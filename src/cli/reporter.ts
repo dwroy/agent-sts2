@@ -1,6 +1,6 @@
 /** Console reporting for the loop: one line per decision, waits de-duplicated. */
 
-import { describeIntent, type LoopEvent, type LoopStats } from "../loop.js";
+import { describeIntent, type LoopEvent, type LoopStats, type LoopTotals } from "../loop.js";
 import { formatMs, style } from "../util/format.js";
 
 export interface Reporter {
@@ -10,6 +10,16 @@ export interface Reporter {
 
 function clock(): string {
   return new Date().toTimeString().slice(0, 8);
+}
+
+/** Jev reports only input/output tokens; output is free, so cost is input at $42 per billion. */
+function usageLine(totals: LoopTotals): string {
+  const cost = (totals.inputTokens / 1_000_000_000) * 42;
+  return (
+    `${totals.decisions} decisions | ${totals.jevCalls} Jev calls | ` +
+    `${totals.inputTokens.toLocaleString("en-US")} in / ${totals.outputTokens.toLocaleString("en-US")} out tokens | ` +
+    `≈ $${cost.toFixed(4)} | ${formatMs(totals.elapsedMs)}`
+  );
 }
 
 export function createReporter(): Reporter {
@@ -46,6 +56,8 @@ export function createReporter(): Reporter {
           process.stdout.write(`${style.dim(`         ${record.rationale}`)}\n`);
           if (decisions % 25 === 0) {
             process.stdout.write(`${style.dim(`         ${record.result}`)}\n`);
+            // Spend is worth watching while it happens, not only at the end.
+            process.stdout.write(`${style.dim(`         progress: ${usageLine(event.totals)}`)}\n`);
           }
           return;
         }
@@ -55,9 +67,6 @@ export function createReporter(): Reporter {
       }
     },
     summary(stats) {
-      // Jev reports only input/output tokens (verified against the SDK's Usage interface); output is
-      // free, so the cost estimate is input tokens at the documented $42 per billion.
-      const costUsd = (stats.inputTokens / 1_000_000_000) * 42;
       const runs = stats.runs
         .map(
           (run) =>
@@ -70,8 +79,14 @@ export function createReporter(): Reporter {
         `\n${style.bold("summary")}\n` +
           `  decisions ${stats.decisions} (${stats.acts} dispatched, ${stats.fallbacks} fallbacks)\n` +
           (runs ? `  runs:\n${runs}\n` : "") +
-          `  Jev calls ${stats.jevCalls} | ${stats.inputTokens.toLocaleString("en-US")} in / ` +
-          `${stats.outputTokens.toLocaleString("en-US")} out tokens | ≈ $${costUsd.toFixed(4)}\n` +
+          `  ${usageLine({
+            decisions: stats.decisions,
+            acts: stats.acts,
+            jevCalls: stats.jevCalls,
+            inputTokens: stats.inputTokens,
+            outputTokens: stats.outputTokens,
+            elapsedMs: stats.elapsedMs,
+          })}\n` +
           `  debounce: ${stats.debounced} answers reused, ${stats.staleSkips} calls skipped as stale\n` +
           `  waits ${stats.waits} | unsupported ${stats.unsupported} | errors ${stats.errors}\n` +
           `  runs completed ${stats.runsCompleted} | elapsed ${formatMs(stats.elapsedMs)}\n` +

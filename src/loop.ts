@@ -87,8 +87,18 @@ export interface RunTokenSummary {
 export type LoopEvent =
   | { type: "note"; message: string }
   | { type: "wait"; screen: string; reason: string }
-  | { type: "decision"; record: DecisionRecord }
+  | { type: "decision"; record: DecisionRecord; totals: LoopTotals }
   | { type: "stop"; reason: string };
+
+/** A snapshot of the session counters, so a reporter can show spend while a run is still going. */
+export interface LoopTotals {
+  decisions: number;
+  acts: number;
+  jevCalls: number;
+  inputTokens: number;
+  outputTokens: number;
+  elapsedMs: number;
+}
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -258,6 +268,15 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (consecutiveFailures >= 3) return "circuit breaker: 3 consecutive failures";
     return null;
   };
+
+  const totals = (): LoopTotals => ({
+    decisions: stats.decisions,
+    acts: stats.acts,
+    jevCalls: stats.jevCalls,
+    inputTokens: stats.inputTokens,
+    outputTokens: stats.outputTokens,
+    elapsedMs: Date.now() - startedAt,
+  });
 
   for (;;) {
     const budget = budgetReason();
@@ -605,7 +624,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, result: "shadow (not dispatched)" };
       log.write(record);
-      onEvent({ type: "decision", record });
+      onEvent({ type: "decision", record, totals: totals() });
       await sleep(pollIntervalMs);
       continue;
     }
@@ -673,7 +692,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
     };
     log.write(record);
-    onEvent({ type: "decision", record });
+    onEvent({ type: "decision", record, totals: totals() });
     await sleep(60);
   }
 
