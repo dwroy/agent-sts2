@@ -139,6 +139,26 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let lastShadowFingerprint: string | null = null;
   let unsupportedScreen: string | null = null;
   let unsupportedCount = 0;
+  // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
+  let stallKey: string | null = null;
+  let stallCount = 0;
+  const noteStall = (state: GameState, reason: string): void => {
+    const key = `${state.screen}|${state.available_actions.join(",")}|${reason}`;
+    stallCount = stallKey === key ? stallCount + 1 : 1;
+    stallKey = key;
+    if (stallCount === 25) {
+      onEvent({
+        type: "note",
+        message:
+          `stuck for ${stallCount} polls on ${state.screen} ` +
+          `(available actions: ${state.available_actions.join(", ") || "none"}) — ${reason}`,
+      });
+    }
+  };
+  const clearStall = (): void => {
+    stallKey = null;
+    stallCount = 0;
+  };
 
   const stop = (reason: string): void => {
     stats.stoppedBecause = reason;
@@ -205,6 +225,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     if (planned.kind === "wait") {
       stats.waits += 1;
+      noteStall(state, planned.reason);
       onEvent({ type: "wait", screen: state.screen, reason: planned.reason });
       await sleep(pollIntervalMs);
       continue;
@@ -303,6 +324,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     if (!resolved.intent) {
       stats.waits += 1;
+      noteStall(state, resolved.rationale);
       onEvent({ type: "wait", screen: state.screen, reason: resolved.rationale });
       await sleep(pollIntervalMs);
       continue;
@@ -311,10 +333,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const gated = gate(state, resolved.intent);
     if (!gated.ok) {
       stats.waits += 1;
+      noteStall(state, gated.reason);
       onEvent({ type: "note", message: `gate rejected ${resolved.intent.action}: ${gated.reason}` });
       await sleep(pollIntervalMs);
       continue;
     }
+    clearStall();
 
     const baseRecord = {
       ts: new Date().toISOString(),

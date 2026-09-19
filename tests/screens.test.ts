@@ -105,6 +105,14 @@ describe("combat", () => {
     expect(resolved.intent).not.toBeNull();
   });
 
+  it("does not burn a potion in the code fallback when the turn is not lethal", () => {
+    const decision = mustDecision(plan(combatPayload()));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const resolved = decision.resolve({});
+    expect(resolved.fallback).toBe(true);
+    expect(resolved.intent?.action).not.toBe("use_potion");
+  });
+
   it("applies the safety floor: end_turn is removed when it would be lethal", () => {
     const decision = mustDecision(plan(combatPayload({ lethalEndTurn: true })));
     if (decision.kind !== "ask") throw new Error("expected an ask");
@@ -172,6 +180,35 @@ describe("reward", () => {
     const decision = mustDecision(plan(rewardClaimPayload()));
     expect(decision.kind).toBe("act");
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "claim_reward", option_index: 0 });
+  });
+
+  it("advances with the action the mod actually advertises once rewards are done", () => {
+    // Live finding: the reward screen advertises `collect_rewards_and_proceed`, not `proceed`.
+    const raw = baseState("REWARD", {
+      available_actions: ["save_and_quit", "resolve_rewards", "collect_rewards_and_proceed"],
+      reward: { pending_card_choice: false, can_proceed: true, rewards: [], card_options: [], alternatives: [] },
+    });
+    const decision = mustDecision(plan(raw));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "collect_rewards_and_proceed" });
+  });
+
+  it("falls back to resolve_rewards when that is the only way forward", () => {
+    const raw = baseState("REWARD", {
+      available_actions: ["save_and_quit", "resolve_rewards"],
+      reward: { pending_card_choice: false, can_proceed: true, rewards: [], card_options: [], alternatives: [] },
+    });
+    const decision = mustDecision(plan(raw));
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "resolve_rewards" });
+  });
+
+  it("skips a pending card choice that offers nothing", () => {
+    const raw = baseState("REWARD", {
+      available_actions: ["skip_reward_cards"],
+      reward: { pending_card_choice: true, can_proceed: false, rewards: [], card_options: [], alternatives: [] },
+    });
+    const decision = mustDecision(plan(raw));
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "skip_reward_cards" });
   });
 });
 

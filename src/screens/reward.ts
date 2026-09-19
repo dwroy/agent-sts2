@@ -18,7 +18,13 @@ export function planReward(env: DecisionEnv): Decision | null {
 
   if (bool(reward["pending_card_choice"])) {
     const offered = asArray(reward["card_options"]).map(asRecord);
-    if (offered.length === 0) return null;
+    if (offered.length === 0) {
+      // Pending but nothing offered: take the documented escape hatch rather than waiting forever.
+      if (actions.includes("skip_reward_cards")) {
+        return { kind: "act", label: "reward/skip", intent: { action: "skip_reward_cards" }, rationale: "card reward pending with no options offered" };
+      }
+      return null;
+    }
     const entries = deckEntries(state, knowledge);
     const options: PickOption[] = offered.map((card, fallbackIndex) => {
       const index = numOrNull(card["index"]) ?? fallbackIndex;
@@ -76,8 +82,19 @@ export function planReward(env: DecisionEnv): Decision | null {
     };
   }
 
-  if (bool(reward["can_proceed"]) && actions.includes("proceed")) {
-    return { kind: "act", label: "reward/proceed", intent: { action: "proceed" }, rationale: "all rewards handled" };
+  // Nothing left to claim: advance. Found by a live run — the installed build advertises
+  // `collect_rewards_and_proceed` here, not `proceed`, so checking only for `proceed` deadlocked on
+  // the reward screen. `available_actions` is the authority, so try each documented name in order.
+  const advance = ["collect_rewards_and_proceed", "resolve_rewards", "proceed"].find((action) =>
+    actions.includes(action),
+  );
+  if (advance) {
+    return {
+      kind: "act",
+      label: "reward/proceed",
+      intent: { action: advance },
+      rationale: `no rewards left to claim; advancing with ${advance}`,
+    };
   }
   return null;
 }

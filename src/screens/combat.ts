@@ -129,10 +129,14 @@ export function planCombat(env: DecisionEnv): Decision | null {
         summary: {
           action: target === null ? `Drink ${potion.name}` : `Drink ${potion.name} on ${target.name}`,
           text: potion.text,
-          note: "uses a consumable; only worth it if it changes the outcome",
+          note: endTurnWouldKill
+            ? "emergency: the mod reports that ending the turn would be lethal"
+            : "uses a consumable; only worth it if it changes the outcome",
         },
-        // Potions are never the code-side default: they are a limited resource.
-        score: -1,
+        // A consumable is never the code-side default unless the turn is lethal, and even then it only
+        // has to beat `end_turn` — a real play (block or a kill) still outranks it. Jev may pick a
+        // potion whenever it judges one worthwhile.
+        score: endTurnWouldKill ? 5 : -50,
         isEndTurn: false,
         lethal: false,
       });
