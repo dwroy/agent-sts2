@@ -387,3 +387,20 @@ export function gameOverPayload(): Raw {
     game_over: { is_victory: false, character_id: "IRONCLAD", can_return_to_main_menu: false },
   });
 }
+
+/** The score screen after `continue_game_over`: only the way out is left. */
+export function gameOverSavedPayload(victory = false): Raw {
+  return baseState("GAME_OVER", {
+    available_actions: ["return_to_main_menu"],
+    game_over: { is_victory: victory, character_id: "IRONCLAD", can_return_to_main_menu: true },
+  });
+}
+
+/** A run that vanished without the score screen (abandoned, or the player left it). */
+export function afterRunPayload(): Raw {
+  return baseState("MAIN_MENU", {
+    session: { mode: "singleplayer", phase: "menu", control_scope: "local_player" },
+    run: null,
+    available_actions: ["continue_run", "open_character_select", "switch_profile"],
+  });
+}

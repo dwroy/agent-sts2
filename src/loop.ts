@@ -18,7 +18,7 @@ import { addNote, buildRunBrief } from "./project/run-brief.js";
 import type { DecisionEnv, ResolvedAction } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { createDecisionLog, type DecisionRecord } from "./telemetry/decision-log.js";
-import { asArray, asRecord, num, str, toJsonValue, type JsonValue } from "./util/json.js";
+import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
 export type LoopMode = "shadow" | "play";
 
@@ -79,6 +79,14 @@ export type LoopEvent =
   | { type: "stop"; reason: string };
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Actions that preserve progression after a run ends, in the order to try them. The mod documents
+ * that `continue_game_over` is what writes the score/unlock save and that leaving for the main menu
+ * first skips it, so this runs before we stop.
+ */
+const FINALIZE_ACTIONS = ["continue_game_over", "confirm_unlock"] as const;
+const MAX_FINALIZE_ACTIONS = 5;
 
 /** Wait until the board actually moves, or give up after a bounded delay. */
 async function waitForStateChange(options: {
@@ -188,6 +196,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   // Planner failures need their own counter: a successful state read resets `consecutiveFailures`,
   // so sharing it meant a planner that threw on every iteration never tripped the breaker.
   let plannerFailures = 0;
+  /* Run-boundary bookkeeping: once a run ends we finish the score/unlock actions, then stop. */
+  let runEndPhase: "none" | "finalizing" | "done" = "none";
+  let runEndDeadline = 0;
+  let finalizeActions = 0;
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -249,14 +261,66 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     consecutiveFailures = 0;
 
-    if (state.session.phase === "run" || state.run !== null) hasSeenRun = true;
-    if (hasSeenRun && state.screen === "MAIN_MENU") {
-      stats.runsCompleted += 1;
-      hasSeenRun = false;
-      notes = [];
-      if (stats.runsCompleted >= maxRuns) {
-        stop(`completed ${stats.runsCompleted} run(s)`);
-        break;
+    /* ---- run boundary (PLAN.md §8.1) ------------------------------------------------------- */
+
+    const inRun = state.session.phase === "run" && state.run !== null;
+    if (inRun) hasSeenRun = true;
+    const runEnded = hasSeenRun && (state.screen === "GAME_OVER" || !inRun);
+    let planned: ReturnType<typeof planDecision> | null = null;
+
+    if (runEnded) {
+      const gameOver = asRecord(state.raw["game_over"]);
+      const victory = bool(gameOver["is_victory"]);
+      const outcome = victory ? "victory" : state.screen === "GAME_OVER" ? "defeat" : "run ended";
+
+      if (runEndPhase === "none") {
+        runEndPhase = "finalizing";
+        runEndDeadline = Date.now() + 15_000;
+        onEvent({ type: "note", message: `run ended (${outcome}): finishing the score/unlock bookkeeping, then stopping` });
+      }
+
+      if (runEndPhase === "finalizing") {
+        const action = FINALIZE_ACTIONS.find((candidate) => state.available_actions.includes(candidate));
+        if (action && finalizeActions < MAX_FINALIZE_ACTIONS) {
+          finalizeActions += 1;
+          // Route it through the normal dispatch path so it is gated, logged and budgeted like any
+          // other action. These three are the mod's progression-preserving actions: the docs warn
+          // that leaving the score screen without `continue_game_over` skips the save.
+          planned = {
+            kind: "decision",
+            decision: {
+              kind: "act",
+              label: "run/finalize",
+              intent: { action },
+              rationale: `${outcome}: saving the result with ${action} before stopping`,
+            },
+          };
+        } else if (
+          Date.now() < runEndDeadline &&
+          state.screen === "GAME_OVER" &&
+          str(gameOver["phase"]) === "summary_animating"
+        ) {
+          // The score screen animates before it accepts a click; wait for that, not for a state that
+          // simply has nothing left to do (which means we should stop now).
+          onEvent({ type: "wait", screen: state.screen, reason: `waiting for the ${outcome} screen to settle` });
+          await sleep(pollIntervalMs);
+          continue;
+        } else {
+          runEndPhase = "done";
+        }
+      }
+
+      if (runEndPhase === "done") {
+        stats.runsCompleted += 1;
+        if (stats.runsCompleted >= maxRuns) {
+          stop(`run ${stats.runsCompleted} ended (${outcome}); stopping as requested`);
+          break;
+        }
+        // More runs requested: reset the boundary state and let the menu planner start another.
+        hasSeenRun = false;
+        runEndPhase = "none";
+        finalizeActions = 0;
+        notes = [];
       }
     }
 
@@ -273,22 +337,23 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // deterministic path is the whole point.
       strictJev: config.strictJev && jev !== null,
     };
-    let planned: ReturnType<typeof planDecision>;
-    try {
-      planned = planDecision(env);
-    } catch (error) {
-      // A planner bug (or a screen whose option set exceeds what a question may carry) must not take
-      // the process down: report it, then let the circuit breaker stop the run if it keeps happening.
-      stats.errors += 1;
-      plannerFailures += 1;
-      const detail = error instanceof Error ? error.message : String(error);
-      onEvent({ type: "note", message: `planner failed on ${state.screen}: ${detail}` });
-      if (plannerFailures >= 3) {
-        stop(`planner failed repeatedly: ${detail}`);
-        break;
+    if (!planned) {
+      try {
+        planned = planDecision(env);
+      } catch (error) {
+        // A planner bug (or a screen whose option set exceeds what a question may carry) must not take
+        // the process down: report it, then let the circuit breaker stop the run if it keeps happening.
+        stats.errors += 1;
+        plannerFailures += 1;
+        const detail = error instanceof Error ? error.message : String(error);
+        onEvent({ type: "note", message: `planner failed on ${state.screen}: ${detail}` });
+        if (plannerFailures >= 3) {
+          stop(`planner failed repeatedly: ${detail}`);
+          break;
+        }
+        await sleep(pollIntervalMs);
+        continue;
       }
-      await sleep(pollIntervalMs);
-      continue;
     }
     plannerFailures = 0;
 

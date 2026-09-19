@@ -674,7 +674,7 @@ calls without asking Jev to do long-horizon reasoning.
 | **Waiting** | Any `pending` status, retryable error, or `can_use_combat_actions === false` means wait + re-read; never re-send. |
 | **Circuit breaker** | 3 consecutive failures → stop, dump diagnostics (mirrors the mod's own recovery policy). |
 | **Budget** | `--max-requests`, `--max-tokens`, `--max-minutes`, `--max-floors`. Hard stop with a summary. |
-| **Run boundary** | Stop when `run_id` changes, `GAME_OVER` completes, or the player leaves the run. |
+| **Run boundary** | A run that ends (victory, defeat, or the run vanishing) is finalised and the loop stops. Finalising means clicking `continue_game_over` — the action the mod documents as writing the score/unlock save — and any `confirm_unlock` overlays, then stopping. `return_to_main_menu` is never clicked for this: it is the action that skips the save, and stopping does not need it. `--max-runs N` keeps going after N runs are finalised. |
 | **Never fight the mod** | Do not call `/session/control` or `/teammate/control`; leave in-game auto-play off. |
 | **Safety floor** | Never choose `end_turn` when `end_turn_will_kill_player` is true unless nothing else is legal. Code, not model. |
 | **Privacy** | Never log the API key; redact `Authorization`; the decision log stores projections and state hashes, not secrets. |

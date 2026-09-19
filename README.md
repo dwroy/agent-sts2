@@ -93,6 +93,10 @@ The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/lo
 - three debounce guards stop the loop outrunning the game's animations: it re-reads before paying for
   an answer, reuses the last resolution while the board is unchanged, and waits for a `pending`
   action to settle. The summary prints how many calls that saved.
+- when a run ends the loop **saves the result and stops**: it clicks `continue_game_over` (the mod
+  documents that as the action that writes the score/unlock save) and any unlock overlay, then exits.
+  It never clicks `return_to_main_menu` to get there, because that is the action which skips the save.
+  `--max-runs N` plays N runs instead of stopping at the first.
 
 The loop never calls `/session/control`: the mod's own auto-play must stay off, or two loops would
 fight over the same instance.

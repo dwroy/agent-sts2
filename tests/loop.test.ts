@@ -17,7 +17,14 @@ import type { JevAskResult, JevClient } from "../src/jev/client.js";
 import { runLoop } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
-import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
+import {
+  afterRunPayload,
+  combatPayload,
+  gameOverPayload,
+  gameOverSavedPayload,
+  mainMenuPayload,
+  testKnowledge,
+} from "./scenarios.js";
 
 interface StubJev {
   client: JevClient;
@@ -138,7 +145,7 @@ describe("runLoop", () => {
     expect(stats.acts).toBe(2);
     expect(stats.runsCompleted).toBe(1);
     expect(stats.errors).toBe(0);
-    expect(stats.stoppedBecause).toContain("completed 1 run");
+    expect(stats.stoppedBecause).toContain("run 1 ended");
     expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
     expect(stats.jevCalls).toBeGreaterThan(0);
   });
@@ -467,5 +474,89 @@ describe("runLoop", () => {
     expect(stats.errors).toBeGreaterThanOrEqual(3);
     expect(stats.stoppedBecause).toContain("planner failed");
     expect(notes.some((note) => note.includes("above the 255 limit"))).toBe(true);
+  });
+
+  it("stops when the run ends, after saving the result", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({
+      sequence: [combatPayload(), gameOverPayload(), gameOverSavedPayload(false), afterRunPayload()],
+    });
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    // It plays, then clicks continue_game_over once (that is what writes the score/unlock save),
+    // then stops instead of walking back through the menus.
+    expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "continue_game_over"]);
+    expect(stats.runsCompleted).toBe(1);
+    expect(stats.stoppedBecause).toContain("ended (defeat)");
+  });
+
+  it("reports a victory as such", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload(), gameOverSavedPayload(true)] });
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: stubJev().client,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.runsCompleted).toBe(1);
+    expect(stats.stoppedBecause).toContain("ended (victory)");
+  });
+
+  it("stops when the run disappears even without a score screen", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload(), afterRunPayload()] });
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: stubJev().client,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.runsCompleted).toBe(1);
+    expect(stats.stoppedBecause).toContain("run ended");
+  });
+
+  it("keeps going when more runs were requested", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({
+      sequence: [combatPayload(), gameOverPayload(), gameOverSavedPayload(false), mainMenuPayload()],
+    });
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: stubJev().client,
+      knowledge: testKnowledge,
+      maxRuns: 2,
+      maxDecisions: 6,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.runsCompleted).toBe(1);
+    expect(stats.stoppedBecause).toContain("decision cap");
   });
 });
