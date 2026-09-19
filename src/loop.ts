@@ -25,7 +25,11 @@ export interface LoopOptions {
   config: AppConfig;
   mode: LoopMode;
   client: ModClient;
-  jev: JevClient;
+  /**
+   * null runs the loop without Jev: every screen that would ask falls back to its code-side choice.
+   * That mode exists to exercise the plumbing against the real game without spending tokens.
+   */
+  jev: JevClient | null;
   knowledge: Knowledge;
   maxRuns?: number;
   maxDecisions?: number;
@@ -102,7 +106,8 @@ function noteForAction(state: GameState, resolved: ResolvedAction, label: string
 }
 
 export async function runLoop(options: LoopOptions): Promise<LoopStats> {
-  const { config, mode, client, jev, knowledge } = options;
+  const { config, mode, client, knowledge } = options;
+  const jev = options.jev;
   const pollIntervalMs = options.pollIntervalMs ?? 400;
   const maxDecisions = options.maxDecisions ?? 2_000;
   const maxRuns = options.maxRuns ?? 1;
@@ -226,8 +231,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let usage = { input_tokens: 0, output_tokens: 0 };
     let reasked = false;
 
+    let usedJev = false;
     if (decision.kind === "act") {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false };
+    } else if (!jev) {
+      // No-Jev mode: the resolver sees an empty answer set and takes its deterministic path.
+      resolved = decision.resolve({});
     } else {
       if (stats.jevCalls >= config.budgets.maxRequests) {
         stop(`request cap reached (${config.budgets.maxRequests})`);
@@ -236,6 +245,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       asked = toJsonValue(decision.questions) as Record<string, JsonValue>;
       try {
         const result = await jev.ask(decision.state, decision.questions);
+        usedJev = true;
         stats.jevCalls += 1;
         stats.inputTokens += result.inputTokens;
         stats.outputTokens += result.outputTokens;
@@ -317,6 +327,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       confidence: resolved.confidence,
       fallback: resolved.fallback,
       reasked,
+      no_jev: !usedJev && decision.kind === "ask",
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
     } satisfies Omit<DecisionRecord, "result">;

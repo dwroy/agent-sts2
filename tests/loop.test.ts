@@ -231,4 +231,34 @@ describe("runLoop", () => {
     expect(stats.stoppedBecause).toContain("decision cap");
     expect(stats.decisions).toBeLessThanOrEqual(3);
   });
+
+  it("drives the game without Jev, resolving every question in code", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({ sequence: [combatPayload(), combatPayload(), mainMenuPayload()] });
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: null,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.acts).toBe(2);
+    expect(stats.jevCalls).toBe(0);
+    expect(stats.fallbacks).toBeGreaterThan(0);
+    expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
+
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    const asked = lines.filter((line) => line.label === "combat/play");
+    expect(asked).toHaveLength(2);
+    for (const line of asked) {
+      expect(line.no_jev).toBe(true);
+      expect(line.fallback).toBe(true);
+      expect(line.usage).toEqual({ input_tokens: 0, output_tokens: 0 });
+    }
+  });
 });

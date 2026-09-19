@@ -36,10 +36,11 @@ export function createReporter(): Reporter {
           const conf = record.confidence === null ? "" : ` conf ${record.confidence.toFixed(2)}`;
           const fallback = record.fallback ? style.yellow(" fallback") : "";
           const reasked = record.reasked ? " reasked" : "";
+          const noJev = record.no_jev ? style.yellow(" no-jev") : "";
           const shadow = record.mode === "shadow" ? style.cyan(" shadow") : "";
           process.stdout.write(
             `${style.dim(clock())} ${style.bold(record.screen.padEnd(15))} ${record.label.padEnd(20)} ${style.green("->")} ` +
-              `${describeIntent(record.chosen)}${conf}${fallback}${reasked}${shadow} ` +
+              `${describeIntent(record.chosen)}${conf}${fallback}${reasked}${noJev}${shadow} ` +
               `${style.dim(`jev ${formatMs(record.latency_ms.jev)} | ${record.usage.input_tokens} in`)}\n`,
           );
           process.stdout.write(`${style.dim(`         ${record.rationale}`)}\n`);

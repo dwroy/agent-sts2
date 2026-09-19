@@ -159,14 +159,15 @@ async function main(argv: string[]): Promise<number> {
       });
       const entries = readRecordedStates(inPath);
       process.stdout.write(`replaying ${entries.length} recorded states from ${inPath}${values.ask === true ? " (asking Jev)" : ""}\n`);
+      const jev = runtime.jev;
       const stats = await replayStates({
         entries,
         knowledge: runtime.knowledge,
         config,
         ask:
-          values.ask === true
+          values.ask === true && jev
             ? async (state, questions) => {
-                const result = await runtime.jev.ask(state, questions as never);
+                const result = await jev.ask(state, questions as never);
                 return result.answers;
               }
             : undefined,
@@ -182,16 +183,18 @@ async function main(argv: string[]): Promise<number> {
     case "shadow":
     case "play": {
       const mode = command;
+      const skipJev = values["no-jev"] === true;
       const reporter = createReporter();
       const runtime = await buildRuntime({
         config,
-        needJev: true,
+        needJev: !skipJev,
         refreshKnowledge: values["refresh-data"] === true,
         onEvent: (message) => process.stdout.write(`${style.dim(message)}\n`),
       });
       process.stdout.write(
         `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
-          `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}\n`,
+          `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
+          `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
       );
       const stats = await runLoop({
         config,

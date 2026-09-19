@@ -25,6 +25,8 @@ export interface DecisionRecord {
   confidence: number | null;
   fallback: boolean;
   reasked: boolean;
+  /** True when a Jev-eligible decision was resolved by code because the loop ran without Jev. */
+  no_jev: boolean;
   latency_ms: { plan: number; jev: number; action: number };
   usage: { input_tokens: number; output_tokens: number };
   result: string;

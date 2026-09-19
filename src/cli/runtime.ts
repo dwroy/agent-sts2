@@ -9,7 +9,8 @@ import { discoverMod } from "../mod/discovery.js";
 export interface Runtime {
   config: AppConfig;
   client: ModClient;
-  jev: JevClient;
+  /** null when the command runs without Jev (`--no-jev`, record, replay without `--ask`). */
+  jev: JevClient | null;
   knowledge: Knowledge;
   modVersion: string;
   baseUrl: string;
@@ -42,14 +43,15 @@ export async function buildRuntime(options: BuildRuntimeOptions): Promise<Runtim
   });
   onEvent(`game data from ${knowledge.source}: ${describeKnowledge(knowledge)}`);
 
-  const apiKey = options.needJev ? requireJevApiKey(config) : config.jev.apiKey ?? "";
-  const jev = new JevClient({
-    apiKey,
-    baseUrl: config.jev.baseUrl,
-    model: config.jev.model,
-    timeoutMs: config.jev.timeoutMs,
-    maxRetries: config.jev.maxRetries,
-  });
+  const jev = options.needJev
+    ? new JevClient({
+        apiKey: requireJevApiKey(config),
+        baseUrl: config.jev.baseUrl,
+        model: config.jev.model,
+        timeoutMs: config.jev.timeoutMs,
+        maxRetries: config.jev.maxRetries,
+      })
+    : null;
 
   return { config, client, jev, knowledge, modVersion: discovery.health.mod_version, baseUrl: discovery.url };
 }
