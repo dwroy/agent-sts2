@@ -9,8 +9,11 @@ import { createReporter } from "./cli/reporter.js";
 import { buildRuntime } from "./cli/runtime.js";
 import { ConfigError, loadConfig, type AppConfig, type ConfigOverrides } from "./config.js";
 import { runLoop } from "./loop.js";
+import { buildRunBrief } from "./project/run-brief.js";
 import { recordStates } from "./replay/record.js";
 import { readRecordedStates, replayStates } from "./replay/replay.js";
+import { planDecision } from "./screens/index.js";
+import { toJsonValue } from "./util/json.js";
 import { style } from "./util/format.js";
 import { acquireLock } from "./util/lock.js";
 
@@ -20,6 +23,7 @@ Usage:
   jev-sts2 doctor [options]     check the mod, the state payload and the Jev credential
   jev-sts2 shadow [options]     decide against the live game but dispatch nothing (safe first run)
   jev-sts2 play [options]       run the full decision loop and drive the game
+  jev-sts2 explain [options]    print the exact request the current state would send to Jev
   jev-sts2 record [options]     capture raw /state snapshots into a fixtures file
   jev-sts2 replay [options]     re-run the decision layer over a fixtures file, offline
 
@@ -37,6 +41,7 @@ Options:
   --out <path>         record output file (default fixtures/states.jsonl)
   --in <path>          replay input file (default fixtures/states.jsonl)
   --ask                replay: also query Jev for each recorded state
+                       explain: send the request and print the answer
   --refresh-data       refetch /data/* instead of using the cache
   --force              take over the single-instance lock from another loop
   -h, --help         show this help
@@ -148,6 +153,80 @@ async function main(argv: string[]): Promise<number> {
             .map(([screen, count]) => `  ${screen}: ${count}`)
             .join("\n") +
           "\n",
+      );
+      return 0;
+    }
+
+    case "explain": {
+      const runtime = await buildRuntime({
+        config,
+        needJev: values.ask === true,
+        refreshKnowledge: values["refresh-data"] === true,
+        onEvent: (message) => process.stderr.write(`${style.dim(message)}\n`),
+      });
+      const state = await runtime.client.state();
+      const rendered = {
+        screen: state.screen,
+        session: `${state.session.mode}/${state.session.phase}`,
+        brief: buildRunBrief(state, runtime.knowledge),
+      };
+      const planned = planDecision({
+        state,
+        knowledge: runtime.knowledge,
+        brief: rendered.brief,
+        thresholds: config.thresholds,
+        runStart: config.run.start,
+        characterPreference: config.run.character,
+        allowFtueModals: config.allowFtueModals,
+      });
+
+      if (planned.kind !== "decision") {
+        process.stdout.write(`${JSON.stringify({ screen: state.screen, outcome: planned.kind, reason: planned.reason }, null, 2)}\n`);
+        return 0;
+      }
+      const decision = planned.decision;
+      if (decision.kind === "act") {
+        process.stdout.write(
+          `${JSON.stringify(
+            { screen: state.screen, label: decision.label, kind: "act", intent: decision.intent, rationale: decision.rationale },
+            null,
+            2,
+          )}\n`,
+        );
+        return 0;
+      }
+
+      const request = { model: config.jev.model, state: decision.state, questions: decision.questions };
+      const serialized = JSON.stringify(request);
+      const summary = {
+        screen: state.screen,
+        label: decision.label,
+        kind: "ask",
+        option_count: Object.keys(decision.questions["play"]?.criteria ?? decision.questions["pick"]?.criteria ?? {}).length,
+        request_chars: serialized.length,
+        // Rough only. Measured against a live 19-option combat request: 7474 chars → 2968 tokens, so
+        // dense JSON (numbers, braces, option keys) tokenizes near 2.5 chars/token, not 3.6.
+        estimated_prompt_tokens: Math.round(serialized.length / 2.5),
+      };
+
+      if (values.ask !== true) {
+        process.stdout.write(`${JSON.stringify({ ...summary, request }, null, 2)}\n`);
+        return 0;
+      }
+      if (!runtime.jev) return fail("--ask needs an API key (TYPESAFE_API_KEY)", 1);
+      const answer = await runtime.jev.ask(decision.state, decision.questions);
+      const resolved = decision.resolve(answer.answers);
+      process.stdout.write(
+        `${JSON.stringify(
+          {
+            ...summary,
+            request,
+            answer: { model: answer.model, answers: toJsonValue(answer.answers), usage: { input_tokens: answer.inputTokens, output_tokens: answer.outputTokens }, latency_ms: answer.latencyMs },
+            resolved,
+          },
+          null,
+          2,
+        )}\n`,
       );
       return 0;
     }

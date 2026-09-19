@@ -115,6 +115,24 @@ export function describeRunRelics(state: GameState, knowledge: Knowledge): strin
   });
 }
 
+/**
+ * `Name: what it does` for the relics held. Capped and truncated: this rides along with every
+ * decision, so it has to stay small (PLAN.md §5.2).
+ */
+export function describeRunRelicEffects(state: GameState, knowledge: Knowledge, max = 10): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"])
+    .map((entry) => {
+      const obj = asRecord(entry);
+      const id = str(obj["relic_id"]);
+      const info = knowledge.relic(id);
+      const name = str(obj["name"], info?.name ?? id);
+      const description = info?.description ?? "";
+      return description ? `${name}: ${truncate(description, 80)}` : null;
+    })
+    .filter((entry): entry is string => entry !== null)
+    .slice(0, max);
+}
+
 export function describeRunPotions(state: GameState, knowledge: Knowledge): string[] {
   return asArray(asRecord(state.run?.raw)["potions"])
     .map((entry) => {

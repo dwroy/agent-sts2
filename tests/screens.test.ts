@@ -65,6 +65,45 @@ function pickAnswer(choice: string, confidence = 0.9): AnswerSet {
 }
 
 describe("combat", () => {
+  it("shows what each buff/debuff does, not just its name", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["enemies"] = [
+      {
+        index: 0,
+        enemy_id: "JAW_WORM",
+        name: "Jaw Worm",
+        current_hp: 42,
+        max_hp: 42,
+        block: 0,
+        is_alive: true,
+        is_hittable: true,
+        powers: [{ index: 0, power_id: "VULNERABLE", name: "Vulnerable", amount: 2, is_debuff: true }],
+        intent: "ATTACK",
+        move_id: "ATTACK",
+        intents: [{ index: 0, intent_type: "Attack", label: "11", damage: 11, hits: 1, total_damage: 11, status_card_count: null }],
+      },
+    ];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const enemies = decision.state["enemies"] as { powers: string[] }[];
+    expect(enemies[0]?.powers[0]).toContain("Vulnerable 2");
+    expect(enemies[0]?.powers[0]).toContain("[debuff]");
+    // The description comes from the knowledge cache, so Jev never has to guess what a power does.
+    expect(enemies[0]?.powers[0]).toContain("50% more damage");
+  });
+
+  it("explains placeholders it cannot render", () => {
+    const raw = combatPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["relics"] = [{ index: 0, relic_id: "BURNING_BLOOD", name: "Burning Blood", description: "", stack: null, is_melted: false }];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const brief = decision.state["run_brief"] as Record<string, unknown>;
+    expect(brief["relic_effects"]).toEqual(["Burning Blood: At the end of combat, heal 6 HP."]);
+    expect(brief["relic_effects_note"]).toBeUndefined();
+  });
+
   it("offers every card × target plus end_turn, with code-computed outcomes", () => {
     const decision = mustDecision(plan(combatPayload()));
     expect(decision.kind).toBe("ask");

@@ -8,7 +8,15 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { asRecord, numOrNull, truncate, type JsonValue } from "../util/json.js";
-import { deckEntries, deckStats, describeRunPotions, describeRunRelics, summarizeDeck, type DeckStats } from "./deck.js";
+import {
+  deckEntries,
+  deckStats,
+  describeRunPotions,
+  describeRunRelicEffects,
+  describeRunRelics,
+  summarizeDeck,
+  type DeckStats,
+} from "./deck.js";
 
 export interface RunBrief {
   character: string | null;
@@ -19,6 +27,7 @@ export interface RunBrief {
   ascension: number;
   deck: string;
   relics: string[];
+  relic_effects: string[];
   potions: string[];
   notes: string[];
 }
@@ -42,6 +51,7 @@ export function buildRunBrief(state: GameState, knowledge: Knowledge, previousNo
     ascension: state.run?.ascension ?? 0,
     deck: summarizeDeck(stats),
     relics: describeRunRelics(state, knowledge),
+    relic_effects: describeRunRelicEffects(state, knowledge),
     potions: describeRunPotions(state, knowledge),
     notes: previousNotes.slice(-MAX_NOTES),
   };
@@ -55,7 +65,7 @@ export function addNote(brief: RunBrief, note: string): RunBrief {
 
 /** The object injected into every decision payload. */
 export function briefJson(brief: RunBrief): Record<string, JsonValue> {
-  return {
+  const json: Record<string, JsonValue> = {
     character: brief.character,
     act: brief.act,
     floor: brief.floor,
@@ -64,7 +74,15 @@ export function briefJson(brief: RunBrief): Record<string, JsonValue> {
     ascension: brief.ascension,
     deck: brief.deck,
     relics: brief.relics,
+    relic_effects: brief.relic_effects,
     potions: brief.potions,
     notes: brief.notes,
   };
+  // Relic and potion text arrives as a template: the mod exposes `{Heal}` where the game shows a
+  // number, and there is no rendered variant for relics the way there is for cards. Say so, so the
+  // model does not read the placeholder as a literal string.
+  if ([...brief.relic_effects, ...brief.potions].some((entry) => entry.includes("{"))) {
+    json["relic_effects_note"] = "{X} marks a value the mod does not expose; the effect text around it is accurate";
+  }
+  return json;
 }

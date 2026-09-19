@@ -38,16 +38,23 @@ function describeIntents(enemy: Record<string, unknown>): { text: string; incomi
   return { text: parts.join(", ") || "unknown", incoming };
 }
 
+/**
+ * Powers are shown as `Name 3 [debuff] (what it does)`. Names alone are not enough: Jev has no
+ * reliable priors for a new game's buffs, and the effect is exactly the decision-relevant part.
+ */
 function describePowers(holder: Record<string, unknown>, knowledge: Knowledge): string[] {
   return asArray(holder["powers"])
     .map(asRecord)
     .map((power) => {
       const id = str(power["power_id"]);
-      const name = str(power["name"], knowledge.power(id)?.name ?? id);
+      const info = knowledge.power(id);
+      const name = str(power["name"], info?.name ?? id);
       const amount = numOrNull(power["amount"]);
       const debuff = bool(power["is_debuff"]);
-      return `${name}${amount === null ? "" : ` ${amount}`}${debuff ? " [debuff]" : ""}`;
-    });
+      const effect = info?.description ? ` (${truncate(info.description, 90)})` : "";
+      return `${name}${amount === null ? "" : ` ${amount}`}${debuff ? " [debuff]" : ""}${effect}`;
+    })
+    .slice(0, 8);
 }
 
 export function enemyViews(state: { raw: Record<string, unknown> }, knowledge: Knowledge): EnemyView[] {
