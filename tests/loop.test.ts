@@ -14,7 +14,7 @@ import type { AppConfig } from "../src/config.js";
 import { loadConfig } from "../src/config.js";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/jev/client.js";
-import { runLoop } from "../src/loop.js";
+import { runLoop, type LoopEvent } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {
@@ -653,5 +653,34 @@ describe("runLoop", () => {
     // The loop this test guards against was skip -> claim_reward -> skip -> ...
     expect(taken).not.toContain("claim_reward");
     expect(stats.stoppedBecause).toContain("decision cap");
+  });
+
+  it("reports the running session total when combat ends", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({
+      sequence: [combatPayload(), combatPayload(), mapPayload(), mapPayload()],
+    });
+    const events: LoopEvent[] = [];
+
+    await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: stubJev().client,
+      knowledge: testKnowledge,
+      maxDecisions: 3,
+      pollIntervalMs: 1,
+      onEvent: (event) => events.push(event),
+    });
+
+    const ended = events.filter((event): event is Extract<LoopEvent, { type: "combat_end" }> => event.type === "combat_end");
+    expect(ended).toHaveLength(1);
+    const report = ended[0];
+    if (!report) throw new Error("no combat_end event");
+    // The line prints the session totals, not the fight's own cost: two decisions, both asks.
+    expect(report.totals.decisions).toBe(2);
+    expect(report.totals.jevCalls).toBe(2);
+    expect(report.totals.inputTokens).toBe(200);
+    expect(report.totals.outputTokens).toBe(20);
   });
 });

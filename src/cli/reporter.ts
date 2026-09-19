@@ -21,6 +21,15 @@ function usageLine(totals: LoopTotals): string {
   );
 }
 
+/** Compact one-liner: `12 decisions, 8 Jev calls, 24,318 in / 1,204 out tokens (≈ $0.0010)`. */
+function costLine(totals: LoopTotals): string {
+  return (
+    `${totals.decisions} decisions, ${totals.jevCalls} Jev calls, ` +
+    `${totals.inputTokens.toLocaleString("en-US")} in / ${totals.outputTokens.toLocaleString("en-US")} out tokens ` +
+    `(${formatCostUsd(totals.inputTokens)})`
+  );
+}
+
 export function createReporter(): Reporter {
   let lastWait: string | null = null;
   let decisions = 0;
@@ -62,6 +71,13 @@ export function createReporter(): Reporter {
         }
         case "stop":
           process.stdout.write(`${style.yellow(`${clock()} stop`)} ${event.reason}\n`);
+          return;
+        case "combat_end":
+          // Asked for explicitly: the session's running token total at the end of every fight.
+          process.stdout.write(
+            `${style.dim(clock())} ${style.bold("combat ended")} — ${style.dim("total token usage:")} ` +
+              `${costLine(event.totals)}\n`,
+          );
           return;
       }
     },

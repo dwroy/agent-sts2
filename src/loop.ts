@@ -88,6 +88,8 @@ export type LoopEvent =
   | { type: "note"; message: string }
   | { type: "wait"; screen: string; reason: string }
   | { type: "decision"; record: DecisionRecord; totals: LoopTotals }
+  /** Emitted when the game leaves combat, carrying the running session totals. */
+  | { type: "combat_end"; totals: LoopTotals; turn: number | null }
   | { type: "stop"; reason: string };
 
 /** A snapshot of the session counters, so a reporter can show spend while a run is still going. */
@@ -232,6 +234,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     startedAt: Date.now(),
     maxFloor: null as number | null,
   };
+  /** Whether the previous state was in combat, so the end of a fight can be noticed. */
+  let inCombatTracked = false;
   /** Reset whenever the screen changes; the shop uses it to tell "just arrived" from "chose to leave". */
   const screenMemory: ScreenMemory = createScreenMemory();
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
@@ -303,6 +307,16 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
     consecutiveFailures = 0;
+
+    /* ---- combat boundary: report the running total once a fight ends ------------------------ */
+
+    const inCombat = state.in_combat || state.screen === "COMBAT";
+    if (inCombat && !inCombatTracked) {
+      inCombatTracked = true;
+    } else if (!inCombat && inCombatTracked) {
+      inCombatTracked = false;
+      onEvent({ type: "combat_end", turn: state.turn, totals: totals() });
+    }
 
     /* ---- run boundary (PLAN.md §8.1) ------------------------------------------------------- */
 
