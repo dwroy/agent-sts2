@@ -26,8 +26,9 @@ Decisions locked with the user (2026-09-19):
 | M4 — full-run loop | **done**: budget caps, circuit breaker, run boundary, JSONL decision log, metrics, and the menu → character select → embark path |
 | M5/M6 — evaluation and tuning | not started (optional per the agreed scope) |
 
-88 tests plus a scripted end-to-end loop test; verified live (read-only) against mod 0.12.5 for
-discovery, `/data/*`, planning and a real Jev round trip.
+125 tests plus a scripted end-to-end loop test; verified live against mod **0.12.5** (upstream's
+latest release is 0.13.0, 2026-09-19) for discovery, `/data/*`, planning, a real Jev round trip, and
+hundreds of dispatched actions across several runs.
 
 Deliberate differences from the text above, recorded so the plan stays honest:
 

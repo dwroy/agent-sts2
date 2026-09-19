@@ -2,28 +2,45 @@
 
 Play **Slay the Spire 2** with **Jev** (TypeSafe System One).
 
-The `STS2-Agent` mod exposes live game state and legal actions over a local HTTP API. This project
-owns the decision loop: read state → project it into a small, English, decision-shaped payload →
-ask Jev typed questions (`choice` / `score` / `noul`) → sanity-check the answer → dispatch one legal
+Live game state and the legal-action list come from the
+[**STS2-Agent**](https://github.com/CharTyr/STS2-Agent) mod, which runs an HTTP API inside the game.
+This project owns the decision loop: read state → project it into a small, English, decision-shaped
+payload → ask Jev typed questions (`choice` / `score` / `noul`) → take its answer → dispatch one legal
 action.
 
 The design, the verified facts about both systems, and the milestone plan live in [PLAN.md](./PLAN.md).
 Read §5.4 before proposing any change that puts a language model on the decision path.
 
+## Compatibility
+
+| Component | Version |
+| --- | --- |
+| [STS2-Agent](https://github.com/CharTyr/STS2-Agent) | **0.12.5** — the build this project was developed and driven against. Upstream's latest release is **0.13.0** (2026-09-19). |
+| Mod HTTP protocol | `2026-03-11-v1` |
+| Mod state model | `state_version` **16** (upstream `docs/api.md` on `main` still documents 11) |
+| Slay the Spire 2 | `v0.111.0` |
+| Jev (TypeSafe System One) | `jev-1.13.0`, pinned via `JEV_MODEL` — `@typesafe-ai/sdk` 0.6.0 |
+| Node.js | 20 or newer (developed on 25) |
+
+A version mismatch is reported, never silently absorbed: `doctor` prints the mod's version, protocol
+and state model, and `checkCompatibility` turns a difference into a warning. Newer mod builds are
+expected to work — the guard exists to tell you when the payload shape moved, not to block you.
+
 ## Status
 
 **M0–M4 implemented.** The full decision loop runs: read state → project it per screen → ask Jev →
 gate → dispatch → verify → log. Every screen in the mod's `Screen` enum has a planner. Verified by
-88 unit/integration tests, a scripted end-to-end loop test, and live read-only runs against a real
-game (discovery, `/data/*`, planning, and a real Jev round trip).
+125 tests, a scripted end-to-end loop test, and live runs against a real game — hundreds of dispatched
+actions across several runs, both with Jev deciding and with `--no-jev` using the deterministic path.
 
-Not yet validated live: dispatching during an actual run. Run `shadow` first — it makes the same
-decisions and writes the same log, without touching the game.
+Runs currently end earlier than they should: the code-only path plays crudely by design, and Jev is
+handed 19-option combat questions where its top probability lands around 0.2. `shadow` mode is the
+safe way to watch it decide without touching the game.
 
 ## Requirements
 
 - Node.js 20 or newer (developed on Node 25)
-- Slay the Spire 2 running with the STS2-Agent mod loaded
+- Slay the Spire 2 running with the [STS2-Agent](https://github.com/CharTyr/STS2-Agent) mod loaded
 - A TypeSafe API key for Jev
 
 ## Quick start
