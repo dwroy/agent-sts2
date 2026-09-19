@@ -32,7 +32,6 @@ interface AnswerMemo {
   key: string;
   resolved: ResolvedAction;
   answers: AnswerSet;
-  usage: { input_tokens: number; output_tokens: number };
 }
 
 export interface LoopOptions {
@@ -66,10 +65,23 @@ export interface LoopStats {
   errors: number;
   inputTokens: number;
   outputTokens: number;
+  /** One entry per finished run, so the tokens of a run can be read on their own. */
+  runs: RunTokenSummary[];
   runsCompleted: number;
   stoppedBecause: string;
   elapsedMs: number;
   logPath: string;
+}
+
+export interface RunTokenSummary {
+  index: number;
+  outcome: string;
+  decisions: number;
+  jevCalls: number;
+  inputTokens: number;
+  outputTokens: number;
+  maxFloor: number | null;
+  elapsedMs: number;
 }
 
 export type LoopEvent =
@@ -175,6 +187,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     errors: 0,
     inputTokens: 0,
     outputTokens: 0,
+    runs: [],
     runsCompleted: 0,
     stoppedBecause: "unknown",
     elapsedMs: 0,
@@ -200,6 +213,15 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let runEndPhase: "none" | "finalizing" | "done" = "none";
   let runEndDeadline = 0;
   let finalizeActions = 0;
+  /** Baseline for the per-run token accounting, captured when a run begins. */
+  let runBaseline = {
+    decisions: 0,
+    jevCalls: 0,
+    inputTokens: 0,
+    outputTokens: 0,
+    startedAt: Date.now(),
+    maxFloor: null as number | null,
+  };
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -264,7 +286,21 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     /* ---- run boundary (PLAN.md §8.1) ------------------------------------------------------- */
 
     const inRun = state.session.phase === "run" && state.run !== null;
-    if (inRun) hasSeenRun = true;
+    if (inRun) {
+      if (!hasSeenRun) {
+        hasSeenRun = true;
+        runBaseline = {
+          decisions: stats.decisions,
+          jevCalls: stats.jevCalls,
+          inputTokens: stats.inputTokens,
+          outputTokens: stats.outputTokens,
+          startedAt: Date.now(),
+          maxFloor: state.run?.floor ?? null,
+        };
+      } else if (state.run?.floor != null) {
+        runBaseline.maxFloor = Math.max(runBaseline.maxFloor ?? 0, state.run.floor);
+      }
+    }
     const runEnded = hasSeenRun && (state.screen === "GAME_OVER" || !inRun);
     let planned: ReturnType<typeof planDecision> | null = null;
 
@@ -312,6 +348,16 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
       if (runEndPhase === "done") {
         stats.runsCompleted += 1;
+        stats.runs.push({
+          index: stats.runsCompleted,
+          outcome,
+          decisions: stats.decisions - runBaseline.decisions,
+          jevCalls: stats.jevCalls - runBaseline.jevCalls,
+          inputTokens: stats.inputTokens - runBaseline.inputTokens,
+          outputTokens: stats.outputTokens - runBaseline.outputTokens,
+          maxFloor: runBaseline.maxFloor,
+          elapsedMs: Date.now() - runBaseline.startedAt,
+        });
         if (stats.runsCompleted >= maxRuns) {
           stop(`run ${stats.runsCompleted} ended (${outcome}); stopping as requested`);
           break;
@@ -389,6 +435,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let asked: Record<string, JsonValue> | undefined;
     let rawAnswers: JsonValue | undefined;
     let usage = { input_tokens: 0, output_tokens: 0 };
+    const requestIds: string[] = [];
     let reasked = false;
 
     let usedJev = false;
@@ -410,7 +457,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         stats.debounced += 1;
         fromMemo = true;
         resolved = memo.resolved;
-        usage = memo.usage;
         rawAnswers = toJsonValue(memo.answers);
         onEvent({
           type: "note",
@@ -439,6 +485,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       try {
         const result = await jev.ask(decision.state, decision.questions);
         usedJev = true;
+        if (result.requestId) requestIds.push(result.requestId);
         stats.jevCalls += 1;
         stats.inputTokens += result.inputTokens;
         stats.outputTokens += result.outputTokens;
@@ -455,6 +502,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria },
           });
           stats.jevCalls += 1;
+          if (followUp.requestId) requestIds.push(followUp.requestId);
           stats.inputTokens += followUp.inputTokens;
           stats.outputTokens += followUp.outputTokens;
           jevLatency += followUp.latencyMs;
@@ -497,7 +545,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
       // Memoise the finished resolution (including any shortlist re-ask that ran above).
-      answerMemo = { key: memoKey, resolved, answers: firstAnswers, usage };
+      answerMemo = { key: memoKey, resolved, answers: firstAnswers };
       }
     }
 
@@ -538,6 +586,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       fallback: resolved.fallback,
       reasked,
       no_jev: !usedJev && !fromMemo && decision.kind === "ask",
+      reused_answer: fromMemo,
+      request_ids: requestIds,
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
     } satisfies Omit<DecisionRecord, "result">;

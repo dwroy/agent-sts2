@@ -225,7 +225,13 @@ async function main(argv: string[]): Promise<number> {
           {
             ...summary,
             request,
-            answer: { model: answer.model, answers: toJsonValue(answer.answers), usage: { input_tokens: answer.inputTokens, output_tokens: answer.outputTokens }, latency_ms: answer.latencyMs },
+            answer: {
+              model: answer.model,
+              answers: toJsonValue(answer.answers),
+              usage: { input_tokens: answer.inputTokens, output_tokens: answer.outputTokens },
+              request_id: answer.requestId,
+              latency_ms: answer.latencyMs,
+            },
             resolved,
           },
           null,

@@ -27,6 +27,10 @@ export interface DecisionRecord {
   reasked: boolean;
   /** True when a Jev-eligible decision was resolved by code because the loop ran without Jev. */
   no_jev: boolean;
+  /** True when the answer came from the memo instead of a fresh call (so `usage` is zero). */
+  reused_answer: boolean;
+  /** `usage` counts the tokens spent on *this* decision; these are the calls behind it. */
+  request_ids: string[];
   latency_ms: { plan: number; jev: number; action: number };
   usage: { input_tokens: number; output_tokens: number };
   result: string;

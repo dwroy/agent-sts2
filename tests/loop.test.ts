@@ -47,7 +47,7 @@ function stubJev(): StubJev {
           answers[id] = { type: "noul", noul: 0.5, raw: {} };
         }
       }
-      return { model: "stub", answers, inputTokens: 100, outputTokens: 10, latencyMs: 1 };
+      return { model: "stub", answers, inputTokens: 100, outputTokens: 10, latencyMs: 1, requestId: `req_stub_${state.calls}` };
     },
   } as unknown as JevClient;
   return {
@@ -144,6 +144,11 @@ describe("runLoop", () => {
 
     expect(stats.acts).toBe(2);
     expect(stats.runsCompleted).toBe(1);
+    // Per-run accounting is reported separately from the session totals.
+    expect(stats.runs).toHaveLength(1);
+    expect(stats.runs[0]).toMatchObject({ index: 1, outcome: "run ended", jevCalls: stats.jevCalls });
+    expect(stats.runs[0]?.inputTokens).toBe(stats.inputTokens);
+    expect(stats.runs[0]?.maxFloor).toBe(9);
     expect(stats.errors).toBe(0);
     expect(stats.stoppedBecause).toContain("run 1 ended");
     expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
@@ -292,6 +297,15 @@ describe("runLoop", () => {
     expect(stats.jevCalls).toBe(1);
     expect(stats.debounced).toBeGreaterThan(0);
     expect(notes.some((note) => note.includes("reused the previous answer"))).toBe(true);
+
+    // A reused answer must not be counted as spend again: the first record carries the tokens, the
+    // later ones carry zero plus the flag that explains why.
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    const reused = lines.filter((line) => line.reused_answer === true);
+    for (const line of reused) expect(line.usage).toEqual({ input_tokens: 0, output_tokens: 0 });
+    const totalLogged = lines.reduce((sum, line) => sum + line.usage.input_tokens, 0);
+    expect(totalLogged).toBe(stats.inputTokens);
+    expect(lines[0]?.request_ids).toEqual(["req_stub_1"]);
   });
 
   it("skips the Jev call when the board moves while it is still planning", async () => {
@@ -388,7 +402,7 @@ describe("runLoop", () => {
           const first = keys[0] ?? "";
           answers[id] = { type: "choice", choice: first, probabilities: { [first]: 0.4 }, confidence: 0.11, raw: {} };
         }
-        return { model: "stub", answers, inputTokens: 10, outputTokens: 5, latencyMs: 1 };
+        return { model: "stub", answers, inputTokens: 10, outputTokens: 5, latencyMs: 1, requestId: "req_unsure" };
       },
     } as unknown as JevClient;
 
@@ -410,6 +424,10 @@ describe("runLoop", () => {
     expect(record.rationale).toContain("still below the act threshold");
     expect(record.confidence).toBeCloseTo(0.11, 5);
     expect(stats.acts).toBe(1);
+    // The shortlist round trip is a second call, and both are counted.
+    expect(stats.jevCalls).toBe(2);
+    expect(stats.inputTokens).toBe(20);
+    expect(stats.outputTokens).toBe(10);
   });
 
   it("survives a planner that refuses to build an over-large question", async () => {

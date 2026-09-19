@@ -50,6 +50,8 @@ export interface JevAskResult {
   inputTokens: number;
   outputTokens: number;
   latencyMs: number;
+  /** `x-typesafe-request-id`, for quoting to TypeSafe support when a call looks wrong. */
+  requestId: string | null;
 }
 
 function statusOf(error: unknown): number | null {
@@ -179,15 +181,21 @@ export class JevClient {
    * alter what we send (and the exact request body is what gets written to the decision log).
    */
   async ask(state: unknown, questions: QuestionSet, timeoutMs?: number): Promise<JevAskResult> {
-    const call = this.client.systemOne.bind(this.client) as unknown as (request: {
+    interface RawResult {
+      answers?: unknown;
       model?: string;
-      state: unknown;
-      questions: QuestionSet;
-    }, options?: { timeout?: number }) => Promise<{ answers?: unknown; model?: string; usage?: unknown }>;
+      usage?: unknown;
+    }
+    // `.withResponse()` also hands back the request id; the docs are explicit that the caller must
+    // not both await the parsed result and read the body, so everything comes from this one promise.
+    const call = this.client.systemOne.bind(this.client) as unknown as (
+      request: { model?: string; state: unknown; questions: QuestionSet },
+      options?: { timeout?: number },
+    ) => { withResponse(): Promise<{ data: RawResult; requestId?: string }> };
 
     const started = Date.now();
-    const result = await this.call(() =>
-      call({ model: this.model, state, questions }, timeoutMs === undefined ? {} : { timeout: timeoutMs }),
+    const { data: result, requestId } = await this.call(() =>
+      call({ model: this.model, state, questions }, timeoutMs === undefined ? {} : { timeout: timeoutMs }).withResponse(),
     );
     const usage = readTokens(result.usage);
     return {
@@ -196,6 +204,7 @@ export class JevClient {
       inputTokens: usage.inputTokens,
       outputTokens: usage.outputTokens,
       latencyMs: Date.now() - started,
+      requestId: requestId ?? null,
     };
   }
 

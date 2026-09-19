@@ -55,10 +55,23 @@ export function createReporter(): Reporter {
       }
     },
     summary(stats) {
+      // Jev reports only input/output tokens (verified against the SDK's Usage interface); output is
+      // free, so the cost estimate is input tokens at the documented $42 per billion.
+      const costUsd = (stats.inputTokens / 1_000_000_000) * 42;
+      const runs = stats.runs
+        .map(
+          (run) =>
+            `  #${run.index} ${run.outcome} — ${run.decisions} decisions, ${run.jevCalls} Jev calls, ` +
+            `${run.inputTokens.toLocaleString("en-US")} in / ${run.outputTokens.toLocaleString("en-US")} out tokens` +
+            `${run.maxFloor === null ? "" : `, reached floor ${run.maxFloor}`}, ${formatMs(run.elapsedMs)}`,
+        )
+        .join("\n");
       process.stdout.write(
         `\n${style.bold("summary")}\n` +
           `  decisions ${stats.decisions} (${stats.acts} dispatched, ${stats.fallbacks} fallbacks)\n` +
-          `  Jev calls ${stats.jevCalls} | ${stats.inputTokens} in / ${stats.outputTokens} out tokens\n` +
+          (runs ? `  runs:\n${runs}\n` : "") +
+          `  Jev calls ${stats.jevCalls} | ${stats.inputTokens.toLocaleString("en-US")} in / ` +
+          `${stats.outputTokens.toLocaleString("en-US")} out tokens | ≈ $${costUsd.toFixed(4)}\n` +
           `  debounce: ${stats.debounced} answers reused, ${stats.staleSkips} calls skipped as stale\n` +
           `  waits ${stats.waits} | unsupported ${stats.unsupported} | errors ${stats.errors}\n` +
           `  runs completed ${stats.runsCompleted} | elapsed ${formatMs(stats.elapsedMs)}\n` +
