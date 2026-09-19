@@ -43,6 +43,7 @@ export function planBundle(env: DecisionEnv): Decision | null {
         label: "bundle/choose",
         instructions: "Which starting card bundle should I take?",
         actThreshold: env.thresholds.act,
+        strictJev: env.strictJev,
         options,
         state: { run_brief: briefJson(env.brief), situation: { screen: "BUNDLE_SELECTION" } },
       });
@@ -83,6 +84,7 @@ export function planCapstone(env: DecisionEnv): Decision | null {
     label: "capstone/choose",
     instructions: "Which option should I take?",
     actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
     options,
     state: { run_brief: briefJson(env.brief), situation: { screen: "CAPSTONE_SELECTION" } },
   });

@@ -58,6 +58,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       label: "reward/card",
       instructions: "Which of these card rewards should I take, if any?",
       actThreshold: env.thresholds.act,
+      strictJev: env.strictJev,
       options,
       state: {
         run_brief: briefJson(env.brief),

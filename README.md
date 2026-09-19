@@ -78,8 +78,9 @@ The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/lo
   from that same payload;
 - the state fingerprint is re-checked immediately before dispatch, so an intent computed against a
   stale board is dropped and re-planned;
-- `end_turn` is removed from the option set when the mod reports it would be lethal, and a lethal
-  `end_turn` answer is overridden in code;
+- with Jev enabled the model decides: its answer is dispatched even at low confidence, and the lethal
+  flag is given to the model rather than used to override it (`STRICT_JEV=false` restores the
+  code-side floor and the confidence fallback);
 - one action in flight, retryable mod errors mean "wait", non-retryable ones mean "re-plan", and
   three consecutive failures stop the loop;
 - hard caps on decisions, Jev requests, tokens, and wall-clock minutes;
@@ -117,7 +118,8 @@ Beyond `.env.example`, two settings shape behaviour on the main menu:
 | `RUN_START` | `auto` | `auto` continues an existing run when the mod offers it; `new` always starts a fresh run; `continue` only continues. |
 | `CHARACTER` | *(unset)* | Character id or name to pick when starting a new run (e.g. `IRONCLAD`). Unset picks the first unlocked character. |
 | `MAX_REQUESTS` / `MAX_TOKENS` | `2000` / `20M` | Budget caps for one `play`/`shadow` session. |
-| `CONFIDENCE_ACT` | `0.55` | Below this the loop narrows the question or falls back to code. |
+| `CONFIDENCE_ACT` | `0.55` | Only used when `STRICT_JEV=false`: below this the loop narrows the question or falls back to code. |
+| `STRICT_JEV` | `true` | Trust Jev completely: act on its answer regardless of confidence. `--allow-fallback` restores the code fallback. |
 | `DECISION_LOG` | `./logs/decisions.jsonl` | One JSON line per decision: state fingerprint, questions, answers, chosen action, latency, tokens. |
 
 ## Layout

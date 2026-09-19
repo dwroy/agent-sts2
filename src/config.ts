@@ -40,6 +40,11 @@ export interface AppConfig {
   run: { start: RunStart; character: string | null };
   /** Allow the loop to answer tutorial/FTUE prompts that change game settings. Default: false. */
   allowFtueModals: boolean;
+  /**
+   * When Jev is available, act on its answer even if its confidence is low, instead of substituting a
+   * code-chosen action. Default true: with Jev enabled the model decides.
+   */
+  strictJev: boolean;
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -65,6 +70,8 @@ export interface ConfigOverrides {
   jevApiKey?: string | undefined;
   jevModel?: string | undefined;
   mode?: string | undefined;
+  /** `--allow-fallback`: opt out of trust-Jev for this run. */
+  allowFallback?: boolean | undefined;
 }
 
 const DEFAULTS = {
@@ -85,6 +92,7 @@ const DEFAULTS = {
   enricherTasks: "run_brief",
   runStart: "auto",
   allowFtueModals: false,
+  strictJev: true,
 } as const;
 
 const MODES: readonly Mode[] = ["shadow", "play", "record", "replay"];
@@ -218,6 +226,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     "ALLOW_FTUE_MODALS",
     problems,
   );
+  const strictJev =
+    overrides.allowFallback === true
+      ? false
+      : parseBoolean(readEnv(env, "STRICT_JEV") ?? String(DEFAULTS.strictJev), "STRICT_JEV", problems);
 
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
@@ -289,6 +301,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     budgets: { maxRequests, maxTokens },
     run: { start: runStart, character },
     allowFtueModals,
+    strictJev,
     mode,
     log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog },
     warnings,

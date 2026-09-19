@@ -31,6 +31,8 @@ export interface PickDecisionParams {
   extras?: QuestionSet;
   /** A code-chosen option used when the model is not needed at all (e.g. only one option). */
   skipModelWhenSingle?: boolean;
+  /** Trust the model's choice regardless of confidence (config `strictJev`). */
+  strictJev: boolean;
 }
 
 export function bestOption(options: PickOption[]): PickOption {
@@ -73,6 +75,32 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
           fallback: true,
         };
       };
+
+      if (params.strictJev) {
+        if (!answer || answer.type !== "choice") {
+          return {
+            intent: null,
+            rationale: "no usable answer from Jev (trust-jev: waiting to ask again instead of choosing in code)",
+            confidence: null,
+            fallback: false,
+          };
+        }
+        const trusted = byKey.get(answer.choice);
+        if (!trusted) {
+          return {
+            intent: null,
+            rationale: `Jev chose unknown option "${answer.choice}" (trust-jev: waiting to ask again instead of choosing in code)`,
+            confidence: answer.confidence,
+            fallback: false,
+          };
+        }
+        return {
+          intent: trusted.intent,
+          rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}`,
+          confidence: answer.confidence,
+          fallback: false,
+        };
+      }
 
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev", null);
       const chosen = byKey.get(answer.choice);

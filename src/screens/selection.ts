@@ -75,6 +75,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     label: `selection/${verb}`,
     instructions: `Which card should I ${verb}?`,
     actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
     options,
     state: {
       run_brief: briefJson(env.brief),

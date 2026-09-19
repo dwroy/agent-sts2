@@ -31,6 +31,7 @@ function describeOption(summary: Record<string, JsonValue>): JsonValue {
 
 export function planCombat(env: DecisionEnv): Decision | null {
   const { state, knowledge, brief, thresholds } = env;
+  const strict = env.strictJev;
   const combat = asRecord(state.raw["combat"]);
   const readiness = asRecord(combat["action_readiness"]);
 
@@ -164,10 +165,13 @@ export function planCombat(env: DecisionEnv): Decision | null {
     lethal: endTurnWouldKill,
   });
 
-  // Safety floor (PLAN.md §6.1 step 3.1): code, not the model.
-  const safeCandidates = endTurnWouldKill && candidates.length > 1
-    ? candidates.filter((candidate) => !candidate.isEndTurn)
-    : candidates;
+  // Safety floor (PLAN.md §6.1 step 3.1). In strict mode it is disabled: the lethal flag is a fact we
+  // put in front of the model (`situation.ending_turn_would_kill_me` and each option's `lethal`),
+  // and the model decides. The filter only runs when we are allowed to override Jev.
+  const safeCandidates =
+    !strict && endTurnWouldKill && candidates.length > 1
+      ? candidates.filter((candidate) => !candidate.isEndTurn)
+      : candidates;
 
   if (safeCandidates.length === 0) return null;
   if (safeCandidates.length === 1 && safeCandidates[0]?.isEndTurn) {
@@ -190,6 +194,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
       enemies_alive: living.length,
       incoming_damage_if_turn_ends: incoming,
       ending_turn_would_kill_me: endTurnWouldKill,
+      warning: endTurnWouldKill ? "the mod reports that ending the turn now would kill the player" : null,
       cards_played_this_turn: num(player["cards_played_this_turn"]),
     },
     player: playerJson(player, knowledge),
@@ -226,9 +231,25 @@ export function planCombat(env: DecisionEnv): Decision | null {
     },
     resolve(answers) {
       const answer = answers["play"];
-      if (!answer || answer.type !== "choice") return fallbackResolve("no usable answer from Jev", null);
+      // Strict mode: an unusable answer means we cannot act on Jev's decision. Ask again next
+      // iteration rather than quietly choosing for it.
+      const unusable = (why: string): ResolvedAction =>
+        strict
+          ? { intent: null, rationale: `${why} (trust-jev: waiting to ask again instead of choosing in code)`, confidence: null, fallback: false }
+          : fallbackResolve(why, null);
+
+      if (!answer || answer.type !== "choice") return unusable("no usable answer from Jev");
       const chosen = byKey.get(answer.choice);
-      if (!chosen) return fallbackResolve(`Jev chose unknown option "${answer.choice}"`, answer.confidence);
+      if (!chosen) return unusable(`Jev chose unknown option "${answer.choice}"`);
+
+      if (strict) {
+        return {
+          intent: chosen.intent,
+          rationale: `Jev chose ${chosen.key} (${str(chosen.summary["action"])}) with confidence ${answer.confidence.toFixed(2)}`,
+          confidence: answer.confidence,
+          fallback: false,
+        };
+      }
 
       const survival = answers["survival"];
       const survivalChoice = survival?.type === "choice" ? survival.choice : null;

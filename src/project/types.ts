@@ -19,6 +19,11 @@ export interface DecisionEnv {
   characterPreference: string | null;
   /** Whether the loop may answer prompts that turn tutorials on (default false). */
   allowFtueModals: boolean;
+  /**
+   * Trust Jev completely: act on its answer regardless of confidence, and never substitute a
+   * code-chosen action. Only the legality gate still applies.
+   */
+  strictJev: boolean;
 }
 
 /**

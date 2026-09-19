@@ -77,6 +77,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       runStart: options.config.run.start,
       characterPreference: options.config.run.character,
       allowFtueModals: options.config.allowFtueModals,
+      strictJev: options.config.strictJev && options.ask !== undefined,
     };
 
     try {

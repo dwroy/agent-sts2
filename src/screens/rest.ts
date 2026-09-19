@@ -49,6 +49,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     label: "rest/choose",
     instructions: "What should I do at this rest site?",
     actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
     options,
     state: {
       run_brief: briefJson(env.brief),

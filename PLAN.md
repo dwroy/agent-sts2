@@ -434,18 +434,27 @@ Each option's criteria value carries the card's English text plus the computed f
 `danger` and `potion_needed` are speculative: they cost a few tokens, arrive in parallel, and are
 exactly the signal a confidence fallback needs.
 
-**Step 3 — safety floor and confidence gate (code):**
+**Step 3 — what happens to the answer (code).**
 
-1. If `combat.end_turn_will_kill_player === true`, remove `end_turn` from the option set unless it is
-   the only option. This is non-negotiable and does not consult the model.
-2. If the chosen option's `confidence < 0.55`, escalate in this order:
-   a. re-ask with a narrowed option set (top 3 by probability + `end_turn`) — the documented
-      hierarchical pattern;
-   b. if still low, fall back to the deterministic heuristic
-      (`kill if lethal → block for incoming → best damage-per-energy → end_turn`).
-3. If the chosen option is `end_turn` but `danger >= "Dangerous"` with confidence ≥ 0.6 and a legal
-   alternative exists, prefer the highest-value non-`end_turn` option. Ending the turn into a lethal
-   is the single worst error mode, so it gets a hard override.
+With Jev enabled the model decides, full stop (`STRICT_JEV`, default on). Its answer is dispatched as
+given; `confidence` is recorded but never used to replace the decision. The facts that used to drive
+code overrides are instead put in front of the model: `situation.ending_turn_would_kill_me`, and a
+`lethal` flag plus the projected HP on the `end_turn` option. Two consequences worth stating plainly:
+
+- a low-confidence answer is still acted on (a live run dispatched on 0.21);
+- `end_turn` stays in the option list even when the mod says it would be lethal.
+
+`--allow-fallback` (or `STRICT_JEV=false`) restores the earlier policy, kept for comparison runs:
+
+1. `end_turn` is removed from the option set when `end_turn_will_kill_player` is true.
+2. `confidence < 0.55` triggers one shortlist re-ask (top 3 by probability + the code-best options);
+   if that is still below the threshold, the deterministic heuristic takes over
+   (`kill if lethal → block for incoming → best damage-per-energy → end_turn`).
+3. A lethal `end_turn` answer is overridden.
+
+What is never negotiable, in either mode: an intent that is not in the freshest `available_actions`,
+or whose index is no longer valid, is dropped. That is not a second opinion — it is the difference
+between an action that can execute and one that would be rejected with a 409.
 
 Then dispatch and re-read. Repeat until `available_actions` no longer contains `play_card`.
 

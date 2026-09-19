@@ -43,6 +43,7 @@ function env(raw: Record<string, unknown>, overrides: Partial<DecisionEnv> = {})
     runStart: "auto",
     characterPreference: null,
     allowFtueModals: false,
+    strictJev: true,
     ...overrides,
   };
 }
@@ -65,6 +66,38 @@ function pickAnswer(choice: string, confidence = 0.9): AnswerSet {
 }
 
 describe("combat", () => {
+  it("trusts Jev: a low-confidence answer is still the action taken", () => {
+    const decision = mustDecision(plan(combatPayload()));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const resolved = decision.resolve(choiceAnswer("c2->e0", 0.12));
+    expect(resolved.intent).toEqual({ action: "play_card", card_index: 2, target_index: 0 });
+    expect(resolved.fallback).toBe(false);
+    expect(resolved.confidence).toBeCloseTo(0.12, 5);
+    expect(resolved.reask).toBeUndefined();
+  });
+
+  it("trusts Jev: an unusable answer waits instead of choosing in code", () => {
+    const decision = mustDecision(plan(combatPayload()));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const resolved = decision.resolve(choiceAnswer("not-an-option", 0.9));
+    expect(resolved.intent).toBeNull();
+    expect(resolved.fallback).toBe(false);
+    expect(resolved.rationale).toContain("trust-jev");
+  });
+
+  it("trusts Jev: a lethal end_turn is offered and flagged, and its choice is honoured", () => {
+    const raw = combatPayload({ lethalEndTurn: true });
+    const decision = mustDecision(plan(raw));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["play"]?.type === "choice" ? decision.questions["play"].criteria : {};
+    expect(Object.keys(criteria)).toContain("end_turn");
+    expect(String(criteria["end_turn"])).toContain('"lethal":true');
+    expect((decision.state["situation"] as Record<string, unknown>)["ending_turn_would_kill_me"]).toBe(true);
+    const resolved = decision.resolve(choiceAnswer("end_turn", 0.9));
+    expect(resolved.intent).toEqual({ action: "end_turn" });
+    expect(resolved.fallback).toBe(false);
+  });
+
   it("shows what each buff/debuff does, not just its name", () => {
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
@@ -126,7 +159,7 @@ describe("combat", () => {
   });
 
   it("re-asks on a shortlist when confidence is low, and never a third time", () => {
-    const decision = mustDecision(plan(combatPayload()));
+    const decision = mustDecision(plan(combatPayload(), { strictJev: false }));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const resolved = decision.resolve(choiceAnswer("c0->e0", 0.31));
     expect(resolved.intent).toBeNull();
@@ -137,7 +170,7 @@ describe("combat", () => {
   });
 
   it("falls back to code when the answer is unusable", () => {
-    const decision = mustDecision(plan(combatPayload()));
+    const decision = mustDecision(plan(combatPayload(), { strictJev: false }));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const resolved = decision.resolve(choiceAnswer("not-an-option", 0.9));
     expect(resolved.fallback).toBe(true);
@@ -145,7 +178,7 @@ describe("combat", () => {
   });
 
   it("does not burn a potion in the code fallback when the turn is not lethal", () => {
-    const decision = mustDecision(plan(combatPayload()));
+    const decision = mustDecision(plan(combatPayload(), { strictJev: false }));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const resolved = decision.resolve({});
     expect(resolved.fallback).toBe(true);
@@ -153,7 +186,7 @@ describe("combat", () => {
   });
 
   it("applies the safety floor: end_turn is removed when it would be lethal", () => {
-    const decision = mustDecision(plan(combatPayload({ lethalEndTurn: true })));
+    const decision = mustDecision(plan(combatPayload({ lethalEndTurn: true }), { strictJev: false }));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["play"]?.type === "choice" ? decision.questions["play"].criteria : {};
     expect(Object.keys(criteria)).not.toContain("end_turn");
@@ -161,7 +194,7 @@ describe("combat", () => {
 
   it("overrides a lethal end_turn answer even if Jev picked it", () => {
     const raw = combatPayload({ lethalEndTurn: true });
-    const decision = mustDecision(plan(raw));
+    const decision = mustDecision(plan(raw, { strictJev: false }));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const forced = { ...decision, questions: { ...decision.questions, play: { type: "choice" as const, instructions: "x", criteria: { end_turn: null, "c0->e0": null } } } };
     const resolved = forced.resolve(choiceAnswer("end_turn", 0.99));
@@ -184,6 +217,14 @@ describe("combat", () => {
 });
 
 describe("map", () => {
+  it("trusts Jev on a pick screen too: a 0.2-confidence choice is still taken", () => {
+    const decision = mustDecision(plan(mapPayload()));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const resolved = decision.resolve(pickAnswer("n2", 0.2));
+    expect(resolved.intent).toEqual({ action: "choose_map_node", option_index: 2 });
+    expect(resolved.fallback).toBe(false);
+  });
+
   it("describes each reachable node with a code-computed lookahead", () => {
     const decision = mustDecision(plan(mapPayload()));
     if (decision.kind !== "ask") throw new Error("expected an ask");

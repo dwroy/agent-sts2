@@ -368,7 +368,7 @@ describe("runLoop", () => {
   });
 
   it("falls back to the code choice when the shortlist answer is still a guess", async () => {
-    const config = testConfig();
+    const config = { ...testConfig(), strictJev: false };
     const { server, actions } = await scriptedMod({ sequence: [combatPayload(), mainMenuPayload()] });
     // Every answer is deliberately uncertain, and every confidence is far below the act threshold.
     const unsure = {

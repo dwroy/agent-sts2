@@ -150,6 +150,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     label: "map/route",
     instructions: "Which node should I travel to next?",
     actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
     options,
     state: {
       run_brief: briefJson(env.brief),

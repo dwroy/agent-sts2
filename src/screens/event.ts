@@ -62,6 +62,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
     label: "event/choose",
     instructions: "Which option should I choose?",
     actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
     options,
     state: {
       run_brief: briefJson(env.brief),

@@ -266,6 +266,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       runStart: config.run.start,
       characterPreference: config.run.character,
       allowFtueModals: config.allowFtueModals,
+      // Trust-Jev only means something when there is a Jev to trust: in `--no-jev` mode the
+      // deterministic path is the whole point.
+      strictJev: config.strictJev && jev !== null,
     };
     const planned = planDecision(env);
 

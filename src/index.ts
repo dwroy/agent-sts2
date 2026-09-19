@@ -42,6 +42,7 @@ Options:
   --in <path>          replay input file (default fixtures/states.jsonl)
   --ask                replay: also query Jev for each recorded state
                        explain: send the request and print the answer
+  --allow-fallback     let the code choose when Jev is unsure (default: trust Jev completely)
   --refresh-data       refetch /data/* instead of using the cache
   --force              take over the single-instance lock from another loop
   -h, --help         show this help
@@ -82,6 +83,7 @@ async function main(argv: string[]): Promise<number> {
         json: { type: "boolean" },
         "no-jev": { type: "boolean" },
         ask: { type: "boolean" },
+        "allow-fallback": { type: "boolean" },
         "refresh-data": { type: "boolean" },
         force: { type: "boolean" },
         "sts2-url": { type: "string" },
@@ -112,6 +114,7 @@ async function main(argv: string[]): Promise<number> {
     jevApiKey: asString(values["api-key"]),
     jevModel: asString(values.model),
     mode: asString(values.mode),
+    allowFallback: values["allow-fallback"] === true,
   };
 
   let config: AppConfig;
@@ -178,6 +181,7 @@ async function main(argv: string[]): Promise<number> {
         runStart: config.run.start,
         characterPreference: config.run.character,
         allowFtueModals: config.allowFtueModals,
+        strictJev: config.strictJev && runtime.jev !== null,
       });
 
       if (planned.kind !== "decision") {
