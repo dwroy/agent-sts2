@@ -59,6 +59,7 @@ export function createReporter(): Reporter {
         `\n${style.bold("summary")}\n` +
           `  decisions ${stats.decisions} (${stats.acts} dispatched, ${stats.fallbacks} fallbacks)\n` +
           `  Jev calls ${stats.jevCalls} | ${stats.inputTokens} in / ${stats.outputTokens} out tokens\n` +
+          `  debounce: ${stats.debounced} answers reused, ${stats.staleSkips} calls skipped as stale\n` +
           `  waits ${stats.waits} | unsupported ${stats.unsupported} | errors ${stats.errors}\n` +
           `  runs completed ${stats.runsCompleted} | elapsed ${formatMs(stats.elapsedMs)}\n` +
           `  stopped: ${stats.stoppedBecause}\n` +

@@ -261,4 +261,147 @@ describe("runLoop", () => {
       expect(line.usage).toEqual({ input_tokens: 0, output_tokens: 0 });
     }
   });
+
+  it("does not re-ask Jev while the board is unchanged", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload()] });
+    const jev = stubJev();
+    const notes: string[] = [];
+
+    const stats = await runLoop({
+      config,
+      mode: "shadow",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxMinutes: 0.05, // ~3 s: enough for many polls against a frozen board
+      pollIntervalMs: 2,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    expect(stats.decisions).toBe(1);
+    expect(stats.jevCalls).toBe(1);
+    expect(stats.debounced).toBeGreaterThan(0);
+    expect(notes.some((note) => note.includes("reused the previous answer"))).toBe(true);
+  });
+
+  it("skips the Jev call when the board moves while it is still planning", async () => {
+    const config = testConfig();
+    const first = combatPayload();
+    const second = combatPayload({ noPlayableCards: true });
+    let reads = 0;
+    const server = await startTestServer((req, res) => {
+      if (req.url === "/state") {
+        reads += 1;
+        // Strictly alternate, so the re-read before asking always disagrees with the planned state.
+        return sendJson(res, 200, envelope(reads % 2 === 1 ? first : second));
+      }
+      return sendJson(res, 200, envelope({ action: "x", status: "completed", stable: true, message: "", state: first }));
+    });
+    servers.push(server);
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "shadow",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxMinutes: 0.05,
+      pollIntervalMs: 2,
+    });
+
+    expect(stats.jevCalls).toBe(0);
+    expect(stats.staleSkips).toBeGreaterThan(0);
+  });
+
+  it("waits for a pending action to settle before planning again", async () => {
+    const config = testConfig();
+    const before = combatPayload();
+    const after = combatPayload({ noPlayableCards: true });
+    let served = before;
+    let pendingOnce = false;
+    const server = await startTestServer((req, res) => {
+      if (req.url === "/state") return sendJson(res, 200, envelope(served));
+      let raw = "";
+      req.on("data", (chunk) => {
+        raw += chunk;
+      });
+      req.on("end", () => {
+        // The first action reports "pending"; the board only moves a beat later.
+        if (!pendingOnce) {
+          pendingOnce = true;
+          setTimeout(() => {
+            served = after;
+          }, 120);
+          return sendJson(
+            res,
+            200,
+            envelope({ action: "end_turn", status: "pending", stable: false, message: "animating", state: before }),
+          );
+        }
+        served = after;
+        sendJson(res, 200, envelope({ action: "end_turn", status: "completed", stable: true, message: "ok", state: served }));
+      });
+    });
+    servers.push(server);
+    const jev = stubJev();
+    const notes: string[] = [];
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 2,
+      pollIntervalMs: 5,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    expect(stats.acts).toBeGreaterThanOrEqual(1);
+    expect(notes.some((note) => note.includes("waited for the board to settle"))).toBe(true);
+  });
+
+  it("falls back to the code choice when the shortlist answer is still a guess", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({ sequence: [combatPayload(), mainMenuPayload()] });
+    // Every answer is deliberately uncertain, and every confidence is far below the act threshold.
+    const unsure = {
+      model: "stub",
+      async ask(_state: unknown, questions: Record<string, { type: string; criteria?: Record<string, unknown> | string[] }>) {
+        const answers: AnswerSet = {};
+        for (const [id, question] of Object.entries(questions)) {
+          const criteria = question.criteria;
+          const keys = criteria && !Array.isArray(criteria) ? Object.keys(criteria) : ["a", "b"];
+          const first = keys[0] ?? "";
+          answers[id] = { type: "choice", choice: first, probabilities: { [first]: 0.4 }, confidence: 0.11, raw: {} };
+        }
+        return { model: "stub", answers, inputTokens: 10, outputTokens: 5, latencyMs: 1 };
+      },
+    } as unknown as JevClient;
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: unsure,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 3,
+      pollIntervalMs: 1,
+    });
+
+    expect(actions).toHaveLength(1);
+    const firstLine = readFileSync(config.log.decisionLog, "utf8").trim().split("\n")[0] ?? "";
+    const record = JSON.parse(firstLine) as { fallback: boolean; rationale: string; confidence: number };
+    expect(record.fallback).toBe(true);
+    expect(record.rationale).toContain("still below the act threshold");
+    expect(record.confidence).toBeCloseTo(0.11, 5);
+    expect(stats.acts).toBe(1);
+  });
 });

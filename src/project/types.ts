@@ -29,6 +29,14 @@ export interface ReaskSpec {
   instructions: string;
   criteria: Record<string, string | null>;
   map: Record<string, ActionRequest>;
+  /**
+   * Used when the shortlist answer is *still* below the act threshold. Without this the loop would
+   * accept a near-guess: a live run came back with confidence 0.11 on the narrow question.
+   */
+  fallbackIntent: ActionRequest;
+  fallbackRationale: string;
+  /** The threshold the shortlist answer has to clear. */
+  actThreshold: number;
 }
 
 export interface ResolvedAction {

@@ -629,6 +629,7 @@ calls without asking Jev to do long-horizon reasoning.
 | --- | --- |
 | **Legality** | Dispatch only actions present in the freshest `available_actions`, with indexes re-derived from the same payload. |
 | **Staleness** | Capture `run_id` / `screen` / `turn` / `state_version` at projection time; drop the intent if any changed before dispatch. |
+| **Debounce** | Jev answers in well under a second, so the loop can outrun the game's animations. Three guards: (1) a pre-ask re-read skips the call when the board already moved; (2) an answer memo keyed on `(fingerprint, decision)` reuses the last *resolution* while the board is unchanged, and is cleared on every dispatch so an answer is never reused across an action; (3) an action that returns `pending`/unstable is followed by a bounded wait for the board to move before the next plan. The fingerprint covers energy, block, powers, potion slots and shop stock, so "the board did not move" cannot be a false negative after drinking a potion. |
 | **In-flight lock** | At most one action in flight. Actions are not idempotent. |
 | **Waiting** | Any `pending` status, retryable error, or `can_use_combat_actions === false` means wait + re-read; never re-send. |
 | **Circuit breaker** | 3 consecutive failures → stop, dump diagnostics (mirrors the mod's own recovery policy). |

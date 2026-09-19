@@ -89,6 +89,9 @@ The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/lo
   `NCombatRulesFtue` are still dismissed so play can continue. `ALLOW_FTUE_MODALS=true` opts in;
 - a single-instance lock (`logs/loop.lock`) refuses to start a second loop while one is alive, so two
   runs cannot fight over the same game instance. `--force` takes over.
+- three debounce guards stop the loop outrunning the game's animations: it re-reads before paying for
+  an answer, reuses the last resolution while the board is unchanged, and waits for a `pending`
+  action to settle. The summary prints how many calls that saved.
 
 The loop never calls `/session/control`: the mod's own auto-play must stay off, or two loops would
 fight over the same instance.

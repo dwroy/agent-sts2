@@ -87,6 +87,7 @@ export function gate(state: GameState, intent: ActionRequest): GateResult {
  */
 export function fingerprint(state: GameState): string {
   const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
   const hand = asArray(combat["hand"])
     .map((entry) => {
       const card = asRecord(entry);
@@ -97,6 +98,20 @@ export function fingerprint(state: GameState): string {
     .map((entry) => {
       const enemy = asRecord(entry);
       return `${num(enemy["index"])}:${numOrNull(enemy["current_hp"])}:${num(enemy["block"])}:${bool(enemy["is_alive"])}`;
+    })
+    .join("|");
+  // Player state matters more than it looks: drinking a potion changes only energy/powers, and
+  // leaving those out made "the board did not move" a lie — which risked repeating the action.
+  const powers = asArray(player["powers"])
+    .map((entry) => {
+      const power = asRecord(entry);
+      return `${String(power["power_id"])}:${numOrNull(power["amount"])}`;
+    })
+    .join("|");
+  const potions = asArray(asRecord(state.raw["run"])["potions"])
+    .map((entry) => {
+      const potion = asRecord(entry);
+      return `${String(potion["potion_id"] ?? "")}:${bool(potion["occupied"])}:${bool(potion["can_use"])}`;
     })
     .join("|");
   const map = asRecord(state.raw["map"]);
@@ -113,10 +128,19 @@ export function fingerprint(state: GameState): string {
     actions: state.available_actions,
     hp: state.run?.current_hp ?? null,
     gold: state.run?.gold ?? null,
+    player: `${num(player["energy"])}:${num(player["block"])}:${num(player["stars"])}`,
+    powers,
+    potions,
     pendingCard: bool(reward["pending_card_choice"]),
     rewards: asArray(reward["rewards"]).map((entry) => num(asRecord(entry)["index"])).join("|"),
     selection: `${numOrNull(selection["selected_count"])}:${bool(selection["can_confirm"])}`,
     shopOpen: bool(shop["is_open"]),
+    shopStock: asArray(shop["cards"])
+      .map((entry) => {
+        const card = asRecord(entry);
+        return `${num(card["index"])}:${bool(card["is_stocked"], true)}`;
+      })
+      .join("|"),
     hand,
     enemies,
     nodes,

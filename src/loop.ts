@@ -9,6 +9,7 @@
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
+import type { AnswerSet } from "./jev/answers.js";
 import type { JevClient } from "./jev/client.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
@@ -20,6 +21,19 @@ import { createDecisionLog, type DecisionRecord } from "./telemetry/decision-log
 import { asArray, asRecord, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
 export type LoopMode = "shadow" | "play";
+
+/**
+ * One answered question, kept so an unchanged board does not pay for the same answer twice.
+ * The *resolved* action is stored, not the raw answers: when a low-confidence answer triggered a
+ * shortlist re-ask, only the finished resolution is reusable (a live run showed the raw-answers
+ * version could not complete a decision it had already paid for).
+ */
+interface AnswerMemo {
+  key: string;
+  resolved: ResolvedAction;
+  answers: AnswerSet;
+  usage: { input_tokens: number; output_tokens: number };
+}
 
 export interface LoopOptions {
   config: AppConfig;
@@ -41,6 +55,10 @@ export interface LoopOptions {
 export interface LoopStats {
   decisions: number;
   jevCalls: number;
+  /** Answers reused instead of re-asking Jev about a board that had not moved. */
+  debounced: number;
+  /** Jev calls skipped because the board moved between planning and asking. */
+  staleSkips: number;
   fallbacks: number;
   acts: number;
   waits: number;
@@ -61,6 +79,26 @@ export type LoopEvent =
   | { type: "stop"; reason: string };
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Wait until the board actually moves, or give up after a bounded delay. */
+async function waitForStateChange(options: {
+  client: ModClient;
+  previous: string;
+  timeoutMs: number;
+  pollIntervalMs: number;
+}): Promise<"changed" | "timeout"> {
+  const deadline = Date.now() + options.timeoutMs;
+  while (Date.now() < deadline) {
+    await sleep(options.pollIntervalMs);
+    try {
+      const state = await options.client.state();
+      if (fingerprint(state) !== options.previous) return "changed";
+    } catch {
+      // Keep waiting; the loop's own error handling reports a broken mod.
+    }
+  }
+  return "timeout";
+}
 
 /** A short, human-readable note about what an action did, fed into the Run Brief. */
 function noteForAction(state: GameState, resolved: ResolvedAction, label: string): string | null {
@@ -120,6 +158,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const stats: LoopStats = {
     decisions: 0,
     jevCalls: 0,
+    debounced: 0,
+    staleSkips: 0,
     fallbacks: 0,
     acts: 0,
     waits: 0,
@@ -137,6 +177,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let hasSeenRun = false;
   let consecutiveFailures = 0;
   let lastShadowFingerprint: string | null = null;
+  // Debounce (PLAN.md §8.1). Jev answers in well under a second, so the loop can outrun the game's
+  // animations: this memo means one question per (board, decision) and one answer per board change.
+  // It is cleared on every dispatch, so an answer can never be reused across an action.
+  let answerMemo: AnswerMemo | null = null;
+  const readMemo = (key: string): AnswerMemo | null =>
+    answerMemo !== null && answerMemo.key === key ? answerMemo : null;
   let unsupportedScreen: string | null = null;
   let unsupportedCount = 0;
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
@@ -258,6 +304,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let reasked = false;
 
     let usedJev = false;
+    let fromMemo = false;
     if (decision.kind === "act") {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false };
     } else if (!jev) {
@@ -268,7 +315,39 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         stop(`request cap reached (${config.budgets.maxRequests})`);
         break;
       }
+      const memoKey = `${stateFingerprint}|${decision.label}`;
+      const memo = readMemo(memoKey);
+      if (memo) {
+        // The board has not moved since we last asked this question: reuse the answer.
+        stats.debounced += 1;
+        fromMemo = true;
+        resolved = memo.resolved;
+        usage = memo.usage;
+        rawAnswers = toJsonValue(memo.answers);
+        onEvent({
+          type: "note",
+          message: `reused the previous answer for ${decision.label} (board unchanged; no Jev call)`,
+        });
+      } else {
+        // The board may have moved while we were planning. Re-read before spending a call on a
+        // position that no longer exists.
+        try {
+          const fresh = await client.state();
+          if (fingerprint(fresh) !== stateFingerprint) {
+            stats.staleSkips += 1;
+            onEvent({
+              type: "note",
+              message: `board changed before asking Jev on ${state.screen}; re-planning instead of paying for a stale answer`,
+            });
+            await sleep(pollIntervalMs);
+            continue;
+          }
+        } catch {
+          // Let the ask surface the failure with its usual classification.
+        }
+
       asked = toJsonValue(decision.questions) as Record<string, JsonValue>;
+      let firstAnswers: AnswerSet = {};
       try {
         const result = await jev.ask(decision.state, decision.questions);
         usedJev = true;
@@ -279,6 +358,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         usage = { input_tokens: result.inputTokens, output_tokens: result.outputTokens };
         rawAnswers = toJsonValue(result.answers);
         resolved = decision.resolve(result.answers);
+        firstAnswers = result.answers;
 
         if (!resolved.intent && resolved.reask) {
           reasked = true;
@@ -294,14 +374,24 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           const answer = followUp.answers["pick"];
           if (answer && answer.type === "choice") {
             const intent = spec.map[answer.choice];
-            resolved = intent
-              ? {
-                  intent,
-                  rationale: `shortlist re-ask chose ${answer.choice} (confidence ${answer.confidence.toFixed(2)})`,
-                  confidence: answer.confidence,
-                  fallback: false,
-                }
-              : { intent: null, rationale: `shortlist answer "${answer.choice}" was not in the map`, confidence: answer.confidence, fallback: true };
+            if (!intent) {
+              resolved = { intent: null, rationale: `shortlist answer "${answer.choice}" was not in the map`, confidence: answer.confidence, fallback: true };
+            } else if (answer.confidence < spec.actThreshold) {
+              // Still a near-guess after narrowing: take the deterministic choice instead.
+              resolved = {
+                intent: spec.fallbackIntent,
+                rationale: `${spec.fallbackRationale} (shortlist confidence ${answer.confidence.toFixed(2)})`,
+                confidence: answer.confidence,
+                fallback: true,
+              };
+            } else {
+              resolved = {
+                intent,
+                rationale: `shortlist re-ask chose ${answer.choice} (confidence ${answer.confidence.toFixed(2)})`,
+                confidence: answer.confidence,
+                fallback: false,
+              };
+            }
           } else {
             resolved = { intent: null, rationale: "shortlist re-ask returned no usable answer", confidence: null, fallback: true };
           }
@@ -317,6 +407,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         await sleep(pollIntervalMs);
         continue;
+      }
+      // Memoise the finished resolution (including any shortlist re-ask that ran above).
+      answerMemo = { key: memoKey, resolved, answers: firstAnswers, usage };
       }
     }
 
@@ -356,7 +449,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       confidence: resolved.confidence,
       fallback: resolved.fallback,
       reasked,
-      no_jev: !usedJev && decision.kind === "ask",
+      no_jev: !usedJev && !fromMemo && decision.kind === "ask",
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
     } satisfies Omit<DecisionRecord, "result">;
@@ -412,6 +505,27 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     stats.acts += 1;
     stats.decisions += 1;
+    // The board is about to change (or should): never reuse an answer across an action.
+    answerMemo = null;
+
+    // Settle debounce: if the mod says the action has not finished, do not plan the next step against
+    // a board that is still animating. Wait for it to move, with a bounded fallback.
+    if (actionResult.status !== "completed" || !actionResult.stable) {
+      const settled = await waitForStateChange({
+        client,
+        previous: stateFingerprint,
+        timeoutMs: 3_000,
+        pollIntervalMs: 150,
+      });
+      onEvent({
+        type: "note",
+        message:
+          settled === "changed"
+            ? `action came back ${actionResult.status}; waited for the board to settle`
+            : `action came back ${actionResult.status} and the board still looks unchanged after 3 s; re-reading anyway`,
+      });
+    }
+
     const note = noteForAction(state, resolved, decision.label);
     if (note) notes = addNote(brief, note).notes;
 

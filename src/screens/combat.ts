@@ -278,6 +278,9 @@ export function planCombat(env: DecisionEnv): Decision | null {
               instructions: "Which single action should I take right now? (shortlist)",
               criteria: Object.fromEntries(shortlist.map((candidate) => [candidate.key, JSON.stringify(candidate.summary)])),
               map: Object.fromEntries(shortlist.map((candidate) => [candidate.key, candidate.intent])),
+              fallbackIntent: best(safeCandidates).intent,
+              fallbackRationale: "shortlist answer was still below the act threshold; using the code choice",
+              actThreshold: thresholds.act,
             },
           };
         }
