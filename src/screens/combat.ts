@@ -12,7 +12,9 @@ import { topAlternatives, type ChoiceAnswer } from "../jev/answers.js";
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
 import { enemyJson, enemyViews, handCardJson, handViews, playerJson, potionViews } from "../project/narrow.js";
+import { playerPowers } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
+import { resolveDamage } from "../strategy/damage.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 
@@ -50,7 +52,32 @@ export function planCombat(env: DecisionEnv): Decision | null {
 
   const enemies = enemyViews({ raw: combat }, knowledge);
   const living = enemies.filter((enemy) => enemy.alive);
-  const incoming = living.reduce((total, enemy) => total + enemy.incoming, 0);
+  const ourPowers = playerPowers(player);
+  // Incoming damage is resolved with the same rules: our Vulnerable raises it, the enemy's Weak
+  // lowers it, our Intangible caps it, and block is consumed across every attacker in order.
+  const incomingOutcome = (() => {
+    let block = playerBlock;
+    let hpLoss = 0;
+    let total = 0;
+    const modifiers = new Set<string>();
+    for (const enemy of living) {
+      for (const attack of enemy.attacks) {
+        const outcome = resolveDamage({
+          perHit: attack.damage,
+          hits: attack.hits,
+          targetBlock: block,
+          targetPowers: ourPowers,
+          attackerPowers: enemy.power_lines,
+        });
+        block = outcome.blockAfter;
+        hpLoss += outcome.hpLoss;
+        total += outcome.total;
+        for (const note of outcome.modifiers) modifiers.add(note);
+      }
+    }
+    return { hpLoss, total, modifiers: [...modifiers] };
+  })();
+  const incoming = incomingOutcome.hpLoss;
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]);
   const hand = handViews({ raw: combat }, knowledge);
   const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge);
@@ -61,11 +88,20 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const pushCard = (card: (typeof hand)[number], targetIndex: number | null): void => {
     const target = targetIndex === null ? null : enemyByIndex.get(targetIndex) ?? null;
     const perHit = card.damage;
-    const totalDamage = perHit === null ? null : perHit * card.hits;
-    const damageAfterBlock =
-      totalDamage === null || target === null || target.hp === null
+    // Modifier-aware: Vulnerable on the target, Weak on us, Intangible on the target, and block
+    // consumed hit by hit. The mod's own number excludes all of these.
+    const outcome =
+      perHit === null || target === null
         ? null
-        : Math.max(0, totalDamage - target.block);
+        : resolveDamage({
+            perHit,
+            hits: card.hits,
+            targetBlock: target.block,
+            targetPowers: target.power_lines,
+            attackerPowers: ourPowers,
+          });
+    const totalDamage = outcome?.total ?? (perHit === null ? null : perHit * card.hits);
+    const damageAfterBlock = outcome?.hpLoss ?? null;
     const hpAfter =
       damageAfterBlock === null || target?.hp === null || target?.hp === undefined
         ? null
@@ -89,8 +125,9 @@ export function planCombat(env: DecisionEnv): Decision | null {
       summary["target_hp"] = `${target.hp} -> ${Math.max(0, hpAfter ?? 0)}`;
       summary["damage_after_block"] = damageAfterBlock;
       summary["kills_target"] = kills;
+      if (outcome && outcome.modifiers.length > 0) summary["modifiers"] = outcome.modifiers.join("; ");
     }
-    if (card.hits > 1) summary["total_damage"] = (perHit ?? 0) * card.hits;
+    if (card.hits > 1 && totalDamage !== null) summary["total_damage"] = totalDamage;
     if (blockGain > 0) summary["block_gained"] = blockGain;
     summary["incoming_damage_after_this"] = incomingAfter;
     if (card.cost > energy) summary["warning"] = "costs more energy than you have";

@@ -142,7 +142,19 @@ export function baseState(screen: string, overrides: Raw = {}): Raw {
   };
 }
 
-export function combatPayload(options: { lethalEndTurn?: boolean; noPlayableCards?: boolean } = {}): Raw {
+export function combatPayload(
+  options: {
+    lethalEndTurn?: boolean;
+    noPlayableCards?: boolean;
+    /** Give the first enemy this much Vulnerable, i.e. a target-side damage modifier. */
+    enemyVulnerable?: number;
+    /** Give the player this much Vulnerable, i.e. an incoming-damage modifier. */
+    playerVulnerable?: number;
+    /** Give the player this much Weak. */
+    playerWeak?: number;
+    enemyHp?: number;
+  } = {},
+): Raw {
   const hand = options.noPlayableCards
     ? [handCard(0, "STRIKE_R", { playable: false, unplayable_reason: "not_enough_energy", energy_cost: 3 })]
     : [
@@ -159,7 +171,15 @@ export function combatPayload(options: { lethalEndTurn?: boolean; noPlayableCard
       player: { current_hp: 55, max_hp: 80, block: 0, energy: 3, stars: 0, focus: 0, powers: [], orbs: [], pets: [], cards_played_this_turn: 0, attacks_played_this_turn: 0, skills_played_this_turn: 0 },
       players: [],
       hand,
-      enemies: [enemy(0, "JAW_WORM", 42, 11), enemy(1, "CULTIST", 48, 6)],
+      enemies: [
+        enemy(0, "JAW_WORM", options.enemyHp ?? 42, 11, {
+          powers:
+            options.enemyVulnerable === undefined
+              ? []
+              : [{ index: 0, power_id: "VULNERABLE_POWER", name: "Vulnerable", amount: options.enemyVulnerable, is_debuff: true }],
+        }),
+        enemy(1, "CULTIST", 48, 6),
+      ],
       end_turn_will_kill_player: options.lethalEndTurn === true,
       lethal_risks: [],
     },
@@ -168,6 +188,18 @@ export function combatPayload(options: { lethalEndTurn?: boolean; noPlayableCard
     // Nothing playable and nothing worth drinking: only end_turn should remain a candidate.
     const run = payload["run"] as Raw;
     for (const potion of run["potions"] as Raw[]) potion["can_use"] = false;
+  }
+  if (options.playerVulnerable !== undefined || options.playerWeak !== undefined) {
+    const combat = payload["combat"] as Raw;
+    const player = combat["player"] as Raw;
+    const powers: Raw[] = [];
+    if (options.playerVulnerable !== undefined) {
+      powers.push({ index: 0, power_id: "VULNERABLE_POWER", name: "Vulnerable", amount: options.playerVulnerable, is_debuff: true });
+    }
+    if (options.playerWeak !== undefined) {
+      powers.push({ index: powers.length, power_id: "WEAK_POWER", name: "Weak", amount: options.playerWeak, is_debuff: true });
+    }
+    player["powers"] = powers;
   }
   return payload;
 }

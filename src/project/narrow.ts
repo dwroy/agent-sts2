@@ -1,6 +1,7 @@
 /** Helpers that turn the raw state into the small English shapes the questions refer to. */
 
 import type { Knowledge } from "../knowledge/index.js";
+import type { PowerLine } from "../strategy/damage.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
 export interface EnemyView {
@@ -13,6 +14,10 @@ export interface EnemyView {
   alive: boolean;
   powers: string[];
   intents: string;
+  /** Power id + amount, for the damage resolver. */
+  power_lines: PowerLine[];
+  /** Raw attack intents, so combat maths can resolve them against our powers and block. */
+  attacks: { damage: number; hits: number }[];
   incoming: number;
 }
 
@@ -36,6 +41,24 @@ function describeIntents(enemy: Record<string, unknown>): { text: string; incomi
     if (legacy) parts.push(legacy);
   }
   return { text: parts.join(", ") || "unknown", incoming };
+}
+
+/** Power id + amount, for the damage resolver (the text form above is what the model reads). */
+export function powerLines(holder: Record<string, unknown>): PowerLine[] {
+  return asArray(holder["powers"])
+    .map(asRecord)
+    .map((power) => ({ id: str(power["power_id"]), amount: numOrNull(power["amount"]) }))
+    .filter((power) => power.id.length > 0);
+}
+
+function attackIntents(enemy: Record<string, unknown>): { damage: number; hits: number }[] {
+  return asArray(enemy["intents"])
+    .map(asRecord)
+    .flatMap((intent) => {
+      const damage = numOrNull(intent["damage"]);
+      if (damage === null) return [];
+      return [{ damage, hits: Math.max(1, Math.round(numOrNull(intent["hits"]) ?? 1)) }];
+    });
 }
 
 /**
@@ -72,7 +95,9 @@ export function enemyViews(state: { raw: Record<string, unknown> }, knowledge: K
       block: num(enemy["block"]),
       alive: enemy["is_alive"] !== false,
       powers: describePowers(enemy, knowledge),
+      power_lines: powerLines(enemy),
       intents: text,
+      attacks: attackIntents(enemy),
       incoming,
     };
   });
@@ -211,4 +236,9 @@ export function playerJson(player: Record<string, unknown>, knowledge: Knowledge
     attacks_played_this_turn: num(player["attacks_played_this_turn"]),
     skills_played_this_turn: num(player["skills_played_this_turn"]),
   };
+}
+
+/** The player's powers as id + amount, for the incoming-damage resolution. */
+export function playerPowers(holder: Record<string, unknown>): PowerLine[] {
+  return powerLines(holder);
 }

@@ -127,6 +127,15 @@ Key behavioural facts that shape the design:
    outside via `GET /state` + `POST /action`, which is exactly what we do from the human instance.
    (Co-op would additionally expose the teammate instance's `api_port` under
    `/health → data.companion`; out of scope.)
+9. **Card numbers come from the game's preview, evaluated for whatever the UI has hovered.**
+   `GameStateService.BuildCardDynamicValuePayloads` clones the card's dynamic vars and calls
+   `card.UpdateDynamicVarPreview(CardPreviewMode.Normal, card.CurrentTarget, previewSet)`, and the
+   same call feeds `resolved_rules_text`. So a target-aware preview exists in principle, but the
+   target is `card.CurrentTarget` — the UI's hover — and an agent never hovers. There is **no API
+   parameter** to ask "what would this card do to enemy X"; the mod reads UI state, it does not
+   simulate. Verified live and in the source: `STRIKE_IRONCLAD` reports `Damage=6` while the board
+   carries `Vulnerable 2`, and the game resolves that as 9.
+   → Resolution-time modifiers are therefore ours to compute (§6.1), not something to ask for.
 
 ### 2.2 Jev / TypeSafe System One (the brain)
 
@@ -437,12 +446,16 @@ c3->e1  Play Strike+ (Attack, 1E) on Jaw Worm
         incoming next turn after this play: 11
 ```
 
-Computed facts (all in `src/strategy/lethal.ts`, never in Jev):
+Computed facts (all in `src/strategy/damage.ts`, never in Jev):
 
-* damage this instance actually deals to each target — from `dynamic_values` / `resolved_rules_text`,
-  never re-derived by the model;
+* damage this instance deals to each target: the mod's `dynamic_values` number (which already carries
+  Strength and card-specific scaling such as Perfected Strike's `CalculatedDamage`), then the
+  resolution-time modifiers the mod does **not** apply — Vulnerable on the target (×1.5), Weak on us
+  (×0.75) and Intangible (each hit capped at 1) — each floored **per hit**, with block consumed hit by
+  hit (6 damage twice against 8 block deals 4, not 0);
 * lethal / overkill per target; whether this play kills the last enemy;
-* block gained; incoming damage after this play (sum of enemy `intents[].total_damage`, minus block);
+* block gained; incoming damage after this play, resolved with the same rules against our own powers
+  and the enemies' Weak, with block consumed across attackers;
 * energy/star cost and what stays playable afterwards;
 * free-value flags (0-cost, "draws a card", "gains energy") so Jev can see the tempo.
 
