@@ -1,6 +1,7 @@
 /** Console reporting for the loop: one line per decision, waits de-duplicated. */
 
 import { describeIntent, type LoopEvent, type LoopStats, type LoopTotals } from "../loop.js";
+import { formatCostUsd } from "../jev/pricing.js";
 import { formatMs, style } from "../util/format.js";
 
 export interface Reporter {
@@ -12,13 +13,11 @@ function clock(): string {
   return new Date().toTimeString().slice(0, 8);
 }
 
-/** Jev reports only input/output tokens; output is free, so cost is input at $42 per billion. */
 function usageLine(totals: LoopTotals): string {
-  const cost = (totals.inputTokens / 1_000_000_000) * 42;
   return (
     `${totals.decisions} decisions | ${totals.jevCalls} Jev calls | ` +
     `${totals.inputTokens.toLocaleString("en-US")} in / ${totals.outputTokens.toLocaleString("en-US")} out tokens | ` +
-    `≈ $${cost.toFixed(4)} | ${formatMs(totals.elapsedMs)}`
+    `${formatCostUsd(totals.inputTokens)} | ${formatMs(totals.elapsedMs)}`
   );
 }
 
@@ -72,6 +71,7 @@ export function createReporter(): Reporter {
           (run) =>
             `  #${run.index} ${run.outcome} — ${run.decisions} decisions, ${run.jevCalls} Jev calls, ` +
             `${run.inputTokens.toLocaleString("en-US")} in / ${run.outputTokens.toLocaleString("en-US")} out tokens` +
+            ` (${formatCostUsd(run.inputTokens)})` +
             `${run.maxFloor === null ? "" : `, reached floor ${run.maxFloor}`}, ${formatMs(run.elapsedMs)}`,
         )
         .join("\n");
