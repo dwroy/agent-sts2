@@ -404,4 +404,68 @@ describe("runLoop", () => {
     expect(record.confidence).toBeCloseTo(0.11, 5);
     expect(stats.acts).toBe(1);
   });
+
+  it("survives a planner that refuses to build an over-large question", async () => {
+    const config = testConfig();
+    // 52 cards x 5 targets = 260 options, past the 255-option cap a Choice may carry. The planner
+    // throws; the loop must report it and stop, not crash or send an illegal request.
+    const huge = combatPayload();
+    const combat = huge["combat"] as Record<string, unknown>;
+    combat["enemies"] = Array.from({ length: 5 }, (_, index) => ({
+      index,
+      enemy_id: "JAW_WORM",
+      name: `Enemy ${index}`,
+      current_hp: 40,
+      max_hp: 40,
+      block: 0,
+      is_alive: true,
+      is_hittable: true,
+      powers: [],
+      intent: "ATTACK",
+      move_id: "ATTACK",
+      intents: [{ index: 0, intent_type: "Attack", label: "5", damage: 5, hits: 1, total_damage: 5, status_card_count: null }],
+    }));
+    combat["hand"] = Array.from({ length: 52 }, (_, index) => ({
+      index,
+      card_id: "STRIKE_R",
+      name: "Strike",
+      upgraded: false,
+      target_type: "AnyEnemy",
+      requires_target: true,
+      target_index_space: "combat.enemies[].index",
+      valid_target_indices: [0, 1, 2, 3, 4],
+      costs_x: false,
+      star_costs_x: false,
+      energy_cost: 0,
+      star_cost: 0,
+      rules_text: "",
+      resolved_rules_text: "Deal 6 damage.",
+      dynamic_values: [{ name: "Damage", base_value: 6, current_value: 6 }],
+      playable: true,
+      can_play_result: true,
+      unplayable_reason: null,
+    }));
+
+    const { server, actions } = await scriptedMod({ sequence: [huge] });
+    const jev = stubJev();
+    const notes: string[] = [];
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    expect(actions).toHaveLength(0);
+    expect(stats.acts).toBe(0);
+    expect(stats.errors).toBeGreaterThanOrEqual(3);
+    expect(stats.stoppedBecause).toContain("planner failed");
+    expect(notes.some((note) => note.includes("above the 255 limit"))).toBe(true);
+  });
 });

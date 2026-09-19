@@ -378,6 +378,37 @@ So the answer to "is history not that important, can we just build the state pro
 **yes on both counts**. The one piece of history that does matter is the plan — and it is kept as a
 short, code-curated memo rather than as a transcript.
 
+### 5.6 Option-set size, and why we do not split questions
+
+A Choice question accepts **at most 255 options** (Jev docs). `choiceQ()` is the single place every
+planner builds an option set, and it now enforces that limit — an over-large question fails in code
+with a readable message instead of coming back as an opaque 422. The same check rejects an empty
+option set. The planner failure is caught by the loop, reported, and tripped into the circuit breaker
+after three consecutive occurrences.
+
+Where we actually sit, measured over 257 recorded live states: the largest option set was **19**
+(combat, 5 cards × 4 enemies). The theoretical worst case is roughly
+`hand × valid targets + potions × targets + 1`, which stays under 100; deck-wide selection screens are
+bounded by deck size. The 255 cap is not a constraint we are near.
+
+What we *do* have is **question-level fan-out**: several questions go in one request and are
+evaluated in parallel (combat asks `play` and `survival` together). What we deliberately do not have
+is **option-level splitting**. The naive version of "split the options, ask twice, take the highest
+probability" is unsound: a Choice answer is *relative* to the options supplied, so probabilities from
+two different calls are not comparable, and the docs warn explicitly against assuming that kind of
+invariance between questions.
+
+If an option set ever did approach the cap, the sound options in order of preference are:
+
+1. **filter in code first** — the documented guidance, and what every planner already does;
+2. **a Noul fan-out** — one absolute per-option question per candidate, all in a single request, then
+   take the maximum in code. This is the correct shape of "batch, then pick the max": Noul answers are
+   absolute rather than relative, so they *are* comparable across options (the docs' own skill
+   suggestion cookbook does exactly this);
+3. **a two-stage shortlist** — narrow in code, then one Choice over the survivors (which is also the
+   way to raise confidence: 19 options gave a top probability of 0.29, 4 options gave 0.18 but on a
+   much more meaningful set).
+
 ---
 
 ## 6. Decision design per screen

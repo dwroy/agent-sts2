@@ -27,6 +27,9 @@ export type QuestionSpec = ChoiceQuestionSpec | NoulQuestionSpec | ScoreQuestion
 export type QuestionSet = Record<string, QuestionSpec>;
 
 export function choiceQ(instructions: string, criteria: Record<string, string | null>): ChoiceQuestionSpec {
+  // Single choke point: every planner builds its option set through here, so an over-large question
+  // fails in code with a readable message instead of coming back as an opaque 422.
+  assertChoiceSize(instructions, criteria);
   return { type: "choice", instructions, criteria };
 }
 

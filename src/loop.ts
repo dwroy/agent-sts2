@@ -185,6 +185,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     answerMemo !== null && answerMemo.key === key ? answerMemo : null;
   let unsupportedScreen: string | null = null;
   let unsupportedCount = 0;
+  // Planner failures need their own counter: a successful state read resets `consecutiveFailures`,
+  // so sharing it meant a planner that threw on every iteration never tripped the breaker.
+  let plannerFailures = 0;
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -270,7 +273,24 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // deterministic path is the whole point.
       strictJev: config.strictJev && jev !== null,
     };
-    const planned = planDecision(env);
+    let planned: ReturnType<typeof planDecision>;
+    try {
+      planned = planDecision(env);
+    } catch (error) {
+      // A planner bug (or a screen whose option set exceeds what a question may carry) must not take
+      // the process down: report it, then let the circuit breaker stop the run if it keeps happening.
+      stats.errors += 1;
+      plannerFailures += 1;
+      const detail = error instanceof Error ? error.message : String(error);
+      onEvent({ type: "note", message: `planner failed on ${state.screen}: ${detail}` });
+      if (plannerFailures >= 3) {
+        stop(`planner failed repeatedly: ${detail}`);
+        break;
+      }
+      await sleep(pollIntervalMs);
+      continue;
+    }
+    plannerFailures = 0;
 
     if (planned.kind === "wait") {
       stats.waits += 1;
