@@ -61,9 +61,11 @@ npm run doctor -- --json          # machine-readable report
 npm run shadow -- --max-decisions 20 --poll 300
 npm run play -- --max-runs 1 --max-minutes 60 --max-decisions 2000
 npm run play -- --no-jev            # drive with code-only decisions (spends no tokens)
-npm run dev -- record --max-minutes 2      # capture raw states into fixtures/states.jsonl
-npm run dev -- replay                      # re-run the decision layer over those states, offline
-npm run dev -- replay --ask                # ... and ask Jev again for each recorded state
+npm run explain                            # print the exact request this state would send to Jev
+npm run --silent explain > request.json    # --silent keeps npm's own banner out of the JSON
+npm run record -- --max-minutes 2          # capture raw states into fixtures/states.jsonl
+npm run replay                             # re-run the decision layer over those states, offline
+npm run replay -- --ask                    # ... and ask Jev again for each recorded state
 ```
 
 ### Checking without the game

@@ -103,8 +103,8 @@ async function main(argv: string[]): Promise<number> {
   }
 
   const { values, positionals } = parsed;
-  const command = positionals[0] ?? (values.help ? "help" : null);
-  if (!command || values.help === true || command === "help") {
+  // `--help` must work even with a broken configuration, so it is answered before the config loads.
+  if (values.help === true || positionals[0] === "help") {
     process.stdout.write(`${USAGE}\n`);
     return 0;
   }
@@ -125,6 +125,13 @@ async function main(argv: string[]): Promise<number> {
       return fail(`invalid configuration\n${error.message}`, 1);
     }
     throw error;
+  }
+
+  // With no command, fall back to MODE from the environment. Without this, `MODE` was configuration
+  // that only ever showed up in `doctor` and never selected anything.
+  const command = positionals[0] ?? config.mode;
+  if (!positionals[0]) {
+    process.stdout.write(`no command given: using MODE=${command} (see --help for the command list)\n`);
   }
 
   const number = (value: unknown, fallback: number): number => {
