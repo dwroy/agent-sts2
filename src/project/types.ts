@@ -38,6 +38,16 @@ export interface ScreenMemory {
   screen: string;
   /** True once the shop inventory has been opened during this visit. */
   shopOpened: boolean;
+  /**
+   * True once a card reward has been skipped on this screen. The mod documents that
+   * `skip_reward_cards` "may leave the underlying reward item claimable", and a live run proved it:
+   * the loop skipped, re-claimed the same card reward, and skipped again forever.
+   */
+  cardRewardSkipped: boolean;
+}
+
+export function createScreenMemory(screen = ""): ScreenMemory {
+  return { screen, shopOpened: false, cardRewardSkipped: false };
 }
 
 /**

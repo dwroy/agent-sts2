@@ -15,7 +15,7 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
-import type { DecisionEnv, ResolvedAction, ScreenMemory } from "./project/types.js";
+import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { createDecisionLog, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
@@ -233,7 +233,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     maxFloor: null as number | null,
   };
   /** Reset whenever the screen changes; the shop uses it to tell "just arrived" from "chose to leave". */
-  const screenMemory: ScreenMemory = { screen: "", shopOpened: false };
+  const screenMemory: ScreenMemory = createScreenMemory();
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -395,6 +395,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (screenMemory.screen !== state.screen) {
       screenMemory.screen = state.screen;
       screenMemory.shopOpened = false;
+      screenMemory.cardRewardSkipped = false;
     }
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
@@ -675,6 +676,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     stats.decisions += 1;
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
+    // Remember the one action whose effect the state does not reflect: a skipped card reward stays
+    // claimable, so without this the planner claims it again on the next iteration.
+    if (resolved.intent.action === "skip_reward_cards") screenMemory.cardRewardSkipped = true;
 
     // Settle debounce: if the mod says the action has not finished, do not plan the next step against
     // a board that is still animating. Wait for it to move, with a bounded fallback.

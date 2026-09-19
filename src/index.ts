@@ -10,6 +10,7 @@ import { buildRuntime } from "./cli/runtime.js";
 import { ConfigError, loadConfig, type AppConfig, type ConfigOverrides } from "./config.js";
 import { runLoop } from "./loop.js";
 import { buildRunBrief } from "./project/run-brief.js";
+import { createScreenMemory } from "./project/types.js";
 import { recordStates } from "./replay/record.js";
 import { readRecordedStates, replayStates } from "./replay/replay.js";
 import { planDecision } from "./screens/index.js";
@@ -184,7 +185,7 @@ async function main(argv: string[]): Promise<number> {
         state,
         knowledge: runtime.knowledge,
         brief: rendered.brief,
-        screenMemory: { screen: state.screen, shopOpened: false },
+        screenMemory: createScreenMemory(state.screen),
         thresholds: config.thresholds,
         runStart: config.run.start,
         characterPreference: config.run.character,

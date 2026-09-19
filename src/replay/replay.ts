@@ -14,6 +14,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import { buildRunBrief } from "../project/run-brief.js";
 import type { DecisionEnv } from "../project/types.js";
+import { createScreenMemory } from "../project/types.js";
 import { planDecision } from "../screens/index.js";
 import { describeIntent } from "../loop.js";
 import { toJsonValue } from "../util/json.js";
@@ -57,7 +58,7 @@ export interface ReplayStats {
 export async function replayStates(options: ReplayOptions): Promise<ReplayStats> {
   const onEvent = options.onEvent ?? ((): void => {});
   const stats: ReplayStats = { total: 0, decisions: 0, deterministic: 0, asks: 0, waits: 0, blocked: 0, unsupported: 0, failed: 0 };
-  const screenMemory = { screen: "", shopOpened: false };
+  const screenMemory = createScreenMemory();
 
   for (const entry of options.entries) {
     stats.total += 1;
@@ -73,6 +74,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
     if (screenMemory.screen !== state.screen) {
       screenMemory.screen = state.screen;
       screenMemory.shopOpened = false;
+      screenMemory.cardRewardSkipped = false;
     }
     const env: DecisionEnv = {
       state,

@@ -24,6 +24,8 @@ import {
   gameOverSavedPayload,
   mainMenuPayload,
   mapPayload,
+  rewardAfterSkipPayload,
+  rewardCardPayload,
   shopPayload,
   testKnowledge,
 } from "./scenarios.js";
@@ -610,6 +612,46 @@ describe("runLoop", () => {
     ]);
     // And the next step is a map choice, not another shop interaction.
     expect(actions[3]?.["action"]).toBe("choose_map_node");
+    expect(stats.stoppedBecause).toContain("decision cap");
+  });
+
+  it("skips a card reward once instead of claiming and skipping forever", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({
+      sequence: [rewardCardPayload(), rewardAfterSkipPayload(), mapPayload()],
+    });
+    // A model that always wants to skip, which is what triggered the loop on a live run.
+    const skipper = {
+      model: "stub",
+      async ask(
+        _state: unknown,
+        questions: Record<string, { type: string; criteria?: Record<string, unknown> | string[] }>,
+      ): Promise<JevAskResult> {
+        const answers: AnswerSet = {};
+        for (const [id, question] of Object.entries(questions)) {
+          const criteria = question.criteria;
+          const keys = criteria && !Array.isArray(criteria) ? Object.keys(criteria) : [];
+          const pick = keys.includes("skip") ? "skip" : keys[0] ?? "";
+          answers[id] = { type: "choice", choice: pick, probabilities: { [pick]: 0.9 }, confidence: 0.9, raw: {} };
+        }
+        return { model: "stub", answers, inputTokens: 10, outputTokens: 5, latencyMs: 1, requestId: null };
+      },
+    } as unknown as JevClient;
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: skipper,
+      knowledge: testKnowledge,
+      maxDecisions: 4,
+      pollIntervalMs: 1,
+    });
+
+    const taken = actions.map((intent) => intent["action"]);
+    expect(taken.slice(0, 3)).toEqual(["skip_reward_cards", "collect_rewards_and_proceed", "choose_map_node"]);
+    // The loop this test guards against was skip -> claim_reward -> skip -> ...
+    expect(taken).not.toContain("claim_reward");
     expect(stats.stoppedBecause).toContain("decision cap");
   });
 });

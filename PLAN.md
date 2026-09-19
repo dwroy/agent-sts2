@@ -46,7 +46,10 @@ Deliberate differences from the text above, recorded so the plan stays honest:
 5. **Screen planners get a small per-visit memory.** `DecisionEnv.screenMemory` is owned by the loop
    and reset whenever the screen changes. The shop needs it to distinguish "just arrived" from
    "browsed and chose to leave": without it a live shop visit flapped open → close → open forever,
-   because affordable stock still existed after the decision to leave (§6.5).
+   because affordable stock still existed after the decision to leave (§6.5). The reward screen needs
+   the same thing for a different reason: the mod documents that `skip_reward_cards` "may leave the
+   underlying reward item claimable", so without a flag the planner claims the card reward again and
+   skips forever (§6.3).
 6. **`state_version` is 16, not 11.** The upstream docs say 11 while the installed Workshop build
    reports 16; the guard was moved to 16 and left as a warning.
 

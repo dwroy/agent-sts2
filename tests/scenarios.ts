@@ -270,6 +270,37 @@ export function rewardClaimPayload(): Raw {
   });
 }
 
+/** The reward screen right after `skip_reward_cards`: the card reward is still claimable. */
+export function rewardAfterSkipPayload(): Raw {
+  return baseState("REWARD", {
+    available_actions: ["claim_reward", "collect_rewards_and_proceed"],
+    reward: {
+      pending_card_choice: false,
+      can_proceed: true,
+      rewards: [{ index: 0, reward_type: "Card", description: "Add a card to your deck.", claimable: true }],
+      card_options: [],
+      alternatives: [],
+    },
+  });
+}
+
+/** The same, but a gold reward is also outstanding and should still be collected. */
+export function rewardAfterSkipWithGoldPayload(): Raw {
+  return baseState("REWARD", {
+    available_actions: ["claim_reward", "collect_rewards_and_proceed"],
+    reward: {
+      pending_card_choice: false,
+      can_proceed: true,
+      rewards: [
+        { index: 0, reward_type: "Gold", description: "23 gold", claimable: true },
+        { index: 1, reward_type: "Card", description: "Add a card to your deck.", claimable: true },
+      ],
+      card_options: [],
+      alternatives: [],
+    },
+  });
+}
+
 export function selectionPayload(selected = 0): Raw {
   return baseState("CARD_SELECTION", {
     available_actions: selected > 0 ? ["select_deck_card", "confirm_selection"] : ["select_deck_card"],

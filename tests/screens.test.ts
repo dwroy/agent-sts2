@@ -10,6 +10,7 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
+import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { loadConfig } from "../src/config.js";
 import {
@@ -25,6 +26,8 @@ import {
   modalPayload,
   restPayload,
   rewardCardPayload,
+  rewardAfterSkipPayload,
+  rewardAfterSkipWithGoldPayload,
   rewardClaimPayload,
   selectionPayload,
   shopPayload,
@@ -44,7 +47,7 @@ function env(raw: Record<string, unknown>, overrides: Partial<DecisionEnv> = {})
     characterPreference: null,
     allowFtueModals: false,
     strictJev: true,
-    screenMemory: { screen: state.screen, shopOpened: false },
+    screenMemory: createScreenMemory(state.screen),
     shopDiscardPotions: ["FOUL_POTION"],
     ...overrides,
   };
@@ -275,6 +278,27 @@ describe("reward", () => {
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "collect_rewards_and_proceed" });
   });
 
+  it("does not re-claim a card reward it already skipped", () => {
+    // Live finding: skip_reward_cards leaves the card reward claimable, so the planner claimed it
+    // again, reopened the card choice, and skipped again — forever.
+    const decision = mustDecision(
+      plan(rewardAfterSkipPayload(), {
+        screenMemory: { ...createScreenMemory("REWARD"), cardRewardSkipped: true },
+      }),
+    );
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent.action).toBe("collect_rewards_and_proceed");
+  });
+
+  it("still collects the other rewards after skipping the card one", () => {
+    const decision = mustDecision(
+      plan(rewardAfterSkipWithGoldPayload(), {
+        screenMemory: { ...createScreenMemory("REWARD"), cardRewardSkipped: true },
+      }),
+    );
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "claim_reward", option_index: 0 });
+  });
+
   it("falls back to resolve_rewards when that is the only way forward", () => {
     const raw = baseState("REWARD", {
       available_actions: ["save_and_quit", "resolve_rewards"],
@@ -334,7 +358,9 @@ describe("shop", () => {
   it("proceeds to the map instead of re-opening once the visit is done", () => {
     // Live finding: the loop flapped open -> close -> open because affordable stock still existed
     // after the decision to leave. The per-visit flag is what breaks that cycle.
-    const decision = mustDecision(plan(shopPayload(false), { screenMemory: { screen: "SHOP", shopOpened: true } }));
+    const decision = mustDecision(
+      plan(shopPayload(false), { screenMemory: { ...createScreenMemory("SHOP"), shopOpened: true } }),
+    );
     expect(decision.kind).toBe("act");
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "proceed" });
   });
@@ -347,7 +373,9 @@ describe("shop", () => {
 
   it("does not discard anything once the shop visit has been opened", () => {
     const decision = mustDecision(
-      plan(shopPayload(false, { foulPotion: true }), { screenMemory: { screen: "SHOP", shopOpened: true } }),
+      plan(shopPayload(false, { foulPotion: true }), {
+        screenMemory: { ...createScreenMemory("SHOP"), shopOpened: true },
+      }),
     );
     if (decision.kind === "act") expect(decision.intent.action).not.toBe("discard_potion");
   });

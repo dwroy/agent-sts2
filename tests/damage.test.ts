@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
+import { createScreenMemory } from "../src/project/types.js";
 import { planDecision } from "../src/screens/index.js";
 import { resolveDamage } from "../src/strategy/damage.js";
 import { loadConfig } from "../src/config.js";
@@ -73,7 +74,7 @@ describe("combat options use the resolved damage", () => {
       state,
       knowledge: testKnowledge,
       brief: buildRunBrief(state, testKnowledge),
-      screenMemory: { screen: state.screen, shopOpened: false },
+      screenMemory: createScreenMemory(state.screen),
       thresholds: config.thresholds,
       runStart: "auto" as const,
       characterPreference: null,

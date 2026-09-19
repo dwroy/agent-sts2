@@ -71,7 +71,14 @@ export function planReward(env: DecisionEnv): Decision | null {
 
   const claimable = asArray(reward["rewards"])
     .map(asRecord)
-    .filter((entry) => bool(entry["claimable"], true));
+    .filter((entry) => bool(entry["claimable"], true))
+    // A skipped card reward stays claimable in the state (the mod documents this). Claiming it again
+    // reopens the card choice, which is how a live run ended up skipping in a loop.
+    .filter(
+      (entry) =>
+        !env.screenMemory.cardRewardSkipped ||
+        !["Card", "SpecialCard", "LinkedRewardSet"].includes(str(entry["reward_type"])),
+    );
   const next = claimable[0];
   if (next) {
     const index = numOrNull(next["index"]) ?? 0;
