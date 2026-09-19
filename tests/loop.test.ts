@@ -1,0 +1,234 @@
+/**
+ * End-to-end loop test with a scripted mod server and a stub Jev.
+ *
+ * It proves the whole chain the design depends on: read → plan → ask → gate → (re-read) → dispatch →
+ * log, with no game and no real model.
+ */
+
+import { readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+
+import type { AppConfig } from "../src/config.js";
+import { loadConfig } from "../src/config.js";
+import type { AnswerSet } from "../src/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/jev/client.js";
+import { runLoop } from "../src/loop.js";
+import { ModClient } from "../src/mod/client.js";
+import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
+
+interface StubJev {
+  client: JevClient;
+  calls: number;
+}
+
+/** Answers the way a cooperative model would: pick the first offered option of every question. */
+function stubJev(): StubJev {
+  const state = { calls: 0 };
+  const client = {
+    model: "stub",
+    async ask(_state: unknown, questions: Record<string, { type: string; criteria?: Record<string, unknown> | string[] }>): Promise<JevAskResult> {
+      state.calls += 1;
+      const answers: AnswerSet = {};
+      for (const [id, question] of Object.entries(questions)) {
+        if (question.type === "choice" && question.criteria && !Array.isArray(question.criteria)) {
+          const first = Object.keys(question.criteria)[0] ?? "";
+          answers[id] = { type: "choice", choice: first, probabilities: { [first]: 0.9 }, confidence: 0.9, raw: {} };
+        } else {
+          answers[id] = { type: "noul", noul: 0.5, raw: {} };
+        }
+      }
+      return { model: "stub", answers, inputTokens: 100, outputTokens: 10, latencyMs: 1 };
+    },
+  } as unknown as JevClient;
+  return {
+    client,
+    get calls() {
+      return state.calls;
+    },
+  } as StubJev;
+}
+
+const servers: TestServer[] = [];
+const logs: string[] = [];
+
+afterEach(async () => {
+  await Promise.all(servers.splice(0).map((server) => server.close()));
+  for (const path of logs.splice(0)) {
+    try {
+      rmSync(path, { force: true });
+    } catch {
+      // best effort
+    }
+  }
+});
+
+function testConfig(): AppConfig {
+  const path = join(tmpdir(), `jev-sts2-test-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+  logs.push(path);
+  const config = loadConfig({} as NodeJS.ProcessEnv);
+  return { ...config, log: { ...config.log, decisionLog: path } };
+}
+
+interface ScriptOptions {
+  /** States served in order; the last one repeats once exhausted. */
+  sequence: Record<string, unknown>[];
+}
+
+async function scriptedMod(options: ScriptOptions): Promise<{ server: TestServer; actions: Record<string, unknown>[] }> {
+  let index = 0;
+  const actions: Record<string, unknown>[] = [];
+  const at = (position: number): Record<string, unknown> =>
+    options.sequence[Math.min(position, options.sequence.length - 1)] as Record<string, unknown>;
+
+  const server = await startTestServer((req, res) => {
+    if (req.method === "GET" && req.url === "/state") {
+      return sendJson(res, 200, envelope(at(index)));
+    }
+    if (req.method === "POST" && req.url === "/action") {
+      let raw = "";
+      req.on("data", (chunk) => {
+        raw += chunk;
+      });
+      req.on("end", () => {
+        const intent = JSON.parse(raw || "{}") as Record<string, unknown>;
+        actions.push(intent);
+        index += 1;
+        sendJson(
+          res,
+          200,
+          envelope({
+            action: intent["action"],
+            status: "completed",
+            stable: true,
+            message: "scripted",
+            state: at(index),
+          }),
+        );
+      });
+      return;
+    }
+    sendJson(res, 404, { ok: false, request_id: "x", error: { code: "not_found", message: "no route", retryable: false } });
+  });
+  servers.push(server);
+  return { server, actions };
+}
+
+describe("runLoop", () => {
+  it("plays through a scripted fight and stops when the run ends", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({
+      sequence: [combatPayload(), combatPayload(), mainMenuPayload()],
+    });
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.acts).toBe(2);
+    expect(stats.runsCompleted).toBe(1);
+    expect(stats.errors).toBe(0);
+    expect(stats.stoppedBecause).toContain("completed 1 run");
+    expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
+    expect(stats.jevCalls).toBeGreaterThan(0);
+  });
+
+  it("writes one decision record per decision", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload(), mainMenuPayload()] });
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    expect(lines).toHaveLength(stats.decisions);
+    for (const line of lines) {
+      expect(line).toMatchObject({ mode: "play", screen: expect.any(String), label: expect.any(String) });
+      expect(typeof line.fingerprint).toBe("string");
+      expect(line.chosen).toBeTruthy();
+    }
+  });
+
+  it("dispatches nothing in shadow mode", async () => {
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({ sequence: [combatPayload(), combatPayload()] });
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "shadow",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 1,
+      pollIntervalMs: 1,
+    });
+
+    expect(actions).toHaveLength(0);
+    expect(stats.acts).toBe(0);
+    expect(stats.decisions).toBe(1);
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    expect(lines[0].result).toContain("shadow");
+  });
+
+  it("stops on the circuit breaker instead of hammering a broken mod", async () => {
+    const config = testConfig();
+    const server = await startTestServer((_req, res) => {
+      sendJson(res, 503, { ok: false, request_id: "x", error: { code: "state_unavailable", message: "settling", retryable: true } });
+    });
+    servers.push(server);
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url, timeoutMs: 500 }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 20,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.acts).toBe(0);
+    expect(stats.errors).toBeGreaterThanOrEqual(3);
+    expect(stats.stoppedBecause).toContain("circuit breaker");
+  });
+
+  it("honours the decision cap", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload(), combatPayload()] });
+    const jev = stubJev();
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 3,
+      pollIntervalMs: 1,
+    });
+
+    expect(stats.stoppedBecause).toContain("decision cap");
+    expect(stats.decisions).toBeLessThanOrEqual(3);
+  });
+});
