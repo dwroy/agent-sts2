@@ -7,6 +7,7 @@
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
+import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -15,6 +16,56 @@ export function planShop(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const shop = asRecord(state.raw["shop"]);
   if (Object.keys(shop).length === 0) return null;
+  const actions = state.available_actions;
+
+  if (!bool(shop["is_open"])) {
+    // 1. Dump the junk potions first: a live shop run showed a Foul Potion blocking a slot, and the
+    //    shop is the safe place to be rid of it.
+    if (!env.screenMemory.shopOpened && actions.includes("discard_potion")) {
+      const discardList = env.shopDiscardPotions.map((entry) => entry.toLowerCase());
+      const junk = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).find(
+        (potion) =>
+          potion.can_discard &&
+          discardList.some(
+            (wanted) => wanted === potion.potion_id.toLowerCase() || wanted === potion.name.toLowerCase(),
+          ),
+      );
+      if (junk) {
+        return {
+          kind: "act",
+          label: "shop/discard",
+          intent: { action: "discard_potion", option_index: junk.slot },
+          rationale: `discarding ${junk.name} before shopping`,
+        };
+      }
+    }
+
+    // 2. Walking into a shop opens the inventory, once per visit.
+    if (
+      !env.screenMemory.shopOpened &&
+      bool(shop["can_open"]) &&
+      actions.includes("open_shop_inventory")
+    ) {
+      return {
+        kind: "act",
+        label: "shop/open",
+        intent: { action: "open_shop_inventory" },
+        rationale: "entering the shop: opening the inventory",
+      };
+    }
+
+    // 3. Already browsed and closed: leave. Re-opening here is what made a live run flap between
+    //    open and close forever, because affordable stock still existed.
+    if (actions.includes("proceed")) {
+      return {
+        kind: "act",
+        label: "shop/leave",
+        intent: { action: "proceed" },
+        rationale: "shopping done: back to the map",
+      };
+    }
+    return null;
+  }
 
   const options: PickOption[] = [];
   const stock: JsonValue[] = [];
@@ -75,26 +126,6 @@ export function planShop(env: DecisionEnv): Decision | null {
     score: 0,
     summary: { buy: "nothing", note: "close the inventory and leave the shop" } satisfies JsonValue,
   });
-
-  // Only the "buy" options count here; `leave` is always present and is not a reason to open.
-  const purchasable = options.filter((option) => option.key !== "leave");
-
-  if (!bool(shop["is_open"])) {
-    // Opening an empty-to-us inventory and then closing it again is an infinite loop: found by
-    // driving a live shop until the gold ran out. Open only when something is actually buyable.
-    if (purchasable.length > 0 && bool(shop["can_open"]) && state.available_actions.includes("open_shop_inventory")) {
-      return { kind: "act", label: "shop/open", intent: { action: "open_shop_inventory" }, rationale: "something here is affordable; opening the shop inventory" };
-    }
-    if (state.available_actions.includes("proceed")) {
-      return {
-        kind: "act",
-        label: "shop/leave",
-        intent: { action: "proceed" },
-        rationale: purchasable.length === 0 ? "nothing here is affordable; leaving the shop" : "nothing to do in this shop",
-      };
-    }
-    return null;
-  }
 
   const entries = deckEntries(state, knowledge);
   return buildPickDecision({

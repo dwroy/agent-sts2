@@ -26,6 +26,7 @@ export const testKnowledge: Knowledge = makeKnowledge({
   ],
   potions: [
     { id: "FIRE_POTION", name: "Fire Potion", description: "Deal 20 damage to target enemy.", rarity: "Common", usage: "CombatOnly", target_type: "AnyEnemy" },
+    { id: "FOUL_POTION", name: "Foul Potion", description: "Deal damage to ALL players and enemies.", rarity: "Rare", usage: "AnyTime", target_type: "AllEnemies" },
   ],
   powers: [{ id: "VULNERABLE", name: "Vulnerable", description: "Takes 50% more damage.", type: "Debuff" }],
   events: [{ id: "BIG_FISH", name: "Big Fish", description: "A large fish offers you a choice.", options: [] }],
@@ -256,11 +257,13 @@ export function selectionPayload(selected = 0): Raw {
   });
 }
 
-export function shopPayload(open: boolean, options: { broke?: boolean } = {}): Raw {
+export function shopPayload(open: boolean, options: { broke?: boolean; foulPotion?: boolean } = {}): Raw {
   const affordable = options.broke !== true;
   const price = (value: number): number => (affordable ? value : 0);
+  const closedActions = ["open_shop_inventory", "proceed"];
+  if (options.foulPotion === true) closedActions.push("discard_potion");
   const payload = baseState("SHOP", {
-    available_actions: open ? ["buy_card", "buy_relic", "close_shop_inventory"] : ["open_shop_inventory", "proceed"],
+    available_actions: open ? ["buy_card", "buy_relic", "close_shop_inventory"] : closedActions,
     shop: {
       is_open: open,
       can_open: !open,
@@ -278,6 +281,27 @@ export function shopPayload(open: boolean, options: { broke?: boolean } = {}): R
   if (options.broke === true) {
     const run = payload["run"] as Raw;
     run["gold"] = 12;
+  }
+  if (options.foulPotion === true) {
+    const run = payload["run"] as Raw;
+    run["potions"] = [
+      {
+        index: 0,
+        potion_id: "FOUL_POTION",
+        name: "Foul Potion",
+        description: "Deal damage to ALL players and enemies.",
+        rarity: "Rare",
+        occupied: true,
+        usage: "AnyTime",
+        target_type: "AllEnemies",
+        is_queued: false,
+        requires_target: false,
+        can_use: true,
+        can_discard: true,
+        target_index_space: null,
+        valid_target_indices: [],
+      },
+    ];
   }
   return payload;
 }

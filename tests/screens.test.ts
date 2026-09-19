@@ -44,6 +44,8 @@ function env(raw: Record<string, unknown>, overrides: Partial<DecisionEnv> = {})
     characterPreference: null,
     allowFtueModals: false,
     strictJev: true,
+    screenMemory: { screen: state.screen, shopOpened: false },
+    shopDiscardPotions: ["FOUL_POTION"],
     ...overrides,
   };
 }
@@ -323,11 +325,31 @@ describe("shop", () => {
     expect(decision.resolve(pickAnswer("leave")).intent).toEqual({ action: "close_shop_inventory" });
   });
 
-  it("leaves instead of re-opening an inventory it cannot afford", () => {
-    // Live finding: open → nothing affordable → close → open … looped forever once the gold ran out.
+  it("opens the inventory on arrival, even with nothing affordable", () => {
     const decision = mustDecision(plan(shopPayload(false, { broke: true })));
     expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "open_shop_inventory" });
+  });
+
+  it("proceeds to the map instead of re-opening once the visit is done", () => {
+    // Live finding: the loop flapped open -> close -> open because affordable stock still existed
+    // after the decision to leave. The per-visit flag is what breaks that cycle.
+    const decision = mustDecision(plan(shopPayload(false), { screenMemory: { screen: "SHOP", shopOpened: true } }));
+    expect(decision.kind).toBe("act");
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "proceed" });
+  });
+
+  it("discards the junk potion before opening the shop", () => {
+    const decision = mustDecision(plan(shopPayload(false, { foulPotion: true })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "discard_potion", option_index: 0 });
+  });
+
+  it("does not discard anything once the shop visit has been opened", () => {
+    const decision = mustDecision(
+      plan(shopPayload(false, { foulPotion: true }), { screenMemory: { screen: "SHOP", shopOpened: true } }),
+    );
+    if (decision.kind === "act") expect(decision.intent.action).not.toBe("discard_potion");
   });
 
   it("closes an open inventory with nothing affordable", () => {

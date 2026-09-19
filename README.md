@@ -116,6 +116,9 @@ The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/lo
   documents that as the action that writes the score/unlock save) and any unlock overlay, then exits.
   It never clicks `return_to_main_menu` to get there, because that is the action which skips the save.
   `--max-runs N` plays N runs instead of stopping at the first.
+- a shop visit is walked once: arriving opens the inventory (after dropping any potion listed in
+  `SHOP_DISCARD_POTIONS`, default `FOUL_POTION`), the model decides what to buy, and once the
+  inventory is closed the loop clicks `proceed` to get back to map selection instead of re-opening.
 
 The loop never calls `/session/control`: the mod's own auto-play must stay off, or two loops would
 fight over the same instance.

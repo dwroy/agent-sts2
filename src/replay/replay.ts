@@ -57,6 +57,7 @@ export interface ReplayStats {
 export async function replayStates(options: ReplayOptions): Promise<ReplayStats> {
   const onEvent = options.onEvent ?? ((): void => {});
   const stats: ReplayStats = { total: 0, decisions: 0, deterministic: 0, asks: 0, waits: 0, blocked: 0, unsupported: 0, failed: 0 };
+  const screenMemory = { screen: "", shopOpened: false };
 
   for (const entry of options.entries) {
     stats.total += 1;
@@ -69,15 +70,21 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       continue;
     }
 
+    if (screenMemory.screen !== state.screen) {
+      screenMemory.screen = state.screen;
+      screenMemory.shopOpened = false;
+    }
     const env: DecisionEnv = {
       state,
       knowledge: options.knowledge,
       brief: buildRunBrief(state, options.knowledge),
+      screenMemory,
       thresholds: options.config.thresholds,
       runStart: options.config.run.start,
       characterPreference: options.config.run.character,
       allowFtueModals: options.config.allowFtueModals,
       strictJev: options.config.strictJev && options.ask !== undefined,
+      shopDiscardPotions: options.config.shop.discardPotions,
     };
 
     try {

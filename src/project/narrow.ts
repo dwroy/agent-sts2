@@ -168,9 +168,11 @@ export function handCardJson(view: HandCardView): Record<string, JsonValue> {
 export interface PotionView {
   slot: number;
   key: string;
+  potion_id: string;
   name: string;
   text: string;
   can_use: boolean;
+  can_discard: boolean;
   requires_target: boolean;
   valid_targets: number[];
 }
@@ -186,9 +188,11 @@ export function potionViews(state: { raw: Record<string, unknown> }, knowledge: 
       return {
         slot,
         key: `p${slot}`,
+        potion_id: id,
         name: str(potion["name"], info?.name ?? id),
         text: truncate(str(potion["description"]) || info?.description || "", 140),
         can_use: bool(potion["can_use"]),
+        can_discard: bool(potion["can_discard"]),
         requires_target: bool(potion["requires_target"]),
         valid_targets: asArray(potion["valid_target_indices"]).map((value) => num(value)),
       };

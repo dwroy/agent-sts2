@@ -38,6 +38,7 @@ export interface AppConfig {
   thresholds: { act: number; strong: number };
   budgets: { maxRequests: number; maxTokens: number };
   run: { start: RunStart; character: string | null };
+  shop: { discardPotions: string[] };
   /** Allow the loop to answer tutorial/FTUE prompts that change game settings. Default: false. */
   allowFtueModals: boolean;
   /**
@@ -93,6 +94,7 @@ const DEFAULTS = {
   runStart: "auto",
   allowFtueModals: false,
   strictJev: true,
+  shopDiscardPotions: "FOUL_POTION",
 } as const;
 
 const MODES: readonly Mode[] = ["shadow", "play", "record", "replay"];
@@ -221,6 +223,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const runStart = (RUN_STARTS.includes(runStartRaw as RunStart) ? runStartRaw : DEFAULTS.runStart) as RunStart;
   const character = readEnv(env, "CHARACTER");
+  const shopDiscardPotions = (readEnv(env, "SHOP_DISCARD_POTIONS") ?? DEFAULTS.shopDiscardPotions)
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.length > 0);
   const allowFtueModals = parseBoolean(
     readEnv(env, "ALLOW_FTUE_MODALS") ?? String(DEFAULTS.allowFtueModals),
     "ALLOW_FTUE_MODALS",
@@ -300,6 +306,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     thresholds: { act: confidenceAct, strong: confidenceStrong },
     budgets: { maxRequests, maxTokens },
     run: { start: runStart, character },
+    shop: { discardPotions: shopDiscardPotions },
     allowFtueModals,
     strictJev,
     mode,

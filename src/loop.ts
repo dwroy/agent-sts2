@@ -15,7 +15,7 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
-import type { DecisionEnv, ResolvedAction } from "./project/types.js";
+import type { DecisionEnv, ResolvedAction, ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { createDecisionLog, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
@@ -232,6 +232,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     startedAt: Date.now(),
     maxFloor: null as number | null,
   };
+  /** Reset whenever the screen changes; the shop uses it to tell "just arrived" from "chose to leave". */
+  const screenMemory: ScreenMemory = { screen: "", shopOpened: false };
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -390,10 +392,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
 
     const brief = buildRunBrief(state, knowledge, notes);
+    if (screenMemory.screen !== state.screen) {
+      screenMemory.screen = state.screen;
+      screenMemory.shopOpened = false;
+    }
+    if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
+      screenMemory.shopOpened = true;
+    }
     const env: DecisionEnv = {
       state,
       knowledge,
       brief,
+      screenMemory,
       thresholds: config.thresholds,
       runStart: config.run.start,
       characterPreference: config.run.character,
@@ -401,6 +411,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // Trust-Jev only means something when there is a Jev to trust: in `--no-jev` mode the
       // deterministic path is the whole point.
       strictJev: config.strictJev && jev !== null,
+      shopDiscardPotions: config.shop.discardPotions,
     };
     if (!planned) {
       try {

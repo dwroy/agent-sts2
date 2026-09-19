@@ -184,11 +184,13 @@ async function main(argv: string[]): Promise<number> {
         state,
         knowledge: runtime.knowledge,
         brief: rendered.brief,
+        screenMemory: { screen: state.screen, shopOpened: false },
         thresholds: config.thresholds,
         runStart: config.run.start,
         characterPreference: config.run.character,
         allowFtueModals: config.allowFtueModals,
         strictJev: config.strictJev && runtime.jev !== null,
+        shopDiscardPotions: config.shop.discardPotions,
       });
 
       if (planned.kind !== "decision") {

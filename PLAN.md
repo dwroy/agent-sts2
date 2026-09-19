@@ -43,7 +43,11 @@ Deliberate differences from the text above, recorded so the plan stays honest:
    moving parts (§6.5).
 4. **The Run Brief is code-only.** Deck stats, relics, potions and rolling notes are derived from
    fresh state; no extra Jev calls are spent maintaining it (§7.2).
-5. **`state_version` is 16, not 11.** The upstream docs say 11 while the installed Workshop build
+5. **Screen planners get a small per-visit memory.** `DecisionEnv.screenMemory` is owned by the loop
+   and reset whenever the screen changes. The shop needs it to distinguish "just arrived" from
+   "browsed and chose to leave": without it a live shop visit flapped open → close → open forever,
+   because affordable stock still existed after the decision to leave (§6.5).
+6. **`state_version` is 16, not 11.** The upstream docs say 11 while the installed Workshop build
    reports 16; the guard was moved to 16 and left as a warning.
 
 ---

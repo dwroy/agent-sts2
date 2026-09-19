@@ -12,6 +12,12 @@ export interface DecisionEnv {
   state: GameState;
   knowledge: Knowledge;
   brief: RunBrief;
+  /**
+   * Per-visit scratch state, owned by the loop and reset whenever the screen changes. The shop needs
+   * it to tell "just walked in" from "already browsed and chose to leave" — a stateless planner
+   * cannot, and getting that wrong produced an open/close loop on a live run.
+   */
+  screenMemory: ScreenMemory;
   thresholds: { act: number; strong: number };
   /** What to do on the main menu: `auto` prefers continuing an existing run. */
   runStart: "auto" | "continue" | "new";
@@ -24,6 +30,14 @@ export interface DecisionEnv {
    * code-chosen action. Only the legality gate still applies.
    */
   strictJev: boolean;
+  /** Potion ids (or names) to drop when entering a shop, e.g. the Foul Potion. */
+  shopDiscardPotions: string[];
+}
+
+export interface ScreenMemory {
+  screen: string;
+  /** True once the shop inventory has been opened during this visit. */
+  shopOpened: boolean;
 }
 
 /**

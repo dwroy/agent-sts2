@@ -23,6 +23,8 @@ import {
   gameOverPayload,
   gameOverSavedPayload,
   mainMenuPayload,
+  mapPayload,
+  shopPayload,
   testKnowledge,
 } from "./scenarios.js";
 
@@ -575,6 +577,39 @@ describe("runLoop", () => {
     });
 
     expect(stats.runsCompleted).toBe(1);
+    expect(stats.stoppedBecause).toContain("decision cap");
+  });
+
+  it("walks through a shop once instead of flapping open and closed", async () => {
+    // The live sequence that started the flap: arrive, open, close, and then keep re-opening because
+    // affordable stock still existed. With nothing affordable the whole visit should be two actions.
+    const config = testConfig();
+    const { server, actions } = await scriptedMod({
+      sequence: [
+        shopPayload(false, { broke: true }),
+        shopPayload(true, { broke: true }),
+        shopPayload(false, { broke: true }),
+        mapPayload(),
+      ],
+    });
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: stubJev().client,
+      knowledge: testKnowledge,
+      maxDecisions: 4,
+      pollIntervalMs: 1,
+    });
+
+    expect(actions.slice(0, 3).map((intent) => intent["action"])).toEqual([
+      "open_shop_inventory",
+      "close_shop_inventory",
+      "proceed",
+    ]);
+    // And the next step is a map choice, not another shop interaction.
+    expect(actions[3]?.["action"]).toBe("choose_map_node");
     expect(stats.stoppedBecause).toContain("decision cap");
   });
 });
