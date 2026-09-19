@@ -8,7 +8,7 @@ import { dirname } from "node:path";
 
 import { fingerprint } from "../act/gate.js";
 import { ModClient } from "../mod/client.js";
-import { parseGameState, type GameState } from "../mod/schema.js";
+import type { GameState } from "../mod/schema.js";
 import { stableStringify } from "../util/json.js";
 
 export interface RecordOptions {
@@ -46,7 +46,9 @@ export async function recordStates(options: RecordOptions): Promise<RecordStats>
     if (deadline !== null && clock() > deadline) break;
     let state: GameState;
     try {
-      state = parseGameState(await options.client.state());
+      // `client.state()` is already validated; parsing it again would store our own wrapper in the
+      // fixture instead of the raw payload (the wrapper hides every field we do not model).
+      state = await options.client.state();
     } catch (error) {
       onEvent(`state read failed: ${error instanceof Error ? error.message : String(error)}`);
       await sleep(intervalMs);

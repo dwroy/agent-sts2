@@ -17,6 +17,8 @@ export interface DecisionEnv {
   runStart: "auto" | "continue" | "new";
   /** Preferred character id or name for a new run; null means "first unlocked". */
   characterPreference: string | null;
+  /** Whether the loop may answer prompts that turn tutorials on (default false). */
+  allowFtueModals: boolean;
 }
 
 /**

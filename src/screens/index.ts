@@ -29,7 +29,17 @@ const CARD_VIEWS = new Set(["CARDS_VIEW", "CARD_PILE", "CARD_INSPECT", "RELIC_IN
 export type PlanOutcome =
   | { kind: "decision"; decision: Decision }
   | { kind: "wait"; reason: string }
+  /** The loop must stop and hand control back to a human (PLAN.md §9). */
+  | { kind: "blocked"; reason: string }
   | { kind: "unsupported"; reason: string };
+
+/**
+ * Prompts that turn tutorials on or change settings. Confirming one is a lasting side effect the
+ * player did not ask for, so the loop refuses and hands back to a human instead
+ * (`ALLOW_FTUE_MODALS=true` opts in). Informational prompts such as `NCombatRulesFtue` are not
+ * matched: they must be dismissed to keep playing and change nothing.
+ */
+export const SETTING_CHANGING_MODAL = /tutorial/i;
 
 export function planDecision(env: DecisionEnv): PlanOutcome {
   const { screen, session } = env.state;
@@ -108,9 +118,23 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
     case "MAIN_MENU":
     case "GAME_OVER":
     case "UNLOCK":
-    case "MODAL":
       decision = planMenu(env);
       break;
+    case "MODAL": {
+      const modal = env.state.raw["modal"];
+      const typeName =
+        typeof modal === "object" && modal !== null ? String((modal as Record<string, unknown>)["type_name"] ?? "") : "";
+      if (!env.allowFtueModals && SETTING_CHANGING_MODAL.test(typeName)) {
+        return {
+          kind: "blocked",
+          reason:
+            `the game is showing the prompt "${typeName}", which turns tutorials or settings on. ` +
+            "The loop will not answer it: dismiss it in-game, or set ALLOW_FTUE_MODALS=true to let it click.",
+        };
+      }
+      decision = planMenu(env);
+      break;
+    }
     default:
       return { kind: "unsupported", reason: `no planner for screen "${screen}"` };
   }

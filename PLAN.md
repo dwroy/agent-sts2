@@ -93,12 +93,11 @@ Key behavioural facts that shape the design:
 1. **The port is not always 8080.** If 8080 is taken the mod auto-increments; `/health` reports the
    real `api_host` / `api_port`. We must discover, not assume.
 2. **`GET /state` is a large object** (potentially tens of KB: full deck, all powers, full map graph).
-   It takes **no query parameters**. The compact `agent_view` described in the mod docs is served by
-   the MCP `get_game_state` tool (`NativeMcpServer.cs` → `GetCompactStateJsonAsync`), which is a
-   different code path from the `/state` route (`Router.cs` → `GameStateService.BuildStatePayload`).
-   → Our project builds its own projection from the raw snapshot. (Using MCP `get_game_state`
-   instead is a viable shortcut, but it is off by default and its output is shaped for generic agents
-   rather than for one narrow question at a time; see §5.3.)
+   It takes **no query parameters**. *(Corrected after a live capture: the installed build does carry
+   an `agent_view` field inside `/state`; the earlier reading of `Router.cs` was about the route
+   handler, not about the payload builder.)* → We still build our own projection (§5.4): the canned
+   `agent_view` is one shape per screen, cannot be narrowed to a single question, and renames keys
+   away from the authoritative indexes. It remains useful as a cross-check when a payload looks odd.
 3. **Legality is authoritative in the payload.** `available_actions` and `combat.action_readiness`
    come from the *same* gate evaluation, so they can never disagree. If
    `combat.action_readiness.can_use_combat_actions` is `false`, the `reason` names the single thing in

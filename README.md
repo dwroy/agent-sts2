@@ -43,6 +43,7 @@ npm run doctor -- --no-jev        # mod-side checks only, no API key needed
 npm run doctor -- --json          # machine-readable report
 npm run shadow -- --max-decisions 20 --poll 300
 npm run play -- --max-runs 1 --max-minutes 60 --max-decisions 2000
+npm run play -- --no-jev            # drive with code-only decisions (spends no tokens)
 npm run dev -- record --max-minutes 2      # capture raw states into fixtures/states.jsonl
 npm run dev -- replay                      # re-run the decision layer over those states, offline
 npm run dev -- replay --ask                # ... and ask Jev again for each recorded state
@@ -82,7 +83,12 @@ The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/lo
 - one action in flight, retryable mod errors mean "wait", non-retryable ones mean "re-plan", and
   three consecutive failures stop the loop;
 - hard caps on decisions, Jev requests, tokens, and wall-clock minutes;
-- `session.mode` must be `singleplayer`, or the loop stops instead of guessing.
+- `session.mode` must be `singleplayer`, or the loop stops instead of guessing;
+- prompts that turn tutorials on (`NAcceptTutorialsFtue`) are **never** answered: the loop stops and
+  hands back to you, because confirming one is a lasting setting change. Informational popups such as
+  `NCombatRulesFtue` are still dismissed so play can continue. `ALLOW_FTUE_MODALS=true` opts in;
+- a single-instance lock (`logs/loop.lock`) refuses to start a second loop while one is alive, so two
+  runs cannot fight over the same game instance. `--force` takes over.
 
 The loop never calls `/session/control`: the mod's own auto-play must stay off, or two loops would
 fight over the same instance.

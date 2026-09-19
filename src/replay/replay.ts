@@ -49,13 +49,14 @@ export interface ReplayStats {
   deterministic: number;
   asks: number;
   waits: number;
+  blocked: number;
   unsupported: number;
   failed: number;
 }
 
 export async function replayStates(options: ReplayOptions): Promise<ReplayStats> {
   const onEvent = options.onEvent ?? ((): void => {});
-  const stats: ReplayStats = { total: 0, decisions: 0, deterministic: 0, asks: 0, waits: 0, unsupported: 0, failed: 0 };
+  const stats: ReplayStats = { total: 0, decisions: 0, deterministic: 0, asks: 0, waits: 0, blocked: 0, unsupported: 0, failed: 0 };
 
   for (const entry of options.entries) {
     stats.total += 1;
@@ -75,6 +76,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       thresholds: options.config.thresholds,
       runStart: options.config.run.start,
       characterPreference: options.config.run.character,
+      allowFtueModals: options.config.allowFtueModals,
     };
 
     try {
@@ -87,6 +89,11 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       if (planned.kind === "unsupported") {
         stats.unsupported += 1;
         onEvent(`#${stats.total} ${state.screen}: unsupported — ${planned.reason}`);
+        continue;
+      }
+      if (planned.kind === "blocked") {
+        stats.blocked += 1;
+        onEvent(`#${stats.total} ${state.screen}: blocked — ${planned.reason}`);
         continue;
       }
 

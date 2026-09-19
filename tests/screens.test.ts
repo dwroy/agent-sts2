@@ -42,6 +42,7 @@ function env(raw: Record<string, unknown>, overrides: Partial<DecisionEnv> = {})
     thresholds: config.thresholds,
     runStart: "auto",
     characterPreference: null,
+    allowFtueModals: false,
     ...overrides,
   };
 }
@@ -254,6 +255,28 @@ describe("crystal sphere", () => {
 });
 
 describe("menus and overlays", () => {
+  it("refuses to answer a prompt that would turn tutorials on", () => {
+    const raw = modalPayload();
+    (raw["modal"] as Record<string, unknown>)["type_name"] = "NAcceptTutorialsFtue";
+    const outcome = plan(raw);
+    expect(outcome.kind).toBe("blocked");
+    expect(outcome.kind === "blocked" ? outcome.reason : "").toContain("NAcceptTutorialsFtue");
+  });
+
+  it("still dismisses an informational FTUE popup", () => {
+    const raw = modalPayload();
+    (raw["modal"] as Record<string, unknown>)["type_name"] = "NCombatRulesFtue";
+    const decision = mustDecision(plan(raw));
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "confirm_modal" });
+  });
+
+  it("can be told to answer it anyway", () => {
+    const raw = modalPayload();
+    (raw["modal"] as Record<string, unknown>)["type_name"] = "NAcceptTutorialsFtue";
+    const decision = mustDecision(plan(raw, { allowFtueModals: true }));
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "confirm_modal" });
+  });
+
   it("continues an existing run by default", () => {
     const decision = mustDecision(plan(mainMenuPayload()));
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "continue_run" });

@@ -12,6 +12,7 @@ import { runLoop } from "./loop.js";
 import { recordStates } from "./replay/record.js";
 import { readRecordedStates, replayStates } from "./replay/replay.js";
 import { style } from "./util/format.js";
+import { acquireLock } from "./util/lock.js";
 
 const USAGE = `jev-sts2 — play Slay the Spire 2 with Jev (TypeSafe System One)
 
@@ -37,6 +38,7 @@ Options:
   --in <path>          replay input file (default fixtures/states.jsonl)
   --ask                replay: also query Jev for each recorded state
   --refresh-data       refetch /data/* instead of using the cache
+  --force              take over the single-instance lock from another loop
   -h, --help         show this help
 
 Environment: see .env.example. Values in .env are loaded when present.`;
@@ -76,6 +78,7 @@ async function main(argv: string[]): Promise<number> {
         "no-jev": { type: "boolean" },
         ask: { type: "boolean" },
         "refresh-data": { type: "boolean" },
+        force: { type: "boolean" },
         "sts2-url": { type: "string" },
         "api-key": { type: "string" },
         model: { type: "string" },
@@ -184,32 +187,46 @@ async function main(argv: string[]): Promise<number> {
     case "play": {
       const mode = command;
       const skipJev = values["no-jev"] === true;
+      const lock = acquireLock("logs/loop.lock", `${mode} (pid ${process.pid})`, { force: values.force === true });
+      if (!lock.ok) {
+        return fail(
+          `another jev-sts2 loop is already running: pid ${lock.holder.pid}` +
+            `${lock.holder.startedAt ? ` (started ${lock.holder.startedAt})` : ""}` +
+            `\n  command: ${lock.holder.command || "unknown"}` +
+            `\nStop it first, or pass --force to take over. Only one loop may drive a game instance.`,
+          2,
+        );
+      }
       const reporter = createReporter();
-      const runtime = await buildRuntime({
-        config,
-        needJev: !skipJev,
-        refreshKnowledge: values["refresh-data"] === true,
-        onEvent: (message) => process.stdout.write(`${style.dim(message)}\n`),
-      });
-      process.stdout.write(
-        `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
-          `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
-          `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
-      );
-      const stats = await runLoop({
-        config,
-        mode,
-        client: runtime.client,
-        jev: runtime.jev,
-        knowledge: runtime.knowledge,
-        maxRuns: number(values["max-runs"], 1),
-        maxDecisions: number(values["max-decisions"], 2_000),
-        maxMinutes: number(values["max-minutes"], 60),
-        pollIntervalMs: number(values.poll, 400),
-        onEvent: (event) => reporter.handle(event),
-      });
-      reporter.summary(stats);
-      return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
+      try {
+        const runtime = await buildRuntime({
+          config,
+          needJev: !skipJev,
+          refreshKnowledge: values["refresh-data"] === true,
+          onEvent: (message) => process.stdout.write(`${style.dim(message)}\n`),
+        });
+        process.stdout.write(
+          `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
+            `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
+            `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
+        );
+        const stats = await runLoop({
+          config,
+          mode,
+          client: runtime.client,
+          jev: runtime.jev,
+          knowledge: runtime.knowledge,
+          maxRuns: number(values["max-runs"], 1),
+          maxDecisions: number(values["max-decisions"], 2_000),
+          maxMinutes: number(values["max-minutes"], 60),
+          pollIntervalMs: number(values.poll, 400),
+          onEvent: (event) => reporter.handle(event),
+        });
+        reporter.summary(stats);
+        return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
+      } finally {
+        lock.release();
+      }
     }
 
     default:

@@ -199,6 +199,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       thresholds: config.thresholds,
       runStart: config.run.start,
       characterPreference: config.run.character,
+      allowFtueModals: config.allowFtueModals,
     };
     const planned = planDecision(env);
 
@@ -219,6 +220,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
       await sleep(pollIntervalMs);
       continue;
+    }
+    if (planned.kind === "blocked") {
+      stop(planned.reason);
+      break;
     }
 
     const decision = planned.decision;
