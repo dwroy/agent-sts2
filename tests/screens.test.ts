@@ -242,6 +242,19 @@ describe("shop", () => {
     expect(Object.keys(criteria).sort()).toEqual(["buy_card0", "buy_relic0", "leave", "remove"]);
     expect(decision.resolve(pickAnswer("leave")).intent).toEqual({ action: "close_shop_inventory" });
   });
+
+  it("leaves instead of re-opening an inventory it cannot afford", () => {
+    // Live finding: open → nothing affordable → close → open … looped forever once the gold ran out.
+    const decision = mustDecision(plan(shopPayload(false, { broke: true })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "proceed" });
+  });
+
+  it("closes an open inventory with nothing affordable", () => {
+    const decision = mustDecision(plan(shopPayload(true, { broke: true })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "close_shop_inventory" });
+  });
 });
 
 describe("event", () => {

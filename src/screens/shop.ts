@@ -16,18 +16,8 @@ export function planShop(env: DecisionEnv): Decision | null {
   const shop = asRecord(state.raw["shop"]);
   if (Object.keys(shop).length === 0) return null;
 
-  if (!bool(shop["is_open"])) {
-    if (bool(shop["can_open"]) && state.available_actions.includes("open_shop_inventory")) {
-      return { kind: "act", label: "shop/open", intent: { action: "open_shop_inventory" }, rationale: "opening the shop inventory" };
-    }
-    if (state.available_actions.includes("proceed")) {
-      return { kind: "act", label: "shop/leave", intent: { action: "proceed" }, rationale: "nothing left to do in this shop" };
-    }
-    return null;
-  }
-
   const options: PickOption[] = [];
-  const affordable: JsonValue[] = [];
+  const stock: JsonValue[] = [];
 
   const collect = (
     list: unknown,
@@ -44,7 +34,7 @@ export function planShop(env: DecisionEnv): Decision | null {
       const info =
         action === "buy_card" ? knowledge.card(id) : action === "buy_relic" ? knowledge.relic(id) : knowledge.potion(id);
       const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
-      affordable.push({ kind: kindLabel, name, price, affordable: enough });
+      stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
       options.push({
         key: `${action}${index}`,
@@ -86,12 +76,34 @@ export function planShop(env: DecisionEnv): Decision | null {
     summary: { buy: "nothing", note: "close the inventory and leave the shop" } satisfies JsonValue,
   });
 
+  // Only the "buy" options count here; `leave` is always present and is not a reason to open.
+  const purchasable = options.filter((option) => option.key !== "leave");
+
+  if (!bool(shop["is_open"])) {
+    // Opening an empty-to-us inventory and then closing it again is an infinite loop: found by
+    // driving a live shop until the gold ran out. Open only when something is actually buyable.
+    if (purchasable.length > 0 && bool(shop["can_open"]) && state.available_actions.includes("open_shop_inventory")) {
+      return { kind: "act", label: "shop/open", intent: { action: "open_shop_inventory" }, rationale: "something here is affordable; opening the shop inventory" };
+    }
+    if (state.available_actions.includes("proceed")) {
+      return {
+        kind: "act",
+        label: "shop/leave",
+        intent: { action: "proceed" },
+        rationale: purchasable.length === 0 ? "nothing here is affordable; leaving the shop" : "nothing to do in this shop",
+      };
+    }
+    return null;
+  }
+
   const entries = deckEntries(state, knowledge);
   return buildPickDecision({
     label: "shop/buy",
     instructions: "What should I buy right now, if anything?",
     actThreshold: env.thresholds.act,
     options,
+    // With nothing affordable the only option is to leave, so skip the model call entirely.
+    skipModelWhenSingle: true,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -99,7 +111,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         gold: state.run?.gold ?? null,
         hp: env.brief.hp,
       },
-      stock: affordable,
+      stock,
       deck: describeDeck(entries),
       note: "one purchase is made per decision; the shop is re-read afterwards.",
     },

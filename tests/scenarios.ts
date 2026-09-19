@@ -256,22 +256,30 @@ export function selectionPayload(selected = 0): Raw {
   });
 }
 
-export function shopPayload(open: boolean): Raw {
-  return baseState("SHOP", {
+export function shopPayload(open: boolean, options: { broke?: boolean } = {}): Raw {
+  const affordable = options.broke !== true;
+  const price = (value: number): number => (affordable ? value : 0);
+  const payload = baseState("SHOP", {
     available_actions: open ? ["buy_card", "buy_relic", "close_shop_inventory"] : ["open_shop_inventory", "proceed"],
     shop: {
       is_open: open,
       can_open: !open,
       can_close: open,
       cards: [
-        { index: 0, name: "Pommel Strike", price: 55, is_stocked: true, enough_gold: true, category: "attack", on_sale: false, card_id: "POMMEL_STRIKE", upgraded: false, card_type: "Attack", rarity: "Common", costs_x: false, star_costs_x: false, energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
-        { index: 1, name: "Inflame", price: 180, is_stocked: true, enough_gold: false, category: "power", on_sale: false, card_id: "INFLAME", upgraded: false, card_type: "Power", rarity: "Uncommon", costs_x: false, star_costs_x: false, energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
+        { index: 0, name: "Pommel Strike", price: price(55), is_stocked: true, enough_gold: affordable, category: "attack", on_sale: false, card_id: "POMMEL_STRIKE", upgraded: false, card_type: "Attack", rarity: "Common", costs_x: false, star_costs_x: false, energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
+        // Deliberately unaffordable in the default fixture: the planner must filter it out.
+        { index: 1, name: "Inflame", price: price(180), is_stocked: true, enough_gold: false, category: "power", on_sale: false, card_id: "INFLAME", upgraded: false, card_type: "Power", rarity: "Uncommon", costs_x: false, star_costs_x: false, energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
       ],
-      relics: [{ index: 0, name: "Vajra", price: 150, is_stocked: true, enough_gold: true, relic_id: "VAJRA", rarity: "Common" }],
+      relics: [{ index: 0, name: "Vajra", price: price(150), is_stocked: true, enough_gold: affordable, relic_id: "VAJRA", rarity: "Common" }],
       potions: [],
-      card_removal: { price: 75, available: true, used: false, enough_gold: true },
+      card_removal: { price: price(75), available: true, used: false, enough_gold: affordable },
     },
   });
+  if (options.broke === true) {
+    const run = payload["run"] as Raw;
+    run["gold"] = 12;
+  }
+  return payload;
 }
 
 export function eventPayload(): Raw {
