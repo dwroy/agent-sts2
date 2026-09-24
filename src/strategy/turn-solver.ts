@@ -592,9 +592,11 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
       for (let hit = 0; hit < attack.hits; hit += 1) {
         if (retaliation > 0 && attackerHp <= 0) break;
         const shown = player.surrounded ? backAttack(attack.damage, enemy.index, player.facing ?? null, sim.facing) : attack.damage;
-        let amount = shown + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
+        // The shown intent already includes our Vulnerable (MAWLER 14 -> 21, SOUL_FYSH 16 -> 24 in
+        // states.jsonl); only Strength changes made this turn still need the ×1.5.
+        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
+        let amount = Math.floor(shown + strengthChange);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
-        if (player.vulnerable) amount = Math.floor(amount * 1.5);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible) amount = Math.min(amount, 1);
         hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });

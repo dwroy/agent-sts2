@@ -878,3 +878,15 @@ describe("Withering Presence (TQX5: the 6th card of the count adds a Wither)", (
     expect(result.plans.find((plan) => plan.steps.length === 0)!.outcome.hpLoss).toBe(0);
   });
 });
+
+describe("player Vulnerable", () => {
+  it("takes the shown intent as is: the game already applied our Vulnerable (MAWLER 14 -> 21)", () => {
+    const result = solveTurn({
+      hand: [],
+      player: player({ hp: 50, energy: 3, vulnerable: true }),
+      enemies: [enemy({ hp: 40, attacks: [{ damage: 21, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.outcome.hpLoss).toBe(21);
+  });
+});
