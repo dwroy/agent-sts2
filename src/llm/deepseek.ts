@@ -7,6 +7,7 @@
  */
 
 import type { JsonValue } from "../util/json.js";
+import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
   apiKey: string;
@@ -31,10 +32,17 @@ const SYSTEM = [
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
 ].join(" ");
 
-export class DeepSeekClient {
+export class DeepSeekClient implements Escalator {
+  readonly name = "deepseek" as const;
+
   constructor(private readonly config: DeepSeekConfig) {}
 
-  async choose(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>): Promise<DeepSeekAnswer> {
+  async choose(
+    state: Record<string, JsonValue>,
+    instructions: string,
+    criteria: Record<string, string | null>,
+    _context: Record<string, JsonValue> = {},
+  ): Promise<DeepSeekAnswer> {
     const started = Date.now();
     const user = JSON.stringify({ state, question: instructions, options: criteria });
     const controller = new AbortController();

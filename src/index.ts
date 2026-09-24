@@ -2,6 +2,7 @@
 /** CLI entry point. Commands after M0 are listed but not implemented yet. */
 
 import { DeepSeekClient } from "./llm/deepseek.js";
+import { FileEscalator, type Escalator } from "./llm/file-escalation.js";
 import { existsSync } from "node:fs";
 import { parseArgs } from "node:util";
 
@@ -316,7 +317,15 @@ async function main(argv: string[]): Promise<number> {
           mode,
           client: runtime.client,
           jev: runtime.jev,
-          deepseek: config.deepseek && runtime.jev ? new DeepSeekClient(config.deepseek) : null,
+          escalators: runtime.jev
+            ? config.escalation.chain.flatMap((name): Escalator[] =>
+                name === "claude"
+                  ? [new FileEscalator(config.escalation.claudeDir, config.escalation.claudeTimeoutMs)]
+                  : config.deepseek
+                    ? [new DeepSeekClient(config.deepseek)]
+                    : [],
+              )
+            : [],
           knowledge: runtime.knowledge,
           maxRuns: number(values["max-runs"], 1),
           maxDecisions: number(values["max-decisions"], 2_000),

@@ -38,6 +38,8 @@ export interface AppConfig {
   enricher: EnricherConfig;
   /** Escalation model for Jev's near-guesses on high-stakes calls (phase 2). null when no key. */
   deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number } | null;
+  /** Escalation order, e.g. ["claude", "deepseek"]: the first one that answers wins. */
+  escalation: { chain: ("claude" | "deepseek")[]; claudeDir: string; claudeTimeoutMs: number; claudeMaxCalls: number };
   thresholds: { act: number; strong: number };
   budgets: { maxRequests: number; maxTokens: number };
   run: { start: RunStart; character: string | null };
@@ -262,6 +264,17 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
       }
     : null;
 
+  const chainRaw = (readEnv(env, "ESCALATION_CHAIN") ?? "claude,deepseek").toLowerCase();
+  const escalation = {
+    chain: chainRaw
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter((entry): entry is "claude" | "deepseek" => entry === "claude" || entry === "deepseek"),
+    claudeDir: readEnv(env, "CLAUDE_ESCALATION_DIR") ?? "./logs/escalation",
+    claudeTimeoutMs: Number(readEnv(env, "CLAUDE_ESCALATION_TIMEOUT_MS") ?? "90000") || 90000,
+    claudeMaxCalls: Number(readEnv(env, "CLAUDE_MAX_CALLS") ?? "60") || 60,
+  };
+
   const combatPlannerRaw = (readEnv(env, "COMBAT_PLANNER") ?? DEFAULTS.combatPlanner).toLowerCase();
   if (combatPlannerRaw !== "turn" && combatPlannerRaw !== "card") {
     problems.push({ field: "COMBAT_PLANNER", message: `expected turn or card, got "${combatPlannerRaw}"` });
@@ -342,6 +355,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     strictJev,
     combatPlanner,
     deepseek,
+    escalation,
     mode,
     log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog },
     warnings,

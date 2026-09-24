@@ -193,7 +193,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-continue",
         intent,
-        rationale: `continuing the ${memo.via === "jev" ? "Jev-chosen" : memo.via === "deepseek" ? "DeepSeek-chosen" : "code-chosen"} plan: ${stepText(next)}`,
+        rationale: `continuing the ${memo.via === "jev" ? "Jev-chosen" : memo.via === "deepseek" ? "DeepSeek-chosen" : memo.via === "claude" ? "Claude-chosen" : "code-chosen"} plan: ${stepText(next)}`,
       };
     }
   }

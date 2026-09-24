@@ -55,7 +55,7 @@ export interface CombatPlanMemo {
   remaining: import("../strategy/turn-solver.js").Step[];
   /** Hand signature the next step expects; any other hand means the board surprised us. */
   expectedHand: string;
-  via: "code" | "jev" | "deepseek";
+  via: "code" | "jev" | "deepseek" | "claude";
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {
@@ -87,8 +87,8 @@ export interface ResolvedAction {
   confidence: number | null;
   fallback: boolean;
   reask?: ReaskSpec;
-  /** Set when a model other than Jev made the call (DeepSeek escalation). */
-  decider?: "jev" | "deepseek";
+  /** Set when a model other than Jev made the call (escalation). */
+  decider?: "jev" | "deepseek" | "claude";
 }
 
 export interface AskDecision {

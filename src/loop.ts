@@ -13,7 +13,7 @@ import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import type { JevClient } from "./jev/client.js";
-import type { DeepSeekClient } from "./llm/deepseek.js";
+import type { Escalator } from "./llm/file-escalation.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -46,8 +46,8 @@ export interface LoopOptions {
    * That mode exists to exercise the plumbing against the real game without spending tokens.
    */
   jev: JevClient | null;
-  /** Escalation for Jev's near-guesses on decisions that allow it; null disables escalation. */
-  deepseek?: DeepSeekClient | null;
+  /** Escalation chain for Jev's near-guesses (Claude via files, then DeepSeek); empty disables it. */
+  escalators?: Escalator[];
   knowledge: Knowledge;
   maxRuns?: number;
   maxDecisions?: number;
@@ -61,6 +61,7 @@ export interface LoopStats {
   jevCalls: number;
   deepseekCalls: number;
   deepseekTokens: number;
+  claudeCalls: number;
   /** Answers reused instead of re-asking Jev about a board that had not moved. */
   debounced: number;
   /** Jev calls skipped because the board moved between planning and asking. */
@@ -202,6 +203,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     jevCalls: 0,
     deepseekCalls: 0,
     deepseekTokens: 0,
+    claudeCalls: 0,
     debounced: 0,
     staleSkips: 0,
     fallbacks: 0,
@@ -557,37 +559,50 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
         const esc = decision.escalate;
         const jevAnswer = esc ? result.answers[esc.question] : undefined;
-        const deepseek = options.deepseek ?? null;
-        if (
-          esc &&
-          deepseek &&
-          jevAnswer?.type === "choice" &&
-          jevAnswer.confidence < esc.below &&
-          stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)
-        ) {
+        if (esc && jevAnswer?.type === "choice" && jevAnswer.confidence < esc.below) {
           const question = decision.questions[esc.question];
-          try {
-            stats.deepseekCalls += 1;
-            const ds = await deepseek.choose(decision.state, question?.instructions ?? "", question?.type === "choice" ? question.criteria : {});
-            stats.deepseekTokens += ds.inputTokens + ds.outputTokens;
-            const override = decision.resolve({
-              ...result.answers,
-              [esc.question]: { type: "choice", choice: ds.choice, probabilities: { [ds.choice]: 1 }, confidence: 1, raw: { deepseek: true } },
-            } as AnswerSet);
-            if (override.intent) {
-              const agreed = ds.choice === jevAnswer.choice;
+          const criteria = question?.type === "choice" ? question.criteria : {};
+          const context: Record<string, JsonValue> = {
+            label: decision.label,
+            why_escalated: esc.why,
+            floor: state.run?.floor ?? null,
+            turn: state.turn,
+            jev_choice: jevAnswer.choice,
+            jev_confidence: Number(jevAnswer.confidence.toFixed(2)),
+            jev_probabilities: toJsonValue(jevAnswer.probabilities),
+          };
+          for (const escalator of options.escalators ?? []) {
+            const capped =
+              escalator.name === "claude"
+                ? stats.claudeCalls >= config.escalation.claudeMaxCalls
+                : stats.deepseekCalls >= (config.deepseek?.maxCalls ?? 0);
+            if (capped) continue;
+            try {
+              if (escalator.name === "claude") stats.claudeCalls += 1;
+              else stats.deepseekCalls += 1;
+              if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
+              const answer = await escalator.choose(decision.state, question?.instructions ?? "", criteria, context);
+              if (escalator.name === "deepseek") stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
+              const override = decision.resolve({
+                ...result.answers,
+                [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name } },
+              } as AnswerSet);
+              if (!override.intent) continue;
+              const agreed = answer.choice === jevAnswer.choice;
+              const who = escalator.name === "claude" ? "Claude" : "DeepSeek";
               resolved = {
                 ...override,
-                decider: "deepseek",
+                decider: escalator.name,
                 confidence: jevAnswer.confidence,
-                rationale: `DeepSeek ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${ds.choice}; ${esc.why}): ${ds.reason} | ${override.rationale}`,
+                rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
-              // A plan committed by this resolution was DeepSeek's, not Jev's (post-mortem attribution).
-              if (screenMemory.combatPlan) screenMemory.combatPlan.via = "deepseek";
-              escalation = { jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: ds.choice, reason: ds.reason, latency_ms: ds.latencyMs, tokens: ds.inputTokens + ds.outputTokens };
+              // A plan committed by this resolution belongs to the escalator (post-mortem attribution).
+              if (screenMemory.combatPlan) screenMemory.combatPlan.via = escalator.name;
+              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens };
+              break;
+            } catch (error) {
+              onEvent({ type: "note", message: `${escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });
             }
-          } catch (error) {
-            onEvent({ type: "note", message: `DeepSeek escalation failed: ${error instanceof Error ? error.message : String(error)}` });
           }
         }
 
