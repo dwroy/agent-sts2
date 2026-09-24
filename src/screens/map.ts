@@ -26,10 +26,13 @@ function hpPercent(env: DecisionEnv): number {
 }
 
 /** How much this node type is worth to *this* run right now. */
-function nodeWeight(type: string, hpPct: number, gold: number): number {
+function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number): number {
   switch (type) {
     case "Elite":
-      return hpPct > 0.65 ? 4 : hpPct > 0.45 ? 1.5 : -1;
+      // Phase 2: no elites in the first floors of an act (the deck is still starter cards), and only
+      // with HP to spare.
+      if (floorInAct <= 4) return -3;
+      return hpPct > 0.7 ? 4 : hpPct > 0.5 ? 0.5 : -3;
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;
     case "Shop":
@@ -116,7 +119,8 @@ export function planMap(env: DecisionEnv): Decision | null {
 
   const hpPct = hpPercent(env);
   const gold = state.run?.gold ?? 0;
-  const weightOf = (type: string): number => nodeWeight(type, hpPct, gold);
+  const floorInAct = ((state.run?.floor ?? 1) - 1) % 17 + 1;
+  const weightOf = (type: string): number => nodeWeight(type, hpPct, gold, floorInAct);
 
   const options: PickOption[] = available.flatMap((node) => {
     const index = numOrNull(node["index"]);
@@ -153,6 +157,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.35,
     options,
+    codeMargin: env.combatPlanner === "card" ? undefined : 2.5,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
