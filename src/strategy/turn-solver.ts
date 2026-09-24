@@ -78,6 +78,10 @@ export interface PlayerSim {
   endTurnBlock?: number;
   /** Rupture N: +N Strength whenever the player loses HP on their own turn. */
   rupture?: number;
+  /** Sloth: at most this many more cards can be played this turn. */
+  maxPlays?: number | null;
+  /** Unblockable HP loss at the end of the turn (Disintegration debuff). */
+  endTurnHpLoss?: number;
 }
 
 export interface SolverInput {
@@ -422,7 +426,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   const incomingAfterBlock = Math.max(0, incomingRaw - sim.block - (input.player.endTurnBlock ?? 0));
   const selfLoss = input.player.hp - sim.hp;
-  const hpLoss = selfLoss + incomingAfterBlock;
+  const hpLoss = selfLoss + incomingAfterBlock + (winsFight ? 0 : input.player.endTurnHpLoss ?? 0);
   const hpAfter = input.player.hp - hpLoss;
   const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0);
 
@@ -569,7 +573,10 @@ export function solveTurn(input: SolverInput): SolveResult {
     if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;
 
     const tried = new Set<string>();
+    const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
+    const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
     for (const card of sim.hand) {
+      if (card.type !== "Potion" && playsLeft <= 0) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {

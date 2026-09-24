@@ -199,6 +199,9 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
     endTurnBlock: powerAmount(player, "PLATING_POWER") + powerAmount(player, "METALLICIZE_POWER"),
     rupture: powerAmount(player, "RUPTURE_POWER"),
+    // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
+    maxPlays: powerAmount(player, "SLOTH_POWER") > 0 ? Math.max(0, powerAmount(player, "SLOTH_POWER") - num(player["cards_played_this_turn"])) : null,
+    endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER"),
   };
   const kind = fightKind(combat, env);
 
