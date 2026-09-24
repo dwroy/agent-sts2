@@ -232,7 +232,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     tempStrength,
     enemyStrength,
     enemyTempStrengthLoss,
-    hpLoss,
+    // Beckon's HpLoss var is what holding it costs, not a price for playing it (PU21: every Beckon
+    // played was charged 6 HP by the solver).
+    hpLoss: heldPenalty > 0 ? 0 : hpLoss,
     energyGain,
     draw,
     exhausts,
