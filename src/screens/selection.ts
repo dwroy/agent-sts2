@@ -34,7 +34,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const isUpgrade = kind === "deck_upgrade_select";
   // The mod reports "pick cards to ADD to the deck" (events) with the same kind as removal; only the
   // prompt tells them apart. Scoring it as a removal picked the worst cards on a live run.
-  const isAdd = /加入到?你的.{0,12}牌组|add .{0,30}to your deck/i.test(prompt);
+  // "Add to deck" and "put on top of the draw pile" (Headbutt) both want the BEST card, yet the mod
+  // labels them like a removal.
+  const isAdd = /加入到?你的.{0,12}牌组|add .{0,30}to your deck|抽牌堆顶|top of your draw pile/i.test(prompt);
   // "Choose a card in hand to exhaust" (Baking Gloves every turn, True Grit+, Burning Pact …): code
   // gives up the least valuable card — statuses/curses, then basics — instead of asking every turn.
   const isExhaust = kind === "combat_hand_select" && /消耗|exhaust/i.test(prompt);
