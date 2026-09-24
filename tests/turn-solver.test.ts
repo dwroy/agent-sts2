@@ -228,6 +228,20 @@ describe("status cards in hand", () => {
     expect(best.steps.length).toBe(2);
     expect(best.outcome.hpLoss).toBe(15);
   });
+
+  it("plays Beckon rather than blocking its HP loss (BG4W F17 T6: died at 8 HP holding two)", () => {
+    const beckon = (index: number): CardModel =>
+      card(index, "BECKON", { type: "Status", target: "none", validTargets: [], cost: 1, heldPenalty: 6, heldHpLoss: 6 });
+    const result = solveTurn({
+      hand: [beckon(0), beckon(1), defend(2), defend(3)],
+      player: player({ hp: 8, energy: 2 }),
+      enemies: [enemy({ hp: 60, attacks: [] })],
+      fightKind: "boss",
+    });
+    const best = result.plans[0]!;
+    expect(best.steps.map((step) => step.cardId)).toEqual(["BECKON", "BECKON"]);
+    expect(best.outcome.hpLoss).toBe(0);
+  });
 });
 
 describe("Duplication potion", () => {

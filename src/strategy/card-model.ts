@@ -55,6 +55,8 @@ export interface CardModel {
   flatValue: number;
   /** HP lost at end of turn if this card is still in hand (Toxic, Burn, Decay, …). */
   heldPenalty: number;
+  /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
+  heldHpLoss?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
   text: string;
@@ -190,6 +192,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const rendered = str(card["resolved_rules_text"]) || info?.description || "";
   const held = /回合结束时[^。]*手牌中[^。]*?(?:受到|失去)(\d+)点(?:伤害|生命)/.exec(rendered) ?? /at the end of your turn[^.]*in your hand[^.]*?(?:take|lose) (\d+)/i.exec(rendered);
   const heldPenalty = held ? Number(held[1]) : 0;
+  // "失去N点生命" / "lose N HP" bypasses block (WX16, BG4W: Soul Fysh's Beckon planned as blockable, died at 8 HP).
+  const heldHpLoss = held && /失去\d+点生命|lose \d+ hp/i.test(held[0]) ? heldPenalty : 0;
   if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
     damage = null;
@@ -225,6 +229,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     known,
     flatValue,
     heldPenalty,
+    heldHpLoss,
     retaliate: dyn(card, "DamageBack") ?? 0,
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };

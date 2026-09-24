@@ -439,9 +439,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
   const winsFight = living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
-  const heldPenalty =
-    sim.hand.reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0) +
-    input.hand.filter((card) => !card.playable).reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0);
+  // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
+  const heldCards = [...sim.hand, ...input.hand.filter((card) => !card.playable)];
+  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
+  const heldPenalty = heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0);
   let incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
   if (sim.buffer > 0 && !winsFight) {
     // Buffer negates whole hits: approximate by removing the biggest ones.
@@ -458,7 +459,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
   const selfLoss = input.player.hp - sim.hp;
-  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd);
+  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   const hpAfter = input.player.hp - hpLoss;
   const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0);
 
