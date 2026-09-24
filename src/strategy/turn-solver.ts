@@ -72,6 +72,8 @@ export interface PlayerSim {
   keepsBlock?: boolean;
   /** The Gambit: any unblocked attack damage kills. */
   gambit?: boolean;
+  /** Block gained at the end of the player's turn, before the enemy acts (Plating, Metallicize). */
+  endTurnBlock?: number;
 }
 
 export interface SolverInput {
@@ -375,7 +377,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     sim.hand.reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0) +
     input.hand.filter((card) => !card.playable).reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0);
   const incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
-  const incomingAfterBlock = Math.max(0, incomingRaw - sim.block);
+  const incomingAfterBlock = Math.max(0, incomingRaw - sim.block - (input.player.endTurnBlock ?? 0));
   const selfLoss = input.player.hp - sim.hp;
   const hpLoss = selfLoss + incomingAfterBlock;
   const hpAfter = input.player.hp - hpLoss;

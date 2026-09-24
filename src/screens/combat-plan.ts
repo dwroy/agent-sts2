@@ -186,6 +186,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
+    endTurnBlock: powerAmount(player, "PLATING_POWER") + powerAmount(player, "METALLICIZE_POWER"),
   };
   const kind = fightKind(combat, env);
 
