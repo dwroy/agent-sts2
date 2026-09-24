@@ -26,7 +26,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const selected = numOrNull(selection["selected_count"]) ?? 0;
   const canConfirm = bool(selection["can_confirm"]);
 
-  if (selected >= min && canConfirm) {
+  // "Up to N" enchant/upgrade screens (min 0): confirming with nothing selected hung the mod's
+  // confirm_selection for good (Twisted Hammer, 2026-09-24), and picking is a pure gain anyway.
+  const pickFirst = selected === 0 && (kind === "deck_enchant_select" || kind === "deck_upgrade_select");
+  if (selected >= min && canConfirm && !pickFirst) {
     return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}/${min} required` };
   }
   if (selected >= max) return null; // the mod usually closes the screen itself; wait for it
