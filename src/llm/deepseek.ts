@@ -22,6 +22,7 @@ export interface DeepSeekAnswer {
   latencyMs: number;
   inputTokens: number;
   outputTokens: number;
+  cacheHitTokens?: number;
 }
 
 const SYSTEM = [
