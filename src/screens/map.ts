@@ -129,7 +129,10 @@ export function planMap(env: DecisionEnv): Decision | null {
     const col = num(node["col"]);
     const type = str(node["node_type"], "Unknown");
     const self = nodes.get(key(row, col)) ?? { row, col, type, children: [] };
-    const value = weightOf(type) + continuation(self, nodes, weightOf, new Map());
+    // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
+    // Monster-first route scored level with a Rest-first one on a live run.
+    const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
+    const value = weightOf(type) * urgency + continuation(self, nodes, weightOf, new Map());
     return [
       {
         key: `n${index}`,
