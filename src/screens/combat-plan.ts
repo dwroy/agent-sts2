@@ -338,7 +338,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     endTurnBlock: powerAmount(player, "PLATING_POWER") + powerAmount(player, "METALLICIZE_POWER"),
     rupture: powerAmount(player, "RUPTURE_POWER"),
     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
-    maxPlays: powerAmount(player, "SLOTH_POWER") > 0 ? Math.max(0, powerAmount(player, "SLOTH_POWER") - num(player["cards_played_this_turn"])) : null,
+    maxPlays: playCap(player),
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? null,
@@ -585,4 +585,16 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
     },
   };
+}
+
+/**
+ * Cards still playable this turn: Sloth caps plays at its amount; Ringing (Ceremonial Beast's
+ * 昏眩, 8LQGV1EFQDVX) allows one card this turn. null = no cap.
+ */
+function playCap(player: Record<string, unknown>): number | null {
+  const caps: number[] = [];
+  if (powerAmount(player, "SLOTH_POWER") > 0) caps.push(powerAmount(player, "SLOTH_POWER"));
+  if (powerAmount(player, "RINGING_POWER") > 0) caps.push(1);
+  if (caps.length === 0) return null;
+  return Math.max(0, Math.min(...caps) - num(player["cards_played_this_turn"]));
 }

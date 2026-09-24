@@ -40,7 +40,8 @@ function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: numbe
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;
     case "Shop":
-      return gold >= 200 ? 3.5 : gold >= 120 ? 2 : 0.8;
+      // 8LQG reached the Act 1 boss holding 565 gold without a shop visit.
+      return gold >= 350 ? 6 : gold >= 200 ? 3.5 : gold >= 120 ? 2 : 0.8;
     case "Treasure":
       return 3;
     case "Unknown": // "?" rooms
