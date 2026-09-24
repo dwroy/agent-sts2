@@ -843,6 +843,62 @@ describe("combat plan guards (batch 2)", () => {
   });
 });
 
+describe("potions at low HP outside boss fights", () => {
+  // Two small attackers (4 + 3): not a dangerous turn, so only the low-HP rule offers the potion.
+  const pressedCombat = (hp: number, potionId: string): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = hp;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = enemies.map((enemy, i) => ({
+      ...enemy,
+      intents: [{ index: 0, intent_type: "Attack", label: String(4 - i), damage: 4 - i, hits: 1, total_damage: 4 - i }],
+    }));
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = potionId;
+    return raw;
+  };
+
+  it("offers an unmodelled potion below 40% HP against two attackers (7Q5G T5, Y83U F30)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const low = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(low?.label).toBe("combat/plan-choice+potion");
+    const high = planCombatTurn(env(pressedCombat(55, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(high?.label).not.toBe("combat/plan-choice+potion");
+  });
+
+  it("a modelled potion costs nothing to use below 40% HP against two attackers", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    // Fire Potion's 20 damage is worth less than the hallway use cost of 15; at low HP it is free.
+    const drinks = (hp: number): boolean => {
+      const e = env(pressedCombat(hp, "FIRE_POTION"), { combatPlanner: "turn" });
+      const decision = planCombatTurn(e);
+      if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
+      const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      // plan1 is the score-best line.
+      return String(criteria["plan1"]).includes("Fire Potion");
+    };
+    expect(drinks(25)).toBe(true);
+    expect(drinks(55)).toBe(false);
+  });
+});
+
+describe("Crimson Mantle already in play", () => {
+  it("its start-of-turn HP shows in the plan's HP loss (Y83U F30 T3: hp_lost 0)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const hpLost = (mantle: number): number => {
+      const raw = combatPayload();
+      const player = (raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>;
+      if (mantle > 0) player["powers"] = [{ index: 0, power_id: "CRIMSON_MANTLE_POWER", name: "Crimson Mantle", amount: mantle, is_debuff: false }];
+      const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+      if (decision?.kind === "act") return Number(/hp -(\d+)/.exec(decision.rationale)![1]);
+      const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      return Math.min(...Object.entries(criteria).filter(([key]) => key.startsWith("plan")).map(([, text]) => Number(JSON.parse(String(text))["hp_lost"])));
+    };
+    expect(hpLost(7) - hpLost(0)).toBe(1);
+    expect(hpLost(14) - hpLost(0)).toBe(2);
+  });
+});
+
 describe("map: the elite before the boss", () => {
   const preBoss = (hp: number): number => {
     const raw = mapPayload();

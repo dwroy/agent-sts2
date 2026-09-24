@@ -345,7 +345,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (juice) {
     return { kind: "act", label: "combat/potion-now", intent: { action: "use_potion", option_index: juice.slot }, rationale: `drinking ${juice.name} (permanent max HP, no reason to wait)` };
   }
-  const potionUseCost = kind === "boss" ? 0 : kind === "elite" ? 5 : 15;
+  // Low HP in an elite fight, or in a hallway fight against two or more attackers, is when potions
+  // are for: drink them like in a boss fight (7Q5G T5, Y83U F30: potions kept until the "emergency"
+  // turn, when it was too late).
+  const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
+  const pressed =
+    playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
+  const potionUseCost = kind === "boss" || pressed ? 0 : kind === "elite" ? 5 : 15;
   // Defensive potions are worth saving when next turn's hit is expected to be bigger than this one
   // (Vantom: Fortifier spent on the 12-damage lance, then nothing left for the 28-damage Dismember).
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
@@ -411,7 +417,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const top = options.includes(best) ? best : options[0] ?? best;
   const second = options.find((plan) => plan !== top);
   const clear = !second || top.score - second.score >= CLOSE_CALL;
-  if (clear && !((dangerous || kind === "boss") && potions.length > 0)) {
+  if (clear && !((dangerous || kind === "boss" || pressed) && potions.length > 0)) {
     commit(env, state.turn, top, hand, "code");
     const margin = second
       ? `+${(top.score - second.score).toFixed(1)} over next`
@@ -436,8 +442,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify(describePlan(plan, playerSim.maxHp));
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
-  // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them for).
-  const offerPotions = dangerous || kind === "boss";
+  // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
+  // for) or when pressed at low HP.
+  const offerPotions = dangerous || kind === "boss" || pressed;
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];

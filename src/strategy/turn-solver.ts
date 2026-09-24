@@ -521,17 +521,18 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
   const selfLoss = input.player.hp - sim.hp;
-  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
+  // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
+  // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
+  // part of this turn's HP loss, whether the Mantle is already up or played now (Y83U F30 T3: a
+  // Mantle plan showed hp_lost 0).
+  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles;
+  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss + startTurnLoss;
   const hpAfter = input.player.hp - hpLoss;
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
   const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
-  // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
-  // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either.
-  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles;
   const dies =
     hpAfter <= 0 ||
-    (startTurnLoss > 0 && hpAfter <= startTurnLoss) ||
     (input.player.gambit === true && incomingAfterBlock > 0) ||
     (sandpitAfter !== null && sandpitAfter <= 0);
 

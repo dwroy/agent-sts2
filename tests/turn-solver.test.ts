@@ -436,7 +436,9 @@ describe("Crimson Mantle's start-of-turn HP cost", () => {
   it("playing it into 1 HP is death next turn (YP9 T3/T5)", () => {
     const result = solveTurn({ hand: [mantle(0), defend(1)], player: player({ hp: 12, energy: 1 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 11, hits: 1 }] })], fightKind: "boss" });
     const mantlePlan = result.plans.find((plan) => plan.steps.some((step) => step.cardId === "CRIMSON_MANTLE"))!;
-    expect(mantlePlan.outcome.hpAfter).toBe(1);
+    // 1 HP after the hit, and the Mantle takes it at the start of the next turn.
+    expect(mantlePlan.outcome.hpLoss).toBe(12);
+    expect(mantlePlan.outcome.hpAfter).toBe(0);
     expect(mantlePlan.outcome.dies).toBe(true);
     expect(result.plans[0]!.steps[0]!.cardId).toBe("DEFEND_IRONCLAD");
   });
@@ -444,6 +446,13 @@ describe("Crimson Mantle's start-of-turn HP cost", () => {
   it("a Mantle already in play kills at 1 HP after the turn", () => {
     const result = solveTurn({ hand: [strike(0)], player: player({ hp: 7, startTurnHpLoss: 1 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 6, hits: 1 }] })], fightKind: "boss" });
     expect(result.plans.every((plan) => plan.outcome.dies)).toBe(true);
+  });
+
+  it("a Mantle already in play counts in the turn's HP loss", () => {
+    const result = solveTurn({ hand: [defend(0)], player: player({ hp: 40, startTurnHpLoss: 2 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 8, hits: 1 }] })], fightKind: "boss" });
+    const blocked = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(blocked.outcome.hpLoss).toBe(3 + 2);
+    expect(blocked.outcome.hpAfter).toBe(35);
   });
 
   it("at low HP a Mantle loses to Defend even when it survives", () => {
