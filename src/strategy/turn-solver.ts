@@ -49,6 +49,8 @@ export interface EnemySim {
   reflect?: boolean;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Painful Stabs, Paper Cuts). */
   punishesUnblocked?: number;
+  /** Gets stronger every turn it lives (Buff intent, Ritual, Territorial, stacking Strength): kill it first. */
+  scaling?: boolean;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -433,6 +435,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, sim.block - incomingRaw);
   score += weights.damage * sim.damageDealt;
+  // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
+  for (const enemy of sim.enemies) {
+    const start = input.enemies.find((entry) => entry.index === enemy.index)!;
+    if (start.scaling) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
+  }
   for (const enemy of kills) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     const threat = start.attacks.reduce((sum, attack) => sum + attack.damage * attack.hits, 0);

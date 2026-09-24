@@ -71,6 +71,11 @@ function enemySims(combat: Record<string, unknown>): EnemySim[] {
       slow: powerAmount(enemy, "SLOW_POWER") > 0,
       illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
       minion: powerAmount(enemy, "MINION_POWER") > 0,
+      scaling:
+        asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
+        powerAmount(enemy, "RITUAL_POWER") > 0 ||
+        powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
+        powerAmount(enemy, "STRENGTH_POWER") >= 5,
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
