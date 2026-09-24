@@ -559,6 +559,8 @@ describe("turn-start settle guard", () => {
 
   it("does not wait on a normal turn start", async () => {
     const { turnStartUnsettled } = await import("../src/screens/index.js");
-    expect(turnStartUnsettled(env(combatPayload(), { combatPlanner: "turn" }), 1_000)).toBe(false);
+    const e = env(combatPayload(), { combatPlanner: "turn" });
+    expect(turnStartUnsettled(e, 1_000)).toBe(true); // 3-card hand: the draw may still be landing
+    expect(turnStartUnsettled(e, 2_600)).toBe(false);
   });
 });

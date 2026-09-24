@@ -76,7 +76,7 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
   let decision: Decision | null = null;
   switch (screen) {
     case "COMBAT":
-      decision = turnStartUnsettled(env) ? null : env.combatPlanner === "card" ? planCombat(env) : planCombatTurn(env);
+      decision = env.combatPlanner === "card" ? planCombat(env) : turnStartUnsettled(env) ? null : planCombatTurn(env);
       break;
     case "MAP":
       decision = planMap(env);
@@ -168,6 +168,10 @@ export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean 
       const type = env.knowledge.card(String(card["card_id"] ?? ""))?.type ?? "";
       return type === "Status" || type === "Curse";
     });
-  if (energy > 0 && !onlyJunk) return false;
-  return now - env.screenMemory.turnSeen.at < 3_000;
+  const elapsed = now - env.screenMemory.turnSeen.at;
+  if (energy === 0 || onlyJunk) return elapsed < 3_000;
+  // A short hand at turn start is usually the draw still animating (run 8: planned the turn from a
+  // one-card hand while four more cards were landing). Give the draw 1.5 s before trusting it.
+  if (hand.length < 5) return elapsed < 1_500;
+  return false;
 }
