@@ -35,6 +35,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // The mod reports "pick cards to ADD to the deck" (events) with the same kind as removal; only the
   // prompt tells them apart. Scoring it as a removal picked the worst cards on a live run.
   const isAdd = /加入到?你的.{0,12}牌组|add .{0,30}to your deck/i.test(prompt);
+  // "Choose a card in hand to exhaust" (Baking Gloves every turn, True Grit+, Burning Pact …): code
+  // gives up the least valuable card — statuses/curses, then basics — instead of asking every turn.
+  const isExhaust = kind === "combat_hand_select" && /消耗|exhaust/i.test(prompt);
   const candidates = asArray(selection["cards"])
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
@@ -52,7 +55,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
-      score: selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")),
+      score: selectionScore(isAdd ? "deck_add_select" : isExhaust ? "deck_card_select" : kind, cardId, str(card["card_type"], info?.type ?? "")),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),
@@ -63,7 +66,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
     };
   });
 
-  const verb = isAdd
+  const verb = isExhaust
+    ? "exhaust"
+    : isAdd
     ? "add"
     : isUpgrade
     ? "upgrade"
