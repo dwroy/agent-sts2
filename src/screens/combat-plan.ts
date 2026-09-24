@@ -183,6 +183,8 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
   for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
+  // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
+  if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) for (const card of hand) card.draw = 0;
   const enemies = enemySims(combat);
   if (enemies.length === 0) return null;
 
