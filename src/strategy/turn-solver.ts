@@ -371,7 +371,7 @@ export function weightsFor(input: SolverInput): Weights {
   const hpFraction = input.player.maxHp > 0 ? input.player.hp / input.player.maxHp : 1;
   // HP gets dearer as it runs low; in elite/boss fights damage gets dearer (the fight is the point).
   const hp = 1.0 + 1.5 * Math.max(0, 0.6 - hpFraction) / 0.6;
-  const damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.55;
+  const damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
 
