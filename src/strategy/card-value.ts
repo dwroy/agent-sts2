@@ -41,6 +41,27 @@ const AOE = new Set(["THUNDERCLAP", "BREAKTHROUGH", "STOMP", "CONFLAGRATION", "W
 const DRAW = new Set(["POMMEL_STRIKE", "SHRUG_IT_OFF", "BATTLE_TRANCE", "BURNING_PACT", "OFFERING", "DRUM_OF_BATTLE", "PILLAGE", "DARK_EMBRACE"]);
 const SCALING = new Set(["DEMON_FORM", "INFLAME", "CORRUPTION", "FEEL_NO_PAIN", "CRIMSON_MANTLE", "PYRE", "RUPTURE", "BRAND", "DOMINATE", "FEED", "JUGGERNAUT", "HELLRAISER", "UNMOVABLE", "BARRICADE"]);
 const FRONTLOAD = new Set(["BREAK", "BLUDGEON", "HEMOKINESIS", "UPPERCUT", "CARNAGE", "TWIN_STRIKE", "POMMEL_STRIKE", "THRASH", "HEADBUTT", "DISMANTLE", "MANGLE", "UNRELENTING", "STOMP", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "SETUP_STRIKE", "TEAR_ASUNDER", "WHIRLWIND", "RAMPAGE", "MOLTEN_FIST", "CINDER", "FIEND_FIRE"]);
+const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL"]);
+
+/**
+ * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 173 HP, so
+ * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 230 HP.
+ */
+function bossBonus(cardId: string, bossId: string): { bonus: number; why: string | null } {
+  const boss = bossId.toUpperCase();
+  if (boss.includes("VANTOM")) {
+    if (MULTI_HIT.has(cardId)) return { bonus: 10, why: "multi-hit strips Vantom's Slippery" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for Vantom's 173 HP" };
+  }
+  if (boss.includes("KIN")) {
+    if (AOE.has(cardId)) return { bonus: 10, why: "AoE for the Kin followers" };
+  }
+  if (boss.includes("CEREMONIAL") || boss.includes("BEAST")) {
+    if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Beast's 230 HP" };
+  }
+  return { bonus: 0, why: null };
+}
+
 const BLOCK = new Set(["SHRUG_IT_OFF", "FLAME_BARRIER", "IMPERVIOUS", "COLOSSUS", "BLOOD_WALL", "TRUE_GRIT", "EVIL_EYE", "EXPECT_A_FIGHT", "STONE_ARMOR", "CRIMSON_MANTLE", "FEEL_NO_PAIN", "TAUNT", "IRON_WAVE"]);
 
 export interface CardValue {
@@ -79,7 +100,7 @@ export function deckProfile(deck: DeckEntry[]): DeckProfile {
   return { size: deck.length, aoe, draw, scaling, frontload, block, basics, copies };
 }
 
-export function cardValue(cardId: string, rarity: string, type: string, deck: DeckProfile, act: number, floor: number): CardValue {
+export function cardValue(cardId: string, rarity: string, type: string, deck: DeckProfile, act: number, floor: number, bossId = ""): CardValue {
   const reasons: string[] = [];
   let value = TIER[cardId] ?? (type === "Curse" || type === "Status" ? 0 : rarity === "Rare" ? 55 : 45);
   if (!(cardId in TIER)) reasons.push("no tier data");
@@ -104,6 +125,11 @@ export function cardValue(cardId: string, rarity: string, type: string, deck: De
   if (BLOCK.has(cardId) && deck.block < 2 && floor >= 5) {
     value += 5;
     reasons.push("thin on block");
+  }
+  const boss = bossBonus(cardId, bossId);
+  if (boss.bonus > 0) {
+    value += boss.bonus;
+    reasons.push(boss.why ?? "boss");
   }
   const copies = deck.copies.get(cardId) ?? 0;
   if (copies > 0) {

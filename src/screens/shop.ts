@@ -99,7 +99,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         intent: { action, option_index: index },
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
-        score: shopScore(action, id, info, profile, act, floor, price),
+        score: shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"])),
         summary: {
           buy: name,
           kind: kindLabel,
@@ -168,11 +168,12 @@ function shopScore(
   act: number,
   floor: number,
   price: number | null,
+  bossId = "",
 ): number {
   const cost = price ?? 150;
   if (action === "buy_card") {
     const card = info as { rarity?: string; type?: string } | null;
-    const value = cardValue(id, card?.rarity ?? "", card?.type ?? "", profile, act, floor).value;
+    const value = cardValue(id, card?.rarity ?? "", card?.type ?? "", profile, act, floor, bossId).value;
     return value - 62 - cost / 25;
   }
   if (action === "buy_relic") return 18 - cost / 40;

@@ -21,7 +21,14 @@ export function planRest(env: DecisionEnv): Decision | null {
     const hpPct = hpPercent(env);
     // Code-side preference only matters when Jev cannot be used or is unsure.
     // Phase 2: heal below half HP, otherwise upgrade; anything unusual stays close so the model sees it.
-    const score = id === "HEAL" ? (hpPct < 0.5 ? 10 : hpPct < 0.65 ? 5 : 1) : id === "SMITH" ? 6 : 4;
+    // The rest site right before an act boss (floor 16 of an act) heals unless HP is already high:
+    // runs 2, 5 and 6 walked into the Act 1 boss at 50-67% and two of them died there.
+    const floorInAct = ((state.run?.floor ?? 1) - 1) % 17 + 1;
+    const beforeBoss = floorInAct >= 15;
+    const score =
+      id === "HEAL"
+        ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) ? 10 : hpPct < 0.65 ? 5 : 1
+        : id === "SMITH" ? 6 : 4;
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,

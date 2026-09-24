@@ -37,7 +37,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
-      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor);
+      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]));
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
@@ -75,7 +75,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       state: {
         run_brief: briefJson(env.brief),
         deck_stats: env.brief.deck,
-        deck_needs: { act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block },
+        deck_needs: { act_boss: str(run["boss_id"]) || null, act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block },
         deck: describeDeck(entries),
         note: "skipping is a legitimate choice: a card that does not fit the plan makes the deck worse.",
       },
