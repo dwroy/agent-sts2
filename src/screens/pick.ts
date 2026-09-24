@@ -76,7 +76,12 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       };
     }
     if (params.maxModelOptions !== undefined && ranked.length > params.maxModelOptions) {
-      return buildPickDecision({ ...params, codeMargin: undefined, options: ranked.slice(0, params.maxModelOptions) });
+      // Keep the "take nothing" option in view even when it ranks low: skipping is always a real choice.
+      const keep = ranked.slice(0, params.maxModelOptions);
+      for (const option of ranked) {
+        if ((option.key === "skip" || option.key === "leave") && !keep.includes(option)) keep.push(option);
+      }
+      return buildPickDecision({ ...params, codeMargin: undefined, options: keep });
     }
   }
 
