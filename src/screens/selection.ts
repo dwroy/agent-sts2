@@ -55,7 +55,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
-      score: selectionScore(isAdd ? "deck_add_select" : isExhaust ? "deck_card_select" : kind, cardId, str(card["card_type"], info?.type ?? "")),
+      score: selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),
@@ -109,6 +109,11 @@ export function planSelection(env: DecisionEnv): Decision | null {
  * then Strikes, then Defends. Higher is better.
  */
 function selectionScore(kind: string, cardId: string, type: string): number {
+  if (kind === "combat_exhaust") {
+    // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
+    if (cardId === "HOWL_FROM_BEYOND") return 200;
+    kind = "deck_card_select";
+  }
   if (kind === "deck_add_select") return cardValue(cardId, "", type, deckProfile([]), 1, 10).value;
   if (kind === "deck_upgrade_select") {
     if (cardId === "BASH") return 95;
