@@ -143,7 +143,8 @@ export function planShop(env: DecisionEnv): Decision | null {
     escalateBelow: 0.4,
     options,
     codeMargin: env.combatPlanner === "card" ? undefined : 10,
-    maxModelOptions: 3,
+    // Five, not three: relics outscored Dark Shackles on a live run and hid it from the supervisor.
+    maxModelOptions: 5,
     // With nothing affordable the only option is to leave, so skip the model call entirely.
     skipModelWhenSingle: true,
     state: {
