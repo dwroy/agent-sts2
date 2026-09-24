@@ -927,3 +927,107 @@ describe("map: the elite before the boss", () => {
     expect(preBoss(Math.round(max * 0.9))).toBeGreaterThan(0);
   });
 });
+
+describe("combat plan guards (batch 3)", () => {
+  const guardCombat = (enemyId = "JAW_WORM"): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = 30;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], enemy_id: enemyId, intents: [{ index: 0, intent_type: "Attack", label: "32", damage: 32, hits: 1, total_damage: 32 }] }];
+    const hand = combat["hand"] as Record<string, unknown>[];
+    const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
+    combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    return raw;
+  };
+  const planLosses = (decision: Decision): { key: string; hpLost: number }[] => {
+    const criteria = decision.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    return Object.entries(criteria)
+      .filter(([key]) => key.startsWith("plan"))
+      .map(([key, text]) => ({ key, hpLost: Number(JSON.parse(String(text))["hp_lost"]) }));
+  };
+  const escalated = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } }) as AnswerSet;
+
+  it("HP guard slack: max(4, 10% HP) in boss/elite fights, max(6, 20%) otherwise, 0 past the fight budget", async () => {
+    const { hpGuardSlack, HP_GUARD_FIGHT_BUDGET } = await import("../src/screens/combat-plan.js");
+    expect(hpGuardSlack(30, "boss")).toBe(4);
+    expect(hpGuardSlack(70, "elite")).toBe(7);
+    expect(hpGuardSlack(30, "monster")).toBe(6);
+    expect(hpGuardSlack(70)).toBe(14);
+    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET)).toBe(7);
+    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
+    expect(hpGuardSlack(70, "monster", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
+  });
+
+  it("boss fight: a choice more than 4 HP over the cheapest plan is replaced", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(guardCombat("LAGAVULIN_MATRIARCH"), { combatPlanner: "turn" }));
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const plans = planLosses(decision);
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
+    const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
+    expect(greedy.hpLost - minLoss).toBeGreaterThan(4);
+    const resolved = decision.resolve(escalated(greedy.key));
+    expect(resolved.guard?.kind).toBe("hp");
+    expect(plans.find((entry) => entry.key === resolved.guard?.choice)!.hpLost).toBeLessThanOrEqual(minLoss + 4);
+  });
+
+  it("tracks the extra HP accepted in a fight, and past 12 plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const first = env(guardCombat(), { combatPlanner: "turn" });
+    const decision = planCombatTurn(first);
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const plans = planLosses(decision);
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
+    const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
+    const resolved = decision.resolve(escalated(greedy.key));
+    const used = plans.find((entry) => entry.key === (resolved.guard?.choice ?? greedy.key))!;
+    expect(first.screenMemory.hpGuard).toEqual({ fight: "1:9", extra: used.hpLost - minLoss });
+
+    // The same fight with the budget spent: anything above the cheapest plan is replaced.
+    const spent = env(guardCombat(), { combatPlanner: "turn" });
+    spent.screenMemory.hpGuard = { fight: "1:9", extra: 13 };
+    const again = planCombatTurn(spent);
+    if (again?.kind !== "ask") throw new Error("expected an ask");
+    const over = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
+    const guarded = again.resolve(escalated(over.key));
+    expect(guarded.guard?.kind).toBe("hp");
+    expect(plans.find((entry) => entry.key === guarded.guard?.choice)!.hpLost).toBe(minLoss);
+    expect(guarded.rationale).toMatch(/this fight already took/);
+    // Another fight (another floor) starts a fresh budget.
+    const next = guardCombat();
+    (next["run"] as Record<string, unknown>)["floor"] = 10;
+    const fresh = env(next, { combatPlanner: "turn" });
+    fresh.screenMemory.hpGuard = { fight: "1:9", extra: 13 };
+    const freshDecision = planCombatTurn(fresh);
+    if (freshDecision?.kind !== "ask") throw new Error("expected an ask");
+    freshDecision.resolve(escalated(plans.find((entry) => entry.hpLost === minLoss)!.key));
+    expect(fresh.screenMemory.hpGuard).toEqual({ fight: "1:10", extra: 0 });
+  });
+
+  it("boss fight: no second potion in a turn while HP is high (1R3C F17 T1)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], enemy_id: "LAGAVULIN_MATRIARCH", current_hp: 150, max_hp: 222, intents: [{ index: 0, intent_type: "Attack", label: "7", damage: 7, hits: 1, total_damage: 7 }] }];
+    const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    potions[1] = { ...potions[0], index: 1, potion_id: "LIQUID_MEMORIES", name: "Liquid Memories", requires_target: false, valid_target_indices: [] };
+    const decide = (startCount: number) => {
+      const e = env(raw, { combatPlanner: "turn" });
+      e.screenMemory.potionTurn = { fight: "1:9", turn: 3, startCount };
+      return planCombatTurn(e);
+    };
+    const usesPotion = (decision: Decision | null): boolean => {
+      if (!decision) return false;
+      if (decision.kind === "act") return decision.intent.action === "use_potion";
+      const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      return Object.entries(criteria).some(([key, text]) => !key.startsWith("plan") || /potion/i.test(String(text)));
+    };
+    // First look this turn: potions are on the table (boss fight).
+    expect(usesPotion(decide(2))).toBe(true);
+    // One already drunk this turn (3 at the start, 2 now): none offered, none planned.
+    expect(usesPotion(decide(3))).toBe(false);
+  });
+});

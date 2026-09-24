@@ -35,14 +35,33 @@ const MODELLED_ENEMY_POWERS = new Set([
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
-  "SANDPIT_POWER",
+  "SANDPIT_POWER", "ASLEEP_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
 const POWER_NOTES: Record<string, string> = {
   SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
+  ASLEEP_POWER: " (asleep, no attacks: the first HP damage wakes it at once, block damage does not; set up powers instead of chipping it)",
+  SLUMBER_POWER: " (sleeping, no attacks: -1 each turn and -1 per hit that takes HP; wakes at 0)",
   CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +5 Strength: kill both in the same turn or wear both down evenly)",
 };
+
+/** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
+export const BOSS_POTION_COST = 4;
+const BOSS_POTIONS_PER_TURN = 1;
+/** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
+const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
+
+/** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
+function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
+  const fight = `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
+  const memo = env.screenMemory.potionTurn;
+  if (!memo || memo.fight !== fight || memo.turn !== env.state.turn) {
+    env.screenMemory.potionTurn = { fight, turn: env.state.turn, startCount: count };
+    return 0;
+  }
+  return Math.max(0, memo.startCount - count);
+}
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
 const CLOSE_CALL = 6;
@@ -52,8 +71,17 @@ const MAX_OPTIONS = 4;
  * HP guardrail for elite/boss/dangerous plan choices: the models keep trading HP for damage ("Burning
  * Blood heals it", "HP buffer is comfortable"; WX16, 7Q5G, YP9, DG1 — the guide alone did not stop
  * it). A non-winning plan may lose at most this much more than the cheapest plan offered.
+ *
+ * Boss and elite fights get the tight bound, max(4, 10% HP): Z2H3 T7/T8 DeepSeek split the trade
+ * across re-plans, each step inside max(6, 20% HP) ≈ 9, about 12 HP over two turns, and died with the
+ * boss at 33. Once a fight's accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the
+ * cheapest plan, unless the choice wins the fight.
  */
-export function hpGuardSlack(hp: number): number {
+export const HP_GUARD_FIGHT_BUDGET = 12;
+
+export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unknown", extraSoFar = 0): number {
+  if (extraSoFar > HP_GUARD_FIGHT_BUDGET) return 0;
+  if (kind === "boss" || kind === "elite") return Math.max(4, hp * 0.1);
   return Math.max(6, hp * 0.2);
 }
 
@@ -61,12 +89,19 @@ export function hpGuardSlack(hp: number): number {
  * The plan to play instead of `chosen` when it loses too much HP, else null: the best-ranked plan
  * within the slack of the cheapest one (options are in code rank order).
  */
-export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number): Plan | null {
+export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp)): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
   const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
-  const bound = minLoss + hpGuardSlack(hp);
+  const bound = minLoss + slack;
   if (chosen.outcome.hpLoss <= bound) return null;
   return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+}
+
+/** This fight's HP-guard record (screenMemory.hpGuard), started fresh for a new fight. */
+function hpGuardMemo(env: DecisionEnv): { fight: string; extra: number } {
+  const fight = `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
+  if (env.screenMemory.hpGuard?.fight !== fight) env.screenMemory.hpGuard = { fight, extra: 0 };
+  return env.screenMemory.hpGuard;
 }
 
 function powerAmount(holder: Record<string, unknown>, id: string): number {
@@ -113,6 +148,8 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
+      asleep: powerAmount(enemy, "ASLEEP_POWER"),
+      slumber: powerAmount(enemy, "SLUMBER_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
       // is what lost G7EJ and WQTRX (the explosion is modelled through `eruption` instead).
       scaling:
@@ -351,7 +388,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
   const pressed =
     playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
-  const potionUseCost = kind === "boss" || pressed ? 0 : kind === "elite" ? 5 : 15;
+  // Boss potions are not free (1R3C F17 T1: cost 0 drank all three on a 7-damage turn): a small
+  // base cost, plus what a defensive one is worth saving for a bigger hit next turn.
+  const potionUseCost = pressed ? 0 : kind === "boss" ? BOSS_POTION_COST : kind === "elite" ? 5 : 15;
   // Defensive potions are worth saving when next turn's hit is expected to be bigger than this one
   // (Vantom: Fortifier spent on the 12-damage lance, then nothing left for the 28-damage Dismember).
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
@@ -360,7 +399,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     .filter((enemy) => enemy["is_alive"] !== false)
     .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
-  const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE"]);
+  // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
+  const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
+  const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const potionCards = potionsAll
     .map((potion) =>
       modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0)),
@@ -373,6 +414,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     fightKind: kind,
     turn: state.turn ?? 1,
     cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
+    potionLimit,
   });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
@@ -400,7 +442,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
   }
 
-  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id));
+  const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
+  const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
+  const potions = potionCapped ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id));
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
@@ -521,12 +565,16 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (hallway && answer.confidence < 0.3 && picked !== top && answer.raw !== undefined && !(answer.raw as { escalated?: string }).escalated) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
       }
-      const replacement = hallway ? null : hpGuardReplacement(picked, options, playerSim.hp);
+      // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
+      const guardMemo = hallway ? null : hpGuardMemo(env);
+      const slack = hpGuardSlack(playerSim.hp, kind, guardMemo?.extra ?? 0);
+      const replacement = hallway ? null : hpGuardReplacement(picked, options, playerSim.hp, slack);
       const plan = replacement ?? picked;
+      if (guardMemo && !plan.outcome.winsFight) guardMemo.extra += Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       commit(env, state.turn, plan, hand, "jev");
       const rank = options.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${hpGuardSlack(playerSim.hp).toFixed(0)} over the cheapest line, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),

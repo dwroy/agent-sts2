@@ -460,3 +460,58 @@ describe("Crimson Mantle's start-of-turn HP cost", () => {
     expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["DEFEND_IRONCLAD"]);
   });
 });
+
+describe("boss potion cap (1R3C F17 T1: three potions on a 7-damage turn)", () => {
+  it("drinks at most one potion a turn unless it wins the fight or the turn ends below 30% HP", async () => {
+    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const potions = () => [
+      modelPotion("BLOCK_POTION", "block", 0, [], 4)!,
+      modelPotion("STRENGTH_POTION", "strength", 1, [], 4)!,
+      modelPotion("WEAK_POTION", "weak", 2, [0], 4)!,
+    ];
+    const potionSteps = (steps: { cardId: string }[]) => steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+    const input = {
+      hand: [strike(0), defend(1), inflame(2), ...potions()],
+      player: player({ hp: 59, maxHp: 68 }),
+      enemies: [enemy({ hp: 173, maxHp: 173, attacks: [{ damage: 7, hits: 1 }] })],
+      fightKind: "boss" as const,
+      turn: 1,
+    };
+    const capped = solveTurn({ ...input, potionLimit: 1 });
+    expect(capped.plans.every((plan) => potionSteps(plan.steps) <= 1)).toBe(true);
+    expect(solveTurn({ ...input, potionLimit: 0 }).plans.every((plan) => potionSteps(plan.steps) === 0)).toBe(true);
+    // Uncapped (the old free boss potions) the solver happily stacks them.
+    const free = solveTurn({ ...input, hand: [strike(0), defend(1), inflame(2), ...potions().map((p) => ({ ...p, flatValue: 0 }))] });
+    expect(potionSteps(free.plans[0]!.steps)).toBeGreaterThan(1);
+    // Low HP: the cap does not apply to a turn that ends below 30% max HP.
+    const low = solveTurn({ ...input, player: player({ hp: 20, maxHp: 68 }), enemies: [enemy({ hp: 173, maxHp: 173, attacks: [{ damage: 30, hits: 1 }] })], potionLimit: 0 });
+    expect(low.plans.some((plan) => potionSteps(plan.steps) > 0)).toBe(true);
+  });
+});
+
+describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and woke it)", () => {
+  const bash = (index: number): CardModel => card(index, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
+  const matriarch = (overrides: Partial<EnemySim> = {}): EnemySim =>
+    enemy({ name: "Lagavulin Matriarch", hp: 222, maxHp: 222, block: 12, asleep: 3, attacks: [], ...overrides });
+
+  it("does not chip an Asleep enemy's HP: set up or hit only its block", () => {
+    const hand = [strike(0), strike(1), strike(2), inflame(3)];
+    const result = solveTurn({ hand, player: player({ hp: 70 }), enemies: [matriarch()], fightKind: "boss", turn: 1 });
+    const best = result.plans[0]!;
+    expect(best.outcome.enemyHpAfter[0]!.hp).toBe(222);
+    expect(best.steps.map((step) => step.cardId)).toContain("INFLAME");
+    // The same board without the sleep: the solver does chip it.
+    const awake = solveTurn({ hand, player: player({ hp: 70 }), enemies: [matriarch({ asleep: 0 })], fightKind: "boss", turn: 1 });
+    expect(awake.plans[0]!.outcome.enemyHpAfter[0]!.hp).toBeLessThan(222);
+  });
+
+  it("wakes it anyway for a big hit (>= 25% of its HP)", () => {
+    const result = solveTurn({ hand: [bash(0), strike(1), strike(2)], player: player({ hp: 70, energy: 4 }), enemies: [matriarch({ hp: 40, block: 0 })], fightKind: "boss", turn: 1 });
+    expect(result.plans[0]!.outcome.enemyHpAfter[0]!.hp).toBeLessThanOrEqual(30);
+  });
+
+  it("an awake (attacking) enemy is hit as usual", () => {
+    const result = solveTurn({ hand: [bash(0), strike(1), strike(2), inflame(3)], player: player({ hp: 70 }), enemies: [matriarch({ asleep: 0, block: 0, attacks: [{ damage: 5, hits: 1 }] })], fightKind: "boss", turn: 1 });
+    expect(result.plans[0]!.outcome.enemyHpAfter[0]!.hp).toBeLessThan(222);
+  });
+});

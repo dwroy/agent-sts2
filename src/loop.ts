@@ -426,6 +426,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.cardRewardSkipped = false;
       screenMemory.combatPlan = null;
     }
+    // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
+    if (!state.in_combat) {
+      screenMemory.hpGuard = undefined;
+      screenMemory.potionTurn = undefined;
+    }
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
     }

@@ -20,6 +20,7 @@ export const testKnowledge: Knowledge = makeKnowledge({
   monsters: [
     { id: "JAW_WORM", name: "Jaw Worm", type: "Monster", min_hp: 40, max_hp: 44, moves: [] },
     { id: "CULTIST", name: "Cultist", type: "Monster", min_hp: 48, max_hp: 54, moves: [] },
+    { id: "LAGAVULIN_MATRIARCH", name: "Lagavulin Matriarch", type: "Boss", min_hp: 222, max_hp: 222, moves: [] },
   ],
   relics: [
     { id: "BURNING_BLOOD", name: "Burning Blood", description: "At the end of combat, heal 6 HP.", rarity: "Starter" },

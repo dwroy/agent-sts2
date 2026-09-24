@@ -55,6 +55,13 @@ export interface ScreenMemory {
   turnBoard?: { turn: number | null; handLen: number; energy: number; changedAt: number };
   /** Enemy index we last targeted (Surrounded facing). */
   facing?: number | null;
+  /**
+   * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
+   * choices in this fight (`fight` = act:floor). Survives in-combat screen changes; cleared out of combat.
+   */
+  hpGuard?: { fight: string; extra: number };
+  /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
+  potionTurn?: { fight: string; turn: number | null; startCount: number };
 }
 
 export interface CombatPlanMemo {

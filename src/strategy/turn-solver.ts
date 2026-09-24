@@ -57,6 +57,14 @@ export interface EnemySim {
    * HP and block. Each Frantic Escape played adds 1.
    */
   sandpit?: number;
+  /**
+   * Sleep turns left while it does not attack: Asleep (Lagavulin Matriarch) ends on the first HP it
+   * loses (it wakes stunned, so the turns after that one are lost); Slumber (Slumbering Beetle) drops
+   * by 1 per HP-losing hit. Block damage does not wake either (states.jsonl: 12 Plating block
+   * chipped to 2, still asleep).
+   */
+  asleep?: number;
+  slumber?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
@@ -122,6 +130,12 @@ export interface SolverInput {
   turn?: number;
   /** Cards already played this turn (Slow). */
   cardsPlayedThisTurn?: number;
+  /**
+   * Potions this turn may still drink (boss fights: 1 a turn), null for no cap. A plan over it is
+   * kept only when it wins the fight or ends the turn below 30% max HP (1R3C F17 T1: all three potions
+   * on a 7-damage turn, none left for the 28-damage Dismember).
+   */
+  potionLimit?: number | null;
   maxNodes?: number;
 }
 
@@ -173,7 +187,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -264,6 +278,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     enemy.hp -= loss;
     enemy.lostThisTurn += loss;
     dealt += loss;
+    if (loss > 0) wake(enemy);
     if ((enemy.thorns ?? 0) > 0) {
       sim.hp -= enemy.thorns ?? 0;
       sim.hpLostThisTurn = true;
@@ -276,6 +291,17 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
   }
   sim.damageDealt += dealt;
   return dealt;
+}
+
+/** HP damage on a sleeper: its free (non-attacking) turns lost. */
+function wake(enemy: Sim["enemies"][number]): void {
+  if ((enemy.asleep ?? 0) > 0) {
+    enemy.sleepLost = (enemy.sleepLost ?? 0) + Math.max(1, (enemy.asleep ?? 0) - 1);
+    enemy.asleep = 0;
+  } else if ((enemy.slumber ?? 0) > 0) {
+    enemy.sleepLost = (enemy.sleepLost ?? 0) + 1;
+    enemy.slumber = (enemy.slumber ?? 0) - 1;
+  }
 }
 
 /** Crab Rage: an ally's death gives the survivor 99 Block and Strength (text says 5; 7Q5G F33 measured 8 -> 14). */
@@ -453,6 +479,7 @@ function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): v
   enemy.hp -= loss;
   enemy.lostThisTurn += loss;
   sim.damageDealt += loss;
+  if (loss > 0) wake(enemy);
   if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 
@@ -474,6 +501,14 @@ function incoming(sim: Sim, player: PlayerSim): number {
     }
   }
   return total;
+}
+
+/** Damage this turn that is worth waking a sleeper for (fraction of its HP). */
+export const SLEEP_BIG_HIT = 0.25;
+
+/** A woken sleeper's expected attack per turn (the Matriarch hit 19 and 9x2 once awake). */
+export function sleepTurnDamage(enemy: EnemySim): number {
+  return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
 
 /** Crimson Mantle's POWER_VALUE (card-model.ts), cancelled when HP is too low to afford it. */
@@ -612,6 +647,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const threat = start.attacks.reduce((sum, attack) => sum + attack.damage * attack.hits, 0);
     score += weights.killBase + weights.killPerIncoming * threat;
   }
+  // Waking a sleeper with chip damage hands it the turns it would have slept (Z2H3 F17 T1: Bash broke
+  // the Matriarch's 12 Plating, 12 HP off 222, and it attacked from T2 instead of T4). Worth it only
+  // for a big hit.
+  for (const enemy of living) {
+    const start = input.enemies.find((entry) => entry.index === enemy.index)!;
+    if (!enemy.sleepLost || start.attacks.length > 0) continue;
+    if (start.hp - enemy.hp >= start.hp * SLEEP_BIG_HIT) continue;
+    score -= weights.hp * enemy.sleepLost * sleepTurnDamage(start);
+  }
   // Debuffs only matter on enemies that survive the turn.
   for (const enemy of living) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
@@ -665,7 +709,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}`;
 }
 
@@ -722,9 +766,13 @@ export function solveTurn(input: SolverInput): SolveResult {
     const plan = evaluate(sim, input, weights);
     const o = plan.outcome;
     const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}`;
+    const potionsDrunk = sim.steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+    const overPotionCap =
+      input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the shorter plan (fewer steps = fewer chances for the board to surprise us).
-    if (!existing || plan.score > existing.score + 1e-9 || (Math.abs(plan.score - existing.score) < 1e-9 && plan.steps.length < existing.steps.length)) {
+    // Over the potion cap it is not a plan to offer, but the search goes on (a later card may win).
+    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || (Math.abs(plan.score - existing.score) < 1e-9 && plan.steps.length < existing.steps.length))) {
       byOutcome.set(signature, plan);
     }
     if (nodes >= maxNodes) {
