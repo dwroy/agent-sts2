@@ -666,3 +666,47 @@ describe("The Bomb (1ZQJ: 40 to every enemy after 3 turns, scored 0 as unmodelle
     expect(model.known).toBe(true);
   });
 });
+
+describe("solveTurn: Slow and Skittish", () => {
+  const thrash = (index: number): CardModel => card(index, "THRASH", { damage: 4, hits: 2 });
+
+  it("Slow counts the cards played before this one (4LGQ T9: Strike then Thrash kills, Defend x2 then Thrash is 1 short)", () => {
+    // The first card of the turn gets no bonus: 10, not 11.
+    const single = solveTurn({ hand: [strike(0)], player: player({ hp: 50, energy: 1 }), enemies: [enemy({ hp: 50, slow: true })], fightKind: "elite" });
+    const struck = single.plans.find((plan) => plan.steps.length === 1)!;
+    expect(struck.outcome.damageDealt).toBe(6);
+    const big = solveTurn({ hand: [card(0, "BIG", { damage: 10 })], player: player({ hp: 50, energy: 1 }), enemies: [enemy({ hp: 50, slow: true })], fightKind: "elite" });
+    expect(big.plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt).toBe(10);
+
+    // Defend, Defend, Thrash: 4 x 1.2 -> 4, x2 = 8 < 9 (the old count said 4 x 1.3 -> 5, x2 = 10, a kill).
+    const blocked = solveTurn({
+      hand: [defend(0), defend(1), thrash(2)],
+      player: player({ hp: 1, energy: 3 }),
+      enemies: [enemy({ hp: 9, slow: true, attacks: [{ damage: 23, hits: 1 }] })],
+      fightKind: "elite",
+    });
+    const all = blocked.plans.find((plan) => plan.steps.length === 3);
+    if (all) expect(all.outcome.winsFight).toBe(false);
+    // Strike (6), Thrash (4 x 1.1 -> 4, x2 = 8): 14 >= 9.
+    const result = solveTurn({
+      hand: [defend(0), defend(1), thrash(2), strike(3)],
+      player: player({ hp: 1, energy: 3 }),
+      enemies: [enemy({ hp: 9, slow: true, attacks: [{ damage: 23, hits: 1 }] })],
+      fightKind: "elite",
+    });
+    const best = result.plans[0]!;
+    expect(best.outcome.winsFight).toBe(true);
+    expect(best.steps.map((step) => step.cardId)).toContain("STRIKE_IRONCLAD");
+  });
+
+  it("Skittish block comes after the first card that hits it (a lone Strike deals its damage)", () => {
+    const single = solveTurn({ hand: [strike(0)], player: player({ hp: 50, energy: 1 }), enemies: [enemy({ hp: 30, skittish: 6 })], fightKind: "monster" });
+    expect(single.plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt).toBe(6);
+    // The second Strike meets the 6 block.
+    const two = solveTurn({ hand: [strike(0), strike(1)], player: player({ hp: 50, energy: 2 }), enemies: [enemy({ hp: 30, skittish: 6 })], fightKind: "monster" });
+    expect(Math.max(...two.plans.map((plan) => plan.outcome.damageDealt))).toBe(6);
+    // Both hits of a multi-hit first card land in full.
+    const multi = solveTurn({ hand: [thrash(0)], player: player({ hp: 50, energy: 1 }), enemies: [enemy({ hp: 30, skittish: 6 })], fightKind: "monster" });
+    expect(multi.plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt).toBe(8);
+  });
+});

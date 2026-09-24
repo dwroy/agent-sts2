@@ -71,7 +71,10 @@ export interface EnemySim {
   unmodelled?: boolean;
   /** Guarded / Soar: damage taken is halved. */
   halved?: boolean;
-  /** Skittish: gains this much block the first time it is hit this turn. */
+  /**
+   * Skittish: gains this much block the first time it is hit this turn, once that card has resolved
+   * (the first card's hits all land in full).
+   */
   skittish?: number;
   /** Reflect: damage absorbed by its block is dealt back to the player. */
   reflect?: boolean;
@@ -207,7 +210,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -270,6 +273,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     if (player.weak) amount = Math.floor(amount * 0.75);
     if (player.shrunk) amount = Math.floor(amount * 0.7);
     if (enemy.vulnerable > 0) amount = Math.floor(amount * 1.5);
+    // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
     if (enemy.slow) amount = Math.floor(amount * (1 + 0.1 * sim.played));
     if ((enemy.flutter ?? 0) > 0) {
       amount = Math.floor(amount * 0.5);
@@ -280,10 +284,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
-    if ((enemy.skittish ?? 0) > 0 && amount > 0) {
-      enemy.block += enemy.skittish ?? 0;
-      enemy.skittish = 0;
-    }
+    if ((enemy.skittish ?? 0) > 0 && amount > 0) enemy.skittishHit = true;
     const absorbed = Math.min(enemy.block, amount);
     enemy.block -= absorbed;
     if (enemy.reflect && absorbed > 0) {
@@ -364,12 +365,20 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const next = clone(sim);
   next.hand = sim.hand.filter((entry) => entry !== card);
   next.energy -= cost;
-  if (card.type !== "Potion") next.played += 1;
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
   const twice = card.type !== "Potion" && next.duplicate > 0;
   if (twice) next.duplicate -= 1;
   resolveEffects(next, card, target, player, cost);
   if (twice) resolveEffects(next, card, target, player, cost);
+  // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
+  // kill that was 1 short), and Skittish block lands once the card that hit it is done.
+  if (card.type !== "Potion") next.played += 1;
+  for (const enemy of next.enemies) {
+    if (!enemy.skittishHit) continue;
+    enemy.skittishHit = false;
+    if (enemy.alive) enemy.block += enemy.skittish ?? 0;
+    enemy.skittish = 0;
+  }
   if (card.special === "duplicate_next") next.duplicate += 1;
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
