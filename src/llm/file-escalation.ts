@@ -23,6 +23,7 @@ export interface EscalationAnswer {
   cacheHitTokens?: number;
   /** DeepSeek only: which strategy guide version was in the prompt. */
   guideId?: string;
+  reasoningTokens?: number;
 }
 
 export interface Escalator {

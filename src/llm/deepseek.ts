@@ -7,7 +7,8 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
 import type { Escalator } from "./file-escalation.js";
@@ -19,6 +20,10 @@ export interface DeepSeekConfig {
   timeoutMs: number;
   /** Optional strategy guide (markdown) appended to the system prompt; a static prefix, so DeepSeek caches it. */
   guideFile?: string;
+  /** Thinking mode: "max" | "high" | "low" enables it at that effort; "" or "off" disables it. */
+  reasoningEffort?: string;
+  /** JSONL file receiving each call's full chain of thought (for later review); "" disables. */
+  reasoningLog?: string;
 }
 
 export interface DeepSeekAnswer {
@@ -30,6 +35,7 @@ export interface DeepSeekAnswer {
   cacheHitTokens?: number;
   /** Short hash of the guide in the prompt ("" when none), so logs show which guide version answered. */
   guideId?: string;
+  reasoningTokens?: number;
 }
 
 const SYSTEM = [
@@ -44,10 +50,12 @@ export class DeepSeekClient implements Escalator {
   readonly name = "deepseek" as const;
 
   private readonly system: string;
+  private readonly thinking: boolean;
   readonly guideId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
     const guide = config.guideFile && existsSync(config.guideFile) ? readFileSync(config.guideFile, "utf8").trim() : "";
+    this.thinking = Boolean(config.reasoningEffort) && config.reasoningEffort !== "off";
     this.guideId = guide ? createHash("sha256").update(guide).digest("hex").slice(0, 8) : "";
     this.system = guide ? `${SYSTEM}\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}` : SYSTEM;
   }
@@ -68,7 +76,9 @@ export class DeepSeekClient implements Escalator {
         headers: { "content-type": "application/json", authorization: `Bearer ${this.config.apiKey}` },
         body: JSON.stringify({
           model: this.config.model,
-          temperature: 0,
+          ...(this.thinking
+            ? { thinking: { type: "enabled" }, reasoning_effort: this.config.reasoningEffort }
+            : { thinking: { type: "disabled" }, temperature: 0 }),
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: this.system },
@@ -82,8 +92,13 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek HTTP ${response.status}: ${body}`);
       }
       const payload = (await response.json()) as {
-        choices?: { message?: { content?: string } }[];
-        usage?: { prompt_tokens?: number; completion_tokens?: number; prompt_cache_hit_tokens?: number };
+        choices?: { message?: { content?: string; reasoning_content?: string } }[];
+        usage?: {
+          prompt_tokens?: number;
+          completion_tokens?: number;
+          prompt_cache_hit_tokens?: number;
+          completion_tokens_details?: { reasoning_tokens?: number };
+        };
       };
       const content = payload.choices?.[0]?.message?.content ?? "";
       let parsed: { choice?: unknown; reason?: unknown };
@@ -93,6 +108,7 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
       }
       const choice = typeof parsed.choice === "string" ? parsed.choice.trim() : "";
+      this.logReasoning(instructions, criteria, choice, parsed.reason, payload.choices?.[0]?.message?.reasoning_content ?? "", Date.now() - started);
       if (!(choice in criteria)) throw new Error(`DeepSeek chose unknown option "${choice}"`);
       return {
         choice,
@@ -102,9 +118,21 @@ export class DeepSeekClient implements Escalator {
         outputTokens: payload.usage?.completion_tokens ?? 0,
         cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
         guideId: this.guideId,
+        reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
       };
     } finally {
       clearTimeout(timer);
+    }
+  }
+
+  private logReasoning(question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number): void {
+    if (!this.config.reasoningLog) return;
+    try {
+      mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
+      const entry = { ts: new Date().toISOString(), model: this.config.model, effort: this.thinking ? this.config.reasoningEffort : "off", guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning };
+      appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
+    } catch {
+      // logging must never break play
     }
   }
 }
