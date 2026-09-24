@@ -94,6 +94,18 @@ export function planSelection(env: DecisionEnv): Decision | null {
           ? "enchant"
           : "choose";
 
+  // Knowledge Demon's Curse of Knowledge: code picks. Disintegration (6 a turn, stacking) over a fight
+  // this long cost ~100 HP and lost DG1CDGW8Y5JE and VKPXGMV8YV31 from full HP; Sloth (3 plays a
+  // turn) rarely binds a 3-energy deck, Mind Rot costs a card a turn. Rupture turns Disintegration
+  // into Strength, so then it is the pick.
+  const curseIds = candidates.map((card) => str(card["card_id"]));
+  if (curseIds.length > 1 && curseIds.every((id) => id in KNOWLEDGE_CURSE_ORDER)) {
+    const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map((power) => str(asRecord(power)["power_id"]));
+    const rank = (id: string): number => (id === "DISINTEGRATION" && powers.includes("RUPTURE_POWER") ? 0 : KNOWLEDGE_CURSE_ORDER[id]!);
+    const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration unless Rupture)` };
+  }
+
   return buildPickDecision({
     label: `selection/${verb}`,
     instructions: `Which card should I ${verb}?`,
@@ -123,6 +135,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
  * most (Bash's extra Vulnerable, then the strongest cards). Remove/transform: curses and statuses,
  * then Strikes, then Defends. Higher is better.
  */
+const KNOWLEDGE_CURSE_ORDER: Record<string, number> = { SLOTH: 1, MIND_ROT: 2, DISINTEGRATION: 3 };
+
 /** Cards whose upgrade gains the most (guide + DeepSeek's repeated upgrade picks); above plain card value. */
 const UPGRADE_PRIORITY: Record<string, number> = {
   DEMON_FORM: 100, OFFERING: 98, BASH: 95, PYRE: 94, CORRUPTION: 92, BATTLE_TRANCE: 90, STONE_ARMOR: 88,
