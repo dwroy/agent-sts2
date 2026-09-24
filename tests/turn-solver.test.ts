@@ -361,3 +361,64 @@ describe("The Insatiable's Sandpit", () => {
     expect(result.plans[0]!.outcome.dies).toBe(false);
   });
 });
+
+describe("Kaiser Crab's Crab Rage", () => {
+  const crusher = (overrides: Partial<EnemySim> = {}): EnemySim =>
+    enemy({ index: 0, name: "Crusher", hp: 58, maxHp: 209, crabRage: true, attacks: [{ damage: 15, hits: 1 }], ...overrides });
+  const rocket = (overrides: Partial<EnemySim> = {}): EnemySim =>
+    enemy({ index: 1, name: "Rocket", hp: 14, maxHp: 199, crabRage: true, attacks: [{ damage: 16, hits: 1 }], ...overrides });
+
+  it("a Whirlwind that kills Rocket first is no lethal: Crusher's 99 Block eats the rest (7Q5G F33)", () => {
+    const whirlwind = card(0, "WHIRLWIND", { cost: 0, xCost: true, target: "all", validTargets: [], damage: 20, special: "whirlwind" });
+    const result = solveTurn({ hand: [whirlwind], player: player({ hp: 80 }), enemies: [crusher(), rocket()], fightKind: "boss" });
+    const swing = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(swing.outcome.winsFight).toBe(false);
+    expect(swing.outcome.kills).toEqual([]);
+    // Hit 1 takes Crusher to 38 and kills Rocket; hits 2 and 3 land on 99 Block.
+    expect(swing.outcome.enemyHpAfter.find((entry) => entry.name === "Crusher")!.hp).toBe(38);
+    // The enraged Crusher hits for 15 + 6.
+    expect(swing.outcome.hpLoss).toBe(21);
+  });
+
+  it("killing one part alone is no kill bonus and scores below hitting the other", () => {
+    const blow = card(0, "STRIKE", { damage: 14, validTargets: [0, 1] });
+    const result = solveTurn({ hand: [blow], player: player({ hp: 80 }), enemies: [crusher(), rocket()], fightKind: "boss" });
+    const killRocket = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    const hitCrusher = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(killRocket.outcome.kills).toEqual([]);
+    expect(hitCrusher.score).toBeGreaterThan(killRocket.score);
+  });
+
+  it("killing both in the same turn wins the fight", () => {
+    const blow = card(0, "STRIKE", { cost: 0, damage: 14, validTargets: [0, 1] });
+    const result = solveTurn({ hand: [blow, { ...blow, index: 1, key: "c1" }], player: player({ hp: 80 }), enemies: [crusher({ hp: 10 }), rocket()], fightKind: "boss" });
+    // Crusher first: Rocket then has 99 Block. Rocket first: Crusher then has 99 Block. Neither wins.
+    expect(result.plans.some((plan) => plan.outcome.winsFight)).toBe(false);
+    const aoe = card(0, "CLEAVE", { target: "all", validTargets: [], damage: 14 });
+    const both = solveTurn({ hand: [aoe], player: player({ hp: 80 }), enemies: [crusher({ hp: 10 }), rocket()], fightKind: "boss" });
+    expect(both.plans[0]!.outcome.winsFight).toBe(true);
+  });
+});
+
+describe("Crimson Mantle's start-of-turn HP cost", () => {
+  const mantle = (index: number): CardModel =>
+    card(index, "CRIMSON_MANTLE", { type: "Power", target: "self", validTargets: [], flatValue: 16, special: "crimson_mantle" });
+
+  it("playing it into 1 HP is death next turn (YP9 T3/T5)", () => {
+    const result = solveTurn({ hand: [mantle(0), defend(1)], player: player({ hp: 12, energy: 1 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 11, hits: 1 }] })], fightKind: "boss" });
+    const mantlePlan = result.plans.find((plan) => plan.steps.some((step) => step.cardId === "CRIMSON_MANTLE"))!;
+    expect(mantlePlan.outcome.hpAfter).toBe(1);
+    expect(mantlePlan.outcome.dies).toBe(true);
+    expect(result.plans[0]!.steps[0]!.cardId).toBe("DEFEND_IRONCLAD");
+  });
+
+  it("a Mantle already in play kills at 1 HP after the turn", () => {
+    const result = solveTurn({ hand: [strike(0)], player: player({ hp: 7, startTurnHpLoss: 1 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 6, hits: 1 }] })], fightKind: "boss" });
+    expect(result.plans.every((plan) => plan.outcome.dies)).toBe(true);
+  });
+
+  it("at low HP a Mantle loses to Defend even when it survives", () => {
+    const result = solveTurn({ hand: [mantle(0), defend(1)], player: player({ hp: 20, energy: 1 }), enemies: [enemy({ hp: 100, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "boss" });
+    expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["DEFEND_IRONCLAD"]);
+  });
+});

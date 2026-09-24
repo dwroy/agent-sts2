@@ -40,6 +40,12 @@ export interface EnemySim {
   /** Reattach (Decimillipede segment): a dead segment comes back while another lives; only all dying is a kill. */
   reattach?: boolean;
   /**
+   * Crab Rage (Kaiser Crab's Rocket / Crusher): when an ally dies this one gains 99 Block and more
+   * Strength at once, so killing one part alone is a trap (7Q5G F33: Rocket "lethal", Crusher kept
+   * 28 HP behind 39 block and killed us).
+   */
+  crabRage?: boolean;
+  /**
    * Steam Eruption stacks (Waterfall Giant): when it "dies" it explodes for this much, one turn
    * later. HP kept above that is what wins the fight.
    */
@@ -100,6 +106,8 @@ export interface PlayerSim {
   facing?: number | null;
   /** Colossus already played this turn. */
   colossus?: boolean;
+  /** HP lost at the start of next turn before block (Crimson Mantle: 1 per copy in play). */
+  startTurnHpLoss?: number;
 }
 
 export interface SolverInput {
@@ -194,6 +202,13 @@ interface Sim {
   feedKills: number;
   /** Frantic Escapes played this turn (each +1 Sandpit). */
   escapes: number;
+  /** Crimson Mantles played this turn (each costs 1 HP at the start of every later turn). */
+  mantles: number;
+  /** A Crab Rage survivor was enraged this turn. */
+  enraged: number;
+  /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
+  sweeping?: boolean;
+  pendingRage?: boolean;
 }
 
 function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak", amount: number): number {
@@ -255,10 +270,31 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
       enemy.block += enemy.curlUp ?? 0;
       enemy.curlUp = 0;
     }
-    if (enemy.hp <= 0) enemy.alive = false;
+    if (enemy.hp <= 0) killEnemy(sim, enemy);
   }
   sim.damageDealt += dealt;
   return dealt;
+}
+
+/** Crab Rage: an ally's death gives the survivor 99 Block and Strength (text says 5; 7Q5G F33 measured 8 -> 14). */
+export const CRAB_RAGE_BLOCK = 99;
+export const CRAB_RAGE_STRENGTH = 6;
+
+function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
+  enemy.alive = false;
+  // A hit that lands on every enemy at once kills both crabs together (no rage in between).
+  if (sim.sweeping) sim.pendingRage = true;
+  else crabRage(sim);
+}
+
+function crabRage(sim: Sim): void {
+  for (const other of sim.enemies) {
+    if (!other.alive || !other.crabRage) continue;
+    other.block += CRAB_RAGE_BLOCK;
+    other.strengthDelta += CRAB_RAGE_STRENGTH;
+    other.crabRage = false;
+    sim.enraged += 1;
+  }
 }
 
 function clone(sim: Sim): Sim {
@@ -319,6 +355,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "rupture") next.rupture += 1;
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
+  if (card.special === "crimson_mantle") next.mantles += 1;
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -343,7 +380,17 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
 
     if (card.target === "all") {
-      for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, perHit, hits, player);
+      // Hit by hit across every enemy, as the game resolves it: a death mid-card (Crab Rage) changes
+      // what the later hits meet.
+      for (let hit = 0; hit < hits; hit += 1) {
+        next.sweeping = true;
+        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, perHit, 1, player);
+        next.sweeping = false;
+        if (next.pendingRage) {
+          next.pendingRage = false;
+          crabRage(next);
+        }
+      }
     } else if (card.target === "random") {
       // Expected value: spread hits across the living enemies, lowest HP first (kills are what matter).
       for (let hit = 0; hit < hits; hit += 1) {
@@ -404,7 +451,7 @@ function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): v
   enemy.hp -= loss;
   enemy.lostThisTurn += loss;
   sim.damageDealt += loss;
-  if (enemy.hp <= 0) enemy.alive = false;
+  if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 
 function incoming(sim: Sim, player: PlayerSim): number {
@@ -426,6 +473,9 @@ function incoming(sim: Sim, player: PlayerSim): number {
   }
   return total;
 }
+
+/** Crimson Mantle's POWER_VALUE (card-model.ts), cancelled when HP is too low to afford it. */
+const MANTLE_VALUE = 16;
 
 export interface Weights {
   hp: number;
@@ -474,13 +524,28 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
   const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
-  const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0) || (sandpitAfter !== null && sandpitAfter <= 0);
+  // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
+  // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either.
+  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles;
+  const dies =
+    hpAfter <= 0 ||
+    (startTurnLoss > 0 && hpAfter <= startTurnLoss) ||
+    (input.player.gambit === true && incomingAfterBlock > 0) ||
+    (sandpitAfter !== null && sandpitAfter <= 0);
 
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
   const allSegmentsDead = sim.enemies.every((enemy) => !enemy.reattach || !enemy.alive);
+  // Crab Rage: one part dying alone only enrages the other; it is no kill until both are dead.
+  const crabs = input.enemies.filter((start) => start.crabRage).map((start) => start.index);
+  const allCrabsDead = sim.enemies.every((enemy) => !crabs.includes(enemy.index) || !enemy.alive);
   const kills = sim.enemies.filter(
-    (enemy) => !enemy.alive && !enemy.illusion && !(enemy.reattach && !allSegmentsDead) && input.enemies.find((start) => start.index === enemy.index)!.hp > 0,
+    (enemy) =>
+      !enemy.alive &&
+      !enemy.illusion &&
+      !(enemy.reattach && !allSegmentsDead) &&
+      !(crabs.includes(enemy.index) && !allCrabsDead) &&
+      input.enemies.find((start) => start.index === enemy.index)!.hp > 0,
   );
   let score = 0;
   if (dies) score -= 100_000;
@@ -489,6 +554,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Ending at 1 leaves next turn a must-Escape turn (or death if none is drawn); the boss has 321 HP,
   // so the countdown outlasts any damage race.
   if (sandpitAfter === 1) score -= weights.hp * 15;
+  // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
+  // counts 3 per point; this adds about two more attacks' worth at HP weight).
+  if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
@@ -543,6 +611,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
     score += (weights.strength * sim.permStrength + sim.flat) * fightLength * earliness;
     score += sim.drawScore;
+    // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over
+    // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
+    if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
   }
   score += sim.feedKills * 12;
   score -= sim.potionCost;
@@ -577,7 +648,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}`;
 }
 
 export interface SolveResult {
@@ -619,6 +690,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     unknown: [],
     feedKills: 0,
     escapes: 0,
+    mantles: 0,
+    enraged: 0,
   };
 
   const seen = new Set<string>();
