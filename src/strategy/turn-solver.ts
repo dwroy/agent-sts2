@@ -324,7 +324,11 @@ export function weightsFor(input: SolverInput): Weights {
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
   const winsFight = living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion));
-  const incomingRaw = winsFight ? 0 : incoming(sim, input.player);
+  // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
+  const heldPenalty =
+    sim.hand.reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0) +
+    input.hand.filter((card) => !card.playable).reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0);
+  const incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
   const incomingAfterBlock = Math.max(0, incomingRaw - sim.block);
   const selfLoss = input.player.hp - sim.hp;
   const hpLoss = selfLoss + incomingAfterBlock;

@@ -51,6 +51,8 @@ export interface CardModel {
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
   flatValue: number;
+  /** HP lost at end of turn if this card is still in hand (Toxic, Burn, Decay, …). */
+  heldPenalty: number;
   text: string;
 }
 
@@ -174,6 +176,16 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));
   }
 
+  // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
+  const rendered = str(card["resolved_rules_text"]) || info?.description || "";
+  const held = /回合结束时[^。]*手牌中[^。]*?(?:受到|失去)(\d+)点(?:伤害|生命)/.exec(rendered) ?? /at the end of your turn[^.]*in your hand[^.]*?(?:take|lose) (\d+)/i.exec(rendered);
+  const heldPenalty = held ? Number(held[1]) : 0;
+  if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
+    // Its Damage var is the self-damage, not an attack.
+    damage = null;
+    known = true;
+  }
+
   return {
     index,
     key: `c${index}`,
@@ -201,6 +213,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     special,
     known,
     flatValue,
+    heldPenalty,
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }
@@ -262,6 +275,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     special: null,
     known: true,
     flatValue: -useCost,
+    heldPenalty: 0,
     text: "",
     ...effect,
   };

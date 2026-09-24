@@ -31,6 +31,7 @@ function card(index: number, cardId: string, overrides: Partial<CardModel> = {})
     special: null,
     known: true,
     flatValue: 0,
+    heldPenalty: 0,
     text: "",
     ...overrides,
   };
@@ -210,5 +211,20 @@ describe("Fortifier", () => {
     const best = result.plans[0]!;
     expect(best.steps.map((step) => step.cardId.split(":")[0])).toEqual(["DEFEND_IRONCLAD", "POTION"]);
     expect(best.outcome.hpLoss).toBe(0);
+  });
+});
+
+describe("status cards in hand", () => {
+  it("plays Toxic to exhaust it instead of eating 5 damage each (floor 22, live run)", () => {
+    const toxic = (index: number): CardModel => card(index, "TOXIC", { type: "Status", target: "none", validTargets: [], heldPenalty: 5, exhausts: true });
+    const result = solveTurn({
+      hand: [toxic(0), toxic(1)],
+      player: player({ hp: 33, energy: 3 }),
+      enemies: [enemy({ hp: 45, attacks: [{ damage: 15, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    const best = result.plans[0]!;
+    expect(best.steps.length).toBe(2);
+    expect(best.outcome.hpLoss).toBe(15);
   });
 });
