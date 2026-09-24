@@ -182,6 +182,29 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
     }));
 }
 
+/** Block a hand typically puts up against the explosion turn. */
+const ERUPTION_BLOCK = 12;
+/** Damage per turn assumed before any has been seen (1ZQJ averaged 16). */
+const ERUPTION_FALLBACK_DAMAGE = 16;
+
+/**
+ * Waterfall Giant too slow to kill (1ZQJ: 16 damage a turn into 240 HP, dead on T15 with the eruption
+ * at 54; 21 HP + 17 block did not survive it). Turns to kill come from the damage dealt so far (or
+ * 16 a turn on T1); the eruption grows 3 a turn. When the projected explosion is at least HP plus a
+ * hand of block, waiting loses: race it.
+ */
+export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number): boolean {
+  if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || enemy["is_alive"] === false) return false;
+  const hp = num(enemy["current_hp"]);
+  const maxHp = num(enemy["max_hp"]);
+  if (hp <= 0 || maxHp >= 1_000_000) return false;
+  const stacks = powerAmount(enemy, "STEAM_ERUPTION_POWER");
+  const eruptionNow = stacks > 0 ? stacks : Math.max(12, 15 + 3 * (turn - 2));
+  const perTurn = turn > 1 ? Math.max(5, (maxHp - hp) / (turn - 1)) : ERUPTION_FALLBACK_DAMAGE;
+  const projected = eruptionNow + 3 * Math.ceil(hp / perTurn);
+  return projected >= playerHp + ERUPTION_BLOCK;
+}
+
 export function fightKind(combat: Record<string, unknown>, env: DecisionEnv): SolverInput["fightKind"] {
   let kind: SolverInput["fightKind"] = "unknown";
   for (const entry of asArray(combat["enemies"])) {
@@ -443,6 +466,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     turn: state.turn ?? 1,
     cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
     potionLimit,
+    raceEruption: asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1)),
   });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { CardModel } from "../src/strategy/card-model.js";
-import { distinctPlans, NEXT_PHASE_HP, solveTurn, weightsFor, WOUND_COST, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { BOMB_SURE, distinctPlans, ERUPTION_RACE_DAMAGE, NEXT_PHASE_HP, solveTurn, weightsFor, WOUND_COST, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -338,6 +338,14 @@ describe("mechanics from the 4-run review", () => {
     // 36 stacks: 40 - 20 = 20 HP left is under the ~27 the explosion needs, so HP counts double.
     expect(pick(36).outcome.blockGained).toBe(10);
   });
+  it("Waterfall Giant too slow to kill (1ZQJ): raceEruption weighs damage up and drops the HP doubling", () => {
+    const hand = [strike(0), strike(1), defend(2), defend(3)];
+    const giant = enemy({ name: "Waterfall Giant", hp: 150, maxHp: 240, vulnerable: 2, eruption: 36, attacks: [{ damage: 20, hits: 1 }] });
+    const input = { hand, player: player({ hp: 40, maxHp: 80, energy: 2 }), enemies: [giant], fightKind: "boss" as const };
+    expect(solveTurn(input).plans[0]!.outcome.blockGained).toBe(10);
+    expect(solveTurn({ ...input, raceEruption: true }).plans[0]!.outcome.damageDealt).toBe(18);
+    expect(weightsFor({ ...input, raceEruption: true }).damage).toBeCloseTo(weightsFor(input).damage * ERUPTION_RACE_DAMAGE);
+  });
 });
 
 describe("The Insatiable's Sandpit", () => {
@@ -629,5 +637,31 @@ describe("Test Subject (2WUM F48)", () => {
     // 15 block: the 2nd hit is partly through, the 3rd and 4th fully: 3 Wounds.
     expect(endScore(0, 15) - endScore(1, 15)).toBeCloseTo(3 * WOUND_COST);
     expect(endScore(0, 40) - endScore(1, 40)).toBeCloseTo(0);
+  });
+});
+
+describe("The Bomb (1ZQJ: 40 to every enemy after 3 turns, scored 0 as unmodelled)", () => {
+  const bomb = (index: number): CardModel =>
+    card(index, "THE_BOMB", { type: "Skill", target: "self", validTargets: [], cost: 2, delayedDamage: 40 });
+
+  it("is worth its delayed damage (capped by enemy HP) in a boss fight", () => {
+    const giant = enemy({ name: "Waterfall Giant", hp: 138, maxHp: 240, attacks: [] });
+    const result = solveTurn({ hand: [bomb(0), strike(1)], player: player({ hp: 60, energy: 2 }), enemies: [giant], fightKind: "boss" });
+    const best = result.plans[0]!;
+    expect(best.steps.map((step) => step.cardId)).toEqual(["THE_BOMB"]);
+    const nothing = result.plans.find((plan) => plan.steps.length === 0)!;
+    expect(best.score - nothing.score).toBeCloseTo(weightsFor({ hand: [], player: player({ hp: 60 }), enemies: [giant], fightKind: "boss" }).damage * 40 * BOMB_SURE);
+  });
+
+  it("card model reads BombDamage", async () => {
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { testKnowledge } = await import("./scenarios.js");
+    const model = modelHandCard(
+      { index: 0, card_id: "THE_BOMB", energy_cost: 2, target_type: "Self", playable: true, dynamic_values: [{ name: "BombDamage", base_value: 40, current_value: 40 }, { name: "Turns", base_value: 3, current_value: 3 }] },
+      0,
+      testKnowledge,
+    );
+    expect(model.delayedDamage).toBe(40);
+    expect(model.known).toBe(true);
   });
 });

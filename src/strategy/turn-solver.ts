@@ -150,6 +150,12 @@ export interface SolverInput {
    * on a 7-damage turn, none left for the 28-damage Dismember).
    */
   potionLimit?: number | null;
+  /**
+   * Waterfall Giant too slow to kill: at the current damage rate its eruption at death outgrows HP
+   * plus a hand of block (1ZQJ: 15 turns, eruption 54), so damage weighs more and the "HP counts double
+   * below the eruption" rule is off. Every turn earlier is 3 less eruption and one attack less.
+   */
+  raceEruption?: boolean;
   maxNodes?: number;
 }
 
@@ -236,6 +242,8 @@ interface Sim {
   mantles: number;
   /** A Crab Rage survivor was enraged this turn. */
   enraged: number;
+  /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
+  bombs: number;
   /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
   sweeping?: boolean;
   pendingRage?: boolean;
@@ -468,6 +476,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.permStrength += card.strength;
   }
   if (card.tempStrength > 0) next.strength += card.tempStrength;
+  if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion") next.potionCost += -card.flatValue;
   else next.flat += card.flatValue;
   if (card.draw > 0) {
@@ -548,6 +557,10 @@ export function sleepTurnDamage(enemy: EnemySim): number {
 
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
+/** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
+export const BOMB_SURE = 0.8;
+/** Damage weight multiplier while racing the Waterfall Giant's eruption (raceEruption). */
+export const ERUPTION_RACE_DAMAGE = 1.5;
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
 export const NEXT_PHASE_HP = 1.25;
 
@@ -568,8 +581,9 @@ export function weightsFor(input: SolverInput): Weights {
   const hpFraction = input.player.maxHp > 0 ? input.player.hp / input.player.maxHp : 1;
   // HP gets dearer as it runs low; in elite/boss fights damage gets dearer (the fight is the point).
   let hp = 1.0 + 1.5 * Math.max(0, 0.6 - hpFraction) / 0.6;
-  const damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
+  let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   if (input.enemies.some((enemy) => enemy.revives)) hp *= NEXT_PHASE_HP;
+  if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
 
@@ -640,7 +654,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
   const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
-  if (!winsFight && eruption > 0 && hpAfter < eruption - 12) score -= weights.hp * hpLoss;
+  // Racing a Giant that is too slow to kill (raceEruption): HP spent on damage is the way through.
+  if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !input.raceEruption) score -= weights.hp * hpLoss;
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
     // kills stops attacking), capped by the attacker's HP.
@@ -688,6 +703,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     return sum;
   }, 0);
   score += weights.damage * (sim.damageDealt - huskDamage - lostDamage);
+  // The Bomb: its damage lands on every enemy a few turns later, unless the fight is over by then.
+  if (sim.bombs > 0 && !winsFight) {
+    const reach = living.filter((enemy) => enemy.maxHp < 1_000_000).reduce((sum, enemy) => sum + Math.min(enemy.hp, sim.bombs), 0);
+    score += weights.damage * reach * (input.fightKind === "boss" || input.fightKind === "elite" ? BOMB_SURE : BOMB_SURE * 0.6);
+  }
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
@@ -761,7 +781,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}`;
 }
 
 export interface SolveResult {
@@ -806,6 +826,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     escapes: 0,
     mantles: 0,
     enraged: 0,
+    bombs: 0,
   };
 
   const seen = new Set<string>();

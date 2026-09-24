@@ -59,6 +59,8 @@ export interface CardModel {
   heldHpLoss?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
+  /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
+  delayedDamage?: number;
   text: string;
 }
 
@@ -178,8 +180,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
+  // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
+  // the end of the 3rd turn.
+  const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   const hasModelledEffect =
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
   if (type === "Power") {
@@ -235,6 +240,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     heldPenalty,
     heldHpLoss,
     retaliate: dyn(card, "DamageBack") ?? 0,
+    delayedDamage,
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }

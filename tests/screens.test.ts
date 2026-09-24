@@ -1140,3 +1140,21 @@ describe("Test Subject phases (2WUMK6PK5QHD)", () => {
     expect(nothing?.kind === "act" && nothing.intent).toEqual({ action: "end_turn" });
   });
 });
+
+describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
+  const giant = (hp: number, eruption: number): Record<string, unknown> => ({
+    enemy_id: "WATERFALL_GIANT", is_alive: true, current_hp: hp, max_hp: 240, powers: eruption > 0 ? [{ power_id: "STEAM_ERUPTION_POWER", amount: eruption }] : [],
+  });
+
+  it("races when the projected eruption at death reaches HP plus a hand of block", async () => {
+    const { eruptionRace } = await import("../src/screens/combat-plan.js");
+    // T9, 160 HP left after 80 dealt in 8 turns: 16 more turns, eruption 36 + 48 = 84 vs 40 HP + 12.
+    expect(eruptionRace(giant(160, 36), 40, 9)).toBe(true);
+    // A fast deck: 150 dealt in 4 turns, 90 left = 3 turns, eruption 24 + 9 = 33 vs 50 + 12.
+    expect(eruptionRace(giant(90, 24), 50, 5)).toBe(false);
+    // T1 (16 a turn assumed): 15 turns, 12 + 45 = 57 vs 80 + 12.
+    expect(eruptionRace(giant(240, 0), 80, 1)).toBe(false);
+    // The husk after "death" is not raced.
+    expect(eruptionRace({ ...giant(999_999_999, 40), max_hp: 999_999_999 }, 10, 12)).toBe(false);
+  });
+});
