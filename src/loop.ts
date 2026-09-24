@@ -52,6 +52,11 @@ export interface LoopOptions {
   maxRuns?: number;
   maxDecisions?: number;
   maxMinutes?: number;
+  /**
+   * How long past `maxMinutes` a fight (or the run-end bookkeeping) may run before the loop stops
+   * anyway. Default: a quarter of `maxMinutes`, at most 30.
+   */
+  combatGraceMinutes?: number;
   pollIntervalMs?: number;
   onEvent?: (event: LoopEvent) => void;
 }
@@ -197,6 +202,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const onEvent = options.onEvent ?? ((): void => {});
   const startedAt = Date.now();
   const deadline = startedAt + maxMinutes * 60_000;
+  // The time cap waits for a safe point: TQX5 stopped between the end of turn 8 and the boss's turn,
+  // so the run never reached GAME_OVER and its result was never recorded. Hard stop after the grace.
+  const hardDeadline = deadline + (options.combatGraceMinutes ?? Math.min(30, maxMinutes / 4)) * 60_000;
 
   const stats: LoopStats = {
     decisions: 0,
@@ -284,7 +292,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (stats.inputTokens + stats.outputTokens >= config.budgets.maxTokens) {
       return `token cap reached (${config.budgets.maxTokens})`;
     }
-    if (Date.now() > deadline) return `time cap reached (${maxMinutes} min)`;
+    if (Date.now() > deadline) {
+      const busy = inCombatTracked || runEndPhase === "finalizing";
+      if (!busy) return `time cap reached (${maxMinutes} min)`;
+      if (Date.now() > hardDeadline) return `time cap reached (${maxMinutes} min, still ${inCombatTracked ? "in combat" : "finishing the run"} after the grace period)`;
+    }
     if (consecutiveFailures >= 3) return "circuit breaker: 3 consecutive failures";
     return null;
   };

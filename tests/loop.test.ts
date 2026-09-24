@@ -498,6 +498,30 @@ describe("runLoop", () => {
     expect(notes.some((note) => note.includes("above the 255 limit"))).toBe(true);
   });
 
+  it("the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)", async () => {
+    const run = async (payload: Record<string, unknown>) => {
+      const { server } = await scriptedMod({ sequence: [payload] });
+      const started = Date.now();
+      const stats = await runLoop({
+        config: testConfig(),
+        mode: "shadow",
+        client: new ModClient({ baseUrl: server.url }),
+        jev: null,
+        knowledge: testKnowledge,
+        maxMinutes: 0.005, // 0.3 s
+        combatGraceMinutes: 0.01, // 0.6 s more
+        pollIntervalMs: 2,
+      });
+      return { stats, elapsed: Date.now() - started };
+    };
+    const map = await run(mapPayload());
+    expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
+    expect(map.elapsed).toBeLessThan(850);
+    const fight = await run(combatPayload());
+    expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
+    expect(fight.elapsed).toBeGreaterThanOrEqual(850);
+  });
+
   it("stops when the run ends, after saving the result", async () => {
     const config = testConfig();
     const { server, actions } = await scriptedMod({
