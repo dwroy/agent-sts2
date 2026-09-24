@@ -19,6 +19,8 @@ export interface EscalationAnswer {
   latencyMs: number;
   inputTokens: number;
   outputTokens: number;
+  /** DeepSeek only: prompt tokens served from its context cache (billed at a lower rate). */
+  cacheHitTokens?: number;
 }
 
 export interface Escalator {

@@ -68,7 +68,7 @@ export class DeepSeekClient implements Escalator {
       }
       const payload = (await response.json()) as {
         choices?: { message?: { content?: string } }[];
-        usage?: { prompt_tokens?: number; completion_tokens?: number };
+        usage?: { prompt_tokens?: number; completion_tokens?: number; prompt_cache_hit_tokens?: number };
       };
       const content = payload.choices?.[0]?.message?.content ?? "";
       let parsed: { choice?: unknown; reason?: unknown };
@@ -85,6 +85,7 @@ export class DeepSeekClient implements Escalator {
         latencyMs: Date.now() - started,
         inputTokens: payload.usage?.prompt_tokens ?? 0,
         outputTokens: payload.usage?.completion_tokens ?? 0,
+        cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
       };
     } finally {
       clearTimeout(timer);
