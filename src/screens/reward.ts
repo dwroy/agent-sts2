@@ -7,6 +7,7 @@
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
+import { cardValue, deckProfile, SKIP_BAR } from "../strategy/card-value.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -26,18 +27,25 @@ export function planReward(env: DecisionEnv): Decision | null {
       return null;
     }
     const entries = deckEntries(state, knowledge);
+    const profile = deckProfile(entries);
+    const run = asRecord(state.run?.raw);
+    const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
+    const floor = state.run?.floor ?? 0;
     const options: PickOption[] = offered.map((card, fallbackIndex) => {
       const index = numOrNull(card["index"]) ?? fallbackIndex;
       const cardId = str(card["card_id"]);
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
+      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor);
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
         intent: { action: "choose_reward_card", option_index: index },
-        score: 1,
+        score: valued.value,
         summary: {
+          code_value: valued.value,
+          why: valued.reasons.join("; ") || null,
           card: name,
           type: info?.type ?? null,
           rarity: info?.rarity ?? null,
@@ -50,8 +58,8 @@ export function planReward(env: DecisionEnv): Decision | null {
       key: "skip",
       label: "skip the card reward",
       intent: { action: "skip_reward_cards" },
-      score: 0,
-      summary: { card: "skip", note: "take nothing; the deck stays lean" } satisfies JsonValue,
+      score: SKIP_BAR,
+      summary: { card: "skip", code_value: SKIP_BAR, note: "take nothing; the deck stays lean" } satisfies JsonValue,
     });
 
     return buildPickDecision({
@@ -60,9 +68,12 @@ export function planReward(env: DecisionEnv): Decision | null {
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
       options,
+      codeMargin: env.combatPlanner === "card" ? undefined : 12,
+      maxModelOptions: 3,
       state: {
         run_brief: briefJson(env.brief),
         deck_stats: env.brief.deck,
+        deck_needs: { act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block },
         deck: describeDeck(entries),
         note: "skipping is a legitimate choice: a card that does not fit the plan makes the deck worse.",
       },

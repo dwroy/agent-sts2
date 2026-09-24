@@ -20,7 +20,8 @@ export function planRest(env: DecisionEnv): Decision | null {
     const title = str(raw["title"], id);
     const hpPct = hpPercent(env);
     // Code-side preference only matters when Jev cannot be used or is unsure.
-    const score = id === "HEAL" ? (hpPct < 0.6 ? 3 : 1) : id === "SMITH" ? 2 : 1;
+    // Phase 2: heal below half HP, otherwise upgrade; anything unusual stays close so the model sees it.
+    const score = id === "HEAL" ? (hpPct < 0.5 ? 10 : hpPct < 0.65 ? 5 : 1) : id === "SMITH" ? 6 : 4;
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,
@@ -51,6 +52,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     options,
+    codeMargin: env.combatPlanner === "card" ? undefined : 3,
     state: {
       run_brief: briefJson(env.brief),
       situation: {

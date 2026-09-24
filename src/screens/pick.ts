@@ -33,6 +33,12 @@ export interface PickDecisionParams {
   skipModelWhenSingle?: boolean;
   /** Trust the model's choice regardless of confidence (config `strictJev`). */
   strictJev: boolean;
+  /**
+   * Phase 2: when the code score of the best option beats the runner-up by at least this much, code
+   * decides and the model is not asked. Otherwise only the top `maxModelOptions` are shown.
+   */
+  codeMargin?: number;
+  maxModelOptions?: number;
 }
 
 export function bestOption(options: PickOption[]): PickOption {
@@ -51,6 +57,23 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       intent: only.intent,
       rationale: `only one legal option: ${only.label ?? only.key}`,
     };
+  }
+
+  if (params.codeMargin !== undefined && options.length > 1) {
+    const ranked = [...options].sort((a, b) => b.score - a.score);
+    const top = ranked[0] as PickOption;
+    const second = ranked[1] as PickOption;
+    if (top.score - second.score >= params.codeMargin) {
+      return {
+        kind: "act",
+        label: params.label,
+        intent: top.intent,
+        rationale: `code: ${top.label ?? top.key} scores ${top.score} vs ${second.label ?? second.key} ${second.score}`,
+      };
+    }
+    if (params.maxModelOptions !== undefined && ranked.length > params.maxModelOptions) {
+      return buildPickDecision({ ...params, codeMargin: undefined, options: ranked.slice(0, params.maxModelOptions) });
+    }
   }
 
   const byKey = new Map(options.map((option) => [option.key, option]));

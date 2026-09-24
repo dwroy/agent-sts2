@@ -10,6 +10,7 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { cardValue, deckProfile } from "../strategy/card-value.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -48,9 +49,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
-      // Without a real scoring function for "best card", every option scores the same and the
-      // fallback becomes "the first legal one" instead of pretending to know better.
-      score: 0,
+      score: selectionScore(kind, cardId, str(card["card_type"], info?.type ?? "")),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),
@@ -77,6 +76,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     options,
+    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : 6,
+    maxModelOptions: 4,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -89,4 +90,25 @@ export function planSelection(env: DecisionEnv): Decision | null {
       candidates: options.map((option) => option.summary as JsonValue),
     },
   });
+}
+
+/**
+ * Code-side preference for deck selection screens (phase 2). Upgrade: the cards whose upgrade matters
+ * most (Bash's extra Vulnerable, then the strongest cards). Remove/transform: curses and statuses,
+ * then Strikes, then Defends. Higher is better.
+ */
+function selectionScore(kind: string, cardId: string, type: string): number {
+  if (kind === "deck_upgrade_select") {
+    if (cardId === "BASH") return 95;
+    if (cardId.startsWith("STRIKE_") || cardId.startsWith("DEFEND_")) return 10;
+    return cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
+  }
+  if (kind === "deck_card_select" || kind === "deck_transform_select") {
+    if (type === "Curse") return 100;
+    if (type === "Status") return 90;
+    if (cardId.startsWith("STRIKE_")) return 80;
+    if (cardId.startsWith("DEFEND_")) return 70;
+    return 100 - cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
+  }
+  return 0;
 }
