@@ -133,7 +133,9 @@ export function cardValue(cardId: string, rarity: string, type: string, deck: De
   }
   const copies = deck.copies.get(cardId) ?? 0;
   if (copies > 0) {
-    const penalty = type === "Power" ? 18 * copies : 6 * copies;
+    // Strength powers stack, so a second copy is still good; other powers mostly do not.
+    const stacks = cardId === "INFLAME" || cardId === "DEMON_FORM";
+    const penalty = type === "Power" && !stacks ? 18 * copies : 6 * copies;
     value -= penalty;
     reasons.push(`already have ${copies}`);
   }
