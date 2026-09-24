@@ -288,6 +288,35 @@ describe("mechanics from the 4-run review", () => {
     expect(allDead.plans[0]!.outcome.winsFight).toBe(true);
   });
 
+  it("damage into a segment that dies alone and reattaches is worth nothing (0NG F29)", () => {
+    const segment = (index: number, hp: number): EnemySim =>
+      enemy({ index, name: `seg${index}`, hp, maxHp: 46, reattach: true, reattachHp: 25, attacks: [{ damage: 8, hits: 1 }] });
+    const hand = [card(0, "HEAVY", { damage: 18, validTargets: [0, 1] })];
+    const result = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 18), segment(1, 40)], fightKind: "elite" });
+    const killAlone = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    const chip = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    // The lone kill only saves seg0's 8 this turn; the chip keeps all 18 damage (elite weight 0.7).
+    expect(chip.score - killAlone.score).toBeCloseTo(0.7 * 18 - 8, 5);
+    expect(result.plans[0]!.steps[0]?.target).toBe(1);
+  });
+
+  it("damage into an illusion that survives the turn is worth nothing (VKPX F22)", () => {
+    const hand = [strike(0)];
+    hand[0]!.validTargets = [0, 1];
+    const result = solveTurn({
+      hand,
+      player: player({ hp: 60 }),
+      enemies: [
+        enemy({ index: 0, name: "Obscura", hp: 68, maxHp: 90 }),
+        enemy({ index: 1, name: "Parafright", hp: 21, maxHp: 21, illusion: true, minion: true }),
+      ],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.steps[0]?.target).toBe(0);
+    const intoIllusion = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    expect(result.plans[0]!.score - intoIllusion.score).toBeCloseTo(0.45 * 6, 5);
+  });
+
   it("plan steps carry the upgrade level", () => {
     const result = solveTurn({
       hand: [defend(0), card(1, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 8, upgraded: true })],

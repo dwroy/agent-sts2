@@ -109,6 +109,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
+      reattachHp: powerAmount(enemy, "REATTACH_POWER"),
       crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),

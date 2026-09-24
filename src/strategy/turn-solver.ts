@@ -39,6 +39,8 @@ export interface EnemySim {
   illusion?: boolean;
   /** Reattach (Decimillipede segment): a dead segment comes back while another lives; only all dying is a kill. */
   reattach?: boolean;
+  /** REATTACH_POWER amount: the HP a dead segment comes back with (25 on the Decimillipede). */
+  reattachHp?: number;
   /**
    * Crab Rage (Kaiser Crab's Rocket / Crusher): when an ally dies this one gains 99 Block and more
    * Strength at once, so killing one part alone is a trap (7Q5G F33: Rocket "lethal", Crusher kept
@@ -583,7 +585,22 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     return sum + Math.max(0, start.hp - enemy.hp);
   }, 0);
-  score += weights.damage * (sim.damageDealt - huskDamage);
+  // Damage that does not stick is worth nothing. An illusion not killed this turn heals to full
+  // (VKPX F22: ~10 turns of attacks into a 21 HP Parafright while the Obscura sat at 68). A segment
+  // that dies while another lives comes back at the Reattach HP (0NG F29: an 18 HP segment killed,
+  // back at 25), so its damage is only worth what it takes off that. Damage into a segment that
+  // lives does stick (the logs show it carried over turn to turn).
+  const lostDamage = sim.enemies.reduce((sum, enemy) => {
+    const start = input.enemies.find((entry) => entry.index === enemy.index)!;
+    const dealt = Math.max(0, start.hp - Math.max(0, enemy.hp));
+    if (enemy.illusion && enemy.alive) return sum + dealt;
+    if (enemy.reattach && !enemy.alive && !allSegmentsDead) {
+      const kept = Math.max(0, start.hp - (enemy.reattachHp ?? start.hp));
+      return sum + Math.max(0, dealt - kept);
+    }
+    return sum;
+  }, 0);
+  score += weights.damage * (sim.damageDealt - huskDamage - lostDamage);
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
