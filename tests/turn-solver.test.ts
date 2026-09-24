@@ -147,3 +147,26 @@ describe("enemy powers", () => {
     expect(result.plans[0]!.outcome.damageDealt).toBe(10);
   });
 });
+
+describe("potions", () => {
+  it("uses a damage potion when it completes a lethal, and not otherwise in a hallway fight", async () => {
+    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const rock = modelPotion("POTION_SHAPED_ROCK", "rock", 1, [0], 15)!;
+    const lethal = solveTurn({
+      hand: [strike(0), rock],
+      player: player({ hp: 10, energy: 1 }),
+      enemies: [enemy({ hp: 20, attacks: [{ damage: 30, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(lethal.plans[0]!.outcome.winsFight).toBe(true);
+    expect(lethal.plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(true);
+
+    const idle = solveTurn({
+      hand: [strike(0), rock],
+      player: player({ hp: 80, energy: 1 }),
+      enemies: [enemy({ hp: 60, attacks: [{ damage: 5, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(idle.plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(false);
+  });
+});

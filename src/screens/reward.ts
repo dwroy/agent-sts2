@@ -82,9 +82,14 @@ export function planReward(env: DecisionEnv): Decision | null {
     });
   }
 
+  // With every potion slot full, claiming a potion hangs the mod's action call (live run, floor 11).
+  const potionSlotsFull = asArray(asRecord(state.run?.raw)["potions"])
+    .map(asRecord)
+    .every((slot) => bool(slot["occupied"]));
   const claimable = asArray(reward["rewards"])
     .map(asRecord)
     .filter((entry) => bool(entry["claimable"], true))
+    .filter((entry) => !(potionSlotsFull && str(entry["reward_type"]) === "Potion"))
     // A skipped card reward stays claimable in the state (the mod documents this). Claiming it again
     // reopens the card choice, which is how a live run ended up skipping in a loop.
     .filter(

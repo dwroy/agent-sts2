@@ -204,3 +204,61 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }
+
+/**
+ * Potions as zero-cost "cards" for the turn solver. The mod does not resolve potion numbers (the
+ * description stays a template), so these are STS1-analogue ESTIMATES, to be calibrated from logs.
+ * Unlisted potions are not modelled and stay with the model (Jev) on dangerous turns.
+ */
+const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
+  FIRE_POTION: { target: "single", damage: 20 },
+  POTION_SHAPED_ROCK: { target: "single", damage: 15 },
+  EXPLOSIVE_AMPOULE: { target: "all", damage: 10 },
+  BLOCK_POTION: { target: "self", block: 12 },
+  STRENGTH_POTION: { target: "self", strength: 2 },
+  FLEX_POTION: { target: "self", tempStrength: 5 },
+  WEAK_POTION: { target: "single", weak: 3 },
+  FEAR_POTION: { target: "single", vulnerable: 3 },
+  ENERGY_POTION: { target: "self", energyGain: 2 },
+  SWIFT_POTION: { target: "self", draw: 3 },
+  FYSH_OIL: { target: "self", strength: 1 },
+};
+
+export function isModelledPotion(potionId: string): boolean {
+  return potionId in POTION_EFFECTS;
+}
+
+/** `slot` is the potion slot; the card index space is kept apart with 100 + slot. */
+export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number): CardModel | null {
+  const effect = POTION_EFFECTS[potionId];
+  if (!effect) return null;
+  return {
+    index: 100 + slot,
+    key: `p${slot}`,
+    cardId: `POTION:${potionId}:${slot}`,
+    name: `potion ${name}`,
+    type: "Potion",
+    upgraded: false,
+    cost: 0,
+    xCost: false,
+    playable: true,
+    validTargets,
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: true,
+    special: null,
+    known: true,
+    flatValue: -useCost,
+    text: "",
+    ...effect,
+  };
+}

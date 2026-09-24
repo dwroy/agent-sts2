@@ -108,6 +108,8 @@ interface Sim {
   vulnerableApplied: number;
   weakApplied: number;
   flat: number;
+  /** Resource cost of potions used this turn (not scaled like lasting value). */
+  potionCost: number;
   drawScore: number;
   cardsDrawn: number;
   unknown: string[];
@@ -236,7 +238,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.permStrength += card.strength;
   }
   if (card.tempStrength > 0) next.strength += card.tempStrength;
-  next.flat += card.flatValue;
+  if (card.type === "Potion") next.potionCost += -card.flatValue;
+  else next.flat += card.flatValue;
   if (card.draw > 0) {
     next.cardsDrawn += card.draw;
     // Earlier draws leave more energy to use what they bring.
@@ -332,6 +335,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score += sim.drawScore;
   }
   score += sim.feedKills * 12;
+  score -= sim.potionCost;
 
   return {
     steps: sim.steps,
@@ -361,7 +365,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -389,6 +393,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     vulnerableApplied: 0,
     weakApplied: 0,
     flat: 0,
+    potionCost: 0,
     drawScore: 0,
     cardsDrawn: 0,
     unknown: [],

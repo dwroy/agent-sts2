@@ -21,7 +21,7 @@ import type { ActionRequest } from "../mod/client.js";
 import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { modelHandCard, type CardModel } from "../strategy/card-model.js";
+import { isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -107,6 +107,10 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
 }
 
 function intentFor(step: Step, hand: CardModel[]): ActionRequest | null {
+  if (step.cardId.startsWith("POTION:")) {
+    const slot = Number(step.cardId.split(":")[2]);
+    return step.target === null ? { action: "use_potion", option_index: slot } : { action: "use_potion", option_index: slot, target_index: step.target };
+  }
   const card = hand.find((entry) => entry.cardId === step.cardId && entry.playable);
   if (!card) return null;
   if (step.target === null) return { action: "play_card", card_index: card.index };
@@ -186,7 +190,12 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
   }
 
-  const solved = solveTurn({ hand, player: playerSim, enemies, fightKind: kind, turn: state.turn ?? 1 });
+  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+  const potionUseCost = kind === "boss" ? 0 : kind === "elite" ? 5 : 15;
+  const potionCards = potionsAll
+    .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost))
+    .filter((card): card is CardModel => card !== null);
+  const solved = solveTurn({ hand: [...hand, ...potionCards], player: playerSim, enemies, fightKind: kind, turn: state.turn ?? 1 });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -201,7 +210,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   //    handle it.
   if (best.outcome.dies) return planCombatPerCard(env);
 
-  const potions = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id));
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
