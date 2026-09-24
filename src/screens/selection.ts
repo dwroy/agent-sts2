@@ -98,7 +98,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.4,
     options,
-    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : 6,
+    // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
+    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" ? 0 : 6,
     maxModelOptions: 4,
     state: {
       run_brief: briefJson(env.brief),
