@@ -117,6 +117,8 @@ export interface Outcome {
   strengthGained: number;
   cardsDrawn: number;
   unknownCards: string[];
+  /** Resource cost of the potions this plan drinks (0 when none). */
+  potionCost: number;
 }
 
 export interface Plan {
@@ -487,6 +489,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
       unknownCards: sim.unknown,
+      potionCost: sim.potionCost,
     },
   };
 }
@@ -583,7 +586,9 @@ function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn];
+  // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
+  // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run).
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
