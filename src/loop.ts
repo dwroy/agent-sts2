@@ -6,6 +6,8 @@
  * and the run boundary.
  */
 
+import { dirname, join } from "node:path";
+
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
@@ -17,7 +19,7 @@ import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
-import { createDecisionLog, type DecisionRecord } from "./telemetry/decision-log.js";
+import { createDecisionLog, createStateLog, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
 export type LoopMode = "shadow" | "play";
@@ -183,6 +185,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const maxRuns = options.maxRuns ?? 1;
   const maxMinutes = options.maxMinutes ?? 60;
   const log = createDecisionLog(config.log.decisionLog);
+  const stateLog = createStateLog(join(dirname(config.log.decisionLog), "states.jsonl"));
+  const logState = (state: GameState, fp: string, ts: string): void =>
+    stateLog.write({ ts, fingerprint: fp, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`, state: state.raw });
   const onEvent = options.onEvent ?? ((): void => {});
   const startedAt = Date.now();
   const deadline = startedAt + maxMinutes * 60_000;
@@ -650,6 +655,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, result: "shadow (not dispatched)" };
       log.write(record);
+      logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
       await sleep(pollIntervalMs);
       continue;
@@ -721,6 +727,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
     };
     log.write(record);
+    logState(state, stateFingerprint, record.ts);
     onEvent({ type: "decision", record, totals: totals() });
     await sleep(60);
   }

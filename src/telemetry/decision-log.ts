@@ -64,3 +64,28 @@ export function createDecisionLog(path: string): DecisionLog {
     },
   };
 }
+
+/**
+ * Raw states behind each logged decision, in the `record` fixture format, so every live run doubles as
+ * a replay fixture (`replay --ask` over the exact boards the loop saw).
+ */
+export interface StateLog {
+  write(entry: { ts: string; fingerprint: string; screen: string; session: string; state: unknown }): void;
+}
+
+export function createStateLog(path: string): StateLog {
+  let ready = false;
+  return {
+    write(entry) {
+      try {
+        if (!ready) {
+          mkdirSync(dirname(path), { recursive: true });
+          ready = true;
+        }
+        appendFileSync(path, `${JSON.stringify(entry)}\n`, "utf8");
+      } catch {
+        // Same rule as the decision log: never stop a run over a log line.
+      }
+    },
+  };
+}
