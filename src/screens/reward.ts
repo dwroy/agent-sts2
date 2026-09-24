@@ -68,7 +68,8 @@ export function planReward(env: DecisionEnv): Decision | null {
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
       escalateBelow: 0.45,
-      options,
+      // Phase 2: a card code values below the skip bar is not offered to the model at all.
+      options: env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR),
       codeMargin: env.combatPlanner === "card" ? undefined : 12,
       maxModelOptions: 3,
       state: {
