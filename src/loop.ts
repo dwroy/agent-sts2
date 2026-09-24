@@ -601,8 +601,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
-              // A plan committed by this resolution belongs to the escalator (post-mortem attribution).
-              if (screenMemory.combatPlan) screenMemory.combatPlan.via = escalator.name;
               escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "" };
               // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
@@ -727,6 +725,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
       lastShadowFingerprint = stateFingerprint;
+      resolved.apply?.();
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, result: "shadow (not dispatched)" };
       log.write(record);
@@ -769,6 +768,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     stats.acts += 1;
     stats.decisions += 1;
+    // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
+    resolved.apply?.();
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     // Remember the one action whose effect the state does not reflect: a skipped card reward stays

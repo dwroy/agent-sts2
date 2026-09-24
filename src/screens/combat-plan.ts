@@ -103,11 +103,26 @@ export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, sl
   return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
 }
 
-/** This fight's HP-guard record (screenMemory.hpGuard), started fresh for a new fight. */
-function hpGuardMemo(env: DecisionEnv): { fight: string; extra: number } {
-  const fight = `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
-  if (env.screenMemory.hpGuard?.fight !== fight) env.screenMemory.hpGuard = { fight, extra: 0 };
-  return env.screenMemory.hpGuard;
+/** This fight's HP-guard record (screenMemory.hpGuard), read-only: the extra HP accepted so far. */
+function hpGuardExtra(env: DecisionEnv): number {
+  const memo = env.screenMemory.hpGuard;
+  if (!memo || memo.fight !== hpGuardFight(env)) return 0;
+  return Object.values(memo.turns).reduce((sum, extra) => sum + extra, 0);
+}
+
+function hpGuardFight(env: DecisionEnv): string {
+  return `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
+}
+
+/**
+ * Records the extra HP of the plan committed this turn, once per turn: a re-plan in the same turn
+ * replaces the turn's entry (b63e836 added it on every resolve, Jev's and the escalator's, and on
+ * every re-plan; the 12 HP budget was gone by turn 2-3).
+ */
+export function recordHpGuard(env: DecisionEnv, turn: number | null, extra: number): void {
+  const fight = hpGuardFight(env);
+  if (env.screenMemory.hpGuard?.fight !== fight) env.screenMemory.hpGuard = { fight, turns: {} };
+  env.screenMemory.hpGuard.turns[String(turn ?? "?")] = extra;
 }
 
 function powerAmount(holder: Record<string, unknown>, id: string): number {
@@ -325,8 +340,14 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
     resolve(answers) {
       const resolved = resolve(answers);
       if (resolved.intent?.action !== "end_turn") return resolved;
-      env.screenMemory.combatPlan = null;
-      return { ...resolved, intent, rationale: `${resolved.rationale}; overridden: ${why}, playing Frantic Escape` };
+      return {
+        ...resolved,
+        apply: () => {
+          env.screenMemory.combatPlan = null;
+        },
+        intent,
+        rationale: `${resolved.rationale}; overridden: ${why}, playing Frantic Escape`,
+      };
     },
   };
 }
@@ -604,10 +625,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
   };
 
-  const fallback = (why: string): ResolvedAction => {
-    commit(env, state.turn, top, hand, "code");
-    return { intent: firstIntent(top, hand, env), rationale: `${why}; using the code-best plan`, confidence: null, fallback: true };
-  };
+  // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
+  // loop runs `apply` once, for the resolution it actually plays.
+  const fallback = (why: string): ResolvedAction => ({
+    intent: firstIntent(top, hand, env),
+    rationale: `${why}; using the code-best plan`,
+    confidence: null,
+    fallback: true,
+    apply: () => commit(env, state.turn, top, hand, "code"),
+  });
 
   return {
     kind: "ask",
@@ -625,21 +651,30 @@ function planTurn(env: DecisionEnv): Decision | null {
       const chosen = byKey.get(answer.choice);
       if (!chosen) return fallback(`Jev chose unknown option "${answer.choice}"`);
       if (chosen.potion) {
-        env.screenMemory.combatPlan = null;
-        return { intent: chosen.potion, rationale: `Jev chose to ${chosen.label} (confidence ${answer.confidence.toFixed(2)})`, confidence: answer.confidence, fallback: false };
+        return {
+          intent: chosen.potion,
+          rationale: `Jev chose to ${chosen.label} (confidence ${answer.confidence.toFixed(2)})`,
+          confidence: answer.confidence,
+          fallback: false,
+          apply: () => {
+            env.screenMemory.combatPlan = null;
+          },
+        };
       }
       const picked = chosen.plan!;
       const hallway = !(kind === "elite" || kind === "boss" || dangerous);
-      if (hallway && answer.confidence < 0.3 && picked !== top && answer.raw !== undefined && !(answer.raw as { escalated?: string }).escalated) {
+      const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
+      if (hallway && answer.confidence < 0.3 && picked !== top && answer.raw !== undefined && !escalatedBy) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
       }
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
-      const guardMemo = hallway ? null : hpGuardMemo(env);
-      const slack = hpGuardSlack(playerSim.hp, kind, guardMemo?.extra ?? 0);
+      // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
+      const memo = env.screenMemory.hpGuard;
+      const thisTurn = memo && memo.fight === hpGuardFight(env) ? (memo.turns[String(state.turn ?? "?")] ?? 0) : 0;
+      const slack = hpGuardSlack(playerSim.hp, kind, hallway ? 0 : hpGuardExtra(env) - thisTurn);
       const replacement = hallway ? null : hpGuardReplacement(picked, options, playerSim.hp, slack);
       const plan = replacement ?? picked;
-      if (guardMemo && !plan.outcome.winsFight) guardMemo.extra += Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
-      commit(env, state.turn, plan, hand, "jev");
+      const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;
       const guardNote = replacement
         ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
@@ -650,6 +685,10 @@ function planTurn(env: DecisionEnv): Decision | null {
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
+        apply: () => {
+          commit(env, state.turn, plan, hand, escalatedBy ?? "jev");
+          if (!hallway) recordHpGuard(env, state.turn, extra);
+        },
       };
     },
   };

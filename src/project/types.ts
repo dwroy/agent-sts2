@@ -59,9 +59,10 @@ export interface ScreenMemory {
   facing?: number | null;
   /**
    * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
-   * choices in this fight (`fight` = act:floor). Survives in-combat screen changes; cleared out of combat.
+   * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a
+   * re-plan replaces it). Survives in-combat screen changes; cleared out of combat.
    */
-  hpGuard?: { fight: string; extra: number };
+  hpGuard?: { fight: string; turns: Record<string, number> };
   /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
   potionTurn?: { fight: string; turn: number | null; startCount: number };
 }
@@ -112,6 +113,12 @@ export interface ResolvedAction {
   decider?: "jev" | "deepseek" | "claude";
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
+  /**
+   * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
+   * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
+   * The loop runs this once, for the resolution it plays.
+   */
+  apply?: () => void;
 }
 
 export interface AskDecision {

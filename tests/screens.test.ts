@@ -982,12 +982,15 @@ describe("combat plan guards (batch 3)", () => {
     const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
     const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
     const resolved = decision.resolve(escalated(greedy.key));
+    // resolve() is pure; the loop applies the played resolution.
+    expect(first.screenMemory.hpGuard).toBeUndefined();
+    resolved.apply?.();
     const used = plans.find((entry) => entry.key === (resolved.guard?.choice ?? greedy.key))!;
-    expect(first.screenMemory.hpGuard).toEqual({ fight: "1:9", extra: used.hpLost - minLoss });
+    expect(first.screenMemory.hpGuard).toEqual({ fight: "1:9", turns: { "3": used.hpLost - minLoss } });
 
     // The same fight with the budget spent: anything above the cheapest plan is replaced.
     const spent = env(guardCombat(), { combatPlanner: "turn" });
-    spent.screenMemory.hpGuard = { fight: "1:9", extra: 13 };
+    spent.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
     const again = planCombatTurn(spent);
     if (again?.kind !== "ask") throw new Error("expected an ask");
     const over = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
@@ -999,11 +1002,44 @@ describe("combat plan guards (batch 3)", () => {
     const next = guardCombat();
     (next["run"] as Record<string, unknown>)["floor"] = 10;
     const fresh = env(next, { combatPlanner: "turn" });
-    fresh.screenMemory.hpGuard = { fight: "1:9", extra: 13 };
+    fresh.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
     const freshDecision = planCombatTurn(fresh);
     if (freshDecision?.kind !== "ask") throw new Error("expected an ask");
-    freshDecision.resolve(escalated(plans.find((entry) => entry.hpLost === minLoss)!.key));
-    expect(fresh.screenMemory.hpGuard).toEqual({ fight: "1:10", extra: 0 });
+    freshDecision.resolve(escalated(plans.find((entry) => entry.hpLost === minLoss)!.key)).apply?.();
+    expect(fresh.screenMemory.hpGuard).toEqual({ fight: "1:10", turns: { "3": 0 } });
+  });
+
+  it("HP guard budget: resolving twice (Jev, then the escalator) and re-planning in a turn count once (b63e836 regression)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    // A boss at 100 HP: the guard's slack (10) lets the next-cheapest plan through, so the turn accepts extra HP.
+    const board = (): Record<string, unknown> => {
+      const raw = guardCombat("LAGAVULIN_MATRIARCH");
+      const player = (raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>;
+      player["current_hp"] = 100;
+      player["max_hp"] = 100;
+      return raw;
+    };
+    const e = env(board(), { combatPlanner: "turn" });
+    const decision = planCombatTurn(e);
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const plans = planLosses(decision);
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
+    const pricier = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
+    const jevAnswer: AnswerSet = { plan: { type: "choice", choice: pricier.key, probabilities: { [pricier.key]: 0.4 }, confidence: 0.4, raw: {} } } as AnswerSet;
+    decision.resolve(jevAnswer);
+    const played = decision.resolve(escalated(pricier.key));
+    expect(e.screenMemory.hpGuard).toBeUndefined();
+    played.apply?.();
+    const used = plans.find((entry) => entry.key === (played.guard?.choice ?? pricier.key))!;
+    expect(used.hpLost - minLoss).toBeGreaterThan(0);
+    const once = { fight: "1:9", turns: { "3": used.hpLost - minLoss } };
+    expect(e.screenMemory.hpGuard).toEqual(once);
+    if (e.screenMemory.combatPlan) expect(e.screenMemory.combatPlan.via).toBe("deepseek");
+    // A re-plan of the same turn replaces the turn's entry rather than adding to it.
+    const again = planCombatTurn(env(board(), { combatPlanner: "turn", screenMemory: e.screenMemory }));
+    if (again?.kind !== "ask") throw new Error("expected an ask");
+    again.resolve(escalated(pricier.key)).apply?.();
+    expect(e.screenMemory.hpGuard).toEqual(once);
   });
 
   it("boss fight: no second potion in a turn while HP is high (1R3C F17 T1)", async () => {
