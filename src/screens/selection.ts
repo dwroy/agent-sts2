@@ -11,7 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardValue, deckProfile } from "../strategy/card-value.js";
-import { modelHandCard, type CardModel } from "../strategy/card-model.js";
+import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -38,6 +38,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
     }
     if (canConfirm) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}; nothing else worth discarding` };
+  }
+  // Touch of Insanity ("选择一张牌使其免费"): the most expensive card, the one the solver planned with
+  // (G8AQ T4: the model made a 1-cost Twin Strike free).
+  if (kind === "combat_hand_select" && selected === 0 && /免费|free/i.test(prompt)) {
+    const pick = freePick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
+    if (pick) {
+      return { kind: "act", label: "selection/free-card", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: make ${pick.name} free for this combat (highest cost, ${pick.cost} energy)` };
+    }
   }
   if (selected >= min && canConfirm && !pickFirst) {
     return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}/${min} required` };
@@ -121,13 +129,15 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Knowledge Demon's Curse of Knowledge: code picks. Disintegration (6 a turn, stacking) over a fight
   // this long cost ~100 HP and lost DG1CDGW8Y5JE and VKPXGMV8YV31 from full HP; Sloth (3 plays a
   // turn) rarely binds a 3-energy deck, Mind Rot costs a card a turn. Rupture turns Disintegration
-  // into Strength, so then it is the pick.
+  // into Strength, so then it is the pick. Waste Away (-1 energy every turn, the third offer) is the
+  // worst: PU21 took it as "only this turn" and played 2 energy a turn to the end. It is only taken when
+  // Disintegration would eat the HP left before the demon dies (see curseRank).
   const curseIds = candidates.map((card) => str(card["card_id"]));
   if (curseIds.length > 1 && curseIds.every((id) => id in KNOWLEDGE_CURSE_ORDER)) {
-    const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map((power) => str(asRecord(power)["power_id"]));
-    const rank = (id: string): number => (id === "DISINTEGRATION" && powers.includes("RUPTURE_POWER") ? 0 : KNOWLEDGE_CURSE_ORDER[id]!);
+    const disintegration = candidates.find((card) => str(card["card_id"]) === "DISINTEGRATION");
+    const rank = curseRank(combat, disintegration ? disintegrationAmount(disintegration) : 0, state.turn ?? 1);
     const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
-    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration unless Rupture)` };
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
   }
 
   return buildPickDecision({
@@ -169,7 +179,46 @@ export function planSelection(env: DecisionEnv): Decision | null {
  * most (Bash's extra Vulnerable, then the strongest cards). Remove/transform: curses and statuses,
  * then Strikes, then Defends. Higher is better.
  */
-const KNOWLEDGE_CURSE_ORDER: Record<string, number> = { SLOTH: 1, MIND_ROT: 2, DISINTEGRATION: 3 };
+const KNOWLEDGE_CURSE_ORDER: Record<string, number> = { SLOTH: 1, MIND_ROT: 2, DISINTEGRATION: 3, WASTE_AWAY: 4 };
+
+/** Damage per turn assumed when none has been dealt yet (the curses come on T1/T5/T9). */
+const CURSE_FALLBACK_DAMAGE = 25;
+/** HP kept in hand for the demon's own attacks when Disintegration is weighed against Waste Away. */
+const CURSE_HP_MARGIN = 20;
+
+/** The Disintegration a curse card adds (6, 7, 8 on the three offers). */
+function disintegrationAmount(card: Record<string, unknown>): number {
+  for (const entry of asArray(card["dynamic_values"])) {
+    const value = asRecord(entry);
+    if (/Disintegration/i.test(str(value["name"]))) return numOrNull(value["current_value"]) ?? 0;
+  }
+  const text = /(\d+)点伤害|(\d+) damage/i.exec(str(card["resolved_rules_text"]));
+  return text ? Number(text[1] ?? text[2]) : 0;
+}
+
+/**
+ * Rank of a Knowledge Demon curse (lower is taken). Disintegration becomes the first pick with
+ * Rupture, and the last one when it would take more than the HP left before the demon dies (turns
+ * left from the damage dealt so far, 25 a turn before any): Disintegration × turns + 20 > HP. PU21 T9
+ * (33 HP, ~8 turns left, Disintegration 8) is that case; with HP to spare Waste Away is the worst.
+ */
+export function curseRank(combat: Record<string, unknown>, offered: number, turn: number): (id: string) => number {
+  const player = asRecord(combat["player"]);
+  const powers = asArray(player["powers"]).map(asRecord);
+  const has = (id: string): number => numOrNull(powers.find((power) => str(power["power_id"]) === id)?.["amount"]) ?? 0;
+  const enemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  const left = enemies.reduce((sum, enemy) => sum + (numOrNull(enemy["current_hp"]) ?? 0), 0);
+  const dealt = enemies.reduce((sum, enemy) => sum + Math.max(0, (numOrNull(enemy["max_hp"]) ?? 0) - (numOrNull(enemy["current_hp"]) ?? 0)), 0);
+  const perTurn = turn > 1 ? Math.max(10, dealt / (turn - 1)) : CURSE_FALLBACK_DAMAGE;
+  const turnsLeft = Math.ceil(left / perTurn);
+  const hp = numOrNull(player["current_hp"]) ?? 0;
+  const outlastsHp = (has("DISINTEGRATION_POWER") + offered) * turnsLeft + CURSE_HP_MARGIN > hp;
+  return (id) => {
+    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
+    if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
+    return KNOWLEDGE_CURSE_ORDER[id]!;
+  };
+}
 
 /** Cards whose upgrade gains the most (guide + DeepSeek's repeated upgrade picks); above plain card value. */
 const UPGRADE_PRIORITY: Record<string, number> = {
@@ -238,6 +287,26 @@ export function discardPick(
   const basic = unreached.find((card) => /^(STRIKE|DEFEND)_/.test(card.cardId));
   if (basic) return { index: basic.index, name: basic.name, why: `basic card the ${energy} energy will not reach` };
   return null;
+}
+
+/**
+ * The card to make free (Touch of Insanity): freeCardPick's choice, or the most expensive card when
+ * none costs 2+ (the potion is already drunk).
+ */
+export function freePick(
+  combat: Record<string, unknown>,
+  cards: Record<string, unknown>[],
+  knowledge: DecisionEnv["knowledge"],
+): CardModel | null {
+  const hand = asArray(combat["hand"]).map(asRecord);
+  const models = cards.map((card, fallbackIndex) => {
+    const index = numOrNull(card["index"]) ?? fallbackIndex;
+    const inHand = hand.find((entry) => numOrNull(entry["index"]) === index && str(entry["card_id"]) === str(card["card_id"]));
+    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge);
+    return { ...model, type: str(card["card_type"], model.type) };
+  });
+  const usable = models.filter((card) => card.type !== "Status" && card.type !== "Curse" && card.cost >= 0);
+  return freeCardPick(usable) ?? (usable.length > 0 ? usable.reduce((best, card) => (card.cost > best.cost ? card : best)) : null);
 }
 
 /** Enemy attack damage coming this turn, less the block already up. */

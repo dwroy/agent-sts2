@@ -512,6 +512,55 @@ describe("rest", () => {
   });
 });
 
+describe("in-combat selections", () => {
+  const selectCard = (index: number, cardId: string, name: string, type: string, cost: number, text: string, dynamic: { name: string; value: number }[] = []) => ({
+    index, selected: false, card_id: cardId, name, upgraded: false, card_type: type, rarity: "Common", costs_x: false, star_costs_x: false,
+    energy_cost: cost, star_cost: 0, rules_text: text, resolved_rules_text: text,
+    dynamic_values: dynamic.map((entry) => ({ name: entry.name, base_value: entry.value, current_value: entry.value, enchanted_value: entry.value, is_modified: false, was_just_upgraded: false })),
+  });
+  const combatSelection = (kind: string, prompt: string, cards: unknown[], combat: { hp: number; maxHp: number; enemyHp: number; enemyMaxHp: number; turn: number }) =>
+    baseState("CARD_SELECTION", {
+      in_combat: true,
+      turn: combat.turn,
+      available_actions: ["select_deck_card"],
+      combat: {
+        player: { current_hp: combat.hp, max_hp: combat.maxHp, block: 0, energy: 3, powers: [] },
+        enemies: [{ index: 0, enemy_id: "KNOWLEDGE_DEMON", name: "Knowledge Demon", current_hp: combat.enemyHp, max_hp: combat.enemyMaxHp, block: 0, is_alive: true, powers: [], intents: [] }],
+        hand: [],
+      },
+      selection: { kind, prompt, min_select: 1, max_select: 1, selected_count: 0, requires_confirmation: false, can_confirm: false, cards },
+    });
+
+  it("Touch of Insanity makes the most expensive card free (G8AQ T4: the model picked a 1-cost Twin Strike)", () => {
+    const cards = [
+      selectCard(0, "TWIN_STRIKE", "Twin Strike", "Attack", 1, "Deal 5 damage twice.", [{ name: "Damage", value: 5 }]),
+      selectCard(1, "BLUDGEON", "Bludgeon+", "Attack", 3, "Deal 44 damage.", [{ name: "Damage", value: 44 }]),
+      selectCard(2, "PYRE", "Pyre", "Power", 2, "Gain 1 energy at the start of your turn."),
+    ];
+    const decision = mustDecision(plan(combatSelection("combat_hand_select", "[center]选择一张牌使其免费。[/center]", cards, { hp: 30, maxHp: 80, enemyHp: 74, enemyMaxHp: 145, turn: 3 })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+  });
+
+  const curses = [
+    selectCard(0, "DISINTEGRATION", "Disintegration", "Status", -1, "在你的回合结束时，受到8点伤害。", [{ name: "DisintegrationPower", value: 8 }]),
+    selectCard(1, "WASTE_AWAY", "Waste Away", "Status", -1, "每回合失去1点能量。", [{ name: "WasteAwayPower", value: 1 }]),
+  ];
+
+  it("Knowledge Demon: Waste Away (-1 energy every turn) is the worst curse while HP can pay for Disintegration", () => {
+    // 80 HP, demon at 100/379 after 8 turns (~35 a turn): 3 turns x 8 + 20 = 44 < 80.
+    const decision = mustDecision(plan(combatSelection("choose_card_select", "选择一张牌", curses, { hp: 80, maxHp: 89, enemyHp: 100, enemyMaxHp: 379, turn: 9 })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 0 });
+  });
+
+  it("Knowledge Demon: Waste Away only when Disintegration would outlast the HP (PU21 T9: 33 HP, demon 182/379)", () => {
+    const decision = mustDecision(plan(combatSelection("choose_card_select", "选择一张牌", curses, { hp: 33, maxHp: 89, enemyHp: 182, enemyMaxHp: 379, turn: 9 })));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+  });
+});
+
 describe("chest", () => {
   it("opens an unopened chest in code", () => {
     const decision = mustDecision(plan(chestPayload(false)));
