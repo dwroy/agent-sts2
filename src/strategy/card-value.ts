@@ -100,7 +100,16 @@ export function deckProfile(deck: DeckEntry[]): DeckProfile {
   return { size: deck.length, aoe, draw, scaling, frontload, block, basics, copies };
 }
 
-export function cardValue(cardId: string, rarity: string, type: string, deck: DeckProfile, act: number, floor: number, bossId = ""): CardValue {
+export function cardValue(
+  cardId: string,
+  rarity: string,
+  type: string,
+  deck: DeckProfile,
+  act: number,
+  floor: number,
+  bossId = "",
+  relics: readonly string[] = [],
+): CardValue {
   const reasons: string[] = [];
   let value = TIER[cardId] ?? (type === "Curse" || type === "Status" ? 0 : rarity === "Rare" ? 55 : 45);
   if (!(cardId in TIER)) reasons.push("no tier data");
@@ -125,6 +134,12 @@ export function cardValue(cardId: string, rarity: string, type: string, deck: De
   if (BLOCK.has(cardId) && deck.block < 2 && floor >= 5) {
     value += 5;
     reasons.push("thin on block");
+  }
+  // Relic synergies found on live runs: Baking Gloves (TOASTY_MITTENS) exhaust a card every turn, so
+  // Howl from Beyond replays itself each turn and Evil Eye always gets its bonus block.
+  if (relics.includes("TOASTY_MITTENS") && (cardId === "HOWL_FROM_BEYOND" || cardId === "EVIL_EYE")) {
+    value += 25;
+    reasons.push("Baking Gloves synergy");
   }
   const boss = bossBonus(cardId, bossId);
   if (boss.bonus > 0) {

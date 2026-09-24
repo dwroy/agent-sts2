@@ -37,7 +37,8 @@ export function planReward(env: DecisionEnv): Decision | null {
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
-      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]));
+      const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
