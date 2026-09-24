@@ -120,6 +120,12 @@ export function planSelection(env: DecisionEnv): Decision | null {
  * most (Bash's extra Vulnerable, then the strongest cards). Remove/transform: curses and statuses,
  * then Strikes, then Defends. Higher is better.
  */
+/** Cards whose upgrade gains the most (guide + DeepSeek's repeated upgrade picks); above plain card value. */
+const UPGRADE_PRIORITY: Record<string, number> = {
+  DEMON_FORM: 100, OFFERING: 98, BASH: 95, PYRE: 94, CORRUPTION: 92, BATTLE_TRANCE: 90, STONE_ARMOR: 88,
+  UNMOVABLE: 88, INFLAME: 85, FEED: 85, UPPERCUT: 80,
+};
+
 function selectionScore(kind: string, cardId: string, type: string): number {
   if (kind === "combat_exhaust") {
     // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
@@ -128,7 +134,7 @@ function selectionScore(kind: string, cardId: string, type: string): number {
   }
   if (kind === "deck_add_select") return cardValue(cardId, "", type, deckProfile([]), 1, 10).value;
   if (kind === "deck_upgrade_select") {
-    if (cardId === "BASH") return 95;
+    if (cardId in UPGRADE_PRIORITY) return UPGRADE_PRIORITY[cardId]!;
     if (cardId.startsWith("STRIKE_") || cardId.startsWith("DEFEND_")) return 10;
     return cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   }
