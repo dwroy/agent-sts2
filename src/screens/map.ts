@@ -33,12 +33,14 @@ function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: numbe
       // with HP to spare.
       if (floorInAct <= 4) return -3;
       return hpPct > 0.7 ? 4 : hpPct > 0.5 ? 0.5 : -3;
+    case "RestSite": // the game's name ("Rest" kept for older fixtures)
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;
     case "Shop":
       return gold >= 200 ? 3.5 : gold >= 120 ? 2 : 0.8;
     case "Treasure":
       return 3;
+    case "Unknown": // "?" rooms
     case "Event":
       return 1.8;
     case "Monster":
@@ -50,38 +52,52 @@ function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: numbe
   }
 }
 
-/** Best continuation value from a node, memoised (the graph is a DAG in row order). */
+/**
+ * Expected HP fraction after fighting at a node. Later nodes are valued at the HP the route leaves,
+ * not at entry HP: 0NG F27 took "Monster -> Elite" at 70% with the elite valued as if fought at 70%,
+ * and reached it at 44/71.
+ */
+const FIGHT_HP_COST = 0.12;
+function hpAfter(type: string, hpPct: number): number {
+  return type === "Monster" || type === "Elite" ? Math.max(0, hpPct - FIGHT_HP_COST) : hpPct;
+}
+
+/** Best continuation value from a node reached with `hpPct`, memoised (the graph is a DAG in row order). */
 function continuation(
   node: MapNode,
+  hpPct: number,
   nodes: Map<string, MapNode>,
-  weights: (type: string) => number,
+  weights: (type: string, hpPct: number) => number,
   memo: Map<string, number>,
 ): number {
-  const nodeKey = key(node.row, node.col);
+  const hpLeft = hpAfter(node.type, hpPct);
+  const nodeKey = `${key(node.row, node.col)}@${hpLeft.toFixed(2)}`;
   const cached = memo.get(nodeKey);
   if (cached !== undefined) return cached;
   let best = 0;
   for (const child of node.children) {
     const childNode = nodes.get(key(child.row, child.col));
     if (!childNode) continue;
-    best = Math.max(best, weights(childNode.type) + continuation(childNode, nodes, weights, memo));
+    best = Math.max(best, weights(childNode.type, hpLeft) + continuation(childNode, hpLeft, nodes, weights, memo));
   }
   memo.set(nodeKey, best);
   return best;
 }
 
 /** Follow the highest-value children to describe where this choice leads. */
-function pathPreview(node: MapNode, nodes: Map<string, MapNode>, weights: (type: string) => number, steps: number): string {
+function pathPreview(node: MapNode, hpPct: number, nodes: Map<string, MapNode>, weights: (type: string, hpPct: number) => number, steps: number): string {
   const types: string[] = [];
   let current = node;
+  let hp = hpPct;
   for (let step = 0; step < steps; step += 1) {
     types.push(current.type);
+    hp = hpAfter(current.type, hp);
     let bestChild: MapNode | null = null;
     let bestValue = -Infinity;
     for (const child of current.children) {
       const childNode = nodes.get(key(child.row, child.col));
       if (!childNode) continue;
-      const value = weights(childNode.type) + continuation(childNode, nodes, weights, new Map());
+      const value = weights(childNode.type, hp) + continuation(childNode, hp, nodes, weights, new Map());
       if (value > bestValue) {
         bestValue = value;
         bestChild = childNode;
@@ -120,7 +136,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const hpPct = hpPercent(env);
   const gold = state.run?.gold ?? 0;
   const floorInAct = ((state.run?.floor ?? 1) - 1) % 17 + 1;
-  const weightOf = (type: string): number => nodeWeight(type, hpPct, gold, floorInAct);
+  const weightOf = (type: string, hp: number): number => nodeWeight(type, hp, gold, floorInAct);
 
   const options: PickOption[] = available.flatMap((node) => {
     const index = numOrNull(node["index"]);
@@ -132,7 +148,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
     // Monster-first route scored level with a Rest-first one on a live run.
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
-    const value = weightOf(type) * urgency + continuation(self, nodes, weightOf, new Map());
+    const value = weightOf(type, hpPct) * urgency + continuation(self, hpPct, nodes, weightOf, new Map());
     return [
       {
         key: `n${index}`,
@@ -143,7 +159,7 @@ export function planMap(env: DecisionEnv): Decision | null {
           node_type: type,
           position: `row ${row}, column ${col}`,
           route_value: Number(value.toFixed(2)),
-          likely_continuation: pathPreview(self, nodes, weightOf, 3),
+          likely_continuation: pathPreview(self, hpPct, nodes, weightOf, 3),
         } satisfies JsonValue,
       } satisfies PickOption,
     ];
