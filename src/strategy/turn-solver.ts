@@ -449,7 +449,14 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score -= punish;
   }
   if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, sim.block - incomingRaw);
-  score += weights.damage * sim.damageDealt;
+  // Unkillable husks (Waterfall Giant after defeat: 999,999,999 HP, exploding next turn): damage into
+  // them is worthless, only surviving the blow matters.
+  const husk = sim.enemies.filter((enemy) => enemy.maxHp >= 1_000_000);
+  const huskDamage = husk.reduce((sum, enemy) => {
+    const start = input.enemies.find((entry) => entry.index === enemy.index)!;
+    return sum + Math.max(0, start.hp - enemy.hp);
+  }, 0);
+  score += weights.damage * (sim.damageDealt - huskDamage);
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
