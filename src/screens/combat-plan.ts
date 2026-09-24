@@ -21,6 +21,7 @@ import type { ActionRequest } from "../mod/client.js";
 import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
+import { expectedNextDamage } from "../knowledge/move-model.js";
 import { isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -227,8 +228,19 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "combat/potion-now", intent: { action: "use_potion", option_index: juice.slot }, rationale: `drinking ${juice.name} (permanent max HP, no reason to wait)` };
   }
   const potionUseCost = kind === "boss" ? 0 : kind === "elite" ? 5 : 15;
+  // Defensive potions are worth saving when next turn's hit is expected to be bigger than this one
+  // (Vantom: Fortifier spent on the 12-damage lance, then nothing left for the 28-damage Dismember).
+  const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
+  const nextIncoming = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
+  const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
+  const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE"]);
   const potionCards = potionsAll
-    .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost))
+    .map((potion) =>
+      modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0)),
+    )
     .filter((card): card is CardModel => card !== null);
   const solved = solveTurn({
     hand: [...hand, ...potionCards],
