@@ -22,14 +22,14 @@ const TIER: Record<string, number> = {
   CRIMSON_MANTLE: 72, DOMINATE: 66, BRAND: 66, STOKE: 64, COLOSSUS: 66,
   // B
   INFLAME: 68, UPPERCUT: 68, HEMOKINESIS: 64, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 58, HEADBUTT: 62,
-  SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 64, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
+  SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 54, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
   DISMANTLE: 64, EXPECT_A_FIGHT: 56, MANGLE: 35, PYRE: 80, STONE_ARMOR: 60, UNRELENTING: 58, BLOOD_WALL: 54,
   ANGER: 50, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
   PILLAGE: 54, ONE_TWO_PUNCH: 54, INFERNAL_BLADE: 52, EVIL_EYE: 54, TRUE_GRIT: 54, ARMAMENTS: 48, // its upgrade effect is unmodelled: the solver never plays it for value (WX16, BG4W)
   MOLTEN_FIST: 54, OUTRAGE: 52, RUPTURE: 50, INFERNO: 66, JUGGERNAUT: 56, WHIRLWIND: 66,
   // C
   BREAKTHROUGH: 54, // AoE 9 for 1 energy, 1 HP
-  IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 62, TREMBLE: 30, SWORD_BOOMERANG: 46,
+  IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 46,
   TAUNT: 62, SECOND_WIND: 44, RAGE: 42, VICIOUS: 42, CRUELTY: 44, AGGRESSION: 46, STAMPEDE: 44, JUGGLING: 25,
   PACTS_END: 40, BARRICADE: 44, ASHEN_STRIKE: 44, PRIMAL_FORCE: 36, CASCADE: 40, NOT_YET: 44, MIDNIGHT: 36,
   // F
@@ -39,9 +39,22 @@ const TIER: Record<string, number> = {
 export const SKIP_BAR = 50;
 
 const AOE = new Set(["INFERNO", "THUNDERCLAP", "BREAKTHROUGH", "STOMP", "CONFLAGRATION", "WHIRLWIND", "HOWL_FROM_BEYOND", "FIEND_FIRE", "SWORD_BOOMERANG"]);
-const DRAW = new Set(["POMMEL_STRIKE", "SHRUG_IT_OFF", "BATTLE_TRANCE", "BURNING_PACT", "OFFERING", "DRUM_OF_BATTLE", "PILLAGE", "DARK_EMBRACE"]);
+const DRAW = new Set(["POMMEL_STRIKE", "SHRUG_IT_OFF", "BATTLE_TRANCE", "BURNING_PACT", "OFFERING", "DRUM_OF_BATTLE", "PILLAGE"]);
 const SCALING = new Set(["DEMON_FORM", "INFLAME", "CORRUPTION", "FEEL_NO_PAIN", "CRIMSON_MANTLE", "PYRE", "RUPTURE", "BRAND", "DOMINATE", "FEED", "JUGGERNAUT", "HELLRAISER", "UNMOVABLE", "BARRICADE"]);
 const FRONTLOAD = new Set(["BREAK", "BLUDGEON", "HEMOKINESIS", "UPPERCUT", "CARNAGE", "TWIN_STRIKE", "POMMEL_STRIKE", "THRASH", "HEADBUTT", "DISMANTLE", "MANGLE", "UNRELENTING", "STOMP", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "SETUP_STRIKE", "TEAR_ASUNDER", "WHIRLWIND", "RAMPAGE", "MOLTEN_FIST", "CINDER", "FIEND_FIRE"]);
+/**
+ * Cards that exhaust something (another card, or themselves): what Dark Embrace and Feel No Pain
+ * feed on. Z2H3 F12: Dark Embrace (62) over True Grit in a 19-card deck with one exhausting card; it
+ * sat in hand four times in the boss fight and was never played. Payoffs (Pact's End, Ashen Strike,
+ * Evil Eye) exhaust nothing and do not count.
+ */
+const EXHAUST = new Set([
+  "TRUE_GRIT", "BURNING_PACT", "SECOND_WIND", "FIEND_FIRE", "CORRUPTION", "BRAND", "CINDER", "STOKE", "THRASH", "HAVOC",
+  "FEED", "IMPERVIOUS", "DOMINATE", "OFFERING", "MOLTEN_FIST", "INFERNAL_BLADE", "TREMBLE", "NOT_YET", "FORGOTTEN_RITUAL",
+]);
+/** Exhaust payoffs and their bonus once the deck has at least 3 exhausting cards. */
+const EXHAUST_PAYOFF: Record<string, number> = { DARK_EMBRACE: 20, FEEL_NO_PAIN: 10 };
+
 const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL"]);
 
 /**
@@ -86,6 +99,8 @@ export interface DeckProfile {
   scaling: number;
   frontload: number;
   block: number;
+  /** Cards that exhaust something (EXHAUST). */
+  exhaust: number;
   basics: number;
   copies: Map<string, number>;
 }
@@ -97,6 +112,7 @@ export function deckProfile(deck: DeckEntry[]): DeckProfile {
   let scaling = 0;
   let frontload = 0;
   let block = 0;
+  let exhaust = 0;
   let basics = 0;
   for (const card of deck) {
     copies.set(card.card_id, (copies.get(card.card_id) ?? 0) + 1);
@@ -105,9 +121,10 @@ export function deckProfile(deck: DeckEntry[]): DeckProfile {
     if (SCALING.has(card.card_id)) scaling += 1;
     if (FRONTLOAD.has(card.card_id)) frontload += 1;
     if (BLOCK.has(card.card_id)) block += 1;
+    if (EXHAUST.has(card.card_id)) exhaust += 1;
     if (card.rarity === "Basic") basics += 1;
   }
-  return { size: deck.length, aoe, draw, scaling, frontload, block, basics, copies };
+  return { size: deck.length, aoe, draw, scaling, frontload, block, exhaust, basics, copies };
 }
 
 export function cardValue(
@@ -144,6 +161,11 @@ export function cardValue(
   if (BLOCK.has(cardId) && deck.block < 2 && floor >= 5) {
     value += 5;
     reasons.push("thin on block");
+  }
+  const payoff = EXHAUST_PAYOFF[cardId];
+  if (payoff !== undefined && (deck.exhaust >= 3 || relics.includes("TOASTY_MITTENS"))) {
+    value += payoff;
+    reasons.push(deck.exhaust >= 3 ? `${deck.exhaust} exhausting cards to feed it` : "Baking Gloves exhaust every turn");
   }
   // Relic synergies found on live runs: Baking Gloves (TOASTY_MITTENS) exhaust a card every turn, so
   // Howl from Beyond replays itself each turn and Evil Eye always gets its bonus block.
