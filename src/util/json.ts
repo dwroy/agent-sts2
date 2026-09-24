@@ -77,12 +77,21 @@ export function shortHash(text: string): string {
 }
 
 export function truncate(text: string, max: number): string {
+  text = iconsToText(text);
   return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 1))}…`;
+}
+
+/**
+ * The game renders energy as an inline image; its res:// path reached the models verbatim
+ * ("获得res://…energy_icon.pngres://…energy_icon.png" = gain 2 energy). One "[能量]" per icon.
+ */
+export function iconsToText(text: string): string {
+  return text.replace(/(?:\[img\])?res:\/\/\S*?energy_icon\.png(?:\[\/img\])?/g, "[能量]").replace(/(?:\[img\])?res:\/\/\S*?\.png(?:\[\/img\])?/g, "");
 }
 
 /** Collapses whitespace and drops the mod's `[blue]…[/blue]` markup for model consumption. */
 export function stripMarkup(text: string): string {
-  return text
+  return iconsToText(text)
     .replace(/\[\/?[a-zA-Z_]+(?::[^\]]*)?\]/g, "")
     .replace(/\\([\[\]{}])/g, "$1")
     .replace(/\s+/g, " ")
