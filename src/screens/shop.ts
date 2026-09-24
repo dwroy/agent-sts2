@@ -16,8 +16,14 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 export function planShop(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const shop = asRecord(state.raw["shop"]);
-  if (Object.keys(shop).length === 0) return null;
   const actions = state.available_actions;
+  if (Object.keys(shop).length === 0) {
+    // The fake-merchant room reports no shop payload (2026-09-25: waited 40 min on it); walk on.
+    if (state.screen === "FAKE_MERCHANT" && actions.includes("proceed")) {
+      return { kind: "act", label: "shop/leave", intent: { action: "proceed" }, rationale: "fake merchant with no shop data: leaving" };
+    }
+    return null;
+  }
 
   if (!bool(shop["is_open"])) {
     // 1. Dump the junk potions first: a live shop run showed a Foul Potion blocking a slot, and the
