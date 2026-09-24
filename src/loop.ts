@@ -582,6 +582,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 confidence: jevAnswer.confidence,
                 rationale: `DeepSeek ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${ds.choice}; ${esc.why}): ${ds.reason} | ${override.rationale}`,
               };
+              // A plan committed by this resolution was DeepSeek's, not Jev's (post-mortem attribution).
+              if (screenMemory.combatPlan) screenMemory.combatPlan.via = "deepseek";
               escalation = { jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: ds.choice, reason: ds.reason, latency_ms: ds.latencyMs, tokens: ds.inputTokens + ds.outputTokens };
             }
           } catch (error) {
