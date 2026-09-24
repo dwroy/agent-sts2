@@ -144,6 +144,8 @@ interface Sim {
   tempDex: number;
   /** Buffer stacks gained this turn: each negates one enemy hit. */
   buffer: number;
+  /** Duplication: the next card played resolves twice. */
+  duplicate: number;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -235,8 +237,32 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   next.hand = sim.hand.filter((entry) => entry !== card);
   next.energy -= cost;
   if (card.type !== "Potion") next.played += 1;
+  if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
+  const twice = card.type !== "Potion" && next.duplicate > 0;
+  if (twice) next.duplicate -= 1;
+  resolveEffects(next, card, target, player, cost);
+  if (twice) resolveEffects(next, card, target, player, cost);
+  if (card.special === "duplicate_next") next.duplicate += 1;
+  if (!card.known) next.unknown = [...next.unknown, card.name];
+  const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
+
+  next.steps = [
+    ...sim.steps,
+    {
+      cardIndex: card.index,
+      cardId: card.cardId,
+      name: card.name,
+      target: card.target === "single" ? target : null,
+      targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
+    },
+  ];
+  return next;
+}
+
+/** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
+function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number): void {
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
-  if (card.target === "single" && targetEnemy === null) return null;
+  if (card.target === "single" && targetEnemy === null) return;
 
   if (card.hpLoss > 0) {
     next.hp -= card.hpLoss;
@@ -258,7 +284,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.damage !== null || card.special === "whirlwind") {
     let perHit = (card.damage ?? 0) + next.strength;
     let hits = card.hits;
-    if (card.special === "body_slam") perHit = sim.block + next.strength;
+    if (card.special === "body_slam") perHit = next.block + next.strength;
     if (card.special === "whirlwind") hits = cost;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
@@ -304,19 +330,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // Earlier draws leave more energy to use what they bring.
     next.drawScore += card.draw * (next.energy > 0 ? 3 : 1);
   }
-  if (!card.known) next.unknown = [...next.unknown, card.name];
-
-  next.steps = [
-    ...sim.steps,
-    {
-      cardIndex: card.index,
-      cardId: card.cardId,
-      name: card.name,
-      target: card.target === "single" ? target : null,
-      targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-    },
-  ];
-  return next;
 }
 
 function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
@@ -493,6 +506,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     potionCost: 0,
     tempDex: 0,
     buffer: 0,
+    duplicate: 0,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,

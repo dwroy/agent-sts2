@@ -229,3 +229,20 @@ describe("status cards in hand", () => {
     expect(best.outcome.hpLoss).toBe(15);
   });
 });
+
+describe("Duplication potion", () => {
+  it("plays the next card twice (floor 12 elite, live run)", async () => {
+    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const dup = modelPotion("DUPLICATOR", "dup", 2, [], 5)!;
+    const setup = card(0, "SETUP_STRIKE", { damage: 7, tempStrength: 3 });
+    const result = solveTurn({
+      hand: [dup, setup, strike(1), card(2, "TWIN_STRIKE", { damage: 5, hits: 2 })],
+      player: player({ hp: 67, maxHp: 92, energy: 3 }),
+      enemies: [enemy({ hp: 42, attacks: [{ damage: 4, hits: 4 }] })],
+      fightKind: "elite",
+    });
+    const best = result.plans[0]!;
+    expect(best.outcome.winsFight).toBe(true);
+    expect(best.steps[0]!.cardId.startsWith("POTION:DUPLICATOR")).toBe(true);
+  });
+});
