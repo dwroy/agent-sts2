@@ -6,6 +6,9 @@
  * OpenAI-compatible chat completions; key from DEEPSEEK_API_KEY. The key is never logged.
  */
 
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
+
 import type { JsonValue } from "../util/json.js";
 import type { Escalator } from "./file-escalation.js";
 
@@ -14,6 +17,8 @@ export interface DeepSeekConfig {
   baseUrl: string;
   model: string;
   timeoutMs: number;
+  /** Optional strategy guide (markdown) appended to the system prompt; a static prefix, so DeepSeek caches it. */
+  guideFile?: string;
 }
 
 export interface DeepSeekAnswer {
@@ -23,6 +28,8 @@ export interface DeepSeekAnswer {
   inputTokens: number;
   outputTokens: number;
   cacheHitTokens?: number;
+  /** Short hash of the guide in the prompt ("" when none), so logs show which guide version answered. */
+  guideId?: string;
 }
 
 const SYSTEM = [
@@ -36,7 +43,14 @@ const SYSTEM = [
 export class DeepSeekClient implements Escalator {
   readonly name = "deepseek" as const;
 
-  constructor(private readonly config: DeepSeekConfig) {}
+  private readonly system: string;
+  readonly guideId: string;
+
+  constructor(private readonly config: DeepSeekConfig) {
+    const guide = config.guideFile && existsSync(config.guideFile) ? readFileSync(config.guideFile, "utf8").trim() : "";
+    this.guideId = guide ? createHash("sha256").update(guide).digest("hex").slice(0, 8) : "";
+    this.system = guide ? `${SYSTEM}\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}` : SYSTEM;
+  }
 
   async choose(
     state: Record<string, JsonValue>,
@@ -57,7 +71,7 @@ export class DeepSeekClient implements Escalator {
           temperature: 0,
           response_format: { type: "json_object" },
           messages: [
-            { role: "system", content: SYSTEM },
+            { role: "system", content: this.system },
             { role: "user", content: user },
           ],
         }),
@@ -87,6 +101,7 @@ export class DeepSeekClient implements Escalator {
         inputTokens: payload.usage?.prompt_tokens ?? 0,
         outputTokens: payload.usage?.completion_tokens ?? 0,
         cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
+        guideId: this.guideId,
       };
     } finally {
       clearTimeout(timer);

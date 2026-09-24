@@ -21,6 +21,8 @@ export interface EscalationAnswer {
   outputTokens: number;
   /** DeepSeek only: prompt tokens served from its context cache (billed at a lower rate). */
   cacheHitTokens?: number;
+  /** DeepSeek only: which strategy guide version was in the prompt. */
+  guideId?: string;
 }
 
 export interface Escalator {
