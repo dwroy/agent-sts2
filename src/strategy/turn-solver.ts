@@ -219,6 +219,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.block += card.block;
     next.blockGained += card.block;
   }
+  if (card.special === "triple_block") {
+    next.blockGained += next.block * 2;
+    next.block *= 3;
+  }
 
   if (card.damage !== null || card.special === "whirlwind") {
     let perHit = (card.damage ?? 0) + next.strength;

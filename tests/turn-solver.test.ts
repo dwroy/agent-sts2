@@ -196,3 +196,19 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.outcome.winsFight).toBe(true);
   });
 });
+
+describe("Fortifier", () => {
+  it("plays Defend before tripling the block (boss floor 17, live run)", async () => {
+    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const fortifier = modelPotion("FORTIFIER", "fortifier", 0, [], 0)!;
+    const result = solveTurn({
+      hand: [defend(0), fortifier],
+      player: player({ hp: 19, energy: 1 }),
+      enemies: [enemy({ hp: 62, attacks: [{ damage: 12, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    const best = result.plans[0]!;
+    expect(best.steps.map((step) => step.cardId.split(":")[0])).toEqual(["DEFEND_IRONCLAD", "POTION"]);
+    expect(best.outcome.hpLoss).toBe(0);
+  });
+});
