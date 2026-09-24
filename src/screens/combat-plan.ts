@@ -41,11 +41,33 @@ const MODELLED_ENEMY_POWERS = new Set([
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
 const POWER_NOTES: Record<string, string> = {
   SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
+  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +5 Strength: kill both in the same turn or wear both down evenly)",
 };
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
 const CLOSE_CALL = 6;
 const MAX_OPTIONS = 4;
+
+/**
+ * HP guardrail for elite/boss/dangerous plan choices: the models keep trading HP for damage ("Burning
+ * Blood heals it", "HP buffer is comfortable"; WX16, 7Q5G, YP9, DG1 — the guide alone did not stop
+ * it). A non-winning plan may lose at most this much more than the cheapest plan offered.
+ */
+export function hpGuardSlack(hp: number): number {
+  return Math.max(6, hp * 0.2);
+}
+
+/**
+ * The plan to play instead of `chosen` when it loses too much HP, else null: the best-ranked plan
+ * within the slack of the cheapest one (options are in code rank order).
+ */
+export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number): Plan | null {
+  if (chosen.outcome.winsFight || options.length === 0) return null;
+  const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
+  const bound = minLoss + hpGuardSlack(hp);
+  if (chosen.outcome.hpLoss <= bound) return null;
+  return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+}
 
 function powerAmount(holder: Record<string, unknown>, id: string): number {
   for (const entry of asArray(holder["powers"])) {
@@ -53,6 +75,14 @@ function powerAmount(holder: Record<string, unknown>, id: string): number {
     if (str(power["power_id"]) === id) return numOrNull(power["amount"]) ?? 1;
   }
   return 0;
+}
+
+/**
+ * Crimson Mantle: each copy costs 1 HP at the start of our turn (and gives 7, or 10 upgraded, block).
+ * The power only shows the block total, so the copies are counted from it.
+ */
+export function mantleHpCost(amount: number): number {
+  return amount > 0 ? Math.max(1, Math.floor(amount / 7)) : 0;
 }
 
 export function enemySims(combat: Record<string, unknown>): EnemySim[] {
@@ -79,6 +109,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
+      crabRage: powerAmount(enemy, "CRAB_RAGE_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
@@ -274,6 +305,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? null,
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
+    startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")),
   };
   const kind = fightKind(combat, env);
 
@@ -370,16 +402,28 @@ function planTurn(env: DecisionEnv): Decision | null {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
-  const options = distinctPlans(solved.plans.filter((plan) => !plan.outcome.dies), MAX_OPTIONS);
-  const second = options[1];
-  const clear = !second || best.score - second.score >= CLOSE_CALL;
+  const surviving = solved.plans.filter((plan) => !plan.outcome.dies);
+  const options = distinctPlans(surviving, MAX_OPTIONS);
+  // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
+  // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
+  // "only line" while the one option shown was the same turn with Defend+ (hp -20). Play what is shown.
+  const top = options.includes(best) ? best : options[0] ?? best;
+  const second = options.find((plan) => plan !== top);
+  const clear = !second || top.score - second.score >= CLOSE_CALL;
   if (clear && !((dangerous || kind === "boss") && potions.length > 0)) {
-    commit(env, state.turn, best, hand, "code");
+    commit(env, state.turn, top, hand, "code");
+    const margin = second
+      ? `+${(top.score - second.score).toFixed(1)} over next`
+      : surviving.length === 1
+        ? "only line"
+        : top === best
+          ? "only distinct line"
+          : "dominates the score-best line";
     return {
       kind: "act",
       label: "combat/plan",
-      intent: firstIntent(best, hand, env),
-      rationale: `code plan (${second ? `+${(best.score - second.score).toFixed(1)} over next` : "only line"}): ${best.steps.length ? best.steps.map(stepText).join(", ") : "end turn"}; hp -${best.outcome.hpLoss}, dmg ${best.outcome.damageDealt}${calcNote}`,
+      intent: firstIntent(top, hand, env),
+      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; hp -${top.outcome.hpLoss}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
 
@@ -402,7 +446,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         criteria[key] = JSON.stringify({
           plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
           text: potion.text,
-          note: `best card plan alone loses ${best.outcome.hpLoss} HP this turn`,
+          note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
@@ -441,8 +485,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
 
   const fallback = (why: string): ResolvedAction => {
-    commit(env, state.turn, best, hand, "code");
-    return { intent: firstIntent(best, hand, env), rationale: `${why}; using the code-best plan`, confidence: null, fallback: true };
+    commit(env, state.turn, top, hand, "code");
+    return { intent: firstIntent(top, hand, env), rationale: `${why}; using the code-best plan`, confidence: null, fallback: true };
   };
 
   return {
@@ -464,18 +508,24 @@ function planTurn(env: DecisionEnv): Decision | null {
         env.screenMemory.combatPlan = null;
         return { intent: chosen.potion, rationale: `Jev chose to ${chosen.label} (confidence ${answer.confidence.toFixed(2)})`, confidence: answer.confidence, fallback: false };
       }
-      const plan = chosen.plan!;
+      const picked = chosen.plan!;
       const hallway = !(kind === "elite" || kind === "boss" || dangerous);
-      if (hallway && answer.confidence < 0.3 && plan !== best && answer.raw !== undefined && !(answer.raw as { escalated?: string }).escalated) {
+      if (hallway && answer.confidence < 0.3 && picked !== top && answer.raw !== undefined && !(answer.raw as { escalated?: string }).escalated) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
       }
+      const replacement = hallway ? null : hpGuardReplacement(picked, options, playerSim.hp);
+      const plan = replacement ?? picked;
       commit(env, state.turn, plan, hand, "jev");
       const rank = options.indexOf(plan) + 1;
+      const guardNote = replacement
+        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${hpGuardSlack(playerSim.hp).toFixed(0)} over the cheapest line, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        : "";
       return {
         intent: firstIntent(plan, hand, env),
-        rationale: `Jev chose plan ${rank}/${options.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${rank}${calcNote}`,
+        rationale: `Jev chose plan ${options.indexOf(picked) + 1}/${options.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${options.indexOf(picked) + 1}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
+        ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
       };
     },
   };

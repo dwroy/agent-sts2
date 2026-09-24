@@ -599,6 +599,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               // A plan committed by this resolution belongs to the escalator (post-mortem attribution).
               if (screenMemory.combatPlan) screenMemory.combatPlan.via = escalator.name;
               escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "" };
+              // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
+              if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
             } catch (error) {
               onEvent({ type: "note", message: `${escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });

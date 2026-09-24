@@ -101,6 +101,8 @@ export interface ResolvedAction {
   reask?: ReaskSpec;
   /** Set when a model other than Jev made the call (escalation). */
   decider?: "jev" | "deepseek" | "claude";
+  /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
+  guard?: { kind: "hp"; choice: string; plan: string };
 }
 
 export interface AskDecision {

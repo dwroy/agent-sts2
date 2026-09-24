@@ -15,6 +15,7 @@ export const testKnowledge: Knowledge = makeKnowledge({
     { id: "ANGER", name: "Anger", type: "Attack", rarity: "Common", cost: 0, description: "Deal 6 damage.", target: "AnyEnemy", keywords: [], tags: [] },
     { id: "INFLAME", name: "Inflame", type: "Power", rarity: "Uncommon", cost: 1, description: "Gain 2 Strength.", target: "Self", keywords: [], tags: [] },
     { id: "SHRUG_IT_OFF", name: "Shrug It Off", type: "Skill", rarity: "Common", cost: 1, description: "Gain 8 Block. Draw 1 card.", target: "Self", keywords: [], tags: [] },
+    { id: "CRIMSON_MANTLE", name: "Crimson Mantle", type: "Power", rarity: "Rare", cost: 1, description: "At the start of your turn, lose 1 HP and gain 7 Block.", target: "Self", keywords: [], tags: [] },
   ],
   monsters: [
     { id: "JAW_WORM", name: "Jaw Worm", type: "Monster", min_hp: 40, max_hp: 44, moves: [] },

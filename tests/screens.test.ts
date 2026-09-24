@@ -762,3 +762,83 @@ describe("Sandpit guard", () => {
     expect(enemies[0]!.powers[0]).toMatch(/^SANDPIT_POWER 2 \(countdown/);
   });
 });
+
+describe("combat plan guards (batch 2)", () => {
+  const card = (index: number, cardId: string, extra: Record<string, unknown> = {}): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: false, target_type: "Self", requires_target: false, valid_target_indices: [],
+    costs_x: false, star_costs_x: false, energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", playable: true, dynamic_values: [], ...extra,
+  });
+
+  it("does not commit a score-best plan that is missing from the options as the 'only line' (YP9 T3)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["energy"] = 1;
+    // Crimson Mantle scores best on its flat power value, but Defend is better on every shown axis.
+    combat["hand"] = [
+      card(0, "CRIMSON_MANTLE"),
+      card(1, "DEFEND_R", { dynamic_values: [{ name: "Block", base_value: 5, current_value: 5 }] }),
+    ];
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    expect(decision?.kind).toBe("act");
+    if (decision?.kind !== "act") return;
+    expect(decision.intent).toEqual({ action: "play_card", card_index: 1 });
+    expect(decision.rationale).not.toMatch(/only line/);
+  });
+
+  const guardCombat = (): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = 30;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], intents: [{ index: 0, intent_type: "Attack", label: "32", damage: 32, hits: 1, total_damage: 32 }] }];
+    const hand = combat["hand"] as Record<string, unknown>[];
+    const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
+    combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
+    // An unmodelled potion on a dangerous turn: the plan goes to Jev.
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    return raw;
+  };
+
+  it("HP guard: a plan losing far more HP than the cheapest one is replaced (DeepSeek 'HP buffer is comfortable')", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(guardCombat(), { combatPlanner: "turn" }));
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    const plans = Object.entries(criteria)
+      .filter(([key]) => key.startsWith("plan"))
+      .map(([key, text]) => ({ key, hpLost: Number(JSON.parse(String(text))["hp_lost"]) }));
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
+    const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
+    expect(greedy.hpLost - minLoss).toBeGreaterThan(6);
+    const escalated = { plan: { type: "choice", choice: greedy.key, probabilities: { [greedy.key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } } as AnswerSet;
+    const resolved = decision.resolve(escalated);
+    expect(resolved.guard?.kind).toBe("hp");
+    expect(resolved.guard?.choice).not.toBe(greedy.key);
+    const used = plans.find((entry) => entry.key === resolved.guard?.choice)!;
+    expect(used.hpLost).toBeLessThanOrEqual(minLoss + 6);
+    expect(resolved.rationale).toMatch(/HP guard/);
+  });
+
+  it("HP guard leaves a plan within the slack alone", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(guardCombat(), { combatPlanner: "turn" }));
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    const cheapest = Object.entries(criteria)
+      .filter(([key]) => key.startsWith("plan"))
+      .reduce((a, b) => (Number(JSON.parse(String(b[1]))["hp_lost"]) < Number(JSON.parse(String(a[1]))["hp_lost"]) ? b : a))[0];
+    const resolved = decision.resolve({ plan: { type: "choice", choice: cheapest, probabilities: { [cheapest]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    expect(resolved.guard).toBeUndefined();
+  });
+
+  it("reads Kaiser Crab's Crab Rage and Crimson Mantle's HP cost", async () => {
+    const { enemySims, mantleHpCost } = await import("../src/screens/combat-plan.js");
+    const [rocket] = enemySims({
+      enemies: [{ index: 1, enemy_id: "ROCKET", name: "Rocket", current_hp: 14, max_hp: 199, block: 0, is_alive: true, powers: [{ power_id: "CRAB_RAGE_POWER", amount: 1 }], intents: [] }],
+    });
+    expect(rocket!.crabRage).toBe(true);
+    expect(rocket!.unmodelled).toBe(false);
+    expect([mantleHpCost(0), mantleHpCost(7), mantleHpCost(10), mantleHpCost(14), mantleHpCost(20)]).toEqual([0, 1, 1, 2, 2]);
+  });
+});
