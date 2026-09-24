@@ -46,6 +46,8 @@ export interface AppConfig {
    * code-chosen action. Default true: with Jev enabled the model decides.
    */
   strictJev: boolean;
+  /** `turn`: whole-turn solver + Jev on close calls (phase 2). `card`: the original per-card question. */
+  combatPlanner: "turn" | "card";
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -94,6 +96,7 @@ const DEFAULTS = {
   runStart: "auto",
   allowFtueModals: false,
   strictJev: true,
+  combatPlanner: "turn" as "turn" | "card",
   shopDiscardPotions: "FOUL_POTION",
 } as const;
 
@@ -237,6 +240,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
       ? false
       : parseBoolean(readEnv(env, "STRICT_JEV") ?? String(DEFAULTS.strictJev), "STRICT_JEV", problems);
 
+  const combatPlannerRaw = (readEnv(env, "COMBAT_PLANNER") ?? DEFAULTS.combatPlanner).toLowerCase();
+  if (combatPlannerRaw !== "turn" && combatPlannerRaw !== "card") {
+    problems.push({ field: "COMBAT_PLANNER", message: `expected turn or card, got "${combatPlannerRaw}"` });
+  }
+  const combatPlanner: "turn" | "card" = combatPlannerRaw === "card" ? "card" : "turn";
+
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
     problems.push({ field: "LOG_LEVEL", message: `expected one of ${LOG_LEVELS.join(", ")}, got "${logLevelRaw}"` });
@@ -309,6 +318,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     shop: { discardPotions: shopDiscardPotions },
     allowFtueModals,
     strictJev,
+    combatPlanner,
     mode,
     log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog },
     warnings,

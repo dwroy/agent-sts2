@@ -30,6 +30,8 @@ export interface DecisionEnv {
    * code-chosen action. Only the legality gate still applies.
    */
   strictJev: boolean;
+  /** Which combat planner to use; undefined means the turn solver. */
+  combatPlanner?: "turn" | "card";
   /** Potion ids (or names) to drop when entering a shop, e.g. the Foul Potion. */
   shopDiscardPotions: string[];
 }
@@ -44,10 +46,20 @@ export interface ScreenMemory {
    * the loop skipped, re-claimed the same card reward, and skipped again forever.
    */
   cardRewardSkipped: boolean;
+  /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
+  combatPlan: CombatPlanMemo | null;
+}
+
+export interface CombatPlanMemo {
+  turn: number | null;
+  remaining: import("../strategy/turn-solver.js").Step[];
+  /** Hand signature the next step expects; any other hand means the board surprised us. */
+  expectedHand: string;
+  via: "code" | "jev" | "deepseek";
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {
-  return { screen, shopOpened: false, cardRewardSkipped: false };
+  return { screen, shopOpened: false, cardRewardSkipped: false, combatPlan: null };
 }
 
 /**
@@ -75,6 +87,8 @@ export interface ResolvedAction {
   confidence: number | null;
   fallback: boolean;
   reask?: ReaskSpec;
+  /** Set when a model other than Jev made the call (DeepSeek escalation). */
+  decider?: "jev" | "deepseek";
 }
 
 export interface AskDecision {

@@ -3,6 +3,7 @@
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { planChest } from "./chest.js";
 import { planCombat } from "./combat.js";
+import { planCombatTurn } from "./combat-plan.js";
 import { planEvent } from "./event.js";
 import { planMap } from "./map.js";
 import { planBundle, planCapstone, planCharacterSelect, planCloseCardsView, planCrystalSphere, planMenu, planTimeline } from "./misc.js";
@@ -75,7 +76,7 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
   let decision: Decision | null = null;
   switch (screen) {
     case "COMBAT":
-      decision = planCombat(env);
+      decision = env.combatPlanner === "card" ? planCombat(env) : planCombatTurn(env);
       break;
     case "MAP":
       decision = planMap(env);

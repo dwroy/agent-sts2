@@ -17,6 +17,8 @@ export interface DecisionRecord {
   floor: number | null;
   turn: number | null;
   label: string;
+  /** Who made this call: code (rules/solver), jev, deepseek, or code after an unusable model answer. */
+  decider?: "code" | "jev" | "deepseek" | "code-fallback";
   fingerprint: string;
   questions?: Record<string, JsonValue>;
   answers?: JsonValue;

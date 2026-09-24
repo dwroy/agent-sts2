@@ -86,6 +86,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       characterPreference: options.config.run.character,
       allowFtueModals: options.config.allowFtueModals,
       strictJev: options.config.strictJev && options.ask !== undefined,
+      combatPlanner: options.config.combatPlanner,
       shopDiscardPotions: options.config.shop.discardPotions,
     };
 

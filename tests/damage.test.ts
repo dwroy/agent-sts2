@@ -80,6 +80,7 @@ describe("combat options use the resolved damage", () => {
       characterPreference: null,
       allowFtueModals: false,
       strictJev: true,
+      combatPlanner: "card" as const,
       shopDiscardPotions: ["FOUL_POTION"],
     };
     const planned = planDecision(env);

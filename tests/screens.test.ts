@@ -47,6 +47,7 @@ function env(raw: Record<string, unknown>, overrides: Partial<DecisionEnv> = {})
     characterPreference: null,
     allowFtueModals: false,
     strictJev: true,
+    combatPlanner: "card",
     screenMemory: createScreenMemory(state.screen),
     shopDiscardPotions: ["FOUL_POTION"],
     ...overrides,

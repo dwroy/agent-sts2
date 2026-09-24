@@ -191,6 +191,7 @@ async function main(argv: string[]): Promise<number> {
         characterPreference: config.run.character,
         allowFtueModals: config.allowFtueModals,
         strictJev: config.strictJev && runtime.jev !== null,
+        combatPlanner: config.combatPlanner,
         shopDiscardPotions: config.shop.discardPotions,
       });
 

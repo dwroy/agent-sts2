@@ -415,6 +415,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.screen = state.screen;
       screenMemory.shopOpened = false;
       screenMemory.cardRewardSkipped = false;
+      screenMemory.combatPlan = null;
     }
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
@@ -431,6 +432,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // Trust-Jev only means something when there is a Jev to trust: in `--no-jev` mode the
       // deterministic path is the whole point.
       strictJev: config.strictJev && jev !== null,
+      combatPlanner: config.combatPlanner,
       shopDiscardPotions: config.shop.discardPotions,
     };
     if (!planned) {
@@ -627,6 +629,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       floor: state.run?.floor ?? null,
       turn: state.turn,
       label: decision.label,
+      decider:
+        decision.kind === "act"
+          ? ("code" as const)
+          : resolved.fallback || (!usedJev && !fromMemo)
+            ? ("code-fallback" as const)
+            : resolved.decider ?? ("jev" as const),
       fingerprint: stateFingerprint,
       questions: asked,
       answers: rawAnswers,

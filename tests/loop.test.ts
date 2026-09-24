@@ -80,7 +80,7 @@ function testConfig(): AppConfig {
   const path = join(tmpdir(), `jev-sts2-test-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
   logs.push(path);
   const config = loadConfig({} as NodeJS.ProcessEnv);
-  return { ...config, log: { ...config.log, decisionLog: path } };
+  return { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: path } };
 }
 
 interface ScriptOptions {
