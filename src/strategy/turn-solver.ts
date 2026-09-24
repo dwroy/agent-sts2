@@ -41,6 +41,14 @@ export interface EnemySim {
   minion?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
   unmodelled?: boolean;
+  /** Guarded / Soar: damage taken is halved. */
+  halved?: boolean;
+  /** Skittish: gains this much block the first time it is hit this turn. */
+  skittish?: number;
+  /** Reflect: damage absorbed by its block is dealt back to the player. */
+  reflect?: boolean;
+  /** Unblocked damage from this enemy has an extra lasting cost (Suck, Painful Stabs, Paper Cuts). */
+  punishesUnblocked?: number;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -56,6 +64,14 @@ export interface PlayerSim {
   intangible: boolean;
   /** Shrink: the player's attacks deal 30% less. */
   shrunk?: boolean;
+  /** Juggernaut N: deal N to a random enemy whenever block is gained. */
+  juggernaut?: number;
+  /** Rage N: gain N block whenever an attack is played this turn. */
+  rage?: number;
+  /** Barricade (or Blur): block carries into next turn, so excess block has value. */
+  keepsBlock?: boolean;
+  /** The Gambit: any unblocked attack damage kills. */
+  gambit?: boolean;
 }
 
 export interface SolverInput {
@@ -157,11 +173,20 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
       enemy.flutter = (enemy.flutter ?? 0) - 1;
     }
     if (enemy.unmodelled) amount = Math.floor(amount * 0.8);
+    if (enemy.halved) amount = Math.floor(amount * 0.5);
     if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
+    if ((enemy.skittish ?? 0) > 0 && amount > 0) {
+      enemy.block += enemy.skittish ?? 0;
+      enemy.skittish = 0;
+    }
     const absorbed = Math.min(enemy.block, amount);
     enemy.block -= absorbed;
+    if (enemy.reflect && absorbed > 0) {
+      sim.hp -= absorbed;
+      sim.hpLostThisTurn = true;
+    }
     let loss = amount - absorbed;
     if (loss > 0 && (enemy.slippery ?? 0) > 0) {
       loss = 1;
@@ -215,10 +240,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0) {
-    next.block += card.block;
-    next.blockGained += card.block;
-  }
+  if (card.block > 0) gainBlock(next, card.block, player);
+  if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
   if (card.special === "triple_block") {
     next.blockGained += next.block * 2;
     next.block *= 3;
@@ -286,6 +309,27 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   return next;
 }
 
+function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
+  sim.block += amount;
+  sim.blockGained += amount;
+  if ((player.juggernaut ?? 0) > 0) {
+    // Random enemy: expected value, lowest HP first (kills matter most).
+    const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
+    if (living[0]) hitEnemyRaw(sim, living[0], player.juggernaut ?? 0);
+  }
+}
+
+/** Non-attack damage (Juggernaut): ignores Vulnerable/Weak, still hits block. */
+function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): void {
+  const absorbed = Math.min(enemy.block, amount);
+  enemy.block -= absorbed;
+  const loss = Math.min(enemy.hp, amount - absorbed);
+  enemy.hp -= loss;
+  enemy.lostThisTurn += loss;
+  sim.damageDealt += loss;
+  if (enemy.hp <= 0) enemy.alive = false;
+}
+
 function incoming(sim: Sim, player: PlayerSim): number {
   let total = 0;
   for (const enemy of sim.enemies) {
@@ -333,13 +377,18 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const selfLoss = input.player.hp - sim.hp;
   const hpLoss = selfLoss + incomingAfterBlock;
   const hpAfter = input.player.hp - hpLoss;
-  const dies = hpAfter <= 0;
+  const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0);
 
   const kills = sim.enemies.filter((enemy) => !enemy.alive && !enemy.illusion && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   let score = 0;
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  if (incomingAfterBlock > 0) {
+    const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
+    score -= punish;
+  }
+  if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, sim.block - incomingRaw);
   score += weights.damage * sim.damageDealt;
   for (const enemy of kills) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;

@@ -32,6 +32,8 @@ const MODELLED_ENEMY_POWERS = new Set([
   "HARDENED_SHELL_POWER", "THORNS_POWER", "CURL_UP_POWER", "FLUTTER_POWER", "HARD_TO_KILL_POWER", "SLOW_POWER",
   "ILLUSION_POWER", "MINION_POWER", "TERRITORIAL_POWER", "PLOW_POWER", "ESCAPE_ARTIST_POWER", "PLATING_POWER",
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
+  "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
+  "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER",
 ]);
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
@@ -69,6 +71,10 @@ function enemySims(combat: Record<string, unknown>): EnemySim[] {
       slow: powerAmount(enemy, "SLOW_POWER") > 0,
       illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
       minion: powerAmount(enemy, "MINION_POWER") > 0,
+      halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
+      skittish: powerAmount(enemy, "SKITTISH_POWER"),
+      reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
+      punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAINFUL_STABS_POWER") > 0 ? 3 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -176,6 +182,10 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     vulnerable: powerAmount(player, "VULNERABLE_POWER") > 0,
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
+    juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
+    rage: powerAmount(player, "RAGE_POWER"),
+    keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
+    gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
   };
   const kind = fightKind(combat, env);
 
