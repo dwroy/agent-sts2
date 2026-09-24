@@ -141,6 +141,11 @@ export function cardValue(
     value += 25;
     reasons.push("Baking Gloves synergy");
   }
+  // Fiddle: no mid-turn draw, so cards valued for their draw lose that value.
+  if (relics.includes("FIDDLE") && DRAW.has(cardId)) {
+    value -= 15;
+    reasons.push("Fiddle: no mid-turn draw");
+  }
   const boss = bossBonus(cardId, bossId);
   if (boss.bonus > 0) {
     value += boss.bonus;
