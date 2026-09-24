@@ -35,7 +35,13 @@ const MODELLED_ENEMY_POWERS = new Set([
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
+  "SANDPIT_POWER",
 ]);
+
+/** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
+const POWER_NOTES: Record<string, string> = {
+  SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
+};
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
 const CLOSE_CALL = 6;
@@ -74,6 +80,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       minion: powerAmount(enemy, "MINION_POWER") > 0,
       reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
       eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
+      sandpit: powerAmount(enemy, "SANDPIT_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
       // is what lost G7EJ and WQTRX (the explosion is modelled through `eruption` instead).
       scaling:
@@ -133,6 +140,7 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
+  if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
 }
@@ -184,7 +192,49 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
       : null;
 }
 
+/**
+ * Sandpit hard guard (TTVY T6): never end the turn with the Sandpit about to reach 0 while an
+ * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
+ * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
+ */
+export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
+  if (!decision) return decision;
+  const combat = asRecord(env.state.raw["combat"]);
+  const sandpits = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .map((enemy) => powerAmount(enemy, "SANDPIT_POWER"))
+    .filter((amount) => amount > 0);
+  if (sandpits.length === 0 || Math.min(...sandpits) - 1 > 0) return decision;
+  const energy = num(asRecord(combat["player"])["energy"]);
+  const escape = asArray(combat["hand"])
+    .map(asRecord)
+    .find((card) => str(card["card_id"]) === "FRANTIC_ESCAPE" && card["playable"] !== false && num(card["energy_cost"]) <= energy);
+  if (!escape) return decision;
+  const intent: ActionRequest = { action: "play_card", card_index: num(escape["index"]) };
+  const why = `Sandpit ${Math.min(...sandpits)} would reach 0 at the enemy turn (death regardless of HP/block)`;
+  if (decision.kind === "act") {
+    if (decision.intent.action !== "end_turn") return decision;
+    env.screenMemory.combatPlan = null;
+    return { kind: "act", label: "combat/sandpit-guard", intent, rationale: `${why}: playing Frantic Escape instead of ending the turn` };
+  }
+  const resolve = decision.resolve.bind(decision);
+  return {
+    ...decision,
+    resolve(answers) {
+      const resolved = resolve(answers);
+      if (resolved.intent?.action !== "end_turn") return resolved;
+      env.screenMemory.combatPlan = null;
+      return { ...resolved, intent, rationale: `${resolved.rationale}; overridden: ${why}, playing Frantic Escape` };
+    },
+  };
+}
+
 export function planCombatTurn(env: DecisionEnv): Decision | null {
+  return guardSandpit(env, planTurn(env));
+}
+
+function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
   const combat = asRecord(state.raw["combat"]);
   const readiness = asRecord(combat["action_readiness"]);
@@ -381,6 +431,11 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
         hp: `${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`,
         block: num(enemy["block"]),
         intents: asArray(enemy["intents"]).map((intent) => `${str(asRecord(intent)["intent_type"])} ${str(asRecord(intent)["label"])}`).join(", "),
+        powers: asArray(enemy["powers"]).map((entry) => {
+          const power = asRecord(entry);
+          const amount = numOrNull(power["amount"]);
+          return `${str(power["power_id"])}${amount === null ? "" : ` ${amount}`}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
+        }),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
   };

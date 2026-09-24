@@ -48,7 +48,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -110,6 +110,7 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   FEED: "feed",
   RUPTURE: "rupture",
   COLOSSUS: "colossus",
+  FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
 };
 
 function targetMode(targetType: string, template: string, requiresTarget: boolean): TargetMode {
@@ -183,6 +184,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
+  } else if (special === "frantic_escape") {
+    known = true; // its whole value is the Sandpit count, scored by the solver
   } else if (!hasModelledEffect) {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy.
     flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));

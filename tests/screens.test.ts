@@ -697,3 +697,68 @@ describe("Waterfall Giant modelling", () => {
     expect(giant!.eruption).toBe(15);
   });
 });
+
+describe("Sandpit guard", () => {
+  const sandpitCombat = (sandpit: number, escapeCost: number): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["enemies"] = [
+      {
+        index: 0, enemy_id: "THE_INSATIABLE", name: "The Insatiable", current_hp: 186, max_hp: 321, block: 0, is_alive: true, is_hittable: true,
+        powers: [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: sandpit, is_debuff: false }],
+        intent: "THRASH_MOVE", move_id: "THRASH_MOVE",
+        intents: [{ index: 0, intent_type: "Attack", label: "10x2", damage: 10, hits: 2, total_damage: 20 }],
+      },
+    ];
+    const hand = combat["hand"] as Record<string, unknown>[];
+    combat["hand"] = [
+      hand[1],
+      { ...hand[1], index: 1, card_id: "FRANTIC_ESCAPE", name: "Frantic Escape", energy_cost: escapeCost, dynamic_values: [], rules_text: "Sandpit +1" },
+    ];
+    return raw;
+  };
+  const endTurn: Decision = { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "test" };
+
+  it("plays an affordable Frantic Escape instead of ending the turn at Sandpit 1", async () => {
+    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    const decision = guardSandpit(env(sandpitCombat(1, 1), { combatPlanner: "turn" }), endTurn);
+    expect(decision?.label).toBe("combat/sandpit-guard");
+    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("leaves end_turn alone when the count survives or the Escape is unaffordable", async () => {
+    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    expect(guardSandpit(env(sandpitCombat(2, 1), { combatPlanner: "turn" }), endTurn)).toBe(endTurn);
+    expect(guardSandpit(env(sandpitCombat(1, 4), { combatPlanner: "turn" }), endTurn)).toBe(endTurn);
+  });
+
+  it("overrides an end_turn answer from Jev/DeepSeek too", async () => {
+    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    const ask: Decision = {
+      kind: "ask", label: "combat/plan-choice", state: {}, questions: {},
+      resolve: () => ({ intent: { action: "end_turn" }, rationale: "Jev chose plan 2", confidence: 0.6, fallback: false }),
+    };
+    const guarded = guardSandpit(env(sandpitCombat(1, 1), { combatPlanner: "turn" }), ask);
+    const resolved = guarded && guarded.kind === "ask" ? guarded.resolve({}) : null;
+    expect(resolved?.intent).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("the turn planner plays the Escape at Sandpit 1", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(sandpitCombat(1, 1), { combatPlanner: "turn" }));
+    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("shows enemy powers (the Sandpit countdown) in the plan-choice question", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = sandpitCombat(2, 1);
+    const enemy = ((raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
+    enemy["intents"] = [{ index: 0, intent_type: "Attack", label: "20x2", damage: 20, hits: 2, total_damage: 40 }];
+    // An unmodelled potion on a dangerous turn: the plan goes to Jev.
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    expect(decision?.label).toMatch(/^combat\/plan-choice/);
+    const enemies = decision && decision.kind === "ask" ? (decision.state["enemies"] as { powers: string[] }[]) : [];
+    expect(enemies[0]!.powers[0]).toMatch(/^SANDPIT_POWER 2 \(countdown/);
+  });
+});

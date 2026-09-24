@@ -310,3 +310,54 @@ describe("mechanics from the 4-run review", () => {
     expect(pick(36).outcome.blockGained).toBe(10);
   });
 });
+
+describe("The Insatiable's Sandpit", () => {
+  const escape = (index: number): CardModel =>
+    card(index, "FRANTIC_ESCAPE", { type: "Skill", target: "self", validTargets: [], special: "frantic_escape" });
+  const sandworm = (overrides: Partial<EnemySim> = {}): EnemySim =>
+    enemy({ name: "The Insatiable", hp: 186, maxHp: 321, sandpit: 1, attacks: [{ damage: 10, hits: 2 }], ...overrides });
+
+  it("plays Frantic Escape when the Sandpit would reach 0 (TTVY T6: eaten at 33 HP with 20 block)", () => {
+    const shrug = card(0, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8, draw: 1 });
+    const defendPlus = card(1, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 8, upgraded: true });
+    const thrash = card(3, "THRASH", { upgraded: true, damage: 6, hits: 2 });
+    const result = solveTurn({
+      hand: [shrug, defendPlus, strike(2), thrash, escape(4)],
+      player: player({ hp: 33, block: 4 }),
+      enemies: [sandworm()],
+      fightKind: "boss",
+      turn: 6,
+    });
+    const best = result.plans[0]!;
+    expect(best.outcome.dies).toBe(false);
+    expect(best.steps.map((step) => step.cardId)).toContain("FRANTIC_ESCAPE");
+    expect(best.outcome.sandpitAfter).toBe(1);
+    // Every line without the Escape is a death, even at full block.
+    for (const plan of result.plans) {
+      if (!plan.steps.some((step) => step.cardId === "FRANTIC_ESCAPE")) expect(plan.outcome.dies).toBe(true);
+    }
+  });
+
+  it("prefers keeping the count at 2 over a Strike when the HP cost is the same", () => {
+    const result = solveTurn({
+      hand: [defend(0), defend(1), strike(2), escape(3)],
+      player: player({ hp: 50 }),
+      enemies: [sandworm({ sandpit: 2, attacks: [{ damage: 10, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    const best = result.plans[0]!;
+    expect(best.steps.map((step) => step.cardId).sort()).toEqual(["DEFEND_IRONCLAD", "DEFEND_IRONCLAD", "FRANTIC_ESCAPE"]);
+    expect(best.outcome.sandpitAfter).toBe(2);
+  });
+
+  it("ignores the countdown on the turn the boss dies", () => {
+    const result = solveTurn({
+      hand: [strike(0), escape(1)],
+      player: player({ hp: 50, energy: 1 }),
+      enemies: [sandworm({ hp: 5 })],
+      fightKind: "boss",
+    });
+    expect(result.plans[0]!.outcome.winsFight).toBe(true);
+    expect(result.plans[0]!.outcome.dies).toBe(false);
+  });
+});

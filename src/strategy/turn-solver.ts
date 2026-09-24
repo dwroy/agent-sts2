@@ -44,6 +44,11 @@ export interface EnemySim {
    * later. HP kept above that is what wins the fight.
    */
   eruption?: number;
+  /**
+   * Sandpit count (The Insatiable): -1 every enemy turn, and at 0 the player is eaten whatever the
+   * HP and block. Each Frantic Escape played adds 1.
+   */
+  sandpit?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
@@ -140,6 +145,8 @@ export interface Outcome {
   unknownCards: string[];
   /** Resource cost of the potions this plan drinks (0 when none). */
   potionCost: number;
+  /** Sandpit count after the enemy turn (null when no enemy has one). */
+  sandpitAfter: number | null;
 }
 
 export interface Plan {
@@ -185,6 +192,8 @@ interface Sim {
   cardsDrawn: number;
   unknown: string[];
   feedKills: number;
+  /** Frantic Escapes played this turn (each +1 Sandpit). */
+  escapes: number;
 }
 
 function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak", amount: number): number {
@@ -309,6 +318,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   if (card.special === "rupture") next.rupture += 1;
   if (card.special === "colossus") next.colossus = true;
+  if (card.special === "frantic_escape") next.escapes += 1;
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -461,7 +471,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const selfLoss = input.player.hp - sim.hp;
   const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   const hpAfter = input.player.hp - hpLoss;
-  const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0);
+  // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
+  const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
+  const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
+  const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0) || (sandpitAfter !== null && sandpitAfter <= 0);
 
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
@@ -473,6 +486,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  // Ending at 1 leaves next turn a must-Escape turn (or death if none is drawn); the boss has 321 HP,
+  // so the countdown outlasts any damage race.
+  if (sandpitAfter === 1) score -= weights.hp * 15;
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
@@ -553,6 +569,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       cardsDrawn: sim.cardsDrawn,
       unknownCards: sim.unknown,
       potionCost: sim.potionCost,
+      sandpitAfter,
     },
   };
 }
@@ -560,7 +577,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}`;
 }
 
 export interface SolveResult {
@@ -601,6 +618,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     cardsDrawn: 0,
     unknown: [],
     feedKills: 0,
+    escapes: 0,
   };
 
   const seen = new Set<string>();
@@ -612,7 +630,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     nodes += 1;
     const plan = evaluate(sim, input, weights);
     const o = plan.outcome;
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${Math.round(plan.score)}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the shorter plan (fewer steps = fewer chances for the board to surprise us).
     if (!existing || plan.score > existing.score + 1e-9 || (Math.abs(plan.score - existing.score) < 1e-9 && plan.steps.length < existing.steps.length)) {
@@ -657,7 +675,7 @@ function vector(plan: Plan): number[] {
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
   // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
   // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run).
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost, o.sandpitAfter ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -689,7 +707,8 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         Math.abs(other.outcome.hpLoss - plan.outcome.hpLoss) <= 2 &&
         Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
-        other.outcome.strengthGained === plan.outcome.strengthGained,
+        other.outcome.strengthGained === plan.outcome.strengthGained &&
+        other.outcome.sandpitAfter === plan.outcome.sandpitAfter,
     );
     if (!similar) picked.push(plan);
   }
