@@ -212,7 +212,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
  */
 const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
   FIRE_POTION: { target: "single", damage: 20 },
-  POTION_SHAPED_ROCK: { target: "single", damage: 15 },
+  POTION_SHAPED_ROCK: { target: "single", damage: 10 }, // measured: 15 on a Vulnerable target
   EXPLOSIVE_AMPOULE: { target: "all", damage: 10 },
   BLOCK_POTION: { target: "self", block: 12 },
   STRENGTH_POTION: { target: "self", strength: 2 },

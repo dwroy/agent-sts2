@@ -155,7 +155,7 @@ describe("potions", () => {
     const lethal = solveTurn({
       hand: [strike(0), rock],
       player: player({ hp: 10, energy: 1 }),
-      enemies: [enemy({ hp: 20, attacks: [{ damage: 30, hits: 1 }] })],
+      enemies: [enemy({ hp: 16, attacks: [{ damage: 30, hits: 1 }] })],
       fightKind: "monster",
     });
     expect(lethal.plans[0]!.outcome.winsFight).toBe(true);
@@ -168,5 +168,31 @@ describe("potions", () => {
       fightKind: "monster",
     });
     expect(idle.plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(false);
+  });
+});
+
+describe("more enemy powers", () => {
+  it("Flutter halves attack damage, so a big hit is not a lethal", () => {
+    const bludgeon = card(0, "BLUDGEON", { cost: 3, damage: 32 });
+    const result = solveTurn({
+      hand: [bludgeon],
+      player: player({ hp: 80 }),
+      enemies: [enemy({ hp: 51, vulnerable: 1, flutter: 5, attacks: [{ damage: 21, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(result.plans.some((plan) => plan.outcome.winsFight)).toBe(false);
+  });
+
+  it("minions leave when the leader dies", () => {
+    const result = solveTurn({
+      hand: [strike(0)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
+      player: player({ hp: 80 }),
+      enemies: [
+        enemy({ index: 0, name: "Leader", hp: 6, attacks: [{ damage: 10, hits: 1 }] }),
+        enemy({ index: 1, name: "Minion", hp: 30, minion: true, attacks: [{ damage: 5, hits: 1 }] }),
+      ],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.outcome.winsFight).toBe(true);
   });
 });

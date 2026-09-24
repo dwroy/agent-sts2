@@ -26,6 +26,14 @@ import { distinctPlans, solveTurn, type EnemySim, type Plan, type PlayerSim, typ
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 
+/** Enemy powers the solver models, or that do not change this turn's numbers. */
+const MODELLED_ENEMY_POWERS = new Set([
+  "VULNERABLE_POWER", "WEAK_POWER", "STRENGTH_POWER", "ARTIFACT_POWER", "INTANGIBLE_POWER", "SLIPPERY_POWER",
+  "HARDENED_SHELL_POWER", "THORNS_POWER", "CURL_UP_POWER", "FLUTTER_POWER", "HARD_TO_KILL_POWER", "SLOW_POWER",
+  "ILLUSION_POWER", "MINION_POWER", "TERRITORIAL_POWER", "PLOW_POWER", "ESCAPE_ARTIST_POWER", "PLATING_POWER",
+  "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
+]);
+
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
 const CLOSE_CALL = 6;
 const MAX_OPTIONS = 4;
@@ -56,6 +64,12 @@ function enemySims(combat: Record<string, unknown>): EnemySim[] {
       hpLossCap: powerAmount(enemy, "HARDENED_SHELL_POWER") > 0 ? powerAmount(enemy, "HARDENED_SHELL_POWER") : null,
       thorns: powerAmount(enemy, "THORNS_POWER"),
       curlUp: powerAmount(enemy, "CURL_UP_POWER"),
+      flutter: powerAmount(enemy, "FLUTTER_POWER"),
+      perHitCap: powerAmount(enemy, "HARD_TO_KILL_POWER") > 0 ? powerAmount(enemy, "HARD_TO_KILL_POWER") : null,
+      slow: powerAmount(enemy, "SLOW_POWER") > 0,
+      illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
+      minion: powerAmount(enemy, "MINION_POWER") > 0,
+      unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
         .flatMap((intent) => {
@@ -195,7 +209,14 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   const potionCards = potionsAll
     .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost))
     .filter((card): card is CardModel => card !== null);
-  const solved = solveTurn({ hand: [...hand, ...potionCards], player: playerSim, enemies, fightKind: kind, turn: state.turn ?? 1 });
+  const solved = solveTurn({
+    hand: [...hand, ...potionCards],
+    player: playerSim,
+    enemies,
+    fightKind: kind,
+    turn: state.turn ?? 1,
+    cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
+  });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 

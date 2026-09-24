@@ -29,10 +29,20 @@ export interface EnemySim {
   thorns?: number;
   /** Curl Up: block gained the first time it takes damage. */
   curlUp?: number;
+  /** Flutter N: attack damage taken is halved; each hit removes a stack. */
+  flutter?: number;
+  /** Hard to Kill N: each damage instance is capped at N. */
+  perHitCap?: number | null;
+  /** Slow: +10% attack damage taken per card played this turn. */
+  slow?: boolean;
+  /** Illusion: revives at full HP next turn, so killing it is only worth this turn's damage. */
+  illusion?: boolean;
+  /** Minion: leaves when every non-minion enemy is dead. */
+  minion?: boolean;
+  /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
+  unmodelled?: boolean;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
-  /** True when the enemy is a minion/summon whose death does not matter much (not modelled yet). */
-  minion?: boolean;
 }
 
 export interface PlayerSim {
@@ -56,6 +66,8 @@ export interface SolverInput {
   fightKind: "monster" | "elite" | "boss" | "unknown";
   /** Combat turn (1-based); lasting effects are worth more early. */
   turn?: number;
+  /** Cards already played this turn (Slow). */
+  cardsPlayedThisTurn?: number;
   maxNodes?: number;
 }
 
@@ -110,6 +122,8 @@ interface Sim {
   flat: number;
   /** Resource cost of potions used this turn (not scaled like lasting value). */
   potionCost: number;
+  /** Cards played this turn so far (for Slow). */
+  played: number;
   drawScore: number;
   cardsDrawn: number;
   unknown: string[];
@@ -137,6 +151,13 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     if (player.weak) amount = Math.floor(amount * 0.75);
     if (player.shrunk) amount = Math.floor(amount * 0.7);
     if (enemy.vulnerable > 0) amount = Math.floor(amount * 1.5);
+    if (enemy.slow) amount = Math.floor(amount * (1 + 0.1 * sim.played));
+    if ((enemy.flutter ?? 0) > 0) {
+      amount = Math.floor(amount * 0.5);
+      enemy.flutter = (enemy.flutter ?? 0) - 1;
+    }
+    if (enemy.unmodelled) amount = Math.floor(amount * 0.8);
+    if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
     const absorbed = Math.min(enemy.block, amount);
@@ -182,6 +203,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const next = clone(sim);
   next.hand = sim.hand.filter((entry) => entry !== card);
   next.energy -= cost;
+  if (card.type !== "Potion") next.played += 1;
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return null;
 
@@ -297,7 +319,7 @@ export function weightsFor(input: SolverInput): Weights {
 
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
-  const winsFight = living.length === 0;
+  const winsFight = living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion));
   const incomingRaw = winsFight ? 0 : incoming(sim, input.player);
   const incomingAfterBlock = Math.max(0, incomingRaw - sim.block);
   const selfLoss = input.player.hp - sim.hp;
@@ -305,7 +327,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const hpAfter = input.player.hp - hpLoss;
   const dies = hpAfter <= 0;
 
-  const kills = sim.enemies.filter((enemy) => !enemy.alive && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const kills = sim.enemies.filter((enemy) => !enemy.alive && !enemy.illusion && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   let score = 0;
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
@@ -364,8 +386,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.drawScore}`;
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -394,6 +416,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     weakApplied: 0,
     flat: 0,
     potionCost: 0,
+    played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,
     unknown: [],
@@ -419,7 +442,7 @@ export function solveTurn(input: SolverInput): SolveResult {
       truncated = true;
       return;
     }
-    if (sim.enemies.every((enemy) => !enemy.alive)) return;
+    if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;
 
     const tried = new Set<string>();
     for (const card of sim.hand) {
