@@ -63,7 +63,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
-      score: selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")),
+      // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
+      score:
+        selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
+        (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),
