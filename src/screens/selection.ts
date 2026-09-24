@@ -30,6 +30,15 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Up to N" enchant/upgrade screens (min 0): confirming with nothing selected hung the mod's
   // confirm_selection for good (Twisted Hammer, 2026-09-24), and picking is a pure gain anyway.
   const pickFirst = selected === 0 && (kind === "deck_enchant_select" || kind === "deck_upgrade_select");
+  // "Discard/replace any number" (Gambler's Brew, min 0): confirming at once threw the potion away
+  // (1ZQJ T4: "selected 0/0 required"). Code picks the dead cards one by one, then confirms.
+  if (kind === "combat_hand_select" && min === 0 && /弃|替换|discard|replace/i.test(prompt)) {
+    const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
+    if (pick && selected < max) {
+      return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
+    }
+    if (canConfirm) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}; nothing else worth discarding` };
+  }
   if (selected >= min && canConfirm && !pickFirst) {
     return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}/${min} required` };
   }
@@ -188,6 +197,47 @@ function selectionScore(kind: string, cardId: string, type: string): number {
     return 100 - cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   }
   return 0;
+}
+
+/**
+ * The next card to discard on a "discard any number, draw as many" screen, or null when every card
+ * left is worth keeping: Status/Curse and unplayable cards first, then cards with no value this turn
+ * (Defend with no attack coming), then basics the energy cannot reach after the better cards.
+ */
+export function discardPick(
+  combat: Record<string, unknown>,
+  cards: Record<string, unknown>[],
+  knowledge: DecisionEnv["knowledge"],
+): { index: number; name: string; why: string } | null {
+  const energy = numOrNull(asRecord(combat["player"])["energy"]) ?? 3;
+  const incoming = incomingDamage(combat);
+  const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
+  const hand = asArray(combat["hand"]).map(asRecord);
+  const open = cards.filter((card) => !bool(card["selected"]));
+  const viewed = open.map((card, fallbackIndex) => {
+    const index = numOrNull(card["index"]) ?? fallbackIndex;
+    // The hand entry carries playability; the selection entry may not.
+    const inHand = hand.find((entry) => numOrNull(entry["index"]) === index && str(entry["card_id"]) === str(card["card_id"]));
+    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge);
+    const type = str(card["card_type"], model.type);
+    const playable = inHand ? bool(inHand["playable"]) || str(inHand["unplayable_reason"]) === "not_enough_energy" : model.cost >= 0;
+    return { index, name: model.name, cardId: model.cardId, type, model, playable, score: thisTurnScore(model, incoming, enemies) };
+  });
+  const junk = viewed.find((card) => card.type === "Status" || card.type === "Curse" || !card.playable || card.model.cost > energy);
+  if (junk) return { index: junk.index, name: junk.name, why: junk.type === "Status" || junk.type === "Curse" ? junk.type.toLowerCase() : "cannot be played this turn" };
+  const dead = viewed.find((card) => card.score <= 0 && card.model.flatValue <= 0 && card.model.draw === 0);
+  if (dead) return { index: dead.index, name: dead.name, why: incoming === 0 && dead.model.block > 0 ? "block with no attack coming" : "no value this turn" };
+  // Spend the energy on the best cards per energy; basics that do not fit are redrawn.
+  let left = energy;
+  const byValue = [...viewed].sort((a, b) => b.score / Math.max(1, b.model.cost) - a.score / Math.max(1, a.model.cost));
+  const unreached: typeof viewed = [];
+  for (const card of byValue) {
+    if (card.model.cost <= left) left -= Math.max(0, card.model.cost);
+    else unreached.push(card);
+  }
+  const basic = unreached.find((card) => /^(STRIKE|DEFEND)_/.test(card.cardId));
+  if (basic) return { index: basic.index, name: basic.name, why: `basic card the ${energy} energy will not reach` };
+  return null;
 }
 
 /** Enemy attack damage coming this turn, less the block already up. */

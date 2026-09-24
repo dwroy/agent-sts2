@@ -1158,3 +1158,66 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
     expect(eruptionRace({ ...giant(999_999_999, 40), max_hp: 999_999_999 }, 10, 12)).toBe(false);
   });
 });
+
+describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected)", () => {
+  const brew = (hand: Record<string, unknown>[], selectedIndices: number[] = [], intents: Record<string, unknown>[] = [{ intent_type: "Heal" }, { intent_type: "Buff" }]): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["energy"] = 2;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], intents }];
+    combat["hand"] = hand;
+    const cards = hand.map((card) => ({ ...card, selected: selectedIndices.includes(Number(card["index"])) }));
+    return {
+      ...raw,
+      screen: "CARD_SELECTION",
+      available_actions: ["select_deck_card", "confirm_selection"],
+      selection: { kind: "combat_hand_select", prompt: "[center]选择任意张牌进行替换。[/center]", min_select: 0, max_select: 999999999, selected_count: selectedIndices.length, can_confirm: true, cards },
+    };
+  };
+  const c = (index: number, cardId: string, dynamic: [string, number][] = [], overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: false, target_type: cardId.startsWith("STRIKE") ? "AnyEnemy" : "Self", requires_target: cardId.startsWith("STRIKE"),
+    valid_target_indices: [0], costs_x: false, energy_cost: 1, rules_text: "", resolved_rules_text: "", playable: true,
+    dynamic_values: dynamic.map(([name, value]) => ({ name, base_value: value, current_value: value })), ...overrides,
+  });
+  const hand = [
+    c(0, "STRIKE_R", [["Damage", 6]]),
+    c(1, "DEFEND_R", [["Block", 5]]),
+    c(2, "PILLAGE", [["Damage", 6]]),
+    c(3, "COLOSSUS", [["Block", 4]]),
+    c(4, "DEFEND_R", [["Block", 5]]),
+  ];
+  const pick = async (raw: Record<string, unknown>): Promise<Decision | null> => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    return planSelection(env(raw, { combatPlanner: "turn" }));
+  };
+
+  it("no attack coming: discards the Defends and Colossus, then confirms", async () => {
+    const picked: number[] = [];
+    for (let step = 0; step < 6; step += 1) {
+      const decision = await pick(brew(hand, picked));
+      if (decision?.kind !== "act") throw new Error("expected an act");
+      if (decision.intent.action === "confirm_selection") break;
+      picked.push(Number(decision.intent.option_index));
+    }
+    expect(picked.sort()).toEqual([1, 3, 4]);
+  });
+
+  it("Status/Curse and unplayable cards go first; a hand worth keeping is confirmed as is", async () => {
+    const first = await pick(brew([c(0, "STRIKE_R", [["Damage", 6]]), c(1, "WOUND", [], { playable: false, energy_cost: -1, unplayable_reason: "unplayable" })]));
+    expect(first?.kind === "act" && first.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+    const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
+    const keep = await pick(brew([c(0, "STRIKE_R", [["Damage", 6]]), c(1, "DEFEND_R", [["Block", 5]])], [], attack));
+    expect(keep?.kind === "act" && keep.intent).toEqual({ action: "confirm_selection" });
+  });
+
+  it("basics the energy cannot reach are redrawn", async () => {
+    const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
+    const decision = await pick(brew([
+      c(0, "POMMEL_STRIKE", [["Damage", 9], ["Cards", 1]], { target_type: "AnyEnemy", requires_target: true }),
+      c(1, "SHRUG_IT_OFF", [["Block", 8], ["Cards", 1]]),
+      c(2, "STRIKE_R", [["Damage", 6]]),
+    ], [], attack));
+    expect(decision?.kind === "act" && decision.intent).toEqual({ action: "select_deck_card", option_index: 2 });
+  });
+});

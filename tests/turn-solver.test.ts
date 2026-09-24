@@ -338,6 +338,7 @@ describe("mechanics from the 4-run review", () => {
     // 36 stacks: 40 - 20 = 20 HP left is under the ~27 the explosion needs, so HP counts double.
     expect(pick(36).outcome.blockGained).toBe(10);
   });
+
   it("Waterfall Giant too slow to kill (1ZQJ): raceEruption weighs damage up and drops the HP doubling", () => {
     const hand = [strike(0), strike(1), defend(2), defend(3)];
     const giant = enemy({ name: "Waterfall Giant", hp: 150, maxHp: 240, vulnerable: 2, eruption: 36, attacks: [{ damage: 20, hits: 1 }] });
