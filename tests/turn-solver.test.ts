@@ -209,6 +209,32 @@ describe("more enemy powers", () => {
     });
     expect(result.plans[0]!.outcome.winsFight).toBe(true);
   });
+
+  it("chips the summoner, not a minion it cannot kill (QE4K F21 T6: 34 damage into Larvae, Ovicopter left at 36)", () => {
+    const result = solveTurn({
+      hand: [strike(0), strike(1)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
+      player: player({ hp: 40 }),
+      enemies: [
+        enemy({ index: 0, name: "Larva", hp: 22, minion: true, attacks: [{ damage: 5, hits: 1 }] }),
+        enemy({ index: 1, name: "Ovicopter", hp: 36, attacks: [] }),
+      ],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
+  });
+
+  it("still kills a minion for the attack it prevents", () => {
+    const result = solveTurn({
+      hand: [strike(0)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
+      player: player({ hp: 40 }),
+      enemies: [
+        enemy({ index: 0, name: "Larva", hp: 5, minion: true, attacks: [{ damage: 6, hits: 1 }] }),
+        enemy({ index: 1, name: "Ovicopter", hp: 36, attacks: [] }),
+      ],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([0]);
+  });
 });
 
 describe("Fortifier", () => {

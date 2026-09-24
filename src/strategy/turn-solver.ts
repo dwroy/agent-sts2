@@ -651,6 +651,8 @@ export function sleepTurnDamage(enemy: EnemySim): number {
   return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
 
+/** Share of damage into a surviving minion that counts while its summoner lives (it leaves with it). */
+export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
@@ -821,7 +823,19 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     }
     return sum;
   }, 0);
-  score += weights.damage * (sim.damageDealt - huskDamage - lostDamage);
+  // Minions leave when the last non-minion dies, so their HP is not what ends the fight (QE4K F21 T6:
+  // 34 damage into Larvae while the 36 HP Ovicopter lived; it laid eggs and hit for 24 over the next
+  // turns). While a non-minion lives, damage into a minion that survives the turn counts only
+  // MINION_CHIP of its value; a minion kill keeps its kill bonus below (the attack it no longer makes).
+  const leaderAlive = living.some((enemy) => !enemy.minion);
+  const minionChip = !leaderAlive
+    ? 0
+    : sim.enemies.reduce((sum, enemy) => {
+        if (!enemy.minion || !enemy.alive || enemy.illusion) return sum;
+        const start = input.enemies.find((entry) => entry.index === enemy.index)!;
+        return sum + (1 - MINION_CHIP) * Math.max(0, start.hp - Math.max(0, enemy.hp));
+      }, 0);
+  score += weights.damage * (sim.damageDealt - huskDamage - lostDamage - minionChip);
   // The Bomb: its damage lands on every enemy a few turns later, unless the fight is over by then.
   if (sim.bombs > 0 && !winsFight) {
     const reach = living.filter((enemy) => enemy.maxHp < 1_000_000).reduce((sum, enemy) => sum + Math.min(enemy.hp, sim.bombs), 0);
