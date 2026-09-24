@@ -13,6 +13,7 @@ import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import type { JevClient } from "./jev/client.js";
+import type { DeepSeekClient } from "./llm/deepseek.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -45,6 +46,8 @@ export interface LoopOptions {
    * That mode exists to exercise the plumbing against the real game without spending tokens.
    */
   jev: JevClient | null;
+  /** Escalation for Jev's near-guesses on decisions that allow it; null disables escalation. */
+  deepseek?: DeepSeekClient | null;
   knowledge: Knowledge;
   maxRuns?: number;
   maxDecisions?: number;
@@ -56,6 +59,8 @@ export interface LoopOptions {
 export interface LoopStats {
   decisions: number;
   jevCalls: number;
+  deepseekCalls: number;
+  deepseekTokens: number;
   /** Answers reused instead of re-asking Jev about a board that had not moved. */
   debounced: number;
   /** Jev calls skipped because the board moved between planning and asking. */
@@ -195,6 +200,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const stats: LoopStats = {
     decisions: 0,
     jevCalls: 0,
+    deepseekCalls: 0,
+    deepseekTokens: 0,
     debounced: 0,
     staleSkips: 0,
     fallbacks: 0,
@@ -489,6 +496,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let usage = { input_tokens: 0, output_tokens: 0 };
     const requestIds: string[] = [];
     let reasked = false;
+    let escalation: JsonValue | undefined;
 
     let usedJev = false;
     let fromMemo = false;
@@ -546,6 +554,40 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         rawAnswers = toJsonValue(result.answers);
         resolved = decision.resolve(result.answers);
         firstAnswers = result.answers;
+
+        const esc = decision.escalate;
+        const jevAnswer = esc ? result.answers[esc.question] : undefined;
+        const deepseek = options.deepseek ?? null;
+        if (
+          esc &&
+          deepseek &&
+          jevAnswer?.type === "choice" &&
+          jevAnswer.confidence < esc.below &&
+          stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)
+        ) {
+          const question = decision.questions[esc.question];
+          try {
+            stats.deepseekCalls += 1;
+            const ds = await deepseek.choose(decision.state, question?.instructions ?? "", question?.type === "choice" ? question.criteria : {});
+            stats.deepseekTokens += ds.inputTokens + ds.outputTokens;
+            const override = decision.resolve({
+              ...result.answers,
+              [esc.question]: { type: "choice", choice: ds.choice, probabilities: { [ds.choice]: 1 }, confidence: 1, raw: { deepseek: true } },
+            } as AnswerSet);
+            if (override.intent) {
+              const agreed = ds.choice === jevAnswer.choice;
+              resolved = {
+                ...override,
+                decider: "deepseek",
+                confidence: jevAnswer.confidence,
+                rationale: `DeepSeek ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${ds.choice}; ${esc.why}): ${ds.reason} | ${override.rationale}`,
+              };
+              escalation = { jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: ds.choice, reason: ds.reason, latency_ms: ds.latencyMs, tokens: ds.inputTokens + ds.outputTokens };
+            }
+          } catch (error) {
+            onEvent({ type: "note", message: `DeepSeek escalation failed: ${error instanceof Error ? error.message : String(error)}` });
+          }
+        }
 
         if (!resolved.intent && resolved.reask) {
           reasked = true;
@@ -648,6 +690,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       request_ids: requestIds,
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
+      ...(escalation === undefined ? {} : { escalation }),
     } satisfies Omit<DecisionRecord, "result">;
 
     if (mode === "shadow") {

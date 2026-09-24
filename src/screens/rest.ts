@@ -51,6 +51,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     instructions: "What should I do at this rest site?",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
+    escalateBelow: 0.5,
     options,
     codeMargin: env.combatPlanner === "card" ? undefined : 3,
     state: {

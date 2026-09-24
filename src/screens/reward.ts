@@ -67,6 +67,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       instructions: "Which of these card rewards should I take, if any?",
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
+      escalateBelow: 0.45,
       options,
       codeMargin: env.combatPlanner === "card" ? undefined : 12,
       maxModelOptions: 3,

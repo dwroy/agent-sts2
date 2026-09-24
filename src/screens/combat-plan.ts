@@ -278,6 +278,11 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     label: dangerous && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
+    escalate: {
+      question: "plan",
+      below: kind === "elite" || kind === "boss" || dangerous ? 0.5 : 0.3,
+      why: `${kind} fight${dangerous ? ", dangerous turn" : ""}`,
+    },
     resolve(answers): ResolvedAction {
       const answer = answers["plan"];
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");

@@ -75,6 +75,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     instructions: `Which card should I ${verb}?`,
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
+    escalateBelow: 0.4,
     options,
     codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : 6,
     maxModelOptions: 4,

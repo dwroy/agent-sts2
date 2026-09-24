@@ -133,6 +133,7 @@ export function planShop(env: DecisionEnv): Decision | null {
     instructions: "What should I buy right now, if anything?",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
+    escalateBelow: 0.4,
     options,
     // With nothing affordable the only option is to leave, so skip the model call entirely.
     skipModelWhenSingle: true,

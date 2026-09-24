@@ -35,6 +35,8 @@ export interface DecisionRecord {
   request_ids: string[];
   latency_ms: { plan: number; jev: number; action: number };
   usage: { input_tokens: number; output_tokens: number };
+  /** Present when the decision was escalated to DeepSeek. */
+  escalation?: JsonValue;
   result: string;
 }
 

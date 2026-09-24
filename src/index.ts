@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** CLI entry point. Commands after M0 are listed but not implemented yet. */
 
+import { DeepSeekClient } from "./llm/deepseek.js";
 import { existsSync } from "node:fs";
 import { parseArgs } from "node:util";
 
@@ -315,6 +316,7 @@ async function main(argv: string[]): Promise<number> {
           mode,
           client: runtime.client,
           jev: runtime.jev,
+          deepseek: config.deepseek && runtime.jev ? new DeepSeekClient(config.deepseek) : null,
           knowledge: runtime.knowledge,
           maxRuns: number(values["max-runs"], 1),
           maxDecisions: number(values["max-decisions"], 2_000),

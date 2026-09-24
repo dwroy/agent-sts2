@@ -43,6 +43,7 @@ export function planChest(env: DecisionEnv): Decision | null {
       instructions: "Which relic should I take from the chest?",
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
+      escalateBelow: 0.45,
       options,
       state: { run_brief: briefJson(env.brief), situation: { screen: "CHEST", hp: env.brief.hp } },
     });

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 /**
  * Configuration: environment variables overridden by CLI flags (PLAN.md §9).
  *
@@ -35,6 +36,8 @@ export interface AppConfig {
   sts2: Sts2Config;
   jev: JevConfig;
   enricher: EnricherConfig;
+  /** Escalation model for Jev's near-guesses on high-stakes calls (phase 2). null when no key. */
+  deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number } | null;
   thresholds: { act: number; strong: number };
   budgets: { maxRequests: number; maxTokens: number };
   run: { start: RunStart; character: string | null };
@@ -240,6 +243,25 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
       ? false
       : parseBoolean(readEnv(env, "STRICT_JEV") ?? String(DEFAULTS.strictJev), "STRICT_JEV", problems);
 
+  let deepseekKey = readEnv(env, "DEEPSEEK_API_KEY") ?? "";
+  const deepseekKeyFile = readEnv(env, "DEEPSEEK_API_KEY_FILE");
+  if (!deepseekKey && deepseekKeyFile) {
+    try {
+      deepseekKey = readFileSync(deepseekKeyFile.replace(/^~(?=\/)/, process.env["HOME"] ?? "~"), "utf8").trim();
+    } catch {
+      problems.push({ field: "DEEPSEEK_API_KEY_FILE", message: "could not read the key file" });
+    }
+  }
+  const deepseek = deepseekKey
+    ? {
+        apiKey: deepseekKey,
+        baseUrl: readEnv(env, "DEEPSEEK_BASE_URL") ?? "https://api.deepseek.com",
+        model: readEnv(env, "DEEPSEEK_MODEL") ?? "deepseek-chat",
+        maxCalls: Number(readEnv(env, "DEEPSEEK_MAX_CALLS") ?? "150") || 150,
+        timeoutMs: Number(readEnv(env, "DEEPSEEK_TIMEOUT_MS") ?? "30000") || 30000,
+      }
+    : null;
+
   const combatPlannerRaw = (readEnv(env, "COMBAT_PLANNER") ?? DEFAULTS.combatPlanner).toLowerCase();
   if (combatPlannerRaw !== "turn" && combatPlannerRaw !== "card") {
     problems.push({ field: "COMBAT_PLANNER", message: `expected turn or card, got "${combatPlannerRaw}"` });
@@ -319,6 +341,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     allowFtueModals,
     strictJev,
     combatPlanner,
+    deepseek,
     mode,
     log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog },
     warnings,

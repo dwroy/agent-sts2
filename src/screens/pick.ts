@@ -39,6 +39,8 @@ export interface PickDecisionParams {
    */
   codeMargin?: number;
   maxModelOptions?: number;
+  /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
+  escalateBelow?: number;
 }
 
 export function bestOption(options: PickOption[]): PickOption {
@@ -87,6 +89,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     label: params.label,
     state: params.state,
     questions: { pick: choiceQ(params.instructions, criteria), ...(params.extras ?? {}) },
+    ...(params.escalateBelow === undefined ? {} : { escalate: { question: "pick", below: params.escalateBelow, why: params.label } }),
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
       const fallback = (why: string, confidence: number | null): ResolvedAction => {

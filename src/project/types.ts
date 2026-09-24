@@ -98,6 +98,11 @@ export interface AskDecision {
   state: Record<string, JsonValue>;
   questions: QuestionSet;
   resolve(answers: AnswerSet): ResolvedAction;
+  /**
+   * Phase 2: when Jev's answer to `question` is below `below` confidence, the loop may ask DeepSeek
+   * the same question (same state, same option keys) and resolve with its choice instead.
+   */
+  escalate?: { question: string; below: number; why: string };
 }
 
 export interface ActDecision {
