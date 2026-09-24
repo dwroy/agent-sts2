@@ -320,7 +320,17 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) for (const card of hand) card.draw = 0;
   const enemies = enemySims(combat);
-  if (enemies.length === 0) return null;
+  if (enemies.length === 0) {
+    // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
+    // revives on the enemy turn. Waiting forever stalled a floor-50 run; after a short settle, end
+    // the turn so the next phase starts.
+    const since = (env.screenMemory.noEnemiesSince ??= Date.now());
+    if (Date.now() - since > 4_000 && state.available_actions.includes("end_turn")) {
+      return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no living enemy but combat continues (boss phase change): ending the turn" };
+    }
+    return null;
+  }
+  env.screenMemory.noEnemiesSince = undefined;
 
   const playerSim: PlayerSim = {
     hp: num(player["current_hp"]),

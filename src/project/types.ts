@@ -40,6 +40,8 @@ export interface ScreenMemory {
   screen: string;
   /** True once the shop inventory has been opened during this visit. */
   shopOpened: boolean;
+  /** When combat was first seen with no living enemy (multi-phase boss between phases). */
+  noEnemiesSince?: number;
   /**
    * True once a card reward has been skipped on this screen. The mod documents that
    * `skip_reward_cards` "may leave the underlying reward item claimable", and a live run proved it:
