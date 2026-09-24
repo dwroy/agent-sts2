@@ -55,6 +55,8 @@ export interface CardModel {
   flatValue: number;
   /** HP lost at end of turn if this card is still in hand (Toxic, Burn, Decay, …). */
   heldPenalty: number;
+  /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
+  retaliate?: number;
   text: string;
 }
 
@@ -218,6 +220,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     known,
     flatValue,
     heldPenalty,
+    retaliate: dyn(card, "DamageBack") ?? 0,
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }

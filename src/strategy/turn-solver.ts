@@ -146,6 +146,8 @@ interface Sim {
   buffer: number;
   /** Duplication: the next card played resolves twice. */
   duplicate: number;
+  /** Flame Barrier: damage back per enemy hit taken this turn. */
+  retaliate: number;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -274,6 +276,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // *earlier* cards only, which is what we simulate).
   if (card.block > 0) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
   if (card.special === "temp_dex") next.tempDex += 5;
+  if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
   if (card.special === "triple_block") {
@@ -415,6 +418,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  if (sim.retaliate > 0 && !winsFight) {
+    // Retaliation lands during the enemy turn: count it as damage (capped by each attacker's HP).
+    let back = 0;
+    for (const enemy of living) {
+      const hits = enemy.attacks.reduce((sum, attack) => sum + attack.hits, 0);
+      back += Math.min(enemy.hp, hits * sim.retaliate);
+    }
+    score += weights.damage * back;
+  }
   if (incomingAfterBlock > 0) {
     const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
     score -= punish;
@@ -475,7 +487,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -507,6 +519,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     tempDex: 0,
     buffer: 0,
     duplicate: 0,
+    retaliate: 0,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,
