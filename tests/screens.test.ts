@@ -842,3 +842,32 @@ describe("combat plan guards (batch 2)", () => {
     expect([mantleHpCost(0), mantleHpCost(7), mantleHpCost(10), mantleHpCost(14), mantleHpCost(20)]).toEqual([0, 1, 1, 2, 2]);
   });
 });
+
+describe("map: the elite before the boss", () => {
+  const preBoss = (hp: number): number => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 14;
+    run["current_hp"] = hp;
+    const map = raw["map"] as Record<string, unknown>;
+    map["available_nodes"] = [
+      { index: 0, row: 13, col: 1, node_type: "Elite" },
+      { index: 1, row: 13, col: 3, node_type: "Unknown" },
+    ];
+    map["nodes"] = [
+      { row: 13, col: 1, node_type: "Elite", children: [] },
+      { row: 13, col: 3, node_type: "Unknown", children: [] },
+    ];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind === "act") return Number.NaN;
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    return JSON.parse(String(criteria["n0"]))["route_value"];
+  };
+
+  it("needs more than 80% HP (BG4W F14: 47/80 took it and lost 33)", () => {
+    const run = mapPayload()["run"] as Record<string, unknown>;
+    const max = Number(run["max_hp"]);
+    expect(preBoss(Math.round(max * 0.75))).toBeLessThan(0);
+    expect(preBoss(Math.round(max * 0.9))).toBeGreaterThan(0);
+  });
+});

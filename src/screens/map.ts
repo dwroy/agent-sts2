@@ -32,6 +32,9 @@ function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: numbe
       // Phase 2: no elites in the first floors of an act (the deck is still starter cards), and only
       // with HP to spare.
       if (floorInAct <= 4) return -3;
+      // The elite right before the boss: only at near-full HP (BG4W F14: took it at 47/80, lost 33,
+      // and went into the boss short after the rest).
+      if (floorInAct >= 12) return hpPct > 0.8 ? 4 : -3;
       return hpPct > 0.7 ? 4 : hpPct > 0.5 ? 0.5 : -3;
     case "RestSite": // the game's name ("Rest" kept for older fixtures)
     case "Rest":
