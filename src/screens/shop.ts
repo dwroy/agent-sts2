@@ -10,6 +10,7 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
+import { cardValue, deckProfile } from "../strategy/card-value.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
@@ -69,6 +70,11 @@ export function planShop(env: DecisionEnv): Decision | null {
 
   const options: PickOption[] = [];
   const stock: JsonValue[] = [];
+  const deckNow = deckEntries(state, knowledge);
+  const profile = deckProfile(deckNow);
+  const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
+  const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
+  const floor = state.run?.floor ?? 0;
 
   const collect = (
     list: unknown,
@@ -91,8 +97,9 @@ export function planShop(env: DecisionEnv): Decision | null {
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,
         intent: { action, option_index: index },
-        // Cheaper is better when the model is not confident; the model still decides by value.
-        score: (info ? 1 : 0) + (price !== null ? Math.max(0, 300 - price) / 300 : 0),
+        // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
+        // relics are usually worth it, potions rarely are.
+        score: shopScore(action, id, info, profile, act, floor, price),
         summary: {
           buy: name,
           kind: kindLabel,
@@ -114,7 +121,7 @@ export function planShop(env: DecisionEnv): Decision | null {
       key: "remove",
       label: `pay ${price ?? "?"}g to remove a card`,
       intent: { action: "remove_card_at_shop" },
-      score: 1.5,
+      score: profile.basics >= 4 || entriesHaveCurse ? 30 : 8,
       summary: { buy: "card removal", kind: "service", price, text: "removes one card from the deck; a smith/removal is usually strong" } satisfies JsonValue,
     });
   }
@@ -135,6 +142,8 @@ export function planShop(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.4,
     options,
+    codeMargin: env.combatPlanner === "card" ? undefined : 10,
+    maxModelOptions: 3,
     // With nothing affordable the only option is to leave, so skip the model call entirely.
     skipModelWhenSingle: true,
     state: {
@@ -149,4 +158,23 @@ export function planShop(env: DecisionEnv): Decision | null {
       note: "one purchase is made per decision; the shop is re-read afterwards.",
     },
   });
+}
+
+function shopScore(
+  action: "buy_card" | "buy_relic" | "buy_potion",
+  id: string,
+  info: unknown,
+  profile: ReturnType<typeof deckProfile>,
+  act: number,
+  floor: number,
+  price: number | null,
+): number {
+  const cost = price ?? 150;
+  if (action === "buy_card") {
+    const card = info as { rarity?: string; type?: string } | null;
+    const value = cardValue(id, card?.rarity ?? "", card?.type ?? "", profile, act, floor).value;
+    return value - 62 - cost / 25;
+  }
+  if (action === "buy_relic") return 18 - cost / 40;
+  return -5 - cost / 30;
 }
