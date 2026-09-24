@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { CardModel } from "../src/strategy/card-model.js";
-import { distinctPlans, solveTurn, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { distinctPlans, NEXT_PHASE_HP, solveTurn, weightsFor, WOUND_COST, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -590,5 +590,44 @@ describe("retaliation stops a multi-hit attacker it kills (2WUM T8: 10x8 into a 
   it("no retaliation: every hit lands", () => {
     const result = solveTurn({ hand: [], player: player({ hp: 100, block: 30, energy: 0 }), enemies: [enemy({ hp: 29, attacks: [{ damage: 10, hits: 8 }] })], fightKind: "boss" });
     expect(result.plans[0]!.outcome.hpLoss).toBe(50);
+  });
+});
+
+describe("Test Subject (2WUM F48)", () => {
+  const skill = (index: number, block: number): CardModel => card(index, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block });
+
+  it("Enrage: every Skill played adds Strength to this turn's attack", () => {
+    const phase1 = enemy({ name: "Test Subject", hp: 100, maxHp: 100, enrage: 2, revives: true, attacks: [{ damage: 20, hits: 1 }] });
+    const result = solveTurn({ hand: [skill(0, 5), skill(1, 5)], player: player({ hp: 80, energy: 2 }), enemies: [phase1], fightKind: "boss" });
+    const both = result.plans.find((plan) => plan.steps.length === 2)!;
+    expect(both.outcome.hpLoss).toBe(24 - 10);
+    // Attacks do not enrage it.
+    const hit = solveTurn({ hand: [strike(0)], player: player({ hp: 80, energy: 1 }), enemies: [phase1], fightKind: "boss" });
+    expect(hit.plans.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(20);
+  });
+
+  it("Adaptable: killing a phase is not a fight win, but the revive turn has no attack", () => {
+    const phase = enemy({ name: "Test Subject", hp: 6, maxHp: 100, revives: true, attacks: [{ damage: 20, hits: 1 }] });
+    const best = solveTurn({ hand: [strike(0), defend(1)], player: player({ hp: 80, energy: 1 }), enemies: [phase], fightKind: "boss" }).plans[0]!;
+    expect(best.steps.map((step) => step.cardId)).toEqual(["STRIKE_IRONCLAD"]);
+    expect(best.outcome.winsFight).toBe(false);
+    expect(best.outcome.kills).toEqual(["Test Subject"]);
+    expect(best.outcome.hpLoss).toBe(0);
+    expect(best.score).toBeLessThan(10_000);
+  });
+
+  it("a phase boss weighs HP more (the next phase starts at full HP)", () => {
+    const base = { hand: [], player: player({ hp: 80 }), fightKind: "boss" as const };
+    const plain = weightsFor({ ...base, enemies: [enemy()] }).hp;
+    expect(weightsFor({ ...base, enemies: [enemy({ revives: true })] }).hp).toBeCloseTo(plain * NEXT_PHASE_HP);
+  });
+
+  it("Painful Stabs: each unblocked hit costs a Wound", () => {
+    const clawing = (woundsPerHit: number): EnemySim => enemy({ name: "Test Subject", hp: 200, maxHp: 200, woundsPerHit, attacks: [{ damage: 10, hits: 4 }] });
+    const endScore = (woundsPerHit: number, block: number): number =>
+      solveTurn({ hand: [], player: player({ hp: 80, block }), enemies: [clawing(woundsPerHit)], fightKind: "boss" }).plans[0]!.score;
+    // 15 block: the 2nd hit is partly through, the 3rd and 4th fully: 3 Wounds.
+    expect(endScore(0, 15) - endScore(1, 15)).toBeCloseTo(3 * WOUND_COST);
+    expect(endScore(0, 40) - endScore(1, 40)).toBeCloseTo(0);
   });
 });

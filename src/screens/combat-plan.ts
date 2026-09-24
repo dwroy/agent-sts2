@@ -35,7 +35,7 @@ const MODELLED_ENEMY_POWERS = new Set([
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
-  "SANDPIT_POWER", "ASLEEP_POWER",
+  "SANDPIT_POWER", "ASLEEP_POWER", "ENRAGE_POWER", "ADAPTABLE_POWER", "NEMESIS_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -44,6 +44,12 @@ const POWER_NOTES: Record<string, string> = {
   ASLEEP_POWER: " (asleep, no attacks: the first HP damage wakes it at once, block damage does not; set up powers instead of chipping it)",
   SLUMBER_POWER: " (sleeping, no attacks: -1 each turn and -1 per hit that takes HP; wakes at 0)",
   CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +5 Strength: kill both in the same turn or wear both down evenly)",
+  // Test Subject (2WUMK6PK5QHD): three phases, 100 / 200 / 300 HP.
+  ADAPTABLE_POWER: " (another phase follows: at 0 HP it spends one turn reviving (no attack), then returns at full, higher max HP with Vulnerable/Strength cleared; killing this phase does NOT end the fight, keep HP for the next one)",
+  ENRAGE_POWER: " (+N Strength every time I play a Skill, raising this turn's attack too: prefer Attacks)",
+  PAINFUL_STABS_POWER: " (every unblocked hit shuffles a Wound into my discard pile; Test Subject's Multi Claw gains 1 hit every turn: block it fully)",
+  NEMESIS_POWER: " (gains 1 Intangible at the end of every 2nd turn)",
+  INTANGIBLE_POWER: " (every hit and HP loss is reduced to 1: many small hits, not big ones)",
 };
 
 /** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
@@ -161,7 +167,10 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
-      punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAINFUL_STABS_POWER") > 0 ? 3 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
+      punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
+      woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
+      enrage: powerAmount(enemy, "ENRAGE_POWER"),
+      revives: powerAmount(enemy, "ADAPTABLE_POWER") > 0,
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -325,7 +334,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     // revives on the enemy turn. Waiting forever stalled a floor-50 run; after a short settle, end
     // the turn so the next phase starts.
     const since = (env.screenMemory.noEnemiesSince ??= Date.now());
-    if (Date.now() - since > 4_000 && state.available_actions.includes("end_turn")) {
+    if (Date.now() - since <= 4_000) return null;
+    // The revive turn is free (2WUM T9: 4 energy, True Grit+ and 2 Wounds in hand, turn ended; next
+    // turn 3 of 5 cards were Wounds): set up the next phase first.
+    const keepsBlock = powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0;
+    const setup = state.available_actions.includes("play_card") ? phaseSetupCard(hand, num(player["energy"]), keepsBlock) : null;
+    if (setup) {
+      return { kind: "act", label: "combat/phase-setup", intent: { action: "play_card", card_index: setup.card.index }, rationale: `no living enemy (boss phase change): ${setup.why} before ending the turn` };
+    }
+    if (state.available_actions.includes("end_turn")) {
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no living enemy but combat continues (boss phase change): ending the turn" };
     }
     return null;
@@ -612,6 +629,37 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
     },
   };
+}
+
+/** Cards that exhaust a card of our choosing (a Wound, a Burn) from the hand. */
+const EXHAUST_PICKERS = new Set(["BURNING_PACT"]);
+
+/**
+ * A card worth playing on a phase boss's revive turn (no enemy to target, no attack coming): exhaust
+ * a Status/Curse first, then powers, then playable Status cards (they exhaust themselves), then block
+ * when it carries over. null when nothing has value: end the turn.
+ */
+export function phaseSetupCard(hand: CardModel[], energy: number, keepsBlock: boolean): { card: CardModel; why: string } | null {
+  const affordable = hand.filter((card) => card.playable && !card.xCost && card.cost <= energy && card.target !== "single");
+  const junk = hand.filter((card) => card.type === "Status" || card.type === "Curse");
+  if (junk.length > 0) {
+    // Unupgraded True Grit exhausts at random: only when everything else is junk.
+    const picker = affordable.find(
+      (card) =>
+        EXHAUST_PICKERS.has(card.cardId) ||
+        (card.cardId === "TRUE_GRIT" && (card.upgraded || hand.every((other) => other === card || other.type === "Status" || other.type === "Curse"))),
+    );
+    if (picker) return { card: picker, why: `playing ${picker.name} to exhaust ${junk[0]!.name}` };
+  }
+  const power = affordable.find((card) => card.type === "Power");
+  if (power) return { card: power, why: `playing the power ${power.name}` };
+  const status = affordable.find((card) => card.type === "Status");
+  if (status) return { card: status, why: `playing ${status.name} to clear it` };
+  if (keepsBlock) {
+    const block = affordable.find((card) => card.block > 0 && card.damage === null);
+    if (block) return { card: block, why: `playing ${block.name} (block carries over)` };
+  }
+  return null;
 }
 
 /**

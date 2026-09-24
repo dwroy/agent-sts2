@@ -75,8 +75,17 @@ export interface EnemySim {
   skittish?: number;
   /** Reflect: damage absorbed by its block is dealt back to the player. */
   reflect?: boolean;
-  /** Unblocked damage from this enemy has an extra lasting cost (Suck, Painful Stabs, Paper Cuts). */
+  /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
+  /** Painful Stabs N: every unblocked hit shuffles N Wounds into the discard pile (2WUM: 3 of 5 cards). */
+  woundsPerHit?: number;
+  /** Enrage N (Test Subject phase 1): +N Strength for every Skill the player plays. */
+  enrage?: number;
+  /**
+   * Adaptable (Test Subject): another phase follows. At 0 HP it spends a turn reviving (no attack) and
+   * comes back at full, higher max HP, so killing it does not win the fight.
+   */
+  revives?: boolean;
   /** Gets stronger every turn it lives (Buff intent, Ritual, Territorial, stacking Strength): kill it first. */
   scaling?: boolean;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
@@ -386,6 +395,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
   if (card.special === "rupture") next.rupture += 1;
+  // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
+  if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
@@ -535,6 +546,10 @@ export function sleepTurnDamage(enemy: EnemySim): number {
   return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
 
+/** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
+export const WOUND_COST = 2;
+/** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
+export const NEXT_PHASE_HP = 1.25;
 
 /** Crimson Mantle's POWER_VALUE (card-model.ts), cancelled when HP is too low to afford it. */
 const MANTLE_VALUE = 16;
@@ -552,14 +567,17 @@ export interface Weights {
 export function weightsFor(input: SolverInput): Weights {
   const hpFraction = input.player.maxHp > 0 ? input.player.hp / input.player.maxHp : 1;
   // HP gets dearer as it runs low; in elite/boss fights damage gets dearer (the fight is the point).
-  const hp = 1.0 + 1.5 * Math.max(0, 0.6 - hpFraction) / 0.6;
+  let hp = 1.0 + 1.5 * Math.max(0, 0.6 - hpFraction) / 0.6;
   const damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
+  if (input.enemies.some((enemy) => enemy.revives)) hp *= NEXT_PHASE_HP;
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
 
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
-  const winsFight = living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion));
+  // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
+  const nextPhase = sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
+  const winsFight = !nextPhase && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...input.hand.filter((card) => !card.playable)];
@@ -636,6 +654,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (incomingAfterBlock > 0) {
     const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
     score -= punish;
+    // Painful Stabs: a Wound per unblocked hit, clogging later hands (2WUM T10: 3 Wounds in 5 cards).
+    let blockLeftForHits = blockLeft;
+    for (const hit of hits) {
+      const through = hit.amount - blockLeftForHits;
+      blockLeftForHits = Math.max(0, blockLeftForHits - hit.amount);
+      if (through <= 0) continue;
+      const wounds = sim.enemies.find((enemy) => enemy.index === hit.enemy)?.woundsPerHit ?? 0;
+      score -= WOUND_COST * wounds;
+    }
   }
   if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, blockLeft - incomingRaw);
   // Unkillable husks (Waterfall Giant after defeat: 999,999,999 HP, exploding next turn): damage into

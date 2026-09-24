@@ -1079,3 +1079,64 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
     expect(thisTurnScore(wall, 10, 1)).toBe(Math.round(10 + 0.3 * 20 - 4));
   });
 });
+
+describe("Test Subject phases (2WUMK6PK5QHD)", () => {
+  it("its powers are modelled: Enrage, Adaptable (revives), Painful Stabs wounds, Nemesis", async () => {
+    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const [phase1] = enemySims({
+      enemies: [
+        {
+          index: 0, enemy_id: "TEST_SUBJECT", name: "Test Subject", current_hp: 100, max_hp: 100, block: 0, is_alive: true,
+          powers: [{ power_id: "ADAPTABLE_POWER", amount: 1 }, { power_id: "ENRAGE_POWER", amount: 2 }, { power_id: "PAINFUL_STABS_POWER", amount: 1 }, { power_id: "NEMESIS_POWER", amount: 1 }],
+          intents: [{ intent_type: "Attack", damage: 20, hits: 1 }],
+        },
+      ],
+    });
+    expect(phase1!.unmodelled).toBe(false);
+    expect(phase1!.enrage).toBe(2);
+    expect(phase1!.revives).toBe(true);
+    expect(phase1!.woundsPerHit).toBe(1);
+  });
+
+  const reviveTurn = (hand: Record<string, unknown>[]): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], enemy_id: "TEST_SUBJECT", current_hp: 0, max_hp: 200, is_alive: false, intents: [{ intent_type: "Heal" }, { intent_type: "Buff" }] }];
+    (combat["player"] as Record<string, unknown>)["energy"] = 4;
+    combat["hand"] = hand;
+    return raw;
+  };
+  const inHand = (index: number, cardId: string, overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: false, target_type: "Self", requires_target: false, valid_target_indices: [], costs_x: false,
+    energy_cost: 1, rules_text: "", resolved_rules_text: "", dynamic_values: [], playable: true, ...overrides,
+  });
+  const decideAfterSettle = async (raw: Record<string, unknown>): Promise<Decision | null> => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const e = env(raw, { combatPlanner: "turn" });
+    e.screenMemory.noEnemiesSince = Date.now() - 5_000;
+    return planCombatTurn(e);
+  };
+
+  it("revive turn (T9): True Grit+ exhausts a Wound before the turn ends", async () => {
+    const decision = await decideAfterSettle(reviveTurn([
+      inHand(0, "DEFEND_R", { dynamic_values: [{ name: "Block", base_value: 5, current_value: 5 }] }),
+      inHand(1, "TRUE_GRIT", { upgraded: true, dynamic_values: [{ name: "Block", base_value: 9, current_value: 9 }] }),
+      inHand(2, "WOUND", { playable: false, energy_cost: -1, target_type: "None" }),
+      inHand(3, "WOUND", { playable: false, energy_cost: -1, target_type: "None" }),
+      inHand(4, "STRIKE_R", { target_type: "AnyEnemy", requires_target: true, energy_cost: 0 }),
+    ]));
+    expect(decision?.kind).toBe("act");
+    if (decision?.kind !== "act") return;
+    expect(decision.label).toBe("combat/phase-setup");
+    expect(decision.intent).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("revive turn: a power is played; with nothing of value the turn ends", async () => {
+    const withPower = await decideAfterSettle(reviveTurn([inHand(0, "DEFEND_R"), inHand(1, "INFLAME")]));
+    expect(withPower?.kind === "act" && withPower.intent).toEqual({ action: "play_card", card_index: 1 });
+    // Unupgraded True Grit exhausts at random: not with a Defend beside the Wound.
+    const nothing = await decideAfterSettle(reviveTurn([inHand(0, "DEFEND_R"), inHand(1, "TRUE_GRIT"), inHand(2, "WOUND", { playable: false, energy_cost: -1 })]));
+    expect(nothing?.kind === "act" && nothing.intent).toEqual({ action: "end_turn" });
+  });
+});
