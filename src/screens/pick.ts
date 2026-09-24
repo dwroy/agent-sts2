@@ -65,7 +65,9 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     const ranked = [...options].sort((a, b) => b.score - a.score);
     const top = ranked[0] as PickOption;
     const second = ranked[1] as PickOption;
-    if (top.score - second.score >= params.codeMargin) {
+    // Identical cards (e.g. two unupgraded Strikes to remove) tie on score but are the same choice.
+    const sameThing = top.label !== undefined && top.label === second.label && top.score === second.score;
+    if (top.score - second.score >= params.codeMargin || sameThing) {
       return {
         kind: "act",
         label: params.label,
