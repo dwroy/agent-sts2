@@ -76,7 +76,7 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
   let decision: Decision | null = null;
   switch (screen) {
     case "COMBAT":
-      decision = env.combatPlanner === "card" ? planCombat(env) : planCombatTurn(env);
+      decision = turnStartUnsettled(env) ? null : env.combatPlanner === "card" ? planCombat(env) : planCombatTurn(env);
       break;
     case "MAP":
       decision = planMap(env);
@@ -142,4 +142,32 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
 
   if (decision) return { kind: "decision", decision };
   return { kind: "wait", reason: `waiting on ${screen} (transition, animation, or nothing legal yet)` };
+}
+
+/**
+ * Turn-start settle guard. The mod reports combat actions as ready while the game is still running
+ * the start of the player's turn: on live runs the loop saw 0 energy and only the two Toxic cards an
+ * enemy had just added, declared "no playable cards" and ended the turn before the real draw and
+ * energy arrived — skipping whole turns (runs 4 and 5, floor 22/31, fatal). Until a card has been
+ * played this turn, a board with no energy or a short hand gets up to 3 s to settle first.
+ */
+export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean {
+  const combat = (env.state.raw["combat"] ?? {}) as Record<string, unknown>;
+  const player = (combat["player"] ?? {}) as Record<string, unknown>;
+  const turn = env.state.turn;
+  if (!env.screenMemory.turnSeen || env.screenMemory.turnSeen.turn !== turn) env.screenMemory.turnSeen = { turn, at: now };
+  const played = Number(player["cards_played_this_turn"] ?? 0);
+  const energy = Number(player["energy"] ?? 0);
+  const hand = Array.isArray(combat["hand"]) ? (combat["hand"] as Record<string, unknown>[]) : [];
+  if (played > 0) return false;
+  // What the premature reads looked like: no energy yet, or a hand holding only the Status/Curse cards
+  // an enemy just added (the real draw not in yet).
+  const onlyJunk =
+    hand.length > 0 &&
+    hand.every((card) => {
+      const type = env.knowledge.card(String(card["card_id"] ?? ""))?.type ?? "";
+      return type === "Status" || type === "Curse";
+    });
+  if (energy > 0 && !onlyJunk) return false;
+  return now - env.screenMemory.turnSeen.at < 3_000;
 }

@@ -545,3 +545,20 @@ describe("gate and fingerprint", () => {
     expect(fingerprint(parseGameState(combatPayload()))).toBe(fingerprint(parseGameState(combatPayload())));
   });
 });
+
+describe("turn-start settle guard", () => {
+  it("waits while a new turn shows 0 energy, then acts after 3 s", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const raw = combatPayload();
+    ((raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>)["energy"] = 0;
+    const e = env(raw, { combatPlanner: "turn" });
+    expect(turnStartUnsettled(e, 1_000)).toBe(true);
+    expect(turnStartUnsettled(e, 2_500)).toBe(true);
+    expect(turnStartUnsettled(e, 4_100)).toBe(false);
+  });
+
+  it("does not wait on a normal turn start", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    expect(turnStartUnsettled(env(combatPayload(), { combatPlanner: "turn" }), 1_000)).toBe(false);
+  });
+});

@@ -48,6 +48,8 @@ export interface ScreenMemory {
   cardRewardSkipped: boolean;
   /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
   combatPlan: CombatPlanMemo | null;
+  /** When the current combat turn was first seen (turn-start settle guard). */
+  turnSeen?: { turn: number | null; at: number };
 }
 
 export interface CombatPlanMemo {
