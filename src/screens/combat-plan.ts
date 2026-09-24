@@ -216,6 +216,11 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   }
 
   const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+  // Permanent max-HP potions have no timing value: drink them as soon as they can be used.
+  const juice = potionsAll.find((potion) => potion.potion_id === "FRUIT_JUICE");
+  if (juice) {
+    return { kind: "act", label: "combat/potion-now", intent: { action: "use_potion", option_index: juice.slot }, rationale: `drinking ${juice.name} (permanent max HP, no reason to wait)` };
+  }
   const potionUseCost = kind === "boss" ? 0 : kind === "elite" ? 5 : 15;
   const potionCards = potionsAll
     .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost))
