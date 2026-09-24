@@ -125,3 +125,25 @@ describe("solveTurn", () => {
     expect(result.truncated).toBe(false);
   });
 });
+
+describe("enemy powers", () => {
+  it("Slippery turns each HP loss into 1, so cheap hits strip it first", () => {
+    const result = solveTurn({
+      hand: [strike(0), strike(1)],
+      player: player({ hp: 80 }),
+      enemies: [enemy({ hp: 170, slippery: 1, attacks: [] })],
+      fightKind: "boss",
+    });
+    expect(result.plans[0]!.outcome.damageDealt).toBe(1 + 6);
+  });
+
+  it("Hardened Shell caps the HP lost in a turn", () => {
+    const result = solveTurn({
+      hand: [strike(0), strike(1), strike(2)],
+      player: player({ hp: 80 }),
+      enemies: [enemy({ hp: 100, hpLossCap: 10, attacks: [] })],
+      fightKind: "elite",
+    });
+    expect(result.plans[0]!.outcome.damageDealt).toBe(10);
+  });
+});

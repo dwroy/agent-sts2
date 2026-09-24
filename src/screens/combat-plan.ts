@@ -52,6 +52,10 @@ function enemySims(combat: Record<string, unknown>): EnemySim[] {
       weak: powerAmount(enemy, "WEAK_POWER"),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
+      slippery: powerAmount(enemy, "SLIPPERY_POWER"),
+      hpLossCap: powerAmount(enemy, "HARDENED_SHELL_POWER") > 0 ? powerAmount(enemy, "HARDENED_SHELL_POWER") : null,
+      thorns: powerAmount(enemy, "THORNS_POWER"),
+      curlUp: powerAmount(enemy, "CURL_UP_POWER"),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
         .flatMap((intent) => {
@@ -153,6 +157,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     weak: powerAmount(player, "WEAK_POWER") > 0,
     vulnerable: powerAmount(player, "VULNERABLE_POWER") > 0,
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
+    shrunk: powerAmount(player, "SHRINK_POWER") > 0,
   };
   const kind = fightKind(combat, env);
 
@@ -181,7 +186,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
   }
 
-  const solved = solveTurn({ hand, player: playerSim, enemies, fightKind: kind });
+  const solved = solveTurn({ hand, player: playerSim, enemies, fightKind: kind, turn: state.turn ?? 1 });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 

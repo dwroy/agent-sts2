@@ -21,6 +21,14 @@ export interface EnemySim {
   weak: number;
   artifact: number;
   intangible: boolean;
+  /** Slippery N: the next N HP losses are reduced to 1 each. */
+  slippery?: number;
+  /** Hardened Shell: caps the HP it can lose this turn. */
+  hpLossCap?: number | null;
+  /** Thorns: damage back to the player per attack hit. */
+  thorns?: number;
+  /** Curl Up: block gained the first time it takes damage. */
+  curlUp?: number;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
   /** True when the enemy is a minion/summon whose death does not matter much (not modelled yet). */
@@ -36,6 +44,8 @@ export interface PlayerSim {
   vulnerable: boolean;
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
+  /** Shrink: the player's attacks deal 30% less. */
+  shrunk?: boolean;
 }
 
 export interface SolverInput {
@@ -44,6 +54,8 @@ export interface SolverInput {
   enemies: EnemySim[];
   /** Fight importance: elites and bosses value damage more, hallway fights value HP more. */
   fightKind: "monster" | "elite" | "boss" | "unknown";
+  /** Combat turn (1-based); lasting effects are worth more early. */
+  turn?: number;
   maxNodes?: number;
 }
 
@@ -89,7 +101,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -121,14 +133,30 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
   for (let hit = 0; hit < hits && enemy.alive; hit += 1) {
     let amount = perHitBase;
     if (player.weak) amount = Math.floor(amount * 0.75);
+    if (player.shrunk) amount = Math.floor(amount * 0.7);
     if (enemy.vulnerable > 0) amount = Math.floor(amount * 1.5);
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
     const absorbed = Math.min(enemy.block, amount);
     enemy.block -= absorbed;
-    const loss = Math.min(enemy.hp, amount - absorbed);
+    let loss = amount - absorbed;
+    if (loss > 0 && (enemy.slippery ?? 0) > 0) {
+      loss = 1;
+      enemy.slippery = (enemy.slippery ?? 0) - 1;
+    }
+    if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) loss = Math.min(loss, Math.max(0, enemy.hpLossCap - enemy.lostThisTurn));
+    loss = Math.min(enemy.hp, loss);
     enemy.hp -= loss;
+    enemy.lostThisTurn += loss;
     dealt += loss;
+    if ((enemy.thorns ?? 0) > 0) {
+      sim.hp -= enemy.thorns ?? 0;
+      sim.hpLostThisTurn = true;
+    }
+    if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
+      enemy.block += enemy.curlUp ?? 0;
+      enemy.curlUp = 0;
+    }
     if (enemy.hp <= 0) enemy.alive = false;
   }
   sim.damageDealt += dealt;
@@ -296,8 +324,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score -= enemy.strengthDelta * 3;
   }
   if (!winsFight) {
-    score += weights.strength * sim.permStrength;
-    score += sim.flat;
+    // Lasting value (Strength, powers) pays off over the rest of the fight: more in long fights,
+    // less the later it comes.
+    const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
+    const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
+    score += (weights.strength * sim.permStrength + sim.flat) * fightLength * earliness;
     score += sim.drawScore;
   }
   score += sim.feedKills * 12;
@@ -329,7 +360,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.drawScore}`;
 }
 
@@ -351,7 +382,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     strength: 0,
     permStrength: 0,
     hpLostThisTurn: false,
-    enemies: input.enemies.map((enemy) => ({ ...enemy, alive: enemy.hp > 0, newlyWeak: false, strengthDelta: 0 })),
+    enemies: input.enemies.map((enemy) => ({ ...enemy, alive: enemy.hp > 0, newlyWeak: false, strengthDelta: 0, lostThisTurn: 0 })),
     steps: [],
     blockGained: 0,
     damageDealt: 0,
