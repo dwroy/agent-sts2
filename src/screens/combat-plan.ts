@@ -324,11 +324,11 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     label: dangerous && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
-    escalate: {
-      question: "plan",
-      below: kind === "elite" || kind === "boss" || dangerous ? 0.5 : 0.3,
-      why: `${kind} fight${dangerous ? ", dangerous turn" : ""}`,
-    },
+    // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
+    // 15 such escalations, so a near-guess from Jev falls back to that plan instead (see resolve).
+    ...(kind === "elite" || kind === "boss" || dangerous
+      ? { escalate: { question: "plan", below: 0.5, why: `${kind} fight${dangerous ? ", dangerous turn" : ""}` } }
+      : {}),
     resolve(answers): ResolvedAction {
       const answer = answers["plan"];
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");
@@ -339,6 +339,10 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
         return { intent: chosen.potion, rationale: `Jev chose to ${chosen.label} (confidence ${answer.confidence.toFixed(2)})`, confidence: answer.confidence, fallback: false };
       }
       const plan = chosen.plan!;
+      const hallway = !(kind === "elite" || kind === "boss" || dangerous);
+      if (hallway && answer.confidence < 0.3 && plan !== best && answer.raw !== undefined && !(answer.raw as { escalated?: string }).escalated) {
+        return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
+      }
       commit(env, state.turn, plan, hand, "jev");
       const rank = options.indexOf(plan) + 1;
       return {
