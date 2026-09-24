@@ -50,6 +50,8 @@ export interface ScreenMemory {
   combatPlan: CombatPlanMemo | null;
   /** When the current combat turn was first seen (turn-start settle guard). */
   turnSeen?: { turn: number | null; at: number };
+  /** Enemy index we last targeted (Surrounded facing). */
+  facing?: number | null;
 }
 
 export interface CombatPlanMemo {

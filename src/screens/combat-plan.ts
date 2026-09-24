@@ -144,10 +144,12 @@ function intentFor(step: Step, hand: CardModel[]): ActionRequest | null {
   return { action: "play_card", card_index: card.index, target_index: step.target };
 }
 
-function firstIntent(plan: Plan, hand: CardModel[]): ActionRequest {
+function firstIntent(plan: Plan, hand: CardModel[], env?: DecisionEnv): ActionRequest {
   const first = plan.steps[0];
   if (!first) return { action: "end_turn" };
-  return intentFor(first, hand) ?? { action: "end_turn" };
+  const intent = intentFor(first, hand) ?? { action: "end_turn" };
+  if (env && intent.target_index !== undefined && intent.target_index !== null) env.screenMemory.facing = intent.target_index;
+  return intent;
 }
 
 /** What the hand should look like after the first step of `plan` (for the commitment check). */
@@ -202,6 +204,8 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
     maxPlays: powerAmount(player, "SLOTH_POWER") > 0 ? Math.max(0, powerAmount(player, "SLOTH_POWER") - num(player["cards_played_this_turn"])) : null,
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER"),
+    surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
+    facing: env.screenMemory.facing ?? null,
   };
   const kind = fightKind(combat, env);
 
@@ -280,7 +284,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   // 3. Code-decided cases.
   if (best.outcome.winsFight) {
     commit(env, state.turn, best, hand, "code");
-    return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
+    return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
   const options = distinctPlans(solved.plans.filter((plan) => !plan.outcome.dies), MAX_OPTIONS);
   const second = options[1];
@@ -290,7 +294,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     return {
       kind: "act",
       label: "combat/plan",
-      intent: firstIntent(best, hand),
+      intent: firstIntent(best, hand, env),
       rationale: `code plan (${second ? `+${(best.score - second.score).toFixed(1)} over next` : "only line"}): ${best.steps.length ? best.steps.map(stepText).join(", ") : "end turn"}; hp -${best.outcome.hpLoss}, dmg ${best.outcome.damageDealt}${calcNote}`,
     };
   }
@@ -349,7 +353,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 
   const fallback = (why: string): ResolvedAction => {
     commit(env, state.turn, best, hand, "code");
-    return { intent: firstIntent(best, hand), rationale: `${why}; using the code-best plan`, confidence: null, fallback: true };
+    return { intent: firstIntent(best, hand, env), rationale: `${why}; using the code-best plan`, confidence: null, fallback: true };
   };
 
   return {
@@ -379,7 +383,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
       commit(env, state.turn, plan, hand, "jev");
       const rank = options.indexOf(plan) + 1;
       return {
-        intent: firstIntent(plan, hand),
+        intent: firstIntent(plan, hand, env),
         rationale: `Jev chose plan ${rank}/${options.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${rank}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,

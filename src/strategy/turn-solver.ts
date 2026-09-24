@@ -82,6 +82,10 @@ export interface PlayerSim {
   maxPlays?: number | null;
   /** Unblockable HP loss at the end of the turn (Disintegration debuff). */
   endTurnHpLoss?: number;
+  /** Surrounded: attacks from enemies we are not facing deal +50%; targeting an enemy turns us to it. */
+  surrounded?: boolean;
+  /** Index of the enemy we currently face (last targeted), when known. */
+  facing?: number | null;
 }
 
 export interface SolverInput {
@@ -160,6 +164,8 @@ interface Sim {
   retaliate: number;
   /** Rupture stacks active this turn (from the start or played this turn). */
   rupture: number;
+  /** Enemy index we face after this turn's targeted plays (Surrounded). */
+  facing: number | null;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -260,6 +266,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
+  if (card.target === "single" && target !== null) next.facing = target;
   next.steps = [
     ...sim.steps,
     {
@@ -382,6 +389,8 @@ function incoming(sim: Sim, player: PlayerSim): number {
         let amount = attack.damage + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (player.vulnerable) amount = Math.floor(amount * 1.5);
+        // Surrounded: unknown facing counts as "behind" for everyone (the safe assumption).
+        if (player.surrounded && sim.facing !== enemy.index) amount = Math.floor(amount * 1.5);
         if (player.intangible) amount = Math.min(amount, 1);
         total += Math.max(0, amount);
       }
@@ -517,7 +526,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -551,6 +560,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     duplicate: 0,
     retaliate: 0,
     rupture: input.player.rupture ?? 0,
+    facing: input.player.facing ?? null,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,
