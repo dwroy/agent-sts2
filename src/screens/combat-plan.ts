@@ -39,6 +39,8 @@ const MODELLED_ENEMY_POWERS = new Set([
   // Surrounded's back attack is in the intents (backAttack in turn-solver.ts); left unmodelled, it cut
   // our damage by 20% (PLC F33 T8: Twin Strike 11x2 planned as 8x2, Crusher left at 2 not 8).
   "BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER", "WITHERING_PRESENCE_POWER", "DEMISE_POWER",
+  // Terror Eel: stunned at half HP (`shriek`); left unmodelled it cut our damage by 20%.
+  "SHRIEK_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -55,6 +57,9 @@ const POWER_NOTES: Record<string, string> = {
   INTANGIBLE_POWER: " (every hit and HP loss is reduced to 1: many small hits, not big ones)",
   WITHERING_PRESENCE_POWER: " (every 6 cards I play, counted across turns, add an unplayable Wither to my hand: it deals its damage at the end of my turn while held, blockable, +3 each Increasing Intensity; play fewer, bigger cards)",
   ARTIFACT_POWER: " (each stack negates one debuff: Vulnerable, Weak, Demise, Strength loss; strip it with cheap debuffs before a debuff potion)",
+  // XJWF F22: seven turns killing the Parafright, the Obscura 96 -> 76, dead at 13 HP.
+  ILLUSION_POWER: " (illusion: back at full HP next turn even if killed; damage into it is wasted, killing it only cancels this turn's attack; it leaves when its summoner dies: hit the summoner)",
+  SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
 };
 
 /** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
@@ -192,6 +197,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
       revives: powerAmount(enemy, "ADAPTABLE_POWER") > 0,
+      shriek: powerAmount(enemy, "SHRIEK_POWER"),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -306,6 +312,8 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
   if (card && card.hpLoss > 0) env.screenMemory.demonTongueTurn = `${hpGuardFight(env)}:${env.state.turn}`;
 }
 
+/** Intimidating Helmet's block per 2+ cost card (PU21 F12-F14: block 0 -> 4; its description is a template). */
+export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 const WITHER_EVERY = 6;
@@ -459,6 +467,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     startTurnDamage: relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0,
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
+    helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
   };
   const kind = fightKind(combat, env);
 

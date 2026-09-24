@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import type { CardModel } from "./card-model.js";
+import { freeCardPick, type CardModel } from "./card-model.js";
 
 export interface EnemySim {
   index: number;
@@ -67,6 +67,11 @@ export interface EnemySim {
   slumber?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
+  /**
+   * Shriek (Terror Eel, SHRIEK_POWER 70 = half its HP): the first time its HP drops to this or below it
+   * is stunned, and its move this turn is cancelled (PU21 F7 T3: 82 -> 69, CRASH 22 became STUNNED).
+   */
+  shriek?: number;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
   unmodelled?: boolean;
   /** Guarded / Soar: damage taken is halved. */
@@ -141,6 +146,11 @@ export interface PlayerSim {
   startTurnDamage?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
+  /**
+   * Intimidating Helmet: block gained for every card played that costs 2+ energy as paid (PU21: 0 -> 4
+   * after Perfected Strike and Howl from Beyond; a Howl made free did not trigger it).
+   */
+  helmetBlock?: number;
 }
 
 export interface SolverInput {
@@ -356,6 +366,10 @@ function wake(enemy: Sim["enemies"][number]): void {
 
 /** Crab Rage: an ally's death gives the survivor 99 Block and Strength (text says 5; 7Q5G F33 measured 8 -> 14). */
 export const CRAB_RAGE_BLOCK = 99;
+/** Intimidating Helmet triggers on cards that cost at least this much as paid. */
+export const HELMET_MIN_COST = 2;
+/** Lasting value per energy of a card made free for the fight (Touch of Insanity), before fight length. */
+export const FREE_CARD_LASTING = 2;
 export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
@@ -389,9 +403,15 @@ function clone(sim: Sim): Sim {
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
   const cost = card.xCost ? sim.energy : card.cost;
   if (cost > sim.energy) return null;
+  // Touch of Insanity: only with a card worth making free (YP9 T1: drunk with only 0-cost cards left).
+  if (card.special === "free_card" && !freeCardPick(sim.hand)) return null;
   const next = clone(sim);
   next.hand = sim.hand.filter((entry) => entry !== card);
+  // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
+  // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
+  if (card.soulbound) next.hand = next.hand.filter((entry) => !entry.soulbound);
   next.energy -= cost;
+  if ((player.helmetBlock ?? 0) > 0 && card.type !== "Potion" && cost >= HELMET_MIN_COST) gainBlock(next, player.helmetBlock ?? 0, player);
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
   const twice = card.type !== "Potion" && next.duplicate > 0;
   if (twice) next.duplicate -= 1;
@@ -407,6 +427,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     enemy.skittish = 0;
   }
   if (card.special === "duplicate_next") next.duplicate += 1;
+  // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
+  // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
+  if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
@@ -450,6 +473,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.block > 0) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
   if (card.special === "temp_dex") next.tempDex += 5;
   if (card.special === "triple_next_attack") next.gigantic += 1;
+  if (card.special === "free_card") {
+    const pick = freeCardPick(next.hand);
+    if (pick) {
+      next.hand = next.hand.map((entry) => (entry === pick ? { ...entry, cost: 0 } : entry));
+      // It stays free for the rest of the fight: worth its energy again every time it is drawn.
+      next.flat += FREE_CARD_LASTING * pick.cost;
+    }
+  }
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
@@ -586,6 +617,8 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
   for (const enemy of sim.enemies) {
     if (!enemy.alive) continue;
     const start = input.enemies.find((entry) => entry.index === enemy.index);
+    // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
+    if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
@@ -771,15 +804,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     return sum + Math.max(0, start.hp - enemy.hp);
   }, 0);
-  // Damage that does not stick is worth nothing. An illusion not killed this turn heals to full
-  // (VKPX F22: ~10 turns of attacks into a 21 HP Parafright while the Obscura sat at 68). A segment
+  // Damage that does not stick is worth nothing. An illusion comes back at full HP next turn whether it
+  // was killed or not (VKPX F22: ~10 turns of attacks into a 21 HP Parafright while the Obscura sat at
+  // 68; XJWF F22: killed 7 turns running, 147 damage into it, the Obscura only 96 -> 76): killing it is
+  // worth this turn's attack it no longer makes (hpLoss), never its HP. A segment
   // that dies while another lives comes back at the Reattach HP (0NG F29: an 18 HP segment killed,
   // back at 25), so its damage is only worth what it takes off that. Damage into a segment that
   // lives does stick (the logs show it carried over turn to turn).
   const lostDamage = sim.enemies.reduce((sum, enemy) => {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     const dealt = Math.max(0, start.hp - Math.max(0, enemy.hp));
-    if (enemy.illusion && enemy.alive) return sum + dealt;
+    if (enemy.illusion) return sum + dealt;
     if (enemy.reattach && !enemy.alive && !allSegmentsDead) {
       const kept = Math.max(0, start.hp - (enemy.reattachHp ?? start.hp));
       return sum + Math.max(0, dealt - kept);
@@ -795,7 +830,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
-    if (start.scaling) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
+    // Not an illusion: its HP comes back (a Parafright buffed by the Obscura has Strength 5+).
+    if (start.scaling && !start.illusion) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
   }
   for (const enemy of kills) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
@@ -868,7 +904,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 }
 
 function simKey(sim: Sim): string {
-  const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
+  const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}#${sim.gigantic}`;
 }
@@ -952,7 +988,7 @@ export function solveTurn(input: SolverInput): SolveResult {
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {
-        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}@${target ?? "-"}`;
+        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}`;
         if (tried.has(dedupe)) continue;
         tried.add(dedupe);
         const next = play(sim, card, target, input.player);

@@ -48,7 +48,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -63,6 +63,16 @@ export interface CardModel {
   delayedDamage?: number;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
+  /**
+   * Soulbound (the Queen's Chains of Binding: the first 3 cards drawn each turn): once one Soulbound
+   * card is played, the others cannot be played this turn (88HN: blocked_by_hook in states.jsonl).
+   */
+  soulbound?: boolean;
+  /**
+   * Exhausts a random card from the hand (True Grit, Ember): a card planned after it may be the one
+   * that goes (PU21 F33 T8: Bash, True Grit, Anger planned 27 damage, Anger was exhausted, 11 dealt).
+   */
+  randomExhaust?: boolean;
   text: string;
 }
 
@@ -220,7 +230,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     upgraded: bool(card["upgraded"]),
     cost: num(card["energy_cost"]),
     xCost: bool(card["costs_x"]),
-    playable: bool(card["playable"]),
+    // Too expensive now is still in the search (it checks energy itself): energy gained this turn, or a
+    // Touch of Insanity making it free, can pay for it.
+    playable: bool(card["playable"]) || str(card["unplayable_reason"]) === "not_enough_energy",
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
@@ -245,6 +257,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     heldHpLoss,
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
+    soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
+    randomExhaust: /随机消耗|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }
@@ -278,7 +292,25 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   POWDERED_DEMISE: { target: "single", demise: 9 },
   // The next Attack deals triple damage (PLC F33: kept from T1 to death with Bludgeon in hand).
   GIGANTIFICATION_POTION: { target: "self", special: "triple_next_attack" },
+  // A card in hand costs 0 for the rest of the combat, chosen on a combat_hand_select screen ("选择一张
+  // 牌使其免费"). G8AQ T3: made Bludgeon+ free would have been lethal; spent on a 1-cost card instead.
+  TOUCH_OF_INSANITY: { target: "self", special: "free_card" },
 };
+
+/** Touch of Insanity is only worth drinking for a card costing at least this much. */
+export const FREE_CARD_MIN_COST = 2;
+
+/**
+ * The card Touch of Insanity should make free: the most expensive real card (2+ energy, not X-cost,
+ * not a Status/Curse), ties broken by what it does. The solver and the selection screen use the same
+ * rule, so the plan the solver scored is the one played. null when no card is worth it.
+ */
+export function freeCardPick<T extends CardModel>(cards: T[]): T | null {
+  const worth = (card: CardModel): number => (card.damage ?? 0) * Math.max(1, card.hits) + card.block + card.flatValue + 5 * card.strength;
+  const eligible = cards.filter((card) => card.type !== "Potion" && card.type !== "Status" && card.type !== "Curse" && !card.xCost && card.cost >= FREE_CARD_MIN_COST);
+  if (eligible.length === 0) return null;
+  return eligible.reduce((best, card) => (card.cost > best.cost || (card.cost === best.cost && worth(card) > worth(best)) ? card : best));
+}
 
 export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;

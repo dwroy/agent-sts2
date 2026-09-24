@@ -902,3 +902,128 @@ describe("player Weak", () => {
     expect(result.plans[0]!.outcome.hpLoss).toBe(0);
   });
 });
+
+describe("Chains of Binding (88HN: after one Soulbound card the others are locked)", () => {
+  it("never plans two Soulbound cards in one turn", () => {
+    // 88HN T5: Bash+ then Flame Barrier planned together; the Barrier was locked, 7 block against 24.
+    const bash = card(0, "BASH", { cost: 2, damage: 10, vulnerable: 3, soulbound: true });
+    const barrier = card(1, "FLAME_BARRIER", { type: "Skill", target: "self", validTargets: [], cost: 2, block: 12, retaliate: 4, soulbound: true });
+    const result = solveTurn({
+      hand: [bash, barrier, strike(2), card(3, "BULLY", { cost: 0, damage: 4 })],
+      player: player({ hp: 40, energy: 3 }),
+      enemies: [enemy({ hp: 199, maxHp: 199, attacks: [{ damage: 24, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    for (const plan of result.plans) {
+      expect(plan.steps.filter((step) => step.cardId === "BASH" || step.cardId === "FLAME_BARRIER").length).toBeLessThanOrEqual(1);
+    }
+    // Bash+ first leaves no block at all: the line that blocks is the Barrier one.
+    const bashLine = result.plans.find((plan) => plan.steps[0]?.cardId === "BASH")!;
+    expect(bashLine.outcome.blockGained).toBe(0);
+    expect(result.plans.some((plan) => plan.steps.some((step) => step.cardId === "FLAME_BARRIER") && plan.outcome.hpLoss === 12)).toBe(true);
+  });
+
+  it("card model reads the Soulbound keyword from the rendered text", async () => {
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const knowledge = { card: () => undefined } as unknown as Parameters<typeof modelHandCard>[2];
+    const bound = modelHandCard({ index: 0, card_id: "DEFEND_IRONCLAD", energy_cost: 1, playable: true, resolved_rules_text: "获得9点格挡。 魂缚", dynamic_values: [] }, 0, knowledge);
+    const exhausting = modelHandCard({ index: 1, card_id: "DEMONIC_FLAME", energy_cost: 1, playable: true, resolved_rules_text: "造成7点伤害。 魂缚 消耗。", dynamic_values: [] }, 1, knowledge);
+    const free = modelHandCard({ index: 2, card_id: "DEFEND_IRONCLAD", energy_cost: 1, playable: true, resolved_rules_text: "获得9点格挡。", dynamic_values: [] }, 2, knowledge);
+    expect([bound.soulbound, exhausting.soulbound, free.soulbound]).toEqual([true, true, false]);
+  });
+});
+
+describe("Touch of Insanity (G8AQ T3: free Bludgeon+ was lethal, the potion went to Twin Strike)", () => {
+  const hand = (): CardModel[] => [
+    card(0, "POMMEL_STRIKE", { damage: 11 }),
+    card(1, "HEADBUTT", { damage: 11 }),
+    card(2, "MOLTEN_FIST", { damage: 12 }),
+    card(3, "PYRE", { type: "Power", target: "self", validTargets: [], cost: 2, flatValue: 16 }),
+    card(4, "BLUDGEON", { upgraded: true, cost: 3, damage: 44 }),
+  ];
+  const touch = (): CardModel => modelPotion("TOUCH_OF_INSANITY", "Touch of Insanity", 0, [], 5)!;
+
+  it("drinks it on the most expensive card and finds the lethal", () => {
+    const result = solveTurn({
+      hand: [...hand(), touch()],
+      player: player({ hp: 30, energy: 3 }),
+      enemies: [enemy({ name: "Entomancer", hp: 74, maxHp: 145 })],
+      fightKind: "elite",
+    });
+    const best = result.plans[0]!;
+    expect(best.outcome.winsFight).toBe(true);
+    expect(best.steps.map((step) => step.cardId)).toContain("POTION:TOUCH_OF_INSANITY:0");
+    expect(best.steps.map((step) => step.cardId)).toContain("BLUDGEON");
+  });
+
+  it("is not drunk with no card of 2+ energy in hand (YP9 T1: a Defend made free)", () => {
+    const result = solveTurn({
+      hand: [strike(0), defend(1), touch()],
+      player: player({ hp: 30, energy: 3 }),
+      enemies: [enemy({ hp: 74, maxHp: 145, attacks: [{ damage: 10, hits: 1 }] })],
+      fightKind: "elite",
+    });
+    for (const plan of result.plans) expect(plan.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(false);
+  });
+
+  it("the solver and the selection screen agree on the card", async () => {
+    const { freeCardPick } = await import("../src/strategy/card-model.js");
+    expect(freeCardPick(hand())?.cardId).toBe("BLUDGEON");
+    expect(freeCardPick([strike(0), defend(1)])).toBeNull();
+  });
+});
+
+describe("prediction biases (PU21 预测校验)", () => {
+  it("Intimidating Helmet: 4 block per card that costs 2+ as paid", () => {
+    const bash = card(0, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
+    const run = (helmetBlock: number) =>
+      solveTurn({ hand: [bash], player: player({ hp: 50, energy: 3, helmetBlock }), enemies: [enemy({ hp: 80, maxHp: 80, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" })
+        .plans.find((plan) => plan.steps.length === 1)!;
+    expect(run(4).outcome.hpLoss).toBe(6);
+    expect(run(0).outcome.hpLoss).toBe(10);
+    // A 1-cost card does not trigger it.
+    const cheap = solveTurn({ hand: [strike(0)], player: player({ hp: 50, energy: 3, helmetBlock: 4 }), enemies: [enemy({ hp: 80, maxHp: 80, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" });
+    expect(cheap.plans.find((plan) => plan.steps.length === 1)!.outcome.blockGained).toBe(0);
+  });
+
+  it("True Grit's random exhaust ends the plan: no card is planned after it", () => {
+    // PU21 F30 T2: Setup Strike, Strike, True Grit, Anger planned 24 damage; Anger was exhausted, 16 dealt.
+    const grit = card(0, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], block: 7, randomExhaust: true });
+    const anger = card(1, "ANGER", { cost: 0, damage: 6 });
+    const result = solveTurn({
+      hand: [grit, anger, strike(2)],
+      player: player({ hp: 50, energy: 2 }),
+      enemies: [enemy({ hp: 80, maxHp: 80, attacks: [{ damage: 10, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    for (const plan of result.plans) {
+      const at = plan.steps.findIndex((step) => step.cardId === "TRUE_GRIT");
+      if (at >= 0) expect(at).toBe(plan.steps.length - 1);
+    }
+    expect(result.plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "ANGER,STRIKE_IRONCLAD,TRUE_GRIT")).toBe(true);
+  });
+
+  it("Terror Eel Shriek: taken to the threshold this turn, its attack is cancelled (PU21 F7 T3: 82 -> 69, predicted -22, took 0)", () => {
+    const result = solveTurn({
+      hand: [card(0, "STRIKE_IRONCLAD", { damage: 13 })],
+      player: player({ hp: 50, energy: 1 }),
+      enemies: [enemy({ name: "Terror Eel", hp: 82, maxHp: 140, shriek: 70, attacks: [{ damage: 22, hits: 1 }] })],
+      fightKind: "elite",
+    });
+    expect(result.plans.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(0);
+    expect(result.plans.find((plan) => plan.steps.length === 0)!.outcome.hpLoss).toBe(22);
+  });
+});
+
+describe("Parafright (XJWF F22: killed seven turns running, the Obscura barely touched)", () => {
+  it("damage into an illusion is worth nothing even when it dies: hit the Obscura", () => {
+    const parafright = enemy({ index: 0, name: "Parafright", hp: 21, maxHp: 21, illusion: true, minion: true, attacks: [{ damage: 16, hits: 1 }] });
+    const obscura = enemy({ index: 1, name: "The Obscura", hp: 96, maxHp: 123, scaling: true, attacks: [{ damage: 6, hits: 1 }] });
+    const hit = (index: number): CardModel => card(index, "STRIKE_IRONCLAD", { damage: 8, validTargets: [0, 1] });
+    const result = solveTurn({ hand: [hit(0), hit(1), hit(2)], player: player({ hp: 92, maxHp: 92, energy: 3 }), enemies: [parafright, obscura], fightKind: "monster" });
+    const best = result.plans[0]!;
+    expect(best.steps.every((step) => step.target === 1)).toBe(true);
+    const kill = result.plans.find((plan) => plan.outcome.enemyHpAfter.find((entry) => entry.index === 0)!.hp === 0)!;
+    expect(kill.outcome.kills).toEqual([]);
+  });
+});
