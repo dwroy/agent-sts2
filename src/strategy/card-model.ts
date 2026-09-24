@@ -48,7 +48,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -106,6 +106,7 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   WHIRLWIND: "whirlwind",
   SPITE: "spite",
   FEED: "feed",
+  RUPTURE: "rupture",
 };
 
 function targetMode(targetType: string, template: string, requiresTarget: boolean): TargetMode {
@@ -148,6 +149,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     }
     case "SETUP_STRIKE":
       tempStrength = strength;
+      strength = 0;
+      break;
+    case "RUPTURE": // Strength comes later, per HP loss on our turn (solver), not on play
       strength = 0;
       break;
     case "BLAZE": // gives Strength to another player

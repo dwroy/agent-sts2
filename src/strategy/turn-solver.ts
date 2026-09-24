@@ -76,6 +76,8 @@ export interface PlayerSim {
   gambit?: boolean;
   /** Block gained at the end of the player's turn, before the enemy acts (Plating, Metallicize). */
   endTurnBlock?: number;
+  /** Rupture N: +N Strength whenever the player loses HP on their own turn. */
+  rupture?: number;
 }
 
 export interface SolverInput {
@@ -152,6 +154,8 @@ interface Sim {
   duplicate: number;
   /** Flame Barrier: damage back per enemy hit taken this turn. */
   retaliate: number;
+  /** Rupture stacks active this turn (from the start or played this turn). */
+  rupture: number;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -273,7 +277,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.hpLoss > 0) {
     next.hp -= card.hpLoss;
     next.hpLostThisTurn = true;
+    if (next.rupture > 0) {
+      next.strength += next.rupture;
+      next.permStrength += next.rupture;
+    }
   }
+  if (card.special === "rupture") next.rupture += 1;
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -497,7 +506,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -530,6 +539,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     buffer: 0,
     duplicate: 0,
     retaliate: 0,
+    rupture: input.player.rupture ?? 0,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,
