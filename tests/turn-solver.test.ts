@@ -890,3 +890,15 @@ describe("player Vulnerable", () => {
     expect(result.plans[0]!.outcome.hpLoss).toBe(21);
   });
 });
+
+describe("player Weak", () => {
+  it("takes the card's shown damage as is: it already includes our Weak (Strike 6 -> 4)", () => {
+    const result = solveTurn({
+      hand: [card(0, "STRIKE_IRONCLAD", { damage: 4 })],
+      player: player({ hp: 50, energy: 1, weak: true }),
+      enemies: [enemy({ hp: 4, attacks: [{ damage: 10, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.outcome.hpLoss).toBe(0);
+  });
+});

@@ -23,8 +23,10 @@ export function planRest(env: DecisionEnv): Decision | null {
     // Phase 2: heal below half HP, otherwise upgrade; anything unusual stays close so the model sees it.
     // The rest site right before an act boss (floor 16 of an act) heals unless HP is already high:
     // runs 2, 5 and 6 walked into the Act 1 boss at 50-67% and two of them died there.
-    const floorInAct = ((state.run?.floor ?? 1) - 1) % 17 + 1;
-    const beforeBoss = floorInAct >= 15;
+    // Act bosses sit on floors 17, 33 and 48 (acts are not all 17 floors: 88HN's F47 rest was missed).
+    const floor = state.run?.floor ?? 1;
+    const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
+    const beforeBoss = nextBoss - floor <= 2;
     const score =
       id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) ? 10 : hpPct < 0.65 ? 5 : 1

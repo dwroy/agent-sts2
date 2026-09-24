@@ -304,7 +304,6 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
   let dealt = 0;
   for (let hit = 0; hit < hits && enemy.alive; hit += 1) {
     let amount = perHitBase;
-    if (player.weak) amount = Math.floor(amount * 0.75);
     if (player.shrunk) amount = Math.floor(amount * 0.7);
     if (enemy.vulnerable > 0) amount = Math.floor(amount * 1.5);
     // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
@@ -460,9 +459,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
 
   if (card.damage !== null || card.special === "whirlwind") {
-    let perHit = (card.damage ?? 0) + next.strength;
+    // A card's shown damage already includes our Weak (Strike 6 -> 4 in states.jsonl; 88HN T5 predicted
+    // 36, dealt 45), so Weak only scales what the card text does not know: this turn's Strength and
+    // Body Slam's block.
+    const weakFactor = player.weak ? 0.75 : 1;
+    let perHit = Math.floor((card.damage ?? 0) + next.strength * weakFactor);
     let hits = card.hits;
-    if (card.special === "body_slam") perHit = next.block + next.strength;
+    if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     if (card.special === "whirlwind") hits = cost;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
