@@ -72,6 +72,19 @@ export interface ScreenMemory {
   hpGuard?: { fight: string; turns: Record<string, number> };
   /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
   potionTurn?: { fight: string; turn: number | null; startCount: number };
+  /**
+   * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
+   * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
+   */
+  lastMap?: RememberedMap;
+}
+
+export interface RememberedMap {
+  runId: string;
+  /** Floor shown on the MAP screen (the node we stood on; the next room is floor + 1). */
+  floor: number | null;
+  nodes: { row: number; col: number; type: string; children: { row: number; col: number }[] }[];
+  available: { row: number; col: number; type: string }[];
 }
 
 export interface CombatPlanMemo {

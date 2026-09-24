@@ -20,6 +20,7 @@ import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
+import { rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
@@ -449,6 +450,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
     }
+    // The REST screen has no map: keep the last one for its "forced elite next" check.
+    if (state.screen === "MAP") rememberMap(screenMemory, state);
     const env: DecisionEnv = {
       state,
       knowledge,

@@ -12,6 +12,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
+import { rememberMap } from "../src/screens/rest.js";
 import { loadConfig } from "../src/config.js";
 import {
   baseState,
@@ -29,6 +30,7 @@ import {
   rewardAfterSkipPayload,
   rewardAfterSkipWithGoldPayload,
   rewardClaimPayload,
+  runPayload,
   selectionPayload,
   shopPayload,
   testKnowledge,
@@ -479,6 +481,34 @@ describe("rest", () => {
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     expect(Object.keys(criteria)).toEqual(["o0", "o1"]);
     expect(decision.resolve(pickAnswer("o1")).intent).toEqual({ action: "choose_rest_option", option_index: 1 });
+  });
+
+  it("heals before a forced elite like before a boss (G8AQ F24: 49/80, the only exit was an Elite)", () => {
+    const raw = { ...restPayload(), run: runPayload({ floor: 24, current_hp: 49, max_hp: 80 }) };
+    const map = (childType: string) => {
+      const memory = createScreenMemory("REST");
+      rememberMap(memory, parseGameState(baseState("MAP", {
+        run: runPayload({ floor: 23 }),
+        map: {
+          nodes: [
+            { row: 5, col: 0, node_type: "Monster", children: [{ row: 6, col: 1 }] },
+            { row: 6, col: 1, node_type: "RestSite", children: [{ row: 7, col: 2 }] },
+            { row: 7, col: 2, node_type: childType, children: [] },
+          ],
+          available_nodes: [{ index: 0, row: 6, col: 1, node_type: "RestSite" }],
+        },
+      })));
+      return memory;
+    };
+    const forced = mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: map("Elite") }));
+    expect(forced.kind).toBe("act");
+    if (forced.kind === "act") expect(forced.intent).toEqual({ action: "choose_rest_option", option_index: 0 });
+    // A Monster next: 61% is not low enough to heal outright, the model is asked.
+    expect(mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: map("Monster") })).kind).toBe("ask");
+    // A map from another floor (stale memory) says nothing.
+    const stale = map("Elite");
+    stale.lastMap!.floor = 20;
+    expect(mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: stale })).kind).toBe("ask");
   });
 });
 
