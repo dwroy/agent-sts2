@@ -140,6 +140,10 @@ interface Sim {
   flat: number;
   /** Resource cost of potions used this turn (not scaled like lasting value). */
   potionCost: number;
+  /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
+  tempDex: number;
+  /** Buffer stacks gained this turn: each negates one enemy hit. */
+  buffer: number;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -242,7 +246,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0) gainBlock(next, card.block, player);
+  if (card.block > 0) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
+  if (card.special === "temp_dex") next.tempDex += 5;
+  if (card.special === "buffer") next.buffer += 1;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
   if (card.special === "triple_block") {
     next.blockGained += next.block * 2;
@@ -376,7 +382,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const heldPenalty =
     sim.hand.reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0) +
     input.hand.filter((card) => !card.playable).reduce((sum, card) => sum + (card.heldPenalty ?? 0), 0);
-  const incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
+  let incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
+  if (sim.buffer > 0 && !winsFight) {
+    // Buffer negates whole hits: approximate by removing the biggest ones.
+    const hits = sim.enemies
+      .filter((enemy) => enemy.alive)
+      .flatMap((enemy) => enemy.attacks.flatMap((attack) => Array.from({ length: attack.hits }, () => attack.damage + enemy.strengthDelta)))
+      .sort((a, b) => b - a);
+    incomingRaw = Math.max(0, incomingRaw - hits.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
+  }
   const incomingAfterBlock = Math.max(0, incomingRaw - sim.block - (input.player.endTurnBlock ?? 0));
   const selfLoss = input.player.hp - sim.hp;
   const hpLoss = selfLoss + incomingAfterBlock;
@@ -448,7 +462,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -477,6 +491,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     weakApplied: 0,
     flat: 0,
     potionCost: 0,
+    tempDex: 0,
+    buffer: 0,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,

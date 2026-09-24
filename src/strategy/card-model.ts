@@ -48,7 +48,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -237,6 +237,8 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   WEAK_POTION: { target: "single", weak: 3 },
   FEAR_POTION: { target: "single", vulnerable: 3 },
   FORTIFIER: { target: "self", special: "triple_block" },
+  SPEED_POTION: { target: "self", special: "temp_dex" }, // +5 Dexterity this turn (STS1 value, estimate)
+  LUCKY_TONIC: { target: "self", special: "buffer" }, // Buffer 1: the next HP loss is prevented
   VULNERABLE_POTION: { target: "single", vulnerable: 3 }, // STS2 id (FEAR_POTION is the STS1 name)
   POTION_OF_BINDING: { target: "all", weak: 1, vulnerable: 1 },
   SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
