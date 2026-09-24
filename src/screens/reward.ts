@@ -63,14 +63,29 @@ export function planReward(env: DecisionEnv): Decision | null {
       summary: { card: "skip", code_value: SKIP_BAR, note: "take nothing; the deck stays lean" } satisfies JsonValue,
     });
 
+    // Phase 2: a card code values below the skip bar is not offered to the model at all. Say so when
+    // that leaves only the skip, instead of the pick helper's "only one legal option".
+    const shown = env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR);
+    if (shown.length === 1 && options.length > 1) {
+      const values = options
+        .filter((option) => option.key !== "skip")
+        .map((option) => `${option.label} ${option.score}`)
+        .join(", ");
+      return {
+        kind: "act",
+        label: "reward/card",
+        intent: { action: "skip_reward_cards" },
+        rationale: `all offers below skip bar ${SKIP_BAR} (${values})`,
+      };
+    }
+
     return buildPickDecision({
       label: "reward/card",
       instructions: "Which of these card rewards should I take, if any?",
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
       escalateBelow: 0.45,
-      // Phase 2: a card code values below the skip bar is not offered to the model at all.
-      options: env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR),
+      options: shown,
       codeMargin: env.combatPlanner === "card" ? undefined : 6,
       maxModelOptions: 3,
       state: {

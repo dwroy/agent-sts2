@@ -286,6 +286,20 @@ describe("reward", () => {
     expect(decision.resolve(pickAnswer("skip")).intent).toEqual({ action: "skip_reward_cards" });
   });
 
+  it("says the offers were below the skip bar instead of 'only one legal option' (0NG Act 2)", () => {
+    const raw = rewardCardPayload();
+    const reward = raw["reward"] as Record<string, unknown>;
+    reward["card_options"] = [
+      { index: 0, card_id: "HAVOC", name: "Havoc", upgraded: false, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
+      { index: 1, card_id: "TANK", name: "Tank", upgraded: false, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
+    ];
+    const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+    expect(decision.kind).toBe("act");
+    if (decision.kind !== "act") return;
+    expect(decision.intent).toEqual({ action: "skip_reward_cards" });
+    expect(decision.rationale).toMatch(/^all offers below skip bar 50 \(Havoc .*\d+, Tank .*\d+\)$/);
+  });
+
   it("claims non-card rewards in code", () => {
     const decision = mustDecision(plan(rewardClaimPayload()));
     expect(decision.kind).toBe("act");

@@ -46,7 +46,9 @@ const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "W
 
 /**
  * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 173 HP, so
- * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 230 HP.
+ * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 230 HP;
+ * Waterfall Giant explodes for its Steam Eruption stacks (15, +3 a turn), so block and a fast kill;
+ * Knowledge Demon has 379 HP and heals, so Strength/scaling. `bossId` is the current act's boss.
  */
 function bossBonus(cardId: string, bossId: string): { bonus: number; why: string | null } {
   const boss = bossId.toUpperCase();
@@ -56,6 +58,13 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   }
   if (boss.includes("KIN")) {
     if (AOE.has(cardId)) return { bonus: 10, why: "AoE for the Kin followers" };
+  }
+  if (boss.includes("WATERFALL_GIANT")) {
+    if (BLOCK.has(cardId)) return { bonus: 6, why: "block for the Waterfall Giant's explosion" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "a fast kill before the Giant's eruption stacks" };
+  }
+  if (boss.includes("KNOWLEDGE_DEMON")) {
+    if (SCALING.has(cardId)) return { bonus: 6, why: "Strength/scaling for the Knowledge Demon's 379 HP" };
   }
   if (boss.includes("CEREMONIAL") || boss.includes("BEAST")) {
     if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Beast's 230 HP" };
@@ -160,9 +169,10 @@ export function cardValue(
     value -= penalty;
     reasons.push(`already have ${copies}`);
   }
-  // Bloat: past 18 cards a middling card makes the good ones rarer.
-  if (deck.size > 18 && value < 70) {
-    value -= Math.min(15, (deck.size - 18) * 1.5);
+  // Bloat: past 22 cards a middling card makes the good ones rarer. (The guide targets 20–28 cards;
+  // starting at 18 pushed every Act 2 offer under SKIP_BAR and 0NG took no card in Act 2.)
+  if (deck.size > 22 && value < 70) {
+    value -= Math.min(15, (deck.size - 22) * 1.5);
     reasons.push(`deck is ${deck.size} cards`);
   }
   return { value: Math.round(value), reasons };
