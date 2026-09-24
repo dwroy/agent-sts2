@@ -86,6 +86,8 @@ export interface PlayerSim {
   surrounded?: boolean;
   /** Index of the enemy we currently face (last targeted), when known. */
   facing?: number | null;
+  /** Colossus already played this turn. */
+  colossus?: boolean;
 }
 
 export interface SolverInput {
@@ -166,6 +168,8 @@ interface Sim {
   rupture: number;
   /** Enemy index we face after this turn's targeted plays (Surrounded). */
   facing: number | null;
+  /** Colossus: damage from Vulnerable enemies is halved this turn. */
+  colossus: boolean;
   /** Cards played this turn so far (for Slow). */
   played: number;
   drawScore: number;
@@ -294,6 +298,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
   if (card.special === "rupture") next.rupture += 1;
+  if (card.special === "colossus") next.colossus = true;
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -391,6 +396,7 @@ function incoming(sim: Sim, player: PlayerSim): number {
         if (player.vulnerable) amount = Math.floor(amount * 1.5);
         // Surrounded: unknown facing counts as "behind" for everyone (the safe assumption).
         if (player.surrounded && sim.facing !== enemy.index) amount = Math.floor(amount * 1.5);
+        if (sim.colossus && enemy.vulnerable > 0) amount = Math.floor(amount * 0.5);
         if (player.intangible) amount = Math.min(amount, 1);
         total += Math.max(0, amount);
       }
@@ -526,7 +532,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.played}#${sim.drawScore}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}`;
 }
 
 export interface SolveResult {
@@ -561,6 +567,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     retaliate: 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
+    colossus: (input.player.colossus ?? false),
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,

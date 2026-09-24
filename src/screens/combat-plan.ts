@@ -208,6 +208,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? null,
+    colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
   };
   const kind = fightKind(combat, env);
 
