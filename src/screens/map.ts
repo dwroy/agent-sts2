@@ -15,6 +15,8 @@ interface MapNode {
   col: number;
   type: string;
   children: { row: number; col: number }[];
+  parents?: { row: number; col: number }[];
+  visited?: boolean;
 }
 
 const key = (row: number, col: number): string => `${row},${col}`;
@@ -29,6 +31,20 @@ function hpPercent(env: DecisionEnv): number {
 interface RouteState {
   hp: number;
   gold: number;
+  /** Hallway/elite fights in a row so far, with no rest, shop or "?" between them. */
+  fights: number;
+}
+
+/**
+ * A chain of hallway fights with no rest, shop or "?" between them is what killed QE4K, XJWF (both at
+ * F22 after four forced Act 2 fights, 80/80 -> 18 and 92 -> 41) and MD3F (five in Act 3, 87 -> 16);
+ * every time the fork before it had a route with a RestSite, Shop or Unknown. The 3rd fight in a row
+ * and every one after it costs this much, up to twice as much as projected HP falls below 60%.
+ */
+export const FIGHT_CHAIN_PENALTY = 1.5;
+export function fightChainPenalty(fightsBefore: number, hpOnArrival: number): number {
+  if (fightsBefore < 2) return 0;
+  return FIGHT_CHAIN_PENALTY * (1 + Math.min(1, Math.max(0, 0.6 - hpOnArrival) / 0.3));
 }
 
 /**
@@ -97,12 +113,15 @@ function stateAfter(type: string, at: RouteState, act: number): RouteState {
   switch (type) {
     case "Monster":
     case "Elite":
-      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + (FIGHT_GOLD[type] ?? 0) };
+      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + (FIGHT_GOLD[type] ?? 0), fights: at.fights + 1 };
     case "RestSite":
     case "Rest":
-      return { hp: Math.min(1, at.hp + REST_HEAL), gold: at.gold };
+      return { hp: Math.min(1, at.hp + REST_HEAL), gold: at.gold, fights: 0 };
     case "Shop":
-      return { hp: at.hp, gold: Math.min(at.gold, GOLD_AFTER_SHOP) };
+      return { hp: at.hp, gold: Math.min(at.gold, GOLD_AFTER_SHOP), fights: 0 };
+    case "Unknown":
+    case "Event":
+      return { ...at, fights: 0 };
     default:
       return at;
   }
@@ -113,7 +132,7 @@ type Weights = (type: string, at: RouteState) => number;
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
 function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>): number {
   const left = stateAfter(node.type, at, act);
-  const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}`;
+  const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}`;
   const cached = memo.get(nodeKey);
   if (cached !== undefined) return cached;
   // Children can all be negative (forced fights at low HP): the best of them, not 0.
@@ -153,6 +172,18 @@ function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNod
   return types.join(" -> ");
 }
 
+/** Fights in a row that end at the current node, walking back through visited parents. */
+function fightsSoFar(nodes: Map<string, MapNode>, current: unknown): number {
+  const at = asRecord(current);
+  let node = at["row"] === undefined ? undefined : nodes.get(key(num(at["row"]), num(at["col"])));
+  let fights = 0;
+  while (node && (node.type === "Monster" || node.type === "Elite" || node.type === "Treasure")) {
+    if (node.type !== "Treasure") fights += 1;
+    node = (node.parents ?? []).map((parent) => nodes.get(key(parent.row, parent.col))).find((parent) => parent?.visited);
+  }
+  return fights;
+}
+
 export function planMap(env: DecisionEnv): Decision | null {
   const { state } = env;
   if (state.session.mode !== "singleplayer" && state.session.mode !== "multiplayer") return null;
@@ -174,6 +205,8 @@ export function planMap(env: DecisionEnv): Decision | null {
       col,
       type: str(raw["node_type"], "Unknown"),
       children: asArray(raw["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
+      parents: asArray(raw["parents"]).map(asRecord).map((parent) => ({ row: num(parent["row"]), col: num(parent["col"]) })),
+      visited: raw["visited"] === true,
     });
   }
 
@@ -182,8 +215,9 @@ export function planMap(env: DecisionEnv): Decision | null {
   const floor = state.run?.floor ?? 1;
   const floorInAct = ((floor - 1) % 17) + 1;
   const act = Math.floor((floor - 1) / 17) + 1;
-  const weightOf: Weights = (type, at) => nodeWeight(type, at.hp, at.gold, floorInAct);
-  const start: RouteState = { hp: hpPct, gold };
+  const weightOf: Weights = (type, at) =>
+    nodeWeight(type, at.hp, at.gold, floorInAct) - (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0);
+  const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   const options: PickOption[] = available.flatMap((node) => {
     const index = numOrNull(node["index"]);

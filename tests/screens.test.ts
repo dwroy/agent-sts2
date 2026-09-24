@@ -299,6 +299,61 @@ describe("map", () => {
     expect(value("n1")).toBeLessThan(0);
   });
 
+  it("avoids a 3rd+ hallway fight in a row when the fork had a rest (QE4K/XJWF F18, MD3F F34)", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 18; // Act 2, full HP
+    run["current_hp"] = run["max_hp"];
+    const map = raw["map"] as Record<string, unknown>;
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    map["current_node"] = { row: 0, col: 3 };
+    map["available_nodes"] = [
+      { index: 0, row: 1, col: 1, node_type: "Monster" },
+      { index: 1, row: 1, col: 5, node_type: "Monster" },
+    ];
+    map["nodes"] = [
+      { ...node(0, 3, "Ancient", [{ row: 1, col: 1 }, { row: 1, col: 5 }]), visited: true },
+      node(1, 1, "Monster", [{ row: 2, col: 1 }]),
+      node(2, 1, "Monster", [{ row: 3, col: 1 }]),
+      node(3, 1, "Monster", [{ row: 4, col: 1 }]),
+      node(4, 1, "Monster"),
+      node(1, 5, "Monster", [{ row: 2, col: 5 }]),
+      node(2, 5, "RestSite", [{ row: 3, col: 5 }]),
+      node(3, 5, "Monster", [{ row: 4, col: 5 }]),
+      node(4, 5, "Monster"),
+    ];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
+    // Four fights (4 x 1.2) used to edge out fight -> rest -> fight -> fight (4.6).
+    expect(value("n1")).toBeGreaterThan(value("n0"));
+  });
+
+  it("counts fights already walked into the chain", () => {
+    const raw = mapPayload();
+    const map = raw["map"] as Record<string, unknown>;
+    const nodes = map["nodes"] as Record<string, unknown>[];
+    // Current Monster (4,2) came from a visited Monster (3,2): the next Monster is the 3rd in a row.
+    nodes[0]!["parents"] = [{ row: 3, col: 2 }];
+    nodes.push({ row: 3, col: 2, node_type: "Monster", visited: true, parents: [], children: [{ row: 4, col: 2 }] });
+    const valueOf = (payload: typeof raw): number => {
+      const decision = mustDecision(plan(payload));
+      if (decision.kind !== "ask") throw new Error("expected an ask");
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.parse(String(criteria["n1"]))["route_value"];
+    };
+    expect(valueOf(raw)).toBeLessThan(valueOf(mapPayload()) - 1.4);
+  });
+
+  it("charges the fight-chain penalty from the 3rd fight, more below 60% HP", async () => {
+    const { fightChainPenalty } = await import("../src/screens/map.js");
+    expect(fightChainPenalty(1, 0.9)).toBe(0);
+    expect(fightChainPenalty(2, 0.9)).toBe(1.5);
+    expect(fightChainPenalty(4, 0.3)).toBe(3);
+    expect(fightChainPenalty(2, 0.45)).toBeCloseTo(2.25);
+  });
+
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
     const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
     expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.14, 0.18]);
