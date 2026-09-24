@@ -474,21 +474,36 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
-  const potionCards = potionsAll
-    .map((potion) =>
-      modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0)),
-    )
-    .filter((card): card is CardModel => card !== null);
-  const solved = solveTurn({
-    hand: [...hand, ...potionCards],
-    player: playerSim,
-    enemies,
-    fightKind: kind,
-    turn: state.turn ?? 1,
-    cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
-    potionLimit,
-    raceEruption: asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1)),
-  });
+  const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
+  const solveWith = (free: boolean) =>
+    solveTurn({
+      hand: [
+        ...hand,
+        ...potionsAll
+          .map((potion) =>
+            modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0)),
+          )
+          .filter((card): card is CardModel => card !== null),
+      ],
+      player: playerSim,
+      enemies,
+      fightKind: kind,
+      turn: state.turn ?? 1,
+      cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
+      potionLimit,
+      raceEruption,
+    });
+  let solved = solveWith(false);
+  // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
+  // (7Q5G/MD3F: hallway fights at -16..-46 HP with a potion kept in the belt): even the line that
+  // keeps the most HP loses >= 30% of current HP, or leaves HP below 25% of max. Potions are free
+  // then, and unmodelled ones are offered.
+  const minLossAfter = (plans: Plan[]): number => Math.max(...plans.map((plan) => plan.outcome.hpAfter));
+  const costly =
+    solved.plans.length > 0 &&
+    playerSim.maxHp > 0 &&
+    (playerSim.hp - minLossAfter(solved.plans) >= playerSim.hp * 0.3 || minLossAfter(solved.plans) < playerSim.maxHp * 0.25);
+  if (costly && !pressed && potionsAll.some((potion) => isModelledPotion(potion.potion_id))) solved = solveWith(true);
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -550,7 +565,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
   const second = options.find((plan) => plan !== top);
   const clear = !second || top.score - second.score >= CLOSE_CALL;
-  if (clear && !((dangerous || kind === "boss" || pressed) && potions.length > 0)) {
+  if (clear && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
     commit(env, state.turn, top, hand, "code");
     const margin = second
       ? `+${(top.score - second.score).toFixed(1)} over next`
@@ -576,8 +591,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
-  // for) or when pressed at low HP.
-  const offerPotions = dangerous || kind === "boss" || pressed;
+  // for), when pressed at low HP, or when even the cheapest line costs a lot of HP.
+  const offerPotions = dangerous || kind === "boss" || pressed || costly;
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];

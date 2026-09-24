@@ -270,6 +270,42 @@ describe("map", () => {
     expect(value("n1")).toBeCloseTo(2.4);
   });
 
+  it("Act 3 at 40% HP: Monster -> Rest beats Monster -> Monster -> Monster (MD3F F34-F39)", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 38; // Act 3
+    run["current_hp"] = 32; // 40% of 80
+    const map = raw["map"] as Record<string, unknown>;
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    map["available_nodes"] = [
+      { index: 0, row: 5, col: 1, node_type: "Monster" },
+      { index: 1, row: 5, col: 3, node_type: "Monster" },
+    ];
+    map["nodes"] = [
+      node(5, 1, "Monster", [{ row: 6, col: 1 }]),
+      node(5, 3, "Monster", [{ row: 6, col: 3 }]),
+      node(6, 1, "RestSite"),
+      node(6, 3, "Monster", [{ row: 7, col: 3 }]),
+      node(7, 3, "Monster"),
+    ];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
+    expect(value("n0")).toBeGreaterThan(value("n1"));
+    // Fights reached below 35% HP are a cost, not +1.2 each.
+    expect(value("n1")).toBeLessThan(0);
+  });
+
+  it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
+    const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
+    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.14, 0.18]);
+    expect(fightHpCost("Elite", 3)).toBeCloseTo(0.36);
+    expect(monsterWeight(0.8)).toBe(1.2);
+    expect(monsterWeight(0.35)).toBeCloseTo(0);
+    expect(monsterWeight(0.2)).toBeLessThan(0);
+  });
+
   it("waits when a vote is already recorded", () => {
     const raw = mapPayload();
     (raw["map"] as Record<string, unknown>)["local_vote"] = { row: 5, col: 3 };
@@ -879,6 +915,45 @@ describe("potions at low HP outside boss fights", () => {
     };
     expect(drinks(25)).toBe(true);
     expect(drinks(55)).toBe(false);
+  });
+});
+
+describe("potions when even the cheapest line costs a lot of HP", () => {
+  // One attacker (not "pressed"), hallway fight, 22/80 HP against 8: Defend keeps 19 HP, below 25% of max.
+  const costlyCombat = (hp: number, damage: number, potionId: string): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = hp;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = enemies.map((enemy, i) => ({
+      ...enemy,
+      intents: i === 0 ? [{ index: 0, intent_type: "Attack", label: String(damage), damage, hits: 1, total_damage: damage }] : [{ index: 0, intent_type: "Buff", label: "" }],
+    }));
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = potionId;
+    return raw;
+  };
+
+  it("offers an unmodelled potion in a hallway fight when the min-loss line leaves HP below 25% (7Q5G, MD3F)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const low = planCombatTurn(env(costlyCombat(22, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(low?.label).toBe("combat/plan-choice+potion");
+    const high = planCombatTurn(env(costlyCombat(60, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(high?.label).not.toBe("combat/plan-choice+potion");
+  });
+
+  it("a modelled potion is free when the min-loss line loses 30% of current HP", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const drinks = (hp: number, damage: number): boolean => {
+      const e = env(costlyCombat(hp, damage, "FIRE_POTION"), { combatPlanner: "turn" });
+      const decision = planCombatTurn(e);
+      if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
+      const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      return String(criteria["plan1"]).includes("Fire Potion");
+    };
+    // 50 HP against 22: Defend still loses 17 (34%).
+    expect(drinks(50, 22)).toBe(true);
+    // 50 HP against 8: Defend loses 3.
+    expect(drinks(50, 8)).toBe(false);
   });
 });
 
