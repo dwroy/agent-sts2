@@ -55,8 +55,15 @@ export interface ScreenMemory {
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
    */
   turnBoard?: { turn: number | null; handLen: number; energy: number; changedAt: number };
-  /** Enemy index we last targeted (Surrounded facing). */
+  /** Enemy index we last targeted (Surrounded facing); cleared out of combat. */
   facing?: number | null;
+  /**
+   * Cards played per turn in this fight (Withering Presence counts them across turns: every 6th adds
+   * a Wither), and the Wither damage last seen in hand. Cleared out of combat.
+   */
+  fightCards?: { fight: string; perTurn: Record<string, number>; witherDamage: number };
+  /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
+  demonTongueTurn?: string;
   /**
    * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
    * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a

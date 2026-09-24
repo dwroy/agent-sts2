@@ -36,6 +36,9 @@ const MODELLED_ENEMY_POWERS = new Set([
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
   "SANDPIT_POWER", "ASLEEP_POWER", "ENRAGE_POWER", "ADAPTABLE_POWER", "NEMESIS_POWER",
+  // Surrounded's back attack is in the intents (backAttack in turn-solver.ts); left unmodelled, it cut
+  // our damage by 20% (PLC F33 T8: Twin Strike 11x2 planned as 8x2, Crusher left at 2 not 8).
+  "BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER", "WITHERING_PRESENCE_POWER", "DEMISE_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -43,13 +46,15 @@ const POWER_NOTES: Record<string, string> = {
   SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
   ASLEEP_POWER: " (asleep, no attacks: the first HP damage wakes it at once, block damage does not; set up powers instead of chipping it)",
   SLUMBER_POWER: " (sleeping, no attacks: -1 each turn and -1 per hit that takes HP; wakes at 0)",
-  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +5 Strength: kill both in the same turn or wear both down evenly)",
+  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +6 Strength: kill both in the same turn or wear both down evenly; Mercury Hourglass kills a partner left at 3 HP or less at the start of my turn)",
   // Test Subject (2WUMK6PK5QHD): three phases, 100 / 200 / 300 HP.
   ADAPTABLE_POWER: " (another phase follows: at 0 HP it spends one turn reviving (no attack), then returns at full, higher max HP with Vulnerable/Strength cleared; killing this phase does NOT end the fight, keep HP for the next one)",
   ENRAGE_POWER: " (+N Strength every time I play a Skill, raising this turn's attack too: prefer Attacks)",
   PAINFUL_STABS_POWER: " (every unblocked hit shuffles a Wound into my discard pile; Test Subject's Multi Claw gains 1 hit every turn: block it fully)",
   NEMESIS_POWER: " (gains 1 Intangible at the end of every 2nd turn)",
   INTANGIBLE_POWER: " (every hit and HP loss is reduced to 1: many small hits, not big ones)",
+  WITHERING_PRESENCE_POWER: " (every 6 cards I play, counted across turns, add an unplayable Wither to my hand: it deals its damage at the end of my turn while held, blockable, +3 each Increasing Intensity; play fewer, bigger cards)",
+  ARTIFACT_POWER: " (each stack negates one debuff: Vulnerable, Weak, Demise, Strength loss; strip it with cheap debuffs before a debuff potion)",
 };
 
 /** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
@@ -182,6 +187,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
+      demise: powerAmount(enemy, "DEMISE_POWER"),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
@@ -256,6 +262,8 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
+  if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
+  if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -288,8 +296,41 @@ function firstIntent(plan: Plan, hand: CardModel[], env?: DecisionEnv): ActionRe
   const first = plan.steps[0];
   if (!first) return { action: "end_turn" };
   const intent = intentFor(first, hand) ?? { action: "end_turn" };
-  if (env && intent.target_index !== undefined && intent.target_index !== null) env.screenMemory.facing = intent.target_index;
+  if (env) noteIntent(env, intent, intent.action === "play_card" ? cardFor(first, hand) : undefined);
   return intent;
+}
+
+/** What an action we send changes for later plans: the facing (Surrounded), a spent Demon Tongue. */
+function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | undefined): void {
+  if (intent.target_index !== undefined && intent.target_index !== null) env.screenMemory.facing = intent.target_index;
+  if (card && card.hpLoss > 0) env.screenMemory.demonTongueTurn = `${hpGuardFight(env)}:${env.state.turn}`;
+}
+
+/** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
+export const MERCURY_HOURGLASS_DAMAGE = 3;
+const WITHER_EVERY = 6;
+const WITHER_BASE_DAMAGE = 3;
+
+/**
+ * Withering Presence (Aeonglass, TQX5): cards played this fight so far (the power's amount stays 6;
+ * the count is ours, per turn from cards_played_this_turn), and the damage a new Wither will deal (the
+ * Withers seen in hand; they grow +3 each Increasing Intensity).
+ */
+export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, hand: CardModel[], playedThisTurn: number): SolverInput["wither"] {
+  const every = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((found, enemy) => found || (powerAmount(enemy, "WITHERING_PRESENCE_POWER") > 0 ? WITHER_EVERY : 0), 0);
+  if (every === 0) return undefined;
+  const fight = hpGuardFight(env);
+  if (env.screenMemory.fightCards?.fight !== fight) env.screenMemory.fightCards = { fight, perTurn: {}, witherDamage: WITHER_BASE_DAMAGE };
+  const memo = env.screenMemory.fightCards;
+  const turn = String(env.state.turn ?? "?");
+  memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
+  const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
+  if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0);
+  return { every, played, damage: memo.witherDamage };
 }
 
 /** What the hand should look like after the first step of `plan` (for the commitment check). */
@@ -416,6 +457,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")),
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
+    startTurnDamage: relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0,
+    demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
   };
   const kind = fightKind(combat, env);
 
@@ -429,6 +472,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const intent = intentFor(next, hand);
     if (intent) {
       const nextCard = cardFor(next, hand);
+      noteIntent(env, intent, nextCard);
       env.screenMemory.combatPlan =
         memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
           ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== nextCard)), handLen: hand.length - 1 }
@@ -474,6 +518,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
+  const wither = witherInput(env, combat, hand, num(player["cards_played_this_turn"]));
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
   const solveWith = (free: boolean) =>
     solveTurn({
@@ -492,6 +537,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
       potionLimit,
       raceEruption,
+      wither,
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight

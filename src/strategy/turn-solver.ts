@@ -78,6 +78,8 @@ export interface EnemySim {
   skittish?: number;
   /** Reflect: damage absorbed by its block is dealt back to the player. */
   reflect?: boolean;
+  /** Demise N: loses N HP at the end of each of its turns (Powdered Demise). */
+  demise?: number;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
   /** Painful Stabs N: every unblocked hit shuffles N Wounds into the discard pile (2WUM: 3 of 5 cards). */
@@ -135,6 +137,10 @@ export interface PlayerSim {
   startTurnHpLoss?: number;
   /** Damage back per enemy attack hit already up (Flame Barrier power, Thorns). */
   retaliate?: number;
+  /** Damage to every enemy at the start of our next turn (Mercury Hourglass: 3). */
+  startTurnDamage?: number;
+  /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
+  demonTongue?: boolean;
 }
 
 export interface SolverInput {
@@ -159,6 +165,12 @@ export interface SolverInput {
    * below the eruption" rule is off. Every turn earlier is 3 less eruption and one attack less.
    */
   raceEruption?: boolean;
+  /**
+   * Withering Presence (Aeonglass): every `every`-th card played in the fight (counted across turns)
+   * adds an unplayable Wither to the hand, dealing `damage` at the end of the turn (blockable).
+   * `played` is the fight's count so far, this turn's cards included.
+   */
+  wither?: { every: number; played: number; damage: number };
   maxNodes?: number;
 }
 
@@ -194,6 +206,10 @@ export interface Outcome {
   potionCost: number;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
+  /** Enemies left at or below the start-of-turn damage (Mercury Hourglass): dead at our next turn start. */
+  startTurnKills: string[];
+  /** Withers this plan adds to the hand (Withering Presence). */
+  withersAdded: number;
 }
 
 export interface Plan {
@@ -250,19 +266,37 @@ interface Sim {
   /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
   sweeping?: boolean;
   pendingRage?: boolean;
+  /** Gigantification: the next Attack played deals triple damage. */
+  gigantic: number;
 }
 
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak", amount: number): number {
+/**
+ * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
+ * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
+ * nothing and gives 2 energy for a Defend).
+ */
+function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
+  if (amount <= 0) return;
+  if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
+  sim.hpLostThisTurn = true;
+}
+
+/**
+ * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
+ * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
+ */
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise", amount: number): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
     return 0;
   }
   if (kind === "vulnerable") enemy.vulnerable += amount;
-  else {
+  else if (kind === "weak") {
     if (enemy.weak === 0) enemy.newlyWeak = true;
     enemy.weak += amount;
-  }
+  } else if (kind === "tempStrengthLoss") enemy.tempStrengthLoss = (enemy.tempStrengthLoss ?? 0) + amount;
+  else enemy.demise = (enemy.demise ?? 0) + amount;
   return amount;
 }
 
@@ -287,10 +321,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     if ((enemy.skittish ?? 0) > 0 && amount > 0) enemy.skittishHit = true;
     const absorbed = Math.min(enemy.block, amount);
     enemy.block -= absorbed;
-    if (enemy.reflect && absorbed > 0) {
-      sim.hp -= absorbed;
-      sim.hpLostThisTurn = true;
-    }
+    if (enemy.reflect && absorbed > 0) loseHp(sim, absorbed, player);
     let loss = amount - absorbed;
     if (loss > 0 && (enemy.slippery ?? 0) > 0) {
       loss = 1;
@@ -302,10 +333,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     enemy.lostThisTurn += loss;
     dealt += loss;
     if (loss > 0) wake(enemy);
-    if ((enemy.thorns ?? 0) > 0) {
-      sim.hp -= enemy.thorns ?? 0;
-      sim.hpLostThisTurn = true;
-    }
+    if ((enemy.thorns ?? 0) > 0) loseHp(sim, enemy.thorns ?? 0, player);
     if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
       enemy.block += enemy.curlUp ?? 0;
       enemy.curlUp = 0;
@@ -404,8 +432,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.target === "single" && targetEnemy === null) return;
 
   if (card.hpLoss > 0) {
-    next.hp -= card.hpLoss;
-    next.hpLostThisTurn = true;
+    loseHp(next, card.hpLoss, player);
     if (next.rupture > 0) {
       next.strength += next.rupture;
       next.permStrength += next.rupture;
@@ -423,6 +450,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // *earlier* cards only, which is what we simulate).
   if (card.block > 0) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
   if (card.special === "temp_dex") next.tempDex += 5;
+  if (card.special === "triple_next_attack") next.gigantic += 1;
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
@@ -439,6 +467,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
+    if (next.gigantic > 0 && card.type === "Attack") {
+      perHit *= 3;
+      next.gigantic -= 1;
+    }
 
     if (card.target === "all") {
       // Hit by hit across every enemy, as the game resolves it: a death mid-card (Crab Rage) changes
@@ -477,7 +509,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.weakApplied += applyDebuff(enemy, "weak", card.weak);
     if (card.enemyStrength > 0) enemy.strengthDelta += card.enemyStrength;
     // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
-    if ((card.enemyTempStrengthLoss ?? 0) > 0) enemy.tempStrengthLoss = (enemy.tempStrengthLoss ?? 0) + (card.enemyTempStrengthLoss ?? 0);
+    applyDebuff(enemy, "tempStrengthLoss", card.enemyTempStrengthLoss ?? 0);
+    applyDebuff(enemy, "demise", card.demise ?? 0);
   }
 
   if (card.strength > 0) {
@@ -517,6 +550,23 @@ function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): v
   if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 
+/**
+ * Surrounded: an enemy behind us hits for +50%, and the mod's intent numbers already include it for
+ * the facing at the time of the state (PLC F33: Rocket's Laser 49 behind, 33 once we attacked it). So
+ * only a change of facing this turn changes the number: turning to a shown-behind enemy takes the 1.5
+ * off, turning away from the one we faced puts it on. Unknown starting facing: the intent is taken as
+ * shown (the targeted enemy may be cheaper than that, never dearer).
+ */
+export function backAttack(shown: number, enemyIndex: number, facingBefore: number | null, facingAfter: number | null): number {
+  if (facingAfter === null || facingAfter === facingBefore) return shown;
+  if (facingBefore === null) return shown;
+  const wasBehind = facingBefore !== enemyIndex;
+  const isBehind = facingAfter !== enemyIndex;
+  if (wasBehind && !isBehind) return Math.ceil(shown / 1.5);
+  if (!wasBehind && isBehind) return Math.floor(shown * 1.5);
+  return shown;
+}
+
 interface IncomingHit {
   enemy: number;
   amount: number;
@@ -541,11 +591,10 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     for (const attack of enemy.attacks) {
       for (let hit = 0; hit < attack.hits; hit += 1) {
         if (retaliation > 0 && attackerHp <= 0) break;
-        let amount = attack.damage + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
+        const shown = player.surrounded ? backAttack(attack.damage, enemy.index, player.facing ?? null, sim.facing) : attack.damage;
+        let amount = shown + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (player.vulnerable) amount = Math.floor(amount * 1.5);
-        // Surrounded: unknown facing counts as "behind" for everyone (the safe assumption).
-        if (player.surrounded && sim.facing !== enemy.index) amount = Math.floor(amount * 1.5);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible) amount = Math.min(amount, 1);
         hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
@@ -572,6 +621,9 @@ export const BOMB_SURE = 0.8;
 export const ERUPTION_RACE_DAMAGE = 1.5;
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
 export const NEXT_PHASE_HP = 1.25;
+
+/** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
+export const DEMISE_TURNS = 3;
 
 /** Crimson Mantle's POWER_VALUE (card-model.ts), cancelled when HP is too low to afford it. */
 const MANTLE_VALUE = 16;
@@ -605,7 +657,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...input.hand.filter((card) => !card.playable)];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
-  const heldPenalty = heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0);
+  // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
+  // -3, the 6th card added a Wither and the turn cost 9).
+  const wither = input.wither;
+  const withersAdded =
+    wither && wither.every > 0
+      ? Math.floor((wither.played + sim.played - (input.cardsPlayedThisTurn ?? 0)) / wither.every) - Math.floor(wither.played / wither.every)
+      : 0;
+  const heldPenalty =
+    heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
   const hits = winsFight ? [] : incomingHits(sim, input);
   let incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   if (sim.buffer > 0 && !winsFight) {
@@ -659,6 +719,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;
+  // Mercury Hourglass hits every enemy at the start of our next turn: one left at or below it dies then
+  // (after its attack). A crab dying that way alone enrages the other just the same (PLC F33 T9: Crusher
+  // left at 2 HP, the Hourglass killed it, Rocket got 99 Block and a 41-damage Laser).
+  const startDamage = input.player.startTurnDamage ?? 0;
+  const startTurnKills = winsFight || startDamage <= 0 ? [] : living.filter((enemy) => enemy.hp <= startDamage);
+  const survivors = living.filter((enemy) => !startTurnKills.includes(enemy));
+  if (startTurnKills.some((enemy) => crabs.includes(enemy.index))) {
+    const enragedNext = survivors.filter((enemy) => enemy.crabRage).length;
+    score -= weights.hp * enragedNext * CRAB_RAGE_STRENGTH * 2;
+  }
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
@@ -742,6 +812,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const addedVulnerable = Math.max(0, enemy.vulnerable - start.vulnerable);
     const addedWeak = Math.max(0, enemy.weak - start.weak);
     score += weights.vulnerable * Math.min(addedVulnerable, 3);
+    // Demise: HP lost at the end of each of its turns, about three of them counted.
+    const addedDemise = Math.max(0, (enemy.demise ?? 0) - (start.demise ?? 0));
+    if (addedDemise > 0) score += weights.damage * Math.min(enemy.hp, addedDemise * DEMISE_TURNS);
     if (start.attacks.length > 0 || enemy.weak > 0) score += weights.weak * Math.min(addedWeak, 3);
     // Fight Me: the enemy's Strength is a lasting cost.
     score -= enemy.strengthDelta * 3;
@@ -783,14 +856,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       unknownCards: sim.unknown,
       potionCost: sim.potionCost,
       sandpitAfter,
+      startTurnKills: startTurnKills.map((enemy) => enemy.name),
+      withersAdded,
     },
   };
 }
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}`;
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}#${sim.gigantic}`;
 }
 
 export interface SolveResult {
@@ -836,6 +911,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     mantles: 0,
     enraged: 0,
     bombs: 0,
+    gigantic: 0,
   };
 
   const seen = new Set<string>();

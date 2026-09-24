@@ -442,6 +442,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (!state.in_combat) {
       screenMemory.hpGuard = undefined;
       screenMemory.potionTurn = undefined;
+      screenMemory.facing = undefined;
+      screenMemory.fightCards = undefined;
+      screenMemory.demonTongueTurn = undefined;
     }
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;

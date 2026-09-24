@@ -1,7 +1,19 @@
 import { describe, expect, it } from "vitest";
 
-import type { CardModel } from "../src/strategy/card-model.js";
-import { BOMB_SURE, distinctPlans, ERUPTION_RACE_DAMAGE, NEXT_PHASE_HP, solveTurn, weightsFor, WOUND_COST, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
+import {
+  backAttack,
+  BOMB_SURE,
+  CRAB_RAGE_STRENGTH,
+  distinctPlans,
+  ERUPTION_RACE_DAMAGE,
+  NEXT_PHASE_HP,
+  solveTurn,
+  weightsFor,
+  WOUND_COST,
+  type EnemySim,
+  type PlayerSim,
+} from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -708,5 +720,161 @@ describe("solveTurn: Slow and Skittish", () => {
     // Both hits of a multi-hit first card land in full.
     const multi = solveTurn({ hand: [thrash(0)], player: player({ hp: 50, energy: 1 }), enemies: [enemy({ hp: 30, skittish: 6 })], fightKind: "monster" });
     expect(multi.plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt).toBe(8);
+  });
+});
+
+describe("Surrounded back attack (PLC F33: the intents already include the x1.5)", () => {
+  // T4: facing Crusher, Rocket's Laser behind us shown as 49 (33 once we attacked Rocket).
+  const crusher = enemy({ index: 0, name: "Crusher", hp: 143, maxHp: 209, attacks: [] });
+  const rocket = enemy({ index: 1, name: "Rocket", hp: 135, maxHp: 199, attacks: [{ damage: 49, hits: 1 }] });
+  const hit = (index: number): CardModel => card(index, "STRIKE", { damage: 6, validTargets: [0, 1] });
+
+  it("takes the shown number as it is, and takes the 1.5 off when we turn to the attacker", () => {
+    const result = solveTurn({
+      hand: [hit(0), defend(1)],
+      player: player({ hp: 90, energy: 1, surrounded: true, facing: 0 }),
+      enemies: [crusher, rocket],
+      fightKind: "boss",
+    });
+    const blocked = result.plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "DEFEND_IRONCLAD")!;
+    expect(blocked.outcome.hpLoss).toBe(44); // 49 - 5, not 73 - 5
+    const turned = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    expect(turned.outcome.hpLoss).toBe(33);
+    const stayed = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(stayed.outcome.hpLoss).toBe(49);
+  });
+
+  it("puts the 1.5 on the enemy we turn away from", () => {
+    const facedCrusher = enemy({ index: 0, name: "Crusher", hp: 143, maxHp: 209, attacks: [{ damage: 12, hits: 1 }] });
+    const quietRocket = enemy({ index: 1, name: "Rocket", hp: 135, maxHp: 199, attacks: [] });
+    const result = solveTurn({
+      hand: [hit(0)],
+      player: player({ hp: 90, energy: 1, surrounded: true, facing: 0 }),
+      enemies: [facedCrusher, quietRocket],
+      fightKind: "boss",
+    });
+    expect(result.plans.find((plan) => plan.steps[0]?.target === 1)!.outcome.hpLoss).toBe(18);
+    expect(result.plans.find((plan) => plan.steps.length === 0)!.outcome.hpLoss).toBe(12);
+  });
+
+  it("unknown starting facing keeps the shown numbers", () => {
+    expect(backAttack(49, 1, null, 1)).toBe(49);
+    expect(backAttack(12, 0, null, 1)).toBe(12);
+    expect(backAttack(49, 1, 0, 1)).toBe(33);
+    expect(backAttack(12, 0, 0, 1)).toBe(18);
+    expect(backAttack(12, 0, 0, null)).toBe(12);
+  });
+});
+
+describe("debuffs into Artifact (TQX5 T1: Powdered Demise into Artifact 3 did nothing)", () => {
+  const demise = () => modelPotion("POWDERED_DEMISE", "Demise", 0, [0], 4)!;
+
+  it("a debuff potion blocked by Artifact is worth nothing, so it is not drunk", () => {
+    const boss = (artifact: number) => enemy({ name: "Aeonglass", hp: 512, maxHp: 512, artifact, attacks: [{ damage: 22, hits: 1 }] });
+    const blocked = solveTurn({ hand: [demise()], player: player({ hp: 69 }), enemies: [boss(3)], fightKind: "boss" });
+    expect(blocked.plans[0]!.steps).toEqual([]);
+    const open = solveTurn({ hand: [demise()], player: player({ hp: 69 }), enemies: [boss(0)], fightKind: "boss" });
+    expect(open.plans[0]!.steps.map((step) => step.cardId)).toEqual(["POTION:POWDERED_DEMISE:0"]);
+  });
+
+  it("each debuff application takes one stack: Bash strips the last one, then Demise lands", () => {
+    const bash = card(1, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
+    const result = solveTurn({
+      hand: [bash, demise()],
+      player: player({ hp: 69, energy: 2 }),
+      enemies: [enemy({ hp: 300, maxHp: 512, artifact: 1, attacks: [] })],
+      fightKind: "boss",
+    });
+    const both = result.plans.find((plan) => plan.steps.length === 2 && plan.steps[0]!.cardId === "BASH")!;
+    expect(both.outcome.enemyHpAfter[0]!.vulnerable).toBe(0);
+    expect(both.outcome.vulnerableApplied).toBe(0);
+    expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["BASH", "POTION:POWDERED_DEMISE:0"]);
+  });
+
+  it("a temporary Strength loss is a debuff too", () => {
+    const mangle = card(0, "MANGLE", { damage: 5, enemyTempStrengthLoss: 5 });
+    const result = solveTurn({
+      hand: [mangle],
+      player: player({ hp: 69 }),
+      enemies: [enemy({ hp: 300, artifact: 1, attacks: [{ damage: 20, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    expect(result.plans.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(20);
+  });
+});
+
+describe("Gigantification potion (PLC F33: kept from T1 to death)", () => {
+  it("triples the next Attack only", () => {
+    const giant = modelPotion("GIGANTIFICATION_POTION", "Gigantification", 1, [], 4)!;
+    const bludgeon = card(0, "BLUDGEON", { cost: 3, damage: 32 });
+    const result = solveTurn({ hand: [giant, bludgeon], player: player({ hp: 80, energy: 3 }), enemies: [enemy({ hp: 400, maxHp: 408 })], fightKind: "boss" });
+    const tripled = result.plans.find((plan) => plan.steps.map((step) => step.cardId).join() === "POTION:GIGANTIFICATION_POTION:1,BLUDGEON")!;
+    expect(tripled.outcome.damageDealt).toBe(96);
+    expect(result.plans[0]).toBe(tripled);
+    const late = result.plans.find((plan) => plan.steps[0]?.cardId === "BLUDGEON" && plan.steps.length === 2);
+    if (late) expect(late.outcome.damageDealt).toBe(32);
+  });
+});
+
+describe("Mercury Hourglass (PLC F33 T9: Crusher left at 2 HP died at our turn start, Rocket enraged)", () => {
+  const crusher = enemy({ index: 0, name: "Crusher", hp: 24, maxHp: 209, crabRage: true, attacks: [{ damage: 8, hits: 2 }] });
+  const rocket = enemy({ index: 1, name: "Rocket", hp: 108, maxHp: 199, crabRage: true, attacks: [] });
+  const twin = card(0, "TWIN_STRIKE", { damage: 11, hits: 2, validTargets: [0, 1] });
+
+  it("an enemy left at or below the start-of-turn damage counts as killed then, and a lone crab kill is punished", () => {
+    const withGlass = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1, startTurnDamage: 3 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const onCrusher = withGlass.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    const onRocket = withGlass.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    expect(onCrusher.outcome.startTurnKills).toEqual(["Crusher"]);
+    expect(onRocket.outcome.startTurnKills).toEqual([]);
+    expect(onRocket.score).toBeGreaterThan(onCrusher.score);
+
+    const without = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const plain = without.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(plain.outcome.startTurnKills).toEqual([]);
+    expect(plain.score - onCrusher.score).toBeCloseTo(weightsFor({ hand: [], player: player({ hp: 25 }), enemies: [], fightKind: "boss" }).hp * CRAB_RAGE_STRENGTH * 2);
+  });
+});
+
+describe("Demon Tongue (TQX5 T1: Offering+ called a -9 end turn)", () => {
+  const offering = card(0, "OFFERING", { type: "Skill", cost: 0, target: "self", validTargets: [], hpLoss: 6, energyGain: 2 });
+  const block = card(1, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 5 });
+
+  it("heals the first HP lost on our turn", () => {
+    const result = solveTurn({
+      hand: [offering, block],
+      player: player({ hp: 20, energy: 0, demonTongue: true }),
+      enemies: [enemy({ hp: 300, attacks: [{ damage: 9, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["OFFERING", "DEFEND_IRONCLAD"]);
+    expect(result.plans[0]!.outcome.hpLoss).toBe(4);
+    const spent = solveTurn({
+      hand: [offering, block],
+      player: player({ hp: 20, energy: 0 }),
+      enemies: [enemy({ hp: 300, attacks: [{ damage: 9, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    expect(spent.plans.find((plan) => plan.steps.length === 2)!.outcome.hpLoss).toBe(10);
+  });
+});
+
+describe("Withering Presence (TQX5: the 6th card of the count adds a Wither)", () => {
+  it("counts this turn's cards toward the next Wither and adds its end-of-turn damage", () => {
+    const result = solveTurn({
+      hand: [strike(0), defend(1)],
+      player: player({ hp: 47, energy: 2 }),
+      enemies: [enemy({ hp: 376, maxHp: 512, attacks: [] })],
+      fightKind: "boss",
+      cardsPlayedThisTurn: 0,
+      wither: { every: 6, played: 17, damage: 6 },
+    });
+    const one = result.plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "STRIKE_IRONCLAD")!;
+    expect(one.outcome.withersAdded).toBe(1);
+    expect(one.outcome.hpLoss).toBe(6);
+    const both = result.plans.find((plan) => plan.steps.length === 2)!;
+    expect(both.outcome.withersAdded).toBe(1);
+    expect(both.outcome.hpLoss).toBe(1);
+    expect(result.plans.find((plan) => plan.steps.length === 0)!.outcome.hpLoss).toBe(0);
   });
 });

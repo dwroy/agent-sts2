@@ -48,7 +48,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -61,6 +61,8 @@ export interface CardModel {
   retaliate?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
   delayedDamage?: number;
+  /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
+  demise?: number;
   text: string;
 }
 
@@ -269,6 +271,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   ENERGY_POTION: { target: "self", energyGain: 2 },
   SWIFT_POTION: { target: "self", draw: 3 },
   FYSH_OIL: { target: "self", strength: 1 },
+  // Debuff: Artifact negates it like any other (TQX5 T1: drunk into Artifact 3, nothing landed).
+  // Demise 9 measured (states.jsonl DEMISE_POWER amount 9).
+  POWDERED_DEMISE: { target: "single", demise: 9 },
+  // The next Attack deals triple damage (PLC F33: kept from T1 to death with Bludgeon in hand).
+  GIGANTIFICATION_POTION: { target: "self", special: "triple_next_attack" },
 };
 
 export function isModelledPotion(potionId: string): boolean {
