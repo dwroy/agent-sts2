@@ -48,8 +48,11 @@ export interface ScreenMemory {
   cardRewardSkipped: boolean;
   /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
   combatPlan: CombatPlanMemo | null;
-  /** When the current combat turn was first seen (turn-start settle guard). */
-  turnSeen?: { turn: number | null; at: number };
+  /**
+   * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
+   * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
+   */
+  turnBoard?: { turn: number | null; handLen: number; energy: number; changedAt: number };
   /** Enemy index we last targeted (Surrounded facing). */
   facing?: number | null;
 }
@@ -59,6 +62,11 @@ export interface CombatPlanMemo {
   remaining: import("../strategy/turn-solver.js").Step[];
   /** Hand signature the next step expects; any other hand means the board surprised us. */
   expectedHand: string;
+  /**
+   * Hand size the next step expects. Commitments are only made past steps that draw nothing, so a
+   * bigger hand means the turn's draw was still landing when the plan was made: replan.
+   */
+  handLen: number;
   via: "code" | "jev" | "deepseek" | "claude";
 }
 

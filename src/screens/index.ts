@@ -148,17 +148,25 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
  * Turn-start settle guard. The mod reports combat actions as ready while the game is still running
  * the start of the player's turn: on live runs the loop saw 0 energy and only the two Toxic cards an
  * enemy had just added, declared "no playable cards" and ended the turn before the real draw and
- * energy arrived — skipping whole turns (runs 4 and 5, floor 22/31, fatal). Until a card has been
- * played this turn, a board with no energy or a short hand gets up to 3 s to settle first.
+ * energy arrived — skipping whole turns (runs 4 and 5, floor 22/31, fatal).
+ *
+ * Timing from the turn-number change did not work: the number flips during the enemy turn, so by
+ * the time the draw landed the wait had long expired and ~50 turns in 4 runs were planned from a
+ * partial hand (G7EJ T9 ended a boss turn holding one Defend of five). So until a card has been
+ * played this turn, the hand size and energy must hold still for a while before they are trusted:
+ * 700 ms normally, 1.5 s for a hand under 5 cards, 3 s for no energy or a junk-only hand.
  */
 export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean {
   const combat = (env.state.raw["combat"] ?? {}) as Record<string, unknown>;
   const player = (combat["player"] ?? {}) as Record<string, unknown>;
   const turn = env.state.turn;
-  if (!env.screenMemory.turnSeen || env.screenMemory.turnSeen.turn !== turn) env.screenMemory.turnSeen = { turn, at: now };
   const played = Number(player["cards_played_this_turn"] ?? 0);
   const energy = Number(player["energy"] ?? 0);
   const hand = Array.isArray(combat["hand"]) ? (combat["hand"] as Record<string, unknown>[]) : [];
+  const seen = env.screenMemory.turnBoard;
+  if (!seen || seen.turn !== turn || seen.handLen !== hand.length || seen.energy !== energy) {
+    env.screenMemory.turnBoard = { turn, handLen: hand.length, energy, changedAt: now };
+  }
   if (played > 0) return false;
   // What the premature reads looked like: no energy yet, or a hand holding only the Status/Curse cards
   // an enemy just added (the real draw not in yet).
@@ -168,10 +176,10 @@ export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean 
       const type = env.knowledge.card(String(card["card_id"] ?? ""))?.type ?? "";
       return type === "Status" || type === "Curse";
     });
-  const elapsed = now - env.screenMemory.turnSeen.at;
-  if (energy === 0 || onlyJunk) return elapsed < 3_000;
-  // A short hand at turn start is usually the draw still animating (run 8: planned the turn from a
-  // one-card hand while four more cards were landing). Give the draw 1.5 s before trusting it.
-  if (hand.length < 5) return elapsed < 1_500;
-  return false;
+  const stableFor = now - env.screenMemory.turnBoard!.changedAt;
+  if (energy === 0 || onlyJunk) return stableFor < 3_000;
+  // A short hand is usually the draw still animating (run 8: planned the turn from a one-card hand
+  // while four more cards were landing).
+  if (hand.length < 5) return stableFor < 1_500;
+  return stableFor < 700;
 }

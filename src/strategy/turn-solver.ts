@@ -37,6 +37,13 @@ export interface EnemySim {
   slow?: boolean;
   /** Illusion: revives at full HP next turn, so killing it is only worth this turn's damage. */
   illusion?: boolean;
+  /** Reattach (Decimillipede segment): a dead segment comes back while another lives; only all dying is a kill. */
+  reattach?: boolean;
+  /**
+   * Steam Eruption stacks (Waterfall Giant): when it "dies" it explodes for this much, one turn
+   * later. HP kept above that is what wins the fight.
+   */
+  eruption?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
@@ -80,7 +87,7 @@ export interface PlayerSim {
   rupture?: number;
   /** Sloth: at most this many more cards can be played this turn. */
   maxPlays?: number | null;
-  /** Unblockable HP loss at the end of the turn (Disintegration debuff). */
+  /** Damage at the end of the turn (Disintegration debuff); it hits block first. */
   endTurnHpLoss?: number;
   /** Surrounded: attacks from enemies we are not facing deal +50%; targeting an enemy turns us to it. */
   surrounded?: boolean;
@@ -106,6 +113,8 @@ export interface SolverInput {
 export interface Step {
   cardIndex: number;
   cardId: string;
+  /** Upgrade level of the planned card: Defend and Defend+ in one hand are different plays. */
+  upgraded: boolean;
   name: string;
   target: number | null;
   targetName: string | null;
@@ -276,6 +285,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     {
       cardIndex: card.index,
       cardId: card.cardId,
+      upgraded: card.upgraded,
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
@@ -441,17 +451,32 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       .sort((a, b) => b - a);
     incomingRaw = Math.max(0, incomingRaw - hits.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
   }
-  const incomingAfterBlock = Math.max(0, incomingRaw - sim.block - (input.player.endTurnBlock ?? 0));
+  // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
+  // unchanged); what block it leaves then meets the enemy attacks.
+  const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0);
+  const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
+  const blockLeft = Math.max(0, blockAtEnd - disintegration);
+  const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
   const selfLoss = input.player.hp - sim.hp;
-  const hpLoss = selfLoss + incomingAfterBlock + (winsFight ? 0 : input.player.endTurnHpLoss ?? 0);
+  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd);
   const hpAfter = input.player.hp - hpLoss;
   const dies = hpAfter <= 0 || (input.player.gambit === true && incomingAfterBlock > 0);
 
-  const kills = sim.enemies.filter((enemy) => !enemy.alive && !enemy.illusion && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
+  // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
+  const allSegmentsDead = sim.enemies.every((enemy) => !enemy.reattach || !enemy.alive);
+  const kills = sim.enemies.filter(
+    (enemy) => !enemy.alive && !enemy.illusion && !(enemy.reattach && !allSegmentsDead) && input.enemies.find((start) => start.index === enemy.index)!.hp > 0,
+  );
   let score = 0;
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
+  // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
+  // both went into the explosion with too little HP after racing damage), so HP counts double.
+  const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
+  if (!winsFight && eruption > 0 && hpAfter < eruption - 12) score -= weights.hp * hpLoss;
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage (capped by each attacker's HP).
     let back = 0;
@@ -465,7 +490,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
     score -= punish;
   }
-  if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, sim.block - incomingRaw);
+  if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, blockLeft - incomingRaw);
   // Unkillable husks (Waterfall Giant after defeat: 999,999,999 HP, exploding next turn): damage into
   // them is worthless, only surviving the blow matters.
   const husk = sim.enemies.filter((enemy) => enemy.maxHp >= 1_000_000);

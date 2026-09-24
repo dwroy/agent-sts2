@@ -246,3 +246,53 @@ describe("Duplication potion", () => {
     expect(best.steps[0]!.cardId.startsWith("POTION:DUPLICATOR")).toBe(true);
   });
 });
+
+describe("mechanics from the 4-run review", () => {
+  it("Disintegration hits block first (DG1 T5: block 8 -> 2, HP unchanged)", () => {
+    const result = solveTurn({
+      hand: [defend(0)],
+      player: player({ hp: 30, block: 3, endTurnHpLoss: 6 }),
+      enemies: [enemy({ hp: 60, attacks: [{ damage: 5, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    const blocked = result.plans.find((plan) => plan.steps.length === 1)!;
+    // 8 block: 6 to Disintegration, 2 left against the 5 hit.
+    expect(blocked.outcome.hpLoss).toBe(3);
+    const nothing = result.plans.find((plan) => plan.steps.length === 0)!;
+    // 3 block: all to Disintegration (3 through), then the full 5.
+    expect(nothing.outcome.hpLoss).toBe(8);
+  });
+
+  it("a Decimillipede segment kill is not a kill while another segment lives (0NG F29)", () => {
+    const segment = (index: number, hp: number): EnemySim =>
+      enemy({ index, name: `seg${index}`, hp, maxHp: 25, reattach: true, attacks: [{ damage: 8, hits: 1 }] });
+    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] })];
+    const result = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 5), segment(1, 25)], fightKind: "elite" });
+    const kill = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(kill.outcome.kills).toEqual([]);
+    const allDead = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 5)], fightKind: "elite" });
+    expect(allDead.plans[0]!.outcome.winsFight).toBe(true);
+  });
+
+  it("plan steps carry the upgrade level", () => {
+    const result = solveTurn({
+      hand: [defend(0), card(1, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 8, upgraded: true })],
+      player: player({ hp: 30, energy: 1 }),
+      enemies: [enemy({ hp: 60, attacks: [{ damage: 20, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.steps).toMatchObject([{ cardId: "DEFEND_IRONCLAD", upgraded: true }]);
+  });
+
+  it("Waterfall Giant: blocks instead of racing when HP would fall under the explosion (WQTRX T5)", () => {
+    const hand = [strike(0), strike(1), defend(2), defend(3)];
+    const giant = (eruption: number): EnemySim =>
+      enemy({ name: "Waterfall Giant", hp: 150, maxHp: 240, vulnerable: 2, eruption, attacks: [{ damage: 20, hits: 1 }] });
+    const pick = (eruption: number) =>
+      solveTurn({ hand, player: player({ hp: 40, maxHp: 80, energy: 2 }), enemies: [giant(eruption)], fightKind: "boss" }).plans[0]!;
+    // No eruption to fear: two Vulnerable Strikes (18 damage) over 10 block.
+    expect(pick(0).outcome.damageDealt).toBe(18);
+    // 36 stacks: 40 - 20 = 20 HP left is under the ~27 the explosion needs, so HP counts double.
+    expect(pick(36).outcome.blockGained).toBe(10);
+  });
+});

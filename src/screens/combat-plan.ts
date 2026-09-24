@@ -34,7 +34,7 @@ const MODELLED_ENEMY_POWERS = new Set([
   "ILLUSION_POWER", "MINION_POWER", "TERRITORIAL_POWER", "PLOW_POWER", "ESCAPE_ARTIST_POWER", "PLATING_POWER",
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
-  "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER",
+  "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
 ]);
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
@@ -49,7 +49,7 @@ function powerAmount(holder: Record<string, unknown>, id: string): number {
   return 0;
 }
 
-function enemySims(combat: Record<string, unknown>): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>): EnemySim[] {
   return asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
@@ -72,11 +72,16 @@ function enemySims(combat: Record<string, unknown>): EnemySim[] {
       slow: powerAmount(enemy, "SLOW_POWER") > 0,
       illusion: powerAmount(enemy, "ILLUSION_POWER") > 0,
       minion: powerAmount(enemy, "MINION_POWER") > 0,
+      reattach: powerAmount(enemy, "REATTACH_POWER") > 0,
+      eruption: powerAmount(enemy, "STEAM_ERUPTION_POWER"),
+      // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
+      // is what lost G7EJ and WQTRX (the explosion is modelled through `eruption` instead).
       scaling:
-        asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
+        str(enemy["enemy_id"]) !== "WATERFALL_GIANT" &&
+        (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
-        powerAmount(enemy, "STRENGTH_POWER") >= 5,
+        powerAmount(enemy, "STRENGTH_POWER") >= 5),
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
@@ -132,12 +137,23 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   return summary;
 }
 
+/**
+ * The hand card a plan step means: same id and upgrade level, else the same id (0NG F17: the plan
+ * said Defend+, a plain Defend was played and the Defend+ stayed in hand — 3 HP lost).
+ */
+function cardFor(step: Step, hand: CardModel[]): CardModel | undefined {
+  return (
+    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && entry.playable) ??
+    hand.find((entry) => entry.cardId === step.cardId && entry.playable)
+  );
+}
+
 function intentFor(step: Step, hand: CardModel[]): ActionRequest | null {
   if (step.cardId.startsWith("POTION:")) {
     const slot = Number(step.cardId.split(":")[2]);
     return step.target === null ? { action: "use_potion", option_index: slot } : { action: "use_potion", option_index: slot, target_index: step.target };
   }
-  const card = hand.find((entry) => entry.cardId === step.cardId && entry.playable);
+  const card = cardFor(step, hand);
   if (!card) return null;
   if (step.target === null) return { action: "play_card", card_index: card.index };
   if (!card.validTargets.includes(step.target)) return null;
@@ -156,16 +172,15 @@ function firstIntent(plan: Plan, hand: CardModel[], env?: DecisionEnv): ActionRe
 function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  const played = hand.find((card) => card.cardId === first.cardId && card.playable);
-  return handSignature(hand.filter((card) => card !== played));
+  return handSignature(hand.filter((card) => card !== cardFor(first, hand)));
 }
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
-  const drawsOrRandom = first ? hand.find((card) => card.cardId === first.cardId)?.draw ?? 0 : 0;
+  const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
-      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), via }
+      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via }
       : null;
 }
 
@@ -213,14 +228,18 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   const kind = fightKind(combat, env);
 
   // 1. A committed plan whose board is exactly as expected: keep executing it.
+  //    A hand that grew without a drawing card played means the plan was made before the turn's draw
+  //    had landed (live runs: planned from 1–3 cards of 5): drop it and plan from the full hand.
   const memo = env.screenMemory.combatPlan;
-  if (memo && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
+  const handGrew = memo !== null && hand.length > memo.handLen;
+  if (memo && !handGrew && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
     if (intent) {
+      const nextCard = cardFor(next, hand);
       env.screenMemory.combatPlan =
-        memo.remaining.length > 1
-          ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== hand.find((entry) => entry.cardId === next.cardId && entry.playable))) }
+        memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
+          ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== nextCard)), handLen: hand.length - 1 }
           : null;
       return {
         kind: "act",

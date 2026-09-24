@@ -563,4 +563,99 @@ describe("turn-start settle guard", () => {
     expect(turnStartUnsettled(e, 1_000)).toBe(true); // 3-card hand: the draw may still be landing
     expect(turnStartUnsettled(e, 2_600)).toBe(false);
   });
+
+  it("times the wait from the last hand change, not from the turn number (G7EJ T9)", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    const hand = combat["hand"] as unknown[];
+    combat["hand"] = hand.slice(0, 1);
+    const e = env(raw, { combatPlanner: "turn" });
+    // Turn number seen during the enemy turn, one card already in: long past the old 1.5 s by now.
+    expect(turnStartUnsettled(e, 1_000)).toBe(true);
+    // The rest of the draw lands at 5 s: the clock restarts.
+    const e2 = env(combatPayload(), { combatPlanner: "turn", screenMemory: e.screenMemory });
+    expect(turnStartUnsettled(e2, 5_000)).toBe(true);
+    expect(turnStartUnsettled(e2, 6_000)).toBe(true);
+    expect(turnStartUnsettled(e2, 6_600)).toBe(false);
+  });
+
+  it("trusts a full hand after 700 ms of no change, and an energy change restarts the clock", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    const hand = combat["hand"] as Record<string, unknown>[];
+    combat["hand"] = [...hand, { ...hand[0], index: 3 }, { ...hand[1], index: 4 }];
+    const e = env(raw, { combatPlanner: "turn" });
+    expect(turnStartUnsettled(e, 1_000)).toBe(true);
+    expect(turnStartUnsettled(e, 1_750)).toBe(false);
+    (combat["player"] as Record<string, unknown>)["energy"] = 4;
+    const e2 = env(raw, { combatPlanner: "turn", screenMemory: e.screenMemory });
+    expect(turnStartUnsettled(e2, 1_800)).toBe(true);
+    expect(turnStartUnsettled(e2, 2_600)).toBe(false);
+  });
+
+  it("never waits once a card has been played this turn", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const raw = combatPayload();
+    ((raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>)["cards_played_this_turn"] = 1;
+    expect(turnStartUnsettled(env(raw, { combatPlanner: "turn" }), 1_000)).toBe(false);
+  });
+});
+
+describe("committed combat plan", () => {
+  const signature = (ids: string[]): string => [...ids].sort().join(",");
+  const step = (cardId: string, upgraded = false) => ({ cardIndex: 0, cardId, upgraded, name: cardId, target: null, targetName: null });
+
+  it("keeps playing the plan when the hand is as expected", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const e = env(combatPayload(), { combatPlanner: "turn" });
+    e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R"), step("STRIKE_R")], expectedHand: signature(["STRIKE_R", "DEFEND_R", "BASH"]), handLen: 3, via: "code" };
+    const decision = planCombatTurn(e);
+    expect(decision?.label).toBe("combat/plan-continue");
+    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("drops the plan when the hand grew since it was made (the draw was still landing)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const e = env(combatPayload(), { combatPlanner: "turn" });
+    e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R")], expectedHand: signature(["STRIKE_R", "DEFEND_R", "BASH"]), handLen: 2, via: "code" };
+    expect(planCombatTurn(e)?.label).not.toBe("combat/plan-continue");
+  });
+
+  it("plays the upgraded copy the plan named (0NG F17: Defend+ planned, Defend played)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    const hand = combat["hand"] as Record<string, unknown>[];
+    combat["hand"] = [...hand, { ...hand[1], index: 3, upgraded: true }];
+    const e = env(raw, { combatPlanner: "turn" });
+    const expected = signature(["STRIKE_R", "DEFEND_R", "BASH", "DEFEND_R+"]);
+    e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R", true)], expectedHand: expected, handLen: 4, via: "code" };
+    const decision = planCombatTurn(e);
+    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 3 });
+    // Falls back to the id alone when no copy has the planned upgrade level.
+    e.screenMemory.combatPlan = { turn: 3, remaining: [step("STRIKE_R", true), step("BASH")], expectedHand: expected, handLen: 4, via: "code" };
+    const again = planCombatTurn(e);
+    expect(again?.label).toBe("combat/plan-continue");
+    expect(again && again.kind === "act" ? again.intent : null).toMatchObject({ action: "play_card", card_index: 0 });
+  });
+});
+
+describe("Waterfall Giant modelling", () => {
+  it("is modelled (no damage discount), not scaling, and carries its eruption stacks", async () => {
+    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const [giant] = enemySims({
+      enemies: [
+        {
+          index: 0, enemy_id: "WATERFALL_GIANT", name: "Waterfall Giant", current_hp: 197, max_hp: 240, block: 0, is_alive: true,
+          powers: [{ power_id: "VULNERABLE_POWER", amount: 2 }, { power_id: "STEAM_ERUPTION_POWER", amount: 15 }],
+          intents: [{ intent_type: "Attack", damage: 20, hits: 1 }, { intent_type: "Buff" }],
+        },
+      ],
+    });
+    expect(giant!.unmodelled).toBe(false);
+    expect(giant!.scaling).toBe(false);
+    expect(giant!.eruption).toBe(15);
+  });
 });
