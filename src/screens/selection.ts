@@ -11,6 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardValue, deckProfile } from "../strategy/card-value.js";
+import { modelHandCard, type CardModel } from "../strategy/card-model.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -49,6 +50,17 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Choose a card in hand to exhaust" (Baking Gloves every turn, True Grit+, Burning Pact …): code
   // gives up the least valuable card — statuses/curses, then basics — instead of asking every turn.
   const isExhaust = kind === "combat_hand_select" && /消耗|exhaust/i.test(prompt);
+  // A card offered into the hand mid-combat (Attack/Skill/Power potions, "choose 1 of 3", Secret
+  // Weapon): it is for this turn, so what it does now counts, not its deck-building rating (7Q5G T5:
+  // DeepSeek took Bloodletting at 11 HP facing 28 as "an A-tier energy card"; 1R3C T1: Stoke).
+  const combat = asRecord(state.raw["combat"]);
+  const forThisTurn =
+    state.in_combat &&
+    !isExhaust &&
+    !kind.startsWith("combat_hand") &&
+    (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
+  const incoming = forThisTurn ? incomingDamage(combat) : 0;
+  const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
   const candidates = asArray(selection["cards"])
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
@@ -67,8 +79,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
       label: name,
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
-      score:
-        selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
+      score: forThisTurn
+        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        : selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
         (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
       summary: {
         card: name,
@@ -80,7 +93,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
     };
   });
 
-  const verb = isExhaust
+  const verb = forThisTurn
+    ? "take into my hand"
+    : isExhaust
     ? "exhaust"
     : isAdd
     ? "add"
@@ -108,7 +123,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
 
   return buildPickDecision({
     label: `selection/${verb}`,
-    instructions: `Which card should I ${verb}?`,
+    instructions: forThisTurn
+      ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
+      : `Which card should I ${verb}?`,
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     escalateBelow: 0.4,
@@ -123,6 +140,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
         task: verb,
         prompt,
         selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`,
+        ...(forThisTurn
+          ? {
+              note: "this card is only for this turn — judge its immediate effect",
+              hp: `${numOrNull(asRecord(combat["player"])["current_hp"]) ?? "?"}/${numOrNull(asRecord(combat["player"])["max_hp"]) ?? "?"}`,
+              energy: numOrNull(asRecord(combat["player"])["energy"]),
+              incoming_attack: incoming,
+            }
+          : {}),
       },
       deck: describeDeck(entries),
       candidates: options.map((option) => option.summary as JsonValue),
@@ -163,4 +188,40 @@ function selectionScore(kind: string, cardId: string, type: string): number {
     return 100 - cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   }
   return 0;
+}
+
+/** Enemy attack damage coming this turn, less the block already up. */
+function incomingDamage(combat: Record<string, unknown>): number {
+  const attacks = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce(
+      (sum, enemy) =>
+        sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0),
+      0,
+    );
+  return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
+}
+
+/**
+ * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
+ * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
+ * value, less its energy cost and HP cost.
+ */
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
+  const score =
+    damage +
+    block +
+    2.5 * Math.min(card.vulnerable, 3) +
+    1.5 * Math.min(card.weak, 3) +
+    5 * card.strength +
+    2 * card.tempStrength +
+    3 * card.draw +
+    4 * card.energyGain +
+    card.flatValue -
+    2 * Math.max(0, card.cost) -
+    card.hpLoss;
+  return Math.round(score);
 }

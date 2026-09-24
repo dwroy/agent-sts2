@@ -1031,3 +1031,51 @@ describe("combat plan guards (batch 3)", () => {
     expect(usesPotion(decide(3))).toBe(false);
   });
 });
+
+describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 HP facing 28)", () => {
+  const offered = (index: number, cardId: string, cost: number, dynamic: [string, number][]): Record<string, unknown> => ({
+    index, selected: false, card_id: cardId, name: cardId, upgraded: false, card_type: "Skill", rarity: "Uncommon", costs_x: false, star_costs_x: false,
+    energy_cost: cost, star_cost: 0, rules_text: "", resolved_rules_text: "", target_type: "Self", requires_target: false, valid_target_indices: [],
+    dynamic_values: dynamic.map(([name, value]) => ({ name, base_value: value, current_value: value })),
+  });
+  const choice = (cards: Record<string, unknown>[]): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = 11;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [{ ...enemies[0], intents: [{ index: 0, intent_type: "Attack", label: "28", damage: 28, hits: 1, total_damage: 28 }] }];
+    return { ...raw, screen: "CARD_SELECTION", available_actions: ["select_deck_card"], selection: { kind: "choose_card_select", prompt: "选择一张牌", min_select: 1, max_select: 1, selected_count: 0, can_confirm: false, cards } };
+  };
+
+  it("code takes the card that blocks the incoming attack over the deck-building pick", async () => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    const decision = planSelection(env(choice([
+      offered(0, "BLOODLETTING", 0, [["HpLoss", 3], ["Energy", 2]]),
+      offered(1, "IMPERVIOUS", 2, [["Block", 30]]),
+      offered(2, "BATTLE_TRANCE", 0, [["Cards", 3]]),
+    ]), { combatPlanner: "turn" }));
+    expect(decision?.kind).toBe("act");
+    if (decision?.kind !== "act") return;
+    expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+  });
+
+  it("a close call goes to the model with a this-turn note", async () => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    const decision = planSelection(env(choice([
+      offered(0, "SHRUG_IT_OFF", 1, [["Block", 8], ["Cards", 1]]),
+      offered(1, "TRUE_GRIT", 1, [["Block", 7]]),
+    ]), { combatPlanner: "turn" }));
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    expect(JSON.stringify(decision.questions)).toMatch(/only for this turn/);
+    expect(JSON.stringify(decision.state)).toMatch(/incoming_attack/);
+  });
+
+  it("thisTurnScore: AoE counts every enemy, block past the attack counts little", async () => {
+    const { thisTurnScore } = await import("../src/screens/selection.js");
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const aoe = modelHandCard({ index: 0, card_id: "THUNDERCLAP", energy_cost: 1, target_type: "AllEnemies", dynamic_values: [{ name: "Damage", base_value: 4, current_value: 4 }] }, 0, testKnowledge);
+    expect(thisTurnScore(aoe, 0, 3)).toBe(12 - 2);
+    const wall = modelHandCard({ index: 0, card_id: "IMPERVIOUS", energy_cost: 2, target_type: "Self", dynamic_values: [{ name: "Block", base_value: 30, current_value: 30 }] }, 0, testKnowledge);
+    expect(thisTurnScore(wall, 10, 1)).toBe(Math.round(10 + 0.3 * 20 - 4));
+  });
+});
