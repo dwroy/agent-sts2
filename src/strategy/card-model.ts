@@ -41,6 +41,8 @@ export interface CardModel {
   tempStrength: number;
   /** Strength the target enemy gains (Fight Me). */
   enemyStrength: number;
+  /** Strength the target enemy loses for this turn only (Mangle): lowers its next attack. */
+  enemyTempStrengthLoss: number;
   hpLoss: number;
   energyGain: number;
   draw: number;
@@ -131,6 +133,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   let strength = dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
   const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
+  const enemyTempStrengthLoss = dyn(card, "StrengthLoss") ?? 0;
   const special = SPECIAL[cardId] ?? null;
 
   // Ambiguous or conditional vars, by id.
@@ -206,6 +209,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     strength,
     tempStrength,
     enemyStrength,
+    enemyTempStrengthLoss,
     hpLoss,
     energyGain,
     draw,
@@ -268,6 +272,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     strength: 0,
     tempStrength: 0,
     enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
     hpLoss: 0,
     energyGain: 0,
     draw: 0,

@@ -129,7 +129,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -280,6 +280,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
     next.weakApplied += applyDebuff(enemy, "weak", card.weak);
     if (card.enemyStrength > 0) enemy.strengthDelta += card.enemyStrength;
+    // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
+    if ((card.enemyTempStrengthLoss ?? 0) > 0) enemy.tempStrengthLoss = (enemy.tempStrengthLoss ?? 0) + (card.enemyTempStrengthLoss ?? 0);
   }
 
   if (card.strength > 0) {
@@ -336,7 +338,7 @@ function incoming(sim: Sim, player: PlayerSim): number {
     if (!enemy.alive) continue;
     for (const attack of enemy.attacks) {
       for (let hit = 0; hit < attack.hits; hit += 1) {
-        let amount = attack.damage + enemy.strengthDelta;
+        let amount = attack.damage + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (player.vulnerable) amount = Math.floor(amount * 1.5);
         if (player.intangible) amount = Math.min(amount, 1);

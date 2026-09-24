@@ -24,6 +24,7 @@ function card(index: number, cardId: string, overrides: Partial<CardModel> = {})
     strength: 0,
     tempStrength: 0,
     enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
     hpLoss: 0,
     energyGain: 0,
     draw: 0,
