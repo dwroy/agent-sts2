@@ -336,6 +336,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const wasAlive = targetEnemy.alive;
       hitEnemy(next, targetEnemy, perHit, hits, player);
       if (card.special === "feed" && wasAlive && !targetEnemy.alive) next.feedKills += 1;
+      // Feed exhausts: spending it without the kill throws away this fight's max-HP gain.
+      else if (card.special === "feed") next.flat -= 8;
       if (card.special === "molten_fist" && targetEnemy.alive) targetEnemy.vulnerable *= 2;
     }
   }
