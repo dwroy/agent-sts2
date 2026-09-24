@@ -114,10 +114,15 @@ export interface PlayerSim {
   surrounded?: boolean;
   /** Index of the enemy we currently face (last targeted), when known. */
   facing?: number | null;
-  /** Colossus already played this turn. */
+  /**
+   * Colossus already up (COLOSSUS_POWER). The mod's intents already show the halved damage for
+   * enemies that were Vulnerable, so only enemies made Vulnerable this turn are halved again.
+   */
   colossus?: boolean;
   /** HP lost at the start of next turn before block (Crimson Mantle: 1 per copy in play). */
   startTurnHpLoss?: number;
+  /** Damage back per enemy attack hit already up (Flame Barrier power, Thorns). */
+  retaliate?: number;
 }
 
 export interface SolverInput {
@@ -208,7 +213,7 @@ interface Sim {
   rupture: number;
   /** Enemy index we face after this turn's targeted plays (Surrounded). */
   facing: number | null;
-  /** Colossus: damage from Vulnerable enemies is halved this turn. */
+  /** Colossus played this turn: damage from Vulnerable enemies is halved this turn. */
   colossus: boolean;
   /** Cards played this turn so far (for Slow). */
   played: number;
@@ -483,24 +488,43 @@ function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): v
   if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 
-function incoming(sim: Sim, player: PlayerSim): number {
-  let total = 0;
+interface IncomingHit {
+  enemy: number;
+  amount: number;
+}
+
+/**
+ * The enemy turn's attack hits in order. Retaliation (Flame Barrier, Thorns) lands on every hit, and
+ * an attacker it kills stops mid-sequence (2WUM T8: 10x8 into a 29 HP boss with Flame Barrier 6, it
+ * died on the 5th hit and we took 20, while the solver counted all 80 and called every line lethal).
+ */
+function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
+  const player = input.player;
+  const hits: IncomingHit[] = [];
   for (const enemy of sim.enemies) {
     if (!enemy.alive) continue;
+    const start = input.enemies.find((entry) => entry.index === enemy.index);
+    // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
+    // already halved, except for enemies that only became Vulnerable this turn.
+    const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
+    const retaliation = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
+    let attackerHp = enemy.hp;
     for (const attack of enemy.attacks) {
       for (let hit = 0; hit < attack.hits; hit += 1) {
+        if (retaliation > 0 && attackerHp <= 0) break;
         let amount = attack.damage + enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (player.vulnerable) amount = Math.floor(amount * 1.5);
         // Surrounded: unknown facing counts as "behind" for everyone (the safe assumption).
         if (player.surrounded && sim.facing !== enemy.index) amount = Math.floor(amount * 1.5);
-        if (sim.colossus && enemy.vulnerable > 0) amount = Math.floor(amount * 0.5);
+        if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible) amount = Math.min(amount, 1);
-        total += Math.max(0, amount);
+        hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
+        attackerHp -= retaliation;
       }
     }
   }
-  return total;
+  return hits;
 }
 
 /** Damage this turn that is worth waking a sleeper for (fraction of its HP). */
@@ -510,6 +534,7 @@ export const SLEEP_BIG_HIT = 0.25;
 export function sleepTurnDamage(enemy: EnemySim): number {
   return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
+
 
 /** Crimson Mantle's POWER_VALUE (card-model.ts), cancelled when HP is too low to afford it. */
 const MANTLE_VALUE = 16;
@@ -540,14 +565,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const heldCards = [...sim.hand, ...input.hand.filter((card) => !card.playable)];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
   const heldPenalty = heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0);
-  let incomingRaw = winsFight ? 0 : incoming(sim, input.player) + heldPenalty;
+  const hits = winsFight ? [] : incomingHits(sim, input);
+  let incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   if (sim.buffer > 0 && !winsFight) {
     // Buffer negates whole hits: approximate by removing the biggest ones.
-    const hits = sim.enemies
-      .filter((enemy) => enemy.alive)
-      .flatMap((enemy) => enemy.attacks.flatMap((attack) => Array.from({ length: attack.hits }, () => attack.damage + enemy.strengthDelta)))
-      .sort((a, b) => b - a);
-    incomingRaw = Math.max(0, incomingRaw - hits.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
+    const biggest = hits.map((hit) => hit.amount).sort((a, b) => b - a);
+    incomingRaw = Math.max(0, incomingRaw - biggest.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
   }
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
@@ -601,11 +624,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12) score -= weights.hp * hpLoss;
   if (sim.retaliate > 0 && !winsFight) {
-    // Retaliation lands during the enemy turn: count it as damage (capped by each attacker's HP).
+    // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
+    // kills stops attacking), capped by the attacker's HP.
     let back = 0;
     for (const enemy of living) {
-      const hits = enemy.attacks.reduce((sum, attack) => sum + attack.hits, 0);
-      back += Math.min(enemy.hp, hits * sim.retaliate);
+      const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
+      back += Math.min(enemy.hp, landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
     }
     score += weights.damage * back;
   }
@@ -742,10 +766,11 @@ export function solveTurn(input: SolverInput): SolveResult {
     tempDex: 0,
     buffer: 0,
     duplicate: 0,
-    retaliate: 0,
+    retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
-    colossus: (input.player.colossus ?? false),
+    // A Colossus already up is in the intents (2WUM T7: 10x7 shown as 5x7, then halved again to 2x7).
+    colossus: false,
     played: input.cardsPlayedThisTurn ?? 0,
     drawScore: 0,
     cardsDrawn: 0,

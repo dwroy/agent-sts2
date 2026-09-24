@@ -515,3 +515,80 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
     expect(result.plans[0]!.outcome.enemyHpAfter[0]!.hp).toBeLessThan(222);
   });
 });
+
+describe("Colossus (2WUM T7: halved twice, ended the turn at 10 HP with 3 Defends and 1 energy)", () => {
+  const colossus = (index: number): CardModel =>
+    card(index, "COLOSSUS", { type: "Skill", target: "self", validTargets: [], block: 4, special: "colossus" });
+  const clawing = (overrides: Partial<EnemySim> = {}): EnemySim =>
+    enemy({ name: "Test Subject", hp: 34, maxHp: 200, vulnerable: 2, attacks: [{ damage: 5, hits: 7 }], ...overrides });
+
+  it("an intent shown with Colossus up is already halved: not halved again", () => {
+    const result = solveTurn({
+      hand: [defend(0), defend(1), defend(2)],
+      player: player({ hp: 10, maxHp: 80, block: 19, energy: 1, colossus: true }),
+      enemies: [clawing()],
+      fightKind: "boss",
+    });
+    const endNow = result.plans.find((plan) => plan.steps.length === 0)!;
+    expect(endNow.outcome.incomingAfterBlock).toBe(35 - 19);
+    expect(endNow.outcome.dies).toBe(true);
+    // Every line dies, but the one that keeps the most HP plays the Defend.
+    const leastLoss = result.plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+    expect(leastLoss.steps.map((step) => step.cardId)).toEqual(["DEFEND_IRONCLAD"]);
+  });
+
+  it("Colossus played this turn halves a Vulnerable attacker's intent", () => {
+    const result = solveTurn({ hand: [colossus(0)], player: player({ hp: 50, energy: 1 }), enemies: [clawing({ attacks: [{ damage: 10, hits: 7 }] })], fightKind: "boss" });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.incomingAfterBlock).toBe(35 - 4);
+  });
+
+  it("Colossus already up: an enemy made Vulnerable this turn is halved (its intent was not)", () => {
+    const bash = card(0, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
+    const result = solveTurn({
+      hand: [bash],
+      player: player({ hp: 50, energy: 2, colossus: true }),
+      enemies: [clawing({ hp: 100, vulnerable: 0, attacks: [{ damage: 10, hits: 2 }] })],
+      fightKind: "boss",
+    });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.incomingAfterBlock).toBe(10);
+    expect(result.plans.find((plan) => plan.steps.length === 0)!.outcome.incomingAfterBlock).toBe(20);
+  });
+});
+
+describe("retaliation stops a multi-hit attacker it kills (2WUM T8: 10x8 into a 29 HP boss, Flame Barrier 6)", () => {
+  const flameBarrier = (index: number): CardModel =>
+    card(index, "FLAME_BARRIER", { type: "Skill", target: "self", validTargets: [], cost: 2, block: 16, retaliate: 6 });
+
+  it("Flame Barrier already up: the boss dies on the 5th hit, 50 lands on 30 block", () => {
+    const result = solveTurn({
+      hand: [],
+      player: player({ hp: 30, block: 30, energy: 0, retaliate: 6 }),
+      enemies: [enemy({ name: "Test Subject", hp: 29, maxHp: 200, attacks: [{ damage: 10, hits: 8 }] })],
+      fightKind: "boss",
+    });
+    const endNow = result.plans[0]!;
+    expect(endNow.outcome.hpLoss).toBe(20);
+    expect(endNow.outcome.dies).toBe(false);
+  });
+
+  it("Flame Barrier played this turn is counted the same way", () => {
+    const result = solveTurn({
+      hand: [flameBarrier(0)],
+      player: player({ hp: 30, block: 14, energy: 2 }),
+      enemies: [enemy({ name: "Test Subject", hp: 29, maxHp: 200, attacks: [{ damage: 10, hits: 8 }] })],
+      fightKind: "boss",
+    });
+    const best = result.plans[0]!;
+    expect(best.steps.map((step) => step.cardId)).toEqual(["FLAME_BARRIER"]);
+    expect(best.outcome.hpLoss).toBe(50 - 30);
+    // Without the cut-off all 8 hits would land: 80 - 30 = 50, dead.
+    expect(best.outcome.dies).toBe(false);
+  });
+
+  it("no retaliation: every hit lands", () => {
+    const result = solveTurn({ hand: [], player: player({ hp: 100, block: 30, energy: 0 }), enemies: [enemy({ hp: 29, attacks: [{ damage: 10, hits: 8 }] })], fightKind: "boss" });
+    expect(result.plans[0]!.outcome.hpLoss).toBe(50);
+  });
+});

@@ -354,6 +354,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     facing: env.screenMemory.facing ?? null,
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")),
+    retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
   };
   const kind = fightKind(combat, env);
 
@@ -469,6 +470,22 @@ function planTurn(env: DecisionEnv): Decision | null {
   // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
   // "only line" while the one option shown was the same turn with Defend+ (hp -20). Play what is shown.
   const top = options.includes(best) ? best : options[0] ?? best;
+  // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
+  // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
+  // end the turn on the solver's word then; play the line that keeps the most HP.
+  if (modSaysLethal && top.steps.length === 0) {
+    const played = surviving.filter((plan) => plan.steps.length > 0);
+    if (played.length > 0) {
+      const safest = played.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter || (b.outcome.hpAfter === a.outcome.hpAfter && b.outcome.blockGained > a.outcome.blockGained) ? b : a));
+      commit(env, state.turn, safest, hand, "code");
+      return {
+        kind: "act",
+        label: "combat/mod-lethal",
+        intent: firstIntent(safest, hand, env),
+        rationale: `mod says ending the turn is lethal, solver disagrees; not ending it: ${safest.steps.map(stepText).join(", ")}${calcNote}`,
+      };
+    }
+  }
   const second = options.find((plan) => plan !== top);
   const clear = !second || top.score - second.score >= CLOSE_CALL;
   if (clear && !((dangerous || kind === "boss" || pressed) && potions.length > 0)) {
