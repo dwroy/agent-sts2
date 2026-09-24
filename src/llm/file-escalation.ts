@@ -24,6 +24,7 @@ export interface EscalationAnswer {
   /** DeepSeek only: which strategy guide version was in the prompt. */
   guideId?: string;
   reasoningTokens?: number;
+  effort?: string;
 }
 
 export interface Escalator {

@@ -22,6 +22,8 @@ export interface DeepSeekConfig {
   guideFile?: string;
   /** Thinking mode: "max" | "high" | "low" enables it at that effort; "" or "off" disables it. */
   reasoningEffort?: string;
+  /** Effort for combat questions (label "combat/..."), whose numbers code has already computed; defaults to reasoningEffort. */
+  combatReasoningEffort?: string;
   /** JSONL file receiving each call's full chain of thought (for later review); "" disables. */
   reasoningLog?: string;
 }
@@ -36,6 +38,8 @@ export interface DeepSeekAnswer {
   /** Short hash of the guide in the prompt ("" when none), so logs show which guide version answered. */
   guideId?: string;
   reasoningTokens?: number;
+  /** Thinking effort actually used for this call ("off" when thinking was disabled). */
+  effort?: string;
 }
 
 const SYSTEM = [
@@ -43,6 +47,9 @@ const SYSTEM = [
   "You get the game state and one question with a fixed set of option keys. Code has already computed",
   "every number shown (damage, block, HP after the enemy turn); trust those numbers.",
   "Think about winning the whole run, not just this screen. Be decisive.",
+  "Do NOT recompute damage, block or HP arithmetic: the numbers in the options are exact (they already include",
+  "strength, vulnerable, weak, block and enemy intents). Compare the options on their differences, weigh the few",
+  "things code cannot see (future turns, deck plan, potion value), decide, and stop. Do not second-guess a decision once made.",
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
 ].join(" ");
 
@@ -50,12 +57,10 @@ export class DeepSeekClient implements Escalator {
   readonly name = "deepseek" as const;
 
   private readonly system: string;
-  private readonly thinking: boolean;
   readonly guideId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
     const guide = config.guideFile && existsSync(config.guideFile) ? readFileSync(config.guideFile, "utf8").trim() : "";
-    this.thinking = Boolean(config.reasoningEffort) && config.reasoningEffort !== "off";
     this.guideId = guide ? createHash("sha256").update(guide).digest("hex").slice(0, 8) : "";
     this.system = guide ? `${SYSTEM}\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}` : SYSTEM;
   }
@@ -67,6 +72,9 @@ export class DeepSeekClient implements Escalator {
     _context: Record<string, JsonValue> = {},
   ): Promise<DeepSeekAnswer> {
     const started = Date.now();
+    const label = typeof _context["label"] === "string" ? _context["label"] : "";
+    const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
+    const thinking = effort !== "off";
     const user = JSON.stringify({ state, question: instructions, options: criteria });
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.config.timeoutMs);
@@ -76,8 +84,8 @@ export class DeepSeekClient implements Escalator {
         headers: { "content-type": "application/json", authorization: `Bearer ${this.config.apiKey}` },
         body: JSON.stringify({
           model: this.config.model,
-          ...(this.thinking
-            ? { thinking: { type: "enabled" }, reasoning_effort: this.config.reasoningEffort }
+          ...(thinking
+            ? { thinking: { type: "enabled" }, reasoning_effort: effort }
             : { thinking: { type: "disabled" }, temperature: 0 }),
           response_format: { type: "json_object" },
           messages: [
@@ -108,7 +116,7 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
       }
       const choice = typeof parsed.choice === "string" ? parsed.choice.trim() : "";
-      this.logReasoning(instructions, criteria, choice, parsed.reason, payload.choices?.[0]?.message?.reasoning_content ?? "", Date.now() - started);
+      this.logReasoning(label, effort, instructions, criteria, choice, parsed.reason, payload.choices?.[0]?.message?.reasoning_content ?? "", Date.now() - started);
       if (!(choice in criteria)) throw new Error(`DeepSeek chose unknown option "${choice}"`);
       return {
         choice,
@@ -119,17 +127,18 @@ export class DeepSeekClient implements Escalator {
         cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
         guideId: this.guideId,
         reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+        effort,
       };
     } finally {
       clearTimeout(timer);
     }
   }
 
-  private logReasoning(question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number): void {
+  private logReasoning(label: string, effort: string, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number): void {
     if (!this.config.reasoningLog) return;
     try {
       mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
-      const entry = { ts: new Date().toISOString(), model: this.config.model, effort: this.thinking ? this.config.reasoningEffort : "off", guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
