@@ -276,9 +276,21 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
       ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
-  // 2. Nothing survives: the solver has no good answer. Let the per-card question (with potions)
-  //    handle it.
-  if (best.outcome.dies) return planCombatPerCard(env);
+  // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
+  //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
+  //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
+  if (best.outcome.dies) {
+    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
+    if (potionsNow.length > 0) return planCombatPerCard(env);
+    const leastLoss = solved.plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+    commit(env, state.turn, leastLoss, hand, "code");
+    return {
+      kind: "act",
+      label: "combat/least-loss",
+      intent: firstIntent(leastLoss, hand, env),
+      rationale: `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
+    };
+  }
 
   const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id));
   const dangerous =
