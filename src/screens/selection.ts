@@ -32,6 +32,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   if (selected >= max) return null; // the mod usually closes the screen itself; wait for it
 
   const isUpgrade = kind === "deck_upgrade_select";
+  // The mod reports "pick cards to ADD to the deck" (events) with the same kind as removal; only the
+  // prompt tells them apart. Scoring it as a removal picked the worst cards on a live run.
+  const isAdd = /加入到?你的.{0,12}牌组|add .{0,30}to your deck/i.test(prompt);
   const candidates = asArray(selection["cards"])
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
@@ -49,7 +52,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
-      score: selectionScore(kind, cardId, str(card["card_type"], info?.type ?? "")),
+      score: selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),
@@ -60,7 +63,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
     };
   });
 
-  const verb = isUpgrade
+  const verb = isAdd
+    ? "add"
+    : isUpgrade
     ? "upgrade"
     : kind === "deck_card_select"
       ? "remove"
@@ -99,6 +104,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
  * then Strikes, then Defends. Higher is better.
  */
 function selectionScore(kind: string, cardId: string, type: string): number {
+  if (kind === "deck_add_select") return cardValue(cardId, "", type, deckProfile([]), 1, 10).value;
   if (kind === "deck_upgrade_select") {
     if (cardId === "BASH") return 95;
     if (cardId.startsWith("STRIKE_") || cardId.startsWith("DEFEND_")) return 10;
