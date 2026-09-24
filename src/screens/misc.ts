@@ -130,7 +130,11 @@ export function planTimeline(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "timeline/confirm", intent: { action: "confirm_timeline_overlay" }, rationale: "closing the timeline overlay" };
   }
   if (bool(timeline["can_choose_epoch"]) && state.available_actions.includes("choose_timeline_epoch")) {
-    const slot = asArray(timeline["slots"]).map(asRecord).find((entry) => bool(entry["is_actionable"]));
+    // A slot already in state "complete" stays actionable (it re-opens for viewing); picking it again
+    // looped forever on a live run. Only open epochs that still have something to reveal.
+    const slot = asArray(timeline["slots"])
+      .map(asRecord)
+      .find((entry) => bool(entry["is_actionable"]) && str(entry["state"]) !== "complete");
     const index = slot ? numOrNull(slot["index"]) : null;
     if (index !== null) {
       return { kind: "act", label: "timeline/epoch", intent: { action: "choose_timeline_epoch", option_index: index }, rationale: "picking an obtained epoch" };
