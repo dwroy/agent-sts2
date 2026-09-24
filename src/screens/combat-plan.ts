@@ -178,7 +178,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   const hand = asArray(combat["hand"]).map((entry, index) => modelHandCard(entry, index, env.knowledge));
   // Evil Eye doubles when a card was exhausted this turn: with Baking Gloves that is every turn.
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const exhaustsEveryTurn = relicIds.some((id) => id.includes("GLOVE"));
+  const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
   for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   const enemies = enemySims(combat);
