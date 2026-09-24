@@ -254,7 +254,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   const options = distinctPlans(solved.plans.filter((plan) => !plan.outcome.dies), MAX_OPTIONS);
   const second = options[1];
   const clear = !second || best.score - second.score >= CLOSE_CALL;
-  if (clear && !(dangerous && potions.length > 0)) {
+  if (clear && !((dangerous || kind === "boss") && potions.length > 0)) {
     commit(env, state.turn, best, hand, "code");
     return {
       kind: "act",
@@ -272,7 +272,9 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify(describePlan(plan, playerSim.maxHp));
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
-  if (dangerous) {
+  // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them for).
+  const offerPotions = dangerous || kind === "boss";
+  if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
       for (const target of targets.slice(0, 2)) {
@@ -321,7 +323,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 
   return {
     kind: "ask",
-    label: dangerous && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
+    label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
