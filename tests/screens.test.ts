@@ -1677,9 +1677,9 @@ describe("ramping enemies count as scaling (6A36: Sludge Spinner, Rage +3 Streng
     intents: [{ index: 0, intent_type: "Attack", damage: 11, hits: 1 }],
   });
 
-  it("a Buff move in the move model's cycle or any Strength makes it scaling; neither does not", async () => {
+  it("any Strength makes it scaling; a Buff move elsewhere in the cycle alone does not", async () => {
     const { enemySims } = await import("../src/screens/combat-plan.js");
-    expect(enemySims({ enemies: [spinner("SLUDGE_SPINNER")] })[0]!.scaling).toBe(true);
+    expect(enemySims({ enemies: [spinner("SLUDGE_SPINNER", [{ power_id: "STRENGTH_POWER", amount: 3 }])] })[0]!.scaling).toBe(true);
     expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY", [{ power_id: "STRENGTH_POWER", amount: 3 }])] })[0]!.scaling).toBe(true);
     expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY")] })[0]!.scaling).toBe(false);
   });
