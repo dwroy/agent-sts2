@@ -100,7 +100,15 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
       children: asArray(node["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
     })),
     available: asArray(map["available_nodes"]).map(asRecord).map((node) => ({ row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") })),
+    current: mapPoint(map["current_node"]),
+    boss: mapPoint(map["boss_node"]),
+    act: state.run?.act_id ?? null,
   };
+}
+
+function mapPoint(value: unknown): { row: number; col: number } | null {
+  const point = asRecord(value);
+  return typeof point["row"] === "number" && typeof point["col"] === "number" ? { row: point["row"], col: point["col"] } : null;
 }
 
 /** Map node types a rest site shows as; events come from "Unknown" (and "Ancient") nodes. */

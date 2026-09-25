@@ -85,6 +85,11 @@ export interface RememberedMap {
   floor: number | null;
   nodes: { row: number; col: number; type: string; children: { row: number; col: number }[] }[];
   available: { row: number; col: number; type: string }[];
+  /** The node we stood on when the map was shown, and the act boss's node (run memory lookahead). */
+  current?: { row: number; col: number } | null;
+  boss?: { row: number; col: number } | null;
+  /** act_id the map belongs to: a map from the previous act says nothing about this one. */
+  act?: string | null;
 }
 
 export interface CombatPlanMemo {
