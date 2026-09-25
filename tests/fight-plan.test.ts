@@ -350,5 +350,25 @@ describe("turn planner with a fight plan", () => {
     // Defend alone blocks 5 of 14: the cheapest line loses 9; the boss bound is max(4, 10% of 55).
     expect(lost).toBeLessThanOrEqual(9 + 5.5);
   });
+
+  it("drinks an unmodelled potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
+    const raw = bossTurnOne();
+    raw["turn"] = 5;
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14x3", damage: 14, hits: 3, total_damage: 42 }];
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["requires_target"] = false;
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
+    const decision = planCombatTurn(e);
+    expect(decision?.kind).toBe("act");
+    expect(decision?.kind === "act" ? decision.intent : null).toMatchObject({ action: "use_potion", option_index: 0 });
+    // Not on a quiet turn.
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "3", damage: 3, hits: 1, total_damage: 3 }];
+    const quiet = env(raw, { fightPlan: "v1" });
+    quiet.screenMemory.fightPlan = plan({ fight: fightKey(quiet.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
+    const calm = planCombatTurn(quiet);
+    expect(calm?.kind === "act" ? calm.intent.action : "ask").not.toBe("use_potion");
+  });
 });
 

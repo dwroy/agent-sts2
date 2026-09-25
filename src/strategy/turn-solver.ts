@@ -827,6 +827,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.strength += card.strength;
     next.permStrength += card.strength;
   }
+  // Dominate (VQSA F33 T3: modelled as 0 Strength, never played into Vulnerable 2).
+  if (card.special === "dominate" && targetEnemy && targetEnemy.alive) {
+    const gained = targetEnemy.vulnerable * (card.strengthPerVulnerable ?? 1);
+    next.strength += gained;
+    next.permStrength += gained;
+  }
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion") next.potionCost += -card.flatValue;
