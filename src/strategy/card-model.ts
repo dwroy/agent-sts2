@@ -228,7 +228,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (special === "whirlwind") hits = 0; // set to X at play time
 
   const hpLoss = dyn(card, "HpLoss") ?? 0;
-  const energyGain = dyn(card, "Energy") ?? 0;
+  // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP).
+  const energyGain = type === "Power" ? 0 : (dyn(card, "Energy") ?? 0);
   const draw = dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));

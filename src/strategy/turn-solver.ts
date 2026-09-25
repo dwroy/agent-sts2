@@ -207,6 +207,8 @@ export interface Step {
   cardId: string;
   /** Upgrade level of the planned card: Defend and Defend+ in one hand are different plays. */
   upgraded: boolean;
+  /** Energy cost when planned: two copies can differ (Snecko Oil left a Strike at 3 and one at 0). */
+  cost?: number;
   name: string;
   target: number | null;
   targetName: string | null;
@@ -538,6 +540,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       cardIndex: card.index,
       cardId: card.cardId,
       upgraded: card.upgraded,
+      cost: card.cost,
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,

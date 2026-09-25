@@ -281,7 +281,10 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
  * said Defend+, a plain Defend was played and the Defend+ stayed in hand — 3 HP lost).
  */
 function cardFor(step: Step, hand: CardModel[]): CardModel | undefined {
+  // Match the planned copy's cost first: after Snecko Oil the gate kept rejecting the 3-cost Strike
+  // while the planned 0-cost one sat in hand (24DPW2ED71QM, 30 min stuck).
   return (
+    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && step.cost !== undefined && entry.cost === step.cost && entry.playable) ??
     hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && entry.playable) ??
     hand.find((entry) => entry.cardId === step.cardId && entry.playable)
   );
