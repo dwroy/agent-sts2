@@ -995,7 +995,9 @@ describe("combat plan guards (batch 2)", () => {
       card(1, "DEFEND_R", { dynamic_values: [{ name: "Block", base_value: 5, current_value: 5 }] }),
     ];
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
-    expect(decision?.kind).toBe("act");
+    // Since the lasting-value axis (9NE1) the Mantle line is no longer dominated, so both lines may go
+    // to the model; what must never happen is committing a hidden plan as the "only line".
+    expect(["act", "ask"]).toContain(decision?.kind);
     if (decision?.kind !== "act") return;
     expect(decision.intent).toEqual({ action: "play_card", card_index: 1 });
     expect(decision.rationale).not.toMatch(/only line/);
