@@ -19,8 +19,9 @@
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
 import { playerJson, potionViews } from "../project/narrow.js";
-import { briefJson } from "../project/run-brief.js";
-import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
+import { briefJson, combatBriefJson } from "../project/run-brief.js";
+import { selectHints } from "../knowledge/jev-hints.js";
+import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
@@ -302,6 +303,58 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
+}
+
+/** What the fact tags need to know about the board (JEV_CONTEXT=v1). */
+export interface FactContext {
+  maxHp: number;
+  hand: CardModel[];
+  enemies: EnemySim[];
+  /** Expected attack damage next turn per enemy index (move model), null when unknown. */
+  nextThreat: Map<number, number | null>;
+  /** No living enemy shows an attack intent this turn. */
+  noAttack: boolean;
+}
+
+/**
+ * Literal facts about one plan, computed by code (M1, JEV_CONTEXT=v1). Jev reads things literally,
+ * so the judgement ("this is a free turn to set up", "this line wastes block") is made here and
+ * handed over as a fact rather than a rule for it to apply.
+ */
+export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValue> {
+  const o = plan.outcome;
+  const cards = plan.steps.map((step) => ctx.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId));
+  const powers = plan.steps.filter((step, i) => !step.cardId.startsWith("POTION:") && cards[i]?.type === "Power").map((step) => step.name);
+  const potions = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
+  const key = new Set(ctx.enemies.filter((enemy) => !enemy.minion && !enemy.illusion).map((enemy) => enemy.name));
+  const keyKills = o.kills.filter((name) => key.has(name));
+  // Next turn's expected hit, from the move model, for the enemies this line leaves alive; Weak the
+  // line leaves on an enemy cuts its hit by a quarter.
+  let threat = 0;
+  let known = false;
+  for (const enemy of ctx.enemies) {
+    const after = o.enemyHpAfter.find((entry) => entry.index === enemy.index);
+    if (o.winsFight || (after && after.hp <= 0)) continue;
+    const next = ctx.nextThreat.get(enemy.index);
+    if (next === null || next === undefined) continue;
+    known = true;
+    threat += next * ((after?.weak ?? 0) > 0 ? 0.75 : 1);
+  }
+  const scaling: string[] = [];
+  if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
+  if (powers.length > 0) scaling.push(`plays power ${powers.join(", ")}`);
+  if (o.lasting >= 1) scaling.push(`lasting value ${Math.round(o.lasting)}`);
+  return {
+    hp_after: o.hpAfter,
+    hp_after_pct: ctx.maxHp > 0 ? Math.round((o.hpAfter / ctx.maxHp) * 100) : null,
+    dmg: o.damageDealt,
+    lethal_now: o.winsFight ? "wins the fight" : keyKills.length > 0 ? `kills ${keyKills.join(", ")}` : "no",
+    enemy_threat_next: o.winsFight ? 0 : known ? Math.round(threat) : "unknown",
+    setup_turn: ctx.noAttack && powers.length > 0,
+    scaling_gained: scaling.length > 0 ? scaling.join("; ") : "none",
+    block_wasted: o.blockWasted ?? 0,
+    potions_used: potions.length > 0 ? potions.join(", ") : "none",
+  };
 }
 
 /**
@@ -813,6 +866,38 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
   };
 
+  // JEV_CONTEXT=v1: Jev gets fact tags on every plan, fight hints and a combat-only brief. The
+  // escalator keeps the original question (same keys, so resolve() serves both).
+  let jevView: AskDecision["jevView"];
+  if (env.jevContext === "v1") {
+    const liveEnemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+    const nextThreat = new Map<number, number | null>(
+      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
+    );
+    const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
+    const jevCriteria: Record<string, string | null> = { ...criteria };
+    options.forEach((plan, index) => {
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx) });
+    });
+    const actRaw = state.run?.act_id;
+    const hints = selectHints({
+      enemyIds: liveEnemies.map((enemy) => str(enemy["enemy_id"])),
+      fight: kind,
+      act: actRaw != null && /^\d+$/.test(actRaw) ? Number(actRaw) + 1 : null,
+      hpPct: playerSim.maxHp > 0 ? (playerSim.hp / playerSim.maxHp) * 100 : 100,
+      enemyPowers: liveEnemies.flatMap((enemy) => asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"]))),
+      noAttack: ctx.noAttack,
+    });
+    const jevState: Record<string, JsonValue> = { ...questionState, run_brief: combatBriefJson(env.brief, state, env.knowledge) };
+    if (hints.length > 0) jevState["fight_hints"] = hints.map((hint) => hint.text);
+    jevView = {
+      state: jevState,
+      questions: { plan: choiceQ("Which plan should I play this turn?", jevCriteria) },
+      context: "v1",
+      hints: hints.map((hint) => hint.id),
+    };
+  }
+
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
   const fallback = (why: string): ResolvedAction => ({
@@ -828,6 +913,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
+    ...(jevView ? { jevView } : {}),
     // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
     // 15 such escalations, so a near-guess from Jev falls back to that plan instead (see resolve).
     ...(kind === "elite" || kind === "boss" || dangerous

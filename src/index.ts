@@ -194,6 +194,7 @@ async function main(argv: string[]): Promise<number> {
         allowFtueModals: config.allowFtueModals,
         strictJev: config.strictJev && runtime.jev !== null,
         combatPlanner: config.combatPlanner,
+        jevContext: config.jevContext,
         shopDiscardPotions: config.shop.discardPotions,
       });
 
@@ -213,7 +214,9 @@ async function main(argv: string[]): Promise<number> {
         return 0;
       }
 
-      const request = { model: config.jev.model, state: decision.state, questions: decision.questions };
+      const jevState = decision.jevView?.state ?? decision.state;
+      const jevQuestions = decision.jevView?.questions ?? decision.questions;
+      const request = { model: config.jev.model, state: jevState, questions: jevQuestions };
       const serialized = JSON.stringify(request);
       const summary = {
         screen: state.screen,
@@ -231,7 +234,7 @@ async function main(argv: string[]): Promise<number> {
         return 0;
       }
       if (!runtime.jev) return fail("--ask needs an API key (TYPESAFE_API_KEY)", 1);
-      const answer = await runtime.jev.ask(decision.state, decision.questions);
+      const answer = await runtime.jev.ask(jevState, jevQuestions);
       const resolved = decision.resolve(answer.answers);
       process.stdout.write(
         `${JSON.stringify(

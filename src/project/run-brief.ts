@@ -7,7 +7,7 @@
 
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { asRecord, numOrNull, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import {
   deckEntries,
   deckStats,
@@ -83,6 +83,68 @@ export function briefJson(brief: RunBrief): Record<string, JsonValue> {
   // number, and there is no rendered variant for relics the way there is for cards. Say so, so the
   // model does not read the placeholder as a literal string.
   if ([...brief.relic_effects, ...brief.potions].some((entry) => entry.includes("{"))) {
+    json["relic_effects_note"] = "{X} marks a value the mod does not expose; the effect text around it is accurate";
+  }
+  return json;
+}
+
+/**
+ * Relics kept in Jev's combat plan-choice brief (JEV_CONTEXT=v1): the ones the turn solver models,
+ * and the ones that trigger during a fight in a way that can change which line is best. Relics that
+ * act only at pickup, at rest sites, on the map, at the start of combat (already applied by the time
+ * a plan is chosen) or after combat are dropped. Burning Blood is dropped on purpose: it heals only
+ * after the fight, and "Burning Blood heals it" was the models' most common bad HP trade (handbook).
+ */
+export const SOLVER_MODELLED_RELICS = ["MERCURY_HOURGLASS", "INTIMIDATING_HELMET", "DEMON_TONGUE", "TOASTY_MITTENS", "FIDDLE"] as const;
+export const COMBAT_TRIGGER_RELICS = [
+  "SHURIKEN", "PEN_NIB", "MINIATURE_CANNON", "CENTENNIAL_PUZZLE", "SPARKLING_ROUGE", "PENDULUM", "MR_STRUGGLES",
+  "LOST_WISP", "HORN_CLEAT", "ART_OF_WAR", "REPTILE_TRINKET", "CROSSBOW", "RED_SKULL", "BEATING_REMNANT",
+  "PAPER_PHROG", "TUNING_FORK", "CLOAK_CLASP", "CANDELABRA", "GAME_PIECE", "PAELS_FLESH", "HAPPY_FLOWER",
+  "UNSETTLING_LAMP", "LIZARD_TAIL", "SCREAMING_FLAGON", "BURNING_STICKS", "STRIKE_DUMMY", "RAINBOW_RING",
+  "ORICHALCUM", "PERMAFROST", "MYSTIC_LIGHTER", "RAZOR_TOOTH", "CHEMICAL_X", "RIPPLE_BASIN", "NUNCHAKU",
+  "BELT_BUCKLE", "VAMBRACE", "KUNAI", "ORNAMENTAL_FAN", "LETTER_OPENER", "SELF_FORMING_CLAY",
+  "BRILLIANT_SCARF", "CAPTAINS_WHEEL", "CHARONS_ASHES", "DAUGHTER_OF_THE_WIND", "DIAMOND_DIADEM", "FORGOTTEN_SOUL",
+  "HAND_DRILL", "HISTORY_COURSE", "ICE_CREAM", "IVORY_TILE", "KUSARIGAMA", "MUMMIFIED_HAND", "MUSIC_BOX",
+  "PAELS_TEARS", "PAELS_LEGION", "PAPER_KRANE", "PARRYING_SHIELD", "POCKETWATCH", "RUNIC_PYRAMID", "STONE_CALENDAR",
+  "STURDY_CLAMP", "THE_BOOT", "TINGSHA", "TOUGH_BANDAGES", "UNCEASING_TOP", "VELVET_CHOKER", "FAKE_ORICHALCUM",
+  "FAKE_STRIKE_DUMMY", "BOOKMARK", "BRIMSTONE", "UNDYING_SIGIL", "REGALITE",
+] as const;
+const COMBAT_RELICS = new Set<string>([...SOLVER_MODELLED_RELICS, ...COMBAT_TRIGGER_RELICS]);
+
+export function isCombatRelic(relicId: string): boolean {
+  return COMBAT_RELICS.has(relicId);
+}
+
+/** `Name: effect` for the held relics that matter inside a fight (see COMBAT_TRIGGER_RELICS). */
+export function combatRelicEffects(state: GameState, knowledge: Knowledge): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"])
+    .map(asRecord)
+    .filter((relic) => isCombatRelic(str(relic["relic_id"])))
+    .map((relic) => {
+      const id = str(relic["relic_id"]);
+      const info = knowledge.relic(id);
+      const name = str(relic["name"], info?.name ?? id);
+      return info?.description ? `${name}: ${truncate(info.description, 80)}` : name;
+    });
+}
+
+/**
+ * The brief for Jev's combat plan choice (JEV_CONTEXT=v1): no deck summary, no gold, no full relic
+ * list; only the combat relics. Jev's accuracy drops with unrelated context.
+ */
+export function combatBriefJson(brief: RunBrief, state: GameState, knowledge: Knowledge): Record<string, JsonValue> {
+  const relics = combatRelicEffects(state, knowledge);
+  const json: Record<string, JsonValue> = {
+    character: brief.character,
+    act: brief.act,
+    floor: brief.floor,
+    hp: brief.hp,
+    ascension: brief.ascension,
+    combat_relics: relics,
+    potions: brief.potions,
+  };
+  if (brief.notes.length > 0) json["notes"] = brief.notes;
+  if ([...relics, ...brief.potions].some((entry) => entry.includes("{"))) {
     json["relic_effects_note"] = "{X} marks a value the mod does not expose; the effect text around it is accurate";
   }
   return json;
