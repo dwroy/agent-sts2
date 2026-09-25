@@ -764,7 +764,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       raceEruption,
       wither,
       ...focusInput,
-      vulnerablePayoffs: asArray(asRecord(state.run?.raw)["deck"]).filter((card) => VULNERABLE_PAYOFFS.has(str(asRecord(card)["card_id"]))).length,
+      // Distinct payoff cards, not copies (VHLZ F21: two Bully doubled Bash+'s weight, 16.5 vs 7.5).
+      vulnerablePayoffs: new Set(asArray(asRecord(state.run?.raw)["deck"]).map((card) => str(asRecord(card)["card_id"])).filter((id) => VULNERABLE_PAYOFFS.has(id))).size,
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
     });
@@ -911,6 +912,13 @@ function planTurn(env: DecisionEnv): Decision | null {
     fightPlan !== null &&
     fightPlan.setup.includes(step.cardId) &&
     !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
+  // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
+  // max(6, 15% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
+  // F22 room at 17/80 with no potions).
+  const actNumber = Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1;
+  const hallwayGuard =
+    (kind === "monster" || kind === "unknown") && (actNumber >= 2 || (state.run?.ascension ?? 0) >= 5) && playerSim.hp < playerSim.maxHp * 0.6;
+  const hallwayGuardSlack = Math.max(6, playerSim.hp * 0.15);
   const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
@@ -947,7 +955,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     let guarded =
       (kind === "elite" || kind === "boss") && !top.outcome.winsFight
         ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
-        : null;
+        : hallwayGuard && !top.outcome.winsFight
+          ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hallwayGuardSlack)
+          : null;
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
@@ -1121,6 +1131,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       const offensiveDrink =
         (chosen.potion !== undefined && OFFENSIVE_POTIONS.has(potionsAll.find((potion) => potion.slot === (chosen.potion as { option_index?: number }).option_index)?.potion_id ?? "")) ||
         (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:") && OFFENSIVE_POTIONS.has(step.cardId.split(":")[1] ?? "")) ?? false);
+      // Elite/boss: a potion line picked by Jev under 0.5 when a potion-free option loses no more HP
+      // (VHLZ F17 T2: Speed Potion at 80/80 and 0.19 with a 0-loss dry line; F14 T1 Glowwater at 0.20):
+      // the dry option instead.
+      if (!hallwayFight && fromJev && drinks && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
+        const chosenLoss = chosen.plan?.outcome.hpLoss ?? Math.min(...options.map((plan) => plan.outcome.hpLoss));
+        const dryBetter = options.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && plan.outcome.hpLoss <= chosenLoss);
+        if (dryBetter) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`);
+      }
       if (!hallwayFight && fromJev && offensiveDrink && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
         return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
       }
@@ -1152,7 +1170,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       // F11 T1: -10 swapped for a line drinking the Fortifier kept for an emergency; the boss at F17
       // then died 3 HP short of us, Dismember hitting 28 into 7 block).
       const guardOptions = options.filter((plan) => plan === picked || !drinksKeptPotion(plan));
-      const proposed = hallway ? null : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
+      const proposed = hallway
+        ? hallwayGuard && !picked.outcome.winsFight
+          ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack)
+          : null
+        : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && guardKeepsSetup(picked, proposed) ? null : proposed;
       const plan = replacement ?? picked;
