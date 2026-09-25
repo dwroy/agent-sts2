@@ -716,8 +716,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
   // Diadem, a "big hit" potion drunk on a 0-loss turn).
   const bigHit = nowIncoming - playerSim.block >= Math.max(12, playerSim.hp * 0.25);
+  // Several enemies can share the id (CWMP F7: four Phantasmal Gardeners, index 0 was always taken
+  // while the plan's Enlarge eel sat at 19 HP for six turns): the lowest-HP one of them, re-read each turn.
   const focusIndex = fightPlan?.focus
-    ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
+    ? numOrNull(
+        asArray(combat["enemies"])
+          .map(asRecord)
+          .filter((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)
+          .sort((a, b) => num(a["current_hp"]) - num(b["current_hp"]))[0]?.["index"],
+      )
     : null;
   // A kill-first target only matters with more than one enemy alive.
   const focusInput = focusIndex !== null && enemies.length > 1 ? { focusIndex } : {};
@@ -891,7 +898,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // guard's slack of code's pick, makes the turn a question for Jev (tagged with the plan fit).
   // Counted per distinct planned card: one of them played is not the plan (CAYK F48 T3: Brand
   // satisfied the check and Mayhem, bought for this fight, was never played).
-  const setupCount = (plan: Plan) => (fightPlan ? new Set(plan.steps.filter((step) => fightPlan.setup.includes(step.cardId)).map((step) => step.cardId)).size : 0);
+  // Molten Fist only sets up into Vulnerable (CWMP F7 T1: played as "setup" into a target with none).
+  const setupStep = (step: Step) =>
+    fightPlan !== null &&
+    fightPlan.setup.includes(step.cardId) &&
+    !(step.cardId === "MOLTEN_FIST" && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
+  const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
   // crab every turn) was traded twice for 6 HP and never played; the crabs died at 7 and 38 HP left.

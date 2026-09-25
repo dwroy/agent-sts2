@@ -76,6 +76,9 @@ export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct
       // The elite right before the boss: only at near-full HP (BG4W F14: took it at 47/80, lost 33,
       // and went into the boss short after the rest).
       if (floorInAct >= 12) return hpPct > 0.8 ? 4 : -3;
+      // Act 1 before the mid-act: the deck is still the starter one (CWMP F6 at A5: 61/87 into four
+      // Phantasmal Gardeners with 2 non-basic cards; died in 7 turns). Only at near-full HP.
+      if (act === 1 && floorInAct <= 7) return hpPct > 0.85 ? 2 : -3;
       // Optional elites mid-act only above 80% HP (UJS25 F24: took Swarm Caster at 58/80 under the old
       // 70% bar, fell to 8 HP and died two fights later; G8AQ died to the same elite). 70-80% is
       // neutral, below that a cost. Same at every ascension: from A1 on elites are more frequent anyway
