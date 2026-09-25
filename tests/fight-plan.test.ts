@@ -337,5 +337,18 @@ describe("turn planner with a fight plan", () => {
       if (resolved.guard) expect(resolved.guard.plan).not.toContain("Fire Potion");
     }
   });
+
+  it("code's own elite/boss pick meets the HP guard bound (7DXA F33 T1-T2)", () => {
+    const raw = bossTurnOne();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const e = env(raw);
+    const decision = planCombatTurn(e);
+    if (decision?.kind !== "act") return;
+    const lost = Number(/hp -(\d+)/.exec(decision.rationale)?.[1] ?? "0");
+    // Defend alone blocks 5 of 14: the cheapest line loses 9; the boss bound is max(4, 10% of 55).
+    expect(lost).toBeLessThanOrEqual(9 + 5.5);
+  });
 });
 
