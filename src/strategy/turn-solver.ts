@@ -161,6 +161,11 @@ export interface PlayerSim {
   turnStartAoe?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
+  /**
+   * Feel No Pain already up (FEEL_NO_PAIN_POWER amount): Block per card exhausted (QBRN F48 T7: Fiend
+   * Fire through 4 cards with Feel No Pain 3 was scored as 9 damage and no block).
+   */
+  feelNoPain?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -360,6 +365,7 @@ interface Sim {
   enraged: number;
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
+  feelNoPain: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
   bombs: number;
   /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
@@ -458,7 +464,7 @@ export function drawScoreAt(draws: DrawValue[], energyLeft: number): number {
  */
 export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT", "BRAND"]);
 /** Cards that exhaust the whole rest of the hand (Stoke: a random card for each). */
-export const EXHAUST_HAND = new Set(["STOKE"]);
+export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -671,6 +677,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.putsOnTop) next.topPlaced = true;
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
+  const exhaustedBefore = next.exhausted.length;
   if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
   else if (EXHAUST_PICKERS.has(card.cardId)) {
     const pick = exhaustPick([...next.held, ...next.hand], next.enemies.some((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0));
@@ -684,6 +691,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
   }
+  const burned = next.exhausted.length - exhaustedBefore;
+  // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
+  if (next.feelNoPain > 0) {
+    const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
+    if (count > 0) gainBlock(next, next.feelNoPain * count, player);
+  }
+  if (card.feelNoPain) next.feelNoPain += card.feelNoPain;
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
@@ -760,6 +774,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     if (card.special === "whirlwind") hits = cost;
+    // Fiend Fire: one hit per card it exhausts, i.e. the rest of the hand (exhausted after this).
+    if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
@@ -1402,6 +1418,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     mantles: 0,
     enraged: 0,
     inferno: input.player.inferno ?? 0,
+    feelNoPain: input.player.feelNoPain ?? 0,
     bombs: 0,
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),

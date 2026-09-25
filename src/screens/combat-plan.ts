@@ -626,6 +626,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
     inferno: powerAmount(player, "INFERNO_POWER"),
+    feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
