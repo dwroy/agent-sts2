@@ -11,6 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardValue, deckProfile } from "../strategy/card-value.js";
+import { expectedNextDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -100,7 +101,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       score: forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
         : exhaustContext
-          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext) - (bool(card["upgraded"]) ? 8 : 0)
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
         (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
       summary: {
@@ -237,7 +238,20 @@ export const EXHAUST_LOW_INCOMING = 10;
 interface ExhaustContext {
   /** Attack cards left in the fight: hand, draw pile and discard pile. */
   attacks: number;
+  /**
+   * The bigger of this turn's incoming (after block) and next turn's expected hit from the move model
+   * (U6W7 F42: nothing much this turn, Defend++ exhausted at 12 HP, next turn's attack was 21).
+   */
   incoming: number;
+  /** Player HP now: at or below `incoming`, block cards are never exhausted. */
+  hp?: number;
+}
+
+/** A card that gives block: a Defend, a Block value, or block in its text. */
+function isBlockCard(card: Record<string, unknown>): boolean {
+  if (str(card["card_id"]).startsWith("DEFEND_")) return true;
+  if (asArray(card["dynamic_values"]).some((entry) => str(asRecord(entry)["name"]) === "Block" && (numOrNull(asRecord(entry)["current_value"]) ?? numOrNull(asRecord(entry)["value"]) ?? 0) > 0)) return true;
+  return /\d+点格挡|gain \d+ block/i.test(str(card["resolved_rules_text"], str(card["rules_text"])));
 }
 
 function isAttackCard(cardId: string, type: string, line: string): boolean {
@@ -262,7 +276,13 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
       if (isAttackCard(cardId, typeOf(cardId), line)) attacks += count;
     }
   }
-  return { attacks, incoming: incomingDamage(combat) };
+  // Next turn's hit counts too: an exhaust is for the rest of the fight, not just this enemy turn.
+  const nextTurn = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"], str(enemy["intent"]))) ?? 0), 0);
+  const hp = numOrNull(asRecord(combat["player"])["current_hp"]) ?? numOrNull(asRecord(raw["run"])["current_hp"]) ?? undefined;
+  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp };
 }
 
 /**
@@ -272,11 +292,13 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
  * Attacks stay while the fight's deck holds MIN_COMBAT_ATTACKS or fewer; a Defend goes before a
  * Strike when little is coming.
  */
-export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext): number {
+export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_")): number {
   // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   if (type === "Curse") return 100;
   if (type === "Status") return 90;
+  // HP at or below the hit coming (this turn or next): the block is what keeps us alive.
+  if (blocks && context.hp !== undefined && context.hp <= context.incoming) return -10;
   const value = cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   if (type === "Attack" && context.attacks <= MIN_COMBAT_ATTACKS) return 0;
   if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : 65;

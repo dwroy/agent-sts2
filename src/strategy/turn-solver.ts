@@ -96,6 +96,13 @@ export interface EnemySim {
    * comes back at full, higher max HP, so killing it does not win the fight.
    */
   revives?: boolean;
+  /**
+   * Stock N (Axebot, STOCK_POWER): revives left. At 0 HP with Stock > 0 it comes straight back at full,
+   * higher max HP with Stock -1, and its move becomes Boot Up (10 Block, +3 Strength: no attack that
+   * turn), then it attacks harder. A kill with Stock left is no kill and no fight win (U6W7 F39: three
+   * "lethal" turns, each one revived it).
+   */
+  stock?: number;
   /** Gets stronger every turn it lives (Buff intent, Ritual, Territorial, stacking Strength): kill it first. */
   scaling?: boolean;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
@@ -224,6 +231,8 @@ export interface Outcome {
   blockGained: number;
   damageDealt: number;
   kills: string[];
+  /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
+  restocked: string[];
   enemyHpAfter: { index: number; name: string; hp: number; vulnerable: number; weak: number }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -864,7 +873,7 @@ export function weightsFor(input: SolverInput): Weights {
   // HP gets dearer as it runs low; in elite/boss fights damage gets dearer (the fight is the point).
   let hp = 1.0 + 1.5 * Math.max(0, 0.6 - hpFraction) / 0.6;
   let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
-  if (input.enemies.some((enemy) => enemy.revives)) hp *= NEXT_PHASE_HP;
+  if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
@@ -885,7 +894,9 @@ export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput):
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
-  const nextPhase = sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
+  // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
+  const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const nextPhase = restocked.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
   const winsFight = !nextPhase && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
@@ -941,6 +952,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     (enemy) =>
       !enemy.alive &&
       !enemy.illusion &&
+      !((enemy.stock ?? 0) > 0) &&
       !(enemy.reattach && !allSegmentsDead) &&
       !(crabs.includes(enemy.index) && !allCrabsDead) &&
       input.enemies.find((start) => start.index === enemy.index)!.hp > 0,
@@ -1110,6 +1122,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       blockGained: sim.blockGained,
       damageDealt: sim.damageDealt,
       kills: kills.map((enemy) => enemy.name),
+      restocked: restocked.map((enemy) => enemy.name),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
         .map((enemy) => ({ index: enemy.index, name: enemy.name, hp: Math.max(0, enemy.hp), vulnerable: enemy.vulnerable, weak: enemy.weak })),

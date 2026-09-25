@@ -717,6 +717,30 @@ describe("in-combat selections", () => {
     expect(exhausted(exhaustState(exhaustHand, many, 6))).toBe(1);
     expect([0, 2]).toContain(exhausted(exhaustState(exhaustHand, many, 17)));
   });
+
+  // U6W7 F42: at 12 HP Defend++ was exhausted on a quiet turn; the Frog Knight's next hit was 21.
+  const frogTurn = (hp: number) => {
+    const raw = exhaustState(exhaustHand, ["打击*4 [1费]：造成6点伤害。", "防御*2 [1费]：获得5点格挡。"], 5);
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = hp;
+    combat["enemies"] = [{ ...(combat["enemies"] as Record<string, unknown>[])[0], enemy_id: "FROG_KNIGHT", move_id: "TONGUE_LASH" }];
+    return raw;
+  };
+
+  it("in-combat exhaust weighs next turn's expected hit, not just this turn's (U6W7 F42)", () => {
+    // 5 now, ~22 next (Tongue Lash -> Strike Down Evil): a Strike goes, not the Defend.
+    expect([0, 2]).toContain(exhausted(frogTurn(40)));
+  });
+
+  it("in-combat exhaust never takes a block card when HP is at or below the hit coming (U6W7 F42: 12 HP, 21 next)", async () => {
+    expect([0, 2]).toContain(exhausted(frogTurn(12)));
+    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    // Even with the attacks at the fight's minimum, the Defend is kept.
+    const tight = { attacks: 3, incoming: 21, hp: 12 };
+    expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", tight)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
+    expect(combatExhaustScore("SHRUG_IT_OFF", "Skill", tight, true)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
+    expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", { ...tight, hp: 40 })).toBeGreaterThan(0);
+  });
 });
 
 describe("chest", () => {
@@ -1449,6 +1473,21 @@ describe("Test Subject phases (2WUMK6PK5QHD)", () => {
     expect(phase1!.enrage).toBe(2);
     expect(phase1!.revives).toBe(true);
     expect(phase1!.woundsPerHit).toBe(1);
+  });
+
+  it("Axebot's Stock is modelled: no unmodelled 20% damage cut, the revives are counted (U6W7 F39)", async () => {
+    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const [axebot] = enemySims({
+      enemies: [
+        {
+          index: 0, enemy_id: "AXEBOT", name: "Axebot", current_hp: 31, max_hp: 76, block: 0, is_alive: true,
+          powers: [{ power_id: "STOCK_POWER", amount: 2 }],
+          intents: [{ intent_type: "Attack", damage: 14, hits: 1 }, { intent_type: "Debuff" }],
+        },
+      ],
+    });
+    expect(axebot!.unmodelled).toBe(false);
+    expect(axebot!.stock).toBe(2);
   });
 
   const reviveTurn = (hand: Record<string, unknown>[]): Record<string, unknown> => {

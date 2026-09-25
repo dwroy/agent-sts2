@@ -41,6 +41,9 @@ const MODELLED_ENEMY_POWERS = new Set([
   "BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER", "WITHERING_PRESENCE_POWER", "DEMISE_POWER",
   // Terror Eel: stunned at half HP (`shriek`); left unmodelled it cut our damage by 20%.
   "SHRIEK_POWER",
+  // Axebot: revives from Stock (`stock`); left unmodelled it cut our damage by 20% and a kill that only
+  // revived it read as lethal three times (U6W7 F39).
+  "STOCK_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -59,6 +62,7 @@ const POWER_NOTES: Record<string, string> = {
   ARTIFACT_POWER: " (each stack negates one debuff: Vulnerable, Weak, Demise, Strength loss; strip it with cheap debuffs before a debuff potion)",
   // XJWF F22: seven turns killing the Parafright, the Obscura 96 -> 76, dead at 13 HP.
   ILLUSION_POWER: " (illusion: back at full HP next turn even if killed; damage into it is wasted, killing it only cancels this turn's attack; it leaves when its summoner dies: hit the summoner)",
+  STOCK_POWER: " (revives left: at 0 HP it comes straight back at full, higher max HP with Stock -1, and that turn does Boot Up (10 Block, +3 Strength, no attack), then attacks harder every turn; a kill with Stock left does NOT end the fight: its real HP is current HP + Stock x max HP, so block rather than race it)",
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
 };
 
@@ -200,6 +204,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
       revives: powerAmount(enemy, "ADAPTABLE_POWER") > 0,
+      stock: powerAmount(enemy, "STOCK_POWER"),
       shriek: powerAmount(enemy, "SHRIEK_POWER"),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
@@ -266,6 +271,7 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
     damage_dealt: o.damageDealt,
   };
   if (o.kills.length > 0) summary["kills"] = o.kills.join(", ");
+  if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
   if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.hp} HP${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;

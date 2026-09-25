@@ -667,6 +667,26 @@ describe("Test Subject (2WUM F48)", () => {
     expect(best.score).toBeLessThan(10_000);
   });
 
+  it("Stock (Axebot, U6W7 F39): a kill with Stock left revives it, so it is no kill and no fight win", () => {
+    const axebot = (stock: number): EnemySim => enemy({ name: "Axebot", hp: 6, maxHp: 76, stock, attacks: [{ damage: 14, hits: 1 }] });
+    const stocked = solveTurn({ hand: [strike(0), defend(1)], player: player({ hp: 80, energy: 1 }), enemies: [axebot(2)], fightKind: "monster" }).plans;
+    const kill = stocked.find((plan) => plan.steps.some((step) => step.cardId === "STRIKE_IRONCLAD"))!;
+    expect(kill.outcome.winsFight).toBe(false);
+    expect(kill.outcome.kills).toEqual([]);
+    expect(kill.outcome.restocked).toEqual(["Axebot"]);
+    // The revive turn is Boot Up (no attack).
+    expect(kill.outcome.hpLoss).toBe(0);
+    expect(kill.score).toBeLessThan(10_000);
+    // Stock 0: the last kill is a real one.
+    const last = solveTurn({ hand: [strike(0), defend(1)], player: player({ hp: 80, energy: 1 }), enemies: [axebot(0)], fightKind: "monster" }).plans[0]!;
+    expect(last.outcome.winsFight).toBe(true);
+    expect(last.outcome.kills).toEqual(["Axebot"]);
+    expect(last.score).toBeGreaterThan(kill.score);
+    expect(weightsFor({ hand: [], player: player({ hp: 80 }), fightKind: "monster", enemies: [axebot(1)] }).hp).toBeCloseTo(
+      weightsFor({ hand: [], player: player({ hp: 80 }), fightKind: "monster", enemies: [axebot(0)] }).hp * NEXT_PHASE_HP,
+    );
+  });
+
   it("a phase boss weighs HP more (the next phase starts at full HP)", () => {
     const base = { hand: [], player: player({ hp: 80 }), fightKind: "boss" as const };
     const plain = weightsFor({ ...base, enemies: [enemy()] }).hp;
