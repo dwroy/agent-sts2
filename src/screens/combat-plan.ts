@@ -847,6 +847,23 @@ function planTurn(env: DecisionEnv): Decision | null {
   const second = options.find((plan) => plan !== top);
   const clear = (!second || top.score - second.score >= CLOSE_CALL) && !setupClose;
   if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
+    // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
+    // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
+    // asked, and T4's laser killed us exactly). Not recorded against the fight's budget: that is for
+    // extra HP a model chose to accept.
+    const guarded =
+      (kind === "elite" || kind === "boss") && !top.outcome.winsFight
+        ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
+        : null;
+    if (guarded) {
+      commit(env, state.turn, guarded, hand, "code");
+      return {
+        kind: "act",
+        label: "combat/plan-guarded",
+        intent: firstIntent(guarded, hand, env),
+        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (hp -${guarded.outcome.hpLoss}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+      };
+    }
     commit(env, state.turn, top, hand, "code");
     const margin = second
       ? `+${(top.score - second.score).toFixed(1)} over next`
