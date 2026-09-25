@@ -111,6 +111,11 @@ export interface EnemySim {
 
 export interface PlayerSim {
   hp: number;
+  /**
+   * Most HP we can lose in one turn (Beating Remnant: 20). CCPR F48 T6-T7: every Test Subject line
+   * really cost 20; uncapped, the guard and least-loss picked block lines over 48-damage ones.
+   */
+  hpLossCap?: number | null;
   maxHp: number;
   block: number;
   energy: number;
@@ -1041,7 +1046,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // An Inferno played this turn (none up before) adds its own 1 HP at the start of every later turn.
   const newInferno = (input.player.inferno ?? 0) === 0 && sim.inferno > 0 ? 1 : 0;
   const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
-  const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss + startTurnLoss;
+  const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
+  const cap = input.player.hpLossCap;
+  const hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
   const hpAfter = input.player.hp - hpLoss;
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);

@@ -71,6 +71,8 @@ const POWER_NOTES: Record<string, string> = {
 
 /** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
 export const HALLWAY_POTION_COST = 15;
+/** Beating Remnant: at most this much HP lost in a turn. */
+export const BEATING_REMNANT_CAP = 20;
 /** A hallway lethal that needs a potion is skipped when a potion-free line loses at most this much HP. */
 export const HALLWAY_LETHAL_POTION_LOSS = 5;
 /** Jev confidence a hallway potion line below code rank 1 needs to be played. */
@@ -626,6 +628,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     inferno: powerAmount(player, "INFERNO_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
+    hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
   };
@@ -696,7 +699,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
-  const bigHit = nowIncoming >= Math.max(12, playerSim.hp * 0.25);
+  // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
+  // Diadem, a "big hit" potion drunk on a 0-loss turn).
+  const bigHit = nowIncoming - playerSim.block >= Math.max(12, playerSim.hp * 0.25);
   const focusIndex = fightPlan?.focus
     ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
     : null;
@@ -979,16 +984,20 @@ function planTurn(env: DecisionEnv): Decision | null {
       const hallway = !(kind === "elite" || kind === "boss" || dangerous);
       const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
       const fromJev = answer.raw !== undefined && !escalatedBy;
+      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
+      // A turn that costs a lot whatever is played is what potions are for: Jev's potion pick stands
+      // there (C2WY F22 T4-T5: Attack Potion picks overridden at 27 -> 18 -> 1 HP, died with 3 potions).
+      // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
+      const potionTurn = drinks && (costly || dangerous);
       // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
-      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top) {
+      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
       }
       // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
       // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
       // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
-      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
       const hallwayFight = kind === "monster" || kind === "unknown";
-      if (hallwayFight && fromJev && drinks && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
+      if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
         return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
       }
       if (chosen.potion) {

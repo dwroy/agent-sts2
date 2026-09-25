@@ -15,6 +15,7 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planCombat } from "../src/screens/combat.js";
 import {
   fightKey,
   fightPlanInput,
@@ -279,6 +280,38 @@ describe("turn planner with a fight plan", () => {
     const steps = [decision?.kind === "act" ? decision.intent : null, ...(e.screenMemory.combatPlan?.remaining ?? []).map((step) => step.cardId)];
     expect(JSON.stringify(steps)).not.toContain("use_potion");
     expect(JSON.stringify(steps)).not.toContain("POTION:");
+  });
+
+  it("per-card fallback never offers a card whose HP cost kills us (C2WY F22 T6: Blood Wall at 1 HP)", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["current_hp"] = 2;
+    const hand = combat["hand"] as Raw[];
+    const bloodWall = { ...hand[1], index: 3, card_id: "BLOOD_WALL", name: "Blood Wall", dynamic_values: [{ name: "Block", base_value: 16, current_value: 16 }, { name: "HpLoss", base_value: 2, current_value: 2 }] };
+    combat["hand"] = [...hand, bloodWall];
+    const decision = planCombat(env(raw, { combatPlanner: "card" }));
+    const options = decision?.kind === "ask" ? Object.keys(decision.questions[Object.keys(decision.questions)[0]!]?.type === "choice" ? (decision.questions[Object.keys(decision.questions)[0]!] as { criteria: Raw }).criteria : {}) : [];
+    expect(decision?.kind).toBe("ask");
+    expect(options).not.toContain("c3");
+    (combat["player"] as Raw)["current_hp"] = 30;
+    const healthy = planCombat(env(raw, { combatPlanner: "card" }));
+    const healthyOptions = healthy?.kind === "ask" ? JSON.stringify(healthy.questions) : "";
+    expect(healthyOptions).toContain("hp_cost");
+  });
+
+  it("lets Jev's potion pick stand on a hallway turn that costs a lot whatever is played (C2WY F22 T4-T5)", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["current_hp"] = 27;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }] }));
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    const decision = planCombatTurn(env(raw));
+    expect(decision?.kind).toBe("ask");
+    const ask = decision as AskDecision;
+    const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
+    const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
+    const picked = ask.resolve({ plan: { type: "choice", choice: potionKey, probabilities: { [potionKey]: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(picked.intent?.action).toBe("use_potion");
   });
 });
 
