@@ -203,8 +203,12 @@ export class RunJournal {
   }
 
   private renderFight(state: GameState): string {
-    if (!inCombat(state) || !this.fight || this.fight.key !== fightKey(state) || this.fight.turns.length === 0) return "";
-    const lines = this.fight.turns.map((turn) => {
+    if (!inCombat(state) || !this.fight || this.fight.key !== fightKey(state)) return "";
+    // Only completed turns: the current turn's line is still being played (no HP lost yet), and
+    // showing it confuses the escalator about what has already happened this turn.
+    const done = this.fight.turns.filter((turn) => turn.turn === null || turn.turn !== state.turn);
+    if (done.length === 0) return "";
+    const lines = done.map((turn) => {
       const lost = turn.hpLost === null ? "" : `, 失血 ${turn.hpLost}`;
       const after = turn.enemiesAfter ? ` | 之后敌人: ${turn.enemiesAfter}` : "";
       return `T${turn.turn ?? "?"} HP ${turn.hpStart ?? "?"}${lost} | ${turn.by}: ${turn.choice}${after}`;

@@ -53,7 +53,7 @@ describe("run journal", () => {
     expect(journal.render(next, testKnowledge, undefined).run_journal).not.toContain("本局兜底决策");
   });
 
-  it("logs the current fight one line per turn: HP, the line chosen and by whom, HP lost, enemies after", () => {
+  it("logs the completed turns of the current fight one line per turn: HP, the line chosen and by whom, HP lost, enemies after", () => {
     const journal = new RunJournal();
     journal.record(combat(1, 55, 42), entry({ label: "combat/plan-choice", by: "jev", choice: "Bash -> JAW_WORM" }));
     journal.record(combat(1, 55, 34), entry({ label: "combat/plan-continue", by: "code", choice: "continuing", asked: false }));
@@ -64,8 +64,12 @@ describe("run journal", () => {
     expect(log).toEqual([
       "T1 HP 55, 失血 7 | jev: Bash -> JAW_WORM | 之后敌人: JAW_WORM 30/30, CULTIST 48/48",
       "T2 HP 48, 失血 3 | deepseek: Defend, Strike | 之后敌人: JAW_WORM 20/20, CULTIST 48/48",
-      "T3 HP 45 | jev: Strike",
     ]);
+    // The current (unfinished) turn is not in the log, even mid-turn after a code act.
+    expect(journal.render(combat(3, 45, 12), testKnowledge, undefined).fight_log).not.toContain("T3");
+    const first = new RunJournal();
+    first.record(combat(1, 55, 42), entry({ label: "combat/plan-choice", by: "jev", choice: "Bash -> JAW_WORM" }));
+    expect(first.render(combat(1, 55, 34), testKnowledge, undefined).fight_log).toBe("");
     // Combat choices are the fight log's, not the run journal's.
     expect(journal.choices).toEqual([]);
 
