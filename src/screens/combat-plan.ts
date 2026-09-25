@@ -23,7 +23,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, dominates, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 
@@ -468,7 +468,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
   for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
-  if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) for (const card of hand) card.draw = 0;
+  if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) {
+    for (const card of hand) {
+      card.draw = 0;
+      card.drawsUntil = false;
+    }
+  }
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
@@ -635,13 +640,16 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (best.outcome.dies) {
     const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
     if (potionsNow.length > 0) return planCombatPerCard(env);
-    const leastLoss = solved.plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+    const leastLoss = leastLossPlan(solved.plans, hand);
+    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
     return {
       kind: "act",
       label: "combat/least-loss",
       intent: firstIntent(leastLoss, hand, env),
-      rationale: `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
+      rationale: drawing
+        ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
+        : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
     };
   }
 
@@ -824,6 +832,27 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
     },
   };
+}
+
+/**
+ * The line to start when every simulated line dies. With a draw card playable, the drawn cards are the
+ * only way out the simulation cannot see, so a line that draws goes first, draw card first, the
+ * most-damage one of them (a kill, or a phase kill: Test Subject's revive turn has no attack), and
+ * the turn is re-planned once it has drawn. VP5F F48 T8: 12 HP against 10x5, 0-cost Battle Trance+
+ * left in hand while least-loss (-30 vs -31) played Molten Fist+, Defend, Strike; 7 of 18 cards in
+ * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
+ * luck. Otherwise, the line that keeps the most HP.
+ */
+export function leastLossPlan(plans: Plan[], hand: CardModel[]): Plan {
+  const drawAt = (plan: Plan): number => plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card)));
+  const drawing = plans.filter((plan) => drawAt(plan) >= 0);
+  if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+  const most = drawing.reduce((a, b) =>
+    b.outcome.damageDealt > a.outcome.damageDealt || (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a,
+  );
+  const at = drawAt(most);
+  if (at === 0) return most;
+  return { ...most, steps: [most.steps[at]!, ...most.steps.slice(0, at), ...most.steps.slice(at + 1)] };
 }
 
 /** Cards that exhaust a card of our choosing (a Wound, a Burn) from the hand. */

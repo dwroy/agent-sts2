@@ -1765,6 +1765,80 @@ describe("Vigor is spent by the first Attack (KFP1 F17 T1: Akabeko's 8 counted o
   });
 });
 
+describe("least-loss draws first when every line dies (VP5F F48 T8: 12 HP, 0-cost Battle Trance+ left in hand)", () => {
+  const card = (index: number, cardId: string, cost: number, dynamic: [string, number][], self = false): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: false, target_type: self ? "Self" : "AnyEnemy", requires_target: !self, costs_x: false, star_costs_x: false,
+    energy_cost: cost, star_cost: 0, rules_text: "", resolved_rules_text: "", playable: true, unplayable_reason: null,
+    can_play_result: true, target_index_space: "combat.enemies[].index", valid_target_indices: self ? [] : [0],
+    dynamic_values: dynamic.map(([name, value]) => ({ name, base_value: value, current_value: value })),
+  });
+  const board = (withTrance: boolean): Record<string, unknown> => {
+    const raw = combatPayload();
+    raw["turn"] = 8;
+    const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    potions[0]!["can_use"] = false;
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["player"] = { ...(combat["player"] as Record<string, unknown>), current_hp: 12, max_hp: 94, energy: 3, powers: [{ index: 0, power_id: "STRENGTH_POWER", amount: 20, is_debuff: false }] };
+    combat["hand"] = [
+      card(0, "BASH", 2, [["Damage", 28], ["VulnerablePower", 2]]),
+      card(1, "DEFEND_R", 1, [["Block", 5]], true),
+      card(2, "STRIKE_R", 1, [["Damage", 26]]),
+      ...(withTrance ? [card(3, "BATTLE_TRANCE", 0, [["Cards", 4]], true)] : []),
+    ];
+    combat["enemies"] = [{
+      index: 0, enemy_id: "TEST_SUBJECT", name: "Test Subject", current_hp: 127, max_hp: 200, block: 0, is_alive: true, is_hittable: true,
+      powers: [
+        { index: 0, power_id: "ADAPTABLE_POWER", amount: 1, is_debuff: false },
+        { index: 1, power_id: "PAINFUL_STABS_POWER", amount: 1, is_debuff: false },
+        { index: 2, power_id: "VULNERABLE_POWER", amount: 1, is_debuff: true },
+      ],
+      intent: "MULTI_CLAW_MOVE", move_id: "MULTI_CLAW_MOVE",
+      intents: [{ index: 0, intent_type: "Attack", label: "10x5", damage: 10, hits: 5, total_damage: 50, status_card_count: null }],
+    }];
+    combat["end_turn_will_kill_player"] = true;
+    return raw;
+  };
+
+  it("plays the 0-cost draw first, then re-plans", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const e = env(board(true), { combatPlanner: "turn" });
+    const decision = planCombatTurn(e);
+    expect(decision?.kind).toBe("act");
+    if (decision?.kind !== "act") return;
+    expect(decision.label).toBe("combat/least-loss");
+    expect(decision.intent).toEqual({ action: "play_card", card_index: 3 });
+    // Nothing committed past the draw: the drawn cards are planned with.
+    expect(e.screenMemory.combatPlan).toBeNull();
+  });
+
+  it("a paid draw over the block that only delays death (Pommel Strike over Defend at 1 energy)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = board(false);
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["energy"] = 1;
+    combat["hand"] = [card(0, "DEFEND_R", 1, [["Block", 5]], true), card(1, "POMMEL_STRIKE", 1, [["Damage", 29], ["Cards", 1]])];
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    expect(decision?.kind === "act" && decision.label).toBe("combat/least-loss");
+    expect(decision?.kind === "act" && decision.intent).toEqual({ action: "play_card", card_index: 1, target_index: 0 });
+  });
+
+  it("without a draw card it still keeps the most HP", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(board(false), { combatPlanner: "turn" }));
+    expect(decision?.kind === "act" && decision.label).toBe("combat/least-loss");
+    expect(decision?.kind === "act" && decision.rationale).toMatch(/keeps the most HP/);
+  });
+
+  it("a phase kill is no death: the revive turn has no attack", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = board(true);
+    const enemies = (raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[];
+    enemies[0]!["current_hp"] = 60;
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    expect(decision?.kind === "act" && decision.label).not.toBe("combat/least-loss");
+  });
+});
+
 describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)", () => {
   it("expands grouped lines and reads the held penalty; falls back to the discard pile", async () => {
     const { drawPileCards } = await import("../src/screens/combat-plan.js");
