@@ -192,6 +192,37 @@ export function debuffWeakFirst(text: string): boolean {
   return weakAt >= 0 && (vulnerableAt < 0 || weakAt < vulnerableAt);
 }
 
+function sentences(text: string): string[] {
+  return text
+    .replace(/\[[^\]]*\]/g, "")
+    .split(/[。.\n]/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
+}
+
+/**
+ * HP lost for playing the card, read from a standalone "失去N点生命。" / "Lose N HP." sentence (an
+ * enchant's added cost). Held-penalty text ("回合结束时…手牌中…失去") and triggered clauses are not it.
+ */
+export function playHpLossOf(rendered: string): number {
+  if (heldPenaltyOf(rendered).heldPenalty > 0) return 0;
+  let total = 0;
+  for (const sentence of sentences(rendered)) {
+    const match = /^(?:你)?失去(\d+)点生命$/.exec(sentence) ?? /^lose (\d+) hp$/i.exec(sentence);
+    if (match) total += Number(match[1]);
+  }
+  return total;
+}
+
+/** Whether the card's Energy is only gained when it is exhausted (Drum of Battle), not on play. */
+export function energyOnExhaustOnly(template: string, rendered: string): boolean {
+  const exhaustClause = /被消耗时|when (?:this card is )?exhausted/i;
+  const withVar = sentences(template.replace(/\{Energy[^}]*\}/g, "ENERGYVAR")).filter((sentence) => sentence.includes("ENERGYVAR"));
+  if (withVar.length > 0) return withVar.every((sentence) => exhaustClause.test(sentence));
+  const energySentences = sentences(rendered).filter((sentence) => /能量|energy/i.test(sentence));
+  return energySentences.length > 0 && energySentences.every((sentence) => exhaustClause.test(sentence));
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -242,9 +273,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (special === "body_slam") damage = dyn(card, "CalculatedDamage") ?? 0;
   if (special === "whirlwind") hits = 0; // set to X at play time
 
-  const hpLoss = dyn(card, "HpLoss") ?? 0;
-  // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP).
-  const energyGain = type === "Power" ? 0 : (dyn(card, "Energy") ?? 0);
+  // Enchants (VC4L: Corrupted Bash, "…失去2点生命。") add a self-damage sentence with no HpLoss var.
+  const renderedText = str(card["resolved_rules_text"]) || info?.description || "";
+  const hpLoss = dyn(card, "HpLoss") ?? (type === "Power" ? 0 : playHpLossOf(renderedText));
+  // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP);
+  // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
+  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) ? 0 : (dyn(card, "Energy") ?? 0);
   const draw = dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
@@ -267,7 +301,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   }
 
   // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
-  const rendered = str(card["resolved_rules_text"]) || info?.description || "";
+  const rendered = renderedText;
   const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
   const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
   if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
+import { modelHandCard, modelPotion, type CardModel } from "../src/strategy/card-model.js";
+import { testKnowledge } from "./scenarios.js";
 import {
   backAttack,
   BOMB_SURE,
@@ -1470,5 +1471,80 @@ describe("draws need energy left at the end, and exhausting costs the card (6A36
     const withWound = solveTurn({ ...board, hand: [...hand, wound] }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "BURNING_PACT")!;
     const without = solveTurn({ ...board, hand }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "BURNING_PACT")!;
     expect(withWound.score).toBeGreaterThan(without.score);
+  });
+});
+
+describe("card model reads costs from the rendered text (VC4L)", () => {
+  const raw = (cardId: string, extra: Record<string, unknown>) => ({
+    index: 0,
+    card_id: cardId,
+    name: cardId,
+    energy_cost: 2,
+    playable: true,
+    target_type: "AnyEnemy",
+    requires_target: true,
+    ...extra,
+  });
+
+  it("a Corrupted Bash loses 2 HP per play though it has no HpLoss var (F23 T2: planned 2 HP left, had 0)", () => {
+    const bash = modelHandCard(
+      raw("BASH", {
+        rules_text: "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。",
+        resolved_rules_text: "造成12点伤害。 给予2层易伤。 失去2点生命。",
+        dynamic_values: [
+          { name: "Damage", current_value: 12 },
+          { name: "VulnerablePower", current_value: 2 },
+        ],
+      }),
+      0,
+      testKnowledge,
+    );
+    expect(bash.hpLoss).toBe(2);
+    expect(bash.damage).toBe(12);
+  });
+
+  it("a held-penalty status (Beckon) is not charged on play", () => {
+    const beckon = modelHandCard(
+      raw("BECKON", { resolved_rules_text: "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", dynamic_values: [] }),
+      0,
+      testKnowledge,
+    );
+    expect(beckon.hpLoss).toBe(0);
+    expect(beckon.heldPenalty).toBe(6);
+  });
+
+  it("Drum of Battle's Energy comes when exhausted, not on play (F21 T4: 5 cards planned on 3 energy)", () => {
+    const drum = modelHandCard(
+      raw("DRUM_OF_BATTLE", {
+        energy_cost: 1,
+        target_type: "Self",
+        requires_target: false,
+        rules_text: "抽{Cards:diff()}张牌。 这张牌被消耗时，获得{Energy:energyIcons()}。",
+        resolved_rules_text: "抽2张牌。 这张牌被消耗时，获得2点能量。",
+        dynamic_values: [
+          { name: "Cards", current_value: 2 },
+          { name: "Energy", current_value: 2 },
+        ],
+      }),
+      0,
+      testKnowledge,
+    );
+    expect(drum.energyGain).toBe(0);
+    expect(drum.draw).toBe(2);
+    const onPlay = modelHandCard(
+      raw("BLOODLETTING", {
+        energy_cost: 0,
+        rules_text: "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。",
+        resolved_rules_text: "失去3点生命。 获得2点能量。",
+        dynamic_values: [
+          { name: "HpLoss", current_value: 3 },
+          { name: "Energy", current_value: 2 },
+        ],
+      }),
+      0,
+      testKnowledge,
+    );
+    expect(onPlay.energyGain).toBe(2);
+    expect(onPlay.hpLoss).toBe(3);
   });
 });
