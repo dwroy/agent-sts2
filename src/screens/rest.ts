@@ -138,3 +138,32 @@ export function forcedNext(memory: ScreenMemory, state: GameState, roomTypes: re
   if (types.every((type) => type === "Boss")) return "Boss";
   return null;
 }
+
+/** Nodes where HP (rest) or the gold an HP trade buys (shop) can be used before an elite. */
+const ELITE_ESCAPES = ["RestSite", "Rest", "Shop"];
+
+/**
+ * Whether every path from this room meets an Elite within `depth` nodes, with no rest site or shop
+ * before it (remembered map). The room is any of the remembered map's available nodes of `roomTypes`:
+ * all of them must lead there, since which one was taken is not known. NZR7 F4: -18 HP for 150 gold
+ * with F5/F6 forced Monsters and a forced Elite at F7, no shop in between; the next-node check saw a
+ * Monster.
+ */
+export function forcedEliteWithin(memory: ScreenMemory, state: GameState, roomTypes: readonly string[], depth: number): boolean {
+  const map: RememberedMap | undefined = memory.lastMap;
+  const floor = state.run?.floor ?? null;
+  if (!map || map.runId !== str(state.raw["run_id"]) || floor === null || map.floor !== floor - 1) return false;
+  const nodeAt = (point: { row: number; col: number }) => map.nodes.find((node) => node.row === point.row && node.col === point.col);
+  const rooms = map.available.filter((node) => roomTypes.includes(node.type)).map(nodeAt);
+  if (rooms.length === 0) return false;
+  const reaches = (node: RememberedMap["nodes"][number], left: number): boolean =>
+    node.children.length > 0 &&
+    node.children.every((child) => {
+      const next = nodeAt(child);
+      if (!next) return false;
+      if (next.type === "Elite") return true;
+      if (ELITE_ESCAPES.includes(next.type) || left <= 1) return false;
+      return reaches(next, left - 1);
+    });
+  return rooms.every((room) => room !== undefined && reaches(room, depth));
+}

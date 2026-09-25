@@ -624,6 +624,32 @@ describe("event", () => {
     expect(shown(mustDecision(plan(hpEvent(45, 80, options))))).toEqual(["o1", "o2"]);
   });
 
+  it("HP guard: a forced Elite within 3 nodes on every path, no rest or shop before it, counts as forced (NZR7 F4: -18 HP, Monster, Monster, Elite)", () => {
+    const options: [string, string][] = [["Alone", "获得150金币。失去18点生命。"], ["Together", "获得51金币。"]];
+    const chain = (types: string[], branch?: string) => {
+      const memory = createScreenMemory("EVENT");
+      const nodes: Record<string, unknown>[] = [{ row: 12, col: 0, node_type: "Unknown", children: [{ row: 13, col: 0 }] }];
+      types.forEach((type, index) => {
+        const children = index + 1 < types.length ? [{ row: 14 + index, col: 0 }] : [];
+        if (index === 0 && branch) children.push({ row: 14, col: 1 });
+        nodes.push({ row: 13 + index, col: 0, node_type: type, children });
+      });
+      if (branch) nodes.push({ row: 14, col: 1, node_type: branch, children: [] });
+      rememberMap(memory, parseGameState(baseState("MAP", {
+        run: runPayload({ floor: 13 }),
+        map: { nodes, available_nodes: [{ index: 0, row: 12, col: 0, node_type: "Unknown" }] },
+      })));
+      return memory;
+    };
+    const at = (memory: ReturnType<typeof chain>) => shown(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: memory })));
+    const guarded = mustDecision(plan(hpEvent(62, 80, options), { screenMemory: chain(["Monster", "Monster", "Elite"]) }));
+    expect(guarded.kind === "act" && guarded.intent).toEqual({ action: "choose_event_option", option_index: 1 });
+    // A rest site before the Elite, the Elite 4 nodes out, or a branch that avoids it: still offered.
+    expect(at(chain(["Monster", "RestSite", "Elite"]))).toEqual(["o0", "o1"]);
+    expect(at(chain(["Monster", "Monster", "Monster", "Elite"]))).toEqual(["o0", "o1"]);
+    expect(at(chain(["Monster", "Monster", "Elite"], "Unknown"))).toEqual(["o0", "o1"]);
+  });
+
   it("HP guard: on Act 1 floors 1-3 an HP cost of 20%+ of max HP is out (6A36 F1: Loose Shears -16 at 64/80)", () => {
     const options: [string, string][] = [
       ["Oyster", "获得[blue]11[/blue]点最大生命值。"],
@@ -1264,6 +1290,76 @@ describe("potions at low HP outside boss fights", () => {
     };
     expect(drinks(25)).toBe(true);
     expect(drinks(55)).toBe(false);
+  });
+});
+
+describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
+  const pressedCombat = (hp: number, potionId: string): Record<string, unknown> => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = hp;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = enemies.map((enemy, i) => ({
+      ...enemy,
+      intents: [{ index: 0, intent_type: "Attack", label: String(4 - i), damage: 4 - i, hits: 1, total_damage: 4 - i }],
+    }));
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = potionId;
+    return raw;
+  };
+  const planAnswer = (choice: string, confidence: number): AnswerSet => ({
+    plan: { type: "choice", choice, probabilities: { [choice]: confidence }, confidence, raw: {} },
+  });
+
+  it("an unmodelled potion below code rank 1 needs Jev at 0.75+; a near-guess falls back too", async () => {
+    const { planCombatTurn, HALLWAY_POTION_CONFIDENCE } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
+    expect(potionKey).toBeDefined();
+    // VC4L F23 T1: Gambler's Brew at 0.05.
+    const guess = decision.resolve(planAnswer(potionKey, 0.05));
+    expect(guess.fallback).toBe(true);
+    expect(guess.intent?.action).not.toBe("use_potion");
+    // NZR7 F6: rank 4 at 0.57.
+    const middling = decision.resolve(planAnswer(potionKey, 0.57));
+    expect(middling.fallback).toBe(true);
+    expect(middling.intent?.action).not.toBe("use_potion");
+    const sure = decision.resolve(planAnswer(potionKey, HALLWAY_POTION_CONFIDENCE));
+    expect(sure.fallback).toBe(false);
+    expect(sure.intent?.action).toBe("use_potion");
+    // An escalator's pick stands.
+    const escalated = decision.resolve({ plan: { type: "choice", choice: potionKey, probabilities: {}, confidence: 0.6, raw: { escalated: "deepseek" } } });
+    expect(escalated.intent?.action).toBe("use_potion");
+  });
+
+  it("the hallway potion cost doubles right before a forced Elite", async () => {
+    const { potionUseCostFor, HALLWAY_POTION_COST } = await import("../src/screens/combat-plan.js");
+    const { forcedEliteWithin } = await import("../src/screens/rest.js");
+    const eliteNext = (childType: string) => {
+      const memory = createScreenMemory("COMBAT");
+      rememberMap(memory, parseGameState(baseState("MAP", {
+        run: runPayload({ floor: 8 }),
+        map: {
+          nodes: [
+            { row: 7, col: 0, node_type: "Monster", children: [{ row: 8, col: 0 }] },
+            { row: 8, col: 0, node_type: childType, children: [] },
+            { row: 7, col: 1, node_type: "Unknown", children: [{ row: 8, col: 1 }] },
+            { row: 8, col: 1, node_type: "Shop", children: [] },
+          ],
+          available_nodes: [{ index: 0, row: 7, col: 0, node_type: "Monster" }],
+        },
+      })));
+      return memory;
+    };
+    const fight = parseGameState(combatPayload());
+    expect(forcedEliteWithin(eliteNext("Elite"), fight, ["Monster", "Unknown"], 1)).toBe(true);
+    expect(forcedEliteWithin(eliteNext("Monster"), fight, ["Monster", "Unknown"], 1)).toBe(false);
+    expect(potionUseCostFor("monster", false, false)).toBe(HALLWAY_POTION_COST);
+    expect(potionUseCostFor("monster", false, true)).toBe(2 * HALLWAY_POTION_COST);
+    expect(potionUseCostFor("unknown", false, true)).toBe(2 * HALLWAY_POTION_COST);
+    expect(potionUseCostFor("elite", false, true)).toBe(5);
+    expect(potionUseCostFor("monster", true, true)).toBe(0);
   });
 });
 

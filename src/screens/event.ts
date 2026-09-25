@@ -7,7 +7,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { EVENT_NODES, forcedNext } from "./rest.js";
+import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -18,6 +18,9 @@ export function eventHpCost(description: string): { hp: number; maxHp: number } 
   for (const match of text.matchAll(/失去(\d+)点最大生命|lose (\d+) max hp/gi)) maxHp += Number(match[1] ?? match[2]);
   return { hp, maxHp };
 }
+
+/** Nodes ahead the HP guard looks for a forced Elite (no rest site or shop before it). */
+export const FORCED_ELITE_DEPTH = 3;
 
 /** Max HP an event option may cost before code rules it out (1K5G F8: 13 for Fresnel Lens, 53/67 at the boss). */
 export const EVENT_MAX_HP_LIMIT = 8;
@@ -72,7 +75,10 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // HP guard: options that cost HP too dearly are not shown, unless every option costs HP.
   const hp = state.run?.current_hp ?? 0;
   const maxHp = state.run?.max_hp ?? 0;
-  const forced = forcedNext(env.screenMemory, state, EVENT_NODES);
+  // A forced Elite within the next FORCED_ELITE_DEPTH nodes on every path counts too (NZR7 F4).
+  const forced =
+    forcedNext(env.screenMemory, state, EVENT_NODES) ??
+    (forcedEliteWithin(env.screenMemory, state, EVENT_NODES, FORCED_ELITE_DEPTH) ? `Elite within ${FORCED_ELITE_DEPTH} nodes` : null);
   const excluded = new Map<Record<string, unknown>, string>();
   const costs = unguarded.map((option) => eventHpCost(str(option["description"])));
   if (costs.some((cost) => cost.hp <= 0 && cost.maxHp <= 0)) {

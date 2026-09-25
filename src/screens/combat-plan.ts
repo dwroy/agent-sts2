@@ -26,6 +26,7 @@ import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
+import { forcedEliteWithin } from "./rest.js";
 
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
 const MODELLED_ENEMY_POWERS = new Set([
@@ -65,6 +66,21 @@ const POWER_NOTES: Record<string, string> = {
   STOCK_POWER: " (revives left: at 0 HP it comes straight back at full, higher max HP with Stock -1, and that turn does Boot Up (10 Block, +3 Strength, no attack), then attacks harder every turn; a kill with Stock left does NOT end the fight: its real HP is current HP + Stock x max HP, so block rather than race it)",
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
 };
+
+/** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
+export const HALLWAY_POTION_COST = 15;
+/** Jev confidence a hallway potion line below code rank 1 needs to be played. */
+export const HALLWAY_POTION_CONFIDENCE = 0.75;
+/** Map node types a hallway fight is fought in. */
+const FIGHT_NODES = ["Monster", "Unknown"];
+
+/** Solver cost of drinking a potion (before any defensive saving). */
+export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolean, eliteNext: boolean): number {
+  if (pressed) return 0;
+  if (kind === "boss") return BOSS_POTION_COST;
+  if (kind === "elite") return 5;
+  return HALLWAY_POTION_COST * (eliteNext ? 2 : 1);
+}
 
 /** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
 export const BOSS_POTION_COST = 4;
@@ -606,7 +622,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
   // Boss potions are not free (1R3C F17 T1: cost 0 drank all three on a 7-damage turn): a small
   // base cost, plus what a defensive one is worth saving for a bigger hit next turn.
-  const potionUseCost = pressed ? 0 : kind === "boss" ? BOSS_POTION_COST : kind === "elite" ? 5 : 15;
+  // A hallway fight right before a forced Elite: the potion is worth twice as much kept (NZR7 F6: both
+  // drunk on a 0-loss turn, 0 potions into the F7 elite).
+  const eliteNext = (kind === "monster" || kind === "unknown") && forcedEliteWithin(env.screenMemory, state, FIGHT_NODES, 1);
+  const potionUseCost = potionUseCostFor(kind, pressed, eliteNext);
   // Defensive potions are worth saving when next turn's hit is expected to be bigger than this one
   // (Vantom: Fortifier spent on the 12-damage lance, then nothing left for the 28-damage Dismember).
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
@@ -819,6 +838,21 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");
       const chosen = byKey.get(answer.choice);
       if (!chosen) return fallback(`Jev chose unknown option "${answer.choice}"`);
+      const hallway = !(kind === "elite" || kind === "boss" || dangerous);
+      const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
+      const fromJev = answer.raw !== undefined && !escalatedBy;
+      // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
+      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top) {
+        return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
+      }
+      // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
+      // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
+      // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
+      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
+      const hallwayFight = kind === "monster" || kind === "unknown";
+      if (hallwayFight && fromJev && drinks && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
+        return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
+      }
       if (chosen.potion) {
         return {
           intent: chosen.potion,
@@ -831,11 +865,6 @@ function planTurn(env: DecisionEnv): Decision | null {
         };
       }
       const picked = chosen.plan!;
-      const hallway = !(kind === "elite" || kind === "boss" || dangerous);
-      const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
-      if (hallway && answer.confidence < 0.3 && picked !== top && answer.raw !== undefined && !escalatedBy) {
-        return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
-      }
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
       // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
       const memo = env.screenMemory.hpGuard;
