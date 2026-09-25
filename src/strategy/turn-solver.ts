@@ -436,15 +436,20 @@ export function exhaustValue(card: CardModel, weights: Weights): number {
   return Math.max(DRAW_IDLE_VALUE, damage + debuffs, block, lasting, DRAW_VALUE * card.draw);
 }
 
-/** The card an exhaust picker takes: junk first, then the least valuable (what selection.ts picks). */
-export function exhaustPick(cards: CardModel[]): CardModel | null {
+/**
+ * The card an exhaust picker takes: junk first, then the least valuable (what selection.ts picks).
+ * With a Sandpit up, Frantic Escape is never taken (THMG F33 T4: Burning Pact exhausted it as junk),
+ * unless it is the only card left (the game forces the pick; selection.ts scores it last too).
+ */
+export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | null {
   const weights = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
   let best: CardModel | null = null;
   for (const card of cards) {
     if (card.type === "Potion") continue;
+    if (sandpit && card.cardId === "FRANTIC_ESCAPE") continue;
     if (!best || exhaustValue(card, weights) < exhaustValue(best, weights)) best = card;
   }
-  return best;
+  return best ?? (sandpit ? cards.find((card) => card.cardId === "FRANTIC_ESCAPE") ?? null : null);
 }
 
 /**
@@ -615,7 +620,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
   else if (EXHAUST_PICKERS.has(card.cardId)) {
-    const pick = exhaustPick([...next.held, ...next.hand]);
+    const pick = exhaustPick([...next.held, ...next.hand], next.enemies.some((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0));
     if (pick) {
       next.hand = next.hand.filter((entry) => entry !== pick);
       next.held = next.held.filter((entry) => entry !== pick);

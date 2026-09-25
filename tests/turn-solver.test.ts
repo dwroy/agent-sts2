@@ -20,6 +20,7 @@ import {
   type EnemySim,
   type PlayerSim,
 } from "../src/strategy/turn-solver.js";
+import { hardRuleLines } from "../src/screens/combat-plan.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -431,6 +432,40 @@ describe("The Insatiable's Sandpit", () => {
     }
   });
 
+  it("hard rule: Sandpit-1 lines are not offered while a line keeps it at 2 (THMG F33 T5)", () => {
+    // T5: Sandpit 1, 3 energy, three Frantic Escapes; Jev took "Escape, Strike, Shrug" (Sandpit 1).
+    const shrug = card(3, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8 });
+    const worm = sandworm({ attacks: [{ damage: 14, hits: 1 }] });
+    const result = solveTurn({ hand: [escape(0), escape(1), escape(2), shrug, strike(4)], player: player({ hp: 40 }), enemies: [worm], fightKind: "boss", turn: 5 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    expect(surviving.some((plan) => plan.outcome.sandpitAfter === 1)).toBe(true);
+    const kept = hardRuleLines(surviving, [worm]);
+    expect(kept.length).toBeGreaterThan(0);
+    for (const plan of kept) expect(plan.outcome.sandpitAfter).toBeGreaterThanOrEqual(2);
+    for (const plan of distinctPlans(kept, 4)) expect(plan.outcome.sandpitAfter).toBeGreaterThanOrEqual(2);
+  });
+
+  it("hard rule: Sandpit-1 lines stay when no line reaches 2", () => {
+    const worm = sandworm({ attacks: [{ damage: 10, hits: 1 }] });
+    const result = solveTurn({ hand: [escape(0), defend(1), strike(2)], player: player({ hp: 40 }), enemies: [worm], fightKind: "boss", turn: 6 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    expect(surviving.length).toBeGreaterThan(0);
+    expect(hardRuleLines(surviving, [worm])).toEqual(surviving);
+  });
+
+  it("an exhaust pick never takes Frantic Escape while the Sandpit is up (THMG F33 T4)", () => {
+    const status = card(0, "FRANTIC_ESCAPE", { type: "Status", target: "self", validTargets: [], special: "frantic_escape" });
+    expect(exhaustPick([status, strike(1), defend(2)])).toBe(status);
+    expect(exhaustPick([status, strike(1), defend(2)], true)!.cardId).toBe("DEFEND_IRONCLAD");
+    // Forced when it is the only card left.
+    expect(exhaustPick([status], true)).toBe(status);
+    const pact = card(3, "BURNING_PACT", { type: "Skill", target: "self", validTargets: [] });
+    const result = solveTurn({ hand: [pact, status, strike(1), defend(2)], player: player({ hp: 50 }), enemies: [sandworm({ sandpit: 3 })], fightKind: "boss", turn: 4 });
+    for (const plan of result.plans) {
+      if (plan.steps[0]?.cardId === "BURNING_PACT") expect(plan.steps.slice(1).some((step) => step.cardId === "DEFEND_IRONCLAD")).toBe(false);
+    }
+  });
+
   it("prefers keeping the count at 2 over a Strike when the HP cost is the same", () => {
     const result = solveTurn({
       hand: [defend(0), defend(1), strike(2), escape(3)],
@@ -572,6 +607,19 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
   it("wakes it anyway for a big hit (>= 25% of its HP)", () => {
     const result = solveTurn({ hand: [bash(0), strike(1), strike(2)], player: player({ hp: 70, energy: 4 }), enemies: [matriarch({ hp: 40, block: 0 })], fightKind: "boss", turn: 1 });
     expect(result.plans[0]!.outcome.enemyHpAfter[0]!.hp).toBeLessThanOrEqual(30);
+  });
+
+  it("hard rule: lines that wake it are not offered while a line leaves it asleep (PYTG F17 T2)", () => {
+    const sleeper = matriarch();
+    const result = solveTurn({ hand: [bash(0), strike(1), strike(2), defend(3)], player: player({ hp: 70, energy: 3 }), enemies: [sleeper], fightKind: "boss", turn: 2 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    expect(surviving.some((plan) => plan.outcome.sleepCost > 0)).toBe(true);
+    const kept = hardRuleLines(surviving, [sleeper]);
+    expect(kept.length).toBeGreaterThan(0);
+    for (const plan of kept) expect(plan.outcome.sleepCost).toBe(0);
+    // Slumber counts as sleeping too; an awake enemy is left alone.
+    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(kept);
+    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0 }])).toEqual(surviving);
   });
 
   it("an awake (attacking) enemy is hit as usual", () => {

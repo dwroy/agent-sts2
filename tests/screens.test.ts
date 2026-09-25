@@ -784,6 +784,17 @@ describe("in-combat selections", () => {
     expect(combatExhaustScore("SHRUG_IT_OFF", "Skill", tight, true)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", { ...tight, hp: 40 })).toBeGreaterThan(0);
   });
+
+  it("in-combat exhaust never takes Frantic Escape while the Sandpit is up (THMG F33 T4: 'scores 90 vs Strike 70')", async () => {
+    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const context = { attacks: 8, incoming: 10, hp: 50 };
+    expect(combatExhaustScore("FRANTIC_ESCAPE", "Status", context)).toBe(90);
+    const sandpit = { ...context, sandpit: true };
+    const escape = combatExhaustScore("FRANTIC_ESCAPE", "Status", sandpit);
+    for (const [id, type] of [["STRIKE_IRONCLAD", "Attack"], ["DEFEND_IRONCLAD", "Skill"], ["BASH", "Attack"], ["WOUND", "Status"]] as const) {
+      expect(escape).toBeLessThan(combatExhaustScore(id, type, sandpit));
+    }
+  });
 });
 
 describe("chest", () => {
@@ -1090,6 +1101,35 @@ describe("Sandpit guard", () => {
     (raw["run"] as Record<string, unknown>)["potions"] = [];
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+  });
+
+  it("THMG F33 T5/T6: lines ending at Sandpit 1 are not offered while one keeps it at 2", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = sandpitCombat(1, 1);
+    const combat = raw["combat"] as Record<string, unknown>;
+    const enemy = (combat["enemies"] as Record<string, unknown>[])[0]!;
+    enemy["intents"] = [{ index: 0, intent_type: "Attack", label: "20x2", damage: 20, hits: 2, total_damage: 40 }];
+    const hand = combat["hand"] as Record<string, unknown>[];
+    const escape = hand[1]!;
+    combat["hand"] = [
+      { ...escape, index: 0 },
+      { ...escape, index: 1 },
+      { ...escape, index: 2 },
+      { ...hand[0], index: 3 },
+      { ...(combatPayload()["combat"] as { hand: Record<string, unknown>[] }).hand[0], index: 4 },
+    ];
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    if (!decision) throw new Error("expected a decision");
+    const shown: Record<string, unknown>[] =
+      decision.kind === "ask"
+        ? Object.entries(decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {})
+            .filter(([key]) => key.startsWith("plan"))
+            .map(([, text]) => JSON.parse(String(text)))
+        : [];
+    if (decision.kind === "act") expect(decision.intent).toMatchObject({ action: "play_card" });
+    for (const plan of shown) expect(Number(plan["sandpit_after_enemy_turn"])).toBeGreaterThanOrEqual(2);
+    expect(decision.kind === "ask" ? shown.length : 1).toBeGreaterThan(0);
   });
 
   it("shows enemy powers (the Sandpit countdown) in the plan-choice question", async () => {
@@ -1689,6 +1729,28 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
     }];
     return raw;
   };
+
+  it("PYTG F17 T2: lines that wake it are not offered to Jev at all (Jev took the waking rank 2 at 0.69)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const raw = board();
+    raw["turn"] = 2;
+    const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    potions[0]!["can_use"] = true;
+    potions[0]!["potion_id"] = "LIQUID_MEMORIES";
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["hand"] = [
+      card(0, "POMMEL_STRIKE", 1, [["Damage", 9]]),
+      card(1, "TAUNT", 1, [["Block", 7], ["VulnerablePower", 1]]),
+      card(2, "STRIKE_R", 1, [["Damage", 6]]),
+    ];
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    if (!decision) throw new Error("expected a decision");
+    if (decision.kind !== "ask") throw new Error(`expected an ask (boss + potion), got ${decision.rationale}`);
+    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    const plans = Object.entries(criteria).filter(([key]) => key.startsWith("plan"));
+    expect(plans.length).toBeGreaterThan(0);
+    for (const [, text] of plans) expect(JSON.parse(String(text))["wakes_sleeping_enemy"]).toBeUndefined();
+  });
 
   it("the committed (or top-ranked) line leaves it asleep", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");

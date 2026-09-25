@@ -452,6 +452,29 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
   };
 }
 
+/**
+ * Hard rules on the surviving lines, before code ranks them and before any are shown to Jev/DeepSeek.
+ * A line that wins the fight is always kept; a rule only applies when some line obeys it.
+ *
+ * - Sandpit >= 2 (THMG T5/T6, TTVY): a line that ends the enemy turn with the Sandpit at 1 leaves
+ *   next turn a must-draw-Frantic-Escape turn; the solver's penalty alone did not stop the models
+ *   picking it (THMG T6: the Sandpit-1 line carried lasting_value).
+ * - Do not wake a sleeper (PYTG T2, KFP1 T1, Z2H3, 1K5G: the Matriarch woken four times): while an
+ *   enemy is Asleep/Slumbering, lines that cost its free turns go when a non-waking line exists.
+ */
+export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
+  let kept = plans;
+  if (enemies.some((enemy) => (enemy.sandpit ?? 0) > 0)) {
+    const deep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter >= 2;
+    if (kept.some((plan) => !plan.outcome.winsFight && deep(plan))) kept = kept.filter(deep);
+  }
+  if (enemies.some((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0)) {
+    const asleep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sleepCost <= 0;
+    if (kept.some((plan) => !plan.outcome.winsFight && asleep(plan))) kept = kept.filter(asleep);
+  }
+  return kept;
+}
+
 export function planCombatTurn(env: DecisionEnv): Decision | null {
   return guardSandpit(env, planTurn(env));
 }
@@ -667,7 +690,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
-  const surviving = solved.plans.filter((plan) => !plan.outcome.dies);
+  const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
   const options = distinctPlans(surviving, MAX_OPTIONS);
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
   // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
