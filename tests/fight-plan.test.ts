@@ -322,6 +322,9 @@ describe("turn planner with a fight plan", () => {
     expect(nodeWeight("Elite", 0.69, 100, 8, 2)).toBe(-3);
     expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBe(LIKELY_DEATH);
     expect(nodeWeight("Monster", 0.9, 100, 8, 2)).toBeGreaterThan(0);
+    // Act 1 before the mid-act: starter deck, elites only at near-full HP (CWMP F6).
+    expect(nodeWeight("Elite", 0.7, 100, 6, 1)).toBe(-3);
+    expect(nodeWeight("Elite", 0.9, 100, 6, 1)).toBeGreaterThan(0);
   });
 
   it("the HP guard never swaps into a line drinking a potion the plan keeps (MGJ8 F11 T1)", () => {
