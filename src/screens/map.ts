@@ -59,7 +59,7 @@ export function monsterWeight(hpOnArrival: number): number {
 }
 
 /** How much this node type is worth to *this* run, at the projected HP/gold on arrival. */
-function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number): number {
+export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number): number {
   switch (type) {
     case "Elite":
       // Phase 2: no elites in the first floors of an act (the deck is still starter cards), and only
@@ -68,7 +68,11 @@ function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: numbe
       // The elite right before the boss: only at near-full HP (BG4W F14: took it at 47/80, lost 33,
       // and went into the boss short after the rest).
       if (floorInAct >= 12) return hpPct > 0.8 ? 4 : -3;
-      return hpPct > 0.7 ? 4 : hpPct > 0.5 ? 0.5 : -3;
+      // Optional elites mid-act only above 80% HP (UJS25 F24: took Swarm Caster at 58/80 under the old
+      // 70% bar, fell to 8 HP and died two fights later; G8AQ died to the same elite). 70-80% is
+      // neutral, below that a cost. Same at every ascension: from A1 on elites are more frequent anyway
+      // (LEVEL_01), so there is no need to seek out extra ones.
+      return hpPct > 0.8 ? 4 : hpPct > 0.7 ? 0 : -3;
     case "RestSite": // the game's name ("Rest" kept for older fixtures)
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;

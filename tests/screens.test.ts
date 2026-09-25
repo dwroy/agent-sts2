@@ -12,6 +12,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
+import { nodeWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { loadConfig } from "../src/config.js";
 import {
@@ -250,7 +251,7 @@ describe("map", () => {
 
   it("values an elite behind a fight at the HP left after that fight (0NG F27)", () => {
     const raw = mapPayload();
-    (raw["run"] as Record<string, unknown>)["current_hp"] = 60; // 75%: an elite now would be +4
+    (raw["run"] as Record<string, unknown>)["current_hp"] = 68; // 85%: an elite now would be +4
     const map = raw["map"] as Record<string, unknown>;
     const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
     map["available_nodes"] = [
@@ -267,9 +268,21 @@ describe("map", () => {
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    // Monster -> Elite: the elite is reached at ~63%, where it is worth +0.5, not +4.
-    expect(value("n0")).toBeCloseTo(1.7);
+    // Monster -> Elite: the elite is reached at ~75%, where it is worth 0, not +4.
+    expect(value("n0")).toBeCloseTo(1.2);
     expect(value("n1")).toBeCloseTo(2.4);
+  });
+
+  it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {
+    expect(nodeWeight("Elite", 0.85, 100, 8)).toBe(4);
+    expect(nodeWeight("Elite", 0.8, 100, 8)).toBe(0);
+    expect(nodeWeight("Elite", 0.725, 100, 8)).toBe(0);
+    expect(nodeWeight("Elite", 0.7, 100, 8)).toBe(-3);
+    expect(nodeWeight("Elite", 0.6, 100, 5)).toBe(-3);
+    // Early floors and the pre-boss elite keep their rules.
+    expect(nodeWeight("Elite", 1, 100, 4)).toBe(-3);
+    expect(nodeWeight("Elite", 0.85, 100, 12)).toBe(4);
+    expect(nodeWeight("Elite", 0.75, 100, 12)).toBe(-3);
   });
 
   it("Act 3 at 40% HP: Monster -> Rest beats Monster -> Monster -> Monster (MD3F F34-F39)", () => {
