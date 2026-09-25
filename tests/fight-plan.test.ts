@@ -400,5 +400,24 @@ describe("turn planner with a fight plan", () => {
     expect(text).not.toContain("Fire Potion");
     expect(text).not.toContain("use_potion");
   });
+
+  it("the HP guard keeps a line playing a planned setup card while HP stays healthy (JF99 F33 T4)", () => {
+    const raw = bossTurnOne();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["INFLAME"], potions: {} });
+    const decision = planCombatTurn(e);
+    if (decision?.kind === "act") {
+      expect(decision.label).not.toBe("combat/plan-guarded");
+      return;
+    }
+    const ask = decision as AskDecision;
+    const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
+    const key = Object.keys(criteria).find((k) => String(criteria[k]).includes("plays planned setup"))!;
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(resolved.guard).toBeUndefined();
+  });
 });
 

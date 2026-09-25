@@ -875,6 +875,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Counted per distinct planned card: one of them played is not the plan (CAYK F48 T3: Brand
   // satisfied the check and Mayhem, bought for this fight, was never played).
   const setupCount = (plan: Plan) => (fightPlan ? new Set(plan.steps.filter((step) => fightPlan.setup.includes(step.cardId)).map((step) => step.cardId)).size : 0);
+  // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
+  // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
+  // crab every turn) was traded twice for 6 HP and never played; the crabs died at 7 and 38 HP left.
+  const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
+    replacement !== null &&
+    setupCount(picked) > setupCount(replacement) &&
+    picked.outcome.hpAfter >= Math.max(playerSim.maxHp * 0.35, nextIncoming);
   const setupLine =
     fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3
       ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
@@ -888,10 +895,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
     // asked, and T4's laser killed us exactly). Not recorded against the fight's budget: that is for
     // extra HP a model chose to accept.
-    const guarded =
+    let guarded =
       (kind === "elite" || kind === "boss") && !top.outcome.winsFight
         ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
         : null;
+    if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -1091,7 +1099,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // F11 T1: -10 swapped for a line drinking the Fortifier kept for an emergency; the boss at F17
       // then died 3 HP short of us, Dismember hitting 28 into 7 block).
       const guardOptions = options.filter((plan) => plan === picked || !drinksKeptPotion(plan));
-      const replacement = hallway ? null : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
+      const proposed = hallway ? null : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
+      const replacement = proposed && guardKeepsSetup(picked, proposed) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;
