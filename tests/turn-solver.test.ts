@@ -283,6 +283,20 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("concentrates damage on one of several enemies when the total is the same (GMT2 F39 T1)", () => {
+    const result = solveTurn({
+      hand: [strike(0), strike(1)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
+      player: player({ hp: 60 }),
+      enemies: [
+        enemy({ index: 0, name: "Cubex", hp: 40, attacks: [] }),
+        enemy({ index: 1, name: "Cubex", hp: 40, attacks: [] }),
+      ],
+      fightKind: "monster",
+    });
+    const targets = result.plans[0]!.steps.map((step) => step.target);
+    expect(new Set(targets).size).toBe(1);
+  });
+
   it("Stomp costs 1 less per Attack played before it this turn (8XQM F48 T8)", () => {
     const stomp = card(0, "STOMP", { cost: 3, damage: 12, target: "all", validTargets: [], special: "stomp" });
     const result = solveTurn({

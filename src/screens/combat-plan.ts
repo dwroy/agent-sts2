@@ -583,7 +583,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
   for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
-  if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) {
+  const noDraw = relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0;
+  if (noDraw) {
     for (const card of hand) {
       card.draw = 0;
       card.drawsUntil = false;
@@ -750,7 +751,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
             ),
           )
-          .filter((card): card is CardModel => card !== null),
+          .filter((card): card is CardModel => card !== null)
+          // Draw potions draw nothing under Fiddle either (GMT2 F38 T2: Swift Potion "draws 3", drew 0).
+          .map((card) => (noDraw ? { ...card, draw: 0, drawsUntil: false } : card)),
       ],
       player: playerSim,
       enemies,
@@ -790,7 +793,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
   // Dexterity potion for 2 HP and Heart of Iron at Jev 0.10; the boss killed us 4 HP short).
   let dryCheap = false;
-  if ((kind === "monster" || kind === "unknown") && solved.plans[0] && drinksPotion(solved.plans[0])) {
+  // Any potion line on offer, not only a top-ranked one (GMT2 F38 T2: end turn ranked first, the tied
+  // Swift Potion line was listed and Jev drank it at 0.11).
+  if ((kind === "monster" || kind === "unknown") && solved.plans.some(drinksPotion)) {
     const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
     if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
       solved = { ...solved, plans: dry };
@@ -905,7 +910,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const setupStep = (step: Step) =>
     fightPlan !== null &&
     fightPlan.setup.includes(step.cardId) &&
-    !(step.cardId === "MOLTEN_FIST" && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
+    !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
