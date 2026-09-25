@@ -76,10 +76,17 @@ export function planCombat(env: DecisionEnv): Decision | null {
         for (const note of outcome.modifiers) modifiers.add(note);
       }
     }
-    return { hpLoss, total, modifiers: [...modifiers] };
+    return { hpLoss, total, modifiers: [...modifiers], blockAfter: block };
   })();
-  const incoming = incomingOutcome.hpLoss;
-  const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]);
+  // Cards that hurt while held at the end of the turn (Beckon 6 HP each, Burn 2): neither the enemy
+  // intents nor the mod's lethal flag count them (F6NT F17 T11: 8 HP, two Beckons drawn by Burning
+  // Pact, end turn shown as "incoming 0, not lethal"; they dealt 12).
+  const heldModels = asArray(combat["hand"]).map((entry, fallbackIndex) => modelHandCard(entry, fallbackIndex, knowledge));
+  const heldPenaltyOf = new Map(heldModels.map((model) => [model.index, model.heldPenalty ?? 0] as const));
+  const heldHpLoss = heldModels.reduce((sum, model) => sum + (model.heldHpLoss ?? 0), 0);
+  const heldDamage = heldModels.reduce((sum, model) => sum + Math.max(0, (model.heldPenalty ?? 0) - (model.heldHpLoss ?? 0)), 0);
+  const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss;
+  const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge);
 
@@ -119,7 +126,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
     const isLastEnemy = kills && living.length === 1;
     const blockGain = card.block ?? 0;
     const hpCost = hpCostByIndex.get(card.index) ?? 0;
-    const incomingAfter = Math.max(0, incoming - (playerBlock + blockGain)) + hpCost;
+    // Playing a card that hurts while held (a playable Beckon) takes its penalty out of the turn.
+    const incomingAfter = Math.max(0, incoming - (heldPenaltyOf.get(card.index) ?? 0) - (playerBlock + blockGain)) + hpCost;
     // Paying its HP cost kills us before anything else happens: not an option.
     if (hpCost > 0 && playerHp !== null && hpCost >= playerHp) return;
 
