@@ -130,8 +130,8 @@ export class RunJournal {
       floor: state.run?.floor ?? null,
       label: entry.label,
       by: entry.by,
-      choice: oneLine(entry.choice, 40),
-      reason: oneLine(entry.reason, 70),
+      choice: oneLine(entry.choice, 70),
+      reason: journalReason(entry.reason),
     });
     if (this.choices.length > MAX_CHOICES) this.choices.splice(0, this.choices.length - MAX_CHOICES);
   }
@@ -237,6 +237,18 @@ function givesStrength(cardId: string, description: string): boolean {
   return STRENGTH_IDS.has(cardId) || /\bgains?\s+(?:\d+|X)\s+Strength/i.test(description);
 }
 
+/**
+ * The escalator's free-text reason is its guess, not a fact (VC4L F22: "腐化≈费用归零" was quoted back
+ * as memory on the next pick; Corrupted costs 2 HP a play). Kept short and labelled unverified.
+ */
+export const UNVERIFIED_REASON_PREFIX = "（DeepSeek 当时的理由，未经核实）";
+export const REASON_CAP = 40;
+
+export function journalReason(reason: string): string {
+  const text = oneLine(reason, REASON_CAP);
+  return text ? `${UNVERIFIED_REASON_PREFIX}${text}` : "";
+}
+
 function oneLine(text: string, max: number): string {
   return truncate(text.replace(/\s+/g, " ").trim(), max);
 }
@@ -337,7 +349,12 @@ function optionText(criterion: string | null): string | null {
   try {
     const parsed = asRecord(JSON.parse(criterion));
     for (const field of ["plays", "option", "card", "name", "title", "label"]) {
-      if (typeof parsed[field] === "string" && parsed[field]) return parsed[field] as string;
+      if (typeof parsed[field] === "string" && parsed[field]) {
+        // The option's own game text rides along (events: "靠近: 一张攻击牌附魔腐化"), so memory holds
+        // what the option said rather than what the escalator guessed it meant.
+        const description = typeof parsed["description"] === "string" ? (parsed["description"] as string).replace(/\[[^\]]*\]/g, "").trim() : "";
+        return description ? `${parsed[field] as string}: ${description}` : (parsed[field] as string);
+      }
     }
     const first = Object.values(parsed).find((value) => typeof value === "string");
     if (typeof first === "string") return first;

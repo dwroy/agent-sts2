@@ -3,7 +3,8 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { memoryChars, pathSpans, renderLookahead, RunJournal, type JournalEntry } from "../src/project/run-journal.js";
+import { describeChoice, memoryChars, pathSpans, renderLookahead, RunJournal, UNVERIFIED_REASON_PREFIX, type JournalEntry } from "../src/project/run-journal.js";
+import type { AskDecision } from "../src/project/types.js";
 import { createScreenMemory, type RememberedMap } from "../src/project/types.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { baseState, combatPayload, runPayload, testKnowledge } from "./scenarios.js";
@@ -144,5 +145,36 @@ describe("lookahead", () => {
     // A map from another act says nothing about this one.
     const nextAct = parseGameState(baseState("SHOP", { run: runPayload({ floor: 18, act_id: "1", boss_id: "KNOWLEDGE_DEMON_BOSS" }) }));
     expect(journal.render(nextAct, testKnowledge, map).lookahead).toMatch(/^boss 要点: 379 血/);
+  });
+});
+
+describe("run journal keeps the option's own text, not the escalator's guess (VC4L F22)", () => {
+  const criterion = JSON.stringify({ option: "靠近", description: "一张攻击牌附魔[gold]腐化[/gold]。", lethal: false });
+  const decision: AskDecision = {
+    kind: "ask",
+    label: "event/choose",
+    state: {},
+    questions: { pick: { type: "choice", instructions: "Which option?", criteria: { o0: criterion, o1: "{\"option\":\"用火烧杀\"}" } } } as never,
+    resolve: () => ({ intent: null, rationale: "", confidence: null, fallback: false }),
+    escalate: { question: "pick", below: 0.5, why: "" },
+  };
+
+  it("the choice is the chosen option's title and game text", () => {
+    const choice = describeChoice(decision, { intent: null, rationale: "", confidence: 0.6, fallback: false }, undefined, { choice: "o0", reason: "腐化约等于费用归零" });
+    expect(choice).toBe("靠近: 一张攻击牌附魔腐化。");
+  });
+
+  it("a kept reason is labelled unverified and capped at 40 chars", () => {
+    const journal = new RunJournal();
+    const state = parseGameState(baseState("EVENT"));
+    journal.record(state, entry({ label: "event/choose", choice: "靠近: 一张攻击牌附魔腐化。", reason: "腐化附魔约等于费用归零，".repeat(10) }));
+    const reason = journal.choices[0]!.reason;
+    expect(reason.startsWith(UNVERIFIED_REASON_PREFIX)).toBe(true);
+    expect(reason.length - UNVERIFIED_REASON_PREFIX.length).toBeLessThanOrEqual(40);
+    const rendered = journal.render(state, testKnowledge, undefined).run_journal;
+    expect(rendered).toContain("靠近: 一张攻击牌附魔腐化。");
+    expect(rendered).toContain(`— ${UNVERIFIED_REASON_PREFIX}`);
+    journal.record(state, entry({ label: "reward/card", choice: "took Inflame", reason: "" }));
+    expect(journal.choices[1]!.reason).toBe("");
   });
 });
