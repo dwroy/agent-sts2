@@ -90,13 +90,55 @@ export class DeepSeekClient implements Escalator {
     criteria: Record<string, string | null>,
     context: Record<string, JsonValue> = {},
   ): Promise<DeepSeekAnswer> {
-    const started = Date.now();
     const label = typeof context["label"] === "string" ? context["label"] : "";
-    const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
-    const thinking = effort !== "off";
     // Run memory (journal, fight log, lookahead) rides in the user message, never the system prompt.
     const memory = context["memory"];
     const user = JSON.stringify({ state, ...(memory === undefined ? {} : { memory }), question: instructions, options: criteria });
+    const done = await this.complete(user, label);
+    let parsed: { choice?: unknown; reason?: unknown };
+    try {
+      parsed = JSON.parse(done.content) as { choice?: unknown; reason?: unknown };
+    } catch {
+      throw new Error(`DeepSeek returned non-JSON: ${done.content.slice(0, 120)}`);
+    }
+    const choice = typeof parsed.choice === "string" ? parsed.choice.trim() : "";
+    this.logReasoning(label, done.effort, instructions, criteria, choice, parsed.reason, done.reasoning, done.latencyMs, memory);
+    if (!(choice in criteria)) throw new Error(`DeepSeek chose unknown option "${choice}"`);
+    return {
+      ...done.meta,
+      choice,
+      reason: typeof parsed.reason === "string" ? parsed.reason.slice(0, 200) : "",
+    };
+  }
+
+  /**
+   * One free-form JSON answer (the fight plan, FIGHT_PLAN=v1): same cached system prompt, the task and
+   * its reply format in the user message. Returns the parsed object; the caller validates it.
+   */
+  async askJson(
+    payload: Record<string, JsonValue>,
+    label: string,
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    const done = await this.complete(JSON.stringify(payload), label);
+    let json: Record<string, unknown>;
+    try {
+      json = JSON.parse(done.content) as Record<string, unknown>;
+    } catch {
+      throw new Error(`DeepSeek returned non-JSON: ${done.content.slice(0, 120)}`);
+    }
+    if (typeof json !== "object" || json === null || Array.isArray(json)) throw new Error("DeepSeek returned a non-object");
+    const memory = payload["memory"];
+    this.logReasoning(label, done.effort, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", done.reasoning, done.latencyMs, memory, json);
+    return { json, meta: done.meta };
+  }
+
+  private async complete(
+    user: string,
+    label: string,
+  ): Promise<{ content: string; reasoning: string; effort: string; latencyMs: number; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    const started = Date.now();
+    const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
+    const thinking = effort !== "off";
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.config.timeoutMs);
     try {
@@ -129,38 +171,33 @@ export class DeepSeekClient implements Escalator {
           completion_tokens_details?: { reasoning_tokens?: number };
         };
       };
-      const content = payload.choices?.[0]?.message?.content ?? "";
-      let parsed: { choice?: unknown; reason?: unknown };
-      try {
-        parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown };
-      } catch {
-        throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
-      }
-      const choice = typeof parsed.choice === "string" ? parsed.choice.trim() : "";
-      this.logReasoning(label, effort, instructions, criteria, choice, parsed.reason, payload.choices?.[0]?.message?.reasoning_content ?? "", Date.now() - started, memory);
-      if (!(choice in criteria)) throw new Error(`DeepSeek chose unknown option "${choice}"`);
+      const latencyMs = Date.now() - started;
       return {
-        choice,
-        reason: typeof parsed.reason === "string" ? parsed.reason.slice(0, 200) : "",
-        latencyMs: Date.now() - started,
-        inputTokens: payload.usage?.prompt_tokens ?? 0,
-        outputTokens: payload.usage?.completion_tokens ?? 0,
-        cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
-        guideId: this.guideId,
-        handbookId: this.handbookId,
-        reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+        content: payload.choices?.[0]?.message?.content ?? "",
+        reasoning: payload.choices?.[0]?.message?.reasoning_content ?? "",
         effort,
+        latencyMs,
+        meta: {
+          latencyMs,
+          inputTokens: payload.usage?.prompt_tokens ?? 0,
+          outputTokens: payload.usage?.completion_tokens ?? 0,
+          cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
+          guideId: this.guideId,
+          handbookId: this.handbookId,
+          reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+          effort,
+        },
       };
     } finally {
       clearTimeout(timer);
     }
   }
 
-  private logReasoning(label: string, effort: string, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number, memory: JsonValue | undefined): void {
+  private logReasoning(label: string, effort: string, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number, memory: JsonValue | undefined, answer?: unknown): void {
     if (!this.config.reasoningLog) return;
     try {
       mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory }) };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory }), ...(answer === undefined ? {} : { answer }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play

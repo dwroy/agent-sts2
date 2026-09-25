@@ -136,6 +136,13 @@ export class RunJournal {
     if (this.choices.length > MAX_CHOICES) this.choices.splice(0, this.choices.length - MAX_CHOICES);
   }
 
+  /** DeepSeek's plan for an elite/boss fight (FIGHT_PLAN=v1): kept with the run's other escalator choices. */
+  noteFightPlan(state: GameState, summary: string): void {
+    this.syncRun(state);
+    this.choices.push({ floor: state.run?.floor ?? null, label: "combat/fight-plan", by: "deepseek", choice: oneLine(summary, 70), reason: "" });
+    if (this.choices.length > MAX_CHOICES) this.choices.splice(0, this.choices.length - MAX_CHOICES);
+  }
+
   private recordTurn(state: GameState, entry: JournalEntry): void {
     const key = fightKey(state);
     if (!this.fight || this.fight.key !== key) this.fight = { key, turns: [], over: false };

@@ -14,6 +14,10 @@ import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import type { JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
+import { DeepSeekClient } from "./llm/deepseek.js";
+import { moveModel } from "./knowledge/move-model.js";
+import { fightKind } from "./screens/combat-plan.js";
+import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -451,6 +455,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.facing = undefined;
       screenMemory.fightCards = undefined;
       screenMemory.demonTongueTurn = undefined;
+      screenMemory.fightPlan = undefined;
+      screenMemory.fightPlanFailed = undefined;
     }
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
@@ -473,7 +479,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       combatPlanner: config.combatPlanner,
       shopDiscardPotions: config.shop.discardPotions,
       jevContext: config.jevContext,
+      fightPlan: config.fightPlan,
     };
+    // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
+    if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
+      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
+      if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
+        await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, (tokens) => {
+          stats.deepseekCalls += 1;
+          stats.deepseekTokens += tokens;
+        });
+      }
+    }
     if (!planned) {
       try {
         planned = planDecision(env);
@@ -882,4 +899,78 @@ export function describeIntent(intent: JsonValue | undefined): string {
     if (obj[key] !== undefined && obj[key] !== null) details.push(`${key}=${String(obj[key])}`);
   }
   return details.length > 0 ? `${action} (${details.join(", ")})` : action;
+}
+
+/**
+ * Makes sure the current elite/boss fight has DeepSeek's plan in screenMemory.fightPlan (FIGHT_PLAN=v1):
+ * restored from the log after a restart, else asked once; re-asked once when a new boss/elite enemy
+ * appears. A failed request is not retried in the same fight (the turns are played without a plan).
+ */
+async function ensureFightPlan(
+  env: DecisionEnv,
+  deepseek: DeepSeekClient,
+  journal: RunJournal,
+  logFile: string,
+  onEvent: (event: LoopEvent) => void,
+  count: (tokens: number) => void,
+): Promise<void> {
+  const { state, knowledge, screenMemory } = env;
+  const combat = asRecord(state.raw["combat"]);
+  const alive = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  if (alive.length === 0) return;
+  const kind = fightKind(combat, env);
+  if (kind !== "elite" && kind !== "boss") return;
+  const fight = fightKey(state);
+  const runId = str(state.raw["run_id"]);
+  const current = screenMemory.fightPlan;
+  if (current && current.fight === fight && current.runId === runId && !needsReplan(current, state, knowledge)) return;
+  if (!current || current.fight !== fight || current.runId !== runId) {
+    const restored = loadFightPlan(logFile, runId, fight);
+    if (restored && !needsReplan(restored, state, knowledge)) {
+      screenMemory.fightPlan = restored;
+      return;
+    }
+  }
+  if (screenMemory.fightPlanFailed === fight && !(current && current.fight === fight)) return;
+  const replans = current && current.fight === fight && current.runId === runId ? current.replans + 1 : 0;
+  if (replans > 1) return;
+  const memory = journal.render(state, knowledge, screenMemory.lastMap);
+  const payload: Record<string, JsonValue> = {
+    task: FIGHT_PLAN_TASK,
+    fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
+    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    ...(current && current.fight === fight ? { previous_plan: fightPlanJson(current), note: "A new boss/elite enemy appeared: revise the plan for the rest of the fight." } : {}),
+  };
+  onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
+  try {
+    const { json, meta } = await deepseek.askJson(payload, `combat/fight-plan`);
+    count(meta.inputTokens + meta.outputTokens);
+    const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
+    screenMemory.fightPlan = plan;
+    journal.noteFightPlan(state, plan.summary || plan.approach);
+    logFightPlan(logFile, {
+      run: runId,
+      fight,
+      floor: state.run?.floor ?? null,
+      turn: state.turn,
+      kind,
+      enemies: plan.enemyIds,
+      plan: toJsonValue(plan),
+      raw: toJsonValue(json),
+      latency_ms: meta.latencyMs,
+      input_tokens: meta.inputTokens,
+      output_tokens: meta.outputTokens,
+      cache_hit_tokens: meta.cacheHitTokens ?? 0,
+      reasoning_tokens: meta.reasoningTokens ?? 0,
+      effort: meta.effort ?? "",
+      guide: meta.guideId ?? "",
+      handbook: meta.handbookId ?? "",
+    });
+    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
+  } catch (error) {
+    screenMemory.fightPlanFailed = fight;
+    const message = error instanceof Error ? error.message : String(error);
+    logFightPlan(logFile, { run: runId, fight, floor: state.run?.floor ?? null, kind, error: message.slice(0, 200) });
+    onEvent({ type: "note", message: `fight plan failed: ${message.slice(0, 160)}` });
+  }
 }

@@ -27,6 +27,7 @@ import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
+import { fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
@@ -687,6 +688,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     .filter((enemy) => enemy["is_alive"] !== false)
     .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
+  // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
+  const fightPlan = activeFightPlan(env);
+  const bigHit = nowIncoming >= Math.max(12, playerSim.hp * 0.25);
+  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed });
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
@@ -699,7 +704,13 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...hand,
         ...potionsAll
           .map((potion) =>
-            modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0)),
+            modelPotion(
+              potion.potion_id,
+              potion.name,
+              potion.slot,
+              potion.valid_targets,
+              free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
+            ),
           )
           .filter((card): card is CardModel => card !== null),
       ],
@@ -756,7 +767,9 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
-  const potions = potionCapped ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id));
+  const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly });
+  const potions = potionCapped ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
+  const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
@@ -789,9 +802,18 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
     }
   }
+  // FIGHT_PLAN=v1: the plan's setup cards in the first turns. A line that plays one, within the HP
+  // guard's slack of code's pick, makes the turn a question for Jev (tagged with the plan fit).
+  const playsSetup = (plan: Plan) => fightPlan !== null && plan.steps.some((step) => fightPlan.setup.includes(step.cardId));
+  const setupLine =
+    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3 && !playsSetup(top)
+      ? surviving.filter(playsSetup).sort((a, b) => b.score - a.score)[0]
+      : undefined;
+  const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
+  if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
-  const clear = !second || top.score - second.score >= CLOSE_CALL;
-  if (clear && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
+  const clear = (!second || top.score - second.score >= CLOSE_CALL) && !setupClose;
+  if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
     commit(env, state.turn, top, hand, "code");
     const margin = second
       ? `+${(top.score - second.score).toFixed(1)} over next`
@@ -809,16 +831,26 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
 
   // 4. A judgement call (or a dangerous turn with potions available): ask Jev.
+  const focusIndex = fightPlan?.focus
+    ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
+    : null;
+  const focusDamage = (plan: Plan): number | null => {
+    if (focusIndex === null) return null;
+    const before = enemies.find((enemy) => enemy.index === focusIndex);
+    const after = plan.outcome.enemyHpAfter.find((entry) => entry.index === focusIndex);
+    return before && after ? Math.max(0, before.hp - after.hp) : null;
+  };
+  const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   options.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify(describePlan(plan, playerSim.maxHp));
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
   // for), when pressed at low HP, or when even the cheapest line costs a lot of HP.
-  const offerPotions = dangerous || kind === "boss" || pressed || costly;
+  const offerPotions = dangerous || kind === "boss" || pressed || costly || planPotionNow;
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
@@ -864,6 +896,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         }),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
+    ...(fightPlan ? { fight_plan: fightPlanJson(fightPlan) } : {}),
   };
 
   // JEV_CONTEXT=v1: Jev gets fact tags on every plan, fight hints and a combat-only brief. The
@@ -877,7 +910,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -916,7 +949,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(jevView ? { jevView } : {}),
     // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
     // 15 such escalations, so a near-guess from Jev falls back to that plan instead (see resolve).
-    ...(kind === "elite" || kind === "boss" || dangerous
+    // FIGHT_PLAN=v1: DeepSeek planned the fight at its start and answers no per-turn choice.
+    ...((kind === "elite" || kind === "boss" || dangerous) && env.fightPlan !== "v1"
       ? { escalate: { question: "plan", below: 0.5, why: `${kind} fight${dangerous ? ", dangerous turn" : ""}` } }
       : {}),
     resolve(answers): ResolvedAction {
@@ -1040,4 +1074,12 @@ function playCap(player: Record<string, unknown>): number | null {
   if (powerAmount(player, "RINGING_POWER") > 0) caps.push(1);
   if (caps.length === 0) return null;
   return Math.max(0, Math.min(...caps) - num(player["cards_played_this_turn"]));
+}
+
+/** DeepSeek's plan for the fight being played (FIGHT_PLAN=v1), or null. */
+function activeFightPlan(env: DecisionEnv): FightPlan | null {
+  if (env.fightPlan !== "v1") return null;
+  const plan = env.screenMemory.fightPlan;
+  if (!plan) return null;
+  return plan.fight === hpGuardFight(env) && plan.runId === str(env.state.raw["run_id"]) ? plan : null;
 }

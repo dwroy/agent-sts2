@@ -60,6 +60,13 @@ export interface AppConfig {
    * run brief. Jev only: the escalator keeps the original question. Default off.
    */
   jevContext: JevContextVersion;
+  /**
+   * `v1`: DeepSeek plans each elite/boss fight once at its start (src/strategy/fight-plan.ts) and no
+   * longer answers per-turn combat plan choices. `off`: per-turn escalation as before. Default off.
+   */
+  fightPlan: "off" | "v1";
+  /** JSONL log of the fight plans (FIGHT_PLAN=v1). */
+  fightPlanLog: string;
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -299,6 +306,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const jevContext: JevContextVersion = jevContextRaw === "v1" ? "v1" : "off";
 
+  const fightPlanRaw = (readEnv(env, "FIGHT_PLAN") ?? "off").toLowerCase();
+  if (fightPlanRaw !== "off" && fightPlanRaw !== "v1") {
+    problems.push({ field: "FIGHT_PLAN", message: `expected off or v1, got "${fightPlanRaw}"` });
+  }
+  const fightPlan: "off" | "v1" = fightPlanRaw === "v1" ? "v1" : "off";
+  const fightPlanLog = readEnv(env, "FIGHT_PLAN_LOG") ?? "logs/fight-plans.jsonl";
+
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
     problems.push({ field: "LOG_LEVEL", message: `expected one of ${LOG_LEVELS.join(", ")}, got "${logLevelRaw}"` });
@@ -373,6 +387,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     strictJev,
     combatPlanner,
     jevContext,
+    fightPlan,
+    fightPlanLog,
     deepseek,
     escalation,
     mode,

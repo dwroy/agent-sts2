@@ -36,6 +36,8 @@ export interface DecisionEnv {
   shopDiscardPotions: string[];
   /** Jev's combat plan-choice context (config JEV_CONTEXT); undefined means "off". */
   jevContext?: "off" | "v1";
+  /** DeepSeek's whole-fight plan at the start of elite/boss fights (config FIGHT_PLAN); undefined means "off". */
+  fightPlan?: "off" | "v1";
 }
 
 export interface ScreenMemory {
@@ -79,6 +81,10 @@ export interface ScreenMemory {
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
    */
   lastMap?: RememberedMap;
+  /** DeepSeek's plan for the current elite/boss fight (FIGHT_PLAN=v1); cleared out of combat. */
+  fightPlan?: import("../strategy/fight-plan.js").FightPlan | null;
+  /** Fight key (act:floor) whose plan request failed: not retried in the same fight. */
+  fightPlanFailed?: string;
 }
 
 export interface RememberedMap {

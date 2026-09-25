@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-interface EnemyModel {
+export interface EnemyModel {
   next: Record<string, Record<string, number>>;
   damage: Record<string, number>;
   /** Moves seen with a Buff intent (Sludge Spinner's RAGE_MOVE: +3 Strength each time). */
@@ -25,6 +25,11 @@ function load(): Record<string, EnemyModel> {
     model = {};
   }
   return model;
+}
+
+/** The whole learned model (the fight plan shows DeepSeek each enemy's move cycle). */
+export function moveModel(): Record<string, EnemyModel> {
+  return load();
 }
 
 /** Expected attack damage of this enemy's move next turn, or null when unknown. */
