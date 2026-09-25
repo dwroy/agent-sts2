@@ -7,6 +7,7 @@ import {
   CRAB_RAGE_STRENGTH,
   distinctPlans,
   DRAW_VALUE,
+  drawFirst,
   drawScoreAt,
   exhaustPick,
   ENRAGE_FUTURE_HITS,
@@ -653,6 +654,32 @@ describe("retaliation stops a multi-hit attacker it kills (2WUM T8: 10x8 into a 
   it("no retaliation: every hit lands", () => {
     const result = solveTurn({ hand: [], player: player({ hp: 100, block: 30, energy: 0 }), enemies: [enemy({ hp: 29, attacks: [{ damage: 10, hits: 8 }] })], fightKind: "boss" });
     expect(result.plans[0]!.outcome.hpLoss).toBe(50);
+  });
+});
+
+describe("a free draw goes first (2WUM F48 T6: Twin Strike, then Battle Trance drew three cards with no energy left)", () => {
+  const trance = (index: number): CardModel => card(index, "BATTLE_TRANCE", { type: "Skill", target: "self", validTargets: [], cost: 0, draw: 3 });
+  const twin = (index: number): CardModel => card(index, "TWIN_STRIKE", { damage: 5, hits: 2 });
+  const boss = enemy({ name: "Test Subject", hp: 150, maxHp: 200, attacks: [{ damage: 10, hits: 3 }] });
+
+  it("Battle Trance is played before the attack when the plan comes out the same", () => {
+    const best = solveTurn({ hand: [twin(0), trance(1)], player: player({ hp: 42, energy: 1 }), enemies: [boss], fightKind: "boss" }).plans[0]!;
+    expect(best.steps.map((step) => step.cardId)).toEqual(["BATTLE_TRANCE", "TWIN_STRIKE"]);
+  });
+
+  it("not ahead of another draw (Battle Trance stops later draws), nor when the order changes the outcome (Slow)", () => {
+    const pommel = card(0, "POMMEL_STRIKE", { damage: 9, draw: 1 });
+    const input = { hand: [pommel, trance(1)], player: player({ hp: 42, energy: 1 }), enemies: [boss], fightKind: "boss" as const };
+    const both = solveTurn(input).plans.find((plan) => plan.steps.length === 2)!;
+    const pommelFirst = { ...both, steps: [both.steps.find((step) => step.cardId === "POMMEL_STRIKE")!, both.steps.find((step) => step.cardId === "BATTLE_TRANCE")!] };
+    expect(drawFirst(pommelFirst, input)).toBe(pommelFirst);
+    // Under Slow the Trance before the attack is +10% on it (11 x 2, not 10 x 2): a different plan.
+    const bigTwin = card(0, "TWIN_STRIKE", { damage: 10, hits: 2 });
+    const slow = { hand: [bigTwin, trance(1)], player: player({ hp: 42, energy: 1 }), enemies: [enemy({ ...boss, slow: true })], fightKind: "boss" as const };
+    const order = (plan: { steps: { cardId: string }[] }) => plan.steps.map((step) => step.cardId).join(",");
+    const attackFirst = solveTurn(slow).plans.find((plan) => order(plan) === "TWIN_STRIKE,BATTLE_TRANCE")!;
+    expect(attackFirst.outcome.damageDealt).toBe(20);
+    expect(drawFirst(attackFirst, slow)).toBe(attackFirst);
   });
 });
 

@@ -1202,11 +1202,76 @@ export interface SolveResult {
   truncated: boolean;
 }
 
-/** Returns every distinct end-of-turn outcome's best plan, best first. */
-export function solveTurn(input: SolverInput): SolveResult {
-  const maxNodes = input.maxNodes ?? 60_000;
-  const weights = weightsFor(input);
-  const root: Sim = {
+/**
+ * A 0-cost card that only draws (Battle Trance): nothing it does depends on when it is played, and the
+ * cards it draws are best seen before any energy is spent. Pommel Strike (damage), Burning Pact (its
+ * exhaust) and Headbutt-like cards are not.
+ */
+export function isFreeDraw(card: CardModel): boolean {
+  return (
+    card.type !== "Potion" &&
+    card.cost === 0 &&
+    !card.xCost &&
+    card.draw > 0 &&
+    card.damage === null &&
+    card.block === 0 &&
+    card.hpLoss === 0 &&
+    !card.randomExhaust &&
+    !card.putsOnTop &&
+    !EXHAUST_PICKERS.has(card.cardId) &&
+    !EXHAUST_HAND.has(card.cardId)
+  );
+}
+
+/** A card that draws (a known number, or until a condition). */
+export function drawsCards(card: CardModel): boolean {
+  return card.draw > 0 || card.drawsUntil === true;
+}
+
+/** The plan's steps played from the start of the turn again; null when one is not legal. */
+function replay(input: SolverInput, weights: Weights, steps: Step[]): Plan | null {
+  let sim = rootSim(input, weights);
+  for (const step of steps) {
+    const card = sim.hand.find((entry) => entry.index === step.cardIndex);
+    if (!card) return null;
+    const next = play(sim, card, step.target, input.player);
+    if (!next) return null;
+    sim = next;
+  }
+  return evaluate(sim, input, weights);
+}
+
+/**
+ * A free draw (isFreeDraw) moved to the front of the plan, when the plan comes out the same played that
+ * way; the loop re-plans once it has drawn. 2WUM F48 T6: Twin Strike first, then Battle Trance drew
+ * Shrug It Off, Whirlwind and Bully with no energy left for them (36 block possible, 28 made). Not
+ * when another card in the plan draws: Battle Trance stops later draws, which the solver does not see.
+ */
+export function drawFirst(plan: Plan, input: SolverInput, weights: Weights = weightsFor(input)): Plan {
+  const cardOf = (step: Step): CardModel | undefined => input.hand.find((card) => card.index === step.cardIndex);
+  const at = plan.steps.findIndex((step) => {
+    const card = cardOf(step);
+    return card !== undefined && isFreeDraw(card);
+  });
+  if (at <= 0) return plan;
+  const otherDraws = plan.steps.some((step, index) => {
+    const card = cardOf(step);
+    return index !== at && card !== undefined && drawsCards(card);
+  });
+  if (otherDraws) return plan;
+  const steps = [plan.steps[at]!, ...plan.steps.slice(0, at), ...plan.steps.slice(at + 1)];
+  const moved = replay(input, weights, steps);
+  if (!moved) return plan;
+  const same =
+    Math.abs(moved.score - plan.score) < 1e-6 &&
+    moved.outcome.hpLoss === plan.outcome.hpLoss &&
+    moved.outcome.damageDealt === plan.outcome.damageDealt &&
+    moved.outcome.kills.join(",") === plan.outcome.kills.join(",");
+  return same ? moved : plan;
+}
+
+function rootSim(input: SolverInput, weights: Weights): Sim {
+  return {
     hand: input.hand.filter((card) => card.playable),
     energy: input.player.energy,
     hp: input.player.hp,
@@ -1249,6 +1314,13 @@ export function solveTurn(input: SolverInput): SolveResult {
     vigor: input.player.vigor ?? 0,
     noBlock: input.player.noBlock === true,
   };
+}
+
+/** Returns every distinct end-of-turn outcome's best plan, best first. */
+export function solveTurn(input: SolverInput): SolveResult {
+  const maxNodes = input.maxNodes ?? 60_000;
+  const weights = weightsFor(input);
+  const root = rootSim(input, weights);
 
   const seen = new Set<string>();
   const byOutcome = new Map<string, Plan>();
@@ -1298,7 +1370,7 @@ export function solveTurn(input: SolverInput): SolveResult {
   };
 
   visit(root);
-  const plans = [...byOutcome.values()].sort((a, b) => b.score - a.score);
+  const plans = [...byOutcome.values()].map((plan) => drawFirst(plan, input, weights)).sort((a, b) => b.score - a.score);
   return { plans, nodes, truncated };
 }
 
