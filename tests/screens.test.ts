@@ -12,7 +12,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
-import { nodeWeight } from "../src/screens/map.js";
+import { nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { loadConfig } from "../src/config.js";
 import {
@@ -271,6 +271,49 @@ describe("map", () => {
     // Monster -> Elite: the elite is reached at ~75%, where it is worth 0, not +4.
     expect(value("n0")).toBeCloseTo(1.2);
     expect(value("n1")).toBeCloseTo(2.4);
+  });
+
+  it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {
+    expect(shopWeight(30, 5, 1)).toBe(0.8);
+    expect(shopWeight(120, 5, 1)).toBe(2.4);
+    expect(shopWeight(360, 5, 1)).toBeCloseTo(7.2);
+    expect(shopWeight(577, 5, 1)).toBeCloseTo(11.54);
+    expect(shopWeight(900, 5, 1)).toBe(12);
+    expect(shopWeight(577, 12, 1)).toBeCloseTo(14.54);
+    expect(shopWeight(577, 12, 2)).toBeCloseTo(11.54);
+    expect(shopWeight(250, 12, 1)).toBe(5);
+    expect(nodeWeight("Shop", 1, 577, 12, 1)).toBeCloseTo(14.54);
+  });
+
+  it("G6YV F12: 577 gold at 60% HP, Shop -> Monster -> Elite beats Rest -> Elite -> Monster", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 12;
+    run["gold"] = 577;
+    run["current_hp"] = 48;
+    run["max_hp"] = 80;
+    const map = raw["map"] as Record<string, unknown>;
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    map["available_nodes"] = [
+      { index: 0, row: 11, col: 1, node_type: "Shop" },
+      { index: 1, row: 11, col: 3, node_type: "RestSite" },
+    ];
+    map["nodes"] = [
+      node(11, 1, "Shop", [{ row: 12, col: 1 }]),
+      node(11, 3, "RestSite", [{ row: 12, col: 3 }]),
+      node(12, 1, "Monster", [{ row: 13, col: 2 }]),
+      node(12, 3, "Elite", [{ row: 13, col: 3 }]),
+      node(13, 2, "Elite"),
+      node(13, 3, "Monster"),
+    ];
+    const decision = mustDecision(plan(raw));
+    const value = (key: string): number => {
+      if (decision.kind !== "ask") return key === "n0" ? 1 : 0;
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.parse(String(criteria[key]))["route_value"];
+    };
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
+    expect(value("n0")).toBeGreaterThan(value("n1"));
   });
 
   it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {

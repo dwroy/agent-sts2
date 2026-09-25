@@ -59,7 +59,7 @@ export function monsterWeight(hpOnArrival: number): number {
 }
 
 /** How much this node type is worth to *this* run, at the projected HP/gold on arrival. */
-export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number): number {
+export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number, act?: number): number {
   switch (type) {
     case "Elite":
       // Phase 2: no elites in the first floors of an act (the deck is still starter cards), and only
@@ -77,8 +77,7 @@ export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;
     case "Shop":
-      // 8LQG reached the Act 1 boss holding 565 gold without a shop visit.
-      return gold >= 350 ? 6 : gold >= 200 ? 3.5 : gold >= 120 ? 2 : 0.8;
+      return shopWeight(gold, floorInAct, act);
     case "Treasure":
       return 3;
     case "Unknown": // "?" rooms
@@ -91,6 +90,17 @@ export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct
     default:
       return 1;
   }
+}
+
+/**
+ * Shop weight grows with gold, min(12, gold / 50), never below the old steps (8LQG reached the Act 1
+ * boss with 565 gold, G6YV with 630 and an empty potion belt: the old cap of 6 lost to a rest at 10.2
+ * vs 9.2). Late in Act 1 with 300+ gold, the boss is the next thing to spend it on: +3.
+ */
+export function shopWeight(gold: number, floorInAct: number, act?: number): number {
+  const floor = gold >= 350 ? 6 : gold >= 200 ? 3.5 : gold >= 120 ? 2 : 0.8;
+  const base = Math.max(floor, Math.min(12, gold / 50));
+  return base + (act === 1 && floorInAct >= 10 && gold >= 300 ? 3 : 0);
 }
 
 /**
@@ -220,7 +230,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const floorInAct = ((floor - 1) % 17) + 1;
   const act = Math.floor((floor - 1) / 17) + 1;
   const weightOf: Weights = (type, at) =>
-    nodeWeight(type, at.hp, at.gold, floorInAct) - (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0);
+    nodeWeight(type, at.hp, at.gold, floorInAct, act) - (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0);
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   const options: PickOption[] = available.flatMap((node) => {
