@@ -67,8 +67,10 @@ export function planCombat(env: DecisionEnv): Decision | null {
           perHit: attack.damage,
           hits: attack.hits,
           targetBlock: block,
-          targetPowers: ourPowers,
-          attackerPowers: enemy.power_lines,
+          // The intent number already includes our Vulnerable and the enemy's Weak (WY41 F48 T4: the
+          // intent showed 22, this path said 33).
+          targetPowers: ourPowers.filter((power) => power.id !== "VULNERABLE_POWER"),
+          attackerPowers: enemy.power_lines.filter((power) => power.id !== "WEAK_POWER"),
         });
         block = outcome.blockAfter;
         hpLoss += outcome.hpLoss;
@@ -88,7 +90,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss;
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
-  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge);
+  // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
+  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).filter((potion) => potion.potion_id !== "FOUL_POTION");
 
   const candidates: Candidate[] = [];
   const enemyByIndex = new Map(enemies.map((enemy) => [enemy.index, enemy]));

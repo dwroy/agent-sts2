@@ -107,13 +107,13 @@ describe("combat options use the resolved damage", () => {
     expect(strike["kills_target"]).toBe(false);
   });
 
-  it("raises the incoming estimate when the player is Vulnerable", () => {
+  it("does not raise the incoming estimate for our Vulnerable: the intent already includes it (WY41 F48 T4)", () => {
     const plain = plan(combatPayload());
     const vulnerable = plan(combatPayload({ playerVulnerable: 2 }));
     const plainSituation = plain.state["situation"] as Record<string, unknown>;
     const vulnSituation = vulnerable.state["situation"] as Record<string, unknown>;
-    // Enemies deal 11 + 6; Vulnerable turns 17 into floor(16.5) + 9 = 25.
+    // Enemies show 11 + 6 with our Vulnerable already applied: 17 either way.
     expect(plainSituation["incoming_damage_if_turn_ends"]).toBe(17);
-    expect(vulnSituation["incoming_damage_if_turn_ends"]).toBe(25);
+    expect(vulnSituation["incoming_damage_if_turn_ends"]).toBe(17);
   });
 });

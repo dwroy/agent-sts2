@@ -96,6 +96,12 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage before the Beckons pile up" };
   }
   // The Matriarch sleeps two turns (time to play powers), then it is a 222 HP damage race (1K5G, Z2H3).
+  // The Queen: from her third turn on the Amalgam hits 12x3 / 22 under permanent Vulnerable, Weak and
+  // Frail; block and early scaling decide it (WY41 F48: 3 block cards, dead on T4; 88HN).
+  if (boss.includes("QUEEN")) {
+    if (BLOCK.has(cardId)) return { bonus: 8, why: "block for the Queen's Amalgam hits under Frail" };
+    if (SCALING.has(cardId)) return { bonus: 6, why: "early scaling for the Queen's first two turns" };
+  }
   if (boss.includes("LAGAVULIN_MATRIARCH")) {
     if (SCALING.has(cardId)) return { bonus: 10, why: "scaling for the Matriarch's sleeping turns" };
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Matriarch's 222 HP" };
