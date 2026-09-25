@@ -35,6 +35,11 @@ export interface CardModel {
   /** Debuffs applied to the target (or every enemy for `all`). */
   vulnerable: number;
   weak: number;
+  /**
+   * Weak is applied before Vulnerable (card-text order: Uppercut "给予1层虚弱。给予1层易伤。"). Matters
+   * against Artifact, which blocks whichever lands first (UJS25 F28: Chomper's Artifact 1 ate the Weak).
+   */
+  weakFirst?: boolean;
   /** Permanent Strength for the player. */
   strength: number;
   /** Strength that only lasts this turn (Setup Strike). */
@@ -156,6 +161,17 @@ export function heldPenaltyOf(rendered: string): { heldPenalty: number; heldHpLo
   return { heldPenalty, heldHpLoss };
 }
 
+/** Whether the card text names Weak before Vulnerable (the game applies them in text order). */
+export function debuffWeakFirst(text: string): boolean {
+  const find = (patterns: RegExp[]): number => {
+    const positions = patterns.map((pattern) => text.search(pattern)).filter((position) => position >= 0);
+    return positions.length > 0 ? Math.min(...positions) : -1;
+  };
+  const weakAt = find([/虚弱/, /WeakPower/, /\bweak\b/i]);
+  const vulnerableAt = find([/易伤/, /VulnerablePower/, /\bvulnerable\b/i]);
+  return weakAt >= 0 && (vulnerableAt < 0 || weakAt < vulnerableAt);
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -231,6 +247,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 
   // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
   const rendered = str(card["resolved_rules_text"]) || info?.description || "";
+  const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
   const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
   if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
@@ -258,6 +275,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     block,
     vulnerable,
     weak,
+    ...(weakFirst ? { weakFirst } : {}),
     strength,
     tempStrength,
     enemyStrength,

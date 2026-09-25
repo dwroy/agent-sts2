@@ -829,6 +829,53 @@ describe("debuffs into Artifact (TQX5 T1: Powdered Demise into Artifact 3 did no
     });
     expect(result.plans.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(20);
   });
+
+  it("debuffs land in card-text order: Uppercut's Weak meets Artifact 1, the Vulnerable lands (UJS25 F28)", async () => {
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const knowledge = { card: () => undefined } as unknown as Parameters<typeof modelHandCard>[2];
+    const uppercut = modelHandCard(
+      {
+        index: 0,
+        card_id: "UPPERCUT",
+        energy_cost: 2,
+        playable: true,
+        requires_target: true,
+        target_type: "AnyEnemy",
+        valid_target_indices: [0],
+        rules_text: "造成{Damage:diff()}点伤害。 给予{Power:diff()}层虚弱。 给予{Power:diff()}层易伤。",
+        resolved_rules_text: "造成13点伤害。 给予1层虚弱。 给予1层易伤。",
+        dynamic_values: [{ name: "Damage", base_value: 13, current_value: 13 }, { name: "Power", base_value: 1, current_value: 1 }],
+      },
+      0,
+      knowledge,
+    );
+    expect(uppercut.weakFirst).toBe(true);
+    const result = solveTurn({
+      hand: [uppercut],
+      player: player({ hp: 60, energy: 2 }),
+      enemies: [enemy({ name: "Chomper", hp: 61, maxHp: 61, artifact: 1, attacks: [{ damage: 8, hits: 2 }] })],
+      fightKind: "monster",
+    });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.enemyHpAfter[0]!.weak).toBe(0);
+    expect(played.outcome.enemyHpAfter[0]!.vulnerable).toBe(1);
+    expect(played.outcome.weakApplied).toBe(0);
+    expect(played.outcome.vulnerableApplied).toBe(1);
+    expect(played.outcome.hpLoss).toBe(16);
+  });
+
+  it("a Vulnerable-first card still has Artifact eat the Vulnerable", () => {
+    const both = card(0, "SHOCKWAVE_LIKE", { damage: 5, vulnerable: 1, weak: 1 });
+    const result = solveTurn({
+      hand: [both],
+      player: player({ hp: 60 }),
+      enemies: [enemy({ hp: 300, artifact: 1, attacks: [{ damage: 8, hits: 2 }] })],
+      fightKind: "monster",
+    });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.enemyHpAfter[0]!.vulnerable).toBe(0);
+    expect(played.outcome.enemyHpAfter[0]!.weak).toBe(1);
+  });
 });
 
 describe("Gigantification potion (PLC F33: kept from T1 to death)", () => {

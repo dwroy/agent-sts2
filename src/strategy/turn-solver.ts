@@ -618,8 +618,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
-    next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
-    next.weakApplied += applyDebuff(enemy, "weak", card.weak);
+    // In card-text order: Artifact blocks whichever lands first (Uppercut: Weak, then Vulnerable).
+    if (card.weakFirst) {
+      next.weakApplied += applyDebuff(enemy, "weak", card.weak);
+      next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
+    } else {
+      next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
+      next.weakApplied += applyDebuff(enemy, "weak", card.weak);
+    }
     if (card.enemyStrength > 0) enemy.strengthDelta += card.enemyStrength;
     // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
     applyDebuff(enemy, "tempStrengthLoss", card.enemyTempStrengthLoss ?? 0);
