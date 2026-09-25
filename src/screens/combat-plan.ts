@@ -628,6 +628,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
   };
   const kind = fightKind(combat, env);
+  // Withering Presence counts every card played: sample the count on every decision, plan-continue
+  // included (Y0KJ F48: counted 15 by T7 against the game's 26; Hellraiser's auto-played Strikes and
+  // the plan's later steps were missed, so Bash's Wither on T6 was not foreseen).
+  const wither = witherInput(env, combat, hand, num(player["cards_played_this_turn"]));
 
   // 1. A committed plan whose board is exactly as expected: keep executing it.
   //    A hand that grew without a drawing card played means the plan was made before the turn's draw
@@ -695,7 +699,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
-  const wither = witherInput(env, combat, hand, num(player["cards_played_this_turn"]));
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
   const solveWith = (free: boolean) =>

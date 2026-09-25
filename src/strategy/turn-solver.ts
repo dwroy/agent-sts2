@@ -228,6 +228,9 @@ export interface DrawPileCard {
   block?: boolean;
 }
 
+/** Expected later end-of-turn holds of a Wither added this turn (its future cost, score only). */
+export const WITHER_FUTURE_REDRAWS = 1;
+
 /** Self-damage weight multiplier on a quiet turn that ends near next turn's hit (JGJS F24 T1). */
 export const QUIET_SELF_DAMAGE_WEIGHT = 3;
 export const NEXT_HIT_MARGIN = 5;
@@ -1059,6 +1062,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
+  // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
+  // died at 32/512 HP with us).
+  if (!winsFight && withersAdded > 0) score -= weights.hp * withersAdded * ((wither?.damage ?? 0) + 3) * WITHER_FUTURE_REDRAWS;
   // Paying HP on a turn with nothing incoming, to end close to next turn's hit (JGJS F24 T1).
   if (!winsFight && selfLoss > 0 && input.nextIncoming !== undefined && input.nextIncoming > 0 && quietTurn(input) && hpAfter <= input.nextIncoming + NEXT_HIT_MARGIN) {
     score -= weights.hp * selfLoss * (QUIET_SELF_DAMAGE_WEIGHT - 1);
