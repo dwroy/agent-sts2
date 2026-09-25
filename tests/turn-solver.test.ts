@@ -283,6 +283,21 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("rounds Weak damage once: 9 x 0.75 x 1.5 = 10, not floor(6.75) x 1.5 = 9 (P4ZD F37 T2/T9)", () => {
+    const pommel = card(0, "POMMEL_STRIKE", { damage: 6, damageBase: 9 });
+    const input = {
+      hand: [pommel],
+      player: player({ hp: 40, weak: true }),
+      enemies: [enemy({ index: 0, name: "Axebot", hp: 50, vulnerable: 2, attacks: [] })],
+      fightKind: "monster" as const,
+    };
+    const hit = solveTurn(input).plans.find((plan) => plan.steps.length === 1)!;
+    expect(hit.outcome.damageDealt).toBe(10);
+    // Without a base that reproduces the shown number, the shown number is used as before.
+    const odd = solveTurn({ ...input, hand: [card(0, "POMMEL_STRIKE", { damage: 6, damageBase: 12 })] }).plans.find((plan) => plan.steps.length === 1)!;
+    expect(odd.outcome.damageDealt).toBe(9);
+  });
+
   it("Fiend Fire hits once per card it exhausts, and Feel No Pain blocks per exhausted card (QBRN F48 T7)", () => {
     const fiendFire = card(0, "FIEND_FIRE", { cost: 2, damage: 7, special: "fiend_fire", exhausts: true, validTargets: [0] });
     const wither = card(4, "WITHER", { type: "Status", playable: false, heldPenalty: 9, validTargets: [] });

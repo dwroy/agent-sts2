@@ -273,6 +273,9 @@ export function fightKind(combat: Record<string, unknown>, env: DecisionEnv): So
     const type = env.knowledge.monster(str(asRecord(entry)["enemy_id"]))?.type ?? "";
     if (type === "Boss") return "boss";
     if (type === "Elite") kind = "elite";
+    // A hallway enemy with lives in stock (Axebot: 72 + 86 + 91 HP) is fought like an elite: fight
+    // plan and HP guard (P4ZD F37: no guard, T5 took -9 for 13 damage, died 4 HP short).
+    else if (type === "Normal" && powerAmount(asRecord(entry), "STOCK_POWER") > 0) kind = "elite";
     else if (type === "Normal" && kind === "unknown") kind = "monster";
   }
   return kind;
@@ -632,6 +635,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     turnStartAoe: turnStartAoe(relicIds, player),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
+    strengthNow: powerAmount(player, "STRENGTH_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
