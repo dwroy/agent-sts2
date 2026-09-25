@@ -73,6 +73,9 @@ const POWER_NOTES: Record<string, string> = {
 export const HALLWAY_POTION_COST = 15;
 /** Beating Remnant: at most this much HP lost in a turn. */
 export const BEATING_REMNANT_CAP = 20;
+/** Otherwise a hallway potion line must save this much HP over the best potion-free line (or win, or add damage). */
+export const HALLWAY_POTION_MIN_SAVE = 8;
+export const HALLWAY_POTION_MIN_DAMAGE = 20;
 /** A hallway potion line is dropped when a potion-free line loses at most this much HP. */
 export const HALLWAY_LETHAL_POTION_LOSS = 5;
 /** Jev confidence a hallway potion line below code rank 1 needs to be played. */
@@ -625,7 +628,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     rupture: powerAmount(player, "RUPTURE_POWER"),
     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
     maxPlays: playCap(player),
-    endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER"),
+    // Constrict (Slithering Strangler) is the same end-of-turn damage (BHMP F6: 12 HP unpredicted).
+    endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER") + powerAmount(player, "CONSTRICT_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? null,
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
@@ -781,6 +785,19 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
       solved = { ...solved, plans: dry };
       dryCheap = true;
+    } else if (dry.length > 0) {
+      // A hallway potion line must buy something over the best potion-free line: the fight, 8+ HP, or
+      // 20+ damage (TXKE F46: two Swift Potions drunk at 0 energy, the draws unplayable, nothing saved;
+      // the final boss was entered with empty slots).
+      const bestDryLoss = Math.min(...dry.map((plan) => plan.outcome.hpLoss));
+      const bestDryDamage = Math.max(...dry.map((plan) => plan.outcome.damageDealt));
+      const worth = (plan: Plan) =>
+        !drinksPotion(plan) ||
+        plan.outcome.winsFight ||
+        bestDryLoss - plan.outcome.hpLoss >= HALLWAY_POTION_MIN_SAVE ||
+        plan.outcome.damageDealt - bestDryDamage >= HALLWAY_POTION_MIN_DAMAGE;
+      const kept = solved.plans.filter(worth);
+      if (kept.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: kept };
     }
   }
   const best = solved.plans[0];
