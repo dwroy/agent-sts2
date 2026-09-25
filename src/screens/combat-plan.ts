@@ -71,6 +71,8 @@ const POWER_NOTES: Record<string, string> = {
 
 /** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
 export const HALLWAY_POTION_COST = 15;
+/** Beating Remnant: at most this much HP lost in a turn. */
+export const BEATING_REMNANT_CAP = 20;
 /** A hallway lethal that needs a potion is skipped when a potion-free line loses at most this much HP. */
 export const HALLWAY_LETHAL_POTION_LOSS = 5;
 /** Jev confidence a hallway potion line below code rank 1 needs to be played. */
@@ -626,6 +628,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     inferno: powerAmount(player, "INFERNO_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
+    hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
   };
@@ -696,7 +699,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
-  const bigHit = nowIncoming >= Math.max(12, playerSim.hp * 0.25);
+  // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
+  // Diadem, a "big hit" potion drunk on a 0-loss turn).
+  const bigHit = nowIncoming - playerSim.block >= Math.max(12, playerSim.hp * 0.25);
   const focusIndex = fightPlan?.focus
     ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
     : null;

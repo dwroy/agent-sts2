@@ -283,6 +283,20 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("caps a turn's HP loss with Beating Remnant, so damage lines are not scored as deaths (CCPR F48 T7)", () => {
+    const input = {
+      hand: [strike(0), strike(1), defend(2)],
+      player: player({ hp: 25 }),
+      enemies: [enemy({ index: 0, name: "Test Subject", hp: 60, attacks: [{ damage: 10, hits: 6 }] })],
+      fightKind: "boss" as const,
+    };
+    expect(solveTurn(input).plans.every((plan) => plan.outcome.dies)).toBe(true);
+    const capped = solveTurn({ ...input, player: player({ hp: 25, hpLossCap: 20 }) });
+    expect(capped.plans[0]!.outcome.dies).toBe(false);
+    expect(capped.plans[0]!.outcome.hpLoss).toBe(20);
+    expect(capped.plans[0]!.steps.map((step) => step.cardId)).toEqual(["STRIKE_IRONCLAD", "STRIKE_IRONCLAD"]);
+  });
+
   it("puts damage into the fight plan's kill-first enemy even when it is a minion (CAYK F48 T1-T3)", () => {
     const input = {
       hand: [strike(0), strike(1)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
