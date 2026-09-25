@@ -254,4 +254,31 @@ describe("turn planner with a fight plan", () => {
     const decision = planCombatTurn(e);
     if (decision?.kind === "ask") expect(decision.state["fight_plan"]).toBeUndefined();
   });
+
+  it("counts planned setup cards: one of two played is not the plan (CAYK F48 T3)", () => {
+    const raw = bossTurnOne();
+    const combat = raw["combat"] as Raw;
+    const hand = combat["hand"] as Raw[];
+    const inflame = hand[3]!;
+    combat["hand"] = [...hand, { ...inflame, index: 4, card_id: "DEMON_FORM", name: "Demon Form", energy_cost: 1 }];
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["INFLAME", "DEMON_FORM"] });
+    const decision = planCombatTurn(e);
+    expect(decision?.kind).toBe("ask");
+    const ask = decision as AskDecision;
+    const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
+    expect(Object.values(criteria).some((text) => String(text).includes("Inflame, Demon Form") || String(text).includes("Demon Form, Inflame"))).toBe(true);
+  });
+
+  it("keeps a potion instead of drinking it for a hallway kill when a dry line costs little (CAYK F37-F40)", () => {
+    const raw = combatPayload({ enemyHp: 25 });
+    const combat = raw["combat"] as Raw;
+    combat["enemies"] = [{ ...(combat["enemies"] as Raw[])[0]!, intents: [{ index: 0, intent_type: "Attack", label: "4", damage: 4, hits: 1, total_damage: 4 }] }];
+    const e = env(raw);
+    const decision = planCombatTurn(e);
+    const steps = [decision?.kind === "act" ? decision.intent : null, ...(e.screenMemory.combatPlan?.remaining ?? []).map((step) => step.cardId)];
+    expect(JSON.stringify(steps)).not.toContain("use_potion");
+    expect(JSON.stringify(steps)).not.toContain("POTION:");
+  });
 });
+

@@ -204,6 +204,12 @@ export interface SolverInput {
    */
   wither?: { every: number; played: number; damage: number };
   /**
+   * Enemy index the fight plan kills first (FIGHT_PLAN=v1): damage into it is never minion-chipped
+   * and is worth FOCUS_BONUS more (CAYK F48: the plan said Torch Head Amalgam first; code alone put
+   * 128 damage into the Queen and 6 into the Amalgam over T1-T3, the Amalgam's 36-damage hits killed us).
+   */
+  focusIndex?: number;
+  /**
    * The cards the next draws come from (the draw pile, or the discard pile when it is empty), when
    * known. Without it a draw is worth a flat DRAW_VALUE; with it, the pile's statuses count (XPA4 T8/T10:
    * Battle Trance at 1 energy drew 2 Beckons from a 6-card pile holding 3, -12 HP on a "-0" plan).
@@ -913,6 +919,8 @@ export function sleepTurnDamage(enemy: EnemySim): number {
   return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
 
+/** Extra damage weight for the fight plan's kill-first enemy. */
+export const FOCUS_BONUS = 0.5;
 /** Share of damage into a surviving minion that counts while its summoner lives (it leaves with it). */
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
@@ -1159,11 +1167,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const minionChip = !leaderAlive
     ? 0
     : sim.enemies.reduce((sum, enemy) => {
-        if (!enemy.minion || !enemy.alive || enemy.illusion) return sum;
+        if (!enemy.minion || !enemy.alive || enemy.illusion || enemy.index === input.focusIndex) return sum;
         const start = input.enemies.find((entry) => entry.index === enemy.index)!;
         return sum + (1 - MINION_CHIP) * Math.max(0, start.hp - Math.max(0, enemy.hp));
       }, 0);
   score += weights.damage * (sim.damageDealt - huskDamage - lostDamage - minionChip);
+  if (input.focusIndex !== undefined && !winsFight) {
+    const focus = sim.enemies.find((enemy) => enemy.index === input.focusIndex);
+    const start = input.enemies.find((entry) => entry.index === input.focusIndex);
+    if (focus && start) score += weights.damage * FOCUS_BONUS * Math.max(0, start.hp - Math.max(0, focus.hp));
+  }
   // The Bomb: its damage lands on every enemy a few turns later, unless the fight is over by then.
   if (sim.bombs > 0 && !winsFight) {
     const reach = living.filter((enemy) => enemy.maxHp < 1_000_000).reduce((sum, enemy) => sum + Math.min(enemy.hp, sim.bombs), 0);

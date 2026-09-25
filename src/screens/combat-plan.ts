@@ -71,6 +71,8 @@ const POWER_NOTES: Record<string, string> = {
 
 /** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
 export const HALLWAY_POTION_COST = 15;
+/** A hallway lethal that needs a potion is skipped when a potion-free line loses at most this much HP. */
+export const HALLWAY_LETHAL_POTION_LOSS = 5;
 /** Jev confidence a hallway potion line below code rank 1 needs to be played. */
 export const HALLWAY_POTION_CONFIDENCE = 0.75;
 /** Map node types a hallway fight is fought in. */
@@ -695,6 +697,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
   const bigHit = nowIncoming >= Math.max(12, playerSim.hp * 0.25);
+  const focusIndex = fightPlan?.focus
+    ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
+    : null;
+  // A kill-first target only matters with more than one enemy alive.
+  const focusInput = focusIndex !== null && enemies.length > 1 ? { focusIndex } : {};
   const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed });
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
@@ -725,6 +732,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       potionLimit,
       raceEruption,
       wither,
+      ...focusInput,
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
     });
@@ -739,6 +747,14 @@ function planTurn(env: DecisionEnv): Decision | null {
     playerSim.maxHp > 0 &&
     (playerSim.hp - minLossAfter(solved.plans) >= playerSim.hp * 0.3 || minLossAfter(solved.plans) < playerSim.maxHp * 0.25);
   if (costly && !pressed && potionsAll.some((potion) => isModelledPotion(potion.potion_id))) solved = solveWith(true);
+  // A hallway fight won this turn only by drinking a potion, when a potion-free line costs little:
+  // keep the potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on
+  // hallway lethals; the boss was entered with 1 of 3 slots filled).
+  const drinksPotion = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+  if ((kind === "monster" || kind === "unknown") && !pressed && solved.plans[0]?.outcome.winsFight && drinksPotion(solved.plans[0])) {
+    const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
+    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) solved = { ...solved, plans: dry };
+  }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -807,10 +823,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
   // FIGHT_PLAN=v1: the plan's setup cards in the first turns. A line that plays one, within the HP
   // guard's slack of code's pick, makes the turn a question for Jev (tagged with the plan fit).
-  const playsSetup = (plan: Plan) => fightPlan !== null && plan.steps.some((step) => fightPlan.setup.includes(step.cardId));
+  // Counted per distinct planned card: one of them played is not the plan (CAYK F48 T3: Brand
+  // satisfied the check and Mayhem, bought for this fight, was never played).
+  const setupCount = (plan: Plan) => (fightPlan ? new Set(plan.steps.filter((step) => fightPlan.setup.includes(step.cardId)).map((step) => step.cardId)).size : 0);
   const setupLine =
-    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3 && !playsSetup(top)
-      ? surviving.filter(playsSetup).sort((a, b) => b.score - a.score)[0]
+    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3
+      ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
       : undefined;
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
@@ -834,9 +852,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
 
   // 4. A judgement call (or a dangerous turn with potions available): ask Jev.
-  const focusIndex = fightPlan?.focus
-    ? numOrNull(asArray(combat["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)?.["index"])
-    : null;
   const focusDamage = (plan: Plan): number | null => {
     if (focusIndex === null) return null;
     const before = enemies.find((enemy) => enemy.index === focusIndex);

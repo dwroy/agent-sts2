@@ -283,6 +283,20 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("puts damage into the fight plan's kill-first enemy even when it is a minion (CAYK F48 T1-T3)", () => {
+    const input = {
+      hand: [strike(0), strike(1)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
+      player: player({ hp: 60 }),
+      enemies: [
+        enemy({ index: 0, name: "Torch Head Amalgam", hp: 199, minion: true, attacks: [{ damage: 12, hits: 1 }] }),
+        enemy({ index: 1, name: "Queen", hp: 400, attacks: [] }),
+      ],
+      fightKind: "boss" as const,
+    };
+    expect(solveTurn(input).plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
+    expect(solveTurn({ ...input, focusIndex: 0 }).plans[0]!.steps.map((step) => step.target)).toEqual([0, 0]);
+  });
+
   it("still kills a minion for the attack it prevents", () => {
     const result = solveTurn({
       hand: [strike(0)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
