@@ -220,6 +220,11 @@ export interface Outcome {
   startTurnKills: string[];
   /** Withers this plan adds to the hand (Withering Presence). */
   withersAdded: number;
+  /**
+   * Score lost to waking a sleeper with chip damage (its free turns, at HP weight); 0 when none. An
+   * outcome axis too, so a waking line can never dominate one that lets it sleep (1K5G F17 T1).
+   */
+  sleepCost: number;
 }
 
 export interface Plan {
@@ -855,12 +860,14 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Waking a sleeper with chip damage hands it the turns it would have slept (Z2H3 F17 T1: Bash broke
   // the Matriarch's 12 Plating, 12 HP off 222, and it attacked from T2 instead of T4). Worth it only
   // for a big hit.
+  let sleepCost = 0;
   for (const enemy of living) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     if (!enemy.sleepLost || start.attacks.length > 0) continue;
     if (start.hp - enemy.hp >= start.hp * SLEEP_BIG_HIT) continue;
-    score -= weights.hp * enemy.sleepLost * sleepTurnDamage(start);
+    sleepCost += weights.hp * enemy.sleepLost * sleepTurnDamage(start);
   }
+  score -= sleepCost;
   // Debuffs only matter on enemies that survive the turn.
   for (const enemy of living) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
@@ -913,6 +920,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       sandpitAfter,
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      sleepCost,
     },
   };
 }
@@ -1026,8 +1034,10 @@ function vector(plan: Plan): number[] {
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
   // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
-  // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run).
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost, o.sandpitAfter ?? 0];
+  // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run). Waking a
+  // sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
+  // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

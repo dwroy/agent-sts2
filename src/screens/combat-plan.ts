@@ -23,7 +23,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 
@@ -270,6 +270,7 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
   if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
+  if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -604,7 +605,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
   // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
   // "only line" while the one option shown was the same turn with Defend+ (hp -20). Play what is shown.
-  const top = options.includes(best) ? best : options[0] ?? best;
+  // Switch only to an option that dominates it (every outcome axis, sleep cost included: 1K5G F17 T1
+  // switched to a line that woke the Matriarch), not merely the highest-ranked one left.
+  const top = options.includes(best) ? best : options.find((plan) => dominates(plan, best)) ?? options[0] ?? best;
   // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
   // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
   // end the turn on the solver's word then; play the line that keeps the most HP.

@@ -1466,3 +1466,70 @@ describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected
     expect(decision?.kind === "act" && decision.intent).toEqual({ action: "select_deck_card", option_index: 2 });
   });
 });
+
+describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominance switch woke it)", () => {
+  const card = (index: number, cardId: string, cost: number, dynamic: [string, number][], self = false): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: false, target_type: self ? "Self" : "AnyEnemy", requires_target: !self, costs_x: false, star_costs_x: false,
+    energy_cost: cost, star_cost: 0, rules_text: "", resolved_rules_text: "", playable: cost >= 0, unplayable_reason: cost >= 0 ? null : "unplayable",
+    can_play_result: cost >= 0, target_index_space: "combat.enemies[].index", valid_target_indices: self ? [] : [0],
+    dynamic_values: dynamic.map(([name, value]) => ({ name, base_value: value, current_value: value })),
+  });
+  const board = (): Record<string, unknown> => {
+    const raw = combatPayload();
+    raw["turn"] = 1;
+    (raw["run"] as Record<string, unknown>)["floor"] = 17;
+    // Clarity (unmodelled) as in the live run; the Fire Potion slot emptied.
+    const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    potions[0]!["can_use"] = false;
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["player"] = { ...(combat["player"] as Record<string, unknown>), current_hp: 53, max_hp: 67 };
+    combat["hand"] = [
+      card(0, "PILLAGE", 1, [["Damage", 6]]),
+      card(1, "TAUNT", 1, [["Block", 8], ["VulnerablePower", 1]]),
+      card(2, "SPOILS_MAP", -1, [["Gold", 600]], true),
+      card(3, "DEFEND_R", 1, [["Block", 5]], true),
+      card(4, "SETUP_STRIKE", 1, [["Damage", 7], ["StrengthPower", 3]]),
+      card(5, "EXPECT_A_FIGHT", 3, [["Block", 15]], true),
+    ];
+    combat["enemies"] = [{
+      index: 0, enemy_id: "LAGAVULIN_MATRIARCH", name: "Lagavulin Matriarch", current_hp: 222, max_hp: 222, block: 12, is_alive: true, is_hittable: true,
+      powers: [{ index: 0, power_id: "PLATING_POWER", amount: 12, is_debuff: false }, { index: 1, power_id: "ASLEEP_POWER", amount: 3, is_debuff: false }],
+      intent: "SLEEP_MOVE", move_id: "SLEEP_MOVE",
+      intents: [{ index: 0, intent_type: "Sleep", label: null, damage: null, hits: null, total_damage: null, status_card_count: null }],
+    }];
+    return raw;
+  };
+
+  it("the committed (or top-ranked) line leaves it asleep", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const e = env(board(), { combatPlanner: "turn" });
+    const decision = planCombatTurn(e);
+    if (!decision) throw new Error("expected a decision");
+    if (decision.kind === "act") {
+      expect(decision.rationale).toMatch(/dmg 0\b/);
+    } else {
+      const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      expect(JSON.parse(String(criteria["plan1"]))["damage_dealt"]).toBe(0);
+    }
+  });
+
+  it("a line that wakes it is never shown as dominating one that does not", async () => {
+    const { solveTurn, distinctPlans, dominates } = await import("../src/strategy/turn-solver.js");
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const combat = board()["combat"] as Record<string, unknown>;
+    const hand = (combat["hand"] as unknown[]).map((entry, index) => modelHandCard(entry, index, testKnowledge));
+    const result = solveTurn({
+      hand,
+      player: { hp: 53, maxHp: 67, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false },
+      enemies: [{ index: 0, name: "Lagavulin Matriarch", hp: 222, maxHp: 222, block: 12, vulnerable: 0, weak: 0, artifact: 0, intangible: false, asleep: 3, attacks: [] }],
+      fightKind: "boss",
+      turn: 1,
+    });
+    const best = result.plans[0]!;
+    expect(best.outcome.sleepCost).toBe(0);
+    const waking = result.plans.filter((plan) => plan.outcome.sleepCost > 0);
+    expect(waking.length).toBeGreaterThan(0);
+    for (const plan of waking) expect(dominates(plan, best)).toBe(false);
+    expect(distinctPlans(result.plans.filter((plan) => !plan.outcome.dies), 4)).toContain(best);
+  });
+});
