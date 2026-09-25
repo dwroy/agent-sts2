@@ -142,8 +142,13 @@ export interface PlayerSim {
   startTurnHpLoss?: number;
   /** Damage back per enemy attack hit already up (Flame Barrier power, Thorns). */
   retaliate?: number;
-  /** Damage to every enemy at the start of our next turn (Mercury Hourglass: 3). */
-  startTurnDamage?: number;
+  /**
+   * Damage to every enemy at the start of our next turn, all sources together (Mercury Hourglass 3,
+   * Inferno's amount for its own 1 HP loss). It kills a crab left at or below it (PLC F33 T9, 9XZX T7).
+   */
+  turnStartAoe?: number;
+  /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
+  inferno?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -294,6 +299,8 @@ interface Sim {
   mantles: number;
   /** A Crab Rage survivor was enraged this turn. */
   enraged: number;
+  /** Inferno amount active (already up plus played this turn). */
+  inferno: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
   bombs: number;
   /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
@@ -363,6 +370,18 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
   if (amount <= 0) return;
   if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
   sim.hpLostThisTurn = true;
+  // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
+  // 敌人造成6点伤害"). One sweep: two crabs dying to it die together.
+  if (sim.inferno > 0) {
+    const outer = sim.sweeping === true;
+    sim.sweeping = true;
+    for (const enemy of sim.enemies) if (enemy.alive) hitEnemyRaw(sim, enemy, sim.inferno);
+    sim.sweeping = outer;
+    if (!outer && sim.pendingRage) {
+      sim.pendingRage = false;
+      crabRage(sim);
+    }
+  }
 }
 
 /**
@@ -545,6 +564,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
+  if ((card.inferno ?? 0) > 0) next.inferno += card.inferno ?? 0;
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -772,6 +792,19 @@ export function weightsFor(input: SolverInput): Weights {
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
 
+/** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
+export const CRAB_GAP_FREE = 30;
+/** Per point of gap past that, as a share of the damage weight (damage into the low part is worth half). */
+export const CRAB_GAP_WEIGHT = 0.5;
+/** A part this close above the start-of-turn AoE dies alone to any chip, while the other is above CRAB_HIGH_HP. */
+export const CRAB_LOW_MARGIN = 10;
+export const CRAB_HIGH_HP = 60;
+
+/** Damage to every enemy at the start of our next turn, with an Inferno played this turn added. */
+export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput): number {
+  return (input.player.turnStartAoe ?? 0) + Math.max(0, sim.inferno - (input.player.inferno ?? 0));
+}
+
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
@@ -808,7 +841,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
   // part of this turn's HP loss, whether the Mantle is already up or played now (Y83U F30 T3: a
   // Mantle plan showed hp_lost 0).
-  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles;
+  // An Inferno played this turn (none up before) adds its own 1 HP at the start of every later turn.
+  const newInferno = (input.player.inferno ?? 0) === 0 && sim.inferno > 0 ? 1 : 0;
+  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
   const hpLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss + startTurnLoss;
   const hpAfter = input.player.hp - hpLoss;
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
@@ -843,15 +878,26 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;
-  // Mercury Hourglass hits every enemy at the start of our next turn: one left at or below it dies then
-  // (after its attack). A crab dying that way alone enrages the other just the same (PLC F33 T9: Crusher
-  // left at 2 HP, the Hourglass killed it, Rocket got 99 Block and a 41-damage Laser).
-  const startDamage = input.player.startTurnDamage ?? 0;
+  // Start-of-turn AoE (Mercury Hourglass, Inferno's own 1 HP loss) hits every enemy at the start of our
+  // next turn: one left at or below it dies then (after its attack). A crab dying that way alone
+  // enrages the other just the same (PLC F33 T9: Crusher left at 2 HP, the Hourglass killed it, Rocket
+  // got 99 Block and a 41-damage Laser; 9XZX T7: Crusher left at 3, Inferno's 6 killed it).
+  const startDamage = turnStartAoeAfter(sim, input);
   const startTurnKills = winsFight || startDamage <= 0 ? [] : living.filter((enemy) => enemy.hp <= startDamage);
   const survivors = living.filter((enemy) => !startTurnKills.includes(enemy));
-  if (startTurnKills.some((enemy) => crabs.includes(enemy.index))) {
+  const rageNext = startTurnKills.some((enemy) => crabs.includes(enemy.index));
+  if (rageNext) {
     const enragedNext = survivors.filter((enemy) => enemy.crabRage).length;
     score -= weights.hp * enragedNext * CRAB_RAGE_STRENGTH * 2;
+  }
+  // Crab balance: both parts alive and not both killed this turn. The only clean kill is both in one
+  // turn, so a wide HP gap makes that harder, and a part left low dies alone to the next AoE (9XZX:
+  // Crusher 155 -> 3 while Rocket stayed at 140, Inferno killed it; W6F4 won by keeping them level).
+  const livingCrabs = living.filter((enemy) => enemy.crabRage && crabs.includes(enemy.index));
+  if (!winsFight && livingCrabs.length === 2) {
+    const [lower, higher] = [...livingCrabs].sort((a, b) => a.hp - b.hp);
+    score -= weights.damage * CRAB_GAP_WEIGHT * Math.max(0, higher!.hp - lower!.hp - CRAB_GAP_FREE);
+    if (!rageNext && lower!.hp <= startDamage + CRAB_LOW_MARGIN && higher!.hp > CRAB_HIGH_HP) score -= weights.hp * CRAB_RAGE_STRENGTH * 2;
   }
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
@@ -1008,7 +1054,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -1053,6 +1099,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     escapes: 0,
     mantles: 0,
     enraged: 0,
+    inferno: input.player.inferno ?? 0,
     bombs: 0,
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp),

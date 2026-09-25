@@ -897,17 +897,93 @@ describe("Mercury Hourglass (PLC F33 T9: Crusher left at 2 HP died at our turn s
   const twin = card(0, "TWIN_STRIKE", { damage: 11, hits: 2, validTargets: [0, 1] });
 
   it("an enemy left at or below the start-of-turn damage counts as killed then, and a lone crab kill is punished", () => {
-    const withGlass = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1, startTurnDamage: 3 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const withGlass = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1, turnStartAoe: 3 }), enemies: [crusher, rocket], fightKind: "boss" });
     const onCrusher = withGlass.plans.find((plan) => plan.steps[0]?.target === 0)!;
     const onRocket = withGlass.plans.find((plan) => plan.steps[0]?.target === 1)!;
     expect(onCrusher.outcome.startTurnKills).toEqual(["Crusher"]);
     expect(onRocket.outcome.startTurnKills).toEqual([]);
     expect(onRocket.score).toBeGreaterThan(onCrusher.score);
 
+    // Without the Hourglass a 2 HP crab next to a 108 HP one still costs the same (crab balance: it dies
+    // alone to any chip). With the partner at 50 that balance penalty is off, and the difference is the
+    // start-of-turn rage alone.
     const without = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
-    const plain = without.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(without.plans.find((plan) => plan.steps[0]?.target === 0)!.score).toBeCloseTo(onCrusher.score);
+    const lowRocket = { ...rocket, hp: 50 };
+    const glass50 = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1, turnStartAoe: 3 }), enemies: [crusher, lowRocket], fightKind: "boss" });
+    const plain50 = solveTurn({ hand: [twin], player: player({ hp: 25, energy: 1 }), enemies: [crusher, lowRocket], fightKind: "boss" });
+    const killed = glass50.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    const plain = plain50.plans.find((plan) => plan.steps[0]?.target === 0)!;
     expect(plain.outcome.startTurnKills).toEqual([]);
-    expect(plain.score - onCrusher.score).toBeCloseTo(weightsFor({ hand: [], player: player({ hp: 25 }), enemies: [], fightKind: "boss" }).hp * CRAB_RAGE_STRENGTH * 2);
+    expect(plain.score - killed.score).toBeCloseTo(weightsFor({ hand: [], player: player({ hp: 25 }), enemies: [], fightKind: "boss" }).hp * CRAB_RAGE_STRENGTH * 2);
+  });
+});
+
+describe("Inferno (9XZX F33: Crusher left at 3 HP died to Inferno's 6 at the start of T7, Rocket enraged)", () => {
+  const crusher = enemy({ index: 0, name: "Crusher", hp: 21, maxHp: 209, crabRage: true, attacks: [{ damage: 8, hits: 1 }] });
+  const rocket = enemy({ index: 1, name: "Rocket", hp: 140, maxHp: 199, crabRage: true, attacks: [] });
+  const fist = card(0, "MOLTEN_FIST", { damage: 18, validTargets: [0, 1] });
+
+  it("Inferno's power counts as start-of-turn AoE: a crab left at or below it is a lone kill", () => {
+    const result = solveTurn({ hand: [fist], player: player({ hp: 50, energy: 1, turnStartAoe: 6, inferno: 6, startTurnHpLoss: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const onCrusher = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
+    const onRocket = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
+    expect(onCrusher.outcome.startTurnKills).toEqual(["Crusher"]);
+    expect(onRocket.outcome.startTurnKills).toEqual([]);
+    expect(result.plans[0]!.steps[0]!.target).toBe(1);
+  });
+
+  it("an Inferno played this turn adds its damage to the next turn start and its 1 HP to the loss", () => {
+    const inferno = card(1, "INFERNO", { type: "Power", target: "self", validTargets: [], inferno: 6, flatValue: 10 });
+    const result = solveTurn({ hand: [inferno], player: player({ hp: 50, energy: 1 }), enemies: [{ ...crusher, hp: 5 }, rocket], fightKind: "boss" });
+    const played = result.plans.find((plan) => plan.steps.some((step) => step.cardId === "INFERNO"))!;
+    expect(played.outcome.startTurnKills).toEqual(["Crusher"]);
+    expect(played.outcome.hpLoss).toBe(8 + 1);
+  });
+
+  it("HP lost on our turn with Inferno up hits every enemy", () => {
+    const bloodletting = card(2, "BLOODLETTING", { type: "Skill", cost: 0, target: "self", validTargets: [], hpLoss: 3, energyGain: 2 });
+    const result = solveTurn({ hand: [bloodletting], player: player({ hp: 50, energy: 0, inferno: 6 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.enemyHpAfter.map((entry) => entry.hp)).toEqual([15, 134]);
+  });
+});
+
+describe("Crab balance (9XZX: Crusher 155 -> 3 while Rocket stayed at 140; W6F4 won keeping them level)", () => {
+  const blow = card(0, "HEAVY_BLADE", { damage: 20, validTargets: [0, 1] });
+
+  it("hits the higher part when the gap is already wide", () => {
+    const crusher = enemy({ index: 0, name: "Crusher", hp: 60, maxHp: 209, crabRage: true, attacks: [{ damage: 8, hits: 1 }] });
+    const rocket = enemy({ index: 1, name: "Rocket", hp: 140, maxHp: 199, crabRage: true, attacks: [{ damage: 8, hits: 1 }] });
+    const result = solveTurn({ hand: [blow], player: player({ hp: 60, energy: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
+    expect(result.plans[0]!.steps[0]!.target).toBe(1);
+  });
+
+  it("does not care while the two are close", () => {
+    const crusher = enemy({ index: 0, name: "Crusher", hp: 120, maxHp: 209, crabRage: true, attacks: [] });
+    const rocket = enemy({ index: 1, name: "Rocket", hp: 130, maxHp: 199, crabRage: true, attacks: [] });
+    const result = solveTurn({ hand: [blow], player: player({ hp: 60, energy: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
+    const on = (target: number) => result.plans.find((plan) => plan.steps[0]?.target === target)!.score;
+    expect(on(0)).toBeCloseTo(on(1));
+  });
+
+  it("strongly penalises leaving one part within reach of the next turn-start AoE while the other is high", () => {
+    const crusher = enemy({ index: 0, name: "Crusher", hp: 34, maxHp: 209, crabRage: true, attacks: [] });
+    const rocket = enemy({ index: 1, name: "Rocket", hp: 140, maxHp: 199, crabRage: true, attacks: [] });
+    const input = { hand: [blow], player: player({ hp: 60, energy: 1, turnStartAoe: 6 }), enemies: [crusher, rocket], fightKind: "boss" as const };
+    const result = solveTurn(input);
+    const on = (target: number) => result.plans.find((plan) => plan.steps[0]?.target === target)!.score;
+    // Crusher 34 -> 14 (<= 6 + 10) is not killed at the turn start but costs a full rage penalty.
+    const weights = weightsFor(input);
+    expect(on(1) - on(0)).toBeGreaterThan(weights.hp * CRAB_RAGE_STRENGTH * 2);
+  });
+
+  it("no balance penalty when the plan kills both", () => {
+    const aoe = card(0, "CLEAVE", { target: "all", validTargets: [], damage: 20 });
+    const crusher = enemy({ index: 0, name: "Crusher", hp: 5, maxHp: 209, crabRage: true, attacks: [] });
+    const rocket = enemy({ index: 1, name: "Rocket", hp: 18, maxHp: 199, crabRage: true, attacks: [] });
+    const result = solveTurn({ hand: [aoe], player: player({ hp: 60, energy: 1 }), enemies: [crusher, rocket], fightKind: "boss" });
+    expect(result.plans[0]!.outcome.winsFight).toBe(true);
   });
 });
 

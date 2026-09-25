@@ -66,6 +66,11 @@ export interface CardModel {
   retaliate?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
   delayedDamage?: number;
+  /**
+   * Inferno: the power's amount. Every HP loss on our turn (its own 1 at the start of each turn, a
+   * Bloodletting, Thorns) deals this much to every enemy.
+   */
+  inferno?: number;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
   /**
@@ -293,6 +298,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     heldHpLoss,
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
+    inferno: cardId === "INFERNO" ? dyn(card, "InfernoPower") ?? 6 : 0,
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),

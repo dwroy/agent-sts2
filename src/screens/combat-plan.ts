@@ -48,7 +48,7 @@ const POWER_NOTES: Record<string, string> = {
   SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
   ASLEEP_POWER: " (asleep, no attacks: the first HP damage wakes it at once, block damage does not; set up powers instead of chipping it)",
   SLUMBER_POWER: " (sleeping, no attacks: -1 each turn and -1 per hit that takes HP; wakes at 0)",
-  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +6 Strength: kill both in the same turn or wear both down evenly; Mercury Hourglass kills a partner left at 3 HP or less at the start of my turn)",
+  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +6 Strength: kill both in the same turn or wear both down evenly; start-of-turn damage to all enemies (Mercury Hourglass 3, Inferno) kills a partner left that low; enemy Block you see now is gone by the start of your next turn)",
   // Test Subject (2WUMK6PK5QHD): three phases, 100 / 200 / 300 HP.
   ADAPTABLE_POWER: " (another phase follows: at 0 HP it spends one turn reviving (no attack), then returns at full, higher max HP with Vulnerable/Strength cleared; killing this phase does NOT end the fight, keep HP for the next one)",
   ENRAGE_POWER: " (+N Strength every time I play a Skill, raising this turn's attack too: prefer Attacks)",
@@ -317,6 +317,18 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
 export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
+
+/**
+ * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), and Inferno
+ * (INFERNO_POWER amount, 6 / 9 upgraded) once for its own start-of-turn HP loss and once more for a
+ * Crimson Mantle's (both are HP lost on our turn). 9XZX T5 -> T6: Crusher 55 -> 49, Rocket 140 -> 134.
+ */
+export function turnStartAoe(relicIds: string[], player: Record<string, unknown>): number {
+  const hourglass = relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0;
+  const inferno = powerAmount(player, "INFERNO_POWER");
+  const lossEvents = inferno > 0 ? 1 + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0) : 0;
+  return hourglass + inferno * lossEvents;
+}
 const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;
 
@@ -487,9 +499,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? null,
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
-    startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")),
+    // Inferno takes 1 HP at the start of each turn (and that loss is what makes it hit every enemy).
+    startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
-    startTurnDamage: relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0,
+    turnStartAoe: turnStartAoe(relicIds, player),
+    inferno: powerAmount(player, "INFERNO_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
   };

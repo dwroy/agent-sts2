@@ -1609,3 +1609,16 @@ describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)",
     expect(drawPileCards({})).toBeUndefined();
   });
 });
+
+describe("turnStartAoe (9XZX: Inferno 6 at each turn start killed a 3 HP Crusher)", () => {
+  it("adds Mercury Hourglass and the INFERNO_POWER amount", async () => {
+    const { turnStartAoe } = await import("../src/screens/combat-plan.js");
+    const inferno = { powers: [{ power_id: "INFERNO_POWER", amount: 6 }] };
+    expect(turnStartAoe([], {})).toBe(0);
+    expect(turnStartAoe(["MERCURY_HOURGLASS"], {})).toBe(3);
+    expect(turnStartAoe([], inferno)).toBe(6);
+    expect(turnStartAoe(["MERCURY_HOURGLASS"], inferno)).toBe(9);
+    // A Crimson Mantle's HP loss at the turn start is a second Inferno trigger.
+    expect(turnStartAoe([], { powers: [...inferno.powers, { power_id: "CRIMSON_MANTLE_POWER", amount: 7 }] })).toBe(12);
+  });
+});
