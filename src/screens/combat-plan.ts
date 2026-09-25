@@ -71,6 +71,8 @@ const POWER_NOTES: Record<string, string> = {
 
 /** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
 export const HALLWAY_POTION_COST = 15;
+/** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
+const VULNERABLE_PAYOFFS = new Set(["DISMANTLE", "BULLY", "MOLTEN_FIST", "DOMINATE"]);
 /** Beating Remnant: at most this much HP lost in a turn. */
 export const BEATING_REMNANT_CAP = 20;
 /** Otherwise a hallway potion line must save this much HP over the best potion-free line (or win, or add damage). */
@@ -759,6 +761,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       raceEruption,
       wither,
       ...focusInput,
+      vulnerablePayoffs: asArray(asRecord(state.run?.raw)["deck"]).filter((card) => VULNERABLE_PAYOFFS.has(str(asRecord(card)["card_id"]))).length,
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
     });

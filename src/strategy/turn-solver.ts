@@ -221,6 +221,8 @@ export interface SolverInput {
    * 128 damage into the Queen and 6 into the Amalgam over T1-T3, the Amalgam's 36-damage hits killed us).
    */
   focusIndex?: number;
+  /** Cards in the deck that pay off on enemy Vulnerable (raises the Vulnerable weight). */
+  vulnerablePayoffs?: number;
   /**
    * The cards the next draws come from (the draw pile, or the discard pile when it is empty), when
    * known. Without it a draw is worth a flat DRAW_VALUE; with it, the pile's statuses count (XPA4 T8/T10:
@@ -1039,7 +1041,11 @@ export function weightsFor(input: SolverInput): Weights {
   let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
-  return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
+  // Cards that pay off on Vulnerable in the deck (Dismantle hits twice, Bully, Molten Fist doubles it,
+  // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
+  // the same HP; Dismantle x2 on T7 would have killed the beetle).
+  const vulnerable = 2.5 + Math.min(4, 1.5 * (input.vulnerablePayoffs ?? 0));
+  return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable, weak: 1.5, strength: 5 };
 }
 
 /**
