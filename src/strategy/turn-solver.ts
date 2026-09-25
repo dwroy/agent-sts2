@@ -221,6 +221,8 @@ export interface SolverInput {
    * 128 damage into the Queen and 6 into the Amalgam over T1-T3, the Amalgam's 36-damage hits killed us).
    */
   focusIndex?: number;
+  /** Cards in the deck that pay off on enemy Vulnerable (raises the Vulnerable weight). */
+  vulnerablePayoffs?: number;
   /**
    * The cards the next draws come from (the draw pile, or the discard pile when it is empty), when
    * known. Without it a draw is worth a flat DRAW_VALUE; with it, the pile's statuses count (XPA4 T8/T10:
@@ -498,8 +500,11 @@ export function exhaustValue(card: CardModel, weights: Weights): number {
  * With a Sandpit up, Frantic Escape is never taken (THMG F33 T4: Burning Pact exhausted it as junk),
  * unless it is the only card left (the game forces the pick; selection.ts scores it last too).
  */
+/** Weights for ranking cards to exhaust (a fight-length view, not this turn's). */
+const EXHAUST_WEIGHTS = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
+
 export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | null {
-  const weights = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
+  const weights = EXHAUST_WEIGHTS;
   let best: CardModel | null = null;
   for (const card of cards) {
     if (card.type === "Potion") continue;
@@ -699,7 +704,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.hand = next.hand.filter((entry) => !taken.includes(entry));
     next.held = next.held.filter((entry) => !taken.includes(entry));
   }
-  if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
+  if (card.randomExhaust) {
+    // The random pick costs the average card left (K8RK F17 T2: plain True Grit took Bludgeon, the plan's
+    // 32-damage race card; shown as "hp_lost 1").
+    const pool = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion");
+    if (pool.length > 0) next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+  }
   else if (EXHAUST_PICKERS.has(card.cardId)) {
     const pick = exhaustPick([...next.held, ...next.hand], next.enemies.some((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0));
     if (pick) {
@@ -1030,7 +1041,11 @@ export function weightsFor(input: SolverInput): Weights {
   let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
-  return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
+  // Cards that pay off on Vulnerable in the deck (Dismantle hits twice, Bully, Molten Fist doubles it,
+  // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
+  // the same HP; Dismantle x2 on T7 would have killed the beetle).
+  const vulnerable = 2.5 + Math.min(4, 1.5 * (input.vulnerablePayoffs ?? 0));
+  return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable, weak: 1.5, strength: 5 };
 }
 
 /**
