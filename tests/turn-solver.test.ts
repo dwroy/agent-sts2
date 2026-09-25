@@ -203,6 +203,46 @@ describe("potions", () => {
   });
 });
 
+describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank the Strength Potion)", () => {
+  const hand = (): CardModel[] => [
+    card(0, "IRON_WAVE", { damage: 5, block: 5 }),
+    card(1, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8, draw: 1 }),
+    card(2, "SWORD_BOOMERANG", { target: "random", validTargets: [], damage: 3, hits: 3 }),
+    card(3, "UPPERCUT", { cost: 2, damage: 13, weak: 1, vulnerable: 1, validTargets: [0, 1] }),
+    defend(4),
+    card(5, "WHIRLWIND", { cost: 0, xCost: true, target: "all", validTargets: [], damage: 5, hits: 0, special: "whirlwind" }),
+    card(6, "BREAKTHROUGH", { target: "all", validTargets: [], damage: 9, hpLoss: 1 }),
+    modelPotion("STRENGTH_POTION", "Strength Potion", 1, [], 15)!,
+  ];
+  const enemies = (): EnemySim[] => [
+    enemy({ index: 0, name: "Calcified Cultist", hp: 39, maxHp: 39 }),
+    enemy({ index: 1, name: "Seapunk", hp: 46, maxHp: 46, attacks: [{ damage: 11, hits: 1 }] }),
+  ];
+  const drinks = (plan: { steps: { cardId: string }[] }) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+  const solve = (fightKind: "monster" | "boss") =>
+    solveTurn({ hand: hand(), player: player({ hp: 61, maxHp: 83, energy: 4 }), enemies: enemies(), fightKind, turn: 1 });
+
+  it("a potion's lasting value is small in a hallway fight, full in a boss fight", () => {
+    const hallway = solve("monster").plans.find(drinks)!;
+    const boss = solve("boss").plans.find(drinks)!;
+    expect(boss.outcome.lasting).toBeCloseTo(10);
+    expect(hallway.outcome.lasting).toBeLessThan(5);
+  });
+
+  it("the hallway's best line keeps the potion, and the options always include a line without it", () => {
+    const result = solve("monster");
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    expect(drinks(surviving[0]!)).toBe(false);
+    expect(distinctPlans(surviving, 4).some((plan) => !drinks(plan))).toBe(true);
+    // Even when every higher-scored pick drinks (a boss fight), a potion-free line is offered.
+    const boss = solve("boss").plans.filter((plan) => !plan.outcome.dies);
+    const picks = distinctPlans(boss, 4);
+    expect(picks.some((plan) => !drinks(plan))).toBe(true);
+    const onlyDrinking = distinctPlans(boss.filter(drinks).concat(boss.filter((plan) => !drinks(plan)).slice(-1)), 4);
+    expect(onlyDrinking.some((plan) => !drinks(plan))).toBe(true);
+  });
+});
+
 describe("more enemy powers", () => {
   it("Flutter halves attack damage, so a big hit is not a lethal", () => {
     const bludgeon = card(0, "BLUDGEON", { cost: 3, damage: 32 });
@@ -620,6 +660,26 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
     // Slumber counts as sleeping too; an awake enemy is left alone.
     expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(kept);
     expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0 }])).toEqual(surviving);
+  });
+
+  it("its last sleep turn (Asleep 1) costs nothing to wake: attack with the full 3 energy (5FMU F17 T3)", () => {
+    // 5FMU F17: Asleep 3/2/1 on T1–T3, first attack (19) on T4. Woken on T3 it is stunned on T3's
+    // enemy turn and attacks on T4 all the same, so no free turn is lost.
+    const breakthrough = (index: number): CardModel => card(index, "BREAKTHROUGH", { target: "all", validTargets: [], damage: 9, hpLoss: 1 });
+    const armaments = (index: number): CardModel => card(index, "ARMAMENTS", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    const sleeper = matriarch({ asleep: 1, block: 11, vulnerable: 1 });
+    const hand = [strike(0), breakthrough(1), defend(2), armaments(3), breakthrough(4)];
+    const result = solveTurn({ hand, player: player({ hp: 86, maxHp: 86, energy: 3 }), enemies: [sleeper], fightKind: "boss", turn: 3 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    for (const plan of surviving) expect(plan.outcome.sleepCost).toBe(0);
+    const kept = hardRuleLines(surviving, [sleeper]);
+    expect(kept).toEqual(surviving);
+    const best = kept[0]!;
+    expect(best.outcome.enemyHpAfter[0]!.hp).toBeLessThan(222);
+    expect(best.steps.filter((step) => step.cardId === "BREAKTHROUGH" || step.cardId === "STRIKE_IRONCLAD")).toHaveLength(3);
+    // Asleep 2 still costs a free turn.
+    const earlier = solveTurn({ hand, player: player({ hp: 86, maxHp: 86, energy: 3 }), enemies: [{ ...sleeper, asleep: 2 }], fightKind: "boss", turn: 2 });
+    expect(earlier.plans.some((plan) => plan.outcome.sleepCost > 0)).toBe(true);
   });
 
   it("an awake (attacking) enemy is hit as usual", () => {

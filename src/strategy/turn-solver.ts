@@ -294,6 +294,9 @@ interface Sim {
   flat: number;
   /** Resource cost of potions used this turn (not scaled like lasting value). */
   potionCost: number;
+  /** Of permStrength and flat, the part potions gave (scaled by POTION_LASTING for the fight kind). */
+  potionStrength: number;
+  potionFlat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   /** Buffer stacks gained this turn: each negates one enemy hit. */
@@ -537,10 +540,15 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
   return dealt;
 }
 
-/** HP damage on a sleeper: its free (non-attacking) turns lost. */
+/**
+ * HP damage on a sleeper: its free (non-attacking) turns lost. Asleep N means it skips N more enemy
+ * turns (5FMU F17: Asleep 3/2/1 on T1–T3, first attack on T4); woken now, it is stunned this enemy
+ * turn and attacks the next, so it loses N − 1 of them — none on its last sleep turn (Asleep 1),
+ * where waking it costs nothing (5FMU F17 T3: 3 energy idled on Asleep 1).
+ */
 function wake(enemy: Sim["enemies"][number]): void {
   if ((enemy.asleep ?? 0) > 0) {
-    enemy.sleepLost = (enemy.sleepLost ?? 0) + Math.max(1, (enemy.asleep ?? 0) - 1);
+    enemy.sleepLost = (enemy.sleepLost ?? 0) + Math.max(0, (enemy.asleep ?? 0) - 1);
     enemy.asleep = 0;
   } else if ((enemy.slumber ?? 0) > 0) {
     enemy.sleepLost = (enemy.sleepLost ?? 0) + 1;
@@ -603,8 +611,14 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
   const twice = card.type !== "Potion" && next.duplicate > 0;
   if (twice) next.duplicate -= 1;
+  const strengthBefore = next.permStrength;
+  const flatBefore = next.flat;
   resolveEffects(next, card, target, player, cost);
   if (twice) resolveEffects(next, card, target, player, cost);
+  if (card.type === "Potion") {
+    next.potionStrength += next.permStrength - strengthBefore;
+    next.potionFlat += next.flat - flatBefore;
+  }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
@@ -926,6 +940,20 @@ export function weightsFor(input: SolverInput): Weights {
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable: 2.5, weak: 1.5, strength: 5 };
 }
 
+/**
+ * Share of a potion's lasting value (Strength Potion, Dexterity Potion, Touch of Insanity) counted by
+ * fight kind. A potion is spent once; in a hallway fight that ends in a few turns its buff pays little
+ * and the potion is worth more saved for an elite or the boss (5FMU F15: Strength Potion drunk T1 of a
+ * hallway fight two floors before the boss, every offered line carried it as "worth about 10 score").
+ */
+export const POTION_LASTING: Record<SolverInput["fightKind"], number> = { monster: 0.25, unknown: 0.25, elite: 1, boss: 1 };
+
+/** Lasting value of the turn (Strength, powers), a potion's part scaled by POTION_LASTING. */
+function lastingValue(sim: Sim, input: SolverInput, weights: Weights): number {
+  const potion = weights.strength * sim.potionStrength + sim.potionFlat;
+  return weights.strength * sim.permStrength + sim.flat - potion * (1 - POTION_LASTING[input.fightKind]);
+}
+
 /** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
 export const CRAB_GAP_FREE = 30;
 /** Per point of gap past that, as a share of the damage weight (damage into the low part is worth half). */
@@ -1151,7 +1179,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // less the later it comes.
     const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += (weights.strength * sim.permStrength + sim.flat) * fightLength * earliness;
+    score += lastingValue(sim, input, weights) * fightLength * earliness;
     score += drawScoreAt(sim.draws, sim.energy);
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
     score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
@@ -1190,7 +1218,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       withersAdded,
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
-      lasting: sim.flat + (weights.strength * sim.permStrength) - enrageCost,
+      lasting: lastingValue(sim, input, weights) - enrageCost,
     },
   };
 }
@@ -1292,6 +1320,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     weakApplied: 0,
     flat: 0,
     potionCost: 0,
+    potionStrength: 0,
+    potionFlat: 0,
     tempDex: 0,
     buffer: 0,
     duplicate: 0,
@@ -1423,6 +1453,17 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter,
     );
     if (!similar) picked.push(plan);
+  }
+  // Potions are optional: when every pick drinks one, the best line that drinks none is shown too
+  // (5FMU F15: all four hallway options carried the Strength Potion, so "keep it" was never offered).
+  const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+  if (limit >= 2 && picked.length > 0 && picked.every(drinks)) {
+    const dry = plans.filter((plan) => !drinks(plan));
+    const keep = dry.find((plan) => !dry.some((other) => other !== plan && dominates(other, plan)));
+    if (keep) {
+      if (picked.length >= limit) picked.pop();
+      picked.push(keep);
+    }
   }
   return picked;
 }
