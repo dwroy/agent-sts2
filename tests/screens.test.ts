@@ -1280,8 +1280,19 @@ describe("potions at low HP outside boss fights", () => {
   it("a modelled potion costs nothing to use below 40% HP against two attackers", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     // Fire Potion's 20 damage is worth less than the hallway use cost of 15; at low HP it is free.
+    // Enough incoming that no potion-free line is cheap (a dry line losing <= 5 keeps the potion even
+    // when pressed: B6AC F30).
+    const heavier = (hp: number) => {
+      const raw = pressedCombat(hp, "FIRE_POTION");
+      const combat = raw["combat"] as Record<string, unknown>;
+      combat["enemies"] = (combat["enemies"] as Record<string, unknown>[]).map((enemy) => ({
+        ...enemy,
+        intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }],
+      }));
+      return raw;
+    };
     const drinks = (hp: number): boolean => {
-      const e = env(pressedCombat(hp, "FIRE_POTION"), { combatPlanner: "turn" });
+      const e = env(heavier(hp), { combatPlanner: "turn" });
       const decision = planCombatTurn(e);
       if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
       const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};

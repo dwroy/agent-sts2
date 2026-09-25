@@ -92,6 +92,11 @@ export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolea
 export const BOSS_POTION_COST = 4;
 const BOSS_POTIONS_PER_TURN = 1;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
+/** Potions that add damage: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
+const OFFENSIVE_POTIONS = new Set([
+  "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
+  "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
+]);
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
 /** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
@@ -708,7 +713,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     : null;
   // A kill-first target only matters with more than one enemy alive.
   const focusInput = focusIndex !== null && enemies.length > 1 ? { focusIndex } : {};
-  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed });
+  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, offensive: OFFENSIVE_POTIONS.has(potionId) });
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
@@ -764,9 +769,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       return use === "save" || use === "emergency";
     });
   // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
-  if ((kind === "monster" || kind === "unknown") && !pressed && solved.plans[0] && drinksPotion(solved.plans[0])) {
+  // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
+  // Dexterity potion for 2 HP and Heart of Iron at Jev 0.10; the boss killed us 4 HP short).
+  let dryCheap = false;
+  if ((kind === "monster" || kind === "unknown") && solved.plans[0] && drinksPotion(solved.plans[0])) {
     const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
-    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) solved = { ...solved, plans: dry };
+    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
+      solved = { ...solved, plans: dry };
+      dryCheap = true;
+    }
   }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
@@ -800,7 +811,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly });
-  const potions = potionCapped ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
+  const potions = potionCapped || dryCheap ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
@@ -816,7 +827,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const due = fightPlan
     ? potions.find((potion) => {
         const use = fightPlan.potions[potion.potion_id];
-        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit);
+        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id));
       })
     : undefined;
   if (due) {

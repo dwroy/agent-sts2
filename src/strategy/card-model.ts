@@ -130,6 +130,9 @@ export function stripVigor(hand: CardModel[], vigor: number, weak: boolean): voi
  */
 const POWER_VALUE: Record<string, number> = {
   DEMON_FORM: 30,
+  // 5 to every enemy at the start of each turn, +5 each time (5+10+15+20 over four turns); B6AC F33:
+  // at the default 8 it was never played, not even on the Knowledge Demon's 0-damage curse turn.
+  ROLLING_BOULDER: 26,
   INFLAME: 4, // the Strength itself is simulated; this is only the "earlier is better" nudge
   FEEL_NO_PAIN: 8,
   DARK_EMBRACE: 8,

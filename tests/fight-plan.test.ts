@@ -164,6 +164,7 @@ describe("plan potion rules", () => {
     expect(planPotionCost(plan({ potions: { X: "early" } }), "X", { ...ctx, turn: 3 })).toBeNull();
     expect(planPotionCost(plan({ potions: { X: "save" } }), "X", ctx)).toEqual({ free: false, extra: 20 });
     expect(planPotionCost(plan({ potions: { X: "big_hit" } }), "X", { ...ctx, bigHit: true })).toEqual({ free: true, extra: 0 });
+    expect(planPotionCost(plan({ potions: { X: "big_hit" } }), "X", { ...ctx, bigHit: true, offensive: true })).toBeNull();
     expect(planPotionCost(plan(), "OTHER", ctx)).toBeNull();
     expect(planPotionCost(null, "X", ctx)).toBeNull();
   });
@@ -351,7 +352,7 @@ describe("turn planner with a fight plan", () => {
     expect(lost).toBeLessThanOrEqual(9 + 5.5);
   });
 
-  it("drinks an unmodelled potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
+  it("drinks an unmodelled non-attack potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
     const raw = bossTurnOne();
     raw["turn"] = 5;
     const combat = raw["combat"] as Raw;
@@ -385,6 +386,19 @@ describe("turn planner with a fight plan", () => {
     const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
     expect(text).toMatch(/12|lethal/i);
     expect(text).not.toContain('"hp_after_enemy_turn":8');
+  });
+
+  it("keeps potions at low HP in a hallway fight when a dry line loses <= 5 (B6AC F30)", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["current_hp"] = 26;
+    (combat["player"] as Raw)["max_hp"] = 94;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy, i) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: String(4 - i), damage: 4 - i, hits: 1, total_damage: 4 - i }] }));
+    const e = env(raw);
+    const decision = planCombatTurn(e);
+    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, e.screenMemory.combatPlan?.remaining]);
+    expect(text).not.toContain("Fire Potion");
+    expect(text).not.toContain("use_potion");
   });
 });
 
