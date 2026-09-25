@@ -979,16 +979,20 @@ function planTurn(env: DecisionEnv): Decision | null {
       const hallway = !(kind === "elite" || kind === "boss" || dangerous);
       const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
       const fromJev = answer.raw !== undefined && !escalatedBy;
+      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
+      // A turn that costs a lot whatever is played is what potions are for: Jev's potion pick stands
+      // there (C2WY F22 T4-T5: Attack Potion picks overridden at 27 -> 18 -> 1 HP, died with 3 potions).
+      // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
+      const potionTurn = drinks && (costly || dangerous);
       // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
-      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top) {
+      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
       }
       // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
       // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
       // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
-      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
       const hallwayFight = kind === "monster" || kind === "unknown";
-      if (hallwayFight && fromJev && drinks && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
+      if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
         return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
       }
       if (chosen.potion) {

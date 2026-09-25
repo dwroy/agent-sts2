@@ -14,9 +14,10 @@ import type { ActionRequest } from "../mod/client.js";
 import { enemyJson, enemyViews, handCardJson, handViews, playerJson, potionViews } from "../project/narrow.js";
 import { playerPowers } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
+import { modelHandCard } from "../strategy/card-model.js";
 import { resolveDamage } from "../strategy/damage.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 
 interface Candidate {
   key: string;
@@ -85,6 +86,14 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const candidates: Candidate[] = [];
   const enemyByIndex = new Map(enemies.map((enemy) => [enemy.index, enemy]));
 
+  // A card's own HP cost (Blood Wall, Offering, Hemokinesis) is paid in full, block or not (C2WY F22
+  // T6: Blood Wall at 1 HP was listed as survivable and killed us).
+  const hpCostByIndex = new Map(
+    asArray(combat["hand"]).map((entry, fallbackIndex) => {
+      const model = modelHandCard(entry, fallbackIndex, knowledge);
+      return [model.index, model.hpLoss] as const;
+    }),
+  );
   const pushCard = (card: (typeof hand)[number], targetIndex: number | null): void => {
     const target = targetIndex === null ? null : enemyByIndex.get(targetIndex) ?? null;
     const perHit = card.damage;
@@ -109,7 +118,10 @@ export function planCombat(env: DecisionEnv): Decision | null {
     const kills = hpAfter !== null && hpAfter <= 0;
     const isLastEnemy = kills && living.length === 1;
     const blockGain = card.block ?? 0;
-    const incomingAfter = Math.max(0, incoming - (playerBlock + blockGain));
+    const hpCost = hpCostByIndex.get(card.index) ?? 0;
+    const incomingAfter = Math.max(0, incoming - (playerBlock + blockGain)) + hpCost;
+    // Paying its HP cost kills us before anything else happens: not an option.
+    if (hpCost > 0 && playerHp !== null && hpCost >= playerHp) return;
 
     const key = targetIndex === null ? card.key : `${card.key}->e${targetIndex}`;
     const summary: Record<string, JsonValue> = {
@@ -129,6 +141,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
     }
     if (card.hits > 1 && totalDamage !== null) summary["total_damage"] = totalDamage;
     if (blockGain > 0) summary["block_gained"] = blockGain;
+    if (hpCost > 0) summary["hp_cost"] = hpCost;
     summary["incoming_damage_after_this"] = incomingAfter;
     if (card.cost > energy) summary["warning"] = "costs more energy than you have";
     if (stars > 0) summary["stars_after"] = stars;
@@ -138,7 +151,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
       (kills ? 500 : 0) +
       (damageAfterBlock ?? 0) * 3 +
       (incoming > 0 ? blockGain * 2 : 0) +
-      (card.cost > energy ? -1_000 : 0);
+      (card.cost > energy ? -1_000 : 0) -
+      hpCost * 3;
 
     candidates.push({ key, intent: targetIndex === null ? { action: "play_card", card_index: card.index } : { action: "play_card", card_index: card.index, target_index: targetIndex }, summary, score, isEndTurn: false, lethal: kills });
   };
