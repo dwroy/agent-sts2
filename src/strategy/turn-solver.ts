@@ -368,6 +368,8 @@ interface Sim {
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
   feelNoPain: number;
+  /** Attacks played in this plan (Stomp costs 1 less for each). */
+  attacksPlayed: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
   bombs: number;
   /** Inside one hit that lands on every enemy: deaths trigger Crab Rage after the whole hit. */
@@ -646,7 +648,9 @@ function clone(sim: Sim): Sim {
 
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
-  const cost = card.xCost ? sim.energy : card.cost;
+  // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
+  // first make it cost 1; played first at 3, the lethal line was never found).
+  const cost = card.xCost ? sim.energy : card.special === "stomp" ? Math.max(0, card.cost - sim.attacksPlayed) : card.cost;
   if (cost > sim.energy) return null;
   // Touch of Insanity: only with a card worth making free (YP9 T1: drunk with only 0-cost cards left).
   if (card.special === "free_card" && !freeCardPick(sim.hand)) return null;
@@ -677,6 +681,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
+  if (card.type === "Attack") next.attacksPlayed += 1;
   for (const enemy of next.enemies) {
     if (!enemy.skittishHit) continue;
     enemy.skittishHit = false;
@@ -1342,7 +1347,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}`;
 }
 
 export interface SolveResult {
@@ -1456,6 +1461,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     enraged: 0,
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
+    attacksPlayed: 0,
     bombs: 0,
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),

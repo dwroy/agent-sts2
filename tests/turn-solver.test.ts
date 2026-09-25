@@ -283,6 +283,20 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Stomp costs 1 less per Attack played before it this turn (8XQM F48 T8)", () => {
+    const stomp = card(0, "STOMP", { cost: 3, damage: 12, target: "all", validTargets: [], special: "stomp" });
+    const result = solveTurn({
+      hand: [stomp, strike(1), strike(2)],
+      player: player({ hp: 40, energy: 3 }),
+      enemies: [enemy({ index: 0, name: "Aeonglass", hp: 29, attacks: [{ damage: 30, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    // Strike, Strike, then Stomp at cost 1: all three fit in 3 energy.
+    const all = result.plans.find((plan) => plan.steps.length === 3);
+    expect(all).toBeDefined();
+    expect(all!.steps.at(-1)!.cardId).toBe("STOMP");
+  });
+
   it("Ashwater exhausts Howl, which hits every enemy at the end of the turn (H14T F39 T4)", async () => {
     const { modelPotion } = await import("../src/strategy/card-model.js");
     const ashwater = modelPotion("ASHWATER", "Ashwater", 0, [], 0)!;
