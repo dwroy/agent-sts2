@@ -370,5 +370,21 @@ describe("turn planner with a fight plan", () => {
     const calm = planCombatTurn(quiet);
     expect(calm?.kind === "act" ? calm.intent.action : "ask").not.toBe("use_potion");
   });
+
+  it("per-card fallback counts held Beckons at the end of the turn (F6NT F17 T11)", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    const player = combat["player"] as Raw;
+    player["current_hp"] = 8;
+    player["energy"] = 0;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Buff", label: "" }] }));
+    const hand = combat["hand"] as Raw[];
+    const beckon = (index: number): Raw => ({ ...hand[1], index, card_id: "BECKON", name: "Beckon", card_type: "Status", energy_cost: 1, playable: false, resolved_rules_text: "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", dynamic_values: [] });
+    combat["hand"] = [beckon(0), beckon(1)];
+    const decision = planCombat(env(raw, { combatPlanner: "card" }));
+    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
+    expect(text).toMatch(/12|lethal/i);
+    expect(text).not.toContain('"hp_after_enemy_turn":8');
+  });
 });
 

@@ -239,6 +239,8 @@ const UPGRADE_PRIORITY: Record<string, number> = {
 
 /** Attack cards the fight's deck keeps at least (6A36: Burning Pact took 3 of the 4, 32/38 dealt in 12 turns). */
 export const MIN_COMBAT_ATTACKS = 4;
+/** Exhaust score of a Defend while more than EXHAUST_LOW_INCOMING is coming (kept over most cards). */
+export const EXHAUST_DEFEND_UNDER_FIRE = 20;
 /** Incoming damage (after block) at or below which a Defend is the cheaper card to exhaust. */
 export const EXHAUST_LOW_INCOMING = 10;
 
@@ -316,7 +318,10 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
   if (blocks && context.hp !== undefined && context.hp <= context.incoming) return -10;
   const value = cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   if (type === "Attack" && context.attacks <= MIN_COMBAT_ATTACKS) return 0;
-  if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : 65;
+  // A Defend goes first only when little is coming; with a real hit coming it is kept below most
+  // cards (7DXA F33 T2 and JR66 F48 T2: Toasty Mittens took the only Defend at 65 over Forgotten
+  // Ritual's 46, -4 and -26 HP).
+  if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : EXHAUST_DEFEND_UNDER_FIRE;
   if (cardId.startsWith("STRIKE_")) return 70;
   return Math.max(1, 100 - value);
 }
