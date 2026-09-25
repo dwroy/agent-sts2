@@ -283,6 +283,26 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Ashwater exhausts Howl, which hits every enemy at the end of the turn (H14T F39 T4)", async () => {
+    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const ashwater = modelPotion("ASHWATER", "Ashwater", 0, [], 0)!;
+    const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 30, target: "all", validTargets: [] });
+    const result = solveTurn({
+      hand: [howl, ashwater, { ...strike(1), validTargets: [0, 1] }, { ...strike(2), validTargets: [0, 1] }],
+      player: player({ hp: 2, energy: 3 }),
+      enemies: [
+        enemy({ index: 0, name: "Punch Construct", hp: 35, attacks: [{ damage: 20, hits: 1 }] }),
+        enemy({ index: 1, name: "Cubex", hp: 35, attacks: [{ damage: 12, hits: 1 }] }),
+      ],
+      fightKind: "monster",
+    });
+    expect(result.plans[0]!.outcome.winsFight).toBe(true);
+    expect(result.plans[0]!.steps[0]!.cardId).toContain("ASHWATER");
+    // With nothing to exhaust, Ashwater is not a line.
+    const empty = solveTurn({ hand: [strike(0), ashwater], player: player({ hp: 40 }), enemies: [enemy({ index: 0, hp: 50, attacks: [] })], fightKind: "monster" });
+    expect(empty.plans.some((plan) => plan.steps.some((step) => step.cardId.includes("ASHWATER")))).toBe(false);
+  });
+
   it("an exhaust takes Howl from Beyond first: it replays from the exhaust pile every turn (SVN2 F17)", async () => {
     const { exhaustPick } = await import("../src/strategy/turn-solver.js");
     const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 18, target: "all", validTargets: [] });

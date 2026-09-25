@@ -59,7 +59,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -391,6 +391,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
  */
 const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
   FIRE_POTION: { target: "single", damage: 20 },
+  // Exhausts any cards in hand: Howl from Beyond (it then replays every turn) and junk (H14T F39 T4:
+  // Ashwater -> Howl was the lethal at 2 HP; unmodelled, every line "died").
+  ASHWATER: { target: "self", special: "ashwater" },
   POTION_SHAPED_ROCK: { target: "single", damage: 10 }, // measured: 15 on a Vulnerable target
   EXPLOSIVE_AMPOULE: { target: "all", damage: 10 },
   BLOCK_POTION: { target: "self", block: 12 },
