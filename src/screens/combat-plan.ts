@@ -309,7 +309,7 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   const o = plan.outcome;
   const cards = plan.steps.map((step) => ctx.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId));
   const powers = plan.steps.filter((step, i) => !step.cardId.startsWith("POTION:") && cards[i]?.type === "Power").map((step) => step.name);
-  const potions = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name);
+  const potions = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
   const key = new Set(ctx.enemies.filter((enemy) => !enemy.minion && !enemy.illusion).map((enemy) => enemy.name));
   const keyKills = o.kills.filter((name) => key.has(name));
   // Next turn's expected hit, from the move model, for the enemies this line leaves alive; Weak the
