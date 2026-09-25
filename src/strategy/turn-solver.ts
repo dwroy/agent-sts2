@@ -698,6 +698,15 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   const exhaustedBefore = next.exhausted.length;
+  // Second Wind (LQLZ F21 T4: unmodelled, it exhausted Inferno and Forgotten Ritual; a replay ranked an
+  // impossible line first): every non-Attack card in hand goes, Block for each.
+  if (card.special === "second_wind") {
+    const taken = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion" && entry.type !== "Attack");
+    next.exhausted = [...next.exhausted, ...taken];
+    next.hand = next.hand.filter((entry) => !taken.includes(entry));
+    next.held = next.held.filter((entry) => !taken.includes(entry));
+    if (!next.noBlock && taken.length > 0) gainBlock(next, (card.block + next.tempDex) * taken.length, player);
+  }
   if (card.special === "ashwater") {
     const taken = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion" && (entry.cardId === "HOWL_FROM_BEYOND" || isJunk(entry)));
     next.exhausted = [...next.exhausted, ...taken];
@@ -772,7 +781,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0 && (card.type === "Potion" || !next.noBlock)) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
+  if (card.block > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;

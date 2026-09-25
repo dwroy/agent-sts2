@@ -283,6 +283,19 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Second Wind exhausts every non-Attack in hand for its Block each (LQLZ F21 T4)", () => {
+    const secondWind = card(0, "SECOND_WIND", { type: "Skill", target: "self", validTargets: [], block: 5, special: "second_wind" });
+    const result = solveTurn({
+      hand: [secondWind, defend(1), defend(2), strike(3)],
+      player: player({ hp: 40, energy: 1 }),
+      enemies: [enemy({ index: 0, hp: 50, attacks: [{ damage: 20, hits: 1 }] })],
+      fightKind: "monster",
+    });
+    const wind = result.plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "SECOND_WIND")!;
+    expect(wind.outcome.blockGained).toBe(10);
+    expect(wind.outcome.hpLoss).toBe(10);
+  });
+
   it("concentrates damage on one of several enemies when the total is the same (GMT2 F39 T1)", () => {
     const result = solveTurn({
       hand: [strike(0), strike(1)].map((entry) => ({ ...entry, validTargets: [0, 1] })),
