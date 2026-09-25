@@ -672,6 +672,37 @@ describe("in-combat selections", () => {
     expect(decision.kind).toBe("act");
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
   });
+
+  // 6A36 F3: Burning Pact's exhaust took Strikes by the removal ranking (Strike 80 > Defend 70).
+  const exhaustHand = [
+    selectCard(0, "STRIKE_IRONCLAD", "Strike", "Attack", 1, "造成6点伤害。", [{ name: "Damage", value: 6 }]),
+    selectCard(1, "DEFEND_IRONCLAD", "Defend", "Skill", 1, "获得5点格挡。", [{ name: "Block", value: 5 }]),
+    selectCard(2, "STRIKE_IRONCLAD", "Strike", "Attack", 1, "造成6点伤害。", [{ name: "Damage", value: 6 }]),
+  ];
+  const exhaustState = (cards: unknown[], draw: string[], incoming: number) => {
+    const raw = combatSelection("combat_hand_select", "[center]选择[blue]1[/blue]张牌来[gold]消耗[/gold]。[/center]", cards, { hp: 40, maxHp: 80, enemyHp: 30, enemyMaxHp: 38, turn: 3 });
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["enemies"] = [{ ...(combat["enemies"] as Record<string, unknown>[])[0], enemy_id: "SLUDGE_SPINNER", intents: incoming > 0 ? [{ intent_type: "Attack", damage: incoming, hits: 1 }] : [] }];
+    return { ...raw, agent_view: { combat: { draw: draw.map((line) => ({ line, card_ids: [line.startsWith("打击") ? "STRIKE_IRONCLAD" : line.startsWith("痛击") ? "BASH" : "DEFEND_IRONCLAD"] })), discard: [] } } };
+  };
+  const exhausted = (raw: Record<string, unknown>): number | undefined => {
+    const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+    expect(decision.kind).toBe("act");
+    return decision.kind === "act" ? (decision.intent as { option_index?: number }).option_index : undefined;
+  };
+
+  it("in-combat exhaust keeps the attacks of a small deck (6A36: 4 attacks in 9 cards): a Defend goes", () => {
+    const raw = exhaustState(exhaustHand, ["打击 [1费]：造成6点伤害。", "痛击 [2费]：造成8点伤害。", "防御*3 [1费]：获得5点格挡。"], 17);
+    expect(exhausted(raw)).toBe(1);
+  });
+
+  it("in-combat exhaust: a Status first; with attacks to spare, a Defend when little is coming, a Strike into a big hit", () => {
+    const wound = selectCard(3, "WOUND", "Wound", "Status", -1, "不能被打出。");
+    expect(exhausted(exhaustState([...exhaustHand, wound], ["打击*4 [1费]：造成6点伤害。"], 17))).toBe(3);
+    const many = ["打击*4 [1费]：造成6点伤害。", "防御*2 [1费]：获得5点格挡。"];
+    expect(exhausted(exhaustState(exhaustHand, many, 6))).toBe(1);
+    expect([0, 2]).toContain(exhausted(exhaustState(exhaustHand, many, 17)));
+  });
 });
 
 describe("chest", () => {

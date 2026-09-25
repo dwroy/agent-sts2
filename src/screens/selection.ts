@@ -65,7 +65,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     asArray(selection["cards"]).some((card) => !deckIds.has(str(asRecord(card)["card_id"])));
   const isAdd = offersNewCards || /加入到?你的.{0,12}牌组|add .{0,30}to your deck|抽牌堆顶|top of your draw pile/i.test(prompt);
   // "Choose a card in hand to exhaust" (Baking Gloves every turn, True Grit+, Burning Pact …): code
-  // gives up the least valuable card — statuses/curses, then basics — instead of asking every turn.
+  // gives up the least valuable card for this fight (combatExhaustScore) instead of asking every turn.
   const isExhaust = kind === "combat_hand_select" && /消耗|exhaust/i.test(prompt);
   // A card offered into the hand mid-combat (Attack/Skill/Power potions, "choose 1 of 3", Secret
   // Weapon): it is for this turn, so what it does now counts, not its deck-building rating (7Q5G T5:
@@ -78,6 +78,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
+  const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   const candidates = asArray(selection["cards"])
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
@@ -98,7 +99,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
-        : selectionScore(isAdd ? "deck_add_select" : isExhaust ? "combat_exhaust" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
+        : exhaustContext
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext) - (bool(card["upgraded"]) ? 8 : 0)
+          : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
         (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
       summary: {
         card: name,
@@ -226,12 +229,62 @@ const UPGRADE_PRIORITY: Record<string, number> = {
   UNMOVABLE: 88, INFLAME: 85, FEED: 85, UPPERCUT: 80,
 };
 
-function selectionScore(kind: string, cardId: string, type: string): number {
-  if (kind === "combat_exhaust") {
-    // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
-    if (cardId === "HOWL_FROM_BEYOND") return 200;
-    kind = "deck_card_select";
+/** Attack cards the fight's deck keeps at least (6A36: Burning Pact took 3 of the 4, 32/38 dealt in 12 turns). */
+export const MIN_COMBAT_ATTACKS = 4;
+/** Incoming damage (after block) at or below which a Defend is the cheaper card to exhaust. */
+export const EXHAUST_LOW_INCOMING = 10;
+
+interface ExhaustContext {
+  /** Attack cards left in the fight: hand, draw pile and discard pile. */
+  attacks: number;
+  incoming: number;
+}
+
+function isAttackCard(cardId: string, type: string, line: string): boolean {
+  if (type) return type === "Attack";
+  return cardId.startsWith("STRIKE_") || /造成\d+点伤害|deals? \d+ damage/i.test(line);
+}
+
+/** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
+function combatExhaustContext(raw: Record<string, unknown>, offered: Record<string, unknown>[], knowledge: DecisionEnv["knowledge"]): ExhaustContext {
+  const combat = asRecord(raw["combat"]);
+  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
+  const typeOf = (cardId: string, fallback = ""): string => fallback || knowledge.card(cardId)?.type || "";
+  // The hand as offered (the exhausting card is already out of it); the raw hand when it is larger.
+  const rawHand = asArray(combat["hand"]).map(asRecord);
+  const hand = rawHand.length > offered.length ? rawHand : offered;
+  let attacks = hand.filter((card) => isAttackCard(str(card["card_id"]), typeOf(str(card["card_id"]), str(card["card_type"])), str(card["resolved_rules_text"]))).length;
+  for (const pile of [view["draw"], view["discard"]]) {
+    for (const entry of asArray(pile).map(asRecord)) {
+      const line = str(entry["line"]);
+      const cardId = str(asArray(entry["card_ids"])[0]);
+      const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+      if (isAttackCard(cardId, typeOf(cardId), line)) attacks += count;
+    }
   }
+  return { attacks, incoming: incomingDamage(combat) };
+}
+
+/**
+ * In-combat exhaust (Burning Pact, True Grit+), higher = exhausted first. Status/Curse first; then the
+ * least useful card for this fight, not the removal ranking (6A36: Strike 80 > Defend 70 let six
+ * Burning Pacts take the Strikes, and the 9-card deck could no longer kill a 38 HP Sludge Spinner).
+ * Attacks stay while the fight's deck holds MIN_COMBAT_ATTACKS or fewer; a Defend goes before a
+ * Strike when little is coming.
+ */
+export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext): number {
+  // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
+  if (cardId === "HOWL_FROM_BEYOND") return 200;
+  if (type === "Curse") return 100;
+  if (type === "Status") return 90;
+  const value = cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
+  if (type === "Attack" && context.attacks <= MIN_COMBAT_ATTACKS) return 0;
+  if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : 65;
+  if (cardId.startsWith("STRIKE_")) return 70;
+  return Math.max(1, 100 - value);
+}
+
+function selectionScore(kind: string, cardId: string, type: string): number {
   if (kind === "deck_add_select") return cardValue(cardId, "", type, deckProfile([]), 1, 10).value;
   if (kind === "deck_upgrade_select") {
     if (cardId in UPGRADE_PRIORITY) return UPGRADE_PRIORITY[cardId]!;
