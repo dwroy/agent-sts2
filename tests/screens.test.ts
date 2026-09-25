@@ -1626,6 +1626,22 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
     expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
   });
 
+  it("Headbutt puts a block card on top when next turn's hit is big (Y27B F33 T10)", async () => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    const raw = choice([
+      { ...offered(0, "POMMEL_STRIKE", 1, [["Damage", 9]]), card_type: "Attack", upgraded: true },
+      offered(1, "FLAME_BARRIER", 2, [["Block", 12]]),
+    ]);
+    (raw["selection"] as Record<string, unknown>)["kind"] = "deck_card_select";
+    (raw["selection"] as Record<string, unknown>)["prompt"] = "选择一张牌放到你的抽牌堆顶。";
+    const combat = raw["combat"] as Record<string, unknown>;
+    (combat["player"] as Record<string, unknown>)["current_hp"] = 36;
+    const decision = planSelection(env(raw, { combatPlanner: "turn" }));
+    expect(decision?.kind).toBe("act");
+    if (decision?.kind !== "act") return;
+    expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+  });
+
   it("a close call goes to the model with a this-turn note", async () => {
     const { planSelection } = await import("../src/screens/selection.js");
     const decision = planSelection(env(choice([

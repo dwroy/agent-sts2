@@ -80,6 +80,12 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
+  // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
+  // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
+  // block with Unmovable; T11's 36 overwhelm killed us with the demon at 12/379; VQSA twice too).
+  const onTop = state.in_combat && /抽牌堆顶|top of your draw pile/i.test(prompt);
+  const topContext = onTop ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
+  const topDanger = topContext !== null && topContext.hp !== undefined && topContext.incoming >= topContext.hp * 0.3;
   const candidates = asArray(selection["cards"])
     .map(asRecord)
     .filter((card) => !bool(card["selected"]))
@@ -107,6 +113,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        : topDanger
+          ? (isBlockCard(card) ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
           ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
@@ -161,7 +169,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     escalateBelow: 0.4,
     options,
     // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
-    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" ? 0 : 6,
+    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
     maxModelOptions: 4,
     state: {
       run_brief: briefJson(env.brief),

@@ -1054,6 +1054,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
       // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
       const hallwayFight = kind === "monster" || kind === "unknown";
+      // Elite/boss: an attack potion on a line below code's rank 1 that does not win needs Jev at 0.5+
+      // (Y27B F33 T2: Flex drunk at 0.32 on a fully blocked turn for ~10 damage; kept, it was the +20
+      // that kills the demon at 12/379 before the overwhelm).
+      const offensiveDrink =
+        (chosen.potion !== undefined && OFFENSIVE_POTIONS.has(potionsAll.find((potion) => potion.slot === (chosen.potion as { option_index?: number }).option_index)?.potion_id ?? "")) ||
+        (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:") && OFFENSIVE_POTIONS.has(step.cardId.split(":")[1] ?? "")) ?? false);
+      if (!hallwayFight && fromJev && offensiveDrink && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
+        return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
+      }
       if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
         return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
       }
