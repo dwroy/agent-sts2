@@ -263,7 +263,8 @@ export function planMap(env: DecisionEnv): Decision | null {
       situation: {
         screen: "MAP",
         floor: state.run?.floor ?? null,
-        act: state.run?.act_id ?? null,
+        // act_id counts from 0; the models read it as the act number (W6F4: "act 1" at F31).
+        act: state.run?.act_id != null && /^\d+$/.test(state.run.act_id) ? String(Number(state.run.act_id) + 1) : (state.run?.act_id ?? null),
         hp_percent: Math.round(hpPct * 100),
         gold,
         current_node: `row ${num(current["row"])}, column ${num(current["col"])}`,

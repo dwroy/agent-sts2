@@ -44,7 +44,8 @@ export function buildRunBrief(state: GameState, knowledge: Knowledge, previousNo
 
   return {
     character: state.run?.character_name ?? null,
-    act: state.run?.act_id ?? null,
+    // act_id counts from 0; the models read it as the act number (W6F4: "act 1" at F31).
+    act: state.run?.act_id != null && /^\d+$/.test(state.run.act_id) ? String(Number(state.run.act_id) + 1) : (state.run?.act_id ?? null),
     floor: state.run?.floor ?? null,
     hp: hp === null ? "unknown" : `${hp}/${maxHp ?? "?"}${hpPct === null ? "" : ` (${hpPct}%)`}`,
     gold: state.run?.gold ?? numOrNull(run["gold"]),
