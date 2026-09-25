@@ -40,4 +40,23 @@ describe("cardValue", () => {
     expect(cardValue("FEEL_NO_PAIN", "Uncommon", "Power", { ...deck(19), exhaust: 3 }, 2, 20).value - painThin).toBe(10);
     expect(cardValue("DARK_EMBRACE", "Uncommon", "Power", deck(19), 1, 12, "", ["TOASTY_MITTENS"]).value).toBe(embraceFed);
   });
+
+  it("Act 1 boss stats: AoE and permanent Strength earlier (wins 81% vs 47% AoE, 50% vs 27% Strength)", () => {
+    const bare = { ...deck(15), aoe: 0, scaling: 0 };
+    expect(cardValue("BREAKTHROUGH", "Common", "Attack", bare, 1, 2).value).toBe(62 + 14);
+    expect(cardValue("INFLAME", "Uncommon", "Power", bare, 1, 3).value).toBe(74);
+    expect(cardValue("INFLAME", "Uncommon", "Power", bare, 1, 4).value).toBe(74 + 10);
+    const entry = (card_id: string, index: number) => ({ index, card_id, name: card_id, upgraded: false, type: "Attack", rarity: "Common", cost: 1, description: "" });
+    expect(deckProfile([entry("SETUP_STRIKE", 0), entry("STRIKE_R", 1)]).scaling).toBe(0);
+    expect(deckProfile([entry("INFLAME", 0)]).scaling).toBe(1);
+  });
+
+  it("Soul Fysh: exhaust and damage up, Battle Trance down; Matriarch: scaling and damage up", () => {
+    const at = (cardId: string, type: string, boss = "") => cardValue(cardId, "Common", type, deck(15), 1, 10, boss).value;
+    expect(at("BURNING_PACT", "Skill", "SOUL_FYSH_BOSS")).toBe(at("BURNING_PACT", "Skill") + 8);
+    expect(at("HEADBUTT", "Attack", "SOUL_FYSH_BOSS")).toBe(at("HEADBUTT", "Attack") + 6);
+    expect(at("BATTLE_TRANCE", "Skill", "SOUL_FYSH_BOSS")).toBe(at("BATTLE_TRANCE", "Skill") - 10);
+    expect(at("INFLAME", "Power", "LAGAVULIN_MATRIARCH_BOSS")).toBe(at("INFLAME", "Power") + 10);
+    expect(at("HEADBUTT", "Attack", "LAGAVULIN_MATRIARCH_BOSS")).toBe(at("HEADBUTT", "Attack") + 6);
+  });
 });
