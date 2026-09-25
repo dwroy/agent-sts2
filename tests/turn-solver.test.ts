@@ -15,6 +15,7 @@ import {
   ERUPTION_RACE_DAMAGE,
   NEXT_PHASE_HP,
   pileValue,
+  QUIET_SELF_DAMAGE_WEIGHT,
   solveTurn,
   weightsFor,
   WOUND_COST,
@@ -1546,5 +1547,55 @@ describe("card model reads costs from the rendered text (VC4L)", () => {
     );
     expect(onPlay.energyGain).toBe(2);
     expect(onPlay.hpLoss).toBe(3);
+  });
+});
+
+describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny Toad's buff turn, 23 -> 16 into 23)", () => {
+  const pommel = (index: number): CardModel => card(index, "POMMEL_STRIKE", { damage: 9, draw: 1 });
+  const offering = card(2, "OFFERING", { type: "Skill", cost: 0, target: "self", validTargets: [], hpLoss: 6, energyGain: 2, draw: 3, exhausts: true });
+  const inferno = card(3, "INFERNO", { type: "Power", target: "self", validTargets: [], inferno: 6, flatValue: 10 });
+  const defendCard = { playable: true, heldPenalty: 0, block: true };
+  const attackCard = { playable: true, heldPenalty: 0 };
+  const input = (nextIncoming?: number) => ({
+    hand: [pommel(0), pommel(1), offering, inferno],
+    player: player({ hp: 23, maxHp: 91, energy: 7 }),
+    enemies: [enemy({ name: "Spiny Toad", hp: 118, maxHp: 118, attacks: [] })],
+    fightKind: "monster" as const,
+    drawPile: [defendCard, defendCard, defendCard, defendCard, attackCard, attackCard, attackCard],
+    ...(nextIncoming === undefined ? {} : { nextIncoming }),
+  });
+  const hasOffering = (plan: { steps: { cardId: string }[] }): boolean => plan.steps.some((step) => step.cardId === "OFFERING");
+
+  it("self-damage weighs x3 when the plan ends within 5 of next turn's hit, and drawn Defends are worth nothing", () => {
+    const result = solveTurn(input(22));
+    expect(hasOffering(result.plans[0]!)).toBe(false);
+    const withOffering = result.plans.find(hasOffering)!;
+    const without = result.plans.find((plan) => !hasOffering(plan) && plan.steps.length === 3)!;
+    expect(without.score).toBeGreaterThan(withOffering.score);
+    expect(QUIET_SELF_DAMAGE_WEIGHT).toBe(3);
+    // Before: an unknown pile and no next hit, Offering was code's pick (the JGJS repro).
+    const unknownPile = { ...input(), drawPile: undefined };
+    expect(hasOffering(solveTurn(unknownPile).plans[0]!)).toBe(true);
+    // The next hit alone (pile unknown) now keeps it out: self-damage x3.
+    expect(hasOffering(solveTurn({ ...unknownPile, nextIncoming: 22 }).plans[0]!)).toBe(false);
+    // Far above the next hit the rule is off.
+    const healthy = { ...unknownPile, player: player({ hp: 80, maxHp: 91, energy: 7 }), nextIncoming: 22 };
+    const healthyNoNext = { ...healthy, nextIncoming: undefined };
+    const pick = (x: typeof healthy) => solveTurn(x).plans[0]!.steps.map((step) => step.cardId).join();
+    expect(pick(healthy)).toBe(pick(healthyNoNext));
+  });
+
+  it("a drawn block card has no draw value on a turn with nothing incoming", () => {
+    const blocks = pileValue([defendCard, defendCard], 1, true)!;
+    expect(blocks.withEnergy).toBe(0);
+    expect(pileValue([defendCard, defendCard], 1, false)!.withEnergy).toBe(DRAW_VALUE);
+  });
+
+  it("with an attack coming this turn the self-damage rule is off", () => {
+    const attacked = { ...input(22), enemies: [enemy({ hp: 118, maxHp: 118, attacks: [{ damage: 5, hits: 1 }] })] };
+    const plain = { ...attacked, nextIncoming: undefined };
+    const a = solveTurn(attacked).plans.find(hasOffering)!;
+    const b = solveTurn(plain).plans.find((plan) => plan.steps.map((step) => step.cardId).join() === a.steps.map((step) => step.cardId).join())!;
+    expect(a.score).toBeCloseTo(b.score);
   });
 });

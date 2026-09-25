@@ -209,6 +209,13 @@ export interface SolverInput {
    * Battle Trance at 1 energy drew 2 Beckons from a 6-card pile holding 3, -12 HP on a "-0" plan).
    */
   drawPile?: DrawPileCard[];
+  /**
+   * Expected damage of the enemies' next attack after this turn (move model), when known. On a turn
+   * with nothing incoming, a plan that ends within NEXT_HIT_MARGIN of it weighs self-damage
+   * QUIET_SELF_DAMAGE_WEIGHT times (JGJS F24 T1: Offering for -6 on the Spiny Toad's buff turn,
+   * 23 -> 16 HP into a 23 hit).
+   */
+  nextIncoming?: number;
   maxNodes?: number;
 }
 
@@ -217,6 +224,17 @@ export interface DrawPileCard {
   playable: boolean;
   /** Damage or HP lost at the end of the turn while it is held (Beckon 6, Burn 2); 0 for most cards. */
   heldPenalty: number;
+  /** A block card (no damage): drawn on a turn with nothing incoming it is discarded unused. */
+  block?: boolean;
+}
+
+/** Self-damage weight multiplier on a quiet turn that ends near next turn's hit (JGJS F24 T1). */
+export const QUIET_SELF_DAMAGE_WEIGHT = 3;
+export const NEXT_HIT_MARGIN = 5;
+
+/** No enemy attacks this turn. */
+export function quietTurn(input: Pick<SolverInput, "enemies">): boolean {
+  return input.enemies.every((enemy) => enemy.attacks.every((attack) => attack.damage * attack.hits <= 0));
 }
 
 export interface Step {
@@ -375,7 +393,7 @@ interface DrawValue {
  * penalty at HP weight, unless a spare energy plays it away (then it costs that energy: at most
  * DRAW_VALUE); an unplayable one always costs its penalty.
  */
-export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number): PileValue | null {
+export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number, blockIsIdle = false): PileValue | null {
   if (!pile || pile.length === 0) return null;
   let withEnergy = 0;
   let withoutEnergy = 0;
@@ -384,6 +402,8 @@ export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number): P
     if (penalty > 0) {
       withEnergy -= card.playable ? Math.min(DRAW_VALUE, penalty) : penalty;
       withoutEnergy -= penalty;
+    } else if (blockIsIdle && card.block) {
+      // Nothing to block this turn (and block does not carry over): the drawn Defend is discarded.
     } else if (card.playable) {
       withEnergy += DRAW_VALUE;
     }
@@ -1037,6 +1057,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (dies) score -= 100_000;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  // Paying HP on a turn with nothing incoming, to end close to next turn's hit (JGJS F24 T1).
+  if (!winsFight && selfLoss > 0 && input.nextIncoming !== undefined && input.nextIncoming > 0 && quietTurn(input) && hpAfter <= input.nextIncoming + NEXT_HIT_MARGIN) {
+    score -= weights.hp * selfLoss * (QUIET_SELF_DAMAGE_WEIGHT - 1);
+  }
   // Ending at 1 leaves next turn a must-Escape turn (or death if none is drawn); the boss has 321 HP,
   // so the countdown outlasts any damage race.
   if (sandpitAfter === 1) score -= weights.hp * 15;
@@ -1341,7 +1365,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     inferno: input.player.inferno ?? 0,
     bombs: 0,
     gigantic: 0,
-    pile: pileValue(input.drawPile, weights.hp),
+    pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
     exhausted: [],
     held: input.hand.filter((card) => !card.playable),

@@ -384,7 +384,9 @@ export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | un
       const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
       const cost = /\[(-?\d+|X)费\]/.exec(line)?.[1];
       const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line);
-      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty };
+      const text = line.replace(/\[[^\]]*\]/g, "");
+      const block = /获得\d+点格挡|gain \d+ block/i.test(text) && !/造成\d+点伤害|deal \d+ damage/i.test(text);
+      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty, ...(block ? { block } : {}) };
       return Array.from({ length: count }, () => card);
     });
   const draw = parse(view["draw"]);
@@ -638,6 +640,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       raceEruption,
       wither,
       drawPile,
+      ...(nextIncoming > 0 ? { nextIncoming } : {}),
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight

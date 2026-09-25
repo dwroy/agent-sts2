@@ -1957,6 +1957,11 @@ describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)",
     expect(pile.filter((card) => !card.playable)).toHaveLength(1);
     expect(drawPileCards(view([], [strike]))).toHaveLength(2);
     expect(drawPileCards({})).toBeUndefined();
+    // Block cards are marked (a quiet turn gives them no draw value, JGJS F24 T1).
+    const defend = { line: "防御*3 [1费]：获得5点格挡。", card_ids: ["DEFEND_IRONCLAD"] };
+    const ironWave = { line: "铁斩波 [1费]：获得5点格挡。 造成5点伤害。", card_ids: ["IRON_WAVE"] };
+    const marked = drawPileCards(view([defend, ironWave, strike]))!;
+    expect(marked.filter((card) => card.block)).toHaveLength(3);
   });
 });
 
