@@ -18,6 +18,7 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
+import { describeChoice, memoryChars, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberMap } from "./screens/rest.js";
@@ -263,6 +264,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let inCombatTracked = false;
   /** Reset whenever the screen changes; the shop uses it to tell "just arrived" from "chose to leave". */
   const screenMemory: ScreenMemory = createScreenMemory();
+  /** Run memory for DeepSeek (choices, this fight's turns, the road to the boss); resets per run id. */
+  const journal = new RunJournal();
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -454,6 +457,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     // The REST screen has no map: keep the last one for its "forced elite next" check.
     if (state.screen === "MAP") rememberMap(screenMemory, state);
+    journal.observe(state);
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -596,6 +600,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             jev_confidence: Number(jevAnswer.confidence.toFixed(2)),
             jev_probabilities: toJsonValue(jevAnswer.probabilities),
           };
+          // Only DeepSeek gets the run memory, in its user message (its system prompt stays cached).
+          const memory = journal.render(state, knowledge, screenMemory.lastMap);
           for (const escalator of options.escalators ?? []) {
             const capped =
               escalator.name === "claude"
@@ -606,7 +612,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               if (escalator.name === "claude") stats.claudeCalls += 1;
               else stats.deepseekCalls += 1;
               if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
-              const answer = await escalator.choose(decision.state, question?.instructions ?? "", criteria, context);
+              const answer = await escalator.choose(
+                decision.state,
+                question?.instructions ?? "",
+                criteria,
+                escalator.name === "deepseek" ? { ...context, memory: { ...memory } } : context,
+              );
               if (escalator.name === "deepseek") stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
               const override = decision.resolve({
                 ...result.answers,
@@ -621,7 +632,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
-              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "" };
+              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}) };
               // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
@@ -748,6 +759,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       usage,
       ...(escalation === undefined ? {} : { escalation }),
     } satisfies Omit<DecisionRecord, "result">;
+    const journalEntry = {
+      label: decision.label,
+      by: baseRecord.decider,
+      choice: describeChoice(decision, resolved, rawAnswers, escalation),
+      reason: str(asRecord(escalation)["reason"]),
+      asked: decision.kind === "ask" && (usedJev || fromMemo) && !resolved.fallback,
+      intent: resolved.intent,
+    };
 
     if (mode === "shadow") {
       if (stateFingerprint === lastShadowFingerprint) {
@@ -760,6 +779,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
       lastShadowFingerprint = stateFingerprint;
       resolved.apply?.();
+      journal.record(state, journalEntry);
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, result: "shadow (not dispatched)" };
       log.write(record);
@@ -804,6 +824,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     stats.decisions += 1;
     // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
     resolved.apply?.();
+    journal.record(state, journalEntry);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     // Remember the one action whose effect the state does not reflect: a skipped card reward stays
