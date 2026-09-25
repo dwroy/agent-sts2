@@ -291,7 +291,8 @@ interface Sim {
   colossus: boolean;
   /** Cards played this turn so far (for Slow). */
   played: number;
-  drawScore: number;
+  /** Each card drawn this turn, valued with and without an energy left at the end to use it. */
+  draws: DrawValue[];
   cardsDrawn: number;
   unknown: string[];
   feedKills: number;
@@ -314,8 +315,13 @@ interface Sim {
   pile: PileValue | null;
   /** Cards drawn from that pile so far this turn (past its size the draws are a reshuffle: flat values). */
   pileDrawn: number;
-  /** Energy the cards drawn so far are expected to use (each drawn card needs 1 to be played or cleared). */
-  drawEnergy: number;
+  /**
+   * Cards exhausted from the hand by this turn's plays (Burning Pact's pick, Stoke's whole hand): their
+   * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
+   */
+  exhausted: CardModel[];
+  /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
+  held: CardModel[];
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
   topPlaced: boolean;
 }
@@ -329,6 +335,13 @@ interface PileValue {
 
 /** Value of one card drawn with energy left to play it (without a known pile). */
 export const DRAW_VALUE = 3;
+/** Value of one card drawn with no energy left for it (unknown pile): only the choice it adds. */
+export const DRAW_IDLE_VALUE = 1;
+
+interface DrawValue {
+  withEnergy: number;
+  withoutEnergy: number;
+}
 
 /**
  * Per-card draw value of a known pile. A normal card is worth DRAW_VALUE with a spare energy and
@@ -352,15 +365,63 @@ export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number): P
   return { size: pile.length, withEnergy: withEnergy / pile.length, withoutEnergy: withoutEnergy / pile.length };
 }
 
-/** Score of drawing one card now: the known pile's expected value, energy permitting. */
-function drawOne(sim: Sim): number {
-  const spare = Math.max(0, Math.min(1, sim.energy - sim.drawEnergy));
+/** One card drawn now: the known pile's expected value (flat values past it or without one). */
+function drawOne(sim: Sim): DrawValue {
   const pile = sim.pile;
-  // Earlier draws leave more energy to use what they bring.
-  if (!pile || sim.pileDrawn >= pile.size) return sim.energy > 0 ? DRAW_VALUE : 1;
+  if (!pile || sim.pileDrawn >= pile.size) return { withEnergy: DRAW_VALUE, withoutEnergy: DRAW_IDLE_VALUE };
   sim.pileDrawn += 1;
-  sim.drawEnergy += spare;
-  return spare * pile.withEnergy + (1 - spare) * pile.withoutEnergy;
+  return { withEnergy: pile.withEnergy, withoutEnergy: Math.min(DRAW_IDLE_VALUE, pile.withoutEnergy) };
+}
+
+/**
+ * Draw value at the end of the plan: only the energy still unspent can use what was drawn, one per
+ * card, earlier draws first. The energy a draw "reserved" at the time is often spent by later plays
+ * (6A36 F3: "Burning Pact, Defend, Defend" at 3 energy scored +6 for two draws it could not play and
+ * beat "Strike, Defend, Defend"); the rest are worth DRAW_IDLE_VALUE at most (or their penalty).
+ */
+export function drawScoreAt(draws: DrawValue[], energyLeft: number): number {
+  let spare = Math.max(0, energyLeft);
+  let score = 0;
+  for (const draw of draws) {
+    const use = Math.min(1, spare);
+    spare -= use;
+    score += use * draw.withEnergy + (1 - use) * draw.withoutEnergy;
+  }
+  return score;
+}
+
+/** Cards that exhaust a card of our choosing from the hand (upgraded True Grit; unupgraded is random). */
+export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT"]);
+/** Cards that exhaust the whole rest of the hand (Stoke: a random card for each). */
+export const EXHAUST_HAND = new Set(["STOKE"]);
+
+/** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
+function isJunk(card: CardModel): boolean {
+  return card.type === "Status" || card.type === "Curse";
+}
+
+/**
+ * What exhausting a card costs, at the scoring weights: its damage or block this turn, its lasting
+ * value, or its draws, whichever is most, and at least DRAW_IDLE_VALUE. Junk costs minus its penalty.
+ */
+export function exhaustValue(card: CardModel, weights: Weights): number {
+  if (isJunk(card)) return -(card.heldPenalty ?? 0) * weights.hp;
+  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * weights.damage;
+  const block = card.block * weights.hp * 0.5;
+  const debuffs = weights.vulnerable * card.vulnerable + weights.weak * card.weak;
+  const lasting = weights.strength * card.strength + card.flatValue;
+  return Math.max(DRAW_IDLE_VALUE, damage + debuffs, block, lasting, DRAW_VALUE * card.draw);
+}
+
+/** The card an exhaust picker takes: junk first, then the least valuable (what selection.ts picks). */
+export function exhaustPick(cards: CardModel[]): CardModel | null {
+  const weights = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
+  let best: CardModel | null = null;
+  for (const card of cards) {
+    if (card.type === "Potion") continue;
+    if (!best || exhaustValue(card, weights) < exhaustValue(best, weights)) best = card;
+  }
+  return best;
 }
 
 /**
@@ -530,6 +591,18 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
+  else if (EXHAUST_PICKERS.has(card.cardId)) {
+    const pick = exhaustPick([...next.held, ...next.hand]);
+    if (pick) {
+      next.hand = next.hand.filter((entry) => entry !== pick);
+      next.held = next.held.filter((entry) => entry !== pick);
+      next.exhausted = [...next.exhausted, pick];
+    }
+  } else if (EXHAUST_HAND.has(card.cardId)) {
+    next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+    next.held = [];
+  }
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
@@ -665,7 +738,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   else next.flat += card.flatValue;
   if (card.draw > 0) {
     next.cardsDrawn += card.draw;
-    for (let drawn = 0; drawn < card.draw; drawn += 1) next.drawScore += drawOne(next);
+    next.draws = [...next.draws];
+    for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
   }
 }
 
@@ -815,7 +889,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const winsFight = !nextPhase && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
-  const heldCards = [...sim.hand, ...input.hand.filter((card) => !card.playable)];
+  const heldCards = [...sim.hand, ...sim.held];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
@@ -1015,7 +1089,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
     score += (weights.strength * sim.permStrength + sim.flat) * fightLength * earliness;
-    score += sim.drawScore;
+    score += drawScoreAt(sim.draws, sim.energy);
+    // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
+    score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
     // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over
     // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
     if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
@@ -1057,7 +1133,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -1095,7 +1171,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // A Colossus already up is in the intents (2WUM T7: 10x7 shown as 5x7, then halved again to 2x7).
     colossus: false,
     played: input.cardsPlayedThisTurn ?? 0,
-    drawScore: 0,
+    draws: [],
     cardsDrawn: 0,
     unknown: [],
     feedKills: 0,
@@ -1107,7 +1183,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp),
     pileDrawn: 0,
-    drawEnergy: 0,
+    exhausted: [],
+    held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
   };
 

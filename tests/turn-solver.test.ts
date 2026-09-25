@@ -7,6 +7,8 @@ import {
   CRAB_RAGE_STRENGTH,
   distinctPlans,
   DRAW_VALUE,
+  drawScoreAt,
+  exhaustPick,
   ERUPTION_RACE_DAMAGE,
   NEXT_PHASE_HP,
   pileValue,
@@ -1235,5 +1237,40 @@ describe("Headbutt then a draw (XPA4 T11: the card put on top was drawn back the
       expect(ids.slice(top + 1).some((id) => id === "POMMEL_STRIKE" || id === "PILLAGE")).toBe(false);
     }
     expect(result.plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "POMMEL_STRIKE,HEADBUTT")).toBe(true);
+  });
+});
+
+describe("draws need energy left at the end, and exhausting costs the card (6A36 F3: Burning Pact over Strike)", () => {
+  const pact = (index: number): CardModel => card(index, "BURNING_PACT", { type: "Skill", target: "self", validTargets: [], draw: 2 });
+  const drawTwo = (index: number): CardModel => card(index, "DRAW_TWO", { type: "Skill", target: "self", validTargets: [], draw: 2 });
+  const ids = (plan: { steps: { cardId: string }[] }): string => plan.steps.map((step) => step.cardId).sort().join(",");
+  const board = { player: player({ hp: 60, energy: 3 }), enemies: [enemy({ hp: 38, maxHp: 38, attacks: [{ damage: 8, hits: 1 }] })], fightKind: "monster" as const };
+
+  it("two draws with no energy left do not beat a Strike at equal HP loss", () => {
+    expect(drawScoreAt([{ withEnergy: DRAW_VALUE, withoutEnergy: 1 }, { withEnergy: DRAW_VALUE, withoutEnergy: 1 }], 0)).toBe(2);
+    expect(drawScoreAt([{ withEnergy: DRAW_VALUE, withoutEnergy: 1 }, { withEnergy: DRAW_VALUE, withoutEnergy: 1 }], 1)).toBe(DRAW_VALUE + 1);
+    const result = solveTurn({ ...board, hand: [strike(0), drawTwo(1), defend(2), defend(3)] });
+    const draws = result.plans.find((plan) => ids(plan) === "DEFEND_IRONCLAD,DEFEND_IRONCLAD,DRAW_TWO")!;
+    const hits = result.plans.find((plan) => ids(plan) === "DEFEND_IRONCLAD,DEFEND_IRONCLAD,STRIKE_IRONCLAD")!;
+    expect(draws.outcome.hpLoss).toBe(hits.outcome.hpLoss);
+    expect(hits.score).toBeGreaterThan(draws.score);
+  });
+
+  it("3 energy, Strike x2, Burning Pact, Defend x2 into 8: the best plan plays a Strike", () => {
+    const result = solveTurn({ ...board, hand: [strike(0), strike(1), pact(2), defend(3), defend(4)] });
+    expect(result.plans[0]!.steps.some((step) => step.cardId === "STRIKE_IRONCLAD")).toBe(true);
+    const pactLine = result.plans.find((plan) => ids(plan) === "BURNING_PACT,DEFEND_IRONCLAD,DEFEND_IRONCLAD");
+    const strikeLine = result.plans.find((plan) => ids(plan) === "DEFEND_IRONCLAD,DEFEND_IRONCLAD,STRIKE_IRONCLAD")!;
+    if (pactLine) expect(pactLine.score).toBeLessThan(strikeLine.score);
+  });
+
+  it("Burning Pact takes a Wound first (free, and its held penalty goes with it)", () => {
+    const wound = card(5, "BURN", { type: "Status", target: "self", validTargets: [], playable: false, heldPenalty: 2 });
+    const hand = [strike(0), pact(1), defend(2)];
+    expect(exhaustPick([strike(0), defend(2), wound])).toBe(wound);
+    expect(exhaustPick([strike(0), defend(2)])!.cardId).toBe("DEFEND_IRONCLAD");
+    const withWound = solveTurn({ ...board, hand: [...hand, wound] }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "BURNING_PACT")!;
+    const without = solveTurn({ ...board, hand }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "BURNING_PACT")!;
+    expect(withWound.score).toBeGreaterThan(without.score);
   });
 });
