@@ -283,6 +283,23 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Fiend Fire hits once per card it exhausts, and Feel No Pain blocks per exhausted card (QBRN F48 T7)", () => {
+    const fiendFire = card(0, "FIEND_FIRE", { cost: 2, damage: 7, special: "fiend_fire", exhausts: true, validTargets: [0] });
+    const wither = card(4, "WITHER", { type: "Status", playable: false, heldPenalty: 9, validTargets: [] });
+    const result = solveTurn({
+      hand: [fiendFire, strike(1), defend(2), strike(3), wither],
+      player: player({ hp: 52, energy: 2, feelNoPain: 3 }),
+      enemies: [enemy({ index: 0, name: "Aeonglass", hp: 400, attacks: [{ damage: 29, hits: 1 }] })],
+      fightKind: "boss",
+    });
+    const fire = result.plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "FIEND_FIRE");
+    expect(fire).toBeDefined();
+    // 4 cards burned (Strike, Defend, Strike, Wither): 28 damage; 4 + Fiend Fire itself = 15 block.
+    expect(fire!.outcome.damageDealt).toBe(28);
+    expect(fire!.outcome.blockGained).toBe(15);
+    expect(fire!.outcome.hpLoss).toBe(14);
+  });
+
   it("Dominate gains Strength per Vulnerable on the target, its own included (VQSA F33 T3)", () => {
     const dominate = card(0, "DOMINATE", { type: "Skill", vulnerable: 1, special: "dominate", strengthPerVulnerable: 1 });
     const result = solveTurn({
