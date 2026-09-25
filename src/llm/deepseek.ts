@@ -20,6 +20,8 @@ export interface DeepSeekConfig {
   timeoutMs: number;
   /** Optional strategy guide (markdown) appended to the system prompt; a static prefix, so DeepSeek caches it. */
   guideFile?: string;
+  /** Optional handbook of lessons from past runs (markdown), appended after the guide; also static and cached. */
+  handbookFile?: string;
   /** Thinking mode: "max" | "high" | "low" enables it at that effort; "" or "off" disables it. */
   reasoningEffort?: string;
   /** Effort for combat questions (label "combat/..."), whose numbers code has already computed; defaults to reasoningEffort. */
@@ -35,8 +37,13 @@ export interface DeepSeekAnswer {
   inputTokens: number;
   outputTokens: number;
   cacheHitTokens?: number;
-  /** Short hash of the guide in the prompt ("" when none), so logs show which guide version answered. */
+  /**
+   * Short hash of the guide in the prompt ("" when none), so logs show which guide version answered;
+   * "<guide>+<handbook>" when a handbook is loaded too.
+   */
   guideId?: string;
+  /** Short hash of the handbook in the prompt ("" when none). */
+  handbookId?: string;
   reasoningTokens?: number;
   /** Thinking effort actually used for this call ("off" when thinking was disabled). */
   effort?: string;
@@ -58,11 +65,23 @@ export class DeepSeekClient implements Escalator {
 
   private readonly system: string;
   readonly guideId: string;
+  readonly handbookId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
-    const guide = config.guideFile && existsSync(config.guideFile) ? readFileSync(config.guideFile, "utf8").trim() : "";
-    this.guideId = guide ? createHash("sha256").update(guide).digest("hex").slice(0, 8) : "";
-    this.system = guide ? `${SYSTEM}\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}` : SYSTEM;
+    const guide = readOptional(config.guideFile);
+    const handbook = readOptional(config.handbookFile);
+    this.handbookId = shortHash(handbook);
+    this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
+    let system = SYSTEM;
+    if (guide) system += `\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
+    // Static text only: the system prompt must stay byte-identical across calls so DeepSeek caches it.
+    if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
+    this.system = system;
+  }
+
+  /** The system prompt as sent (for tools and tests). */
+  get systemPrompt(): string {
+    return this.system;
   }
 
   async choose(
@@ -126,6 +145,7 @@ export class DeepSeekClient implements Escalator {
         outputTokens: payload.usage?.completion_tokens ?? 0,
         cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
         guideId: this.guideId,
+        handbookId: this.handbookId,
         reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
         effort,
       };
@@ -144,4 +164,17 @@ export class DeepSeekClient implements Escalator {
       // logging must never break play
     }
   }
+}
+
+function readOptional(file: string | undefined): string {
+  if (!file || !existsSync(file)) return "";
+  try {
+    return readFileSync(file, "utf8").trim();
+  } catch {
+    return "";
+  }
+}
+
+function shortHash(text: string): string {
+  return text ? createHash("sha256").update(text).digest("hex").slice(0, 8) : "";
 }

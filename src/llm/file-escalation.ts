@@ -23,6 +23,8 @@ export interface EscalationAnswer {
   cacheHitTokens?: number;
   /** DeepSeek only: which strategy guide version was in the prompt. */
   guideId?: string;
+  /** DeepSeek only: which handbook version was in the prompt. */
+  handbookId?: string;
   reasoningTokens?: number;
   effort?: string;
 }

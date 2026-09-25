@@ -37,7 +37,7 @@ export interface AppConfig {
   jev: JevConfig;
   enricher: EnricherConfig;
   /** Escalation model for Jev's near-guesses on high-stakes calls (phase 2). null when no key. */
-  deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number; guideFile: string; reasoningEffort: string; combatReasoningEffort: string; reasoningLog: string } | null;
+  deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number; guideFile: string; handbookFile: string; reasoningEffort: string; combatReasoningEffort: string; reasoningLog: string } | null;
   /** Escalation order, e.g. ["claude", "deepseek"]: the first one that answers wins. */
   escalation: { chain: ("claude" | "deepseek")[]; claudeDir: string; claudeTimeoutMs: number; claudeMaxCalls: number };
   thresholds: { act: number; strong: number };
@@ -262,6 +262,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
         maxCalls: Number(readEnv(env, "DEEPSEEK_MAX_CALLS") ?? "150") || 150,
         timeoutMs: Number(readEnv(env, "DEEPSEEK_TIMEOUT_MS") ?? "30000") || 30000,
         guideFile: readEnv(env, "DEEPSEEK_GUIDE_FILE") ?? "src/knowledge/ironclad-guide.md",
+        handbookFile: readEnv(env, "DEEPSEEK_HANDBOOK_FILE") ?? "src/knowledge/ds-handbook.md",
         reasoningEffort: readEnv(env, "DEEPSEEK_REASONING_EFFORT") ?? "off",
         combatReasoningEffort: readEnv(env, "DEEPSEEK_COMBAT_REASONING_EFFORT") ?? "",
         reasoningLog: readEnv(env, "DEEPSEEK_REASONING_LOG") ?? "logs/deepseek-reasoning.jsonl",
