@@ -188,6 +188,17 @@ describe("potions", () => {
     });
     expect(idle.plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(false);
   });
+
+  it("Dexterity Potion is worth the block cards in hand, nothing without one (KFP1 F17 T3: drunk with only Attacks)", () => {
+    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [], 4)!;
+    const boss = enemy({ name: "Lagavulin Matriarch", hp: 200, maxHp: 222, attacks: [{ damage: 20, hits: 1 }] });
+    const drinks = (hand: CardModel[]) => solveTurn({ hand: [...hand, dex], player: player({ hp: 60, energy: 2 }), enemies: [boss], fightKind: "boss", turn: 3 }).plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"));
+    expect(drinks([strike(0), strike(1)])).toBe(false);
+    expect(drinks([defend(0), defend(1)])).toBe(true);
+    // Drunk first, both Defends get +2.
+    const best = solveTurn({ hand: [defend(0), defend(1), dex], player: player({ hp: 60, energy: 2 }), enemies: [boss], fightKind: "boss", turn: 3 }).plans[0]!;
+    expect(best.outcome.blockGained).toBe(14);
+  });
 });
 
 describe("more enemy powers", () => {

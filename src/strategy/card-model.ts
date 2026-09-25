@@ -53,7 +53,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -355,6 +355,9 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // A card in hand costs 0 for the rest of the combat, chosen on a combat_hand_select screen ("选择一张
   // 牌使其免费"). G8AQ T3: made Bludgeon+ free would have been lethal; spent on a 1-cost card instead.
   TOUCH_OF_INSANITY: { target: "self", special: "free_card" },
+  // +2 Dexterity for the fight (DEXTERITY_POWER 2 in states.jsonl). Worth only the block cards it
+  // raises: KFP1 T3 and 2WUM F33 T3 drank it with no block card left to play, 0 gained that turn.
+  DEXTERITY_POTION: { target: "self", special: "dexterity" },
 };
 
 /** Touch of Insanity is only worth drinking for a card costing at least this much. */

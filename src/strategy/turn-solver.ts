@@ -672,6 +672,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
+  if (card.special === "dexterity") {
+    next.tempDex += DEX_POTION;
+    if (!next.noBlock) next.flat += DEX_LASTING_PER_BLOCK_CARD * next.hand.filter((entry) => entry.type !== "Potion" && entry.block > 0).length;
+  }
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "free_card") {
     const pick = freeCardPick(next.hand);
@@ -882,6 +886,14 @@ export const NEXT_PHASE_HP = 1.25;
  * x1.5 (VP5F F48: two T1 Skills, Bite 36 = (20 + 4) x 1.5 on T3). This turn's attack is counted apart.
  */
 export const ENRAGE_FUTURE_HITS = 3;
+
+/** Dexterity Potion: Dexterity gained (states.jsonl: DEXTERITY_POWER 2). */
+export const DEX_POTION = 2;
+/**
+ * Its lasting value per block card in hand when drunk (before fight length): the hand stands in for
+ * how block-heavy the deck is. No block card in hand, no value (KFP1 T3: drunk with only Attacks).
+ */
+export const DEX_LASTING_PER_BLOCK_CARD = 1.5;
 
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;
