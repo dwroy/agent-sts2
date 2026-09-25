@@ -237,6 +237,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   // animations: this memo means one question per (board, decision) and one answer per board change.
   // It is cleared on every dispatch, so an answer can never be reused across an action.
   let answerMemo: AnswerMemo | null = null;
+  // Consecutive gate rejections; after a few in combat the loop ends the turn instead of spinning.
+  let gateRejections = 0;
   const readMemo = (key: string): AnswerMemo | null =>
     answerMemo !== null && answerMemo.key === key ? answerMemo : null;
   let unsupportedScreen: string | null = null;
@@ -693,14 +695,28 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
 
-    const gated = gate(state, resolved.intent);
+    let gated = gate(state, resolved.intent);
+    if (!gated.ok && state.screen === "COMBAT" && gateRejections >= 3 && state.available_actions.includes("end_turn")) {
+      // The same illegal play kept coming back (a card whose cost rose above our energy, 2026-09-25:
+      // 30 min spinning on "card_index 5 is not playable"): stop re-planning it and end the turn.
+      onEvent({ type: "note", message: `gate rejected ${resolved.intent.action} ${gateRejections} times: ending the turn instead` });
+      const endTurn = { action: "end_turn" } as const;
+      resolved.intent = endTurn;
+      resolved.rationale = `fallback after repeated illegal plays: ${resolved.rationale}`;
+      gated = gate(state, endTurn);
+    }
     if (!gated.ok) {
       stats.waits += 1;
+      gateRejections += 1;
       noteStall(state, gated.reason);
       onEvent({ type: "note", message: `gate rejected ${resolved.intent.action}: ${gated.reason}` });
+      // Never serve the rejected answer or plan again: the next pass re-plans from the live state.
+      answerMemo = null;
+      screenMemory.combatPlan = null;
       await sleep(pollIntervalMs);
       continue;
     }
+    gateRejections = 0;
     clearStall();
 
     const baseRecord = {
