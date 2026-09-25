@@ -21,7 +21,7 @@ import type { ActionRequest } from "../mod/client.js";
 import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { expectedNextDamage } from "../knowledge/move-model.js";
+import { expectedNextDamage, hasBuffMove } from "../knowledge/move-model.js";
 import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -183,12 +183,16 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       slumber: powerAmount(enemy, "SLUMBER_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
       // is what lost G7EJ and WQTRX (the explosion is modelled through `eruption` instead).
+      // Any Strength already, or a Buff move anywhere in its cycle, not just this turn's intent (6A36:
+      // Sludge Spinner's Rage +3 every third turn, damage weight stayed at hallway 0.45 on T2-T6 while
+      // it went to Strength 9 and Slam 20).
       scaling:
         str(enemy["enemy_id"]) !== "WATERFALL_GIANT" &&
         (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
-        powerAmount(enemy, "STRENGTH_POWER") >= 5),
+        powerAmount(enemy, "STRENGTH_POWER") > 0 ||
+        hasBuffMove(str(enemy["enemy_id"]))),
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,

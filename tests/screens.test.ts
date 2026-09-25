@@ -1018,7 +1018,10 @@ describe("Sandpit guard", () => {
 
   it("the turn planner plays the Escape at Sandpit 1", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const decision = planCombatTurn(env(sandpitCombat(1, 1), { combatPlanner: "turn" }));
+    // Without the Fire Potion: The Insatiable ramps (Buff moves), so a potion line is a real second option.
+    const raw = sandpitCombat(1, 1);
+    (raw["run"] as Record<string, unknown>)["potions"] = [];
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
   });
 
@@ -1665,5 +1668,19 @@ describe("turnStartAoe (9XZX: Inferno 6 at each turn start killed a 3 HP Crusher
     expect(turnStartAoe(["MERCURY_HOURGLASS"], inferno)).toBe(9);
     // A Crimson Mantle's HP loss at the turn start is a second Inferno trigger.
     expect(turnStartAoe([], { powers: [...inferno.powers, { power_id: "CRIMSON_MANTLE_POWER", amount: 7 }] })).toBe(12);
+  });
+});
+
+describe("ramping enemies count as scaling (6A36: Sludge Spinner, Rage +3 Strength, damage weight stayed at 0.45)", () => {
+  const spinner = (enemyId: string, powers: { power_id: string; amount: number }[] = []) => ({
+    index: 0, enemy_id: enemyId, name: enemyId, current_hp: 38, max_hp: 38, block: 0, is_alive: true, powers,
+    intents: [{ index: 0, intent_type: "Attack", damage: 11, hits: 1 }],
+  });
+
+  it("a Buff move in the move model's cycle or any Strength makes it scaling; neither does not", async () => {
+    const { enemySims } = await import("../src/screens/combat-plan.js");
+    expect(enemySims({ enemies: [spinner("SLUDGE_SPINNER")] })[0]!.scaling).toBe(true);
+    expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY", [{ power_id: "STRENGTH_POWER", amount: 3 }])] })[0]!.scaling).toBe(true);
+    expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY")] })[0]!.scaling).toBe(false);
   });
 });

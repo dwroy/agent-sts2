@@ -10,6 +10,8 @@ import { fileURLToPath } from "node:url";
 interface EnemyModel {
   next: Record<string, Record<string, number>>;
   damage: Record<string, number>;
+  /** Moves seen with a Buff intent (Sludge Spinner's RAGE_MOVE: +3 Strength each time). */
+  buffs?: string[];
 }
 
 let model: Record<string, EnemyModel> | null = null;
@@ -40,4 +42,9 @@ export function expectedNextDamage(enemyId: string, currentMove: string): number
     count += n;
   }
   return count > 0 ? total / count : null;
+}
+
+/** The enemy's move cycle has a Buff move: it ramps while it lives (6A36: Sludge Spinner, +3 Strength per Rage). */
+export function hasBuffMove(enemyId: string): boolean {
+  return (load()[enemyId]?.buffs ?? []).length > 0;
 }
