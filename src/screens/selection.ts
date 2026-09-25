@@ -85,7 +85,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
     .filter((card) => !bool(card["selected"]))
     .filter((card) => !isUpgrade || !bool(card["upgraded"]));
 
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) {
+    // Nothing left to pick but the screen still waits for a confirm (VC4LRL945UEF: after two discards
+    // the mod sent no selection payload and only confirm_selection; 25 min stuck).
+    if (state.available_actions.includes("confirm_selection") && (selected > 0 || Object.keys(selection).length === 0)) {
+      return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: "nothing left to select: confirming" };
+    }
+    return null;
+  }
 
   const entries = deckEntries(state, knowledge);
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
