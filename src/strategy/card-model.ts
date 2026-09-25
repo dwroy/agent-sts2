@@ -232,7 +232,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     xCost: bool(card["costs_x"]),
     // Too expensive now is still in the search (it checks energy itself): energy gained this turn, or a
     // Touch of Insanity making it free, can pay for it.
-    playable: bool(card["playable"]) || str(card["unplayable_reason"]) === "not_enough_energy",
+    // The Gambit is never played: after it any unblocked hit is fatal (S780).
+    playable: str(card["card_id"]) !== "THE_GAMBIT" && (bool(card["playable"]) || str(card["unplayable_reason"]) === "not_enough_energy"),
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,

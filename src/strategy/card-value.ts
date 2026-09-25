@@ -34,7 +34,7 @@ const TIER: Record<string, number> = {
   PACTS_END: 40, BARRICADE: 44, ASHEN_STRIKE: 44, PRIMAL_FORCE: 36, CASCADE: 40, NOT_YET: 44, MIDNIGHT: 36,
   THE_BOMB: 48, // colorless: 40 to every enemy after 3 turns, good in long boss fights (1ZQJ never played it)
   // F
-  HAVOC: 20, FIGHT_ME: 25, BLAZE: 10, DEMONIC_SHIELD: 10, TANK: 5,
+  HAVOC: 20, FIGHT_ME: 25, THE_GAMBIT: 0, BLAZE: 10, DEMONIC_SHIELD: 10, TANK: 5,
 };
 
 export const SKIP_BAR = 50;

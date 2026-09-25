@@ -328,6 +328,9 @@ function incomingDamage(combat: Record<string, unknown>): number {
  * value, less its energy cost and HP cost.
  */
 export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
+  // Colorless Potion, died to a 9-damage hit). Never worth taking.
+  if (card.cardId === "THE_GAMBIT") return -100;
   const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
   const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
   const score =

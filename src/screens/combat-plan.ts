@@ -501,7 +501,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
   }
 
-  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+  // Foul Potion hits us too (39J9: two drunk at 22 HP cost 12 of it); never drink it in a fight.
+  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter(
+    (potion) => potion.can_use && potion.potion_id !== "FOUL_POTION",
+  );
   // Permanent max-HP potions have no timing value: drink them as soon as they can be used.
   const juice = potionsAll.find((potion) => potion.potion_id === "FRUIT_JUICE");
   if (juice) {
