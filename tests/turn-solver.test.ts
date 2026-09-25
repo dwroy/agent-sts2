@@ -283,6 +283,13 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("an exhaust takes Howl from Beyond first: it replays from the exhaust pile every turn (SVN2 F17)", async () => {
+    const { exhaustPick } = await import("../src/strategy/turn-solver.js");
+    const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 18, target: "all", validTargets: [] });
+    const wound = card(4, "WOUND", { type: "Status", playable: false, heldPenalty: 0, validTargets: [] });
+    expect(exhaustPick([strike(1), defend(2), howl, wound])?.cardId).toBe("HOWL_FROM_BEYOND");
+  });
+
   it("rounds Weak damage once: 9 x 0.75 x 1.5 = 10, not floor(6.75) x 1.5 = 9 (P4ZD F37 T2/T9)", () => {
     const pommel = card(0, "POMMEL_STRIKE", { damage: 6, damageBase: 9 });
     const input = {
