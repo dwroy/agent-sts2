@@ -280,6 +280,9 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
+  // Powers pay off every later turn; without saying so the models swapped power lines for ones that
+  // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
+  if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
