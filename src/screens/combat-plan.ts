@@ -1106,7 +1106,11 @@ function planTurn(env: DecisionEnv): Decision | null {
           },
         };
       }
-      const picked = chosen.plan!;
+      // A near-guess from Jev in an elite/boss fight (DeepSeek no longer re-asks) never plays a line
+      // another option beats on every axis (SVN2 F17 T3: a 0-damage line at 0.36 over one with the same
+      // HP loss and 15 damage).
+      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && dominates(plan, chosen.plan!)) : undefined;
+      const picked = dominator ?? chosen.plan!;
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
       // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
       const memo = env.screenMemory.hpGuard;
