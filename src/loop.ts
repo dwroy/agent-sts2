@@ -943,7 +943,9 @@ async function ensureFightPlan(
   };
   onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
   try {
-    const { json, meta } = await deepseek.askJson(payload, `combat/fight-plan`);
+    // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
+    // per-turn combat effort.
+    const { json, meta } = await deepseek.askJson(payload, "fight-plan");
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;

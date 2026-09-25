@@ -51,7 +51,7 @@ for (const line of readFileSync(file, "utf8").split("\n")) {
     memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
   };
   if (dump) console.log(JSON.stringify(payload, null, 1));
-  const { json, meta } = await deepseek.askJson(payload, "combat/fight-plan");
+  const { json, meta } = await deepseek.askJson(payload, "fight-plan");
   const plan = parseFightPlan(json, state, knowledge, { runId: str(state.raw["run_id"]), fight: fightKey(state), kind, replans: 0 });
   console.log(
     `F${state.run?.floor} ${kind} ${plan.enemyIds.join("+")}: ${(meta.latencyMs / 1000).toFixed(1)} s, in ${meta.inputTokens} (cache ${meta.cacheHitTokens}), out ${meta.outputTokens} (reasoning ${meta.reasoningTokens}), effort ${meta.effort}`,
