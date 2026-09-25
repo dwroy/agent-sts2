@@ -809,6 +809,27 @@ function planTurn(env: DecisionEnv): Decision | null {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
+  // The plan's moment for an unmodelled potion (early in turns 1-2, big_hit on a big hit): drink it,
+  // then re-plan (VQSA F33 T14: both potions planned for big hits were only offered, Jev played cards
+  // at 0.58, 32 -> 5 HP; both were drunk at 4 HP two turns later).
+  const due = fightPlan
+    ? potions.find((potion) => {
+        const use = fightPlan.potions[potion.potion_id];
+        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit);
+      })
+    : undefined;
+  if (due) {
+    const target = due.requires_target ? (focusIndex !== null && due.valid_targets.includes(focusIndex) ? focusIndex : due.valid_targets[0]) : undefined;
+    if (!due.requires_target || target !== undefined) {
+      env.screenMemory.combatPlan = null;
+      return {
+        kind: "act",
+        label: "combat/plan-potion",
+        intent: target === undefined ? { action: "use_potion", option_index: due.slot } : { action: "use_potion", option_index: due.slot, target_index: target },
+        rationale: `fight plan: drink ${due.name} now (${fightPlan!.potions[due.potion_id]})`,
+      };
+    }
+  }
   const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
   const options = distinctPlans(surviving, MAX_OPTIONS);
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)

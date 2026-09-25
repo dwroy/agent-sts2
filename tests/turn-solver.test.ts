@@ -283,6 +283,21 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Dominate gains Strength per Vulnerable on the target, its own included (VQSA F33 T3)", () => {
+    const dominate = card(0, "DOMINATE", { type: "Skill", vulnerable: 1, special: "dominate", strengthPerVulnerable: 1 });
+    const result = solveTurn({
+      hand: [dominate, strike(1)],
+      player: player({ hp: 60, energy: 2 }),
+      enemies: [enemy({ index: 0, name: "Knowledge Demon", hp: 300, vulnerable: 2, attacks: [] })],
+      fightKind: "boss",
+    });
+    const both = result.plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "DOMINATE,STRIKE_IRONCLAD");
+    expect(both).toBeDefined();
+    expect(both!.outcome.strengthGained).toBe(3);
+    // Strike 6 + 3 Strength, x1.5 Vulnerable.
+    expect(both!.outcome.damageDealt).toBe(13);
+  });
+
   it("caps a turn's HP loss with Beating Remnant, so damage lines are not scored as deaths (CCPR F48 T7)", () => {
     const input = {
       hand: [strike(0), strike(1), defend(2)],

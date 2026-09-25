@@ -44,6 +44,8 @@ export interface CardModel {
   strength: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
+  /** Dominate: Strength gained per Vulnerable on the target (after the card's own Vulnerable). */
+  strengthPerVulnerable?: number;
   /** Strength the target enemy gains (Fight Me). */
   enemyStrength: number;
   /** Strength the target enemy loses for this turn only (Mangle): lowers its next attack. */
@@ -53,7 +55,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -157,6 +159,7 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   FEED: "feed",
   RUPTURE: "rupture",
   COLOSSUS: "colossus",
+  DOMINATE: "dominate", // Strength per Vulnerable on the target, after its own Vulnerable (solver)
   FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
   CRIMSON_MANTLE: "crimson_mantle", // 1 HP at the start of every turn (the solver checks it can afford it)
 };
@@ -241,6 +244,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   let weak = dyn(card, "WeakPower") ?? 0;
   let strength = dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
+  let strengthPerVulnerable = 0;
   const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
   const enemyTempStrengthLoss = dyn(card, "StrengthLoss") ?? 0;
   const special = SPECIAL[cardId] ?? null;
@@ -261,7 +265,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       strength = 0;
       break;
     case "BLAZE": // gives Strength to another player
-    case "DOMINATE": // Strength depends on stacks; modelled as the Vulnerable only
+      strength = 0;
+      break;
+    case "DOMINATE": // Strength per Vulnerable on the target: the solver counts it at play time
+      strengthPerVulnerable = dyn(card, "StrengthPerVulnerable") ?? 1;
       strength = 0;
       break;
     case "SPITE": // repeats only if we lost HP this turn; the solver decides
@@ -333,6 +340,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(weakFirst ? { weakFirst } : {}),
     strength,
     tempStrength,
+    ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
     enemyStrength,
     enemyTempStrengthLoss,
     // Beckon's HpLoss var is what holding it costs, not a price for playing it (PU21: every Beckon
