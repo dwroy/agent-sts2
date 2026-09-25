@@ -1097,3 +1097,20 @@ describe("draws from a known pile (XPA4 T8/T10: Battle Trance at 1 energy drew 2
     expect(played.score).toBeLessThan(idle.score);
   });
 });
+
+describe("Headbutt then a draw (XPA4 T11: the card put on top was drawn back the same turn)", () => {
+  const headbutt = (index: number): CardModel => card(index, "HEADBUTT", { damage: 9, putsOnTop: true });
+  const pommel = (index: number): CardModel => card(index, "POMMEL_STRIKE", { damage: 9, draw: 1 });
+  const pillage = (index: number): CardModel => card(index, "PILLAGE", { damage: 6, drawsUntil: true });
+
+  it("no plan draws after a put-on-top; drawing first, then Headbutt, is allowed", () => {
+    const result = solveTurn({ hand: [headbutt(0), pommel(1), pillage(2)], player: player({ hp: 60 }), enemies: [enemy({ hp: 200, maxHp: 200, attacks: [] })], fightKind: "boss" });
+    for (const plan of result.plans) {
+      const ids = plan.steps.map((step) => step.cardId);
+      const top = ids.indexOf("HEADBUTT");
+      if (top < 0) continue;
+      expect(ids.slice(top + 1).some((id) => id === "POMMEL_STRIKE" || id === "PILLAGE")).toBe(false);
+    }
+    expect(result.plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "POMMEL_STRIKE,HEADBUTT")).toBe(true);
+  });
+});

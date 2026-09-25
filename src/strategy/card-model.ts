@@ -69,6 +69,14 @@ export interface CardModel {
    */
   soulbound?: boolean;
   /**
+   * Puts a card on top of the draw pile (Headbutt: from the discard pile). A draw later in the same
+   * turn takes that card back into hand (XPA4 T11: Headbutt put Shrug It Off+ on top for next turn, then
+   * Pommel Strike drew it and it was discarded unplayed).
+   */
+  putsOnTop?: boolean;
+  /** Draws an unknown number of cards (Pillage: until a non-Attack); `draw` stays 0. */
+  drawsUntil?: boolean;
+  /**
    * Exhausts a random card from the hand (True Grit, Ember): a card planned after it may be the one
    * that goes (PU21 F33 T8: Bash, True Grit, Anger planned 27 damage, Anger was exhausted, 11 dealt).
    */
@@ -268,6 +276,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
+    putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
+    drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
     randomExhaust: /随机消耗|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };

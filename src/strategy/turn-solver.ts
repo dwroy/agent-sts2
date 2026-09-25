@@ -302,6 +302,8 @@ interface Sim {
   pileDrawn: number;
   /** Energy the cards drawn so far are expected to use (each drawn card needs 1 to be played or cleared). */
   drawEnergy: number;
+  /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
+  topPlaced: boolean;
 }
 
 /** A known pile's expected value per card drawn, with a spare energy to use it and without. */
@@ -472,6 +474,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (cost > sim.energy) return null;
   // Touch of Insanity: only with a card worth making free (YP9 T1: drunk with only 0-cost cards left).
   if (card.special === "free_card" && !freeCardPick(sim.hand)) return null;
+  // After Headbutt the next draw is the card it put on top, taken back into hand this turn (XPA4 T11:
+  // Shrug It Off+ kept for a 24-damage turn was drawn by Pommel Strike and discarded unplayed). Which
+  // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
+  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
   const next = clone(sim);
   next.hand = sim.hand.filter((entry) => entry !== card);
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
@@ -494,6 +500,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     enemy.skittish = 0;
   }
   if (card.special === "duplicate_next") next.duplicate += 1;
+  if (card.putsOnTop) next.topPlaced = true;
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
@@ -989,7 +996,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}#${sim.gigantic}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.drawScore}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -1039,6 +1046,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     pile: pileValue(input.drawPile, weights.hp),
     pileDrawn: 0,
     drawEnergy: 0,
+    topPlaced: false,
   };
 
   const seen = new Set<string>();
