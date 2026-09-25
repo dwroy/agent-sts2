@@ -22,8 +22,8 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
+import { distinctPlans, dominates, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 
@@ -343,6 +343,29 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
 }
 
 /** What the hand should look like after the first step of `plan` (for the commitment check). */
+/**
+ * The cards the next draws come from: agent_view.combat.draw, grouped lines like "打击*4 [1费]：…"
+ * (count after "*"), or the discard pile when the draw pile is empty (it is shuffled in). undefined
+ * when the state has neither (older mod, tests). XPA4 T8/T10: nothing read the piles, so Battle
+ * Trance at 1 energy was "+9" with 3 Beckons in a 6-card pile.
+ */
+export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
+  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
+  const parse = (pile: unknown): DrawPileCard[] =>
+    asArray(pile).flatMap((entry) => {
+      const line = str(asRecord(entry)["line"]);
+      const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+      const cost = /\[(-?\d+|X)费\]/.exec(line)?.[1];
+      const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line);
+      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty };
+      return Array.from({ length: count }, () => card);
+    });
+  const draw = parse(view["draw"]);
+  if (draw.length > 0) return draw;
+  const discard = parse(view["discard"]);
+  return discard.length > 0 ? discard : undefined;
+}
+
 function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
@@ -532,6 +555,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const wither = witherInput(env, combat, hand, num(player["cards_played_this_turn"]));
+  const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
   const solveWith = (free: boolean) =>
     solveTurn({
@@ -551,6 +575,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       potionLimit,
       raceEruption,
       wither,
+      drawPile,
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight

@@ -4,8 +4,8 @@
  * two-Strike lethal on a live run (floor 7, Byrdonis, 10 HP vs 2x9 damage).
  *
  * It is deliberately a *turn* model: draws, random effects and next turn are not simulated. Cards
- * that draw are valued with a flat bonus and the loop re-plans after every single action, so the
- * drawn cards are picked up on the next plan. Numbers are exact where the mod gives them (card
+ * that draw are valued by what the known pile holds (a flat bonus when it is unknown) and the loop
+ * re-plans after every single action, so the drawn cards are picked up on the next plan. Numbers are exact where the mod gives them (card
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
@@ -181,7 +181,20 @@ export interface SolverInput {
    * `played` is the fight's count so far, this turn's cards included.
    */
   wither?: { every: number; played: number; damage: number };
+  /**
+   * The cards the next draws come from (the draw pile, or the discard pile when it is empty), when
+   * known. Without it a draw is worth a flat DRAW_VALUE; with it, the pile's statuses count (XPA4 T8/T10:
+   * Battle Trance at 1 energy drew 2 Beckons from a 6-card pile holding 3, -12 HP on a "-0" plan).
+   */
+  drawPile?: DrawPileCard[];
   maxNodes?: number;
+}
+
+export interface DrawPileCard {
+  /** Can be played (to get rid of a status like Beckon) at all. */
+  playable: boolean;
+  /** Damage or HP lost at the end of the turn while it is held (Beckon 6, Burn 2); 0 for most cards. */
+  heldPenalty: number;
 }
 
 export interface Step {
@@ -283,6 +296,55 @@ interface Sim {
   pendingRage?: boolean;
   /** Gigantification: the next Attack played deals triple damage. */
   gigantic: number;
+  /** Expected value of one card drawn from the known pile (null: pile unknown, flat values). */
+  pile: PileValue | null;
+  /** Cards drawn from that pile so far this turn (past its size the draws are a reshuffle: flat values). */
+  pileDrawn: number;
+  /** Energy the cards drawn so far are expected to use (each drawn card needs 1 to be played or cleared). */
+  drawEnergy: number;
+}
+
+/** A known pile's expected value per card drawn, with a spare energy to use it and without. */
+interface PileValue {
+  size: number;
+  withEnergy: number;
+  withoutEnergy: number;
+}
+
+/** Value of one card drawn with energy left to play it (without a known pile). */
+export const DRAW_VALUE = 3;
+
+/**
+ * Per-card draw value of a known pile. A normal card is worth DRAW_VALUE with a spare energy and
+ * nothing without one (it cannot be played this turn). A status that hurts while held costs its
+ * penalty at HP weight, unless a spare energy plays it away (then it costs that energy: at most
+ * DRAW_VALUE); an unplayable one always costs its penalty.
+ */
+export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number): PileValue | null {
+  if (!pile || pile.length === 0) return null;
+  let withEnergy = 0;
+  let withoutEnergy = 0;
+  for (const card of pile) {
+    const penalty = card.heldPenalty * hpWeight;
+    if (penalty > 0) {
+      withEnergy -= card.playable ? Math.min(DRAW_VALUE, penalty) : penalty;
+      withoutEnergy -= penalty;
+    } else if (card.playable) {
+      withEnergy += DRAW_VALUE;
+    }
+  }
+  return { size: pile.length, withEnergy: withEnergy / pile.length, withoutEnergy: withoutEnergy / pile.length };
+}
+
+/** Score of drawing one card now: the known pile's expected value, energy permitting. */
+function drawOne(sim: Sim): number {
+  const spare = Math.max(0, Math.min(1, sim.energy - sim.drawEnergy));
+  const pile = sim.pile;
+  // Earlier draws leave more energy to use what they bring.
+  if (!pile || sim.pileDrawn >= pile.size) return sim.energy > 0 ? DRAW_VALUE : 1;
+  sim.pileDrawn += 1;
+  sim.drawEnergy += spare;
+  return spare * pile.withEnergy + (1 - spare) * pile.withoutEnergy;
 }
 
 /**
@@ -562,8 +624,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   else next.flat += card.flatValue;
   if (card.draw > 0) {
     next.cardsDrawn += card.draw;
-    // Earlier draws leave more energy to use what they bring.
-    next.drawScore += card.draw * (next.energy > 0 ? 3 : 1);
+    for (let drawn = 0; drawn < card.draw; drawn += 1) next.drawScore += drawOne(next);
   }
 }
 
@@ -975,6 +1036,9 @@ export function solveTurn(input: SolverInput): SolveResult {
     enraged: 0,
     bombs: 0,
     gigantic: 0,
+    pile: pileValue(input.drawPile, weights.hp),
+    pileDrawn: 0,
+    drawEnergy: 0,
   };
 
   const seen = new Set<string>();

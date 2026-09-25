@@ -1533,3 +1533,19 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
     expect(distinctPlans(result.plans.filter((plan) => !plan.outcome.dies), 4)).toContain(best);
   });
 });
+
+describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)", () => {
+  it("expands grouped lines and reads the held penalty; falls back to the discard pile", async () => {
+    const { drawPileCards } = await import("../src/screens/combat-plan.js");
+    const view = (draw: unknown[], discard: unknown[] = []) => ({ agent_view: { combat: { draw, discard } } });
+    const beckon = { line: "呼唤*3 [1费]：在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", card_ids: ["BECKON"] };
+    const strike = { line: "打击*2 [1费]：造成6点伤害。", card_ids: ["STRIKE_IRONCLAD"] };
+    const map = { line: "藏宝图 [-1费]：不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。", card_ids: ["SPOILS_MAP"] };
+    const pile = drawPileCards(view([beckon, strike, map]))!;
+    expect(pile).toHaveLength(6);
+    expect(pile.filter((card) => card.heldPenalty === 6)).toHaveLength(3);
+    expect(pile.filter((card) => !card.playable)).toHaveLength(1);
+    expect(drawPileCards(view([], [strike]))).toHaveLength(2);
+    expect(drawPileCards({})).toBeUndefined();
+  });
+});

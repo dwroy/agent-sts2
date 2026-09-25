@@ -136,6 +136,18 @@ function targetMode(targetType: string, template: string, requiresTarget: boolea
   return "none";
 }
 
+/**
+ * What holding a status/curse at the end of the turn costs, read from its rendered text: Burn "受到N点
+ * 伤害" meets block, Beckon "失去N点生命" does not (WX16, BG4W: Soul Fysh's Beckon planned as blockable,
+ * died at 8 HP). Also used for draw-pile lines (agent_view), which carry the same text.
+ */
+export function heldPenaltyOf(rendered: string): { heldPenalty: number; heldHpLoss: number } {
+  const held = /回合结束时[^。]*手牌中[^。]*?(?:受到|失去)(\d+)点(?:伤害|生命)/.exec(rendered) ?? /at the end of your turn[^.]*in your hand[^.]*?(?:take|lose) (\d+)/i.exec(rendered);
+  const heldPenalty = held ? Number(held[1]) : 0;
+  const heldHpLoss = held && /失去\d+点生命|lose \d+ hp/i.test(held[0]) ? heldPenalty : 0;
+  return { heldPenalty, heldHpLoss };
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -211,10 +223,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 
   // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
   const rendered = str(card["resolved_rules_text"]) || info?.description || "";
-  const held = /回合结束时[^。]*手牌中[^。]*?(?:受到|失去)(\d+)点(?:伤害|生命)/.exec(rendered) ?? /at the end of your turn[^.]*in your hand[^.]*?(?:take|lose) (\d+)/i.exec(rendered);
-  const heldPenalty = held ? Number(held[1]) : 0;
-  // "失去N点生命" / "lose N HP" bypasses block (WX16, BG4W: Soul Fysh's Beckon planned as blockable, died at 8 HP).
-  const heldHpLoss = held && /失去\d+点生命|lose \d+ hp/i.test(held[0]) ? heldPenalty : 0;
+  const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
   if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
     damage = null;

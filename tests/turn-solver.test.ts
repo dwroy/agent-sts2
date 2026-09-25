@@ -6,8 +6,10 @@ import {
   BOMB_SURE,
   CRAB_RAGE_STRENGTH,
   distinctPlans,
+  DRAW_VALUE,
   ERUPTION_RACE_DAMAGE,
   NEXT_PHASE_HP,
+  pileValue,
   solveTurn,
   weightsFor,
   WOUND_COST,
@@ -1051,5 +1053,47 @@ describe("Parafright (XJWF F22: killed seven turns running, the Obscura barely t
     expect(best.steps.every((step) => step.target === 1)).toBe(true);
     const kill = result.plans.find((plan) => plan.outcome.enemyHpAfter.find((entry) => entry.index === 0)!.hp === 0)!;
     expect(kill.outcome.kills).toEqual([]);
+  });
+});
+
+describe("draws from a known pile (XPA4 T8/T10: Battle Trance at 1 energy drew 2 Beckons, -12 on a '-0' plan)", () => {
+  const pommel = (index: number): CardModel => card(index, "POMMEL_STRIKE", { damage: 9, draw: 1 });
+  const heavy = (index: number): CardModel => card(index, "HEAVY", { damage: 9 });
+  const beckon = { playable: true, heldPenalty: 6 };
+  const plain = { playable: true, heldPenalty: 0 };
+  const input = (drawPile?: { playable: boolean; heldPenalty: number }[]) => ({
+    hand: [pommel(0), heavy(1)],
+    player: player({ hp: 60, energy: 1 }),
+    enemies: [enemy({ hp: 80, maxHp: 80, attacks: [] })],
+    fightKind: "monster" as const,
+    drawPile,
+  });
+  const scoreOf = (result: ReturnType<typeof solveTurn>, cardId: string): number =>
+    result.plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === cardId)!.score;
+
+  it("2 Beckons in a 4-card pile with 0 energy left: the draw is valued negative", () => {
+    const value = pileValue([beckon, beckon, plain, plain], 1)!;
+    expect(value.withoutEnergy).toBeLessThan(0);
+    expect(value.withEnergy).toBeLessThan(DRAW_VALUE);
+    const result = solveTurn(input([beckon, beckon, plain, plain]));
+    // Pommel Strike (9 + draw) now scores below the same 9 damage without a draw.
+    expect(scoreOf(result, "POMMEL_STRIKE")).toBeLessThan(scoreOf(result, "HEAVY"));
+    expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["HEAVY"]);
+  });
+
+  it("a clean pile (or an unknown one) still makes the draw worth something", () => {
+    const clean = solveTurn(input([plain, plain, plain]));
+    expect(scoreOf(clean, "POMMEL_STRIKE")).toBeGreaterThanOrEqual(scoreOf(clean, "HEAVY"));
+    const unknown = solveTurn(input());
+    expect(scoreOf(unknown, "POMMEL_STRIKE")).toBeGreaterThan(scoreOf(unknown, "HEAVY"));
+  });
+
+  it("one spare energy clears one drawn Beckon, not three", () => {
+    const trance = card(0, "BATTLE_TRANCE", { type: "Skill", target: "self", validTargets: [], cost: 0, draw: 3 });
+    const pile = [beckon, beckon, beckon, plain, plain, plain];
+    const result = solveTurn({ ...input(pile), hand: [trance] });
+    const played = result.plans.find((plan) => plan.steps.length === 1)!;
+    const idle = result.plans.find((plan) => plan.steps.length === 0)!;
+    expect(played.score).toBeLessThan(idle.score);
   });
 });
