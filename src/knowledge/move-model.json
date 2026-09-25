@@ -85,7 +85,7 @@
  },
  "BOWLBUG_EGG": {
   "damage": {
-   "BITE_MOVE": 6.9
+   "BITE_MOVE": 6.8
   },
   "next": {
    "BITE_MOVE": {
@@ -116,30 +116,31 @@
  },
  "BOWLBUG_ROCK": {
   "damage": {
-   "HEADBUTT_MOVE": 14.9,
+   "HEADBUTT_MOVE": 14.8,
    "STUNNED": 0.0
   },
   "next": {
    "HEADBUTT_MOVE": {
-    "HEADBUTT_MOVE": 56,
-    "STUNNED": 13
+    "HEADBUTT_MOVE": 57,
+    "STUNNED": 14
    },
    "STUNNED": {
-    "HEADBUTT_MOVE": 8
+    "HEADBUTT_MOVE": 8,
+    "STUNNED": 1
    }
   }
  },
  "BOWLBUG_SILK": {
   "damage": {
-   "THRASH_MOVE": 8.2,
+   "THRASH_MOVE": 8.1,
    "TOXIC_SPIT_MOVE": 0.0
   },
   "next": {
    "THRASH_MOVE": {
-    "TOXIC_SPIT_MOVE": 36
+    "TOXIC_SPIT_MOVE": 38
    },
    "TOXIC_SPIT_MOVE": {
-    "THRASH_MOVE": 44
+    "THRASH_MOVE": 46
    }
   }
  },
@@ -184,14 +185,14 @@
  "BYRDONIS": {
   "damage": {
    "PECK_MOVE": 14.7,
-   "SWOOP_MOVE": 18.1
+   "SWOOP_MOVE": 18.0
   },
   "next": {
    "PECK_MOVE": {
-    "SWOOP_MOVE": 22
+    "SWOOP_MOVE": 24
    },
    "SWOOP_MOVE": {
-    "PECK_MOVE": 31
+    "PECK_MOVE": 33
    }
   }
  },
@@ -220,27 +221,32 @@
   ],
   "damage": {
    "BEAST_CRY_MOVE": 0.0,
-   "CRUSH_MOVE": 18.6,
-   "PLOW_MOVE": 20.7,
+   "CRUSH_MOVE": 18.5,
+   "PLOW_MOVE": 20.6,
    "STAMP_MOVE": 0.0,
-   "STOMP_MOVE": 16.9
+   "STOMP_MOVE": 16.8,
+   "STUNNED": 0.0
   },
   "next": {
    "BEAST_CRY_MOVE": {
-    "STOMP_MOVE": 19
+    "STOMP_MOVE": 20
    },
    "CRUSH_MOVE": {
     "BEAST_CRY_MOVE": 10
    },
    "PLOW_MOVE": {
     "BEAST_CRY_MOVE": 9,
-    "PLOW_MOVE": 21
+    "PLOW_MOVE": 22,
+    "STUNNED": 1
    },
    "STAMP_MOVE": {
-    "PLOW_MOVE": 9
+    "PLOW_MOVE": 10
    },
    "STOMP_MOVE": {
-    "CRUSH_MOVE": 15
+    "CRUSH_MOVE": 16
+   },
+   "STUNNED": {
+    "BEAST_CRY_MOVE": 1
    }
   }
  },
@@ -506,28 +512,32 @@
   "next": {
    "ENRAGE_MOVE": {
     "ENRAGE_MOVE": 6,
-    "MANDIBLES_MOVE": 30,
-    "SKITTER_MOVE": 27
+    "MANDIBLES_MOVE": 31,
+    "SKITTER_MOVE": 28
    },
    "MANDIBLES_MOVE": {
-    "ENRAGE_MOVE": 59,
-    "MANDIBLES_MOVE": 13,
+    "ENRAGE_MOVE": 61,
+    "MANDIBLES_MOVE": 14,
     "SKITTER_MOVE": 9
    },
    "SKITTER_MOVE": {
     "ENRAGE_MOVE": 4,
-    "MANDIBLES_MOVE": 44,
+    "MANDIBLES_MOVE": 45,
     "SKITTER_MOVE": 4
    }
   }
  },
  "EYE_WITH_TEETH": {
   "damage": {
-   "DISTRACT_MOVE": 0.0
+   "DISTRACT_MOVE": 0.0,
+   "REVIVE_MOVE": 0.0
   },
   "next": {
    "DISTRACT_MOVE": {
     "DISTRACT_MOVE": 23
+   },
+   "REVIVE_MOVE": {
+    "REVIVE_MOVE": 2
    }
   }
  },
@@ -587,22 +597,22 @@
  },
  "FLYCONID": {
   "damage": {
-   "FRAIL_SPORES_MOVE": 9.8,
+   "FRAIL_SPORES_MOVE": 9.6,
    "SMASH_MOVE": 12.8,
    "VULNERABLE_SPORES_MOVE": 0.0
   },
   "next": {
    "FRAIL_SPORES_MOVE": {
-    "SMASH_MOVE": 18,
+    "SMASH_MOVE": 19,
     "VULNERABLE_SPORES_MOVE": 4
    },
    "SMASH_MOVE": {
     "FRAIL_SPORES_MOVE": 9,
-    "VULNERABLE_SPORES_MOVE": 16
+    "VULNERABLE_SPORES_MOVE": 17
    },
    "VULNERABLE_SPORES_MOVE": {
     "FRAIL_SPORES_MOVE": 9,
-    "SMASH_MOVE": 12
+    "SMASH_MOVE": 13
    }
   }
  },
@@ -619,10 +629,10 @@
   },
   "next": {
    "HEADBUTT_MOVE": {
-    "SWIPE_MOVE": 5
+    "SWIPE_MOVE": 6
    },
    "SWIPE_MOVE": {
-    "HEADBUTT_MOVE": 10,
+    "HEADBUTT_MOVE": 11,
     "SWIPE_RANDOM_MOVE": 6
    },
    "SWIPE_RANDOM_MOVE": {
@@ -691,13 +701,13 @@
   },
   "next": {
    "ACID_GOOP": {
-    "FIRST_ACID_GOOP": 19
+    "FIRST_ACID_GOOP": 20
    },
    "FIRST_ACID_GOOP": {
-    "INHALE": 44
+    "INHALE": 46
    },
    "INHALE": {
-    "ACID_GOOP": 35
+    "ACID_GOOP": 36
    }
   }
  },
@@ -780,19 +790,19 @@
  "HUNTER_KILLER": {
   "damage": {
    "BITE_MOVE": 17.2,
-   "PUNCTURE_MOVE": 21.8,
+   "PUNCTURE_MOVE": 21.7,
    "TENDERIZING_GOOP_MOVE": 0.0
   },
   "next": {
    "BITE_MOVE": {
-    "PUNCTURE_MOVE": 14
+    "PUNCTURE_MOVE": 16
    },
    "PUNCTURE_MOVE": {
-    "BITE_MOVE": 15,
+    "BITE_MOVE": 16,
     "PUNCTURE_MOVE": 8
    },
    "TENDERIZING_GOOP_MOVE": {
-    "BITE_MOVE": 5,
+    "BITE_MOVE": 6,
     "PUNCTURE_MOVE": 9
    }
   }
@@ -899,23 +909,23 @@
   ],
   "damage": {
    "CURSE_OF_KNOWLEDGE_MOVE": 0.0,
-   "KNOWLEDGE_OVERWHELMING_MOVE": 29.2,
-   "PONDER_MOVE": 12.3,
-   "SLAP_MOVE": 18.8
+   "KNOWLEDGE_OVERWHELMING_MOVE": 30.3,
+   "PONDER_MOVE": 12.6,
+   "SLAP_MOVE": 19.2
   },
   "next": {
    "CURSE_OF_KNOWLEDGE_MOVE": {
-    "SLAP_MOVE": 26
+    "SLAP_MOVE": 29
    },
    "KNOWLEDGE_OVERWHELMING_MOVE": {
-    "PONDER_MOVE": 21
+    "PONDER_MOVE": 25
    },
    "PONDER_MOVE": {
-    "CURSE_OF_KNOWLEDGE_MOVE": 16,
-    "SLAP_MOVE": 1
+    "CURSE_OF_KNOWLEDGE_MOVE": 18,
+    "SLAP_MOVE": 3
    },
    "SLAP_MOVE": {
-    "KNOWLEDGE_OVERWHELMING_MOVE": 25
+    "KNOWLEDGE_OVERWHELMING_MOVE": 30
    }
   }
  },
@@ -956,10 +966,10 @@
   },
   "next": {
    "CLUMP_SHOT": {
-    "STICKY_SHOT": 30
+    "STICKY_SHOT": 33
    },
    "STICKY_SHOT": {
-    "CLUMP_SHOT": 42
+    "CLUMP_SHOT": 45
    }
   }
  },
@@ -974,7 +984,7 @@
     "TACKLE_MOVE": 26
    },
    "TACKLE_MOVE": {
-    "GOOP_MOVE": 20
+    "GOOP_MOVE": 22
    }
   }
  },
@@ -1017,18 +1027,18 @@
   ],
   "damage": {
    "CURL_AND_GROW_MOVE": 0.0,
-   "POUNCE_MOVE": 19.0,
-   "WEB_CANNON_MOVE": 11.2
+   "POUNCE_MOVE": 19.3,
+   "WEB_CANNON_MOVE": 11.1
   },
   "next": {
    "CURL_AND_GROW_MOVE": {
-    "POUNCE_MOVE": 15
+    "POUNCE_MOVE": 17
    },
    "POUNCE_MOVE": {
-    "WEB_CANNON_MOVE": 11
+    "WEB_CANNON_MOVE": 12
    },
    "WEB_CANNON_MOVE": {
-    "CURL_AND_GROW_MOVE": 19
+    "CURL_AND_GROW_MOVE": 21
    }
   }
  },
@@ -1139,7 +1149,7 @@
    "BUTT_MOVE": {
     "BUTT_MOVE": 1,
     "HISS_MOVE": 3,
-    "SLICE_MOVE": 40
+    "SLICE_MOVE": 41
    },
    "HISS_MOVE": {
     "BUTT_MOVE": 30,
@@ -1148,7 +1158,7 @@
    },
    "SLICE_MOVE": {
     "BUTT_MOVE": 2,
-    "HISS_MOVE": 32
+    "HISS_MOVE": 33
    }
   }
  },
@@ -1254,10 +1264,10 @@
   },
   "next": {
    "INFECT_MOVE": {
-    "LASH_MOVE": 19
+    "LASH_MOVE": 20
    },
    "LASH_MOVE": {
-    "INFECT_MOVE": 12
+    "INFECT_MOVE": 13
    }
   }
  },
@@ -1415,10 +1425,10 @@
   },
   "next": {
    "CHOMP_MOVE": {
-    "STOMP_MOVE": 26
+    "STOMP_MOVE": 27
    },
    "SHRINKER_MOVE": {
-    "CHOMP_MOVE": 27
+    "CHOMP_MOVE": 28
    },
    "STOMP_MOVE": {
     "CHOMP_MOVE": 10
@@ -1523,17 +1533,17 @@
    "ROLL_OUT_MOVE"
   ],
   "damage": {
-   "ROLL_OUT_MOVE": 18.0,
+   "ROLL_OUT_MOVE": 18.1,
    "SNORE_MOVE": 0.0,
    "STUNNED": 0.0
   },
   "next": {
    "ROLL_OUT_MOVE": {
-    "ROLL_OUT_MOVE": 30
+    "ROLL_OUT_MOVE": 34
    },
    "SNORE_MOVE": {
-    "ROLL_OUT_MOVE": 15,
-    "SNORE_MOVE": 31
+    "ROLL_OUT_MOVE": 16,
+    "SNORE_MOVE": 33
    },
    "STUNNED": {
     "ROLL_OUT_MOVE": 2
@@ -1545,11 +1555,11 @@
    "ENERGY_ORB_MOVE"
   ],
   "damage": {
-   "ENERGY_ORB_MOVE": 4.5
+   "ENERGY_ORB_MOVE": 4.4
   },
   "next": {
    "ENERGY_ORB_MOVE": {
-    "ENERGY_ORB_MOVE": 18
+    "ENERGY_ORB_MOVE": 19
    }
   }
  },
@@ -1831,20 +1841,23 @@
    "FLUTTER_MOVE": 0.0,
    "HAT_TRICK_MOVE": 21.0,
    "NAB_MOVE": 14.0,
-   "THIEVERY_MOVE": 16.7
+   "THIEVERY_MOVE": 16.5
   },
   "next": {
+   "ESCAPE_MOVE": {
+    "ESCAPE_MOVE": 1
+   },
    "FLUTTER_MOVE": {
-    "HAT_TRICK_MOVE": 23
+    "HAT_TRICK_MOVE": 24
    },
    "HAT_TRICK_MOVE": {
-    "NAB_MOVE": 17
+    "NAB_MOVE": 18
    },
    "NAB_MOVE": {
-    "ESCAPE_MOVE": 7
+    "ESCAPE_MOVE": 8
    },
    "THIEVERY_MOVE": {
-    "FLUTTER_MOVE": 29
+    "FLUTTER_MOVE": 30
    }
   }
  },
@@ -1983,10 +1996,10 @@
   "next": {
    "POKEY_POUNCE_MOVE": {
     "POKEY_POUNCE_MOVE": 7,
-    "STICKY_SHOT_MOVE": 11
+    "STICKY_SHOT_MOVE": 12
    },
    "STICKY_SHOT_MOVE": {
-    "POKEY_POUNCE_MOVE": 33
+    "POKEY_POUNCE_MOVE": 35
    }
   }
  },
@@ -2128,15 +2141,15 @@
   },
   "next": {
    "NASTY_BITE_MOVE": {
-    "NASTY_BITE_MOVE": 19,
-    "WRIGGLE_MOVE": 37
+    "NASTY_BITE_MOVE": 20,
+    "WRIGGLE_MOVE": 38
    },
    "SPAWNED_MOVE": {
-    "NASTY_BITE_MOVE": 27,
-    "WRIGGLE_MOVE": 27
+    "NASTY_BITE_MOVE": 29,
+    "WRIGGLE_MOVE": 29
    },
    "WRIGGLE_MOVE": {
-    "NASTY_BITE_MOVE": 40,
+    "NASTY_BITE_MOVE": 41,
     "WRIGGLE_MOVE": 9
    }
   }
