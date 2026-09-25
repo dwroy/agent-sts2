@@ -46,6 +46,8 @@ export interface CardModel {
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
   feelNoPain?: number;
+  /** The card's printed base damage (dynamic Damage base_value): with Weak, the solver rounds once from it. */
+  damageBase?: number;
   /** Dominate: Strength gained per Vulnerable on the target (after the card's own Vulnerable). */
   strengthPerVulnerable?: number;
   /** Strength the target enemy gains (Fight Me). */
@@ -96,6 +98,15 @@ export interface CardModel {
    */
   randomExhaust?: boolean;
   text: string;
+}
+
+/** A dynamic value's base (before our Strength/Weak), or null. */
+function dynBase(card: Record<string, unknown>, name: string): number | null {
+  for (const entry of asArray(card["dynamic_values"])) {
+    const value = asRecord(entry);
+    if (str(value["name"]) === name) return numOrNull(value["base_value"]);
+  }
+  return null;
 }
 
 function dyn(card: Record<string, unknown>, name: string): number | null {
@@ -347,6 +358,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     strength,
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
+    ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
     ...(cardId === "FEEL_NO_PAIN" ? { feelNoPain: dyn(card, "Power") ?? 3 } : {}),
     enemyStrength,
     enemyTempStrengthLoss,

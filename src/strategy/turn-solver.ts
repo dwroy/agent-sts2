@@ -161,6 +161,8 @@ export interface PlayerSim {
   turnStartAoe?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
+  /** Strength at the start of the turn (STRENGTH_POWER), for rounding Weak damage once from the base. */
+  strengthNow?: number;
   /**
    * Feel No Pain already up (FEEL_NO_PAIN_POWER amount): Block per card exhausted (QBRN F48 T7: Fiend
    * Fire through 4 cards with Feel No Pain 3 was scored as 9 damage and no block).
@@ -556,6 +558,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     }
     if (enemy.unmodelled) amount = Math.floor(amount * 0.8);
     if (enemy.halved) amount = Math.floor(amount * 0.5);
+    amount = Math.floor(amount);
     if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
@@ -770,7 +773,16 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // 36, dealt 45), so Weak only scales what the card text does not know: this turn's Strength and
     // Body Slam's block.
     const weakFactor = player.weak ? 0.75 : 1;
-    let perHit = Math.floor((card.damage ?? 0) + next.strength * weakFactor);
+    // With Weak the game multiplies (base + Strength) by 0.75, then by Vulnerable, and rounds once;
+    // the shown number is already rounded down (P4ZD F37 T9: Strike 9x0.75x1.5 = 10, counted 9; the
+    // exact 28 lethal was dropped as 27 and we died with the Axebot at 1 HP). Unrounded here,
+    // rounded in hitEnemy, when the base reproduces the shown number.
+    let shown = card.damage ?? 0;
+    if (player.weak && card.damageBase !== undefined && card.special !== "body_slam") {
+      const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
+      if (Math.floor(exact) === shown) shown = exact;
+    }
+    let perHit = shown + next.strength * weakFactor;
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     if (card.special === "whirlwind") hits = cost;
