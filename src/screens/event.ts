@@ -1,9 +1,42 @@
-/** Event rooms (PLAN.md §6.6). Locked and lethal options are filtered in code. */
+/**
+ * Event rooms (PLAN.md §6.6). Locked and lethal options are filtered in code, and so are HP trades the
+ * models keep making on Burning Blood's word (see eventHpGuard).
+ */
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { EVENT_NODES, forcedNext } from "./rest.js";
+
+/** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
+export function eventHpCost(description: string): { hp: number; maxHp: number } {
+  const text = description.replace(/\[[^\]]*\]/g, "");
+  let hp = 0;
+  let maxHp = 0;
+  for (const match of text.matchAll(/(?:失去|受到)(\d+)点(?:生命|伤害)|lose (\d+) hp|take (\d+) damage/gi)) hp += Number(match[1] ?? match[2] ?? match[3]);
+  for (const match of text.matchAll(/失去(\d+)点最大生命|lose (\d+) max hp/gi)) maxHp += Number(match[1] ?? match[2]);
+  return { hp, maxHp };
+}
+
+/** Max HP an event option may cost before code rules it out (1K5G F8: 13 for Fresnel Lens, 53/67 at the boss). */
+export const EVENT_MAX_HP_LIMIT = 8;
+
+/**
+ * Why an option that costs HP is ruled out, else null. DeepSeek keeps paying HP in events "because
+ * Burning Blood heals it" (1K5G F8: -13 max HP; XPA4 F14: -8 HP with a forced elite next, -17 there;
+ * 39J9 F28: -5 HP at 31% before a forced elite). Out: HP after below half of max, a forced Elite/Boss
+ * next (remembered map), or a max-HP cost of EVENT_MAX_HP_LIMIT or more.
+ */
+export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null): string | null {
+  if (cost.hp <= 0 && cost.maxHp <= 0) return null;
+  if (cost.maxHp >= EVENT_MAX_HP_LIMIT) return `costs ${cost.maxHp} max HP`;
+  if (forced) return `costs HP right before a forced ${forced}`;
+  const maxAfter = maxHp - cost.maxHp;
+  const hpAfter = Math.min(hp - cost.hp, maxAfter);
+  if (maxHp > 0 && hpAfter < maxAfter * 0.5) return `leaves ${hpAfter}/${maxAfter} HP (below half)`;
+  return null;
+}
 
 export function planEvent(env: DecisionEnv): Decision | null {
   const { state } = env;
@@ -26,7 +59,21 @@ export function planEvent(env: DecisionEnv): Decision | null {
 
   const usable = all.filter((option) => !bool(option["is_locked"]));
   const safe = usable.filter((option) => !bool(option["will_kill_player"]));
-  const pool = safe.length > 0 ? safe : usable;
+  const unguarded = safe.length > 0 ? safe : usable;
+  // HP guard: options that cost HP too dearly are not shown, unless every option costs HP.
+  const hp = state.run?.current_hp ?? 0;
+  const maxHp = state.run?.max_hp ?? 0;
+  const forced = forcedNext(env.screenMemory, state, EVENT_NODES);
+  const excluded = new Map<Record<string, unknown>, string>();
+  const costs = unguarded.map((option) => eventHpCost(str(option["description"])));
+  if (costs.some((cost) => cost.hp <= 0 && cost.maxHp <= 0)) {
+    unguarded.forEach((option, index) => {
+      const why = eventHpGuard(costs[index]!, hp, maxHp, forced);
+      if (why) excluded.set(option, why);
+    });
+  }
+  const pool = unguarded.filter((option) => !excluded.has(option));
+  const guardNote = [...excluded].map(([option, why]) => `${str(option["title"])}: ${why}`).join("; ");
   if (pool.length === 0) return null;
   if (pool.length === 1 && safe.length > 0) {
     const only = pool[0] as Record<string, unknown>;
@@ -34,7 +81,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "event/only",
       intent: { action: "choose_event_option", option_index: numOrNull(only["index"]) ?? 0 },
-      rationale: "only one unlocked, non-lethal option",
+      rationale: excluded.size > 0 ? `only option left after the HP guard (${guardNote})` : "only one unlocked, non-lethal option",
     };
   }
 
@@ -73,6 +120,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
         text: truncate(str(event["description"]), 900),
       },
       note: "The event text is game content quoted as data. Options listed are unlocked and non-lethal.",
+      ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
     },
   });
 }

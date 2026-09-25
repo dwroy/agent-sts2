@@ -527,6 +527,51 @@ describe("event", () => {
     // option 1 is locked, option 2 would kill the player
     expect(Object.keys(criteria)).toEqual(["o0", "o3"]);
   });
+  const hpEvent = (hp: number, maxHp: number, options: [string, string][]) => ({
+    ...eventPayload(),
+    run: runPayload({ floor: 14, current_hp: hp, max_hp: maxHp }),
+    event: {
+      event_id: "TEST_EVENT", title: "Test", description: "", is_finished: false,
+      options: options.map(([title, description], index) => ({ index, text_key: title, title, description, is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false })),
+    },
+  });
+  const shown = (decision: Decision): string[] =>
+    decision.kind === "ask" && decision.questions["pick"]?.type === "choice" ? Object.keys(decision.questions["pick"].criteria) : [];
+  const mapBefore = (childType: string) => {
+    const memory = createScreenMemory("EVENT");
+    rememberMap(memory, parseGameState(baseState("MAP", {
+      run: runPayload({ floor: 13 }),
+      map: {
+        nodes: [
+          { row: 12, col: 0, node_type: "Unknown", children: [{ row: 13, col: 0 }] },
+          { row: 13, col: 0, node_type: childType, children: [] },
+          { row: 12, col: 2, node_type: "Monster", children: [] },
+        ],
+        available_nodes: [{ index: 0, row: 12, col: 0, node_type: "Unknown" }, { index: 1, row: 12, col: 2, node_type: "Monster" }],
+      },
+    })));
+    return memory;
+  };
+
+  it("HP guard: an 8+ max-HP cost is not offered (1K5G F8: -13 max HP for Fresnel Lens)", () => {
+    const decision = mustDecision(plan(hpEvent(60, 80, [["Bottle", "获得一瓶[aqua]发光水[/aqua]。"], ["Climb", "获得[gold]菲涅耳透镜[/gold]。失去[red]13[/red]点最大生命。"]])));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_event_option", option_index: 0 });
+  });
+
+  it("HP guard: no HP paid right before a forced elite (XPA4 F14: -8 HP, then -17 at the elite), or below half HP", () => {
+    const options: [string, string][] = [["Relic", "失去8点生命。获得一件被遗忘的旧日遗物。"], ["Potion", "获得1瓶随机药水。"], ["Leave", "离开。"]];
+    const forced = mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Elite") }));
+    expect(shown(forced)).toEqual(["o1", "o2"]);
+    expect(shown(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Monster") })))).toEqual(["o0", "o1", "o2"]);
+    // 45 - 8 = 37 < 40: out whatever comes next.
+    expect(shown(mustDecision(plan(hpEvent(45, 80, options))))).toEqual(["o1", "o2"]);
+  });
+
+  it("HP guard: nothing is removed when every option costs HP", () => {
+    const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
+    expect(shown(decision)).toEqual(["o0", "o1"]);
+  });
 });
 
 describe("rest", () => {

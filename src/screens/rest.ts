@@ -103,24 +103,28 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
   };
 }
 
+/** Map node types a rest site shows as; events come from "Unknown" (and "Ancient") nodes. */
+export const REST_NODES = ["RestSite", "Rest"];
+export const EVENT_NODES = ["Unknown", "Ancient"];
+
 /**
- * The node types reachable from this rest site, from the map remembered one floor earlier: the rest
- * site is the RestSite among that map's available nodes. null when that is not known.
+ * The node types reachable from this room, from the map remembered one floor earlier: the room is the
+ * one node of `roomTypes` among that map's available nodes. null when that is not known.
  */
-export function nextNodeTypes(memory: ScreenMemory, state: GameState): string[] | null {
+export function nextNodeTypes(memory: ScreenMemory, state: GameState, roomTypes: readonly string[] = REST_NODES): string[] | null {
   const map: RememberedMap | undefined = memory.lastMap;
   const floor = state.run?.floor ?? null;
   if (!map || map.runId !== str(state.raw["run_id"]) || floor === null || map.floor !== floor - 1) return null;
-  const rests = map.available.filter((node) => node.type === "RestSite" || node.type === "Rest");
+  const rests = map.available.filter((node) => roomTypes.includes(node.type));
   if (rests.length !== 1) return null;
   const here = map.nodes.find((node) => node.row === rests[0]!.row && node.col === rests[0]!.col);
   if (!here || here.children.length === 0) return null;
   return here.children.map((child) => map.nodes.find((node) => node.row === child.row && node.col === child.col)?.type ?? "Unknown");
 }
 
-/** "Elite" or "Boss" when every path from this rest site goes straight into one; else null. */
-export function forcedNext(memory: ScreenMemory, state: GameState): "Elite" | "Boss" | null {
-  const types = nextNodeTypes(memory, state);
+/** "Elite" or "Boss" when every path from this room goes straight into one; else null. */
+export function forcedNext(memory: ScreenMemory, state: GameState, roomTypes: readonly string[] = REST_NODES): "Elite" | "Boss" | null {
+  const types = nextNodeTypes(memory, state, roomTypes);
   if (!types || types.length === 0) return null;
   if (types.every((type) => type === "Elite")) return "Elite";
   if (types.every((type) => type === "Boss")) return "Boss";
