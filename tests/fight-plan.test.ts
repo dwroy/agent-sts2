@@ -419,5 +419,6 @@ describe("turn planner with a fight plan", () => {
     const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
     expect(resolved.guard).toBeUndefined();
   });
+
 });
 

@@ -116,9 +116,11 @@ export function shopWeight(gold: number, floorInAct: number, act?: number): numb
  * each; the old flat 0.12 made all-fight continuations look free). Elites cost twice as much.
  */
 const FIGHT_HP_COST_BY_ACT = [0.1, 0.14, 0.18];
+export const ELITE_HP_COST_FACTOR = 2.5;
 export function fightHpCost(type: string, act: number): number {
   const base = FIGHT_HP_COST_BY_ACT[Math.min(Math.max(act, 1), FIGHT_HP_COST_BY_ACT.length) - 1]!;
-  return type === "Elite" ? base * 2 : type === "Monster" ? base : 0;
+  // Elites x2.5: at A4 an act-1 elite cost ~43 HP where x2 priced 16 (BHMP F11 Bygone Effigy).
+  return type === "Elite" ? base * ELITE_HP_COST_FACTOR : type === "Monster" ? base : 0;
 }
 /** A rest heals 30% of max HP (the model assumes resting, not smithing, when projecting). */
 const REST_HEAL = 0.3;
