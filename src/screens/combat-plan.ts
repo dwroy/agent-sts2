@@ -895,7 +895,19 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
   // crab every turn) was traded twice for 6 HP and never played; the crabs died at 7 and 38 HP left.
+  // Boss race: a line whose extra damage per extra HP beats the race (boss HP left / our HP) is kept,
+  // and not charged to the fight's budget, while it leaves next turn's hit + 5 (ZH8J F17: the budget
+  // was spent by T8, then Bludgeon's 32 damage became 6 on T9 and Tear Asunder was swapped on T10;
+  // the boss was left at 92/222).
+  const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp, 0);
+  const winsRace = (picked: Plan, replacement: Plan | null): boolean => {
+    if (kind !== "boss" || replacement === null) return false;
+    const extraLoss = picked.outcome.hpLoss - replacement.outcome.hpLoss;
+    const extraDamage = picked.outcome.damageDealt - replacement.outcome.damageDealt;
+    return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
+  };
   const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
+    winsRace(picked, replacement) ||
     replacement !== null &&
     setupCount(picked) > setupCount(replacement) &&
     picked.outcome.hpAfter >= Math.max(playerSim.maxHp * 0.35, nextIncoming);
@@ -1121,6 +1133,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       // then died 3 HP short of us, Dismember hitting 28 into 7 block).
       const guardOptions = options.filter((plan) => plan === picked || !drinksKeptPotion(plan));
       const proposed = hallway ? null : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
+      const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && guardKeepsSetup(picked, proposed) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
@@ -1136,7 +1149,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
         apply: () => {
           commit(env, state.turn, plan, hand, escalatedBy ?? "jev");
-          if (!hallway) recordHpGuard(env, state.turn, extra);
+          if (!hallway) recordHpGuard(env, state.turn, raceKept ? 0 : extra);
         },
       };
     },
