@@ -631,7 +631,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // Constrict (Slithering Strangler) is the same end-of-turn damage (BHMP F6: 12 HP unpredicted).
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER") + powerAmount(player, "CONSTRICT_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
-    facing: env.screenMemory.facing ?? null,
+    facing: env.screenMemory.facing ?? startFacing(combat),
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
     // Inferno takes 1 HP at the start of each turn (and that loss is what makes it hit every enemy).
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
@@ -1226,4 +1226,16 @@ function activeFightPlan(env: DecisionEnv): FightPlan | null {
   const plan = env.screenMemory.fightPlan;
   if (!plan) return null;
   return plan.fight === hpGuardFight(env) && plan.runId === str(env.state.raw["run_id"]) ? plan : null;
+}
+
+/**
+ * Surrounded, before any targeted card this fight: we start facing the enemy with the right-hand
+ * back-attack power (5TQX F33 T2: facing unknown, so Strike and Pommel Strike+ into the Crusher were
+ * planned at -17; turning our back on the Rocket made its beam 27, -25).
+ */
+function startFacing(combat: Record<string, unknown>): number | null {
+  const enemy = asArray(combat["enemies"])
+    .map(asRecord)
+    .find((entry) => entry["is_alive"] !== false && powerAmount(entry, "BACK_ATTACK_RIGHT_POWER") > 0);
+  return enemy ? numOrNull(enemy["index"]) : null;
 }
