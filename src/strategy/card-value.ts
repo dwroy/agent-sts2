@@ -88,8 +88,11 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // Soul Fysh shuffles Beckons into the deck (XPA4: 8 in the deck at death): exhaust clears them, damage
   // ends it before they pile up, and Battle Trance draws them (twice in that fight).
   if (boss.includes("SOUL_FYSH")) {
+    const BECKON_CLEARERS = new Set(["BURNING_PACT", "PURITY", "FIEND_FIRE", "SECOND_WIND", "BRAND", "STOKE"]);
     if (cardId === "BATTLE_TRANCE") return { bonus: -10, why: "draws Soul Fysh's Beckons" };
-    if (EXHAUST.has(cardId)) return { bonus: 8, why: "exhaust clears Soul Fysh's Beckons" };
+    // Only cards that exhaust OTHER chosen cards clear Beckons (K8RK: +8 went to Not Yet, Forgotten
+    // Ritual and plain True Grit, which exhaust themselves or at random; Purity went unbought).
+    if (BECKON_CLEARERS.has(cardId)) return { bonus: 8, why: "exhausts chosen cards: clears Soul Fysh's Beckons" };
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage before the Beckons pile up" };
   }
   // The Matriarch sleeps two turns (time to play powers), then it is a 222 HP damage race (1K5G, Z2H3).

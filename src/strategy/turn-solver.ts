@@ -498,8 +498,11 @@ export function exhaustValue(card: CardModel, weights: Weights): number {
  * With a Sandpit up, Frantic Escape is never taken (THMG F33 T4: Burning Pact exhausted it as junk),
  * unless it is the only card left (the game forces the pick; selection.ts scores it last too).
  */
+/** Weights for ranking cards to exhaust (a fight-length view, not this turn's). */
+const EXHAUST_WEIGHTS = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
+
 export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | null {
-  const weights = { hp: 1, damage: 0.45, killBase: 0, killPerIncoming: 0, vulnerable: 2.5, weak: 1.5, strength: 5 };
+  const weights = EXHAUST_WEIGHTS;
   let best: CardModel | null = null;
   for (const card of cards) {
     if (card.type === "Potion") continue;
@@ -699,7 +702,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.hand = next.hand.filter((entry) => !taken.includes(entry));
     next.held = next.held.filter((entry) => !taken.includes(entry));
   }
-  if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
+  if (card.randomExhaust) {
+    // The random pick costs the average card left (K8RK F17 T2: plain True Grit took Bludgeon, the plan's
+    // 32-damage race card; shown as "hp_lost 1").
+    const pool = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion");
+    if (pool.length > 0) next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+  }
   else if (EXHAUST_PICKERS.has(card.cardId)) {
     const pick = exhaustPick([...next.held, ...next.hand], next.enemies.some((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0));
     if (pick) {
