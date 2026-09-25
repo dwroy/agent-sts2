@@ -650,6 +650,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (cost > sim.energy) return null;
   // Touch of Insanity: only with a card worth making free (YP9 T1: drunk with only 0-cost cards left).
   if (card.special === "free_card" && !freeCardPick(sim.hand)) return null;
+  // Ashwater with nothing worth exhausting does nothing (H14T: wasted four times with "selected 0/0").
+  if (card.special === "ashwater" && ![...sim.hand, ...sim.held].some((entry) => entry !== card && entry.type !== "Potion" && (entry.cardId === "HOWL_FROM_BEYOND" || isJunk(entry)))) return null;
   // After Headbutt the next draw is the card it put on top, taken back into hand this turn (XPA4 T11:
   // Shrug It Off+ kept for a 24-damage turn was drawn by Pommel Strike and discarded unplayed). Which
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
@@ -686,6 +688,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   const exhaustedBefore = next.exhausted.length;
+  if (card.special === "ashwater") {
+    const taken = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion" && (entry.cardId === "HOWL_FROM_BEYOND" || isJunk(entry)));
+    next.exhausted = [...next.exhausted, ...taken];
+    next.hand = next.hand.filter((entry) => !taken.includes(entry));
+    next.held = next.held.filter((entry) => !taken.includes(entry));
+  }
   if (card.randomExhaust) next.hand = next.hand.filter((entry) => entry.type === "Potion");
   else if (EXHAUST_PICKERS.has(card.cardId)) {
     const pick = exhaustPick([...next.held, ...next.hand], next.enemies.some((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0));
@@ -1048,6 +1056,15 @@ export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput):
 }
 
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
+  // A Howl from Beyond exhausted this turn plays itself at the end of the turn, before the enemies act.
+  const howls = sim.exhausted.filter((card) => card.cardId === "HOWL_FROM_BEYOND");
+  if (howls.length > 0 && sim.enemies.some((enemy) => enemy.alive)) {
+    sim = clone(sim);
+    for (const howl of howls) {
+      const perHit = (howl.damage ?? 0) + sim.strength * (input.player.weak ? 0.75 : 1);
+      for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player);
+    }
+  }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
