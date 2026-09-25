@@ -22,15 +22,24 @@ export function eventHpCost(description: string): { hp: number; maxHp: number } 
 /** Max HP an event option may cost before code rules it out (1K5G F8: 13 for Fresnel Lens, 53/67 at the boss). */
 export const EVENT_MAX_HP_LIMIT = 8;
 
+/** Act 1 floors up to this one: an HP cost of EARLY_EVENT_HP_SHARE of max HP or more is out. */
+export const EARLY_EVENT_FLOORS = 3;
+/** 6A36 F1 (A2, 64/80): DeepSeek took Loose Shears for 16 HP "with Burning Blood", 48 HP into F2. */
+export const EARLY_EVENT_HP_SHARE = 0.2;
+
 /**
  * Why an option that costs HP is ruled out, else null. DeepSeek keeps paying HP in events "because
  * Burning Blood heals it" (1K5G F8: -13 max HP; XPA4 F14: -8 HP with a forced elite next, -17 there;
  * 39J9 F28: -5 HP at 31% before a forced elite). Out: HP after below half of max, a forced Elite/Boss
- * next (remembered map), or a max-HP cost of EVENT_MAX_HP_LIMIT or more.
+ * next (remembered map), a max-HP cost of EVENT_MAX_HP_LIMIT or more, or on Act 1 floors 1-3 an HP
+ * cost of EARLY_EVENT_HP_SHARE of max HP or more.
  */
-export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null): string | null {
+export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null, floor: number | null = null): string | null {
   if (cost.hp <= 0 && cost.maxHp <= 0) return null;
   if (cost.maxHp >= EVENT_MAX_HP_LIMIT) return `costs ${cost.maxHp} max HP`;
+  if (floor !== null && floor <= EARLY_EVENT_FLOORS && maxHp > 0 && cost.hp >= maxHp * EARLY_EVENT_HP_SHARE) {
+    return `costs ${cost.hp} HP (${Math.round(EARLY_EVENT_HP_SHARE * 100)}%+ of max) on floor ${floor}`;
+  }
   if (forced) return `costs HP right before a forced ${forced}`;
   const maxAfter = maxHp - cost.maxHp;
   const hpAfter = Math.min(hp - cost.hp, maxAfter);
@@ -68,7 +77,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const costs = unguarded.map((option) => eventHpCost(str(option["description"])));
   if (costs.some((cost) => cost.hp <= 0 && cost.maxHp <= 0)) {
     unguarded.forEach((option, index) => {
-      const why = eventHpGuard(costs[index]!, hp, maxHp, forced);
+      const why = eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null);
       if (why) excluded.set(option, why);
     });
   }

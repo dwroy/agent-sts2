@@ -540,9 +540,9 @@ describe("event", () => {
     // option 1 is locked, option 2 would kill the player
     expect(Object.keys(criteria)).toEqual(["o0", "o3"]);
   });
-  const hpEvent = (hp: number, maxHp: number, options: [string, string][]) => ({
+  const hpEvent = (hp: number, maxHp: number, options: [string, string][], floor = 14) => ({
     ...eventPayload(),
-    run: runPayload({ floor: 14, current_hp: hp, max_hp: maxHp }),
+    run: runPayload({ floor, current_hp: hp, max_hp: maxHp }),
     event: {
       event_id: "TEST_EVENT", title: "Test", description: "", is_finished: false,
       options: options.map(([title, description], index) => ({ index, text_key: title, title, description, is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false })),
@@ -579,6 +579,20 @@ describe("event", () => {
     expect(shown(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Monster") })))).toEqual(["o0", "o1", "o2"]);
     // 45 - 8 = 37 < 40: out whatever comes next.
     expect(shown(mustDecision(plan(hpEvent(45, 80, options))))).toEqual(["o1", "o2"]);
+  });
+
+  it("HP guard: on Act 1 floors 1-3 an HP cost of 20%+ of max HP is out (6A36 F1: Loose Shears -16 at 64/80)", () => {
+    const options: [string, string][] = [
+      ["Oyster", "获得[blue]11[/blue]点最大生命值。"],
+      ["Holster", "获得[blue]1[/blue]个药水栏位并获得[blue]2[/blue]瓶随机[gold]药水[/gold]。"],
+      ["Shears", "从你的[gold]牌组[/gold]中移除[blue]2[/blue]张牌，然后失去[red]16[/red]点生命。"],
+    ];
+    // 64 - 16 = 48 is above half: only the early-floor rule takes it out.
+    expect(shown(mustDecision(plan(hpEvent(64, 80, options, 1))))).toEqual(["o0", "o1"]);
+    expect(shown(mustDecision(plan(hpEvent(64, 80, options, 14))))).toEqual(["o0", "o1", "o2"]);
+    // 15 of 80 is under 20%: still offered on floor 2.
+    const smaller: [string, string][] = [options[0]!, ["Mushroom", "失去[red]15[/red]点生命，然后随机[gold]升级[/gold][blue]2[/blue]张牌。"]];
+    expect(shown(mustDecision(plan(hpEvent(64, 80, [...smaller, options[1]!], 2))))).toEqual(["o0", "o1", "o2"]);
   });
 
   it("HP guard: nothing is removed when every option costs HP", () => {
