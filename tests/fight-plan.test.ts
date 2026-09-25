@@ -16,6 +16,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planCombat } from "../src/screens/combat.js";
+import { LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
 import {
   fightKey,
   fightPlanInput,
@@ -312,6 +313,29 @@ describe("turn planner with a fight plan", () => {
     const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
     const picked = ask.resolve({ plan: { type: "choice", choice: potionKey, probabilities: { [potionKey]: 0.4 }, confidence: 0.4, raw: {} } });
     expect(picked.intent?.action).toBe("use_potion");
+  });
+
+  it("routes: an elite at low HP is worse than a monster, and a fight at HP below its cost is a likely death (K39J F28)", () => {
+    expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(nodeWeight("Monster", 0.26, 100, 8, 2));
+    expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(-7);
+    expect(nodeWeight("Elite", 0.69, 100, 8, 2)).toBe(-3);
+    expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBe(LIKELY_DEATH);
+    expect(nodeWeight("Monster", 0.9, 100, 8, 2)).toBeGreaterThan(0);
+  });
+
+  it("the HP guard never swaps into a line drinking a potion the plan keeps (MGJ8 F11 T1)", () => {
+    const raw = bossTurnOne();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "30", damage: 30, hits: 1, total_damage: 30 }];
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { FIRE_POTION: "emergency" } });
+    const decision = planCombatTurn(e);
+    if (decision?.kind !== "ask") return;
+    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+    for (const key of Object.keys(criteria).filter((k) => k.startsWith("plan"))) {
+      const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+      if (resolved.guard) expect(resolved.guard.plan).not.toContain("Fire Potion");
+    }
   });
 });
 

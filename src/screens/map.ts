@@ -58,10 +58,18 @@ export function monsterWeight(hpOnArrival: number): number {
   return Math.max(-4, (-3 * (0.35 - hpOnArrival)) / 0.15);
 }
 
+/** Weight of a fight reached with no more HP than it is expected to cost. */
+export const LIKELY_DEATH = -20;
+
 /** How much this node type is worth to *this* run, at the projected HP/gold on arrival. */
 export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number, act?: number): number {
+  // A fight reached with no more HP than it is expected to cost is a likely death, not a -3.
+  if ((type === "Elite" || type === "Monster") && act !== undefined && hpPct <= fightHpCost(type, act)) return LIKELY_DEATH;
   switch (type) {
     case "Elite":
+      // Below half HP an elite gets worse the lower HP is (K39J F28: Infested Prism at 21/80 scored -3,
+      // the same as at 69%, above the monster path; T1 took 21 -> 6 and the run died on T3).
+      if (hpPct < 0.5) return Math.max(-15, -3 - (12 * (0.5 - hpPct)) / 0.5);
       // Phase 2: no elites in the first floors of an act (the deck is still starter cards), and only
       // with HP to spare.
       if (floorInAct <= 4) return -3;
