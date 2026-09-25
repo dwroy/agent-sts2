@@ -990,6 +990,8 @@ export function sleepTurnDamage(enemy: EnemySim): number {
   return Math.max(10, Math.round(enemy.maxHp * 0.08));
 }
 
+/** Extra damage weight for the damage dealt to the most-hit enemy (concentration tie-break). */
+export const CONCENTRATION_BONUS = 0.15;
 /** Extra damage weight for the fight plan's kill-first enemy. */
 export const FOCUS_BONUS = 0.5;
 /** Share of damage into a surviving minion that counts while its summoner lives (it leaves with it). */
@@ -1258,6 +1260,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         return sum + (1 - MINION_CHIP) * Math.max(0, start.hp - Math.max(0, enemy.hp));
       }, 0);
   score += weights.damage * (sim.damageDealt - huskDamage - lostDamage - minionChip);
+  // With several enemies, concentrated damage beats the same damage spread (GMT2 F39 T1: 26 split vs
+  // 26 focused scored equal, the split left two cubes at 38 and 47 and none died on T2).
+  if (!winsFight && input.enemies.length > 1) {
+    const perEnemy = sim.enemies.map((enemy) => Math.max(0, input.enemies.find((start) => start.index === enemy.index)!.hp - Math.max(0, enemy.hp)));
+    score += weights.damage * CONCENTRATION_BONUS * Math.max(0, ...perEnemy);
+  }
   if (input.focusIndex !== undefined && !winsFight) {
     const focus = sim.enemies.find((enemy) => enemy.index === input.focusIndex);
     const start = input.enemies.find((entry) => entry.index === input.focusIndex);
