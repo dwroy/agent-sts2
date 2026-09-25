@@ -73,7 +73,7 @@ const POWER_NOTES: Record<string, string> = {
 export const HALLWAY_POTION_COST = 15;
 /** Beating Remnant: at most this much HP lost in a turn. */
 export const BEATING_REMNANT_CAP = 20;
-/** A hallway lethal that needs a potion is skipped when a potion-free line loses at most this much HP. */
+/** A hallway potion line is dropped when a potion-free line loses at most this much HP. */
 export const HALLWAY_LETHAL_POTION_LOSS = 5;
 /** Jev confidence a hallway potion line below code rank 1 needs to be played. */
 export const HALLWAY_POTION_CONFIDENCE = 0.75;
@@ -752,11 +752,18 @@ function planTurn(env: DecisionEnv): Decision | null {
     playerSim.maxHp > 0 &&
     (playerSim.hp - minLossAfter(solved.plans) >= playerSim.hp * 0.3 || minLossAfter(solved.plans) < playerSim.maxHp * 0.25);
   if (costly && !pressed && potionsAll.some((potion) => isModelledPotion(potion.potion_id))) solved = solveWith(true);
-  // A hallway fight won this turn only by drinking a potion, when a potion-free line costs little:
-  // keep the potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on
-  // hallway lethals; the boss was entered with 1 of 3 slots filled).
+  // A hallway turn whose best line drinks a potion, when a potion-free line costs little: keep the
+  // potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on hallway
+  // lethals; the boss was entered with 1 of 3 slots filled).
   const drinksPotion = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
-  if ((kind === "monster" || kind === "unknown") && !pressed && solved.plans[0]?.outcome.winsFight && drinksPotion(solved.plans[0])) {
+  const drinksKeptPotion = (plan: Plan) =>
+    fightPlan !== null &&
+    plan.steps.some((step) => {
+      const use = step.cardId.startsWith("POTION:") ? fightPlan.potions[step.cardId.split(":")[1] ?? ""] : undefined;
+      return use === "save" || use === "emergency";
+    });
+  // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
+  if ((kind === "monster" || kind === "unknown") && !pressed && solved.plans[0] && drinksPotion(solved.plans[0])) {
     const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
     if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) solved = { ...solved, plans: dry };
   }
@@ -1017,7 +1024,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       const memo = env.screenMemory.hpGuard;
       const thisTurn = memo && memo.fight === hpGuardFight(env) ? (memo.turns[String(state.turn ?? "?")] ?? 0) : 0;
       const slack = hpGuardSlack(playerSim.hp, kind, hallway ? 0 : hpGuardExtra(env) - thisTurn);
-      const replacement = hallway ? null : hpGuardReplacement(picked, options, playerSim.hp, slack);
+      // The guard does not swap into a line that drinks a potion the fight plan keeps for later (MGJ8
+      // F11 T1: -10 swapped for a line drinking the Fortifier kept for an emergency; the boss at F17
+      // then died 3 HP short of us, Dismember hitting 28 into 7 block).
+      const guardOptions = options.filter((plan) => plan === picked || !drinksKeptPotion(plan));
+      const replacement = hallway ? null : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;

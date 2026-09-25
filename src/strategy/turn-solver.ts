@@ -452,8 +452,11 @@ export function drawScoreAt(draws: DrawValue[], energyLeft: number): number {
   return score;
 }
 
-/** Cards that exhaust a card of our choosing from the hand (upgraded True Grit; unupgraded is random). */
-export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT"]);
+/**
+ * Cards that exhaust a card of our choosing from the hand (upgraded True Grit; unupgraded is random).
+ * Brand too (K39J F23 T2, F25 T1: it exhausted a card the plan still meant to play).
+ */
+export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT", "BRAND"]);
 /** Cards that exhaust the whole rest of the hand (Stoke: a random card for each). */
 export const EXHAUST_HAND = new Set(["STOKE"]);
 
