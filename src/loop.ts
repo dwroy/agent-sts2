@@ -472,6 +472,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       strictJev: config.strictJev && jev !== null,
       combatPlanner: config.combatPlanner,
       shopDiscardPotions: config.shop.discardPotions,
+      jevContext: config.jevContext,
     };
     if (!planned) {
       try {
@@ -571,10 +572,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           // Let the ask surface the failure with its usual classification.
         }
 
-      asked = toJsonValue(decision.questions) as Record<string, JsonValue>;
+      // Jev's own view of the question when there is one (JEV_CONTEXT=v1); the escalator below keeps
+      // decision.state/questions.
+      const jevState = decision.jevView?.state ?? decision.state;
+      const jevQuestions = decision.jevView?.questions ?? decision.questions;
+      asked = toJsonValue(jevQuestions) as Record<string, JsonValue>;
       let firstAnswers: AnswerSet = {};
       try {
-        const result = await jev.ask(decision.state, decision.questions);
+        const result = await jev.ask(jevState, jevQuestions);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
         stats.jevCalls += 1;
@@ -645,7 +650,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         if (!resolved.intent && resolved.reask) {
           reasked = true;
           const spec = resolved.reask;
-          const followUp = await jev.ask(decision.state, {
+          const followUp = await jev.ask(jevState, {
             pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria },
           });
           stats.jevCalls += 1;
@@ -758,6 +763,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
+      ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
       label: decision.label,

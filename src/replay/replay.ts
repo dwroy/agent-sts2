@@ -87,6 +87,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       allowFtueModals: options.config.allowFtueModals,
       strictJev: options.config.strictJev && options.ask !== undefined,
       combatPlanner: options.config.combatPlanner,
+      jevContext: options.config.jevContext,
       shopDiscardPotions: options.config.shop.discardPotions,
     };
 
@@ -120,7 +121,7 @@ export async function replayStates(options: ReplayOptions): Promise<ReplayStats>
       onEvent(`#${stats.total} ${state.screen}: ${decision.label} -> ask Jev (${Object.keys(decision.questions).join(", ")}; ${optionKeys.length} options)`);
       if (options.ask) {
         stats.asks += 1;
-        const answers = await options.ask(decision.state, decision.questions);
+        const answers = await options.ask(decision.jevView?.state ?? decision.state, decision.jevView?.questions ?? decision.questions);
         const resolved = decision.resolve(answers);
         onEvent(`         answer -> ${resolved.intent ? describeIntent(toJsonValue(resolved.intent)) : "(wait)"} [${resolved.rationale}]${resolved.fallback ? " (fallback)" : ""}`);
       }

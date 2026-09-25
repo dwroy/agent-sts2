@@ -34,6 +34,8 @@ export interface DecisionEnv {
   combatPlanner?: "turn" | "card";
   /** Potion ids (or names) to drop when entering a shop, e.g. the Foul Potion. */
   shopDiscardPotions: string[];
+  /** Jev's combat plan-choice context (config JEV_CONTEXT); undefined means "off". */
+  jevContext?: "off" | "v1";
 }
 
 export interface ScreenMemory {
@@ -158,6 +160,11 @@ export interface AskDecision {
    * the same question (same state, same option keys) and resolve with its choice instead.
    */
   escalate?: { question: string; below: number; why: string };
+  /**
+   * What Jev is asked instead of `state`/`questions` (JEV_CONTEXT=v1): same question keys and option
+   * keys, richer option facts, fight hints, a trimmed brief. The escalator keeps `state`/`questions`.
+   */
+  jevView?: { state: Record<string, JsonValue>; questions: QuestionSet; context: string; hints: string[] };
 }
 
 export interface ActDecision {

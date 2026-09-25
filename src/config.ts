@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 export type Mode = "shadow" | "play" | "record" | "replay";
 export type LogLevel = "debug" | "info" | "warn" | "error";
 export type RunStart = "auto" | "continue" | "new";
+export type JevContextVersion = "off" | "v1";
 
 export interface Sts2Config {
   baseUrl: string;
@@ -53,6 +54,12 @@ export interface AppConfig {
   strictJev: boolean;
   /** `turn`: whole-turn solver + Jev on close calls (phase 2). `card`: the original per-card question. */
   combatPlanner: "turn" | "card";
+  /**
+   * What Jev sees on combat plan choices (M1). `off`: the original question. `v1`: code-computed fact
+   * tags on every option, retrieved fight hints (src/knowledge/jev-hints.json) and a combat-trimmed
+   * run brief. Jev only: the escalator keeps the original question. Default off.
+   */
+  jevContext: JevContextVersion;
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -286,6 +293,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const combatPlanner: "turn" | "card" = combatPlannerRaw === "card" ? "card" : "turn";
 
+  const jevContextRaw = (readEnv(env, "JEV_CONTEXT") ?? "off").toLowerCase();
+  if (jevContextRaw !== "off" && jevContextRaw !== "v1") {
+    problems.push({ field: "JEV_CONTEXT", message: `expected off or v1, got "${jevContextRaw}"` });
+  }
+  const jevContext: JevContextVersion = jevContextRaw === "v1" ? "v1" : "off";
+
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
     problems.push({ field: "LOG_LEVEL", message: `expected one of ${LOG_LEVELS.join(", ")}, got "${logLevelRaw}"` });
@@ -359,6 +372,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     allowFtueModals,
     strictJev,
     combatPlanner,
+    jevContext,
     deepseek,
     escalation,
     mode,

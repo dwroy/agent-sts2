@@ -37,6 +37,10 @@ export interface DecisionRecord {
   usage: { input_tokens: number; output_tokens: number };
   /** Present when the decision was escalated to DeepSeek. */
   escalation?: JsonValue;
+  /** Jev context version of this question (JEV_CONTEXT), present when not "off". */
+  jev_context?: string;
+  /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
+  jev_hints?: string[];
   result: string;
 }
 

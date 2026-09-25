@@ -269,6 +269,8 @@ export interface Outcome {
    * so a line without them cannot dominate one that plays them (9NE1: 0-cost Mantle never played).
    */
   lasting: number;
+  /** Block left over after the enemy turn's hits (block beyond incoming); 0 when the fight is won. */
+  blockWasted?: number;
 }
 
 export interface Plan {
@@ -1219,6 +1221,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
+      blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
     },
   };
 }

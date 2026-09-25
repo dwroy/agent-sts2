@@ -1,0 +1,162 @@
+{
+  "version": "v1",
+  "note": "Fight hints for Jev's combat plan choice (JEV_CONTEXT=v1). Only lessons with evidence from 2+ runs (notes/lessons.md, ds-handbook.md). Each text <= 25 words, conditional, literal. `when` fields must all hold: enemies (any enemy id present), fight (kind), act, hp_below_pct (player HP %), enemy_powers (any living enemy has one), no_attack (no enemy attacks this turn).",
+  "hints": [
+    {
+      "id": "sandpit-zero",
+      "when": { "enemies": ["THE_INSATIABLE"] },
+      "text": "Sandpit reaching 0 kills me whatever my HP and block. Prefer lines with sandpit_after_enemy_turn 2 or more; each Frantic Escape adds 1.",
+      "evidence": ["TTVYCS2ADZRM", "YP9CGPJE19GP", "THMGB35RGDSD"]
+    },
+    {
+      "id": "sandpit-no-race",
+      "when": { "enemies": ["THE_INSATIABLE"] },
+      "text": "The Insatiable has about 321 HP; racing damage loses to the Sandpit countdown. Play Frantic Escape before extra damage.",
+      "evidence": ["TTVYCS2ADZRM", "THMGB35RGDSD"]
+    },
+    {
+      "id": "matriarch-asleep",
+      "when": { "enemies": ["LAGAVULIN_MATRIARCH"], "enemy_powers": ["ASLEEP_POWER", "SLUMBER_POWER"] },
+      "text": "While the Matriarch sleeps, HP damage wakes it and costs its free turns. Play powers and set-up cards instead of chipping it.",
+      "evidence": ["Z2H318ZMMAD0", "1K5G5HPXA2ZV", "KFP1104FQM27", "PYTG6PC12PEN"]
+    },
+    {
+      "id": "matriarch-sleep-turns",
+      "when": { "enemies": ["LAGAVULIN_MATRIARCH"], "enemy_powers": ["ASLEEP_POWER", "SLUMBER_POWER"] },
+      "text": "Sleep turns are free turns: spend all energy on powers or lasting block. On its last sleep turn (Asleep 1) attacking costs nothing extra.",
+      "evidence": ["KFP1104FQM27", "5FMUSNUXEHGY"]
+    },
+    {
+      "id": "matriarch-siphon",
+      "when": { "enemies": ["LAGAVULIN_MATRIARCH"] },
+      "text": "Once awake, each Soul Siphon takes my Strength and Dexterity, so block cards get weaker every cycle: favour damage lines early.",
+      "evidence": ["Z2H318ZMMAD0", "1K5G5HPXA2ZV", "PYTG6PC12PEN"]
+    },
+    {
+      "id": "crab-level",
+      "when": { "enemies": ["CRUSHER", "ROCKET"] },
+      "text": "Killing one crab alone gives the other 99 Block and +6 Strength. Keep Crusher and Rocket HP level and kill both the same turn.",
+      "evidence": ["7Q5GTQNH1SZT", "9XZX4ZJ1ZKUA", "W6F4YXF3MT7A"]
+    },
+    {
+      "id": "crab-charge",
+      "when": { "enemies": ["ROCKET"] },
+      "text": "Rocket's charge-up is followed by a laser of about 49: on the charge turn save HP and block, do not trade HP for damage.",
+      "evidence": ["TXLHYU13L102", "9XZX4ZJ1ZKUA"]
+    },
+    {
+      "id": "crab-scaling",
+      "when": { "enemies": ["CRUSHER", "ROCKET"] },
+      "text": "The two crabs have about 408 HP together: permanent Strength and AoE lines are worth a few HP here.",
+      "evidence": ["W6F4YXF3MT7A", "1WSHZ8ML4EVF", "TXLHYU13L102"]
+    },
+    {
+      "id": "kd-curse-turn",
+      "when": { "enemies": ["KNOWLEDGE_DEMON"], "no_attack": true },
+      "text": "Knowledge Demon curse turn (turns 1, 5, 9): it does not attack. Play powers now; they pay off over a 10+ turn fight.",
+      "evidence": ["9NE1DHFGZC2K", "CRRPX9MWJZGM", "JEGBU7JHEL1A"]
+    },
+    {
+      "id": "kd-long-fight",
+      "when": { "enemies": ["KNOWLEDGE_DEMON"] },
+      "text": "Knowledge Demon gains 2 Strength each cycle and heals 30 on Ponder. The fight lasts 10-15 turns: lasting_value lines beat small HP savings.",
+      "evidence": ["DG1CDGW8Y5JE", "VKPXGMV8YV31", "PU21Z67J65NE", "24DPW2ED71QM", "JEGBU7JHEL1A"]
+    },
+    {
+      "id": "kd-overwhelm",
+      "when": { "enemies": ["KNOWLEDGE_DEMON"] },
+      "text": "After Slap comes Knowledge Overwhelm, about 30 over three hits: keep block cards and HP for that turn.",
+      "evidence": ["9NE1DHFGZC2K", "JEGBU7JHEL1A"]
+    },
+    {
+      "id": "vantom-dismember",
+      "when": { "enemies": ["VANTOM", "VANTOM_BOSS"] },
+      "text": "Vantom's Dismember (26-28 plus Wounds) lands on turns 3 and 7. Save big one-shot block and defensive potions for those turns.",
+      "evidence": ["1R3CUXT91TAE", "S780Y1W7AQZL"]
+    },
+    {
+      "id": "test-subject-enrage",
+      "when": { "enemies": ["TEST_SUBJECT"], "enemy_powers": ["ENRAGE_POWER"] },
+      "text": "Phase 1: every Skill I play gives Test Subject +2 Strength. Prefer Attacks and powers; play as few Skills as possible.",
+      "evidence": ["2WUMK6PK5QHD", "VP5FZC9UCP63"]
+    },
+    {
+      "id": "test-subject-phases",
+      "when": { "enemies": ["TEST_SUBJECT"] },
+      "text": "Test Subject has three phases (100, 200, 300 HP); killing a phase does not end the fight. Enter phase 2 with 60+ HP.",
+      "evidence": ["2WUMK6PK5QHD", "VP5FZC9UCP63", "W6F4YXF3MT7A", "CRRPX9MWJZGM"]
+    },
+    {
+      "id": "test-subject-claw",
+      "when": { "enemies": ["TEST_SUBJECT"], "enemy_powers": ["PAINFUL_STABS_POWER"] },
+      "text": "Multi Claw gains one hit every turn and unblocked hits add Wounds: block it fully rather than trading HP.",
+      "evidence": ["2WUMK6PK5QHD", "VP5FZC9UCP63"]
+    },
+    {
+      "id": "fysh-beckon",
+      "when": { "enemies": ["SOUL_FYSH"] },
+      "text": "Each Beckon held at end of turn costs 6 HP that block cannot stop. Playing it costs 1 energy; on no-attack turns play them all.",
+      "evidence": ["WX16C8B1ZWZ0", "BG4W9DSX99DA", "XPA49DEKREQ1", "G6YVT0ALVQ65"]
+    },
+    {
+      "id": "fysh-draw-energy",
+      "when": { "enemies": ["SOUL_FYSH"] },
+      "text": "Do not draw cards with no energy left: drawn Beckons cannot be played and cost 6 HP each.",
+      "evidence": ["XPA49DEKREQ1", "G6YVT0ALVQ65"]
+    },
+    {
+      "id": "giant-eruption",
+      "when": { "enemies": ["WATERFALL_GIANT"] },
+      "text": "Waterfall Giant explodes for its Steam Eruption stacks, growing 3 per turn. Keep HP above that; do not trade HP for damage early.",
+      "evidence": ["G7EJ07RPR1NX", "WQTRXBJY0Q1S", "1ZQJXQ53KSBG"]
+    },
+    {
+      "id": "obscura-summoner",
+      "when": { "enemies": ["THE_OBSCURA", "PARAFRIGHT"] },
+      "text": "Parafright is an illusion that returns at full HP each turn. Damage into it is wasted: attack The Obscura.",
+      "evidence": ["XJWF15R19UXF", "VKPXGMV8YV31"]
+    },
+    {
+      "id": "decimillipede-segments",
+      "when": { "enemies": ["DECIMILLIPEDE_SEGMENT_FRONT", "DECIMILLIPEDE_SEGMENT_MIDDLE", "DECIMILLIPEDE_SEGMENT_BACK"] },
+      "text": "Dead segments reattach at 25 HP unless every segment dies the same turn: spread damage evenly, then finish them together.",
+      "evidence": ["0NG27W8QBNYX", "Y83UP1RUC8R6", "39J9KFKGKEXA"]
+    },
+    {
+      "id": "entomancer-fast",
+      "when": { "enemies": ["ENTOMANCER"] },
+      "text": "Entomancer (145 HP) shuffles Dazed into my deck when attacked: kill it fast with few big single hits.",
+      "evidence": ["G8AQJ2YEMEHE", "UJS25W5ARGBV", "2AX48ZA9H9DM"]
+    },
+    {
+      "id": "mecha-knight-t4",
+      "when": { "enemies": ["MECHA_KNIGHT"] },
+      "text": "Mecha Knight hits 30-40 on its turn 4 attack: keep HP and block cards for that turn.",
+      "evidence": ["W6F4YXF3MT7A", "CRRPX9MWJZGM"]
+    },
+    {
+      "id": "hp-trade-boss",
+      "when": { "fight": ["boss", "elite"] },
+      "text": "Extra HP traded for damage decided many lost boss fights. Burning Blood heals only after combat. Prefer lower hp_lost unless the line kills soon.",
+      "evidence": ["DG1CDGW8Y5JE", "G7EJ07RPR1NX", "WQTRXBJY0Q1S", "WX16C8B1ZWZ0", "Z2H318ZMMAD0", "TXLHYU13L102"]
+    },
+    {
+      "id": "vulnerable-trade",
+      "when": { "fight": ["boss", "elite"] },
+      "text": "Do not lose 5+ extra HP just to apply Vulnerable unless big attacks will hit the Vulnerable enemy for the next two turns.",
+      "evidence": ["WX16C8B1ZWZ0", "TXLHYU13L102", "PLCXM5MLTHP7"]
+    },
+    {
+      "id": "setup-free-turn",
+      "when": { "fight": ["boss", "elite"], "no_attack": true },
+      "text": "No enemy attacks this turn: a setup_turn line playing a power is usually best; lasting_value is worth a few HP now.",
+      "evidence": ["JEGBU7JHEL1A", "9NE1DHFGZC2K", "KFP1104FQM27", "CRRPX9MWJZGM"]
+    },
+    {
+      "id": "potion-big-turn",
+      "when": { "fight": ["boss"] },
+      "text": "Drink defensive potions on turns with 25+ incoming or ending below 50% HP; not on turns with little or no incoming damage.",
+      "evidence": ["2AX48ZA9H9DM", "JEGBU7JHEL1A", "1R3CUXT91TAE"]
+    }
+  ]
+}
