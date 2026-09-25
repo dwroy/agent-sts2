@@ -18,6 +18,7 @@ export const testKnowledge: Knowledge = makeKnowledge({
     { id: "CRIMSON_MANTLE", name: "Crimson Mantle", type: "Power", rarity: "Rare", cost: 1, description: "At the start of your turn, lose 1 HP and gain 7 Block.", target: "Self", keywords: [], tags: [] },
     { id: "TRUE_GRIT", name: "True Grit", type: "Skill", rarity: "Common", cost: 1, description: "Gain 7 Block. Exhaust 1 card.", target: "Self", keywords: [], tags: [] },
     { id: "WOUND", name: "Wound", type: "Status", rarity: "Status", cost: -1, description: "Unplayable.", target: "None", keywords: [], tags: [] },
+    { id: "SWORD_BOOMERANG", name: "Sword Boomerang", type: "Attack", rarity: "Common", cost: 1, description: "Deal 3 damage to a random enemy 3 times.", target: "RandomEnemy", keywords: [], tags: [] },
     { id: "COLOSSUS", name: "Colossus", type: "Skill", rarity: "Uncommon", cost: 1, description: "Gain 4 Block. Vulnerable enemies deal 50% less damage to you this turn.", target: "Self", keywords: [], tags: [] },
   ],
   monsters: [

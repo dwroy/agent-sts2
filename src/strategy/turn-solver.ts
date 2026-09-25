@@ -163,6 +163,11 @@ export interface PlayerSim {
    * after Perfected Strike and Howl from Beyond; a Howl made free did not trigger it).
    */
   helmetBlock?: number;
+  /**
+   * Vigor N (VIGOR_POWER): the next Attack deals N more, once. The hand's damage has it taken off
+   * (stripVigor), and the solver adds it to the first Attack's first hit.
+   */
+  vigor?: number;
 }
 
 export interface SolverInput {
@@ -333,6 +338,8 @@ interface Sim {
   held: CardModel[];
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
   topPlaced: boolean;
+  /** Vigor not yet spent: added to the next Attack's first hit. */
+  vigor: number;
 }
 
 /** A known pile's expected value per card drawn, with a spare energy to use it and without. */
@@ -685,8 +692,15 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
+    // Vigor: spent by the first Attack, on its first hit (KFP1 F17 T1).
+    let firstHit = perHit;
+    if (card.type === "Attack" && next.vigor > 0) {
+      firstHit += Math.floor(next.vigor * weakFactor);
+      next.vigor = 0;
+    }
     if (next.gigantic > 0 && card.type === "Attack") {
       perHit *= 3;
+      firstHit *= 3;
       next.gigantic -= 1;
     }
 
@@ -695,7 +709,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       // what the later hits meet.
       for (let hit = 0; hit < hits; hit += 1) {
         next.sweeping = true;
-        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, perHit, 1, player);
+        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, hit === 0 ? firstHit : perHit, 1, player);
         next.sweeping = false;
         if (next.pendingRage) {
           next.pendingRage = false;
@@ -708,11 +722,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
         const living = next.enemies.filter((enemy) => enemy.alive);
         if (living.length === 0) break;
         const victim = living[hit % living.length]!;
-        hitEnemy(next, victim, perHit, 1, player);
+        hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player);
       }
     } else if (targetEnemy) {
       const wasAlive = targetEnemy.alive;
-      hitEnemy(next, targetEnemy, perHit, hits, player);
+      if (hits > 0) hitEnemy(next, targetEnemy, firstHit, 1, player);
+      hitEnemy(next, targetEnemy, perHit, hits - 1, player);
       if (card.special === "feed" && wasAlive && !targetEnemy.alive) next.feedKills += 1;
       // Feed exhausts: spending it without the kill throws away this fight's max-HP gain.
       else if (card.special === "feed") next.flat -= 8;
@@ -1146,7 +1161,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}`;
 }
 
 export interface SolveResult {
@@ -1199,6 +1214,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     exhausted: [],
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
+    vigor: input.player.vigor ?? 0,
   };
 
   const seen = new Set<string>();

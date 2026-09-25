@@ -1681,6 +1681,90 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
   });
 });
 
+describe("Vigor is spent by the first Attack (KFP1 F17 T1: Akabeko's 8 counted on every hit, 54 planned, 18 dealt)", () => {
+  const card = (index: number, cardId: string, cost: number, dynamic: [string, number, number][], target = "AnyEnemy"): Record<string, unknown> => ({
+    index, card_id: cardId, name: cardId, upgraded: cardId === "BASH", target_type: target, requires_target: target === "AnyEnemy", costs_x: false, star_costs_x: false,
+    energy_cost: cost, star_cost: 0, rules_text: target === "RandomEnemy" ? "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。" : "", resolved_rules_text: "", playable: true, unplayable_reason: null,
+    can_play_result: true, target_index_space: "combat.enemies[].index", valid_target_indices: target === "AnyEnemy" ? [0] : [],
+    dynamic_values: dynamic.map(([name, base, current]) => ({ name, base_value: base, current_value: current })),
+  });
+  // The live T1 hand: every Attack shows +8 (Strike 14, Bash+ 18, Sword Boomerang 11x3).
+  const board = (): Record<string, unknown> => {
+    const raw = combatPayload();
+    raw["turn"] = 1;
+    (raw["run"] as Record<string, unknown>)["floor"] = 17;
+    const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    potions[0]!["can_use"] = false;
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["player"] = { ...(combat["player"] as Record<string, unknown>), current_hp: 73, max_hp: 80, powers: [{ index: 0, power_id: "VIGOR_POWER", name: "活力", amount: 8, is_debuff: false }] };
+    combat["hand"] = [
+      card(0, "STRIKE_R", 1, [["Damage", 6, 14]]),
+      card(1, "BASH", 2, [["Damage", 10, 18], ["VulnerablePower", 3, 3]]),
+      card(2, "DEFEND_R", 1, [["Block", 5, 10]], "Self"),
+      card(3, "DEFEND_R", 1, [["Block", 5, 10]], "Self"),
+      card(4, "SWORD_BOOMERANG", 1, [["Damage", 3, 11], ["Repeat", 3, 3]], "RandomEnemy"),
+    ];
+    combat["enemies"] = [{
+      index: 0, enemy_id: "LAGAVULIN_MATRIARCH", name: "Lagavulin Matriarch", current_hp: 222, max_hp: 222, block: 12, is_alive: true, is_hittable: true,
+      powers: [{ index: 0, power_id: "PLATING_POWER", amount: 12, is_debuff: false }, { index: 1, power_id: "ASLEEP_POWER", amount: 3, is_debuff: false }],
+      intent: "SLEEP_MOVE", move_id: "SLEEP_MOVE",
+      intents: [{ index: 0, intent_type: "Sleep", label: null, damage: null, hits: null, total_damage: null, status_card_count: null }],
+    }];
+    return raw;
+  };
+
+  it("Bash+ then Sword Boomerang deals the real 18, and letting it sleep ranks first", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { solveTurn } = await import("../src/strategy/turn-solver.js");
+    const { modelHandCard, stripVigor } = await import("../src/strategy/card-model.js");
+    const combat = board()["combat"] as Record<string, unknown>;
+    const hand = (combat["hand"] as unknown[]).map((entry, index) => modelHandCard(entry, index, testKnowledge));
+    stripVigor(hand, 8, false);
+    expect(hand.map((entry) => entry.damage)).toEqual([6, 10, null, null, 3]);
+    const result = solveTurn({
+      hand,
+      player: { hp: 73, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, vigor: 8 },
+      enemies: [{ index: 0, name: "Lagavulin Matriarch", hp: 222, maxHp: 222, block: 12, vulnerable: 0, weak: 0, artifact: 0, intangible: false, asleep: 3, attacks: [] }],
+      fightKind: "boss",
+      turn: 1,
+    });
+    const waking = result.plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "BASH,SWORD_BOOMERANG")!;
+    // Bash+ 10 + 8 Vigor into 12 Plating block: 6; then 3 x floor(3 x 1.5) = 12.
+    expect(waking.outcome.damageDealt).toBe(18);
+    expect(waking.outcome.sleepCost).toBeGreaterThan(0);
+    const best = result.plans[0]!;
+    expect(best.outcome.sleepCost).toBe(0);
+    expect(best.score).toBeGreaterThan(waking.score);
+
+    const decision = planCombatTurn(env(board(), { combatPlanner: "turn" }));
+    if (!decision) throw new Error("expected a decision");
+    if (decision.kind === "act") {
+      expect(decision.rationale).toMatch(/dmg 0\b/);
+    } else {
+      const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      expect(JSON.parse(String(criteria["plan1"]))["damage_dealt"]).toBe(0);
+    }
+  });
+
+  it("the first Attack's first hit carries the Vigor, later hits and Attacks do not", async () => {
+    const { solveTurn } = await import("../src/strategy/turn-solver.js");
+    const { modelHandCard, stripVigor } = await import("../src/strategy/card-model.js");
+    const hand = [
+      modelHandCard(card(0, "STRIKE_R", 1, [["Damage", 6, 14]]), 0, testKnowledge),
+      modelHandCard(card(1, "STRIKE_R", 1, [["Damage", 6, 14]]), 1, testKnowledge),
+    ];
+    stripVigor(hand, 8, false);
+    const result = solveTurn({
+      hand,
+      player: { hp: 50, maxHp: 80, block: 0, energy: 2, weak: false, vulnerable: false, intangible: false, vigor: 8 },
+      enemies: [{ index: 0, name: "Jaw Worm", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 5, hits: 1 }] }],
+      fightKind: "monster",
+    });
+    expect(result.plans.find((plan) => plan.steps.length === 2)!.outcome.damageDealt).toBe(14 + 6);
+    expect(result.plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt).toBe(14);
+  });
+});
+
 describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)", () => {
   it("expands grouped lines and reads the held penalty; falls back to the discard pile", async () => {
     const { drawPileCards } = await import("../src/screens/combat-plan.js");

@@ -22,7 +22,7 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, type CardModel } from "../strategy/card-model.js";
+import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -469,6 +469,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   if (relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0) for (const card of hand) card.draw = 0;
+  // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
+  const vigor = powerAmount(player, "VIGOR_POWER");
+  stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
   const enemies = enemySims(combat);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
@@ -518,6 +521,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     inferno: powerAmount(player, "INFERNO_POWER"),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
+    vigor,
   };
   const kind = fightKind(combat, env);
 

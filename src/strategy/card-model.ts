@@ -106,6 +106,21 @@ function dyn(card: Record<string, unknown>, name: string): number | null {
 }
 
 /**
+ * Vigor (VIGOR_POWER, Akabeko 8): the mod adds it to every Attack's shown damage, per hit (Strike 14,
+ * Sword Boomerang 11x3), but the game spends it on the first Attack played (KFP1 F17 T1: Bash+ and
+ * Sword Boomerang predicted 54 into the sleeping Matriarch, dealt 18, and the waking line won). Taken
+ * off every Attack here; the solver adds it back once (PlayerSim.vigor). Under Weak the shown number
+ * carries it at 0.75.
+ */
+export function stripVigor(hand: CardModel[], vigor: number, weak: boolean): void {
+  if (vigor <= 0) return;
+  const shown = Math.floor(vigor * (weak ? 0.75 : 1));
+  for (const card of hand) {
+    if (card.type === "Attack" && card.damage !== null) card.damage = Math.max(0, card.damage - shown);
+  }
+}
+
+/**
  * Rough value of a Power card's lasting effect, in "HP-equivalent" points, for a fight of average
  * length. Only used to rank it against immediate damage/block; tuned from run logs.
  */
