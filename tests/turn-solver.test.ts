@@ -9,6 +9,7 @@ import {
   DRAW_VALUE,
   drawScoreAt,
   exhaustPick,
+  ENRAGE_FUTURE_HITS,
   ERUPTION_RACE_DAMAGE,
   NEXT_PHASE_HP,
   pileValue,
@@ -655,6 +656,37 @@ describe("Test Subject (2WUM F48)", () => {
     // Attacks do not enrage it.
     const hit = solveTurn({ hand: [strike(0)], player: player({ hp: 80, energy: 1 }), enemies: [phase1], fightKind: "boss" });
     expect(hit.plans.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(20);
+  });
+
+  it("Enrage: a Skill's Strength is lasting, weighed by the attacks it raises (VP5F F48 T1: two Skills, Bite 36 on T3)", () => {
+    const phase1 = enemy({ name: "Test Subject", hp: 100, maxHp: 100, enrage: 2, revives: true, attacks: [{ damage: 10, hits: 1 }] });
+    const input = { player: player({ hp: 20, energy: 1 }), enemies: [phase1], fightKind: "boss" as const };
+    const plans = solveTurn({ ...input, hand: [skill(0, 5)] }).plans;
+    const blocked = plans.find((plan) => plan.steps.length === 1)!;
+    const ended = plans.find((plan) => plan.steps.length === 0)!;
+    const w = weightsFor({ ...input, hand: [] });
+    // Defend saves 5 - 2 this turn, and the +2 Strength costs 2 x ENRAGE_FUTURE_HITS later.
+    expect(ended.score - blocked.score).toBeCloseTo(-3 * w.hp + 2 * w.hp * ENRAGE_FUTURE_HITS);
+    // At 20 HP that is a loss: the flat 3 per Strength point it used to cost made Defend the pick.
+    expect(plans[0]!.steps).toEqual([]);
+    expect(blocked.outcome.lasting).toBeLessThan(ended.outcome.lasting);
+  });
+
+  it("No Block (Panic Button, VP5F F48 T2): cards give no Block while it is up, and none after Panic Button", () => {
+    const biting = enemy({ name: "Test Subject", hp: 100, maxHp: 100, attacks: [{ damage: 15, hits: 1 }] });
+    const locked = solveTurn({ hand: [defend(0)], player: player({ hp: 80, energy: 1, noBlock: true }), enemies: [biting], fightKind: "boss" }).plans;
+    // Defend adds nothing, so it is the same outcome as ending the turn.
+    expect(locked.every((plan) => plan.outcome.hpLoss === 15 && plan.outcome.blockGained === 0)).toBe(true);
+    // A block potion is not a card.
+    const potion = modelPotion("BLOCK_POTION", "Block Potion", 0, [], 0)!;
+    const drunk = solveTurn({ hand: [potion], player: player({ hp: 80, energy: 0, noBlock: true }), enemies: [biting], fightKind: "boss" }).plans;
+    expect(drunk.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(3);
+    const panic = card(1, "PANIC_BUTTON", { type: "Skill", target: "self", validTargets: [], cost: 0, block: 10 });
+    const after = solveTurn({ hand: [panic, defend(0)], player: player({ hp: 80, energy: 1 }), enemies: [biting], fightKind: "boss" }).plans;
+    // Defend first, then Panic Button: 15. Panic Button first locks the Defend out.
+    expect(after[0]!.steps.map((step) => step.cardId)).toEqual(["DEFEND_IRONCLAD", "PANIC_BUTTON"]);
+    expect(after[0]!.outcome.blockGained).toBe(15);
+    expect(after.filter((plan) => plan.steps[0]?.cardId === "PANIC_BUTTON").every((plan) => plan.outcome.blockGained === 10)).toBe(true);
   });
 
   it("Adaptable: killing a phase is not a fight win, but the revive turn has no attack", () => {

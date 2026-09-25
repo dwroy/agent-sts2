@@ -168,6 +168,11 @@ export interface PlayerSim {
    * (stripVigor), and the solver adds it to the first Attack's first hit.
    */
   vigor?: number;
+  /**
+   * No Block (NO_BLOCK_POWER, from Panic Button: "no Block from cards for the next 2 turns"): block
+   * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
+   */
+  noBlock?: boolean;
 }
 
 export interface SolverInput {
@@ -340,6 +345,8 @@ interface Sim {
   topPlaced: boolean;
   /** Vigor not yet spent: added to the next Attack's first hit. */
   vigor: number;
+  /** Cards give no Block (NO_BLOCK_POWER already up, or Panic Button played this turn). */
+  noBlock: boolean;
 }
 
 /** A known pile's expected value per card drawn, with a spare energy to use it and without. */
@@ -661,7 +668,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
+  if (card.block > 0 && (card.type === "Potion" || !next.noBlock)) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
+  // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
+  if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "free_card") {
@@ -866,6 +875,13 @@ export const BOMB_SURE = 0.8;
 export const ERUPTION_RACE_DAMAGE = 1.5;
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
 export const NEXT_PHASE_HP = 1.25;
+
+/**
+ * Enrage (Test Subject phase 1): the Strength a Skill gives it stays for the phase. Its later attacks
+ * it raises, as hits at HP weight: about two more attacks, the Vulnerable from Skull Bash making them
+ * x1.5 (VP5F F48: two T1 Skills, Bite 36 = (20 + 4) x 1.5 on T3). This turn's attack is counted apart.
+ */
+export const ENRAGE_FUTURE_HITS = 3;
 
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;
@@ -1098,6 +1114,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   score -= sleepCost;
   // Debuffs only matter on enemies that survive the turn.
+  let enrageCost = 0;
   for (const enemy of living) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     const addedVulnerable = Math.max(0, enemy.vulnerable - start.vulnerable);
@@ -1107,8 +1124,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const addedDemise = Math.max(0, (enemy.demise ?? 0) - (start.demise ?? 0));
     if (addedDemise > 0) score += weights.damage * Math.min(enemy.hp, addedDemise * DEMISE_TURNS);
     if (start.attacks.length > 0 || enemy.weak > 0) score += weights.weak * Math.min(addedWeak, 3);
-    // Fight Me: the enemy's Strength is a lasting cost.
-    score -= enemy.strengthDelta * 3;
+    // Fight Me: the enemy's Strength is a lasting cost. Enrage's is weighed by the attacks it raises.
+    const strengthCost = enemy.strengthDelta * ((enemy.enrage ?? 0) > 0 ? Math.max(3, weights.hp * ENRAGE_FUTURE_HITS) : 3);
+    score -= strengthCost;
+    if ((enemy.enrage ?? 0) > 0) enrageCost += strengthCost;
   }
   if (!winsFight) {
     // Lasting value (Strength, powers) pays off over the rest of the fight: more in long fights,
@@ -1153,7 +1172,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,
-      lasting: sim.flat + (weights.strength * sim.permStrength),
+      // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
+      lasting: sim.flat + (weights.strength * sim.permStrength) - enrageCost,
     },
   };
 }
@@ -1161,7 +1181,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -1215,6 +1235,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
     vigor: input.player.vigor ?? 0,
+    noBlock: input.player.noBlock === true,
   };
 
   const seen = new Set<string>();

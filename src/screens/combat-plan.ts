@@ -522,6 +522,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     vigor,
+    noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
   };
   const kind = fightKind(combat, env);
 
