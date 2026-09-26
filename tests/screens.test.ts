@@ -326,6 +326,14 @@ describe("map", () => {
     expect(nodeWeight("Elite", 1, 100, 4)).toBe(-3);
     expect(nodeWeight("Elite", 0.85, 100, 12)).toBe(4);
     expect(nodeWeight("Elite", 0.75, 100, 12)).toBe(-3);
+    // From act 2 the pre-boss elite needs full HP (UMX6 F31: Decimillipede at 67/80).
+    expect(nodeWeight("Elite", 0.84, 100, 14, 2)).toBe(-5);
+    expect(nodeWeight("Elite", 0.96, 100, 14, 2)).toBe(1);
+  });
+
+  it("below half HP a shop is worth no more than a rest (2VW5 F26/F27: 698 gold, died at F28)", () => {
+    expect(nodeWeight("Shop", 0.42, 698, 10, 2)).toBeLessThanOrEqual(nodeWeight("RestSite", 0.42, 698, 10, 2));
+    expect(nodeWeight("Shop", 0.8, 698, 10, 2)).toBe(12);
   });
 
   it("Act 3 at 40% HP: Monster -> Rest beats Monster -> Monster -> Monster (MD3F F34-F39)", () => {

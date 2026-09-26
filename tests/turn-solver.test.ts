@@ -1058,6 +1058,17 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("least-loss fallback (2VW5 F28 T7)", () => {
+  it("does not play a drawing card first whose HP cost kills us", async () => {
+    const { leastLossPlan } = await import("../src/screens/combat-plan.js");
+    const offering = card(0, "OFFERING", { type: "Skill", target: "self", validTargets: [], cost: 0, draw: 3, hpLoss: 6 });
+    const base = solveTurn({ hand: [strike(1)], player: player({ hp: 5 }), enemies: [enemy({ index: 0, hp: 50, attacks: [{ damage: 37, hits: 1 }] })], fightKind: "monster" }).plans[0]!;
+    const plan = { ...base, steps: [{ cardIndex: 1, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target: 0, targetName: null }, { cardIndex: 0, cardId: "OFFERING", upgraded: false, name: "Offering", target: null, targetName: null }] };
+    expect(leastLossPlan([plan], [offering, strike(1)], 5).steps[0]!.cardId).toBe("STRIKE_IRONCLAD");
+    expect(leastLossPlan([plan], [offering, strike(1)], 40).steps[0]!.cardId).toBe("OFFERING");
+  });
+});
+
 describe("Kaiser Crab focus (GGF8 F33)", () => {
   it("a planned kill-first claw gets no focus bonus: the claws stay level", () => {
     const claws = [
