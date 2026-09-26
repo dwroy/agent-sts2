@@ -32,6 +32,8 @@ import { forcedEliteWithin } from "./rest.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
+/** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
+export const BOSS_DRINK_FIRST_LOSS = 10;
 
 /**
  * Elite/boss: whether a potion-free line overrides Jev's low-confidence potion pick. A line that drinks
@@ -479,6 +481,13 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  * when the state has neither (older mod, tests). XPA4 T8/T10: nothing read the piles, so Battle
  * Trance at 1 energy was "+9" with 3 Beckons in a 6-card pile.
  */
+/** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
+export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
+  const pile = asRecord(asRecord(raw["agent_view"])["combat"])["exhaust"];
+  if (pile === undefined) return undefined;
+  return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
+}
+
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
   const view = asRecord(asRecord(raw["agent_view"])["combat"]);
   const parse = (pile: unknown): DrawPileCard[] =>
@@ -632,6 +641,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   env.screenMemory.noEnemiesSince = undefined;
 
   const playerSim: PlayerSim = {
+    exhaustPile: exhaustPileSize(state.raw),
     hp: num(player["current_hp"]),
     maxHp: num(player["max_hp"]),
     block: num(player["block"]),
@@ -1180,7 +1190,11 @@ function planTurn(env: DecisionEnv): Decision | null {
         const dryTop = dry.includes(top) ? top : (dry[0] ?? top);
         if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop);
       }
-      if (!hallwayFight && fromJev && offensiveDrink && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
+      // Boss, drink-first (the line is re-planned after the potion), every dry line losing 10+: the
+      // potion stands (MF7A F17 T7, 24HM F33, H1FA F17 T2-T7: attack potions refused, died holding them).
+      const dryLossNow = Math.min(...options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:"))).map((plan) => plan.outcome.hpLoss));
+      const bossDrinkFirst = kind === "boss" && chosen.plan === undefined && dryLossNow >= BOSS_DRINK_FIRST_LOSS;
+      if (!hallwayFight && fromJev && offensiveDrink && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
         return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
       }
       if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {

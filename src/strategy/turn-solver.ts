@@ -113,6 +113,8 @@ export interface EnemySim {
 
 export interface PlayerSim {
   hp: number;
+  /** Cards in the exhaust pile at the start of this decision, when known (Pact's End needs 3). */
+  exhaustPile?: number;
   /**
    * Most HP we can lose in one turn (Beating Remnant: 20). CCPR F48 T6-T7: every Test Subject line
    * really cost 20; uncapped, the guard and least-loss picked block lines over 48-damage ones.
@@ -842,6 +844,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     let perHit = shown + next.strength * weakFactor;
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
+    // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
+    // an empty pile, dealt 0, died by 1 HP). An unknown pile counts as empty.
+    if (card.cardId === "PACTS_END" && (player.exhaustPile ?? 0) + next.exhausted.length < PACTS_END_EXHAUST) perHit = 0;
     if (card.special === "whirlwind") hits = cost;
     // Fiend Fire: one hit per card it exhausts, i.e. the rest of the hand (exhausted after this).
     if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length;
@@ -1026,6 +1031,8 @@ export const FOCUS_BONUS = 0.5;
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
+/** Cards Pact's End needs in the exhaust pile. */
+export const PACTS_END_EXHAUST = 3;
 /** Damage one more Sandpit turn is worth (the deck's rough output per turn into The Insatiable). */
 export const SANDPIT_TURN_DAMAGE = 20;
 /** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */

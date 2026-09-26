@@ -1058,6 +1058,17 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Pact's End (H1FA F17 T9)", () => {
+  it("deals damage only with 3+ cards in the exhaust pile", () => {
+    const pact = card(0, "PACTS_END", { cost: 0, damage: 18, target: "all", validTargets: [] });
+    const dealt = (exhaustPile: number) =>
+      solveTurn({ hand: [pact], player: player({ hp: 60, exhaustPile }), enemies: [enemy({ index: 0, hp: 100, attacks: [] })], fightKind: "boss" })
+        .plans.find((plan) => plan.steps.length > 0)?.outcome.damageDealt ?? 0;
+    expect(dealt(0)).toBe(0);
+    expect(dealt(3)).toBe(18);
+  });
+});
+
 describe("dominated lines (Q4JV F17 T3)", () => {
   it("cards drawn with no energy left do not keep a weaker line alive", async () => {
     const { dominates } = await import("../src/strategy/turn-solver.js");
