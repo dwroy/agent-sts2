@@ -8,3 +8,6 @@
 - 2026-09-25 20:00 迁移第 1 步（M1）上线前重评（tools/jev-context-eval.ts 新采样器，120 个局面，其中 31 个有"该打能力牌"选项）：选能力牌线比例 基线 0.32 → 标签 0.39 → 标签+提示 0.48；比最省血线多掉的血 1.53 → 1.47 → 1.28；伤害 19.0 → 16.6。不低于基线，按约定上线 JEV_CONTEXT=v1。结果存 paper/materials/analysis/jev-context-eval-2.json。
 - 2026-09-25 20:10 同时上线"开战计划"（FIGHT_PLAN=v1，d98b0a8，Dai 同意）：DeepSeek 在精英/boss 战开场做一次整场计划（打法、先打的能力牌、先杀谁、每瓶药的用途、危险回合），不再逐回合接手出牌。计划以标签进入 Jev 的选项、以药水成本进入求解器。试跑 Y0KJ 三个 boss：每次 7–13 秒。实验变量：M1 与开战计划同时上线（混杂），用 decisions.jsonl 的 jev_context 字段和 logs/fight-plans.jsonl 区分。评估指标：精英/boss 战失血、过各幕 boss 比例、每局 DeepSeek 费用与总用时。首个新代码局 CAYKKMTJWBPM（局中重启，前几层为旧代码）。
 - 2026-09-26 10:05 上线整局计划 RUN_PLAN=v1（2c61c6f）。评估：进阶 5 的过幕率、进 boss 血量、牌组格挡牌数、药水携带数；对照为进阶 5 此前 12 局（到最终 boss 2 次，0 胜）。日志 logs/run-plans.jsonl。
+
+## Boss clock (from 2026-09-26T11:42 UTC)
+Code estimates the deck's damage a turn against the act boss's need; damage cards get a gap bonus, rests lean to smith, DeepSeek's run plan sees the clock. Measure: `python3 ops/metrics.py --asc 7 --split 2026-09-26T11:42` — past act 2 boss rate (was 1/15 at A7), F33 boss HP lost, after 8–10 runs.
