@@ -241,8 +241,11 @@ export function planMap(env: DecisionEnv): Decision | null {
   const hpPct = hpPercent(env);
   const gold = state.run?.gold ?? 0;
   const floor = state.run?.floor ?? 1;
-  const floorInAct = ((floor - 1) % 17) + 1;
-  const act = Math.floor((floor - 1) / 17) + 1;
+  // Acts are 17, 16 and 15 floors (bosses on 17, 33, 48) (V1YT F34: floor/17 scored act 3 as act 2 floor 17, every elite got the pre-boss +4 and the
+  // route into a forced F43 elite won by 0.4).
+  const act = floor <= 17 ? 1 : floor <= 33 ? 2 : 3;
+  const actStart = [1, 18, 34][Math.min(act, 3) - 1]!;
+  const floorInAct = Math.max(1, floor - actStart + 1);
   // RUN_PLAN=v1: the plan's elite appetite shifts elite nodes.
   const weightOf: Weights = (type, at) =>
     nodeWeight(type, at.hp, at.gold, floorInAct, act) -
