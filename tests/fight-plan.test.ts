@@ -455,3 +455,13 @@ describe("elite/boss potion veto (M812 F28/F33, 9YR9 F17, F3SS F33)", () => {
   });
 });
 
+describe("big_hit on an attack potion (24HM F33)", () => {
+  it("falls back to the default offer rule instead of waiting for an enemy big hit", async () => {
+    const { planOffersPotion } = await import("../src/strategy/fight-plan.js");
+    const p = plan({ potions: { ATTACK_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
+    const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
+    expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
+    expect(planOffersPotion(p, "BLOCK_POTION", calm)).toBe(false);
+  });
+});
+

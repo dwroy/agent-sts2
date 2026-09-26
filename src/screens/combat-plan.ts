@@ -865,7 +865,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
-  const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly });
+  const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: OFFENSIVE_POTIONS.has(potionId) });
   const potions = potionCapped || dryCheap ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
