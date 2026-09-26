@@ -119,7 +119,11 @@ export function shopWeight(gold: number, floorInAct: number, act?: number): numb
  * Expected HP fraction lost to a hallway fight, by act (MD3F Act 3 hallway fights took ~0.3 max HP
  * each; the old flat 0.12 made all-fight continuations look free). Elites cost twice as much.
  */
-const FIGHT_HP_COST_BY_ACT = [0.1, 0.14, 0.18];
+// A7 measured 12.5 HP a hallway fight (~16% of max HP, all acts); act 2/3 hallways drained the runs
+// that died before the act-2 boss (4V5T F19-F23, MF7A F19-F24) and SUUK F40-F45 (-50, -30).
+const FIGHT_HP_COST_BY_ACT = [0.1, 0.18, 0.24];
+/** Share of a hallway fight's HP cost a "?" room carries (some are fights, some events cost HP). */
+const UNKNOWN_HP_SHARE = 0.4;
 export const ELITE_HP_COST_FACTOR = 2.5;
 export function fightHpCost(type: string, act: number): number {
   const base = FIGHT_HP_COST_BY_ACT[Math.min(Math.max(act, 1), FIGHT_HP_COST_BY_ACT.length) - 1]!;
@@ -148,6 +152,9 @@ function stateAfter(type: string, at: RouteState, act: number): RouteState {
     case "Shop":
       return { hp: at.hp, gold: Math.min(at.gold, GOLD_AFTER_SHOP), fights: 0 };
     case "Unknown":
+      // A "?" room is often a fight or an HP event: it costs some HP and does not reset the fight chain
+      // (4V5T F20: the lantern-key event fight cost 28 HP on a route priced as free).
+      return { ...at, hp: Math.max(0, at.hp - UNKNOWN_HP_SHARE * fightHpCost("Monster", act)) };
     case "Event":
       return { ...at, fights: 0 };
     default:
