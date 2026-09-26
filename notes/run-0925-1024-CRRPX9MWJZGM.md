@@ -1,0 +1,110 @@
+## 复盘：run CRRPX9MWJZGM — 胜利，最高第 48 层
+
+- 决策 692 个；Jev 调用 63 次，Claude 0 次，DeepSeek 70 次；token 202,214 入 / 5,897 出，约 $0.0087；用时 51.1 分钟
+- 决策者：code 451，jev-plan 75，deepseek 70，jev 61，deepseek-plan 33，code-fallback 2
+
+### 战斗掉血（按层）
+- 第 2 层 树叶史莱姆（小）/树枝史莱姆（中）/树枝史莱姆（小）: HP 80→68（-12），决策 code 11，jev-plan 2，jev 1
+- 第 3 层 小啃兽: HP 74→66（-8），决策 jev-plan 4，code 4，jev 2
+- 第 5 层 毛绒伏地虫: HP 72→72（-0），决策 code 8，code-fallback 1
+- 第 6 层 树叶史莱姆（中）/树叶史莱姆（小）/树枝史莱姆（中）/树枝史莱姆（小）: HP 78→60（-18），决策 code 10，jev 6，jev-plan 5
+- 第 7 层 旧日雕像: HP 66→54（-12），决策 code 11，deepseek 3，deepseek-plan 2
+- 第 12 层 墨宝: HP 66→65（-1），决策 code 8，jev-plan 2，code-fallback 1，jev 1
+- 第 14 层 异蛙寄生虫/扭动虫: HP 71→48（-23），决策 code 18，jev-plan 3，deepseek-plan 2，jev 2，deepseek 1
+- 第 17 层 同族信徒/同族神官: HP 78→57（-21），决策 deepseek 16，deepseek-plan 7，jev-plan 5，code 5，jev 3
+- 第 19 层 盛碗虫（卵）/盛碗虫（石）: HP 80→61（-19），决策 code 9
+- 第 21 层 外骨骼虫: HP 62→61（-1），决策 code 8，jev-plan 2，jev 1
+- 第 22 层 虱虫之祖: HP 67→58（-9），决策 code 10
+- 第 24 层 蜂群术士: HP 64→35（-29），决策 code 15，deepseek 4，deepseek-plan 3
+- 第 28 层 感染棱柱: HP 64→24（-40），决策 code 10，jev 6，deepseek 6，deepseek-plan 6，jev-plan 5
+- 第 30 层 残杀千足虫: HP 63→42（-21），决策 code 5，deepseek 4，deepseek-plan 3，jev-plan 3，jev 2
+- 第 31 层 寄生惧魔/胧光怪: HP 48→40（-8），决策 jev-plan 6，jev 5，code 5
+- 第 33 层 知识恶魔: HP 70→70（-0），决策 deepseek 2，jev 1
+- 第 33 层 知识恶魔: HP 70→46（-24），决策 deepseek 6，deepseek-plan 4，jev 3，jev-plan 2
+- 第 33 层 知识恶魔: HP 46→11（-35），决策 jev-plan 5，jev 4，code 3
+- 第 35 层 虔诚雕刻师: HP 87→76（-11），决策 code 11，jev-plan 4，jev 1
+- 第 40 层 幽灵骑士/连枷骑士/魔法骑士: HP 82→82（-0），决策 jev-plan 4，code 3，jev 2，deepseek 1
+- 第 40 层 幽灵骑士/连枷骑士/魔法骑士: HP 81→35（-46），决策 code 15
+- 第 43 层 机甲骑士: HP 82→66（-16），决策 code 10
+- 第 43 层 机甲骑士: HP 65→33（-32），决策 code 19，deepseek 1，deepseek-plan 1
+- 第 43 层 机甲骑士: HP 32→28（-4），决策 code 7
+- 第 45 层 灵魂枢纽: HP 75→48（-27），决策 jev-plan 5，deepseek-plan 4，deepseek 3，code 3，jev 1
+- 第 45 层 灵魂枢纽: HP 47→30（-17），决策 code 6，jev-plan 3，deepseek 2，jev 1
+- 第 46 层 咬人卷轴: HP 36→31（-5），决策 code 2，jev-plan 2，jev 1
+- 第 46 层 咬人卷轴: HP 30→29（-1），决策 code 3
+- 第 48 层 实验体 #C12: HP 76→62（-14），决策 jev 5，jev-plan 3，deepseek 3，deepseek-plan 1，code 1
+- 第 48 层 实验体 #C12: HP 61→25（-36），决策 jev-plan 10，jev 4，code 3，deepseek 2
+- 第 48 层 实验体 #C12: HP 25→24（-1），决策 code 2，deepseek 1
+- 第 48 层 实验体 #C12: HP 23→7（-16），决策 code 15
+
+### 各类决策由谁做
+- combat/plan / code: 101
+- combat/plan-continue / code: 89
+- combat/plan-continue / jev-plan: 75
+- reward/claim / code: 61
+- combat/plan-choice+potion / deepseek: 49
+- map/route / code: 42
+- combat/plan-continue / deepseek-plan: 33
+- combat/plan-choice+potion / jev: 32
+- combat/lethal / code: 30
+- reward/proceed / code: 23
+- combat/plan-choice / jev: 20
+- combat/end_turn / code: 19
+- reward/card / code: 19
+- event/leave / code: 12
+- rest/proceed / code: 9
+- rest/choose / code: 7
+- selection/exhaust / code: 7
+- shop/buy / code: 7
+- combat/plan-choice / deepseek: 6
+- event/choose / deepseek: 6
+- map/route / jev: 4
+- reward/card / deepseek: 4
+- selection/remove / code: 4
+- chest/open / code: 3
+- chest/proceed / code: 3
+- event/only / code: 3
+- shop/buy / deepseek: 3
+- shop/leave / code: 3
+- shop/open / code: 3
+- chest/relic / code: 2
+- combat/plan-choice / code-fallback: 2
+- event/choose / jev: 2
+- rest/choose / jev: 2
+- selection/curse / code: 2
+- combat/least-loss / code: 1
+- map/route / deepseek: 1
+- selection/confirm / code: 1
+- selection/upgrade / deepseek: 1
+- shop/buy / jev: 1
+
+### 兜底介入（Claude/DeepSeek）：70 次（推翻 Jev 34 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o1 @0.39 → o2）：Early game wants strong attacks; 3 upgraded card rewards outweigh one lost Act-1 chest relic and beat upgrading Strike/D
+- [deepseek] 第 2 层 T4 reward/card: 推翻 Jev（card2 @0.24 → card1）：预备打击+ is A-tier: 9 damage plus 4 Strength this turn makes every other attack (5 Strikes, Bash) hit much harder in Act 1.
+- [deepseek] 第 3 层 T3 reward/card: 同意 Jev（card0 @0.35 → card0）：熔融之拳+ gives strong early damage and extends Bash's vulnerable; Thunderclap+ is too weak a card to fix AoE properly.
+- [deepseek] 第 6 层 T6 map/route: 同意 Jev（n0 @0.05 → n0）：83% HP with 3 potions and Burning Blood sustain: take the Act 1 elite for a relic, then RestSite heals before continuing
+- [deepseek] 第 7 层 T3 combat/plan-choice+potion: 同意 Jev（plan1 @0.32 → plan1）：Balanced: 11 block + 19 dmg for only 12 HP, leaving enemy at 43; fewer cards limits Bygone Effigy's slow scaling and pre
+- [deepseek] 第 7 层 T3 combat/plan-choice+potion: 推翻 Jev（p2 @0.42 → plan1）：66 HP, 12 damage is affordable; save potions for boss, kill next turn with vulnerable burst.
+- [deepseek] 第 7 层 T4 combat/plan-choice+potion: 同意 Jev（plan1 @0.32 → plan1）：Max damage races the 43-HP elite: 20 HP left with Vulnerable means we likely kill next turn, avoiding a second 23-damage
+- [deepseek] 第 13 层 TNone selection/upgrade: 推翻 Jev（card8 @0.30 → card10）：Demon Form is the deck's win condition and upgrade priority per guide; Bash, Battle Trance, and a second Setup Strike ar
+- [deepseek] 第 14 层 T2 combat/plan-choice+potion: 推翻 Jev（plan3 @0.25 → plan1）：Demon Form+ in hand: play now or it's discarded; 71 HP easily affords 16, and scaling wins the elite's minion spawn and 
+- [deepseek] 第 14 层 T7 reward/card: 推翻 Jev（skip @0.14 → card0）：坚毅: reliable 1E 7-block, feeds 邪眼++ exhaust synergy and thins junk; needed survivability for Kin boss where 添柴's random 
+- [deepseek] 第 15 层 TNone shop/buy: 推翻 Jev（buy_relic0 @0.23 → buy_relic1）：Ice Cream's energy retention is a run-defining relic, letting us bank energy for Demon Form++; still leaves 47 gold to a
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 推翻 Jev（plan3 @0.35 → plan1）：Balanced: 24 damage on the priest while blocking nearly all incoming (only 2 HP lost); boss is a long fight so preservin
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 同意 Jev（plan1 @0.34 → plan1）：At 78/80 HP, only 2 damage leaks through block; save all potions for later in the boss fight.
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 推翻 Jev（p2 @0.39 → p0）：Boss fight is long; Regen heals every turn (unaffected by Frail-weakened block) and its total value is maximized by drin
+- [deepseek] 第 17 层 T3 combat/plan-choice+potion: 推翻 Jev（plan2 @0.33 → plan3）：Bash sets Vulnerable 2 on the 190 HP priest, multiplying all future damage; same HP cost as plan1 but better long-term. 
+- [deepseek] 第 17 层 T3 combat/plan-choice+potion: 同意 Jev（p2 @0.13 → p2）：Plating gives immediate block this turn plus steady block every turn, ideal for this long boss fight; dexterity can't he
+- [deepseek] 第 17 层 T4 combat/plan-choice+potion: 推翻 Jev（plan2 @0.38 → plan1）：Demon Form+ on turn 4 vs long Kin fight is the win condition; paying only 1 HP for permanent +4 strength is clearly wort
+- [deepseek] 第 17 层 T4 combat/plan-choice+potion: 推翻 Jev（plan2 @0.35 → plan1）：Long boss fight; this turn is safe (1 HP lost). Demon Form+ scaling now wins the fight and saves the potion.
+- [deepseek] 第 17 层 T4 combat/plan-choice+potion: 同意 Jev（plan1 @0.23 → plan1）：Only 1 HP lost; Demon Form + Regen + Plated Armor already dominate the fight. Save the Dexterity potion for a later, har
+- [deepseek] 第 17 层 T5 combat/plan-choice+potion: 同意 Jev（plan1 @0.08 → plan1）：0 energy means the dexterity potion helps nothing this turn; Demon Form 4 + Metallicize + Regen already win this boss, s
+
+### Jev 低置信度（<0.35）决策：7 个
+- 第 2 层 combat/plan-choice: Jev chose plan 4/4 (防御, 打击 -> 树枝史莱姆（中）, 打击 -> 树枝史莱姆（中）) with confidence 0.32; code rank 4 (0.32)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/3 (打击 -> 小啃兽, 防御, 防御) with confidence 0.20; code rank 1 (0.20)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (防御, 防御, 防御) with confidence 0.05; code rank 1 (0.05)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/4 (预备打击+ -> 树枝史莱姆（中）, 痛击 -> 树叶史莱姆（中）) with confidence 0.23; code rank 1 (0.23)
+- 第 31 层 combat/plan-choice: Jev chose plan 1/2 (突破, 防御, 打击 -> 寄生惧魔) with confidence 0.18; code rank 1 (0.18)
+- 第 31 层 combat/plan-choice: Jev chose plan 1/2 (战斗专注, 邪眼+, 痛击 -> 胧光怪) with confidence 0.15; code rank 1 (0.15)
+- 第 46 层 combat/plan-choice: Jev chose plan 1/4 (放血+, 恶魔形态+, 烙印, 突破) with confidence 0.09; code rank 1 (0.09)

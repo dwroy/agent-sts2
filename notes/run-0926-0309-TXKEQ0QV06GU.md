@@ -1,0 +1,139 @@
+## 复盘：run TXKEQ0QV06GU — 阵亡，最高第 48 层
+
+- 决策 678 个；Jev 调用 103 次，Claude 0 次，DeepSeek 15 次；token 191,645 入 / 5,186 出，约 $0.0083；用时 32.0 分钟
+- 决策者：code 475，jev 87，jev-plan 85，code-fallback 16，deepseek 15
+
+### 战斗掉血（按层）
+- 第 2 层 小啃兽: HP 64→61（-3），决策 code 7，jev-plan 3，jev 2
+- 第 3 层 毛绒伏地虫: HP 67→61（-6），决策 code 10，jev 1，jev-plan 1
+- 第 4 层 缩小甲虫: HP 67→65（-2），决策 code 7，code-fallback 1
+- 第 5 层 利齿之眼/雾菇: HP 71→48（-23），决策 code 13，code-fallback 2
+- 第 7 层 树叶史莱姆（中）/飞蝇菌子: HP 54→41（-13），决策 code 3，jev-plan 3，jev 2，code-fallback 1
+- 第 7 层 树叶史莱姆（中）/飞蝇菌子: HP 41→38（-3），决策 code 4，jev-plan 3，jev 2
+- 第 9 层 多尼斯异鸟: HP 68→41（-27），决策 jev-plan 7，jev 6，code 6
+- 第 14 层 旧日雕像: HP 53→42（-11），决策 code 13，jev 2
+- 第 17 层 同族信徒/同族神官: HP 72→72（-0），决策 jev-plan 4，code 1，jev 1
+- 第 17 层 同族信徒/同族神官: HP 71→63（-8），决策 code 6，jev 1
+- 第 17 层 同族信徒/同族神官: HP 63→55（-8），决策 code 4
+- 第 17 层 同族信徒/同族神官: HP 54→54（-0），决策 code 1
+- 第 17 层 同族信徒/同族神官: HP 54→47（-7），决策 code 10
+- 第 17 层 同族神官: HP 46→46（-0），决策 jev 1
+- 第 17 层 同族神官: HP 46→35（-11），决策 code 5
+- 第 19 层 偷窃草蜢: HP 72→69（-3），决策 jev 3，jev-plan 2，code 1
+- 第 19 层 偷窃草蜢: HP 68→49（-19），决策 code 6，jev-plan 2，code-fallback 1，jev 1
+- 第 19 层 偷窃草蜢: HP 48→45（-3），决策 code 4
+- 第 21 层 外骨骼虫: HP 51→48（-3），决策 code 6，jev-plan 2，jev 1
+- 第 21 层 外骨骼虫: HP 47→47（-0），决策 code 2
+- 第 23 层 棘刺蟾蜍: HP 52→52（-0），决策 code 3，jev 1，code-fallback 1
+- 第 23 层 棘刺蟾蜍: HP 51→44（-7），决策 code 6，code-fallback 2
+- 第 23 层 棘刺蟾蜍: HP 44→37（-7），决策 code 5，jev 2
+- 第 24 层 蜂群术士: HP 38→36（-2），决策 jev-plan 5，code 4，jev 3
+- 第 24 层 蜂群术士: HP 36→30（-6），决策 code 5，jev-plan 2，jev 1
+- 第 30 层 猎人杀手: HP 69→54（-15），决策 code 5，jev-plan 4，jev 3
+- 第 30 层 猎人杀手: HP 54→42（-12），决策 code 4，code-fallback 1
+- 第 31 层 寄生惧魔/胧光怪: HP 51→45（-6），决策 code 7，jev-plan 4，jev 2，code-fallback 2
+- 第 31 层 寄生惧魔/胧光怪: HP 45→45（-0），决策 code 2，code-fallback 1
+- 第 31 层 寄生惧魔/胧光怪: HP 44→36（-8），决策 code 3，jev 1
+- 第 33 层 无厌沙虫: HP 68→68（-0），决策 code 2
+- 第 33 层 无厌沙虫: HP 67→64（-3），决策 code 4，jev-plan 4，jev 2
+- 第 33 层 无厌沙虫: HP 64→64（-0），决策 jev 1，jev-plan 1
+- 第 33 层 无厌沙虫: HP 64→24（-40），决策 code 8，jev-plan 5，jev 4
+- 第 33 层 无厌沙虫: HP 23→8（-15），决策 jev 3，jev-plan 3
+- 第 33 层 无厌沙虫: HP 8→7（-1），决策 code 3，jev 1
+- 第 35 层 活体盾/高塔炮手: HP 80→67（-13），决策 jev-plan 5，code 4，jev 3
+- 第 35 层 活体盾/高塔炮手: HP 66→66（-0），决策 code 2
+- 第 35 层 高塔炮手: HP 66→66（-0），决策 code 1
+- 第 36 层 咬人卷轴: HP 71→71（-0），决策 code 2
+- 第 36 层 咬人卷轴: HP 71→71（-0），决策 code 1
+- 第 38 层 猫头鹰法官: HP 77→40（-37），决策 code 9，jev-plan 5，jev 4，code-fallback 1
+- 第 38 层 猫头鹰法官: HP 39→58（+19），决策 code 2，jev 2，jev-plan 1
+- 第 38 层 猫头鹰法官: HP 58→57（-1），决策 jev 2，jev-plan 1
+- 第 38 层 猫头鹰法官: HP 57→57（-0），决策 code 2
+- 第 39 层 巨斧机器人: HP 38→38（-0），决策 code 2，jev 2，jev-plan 2
+- 第 39 层 巨斧机器人: HP 37→23（-14），决策 code 7，jev-plan 6，jev 4
+- 第 39 层 巨斧机器人: HP 23→8（-15），决策 code 4，jev 1，jev-plan 1
+- 第 39 层 巨斧机器人: HP 8→2（-6），决策 code 4
+- 第 42 层 咬人卷轴: HP 36→28（-8），决策 code 3，code-fallback 2，jev-plan 2，jev 1
+- 第 46 层 史莱姆狂战士: HP 77→68（-9），决策 jev 6，code 6，jev-plan 4，code-fallback 1
+- 第 46 层 史莱姆狂战士: HP 67→32（-35），决策 code 9，jev 3，jev-plan 3
+- 第 48 层 永世沙漏: HP 63→4（-59），决策 code 20，jev 4
+- 第 48 层 永世沙漏: HP 3→3（-0），决策 code 3
+
+### 死亡战斗：第 48 层 永世沙漏
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (-4): 熔融之拳 -> 永世沙漏, 跃跃欲试
+- T7 [code] combat/plan-continue: continuing the code-chosen plan: 跃跃欲试
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (-4): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 136
+- combat/plan-continue / jev-plan: 85
+- combat/plan-continue / code: 75
+- combat/plan-choice / jev: 65
+- reward/claim / code: 55
+- map/route / code: 41
+- combat/lethal / code: 21
+- reward/proceed / code: 21
+- reward/card / code: 16
+- selection/add / code: 16
+- combat/plan-choice / code-fallback: 15
+- selection/exhaust / code: 15
+- combat/plan-choice+potion / jev: 14
+- event/leave / code: 10
+- shop/buy / code: 10
+- rest/proceed / code: 8
+- combat/end_turn / code: 6
+- combat/plan-guarded / code: 6
+- rest/choose / code: 6
+- shop/buy / deepseek: 6
+- shop/leave / code: 6
+- reward/card / deepseek: 5
+- shop/open / code: 5
+- combat/least-loss / code: 4
+- map/route / jev: 4
+- chest/open / code: 3
+- chest/proceed / code: 3
+- chest/relic / code: 3
+- combat/plan-potion / code: 3
+- event/choose / deepseek: 3
+- selection/remove / code: 3
+- event/choose / jev: 2
+- rest/choose / jev: 2
+- combat/plan-choice+potion / code-fallback: 1
+- event/only / code: 1
+- map/route / deepseek: 1
+- run/finalize / code: 1
+- selection/take into my hand / code: 1
+
+### 兜底介入（Claude/DeepSeek）：15 次（推翻 Jev 9 次）
+- [deepseek] 第 1 层 TNone event/choose: 同意 Jev（o0 @0.09 → o0）：Gold is flexible: funds strike removal plus an AOE/力量 card for the Kin boss; avoids diluting a thin deck with basics for
+- [deepseek] 第 1 层 TNone map/route: 同意 Jev（n2 @0.24 → n2）：Highest route value; shop soon in n1 but early fights build deck first, and 80% HP lets me take monsters.
+- [deepseek] 第 6 层 TNone shop/buy: 推翻 Jev（buy_relic1 @0.13 → buy_card4）：燃烧是永久力量来源，本局0力量、boss神官长战正需要；指南明确见燃烧就拿，73金优先于遗物与跃跃欲试。
+- [deepseek] 第 6 层 TNone shop/buy: 同意 Jev（buy_card2 @0.32 → buy_card2）：燃烧已提供力量，跃跃欲试可得约25格挡并触发势不可当；牌组缺非基础格挡，神官持久战正需要防御。
+- [deepseek] 第 6 层 TNone shop/buy: 同意 Jev（buy_card3 @0.28 → buy_card3）：38金买地狱之刃：每轮白送一次随机攻击，配合燃烧+易伤可缩短神官长战；格挡药水仅一次性12格挡，收益更低。
+- [deepseek] 第 7 层 T5 reward/card: 推翻 Jev（card0 @0.01 → skip）：牌组仅16张、无过牌无能量遗物，已有同名3费格挡牌；再加一张3费会卡手，优先留薄牌组等AOE与过牌。
+- [deepseek] 第 15 层 TNone shop/buy: 推翻 Jev（buy_relic2 @0.23 → buy_card4）：Buy Inferno: second AOE, passive 6 to all each turn kills Kin's growing followers; 76g still leaves enough for Battle Tr
+- [deepseek] 第 18 层 TNone event/choose: 同意 Jev（o0 @0.35 → o0）：无能量遗物、牌组低费常能留1能量换2能量；能量加速击杀无厌沙虫，防御向的两个选项价值远不如它。
+- [deepseek] 第 19 层 T5 reward/card: 推翻 Jev（card2 @0.06 → card1）：0费攻击配合力量成长、还能减踩踏费用；无厌沙虫是伤害竞速，牌组正缺输出来源。
+- [deepseek] 第 23 层 T5 reward/card: 推翻 Jev（card1 @0.39 → card2）：突破：1E 9点AOE，自伤触发狱火再打6AOE（合计15），还给踩踏减费；易伤已由痛击/熔融之拳覆盖，而无厌沙虫是伤害竞速。
+- [deepseek] 第 33 层 T9 reward/card: 同意 Jev（card2 @0.08 → card2）：薪火之源是S级无条件拿：牌组高费牌（踩踏3E、跃跃欲试3E、势不可当2E）急需能量，与佩尔之泪/开心小花叠加，长战收益远超单张痛殴或第二张狂宴。
+- [deepseek] 第 34 层 TNone event/choose: 推翻 Jev（o1 @0.10 → o2）：已有薪火之源且牌组低费，能量不缺；鹿角的晕眩只会卡手。皮草大衣让8场战斗近乎无伤，保HP并拿满奖励进永世沙漏。
+- [deepseek] 第 37 层 TNone shop/buy: 推翻 Jev（buy_relic1 @0.22 → buy_card3）：祭品是S级爆发牌：2能量+抽3加快找到重锤++/薪火之源，自伤还触发狱火；永世沙漏需第9回合前打完，正是这种加速。
+- [deepseek] 第 37 层 TNone shop/buy: 推翻 Jev（buy_card0 @0.27 → buy_potion2）：液态记忆可0费重打重锤++(42伤)或祭品，boss战最缺爆发；不买卡牌以免稀释27张牌组、加重凋萎惩罚。
+- [deepseek] 第 38 层 T6 reward/card: 推翻 Jev（skip @0.04 → card2）：双重打击+ 1E两段14伤，与燃烧(+2力量)双倍加成，正是永世沙漏速杀所需的高效伤害；牌组27张可再收一张。
+
+### Jev 低置信度（<0.35）决策：42 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (打击 -> 小啃兽, 防御, 防御) with confidence 0.14; code rank 1 (0.14)
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御, 痛击 -> 小啃兽) with confidence 0.11; code rank 1 (0.11)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/4 (燃烧, 势不可当) with confidence 0.18; code rank 1 (0.18)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/2 (防御, 打击 -> 多尼斯异鸟, 打击 -> 多尼斯异鸟) with confidence 0.04; code rank 1; HP guard: plan 1 (防御, 打击 -> 多尼斯异鸟, 打击 -> 多尼斯异鸟) loses 14 HP, more (0.04)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/4 (打击 -> 多尼斯异鸟, 防御, 防御) with confidence 0.19; code rank 1; HP guard: plan 1 (打击 -> 多尼斯异鸟, 防御, 防御) loses 11 HP, more than 4 over the c (0.19)
+- 第 14 层 combat/plan-choice: Jev chose plan 1/3 (防御, 打击 -> 旧日雕像, 打击 -> 旧日雕像) with confidence 0.15; code rank 1; HP guard: plan 1 (防御, 打击 -> 旧日雕像, 打击 -> 旧日雕像) loses 17 HP, more tha (0.15)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/4 (头槌 -> 同族信徒, 势不可当) with confidence 0.17; code rank 1 (0.17)
+- 第 17 层 combat/plan-choice: Jev chose plan 2/2 (头槌 -> 同族神官, 防御) with confidence 0.23; code rank 2 (0.23)
+- 第 19 层 combat/plan-choice: Jev chose plan 1/4 (防御, 地狱之刃, 防御) with confidence 0.21; code rank 1 (0.21)
+- 第 23 层 combat/plan-choice: Jev chose plan 1/2 (战斗专注, 防御, 岩石铠甲+, 地狱之刃, 烙印) with confidence 0.26; code rank 1 (0.26)
+- 第 23 层 combat/plan-choice: Jev chose plan 2/2 (燃烧) with confidence 0.30; code rank 2 (0.30)
+- 第 24 层 combat/plan-choice: Jev chose plan 4/4 (打击 -> 蜂群术士, 岩石铠甲+, 防御, 烙印) with confidence 0.20; code rank 4 (0.20)
+- 第 24 层 combat/plan-choice: Jev chose plan 1/2 (狱火, 防御, 愤怒 -> 蜂群术士) with confidence 0.00; code rank 1 (0.00)
+- 第 30 层 combat/plan-choice+potion: Jev chose plan 1/1 (战斗专注, 头槌 -> 猎人杀手, 熔融之拳 -> 猎人杀手, 愤怒 -> 猎人杀手, 打击 -> 猎人杀手) with confidence 0.01; code rank 1 (0.01)
+- 第 30 层 combat/plan-choice: Jev chose plan 4/4 (头槌 -> 猎人杀手, 熔融之拳 -> 猎人杀手, 愤怒 -> 猎人杀手, 防御) with confidence 0.30; code rank 4 (0.30)

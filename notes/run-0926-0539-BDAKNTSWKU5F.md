@@ -1,0 +1,178 @@
+## 复盘：run BDAKNTSWKU5F — 胜利，最高第 48 层
+
+- 决策 688 个；Jev 调用 77 次，Claude 0 次，DeepSeek 20 次；token 145,653 入 / 4,041 出，约 $0.0063；用时 34.8 分钟
+- 决策者：code 545，jev 71，jev-plan 46，deepseek 20，code-fallback 6
+
+### 战斗掉血（按层）
+- 第 2 层 小啃兽: HP 64→64（-0），决策 jev 1，jev-plan 1
+- 第 2 层 小啃兽: HP 64→52（-12），决策 code 4
+- 第 3 层 缩小甲虫: HP 58→58（-0），决策 code 2
+- 第 3 层 缩小甲虫: HP 58→58（-0），决策 code 4
+- 第 5 层 毛绒伏地虫: HP 71→71（-0），决策 jev 1，jev-plan 1
+- 第 5 层 毛绒伏地虫: HP 71→67（-4），决策 code 6
+- 第 7 层 异蛙寄生虫/扭动虫: HP 73→37（-36），决策 code 17，jev 4，jev-plan 3
+- 第 12 层 旧日雕像: HP 69→69（-0），决策 jev 1，jev-plan 1
+- 第 12 层 旧日雕像: HP 69→34（-35），决策 code 12，jev 6，jev-plan 4
+- 第 14 层 墨宝: HP 52→46（-6），决策 code 4，code-fallback 1
+- 第 15 层 树叶史莱姆（中）/树叶史莱姆（小）/树枝史莱姆（中）/树枝史莱姆（小）: HP 52→49（-3），决策 code 9，code-fallback 1
+- 第 17 层 墨影幻灵: HP 81→39（-42），决策 code 23，jev 1，jev-plan 1
+- 第 17 层 墨影幻灵: HP 39→39（-0），决策 code 1
+- 第 19 层 偷窃草蜢: HP 81→81（-0），决策 code 4
+- 第 19 层 偷窃草蜢: HP 78→76（-2），决策 code 4
+- 第 20 层 地道虫: HP 82→82（-0），决策 code 4
+- 第 20 层 地道虫: HP 82→82（-0），决策 code 2，code-fallback 1
+- 第 20 层 地道虫: HP 82→82（-0），决策 code 1
+- 第 20 层 地道虫: HP 82→82（-0），决策 code-fallback 1，code 1
+- 第 20 层 地道虫: HP 64→64（-0），决策 code 4
+- 第 21 层 猎人杀手: HP 70→70（-0），决策 jev 2，jev-plan 1
+- 第 21 层 猎人杀手: HP 70→70（-0），决策 code 2，jev 1，jev-plan 1
+- 第 21 层 猎人杀手: HP 52→52（-0），决策 jev-plan 2，jev 1，code 1
+- 第 21 层 猎人杀手: HP 40→40（-0），决策 jev 1，jev-plan 1，code 1
+- 第 21 层 猎人杀手: HP 34→34（-0），决策 code 1
+- 第 22 层 胧光怪: HP 52→52（-0），决策 code 3
+- 第 22 层 寄生惧魔/胧光怪: HP 52→52（-0），决策 jev 1，jev-plan 1，code 1
+- 第 22 层 寄生惧魔/胧光怪: HP 46→44（-2），决策 code 3，jev 1
+- 第 22 层 寄生惧魔/胧光怪: HP 42→42（-0），决策 jev 2，jev-plan 2
+- 第 22 层 寄生惧魔/胧光怪: HP 42→36（-6），决策 code 3，jev 1
+- 第 29 层 蜂群术士: HP 80→80（-0），决策 code 4
+- 第 29 层 蜂群术士: HP 80→80（-0），决策 jev-plan 2，jev 1
+- 第 29 层 蜂群术士: HP 80→80（-0），决策 jev 1
+- 第 29 层 蜂群术士: HP 70→70（-0），决策 code 4
+- 第 29 层 蜂群术士: HP 70→70（-0），决策 code 1
+- 第 30 层 啃咬机: HP 76→76（-0），决策 jev-plan 2，jev 1，code 1
+- 第 30 层 啃咬机: HP 75→75（-0），决策 jev-plan 2，jev 1，code 1
+- 第 30 层 啃咬机: HP 62→62（-0），决策 code 2
+- 第 30 层 啃咬机: HP 62→56（-6），决策 jev 2，code 2，jev-plan 1
+- 第 33 层 火箭/碾碎爪: HP 87→87（-0），决策 code 1
+- 第 33 层 火箭/碾碎爪: HP 87→87（-0），决策 jev-plan 2，jev 1，code 1
+- 第 33 层 火箭/碾碎爪: HP 86→86（-0），决策 jev 2，jev-plan 1，code 1
+- 第 33 层 火箭/碾碎爪: HP 77→71（-6），决策 code 6
+- 第 33 层 火箭/碾碎爪: HP 71→71（-0），决策 jev 1
+- 第 33 层 火箭/碾碎爪: HP 71→71（-0），决策 code 3，jev 1
+- 第 33 层 火箭/碾碎爪: HP 71→69（-2），决策 code 4
+- 第 33 层 火箭/碾碎爪: HP 62→62（-0），决策 code 4
+- 第 33 层 火箭/碾碎爪: HP 62→60（-2），决策 code 5
+- 第 33 层 碾碎爪: HP 53→53（-0），决策 code 4
+- 第 33 层 碾碎爪: HP 53→53（-0），决策 code 1
+- 第 35 层 虔诚雕刻师: HP 81→81（-0），决策 jev 2，jev-plan 1
+- 第 35 层 虔诚雕刻师: HP 81→79（-2），决策 code 4，code-fallback 1
+- 第 35 层 虔诚雕刻师: HP 70→70（-0），决策 jev 1，jev-plan 1，code 1
+- 第 35 层 虔诚雕刻师: HP 70→70（-0），决策 code 3
+- 第 35 层 虔诚雕刻师: HP 70→70（-0），决策 code 1
+- 第 35 层 虔诚雕刻师: HP 61→61（-0），决策 code 2
+- 第 36 层 活体盾/高塔炮手: HP 67→65（-2），决策 jev 1，jev-plan 1，code 1
+- 第 36 层 活体盾/高塔炮手: HP 64→64（-0），决策 code 5
+- 第 36 层 活体盾/高塔炮手: HP 61→61（-0），决策 code 1
+- 第 38 层 拳击构装体/方柱构装体: HP 67→67（-0），决策 code 4
+- 第 38 层 拳击构装体/方柱构装体: HP 67→67（-0），决策 code 2，jev 1，jev-plan 1
+- 第 38 层 拳击构装体/方柱构装体: HP 55→55（-0），决策 jev 2，jev-plan 2
+- 第 38 层 拳击构装体/方柱构装体: HP 40→37（-3），决策 code 2
+- 第 39 层 咬人卷轴: HP 55→55（-0），决策 code 5
+- 第 39 层 咬人卷轴: HP 55→55（-0），决策 code 5
+- 第 43 层 灵魂枢纽: HP 94→94（-0），决策 code 5
+- 第 43 层 灵魂枢纽: HP 94→94（-0），决策 code 3
+- 第 43 层 灵魂枢纽: HP 78→78（-0），决策 code 3
+- 第 43 层 灵魂枢纽: HP 67→65（-2），决策 code 4
+- 第 43 层 灵魂枢纽: HP 47→47（-0），决策 jev 2，jev-plan 2
+- 第 43 层 灵魂枢纽: HP 40→40（-0），决策 code 2
+- 第 45 层 机甲骑士: HP 86→86（-0），决策 code 5
+- 第 45 层 机甲骑士: HP 69→69（-0），决策 code 4
+- 第 45 层 机甲骑士: HP 69→69（-0），决策 code 4
+- 第 45 层 机甲骑士: HP 69→69（-0），决策 jev 2，jev-plan 2
+- 第 45 层 机甲骑士: HP 47→47（-0），决策 code 1
+- 第 46 层 猫头鹰法官: HP 65→65（-0），决策 code 3，code-fallback 1
+- 第 46 层 猫头鹰法官: HP 65→59（-6），决策 code 4，jev 2，jev-plan 2
+- 第 46 层 猫头鹰法官: HP 59→57（-2），决策 code 3
+- 第 46 层 猫头鹰法官: HP 57→57（-0），决策 jev-plan 2，jev 1，code 1
+- 第 46 层 猫头鹰法官: HP 50→50（-0），决策 jev 2，jev-plan 1，code 1
+- 第 46 层 猫头鹰法官: HP 41→41（-0），决策 code 2，jev 1，jev-plan 1
+- 第 46 层 猫头鹰法官: HP 34→34（-0），决策 code 1
+- 第 48 层 女王/火炬头聚合体: HP 94→91（-3），决策 code 8
+- 第 48 层 女王/火炬头聚合体: HP 80→80（-0），决策 code 4
+- 第 48 层 女王/火炬头聚合体: HP 79→79（-0），决策 code 3
+- 第 48 层 女王/火炬头聚合体: HP 66→66（-0），决策 code 3
+- 第 48 层 女王: HP 66→66（-0），决策 code 1
+- 第 48 层 女王: HP 66→66（-0），决策 code 2
+- 第 48 层 女王: HP 35→35（-0），决策 jev 3，jev-plan 1
+- 第 48 层 女王: HP 24→24（-0），决策 code 4
+- 第 48 层 女王: HP 24→24（-0），决策 code 1
+
+### 各类决策由谁做
+- combat/plan / code: 134
+- combat/plan-continue / code: 93
+- selection/exhaust / code: 72
+- reward/claim / code: 59
+- combat/plan-choice / jev: 48
+- combat/plan-continue / jev-plan: 46
+- map/route / code: 36
+- combat/lethal / code: 31
+- reward/proceed / code: 23
+- reward/card / code: 16
+- selection/confirm / code: 11
+- map/route / jev: 10
+- event/leave / code: 8
+- rest/proceed / code: 8
+- shop/buy / code: 8
+- combat/plan-choice+potion / jev: 7
+- event/choose / deepseek: 7
+- combat/plan-choice / code-fallback: 6
+- combat/plan-guarded / code: 6
+- rest/choose / code: 6
+- reward/card / deepseek: 5
+- shop/buy / deepseek: 5
+- shop/leave / code: 5
+- shop/open / code: 5
+- chest/open / code: 4
+- chest/proceed / code: 4
+- chest/relic / code: 4
+- combat/end_turn / code: 4
+- combat/plan-potion / code: 2
+- event/only / code: 2
+- rest/choose / jev: 2
+- selection/remove / code: 2
+- selection/take into my hand / jev: 2
+- map/route / deepseek: 1
+- reward/card / jev: 1
+- run/finalize / code: 1
+- selection/add / code: 1
+- selection/enchant / deepseek: 1
+- selection/upgrade / deepseek: 1
+- shop/buy / jev: 1
+
+### 兜底介入（Claude/DeepSeek）：20 次（推翻 Jev 10 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o1 @0.35 → o0）：免费获得涅奥签名牌，十张牌组稀释小；前期输出收益高于单次痛击升级，且无生命代价。
+- [deepseek] 第 4 层 TNone event/choose: 推翻 Jev（o1 @0.16 → o0）：吃蛋永久+7最大生命；异鸟蛋是不可打出的废牌，等同诅咒，会稀释13张的精简牌组。
+- [deepseek] 第 6 层 TNone shop/buy: 推翻 Jev（buy_card0 @0.20 → buy_card1）：Whirlwind: needed AOE plus multi-hit to strip Vantom's 9 Slippery; leaves 51 gold for Shrug It Off next.
+- [deepseek] 第 12 层 T6 reward/card: 同意 Jev（card1 @0.13 → card1）：飞剑回旋镖: multi-hit strips Vantom's 9 Slippery and scales with strength; deck lacks attacks with multi-hit and needs 2nd AO
+- [deepseek] 第 13 层 TNone event/choose: 同意 Jev（o0 @0.11 → o0）：牌组 13 攻击仅 5 技能，锋利附在多段攻击（旋风斩/飞剑回旋镖）上收益极高；灵巧只加格挡且技能太少，价值低。
+- [deepseek] 第 13 层 TNone selection/enchant: 同意 Jev（card9 @0.23 → card9）：旋风斩每段+2且打全体，多段破墨影幻灵9层滑溜，收益最高；飞剑回旋镖次之但只打单体。
+- [deepseek] 第 14 层 T2 reward/card: 同意 Jev（card1 @0.33 → card1）：牌组仅1张非基础格挡牌，挑衅同时给6格挡和易伤，配合多段攻击打墨影幻灵，1费双效最优。
+- [deepseek] 第 18 层 TNone event/choose: 推翻 Jev（o0 @0.14 → o1）：牌组零力量来源，帝王蟹408血必须叠力量；烘焙手套每回合+1力量，消耗的多是打击，正好兼作压缩牌组。
+- [deepseek] 第 19 层 T2 map/route: 同意 Jev（n1 @0.21 → n1）：HP 94% and route value higher (27 vs 25.2); Unknown can give relic/removal/upgrade, and deck is already 22 cards so extr
+- [deepseek] 第 20 层 T4 reward/card: 推翻 Jev（card0 @0.14 → card2）：Deck lacks non-basic block (only 2) for a long Crab fight; Flame Barrier+ is A-tier, gives 16 block plus punish damage, 
+- [deepseek] 第 23 层 TNone event/choose: 同意 Jev（o0 @0.31 → o0）：Free 5-card choice beats paying 5 HP for 3 colorless; deck still needs strength/AOE and 5 picks give best odds of a hit 
+- [deepseek] 第 25 层 TNone event/choose: 推翻 Jev（o0 @0.08 → o1）：污浊药水代码永不使用，等于零价值；随机罕见药水是真资源，且当前药水栏为空。
+- [deepseek] 第 28 层 TNone shop/buy: 推翻 Jev（leave @0.32 → buy_card3）：岿然不动 74金：30格挡的S级防御，牌组非基础格挡仅3张，下节点强制精英、boss蟹的49激光都靠它保命。
+- [deepseek] 第 28 层 TNone shop/buy: 推翻 Jev（leave @0.31 → buy_potion2）：Kaiser Crab (408 HP) needs strength growth and deck only has 燃烧; power potion can roll 恶魔形态/燃烧 at boss start, cheap at 5
+- [deepseek] 第 28 层 TNone shop/buy: 同意 Jev（buy_card4 @0.07 → buy_card4）：岩石铠甲: 4 Plating/turn scales in the coming forced elite and long Kaiser Crab boss; deck lacks sustained block. 亮剑 is fill
+- [deepseek] 第 33 层 T9 reward/card: 推翻 Jev（skip @0.27 → card2）：焚烧: 1费多段AOE，吃力量加成（燃烧/恶魔形态），正好用于帝皇蟹同回合击杀两只钳子；添柴无消耗体系配合，跳过。
+- [deepseek] 第 34 层 TNone event/choose: 推翻 Jev（o1 @0.25 → o0）：利爪: transform 6 weakest cards (Strikes) into Bites — better damage plus healing, good for attrition vs Queen. Warhammer 
+- [deepseek] 第 37 层 TNone shop/buy: 同意 Jev（buy_card2 @0.27 → buy_card2）：放血只需37金：最便宜的A级能量牌，配合恶魔形态与彼岸咆哮等三费牌，正是女王长战所需。
+- [deepseek] 第 39 层 T2 reward/card: 同意 Jev（skip @0.27 → skip）：30-card deck, 9 floors to Queen; a plain 9-damage common adds nothing the deck lacks (AOE, scaling, block already presen
+- [deepseek] 第 40 层 TNone selection/upgrade: 同意 Jev（card23 @0.12 → card23）：恶魔形态升级每回合力量3→4，是长战对女王/聚合体约600有效血量的核心成长；升级优先级最高。
+
+### Jev 低置信度（<0.35）决策：14 个
+- 第 5 层 combat/plan-choice: Jev chose plan 1/3 (痛击 -> 毛绒伏地虫, 涅奥之怒 -> 毛绒伏地虫) with confidence 0.32; code rank 1 (0.32)
+- 第 7 层 combat/plan-choice+potion: Jev chose to drink 流动铜液 (confidence 0.05) (0.05)
+- 第 12 层 combat/plan-choice: Jev chose plan 1/2 (打击 -> 旧日雕像, 涅奥之怒 -> 旧日雕像, 御血术 -> 旧日雕像) with confidence 0.30; code rank 1 (0.30)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/2 (上勾拳 -> 墨影幻灵, 防御) with confidence 0.03; code rank 1 (0.03)
+- 第 21 层 combat/plan-choice: Jev chose plan 1/2 (end turn) with confidence 0.25; code rank 1 (0.25)
+- 第 21 层 combat/plan-choice: Jev chose plan 1/2 (防御, 防御, 拆卸 -> 猎人杀手) with confidence 0.21; code rank 1 (0.21)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/3 (耸肩无视, 挑衅 -> 胧光怪, 御血术 -> 胧光怪) with confidence 0.22; code rank 1 (0.22)
+- 第 22 层 combat/plan-choice+potion: Jev chose to drink 技能药水 (confidence 0.31) (0.31)
+- 第 33 层 combat/plan-choice: Jev chose plan 2/4 (火焰屏障+, 旋风斩, 无惧疼痛) with confidence 0.30; code rank 2 (0.30)
+- 第 33 层 combat/plan-choice+potion: Jev chose to drink 稳定血清 (confidence 0.08) (0.08)
+- 第 35 层 combat/plan-choice: Jev chose plan 1/2 (岿然不动, 岩石铠甲) with confidence 0.10; code rank 1 (0.10)
+- 第 36 层 combat/plan-choice: Jev chose plan 1/4 (火焰屏障+, 御血术 -> 活体盾) with confidence 0.20; code rank 1 (0.20)
+- 第 38 层 combat/plan-choice+potion: Jev chose plan 4/4 (燃烧, 上勾拳 -> 拳击构装体, potion 虚弱药水 -> 拳击构装体) with confidence 0.33; code rank 4 (0.33)
+- 第 46 层 combat/plan-choice: Jev chose plan 1/3 (飞剑回旋镖, 耸肩无视+) with confidence 0.15; code rank 1 (0.15)

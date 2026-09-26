@@ -1,0 +1,139 @@
+<title>Jev 爬塔十小时</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --bg: #f6f5f3; --surface: #ffffff; --ink: #1c1f26; --muted: #5d6270; --line: #dedad4;
+    --accent: #a3263a; --accent-soft: #f5e3e5; --good: #2f7a4f; --warn: #b36b00;
+    --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    --serif: "Noto Serif SC", "Songti SC", serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15161a; --surface: #1d1f25; --ink: #e9e7e3; --muted: #a2a6b1; --line: #33363f;
+      --accent: #e0667a; --accent-soft: #3a2027; --good: #6fc394; --warn: #e3a54a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15161a; --surface: #1d1f25; --ink: #e9e7e3; --muted: #a2a6b1; --line: #33363f;
+    --accent: #e0667a; --accent-soft: #3a2027; --good: #6fc394; --warn: #e3a54a; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.7 var(--sans); }
+  .wrap { max-width: 760px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 56px; }
+  h1 { font: 700 26px/1.3 var(--serif); margin: 0 0 6px; text-wrap: balance; }
+  h2 { font: 700 18px/1.4 var(--sans); margin: 36px 0 12px; color: var(--accent); text-wrap: balance; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .lede { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 14px 16px; margin-top: 18px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 18px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); padding: 10px 12px; }
+  .stat b { display: block; font: 500 22px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: 12.5px; }
+  .tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 520px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+  td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.boss td { background: var(--accent-soft); }
+  .floor48 { color: var(--accent); font-weight: 700; }
+  ul { padding-left: 1.2em; margin: 6px 0; }
+  li { margin: 4px 0; }
+  h3 { font-size: 15px; margin: 18px 0 4px; }
+  .note { color: var(--muted); font-size: 13px; }
+  code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+
+<div class="wrap">
+  <h1>Jev 爬塔十小时</h1>
+  <div class="meta">2026-09-24 21:15 至 09-25 07:15（北京时间）· 铁甲战士 · 进阶 0 · 兜底 DeepSeek（deepseek-flash 思考模式）</div>
+
+  <div class="lede"><strong>18 局，0 胜，但 3 局打到了第三幕最终 boss（第 48 层）。</strong>在此之前，整个实验只有 1 局走到这里。三次分别输给实验体、永世沙漏（boss 只剩 33 血）和女王。瓶颈已从前两幕的机制 bug 后移到最终 boss 的机制和牌组输出不足。这 10 小时共有 34 次代码提交，修掉了多处会系统性算错伤害的 bug。</div>
+
+  <div class="stats">
+    <div class="stat"><b>18</b><span>局，0 胜</span></div>
+    <div class="stat"><b>3</b><span>局到最终 boss（第 48 层）</span></div>
+    <div class="stat"><b>9</b><span>局到第二幕 boss 或更远</span></div>
+    <div class="stat"><b>$2.69</b><span>DeepSeek 费用（高峰价）</span></div>
+  </div>
+
+  <h2>战绩</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>结束</th><th>层数</th><th>死于</th><th>局号</th></tr></thead>
+    <tbody>
+      <tr><td class="n">22:25</td><td class="n">33</td><td>知识恶魔（选了瓦解诅咒）</td><td class="n">VKPXGMV8YV31</td></tr>
+      <tr><td class="n">22:46</td><td class="n">30</td><td>熟睡甲虫（精英后被迫连战）</td><td class="n">Y83UP1RUC8R6</td></tr>
+      <tr><td class="n">23:02</td><td class="n">17</td><td>乐加维林族母（第 1 回合就把它打醒）</td><td class="n">Z2H318ZMMAD0</td></tr>
+      <tr><td class="n">23:17</td><td class="n">17</td><td>墨影幻灵（第 1 回合喝光药水）</td><td class="n">1R3CUXT91TAE</td></tr>
+      <tr><td class="n">23:30</td><td class="n">17</td><td>仪式兽（昏眩未建模，boss 剩 21 血）</td><td class="n">8LQGV1EFQDVX</td></tr>
+      <tr class="boss"><td class="n">01:30</td><td class="n floor48">48</td><td>最终 boss 实验体（三阶段）</td><td class="n">2WUMK6PK5QHD</td></tr>
+      <tr><td class="n">01:48</td><td class="n">17</td><td>瀑布巨兽（输出太低）</td><td class="n">1ZQJXQ53KSBG</td></tr>
+      <tr><td class="n">02:27</td><td class="n">33</td><td>帝皇蟹（输出不足）</td><td class="n">1WSHZ8ML4EVF</td></tr>
+      <tr><td class="n">02:40</td><td class="n">9</td><td>精英花园幽灵鳗（护栏记账 bug）</td><td class="n">21TKTPL5D4A6</td></tr>
+      <tr><td class="n">02:50</td><td class="n">9</td><td>精英旧日雕像（护栏记账 bug）</td><td class="n">4LGQ5ZBC8DN7</td></tr>
+      <tr><td class="n">03:21</td><td class="n">39</td><td>三幕普通战（连打 5 场没休息）</td><td class="n">MD3FLLNB7Q2W</td></tr>
+      <tr class="boss"><td class="n">04:11</td><td class="n floor48">48</td><td>最终 boss 永世沙漏（剩 33/512 血）</td><td class="n">TQX5JJX3UD39</td></tr>
+      <tr><td class="n">04:43</td><td class="n">33</td><td>帝皇蟹（水银沙漏触发蟹之怒）</td><td class="n">PLCXM5MLTHP7</td></tr>
+      <tr class="boss"><td class="n">05:31</td><td class="n floor48">48</td><td>最终 boss 女王（魂缚锁链）</td><td class="n">88HNFZ9K5LZ5</td></tr>
+      <tr><td class="n">06:04</td><td class="n">33</td><td>知识恶魔（衰朽诅咒）</td><td class="n">PU21Z67J65NE</td></tr>
+      <tr><td class="n">06:24</td><td class="n">22</td><td>胧光怪（一直在打会复活的寄生惧魔）</td><td class="n">XJWF15R19UXF</td></tr>
+      <tr><td class="n">06:43</td><td class="n">25</td><td>精英蜂群术士（它只剩 8 血）</td><td class="n">G8AQJ2YEMEHE</td></tr>
+      <tr><td class="n">07:06</td><td class="n">22</td><td>复盘中</td><td class="n">QE4KRWB1MB3X</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>决策分工与 DeepSeek 评估</h2>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>总决策数</td><td class="n">7,632</td></tr>
+      <tr><td>代码直接决定</td><td class="n">6,178（81%）</td></tr>
+      <tr><td>Jev 决定</td><td>755（10%）；Jev 共调用 1,454 次，约 $0.09</td></tr>
+      <tr><td>DeepSeek 兜底</td><td>590 次（8%）：战斗 335、事件 77、选牌 62、选牌界面 55、商店 40、路线 18</td></tr>
+      <tr><td>DeepSeek 推翻 Jev</td><td class="n">303 次（51%）</td></tr>
+      <tr><td>被血量护栏拦下</td><td class="n">76 次</td></tr>
+      <tr><td>DeepSeek token</td><td>输入 328 万（缓存命中 80%），输出 207 万（几乎全是思考）</td></tr>
+      <tr><td>DeepSeek 延迟</td><td>中位 12.6 秒，90% 在 40.6 秒内，累计等待约 3 小时</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">DeepSeek 最大的系统性问题是拿血换伤害，反复用“燃烧之血会回血”“有瓶中精灵兜底”为理由放弃格挡。改攻略措辞没有用，最后靠代码的血量护栏兜住。费用很低，但每次兜底平均要等十几秒。</p>
+
+  <h2>修掉的关键问题</h2>
+  <h3>系统性算错数字（影响每一局）</h3>
+  <ul>
+    <li>易伤、虚弱、背后受击被重复计算。游戏显示的数字已经包含这些修正，代码又乘了一次：易伤时高估受伤 50%，虚弱时低估输出 25%。</li>
+    <li>巨像减伤算了两次；“呼唤”的失血被当成可格挡，打出时还被多扣 6 血。</li>
+    <li>血量护栏的额度被重复计数，导致两局在第 9 层阵亡。</li>
+  </ul>
+  <h3>卡死（每次都在 15 分钟内发现）</h3>
+  <ul>
+    <li>附魔界面“至多选 3 张”时一张不选就确认，mod 卡死，需要人手点一次。</li>
+    <li>假商人房间没有商店数据；多阶段 boss 转阶段时场上没有活着的敌人。两处都会让程序一直等待。</li>
+    <li>单局 90 分钟上限会在 boss 战中途打断；改为 240 分钟，并且只在安全时机停下。</li>
+  </ul>
+  <h3>新建模的 boss 和精英机制</h3>
+  <ul>
+    <li>第一幕：瀑布巨兽自爆、乐加维林族母熟睡、仪式兽昏眩、灵魂异鱼呼唤。</li>
+    <li>第二幕：无厌沙虫的沙坑倒计时、帝皇蟹的蟹之怒、知识恶魔的四种诅咒（改由代码选）、千足虫的复活节、幻象怪。</li>
+    <li>最终 boss：实验体三阶段、永世沙漏的凋萎与人工制品、女王的魂缚锁链与“你是我的”。</li>
+  </ul>
+  <h3>策略</h3>
+  <ul>
+    <li>路线按幕估算每场战斗的掉血，低血时避开连续普通战，多去休息点和商店；精英前的休息点优先回血。</li>
+    <li>药水：boss 战每回合最多喝 1 瓶；高危回合药水视为免费，不再囤到必死才喝。</li>
+    <li>构筑：黑暗之拥和无惧疼痛要有 3 张以上消耗牌才加分；战斗中临时选牌按当回合效果选。</li>
+  </ul>
+
+  <h2>学习闭环</h2>
+  <ul>
+    <li>每局结束，由子任务复盘，写进 <code>notes/lessons.md</code>。</li>
+    <li>每满 5 局或同一原因连输两局就改规则。本期 6 次规则调整加多次即时修复，测试从 203 个增至 274 个。</li>
+    <li>每 30 分钟检查一次通关和卡死。本期 3 次卡死都是这项检查发现的。</li>
+  </ul>
+
+  <h2>判断与下一步</h2>
+  <ul>
+    <li>离首胜已经很近：3 次到最终 boss，永世沙漏那局只差 33 血。</li>
+    <li>最大的短板是牌组没有力量成长，打不动最终 boss 400–600 的有效血量。下一步提高力量和成长类牌在选牌里的权重。</li>
+    <li>进阶 10 仍然很远：要先稳定通关进阶 0，再逐级解锁。</li>
+  </ul>
+  <p class="note">同内容的 PDF 在 xdwin 桌面：Jev代打杀戮尖塔2_10小时总结_2026-09-25.pdf</p>
+</div>

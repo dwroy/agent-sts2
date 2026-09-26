@@ -1,0 +1,91 @@
+# STS2 × Jev 实验：当前状态（上下文压缩/会话重启后先读这里）
+
+更新：2026-09-25 20:15（北京时间）
+
+## 目标与规则（Dai 定）
+- **目标**：自动游玩《杀戮尖塔 2》铁甲战士，通关进阶 10。进阶不固定，随通关自动 +1。
+- **汇报**：Dai 只要两类汇报。
+  - 通关：在会话里提醒一句，不发推送。
+  - 卡死：自己修好，然后说一两句。
+  - 其他都不汇报。复盘、规则调整、上线新步骤都自己完成，并记进 `paper/materials/decision-log.md`。
+- **兜底决策**：只用 DeepSeek，Claude 不在对局中作答。
+- **安全**：key 不许打印、不许进日志；只改 ~/Projects/sts2-jev；不推送任何远端；git 只在本地 phase2 分支提交。
+- **论文**：所有数据都要落盘，历史不能丢。档案在 `paper/`，结构见 `paper/README.md`。
+
+## 系统现状
+- **运行链路**：Windows 上的游戏和 STS2-Agent mod（127.0.0.1:8080），加 WSL 里的 `ops/autoplay.sh`（pid 153052）。autoplay 一局接一局调用 `ops/run.sh`，每局上限 240 分钟，只在安全时机停止。
+- **代码**：`jev-sts2/`，phase2 分支，HEAD d98b0a8（已合并 M1 和开战计划），379 个测试通过。.env 已开 `JEV_CONTEXT=v1`、`FIGHT_PLAN=v1`。
+  - 工作树：`jev-sts2-m1`（分支 m1-jev-context，已合并）、`jev-sts2-fp`（分支 fight-plan，已快进进 phase2）。新功能先在独立工作树做、测试通过后再快进 phase2，避免对局进程加载到改一半的代码。
+  - Node 在 `~/.local/node/bin`，跑测试前要加进 PATH。
+  - `src/knowledge/move-model.json` 由 `tools/build-move-model.py` 定期刷新。
+- **三层分工**（20:10 起）：
+  - **代码**：整回合求解器，规则打分，护栏（血量护栏、沙坑、熟睡、事件付血等硬规则）。
+  - **Jev**（jev-1.13，经 OpenRouter）：在接近的选项之间选。战斗题带事实标签和战斗提示（M1），以及 DeepSeek 的开战计划与每个选项的 fight_plan_fit 标签。精英/boss 战里 Jev 拿不准也不再上交，由血量护栏兜底。
+  - **DeepSeek**（deepseek-flash 思考模式；战斗题 high、构筑题 max；超时 5 分钟）：
+    - 精英/boss 战开场做一次整场计划（`src/strategy/fight-plan.ts`，日志 `logs/fight-plans.jsonl`；出现新的 boss/精英敌人时重做一次）；
+    - 非战斗决策（构筑、商店、事件、地图、休息）仍在 Jev 置信度低于阈值时接手；
+    - 不再逐回合接手出牌。
+- **DeepSeek 看到的内容**：系统提示 = 说明 + `src/knowledge/ironclad-guide.md` + `src/knowledge/ds-handbook.md`；用户消息里附本局记忆：`src/project/run-journal.ts` 生成的 run_journal、fight_log、lookahead。
+
+## 实验与下一步
+1. **DeepSeek 记忆 v1**：已结束（5 局，进阶 3）：5FMU 17、VC4L 23、NZR7 7、JGJS 24、Y0KJ 48（最终 boss），平均 23.8 层，0 胜。记忆没有拖慢速度。
+2. **M1（Jev 标签+提示）与开战计划（FIGHT_PLAN=v1）**：20:10 同时上线（ops/m1-ready 已写）。
+   - M1 重评：选能力牌线 0.32→0.48，多掉的血 1.53→1.28，伤害 19.0→16.6。
+   - 开战计划 = 迁移第 2、3 步的合并版，Dai 同意（"开战前可以问一次，给出建议打法和药品的建议"）。
+   - 评估：精英/boss 战失血、过各幕 boss 比例、每局 DeepSeek 费用与总用时；看 `paper/data/fight_plans.csv` 和 runs.csv 的 fight_plan_* 列。两项同时上线，存在混杂。
+   - 观察点：计划是否被执行（fight_plan_fit 标签对 Jev 选择的影响）、药水是否按计划使用、失败/超时率。
+3. **后续迁移路线**：见 `paper/materials/architecture-review/7-final-synthesis.md`。下一步候选：M4（规则降级为先验）；给开战计划加"历史上打这个敌人的结果"（跨局经验）；M5 整场模拟（有门槛）。
+
+## 定时任务（只存在于当前会话；会话重启后要用 CronCreate 重建，文字照抄下面）
+- **学习闭环，每小时 13 分和 43 分**："[定时任务：STS2 学习闭环] 在 ~/Projects/sts2-jev 执行。Dai 的要求：除了通关和卡死，其他一律不在会话里汇报……"，共包含以下几步：
+  - 0：胜利提醒，写入 ops/win-notified；
+  - 0c：记忆实验计数（已完成，ops/m1-ready 存在，此步跳过）；
+  - 1–2：找出没复盘的局，重建出招模型，派子 agent 把复盘写进 lessons.md，然后运行 `ops/paper_dataset.py --no-raw`；
+  - 3：自上次调整以来满 5 局，或同一原因连输两局时，调整规则。计数是 autoplay.log 的行数减去 ops/rule-update.mark。
+- **卡死检查，每 5 分钟**：运行 `ops/stall-check.sh`。输出 OK 就静默；输出 STALL 就查控制台和 mod 状态，修复并测试后提交，运行 `ops/stop.sh` 重启对局进程，然后告诉 Dai。
+- **每日快照，每天 04:07**：
+  - `ops/paper_dataset.py` 完整快照；
+  - 归档会话记录，先检查不含 key；
+  - 重新生成 git bundle；
+  - 用 rsync 同步到 `/mnt/c/Users/XD/Documents/sts2-jev-paper/`。
+
+## 战绩（截至 09-26 05:45）
+- **总计**：约 95 局，5 胜。
+  - W6F4YXF3MT7A：进阶 0
+  - CRRPX9MWJZGM：进阶 1
+  - 4JVP9LTXYY9D：进阶 2（在记忆上线之前开局）
+  - JR66CJ9T8H7W：进阶 3（09-26 00:30，新架构首胜，约 41 分钟）
+  - BDAKNTSWKU5F：进阶 4（09-26 05:39，约 35 分钟；DeepSeek 力量构筑 + 焚烧收尾）
+- **当前**：进阶 5（09-26 05:40 起）。进阶 4 共约 14 局 1 胜。
+- 通关的共同点：
+  - 构筑方向来自 DeepSeek 推翻 Jev；
+  - 进 boss 时血量高；
+  - 能力牌在 boss 战前两回合打出；
+  - 最后都靠代码算出斩杀、血量护栏兜住。
+- 归因结论，详见 `paper/materials/analysis/`：
+  - 输局主因多为代码 bug 或没建模的机制，这类修好就不再复发；
+  - DeepSeek 在战斗里拿血换伤害，靠护栏拦；
+  - Jev 在战斗选线上最稳；
+  - DeepSeek 的价值在构筑。
+
+## 常用命令与文件
+- `python3 ops/stats.py`：跨局统计。
+- `python3 ops/metrics.py [--split UTC时间] [--asc N]`：按进阶/时间段的灵敏指标（过幕率、进 boss 血量与药水、各类战斗失血），写 paper/data/metrics.md。判断改动效果先看这个。
+- `cd jev-sts2 && npx tsx tools/decision-replay.ts --last 5`（或 `--runs A,B`）：用当前代码离线重放历史决策，并检查 ops/replay-cases.jsonl 里复盘标出的错误是否已修（fixed / still_wrong）。每次规则调整后跑一遍，把新复盘的关键错误追加成案例。
+- `python3 ops/report.py <run>`：单局复盘，已改为流式读取，约 2 秒。
+- `python3 ops/corrections.py`：生成 DeepSeek 纠正 Jev 的汇总。
+- `bash ops/stall-check.sh`：卡死检查。
+- `bash ops/stop.sh`：重启对局进程，autoplay 会自动拉起新进程。
+- `tools/deepseek-prompt-dump.ts`：重建一次 DeepSeek 请求。注意它还没加手册和记忆。
+- 文件：
+  - 复盘：`notes/lessons.md`
+  - 实验记录：`ops/experiments.md`
+  - 决策日志：`paper/materials/decision-log.md`
+  - 时间线：`paper/timeline.md`
+  - 已提醒过的通关：`ops/win-notified`
+
+## 已发布的页面（claude.ai artifact）
+- 10 小时总结：https://claude.ai/artifact/1iKfyMEAJzigqiTC74mydA
+- 通关总结（已更新到第三胜；分享设置目前是"任何人可访问"）：https://claude.ai/artifact/1ks4WadLEf3sCjiLfwyoNr
+- DeepSeek 透视：https://claude.ai/artifact/N2MgZaXA24jbFZZ7VZibkS
+- 架构评审：https://claude.ai/artifact/NFQqpMAptfdLeoUoXbgvFL

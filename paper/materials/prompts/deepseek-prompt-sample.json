@@ -1,0 +1,77 @@
+{
+ "question_key": "plan",
+ "floor": 19,
+ "turn": 2,
+ "user_message": {
+  "state": {
+   "run_brief": {
+    "character": "铁甲战士",
+    "act": "2",
+    "floor": 19,
+    "hp": "65/80 (81%)",
+    "gold": 279,
+    "ascension": 2,
+    "deck": "19 cards | 10 attacks / 6 skills / 3 powers | 1 upgraded | avg cost 1.05",
+    "relics": [
+     "燃烧之血",
+     "沉重石板",
+     "孙子兵法",
+     "百年积木",
+     "古茶具套装",
+     "烫嘴可可"
+    ],
+    "relic_effects": [
+     "燃烧之血: 在战斗结束时，回复{Heal}点生命。",
+     "沉重石板: 拾起时，从{Cards}张稀有牌中选择1张加入你的牌组，同时将1张受伤加入你的牌组。",
+     "孙子兵法: 如果你在本回合中没有打出过攻击牌，则在下一回合额外获得1点{Energy:energyIcons()}。",
+     "百年积木: 你在每场战斗中第一次损失生命值时，抽{Cards}张牌。",
+     "古茶具套装: 到达休息处后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
+     "烫嘴可可: 在每场战斗的第一回合额外获得{Energy:energyIcons()}。"
+    ],
+    "potions": [],
+    "notes": [],
+    "relic_effects_note": "{X} marks a value the mod does not expose; the effect text around it is accurate"
+   },
+   "fight": "monster",
+   "situation": {
+    "turn": 2,
+    "hp": "65/80",
+    "block": 7,
+    "energy": 3,
+    "incoming_if_i_do_nothing": 0
+   },
+   "player": {
+    "hp": 65,
+    "max_hp": 80,
+    "block": 7,
+    "energy": 3,
+    "stars": 0,
+    "powers": [
+     "绯红披风 7 (在你的回合开始时，失去生命并获得格挡。)"
+    ],
+    "cards_played_this_turn": 0,
+    "attacks_played_this_turn": 0,
+    "skills_played_this_turn": 0
+   },
+   "enemies": [
+    {
+     "name": "地道虫",
+     "hp": "50/87",
+     "block": 0,
+     "intents": "Buff , Defend ",
+     "powers": [
+      "VULNERABLE_POWER 2"
+     ]
+    }
+   ],
+   "note": "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn."
+  },
+  "question": "Which plan should I play this turn?",
+  "options": {
+   "plan1": "{\"plays\":\"烙印, then 彼岸咆哮\",\"result\":\"survives with 63/80 HP before healing\",\"hp_lost\":2,\"damage_dealt\":28,\"enemies_after\":\"地道虫 22 HP, Vulnerable 2\",\"strength_gained\":1,\"lasting_value\":\"sets up a power worth about 5 score over the fight (a few HP now is often worth it in a long fight)\"}",
+   "plan2": "{\"plays\":\"烙印, then 燃烧, then 打击 -> 地道虫\",\"result\":\"survives with 63/80 HP before healing\",\"hp_lost\":2,\"damage_dealt\":13,\"enemies_after\":\"地道虫 37 HP, Vulnerable 2\",\"strength_gained\":3,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 19 score over the fight (a few HP now is often worth it in a long fight)\"}",
+   "plan3": "{\"plays\":\"彼岸咆哮\",\"result\":\"survives with 64/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":27,\"enemies_after\":\"地道虫 23 HP, Vulnerable 2\"}",
+   "plan4": "{\"plays\":\"燃烧, then 打击 -> 地道虫\",\"result\":\"survives with 64/80 HP before healing\",\"hp_lost\":1,\"damage_dealt\":12,\"enemies_after\":\"地道虫 38 HP, Vulnerable 2\",\"strength_gained\":2,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 14 score over the fight (a few HP now is often worth it in a long fight)\"}"
+  }
+ }
+}

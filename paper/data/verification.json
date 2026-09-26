@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true,
+    "runs.jsonl decision-count mismatches": []
+  },
+  "row_counts": {
+    "runs.csv": 106,
+    "decisions_by_label.csv": 3676,
+    "escalations.csv": 2630,
+    "fight_plans.csv": 150,
+    "commits.csv": 263
+  }
+}
