@@ -92,7 +92,9 @@ export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct
     case "Rest":
       return hpPct < 0.55 ? 5 : hpPct < 0.75 ? 2.5 : 1;
     case "Shop":
-      return shopWeight(gold, floorInAct, act);
+      // Low on HP a shop is worth no more than a rest: gold does not save a run that dies on the way
+      // (2VW5 F26/F27: a 12-point shop beat a rest at 42/80 and 33/80, died at F28 holding 698 gold).
+      return hpPct < 0.5 ? Math.min(shopWeight(gold, floorInAct, act), 4) : shopWeight(gold, floorInAct, act);
     case "Treasure":
       return 3;
     case "Unknown": // "?" rooms

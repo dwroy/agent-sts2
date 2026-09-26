@@ -119,6 +119,8 @@ const OFFENSIVE_POTIONS = new Set([
   "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
   "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
 ]);
+/** Potion text that blunts an enemy hit (the only kind a plan's "big_hit" applies to). */
+const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
 /** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
@@ -761,7 +763,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     : null;
   // A kill-first target only matters with more than one enemy alive.
   const focusInput = focusIndex !== null && enemies.length > 1 ? { focusIndex } : {};
-  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, offensive: OFFENSIVE_POTIONS.has(potionId) });
+  // "big_hit" only means something for a potion that blunts a hit; any other (Cure All, Colorless
+  // Potion: SM9H F33, never drunk until T8 with 5 of 7 energy unspent on T1) follows the default rule.
+  const notBlunting = (potionId: string) =>
+    OFFENSIVE_POTIONS.has(potionId) || !BLUNTS_HIT.test(potionsAll.find((potion) => potion.potion_id === potionId)?.text ?? "");
+  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, offensive: notBlunting(potionId) });
   // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
   const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
@@ -864,7 +870,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (best.outcome.dies) {
     const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
     if (potionsNow.length > 0) return planCombatPerCard(env);
-    const leastLoss = leastLossPlan(solved.plans, hand);
+    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
     const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
     return {
@@ -879,7 +885,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
-  const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: OFFENSIVE_POTIONS.has(potionId) });
+  const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
   const potions = potionCapped || dryCheap ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
@@ -903,7 +909,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         const use = fightPlan.potions[potion.potion_id];
         // big_hit only for a potion that blunts the hit (92MW F29 T1: Stable Serum "big_hit", drunk on a
         // 24 hit it does nothing against; the fight was won before its planned turns).
-        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id) && /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns/i.test(potion.text));
+        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id) && BLUNTS_HIT.test(potion.text));
       })
     : undefined;
   if (due) {
@@ -1270,8 +1276,10 @@ function planTurn(env: DecisionEnv): Decision | null {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(plans: Plan[], hand: CardModel[]): Plan {
-  const drawAt = (plan: Plan): number => plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card)));
+export function leastLossPlan(plans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+  // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first).
+  const drawAt = (plan: Plan): number =>
+    plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp));
   const drawing = plans.filter((plan) => drawAt(plan) >= 0);
   if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
   const most = drawing.reduce((a, b) =>
