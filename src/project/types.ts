@@ -81,6 +81,8 @@ export interface ScreenMemory {
   hpGuard?: { fight: string; turns: Record<string, number> };
   /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
   potionTurn?: { fight: string; turn: number | null; startCount: number };
+  /** Potion ids the fight plan's auto-drink used this fight: one each (H5MZ F39: both Power Potions went T1). */
+  planPotionsDrunk?: { fight: string; ids: string[] };
   /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).

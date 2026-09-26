@@ -377,6 +377,22 @@ describe("turn planner with a fight plan", () => {
     expect(calm?.kind === "act" ? calm.intent.action : "ask").not.toBe("use_potion");
   });
 
+  it("auto-drinks one potion per id a fight: a second copy is not planned (H5MZ F39 T1: both Power Potions)", () => {
+    const raw = bossTurnOne();
+    raw["turn"] = 5;
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14x3", damage: 14, hits: 3, total_damage: 42 }];
+    const potion = ((raw["run"] as Raw)["potions"] as Raw[])[0]!;
+    Object.assign(potion, { potion_id: "LIQUID_MEMORIES", requires_target: false, description: "获得 20 点格挡。" });
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
+    const first = planCombatTurn(e);
+    expect(first?.kind === "act" ? first.intent.action : "ask").toBe("use_potion");
+    // The same board again (the second copy): no second auto-drink this fight.
+    const again = planCombatTurn(e);
+    expect(again?.kind === "act" ? again.label : "ask").not.toBe("combat/plan-potion");
+  });
+
   it("per-card fallback counts held Beckons at the end of the turn (F6NT F17 T11)", () => {
     const raw = combatPayload();
     const combat = raw["combat"] as Raw;
