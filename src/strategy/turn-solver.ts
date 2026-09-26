@@ -87,6 +87,8 @@ export interface EnemySim {
   demise?: number;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
+  /** Personal Hive N (Entomancer): every attack hit on it adds N Dazed to our draw pile (M812 F28). */
+  dazedPerHit?: number;
   /** Painful Stabs N: every unblocked hit shuffles N Wounds into the discard pile (2WUM: 3 of 5 cards). */
   woundsPerHit?: number;
   /** Enrage N (Test Subject phase 1): +N Strength for every Skill the player plays. */
@@ -363,6 +365,8 @@ interface Sim {
   cardsDrawn: number;
   unknown: string[];
   feedKills: number;
+  /** Dazed our hits put into the draw pile this turn (Personal Hive). */
+  dazedAdded: number;
   /** Frantic Escapes played this turn (each +1 Sandpit). */
   escapes: number;
   /** Crimson Mantles played this turn (each costs 1 HP at the start of every later turn). */
@@ -580,6 +584,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     if (enemy.intangible) amount = Math.min(amount, 1);
     amount = Math.max(0, amount);
     if ((enemy.skittish ?? 0) > 0 && amount > 0) enemy.skittishHit = true;
+    sim.dazedAdded += enemy.dazedPerHit ?? 0;
     const absorbed = Math.min(enemy.block, amount);
     enemy.block -= absorbed;
     if (enemy.reflect && absorbed > 0) loseHp(sim, absorbed, player);
@@ -1021,6 +1026,8 @@ export const FOCUS_BONUS = 0.5;
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
+/** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */
+export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
 export const BOMB_SURE = 0.8;
 /** Damage weight multiplier while racing the Waterfall Giant's eruption (raceEruption). */
@@ -1353,6 +1360,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
   }
   score += sim.feedKills * 12;
+  // Personal Hive: each hit clogs a later hand with a Dazed (M812 F28: 2-4 Dazed per hand from T4).
+  if (!winsFight) score -= DAZED_COST * sim.dazedAdded;
   score -= sim.potionCost;
 
   return {
@@ -1501,6 +1510,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     cardsDrawn: 0,
     unknown: [],
     feedKills: 0,
+    dazedAdded: 0,
     escapes: 0,
     mantles: 0,
     enraged: 0,

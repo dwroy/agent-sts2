@@ -47,6 +47,8 @@ const MODELLED_ENEMY_POWERS = new Set([
   // Axebot: revives from Stock (`stock`); left unmodelled it cut our damage by 20% and a kill that only
   // revived it read as lethal three times (U6W7 F39).
   "STOCK_POWER",
+  // Entomancer: a Dazed per hit (`dazedPerHit`); left unmodelled it cut our damage by 20% (M812 F28).
+  "PERSONAL_HIVE_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -238,6 +240,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       revives: powerAmount(enemy, "ADAPTABLE_POWER") > 0,
       stock: powerAmount(enemy, "STOCK_POWER"),
       shriek: powerAmount(enemy, "SHRIEK_POWER"),
+      dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
