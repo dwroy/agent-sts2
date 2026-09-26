@@ -1026,6 +1026,8 @@ export const FOCUS_BONUS = 0.5;
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
+/** Damage one more Sandpit turn is worth (the deck's rough output per turn into The Insatiable). */
+export const SANDPIT_TURN_DAMAGE = 20;
 /** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */
 export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
@@ -1199,6 +1201,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Ending at 1 leaves next turn a must-Escape turn (or death if none is drawn); the boss has 321 HP,
   // so the countdown outlasts any damage race.
   if (sandpitAfter === 1) score -= weights.hp * 15;
+  // Each Frantic Escape is one more turn before the pit eats us: about a turn of damage against a
+  // 321 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
+  if (!winsFight && sandpitAfter !== null) score += sim.escapes * weights.damage * SANDPIT_TURN_DAMAGE;
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;
