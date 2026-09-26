@@ -1046,6 +1046,17 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("dominated lines (Q4JV F17 T3)", () => {
+  it("cards drawn with no energy left do not keep a weaker line alive", async () => {
+    const { dominates } = await import("../src/strategy/turn-solver.js");
+    const base = solveTurn({ hand: [strike(0)], player: player({ hp: 60 }), enemies: [enemy({ index: 0, hp: 200, attacks: [] })], fightKind: "boss" }).plans[0]!;
+    const hits = { ...base, outcome: { ...base.outcome, damageDealt: 23, cardsDrawn: 0, energyLeft: 0 } };
+    const trance = (energyLeft: number) => ({ ...base, outcome: { ...base.outcome, damageDealt: 8, cardsDrawn: 3, energyLeft } });
+    expect(dominates(hits, trance(0))).toBe(true);
+    expect(dominates(hits, trance(1))).toBe(false);
+  });
+});
+
 describe("The Bomb (1ZQJ: 40 to every enemy after 3 turns, scored 0 as unmodelled)", () => {
   const bomb = (index: number): CardModel =>
     card(index, "THE_BOMB", { type: "Skill", target: "self", validTargets: [], cost: 2, delayedDamage: 40 });
