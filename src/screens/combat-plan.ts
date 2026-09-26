@@ -1029,8 +1029,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     const extraDamage = picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
+  // Not on a big-hit turn: that is the turn to block (0YG4 F43 T4: Dark Embrace + Blood Wall, -26,
+  // kept over a 29-block line at -13 into the Heavy Cleave).
   const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
     winsRace(picked, replacement) ||
+    !bigHit &&
     replacement !== null &&
     setupCount(picked) > setupCount(replacement) &&
     picked.outcome.hpAfter >= Math.max(playerSim.maxHp * 0.35, nextIncoming);
