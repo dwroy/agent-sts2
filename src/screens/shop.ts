@@ -110,7 +110,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
         score:
-          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots) +
+          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
           (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus : 0),
         summary: {
           buy: name,
@@ -183,6 +183,7 @@ function shopScore(
   price: number | null,
   bossId = "",
   emptySlots = 0,
+  hpPct = 1,
 ): number {
   const cost = price ?? 150;
   if (action === "buy_card") {
@@ -193,6 +194,9 @@ function shopScore(
   if (action === "buy_relic") return 18 - cost / 40;
   // Empty potion slots from act 2 on: a potion is a turn saved in the next elite or boss (SUUK F39,
   // 12ZG F21, F8HR F20: empty belts, gold spent on removals and cards, died holding no potion).
+  // Low HP with an empty slot: the potion is the next fight, above a removal's 30 (X4QR F21: 21/80
+  // after, 261 gold on Flame Barrier, a removal and Feel No Pain; Explosive Ampoule and Fire Potion left).
+  if (emptySlots > 0 && hpPct < 0.45) return 34 - cost / 25;
   if (act >= 2 && emptySlots > 0) return (emptySlots >= 2 ? 14 : 8) - cost / 25;
   return -5 - cost / 30;
 }

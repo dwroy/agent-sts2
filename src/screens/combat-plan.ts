@@ -1044,7 +1044,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     !bigHit &&
     replacement !== null &&
     setupCount(picked) > setupCount(replacement) &&
-    picked.outcome.hpAfter >= Math.max(playerSim.maxHp * 0.35, nextIncoming);
+    // Boss fights: a setup power is kept while HP clears the next hit with room (5BXM F33 T4/T6: Demon
+    // Form+ swapped twice at 22-33 HP before a no-attack curse turn, never played; boss left at 152).
+    picked.outcome.hpAfter >= (kind === "boss" ? Math.max(playerSim.maxHp * 0.2, nextIncoming + 5) : Math.max(playerSim.maxHp * 0.35, nextIncoming));
   // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
   // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
   const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
