@@ -381,7 +381,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
-    randomExhaust: /随机消耗|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
+    // Thrash: "消耗你的手牌中随机一张攻击牌" (MAHA F33 T7: played before Anger, which it ate; the boss
+    // was left at 1/321).
+    randomExhaust: /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }
