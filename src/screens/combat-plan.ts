@@ -818,7 +818,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     fightPlan !== null &&
     plan.steps.some((step) => {
       const use = step.cardId.startsWith("POTION:") ? fightPlan.potions[step.cardId.split(":")[1] ?? ""] : undefined;
-      return use === "save" || use === "emergency";
+      // A potion the plan keeps for a big hit is kept on the turns before it (MK1N F33 T2: the Block
+      // Potion planned for the T4 Laser drunk on T2; WLY1).
+      return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed);
     });
   // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
   // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
@@ -946,9 +948,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Counted per distinct planned card: one of them played is not the plan (CAYK F48 T3: Brand
   // satisfied the check and Mayhem, bought for this fight, was never played).
   // Molten Fist only sets up into Vulnerable (CWMP F7 T1: played as "setup" into a target with none).
+  // An attack is setup only when it debuffs (Bash, Molten Fist): Howl from Beyond+ at 19 HP for 19
+  // damage passed the guard as "planned setup" (MK1N F33 T2).
   const setupStep = (step: Step) =>
     fightPlan !== null &&
     fightPlan.setup.includes(step.cardId) &&
+    !((() => {
+      const model = cardFor(step, hand);
+      return model !== undefined && model !== null && model.type === "Attack" && model.vulnerable === 0 && model.weak === 0 && step.cardId !== "MOLTEN_FIST" && step.cardId !== "DOMINATE";
+    })()) &&
     !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
   // max(6, 15% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
