@@ -326,8 +326,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     known = true;
   } else if (special === "frantic_escape") {
     known = true; // its whole value is the Sandpit count, scored by the solver
-  } else if (!hasModelledEffect) {
-    // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy.
+  } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
+    // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
+    // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
     flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));
   }
 

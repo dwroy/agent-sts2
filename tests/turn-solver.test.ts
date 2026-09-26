@@ -1058,6 +1058,18 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("plain True Grit (VL2D F17 T16)", () => {
+  it("the cards left unplayed still pay their held penalty", () => {
+    const grit = card(0, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], cost: 1, block: 7, randomExhaust: true });
+    const beckon = card(1, "BECKON", { type: "Status", target: "self", validTargets: [], cost: 2, heldPenalty: 6, heldHpLoss: 6 });
+    const result = solveTurn({ hand: [grit, beckon], player: player({ hp: 15, energy: 1 }), enemies: [enemy({ index: 0, hp: 100, attacks: [] })], fightKind: "boss" });
+    const played = result.plans.find((plan) => plan.steps.some((step) => step.cardId === "TRUE_GRIT"));
+    expect(played === undefined || played.outcome.hpLoss > 0).toBe(true);
+    // Never a "free" line that hides the held Beckon.
+    expect(result.plans.every((plan) => plan.outcome.hpLoss > 0)).toBe(true);
+  });
+});
+
 describe("Stone Armor (SCBC F21 T2)", () => {
   it("its plating blocks at the end of the turn it is played", () => {
     const armor = card(0, "STONE_ARMOR", { type: "Power", target: "self", validTargets: [], cost: 1, plating: 4 });
