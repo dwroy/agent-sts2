@@ -126,7 +126,8 @@ export function shopWeight(gold: number, floorInAct: number, act?: number): numb
  */
 // A7 measured 12.5 HP a hallway fight (~16% of max HP, all acts); act 2/3 hallways drained the runs
 // that died before the act-2 boss (4V5T F19-F23, MF7A F19-F24) and SUUK F40-F45 (-50, -30).
-const FIGHT_HP_COST_BY_ACT = [0.1, 0.18, 0.24];
+// Act 3 hallways cost ~0.33 max HP each in 1LJF (-39, -17, -31) and SUUK (-50, -30).
+const FIGHT_HP_COST_BY_ACT = [0.1, 0.18, 0.28];
 /** Share of a hallway fight's HP cost a "?" room carries (some are fights, some events cost HP). */
 const UNKNOWN_HP_SHARE = 0.4;
 export const ELITE_HP_COST_FACTOR = 2.5;

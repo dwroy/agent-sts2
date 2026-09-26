@@ -80,6 +80,7 @@ export function planShop(env: DecisionEnv): Decision | null {
   const stock: JsonValue[] = [];
   const deckNow = deckEntries(state, knowledge);
   const gap = damageGap(state, knowledge);
+  const emptyPotionSlots = asArray(asRecord(state.run?.raw)["potions"]).filter((slot) => !bool(asRecord(slot)["occupied"])).length;
   const profile = deckProfile(deckNow);
   const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
   const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
@@ -109,7 +110,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
         score:
-          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"])) +
+          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots) +
           (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus : 0),
         summary: {
           buy: name,
@@ -181,6 +182,7 @@ function shopScore(
   floor: number,
   price: number | null,
   bossId = "",
+  emptySlots = 0,
 ): number {
   const cost = price ?? 150;
   if (action === "buy_card") {
@@ -189,5 +191,8 @@ function shopScore(
     return value - 62 - cost / 25;
   }
   if (action === "buy_relic") return 18 - cost / 40;
+  // Empty potion slots from act 2 on: a potion is a turn saved in the next elite or boss (SUUK F39,
+  // 12ZG F21, F8HR F20: empty belts, gold spent on removals and cards, died holding no potion).
+  if (act >= 2 && emptySlots > 0) return (emptySlots >= 2 ? 14 : 8) - cost / 25;
   return -5 - cost / 30;
 }
