@@ -497,6 +497,8 @@ describe("Multi Claw next hit (YFG5, ZANM)", () => {
     const { multiClawNext } = await import("../src/screens/combat-plan.js");
     expect(multiClawNext({ move_id: "MULTI_CLAW", intents: [{ damage: 10, hits: 4 }] })).toBe(50);
     expect(multiClawNext({ move_id: "BITE", intents: [{ damage: 20, hits: 1 }] })).toBeNull();
+    // Kin Priest: Beam after Orb of Weakness, 3 hits of 3 + Strength (P78Z, PPKT T11: 21).
+    expect(multiClawNext({ enemy_id: "KIN_PRIEST", move_id: "ORB_OF_WEAKNESS", powers: [{ power_id: "STRENGTH_POWER", amount: 4 }], intents: [] })).toBe(21);
   });
 });
 

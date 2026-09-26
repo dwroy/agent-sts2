@@ -1436,6 +1436,11 @@ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player
  * not the move model's average (YFG5, ZANM, 7DFB: a flat 41 read for 50-70 hits).
  */
 export function multiClawNext(enemy: Record<string, unknown>): number | null {
+  // Kin Priest: a fixed cycle Orb of Frailty -> Orb of Weakness -> Beam (3 hits of 3 + Strength) ->
+  // Ritual; the move model's average Beam (13) missed the 21 that killed P78Z and PPKT on T11.
+  if (str(enemy["enemy_id"]) === "KIN_PRIEST" && /ORB_OF_WEAKNESS/i.test(str(enemy["move_id"]))) {
+    return (3 + powerAmount(enemy, "STRENGTH_POWER")) * 3;
+  }
   if (!/MULTI_CLAW/i.test(str(enemy["move_id"]))) return null;
   const intent = asArray(enemy["intents"]).map(asRecord).find((entry) => num(entry["damage"]) > 0);
   if (!intent) return null;
