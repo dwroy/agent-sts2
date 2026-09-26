@@ -21,7 +21,8 @@
 - 好牌(A)：绯红披风、岿然不动、狂宴 Feed(见到就拿、用于斩杀)、烙印、挑衅、剑柄打击、燃烧、巨像、耸肩无视、燃烧契约、狱火、黑暗之拥与无惧疼痛(牌组里已有 ≥3 张会消耗的牌时才是好牌，否则跳过)、火焰屏障、壁垒(有格挡体系时)、上勾拳、拆卸、旋风斩、头槌 Headbutt、放血、预备打击。
 - 随机稀有牌事件拿到黑暗之拥/无惧疼痛时，没有 3 张以上消耗牌就当废牌（不会打出，只占抽牌）。
 - 看体系(B/C)：武装 Armaments(效果未计入求解器)、残酷、好勇斗狠 Aggression、地狱狂徒、倾泻 Cascade、焚烧、重锤 Bludgeon、无情猛攻 Unrelenting、踩踏 Stomp、狂怒 Rage、连环拳 One-Two Punch、恶魔之焰、重振精神、怨恨、扯碎、被遗忘的仪式、添柴、原始力量、完美打击、惊逃 Stampede、势不可当、全身撞击(只在有壁垒/大量格挡时)。
-- 陷阱(F，基本不拿)：破灭 Havoc、余烬 Cinder、与我一战！ Fight Me!、杂耍 Juggling、战鼓 Drum of Battle、铁斩波 Iron Wave、战栗 Tremble(被挑衅完爆)、暴走 Rampage、凌虐 Mangle、闪电霹雳 Thunderclap(仅缺 AOE 时可用)。
+- 与我一战！ Fight Me!：永久力量来源，对最终 boss 实验体（600 血）有用（ZANM 靠它 13 力量），别放进 avoid。
+- 陷阱(F，基本不拿)：破灭 Havoc、余烬 Cinder、杂耍 Juggling、战鼓 Drum of Battle、铁斩波 Iron Wave、战栗 Tremble(被挑衅完爆)、暴走 Rampage、凌虐 Mangle、闪电霹雳 Thunderclap(仅缺 AOE 时可用)。
 
 ## 4. 选牌原则
 - 每张牌问：它是否比平均抽到的牌更好？否则跳过。第 2 幕后跳过率应明显上升。
