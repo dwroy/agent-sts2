@@ -72,6 +72,11 @@ export interface EnemySim {
    * is stunned, and its move this turn is cancelled (PU21 F7 T3: 82 -> 69, CRASH 22 became STUNNED).
    */
   shriek?: number;
+  /**
+   * Burrowed (Tunneler): its block stays up between turns, and breaking it during our turn stuns it,
+   * cancelling this turn's attack (HV0D F21: 32 block T3-T10, Below 23 landed five times).
+   */
+  burrowed?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
   unmodelled?: boolean;
   /** Guarded / Soar: damage taken is halved. */
@@ -1005,6 +1010,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     const start = input.enemies.find((entry) => entry.index === enemy.index);
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
+    if (enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);

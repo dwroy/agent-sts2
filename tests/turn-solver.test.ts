@@ -1058,6 +1058,18 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Tunneler burrow (HV0D F21 T8)", () => {
+  it("breaking the burrow block cancels this turn's attack", () => {
+    const bash = card(0, "BASH", { cost: 2, damage: 10 });
+    const pommel = card(1, "POMMEL_STRIKE", { cost: 1, damage: 16 });
+    const defend = card(2, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], cost: 1, block: 5 });
+    const tunneler = enemy({ index: 0, name: "Tunneler", hp: 56, block: 22, burrowed: true, attacks: [{ damage: 23, hits: 1 }] });
+    const best = solveTurn({ hand: [bash, pommel, defend], player: player({ hp: 20, energy: 3 }), enemies: [tunneler], fightKind: "monster" }).plans[0]!;
+    expect(best.outcome.hpLoss).toBe(0);
+    expect(best.steps.map((step) => step.cardId).sort()).toEqual(["BASH", "POMMEL_STRIKE"]);
+  });
+});
+
 describe("Free Attack (NEVM F23 T2)", () => {
   it("only the next attack is free after Unrelenting", () => {
     const uppercut = card(0, "UPPERCUT", { cost: 2, damage: 13 });
