@@ -963,6 +963,9 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hallwayGuardSlack)
           : null;
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
+    // Racing the Waterfall Giant's eruption, damage is the defence (KG0E F17: the guard swapped four
+    // lines, ~66 damage, one to a 0-damage turn; the boss healed and the eruption outgrew us).
+    if (raceEruption) guarded = null;
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -1181,7 +1184,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
       const raceKept = proposed !== null && winsRace(picked, proposed);
-      const replacement = proposed && guardKeepsSetup(picked, proposed) ? null : proposed;
+      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;
