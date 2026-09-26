@@ -32,9 +32,12 @@ export function planRest(env: DecisionEnv): Decision | null {
     const floor = state.run?.floor ?? 1;
     const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
     const beforeBoss = nextBoss - floor <= 2 || forcedNext(env.screenMemory, state) !== null;
+    // Within 4 floors of the boss, below 65% there are fights left to lose HP in before the last rest
+    // (T4PY F29: smithed at 46/80, entered the crab at 55/80 after two fights, died on T4).
+    const nearBoss = nextBoss - floor <= 4;
     const score =
       (id === "HEAL"
-        ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) ? 10 : hpPct < 0.65 ? 5 : 1
+        ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1
         : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
     options.push({
       key: `o${index}`,
