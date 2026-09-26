@@ -53,4 +53,14 @@ describe("boss clock", () => {
     expect(bossClockJson(state, testKnowledge)).toMatchObject({ boss: "KAISER_CRAB", boss_hp: 408, need_damage_per_turn: 34 });
     expect(gapCardBonus({ ...gap, gap: 0 }, "INFLAME").bonus).toBe(0);
   });
+
+  it("no clock on a boss floor (the boss id is the dead one), and energy relics count (7DFB)", () => {
+    const starter = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
+    const onBoss = parseGameState(baseState("MAP", { run: runPayload({ deck: starter, boss_id: "KAISER_CRAB_BOSS", floor: 33 }) }));
+    expect(damageGap(onBoss, testKnowledge)).toBeNull();
+    const heavy = [...starter, attack(9, "BLUDGEON", 32, 3), attack(10, "BLUDGEON", 32, 3), attack(11, "BLUDGEON", 32, 3)];
+    const plain = deckDamagePerTurn(mapState(heavy), testKnowledge);
+    const antler = deckDamagePerTurn(parseGameState(baseState("MAP", { run: runPayload({ deck: heavy, boss_id: "KAISER_CRAB_BOSS", floor: 25, relics: [{ index: 0, relic_id: "BLESSED_ANTLER" }] }) })), testKnowledge);
+    expect(antler).toBeGreaterThan(plain);
+  });
 });

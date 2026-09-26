@@ -72,7 +72,8 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         kind: "act",
         label: params.label,
         intent: top.intent,
-        rationale: `code: ${top.label ?? top.key} scores ${top.score} vs ${second.label ?? second.key} ${second.score}`,
+        // The winner's reasons (card value, run plan, boss clock) so a bonus can be traced in the log.
+        rationale: `code: ${top.label ?? top.key} scores ${top.score} vs ${second.label ?? second.key} ${second.score}${whyOf(top)}`,
       };
     }
     if (params.maxModelOptions !== undefined && ranked.length > params.maxModelOptions) {
@@ -149,4 +150,11 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       };
     },
   };
+}
+
+/** " (why: …)" from an option's summary, when it carries a `why`. */
+function whyOf(option: PickOption): string {
+  const summary = option.summary;
+  const why = summary && typeof summary === "object" && !Array.isArray(summary) ? (summary as Record<string, unknown>)["why"] : null;
+  return typeof why === "string" && why ? ` (why: ${why})` : "";
 }
