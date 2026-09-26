@@ -468,7 +468,9 @@ describe("big_hit on an attack potion (24HM F33)", () => {
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
     const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");
-    const e = env(combatPayload());
+    const raw = combatPayload();
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得 12 点格挡。", requires_target: false, valid_target_indices: [] });
+    const e = env(raw);
     const bees = [{ index: 0, name: "Entomancer", hp: 55, maxHp: 145, block: 0, alive: true, vulnerable: 0, weak: 0, strengthDelta: 0, attacks: [{ damage: 5, hits: 7 }] }];
     const player = { hp: 30, maxHp: 80, block: 0, energy: 3, strength: 0, dexterity: 0, weak: false, vulnerable: false, frail: false, intangible: false };
     const decision = noPlayRescuePotion(e, bees as never, player as never);

@@ -1250,7 +1250,10 @@ function planTurn(env: DecisionEnv): Decision | null {
         const bestDryLoss = dry.length > 0 ? Math.min(...dry.map((plan) => plan.outcome.hpLoss)) : Infinity;
         // Refusing the potion plays a dry line, not code's rank 1 when that drinks (F3SS F33 T3: the
         // fallback drank the Dexterity Potion anyway).
-        const dryTop = dry.includes(top) ? top : (dry[0] ?? top);
+        // The veto rests on the least-loss dry line, so that is the one played (P2E4 F48 T2: justified by a
+        // -5 dry line, the top-scoring dry line lost 19).
+        const leastDry = dry.filter((plan) => plan.outcome.hpLoss === bestDryLoss);
+        const dryTop = dry.includes(top) && top.outcome.hpLoss === bestDryLoss ? top : (leastDry[0] ?? dry[0] ?? top);
         if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop);
       }
       // Boss, drink-first (the line is re-planned after the potion), every dry line losing 10+: the
@@ -1414,8 +1417,9 @@ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player
   const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && potion.potion_id !== "FOUL_POTION");
   const pick =
     potions.find((potion) => BLUNTS_HIT.test(potion.text)) ??
-    potions.find((potion) => /抽|draw/i.test(potion.text)) ??
-    potions.find((potion) => !potion.requires_target || potion.valid_targets.length > 0);
+    potions.find((potion) => /抽|draw/i.test(potion.text));
+  // Only a potion that blocks or draws helps a hand with nothing playable (P2E4 F48: Blessing of the
+  // Forge drunk on a hand of Soulbound-locked cards).
   if (!pick) return null;
   const target = pick.requires_target ? pick.valid_targets[0] : undefined;
   if (pick.requires_target && target === undefined) return null;
