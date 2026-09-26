@@ -1058,6 +1058,20 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Kaiser Crab focus (GGF8 F33)", () => {
+  it("a planned kill-first claw gets no focus bonus: the claws stay level", () => {
+    const claws = [
+      enemy({ index: 0, name: "Crusher", hp: 150, maxHp: 209, crabRage: true, attacks: [] }),
+      enemy({ index: 1, name: "Rocket", hp: 120, maxHp: 199, crabRage: true, attacks: [] }),
+    ];
+    const hand = [{ ...strike(0), validTargets: [0, 1] }];
+    const plain = solveTurn({ hand, player: player({ hp: 60 }), enemies: claws, fightKind: "boss" }).plans[0]!;
+    const focused = solveTurn({ hand, player: player({ hp: 60 }), enemies: claws, fightKind: "boss", focusIndex: 1 }).plans[0]!;
+    expect(focused.steps[0]!.target).toBe(plain.steps[0]!.target);
+    expect(focused.score).toBeCloseTo(plain.score);
+  });
+});
+
 describe("Pact's End (H1FA F17 T9)", () => {
   it("deals damage only with 3+ cards in the exhaust pile", () => {
     const pact = card(0, "PACTS_END", { cost: 0, damage: 18, target: "all", validTargets: [] });
