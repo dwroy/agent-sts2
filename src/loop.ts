@@ -447,7 +447,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.screen = state.screen;
       screenMemory.shopOpened = false;
       screenMemory.cardRewardSkipped = false;
-      screenMemory.planBeforeSelection = state.in_combat && screenMemory.combatPlan ? screenMemory.combatPlan.remaining : undefined;
+      const after = screenMemory.plannedAfter;
+      screenMemory.planBeforeSelection = !state.in_combat
+        ? undefined
+        : screenMemory.combatPlan
+          ? screenMemory.combatPlan.remaining
+          : after && after.turn === state.turn
+            ? after.steps
+            : undefined;
       screenMemory.combatPlan = null;
     }
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
@@ -457,6 +464,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.facing = undefined;
       screenMemory.fightCards = undefined;
       screenMemory.planBeforeSelection = undefined;
+      screenMemory.plannedAfter = undefined;
       screenMemory.demonTongueTurn = undefined;
       screenMemory.fightPlan = undefined;
       screenMemory.fightPlanFailed = undefined;

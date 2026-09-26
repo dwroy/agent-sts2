@@ -507,6 +507,7 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
   const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
+  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via }
@@ -684,6 +685,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
+      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       env.screenMemory.combatPlan =
         memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
           ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== nextCard)), handLen: hand.length - 1 }
