@@ -1596,7 +1596,10 @@ function vector(plan: Plan): number[] {
   // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run). Waking a
   // sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
   // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, o.cardsDrawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5)];
+  // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
+  // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
+  const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
