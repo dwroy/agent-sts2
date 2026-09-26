@@ -348,6 +348,8 @@ interface Sim {
   potionFlat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
+  /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
+  intangible: boolean;
   /** Buffer stacks gained this turn: each negates one enemy hit. */
   buffer: number;
   /** Duplication: the next card played resolves twice. */
@@ -821,6 +823,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
   if (card.special === "buffer") next.buffer += 1;
+  if (card.special === "intangible") next.intangible = true;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
   if (card.special === "triple_block") {
     next.blockGained += next.block * 2;
@@ -1006,7 +1009,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         let amount = Math.floor(shown + strengthChange);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
-        if (player.intangible) amount = Math.min(amount, 1);
+        if (player.intangible || sim.intangible) amount = Math.min(amount, 1);
         hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
         attackerHp -= retaliation;
       }
@@ -1512,6 +1515,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     potionStrength: 0,
     potionFlat: 0,
     tempDex: 0,
+    intangible: false,
     buffer: 0,
     duplicate: 0,
     retaliate: input.player.retaliate ?? 0,

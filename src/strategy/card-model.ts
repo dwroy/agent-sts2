@@ -59,7 +59,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -177,6 +177,9 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   COLOSSUS: "colossus",
   FIEND_FIRE: "fiend_fire",
   STOMP: "stomp",
+  // Apparition: Intangible for the enemy turn, every hit to 1 (1LJF F42 T6: two exhausted unplayed
+  // on the wind-up turn, the Heavy Cleave 45 killed us next turn).
+  APPARITION: "intangible",
   SECOND_WIND: "second_wind", // exhausts every non-Attack in hand, its Block per card (solver) // costs 1 less per Attack played this turn (the shown cost counts the ones before planning) // exhausts the hand, one hit per card exhausted (solver)
   DOMINATE: "dominate", // Strength per Vulnerable on the target, after its own Vulnerable (solver)
   FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
