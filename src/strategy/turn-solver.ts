@@ -136,6 +136,11 @@ export interface PlayerSim {
   intangible: boolean;
   /** Shrink: the player's attacks deal 30% less. */
   shrunk?: boolean;
+  /**
+   * Kusarigama: every 3rd attack in a turn deals 6 to a random enemy (counted as the lowest-HP one). The
+   * relic's counter (attacks already played this turn) comes from its stack.
+   */
+  kusarigama?: { every: number; damage: number; count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -716,6 +721,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
+    // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
+    const kusa = player.kusarigama;
+    if (kusa && kusa.every > 0 && (kusa.count + next.attacksPlayed) % kusa.every === 0) {
+      const living = next.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
+      if (living[0]) hitEnemyRaw(next, living[0], kusa.damage);
+    }
   }
   for (const enemy of next.enemies) {
     if (!enemy.skittishHit) continue;

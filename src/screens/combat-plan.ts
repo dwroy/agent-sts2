@@ -680,6 +680,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
+    kusarigama: kusarigamaOf(state.run?.raw),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1458,4 +1459,10 @@ export function multiClawNext(enemy: Record<string, unknown>): number | null {
   const intent = asArray(enemy["intents"]).map(asRecord).find((entry) => num(entry["damage"]) > 0);
   if (!intent) return null;
   return num(intent["damage"]) * (Math.max(1, num(intent["hits"])) + 1);
+}
+
+/** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
+function kusarigamaOf(run: unknown): { every: number; damage: number; count: number } | undefined {
+  const relic = asArray(asRecord(run)["relics"]).map(asRecord).find((entry) => str(entry["relic_id"]) === "KUSARIGAMA");
+  return relic ? { every: 3, damage: 6, count: num(relic["stack"]) % 3 } : undefined;
 }
