@@ -1058,6 +1058,15 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Apparition (1LJF F42 T6)", () => {
+  it("makes every enemy hit this turn deal 1", () => {
+    const apparition = card(0, "APPARITION", { type: "Skill", target: "self", validTargets: [], cost: 1, special: "intangible" });
+    const result = solveTurn({ hand: [apparition, strike(1)], player: player({ hp: 40, energy: 1 }), enemies: [enemy({ index: 0, hp: 300, attacks: [{ damage: 45, hits: 1 }] })], fightKind: "elite" });
+    expect(result.plans[0]!.steps[0]!.cardId).toBe("APPARITION");
+    expect(result.plans[0]!.outcome.hpLoss).toBe(1);
+  });
+});
+
 describe("least-loss fallback (2VW5 F28 T7)", () => {
   it("does not play a drawing card first whose HP cost kills us", async () => {
     const { leastLossPlan } = await import("../src/screens/combat-plan.js");
