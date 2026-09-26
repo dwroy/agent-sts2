@@ -128,6 +128,12 @@ export interface CombatPlanMemo {
    */
   handLen: number;
   via: "code" | "jev" | "deepseek" | "claude";
+  /**
+   * Living enemies ("index:id") when the plan was made. A kill shifts the game's enemy indices, so a
+   * planned target_index then hits the wrong enemy (NEVM F23 T2: Bash meant for the Silk Bowlbug went
+   * into the sleeping beetle's Plating): replan.
+   */
+  enemies?: string;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {

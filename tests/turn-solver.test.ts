@@ -1058,6 +1058,18 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Free Attack (NEVM F23 T2)", () => {
+  it("only the next attack is free after Unrelenting", () => {
+    const uppercut = card(0, "UPPERCUT", { cost: 2, damage: 13 });
+    const bludgeon = card(1, "BLUDGEON", { cost: 3, damage: 32 });
+    const result = solveTurn({ hand: [uppercut, bludgeon], player: player({ hp: 60, energy: 2, freeAttacks: 1 }), enemies: [enemy({ index: 0, hp: 200, attacks: [] })], fightKind: "monster" });
+    // Bludgeon free, Uppercut paid with the 2 energy: both fit; a third attack would not.
+    expect(result.plans[0]!.outcome.damageDealt).toBe(45);
+    const none = solveTurn({ hand: [uppercut, bludgeon], player: player({ hp: 60, energy: 2 }), enemies: [enemy({ index: 0, hp: 200, attacks: [] })], fightKind: "monster" });
+    expect(none.plans[0]!.outcome.damageDealt).toBe(13);
+  });
+});
+
 describe("Apparition (1LJF F42 T6)", () => {
   it("makes every enemy hit this turn deal 1", () => {
     const apparition = card(0, "APPARITION", { type: "Skill", target: "self", validTargets: [], cost: 1, special: "intangible" });

@@ -11,7 +11,7 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { cardValue, deckProfile } from "../strategy/card-value.js";
+import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
 
@@ -393,6 +393,9 @@ function selectionScore(kind: string, cardId: string, type: string): number {
     if (type === "Status") return 90;
     if (cardId.startsWith("STRIKE_")) return 80;
     if (cardId.startsWith("DEFEND_")) return 70;
+    // A Strength card is the deck's scaling: never a removal (F8HR F20: 200 gold to remove Fight Me,
+    // the only one; the Entomancer then lived at 71/145).
+    if (damageRole(cardId) === "scaling") return -50;
     return 100 - cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   }
   return 0;

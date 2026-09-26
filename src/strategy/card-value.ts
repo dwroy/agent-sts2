@@ -133,7 +133,7 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
 
 /** Which kind of damage card this is (for the boss clock's gap bonus), or null. */
 export function damageRole(cardId: string): "scaling" | "aoe" | "frontload" | null {
-  const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT"]);
+  const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"]);
   if (STRENGTH.has(cardId)) return "scaling";
   if (AOE.has(cardId)) return "aoe";
   if (FRONTLOAD.has(cardId)) return "frontload";
