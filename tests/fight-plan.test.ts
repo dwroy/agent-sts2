@@ -355,13 +355,15 @@ describe("turn planner with a fight plan", () => {
     expect(lost).toBeLessThanOrEqual(9 + 5.5);
   });
 
-  it("drinks an unmodelled non-attack potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
+  it("drinks an unmodelled defensive potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
     const raw = bossTurnOne();
     raw["turn"] = 5;
     const combat = raw["combat"] as Raw;
     (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14x3", damage: 14, hits: 3, total_damage: 42 }];
     ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
     ((raw["run"] as Raw)["potions"] as Raw[])[0]!["requires_target"] = false;
+    // A potion that blunts the hit (big_hit is only for those: 92MW F29).
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["description"] = "获得 20 点格挡。";
     const e = env(raw, { fightPlan: "v1" });
     e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
     const decision = planCombatTurn(e);

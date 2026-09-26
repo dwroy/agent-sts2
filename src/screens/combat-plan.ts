@@ -643,6 +643,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
+    // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
+    unmovableArmed: powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0,
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
@@ -864,7 +866,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const due = fightPlan
     ? potions.find((potion) => {
         const use = fightPlan.potions[potion.potion_id];
-        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id));
+        // big_hit only for a potion that blunts the hit (92MW F29 T1: Stable Serum "big_hit", drunk on a
+        // 24 hit it does nothing against; the fight was won before its planned turns).
+        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id) && /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns/i.test(potion.text));
       })
     : undefined;
   if (due) {
@@ -1116,7 +1120,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // A turn that costs a lot whatever is played is what potions are for: Jev's potion pick stands
       // there (C2WY F22 T4-T5: Attack Potion picks overridden at 27 -> 18 -> 1 HP, died with 3 potions).
       // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
-      const potionTurn = drinks && (costly || dangerous);
+      // Not on a near-guess (M75J F37: Blood Potion at 0.14 on 78/111 HP, healed to full by the next event).
+      const potionTurn = drinks && (costly || dangerous) && answer.confidence >= 0.25;
       // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
       if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);

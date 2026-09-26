@@ -167,7 +167,12 @@ export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean 
   if (!seen || seen.turn !== turn || seen.handLen !== hand.length || seen.energy !== energy) {
     env.screenMemory.turnBoard = { turn, handLen: hand.length, energy, changedAt: now };
   }
-  if (played > 0) return false;
+  // Cards played this turn means the draw has landed, except on a frame with no hand and no energy: at
+  // a fight's start that is the previous fight's counters (M75J F37 T1, TXKE F38: "1 card played", 0
+  // energy, empty hand; the turn was ended at once, 4 energy and a 5-card hand lost to a 16 hit).
+  const staleStart = hand.length === 0 && energy === 0;
+  if (played > 0 && !staleStart) return false;
+  if (staleStart && (turn ?? 1) <= 1) return now - env.screenMemory.turnBoard!.changedAt < 5_000;
   // What the premature reads looked like: no energy yet, or a hand holding only the Status/Curse cards
   // an enemy just added (the real draw not in yet).
   const onlyJunk =

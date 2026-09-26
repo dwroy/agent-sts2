@@ -972,6 +972,21 @@ describe("turn-start settle guard", () => {
     expect(turnStartUnsettled(e, 4_100)).toBe(false);
   });
 
+  it("waits on a fight's first frame that still shows the last fight's counters (M75J F37 T1)", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const raw = combatPayload();
+    raw["turn"] = 1;
+    const combat = raw["combat"] as Record<string, unknown>;
+    const player = combat["player"] as Record<string, unknown>;
+    player["energy"] = 0;
+    player["cards_played_this_turn"] = 1;
+    combat["hand"] = [];
+    const e = env(raw, { combatPlanner: "turn" });
+    expect(turnStartUnsettled(e, 1_000)).toBe(true);
+    expect(turnStartUnsettled(e, 4_000)).toBe(true);
+    expect(turnStartUnsettled(e, 6_100)).toBe(false);
+  });
+
   it("does not wait on a normal turn start", async () => {
     const { turnStartUnsettled } = await import("../src/screens/index.js");
     const e = env(combatPayload(), { combatPlanner: "turn" });
