@@ -30,6 +30,19 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
+/** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
+export const POTION_PRESSED_SHARE = 0.3;
+
+/**
+ * Elite/boss: whether a potion-free line overrides Jev's low-confidence potion pick. A line that drinks
+ * loses to a dry line losing no more HP; a drink-first pick (its line unknown until re-planned) only
+ * to a dry line losing at most max(3, 10% HP). Never when the best dry line costs 30% of our HP.
+ */
+export function dryLineOverridesPotion(chosenLoss: number | undefined, bestDryLoss: number, hp: number): boolean {
+  if (bestDryLoss >= POTION_PRESSED_SHARE * hp) return false;
+  return chosenLoss !== undefined ? bestDryLoss <= chosenLoss : bestDryLoss <= Math.max(3, 0.1 * hp);
+}
+
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
 const MODELLED_ENEMY_POWERS = new Set([
   "VULNERABLE_POWER", "WEAK_POWER", "STRENGTH_POWER", "ARTIFACT_POWER", "INTANGIBLE_POWER", "SLIPPERY_POWER",
@@ -1145,10 +1158,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Elite/boss: a potion line picked by Jev under 0.5 when a potion-free option loses no more HP
       // (VHLZ F17 T2: Speed Potion at 80/80 and 0.19 with a 0-loss dry line; F14 T1 Glowwater at 0.20):
       // the dry option instead.
+      // A drink-first pick (no line: the turn is re-planned after the potion) is only refused when the
+      // best dry line is nearly free; measured against the least loss of any line the dry line always
+      // won (M812 F28/F33: vetoed at 24 and 10 HP; 9YR9 F17, F3SS F33: potions carried to the death).
+      // Nor is a potion refused when the best dry line still costs 30% of our HP.
       if (!hallwayFight && fromJev && drinks && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
-        const chosenLoss = chosen.plan?.outcome.hpLoss ?? Math.min(...options.map((plan) => plan.outcome.hpLoss));
-        const dryBetter = options.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && plan.outcome.hpLoss <= chosenLoss);
-        if (dryBetter) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`);
+        const dry = options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
+        const bestDryLoss = dry.length > 0 ? Math.min(...dry.map((plan) => plan.outcome.hpLoss)) : Infinity;
+        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`);
       }
       if (!hallwayFight && fromJev && offensiveDrink && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
         return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);

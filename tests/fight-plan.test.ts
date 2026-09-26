@@ -427,3 +427,15 @@ describe("turn planner with a fight plan", () => {
 
 });
 
+describe("elite/boss potion veto (M812 F28/F33, 9YR9 F17, F3SS F33)", () => {
+  it("refuses a drink-first pick only when the dry line is nearly free, and never when pressed", async () => {
+    const { dryLineOverridesPotion } = await import("../src/screens/combat-plan.js");
+    // Drink-first at 24 HP: the dry line losing 6 no longer vetoes it (it used to: min loss of any line).
+    expect(dryLineOverridesPotion(undefined, 6, 24)).toBe(false);
+    expect(dryLineOverridesPotion(undefined, 2, 60)).toBe(true);
+    // A drinking line losing as much as the dry line is still refused, unless the dry line costs 30% HP.
+    expect(dryLineOverridesPotion(5, 5, 60)).toBe(true);
+    expect(dryLineOverridesPotion(10, 10, 21)).toBe(false);
+  });
+});
+
