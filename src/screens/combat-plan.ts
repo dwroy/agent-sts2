@@ -715,6 +715,10 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {
+    // A hand of Dazed is not the end of the options: a potion can still block, draw or kill (CY8U F25
+    // T7: 5/5 Dazed, Snecko Oil never considered, Bees 35 into 30 HP and 0 block).
+    const rescue = noPlayRescuePotion(env, enemies, playerSim);
+    if (rescue) return rescue;
     return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
   }
 
@@ -985,7 +989,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
   const winsRace = (picked: Plan, replacement: Plan | null): boolean => {
-    if (kind !== "boss" || replacement === null) return false;
+    // Elites too: the guard swapped three racing lines and the Entomancer lived at 2/145 (6X8F F25).
+    if ((kind !== "boss" && kind !== "elite") || replacement === null) return false;
     const extraLoss = picked.outcome.hpLoss - replacement.outcome.hpLoss;
     const extraDamage = picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
@@ -1355,4 +1360,29 @@ function startFacing(combat: Record<string, unknown>): number | null {
     .map(asRecord)
     .find((entry) => entry["is_alive"] !== false && powerAmount(entry, "BACK_ATTACK_RIGHT_POWER") > 0);
   return enemy ? numOrNull(enemy["index"]) : null;
+}
+
+/**
+ * No playable card and the enemy turn is lethal (or costs 30%+ HP in an elite/boss fight): drink a
+ * potion first. A hit-blunting potion before a drawing one before any other; then the turn re-plans.
+ */
+export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player: PlayerSim): Decision | null {
+  const incoming = Math.max(0, enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((total, attack) => total + attack.damage * attack.hits, 0), 0) - player.block);
+  const kind = fightKind(asRecord(env.state.raw["combat"]), env);
+  const urgent = incoming >= player.hp || ((kind === "elite" || kind === "boss") && incoming >= player.hp * 0.3);
+  if (!urgent) return null;
+  const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && potion.potion_id !== "FOUL_POTION");
+  const pick =
+    potions.find((potion) => BLUNTS_HIT.test(potion.text)) ??
+    potions.find((potion) => /抽|draw/i.test(potion.text)) ??
+    potions.find((potion) => !potion.requires_target || potion.valid_targets.length > 0);
+  if (!pick) return null;
+  const target = pick.requires_target ? pick.valid_targets[0] : undefined;
+  if (pick.requires_target && target === undefined) return null;
+  return {
+    kind: "act",
+    label: "combat/potion-now",
+    intent: target === undefined ? { action: "use_potion", option_index: pick.slot } : { action: "use_potion", option_index: pick.slot, target_index: target },
+    rationale: `no playable cards and ${incoming} incoming at ${player.hp} HP: drinking ${pick.name} first`,
+  };
 }
