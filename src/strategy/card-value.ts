@@ -118,6 +118,12 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
     if (BLOCK.has(cardId)) return { bonus: 8, why: "block for the Queen's Amalgam hits under Frail" };
     if (SCALING.has(cardId)) return { bonus: 6, why: "early scaling for the Queen's first two turns" };
   }
+  // Test Subject: 600 HP over three phases; the two wins had 28 and 40 Strength, the losses 16 or none
+  // (7DFB, ZANM, 2WUM). Multi Claw grows every turn in phase 2: block too.
+  if (boss.includes("TEST_SUBJECT")) {
+    if (SCALING.has(cardId) || cardId === "FIGHT_ME") return { bonus: 10, why: "Strength scaling for Test Subject's 600 HP" };
+    if (BLOCK.has(cardId)) return { bonus: 4, why: "block for Test Subject's Multi Claw" };
+  }
   if (boss.includes("LAGAVULIN_MATRIARCH")) {
     if (SCALING.has(cardId)) return { bonus: 10, why: "scaling for the Matriarch's sleeping turns" };
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Matriarch's 222 HP" };

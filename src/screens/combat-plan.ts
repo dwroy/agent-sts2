@@ -77,7 +77,8 @@ const POWER_NOTES: Record<string, string> = {
   ENRAGE_POWER: " (+N Strength every time I play a Skill, raising this turn's attack too: prefer Attacks)",
   PAINFUL_STABS_POWER: " (every unblocked hit shuffles a Wound into my discard pile; Test Subject's Multi Claw gains 1 hit every turn: block it fully)",
   NEMESIS_POWER: " (gains 1 Intangible at the end of every 2nd turn)",
-  INTANGIBLE_POWER: " (every hit and HP loss is reduced to 1: many small hits, not big ones)",
+  // Nemesis gives Intangible only every 2nd turn (ZANM F48: "many small hits" misled every turn).
+  INTANGIBLE_POWER: " (while it lasts every hit and HP loss is reduced to 1: block or set up now, save big hits for the turns without it)",
   WITHERING_PRESENCE_POWER: " (every 6 cards I play, counted across turns, add an unplayable Wither to my hand: it deals its damage at the end of my turn while held, blockable, +3 each Increasing Intensity; play fewer, bigger cards)",
   ARTIFACT_POWER: " (each stack negates one debuff: Vulnerable, Weak, Demise, Strength loss; strip it with cheap debuffs before a debuff potion)",
   // XJWF F22: seven turns killing the Parafright, the Obscura 96 -> 76, dead at 13 HP.
@@ -979,7 +980,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // and not charged to the fight's budget, while it leaves next turn's hit + 5 (ZH8J F17: the budget
   // was spent by T8, then Bludgeon's 32 damage became 6 on T9 and Tear Asunder was swapped on T10;
   // the boss was left at 92/222).
-  const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp, 0);
+  // A phase boss's later phases count too (ZANM F48: phase 2 at 151 read as the whole race, the guard
+  // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
+  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
+  const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
   const winsRace = (picked: Plan, replacement: Plan | null): boolean => {
     if (kind !== "boss" || replacement === null) return false;
     const extraLoss = picked.outcome.hpLoss - replacement.outcome.hpLoss;
