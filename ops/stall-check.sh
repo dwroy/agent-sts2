@@ -23,6 +23,13 @@ pgrep -f "ops/report.py" >/dev/null && between=1
 [ "$running" -eq 0 ] && [ "$between" -eq 0 ] && why="no play process running"
 # The loop logs "stuck for N polls" after ~25 idle polls, and repeated gate rejections mean a loop.
 tail -n 4 "$console" | grep -q -E "stuck for [0-9]+ polls|gate rejected .* times|cannot reach the STS2-Agent mod" && why="${why:+$why; }console reports stuck/unreachable"
+# A play process that keeps exiting early (a model outage) restarts every ~12 s: each start writes a new
+# console log (24HM 2026-09-26: 30 restarts on Jev 403s read as "between runs").
+recent=$(find "$LOGDIR/console" -name '*.log' -newermt "@$(( now - 300 ))" 2>/dev/null | wc -l)
+if [ "$recent" -ge 4 ]; then
+  cause=$(grep -h "stopped:" $(ls -t "$LOGDIR"/console/*.log | head -3) 2>/dev/null | tail -1 | cut -c1-160)
+  why="${why:+$why; }play restarted $recent times in 5 min${cause:+ ($cause)}"
+fi
 # DeepSeek thinking can keep the console quiet for up to its 5 min timeout; allow 7 min.
 [ "$quiet" -gt 420 ] && why="${why:+$why; }console silent ${quiet}s"
 [ "$no_decision" -gt 900 ] && why="${why:+$why; }no decision for ${no_decision}s"
