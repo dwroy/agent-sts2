@@ -27,7 +27,7 @@ import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
-import { fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
+import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
@@ -879,8 +879,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The plan's moment for an unmodelled potion (early in turns 1-2, big_hit on a big hit): drink it,
   // then re-plan (VQSA F33 T14: both potions planned for big hits were only offered, Jev played cards
   // at 0.58, 32 -> 5 HP; both were drunk at 4 HP two turns later).
+  // One auto-drink per potion id a fight: the plan keys potions by id, so a second copy is not planned
+  // for this fight (H5MZ F39 T1: both Power Potions drunk "early"; the plan kept one for the Queen).
+  const drunkMemo = env.screenMemory.planPotionsDrunk;
+  const drunkHere = drunkMemo && drunkMemo.fight === fightKey(state) ? drunkMemo.ids : [];
   const due = fightPlan
     ? potions.find((potion) => {
+        if (drunkHere.includes(potion.potion_id)) return false;
         const use = fightPlan.potions[potion.potion_id];
         // big_hit only for a potion that blunts the hit (92MW F29 T1: Stable Serum "big_hit", drunk on a
         // 24 hit it does nothing against; the fight was won before its planned turns).
@@ -891,6 +896,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const target = due.requires_target ? (focusIndex !== null && due.valid_targets.includes(focusIndex) ? focusIndex : due.valid_targets[0]) : undefined;
     if (!due.requires_target || target !== undefined) {
       env.screenMemory.combatPlan = null;
+      env.screenMemory.planPotionsDrunk = { fight: fightKey(state), ids: [...drunkHere, due.potion_id] };
       return {
         kind: "act",
         label: "combat/plan-potion",
@@ -1107,12 +1113,12 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
-  const fallback = (why: string): ResolvedAction => ({
-    intent: firstIntent(top, hand, env),
-    rationale: `${why}; using the code-best plan`,
+  const fallback = (why: string, line: Plan = top): ResolvedAction => ({
+    intent: firstIntent(line, hand, env),
+    rationale: `${why}; using the code-best ${line === top ? "plan" : "potion-free plan"}`,
     confidence: null,
     fallback: true,
-    apply: () => commit(env, state.turn, top, hand, "code"),
+    apply: () => commit(env, state.turn, line, hand, "code"),
   });
 
   return {
@@ -1165,7 +1171,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (!hallwayFight && fromJev && drinks && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
         const dry = options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
         const bestDryLoss = dry.length > 0 ? Math.min(...dry.map((plan) => plan.outcome.hpLoss)) : Infinity;
-        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`);
+        // Refusing the potion plays a dry line, not code's rank 1 when that drinks (F3SS F33 T3: the
+        // fallback drank the Dexterity Potion anyway).
+        const dryTop = dry.includes(top) ? top : (dry[0] ?? top);
+        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop);
       }
       if (!hallwayFight && fromJev && offensiveDrink && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
         return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
