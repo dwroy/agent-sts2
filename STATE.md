@@ -11,6 +11,7 @@
 - **兜底决策**：只用 DeepSeek，Claude 不在对局中作答。
 - **安全**：key 不许打印、不许进日志；只改 ~/Projects/sts2-jev；不推送任何远端；git 只在本地 phase2 分支提交。
 - **论文**：所有数据都要落盘，历史不能丢。档案在 `paper/`，结构见 `paper/README.md`。
+- **工作区 git**（09-26 起）：`~/Projects/sts2-jev` 本身是本地 git 仓库（main，无远端），跟踪 ops/、notes/、paper/（除 raw、session、code 包）、STATE.md。代码仍在 jev-sts2 仓库。改完 ops/notes/paper 后在这里本地提交；提交前扫描 key。
 
 ## 系统现状
 - **运行链路**：Windows 上的游戏和 STS2-Agent mod（127.0.0.1:8080），加 WSL 里的 `ops/autoplay.sh`（pid 153052）。autoplay 一局接一局调用 `ops/run.sh`，每局上限 240 分钟，只在安全时机停止。
