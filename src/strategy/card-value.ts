@@ -76,6 +76,9 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   }
   if (boss.includes("KIN")) {
     if (AOE.has(cardId)) return { bonus: 10, why: "AoE for the Kin followers" };
+    // The priest phase decides it (P78Z, PPKT: priest left at 38 and 26 of 190, ~18 a turn alone).
+    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for the Kin Priest's 190 HP" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Kin Priest" };
   }
   if (boss.includes("WATERFALL_GIANT")) {
     if (BLOCK.has(cardId)) return { bonus: 6, why: "block for the Waterfall Giant's explosion" };
