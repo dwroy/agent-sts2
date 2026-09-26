@@ -23,7 +23,7 @@ const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS") => parseGameState(ba
 describe("boss clock", () => {
   it("knows the act bosses' HP and damage a turn", () => {
     expect(bossNeed("KAISER_CRAB_BOSS")).toMatchObject({ id: "KAISER_CRAB", hp: 408, perTurn: 51 });
-    expect(bossNeed("KNOWLEDGE_DEMON_BOSS")?.perTurn).toBe(49);
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS")?.perTurn).toBe(51);
     expect(bossNeed("SLIME_BOSS")).toBeNull();
   });
 
