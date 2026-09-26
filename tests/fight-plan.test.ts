@@ -490,3 +490,11 @@ describe("plan continuation after a kill (NEVM F23 T2)", () => {
   });
 });
 
+describe("Multi Claw next hit (YFG5, ZANM)", () => {
+  it("is this Multi Claw plus one hit", async () => {
+    const { multiClawNext } = await import("../src/screens/combat-plan.js");
+    expect(multiClawNext({ move_id: "MULTI_CLAW", intents: [{ damage: 10, hits: 4 }] })).toBe(50);
+    expect(multiClawNext({ move_id: "BITE", intents: [{ damage: 20, hits: 1 }] })).toBeNull();
+  });
+});
+

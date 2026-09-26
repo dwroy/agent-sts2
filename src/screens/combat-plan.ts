@@ -776,7 +776,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const nextIncoming = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
-    .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
+    .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
@@ -1160,7 +1160,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (env.jevContext === "v1") {
     const liveEnemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
     const nextThreat = new Map<number, number | null>(
-      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
+      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
     );
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
@@ -1425,4 +1425,15 @@ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player
     intent: target === undefined ? { action: "use_potion", option_index: pick.slot } : { action: "use_potion", option_index: pick.slot, target_index: target },
     rationale: `no playable cards and ${incoming} incoming at ${player.hp} HP: drinking ${pick.name} first`,
   };
+}
+
+/**
+ * Test Subject's Multi Claw gains a hit every use (10x3, x4, x5 …): the next one is this one plus a hit,
+ * not the move model's average (YFG5, ZANM, 7DFB: a flat 41 read for 50-70 hits).
+ */
+export function multiClawNext(enemy: Record<string, unknown>): number | null {
+  if (!/MULTI_CLAW/i.test(str(enemy["move_id"]))) return null;
+  const intent = asArray(enemy["intents"]).map(asRecord).find((entry) => num(entry["damage"]) > 0);
+  if (!intent) return null;
+  return num(intent["damage"]) * (Math.max(1, num(intent["hits"])) + 1);
 }
