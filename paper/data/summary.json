@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-26T23:27:25.575Z",
+  "generated_at": "2026-09-26T23:55:53.389Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 88923788,
-    "deepseek-reasoning.jsonl": 54322208,
+    "decisions.jsonl": 89696834,
+    "deepseek-reasoning.jsonl": 54680366,
     "runs.jsonl": 58867,
-    "states.jsonl": 1906293818,
-    "fight-plans.jsonl": 555570,
-    "run-plans.jsonl": 432417
+    "states.jsonl": 1924339405,
+    "fight-plans.jsonl": 561715,
+    "run-plans.jsonl": 440821
   },
   "runs_total": 158,
   "runs_by_outcome": {
@@ -161,7 +161,6 @@
     }
   ],
   "floor_max_distribution": {
-    "2": 1,
     "3": 1,
     "7": 3,
     "9": 2,
@@ -176,7 +175,7 @@
     "28": 3,
     "29": 1,
     "30": 1,
-    "31": 3,
+    "31": 4,
     "33": 41,
     "37": 1,
     "39": 3,
@@ -437,7 +436,7 @@
       "win_rate_finished": 0.0,
       "mean_floor_finished": 25.88,
       "median_floor_finished": 23.5,
-      "reached_act2": 7,
+      "reached_act2": 8,
       "reached_act3": 0,
       "run_ids": [
         "SCBC3F0QT8BC",
@@ -586,7 +585,7 @@
       "win_rate_finished": 0.054,
       "mean_floor_finished": 31.05,
       "median_floor_finished": 33.0,
-      "reached_act2": 73,
+      "reached_act2": 74,
       "reached_act3": 27,
       "run_ids": [
         "5FMUSNUXEHGY",
@@ -722,7 +721,7 @@
       "win_rate_finished": 0.057,
       "mean_floor_finished": 30.04,
       "median_floor_finished": 33.0,
-      "reached_act2": 104,
+      "reached_act2": 105,
       "reached_act3": 36,
       "run_ids": [
         "DG1CDGW8Y5JE",
@@ -871,21 +870,21 @@
   },
   "api": {
     "jev": {
-      "calls": 11839,
-      "in_tokens": 17804009,
-      "out_tokens": 545753,
-      "cost_usd": 0.7707,
+      "calls": 11963,
+      "in_tokens": 17986866,
+      "out_tokens": 550976,
+      "cost_usd": 0.7786,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
-      "calls": 3002,
-      "in_tokens": 22416326,
-      "cache_hit_tokens": 18664832,
-      "out_tokens": 10129511,
-      "reasoning_tokens": 9990428,
+      "calls": 3013,
+      "in_tokens": 22538836,
+      "cache_hit_tokens": 18766336,
+      "out_tokens": 10166711,
+      "reasoning_tokens": 10027042,
       "calls_without_token_split": 19,
-      "cost_usd": 13.3986,
-      "latency_p50_s": 11.32,
+      "cost_usd": 13.4501,
+      "latency_p50_s": 11.29,
       "override_rate": 0.519,
       "hp_guard_triggers": 161,
       "pricing_usd_per_m": {
@@ -900,49 +899,49 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 14.1693,
+  "api_cost_total_usd": 14.2287,
   "decisions": {
-    "play_total": 66715,
-    "attributed_to_runs": 65220,
+    "play_total": 67262,
+    "attributed_to_runs": 65767,
     "unattributed_menu_timeline": 1495,
     "shadow": 20,
     "by_layer": {
-      "code": 46340,
-      "jev": 7510,
-      "deepseek": 3006,
+      "code": 46690,
+      "jev": 7613,
+      "deepseek": 3017,
       "claude": 186,
-      "code-fallback": 1146,
-      "jev-plan": 6112,
+      "code-fallback": 1156,
+      "jev-plan": 6185,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
     "decider_inferred": 342
   },
   "escalations": {
-    "rows": 3188,
+    "rows": 3199,
     "by_variant": {
       "deepseek_nonthinking": 207,
       "claude": 186,
       "deepseek_thinking": 1650,
-      "deepseek_memory": 1145
+      "deepseek_memory": 1156
     }
   },
   "deepseek_reasoning_log": {
-    "records": 3472,
-    "matched_to_escalations": 2795,
+    "records": 3492,
+    "matched_to_escalations": 2806,
     "models": {
-      "deepseek-flash": 3472
+      "deepseek-flash": 3492
     }
   },
-  "states_lines_scanned": 66647,
+  "states_lines_scanned": 67194,
   "console_logs": 228,
   "commits": {
-    "total": 378,
+    "total": 381,
     "upstream": 19,
-    "experiment": 359
+    "experiment": 362
   },
   "postmortems": {
-    "runs_with_heading": 139,
+    "runs_with_heading": 140,
     "preloop_listed": 13
   }
 }
