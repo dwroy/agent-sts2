@@ -1036,6 +1036,14 @@ describe("Test Subject (2WUM F48)", () => {
     expect(endScore(0, 15) - endScore(1, 15)).toBeCloseTo(3 * WOUND_COST);
     expect(endScore(0, 40) - endScore(1, 40)).toBeCloseTo(0);
   });
+
+  it("Personal Hive: each hit on the Entomancer adds a Dazed, and full damage lands (M812 F28)", async () => {
+    const { DAZED_COST } = await import("../src/strategy/turn-solver.js");
+    const hive = (dazedPerHit: number): EnemySim => enemy({ name: "Entomancer", hp: 145, maxHp: 145, dazedPerHit, attacks: [] });
+    const twinScore = (dazedPerHit: number) => solveTurn({ hand: [card(0, "TWIN_STRIKE", { damage: 5, hits: 2 })], player: player({ hp: 80 }), enemies: [hive(dazedPerHit)], fightKind: "elite" }).plans.find((plan) => plan.steps.length > 0)!;
+    expect(twinScore(0).score - twinScore(1).score).toBeCloseTo(2 * DAZED_COST);
+    expect(twinScore(1).outcome.damageDealt).toBe(10);
+  });
 });
 
 describe("The Bomb (1ZQJ: 40 to every enemy after 3 turns, scored 0 as unmodelled)", () => {
