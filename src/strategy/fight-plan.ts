@@ -252,7 +252,10 @@ export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: 
   // "big_hit" on an attack potion is the plan's burst, not the enemy's big hit: the default rule offers
   // it (24HM F33: Attack Potion tagged big_hit, offered on no turn in 14, died holding it).
   if (use === "big_hit" && ctx.offensive) return null;
-  if (ctx.pressed || ctx.costly) return true;
+  if (ctx.pressed) return true;
+  // A costly turn does not unlock a potion the plan keeps for a later fight or for the big hit (J8E4
+  // F17 T2: Shackling Potion, kept for the Pressure Gun, drunk on a 15 Stomp).
+  if (ctx.costly && use !== "save" && use !== "big_hit") return true;
   if (use === "early") return ctx.turn <= 2 ? true : null;
   if (use === "big_hit") return ctx.bigHit;
   return false;
