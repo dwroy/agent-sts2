@@ -1,0 +1,140 @@
+## 复盘：run SUUKNZNT3KDF — 阵亡，最高第 45 层
+
+- 决策 566 个；Jev 调用 83 次，Claude 0 次，DeepSeek 13 次；token 156,777 入 / 4,400 出，约 $0.0068；用时 33.3 分钟
+- 决策者：code 396，jev 73，jev-plan 73，deepseek 13，code-fallback 11
+
+### 战斗掉血（按层）
+- 第 2 层 噬尸蛞蝓: HP 64→52（-12），决策 code 7，jev-plan 5，jev 2，code-fallback 1
+- 第 6 层 淤泥旋螺: HP 58→55（-3），决策 jev-plan 3，code 3，jev 2
+- 第 8 层 海洋混混: HP 61→60（-1），决策 code 3，jev-plan 2，jev 1，code-fallback 1
+- 第 9 层 噬尸蛞蝓: HP 66→51（-15），决策 code 13，code-fallback 2，jev 1，jev-plan 1
+- 第 11 层 潮湿邪教徒/钙化邪教徒: HP 57→51（-6），决策 code 11，jev-plan 6，jev 3
+- 第 13 层 鬼祟珊瑚群: HP 75→65（-10），决策 code 15，jev-plan 5，jev 3
+- 第 15 层 骇鳗: HP 71→43（-28），决策 jev-plan 10，code 9，jev 8
+- 第 17 层 瀑布巨兽: HP 73→59（-14），决策 code 18，jev-plan 12，jev 11
+- 第 19 层 地道虫: HP 72→70（-2），决策 jev-plan 2，jev 1，code 1
+- 第 19 层 地道虫: HP 70→64（-6），决策 code 5，jev 1，code-fallback 1
+- 第 19 层 地道虫: HP 64→64（-0），决策 code 4
+- 第 19 层 地道虫: HP 62→62（-0），决策 jev-plan 2，jev 1，code 1
+- 第 19 层 地道虫: HP 62→62（-0），决策 code 1
+- 第 21 层 盛碗虫（卵）/盛碗虫（石）: HP 68→66（-2），决策 jev 2，jev-plan 2，code 1
+- 第 21 层 盛碗虫（石）: HP 64→64（-0），决策 code 3
+- 第 24 层 猎人杀手: HP 67→61（-6），决策 code 4，code-fallback 1
+- 第 24 层 猎人杀手: HP 61→59（-2），决策 code 3，code-fallback 1
+- 第 24 层 猎人杀手: HP 42→42（-0），决策 jev 1，code 1
+- 第 28 层 棘刺蟾蜍: HP 73→73（-0），决策 code 4，code-fallback 1
+- 第 28 层 棘刺蟾蜍: HP 73→73（-0），决策 jev 2，jev-plan 2，code 1
+- 第 28 层 棘刺蟾蜍: HP 67→67（-0），决策 jev 1，jev-plan 1，code 1
+- 第 28 层 棘刺蟾蜍: HP 50→50（-0），决策 code 1
+- 第 30 层 残杀千足虫: HP 80→78（-2），决策 jev 3，jev-plan 2，code 1
+- 第 30 层 残杀千足虫: HP 62→62（-0），决策 jev 2，jev-plan 1
+- 第 30 层 残杀千足虫: HP 39→39（-0），决策 jev-plan 2，jev 1，code 1
+- 第 30 层 残杀千足虫: HP 31→31（-0），决策 jev 2，jev-plan 2，code 1
+- 第 31 层 外骨骼虫: HP 37→37（-0），决策 code 3
+- 第 31 层 外骨骼虫: HP 30→30（-0），决策 jev 2，jev-plan 2
+- 第 31 层 外骨骼虫: HP 30→30（-0），决策 code 1
+- 第 33 层 无厌沙虫: HP 80→80（-0），决策 code 1
+- 第 33 层 无厌沙虫: HP 80→74（-6），决策 code 7
+- 第 33 层 无厌沙虫: HP 74→74（-0），决策 code 2，jev 2，jev-plan 1
+- 第 33 层 无厌沙虫: HP 66→64（-2），决策 jev-plan 3，jev 2，code 1
+- 第 33 层 无厌沙虫: HP 53→53（-0），决策 code 3
+- 第 33 层 无厌沙虫: HP 53→53（-0），决策 jev 2，jev-plan 1，code 1
+- 第 33 层 无厌沙虫: HP 53→51（-2），决策 code 5
+- 第 33 层 无厌沙虫: HP 38→38（-0），决策 code 2
+- 第 35 层 咬人卷轴: HP 72→72（-0），决策 code 1，jev 1
+- 第 35 层 咬人卷轴: HP 72→72（-0），决策 code 2
+- 第 35 层 咬人卷轴: HP 48→42（-6），决策 code 2
+- 第 37 层 活体盾/高塔炮手: HP 48→42（-6），决策 jev-plan 2，jev 1，code-fallback 1，code 1
+- 第 37 层 活体盾/高塔炮手: HP 38→38（-0），决策 code 4
+- 第 37 层 活体盾: HP 38→36（-2），决策 code 4
+- 第 42 层 猫头鹰法官: HP 76→76（-0），决策 code 2，code-fallback 1
+- 第 42 层 猫头鹰法官: HP 60→59（-1），决策 jev 2，jev-plan 1
+- 第 42 层 猫头鹰法官: HP 35→33（-2），决策 code 3
+- 第 42 层 猫头鹰法官: HP 33→33（-0），决策 code 6
+- 第 42 层 猫头鹰法官: HP 26→26（-0），决策 code 2
+- 第 43 层 电球头: HP 32→32（-0），决策 code 3
+- 第 43 层 电球头: HP 32→20（-12），决策 jev-plan 3，code-fallback 1，jev 1，code 1
+- 第 43 层 电球头: HP 8→8（-0），决策 code 4
+- 第 43 层 电球头: HP 2→2（-0），决策 code 1
+- 第 45 层 组装师: HP 8→8（-0），决策 code 6
+
+### 死亡战斗：第 45 层 组装师
+- T1 [code] combat/least-loss: every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg 34): 战斗专注, 防御, 打击 -> 组装师, 御
+- T1 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): 防御, 打击 -> 组装师, 原始力量+, 防御
+- T1 [code] combat/plan-continue: continuing the code-chosen plan: 打击 -> 组装师
+- T1 [code] combat/plan-continue: continuing the code-chosen plan: 原始力量+
+- T1 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): 防御
+- T1 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 92
+- combat/plan-continue / jev-plan: 73
+- combat/plan-continue / code: 56
+- combat/plan-choice / jev: 50
+- reward/claim / code: 48
+- selection/exhaust / code: 43
+- map/route / code: 37
+- reward/proceed / code: 19
+- combat/lethal / code: 16
+- reward/card / code: 16
+- event/leave / code: 12
+- combat/plan-choice / code-fallback: 11
+- combat/plan-choice+potion / jev: 11
+- combat/end_turn / code: 8
+- event/choose / deepseek: 7
+- rest/proceed / code: 7
+- map/route / jev: 6
+- rest/choose / code: 6
+- shop/buy / code: 5
+- combat/least-loss / code: 4
+- shop/leave / code: 4
+- chest/open / code: 3
+- chest/proceed / code: 3
+- chest/relic / code: 3
+- combat/plan-potion / code: 3
+- event/choose / jev: 3
+- shop/buy / deepseek: 3
+- shop/open / code: 3
+- combat/plan-guarded / code: 2
+- reward/card / deepseek: 2
+- selection/remove / code: 2
+- rest/choose / jev: 1
+- reward/card / jev: 1
+- run/finalize / code: 1
+- selection/add / code: 1
+- selection/confirm / code: 1
+- selection/discard / code: 1
+- selection/take into my hand / jev: 1
+- selection/upgrade / deepseek: 1
+
+### 兜底介入（Claude/DeepSeek）：13 次（推翻 Jev 8 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o0 @0.29 → o1）：A7 halves rare-card odds, so a guaranteed rare (Demon Form/Offering tier) beats a common pick plus potion; curse-for-rel
+- [deepseek] 第 3 层 TNone event/choose: 推翻 Jev（o0 @0.40 → o1）：8 HP is precious early A7 with an HP-taxing boss ahead; 100 gold (≈one Strike removal) plus a free card is safe, reliabl
+- [deepseek] 第 5 层 TNone shop/buy: 同意 Jev（buy_card2 @0.14 → buy_card2）：A-tier block card; deck has zero real block, needed for elites and Waterfall Giant's explosion turn; leaves 136g for Twi
+- [deepseek] 第 5 层 TNone shop/buy: 推翻 Jev（buy_card3 @0.18 → remove）：商店第一优先是删牌：5张打击太多，删一张能提升抽牌质量；巨像需配合痛击才强，双重打击对缺力量的牌组提升有限。
+- [deepseek] 第 6 层 T2 reward/card: 推翻 Jev（card2 @0.32 → card1）：飞剑回旋镖：多段伤害契合力量+多段计划，立即提升输出，三幕前抢伤害；撕裂仅靠御血术触发太慢。
+- [deepseek] 第 18 层 TNone event/choose: 同意 Jev（o1 @0.38 → o1）：每回合+1力量＝免费半张恶魔形态，长期收益最大；消耗的多余打击还能精简牌组。打击附魔与本局主力（非打击）冲突，换地图风险未知。
+- [deepseek] 第 20 层 TNone event/choose: 同意 Jev（o1 @0.08 → o1）：Foul potions are never drunk by the bot and only clog limited slots; one random uncommon potion is directly useful for t
+- [deepseek] 第 22 层 TNone event/choose: 推翻 Jev（o1 @0.28 → o0）：Free deck-thinning removal of 2-cost Bash (Marble Bag already grants free Vulnerable each fight); no HP loss, helps boss
+- [deepseek] 第 24 层 T3 reward/card: 同意 Jev（card0 @0.21 → card0）：Exhaust engine (Baking Gloves, Fiend Fire, True Grit) puts both copies in the exhaust pile: free recurring AoE each turn
+- [deepseek] 第 27 层 TNone selection/upgrade: 推翻 Jev（card13 @0.13 → card20）：Demon Form 3E→2E is the biggest tempo gain; it's the deck's only permanent strength source and must land early every fig
+- [deepseek] 第 34 层 TNone event/choose: 推翻 Jev（o1 @0.19 → o0）：神化升级全套28张牌，放大恶魔形态+旋风斩对永世沙漏的爆发；金币只剩0-2商店难变现，鹿角晕眩拖慢。
+- [deepseek] 第 36 层 TNone event/choose: 同意 Jev（o1 @0.34 → o1）：Free gain with no downside; adding Decay would clog the tight Aeonglass kill window where Withers already flood the hand
+- [deepseek] 第 39 层 TNone shop/buy: 推翻 Jev（leave @0.11 → buy_card0）：Demon Form++ makes 1E AOE 突破 scale hard for the final boss damage race; no shops remain, so unspent gold is dead.
+
+### Jev 低置信度（<0.35）决策：24 个
+- 第 6 层 combat/plan-choice: Jev chose plan 1/4 (防御, 原始力量, 防御, 打击 -> 淤泥旋螺) with confidence 0.29; code rank 1 (0.29)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/4 (防御, 飞剑回旋镖, 防御) with confidence 0.08; code rank 1 (0.08)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/4 (铁蒺藜, 火焰屏障) with confidence 0.18; code rank 1 (0.18)
+- 第 11 层 combat/plan-choice: Jev chose plan 1/4 (火焰屏障, 御血术 -> 钙化邪教徒, 原始力量) with confidence 0.14; code rank 1 (0.14)
+- 第 11 层 combat/plan-choice: Jev chose plan 2/4 (防御, 防御, 打击 -> 潮湿邪教徒) with confidence 0.31; code rank 2 (0.31)
+- 第 13 层 combat/plan-choice+potion: Jev chose plan 3/4 (薪火之源, 铁蒺藜) with confidence 0.26; code rank 3 (0.26)
+- 第 15 层 combat/plan-choice: Jev chose plan 2/2 (痛击 -> 骇鳗, 打击 -> 骇鳗, 防御) with confidence 0.25; code rank 2 (0.25)
+- 第 15 层 combat/plan-choice: Jev chose plan 1/2 (火焰屏障, 邪眼, 打击 -> 骇鳗) with confidence 0.23; code rank 1 (0.23)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/2 (恶魔之焰 -> 瀑布巨兽) with confidence 0.23; code rank 1 (0.23)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/4 (防御, 巨石 -> 瀑布巨兽, 防御, 巨石 -> 瀑布巨兽) with confidence 0.21; code rank 1 (0.21)
+- 第 17 层 combat/plan-choice: Jev chose plan 2/4 (巨石 -> 瀑布巨兽, 飞剑回旋镖, 原始力量, 邪眼, 防御) with confidence 0.31; code rank 2 (0.31)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/4 (战斗专注, 痛击 -> 瀑布巨兽, 邪眼) with confidence 0.31; code rank 1 (0.31)
+- 第 19 层 combat/plan-choice: Jev chose plan 1/4 (御血术 -> 地道虫, 防御, 耸肩无视) with confidence 0.26; code rank 1 (0.26)
+- 第 28 层 combat/plan-choice: Jev chose plan 1/4 (防御, 防御, 坚毅) with confidence 0.34; code rank 1 (0.34)
+- 第 28 层 combat/plan-choice: Jev chose plan 1/2 (end turn) with confidence 0.28; code rank 1 (0.28)
