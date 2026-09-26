@@ -1279,6 +1279,11 @@ describe("combat plan guards (batch 2)", () => {
       enemies: [{ index: 1, enemy_id: "ROCKET", name: "Rocket", current_hp: 14, max_hp: 199, block: 0, is_alive: true, powers: [{ power_id: "CRAB_RAGE_POWER", amount: 1 }], intents: [] }],
     });
     expect(rocket!.crabRage).toBe(true);
+    // Plow: stunned at 150 like Shriek (RAWT F17 T6).
+    const [beast] = enemySims({
+      enemies: [{ index: 0, enemy_id: "CEREMONIAL_BEAST", name: "Beast", current_hp: 160, max_hp: 252, block: 0, is_alive: true, powers: [{ power_id: "PLOW_POWER", amount: 150 }], intents: [] }],
+    });
+    expect(beast!.shriek).toBe(150);
     expect(rocket!.unmodelled).toBe(false);
     expect([mantleHpCost(0), mantleHpCost(7), mantleHpCost(10), mantleHpCost(14), mantleHpCost(20)]).toEqual([0, 1, 1, 2, 2]);
   });
