@@ -161,6 +161,8 @@ export interface PlayerSim {
   turnStartAoe?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
+  /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
+  unmovableArmed?: boolean;
   /** Strength at the start of the turn (STRENGTH_POWER), for rounding Weak damage once from the base. */
   strengthNow?: number;
   /**
@@ -370,6 +372,8 @@ interface Sim {
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
   feelNoPain: number;
+  /** Unmovable's doubling used by a Block card in this plan. */
+  unmovableSpent: boolean;
   /** Attacks played in this plan (Stomp costs 1 less for each). */
   attacksPlayed: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
@@ -781,7 +785,16 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) gainBlock(next, card.block + (card.type === "Potion" ? 0 : next.tempDex), player);
+  if (card.block > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
+    // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
+    // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
+    let shown = card.block;
+    if (card.type !== "Potion" && player.unmovableArmed) {
+      if (next.unmovableSpent) shown = Math.floor(shown / 2);
+      next.unmovableSpent = true;
+    }
+    gainBlock(next, shown + (card.type === "Potion" ? 0 : next.tempDex), player);
+  }
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
@@ -1494,6 +1507,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
     attacksPlayed: 0,
+    unmovableSpent: false,
     bombs: 0,
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),

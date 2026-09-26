@@ -283,6 +283,18 @@ describe("more enemy powers", () => {
     expect(result.plans[0]!.steps.map((step) => step.target)).toEqual([1, 1]);
   });
 
+  it("Unmovable doubles only the first Block card of the turn (92MW F33 T2)", () => {
+    // Shown values are doubled (Defend 5 -> 10) until the first Block card is played.
+    const input = {
+      hand: [{ ...defend(0), block: 10 }, { ...defend(1), block: 10 }],
+      player: player({ hp: 40, energy: 2, unmovableArmed: true }),
+      enemies: [enemy({ index: 0, hp: 50, attacks: [{ damage: 30, hits: 1 }] })],
+      fightKind: "monster" as const,
+    };
+    const both = solveTurn(input).plans.find((plan) => plan.steps.length === 2)!;
+    expect(both.outcome.blockGained).toBe(15);
+  });
+
   it("Second Wind exhausts every non-Attack in hand for its Block each (LQLZ F21 T4)", () => {
     const secondWind = card(0, "SECOND_WIND", { type: "Skill", target: "self", validTargets: [], block: 5, special: "second_wind" });
     const result = solveTurn({
