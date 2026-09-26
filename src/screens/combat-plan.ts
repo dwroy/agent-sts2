@@ -1022,11 +1022,19 @@ function planTurn(env: DecisionEnv): Decision | null {
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
   const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // Damage into enemies that are neither minions nor illusions.
+  const realDamage = (plan: Plan): number =>
+    enemies
+      .filter((enemy) => !enemy.minion && !enemy.illusion)
+      .reduce((sum, enemy) => sum + Math.max(0, enemy.hp - Math.max(0, plan.outcome.enemyHpAfter.find((after) => after.index === enemy.index)?.hp ?? enemy.hp)), 0);
   const winsRace = (picked: Plan, replacement: Plan | null): boolean => {
     // Elites too: the guard swapped three racing lines and the Entomancer lived at 2/145 (6X8F F25).
-    if ((kind !== "boss" && kind !== "elite") || replacement === null) return false;
+    // Illusion fights (Obscura + Parafright) race the summoner too; damage into the illusion is not
+    // progress (H8LC F23: the hallway guard swapped Uppercut -> Obscura for a line hitting the Parafright).
+    const illusionFight = enemies.some((enemy) => enemy.illusion);
+    if ((kind !== "boss" && kind !== "elite" && !illusionFight) || replacement === null) return false;
     const extraLoss = picked.outcome.hpLoss - replacement.outcome.hpLoss;
-    const extraDamage = picked.outcome.damageDealt - replacement.outcome.damageDealt;
+    const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
   // Not on a big-hit turn: that is the turn to block (0YG4 F43 T4: Dark Embrace + Blood Wall, -26,
