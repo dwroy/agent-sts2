@@ -55,6 +55,11 @@ export interface ScreenMemory {
   /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
   combatPlan: CombatPlanMemo | null;
   /**
+   * The combat plan's remaining steps when an in-combat card choice opened (the screen change clears
+   * combatPlan): an exhaust pick keeps the cards the plan still means to play. Cleared out of combat.
+   */
+  planBeforeSelection?: import("../strategy/turn-solver.js").Step[];
+  /**
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
    */

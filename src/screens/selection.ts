@@ -130,6 +130,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   }
 
   const entries = deckEntries(state, knowledge);
+  // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
+  // Bash+ the plan played next).
+  const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const cardId = str(card["card_id"]);
@@ -145,7 +148,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
         : topDanger
           ? (isBlockCard(card) ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
-          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0)
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0) -
+            (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
             (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
             // RUN_PLAN=v1: the plan's removal targets go first; its wanted cards are what an add takes.
@@ -349,6 +353,9 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
  * Attacks stay while the fight's deck holds MIN_COMBAT_ATTACKS or fewer; a Defend goes before a
  * Strike when little is coming.
  */
+/** Exhaust-score malus for a card the committed plan still plays (below any junk, above nothing). */
+export const PLANNED_CARD_KEEP = 150;
+
 export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_")): number {
   // Howl from Beyond plays itself once from the exhaust pile, then goes to the discard pile: a free hit.
   if (cardId === "HOWL_FROM_BEYOND") return 200;

@@ -787,6 +787,13 @@ describe("in-combat selections", () => {
     expect([0, 2]).toContain(exhausted(exhaustState(exhaustHand, many, 17)));
   });
 
+  it("in-combat exhaust keeps a card the turn's plan still plays (F3SS F33 T5: Brand took the Bash+)", () => {
+    const many = ["打击*4 [1费]：造成6点伤害。", "防御*2 [1费]：获得5点格挡。"];
+    const screenMemory = { ...createScreenMemory("CARD_SELECT"), planBeforeSelection: [{ cardIndex: 1, cardId: "DEFEND_IRONCLAD", upgraded: false, name: "Defend", target: null, targetName: null }] };
+    const decision = mustDecision(plan(exhaustState(exhaustHand, many, 6), { combatPlanner: "turn", screenMemory }));
+    expect(decision.kind === "act" && (decision.intent as { option_index?: number }).option_index).not.toBe(1);
+  });
+
   // U6W7 F42: at 12 HP Defend++ was exhausted on a quiet turn; the Frog Knight's next hit was 21.
   const frogTurn = (hp: number) => {
     const raw = exhaustState(exhaustHand, ["打击*4 [1费]：造成6点伤害。", "防御*2 [1费]：获得5点格挡。"], 5);
