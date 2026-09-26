@@ -1058,6 +1058,15 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Stone Armor (SCBC F21 T2)", () => {
+  it("its plating blocks at the end of the turn it is played", () => {
+    const armor = card(0, "STONE_ARMOR", { type: "Power", target: "self", validTargets: [], cost: 1, plating: 4 });
+    const result = solveTurn({ hand: [armor], player: player({ hp: 30, energy: 1 }), enemies: [enemy({ index: 0, hp: 100, attacks: [{ damage: 18, hits: 1 }] })], fightKind: "monster" });
+    const played = result.plans.find((plan) => plan.steps.some((step) => step.cardId === "STONE_ARMOR"))!;
+    expect(played.outcome.hpLoss).toBe(14);
+  });
+});
+
 describe("The Gambit (P78Z F17 T11)", () => {
   it("is played only when every other line dies", () => {
     const gambit = card(0, "THE_GAMBIT", { type: "Skill", target: "self", validTargets: [], cost: 0, block: 50 });

@@ -56,6 +56,8 @@ export interface CardModel {
   enemyTempStrengthLoss: number;
   hpLoss: number;
   energyGain: number;
+  /** Plating gained (Stone Armor): that much block at the end of this turn, and less each later turn. */
+  plating?: number;
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
@@ -373,6 +375,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // played was charged 6 HP by the solver).
     hpLoss: heldPenalty > 0 ? 0 : hpLoss,
     energyGain,
+    plating: dyn(card, "PlatingPower") ?? 0,
     draw,
     exhausts,
     special,
