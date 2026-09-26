@@ -87,7 +87,11 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const heldPenaltyOf = new Map(heldModels.map((model) => [model.index, model.heldPenalty ?? 0] as const));
   const heldHpLoss = heldModels.reduce((sum, model) => sum + (model.heldHpLoss ?? 0), 0);
   const heldDamage = heldModels.reduce((sum, model) => sum + Math.max(0, (model.heldPenalty ?? 0) - (model.heldHpLoss ?? 0)), 0);
-  const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss;
+  // HP lost at the start of our next turn (Crimson Mantle 1 a copy, Inferno 1) comes before we act
+  // (24HM F33 T14: 1 HP predicted after the enemy turn, the Mantle's 1 killed us at the start of T15).
+  const mantle = ourPowers.find((power) => power.id === "CRIMSON_MANTLE_POWER")?.amount ?? 0;
+  const startTurnHpLoss = (mantle > 0 ? Math.max(1, Math.floor(mantle / 7)) : 0) + (ourPowers.some((power) => power.id === "INFERNO_POWER" && (power.amount ?? 0) > 0) ? 1 : 0);
+  const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss + startTurnHpLoss;
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
