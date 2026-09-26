@@ -1058,6 +1058,15 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("Kusarigama (MX8K F33 T9)", () => {
+  it("the 3rd attack's random 6 counts against the lowest-HP enemy", () => {
+    const hand = [0, 1, 2].map((i) => ({ ...strike(i), damage: 1, validTargets: [0, 1] }));
+    const enemies = [enemy({ index: 0, hp: 4, attacks: [] }), enemy({ index: 1, hp: 50, attacks: [] })];
+    const withRelic = solveTurn({ hand, player: player({ hp: 60, energy: 3, kusarigama: { every: 3, damage: 6, count: 0 } }), enemies, fightKind: "monster" }).plans[0]!;
+    expect(withRelic.outcome.damageDealt).toBeGreaterThanOrEqual(7);
+  });
+});
+
 describe("plain True Grit (VL2D F17 T16)", () => {
   it("the cards left unplayed still pay their held penalty", () => {
     const grit = card(0, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], cost: 1, block: 7, randomExhaust: true });

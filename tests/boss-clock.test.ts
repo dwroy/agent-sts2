@@ -22,7 +22,7 @@ const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS") => parseGameState(ba
 
 describe("boss clock", () => {
   it("knows the act bosses' HP and damage a turn", () => {
-    expect(bossNeed("KAISER_CRAB_BOSS")).toMatchObject({ id: "KAISER_CRAB", hp: 408, perTurn: 51 });
+    expect(bossNeed("KAISER_CRAB_BOSS")).toMatchObject({ id: "KAISER_CRAB", hp: 428, perTurn: 54 });
     expect(bossNeed("KNOWLEDGE_DEMON_BOSS")?.perTurn).toBe(51);
     expect(bossNeed("SLIME_BOSS")).toBeNull();
   });
@@ -50,7 +50,7 @@ describe("boss clock", () => {
     expect(gapRestShift(gap, "SMITH", 0.8, false)).toBe(2);
     expect(gapRestShift(gap, "SMITH", 0.5, false)).toBe(0);
     expect(gapRestShift(gap, "SMITH", 0.8, true)).toBe(0);
-    expect(bossClockJson(state, testKnowledge)).toMatchObject({ boss: "KAISER_CRAB", boss_hp: 408, need_damage_per_turn: 51 });
+    expect(bossClockJson(state, testKnowledge)).toMatchObject({ boss: "KAISER_CRAB", boss_hp: 428, need_damage_per_turn: 54 });
     expect(gapCardBonus({ ...gap, gap: 0 }, "INFLAME").bonus).toBe(0);
   });
 

@@ -29,7 +29,7 @@ export interface BossNeed {
 export const BOSS_NEEDS: Record<string, BossNeed> = {
   // The two wins took 7-8 turns (58 and 51 a turn); the Bug Sting -> Laser opener ends longer fights
   // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough).
-  KAISER_CRAB: { hp: 408, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
+  KAISER_CRAB: { hp: 428, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
   KNOWLEDGE_DEMON: { hp: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },

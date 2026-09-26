@@ -43,7 +43,9 @@ export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, ma
   if (floor !== null && floor <= EARLY_EVENT_FLOORS && maxHp > 0 && cost.hp >= maxHp * EARLY_EVENT_HP_SHARE) {
     return `costs ${cost.hp} HP (${Math.round(EARLY_EVENT_HP_SHARE * 100)}%+ of max) on floor ${floor}`;
   }
-  if (forced) return `costs HP right before a forced ${forced}`;
+  // A small cost is fine even before a forced fight (P78Z F11, KEMS F22: a 3-HP Slippery Bridge reroll
+  // was refused and the event removed Uppercut / Whirlwind).
+  if (forced && cost.hp >= Math.max(4, maxHp * 0.05)) return `costs HP right before a forced ${forced}`;
   const maxAfter = maxHp - cost.maxHp;
   const hpAfter = Math.min(hp - cost.hp, maxAfter);
   if (maxHp > 0 && hpAfter < maxAfter * 0.5) return `leaves ${hpAfter}/${maxAfter} HP (below half)`;
