@@ -168,7 +168,10 @@ function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>
   for (const child of node.children) {
     const childNode = nodes.get(key(child.row, child.col));
     if (!childNode) continue;
-    best = Math.max(best, weights(childNode.type, left) + continuation(childNode, left, nodes, weights, act, memo));
+    // A likely death ends the route: nothing after it counts (4UWK F22: at 9/80 the Unknown room into a
+    // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7).
+    const here = weights(childNode.type, left);
+    best = Math.max(best, here <= LIKELY_DEATH ? here : here + continuation(childNode, left, nodes, weights, act, memo));
   }
   if (best === -Infinity) best = 0;
   memo.set(nodeKey, best);

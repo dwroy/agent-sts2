@@ -296,6 +296,8 @@ interface ExhaustContext {
   hp?: number;
   /** An enemy has SANDPIT_POWER: Frantic Escape is the countdown's only answer, never junk. */
   sandpit?: boolean;
+  /** Attack cards in hand right now. */
+  handAttacks?: number;
 }
 
 /** A card that gives block: a Defend, a Block value, or block in its text. */
@@ -336,7 +338,8 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
   const sandpit = asArray(combat["enemies"])
     .map(asRecord)
     .some((enemy) => enemy["is_alive"] !== false && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "SANDPIT_POWER"));
-  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit };
+  const handAttacks = hand.filter((card) => isAttackCard(str(card["card_id"]), typeOf(str(card["card_id"]), str(card["card_type"])), str(card["resolved_rules_text"]))).length;
+  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks };
 }
 
 /**
@@ -355,7 +358,12 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
   if (type === "Curse") return 100;
   if (type === "Status") return 90;
   // HP at or below the hit coming (this turn or next): the block is what keeps us alive.
+  // The only attack in hand is what kills (4UWK F24 T8: at 1 HP with the Prism at 33 and buffing, the
+  // gloves took Uppercut, the only attack, because every block card scored -10; the kill was there).
+  if (type === "Attack" && context.handAttacks !== undefined && context.handAttacks <= 1) return -20;
   if (blocks && context.hp !== undefined && context.hp <= context.incoming) return -10;
+  // An unplayed power is the deck's engine (4UWK: the gloves exhausted Barricade twice).
+  if (type === "Power") return 5;
   const value = cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
   if (type === "Attack" && context.attacks <= MIN_COMBAT_ATTACKS) return 0;
   // A Defend goes first only when little is coming; with a real hit coming it is kept below most

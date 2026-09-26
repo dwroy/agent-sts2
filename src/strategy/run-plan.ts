@@ -54,7 +54,8 @@ export const RUN_PLAN_HP_DROP = 0.3;
 export const RUN_PLAN_LOW_HP = 0.4;
 
 /** Card-value bonus for planned cards, malus for avoided ones. */
-export const RUN_PLAN_WANT_BONUS = 12;
+// 12 was too weak: 4UWK F15 Body Slam, the plan's first want, lost 86 to 73 to Thrash.
+export const RUN_PLAN_WANT_BONUS = 20;
 export const RUN_PLAN_AVOID_MALUS = 15;
 
 export function actOf(state: GameState): number {
