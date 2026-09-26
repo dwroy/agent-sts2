@@ -356,7 +356,7 @@ describe("more enemy powers", () => {
     expect(empty.plans.some((plan) => plan.steps.some((step) => step.cardId.includes("ASHWATER")))).toBe(false);
   });
 
-  it("an exhaust takes Howl from Beyond first: it replays from the exhaust pile every turn (SVN2 F17)", async () => {
+  it("an exhaust takes Howl from Beyond first: it plays itself once from the exhaust pile and is not lost (SVN2 F17, N1V2 F48)", async () => {
     const { exhaustPick } = await import("../src/strategy/turn-solver.js");
     const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 18, target: "all", validTargets: [] });
     const wound = card(4, "WOUND", { type: "Status", playable: false, heldPenalty: 0, validTargets: [] });

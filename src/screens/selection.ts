@@ -350,7 +350,7 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
  * Strike when little is coming.
  */
 export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_")): number {
-  // Howl from Beyond replays itself every turn from the exhaust pile: exhausting it is a gain.
+  // Howl from Beyond plays itself once from the exhaust pile, then goes to the discard pile: a free hit.
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   // Frantic Escape is a Status, but against the Sandpit it is the only thing that pushes the countdown
   // back (THMG F33 T4: Burning Pact took it as 90-point junk; both lines then left the Sandpit at 1).
