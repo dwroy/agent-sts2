@@ -10,7 +10,8 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
-import { cardValue, deckProfile } from "../strategy/card-value.js";
+import { cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
+import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
@@ -105,7 +106,9 @@ export function planShop(env: DecisionEnv): Decision | null {
         intent: { action, option_index: index },
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
-        score: shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"])),
+        score:
+          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"])) +
+          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id)).length, isBlockCardId(id)).bonus : 0),
         summary: {
           buy: name,
           kind: kindLabel,

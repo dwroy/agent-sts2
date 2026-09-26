@@ -18,6 +18,7 @@ import { DeepSeekClient } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
+import { loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -482,6 +483,21 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       fightPlan: config.fightPlan,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
+    // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
+    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
+      if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
+        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, onEvent, (tokens) => {
+          stats.deepseekCalls += 1;
+          stats.deepseekTokens += tokens;
+        });
+      }
+    }
+    if (config.runPlan === "v1") {
+      if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]));
+      const line = screenMemory.runPlan && screenMemory.runPlan.runId === str(state.raw["run_id"]) ? runPlanLine(screenMemory.runPlan) : null;
+      if (line) env.brief.plan = line;
+    }
     if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
       const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
@@ -939,6 +955,9 @@ async function ensureFightPlan(
     task: FIGHT_PLAN_TASK,
     fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
     memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    ...(screenMemory.runPlan && screenMemory.runPlan.runId === runId
+      ? { run_plan: { archetype: screenMemory.runPlan.archetype, boss_prep: screenMemory.runPlan.bossPrep, summary: screenMemory.runPlan.summary } }
+      : {}),
     ...(current && current.fight === fight ? { previous_plan: fightPlanJson(current), note: "A new boss/elite enemy appeared: revise the plan for the rest of the fight." } : {}),
   };
   onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
@@ -974,5 +993,62 @@ async function ensureFightPlan(
     const message = error instanceof Error ? error.message : String(error);
     logFightPlan(logFile, { run: runId, fight, floor: state.run?.floor ?? null, kind, error: message.slice(0, 200) });
     onEvent({ type: "note", message: `fight plan failed: ${message.slice(0, 160)}` });
+  }
+}
+
+/**
+ * Makes sure the run has a current DeepSeek run plan (RUN_PLAN=v1): restored from the log after a
+ * restart, else asked when a checkpoint is due (run start, new act, heavy HP loss, every few floors).
+ * A failed request is not retried on the same floor.
+ */
+async function ensureRunPlan(
+  env: DecisionEnv,
+  deepseek: DeepSeekClient,
+  journal: RunJournal,
+  logFile: string,
+  onEvent: (event: LoopEvent) => void,
+  count: (tokens: number) => void,
+): Promise<void> {
+  const { state, knowledge, screenMemory } = env;
+  const runId = str(state.raw["run_id"]);
+  if (!runId) return;
+  if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(logFile, runId);
+  const trigger = runPlanTrigger(screenMemory.runPlan, state);
+  if (!trigger) return;
+  const failKey = `${runId}:${state.run?.floor ?? "?"}`;
+  if (screenMemory.runPlanFailed === failKey) return;
+  const memory = journal.render(state, knowledge, screenMemory.lastMap);
+  const shown = fightPlanInput(state, knowledge, "run", {});
+  const payload: Record<string, JsonValue> = {
+    task: RUN_PLAN_TASK,
+    run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String)),
+    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    ...(screenMemory.runPlan ? { previous_plan: toJsonValue(screenMemory.runPlan) } : {}),
+  };
+  onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
+  try {
+    const { json, meta } = await deepseek.askJson(payload, "run-plan");
+    count(meta.inputTokens + meta.outputTokens);
+    const plan = parseRunPlan(json, state, knowledge, trigger);
+    screenMemory.runPlan = plan;
+    logRunPlan(logFile, {
+      run: runId,
+      floor: state.run?.floor ?? null,
+      trigger,
+      plan: toJsonValue(plan),
+      raw: toJsonValue(json),
+      latency_ms: meta.latencyMs,
+      input_tokens: meta.inputTokens,
+      output_tokens: meta.outputTokens,
+      cache_hit_tokens: meta.cacheHitTokens ?? 0,
+      reasoning_tokens: meta.reasoningTokens ?? 0,
+      effort: meta.effort ?? "",
+    });
+    onEvent({ type: "note", message: `run plan (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
+  } catch (error) {
+    screenMemory.runPlanFailed = failKey;
+    const message = error instanceof Error ? error.message : String(error);
+    logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200) });
+    onEvent({ type: "note", message: `run plan failed: ${message.slice(0, 160)}` });
   }
 }

@@ -67,6 +67,9 @@ export interface AppConfig {
   fightPlan: "off" | "v1";
   /** JSONL log of the fight plans (FIGHT_PLAN=v1). */
   fightPlanLog: string;
+  /** `v1`: DeepSeek sets a run plan (strategy only) at run/act start, heavy HP loss and every few floors. */
+  runPlan: "off" | "v1";
+  runPlanLog: string;
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -312,6 +315,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const fightPlan: "off" | "v1" = fightPlanRaw === "v1" ? "v1" : "off";
   const fightPlanLog = readEnv(env, "FIGHT_PLAN_LOG") ?? "logs/fight-plans.jsonl";
+  const runPlanRaw = (readEnv(env, "RUN_PLAN") ?? "off").toLowerCase();
+  if (runPlanRaw !== "off" && runPlanRaw !== "v1") {
+    problems.push({ field: "RUN_PLAN", message: `expected off or v1, got "${runPlanRaw}"` });
+  }
+  const runPlan: "off" | "v1" = runPlanRaw === "v1" ? "v1" : "off";
+  const runPlanLog = readEnv(env, "RUN_PLAN_LOG") ?? "logs/run-plans.jsonl";
 
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
@@ -389,6 +398,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     jevContext,
     fightPlan,
     fightPlanLog,
+    runPlan,
+    runPlanLog,
     deepseek,
     escalation,
     mode,
