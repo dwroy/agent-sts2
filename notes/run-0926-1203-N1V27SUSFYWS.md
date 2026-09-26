@@ -1,0 +1,129 @@
+## 复盘：run N1V27SUSFYWS — 胜利，最高第 48 层
+
+- 决策 769 个；Jev 调用 102 次，Claude 0 次，DeepSeek 23 次；token 203,289 入 / 5,046 出，约 $0.0088；用时 47.5 分钟
+- 决策者：code 572，jev 91，jev-plan 72，deepseek 23，code-fallback 11
+
+### 战斗掉血（按层）
+- 第 2 层 海洋混混: HP 64→55（-9），决策 jev-plan 3，code 3，jev 2
+- 第 5 层 蟾蜍蝌蚪: HP 80→78（-2），决策 jev 2，jev-plan 2，code 1
+- 第 5 层 蟾蜍蝌蚪: HP 76→70（-6），决策 code 2，jev 1
+- 第 6 层 淤泥旋螺: HP 76→76（-0），决策 code 4，jev 1，jev-plan 1
+- 第 6 层 淤泥旋螺: HP 76→72（-4），决策 code 6，jev 1，code-fallback 1
+- 第 8 层 鬼祟珊瑚群: HP 78→74（-4），决策 jev-plan 4，jev 2，code 1
+- 第 8 层 鬼祟珊瑚群: HP 74→62（-12），决策 jev 4，jev-plan 4，code 2
+- 第 8 层 鬼祟珊瑚群: HP 62→62（-0），决策 code 3，jev 1，jev-plan 1
+- 第 9 层 双尾鼠: HP 68→63（-5），决策 code 13，jev-plan 2，code-fallback 1，jev 1
+- 第 11 层 花园幽灵鳗: HP 69→41（-28），决策 code 17，jev-plan 2，jev 1
+- 第 13 层 骇鳗: HP 80→71（-9），决策 code 7，jev-plan 5，jev 4
+- 第 13 层 骇鳗: HP 71→71（-0），决策 code 5，jev 1，jev-plan 1
+- 第 14 层 噬尸蛞蝓: HP 77→72（-5），决策 code 10，jev-plan 2，jev 1
+- 第 14 层 噬尸蛞蝓: HP 72→62（-10），决策 code 4，code-fallback 1，jev 1，jev-plan 1
+- 第 15 层 气态炸弹/活雾: HP 68→66（-2），决策 code 10
+- 第 17 层 灵魂异鱼: HP 80→80（-0），决策 code 9
+- 第 17 层 灵魂异鱼: HP 80→25（-55），决策 code 21，jev-plan 9，jev 8，code-fallback 1
+- 第 19 层 地道虫: HP 72→65（-7），决策 code 7，jev 5，jev-plan 4
+- 第 21 层 盛碗虫（卵）/盛碗虫（石）: HP 71→66（-5），决策 code 13
+- 第 22 层 啃咬机: HP 72→66（-6），决策 code 5，jev 3，jev-plan 1，code-fallback 1
+- 第 22 层 啃咬机: HP 66→57（-9），决策 code 12，jev 1
+- 第 23 层 熟睡甲虫/盛碗虫（丝）/盛碗虫（石）: HP 63→61（-2），决策 code 7，jev 3，jev-plan 2，code-fallback 1
+- 第 23 层 熟睡甲虫/盛碗虫（丝）: HP 61→44（-17），决策 code 10，jev 3，code-fallback 1
+- 第 24 层 外骨骼虫: HP 50→43（-7），决策 code 17
+- 第 27 层 蜂群术士: HP 64→45（-19），决策 code 16，jev 3
+- 第 29 层 残杀千足虫: HP 80→74（-6），决策 code 8
+- 第 30 层 盛碗虫（丝）/盛碗虫（卵）/盛碗虫（石）: HP 80→74（-6），决策 jev 3，jev-plan 3，code-fallback 1
+- 第 30 层 盛碗虫（丝）/盛碗虫（石）: HP 74→66（-8），决策 code 5，jev 1，jev-plan 1
+- 第 33 层 无厌沙虫: HP 80→67（-13），决策 code 7，jev-plan 3，jev 2
+- 第 33 层 无厌沙虫: HP 67→36（-31），决策 code 14，jev 2，jev-plan 2
+- 第 35 层 活体盾/高塔炮手: HP 74→69（-5），决策 code 14，jev 1
+- 第 36 层 咬人卷轴: HP 79→79（-0），决策 code 4，jev-plan 2，jev 1
+- 第 36 层 咬人卷轴: HP 79→79（-0），决策 code 2
+- 第 37 层 史莱姆狂战士: HP 84→84（-0），决策 code 18，jev 3，jev-plan 1
+- 第 42 层 幽灵骑士/连枷骑士/魔法骑士: HP 91→83（-8），决策 code 6，jev 1，jev-plan 1，code-fallback 1
+- 第 42 层 幽灵骑士/魔法骑士: HP 83→50（-33），决策 code 15，jev 2，jev-plan 2，code-fallback 1
+- 第 44 层 机甲骑士: HP 101→98（-3），决策 jev 5，jev-plan 5，code 2
+- 第 44 层 机甲骑士: HP 98→83（-15），决策 code 15，jev 5，jev-plan 5
+- 第 45 层 拳击构装体/方柱构装体: HP 89→85（-4），决策 code 10，code-fallback 1，jev 1
+- 第 48 层 永世沙漏: HP 105→105（-0），决策 code 1
+- 第 48 层 永世沙漏: HP 105→61（-44），决策 code 36，jev 4，jev-plan 3
+
+### 各类决策由谁做
+- combat/plan / code: 183
+- combat/plan-continue / code: 134
+- combat/plan-continue / jev-plan: 72
+- combat/plan-choice / jev: 68
+- reward/claim / code: 64
+- map/route / code: 37
+- combat/lethal / code: 26
+- reward/proceed / code: 26
+- reward/card / code: 19
+- combat/end_turn / code: 15
+- combat/plan-choice+potion / jev: 12
+- combat/plan-choice / code-fallback: 10
+- selection/add / code: 10
+- event/choose / deepseek: 9
+- event/leave / code: 7
+- map/route / jev: 7
+- rest/proceed / code: 7
+- reward/card / deepseek: 6
+- chest/open / code: 5
+- chest/proceed / code: 5
+- chest/relic / code: 5
+- rest/choose / code: 5
+- shop/buy / code: 5
+- selection/remove / code: 4
+- combat/plan-guarded / code: 3
+- map/route / deepseek: 3
+- selection/add / jev: 3
+- selection/upgrade / code: 3
+- shop/buy / deepseek: 2
+- shop/leave / code: 2
+- shop/open / code: 2
+- bundle/confirm / code: 1
+- combat/plan-choice+potion / code-fallback: 1
+- combat/plan-potion / code: 1
+- event/only / code: 1
+- rest/choose / deepseek: 1
+- rest/choose / jev: 1
+- run/finalize / code: 1
+- selection/add / deepseek: 1
+- selection/take into my hand / code: 1
+- selection/upgrade / deepseek: 1
+
+### 兜底介入（Claude/DeepSeek）：23 次（推翻 Jev 10 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o0 @0.20 → o1）：牌组缺 AOE、力量与格挡牌；卡包提供永久牌面提升，从两包中选更可控，胜过一次性随机药水。
+- [deepseek] 第 3 层 TNone event/choose: 同意 Jev（o1 @0.09 → o1）：Healing to 80/80 secures Act 1 elite/boss HP; enchant only touches basic Strike/Defend, which this run plans to remove a
+- [deepseek] 第 3 层 TNone map/route: 同意 Jev（n0 @0.25 → n0）：Full HP favors Unknown: slight route-value edge, event upside at 100% HP, still leaves Monster chain for card rewards.
+- [deepseek] 第 5 层 T2 selection/add: 推翻 Jev（card1 @0.39 → card0）：痛击是最强的牌：为熔融之拳/易伤爆发铺路，放到抽牌堆顶可以下回合立即再用；打击和重振精神价值低得多。
+- [deepseek] 第 8 层 T6 map/route: 同意 Jev（n0 @0.28 → n0）：85% HP is safe for a normal fight; Monster gives card, gold and higher route value, and the RestSite follows soon after 
+- [deepseek] 第 9 层 T5 reward/card: 同意 Jev（card0 @0.40 → card0）：挑衅 is A-tier: 1E for 6 block plus Vulnerable, feeding Molten Fist doubling; boss needs more block and debuff, and multi-
+- [deepseek] 第 18 层 TNone event/choose: 推翻 Jev（o0 @0.10 → o2）：Deck is 23 cards; extra cards dilute the sandpit DPS race. This relic adds repeatable block doubling every 3 turns with 
+- [deepseek] 第 19 层 T4 reward/card: 推翻 Jev（card0 @0.19 → card2）：Deck plan is strength+vulnerable burst; multi-hit Twin Strike+ scales with strength and gives best single-target DPS for
+- [deepseek] 第 20 层 TNone event/choose: 同意 Jev（o0 @0.24 → o0）：Remove 2 worst cards (Strikes), add premium attack—fits Insatiable DPS race; Defends are still needed as core block.
+- [deepseek] 第 20 层 TNone event/choose: 同意 Jev（o0 @0.20 → o0）：删牌优先删打击；究极打击契合力量+易伤爆发计划，且防御仍是非基础格挡之外的必要防线。
+- [deepseek] 第 23 层 T7 reward/card: 同意 Jev（card2 @0.22 → card2）：拆卸+ 造成20点伤害（易伤时攻击两次），牌组已有4个易伤源+熔融之拳翻倍；无厌沙虫是限时DPS战，需要这种高效伤害。
+- [deepseek] 第 30 层 T3 reward/card: 同意 Jev（card2 @0.04 → card2）：Uppercut+ is A-tier: 13 damage plus 2 weak/2 vuln; vuln doubles via Molten Fist and weak blunts the Insatiable's DPS rac
+- [deepseek] 第 31 层 TNone shop/buy: 推翻 Jev（buy_card4 @0.27 → remove）：Deck still has Strikes; removal at 75 is cheapest highest-value buy. Keep gold for strength/AOE later; boss 无厌沙虫 is a DP
+- [deepseek] 第 31 层 TNone shop/buy: 同意 Jev（buy_card0 @0.20 → buy_card0）：Feed+ is a 1-cost heavy hit plus permanent max HP growth; best lasting value here, and gold must be spent before the bos
+- [deepseek] 第 32 层 TNone selection/upgrade: 推翻 Jev（card11 @0.23 → card16）：升级绯红披风：长线计时战每回合多3格挡，收益最高且与招架盾、格挡体系协同；其余升级只加少量伤害或数值。
+- [deepseek] 第 34 层 TNone event/choose: 推翻 Jev（o2 @0.24 → o1）：永久+1能量，廉价多抽牌组能花光；永世沙漏是限时DPS赛，加速击杀；3张晕眩虚无，代价小。
+- [deepseek] 第 35 层 T3 reward/card: 同意 Jev（card1 @0.03 → card1）：Colossus+ halves Aeonglass's 22 and 11×2 hits; we apply vulnerable easily (痛击/挑衅/上勾拳), so a second copy upgrades our sur
+- [deepseek] 第 38 层 TNone event/choose: 推翻 Jev（o0 @0.07 → o1）：满血84点，3点生命极廉价；重掷有望改删打击/诅咒，优于直接失去A级头槌，34张牌组仍需精简。
+- [deepseek] 第 38 层 TNone event/choose: 推翻 Jev（o0 @0.23 → o1）：祭品+是核心爆发牌，34张牌组有打击和诅咒可删；96%血量下4点生命极廉价，重掷以求删打击或诅咒。
+- [deepseek] 第 38 层 TNone event/choose: 同意 Jev（o0 @0.38 → o0）：Free thinning for a bloated 34-card deck; Taunt is replaceable since Bash still strips Artifact. Save HP for the Aeongla
+
+### Jev 低置信度（<0.35）决策：34 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御, 痛击 -> 海洋混混) with confidence 0.22; code rank 1 (0.22)
+- 第 5 层 combat/plan-choice: Jev chose plan 1/3 (痛击 -> 蟾蜍蝌蚪, 熔融之拳 -> 蟾蜍蝌蚪) with confidence 0.28; code rank 1 (0.28)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (打击 -> 淤泥旋螺, 头槌 -> 淤泥旋螺, 防御) with confidence 0.33; code rank 1 (0.33)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (防御) with confidence 0.28; code rank 1 (0.28)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/3 (熔融之拳 -> 鬼祟珊瑚群, 防御, 防御) with confidence 0.09; code rank 1 (0.09)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/4 (防御, 打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群) with confidence 0.27; code rank 1; HP guard: plan 1 (防御, 打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群) loses 11 HP, more (0.27)
+- 第 8 层 combat/plan-choice: Jev chose plan 2/3 (铁斩波 -> 鬼祟珊瑚群, 头槌 -> 鬼祟珊瑚群, 防御) with confidence 0.07; code rank 2 (0.07)
+- 第 8 层 combat/plan-choice: Jev chose plan 3/3 (打击 -> 鬼祟珊瑚群, potion 瓶中船) with confidence 0.19; code rank 3 (0.19)
+- 第 13 层 combat/plan-choice: Jev chose plan 1/2 (痛击 -> 骇鳗, 打击 -> 骇鳗) with confidence 0.31; code rank 1 (0.31)
+- 第 13 层 combat/plan-choice: Jev chose plan 2/2 (打击 -> 骇鳗, 打击 -> 骇鳗) with confidence 0.27; code rank 2 (0.27)
+- 第 14 层 combat/plan-choice: Jev chose plan 1/2 (防御, 剑柄打击 -> 噬尸蛞蝓) with confidence 0.18; code rank 1 (0.18)
+- 第 17 层 combat/plan-choice: Jev chose plan 2/2 (呼唤, 打击 -> 灵魂异鱼, 打击 -> 灵魂异鱼) with confidence 0.07; code rank 2 (0.07)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/4 (痛击+ -> 灵魂异鱼, 坚毅) with confidence 0.11; code rank 1 (0.11)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/3 (呼唤, 重振精神, 打击 -> 灵魂异鱼) with confidence 0.24; code rank 1 (0.24)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 2/2 (铁斩波 -> 灵魂异鱼, 呼唤) with confidence 0.19; code rank 2 (0.19)
