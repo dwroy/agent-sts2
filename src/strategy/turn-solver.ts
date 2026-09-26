@@ -748,6 +748,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // 32-damage race card; shown as "hp_lost 1").
     const pool = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion");
     if (pool.length > 0) next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
+    // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
+    // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
+    next.held = [...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
   }
   else if (EXHAUST_PICKERS.has(card.cardId)) {

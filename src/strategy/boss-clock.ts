@@ -41,7 +41,7 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   // Three phases, ~100 + 200 + 300 HP (7DFB F48: phase 2 at 27/200 on T7 with phase 3 still to come).
   TEST_SUBJECT: { hp: 600, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
   LAGAVULIN_MATRIARCH: { hp: 222, turns: 12, note: "sleeps two turns (play powers), then drains Strength/Dexterity" },
-  SOUL_FYSH: { hp: 211, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
+  SOUL_FYSH: { hp: 221, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
   THE_KIN: { hp: 307, turns: 10, note: "priest 190 plus two followers ~59: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)" },
   VANTOM: { hp: 173, turns: 8, note: "9 Slippery stacks: multi-hit" },
   WATERFALL_GIANT: { hp: 260, turns: 11, note: "240 HP plus two Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks" },
