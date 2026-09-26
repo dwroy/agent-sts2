@@ -98,6 +98,13 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // The Matriarch sleeps two turns (time to play powers), then it is a 222 HP damage race (1K5G, Z2H3).
   // The Queen: from her third turn on the Amalgam hits 12x3 / 22 under permanent Vulnerable, Weak and
   // Frail; block and early scaling decide it (WY41 F48: 3 block cards, dead on T4; 88HN).
+  // Aeonglass: 512 HP with two 33-block turns by T9 and Withers every 6 cards: about 70 damage a turn,
+  // few big cards, and a way to exhaust Withers (YVWA/TQX5/Y0KJ: left at 312, 33, 32 of 512).
+  if (boss.includes("AEONGLASS")) {
+    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for Aeonglass's 512 HP" };
+    if (cardId === "TRUE_GRIT" || cardId === "BURNING_PACT" || cardId === "FIEND_FIRE") return { bonus: 8, why: "exhausts Aeonglass's Withers" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "big hits: few cards against Withering Presence" };
+  }
   if (boss.includes("QUEEN")) {
     if (BLOCK.has(cardId)) return { bonus: 8, why: "block for the Queen's Amalgam hits under Frail" };
     if (SCALING.has(cardId)) return { bonus: 6, why: "early scaling for the Queen's first two turns" };

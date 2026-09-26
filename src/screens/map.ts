@@ -5,7 +5,7 @@
  * rests more when HP is low, shops more when there is gold to spend and a card worth removing.
  */
 
-import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { runPlanEliteShift } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -227,6 +227,31 @@ export function planMap(env: DecisionEnv): Decision | null {
   const available = asArray(map["available_nodes"]).map(asRecord);
   if (available.length === 0) return null;
 
+  // Full potion slots with a guaranteed potion coming (White Beast Statue after every fight, Tiny
+  // Mailbox at a rest): the reward screen cannot discard, so the new potion was silently dropped
+  // (YVWA F35-F47: 10 potions lost, Strength, Fire, Regen, Ashwater among them). Free the weakest slot
+  // here, where discarding is allowed, unless the weakest is still worth keeping.
+  const relics = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord);
+  const beltFull = belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
+  const potionComing =
+    (relics.includes("WHITE_BEAST_STATUE") && available.some((node) => ["Monster", "Elite", "Unknown", "Boss"].includes(str(node["node_type"])))) ||
+    (relics.includes("TINY_MAILBOX") && available.some((node) => ["RestSite", "Rest"].includes(str(node["node_type"]))));
+  if (beltFull && potionComing && state.available_actions.includes("discard_potion")) {
+    const weakest = belt
+      .filter((slot) => bool(slot["can_discard"], true))
+      .map((slot) => ({ slot, rank: potionRank(str(slot["potion_id"])) }))
+      .sort((a, b) => a.rank - b.rank)[0];
+    if (weakest && weakest.rank <= POTION_RANK_DISCARDABLE) {
+      return {
+        kind: "act",
+        label: "map/discard-potion",
+        intent: { action: "discard_potion", option_index: num(weakest.slot["index"]) },
+        rationale: `potion slots full with a guaranteed potion coming: discarding ${str(weakest.slot["name"], str(weakest.slot["potion_id"]))} (rank ${weakest.rank})`,
+      };
+    }
+  }
+
   const nodes = new Map<string, MapNode>();
   for (const raw of asArray(map["nodes"]).map(asRecord)) {
     const row = num(raw["row"]);
@@ -310,4 +335,21 @@ export function planMap(env: DecisionEnv): Decision | null {
       note: "route_value and likely_continuation are computed in code from the visible map graph. Do not recompute them.",
     },
   });
+}
+
+/**
+ * Rough keep-value of a potion (0 worst .. 10 best) for freeing a slot. Card-generating and random
+ * potions are the least reliable; defensive, damage and Strength potions the most.
+ */
+const POTION_RANKS: Record<string, number> = {
+  FOUL_POTION: 0, GAMBLERS_BREW: 2, CLARITY: 2, SWIFT_POTION: 3, LIQUID_MEMORIES: 3, COLORLESS_POTION: 3,
+  SKILL_POTION: 4, ATTACK_POTION: 4, POWER_POTION: 5, ENERGY_POTION: 4, BLESSING_OF_THE_FORGE: 3, ASHWATER: 5,
+  BLOCK_POTION: 7, FIRE_POTION: 7, EXPLOSIVE_AMPOULE: 7, WEAK_POTION: 6, VULNERABLE_POTION: 6, FEAR_POTION: 6,
+  DEXTERITY_POTION: 7, STRENGTH_POTION: 8, FLEX_POTION: 6, REGEN_POTION: 7, HEART_OF_IRON: 8, FORTIFIER: 9,
+  DUPLICATOR: 6, BLOOD_POTION: 6, FAIRY_IN_A_BOTTLE: 10, POTION_OF_BINDING: 7, GIGANTIFICATION_POTION: 7,
+};
+/** Potions at or below this rank are dropped to make room for a guaranteed one. */
+export const POTION_RANK_DISCARDABLE = 5;
+export function potionRank(potionId: string): number {
+  return POTION_RANKS[potionId] ?? 5;
 }
