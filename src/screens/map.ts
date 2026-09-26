@@ -76,7 +76,10 @@ export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct
       if (floorInAct <= 4) return -3;
       // The elite right before the boss: only at near-full HP (BG4W F14: took it at 47/80, lost 33,
       // and went into the boss short after the rest).
-      if (floorInAct >= 12) return hpPct > 0.8 ? 4 : -3;
+      // From act 2 on the pre-boss elite costs the boss its entry HP and potions (UMX6 F31: Decimillipede
+      // at 67/80, 26 left and both potions gone, crab entered at 50/80 with none; MK1N 52/80): only at
+      // full HP, and never a draw toward it.
+      if (floorInAct >= 12) return act !== undefined && act >= 2 ? (hpPct >= 0.95 ? 1 : -5) : hpPct > 0.8 ? 4 : -3;
       // Act 1 before the mid-act: the deck is still the starter one (CWMP F6 at A5: 61/87 into four
       // Phantasmal Gardeners with 2 non-basic cards; died in 7 turns). Only at near-full HP.
       if (act === 1 && floorInAct <= 7) return hpPct > 0.85 ? 2 : -3;
