@@ -1176,7 +1176,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
-  const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0);
+  // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
+  const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
+  const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0) + platingNow;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
