@@ -1034,8 +1034,14 @@ function planTurn(env: DecisionEnv): Decision | null {
     replacement !== null &&
     setupCount(picked) > setupCount(replacement) &&
     picked.outcome.hpAfter >= Math.max(playerSim.maxHp * 0.35, nextIncoming);
+  // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
+  // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
+  const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
+  const fightId = fightKey(state);
+  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow };
+  const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   const setupLine =
-    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3
+    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3 && !laterPhase
       ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
       : undefined;
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
