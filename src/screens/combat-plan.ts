@@ -260,6 +260,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       // Plow (Ceremonial Beast): stunned the first time HP drops to its amount (150), like Shriek (RAWT
       // F17 T6: a Strike crossed 150 and cancelled a 26 Plow the solver had counted).
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
+      burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
