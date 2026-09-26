@@ -1120,7 +1120,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // A turn that costs a lot whatever is played is what potions are for: Jev's potion pick stands
       // there (C2WY F22 T4-T5: Attack Potion picks overridden at 27 -> 18 -> 1 HP, died with 3 potions).
       // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
-      const potionTurn = drinks && (costly || dangerous);
+      // Not on a near-guess (M75J F37: Blood Potion at 0.14 on 78/111 HP, healed to full by the next event).
+      const potionTurn = drinks && (costly || dangerous) && answer.confidence >= 0.25;
       // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
       if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
         return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
