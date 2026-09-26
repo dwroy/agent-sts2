@@ -893,6 +893,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
   if (best.outcome.dies) {
+    // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
+    // turn follows (a fresh draw before the enemy acts). 12ZG F23 T6: never used, died to a 24 Pounce.
+    const fightId = fightKey(state);
+    if (relicIds.includes("PAELS_EYE") && num(player["cards_played_this_turn"]) === 0 && env.screenMemory.paelsEyeFight !== fightId) {
+      env.screenMemory.paelsEyeFight = fightId;
+      return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
+    }
     const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
     if (potionsNow.length > 0) return planCombatPerCard(env);
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);

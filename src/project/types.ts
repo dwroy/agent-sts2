@@ -59,6 +59,8 @@ export interface ScreenMemory {
    * combatPlan): an exhaust pick keeps the cards the plan still means to play. Cleared out of combat.
    */
   planBeforeSelection?: import("../strategy/turn-solver.js").Step[];
+  /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
+  paelsEyeFight?: string;
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
