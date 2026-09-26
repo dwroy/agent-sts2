@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-26T02:52:12.305Z",
+  "generated_at": "2026-09-26T02:58:53.834Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 59638842,
-    "deepseek-reasoning.jsonl": 37008356,
+    "decisions.jsonl": 59801984,
+    "deepseek-reasoning.jsonl": 37125711,
     "runs.jsonl": 39792,
-    "states.jsonl": 1252573951,
+    "states.jsonl": 1256444611,
     "fight-plans.jsonl": 233343,
-    "run-plans.jsonl": 16709
+    "run-plans.jsonl": 20074
   },
   "runs_total": 107,
   "runs_by_outcome": {
@@ -135,7 +135,7 @@
     "7": 3,
     "9": 2,
     "13": 2,
-    "17": 26,
+    "17": 25,
     "21": 1,
     "22": 6,
     "23": 2,
@@ -143,7 +143,7 @@
     "25": 1,
     "28": 2,
     "29": 1,
-    "30": 1,
+    "30": 2,
     "31": 3,
     "33": 27,
     "37": 1,
@@ -311,7 +311,7 @@
       "win_rate_finished": 0.0,
       "mean_floor_finished": 29.36,
       "median_floor_finished": 28.5,
-      "reached_act2": 11,
+      "reached_act2": 12,
       "reached_act3": 4,
       "run_ids": [
         "CWMPAZUR32MW",
@@ -466,7 +466,7 @@
       "win_rate_finished": 0.049,
       "mean_floor_finished": 31,
       "median_floor_finished": 33,
-      "reached_act2": 31,
+      "reached_act2": 32,
       "reached_act3": 14,
       "run_ids": [
         "5FMUSNUXEHGY",
@@ -551,7 +551,7 @@
       "win_rate_finished": 0.056,
       "mean_floor_finished": 29.44,
       "median_floor_finished": 33,
-      "reached_act2": 62,
+      "reached_act2": 63,
       "reached_act3": 23,
       "run_ids": [
         "DG1CDGW8Y5JE",
@@ -649,22 +649,22 @@
   },
   "api": {
     "jev": {
-      "calls": 8143,
-      "in_tokens": 12091024,
-      "out_tokens": 383328,
-      "cost_usd": 0.5239,
+      "calls": 8165,
+      "in_tokens": 12130392,
+      "out_tokens": 384524,
+      "cost_usd": 0.5256,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
-      "calls": 2453,
-      "in_tokens": 16542341,
-      "cache_hit_tokens": 13655168,
-      "out_tokens": 8261874,
-      "reasoning_tokens": 8149673,
+      "calls": 2460,
+      "in_tokens": 16620545,
+      "cache_hit_tokens": 13718528,
+      "out_tokens": 8281403,
+      "reasoning_tokens": 8168865,
       "calls_without_token_split": 19,
-      "cost_usd": 10.8681,
-      "latency_p50_s": 11.47,
-      "override_rate": 0.519,
+      "cost_usd": 10.8963,
+      "latency_p50_s": 11.46,
+      "override_rate": 0.52,
       "hp_guard_triggers": 161,
       "pricing_usd_per_m": {
         "input_cache_miss": 0.3,
@@ -678,49 +678,49 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 11.392,
+  "api_cost_total_usd": 11.4219,
   "decisions": {
-    "play_total": 45059,
-    "attributed_to_runs": 43666,
+    "play_total": 45178,
+    "attributed_to_runs": 43785,
     "unattributed_menu_timeline": 1393,
     "shadow": 20,
     "by_layer": {
-      "code": 30895,
-      "jev": 4759,
-      "deepseek": 2456,
+      "code": 30986,
+      "jev": 4770,
+      "deepseek": 2463,
       "claude": 186,
-      "code-fallback": 748,
-      "jev-plan": 3702,
+      "code-fallback": 752,
+      "jev-plan": 3708,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
     "decider_inferred": 342
   },
   "escalations": {
-    "rows": 2639,
+    "rows": 2646,
     "by_variant": {
       "deepseek_nonthinking": 207,
       "claude": 186,
       "deepseek_thinking": 1650,
-      "deepseek_memory": 596
+      "deepseek_memory": 603
     }
   },
   "deepseek_reasoning_log": {
-    "records": 2455,
-    "matched_to_escalations": 2246,
+    "records": 2464,
+    "matched_to_escalations": 2253,
     "models": {
-      "deepseek-flash": 2455
+      "deepseek-flash": 2464
     }
   },
-  "states_lines_scanned": 44991,
+  "states_lines_scanned": 45110,
   "console_logs": 149,
   "commits": {
-    "total": 265,
+    "total": 269,
     "upstream": 19,
-    "experiment": 246
+    "experiment": 250
   },
   "postmortems": {
-    "runs_with_heading": 87,
+    "runs_with_heading": 89,
     "preloop_listed": 13
   }
 }
