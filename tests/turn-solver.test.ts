@@ -629,6 +629,18 @@ describe("The Insatiable's Sandpit", () => {
     }
   });
 
+  it("plays a 1-cost Escape at Sandpit 3 over a lasting power of the same energy (Y08T F33 T3: Pyre won)", () => {
+    const power = card(0, "INFLAME", { type: "Power", target: "self", validTargets: [], strength: 1 });
+    const result = solveTurn({
+      hand: [power, escape(1)],
+      player: player({ hp: 60, energy: 1 }),
+      enemies: [sandworm({ hp: 280, sandpit: 3, attacks: [{ damage: 8, hits: 1 }] })],
+      fightKind: "boss",
+      turn: 3,
+    });
+    expect(result.plans[0]!.steps.map((step) => step.cardId)).toEqual(["FRANTIC_ESCAPE"]);
+  });
+
   it("hard rule: Sandpit-1 lines are not offered while a line keeps it at 2 (THMG F33 T5)", () => {
     // T5: Sandpit 1, 3 energy, three Frantic Escapes; Jev took "Escape, Strike, Shrug" (Sandpit 1).
     const shrug = card(3, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8 });
