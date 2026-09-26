@@ -26,6 +26,13 @@ describe("cardValue", () => {
     expect(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20).value);
   });
 
+  it("Aeonglass: the big-hit bonus goes to real big hits only (L34T: Setup Strike, a 3rd Pommel Strike)", () => {
+    const pommel = cardValue("POMMEL_STRIKE", "Common", "Attack", deck(15), 3, 40).value;
+    expect(cardValue("POMMEL_STRIKE", "Common", "Attack", deck(15), 3, 40, "AEONGLASS_BOSS").value).toBe(pommel);
+    const bludgeon = cardValue("BLUDGEON", "Uncommon", "Attack", deck(15), 3, 40).value;
+    expect(cardValue("BLUDGEON", "Uncommon", "Attack", deck(15), 3, 40, "AEONGLASS_BOSS").value).toBe(bludgeon + 4);
+  });
+
   it("Test Subject favours Strength scaling (7DFB, ZANM: 16 Strength or none, both died in phase 2-3)", () => {
     const plain = cardValue("INFLAME", "Uncommon", "Power", deck(15), 3, 40).value;
     expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 3, 40, "TEST_SUBJECT_BOSS").value).toBe(plain + 10);

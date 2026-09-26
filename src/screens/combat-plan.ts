@@ -295,6 +295,9 @@ export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, t
   return projected >= playerHp + ERUPTION_BLOCK;
 }
 
+/** Hallway enemies fought like elites. */
+const HALLWAY_ELITES = new Set(["SLUMBERING_BEETLE", "LOUSE_PROGENITOR"]);
+
 export function fightKind(combat: Record<string, unknown>, env: DecisionEnv): SolverInput["fightKind"] {
   let kind: SolverInput["fightKind"] = "unknown";
   for (const entry of asArray(combat["enemies"])) {
@@ -304,6 +307,9 @@ export function fightKind(combat: Record<string, unknown>, env: DecisionEnv): So
     // A hallway enemy with lives in stock (Axebot: 72 + 86 + 91 HP) is fought like an elite: fight
     // plan and HP guard (P4ZD F37: no guard, T5 took -9 for 13 damage, died 4 HP short).
     else if (type === "Normal" && powerAmount(asRecord(entry), "STOCK_POWER") > 0) kind = "elite";
+    // Hallway fights that killed runs like elites: fight plan, potion plan, elite HP guard (the beetle
+    // group 4 runs: 4V5T, 2VW5, NEVM, WM2X; Louse Progenitor 2: 3RWJ, 12ZG).
+    else if (type === "Normal" && HALLWAY_ELITES.has(str(asRecord(entry)["enemy_id"])) && asRecord(entry)["is_alive"] !== false) kind = "elite";
     else if (type === "Normal" && kind === "unknown") kind = "monster";
   }
   return kind;

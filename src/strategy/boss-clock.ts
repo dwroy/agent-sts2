@@ -12,7 +12,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { modelHandCard } from "./card-model.js";
-import { damageRole } from "./card-value.js";
+import { damageRole, isBigHit } from "./card-value.js";
 
 export interface BossNeed {
   /** Total HP to chew through (both claws for the crab). */
@@ -30,7 +30,8 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   KAISER_CRAB: { hp: 408, turns: 12, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   KNOWLEDGE_DEMON: { hp: 379, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
-  AEONGLASS: { hp: 512, turns: 9, note: "two 33-block turns by T9, Withers every 6 cards" },
+  // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
+  AEONGLASS: { hp: 578, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
   QUEEN: { hp: 350, turns: 8, note: "from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail" },
   // Three phases, ~100 + 200 + 300 HP (7DFB F48: phase 2 at 27/200 on T7 with phase 3 still to come).
   TEST_SUBJECT: { hp: 600, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
@@ -141,6 +142,8 @@ export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: nu
   if (!gap || gap.gap <= 0) return { bonus: 0, why: null };
   const role = damageRole(cardId);
   if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
+  // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
+  if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
   const bonus = Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
   return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need} for ${gap.boss}: ${role} +${bonus}` };
 }

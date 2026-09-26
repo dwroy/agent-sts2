@@ -420,8 +420,8 @@ describe("map", () => {
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
     const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
-    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.18, 0.24]);
-    expect(fightHpCost("Elite", 3)).toBeCloseTo(0.6);
+    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.18, 0.28]);
+    expect(fightHpCost("Elite", 3)).toBeCloseTo(0.7);
     expect(monsterWeight(0.8)).toBe(1.2);
     expect(monsterWeight(0.35)).toBeCloseTo(0);
     expect(monsterWeight(0.2)).toBeLessThan(0);

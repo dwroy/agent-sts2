@@ -44,6 +44,8 @@ const AOE = new Set(["INFERNO", "THUNDERCLAP", "BREAKTHROUGH", "STOMP", "CONFLAG
 const DRAW = new Set(["POMMEL_STRIKE", "SHRUG_IT_OFF", "BATTLE_TRANCE", "BURNING_PACT", "OFFERING", "DRUM_OF_BATTLE", "PILLAGE"]);
 /** Lasting Strength/scaling. Not Setup Strike: its Strength is gone at the end of the turn. */
 const SCALING = new Set(["DEMON_FORM", "INFLAME", "CORRUPTION", "FEEL_NO_PAIN", "CRIMSON_MANTLE", "PYRE", "RUPTURE", "BRAND", "DOMINATE", "FEED", "JUGGERNAUT", "HELLRAISER", "UNMOVABLE", "BARRICADE"]);
+/** Single cards of 14+ damage (Aeonglass: few, big cards). */
+const BIG_HITS = new Set(["BLUDGEON", "CARNAGE", "HEMOKINESIS", "TEAR_ASUNDER", "FIEND_FIRE", "WHIRLWIND", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "MANGLE", "UPPERCUT", "RAMPAGE"]);
 const FRONTLOAD = new Set(["BREAK", "BLUDGEON", "HEMOKINESIS", "UPPERCUT", "CARNAGE", "TWIN_STRIKE", "POMMEL_STRIKE", "THRASH", "HEADBUTT", "DISMANTLE", "MANGLE", "UNRELENTING", "STOMP", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "SETUP_STRIKE", "TEAR_ASUNDER", "WHIRLWIND", "RAMPAGE", "MOLTEN_FIST", "CINDER", "FIEND_FIRE"]);
 /**
  * Cards that exhaust something (another card, or themselves): what Dark Embrace and Feel No Pain
@@ -112,7 +114,8 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   if (boss.includes("AEONGLASS")) {
     if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for Aeonglass's 512 HP" };
     if (cardId === "TRUE_GRIT" || cardId === "BURNING_PACT" || cardId === "FIEND_FIRE") return { bonus: 8, why: "exhausts Aeonglass's Withers" };
-    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "big hits: few cards against Withering Presence" };
+    // Only real big hits: Setup Strike and a third Pommel Strike got it too and the deck swelled to 31 (L34T).
+    if (BIG_HITS.has(cardId)) return { bonus: 4, why: "big hits: few cards against Withering Presence" };
   }
   if (boss.includes("QUEEN")) {
     if (BLOCK.has(cardId)) return { bonus: 8, why: "block for the Queen's Amalgam hits under Frail" };
@@ -129,6 +132,11 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Matriarch's 222 HP" };
   }
   return { bonus: 0, why: null };
+}
+
+/** One of the 14+ damage single cards. */
+export function isBigHit(cardId: string): boolean {
+  return BIG_HITS.has(cardId);
 }
 
 /** Which kind of damage card this is (for the boss clock's gap bonus), or null. */
