@@ -41,7 +41,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
       const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
       // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
-      const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id)).length, isBlockCardId(cardId));
+      const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
       const valued = { value: base.value + planned.bonus, reasons: planned.why ? [...base.reasons, planned.why] : base.reasons };
       return {
         key: `card${index}`,
