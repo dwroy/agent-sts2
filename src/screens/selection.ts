@@ -49,6 +49,34 @@ export function planSelection(env: DecisionEnv): Decision | null {
       return { kind: "act", label: "selection/free-card", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: make ${pick.name} free for this combat (highest cost, ${pick.cost} energy)` };
     }
   }
+  // "Exhaust / take any number" (min 0) screens: confirming with nothing picked wasted the potion or
+  // card (BFVA F33 T1: Ashwater with Howl from Beyond+ in hand, the planned exhaust confirmed at 0/1;
+  // T4: Neow's Fury "put up to 2 into your hand" confirmed at 0/2). Code picks, then confirms.
+  if (kind === "combat_hand_select" && min === 0 && selected < max) {
+    const offered = asArray(selection["cards"]).map(asRecord).filter((card) => !bool(card["selected"]));
+    if (/消耗|exhaust/i.test(prompt)) {
+      const context = combatExhaustContext(state.raw, offered, knowledge);
+      // Only what is better gone: Howl from Beyond (it replays from the exhaust pile), Status, Curse.
+      const worth = offered
+        .map((card) => ({ card, score: combatExhaustScore(str(card["card_id"]), str(card["card_type"], knowledge.card(str(card["card_id"]))?.type ?? ""), context, isBlockCard(card)) }))
+        .filter((entry) => entry.score >= 90)
+        .sort((a, b) => b.score - a.score)[0];
+      if (worth) {
+        return { kind: "act", label: "selection/exhaust", intent: { action: "select_deck_card", option_index: numOrNull(worth.card["index"]) ?? 0 }, rationale: `code: exhaust ${str(worth.card["name"], str(worth.card["card_id"]))} (${worth.score >= 200 ? "replays from the exhaust pile" : "junk"})` };
+      }
+    } else if (/手牌|into your hand/i.test(prompt)) {
+      const combat = asRecord(state.raw["combat"]);
+      const incoming = incomingDamage(combat);
+      const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
+      const best = offered
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies) }))
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => b.score - a.score)[0];
+      if (best) {
+        return { kind: "act", label: "selection/take", intent: { action: "select_deck_card", option_index: numOrNull(best.card["index"]) ?? 0 }, rationale: `code: take ${str(best.card["name"], str(best.card["card_id"]))} into the hand` };
+      }
+    }
+  }
   if (selected >= min && canConfirm && !pickFirst) {
     return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}/${min} required` };
   }

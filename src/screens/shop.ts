@@ -108,7 +108,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         // relics are usually worth it, potions rarely are.
         score:
           shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"])) +
-          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id)).length, isBlockCardId(id)).bonus : 0),
+          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus : 0),
         summary: {
           buy: name,
           kind: kindLabel,
