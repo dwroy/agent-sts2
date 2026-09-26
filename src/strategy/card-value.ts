@@ -79,8 +79,17 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
     if (BLOCK.has(cardId)) return { bonus: 6, why: "block for the Waterfall Giant's explosion" };
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "a fast kill before the Giant's eruption stacks" };
   }
+  // Both act-2 bosses are damage races entered at full HP and lost short of damage (24HM: 24.9 a turn
+  // of 33.5 needed into the demon; WLY1: 21.6 a turn into the crab's 408 HP, Thunderclap skipped at 33).
   if (boss.includes("KNOWLEDGE_DEMON")) {
-    if (SCALING.has(cardId)) return { bonus: 6, why: "Strength/scaling for the Knowledge Demon's 379 HP" };
+    if (SCALING.has(cardId)) return { bonus: 10, why: "Strength/scaling for the Knowledge Demon's 379 HP" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Knowledge Demon's heals" };
+  }
+  // Kaiser Crab: two claws (Rocket, Crusher) with 408 HP between them: AoE hits both.
+  if (boss.includes("KAISER_CRAB")) {
+    if (AOE.has(cardId)) return { bonus: 12, why: "AoE hits both of the Kaiser Crab's claws" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for the Kaiser Crab's 408 HP" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Kaiser Crab's 408 HP" };
   }
   if (boss.includes("CEREMONIAL") || boss.includes("BEAST")) {
     if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Beast's 230 HP" };

@@ -21,8 +21,16 @@ describe("cardValue", () => {
 
   it("Knowledge Demon favours Strength/scaling", () => {
     const plain = cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20).value;
-    expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(plain + 6);
-    expect(cardValue("HEADBUTT", "Common", "Attack", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(cardValue("HEADBUTT", "Common", "Attack", deck(15), 2, 20).value);
+    expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(plain + 10);
+    expect(cardValue("HEADBUTT", "Common", "Attack", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(cardValue("HEADBUTT", "Common", "Attack", deck(15), 2, 20).value + 4);
+    expect(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20).value);
+  });
+
+  it("Kaiser Crab favours AoE, then scaling (WLY1 F31: Thunderclap skipped, 21.6 damage a turn into 408 HP)", () => {
+    const plain = cardValue("THUNDERCLAP", "Common", "Attack", deck(15), 2, 20).value;
+    expect(cardValue("THUNDERCLAP", "Common", "Attack", deck(15), 2, 20, "KAISER_CRAB").value).toBe(plain + 12);
+    const inflame = cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20).value;
+    expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, "KAISER_CRAB").value).toBe(inflame + 8);
   });
 
   it("Dark Embrace / Feel No Pain only pay with 3+ exhausting cards (Z2H3 F12: Dark Embrace 67 over True Grit, one exhauster)", () => {

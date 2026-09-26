@@ -1168,7 +1168,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       // best dry line is nearly free; measured against the least loss of any line the dry line always
       // won (M812 F28/F33: vetoed at 24 and 10 HP; 9YR9 F17, F3SS F33: potions carried to the death).
       // Nor is a potion refused when the best dry line still costs 30% of our HP.
-      if (!hallwayFight && fromJev && drinks && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
+      // Not when Jev agrees with code's rank 1 (WLY1 F33 T1: the Flex line, 42 damage, was vetoed for a
+      // 26-damage dry line losing the same HP).
+      if (!hallwayFight && fromJev && drinks && chosen.plan !== top && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
         const dry = options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
         const bestDryLoss = dry.length > 0 ? Math.min(...dry.map((plan) => plan.outcome.hpLoss)) : Infinity;
         // Refusing the potion plays a dry line, not code's rank 1 when that drinks (F3SS F33 T3: the
