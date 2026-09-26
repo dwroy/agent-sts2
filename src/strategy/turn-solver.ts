@@ -1051,6 +1051,8 @@ export const FOCUS_BONUS = 0.5;
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
+/** HP-equivalent cost of playing The Gambit (every later unblocked hit is fatal). */
+export const GAMBIT_COST = 60;
 /** Cards Pact's End needs in the exhaust pile. */
 export const PACTS_END_EXHAUST = 3;
 /** Damage one more Sandpit turn is worth (the deck's rough output per turn into The Insatiable). */
@@ -1193,9 +1195,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
   const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
+  const gambitPlayed = sim.steps.some((step) => step.cardId === "THE_GAMBIT");
   const dies =
     hpAfter <= 0 ||
-    (input.player.gambit === true && incomingAfterBlock > 0) ||
+    ((input.player.gambit === true || gambitPlayed) && incomingAfterBlock > 0) ||
     (sandpitAfter !== null && sandpitAfter <= 0);
 
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
@@ -1396,6 +1399,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
     if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
   }
+  // After The Gambit every unblocked hit for the rest of the fight kills: a last resort only.
+  if (gambitPlayed && !winsFight) score -= weights.hp * GAMBIT_COST;
   score += sim.feedKills * 12;
   // Personal Hive: each hit clogs a later hand with a Dazed (M812 F28: 2-4 Dazed per hand from T4).
   // A thin draw pile draws them next turn (CY8U F25 T6: 6 Dazed into a 1-card pile, T7 hand 5/5 Dazed).

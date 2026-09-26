@@ -146,7 +146,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       score: forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
         : topDanger
-          ? (isBlockCard(card) ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
+          ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
           ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0) -
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)

@@ -1058,6 +1058,17 @@ describe("Test Subject (2WUM F48)", () => {
   });
 });
 
+describe("The Gambit (P78Z F17 T11)", () => {
+  it("is played only when every other line dies", () => {
+    const gambit = card(0, "THE_GAMBIT", { type: "Skill", target: "self", validTargets: [], cost: 0, block: 50 });
+    const defend = card(1, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], cost: 1, block: 5 });
+    const beam = (hp: number) => solveTurn({ hand: [gambit, defend], player: player({ hp, energy: 1 }), enemies: [enemy({ index: 0, hp: 38, attacks: [{ damage: 7, hits: 3 }] })], fightKind: "boss" }).plans[0]!;
+    expect(beam(3).steps.map((step) => step.cardId)).toContain("THE_GAMBIT");
+    expect(beam(3).outcome.dies).toBe(false);
+    expect(beam(40).steps.map((step) => step.cardId)).not.toContain("THE_GAMBIT");
+  });
+});
+
 describe("Tunneler burrow (HV0D F21 T8)", () => {
   it("breaking the burrow block cancels this turn's attack", () => {
     const bash = card(0, "BASH", { cost: 2, damage: 10 });
