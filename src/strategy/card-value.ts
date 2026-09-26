@@ -206,7 +206,7 @@ export function cardValue(
     reasons.push(deck.exhaust >= 3 ? `${deck.exhaust} exhausting cards to feed it` : "Baking Gloves exhaust every turn");
   }
   // Relic synergies found on live runs: Baking Gloves (TOASTY_MITTENS) exhaust a card every turn, so
-  // Howl from Beyond replays itself each turn and Evil Eye always gets its bonus block.
+  // Howl from Beyond fires free each time it is drawn and exhausted, and Evil Eye always gets its bonus block.
   if (relics.includes("TOASTY_MITTENS") && (cardId === "HOWL_FROM_BEYOND" || cardId === "EVIL_EYE")) {
     value += 25;
     reasons.push("Baking Gloves synergy");

@@ -489,8 +489,9 @@ function isJunk(card: CardModel): boolean {
  */
 export function exhaustValue(card: CardModel, weights: Weights): number {
   if (isJunk(card)) return -(card.heldPenalty ?? 0) * weights.hp;
-  // Howl from Beyond plays itself from the exhaust pile at the end of every turn: exhausting it is a
-  // gain, the first card any exhaust takes (SVN2 F17: in hand on 5 boss turns, never exhausted).
+  // Howl from Beyond in the exhaust pile plays itself at the end of the turn (a free hit to every enemy,
+  // counted in evaluate) and then goes to the discard pile, not lost: exhausting it is a gain, the first
+  // card any exhaust takes (SVN2 F17: in hand on 5 boss turns, never exhausted).
   if (card.cardId === "HOWL_FROM_BEYOND") return -HOWL_EXHAUST_VALUE;
   const damage = (card.damage ?? 0) * Math.max(1, card.hits) * weights.damage;
   const block = card.block * weights.hp * 0.5;
@@ -1345,9 +1346,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score += drawScoreAt(sim.draws, sim.energy);
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
     score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
-    // An exhausted Howl hits every enemy for its damage at the end of each turn from now on.
-    const livingNow = sim.enemies.filter((enemy) => enemy.alive).length;
-    score += sim.exhausted.filter((card) => card.cardId === "HOWL_FROM_BEYOND").reduce((sum, card) => sum + (card.damage ?? 0) * livingNow * weights.damage * fightLength, 0);
+    // An exhausted Howl fires once (counted above) and goes to the discard pile, not every turn after
+    // (N1V2 F48: exhausted T4, fired once, back in hand T7).
     // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over
     // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
     if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
