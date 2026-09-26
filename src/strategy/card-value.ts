@@ -125,6 +125,15 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   return { bonus: 0, why: null };
 }
 
+/** Which kind of damage card this is (for the boss clock's gap bonus), or null. */
+export function damageRole(cardId: string): "scaling" | "aoe" | "frontload" | null {
+  const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT"]);
+  if (STRENGTH.has(cardId)) return "scaling";
+  if (AOE.has(cardId)) return "aoe";
+  if (FRONTLOAD.has(cardId)) return "frontload";
+  return null;
+}
+
 /** Whether a card is one of the deck's block cards (Defends count too). */
 export function isBlockCardId(cardId: string): boolean {
   return BLOCK.has(cardId) || cardId.startsWith("DEFEND_");

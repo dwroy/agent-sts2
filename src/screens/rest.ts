@@ -1,6 +1,7 @@
 /** Rest sites (PLAN.md §6.7): HEAL vs SMITH and friends, driven by HP% and upgradeable cards. */
 
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { damageGap, gapRestShift } from "../strategy/boss-clock.js";
 import { runPlanRestShift } from "../strategy/run-plan.js";
 import { deckEntries } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
@@ -34,7 +35,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     const score =
       (id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss);
+        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,

@@ -17,6 +17,7 @@ import { dirname } from "node:path";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries } from "../project/deck.js";
+import { bossClockJson } from "./boss-clock.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
@@ -86,6 +87,9 @@ export const RUN_PLAN_TASK = [
   "You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops,",
   "removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions,",
   "the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act.",
+  "act_boss_clock gives the boss's HP, the turns the fight can last, the damage a turn that needs, and code's rough",
+  "estimate of this deck's damage a turn (Strength counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling",
+  "and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary.",
   'Reply with JSON only: {"archetype": "<the deck direction, max 12 words>",',
   '"want": [card ids to pick when offered, most important first, max 6],',
   '"avoid": [card ids not to take, max 6], "remove": [card ids in the deck to remove first, max 3],',
@@ -106,6 +110,7 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
     hp: `${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"}`,
     gold: state.run?.gold ?? null,
     act_boss: str(raw["boss_id"]),
+    act_boss_clock: bossClockJson(state, knowledge),
     deck_size: deckEntries(state, knowledge).length,
     deck: deckLines,
     relics,

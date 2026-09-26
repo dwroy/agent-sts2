@@ -8,6 +8,7 @@
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
+import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
 import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -29,6 +30,7 @@ export function planReward(env: DecisionEnv): Decision | null {
     }
     const entries = deckEntries(state, knowledge);
     const profile = deckProfile(entries);
+    const gap = damageGap(state, knowledge);
     const run = asRecord(state.run?.raw);
     const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
     const floor = state.run?.floor ?? 0;
@@ -42,7 +44,9 @@ export function planReward(env: DecisionEnv): Decision | null {
       const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
       // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
       const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
-      const valued = { value: base.value + planned.bonus, reasons: planned.why ? [...base.reasons, planned.why] : base.reasons };
+      // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
+      const clock = gapCardBonus(gap, cardId);
+      const valued = { value: base.value + planned.bonus + clock.bonus, reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : [])] };
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
