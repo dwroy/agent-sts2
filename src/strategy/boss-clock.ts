@@ -27,7 +27,9 @@ export interface BossNeed {
  * Keys match a substring of run.boss_id.
  */
 export const BOSS_NEEDS: Record<string, BossNeed> = {
-  KAISER_CRAB: { hp: 408, turns: 12, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
+  // The two wins took 7-8 turns (58 and 51 a turn); the Bug Sting -> Laser opener ends longer fights
+  // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough).
+  KAISER_CRAB: { hp: 408, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   KNOWLEDGE_DEMON: { hp: 379, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
@@ -39,7 +41,7 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   SOUL_FYSH: { hp: 211, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
   THE_KIN: { hp: 307, turns: 10, note: "priest 190 plus two followers ~59: AoE" },
   VANTOM: { hp: 173, turns: 8, note: "9 Slippery stacks: multi-hit" },
-  WATERFALL_GIANT: { hp: 250, turns: 10, note: "Steam Eruption explodes for its stacks (15, +3 a turn): kill before it or block it" },
+  WATERFALL_GIANT: { hp: 260, turns: 11, note: "240 HP plus two Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks" },
   // 252 HP at A7 (RAWT, 8LQG); fights run ~13 turns with the Ringing one-card turns.
   CEREMONIAL_BEAST: { hp: 252, turns: 13, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them" },
 };

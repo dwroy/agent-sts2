@@ -1254,7 +1254,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // both went into the explosion with too little HP after racing damage), so HP counts double.
   const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
   // Racing a Giant that is too slow to kill (raceEruption): HP spent on damage is the way through.
-  if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !input.raceEruption) score -= weights.hp * hpLoss;
+  // Racing still keeps enough HP for the next hit before the explosion (J8E4 F17 T10: the last 25 of 28
+  // HP spent without a kill, the Pressure Gun and explosion followed).
+  const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
+  if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
     // kills stops attacking), capped by the attacker's HP.
