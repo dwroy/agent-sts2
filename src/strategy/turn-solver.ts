@@ -569,12 +569,13 @@ function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" 
   return amount;
 }
 
-function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, hits: number, player: PlayerSim): number {
+function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, hits: number, player: PlayerSim, potion = false): number {
   let dealt = 0;
   for (let hit = 0; hit < hits && enemy.alive; hit += 1) {
     let amount = perHitBase;
     if (player.shrunk) amount = Math.floor(amount * 0.7);
-    if (enemy.vulnerable > 0) amount = Math.floor(amount * 1.5);
+    // Potion damage ignores Vulnerable (6X8F F25 T1: Fire Potion into a Vulnerable Entomancer did 20).
+    if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * 1.5);
     // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
     if (enemy.slow) amount = Math.floor(amount * (1 + 0.1 * sim.played));
     if ((enemy.flutter ?? 0) > 0) {
@@ -873,7 +874,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       // what the later hits meet.
       for (let hit = 0; hit < hits; hit += 1) {
         next.sweeping = true;
-        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, hit === 0 ? firstHit : perHit, 1, player);
+        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
         next.sweeping = false;
         if (next.pendingRage) {
           next.pendingRage = false;
@@ -886,12 +887,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
         const living = next.enemies.filter((enemy) => enemy.alive);
         if (living.length === 0) break;
         const victim = living[hit % living.length]!;
-        hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player);
+        hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
       }
     } else if (targetEnemy) {
       const wasAlive = targetEnemy.alive;
-      if (hits > 0) hitEnemy(next, targetEnemy, firstHit, 1, player);
-      hitEnemy(next, targetEnemy, perHit, hits - 1, player);
+      if (hits > 0) hitEnemy(next, targetEnemy, firstHit, 1, player, card.type === "Potion");
+      hitEnemy(next, targetEnemy, perHit, hits - 1, player, card.type === "Potion");
       if (card.special === "feed" && wasAlive && !targetEnemy.alive) next.feedKills += 1;
       // Feed exhausts: spending it without the kill throws away this fight's max-HP gain.
       else if (card.special === "feed") next.flat -= 8;
@@ -1378,7 +1379,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   score += sim.feedKills * 12;
   // Personal Hive: each hit clogs a later hand with a Dazed (M812 F28: 2-4 Dazed per hand from T4).
-  if (!winsFight) score -= DAZED_COST * sim.dazedAdded;
+  // A thin draw pile draws them next turn (CY8U F25 T6: 6 Dazed into a 1-card pile, T7 hand 5/5 Dazed).
+  if (!winsFight) score -= DAZED_COST * sim.dazedAdded * (input.drawPile !== undefined && input.drawPile.length < 10 ? 2 : 1);
   score -= sim.potionCost;
 
   return {
