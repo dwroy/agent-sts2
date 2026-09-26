@@ -522,8 +522,17 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
-      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via }
+      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
       : null;
+}
+
+/** Living enemies as "index:enemy_id", in order. */
+export function livingEnemySignature(raw: Record<string, unknown>): string {
+  return asArray(asRecord(raw["combat"])["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .map((enemy) => `${num(enemy["index"])}:${str(enemy["enemy_id"])}`)
+    .join("|");
 }
 
 /**
@@ -605,7 +614,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!state.available_actions.includes("play_card") && !state.available_actions.includes("end_turn")) return null;
 
   const player = asRecord(combat["player"]);
-  const hand = asArray(combat["hand"]).map((entry, index) => modelHandCard(entry, index, env.knowledge));
+  // Free Attack (Unrelenting): the game shows every attack at 0, but only the next N are free. The
+  // solver pays the real cost and gets N free attacks (NEVM F23 T2: an unaffordable Uppercut planned).
+  const freeAttacks = powerAmount(player, "FREE_ATTACK_POWER");
+  const hand = asArray(combat["hand"]).map((entry, index) => {
+    const model = modelHandCard(entry, index, env.knowledge);
+    const base = env.knowledge.card(model.cardId)?.cost ?? null;
+    return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
+  });
   // Evil Eye doubles when a card was exhausted this turn: with Baking Gloves that is every turn.
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
@@ -644,6 +660,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   env.screenMemory.noEnemiesSince = undefined;
 
   const playerSim: PlayerSim = {
+    freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
     hp: num(player["current_hp"]),
     maxHp: num(player["max_hp"]),
@@ -692,7 +709,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    had landed (live runs: planned from 1–3 cards of 5): drop it and plan from the full hand.
   const memo = env.screenMemory.combatPlan;
   const handGrew = memo !== null && hand.length > memo.handLen;
-  if (memo && !handGrew && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
+  const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
+  if (memo && !handGrew && sameEnemies && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
     if (intent) {

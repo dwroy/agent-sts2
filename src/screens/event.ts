@@ -57,7 +57,10 @@ export function planEvent(env: DecisionEnv): Decision | null {
   if (!state.available_actions.includes("choose_event_option")) return null;
 
   const all = asArray(event["options"]).map(asRecord);
-  const finished = bool(event["is_finished"]);
+  // "Finished" with several options and none of them a proceed is a stale frame of the next page: choose
+  // normally instead of clicking option 0 (F8HR F22: Field of Man-Sized Holes, option 0 added Normality).
+  const staleFinish = bool(event["is_finished"]) && all.length > 1 && !all.some((option) => bool(option["is_proceed"]));
+  const finished = bool(event["is_finished"]) && !staleFinish;
   if (finished) {
     const proceed = all.find((option) => bool(option["is_proceed"])) ?? all[0];
     const index = proceed ? numOrNull(proceed["index"]) ?? 0 : 0;

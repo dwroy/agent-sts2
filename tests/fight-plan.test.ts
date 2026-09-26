@@ -479,3 +479,14 @@ describe("no playable card (CY8U F25 T7)", () => {
   });
 });
 
+describe("plan continuation after a kill (NEVM F23 T2)", () => {
+  it("the living-enemy signature changes when an enemy dies, so the plan is re-made", async () => {
+    const { livingEnemySignature } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const before = livingEnemySignature(raw);
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["is_alive"] = false;
+    expect(livingEnemySignature(raw)).not.toBe(before);
+  });
+});
+
