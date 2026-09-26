@@ -1,6 +1,7 @@
 /** Rest sites (PLAN.md §6.7): HEAL vs SMITH and friends, driven by HP% and upgradeable cards. */
 
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { runPlanRestShift } from "../strategy/run-plan.js";
 import { deckEntries } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { GameState } from "../mod/schema.js";
@@ -31,9 +32,9 @@ export function planRest(env: DecisionEnv): Decision | null {
     const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
     const beforeBoss = nextBoss - floor <= 2 || forcedNext(env.screenMemory, state) !== null;
     const score =
-      id === "HEAL"
+      (id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4;
+        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss);
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,

@@ -7,7 +7,8 @@
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
-import { cardValue, deckProfile, SKIP_BAR } from "../strategy/card-value.js";
+import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
+import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -38,7 +39,10 @@ export function planReward(env: DecisionEnv): Decision | null {
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
       const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-      const valued = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
+      const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
+      // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
+      const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id)).length, isBlockCardId(cardId));
+      const valued = { value: base.value + planned.bonus, reasons: planned.why ? [...base.reasons, planned.why] : base.reasons };
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,

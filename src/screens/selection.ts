@@ -6,6 +6,7 @@
  */
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { RUN_PLAN_WANT_BONUS } from "../strategy/run-plan.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -118,7 +119,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
         : exhaustContext
           ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
-        (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
+            (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
+            // RUN_PLAN=v1: the plan's removal targets go first; its wanted cards are what an add takes.
+            (kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? 40 : 0) +
+            (isAdd && env.screenMemory.runPlan?.want.includes(cardId) ? RUN_PLAN_WANT_BONUS : 0),
       summary: {
         card: name,
         upgraded: bool(card["upgraded"]),

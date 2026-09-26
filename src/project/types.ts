@@ -85,6 +85,10 @@ export interface ScreenMemory {
   fightPlan?: import("../strategy/fight-plan.js").FightPlan | null;
   /** Fight key (act:floor) whose plan request failed: not retried in the same fight. */
   fightPlanFailed?: string;
+  /** DeepSeek's run plan (RUN_PLAN=v1): strategy weights for build and route decisions. Kept across screens. */
+  runPlan?: import("../strategy/run-plan.js").RunPlan | null;
+  /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
+  runPlanFailed?: string;
 }
 
 export interface RememberedMap {

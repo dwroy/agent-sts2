@@ -109,6 +109,11 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   return { bonus: 0, why: null };
 }
 
+/** Whether a card is one of the deck's block cards (Defends count too). */
+export function isBlockCardId(cardId: string): boolean {
+  return BLOCK.has(cardId) || cardId.startsWith("DEFEND_");
+}
+
 const BLOCK = new Set(["SHRUG_IT_OFF", "FLAME_BARRIER", "IMPERVIOUS", "COLOSSUS", "BLOOD_WALL", "TRUE_GRIT", "EVIL_EYE", "EXPECT_A_FIGHT", "STONE_ARMOR", "CRIMSON_MANTLE", "FEEL_NO_PAIN", "TAUNT", "IRON_WAVE"]);
 
 export interface CardValue {
