@@ -195,7 +195,9 @@ export function parseFightPlan(
     enemyIds: livingEnemyIds(state),
     approach: APPROACHES.includes(approachRaw) ? approachRaw : "race",
     setup,
-    focus: focusEnemy ? str(focusEnemy["enemy_id"]) : null,
+    // No kill-first target among enemies that must die together (Decimillipede segments reattach,
+    // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
+    focus: focusEnemy && !mustDieTogether(focusEnemy) ? str(focusEnemy["enemy_id"]) : null,
     potions,
     keyTurns: typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
@@ -318,4 +320,9 @@ export function loadFightPlan(file: string, runId: string, fight: string): Fight
     return null;
   }
   return null;
+}
+
+/** An enemy that must die in the same turn as its partners (a lone kill brings it back or enrages the rest). */
+function mustDieTogether(enemy: Record<string, unknown>): boolean {
+  return asArray(enemy["powers"] as JsonValue).some((power) => /REATTACH_POWER|CRAB_RAGE_POWER/.test(str(asRecord(power)["power_id"])));
 }

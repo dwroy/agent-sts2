@@ -1339,7 +1339,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const start = input.enemies.find((entry) => entry.index === input.focusIndex);
     // Not on a Kaiser Crab claw: the crab is won by keeping both claws level, and the focus bonus
     // cancelled the gap penalty (GGF8 F33: focus Rocket, the gap grew 30 -> 73, Rocket died alone).
-    if (focus && start && !focus.crabRage) score += weights.damage * FOCUS_BONUS * Math.max(0, start.hp - Math.max(0, focus.hp));
+    // Nor on a Decimillipede segment: one killed alone reattaches (4VC5 F24: focus Middle, 66 of 99
+    // damage into it, it died alone on T2 and came back at 25 on T4).
+    if (focus && start && !focus.crabRage && !focus.reattach) score += weights.damage * FOCUS_BONUS * Math.max(0, start.hp - Math.max(0, focus.hp));
   }
   // The Bomb: its damage lands on every enemy a few turns later, unless the fight is over by then.
   if (sim.bombs > 0 && !winsFight) {
