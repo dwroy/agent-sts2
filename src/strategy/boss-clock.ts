@@ -98,7 +98,8 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
     // unplayable cards (cost -1) are the ones that never play.
     const playable = card.type !== "Curse" && card.type !== "Status" && (card.xCost || card.cost >= 0);
     if (!playable) continue;
-    const cardCost = card.xCost ? energy : Math.max(0, card.cost);
+    // Spiked Gauntlets: powers cost 1 more (G1Z0: Demon Form at 4, never played).
+    const cardCost = card.xCost ? energy : Math.max(0, card.cost) + (card.type === "Power" && relicIds.includes("SPIKED_GAUNTLETS") ? 1 : 0);
     cost += cardCost;
     if (card.type === "Attack") {
       attacks += 1;
@@ -113,7 +114,9 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   const attacksPlayed = HAND * (attacks / n) * playedShare;
   const base = HAND * (damage / n) * playedShare + strength * attacksPlayed;
   // Two Vulnerable sources keep the boss Vulnerable most turns.
-  return Math.round(base * (vulnerable >= 2 ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE);
+  // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
+  const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
+  return Math.round(base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE);
 }
 
 export interface DamageGap {

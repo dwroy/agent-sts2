@@ -368,7 +368,8 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
   // The only attack in hand is what kills (4UWK F24 T8: at 1 HP with the Prism at 33 and buffing, the
   // gloves took Uppercut, the only attack, because every block card scored -10; the kill was there).
   if (type === "Attack" && context.handAttacks !== undefined && context.handAttacks <= 1) return -20;
-  if (blocks && context.hp !== undefined && context.hp <= context.incoming) return -10;
+  // Among block cards a plain Defend goes first (G1Z0 F48: Toasty Mittens took True Grit, then Taunt).
+  if (blocks && context.hp !== undefined && context.hp <= context.incoming) return cardId.startsWith("DEFEND_") ? -9 : -10;
   // An unplayed power is the deck's engine (4UWK: the gloves exhausted Barricade twice).
   if (type === "Power") return 5;
   const value = cardValue(cardId, "", type, deckProfile([]), 2, 20).value;
