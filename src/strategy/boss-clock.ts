@@ -32,7 +32,8 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   AEONGLASS: { hp: 512, turns: 9, note: "two 33-block turns by T9, Withers every 6 cards" },
   QUEEN: { hp: 350, turns: 8, note: "from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail" },
-  TEST_SUBJECT: { hp: 300, turns: 9, note: "phases; Painful Stabs Wounds on unblocked hits" },
+  // Three phases, ~100 + 200 + 300 HP (7DFB F48: phase 2 at 27/200 on T7 with phase 3 still to come).
+  TEST_SUBJECT: { hp: 600, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
   LAGAVULIN_MATRIARCH: { hp: 222, turns: 12, note: "sleeps two turns (play powers), then drains Strength/Dexterity" },
   SOUL_FYSH: { hp: 211, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
   THE_KIN: { hp: 307, turns: 10, note: "priest 190 plus two followers ~59: AoE" },
@@ -49,6 +50,11 @@ export function bossNeed(bossId: string): (BossNeed & { id: string; perTurn: num
   return { ...need, id: key, perTurn: Math.round(need.hp / need.turns) };
 }
 
+/** Relics that give 1 energy on (almost) every turn. */
+const ENERGY_RELICS = new Set([
+  "BLESSED_ANTLER", "BLOOD_SOAKED_ROSE", "BREAD", "ECTOPLASM", "PAELS_FLESH", "PHILOSOPHERS_STONE", "PRISMATIC_GEM",
+  "PUMPKIN_CANDLE", "SOZU", "SPIKED_GAUNTLETS", "VELVET_CHOKER", "WHISPERING_EARRING",
+]);
 /** Cards drawn a turn (no draw cards counted: this is a floor, not a ceiling). */
 const HAND = 5;
 /**
@@ -74,7 +80,10 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   });
   if (cards.length === 0) return 0;
   const crab = str(run["boss_id"]).toUpperCase().includes("KAISER_CRAB");
-  const energy = Math.max(3, num(run["max_energy"]) || 3);
+  // max_energy leaves out the relics that add energy every turn (7DFB: 3 shown with Pael's Flesh and
+  // Blessed Antler).
+  const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
   let damage = 0;
   let cost = 0;
   let attacks = 0;
@@ -112,11 +121,16 @@ export interface DamageGap {
 }
 
 export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | null {
+  // On a boss floor the boss id is the one just killed; the next act's is not known yet (7DFB F33:
+  // Dominate valued against the dead crab's numbers).
+  if (BOSS_FLOORS.includes(state.run?.floor ?? 0)) return null;
   const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]));
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck) };
 }
+
+const BOSS_FLOORS = [17, 33, 48];
 
 /** Largest card-value bonus a damage card gets from the gap. */
 export const GAP_BONUS_MAX = 12;
