@@ -39,7 +39,8 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   THE_KIN: { hp: 307, turns: 10, note: "priest 190 plus two followers ~59: AoE" },
   VANTOM: { hp: 173, turns: 8, note: "9 Slippery stacks: multi-hit" },
   WATERFALL_GIANT: { hp: 250, turns: 10, note: "Steam Eruption explodes for its stacks (15, +3 a turn): kill before it or block it" },
-  CEREMONIAL_BEAST: { hp: 230, turns: 9, note: "big HP, plain damage race" },
+  // 252 HP at A7 (RAWT, 8LQG); fights run ~13 turns with the Ringing one-card turns.
+  CEREMONIAL_BEAST: { hp: 252, turns: 13, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them" },
 };
 
 export function bossNeed(bossId: string): (BossNeed & { id: string; perTurn: number }) | null {
