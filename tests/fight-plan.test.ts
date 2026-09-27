@@ -15,7 +15,7 @@ import { loadConfig } from "../src/config.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planCombatTurn, sandpitVetoExempt } from "../src/screens/combat-plan.js";
 import { planCombat } from "../src/screens/combat.js";
 import { LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
 import {
@@ -28,7 +28,7 @@ import {
   parseFightPlan,
   type FightPlan,
 } from "../src/strategy/fight-plan.js";
-import { combatFit } from "../src/strategy/intent.js";
+import { combatFit, CONTEXT_CHARS, intentLines, objectiveDamage } from "../src/strategy/intent.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
@@ -239,6 +239,46 @@ describe("combatFit (compliance labels for Jev)", () => {
     expect(combatFit("kill_fast", "balanced", line({ damage: 10 }), field).label).toBe("breaks kill_fast: 20 less damage than the best line");
     expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6 }), field).label).toBe("breaks hp_policy preserve: loses 8 more HP than the safest line; hits kill-priority Louse for 6");
     expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field).breaks).toBe(false);
+  });
+
+  it("counts Sandpit turns bought as damage, and never has code's rank 1 break the objective (9V09 F33 T2)", () => {
+    // T2, pit 4, boss 300: rank 1 "Pommel Strike+, Frantic Escape, Sword Boomerang+" 46 damage, rank 2
+    // "Pommel Strike+, Sword Boomerang+, Feast+" 67. A pit turn is worth 49; 7 turns needed.
+    const sandpit = { turnValue: 49, behind: true, now: 4, turnsNeeded: 7, maxEscapes: 1 };
+    const pit = { ...field, maxDamage: Math.max(objectiveDamage({ damage: 46, escapes: 1 }, sandpit), 67), maxSetup: 0, sandpit };
+    expect(pit.maxDamage).toBe(95);
+    const escapeLine = combatFit("race", "balanced", line({ damage: 46, escapes: 1, codeTop: true }), pit);
+    expect(escapeLine).toEqual({ label: "fits race: most damage, counting the Sandpit turns bought (+1 Sandpit turn, ~49 damage each)", breaks: false });
+    const noEscape = combatFit("race", "balanced", line({ damage: 67 }), pit);
+    expect(noEscape.breaks).toBe(true);
+    expect(noEscape.label).toBe(
+      "breaks race: 28 less damage than the best line, counting the Sandpit turns Frantic Escape buys; breaks the Sandpit race: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
+    );
+    // kill_fast the same; scale_then_kill: the Escape line buys time instead of "skipping setup".
+    expect(combatFit("kill_fast", "balanced", line({ damage: 46, escapes: 1 }), pit).breaks).toBe(false);
+    expect(combatFit("scale_then_kill", "balanced", line({ damage: 46, escapes: 1 }), { ...pit, maxSetup: 1 })).toEqual({ label: "fits scale_then_kill: buys time to scale (+1 Sandpit turn, ~49 damage each)", breaks: false });
+    // Not behind (the kill fits the pit): no Sandpit-race part.
+    expect(combatFit("race", "balanced", line({ damage: 67 }), { ...pit, maxDamage: 67, sandpit: { ...sandpit, behind: false, turnValue: 20 } }).label).toBe("fits race: most damage");
+    // Code's rank 1 with less damage and no Sandpit: fits, with the reason (the solver ranked it under race).
+    const top = combatFit("race", "balanced", line({ damage: 10, codeTop: true }), field);
+    expect(top).toEqual({ label: "fits race: code's best line under race weights (20 less damage than the best line, for less HP or more lasting value)", breaks: false });
+    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, codeTop: true }), field).breaks).toBe(false);
+    expect(combatFit("scale_then_kill", "balanced", line({ codeTop: true }), field).breaks).toBe(false);
+    // hp_policy is not the fight objective: still labelled on rank 1.
+    expect(combatFit("race", "preserve", line({ hpLoss: 12, codeTop: true }), field).breaks).toBe(true);
+  });
+});
+
+describe("intentLines: the plans' own words reach Jev (9V09 F33)", () => {
+  it("shows the fight plan's summary and threat and the run plan's boss_prep, short, as context", () => {
+    const fight = plan({ objective: "race", summary: "Play every affordable Frantic Escape early; race the Insatiable.", threat: "each unplayed Frantic Escape wastes a needed turn" });
+    const lines = intentLines(runPlan({ bossPrep: "play every affordable Frantic Escape early" }), fight, 33);
+    expect(lines).toContain("fight plan (context): Play every affordable Frantic Escape early; race the Insatiable.");
+    expect(lines).toContain("threat (context): each unplayed Frantic Escape wastes a needed turn");
+    expect(lines).toContain("boss prep (context): play every affordable Frantic Escape early");
+    expect(lines.find((entry) => entry.startsWith("fight objective race"))).toMatch(/Frantic Escape\) is worth a full turn of damage/);
+    const long = intentLines(null, plan({ summary: "x ".repeat(400) }), 33).find((entry) => entry.startsWith("fight plan"))!;
+    expect(long.length).toBeLessThanOrEqual("fight plan (context): ".length + CONTEXT_CHARS);
   });
 });
 
@@ -897,5 +937,58 @@ describe("HP guard in an act-boss race (N28L, WB02, R2H1, EJXC F33 T5)", () => {
   it("does not swap a Frantic Escape line for one without it", () => {
     const shown = played(board("SLIME_BOSS", true), byPlays(/"plays":"(FRANTIC_ESCAPE, then BASH|BASH[^"]*, then FRANTIC_ESCAPE)/));
     expect(shown).not.toMatch(/HP guard|guard bound/);
+  });
+});
+
+describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V09 F33)", () => {
+  /** T2: boss 300/341, Sandpit 4, 6x2 incoming, 3 energy; Strike, Bash (2, 30), two 1-cost Frantic Escapes. */
+  const board = (): Raw => {
+    const raw = bossTurnOne();
+    raw["turn"] = 2;
+    Object.assign(raw["run"] as Raw, { boss_id: "THE_INSATIABLE", ascension: 8 });
+    const pots = (raw["run"] as Raw)["potions"] as Raw[];
+    Object.assign(pots[0]!, { potion_id: "RADIANT_TINCTURE", name: "Radiant Tincture", description: "Gain 1 Energy.", requires_target: false, valid_target_indices: [] });
+    // An unmodelled potion so the turn goes to Jev (boss fights offer it).
+    pots[1] = { ...pots[0], index: 1, potion_id: "LIQUID_BRONZE", name: "Liquid Bronze", description: "Gain 3 Thorns." };
+    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+    Object.assign(boss, { enemy_id: "THE_INSATIABLE", name: "The Insatiable", current_hp: 300, max_hp: 341 });
+    boss["powers"] = [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: 4, is_debuff: false }];
+    boss["intents"] = [{ index: 0, intent_type: "Attack", label: "6x2", damage: 6, hits: 2, total_damage: 12 }];
+    const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+    const strike = hand.find((card) => card["card_id"] === "STRIKE_R")!;
+    const defend = hand.find((card) => card["card_id"] === "DEFEND_R")!;
+    const bash = hand.find((card) => card["card_id"] === "BASH")!;
+    const escape = (index: number) => ({ ...defend, index, card_id: "FRANTIC_ESCAPE", name: "Frantic Escape", energy_cost: 1, dynamic_values: [] });
+    (raw["combat"] as Raw)["hand"] = [strike, { ...bash, index: 1, energy_cost: 2, dynamic_values: [{ name: "Damage", base_value: 30, current_value: 30 }] }, escape(2), escape(3)];
+    return raw;
+  };
+
+  it("code's rank 1 plays the Escapes, fits race, and lines with fewer Escapes break the Sandpit race", () => {
+    const e = env(board(), { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), objective: "race", enemyIds: ["THE_INSATIABLE"], killPriority: [], summary: "Play every affordable Frantic Escape early." });
+    const decision = planCombatTurn(e) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = (decision.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const plans = Object.keys(criteria).filter((key) => key.startsWith("plan")).map((key) => JSON.parse(criteria[key]!) as Record<string, string>);
+    const escapes = (entry: Record<string, string>) => (entry["plays"]!.match(/Frantic Escape/g) ?? []).length;
+    // Rank 1 plays both Escapes (the Tincture pays for Bash too) and fits race.
+    expect(escapes(plans[0]!)).toBe(2);
+    expect(plans[0]!["intent_fit"]).toMatch(/^fits race/);
+    for (const entry of plans) {
+      if (escapes(entry) < 2) expect(entry["intent_fit"]).toMatch(/breaks the Sandpit race: \d Frantic Escapes? fewer/);
+    }
+    // The fight plan's own words are in the strategy context.
+    expect(decision.state["strategy"]).toContain("fight plan (context): Play every affordable Frantic Escape early.");
+  });
+
+  it("the potion veto keeps Escapes while behind the clock", () => {
+    const behind = { behind: true, chosenEscapes: 2, swapInEscapes: 1, energyPotion: false, escapeCostInHand: 2, energy: 2 };
+    expect(sandpitVetoExempt(behind)).toBe(true);
+    expect(sandpitVetoExempt({ ...behind, behind: false })).toBe(false);
+    expect(sandpitVetoExempt({ ...behind, chosenEscapes: 1 })).toBe(false);
+    // Drink first: an energy potion while the Escapes in hand cost more than the energy left.
+    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: true, escapeCostInHand: 2, energy: 1 })).toBe(true);
+    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: true, escapeCostInHand: 2, energy: 3 })).toBe(false);
+    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: false, escapeCostInHand: 2, energy: 1 })).toBe(false);
   });
 });

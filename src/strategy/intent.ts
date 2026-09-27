@@ -41,7 +41,7 @@
  *                                          race rule applies in every fight
  *                         race             damage x1.3, HP x0.85, lasting x0.5; guard slack x1.5; race rule
  *   kill_priority (fight) the first living enemy in the list is the solver's focus target
- *   threat, boss_prep     free text, shown to Jev as context only
+ *   threat, summary (fight), boss_prep (run)  free text, shown to Jev as context only (short)
  */
 
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
@@ -83,7 +83,7 @@ export const MEANING = {
     kill_fast: "end the fight quickly: most damage, accept a little more HP loss",
     preserve_hp: "lose as little HP as possible: block first, damage second",
     scale_then_kill: "play powers / permanent Strength in the first turns (a few HP is fine, never a risk of death), then kill",
-    race: "the enemy scales or the clock is short: maximum damage every turn, HP traded for damage while behind",
+    race: "the enemy scales or the clock is short: maximum damage every turn, HP traded for damage while behind; a turn the clock grants (Frantic Escape) is worth a full turn of damage",
   } satisfies Record<FightObjective, string>,
 };
 
@@ -281,28 +281,66 @@ export interface LineFacts {
   winsFight: boolean;
   /** Damage into the kill-priority enemy, null without one. */
   focusDamage: number | null;
+  /** Frantic Escapes the line plays (each +1 Sandpit turn). */
+  escapes?: number;
+  /** Code's rank-1 line: the solver's best score under the objective's weights. */
+  codeTop?: boolean;
+}
+/** The Sandpit race (The Insatiable), when one is on. */
+export interface SandpitField {
+  /** Damage one more Sandpit turn is worth (turn-solver sandpitTurnValue). */
+  turnValue: number;
+  /** The Sandpit's turns left are no more than the turns the kill needs. */
+  behind: boolean;
+  /** Sandpit now and turns the kill needs at a turn's damage. */
+  now: number;
+  turnsNeeded: number;
+  /** Most Frantic Escapes any shown line plays. */
+  maxEscapes: number;
 }
 export interface LineField {
   minLoss: number;
+  /** Most objective damage of any shown line (objectiveDamage: this turn's damage plus Sandpit turns bought). */
   maxDamage: number;
   maxSetup: number;
   /** HP over the safest line a "preserve" policy tolerates. */
   slack: number;
   focusName?: string;
+  sandpit?: SandpitField;
 }
+
+/**
+ * A line's damage toward the fight's objective: this turn's damage plus each Sandpit turn it buys at
+ * a turn's worth (9V09: "Pommel Strike+, Frantic Escape, Sword Boomerang+" read "breaks race: 21 less
+ * damage" against a line with no Escape, while the Escape bought a ~49-damage turn).
+ */
+export function objectiveDamage(line: Pick<LineFacts, "damage" | "escapes">, sandpit?: SandpitField): number {
+  return line.damage + (sandpit ? (line.escapes ?? 0) * sandpit.turnValue : 0);
+}
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 /**
  * The compliance label of one combat line: "fits <intent>: …" or "breaks <intent>: …" per intent,
  * joined. `breaks` is set when a soft intent is broken (a pick of it is logged as a deviation).
+ * Damage is objective damage (Sandpit turns bought count as turns of damage), and code's rank-1 line
+ * never breaks the fight objective: the solver ranked it with the objective's weights, so the label
+ * cannot contradict it (9V09 F33 T2-T3: code's rank 1 labelled "breaks race" three times; Jev followed
+ * the labels, 0 of 21 "breaks" options picked, and no Frantic Escape was played).
  */
 export function combatFit(objective: FightObjective | null, policy: HpPolicy, line: LineFacts, field: LineField): { label: string; breaks: boolean } {
   if (line.winsFight) return { label: "fits every intent: wins the fight", breaks: false };
   const parts: string[] = [];
   let breaks = false;
   const extraLoss = line.hpLoss - field.minLoss;
+  const pit = field.sandpit;
+  const escapes = line.escapes ?? 0;
+  const bought = pit && escapes > 0 ? ` (+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each)` : "";
+  const codeBest = (name: string, why: string) => parts.push(`fits ${name}: code's best line under ${name} weights (${why})`);
   if (objective === "preserve_hp") {
     if (extraLoss <= 0) parts.push("fits preserve_hp: loses the least HP");
     else if (extraLoss <= 2) parts.push(`fits preserve_hp: within ${extraLoss} HP of the safest line`);
+    else if (line.codeTop) codeBest("preserve_hp", `${extraLoss} more HP than the safest line${bought}`);
     else {
       parts.push(`breaks preserve_hp: loses ${extraLoss} more HP than the safest line`);
       breaks = true;
@@ -310,15 +348,30 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   } else if (objective === "scale_then_kill") {
     if (field.maxSetup <= 0) parts.push("fits scale_then_kill: nothing to set up this turn");
     else if (line.setup >= field.maxSetup) parts.push("fits scale_then_kill: sets up (powers / Strength)");
+    else if (pit?.behind && escapes > 0 && escapes >= pit.maxEscapes) parts.push(`fits scale_then_kill: buys time to scale${bought}`);
+    else if (line.codeTop) codeBest("scale_then_kill", `less setup than another line${bought}`);
     else {
       parts.push("breaks scale_then_kill: skips setup another line plays");
       breaks = true;
     }
   } else if (objective === "kill_fast" || objective === "race") {
-    const short = field.maxDamage - line.damage;
-    if (short <= Math.max(2, field.maxDamage * 0.1)) parts.push(`fits ${objective}: most damage`);
+    const value = objectiveDamage(line, pit);
+    const short = Math.round(field.maxDamage - value);
+    if (short <= Math.max(2, field.maxDamage * 0.1)) parts.push(`fits ${objective}: most damage${bought ? `, counting the Sandpit turns bought${bought}` : ""}`);
+    else if (line.codeTop) codeBest(objective, `${short} less damage than the best line${bought ? `, counting the Sandpit turns bought${bought}` : ""}, for less HP or more lasting value`);
     else {
-      parts.push(`breaks ${objective}: ${short} less damage than the best line`);
+      parts.push(`breaks ${objective}: ${short} less damage than the best line${pit && pit.maxEscapes > 0 ? ", counting the Sandpit turns Frantic Escape buys" : ""}${bought}`);
+      breaks = true;
+    }
+  }
+  // The Sandpit eats us at 0 whatever the HP: while the pit is no longer than the kill, a line
+  // playing fewer Frantic Escapes than another gives a turn away (9V09, X8HF rule 2).
+  if (pit?.behind && escapes < pit.maxEscapes) {
+    const fewer = pit.maxEscapes - escapes;
+    const why = `${plural(fewer, "Frantic Escape")} fewer than another line while the Sandpit (${pit.now}) is no longer than the kill (~${pit.turnsNeeded} turns)`;
+    if (line.codeTop) parts.push(`note: ${why}`);
+    else {
+      parts.push(`breaks the Sandpit race: ${why}`);
       breaks = true;
     }
   }
@@ -369,13 +422,16 @@ export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | 
     if (risk !== "normal") lines.push(`route_risk ${risk}: ${MEANING.route_risk[risk]}`);
     if ((run.reserve ?? []).length > 0) lines.push(`reserve ${run.reserve.join(", ")} potions for the act boss: not offered before it (only below 25% HP or when every other line dies)`);
     if ((run.needs ?? []).length > 0) lines.push(`deck needs ${run.needs.join(", ")} cards before the act boss`);
-    if (run.bossPrep) lines.push(`boss prep (context): ${run.bossPrep}`);
+    if (run.bossPrep) lines.push(`boss prep (context): ${short(run.bossPrep)}`);
     for (const change of recentChanges(run, floor)) lines.push(`strategy changed at F${change.floor}: ${change.field} ${fmt(change.from)}→${fmt(change.to)} because ${change.trigger}${change.fact ? ` (${change.fact})` : ""}`);
   }
   if (fight) {
     lines.push(`fight objective ${fight.objective}: ${MEANING.objective[fight.objective]}`);
     if (fight.killPriority.length > 0) lines.push(`kill priority: ${fight.killPriority.join(" > ")}`);
-    if (fight.threat) lines.push(`threat (context): ${fight.threat}`);
+    // The plan in DeepSeek's words, context only (9V09 F33: "Play every affordable Frantic Escape
+    // early" never reached Jev, only the objective's one-line meaning did).
+    if (fight.summary) lines.push(`fight plan (context): ${short(fight.summary)}`);
+    if (fight.threat) lines.push(`threat (context): ${short(fight.threat)}`);
   }
   return lines;
 }
@@ -383,6 +439,13 @@ export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | 
 export function recentChanges(run: RunPlan, floor: number | null): RunPlan["changes"] {
   if (floor === null) return [];
   return (run.changes ?? []).filter((change) => floor - change.floor <= CHANGE_NOTICE_FLOORS && floor >= change.floor);
+}
+
+/** Context text for Jev, kept short. */
+export const CONTEXT_CHARS = 240;
+function short(text: string): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  return flat.length <= CONTEXT_CHARS ? flat : `${flat.slice(0, CONTEXT_CHARS - 1)}…`;
 }
 
 function fmt(value: unknown): string {

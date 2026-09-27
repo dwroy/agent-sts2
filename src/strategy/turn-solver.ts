@@ -265,6 +265,11 @@ export interface SolverInput {
    * run's hp_policy); 1/1/1 when absent.
    */
   intentScale?: { hp: number; damage: number; lasting: number };
+  /**
+   * Damage one more Sandpit turn is worth this fight (sandpitTurnValue); SANDPIT_TURN_DAMAGE when
+   * absent, never below it.
+   */
+  sandpitTurnDamage?: number;
   maxNodes?: number;
 }
 
@@ -1100,8 +1105,27 @@ export const WOUND_COST = 2;
 export const GAMBIT_COST = 60;
 /** Cards Pact's End needs in the exhaust pile. */
 export const PACTS_END_EXHAUST = 3;
-/** Damage one more Sandpit turn is worth (the deck's rough output per turn into The Insatiable). */
+/** Floor of what one more Sandpit turn is worth in damage (sandpitTurnValue raises it when behind). */
 export const SANDPIT_TURN_DAMAGE = 20;
+
+/**
+ * What one more Sandpit turn (a Frantic Escape) is worth in damage, and whether the race is behind:
+ * the Sandpit's turns left (this one included) are no more than the turns the kill needs.
+ * A turn is worth the larger of the deck's estimate (boss-clock deckDamagePerTurn) and the clock's
+ * need a turn, floor SANDPIT_TURN_DAMAGE; while not behind the floor alone (the kill fits the pit).
+ * (9V09: the flat 20 ranked "Escape, Escape" third behind a 54-damage line on T2 at pit 4, the boss at
+ * 300/341 needing ~49 a turn; no Escape was played and the pit ate us on T5 with the boss at 112.)
+ */
+export function sandpitTurnValue(ctx: { bossHpLeft: number; sandpit: number; deckPerTurn?: number | null; clockPerTurn?: number | null }): {
+  value: number;
+  behind: boolean;
+  turnsNeeded: number;
+} {
+  const perTurn = Math.max(SANDPIT_TURN_DAMAGE, ctx.deckPerTurn ?? 0, ctx.clockPerTurn ?? 0);
+  const turnsNeeded = Math.ceil(ctx.bossHpLeft / perTurn);
+  const behind = ctx.sandpit > 0 && ctx.sandpit <= turnsNeeded;
+  return { value: behind ? perTurn : SANDPIT_TURN_DAMAGE, behind, turnsNeeded };
+}
 /** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */
 export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
@@ -1283,8 +1307,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // so the countdown outlasts any damage race.
   if (sandpitAfter === 1) score -= weights.hp * 15;
   // Each Frantic Escape is one more turn before the pit eats us: about a turn of damage against a
-  // 321 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
-  if (!winsFight && sandpitAfter !== null) score += sim.escapes * weights.damage * SANDPIT_TURN_DAMAGE;
+  // 341 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
+  // Worth the deck's turn while behind (9V09: sandpitTurnValue, ~49 not 20).
+  if (!winsFight && sandpitAfter !== null) score += sim.escapes * weights.damage * Math.max(SANDPIT_TURN_DAMAGE, input.sandpitTurnDamage ?? 0);
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;

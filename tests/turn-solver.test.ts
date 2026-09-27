@@ -16,6 +16,8 @@ import {
   NEXT_PHASE_HP,
   pileValue,
   QUIET_SELF_DAMAGE_WEIGHT,
+  SANDPIT_TURN_DAMAGE,
+  sandpitTurnValue,
   solveTurn,
   weightsFor,
   WOUND_COST,
@@ -685,6 +687,45 @@ describe("The Insatiable's Sandpit", () => {
     const best = result.plans[0]!;
     expect(best.steps.map((step) => step.cardId).sort()).toEqual(["DEFEND_IRONCLAD", "DEFEND_IRONCLAD", "FRANTIC_ESCAPE"]);
     expect(best.outcome.sandpitAfter).toBe(2);
+  });
+
+  it("values a Sandpit turn at the deck's turn while behind (9V09 F33 T2: two Escapes ranked below a 54-damage line)", () => {
+    // Pit 4, boss 300/341, ~45 a turn from the deck and 49 on the clock: 7 turns needed, behind.
+    const clock = sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 });
+    expect(clock).toEqual({ value: 49, behind: true, turnsNeeded: 7 });
+    // Not behind (the kill fits the pit): the floor.
+    expect(sandpitTurnValue({ bossHpLeft: 100, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 })).toEqual({ value: SANDPIT_TURN_DAMAGE, behind: false, turnsNeeded: 3 });
+    // Never below the floor.
+    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 2, deckPerTurn: 5 }).value).toBe(SANDPIT_TURN_DAMAGE);
+    // T2 re-plan: 2 energy, two 1-cost Escapes and two 1-cost 27-damage attacks.
+    const big = (index: number) => card(index, "SWORD_BOOMERANG", { upgraded: true, damage: 27 });
+    const input = {
+      hand: [escape(0), escape(1), big(2), big(3)],
+      player: player({ hp: 62, energy: 2 }),
+      enemies: [sandworm({ hp: 300, maxHp: 341, sandpit: 4, attacks: [{ damage: 6, hits: 2 }] })],
+      fightKind: "boss" as const,
+      turn: 2,
+    };
+    const ids = (sandpitTurnDamage?: number) => solveTurn({ ...input, ...(sandpitTurnDamage ? { sandpitTurnDamage } : {}) }).plans[0]!.steps.map((step) => step.cardId);
+    // The flat 20: 2 x 20 = 40 < 54, the attacks.
+    expect(ids()).toEqual(["SWORD_BOOMERANG", "SWORD_BOOMERANG"]);
+    // A turn at 49: both Escapes (pit 4 -> 5 after the enemy turn).
+    expect(ids(clock.value)).toEqual(["FRANTIC_ESCAPE", "FRANTIC_ESCAPE"]);
+  });
+
+  it("Radiant Tincture: +1 energy now, so Escape, Escape and an attack fit a 2-energy turn (9V09 F33 T2)", () => {
+    const tincture = modelPotion("RADIANT_TINCTURE", "Radiant Tincture", 0, [], 0)!;
+    expect(tincture.energyGain).toBe(1);
+    const big = card(2, "SWORD_BOOMERANG", { upgraded: true, damage: 27 });
+    const result = solveTurn({
+      hand: [escape(0), escape(1), big, tincture],
+      player: player({ hp: 62, energy: 2 }),
+      enemies: [sandworm({ hp: 300, maxHp: 341, sandpit: 4, attacks: [{ damage: 6, hits: 2 }] })],
+      fightKind: "boss",
+      turn: 2,
+      sandpitTurnDamage: 49,
+    });
+    expect(result.plans[0]!.steps.map((step) => step.cardId.split(":")[0]).sort()).toEqual(["FRANTIC_ESCAPE", "FRANTIC_ESCAPE", "POTION", "SWORD_BOOMERANG"]);
   });
 
   it("ignores the countdown on the turn the boss dies", () => {

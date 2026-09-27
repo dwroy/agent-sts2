@@ -24,14 +24,14 @@ import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { combatFit, objectiveDamage, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
-import { bossNeed } from "../strategy/boss-clock.js";
+import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
@@ -66,6 +66,17 @@ export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
 export function dryLineOverridesPotion(chosenLoss: number | undefined, bestDryLoss: number, hp: number): boolean {
   if (bestDryLoss >= POTION_PRESSED_SHARE * hp) return false;
   return chosenLoss !== undefined ? bestDryLoss <= chosenLoss : bestDryLoss <= Math.max(3, 0.1 * hp);
+}
+
+/**
+ * The Sandpit race behind the clock (sandpitTurnValue): a potion veto does not swap Jev's line for one
+ * playing fewer Frantic Escapes, nor refuse an energy potion drunk first (chosenEscapes null) while the
+ * Escapes in hand cost more than the energy left (9V09 F33 T2/T4).
+ */
+export function sandpitVetoExempt(ctx: { behind: boolean; chosenEscapes: number | null; swapInEscapes: number; energyPotion: boolean; escapeCostInHand: number; energy: number }): boolean {
+  if (!ctx.behind) return false;
+  if (ctx.chosenEscapes !== null) return ctx.chosenEscapes > ctx.swapInEscapes;
+  return ctx.energyPotion && ctx.escapeCostInHand > ctx.energy;
 }
 
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
@@ -140,6 +151,8 @@ const BOSS_POTIONS_PER_TURN = 1;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
 /** Potion text that blunts an enemy hit. */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
+/** Potions that give energy (id or text), for the Sandpit veto exemption. */
+const ENERGY_POTIONS = /ENERGY_POTION|RADIANT_TINCTURE|能量|\bEnergy\b/;
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
 /**
@@ -885,6 +898,17 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
   const intentScale = solverScale(objective, hpPolicy, hpFrac);
+  // The Sandpit race (The Insatiable): what one more pit turn is worth, and whether the pit is no
+  // longer than the kill (9V09 F33: a Frantic Escape counted 20 against ~49 a turn needed).
+  const pitNow = Math.min(...enemies.filter((enemy) => enemy.hp > 0 && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!));
+  const pitClock = Number.isFinite(pitNow)
+    ? sandpitTurnValue({
+        bossHpLeft: enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0),
+        sandpit: pitNow,
+        deckPerTurn: deckDamagePerTurn(state, env.knowledge),
+        clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
+      })
+    : null;
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
     solveTurn({
       hand: [
@@ -921,6 +945,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       intentScale,
+      ...(pitClock ? { sandpitTurnDamage: pitClock.value } : {}),
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
@@ -1230,16 +1255,26 @@ function planTurn(env: DecisionEnv): Decision | null {
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
   // Intent compliance of each option (intent.ts combatFit): "fits <intent>: …" / "breaks <intent>: …".
+  // Sandpit turns bought count as damage, and code's rank 1 never "breaks" its own objective (9V09).
+  const sandpitField: SandpitField | undefined = pitClock
+    ? { turnValue: pitClock.value, behind: pitClock.behind, now: pitNow, turnsNeeded: pitClock.turnsNeeded, maxEscapes: Math.max(0, ...options.map(escapesIn)) }
+    : undefined;
   const field = {
     minLoss: Math.min(...options.map((plan) => plan.outcome.hpLoss)),
-    maxDamage: Math.max(...options.map((plan) => plan.outcome.damageDealt)),
+    maxDamage: Math.max(...options.map((plan) => objectiveDamage({ damage: plan.outcome.damageDealt, escapes: escapesIn(plan) }, sandpitField))),
+    ...(sandpitField ? { sandpit: sandpitField } : {}),
     // Setup that risks death is no setup to skip (intent.ts setupRisksDeath).
     maxSetup: Math.max(0, ...options.filter((plan) => !setupRisksDeath(plan.outcome.hpAfter, nextIncoming, playerSim.maxHp)).map(setupCount)),
     slack: hpGuardSlack(playerSim.hp, kind) * guardScale,
     focusName: enemies.find((enemy) => enemy.index === focusIndex)?.name ?? undefined,
   };
   const fitFor = (plan: Plan) =>
-    combatFit(objective, hpPolicy, { hpLoss: plan.outcome.hpLoss, damage: plan.outcome.damageDealt, setup: setupCount(plan), winsFight: plan.outcome.winsFight, focusDamage: fightPlan ? focusDamage(plan) : null }, field);
+    combatFit(
+      objective,
+      hpPolicy,
+      { hpLoss: plan.outcome.hpLoss, damage: plan.outcome.damageDealt, setup: setupCount(plan), winsFight: plan.outcome.winsFight, focusDamage: fightPlan ? focusDamage(plan) : null, escapes: escapesIn(plan), codeTop: plan === top },
+      field,
+    );
   const reserveTag = (plan: Plan): Record<string, JsonValue> => (reserveNote && drinksReserved(plan) ? { reserve: `drinks a potion reserved for the act boss (released: ${reserveNote})` } : {});
   const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan || runPlan ? { intent_fit: fitFor(plan).label, ...reserveTag(plan) } : {});
   const criteria: Record<string, string | null> = {};
@@ -1363,6 +1398,24 @@ function planTurn(env: DecisionEnv): Decision | null {
     return [...fromSlot, ...fromPlan];
   };
 
+  // The Sandpit race behind the clock: a potion veto never swaps Jev's pick for a line playing fewer
+  // Frantic Escapes, nor refuses an energy potion drunk first while the hand holds more Escapes than
+  // the energy pays for (9V09 F33 T2: two 1-cost Escapes and three attacks at 3 energy, Radiant
+  // Tincture offered; T4 its pick was vetoed by a potion-free line).
+  const escapeCostInHand = hand.filter((card) => card.cardId === "FRANTIC_ESCAPE" && card.playable).reduce((sum, card) => sum + Math.max(0, card.cost), 0);
+  const keepsEscapes = (chosen: { plan?: Plan; potion?: ActionRequest }, swapIn: Plan): boolean => {
+    const slot = (chosen.potion as { option_index?: number } | undefined)?.option_index;
+    const potion = potionsAll.find((entry) => entry.slot === slot);
+    return sandpitVetoExempt({
+      behind: pitClock?.behind ?? false,
+      chosenEscapes: chosen.plan ? escapesIn(chosen.plan) : null,
+      swapInEscapes: escapesIn(swapIn),
+      energyPotion: potion !== undefined && ENERGY_POTIONS.test(`${potion.potion_id} ${potion.text}`),
+      escapeCostInHand,
+      energy: playerSim.energy,
+    });
+  };
+
   return {
     kind: "ask",
     label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
@@ -1421,7 +1474,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         // -5 dry line, the top-scoring dry line lost 19).
         const leastDry = dry.filter((plan) => plan.outcome.hpLoss === bestDryLoss);
         const dryTop = dry.includes(top) && top.outcome.hpLoss === bestDryLoss ? top : (leastDry[0] ?? dry[0] ?? top);
-        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop, potionIdsOf(chosen));
+        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp) && !keepsEscapes(chosen, dryTop)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop, potionIdsOf(chosen));
       }
       // Boss, drink-first (the line is re-planned after the potion), every dry line losing 10+: the
       // potion stands (MF7A F17 T7, 24HM F33, H1FA F17 T2-T7: attack potions refused, died holding them).
@@ -1431,7 +1484,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       // in a costlier line (RVL2 F31 T1: -2 with Explosive Ampoule refused for -10 with the Ampoule).
       const topDrinks = new Set(potionIdsOf({ plan: top }));
       const sameOffensive = potionIdsOf(chosen).some((id) => OFFENSIVE_POTIONS.has(id) && topDrinks.has(id));
-      if (!hallwayFight && fromJev && offensiveDrink && !sameOffensive && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
+      if (!hallwayFight && fromJev && offensiveDrink && !sameOffensive && !keepsEscapes(chosen, top) && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
         return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`, top, potionIdsOf(chosen).filter((id) => !topDrinks.has(id)));
       }
       if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
