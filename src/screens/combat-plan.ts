@@ -576,6 +576,19 @@ export function livingEnemySignature(raw: Record<string, unknown>): string {
  * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
  * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
  */
+/** Frantic Escapes still to play this fight: hand, draw pile and discard pile (agent_view lines). */
+export function franticEscapesLeft(raw: Record<string, unknown>, hand: CardModel[]): number {
+  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
+  let count = hand.filter((card) => card.cardId === "FRANTIC_ESCAPE").length;
+  for (const pile of [view["draw"], view["discard"]]) {
+    for (const entry of asArray(pile).map(asRecord)) {
+      if (str(asArray(entry["card_ids"])[0]) !== "FRANTIC_ESCAPE") continue;
+      count += Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(entry["line"]))?.[1] ?? 1);
+    }
+  }
+  return count;
+}
+
 export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
   if (!decision) return decision;
   const combat = asRecord(env.state.raw["combat"]);
@@ -1116,6 +1129,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
   const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // The Insatiable: the Sandpit eats us at 0 whatever the HP, so HP the guard saves buys nothing once
+  // the boss's HP over the turns left (Sandpit + Frantic Escapes still to play) is more than the best
+  // line deals (WB02 F33: the guard swapped 4 lines, ~60 damage for ~35 HP; MAHA lost by 1 HP). The
+  // guard then only keeps lines that do not die this turn (already all that are offered).
+  const sandpitNow = Math.min(...enemies.filter((enemy) => enemy.hp > 0 && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!));
+  const sandpitRaceLost =
+    Number.isFinite(sandpitNow) &&
+    bossHpLeft / Math.max(1, sandpitNow + franticEscapesLeft(state.raw, hand)) > Math.max(0, ...surviving.map((plan) => plan.outcome.damageDealt));
   // Damage into enemies that are neither minions nor illusions.
   const realDamage = (plan: Plan): number =>
     enemies
@@ -1172,7 +1193,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     // Racing the Waterfall Giant's eruption, damage is the defence (KG0E F17: the guard swapped four
     // lines, ~66 damage, one to a 0-damage turn; the boss healed and the eruption outgrew us).
-    if (raceEruption) guarded = null;
+    if (raceEruption || sandpitRaceLost) guarded = null;
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -1408,7 +1429,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
       const raceKept = proposed !== null && winsRace(picked, proposed);
-      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
+      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption || sandpitRaceLost) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;

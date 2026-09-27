@@ -620,6 +620,40 @@ describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
   });
 });
 
+describe("HP guard in a lost Sandpit race (WB02 F33)", () => {
+  it("does not swap damage for HP when the Sandpit ends the fight first anyway", () => {
+    const board = (sandpit: boolean): Raw => {
+      const raw = bossTurnOne();
+      ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+      const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+      // The test knowledge knows the Matriarch as a Boss; the Sandpit power is what matters here.
+      Object.assign(boss, { current_hp: 300, max_hp: 341 });
+      boss["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
+      boss["powers"] = sandpit ? [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: 3, is_debuff: false }] : [];
+      boss["intents"] = [{ index: 0, intent_type: "Attack", label: "20", damage: 20, hits: 1, total_damage: 20 }];
+      // A second Defend: the cheapest line (-10) is 10 HP under Strike + Bash (-20).
+      const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+      const defend = hand.find((card) => card["card_id"] === "DEFEND_R")!;
+      (raw["combat"] as Raw)["hand"] = [...hand.filter((card) => card["card_id"] !== "INFLAME"), { ...defend, index: 3 }];
+      return raw;
+    };
+    /** Whether the guard replaces the most-damage line (code's own pick, or Jev's pick of it). */
+    const guarded = (raw: Raw): boolean => {
+      const decision = planCombatTurn(env(raw));
+      if (decision?.kind === "act") return decision.label === "combat/plan-guarded";
+      const ask = decision as AskDecision;
+      const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
+      const key = Object.keys(criteria)
+        .filter((k) => k.startsWith("plan"))
+        .sort((a, b) => Number(JSON.parse(String(criteria[b]))["damage_dealt"] ?? 0) - Number(JSON.parse(String(criteria[a]))["damage_dealt"] ?? 0))[0]!;
+      const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+      return resolved.guard !== undefined || /guard/i.test(resolved.rationale);
+    };
+    expect(guarded(board(false))).toBe(true);
+    expect(guarded(board(true))).toBe(false);
+  });
+});
+
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
     const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");
