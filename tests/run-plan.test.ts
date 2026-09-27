@@ -126,7 +126,7 @@ describe("plan weights", () => {
     expect(mapShift(plan({ routeRisk: "avoid_elites" }), "Elite", 0.9)).toBe(-6);
     expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.9)).toBe(2);
     expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.5)).toBe(0);
-    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-1.5);
+    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-0.88);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.7, false)).toBe(3);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.4, false)).toBe(0);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.9, true)).toBe(0);

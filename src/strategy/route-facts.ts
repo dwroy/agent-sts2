@@ -25,8 +25,22 @@ export interface ForcedElite {
   rest: RestBefore;
 }
 
+/**
+ * Every path meets at least one elite, though not all on one floor (N7KR F4: from (4,2) every path met
+ * the row-6 elite or, after a rest, the row-8 one, and the option read "none: every elite ahead can be
+ * routed around").
+ */
+export interface EliteOnEveryPath {
+  rows: number[];
+  floors: number[];
+  /** Whether every, some or no path passes a rest before the first elite it meets. */
+  rest: RestBefore;
+}
+
 export interface RouteFacts {
   forcedElites: ForcedElite[];
+  /** Set when no path avoids every elite (whether or not one floor is shared). */
+  eliteOnEveryPath: EliteOnEveryPath | null;
   /** Fewest back-to-back fights (Monster/Elite, no rest, shop or event between) the worst stretch of any path to the boss holds. */
   longestForcedFightRun: number;
 }
@@ -98,6 +112,33 @@ export function routeFacts(nodes: Map<string, RouteNode>, starts: RouteNode[], f
     forcedElites.push({ row, cols, floor: floorOf(row), rest: noRest === 0 ? "every" : noRest === via ? "none" : "some" });
   }
 
+  // Paths that meet no elite, and paths whose first elite comes with or without a rest before it.
+  const firstElite = new Map<string, { none: number; rested: number; unrested: number }>();
+  const eliteCounts = (node: RouteNode, rested: boolean): { none: number; rested: number; unrested: number } => {
+    const id = `${key(node.row, node.col)}@${rested}`;
+    const cached = firstElite.get(id);
+    if (cached) return cached;
+    let value: { none: number; rested: number; unrested: number };
+    if (node.type === "Elite") value = rested ? { none: 0, rested: 1, unrested: 0 } : { none: 0, rested: 0, unrested: 1 };
+    else {
+      const children = childrenOf(node);
+      const next = rested || RESTS.has(node.type);
+      value = children.length === 0 ? { none: 1, rested: 0, unrested: 0 } : { none: 0, rested: 0, unrested: 0 };
+      for (const child of children) {
+        const counts = eliteCounts(child, next);
+        value = { none: value.none + counts.none, rested: value.rested + counts.rested, unrested: value.unrested + counts.unrested };
+      }
+    }
+    firstElite.set(id, value);
+    return value;
+  };
+  const counts = starts.map((start) => eliteCounts(start, false)).reduce((a, b) => ({ none: a.none + b.none, rested: a.rested + b.rested, unrested: a.unrested + b.unrested }), { none: 0, rested: 0, unrested: 0 });
+  const eliteRows = [...new Set(reachable.filter((node) => node.type === "Elite").map((node) => node.row))].sort((a, b) => a - b);
+  const eliteOnEveryPath: EliteOnEveryPath | null =
+    starts.length > 0 && counts.none === 0 && eliteRows.length > 0
+      ? { rows: eliteRows, floors: eliteRows.map(floorOf), rest: counts.unrested === 0 ? "every" : counts.rested === 0 ? "none" : "some" }
+      : null;
+
   // Min over paths of the longest run of fights on it.
   const memo = new Map<string, number>();
   const leastWorstRun = (node: RouteNode, run: number): number => {
@@ -111,15 +152,21 @@ export function routeFacts(nodes: Map<string, RouteNode>, starts: RouteNode[], f
     return value;
   };
   const longestForcedFightRun = starts.length === 0 ? 0 : Math.min(...starts.map((start) => leastWorstRun(start, fightsBefore)));
-  return { forcedElites, longestForcedFightRun };
+  return { forcedElites, eliteOnEveryPath, longestForcedFightRun };
 }
 
 /** The facts in words, for a route option or the run plan. */
 export function routeFactsText(facts: RouteFacts): { forced_elites: string; longest_forced_fight_run: number } {
   const rest = { every: "a rest before it on every path", some: "a rest before it only on some paths", none: "no rest before it" } as const;
+  const firstRest = { every: "a rest before the first one on every path", some: "a rest before the first one only on some paths", none: "no rest before the first one" } as const;
   const elites = facts.forcedElites.map((elite) => `F${elite.floor} (row ${elite.row}, col ${elite.cols.join("/")}): ${rest[elite.rest]}`);
   return {
-    forced_elites: elites.length > 0 ? `every path to the boss meets ${elites.join("; ")}` : "none: every elite ahead can be routed around",
+    forced_elites:
+      elites.length > 0
+        ? `every path to the boss meets ${elites.join("; ")}`
+        : facts.eliteOnEveryPath
+          ? `every path to the boss meets an elite, not all on one floor (F${facts.eliteOnEveryPath.floors.join("/F")}): ${firstRest[facts.eliteOnEveryPath.rest]}`
+          : "none: every elite ahead can be routed around",
     longest_forced_fight_run: facts.longestForcedFightRun,
   };
 }

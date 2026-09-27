@@ -181,7 +181,9 @@ describe("hp_policy, route_risk and avoid carried out", () => {
   it("hp_policy preserve lowers elites and '?' at low HP on the map", async () => {
     const { mapShift } = await import("../src/strategy/intent.js");
     expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Elite", 0.95)).toBe(-3);
-    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-1.5);
+    // By the room's expected HP cost (act 2 by default): '?' 0.4 x 0.22 x 10, a Monster 0.22 x 10 (NJSZ F29).
+    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-0.88);
+    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Monster", 0.5)).toBe(-2.2);
     expect(mapShift(runPlan({ hpPolicy: "preserve" }), "RestSite", 0.6)).toBe(1.5);
     expect(mapShift(runPlan(), "Elite", 0.95)).toBe(0);
   });

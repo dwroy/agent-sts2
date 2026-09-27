@@ -69,6 +69,9 @@
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
 import type { FightPlan } from "./fight-plan.js";
 import type { RunPlan } from "./run-plan.js";
+import { roomHpCost } from "./route-cost.js";
+
+const round2 = (value: number): number => Math.round(value * 100) / 100;
 
 export const HP_POLICIES = ["preserve", "balanced", "push"] as const;
 export type HpPolicy = (typeof HP_POLICIES)[number];
@@ -456,8 +459,16 @@ export function restShift(plan: RunPlan | null | undefined, option: string, hpPc
   return shift;
 }
 
-/** Route weight change for a node from the run plan's intents, at the projected HP on arrival. */
-export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99): number {
+/**
+ * Route weight per unit of expected HP cost (fraction of max HP) of a hallway fight or "?" under
+ * hp_policy preserve below 60% HP: the shift follows what the room is expected to cost, so a "?" (0.4 of
+ * a fight) is never priced below a Monster at the same spot (NJSZ F29: preserve moved the "?" -1.5 and
+ * the Monster -0; the Monster took 44 -> 12 before the forced elite).
+ */
+export const PRESERVE_HP_WEIGHT = 10;
+
+/** Route weight change for a node from the run plan's intents, at the projected HP on arrival (`act` prices hallway rooms). */
+export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99, act = 2): number {
   if (!plan) return 0;
   const policy = policyAt(plan, hpOnArrival);
   const risk = routeRiskAt(plan, hpOnArrival);
@@ -474,9 +485,9 @@ export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArr
       return shift;
     }
     case "Unknown":
-      return policy === "preserve" && hpOnArrival < 0.6 ? -1.5 : 0;
+      return policy === "preserve" && hpOnArrival < 0.6 ? -round2(PRESERVE_HP_WEIGHT * roomHpCost(type, act)) : 0;
     case "Monster":
-      return policy === "preserve" && hpOnArrival < 0.5 ? -0.5 : policy === "push" && hpOnArrival > 0.6 ? 0.5 : 0;
+      return policy === "preserve" && hpOnArrival < 0.6 ? -round2(PRESERVE_HP_WEIGHT * roomHpCost(type, act)) : policy === "push" && hpOnArrival > 0.6 ? 0.5 : 0;
     case "RestSite":
     case "Rest":
       return (policy === "preserve" && low ? 1.5 : 0) + (entryRaised(plan) && plan.entryHp && hpOnArrival < plan.entryHp ? 1.5 : 0);
@@ -702,20 +713,63 @@ function runIntentName(plan: RunPlan, hpPct: number): string | null {
   return parts.length > 0 ? parts.join(", ") : null;
 }
 
+/** Projected HP (fraction of max) on arrival at the first elite every path meets and at the boss (map.ts). */
+export interface RouteArrival {
+  eliteHp: number | null;
+  eliteFloor: number | null;
+  /** An elite's expected HP cost this act. */
+  eliteCost: number;
+  /** Rest before that elite on every, some or no path. */
+  eliteRest: "every" | "some" | "none" | null;
+  bossHp: number | null;
+  /** Chance of reaching the boss alive on that path. */
+  bossSurvival?: number | null;
+  bossFloor: number | null;
+}
+
+/** Arrival HP this far below the run's entry-HP target breaks it (N7KR F4: "fits entry_hp 90%" into a no-rest forced elite at a projected 60%). */
+export const ENTRY_ARRIVAL_SLACK = 0.25;
+/** Another option must arrive at least this much higher for the shortfall to be a cost of this one. */
+const ARRIVAL_BETTER = 0.05;
+
 /**
  * The label of a map node, from the same scoring that ranks the nodes (5JU3 F10: '?' labelled "breaks
  * preserve" and Monster unlabelled, while the route scoring priced '?' cheaper; Jev took the Monster at
  * 0.98 into the fight that killed us). `route` is the node's route_value and the best one offered;
- * the note says what the run intents did to this node's weight.
+ * the note says what the run intents did to this node's weight. With an entry-HP target, `arrival`
+ * (projected HP at the first elite every path meets and at the boss, and the best of the options) makes
+ * the option "costs" when it arrives below target - 0.25, or at no more HP than the elite costs, while
+ * another option arrives higher (N7KR F4, K7G9 F43).
  */
-export function mapFit(plan: RunPlan | null | undefined, type: string, hpPct: number, route?: { value: number; best: number }, toBoss = 99): string | null {
+export function mapFit(
+  plan: RunPlan | null | undefined,
+  type: string,
+  hpPct: number,
+  route?: { value: number; best: number },
+  toBoss = 99,
+  arrival?: RouteArrival & { best: { eliteHp: number; bossHp: number } },
+  act = 2,
+): string | null {
   if (!plan) return null;
   const intents = runIntentName(plan, hpPct);
   if (!intents) return null;
-  const shift = mapShift(plan, type, hpPct, toBoss);
+  const shift = mapShift(plan, type, hpPct, toBoss, act);
   const effect = shift !== 0 ? ` (the plan moves this ${type} ${shift > 0 ? "+" : ""}${shift})` : "";
   if (!route) return `${intents}${effect}`;
   const gap = route.best - route.value;
+  const pct = (value: number) => `${Math.round(value * 100)}%`;
+  // Never on code's own best route (labels come from the scoring that ranks the nodes).
+  if (plan.entryHp && arrival && gap > 0.005) {
+    const floorLine = plan.entryHp - ENTRY_ARRIVAL_SLACK;
+    const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
+    if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
+      const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
+      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+    }
+    if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
+      return `costs entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+    }
+  }
   if (gap <= MAP_NEAR) return `fits ${intents}: ${gap <= 0.005 ? "code's best route" : `within ${gap.toFixed(1)} of code's best route`} under the plan${effect}`;
   return `costs ${gap.toFixed(1)} route value vs the best node under ${intents}${effect}`;
 }

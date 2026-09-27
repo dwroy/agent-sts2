@@ -462,7 +462,9 @@ describe("turn planner with a fight plan", () => {
     expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(nodeWeight("Monster", 0.26, 100, 8, 2));
     expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(-7);
     expect(nodeWeight("Elite", 0.69, 100, 8, 2)).toBe(-3);
-    expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBe(LIKELY_DEATH);
+    // A likely death scales with the shortfall: 20% HP against a 55% elite (NJSZ F29, K7G9 F43).
+    expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBeCloseTo(LIKELY_DEATH * (1 + 0.35 / 0.55));
+    expect(nodeWeight("Elite", 0.5, 100, 8, 2)).toBeGreaterThan(nodeWeight("Elite", 0.2, 100, 8, 2));
     expect(nodeWeight("Monster", 0.9, 100, 8, 2)).toBeGreaterThan(0);
     // Act 1 before the mid-act: starter deck, elites only at near-full HP (CWMP F6).
     expect(nodeWeight("Elite", 0.7, 100, 6, 1)).toBe(-3);
