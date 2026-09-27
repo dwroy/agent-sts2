@@ -11,3 +11,6 @@
 
 ## Boss clock (from 2026-09-26T11:42 UTC)
 Code estimates the deck's damage a turn against the act boss's need; damage cards get a gap bonus, rests lean to smith, DeepSeek's run plan sees the clock. Measure: `python3 ops/metrics.py --asc 7 --split 2026-09-26T11:42` — past act 2 boss rate (was 1/15 at A7), F33 boss HP lost, after 8–10 runs.
+
+## Enemy dossiers + run-plan commitments (from 2026-09-27T01:43 UTC)
+Dossiers for 47 enemies feed the run plan and fight plans; the run plan's entry HP, potions kept for the boss and must-have roles are strong weights plus labels for Jev. Measure: `python3 ops/metrics.py --asc 8 --split 2026-09-27T01:43` — boss entry HP, potions into the boss, past-act-2-boss rate.
