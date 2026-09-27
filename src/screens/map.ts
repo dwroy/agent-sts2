@@ -12,7 +12,7 @@ import { actEliteNeed } from "../knowledge/dossiers.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
 import { eliteCostFactor, fightHpCost, roomProjectedCost, roomSurvival } from "../strategy/route-cost.js";
-import { isModelledPotion } from "../strategy/card-model.js";
+import { isModelledPotion, potionRegen, regenHealHp } from "../strategy/card-model.js";
 
 export { eliteCostFactor, fightHpCost } from "../strategy/route-cost.js";
 import { briefJson } from "../project/run-brief.js";
@@ -36,15 +36,30 @@ const key = (row: number, col: number): string => `${row},${col}`;
  * F26: 14/74 with a Blood Potion, 20% max HP, measured 25 -> 39 at F30; counted as 19% the Monster
  * route was a "likely death" and the rest line into a forced elite won).
  */
-export const HEAL_POTION_SHARE: Record<string, number> = { BLOOD_POTION: 0.2, REGEN_POTION: 0.1 };
+export const HEAL_POTION_SHARE: Record<string, number> = { BLOOD_POTION: 0.2 };
+/**
+ * Our turn ends a Regen Potion's heal is counted over on the route: a hallway fight's typical length
+ * (Regen 5: 5+4+3+2 = 14 HP; PKB0 F17 T8 REGEN_POWER 5).
+ */
+export const REGEN_ROUTE_TURNS = 4;
+
+/** HP a heal potion restores (Blood Potion 20% of max HP, Regen Potion over REGEN_ROUTE_TURNS turns). */
+export function potionHealHp(potionId: string, maxHp: number): number {
+  const regen = potionRegen(potionId);
+  if (regen > 0) return regenHealHp(regen, REGEN_ROUTE_TURNS);
+  return Math.floor((HEAL_POTION_SHARE[potionId] ?? 0) * maxHp);
+}
 
 /**
- * Heal a potion adds to the route's HP: only one the fights drink by their numbers (card-model
- * POTION_EFFECTS). EN55 F7: an unmodelled Blood Potion read 51% as ~71% and the optional elite was
- * taken; in the fight it stayed "its effect is in no line's numbers" until 7 HP.
+ * Heal a potion adds to the route's HP, as a share of max HP: only one the fights drink by their numbers
+ * (card-model POTION_EFFECTS). EN55 F7: an unmodelled Blood Potion read 51% as ~71% and the optional
+ * elite was taken; in the fight it stayed "its effect is in no line's numbers" until 7 HP. The Regen
+ * Potion counts since it is modelled (PKB0).
  */
-export function routeHealShare(potionId: string): number {
-  return isModelledPotion(potionId) ? HEAL_POTION_SHARE[potionId] ?? 0 : 0;
+export function routeHealShare(potionId: string, maxHp = 80): number {
+  if (!isModelledPotion(potionId) || maxHp <= 0) return 0;
+  const regen = potionRegen(potionId);
+  return regen > 0 ? potionHealHp(potionId, maxHp) / maxHp : HEAL_POTION_SHARE[potionId] ?? 0;
 }
 
 /**
@@ -61,7 +76,7 @@ export function hpPercent(env: DecisionEnv, withHeal = true): number {
   const reserve = currentRunPlan(env.screenMemory, env.state)?.reserve;
   const held = (potion: Record<string, unknown>) => hp / max >= RESERVE_RELEASE_HP && isReserved(reserve, str(potion["potion_id"]), str(potion["description"]));
   const potions = asArray(asRecord(env.state.run?.raw)["potions"]).map(asRecord);
-  const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) && !held(potion) ? routeHealShare(str(potion["potion_id"])) : 0), 0);
+  const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) && !held(potion) ? routeHealShare(str(potion["potion_id"]), max) : 0), 0);
   return Math.min(1, hp / max + heal);
 }
 

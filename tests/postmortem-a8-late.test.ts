@@ -92,12 +92,12 @@ describe("route projection at median room costs, survival fight by fight (Z49J, 
 describe("heal potions count as route HP only when the fights model them (EN55 F7, F8)", () => {
   it("the Blood Potion is modelled and counts its 20%; an unmodelled heal potion does not", () => {
     expect(routeHealShare("BLOOD_POTION")).toBeCloseTo(0.2);
-    expect(routeHealShare("REGEN_POTION")).toBe(0);
+    expect(routeHealShare("AMBERGRIS")).toBe(0);
     const fx = logged("en55-map-f7");
     expect(hpPercent(loggedEnv(fx))).toBeCloseTo(41 / 80 + 0.2);
     expect(hpPercent(loggedEnv(fx), false)).toBeCloseTo(41 / 80);
     const regen = logged("en55-map-f7");
-    for (const potion of (regen.state["run"] as Raw)["potions"] as Raw[]) if (potion["potion_id"] === "BLOOD_POTION") potion["potion_id"] = "REGEN_POTION";
+    for (const potion of (regen.state["run"] as Raw)["potions"] as Raw[]) if (potion["potion_id"] === "BLOOD_POTION") potion["potion_id"] = "AMBERGRIS";
     expect(hpPercent(loggedEnv(regen))).toBeCloseTo(41 / 80);
   });
 
