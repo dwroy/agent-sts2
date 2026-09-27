@@ -7,7 +7,7 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
+import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskAt, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
 import { actEliteNeed } from "../knowledge/dossiers.js";
 import { bossNeed, damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
@@ -389,7 +389,7 @@ interface Stop {
  * rooms and elites alike (77QX F18: the forced elite was charged in full, a chain of five hallways only
  * as discounted likely deaths).
  */
-function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, act: number, target: Stop, memo: Map<string, Arrival>): Arrival {
+function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, act: number, target: Stop, memo: Map<string, Arrival>, avoidEliteAt?: (hp: number) => boolean): Arrival {
   const id = `${key(node.row, node.col)}@${at.hp.toFixed(3)}/${Math.min(at.fights, 2)}`;
   const cached = memo.get(id);
   if (cached) return cached;
@@ -401,10 +401,13 @@ function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, a
     const left = stateAfter(node.type, at, act);
     const ranOut = left.hp <= 0 && at.hp > 0 ? node.row : null;
     let best: Arrival | null = null;
-    for (const child of node.children) {
-      const childNode = nodes.get(key(child.row, child.col));
-      if (!childNode) continue;
-      const next = arrivalAt(childNode, left, nodes, act, target, memo);
+    // A fork the run plan (or the elite gate) would take away from an optional elite is projected the
+    // same way: the elite child is skipped while a sibling is not an elite (PCGH F25: (8,2) read "alive
+    // ~53%" through the optional elite (10,3) that avoid_elites then filtered).
+    const children = node.children.map((child) => nodes.get(key(child.row, child.col))).filter((child): child is MapNode => child !== undefined);
+    const avoid = avoidEliteAt?.(left.hp) === true && children.some((child) => child.type !== "Elite");
+    for (const childNode of avoid ? children.filter((child) => child.type !== "Elite") : children) {
+      const next = arrivalAt(childNode, left, nodes, act, target, memo, avoidEliteAt);
       if (!best || next.p > best.p + 1e-9 || (Math.abs(next.p - best.p) <= 1e-9 && next.hp > best.hp)) best = next;
     }
     value = best ? { ...best, p: survive * best.p, ranOut: ranOut ?? best.ranOut ?? null } : { p: survive, hp: left.hp, row: node.row, ranOut };
@@ -615,7 +618,10 @@ export function planMap(env: DecisionEnv): Decision | null {
   const sharedElite = routeFacts(nodes as Map<string, RouteNode>, offered.map(selfOf), floorOf, 0).forcedElites[0];
   const checkpoint = sharedElite ? { row: sharedElite.row, inclusive: true } : null;
   const arrivalMemo = new Map<string, Arrival>();
-  const survivalOf = (self: MapNode): number => (checkpoint ? arrivalAt(self, start, nodes, act, checkpoint, arrivalMemo).p : 1);
+  // Later forks are projected as they will be decided: optional elites avoided under route_risk
+  // avoid_elites or the elite gate, at the HP projected there (routeRiskFilter).
+  const avoidEliteAt = (hp: number): boolean => routeRiskAt(runPlan, hp) === "avoid_elites" || gateAt(hp) !== null;
+  const survivalOf = (self: MapNode): number => (checkpoint ? arrivalAt(self, start, nodes, act, checkpoint, arrivalMemo, avoidEliteAt).p : 1);
   const restMemo = new Map<string, Arrival>();
   const bossMemo = new Map<string, Arrival>();
   const eliteMemo = new Map<string, { hp: number; row: number } | null>();
@@ -663,7 +669,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     const here = weightOf(type, start, row) + (weightOf(type, start, row) > LIKELY_DEATH ? gapBonus : 0);
     const survival = survivalOf(self);
     const { optionalElite, children, facts } = factsOf(node);
-    const toRest = arrivalAt(self, start, nodes, act, { row: bossRow ?? Infinity, inclusive: false, restAfter: horizon }, restMemo);
+    const toRest = arrivalAt(self, start, nodes, act, { row: bossRow ?? Infinity, inclusive: false, restAfter: horizon }, restMemo, avoidEliteAt);
     // The shared checkpoint keeps its discount: every option dies there alike, the later the better (RVR6 F38).
     const forcedRows = new Set(facts.forcedElites.filter((forced) => forced.row !== checkpoint?.row).map((forced) => forced.row));
     const boots = offPath(row, col) ? bootsCost(act, bootsCharges) : null;
@@ -675,7 +681,7 @@ export function planMap(env: DecisionEnv): Decision | null {
       SURVIVAL_WEIGHT * (1 - toRest.p);
     // Projected HP on arrival at the first elite every path meets and at the boss (stateAfter).
     const elite = optionalElite ? firstEliteArrivalFrom(children, stateAfter(type, start, act), nodes, act, eliteMemo) : firstEliteArrival(self, start, nodes, act, eliteMemo);
-    const bossArrival = bossRow !== null ? arrivalAt(self, start, nodes, act, { row: bossRow, inclusive: false }, bossMemo) : null;
+    const bossArrival = bossRow !== null ? arrivalAt(self, start, nodes, act, { row: bossRow, inclusive: false }, bossMemo, avoidEliteAt) : null;
     // A projection that runs out of HP before the boss says so: its "+30% at the last rest" is no arrival HP.
     const ranOut = bossArrival?.ranOut ?? null;
     const arrival: RouteArrival = {

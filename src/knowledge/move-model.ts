@@ -49,6 +49,25 @@ export function expectedNextDamage(enemyId: string, currentMove: string): number
   return count > 0 ? total / count : null;
 }
 
+/**
+ * Expected attack damage of this enemy's next `steps` moves after `currentMove`: each step's expected
+ * hit over its successors, then on to the most likely successor (FEY6 F17 T6: the Matriarch's Slash 2
+ * is followed by Soul Siphon, 0, then Slash). Stops early (shorter array) where the model has no successors.
+ */
+export function expectedHitsAhead(enemyId: string, currentMove: string, steps: number): number[] | null {
+  const entry = load()[enemyId];
+  if (!entry?.next[currentMove]) return null;
+  const hits: number[] = [];
+  let move = currentMove;
+  for (let step = 0; step < steps; step += 1) {
+    const successors = entry.next[move];
+    if (!successors || Object.keys(successors).length === 0) break;
+    hits.push(expectedNextDamage(enemyId, move) ?? 0);
+    move = Object.entries(successors).sort((a, b) => b[1] - a[1])[0]![0];
+  }
+  return hits;
+}
+
 /** The enemy's move cycle has a Buff move: it ramps while it lives (6A36: Sludge Spinner, +3 Strength per Rage). */
 export function hasBuffMove(enemyId: string): boolean {
   return (load()[enemyId]?.buffs ?? []).length > 0;

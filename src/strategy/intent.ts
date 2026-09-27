@@ -319,17 +319,22 @@ export function hallwayGuardOn(policy: HpPolicy, act: number, ascension: number,
   return later && hpFraction < 0.6;
 }
 
-/** A setup line "risks death": it leaves no more than next turn's hit + 3, or under 15% of max HP. */
-export function setupRisksDeath(hpAfter: number, nextIncoming: number, maxHp: number): boolean {
-  return hpAfter <= nextIncoming + 3 || hpAfter < maxHp * 0.15;
+/**
+ * A setup line "risks death": it leaves no more than next turn's hit + 3, or under 15% of max HP while
+ * next turn may attack (`nextAttacks`: some enemy's next move attacks, or is unknown). A next turn the
+ * move model says attacks with nothing is no death risk at 15% (FEY6 F17 T6: 10 HP left before the
+ * Matriarch's Soul Siphon; the 15% floor swapped the line that killed her on T8).
+ */
+export function setupRisksDeath(hpAfter: number, nextIncoming: number, maxHp: number, nextAttacks = true): boolean {
+  return hpAfter <= nextIncoming + 3 || (nextAttacks && hpAfter < maxHp * 0.15);
 }
 
 /**
  * scale_then_kill: the HP guard keeps a line with more setup than its replacement unless the line
  * risks death (JF99 F33 T4/T7: Crimson Mantle swapped twice for 6 HP, never played; 5BXM F33 Demon Form+).
  */
-export function guardProtectsSetup(objective: FightObjective | null, picked: { setup: number; hpAfter: number }, replacement: { setup: number }, nextIncoming: number, maxHp: number): boolean {
-  return objective === "scale_then_kill" && picked.setup > replacement.setup && !setupRisksDeath(picked.hpAfter, nextIncoming, maxHp);
+export function guardProtectsSetup(objective: FightObjective | null, picked: { setup: number; hpAfter: number }, replacement: { setup: number }, nextIncoming: number, maxHp: number, nextAttacks = true): boolean {
+  return objective === "scale_then_kill" && picked.setup > replacement.setup && !setupRisksDeath(picked.hpAfter, nextIncoming, maxHp, nextAttacks);
 }
 
 /** race / kill_fast: the guard's damage-for-HP race rule applies in every fight, not only boss/elite. */
@@ -439,12 +444,12 @@ export function reserveReleased(ctx: {
   hpFraction: number;
   everyDryLineDies: boolean;
   /** HP after the potion-free line that keeps the most, with next turn's expected hit and max HP. */
-  dry?: { hpAfter: number; nextIncoming: number; maxHp: number } | null;
+  dry?: { hpAfter: number; nextIncoming: number; maxHp: number; nextAttacks?: boolean } | null;
 }): string | null {
   if (ctx.bossFight) return "act boss: the reserve is for this fight";
   if (ctx.hpFraction < RESERVE_RELEASE_HP) return `HP below ${RESERVE_RELEASE_HP * 100}%`;
   if (ctx.everyDryLineDies) return "every line without it dies";
-  if (ctx.dry && setupRisksDeath(ctx.dry.hpAfter, ctx.dry.nextIncoming, ctx.dry.maxHp)) {
+  if (ctx.dry && setupRisksDeath(ctx.dry.hpAfter, ctx.dry.nextIncoming, ctx.dry.maxHp, ctx.dry.nextAttacks)) {
     return `the safest line without it leaves ${ctx.dry.hpAfter} HP against next turn's ~${Math.round(ctx.dry.nextIncoming)}`;
   }
   return null;
@@ -580,6 +585,8 @@ export interface LineFacts {
   scoreGap?: number;
   /** Damage into the burst target this turn (LineField.burst). */
   burstDamage?: number;
+  /** Another shown line loses no more HP and deals no less damage, and is better on one: never "fits"/"best". */
+  hpDamageDominated?: boolean;
 }
 /** The Sandpit race (The Insatiable), when one is on. */
 export interface SandpitField {
@@ -654,7 +661,7 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   const pit = field.sandpit;
   const escapes = line.escapes ?? 0;
   const bought = pit && escapes > 0 ? `+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each` : "";
-  const near = line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR));
+  const near = line.hpDamageDominated !== true && (line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR)));
   let grade: FitGrade = "neutral";
   let breaks = false;
   if (field.burst) {
