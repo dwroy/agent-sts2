@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
-import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX } from "../src/strategy/boss-clock.js";
+import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, relicDamagePerTurn } from "../src/strategy/boss-clock.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;
@@ -80,5 +80,23 @@ describe("boss clock", () => {
     const ruptureOnly = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE")], "AEONGLASS_BOSS"), testKnowledge);
     const withMantle = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE"), power(10, "CRIMSON_MANTLE")], "AEONGLASS_BOSS"), testKnowledge);
     expect(withMantle).toBeGreaterThan(ruptureOnly);
+  });
+});
+
+describe("relic damage in the deck estimate (EJXC F33: clock 23/turn, dealt 44 with ~8.3 from relics)", () => {
+  it("adds Mercury Hourglass, Mr. Struggles and Festive Popper per turn; both claws for the crab", () => {
+    // 7 turns: 3x7 + (1+...+7) + 9 = 58, ~8 a turn.
+    expect(relicDamagePerTurn(["MERCURY_HOURGLASS", "MR_STRUGGLES", "FESTIVE_POPPER"], 7)).toBe(8);
+    expect(relicDamagePerTurn(["MERCURY_HOURGLASS"], 8, true)).toBe(6);
+    expect(relicDamagePerTurn(["BURNING_BLOOD"], 7)).toBe(0);
+  });
+
+  it("the deck estimate and the run plan's note include it", () => {
+    const deck = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
+    const relic = (id: string) => ({ index: 0, relic_id: id, name: id, description: "", stack: null, is_melted: false });
+    const without = deckDamagePerTurn(mapState(deck, "THE_INSATIABLE_BOSS"), testKnowledge);
+    const withRelics = mapState(deck, "THE_INSATIABLE_BOSS", { relics: [relic("MERCURY_HOURGLASS"), relic("MR_STRUGGLES")] });
+    expect(deckDamagePerTurn(withRelics, testKnowledge) - without).toBe(7);
+    expect(String(bossClockJson(withRelics, testKnowledge)?.["estimate_note"])).toMatch(/relic damage \(~7\/turn/);
   });
 });
