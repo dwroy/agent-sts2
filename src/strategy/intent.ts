@@ -599,6 +599,8 @@ export interface SandpitField {
   turnsNeeded: number;
   /** Most Frantic Escapes any shown line plays. */
   maxEscapes: number;
+  /** Escapes that buy a turn our HP lives to use (sandpitTurnValue); more are worth nothing. */
+  useful?: number;
 }
 export interface LineField {
   minLoss: number;
@@ -633,7 +635,7 @@ export type FitGrade = "fits" | "neutral" | "costs";
  * damage" against a line with no Escape, while the Escape bought a ~49-damage turn).
  */
 export function objectiveDamage(line: Pick<LineFacts, "damage" | "escapes">, sandpit?: SandpitField): number {
-  return line.damage + (sandpit ? (line.escapes ?? 0) * sandpit.turnValue : 0);
+  return line.damage + (sandpit ? Math.min(line.escapes ?? 0, sandpit.useful ?? Infinity) * sandpit.turnValue : 0);
 }
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
@@ -660,7 +662,10 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   const parts: string[] = [];
   const pit = field.sandpit;
   const escapes = line.escapes ?? 0;
-  const bought = pit && escapes > 0 ? `+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each` : "";
+  const wasted = pit && pit.useful !== undefined && escapes > pit.useful ? escapes - pit.useful : 0;
+  const bought = pit && escapes > 0
+    ? `+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each${wasted > 0 ? `; ${wasted} past the turns our HP lasts, worth nothing` : ""}`
+    : "";
   const near = line.hpDamageDominated !== true && (line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR)));
   let grade: FitGrade = "neutral";
   let breaks = false;
@@ -714,8 +719,9 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   }
   // The Sandpit eats us at 0 whatever the HP: while the pit is no longer than the kill, a line
   // playing fewer Frantic Escapes than another gives a turn away (9V09, X8HF rule 2).
-  if (pit?.behind && escapes < pit.maxEscapes) {
-    const fewer = pit.maxEscapes - escapes;
+  const wantedEscapes = pit ? Math.min(pit.maxEscapes, pit.useful ?? Infinity) : 0;
+  if (pit?.behind && escapes < wantedEscapes) {
+    const fewer = wantedEscapes - escapes;
     const why = `${plural(fewer, "Frantic Escape")} fewer than another line while the Sandpit (${pit.now}) is no longer than the kill (~${pit.turnsNeeded} turns)`;
     if (near) parts.push(`note: ${why}`);
     else {

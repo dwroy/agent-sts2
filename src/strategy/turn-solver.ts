@@ -295,6 +295,8 @@ export interface SolverInput {
    * absent, never below it.
    */
   sandpitTurnDamage?: number;
+  /** Escapes that buy a turn our HP lives to use (sandpitTurnValue `useful`); the rest are worth 0. */
+  sandpitUsefulEscapes?: number;
   maxNodes?: number;
 }
 
@@ -1261,20 +1263,25 @@ export const SANDPIT_TURN_DAMAGE = 20;
 /**
  * What one more Sandpit turn (a Frantic Escape) is worth in damage, and whether the race is behind:
  * the Sandpit's turns left (this one included) are no more than the turns the kill needs.
- * A turn is worth the larger of the deck's estimate (boss-clock deckDamagePerTurn) and the clock's
- * need a turn, floor SANDPIT_TURN_DAMAGE; while not behind the floor alone (the kill fits the pit).
- * (9V09: the flat 20 ranked "Escape, Escape" third behind a 54-damage line on T2 at pit 4, the boss at
- * 300/341 needing ~49 a turn; no Escape was played and the pit ate us on T5 with the boss at 112.)
+ * A turn is worth what the deck realistically deals in one (this fight's measured rate, else the
+ * boss-clock estimate; the clock's need only without either), floor SANDPIT_TURN_DAMAGE; while not
+ * behind the floor alone (the kill fits the pit). 9V09: the flat 20 ranked "Escape, Escape" third
+ * behind a 54-damage line at pit 4, the boss needing ~49 a turn. 9LSQ F33: priced at the clock's 49
+ * against a deck dealing ~24, T3 swapped a Strike for a second Escape and dealt 0.
+ * `useful`: Escapes that buy a turn we live to use, the HP clock (turns our HP lasts at the expected
+ * loss a turn) past the pit; more Escapes than that buy nothing (9LSQ: pit held at 4-6, dead of HP on T7).
  */
-export function sandpitTurnValue(ctx: { bossHpLeft: number; sandpit: number; deckPerTurn?: number | null; clockPerTurn?: number | null }): {
+export function sandpitTurnValue(ctx: { bossHpLeft: number; sandpit: number; deckPerTurn?: number | null; clockPerTurn?: number | null; hpTurns?: number | null }): {
   value: number;
   behind: boolean;
   turnsNeeded: number;
+  useful: number;
 } {
-  const perTurn = Math.max(SANDPIT_TURN_DAMAGE, ctx.deckPerTurn ?? 0, ctx.clockPerTurn ?? 0);
+  const perTurn = Math.max(SANDPIT_TURN_DAMAGE, ctx.deckPerTurn ?? ctx.clockPerTurn ?? 0);
   const turnsNeeded = Math.ceil(ctx.bossHpLeft / perTurn);
   const behind = ctx.sandpit > 0 && ctx.sandpit <= turnsNeeded;
-  return { value: behind ? perTurn : SANDPIT_TURN_DAMAGE, behind, turnsNeeded };
+  const useful = ctx.hpTurns === undefined || ctx.hpTurns === null || !Number.isFinite(ctx.hpTurns) ? Infinity : Math.max(0, Math.floor(ctx.hpTurns) - ctx.sandpit);
+  return { value: behind ? perTurn : SANDPIT_TURN_DAMAGE, behind, turnsNeeded, useful };
 }
 /** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */
 export const DAZED_COST = 1.5;
@@ -1487,7 +1494,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Each Frantic Escape is one more turn before the pit eats us: about a turn of damage against a
   // 341 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
   // Worth the deck's turn while behind (9V09: sandpitTurnValue, ~49 not 20).
-  if (!winsFight && sandpitAfter !== null) score += sim.escapes * weights.damage * Math.max(SANDPIT_TURN_DAMAGE, input.sandpitTurnDamage ?? 0);
+  // Escapes past the HP clock buy a pit turn we do not live to use (9LSQ F33).
+  if (!winsFight && sandpitAfter !== null) score += Math.min(sim.escapes, input.sandpitUsefulEscapes ?? Infinity) * weights.damage * Math.max(SANDPIT_TURN_DAMAGE, input.sandpitTurnDamage ?? 0);
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;

@@ -1265,8 +1265,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     ? sandpitTurnValue({
         bossHpLeft: enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0),
         sandpit: pitNow,
-        deckPerTurn: deckDamagePerTurn(state, env.knowledge),
+        // The deck's realistic turn: this fight's measured rate, else the estimate (9LSQ F33: 24, not 49).
+        deckPerTurn: perTurn > 0 ? perTurn : null,
         clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
+        // The HP clock: turns our HP lasts at the larger of the measured and the expected loss a turn.
+        hpTurns: playerSim.hp / Math.max(1, measuredLoss ?? 0, expectedLossPerTurn(state, env.knowledge)),
       })
     : null;
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), and the pile card a
@@ -1336,7 +1339,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       intentScale,
-      ...(pitClock ? { sandpitTurnDamage: pitClock.value } : {}),
+      ...(pitClock ? { sandpitTurnDamage: pitClock.value, ...(Number.isFinite(pitClock.useful) ? { sandpitUsefulEscapes: pitClock.useful } : {}) } : {}),
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
@@ -1759,7 +1762,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Intent compliance of each option (intent.ts combatFit): "fits <intent>: …" / "breaks <intent>: …".
   // Sandpit turns bought count as damage, and code's rank 1 never "breaks" its own objective (9V09).
   const sandpitField: SandpitField | undefined = pitClock
-    ? { turnValue: pitClock.value, behind: pitClock.behind, now: pitNow, turnsNeeded: pitClock.turnsNeeded, maxEscapes: Math.max(0, ...options.map(escapesIn)) }
+    ? { turnValue: pitClock.value, behind: pitClock.behind, now: pitNow, turnsNeeded: pitClock.turnsNeeded, maxEscapes: Math.max(0, ...options.map(escapesIn)), ...(Number.isFinite(pitClock.useful) ? { useful: pitClock.useful } : {}) }
     : undefined;
   // The Queen's YOU_ARE_MINE turn is the last one before 99 Weak/Frail/Vulnerable on us: lines are
   // ranked by damage into the Torch Head Amalgam, whatever the objective (H7W0 F48 T2: Jev took a

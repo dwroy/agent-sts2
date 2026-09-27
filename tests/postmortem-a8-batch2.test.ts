@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { damageGap, deckDamageParts, deckDamagePerTurn } from "../src/strategy/boss-clock.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planShop, unspentGoldCost } from "../src/screens/shop.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
@@ -89,5 +90,33 @@ describe("boss clock: Inferno is per-turn damage, the crab's realised share is o
     const run = fx.state["run"] as Raw;
     run["deck"] = (run["deck"] as Raw[]).filter((card) => card["card_id"] !== "INFERNO");
     expect(deckDamageParts(parseGameState(fx.state), loggedKnowledge)!.powers).toBe(0);
+  });
+});
+
+/** Code's act, or every line offered to Jev (plan1 first). */
+function combatLines(fx: ReturnType<typeof logged>, over: Parameters<typeof loggedEnv>[1] = {}): { act: Decision | null; lines: Raw[] } {
+  const decision = planCombatTurn(loggedEnv(fx, over)) as Decision;
+  if (decision.kind !== "ask") return { act: decision, lines: [] };
+  const question = Object.values((decision as AskDecision).questions)[0]!;
+  if (question.type !== "choice") return { act: null, lines: [] };
+  return { act: null, lines: Object.entries(question.criteria).filter(([key]) => key.startsWith("plan")).map(([, value]) => JSON.parse(value!) as Raw) };
+}
+
+describe("a Sandpit turn is worth the deck's turn, and only while our HP lasts past the pit (9LSQ F33)", () => {
+  it("T2: an Escape is labelled at the deck's damage a turn, not the clock's 49", () => {
+    const { lines } = combatLines(logged("9lsq-f33-t2"));
+    const label = lines.map((line) => String(line["intent_fit"])).find((text) => /Sandpit turn, ~\d+ damage each/.test(text))!;
+    const each = Number(/~(\d+) damage each/.exec(label)![1]);
+    expect(each).toBeLessThan(40);
+    expect(each).toBeGreaterThanOrEqual(20);
+  });
+
+  it("T3 after the draw (70 HP, pit 4): no 0-damage turn of two Escapes (logged: 'Escape, Burn+, Escape, Weak Potion', 0 damage, -21)", () => {
+    const { act, lines } = combatLines(logged("9lsq-f33-t3-draw"));
+    const plays = act?.kind === "act" ? act.rationale : String(lines[0]!["plays"]);
+    const escapes = (plays.match(/狂乱逃离/g) ?? []).length;
+    expect(escapes).toBeLessThan(2);
+    if (act?.kind === "act") expect(act.rationale).not.toMatch(/dmg 0\b/);
+    else expect(Number(lines[0]!["damage_dealt"])).toBeGreaterThan(0);
   });
 });
