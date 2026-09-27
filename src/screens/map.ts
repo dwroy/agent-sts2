@@ -22,10 +22,20 @@ interface MapNode {
 
 const key = (row: number, col: number): string => `${row},${col}`;
 
+/**
+ * Share of max HP a heal potion in the belt restores, drinkable before or during the next fight (RVL2
+ * F26: 14/74 with a Blood Potion, 20% max HP, measured 25 -> 39 at F30; counted as 19% the Monster
+ * route was a "likely death" and the rest line into a forced elite won).
+ */
+export const HEAL_POTION_SHARE: Record<string, number> = { BLOOD_POTION: 0.2, REGEN_POTION: 0.1 };
+
 function hpPercent(env: DecisionEnv): number {
   const hp = env.state.run?.current_hp ?? null;
   const max = env.state.run?.max_hp ?? null;
-  return hp !== null && max !== null && max > 0 ? hp / max : 1;
+  if (hp === null || max === null || max <= 0) return 1;
+  const potions = asArray(asRecord(env.state.run?.raw)["potions"]).map(asRecord);
+  const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) ? HEAL_POTION_SHARE[str(potion["potion_id"])] ?? 0 : 0), 0);
+  return Math.min(1, hp / max + heal);
 }
 
 /** Projected state on arrival at a node: HP fraction and gold. */
@@ -206,6 +216,7 @@ function continuation(
   memo: Map<string, number>,
   deathElite = FORCED_ELITE_AFTER_DEATH,
   eliteMemo: Map<string, number> = new Map(),
+  deathUrgency = 1,
 ): number {
   const left = stateAfter(node.type, at, act);
   const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}`;
@@ -219,12 +230,15 @@ function continuation(
     // A likely death ends the route: nothing after it counts (4UWK F22: at 9/80 the Unknown room into a
     // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7), except
     // the elites it cannot avoid after it (PFBK F18).
+    // A likely death further down counts with the same low-HP urgency as one at the next node: the max
+    // over children dodges it where the map allows, so only a forced one keeps the penalty (RVL2 F26:
+    // rest -> ? -> ? -> Monster -> forced Elite at a projected 9% scored -20, the Monster right now -60).
     const here = weights(childNode.type, left, childNode.row);
     best = Math.max(
       best,
       here <= LIKELY_DEATH
-        ? here - deathElite * minElitesAhead(childNode, nodes, eliteMemo)
-        : here + continuation(childNode, left, nodes, weights, act, memo, deathElite, eliteMemo),
+        ? here * deathUrgency - deathElite * minElitesAhead(childNode, nodes, eliteMemo)
+        : here + continuation(childNode, left, nodes, weights, act, memo, deathElite, eliteMemo, deathUrgency),
     );
   }
   if (best === -Infinity) best = 0;
@@ -351,7 +365,13 @@ export function planMap(env: DecisionEnv): Decision | null {
     // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
     // Monster-first route scored level with a Rest-first one on a live run.
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
-    const value = weightOf(type, start, row) * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite);
+    // A likely death right here ends the route too, as further down (RC9A F24: at 38/80 the elite now
+    // scored -36 plus the rooms after it, above a "?" whose forced elite later counted in full).
+    const here = weightOf(type, start, row);
+    const value =
+      here <= LIKELY_DEATH
+        ? here * urgency - deathElite * minElitesAhead(self, nodes, new Map())
+        : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency);
     return [
       {
         key: `n${index}`,
