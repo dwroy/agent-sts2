@@ -98,8 +98,14 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
     );
     expect(unsupported.routeRisk).toBe("normal");
     expect(unsupported.validator[0]).toMatch(/trigger key_card_or_relic_gained is not supported by the facts/);
+    // An unknown trigger name is judged by the facts (KQK2 F6): HP 69%→38% supports avoid_elites.
     const unknown = parseRunPlan({ route_risk: "avoid_elites", changes: [{ field: "route_risk", trigger: "vibes" }] }, later(), testKnowledge, "review", previous());
-    expect(unknown.validator[0]).toMatch(/trigger "vibes" is not one of/);
+    expect(unknown.routeRisk).toBe("avoid_elites");
+    expect(unknown.validator[0]).toMatch(/trigger "vibes" is not listed; read as hp_below_target from the facts/);
+    // No fact supports it (HP up to 90%, same belt): rejected.
+    const idle = parseRunPlan({ route_risk: "avoid_elites", changes: [{ field: "route_risk", trigger: "vibes" }] }, mapState({ floor: 11, current_hp: 72 }), testKnowledge, "review", previous());
+    expect(idle.routeRisk).toBe("normal");
+    expect(idle.validator[0]).toMatch(/trigger "vibes" is not one of/);
   });
 
   it("accepts a supported change, logs it, and applies it from the next decision on (rest heals)", () => {

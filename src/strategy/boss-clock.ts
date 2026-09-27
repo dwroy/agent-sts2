@@ -22,6 +22,12 @@ export interface BossNeed {
   /** Turns a fight can reasonably last before the boss's script kills us. */
   turns: number;
   note: string;
+  /**
+   * Share of the deck estimate the boss lets through, measured (default 1): Soul Fysh's Beckons and
+   * Intangible turns (JF8N F17: estimate ~20, dealt 13.5), the Queen's 99 Weak from T3 and the chained
+   * cards (H7W0 F48: ~39, dealt 27.5; CWU9 26.7).
+   */
+  realised?: number;
 }
 
 /** Ascension from which bosses have their A8 HP. */
@@ -45,13 +51,13 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   AEONGLASS: { hp: 578, hpA8: 601, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
   // Queen 400 + Amalgam 199 at A7, plus 20 Queen block a turn while the Amalgam lives; wins took 9-12
   // turns (P2E4: 47.5 a turn, Queen left at 219). A8: Queen 419 (CWU9), ~69 a turn.
-  QUEEN: { hp: 640, hpA8: 690, turns: 10, note: "kill the Torch Head Amalgam first: from her third turn it hits 12x3/22 under Vulnerable, Weak and Frail while the Queen only buffs" },
+  QUEEN: { hp: 640, hpA8: 690, turns: 10, realised: 0.75, note: "kill the Torch Head Amalgam first: from her third turn it hits 12x3/22 under Vulnerable, Weak and Frail while the Queen only buffs" },
   // Three phases, ~100 + 200 + 300 HP (7DFB F48: phase 2 at 27/200 on T7 with phase 3 still to come).
   TEST_SUBJECT: { hp: 600, hpA8: 630, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
   // 233 at A8 (N28L).
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, turns: 12, note: "sleeps two turns (play powers), then drains Strength/Dexterity" },
   // 221 at A8 (BUUY, VL2D).
-  SOUL_FYSH: { hp: 211, hpA8: 221, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
+  SOUL_FYSH: { hp: 211, hpA8: 221, turns: 9, realised: 0.65, note: "shuffles Beckons into the deck, Intangible turns" },
   // Priest 199 at A8 (WYF0).
   THE_KIN: { hp: 307, hpA8: 322, turns: 10, note: "priest 190 (199 at A8) plus two followers ~59: AoE; the fight ends when the priest dies; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)" },
   // 183 at A8 (XWPV, YNMB, RC9A).
@@ -75,6 +81,8 @@ export function bossNeed(bossId: string, ascension = 0): (BossNeed & { id: strin
 const ENERGY_RELICS = new Set([
   "BLESSED_ANTLER", "BLOOD_SOAKED_ROSE", "BREAD", "ECTOPLASM", "PAELS_FLESH", "PHILOSOPHERS_STONE", "PRISMATIC_GEM",
   "PUMPKIN_CANDLE", "SOZU", "SPIKED_GAUNTLETS", "VELVET_CHOKER", "WHISPERING_EARRING",
+  // +1 energy a turn, not in max_energy (KFPC F18-F28: clock read ~19-22 of 49, the boss took 38.4 a turn).
+  "SEAL_OF_GOLD",
 ]);
 /** Cards drawn a turn (no draw cards counted: this is a floor, not a ceiling). */
 const HAND = 5;
@@ -111,7 +119,8 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   // Blessed Antler).
   const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
-  const turns = bossNeed(str(run["boss_id"]))?.turns ?? 9;
+  const need = bossNeed(str(run["boss_id"]));
+  const turns = need?.turns ?? 9;
   let damage = 0;
   let cost = 0;
   let attacks = 0;
@@ -147,7 +156,7 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   // Two Vulnerable sources keep the boss Vulnerable most turns.
   // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
-  return Math.round(base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE) + relicDamagePerTurn(relicIds, turns, crab);
+  return Math.round((base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE + relicDamagePerTurn(relicIds, turns, crab)) * (need?.realised ?? 1));
 }
 
 /** Mercury Hourglass: 3 to every enemy at the start of each turn (same number as the solver's). */
