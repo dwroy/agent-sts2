@@ -870,3 +870,33 @@ describe("attack-potion veto when code's rank 1 drinks the same potion (RVL2 F31
     expect(resolved.rationale).not.toMatch(/attack potion below code rank 1/);
   });
 });
+
+describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambler's Brew, nothing playable after)", () => {
+  const lethalZero = (): Raw => {
+    const raw = combatPayload({ lethalEndTurn: true });
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["energy"] = 0;
+    combat["hand"] = (combat["hand"] as Raw[]).map((card) => ({ ...card, playable: false, unplayable_reason: "not_enough_energy" }));
+    const potions = (raw["run"] as Raw)["potions"] as Raw[];
+    Object.assign(potions[0]!, { potion_id: "GAMBLERS_BREW", name: "Gambler's Brew", description: "丢弃任意张牌，然后抽相同数量的牌。", requires_target: false, valid_target_indices: [] });
+    Object.assign(potions[1]!, { index: 1, potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得12点格挡。", occupied: true, usage: "CombatOnly", can_use: true, requires_target: false, valid_target_indices: [] });
+    return raw;
+  };
+  const text = (raw: Raw) => {
+    const decision = planCombat(env(raw, { combatPlanner: "card" }));
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions["play"] : decision?.kind === "act" ? decision.intent : null);
+  };
+
+  it("drops Gambler's Brew at 0 energy; the Block Potion keeps its emergency note", () => {
+    const shown = text(lethalZero());
+    expect(shown).not.toMatch(/Gambler/);
+    expect(shown).toMatch(/Block Potion[^}]*emergency/);
+  });
+
+  it("offers it with energy left, without the emergency note", () => {
+    const raw = lethalZero();
+    ((raw["combat"] as Raw)["player"] as Raw)["energy"] = 2;
+    const shown = text(raw);
+    expect(shown).toMatch(/Gambler[^}]*only helps through cards played after it/);
+  });
+});
