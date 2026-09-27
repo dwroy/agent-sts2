@@ -64,6 +64,14 @@ export function actThreats(act: number, limit = 8): (Dossier & { id: string })[]
     .slice(0, limit);
 }
 
+/** The lowest damage a turn any of this act's elites needs (dossier need_damage_per_turn), null when none is known. */
+export function actEliteNeed(act: number): number | null {
+  const needs = Object.values(load())
+    .filter((dossier) => dossier.act === act && dossier.kind === "elite" && (dossier.need_damage_per_turn ?? 0) > 0)
+    .map((dossier) => dossier.need_damage_per_turn!);
+  return needs.length > 0 ? Math.min(...needs) : null;
+}
+
 /** A compact view for a model prompt. */
 export function dossierJson(dossier: Dossier & { id: string }, ascension: number): Record<string, JsonValue> {
   const hp = ascension >= 8 ? dossier.hp?.a8 ?? dossier.hp?.a7 : dossier.hp?.a7 ?? dossier.hp?.a8;

@@ -7,7 +7,9 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type RouteArrival } from "../strategy/intent.js";
+import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
+import { actEliteNeed } from "../knowledge/dossiers.js";
+import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost, roomSurvival } from "../strategy/route-cost.js";
 
@@ -481,6 +483,10 @@ export function planMap(env: DecisionEnv): Decision | null {
   const floorsAhead = (row: number) => Math.max(1, currentRow === null ? row + 1 : row - currentRow);
   // RUN_PLAN=v1: the run's hp_policy, route_risk and entry HP shift node weights (intent.ts mapShift).
   const runPlan = currentRunPlan(env.screenMemory, state);
+  // A deck under the act's lowest elite need avoids optional elites, whatever the plan (intent.ts EliteGate).
+  const eliteNeed = actEliteNeed(act);
+  const deckDamage = Math.round(deckDamagePerTurn(state, env.knowledge) / (bossNeed(str(asRecord(state.run?.raw)["boss_id"]))?.realised ?? 1));
+  const gate: EliteGate | null = eliteNeed !== null && deckDamage > 0 && deckDamage < eliteNeed ? { deck: deckDamage, need: eliteNeed } : null;
   // A likely death is its own weight: no node-type shift or chain penalty on top (RVR6 F38: the elite's
   // -9 under avoid_elites + preserve stacked on -20 and tripled). An elite as the 3rd fight in a row
   // pays the chain penalty too, at its cost factor (N7KR F4: "? -> Monster -> Monster -> Elite").
@@ -488,13 +494,13 @@ export function planMap(env: DecisionEnv): Decision | null {
     const base = nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act);
     if (base <= LIKELY_DEATH) return base;
     const chain = type === "Monster" ? fightChainPenalty(at.fights, at.hp) : type === "Elite" ? eliteCostFactor(act) * fightChainPenalty(at.fights, at.hp) : 0;
-    return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act);
+    return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act, gate);
   };
   const deathElite = runPlan?.routeRisk === "avoid_elites" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   // route_risk avoid_elites is hard on the next node: an Elite is not offered while another node is.
-  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") })), hpPct).map((entry) => entry.node);
+  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") })), hpPct, gate).map((entry) => entry.node);
   const selfOf = (node: Record<string, unknown>): MapNode => {
     const row = num(node["row"]);
     const col = num(node["col"]);
@@ -601,7 +607,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     bossHp: Math.max(...options.map((option) => option.arrival.bossHp ?? 0)),
   };
   const labelled: PickOption[] = options.map(({ type, row, arrival, ...option }) => {
-    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)), { ...arrival, best: bestArrival }, act);
+    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)), { ...arrival, best: bestArrival }, act, gate);
     return {
       ...option,
       summary: { ...option.summary, ...(fit ? { intent_fit: fit } : {}) },

@@ -8,7 +8,8 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planMap } from "../src/screens/map.js";
-import { mapFit } from "../src/strategy/intent.js";
+import { actEliteNeed } from "../src/knowledge/dossiers.js";
+import { mapFit, mapShift, routeRiskAt, routeRiskFilter } from "../src/strategy/intent.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -20,8 +21,10 @@ const pick = (name: string): unknown => {
   return decision?.kind === "act" ? decision.intent : decision?.kind;
 };
 /** Every option with its summary, with no code margin (the "card" planner asks Jev every time). */
-function options(name: string): Raw[] {
-  const decision = planMap(loggedEnv(logged(name), { combatPlanner: "card" })) as Decision;
+function options(name: string, edit: (fx: ReturnType<typeof logged>) => void = () => {}): Raw[] {
+  const fx = logged(name);
+  edit(fx);
+  const decision = planMap(loggedEnv(fx, { combatPlanner: "card" })) as Decision;
   expect(decision.kind).toBe("ask");
   const question = (decision as AskDecision).questions["pick"]!;
   if (question.type !== "choice") throw new Error("not a choice");
@@ -72,10 +75,33 @@ describe("a forced elite on one option's branchless line is priced like the shar
 describe("an optional elite option is not a forced elite (EGX7 F27, PWSD F10)", () => {
   for (const [name, position] of [["egx7-map-f27", "row 10, column 2"], ["pwsd-map-f10", "row 10, column 5"]] as const) {
     it(`${name}: the Elite option reads optional; its forced elites are counted after it`, () => {
-      const elite = at(options(name), position);
+      // With a deck the act's elites do not outpace (6 energy), so the Elite stays on offer.
+      const elite = at(options(name, (fx) => Object.assign(fx.state["run"] as Raw, { max_energy: 6 })), position);
       expect(elite["optional_elite"]).toMatch(/optional Elite/);
       expect(String(elite["forced_elites"])).toMatch(/^after this elite: none/);
       expect(elite["next_forced_elite"]).toBeUndefined();
     });
   }
+});
+
+describe("optional elites are avoided while the deck is under the act's lowest elite need (EGX7 F27)", () => {
+  it("EGX7 F27 at 75/87, deck ~25/turn vs act-2 elites 30+: the Monster (10,3), not the Entomancer (logged: Elite 9.6 vs Monster 8.3, Jev 0.09 took it, 75 -> 32)", () => {
+    expect(pick("egx7-map-f27")).toEqual({ action: "choose_map_node", option_index: 1 });
+    // The run plan's route_risk had lapsed (low-HP origin, 86% >= 85%): the deck decides, not the provenance.
+    const plan = logged("egx7-map-f27").runPlan!;
+    expect(routeRiskAt(plan, 75 / 87)).toBe("normal");
+  });
+
+  it("PWSD F10 at 70/80, deck ~18/turn vs act-1 elites 20+: rests (logged: Elite 15.6 vs RestSite 7.4, 72 -> 23 at the F11 Bygone Effigy)", () => {
+    expect(pick("pwsd-map-f10")).toEqual({ action: "choose_map_node", option_index: 0 });
+  });
+
+  it("the gate's words and weight, with or without a run plan", () => {
+    const gate = { deck: 25, need: 30 };
+    expect(mapShift(null, "Elite", 0.9, 99, 2, gate)).toBe(-6);
+    expect(mapShift(null, "Monster", 0.9, 99, 2, gate)).toBe(0);
+    expect(mapFit(null, "Elite", 0.9, { value: 1, best: 1 }, 99, undefined, 2, gate)).toBe("deck ~25/turn under the act's elites (30+)");
+    expect(routeRiskFilter(null, [{ type: "Elite" }, { type: "Monster" }], 0.9, gate)).toEqual([{ type: "Monster" }]);
+    expect(actEliteNeed(2)).toBeGreaterThan(25);
+  });
 });
