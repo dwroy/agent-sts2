@@ -194,6 +194,9 @@ const BOSS_FLOORS = [17, 33, 48];
 
 /** Largest card-value bonus a damage card gets from the gap. */
 export const GAP_BONUS_MAX = 12;
+/** Gap a turn from which the bonus is gap/2, up to GAP_BONUS_BIG_MAX (same bar as run-plan BIG_GAP). */
+export const BIG_GAP_BONUS = 8;
+export const GAP_BONUS_BIG_MAX = 16;
 
 /** Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short. */
 export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: number; why: string | null } {
@@ -202,7 +205,12 @@ export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: nu
   if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
   // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
   if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
-  const bonus = Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
+  // From a gap of BIG_GAP_BONUS a turn, gap/2 (UP1C, GZ24: a 9 gap gave +4 against a +14 must-have
+  // block bonus; both bosses were fought at ~62% of the clock).
+  const bonus =
+    gap.gap >= BIG_GAP_BONUS
+      ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap.gap / 2) + (role === "scaling" ? 2 : 0))
+      : Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
   return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need} for ${gap.boss}: ${role} +${bonus}` };
 }
 

@@ -11,6 +11,7 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { rewardCardValuer } from "./reward.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
@@ -133,10 +134,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
+  // A card added to the deck outside combat (an event's "choose 1 of N"): the card reward's valuation
+  // against the real deck, not the empty-deck value (UP1C F3: Inflame lost to Shrug It Off by 2).
+  const deckAdd = isAdd && !state.in_combat ? rewardCardValuer(env) : null;
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const cardId = str(card["card_id"]);
     const info = knowledge.card(cardId);
+    const added = deckAdd ? deckAdd(cardId) : null;
     const name = str(card["name"], info?.name ?? cardId);
     return {
       key: `card${index}`,
@@ -145,6 +150,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        : added
+          ? added.value
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
@@ -156,6 +163,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
             (kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? 40 : 0) +
             (isAdd && env.screenMemory.runPlan?.want.includes(cardId) ? RUN_PLAN_WANT_BONUS : 0),
       summary: {
+        ...(added ? { code_value: added.value, why: added.reasons.join("; ") || null } : {}),
         card: name,
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),

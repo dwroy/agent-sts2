@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
-import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, relicDamagePerTurn } from "../src/strategy/boss-clock.js";
+import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, GAP_BONUS_BIG_MAX, relicDamagePerTurn } from "../src/strategy/boss-clock.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;
@@ -48,7 +48,7 @@ describe("boss clock", () => {
     const gap = damageGap(state, testKnowledge)!;
     expect(gap.gap).toBeGreaterThan(8);
     expect(gapCardBonus(gap, "INFLAME").bonus).toBeGreaterThan(0);
-    expect(gapCardBonus(gap, "INFLAME").bonus).toBeLessThanOrEqual(GAP_BONUS_MAX);
+    expect(gapCardBonus(gap, "INFLAME").bonus).toBeLessThanOrEqual(GAP_BONUS_BIG_MAX);
     expect(gapCardBonus(gap, "THUNDERCLAP").bonus).toBeGreaterThan(0);
     expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBe(0);
     // AoE only counts against two-part bosses.
@@ -98,5 +98,21 @@ describe("relic damage in the deck estimate (EJXC F33: clock 23/turn, dealt 44 w
     const withRelics = mapState(deck, "THE_INSATIABLE_BOSS", { relics: [relic("MERCURY_HOURGLASS"), relic("MR_STRUGGLES")] });
     expect(deckDamagePerTurn(withRelics, testKnowledge) - without).toBe(7);
     expect(String(bossClockJson(withRelics, testKnowledge)?.["estimate_note"])).toMatch(/relic damage \(~7\/turn/);
+  });
+});
+
+describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)", () => {
+  it("from a gap of 8 a turn damage gets gap/2 and a must-have block card half its bonus", async () => {
+    const { mustHaveBonus } = await import("../src/strategy/run-plan.js");
+    const gap = (n: number) => ({ boss: "WATERFALL_GIANT", need: 25, deck: 25 - n, gap: n });
+    // Below 8: the old 0.4 slope.
+    expect(gapCardBonus(gap(7), "BLUDGEON").bonus).toBe(3);
+    expect(gapCardBonus(gap(9), "BLUDGEON").bonus).toBe(5);
+    expect(gapCardBonus(gap(9), "INFLAME").bonus).toBe(7);
+    expect(gapCardBonus(gap(40), "INFLAME").bonus).toBe(GAP_BONUS_BIG_MAX);
+    const plan = { mustHave: ["block"] } as never;
+    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 0).bonus).toBe(14);
+    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 9).bonus).toBe(7);
+    expect(mustHaveBonus({ mustHave: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
   });
 });

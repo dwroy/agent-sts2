@@ -14,6 +14,38 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
+/**
+ * A card-reward valuation for the run's real deck: card value, run-plan want/avoid/block target, the
+ * boss clock's damage gap and the run plan's must-have roles. Shared with the event "add a card"
+ * choices (UP1C F3: the event scored Inflame 104 vs Shrug It Off 106 from an empty deck profile, so
+ * Jev chose; the reward scoring adds must-have strength +14 and the gap bonus).
+ */
+export function rewardCardValuer(env: DecisionEnv): (cardId: string) => { value: number; reasons: string[] } {
+  const { state, knowledge } = env;
+  const entries = deckEntries(state, knowledge);
+  const profile = deckProfile(entries);
+  const gap = damageGap(state, knowledge);
+  const run = asRecord(state.run?.raw);
+  const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
+  const floor = state.run?.floor ?? 0;
+  const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const deckIds = entries.map((entry) => entry.card_id);
+  const extraBlock = entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length;
+  return (cardId) => {
+    const info = knowledge.card(cardId);
+    const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
+    // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
+    const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, extraBlock, isBlockCardId(cardId));
+    // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
+    const clock = gapCardBonus(gap, cardId);
+    const must = mustHaveBonus(env.screenMemory.runPlan, cardId, deckIds, gap?.gap ?? 0);
+    return {
+      value: base.value + planned.bonus + clock.bonus + must.bonus,
+      reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : []), ...(must.why ? [must.why] : [])],
+    };
+  };
+}
+
 export function planReward(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const reward = asRecord(state.raw["reward"]);
@@ -30,24 +62,16 @@ export function planReward(env: DecisionEnv): Decision | null {
     }
     const entries = deckEntries(state, knowledge);
     const profile = deckProfile(entries);
-    const gap = damageGap(state, knowledge);
     const run = asRecord(state.run?.raw);
     const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
-    const floor = state.run?.floor ?? 0;
+    const valueOf = rewardCardValuer(env);
     const options: PickOption[] = offered.map((card, fallbackIndex) => {
       const index = numOrNull(card["index"]) ?? fallbackIndex;
       const cardId = str(card["card_id"]);
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
-      const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-      const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
-      // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
-      const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
-      // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
-      const clock = gapCardBonus(gap, cardId);
-      const must = mustHaveBonus(env.screenMemory.runPlan, cardId, entries.map((entry) => entry.card_id));
-      const valued = { value: base.value + planned.bonus + clock.bonus + must.bonus, reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : []), ...(must.why ? [must.why] : [])] };
+      const valued = valueOf(cardId);
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,

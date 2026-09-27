@@ -982,6 +982,47 @@ describe("rest", () => {
   });
 });
 
+describe("rest before the boss with Pantograph (UP1C F16: healed 60 -> 80, Pantograph's 25 would have done it)", () => {
+  it("smiths at 60/80 on F16 with Pantograph, heals without it", () => {
+    const pick = (relics: string[]) => {
+      const raw = { ...restPayload(), run: runPayload({ floor: 16, current_hp: 60, max_hp: 80, relics: relics.map((id, index) => ({ index, relic_id: id, name: id, description: "", stack: null, is_melted: false })) }) };
+      const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+      if (decision.kind === "act") return decision.intent.option_index === 0 ? "HEAL" : "SMITH";
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.stringify(criteria);
+    };
+    expect(pick(["BURNING_BLOOD"])).toBe("HEAL");
+    expect(pick(["BURNING_BLOOD", "PANTOGRAPH"])).toBe("SMITH");
+  });
+});
+
+describe("event card add uses the reward valuation (UP1C F3: Shrug It Off 106 vs Inflame 104)", () => {
+  it("a must-have Strength card the deck lacks outscores a wanted block card, with code_value and why", () => {
+    const card = (index: number, cardId: string, name: string, type: string) => ({
+      index, selected: false, card_id: cardId, name, upgraded: false, card_type: type, rarity: "Uncommon", costs_x: false, star_costs_x: false,
+      energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [],
+    });
+    const raw = baseState("CARD_SELECTION", {
+      available_actions: ["select_deck_card"],
+      selection: { kind: "deck_card_select", prompt: "选择一张牌加入你的牌组。", min_select: 1, max_select: 1, selected_count: 0, can_confirm: false, cards: [card(0, "SHRUG_IT_OFF", "Shrug It Off", "Skill"), card(1, "INFLAME", "Inflame", "Power")] },
+    });
+    // UP1C's deck had no Strength card.
+    const run = raw["run"] as Record<string, unknown>;
+    run["deck"] = (run["deck"] as Record<string, unknown>[]).filter((entry) => entry["card_id"] !== "INFLAME");
+    const memory = createScreenMemory("CARD_SELECTION");
+    memory.runPlan = { want: ["SHRUG_IT_OFF", "INFLAME"], avoid: [], remove: [], mustHave: ["strength"], blockTarget: null } as never;
+    const decision = mustDecision(plan(raw, { screenMemory: memory }));
+    if (decision.kind === "act") {
+      expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+      return;
+    }
+    const criteria = (decision.questions["pick"] as { criteria: Record<string, string> }).criteria;
+    const value = (key: string) => JSON.parse(criteria[key]!)["code_value"] as number;
+    expect(value("card1") - value("card0")).toBeGreaterThanOrEqual(10);
+    expect(criteria["card1"]).toMatch(/must-have strength/);
+  });
+});
+
 describe("in-combat selections", () => {
   const selectCard = (index: number, cardId: string, name: string, type: string, cost: number, text: string, dynamic: { name: string; value: number }[] = []) => ({
     index, selected: false, card_id: cardId, name, upgraded: false, card_type: type, rarity: "Common", costs_x: false, star_costs_x: false,
