@@ -7,11 +7,14 @@
 
 import { describe, expect, it } from "vitest";
 
+import { dossierFor } from "../src/knowledge/dossiers.js";
+import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { gapFightBonus, planMap } from "../src/screens/map.js";
 import { planSelection } from "../src/screens/selection.js";
-import { logged, loggedEnv } from "./logged.js";
+import { fightPlanInput } from "../src/strategy/fight-plan.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -148,5 +151,32 @@ describe("the act boss's damage gap makes a hallway fight worth more than a '?' 
     expect(gapFightBonus(gap(0.45), 0.45, 1)).toBe(0);
     expect(gapFightBonus(gap(0.6), 0.95, 3)).toBe(0);
     expect(gapFightBonus(null, 0.95, 1)).toBe(0);
+  });
+});
+
+describe("dossiers from the logged fights: Slimed Berserker, Terror Eel, Devoted Sculptor (123Z, PKB0/77QX, 9VG8)", () => {
+  const enemyOf = (name: string, id: string) =>
+    (((logged(name).state["combat"] as Raw)["enemies"] as Raw[]).find((enemy) => enemy["enemy_id"] === id))!;
+
+  it("each A8 HP is the logged board's max HP", () => {
+    for (const [name, id] of [["123z-f38-t1", "SLIMED_BERSERKER"], ["pkb0-f13-t1", "TERROR_EEL"], ["9vg8-f35-t6", "DEVOTED_SCULPTOR"]] as const) {
+      expect(dossierFor(id)?.hp?.a8).toBe(Number(enemyOf(name, id)["max_hp"]));
+    }
+  });
+
+  it("123Z F38: the fight plan's input carries the Slimed Berserker dossier (logged: none, DeepSeek read 'doesn't scale much')", () => {
+    const state = parseGameState(logged("123z-f38-t1").state);
+    const enemies = fightPlanInput(state, loggedKnowledge, "monster", {})["enemies"] as Raw[];
+    const dossier = enemies.find((enemy) => enemy["enemy_id"] === "SLIMED_BERSERKER")?.["dossier"] as Raw | undefined;
+    expect(dossier?.["kind"]).toBe("hallway");
+    expect(Number(dossier?.["need_damage_per_turn"])).toBeGreaterThan(0);
+    expect(String(dossier?.["danger"])).toMatch(/SMOTHER/);
+  });
+
+  it("the Terror Eel has a need and its deaths, the Sculptor its two deaths", () => {
+    expect(dossierFor("TERROR_EEL")?.need_damage_per_turn).toBeGreaterThan(0);
+    expect(dossierFor("TERROR_EEL")?.evidence).toEqual(expect.arrayContaining(["EN55E3C1WLHP", "77QXNB8RFSQQ", "PKB0Z630CLXT"]));
+    expect(dossierFor("DEVOTED_SCULPTOR")?.deaths).toBe(2);
+    expect(dossierFor("DEVOTED_SCULPTOR")?.evidence).toEqual(expect.arrayContaining(["NX48MBG3SPRJ", "9VG86DYJH4CS"]));
   });
 });
