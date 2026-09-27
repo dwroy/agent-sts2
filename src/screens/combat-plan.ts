@@ -626,8 +626,15 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
     const deep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter >= 2;
     if (kept.some((plan) => !plan.outcome.winsFight && deep(plan))) kept = kept.filter(deep);
   }
-  if (enemies.some((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0)) {
-    const asleep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sleepCost <= 0;
+  // Asleep only (Lagavulin Matriarch: one HP lost wakes it and loses 2-3 sleep turns, 1K5G). Slumber
+  // (Slumbering Beetle) drops by 1 per hit and wakes a turn early at most: its sleep cost stays a score
+  // penalty (RC9A F27 T1: the filter removed every Howl from Beyond line, the only AoE; the bowlbugs
+  // lived to T6 and the beetle woke at full HP anyway).
+  const sleepers = enemies.filter((enemy) => (enemy.asleep ?? 0) > 0);
+  if (sleepers.length > 0) {
+    const hitsSleeper = (plan: Plan) =>
+      sleepers.some((enemy) => (plan.outcome.enemyHpAfter.find((after) => after.index === enemy.index)?.hp ?? enemy.hp) < enemy.hp);
+    const asleep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sleepCost <= 0 || !hitsSleeper(plan);
     if (kept.some((plan) => !plan.outcome.winsFight && asleep(plan))) kept = kept.filter(asleep);
   }
   return kept;

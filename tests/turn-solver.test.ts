@@ -826,8 +826,9 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
     const kept = hardRuleLines(surviving, [sleeper]);
     expect(kept.length).toBeGreaterThan(0);
     for (const plan of kept) expect(plan.outcome.sleepCost).toBe(0);
-    // Slumber counts as sleeping too; an awake enemy is left alone.
-    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(kept);
+    // Slumber is only a score penalty, not a filter (RC9A F27 T1: every AoE line was removed); an awake
+    // enemy is left alone.
+    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(surviving);
     expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0 }])).toEqual(surviving);
   });
 
@@ -1909,5 +1910,18 @@ describe("Tender on the player (LSWU F21 T5, Hunter Killer)", () => {
     // Block too: Strike then two Defends gives 4 + 3.
     const blocks = solveTurn({ hand: [strike(0), defend(1), defend(2)], player: player({ hp: 40, tender: 1 }), enemies: [enemy({ hp: 50, attacks: [{ damage: 30, hits: 1 }] })], fightKind: "monster" });
     expect(Math.max(...blocks.plans.map((plan) => plan.outcome.blockGained))).toBeLessThanOrEqual(9);
+  });
+});
+
+describe("Slumber is a score penalty, not a filter (RC9A F27 T1)", () => {
+  it("keeps the AoE line that chips the slumbering beetle through its Plating", () => {
+    const howl = card(0, "HOWL_FROM_BEYOND", { cost: 3, target: "all", validTargets: [], damage: 24 });
+    const beetle = enemy({ index: 0, name: "Beetle", hp: 89, maxHp: 89, block: 18, slumber: 3 });
+    const rock = enemy({ index: 1, name: "Rock", hp: 46, maxHp: 46, attacks: [{ damage: 8, hits: 1 }] });
+    const silk = enemy({ index: 2, name: "Silk", hp: 43, maxHp: 43, attacks: [{ damage: 5, hits: 1 }] });
+    const result = solveTurn({ hand: [howl, strike(1), defend(2), strike(3)], player: player({ hp: 48, maxHp: 90 }), enemies: [beetle, rock, silk], fightKind: "monster", turn: 1 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    const kept = hardRuleLines(surviving, [beetle, rock, silk]);
+    expect(kept.some((plan) => plan.steps.some((step) => step.cardId === "HOWL_FROM_BEYOND"))).toBe(true);
   });
 });
