@@ -8,7 +8,10 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { fightHpCost } from "./map.js";
+import { fightHpCost, HEAL_POTION_SHARE } from "./map.js";
+import { potionBlockHp } from "../strategy/card-model.js";
+import { currentRunPlan } from "../strategy/run-plan.js";
+import { isReserved } from "../strategy/intent.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
 /** An option that starts a fight ("回复24点生命。进入战斗。", the Lantern Key's 「战斗来取得钥匙。」). */
@@ -28,16 +31,51 @@ function eventHeal(text: string, hp: number, maxHp: number): number {
  * less what it heals first: VUV4 F13 at 80/80, 「回复24点生命。进入战斗。」 was priced 0 HP against
  * 「失去8点生命」, healed 0 and cost 21.
  */
-export function eventHpCost(description: string, run?: { act: number; hp: number; maxHp: number }): { hp: number; maxHp: number } {
+export function eventHpCost(description: string, run?: { act: number; hp: number; maxHp: number; reserved?: ReservedPotion[] }): { hp: number; maxHp: number; spends?: ReservedPotion } {
   const text = description.replace(/\[[^\]]*\]/g, "");
   let hp = 0;
   let maxHp = 0;
+  // Losing a potion the run plan reserves costs what it is worth in HP (KGR6 F27).
+  const spends = (run?.reserved ?? []).find((potion) => new RegExp(`(?:失去|交出|lose|give up)[^。.]{0,6}${escapeRegExp(potion.name)}`, "i").test(text));
+  if (spends) hp += spends.hp;
   for (const match of text.matchAll(/(?:失去|受到)(\d+)点(?:生命|伤害)|lose (\d+) hp|take (\d+) damage/gi)) hp += Number(match[1] ?? match[2] ?? match[3]);
   for (const match of text.matchAll(/失去(\d+)点最大生命|lose (\d+) max hp/gi)) maxHp += Number(match[1] ?? match[2]);
   if (run && run.maxHp > 0 && FIGHT_OPTION.test(text)) {
     hp += Math.max(0, Math.round(fightHpCost("Monster", run.act) * run.maxHp) - eventHeal(text, run.hp, run.maxHp));
   }
-  return { hp, maxHp };
+  return { hp, maxHp, ...(spends ? { spends } : {}) };
+}
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** A belt potion the run plan reserves, with its worth in HP. */
+export interface ReservedPotion {
+  id: string;
+  name: string;
+  hp: number;
+}
+
+/** Worth of a potion kept for a fight, in HP when not otherwise priced (the event score's +8 for a potion). */
+export const RESERVED_POTION_HP = 8;
+
+/**
+ * The belt's potions the run plan reserves, each with its HP worth in the fight it is kept for: block
+ * and Plating over an elite's turns (card-model potionBlockHp: Heart of Iron 22), a heal potion's heal,
+ * else RESERVED_POTION_HP. KGR6 F27: the HP guard left only "lose Heart of Iron for +10 max HP", the
+ * block potion reserved since act 1, against "-6 HP"; the F28 elite killed the run.
+ */
+export function reservedPotions(potions: Record<string, unknown>[], reserve: Parameters<typeof isReserved>[0], maxHp: number): ReservedPotion[] {
+  return potions
+    .filter((potion) => bool(potion["occupied"], true) && str(potion["potion_id"]) !== "")
+    .filter((potion) => isReserved(reserve, str(potion["potion_id"]), str(potion["description"])))
+    .map((potion) => {
+      const id = str(potion["potion_id"]);
+      const block = potionBlockHp(id);
+      const heal = Math.round((HEAL_POTION_SHARE[id] ?? 0) * maxHp);
+      return { id, name: str(potion["name"], id), hp: block > 0 ? block : heal > 0 ? heal : RESERVED_POTION_HP };
+    });
 }
 
 /** HP-equivalent of an option's cost, for "is another option cheaper" (max HP counts 1.5). */
@@ -108,7 +146,7 @@ function hpWeight(hp: number, maxHp: number): number {
  */
 export function eventOptionScore(
   description: string,
-  ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[]; act?: number },
+  ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[]; act?: number; reserved?: ReservedPotion[] },
 ): number {
   const text = description.replace(/\[[^\]]*\]/g, "");
   const weight = hpWeight(ctx.hp, ctx.maxHp);
@@ -117,7 +155,7 @@ export function eventOptionScore(
   // A fight the option starts is priced with what it heals first (eventHpCost), so its heal is not
   // counted again.
   const fight = ctx.act !== undefined && FIGHT_OPTION.test(text);
-  const cost = eventHpCost(text, ctx.act !== undefined ? { act: ctx.act, hp: ctx.hp, maxHp: ctx.maxHp } : undefined);
+  const cost = eventHpCost(text, ctx.act !== undefined ? { act: ctx.act, hp: ctx.hp, maxHp: ctx.maxHp, reserved: ctx.reserved } : { act: 0, hp: ctx.hp, maxHp: 0, reserved: ctx.reserved });
   score -= cost.hp * weight + cost.maxHp * 1.5;
   const heal = eventHeal(text, ctx.hp, ctx.maxHp);
   if (fight) score += Math.max(0, heal - Math.round(fightHpCost("Monster", ctx.act ?? 1) * ctx.maxHp)) * weight * (ctx.forced ? 1.5 : 1);
@@ -209,7 +247,8 @@ export function planEvent(env: DecisionEnv): Decision | null {
     }
   }
   const act = Number(state.run?.act_id ?? 0) + 1 || 1;
-  const run = { act, hp, maxHp };
+  const reserved = reservedPotions(asArray(asRecord(state.run?.raw)["potions"]).map(asRecord), currentRunPlan(env.screenMemory, state)?.reserve, maxHp);
+  const run = { act, hp, maxHp, reserved };
   const costs = unguarded.map((option) => eventHpCost(str(option["description"]), run));
   // An option the guard flags is removed only while a cheaper unflagged one is left: never leave only
   // a worse one (VUV4 F13: the -8 HP option removed for "a fight" that healed 0 and cost 21).
@@ -221,14 +260,17 @@ export function planEvent(env: DecisionEnv): Decision | null {
   });
   const pool = unguarded.filter((option) => !excluded.has(option));
   const guardNote = [...excluded].map(([option, why]) => `${str(option["title"])}: ${why}`).join("; ");
+  const spendsOf = (option: Record<string, unknown>) => costs[unguarded.indexOf(option)]?.spends;
+  const spendsText = (spends: ReservedPotion) => `spends reserved ${spends.id} (~${spends.hp} HP in the fight it is kept for)`;
   if (pool.length === 0) return null;
   if (pool.length === 1 && safe.length > 0) {
     const only = pool[0] as Record<string, unknown>;
+    const spends = spendsOf(only);
     return {
       kind: "act",
       label: "event/only",
       intent: { action: "choose_event_option", option_index: numOrNull(only["index"]) ?? 0 },
-      rationale: excluded.size > 0 ? `only option left after the HP guard (${guardNote})` : "only one unlocked, non-lethal option",
+      rationale: `${excluded.size > 0 ? `only option left after the HP guard (${guardNote})` : "only one unlocked, non-lethal option"}${spends ? `; ${spendsText(spends)}` : ""}`,
     };
   }
 
@@ -241,7 +283,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       valued: !basic && (str(card["card_type"]) === "Power" || bool(card["upgraded"]) || str(card["rarity"]) === "Rare"),
     };
   });
-  const scoreCtx = { hp, maxHp, forced: forced !== null, deck, act };
+  const scoreCtx = { hp, maxHp, forced: forced !== null, deck, act, reserved };
   const options: PickOption[] = pool.flatMap((option) => {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
@@ -259,6 +301,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
           option: title,
           description: truncate(str(option["description"]), 200),
           lethal: bool(option["will_kill_player"]),
+          ...(spendsOf(option) ? { reserved_potion: spendsText(spendsOf(option)!) } : {}),
           ...relicNotes,
         } satisfies JsonValue,
       } satisfies PickOption,

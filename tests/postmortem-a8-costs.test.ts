@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
+import { eventHpCost, eventOptionScore, planEvent, reservedPotions } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planReward } from "../src/screens/reward.js";
 import { actEliteNeed } from "../src/knowledge/dossiers.js";
@@ -185,5 +186,29 @@ describe("potions carried unmodelled to the death are lines now (PWSD, KGR6, EGX
     expect(droplet?.generates?.cost).toBe(drawPick.cost);
     // An empty pile: the potion does nothing this turn (and no line drinks it).
     expect(modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], 0, { ...ctx, discardPick: pileCardPick([], 20, 3, true) })?.generates).toBeUndefined();
+  });
+});
+
+describe("the event HP guard prices a reserved potion given away (KGR6 F27, Stone of All Time)", () => {
+  const fx = () => logged("kgr6-event-f27");
+  const eventOptions = () => ((fx().state["event"] as Raw)["options"] as Raw[]).map((option) => String(option["description"]));
+
+  it("no longer leaves only 'lose Heart of Iron' (logged: event/only, the -6 HP push removed before the forced F28 elite)", () => {
+    const decision = planEvent(loggedEnv(fx())) as Decision;
+    expect(decision.kind === "act" ? decision.intent : null).not.toEqual({ action: "choose_event_option", option_index: 0 });
+    expect(JSON.stringify(decision.kind === "ask" ? decision.questions : decision)).toMatch(/spends reserved HEART_OF_IRON/);
+  });
+
+  it("code's score takes the push (-6 HP, keeps the block potion) over +10 max HP for it", () => {
+    const state = fx().state;
+    const run = state["run"] as Raw;
+    const reserved = reservedPotions(run["potions"] as Raw[], fx().runPlan!.reserve, 80);
+    expect(reserved.find((potion) => potion.id === "HEART_OF_IRON")?.hp).toBe(7 + 6 + 5 + 4);
+    const ctx = { hp: 31, maxHp: 80, forced: true, act: 2, reserved };
+    const [lift, push] = eventOptions();
+    expect(eventHpCost(lift!, { act: 2, hp: 31, maxHp: 80, reserved }).hp).toBe(22);
+    expect(eventOptionScore(push!, ctx)).toBeGreaterThan(eventOptionScore(lift!, ctx));
+    // Without a reserve the potion is not priced as HP.
+    expect(eventHpCost(lift!, { act: 2, hp: 31, maxHp: 80, reserved: [] }).hp).toBe(0);
   });
 });

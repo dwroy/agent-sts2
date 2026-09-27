@@ -616,6 +616,18 @@ export function freeCardPick<T extends CardModel>(cards: T[]): T | null {
   return eligible.reduce((best, card) => (card.cost > best.cost || (card.cost === best.cost && worth(card) > worth(best)) ? card : best));
 }
 
+/** Enemy turns a kept block potion is counted over in the fight it is kept for (an elite's ~4). */
+export const KEPT_POTION_TURNS = 4;
+
+/** Block a potion gives over KEPT_POTION_TURNS turns: its block, and Plating one less each turn (Heart of Iron 7+6+5+4). */
+export function potionBlockHp(potionId: string, turns = KEPT_POTION_TURNS): number {
+  const effect = POTION_EFFECTS[potionId];
+  if (!effect) return 0;
+  let plating = 0;
+  for (let turn = 0; turn < turns; turn += 1) plating += Math.max(0, (effect.plating ?? 0) - turn);
+  return (effect.block ?? 0) + plating;
+}
+
 export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;
 }
