@@ -297,7 +297,8 @@ export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, t
 }
 
 /** Hallway enemies fought like elites. */
-const HALLWAY_ELITES = new Set(["SLUMBERING_BEETLE", "LOUSE_PROGENITOR"]);
+// Frog Knight: 199 HP + Plating, +5 Strength every 3rd turn; killed 7UJ1 (F37) and U6W7, cost 4 others 23-52 HP.
+const HALLWAY_ELITES = new Set(["SLUMBERING_BEETLE", "LOUSE_PROGENITOR", "FROG_KNIGHT"]);
 
 export function fightKind(combat: Record<string, unknown>, env: DecisionEnv): SolverInput["fightKind"] {
   let kind: SolverInput["fightKind"] = "unknown";
