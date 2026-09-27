@@ -207,7 +207,31 @@ def main():
                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out,
                 "deciders": dict(by_decider),
                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
+                **ablation_arm(),
             }, ensure_ascii=False) + "\n")
+
+
+def ablation_arm():
+    """The ablation arm this run played under (ops/ablation-current.json, set by ops/run.sh), then
+    advance the schedule. {} when no ablation is running."""
+    ops = os.path.join(os.path.dirname(ROOT), "ops")
+    cur_path = os.path.join(ops, "ablation-current.json")
+    sched_path = os.path.join(ops, "ablation.json")
+    try:
+        cur = json.load(open(cur_path))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if cur.get("done"):
+        return {}
+    cur["done"] = True
+    json.dump(cur, open(cur_path, "w"))
+    try:
+        sched = json.load(open(sched_path))
+        sched["i"] = int(sched.get("i", 0)) + 1
+        json.dump(sched, open(sched_path, "w"))
+    except (OSError, json.JSONDecodeError):
+        pass
+    return {"arm": cur.get("arm")}
 
 
 if __name__ == "__main__":
