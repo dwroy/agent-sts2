@@ -33,10 +33,12 @@ export function planRest(env: DecisionEnv): Decision | null {
     // runs 2, 5 and 6 walked into the Act 1 boss at 50-67% and two of them died there.
     // Act bosses sit on floors 17, 33 and 48 (acts are not all 17 floors: 88HN's F47 rest was missed).
     // A rest whose every exit is an Elite is the same as the pre-boss rest (G8AQ F24: 49/80, trained
-    // instead of healing, the forced elite next killed us; XJWF F7: smithed at 65%, elite took 60 -> 26).
+    // instead of healing, the forced elite next killed us; XJWF F7: smithed at 65%, elite took 60 -> 26),
+    // and so is one whose every path meets an Elite two nodes on with no rest or shop between (77QX F9:
+    // smithed at 65% with only a treasure room before the F11 Terror Eel, 52 -> 17).
     const floor = state.run?.floor ?? 1;
     const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
-    const beforeBoss = nextBoss - floor <= 2 || forcedNext(env.screenMemory, state) !== null;
+    const beforeBoss = nextBoss - floor <= 2 || forcedNext(env.screenMemory, state) !== null || forcedEliteWithin(env.screenMemory, state, REST_NODES, REST_ELITE_DEPTH);
     // Within 4 floors of the boss, below 65% there are fights left to lose HP in before the last rest
     // (T4PY F29: smithed at 46/80, entered the crab at 55/80 after two fights, died on T4).
     const nearBoss = nextBoss - floor <= 4;
@@ -169,6 +171,9 @@ export function forcedNext(memory: ScreenMemory, state: GameState, roomTypes: re
   if (types.every((type) => type === "Boss")) return "Boss";
   return null;
 }
+
+/** Nodes a rest site looks ahead for a forced Elite (through a treasure room or a fight). */
+export const REST_ELITE_DEPTH = 2;
 
 /** Nodes where HP (rest) or the gold an HP trade buys (shop) can be used before an elite. */
 const ELITE_ESCAPES = ["RestSite", "Rest", "Shop"];

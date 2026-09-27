@@ -12,6 +12,7 @@ import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { hpPercent, planMap, routeHealShare } from "../src/screens/map.js";
+import { planRest, rememberMap } from "../src/screens/rest.js";
 import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPerTurn } from "../src/strategy/boss-clock.js";
 import { fightHpCost, MEDIAN_OF_P75, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
@@ -131,5 +132,20 @@ describe("boss clock: multi-part bosses hit with their parts (Z49J F32 Kaiser Cr
 
   it("The Kin boards read the cap too (K8TC F3, VUV4 F12)", () => {
     for (const name of ["k8tc-map-f3", "vuv4-map-f12"]) expect(String(bossClockJson(board(name), loggedKnowledge)!["turns_note"])).toMatch(/^10 turns in the table, capped at/);
+  });
+});
+
+describe("a rest site looks two nodes ahead for a forced elite, through a treasure room (77QX F9)", () => {
+  it("77QX F9 at 52/80: heals (logged: smithed at 65%, the F11 Terror Eel behind a treasure room took 52 -> 17)", () => {
+    const env = loggedEnv(logged("77qx-rest-f9"));
+    rememberMap(env.screenMemory, parseGameState(logged("77qx-map-f8").state));
+    const decision = planRest(env)!;
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.rationale).toMatch(/^code: \S+ \(HEAL\)/);
+  });
+
+  it("without the remembered map it cannot see the elite (the old next-node check alone)", () => {
+    const decision = planRest(loggedEnv(logged("77qx-rest-f9")))!;
+    if (decision.kind === "act") expect(decision.rationale).toMatch(/^code: \S+ \(SMITH\)/);
   });
 });
