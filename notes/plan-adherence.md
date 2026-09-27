@@ -344,25 +344,28 @@ Fight-plan potion timing (metric 6), per planned use:
 
 ### unfinished intent-era runs, not in the aggregates above (1: K7G9M8K4DWFW)
 
-- **I1 validator repairs**: 0 (0 on 7 run plans, 0 on 8 fight plans). By type: -.
-- **I2 re-plans**: 7 run-plan versions (7.0 per run, max 7); by checkpoint: hp_rise 3, start 1, review 1, hp_drop 1, act 1; failed requests: run 0, fight 0.
-  - changes accepted 14: by field run: hp_policy 6, run: route_risk 4, run: reserve 2, run: needs 2; by trigger hp_below_target 5, hp_recovered 5, act_changed 2, potion_lost_or_gained 1, key_card_or_relic_gained 1.
+- **I1 validator repairs**: 1 (1 on 16 run plans, 0 on 17 fight plans). By type: run: unknown want dropped 1.
+- **I2 re-plans**: 16 run-plan versions (16.0 per run, max 16); by checkpoint: hp_rise 6, hp_drop 6, act 2, start 1, review 1; failed requests: run 0, fight 0.
+  - changes accepted 19: by field run: hp_policy 7, run: route_risk 5, run: reserve 3, run: needs 3, run: entry_hp_pct 1; by trigger hp_below_target 7, hp_recovered 5, act_changed 3, potion_lost_or_gained 2, key_card_or_relic_gained 1, boss_gap_widened 1.
   - changes rejected 0: by reason -; by field -.
-- **I3 execution after an accepted change**: honoured 6/6 (100%), n/a 10 (no check or no opportunity).
-- **I4 intent deviations**: 0 Jev decisions labelled "breaks …" (0% of 52 Jev decisions); by intent -; by screen -. Jev decisions with an intent_fit label: 41/52 (79%).
-- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 2/2 (100%), broken 0 (by -; exceptions -; discarded 0), n/a 2 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
+- **I3 execution after an accepted change**: honoured 11/11 (100%), n/a 13 (no check or no opportunity).
+- **I4 intent deviations**: 0 Jev decisions labelled "breaks …" (0% of 104 Jev decisions); by intent -; by screen -. Jev decisions with an intent_fit label: 80/104 (77%).
+- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 2/3 (67%), broken 1 (by jev 1; exceptions HP < 25% 1; discarded 0), n/a 1 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
 
 | accepted change | check | honoured | broken | n/a | broken by |
 |---|---|---:|---:|---:|---|
+| entry_hp_pct → 0.9 | rest_heal_near_boss/no_elite_near_boss | 0 | 0 | 1 | - |
 | hp_policy → "balanced" | none | 0 | 0 | 3 | - |
-| hp_policy → "preserve" | no_optional_elite | 1 | 0 | 0 | - |
-| hp_policy → "preserve" | rest_heal_below_target | 2 | 0 | 0 | - |
+| hp_policy → "preserve" | no_optional_elite | 2 | 0 | 0 | - |
+| hp_policy → "preserve" | rest_heal_below_target | 5 | 0 | 0 | - |
 | hp_policy → "preserve" | rest_heal_below_target/no_optional_elite | 0 | 0 | 1 | - |
+| needs → ["aoe", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "multi_hit", "strength"] | none | 0 | 0 | 1 | - |
 | reserve → ["block", "damage", "heal"] | reserve_added_kept | 0 | 0 | 1 | - |
+| reserve → ["block", "damage", "strength"] | reserve_added_kept | 0 | 0 | 1 | - |
 | reserve → ["block", "heal", "weak"] | reserve_added_kept | 2 | 0 | 0 | - |
-| route_risk → "avoid_elites" | no_optional_elite | 1 | 0 | 1 | - |
+| route_risk → "avoid_elites" | no_optional_elite | 2 | 0 | 1 | - |
 | route_risk → "normal" | none | 0 | 0 | 2 | - |
 
 
@@ -501,7 +504,7 @@ Fight-plan potion timing (metric 6), per planned use:
 | HCBJ887UWCNE | 2026-09-27T15:07 | normal | intent (from 0f2e648) | 475f65c+dirty | 17 | False | - | A1:65/85 | 3/4 | 3/4 | 6/6 | 2/2 | 3/5 | - | - | - |
 | XMY29WWQDC1Y | 2026-09-27T15:19 | normal | intent (from 0f2e648) | 475f65c+dirty | 24 | False | - | A1:75/85 | 3/4 | 4/5 | 3/3 | 3/3 | 14/17 | - | - | - |
 | RVR696LSKBE3 | 2026-09-27T15:33 | normal | intent (from 0f2e648) | 475f65c+dirty | 39 | False | - | A1:95/85 A2:100/85 | 6/8 | 4/5 | 5/5 | 7/7 | 31/43 | - | - | - |
-| K7G9M8K4DWFW | 2026-09-27T15:53 | normal | intent (from 0f2e648) | ? | ? | unfinished | - | A1:85/85 | 1/3 | 2/6 | 4/4 | 1/1 | 14/16 | - | - | - |
+| K7G9M8K4DWFW | 2026-09-27T15:53 | normal | intent (from 0f2e648) | ? | ? | unfinished | - | A1:85/85 A2:66/85 | 4/7 | 3/7 | 6/6 | 2/2 | 33/39 | - | - | - |
 
 ### Per run, intent era (I1-I5; older runs: n/a)
 
@@ -524,7 +527,7 @@ Fight-plan potion timing (metric 6), per planned use:
 | HCBJ887UWCNE | 7 | 0/0 | hp_policy 2, route_risk 1, reserve 1 | 0 | 8/8 | 0 | 23/28 | 2/3 |
 | XMY29WWQDC1Y | 7 | 1/0 | hp_policy 5, route_risk 5, reserve 2 | 0 | 5/6 | 0 | 53/60 | 0/2 BUG 1 |
 | RVR696LSKBE3 | 12 | 1/0 | hp_policy 9, route_risk 8, reserve 3, entry_hp_pct 1 | 0 | 9/10 | 0 | 38/59 | 3/4 |
-| K7G9M8K4DWFW | 7 | 0/0 | hp_policy 6, route_risk 4, reserve 2, needs 2 | 0 | 6/6 | 0 | 41/52 | 2/2 |
+| K7G9M8K4DWFW | 16 | 1/0 | hp_policy 7, route_risk 5, reserve 3, needs 3, entry_hp_pct 1 | 0 | 11/11 | 0 | 80/104 | 2/3 |
 ## Spot checks against the raw logs (by hand, 2026-09-27)
 
 - **EJXCAQ56PWLK F28 (elite, Entomancer) T1 -- Flex and Speed drunk.** decisions.jsonl: 10:06:42Z Jev chose plan 2/4
