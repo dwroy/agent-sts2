@@ -14,3 +14,12 @@ Code estimates the deck's damage a turn against the act boss's need; damage card
 
 ## Enemy dossiers + run-plan commitments (from 2026-09-27T01:43 UTC)
 Dossiers for 47 enemies feed the run plan and fight plans; the run plan's entry HP, potions kept for the boss and must-have roles are strong weights plus labels for Jev. Measure: `python3 ops/metrics.py --asc 8 --split 2026-09-27T01:43` — boss entry HP, potions into the boss, past-act-2-boss rate.
+
+## A8 ablation result (2026-09-27, 20 runs, 01:58–16:00)
+| arm | floors | mean | past act-1 boss | past act-2 boss | wins |
+|---|---|---|---|---|---|
+| code | 17,17,17,33,17 | 20.2 | 1/5 | 0/5 | 0 |
+| jev (code+Jev) | 24,48,21,48,27 | 33.6 | 5/5 | 2/5 | 0 |
+| ds (code+DeepSeek, Jev stubbed) | 33,17,33,33,33 | 29.8 | 4/5 | 0/5 | 0 |
+| full | 7,33,48,28,27 | 28.6 (34.0 w/o X226 bug death) | 4/5 | 1/5 | 0 |
+Caveats: n=5 per arm; X226 (full) died F7 to a stale-event code bug; ds-arm stub picks the first option on card-by-card combat decisions (not code #1), hurting ds in ZWX5's last boss turn. Reading: any model layer lifts act-1 boss pass from 1/5 to 4–5/5; Jev (in-fight choices) is the main source of act-2 passes; DeepSeek run/fight plans reliably reach F33 but did not convert act-2 bosses (4 of 4 deaths on F33, damage 18–54/turn vs clock); full not better than jev alone at this n. Code frozen during the run; queued fixes in decision-log resume now.
