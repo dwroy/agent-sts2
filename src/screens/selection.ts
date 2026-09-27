@@ -14,7 +14,7 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { rewardCardValuer } from "./reward.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
+import { freeCardPick, modelHandCard, thisTurnScore, type CardModel } from "../strategy/card-model.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -532,28 +532,4 @@ function incomingDamage(combat: Record<string, unknown>): number {
   return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
 }
 
-/**
- * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
- * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
- * value, less its energy cost and HP cost.
- */
-export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
-  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
-  // Colorless Potion, died to a 9-damage hit). Never worth taking.
-  if (card.cardId === "THE_GAMBIT") return -100;
-  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
-  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
-  const score =
-    damage +
-    block +
-    2.5 * Math.min(card.vulnerable, 3) +
-    1.5 * Math.min(card.weak, 3) +
-    5 * card.strength +
-    2 * card.tempStrength +
-    3 * card.draw +
-    4 * card.energyGain +
-    card.flatValue -
-    2 * Math.max(0, card.cost) -
-    card.hpLoss;
-  return Math.round(score);
-}
+export { thisTurnScore } from "../strategy/card-model.js";

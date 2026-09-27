@@ -25,7 +25,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { drinkFirstSafe, heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { drinkFirstSafe, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -66,10 +66,14 @@ export const BOSS_DRINK_FIRST_LOSS = 10;
 
 /**
  * A line drinking a potion at 0 energy that gains nothing this turn over the potion-free lines: no less
- * HP lost, no more damage dealt, no win (GZ24 F8 T1: Dexterity Potion at 0 energy, 0 block from it).
+ * HP lost, no more damage dealt, no win (GZ24 F8 T1: Dexterity Potion at 0 energy, 0 block from it). A
+ * line that plays the card a potion puts in hand is not idle: that card is free now and its setup starts
+ * a turn earlier (EGX7 F31 T1: "potion Power Potion, card from Power Potion" ended the rank-1 line, was
+ * dropped at 0 energy twice, and Feel No Pain came a turn late; N7KR F8, the same function).
  */
 export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
   if (dry.length === 0 || plan.outcome.winsFight || !plan.steps.some((step) => step.cardId.startsWith("POTION:"))) return false;
+  if (plan.steps.some((step) => isGeneratedStep(step.cardId)) && plan.outcome.lasting > Math.max(...dry.map((entry) => entry.outcome.lasting))) return false;
   const bestLoss = Math.min(...dry.map((entry) => entry.outcome.hpLoss));
   const bestDamage = Math.max(...dry.map((entry) => entry.outcome.damageDealt));
   return plan.outcome.hpLoss >= bestLoss && plan.outcome.damageDealt <= bestDamage;
@@ -701,6 +705,43 @@ export function setupLeft(state: GameState, hand: CardModel[], knowledge: Knowle
   return draw.some((entry) => asArray(asRecord(entry)["card_ids"]).some((id) => deckSetup.has(str(id))));
 }
 
+/** Enemy attack damage coming this turn, less the block already up (as the selection screen reads it). */
+function thisTurnIncoming(combat: Record<string, unknown>): number {
+  const attacks = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
+  return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
+}
+
+/**
+ * The cards of the discard or draw pile (agent_view lines) as hand cards: the deck's entry of that card
+ * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
+ */
+export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  return asArray(view[pile]).flatMap((raw, position) => {
+    const entry = asRecord(raw);
+    const cardId = str(asArray(entry["card_ids"])[0]);
+    if (!cardId) return [];
+    const line = str(entry["line"]);
+    const upgraded = /^[^[*：:]*?\+\s*(?:\*\d+\s*)?\[/.test(line);
+    const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? { card_id: cardId, upgraded };
+    const info = knowledge.card(cardId);
+    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
+    const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
+    return [
+      {
+        ...model,
+        playable,
+        validTargets: model.target === "single" ? ctx.enemyTargets : [],
+        damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+      },
+    ];
+  });
+}
+
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
   const view = asRecord(asRecord(raw["agent_view"])["combat"]);
   const parse = (pile: unknown): DrawPileCard[] =>
@@ -1106,8 +1147,18 @@ function planTurn(env: DecisionEnv): Decision | null {
         clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
       })
     : null;
-  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS).
-  const potionContext = { enemyTargets: enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index), strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), and the pile card a
+  // pile-card potion would take (Liquid Memories, Droplet of Precognition).
+  const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
+  const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  const beltIds = new Set(potionsAll.map((potion) => potion.potion_id));
+  const pickFrom = (pile: "discard" | "draw", free: boolean) =>
+    pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free);
+  const potionContext = {
+    ...pileContext,
+    ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
+    ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
+  };
   // Lines are shown and played with their order-free potions drunk first (potionsFirst).
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) => {
     const result = solveRaw(free, withPotions);
@@ -1188,12 +1239,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       // A hallway potion line must buy something over the best potion-free line: the fight, 8+ HP, or
       // 20+ damage (TXKE F46: two Swift Potions drunk at 0 energy, the draws unplayable, nothing saved;
       // the final boss was entered with empty slots).
+      // At low HP the save that is worth a potion is the same share of HP as above (KGR6 F23 T4: at 14 HP
+      // Heart of Iron's 7 block against an 11-HP turn was under the flat 8).
       const bestDryLoss = Math.min(...dry.map((plan) => plan.outcome.hpLoss));
       const bestDryDamage = Math.max(...dry.map((plan) => plan.outcome.damageDealt));
+      const minSave = Math.min(HALLWAY_POTION_MIN_SAVE, playerSim.hp * 0.2);
       const worth = (plan: Plan) =>
         !drinksPotion(plan) ||
         plan.outcome.winsFight ||
-        bestDryLoss - plan.outcome.hpLoss >= HALLWAY_POTION_MIN_SAVE ||
+        bestDryLoss - plan.outcome.hpLoss >= minSave ||
         plan.outcome.damageDealt - bestDryDamage >= HALLWAY_POTION_MIN_DAMAGE;
       const kept = solved.plans.filter(worth);
       if (kept.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: kept };

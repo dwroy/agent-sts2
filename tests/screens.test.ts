@@ -1537,7 +1537,7 @@ describe("Sandpit guard", () => {
       { ...hand[0], index: 3 },
       { ...(combatPayload()["combat"] as { hand: Record<string, unknown>[] }).hand[0], index: 4 },
     ];
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     if (!decision) throw new Error("expected a decision");
     const shown: Record<string, unknown>[] =
@@ -1557,7 +1557,7 @@ describe("Sandpit guard", () => {
     const enemy = ((raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
     enemy["intents"] = [{ index: 0, intent_type: "Attack", label: "20x2", damage: 20, hits: 2, total_damage: 40 }];
     // An unmodelled potion on a dangerous turn: the plan goes to Jev.
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     expect(decision?.label).toMatch(/^combat\/plan-choice/);
     const enemies = decision && decision.kind === "ask" ? (decision.state["enemies"] as { powers: string[] }[]) : [];
@@ -1600,7 +1600,7 @@ describe("combat plan guards (batch 2)", () => {
     const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
     combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
     // An unmodelled potion on a dangerous turn: the plan goes to Jev.
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
     return raw;
   };
 
@@ -1669,9 +1669,9 @@ describe("potions at low HP outside boss fights", () => {
 
   it("offers an unmodelled potion below 40% HP against two attackers (7Q5G T5, Y83U F30)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const low = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const low = planCombatTurn(env(pressedCombat(25, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
     expect(low?.label).toBe("combat/plan-choice+potion");
-    const high = planCombatTurn(env(pressedCombat(55, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const high = planCombatTurn(env(pressedCombat(55, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
     expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
@@ -1721,7 +1721,7 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
 
   it("an unmodelled potion below code rank 1 needs Jev at 0.75+; a near-guess falls back too", async () => {
     const { planCombatTurn, HALLWAY_POTION_CONFIDENCE } = await import("../src/screens/combat-plan.js");
-    const decision = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const decision = planCombatTurn(env(pressedCombat(25, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
     const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
@@ -1789,9 +1789,9 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
 
   it("offers an unmodelled potion in a hallway fight when the min-loss line leaves HP below 25% (7Q5G, MD3F)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const low = planCombatTurn(env(costlyCombat(22, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const low = planCombatTurn(env(costlyCombat(22, 8, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
     expect(low?.label).toBe("combat/plan-choice+potion");
-    const high = planCombatTurn(env(costlyCombat(60, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const high = planCombatTurn(env(costlyCombat(60, 8, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
     expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
@@ -1867,7 +1867,7 @@ describe("combat plan guards (batch 3)", () => {
     const hand = combat["hand"] as Record<string, unknown>[];
     const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
     combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
     return raw;
   };
   const planLosses = (decision: Decision): { key: string; hpLost: number }[] => {
@@ -1978,7 +1978,7 @@ describe("combat plan guards (batch 3)", () => {
     const enemies = combat["enemies"] as Record<string, unknown>[];
     combat["enemies"] = [{ ...enemies[0], enemy_id: "LAGAVULIN_MATRIARCH", current_hp: 150, max_hp: 222, intents: [{ index: 0, intent_type: "Attack", label: "7", damage: 7, hits: 1, total_damage: 7 }] }];
     const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
-    potions[1] = { ...potions[0], index: 1, potion_id: "LIQUID_MEMORIES", name: "Liquid Memories", requires_target: false, valid_target_indices: [] };
+    potions[1] = { ...potions[0], index: 1, potion_id: "ENTROPIC_BREW", name: "Entropic Brew", requires_target: false, valid_target_indices: [] };
     const decide = (startCount: number) => {
       const e = env(raw, { combatPlanner: "turn" });
       e.screenMemory.potionTurn = { fight: "1:9", turn: 3, startCount };
@@ -2257,7 +2257,7 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
     raw["turn"] = 2;
     const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
     potions[0]!["can_use"] = true;
-    potions[0]!["potion_id"] = "LIQUID_MEMORIES";
+    potions[0]!["potion_id"] = "ENTROPIC_BREW";
     const combat = raw["combat"] as Record<string, unknown>;
     combat["hand"] = [
       card(0, "POMMEL_STRIKE", 1, [["Damage", 9]]),

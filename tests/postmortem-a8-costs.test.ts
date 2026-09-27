@@ -6,14 +6,17 @@
 
 import { describe, expect, it } from "vitest";
 
+import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
+import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
 import { planMap } from "../src/screens/map.js";
 import { planReward } from "../src/screens/reward.js";
 import { actEliteNeed } from "../src/knowledge/dossiers.js";
 import { mapFit, mapShift, routeRiskAt, routeRiskFilter } from "../src/strategy/intent.js";
+import { modelPotion, pileCardPick } from "../src/strategy/card-model.js";
 import { LOW_HP_BLOCK_BONUS, MUST_HAVE_BONUS, mustHaveBonus } from "../src/strategy/run-plan.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -138,5 +141,49 @@ describe("block rewards two short of the plan's block target below half HP (PWSD
     expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT"], 13, 0.31).bonus).toBe(2);
     // EGX7 F23 (block 4/5): one short, no low-HP bonus.
     expect(mustHaveBonus({ needs: ["block"], blockTarget: 5 } as never, "FLAME_BARRIER", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT", "BLOOD_WALL"], 13, 0.2).bonus).toBe(4);
+  });
+});
+
+describe("potions carried unmodelled to the death are lines now (PWSD, KGR6, EGX7, K8TC)", () => {
+  const decisionText = (name: string): string => {
+    const decision = planCombatTurn(loggedEnv(logged(name)));
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null);
+  };
+
+  it("K8TC F17 T5 (the Kin, 20/80): Snecko Oil is drunk in code's line (logged: 'its effect is in no line's numbers', carried to the death)", () => {
+    const decision = planCombatTurn(loggedEnv(logged("k8tc-f17-t5")));
+    expect(decision?.kind).toBe("act");
+    expect(decision?.kind === "act" ? decision.intent : null).toEqual({ action: "use_potion", option_index: 1 });
+  });
+
+  it("KGR6 F23 T4 (14/80, two Chompers): Heart of Iron's Plating 7 is in the lines and saves HP (logged: Jev's rank 1 left 1 HP)", () => {
+    const text = decisionText("kgr6-f23-t4");
+    expect(text).toMatch(/plays\\":\\"potion 铁心药水/);
+    const card = modelPotion("HEART_OF_IRON", "Heart of Iron", 0, [], 0);
+    expect(card?.plating).toBe(7);
+  });
+
+  it("EGX7 F31 T1 at 0 energy: the Power Potion line is kept and played (logged: dropped as idle, drunk a turn late)", () => {
+    const decision = planCombatTurn(loggedEnv(logged("egx7-f31-t1-replan")));
+    expect(decision?.kind === "act" ? decision.intent : decision?.kind).toEqual({ action: "use_potion", option_index: 0 });
+  });
+
+  it("Liquid Memories takes the discard pile's best card for this turn, free; Droplet the draw pile's, at its cost", () => {
+    const fx = logged("pwsd-f23-t3");
+    const state = parseGameState(fx.state);
+    const ctx = { enemyTargets: [0, 1, 2], strength: 0, weak: false };
+    const discard = pileCardModels(state, loggedKnowledge, "discard", ctx);
+    expect(discard.length).toBeGreaterThan(5);
+    const pick = pileCardPick(discard, 20, 3, true);
+    const memories = modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], 0, { ...ctx, discardPick: pick });
+    expect(memories?.generates?.cost).toBe(0);
+    expect(discard.map((card) => card.cardId)).toContain(pick!.cardId);
+    const egx7 = parseGameState(logged("egx7-f31-t1-replan").state);
+    const draw = pileCardModels(egx7, loggedKnowledge, "draw", { ...ctx, enemyTargets: [0] });
+    const drawPick = pileCardPick(draw, 10, 1, false)!;
+    const droplet = modelPotion("DROPLET_OF_PRECOGNITION", "Droplet", 1, [], 0, { ...ctx, drawPick });
+    expect(droplet?.generates?.cost).toBe(drawPick.cost);
+    // An empty pile: the potion does nothing this turn (and no line drinks it).
+    expect(modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], 0, { ...ctx, discardPick: pileCardPick([], 20, 3, true) })?.generates).toBeUndefined();
   });
 });

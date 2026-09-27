@@ -448,7 +448,7 @@ describe("turn planner with a fight plan", () => {
     const combat = raw["combat"] as Raw;
     (combat["player"] as Raw)["current_hp"] = 27;
     combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }] }));
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "ENTROPIC_BREW";
     const decision = planCombatTurn(env(raw));
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
