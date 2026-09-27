@@ -585,6 +585,8 @@ export interface LineFacts {
   scoreGap?: number;
   /** Damage into the burst target this turn (LineField.burst). */
   burstDamage?: number;
+  /** Another shown line loses no more HP and deals no less damage, and is better on one: never "fits"/"best". */
+  hpDamageDominated?: boolean;
 }
 /** The Sandpit race (The Insatiable), when one is on. */
 export interface SandpitField {
@@ -659,7 +661,7 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   const pit = field.sandpit;
   const escapes = line.escapes ?? 0;
   const bought = pit && escapes > 0 ? `+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each` : "";
-  const near = line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR));
+  const near = line.hpDamageDominated !== true && (line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR)));
   let grade: FitGrade = "neutral";
   let breaks = false;
   if (field.burst) {

@@ -1728,10 +1728,35 @@ function planTurn(env: DecisionEnv): Decision | null {
     const after = plan.outcome.enemyHpAfter.find((entry) => entry.index === burstTarget.index)?.hp ?? 0;
     return Math.max(0, burstTarget.hp - Math.max(0, after));
   };
+  // A line another shown line beats on both HP and damage is never labelled code's best (PCGH F23 T4:
+  // "Bash+, Strike" -32 for 19 read "code's best line under kill_fast weights" beside "Bash+, Headbutt"
+  // -13 for 21; Jev took the label, the guard swapped it). Rank 1 is still what code plays; the label's
+  // reference line is then the best-scoring shown line that beats it and that no other line beats.
+  const labelDamage = (plan: Plan) => objectiveDamage({ damage: plan.outcome.damageDealt, escapes: escapesIn(plan) }, sandpitField);
+  const hpDamageDominated = (plan: Plan): boolean =>
+    !plan.outcome.winsFight &&
+    options.some(
+      (other) =>
+        other !== plan &&
+        other.outcome.hpLoss <= plan.outcome.hpLoss &&
+        labelDamage(other) >= labelDamage(plan) &&
+        // Setup is a third axis (lasting value: a power line within the score margin still "fits").
+        setupCount(other) >= setupCount(plan) &&
+        (other.outcome.hpLoss < plan.outcome.hpLoss || labelDamage(other) > labelDamage(plan)),
+    );
+  const beatsTop = options.filter(
+    (plan) =>
+      plan !== top &&
+      !hpDamageDominated(plan) &&
+      plan.outcome.hpLoss <= top.outcome.hpLoss &&
+      labelDamage(plan) >= labelDamage(top) &&
+      setupCount(plan) >= setupCount(top),
+  );
+  const labelTop = hpDamageDominated(top) && beatsTop.length > 0 ? beatsTop.reduce((a, b) => (b.score > a.score ? b : a)) : top;
   const field: LineField = {
     minLoss: Math.min(...options.map((plan) => plan.outcome.hpLoss)),
     // Code's best line under the intents: every label prices a line against it, from the same score.
-    best: { hpLoss: top.outcome.hpLoss, damage: objectiveDamage({ damage: top.outcome.damageDealt, escapes: escapesIn(top) }, sandpitField), setup: setupCount(top) },
+    best: { hpLoss: labelTop.outcome.hpLoss, damage: labelDamage(labelTop), setup: setupCount(labelTop) },
     near: LABEL_NEAR,
     ...(burstTarget ? { burst: { target: burstTarget.name, maxDamage: Math.max(0, ...options.map(burstDamage)), why: "YOU_ARE_MINE: the last turn before 99 Weak/Frail/Vulnerable" } } : {}),
     maxDamage: Math.max(...options.map((plan) => objectiveDamage({ damage: plan.outcome.damageDealt, escapes: escapesIn(plan) }, sandpitField))),
@@ -1752,9 +1777,11 @@ function planTurn(env: DecisionEnv): Decision | null {
         winsFight: plan.outcome.winsFight,
         focusDamage: fightPlan ? focusDamage(plan) : null,
         escapes: escapesIn(plan),
-        codeTop: plan === top,
+        codeTop: plan === labelTop,
         // Signed: a line scoring above code's pick (picked for dominating the score-best) is not "best".
-        scoreGap: plan === top ? 0 : top.score - plan.score,
+        // Against a label reference that is not code's pick, a line scoring above it only ties it.
+        scoreGap: plan === labelTop ? 0 : labelTop === top ? top.score - plan.score : Math.max(0, labelTop.score - plan.score),
+        hpDamageDominated: hpDamageDominated(plan),
         burstDamage: burstDamage(plan),
       },
       field,

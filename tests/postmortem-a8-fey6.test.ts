@@ -65,3 +65,24 @@ describe("the measured damage rate leaves out the idle turn that woke the boss, 
     expect(env.screenMemory.fightStart?.turnHp).toEqual({ "6": 85 });
   });
 });
+
+describe("a line another shown line beats on HP and damage is never labelled code's best (PCGH F23 T4)", () => {
+  it("the logged kill_fast board: Bash+, Strike (-32, 19) costs; Bash+, Headbutt (-13, 21) is the reference", () => {
+    const decision = planCombatTurn(loggedEnv(logged("pcgh-f23-t4")));
+    expect(decision?.kind).toBe("ask");
+    const options = Object.values((decision as AskDecision).questions)
+      .flatMap((question) => Object.entries(question.criteria ?? {}))
+      .filter(([key]) => /^plan\d+$/.test(key))
+      .map(([, value]) => JSON.parse(String(value)) as { hp_lost: number; damage_dealt: number; intent_fit?: string });
+    expect(options.length).toBeGreaterThan(1);
+    for (const line of options) {
+      const beaten = options.some(
+        (other) => other !== line && other.hp_lost <= line.hp_lost && other.damage_dealt >= line.damage_dealt && (other.hp_lost < line.hp_lost || other.damage_dealt > line.damage_dealt) && !/lasting|sets up/.test(JSON.stringify(line)),
+      );
+      if (beaten) expect(line.intent_fit).not.toMatch(/code's best line|fits/);
+    }
+    const best = options.filter((line) => /code's best line under/.test(String(line.intent_fit)));
+    expect(best).toHaveLength(1);
+    expect(best[0]!.hp_lost).toBe(Math.min(...options.map((line) => line.hp_lost)));
+  });
+});
