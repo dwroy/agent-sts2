@@ -1925,3 +1925,39 @@ describe("Slumber is a score penalty, not a filter (RC9A F27 T1)", () => {
     expect(kept.some((plan) => plan.steps.some((step) => step.cardId === "HOWL_FROM_BEYOND"))).toBe(true);
   });
 });
+
+describe("random hits are not counted as kills (S6AG F25 T6, H8LC F23 T5)", () => {
+  // S6AG: Juggernaut+ 8. The code's rank 1 "Stomp+, Shrug It Off" was predicted -2 because Shrug's 8
+  // was counted on the 6-HP Parafright; it hit the Obscura and 8 block met 16 + 10. The all-block line
+  // (Defend, Shrug It Off, True Grit: 20 block) survives whether or not the Parafright dies.
+  const enemies = (): EnemySim[] => [
+    enemy({ index: 0, name: "The Obscura", hp: 46, maxHp: 129, attacks: [{ damage: 10, hits: 1 }] }),
+    enemy({ index: 1, name: "Parafright", hp: 12, maxHp: 21, attacks: [{ damage: 16, hits: 1 }] }),
+  ];
+  const hand = (): CardModel[] => [
+    card(0, "STOMP", { damage: 6, validTargets: [0, 1] }),
+    card(1, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8 }),
+    defend(2),
+    card(3, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], block: 7 }),
+  ];
+  const ids = (plan: { steps: { cardId: string }[] }) => plan.steps.map((step) => step.cardId).sort().join(",");
+
+  it("Juggernaut's hit is not assumed to finish the Parafright; the 20-block line ranks first", () => {
+    const result = solveTurn({ hand: hand(), player: player({ hp: 13, maxHp: 86, energy: 3, juggernaut: 8 }), enemies: enemies(), fightKind: "monster", turn: 6 });
+    const gamble = result.plans.find((plan) => ids(plan) === "SHRUG_IT_OFF,STOMP");
+    if (gamble) expect(gamble.outcome.hpLoss).toBe(18);
+    expect(result.plans[0]!.outcome.hpLoss).toBeLessThanOrEqual(6);
+    expect(result.plans[0]!.outcome.dies).toBeFalsy();
+  });
+
+  it("a random multi-hit goes where it kills least; a kill every split gives still counts", () => {
+    const boomerang = card(0, "SWORD_BOOMERANG", { target: "random", validTargets: [], damage: 7, hits: 3 });
+    const solve = (hps: number[]) =>
+      solveTurn({ hand: [boomerang], player: player({ hp: 60, energy: 1 }), enemies: hps.map((hp, index) => enemy({ index, hp, maxHp: 50, attacks: [{ damage: 5, hits: 1 }] })), fightKind: "monster" })
+        .plans.find((plan) => plan.steps.length > 0)!;
+    // 40 + 6: all three hits could land on the 40, so the 6-HP attacker still hits us.
+    expect(solve([40, 6]).outcome.hpLoss).toBe(10);
+    // 10 + 10: whatever the split, one enemy takes two hits (14) and dies.
+    expect(solve([10, 10]).outcome.hpLoss).toBe(5);
+  });
+});
