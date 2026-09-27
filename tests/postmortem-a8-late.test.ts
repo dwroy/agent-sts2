@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
 import { eventHpEffect, planEvent } from "../src/screens/event.js";
 import { hpPercent, optionalEliteBar, planMap, routeHealShare } from "../src/screens/map.js";
 import { planRest, rememberMap } from "../src/screens/rest.js";
@@ -226,6 +226,12 @@ describe("Gambler's Brew: an expected-value draw from the draw pile, as a line (
     expect(draw.block).toBe(3);
     expect(draw.damage).toBe(5);
     expect(draw.cost).toBe(1);
+  });
+
+  it("the draw pile counts each line's copies (77UJ F33 T5: 8 cards, Pommel Strike x2)", () => {
+    const pile = pileCardModels(parseGameState(logged("77uj-f33-t5").state), loggedKnowledge, "draw", { enemyTargets: [0], strength: 0, weak: false });
+    expect(pile).toHaveLength(8);
+    expect(pile.filter((card) => card.cardId === "POMMEL_STRIKE")).toHaveLength(2);
   });
 
   it("77UJ F33 T5 at 9 HP against 14: code's lines drink it after the Defend (logged: carried to the death, every line died)", () => {

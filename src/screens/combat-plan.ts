@@ -720,7 +720,7 @@ function thisTurnIncoming(combat: Record<string, unknown>): number {
 }
 
 /**
- * The cards of the discard or draw pile (agent_view lines) as hand cards: the deck's entry of that card
+ * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
  * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
  */
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
@@ -736,14 +736,15 @@ export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "di
     const info = knowledge.card(cardId);
     const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
     const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
-    return [
-      {
-        ...model,
-        playable,
-        validTargets: model.target === "single" ? ctx.enemyTargets : [],
-        damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
-      },
-    ];
+    const card: CardModel = {
+      ...model,
+      playable,
+      validTargets: model.target === "single" ? ctx.enemyTargets : [],
+      damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+    };
+    // "剑柄打击*2 [1费]": one line per card id, with its count (drawPileCards reads it the same way).
+    const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+    return Array.from({ length: Math.max(1, count) }, () => card);
   });
 }
 
