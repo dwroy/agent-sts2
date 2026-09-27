@@ -8,16 +8,41 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { fightHpCost } from "./map.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
-/** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
-export function eventHpCost(description: string): { hp: number; maxHp: number } {
+/** An option that starts a fight ("回复24点生命。进入战斗。", the Lantern Key's 「战斗来取得钥匙。」). */
+const FIGHT_OPTION = /进入战斗|战斗来|enter (?:a )?(?:combat|fight)|start a fight/i;
+
+/** HP an option's text heals ("回复24点生命", "回复所有生命"), up to the HP missing. */
+function eventHeal(text: string, hp: number, maxHp: number): number {
+  let heal = 0;
+  for (const match of text.matchAll(/(?:回复|恢复)(\d+)点生命|heal (\d+)/gi)) heal += Number(match[1] ?? match[2]);
+  if (/(?:回复|恢复)所有生命|heal to full|回满/i.test(text)) heal += Math.max(0, maxHp - hp);
+  return Math.min(heal, Math.max(0, maxHp - hp));
+}
+
+/**
+ * HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP").
+ * With the run's act and HP, an option that starts a fight costs a hallway fight (map.ts fightHpCost),
+ * less what it heals first: VUV4 F13 at 80/80, 「回复24点生命。进入战斗。」 was priced 0 HP against
+ * 「失去8点生命」, healed 0 and cost 21.
+ */
+export function eventHpCost(description: string, run?: { act: number; hp: number; maxHp: number }): { hp: number; maxHp: number } {
   const text = description.replace(/\[[^\]]*\]/g, "");
   let hp = 0;
   let maxHp = 0;
   for (const match of text.matchAll(/(?:失去|受到)(\d+)点(?:生命|伤害)|lose (\d+) hp|take (\d+) damage/gi)) hp += Number(match[1] ?? match[2] ?? match[3]);
   for (const match of text.matchAll(/失去(\d+)点最大生命|lose (\d+) max hp/gi)) maxHp += Number(match[1] ?? match[2]);
+  if (run && run.maxHp > 0 && FIGHT_OPTION.test(text)) {
+    hp += Math.max(0, Math.round(fightHpCost("Monster", run.act) * run.maxHp) - eventHeal(text, run.hp, run.maxHp));
+  }
   return { hp, maxHp };
+}
+
+/** HP-equivalent of an option's cost, for "is another option cheaper" (max HP counts 1.5). */
+function costWeight(cost: { hp: number; maxHp: number }): number {
+  return cost.hp + 1.5 * cost.maxHp;
 }
 
 /** Nodes ahead the HP guard looks for a forced Elite (no rest site or shop before it). */
@@ -34,11 +59,14 @@ export const EARLY_EVENT_HP_SHARE = 0.2;
 /**
  * Why an option that costs HP is ruled out, else null. DeepSeek keeps paying HP in events "because
  * Burning Blood heals it" (1K5G F8: -13 max HP; XPA4 F14: -8 HP with a forced elite next, -17 there;
- * 39J9 F28: -5 HP at 31% before a forced elite). Out: HP after below half of max, a forced Elite/Boss
- * next (remembered map), a max-HP cost of EVENT_MAX_HP_LIMIT or more, or on Act 1 floors 1-3 an HP
- * cost of EARLY_EVENT_HP_SHARE of max HP or more.
+ * 39J9 F28: -5 HP at 31% before a forced elite). Out: HP after below half of max, a max-HP cost of
+ * EVENT_MAX_HP_LIMIT or more, on Act 1 floors 1-3 an HP cost of EARLY_EVENT_HP_SHARE of max HP or more,
+ * a forced Boss next, or a forced Elite (next, or within FORCED_ELITE_DEPTH nodes) that the HP left
+ * after the cost and the elite's expected cost (map.ts fightHpCost) would leave below half of max HP.
+ * VUV4 F13 at 80/80: -8 HP for 77 gold was out for an elite 3 nodes away; 80 - 8 - 20 is 52 of 80.
+ * The caller only removes an option when a cheaper one is left (planEvent).
  */
-export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null, floor: number | null = null): string | null {
+export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null, floor: number | null = null, act = 1): string | null {
   if (cost.hp <= 0 && cost.maxHp <= 0) return null;
   if (cost.maxHp >= EVENT_MAX_HP_LIMIT) return `costs ${cost.maxHp} max HP`;
   if (floor !== null && floor <= EARLY_EVENT_FLOORS && maxHp > 0 && cost.hp >= maxHp * EARLY_EVENT_HP_SHARE) {
@@ -46,9 +74,13 @@ export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, ma
   }
   // A small cost is fine even before a forced fight (P78Z F11, KEMS F22: a 3-HP Slippery Bridge reroll
   // was refused and the event removed Uppercut / Whirlwind).
-  if (forced && cost.hp >= Math.max(4, maxHp * 0.05)) return `costs HP right before a forced ${forced}`;
   const maxAfter = maxHp - cost.maxHp;
   const hpAfter = Math.min(hp - cost.hp, maxAfter);
+  if (forced && cost.hp >= Math.max(4, maxHp * 0.05)) {
+    if (!forced.startsWith("Elite")) return `costs HP right before a forced ${forced}`;
+    const eliteCost = Math.round(fightHpCost("Elite", act) * maxHp);
+    if (hpAfter - eliteCost < maxAfter * 0.5) return `costs HP right before a forced ${forced} (~${eliteCost} HP there would leave ${hpAfter - eliteCost}/${maxAfter})`;
+  }
   if (maxHp > 0 && hpAfter < maxAfter * 0.5) return `leaves ${hpAfter}/${maxAfter} HP (below half)`;
   return null;
 }
@@ -76,19 +108,20 @@ function hpWeight(hp: number, maxHp: number): number {
  */
 export function eventOptionScore(
   description: string,
-  ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[] },
+  ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[]; act?: number },
 ): number {
   const text = description.replace(/\[[^\]]*\]/g, "");
   const weight = hpWeight(ctx.hp, ctx.maxHp);
   let score = 0;
   if (/不能被打出|unplayable/i.test(text) || /(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)/i.test(text)) score -= 30;
-  const cost = eventHpCost(text);
+  // A fight the option starts is priced with what it heals first (eventHpCost), so its heal is not
+  // counted again.
+  const fight = ctx.act !== undefined && FIGHT_OPTION.test(text);
+  const cost = eventHpCost(text, ctx.act !== undefined ? { act: ctx.act, hp: ctx.hp, maxHp: ctx.maxHp } : undefined);
   score -= cost.hp * weight + cost.maxHp * 1.5;
-  let heal = 0;
-  for (const match of text.matchAll(/(?:回复|恢复)(\d+)点生命|heal (\d+)/gi)) heal += Number(match[1] ?? match[2]);
-  if (/(?:回复|恢复)所有生命|heal to full|回满/i.test(text)) heal += Math.max(0, ctx.maxHp - ctx.hp);
-  heal = Math.min(heal, Math.max(0, ctx.maxHp - ctx.hp));
-  score += heal * weight * (ctx.forced ? 1.5 : 1);
+  const heal = eventHeal(text, ctx.hp, ctx.maxHp);
+  if (fight) score += Math.max(0, heal - Math.round(fightHpCost("Monster", ctx.act ?? 1) * ctx.maxHp)) * weight * (ctx.forced ? 1.5 : 1);
+  else score += heal * weight * (ctx.forced ? 1.5 : 1);
   for (const match of text.matchAll(/获得(\d+)点最大生命|gain (\d+) max hp/gi)) score += 0.6 * Number(match[1] ?? match[2]);
   if (/药水栏|potion slot/i.test(text)) score += 12;
   else if (/药水|potion/i.test(text) && !/(?:失去|消耗|lose)[^。.]{0,8}(?:药水|potion)/i.test(text)) score += 8;
@@ -100,7 +133,7 @@ export function eventOptionScore(
     score += named ? -30 : 12;
   }
   if (/升级|upgrade/i.test(text)) score += 6;
-  for (const match of text.matchAll(/获得(\d+)(?:枚)?金|gain (\d+) gold/gi)) score += Number(match[1] ?? match[2]) / 12;
+  for (const match of text.matchAll(/获得(\d+)\s*(?:枚)?\s*金|gain (\d+) gold/gi)) score += Number(match[1] ?? match[2]) / 12;
   return Math.round(score * 10) / 10;
 }
 
@@ -165,13 +198,6 @@ export function planEvent(env: DecisionEnv): Decision | null {
     forcedNext(env.screenMemory, state, EVENT_NODES) ??
     (forcedEliteWithin(env.screenMemory, state, EVENT_NODES, FORCED_ELITE_DEPTH) ? `Elite within ${FORCED_ELITE_DEPTH} nodes` : null);
   const excluded = new Map<Record<string, unknown>, string>();
-  const costs = unguarded.map((option) => eventHpCost(str(option["description"])));
-  if (costs.some((cost) => cost.hp <= 0 && cost.maxHp <= 0)) {
-    unguarded.forEach((option, index) => {
-      const why = eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null);
-      if (why) excluded.set(option, why);
-    });
-  }
   // The Lantern Key: keeping it is a fight with the Mysterious Knight (108 HP, Strength 6, Plating 6: an
   // elite), paid with an unplayable Quest card and a card reward, not a relic. Three times a model kept
   // it for "a relic" (4V5T F23 -28, ZWX5 F28 -47, X8HF F21 55 -> 5 HP): below LANTERN_KEY_MIN_HP of max
@@ -182,6 +208,17 @@ export function planEvent(env: DecisionEnv): Decision | null {
       for (const option of keep) excluded.set(option, `keeping the key is an elite-strength fight (Mysterious Knight) at ${hp}/${maxHp} HP, below ${Math.round(LANTERN_KEY_MIN_HP * 100)}%`);
     }
   }
+  const act = Number(state.run?.act_id ?? 0) + 1 || 1;
+  const run = { act, hp, maxHp };
+  const costs = unguarded.map((option) => eventHpCost(str(option["description"]), run));
+  // An option the guard flags is removed only while a cheaper unflagged one is left: never leave only
+  // a worse one (VUV4 F13: the -8 HP option removed for "a fight" that healed 0 and cost 21).
+  const flagged = unguarded.map((_, index) => eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null, act));
+  const cheapestKept = Math.min(...costs.filter((_, index) => flagged[index] === null).map(costWeight));
+  unguarded.forEach((option, index) => {
+    const why = flagged[index];
+    if (why && !excluded.has(option) && costWeight(costs[index]!) > cheapestKept) excluded.set(option, why);
+  });
   const pool = unguarded.filter((option) => !excluded.has(option));
   const guardNote = [...excluded].map(([option, why]) => `${str(option["title"])}: ${why}`).join("; ");
   if (pool.length === 0) return null;
@@ -204,7 +241,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       valued: !basic && (str(card["card_type"]) === "Power" || bool(card["upgraded"]) || str(card["rarity"]) === "Rare"),
     };
   });
-  const scoreCtx = { hp, maxHp, forced: forced !== null, deck };
+  const scoreCtx = { hp, maxHp, forced: forced !== null, deck, act };
   const options: PickOption[] = pool.flatMap((option) => {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
