@@ -317,6 +317,53 @@ describe("map", () => {
     expect(value("n0")).toBeGreaterThan(value("n1"));
   });
 
+  it("PFBK F18: elites a route cannot avoid after its likely death still count", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 18;
+    run["current_hp"] = 76;
+    run["max_hp"] = 80;
+    run["gold"] = 50;
+    const map = raw["map"] as Record<string, unknown>;
+    map["current_node"] = { row: 0, col: 3 };
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    const at = (row: number, col: number) => ({ row, col });
+    map["available_nodes"] = [
+      { index: 0, row: 1, col: 1, node_type: "Monster" },
+      { index: 1, row: 1, col: 5, node_type: "Shop" },
+    ];
+    map["nodes"] = [
+      node(0, 3, "Ancient", [at(1, 1), at(1, 5)]),
+      // One elite, then a way round every other one.
+      node(1, 1, "Monster", [at(2, 1)]),
+      node(2, 1, "Monster", [at(3, 1)]),
+      node(3, 1, "Elite", [at(4, 1)]),
+      node(4, 1, "Monster", [at(5, 1)]),
+      node(5, 1, "RestSite"),
+      // Shop, "?", rest and a chest first, then four forced elites with no branch (F25/F27/F29).
+      node(1, 5, "Shop", [at(2, 5)]),
+      node(2, 5, "Unknown", [at(3, 5)]),
+      node(3, 5, "RestSite", [at(4, 5)]),
+      node(4, 5, "Treasure", [at(5, 5)]),
+      node(5, 5, "Elite", [at(6, 5)]),
+      node(6, 5, "Unknown", [at(7, 5)]),
+      node(7, 5, "Elite", [at(8, 5)]),
+      node(8, 5, "Treasure", [at(9, 5)]),
+      node(9, 5, "Elite", [at(10, 5)]),
+      node(10, 5, "Unknown", [at(11, 5)]),
+      node(11, 5, "Elite", [at(12, 5)]),
+      node(12, 5, "RestSite"),
+    ];
+    const decision = mustDecision(plan(raw));
+    const value = (key: string): number => {
+      if (decision.kind !== "ask") return key === "n0" ? 1 : 0;
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.parse(String(criteria[key]))["route_value"];
+    };
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
+    expect(value("n0")).toBeGreaterThan(value("n1"));
+  });
+
   it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {
     expect(nodeWeight("Elite", 0.85, 100, 8)).toBe(4);
     expect(nodeWeight("Elite", 0.8, 100, 8)).toBe(0);
