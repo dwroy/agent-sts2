@@ -217,4 +217,13 @@ describe("the HP guard compares HP lost until the kill (G8F1 F30 T6, kill_fast e
     expect(decision?.kind === "act" ? decision.label : "").toBe("combat/plan");
     expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/^code plan .*御血术/);
   });
+
+  it("the guard still swaps when the extra damage does not bring the kill a turn sooner (VF5C F27 T2)", () => {
+    const decision = planCombatTurn(loggedEnv(logged("vf5c-f27-t2")));
+    expect(decision?.kind).toBe("ask");
+    // Jev's logged pick: plan 3 (Defend, Bash, Strike: 17 damage, -12) at 0.34; the Entomancer's 147 HP
+    // takes as many turns either way, so the -1 line is played.
+    const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: "plan3", confidence: 0.34, probabilities: {}, raw: {} } } as never);
+    expect(resolved.rationale).toMatch(/HP guard: plan 3/);
+  });
 });
