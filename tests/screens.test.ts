@@ -624,6 +624,21 @@ describe("shop", () => {
     if (decision.kind === "act") expect(decision.intent.action).not.toBe("discard_potion");
   });
 
+  it("shows card energy cost and type, and keeps a potion in view with an empty slot (B98P F15, CWU9 F31)", () => {
+    const raw = shopPayload(true);
+    const shop = raw["shop"] as Record<string, unknown>;
+    const relic = (index: number, id: string) => ({ index, name: id, price: 150, is_stocked: true, enough_gold: true, relic_id: id, rarity: "Common" });
+    shop["relics"] = [relic(0, "VAJRA"), relic(1, "ANCHOR"), relic(2, "LANTERN"), relic(3, "BAG_OF_MARBLES"), relic(4, "ODDLY_SMOOTH_STONE"), relic(5, "BRONZE_SCALES")];
+    shop["potions"] = [{ index: 0, potion_id: "BLOOD_POTION", name: "Blood Potion", rarity: "Common", usage: "CombatOnly", price: 49, is_stocked: true, enough_gold: true }];
+    (raw["run"] as Record<string, unknown>)["gold"] = 900;
+    const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    expect(Object.keys(criteria)).toContain("buy_potion0");
+    const pommel = Object.values(criteria).map((text) => JSON.parse(String(text))).find((entry) => entry["buy"] === "Pommel Strike");
+    expect(pommel).toMatchObject({ cost: 1, type: "Attack" });
+  });
+
   it("closes an open inventory with nothing affordable", () => {
     const decision = mustDecision(plan(shopPayload(true, { broke: true })));
     expect(decision.kind).toBe("act");

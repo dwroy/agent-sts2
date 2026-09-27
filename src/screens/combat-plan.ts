@@ -504,7 +504,12 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
   memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
   const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
   if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
-  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0);
+  // Throwing Axe replays the fight's first card, and Withering Presence counts the replay while
+  // cards_played_this_turn does not (XWPV F48: every Wither came one card earlier than counted; T7's
+  // plan stopped at two cards "before the 3rd adds a Wither", the 2nd added it). Counted from the start:
+  // before any card the first one is already two.
+  const axe = asArray(asRecord(env.state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + (axe ? 1 : 0);
   return { every, played, damage: memo.witherDamage };
 }
 

@@ -100,7 +100,8 @@ export function planShop(env: DecisionEnv): Decision | null {
       const name = str(raw["name"], id);
       const info =
         action === "buy_card" ? knowledge.card(id) : action === "buy_relic" ? knowledge.relic(id) : knowledge.potion(id);
-      const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
+      // The card's resolved text (numbers filled in) when the shop sends it.
+      const text = str(raw["resolved_rules_text"]) || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "");
       stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
       options.push({
@@ -112,10 +113,15 @@ export function planShop(env: DecisionEnv): Decision | null {
         score:
           shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
           (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id)).bonus : 0),
+        // Cards carry their energy cost and type like card rewards do (B98P F15: DeepSeek bought Expect a
+        // Fight as "1E"; it costs 3).
         summary: {
           buy: name,
           kind: kindLabel,
           price,
+          ...(action === "buy_card"
+            ? { cost: numOrNull(raw["energy_cost"]) ?? (info as { cost?: number } | null)?.cost ?? null, type: str(raw["card_type"], (info as { type?: string } | null)?.type ?? "") }
+            : {}),
           text: truncate(text, 140),
         } satisfies JsonValue,
       });
@@ -125,6 +131,12 @@ export function planShop(env: DecisionEnv): Decision | null {
   collect(shop["relics"], "buy_relic", "relic");
   collect(shop["cards"], "buy_card", "card");
   collect(shop["potions"], "buy_potion", "potion");
+  // With an empty potion slot the best potion stays in the model's view even when it ranks below the
+  // top five (CWU9 F31: 721 gold, a slot empty, both potions pruned; left with nothing bought).
+  if (emptyPotionSlots > 0) {
+    const bestPotion = options.filter((option) => option.intent.action === "buy_potion").sort((a, b) => b.score - a.score)[0];
+    if (bestPotion) bestPotion.keepInView = true;
+  }
 
   const removal = asRecord(shop["card_removal"]);
   if (bool(removal["available"]) && bool(removal["enough_gold"])) {
