@@ -16,6 +16,8 @@ import { planSelection } from "../src/screens/selection.js";
 import { planShop, unspentGoldCost } from "../src/screens/shop.js";
 import { modelHandCard, thisTurnDamage } from "../src/strategy/card-model.js";
 import { solveTurn } from "../src/strategy/turn-solver.js";
+import { avoidElitesDisagreement } from "../src/strategy/plan-validator.js";
+import { floorsToBoss, parseRunPlan } from "../src/strategy/run-plan.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -223,5 +225,34 @@ describe("a block potion is kept when a Defend in hand takes the hit and next tu
     const top = act?.kind === "act" ? act.rationale : String(lines[0]!["plays"]);
     expect(top).not.toMatch(/格挡药水/);
     expect(top).toMatch(/防御/);
+  });
+});
+
+describe("avoid_elites against a plan that needs scaling is logged as a disagreement (9LSQ F18 v7)", () => {
+  it("v7 at 91%: avoid_elites, needs strength, gap ~39 of ~49: disagreement kept, route_risk untouched", () => {
+    const fx = logged("9lsq-map-f18");
+    const state = parseGameState(fx.state);
+    const plan = fx.runPlan!;
+    expect(plan.routeRisk).toBe("avoid_elites");
+    const note = avoidElitesDisagreement(plan, damageGap(state, loggedKnowledge), { hpPct: 73 / 80, toBoss: floorsToBoss(18) });
+    expect(note).toMatch(/^disagreement \(kept\): route_risk avoid_elites while the plan needs strength/);
+    expect(plan.routeRisk).toBe("avoid_elites");
+  });
+
+  it("a re-plan keeping avoid_elites carries it in disagreements, not in the validator's repairs", () => {
+    const fx = logged("9lsq-map-f18");
+    const state = parseGameState(fx.state);
+    const plan = parseRunPlan({ route_risk: "avoid_elites", hp_policy: "preserve", needs: ["strength", "multi_hit"], summary: "skip elites" }, state, loggedKnowledge, "review", fx.runPlan!);
+    expect(plan.routeRisk).toBe("avoid_elites");
+    expect(plan.disagreements?.join(" ")).toMatch(/route_risk avoid_elites while the plan needs strength/);
+    expect(plan.validator.join(" ")).not.toMatch(/disagreement/);
+  });
+
+  it("no note when the plan does not avoid elites, or the deck is close to the boss's need", () => {
+    const fx = logged("9lsq-map-f18");
+    const gap = damageGap(parseGameState(fx.state), loggedKnowledge)!;
+    expect(avoidElitesDisagreement({ ...fx.runPlan!, routeRisk: "normal" }, gap, { hpPct: 0.9, toBoss: 15 })).toBeNull();
+    expect(avoidElitesDisagreement(fx.runPlan!, { ...gap, gap: 2 }, { hpPct: 0.9, toBoss: 15 })).toBeNull();
+    expect(avoidElitesDisagreement(fx.runPlan!, gap, { hpPct: 0.9, toBoss: 1 })).toBeNull();
   });
 });

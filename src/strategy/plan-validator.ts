@@ -306,6 +306,22 @@ export function repairRunPlan(plan: RunPlan, ctx: { hpPct: number; toBoss: numbe
   return notes;
 }
 
+/** Share of the boss's need a turn the deck is short by from which avoid_elites is questioned. */
+export const SCALING_GAP_SHARE = 0.3;
+
+/**
+ * route_risk avoid_elites against a plan that needs Strength while the boss clock reads the deck well
+ * short of the boss (gap >= SCALING_GAP_SHARE of the need): elites (their relics and rare cards) are
+ * the main source of the scaling the plan asks for. Logged as a disagreement and kept: code does not
+ * force elites (9LSQ: v6-v10 "without Demon Form or heavy strength this boss cannot be killed", gap
+ * 39-44, avoid_elites all act 2, 0 elites; the deck dealt 23 a turn into the 341 HP sandworm).
+ */
+export function avoidElitesDisagreement(plan: RunPlan, gap: { boss: string; need: number; deck: number; gap: number } | null, ctx: { hpPct: number; toBoss: number }): string | null {
+  if (plan.routeRisk !== "avoid_elites" || !gap || gap.need <= 0) return null;
+  if (!plan.needs.includes("strength") || gap.gap < SCALING_GAP_SHARE * gap.need || ctx.toBoss <= 2) return null;
+  return `${DISAGREE}route_risk avoid_elites while the plan needs strength and the boss clock reads the deck ~${gap.deck}/turn of ${gap.need} for ${gap.boss} (gap ${gap.gap}, at ${Math.round(ctx.hpPct * 100)}% HP): elites' relics and rare cards are where that scaling comes from; kept (code does not force elites)`;
+}
+
 // ---------------------------------------------------------------- fight plan
 
 export interface FightContext {

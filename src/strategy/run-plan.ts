@@ -26,7 +26,7 @@ import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } f
 import { bossClockJson, damageGap } from "./boss-clock.js";
 import { cardRoles } from "./card-value.js";
 import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, originOf, recentChanges, ROUTE_RISKS, type ChangeTrigger, type OriginField, type PolicyOrigin, type HpPolicy, type IntentReason, type ReasonField, type RouteRisk } from "./intent.js";
-import { repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
+import { avoidElitesDisagreement, repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
 import { routeFacts, routeFactsText, type RouteNode } from "./route-facts.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
@@ -108,6 +108,8 @@ export interface RunPlan {
   changes: PlanChange[];
   /** Validator repairs and rejected changes of this version, one reason each. */
   validator: string[];
+  /** Judgment calls the validator disagrees with and keeps (plan-validator DISAGREE), this version. */
+  disagreements?: string[];
 }
 
 /** A plan older than this many floors is reviewed at the next map. */
@@ -423,8 +425,11 @@ export function parseRunPlan(
     notes.push(...checked.notes);
   }
   notes.push(...repairRunPlan(plan, { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) }));
+  // Judgment calls code does not repair: logged apart from the repairs, as the fight plan's are.
+  const eliteNote = avoidElitesDisagreement(plan, damageGap(state, knowledge), { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) });
   plan.origins = originsAfter(prev, plan);
   plan.validator = notes;
+  if (eliteNote) plan.disagreements = [eliteNote];
   return plan;
 }
 
@@ -484,6 +489,7 @@ export function normalizeRunPlan(raw: RunPlan | Record<string, unknown>): RunPla
     ...(plan.snapshot ? { snapshot: plan.snapshot } : {}),
     changes: Array.isArray(plan.changes) ? plan.changes : [],
     validator: Array.isArray(plan.validator) ? plan.validator : [],
+    ...(Array.isArray(plan.disagreements) && plan.disagreements.length > 0 ? { disagreements: plan.disagreements } : {}),
   };
 }
 
