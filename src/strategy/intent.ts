@@ -16,6 +16,7 @@
  * Translation table (compact; the functions below are the whole of it):
  *
  *   hp_policy (run)       preserve  solver HP x1.25, guard slack x0.75, hallway guard below 75% HP,
+ *                                   balanced in an act-boss fight behind its clock (combatPolicy),
  *                                   rest heals below target (entry_hp_pct or 80%), map: elites -3,
  *                                   "?" -1.5 and Monster -0.5 at low HP, rest +1.5
  *                         balanced  the defaults
@@ -27,8 +28,9 @@
  *                                   elite that leaves it out of reach (-8); a raised target steers
  *                                   rest (+3 heal) and map (rest +1.5) at any distance
  *   reserve (run)         potion roles kept for the act boss: HARD filtered from every non-boss line
- *                                   and offer, released only below 25% HP or when every line without
- *                                   it dies (then no save cost at all); free in the boss fight; burst
+ *                                   and offer, released only below 25% HP, when every line without it
+ *                                   dies, or when the safest line without it ends within next turn's
+ *                                   hit + 3 (then no save cost at all); free in the boss fight; burst
  *                                   potions (energy, card-making, Duplicator) are "damage" by id;
  *                                   Potion-Shaped Rocks never reserved (free to drink with the Toad)
  *   needs / avoid (run)   needed card roles get the must-have pick bonus; avoided card ids/roles are
@@ -38,16 +40,24 @@
  *                         scale_then_kill  lasting value x1.5; the guard keeps a line with more setup
  *                                          (powers, permanent Strength) unless it risks death
  *                                          (HP after <= next hit + 3 or < 15% max); setup lines in
- *                                          turns 1-3 go to Jev
+ *                                          turns 1-3 go to Jev; from turn 4 (or a new boss phase), or
+ *                                          once no setup card is left in hand or draw pile, played as
+ *                                          kill_fast (objectiveInForce)
  *                         kill_fast        damage x1.2, HP x0.9; guard slack x1.25; the damage-for-HP
- *                                          race rule applies in every fight
+ *                                          race rule applies in every fight; in elite/boss fights the
+ *                                          guard keeps a line whose kill comes a turn sooner while its
+ *                                          extra HP is no more than the hits the later kill takes
  *                         race             damage x1.3, HP x0.85, lasting x0.5; guard slack x1.5; race rule
- *   kill_priority (fight) the first living enemy in the list is the solver's focus target
+ *                                          and the kill-sooner rule as kill_fast
+ *   kill_priority (fight) the first living enemy in the list is the solver's focus target; minions go
+ *                                   behind the last non-minion (validator)
  *   threat, summary (fight), boss_prep (run)  free text, shown to Jev as context only (short)
  *   reason (both)         why the intent was chosen, closed list (INTENT_REASONS): kill_fast/race
  *                                   because enemy_scales / burst_window drop preserve's weights in
- *                                   that fight (combatPolicy); preserve / avoid_elites because low_hp
- *                                   lapse to balanced / normal while HP is at the target (policyAt)
+ *                                   that fight (combatPolicy); preserve / avoid_elites set for low HP
+ *                                   (an hp_below_target change, or reason low_hp when set) lapse to
+ *                                   balanced / normal while HP is at the target, whatever reason a
+ *                                   later re-plan gives (policyAt, originOf)
  *
  * Labels (combatFit, mapFit, restFit) are graded from the same score that ranks the options: "fits"
  * (code's best or within its close-call margin), "costs X HP / Y damage vs the best line for <intent>",
@@ -92,7 +102,7 @@ export const REASON_MEANING: Record<IntentReason, string> = {
   enemy_scales: "the enemy grows every turn (Strength, Ritual, Ravenous, escalating attacks): kill_fast/race keep full damage weight even under hp_policy preserve",
   burst_window: "a short window for damage (sleeping, stunned or not yet debuffing enemy): damage now over block",
   low_hp: "HP is low now: once HP is back at the target, preserve / avoid_elites lapse to balanced / normal until it falls again",
-  boss_prep: "HP and potions are kept for the act boss: the intent holds at any HP",
+  boss_prep: "HP and potions are kept for the act boss: the intent holds at any HP, except a preserve / avoid_elites first set by an hp_below_target change, which lapses at the target like low_hp",
   deck_weak: "the deck lacks damage or scaling",
   deck_strong: "the deck already beats this",
   many_enemies: "several attackers: fewer enemies alive is the defence",
@@ -129,21 +139,64 @@ export function parseReasons(raw: unknown): { reasons: IntentReason[]; dropped: 
 export const REASON_FIELDS = ["hp_policy", "route_risk", "entry_hp_pct", "reserve"] as const;
 export type ReasonField = (typeof REASON_FIELDS)[number];
 
+/** Run-plan fields whose value can be set for low HP and lapse once HP is back. */
+export type OriginField = "hp_policy" | "route_risk";
+
+/** Where a run-plan field's current value came from: the change (or the first plan) that set it. */
+export interface PolicyOrigin {
+  floor: number;
+  version: number;
+  /** The accepted change's trigger, or "start" for a value the run's first plan set. */
+  trigger: ChangeTrigger | "start";
+  /** The reason DeepSeek gave for the field when the value was set (null when none). */
+  reason: IntentReason | null;
+}
+
+const fieldValue = (plan: RunPlan, field: OriginField): string => (field === "hp_policy" ? plan.hpPolicy : plan.routeRisk);
+
 /**
- * The run's hp_policy at this HP: a preserve chosen because HP was low lapses to balanced once HP is
+ * The origin of a field's current value: the plan's own record (run-plan.ts parseRunPlan keeps it
+ * across re-plans that leave the value alone), else the last accepted change that set this value
+ * (plans logged before origins were kept), else null.
+ */
+export function originOf(plan: RunPlan | null | undefined, field: OriginField): PolicyOrigin | null {
+  if (!plan) return null;
+  const kept = plan.origins?.[field];
+  if (kept) return kept;
+  const change = [...(plan.changes ?? [])].reverse().find((entry) => entry.field === field && entry.to === fieldValue(plan, field));
+  return change ? { floor: change.floor, version: change.version, trigger: change.trigger, reason: null } : null;
+}
+
+/**
+ * A value set because HP was low: its origin is an hp_below_target change or came with reason low_hp,
+ * or (no origin known) its reason is low_hp now. The origin decides, not the reason text of a later
+ * re-plan (Z7D7 F24: the hp_rise re-plan rewrote the F20 hp_below_target preserve's reason low_hp to
+ * boss_prep at 86% HP, and the Decimillipede was fought under it; FN0H F33: an F31 hp_below_target
+ * preserve still in force at 94% after the forced rest).
+ */
+export function setForLowHp(plan: RunPlan | null | undefined, field: OriginField): boolean {
+  if (!plan) return false;
+  const origin = originOf(plan, field);
+  if (origin && (origin.trigger === "hp_below_target" || origin.reason === "low_hp")) return true;
+  return plan.reasons?.[field] === "low_hp";
+}
+
+/**
+ * The run's hp_policy at this HP: a preserve set because HP was low lapses to balanced once HP is
  * back at the target (NX48: preserve set at 35% HP stayed on at 86% after the Ancient's heal, the
- * solver kept HP x1.25 in the fight that killed us). Any other reason (boss_prep, none) holds.
+ * solver kept HP x1.25 in the fight that killed us). A preserve set for another reason (boss_prep at
+ * a healthy HP, none) holds.
  */
 export function policyAt(plan: RunPlan | null | undefined, hpFraction: number): HpPolicy {
   const policy = plan?.hpPolicy ?? "balanced";
-  if (policy === "preserve" && plan?.reasons?.hp_policy === "low_hp" && hpFraction >= hpTarget(plan)) return "balanced";
+  if (policy === "preserve" && setForLowHp(plan, "hp_policy") && hpFraction >= hpTarget(plan)) return "balanced";
   return policy;
 }
 
-/** The run's route_risk at this HP: avoid_elites chosen because HP was low lapses the same way. */
+/** The run's route_risk at this HP: avoid_elites set because HP was low lapses the same way. */
 export function routeRiskAt(plan: RunPlan | null | undefined, hpFraction: number): RouteRisk {
   const risk = plan?.routeRisk ?? "normal";
-  if (risk === "avoid_elites" && plan?.reasons?.route_risk === "low_hp" && hpFraction >= hpTarget(plan)) return "normal";
+  if (risk === "avoid_elites" && setForLowHp(plan, "route_risk") && hpFraction >= hpTarget(plan)) return "normal";
   return risk;
 }
 
@@ -158,11 +211,29 @@ export function damageFirst(fight: Pick<FightPlan, "objective"> & { reasons?: In
  * when the fight plan races a scaling enemy (5JU3 F9: preserve weights T2-T4 played 16, 6 and 0 damage
  * lines against a Fossil Stalker gaining Strength every hit; -40 where the damage lines cost ~-32).
  */
-export function combatPolicy(plan: RunPlan | null | undefined, fight: (Pick<FightPlan, "objective"> & { reasons?: IntentReason[] }) | null | undefined, hpFraction: number): { policy: HpPolicy; why: string | null } {
+export function combatPolicy(
+  plan: RunPlan | null | undefined,
+  fight: (Pick<FightPlan, "objective"> & { reasons?: IntentReason[] }) | null | undefined,
+  hpFraction: number,
+  bossClock: BossClockNow | null = null,
+): { policy: HpPolicy; why: string | null } {
   const base = policyAt(plan, hpFraction);
   if (base !== (plan?.hpPolicy ?? "balanced")) return { policy: base, why: `hp_policy ${plan?.hpPolicy} was for low HP; HP ${Math.round(hpFraction * 100)}% is back at the ${Math.round(hpTarget(plan) * 100)}% target` };
   if (base === "preserve" && damageFirst(fight)) return { policy: "balanced", why: `fight objective ${fight!.objective} because ${(fight!.reasons ?? []).join(", ")}: damage first under hp_policy preserve` };
+  // The act boss is fought to the end whatever the policy (plan-validator.ts): while its clock needs
+  // more a turn than the deck deals, HP saved only stretches a race already behind (G8F1 F33: preserve
+  // weights and labels played 30, 4, 0, 0 on T1-T4 against a 399 HP demon needing ~51 a turn of a
+  // ~32 deck). Only "this line dies" matters then, and the lethal check keeps that.
+  if (base === "preserve" && bossClock && bossClock.need > bossClock.deck) {
+    return { policy: "balanced", why: `act boss behind its clock (needs ~${Math.round(bossClock.need)} a turn, deck ~${Math.round(bossClock.deck)}): HP kept only stretches the race` };
+  }
   return { policy: base, why: null };
+}
+
+/** The act-boss clock in a boss fight: damage a turn the kill needs now (boss HP left / clock turns left) and the deck's estimate. */
+export interface BossClockNow {
+  need: number;
+  deck: number;
 }
 
 /** What each intent means, in the words Jev and DeepSeek are shown. */
@@ -180,7 +251,7 @@ export const MEANING = {
   objective: {
     kill_fast: "end the fight quickly: most damage, accept a little more HP loss",
     preserve_hp: "lose as little HP as possible: block first, damage second",
-    scale_then_kill: "play powers / permanent Strength in the first turns (a few HP is fine, never a risk of death), then kill",
+    scale_then_kill: "play powers / permanent Strength in the first turns (a few HP is fine, never a risk of death), then kill: played as kill_fast from turn 4, or earlier once no power or Strength card is left in hand or draw pile",
     race: "the enemy scales or the clock is short: maximum damage every turn, HP traded for damage while behind; a turn the clock grants (Frantic Escape) is worth a full turn of damage",
   } satisfies Record<FightObjective, string>,
 };
@@ -264,6 +335,20 @@ export function promotesSetup(objective: FightObjective | null, turn: number, la
   return objective === "scale_then_kill" && turn <= 3 && !laterPhase;
 }
 
+/**
+ * The objective played this turn. scale_then_kill is a phase, then a kill: its setup weights hold only
+ * while the setup window is open (promotesSetup) and there is setup left to play (a power or permanent
+ * Strength card in hand or in the draw pile); after that the fight is played, ranked and labelled as
+ * kill_fast (VQ7J F11: "Free turns 1-2: set up … Then kill fast" read as scale_then_kill all fight, T3-T6
+ * lines labelled "nothing to set up this turn"; FN0H F33 the same after T1).
+ */
+export function objectiveInForce(objective: FightObjective | null, ctx: { turn: number; laterPhase: boolean; setupLeft: boolean }): { objective: FightObjective | null; why: string | null } {
+  if (objective !== "scale_then_kill") return { objective, why: null };
+  if (!promotesSetup(objective, ctx.turn, ctx.laterPhase)) return { objective: "kill_fast", why: `scale_then_kill's setup window is over (turn ${ctx.turn}${ctx.laterPhase ? ", a new boss phase" : ""}): kill` };
+  if (!ctx.setupLeft) return { objective: "kill_fast", why: "scale_then_kill: no power or permanent Strength card left in hand or draw pile: kill" };
+  return { objective, why: null };
+}
+
 // ---------------------------------------------------------------- reserved potions
 
 /**
@@ -299,11 +384,26 @@ export function isReserved(reserve: readonly PotionRole[] | undefined, potionId:
 /** Below this HP fraction a reserved potion may be drunk in any fight. */
 export const RESERVE_RELEASE_HP = 0.25;
 
-/** Why reserved potions are usable right now, or null when they stay in the belt. */
-export function reserveReleased(ctx: { bossFight: boolean; hpFraction: number; everyDryLineDies: boolean }): string | null {
+/**
+ * Why reserved potions are usable right now, or null when they stay in the belt: the act boss, HP
+ * below 25%, every line without them dying this turn, or the safest line without them leaving no more
+ * than next turn's expected hit + 3 (setupRisksDeath: the same "risks death" as setup lines). VF5C
+ * F27 T4: the only dry line left 2 of 31 HP, the Explosive Ampoule and Weak Potion stayed held and T5
+ * opened at 2 HP with 6 Dazed; Z7D7 F28 T3: every line 27 -> 2 with Heart of Iron held.
+ */
+export function reserveReleased(ctx: {
+  bossFight: boolean;
+  hpFraction: number;
+  everyDryLineDies: boolean;
+  /** HP after the potion-free line that keeps the most, with next turn's expected hit and max HP. */
+  dry?: { hpAfter: number; nextIncoming: number; maxHp: number } | null;
+}): string | null {
   if (ctx.bossFight) return "act boss: the reserve is for this fight";
   if (ctx.hpFraction < RESERVE_RELEASE_HP) return `HP below ${RESERVE_RELEASE_HP * 100}%`;
   if (ctx.everyDryLineDies) return "every line without it dies";
+  if (ctx.dry && setupRisksDeath(ctx.dry.hpAfter, ctx.dry.nextIncoming, ctx.dry.maxHp)) {
+    return `the safest line without it leaves ${ctx.dry.hpAfter} HP against next turn's ~${Math.round(ctx.dry.nextIncoming)}`;
+  }
   return null;
 }
 
@@ -354,11 +454,13 @@ export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArr
   const low = hpOnArrival < hpTarget(plan);
   switch (type) {
     case "Elite": {
-      // Enforced: near the boss, no elite that would leave the entry HP out of reach.
-      if (plan.entryHp && toBoss <= 8 && hpOnArrival < plan.entryHp + 0.15) return -8;
       let shift = risk === "avoid_elites" ? -6 : risk === "seek_elites" && hpOnArrival > 0.6 ? 2 : 0;
       if (policy === "preserve") shift -= 3;
       if (policy === "push" && hpOnArrival > 0.7) shift += 1.5;
+      // Enforced: near the boss, no elite that would leave the entry HP out of reach: at least -8, and
+      // never milder than the elite reached with more HP (Z7D7 F25: -8 at 62% after a shop, -9 at 92%
+      // after a rest under avoid_elites + preserve; the shop line won).
+      if (plan.entryHp && toBoss <= 8 && hpOnArrival < plan.entryHp + 0.15) return Math.min(-8, shift);
       return shift;
     }
     case "Unknown":
@@ -590,7 +692,14 @@ export function restFit(plan: RunPlan | null | undefined, option: string, hpPct:
 export const CHANGE_NOTICE_FLOORS = 3;
 
 /** One line per current strategic intent, with what it means; recent changes after them. */
-export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | null | undefined, floor: number | null = null, hpFraction: number | null = null): string[] {
+export function intentLines(
+  run: RunPlan | null | undefined,
+  fight: FightPlan | null | undefined,
+  floor: number | null = null,
+  hpFraction: number | null = null,
+  now: { bossClock?: BossClockNow | null; objective?: { objective: FightObjective | null; why: string | null } } = {},
+): string[] {
+  const bossClock = now.bossClock ?? null;
   const lines: string[] = [];
   const because = (reason: string | undefined) => (reason ? ` because ${reason}` : "");
   if (run) {
@@ -599,18 +708,19 @@ export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | 
     const risk = run.routeRisk ?? "normal";
     if (risk !== "normal") lines.push(`route_risk ${risk}${because(run.reasons?.route_risk)}: ${MEANING.route_risk[risk]}`);
     if (hpFraction !== null) {
-      const now = combatPolicy(run, fight, hpFraction);
+      const now = combatPolicy(run, fight, hpFraction, bossClock);
       if (now.why) lines.push(`in force now: hp_policy ${now.policy} (${now.why})`);
       const riskNow = routeRiskAt(run, hpFraction);
       if (riskNow !== risk) lines.push(`in force now: route_risk ${riskNow} (avoid_elites was for low HP; HP is back at the target)`);
     }
-    if ((run.reserve ?? []).length > 0) lines.push(`reserve ${run.reserve.join(", ")} potions for the act boss${because(run.reasons?.reserve)}: not offered before it (only below 25% HP or when every other line dies)`);
+    if ((run.reserve ?? []).length > 0) lines.push(`reserve ${run.reserve.join(", ")} potions for the act boss${because(run.reasons?.reserve)}: not offered before it (only below 25% HP, when every other line dies, or when the safest other line ends within next turn's hit + 3)`);
     if ((run.needs ?? []).length > 0) lines.push(`deck needs ${run.needs.join(", ")} cards before the act boss`);
     if (run.bossPrep) lines.push(`boss prep (context): ${short(run.bossPrep)}`);
     for (const change of recentChanges(run, floor)) lines.push(`strategy changed at F${change.floor}: ${change.field} ${fmt(change.from)}→${fmt(change.to)} because ${change.trigger}${change.fact ? ` (${change.fact})` : ""}`);
   }
   if (fight) {
     lines.push(`fight objective ${fight.objective}${because((fight.reasons ?? []).join(", "))}: ${MEANING.objective[fight.objective]}`);
+    if (now.objective?.why && now.objective.objective) lines.push(`in force now: objective ${now.objective.objective} (${now.objective.why})`);
     if (fight.killPriority.length > 0) lines.push(`kill priority: ${fight.killPriority.join(" > ")}`);
     // The plan in DeepSeek's words, context only (9V09 F33: "Play every affordable Frantic Escape
     // early" never reached Jev, only the objective's one-line meaning did).

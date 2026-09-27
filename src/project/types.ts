@@ -62,7 +62,7 @@ export interface ScreenMemory {
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */
-  fightStart?: { fight: string; maxHp: number };
+  fightStart?: { fight: string; maxHp: number; /** Non-minion enemy HP and the turn when first seen (this fight's damage a turn). */ hp?: number; turn?: number };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
