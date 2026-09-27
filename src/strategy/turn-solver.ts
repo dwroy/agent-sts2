@@ -136,6 +136,18 @@ export interface PlayerSim {
   /** Cards in the exhaust pile at the start of this decision, when known (Pact's End needs 3). */
   exhaustPile?: number;
   /**
+   * Cards in the draw and discard piles together, when known: the most this turn's draws can bring into
+   * the hand (Fiend Fire counts them: 9VG8 F35 T6).
+   */
+  drawable?: number;
+  /**
+   * Duplication already up (DUPLICATION_POWER, from a Duplicator drunk earlier this turn): the next card
+   * is played twice (11LC F17 T2: re-planned after the drink as if it were not, Bash+ went single).
+   */
+  duplicate?: number;
+  /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
+  regen?: number;
+  /**
    * Most HP we can lose in one turn (Beating Remnant: 20). CCPR F48 T6-T7: every Test Subject line
    * really cost 20; uncapped, the guard and least-loss picked block lines over 48-damage ones.
    */
@@ -319,6 +331,8 @@ export interface Step {
   targetName: string | null;
   /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
   discards?: string[];
+  /** A pile-card potion's card: the pile card the plan counted (the selection screen takes it). */
+  pileSource?: { cardId: string; upgraded: boolean; name: string };
 }
 
 export interface Outcome {
@@ -416,6 +430,13 @@ interface Sim {
   /** Each card drawn this turn, valued with and without an energy left at the end to use it. */
   draws: DrawValue[];
   cardsDrawn: number;
+  /**
+   * Of the cards drawn this turn, those still in the hand (not exhausted since): a hand-counting card
+   * (Fiend Fire) counts them. 9VG8 F35 T6: Offering+ drew 5, Fiend Fire+ counted 4 hits, not 9 (99, a kill).
+   */
+  drawnInHand: number;
+  /** Regen up at the end of this turn (already up plus drunk now): healed before the enemy attacks. */
+  regen: number;
   unknown: string[];
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
@@ -536,6 +557,8 @@ export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT", "BRAND"]);
 export const HOWL_EXHAUST_VALUE = 50;
 /** Cards that exhaust the whole rest of the hand (Stoke: a random card for each). */
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
+/** Cards a hand can hold: draws past it are discarded. */
+export const HAND_LIMIT = 10;
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -598,6 +621,11 @@ function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
 
 /** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS; map.ts HEAL_POTION_SHARE). */
 export const BLOOD_POTION_HEAL = 0.2;
+/**
+ * Regen's heals after this turn ((n-1) + ... + 1 for Regen n), counted at this share: the fight may end
+ * first, and HP near max takes less.
+ */
+export const REGEN_LATER_SHARE = 0.5;
 
 /**
  * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
@@ -810,6 +838,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   const exhaustedBefore = next.exhausted.length;
+  let drawnBurned = 0;
   // Second Wind (LQLZ F21 T4: unmodelled, it exhausted Inferno and Forgotten Ritual; a replay ranked an
   // impossible line first): every non-Attack card in hand goes, Block for each.
   if (card.special === "second_wind") {
@@ -843,11 +872,14 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.exhausted = [...next.exhausted, pick];
     }
   } else if (EXHAUST_HAND.has(card.cardId)) {
+    // The cards drawn earlier this turn go too (their values stay as draws: what they were is unknown).
+    drawnBurned = next.drawnInHand;
+    next.drawnInHand = 0;
     next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
   }
-  const burned = next.exhausted.length - exhaustedBefore;
+  const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
   // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
     const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
@@ -869,6 +901,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
       ...(card.discards ? { discards: discarded } : {}),
+      ...(card.pileSource ? { pileSource: card.pileSource } : {}),
     },
   ];
   return next;
@@ -921,6 +954,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
   if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+  // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
+  if (card.special === "regen" && (card.regen ?? 0) > 0) {
+    const amount = card.regen ?? 0;
+    next.regen += amount;
+    next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
+  }
   if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
   if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
@@ -932,6 +971,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
     next.hand = next.hand.filter((entry) => !discards.has(entry.key));
     if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}`, cardId: `${draw.cardId}:${i}` }))];
+  } else if (card.special === "chaos" && card.generates) {
+    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card, at a
+    // random enemy (worst case: randomVictim). They leave the pile: later draws come from below them.
+    const top: CardModel = { ...card.generates, cost: 0, target: card.generates.damage !== null ? "random" : "self", validTargets: [] };
+    for (let played = 0; played < (card.playsTop ?? 0); played += 1) resolveEffects(next, top, null, player, 0);
+    next.pileDrawn += card.playsTop ?? 0;
   } else if (card.generates) next.hand = [...next.hand, card.generates];
   // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
   // upgraded numbers; each card's gain counts again for its later draws (BLESSING_LASTING).
@@ -983,7 +1028,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.cardId === "PACTS_END" && (player.exhaustPile ?? 0) + next.exhausted.length < PACTS_END_EXHAUST) perHit = 0;
     if (card.special === "whirlwind") hits = cost;
     // Fiend Fire: one hit per card it exhausts, i.e. the rest of the hand (exhausted after this).
-    if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length;
+    if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length + next.drawnInHand;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
@@ -1062,6 +1107,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.type === "Potion") next.potionCost += -card.flatValue;
   else next.flat += card.flatValue;
   if (card.draw > 0) {
+    // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
+    const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
+    const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
+    next.drawnInHand += Math.min(card.draw, room, handSpace);
     next.cardsDrawn += card.draw;
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
@@ -1378,7 +1427,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
-  const selfLoss = input.player.hp - sim.hp;
+  // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
+  const regenHeal = winsFight ? 0 : Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp));
+  const selfLoss = input.player.hp - sim.hp - regenHeal;
   // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
   // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
   // part of this turn's HP loss, whether the Mantle is already up or played now (Y83U F30 T3: a
@@ -1675,7 +1726,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.regen}`;
 }
 
 export interface SolveResult {
@@ -1774,7 +1825,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     tempDex: 0,
     intangible: false,
     buffer: 0,
-    duplicate: 0,
+    duplicate: input.player.duplicate ?? 0,
     retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
@@ -1783,6 +1834,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     played: input.cardsPlayedThisTurn ?? 0,
     draws: [],
     cardsDrawn: 0,
+    drawnInHand: 0,
+    regen: input.player.regen ?? 0,
     unknown: [],
     feedKills: 0,
     dazedAdded: 0,

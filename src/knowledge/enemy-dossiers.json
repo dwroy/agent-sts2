@@ -651,12 +651,12 @@
    "act": 1,
    "hp": {
     "a7": 140,
-    "a8": 147
+    "a8": 150
    },
-   "danger": "撞击22、痛殴~10;跌破70血时尖叫 SHRIEK:被击晕一次但给玩家99层易伤。Z2H3 T6易伤下吃24,73→27(−46);G6YV −46;1K5G −31",
-   "win_pattern": "值得多打一点伤害抢到70血击晕线;易伤后用格挡/药水不硬吃",
+   "danger": "开场撞击 CRASH 16;痛殴 THRASH 3×3 并给自己活力 VIGOR 6,下一次撞击 16→22;尖叫 SHRIEK 75:跌破75血时被击晕一回合,醒来放恐惧 TERROR 给玩家99层易伤,之后撞击22在易伤下是33。A8实测150血(PKB0/EN55/77QX)。一幕精英里掉血最多:PKB0 70→26(−44,55%)、77QX 52→17、Z7D7 74→11、S6AG 58→9、EN55 41进场9回合死于易伤下的撞击33",
+   "win_pattern": "每回合~30:约2.5回合打到75血线(击晕换一回合),再约2.5回合在恐惧之前或恐惧回合打完;PKB0 70/80进、5回合(每回合30)在恐惧前用两瓶药斩杀;每回合<15的都在20%以下出场",
    "entry_hp_pct": 0.75,
-   "need_damage_per_turn": null,
+   "need_damage_per_turn": 30,
    "must_have": [
     "frontload",
     "block"
@@ -665,13 +665,18 @@
     "block",
     "weak"
    ],
-   "avoid": "易伤99时用攻击换血;无色药水囤着不喝",
-   "deaths": 0,
+   "avoid": "慢速牌组(每回合<20)选可选的骇鳗;易伤99时用攻击换血;无色/伤害药水囤到恐惧之后",
+   "deaths": 1,
    "evidence": [
     "Z2H318ZMMAD0",
     "G6YVT0ALVQ65",
     "1K5G5HPXA2ZV",
-    "XPA49DEKREQ1"
+    "XPA49DEKREQ1",
+    "EN55E3C1WLHP",
+    "77QXNB8RFSQQ",
+    "Z7D7J1RUUJ61",
+    "S6AG9SH1ZP1K",
+    "PKB0Z630CLXT"
    ]
   },
   "SKULKING_COLONY": {
@@ -1304,10 +1309,10 @@
    "act": 3,
    "hp": {
     "a7": 162,
-    "a8": 170
+    "a8": 172
    },
-   "danger": "禁忌咒语仪式9,之后野蛮 SAVAGE 12→21→30→39逐回合涨。1LJF 73→34(−39)",
-   "win_pattern": "开局爆发速杀,拖得越久越痛",
+   "danger": "T1禁忌咒语 FORBIDDEN_INCANTATION(不攻击,得仪式 RITUAL 9),之后每回合野蛮 SAVAGE,力量每回合+9:12/21/30/39/48/57(A8实测)。NX48 69/80进、剩44死;9VG8 77/80进、T7 11血对57死;1LJF 73→34;123Z F35 71→41",
+   "win_pattern": "T1是免费窗口(不攻击):能力、易伤、全部伤害压在T1;要在T6的48之前打完172,前5回合每回合~35-40;123Z F35 71/80进、4回合打完(每回合43)。斩杀线要把本回合抽到的牌算进恶魔之焰等按手牌计数的牌(9VG8 T6祭品+恶魔之焰=99)",
    "entry_hp_pct": 0.6,
    "need_damage_per_turn": 40,
    "must_have": [
@@ -1317,10 +1322,43 @@
    "save_potions": [
     "block"
    ],
-   "avoid": "慢速成长牌组硬拖",
-   "deaths": 0,
+   "avoid": "慢速成长牌组硬拖;中段只挡不打(SAVAGE每回合+9,挡不住后面的)",
+   "deaths": 2,
    "evidence": [
-    "1LJFBKUF51PE"
+    "1LJFBKUF51PE",
+    "NX48MBG3SPRJ",
+    "9VG86DYJH4CS",
+    "123ZSH58F5FS"
+   ]
+  },
+  "SLIMED_BERSERKER": {
+   "name": "史莱姆狂战士",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 261,
+    "a8": 281
+   },
+   "danger": "4回合一轮:呕吐黏液 VOMIT_ICHOR(不攻击,往牌堆塞黏液 SLIMED,意图数10)→狂怒猛击 FURIOUS_PUMMELING 4×4(+力量)→吸血拥抱 LEECHING_HUG(不攻击,给玩家虚弱3、自身+3力量)→闷压 SMOTHER 30+力量(第1/2/3轮 33/36/39)。第二轮起手牌被黏液堵(123Z T9手里4张),虚弱让输出再掉25%;每轮+3力量,越拖越痛。A8实测281血",
+   "win_pattern": "7回合内打完(每回合~40):第一轮T1/T3不攻击、牌堆还没黏液,T1-T4全力输出;闷压回合挡满;123Z同一副牌对它每回合20.9、12回合死,对F33 boss/F35雕刻师每回合43-49",
+   "entry_hp_pct": 0.7,
+   "need_damage_per_turn": 40,
+   "must_have": [
+    "frontload",
+    "strength",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "weak",
+    "damage"
+   ],
+   "avoid": "当成「不怎么成长」的普通战打长线(123Z F38 fight plan「end it in ~6 turns」实际12回合);第二轮起指望抽牌",
+   "deaths": 1,
+   "evidence": [
+    "123ZSH58F5FS",
+    "MD3FLLNB7Q2W",
+    "TXKEQ0QV06GU"
    ]
   },
   "THE_LOST": {

@@ -8,7 +8,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { fightHpCost, HEAL_POTION_SHARE } from "./map.js";
+import { fightHpCost, potionHealHp } from "./map.js";
 import { potionBlockHp } from "../strategy/card-model.js";
 import { currentRunPlan } from "../strategy/run-plan.js";
 import { isReserved } from "../strategy/intent.js";
@@ -73,7 +73,7 @@ export function reservedPotions(potions: Record<string, unknown>[], reserve: Par
     .map((potion) => {
       const id = str(potion["potion_id"]);
       const block = potionBlockHp(id);
-      const heal = Math.round((HEAL_POTION_SHARE[id] ?? 0) * maxHp);
+      const heal = potionHealHp(id, maxHp);
       return { id, name: str(potion["name"], id), hp: block > 0 ? block : heal > 0 ? heal : RESERVED_POTION_HP };
     });
 }

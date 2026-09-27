@@ -145,6 +145,30 @@ export function planSelection(env: DecisionEnv): Decision | null {
     return null;
   }
 
+  // The card a pile-card potion's line counted (Droplet of Precognition, Liquid Memories): the plan was
+  // solved with it, so code takes it (11LC F17 T1: the line drank the Droplet for Bash+, the screen asked
+  // Jev blind and Jev took Setup Strike at 0.26; Vulnerable 3 lost on the act boss).
+  const plannedSteps = forThisTurn ? env.screenMemory.planBeforeSelection ?? [] : [];
+  const pileStep = plannedSteps.find((step) => step.pileSource);
+  if (pileStep?.pileSource) {
+    const source = pileStep.pileSource;
+    const match =
+      candidates.find((card) => str(card["card_id"]) === source.cardId && bool(card["upgraded"]) === source.upgraded) ??
+      candidates.find((card) => str(card["card_id"]) === source.cardId);
+    if (match) {
+      const potion = /^GEN:([A-Z_]+):/.exec(pileStep.cardId)?.[1] ?? "the potion";
+      return {
+        kind: "act",
+        label: "selection/plan-card",
+        intent: { action: "select_deck_card", option_index: numOrNull(match["index"]) ?? 0 },
+        rationale: `code: take ${str(match["name"], source.name)} (the combat plan drank ${knowledge.potion(potion)?.name ?? potion} for it: ${pileStep.name})`,
+      };
+    }
+  }
+  // A card potion's line (Attack/Skill/Power/Colorless Potion) counted a card of its type for this turn,
+  // not a named one: the offered card that does most this turn is marked as the plan's card for Jev.
+  const cardPotionStep = plannedSteps.find((step) => /^GEN:(ATTACK|SKILL|POWER|COLORLESS)_POTION:/.test(step.cardId));
+
   const entries = deckEntries(state, knowledge);
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
@@ -187,6 +211,11 @@ export function planSelection(env: DecisionEnv): Decision | null {
       } satisfies JsonValue,
     };
   });
+
+  if (cardPotionStep && options.length > 0) {
+    const best = options.reduce((top, option) => (option.score > top.score ? option : top));
+    best.summary = { ...(best.summary as Record<string, JsonValue>), plan_card: `the combat plan drank this potion for a card played this turn (${cardPotionStep.name}); this one does the most this turn (code's pick)` };
+  }
 
   const verb = forThisTurn
     ? "take into my hand"

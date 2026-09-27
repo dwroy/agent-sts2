@@ -58,10 +58,22 @@ export interface CardModel {
   energyGain: number;
   /** Plating gained (Stone Armor): that much block at the end of this turn, and less each later turn. */
   plating?: number;
+  /**
+   * A pile-card potion's card (Droplet of Precognition, Liquid Memories): the pile card it takes, so the
+   * selection screen after the drink takes the one the plan counted (11LC F17 T1).
+   */
+  pileSource?: { cardId: string; upgraded: boolean; name: string };
+  /** Regen gained (Regen Potion): that much HP at the end of this turn, one less each later turn. */
+  regen?: number;
+  /**
+   * Distilled Chaos: plays this many cards from the top of the draw pile, each the pile's expected card
+   * (`generates`, never put in the hand).
+   */
+  playsTop?: number;
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -488,6 +500,16 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // F33 T5 and EN55 F8 T9: carried unmodelled to the death, each time a draw of the pile's block cards
   // would likely have lived.
   GAMBLERS_BREW: { target: "self", special: "gamble" },
+  // Regen Potion: 「获得{RegenPower}层再生」, REGEN_POWER 5 on the drink (states.jsonl PKB0 F17 T8); Regen heals
+  // its amount at the end of our turn, before the enemy attacks, then drops by 1 (5+4+3+2+1 = 15 over five
+  // turns). This turn's 5 is in the line's HP; the later heals are lasting value (turn-solver
+  // REGEN_LATER_SHARE). Unmodelled, PKB0 F17 T4 read "fits hp ... its effect is in no line's numbers" at
+  // 15/80 and Jev left it (0.05) until 2 HP.
+  REGEN_POTION: { target: "self", special: "regen", regen: 5 },
+  // Distilled Chaos: 「打出你抽牌堆顶部的{Repeat}张牌」, 3 cards (YG3H F33 T7: the draw pile 21 -> 18 on the drink,
+  // Strike + 2 Defend played). Each is the draw pile's expected card (expectedDraw), played for free at a
+  // random enemy (turn-solver "chaos"). Unmodelled, YG3H carried it F1-F33 as "neutral: unclassified".
+  DISTILLED_CHAOS: { target: "self", special: "chaos", playsTop: 3 },
   // Pile-card potions: a card from a pile into the hand (modelPotion builds it from PotionContext).
   // Liquid Memories: 「将你弃牌堆中的一张牌放入你的手牌。这张牌在本回合可以免费打出」 (PWSD: carried F2-F23 T4).
   // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
@@ -523,7 +545,7 @@ export interface PotionContext {
   /** The pile card a pile-card potion would take (pileCardPick), as a hand card (Strength and Weak in). */
   discardPick?: CardModel | null;
   drawPick?: CardModel | null;
-  /** Gambler's Brew: the draw pile's average card (expectedDraw). */
+  /** Gambler's Brew and Distilled Chaos: the draw pile's average card (expectedDraw). */
   expectedDraw?: CardModel | null;
 }
 
@@ -687,12 +709,24 @@ export function potionBlockHp(potionId: string, turns = KEPT_POTION_TURNS): numb
   return (effect.block ?? 0) + plating;
 }
 
+/** HP Regen n heals over `turns` of our turn ends (n, n-1, ...). */
+export function regenHealHp(amount: number, turns: number): number {
+  let heal = 0;
+  for (let turn = 0; turn < turns; turn += 1) heal += Math.max(0, amount - turn);
+  return heal;
+}
+
+/** The Regen a potion gives (Regen Potion 5), 0 for any other. */
+export function potionRegen(potionId: string): number {
+  return POTION_EFFECTS[potionId]?.regen ?? 0;
+}
+
 export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;
 }
 
 /** Self-buff specials whose effect does not depend on what was played before them. */
-const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating", "heal"]);
+const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating", "heal", "regen"]);
 
 /**
  * A modelled potion that is never worse drunk before the turn's cards than after them: it targets no
@@ -715,13 +749,15 @@ export function drinkFirstSafe(potionId: string): boolean {
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
+  // Distilled Chaos without a known draw pile: nothing to price its cards by.
+  if (effect.special === "chaos" && !ctx?.expectedDraw) return null;
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
-  const generates: CardModel | undefined = effect.special === "gamble"
+  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
-    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
+    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true, pileSource: { cardId: pileCard.cardId, upgraded: pileCard.upgraded, name: pileCard.name } }
     : card
     ? {
         index: 200 + slot,

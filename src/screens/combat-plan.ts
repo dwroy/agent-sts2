@@ -25,8 +25,8 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { drinkFirstSafe, expectedDraw, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { drinkFirstSafe, expectedDraw, potionRegen, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { BLOOD_POTION_HEAL, distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
@@ -529,13 +529,46 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
+  const heal = healPotionText(plan, playerHp);
+  if (heal) summary["heal_potion"] = heal;
   if (o.lasting >= 5) {
     const forge = plan.steps.some((step) => step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:"));
-    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+    const regen = plan.steps.some((step) => step.cardId.startsWith("POTION:REGEN_POTION:"));
+    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
   }
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
+}
+
+/**
+ * A line's heal potion in numbers: "+16 HP now (Blood Potion), 35/80 (44%) -> 51/80 (64%)", or Regen's
+ * heal at this turn's end and after. PKB0 F17 T4: the Regen Potion was offered as "fits hp: a heal
+ * potion ... its effect is in no line's numbers" at 35/80, and Jev left it at 0.05 until 2 HP.
+ */
+export function healPotionText(plan: Plan, maxHp: number): string | null {
+  const o = plan.outcome;
+  const hp = o.hpAfter + o.hpLoss;
+  if (maxHp <= 0) return null;
+  const pct = (value: number) => `${value}/${maxHp} (${Math.round((100 * value) / maxHp)}%)`;
+  const parts: string[] = [];
+  let healed = hp;
+  for (const step of plan.steps) {
+    const id = step.cardId.split(":")[1] ?? "";
+    if (!step.cardId.startsWith("POTION:")) continue;
+    if (id === "BLOOD_POTION") {
+      const gain = Math.min(maxHp - healed, Math.floor(maxHp * BLOOD_POTION_HEAL));
+      healed += gain;
+      parts.push(`+${gain} HP now (${step.name.replace(/^potion /, "")}, ${Math.round(BLOOD_POTION_HEAL * 100)}% of max HP)`);
+    } else if (potionRegen(id) > 0) {
+      const regen = potionRegen(id);
+      const gain = o.winsFight ? 0 : Math.min(maxHp - healed, regen);
+      healed += gain;
+      const later = Array.from({ length: regen - 1 }, (_, i) => `+${regen - 1 - i}`).join(", ");
+      parts.push(`+${gain} HP at this turn's end (${step.name.replace(/^potion /, "")}, Regen ${regen})${later ? `, then ${later} HP on the next turns while the fight lasts` : ""}`);
+    }
+  }
+  return parts.length > 0 ? `${parts.join("; ")}: ${pct(hp)} -> ${pct(healed)} before the enemy turn` : null;
 }
 
 /** What the fact tags need to know about the board (JEV_CONTEXT=v1). */
@@ -685,7 +718,19 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  */
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
-  const pile = asRecord(asRecord(raw["agent_view"])["combat"])["exhaust"];
+  return pileSize(raw, "exhaust");
+}
+
+/** Cards in the draw and discard piles together (what this turn's draws can bring in), or undefined. */
+export function drawablePileSize(raw: Record<string, unknown>): number | undefined {
+  const draw = pileSize(raw, "draw");
+  const discard = pileSize(raw, "discard");
+  return draw === undefined && discard === undefined ? undefined : (draw ?? 0) + (discard ?? 0);
+}
+
+/** Cards in one agent_view.combat pile (grouped "name*N" lines), or undefined when the view lacks it. */
+export function pileSize(raw: Record<string, unknown>, which: "draw" | "discard" | "exhaust"): number | undefined {
+  const pile = asRecord(asRecord(raw["agent_view"])["combat"])[which];
   if (pile === undefined) return undefined;
   return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
 }
@@ -951,6 +996,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const playerSim: PlayerSim = {
     freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
+    ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
+    // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
+    duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    regen: powerAmount(player, "REGEN_POWER"),
     hp: num(player["current_hp"]),
     maxHp: num(player["max_hp"]),
     block: num(player["block"]),
@@ -1167,15 +1216,16 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
-    // Gambler's Brew draws from the draw pile, or the discard pile reshuffled when it is empty.
-    ...(beltIds.has("GAMBLERS_BREW")
+    // Gambler's Brew draws from the draw pile, or the discard pile reshuffled when it is empty; Distilled
+    // Chaos plays its top cards from the same.
+    ...(beltIds.has("GAMBLERS_BREW") || beltIds.has("DISTILLED_CHAOS")
       ? {
           expectedDraw: expectedDraw(
             (() => {
               const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
               return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
             })(),
-            potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW")?.slot ?? 0,
+            (potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW") ?? potionsAll.find((potion) => potion.potion_id === "DISTILLED_CHAOS"))?.slot ?? 0,
           ),
         }
       : {}),
