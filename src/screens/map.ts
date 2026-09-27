@@ -9,7 +9,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
 import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
 import { actEliteNeed } from "../knowledge/dossiers.js";
-import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
+import { bossNeed, damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
 import { eliteCostFactor, fightHpCost, roomProjectedCost, roomSurvival } from "../strategy/route-cost.js";
 import { isModelledPotion, potionRegen, regenHealHp } from "../strategy/card-model.js";
@@ -109,6 +109,28 @@ export function monsterWeight(hpOnArrival: number): number {
   if (hpOnArrival >= 0.5) return 1.2;
   if (hpOnArrival >= 0.35) return (1.2 * (hpOnArrival - 0.35)) / 0.15;
   return Math.max(-4, (-3 * (0.35 - hpOnArrival)) / 0.15);
+}
+
+/**
+ * A hallway fight's extra worth while the deck is well short of the act boss (acts 1-2): each one is a
+ * card reward toward the gap. Proportional to the gap's share of the need (nothing under
+ * GAP_FIGHT_MIN_SHARE, full at GAP_FIGHT_FULL_SHARE) and to HP safety: the HP a bad (p75) hallway fight
+ * leaves above GAP_FIGHT_HP_FLOOR, full once that is another such fight's worth. 11LC (act 1, gap 13 of
+ * 28 a turn, 50/80): code took '?' over a hallway four times (F3 28.9 vs 26.4, F4, F5, F11), 5 of 7 '?'
+ * were events, 6 fights and 6 card picks in the act; the Waterfall Giant was fought at ~25 a turn.
+ */
+export const GAP_FIGHT_MAX = 3;
+export const GAP_FIGHT_MIN_SHARE = 0.25;
+export const GAP_FIGHT_FULL_SHARE = 0.5;
+export const GAP_FIGHT_HP_FLOOR = 0.4;
+export function gapFightBonus(gap: DamageGap | null, hpOnArrival: number, act: number): number {
+  if (!gap || act > 2 || gap.need <= 0) return 0;
+  const share = gap.gap / gap.need;
+  if (share < GAP_FIGHT_MIN_SHARE) return 0;
+  const size = Math.min(1, share / GAP_FIGHT_FULL_SHARE);
+  const cost = fightHpCost("Monster", act);
+  const safety = Math.min(1, Math.max(0, (hpOnArrival - cost - GAP_FIGHT_HP_FLOOR) / cost));
+  return GAP_FIGHT_MAX * size * safety;
 }
 
 /**
@@ -565,6 +587,8 @@ export function planMap(env: DecisionEnv): Decision | null {
   // A likely death is its own weight: no node-type shift or chain penalty on top (RVR6 F38: the elite's
   // -9 under avoid_elites + preserve stacked on -20 and tripled). An elite as the 3rd fight in a row
   // pays the chain penalty too, at its cost factor (N7KR F4: "? -> Monster -> Monster -> Elite").
+  // The act boss's damage gap: a hallway fight (a card reward) gains worth over '?' (gapFightBonus).
+  const bossGap = damageGap(state, env.knowledge);
   const weightOf: Weights = (type, at, row, optional = false) => {
     const base = nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act);
     if (base <= LIKELY_DEATH) return base;
@@ -632,7 +656,11 @@ export function planMap(env: DecisionEnv): Decision | null {
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
     // A likely death right here ends the route too, as further down (RC9A F24: at 38/80 the elite now
     // scored -36 plus the rooms after it, above a "?" whose forced elite later counted in full).
-    const here = weightOf(type, start, row);
+    // The boss gap prices the fight on offer now, not every fight down the line: each later fork is
+    // decided again with the gap then (along every path it mostly rewarded routes that keep HP for later
+    // fights: 11LC F4 '?' 47.4 vs Monster 45.0 at twice the bonus).
+    const gapBonus = type === "Monster" ? gapFightBonus(bossGap, start.hp, act) : 0;
+    const here = weightOf(type, start, row) + (weightOf(type, start, row) > LIKELY_DEATH ? gapBonus : 0);
     const survival = survivalOf(self);
     const { optionalElite, children, facts } = factsOf(node);
     const toRest = arrivalAt(self, start, nodes, act, { row: bossRow ?? Infinity, inclusive: false, restAfter: horizon }, restMemo);
@@ -679,6 +707,9 @@ export function planMap(env: DecisionEnv): Decision | null {
           ...(optionalElite ? { forced_elites: `after this elite: ${routeFactsText(facts).forced_elites}`, longest_forced_fight_run: facts.longestForcedFightRun } : routeFactsText(facts)),
           ...arrivalText(arrival, checkpoint ? survival : null),
           route_survival: `alive${through} at ${restText} ~${Math.round(toRest.p * 100)}% of the time on its safest path (median room costs, p75 risk)`,
+          ...(gapBonus > 0 && bossGap
+            ? { boss_gap: `a card reward toward the act boss gap (deck ~${bossGap.deck} of ${bossGap.need} damage a turn for ${bossGap.boss}): +${gapBonus.toFixed(1)} route value` }
+            : {}),
           ...(boots !== null ? { winged_boots: `off the current path: uses a Winged Boots charge, ${bootsCharges - 1} left after${boots > 0 ? ` (priced -${boots}: charges are kept for act 3)` : ""}` } : {}),
         } as Record<string, JsonValue>,
         type,

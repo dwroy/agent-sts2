@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { gapFightBonus, planMap } from "../src/screens/map.js";
 import { planSelection } from "../src/screens/selection.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -115,5 +116,37 @@ describe("a pile-card potion's pick follows the line that drank it (11LC F17 T1)
 
   it("with no plan behind the screen it is still a question", () => {
     expect(planSelection(loggedEnv(logged("11lc-f17-t1-pick")))?.kind).toBe("ask");
+  });
+});
+
+describe("the act boss's damage gap makes a hallway fight worth more than a '?' (11LC F3-F5)", () => {
+  /** route_value by node type on a logged map (the "card" planner always asks: every option shown). */
+  function routeValues(name: string): Record<string, number> {
+    const decision = planMap(loggedEnv(logged(name), { combatPlanner: "card" })) as Decision;
+    const question = (decision as AskDecision).questions["pick"]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    const out: Record<string, number> = {};
+    for (const value of Object.values(question.criteria)) {
+      const option = JSON.parse(value!) as Raw;
+      out[String(option["node_type"])] = Number(option["route_value"]);
+    }
+    return out;
+  }
+
+  it("F3 and F5 (gap 13 of 28-30 a turn, 60-62% HP): the hallway ranks above the '?' (logged: '?' 28.9 vs 26.4, 27.4 vs 20.0)", () => {
+    for (const name of ["11lc-map-f3", "11lc-map-f5"]) {
+      const values = routeValues(name);
+      expect(values["Monster"]).toBeGreaterThan(values["Unknown"]!);
+    }
+  });
+
+  it("the bonus grows with the gap's share of the need and with HP safety; none in act 3 or under a quarter", () => {
+    const gap = (share: number) => ({ boss: "WATERFALL_GIANT", need: 28, deck: 28 * (1 - share), gap: 28 * share });
+    expect(gapFightBonus(gap(0.2), 0.9, 1)).toBe(0);
+    expect(gapFightBonus(gap(0.3), 0.9, 1)).toBeLessThan(gapFightBonus(gap(0.45), 0.9, 1));
+    expect(gapFightBonus(gap(0.45), 0.55, 1)).toBeLessThan(gapFightBonus(gap(0.45), 0.7, 1));
+    expect(gapFightBonus(gap(0.45), 0.45, 1)).toBe(0);
+    expect(gapFightBonus(gap(0.6), 0.95, 3)).toBe(0);
+    expect(gapFightBonus(null, 0.95, 1)).toBe(0);
   });
 });
