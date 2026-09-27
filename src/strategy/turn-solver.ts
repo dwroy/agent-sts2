@@ -1017,6 +1017,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.blockGained += next.block * 2;
     next.block *= 3;
   }
+  if (card.special === "double_block") {
+    next.blockGained += next.block;
+    next.block *= 2;
+  }
 
   if (card.damage !== null || card.special === "whirlwind") {
     // A card's shown damage already includes our Weak (Strike 6 -> 4 in states.jsonl; 88HN T5 predicted

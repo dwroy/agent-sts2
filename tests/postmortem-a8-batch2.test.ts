@@ -15,6 +15,7 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { planShop, unspentGoldCost } from "../src/screens/shop.js";
 import { modelHandCard, thisTurnDamage } from "../src/strategy/card-model.js";
+import { solveTurn } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -173,5 +174,45 @@ describe("Infested Prism dossier: A8 HP, need a turn, deaths and evidence (4th d
     expect(prism.need_damage_per_turn).toBe(35);
     expect(prism.deaths).toBeGreaterThanOrEqual(4);
     expect(prism.evidence).toEqual(expect.arrayContaining(["N95WHBGC4CG9", "KGR6WH5YJ743"]));
+  });
+});
+
+describe("Entrench doubles the block up when played; at 0 block it is worth 0 (RTF3 F17 T1, F28 T4)", () => {
+  const entrenchOf = (name: string) => {
+    const fx = logged(name);
+    const hand = (fx.state["combat"] as Raw)["hand"] as Raw[];
+    const index = hand.findIndex((card) => card["card_id"] === "ENTRENCH");
+    return modelHandCard(hand[index]!, index, loggedKnowledge);
+  };
+
+  it("modelled: no flat unmodelled value; the solver doubles block, 0 stays 0", () => {
+    const entrench = entrenchOf("rtf3-f17-t1-draw");
+    expect(entrench.special).toBe("double_block");
+    expect(entrench.flatValue).toBe(0);
+    const input = (block: number) => ({
+      hand: [{ ...entrench, index: 0, cost: 0 }],
+      player: { hp: 60, maxHp: 80, block, energy: 3, weak: false, vulnerable: false, intangible: false },
+      enemies: [{ index: 0, name: "x", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 30, hits: 1 }] }],
+      fightKind: "monster" as const,
+    });
+    const played = (block: number) => solveTurn(input(block)).plans.find((plan) => plan.steps.some((step) => step.cardId === "ENTRENCH"));
+    expect(played(12)?.outcome.blockGained).toBe(12);
+    const atZero = played(0);
+    if (atZero) expect(atZero.outcome.blockGained).toBe(0);
+  });
+
+  it("F17 T1 after Production (0 block): no line plays Entrench as code's pick or 'sets up a power' (logged: plan1 'Production, Entrench', 0 damage, lasting 7)", () => {
+    const { act, lines } = combatLines(logged("rtf3-f17-t1-draw"));
+    if (act?.kind === "act") expect(act.rationale).not.toMatch(/巩固/);
+    else {
+      expect(String(lines[0]!["plays"])).not.toMatch(/巩固/);
+      for (const line of lines) if (/巩固/.test(String(line["plays"]))) expect(String(line["lasting_value"] ?? "")).not.toMatch(/sets up a power/);
+    }
+  });
+
+  it("F28 T4 (0 block): Entrench is not in code's rank 1 (logged: 'Entrench, Setup Strike' rank 1 at -28)", () => {
+    const { act, lines } = combatLines(logged("rtf3-f28-t4"));
+    const top = act?.kind === "act" ? act.rationale : String(lines[0]!["plays"]);
+    expect(top).not.toMatch(/巩固/);
   });
 });

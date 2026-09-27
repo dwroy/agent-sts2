@@ -553,7 +553,7 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
+function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
@@ -579,7 +579,14 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.lasting >= 5) {
     const forge = plan.steps.some((step) => step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:"));
     const regen = plan.steps.some((step) => step.cardId.startsWith("POTION:REGEN_POTION:"));
-    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+    // A power is what pays off later; an unmodelled skill's flat nudge is not one (RTF3 F17 T1: Entrench
+    // at 0 block read "sets up a power, lasting 7").
+    const played = plan.steps.map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId));
+    const setsUp =
+      played.some((card) => card !== undefined && (card.type === "Power" || card.strength > 0)) ||
+      !played.some((card) => card !== undefined && !card.known && card.flatValue > 0);
+    const what = forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : setsUp ? "sets up a power" : "unmodelled skill, flat value";
+    summary["lasting_value"] = `${what}, worth about ${Math.round(o.lasting)} score over the fight${setsUp || forge || regen ? " (a few HP now is often worth it in a long fight)" : ""}`;
   }
   if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
@@ -1846,7 +1853,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   options.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...fitOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
@@ -1925,7 +1932,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...planFacts(plan, ctx), ...fitOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
