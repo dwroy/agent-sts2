@@ -19,6 +19,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
+import { moveModel } from "../knowledge/move-model.js";
 import { bossNote } from "../project/run-journal.js";
 import { deckDamagePerTurn } from "./boss-clock.js";
 import { FIGHT_OBJECTIVES, INTENT_REASONS, isOneOf, MEANING, parseReasons, REASON_MEANING, type FightObjective, type IntentReason } from "./intent.js";
@@ -171,14 +172,21 @@ export const FIGHT_PLAN_TASK = [
   "Code overrides the objective only on hard facts: scale_then_kill below 25% HP or against a hit of half our HP becomes",
   "preserve_hp; kill_fast/race under the run's hp_policy preserve become preserve_hp only below 40% HP against enemies",
   "that do not scale, when code expects the fight to last more than 3 turns. Any other disagreement is logged and your",
-  "objective is kept.",
+  "objective is kept. In kill_priority, minions (MINION_POWER: they leave when the last non-minion dies) are moved",
+  "behind the last non-minion.",
 ].join(" ");
 
-/** The first living kill-priority enemy that is not one of several that must die together. */
+/**
+ * The first living kill-priority enemy; a minion only once no non-minion lives (a plan logged before
+ * the validator moved minions last, G8F1 F17).
+ */
 export function fightFocus(plan: FightPlan | null, state: GameState): string | null {
   if (!plan) return null;
-  const living = livingEnemyIds(state);
-  return plan.killPriority.find((id) => living.includes(id)) ?? null;
+  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  const living = enemies.map((enemy) => str(enemy["enemy_id"]));
+  const minionIds = new Set(enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])));
+  const leaderAlive = enemies.some((enemy) => !isMinion(enemy));
+  return plan.killPriority.find((id) => living.includes(id) && !(leaderAlive && minionIds.has(id))) ?? null;
 }
 
 /**
@@ -244,9 +252,11 @@ export function parseFightPlan(
       // No kill-first target among enemies that must die together (Decimillipede segments reattach,
       // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
       together: enemies.filter(mustDieTogether).map((enemy) => str(enemy["enemy_id"])),
+      minions: enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])),
       potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "" })),
       kind: base.kind,
       scaling: enemies.map((enemy) => enemyScales(enemy)).filter((why): why is string => why !== null),
+      cycleScaling: enemies.map((enemy) => cycleGrowth(str(enemy["enemy_id"]))).filter((why): why is string => why !== null),
     });
   notes.push(...checked.filter((note) => !note.startsWith(DISAGREE)));
   plan.validator = notes;
@@ -340,8 +350,23 @@ export function loadFightPlan(file: string, runId: string, fight: string): Fight
 }
 
 /** An enemy that must die in the same turn as its partners (a lone kill brings it back or enrages the rest). */
+function isMinion(enemy: Record<string, unknown>): boolean {
+  return asArray(enemy["powers"] as JsonValue).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
+}
+
 function mustDieTogether(enemy: Record<string, unknown>): boolean {
   return asArray(enemy["powers"] as JsonValue).some((power) => /REATTACH_POWER|CRAB_RAGE_POWER/.test(str(asRecord(power)["power_id"])));
+}
+
+/**
+ * Why an enemy grows over its move cycle (the move model: a move seen with a Buff intent, THRASH's
+ * Vigor, the Waterfall Giant's Steam Eruption stacking), or null. For the validator's "no growth"
+ * check only: Z7D7 F8 Terror Eel (Vigor 6 every other turn) and F17 Waterfall Giant (+3 Steam a turn)
+ * were logged as "code sees no growth" from their T1 boards.
+ */
+export function cycleGrowth(enemyId: string): string | null {
+  const buffs = moveModel()[enemyId]?.buffs ?? [];
+  return buffs.length > 0 ? `${enemyId} buff move${buffs.length > 1 ? "s" : ""} ${buffs.map((move) => move.replace(/_MOVE$/, "")).join("/")} in its cycle` : null;
 }
 
 /** Powers that make an enemy grow every turn it lives (Strength per turn or per hit, per death, per Skill). */
