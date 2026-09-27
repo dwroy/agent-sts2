@@ -1403,8 +1403,26 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Not with Tender on us: a lethal it makes one short is a turn of the Hunter Killer's hits (LSWU F21 T5:
   // 6/126 left, dead at 13 HP). The line still ranks first below; it only loses the shortcut.
   if (best.outcome.winsFight && playerSim.tender === 0) {
-    commit(env, state.turn, best, hand, "code");
-    return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
+    // A lethal line that keeps the run plan's reserved potions beats one that drinks them (Z49J F24 T4:
+    // the Strength Potion kept for the crab went into a hallway lethal that Battle Trance, Sword
+    // Boomerang, Relentless and the Toad's rock made without it). The Toad's rock comes back every fight.
+    const spendsKept = (plan: Plan) =>
+      plan.steps.some((step) => {
+        const id = step.cardId.startsWith("POTION:") ? step.cardId.split(":")[1] ?? "" : "";
+        return id !== "" && !toadRock(id) && reservedPotion(id, potionText(id));
+      });
+    let lethal = best;
+    if (spendsKept(best)) {
+      const kept = (plans: Plan[]) => plans.find((plan) => plan.outcome.winsFight && !spendsKept(plan));
+      lethal = kept(solved.plans) ?? kept(solveWith(solvedFree, (potion) => toadRock(potion.potion_id) || !reservedPotion(potion.potion_id, potion.text)).plans) ?? best;
+    }
+    commit(env, state.turn, lethal, hand, "code");
+    return {
+      kind: "act",
+      label: "combat/lethal",
+      intent: firstIntent(lethal, hand, env),
+      rationale: `lethal: ${lethal.steps.map(stepText).join(", ")}${lethal !== best ? " (keeps the reserved potion: a lethal without it)" : ""}${calcNote}`,
+    };
   }
   // A line that wakes a sleeper into next turn and is left within its first hit (+ next turn's other
   // hits) risks death: dropped while a line without that risk survives (FH3M F30 T2: Offering's Inferno

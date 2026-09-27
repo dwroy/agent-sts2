@@ -247,3 +247,25 @@ describe("Gambler's Brew: an expected-value draw from the draw pile, as a line (
     expect(bestLine("en55-f8-t9")).toMatch(/potion 鲜血药水.*potion 赌徒特酿/);
   });
 });
+
+describe("a lethal line keeps the reserved potion when another lethal does not need it (Z49J F24 T4)", () => {
+  it("Battle Trance first, the Strength Potion kept for the crab (logged: drank it for the hallway lethal)", () => {
+    const fx = logged("z49j-f24-t4");
+    expect(fx.runPlan!.reserve).toContain("strength");
+    const decision = planCombatTurn(loggedEnv(fx))!;
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") {
+      expect(decision.label).toBe("combat/lethal");
+      expect(decision.rationale).not.toMatch(/力量药水/);
+      expect(decision.intent.action).toBe("play_card");
+    }
+  });
+
+  it("with nothing reserved code takes the best-scoring lethal as before", () => {
+    const fx = logged("z49j-f24-t4");
+    const decision = planCombatTurn(loggedEnv(fx, { runPlan: { ...fx.runPlan!, reserve: [] } }))!;
+    // Unreserved, code is free to take whichever lethal scores best.
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.label).toBe("combat/lethal");
+  });
+});
