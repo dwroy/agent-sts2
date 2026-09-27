@@ -1895,3 +1895,19 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
     expect(a.score).toBeCloseTo(b.score);
   });
 });
+
+describe("Tender on the player (LSWU F21 T5, Hunter Killer)", () => {
+  it("each card played lowers this turn's Strength and Dexterity for the cards after it", () => {
+    // Three Strikes into 18 HP: a lethal at full Strength, 6 + 5 + 4 = 15 with Tender 1.
+    const hand = [strike(0), strike(1), strike(2)];
+    const target = enemy({ hp: 18, attacks: [{ damage: 5, hits: 1 }] });
+    const plain = solveTurn({ hand, player: player({ hp: 40 }), enemies: [target], fightKind: "monster" });
+    expect(plain.plans[0]!.outcome.winsFight).toBe(true);
+    const tender = solveTurn({ hand, player: player({ hp: 40, tender: 1 }), enemies: [target], fightKind: "monster" });
+    expect(tender.plans.some((plan) => plan.outcome.winsFight)).toBe(false);
+    expect(Math.max(...tender.plans.map((plan) => plan.outcome.damageDealt))).toBe(15);
+    // Block too: Strike then two Defends gives 4 + 3.
+    const blocks = solveTurn({ hand: [strike(0), defend(1), defend(2)], player: player({ hp: 40, tender: 1 }), enemies: [enemy({ hp: 50, attacks: [{ damage: 30, hits: 1 }] })], fightKind: "monster" });
+    expect(Math.max(...blocks.plans.map((plan) => plan.outcome.blockGained))).toBeLessThanOrEqual(9);
+  });
+});

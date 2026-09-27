@@ -521,6 +521,18 @@ describe("the run plan's boss keep beats a hallway plan's free big_hit (WB02 F29
   });
 });
 
+describe("Tender turns off the lethal shortcut (LSWU F21 T5)", () => {
+  it("a lethal line is still played, but not through combat/lethal", () => {
+    const raw = combatPayload({ enemyHp: 5 });
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[1]!["is_alive"] = false;
+    expect(planCombatTurn(env(raw))?.kind === "act" ? (planCombatTurn(env(raw)) as { label: string }).label : "ask").toBe("combat/lethal");
+    (combat["player"] as Raw)["powers"] = [{ index: 0, power_id: "TENDER_POWER", name: "Tender", amount: 1, is_debuff: true }];
+    const decision = planCombatTurn(env(raw));
+    expect(decision?.kind === "act" ? decision.label : "ask").not.toBe("combat/lethal");
+  });
+});
+
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
     const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");

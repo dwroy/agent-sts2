@@ -708,6 +708,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
+    tender: powerAmount(player, "TENDER_POWER"),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -963,7 +964,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
   // 3. Code-decided cases.
-  if (best.outcome.winsFight) {
+  // Not with Tender on us: a lethal it makes one short is a turn of the Hunter Killer's hits (LSWU F21 T5:
+  // 6/126 left, dead at 13 HP). The line still ranks first below; it only loses the shortcut.
+  if (best.outcome.winsFight && playerSim.tender === 0) {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
