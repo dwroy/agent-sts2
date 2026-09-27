@@ -12,7 +12,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { cardRoles, cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { currentRunPlan, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
+import { currentRunPlan, floorsToBoss, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
 import { isReserved, planForbidsCard, potionRole } from "../strategy/intent.js";
 import { potionRank, POTION_RANK_DISCARDABLE } from "./map.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -79,6 +79,7 @@ export function planShop(env: DecisionEnv): Decision | null {
   }
 
   const options: PickOption[] = [];
+  const freeValue = new Map<PickOption, number>();
   const stock: JsonValue[] = [];
   const deckNow = deckEntries(state, knowledge);
   const gap = damageGap(state, knowledge);
@@ -108,15 +109,16 @@ export function planShop(env: DecisionEnv): Decision | null {
       if (!enough) continue;
       // RUN_PLAN=v1: a card the run plan avoids is not for sale to us (hard intent).
       if (action === "buy_card" && planForbidsCard(currentRunPlan(env.screenMemory, state), id, cardRoles(id)) !== null) continue;
-      options.push({
+      const scored =
+          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
+          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id), gap?.gap ?? 0, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)).bonus : 0);
+      const option: PickOption = {
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,
         intent: { action, option_index: index },
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
-        score:
-          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
-          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id), gap?.gap ?? 0, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)).bonus : 0),
+        score: scored,
         // Cards carry their energy cost and type like card rewards do (B98P F15: DeepSeek bought Expect a
         // Fight as "1E"; it costs 3).
         summary: {
@@ -128,7 +130,10 @@ export function planShop(env: DecisionEnv): Decision | null {
             : {}),
           text: truncate(text, 140),
         } satisfies JsonValue,
-      });
+      };
+      options.push(option);
+      // The value of the item itself, the gold aside.
+      freeValue.set(option, scored + pricePenalty(action, price ?? 150, emptyPotionSlots));
     }
   };
 
@@ -163,13 +168,35 @@ export function planShop(env: DecisionEnv): Decision | null {
     });
   }
 
-  options.push({
-    key: "leave",
-    label: "stop shopping",
-    intent: { action: "close_shop_inventory" },
-    score: 0,
-    summary: { buy: "nothing", note: "close the inventory and leave the shop" } satisfies JsonValue,
-  });
+  // Leaving is not free: gold left over past what the shops before the boss can still absorb is worth
+  // nothing to the fight that decides the act (CWU9 F31 721 gold, RTF3 F37 1237, EHJZ F31 277 two floors
+  // before the boss: each time Jev left at < 0.3 confidence and the gold died unspent).
+  const gold = state.run?.gold ?? 0;
+  const leaveCost = unspentGoldCost(gold, floor);
+  const leaveScore = -leaveCost;
+  const best = options.reduce<PickOption | null>((top, option) => (top === null || option.score > top.score ? option : top), null);
+  // A buy that clears leaving by a wide margin takes "stop shopping" off the list: what Jev still picks
+  // between are the buys worth their gold now (a buy that hurts the deck even for free is dropped too).
+  // Each purchase re-reads the shop, so leaving comes back once the gold or the good stock runs out.
+  const leaveDominated = best !== null && best.score - leaveScore >= LEAVE_DOMINATED && best.score >= 0;
+  if (leaveDominated) {
+    for (let index = options.length - 1; index >= 0; index -= 1) {
+      if ((freeValue.get(options[index]!) ?? 1) <= 0) options.splice(index, 1);
+    }
+  } else {
+    options.push({
+      key: "leave",
+      label: "stop shopping",
+      intent: { action: "close_shop_inventory" },
+      score: Math.round(leaveScore * 100) / 100,
+      summary: {
+        buy: "nothing",
+        note: leaveCost > 0
+          ? `close the inventory and leave the shop: ~${Math.round(leaveCost * 25)} of the ${gold} gold has no shop left to spend it in before the F${floor + floorsToBoss(floor)} boss`
+          : "close the inventory and leave the shop",
+      } satisfies JsonValue,
+    });
+  }
 
   const entries = deckEntries(state, knowledge);
   return buildPickDecision({
@@ -198,6 +225,29 @@ export function planShop(env: DecisionEnv): Decision | null {
   });
 }
 
+/** Best buy minus leaving at which "stop shopping" is no longer offered. */
+export const LEAVE_DOMINATED = 20;
+/** Gold the shops left before the act boss can still usefully absorb, 10+ floors out. */
+const FUTURE_SHOP_GOLD = 450;
+
+/**
+ * What leaving the shop with `gold` costs, in shop-score units (25 gold = 1, the rate buys pay): the
+ * gold beyond what the shops still ahead can absorb. That allowance shrinks to nothing two floors
+ * before the act boss, where kept gold buys nothing for the fight that decides the act.
+ */
+export function unspentGoldCost(gold: number, floor: number): number {
+  const ahead = Math.min(1, Math.max(0, (floorsToBoss(floor) - 2) / 10));
+  const surplus = Math.max(0, gold - FUTURE_SHOP_GOLD * ahead);
+  return Math.min(40, surplus / 25);
+}
+
+/** The price part of shopScore (what the item costs in score). */
+function pricePenalty(action: "buy_card" | "buy_relic" | "buy_potion", cost: number, emptySlots: number): number {
+  if (action === "buy_card") return cost / 25;
+  if (action === "buy_relic") return cost / 40;
+  return emptySlots > 0 ? cost / 25 : cost / 30;
+}
+
 function shopScore(
   action: "buy_card" | "buy_relic" | "buy_potion",
   id: string,
@@ -222,7 +272,8 @@ function shopScore(
   // Low HP with an empty slot: the potion is the next fight, above a removal's 30 (X4QR F21: 21/80
   // after, 261 gold on Flame Barrier, a removal and Feel No Pain; Explosive Ampoule and Fire Potion left).
   if (emptySlots > 0 && hpPct < 0.45) return 34 - cost / 25;
-  if (act >= 2 && emptySlots > 0) return (emptySlots >= 2 ? 14 : 8) - cost / 25;
+  // An empty slot in any act: a potion is worth more than the gold held for it (it outranks leaving).
+  if (emptySlots > 0) return (act >= 2 && emptySlots >= 2 ? 14 : 8) - cost / 25;
   return -5 - cost / 30;
 }
 
