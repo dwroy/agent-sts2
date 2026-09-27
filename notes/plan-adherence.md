@@ -7,31 +7,31 @@ script's docstring; `--json` for raw events, `--events RUNID` for one run).
 
 - **Boss potions (run plan save_potions)**: kept until the act boss 17/36 (47%). Broken by: code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2; only 4/19 at low HP / dying lines, 18/19 inside code's 10-floor keep window. In 13/19 the fight plan of that same fight told code/Jev to drink it (early or big_hit): the two DeepSeek plans contradict each other.
 - **Parser loss**: DeepSeek often lists 3 save_potions roles; parseRunPlan keeps 2. Potions of the dropped role: 8/16 (50%) kept anyway.
-- **Entry HP**: met 23/41 (56%); misses average 15.6pp. Broken by: no_opportunity 16, deepseek 1, map_scoring 1 (no_opportunity = no smithing below target and no optional elite near the boss: the HP went in fights).
-- **Must-have roles**: deck had >= 2 cards of the role at the boss 94/127 (74%); a card reward offering a lacking role was taken 109/134 (81%) (misses: code 19, deepseek 6).
-- **Avoid**: avoided cards stayed out 386/391 (99%) (added anyway: code 3, deepseek 1, jev 1); elites avoided 162/172 (94%) (taken by: map_scoring 6, deepseek 3, jev 1).
-- **Kill-first enemy**: 1179/1387 (85%) of targeted plays hit it (misses: code 124, hp_guard 35, jev=rank1 28, jev 11, fallback 8, potion_veto 2).
+- **Entry HP**: met 28/47 (60%); misses average 15.6pp. Broken by: no_opportunity 17, deepseek 1, map_scoring 1 (no_opportunity = no smithing below target and no optional elite near the boss: the HP went in fights).
+- **Must-have roles**: deck had >= 2 cards of the role at the boss 108/150 (72%); a card reward offering a lacking role was taken 134/162 (83%) (misses: code 22, deepseek 6).
+- **Avoid**: avoided cards stayed out 403/408 (99%) (added anyway: code 3, deepseek 1, jev 1); elites avoided 179/189 (95%) (taken by: map_scoring 6, deepseek 3, jev 1).
+- **Kill-first enemy**: 1301/1517 (86%) of targeted plays hit it (misses: code 128, hp_guard 35, jev=rank1 31, jev 12, fallback 8, potion_veto 2).
 - **Fight-plan potions**: early 163/176, save 183/194, emergency 150/170 honoured; big_hit 21/56 and burst(from big_hit) 11/78 are the weak spots (mostly offensive potions drunk on T1-2, the case code later re-read as burst).
 - **Setup cards**: played on the first T1-2 turn in hand 787/878 (90%) (misses: code 26, jev=rank1 19, hp_guard 19, jev 8, jev(stub)=rank1 7, potion_veto 6, fallback 6).
 - **Plan labels on Jev's options**: setup-labelled line: code rank 1 73%, Jev's pick 90%, finally played 83% (the HP guard is what undoes Jev's setup picks); potion-keep labels: Jev 73%, finally 79% (the potion veto repairs some).
-- **Intent era (from 0f2e648)**, 6 finished run(s): 13 validator repairs, 26 run-plan versions, 35 changes accepted / 3 rejected; execution after a change 31/32; 2 Jev intent deviations; intent_fit on 74% of Jev decisions; reserve kept 12/14, 0 bug(s).
+- **Intent era (from 0f2e648)**, 11 finished run(s): 20 validator repairs, 54 run-plan versions, 69 changes accepted / 5 rejected; execution after a change 68/69; 3 Jev intent deviations; intent_fit on 76% of Jev decisions; reserve kept 19/24, 0 bug(s).
 
-Plan adherence: 120 finished runs with DeepSeek plans (+1 unfinished, not aggregated).
+Plan adherence: 125 finished runs with DeepSeek plans (+1 unfinished, not aggregated).
 honoured / broken per commitment; 'broken by' = who made the choice that broke it (see --help / docstring).
 
-### ALL finished runs (120 runs)
+### ALL finished runs (125 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 36 | 17 (47%) | 19 (53%) | 2 | code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2 (justified 4/19, inside 10-floor window 18/19; that fight's plan said: early 7, big_hit 6, burst 4, emergency 1, save 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 16 | 8 (50%) | 8 (50%) | 1 | code 3, jev=rank1 1, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 4/8, inside 10-floor window 7/8; that fight's plan said: early 3, big_hit 2, emergency 1, save 1, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 41 | 23 (56%) | 18 (44%) | 0 | no_opportunity 16, deepseek 1, map_scoring 1 (missed by 15.6pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 127 | 94 (74%) | 33 (26%) [19 partial] | 0 | code 16, no_opportunity 11, deepseek 4, code,deepseek 2 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 134 | 109 (81%) | 25 (19%) | 0 | code 19, deepseek 6 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 391 | 386 (99%) | 5 (1%) | 0 | code 3, deepseek 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 172 | 162 (94%) | 10 (6%) | 45 | map_scoring 6, deepseek 3, jev 1 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1387 | 1179 (85%) | 208 (15%) | 0 | code 124, hp_guard 35, jev=rank1 28, jev 11, fallback 8, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 749 | 622 (83%) | 127 (17%) | 0 | code 66, hp_guard 23, jev=rank1 23, jev 8, fallback 6, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 47 | 28 (60%) | 19 (40%) | 0 | no_opportunity 17, deepseek 1, map_scoring 1 (missed by 15.6pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 150 | 108 (72%) | 42 (28%) [24 partial] | 0 | code 20, no_opportunity 16, deepseek 4, code,deepseek 2 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 162 | 134 (83%) | 28 (17%) | 0 | code 22, deepseek 6 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 408 | 403 (99%) | 5 (1%) | 0 | code 3, deepseek 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 189 | 179 (95%) | 10 (5%) | 48 | map_scoring 6, deepseek 3, jev 1 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1517 | 1301 (86%) | 216 (14%) | 0 | code 128, hp_guard 35, jev=rank1 31, jev 12, fallback 8, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 823 | 691 (84%) | 132 (16%) | 0 | code 68, jev=rank1 25, hp_guard 23, jev 9, fallback 6, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 784 | 589 (75%) | 195 (25%) | 39 | jev 49, code 45, jev=rank1 41, not_drunk 38, hp_guard 15, potion_veto 7 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 878 | 787 (90%) | 91 (10%) | 764 | code 26, jev=rank1 19, hp_guard 19, jev 8, jev(stub)=rank1 7, potion_veto 6, fallback 6 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 1032 | 811 (79%) | 221 (21%) | 10 | jev=rank1 68, hp_guard 62, jev 49, jev(stub)=rank1 26, fallback 13, potion_veto 3 |
@@ -130,36 +130,36 @@ Fight-plan potion timing (metric 6), per planned use:
 | save | 50 | 0 | 0 | - |
 | emergency | 20 | 0 | 0 | - |
 
-### era intent (from 0f2e648) (6 runs)
+### era intent (from 0f2e648) (11 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 0 | 0 (-) | 0 (-) | 0 | - |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 0 | 0 (-) | 0 (-) | 0 | - |
-| 2 run plan: act-boss entry HP >= target | 7 | 4 (57%) | 3 (43%) | 0 | no_opportunity 3 (missed by 20.3pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 26 | 20 (77%) | 6 (23%) [5 partial] | 0 | code 5, no_opportunity 1 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 37 | 33 (89%) | 4 (11%) | 0 | code 4 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 26 | 26 (100%) | 0 (0%) | 0 | - |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 11 | 11 (100%) | 0 (0%) | 3 | - |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 110 | 93 (85%) | 17 (15%) | 0 | code 6, jev 5, jev=rank1 3, hp_guard 2, fallback 1 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 61 | 50 (82%) | 11 (18%) | 0 | code 4, jev 3, jev=rank1 2, hp_guard 1, fallback 1 |
+| 2 run plan: act-boss entry HP >= target | 13 | 9 (69%) | 4 (31%) | 0 | no_opportunity 4 (missed by 19.2pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 49 | 34 (69%) | 15 (31%) [10 partial] | 0 | code 9, no_opportunity 6 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 65 | 58 (89%) | 7 (11%) | 0 | code 7 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 43 | 43 (100%) | 0 (0%) | 0 | - |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 28 | 28 (100%) | 0 (0%) | 6 | - |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 240 | 215 (90%) | 25 (10%) | 0 | code 10, jev 6, jev=rank1 6, hp_guard 2, fallback 1 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 135 | 119 (88%) | 16 (12%) | 0 | code 6, jev 4, jev=rank1 4, hp_guard 1, fallback 1 |
 | 6 fight plan: potion drunk at the planned moment | 0 | 0 (-) | 0 (-) | 0 | - |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 0 | 0 (-) | 0 (-) | 0 | - |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 0 | 0 (-) | 0 (-) | 0 | - |
 
-### arm normal (110 runs)
+### arm normal (115 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 23 | 12 (52%) | 11 (48%) | 0 | code 4, hp_guard 3, jev 2, jev=rank1 1, plan_potion 1 (justified 1/11, inside 10-floor window 11/11; that fight's plan said: early 6, big_hit 4, burst 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 11 | 5 (45%) | 6 (55%) | 1 | code 2, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 3/6, inside 10-floor window 5/6; that fight's plan said: early 3, big_hit 2, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 25 | 12 (48%) | 13 (52%) | 0 | no_opportunity 12, map_scoring 1 (missed by 16.3pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 80 | 57 (71%) | 23 (29%) [13 partial] | 0 | code 11, no_opportunity 9, deepseek 2, code,deepseek 1 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 91 | 76 (84%) | 15 (16%) | 0 | code 12, deepseek 3 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 350 | 346 (99%) | 4 (1%) | 0 | code 2, deepseek 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 140 | 131 (94%) | 9 (6%) | 39 | map_scoring 5, deepseek 3, jev 1 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1178 | 986 (84%) | 192 (16%) | 0 | code 109, hp_guard 35, jev=rank1 28, jev 11, fallback 7, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 634 | 519 (82%) | 115 (18%) | 0 | code 55, hp_guard 23, jev=rank1 23, jev 8, fallback 5, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 31 | 17 (55%) | 14 (45%) | 0 | no_opportunity 13, map_scoring 1 (missed by 16.3pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 103 | 71 (69%) | 32 (31%) [18 partial] | 0 | code 15, no_opportunity 14, deepseek 2, code,deepseek 1 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 119 | 101 (85%) | 18 (15%) | 0 | code 15, deepseek 3 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 367 | 363 (99%) | 4 (1%) | 0 | code 2, deepseek 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 157 | 148 (94%) | 9 (6%) | 42 | map_scoring 5, deepseek 3, jev 1 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1308 | 1108 (85%) | 200 (15%) | 0 | code 113, hp_guard 35, jev=rank1 31, jev 12, fallback 7, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 708 | 588 (83%) | 120 (17%) | 0 | code 57, jev=rank1 25, hp_guard 23, jev 9, fallback 5, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 651 | 479 (74%) | 172 (26%) | 37 | jev 47, code 39, jev=rank1 38, not_drunk 28, hp_guard 13, potion_veto 7 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 755 | 682 (90%) | 73 (10%) | 632 | jev=rank1 19, code 18, hp_guard 18, jev 8, potion_veto 6, fallback 4 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 900 | 719 (80%) | 181 (20%) | 10 | jev=rank1 61, hp_guard 57, jev 48, fallback 12, potion_veto 3 |
@@ -256,19 +256,19 @@ Fight-plan potion timing (metric 6), per planned use:
 | save | 29 | 1 | 0 | - |
 | emergency | 30 | 1 | 0 | - |
 
-### runs with commitment fields (entryHp/savePotions/mustHave) (28 runs)
+### runs with commitment fields (entryHp/savePotions/mustHave) (33 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 36 | 17 (47%) | 19 (53%) | 2 | code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2 (justified 4/19, inside 10-floor window 18/19; that fight's plan said: early 7, big_hit 6, burst 4, emergency 1, save 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 16 | 8 (50%) | 8 (50%) | 1 | code 3, jev=rank1 1, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 4/8, inside 10-floor window 7/8; that fight's plan said: early 3, big_hit 2, emergency 1, save 1, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 41 | 23 (56%) | 18 (44%) | 0 | no_opportunity 16, deepseek 1, map_scoring 1 (missed by 15.6pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 127 | 94 (74%) | 33 (26%) [19 partial] | 0 | code 16, no_opportunity 11, deepseek 4, code,deepseek 2 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 134 | 109 (81%) | 25 (19%) | 0 | code 19, deepseek 6 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 115 | 113 (98%) | 2 (2%) | 0 | code 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 75 | 73 (97%) | 2 (3%) | 17 | map_scoring 2 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 700 | 610 (87%) | 90 (13%) | 0 | code 53, hp_guard 14, jev=rank1 10, fallback 6, jev 5, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 376 | 317 (84%) | 59 (16%) | 0 | code 32, hp_guard 10, jev=rank1 8, fallback 5, jev 3, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 47 | 28 (60%) | 19 (40%) | 0 | no_opportunity 17, deepseek 1, map_scoring 1 (missed by 15.6pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 150 | 108 (72%) | 42 (28%) [24 partial] | 0 | code 20, no_opportunity 16, deepseek 4, code,deepseek 2 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 162 | 134 (83%) | 28 (17%) | 0 | code 22, deepseek 6 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 132 | 130 (98%) | 2 (2%) | 0 | code 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 92 | 90 (98%) | 2 (2%) | 20 | map_scoring 2 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 830 | 732 (88%) | 98 (12%) | 0 | code 57, hp_guard 14, jev=rank1 13, fallback 6, jev 6, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 450 | 386 (86%) | 64 (14%) | 0 | code 34, jev=rank1 10, hp_guard 10, fallback 5, jev 4, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 284 | 237 (83%) | 47 (17%) | 22 | not_drunk 20, code 13, jev=rank1 8, jev 3, hp_guard 2, potion_veto 1 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 318 | 281 (88%) | 37 (12%) | 271 | code 14, jev(stub)=rank1 7, fallback 6, hp_guard 5, jev 2, jev=rank1 2, potion_veto 1 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 342 | 251 (73%) | 91 (27%) | 2 | jev(stub)=rank1 26, jev=rank1 26, hp_guard 19, fallback 10, jev 10 |
@@ -296,48 +296,60 @@ Fight-plan potion timing (metric 6), per planned use:
 
 ## Intent era (from 0f2e648): validator, re-plans, execution, deviations, reserve
 
-### finished intent-era runs (6)
+### finished intent-era runs (11)
 
-- **I1 validator repairs**: 13 (2 on 26 run plans, 11 on 61 fight plans). By type: fight: kill_fast/race→preserve_hp (hp_policy preserve) 11, run: reserve any+roles→any 1, run: unknown avoid dropped 1.
-- **I2 re-plans**: 26 run-plan versions (4.3 per run, max 6); by checkpoint: hp_drop 8, review 7, start 6, act 5; failed requests: run 0, fight 1.
-  - changes accepted 35: by field run: hp_policy 10, run: needs 9, run: route_risk 8, run: reserve 7, run: entry_hp_pct 1; by trigger hp_below_target 14, act_changed 8, potion_lost_or_gained 5, hp_recovered 4, key_card_or_relic_gained 2, boss_gap_closed 2.
-  - changes rejected 3: by reason invalid_trigger 2, no_trigger 1; by field reserve 1, hp_policy 1, route_risk 1.
-- **I3 execution after an accepted change**: honoured 31/32 (97%), n/a 17 (no check or no opportunity).
-- **I4 intent deviations**: 2 Jev decisions labelled "breaks …" (1% of 276 Jev decisions); by intent hp_policy preserve 2; by screen COMBAT 2. Jev decisions with an intent_fit label: 204/276 (74%).
-- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 12/14 (86%), broken 2 (by jev=rank1 1, code 1; exceptions HP < 25% 2; discarded 0), n/a 3 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
+- **I1 validator repairs**: 20 (6 on 54 run plans, 14 on 108 fight plans). By type: fight: kill_fast/race→preserve_hp (hp_policy preserve) 14, run: reserve any+roles→any 2, run: unknown want dropped 2, run: unknown avoid dropped 1, run: other 1.
+- **I2 re-plans**: 54 run-plan versions (4.9 per run, max 8); by checkpoint: hp_drop 15, start 11, review 11, hp_rise 9, act 8; failed requests: run 0, fight 1.
+  - changes accepted 69: by field run: hp_policy 26, run: route_risk 16, run: reserve 14, run: needs 11, run: entry_hp_pct 2; by trigger hp_below_target 28, hp_recovered 14, act_changed 13, potion_lost_or_gained 10, key_card_or_relic_gained 2, boss_gap_closed 2.
+  - changes rejected 5: by reason no_trigger 2, invalid_trigger 2, unsupported 1; by field reserve 3, hp_policy 1, route_risk 1.
+- **I3 execution after an accepted change**: honoured 68/69 (99%), n/a 35 (no check or no opportunity).
+- **I4 intent deviations**: 3 Jev decisions labelled "breaks …" (0% of 602 Jev decisions); by intent hp_policy preserve 2, the Sandpit race 1; by screen COMBAT 3. Jev decisions with an intent_fit label: 456/602 (76%).
+- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 19/24 (79%), broken 5 (by code 2, jev 2, jev=rank1 1; exceptions HP < 25% 5; discarded 0), n/a 4 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
 
 | accepted change | check | honoured | broken | n/a | broken by |
 |---|---|---:|---:|---:|---|
+| entry_hp_pct → 0.85 | none | 0 | 0 | 1 | - |
 | entry_hp_pct → 0.9 | no_elite_near_boss | 2 | 0 | 0 | - |
 | entry_hp_pct → 0.9 | rest_heal_near_boss | 3 | 0 | 0 | - |
-| hp_policy → "balanced" | none | 0 | 0 | 2 | - |
-| hp_policy → "preserve" | no_optional_elite | 3 | 0 | 0 | - |
-| hp_policy → "preserve" | rest_heal_below_target | 12 | 0 | 0 | - |
-| needs → ["aoe", "block", "frontload", "strength"] | needs_reward | 1 | 0 | 0 | - |
+| hp_policy → "balanced" | none | 0 | 0 | 9 | - |
+| hp_policy → "preserve" | no_optional_elite | 14 | 0 | 0 | - |
+| hp_policy → "preserve" | rest_heal_below_target | 26 | 0 | 0 | - |
+| needs → ["aoe", "block", "frontload", "strength"] | needs_reward | 1 | 0 | 1 | - |
 | needs → ["aoe", "block", "multi_hit", "strength"] | needs_reward | 1 | 0 | 0 | - |
 | needs → ["aoe", "block", "strength"] | none | 0 | 0 | 1 | - |
+| needs → ["aoe", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "draw", "frontload", "strength"] | needs_reward | 1 | 0 | 0 | - |
 | needs → ["block", "draw", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "draw"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "exhaust", "frontload", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "frontload", "multi_hit", "strength"] | needs_reward | 1 | 1 | 0 | code 1 |
 | needs → ["block", "frontload", "strength"] | none | 0 | 0 | 1 | - |
+| reserve → ["any", "block", "damage", "heal"] | reserve_added_kept | 2 | 0 | 0 | - |
 | reserve → ["any", "block", "damage", "strength"] | reserve_added_kept | 3 | 0 | 0 | - |
-| reserve → ["block", "damage", "strength"] | reserve_added_kept | 0 | 0 | 4 | - |
+| reserve → ["block", "damage", "heal", "strength", "weak"] | reserve_added_kept | 0 | 0 | 1 | - |
+| reserve → ["block", "damage", "strength", "weak"] | reserve_added_kept | 0 | 0 | 2 | - |
+| reserve → ["block", "damage", "strength"] | reserve_added_kept | 1 | 0 | 5 | - |
 | reserve → ["block", "damage", "weak"] | reserve_added_kept | 0 | 0 | 1 | - |
+| reserve → ["damage", "strength", "weak"] | reserve_added_kept | 1 | 0 | 0 | - |
 | reserve → ["damage", "weak"] | reserve_added_kept | 1 | 0 | 0 | - |
-| route_risk → "avoid_elites" | no_optional_elite | 3 | 0 | 3 | - |
-| route_risk → "normal" | none | 0 | 0 | 2 | - |
+| route_risk → "avoid_elites" | no_optional_elite | 11 | 0 | 4 | - |
+| route_risk → "normal" | none | 0 | 0 | 5 | - |
 
-### unfinished intent-era runs, not in the aggregates above (1: FN0HCB4DVKZK)
+### unfinished intent-era runs, not in the aggregates above (1: X8R8CDF4HMNG)
 
-- **I1 validator repairs**: 0 (0 on 1 run plans, 0 on 3 fight plans). By type: -.
-- **I2 re-plans**: 1 run-plan versions (1.0 per run, max 1); by checkpoint: start 1; failed requests: run 0, fight 0.
-  - changes accepted 0: by field -; by trigger -.
+- **I1 validator repairs**: 0 (0 on 2 run plans, 0 on 2 fight plans). By type: -.
+- **I2 re-plans**: 2 run-plan versions (2.0 per run, max 2); by checkpoint: start 1, hp_drop 1; failed requests: run 0, fight 1.
+  - changes accepted 2: by field run: hp_policy 1, run: route_risk 1; by trigger hp_below_target 2.
   - changes rejected 0: by reason -; by field -.
-- **I3 execution after an accepted change**: honoured 0/0 (-), n/a 0 (no check or no opportunity).
-- **I4 intent deviations**: 0 Jev decisions labelled "breaks …" (0% of 14 Jev decisions); by intent -; by screen -. Jev decisions with an intent_fit label: 7/14 (50%).
+- **I3 execution after an accepted change**: honoured 3/3 (100%), n/a 0 (no check or no opportunity).
+- **I4 intent deviations**: 0 Jev decisions labelled "breaks …" (0% of 16 Jev decisions); by intent -; by screen -. Jev decisions with an intent_fit label: 13/16 (81%).
 - **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 0/0 (-), broken 0 (by -; exceptions -; discarded 0), n/a 0 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
+
+| accepted change | check | honoured | broken | n/a | broken by |
+|---|---|---:|---:|---:|---|
+| hp_policy → "preserve" | no_optional_elite | 1 | 0 | 0 | - |
+| hp_policy → "preserve" | rest_heal_below_target | 1 | 0 | 0 | - |
+| route_risk → "avoid_elites" | no_optional_elite | 1 | 0 | 0 | - |
 
 
 ### Per run (honoured/scored)
@@ -464,7 +476,12 @@ Fight-plan potion timing (metric 6), per planned use:
 | KQK207TQ9BQ1 | 2026-09-27T12:35 | normal | intent (from 0f2e648) | 0f2e648+dirty | 25 | False | - | A1:100/85 | 3/4 | 6/7 | 4/4 | 1/1 | 10/17 | - | - | - |
 | VQ7JT9W2V287 | 2026-09-27T12:49 | normal | intent (from 0f2e648) | 409c7a2 | 11 | False | - | - | - | 4/4 | 2/2 | - | 12/13 | - | - | - |
 | G8F1QPPZCM4T | 2026-09-27T12:55 | normal | intent (from 0f2e648) | 409c7a2+dirty | 33 | False | - | A1:100/90 A2:51/90 | 7/8 | 6/6 | 5/5 | 3/3 | 21/22 | - | - | - |
-| FN0HCB4DVKZK | 2026-09-27T13:10 | normal | intent (from 0f2e648) | ? | ? | unfinished | - | - | - | 4/4 | 1/1 | - | 9/9 | - | - | - |
+| FN0HCB4DVKZK | 2026-09-27T13:10 | normal | intent (from 0f2e648) | 409c7a2+dirty | 33 | False | - | A1:91/85 A2:94/85 | 6/8 | 7/8 | 5/5 | 4/4 | 12/16 | - | - | - |
+| VF5CMUAQV4G4 | 2026-09-27T13:26 | normal | intent (from 0f2e648) | 409c7a2+dirty | 27 | False | - | A1:100/90 | 1/3 | 3/4 | 3/3 | 6/6 | 34/36 | - | - | - |
+| Z7D7J1RUUJ61 | 2026-09-27T13:39 | normal | intent (from 0f2e648) | 78e159a | 28 | False | - | A1:100/85 | 2/4 | 7/7 | 5/5 | 2/2 | 24/25 | - | - | - |
+| VUV4MSZUA34L | 2026-09-27T13:57 | normal | intent (from 0f2e648) | 78e159a | 17 | False | - | A1:74/90 | 3/4 | 4/4 | 2/2 | 3/3 | 30/31 | - | - | - |
+| T86WL2BHF6QW | 2026-09-27T14:07 | normal | intent (from 0f2e648) | 78e159a+dirty | 17 | False | - | A1:88/85 | 2/4 | 4/5 | 2/2 | 2/2 | 22/22 | - | - | - |
+| X8R8CDF4HMNG | 2026-09-27T14:17 | normal | intent (from 0f2e648) | ? | ? | unfinished | - | - | - | 3/3 | - | 1/1 | 0/4 | - | - | - |
 
 ### Per run, intent era (I1-I5; older runs: n/a)
 
@@ -476,7 +493,12 @@ Fight-plan potion timing (metric 6), per planned use:
 | KQK207TQ9BQ1 | 5 | 0/3 | hp_policy 1, route_risk 1, reserve 2, needs 1 | invalid_trigger 2 | 7/7 | 0 | 37/49 | 2/2 |
 | VQ7JT9W2V287 | 2 | 0/1 | hp_policy 1, route_risk 1, needs 1 | 0 | 1/1 | 0 | 26/36 | - |
 | G8F1QPPZCM4T | 5 | 1/1 | hp_policy 3, reserve 1, needs 2, route_risk 2 | 0 | 3/3 | 0 | 32/46 | 2/4 |
-| FN0HCB4DVKZK | 1 | 0/0 | 0 | 0 | - | 0 | 7/14 | - |
+| FN0HCB4DVKZK | 5 | 1/1 | reserve 2, hp_policy 3, route_risk 2, needs 1 | 0 | 4/4 | the Sandpit race 1 | 48/67 | 2/2 |
+| VF5CMUAQV4G4 | 5 | 0/2 | hp_policy 4, route_risk 1, reserve 1, entry_hp_pct 1, needs 1 | 0 | 13/13 | 0 | 53/75 | 1/2 |
+| Z7D7J1RUUJ61 | 8 | 3/0 | hp_policy 3, route_risk 1, reserve 3 | unsupported 1, no_trigger 1 | 8/8 | 0 | 59/77 | 3/5 |
+| VUV4MSZUA34L | 6 | 0/0 | hp_policy 4, route_risk 2, reserve 1 | 0 | 5/5 | 0 | 40/47 | 1/1 |
+| T86WL2BHF6QW | 4 | 0/0 | hp_policy 2, route_risk 2 | 0 | 7/7 | 0 | 52/60 | - |
+| X8R8CDF4HMNG | 2 | 0/0 | hp_policy 1, route_risk 1 | 0 | 3/3 | 0 | 13/16 | - |
 ## Spot checks against the raw logs (by hand, 2026-09-27)
 
 - **EJXCAQ56PWLK F28 (elite, Entomancer) T1 -- Flex and Speed drunk.** decisions.jsonl: 10:06:42Z Jev chose plan 2/4
