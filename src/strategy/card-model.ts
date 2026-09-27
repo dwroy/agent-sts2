@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -468,6 +468,20 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Every card in hand upgraded for the fight (upgradeCard): this turn's plays after it and the upgraded
   // cards' later draws (VUV4 F17: carried unmodelled, drunk at 0 energy on one Defend; T86W to the death).
   BLESSING_OF_THE_FORGE: { target: "self", special: "upgrade_hand" },
+  // Heart of Iron: Plating 7 (states.jsonl, 20 drinks from 3MDJ to Z7D7: PLATING_POWER 7 each time,
+  // not Metallicize): block at the end of this turn (turn-solver platingNow) and one less each later turn
+  // (lasting value at Stone Armor's rate, PLATING_LASTING). Unmodelled, KGR6 carried it from F8 to the
+  // F27 event that took it, through two 1-3 HP turns.
+  HEART_OF_IRON: { target: "self", plating: 7, special: "plating" },
+  // Snecko Oil: 「抽{Cards}张牌。在本回合随机化你手牌中所有牌的耗能」. Drawn 7 up to the 10-card hand (24DP
+  // 2 -> 9, 24HM 3 -> 10; 5 -> 10 elsewhere), costs 0-3 at random (states.jsonl): the hand's costs at their
+  // expected SNECKO_COST. Unmodelled, K8TC carried it from F6 into the act boss that killed it.
+  SNECKO_OIL: { target: "self", draw: 7, special: "snecko" },
+  // Pile-card potions: a card from a pile into the hand (modelPotion builds it from PotionContext).
+  // Liquid Memories: 「将你弃牌堆中的一张牌放入你的手牌。这张牌在本回合可以免费打出」 (PWSD: carried F2-F23 T4).
+  // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
+  LIQUID_MEMORIES: { target: "self" },
+  DROPLET_OF_PRECOGNITION: { target: "self" },
   // Card potions: drinking puts the card in hand (modelPotion builds it from GENERATED_CARD_POTIONS).
   ATTACK_POTION: { target: "self" },
   SKILL_POTION: { target: "self" },
@@ -495,6 +509,26 @@ export interface PotionContext {
   enemyTargets: number[];
   strength: number;
   weak: boolean;
+  /** The pile card a pile-card potion would take (pileCardPick), as a hand card (Strength and Weak in). */
+  discardPick?: CardModel | null;
+  drawPick?: CardModel | null;
+}
+
+/** Potions that take a card from a pile into the hand, and whether it is free this turn. */
+export const PILE_CARD_POTIONS: Record<string, { pile: "discard" | "draw"; free: boolean }> = {
+  LIQUID_MEMORIES: { pile: "discard", free: true },
+  DROPLET_OF_PRECOGNITION: { pile: "draw", free: false },
+};
+
+/**
+ * The pile card a pile-card potion takes: the best one this turn by thisTurnScore (the selection
+ * screen's own rule), at cost 0 when the potion makes it free. null for an empty pile.
+ */
+export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean): CardModel | null {
+  const playable = cards.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse" && card.cardId !== "THE_GAMBIT");
+  if (playable.length === 0) return null;
+  const scored = playable.map((card) => (free ? { ...card, cost: card.xCost ? card.cost : 0 } : card));
+  return scored.reduce((best, card) => (thisTurnScore(card, incoming, enemies) > thisTurnScore(best, incoming, enemies) ? card : best));
 }
 
 /**
@@ -541,6 +575,32 @@ export function upgradeGain(before: CardModel, after: CardModel): number {
   return damage + (after.block - before.block) + 2.5 * (after.vulnerable - before.vulnerable + after.weak - before.weak) + 5 * (after.strength - before.strength) + 2 * (after.draw - before.draw) + 3 * (before.cost - after.cost);
 }
 
+/**
+ * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
+ * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
+ * value, less its energy cost and HP cost.
+ */
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
+  // Colorless Potion, died to a 9-damage hit). Never worth taking.
+  if (card.cardId === "THE_GAMBIT") return -100;
+  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
+  const score =
+    damage +
+    block +
+    2.5 * Math.min(card.vulnerable, 3) +
+    1.5 * Math.min(card.weak, 3) +
+    5 * card.strength +
+    2 * card.tempStrength +
+    3 * card.draw +
+    4 * card.energyGain +
+    card.flatValue -
+    2 * Math.max(0, card.cost) -
+    card.hpLoss;
+  return Math.round(score);
+}
+
 /** Touch of Insanity is only worth drinking for a card costing at least this much. */
 export const FREE_CARD_MIN_COST = 2;
 
@@ -556,12 +616,24 @@ export function freeCardPick<T extends CardModel>(cards: T[]): T | null {
   return eligible.reduce((best, card) => (card.cost > best.cost || (card.cost === best.cost && worth(card) > worth(best)) ? card : best));
 }
 
+/** Enemy turns a kept block potion is counted over in the fight it is kept for (an elite's ~4). */
+export const KEPT_POTION_TURNS = 4;
+
+/** Block a potion gives over KEPT_POTION_TURNS turns: its block, and Plating one less each turn (Heart of Iron 7+6+5+4). */
+export function potionBlockHp(potionId: string, turns = KEPT_POTION_TURNS): number {
+  const effect = POTION_EFFECTS[potionId];
+  if (!effect) return 0;
+  let plating = 0;
+  for (let turn = 0; turn < turns; turn += 1) plating += Math.max(0, (effect.plating ?? 0) - turn);
+  return (effect.block ?? 0) + plating;
+}
+
 export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;
 }
 
 /** Self-buff specials whose effect does not depend on what was played before them. */
-const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual"]);
+const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating"]);
 
 /**
  * A modelled potion that is never worse drunk before the turn's cards than after them: it targets no
@@ -571,7 +643,7 @@ const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade
  */
 export function drinkFirstSafe(potionId: string): boolean {
   const effect = POTION_EFFECTS[potionId];
-  if (!effect || effect.target !== "self" || potionId in GENERATED_CARD_POTIONS) return false;
+  if (!effect || effect.target !== "self" || potionId in GENERATED_CARD_POTIONS || potionId in PILE_CARD_POTIONS) return false;
   // Clarity draws one card: drunk first that card can still be played, and its later draws are the point.
   if ((effect.draw ?? 0) > 0) return effect.special === "clarity";
   return effect.special === undefined || effect.special === null || ORDER_FREE_SPECIALS.has(effect.special);
@@ -585,7 +657,11 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
   const card = GENERATED_CARD_POTIONS[potionId];
-  const generates: CardModel | undefined = card
+  const pile = PILE_CARD_POTIONS[potionId];
+  const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
+  const generates: CardModel | undefined = pileCard
+    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
+    : card
     ? {
         index: 200 + slot,
         key: `g${slot}`,

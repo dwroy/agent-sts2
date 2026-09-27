@@ -4,28 +4,50 @@
  */
 
 /**
- * HP fraction of max HP a hallway fight costs, by act: the 75th percentile of the net loss (after
- * Burning Blood) of logged A8 fights, so a route is priced at a bad-but-common fight, not the median.
- * A8 logs (decisions.jsonl, fight-plans.jsonl kind, 2026-09-28): act 1 hallways n=219, median 5, mean
- * 6.4, p75 11, p90 17 HP of 80 -> 0.14 (was 0.10; N7KR F4-F7 lost 6/11/28, K7G9 act 1 averaged 12.3
- * before the heal); act 2 hallways n=148, p75 19 (0.24; 0.22 kept); act 1 elites p75 29 (0.36, x2.5 =
- * 0.35); act 2 elites p75 41 (0.51, x2.5 = 0.55).
- * Earlier: A7 measured 12.5 HP a hallway fight; act 3 hallways ~0.33 max HP each in 1LJF and SUUK.
+ * HP fraction of max HP a room's fight costs, by act: the 75th percentile of the net loss (after
+ * Burning Blood; a death counts as the whole HP brought in) of the logged A8 fights, so a route is
+ * priced at a bad-but-common fight, not the median. The p75 is bagged (mean over 2000 bootstrap
+ * resamples) so a small sample's one fight does not set it; fewer than 20 fights keep the prior.
+ * Rooms are typed by the map node entered.
+ *
+ * A8 logs, 69 runs, 2026-09-26..28 (states.jsonl: HP at the first combat state vs the reward screen;
+ * room type from the map's current node or the map/route decision), median / p75 (bagged, 90% CI) / p90:
+ *   hallway   act 1 n=386 0.05 / 0.11 (0.10-0.13) / 0.19;  act 2 n=201 0.15 / 0.24 (0.23-0.26) / 0.34;
+ *             act 3 n=24 0.19 / 0.31 (0.22-0.39) / 0.42
+ *   "?" fight act 1 n=56 0.06 / 0.14 (0.10-0.19) / 0.21;  act 2 n=35 0.18 / 0.27 (0.20-0.41) / 0.42;
+ *             act 3 n=12: too few, the hallway's
+ *   elite     act 1 n=48 0.28 / 0.37 (0.33-0.43) / 0.51;  act 2 n=33 0.43 / 0.59 (0.44-0.66) / 0.67;
+ *             act 3 n=5: too few, 0.70 kept
+ * The median is ~0.6 of the p75 wherever n >= 20, as fightSurvival assumes. Was 0.14 / 0.22 / 0.28 with
+ * elites at x2.5 (0.35 / 0.55 / 0.70): act-2 hallways and act-1/2 elites were priced low (PWSD, KGR6,
+ * EGX7 post-mortems: act-2 hallways 13-55 HP of 80, act-1 elites 40-61%), act-1 hallways high. The last
+ * 20 A8 runs alone: act-1 hallway 0.10, act-2 0.26, act-1 elite 0.50, act-2 elite 0.62 (n 117/52/13/9).
  */
-export const FIGHT_HP_COST_BY_ACT = [0.14, 0.22, 0.28];
-/** Share of a hallway fight's HP cost a "?" room carries (some are fights, some events cost HP). */
-export const UNKNOWN_HP_SHARE = 0.4;
-/** Elites x2.5: at A4 an act-1 elite cost ~43 HP where x2 priced 16 (BHMP F11 Bygone Effigy). */
-export const ELITE_HP_COST_FACTOR = 2.5;
+export const FIGHT_HP_COST_BY_ACT = [0.11, 0.24, 0.31];
+export const ELITE_HP_COST_BY_ACT = [0.37, 0.59, 0.7];
+/** A "?" room that opens a fight: p75 of those fights' net loss. */
+export const UNKNOWN_FIGHT_COST_BY_ACT = [0.14, 0.27, 0.31];
+/**
+ * Share of "?" rooms entered that were fights (A8 logs: act 1 56 of 244, act 2 35 of 136, act 3 12 of
+ * 35). The others (events) cost ~0 HP at the median; their p75 over all "?" rooms is 0.02 / 0.07 / 0.08,
+ * about this share times the fight's cost.
+ */
+export const UNKNOWN_FIGHT_SHARE_BY_ACT = [0.23, 0.26, 0.34];
+
+const byAct = (table: number[], act: number): number => table[Math.min(Math.max(act, 1), table.length) - 1]!;
 
 export function fightHpCost(type: string, act: number): number {
-  const base = FIGHT_HP_COST_BY_ACT[Math.min(Math.max(act, 1), FIGHT_HP_COST_BY_ACT.length) - 1]!;
-  return type === "Elite" ? base * ELITE_HP_COST_FACTOR : type === "Monster" ? base : 0;
+  return type === "Elite" ? byAct(ELITE_HP_COST_BY_ACT, act) : type === "Monster" ? byAct(FIGHT_HP_COST_BY_ACT, act) : 0;
 }
 
-/** Expected HP cost of a room of this type ("?" at its share of a hallway fight). */
+/** How many hallway fights an elite costs this act (the chain penalty scales by it). */
+export function eliteCostFactor(act: number): number {
+  return fightHpCost("Elite", act) / fightHpCost("Monster", act);
+}
+
+/** Expected HP cost of a room of this type ("?" at its share of fights times a "?" fight's cost). */
 export function roomHpCost(type: string, act: number): number {
-  if (type === "Unknown") return UNKNOWN_HP_SHARE * fightHpCost("Monster", act);
+  if (type === "Unknown") return byAct(UNKNOWN_FIGHT_SHARE_BY_ACT, act) * byAct(UNKNOWN_FIGHT_COST_BY_ACT, act);
   return fightHpCost(type, act);
 }
 
@@ -49,9 +71,9 @@ export function fightSurvival(hp: number, cost: number): number {
   return phi((hp / cost - 0.6) / 0.6);
 }
 
-/** Chance to leave a room of this type alive ("?": a hallway fight UNKNOWN_HP_SHARE of the time). */
+/** Chance to leave a room of this type alive ("?": a "?" fight UNKNOWN_FIGHT_SHARE of the time). */
 export function roomSurvival(type: string, hp: number, act: number): number {
   if (type === "Monster" || type === "Elite") return fightSurvival(hp, fightHpCost(type, act));
-  if (type === "Unknown") return 1 - UNKNOWN_HP_SHARE * (1 - fightSurvival(hp, fightHpCost("Monster", act)));
+  if (type === "Unknown") return 1 - byAct(UNKNOWN_FIGHT_SHARE_BY_ACT, act) * (1 - fightSurvival(hp, byAct(UNKNOWN_FIGHT_COST_BY_ACT, act)));
   return 1;
 }

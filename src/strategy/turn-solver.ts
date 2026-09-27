@@ -893,6 +893,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "clarity") next.flat += DRAW_VALUE * CLARITY_LATER_DRAWS;
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
+  if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
+  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
+  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
   // A card potion: its card joins the hand, free this turn (card-model GENERATED_CARD_POTIONS).
   if (card.generates) next.hand = [...next.hand, card.generates];
   // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
@@ -1226,6 +1229,14 @@ export const CLARITY_LATER_DRAWS = 3;
  * vs 1), before the fight-length and potion shares.
  */
 export const RITUAL_VALUE = 10;
+
+/**
+ * Plating's lasting value per stack (Heart of Iron: 7), at Stone Armor's rate: POWER_VALUE 14 for its
+ * 4 Plating (card-model.ts), block at the end of each later turn, one less each turn.
+ */
+export const PLATING_LASTING = 14 / 4;
+/** Snecko Oil: a hand card's expected cost this turn (0-3 at random). */
+export const SNECKO_COST = 1.5;
 
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;

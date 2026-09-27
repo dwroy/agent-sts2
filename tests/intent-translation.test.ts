@@ -12,6 +12,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planMap } from "../src/screens/map.js";
+import { roomHpCost } from "../src/strategy/route-cost.js";
 import { planRest } from "../src/screens/rest.js";
 import type { FightPlan } from "../src/strategy/fight-plan.js";
 import {
@@ -137,8 +138,10 @@ describe("map and rest labels from the same scores", () => {
     }
     // 5JU3 F10 at 30/80 (act 1): '?' 7.12 and Monster 7.0 are both near code's best; preserve moves each by
     // its expected HP cost, the '?' less than the Monster (NJSZ F29).
-    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.375, { value: 7.12, best: 7.12 }, 99, undefined, 1)).toBe("fits hp_policy preserve: code's best route under the plan (the plan moves this Unknown -0.56)");
-    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Monster", 0.375, { value: 7.0, best: 7.12 }, 99, undefined, 1)).toBe("fits hp_policy preserve: within 0.1 of code's best route under the plan (the plan moves this Monster -1.4)");
+    const shift = (type: string) => -Math.round(100 * 10 * roomHpCost(type, 1)) / 100;
+    expect(shift("Unknown")).toBeGreaterThan(shift("Monster"));
+    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.375, { value: 7.12, best: 7.12 }, 99, undefined, 1)).toBe(`fits hp_policy preserve: code's best route under the plan (the plan moves this Unknown ${shift("Unknown")})`);
+    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Monster", 0.375, { value: 7.0, best: 7.12 }, 99, undefined, 1)).toBe(`fits hp_policy preserve: within 0.1 of code's best route under the plan (the plan moves this Monster ${shift("Monster")})`);
     expect(mapFit(runPlan(), "Monster", 0.375, { value: 1, best: 7.12 })).toBeNull();
   });
 

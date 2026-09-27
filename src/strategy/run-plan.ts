@@ -503,28 +503,41 @@ export function planSavesPotion(plan: RunPlan | null | undefined, potionId: stri
 /**
  * Card bonus for a needed role the deck still lacks (fewer than 2 cards of it). A block role gets
  * half while the boss clock's gap is BIG_GAP or more a turn (UP1C F6: Taunt 93 over Anger 50 on "must-have
- * block +14" against a damage-gap +4; the boss was fought at 64% of the clock with 10 block cards).
+ * block +14" against a damage-gap +4; the boss was fought at 64% of the clock with 10 block cards), but
+ * only once the plan's block target is met: short of it, the deck cannot hold the boss's turns either
+ * (K8TC F14: Fortitude halved to +7 at block 1/3, 38/80; the Kin took 61 HP in five enemy turns). Two
+ * or more short of the target below half HP, block gets the bonus plus the half the gap would take
+ * (LOW_HP_BLOCK_BONUS: PWSD F20 at 25/80, block 1/3, Blood Wall 72 lost to Battle Trance+ 83; died at F23).
  */
-export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[], gapPerTurn = 0): { bonus: number; why: string | null } {
+export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[], gapPerTurn = 0, hpFraction = 1): { bonus: number; why: string | null } {
   const roles = plan?.needs ?? [];
   if (roles.length === 0) return { bonus: 0, why: null };
   const mine = cardRoles(cardId);
   for (const role of roles) {
     if (!mine.has(role)) continue;
     const have = deckIds.filter((id) => cardRoles(id).has(role)).length;
+    const target = role === "block" ? plan?.blockTarget ?? null : null;
+    if (target !== null && have <= target - 2 && hpFraction < LOW_HP_BLOCK) {
+      return { bonus: LOW_HP_BLOCK_BONUS, why: `run plan must-have ${role} (${have} of ${target} in deck, HP ${Math.round(hpFraction * 100)}%) +${LOW_HP_BLOCK_BONUS}` };
+    }
     const full = have < 2 ? MUST_HAVE_BONUS : 4;
-    const halved = role === "block" && gapPerTurn >= BIG_GAP;
+    const halved = role === "block" && gapPerTurn >= BIG_GAP && (target === null || have >= target);
     const bonus = halved ? Math.round(full / 2) : full;
     return { bonus, why: `run plan must-have ${role} (${have} in deck) +${bonus}${halved ? ` (halved: deck ${gapPerTurn}/turn short of the boss)` : ""}` };
   }
   return { bonus: 0, why: null };
 }
 
+/** Below this HP a block role two short of the plan's block target gets LOW_HP_BLOCK_BONUS. */
+export const LOW_HP_BLOCK = 0.5;
+
 /** Boss-clock gap (damage a turn) from which damage outranks the must-have block bonus. */
 export const BIG_GAP = 8;
 
 /** Bonus for a card filling a needed role the deck lacks. */
 export const MUST_HAVE_BONUS = 14;
+/** The must-have bonus plus the half the boss-gap rule takes off it (14 + 7). */
+export const LOW_HP_BLOCK_BONUS = MUST_HAVE_BONUS + MUST_HAVE_BONUS / 2;
 
 /** The run brief's plan line (Jev and DeepSeek see it on build and route questions): intents first. */
 export function runPlanLine(plan: RunPlan | null | undefined, floor: number | null = null): string | null {

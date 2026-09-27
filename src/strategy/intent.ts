@@ -497,15 +497,30 @@ export function restShift(plan: RunPlan | null | undefined, option: string, hpPc
  */
 export const PRESERVE_HP_WEIGHT = 10;
 
+/**
+ * The deck's damage a turn (boss-clock deckDamagePerTurn, without the act boss's realised share) under
+ * the lowest need of the act's elites (dossiers): optional elites are avoided whatever the run plan's
+ * route_risk and wherever it came from (EGX7 F27: "Skip optional elites (deck under their 30+/turn
+ * needs)" re-planned at 86% kept the F21 low-HP origin, lapsed to normal, and the Entomancer was taken
+ * at 75/87 with a deck of ~25 a turn: 75 -> 32).
+ */
+export interface EliteGate {
+  deck: number;
+  need: number;
+}
+export function eliteGateText(gate: EliteGate): string {
+  return `deck ~${gate.deck}/turn under the act's elites (${gate.need}+)`;
+}
+
 /** Route weight change for a node from the run plan's intents, at the projected HP on arrival (`act` prices hallway rooms). */
-export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99, act = 2): number {
-  if (!plan) return 0;
+export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99, act = 2, gate: EliteGate | null = null): number {
+  if (!plan) return type === "Elite" && gate ? -6 : 0;
   const policy = policyAt(plan, hpOnArrival);
   const risk = routeRiskAt(plan, hpOnArrival);
   const low = hpOnArrival < hpTarget(plan);
   switch (type) {
     case "Elite": {
-      let shift = risk === "avoid_elites" ? -6 : risk === "seek_elites" && hpOnArrival > 0.6 ? 2 : 0;
+      let shift = risk === "avoid_elites" || gate ? -6 : risk === "seek_elites" && hpOnArrival > 0.6 ? 2 : 0;
       if (policy === "preserve") shift -= 3;
       if (policy === "push" && hpOnArrival > 0.7) shift += 1.5;
       // Enforced: near the boss, no elite that would leave the entry HP out of reach: at least -8, and
@@ -526,9 +541,9 @@ export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArr
   }
 }
 
-/** avoid_elites is hard on the next node: Elite options go while another node is open. */
-export function routeRiskFilter<T extends { type: string }>(plan: RunPlan | null | undefined, options: T[], hpFraction = 0): T[] {
-  if (routeRiskAt(plan, hpFraction) !== "avoid_elites") return options;
+/** avoid_elites (or a deck under the act's elites) is hard on the next node: Elite options go while another node is open. */
+export function routeRiskFilter<T extends { type: string }>(plan: RunPlan | null | undefined, options: T[], hpFraction = 0, gate: EliteGate | null = null): T[] {
+  if (routeRiskAt(plan, hpFraction) !== "avoid_elites" && !gate) return options;
   const others = options.filter((option) => option.type !== "Elite");
   return others.length > 0 ? others : options;
 }
@@ -779,24 +794,30 @@ export function mapFit(
   toBoss = 99,
   arrival?: RouteArrival & { best: { eliteHp: number; bossHp: number } },
   act = 2,
+  gate: EliteGate | null = null,
 ): string | null {
-  if (!plan) return null;
-  const intents = runIntentName(plan, hpPct);
+  const gated = gate !== null && type === "Elite";
+  if (!plan && !gated) return null;
+  const intents = [plan ? runIntentName(plan, hpPct) : null, gated ? eliteGateText(gate) : null].filter(Boolean).join(", ") || null;
   if (!intents) return null;
-  const shift = mapShift(plan, type, hpPct, toBoss, act);
+  if (!plan) return intents;
+  const shift = mapShift(plan, type, hpPct, toBoss, act, gate);
   const effect = shift !== 0 ? ` (the plan moves this ${type} ${shift > 0 ? "+" : ""}${shift})` : "";
   if (!route) return `${intents}${effect}`;
   const gap = route.best - route.value;
   const pct = (value: number) => `${Math.round(value * 100)}%`;
-  // Never on code's own best route (labels come from the scoring that ranks the nodes).
-  if (plan.entryHp && arrival && gap > 0.005) {
+  if (plan.entryHp && arrival) {
     const floorLine = plan.entryHp - ENTRY_ARRIVAL_SLACK;
     const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
+    // A forced elite reached short is a fact of the route, on code's best one too (KGR6 F19: the Shop
+    // line "arrives at the F28 elite at ~42% HP (an elite costs ~55%)" was labelled "fits entry_hp 85%").
     if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
       const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
-      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+      const where = gap > 0.005 ? `${gap.toFixed(1)} route value below the best` : "code's best route by route value";
+      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${where}${effect}`;
     }
-    if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
+    // The boss arrival stays a comparison between routes: not on code's own best route.
+    if (gap > 0.005 && bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
       return `costs entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
     }
   }

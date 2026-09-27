@@ -17,7 +17,7 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
 import { planCombatTurn, sandpitVetoExempt } from "../src/screens/combat-plan.js";
 import { planCombat } from "../src/screens/combat.js";
-import { LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
+import { fightHpCost, LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
 import {
   fightKey,
   fightPlanInput,
@@ -448,7 +448,7 @@ describe("turn planner with a fight plan", () => {
     const combat = raw["combat"] as Raw;
     (combat["player"] as Raw)["current_hp"] = 27;
     combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }] }));
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "ENTROPIC_BREW";
     const decision = planCombatTurn(env(raw));
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
@@ -462,8 +462,9 @@ describe("turn planner with a fight plan", () => {
     expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(nodeWeight("Monster", 0.26, 100, 8, 2));
     expect(nodeWeight("Elite", 0.26, 100, 8, 2)).toBeLessThan(-7);
     expect(nodeWeight("Elite", 0.69, 100, 8, 2)).toBe(-3);
-    // A likely death scales with the shortfall: 20% HP against a 55% elite (NJSZ F29, K7G9 F43).
-    expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBeCloseTo(LIKELY_DEATH * (1 + 0.35 / 0.55));
+    // A likely death scales with the shortfall: 20% HP against an act-2 elite (NJSZ F29, K7G9 F43).
+    const elite = fightHpCost("Elite", 2);
+    expect(nodeWeight("Elite", 0.2, 100, 8, 2)).toBeCloseTo(LIKELY_DEATH * (1 + (elite - 0.2) / elite));
     expect(nodeWeight("Elite", 0.5, 100, 8, 2)).toBeGreaterThan(nodeWeight("Elite", 0.2, 100, 8, 2));
     expect(nodeWeight("Monster", 0.9, 100, 8, 2)).toBeGreaterThan(0);
     // Act 1 before the mid-act: starter deck, elites only at near-full HP (CWMP F6).

@@ -46,7 +46,7 @@ function askCombat(): Record<string, unknown> {
   const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
   combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
   const run = raw["run"] as Record<string, unknown>;
-  (run["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
+  (run["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
   run["relics"] = [
     { index: 0, relic_id: "BURNING_BLOOD", name: "Burning Blood", description: "", stack: null, is_melted: false },
     { index: 1, relic_id: "MERCURY_HOURGLASS", name: "Mercury Hourglass", description: "", stack: null, is_melted: false },

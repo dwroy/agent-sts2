@@ -39,7 +39,7 @@ export function rewardCardValuer(env: DecisionEnv): (cardId: string) => { value:
     const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, extraBlock, isBlockCardId(cardId));
     // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
     const clock = gapCardBonus(gap, cardId);
-    const must = mustHaveBonus(env.screenMemory.runPlan, cardId, deckIds, gap?.gap ?? 0);
+    const must = mustHaveBonus(env.screenMemory.runPlan, cardId, deckIds, gap?.gap ?? 0, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
     return {
       value: base.value + planned.bonus + clock.bonus + must.bonus,
       reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : []), ...(must.why ? [must.why] : [])],
