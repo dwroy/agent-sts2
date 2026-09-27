@@ -139,3 +139,5 @@
 - 2026-09-27 09:58 Dai 决定在 A8 做消融实验：4 组轮换各 5 局（code=只有代码，--no-jev；jev=代码+Jev，ESCALATION_CHAIN=none；ds=代码+DeepSeek，Jev 恒答置信 0、可升级界面全交 DeepSeek；full=现状）。ops/ablation.json 控制轮换，report.py 把 arm 写进 runs.jsonl；run.sh 在重启时保留当前组。指标：到达层数、过一/二幕 boss、胜局。另：游戏 prefs 里 fast_mode 为 normal，建议 Dai 在游戏设置里改为最快（不改文件，范围外）。
 - 2026-09-27 09:59 VE97 复盘（A8 第 2 局到最终 boss，46/78 进女王死于 T6；二幕走廊计划效果：二幕走廊净掉血 12.3/场，之前 A8 为 13.6–23.0，三幕 5.5/场，耗血转移到精英与 boss）。消融实验期间冻结规则与代码改动（保证四组用同一份代码），发现的问题先记入 lessons.md 待实验结束后统一处理：魂缚牌消耗选择 bug（selection.ts combatExhaustScore）、生成卡牌药水时机、女王 A8 时钟 690。
 - 2026-09-27 11:29 消融第 1 轮完成（code F17/F17、jev F24、ds F33、full F7）。full 组 X226 死于代码 bug（F6 事件过期『已结束』帧→点 proceed 落到新事件 JUNGLE_MAZE 选项 0，−18 血），与模型无关；为保证四组同一份代码，bug 先记录、实验结束后修。注意：ds 组的 Jev 桩会在 deciders 里记为 jev，分析时以 runs.jsonl 的 arm 字段为准。
+- 2026-09-27 11:30 卡死：11:27:50 游戏进程崩溃/退出（mod 连接 ECONNRESET，之后 8080 无响应，tasklist 里没有游戏进程），play 进程每 12 秒重启、连不上 mod。需 Dai 重新启动游戏（带 mod）；autoplay 会自动接上，当前消融组（jev，第 6 局）保持不变。
+- 2026-09-27 11:51 恢复：Dai 授权后由 Claude 用 cmd.exe start steam://rungameid/2868840 重新启动游戏，5 秒后 mod 可用，autoplay 从主菜单『继续』接上存档（F33 二幕 boss 战，消融组 jev 第 6 局）。游戏崩溃约 24 分钟。
