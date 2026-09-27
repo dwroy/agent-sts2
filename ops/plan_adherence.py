@@ -8,6 +8,7 @@ Usage
     python3 ops/plan_adherence.py --json     # machine-readable output (everything)
     python3 ops/plan_adherence.py --md notes/plan-adherence.md   # also write the Markdown report
     python3 ops/plan_adherence.py --events RUNID   # every scored event of one run (for spot checks)
+    python3 ops/plan_adherence.py --logs DIR       # read another log directory (synthetic checks)
 
 Stdlib only.  Reads jev-sts2/logs/{runs,run-plans,fight-plans,decisions,states}.jsonl, the cached
 game data (jev-sts2/.cache/game-data.json: monster types, potion/card text) and the card-role sets
@@ -22,8 +23,8 @@ Scope
     aggregates.  Plans carry their run id (plan.run), so no timestamp matching is needed; decisions
     and states carry it in the fingerprint / state.run_id, and a decision is joined to its state by
     the identical timestamp.
-    Period: "pre-892278c" = run started before 2026-09-27 16:48:01 +0800 (08:48:01Z, merge 892278c);
-    "post-892278c" = on/after.  Arm: runs.jsonl "arm" (full/ds for the A8 ablation); runs without one
+    Period (era): "pre-892278c" = run started before 2026-09-27 16:48:01 +0800 (08:48:01Z, merge 892278c);
+    "892278c..0f2e648" = on/after, before the intent merge; "intent (from 0f2e648)" = see Eras below.  Arm: runs.jsonl "arm" (full/ds for the A8 ablation); runs without one
     ran the normal (full) configuration and are labelled "normal".
 
 Who ("by whom") -- every scored action is attributed to the decision that chose it.  Combat cards and
@@ -130,6 +131,48 @@ Metrics (unit, honoured / broken / n/a):
    plan" cannot be mapped to an option index; for "keep" it is consistent by construction, for the
    other tags it is "unknown" and excluded from the final-% denominator.
 
+Eras (runs.jsonl start = first decision of the run)
+    pre-892278c         before 2026-09-27 08:48:01Z
+    892278c..0f2e648    from 892278c, before the intent merge
+    intent (from 0f2e648)   the run has a new-format plan (run plan with `version`/`hpPolicy`, fight plan with
+                        `objective`) or started at/after 2026-09-27 11:57:05Z (0f2e648, 19:57:05 +0800)
+    "period" in the per-run table is this era.
+
+Intent-era metrics (plans in the new closed vocabulary: jev-sts2/src/strategy/intent.ts, plan-validator.ts).
+Older runs show "n/a" for all of these.  For new-format plans the old metrics still run where a field maps:
+needs -> must_have (3), route_risk avoid_elites -> elites avoid (4b), kill_priority (first living) -> focus
+(5); save_potions (1) is replaced by I5 (the reserve rule changed), potion timing / setup / labels (6-8) have
+no new-format source and stay empty.
+ I1 validator repairs   every `validator` string of a run plan / fight plan log entry that is not a
+   rejected change, classified by type (e.g. fight "scale_then_kill→preserve_hp (low HP)", "reserved potion
+   timing ignored", "unknown enemy dropped"; run "push→balanced (low HP)", "unknown card/role dropped").
+ I2 re-plans            run-plan versions per run (checkpoint trigger start/act/hp_drop/review; failed requests
+   counted apart), accepted changes (entry `changes`: field old→new, trigger, fact; fight plans log an
+   objective change on a re-plan with trigger new_enemy), rejected changes (validator "rejected change ...",
+   by reason: no_trigger, invalid_trigger, unsupported (the facts do not show it), wrong_direction, flip_flop).
+ I3 execution after an accepted run-plan change, on the floors while the new value is in force in that act
+   (plan_at(ts) still holds it):
+     hp_policy→preserve     rest below the HP target (entry_hp_pct or 80%) heals; no elite while another node
+                            was open
+     hp_policy→push         rest at >= 55% HP more than 2 floors from the boss smiths (soft: +3 only)
+     route_risk→avoid_elites  no elite while another node was open (hard filter in code)
+     route_risk→seek_elites   elite taken when one was open and HP > 60% (soft: +2 only)
+     entry_hp_pct raised    rest <= 6 floors from the boss below the target heals; no elite <= 8 floors from
+                            the boss below target+15pp while another node was open
+     reserve added roles    potions of the added roles flagged after the change: kept to the boss (from I5)
+     needs added roles      a card reward offering a card of the added role the deck lacks (< 2): one taken
+     avoid added            a card reward offering an added avoided card id / role card: not taken
+   Other changes (balanced, normal, lowered entry HP, removals) have nothing to check: n/a.
+ I4 intent deviations   decisions carrying `intent_deviation` (Jev picked an option labelled "breaks …"),
+   by intent (the text after "breaks" up to ":"), per run; plus the share of Jev decisions (decider jev) whose
+   question carried an `intent_fit` label on at least one option.
+ I5 reserve (new rule)  like metric 1 with plan.reserve: a potion of a reserved role held while a plan of the
+   same act reserves it; kept = in the belt when the act-boss fight starts (drunk inside it is fine); broken =
+   drunk/discarded before.  Exceptions (code releases the reserve): HP < 25% at the drink, a least-loss line
+   (every line dies), or the option was tagged "released".  A drink outside the exceptions is flagged BUG
+   (the reserve is a hard filter in code: it should never happen).  Discards are listed apart (not filtered by
+   code).  A potion whose role a later plan stops reserving is closed n/a ("reserve change released it").
+
 Approximations / limits (also in the report)
   * The plan classifiers (potion roles, card roles, offensive potions) are today's; older runs were
     played with older code that may have classified differently (e.g. Dexterity/Speed Potion as
@@ -155,6 +198,10 @@ LOGS = os.path.join(ROOT, "jev-sts2", "logs")
 SRC = os.path.join(ROOT, "jev-sts2", "src")
 GAME_DATA = os.path.join(ROOT, "jev-sts2", ".cache", "game-data.json")
 CUTOFF = "2026-09-27T08:48:01Z"  # 892278c, 16:48:01 +0800
+INTENT_CUTOFF = "2026-09-27T11:57:05Z"  # 0f2e648, 19:57:05 +0800 (strategy-intent merge)
+ERA_PRE, ERA_MID, ERA_INTENT = "pre-892278c", "892278c..0f2e648", "intent (from 0f2e648)"
+RESERVE_RELEASE_HP = 0.25  # intent.ts RESERVE_RELEASE_HP
+HP_TARGET = {"preserve": 0.8, "balanced": 0.7, "push": 0.6}  # intent.ts HP_TARGET
 BOSS_FLOORS = (17, 33, 48)
 SAVE_POTIONS_WITHIN = 10
 SPOT_RUNS = ("EJXCAQ56PWLK", "WR2Y98A43YCY", "GZ24W7LC496Q")
@@ -283,6 +330,115 @@ def read_potion_use(use: str | None, potion_id: str) -> str | None:
     return use
 
 
+# ------------------------------------------------------------------------- intent era (0f2e648 on)
+
+
+def is_new_run_entry(entry: dict) -> bool:
+    """A run-plan log entry in the intent vocabulary (run-plan.ts after 0f2e648)."""
+    return "version" in entry or "hpPolicy" in (entry.get("plan") or {})
+
+
+def is_new_fight_entry(entry: dict) -> bool:
+    return "objective" in (entry.get("plan") or {}) or "validator" in entry
+
+
+def plan_reserves(plan: dict | None, potion_id: str, text: str) -> bool:
+    """isReserved() in intent.ts, on a new-format plan's reserve roles."""
+    roles = (plan or {}).get("reserve") or []
+    if not roles:
+        return False
+    if "any" in roles:
+        return True
+    r = potion_role(potion_id, text)
+    return r is not None and r in roles
+
+
+def plan_field(plan: dict | None, field: str):
+    """getField() in plan-validator.ts on a logged plan (lists sorted)."""
+    p = plan or {}
+    if field == "hp_policy":
+        return p.get("hpPolicy")
+    if field == "route_risk":
+        return p.get("routeRisk")
+    if field == "entry_hp_pct":
+        return p.get("entryHp")
+    if field == "reserve":
+        return sorted(p.get("reserve") or [])
+    if field == "needs":
+        return sorted(p.get("needs") or [])
+    if field == "avoid":
+        return sorted((p.get("avoid") or []) + (p.get("avoidRoles") or []))
+    return None
+
+
+def same_value(field: str, a, b) -> bool:
+    if field == "entry_hp_pct":
+        return a == b or (isinstance(a, (int, float)) and isinstance(b, (int, float)) and abs(a - b) < 0.03)
+    if isinstance(a, list) and isinstance(b, list):
+        return sorted(map(str, a)) == sorted(map(str, b))
+    return a == b
+
+
+REPAIR_TYPES = [
+    # fight plans (validateFightPlan / parseFightPlan)
+    (r"^objective scale_then_kill at \d+% HP", "scale_then_kill→preserve_hp (low HP)"),
+    (r"^objective scale_then_kill with \d+ incoming", "scale_then_kill→preserve_hp (big hit)"),
+    (r"^objective (kill_fast|race) under run hp_policy preserve", "kill_fast/race→preserve_hp (hp_policy preserve)"),
+    (r"^kill_priority: .* not in this fight", "unknown enemy dropped"),
+    (r"^kill_priority: .* must die together", "together-enemy dropped from kill_priority"),
+    (r"^potion \S+ .* ignored: the run plan reserves it", "reserved potion timing ignored"),
+    (r"^potion timing ", "potion timing ignored"),
+    (r"^(setup_cards|cards|key_turns|turns) ignored", "card/turn order ignored"),
+    (r"^objective .* unknown", "unknown objective"),
+    (r"^old-format approach", "old-format approach read"),
+    (r"^no objective", "no objective"),
+    # run plans (parseRunPlan / repairRunPlan)
+    (r"^hp_policy push at \d+% HP", "push→balanced (low HP)"),
+    (r"^hp_policy push \d+ floors from the boss", "push→balanced (near boss below entry)"),
+    (r"^route_risk seek_elites contradicts", "seek_elites→normal (hp_policy preserve)"),
+    (r"^route_risk seek_elites at \d+% HP", "seek_elites→normal (low HP)"),
+    (r"^avoid roles .* also needed", "avoid role also needed: dropped"),
+    (r"^cards .* both wanted and avoided", "card wanted and avoided: dropped"),
+    (r"^reserve lists 'any'", "reserve any+roles→any"),
+    (r"^entry_hp_pct: .* not a fraction", "entry_hp_pct not a fraction"),
+    (r"^(\w+): dropped unknown", "unknown {0} dropped"),
+    (r"^(\w+): unknown value", "unknown {0} value ignored"),
+]
+
+
+def classify_repair(text: str) -> str:
+    for pat, name in REPAIR_TYPES:
+        m = re.search(pat, text)
+        if m:
+            return name.format(*m.groups()) if "{0}" in name else name
+    return "other"
+
+
+def classify_rejection(text: str) -> tuple[str, str]:
+    """(field, reason) of a validator "rejected change FIELD ...: WHY; kept ..." note."""
+    m = re.match(r"rejected change (\w+) ", text)
+    field = m.group(1) if m else "?"
+    if "no trigger given" in text:
+        why = "no_trigger"
+    elif "is not one of" in text:
+        why = "invalid_trigger"
+    elif "not supported by the facts" in text:
+        why = "unsupported"
+    elif "points the other way" in text:
+        why = "wrong_direction"
+    elif re.search(r"reverses the F\d+ change", text):
+        why = "flip_flop"
+    else:
+        why = "other"
+    return field, why
+
+
+def deviation_intents(label: str) -> list[str]:
+    """The intents a "breaks …" label breaks: 'breaks preserve_hp: …; breaks hp_policy preserve: …'."""
+    out = [m.group(1).strip() for m in re.finditer(r"breaks ([^:;]+)", label or "")]
+    return out or ["?"]
+
+
 # ----------------------------------------------------------------------------------------- loading
 
 
@@ -291,14 +447,19 @@ def load_runs():
     for d in jl(os.path.join(LOGS, "runs.jsonl")):
         runs[d["run_id"]] = d
     run_plans = collections.defaultdict(list)
+    errors = collections.defaultdict(lambda: {"run": 0, "fight": 0})
     for d in jl(os.path.join(LOGS, "run-plans.jsonl")):
         if d.get("plan"):
             run_plans[d["run"]].append(d)
+        elif d.get("error") and d.get("run"):
+            errors[d["run"]]["run"] += 1
     fight_plans = collections.defaultdict(list)
     for d in jl(os.path.join(LOGS, "fight-plans.jsonl")):
         if d.get("plan"):
             fight_plans[d["run"]].append(d)
-    return runs, run_plans, fight_plans
+        elif d.get("error") and d.get("run"):
+            errors[d["run"]]["fight"] += 1
+    return runs, run_plans, fight_plans, errors
 
 
 def fp_fields(fp: str) -> dict:
@@ -362,6 +523,8 @@ def load_timelines(target: set[str], monsters: dict):
         for q in qs.values():
             crit = q.get("criteria")
             break
+        has_fit = any("intent_fit" in str(v) for q in qs.values() if isinstance(q, dict)
+                      for v in (q.get("criteria") or {}).values())
         ans = None
         for a in (d.get("answers") or {}).values():
             ans = a
@@ -372,6 +535,7 @@ def load_timelines(target: set[str], monsters: dict):
             "rationale": d.get("rationale") or "", "criteria": crit,
             "jev_choice": (ans or {}).get("choice"), "jev_conf": (ans or {}).get("confidence"),
             "esc": d.get("escalation"), "fp": fp,
+            "deviation": d.get("intent_deviation"), "has_fit": has_fit,
         })
     states = collections.defaultdict(dict)
     with open(os.path.join(LOGS, "states.jsonl"), "rb") as fh:
@@ -477,9 +641,13 @@ def costly_turn(d: dict) -> bool:
 
 
 class RunAnalysis:
-    def __init__(self, rid, meta, rplans, fplans, rows, arm, period):
+    def __init__(self, rid, meta, rplans, fplans, rows, arm, period, errors=None):
         self.rid, self.meta, self.rplans, self.fplans, self.rows = rid, meta, rplans, fplans, rows
         self.arm, self.period = arm, period
+        self.errors = errors or {"run": 0, "fight": 0}
+        self.new = any(is_new_run_entry(p) for p in rplans) or any(is_new_fight_entry(p) for p in fplans)
+        self.jev_decisions = 0
+        self.jev_with_fit = 0
         self.events: list[dict] = []  # every scored unit
         self.fight_kind: dict[int, str] = {}
         self.last_combat_floor = None
@@ -555,9 +723,10 @@ class RunAnalysis:
         return out
 
     # --- metric 1
-    def m_save_potions(self, metric="save_potions", saves=None):
+    def m_save_potions(self, metric="save_potions", saves=None, roles_key="savePotions"):
         saves = saves or plan_saves
         self._metric = metric
+        reserve = metric == "reserve"
         boss = self.boss_entries()
         prev_slots: list[str | None] = []
         inst: dict[int, dict] = {}  # slot -> instance
@@ -585,8 +754,16 @@ class RunAnalysis:
                 if it["flag_act"] is not None and it["flag_act"] != act:
                     # the act changed while held: the flagged act's boss must have been passed with it
                     self._close_flag(it, "honoured", r, boss)
-                if plan and plan.get("act") == act and saves(plan, it["id"], it["text"]) and it["flag_act"] is None:
-                    it["flag_act"], it["flag_floor"], it["roles"] = act, r["floor"], plan.get("savePotions")
+                if reserve and it["flag_act"] == act and plan and plan.get("act") == act and not saves(plan, it["id"], it["text"]):
+                    # a later plan of this act stopped reserving its role: released by a change
+                    self.ev(metric, "n/a", who="n/a", potion=it["id"], act=act, floor=r["floor"],
+                            role=potion_role(it["id"], it["text"]), flagged_floor=it["flag_floor"],
+                            note="reserve change released it")
+                    it["flag_act"] = None
+                    continue
+                if plan and plan.get("act") == act and saves(plan, it["id"], it["text"]) and it["flag_act"] is None \
+                        and not (reserve and it.get("closed_act") == act):
+                    it["flag_act"], it["flag_floor"], it["roles"] = act, r["floor"], plan.get(roles_key)
                 # the boss fight of the flagged act has started with it in the belt
                 b = boss.get(it["flag_act"]) if it["flag_act"] is not None else None
                 if b is not None and r["ts"] >= b["ts"]:
@@ -603,7 +780,7 @@ class RunAnalysis:
             return
         b = boss.get(it["flag_act"])
         self.ev(self._metric, outcome, who="-", potion=it["id"], act=it["flag_act"], flagged_floor=it["flag_floor"],
-                boss_floor=b["floor"] if b else None)
+                boss_floor=b["floor"] if b else None, role=potion_role(it["id"], it["text"]))
         it["closed_act"] = it["flag_act"]
         it["flag_act"] = None
 
@@ -628,6 +805,23 @@ class RunAnalysis:
         who = self.origin_who(last_row) if last_row["screen"] == "COMBAT" else who_of(last_row, self.arm)
         hf = hp_frac(last_row)
         o = last_row.get("origin") or last_row
+        if self._metric == "reserve":
+            opt = crit_json(o).get(o.get("jev_choice") or "") or {}
+            exception = None
+            if how == "drunk":
+                if hf is not None and hf < RESERVE_RELEASE_HP:
+                    exception = f"HP < {int(RESERVE_RELEASE_HP * 100)}%"
+                elif o["label"] == "combat/least-loss":
+                    exception = "every line dies (least-loss)"
+                elif "released" in str(opt.get("reserve", "")):
+                    exception = "option tagged released"
+            self.ev("reserve", "broken", who=who, potion=it["id"], role=potion_role(it["id"], it["text"]), act=act,
+                    floor=floor, turn=last_row["turn"], how=how,
+                    fight=self.fight_kind.get(floor, "-") if last_row["screen"] == "COMBAT" else last_row["screen"],
+                    hp_pct=round(hf * 100) if hf is not None else None, exception=exception,
+                    bug=how == "drunk" and exception is None, label=o["label"], flagged_floor=it["flag_floor"])
+            it["flag_act"] = None
+            return
         justified = bool(
             (hf is not None and hf < 0.4) or o["label"] in ("combat/least-loss", "combat/lethal")
             or costly_turn(o) or self.died_on(floor))
@@ -779,6 +973,10 @@ class RunAnalysis:
             for r in rows:
                 plan = self.fight_plan_at(fl, r["ts"])
                 focus = (plan or {}).get("focus")
+                if not focus and (plan or {}).get("killPriority"):
+                    # new format: the first living kill-priority enemy is the solver's focus
+                    living = {e["id"] for e in r["st"].get("enemies") or [] if e["alive"]}
+                    focus = next((x for x in plan["killPriority"] if x in living), None)
                 ch = r["chosen"]
                 if not focus or ch.get("action") != "play_card" or ch.get("target_index") is None:
                     continue
@@ -977,12 +1175,184 @@ class RunAnalysis:
                         floor=r["floor"], turn=r["turn"], code_rank1=cons.get("plan1"), jev=jc, final=fc, override=who,
                         jev_pick=jev_pick, final_pick=final)
 
+    # --- intent era: I1 repairs, I2 re-plans / changes
+    def m_intent_plans(self):
+        for src, entries in (("run", self.rplans), ("fight", self.fplans)):
+            for p in entries:
+                if not (is_new_run_entry(p) if src == "run" else is_new_fight_entry(p)):
+                    continue
+                version = p.get("version") if src == "run" else p.get("run_plan_version")
+                floor = p.get("floor")
+                if src == "run":
+                    self.ev("replan", "n/a", who="deepseek", version=version, trigger=p.get("trigger"), floor=floor)
+                for note in p.get("validator") or (p.get("plan") or {}).get("validator") or []:
+                    note = str(note)
+                    if note.startswith("rejected change "):
+                        field, why = classify_rejection(note)
+                        self.ev("change_rejected", "n/a", who="validator", source=src, field=field, reason=why,
+                                floor=floor, version=version, text=note[:200])
+                    else:
+                        self.ev("validator_repair", "n/a", who="validator", source=src, type=classify_repair(note),
+                                floor=floor, version=version, kind=p.get("kind"), text=note[:200])
+                for ch in p.get("changes") or []:
+                    self.ev("change_accepted", "n/a", who="deepseek", source=src, field=ch.get("field"),
+                            frm=ch.get("from"), to=ch.get("to"), trigger=ch.get("trigger"), fact=ch.get("fact"),
+                            floor=ch.get("floor", floor), act=ch.get("act"), version=ch.get("version", version),
+                            ts=p["ts"])
+
+    # --- I3 execution after an accepted run-plan change
+    def m_change_exec(self):
+        for p in self.rplans:
+            if not is_new_run_entry(p):
+                continue
+            for ch in p.get("changes") or []:
+                self._exec_change(p, ch)
+
+    def _exec_change(self, entry, ch):
+        field, frm, to, act = ch.get("field"), ch.get("from"), ch.get("to"), ch.get("act")
+        base = dict(field=field, change=f"{field} {json.dumps(frm)}→{json.dumps(to)}", trigger=ch.get("trigger"),
+                    change_floor=ch.get("floor"))
+        checks: list[str] = []
+        if field == "hp_policy" and to == "preserve":
+            checks = ["rest_heal_below_target", "no_optional_elite"]
+        elif field == "hp_policy" and to == "push":
+            checks = ["rest_smith_healthy"]
+        elif field == "route_risk" and to == "avoid_elites":
+            checks = ["no_optional_elite"]
+        elif field == "route_risk" and to == "seek_elites":
+            checks = ["elite_when_healthy"]
+        elif field == "entry_hp_pct" and isinstance(to, (int, float)) and (not isinstance(frm, (int, float)) or to > frm):
+            checks = ["rest_heal_near_boss", "no_elite_near_boss"]
+        elif field == "reserve":
+            added = [x for x in (to or []) if x not in (frm or [])]
+            if added:
+                es = [e for e in self.events if e["metric"] == "reserve" and e.get("act") == act and e["outcome"] != "n/a"
+                      and (e.get("flagged_floor") or 0) >= (ch.get("floor") or 0) and (e.get("role") in added or "any" in added)]
+                for e in es:
+                    # a drink under a release exception (HP < 25%, every line dies) is within the rule
+                    released = e["outcome"] == "broken" and e.get("exception")
+                    self.ev("change_exec", "n/a" if released else e["outcome"], who=e["who"], check="reserve_added_kept",
+                            floor=e.get("floor") or e.get("boss_floor"), potion=e.get("potion"),
+                            **({"note": f"released: {e['exception']}"} if released else {}), **base)
+                if not es:
+                    self.ev("change_exec", "n/a", who="-", check="reserve_added_kept", note="no potion of the added role held", **base)
+                return
+        elif field == "needs":
+            added = [x for x in (to or []) if x not in (frm or [])]
+            if added:
+                checks = ["needs_reward"]
+        elif field == "avoid":
+            added = [x for x in (to or []) if x not in (frm or [])]
+            if added:
+                checks = ["avoid_reward"]
+        if not checks:
+            self.ev("change_exec", "n/a", who="-", check="none", note="nothing to check for this change", **base)
+            return
+        added = [x for x in ((to if isinstance(to, list) else []) or []) if x not in ((frm if isinstance(frm, list) else []) or [])]
+        seen = 0
+        for r in self.rows:
+            if r["ts"] <= entry["ts"]:
+                continue
+            if r["st"].get("act") is not None and act is not None and r["st"].get("act") != act:
+                break
+            plan = self.plan_at(r["ts"])
+            if not plan or not same_value(field, plan_field(plan, field), to):
+                if plan and plan.get("act") == act:
+                    break  # changed again (or repaired away) within the act
+                continue
+            hf = hp_frac(r)
+            fl = r["floor"] or 0
+            target = plan.get("entryHp") or HP_TARGET.get(plan.get("hpPolicy") or "balanced", 0.7)
+            if r["label"] == "rest/choose" and hf is not None:
+                opts = r["st"].get("rest_opts") or []
+                oi = r["chosen"].get("option_index")
+                pick = opts[oi] if oi is not None and oi < len(opts) else None
+                if pick is None:
+                    continue
+                want = None
+                if "rest_heal_below_target" in checks and hf < target and "HEAL" in opts:
+                    want, chk = "HEAL", "rest_heal_below_target"
+                elif "rest_heal_near_boss" in checks and floors_to_boss(fl) <= 6 and hf < (plan.get("entryHp") or 1) and "HEAL" in opts:
+                    want, chk = "HEAL", "rest_heal_near_boss"
+                elif "rest_smith_healthy" in checks and hf >= 0.55 and floors_to_boss(fl) > 2 and "SMITH" in opts:
+                    want, chk = "SMITH", "rest_smith_healthy"
+                if want:
+                    seen += 1
+                    self.ev("change_exec", "honoured" if pick == want else "broken", who=who_of(r, self.arm), check=chk,
+                            floor=fl, pick=pick, hp_pct=round(hf * 100), **base)
+            elif r["label"] == "map/route":
+                avail = r["st"].get("map_avail") or []
+                oi = r["chosen"].get("option_index")
+                pick = avail[oi] if oi is not None and oi < len(avail) else None
+                if pick is None or "Elite" not in avail:
+                    continue
+                alt = any(a != "Elite" for a in avail)
+                nxt = fl + 1
+                chk = None
+                ok = None
+                if "no_optional_elite" in checks and alt:
+                    chk, ok = "no_optional_elite", pick != "Elite"
+                elif "no_elite_near_boss" in checks and alt and hf is not None and floors_to_boss(nxt) <= 8 \
+                        and hf < (plan.get("entryHp") or 0) + 0.15:
+                    chk, ok = "no_elite_near_boss", pick != "Elite"
+                elif "elite_when_healthy" in checks and hf is not None and hf > 0.6:
+                    chk, ok = "elite_when_healthy", pick == "Elite"
+                if chk:
+                    seen += 1
+                    who = who_of(r, self.arm)
+                    if who == "forced" and alt:
+                        who = "code_filter"  # route_risk avoid_elites removed the elite: one option left
+                    self.ev("change_exec", "honoured" if ok else "broken", who=who, check=chk,
+                            floor=nxt, pick=pick, hp_pct=round(hf * 100) if hf is not None else None, **base)
+            elif r["label"] == "reward/card" and ("needs_reward" in checks or "avoid_reward" in checks):
+                opts = r["st"].get("card_options") or []
+                c = r["chosen"]
+                took = opts[c["option_index"]] if c.get("action") == "choose_reward_card" and c.get("option_index") is not None \
+                    and c["option_index"] < len(opts) else None
+                if "needs_reward" in checks:
+                    deck = r["st"].get("deck") or []
+                    lacking = [ro for ro in added if sum(1 for x in deck if ro in card_roles(x)) < 2]
+                    fits = [x for x in opts if card_roles(x) & set(lacking)]
+                    if fits:
+                        seen += 1
+                        self.ev("change_exec", "honoured" if took and card_roles(took) & set(lacking) else "broken",
+                                who=who_of(r, self.arm), check="needs_reward", floor=fl, offered=fits, took=took or "skip", **base)
+                if "avoid_reward" in checks:
+                    bad = [x for x in opts if x in added or card_roles(x) & set(added)]
+                    if bad:
+                        seen += 1
+                        self.ev("change_exec", "broken" if took in bad else "honoured", who=who_of(r, self.arm),
+                                check="avoid_reward", floor=fl, offered=bad, took=took or "skip", **base)
+        if not seen:
+            self.ev("change_exec", "n/a", who="-", check="/".join(checks), note="no opportunity while in force", **base)
+
+    # --- I4 intent deviations, intent_fit coverage
+    def m_deviations(self):
+        for r in self.rows:
+            if r["decider"] == "jev":
+                self.jev_decisions += 1
+                if r.get("has_fit"):
+                    self.jev_with_fit += 1
+            dv = r.get("deviation")
+            if not dv:
+                continue
+            label = str(dv.get("intent", "")) if isinstance(dv, dict) else str(dv)
+            for intent in deviation_intents(label):
+                self.ev("intent_deviation", "n/a", who=who_of(r, self.arm), intent=intent, screen=r["screen"],
+                        floor=r["floor"], turn=r["turn"], version=dv.get("run_plan_version") if isinstance(dv, dict) else None,
+                        objective=dv.get("fight_objective") if isinstance(dv, dict) else None, label=label[:200])
+
     def analyse(self):
         self.m_save_potions()
         # roles DeepSeek asked to keep that parse_run_plan dropped (it keeps only the first 2 roles)
         self.m_save_potions("save_potions_dropped", plan_saves_dropped)
         for f in (self.m_cards, self.m_boss_entry, self.m_elites, self.m_fights, self.m_labels):
             f()
+        if self.new:
+            self.m_save_potions("reserve", plan_reserves, "reserve")
+            self.m_intent_plans()
+            self.m_change_exec()
+            self.m_deviations()
         return self
 
 
@@ -1108,17 +1478,158 @@ def run_row(a: RunAnalysis) -> dict:
     }
 
 
+def summarize_intent(analyses: list) -> dict:
+    """I1-I5 over the intent-era runs given (old-format runs are not passed in)."""
+    ev = [e for a in analyses for e in a.events]
+
+    def of(metric):
+        return [e for e in ev if e["metric"] == metric]
+    rep, acc, rej, exe, dev, res, rpl = (of(m) for m in ("validator_repair", "change_accepted", "change_rejected",
+                                                         "change_exec", "intent_deviation", "reserve", "replan"))
+    n_runs = len(analyses)
+    n_fplans = sum(1 for a in analyses for p in a.fplans if is_new_fight_entry(p))
+    out: dict[str, Any] = {"_runs": n_runs}
+    out["repairs"] = {
+        "total": len(rep), "run_plan": sum(1 for e in rep if e["source"] == "run"),
+        "fight_plan": sum(1 for e in rep if e["source"] == "fight"),
+        "run_plans": len(rpl), "fight_plans": n_fplans,
+        "by_type": dict(collections.Counter(f"{e['source']}: {e['type']}" for e in rep).most_common()),
+    }
+    by_version = collections.Counter(a.rid for a in analyses for e in a.events if e["metric"] == "replan")
+    out["replans"] = {
+        "versions": len(rpl), "per_run": round(len(rpl) / n_runs, 1) if n_runs else None,
+        "max_per_run": max(by_version.values()) if by_version else 0,
+        "by_trigger": dict(collections.Counter(e.get("trigger") for e in rpl).most_common()),
+        "failed_run_plan_requests": sum(a.errors["run"] for a in analyses),
+        "failed_fight_plan_requests": sum(a.errors["fight"] for a in analyses),
+    }
+    out["accepted"] = {
+        "total": len(acc),
+        "by_field": dict(collections.Counter(f"{e['source']}: {e['field']}" for e in acc).most_common()),
+        "by_trigger": dict(collections.Counter(e.get("trigger") for e in acc).most_common()),
+        "by_change": dict(collections.Counter(f"{e['field']} {json.dumps(e.get('frm'))}→{json.dumps(e.get('to'))} ({e.get('trigger')})"
+                                              for e in acc).most_common(12)),
+    }
+    out["rejected"] = {
+        "total": len(rej),
+        "by_reason": dict(collections.Counter(e["reason"] for e in rej).most_common()),
+        "by_field": dict(collections.Counter(e["field"] for e in rej).most_common()),
+    }
+    ex = {}
+    for e in exe:
+        k = (e["change"].split(" ")[0] + " → " + e["change"].split("→", 1)[-1], e["check"])
+        row = ex.setdefault(k, {"honoured": 0, "broken": 0, "na": 0, "broken_by": collections.Counter()})
+        if e["outcome"] == "n/a":
+            row["na"] += 1
+        else:
+            row[e["outcome"]] += 1
+            if e["outcome"] == "broken":
+                row["broken_by"][e["who"]] += 1
+    out["execution"] = {
+        "honoured": sum(1 for e in exe if e["outcome"] == "honoured"), "broken": sum(1 for e in exe if e["outcome"] == "broken"),
+        "na": sum(1 for e in exe if e["outcome"] == "n/a"),
+        "rows": [{"change": k[0], "check": k[1], "honoured": v["honoured"], "broken": v["broken"], "na": v["na"],
+                  "broken_by": dict(v["broken_by"])} for k, v in sorted(ex.items())],
+    }
+    jd = sum(a.jev_decisions for a in analyses)
+    jf = sum(a.jev_with_fit for a in analyses)
+    dev_decisions = sum(1 for a in analyses for r in a.rows if r.get("deviation"))
+    out["deviations"] = {
+        "decisions": dev_decisions, "by_intent": dict(collections.Counter(e["intent"] for e in dev).most_common()),
+        "by_screen": dict(collections.Counter(e["screen"] for e in dev).most_common()),
+        "by_objective": dict(collections.Counter(str(e.get("objective")) for e in dev if e.get("objective")).most_common()),
+        "jev_decisions": jd, "jev_with_intent_fit": jf, "fit_share": pct(jf, jd),
+        "deviation_share_of_jev": pct(dev_decisions, jd),
+    }
+    br = [e for e in res if e["outcome"] == "broken"]
+    out["reserve"] = {
+        "n": sum(1 for e in res if e["outcome"] in ("honoured", "broken")),
+        "kept": sum(1 for e in res if e["outcome"] == "honoured"), "broken": len(br),
+        "na": sum(1 for e in res if e["outcome"] == "n/a"),
+        "released_by_change": sum(1 for e in res if e.get("note") == "reserve change released it"),
+        "broken_by": dict(collections.Counter(e["who"] for e in br).most_common()),
+        "exceptions": dict(collections.Counter(e["exception"] for e in br if e.get("exception")).most_common()),
+        "discarded": sum(1 for e in br if e.get("how") == "discarded"),
+        "bugs": [{k: e.get(k) for k in ("run", "potion", "role", "act", "floor", "turn", "fight", "who", "hp_pct", "label")}
+                 for e in br if e.get("bug")],
+    }
+    return out
+
+
+def fmt_intent(title: str, s: dict) -> list[str]:
+    lines = [f"### {title}", ""]
+    if not s["_runs"]:
+        return lines + ["No runs yet with new-format (intent) plans: I1-I5 have no data.", ""]
+
+    def kv(d):
+        return ", ".join(f"{k} {v}" for k, v in d.items()) or "-"
+    r, p = s["repairs"], s["replans"]
+    a, j, x, d, v = s["accepted"], s["rejected"], s["execution"], s["deviations"], s["reserve"]
+    lines += [
+        f"- **I1 validator repairs**: {r['total']} ({r['run_plan']} on {r['run_plans']} run plans, {r['fight_plan']} on "
+        f"{r['fight_plans']} fight plans). By type: {kv(r['by_type'])}.",
+        f"- **I2 re-plans**: {p['versions']} run-plan versions ({p['per_run']} per run, max {p['max_per_run']}); by checkpoint: "
+        f"{kv(p['by_trigger'])}; failed requests: run {p['failed_run_plan_requests']}, fight {p['failed_fight_plan_requests']}.",
+        f"  - changes accepted {a['total']}: by field {kv(a['by_field'])}; by trigger {kv(a['by_trigger'])}.",
+        f"  - changes rejected {j['total']}: by reason {kv(j['by_reason'])}; by field {kv(j['by_field'])}.",
+        f"- **I3 execution after an accepted change**: honoured {x['honoured']}/{x['honoured'] + x['broken']} "
+        f"({pct(x['honoured'], x['honoured'] + x['broken'])}), n/a {x['na']} (no check or no opportunity).",
+        f"- **I4 intent deviations**: {d['decisions']} Jev decisions labelled \"breaks …\" ({d['deviation_share_of_jev']} of "
+        f"{d['jev_decisions']} Jev decisions); by intent {kv(d['by_intent'])}; by screen {kv(d['by_screen'])}. "
+        f"Jev decisions with an intent_fit label: {d['jev_with_intent_fit']}/{d['jev_decisions']} ({d['fit_share']}).",
+        f"- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept {v['kept']}/{v['n']} ({pct(v['kept'], v['n'])}), "
+        f"broken {v['broken']} (by {kv(v['broken_by'])}; exceptions {kv(v['exceptions'])}; discarded {v['discarded']}), "
+        f"n/a {v['na']} (of which released by a reserve change {v['released_by_change']}). "
+        + (f"**BUG: {len(v['bugs'])} reserved potion(s) drunk outside the exceptions**: "
+           + "; ".join(f"{b['run']} {b['potion']} F{b['floor']} T{b['turn']} {b['fight']} by {b['who']} at {b['hp_pct']}% ({b['label']})" for b in v["bugs"])
+           if v["bugs"] else "No reserved potion drunk outside the exceptions."),
+        "",
+    ]
+    if x["rows"]:
+        lines += ["| accepted change | check | honoured | broken | n/a | broken by |", "|---|---|---:|---:|---:|---|"]
+        for row in x["rows"]:
+            lines.append(f"| {row['change']} | {row['check']} | {row['honoured']} | {row['broken']} | {row['na']} | {kv(row['broken_by']) } |")
+        lines.append("")
+    return lines
+
+
+def intent_row(a: RunAnalysis) -> dict:
+    if not a.new:
+        return {"run": a.rid, "era": a.period, **{k: "n/a" for k in ("versions", "repairs", "accepted", "rejected", "exec",
+                                                                      "deviations", "fit", "reserve")}}
+    ev = collections.defaultdict(list)
+    for e in a.events:
+        ev[e["metric"]].append(e)
+    ex = [e for e in ev["change_exec"] if e["outcome"] != "n/a"]
+    res = [e for e in ev["reserve"] if e["outcome"] in ("honoured", "broken")]
+    bugs = sum(1 for e in ev["reserve"] if e.get("bug"))
+    return {
+        "run": a.rid, "era": a.period,
+        "versions": f"{len(ev['replan'])}" + (f" (+{a.errors['run']} failed)" if a.errors["run"] else ""),
+        "repairs": f"{sum(1 for e in ev['validator_repair'] if e['source'] == 'run')}/{sum(1 for e in ev['validator_repair'] if e['source'] == 'fight')}",
+        "accepted": ", ".join(f"{k} {n}" for k, n in collections.Counter(e["field"] for e in ev["change_accepted"]).items()) or "0",
+        "rejected": ", ".join(f"{k} {n}" for k, n in collections.Counter(e["reason"] for e in ev["change_rejected"]).items()) or "0",
+        "exec": f"{sum(1 for e in ex if e['outcome'] == 'honoured')}/{len(ex)}" if ex else "-",
+        "deviations": ", ".join(f"{k} {n}" for k, n in collections.Counter(e["intent"] for e in ev["intent_deviation"]).items()) or "0",
+        "fit": f"{a.jev_with_fit}/{a.jev_decisions}",
+        "reserve": (f"{sum(1 for e in res if e['outcome'] == 'honoured')}/{len(res)}" if res else "-") + (f" BUG {bugs}" if bugs else ""),
+    }
+
+
 def main():
+    global LOGS
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--logs", metavar="DIR", default=LOGS, help="log directory (default jev-sts2/logs; for synthetic checks)")
     ap.add_argument("--runs", action="store_true", help="per-run table")
     ap.add_argument("--json", action="store_true", help="machine output (summaries, per-run rows, events)")
     ap.add_argument("--md", metavar="PATH", help="write the Markdown report here")
     ap.add_argument("--events", metavar="RUNID", help="print every scored event of one run")
     args = ap.parse_args()
+    LOGS = args.logs
 
     monsters, potion_text, _cards = load_game_data()
     POTION_TEXT.update(potion_text)
-    runs, run_plans, fight_plans = load_runs()
+    runs, run_plans, fight_plans, errors = load_runs()
     target = set(run_plans) | set(fight_plans)
     target = {r for r in target if (runs.get(r) or {}).get("arm") not in ("code", "jev")}
     timelines = load_timelines(target, monsters)
@@ -1130,23 +1641,37 @@ def main():
             continue
         meta = runs.get(rid)
         arm = (meta or {}).get("arm") or "normal"
-        period = "post-892278c" if rows[0]["ts"] >= CUTOFF else "pre-892278c"
         rp = sorted(run_plans.get(rid, []), key=lambda p: p["ts"])
-        for p in rp:
-            p["plan"]["_raw_save"] = (p.get("raw") or {}).get("save_potions") or []
         fp = sorted(fight_plans.get(rid, []), key=lambda p: p["ts"])
-        analyses.append(RunAnalysis(rid, meta, rp, fp, rows, arm, period).analyse())
+        new = any(is_new_run_entry(p) for p in rp) or any(is_new_fight_entry(p) for p in fp)
+        period = ERA_INTENT if new or rows[0]["ts"] >= INTENT_CUTOFF else ERA_MID if rows[0]["ts"] >= CUTOFF else ERA_PRE
+        for p in rp:
+            if is_new_run_entry(p):
+                # new vocabulary read by the old metrics where a field maps (docstring); the parser no
+                # longer drops reserve roles, so metric 1' has nothing to score
+                pl = p["plan"]
+                pl["_raw_save"] = []
+                pl.setdefault("mustHave", pl.get("needs") or [])
+                if pl.get("routeRisk") == "avoid_elites":
+                    pl.setdefault("elites", "avoid")
+            else:
+                p["plan"]["_raw_save"] = (p.get("raw") or {}).get("save_potions") or []
+        analyses.append(RunAnalysis(rid, meta, rp, fp, rows, arm, period, errors.get(rid)).analyse())
 
     done = [a for a in analyses if a.meta is not None]
     groups = {"ALL finished runs": done}
-    for per in ("pre-892278c", "post-892278c"):
-        groups[f"period {per}"] = [a for a in done if a.period == per]
+    for per in (ERA_PRE, ERA_MID, ERA_INTENT):
+        groups[f"era {per}"] = [a for a in done if a.period == per]
     for arm in ("normal", "full", "ds"):
         groups[f"arm {arm}"] = [a for a in done if a.arm == arm]
     groups["runs with commitment fields (entryHp/savePotions/mustHave)"] = [
         a for a in done if any(p["plan"].get("savePotions") or p["plan"].get("entryHp") for p in a.rplans)]
     summaries = {g: summarize([e for a in rs for e in a.events]) | {"_runs": len(rs)} for g, rs in groups.items()}
     rows = [run_row(a) for a in analyses]
+    intent_done = [a for a in done if a.new]
+    intent_live = [a for a in analyses if a.new and a.meta is None]
+    intent_summary = {"finished": summarize_intent(intent_done), "unfinished": summarize_intent(intent_live)}
+    intent_rows = [intent_row(a) for a in analyses]
 
     if args.events:
         for a in analyses:
@@ -1155,7 +1680,7 @@ def main():
                     print(json.dumps(e, ensure_ascii=False, default=str))
         return
     if args.json:
-        json.dump({"summaries": summaries, "runs": rows,
+        json.dump({"summaries": summaries, "intent": intent_summary, "runs": rows, "intent_runs": intent_rows,
                    "events": [e for a in analyses for e in a.events]}, sys.stdout, ensure_ascii=False, indent=1, default=str)
         print()
         return
@@ -1168,6 +1693,14 @@ def main():
             continue
         out.append("")
         out += fmt_table(f"{g} ({len(rs)} runs)", summaries[g])
+    out += ["", "## Intent era (from 0f2e648): validator, re-plans, execution, deviations, reserve", ""]
+    if not intent_done and not intent_live:
+        out.append("No runs yet with new-format (intent) plans.")
+    else:
+        out += fmt_intent(f"finished intent-era runs ({len(intent_done)})", intent_summary["finished"])
+        if intent_live:
+            out += fmt_intent(f"unfinished intent-era runs, not in the aggregates above ({len(intent_live)}: "
+                              f"{', '.join(a.rid for a in intent_live)})", intent_summary["unfinished"])
     if args.runs or args.md:
         run_lines = ["", "### Per run (honoured/scored)", "",
                      "| run | start (UTC) | arm | period | code | floor | win | save_pot | entry HP% A:hp/target | must deck | must reward | avoid card | avoid elite | focus plays | potion timing | setup | labels |",
@@ -1175,6 +1708,17 @@ def main():
         for r in rows:
             run_lines.append("| " + " | ".join(str(r[k]) for k in ("run", "start", "arm", "period", "code", "floor", "win", "save_pot", "entry_hp",
                                                                    "must_deck", "must_rew", "avoid_card", "avoid_elite", "focus", "pot_time", "setup", "labels")) + " |")
+        ir = [r for r in intent_rows if r["versions"] != "n/a"]
+        run_lines += ["", "### Per run, intent era (I1-I5; older runs: n/a)", ""]
+        if not ir:
+            run_lines.append("No runs yet with new-format (intent) plans.")
+        else:
+            run_lines += ["| run | run-plan versions | repairs run/fight | changes accepted | changes rejected | exec after change | "
+                          "deviations by intent | Jev decisions with intent_fit | reserve kept |",
+                          "|---|---:|---|---|---|---|---|---|---|"]
+            for r in ir:
+                run_lines.append("| " + " | ".join(str(r[k]) for k in ("run", "versions", "repairs", "accepted", "rejected", "exec",
+                                                                       "deviations", "fit", "reserve")) + " |")
     else:
         run_lines = []
     text = "\n".join(out + (run_lines if args.runs else []))
@@ -1190,14 +1734,14 @@ def main():
                     if e["outcome"] in ("broken", "partial") and e["metric"] in ("save_potions", "avoid_card", "potion_timing", "plan_label", "entry_hp"):
                         spot.append("- " + json.dumps({k: v for k, v in e.items() if k != "run"}, ensure_ascii=False, default=str))
                 spot.append("")
-        md = [MD_HEAD] + headlines(summaries) + out + run_lines + [SPOT_CHECKS] + spot + [MD_TAIL]
+        md = [MD_HEAD] + headlines(summaries, intent_summary) + out + run_lines + [SPOT_CHECKS] + spot + [MD_TAIL]
         os.makedirs(os.path.dirname(os.path.abspath(args.md)), exist_ok=True)
         with open(args.md, "w", encoding="utf8") as fh:
             fh.write("\n".join(md) + "\n")
         print(f"\nwrote {args.md}", file=sys.stderr)
 
 
-def headlines(summaries: dict) -> list[str]:
+def headlines(summaries: dict, intent: dict | None = None) -> list[str]:
     """Plain-language headline bullets, numbers filled from the summaries."""
     a = summaries["ALL finished runs"]
     c = summaries.get("runs with commitment fields (entryHp/savePotions/mustHave)") or a
@@ -1240,6 +1784,20 @@ def headlines(summaries: dict) -> list[str]:
              f"finally played {st.get('final_consistent')} (the HP guard is what undoes Jev's setup picks); potion-keep labels: Jev {kp.get('jev_pick_consistent')}, "
              f"finally {kp.get('final_consistent')} (the potion veto repairs some).",
              ""]
+    if intent is not None:
+        fi, li = intent["finished"], intent["unfinished"]
+        if not fi["_runs"] and not li["_runs"]:
+            lines[-1:] = ["- **Intent era (from 0f2e648)**: no runs yet with new-format plans; I1-I5 are empty.", ""]
+        else:
+            s = fi if fi["_runs"] else li
+            which = f"{fi['_runs']} finished" if fi["_runs"] else f"{li['_runs']} unfinished (no finished run yet)"
+            v = s["reserve"]
+            lines[-1:] = [
+                f"- **Intent era (from 0f2e648)**, {which} run(s): {s['repairs']['total']} validator repairs, "
+                f"{s['replans']['versions']} run-plan versions, {s['accepted']['total']} changes accepted / {s['rejected']['total']} rejected; "
+                f"execution after a change {s['execution']['honoured']}/{s['execution']['honoured'] + s['execution']['broken']}; "
+                f"{s['deviations']['decisions']} Jev intent deviations; intent_fit on {s['deviations']['fit_share']} of Jev decisions; "
+                f"reserve kept {v['kept']}/{v['n']}, {len(v['bugs'])} bug(s).", ""]
     return lines
 
 
@@ -1289,6 +1847,14 @@ MD_TAIL = """
 - Burst / big-hit detection comes from the logged state (intents, block, enemies alive after the
   turn's steps), approximate for multi-phase enemies and minions.
 - approach (race/setup/defend) and key_turns are free text: n/a.
+- Intent era (I1-I5): only runs whose logs carry the new plan format. Execution checks (I3) cover rest,
+  map and card-reward choices on the floors the changed value stays in force in its act; combat-side
+  effects of hp_policy (solver weights, guard slack) are not checked there (I4 sees Jev's side of them).
+  I4's share counts decisions with decider "jev" whose question had an intent_fit label on any option;
+  labels only exist when a run or fight plan is in force (early floors before the first plan have none).
+  I5 exceptions are read from the logged HP (fingerprint hp / state max_hp), the least-loss label and the
+  option's "released" tag; the per-card fallback's "lethal turn" release is not visible and would show as a BUG
+  (check the event with --events before trusting a flagged case).
 """
 
 
