@@ -23,3 +23,6 @@ Dossiers for 47 enemies feed the run plan and fight plans; the run plan's entry 
 | ds (code+DeepSeek, Jev stubbed) | 33,17,33,33,33 | 29.8 | 4/5 | 0/5 | 0 |
 | full | 7,33,48,28,27 | 28.6 (34.0 w/o X226 bug death) | 4/5 | 1/5 | 0 |
 Caveats: n=5 per arm; X226 (full) died F7 to a stale-event code bug; ds-arm stub picks the first option on card-by-card combat decisions (not code #1), hurting ds in ZWX5's last boss turn. Reading: any model layer lifts act-1 boss pass from 1/5 to 4–5/5; Jev (in-fight choices) is the main source of act-2 passes; DeepSeek run/fight plans reliably reach F33 but did not convert act-2 bosses (4 of 4 deaths on F33, damage 18–54/turn vs clock); full not better than jev alone at this n. Code frozen during the run; queued fixes in decision-log resume now.
+
+## Era: strategy-only DeepSeek + Jev final (from 2026-09-27 19:57, phase2 0f2e648)
+Compare against the post-ablation full runs (892278c/b31b36e/2c98200) on mean floor, act-2 boss pass, boss-reserved potions kept (plan_adherence), intent deviations, validator repairs/rejected changes. Evaluate after ~10 runs.

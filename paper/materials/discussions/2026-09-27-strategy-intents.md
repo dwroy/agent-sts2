@@ -56,3 +56,6 @@ Dai 问："deepseek 的全局策略，包括局中的调整，能否被代码和
 
 ## 5. 实施记录
 见 `decision-log.md` 对应日期的条目；代码提交在 jev-sts2 phase2（先在 jev-sts2-fp 的 fight-plan 分支完成）。
+
+### 实施完成（2026-09-27 19:57）
+jev-sts2 phase2 0f2e648，494 个测试通过；.env 设 ESCALATION_CHAIN=none，RUN_PLAN / FIGHT_PLAN 仍为 v1。意图词表、翻译表、校验规则、Jev 标签的完整说明见 decision-log 同日条目，代码在 src/strategy/intent.ts 和 plan-validator.ts。
