@@ -143,3 +143,4 @@
 - 2026-09-27 11:51 恢复：Dai 授权后由 Claude 用 cmd.exe start steam://rungameid/2868840 重新启动游戏，5 秒后 mod 可用，autoplay 从主菜单『继续』接上存档（F33 二幕 boss 战，消融组 jev 第 6 局）。游戏崩溃约 24 分钟。
 
 - 2026-09-27 ablation 10/20 post-mortems (R2H1 full F33 crab, BUUY code F17 Soul Fysh, LSWU jev F21 Hunter Killer). Queued (freeze): TENDER_POWER on player not modelled in solver (5th Hunter Killer loss; disable lethal shortcut meanwhile); Skill Potion never planned; gap ≥20 should scale AoE/strength bonus (gap/2) and halve mustHave block; event.ts all-0 scores (3rd code-arm run hurt).
+- 2026-09-27 ablation 11/20 post-mortem 6HRZZ (ds, F33 Kaiser Crab, 18/turn of 54). Queued (freeze): Toasty Mittens exhaust pick uses static value, ignores Strength/AoE (4th time); fight-plan big_hit tag on energy/strength potions drinks them early (add "burst" use, respect keptForBoss).
