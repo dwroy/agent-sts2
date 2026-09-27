@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { deathDelay, likelyDeathWeight, LIKELY_DEATH, planMap } from "../src/screens/map.js";
+import { BOOTS_CHARGE, BOOTS_LAST_CHARGE, bootsCost, deathDelay, likelyDeathWeight, LIKELY_DEATH, planMap } from "../src/screens/map.js";
 import { fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
 import { mapShift } from "../src/strategy/intent.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -99,5 +99,23 @@ describe("NJSZ F29: preserve prices '?' and Monster by their expected HP cost (4
     const byType = Object.fromEntries(Object.values(options("njsz-map-f29")).map((option) => [option["node_type"], option]));
     expect(byType["Monster"]!["next_forced_elite"]).toMatch(/~33% HP/);
     expect(byType["Unknown"]!["next_forced_elite"]).toMatch(/~46% HP/);
+  });
+});
+
+describe("Winged Boots charges are budgeted across acts (RVR6: three spent in act 1, none left at F38)", () => {
+  it("off-path nodes cost 3 in acts 1-2, 6 for the last charge, nothing in act 3", () => {
+    expect(bootsCost(1, 3)).toBe(BOOTS_CHARGE);
+    expect(bootsCost(2, 1)).toBe(BOOTS_LAST_CHARGE);
+    expect(bootsCost(3, 1)).toBe(0);
+  });
+
+  it("F13: the child elite (13,3), not the off-path (13,0) for +0.6 (logged: Jev took (13,0) at 0.89)", () => {
+    expect(pick("rvr6-map-f13")).toEqual({ action: "choose_map_node", option_index: 1 });
+  });
+
+  it("F14: the child '?' (14,0), not the off-path Monster (14,4) for +0.9 with the last charge; the option says so", () => {
+    expect(pick("rvr6-map-f14")).toEqual({ action: "choose_map_node", option_index: 0 });
+    const offPath = Object.values(options("rvr6-map-f14")).find((option) => option["position"] === "row 14, column 4")!;
+    expect(offPath["winged_boots"]).toMatch(/uses a Winged Boots charge, 0 left after \(priced -6/);
   });
 });

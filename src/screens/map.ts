@@ -113,6 +113,19 @@ export function deathDelay(nodesAhead: number): number {
  */
 export const SURVIVAL_WEIGHT = 40;
 
+/**
+ * Winged Boots: a node off the current node's children spends one of its charges (the relic's `stack`).
+ * RVR6 spent all three in act 1, two of them for +0.6 and +0.9 route value; one left at F38 would have
+ * routed around the Frog Knight and the F42 forced elite. Off-path nodes cost BOOTS_CHARGE route value
+ * in acts 1-2, the last charge BOOTS_LAST_CHARGE (kept for act 3), nothing in act 3.
+ */
+export const BOOTS_CHARGE = 3;
+export const BOOTS_LAST_CHARGE = 6;
+export function bootsCost(act: number, charges: number): number {
+  if (act >= 3) return 0;
+  return charges <= 1 ? BOOTS_LAST_CHARGE : BOOTS_CHARGE;
+}
+
 /** How much this node type is worth to *this* run, at the projected HP/gold on arrival. */
 export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number, act?: number): number {
   // A fight reached with no more HP than it is expected to cost is a likely death, not a -3.
@@ -484,6 +497,12 @@ export function planMap(env: DecisionEnv): Decision | null {
   const bestSurvival = Math.max(0, ...offered.map((node) => survivalOf(selfOf(node))));
   const bossMemo = new Map<string, Arrival>();
   const eliteMemo = new Map<string, { hp: number; row: number } | null>();
+  // Winged Boots: nodes off the current node's children spend a charge.
+  const bootsRelic = asArray(asRecord(state.run?.raw)["relics"]).map(asRecord).find((relic) => str(relic["relic_id"]) === "WINGED_BOOTS");
+  const bootsCharges = bootsRelic ? num(bootsRelic["stack"]) : 0;
+  const currentKey = currentRow === null ? null : key(currentRow, num(asRecord(map["current_node"])["col"]));
+  const pathChildren = new Set((currentKey ? nodes.get(currentKey)?.children ?? [] : []).map((child) => key(child.row, child.col)));
+  const offPath = (row: number, col: number) => bootsCharges > 0 && pathChildren.size > 0 && !pathChildren.has(key(row, col));
   const options: (Omit<PickOption, "summary"> & { summary: Record<string, JsonValue>; type: string; row: number; arrival: RouteArrival })[] = offered.flatMap((node) => {
     const index = numOrNull(node["index"]);
     if (index === null) return [];
@@ -498,7 +517,9 @@ export function planMap(env: DecisionEnv): Decision | null {
     // scored -36 plus the rooms after it, above a "?" whose forced elite later counted in full).
     const here = weightOf(type, start, row);
     const survival = survivalOf(self);
+    const boots = offPath(row, col) ? bootsCost(act, bootsCharges) : null;
     const value =
+      -(boots ?? 0) +
       (here <= LIKELY_DEATH
         ? here * urgency - deathElite * minElitesAhead(self, nodes, new Map())
         : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency)) -
@@ -531,6 +552,7 @@ export function planMap(env: DecisionEnv): Decision | null {
           // longest run of fights every path takes (VQ7J F7, Z7D7 F25).
           ...routeFactsText(facts),
           ...arrivalText(arrival, checkpoint ? survival : null),
+          ...(boots !== null ? { winged_boots: `off the current path: uses a Winged Boots charge, ${bootsCharges - 1} left after${boots > 0 ? ` (priced -${boots}: charges are kept for act 3)` : ""}` } : {}),
         } as Record<string, JsonValue>,
         type,
         row,
