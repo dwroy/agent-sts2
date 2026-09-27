@@ -72,6 +72,8 @@ export interface ScreenMemory {
     playerHp?: number;
     /** Turns whose first look found every non-minion enemy asleep or intangible (not damage-rate turns). */
     idle?: number[];
+    /** Non-minion enemy HP at each turn's first look (keyed by turn): what an idle turn dealt is left out. */
+    turnHp?: Record<string, number>;
   };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because

@@ -8,7 +8,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AskDecision } from "../src/project/types.js";
-import { hpClockTurns, planCombatTurn } from "../src/screens/combat-plan.js";
+import { hpClockTurns, measuredDamagePerTurn, planCombatTurn } from "../src/screens/combat-plan.js";
 import { setupRisksDeath } from "../src/strategy/intent.js";
 import { asArray, asRecord } from "../src/util/json.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -43,5 +43,25 @@ describe("boss race: behind on the tighter of the boss clock and our HP clock (F
     const resolved = (decision as AskDecision).resolve(answer("plan1", 0.68));
     expect(resolved.rationale).toMatch(/^Jev chose plan 1\//);
     expect(resolved.rationale).not.toMatch(/HP guard/);
+  });
+});
+
+describe("the measured damage rate leaves out the idle turn that woke the boss, and what it dealt (FEY6 F17 T6)", () => {
+  // First-look Matriarch HP by turn (states): asleep T1-T3, T3's Bash+/Strike/Fire Potion woke her.
+  const turnHp = { "1": 233, "2": 233, "3": 233, "4": 191, "5": 142, "6": 85 };
+  it("T6 reads T4-T5's rate (106 over 2), not 148 over 2", () => {
+    const rate = measuredDamagePerTurn({ hp: 233, turn: 1, idle: [1, 2, 3], turnHp }, 85, 6)!;
+    expect(rate).toBeCloseTo(53, 5);
+    expect(rate).toBeLessThan(148 / 2);
+    // Without first-look HPs nothing is subtracted (older memory).
+    expect(measuredDamagePerTurn({ hp: 233, turn: 1, idle: [1, 2, 3] }, 85, 6)).toBe(74);
+    // At T4 the only measured turns are idle: nothing measured.
+    expect(measuredDamagePerTurn({ hp: 233, turn: 1, idle: [1, 2, 3], turnHp }, 191, 4)).toBeNull();
+  });
+
+  it("the board records each turn's first-look enemy HP once", () => {
+    const env = loggedEnv(logged("fey6-f17-t6"));
+    planCombatTurn(env);
+    expect(env.screenMemory.fightStart?.turnHp).toEqual({ "6": 85 });
   });
 });

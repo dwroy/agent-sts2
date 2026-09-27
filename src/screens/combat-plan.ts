@@ -261,14 +261,28 @@ const FIGHT_NODES = ["Monster", "Unknown"];
 
 /**
  * This fight's damage a turn so far (non-minion enemy HP lost over the turns since the first look), not
- * counting turns that began with every enemy asleep or intangible; null when there is nothing measured
- * yet (then the deck estimate stands in).
+ * counting turns that began with every enemy asleep or intangible: neither the turn nor what it dealt
+ * (from each turn's first-look HP, `turnHp`). FEY6 F17 T6: the T3 that woke the Matriarch for 36 was an
+ * idle turn with its 36 still counted, 74 a turn read for 49. Null when there is nothing measured yet
+ * (then the deck estimate stands in).
  */
-export function measuredDamagePerTurn(start: { hp?: number; turn?: number; idle?: number[] } | undefined, enemyHpNow: number, turn: number): number | null {
+export function measuredDamagePerTurn(
+  start: { hp?: number; turn?: number; idle?: number[]; turnHp?: Record<string, number> } | undefined,
+  enemyHpNow: number,
+  turn: number,
+): number | null {
   if (start?.hp === undefined || start.turn === undefined || turn <= start.turn || start.hp <= enemyHpNow) return null;
-  const idle = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn).length;
-  const turns = turn - start.turn - idle;
-  return turns > 0 ? (start.hp - enemyHpNow) / turns : null;
+  const idleTurns = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn);
+  const turns = turn - start.turn - idleTurns.length;
+  // What each idle turn dealt: its first-look HP less the next turn's (now, for last turn).
+  const hpAt = (t: number): number | undefined => (t === turn ? (start.turnHp?.[String(t)] ?? enemyHpNow) : start.turnHp?.[String(t)]);
+  const idleDealt = idleTurns.reduce((sum, t) => {
+    const before = t === start.turn ? (hpAt(t) ?? start.hp!) : hpAt(t);
+    const after = hpAt(t + 1);
+    return before === undefined || after === undefined ? sum : sum + Math.max(0, before - after);
+  }, 0);
+  const dealt = start.hp - enemyHpNow - idleDealt;
+  return turns > 0 && dealt > 0 ? dealt / turns : null;
 }
 
 /**
@@ -1122,6 +1136,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1, playerHp: playerSim.hp };
   // A turn that starts with every non-minion enemy asleep or intangible is no turn of this fight's damage
   // rate (T86W F17: the Matriarch slept T1-T3 for 1 damage; T4 read 1/3 a turn and "kills" in 700 turns).
+  const turnHp = (env.screenMemory.fightStart.turnHp ??= {});
+  if (turnHp[String(state.turn ?? 1)] === undefined) turnHp[String(state.turn ?? 1)] = enemyHpNow;
   const keyEnemies = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0);
   if (keyEnemies.length > 0 && keyEnemies.every((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0 || enemy.intangible)) {
     const idle = (env.screenMemory.fightStart.idle ??= []);
