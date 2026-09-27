@@ -44,4 +44,5 @@ for (const line of readFileSync(file, "utf8").split("\n")) {
   console.log(`  ${plan.archetype} | want ${plan.want.join(",")} | avoid ${plan.avoid.join(",")} | remove ${plan.remove.join(",")} | block ${plan.blockTarget} | elites ${plan.elites} | rest ${plan.rest}`);
   console.log(`  boss: ${plan.bossPrep}`);
   console.log(`  ${plan.summary}`);
+  console.log(`  entry_hp ${plan.entryHp ?? "-"} | save_potions ${(plan.savePotions ?? []).join(",")} | must_have ${(plan.mustHave ?? []).join(",")}`);
 }

@@ -1,0 +1,1435 @@
+{
+ "note": "铁甲自动玩家的敌人档案(2026-09-27,来源 notes/lessons.md、boss-clock BOSS_NEEDS、run-journal BOSS_NOTES、ironclad-guide、jev-hints、move-model、runs.jsonl 157局)。key=游戏 enemy_id;多体战斗用主id并在 ids 列出全部 id(KAISER_CRAB/THE_KIN 为 boss_id)。hp 为多体合计;a7 取日志实测/游戏数据,a8 有实测用实测(KD 399、异鱼221、帝王蟹428、沙漏535、千足虫150、蟾蜍122、胧光怪129、青蛙199),其余按+5%估算。need_damage_per_turn: boss 取 BOSS_NEEDS hp/turns,其余为估计。deaths 按 runs.jsonl death_fight 计(组合战计入主敌)。entry_hp_pct 由输赢局进场血量推定。",
+ "enemies": {
+  "VANTOM": {
+   "name": "墨影幻灵",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 173,
+    "a8": 182
+   },
+   "danger": "开场9层滑溜(前9次伤害只算1)。4回合循环:墨迹→墨水长枪→肢解 DISMEMBER 26-30+3伤口(T3/T7)→准备。T7 25血无格挡吃28死(1R3C);T5孤注一掷后墨迹9即死(S780)",
+   "win_pattern": "YN4E 78/87进,5回合每回合35,双重打击/多段破滑溜;W6F4 72/80进6回合;肢解回合全力格挡,准备回合打能力/爆发",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 22,
+   "must_have": [
+    "multi_hit",
+    "block",
+    "strength"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "准备回合(只来7伤)喝光药水;选孤注一掷;开局用重锤打滑溜",
+   "deaths": 5,
+   "evidence": [
+    "1R3CUXT91TAE",
+    "S780Y1W7AQZL",
+    "MGJ8W6C8L1DG",
+    "5L1H7N0ULL7C",
+    "WFR4AUP2CWDT"
+   ]
+  },
+  "CEREMONIAL_BEAST": {
+   "name": "仪式兽",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 252,
+    "a8": 265
+   },
+   "danger": "犁地18/20/22/24;首次跌破150被击晕一回合。之后兽吼给昏眩(本回合只能打1张)→践踏15/18→碾压17/20+3力。RAWT T11 17血昏眩回合只能防御5,T14死",
+   "win_pattern": "A0 5胜1负;跌破150那一击会取消当回合犁地;兽吼回合(0来袭)全力输出,践踏回合打单张大格挡(耸肩无视/火焰屏障)",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 19,
+   "must_have": [
+    "block",
+    "strength",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "前两回合为赶150击晕线换血(8LQG多掉17);格挡药水在第一次犁地就喝掉",
+   "deaths": 2,
+   "evidence": [
+    "8LQGV1EFQDVX",
+    "RAWTLJF81MXW"
+   ]
+  },
+  "THE_KIN": {
+   "name": "同族",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 307,
+    "a8": 322
+   },
+   "danger": "神官190+两信徒~58。神官循环:脆弱之球→虚弱之球→光束 BEAM 7×3=21(T3/T7/T11)→仪式+力。P78Z/PPKT都在T11 3-6血吃光束21死,神官剩26-38",
+   "win_pattern": "CRRP 78/80进:T2再生药水,T3铁心药水,T4恶魔形态+,9回合斩杀;JR66靠彼岸咆哮AOE先清信徒,14回合71→13",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 31,
+   "must_have": [
+    "aoe",
+    "strength",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "weak",
+    "strength"
+   ],
+   "avoid": "契约终结当AOE算(消耗堆0张=0伤);攻击药水拖到T9才喝;HP护栏换掉AOE线",
+   "deaths": 4,
+   "evidence": [
+    "P78Z8AGNN9Z3",
+    "PPKTGCDHJHM9",
+    "H1FAYT87VH2Q",
+    "ZZA7PCSRYTNM",
+    "CRRPX9MWJZGM"
+   ],
+   "ids": [
+    "KIN_PRIEST",
+    "KIN_FOLLOWER"
+   ]
+  },
+  "WATERFALL_GIANT": {
+   "name": "瀑布巨兽",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 240,
+    "a8": 252
+   },
+   "danger": "高压水枪 PRESSURE_GUN T5 20/T10 25/T15 30;虹吸 SIPHON 回10血;被打死后下回合自爆=蒸汽喷发层数(15起每回合+3,实测36-45)。J8E4两次水枪0格挡硬吃,3血吃自爆42",
+   "win_pattern": "4JVP 76/87进10回合,护栏3次省血,T8喝鲜血药水留余量,T9斩杀,T10三张防御挡自爆36;H8LC 74/80进T10打死,自爆−24",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 24,
+   "must_have": [
+    "block",
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "block",
+    "heal"
+   ],
+   "avoid": "前期换血抢伤害;水枪回合不格挡;速度药水T2就喝掉;打死时HP低于喷发层数",
+   "deaths": 6,
+   "evidence": [
+    "J8E47LUXEV0Q",
+    "XKKNWSZMMSZN",
+    "KG0EDXDMLP5K",
+    "G7EJ07RPR1NX",
+    "1ZQJXQ53KSBG"
+   ]
+  },
+  "SOUL_FYSH": {
+   "name": "灵魂异鱼",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 211,
+    "a8": 221
+   },
+   "danger": "往牌组塞呼唤 BECKON(回合末留在手里每张失6血,不可格挡;打出费1能量);周期性无实体;泄气 DE_GAS ~21,易伤时24。VL2D T12-13两回合各摸3张呼唤−34;9YR9 17血3张呼唤死",
+   "win_pattern": "N1V2 80/80满血进,13回合打完剩25;赢局进场93%(输局78%);用消耗牌清呼唤,无攻击回合把呼唤全打掉",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 25,
+   "must_have": [
+    "exhaust",
+    "strength",
+    "frontload",
+    "aoe"
+   ],
+   "save_potions": [
+    "damage",
+    "strength",
+    "block"
+   ],
+   "avoid": "能量用完还抽牌(抽到呼唤白掉6);把呼唤当可格挡;0永久力量+0升级进场",
+   "deaths": 8,
+   "evidence": [
+    "VL2DGJ684H2K",
+    "9YR9335HNR88",
+    "K8RK6JG2YF62",
+    "F6NT0JYR6NLS",
+    "XPA49DEKREQ1"
+   ]
+  },
+  "LAGAVULIN_MATRIARCH": {
+   "name": "乐加维林族母",
+   "kind": "boss",
+   "act": 1,
+   "hp": {
+    "a7": 222,
+    "a8": 233
+   },
+   "danger": "开场沉睡+覆甲12,掉1血就醒;醒后斩击19→开膛 DISEMBOWEL 11×2→吸魂 SOUL_SIPHON(−2力−2敏)。Q4JV T17 19血吃开膛22死,boss剩17;多局剩13-38血=输出不够",
+   "win_pattern": "H5MZ 72/83进,12回合−48;沉睡回合打能力/留格挡不碰它的血;醒后尽早爆发(吸魂后格挡越来越弱)",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 19,
+   "must_have": [
+    "strength",
+    "frontload",
+    "aoe"
+   ],
+   "save_potions": [
+    "strength",
+    "damage"
+   ],
+   "avoid": "T1/T2把熟睡的boss打醒;力量药水在走廊喝掉;Jev换掉高伤rank1线",
+   "deaths": 9,
+   "evidence": [
+    "Q4JVJT9WS60C",
+    "ZH8J9ZQXV5YC",
+    "SVN20LTDALQS",
+    "KFP1104FQM27",
+    "PYTG6PC12PEN"
+   ]
+  },
+  "KAISER_CRAB": {
+   "name": "帝王蟹(碾碎爪+火箭)",
+   "kind": "boss",
+   "act": 2,
+   "hp": {
+    "a7": 408,
+    "a8": 428
+   },
+   "danger": "T3碾碎爪虫刺 BUG_STING 挂虚弱2+脆弱2,T4火箭激光 LASER 41-49(T4PY 29血+10格挡吃49)。单杀一只→另一只+99格挡+6力(蟹之怒),回合开始AOE/沙漏也会触发",
+   "win_pattern": "W6F4/JR66:两钳血量对齐(T3 115/115),同一回合一起打死;满血进场;每回合~46-58,7-9回合打完",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 54,
+   "must_have": [
+    "aoe",
+    "strength",
+    "block",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak",
+    "damage"
+   ],
+   "avoid": "50-52血进场(3局全死);T2-T3换血打火箭;把一只钳子打到≤3血;锁镰/回旋镖随机单杀",
+   "deaths": 17,
+   "evidence": [
+    "T4PYMNJJFSU6",
+    "MX8KZU7ABQBQ",
+    "GL2UHZGJ7P8M",
+    "MK1NRF1ZW79B",
+    "UMX6X5FPP30L"
+   ],
+   "ids": [
+    "CRUSHER",
+    "ROCKET"
+   ]
+  },
+  "KNOWLEDGE_DEMON": {
+   "name": "知识恶魔",
+   "kind": "boss",
+   "act": 2,
+   "hp": {
+    "a7": 379,
+    "a8": 399
+   },
+   "danger": "诅咒(T1/5/9)→掌掴 SLAP 17-21→知识淹没 10-12×3=30-36→沉思(11+回30血+力)。瓦解每回合6叠加;衰朽整场−1能量。输局每回合21-31,boss剩59-212",
+   "win_pattern": "CRRP 70/87进:T1诅咒回合打恶魔形态+,力量28,8回合打完;诅咒选懒惰>心灵腐化>瓦解;需≥50/回合",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 51,
+   "must_have": [
+    "strength",
+    "block",
+    "draw"
+   ],
+   "save_potions": [
+    "block",
+    "damage",
+    "strength"
+   ],
+   "avoid": "满血选瓦解;Jev/HP护栏换掉能力牌线;两瓶药留到T8+;淹没回合手里0格挡",
+   "deaths": 17,
+   "evidence": [
+    "P0ATKY6W0F0P",
+    "5BXMTT63VBBA",
+    "SM9H2ZQVHPNY",
+    "24HMNKB4N32V",
+    "F3SSGJ0N6YYN"
+   ]
+  },
+  "THE_INSATIABLE": {
+   "name": "无厌沙虫",
+   "kind": "boss",
+   "act": 2,
+   "hp": {
+    "a7": 321,
+    "a8": 337
+   },
+   "danger": "沙坑 SANDPIT 从4起每敌方回合−1,归零即死(与HP/格挡无关);猛扑 LUNGING_BITE ~28-30。Y08T 48血+14格挡被吞(两张狂乱逃离没打);MAHA差1血",
+   "win_pattern": "4JVP/N1V2/H5MZ/YN4E四胜:满血或81%+进,6-8回合每回合40-52;沙坑≤2先打1费狂乱逃离再输出",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 46,
+   "must_have": [
+    "frontload",
+    "strength",
+    "block"
+   ],
+   "save_potions": [
+    "damage",
+    "block",
+    "strength"
+   ],
+   "avoid": "沙坑1时不打逃离;斩杀线先打痛殴吃掉愤怒;31-61血进场",
+   "deaths": 6,
+   "evidence": [
+    "Y08TU00D9VLH",
+    "MAHAHJY541KJ",
+    "M8123JA75Y1G",
+    "THMGB35RGDSD",
+    "TTVYCS2ADZRM"
+   ]
+  },
+  "QUEEN": {
+   "name": "女王(+火炬头聚合体)",
+   "kind": "boss",
+   "act": 3,
+   "hp": {
+    "a7": 599,
+    "a8": 629
+   },
+   "danger": "T1魂缚锁链(每回合一张魂缚牌);T2你是我的:99层易伤/虚弱/脆弱。聚合体12×3/22,每回合+1力;女王处决 EXECUTION 25、斩首10×5=50。WY41 55/89 0药4回合死",
+   "win_pattern": "4JVP/BDAK/H5MZ/YN4E:T1-T2无减益时打出能力+最大爆发,攻击全给聚合体(T4-T6杀),再集火女王;每回合~50-66",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 64,
+   "must_have": [
+    "strength",
+    "aoe",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak",
+    "damage",
+    "strength"
+   ],
+   "avoid": "进场0药水;前三回合伤害打女王(20格挡)而不打聚合体;无力量成长(P2E4 47.5/回合)",
+   "deaths": 5,
+   "evidence": [
+    "P2E43JJVFGMK",
+    "WY41FADPAGTW",
+    "CAYKKMTJWBPM",
+    "88HNFZ9K5LZ5",
+    "D4JGCNEL40VL"
+   ],
+   "ids": [
+    "QUEEN",
+    "TORCH_HEAD_AMALGAM"
+   ]
+  },
+  "TEST_SUBJECT": {
+   "name": "实验体",
+   "kind": "boss",
+   "act": 3,
+   "hp": {
+    "a7": 600,
+    "a8": 630
+   },
+   "danger": "三阶段100/200/300。一阶段每打技能+2力;二阶段多段爪10×N每回合+1段,没挡住塞伤口(7DFB T6 26→1);三阶段无实体,猛扑 BIG_POUNCE 37-45(ZANM/M75J死)",
+   "win_pattern": "W6F4:能力药水出恶魔形态,力量28一回合200;CRRP恶魔形态+,力量40;复生回合做准备,二阶段≤3回合打完,进三阶段≥40-50血",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 43,
+   "must_have": [
+    "strength",
+    "block",
+    "multi_hit",
+    "exhaust"
+   ],
+   "save_potions": [
+    "strength",
+    "block",
+    "heal"
+   ],
+   "avoid": "一阶段打技能;二阶段拖5回合;无力量成长进场",
+   "deaths": 7,
+   "evidence": [
+    "YFG53EZ372D7",
+    "ZANMLV9UU31K",
+    "7DFB21JE2DTK",
+    "M75JX3KS80NB",
+    "VP5FZC9UCP63"
+   ]
+  },
+  "AEONGLASS": {
+   "name": "永世沙漏",
+   "kind": "boss",
+   "act": 3,
+   "hp": {
+    "a7": 512,
+    "a8": 535
+   },
+   "danger": "人工制品3;3回合循环:退潮 EBB 22+力并得33格挡(我方T2/5/8)→眼部激光(11+力)×2→渐强+3/4/5力。每打6张牌塞凋萎3/6/9。没有输局活过T8-T9",
+   "win_pattern": "N1V2 105/105满血,9回合每回合57(熔融之拳+易伤翻倍);JR66 T3/T6/T9爆发、烙印+消耗凋萎;少打小牌,退潮回合打能力",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 75,
+   "must_have": [
+    "strength",
+    "frontload",
+    "exhaust",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "strength",
+    "damage"
+   ],
+   "avoid": "每回合<50输出;减益药水喂人工制品;打一堆0费小牌叠凋萎;HP护栏换成空过回合",
+   "deaths": 8,
+   "evidence": [
+    "M6P7KAWMF6BC",
+    "G1Z0X3WBH4XQ",
+    "L34T7HND7EL8",
+    "YVWAWAPXJXGV",
+    "TXKEQ0QV06GU"
+   ]
+  },
+  "ENTOMANCER": {
+   "name": "蜂群术士",
+   "kind": "elite",
+   "act": 2,
+   "hp": {
+    "a7": 145,
+    "a8": 152
+   },
+   "danger": "被攻击往牌组塞晕眩;蜂群 BEES 5×7=35、长矛 SPEAR 20。CY8U T7 5张晕眩0格挡吃35;F8HR每回合10.6;6X8F差2血",
+   "win_pattern": "H5MZ 5回合每回合29,62→47(手里晕眩≤2);少张大伤害单卡速杀,蜂群回合留格挡",
+   "entry_hp_pct": 0.75,
+   "need_damage_per_turn": 29,
+   "must_have": [
+    "frontload",
+    "strength",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "damage"
+   ],
+   "avoid": "Buff回合喝应急药;HP护栏连续换小伤线;带3张诅咒进场;<60%进强制精英",
+   "deaths": 5,
+   "evidence": [
+    "CY8UG7ABBSAS",
+    "6X8F3ALWG9RM",
+    "F8HR4M65MJCG",
+    "2AX48ZA9H9DM",
+    "G8AQJ2YEMEHE"
+   ]
+  },
+  "DECIMILLIPEDE": {
+   "name": "残杀千足虫",
+   "kind": "elite",
+   "act": 2,
+   "hp": {
+    "a7": 130,
+    "a8": 150
+   },
+   "danger": "三节各40-52;单节死后接续 REATTACH 25血回来,除非同回合全死;来袭24→26→28。KEMS 22血3回合死,MX1Q 4回合一节没死",
+   "win_pattern": "YN4E不设先杀目标87→73赢;平均削三节,最后一回合一起打死;需要AOE",
+   "entry_hp_pct": 0.8,
+   "need_damage_per_turn": 30,
+   "must_have": [
+    "aoe",
+    "multi_hit",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "damage"
+   ],
+   "avoid": "逐节单杀(4VC5 66伤打在中节被接回);T1连喝污浊药水自伤;0能量白喝药",
+   "deaths": 6,
+   "evidence": [
+    "KEMSNC6AQZ77",
+    "MX1QJL5342AN",
+    "4VC5BDRG4Y7B",
+    "MF7ANMXHA7UA",
+    "39J9KFKGKEXA"
+   ],
+   "ids": [
+    "DECIMILLIPEDE_SEGMENT_FRONT",
+    "DECIMILLIPEDE_SEGMENT_MIDDLE",
+    "DECIMILLIPEDE_SEGMENT_BACK"
+   ]
+  },
+  "INFESTED_PRISM": {
+   "name": "感染棱柱",
+   "kind": "elite",
+   "act": 2,
+   "hp": {
+    "a7": 161,
+    "a8": 169
+   },
+   "danger": "活力火花:我方每打一张技能,棱柱本回合每段+2。JAB 15→RADIATE→WHIRLWIND 5×3。K39J 21血T1无格挡吃15,T3死;4UWK 9血进场",
+   "win_pattern": "赢局都是较高HP进场,掉20-39;攻击为主少打技能",
+   "entry_hp_pct": 0.7,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "block",
+    "damage"
+   ],
+   "avoid": "低于30%血进场;回合里连打多张技能格挡",
+   "deaths": 2,
+   "evidence": [
+    "K39JRY3WW4VM",
+    "4UWKHE61JLK4",
+    "THMGB35RGDSD",
+    "CRRPX9MWJZGM"
+   ]
+  },
+  "MECHA_KNIGHT": {
+   "name": "机甲骑士",
+   "kind": "elite",
+   "act": 3,
+   "hp": {
+    "a7": 300,
+    "a8": 315
+   },
+   "danger": "人工制品;冲锋 CHARGE 25→火焰喷射→蓄力 WINDUP→重劈 HEAVY_CLEAVE 40-50(T4/T7/T10)。0YG4满血120进场,三次重劈只挡16/16/15,第三次死",
+   "win_pattern": "W6F4/CRRP/YN4E/BDAK都赢但T4掉30-40;蓄力回合留格挡牌和药,每回合≥30争取T9前打完",
+   "entry_hp_pct": 0.9,
+   "need_damage_per_turn": 33,
+   "must_have": [
+    "block",
+    "strength",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "T1按early喝稳定血清;蓄力回合不打灵体/格挡;易伤药水喂人工制品",
+   "deaths": 2,
+   "evidence": [
+    "0YG4ETM3MLHS",
+    "1LJFBKUF51PE",
+    "W6F4YXF3MT7A",
+    "CRRPX9MWJZGM",
+    "YN4ETG9Z8ERN"
+   ]
+  },
+  "SOUL_NEXUS": {
+   "name": "灵魂枢纽",
+   "kind": "elite",
+   "act": 3,
+   "hp": {
+    "a7": 234,
+    "a8": 246
+   },
+   "danger": "魂焚 SOUL_BURN 29-35→漩涡 MAELSTROM 6×4→吸取生命20,给虚弱易伤。H5MZ 96→35(T2−19,T3−17,T4−22);V1YT 44/83进5回合死",
+   "win_pattern": "BDAK T1-T2打恶魔形态+护栏保setup;ZANM T1喝速度+火焰药水−9、107伤;速战",
+   "entry_hp_pct": 0.85,
+   "need_damage_per_turn": 45,
+   "must_have": [
+    "strength",
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "damage",
+    "block",
+    "weak"
+   ],
+   "avoid": "半血进强制精英;boss前连打两只精英",
+   "deaths": 1,
+   "evidence": [
+    "V1YTJTAX8N07",
+    "H5MZ6BKA1HVS",
+    "ZANMLV9UU31K",
+    "BDAKNTSWKU5F"
+   ]
+  },
+  "FLAIL_KNIGHT": {
+   "name": "三骑士(连枷/魔法/幽灵)",
+   "kind": "elite",
+   "act": 3,
+   "hp": {
+    "a7": 276,
+    "a8": 290
+   },
+   "danger": "连枷骑士~20连击、魔法骑士魔法炸弹 MAGIC_BOMB 35、幽灵骑士灵魂斩15。CRRP 81→35(T3只有一条线−33),M75J 77→16,BDAK −41",
+   "win_pattern": "JR66先集火魔法骑士,T2末只剩两个;BDAK/CRRP赢但掉33-61;炸弹回合留格挡药",
+   "entry_hp_pct": 0.8,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "block",
+    "strength"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "73%血主动选这只精英",
+   "deaths": 0,
+   "evidence": [
+    "CRRPX9MWJZGM",
+    "M75JX3KS80NB",
+    "JR66CJ9T8H7W",
+    "CCPRXV86HPLH"
+   ],
+   "ids": [
+    "FLAIL_KNIGHT",
+    "MAGI_KNIGHT",
+    "SPECTRAL_KNIGHT"
+   ]
+  },
+  "PHANTASMAL_GARDENER": {
+   "name": "花园幽灵鳗",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 116,
+    "a8": 122
+   },
+   "danger": "4只26-31血,胆小:每回合首次受伤得格挡;ENLARGE加力,来袭15→27。21TK 11回合5回合0伤害57血磨死;CWMP起始牌组70%血进场死",
+   "win_pattern": "A0 3场都赢(−14/−14/−16);逐只集火,先小打再重击",
+   "entry_hp_pct": 0.8,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "multi_hit"
+   ],
+   "save_potions": [
+    "damage",
+    "block"
+   ],
+   "avoid": "起始牌组在一幕F7前进;伤害分散到多只",
+   "deaths": 2,
+   "evidence": [
+    "21TKTPL5D4A6",
+    "CWMPAZUR32MW",
+    "VKPXGMV8YV31"
+   ]
+  },
+  "BYGONE_EFFIGY": {
+   "name": "旧日雕像",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 127,
+    "a8": 133
+   },
+   "danger": "T1沉睡,T2醒来+10力,之后每回合斩击 SLASHES 23。4LGQ T9 1血斩杀差1点吃23死;MGJ8 61→26;V5S6 −40",
+   "win_pattern": "睡眠回合只打能力不攻击;集中一回合多打攻击",
+   "entry_hp_pct": 0.75,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "strength",
+    "block",
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "59%血进强制精英(BHMP 17血出来被下一场打死)",
+   "deaths": 1,
+   "evidence": [
+    "4LGQ5ZBC8DN7",
+    "BHMPNWGFZ9JL",
+    "MGJ8W6C8L1DG"
+   ]
+  },
+  "TERROR_EEL": {
+   "name": "骇鳗",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 140,
+    "a8": 147
+   },
+   "danger": "撞击22、痛殴~10;跌破70血时尖叫 SHRIEK:被击晕一次但给玩家99层易伤。Z2H3 T6易伤下吃24,73→27(−46);G6YV −46;1K5G −31",
+   "win_pattern": "值得多打一点伤害抢到70血击晕线;易伤后用格挡/药水不硬吃",
+   "entry_hp_pct": 0.75,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "易伤99时用攻击换血;无色药水囤着不喝",
+   "deaths": 0,
+   "evidence": [
+    "Z2H318ZMMAD0",
+    "G6YVT0ALVQ65",
+    "1K5G5HPXA2ZV",
+    "XPA49DEKREQ1"
+   ]
+  },
+  "SKULKING_COLONY": {
+   "name": "鬼祟珊瑚群",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 75,
+    "a8": 79
+   },
+   "danger": "硬化外壳:每回合最多掉20血,75血要打4-5回合;穿刺~18。BG4W 47→14,VL2D 36→12,G6YV −38",
+   "win_pattern": "满血时可打(ZH8J 78→46);持续输出,不追爆发",
+   "entry_hp_pct": 0.8,
+   "need_damage_per_turn": 20,
+   "must_have": [
+    "block",
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "59%或更低血选它;下一层强制精英前锻造不回血",
+   "deaths": 0,
+   "evidence": [
+    "BG4W9DSX99DA",
+    "VL2DGJ684H2K",
+    "G6YVT0ALVQ65",
+    "ZH8J9ZQXV5YC"
+   ]
+  },
+  "BYRDONIS": {
+   "name": "多尼斯异鸟",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 84,
+    "a8": 88
+   },
+   "danger": "啄击/俯冲 SWOOP 17-18交替,每回合+力,越拖越痛",
+   "win_pattern": "P4ZD按race打,两瓶early药T1喝,−12",
+   "entry_hp_pct": 0.6,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "damage"
+   ],
+   "avoid": "把emergency药水当普通省血喝",
+   "deaths": 0,
+   "evidence": [
+    "P4ZDR744B9JC",
+    "MGJ8W6C8L1DG",
+    "PPKTGCDHJHM9"
+   ]
+  },
+  "PHROG_PARASITE": {
+   "name": "异蛙寄生虫",
+   "kind": "elite",
+   "act": 1,
+   "hp": {
+    "a7": 142,
+    "a8": 149
+   },
+   "danger": "寄生虫64血,死后分出4只扭动虫共78血,每只每两回合+2力并塞感染。NZR7 T4/T5纯格挡0伤害,T6 3张感染−25,T8死",
+   "win_pattern": "要AOE;逐只集火扭动虫,别纯格挡",
+   "entry_hp_pct": 0.75,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "multi_hit"
+   ],
+   "save_potions": [
+    "damage",
+    "block"
+   ],
+   "avoid": "0药水46/80进场;扭动虫出现后纯格挡",
+   "deaths": 1,
+   "evidence": [
+    "NZR74LJP5VSM",
+    "24DPW2ED71QM"
+   ],
+   "ids": [
+    "PHROG_PARASITE",
+    "WRIGGLER"
+   ]
+  },
+  "SLUMBERING_BEETLE": {
+   "name": "熟睡甲虫(+盛碗虫)",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 172,
+    "a8": 181
+   },
+   "danger": "甲虫86+覆甲15,睡3回合,醒后滚动 ROLL_OUT 16→18→20→…每回合+2力;同场盛碗虫石46/丝40。进场33-46血4局全死,平均掉约45",
+   "win_pattern": "沉睡期把盛碗虫全部打死,醒后首回合给甲虫上易伤+能力集火;按精英对待(做fight plan)",
+   "entry_hp_pct": 0.6,
+   "need_damage_per_turn": 30,
+   "must_have": [
+    "aoe",
+    "strength",
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "damage",
+    "weak",
+    "block"
+   ],
+   "avoid": "沉睡期伤害分散或打在甲虫覆甲上;低血时先打祭品自伤",
+   "deaths": 7,
+   "evidence": [
+    "WM2XPDZ02BNF",
+    "NEVMW4HGUJ1U",
+    "2VW5U020FUTV",
+    "4V5TA3ZG6MJS",
+    "5R0G8U5TB6GY"
+   ],
+   "ids": [
+    "SLUMBERING_BEETLE",
+    "BOWLBUG_ROCK",
+    "BOWLBUG_SILK"
+   ]
+  },
+  "BOWLBUG_ROCK": {
+   "name": "盛碗虫组(石/丝/蜜/卵)",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 84,
+    "a8": 88
+   },
+   "danger": "石虫头槌15(之后一回合晕),蜜虫Buff后痛殴18,丝虫毒液。X4QR 69→34(T1/T2各吃15/16),F8HR −34,K39J −32",
+   "win_pattern": "先打下一招是头槌/痛殴的那只;手里留防御",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "两回合手里0-1张防御",
+   "deaths": 0,
+   "evidence": [
+    "X4QRH94TSFG2",
+    "F8HR4M65MJCG",
+    "K39JRY3WW4VM",
+    "12ZGL23T341Q"
+   ],
+   "ids": [
+    "BOWLBUG_ROCK",
+    "BOWLBUG_SILK",
+    "BOWLBUG_NECTAR",
+    "BOWLBUG_EGG"
+   ]
+  },
+  "LOUSE_PROGENITOR": {
+   "name": "虱虫之祖",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 134,
+    "a8": 141
+   },
+   "danger": "蜷缩成长(格挡+力)→猛扑 POUNCE 14+力(~24)→蛛网炮11+脆弱。12ZG 33/80进,每回合12,T6 17血脆弱只能挡6吃24死",
+   "win_pattern": "高血进场掉14-19;每回合≥25在第二次猛扑前打完",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": 25,
+   "must_have": [
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "低于40%血进场;为多打几点把1血线留给它",
+   "deaths": 2,
+   "evidence": [
+    "12ZGL23T341Q",
+    "3RWJX25LB2CD",
+    "5R0G8U5TB6GY",
+    "6X8F3ALWG9RM"
+   ]
+  },
+  "FROG_KNIGHT": {
+   "name": "青蛙骑士",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 191,
+    "a8": 199
+   },
+   "danger": "覆甲15-19;舌鞭15-23→正义打击22→为了女王→甲虫冲锋 BEETLE_CHARGE 40-45。7UJ1 88/126进,T7冲锋手里0格挡50→5,T8死;GMT2 −52",
+   "win_pattern": "按精英打;冲锋前一回合(为了女王)留格挡牌/药;每回合≥30",
+   "entry_hp_pct": 0.75,
+   "need_damage_per_turn": 30,
+   "must_have": [
+    "block",
+    "strength",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "0能量回合白喝药;把它当普通走廊战",
+   "deaths": 2,
+   "evidence": [
+    "7UJ19R15SSC5",
+    "U6W7J2AWV7AV",
+    "GMT2Q5L6BVL0",
+    "G1Z0X3WBH4XQ",
+    "YVWAWAPXJXGV"
+   ]
+  },
+  "TUNNELER": {
+   "name": "地道虫",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 87,
+    "a8": 91
+   },
+   "danger": "撕咬13→钻地 BURROW:32格挡跨回合保留→每回合 BELOW 23。HV0D T3-T10一直选防御,吃5次23,47→8死;NEVM T3一回合−23",
+   "win_pattern": "一两回合内打破32钻地格挡,只掉0-24;YN4E T4收掉−24",
+   "entry_hp_pct": 0.55,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "multi_hit"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "认为打在钻地格挡上的伤害=0而一直防御",
+   "deaths": 1,
+   "evidence": [
+    "HV0DPJUTV9RA",
+    "NEVMW4HGUJ1U",
+    "2VW5U020FUTV",
+    "YN4ETG9Z8ERN"
+   ]
+  },
+  "SPINY_TOAD": {
+   "name": "棘刺蟾蜍",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 118,
+    "a8": 122
+   },
+   "danger": "突刺(0来袭,下回合荆棘5)→尖刺爆发 SPIKE_EXPLOSION 23→舌鞭17。SCBC 25/80进打到2血;LQLZ差1血(荆棘反伤先死);多段攻击打荆棘−25",
+   "win_pattern": "Buff回合抢伤害(SCBC T1打31);荆棘期间用单段重击",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "荆棘5时打多段/飞剑回旋镖;Buff回合用自伤抽牌",
+   "deaths": 3,
+   "evidence": [
+    "SCBC3F0QT8BC",
+    "LQLZTS1J5RZE",
+    "JGJS7QE62GLD",
+    "YP9CGPJE19GP"
+   ]
+  },
+  "CHOMPER": {
+   "name": "啃咬机(×2)",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 126,
+    "a8": 130
+   },
+   "danger": "两只60-66血,人工制品1;钳夹 CLAMP 8×2↔尖啸交替。X4QR 21/80 0药进场T4吃8×2死;VC4L 腐化痛击自伤后1血;UJS2 32血进场",
+   "win_pattern": "高血进场掉17-21;先剥人工制品再上虚弱,集火一只",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "block"
+   ],
+   "save_potions": [
+    "damage",
+    "block"
+   ],
+   "avoid": "以为虚弱生效(被人工制品挡);<40%血0药水进场",
+   "deaths": 4,
+   "evidence": [
+    "X4QRH94TSFG2",
+    "VC4LRL945UEF",
+    "UJS25W5ARGBV",
+    "AMA2B58E2ZMA",
+    "MX1QJL5342AN"
+   ]
+  },
+  "THE_OBSCURA": {
+   "name": "胧光怪(+寄生惧魔)",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 123,
+    "a8": 129
+   },
+   "danger": "T1召唤寄生惧魔21血(幻象,打死下回合满血回来),猛击16→19→22→25。XJWF 7回合打幻象147伤,T9 13血吃25+19死;H8LC 63伤打在幻象上",
+   "win_pattern": "PU21:T1召唤回合54伤全打胧光怪,不管寄生惧魔,T4斩杀",
+   "entry_hp_pct": 0.55,
+   "need_damage_per_turn": 30,
+   "must_have": [
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "打寄生惧魔;药水打在幻象上",
+   "deaths": 2,
+   "evidence": [
+    "XJWF15R19UXF",
+    "H8LCRD86HPZB",
+    "VKPXGMV8YV31",
+    "2VW5U020FUTV"
+   ],
+   "ids": [
+    "THE_OBSCURA",
+    "PARAFRIGHT"
+   ]
+  },
+  "HUNTER_KILLER": {
+   "name": "猎人杀手",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 121,
+    "a8": 127
+   },
+   "danger": "嫩化黏液 TENDER:每打一张牌本回合−1力−1敏;穿刺7×3=21、撕咬17。C2WY −38死,MF7A 48→8,BDAK −36,WM2X −35;TENDER没建模",
+   "win_pattern": "有来袭时先打格挡牌再打攻击;高血进场也常掉30+",
+   "entry_hp_pct": 0.6,
+   "need_damage_per_turn": 25,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "damage"
+   ],
+   "avoid": "防御排在第3张之后(敏捷已−2);按未减力量算斩杀",
+   "deaths": 3,
+   "evidence": [
+    "C2WY3N414F9X",
+    "VHLZ531VC9RE",
+    "MF7ANMXHA7UA",
+    "BDAKNTSWKU5F",
+    "WM2XPDZ02BNF"
+   ]
+  },
+  "FABRICATOR": {
+   "name": "组装师",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 150,
+    "a8": 158
+   },
+   "danger": "组装打击 FABRICATING_STRIKE 18+召唤,瓦解11。SUUK 8/76 0药水进?房,T1手里最多10格挡,每条线都死",
+   "win_pattern": "无赢局记录;别低血进三幕?房",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "三幕低于30%血走?房",
+   "deaths": 1,
+   "evidence": [
+    "SUUKNZNT3KDF"
+   ]
+  },
+  "OWL_MAGISTRATE": {
+   "name": "猫头鹰法官",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 231,
+    "a8": 243
+   },
+   "danger": "审视 MAGISTRATE_SCRUTINY 16-20→啄击 4×6=24→飞升→审判 VERDICT 33。SUUK −50,Y0KJ −48,4JVP T4 −33,M75J毛掉约90",
+   "win_pattern": "T1-T2留格挡再打能力;审判前一回合备格挡;每回合≥40",
+   "entry_hp_pct": 0.7,
+   "need_damage_per_turn": 40,
+   "must_have": [
+    "block",
+    "strength",
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "T1打能力+X费攻击0格挡;为省7血在走廊喝boss药",
+   "deaths": 0,
+   "evidence": [
+    "SUUKNZNT3KDF",
+    "Y0KJC2MQ57Z4",
+    "4JVP9LTXYY9D",
+    "M75JX3KS80NB",
+    "BDAKNTSWKU5F"
+   ]
+  },
+  "GLOBE_HEAD": {
+   "name": "电球头",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 148,
+    "a8": 155
+   },
+   "danger": "流电 GALVANIC 6:我方每打一张能力牌受6伤;雷击19、电掌13。SUUK −30,YVWA 55→21,M6P7 71→27",
+   "win_pattern": "能力牌留到战后或先挂格挡;集中攻击",
+   "entry_hp_pct": 0.6,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "流电在场时连打能力牌",
+   "deaths": 0,
+   "evidence": [
+    "SUUKNZNT3KDF",
+    "YVWAWAPXJXGV",
+    "M6P7KAWMF6BC"
+   ]
+  },
+  "THIEVING_HOPPER": {
+   "name": "偷窃草蜢",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 79,
+    "a8": 84
+   },
+   "danger": "偷牌→帽子戏法 HAT_TRICK 21→夺取14→逃跑(带走偷的牌)。UMX6 −32,X4QR 40→15,F8HR偷走重锤后逃跑",
+   "win_pattern": "在逃跑前打死;手里有好牌被偷时集火",
+   "entry_hp_pct": 0.45,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "帽子戏法回合手里全攻击0格挡",
+   "deaths": 0,
+   "evidence": [
+    "UMX6X5FPP30L",
+    "X4QRH94TSFG2",
+    "F8HR4M65MJCG",
+    "SCBC3F0QT8BC",
+    "NEVMW4HGUJ1U"
+   ]
+  },
+  "AXEBOT": {
+   "name": "巨斧机器人",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 249,
+    "a8": 262
+   },
+   "danger": "库存2:打到0满血复活(72→86→91)+3力;第三命上勾拳20、一二连击16×2并挂虚弱+脆弱。MD3F 10血虚弱脆弱死;P4ZD差1血;U6W7 −48",
+   "win_pattern": "按三条命算血;每回合先挡攻击,药水和格挡留给后两条命",
+   "entry_hp_pct": 0.7,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "block",
+    "strength",
+    "frontload"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "为斩杀换血;第一条命就喝光药水",
+   "deaths": 2,
+   "evidence": [
+    "MD3FLLNB7Q2W",
+    "P4ZDR744B9JC",
+    "U6W7J2AWV7AV",
+    "V1YTJTAX8N07",
+    "M75JX3KS80NB"
+   ]
+  },
+  "MYTE": {
+   "name": "异螨(×2)",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 130,
+    "a8": 137
+   },
+   "danger": "两只64-66错开:毒素(塞2张毒素)→撕咬9/15→吸血。QE4K 18血进场被磨死;VHLZ 59→11;TTVY −40;K39J −31",
+   "win_pattern": "先打死下一招是撕咬的那只,多余能量打掉毒素(1费抵5血);不要<25血进",
+   "entry_hp_pct": 0.5,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "两回合不走格挡线",
+   "deaths": 2,
+   "evidence": [
+    "QE4KRWB1MB3X",
+    "VHLZ531VC9RE",
+    "CMUXQKE4UDJ4",
+    "4UWKHE61JLK4",
+    "K39JRY3WW4VM"
+   ]
+  },
+  "OVICOPTER": {
+   "name": "直飞产卵虫",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 130,
+    "a8": 137
+   },
+   "danger": "下蛋召唤3个结实的卵(爪牙)→猛砸 SMASH 19→嫩化7。QE4K 58→12,39J9 74→25(伤害都打在卵上)",
+   "win_pattern": "伤害全打本体,本体死爪牙跟着消失",
+   "entry_hp_pct": 0.55,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "打卵/幼虫",
+   "deaths": 0,
+   "evidence": [
+    "QE4KRWB1MB3X",
+    "39J9KFKGKEXA",
+    "CY8UG7ABBSAS"
+   ],
+   "ids": [
+    "OVICOPTER",
+    "TOUGH_EGG"
+   ]
+  },
+  "EXOSKELETON": {
+   "name": "外骨骼虫群",
+   "kind": "hallway",
+   "act": 2,
+   "hp": {
+    "a7": 104,
+    "a8": 109
+   },
+   "danger": "3-4只24-28,激怒后大颚~9。92MW 32→9(−23),MF7A 14→1,Y83U −29",
+   "win_pattern": "AOE清场;集火单只",
+   "entry_hp_pct": 0.4,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "低血0药水进场",
+   "deaths": 0,
+   "evidence": [
+    "92MWCWJCFDAE",
+    "MF7ANMXHA7UA",
+    "Y83UP1RUC8R6"
+   ]
+  },
+  "PUNCH_CONSTRUCT": {
+   "name": "构装体(拳击+方柱×2)",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 185,
+    "a8": 194
+   },
+   "danger": "方柱充能后连射9-11×2、驱逐22;拳击快拳10/重拳14。H14T 2/67血时来袭44死;GMT2 25/89 0药进场;P2E4(一幕)61→7",
+   "win_pattern": "集火一只方柱;荆棘对多段有效",
+   "entry_hp_pct": 0.55,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "block"
+   ],
+   "save_potions": [
+    "block",
+    "weak"
+   ],
+   "avoid": "伤害分给两只方柱;0能量白喝药",
+   "deaths": 2,
+   "evidence": [
+    "H14TDJAE4JB9",
+    "GMT2Q5L6BVL0",
+    "P2E43JJVFGMK"
+   ],
+   "ids": [
+    "PUNCH_CONSTRUCT",
+    "CUBEX_CONSTRUCT"
+   ]
+  },
+  "DEVOTED_SCULPTOR": {
+   "name": "虔诚雕刻师",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 162,
+    "a8": 170
+   },
+   "danger": "禁忌咒语仪式9,之后野蛮 SAVAGE 12→21→30→39逐回合涨。1LJF 73→34(−39)",
+   "win_pattern": "开局爆发速杀,拖得越久越痛",
+   "entry_hp_pct": 0.6,
+   "need_damage_per_turn": 40,
+   "must_have": [
+    "frontload",
+    "strength"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "慢速成长牌组硬拖",
+   "deaths": 0,
+   "evidence": [
+    "1LJFBKUF51PE"
+   ]
+  },
+  "THE_LOST": {
+   "name": "失落之物(+遗忘之物)",
+   "kind": "hallway",
+   "act": 3,
+   "hp": {
+    "a7": 199,
+    "a8": 209
+   },
+   "danger": "失落之物虚弱烟雾+眼部激光~13;遗忘之物恐惧16。M6P7 59→5(−54)",
+   "win_pattern": "无详细赢法记录;集火一只",
+   "entry_hp_pct": 0.65,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "aoe",
+    "block"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "中血量硬进",
+   "deaths": 0,
+   "evidence": [
+    "M6P7KAWMF6BC"
+   ],
+   "ids": [
+    "THE_LOST",
+    "THE_FORGOTTEN"
+   ]
+  },
+  "SLUDGE_SPINNER": {
+   "name": "淤泥旋螺",
+   "kind": "hallway",
+   "act": 1,
+   "hp": {
+    "a7": 38,
+    "a8": 40
+   },
+   "danger": "油液喷射8+虚弱→猛击11→狂怒+力。6A36 燃烧契约把9张牌组缩到3张,12回合只打32/38,T12 11血挡不住17",
+   "win_pattern": "简单单体,打击直接打",
+   "entry_hp_pct": 0.3,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload"
+   ],
+   "save_potions": [
+    "any"
+   ],
+   "avoid": "用燃烧契约消耗打击/防御",
+   "deaths": 1,
+   "evidence": [
+    "6A36WUWL64KE"
+   ]
+  },
+  "FLYCONID": {
+   "name": "飞蝇菌子(+闪光贾克斯果)",
+   "kind": "hallway",
+   "act": 1,
+   "hp": {
+    "a7": 49,
+    "a8": 51
+   },
+   "danger": "脆弱孢子+9→猛砸13,易伤孢子。BHMP 17血进?房被打死",
+   "win_pattern": "无详细记录",
+   "entry_hp_pct": 0.35,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "精英后低血进?房",
+   "deaths": 1,
+   "evidence": [
+    "BHMPNWGFZ9JL",
+    "NZR74LJP5VSM"
+   ],
+   "ids": [
+    "FLYCONID",
+    "SNAPPING_JAXFRUIT"
+   ]
+  },
+  "FUZZY_WURM_CRAWLER": {
+   "name": "毛绒伏地虫(+缩小甲虫)",
+   "kind": "hallway",
+   "act": 1,
+   "hp": {
+    "a7": 56,
+    "a8": 59
+   },
+   "danger": "酸液11.5→吸气;缩小甲虫踩踏13。NSWF A0 F13死(学习闭环前,无复盘)",
+   "win_pattern": "无详细记录",
+   "entry_hp_pct": 0.35,
+   "need_damage_per_turn": null,
+   "must_have": [
+    "frontload"
+   ],
+   "save_potions": [
+    "block"
+   ],
+   "avoid": "无记录",
+   "deaths": 1,
+   "evidence": [
+    "NSWFREAAWMXQ"
+   ],
+   "ids": [
+    "FUZZY_WURM_CRAWLER",
+    "SHRINKER_BEETLE"
+   ]
+  }
+ }
+}

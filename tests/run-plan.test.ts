@@ -135,3 +135,36 @@ describe("run plan log", () => {
     }
   });
 });
+
+describe("run plan commitments (entry HP, saved potions, must-have roles)", () => {
+  it("parses them from the reply", () => {
+    const parsed = parseRunPlan({ archetype: "x", entry_hp_pct: 0.9, save_potions: ["block", "weak", "damage"], must_have: ["aoe", "strength", "nonsense"] }, mapState(), testKnowledge, "act");
+    expect(parsed.entryHp).toBe(0.9);
+    expect(parsed.savePotions).toEqual(["block", "weak"]);
+    expect(parsed.mustHave).toEqual(["aoe", "strength"]);
+  });
+  it("turns them into weights: heal and avoid elites below the entry HP near the boss, saved potions, must-have roles", async () => {
+    const { planSavesPotion, mustHaveBonus, MUST_HAVE_BONUS, floorsToBoss } = await import("../src/strategy/run-plan.js");
+    const committed = plan({ entryHp: 0.85, savePotions: ["block"], mustHave: ["aoe"] });
+    expect(runPlanRestShift(committed, "HEAL", 0.6, false, 4)).toBe(8);
+    expect(runPlanRestShift(committed, "HEAL", 0.6, false, 12)).toBe(0);
+    expect(runPlanEliteShift(committed, 0.8, 5)).toBe(-8);
+    expect(runPlanEliteShift(committed, 1, 5)).toBe(0);
+    expect(planSavesPotion(committed, "BLOCK_POTION", "获得 12 点格挡。")).toBe(true);
+    expect(planSavesPotion(committed, "FIRE_POTION", "造成 20 点伤害。")).toBe(false);
+    expect(mustHaveBonus(committed, "THUNDERCLAP", ["STRIKE_R"]).bonus).toBe(MUST_HAVE_BONUS);
+    expect(mustHaveBonus(committed, "THUNDERCLAP", ["STOMP", "INFERNO"]).bonus).toBe(4);
+    expect(mustHaveBonus(committed, "DEFEND_R", []).bonus).toBe(0);
+    expect(floorsToBoss(29)).toBe(4);
+  });
+});
+
+describe("enemy dossiers", () => {
+  it("find the crab by boss id and by claw id, and list an act's threats", async () => {
+    const { dossierFor, actThreats } = await import("../src/knowledge/dossiers.js");
+    expect(dossierFor("KAISER_CRAB_BOSS")?.id).toBe("KAISER_CRAB");
+    expect(dossierFor("ROCKET")?.id).toBe("KAISER_CRAB");
+    expect(actThreats(2).length).toBeGreaterThan(0);
+  });
+});
+

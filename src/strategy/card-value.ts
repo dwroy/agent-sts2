@@ -137,6 +137,24 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   return { bonus: 0, why: null };
 }
 
+const DRAW_CARDS = new Set(["BATTLE_TRANCE", "POMMEL_STRIKE", "SHRUG_IT_OFF", "OFFERING", "BURNING_PACT", "DARK_EMBRACE", "WARCRY", "MASTER_OF_STRATEGY", "EXPECT_A_FIGHT"]);
+const EXHAUST_CARDS = new Set(["TRUE_GRIT", "BURNING_PACT", "SECOND_WIND", "FIEND_FIRE", "BRAND", "CORRUPTION", "FEEL_NO_PAIN", "DARK_EMBRACE"]);
+const DEBUFF_CARDS = new Set(["BASH", "UPPERCUT", "SHOCKWAVE", "THUNDERCLAP", "DISARM", "MOLTEN_FIST", "DOMINATE", "TAUNT", "INTIMIDATE"]);
+
+/** The roles a card fills (for a run plan's must-have roles). */
+export function cardRoles(cardId: string): Set<string> {
+  const roles = new Set<string>();
+  if (AOE.has(cardId)) roles.add("aoe");
+  if (damageRole(cardId) === "scaling") roles.add("strength");
+  if (BLOCK.has(cardId)) roles.add("block");
+  if (DRAW_CARDS.has(cardId)) roles.add("draw");
+  if (EXHAUST_CARDS.has(cardId)) roles.add("exhaust");
+  if (MULTI_HIT.has(cardId)) roles.add("multi_hit");
+  if (FRONTLOAD.has(cardId)) roles.add("frontload");
+  if (DEBUFF_CARDS.has(cardId)) roles.add("debuff");
+  return roles;
+}
+
 /** One of the 14+ damage single cards. */
 export function isBigHit(cardId: string): boolean {
   return BIG_HITS.has(cardId);

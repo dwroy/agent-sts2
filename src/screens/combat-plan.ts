@@ -27,11 +27,16 @@ import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
+import { floorsToBoss, planSavesPotion } from "../strategy/run-plan.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
+/** Extra solver cost of a potion the run plan keeps for the act boss, before the boss. */
+export const RUN_PLAN_SAVE_COST = 20;
+/** …only within this many floors of the boss (earlier, a potion used is a potion found again). */
+export const SAVE_POTIONS_WITHIN = 10;
 /** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
 export const BOSS_DRINK_FIRST_LOSS = 10;
 
@@ -755,6 +760,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter(
     (potion) => potion.can_use && potion.potion_id !== "FOUL_POTION",
   );
+  // Run plan: potions kept for the act boss cost more before it (a weight, not a ban: a deadly turn
+  // still drinks them), and Jev is told which ones they are (M6P7, T4PY, 0YG4: boss potions spent in
+  // hallways and elites, the boss met with none).
+  const keptForBoss = (potionId: string, text: string) =>
+    kind !== "boss" && floorsToBoss(state.run?.floor ?? 0) <= SAVE_POTIONS_WITHIN && planSavesPotion(env.screenMemory.runPlan, potionId, text);
   // Permanent max-HP potions have no timing value: drink them as soon as they can be used.
   const juice = potionsAll.find((potion) => potion.potion_id === "FRUIT_JUICE");
   if (juice) {
@@ -818,7 +828,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               potion.name,
               potion.slot,
               potion.valid_targets,
-              free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
+              free || planCost(potion.potion_id)?.free
+                ? 0
+                : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0) + (keptForBoss(potion.potion_id, potion.text) ? RUN_PLAN_SAVE_COST : 0),
             ),
           )
           .filter((card): card is CardModel => card !== null)
@@ -1133,6 +1145,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         criteria[key] = JSON.stringify({
           plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
           text: potion.text,
+          ...(keptForBoss(potion.potion_id, potion.text) ? { run_plan: "the run plan keeps this potion for the act boss: drink it only if this fight is going badly" } : {}),
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
         });
         byKey.set(key, {

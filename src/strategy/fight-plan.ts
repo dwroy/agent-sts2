@@ -20,6 +20,7 @@ import { dirname } from "node:path";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
+import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
 import { bossNote } from "../project/run-journal.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
@@ -119,6 +120,9 @@ export function fightPlanInput(
       if (moves) out["moves_seen"] = moves;
       const note = info?.type === "Boss" ? bossNote(id) : null;
       if (note) out["boss_note"] = note;
+      // The enemy's dossier from past runs (danger turns, how wins went, what to keep for it).
+      const dossier = dossierFor(id);
+      if (dossier) out["dossier"] = dossierJson(dossier, state.run?.ascension ?? 0);
       return out;
     });
   const potions = asArray(raw["potions"])

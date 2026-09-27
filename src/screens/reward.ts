@@ -9,7 +9,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { runPlanCardBonus } from "../strategy/run-plan.js";
+import { mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -46,7 +46,8 @@ export function planReward(env: DecisionEnv): Decision | null {
       const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
       // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
       const clock = gapCardBonus(gap, cardId);
-      const valued = { value: base.value + planned.bonus + clock.bonus, reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : [])] };
+      const must = mustHaveBonus(env.screenMemory.runPlan, cardId, entries.map((entry) => entry.card_id));
+      const valued = { value: base.value + planned.bonus + clock.bonus + must.bonus, reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : []), ...(must.why ? [must.why] : [])] };
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,

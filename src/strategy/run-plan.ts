@@ -17,7 +17,9 @@ import { dirname } from "node:path";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries } from "../project/deck.js";
+import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } from "../knowledge/dossiers.js";
 import { bossClockJson } from "./boss-clock.js";
+import { cardRoles } from "./card-value.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
@@ -45,6 +47,13 @@ export interface RunPlan {
   rest: RestPolicy;
   bossPrep: string;
   summary: string;
+  /**
+   * Commitments code enforces (Dai: "ds 的规划要能有保障让 jev 可以落地"): the HP fraction to enter the
+   * act boss with, the potion roles kept for it, and the card roles the deck must get before it.
+   */
+  entryHp?: number | null;
+  savePotions?: PotionRole[];
+  mustHave?: CardRole[];
 }
 
 /** A plan older than this many floors is reviewed at the next map. */
@@ -96,7 +105,14 @@ export const RUN_PLAN_TASK = [
   '"block_target": <number of block cards the deck should hold by the act boss>,',
   '"elites": "seek" | "normal" | "avoid", "rest": "heal" | "smith" | "auto",',
   '"boss_prep": "<max 30 words: what to have ready for the act boss>",',
+  '"entry_hp_pct": <0-1: HP fraction to enter the act boss with, from act_boss_dossier>,',
+  '"save_potions": [potion roles to keep for the act boss: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
+  '"must_have": [card roles the deck must get before the act boss: "aoe"|"strength"|"block"|"draw"|"exhaust"|"multi_hit"|"frontload"|"debuff"],',
   '"summary": "<max 40 words: the plan in plain words>"}',
+  "act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP and potions that worked.",
+  "entry_hp_pct, save_potions and must_have are carried out by code and shown to the card-playing model as strong weights",
+  "(near the boss, rests lean to heal and elites are avoided below the entry HP; saved potions cost more before the boss and are",
+  "labelled 'kept for the boss'; must-have roles get a large pick bonus) — set them to what the boss needs, not more.",
 ].join(" ");
 
 /** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
@@ -111,6 +127,12 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
     gold: state.run?.gold ?? null,
     act_boss: str(raw["boss_id"]),
     act_boss_clock: bossClockJson(state, knowledge),
+    // Dossiers from past runs: the act boss and this act's most dangerous elites and hallway enemies.
+    act_boss_dossier: (() => {
+      const dossier = dossierFor(str(raw["boss_id"]));
+      return dossier ? dossierJson(dossier, state.run?.ascension ?? 0) : null;
+    })(),
+    act_threats: actThreats(actOf(state), 6).map((dossier) => dossierJson(dossier, state.run?.ascension ?? 0)),
     deck_size: deckEntries(state, knowledge).length,
     deck: deckLines,
     relics,
@@ -157,8 +179,51 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
     rest,
     bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : "",
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
+    entryHp: typeof json["entry_hp_pct"] === "number" && json["entry_hp_pct"] > 0 && json["entry_hp_pct"] <= 1 ? Math.min(0.95, json["entry_hp_pct"]) : null,
+    savePotions: asArray(json["save_potions"] as JsonValue).filter((role): role is PotionRole => typeof role === "string" && POTION_ROLES.includes(role as PotionRole)).slice(0, 2),
+    mustHave: asArray(json["must_have"] as JsonValue).filter((role): role is CardRole => typeof role === "string" && CARD_ROLES.includes(role as CardRole)).slice(0, 3),
   };
 }
+
+const POTION_ROLES: PotionRole[] = ["block", "weak", "damage", "strength", "heal", "any"];
+const CARD_ROLES: CardRole[] = ["aoe", "strength", "block", "draw", "exhaust", "multi_hit", "frontload", "debuff"];
+
+/** Floors from this one to the act boss (17/33/48). */
+export function floorsToBoss(floor: number): number {
+  const boss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
+  return boss - floor;
+}
+
+/** Whether a potion is one the run plan keeps for the act boss. */
+export function planSavesPotion(plan: RunPlan | null | undefined, potionId: string, text: string): boolean {
+  const roles = plan?.savePotions ?? [];
+  if (roles.length === 0) return false;
+  if (roles.includes("any")) return true;
+  const role: PotionRole | null =
+    /STRENGTH|FLEX/.test(potionId) ? "strength" :
+    /回复|heal|恢复/i.test(text) ? "heal" :
+    /格挡|block|无实体|intangible/i.test(text) ? "block" :
+    /虚弱|weak/i.test(text) ? "weak" :
+    /伤害|damage/i.test(text) ? "damage" : null;
+  return role !== null && roles.includes(role);
+}
+
+/** Card bonus for a must-have role the deck still lacks (fewer than 2 cards of it). */
+export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[]): { bonus: number; why: string | null } {
+  const roles = plan?.mustHave ?? [];
+  if (roles.length === 0) return { bonus: 0, why: null };
+  const mine = cardRoles(cardId);
+  for (const role of roles) {
+    if (!mine.has(role)) continue;
+    const have = deckIds.filter((id) => cardRoles(id).has(role)).length;
+    const bonus = have < 2 ? MUST_HAVE_BONUS : 4;
+    return { bonus, why: `run plan must-have ${role} (${have} in deck) +${bonus}` };
+  }
+  return { bonus: 0, why: null };
+}
+
+/** Bonus for a card filling a must-have role the deck lacks. */
+export const MUST_HAVE_BONUS = 14;
 
 /** One line for the run brief (Jev and DeepSeek see it on build and route questions). */
 export function runPlanLine(plan: RunPlan | null | undefined): string | null {
@@ -187,16 +252,21 @@ export function runPlanCardBonus(plan: RunPlan | null | undefined, cardId: strin
 }
 
 /** Route weight change for an elite node. */
-export function runPlanEliteShift(plan: RunPlan | null | undefined, hpPct: number): number {
+export function runPlanEliteShift(plan: RunPlan | null | undefined, hpPct: number, toBoss = 99): number {
   if (!plan) return 0;
+  // Enforced: near the boss, no elite that would leave the entry HP out of reach.
+  if (plan.entryHp && toBoss <= 8 && hpPct < plan.entryHp + 0.15) return -8;
   if (plan.elites === "avoid") return -3;
   if (plan.elites === "seek" && hpPct > 0.6) return 2;
   return 0;
 }
 
 /** Rest-site score change for HEAL / SMITH. */
-export function runPlanRestShift(plan: RunPlan | null | undefined, option: string, hpPct: number, beforeBoss: boolean): number {
-  if (!plan || plan.rest === "auto") return 0;
+export function runPlanRestShift(plan: RunPlan | null | undefined, option: string, hpPct: number, beforeBoss: boolean, toBoss = 99): number {
+  if (!plan) return 0;
+  // Enforced: within 6 floors of the boss, heal while below the plan's entry HP.
+  if (plan.entryHp && toBoss <= 6 && hpPct < plan.entryHp) return option === "HEAL" ? 8 : 0;
+  if (plan.rest === "auto") return 0;
   if (plan.rest === "heal" && option === "HEAL") return 3;
   // Smithing never overrides a low-HP heal or the pre-boss heal.
   if (plan.rest === "smith" && option === "SMITH" && hpPct >= 0.5 && !beforeBoss) return 3;

@@ -2,7 +2,7 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { damageGap, gapRestShift } from "../strategy/boss-clock.js";
-import { runPlanRestShift } from "../strategy/run-plan.js";
+import { floorsToBoss, runPlanRestShift } from "../strategy/run-plan.js";
 import { deckEntries } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { GameState } from "../mod/schema.js";
@@ -38,7 +38,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     const score =
       (id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss, floorsToBoss(floor)) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,

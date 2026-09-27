@@ -6,7 +6,7 @@
  */
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { runPlanEliteShift } from "../strategy/run-plan.js";
+import { floorsToBoss, runPlanEliteShift } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -292,7 +292,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const weightOf: Weights = (type, at) =>
     nodeWeight(type, at.hp, at.gold, floorInAct, act) -
     (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0) +
-    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp) : 0);
+    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp, floorsToBoss(floor)) : 0);
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   const options: PickOption[] = available.flatMap((node) => {
