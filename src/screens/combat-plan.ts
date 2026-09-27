@@ -880,10 +880,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
   if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
   const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
-  // scale_then_kill is played as kill_fast once its setup window closes or nothing is left to set up
-  // (intent.ts objectiveInForce).
-  const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, { turn: state.turn ?? 1, laterPhase, setupLeft: setupLeft(state, hand, env.knowledge) });
-  const objective = objectiveNow.objective;
   const hpFrac = playerSim.maxHp > 0 ? playerSim.hp / playerSim.maxHp : 1;
   // The run's hp_policy as this fight plays it: a low_hp preserve lapses once HP is back, and
   // kill_fast/race because the enemy scales puts damage first under preserve (intent.ts combatPolicy).
@@ -891,6 +887,21 @@ function planTurn(env: DecisionEnv): Decision | null {
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
   const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // Expected damage a turn: this fight's so far, else the deck estimate (boss-clock.ts).
+  const fightTurn = state.turn ?? 1;
+  const start = env.screenMemory.fightStart;
+  const perTurn =
+    start?.hp !== undefined && start.turn !== undefined && fightTurn > start.turn && start.hp > enemyHpNow
+      ? (start.hp - enemyHpNow) / (fightTurn - start.turn)
+      : deckDamagePerTurn(state, env.knowledge);
+  // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
+  // set up, or in a new boss phase (intent.ts objectiveInForce).
+  const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {
+    turnsLeft: perTurn > 0 ? bossHpLeft / perTurn : null,
+    laterPhase,
+    setupLeft: setupLeft(state, hand, env.knowledge),
+  });
+  const objective = objectiveNow.objective;
   const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
   const clockTurnsLeft = need ? Math.max(1, need.turns - ((state.turn ?? 1) - 1)) : 1;
   // The act boss's clock now: HP left over the clock's turns left, against the deck's estimate.
@@ -1275,12 +1286,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   // rounded up) pays one more turn of the enemy's expected hit for each extra turn (G8F1 F30: the guard
   // swapped Bludgeon -15 for Flame Barrier -3 and T6's 30- and 21-damage lines for 23 and 7; the Prism
   // lived to T8 at -71; VF5C F27).
-  const fightTurn = state.turn ?? 1;
-  const start = env.screenMemory.fightStart;
-  const perTurn =
-    start?.hp !== undefined && start.turn !== undefined && fightTurn > start.turn && start.hp > enemyHpNow
-      ? (start.hp - enemyHpNow) / (fightTurn - start.turn)
-      : deckDamagePerTurn(state, env.knowledge);
   const killTurns = (plan: Plan): number =>
     plan.outcome.winsFight ? 1 : 1 + Math.ceil(Math.max(0, bossHpLeft - realDamage(plan)) / Math.max(1, perTurn));
   const killsSooner = (picked: Plan, replacement: Plan | null): boolean => {

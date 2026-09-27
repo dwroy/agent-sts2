@@ -40,9 +40,10 @@
  *                         scale_then_kill  lasting value x1.5; the guard keeps a line with more setup
  *                                          (powers, permanent Strength) unless it risks death
  *                                          (HP after <= next hit + 3 or < 15% max); setup lines in
- *                                          turns 1-3 go to Jev; from turn 4 (or a new boss phase), or
- *                                          once no setup card is left in hand or draw pile, played as
- *                                          kill_fast (objectiveInForce)
+ *                                          turns 1-3 go to Jev; played as kill_fast once the fight is
+ *                                          expected to end within 3 turns (enemy HP / damage a turn),
+ *                                          no setup card is left in hand or draw pile, or in a new boss
+ *                                          phase (objectiveInForce)
  *                         kill_fast        damage x1.2, HP x0.9; guard slack x1.25; the damage-for-HP
  *                                          race rule applies in every fight; in elite/boss fights the
  *                                          guard keeps a line whose kill comes a turn sooner while its
@@ -251,7 +252,7 @@ export const MEANING = {
   objective: {
     kill_fast: "end the fight quickly: most damage, accept a little more HP loss",
     preserve_hp: "lose as little HP as possible: block first, damage second",
-    scale_then_kill: "play powers / permanent Strength in the first turns (a few HP is fine, never a risk of death), then kill: played as kill_fast from turn 4, or earlier once no power or Strength card is left in hand or draw pile",
+    scale_then_kill: "play powers / permanent Strength in the first turns (a few HP is fine, never a risk of death), then kill: played as kill_fast once the fight should end within ~3 turns or no power or Strength card is left in hand or draw pile",
     race: "the enemy scales or the clock is short: maximum damage every turn, HP traded for damage while behind; a turn the clock grants (Frantic Escape) is worth a full turn of damage",
   } satisfies Record<FightObjective, string>,
 };
@@ -335,17 +336,26 @@ export function promotesSetup(objective: FightObjective | null, turn: number, la
   return objective === "scale_then_kill" && turn <= 3 && !laterPhase;
 }
 
+/** Expected turns left in the fight from which setup still pays (scale_then_kill). */
+export const SETUP_MIN_TURNS_LEFT = 3;
+
 /**
- * The objective played this turn. scale_then_kill is a phase, then a kill: its setup weights hold only
- * while the setup window is open (promotesSetup) and there is setup left to play (a power or permanent
- * Strength card in hand or in the draw pile); after that the fight is played, ranked and labelled as
- * kill_fast (VQ7J F11: "Free turns 1-2: set up … Then kill fast" read as scale_then_kill all fight, T3-T6
- * lines labelled "nothing to set up this turn"; FN0H F33 the same after T1).
+ * The objective played this turn. scale_then_kill is a phase, then a kill: its setup weights hold while
+ * the fight is expected to last SETUP_MIN_TURNS_LEFT+ more turns (enemy HP left / expected damage a
+ * turn) and setup is left to play (a power or permanent Strength card in hand or draw pile); not in a
+ * new boss phase (its own window is closed, YFG5 F48). Otherwise the fight is played, ranked and
+ * labelled as kill_fast (VQ7J F11: "Free turns 1-2: set up … Then kill fast" read as scale_then_kill all
+ * fight; FN0H F33 the same after T1). Computed, not a turn cutoff: G8F1 F33 T4 against a 399 HP demon
+ * still has ~10 turns for a Demon Form. A setup line that risks death is refused per line
+ * (setupRisksDeath) whatever the objective.
  */
-export function objectiveInForce(objective: FightObjective | null, ctx: { turn: number; laterPhase: boolean; setupLeft: boolean }): { objective: FightObjective | null; why: string | null } {
+export function objectiveInForce(objective: FightObjective | null, ctx: { turnsLeft: number | null; laterPhase: boolean; setupLeft: boolean }): { objective: FightObjective | null; why: string | null } {
   if (objective !== "scale_then_kill") return { objective, why: null };
-  if (!promotesSetup(objective, ctx.turn, ctx.laterPhase)) return { objective: "kill_fast", why: `scale_then_kill's setup window is over (turn ${ctx.turn}${ctx.laterPhase ? ", a new boss phase" : ""}): kill` };
+  if (ctx.laterPhase) return { objective: "kill_fast", why: "scale_then_kill: a new boss phase is no setup window: kill" };
   if (!ctx.setupLeft) return { objective: "kill_fast", why: "scale_then_kill: no power or permanent Strength card left in hand or draw pile: kill" };
+  if (ctx.turnsLeft !== null && ctx.turnsLeft < SETUP_MIN_TURNS_LEFT) {
+    return { objective: "kill_fast", why: `scale_then_kill: the fight is expected to end in ~${Math.max(1, Math.round(ctx.turnsLeft))} turn(s), too soon for setup to pay: kill` };
+  }
   return { objective, why: null };
 }
 

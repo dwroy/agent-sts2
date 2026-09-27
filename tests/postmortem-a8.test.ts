@@ -146,22 +146,33 @@ describe("kill_priority puts minions behind the last non-minion (G8F1 F17 The Ki
   });
 });
 
-describe("scale_then_kill is a phase: kill_fast once the setup window closes or no setup is left (VQ7J F11)", () => {
+describe("scale_then_kill is a phase: kill_fast once the fight is too short for setup or none is left (VQ7J F11, G8F1 F33)", () => {
   it("the rule", () => {
-    expect(objectiveInForce("scale_then_kill", { turn: 2, laterPhase: false, setupLeft: true }).objective).toBe("scale_then_kill");
-    expect(objectiveInForce("scale_then_kill", { turn: 2, laterPhase: false, setupLeft: false }).objective).toBe("kill_fast");
-    expect(objectiveInForce("scale_then_kill", { turn: 4, laterPhase: false, setupLeft: true }).objective).toBe("kill_fast");
-    expect(objectiveInForce("preserve_hp", { turn: 5, laterPhase: false, setupLeft: false }).objective).toBe("preserve_hp");
+    expect(objectiveInForce("scale_then_kill", { turnsLeft: 8, laterPhase: false, setupLeft: true }).objective).toBe("scale_then_kill");
+    expect(objectiveInForce("scale_then_kill", { turnsLeft: 8, laterPhase: false, setupLeft: false }).objective).toBe("kill_fast");
+    expect(objectiveInForce("scale_then_kill", { turnsLeft: 2, laterPhase: false, setupLeft: true }).objective).toBe("kill_fast");
+    expect(objectiveInForce("scale_then_kill", { turnsLeft: 8, laterPhase: true, setupLeft: true }).objective).toBe("kill_fast");
+    expect(objectiveInForce("preserve_hp", { turnsLeft: 1, laterPhase: false, setupLeft: false }).objective).toBe("preserve_hp");
   });
 
-  it("T3 (Inferno in the draw pile) is still setup; T4 (nothing left) is labelled kill_fast", () => {
+  it("VQ7J T3 (Inferno in the draw pile) is still setup; T4 (nothing left) is labelled kill_fast", () => {
     const t3 = planCombatTurn(loggedEnv(logged("vq7j-f11-t3")));
     expect(Object.values(optionsOf(t3)).map((option) => String(option["intent_fit"])).join("\n")).toMatch(/scale_then_kill/);
     const t4 = planCombatTurn(loggedEnv(logged("vq7j-f11-t4")));
     const labels = Object.values(optionsOf(t4)).map((option) => String(option["intent_fit"] ?? "")).join("\n");
     expect(labels).toMatch(/kill_fast/);
     expect(labels).not.toMatch(/scale_then_kill/);
-    expect(strategyOf(t4).join("\n")).toMatch(/in force now: objective kill_fast \(scale_then_kill's setup window is over/);
+    expect(strategyOf(t4).join("\n")).toMatch(/in force now: objective kill_fast \(scale_then_kill: /);
+  });
+
+  it("G8F1 F33 T4: a long boss fight left, Demon Form is still played (no turn cutoff)", () => {
+    const fx = logged("g8f1-f33-t4");
+    // Logged: "code plan (+21.5 over next): 恶魔形态; hp -11, dmg 0".
+    expect(fx.decision.rationale).toMatch(/恶魔形态/);
+    const decision = planCombatTurn(loggedEnv(fx));
+    const text = decision?.kind === "act" ? decision.rationale : JSON.stringify(Object.values(optionsOf(decision))[0]);
+    expect(text).toMatch(/恶魔形态/);
+    if (decision?.kind === "ask") expect(String(Object.values(optionsOf(decision))[0]!["intent_fit"])).toMatch(/^fits scale_then_kill/);
   });
 });
 
