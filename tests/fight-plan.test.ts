@@ -900,3 +900,56 @@ describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambl
     expect(shown).toMatch(/Gambler[^}]*only helps through cards played after it/);
   });
 });
+
+describe("HP guard in an act-boss race (N28L, WB02, R2H1, EJXC F33 T5)", () => {
+  /** Boss at 300, 20 incoming; Bash (3 energy, 30) -20 vs Defend, Defend, Strike (4 block each) -12. */
+  const board = (bossId: string, escape = false): Raw => {
+    const raw = bossTurnOne();
+    (raw["run"] as Raw)["boss_id"] = bossId;
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+    Object.assign(boss, { current_hp: 300, max_hp: 341 });
+    boss["intents"] = [{ index: 0, intent_type: "Attack", label: "20", damage: 20, hits: 1, total_damage: 20 }];
+    const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+    const strike = hand.find((card) => card["card_id"] === "STRIKE_R")!;
+    const defend = hand.find((card) => card["card_id"] === "DEFEND_R")!;
+    const bash = hand.find((card) => card["card_id"] === "BASH")!;
+    const def4 = { ...defend, dynamic_values: [{ name: "Block", base_value: 4, current_value: 4 }] };
+    (raw["combat"] as Raw)["hand"] = [
+      strike,
+      { ...def4, index: 1 },
+      { ...bash, energy_cost: escape ? 2 : 3, dynamic_values: [{ name: "Damage", base_value: 30, current_value: 30 }] },
+      { ...def4, index: 3 },
+    ];
+    if (escape) {
+      // The Insatiable at 100 with Sandpit 3, a 1-cost Frantic Escape in hand.
+      Object.assign(boss, { current_hp: 100 });
+      boss["powers"] = [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: 3, is_debuff: false }];
+      ((raw["combat"] as Raw)["hand"] as Raw[]).push({ ...defend, index: 4, card_id: "FRANTIC_ESCAPE", name: "Frantic Escape", energy_cost: 1, dynamic_values: [] });
+    }
+    return raw;
+  };
+  const played = (raw: Raw, pick: (criteria: Record<string, string>) => string): string => {
+    const decision = planCombatTurn(env(raw));
+    if (decision?.kind === "act") return `${decision.label} ${decision.rationale}`;
+    const ask = decision as AskDecision;
+    const criteria = (ask.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const key = pick(criteria);
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+    return `${resolved.guard ? "guarded" : "kept"} ${resolved.rationale}`;
+  };
+  const byPlays = (pattern: RegExp) => (criteria: Record<string, string>) => Object.keys(criteria).find((k) => pattern.test(criteria[k]!))!;
+
+  it("keeps 24 more damage for 8 HP while the clock says we are behind; swaps it without a clock", () => {
+    // Lagavulin Matriarch: 222 over 12 turns; 300 left over 12 is 25 a turn, more than the 6 of the swap.
+    const behind = played(board("LAGAVULIN_MATRIARCH"), byPlays(/"plays":"BASH/));
+    expect(behind).not.toMatch(/guard/i);
+    const noClock = played(board("SLIME_BOSS"), byPlays(/"plays":"BASH/));
+    expect(noClock).toMatch(/guard/i);
+  });
+
+  it("does not swap a Frantic Escape line for one without it", () => {
+    const shown = played(board("SLIME_BOSS", true), byPlays(/"plays":"(FRANTIC_ESCAPE, then BASH|BASH[^"]*, then FRANTIC_ESCAPE)/));
+    expect(shown).not.toMatch(/HP guard|guard bound/);
+  });
+});

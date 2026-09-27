@@ -30,6 +30,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { floorsToBoss, planSavesPotion } from "../strategy/run-plan.js";
 import { fightKey, fightPlanJson, OFFENSIVE_POTIONS, planFit, planOffersPotion, planPotionCost, planPotionUse, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
+import { bossNeed } from "../strategy/boss-clock.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
@@ -37,6 +38,10 @@ export const POTION_PRESSED_SHARE = 0.3;
 export const RUN_PLAN_SAVE_COST = 20;
 /** …only within this many floors of the boss (earlier, a potion used is a potion found again). */
 export const SAVE_POTIONS_WITHIN = 10;
+/** Boss race behind the clock: the HP guard keeps a line dealing this much more… */
+export const BOSS_RACE_KEEP_DAMAGE = 20;
+/** …for at most this much more HP lost. */
+export const BOSS_RACE_KEEP_HP = 8;
 /** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
 export const BOSS_DRINK_FIRST_LOSS = 10;
 
@@ -1228,10 +1233,29 @@ function planTurn(env: DecisionEnv): Decision | null {
     const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
+  // Act-boss race (5th time: N28L, WB02, R2H1, EJXC F33 T5): the guard does not swap a line playing
+  // Frantic Escape for one playing fewer (each Escape is a turn of the Sandpit: EJXC T5 swapped
+  // "Strike, Frantic Escape, Twin Strike" -20 for "Strike, Twin Strike, Defend" -15, same damage, and the
+  // Sandpit ran out on T7 with the boss at 31), nor trade 20+ damage for 8 HP or less while the boss
+  // clock says we are behind (boss HP left over the clock's turns left is more than the swap deals).
+  const escapesIn = (plan: Plan) => plan.steps.filter((step) => step.cardId === "FRANTIC_ESCAPE").length;
+  const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
+  const clockTurnsLeft = need ? Math.max(1, need.turns - ((state.turn ?? 1) - 1)) : 1;
+  const bossRaceKeeps = (picked: Plan, replacement: Plan | null): boolean => {
+    if (kind !== "boss" || replacement === null) return false;
+    if (escapesIn(picked) > escapesIn(replacement)) return true;
+    const behind = need !== null && bossHpLeft / clockTurnsLeft > replacement.outcome.damageDealt;
+    return (
+      behind &&
+      picked.outcome.damageDealt - replacement.outcome.damageDealt >= BOSS_RACE_KEEP_DAMAGE &&
+      picked.outcome.hpLoss - replacement.outcome.hpLoss <= BOSS_RACE_KEEP_HP
+    );
+  };
   // Not on a big-hit turn: that is the turn to block (0YG4 F43 T4: Dark Embrace + Blood Wall, -26,
   // kept over a 29-block line at -13 into the Heavy Cleave).
   const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
     winsRace(picked, replacement) ||
+    bossRaceKeeps(picked, replacement) ||
     !bigHit &&
     replacement !== null &&
     setupCount(picked) > setupCount(replacement) &&
@@ -1529,7 +1553,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption || sandpitRaceLost) ? null : proposed;
       const plan = replacement ?? picked;
-      const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
+      // Frantic Escape's HP is survival, not greed: not charged to the fight's budget (EJXC F33 T2-T3:
+      // two Escape lines spent the 12 HP budget, and T5's guard then dropped the third Escape).
+      const extra = plan.outcome.winsFight || escapesIn(plan) > 0 ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;
       const guardNote = replacement
         ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
