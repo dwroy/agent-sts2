@@ -1430,8 +1430,11 @@ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player
   const urgent = incoming >= player.hp || ((kind === "elite" || kind === "boss") && incoming >= player.hp * 0.3);
   if (!urgent) return null;
   const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && potion.potion_id !== "FOUL_POTION");
+  // A debuff potion into Artifact does nothing (M6P7 F48 T8: Weak Potion into Aeonglass's Artifact).
+  const artifactUp = enemies.some((enemy) => enemy.hp > 0 && (enemy.artifact ?? 0) > 0);
+  const useful = (potion: { text: string }) => !(artifactUp && /虚弱|weak|易伤|vulnerable/i.test(potion.text) && !/格挡|block/i.test(potion.text));
   const pick =
-    potions.find((potion) => BLUNTS_HIT.test(potion.text)) ??
+    potions.filter(useful).find((potion) => BLUNTS_HIT.test(potion.text)) ??
     potions.find((potion) => /抽|draw/i.test(potion.text));
   // Only a potion that blocks or draws helps a hand with nothing playable (P2E4 F48: Blessing of the
   // Forge drunk on a hand of Soulbound-locked cards).

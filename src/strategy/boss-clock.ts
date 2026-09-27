@@ -34,7 +34,8 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   KNOWLEDGE_DEMON: { hp: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
-  AEONGLASS: { hp: 578, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
+  // 535 at A8 plus two 33-block Ebbs (M6P7: 33 a turn, left at 234).
+  AEONGLASS: { hp: 601, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
   // Queen 400 + Amalgam 199 at A7, plus 20 Queen block a turn while the Amalgam lives; wins took 9-12
   // turns (P2E4: 47.5 a turn, Queen left at 219).
   QUEEN: { hp: 640, turns: 10, note: "from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail" },
