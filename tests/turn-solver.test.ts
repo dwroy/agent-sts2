@@ -712,11 +712,17 @@ describe("The Insatiable's Sandpit", () => {
   });
 
   it("values a Sandpit turn at the deck's turn while behind (9V09 F33 T2: two Escapes ranked below a 54-damage line)", () => {
-    // Pit 4, boss 300/341, ~45 a turn from the deck and 49 on the clock: 7 turns needed, behind.
+    // Pit 4, boss 300/341, ~45 a turn from the deck and 49 on the clock: the deck's turn, not the clock's
+    // need (9LSQ F33: 49 against a deck dealing 24); 7 turns needed, behind.
     const clock = sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 });
-    expect(clock).toEqual({ value: 49, behind: true, turnsNeeded: 7 });
+    expect(clock).toEqual({ value: 45, behind: true, turnsNeeded: 7, useful: Infinity });
+    // The clock's need only without a deck figure.
+    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, clockPerTurn: 49 }).value).toBe(49);
     // Not behind (the kill fits the pit): the floor.
-    expect(sandpitTurnValue({ bossHpLeft: 100, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 })).toEqual({ value: SANDPIT_TURN_DAMAGE, behind: false, turnsNeeded: 3 });
+    expect(sandpitTurnValue({ bossHpLeft: 100, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 })).toEqual({ value: SANDPIT_TURN_DAMAGE, behind: false, turnsNeeded: 3, useful: Infinity });
+    // The HP clock: with HP for 5 turns at pit 4 one Escape buys a turn we live to use; at pit 5 none.
+    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, deckPerTurn: 24, hpTurns: 5.07 }).useful).toBe(1);
+    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 5, deckPerTurn: 24, hpTurns: 5.07 }).useful).toBe(0);
     // Never below the floor.
     expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 2, deckPerTurn: 5 }).value).toBe(SANDPIT_TURN_DAMAGE);
     // T2 re-plan: 2 energy, two 1-cost Escapes and two 1-cost 27-damage attacks.

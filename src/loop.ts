@@ -1104,6 +1104,7 @@ async function ensureRunPlan(
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
       validator: plan.validator,
+      disagreements: plan.disagreements ?? [],
       changes: toJsonValue(accepted),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
@@ -1112,7 +1113,7 @@ async function ensureRunPlan(
       reasoning_tokens: meta.reasoningTokens ?? 0,
       effort: meta.effort ?? "",
     });
-    onEvent({ type: "note", message: `run plan v${plan.version} (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; hp_policy ${plan.hpPolicy}; route_risk ${plan.routeRisk}; reserve ${plan.reserve.join("/") || "-"}${accepted.length > 0 ? `; changed ${accepted.map((change) => `${change.field} (${change.trigger})`).join(", ")}` : ""}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}` });
+    onEvent({ type: "note", message: `run plan v${plan.version} (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; hp_policy ${plan.hpPolicy}; route_risk ${plan.routeRisk}; reserve ${plan.reserve.join("/") || "-"}${accepted.length > 0 ? `; changed ${accepted.map((change) => `${change.field} (${change.trigger})`).join(", ")}` : ""}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}${(plan.disagreements ?? []).length > 0 ? ` [${plan.disagreements!.join("; ")}]` : ""}` });
   } catch (error) {
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);

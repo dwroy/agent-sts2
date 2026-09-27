@@ -14,7 +14,8 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { rewardCardValuer } from "./reward.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, thisTurnScore, type CardModel } from "../strategy/card-model.js";
+import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
+import { exhaustPileSize } from "./combat-plan.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -85,7 +86,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       const incoming = incomingDamage(combat);
       const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
       const best = offered
-        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies) }))
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score)[0];
       if (best) {
@@ -124,6 +125,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
+  const board = forThisTurn ? thisTurnBoard(state.raw, knowledge) : {};
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
   // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
@@ -188,7 +190,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
         : added
           ? added.value
         : topDanger
@@ -577,3 +579,22 @@ function incomingDamage(combat: Record<string, unknown>): number {
 }
 
 export { thisTurnScore } from "../strategy/card-model.js";
+
+/**
+ * The combat board a card picked for this turn is scored on (card-model ThisTurnBoard): the exhaust
+ * pile plus the exhausting cards in hand, and the most Vulnerable on a living enemy. The exhaust pile is
+ * left unknown when the state carries no piles.
+ */
+export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
+  const combat = asRecord(raw["combat"]);
+  const pile = exhaustPileSize(raw);
+  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge).exhausts).length;
+  const vulnerable = Math.max(
+    0,
+    ...asArray(combat["enemies"])
+      .map(asRecord)
+      .filter((enemy) => enemy["is_alive"] !== false)
+      .map((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "VULNERABLE_POWER").reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0)),
+  );
+  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
+}

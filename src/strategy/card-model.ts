@@ -73,7 +73,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -190,6 +190,8 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
+  // Entrench: doubles the block up when it is played (0 block: worth 0; RTF3 F17/F28).
+  ENTRENCH: "double_block",
   MOLTEN_FIST: "molten_fist",
   WHIRLWIND: "whirlwind",
   SPITE: "spite",
@@ -355,8 +357,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape") {
-    known = true; // its whole value is the Sandpit count, scored by the solver
+  } else if (special === "frantic_escape" || special === "double_block") {
+    known = true; // its whole value is the Sandpit count / the block doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
     // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
@@ -605,11 +607,11 @@ export const PILE_CARD_POTIONS: Record<string, { pile: "discard" | "draw"; free:
  * The pile card a pile-card potion takes: the best one this turn by thisTurnScore (the selection
  * screen's own rule), at cost 0 when the potion makes it free. null for an empty pile.
  */
-export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean): CardModel | null {
+export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean, board: ThisTurnBoard = {}): CardModel | null {
   const playable = cards.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse" && card.cardId !== "THE_GAMBIT");
   if (playable.length === 0) return null;
   const scored = playable.map((card) => (free ? { ...card, cost: card.xCost ? card.cost : 0 } : card));
-  return scored.reduce((best, card) => (thisTurnScore(card, incoming, enemies) > thisTurnScore(best, incoming, enemies) ? card : best));
+  return scored.reduce((best, card) => (thisTurnScore(card, incoming, enemies, board) > thisTurnScore(best, incoming, enemies, board) ? card : best));
 }
 
 /**
@@ -661,11 +663,11 @@ export function upgradeGain(before: CardModel, after: CardModel): number {
  * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
  * value, less its energy cost and HP cost.
  */
-export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number, board: ThisTurnBoard = {}): number {
   // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
   // Colorless Potion, died to a 9-damage hit). Never worth taking.
   if (card.cardId === "THE_GAMBIT") return -100;
-  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const damage = thisTurnDamage(card, board) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
   const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
   const score =
     damage +
@@ -680,6 +682,30 @@ export function thisTurnScore(card: CardModel, incoming: number, enemies: number
     2 * Math.max(0, card.cost) -
     card.hpLoss;
   return Math.round(score);
+}
+
+/** What the board lets a card deal this turn (thisTurnScore). */
+export interface ThisTurnBoard {
+  /**
+   * Cards the exhaust pile can hold this turn: its size now plus the exhausting cards in hand. Pact's
+   * End needs 3 (the solver's PACTS_END_EXHAUST); below that it deals nothing (9LSQ F17 T1, H1FA twice:
+   * an Attack Potion took it over Fight Me with the exhaust pile empty, and it sat in hand).
+   */
+  exhaustReach?: number;
+  /** Most Vulnerable on a living enemy: Bully deals 2 more per stack. */
+  vulnerable?: number;
+}
+
+/** Cards Pact's End needs in the exhaust pile (turn-solver PACTS_END_EXHAUST). */
+const PACTS_END_CARDS = 3;
+/** Bully: extra damage per Vulnerable stack on its target. */
+const BULLY_PER_VULNERABLE = 2;
+
+/** A card's damage per hit this turn on this board. */
+export function thisTurnDamage(card: CardModel, board: ThisTurnBoard = {}): number {
+  if (card.cardId === "PACTS_END" && board.exhaustReach !== undefined && board.exhaustReach < PACTS_END_CARDS) return 0;
+  if (card.cardId === "BULLY") return (card.damage ?? 0) + BULLY_PER_VULNERABLE * (board.vulnerable ?? 0);
+  return card.damage ?? 0;
 }
 
 /** Touch of Insanity is only worth drinking for a card costing at least this much. */

@@ -1015,6 +1015,10 @@ describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V0
     const bash = hand.find((card) => card["card_id"] === "BASH")!;
     const escape = (index: number) => ({ ...defend, index, card_id: "FRANTIC_ESCAPE", name: "Frantic Escape", energy_cost: 1, dynamic_values: [] });
     (raw["combat"] as Raw)["hand"] = [strike, { ...bash, index: 1, energy_cost: 2, dynamic_values: [{ name: "Damage", base_value: 30, current_value: 30 }] }, escape(2), escape(3)];
+    // The HP clock well past the pit, as in 9V09 (eaten by the pit at 48 HP): every Escape buys a turn
+    // we live to use (9LSQ, the other way round, is in postmortem-a8-batch2).
+    Object.assign((raw["combat"] as Raw)["player"] as Raw, { current_hp: 120, max_hp: 120 });
+    Object.assign(raw["run"] as Raw, { current_hp: 120, max_hp: 120 });
     return raw;
   };
 

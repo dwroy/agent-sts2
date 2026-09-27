@@ -376,10 +376,12 @@ export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unkno
  */
 export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp)): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
-  const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
+  // A block potion drunk for a hit the hand could take is next turn's loss (turn-solver blockPotionShort).
+  const loss = (plan: Plan) => plan.outcome.hpLoss + (plan.outcome.blockPotionShort ?? 0);
+  const minLoss = Math.min(...options.map(loss));
   const bound = minLoss + slack;
-  if (chosen.outcome.hpLoss <= bound) return null;
-  return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+  if (loss(chosen) <= bound) return null;
+  return options.find((plan) => loss(plan) <= bound) ?? options.find((plan) => loss(plan) === minLoss) ?? null;
 }
 
 /** This fight's HP-guard record (screenMemory.hpGuard), read-only: the extra HP accepted so far. */
@@ -452,6 +454,10 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       slumber: powerAmount(enemy, "SLUMBER_POWER"),
       ...(powerAmount(enemy, "ASLEEP_POWER") + powerAmount(enemy, "SLUMBER_POWER") > 0
         ? { wakeHit: Math.round((maxMoveDamage(str(enemy["enemy_id"])) ?? 0) + powerAmount(enemy, "STRENGTH_POWER")) || undefined }
+        : {}),
+      // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
+      ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
+        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
       vitalSpark: powerAmount(enemy, "VITAL_SPARK_POWER"),
       ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
@@ -549,7 +555,7 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
+function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
@@ -575,8 +581,16 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.lasting >= 5) {
     const forge = plan.steps.some((step) => step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:"));
     const regen = plan.steps.some((step) => step.cardId.startsWith("POTION:REGEN_POTION:"));
-    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+    // A power is what pays off later; an unmodelled skill's flat nudge is not one (RTF3 F17 T1: Entrench
+    // at 0 block read "sets up a power, lasting 7").
+    const played = plan.steps.map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId));
+    const setsUp =
+      played.some((card) => card !== undefined && (card.type === "Power" || card.strength > 0)) ||
+      !played.some((card) => card !== undefined && !card.known && card.flatValue > 0);
+    const what = forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : setsUp ? "sets up a power" : "unmodelled skill, flat value";
+    summary["lasting_value"] = `${what}, worth about ${Math.round(o.lasting)} score over the fight${setsUp || forge || regen ? " (a few HP now is often worth it in a long fight)" : ""}`;
   }
+  if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -1265,8 +1279,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     ? sandpitTurnValue({
         bossHpLeft: enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0),
         sandpit: pitNow,
-        deckPerTurn: deckDamagePerTurn(state, env.knowledge),
+        // The deck's realistic turn: this fight's measured rate, else the estimate (9LSQ F33: 24, not 49).
+        deckPerTurn: perTurn > 0 ? perTurn : null,
         clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
+        // The HP clock: turns our HP lasts at the larger of the measured and the expected loss a turn.
+        hpTurns: playerSim.hp / Math.max(1, measuredLoss ?? 0, expectedLossPerTurn(state, env.knowledge)),
       })
     : null;
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), and the pile card a
@@ -1275,7 +1292,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
   const beltIds = new Set(potionsAll.map((potion) => potion.potion_id));
   const pickFrom = (pile: "discard" | "draw", free: boolean) =>
-    pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free);
+    pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
+      ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
+      vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
+    });
   const potionContext = {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
@@ -1336,7 +1356,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       intentScale,
-      ...(pitClock ? { sandpitTurnDamage: pitClock.value } : {}),
+      ...(pitClock ? { sandpitTurnDamage: pitClock.value, ...(Number.isFinite(pitClock.useful) ? { sandpitUsefulEscapes: pitClock.useful } : {}) } : {}),
     });
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
@@ -1759,7 +1779,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Intent compliance of each option (intent.ts combatFit): "fits <intent>: …" / "breaks <intent>: …".
   // Sandpit turns bought count as damage, and code's rank 1 never "breaks" its own objective (9V09).
   const sandpitField: SandpitField | undefined = pitClock
-    ? { turnValue: pitClock.value, behind: pitClock.behind, now: pitNow, turnsNeeded: pitClock.turnsNeeded, maxEscapes: Math.max(0, ...options.map(escapesIn)) }
+    ? { turnValue: pitClock.value, behind: pitClock.behind, now: pitNow, turnsNeeded: pitClock.turnsNeeded, maxEscapes: Math.max(0, ...options.map(escapesIn)), ...(Number.isFinite(pitClock.useful) ? { useful: pitClock.useful } : {}) }
     : undefined;
   // The Queen's YOU_ARE_MINE turn is the last one before 99 Weak/Frail/Vulnerable on us: lines are
   // ranked by damage into the Torch Head Amalgam, whatever the objective (H7W0 F48 T2: Jev took a
@@ -1835,7 +1855,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   options.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...fitOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
@@ -1914,7 +1934,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...planFacts(plan, ctx), ...fitOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
