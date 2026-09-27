@@ -124,6 +124,24 @@ const BOSS_POTIONS_PER_TURN = 1;
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
+/**
+ * Kill-first enemy when no fight plan names one, keyed by an enemy in the fight. The Queen: her Torch
+ * Head Amalgam is a minion, so MINION_CHIP (turn-solver.ts) valued damage into it at 25% and code
+ * hit the Queen while the Amalgam dealt every hit we took (CWU9 F48 T1-T3: 39 into the Queen, Amalgam
+ * alive to T9; ZPPV, CAYK). The Kin need no entry: the chip already sends damage to the priest, whose
+ * death ends the fight (WYF0 F17).
+ */
+export const DEFAULT_FOCUS: Record<string, string> = { QUEEN: "TORCH_HEAD_AMALGAM" };
+
+export function defaultFocus(combat: Record<string, unknown>): string | null {
+  const living = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false).map((enemy) => str(enemy["enemy_id"]));
+  for (const id of living) {
+    const focus = DEFAULT_FOCUS[id];
+    if (focus && living.includes(focus)) return focus;
+  }
+  return null;
+}
+
 /** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
 function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
   const fight = `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
@@ -242,8 +260,11 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       // Any Strength already, not just this turn's Buff intent (6A36: Sludge Spinner's Rage +3 every
       // third turn went to Strength 9 while damage stayed at hallway weight). A Buff move anywhere in
       // the cycle was too broad: 56 of 101 enemies, most of whose buffs are not Strength.
+      // The Queen's Buff (Burn Bright for Me) buffs her Amalgam, not herself (CWU9 F48: T3-T9 Buff only,
+      // every hit taken from the Amalgam): read as her scaling it outweighed the kill-first bonus.
       scaling:
         str(enemy["enemy_id"]) !== "WATERFALL_GIANT" &&
+        str(enemy["enemy_id"]) !== "QUEEN" &&
         (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
@@ -793,11 +814,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   const bigHit = nowIncoming - playerSim.block >= Math.max(12, playerSim.hp * 0.25);
   // Several enemies can share the id (CWMP F7: four Phantasmal Gardeners, index 0 was always taken
   // while the plan's Enlarge eel sat at 19 HP for six turns): the lowest-HP one of them, re-read each turn.
-  const focusIndex = fightPlan?.focus
+  const focusId = fightPlan?.focus ?? defaultFocus(combat);
+  const focusIndex = focusId
     ? numOrNull(
         asArray(combat["enemies"])
           .map(asRecord)
-          .filter((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)
+          .filter((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === focusId)
           .sort((a, b) => num(a["current_hp"]) - num(b["current_hp"]))[0]?.["index"],
       )
     : null;

@@ -533,6 +533,47 @@ describe("Tender turns off the lethal shortcut (LSWU F21 T5)", () => {
   });
 });
 
+describe("default kill-first target without a plan (CWU9 F48, WYF0 F17)", () => {
+  /** Every attack target of code's pick (act and remaining steps) or of every option asked. */
+  const targets = (raw: Raw): string => {
+    const e = env(raw);
+    const decision = planCombatTurn(e);
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.rationale : null, e.screenMemory.combatPlan?.remaining]);
+  };
+  const fight = (enemies: Raw[]): Raw => {
+    const raw = combatPayload();
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const combat = raw["combat"] as Raw;
+    const base = (combat["enemies"] as Raw[])[0]!;
+    combat["enemies"] = enemies.map((enemy) => ({ ...base, ...enemy }));
+    return raw;
+  };
+  const minion = [{ index: 0, power_id: "MINION_POWER", name: "Minion", amount: 1, is_debuff: false }];
+  const buff = [{ index: 0, intent_type: "Buff", label: "" }];
+  const hit = (damage: number) => [{ index: 0, intent_type: "Attack", label: String(damage), damage, hits: 1, total_damage: damage }];
+
+  it("the Queen fight hits the Torch Head Amalgam, not the Queen", () => {
+    const raw = fight([
+      { index: 0, enemy_id: "QUEEN", name: "QUEEN", current_hp: 419, max_hp: 419, powers: [], intents: buff },
+      { index: 1, enemy_id: "TORCH_HEAD_AMALGAM", name: "TORCH_HEAD_AMALGAM", current_hp: 199, max_hp: 199, powers: minion, intents: hit(13) },
+    ]);
+    const text = targets(raw);
+    expect(text).toContain("-> TORCH_HEAD_AMALGAM");
+    expect(text).not.toContain("-> QUEEN");
+  });
+
+  it("the Kin fight still hits the priest (the followers are minions)", () => {
+    const raw = fight([
+      { index: 0, enemy_id: "KIN_FOLLOWER", name: "KIN_FOLLOWER", current_hp: 59, max_hp: 59, powers: minion, intents: hit(5) },
+      { index: 1, enemy_id: "KIN_PRIEST", name: "KIN_PRIEST", current_hp: 199, max_hp: 199, powers: [], intents: hit(8) },
+      { index: 2, enemy_id: "KIN_FOLLOWER", name: "KIN_FOLLOWER", current_hp: 59, max_hp: 59, powers: minion, intents: hit(5) },
+    ]);
+    const text = targets(raw);
+    expect(text).toContain("-> KIN_PRIEST");
+    expect(text).not.toContain("-> KIN_FOLLOWER");
+  });
+});
+
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
     const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");
