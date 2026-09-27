@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { bossRaceTrade, planCombatTurn } from "../src/screens/combat-plan.js";
 import { eventHpCost, eventHpGuard, eventOptionScore, planEvent } from "../src/screens/event.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { averagePowerStrength, damageGap, expectedPlayTurn } from "../src/strategy/boss-clock.js";
@@ -199,5 +199,22 @@ describe("only code's pick is labelled \"code's best line\" (M9PL F25 T2)", () =
   it("the logged board: at most one option is code's best line", () => {
     const { options } = linesOf(planCombatTurn(loggedEnv(logged("m9pl-f25-t2"))));
     expect(Object.values(options).filter((option) => /code's best line under/.test(String(option["intent_fit"]))).length).toBeLessThanOrEqual(1);
+  });
+});
+
+describe("boss race: the HP guard's keep is proportional to the race (M9PL F33, T86W F17)", () => {
+  it("M9PL T3: 19 more damage for 6 HP against a crab needing ~58 a turn is kept (was swapped: under 20)", () => {
+    // Second question: 58 damage -9 swapped for 39 damage -3; 61 HP, crab 348 left over 6 clock turns.
+    expect(bossRaceTrade({ extraDamage: 19, extraLoss: 6, hp: 61, maxHp: 80, bossHpLeft: 348, needPerTurn: 58 })).toBe(true);
+    // T4: 12 more damage for 7 HP is a fifth of a turn's need: swapped.
+    expect(bossRaceTrade({ extraDamage: 12, extraLoss: 7, hp: 58, maxHp: 80, bossHpLeft: 348, needPerTurn: 58 })).toBe(false);
+  });
+
+  it("the HP allowed grows with what the damage is worth at our HP per boss HP", () => {
+    // T86W T4: 33 more damage for 14 HP at 70 HP, 232 boss HP: worth ~10 HP, 8 by the max-HP share.
+    expect(bossRaceTrade({ extraDamage: 33, extraLoss: 14, hp: 70, maxHp: 80, bossHpLeft: 232, needPerTurn: 26 })).toBe(false);
+    expect(bossRaceTrade({ extraDamage: 33, extraLoss: 9, hp: 70, maxHp: 80, bossHpLeft: 232, needPerTurn: 26 })).toBe(true);
+    // Late in a race the same damage buys more HP: 33 for 14 with the boss at 120.
+    expect(bossRaceTrade({ extraDamage: 33, extraLoss: 14, hp: 70, maxHp: 80, bossHpLeft: 120, needPerTurn: 26 })).toBe(true);
   });
 });

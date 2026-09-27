@@ -42,10 +42,25 @@ export const POTION_PRESSED_SHARE = 0.3;
  * then filtered unless the reserve is released: intent.ts reserveReleased).
  */
 export const RUN_PLAN_SAVE_COST = 20;
-/** Boss race behind the clock: the HP guard keeps a line dealing this much more… */
-export const BOSS_RACE_KEEP_DAMAGE = 20;
-/** …for at most this much more HP lost. */
-export const BOSS_RACE_KEEP_HP = 8;
+/** Boss race behind the clock: the HP guard keeps a line adding at least this share of a turn's need… */
+export const BOSS_RACE_MIN_SHARE = 0.25;
+/** …(and at least this much damage)… */
+export const BOSS_RACE_MIN_DAMAGE = 5;
+/** …for HP up to its worth at the race's exchange rate, or up to this share of max HP. */
+export const BOSS_RACE_HP_SHARE = 0.1;
+
+/**
+ * Act boss behind its clock: whether the HP guard keeps a line dealing `extraDamage` more for
+ * `extraLoss` more HP. Proportional, not the old fixed "20+ damage for 8 HP or less" (M9PL F33 T3: 19
+ * more damage for 6 HP swapped with the crab needing ~58 a turn; T86W F17 T4): the extra damage must be
+ * a real part of a turn's need (BOSS_RACE_MIN_SHARE), and the HP it costs at most what that damage is
+ * worth at our HP per boss HP (the exchange rate), or BOSS_RACE_HP_SHARE of max HP.
+ */
+export function bossRaceTrade(t: { extraDamage: number; extraLoss: number; hp: number; maxHp: number; bossHpLeft: number; needPerTurn: number }): boolean {
+  if (t.extraDamage < Math.max(BOSS_RACE_MIN_DAMAGE, BOSS_RACE_MIN_SHARE * t.needPerTurn)) return false;
+  const exchange = (t.extraDamage * t.hp) / Math.max(1, t.bossHpLeft);
+  return t.extraLoss <= Math.max(exchange, BOSS_RACE_HP_SHARE * t.maxHp);
+}
 /** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
 export const BOSS_DRINK_FIRST_LOSS = 10;
 
@@ -1274,8 +1289,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Act-boss race (5th time: N28L, WB02, R2H1, EJXC F33 T5): the guard does not swap a line playing
   // Frantic Escape for one playing fewer (each Escape is a turn of the Sandpit: EJXC T5 swapped
   // "Strike, Frantic Escape, Twin Strike" -20 for "Strike, Twin Strike, Defend" -15, same damage, and the
-  // Sandpit ran out on T7 with the boss at 31), nor trade 20+ damage for 8 HP or less while the boss
-  // clock says we are behind (boss HP left over the clock's turns left is more than the swap deals).
+  // Sandpit ran out on T7 with the boss at 31), nor trade damage the race needs for HP it can pay
+  // (bossRaceTrade) while the boss clock says we are behind (boss HP left over the clock's turns left
+  // is more than the swap deals).
   const escapesIn = (plan: Plan) => plan.steps.filter((step) => step.cardId === "FRANTIC_ESCAPE").length;
   const bossRaceKeeps = (picked: Plan, replacement: Plan | null): boolean => {
     if (kind !== "boss" || replacement === null) return false;
@@ -1283,8 +1299,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     const behind = need !== null && bossHpLeft / clockTurnsLeft > replacement.outcome.damageDealt;
     return (
       behind &&
-      picked.outcome.damageDealt - replacement.outcome.damageDealt >= BOSS_RACE_KEEP_DAMAGE &&
-      picked.outcome.hpLoss - replacement.outcome.hpLoss <= BOSS_RACE_KEEP_HP
+      !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp) &&
+      bossRaceTrade({
+        extraDamage: picked.outcome.damageDealt - replacement.outcome.damageDealt,
+        extraLoss: picked.outcome.hpLoss - replacement.outcome.hpLoss,
+        hp: playerSim.hp,
+        maxHp: playerSim.maxHp,
+        bossHpLeft,
+        needPerTurn: bossHpLeft / clockTurnsLeft,
+      })
     );
   };
   // Elite/boss under kill_fast/race: the guard compares the HP lost until the kill, not this turn's
