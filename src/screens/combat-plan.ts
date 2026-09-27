@@ -25,7 +25,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { drinkFirstSafe, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { drinkFirstSafe, expectedDraw, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -300,6 +300,11 @@ function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
     return 0;
   }
   return Math.max(0, memo.startCount - count);
+}
+
+/** A line's HP change in a rationale: "hp -7", or "hp +2" when a heal outweighs the turn's loss. */
+function hpText(loss: number): string {
+  return loss < 0 ? `hp +${-loss}` : `hp -${loss}`;
 }
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
@@ -769,8 +774,11 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
-  const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
+  // Gambler's Brew draws what it draws: re-planned after it, like a draw.
+  const firstCard = first ? cardFor(first, hand) : undefined;
+  const drawsOrRandom = (firstCard?.draw ?? 0) + (firstCard?.special === "gamble" ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
@@ -1158,6 +1166,18 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
+    // Gambler's Brew draws from the draw pile, or the discard pile reshuffled when it is empty.
+    ...(beltIds.has("GAMBLERS_BREW")
+      ? {
+          expectedDraw: expectedDraw(
+            (() => {
+              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
+            })(),
+            potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW")?.slot ?? 0,
+          ),
+        }
+      : {}),
   };
   // Lines are shown and played with their order-free potions drunk first (potionsFirst).
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) => {
@@ -1546,7 +1566,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-guarded",
         intent: firstIntent(guarded, hand, env),
-        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (hp -${guarded.outcome.hpLoss}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (${hpText(guarded.outcome.hpLoss)}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
       };
     }
     commit(env, state.turn, top, hand, "code");
@@ -1561,7 +1581,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "combat/plan",
       intent: firstIntent(top, hand, env),
-      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; hp -${top.outcome.hpLoss}, dmg ${top.outcome.damageDealt}${calcNote}`,
+      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; ${hpText(top.outcome.hpLoss)}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
 
@@ -1885,7 +1905,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const fit = fromJev ? fitFor(picked) : null;
       const deviation = fit?.breaks && (fightPlan || runPlan) ? { intent: fit.label, runPlanVersion: runPlan?.version ?? null, fightObjective: objective } : undefined;
       const guardNote = replacement
-        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; ${hpText(plan.outcome.hpLoss)}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),

@@ -2211,6 +2211,22 @@ describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected
     expect(keep?.kind === "act" && keep.intent).toEqual({ action: "confirm_selection" });
   });
 
+  it("the combat plan's Gambler's Brew discards come first, then the selection is confirmed (77UJ F33 T5)", async () => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
+    const picked: number[] = [];
+    for (let step = 0; step < 4; step += 1) {
+      const raw = brew(hand, picked, attack);
+      const e = env(raw, { combatPlanner: "turn" });
+      e.screenMemory.gambleDiscards = { turn: e.state.turn, cardIds: ["STRIKE_R", "PILLAGE"] };
+      const decision = planSelection(e);
+      if (decision?.kind !== "act") throw new Error("expected an act");
+      if (decision.intent.action === "confirm_selection") break;
+      picked.push(Number(decision.intent.option_index));
+    }
+    expect(picked.sort()).toEqual([0, 2]);
+  });
+
   it("basics the energy cannot reach are redrawn", async () => {
     const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
     const decision = await pick(brew([

@@ -106,6 +106,8 @@ export interface ScreenMemory {
    * re-plans do not offer them again (GZ24 F8 T1, EJXC F28 T1: refused, then drunk 3 s later at 0.51).
    */
   potionVeto?: { fight: string; turn: number | null; ids: string[] };
+  /** Gambler's Brew drunk by a plan this turn: the hand cards (ids) the plan discards with it. */
+  gambleDiscards?: { turn: number | null; cardIds: string[] };
   /**
    * The reserve released in this fight turn, with why: it stays released for the turn's re-plans (N7KR
    * F8 T1: released for a line drinking the Skill and Dexterity potions; after the Skill Potion's card

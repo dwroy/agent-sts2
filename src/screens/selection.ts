@@ -36,6 +36,21 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Discard/replace any number" (Gambler's Brew, min 0): confirming at once threw the potion away
   // (1ZQJ T4: "selected 0/0 required"). Code picks the dead cards one by one, then confirms.
   if (kind === "combat_hand_select" && min === 0 && /弃|替换|discard|replace/i.test(prompt)) {
+    // The discards the combat plan drank it for (turn-solver gambleWays), while they are in hand.
+    const planned = env.screenMemory.gambleDiscards;
+    if (planned && planned.turn === state.turn) {
+      const cards = asArray(selection["cards"]).map(asRecord);
+      const left = [...planned.cardIds];
+      for (const card of cards.filter((entry) => bool(entry["selected"]))) {
+        const at = left.indexOf(str(card["card_id"]));
+        if (at >= 0) left.splice(at, 1);
+      }
+      const next = cards.find((card) => !bool(card["selected"]) && left.includes(str(card["card_id"])));
+      if (next && selected < max) {
+        return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: numOrNull(next["index"]) ?? 0 }, rationale: `code: discard ${str(next["name"], str(next["card_id"]))} (the combat plan's Gambler's Brew discard)` };
+      }
+      if (canConfirm && selected > 0) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}: the combat plan's discards` };
+    }
     const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
     if (pick && selected < max) {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };

@@ -168,7 +168,8 @@ describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: b
   it("the X8R8 T8 board with an unmodelled potion: its option carries intent_fit", () => {
     const fx = logged("x8r8-f17-t8");
     const potions = ((fx.state["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[]);
-    Object.assign(potions[0]!, { potion_id: "GAMBLERS_BREW", name: "赌徒特酿", description: "弃掉任意张牌，然后抽相同数量的牌。" });
+    // Regeneration is not simulated (Gambler's Brew is since 77UJ/EN55).
+    Object.assign(potions[0]!, { potion_id: "REGEN_POTION", name: "再生药水", description: "获得5层再生。" });
     const { options } = linesOf(planCombatTurn(loggedEnv(fx)));
     const drink = Object.entries(options).find(([key]) => /^p\d/.test(key));
     expect(drink).toBeDefined();

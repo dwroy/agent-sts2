@@ -16,6 +16,7 @@ import { hpPercent, optionalEliteBar, planMap, routeHealShare } from "../src/scr
 import { planRest, rememberMap } from "../src/screens/rest.js";
 import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPerTurn } from "../src/strategy/boss-clock.js";
 import { runPlanTrigger } from "../src/strategy/run-plan.js";
+import { expectedDraw, modelPotion } from "../src/strategy/card-model.js";
 import { fightHpCost, MEDIAN_OF_P75, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
@@ -41,7 +42,7 @@ const pctIn = (text: unknown, pattern: RegExp): number => Number(pattern.exec(St
 /** Code's best combat line: plan1's plays when Jev is asked, else the rationale of the act. */
 function bestLine(name: string, over: Parameters<typeof loggedEnv>[1] = {}): string {
   const decision = planCombatTurn(loggedEnv(logged(name), over)) as Decision;
-  if (decision.kind !== "ask") return decision.kind === "act" ? decision.rationale : "";
+  if (decision.kind !== "ask") return decision.kind === "act" ? decision.rationale.replace(/^[^:]*: /, "") : "";
   const question = Object.values((decision as AskDecision).questions)[0]!;
   if (question.type !== "choice") return "";
   return String((JSON.parse(question.criteria["plan1"] ?? "{}") as Raw)["plays"] ?? "");
@@ -212,5 +213,31 @@ describe("event options carry their HP effect, and under the entry target a pure
   it("the HP effect in words, against the entry target", () => {
     expect(eventHpEffect(25, { hp: 0, maxHp: 0 }, 53, 80, 0.85)).toBe("+25 HP: 66% -> 98%, reaches entry_hp 85%");
     expect(eventHpEffect(0, { hp: 6, maxHp: 0 }, 31, 80, 0.85)).toBe("-6 HP: 39% -> 31%, further below entry_hp 85%");
+  });
+});
+
+describe("Gambler's Brew: an expected-value draw from the draw pile, as a line (77UJ F33 T5, EN55 F8 T9)", () => {
+  it("the expected draw is the pile's mean card", () => {
+    const pile = [
+      { ...modelPotion("BLOCK_POTION", "b", 0, [], 0)!, type: "Skill", cost: 1, block: 6, playable: true },
+      { ...modelPotion("FIRE_POTION", "f", 1, [0], 0)!, type: "Attack", cost: 1, damage: 10, playable: true },
+    ];
+    const draw = expectedDraw(pile, 0)!;
+    expect(draw.block).toBe(3);
+    expect(draw.damage).toBe(5);
+    expect(draw.cost).toBe(1);
+  });
+
+  it("77UJ F33 T5 at 9 HP against 14: code's lines drink it after the Defend (logged: carried to the death, every line died)", () => {
+    const line = bestLine("77uj-f33-t5");
+    expect(line).toMatch(/potion 赌徒特酿/);
+    expect(line.indexOf("防御")).toBeLessThan(line.indexOf("potion 赌徒特酿"));
+    const decision = planCombatTurn(loggedEnv(logged("77uj-f33-t5")));
+    // A line that survives in expectation is offered: no longer the per-card "every line dies" question.
+    expect(decision?.label).not.toBe("combat/play");
+  });
+
+  it("EN55 F8 T9 at 7 HP: its line drinks it too, with the Blood Potion (logged: carried to the death)", () => {
+    expect(bestLine("en55-f8-t9")).toMatch(/potion 鲜血药水.*potion 赌徒特酿/);
   });
 });
