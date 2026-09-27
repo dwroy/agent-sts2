@@ -24,7 +24,7 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
+import { awakeDamagePerTurn, expectedHitsAhead, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
 import { drinkFirstSafe, expectedDraw, potionRegen, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { BLOOD_POTION_HEAL, distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -101,6 +101,33 @@ export function incomingUntil(foes: Foe[], turns: number): number {
   let total = 0;
   for (let t = 1; t <= turns; t += 1) total += foes.reduce((sum, foe) => sum + (t < foe.sleepLeft ? 0 : foe.hit), 0);
   return turns > 0 ? total / turns : 0;
+}
+
+/** Longest HP clock counted (turns). */
+export const HP_CLOCK_MAX = 30;
+
+/**
+ * Our HP clock: the turns we still play, this one included, before the enemies' expected hits take the
+ * HP a line leaves (`hpAfter`, after this turn's hit), block not counted. Next turn's hit is nextHitOf;
+ * later ones follow each enemy's likely move chain (move-model expectedHitsAhead), else its awake
+ * average once it wakes. FEY6 F17 T6: 17 HP, Soul Siphon (0) then Slash (~21): 3 turns, against the
+ * dossier clock's 7.
+ */
+export function hpClockTurns(enemies: Record<string, unknown>[], hpAfter: number): number {
+  if (hpAfter <= 0) return 1;
+  const alive = enemies.filter((enemy) => enemy["is_alive"] !== false && num(enemy["current_hp"], 1) > 0);
+  const foes = foesOf(alive);
+  const chains = alive.map((enemy) => expectedHitsAhead(str(enemy["enemy_id"]), str(enemy["move_id"]), HP_CLOCK_MAX) ?? []);
+  let taken = 0;
+  for (let t = 1; t <= HP_CLOCK_MAX; t += 1) {
+    taken += alive.reduce((sum, enemy, i) => {
+      if (t === 1) return sum + (nextHitOf(enemy) ?? chains[i]![0] ?? 0);
+      const foe = foes[i]!;
+      return sum + (chains[i]![t - 1] ?? (t < foe.sleepLeft ? 0 : foe.hit));
+    }, 0);
+    if (taken >= hpAfter) return 1 + t;
+  }
+  return Infinity;
 }
 
 /**
@@ -1174,6 +1201,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
     .reduce((sum, enemy) => sum + (nextHitOf(enemy) ?? 0), 0);
+  // Whether next turn may attack at all: some living enemy's next move attacks, or is unknown to the model.
+  const nextAttacks = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .some((enemy) => (nextHitOf(enemy) ?? 1) > 0);
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // Several enemies can share the id (CWMP F7: four Phantasmal Gardeners, index 0 was always taken
   // while the plan's Enlarge eel sat at 19 HP for six turns): the lowest-HP one of them, re-read each turn.
@@ -1361,7 +1393,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         bossFight: false,
         hpFraction: hpFrac,
         everyDryLineDies: dry.every((plan) => plan.outcome.dies),
-        dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+        dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp, nextAttacks } : null,
       });
     if (reserveNote) rememberRelease(reserveNote);
     if (!reserveNote) solved = { ...solved, plans: dry };
@@ -1433,7 +1465,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       bossFight: false,
       hpFraction: hpFrac,
       everyDryLineDies: best.outcome.dies,
-      dry: aliveNow.length > 0 ? { hpAfter: Math.max(...aliveNow.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+      dry: aliveNow.length > 0 ? { hpAfter: Math.max(...aliveNow.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp, nextAttacks } : null,
     });
   if (offerReleased && !releasedThisTurn) rememberRelease(offerReleased);
   const potions =
@@ -1560,17 +1592,21 @@ function planTurn(env: DecisionEnv): Decision | null {
   const bossRaceKeeps = (picked: Plan, replacement: Plan | null): boolean => {
     if (kind !== "boss" || replacement === null) return false;
     if (escapesIn(picked) > escapesIn(replacement)) return true;
-    const behind = need !== null && bossHpLeft / clockTurnsLeft > replacement.outcome.damageDealt;
+    // Behind on the tighter clock: the boss's, or our HP's at the replacement's HP (FEY6 F17 T6: the
+    // dossier clock read 85 over 7 turns, 12 a turn, "not behind"; the 17 HP the swap kept lasted 3
+    // turns, 28 a turn, and the swapped line killed the Matriarch on T8).
+    const turnsLeft = Math.min(clockTurnsLeft, hpClockTurns(asArray(combat["enemies"]).map(asRecord), replacement.outcome.hpAfter));
+    const behind = need !== null && bossHpLeft / turnsLeft > replacement.outcome.damageDealt;
     return (
       behind &&
-      !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp) &&
+      !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp, nextAttacks) &&
       bossRaceTrade({
         extraDamage: picked.outcome.damageDealt - replacement.outcome.damageDealt,
         extraLoss: picked.outcome.hpLoss - replacement.outcome.hpLoss,
         hp: playerSim.hp,
         maxHp: playerSim.maxHp,
         bossHpLeft,
-        needPerTurn: bossHpLeft / clockTurnsLeft,
+        needPerTurn: bossHpLeft / turnsLeft,
       })
     );
   };
@@ -1594,7 +1630,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // Several enemies: each one's own death turn, simulated (a sooner kill of one hitter).
     const lossOf = (plan: Plan) => (plan.outcome.winsFight ? 0 : lossUntilKill(foes, plan.outcome.enemyHpAfter, perTurn, blockPerTurn, focusIndex));
     const bySim = foes.filter((foe) => !foe.minion).length > 1 && picked.outcome.hpLoss + lossOf(picked) < replacement.outcome.hpLoss + lossOf(replacement);
-    return (byTurns || bySim) && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
+    return (byTurns || bySim) && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp, nextAttacks);
   };
   // scale_then_kill: a line with more setup is kept unless it risks death (intent.ts guardProtectsSetup;
   // JF99 F33 T4/T7: Crimson Mantle traded twice for 6 HP and never played, the crabs died at 7 and 38
@@ -1604,13 +1640,13 @@ function planTurn(env: DecisionEnv): Decision | null {
     winsRace(picked, replacement) ||
     killsSooner(picked, replacement) ||
     bossRaceKeeps(picked, replacement) ||
-    (replacement !== null && guardProtectsSetup(objective, { setup: setupCount(picked), hpAfter: picked.outcome.hpAfter }, { setup: setupCount(replacement) }, nextIncoming, playerSim.maxHp));
+    (replacement !== null && guardProtectsSetup(objective, { setup: setupCount(picked), hpAfter: picked.outcome.hpAfter }, { setup: setupCount(replacement) }, nextIncoming, playerSim.maxHp, nextAttacks));
   // Only under scale_then_kill (MX1Q F23 T2: Inflame lines at 24/26 damage over 44/54 at the same HP,
   // pulled in against a Chomper pair when any plan listed a setup card).
   const setupLine = promotesSetup(objective, state.turn ?? 1, laterPhase)
     ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
     : undefined;
-  const setupClose = setupLine !== undefined && !setupRisksDeath(setupLine.outcome.hpAfter, nextIncoming, playerSim.maxHp);
+  const setupClose = setupLine !== undefined && !setupRisksDeath(setupLine.outcome.hpAfter, nextIncoming, playerSim.maxHp, nextAttacks);
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
   const clear = (!second || top.score - second.score >= CLOSE_CALL) && !setupClose;
@@ -1685,7 +1721,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     maxDamage: Math.max(...options.map((plan) => objectiveDamage({ damage: plan.outcome.damageDealt, escapes: escapesIn(plan) }, sandpitField))),
     ...(sandpitField ? { sandpit: sandpitField } : {}),
     // Setup that risks death is no setup to skip (intent.ts setupRisksDeath).
-    maxSetup: Math.max(0, ...options.filter((plan) => !setupRisksDeath(plan.outcome.hpAfter, nextIncoming, playerSim.maxHp)).map(setupCount)),
+    maxSetup: Math.max(0, ...options.filter((plan) => !setupRisksDeath(plan.outcome.hpAfter, nextIncoming, playerSim.maxHp, nextAttacks)).map(setupCount)),
     slack: hpGuardSlack(playerSim.hp, kind) * guardScale,
     focusName: enemies.find((enemy) => enemy.index === focusIndex)?.name ?? undefined,
   };
