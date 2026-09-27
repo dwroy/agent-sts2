@@ -7,11 +7,14 @@
 
 import { describe, expect, it } from "vitest";
 
+import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
+import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { hpPercent, planMap, routeHealShare } from "../src/screens/map.js";
+import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPerTurn } from "../src/strategy/boss-clock.js";
 import { fightHpCost, MEDIAN_OF_P75, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -98,5 +101,35 @@ describe("heal potions count as route HP only when the fights model them (EN55 F
 
   it("EN55 F8 T5 (18/80, the eel's CRASH coming): code's best line drinks the Blood Potion (logged: kept to T9 at 7 HP)", () => {
     expect(String(bestLine("en55-f8-t5"))).toMatch(/^(code plan[^:]*: )?potion 鲜血药水/);
+  });
+});
+
+describe("boss clock: multi-part bosses hit with their parts (Z49J F32 Kaiser Crab, K8TC/VUV4 The Kin)", () => {
+  const board = (name: string) => parseGameState(logged(name).state);
+
+  it("the crab is its two claws, the Kin its priest and two followers", () => {
+    expect(bossDamagePerTurn("KAISER_CRAB")!.perTurn).toBeCloseTo(awakeDamagePerTurn("CRUSHER")!.perTurn + awakeDamagePerTurn("ROCKET")!.perTurn);
+    expect(bossDamagePerTurn("THE_KIN")!.perTurn).toBeCloseTo(awakeDamagePerTurn("KIN_PRIEST")!.perTurn + 2 * awakeDamagePerTurn("KIN_FOLLOWER")!.perTurn);
+    expect(bossDamagePerTurn("KAISER_CRAB")!.sleepTurns).toBe(0);
+  });
+
+  it("Z49J F32 at 45/80: the clock is capped at the turns 45 HP lasts (was 8 turns, 'need 54, gap 19'; the Laser killed on T4)", () => {
+    const state = board("z49j-map-f32");
+    const need = cappedBossNeed(state, loggedKnowledge)!;
+    const hit = bossDamagePerTurn("KAISER_CRAB")!.perTurn;
+    expect(need.entryHp).toBe(45);
+    expect(need.survivableTurns).toBeCloseTo(45 / Math.max(1, hit - deckBlockPerTurn(state, loggedKnowledge)), 1);
+    expect(need.turns).toBeLessThan(bossNeed("KAISER_CRAB")!.turns);
+    // 428 HP over those turns (the turns are shown to one decimal).
+    expect(Math.abs(need.perTurn - 428 / need.turns)).toBeLessThan(0.05 * need.perTurn);
+    expect(String(bossClockJson(state, loggedKnowledge)!["turns_note"])).toMatch(/capped at [\d.]+: the turns 45 HP survives/);
+  });
+
+  it("the crab lets ~45% of the deck estimate through (M9PL 23.6 of 53, Z49J 16.3 of 35)", () => {
+    expect(bossNeed("KAISER_CRAB")!.realised).toBeCloseTo(0.45);
+  });
+
+  it("The Kin boards read the cap too (K8TC F3, VUV4 F12)", () => {
+    for (const name of ["k8tc-map-f3", "vuv4-map-f12"]) expect(String(bossClockJson(board(name), loggedKnowledge)!["turns_note"])).toMatch(/^10 turns in the table, capped at/);
   });
 });

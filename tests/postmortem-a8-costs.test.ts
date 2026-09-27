@@ -119,7 +119,12 @@ describe("block rewards two short of the plan's block target below half HP (PWSD
   /** Code's value of each offered card on a logged card reward. */
   const values = (name: string): Record<string, number> => {
     const decision = planReward(loggedEnv(logged(name))) as Decision;
-    if (decision.kind !== "ask") return decision.kind === "act" ? { [JSON.stringify(decision.intent)]: 1 } : {};
+    // Code's own pick: the card it names first, over the runner-up.
+    if (decision.kind === "act") {
+      const [, top, topScore, second, secondScore] = /^code: (\S+) \([^)]*\) scores (-?[\d.]+) vs (\S+) \([^)]*\) (-?[\d.]+)/.exec(decision.rationale) ?? [];
+      return top && second ? { [top]: Number(topScore), [second]: Number(secondScore) } : {};
+    }
+    if (decision.kind !== "ask") return {};
     const question = decision.questions["pick"]!;
     if (question.type !== "choice") throw new Error("not a choice");
     return Object.fromEntries(Object.values(question.criteria).map((text) => JSON.parse(text!) as Raw).map((option) => [String(option["card"]), Number(option["code_value"])]));
