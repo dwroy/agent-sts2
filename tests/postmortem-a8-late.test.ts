@@ -11,6 +11,7 @@ import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { eventHpEffect, planEvent } from "../src/screens/event.js";
 import { hpPercent, optionalEliteBar, planMap, routeHealShare } from "../src/screens/map.js";
 import { planRest, rememberMap } from "../src/screens/rest.js";
 import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPerTurn } from "../src/strategy/boss-clock.js";
@@ -174,5 +175,42 @@ describe("an optional elite needs HP, heal potions out, of twice the act's elite
     const fx = logged("en55-map-f7");
     expect(fx.runPlan!.hpPct).toBeCloseTo(0.8);
     expect(runPlanTrigger(fx.runPlan, parseGameState(fx.state))).toBe("hp_drop");
+  });
+});
+
+describe("event options carry their HP effect, and under the entry target a pure heal is code's pick (77UJ F22)", () => {
+  const criteria = (decision: Decision | null): Record<string, Raw> => {
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const question = Object.values((decision as AskDecision).questions)[0]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    return Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value!) as Raw]));
+  };
+
+  it("Spirit Grafter at 53/80 under entry_hp 85%: code takes Let It In, +25 HP (logged: Jev took Rejection, -10 HP, at 0.04)", () => {
+    const decision = planEvent(loggedEnv(logged("77uj-event-f22")))!;
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") {
+      expect(decision.intent).toEqual({ action: "choose_event_option", option_index: 0 });
+      expect(decision.rationale).toMatch(/heals 25 with no other cost .*entry_hp 85%/);
+    }
+  });
+
+  it("with no entry target Jev is asked, and each option says what it does to HP", () => {
+    const fx = logged("77uj-event-f22");
+    const shown = criteria(planEvent(loggedEnv(fx, { runPlan: { ...fx.runPlan!, entryHp: null } })));
+    expect(shown["o0"]!["hp_effect"]).toBe("+25 HP: 66% -> 98%");
+    expect(shown["o1"]!["hp_effect"]).toBe("-10 HP: 66% -> 54%");
+  });
+
+  it("above the entry target the labels say where each option leaves it", () => {
+    const fx = logged("77uj-event-f22");
+    const shown = criteria(planEvent(loggedEnv(fx, { runPlan: { ...fx.runPlan!, entryHp: 0.6 } })));
+    expect(shown["o0"]!["hp_effect"]).toMatch(/, at entry_hp 60%$/);
+    expect(shown["o1"]!["hp_effect"]).toMatch(/, drops below entry_hp 60%$/);
+  });
+
+  it("the HP effect in words, against the entry target", () => {
+    expect(eventHpEffect(25, { hp: 0, maxHp: 0 }, 53, 80, 0.85)).toBe("+25 HP: 66% -> 98%, reaches entry_hp 85%");
+    expect(eventHpEffect(0, { hp: 6, maxHp: 0 }, 31, 80, 0.85)).toBe("-6 HP: 39% -> 31%, further below entry_hp 85%");
   });
 });
