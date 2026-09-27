@@ -1,6 +1,808 @@
 # deepseek 纠正 Jev 的决策（2026-09-24T07:05 起）
 
-## combat/plan-choice+potion（19 次）
+## event/choose（400 次）
+- 2026-09-24T07:14 第1层：Jev o1@0.16 → o2。Rare card early is huge for Ironclad; one Injury is minor and can be removed later.
+  - 选项：o0=钓鱼竿；o1=羽翼之靴；o2=沉重石板
+- 2026-09-24T07:25 第4层：Jev o1@0.04 → o0。Ironclad wants damage; Sharp 2 on an attack improves kill speed and boss fights more than block.
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-24T07:32 第23层：Jev o0@0.21 → o1。5 HP is cheap at 79% HP; colorless card reward is stronger than a random card, and we have healing relics.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-24T07:38 第1层：Jev o1@0.08 → o2。Two relics early is huge value; the added Strike/Defend is a minor cost for a strong run-long boost.
+  - 选项：o0=卷轴箱；o1=涅奥的护符；o2=巨大扭蛋
+- 2026-09-24T07:41 第7层：Jev o0@0.29 → o1。Card removal is stronger long-term; deck has 15 cards with basics, trimming improves consistency for the whole run.
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-24T07:59 第13层：Jev o2@0.25 → o0。Ironclad deck is attack-heavy; Sharp 2 on an attack adds permanent damage, best value for this run.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-24T08:07 第1层：Jev o0@0.32 → o1。Boss relic choice: extra draw and energy in every elite fight is strong for the whole run; card pack is random and weaker.
+  - 选项：o0=卷轴箱；o1=轰鸣海螺；o2=寻龙尺
+- 2026-09-24T08:10 第6层：Jev o0@0.31 → o1。Lose only 5 HP for a colorless card reward; colorless cards are strong and HP is healthy at 75%.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-24T08:26 第18层：Jev o2@0.02 → o0。Upgrading 4 cards permanently strengthens deck for whole run; other options are temporary or risky.
+  - 选项：o0=美味饼干；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-24T08:48 第4层：Jev o1@0.03 → o0。鸟形态把低效打击换成更强攻击牌，第1幕最缺输出；圆环偏防御、蛇行附魔收益最小。
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-24T09:07 第22层：Jev o0@0.09 → o1。Deck has 24 cards and no exhaust; a Decay curse would pollute draws in Act 2. 48 gold funds a shop removal, safer value.
+  - 选项：o0=抓住这团鬼火；o1=搜索附近的区域
+- 2026-09-24T09:20 第5层：Jev o0@0.38 → o1。Random relic outweighs 47 gold; Clumsy is Ethereal so it barely clogs draws, and HP is high enough to skip the safe gold.
+  - 选项：o0=这个；o1=那个
+- 2026-09-24T09:56 第5层：Jev o0@0.47 → o1。满血80，14点生命可承受（燃烧之血可回），遗物长期价值高于两张普通牌。
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-24T10:09 第1层：Jev o0@0.22 → o1。Conch gives guaranteed +1 energy and 2 cards in every elite fight, hugely improving act 1 elite farming with no curse downside.
+  - 选项：o0=铅制镇纸；o1=轰鸣海螺；o2=涅奥骨骰
+- 2026-09-24T10:10 第4层：Jev o1@0.01 → o0。Early Act 1 with 7 attacks: +2 damage on a key attack (Bash or multi-hit) ends fights faster and saves more HP than +2 block on a skill.
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-24T10:23 第1层：Jev o1@0.13 → o2。333 gold buys an early shop: remove a Strike plus a strong card/relic, far better tempo than a random rare or colorless card; one curse is tolerable for Ironclad.
+  - 选项：o0=铅制镇纸；o1=奥术卷轴；o2=诅咒珍珠
+- 2026-09-24T10:26 第5层：Jev o1@0.30 → o0。Full HP early Act 1, free upgrade worth 6 max HP; Burning Blood offsets the loss and deck is still small so odds of hitting a key card are decent.
+  - 选项：o0=继续解读；o1=放弃
+- 2026-09-24T10:39 第18层：Jev o1@0.03 → o2。+1 energy per turn for the rest of the run (159 gold buys ~50 turns) beats buffing Strikes we plan to remove or one unknown card.
+  - 选项：o0=营养汤；o1=故事书；o2=黄金印
+- 2026-09-24T11:59 第1层：Jev o1@0.19 → o0。A random rare card early yields high value (Offering, Demon Form, Feed, Corruption) and helps fix Ironclad's weak early damage; other options are situational.
+  - 选项：o0=奥术卷轴；o1=轰鸣海螺；o2=白银熔炉
+- 2026-09-24T12:23 第1层：Jev o0@0.19 → o2。A choice of 3 rare cards gives run-defining power early; the Injury is a minor cost at A0 with Burning Blood healing. Better than 11 max HP or path charges.
+  - 选项：o0=营养牡蛎；o1=羽翼之靴；o2=沉重石板
+- 2026-09-24T12:43 第25层：Jev o1@0.14 → o0。Take Bing Bong's relic: deck is attack-heavy with Brimstone strength scaling, and Regen potion plus Burning Blood already cover HP, so offense outweighs defense here.
+  - 选项：o0=宾邦；o1=抱抱先生
+- 2026-09-24T12:50 第1层：Jev o1@0.07 → o2。两件随机遗物在开局收益最高，长期强度远超靴子；额外打击/防御虽稀释牌组，但零代价下仍是最大价值。
+  - 选项：o0=羽翼之靴；o1=铅制镇纸；o2=巨大扭蛋
+- 2026-09-24T12:55 第11层：Jev o0@0.09 → o1。Permanent relic outweighs one potion; this comfortable A0 run at 74 HP can absorb 13 max HP, Burning Blood and rest sites recover it.
+  - 选项：o0=装瓶；o1=攀爬
+- 2026-09-24T13:14 第18层：Jev o1@0.12 → o2。Deck's strikes are low-value and slated for removal; enchanting them is weak. Five relics give an immediate Act 2 power spike to survive elites/boss while HP is full.
+  - 选项：o0=营养汤；o1=故事书；o2=玩具盒
+- 2026-09-24T14:34 第14层：Jev o0@0.26 → o1。Cheap 55-gold permanent enchant on a key card beats +6 max HP; keeps 263 gold for act-2 shops.
+  - 选项：o0=血液墨水；o1=触手羽毛笔；o2=扎手海绵
+- 2026-09-24T14:39 第18层：Jev o0@0.15 → o1。Wings turns skips we'd make anyway into relics—compounding free value; Tear rarely triggers for this cheap deck, Soldier's block boost is modest.
+  - 选项：o0=佩尔之泪；o1=佩尔之翼；o2=佩尔的士兵
+- 2026-09-24T14:40 第20层：Jev o1@0.49 → o0。Random Power beats random 0-cost card: Ironclad powers (Demon Form, Corruption, Inflame, Feel No Pain) are far more impactful than typical 0-cost filler.
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-24T14:42 第25层：Jev o1@0.18 → o0。Upgraded rare power card (Demon Form/Barricade/Corruption tier) far outweighs an upgraded common attack; Madness potion is the cheaper sacrifice than losing AOE.
+  - 选项：o0=放入罕见药水；o1=放入普通药水
+- 2026-09-24T14:49 第5层：Jev o0@0.41 → o1。Full HP on floor 5; 14 HP is recoverable via Burning Blood, and a permanent relic beats diluting a thin 13-card deck with 2 random commons.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-24T15:03 第1层：Jev o0@0.27 → o2。2张变化立刻提升前期战力（打击/防御换随机牌），A0血量充裕，燃烧之血回血足以弥补12上限损失；鱼竿升级随机、羽翼之靴仅路线灵活。
+  - 选项：o0=羽翼之靴；o1=钓鱼竿；o2=树叶药膏
+- 2026-09-24T15:13 第15层：Jev o0@0.01 → o1。Rest to 53 HP then fight for card reward, gold and Burning Blood heal; 62 gold at 72 can't even buy a removal, and 25 HP before the Act 1 boss is too risky.
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-24T15:30 第1层：Jev o0@0.35 → o2。Removing 2 Strikes early beats 2 minor upgrades; 16 HP is minor and Burning Blood recovers it over the act.
+  - 选项：o0=涅奥的护符；o1=羽翼之靴；o2=松动羊毛剪
+- 2026-09-24T15:32 第4层：Jev o0@0.42 → o1。Relic is permanent value; 14 HP is affordable at 69% with Burning Blood sustain, while two random commons dilute this thin 10-card deck.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-24T15:38 第14层：Jev o0@0.12 → o1。3点生命代价极低；重掷以求移除打击/防御等废牌，保留能与痛击易伤配合的欺凌，16张牌组更精简。
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-24T15:38 第14层：Jev o1@0.44 → o0。Free removal of a Strike is ideal deck thinning; paying 6 HP to reroll risks a worse outcome for marginal gain.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-24T15:46 第18层：Jev o0@0.04 → o2。Five relics now is the biggest act-2 power spike; Strikes get removed later so the Ember enchant fades, and one card is minor.
+  - 选项：o0=营养汤；o1=故事书；o2=玩具盒
+- 2026-09-24T16:52 第38层：Jev o1@0.17 → o2。Keep the energy (Happy Flower) and draw (Centennial Puzzle); the Shovel only digs at the cost of needed upgrades, while a permanent relic compensates for melting wax relics.
+  - 选项：o0=拿上面那件；o1=拿中间这件；o2=拿下面那件
+- 2026-09-24T17:01 第45层：Jev o0@0.32 → o1。150 HP is reachable in 3 turns with this attack-heavy deck; 2 upgrades beat a low-value random potion, and 300 is out of reach.
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-24T17:31 第1层：Jev o1@0.22 → o0。随机稀有牌在A0价值最高，可给前期强力攻击或核心能力；无色二选一波动大，诅咒+药水拖累早期牌组。
+  - 选项：o0=奥术卷轴；o1=铅制镇纸；o2=涅奥的牺牲
+- 2026-09-24T17:32 第4层：Jev o1@0.34 → o0。13-card deck: random upgrade likely hits a Strike/Defend (9/13), while 40 gold to transform a Strike removes a dead card for a better one; 125 gold is plenty.
+  - 选项：o0=从传送带上拿份果冻肝；o1=观察主厨
+- 2026-09-24T17:49 第1层：Jev o0@0.07 → o2。两件随机遗物带来长期被动战力与精英容错，价值远超150金；额外一张打击/防御稀释有限，后期删掉即可。
+  - 选项：o0=金色珍珠；o1=药瓶皮套；o2=巨大扭蛋
+- 2026-09-24T18:28 第1层：Jev o2@0.24 → o0。Removing a Strike is the most reliable start; 2 relics aren't worth adding Strike+Defend, and Fishing Rod upgrades are too slow to matter early.
+  - 选项：o0=精准剪刀；o1=钓鱼竿；o2=巨大扭蛋
+- 2026-09-24T18:44 第7层：Jev o1@0.05 → o0。Free permanent relic beats 107 gold that needs a future shop; 7 HP is trivial with Burning Blood, and the sword likely boosts act-1 elite/boss damage.
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-24T18:51 第1层：Jev o0@0.14 → o2。Two random relics this early snowball the whole run; the added Strike/Defend is a minor dilution at A0 and can be removed at the first shop.
+  - 选项：o0=失物盒；o1=营养牡蛎；o2=巨大扭蛋
+- 2026-09-24T19:04 第18层：Jev o1@0.04 → o2。Golden Seal gives permanent +1 energy per turn for only 3 gold (income covers it); energy outweighs a few enchanted Strikes or one unknown card.
+  - 选项：o0=营养汤；o1=故事书；o2=黄金印
+- 2026-09-24T19:16 第34层：Jev o1@0.13 → o0。+1 energy every turn is the strongest long-term scaling; 3 ethereal Dazed is a minor, temporary cost versus 20 block or random Swift.
+  - 选项：o0=赐福鹿角；o1=华美手镯；o2=钻石头冠
+- 2026-09-24T19:21 第1层：Jev o1@0.25 → o0。Boss额外两件遗物是永久战力提升，优于333金币附带诅咒，也优于仅3次路线绕行。
+  - 选项：o0=熔岩石；o1=羽翼之靴；o2=诅咒珍珠
+- 2026-09-24T19:29 第15层：Jev o1@0.46 → o0。Free removal of a Strike (top priority) with no HP cost; rerolling for 4 HP risks a worse card choice. Take it.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-24T20:01 第39层：Jev o2@0.14 → o0。Attack-heavy 28-card deck (15 attacks): +2 damage on the best multi-hit attack applies every combat and ends fights faster; only 2 powers make Swift risky.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-24T20:12 第1层：Jev o0@0.42 → o1。第1幕最缺输出：免费攻击牌直接提升前期战力，自伤可被燃烧之血抵消；升级打击/防御收益太小，10张牌的薄牌组里检索牌价值低。
+  - 选项：o0=涅奥的护符；o1=涅奥的苦痛；o2=寻龙尺
+- 2026-09-24T20:27 第18层：Jev o0@0.26 → o1。Deck is bloated (23) and block-light; removing 5 cards and getting them back upgraded is the biggest permanent power gain.
+  - 选项：o0=佩尔之角；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-24T20:31 第27层：Jev o0@0.06 → o1。Trading 6 HP for a permanent Vigor-8 attack enchant beats losing the ability potion for 10 max HP; keeping both potions for the boss.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-24T20:57 第18层：Jev o0@0.28 → o2。Deck avg cost ~1, so the Tear rarely triggers. Block-doubling suits our thin defense, is controllable, and scales with Act 2-3 block cards.
+  - 选项：o0=佩尔之泪；o1=佩尔的增生组织；o2=佩尔的士兵
+- 2026-09-24T21:00 第23层：Jev o0@0.41 → o1。牌组已26张，加2张随机普通牌只是稀释（刚花钱删牌）；60血承受14点不致命，燃烧之血可回复，遗物是永久价值。
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-24T21:21 第43层：Jev o1@0.03 → o0。Enchanting a chosen key attack (Corrupted) gives targeted, permanent boss-fight value; a random transform in this bloated 32-card deck is weaker upside.
+  - 选项：o0=靠近；o1=用火烧杀
+- 2026-09-24T21:47 第18层：Jev o0@0.05 → o1。Clone on a key attack is permanent, no-dilution value every combat; Relax cards dilute the deck and the extra-turn trigger is too situational.
+  - 选项：o0=佩尔之角；o1=佩尔的增生组织；o2=佩尔之眼
+- 2026-09-24T21:48 第20层：Jev o0@0.42 → o1。Near-full HP; Clumsy is ethereal and self-exhausts, so a permanent relic outweighs 65 gold of shop value.
+  - 选项：o0=这个；o1=那个
+- 2026-09-24T22:04 第1层：Jev o0@0.22 → o2。两件遗物是永久战力，收益远高于药水与三次绕路；多两张基础牌可后期删除。
+  - 选项：o0=药瓶皮套；o1=羽翼之靴；o2=巨大扭蛋
+- 2026-09-24T22:06 第5层：Jev o1@0.07 → o0。At 72% HP the 8 damage is easily healed by Burning Blood/rests, while +2 max HP is permanent and helps through act 1 boss and beyond.
+  - 选项：o0=沉溺；o1=离开浴场
+- 2026-09-24T22:06 第5层：Jev o0@0.13 → o1。9 HP for only 2 max HP is a bad trade at 64% HP with no healing nearby in Act 1; skip and keep health for elites.
+  - 选项：o0=沉溺；o1=离开浴场
+- 2026-09-24T22:19 第18层：Jev o0@0.08 → o2。Permanent relic, no deck dilution: a free extra turn whenever my hand is dead, with Burning Blood exhaust synergy. Safer than adding 2 Relax cards or an unknown Clone enchant.
+  - 选项：o0=佩尔之角；o1=佩尔的增生组织；o2=佩尔之眼
+- 2026-09-24T22:25 第1层：Jev o0@0.29 → o1。Full HP at A0 makes reaching the Act 1 boss near-certain; two extra relics snowball act 2+ far more than one random card pack or a Seek card.
+  - 选项：o0=卷轴箱；o1=熔岩石；o2=寻龙尺
+- 2026-09-24T22:28 第7层：Jev o1@0.16 → o2。Deck is attack-heavy (10 attacks/4 skills); an upgraded uncommon skill is the best permanent upgrade, and the rare energy potion is replaceable before the boss.
+  - 选项：o0=放入普通药水；o1=放入普通药水；o2=放入罕见药水
+- 2026-09-24T22:36 第18层：Jev o0@0.17 → o2。Perr's Blood gives unconditional +1 draw every turn — best consistency for a 21-card deck with avg cost 1, where energy is rarely the bottleneck; Defend enchant only helps cards I plan to remove.
+  - 选项：o0=佩尔之泪；o1=佩尔之爪；o2=佩尔之血
+- 2026-09-24T22:44 第1层：Jev o0@0.33 → o1。精准剪刀删一张打击，是最稳的牌组优化；随机无色牌质量不确定，诅咒换药水更亏。
+  - 选项：o0=铅制镇纸；o1=精准剪刀；o2=涅奥的牺牲
+- 2026-09-24T23:00 第18层：Jev o0@0.37 → o1。Cheap attack deck (avg 1.05) spends all energy, so Tears rarely triggers; Soldier weak with basic Defends. Fang thins 5 dead cards and permanently upgrades them—best Act 2 deck quality.
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-24T23:07 第1层：Jev o0@0.43 → o2。两件遗物是全局复利收益，远胜单卡或卡包；随机诅咒可用99金币在商店删除，A0低难度可承受。
+  - 选项：o0=卷轴箱；o1=涅奥的苦痛；o2=涅奥骨骰
+- 2026-09-24T23:10 第5层：Jev o1@0.04 → o0。Act 1 wants damage: Bird swaps a weak Strike for attack card Peck, thinning deck and adding offense; full HP makes the defensive ring unnecessary.
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-24T23:30 第28层：Jev o1@0.02 → o0。Doll Room gamble: Bing Bong is the safer value pick for a thick 27-card deck at 22 HP; skip the riskier wind doll.
+  - 选项：o0=宾邦；o1=风的女儿
+- 2026-09-24T23:38 第11层：Jev o0@0.45 → o1。5 HP is trivial at 78/80 (Burning Blood refunds it); colorless pool offers higher-impact picks or a skip, better than a forced random class card.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T00:09 第1层：Jev o1@0.20 → o0。Free card removal is the safest, strongest start: delete a Strike to thin the deck with no HP or curse cost.
+  - 选项：o0=精准剪刀；o1=涅奥的苦痛；o2=树叶药膏
+- 2026-09-25T00:12 第8层：Jev o0@0.15 → o1。Permanent relic outweighs a one-time potion; 13 max HP is affordable at 75/80 with Burning Blood healing on A0.
+  - 选项：o0=装瓶；o1=攀爬
+- 2026-09-25T00:21 第1层：Jev o1@0.20 → o0。Floor 1: a random relic is guaranteed value with no deck dilution; transforming one Strike is a coin flip and adding Seek just bloats a fresh 10-card deck.
+  - 选项：o0=小型扭蛋；o1=新叶；o2=寻龙尺
+- 2026-09-25T00:33 第18层：Jev o0@0.31 → o1。Fang: remove 5 worst cards (temporarily thins deck for consistency) and they return upgraded one per combat — five free upgrades far outweighs the other two relics.
+  - 选项：o0=佩尔之角；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-25T00:35 第20层：Jev o0@0.43 → o1。Deck is tight (15 cards, 8 upgraded); two random commons would dilute it. 74 HP easily absorbs 14 for a permanent event relic.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-25T00:36 第22层：Jev o0@0.07 → o1。Random uncommon potion is higher quality per slot; 3 foul potions would clog all 3 slots and are likely weak. Keep room for better potions before boss.
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-25T00:49 第1层：Jev o0@0.28 → o2。Two removals (Strikes) permanently improve deck quality; 16 HP is cheap at 80 HP with Burning Blood healing, and better than a random colorless card or pathing flexibility.
+  - 选项：o0=铅制镇纸；o1=羽翼之靴；o2=松动羊毛剪
+- 2026-09-25T01:02 第18层：Jev o0@0.16 → o2。5 relic effects lasting ~15 fights is a huge Act 2 power spike; 4 upgrades are minor in a 20-card low-curve deck, and one random card is weakest.
+  - 选项：o0=美味饼干；o1=故事书；o2=玩具盒
+- 2026-09-25T01:03 第21层：Jev o1@0.47 → o0。铁甲战士能力牌池极强（恶魔形态、燃烧、壁垒等），且当前牌组0能力；随机0费牌平均价值更低，牌组已22张。
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-25T01:23 第38层：Jev o0@0.22 → o1。Cheap 14-attack deck with Vajra/strength potion can kill 150 in 3 turns; permanent upgrades beat a buyable potion; 300 HP unreachable.
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-25T01:32 第1层：Jev o1@0.39 → o2。Early game wants strong attacks; 3 upgraded card rewards outweigh one lost Act-1 chest relic and beat upgrading Strike/Defend.
+  - 选项：o0=卷轴箱；o1=涅奥的护符；o2=白银熔炉
+- 2026-09-25T01:49 第20层：Jev o0@0.45 → o1。5 HP is trivial with Burning Blood (heals 6/combat at 84% HP); colorless card rewards offer high-impact options, better than a random class card.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T01:51 第23层：Jev o1@0.15 → o0。给药水代价最低：保留强力的水银沙漏AOE，还白得一件遗物；100金剩51不够删牌，弃沙漏换两随机遗物不划算。
+  - 选项：o0=给他敏捷药水；o1=给他100金币；o2=给他水银沙漏
+- 2026-09-25T02:07 第34层：Jev o2@0.09 → o0。+1 energy every turn is a permanent boss-tier boost for act 3 and the finale; three ethereal Dazed are a mild cost, beating 888 gold and 8 trivial fights.
+  - 选项：o0=赐福鹿角；o1=皮草大衣；o2=图章戒指
+- 2026-09-25T02:09 第37层：Jev o1@0.09 → o0。固化药水（格挡三倍）是boss爆发回合的保命保险，比敏捷药水更值钱；用较弱的敏捷药水换一张升级攻击牌补伤害，保留最好的药水。
+  - 选项：o0=放入普通药水；o1=放入罕见药水
+- 2026-09-25T02:25 第3层：Jev o0@0.27 → o1。Random relic beats 41 gold long-term; Clumsy is ethereal and only briefly dilutes an 11-card deck, and 6 HP saves nothing here.
+  - 选项：o0=这个；o1=那个
+- 2026-09-25T02:41 第18层：Jev o0@0.23 → o2。Guaranteed relic: doubles a card's block every 3 turns, never dilutes the deck, and scales with the premium block cards we'll add later.
+  - 选项：o0=佩尔之角；o1=佩尔之爪；o2=佩尔的士兵
+- 2026-09-25T03:00 第21层：Jev o0@0.35 → o1。5 HP at 77/95 with Burning Blood is trivial; colorless card rewards offer high-impact options (e.g. Apotheosis, draw/energy) vs a random 5-card pick.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T03:03 第27层：Jev o0@0.00 → o1。Upgraded uncommon skill is permanent deck quality; Clarity Extract is the weaker potion, and we keep the emergency heal at 36% HP.
+  - 选项：o0=放入普通药水；o1=放入罕见药水
+- 2026-09-25T04:09 第25层：Jev o1@0.48 → o0。随机能力牌池整体远优于0费牌池（后者含浩劫等废牌）；本套缺成长牌，拿能力牌更利后期。
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-25T04:23 第1层：Jev o1@0.36 → o2。Floor 1: removing 2 Strikes hugely upgrades the deck's consistency for the whole run; 16 HP at 64 is affordable with Burning Blood healing back over early fights.
+  - 选项：o0=营养牡蛎；o1=药瓶皮套；o2=松动羊毛剪
+- 2026-09-25T04:29 第4层：Jev o0@0.01 → o1。10 HP for 40 gold is poor value; HP is fine at 70%. Random upgrade on a 12-card deck hits a starter attack (likely Strike+) — better long-run value, and gold is better saved for card removal.
+  - 选项：o0=从传送带上拿份蚌肉卷；o1=观察主厨
+- 2026-09-25T04:31 第8层：Jev o1@0.42 → o0。Upgraded rare attack card permanently strengthens this attack-heavy deck, while a rare potion is replaceable; common skill card is far weaker value.
+  - 选项：o0=放入罕见药水；o1=放入普通药水
+- 2026-09-25T04:46 第21层：Jev o0@0.13 → o1。+8 damage on an attack card (deck is attack-heavy) outweighs 10 max HP for a 30% heal potion; 6 HP cost is trivial, keep Blood Potion for emergencies.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-25T05:12 第21层：Jev o0@0.39 → o1。54 gold is under a removal; a random relic is worth far more. Clumsy is ethereal/unplayable, so deck cost is minor at 81 HP. Get the relic.
+  - 选项：o0=这个；o1=那个
+- 2026-09-25T05:18 第1层：Jev o1@0.08 → o0。Fishing Rod gives repeated free upgrades with no downside; humidifier is slow and needs resting, and the curse option pollutes the deck.
+  - 选项：o0=钓鱼竿；o1=石炉加湿器；o2=涅奥的牺牲
+- 2026-09-25T05:34 第18层：Jev o0@0.07 → o2。572 gold funds ~190 turns of +1 energy—essentially a free boss-tier energy relic for the rest of the run; strike enchant and junk-adding removal are weaker.
+  - 选项：o0=营养汤；o1=大～抱抱；o2=黄金印
+- 2026-09-25T05:55 第34层：Jev o2@0.47 → o0。Earring's +1 energy every turn dwarfs one free power; Bread already weakens turn 1, so Vaku controlling that turn costs little.
+  - 选项：o0=低语耳环；o2=宝石面具
+- 2026-09-25T06:01 第1层：Jev o1@0.39 → o0。Fresh deck needs no curse; a free relic is immediate value with no downside, while card packs risk diluting a 10-card deck.
+  - 选项：o0=小型扭蛋；o1=卷轴箱；o2=涅奥骨骰
+- 2026-09-25T06:16 第21层：Jev o0@0.08 → o1。At 95% HP the 25 heal is nearly wasted; trading 10 HP for a guaranteed upgrade is solid value, while the unknown added card could dilute/curse the deck.
+  - 选项：o0=接纳；o1=拒绝
+- 2026-09-25T06:19 第23层：Jev o0@0.10 → o1。Potion slots are already full (plating + 2 regen), so three murky potions add little; one higher-rarity potion is better quality for the upcoming boss.
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-25T07:14 第1层：Jev o0@0.17 → o1。随机稀有牌立即提升第1幕战力（稀有池多为Feed/恶魔形态等核心），优于带贪婪诅咒的333金；无色二选一收益偏弱。
+  - 选项：o0=铅制镇纸；o1=奥术卷轴；o2=诅咒珍珠
+- 2026-09-25T07:16 第4层：Jev o1@0.34 → o0。+7 max HP is a permanent Ironclad resource, healing to 69/80 for upcoming elites; the egg card just dilutes a lean 13-card early deck.
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-25T07:28 第18层：Jev o0@0.05 → o2。Deck lacks an energy relic; +1 energy speeds act 2 elites and boss and is relit at rest sites. Upgrades and per-turn card exhaust are worth less.
+  - 选项：o0=美味饼干；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-25T07:35 第28层：Jev o0@0.18 → o1。Foul potions are dubious filler that would clog limited potion slots; a random uncommon potion is a known, reliably useful combat resource for elites/bosses.
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-25T07:43 第1层：Jev o1@0.32 → o0。Floor 1 random relic adds permanent power without diluting the 10-card deck; card packs bloat early deck and delay key draws.
+  - 选项：o0=小型扭蛋；o1=卷轴箱
+- 2026-09-25T07:44 第3层：Jev o0@0.38 → o1。Relic (Chosen Cheese) is permanent value; 14 HP is affordable at 57/80 with Burning Blood healing, while 2 random commons just dilute the deck.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-25T08:17 第1层：Jev o1@0.37 → o2。A rare Ironclad card (Demon Form/Offering tier) is a run-defining power spike; Injury is a manageable dead card removed later at a shop.
+  - 选项：o0=橙型香盒；o1=铅制镇纸；o2=沉重石板
+- 2026-09-25T08:35 第21层：Jev o1@0.29 → o0。53金太少；永久遗物价值远超之，腐朽的掉血可被燃烧之血抵消，19张牌组容得下一张废牌。
+  - 选项：o0=抓住这团鬼火；o1=搜索附近的区域
+- 2026-09-25T08:46 第1层：Jev o1@0.19 → o2。Two random relics at floor 1 snowball the whole run; losing 11 max HP or one removal is far less value than an early relic pair.
+  - 选项：o0=精准剪刀；o1=营养牡蛎；o2=巨大扭蛋
+- 2026-09-25T08:48 第4层：Jev o0@0.47 → o1。5 HP is cheap (Burning Blood refunds 6 per fight); a chosen colorless card beats one random class card for Act 1 power.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T09:11 第20层：Jev o1@0.32 → o0。100 gold for a random common relic is a discount and keeps gold for strike removal; the named 200-gold relic is unknown value at full price.
+  - 选项：o0=旺购的打折货物；o1=旺购的特选商品；o3=离开
+- 2026-09-25T09:12 第22层：Jev o0@0.08 → o1。Hug-themed doll should give defensive/healing utility; deck is attack-heavy with little block, so shoring up survivability best carries Act 3.
+  - 选项：o0=风的女儿；o1=抱抱先生；o2=宾邦
+- 2026-09-25T09:25 第34层：Jev o2@0.05 → o0。十字弓是每回合免费额外攻击的强力遗物，无牌组污染；吹哨加废牌，附魔仅3张攻击收益低。选它。
+  - 选项：o0=十字弓；o1=坦克斯的哨子；o2=三刃回旋镖
+- 2026-09-25T09:43 第1层：Jev o1@0.35 → o0。Deck lacks damage/AOE and strength for the 222-HP boss; a card pack adds real power while upgrading a Strike/Defend is minimal value and 探寻 is dead weight early.
+  - 选项：o0=卷轴箱；o1=涅奥的护符；o2=寻龙尺
+- 2026-09-25T11:02 第3层：Jev o1@0.04 → o0。第一幕优先补输出：把最差的打击变化为攻击牌啄击，提升牌组质量；单张附魔和格挡牌收益较小，boss 也需快速清信徒。
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-25T11:20 第4层：Jev o1@0.06 → o0。无消耗手段，诅咒会稀释12张牌组的关键抽牌；本路线商店仅0-2家，357金难以花完，拿干净65金更稳。
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-25T11:26 第14层：Jev o0@0.32 → o1。5 HP is trivial (燃烧之血 refunds 6) and the colorless pool offers unique block/weak/utility — Blind or Panic Button would help greatly vs Waterfall Giant's explosion; can skip if bad.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T11:58 第1层：Jev o0@0.39 → o2。Choice of 3 rares can hand us Demon Form/Immolate/Offering, our missing power and AOE; one Injury is removable later and only 1 dead draw.
+  - 选项：o0=金色珍珠；o1=卷轴箱；o2=沉重石板
+- 2026-09-25T12:08 第18层：Jev o1@0.06 → o0。Deck has just 1 upgrade in 23 cards; 4 free upgrades strengthen key attacks/block without diluting the deck or draining the 367 gold needed for shops.
+  - 选项：o0=美味饼干；o1=故事书；o2=黄金印
+- 2026-09-25T12:23 第34层：Jev o1@0.19 → o2。钗每回合稳定+7格挡，整场boss累积上百减伤；不受99层脆弱与魂缚限制，比一次性强化攻击或首牌双打更保命。
+  - 选项：o0=三刃回旋镖；o1=投斧；o2=钗
+- 2026-09-25T12:34 第43层：Jev o0@0.01 → o1。祭品+是S级核心牌（能量+过牌），绝不能删；59血付5点很便宜，重抽搏一张打击/防御来删，为女王战保命。
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-25T12:41 第1层：Jev o0@0.12 → o1。Act 1 boss extra 2 relics is the strongest snowball; gold+curse dilutes a 10-card deck, and Fishing Rod upgrades are slow and random.
+  - 选项：o0=钓鱼竿；o1=熔岩石；o2=诅咒珍珠
+- 2026-09-25T13:01 第30层：Jev o2@0.15 → o0。无厌沙虫是按回合倒计时的输出赛：攻击牌出得最频繁，锋利2每场能累计成吨伤害（双重打击等多段翻倍）；能力牌整场只打一次，格挡不解决沙坑计时。
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-25T13:26 第8层：Jev o0@0.11 → o1。藏宝图是无用死牌，绝不拿；52/80 掉 8 血可承受，随机药水在瀑布巨兽 boss 前更有价值。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-25T13:46 第5层：Jev o0@0.09 → o1。Transform a Strike beats 2 random potions; 9 HP is small at 71/80 with Burning Blood, and 131 gold stays useful for shop removal.
+  - 选项：o0=交换金币；o1=拥抱树木
+- 2026-09-25T13:57 第1层：Jev o2@0.10 → o1。稀有牌期望值最高：铁甲稀有池含恶魔形态/祭品/重锤等核心，且不稀释10张精简牌组；升级打击防御收益太小，巨型扭蛋多塞两张废牌。
+  - 选项：o0=涅奥的护符；o1=奥术卷轴；o2=巨大扭蛋
+- 2026-09-25T14:10 第18层：Jev o0@0.21 → o1。佩尔之翼：可把本就要跳过的卡牌奖励换成遗物，长线价值最高；角会稀释23张牌组，眼的额外回合条件太苛刻。
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔之眼
+- 2026-09-25T14:17 第1层：Jev o0@0.24 → o1。Floor 1 transform (a Strike) is a free permanent deck upgrade; Wing Boots is only 3 path skips, and losing 99 gold costs about a card removal for one enchantment.
+  - 选项：o0=羽翼之靴；o1=新叶；o2=华美发束
+- 2026-09-25T14:20 第6层：Jev o0@0.11 → o1。藏宝图是占手牌的死牌（按诅咒算）；57/80 血换随机药水划算，药水格有空位，下一个节点是商店可补状态。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-25T14:26 第15层：Jev o0@0.25 → o1。仅4金，67金杯水车薪；305金可在二幕删诅咒、买卡与药水，弱势牌组急需资源，诅咒可在首个商店移除。
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-25T14:42 第1层：Jev o1@0.49 → o0。额外两件遗物价值远超升级1打击1防御；骨骰带诅咒按经验必拒。遗物助力更弱的第二幕，提升整局胜率。
+  - 选项：o0=熔岩石；o1=涅奥的护符；o2=涅奥骨骰
+- 2026-09-25T14:58 第18层：Jev o0@0.15 → o2。佩尔之血每回合无条件多抽1张，提升抽到格挡与核心牌的一致性；眼泪需刻意留能量，爪只强化防御牌，价值都更低。
+  - 选项：o0=佩尔之泪；o1=佩尔之爪；o2=佩尔之血
+- 2026-09-25T15:16 第4层：Jev o2@0.15 → o0。锋利2附魔攻击牌收益最高：痛击+/AOE每次循环多2伤，助打精英与同族神官速杀；技能仅基础防御、能力仅1张，收益过低。
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-25T15:26 第18层：Jev o1@0.05 → o2。黄金印每回合+1能量直到金币耗尽，等同免费能量遗物，助长战与知识恶魔；煤灰污染与强化待删打击都不如它。
+  - 选项：o0=营养汤；o1=大～抱抱；o2=黄金印
+- 2026-09-25T15:45 第44层：Jev o0@0.20 → o1。19攻低费牌组配金刚杵、抱抱先生和3回合成长，约可打150；两次升级对boss输出赛价值高于一瓶药水，失败不致命且前面有休息点。
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-25T16:05 第18层：Jev o0@0.40 → o1。牌组无任何力量来源，Boss 帝皇蟹正需持续成长；每回合+1力量配合双重打击等多段攻击，比短期能量或 5 战限时能量更值。
+  - 选项：o0=烫嘴可可；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-25T16:09 第24层：Jev o2@0.15 → o0。Attack-heavy deck (13 attacks, 4 AOE): Sharp 2 on a multi-hit AOE attack adds repeat damage Kaiser Crab needs; skill/power enchants give little.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-25T16:17 第36层：Jev o1@0.16 → o2。Keep 瓶中精灵 the crucial revive and 明晰提取物 cheap draw; Bottled Potential is most replaceable, and a rare skill patches thin block (4 cards) for Aeon Glass.
+  - 选项：o0=放入稀有药水；o1=放入罕见药水；o2=放入稀有药水
+- 2026-09-25T16:30 第1层：Jev o1@0.22 → o0。精剪删1张打击：一层最稳的牌组精简，避免诅咒占手牌；无色牌随机且不可控，333金需带贪婪整幕冒险。
+  - 选项：o0=精准剪刀；o1=铅制镇纸；o2=诅咒珍珠
+- 2026-09-25T16:39 第15层：Jev o0@0.28 → o1。Targeted removal (a Strike) beats two random upgrades that likely hit Defend/Strike; next node is a forced RestSite anyway, so save upgrade for Bash there. Deck wants thinning for Soul Fysh.
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-25T16:42 第1层：Jev o0@0.40 → o1。Free rare card boosts Act 1 damage (boss Soul Fysh needs output); o2's curse is too costly, Wing Boots is only utility at 80% HP.
+  - 选项：o0=羽翼之靴；o1=涅奥的苦痛；o2=涅奥骨骰
+- 2026-09-25T16:44 第4层：Jev o0@0.23 → o1。删牌确定性强：优先删打击提高抽到痛击/核心牌概率，随机升级可能浪费在防御上；小牌组收益更持久。
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-25T16:54 第18层：Jev o0@0.12 → o2。佩尔的士兵不占牌位，可与岿然不动等大格挡牌配合翻倍；加牌稀释17张牌组、强化将删的基础防御价值低，知识恶魔长战防御优先。
+  - 选项：o0=佩尔之角；o1=佩尔之爪；o2=佩尔的士兵
+- 2026-09-25T17:11 第31层：Jev o0@0.20 → o1。牌组已有2张AOE，下个boss知识恶魔是379血单体，压扁更可能补单体输出；杀灭偏群体清场，对boss无用。
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-25T17:26 第18层：Jev o0@0.34 → o1。Remove 4 strikes fixes our bloated 13-attack deck permanently; in-fight Cinder tax is small, while turn-1 energy is wasted with 5-card cheap draws.
+  - 选项：o0=烫嘴可可；o1=大～抱抱；o2=黄金罗盘
+- 2026-09-25T17:38 第1层：Jev o0@0.07 → o1。稳赚：变化1张打击为随机牌，直接减废牌提升质量；扭蛋多4张打击/防御拖累删牌，卡牌包易混入废牌。
+  - 选项：o0=卷轴箱；o1=新叶；o2=巨大扭蛋
+- 2026-09-25T17:51 第21层：Jev o0@0.15 → o1。Taunt is one of only 2 block cards and a vulnerable source for the strength deck; 4 HP at 84% is cheap to reroll for a Strike removal instead.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-25T17:51 第21层：Jev o1@0.49 → o0。Free Strike removal with no HP cost is ideal deck thinning before boss; losing 6 HP for a reroll risks worse options.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-25T18:02 第30层：Jev o0@0.19 → o1。知识恶魔单体379血且每4回合回30，必须速杀；牌组已有2张AOE，单体高伤的双重打击更补短板。
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-25T18:14 第6层：Jev o1@0.14 → o0。付40金把一张打击变化掉＝删废牌且补新牌，收益稳定；随机升级在15张牌中大概率砸中打击/防御，价值低。
+  - 选项：o0=从传送带上拿份果冻肝；o1=观察主厨
+- 2026-09-25T18:20 第18层：Jev o0@0.01 → o1。牌组无任何力量来源，而蟹王 408 血需要成长；烘焙手套每回合+1力量正好补短板。能量不缺（均费1.22），饼干升级4张收益低于永久力量。
+  - 选项：o0=美味饼干；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-25T18:58 第34层：Jev o1@0.10 → o2。已有薪火之源且牌组低费，能量不缺；鹿角的晕眩只会卡手。皮草大衣让8场战斗近乎无伤，保HP并拿满奖励进永世沙漏。
+  - 选项：o0=亮片；o1=赐福鹿角；o2=皮草大衣
+- 2026-09-25T19:10 第1层：Jev o1@0.31 → o0。随机稀有牌有机会直给恶魔形态/力量成长或AOE，正补当前0力量0AOE短板；羽翼之靴不加战力，诅咒珍珠是死牌且金常花不完。
+  - 选项：o0=奥术卷轴；o1=羽翼之靴；o2=诅咒珍珠
+- 2026-09-25T19:20 第4层：Jev o1@0.05 → o0。石之剑是永久价值，7 点血可靠燃烧之血与休息补回；已有 124 金，111 金币边际价值低，本牌组更缺永久成长。
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-25T19:23 第9层：Jev o0@0.22 → o1。藏宝图是无用诅咒牌，占手牌且拖延；8点生命损失可接受（53/80，仍有休息点），换一瓶随机药水对老板战更有价值。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-25T19:29 第1层：Jev o0@0.33 → o1。变掉一张打击提升前半幕强度；不拿随机诅咒遗物，无色牌期望一般，新叶更稳。
+  - 选项：o0=铅制镇纸；o1=新叶；o2=涅奥骨骰
+- 2026-09-25T19:36 第11层：Jev o0@0.12 → o1。藏宝图是不可打出的废牌，只会占手牌；8点血可在boss前休息点恢复，随机药水对乐加维林族母战更有价值。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-25T19:53 第18层：Jev o0@0.22 → o1。Sacrificing only bad/skipped rewards is optional; two skips buy a permanent relic — best long-run value. Block relic limited by only 2 block cards.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔的士兵
+- 2026-09-25T20:16 第18层：Jev o0@0.16 → o2。Permanent +1 draw every turn; 20-card cheap deck must dig early for Demon Form+/Rupture, while Tear's energy needs floating and Claw only buffs soon-deleted Defends.
+  - 选项：o0=佩尔之泪；o1=佩尔之爪；o2=佩尔之血
+- 2026-09-25T20:17 第21层：Jev o0@0.21 → o1。5 HP is cheap; self-picked colorless card beats a random deck-bloating card in a 20-card deck needing consistency.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-25T20:24 第29层：Jev o0@0.23 → o1。《压扁》应为止单体重击，正合无厌沙虫321血急需的单体爆发；牌组已有3张AOE，缺的是终结boss的高伤害。
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-25T20:28 第34层：Jev o2@0.29 → o0。Scarf gives repeatable energy every combat through the elite gauntlet and Queen fight; 888 gold only pays off if a shop appears, and potions are already full for the fern.
+  - 选项：o0=艳丽围巾；o1=娇嫩蕨草；o2=图章戒指
+- 2026-09-25T20:36 第6层：Jev o1@0.17 → o0。+7 最大生命是确定收益；异鸟蛋是打不出的废牌，经验手册明确不拿藏宝图/蛋类占手牌，且+最大生命选项历来必选。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-25T21:04 第1层：Jev o1@0.35 → o0。免费获得涅奥签名牌，十张牌组稀释小；前期输出收益高于单次痛击升级，且无生命代价。
+  - 选项：o0=涅奥的苦痛；o1=橙型香盒
+- 2026-09-25T21:05 第4层：Jev o1@0.16 → o0。吃蛋永久+7最大生命；异鸟蛋是不可打出的废牌，等同诅咒，会稀释13张的精简牌组。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-25T21:14 第18层：Jev o0@0.14 → o1。牌组零力量来源，帝王蟹408血必须叠力量；烘焙手套每回合+1力量，消耗的多是打击，正好兼作压缩牌组。
+  - 选项：o0=美味饼干；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-25T21:19 第25层：Jev o0@0.08 → o1。污浊药水代码永不使用，等于零价值；随机罕见药水是真资源，且当前药水栏为空。
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-25T21:26 第34层：Jev o1@0.25 → o0。利爪: transform 6 weakest cards (Strikes) into Bites — better damage plus healing, good for attrition vs Queen. Warhammer near-dead (few elites left); cooking value unclear.
+  - 选项：o0=利爪；o1=战锤；o2=切肉刀
+- 2026-09-25T21:40 第1层：Jev o1@0.31 → o0。A random relic gives immediate Act-1 tempo; the curse option poisons a thin 11-card deck with no exhaust, and +5 max HP per rest is slow and competes with upgrades.
+  - 选项：o0=小型扭蛋；o1=石炉加湿器；o2=涅奥骨骰
+- 2026-09-25T22:00 第1层：Jev o0@0.38 → o1。每3场普通战免费随机升级，长期收益稳定，不依赖易失误的药水操作；历史赢局升级数远高于输局。
+  - 选项：o0=药瓶皮套；o1=钓鱼竿；o2=寻龙尺
+- 2026-09-25T22:01 第4层：Jev o0@0.26 → o1。藏宝图是不可打的废牌，按诅咒算，历史经验明确不拿；8 HP 换随机药水，可留给族母 boss 战。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-25T22:08 第18层：Jev o0@0.22 → o1。Thins 5 weak cards now (better draws for boss), then returns them upgraded over 5 combats; Horn adds junk, Eye needs exhaust synergy this deck lacks.
+  - 选项：o0=佩尔之角；o1=佩尔之牙；o2=佩尔之眼
+- 2026-09-25T22:09 第20层：Jev o0@0.04 → o1。Heal 25 is mostly wasted at 71/80 (+9 only); unknown 羽化 card likely bloats/curse. 10 HP for an upgrade is fine with 2–3 rest sites before Kaiser Crab.
+  - 选项：o0=接纳；o1=拒绝
+- 2026-09-25T22:14 第1层：Jev o0@0.15 → o1。卡牌奖励能挑前期急需的攻击或成长牌（永久收益）并附赠药水；两瓶随机药水价值短暂，诅咒牌组无消耗手段不拿。
+  - 选项：o0=药瓶皮套；o1=失物盒；o2=涅奥骨骰
+- 2026-09-25T22:15 第4层：Jev o0@0.44 → o1。14 HP is affordable at 80% with Burning Blood; a permanent relic beats two random commons for a deck already thin on power and scaling.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-25T22:18 第9层：Jev o0@0.47 → o1。随机升级可能砸在防御上；删牌可控，优先删打击，精简牌组提高打 boss 关键牌上手率。
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-25T22:21 第15层：Jev o0@0.18 → o1。Rest site next: healing to full frees the forge for a key upgrade (Bash+); the vortex enchant only hits basic Strike/Defend we plan to remove.
+  - 选项：o0=观察；o1=饮用
+- 2026-09-25T22:35 第31层：Jev o0@0.08 → o1。污浊药水代码永不使用，只占药水格；1 瓶随机罕见药水才是真收益，且当前只剩 1 个药水格。
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-25T22:38 第34层：Jev o2@0.19 → o0。小提琴每回合额外抽2张，女王长战最需要稳定卡量与格挡；牌组过牌仅4张，代价可接受。
+  - 选项：o0=小提琴；o1=腌制活雾；o2=选择悖论
+- 2026-09-25T22:43 第1层：Jev o1@0.19 → o0。Fishing Rod gives roughly 8 free upgrades across the run; one random colorless card is less consistent and can dilute the deck.
+  - 选项：o0=钓鱼竿；o1=铅制镇纸
+- 2026-09-25T22:47 第7层：Jev o0@0.14 → o1。329 gold buys two removals plus a card in Act 2; the curse is removable with that gold, while 54 gold changes nothing.
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-25T22:50 第14层：Jev o2@0.39 → o0。牌组无力量来源、伤害吃紧；锋利2附在主力攻击（尤以多段/AOE如旋风斩）每次攻击都加伤，长期收益最高，优于格挡与能力附魔。
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-25T22:55 第18层：Jev o1@0.16 → o0。Pael's Tear is free energy: banking leftover energy into +2 turns fuels Demon Form ramp and burst for Knowledge Demon; Clone's payoff is uncertain, Eye costs tempo.
+  - 选项：o0=佩尔之泪；o1=佩尔的增生组织；o2=佩尔之眼
+- 2026-09-25T23:01 第1层：Jev o1@0.17 → o0。海螺让每场精英开局多抽2张并加能量，直接降低精英战掉血风险且无诅咒负担；金币选项易被囤积浪费，鞋子价值太低。
+  - 选项：o0=轰鸣海螺；o1=羽翼之靴；o2=诅咒珍珠
+- 2026-09-25T23:23 第14层：Jev o1@0.13 → o2。Deck lacks non-basic block (only 坚毅); Kin boss is a long 3-enemy attrition fight. Replace a Defend with the defensive ring to survive; attacks plentiful.
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-25T23:31 第23层：Jev o1@0.48 → o0。随机能力牌池整体期望远高于0费牌池（恶魔形态/燃烧/腐化等均可补力量成长），无厌沙虫需要成长，选学习。
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-25T23:49 第1层：Jev o0@0.19 → o2。白银熔炉给前3次卡牌奖励升级（半场相当于免费锻造3次，助拿AOE/攻击解族母），代价仅一个宝箱遗物，最稳。
+  - 选项：o0=轰鸣海螺；o1=熔岩石；o2=白银熔炉
+- 2026-09-25T23:51 第3层：Jev o0@0.06 → o1。治疗至近满血为打族母攒血量，战斗还给白银熔炉升级卡与金币；88金不值得用8血换。
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-25T23:55 第8层：Jev o0@0.01 → o1。9点血换删/转换一张打击或诅咒，直接提升牌组质量并利于族母战；药水格有限，且金币留113仍够商店删牌。
+  - 选项：o0=交换金币；o1=拥抱树木
+- 2026-09-26T00:02 第18层：Jev o0@0.42 → o2。130金可换约43点能量，本套抽牌6张、均费0.95且有旋风斩X费，能量正是瓶颈；金币囤着不花历来是败因。
+  - 选项：o0=美味饼干；o1=大～抱抱；o2=黄金印
+- 2026-09-26T00:13 第34层：Jev o1@0.25 → o0。手册明确优先级：有+最大生命就选（两胜局都拿了布质果实）。+31永久血线直接给实验体三阶段留出安全余量，并放大休息点与鲜血药水回复。
+  - 选项：o0=布质果实；o1=皮草大衣；o2=艳丽围巾
+- 2026-09-26T00:25 第1层：Jev o1@0.30 → o0。Permanent colorless card improves an 11-card starter deck; avoids curse (o2) and one-time random potions the bot often misuses. Act 1 needs early output.
+  - 选项：o0=铅制镇纸；o1=药瓶皮套；o2=涅奥骨骰
+- 2026-09-26T00:30 第9层：Jev o2@0.13 → o0。Attack-heavy deck: Sharp 2 on Breakthrough adds recurring AOE damage every play, while cheap powers waste Swift and no block skills exist for Nimble.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T00:37 第18层：Jev o0@0.11 → o2。佩尔之血无条件每回合多抽1张，直接补牌量与稳定性，帮我找到仅有的2张格挡和关键攻击；能量条件触发不可靠，我牌均费仅0.96。
+  - 选项：o0=佩尔之泪；o1=佩尔之翼；o2=佩尔之血
+- 2026-09-26T00:58 第15层：Jev o0@0.06 → o1。Rest site must be used to heal (26/80), so this free upgrade is our only pre-boss one; cannon rewards upgraded attacks. 4 max HP for 40 gold is poor value.
+  - 选项：o0=从传送带上拿份鱼子酱；o1=观察主厨
+- 2026-09-26T01:24 第34层：Jev o0@0.09 → o2。钗每回合开始7格挡且不受脆弱(99层)影响，女王持久战最稳；战锤依赖精英、投斧依赖起手首牌，均不够确定。
+  - 选项：o0=战锤；o1=投斧；o2=钗
+- 2026-09-26T01:30 第42层：Jev o1@0.04 → o0。附魔永久强化核心攻击牌，不费血不增牌；牌组已29张，变牌随机且可能稀释，女王战更缺攻击上限。
+  - 选项：o0=靠近；o1=用火烧杀
+- 2026-09-26T01:34 第1层：Jev o1@0.27 → o2。Two random relics at floor 1 give lasting power and a chance at strength/energy; the added Strike and Defend are removable later and only mildly dilute a 13-card deck.
+  - 选项：o0=涅奥的苦痛；o1=橙型香盒；o2=巨大扭蛋
+- 2026-09-26T01:38 第11层：Jev o0@0.00 → o1。Trade situational Ash Water for an upgraded uncommon skill — deck badly needs block/draw; Strength Potion kept for Soul Fysh burst.
+  - 选项：o0=放入普通药水；o1=放入罕见药水
+- 2026-09-26T01:44 第18层：Jev o0@0.37 → o1。Pael's Tooth gives 5 upgrades plus temporary deck thinning; other relics weak with 1 block card and cheap deck.
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-26T01:52 第30层：Jev o0@0.09 → o1。锚只给一次性10格挡，长战价值最低；护喉甲每回合覆甲与折扇的每3攻击4格挡对本套15攻击、缺格挡更关键，留它们、换出锚。
+  - 选项：o0=拿上面那件；o1=拿中间这件；o2=拿下面那件
+- 2026-09-26T01:59 第4层：Jev o1@0.11 → o0。No shops on the act-1 path, so 102 gold is nearly dead value; a free relic is permanent, and 7 HP is worth keeping before elites and Soul Fysh.
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T02:11 第18层：Jev o2@0.02 → o1。Deck has zero strength; gloves give permanent +1 Str/turn, exhaust thins junk/curse and speeds Barricade cycles; energy relic expires and 0-draw deck wastes energy.
+  - 选项：o0=营养汤；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-26T02:21 第1层：Jev o1@0.40 → o0。Act 1 needs damage for the 222-HP sleeping boss; Neow's Wrath upgrades the thin starter deck, while Winged Boots is only three situational path skips.
+  - 选项：o0=涅奥的苦痛；o1=羽翼之靴
+- 2026-09-26T02:24 第5层：Jev o0@0.11 → o1。Free random upgrade adds early tempo for the 222-HP boss burst and saves 128 gold for Strike removal; a random colorless card would dilute this thin deck.
+  - 选项：o0=从传送带上拿份炸鳗鱼；o1=观察主厨
+- 2026-09-26T02:26 第11层：Jev o1@0.01 → o0。Deck is attack-heavy with zero real block; Sharp 2 adds damage for bursting the sleeping Matriarch, while +2 block on one skill is negligible.
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-26T02:41 第1层：Jev o1@0.21 → o2。3 upgraded card rewards snowball Act 1 damage and tempo, worth far more than one lost common chest relic; path skips are marginal for a bot.
+  - 选项：o0=新叶；o1=羽翼之靴；o2=白银熔炉
+- 2026-09-26T02:58 第27层：Jev o2@0.19 → o0。锋利2附在多段/AOE攻击上，随力量成长放大爆发，利于帝皇蟹双钳同回合击杀；本局仅2张格挡、2张能力，另两项收益小。
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T03:04 第34层：Jev o2@0.44 → o0。+1 energy per turn is huge for a 29-card deck with Demon Form and a 512 HP boss; one curse is minor dilution.
+  - 选项：o0=血染玫瑰；o2=选择悖论
+- 2026-09-26T03:06 第37层：Jev o1@0.46 → o0。Free card removal thins a 29-card deck; 5 HP is worth more for the Aeonglass fight, and rerolls already cost 3 and 4 HP.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T03:15 第1层：Jev o0@0.20 → o1。牌组缺 AOE、力量与格挡牌；卡包提供永久牌面提升，从两包中选更可控，胜过一次性随机药水。
+  - 选项：o0=药瓶皮套；o1=卷轴箱
+- 2026-09-26T03:30 第18层：Jev o0@0.10 → o2。Deck is 23 cards; extra cards dilute the sandpit DPS race. This relic adds repeatable block doubling every 3 turns with no deck cost.
+  - 选项：o0=佩尔之角；o1=佩尔之爪；o2=佩尔的士兵
+- 2026-09-26T03:46 第34层：Jev o2@0.24 → o1。永久+1能量，廉价多抽牌组能花光；永世沙漏是限时DPS赛，加速击杀；3张晕眩虚无，代价小。
+  - 选项：o0=亮片；o1=赐福鹿角；o2=图章戒指
+- 2026-09-26T03:49 第38层：Jev o0@0.07 → o1。满血84点，3点生命极廉价；重掷有望改删打击/诅咒，优于直接失去A级头槌，34张牌组仍需精简。
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T03:49 第38层：Jev o0@0.23 → o1。祭品+是核心爆发牌，34张牌组有打击和诅咒可删；96%血量下4点生命极廉价，重掷以求删打击或诅咒。
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T04:03 第1层：Jev o1@0.26 → o0。免费删牌优先级最高：A6 商店删牌要 100 金，现在删一张打击直接提升前期抽牌质量，比随机升级/加牌可靠。
+  - 选项：o0=精准剪刀；o1=钓鱼竿；o2=寻龙尺
+- 2026-09-26T04:32 第1层：Jev o1@0.20 → o0。Transform upgrades the worst card (Strike or the A5 curse) into a random card, thinning strikes; curse-relic gamble is bad and random rare is too swingy on floor 1.
+  - 选项：o0=新叶；o1=奥术卷轴；o2=涅奥骨骰
+- 2026-09-26T04:34 第4层：Jev o0@0.13 → o1。藏宝图是打不出的废牌，占手牌拖累全程；70/80 血付 8 点换药水可接受，且燃烧之血/boss 前休息能补回。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T04:47 第21层：Jev o2@0.24 → o1。Only 2 block cards at 42% HP; Nimble on a block skill adds repeatable block every fight. Power option only hits Inflame (1E), and +2 attack damage is marginal.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T05:01 第8层：Jev o1@0.06 → o0。Act 1 needs damage; Sharp on Bash/AOE speeds elite and Soul Fysh kills, and Bash stays in deck while Defends get removed.
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-26T05:15 第9层：Jev o1@0.11 → o0。攻击牌 12 张且无力量/AOE，伤害是瓶颈；+2 伤害附在欺凌或多段攻击上每回合都生效，格挡可靠折扇/音叉补。
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-26T05:22 第18层：Jev o1@0.41 → o0。Deck is attack-heavy with ~6 Strikes and no strength yet; enchanting them all is a large permanent boost, while one card or a gambled map reroute is weaker.
+  - 选项：o0=营养汤；o1=故事书；o2=黄金罗盘
+- 2026-09-26T05:46 第46层：Jev o0@0.19 → o2。熔火之蛋已无新攻击牌可升级，换钨合金棍为女王战提供每段减伤的稳定收益；保留光滑石头的防御比换铜质鳞片更稳。
+  - 选项：o0=拿上面那件；o1=拿中间这件；o2=拿下面那件
+- 2026-09-26T05:51 第1层：Jev o0@0.26 → o1。Card pack adds several cards at once, best fix for this 11-card deck's missing Act 1 damage/AOE; one colorless card is thinner, and losing 99 gold for a single enchanted reward is worse.
+  - 选项：o0=铅制镇纸；o1=卷轴箱；o2=华美发束
+- 2026-09-26T06:09 第6层：Jev o0@0.22 → o1。手册明确：藏宝图是占手牌的废牌，不拿。付 8 血（78→70，仍高于 80%）换一瓶随机药水，燃烧之血还能回，稳赚。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T06:21 第18层：Jev o1@0.23 → o0。Clean permanent value: upgrade our 4 best attack/block cards; candle expires in 5 fights and costs rest refills; hug's cinders would clog the long Knowledge Demon fight.
+  - 选项：o0=美味饼干；o1=大～抱抱；o2=南瓜蜡烛
+- 2026-09-26T06:41 第1层：Jev o1@0.14 → o0。羽翼之靴无代价且本局缺 AOE/力量, 靠跳过坏路线避开精英、保住血线最划算; 贪婪诅咒会占手牌, 手册反复警告不要拿诅咒换资源。
+  - 选项：o0=羽翼之靴；o1=卷轴箱；o2=诅咒珍珠
+- 2026-09-26T06:45 第5层：Jev o0@0.02 → o1。下一节点是商店：113 金可同时买关键牌并删打击，支撑本局缺力量/AOE 的牌组；80% 血量付 7 血便宜，燃烧之血可快速回补。
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T06:52 第18层：Jev o0@0.15 → o2。Permanent +1 draw every turn is unconditional value; the energy relic rarely triggers with a 1.1-cost deck, and enchanting only base Defends is weak.
+  - 选项：o0=佩尔之泪；o1=佩尔之爪；o2=佩尔之血
+- 2026-09-26T06:53 第21层：Jev o1@0.49 → o0。力量/AOE 成长流：随机能力牌池含恶魔形态、燃烧、壁垒，上限极高；0 费牌池多废牌（破灭等），且牌组已 22 张需精简。
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-26T07:02 第1层：Jev o0@0.29 → o1。A7 halves rare-card odds, so a guaranteed rare (Demon Form/Offering tier) beats a common pick plus potion; curse-for-relics is a known trap.
+  - 选项：o0=失物盒；o1=奥术卷轴；o2=涅奥骨骰
+- 2026-09-26T07:03 第3层：Jev o0@0.40 → o1。8 HP is precious early A7 with an HP-taxing boss ahead; 100 gold (≈one Strike removal) plus a free card is safe, reliable value.
+  - 选项：o0=扎进垃圾堆；o1=随便拿点垃圾
+- 2026-09-26T07:17 第22层：Jev o1@0.28 → o0。Free deck-thinning removal of 2-cost Bash (Marble Bag already grants free Vulnerable each fight); no HP loss, helps boss speed.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T07:27 第34层：Jev o1@0.19 → o0。神化升级全套28张牌，放大恶魔形态+旋风斩对永世沙漏的爆发；金币只剩0-2商店难变现，鹿角晕眩拖慢。
+  - 选项：o0=珠宝盒；o1=图章戒指；o2=赐福鹿角
+- 2026-09-26T07:51 第18层：Jev o0@0.03 → o1。Permanently upgrades all four Defends with a beneficial enchant, no deck bloat, reinforcing the thick-block plan for the Insatiable boss; Relax filler and the niche extra-turn passive are worse.
+  - 选项：o0=佩尔之角；o1=佩尔之爪；o2=佩尔之眼
+- 2026-09-26T08:06 第1层：Jev o1@0.26 → o0。Transform removes a weak Strike for a random card, best early value; pack risks bloat, Seek too slow for Act 1.
+  - 选项：o0=新叶；o1=卷轴箱；o2=寻龙尺
+- 2026-09-26T08:22 第1层：Jev o2@0.01 → o1。移除一张打击精简牌组是确定收益；随机遗物方差大，骨骰还加诅咒（已有进阶之咒），不值。
+  - 选项：o0=小型扭蛋；o1=精准剪刀；o2=涅奥骨骰
+- 2026-09-26T08:26 第8层：Jev o0@0.07 → o1。藏宝图是不可打出的废牌，会永久稀释 15 张精简牌组并卡住 boss 战抽牌；8 血可用燃烧之血与休息点补回，药水还能助战。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T08:33 第18层：Jev o1@0.23 → o2。格挡翻倍遗物补牌组最缺的防御（仅2张格挡牌），不稀释牌组，知识恶魔多段攻击战价值高。
+  - 选项：o0=佩尔之角；o1=佩尔的增生组织；o2=佩尔的士兵
+- 2026-09-26T08:36 第20层：Jev o0@0.13 → o1。Squash likely single-target burst, best for the Knowledge Demon boss fight; deck already has 2 AOE and boss is single-target.
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-26T08:41 第1层：Jev o1@0.44 → o0。熔岩石 grants two extra boss relics — permanent run-wide power; potions are consumable and the Greed curse would clog an already-cursed A7 deck.
+  - 选项：o0=熔岩石；o1=药瓶皮套；o2=诅咒珍珠
+- 2026-09-26T08:44 第4层：Jev o0@0.21 → o1。359 gold funds 2-3 removals plus key buys in Act 2; one dead curse is a small, removable cost and Act 1 has no shops anyway.
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-26T08:56 第1层：Jev o1@0.24 → o0。Floor 1 base deck needs immediate damage/AOE for Act 1 elites and The Kin boss; a pack from two choices adds more usable cards now than gold that only converts at a distant shop.
+  - 选项：o0=卷轴箱；o1=金色珍珠
+- 2026-09-26T08:58 第6层：Jev o0@0.23 → o1。藏宝图是占手牌的死牌，复盘明确禁止；8 血在 63/80 时完全可付，随机药水对 11 层后的精英/boss 有价值。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T09:10 第3层：Jev o2@0.19 → o0。Enchant our best lasting attack: Sharp 2 adds damage every play all run. Only 4 skills are removable Defends, and our lone non-core power gains little from Swift.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T09:22 第18层：Jev o0@0.12 → o2。每回合无条件多抽1张是最强永久增益：更快抓到燃烧/撕裂与格挡，也为帝王蟹的爆发回合攒够手牌。
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔之血
+- 2026-09-26T09:41 第6层：Jev o1@0.04 → o0。免费遗物是永久收益；牌组零力量零能力，极需上限。进阶7下7点生命比108金币更值钱，且后续商店仅0–1个。
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T09:59 第30层：Jev o1@0.04 → o0。删2张打击精简牌组并补高伤攻击，符合既定删打击方向；已有5张格挡牌，帝王蟹战更缺力量爆发与输出而非防御。
+  - 选项：o0=融合打击；o1=融合防御
+- 2026-09-26T10:05 第1层：Jev o0@0.21 → o1。新叶变化打击：无诅咒、立刻补强缺输出的牌组，前期收益最稳；333 金附带诅咒风险大，羽翼之靴收益有限。
+  - 选项：o0=羽翼之靴；o1=新叶；o2=诅咒珍珠
+- 2026-09-26T10:06 第3层：Jev o0@0.14 → o1。回血到满再打普通战：前期攻击/AOE 卡牌奖励比 61 金更值，战后 HP 仍高于跋涉后的 52，保留精英空间。
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-26T10:23 第23层：Jev o1@0.18 → o0。杀灭更可能是多段/AOE 杀虫技巧，契合本局补 AOE、同回合清双钳的路线；有力量时多段收益高于单体一压。
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-26T10:32 第1层：Jev o1@0.26 → o0。化解一张打击：既删废牌又补新牌，早期最稳；已有诅咒不宜再添贪婪，随机稀有期望一般。
+  - 选项：o0=新叶；o1=奥术卷轴；o2=诅咒珍珠
+- 2026-09-26T10:59 第13层：Jev o1@0.07 → o0。取石剑：零血代价得永久遗物，本局正缺力量成长；7血换113金不值，保血备战仪式兽并留商店余地。
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T11:06 第18层：Jev o0@0.15 → o1。Convert frequent act-2 card-reward skips into relics for permanent power before Knowledge Demon; deck is already at 24 cards and needs quality, not more filler.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔之眼
+- 2026-09-26T11:15 第1层：Jev o1@0.36 → o0。免费删牌是开局最强选项：删一张打击提升抽牌质量、加速痛击上手；随机稀有牌收益不稳，诅咒换遗物更不可取。
+  - 选项：o0=精准剪刀；o1=奥术卷轴；o2=涅奥骨骰
+- 2026-09-26T11:17 第4层：Jev o0@0.01 → o1。116金≈A6一次删打击，是当前最缺的提升；7血有燃烧之血与沿途休息兜底，未知石剑不如确定金币。
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T11:21 第11层：Jev o1@0.14 → o0。+7 最大生命永久收益；异鸟蛋是打不出的废牌，占手牌（手册明令不拿蛋/藏宝图），牌组已 16 张需精简。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-26T11:36 第34层：Jev o2@0.38 → o1。灵体3张是应对女王高伤与99层脆弱的最强防御，完美补上牌组缺格挡的短板；2张诅咒可被6张过牌稀释，小提琴则与6张过牌严重冲突。
+  - 选项：o0=小提琴；o1=卓越斗篷；o2=选择悖论
+- 2026-09-26T11:48 第7层：Jev o0@0.15 → o1。癫狂之触在低费牌组里几乎无用；换掉它得升级罕见技能（更高上限，能补格挡），保留敏捷药水给族母boss。
+  - 选项：o0=放入普通药水；o1=放入罕见药水
+- 2026-09-26T11:50 第13层：Jev o0@0.15 → o1。Free removal is deterministic: delete a Strike (or curse) to thin deck and draw block/setup before forced elite and boss; random upgrades are unreliable.
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-26T11:57 第21层：Jev o0@0.31 → o1。5 HP at 66/80 is cheap (Burning Blood heals 6); colorless pool has high-impact cards and can be skipped, while the other option forces a card into a lean 19-card deck.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-26T12:02 第31层：Jev o1@0.02 → o0。Handbook rule: always take +max HP. 10 permanent HP beats a one-use attack potion and beats paying 6 HP for a modest 8-damage enchant before the boss.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-26T12:06 第34层：Jev o0@0.37 → o1。600血三阶段实验体缺力量，每回合+1能量能多打一张攻击/格挡提高输出与存活；3张晕眩只占少量手牌，金币与随机药水太不稳定。
+  - 选项：o0=图章戒指；o1=赐福鹿角；o2=娇嫩蕨草
+- 2026-09-26T12:10 第38层：Jev o1@0.07 → o0。75 HP is a near-certain 3-turn kill for this skill-heavy, strength-less deck; the guaranteed potion helps the Test Subject boss. The 150/300 checks exceed our burst.
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-26T12:15 第45层：Jev o0@0.12 → o1。Handbook precedent: 3 foul potions are un-drinkable vendor trash (and A4 has only 2 slots); one random uncommon potion is better for the boss.
+  - 选项：o0=拿走这批药水；o1=洗劫
+- 2026-09-26T12:18 第1层：Jev o1@0.33 → o0。Guaranteed rare card on floor 1 is high-value; A7 halves rare odds, and the Guilt curse option burdens a deck with no exhaust.
+  - 选项：o0=奥术卷轴；o1=卷轴箱；o2=涅奥的牺牲
+- 2026-09-26T12:20 第4层：Jev o0@0.15 → o1。Removal beats random upgrades: delete a Strike (or curse) for consistency, and this deck needs thinning before the boss.
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-26T12:21 第6层：Jev o2@0.24 → o0。Sharp 2 on the best multi-hit attack adds permanent damage every play; deck has no strength source and must race the 240-HP boss.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T12:35 第18层：Jev o1@0.27 → o0。Deck has 5 Strikes and no AOE; mass enchant upgrades our most common cards now, and any remaining Strikes can still be removed later.
+  - 选项：o0=营养汤；o1=故事书；o2=黄金罗盘
+- 2026-09-26T12:44 第31层：Jev o0@0.37 → o1。5 HP is cheap with a rest site next and Burning Blood; colorless pool offers high-impact cards (Apotheosis/draw/Strength) for the Insatiable damage race, unlike random dilution.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-26T12:47 第34层：Jev o0@0.25 → o1。十字弓每回合免费给一张攻击牌，长战（实验体600血、三阶段无实体靠多段）持续增值；投斧每战只触发一次太弱，切肉刀价值慢。
+  - 选项：o0=投斧；o1=十字弓；o2=切肉刀
+- 2026-09-26T13:01 第1层：Jev o1@0.34 → o0。Max HP +11 matches the手册's rule: always take +max HP at Neow. Potion belt is minor; losing 99 gold for an unknown enchant is poor expected value.
+  - 选项：o0=营养牡蛎；o1=药瓶皮套；o2=华美发束
+- 2026-09-26T13:04 第4层：Jev o1@0.03 → o0。伤害是打族母的最大缺口：锋利2加在保留的攻击（痛击/多段）上永久提速击杀，比+2格挡更契合力量成长计划。
+  - 选项：o0=读下封底；o1=随便读个一段
+- 2026-09-26T13:15 第18层：Jev o1@0.08 → o2。+1 draw every turn is a permanent top-tier boost: deck has 0 powers and no strength, so consistency finds Demon Form/block and fixes the 21-damage gap.
+  - 选项：o0=佩尔之角；o1=佩尔之牙；o2=佩尔之血
+- 2026-09-26T13:24 第4层：Jev o0@0.23 → o1。Treasure Map is a dead hand-clogging card (manual says skip it); 8 HP at 70% with Burning Blood regen is cheap for a random potion before the boss.
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T13:34 第18层：Jev o1@0.22 → o0。永久升级4张胜过会融化的蜡遗物；A7升级牌稀少，牌组21张薄，升级痛击/拆卸/熔融之拳等核心牌能全局补足输出与格挡，更稳。
+  - 选项：o0=美味饼干；o1=故事书；o2=玩具盒
+- 2026-09-26T13:44 第8层：Jev o0@0.28 → o1。348 gold funds an imminent shop: remove the Greed curse, then buy power/AOE/damage — far outweighs one dead card for the boss clock.
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-26T13:53 第18层：Jev o0@0.41 → o1。Tooth removes 5 dead cards (Strikes/curses), tightening the deck, and returns each upgraded — huge permanent value; Tear needs wasted energy, Eye exhausts hand.
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔之眼
+- 2026-09-26T13:58 第1层：Jev o1@0.23 → o0。Elite fights are the run's main risk and reward; extra draw and energy at every elite start is a premium combat relic, far better than slow max HP or one added card.
+  - 选项：o0=轰鸣海螺；o1=石炉加湿器；o2=寻龙尺
+- 2026-09-26T14:16 第22层：Jev o0@0.17 → o1。压扁 likely heavy crushing damage; deck needs burst vs 379-HP Knowledge Demon and lacks strength/AOE, so take the stronger attack technique.
+  - 选项：o0=学习杀灭的技巧；o1=学习压扁的技巧
+- 2026-09-26T14:23 第11层：Jev o0@0.11 → o1。藏宝图是不可打出的废牌，手册明令不拿；8 点生命可被燃烧之血和休息点补回，随机药水对 boss 战更有用。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T14:31 第18层：Jev o0@0.31 → o2。Eye gives a permanent once-per-combat extra turn (free Time Walk); deck-independent value in long fights like Knowledge Demon, unlike diluting a 22-card deck or enchanting cards we intend to cut.
+  - 选项：o0=佩尔之角；o1=佩尔之爪；o2=佩尔之眼
+- 2026-09-26T14:39 第7层：Jev o1@0.16 → o0。异鸟蛋是不可打出的废牌，只占手牌；+7 最大生命直接增强生存，手册也明说优先选最大生命。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-26T14:49 第1层：Jev o0@0.39 → o1。Random relic = permanent value, usually worth more than 150 gold; curse option rejected (curse deadens draws, already have Ascender's Bane).
+  - 选项：o0=金色珍珠；o1=小型扭蛋；o2=涅奥的牺牲
+- 2026-09-26T14:58 第18层：Jev o0@0.15 → o2。牌组均费0.89，瓶颈在过牌而非能量；每回合+1抽且第一回合即生效，更快找到恶魔形态/燃烧与多段攻击，胜过第3回合才+1能量。
+  - 选项：o0=佩尔之肉；o1=佩尔之牙；o2=佩尔之血
+- 2026-09-26T15:01 第23层：Jev o0@0.31 → o1。6 HP is cheap at 69% with rest sites next; deeper exploration likely yields a relic/card, worth more than unspendable 75 gold at 46.
+  - 选项：o0=采集花蜜；o1=深入探索
+- 2026-09-26T15:01 第23层：Jev o0@0.03 → o1。7 HP at 62% is cheap with 2-3 rest sites ahead; a permanent relic outweighs 135 gold, and gold alone buys too little at remaining shops.
+  - 选项：o0=采集花蜜；o1=抵达核心
+- 2026-09-26T15:01 第25层：Jev o1@0.23 → o2。84% HP with rest sites and a chest ahead; paying 15 for the best of 3 permanent relics beats gamble, and Knowledge Demon needs stronger tools.
+  - 选项：o0=随机拿走一尊；o1=花点时间慢慢来；o2=仔细检查然后挑选最好的那个
+- 2026-09-26T15:24 第3层：Jev o0@0.17 → o1。112 gold is guaranteed value (funds a Strike removal plus a card at the next shop); 7 HP at 63/80 with rests ahead is affordable, while the sword relic's effect is unverified.
+  - 选项：o0=拿起石剑；o1=潜水
+- 2026-09-26T15:35 第21层：Jev o0@0.06 → o1。风-themed doll likely gives per-turn tempo/agility value; deck already has block sources but needs speed to race Knowledge Demon's heals before curses compound.
+  - 选项：o0=抱抱先生；o1=风的女儿
+- 2026-09-26T15:46 第7层：Jev o1@0.12 → o2。甲虫汁最不值钱；本牌组无力量成长，升级稀有能力牌有机会拿到恶魔形态/壁垒等核心引擎，长期价值最高。
+  - 选项：o0=放入罕见药水；o1=放入普通药水；o2=放入稀有药水
+- 2026-09-26T15:59 第23层：Jev o0@0.37 → o1。5点生命代价小，无色卡池上限高且可跳过；26张牌组不宜被迫塞入随机牌，留着删打击、存钱进商店更稳。
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-26T16:05 第1层：Jev o1@0.40 → o0。A7 开局删掉一张打击最稳；随机遗物换诅咒按经验手册是亏的，羽翼之靴只改路线不提升牌组质量。
+  - 选项：o0=精准剪刀；o1=羽翼之靴；o2=涅奥骨骰
+- 2026-09-26T16:15 第1层：Jev o1@0.25 → o0。变形一张打击提升牌组质量，无色牌平均偏弱且不删打击；本局缺输出与AOE，随机牌期望更高。
+  - 选项：o0=新叶；o1=铅制镇纸
+- 2026-09-26T16:18 第7层：Jev o1@0.05 → o0。多尼斯异鸟蛋是打不出的废牌占手牌；+7 最大生命是手册推荐的永久收益（有+最大生命就选）。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-26T16:20 第11层：Jev o0@0.09 → o1。3 HP is trivial (71/87, Burning Blood); Shrug It Off is one of only 3 block cards. Reroll hoping to pitch a Strike instead.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T16:21 第11层：Jev o1@0.08 → o0。Free deck-thinning; 6 HP reroll risks landing on core cards (燃烧/地狱火) and escalates cost. HP already below boss-entry average — save it for the Kin fight.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T16:28 第18层：Jev o0@0.24 → o1。Wings turns card rewards we plan to skip into relics with no HP cost; relic density best fixes our weak deck before Kaiser Crab and Act 3.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔的士兵
+- 2026-09-26T16:34 第3层：Jev o0@0.20 → o1。Full heal to 80 plus an extra card-reward fight suits this thin 12-card deck needing attacks; 62 gold buys nothing at A7 prices while 8 HP is real.
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-26T16:50 第23层：Jev o0@0.18 → o1。Losing Pommel Strike (damage+draw) is worse than 3 HP; reroll to fish a Strike/curse removal instead — 64/91 HP can afford it.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T16:52 第23层：Jev o0@0.13 → o1。Bash+ is our only vulnerable applier, key for the crab double-kill; 5 HP is cheap with Burning Blood, Small Blood Vial and rests ahead. Reroll hoping a Strike/Defend falls.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-26T17:01 第34层：Jev o1@0.08 → o2。+1 energy/turn hugely outweighs powers costing +1: deck is 15 attacks vs only 3 powers, and energy helps block+attack vs 600-HP boss with Pel Blood draw.
+  - 选项：o0=切肉刀；o1=三刃回旋镖；o2=带刺手甲
+- 2026-09-26T17:40 第34层：Jev o1@0.13 → o0。+1 energy every turn is far stronger for the Aeonglass race; only 3 powers (small penalty), extra energy fuels Shuriken stacks and big Bludgeon turns.
+  - 选项：o0=带刺手甲；o1=投斧；o2=三刃回旋镖
+- 2026-09-26T17:43 第39层：Jev o1@0.44 → o0。Decay is cheap with Tungsten Rod and Baking Glove exhaust fuel; a permanent Soul Power enchant boosts a played exhaust card for the Aeonglass race.
+  - 选项：o0=让它直面真相；o1=接受这颗遗忘之魂
+- 2026-09-26T17:50 第1层：Jev o1@0.29 → o2。Deck lacks strength/AOE；一张稀有牌（恶魔形态/献祭/狱火）能整体提升胜率，一张受伤诅咒还能靠商店删；海螺只在精英战生效。
+  - 选项：o0=轰鸣海螺；o1=石炉加湿器；o2=沉重石板
+- 2026-09-26T17:52 第3层：Jev o0@0.20 → o1。回复到满血并多打一场，拿到卡牌奖励与燃烧之血回复，血线支撑路上 2–4 个精英；A7 血量是硬约束，85 金不值 8 血。
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-26T18:06 第1层：Jev o0@0.19 → o2。A7 makes rare cards scarce; choose a rare power/AOE now. Injury is a dead card but removable later; immediate deck power outweighs.
+  - 选项：o0=钓鱼竿；o1=轰鸣海螺；o2=沉重石板
+- 2026-09-26T18:18 第18层：Jev o1@0.45 → o2。每回合+1能量，直接换成伤害与格挡（当前3能量每回合都花光）；3金/回合可由战斗收入覆盖；附魔要删的打击价值低，单卡不确定。
+  - 选项：o0=营养汤；o1=故事书；o2=黄金印
+- 2026-09-26T18:25 第28层：Jev o1@0.28 → o0。Random Power hits Demon Form/Inflame, which this deck badly needs for permanent Strength; 0-cost pool is mostly filler for a 29-card deck.
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-26T18:31 第34层：Jev o1@0.21 → o2。Relic: first card each combat played twice is free permanent tempo/scaling — doubles Demon Form/Inflame or a big attack every fight, with no deck bloat unlike the whistle or enchant.
+  - 选项：o0=坦克斯的哨子；o1=三刃回旋镖；o2=投斧
+- 2026-09-26T18:34 第45层：Jev o0@0.15 → o1。金纸依赖消耗体系，此牌组近乎废牌；精致折扇每3张攻击给格挡，不受脆弱削减，正合女王战的持续防御需求。
+  - 选项：o0=拿上面那件；o1=拿中间这件；o2=拿下面那件
+- 2026-09-26T18:53 第22层：Jev o1@0.11 → o0。治疗后接近满血，后续休息点可全改为锻造；佩尔之牙本就会返还升级牌，-10 血换升级不值，羽化只占牌组一张。
+  - 选项：o0=接纳；o1=拒绝
+- 2026-09-26T18:56 第1层：Jev o1@0.38 → o0。每次休息+5最大生命，长线最强，A7血量稀缺；无色随机收益一般，失去99金等于删牌，均不如稳定上限成长。
+  - 选项：o0=石炉加湿器；o1=铅制镇纸；o2=华美发束
+- 2026-09-26T19:15 第28层：Jev o1@0.13 → o0。删打击是既定方针：牌组 12 攻击偏多、格挡仅够用；移除 2 张打击提浓度并换一张高质攻击，符合力量爆发路线。
+  - 选项：o0=融合打击；o1=融合防御
+- 2026-09-26T19:15 第28层：Jev o1@0.17 → o0。删打击是既定方针：牌组攻击太杂、需要浓度，且究极打击比基础打击强；格挡牌已有6张，不能删防御削弱知识恶魔战。
+  - 选项：o0=融合打击；o1=融合防御
+- 2026-09-26T19:25 第1层：Jev o1@0.10 → o0。免费升级每3场战斗一次，无副作用；赢局升级数高，诅咒死牌拖手牌，路线灵活性不如稳定成长。
+  - 选项：o0=钓鱼竿；o1=羽翼之靴；o2=诅咒珍珠
+- 2026-09-26T19:37 第1层：Jev o1@0.23 → o0。Max-HP scaling beats a random card pack; curse for gold is a known trap, and extra HP keeps us above Waterfall Giant's eruption.
+  - 选项：o0=石炉加湿器；o1=卷轴箱；o2=诅咒珍珠
+- 2026-09-26T19:50 第18层：Jev o0@0.15 → o2。Permanent +1 draw every turn beats conditional energy and deferred random upgrades; finds block/damage for the 321 HP sandpit boss in 15 floors.
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔之血
+- 2026-09-26T20:05 第34层：Jev o2@0.09 → o0。+1 energy/turn is a top-tier boss-relic effect for the 600 HP Test Subject fight; one curse is fine with Dark Embrace exhaust, while Parasol is shop-dependent and force-adds cards.
+  - 选项：o0=血染玫瑰；o2=领主阳伞
+- 2026-09-26T20:14 第1层：Jev o1@0.10 → o0。A7 halves rare drops, and a guaranteed rare (Demon Form/Offering/Pyre/Feed) adds the missing power spike; Strike can be removed later at a shop.
+  - 选项：o0=奥术卷轴；o1=精准剪刀；o2=涅奥的牺牲
+- 2026-09-26T20:16 第6层：Jev o1@0.03 → o0。异鸟蛋是占手牌的废牌（手册明列为诅咒级）；+7 最大生命直接提升生存，符合「有加最大生命就选」原则。
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-26T20:28 第18层：Jev o0@0.15 → o1。牌组无力量来源且均费仅0.79、能量常花不完；烘焙手套把每回合用不到的牌转为永久力量成长，正补本局最大短板。
+  - 选项：o0=烫嘴可可；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-26T20:30 第21层：Jev o0@0.09 → o1。6 HP is cheap (Burning Blood/rests recover it); permanent Vigor 8 patches our missing strength for the Insatiable damage race, and keeps both potions for the boss.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-26T20:34 第24层：Jev o1@0.41 → o0。Deck needs permanent strength (Demon Form/Inflame); random Power pool far beats weak 0-cost fillers, and Baking Glove already feeds on junk cards.
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-26T20:43 第34层：Jev o1@0.06 → o2。Apotheosis upgrades our 30-card deck for the Queen fight; Swift enchant on 4 random cards and random potions are far weaker.
+  - 选项：o0=华美手镯；o1=娇嫩蕨草；o2=珠宝盒
+- 2026-09-26T20:46 第42层：Jev o1@0.10 → o0。Upgraded uncommon Power fits strength-ramp plan (Inflame/Feel No Pain/Rupture chance); Radiant Tincture expendable with Pyre+ energy, keep draw potion.
+  - 选项：o0=放入罕见药水；o1=放入罕见药水
+- 2026-09-26T20:54 第1层：Jev o0@0.35 → o2。三层稀有牌选择是A7下稀有机会，早期拿到恶魔形态/核心稀有牌可定胜负；受伤日后可100金删掉，风险可控。
+  - 选项：o0=金色珍珠；o1=药瓶皮套；o2=沉重石板
+- 2026-09-26T20:58 第5层：Jev o2@0.09 → o0。攻击牌每场都打出，锋利+2伤害直接补本局最大缺口（无力量来源、boss 173血）；技能/能力附魔收益小且能力牌很少打。
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-26T21:12 第1层：Jev o0@0.36 → o1。删牌最优先：移除一张打击，直接提升牌组质量；升级打击/防御收益低，药水换诅咒更是净亏。
+  - 选项：o0=涅奥的护符；o1=精准剪刀；o2=涅奥的牺牲
+- 2026-09-26T21:18 第14层：Jev o0@0.07 → o1。藏宝图是无用死牌（等同诅咒），会稀释16张的薄牌组；8血换一瓶药水为boss做准备，血量充足且有休息点。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T21:24 第18层：Jev o0@0.10 → o1。Wings converts card rewards into relics; deck is already near target size and should skip mediocre rewards anyway, while Eye is situational and Horn dilutes the deck.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔之眼
+- 2026-09-26T21:28 第1层：Jev o0@0.04 → o1。轰鸣海螺在精英战开局额外抽2张并获得能量，直接提升一幕精英胜率与遗物滚雪球；骨骰附赠诅咒风险太高，羽翼之靴收益偏弱。
+  - 选项：o0=羽翼之靴；o1=轰鸣海螺；o2=涅奥骨骰
+- 2026-09-26T21:55 第1层：Jev o1@0.15 → o0。升级打击/防御价值极低（打击迟早要删）；卡包能补前期输出，A8 下早期攻击牌更重要。选卷轴箱。
+  - 选项：o0=卷轴箱；o1=涅奥的护符
+- 2026-09-26T22:13 第1层：Jev o1@0.29 → o0。随机稀有牌上限最高，直接补第一幕急需的输出/AOE；加最大生命只在休息时触发，和锻造升级冲突，价值低。
+  - 选项：o0=奥术卷轴；o1=石炉加湿器；o2=寻龙尺
+- 2026-09-26T22:32 第6层：Jev o0@0.32 → o1。藏宝图是占手牌的废牌（手册明令不拿）；8血换1瓶药水可接受，且药水格有空位。燃烧之血小战可回血。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T22:40 第18层：Jev o0@0.35 → o2。佩尔的士兵 gives repeatable defensive value with no deck dilution; the deck already needs every card reward for damage, and 2 unknown 放松 cards would only slow key draws before Kaiser Crab.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔的士兵
+- 2026-09-26T22:54 第3层：Jev o1@0.18 → o0。+7 max HP is a real boost (and 7 heal now); the Egg is a dead card that just clogs draws, and my notes already flag it as curse-like. Never take it.
+  - 选项：o0=吃掉这颗蛋；o1=带走这颗蛋
+- 2026-09-26T22:57 第11层：Jev o0@0.13 → o1。藏宝图是不可打出的废牌（过往4局教训）；59血扣8仍够用，前方2个休息点+燃烧之血可回，随机药水可留Boss战。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-26T23:01 第18层：Jev o0@0.08 → o1。Optional, no deck dilution: sacrifice only weak card rewards for relics, boosting a run that skips most act-2 rewards anyway.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔之眼
+- 2026-09-26T23:07 第1层：Jev o1@0.32 → o2。A8 keeps upgrades scarce; three guaranteed upgraded rewards now (later picks are chosen anyway) beat one random relic, and the lost first chest is a bounded cost. Skip the low-value transform.
+  - 选项：o0=新叶；o1=小型扭蛋；o2=白银熔炉
+- 2026-09-26T23:16 第18层：Jev o0@0.07 → o1。佩尔之牙：移除5张最弱牌（多余打击）暂时精简卡组，距boss还有15层，每场战斗后随机返还并升级1张，等于战前白得5次升级——长期收益最高。
+  - 选项：o0=佩尔之角；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-26T23:17 第21层：Jev o1@0.21 → o2。石头的+1敏捷对只有1张格挡牌的卡组收益很低；用它换2件随机遗物，为12层后的帝王蟹boss积累战力更划算。
+  - 选项：o0=给他鲜血药水；o1=给他100金币；o2=给他意外光滑的石头
+- 2026-09-26T23:26 第1层：Jev o0@0.19 → o2。牌组无力量无AOE，3选1稀有牌（恶魔形态/祭品/狱火）最补核心瓶颈；受伤仅一张死牌，可用后续消耗或删除处理。
+  - 选项：o0=石炉加湿器；o1=新叶；o2=沉重石板
+- 2026-09-27T00:00 第34层：Jev o1@0.10 → o2。+31 max HP directly boosts survival for the Queen's ~600 effective HP fight and amplifies Royal Pillow rests; 888 gold needs rare shops, and Fur Coat value is unreliable.
+  - 选项：o0=图章戒指；o1=皮草大衣；o2=布质果实
+- 2026-09-27T00:26 第34层：Jev o0@0.26 → o2。+1 energy every turn is the reliable way to close the ~50 dmg/turn boss gap; the 3 Dazed are minor and Baking Glove can eat statuses. Potions already come from 小邮箱 rests.
+  - 选项：o0=娇嫩蕨草；o1=艳丽围巾；o2=赐福鹿角
+- 2026-09-27T00:33 第45层：Jev o2@0.05 → o1。150 HP is killable in 3 turns with 4-5 energy plus Strike Dummy/Baking Glove damage; 2 upgrades beat a potion (小邮箱 refills them), while 300 HP is likely unreachable.
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-27T00:41 第3层：Jev o0@0.22 → o1。藏宝图是死牌占抽牌，手册明令不拿。58血足够，8点血换随机药水可接受，与现有癫狂之触组成应急手段。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-27T00:52 第18层：Jev o0@0.09 → o1。移除4张（打击/诅咒）最能提升关键牌上手率，正合删打击保Whirlwind/燃烧的计划；煤灰仅本场战斗按洗牌累计，代价小，胜过4次升级。
+  - 选项：o0=美味饼干；o1=大～抱抱；o2=黄金罗盘
+- 2026-09-27T01:15 第23层：Jev o1@0.05 → o0。靠近给确定的攻击牌附魔，直接强化输出/AOE，服务力量爆发计划；变化随机、可能出废牌，boss 前要稳定。
+  - 选项：o0=靠近；o1=用火烧杀
+- 2026-09-27T01:26 第34层：Jev o1@0.07 → o0。Extra energy every turn dwarfs one-time first-card double and random attacks; power tax is minor next to 10+ extra energy in long Queen fight.
+  - 选项：o0=带刺手甲；o1=投斧；o2=十字弓
+- 2026-09-27T01:39 第46层：Jev o0@0.26 → o1。19血且药水位已满，第1档奖励作废；300血三回合打不完，150血配合力量成长和易伤可击杀，2张随机升级能补女王战的牌质。
+  - 选项：o0=第1档；o1=第2档；o2=第3档
+- 2026-09-27T01:59 第22层：Jev o0@0.23 → o1。Inferno is my only AOE and core strength/self-damage engine; 3 HP (81%→77%) is cheap to re-roll for a Strike/curse removal instead.
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-27T02:35 第1层：Jev o0@0.00 → o1。卡牌包无代价立即补强前期输出(缺 AOE/力量)；牌组仅11张且已带1诅咒，再添死牌风险大于333金。
+  - 选项：o0=轰鸣海螺；o1=卷轴箱；o2=诅咒珍珠
+- 2026-09-27T02:41 第12层：Jev o0@0.00 → o2。Deck has 14 attacks but zero non-basic block; transforming a Strike into a defensive card fixes both needs before The Kin boss.
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-27T02:51 第23层：Jev o0@0.00 → o1。Relic is permanent power and doesn't dilute the 27-card deck; 14 HP affordable at 86% with rest sites, Burning Blood and blood potion.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-27T02:52 第27层：Jev o0@0.00 → o1。避开诅咒：腐朽每回合掉血、污染抽牌，且随机伤害遗物会打乱帝皇蟹双钳血量；59 金可存到商店删牌。
+  - 选项：o0=抓住这团鬼火；o1=搜索附近的区域
+- 2026-09-27T04:01 第1层：Jev o0@0.00 → o1。Early deck is weak; the run snowballs through elite relics/cards, and +2 draw +1 energy makes those Act 1 elite fights far safer.
+  - 选项：o0=羽翼之靴；o1=轰鸣海螺
+- 2026-09-27T04:14 第1层：Jev o0@0.30 → o1。Transform a Strike for a free upgrade early; best average value. Neow's Dice curse-is-bad per guide; colorless picks are low impact in Act 1.
+  - 选项：o0=铅制镇纸；o1=新叶；o2=涅奥骨骰
+- 2026-09-27T04:20 第15层：Jev o0@0.11 → o1。藏宝图是打不出的废牌（占手牌按诅咒算），手册明确不拿。8 血换一瓶随机药水，血线安全且下一站是休息点，药水留给墨影幻灵肢解回合。
+  - 选项：o0=顺走地图；o1=耐心寻找出口
+- 2026-09-27T04:23 第20层：Jev o0@0.04 → o1。6 HP is affordable at 51/80 with 2-3 rests ahead; reaching the flower's core relic outweighs 75 gold and fits the power/block needs.
+  - 选项：o0=采集花蜜；o1=深入探索
+- 2026-09-27T04:46 第1层：Jev o0@0.00 → o1。Deck lacks strength, AOE, block; card packs give immediate Act-1 power for the Lagavulin boss. Conch only helps elites; gold risks a curse and hoarding.
+  - 选项：o0=轰鸣海螺；o1=卷轴箱；o2=诅咒珍珠
+- 2026-09-27T04:58 第18层：Jev o0@0.00 → o1。牌组零力量来源；烘焙手套每回合+1力量，直补凯撒蟹与三幕最大短板，消耗手牌还能顺带精简牌组。
+  - 选项：o0=美味饼干；o1=烘焙手套；o2=玩具盒
+- 2026-09-27T05:12 第1层：Jev o0@0.29 → o1。经验手册明确：有+最大生命选项就选（牡蛎/草莓），两胜均如此。卡牌奖励普通战斗即可获得，11上限永久保值。
+  - 选项：o0=失物盒；o1=营养牡蛎
+- 2026-09-27T05:14 第8层：Jev o0@0.10 → o1。Heal to full before boss (Vantom needs high entry HP), and the fight still yields gold plus a much-needed card reward; 8 HP outweighs 72 gold.
+  - 选项：o0=坚持跋涉；o1=休息
+- 2026-09-27T05:19 第18层：Jev o0@0.11 → o1。牌组无任何力量来源，烘焙手套每回合+1力量是永久成长，正好支撑沙虫7回合斩杀；另两个只是临时能量，蜡烛还会过期。
+  - 选项：o0=烫嘴可可；o1=烘焙手套；o2=南瓜蜡烛
+- 2026-09-27T05:26 第25层：Jev o0@0.04 → o1。牌组无力量成长、沙虫按沙坑倒计时必死，最缺的是伤害；6血便宜（有微型帐篷可边休边锻），活力8永久增伤直接缩短斩杀回合，迅捷药水不值这份伤害。
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-27T05:38 第36层：Jev o0@0.31 → o1。诅咒有烘焙手套/燃烧契约可消耗成燃料，6次占卜价值翻倍，优先找恶魔形态/燃烧补力量短板，且110金本就不够关键购物。
+  - 选项：o0=揭幕未来；o1=分期付款
+- 2026-09-27T06:16 第1层：Jev o0@0.00 → o1。删一张打击最稳：牌组薄化提升关键牌密度；卡包随机、A8/A7 下奖励已降级，熔炉还要赔掉首个宝箱遗物。
+  - 选项：o0=卷轴箱；o1=精准剪刀；o2=白银熔炉
+- 2026-09-27T06:19 第6层：Jev o0@0.00 → o2。Deck has only 1 block card; the Kin's 3-hit beam punishes that. Transforming a Strike into 坚韧之环 adds real defense while thinning Strikes.
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-27T06:40 第31层：Jev o0@0.00 → o1。28/80 HP with boss in 2 floors: Decay curse bleeds ~2 HP/turn through the long sandpit clock fight; 49 gold carries to Act 3 shops. Skip the relic.
+  - 选项：o0=抓住这团鬼火；o1=搜索附近的区域
+- 2026-09-27T06:42 第1层：Jev o1@0.24 → o2。A rare card now is the biggest power spike; run lacks strength/AOE win conditions. One Injury is a manageable, later-deletable cost.
+  - 选项：o0=钓鱼竿；o1=羽翼之靴；o2=沉重石板
+- 2026-09-27T06:56 第18层：Jev o2@0.18 → o0。Permanent +1 energy from turn 3 is strongest: Demon Form costs 3, and long boss fights (Knowledge Demon) reward energy every turn over one extra draw.
+  - 选项：o0=佩尔之肉；o1=佩尔的增生组织；o2=佩尔之血
+- 2026-09-27T07:21 第1层：Jev o0@0.00 → o1。Early Act 1 needs attack/AOE cards; the pack adds value without a dead curse, while Strike/Defend upgrades are weak.
+  - 选项：o0=涅奥的护符；o1=卷轴箱；o2=诅咒珍珠
+- 2026-09-27T07:27 第15层：Jev o0@0.00 → o1。Deck is bloated with 13 attacks; a targeted Strike removal beats two random upgrades. Next node is a RestSite, so upgrading is available anyway.
+  - 选项：o0=光之门；o1=暗之门
+- 2026-09-27T07:31 第18层：Jev o0@0.00 → o1。Wings converts skipped card rewards into relics; deck is already 22 cards and A8 rewards are weak. Take needed block/AOE, sacrifice rest.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔的士兵
+- 2026-09-27T07:34 第23层：Jev o0@0.00 → o1。150 gold buys +2 Strength for the next 5 fights (~free Inflame each battle), speeding kills at 40% HP; 182 gold remains for shop removals.
+  - 选项：o0=骨茶；o1=余烬茶；o2=无礼之茶
+- 2026-09-27T07:42 第1层：Jev o1@0.16 → o2。两件遗物提供贯穿全局的永久战力；附加的打击/防御在前期尚可使用，代价可接受。精英额外抽牌仅在精英战生效，价值偏窄。
+  - 选项：o0=轰鸣海螺；o1=卷轴箱；o2=巨大扭蛋
+- 2026-09-27T07:57 第23层：Jev o1@0.45 → o0。Bottleneck is permanent Strength/scaling for the 7-turn sand clock; power pool holds Demon Form/Inflame, and 宾邦 duplicates the pick. 0-cost pool mostly dilutes.
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-27T08:01 第1层：Jev o1@0.42 → o0。Random rare card addresses run's core gaps (strength/AOE) with high upside; boots only help pathing, and 99 gold is worth more than a coin-flip enchant.
+  - 选项：o0=奥术卷轴；o1=羽翼之靴；o2=华美发束
+- 2026-09-27T08:10 第20层：Jev o1@0.02 → o0。+10 max HP is permanent and heals now before the act boss; Stable Serum is a replaceable one-shot consumable, and Energy Potion remains for the Kaiser Crab.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-27T08:20 第1层：Jev o1@0.32 → o0。精英额外抽2牌+1能量全程有效，A8精英更多；变形1张收益小，金币换附魔不值。
+  - 选项：o0=轰鸣海螺；o1=新叶；o2=华美发束
+- 2026-09-27T08:21 第3层：Jev o1@0.05 → o0。A8 前3层HP比金币贵，保留83%血为精英；空药水栏正好装满2瓶，Vantom战兜底，坏药水还能卖钱。
+  - 选项：o0=交换金币；o1=拥抱树木
+- 2026-09-27T08:35 第23层：Jev o1@0.24 → o0。Deck has zero power/growth and needs strength; a random Power can be Demon Form/Inflame, while random 0-cost cards are usually filler.
+  - 选项：o0=学习；o1=触碰核心
+- 2026-09-27T08:55 第1层：Jev o0@0.38 → o1。A8 下 99 金不够删牌，华彩附魔收益太小；随机稀有牌期望值最高，本局急需力量/AOE。首幕怪物也靠一张强稀有打开局面。
+  - 选项：o0=卷轴箱；o1=奥术卷轴；o2=华美发束
+- 2026-09-27T08:59 第8层：Jev o0@0.40 → o1。53金几乎无用；325金够二幕删打击+买核心牌/遗物，19张牌组多一张诅咒可接受，燃烧之血续航足够。
+  - 选项：o0=第一个箱子；o1=第二个箱子
+- 2026-09-27T09:06 第18层：Jev o1@0.18 → o0。Permanent +1 energy from turn 3, no drawback: powers up scaling (Demon Form/Whirlwind) and defends against the sandpit clock; other options are situational and weak.
+  - 选项：o0=佩尔之肉；o1=佩尔的增生组织；o2=佩尔的士兵
+- 2026-09-27T09:19 第30层：Jev o1@0.38 → o0。74 gold can't buy removal before boss (106<150); permanent relic outweighs one Decay in a 29-card deck, and Rupture may convert its damage to Strength.
+  - 选项：o0=抓住这团鬼火；o1=搜索附近的区域
+- 2026-09-27T09:23 第1层：Jev o1@0.43 → o0。轰鸣海螺永久生效：精英战开局多1能量+2张牌，最利于一幕打精英滚雪球拿遗物；随机药水与「探寻」价值更低且一次性。
+  - 选项：o0=轰鸣海螺；o1=药瓶皮套；o2=寻龙尺
+- 2026-09-27T09:27 第5层：Jev o2@0.08 → o0。鸟：将一张打击变为啄击，既删最差废牌又补攻击输出，契合本局“力量/伤害优先、Boss 神官竞速”的计划。
+  - 选项：o0=鸟；o1=蛇；o2=圆环
+- 2026-09-27T09:46 第18层：Jev o0@0.38 → o1。5 cards temporarily removed (thins bloated 22-card deck, key draws sooner) then permanently upgraded: best value for closing the Insatiable damage gap; upgrades match winning pattern.
+  - 选项：o0=佩尔之泪；o1=佩尔之牙；o2=佩尔的士兵
+- 2026-09-27T09:47 第20层：Jev o0@0.17 → o1。6 HP buys a permanent +8 damage enchant on an attack card; boss needs damage to close the 31/turn gap, and the random-play potion is expendable.
+  - 选项：o0=喝药抬起；o1=用力去推
+- 2026-09-27T09:52 第4层：Jev o0@0.42 → o1。18 HP is a steep price at A8 with elites ahead and no shops on route; 92 extra gold is only ~1 common card. Protect HP, take the safe 61 gold.
+  - 选项：o0=独自挑战；o1=结伴同行
+- 2026-09-27T09:56 第13层：Jev o0@0.34 → o1。72/80 HP and a rest site before boss; permanent Strength relic fixes our biggest gap better than two common cards.
+  - 选项：o0=大快朵颐；o1=仔细翻找
+- 2026-09-27T09:59 第18层：Jev o0@0.10 → o1。Opt-in sacrifice turns skippable rewards into relics, fixing our power/strength gap; Horn dilutes a 19-card deck and the Eye exhausts our hand with zero exhaust synergy.
+  - 选项：o0=佩尔之角；o1=佩尔之翼；o2=佩尔之眼
+- 2026-09-27T10:02 第20层：Jev o1@0.25 → o0。完美打击是可被淘汰的单体攻击（牌组将变薄、它不是力量/多段核心），免费删牌不花 HP；再花 4 HP 重随是赌注，可能命中关键牌还要继续付血。省血进 boss。
+  - 选项：o0=跨越；o1=再撑一会
+- 2026-09-27T10:04 第25层：Jev o1@0.03 → o0。Free card choice from 5 beats paying 5 HP for a random colorless card; HP is precious before 1-3 elites and boss at 73%.
+  - 选项：o0=分享知识；o1=把它扯下来
+- 2026-09-27T10:10 第1层：Jev o2@0.14 → o0。无副作用；升级痛击直接强化前期精英与 Boss 输出。扭蛋会加 4 张基础牌拖累 A8 删牌节奏，靴子只影响路线。
+  - 选项：o0=橙型香盒；o1=羽翼之靴；o2=巨大扭蛋
+- 2026-09-27T10:14 第9层：Jev o2@0.13 → o0。Sharp on multi-hit Sword Boomerang adds +2 per hit, fitting the strength damage race vs Waterfall Giant; deck has only 1 power, so Swift is marginal.
+  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
+- 2026-09-27T10:30 第5层：Jev o1@0.07 → o0。Free relic beats HP-priced gold: the sword likely boosts damage/strength, fitting this run's scaling plan, while 7 HP at 59% is precious before elites/boss.
+  - 选项：o0=拿起石剑；o1=潜水
+
+## combat/plan-choice+potion（333 次）
 - 2026-09-24T07:08 第17层：Jev plan1@0.27 → p0。Boss only adds status cards turn 1; use 发光水 to dig for scaling/damage now while safe, saving 虚弱药水 for a real attack turn.
   - 选项：plan1=；p0=；p1=
 - 2026-09-24T07:08 第17层：Jev plan4@0.31 → plan1。Turn 1 Demon Form is the win condition; it scales every turn. Weak potion blunts boss damage while Form ramps.
@@ -39,8 +841,1174 @@
   - 选项：plan1=；plan2=；plan3=；plan4=；p0=
 - 2026-09-24T08:39 第25层：Jev plan1@0.38 → p2。37 HP vs 39 incoming in a long 3-enemy fight; extra energy/draw adds block plus Uppercut debuff, keeping enough HP to survive and finish the fight.
   - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T09:00 第17层：Jev plan2@0.20 → p0。Boss fight is long and energy-hungry; Radiant Tincture's extra energy now and next turns compounds, improving both block and damage. Use it now, don't hoard.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T09:12 第31层：Jev plan4@0.23 → plan2。Draws a card, applies Vulnerable 3, gains 7 block, and loses least HP while keeping damage close; beats passivity and glass plan3.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T09:16 第33层：Jev plan1@0.20 → p0。Low HP vs 230-HP boss; Dexterity persists all fight, so drinking early maximizes block value across remaining turns and cuts damage now.
+  - 选项：plan1=；p0=
+- 2026-09-24T09:27 第17层：Jev plan1@0.46 → p1。Free turn (boss buffing): ability potion yields a free power for scaling vs 240 HP boss; best long-term value now.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T09:31 第17层：Jev plan1@0.48 → p0。Long boss fight: thorns adds persistent chip damage, shortens the fight, saves HP; guide says use potions boldly in boss fights.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-24T09:32 第17层：Jev plan1@0.38 → p2。Boss fight where potions should be used boldly; free random skill can add block/damage, then still play Headbutt line.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-24T09:39 第22层：Jev plan2@0.38 → plan1。Kill all eggs/larva to stop the summon snowball, gain permanent +1 strength with Brand, and leave only the big bug to block next turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T09:43 第24层：Jev plan1@0.42 → plan2。Race the buffing beetle: 14 dmg on the scaling threat now outweighs 5 HP, which Burning Blood refunds; Headbutt also recurs a key card.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T09:48 第33层：Jev p0@0.25 → plan1。Draw is blocked this turn and no attack lands, so the potion's value is minimal; conserve it for the demon's big hitting turns and just take the free 11 damage.
+  - 选项：plan1=；p0=
+- 2026-09-24T10:04 第17层：Jev plan1@0.28 → p1。Boss is damage race; draw potion uses unused energy, cycles to attacks, and reduces HP loss now.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T10:06 第17层：Jev plan1@0.39 → plan3。Bash applies Vulnerable 2 on a 240-HP boss that heals every 5 turns; amplified future damage beats plan1's 3 damage and plan2's raw 8.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-24T10:06 第17层：Jev plan2@0.27 → p0。Free potion card adds value, may avoid Bloodletting's 3 HP loss, and boosts Fiend Fire damage.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-24T10:14 第9层：Jev plan1@0.13 → p0。Turn 1 of a long 140 HP elite: Ritual scaling is at peak value, and potions should be used boldly in elites to win the HP race.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T10:37 第17层：Jev plan1@0.40 → p0。Boss at 47 HP, we must deal damage now. Attack potion grants a free attack while still allowing 0 HP lost, maximising burst to end the fight before Dismember.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T11:01 第17层：Jev plan1@0.40 → plan2。Sets Vulnerable 4 (痛击+熔融之拳 doubling it), massively accelerating damage to reach the 150 HP stun; the bigger 50% multiplier beats 5 HP and 9 raw damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p3=
+- 2026-09-24T11:02 第17层：Jev plan1@0.30 → p0。敏捷药水+2敏捷全場提升格挡，19血长战价值最高；优于随机技能药水和无用的混沌药水。
+  - 选项：plan1=；plan2=；p0=；p1=；p3=
+- 2026-09-24T11:04 第17层：Jev plan2@0.49 → plan1。Plan1 deals 28, applies Vulnerable 3 + Weak 1, triggers 百年积木 draw, and sets up the stun next turn; weak offsets the 8 HP loss.
+  - 选项：plan1=；plan2=；p1=；p3=
+- 2026-09-24T11:08 第17层：Jev plan1@0.35 → p1。混沌药水 (Entropic Brew) fills empty slots for free value; at 5 HP in a boss fight extra potions (heals/blocks) beat one random skill, and the card plan alone already takes 0 damage.
+  - 选项：plan1=；p1=；p3=
+- 2026-09-24T11:09 第17层：Jev plan1@0.37 → p1。Drawing 2 cards may find a heal (e.g. Reaper) to survive Crimson Mantle's 10 HP loss next turn; plan1 guarantees death next turn.
+  - 选项：plan1=；p1=；p3=
+- 2026-09-24T11:11 第17层：Jev p3@0.12 → plan1。Free turn (0 incoming); 5 vulnerable on the boss wins the damage race at 4 HP, while a random skill adds little now.
+  - 选项：plan1=；p3=
+- 2026-09-24T11:20 第27层：Jev plan2@0.32 → plan1。Kills the 21HP attacker, removing 22 damage/turn, and loses least HP (14). Best progress with only 胧光怪 left.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p3=
+- 2026-09-24T11:27 第33层：Jev plan3@0.46 → plan2。Enemy buffs, no damage incoming: Inflame gives permanent +3 strength AND Uppercut applies Vulnerable+Weak, maximizing value over this long 321 HP boss fight.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p3=
+- 2026-09-24T11:29 第33层：Jev plan1@0.35 → p0。Dexterity potion gives permanent block scaling for the long boss fight, better than one random free card now.
+  - 选项：plan1=；p0=；p1=；p3=
+- 2026-09-24T11:38 第12层：Jev plan2@0.29 → plan1。Max tempo: 18 dmg plus Vulnerable sets up a kill next turn; 16 HP is affordable with Burning Blood and Bone Meat healing on this elite.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T11:42 第15层：Jev plan1@0.42 → plan2。Loses 5 less HP while still leaving Eel at 10 HP with Vulnerable, trivially killable next turn; no need to spend potions on a nearly-dead elite.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T11:43 第17层：Jev plan1@0.41 → p0。Free turn (no incoming damage); Dexterity buffs every block card across the long 211 HP boss fight — best value, lowest regret.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T11:43 第17层：Jev plan1@0.24 → p1。No damage incoming, so use turn 1 to develop. plan1 wastes 2 energy and burns vulnerable potion for only 9 damage; Clarity draws cards and re-plans for full value.
+  - 选项：plan1=；p1=
+- 2026-09-24T11:52 第12层：Jev plan1@0.38 → p2->e0。Long elite fight (130 HP); Demise powder ticks every enemy turn, using it early maximizes free damage and shortens the fight.
+  - 选项：plan1=；p0=；p1=；p2->e0=
+- 2026-09-24T11:52 第12层：Jev plan1@0.18 → p0。Free attack+skill+power cards this turn add real tempo and a possible scaling power; worth using now in a long 140 HP elite fight.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T11:56 第17层：Jev plan1@0.46 → p0。Boss turn 1 with no incoming damage — a free power compounds over this long fight; potions are meant to be used boldly in boss fights.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T11:58 第17层：Jev plan1@0.30 → p1。At 24 HP the potion's free random skill strictly adds options (extra block or damage) — dominates both fixed plans, and bosses are where potions should be spent.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T12:10 第17层：Jev plan1@0.38 → p1。Free turn (boss buffing, no attack): persistent Plating pays off across this long 252-HP fight, and fire potion is saved for a later burst/execute turn.
+  - 选项：plan1=；p1=
+- 2026-09-24T12:21 第33层：Jev plan2@0.29 → p0。Use the whole-combat free-card potion on turn 1 while the boss only buffs; card-only lines just bleed 6 HP for nothing and waste energy.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T12:37 第17层：Jev p0@0.11 → plan1。Remnant can't be damaged; 50 HP beats the ~36-42 self-destruct and we can block next turn, so save the regen potion for later.
+  - 选项：plan1=；p0=
+- 2026-09-24T12:48 第33层：Jev plan1@0.25 → plan3。Balanced line: 58 damage still leaves 火箭 killable next turn, while 11 HP and 9 block beat plan1's suicidal 2 HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T13:06 第17层：Jev p1@0.05 → plan1。Enemy is stunned with 0 incoming: free turn. No need to burn potions; save them for the boss's wake-up burst phase since no HP is lost.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T13:06 第17层：Jev plan2@0.40 → p2。Iron Heart potion grants permanent Plating, reducing damage every turn for the whole boss fight; using it early maximizes its value.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T13:07 第17层：Jev plan2@0.26 → plan1。Bash sets up Vulnerable 2 for future turns, Shrug It Off blocks well with Plated Armor, costs only 2 HP on a long boss fight.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T13:09 第17层：Jev plan3@0.15 → plan1。Burst before the boss's str/dex debuffs; 25 damage plus two Razor Tooth upgrades outweigh 12 HP, and 43/67 stays safe.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T13:11 第17层：Jev plan1@0.27 → plan2。Balanced: 30 damage while losing only 9 HP keeps us healthy in a long boss fight; better damage-per-HP than racing plan1, and plan3 makes no progress.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T13:11 第17层：Jev plan1@0.21 → p1。Boss fight, tight HP clock; a free skill can add block to cut the 9 HP loss and free energy to attack.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T13:12 第17层：Jev plan1@0.41 → p0。Chaos potion costs no energy and generates extra potions, giving more options to survive and race the 105 HP boss; drink now, then re-plan.
+  - 选项：plan1=；p0=
+- 2026-09-24T13:12 第17层：Jev plan1@0.45 → p0。Boss fight, 0 HP lost either way; a free power (Demon Form/Inflame) is the biggest long-fight gain, and I have 3 potions.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T13:13 第17层：Jev plan2@0.37 → plan1。Enemy is buffing, not attacking, so this is free damage: deal 54, leave boss at 7 HP killable next turn, costs only 3 HP. Save potions.
+  - 选项：plan1=；plan2=；p1=；p2=
+- 2026-09-24T13:21 第22层：Jev plan1@0.45 → p0。Energy potion gives extra energy+draw, enabling all three key cards to nearly kill the minion and block, minimizing future damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T14:20 第33层：Jev plan1@0.34 → p0。Turn 1 is a free debuff turn; power potion can yield Demon Form/Inflame free, and 4 energy stays for more plays—better long-game value than plan1's 18 damage.
+  - 选项：plan1=；p0=
+- 2026-09-24T14:35 第17层：Jev plan2@0.32 → plan1。No incoming attack, so block is wasted; 51 damage (vs 31) shortens the fight, cutting the steam-eruption explosion, and 1 HP is trivial.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T14:35 第17层：Jev plan1@0.18 → p0。Potion is free; Plating lasts whole fight, reducing damage now and later. Best used early in boss fight.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T14:52 第12层：Jev plan1@0.23 → plan2。Same lethal setup; Taunt+Molten Fist gives 6 block (16 vs 22 HP lost) and more Vulnerable for next turns. Fight is long, HP is king.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T14:57 第17层：Jev plan3@0.14 → plan1。Trade 2 HP for 13 damage — best efficiency; keeps vulnerable up, grinds boss while staying safe without burning potions.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T14:59 第17层：Jev plan1@0.43 → p1。Reduce the boss's heavy 21 hit this turn to protect HP in a long attrition fight while keeping full Bash+Twin Strike offense.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T14:59 第17层：Jev plan2@0.39 → plan1。Boss race: 6 damage plus stacked Vulnerable beats saving 3 HP; pure defense cannot kill 131 HP, so keep pressure now.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T15:00 第17层：Jev plan1@0.33 → p0。Boss fight at 53% HP; the free colorless card now cuts this turn's 12+ HP loss and adds tempo — potions are meant for boss fights, don't hoard.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T15:08 第7层：Jev plan4@0.22 → plan3。Lowest HP loss (5) at 29 HP, weakens the 14-damage attacker 3 turns, and sets up an easy kill next turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T15:14 第17层：Jev plan3@0.40 → plan1。Turn 1 lay both powers (Pyre energy engine + Inflame +2 str) and still take 0 damage; keep 旋风斩 for a bigger multi-hit next turn. Best long-fight scaling.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T15:14 第17层：Jev plan1@0.23 → p1。Free power card turn 1 of a long Vantom boss fight maximizes scaling value; only 5 HP at risk now.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T15:20 第7层：Jev plan4@0.29 → plan1。Byrdonis scales power each turn, so race: Bash+Strike deals 22 and applies Vulnerable 2; 17 HP loss is trivial at 77/80.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T15:20 第7层：Jev plan1@0.47 → plan2。Takes only 12 now, leaves bird at 11 HP (killable next turn for 0 damage). plan1 loses 19 without killing; plan3 leaves 19 HP and risks another hit.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T15:23 第14层：Jev plan1@0.43 → p0。Elite has 10 Strength and scales; spend the attack potion for free burst damage to kill faster and preserve HP for the rest of the act.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T15:26 第17层：Jev plan3@0.20 → plan1。Deal 15 to push boss toward 150 stun threshold sooner; scaling plow damage means ending fight faster beats hoarding 5 HP.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-24T15:26 第17层：Jev plan2@0.16 → plan1。Deal 6 damage to approach 150 HP stun threshold; only 5 HP more cost, and stunning a turn earlier skips a ~22 chip attack.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T15:27 第17层：Jev plan1@0.26 → p1。Snecko Oil draws 5 cards and randomizes costs; likely blocks more, still crosses 150 for the stun, preserving HP for this boss fight.
+  - 选项：plan1=；p1=
+- 2026-09-24T15:43 第17层：Jev plan1@0.20 → p0。Drink Iron Skin now: plating cancels the 3 HP loss and adds block each remaining turn, vital before the boss's self-destruct explosion.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T16:37 第33层：Jev p0@0.01 → plan1。Full 103 HP and nothing blockable with 0 energy; 27 is affordable. Save Chaos until it fills multiple potion slots and save burst for the long two-claw fight.
+  - 选项：plan1=；p0=
+- 2026-09-24T16:37 第33层：Jev plan1@0.22 → plan2。Trading 8 HP for 12 extra damage accelerates this boss; HP is recoverable and we have Fairy safety.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T16:43 第33层：Jev plan1@0.27 → p0。Drinking 混沌药水 is free: fills the empty slot and triggers 蜡制爬行动物饰品 for this-turn Strength, then re-plan with extra damage — strictly better than any card-only plan.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-24T16:57 第44层：Jev plan1@0.23 → p1。Use Power potion for a free power and strength; elite fight warrants bold potion use to win faster and save HP for boss.
+  - 选项：plan1=；plan2=；p0->e0=；p1=
+- 2026-09-24T17:00 第44层：Jev plan1@0.04 → p0->e0。At 38 HP after this turn, a 0-energy dead turn is wasted; Demise adds damage-over-time to speed the elite kill, and Fairy in Bottle stays as safety.
+  - 选项：plan1=；p0->e0=
+- 2026-09-24T17:40 第17层：Jev p0@0.31 → plan1。Enemy is only buffing (0 incoming); 1 energy can't convert a potion into real value. Hold all potions — the skill potion is emergency block for the explosion turn.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T17:40 第17层：Jev plan4@0.31 → plan1。Take Inflame early for permanent +2 Strength; max damage now shortens fight and keeps explosion stacks lower; 12 HP is safe.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T17:41 第17层：Jev plan3@0.34 → plan1。Bash applies Vulnerable 2 (only source), boosting all attacks over next 2 turns; 0 HP lost, block 8. Worth more than 7 extra damage now.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T17:42 第17层：Jev plan1@0.40 → p0。Boss's steam eruption grows; use Colorless Potion for a free card to accelerate damage, then play Headbutt.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T17:43 第17层：Jev plan1@0.49 → p1。Free turn (no incoming damage) and steam eruption grows each turn, so cycle the hand with Gambler's Brew to dig for more attacks and shorten the fight before the explosion scales too high.
+  - 选项：plan1=；p1=；p2=
+- 2026-09-24T17:44 第17层：Jev plan1@0.32 → plan3。For Waterfall Giant keep HP above steam line; block 10 and chip 12 with Feed, avoiding plan2's heavier HP trade.
+  - 选项：plan1=；plan2=；plan3=；p2=
+- 2026-09-24T17:45 第17层：Jev plan2@0.11 → p2。Boss attrition fight: potion is free value now, keeps 45 HP, lets us still deal 8 via Strike+Defend re-plan. Use potions boldly in boss fights.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-24T17:55 第15层：Jev plan4@0.32 → plan1。Full HP lets us tank 13; Bash+ sets 3 vulnerable and 24 damage speeds the kill, saving 固化/敏捷 potions for the boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p2=
+- 2026-09-24T17:57 第17层：Jev plan3@0.48 → plan1。Maximize AOE damage to kill cultists faster; losing 9 HP at full health is acceptable in a long boss fight.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T17:59 第17层：Jev p1@0.32 → plan1。Enemy only buffs (0 damage incoming) and we have 0 energy; free +1 strength for 1 HP is pure value in a long boss fight. Save potions.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T17:59 第17层：Jev plan2@0.26 → plan1。Boss fight: 6 extra damage for 3 HP is worth it; 46/87 is safe and killing Kin faster limits its ramping strength.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T17:59 第17层：Jev p1@0.33 → plan1。No energy left; ending turn costs only 7 HP (49/87, safe). Save 痊愈药水 for a critical burst or big-hit turn later in this boss fight.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T18:00 第17层：Jev plan4@0.12 → p1。Boss fight: use energy/draw potion for a bigger turn, applying vulnerable and blocking to save HP for the long fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T18:02 第17层：Jev plan1@0.28 → plan2。Balanced trade: 14 damage advances the 60-HP kill while keeping a healthy 41 HP buffer against the strength-scaling boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p2=
+- 2026-09-24T18:09 第27层：Jev plan1@0.43 → plan4。Bludgeon+ kills the strength-stacking 7x2 centipede (biggest threat) while losing only 11 HP, best HP retention before act boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p2=
+- 2026-09-24T18:10 第27层：Jev plan2@0.39 → plan1。Best trade: 14 damage for only 2 HP, keeps us at 31/87 in an elite fight; plan3's extra 3 damage costs 10 HP. Finish next turn.
+  - 选项：plan1=；plan2=；plan3=；p0=；p2=
+- 2026-09-24T18:11 第27层：Jev plan2@0.36 → plan1。More damage (9 vs 3) pushes elite to 5 HP; 2 HP cost trivial with Burning Blood post-combat heal. End the fight faster.
+  - 选项：plan1=；plan2=；p0=；p2=
+- 2026-09-24T18:18 第33层：Jev plan4@0.31 → plan1。Highest damage (25) for same 24 HP loss as plan2; Hemokinesis amplified by existing Vulnerable on 碾碎爪, and both claws worn down without over-committing HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T18:19 第33层：Jev plan1@0.35 → p2。Guaranteed permanent Dexterity for the long boss fight; target rocket to face it and avoid back-attack, then re-plan.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T18:21 第33层：Jev plan1@0.16 → p1。At 0 energy, the colorless potion's free card is the only way to influence this turn (block or chip); boss fight justifies spending it to reduce the 29 HP hit.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T18:21 第33层：Jev plan4@0.14 → plan1。Best damage (23) while wearing both crabs down evenly; AOE hits the sleeping rocket too, shortening this long boss fight. HP buffer is safe.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T18:22 第33层：Jev plan3@0.12 → plan2。Balanced: keeps HP high (45) for a long two-claw boss fight with rage mechanic, while dealing decent damage and keeping Vulnerable up.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T18:23 第33层：Jev plan1@0.25 → p0。Chaos potion is a free action in a must-win boss fight; extra potions can beat plan1's poor 13 HP / 16 dmg outcome, and card plans still remain available.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T18:24 第33层：Jev plan1@0.42 → p1。Long boss fight; +2 Dex boosts all future block cards, better than one-turn upgrades, and saves fairy potion.
+  - 选项：plan1=；plan2=；p1=；p2=
+- 2026-09-24T18:26 第33层：Jev plan2@0.26 → p2。Boss fight at low HP; upgrade whole hand free this turn (0 HP), boosting the long fight. Potions should be used in bosses.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-24T18:34 第9层：Jev plan3@0.28 → plan1。Kills the strength+vulnerable eel outright, permanently removing the biggest scaling attacker; only 1 HP costlier than the safest efficient line in a long 100 HP elite fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T18:38 第9层：Jev plan2@0.21 → p1。At 7 HP with ~25 incoming next turn, drink 无色药水 for a free chosen card giving extra block or damage to survive this elite.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T18:38 第9层：Jev plan1@0.46 → p0。Card plan is near-useless: 3 damage, no kills, lose 10 HP with all 3 eels alive. In a must-win elite, spend the Gambler's Brew to dig for a real turn.
+  - 选项：plan1=；p0=
+- 2026-09-24T18:45 第9层：Jev plan2@0.08 → plan1。Burst enemy to 31 HP now (44 dmg) to end the fight in 2 turns; at 66 HP the 24 HP loss is affordable and Burning Blood heals after.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T18:46 第9层：Jev plan1@0.22 → p0。Elite fight: colorless potion offers best of 3 free cards, likely boosting damage or block to win the race; use potions boldly on elites.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T18:48 第9层：Jev p1@0.21 → plan1。Bash applies Vulnerable and deals 18, leaving elite at 26 HP killable next turn; faster kill beats the 5 HP plan2 saves.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T18:49 第9层：Jev p1@0.11 → plan1。Deals 29 leaving enemy at 15 while keeping 18 HP; next turn kill is nearly guaranteed from a 9-attack deck, saving the potion.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-24T19:00 第17层：Jev plan1@0.26 → p0。Drink potion for energy/draw; enables 御血术+打击 to push boss below 150, triggering stun and avoiding next big attack.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-24T19:30 第17层：Jev plan1@0.48 → p3。Boss fight, enemy only buffs this turn (0 damage) so it's a safe setup turn; early persistent Dexterity boosts blocking for the whole long fight.
+  - 选项：plan1=；p0=；p1=；p2=；p3=
+- 2026-09-24T19:31 第17层：Jev plan2@0.33 → plan1。22 dmg drops boss to 148, triggering the below-150 stun for a free turn; 8 extra HP is worth it.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-24T19:32 第17层：Jev plan2@0.49 → p0。Use Colorless Potion: free card can boost block/damage, preserving Regen Potion; better than plan1/plan2 and safer than 精炼混沌.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T19:34 第17层：Jev plan2@0.43 → p2。Regen potion heals 15-25 over the fight, ensuring survival against big boss hits; chaos potion is random and less reliable.
+  - 选项：plan1=；plan2=；p1=；p2=
+- 2026-09-24T19:35 第17层：Jev plan1@0.23 → p1。昏眩 limits us to 1 card and boss hits hard; potion gives free cards now in a boss fight — use it, then defend.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T19:47 第30层：Jev plan2@0.30 → plan1。Only plan that kills an enemy, removing the buffer and giving best board position; we can kill or fully block the 15 HP survivor next turn, with potion backup.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T19:51 第33层：Jev plan1@0.31 → plan2。Keeps claws even (rage mechanic), lowest HP loss (4), most block (14) to face the rocket claw's turn-4 threat; no potion needed.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T19:51 第33层：Jev plan1@0.26 → p0。Long two-enemy boss with only 55 HP; persistent Plating blocks every future turn far more than 3 HP saved, so drink 铁心药水 and re-plan.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T19:52 第33层：Jev plan1@0.27 → p1。Long boss fight; dexterity persists, boosting every future block card, so drink now to cut this turn's damage and stabilize before re-planning.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T20:06 第48层：Jev plan2@0.29 → plan1。Offering+ draws 3 and gains energy, enabling max damage (14) while keeping block 14; we have HP margin versus a long boss fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1->e0=
+- 2026-09-24T20:07 第48层：Jev plan2@0.15 → p1->e0。489-HP boss means a long fight; Demise potion ticks every enemy turn so use it turn 1, then re-plan with the 1-HP line to conserve HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1->e0=
+- 2026-09-24T20:08 第48层：Jev plan1@0.43 → p0。Boss fight; plan1 wastes 3 energy and deals 0. Saving uses potion freely—get a free card to add value while already safe.
+  - 选项：plan1=；p0=
+- 2026-09-24T20:20 第11层：Jev plan1@0.37 → p0。Turn 1 of an elite with a long 4-enemy fight: Power Potion is free this turn, and an early power compounds. Use it now, then pick the best card plan.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T20:37 第33层：Jev plan3@0.21 → p0。Boss turn 1: a free power scales the long fight and triggers the power-relic block; save duplication/gigantification potions for the finishing turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-24T20:38 第33层：Jev plan2@0.16 → plan1。Full HP and Burning Blood heals 6; deal 20 spread evenly across both claws, cheap 8 HP for tempo in long boss fight.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T20:39 第33层：Jev p1@0.11 → plan1。Full HP, only 2 chip damage; save the triple-damage potion for a big attack or the same-turn double crab kill.
+  - 选项：plan1=；p1=
+- 2026-09-24T20:39 第33层：Jev p1@0.05 → plan1。Only 7 damage possible; potion triple wouldn't kill/seriously maim 135+ HP claws. Losing 46 leaves 44 HP. Save potion for a real burst/kill turn.
+  - 选项：plan1=；p1=
+- 2026-09-24T20:41 第33层：Jev plan2@0.25 → plan3。痛击+先上易伤3再双重打击；对209血boss，易伤三回合的+50%伤害远超plan1眼前多出的16点，值得多花6血。
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T20:41 第33层：Jev plan3@0.20 → plan1。Same 24 HP lost as plan3 but 燃烧+ grants +3 permanent strength, which massively outweighs 10 damage in this long two-crab boss fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T21:09 第33层：Jev plan2@0.46 → p0。癫狂之触 makes a hand card free for the whole combat: permanent energy tempo in a long sandpit race, letting us add an extra attack every turn, beating plan1/plan2.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-24T21:10 第33层：Jev plan1@0.33 → p1。Enemy is buffing (no attack this turn), so it's a free damage window in a 321-HP boss race; the attack potion adds a free attack and keeps HP at 47, so spend it now to push damage.
+  - 选项：plan1=；p1=；p2=
+- 2026-09-24T21:12 第33层：Jev plan1@0.45 → plan2。Best HP outcome (27 vs 26) by avoiding Breakthrough self-damage; worm is nearly dead either way, so the extra 5 damage is not worth the health in a boss fight.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-24T21:17 第42层：Jev plan3@0.32 → plan2。痛击+上易伤后全力输出：56伤害只掉2血，效率最高；保留78血迎接后续精英/boss，13点额外伤害不值12血代价。
+  - 选项：plan1=；plan2=；plan3=；plan4=；p2=
+- 2026-09-24T21:20 第42层：Jev plan1@0.44 → p2。Elite fight, losing the race and bleeding 39 HP; Snake Oil draws cards and rerolls costs, then we re-plan optimally — pots belong in elites.
+  - 选项：plan1=；p2=
+- 2026-09-24T21:25 第45层：Jev plan2@0.20 → plan1。Inflame ramps strength for this long fight and Dismantle chips; we survive easily at 36 HP, and faster kills save more HP than blocking.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-24T21:26 第48层：Jev plan1@0.18 → plan2。Near-max damage with 3 Weak/Vulnerable on the 26-attack minion maximizes survival in this long fight; only 2 HP cost is negligible.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T21:29 第48层：Jev plan1@0.08 → p0。Plan1 wastes 3 energy and deals nothing while debuffed; boss fight, burn the potion for a fresh hand and re-plan with 5 energy.
+  - 选项：plan1=；p0=
+- 2026-09-24T21:43 第17层：Jev plan1@0.44 → p0->e0。Healthy (0 HP lost either way); boss fight — spend Beetle Juice now to cut its attack damage over the long fight, then play cards for max damage.
+  - 选项：plan1=；p0->e0=；p1=；p2=
+- 2026-09-24T21:44 第17层：Jev plan1@0.28 → p1。Enemy is intangible now, so attacks waste 8 HP for 2 damage; retain key cards to unleash when intangible drops and block.
+  - 选项：plan1=；p1=；p2=
+- 2026-09-24T21:45 第17层：Jev plan1@0.25 → p2。Boss fight, only 1 energy; the free-card potion lets me both block and attack this turn, best for finishing the low-HP boss.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-24T21:58 第33层：Jev plan3@0.42 → plan1。Long boss fight (292 HP left): casting 燃烧 for permanent +2 strength while blocking 9 and drawing 2 beats 5 extra damage or spending a potion.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-24T21:58 第33层：Jev plan2@0.41 → plan1。Knowledge Demon is a long ~292 HP fight; permanent +2 Strength from Inflame outscales 9 extra damage now, and both plans lose the same HP.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T22:01 第33层：Jev plan2@0.48 → plan1。Max damage (47) in the kill race; next turn is the no-damage curse turn, and Lizard Tail backstops the HP cost.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-24T22:15 第17层：Jev plan2@0.29 → plan1。Full HP turn 2 vs 240 HP boss: Demon Form sets up permanent scaling to race the growing Steam Eruption; 12 HP is affordable now.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T22:17 第17层：Jev plan1@0.36 → plan3。Blocks incoming to lose only 4 HP while dealing 51; boss still dies next turn, keeping the steam explosion small and minimizing total HP loss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-24T22:18 第17层：Jev plan1@0.30 → plan2。Deals 26, takes 0 HP (Weak blunts the 13 attack), still killable next turn at 16 strength; saves the Dexterity potion and avoids trading HP per giant strategy.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-24T22:33 第17层：Jev plan1@0.27 → p0。Boss is buffing, so no incoming damage — a free safe turn for permanent +2 Dexterity that lasts this long, escalating-damage fight.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T22:34 第17层：Jev plan1@0.21 → plan2。Bash + Molten Fist applies 4 Vulnerable, amplifying all future damage in this long boss race; 18 HP is affordable at 75/80.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-24T22:34 第17层：Jev plan1@0.46 → p1。Free colorless card may push boss under 150 to trigger its stun (skips a big attack); potions are meant for boss fights, so spend it now.
+  - 选项：plan1=；p1=
+- 2026-09-24T22:58 第17层：Jev plan1@0.45 → p0。Boss fight, long grind vs 166 HP; potion is free now and adds damage while staying safe, per 'use potions boldly in boss fights'.
+  - 选项：plan1=；p0=
+- 2026-09-24T23:15 第9层：Jev plan1@0.09 → p0。Elite fight, 0 energy: free attack potion card should kill the 5HP attacker, saving 8 HP now; worth spending a potion here.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T23:29 第27层：Jev plan1@0.24 → p0。Potion kills 9 HP attacker, preventing 24 damage, leaving more HP than passing.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-24T23:31 第29层：Jev plan1@0.24 → p1。Elite with 3 reattaching centipedes; AOE potion hits all at once, and guide says use potions boldly in elites rather than hoard.
+  - 选项：plan1=；p1=；p2=
+- 2026-09-24T23:41 第15层：Jev plan4@0.31 → plan1。Max damage (22) plus Vulnerable 2 to race the strength-scaling elite; 12 HP loss is fine at 68 HP with Burning Blood healing after.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=；p3=
+- 2026-09-24T23:41 第15层：Jev plan1@0.11 → p2。Scaling elite; a free attack card (attack potion) adds damage now, speeding the kill with no energy cost while HP is healthy.
+  - 选项：plan1=；p0=；p1=；p2=；p3=
+- 2026-09-24T23:42 第15层：Jev plan1@0.09 → p0。0 energy, potion gives a free card to block or chip the 23-HP bird; Ritual is wasted on a nearly-dead foe; pure upside over eating 19.
+  - 选项：plan1=；p0=；p1=；p3=
+- 2026-09-24T23:43 第15层：Jev p1@0.18 → plan1。Elite is nearly dead (23 HP); 19 damage is affordable at 68 HP. Save both potions, especially the Ritual gift, for the Act 1 boss.
+  - 选项：plan1=；p1=；p3=
+- 2026-09-24T23:43 第17层：Jev p1@0.21 → p3。Drink Masquerade's Gift now: free scaling (Ritual) for the whole boss fight since we can't spend energy anyway; earlier use maximizes strength stacks.
+  - 选项：plan1=；p1=；p3=
+- 2026-09-24T23:44 第17层：Jev plan2@0.03 → plan1。At 79/80 HP vs 4 Slippery stacks, attacks deal only 1; block to lose 21 rather than 26, save potion for a pinch.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-24T23:53 第8层：Jev p0@0.18 → plan1。0 energy means potions can't reliably kill the 13 HP elite; eating 13 at 61/80 is fine, save potions for the act boss.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-24T23:58 第15层：Jev plan3@0.22 → plan2。Most damage (17) at the same 15 HP cost as Bash; racing to kill the skittish eels before their buffs stack.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-24T23:58 第15层：Jev plan1@0.39 → p2。Long 4-enemy elite: a free power (Demon Form/Inflame/Combust) scales this attritional fight; free play stacks with Defend, losing no more HP than plan1.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T00:02 第15层：Jev p0@0.33 → p1。0 energy means this turn's 15 HP loss is unavoidable; dexterity persists all combat, strengthening every future block in this escalating elite fight. Save nothing.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T00:17 第17层：Jev plan1@0.44 → p0。Keep boss asleep; plan1 wakes it for only 11 dmg. Drink potion for card advantage while it sleeps, then set up powers/block.
+  - 选项：plan1=；p0=
+- 2026-09-25T00:28 第17层：Jev plan2@0.29 → plan1。Enemy isn't attacking, so maximize damage. 1 HP for +13 damage is a great trade and shortens the fight before Steam Eruption stacks grow.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-25T00:29 第17层：Jev plan1@0.32 → p0。No attack incoming, so regen heals 6 now plus later turns for free; Snecko Oil with 0 energy is a wasteful gamble, better saved for a burst turn.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T00:30 第17层：Jev plan1@0.14 → plan2。Blocks, chips 13, draws 2 cards; Waterfall Giant guide says keep HP above steam explosion, don't trade HP for damage.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-25T00:31 第17层：Jev plan2@0.29 → plan1。Deal 13 and draw (13 dmg ~5% boss) for only 8 more HP than Defend+; ending the 123 HP boss sooner outweighs the HP cost, and we keep the potion for the explosion turn.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-25T00:31 第17层：Jev plan1@0.25 → p1。Snecko Oil can draw cards and randomize costs, letting us use our dead 0-energy hand to damage or kill the boss now, reducing later explosion damage.
+  - 选项：plan1=；p1=
+- 2026-09-25T00:41 第30层：Jev plan1@0.28 → plan3。Near-full block (only 2 through) plus 19 dmg from 御血术 whose 2 HP self-cost is only 2, saving HP for the act boss; better than spending 8 HP for 12 more damage.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T00:42 第30层：Jev plan1@0.23 → p0。Thorns procs on each of the 7 hits, dealing ~21 to a 15 HP enemy — kills it and cuts damage taken, far better than losing 28 HP.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T00:43 第31层：Jev plan1@0.45 → plan3。Same 41 damage, enemy to 28 with Vulnerable 3, but 6 less HP lost than plan1; save potions and HP for elites/boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T00:44 第33层：Jev plan2@0.40 → p0。Turn 1 has no incoming damage; a free power (Demon Form/Inflame) at a 379 HP boss is ideal scaling, and attacks still deal 39 without HP loss.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-25T00:45 第33层：Jev plan2@0.38 → plan1。知识恶魔会回血，需速攻：多打19伤远胜省8血；易伤3已铺，保药水留后。
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-25T00:45 第33层：Jev plan1@0.28 → p1。Long attrition boss worth dexterity for the whole fight; it boosts every future block card, far outweighing 4 HP now. Use potions boldly on bosses.
+  - 选项：plan1=；p1=
+- 2026-09-25T01:01 第17层：Jev plan1@0.36 → p1。Boss is buffing, not attacking; free attack potion adds damage with no HP loss, speeding the boss kill.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T01:01 第17层：Jev p0@0.22 → plan1。Boss at 20 HP, only a 9 attack fully blocked by 13 block; kill next turn, conserve both potions for later acts.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T01:11 第33层：Jev plan2@0.41 → plan1。16 dmg and Vulnerable 4 on the 27-damage claw beats 11 dmg; same 5 HP cost, keep potions for later.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=；p3=
+- 2026-09-25T01:11 第33层：Jev plan1@0.41 → p1。Free power online early in boss fight maximizes scaling; losing only 2 HP is negligible.
+  - 选项：plan1=；p0=；p1=；p2=；p3=
+- 2026-09-25T01:12 第33层：Jev plan2@0.33 → plan3。Max damage (96) with both crabs evenly worn (110 vs 85), keeping them aligned for a same-turn kill; 15 HP at 67 is affordable in a long boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p2=；p3=
+- 2026-09-25T01:13 第33层：Jev p0@0.25 → plan1。0 energy with the turn already spent; nothing to play. Take the 12, keep 3 potions for the rocket claw's big turn and the boss fight's danger.
+  - 选项：plan1=；p0=；p2=；p3=
+- 2026-09-25T01:15 第33层：Jev plan1@0.39 → p3。Dex potion boosts block, reducing HP loss below 15; safest at 26 HP, and potions are use-it-or-lose-it at boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p2=；p3=
+- 2026-09-25T01:28 第48层：Jev plan2@0.38 → plan3。Applies Vulnerable 3 and 11 damage while playing only one Skill, minimizing permanent Enrage strength; block keeps loss to 9 HP.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T01:28 第48层：Jev plan1@0.26 → p1。Free random power turn 1 scales the long 3-phase boss fight (Demon Form/Inflame); with 0 energy it's free value over taking 9 damage.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T01:28 第48层：Jev plan3@0.26 → plan1。Max damage with no Skill plays (no Enrage growth); 燃烧+ power fuels Demon Form scaling and clears phase 1 a turn sooner, worth 12 HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T01:29 第48层：Jev plan1@0.32 → p0。Drinking regen costs nothing (0 HP lost either way) and heals through this long 3-phase boss; using it early maximizes total regen with our 44 HP deficit.
+  - 选项：plan1=；p0=
+- 2026-09-25T01:37 第7层：Jev p2@0.42 → plan1。66 HP, 12 damage is affordable; save potions for boss, kill next turn with vulnerable burst.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T01:39 第14层：Jev plan3@0.25 → plan1。Demon Form+ in hand: play now or it's discarded; 71 HP easily affords 16, and scaling wins the elite's minion spawn and rest of act.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-25T01:42 第17层：Jev plan3@0.35 → plan1。Balanced: 24 damage on the priest while blocking nearly all incoming (only 2 HP lost); boss is a long fight so preserving HP beats plan2's extra 9 damage for 11 HP.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-25T01:43 第17层：Jev p2@0.39 → p0。Boss fight is long; Regen heals every turn (unaffected by Frail-weakened block) and its total value is maximized by drinking early, offsetting ongoing chip damage.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T01:44 第17层：Jev plan2@0.33 → plan3。Bash sets Vulnerable 2 on the 190 HP priest, multiplying all future damage; same HP cost as plan1 but better long-term. Save potions, we're healthy.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=；p2=
+- 2026-09-25T01:45 第17层：Jev plan2@0.38 → plan1。Demon Form+ on turn 4 vs long Kin fight is the win condition; paying only 1 HP for permanent +4 strength is clearly worth it.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-25T01:45 第17层：Jev plan2@0.35 → plan1。Long boss fight; this turn is safe (1 HP lost). Demon Form+ scaling now wins the fight and saves the potion.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-25T01:46 第17层：Jev plan3@0.18 → plan1。Kill the follower now removes its attack permanently; 37 dmg exactly kills it, lowest HP loss while ending the fight fastest with strength 12.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-25T01:47 第17层：Jev plan2@0.24 → plan1。Boss nearly dead (18 HP, Vulnerable 2) for only 10 HP; the follower's MINION_POWER means it dies when the priest does, and 16 Strength finishes next turn.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-25T01:53 第24层：Jev plan1@0.35 → p0。Elite fight, no block in hand: potion plays free draw-pile cards, then re-plan with full 6 energy, avoiding plan1's 28 HP loss and wasted energy.
+  - 选项：plan1=；p0=
+- 2026-09-25T01:56 第28层：Jev p0@0.05 → plan1。Zero energy means dexterity blocks nothing this turn; 64 HP absorbs the 17 fine, so keep the potion for the boss.
+  - 选项：plan1=；p0=
+- 2026-09-25T01:57 第28层：Jev plan4@0.47 → plan2。Demon Form+ is the win condition for the boss; blocking keeps 8 HP this turn, and its +4 strength/turn easily makes up the 15 damage foregone next turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:00 第30层：Jev plan4@0.47 → plan1。Play Pyre early (S-tier +1 energy every turn); the extra Strike sets centipede #2 to 14 for a quick kill, shortening this long elite.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:00 第30层：Jev p0@0.15 → plan1。0 energy means no block cards can be played, so Dexterity potion does nothing this turn; end turn, eat 24, save potion for later.
+  - 选项：plan1=；p0=
+- 2026-09-25T02:03 第33层：Jev plan2@0.27 → plan1。Enemy deals no damage now: play 3-cost Demon Form+ while it's free; cheap Pyre fits later defensive turns, and strength scales this long boss fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:04 第33层：Jev plan1@0.17 → plan2。Demon Form already scaling, so HP preservation matters more than marginal damage; 42 dmg for only 11 HP plus 8 block is the best long-fight trade.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T02:05 第33层：Jev plan2@0.42 → plan4。Demon Form is ramping; boss heals 30 per cycle, so the extra 20 chip damage in plan2 is wasted. Plan4 deals 45 while keeping 46 HP and 11 block for the long grind.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:13 第45层：Jev plan3@0.37 → plan1。Pyre online turn 1 is worth far more than 13 extra damage; it deals most damage among Pyre plans and only costs 2 HP vs plan2.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T02:16 第48层：Jev plan4@0.35 → plan1。42 dmg for 18 HP and only one Skill played (limits Enrage); Vulnerable applied. Best damage-per-HP trade for the long 3-phase fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:18 第48层：Jev plan4@0.27 → plan1。No Skills = no Enrage Strength stacking through phase 1; 19 dmg is max, and 62 HP stays safe for the 600-HP boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T02:22 第48层：Jev plan1@0.35 → p0。plan1 wastes 18 energy and lands only 1 hit on the 298 HP Intangible boss; re-planning plays more attacks, each hit chipping 1.
+  - 选项：plan1=；p0=
+- 2026-09-25T02:34 第17层：Jev p0@0.15 → plan1。Enemy sleeps; waking it early only starts its attacks sooner. No powers to set up, so end turn, keep 8 block, save the attack potion for when damage matters.
+  - 选项：plan1=；p0=
+- 2026-09-25T02:35 第17层：Jev plan1@0.09 → p0。Enemy is stunned and won't attack; free attack-potion cards cost 0 this turn, so bank pure damage with zero risk before she wakes next turn.
+  - 选项：plan1=；p0=
+- 2026-09-25T02:55 第17层：Jev plan4@0.45 → p0。Boss fight, 307 HP total: free Power Potion grants early scaling; remaining 3 energy still blocks this turn's 13 damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T03:08 第31层：Jev p0@0.05 → plan1。Enemy is at 33 HP and dies next turn; 38 HP is safe. Save the 38-HP potion for a real emergency in this elite/boss run.
+  - 选项：plan1=；p0=
+- 2026-09-25T03:10 第33层：Jev p0@0.20 → plan1。At 76% HP with 律动残余 capping damage at 20/turn, there's no emergency; conserve the heal potion for when HP is actually low.
+  - 选项：plan1=；p0=
+- 2026-09-25T03:12 第33层：Jev plan4@0.29 → plan1。Roar+ deals 75 — best damage per HP; attacking 火箭 flips facing so future incoming drops to 24; potion covers the risk.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T03:14 第33层：Jev p0@0.13 → plan1。Long two-crab boss; heal is fixed whenever drunk, so keep the potion for a low-HP emergency. 律动残余 caps burst, and 44 HP is safe.
+  - 选项：plan1=；p0=
+- 2026-09-25T03:16 第33层：Jev plan1@0.27 → p0。Drink potion first to survive boss; then play plan2 to focus rocket and avoid early crab kill.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T03:24 第14层：Jev plan1@0.44 → plan2。No HP lost and nearly same result; enemy left at 9 will still die next turn, preserving 26 HP for this long elite.
+  - 选项：plan1=；plan2=；plan3=；p0=；p2=
+- 2026-09-25T03:25 第14层：Jev p2@0.06 → plan1。No incoming damage; 0 energy left this turn. Don't waste a potion—save for boss, then finish the 9 HP elite next turn with full energy.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T03:26 第14层：Jev plan1@0.21 → p2。With 0 energy, Snake Oil's random costs can yield free blocks/attacks (kill the 9-HP Vulnerable worm); Ashwater offers nothing useful here. Potion worth spending at 26 HP.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T03:58 第14层：Jev plan2@0.15 → plan1。Same 12 HP loss as plan2 but kills a wriggler, cutting future incoming damage—best given low 26 HP.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T04:03 第17层：Jev plan3@0.37 → plan2。Get 薪火之源 online while two 防御 fully block (12>9); only 1 HP lost. 7 damage isn't worth skipping permanent +1 energy at 28 HP.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T04:04 第17层：Jev p0@0.04 → plan1。0 energy this turn, so the exhaust potion buys nothing (no exhaust payoffs); end turn, survive at 9, let 狱火 grind the 45 HP boss and keep the potion.
+  - 选项：plan1=；p0=
+- 2026-09-25T04:11 第28层：Jev plan1@0.21 → p0。Exhaust hand cards with Grey Water; Feel No Pain 3 converts them to block, negating the 15-damage hit and saving ~15 HP in this elite.
+  - 选项：plan1=；p0=
+- 2026-09-25T04:17 第33层：Jev plan2@0.25 → plan3。Best value: 12 block + 15 damage for only 1 more HP than no-damage line; Feel No Pain can be played later on the lighter PONDER turn.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=；p2=
+- 2026-09-25T04:18 第33层：Jev plan1@0.34 → p1。Boss fight is long attrition; +Dex blocks every turn and compounds, beating one-time heals. Using it now maximizes turns of value.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T04:19 第33层：Jev plan1@0.30 → p2。Long attrition boss (heals 30, gains strength); regen pays most when started early, keeping burst-heal 鲜血药水 as emergency insurance. Potions replenish via 小邮箱.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T04:21 第33层：Jev p0@0.07 → plan1。Enemy only debuffs—no damage this turn. Keep the heal potion and Regen for the boss's burst attack turns.
+  - 选项：plan1=；p0=
+- 2026-09-25T04:34 第12层：Jev plan1@0.11 → plan2。Push enemy to 17 HP so next turn's ~19 damage secures the kill; ending the fight sooner saves HP and keeps the heal potion for the boss.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T04:34 第12层：Jev p0@0.07 → plan1。1 energy only; Defend caps loss at 23 vs 28, and 4 chip damage on a 19 HP elite isn't worth 5 HP. Save the potion.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T04:35 第12层：Jev p0@0.28 → plan1。0 energy means no cards playable anyway; 31 HP is safe, so save the heal potion for the upcoming Act 1 boss.
+  - 选项：plan1=；p0=
+- 2026-09-25T04:36 第15层：Jev plan3@0.32 → plan2。Kills the 22 HP attacker (7 dmg/turn removed) for only 3 more HP than the passive line; tempo now beats a small HP save.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T04:37 第17层：Jev plan3@0.16 → plan1。Boss asleep 3 turns; Bash is fully blocked so it stays asleep, keeping all free setup turns. Waking it for 33-39 dmg isn't worth losing two free turns; Ritual potion can be drunk next turn for near-eq
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T04:38 第17层：Jev plan2@0.18 → plan1。Waking the sleeping boss costs 3 free setup turns; max 33 damage is under the 25% (55) wake threshold, so play nothing and keep it asleep.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T04:40 第17层：Jev plan1@0.27 → plan2。Sleep turn is unusable (no powers in hand); Vulnerable expires now and 3 attacks trigger Shuriken. Deal 32, keep the bomb and heal potions.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T04:41 第17层：Jev plan2@0.19 → plan1。Best damage/HP ratio (20 dmg for 10 HP); stays at 59 HP, healthy buffer while advancing the boss kill faster than plan2 or plan4.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T04:42 第17层：Jev plan1@0.21 → p1。Potion is a free action, costs 0 HP this turn; Ritual's stacking Strength is vital to burn down 171 HP before HP drains. Heal wasted at 69/80.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T04:44 第17层：Jev p0@0.26 → plan1。Boss at 35 HP dies next turn; healing value is fixed, so save the potion for Act 2 while 31 HP survives one more 21 hit.
+  - 选项：plan1=；p0=
+- 2026-09-25T04:48 第23层：Jev p1@0.12 → plan1。At 46 HP, losing 19 to end at 27 is safe; energy is spent so no cards playable. Conserve both blood potions and the attack potion for the long spawner fight.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T04:49 第27层：Jev p1@0.15 → plan1。At 59 HP, 11 damage is affordable; save all three potions for the act boss and emergencies rather than wasting one turn 1.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T04:52 第27层：Jev p1@0.15 → p0。At 46 HP taking 23+/turn into a 28-damage hit, healing 24 now is free survival buffer; the elite is nearly dead anyway.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T04:54 第27层：Jev p2@0.30 → plan1。Enemy at 34 HP with 3 Vulnerable dies to two Strength-4 Strikes next turn; 25 HP is safe, so save the 20 HP potion for the boss.
+  - 选项：plan1=；p2=
+- 2026-09-25T05:16 第24层：Jev plan1@0.17 → p1。Enemy buffs (0 incoming): a free turn to deal damage. Use the expendable Colorless potion—its free card adds output now without energy, keeping the stronger Foresight tutor for the boss.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T05:24 第11层：Jev p0@0.19 → plan1。No energy left, so potion can't prevent the 12 damage; both lines lose 12 HP, so save Gambler's Brew for later.
+  - 选项：plan1=；p0=
+- 2026-09-25T05:27 第11层：Jev plan2@0.30 → plan1。Lose only 1 HP while applying Vulnerable+Weak, leaving elite at 8 HP; next turn's boosted attacks finish it, saving HP for the boss.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T05:29 第17层：Jev plan1@0.36 → plan2。Uppercut applies Weak+Vulnerable, key vs its 16 atk, and Defend caps loss at 7; sustaining HP over this long boss outweighs 10 extra damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-25T05:33 第17层：Jev plan1@0.45 → p0。Hand holds dead Beckon cards; brew redraws into real attacks to win the damage race vs the 46-HP boss before 34 HP runs out.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T05:40 第28层：Jev plan2@0.21 → plan1。Playing 燃烧+ now online gives +3 strength for all later hits; 24 HP at full health is cheap, next turn's boosted 旋风斩 clears all three.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-25T05:44 第33层：Jev plan1@0.37 → plan2。Boss with no incoming damage: potion's str/dex pays off over a long fight, and Uppercut+ Vulnerable+Weak amplifies all future damage while cutting incoming.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=；p2=
+- 2026-09-25T05:46 第33层：Jev plan1@0.40 → p1。Sandpit timer demands fast damage; Gambler's Brew digs for best attacks or Frantic Escape, while Dexterity doesn't address the lethal clock.
+  - 选项：plan1=；p1=；p2=
+- 2026-09-25T05:48 第33层：Jev p2@0.02 → plan1。At 0 energy the potion changes nothing this turn; end now and save it to drink next turn when it can actually block.
+  - 选项：plan1=；p2=
+- 2026-09-25T06:11 第17层：Jev p0@0.25 → plan1。Enemy is buffing (0 incoming) and I have 0 energy; nothing to play. Save both potions for the boss's real attack turns.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T06:12 第17层：Jev p0@0.25 → plan1。Intangible makes attacks pointless; block+plating already nullifies the 13 hit for 0 HP loss. Save both potions for the boss's dangerous phases.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T06:13 第17层：Jev p0@0.36 → plan1。Boss at 23 HP dies next turn; 43 HP is plenty, so save both potions for later fights.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T06:21 第28层：Jev plan2@0.24 → plan1。放血自伤触发怨恨加成，多打7点伤害仅多花3血；恶魔形态在身，速杀精英，保留药水给Boss。
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=；p2=
+- 2026-09-25T06:25 第33层：Jev p0@0.38 → p1。Long boss fight, full potion slots, and a duplicate Regen: drink one now for maximum sustained healing across many turns, keeping one in reserve.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T06:27 第33层：Jev plan2@0.25 → plan1。Deal 7 damage and progress Shuriken; 2 HP loss healed by Regen, vulnerable better saved for a bigger attack turn.
+  - 选项：plan1=；plan2=；p0=；p2=
+- 2026-09-25T06:34 第33层：Jev plan1@0.20 → p2。Regen potion is free value in this long boss damage race; no HP cost, and healing now maximizes duration before the fight ends.
+  - 选项：plan1=；p2=
+- 2026-09-25T06:50 第42层：Jev p0@0.08 → plan1。0 energy means drawn cards can't be played this turn; surviving at 28 HP anyway, so save the draw potion for the act-3 boss.
+  - 选项：plan1=；p0=
+- 2026-09-25T06:50 第42层：Jev plan1@0.12 → p0。Low HP vs half-HP elite; potion digs for energy/lethal and adds draw for next turns while block keeps us safe.
+  - 选项：plan1=；p0=
+- 2026-09-25T07:05 第14层：Jev plan1@0.15 → p2。In an elite fight, free top-3 cards now can deal damage/block, ending it a turn sooner and saving ~14 HP; keep reliable Dexterity potion for the Act 1 boss.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T07:07 第17层：Jev p1@0.11 → plan1。Enemy is stunned with 0 incoming and I have no energy; drinking potions now gains nothing, so bank them for later boss turns.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T07:09 第17层：Jev plan1@0.39 → p0。Dex potion permanently boosts block for this long multi-hit boss fight and improves blocking this turn too.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T07:40 第33层：Jev plan2@0.49 → plan1。Strength build races this healing/buffing boss; trade 6 HP for 12 extra damage, and next turn is attack-free so HP risk is low.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T07:40 第33层：Jev plan3@0.34 → plan1。Boss heals ~30 this PONDER turn, so maximizing damage (34) to offset heal beats saving 6 HP on a weak 14-attack turn; 6 HP is cheap here.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T07:42 第33层：Jev plan1@0.32 → plan2。防御+打击 keeps the most HP (23) while chipping 12; 与我一战! is a trap card that buffs the enemy in a long boss fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T07:42 第33层：Jev p0@0.12 → plan1。0 energy, so no card can change the 17 HP loss; drinking 灰水 now would waste a potion for zero immediate gain. Save it for a turn with energy.
+  - 选项：plan1=；p0=
+- 2026-09-25T07:49 第17层：Jev plan2@0.47 → plan1。Keep the boss asleep through its 3 free turns; 16 damage is far below the ~55 wake threshold, and both potions are wasted at full HP.
+  - 选项：plan1=；plan2=；p0=；p2=
+- 2026-09-25T07:50 第17层：Jev plan3@0.35 → plan1。Full HP vs long boss fight: Inflame's permanent +2 strength far outweighs 5 extra HP; losing only 7 HP now is trivial.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p2=
+- 2026-09-25T07:50 第17层：Jev plan3@0.24 → plan1。At 92% HP vs a 208 HP boss, trade 10 HP for 16 damage to shorten the fight; potions saved for later.
+  - 选项：plan1=；plan2=；plan3=；p0=；p2=
+- 2026-09-25T07:52 第17层：Jev plan1@0.29 → p0。Use skill potion now for extra damage/energy before debuff cuts strength; potions are meant for boss fights.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T07:54 第17层：Jev p2@0.24 → plan1。Survive at 39 HP; keep Red Skull's low-HP strength active and save the potion for an emergency turn.
+  - 选项：plan1=；p2=
+- 2026-09-25T07:55 第17层：Jev plan1@0.23 → plan2。Both lines likely need the same number of turns; Shrug It Off saves 6 HP, blocks 14 down to 8, and draws a card. Keep potion as emergency option.
+  - 选项：plan1=；plan2=；p2=
+- 2026-09-25T08:22 第12层：Jev plan2@0.44 → plan1。Same 11 HP lost either way; 燃烧's permanent +2 strength outweighs 7 extra damage now, scaling all later turns and the minion spawns.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T08:23 第12层：Jev p1@0.12 → plan1。At 95% HP with the elite nearly dead, take 11 damage rather than burn a potion; save both for the upcoming boss.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T08:24 第12层：Jev plan2@0.24 → plan1。Killing the strength worm and chipping the buff worm to 10 leaves one threat next turn; 59/80 HP is fine with Burning Blood, tempo beats saving 5 HP.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-25T08:24 第12层：Jev p1@0.17 → plan1。Turn is over (0 energy); 11 HP at 70/80 is affordable. Save both potions for the upcoming act 1 boss rather than spend one for marginal tempo.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T08:27 第17层：Jev plan2@0.32 → plan1。Playing the strength power early compounds over a long 173 HP boss fight; 1 HP is trivial at full health, so save potions.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T08:29 第17层：Jev p1@0.17 → p2。Ritual potion gives permanent strength scaling, ideal for long boss fight; use it early to maximize turns.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T08:30 第17层：Jev plan1@0.37 → plan2。At 95% HP the 5 HP cost is trivial; the extra hit strips one Slippery stack so real damage lands sooner before the turn-4 buff window.
+  - 选项：plan1=；plan2=；p0=；p1=
+- 2026-09-25T08:30 第17层：Jev p1@0.09 → p0。0-energy turn: the free attack card scales with Strength 4 + Vulnerable for real damage now, keeping the energy potion as an emergency buffer.
+  - 选项：plan1=；p0=；p1=
+- 2026-09-25T08:31 第17层：Jev p1@0.08 → plan1。At 75/80 HP we can safely tank 18; turn 4 Prepare is a free damage turn, so save the energy+draw potion to burst then with 6 Strength.
+  - 选项：plan1=；p1=
+- 2026-09-25T08:37 第28层：Jev plan3@0.34 → plan1。Same HP loss as others but stacks two lasting powers (Inflame + block power) for a long 161-HP elite fight; extra future block outweighs 14 damage now.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T08:41 第31层：Jev plan4@0.26 → plan1。Same 38 damage as plan4 for only 6 more HP; Crimson Mantle's recurring block pays off over this long 125 HP fight and pairs with Feel No Pain.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T08:42 第31层：Jev plan2@0.35 → plan1。Kills the status enemy, leaves the attacker at 28 (one-turn kill) for only 5 more HP; 19 HP safely survives the next 16 hit. Burn potion as backup.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T08:43 第33层：Jev plan1@0.23 → p0。Long survival boss fight (Sandpit countdown); regen used turn 1 maximizes total healing, and plan1 wastes 6 energy.
+  - 选项：plan1=；p0=
+- 2026-09-25T08:52 第9层：Jev plan1@0.48 → p0。Free power is best long-term for this 140 HP elite; strength (Inflame) deals 19+, stunning the eel at 70 and cancelling the 22 attack.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T08:53 第9层：Jev plan1@0.27 → plan3。Enemy at 28 HP and hits 33/turn; deal max damage now to set up a kill next turn, shortening the fight saves more HP than extra block.
+  - 选项：plan1=；plan2=；plan3=；p1=
+- 2026-09-25T08:54 第9层：Jev p1@0.01 → plan2。6 damage drops eel to 22, inside a likely next-turn kill; racing an elite beats blocking for 5 extra HP.
+  - 选项：plan1=；plan2=；p1=
+- 2026-09-25T09:00 第17层：Jev plan3@0.18 → plan2。Balanced: 19 damage while only losing 11 HP, front-loading damage before the boss's debuff and preserving HP cushion for the growing self-destruct.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T09:00 第17层：Jev plan2@0.31 → plan1。Trading 1 HP for 6 extra damage is efficient; killing the boss sooner lowers the steam explosion stacks we must block.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T09:01 第17层：Jev plan2@0.19 → plan1。Deal 6 more damage for only 1 HP; racing the growing Steam Eruption explosion matters more than 1 HP, and the potion is saved for that burst turn.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T09:01 第17层：Jev plan2@0.18 → plan1。Max damage (11) for negligible 1 HP cost; conserve potion for the explosion turn; killing faster caps rising steam eruption.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T09:04 第17层：Jev plan2@0.34 → plan1。Trade only 6 HP for 18 extra damage; boss to 28 HP, near-dead next turn, and 43 HP stays above the 30 eruption layer. Faster kill cuts growing steam damage.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T09:06 第17层：Jev plan1@0.30 → plan3。Full block wastes the 15 attack, deal 42 keeping HP 48 well above the 30 steam; per Waterfall Giant guide don't trade HP for damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T09:06 第17层：Jev p0@0.02 → plan1。0 energy left; 48 HP comfortably survives the ~30 explosion and Ancient heals after act 1, so save the blood potion.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:07 第17层：Jev plan1@0.05 → p0。Use potion now for safety margin; explosion will be 36 and bad draws risk death without it.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:14 第24层：Jev p0@0.30 → plan1。0 energy and 3 attacks already played: potion draw is wasted now, so save it for a turn with energy and just take the 18.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:15 第24层：Jev plan1@0.35 → p0。Low HP (37) vs 19-damage elite; the draw+clarity potion accelerates the kill and reduces total damage taken, worth spending now in this dangerous fight.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:20 第31层：Jev plan1@0.04 → p0。No block in hand; skill potion may find defense/utility to cut the 15 HP loss, and it's free this turn. Elites demand HP conservation.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:24 第33层：Jev p1@0.19 → plan1。Sandpit 2 will tick to 0 and kill the worm regardless; 77 HP easily absorbs 21, so save the heal potion for Act 3.
+  - 选项：plan1=；p1=
+- 2026-09-25T09:28 第38层：Jev p1@0.07 → plan1。Fight is already won (enemy 8 HP, dies next turn); 44 HP is fine with burning blood and rest sites ahead. Save the heal potion for the act 3 boss.
+  - 选项：plan1=；p1=
+- 2026-09-25T09:36 第48层：Jev plan2@0.25 → plan1。Blocks 26 incoming to lose only 1 HP while still dealing 20 AOE; saves HP for the upcoming 99 vuln/weak turns where damage and defense both suffer.
+  - 选项：plan1=；plan2=；plan3=；p0=；p1=
+- 2026-09-25T09:36 第48层：Jev plan4@0.29 → plan2。Full HP and Burning Blood heals 6 post-fight, so the 6 HP cost is recovered; set up the AOE power early while chipping the amalgam on a clean turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=；p1=
+- 2026-09-25T09:40 第48层：Jev plan1@0.07 → p1。Boss race vs Queen; Queen buffs now (no damage), this energy-starved turn is free to heal. Extra ~27 HP buffers her escalating 45-60 hit cycle.
+  - 选项：plan1=；p1=
+- 2026-09-25T09:50 第14层：Jev plan2@0.30 → plan1。Max damage (51) nearly kills the buffing eel for an easy T2 finish; 5 extra HP is cheap at 73/80 with a rest before boss.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T09:50 第14层：Jev p0@0.35 → plan1。90% HP, only 15 damage; save the random skill potion for the boss where a burst block matters more.
+  - 选项：plan1=；p0=
+- 2026-09-25T09:51 第14层：Jev plan4@0.35 → plan1。Whirlwind at full 3 energy deals 47, kills one and leaves the other three at 4/5/3 HP; near-clearing the board now prevents more damage later, only 10 HP with a rest site before boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T09:53 第17层：Jev plan1@0.06 → p0。Enemy is asleep 3 turns; Bash's vulnerable would tick away wasted. Use sleep turns to set up powers/skills; free potion skill beats chipping.
+  - 选项：plan1=；p0=
+- 2026-09-25T10:04 第6层：Jev plan2@0.23 → p0。31% HP: 攻击药水抽出的攻击配两张打击(12伤)可斩杀20血敌人，本回合免掉11血；血量比药水更值钱。
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T10:10 第17层：Jev plan3@0.48 → plan1。Free buff turn: play the power Hellraiser early, then use spare energy for 6 damage; Shrug's block is wasted with zero incoming.
+  - 选项：plan1=；plan2=；plan3=；p0=
+- 2026-09-25T10:10 第17层：Jev p0@0.37 → plan1。Turn 1 is a Buff turn with 0 energy and no incoming damage; save the thorns potion (useless vs the explosion) and just end the turn.
+  - 选项：plan1=；p0=
+- 2026-09-25T10:13 第17层：Jev plan2@0.21 → plan1。放血 triggers 狱火 for 6 damage at only 3 extra HP; with 78 HP buffer, racing the growing steam-eruption stack is worth it.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T10:17 第17层：Jev plan1@0.34 → p0。Boss fight: thorns potion gives ongoing free damage while the re-plan still blocks, dominating both card plans at only a spare potion slot's cost.
+  - 选项：plan1=；plan2=；p0=
+- 2026-09-25T10:23 第21层：Jev p0@0.00 → plan1。At 0 energy a cycling potion draws only unplayable cards; the 24-damage turn is unavoidable, so save the Brew for a fight where energy is available.
+  - 选项：plan1=；p0=
+- 2026-09-25T11:16 第23层：Jev plan3@0.21 → plan1。Sets up both 撕裂 and 狱火 (lasting value 21) with comparable HP loss; strength engine is our win condition for Kaiser Crab. Keep energy potion for boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p0=
+- 2026-09-25T11:34 第24层：Jev plan4@0.29 → plan1。恶魔形态是161血精英的长期发动机，当前15来袭不会破防；早一回合叠力量远胜省8血，狂宴留作斩杀。
+  - 选项：plan1=；plan2=；plan3=；plan4=；p1=
+- 2026-09-25T11:39 第33层：Jev plan2@0.42 → plan1。Debuff turn, no damage incoming — play Demon Form+ now to stack strength for this 15-turn fight; 熔融之拳 chips in free damage.
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T11:39 第33层：Jev p0@0.27 → plan1。Debuff turn, zero incoming damage, Demon Form already online with no energy left; save all three potions for later burst or emergency block turns.
+  - 选项：plan1=；p0=；p1=；p2=
+- 2026-09-25T11:41 第33层：Jev plan2@0.21 → p1。恶魔形态长战已成，明耀酊剂每回合加能量越早喝收益越大；本回合掉血与纯防御相同，稳赚不亏。
+  - 选项：plan1=；plan2=；p0=；p1=；p2=
+- 2026-09-25T11:41 第33层：Jev p0@0.30 → plan1。Block already covers incoming 11; boss heals this turn so extra damage is wasted. Demon Form scaling grows later — save both potions for a burst or defense turn.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T11:43 第33层：Jev plan1@0.22 → p0。Free damage turn (no incoming) vs a 210 HP boss we're racing; 痊愈药水's energy+draw turns it into more attacks, and Demon Form makes each extra play huge.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T11:53 第45层：Jev plan2@0.43 → plan1。Plan1 deals 51 damage leaving enemy at 10 HP, almost guaranteeing a kill next turn; the 20 HP loss is acceptable with healing available before the boss.
+  - 选项：plan1=；plan2=；p0=；p2=
+- 2026-09-25T11:54 第48层：Jev plan1@0.16 → p0。Long 512-HP Aeonglass fight; deploying Regen on turn 1 maximizes total healing across the escalating ~9-turn battle, worth far more than saving it.
+  - 选项：plan1=；p0=；p2=
+- 2026-09-25T11:54 第48层：Jev plan2@0.41 → plan1。撕裂 gives permanent strength scaling needed to kill 470 HP before turn 9; same 29 HP cost as plan2, whose +7 chip into block is negligible.
+  - 选项：plan1=；plan2=；plan3=；plan4=；p2=
 
-## reward/card（17 次）
+## shop/buy（268 次）
+- 2026-09-24T07:25 第3层：Jev leave@0.31 → buy_card1。Cheap Twin Strike adds solid early damage; other cards too pricey or weak, potions not worth gold now.
+  - 选项：buy_card1=双重打击；leave=nothing；buy_potion2=能力药水；buy_potion0=再生药水；buy_potion1=明耀酊剂
+- 2026-09-24T07:36 第30层：Jev buy_card3@0.15 → leave。HP 21/80, low gold; none of these cards fix survival. Save gold for rest/potion before boss.
+  - 选项：buy_card2=放血；leave=nothing；buy_card3=火焰屏障；buy_card1=重锤；buy_card0=欺凌
+- 2026-09-24T07:50 第29层：Jev buy_relic0@0.17 → buy_relic1。磨刀石升级多张攻击牌，牌组攻击多，长期收益最高；金币充裕。
+  - 选项：buy_relic1=磨刀石；buy_relic0=餐券；buy_relic2=化学物X；leave=nothing；buy_potion2=虚弱药水
+- 2026-09-24T07:50 第29层：Jev buy_relic0@0.34 → buy_relic2。化学物X boosts X-cost cards; deck has 旋风斩, strong scaling for boss fights. High gold, worth it.
+  - 选项：buy_relic0=餐券；buy_relic2=化学物X；leave=nothing；buy_potion2=虚弱药水；buy_potion0=流动铜液
+- 2026-09-24T07:50 第29层：Jev leave@0.12 → buy_card4。无惧疼痛与消耗体系协同，提供持续格挡，价格合理，提升后期生存。
+  - 选项：leave=nothing；buy_potion2=虚弱药水；buy_potion0=流动铜液；buy_potion1=缚魂药水；buy_card4=无惧疼痛
+- 2026-09-24T07:56 第7层：Jev buy_relic0@0.21 → buy_relic1。Anchor gives 10 block every fight, strong early defense; affordable and helps survive Act 1 elites.
+  - 选项：buy_relic0=古茶具套装；buy_relic1=锚；buy_relic2=大锅；leave=nothing；buy_potion1=虚弱药水
+- 2026-09-24T07:56 第7层：Jev buy_potion2@0.23 → leave。No affordable card meaningfully improves this starter deck; save gold for a stronger shop or card removal later.
+  - 选项：leave=nothing；buy_potion1=虚弱药水；buy_potion0=易伤药水；buy_card0=欺凌；buy_potion2=熔炉的祝福
+- 2026-09-24T08:14 第14层：Jev buy_relic1@0.17 → buy_card3。Solid block+draw card for 48g, improves deck consistency; relics too expensive and less impactful now.
+  - 选项：buy_relic0=五轮书；buy_relic1=精致折扇；buy_relic2=王室印章；buy_card3=耸肩无视；leave=nothing
+- 2026-09-24T08:20 第5层：Jev buy_card3@0.10 → remove。Removing a Strike improves deck quality; other cards are mediocre and relics unaffordable.
+  - 选项：remove=card removal；buy_card3=耸肩无视；buy_card1=御血术；buy_card0=熔融之拳；buy_card4=岩石铠甲；leave=nothing
+- 2026-09-24T08:24 第15层：Jev buy_card0@0.16 → buy_card1。上勾拳36金性价比高，提供虚弱易伤，配合痛击与熔融之拳放大输出，卡组缺优质攻击。
+  - 选项：buy_card0=全身撞击；buy_card1=上勾拳；buy_card2=破灭；leave=nothing
+- 2026-09-24T08:53 第9层：Jev leave@0.16 → buy_card5。连射 gives permanent multi-hit damage scaling with strength/闪亮口红, perfect vs Vantom's Slippery; leaves 50 gold to also grab 力量药水 for the act 1 boss.
+  - 选项：leave=nothing；buy_potion1=力量药水；buy_potion0=速度药水；buy_potion2=固化药水；buy_card5=连射
+- 2026-09-24T09:09 第23层：Jev buy_relic2@0.13 → buy_relic1。Deck lacks scaling; candy adds a power-card option every two fights, best long-run value. 74% HP with Burning Blood makes the boss heal unnecessary.
+  - 选项：buy_relic2=燃烧木棍；buy_relic0=缩放仪；buy_relic1=吃不完的糖；leave=nothing；buy_potion1=能力药水
+- 2026-09-24T09:40 第23层：Jev buy_relic1@0.04 → buy_relic0。红头骨+3力量在精英/boss低血时长期强力，配合烙印与彼岸咆哮AOE放大输出；440金仍够买耸肩等后续好牌。
+  - 选项：buy_relic0=红头骨；buy_relic1=古茶具套装；buy_relic2=算盘；buy_card3=耸肩无视；leave=nothing
+- 2026-09-24T10:03 第15层：Jev buy_card4@0.33 → buy_card3。放血 is the best long-term card here: 2 energy enables big 痛击/恶魔之焰 turns, draws exist to use it, and 3 HP is cheap at 83 gold with nothing else impactful affordable.
+  - 选项：buy_card3=放血；leave=nothing；buy_card4=岩石铠甲；buy_potion0=无色药水；buy_potion1=技能药水
+- 2026-09-24T10:25 第4层：Jev buy_card4@0.34 → buy_potion0。Rupture is dead weight with no self-damage cards; Attack Potion fills an empty slot and gives a free chosen attack for elite/boss fights.
+  - 选项：leave=nothing；buy_card4=撕裂；buy_potion1=迅捷药水；buy_potion2=火焰药水；buy_potion0=攻击药水
+- 2026-09-24T10:25 第4层：Jev leave@0.24 → buy_card1。Sword Boomerang is a cheap multi-hit attack — deck needs early damage; 3 hits scale with strength and strip Slippery vs Vantom. Rupture has no self-damage synergy yet.
+  - 选项：leave=nothing；buy_card4=撕裂；buy_potion1=迅捷药水；buy_potion2=火焰药水；buy_card1=飞剑回旋镖
+- 2026-09-24T11:14 第20层：Jev leave@0.09 → buy_relic0。重攻击牌组（地狱狂徒、旋风斩、多段）最适合熔火之蛋：之后所有攻击牌自动升级，长期收益最高；327金全额够买，残留75金无碍。
+  - 选项：buy_relic2=三角铃鼓；buy_relic1=锁镰；buy_relic0=熔火之蛋；buy_card3=耸肩无视；leave=nothing
+- 2026-09-24T11:15 第20层：Jev leave@0.14 → buy_card3。Shrug It Off is premium block+draw, best long-run value; vulnerable already abundant (Bash++, Uppercut++, Molten Fist) so Taunt and Rupture are redundant.
+  - 选项：buy_card3=耸肩无视；leave=nothing；buy_potion1=能量药水；buy_potion2=易伤药水；buy_card2=挑衅
+- 2026-09-24T11:40 第14层：Jev leave@0.05 → buy_card1。Dismantle is cheap, doubles damage with Bash++/Taunt vulnerable, and fixes deck's low damage; keeps gold for other shop buys.
+  - 选项：buy_relic1=佛珠手链；buy_relic2=勇气投石索；buy_card1=拆卸；buy_card2=火焰屏障；leave=nothing
+- 2026-09-24T11:40 第14层：Jev buy_card0@0.32 → buy_potion1。Boss next (floor 14); Weak potion cuts incoming big hits ~25%, filling deck's block gap. We have a free potion slot and 61 gold.
+  - 选项：buy_card0=愤怒；buy_potion0=肌肉药水；buy_potion1=虚弱药水；buy_potion2=敏捷药水；leave=nothing
+- 2026-09-24T11:54 第14层：Jev leave@0.09 → buy_relic1。Bag of Preparation draws 2 extra cards every combat, fixing deck consistency and finding block/Bash; better than +1 Dex or one card.
+  - 选项：buy_relic1=准备背包；buy_relic0=意外光滑的石头；buy_relic2=燃烧木棍；buy_card2=燃烧契约；leave=nothing
+- 2026-09-24T12:07 第14层：Jev buy_relic2@0.29 → buy_card1。第二张上勾拳利于Boss战：虚弱减伤、易伤增伤，优于无力量支撑的焚烧；燃烧木棍无消耗技能可触发，枕头太贵。
+  - 选项：buy_relic2=燃烧木棍；buy_relic1=皇家枕头；buy_card0=焚烧；buy_card1=上勾拳；leave=nothing
+- 2026-09-24T12:07 第14层：Jev buy_card3@0.27 → buy_card0。焚烧 adds permanent 4-hit AOE, fixing the deck's biggest gap: strips Vantom's Slippery, kills Act 1/2 multi-enemy packs, scales with strength and vulnerable. Potions are one-use.
+  - 选项：buy_card0=焚烧；leave=nothing；buy_potion2=爆炸安瓿；buy_potion1=速度药水；buy_card3=武装
+- 2026-09-24T12:15 第22层：Jev buy_card1@0.32 → buy_potion1。能量药水最灵活：配合旋风斩/祭品在boss战爆发或补格挡。牌组已25张且已有飞剑回旋镖，再添牌不值；其余药水收益低。
+  - 选项：leave=nothing；buy_potion1=能量药水；buy_potion2=肌肉药水；buy_potion0=虚弱药水；buy_card1=飞剑回旋镖
+- 2026-09-24T12:33 第15层：Jev leave@0.19 → buy_relic2。硫磺每回合加力量，痛殴、彼岸咆哮消耗回响与多段攻击极吃力量；182金可承担，买后还剩117金再拿双重打击。
+  - 选项：buy_relic2=硫磺；buy_relic0=石化蟾蜍；buy_relic1=闪亮口红；buy_card1=双重打击；leave=nothing
+- 2026-09-24T12:33 第15层：Jev buy_card2@0.21 → buy_card3。硫磺每回合+力量，使跃跃欲试格挡快速成长；面对boss和后续敌人加力量，这是本店最有价值的防御核心。
+  - 选项：buy_card1=双重打击；leave=nothing；buy_card2=武装；buy_card3=跃跃欲试；buy_potion0=格挡药水
+- 2026-09-24T12:56 第12层：Jev leave@0.16 → buy_card0。痛殴是S级成长攻击，牌组缺输出打第一幕Boss；买后还剩74金可再买药水。
+  - 选项：buy_relic2=三角铃鼓；buy_relic1=百年积木；buy_relic0=自成型黏土；buy_card0=痛殴；leave=nothing
+- 2026-09-24T12:56 第12层：Jev leave@0.15 → buy_potion1。铁心药水(覆甲)是实打实的防御增益，留给第一幕Boss/精英战；战栗是F级陷阱牌，速度药水太弱，留金币无意义。
+  - 选项：buy_card2=战栗；buy_potion0=速度药水；buy_potion1=铁心药水；leave=nothing
+- 2026-09-24T13:27 第31层：Jev leave@0.09 → buy_card4。无惧疼痛是消耗体系核心，牌组已有坚毅/燃烧契约/痛殴/熔融之拳等消耗源，75金性价比最高；磨刀石被剃刀牙的每战升级覆盖，价值大减。
+  - 选项：buy_relic0=磨刀石；buy_relic2=扭曲锤子；buy_card4=无惧疼痛；leave=nothing；buy_card1=上勾拳
+- 2026-09-24T14:40 第22层：Jev leave@0.13 → buy_card4。绯红披风每回合掉1血得7格挡，配合撕裂攒力量、怨恨双段，攻防一体；余金还可再买剑柄打击与坚毅。
+  - 选项：buy_relic0=药水腰带；buy_relic2=神秘打火机；buy_relic1=活动星图；buy_card0=剑柄打击；buy_card4=绯红披风；leave=nothing
+- 2026-09-24T14:51 第9层：Jev buy_potion0@0.17 → buy_card4。惊逃 is a cheap permanent power engine with 8 attacks; better long-term value than one-use random power/dex potions.
+  - 选项：buy_card4=惊逃；buy_potion0=能力药水；buy_potion2=敏捷药水；leave=nothing
+- 2026-09-24T15:12 第14层：Jev leave@0.18 → buy_card4。无惧疼痛是长期强力能力牌，74金性价比最高，留下135金还可再买药水备战boss；遗物太贵且收益一般。
+  - 选项：buy_relic2=羽翼护符；buy_relic1=弹珠袋；buy_relic0=战纹涂料；buy_card4=无惧疼痛；leave=nothing
+- 2026-09-24T15:13 第14层：Jev buy_card0@0.31 → buy_potion2。Gold can't afford removal; damage potion adds burst/AOE for the coming elite or boss, complementing my existing ability potion and low HP.
+  - 选项：leave=nothing；buy_potion2=爆炸安瓿；buy_potion1=迅捷药水；buy_potion0=能力药水；buy_card0=完美打击
+- 2026-09-24T16:32 第29层：Jev leave@0.08 → buy_relic1。开心小花每3回合+1能量，长期最强；巨像仅36金，下一轮再买即可。
+  - 选项：buy_relic1=开心小花；buy_relic0=百年积木；buy_relic2=神秘打火机；buy_card2=巨像；leave=nothing
+- 2026-09-24T16:33 第29层：Jev buy_relic0@0.12 → buy_card2。巨像仅36金，配合纸蛙与痛击/挑衅的易伤可减半Boss伤害，性价比高且保留金币继续选购。
+  - 选项：buy_relic0=百年积木；buy_relic2=神秘打火机；buy_card2=巨像；leave=nothing；buy_card6=贪婪之手
+- 2026-09-24T16:54 第40层：Jev buy_card3@0.11 → buy_potion1。Act-2 boss (huge HP, regen) incoming; Demise powder chips the whole fight while cards offered are weaker copies. Gold has no better use.
+  - 选项：leave=nothing；buy_potion2=爆炸安瓿；buy_potion1=消亡粉末；buy_card2=挑衅；buy_card3=邪眼
+- 2026-09-24T16:54 第42层：Jev buy_card1@0.10 → buy_potion1。牌组25张却零能力牌，药水栏有空位；52金买能力药水，免费强力能力牌可留二幕boss战，远优于稀释牌组的愤怒/闪电霹雳。
+  - 选项：buy_card0=愤怒；buy_card1=闪电霹雳；buy_potion1=能力药水；leave=nothing
+- 2026-09-24T18:05 第21层：Jev leave@0.21 → buy_card3。挑衅 only 25g: block 6 (doubles with 坚定不移) plus vulnerable, enabling 拆卸 double hits and boss burst; cheap, keeps gold.
+  - 选项：leave=nothing；buy_card1=御血术；buy_card3=挑衅；buy_potion0=迅捷药水；buy_potion1=敏捷药水
+- 2026-09-24T18:06 第21层：Jev leave@0.29 → buy_card1。御血术是A级高效1费15伤攻击，永久提升输出助打第二幕Boss；药水槽近满（混沌药水），故选卡牌。
+  - 选项：leave=nothing；buy_card1=御血术；buy_potion0=迅捷药水；buy_potion1=敏捷药水；buy_potion2=能力药水
+- 2026-09-24T18:29 第4层：Jev leave@0.21 → buy_card3。挑衅 is A-tier: cheap block plus a second vulnerable source to amplify Unrelenting/Bash; Thunderclap is a trap. Saving 50 gold buys too little.
+  - 选项：buy_card1=闪电霹雳；buy_card3=挑衅；buy_potion1=攻击药水；buy_potion2=爆炸安瓿；leave=nothing
+- 2026-09-24T18:44 第8层：Jev buy_card3@0.10 → buy_card0。痛殴是S级可成长攻击，第一幕正需输出；76金可负担，余下金币还够随后删一张打击。
+  - 选项：buy_card0=痛殴；remove=card removal；buy_card3=挑衅；buy_card4=撕裂；leave=nothing
+- 2026-09-24T18:55 第8层：Jev buy_card0@0.14 → buy_card1。Hemokinesis is the best damage-per-energy here (15 for 1E), fixing this deck's weak Act 1 output for elites/boss while leaving gold for removal later.
+  - 选项：remove=card removal；buy_card4=坚定不移；buy_card3=耸肩无视；buy_card0=剑柄打击；buy_card1=御血术；leave=nothing
+- 2026-09-24T19:48 第31层：Jev buy_relic0@0.20 → buy_card2。Battle Trance is S-tier draw for cheap (73); deck lacks card draw and wins by cycling to 薪火之源/祭品. Save gold for Vajra or removal next.
+  - 选项：buy_relic0=金刚杵；buy_card2=战斗专注；buy_relic1=摆动球；buy_relic2=木札；leave=nothing
+- 2026-09-24T19:48 第31层：Jev leave@0.09 → buy_card1。上勾拳仅78金，契合易伤/力量体系，虚弱加易伤助打Boss；遗物太贵，留金币更稳。
+  - 选项：buy_relic1=摆动球；buy_relic2=木札；leave=nothing；buy_card1=上勾拳；buy_potion1=肌肉药水
+- 2026-09-24T19:48 第31层：Jev leave@0.29 → buy_potion0。复制药水对boss最强，可双发上勾拳或祭品；牌组已厚不拿愤怒，其他药水收益较低。
+  - 选项：leave=nothing；buy_potion1=肌肉药水；buy_potion0=复制药水；buy_potion2=稳定血清；buy_card0=愤怒
+- 2026-09-24T19:48 第31层：Jev leave@0.16 → buy_potion1。Boss likely next at 46 HP; Flex bursts with our multi-hit attacks and Duplication potion, while Anger/Grit would only bloat the already-thick 27-card deck.
+  - 选项：leave=nothing；buy_potion1=肌肉药水；buy_potion2=稳定血清；buy_card0=愤怒；buy_card3=坚毅
+- 2026-09-24T20:05 第46层：Jev buy_relic0@0.22 → buy_relic1。开心小花每3回合+1能量，与薪火之源/祭品++能量引擎契合，长期最强；磨刀石随机升级攻击（可能撞打击）风险高，大锅仅一次性药水。
+  - 选项：buy_relic0=磨刀石；buy_relic1=开心小花；buy_relic2=大锅；leave=nothing；buy_potion2=无色药水
+- 2026-09-24T20:16 第6层：Jev buy_card0@0.13 → buy_card1。预备打击 A 级：7伤害+本回合3力，放大双重打击爆发；头槌已有重复、战鼓陷阱、能力药水随机。买它剩21金。
+  - 选项：buy_card0=头槌；buy_card1=预备打击；buy_card2=战鼓；buy_potion2=能力药水；leave=nothing
+- 2026-09-24T20:51 第15层：Jev buy_relic0@0.22 → buy_card3。Cheap premium block (36g) for Vantom's heavy multi-hits; retaliation adds damage. Keeps gold to also grab 放血 next; relic buffs not worth 178g.
+  - 选项：buy_relic0=打击木偶；buy_relic2=星系仪；buy_card2=放血；buy_card3=火焰屏障；leave=nothing
+- 2026-09-24T20:52 第15层：Jev leave@0.08 → buy_card2。Bloodletting is an A-tier energy engine, usable now and for future high-cost cards; Dismantle overlaps with existing vulnerable payoff, and Feel No Pain lacks exhaust fuel.
+  - 选项：buy_card2=放血；leave=nothing；buy_card0=拆卸；buy_card4=无惧疼痛；buy_potion1=敏捷药水
+- 2026-09-24T21:03 第28层：Jev leave@0.08 → buy_card2。主宰 turns the deck's heavy Vulnerable (Bash++/Molten Fist/Taunt) into permanent Strength — the scaling this deck lacks for later bosses.
+  - 选项：buy_relic0=古茶具套装；buy_relic1=锚；buy_relic2=化学物X；leave=nothing；buy_card2=主宰
+- 2026-09-24T21:03 第28层：Jev leave@0.08 → buy_relic1。锚 gives 10 block every combat including the boss; Chemical X useless (no X-cost cards), Tea Set too situational, greedy card overpriced for a bloated 26-card deck.
+  - 选项：buy_relic0=古茶具套装；buy_relic1=锚；buy_relic2=化学物X；leave=nothing；buy_card6=贪婪之手
+- 2026-09-24T21:03 第28层：Jev buy_relic0@0.26 → buy_card0。Cheap multi-hit attack: scales with our vulnerable kit (Bash/Uppercut/Molten Fist) and shreds Vantom's Slippery stacks; other relics/cards too costly or off-plan.
+  - 选项：buy_relic0=古茶具套装；buy_relic2=化学物X；leave=nothing；buy_card6=贪婪之手；buy_card0=飞剑回旋镖
+- 2026-09-24T21:07 第31层：Jev leave@0.11 → buy_card4。无惧疼痛 has 3+ exhaust enablers (熔融之拳、主宰、彼岸咆哮++), giving persistent block for long fights; 劫掠/灰烬打击/战鼓 are weaker.
+  - 选项：leave=nothing；buy_card4=无惧疼痛；buy_card0=劫掠；buy_card1=灰烬打击；buy_card3=战鼓
+- 2026-09-24T21:39 第11层：Jev leave@0.08 → buy_card2。Battle Trance is S-tier draw, cheap at 74g, helps dig for Perfected Strike/Molten Fist; leaves 195g for Bag of Preparation next.
+  - 选项：buy_card2=战斗专注；buy_relic0=护喉甲；buy_relic1=准备背包；buy_relic2=会员卡；buy_card3=燃烧契约；leave=nothing
+- 2026-09-24T21:39 第11层：Jev leave@0.10 → buy_relic1。准备背包（开局多抽2张）永久提升每场战斗稳定性与输出上限，156金可负担且还剩54金买药水备战boss，优于单张牌和会员卡。
+  - 选项：buy_relic0=护喉甲；buy_relic1=准备背包；buy_relic2=会员卡；leave=nothing；buy_card3=燃烧契约
+- 2026-09-24T21:39 第11层：Jev leave@0.22 → buy_potion1。Stacking Strength Potions fill our last slot and best help the act-1 boss (multi-hit/Vantom layers, 预备打击 synergy) more than flat fire damage.
+  - 选项：buy_potion0=火焰药水；buy_potion1=力量药水；buy_potion2=速度药水；leave=nothing
+- 2026-09-24T21:48 第21层：Jev buy_relic2@0.25 → buy_card4。燃烧(+2力量,76金)契合已有预备打击/熔融之拳的成长与易伤体系，为boss和2幕提供长期收益；华夫饼回血在99%血时几乎浪费。
+  - 选项：buy_relic2=李家华夫饼；buy_card3=耸肩无视；buy_card4=燃烧；leave=nothing；buy_card1=重锤
+- 2026-09-24T22:46 第6层：Jev buy_card1@0.17 → buy_card3。Shrug It Off is the best card here (8 block + draw, great all run) at only 50g, leaving gold to remove a Strike for 75 next purchase.
+  - 选项：remove=card removal；buy_card1=踩踏；buy_card3=耸肩无视；buy_card2=巨像；leave=nothing
+- 2026-09-24T22:47 第6层：Jev buy_card1@0.22 → buy_card2。巨像A级防御牌，配合痛击易伤减半伤害，优于删牌和药水。
+  - 选项：remove=card removal；buy_card1=踩踏；buy_card2=巨像；leave=nothing；buy_potion0=爆炸安瓿
+- 2026-09-24T23:17 第11层：Jev buy_relic0@0.09 → buy_card4。First power; 2 Strength boosts our multi-hit attacks and boss damage; removal can follow.
+  - 选项：remove=card removal；buy_card4=燃烧；buy_relic0=草莓；buy_relic1=船夹板；buy_relic2=木札；leave=nothing
+- 2026-09-24T23:18 第11层：Jev leave@0.11 → buy_potion0。48g vulnerable potion: +50% damage for the act-1 boss, doubles with Molten Fist; better run value than weak True Grit, relics unaffordable anyway.
+  - 选项：leave=nothing；buy_potion0=易伤药水；buy_potion2=攻击药水；buy_potion1=复制药水；buy_card3=坚毅
+- 2026-09-24T23:39 第14层：Jev buy_relic0@0.14 → buy_card1。Dismantle adds needed attack damage and doubles with Bash vulnerable; third Battle Trance is marginal, Rupture has no self-damage synergy.
+  - 选项：buy_relic1=皇家枕头；buy_relic0=红头骨；buy_card1=拆卸；buy_card4=撕裂；buy_card3=战斗专注；leave=nothing
+- 2026-09-24T23:40 第14层：Jev leave@0.12 → buy_potion0。Boss imminent; Strength Potion amplifies multi-hit Whirlwind/Dismantle. Rupture is dead without self-damage cards, third Battle Trance redundant, ampoule is one-shot.
+  - 选项：buy_card4=撕裂；buy_card3=战斗专注；leave=nothing；buy_potion0=力量药水；buy_potion1=爆炸安瓿
+- 2026-09-25T00:38 第25层：Jev buy_card2@0.20 → buy_card0。24金买A级过牌攻击剑柄打击最划算，买后仍剩49金可再买易伤药水备战精英/Boss；耸肩52金则锁死余钱。
+  - 选项：buy_card2=耸肩无视；buy_card0=剑柄打击；leave=nothing；buy_potion2=易伤药水；buy_potion1=格挡药水
+- 2026-09-25T00:40 第28层：Jev buy_relic2@0.07 → buy_card1。拆卸 is 1E 16 damage with our Bash/Taunt vulnerable sources; cheaper and better tempo than Uppercut for the boss. Chemical X and Astrolabe waste gold.
+  - 选项：buy_relic2=化学物X；buy_relic1=活动星图；buy_card0=上勾拳；leave=nothing；buy_card1=拆卸
+- 2026-09-25T00:40 第28层：Jev leave@0.09 → buy_card0。Uppercut: cheap damage + weak mitigation at 47 HP, and vulnerable enables Dismantle double-hits. Chemical X dead (no X cards); heal relic overpriced.
+  - 选项：buy_relic2=化学物X；buy_relic1=活动星图；buy_card0=上勾拳；leave=nothing；buy_card4=岩石铠甲
+- 2026-09-25T00:40 第28层：Jev buy_relic1@0.12 → buy_card4。岩石铠甲每回合+4格挡，触发势不可当打8点，攻防兼得；化学物X无X费牌无用，活动星图210太贵，药水仅一次性。
+  - 选项：buy_relic2=化学物X；buy_relic1=活动星图；leave=nothing；buy_card4=岩石铠甲；buy_potion1=迅捷药水
+- 2026-09-25T00:40 第28层：Jev buy_relic2@0.21 → buy_potion0。化学物X无X费牌是废牌，星图210金只为小回复不值；留钱买挑衅等卡，先花52金补易伤药水助Boss/精英爆发（配合拆卸）。
+  - 选项：buy_relic2=化学物X；buy_relic1=活动星图；leave=nothing；buy_potion1=迅捷药水；buy_potion0=易伤药水
+- 2026-09-25T00:40 第28层：Jev buy_card3@0.09 → buy_card2。挑衅仅25金：6格挡触发势不可当++打8，还提供易伤配合拆卸/上勾拳；另两张太贵且不契合卡组，省下金币。
+  - 选项：buy_card2=挑衅；buy_card3=重振精神；buy_card5=究极防御；leave=nothing
+- 2026-09-25T01:04 第23层：Jev buy_card2@0.11 → buy_potion0。Boss is imminent on floor 23; Dexterity potion fills a belt slot for that fight, while Thunderclap/Armaments add little to a deck already rich in AOE and vulnerable.
+  - 选项：buy_card1=闪电霹雳；buy_card2=武装；buy_potion0=敏捷药水；leave=nothing
+- 2026-09-25T01:09 第31层：Jev leave@0.07 → buy_card3。祭品是S级核心牌：2能量+抽3张，掉血由燃烧之血弥补；金币充足，买后仍够删牌。
+  - 选项：remove=card removal；buy_card3=祭品；buy_relic1=五轮书；buy_relic2=勇气投石索；buy_relic0=烛台；leave=nothing
+- 2026-09-25T01:10 第31层：Jev buy_card4@0.09 → buy_relic0。Candelabra's turn-2 energy helps every fight and the upcoming boss; elite-only strength and heal-on-add are situational, and the 27-card deck needs no more cards.
+  - 选项：buy_relic1=五轮书；buy_relic2=勇气投石索；buy_relic0=烛台；leave=nothing；buy_card4=岩石铠甲
+- 2026-09-25T01:23 第39层：Jev leave@0.19 → buy_card3。耸肩无视 is an A-tier block+draw card that improves the deck permanently for act 3/bosses; 48g leaves nothing better affordable, and potions are only one-fight value.
+  - 选项：buy_card3=耸肩无视；leave=nothing；buy_potion2=易伤药水；buy_potion1=火焰药水；buy_potion0=癫狂之触
+- 2026-09-25T01:41 第15层：Jev buy_relic0@0.23 → buy_relic1。Ice Cream's energy retention is a run-defining relic, letting us bank energy for Demon Form++; still leaves 47 gold to also grab cheap Dismantle.
+  - 选项：buy_relic0=弹珠袋；buy_relic2=熔岩灯；buy_relic1=冰淇淋；buy_card0=拆卸；leave=nothing
+- 2026-09-25T01:55 第27层：Jev buy_card2@0.33 → buy_potion1。Shop sits right before Act 1 boss; 力量药水 gives burst damage, the best use of 63 gold. 战鼓 is F-tier per guide; deck already has strong draw and Demon Form defense.
+  - 选项：buy_card2=战鼓；buy_potion0=迅捷药水；buy_potion1=力量药水；buy_potion2=敏捷药水；leave=nothing
+- 2026-09-25T02:34 第15层：Jev buy_relic1@0.13 → buy_card1。Cheap 78g for A-tier Uppercut: 13 dmg plus weak (boss defense) and vuln feeding Bash/Molten Fist/Bully; leaves gold for 金刚杵 next.
+  - 选项：buy_relic1=金刚杵；buy_relic2=多利之镜；buy_relic0=小邮箱；buy_card1=上勾拳；leave=nothing
+- 2026-09-25T02:34 第15层：Jev leave@0.28 → buy_potion1。Boss is next; empty potion slots. Attack potion (49g) gives a free burst attack for the boss fight, better value than the mediocre block cards or brew.
+  - 选项：leave=nothing；buy_card3=坚毅；buy_card2=邪眼；buy_potion1=攻击药水；buy_potion0=赌徒特酿
+- 2026-09-25T02:42 第20层：Jev leave@0.18 → buy_card0。御血术 fits the self-damage deck perfectly: lose 2 HP triggers 撕裂, 狱火++, 怨恨; 15 damage for 1E at only 39 gold. Other options are weak or unaffordable.
+  - 选项：buy_card0=御血术；leave=nothing；buy_card3=坚毅；buy_potion2=迅捷药水；buy_potion1=力量药水
+- 2026-09-25T03:04 第29层：Jev leave@0.11 → buy_card2。战斗专注仅77金，S级过牌，能提升27张牌组的稳定性；会员卡183难回本，两件243遗物性价比低，金币留给第三幕商店。
+  - 选项：buy_relic2=会员卡；buy_card2=战斗专注；buy_relic0=赤牛；buy_relic1=损毁头盔；leave=nothing
+- 2026-09-25T03:05 第29层：Jev leave@0.08 → buy_relic1。损毁头盔 doubles 燃烧++ first strength gain (+3 str every combat), greatly boosting this multi-hit strength deck; affordable with 375 gold.
+  - 选项：buy_relic2=会员卡；buy_relic0=赤牛；buy_relic1=损毁头盔；leave=nothing；buy_potion0=鲜血药水
+- 2026-09-25T03:05 第29层：Jev buy_potion0@0.30 → buy_potion1。Deck already 28 cards — skip Mind Blast. Weak potion is the best boss consumable; 62 HP plus a second potion buy covers the act 2 boss.
+  - 选项：leave=nothing；buy_potion0=鲜血药水；buy_potion1=虚弱药水；buy_potion2=火焰药水；buy_card5=心灵震慑
+- 2026-09-25T03:06 第29层：Jev buy_potion0@0.22 → buy_card0。Deck has 无惧疼痛+多张消耗牌，消耗堆轻松≥3；契约终结可反复打出的AOE配燃烧++更好，比一次性药水持久。
+  - 选项：leave=nothing；buy_potion0=鲜血药水；buy_potion2=火焰药水；buy_card4=惊逃；buy_card0=契约终结
+- 2026-09-25T04:00 第15层：Jev buy_relic1@0.30 → buy_card0。Cheap A-tier damage kills boss faster; 2 HP cost offset by Burning Blood. Keeps 191 gold flexible for Strawberry or potions next.
+  - 选项：buy_relic1=草莓；buy_card0=御血术；buy_relic2=星系仪；buy_card4=狱火；leave=nothing
+- 2026-09-25T04:01 第15层：Jev buy_relic1@0.31 → buy_card4。狱火与突破、御血术自伤联动，提供持续AOE与输出，价格便宜，余钱还能买药水备战boss。
+  - 选项：buy_relic1=草莓；buy_card4=狱火；leave=nothing；buy_potion2=力量药水；buy_potion1=火焰药水
+- 2026-09-25T04:01 第15层：Jev buy_potion2@0.20 → buy_card2。燃烧契约 is lasting deck quality: Pyre's extra energy makes draw strong, and it exhausts the dead 藏宝图/strikes. Potions are redundant since 小邮箱 refills slots at rest.
+  - 选项：leave=nothing；buy_potion2=力量药水；buy_potion1=火焰药水；buy_card2=燃烧契约；buy_potion0=流动铜液
+- 2026-09-25T04:09 第24层：Jev leave@0.18 → buy_card1。Body Slam is cheap (24g), converts our strong block (锚, 巨像++, 防御) into needed single-target damage; Havoc is a trap and the potions are poor value.
+  - 选项：buy_card1=全身撞击；buy_card2=破灭；buy_potion0=速度药水；buy_potion2=爆炸安瓿；leave=nothing
+- 2026-09-25T05:05 第14层：Jev buy_relic0@0.32 → buy_card1。Stomp is a cheap-in-play 12-damage AOE for this attack-dense deck, filling the deck's AOE hole for Act 2; skip the overpriced relics.
+  - 选项：buy_relic0=弹珠袋；buy_relic1=餐券；buy_card1=踩踏；leave=nothing；buy_card0=头槌
+- 2026-09-25T05:05 第14层：Jev buy_card4@0.26 → buy_card3。坚毅是可靠格挡牌，可消耗状态/打击，为后续无惧疼痛铺垫；无惧疼痛目前消耗牌不足，跳过；药水只是临时价值。
+  - 选项：leave=nothing；buy_card4=无惧疼痛；buy_potion1=速度药水；buy_potion2=迅捷药水；buy_card3=坚毅
+- 2026-09-25T05:38 第24层：Jev buy_relic0@0.18 → buy_relic2。面包 is a boss-tier energy relic: +1 energy every turn after the first is far stronger than Bag of Preparation or a mid card, and we have gold to spare.
+  - 选项：buy_relic0=准备背包；buy_relic2=面包；leave=nothing；buy_card2=坚毅；buy_card0=劫掠
+- 2026-09-25T05:39 第24层：Jev leave@0.34 → buy_card2。Low HP needs block; 坚毅 adds defense and thins strikes/statuses, better than more damage or saving 76 gold.
+  - 选项：leave=nothing；buy_card2=坚毅；buy_card0=劫掠；buy_card1=完美打击；buy_card4=凶恶
+- 2026-09-25T05:57 第37层：Jev leave@0.23 → buy_card3。Offering is S-tier: 2 energy and draw 3 for Act 3, exhaust thins deck; HP cost offset by Burning Blood/healing.
+  - 选项：remove=card removal；buy_card3=祭品；buy_relic0=金刚杵；buy_relic1=节日拉炮；buy_relic2=燃烧木棍；leave=nothing
+- 2026-09-25T05:57 第37层：Jev leave@0.19 → buy_relic0。Vajra's permanent +1 strength boosts every multi-hit/AOE attack in this strength deck, free of energy or draw cost; still affordable alongside Inflame next.
+  - 选项：buy_relic0=金刚杵；buy_relic1=节日拉炮；buy_relic2=燃烧木棍；leave=nothing；buy_card4=燃烧
+- 2026-09-25T05:57 第37层：Jev leave@0.20 → buy_card4。燃烧 is cheap strength scaling for Act 3 boss; keeps enough gold for 黄金印 energy and future buys.
+  - 选项：buy_relic1=节日拉炮；buy_relic2=燃烧木棍；leave=nothing；buy_card4=燃烧；buy_potion0=格挡药水
+- 2026-09-25T05:57 第37层：Jev leave@0.32 → buy_card2。Strength build: with 燃烧++(3 str) this is 30 block for 1E, scaling higher with 预备打击; Act 3 boss defense. Great value at 73g.
+  - 选项：leave=nothing；buy_potion0=格挡药水；buy_potion1=灰水；buy_potion2=明耀酊剂；buy_card2=跃跃欲试
+- 2026-09-25T06:47 第38层：Jev buy_relic2@0.17 → buy_relic1。Gambling Chip: battle-start filtering fixes this 29-card deck's draws and digs for Demon Form++/energy cards in boss fights; unconditional value beats the conditional Rainbow Ring.
+  - 选项：buy_relic2=火龙果；buy_relic0=彩虹戒指；buy_relic1=赌博筹码；leave=nothing；buy_potion0=攻击药水
+- 2026-09-25T07:00 第5层：Jev buy_card2@0.39 → buy_card4。Inferno AOE power combos with Rupture already in deck (self-damage: +1 strength and 6 AOE each trigger); leaves 66 gold for Shrug It Off next.
+  - 选项：remove=card removal；buy_card2=耸肩无视；buy_card1=御血术；buy_card4=狱火；leave=nothing
+- 2026-09-25T07:22 第14层：Jev leave@0.12 → buy_card0。痛殴 (Thrash) is S-tier scaling multi-hit; with Rupture/strength synergy it carries fights. Still affordable to also buy removal next.
+  - 选项：remove=card removal；buy_card0=痛殴；buy_relic1=佛珠手链；buy_relic2=李家华夫饼；buy_relic0=赤牛；leave=nothing
+- 2026-09-25T07:23 第14层：Jev leave@0.22 → buy_card2。Cheap 25g True Grit adds a real block skill to an attack-heavy deck; leftover 41g can't buy anything else anyway.
+  - 选项：buy_card2=坚毅；buy_potion0=迅捷药水；buy_potion1=能量药水；buy_potion2=技能药水；leave=nothing
+- 2026-09-25T07:35 第29层：Jev leave@0.11 → buy_card0。剑柄打击25金性价比最高：9伤+抽1提升循环与输出；斗篷扣278金太贵且非过牌流收益低，奥利哈钢与绯红披风/覆甲冲突。
+  - 选项：buy_card0=剑柄打击；buy_relic0=奥利哈钢；buy_relic2=神秘打火机；buy_relic1=斗篷扣；buy_card3=耸肩无视；leave=nothing
+- 2026-09-25T07:35 第29层：Jev leave@0.08 → buy_relic1。斗篷扣每回合结束按手牌给格挡，永久提升防御、不稀释牌组；奥利哈钢与绯红披风冲突，打火机无附魔攻击可加成。
+  - 选项：buy_relic0=奥利哈钢；buy_relic2=神秘打火机；buy_relic1=斗篷扣；buy_card3=耸肩无视；leave=nothing
+- 2026-09-25T07:47 第9层：Jev buy_potion1@0.22 → buy_card2。Flame Barrier is cheap A-tier block; 44 HP needs defense for the Act 1 boss, and it chips attackers too.
+  - 选项：buy_card2=火焰屏障；buy_card0=双重打击；leave=nothing；buy_potion0=肌肉药水；buy_potion1=鲜血药水
+- 2026-09-25T08:20 第6层：Jev buy_card1@0.11 → buy_card3。放血 is cheap (36g), 0-cost 2-energy acceleration enabling the 3-cost 彼岸咆哮 and big turns; 全身撞击 needs a block deck, 武装 is filler.
+  - 选项：buy_card1=全身撞击；buy_card2=武装；buy_card3=放血；leave=nothing
+- 2026-09-25T09:16 第25层：Jev buy_potion0@0.36 → buy_card4。燃烧仅74金，为无能力牌的卡组提供永久力量成长，配合欺凌/易伤打二幕精英与boss；主宰156金太贵。
+  - 选项：buy_card4=燃烧；leave=nothing；buy_card3=主宰；buy_potion2=无色药水；buy_potion0=鲜血药水
+- 2026-09-25T09:16 第25层：Jev buy_potion0@0.37 → buy_card1。头槌仅24金，A级攻击，还能回收突破++/狂宴++等关键牌；比一次性药水更持久，留金以备后用。
+  - 选项：leave=nothing；buy_potion2=无色药水；buy_potion0=鲜血药水；buy_potion1=流动铜液；buy_card1=头槌
+- 2026-09-25T09:17 第25层：Jev buy_potion0@0.38 → buy_card0。预备打击是A级力量爆发牌，仅51金且永久提升卡组，配合燃烧/无情猛攻/欺凌等多段与0费攻击，远比一次性药水划算。
+  - 选项：leave=nothing；buy_potion2=无色药水；buy_potion0=鲜血药水；buy_potion1=流动铜液；buy_card0=预备打击
+- 2026-09-25T09:31 第42层：Jev buy_card0@0.30 → buy_potion0。Strength potion boosts our 0-cost 欺凌/multi-hit attacks over the long Act 3 boss; 完美打击 would dilute a 27-card deck, other cards are traps or unaffordable.
+  - 选项：leave=nothing；buy_potion1=技能药水；buy_potion2=虚弱药水；buy_potion0=力量药水；buy_card0=完美打击
+- 2026-09-25T09:48 第9层：Jev buy_card2@0.19 → buy_card1。28血需要虚弱减伤，上勾拳还提供易伤放大钢笔尖/旋风斩爆发；手册明确低血时买战斗专注曾致死。
+  - 选项：buy_card3=战斗专注；buy_card1=上勾拳；buy_card0=双重打击；buy_card2=巨像；leave=nothing
+- 2026-09-25T11:08 第14层：Jev buy_relic0@0.28 → buy_card3。Deck has zero non-basic block and dies to chip damage; Shrug It Off (52g) adds block+draw cheaply, and 招财异鱼 refunds gold. 狂宴 too pricey, 巨像 too conditional.
+  - 选项：buy_card1=狂宴；buy_card3=耸肩无视；buy_relic0=准备背包；buy_card2=巨像；leave=nothing
+- 2026-09-25T11:34 第23层：Jev leave@0.07 → buy_card1。狂宴是S/A级牌：斩杀永久+3最大生命，配合恶魔形态+打知识恶魔长战最赚；406金充裕，删打击可稍后再买。
+  - 选项：remove=card removal；buy_card1=狂宴；buy_relic0=灯笼；buy_relic2=多利之镜；buy_relic1=金纸；leave=nothing
+- 2026-09-25T11:47 第37层：Jev leave@0.17 → buy_card4。撕裂配绯红披风/血墙每回合稳定+1力量，永久成长，配合恶魔形态+打512血沙漏，优于一次性药水。
+  - 选项：leave=nothing；buy_potion0=鲜血药水；buy_potion1=明晰提取物；buy_potion2=复制药水；buy_card4=撕裂
+- 2026-09-25T11:47 第37层：Jev buy_potion0@0.12 → buy_card0。飞剑回旋镖仅26金：多段攻击完美吃恶魔形态+与撕裂的力量成长，是打512血沙漏所需伤害；76%血量还有休息点，鲜血药水不值50金。
+  - 选项：buy_card0=飞剑回旋镖；buy_potion0=鲜血药水；leave=nothing
+- 2026-09-25T12:01 第6层：Jev buy_card0@0.23 → buy_card1。预备打击仅24金，A级力量牌：本回合+3力量放大双重打击/愤怒，助力接下来的精英战与仪式兽跌破150血击晕爆发。
+  - 选项：buy_card1=预备打击；leave=nothing；buy_potion1=虚弱药水；buy_potion0=易伤药水；buy_card0=愤怒
+- 2026-09-25T12:11 第21层：Jev buy_relic1@0.14 → buy_relic0。缩放仪在Boss战开始回血，正是本局短板：牌组无力量成长、无厌沙虫是持久战，65%血量进Boss此前多次致命，金币该花掉。
+  - 选项：buy_relic1=磨刀石；buy_relic2=木札；buy_relic0=缩放仪；leave=nothing；buy_potion0=易伤药水
+- 2026-09-25T12:12 第21层：Jev buy_card1@0.25 → buy_card3。挑衅是永久格挡+易伤，正好补本局非基础格挡不足，长期收益高于一次性药水和占牌组的愤怒；金币留着也没用。
+  - 选项：buy_card1=愤怒；buy_card3=挑衅；buy_potion0=易伤药水；buy_potion2=爆炸安瓿；leave=nothing
+- 2026-09-25T12:25 第36层：Jev leave@0.22 → buy_card1。痛殴是S级多段攻击，补充本牌组最缺的伤害并顺带消耗压缩牌组；火龙果只约+10最大生命，金币应花掉。
+  - 选项：buy_relic0=永冻冰晶；buy_relic2=火龙果；buy_card1=痛殴；buy_relic1=活动星图；leave=nothing
+- 2026-09-25T12:25 第36层：Jev leave@0.22 → buy_potion0。51金补满药水格：0费易伤让女王/聚合体爆发回合增伤50%，契合首两回合抢攻；三件遗物对本无能力牌组价值低。
+  - 选项：buy_relic0=永冻冰晶；buy_relic2=火龙果；buy_relic1=活动星图；leave=nothing；buy_potion0=易伤药水
+- 2026-09-25T12:26 第36层：Jev leave@0.20 → buy_relic2。 Spend gold rather than hoard; 火龙果's永久 max-HP gain on every future gold pickup is the only useful buy here (no powers for 冰晶, ? rooms sparse), still leaving 415 for a later shop/removal.
+  - 选项：buy_relic0=永冻冰晶；buy_relic2=火龙果；buy_relic1=活动星图；leave=nothing；buy_potion1=速度药水
+- 2026-09-25T12:26 第36层：Jev leave@0.13 → buy_potion2。能量药水仅51金填满药水格，供女王战前两回合无减益时爆发；其他货品对本牌组（0能力牌、无力量）价值太低，留金待后续商店。
+  - 选项：buy_relic0=永冻冰晶；buy_relic1=活动星图；leave=nothing；buy_potion1=速度药水；buy_potion2=能量药水
+- 2026-09-25T12:27 第36层：Jev leave@0.11 → buy_card2。邪眼仅72金，烙印/燃烧契约/祭品可触发16格挡，是女王持久战最缺的廉价稳定格挡；乱战167金随机性太险，金币应花掉。
+  - 选项：buy_relic0=永冻冰晶；buy_relic1=活动星图；leave=nothing；buy_card2=邪眼；buy_card6=乱战
+- 2026-09-25T12:28 第36层：Jev buy_relic1@0.10 → buy_card6。乱战每回合免费出牌≈多一能量，女王长战与途中精英收益最高；血墙对已30张牌组边际小，两遗物与0能力牌组不契合。
+  - 选项：buy_relic0=永冻冰晶；buy_relic1=活动星图；leave=nothing；buy_card6=乱战；buy_card3=血墙
+- 2026-09-25T13:03 第31层：Jev leave@0.26 → buy_card3。Impervious: 30 block doubled to 60 by Unmovable, exhausts; deck lacks a big-block button; 989 gold still affords Gambling Chip and potions afterward.
+  - 选项：buy_relic2=勇气投石索；buy_relic1=律动残余；buy_relic0=赌博筹码；buy_card3=岿然不动；leave=nothing
+- 2026-09-25T13:03 第31层：Jev leave@0.25 → buy_relic0。Gambling Chip is the best long-term buy: per-combat card selection fixes bad draws for the sand-pit race and Act 3; 293/846 gold is easily affordable.
+  - 选项：buy_relic2=勇气投石索；buy_relic1=律动残余；buy_relic0=赌博筹码；leave=nothing；buy_potion1=攻击药水
+- 2026-09-25T13:04 第31层：Jev leave@0.18 → buy_potion0。力量药水仅51金，直接加强无厌沙虫的DPS竞速；律动残余对沙坑倒计时死亡无效，留金给后续删打击。
+  - 选项：buy_relic2=勇气投石索；buy_relic1=律动残余；leave=nothing；buy_potion1=攻击药水；buy_potion0=力量药水
+- 2026-09-25T13:04 第31层：Jev leave@0.13 → buy_potion2。无厌沙虫是DPS竞速：复制药水配力量药水/熔炉祝福可翻倍爆发，填满第三药水格；余406金仍充裕。
+  - 选项：buy_relic2=勇气投石索；buy_relic1=律动残余；leave=nothing；buy_potion1=攻击药水；buy_potion2=复制药水
+- 2026-09-25T13:16 第45层：Jev buy_relic1@0.34 → buy_card2。战斗专注是S级0费抽3，600血实验体长战最需要的稳定性；77金便宜，剩余126金还可买复制药水。
+  - 选项：buy_relic1=摆动球；buy_card2=战斗专注；leave=nothing；buy_potion0=鲜血药水；buy_potion1=复制药水
+- 2026-09-25T13:17 第45层：Jev leave@0.28 → buy_card0。剑柄打击仅25金，A级过牌攻击且受打击木偶加成，30张牌缺输出；余101金足以下一步再买Boss药水。
+  - 选项：leave=nothing；buy_potion0=鲜血药水；buy_potion1=复制药水；buy_potion2=甲虫汁；buy_card0=剑柄打击
+- 2026-09-25T13:31 第14层：Jev buy_relic1@0.17 → buy_card3。挑衅52金：A级易伤核心，配痛击++与熔融之拳，兼顾格挡；余306金留给二幕买力量/AOE与删牌，三件遗物要么无用要么太贵。
+  - 选项：buy_relic1=地精之角；buy_relic2=化学物X；buy_relic0=精致折扇；buy_card3=挑衅；leave=nothing
+- 2026-09-25T13:32 第14层：Jev buy_relic1@0.14 → buy_card1。Headbutt (51g) is A-tier damage plus recursion for 痛击++/块牌, beats average draw, and keeps 255g for Act 2 scaling—unlike 245g Fan or dead relics.
+  - 选项：buy_relic1=地精之角；buy_relic2=化学物X；buy_relic0=精致折扇；leave=nothing；buy_card1=头槌
+- 2026-09-25T13:32 第14层：Jev buy_relic1@0.21 → buy_relic0。地精之角/化学物X对本牌组几乎无用；精致折扇配9张攻击牌每回合叠加格挡，正是瀑布巨兽自爆战所需，金币应花掉。
+  - 选项：buy_relic1=地精之角；buy_relic2=化学物X；buy_relic0=精致折扇；leave=nothing；buy_potion2=技能药水
+- 2026-09-25T14:14 第27层：Jev buy_relic1@0.14 → buy_card3。21 血且非基础格挡牌仅 3 张：耸肩无视 8 格挡+抽牌，49 金最便宜且永久补强防守，余钱留给药水。
+  - 选项：buy_relic1=摆动球；buy_card3=耸肩无视；leave=nothing；buy_potion2=肌肉药水；buy_potion1=熔炉的祝福
+- 2026-09-25T14:15 第27层：Jev buy_potion1@0.10 → buy_card5。21 HP 且到 boss 前无商店：拳斗=7伤+等量格挡，受力量双重加成，兼顾生存与输出；金不花就是废纸，其他牌与药水价值更低。
+  - 选项：leave=nothing；buy_potion1=熔炉的祝福；buy_potion0=赌徒特酿；buy_card4=地狱狂徒；buy_card5=拳斗
+- 2026-09-25T14:35 第25层：Jev leave@0.17 → buy_card0。宾邦让24金的预备打击变2张：1费7伤+3临时力量，配合踩踏/回旋镖/重锤与手套、手里剑爆发，且留钱继续买药水。
+  - 选项：buy_relic1=古茶具套装；buy_relic2=星系仪；buy_relic0=石化蟾蜍；leave=nothing；buy_card0=预备打击
+- 2026-09-25T14:36 第25层：Jev buy_card1@0.16 → buy_card3。Buy 血墙: 16 block fixes thin non-basic block, 坚定不移 doubles it, and its 2-HP loss triggers 狱火 AOE for Kaiser Crab's twin claws.
+  - 选项：buy_card1=全身撞击；buy_card3=血墙；buy_potion0=速度药水；leave=nothing
+- 2026-09-25T14:47 第7层：Jev buy_card1@0.12 → buy_potion0。消亡粉末免能量、无视格挡持续掉血，正补本牌组对252血仪式兽的输出短板；暴走为F级陷阱，能量药水收益偏小。药水留给Boss战。
+  - 选项：leave=nothing；buy_potion1=能量药水；buy_potion2=速度药水；buy_potion0=消亡粉末；buy_card1=暴走
+- 2026-09-25T14:47 第7层：Jev buy_card0@0.22 → buy_card4。牌组缺持续格挡；第二张岩石铠甲叠加到每回合8格挡，仅38金；无壁垒时全身撞击太弱，药水价值低于永久防御。
+  - 选项：buy_card0=全身撞击；buy_card4=岩石铠甲；buy_potion1=能量药水；buy_potion2=速度药水；leave=nothing
+- 2026-09-25T15:02 第23层：Jev buy_relic1@0.14 → buy_card1。Headbutt: cheap damage plus tutor for Bash++/Molten Fist/Shrug, keeps 139 gold for a later strike removal; Whetstone may whiff on Strikes.
+  - 选项：buy_relic1=磨刀石；buy_relic0=缩放仪；buy_card2=耸肩无视；leave=nothing；buy_card1=头槌
+- 2026-09-25T15:03 第23层：Jev leave@0.24 → buy_card2。Cheap permanent 8-block+draw; improves consistency for elite/boss multi-hits, and no affordable strength/AOE card exists. Potions are single-use, so skip.
+  - 选项：buy_card2=耸肩无视；leave=nothing；buy_potion0=异鱼之油；buy_potion1=消亡粉末；buy_potion2=铁心药水
+- 2026-09-25T15:03 第23层：Jev buy_card2@0.21 → buy_potion0。牌组无力量来源，知识恶魔379血需速攻；异鱼之油补力量+敏捷，可与易伤药水叠加爆发，优于格挡牌。
+  - 选项：leave=nothing；buy_potion0=异鱼之油；buy_potion1=消亡粉末；buy_potion2=铁心药水；buy_card2=武装
+- 2026-09-25T15:21 第13层：Jev buy_card1@0.15 → buy_card0。突破仅24金：自伤触发狱火额外6点群体伤害并强化扯碎，是打同族神官/精英清信徒的关键AOE，余钱可再买药水。
+  - 选项：buy_card0=突破；buy_card1=上勾拳；leave=nothing；buy_card4=岩石铠甲；buy_potion1=火焰药水
+- 2026-09-25T15:33 第31层：Jev buy_card4@0.35 → buy_potion2。牌组无任何力量来源，知识恶魔需成长速攻；能力药水最可能开出恶魔形态/燃烧，boss第一回合免费打出价值最高。
+  - 选项：buy_card4=无惧疼痛；leave=nothing；buy_potion2=能力药水；buy_potion0=格挡药水；buy_potion1=爆炸安瓿
+- 2026-09-25T15:46 第46层：Jev buy_card2@0.23 → leave。战鼓+/破灭+属陷阱牌，稀释32张牌组且永世沙漏按出牌塞凋萎；火焰药水20伤不值52金，金币留给黄金印在最终boss换能量。
+  - 选项：buy_card2=战鼓+；buy_card3=破灭+；buy_potion2=火焰药水；leave=nothing
+- 2026-09-25T15:51 第6层：Jev buy_card4@0.10 → buy_card1。旋风斩 gives the second AOE the Kin boss demands, is multi-hit for future strength scaling, and is affordable; a Strike removal can wait for a later shop.
+  - 选项：remove=card removal；buy_card1=旋风斩；buy_card4=岩石铠甲；leave=nothing；buy_potion2=能量药水
+- 2026-09-25T15:51 第6层：Jev leave@0.27 → buy_card4。永久覆甲每回合免费格挡，适合与神官+信徒的长期战斗；药水只一次性，40金换持续防御更值。
+  - 选项：buy_card4=岩石铠甲；leave=nothing；buy_potion2=能量药水；buy_potion1=鲜血药水；buy_potion0=无色药水
+- 2026-09-25T16:09 第27层：Jev leave@0.31 → buy_card1。突破: 49g AOE on-archetype — 1 HP loss triggers 狱火 (6 AOE), giving 15 damage to both Kaiser Crab claws, aiding same-turn double kill.
+  - 选项：leave=nothing；buy_potion2=力量药水；buy_potion1=迅捷药水；buy_potion0=稳定血清；buy_card1=突破
+- 2026-09-25T16:12 第30层：Jev buy_card1@0.24 → buy_potion1。Power Potion best boss value—can roll Demon Form/Inflame for the long Kaiser Crab fight; deck at 26 cards doesn't want Headbutt.
+  - 选项：leave=nothing；buy_potion1=能力药水；buy_potion2=易伤药水；buy_potion0=速度药水；buy_card1=头槌
+- 2026-09-25T17:03 第24层：Jev buy_relic0@0.07 → buy_card0。Cheap second AOE (AOE>=2 correlates with wins) for 39 gold; the 163-229 relics are marginal value at that price, keeping gold for act 3.
+  - 选项：buy_relic1=护喉甲；buy_relic0=百年积木；buy_relic2=勇气投石索；leave=nothing；buy_card0=彼岸咆哮
+- 2026-09-25T17:03 第24层：Jev buy_relic1@0.07 → buy_card6。滚石每回合递增的伤害补上牌组最缺的成长速度，对379血知识恶魔是决胜引擎；防御已有巨像+/邪眼，不缺护喉甲。
+  - 选项：buy_relic1=护喉甲；buy_relic0=百年积木；buy_relic2=勇气投石索；leave=nothing；buy_card6=滚石
+- 2026-09-25T17:29 第21层：Jev leave@0.25 → buy_card1。Deck has zero AOE and this is cheap 48g AOE; its mass vulnerable pairs with Paper Phrog, Molten Fist and Bully for the boss and Act 3.
+  - 选项：leave=nothing；buy_potion2=迅捷药水；buy_potion1=格挡药水；buy_potion0=能量药水；buy_card1=闪电霹雳
+- 2026-09-25T17:29 第21层：Jev leave@0.26 → buy_potion1。战栗是陷阱牌；牌组非基础格挡仅3张，格挡药水能挡知识恶魔17-30的大招，比能量/抽牌药水更保命。
+  - 选项：buy_card3=战栗；buy_potion0=能量药水；buy_potion1=格挡药水；buy_potion2=迅捷药水；leave=nothing
+- 2026-09-25T17:53 第24层：Jev buy_card3@0.09 → buy_card4。牌组0 AOE；狱火每回合自伤1点，触发撕裂+1力量并对全体6伤，正好配合知识恶魔力量速攻，仅73金。
+  - 选项：buy_card4=狱火；buy_relic2=会员卡；buy_relic1=吃不完的糖；buy_relic0=地精之角；buy_card3=火焰屏障；leave=nothing
+- 2026-09-25T17:54 第28层：Jev leave@0.17 → buy_card4。燃烧是永久+2力量：本局唯一力量源是撕裂，知识恶魔需要力量速攻；38金很便宜，之后可再买旋风斩补AOE。
+  - 选项：buy_card4=燃烧；buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；buy_card0=旋风斩；leave=nothing
+- 2026-09-25T17:54 第28层：Jev leave@0.13 → buy_card0。Deck has only one AOE (Inferno); Whirlwind is cheap, fills the AOE need, and scales hugely with Burning/Rupture strength for boss burst.
+  - 选项：buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；buy_card0=旋风斩；buy_card2=耸肩无视；leave=nothing
+- 2026-09-25T17:55 第28层：Jev leave@0.14 → buy_card2。Shrug It Off is a cheap A-tier block+draw card, shoring up defense for Knowledge Demon; relics are overpriced low value, keep gold for act 3.
+  - 选项：buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；buy_card2=耸肩无视；leave=nothing
+- 2026-09-25T17:55 第28层：Jev leave@0.22 → buy_potion0。25金易伤药水最划算：知识恶魔无人工制品，配合痛击++/熔融之拳爆发；95金小血瓶与药水腰带/羽翼护符此阶段价值低。
+  - 选项：buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_potion0=易伤药水
+- 2026-09-25T17:55 第28层：Jev leave@0.13 → buy_card6。乱战每回合免费打出一张牌：知识恶魔是十几回合的持久战，省能量收益最大；金币本就该在 boss 前花掉。
+  - 选项：buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_card6=乱战
+- 2026-09-25T17:56 第28层：Jev leave@0.09 → buy_relic0。Slots are full (2/2), blocking the shop's 能力药水/炖汤; 药水腰带 opens two slots so I can stock boss potions for Knowledge Demon.
+  - 选项：buy_relic0=药水腰带；buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_card1=双重打击
+- 2026-09-25T17:56 第28层：Jev buy_relic2@0.08 → buy_potion2。Cheapest high-impact buy: power potion saved for Knowledge Demon turn 1 to fish Demon Form (free), matching proven boss plan; leaves gold for more.
+  - 选项：buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_potion2=能力药水；buy_potion1=士兵炖汤
+- 2026-09-25T17:58 第28层：Jev buy_relic1@0.08 → buy_card1。26g 双重打击 is cheap and on-plan (multi-hit scales with our strength/vulnerable); Blood Vial/Wing Charm are overpriced unknowns, potion slot uncertain; keep ~151g for later shop/removal.
+  - 选项：buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_potion1=士兵炖汤；buy_card1=双重打击
+- 2026-09-25T18:00 第28层：Jev buy_relic1@0.10 → buy_card5。41g Discover: 0-cost flexible dig every combat, exhausts into Dark Embrace draw; helps the Knowledge Demon grind; keeps 110g for act 3.
+  - 选项：buy_relic2=羽翼护符；buy_relic1=小血瓶；leave=nothing；buy_potion1=士兵炖汤；buy_card5=发现
+- 2026-09-25T18:17 第12层：Jev buy_card1@0.23 → buy_card4。牌组无力量无AOE，伤害是瓶颈：狱火每回合免费6点、配血墙自伤翻倍到12点，boss战与二幕群战都受益；余10金无损失。
+  - 选项：buy_card1=熔融之拳；buy_card2=重振精神；buy_card3=燃烧契约；buy_card4=狱火；leave=nothing
+- 2026-09-25T18:40 第6层：Jev buy_relic1@0.13 → buy_card4。燃烧是永久力量来源，本局0力量、boss神官长战正需要；指南明确见燃烧就拿，73金优先于遗物与跃跃欲试。
+  - 选项：buy_relic0=百年积木；buy_relic1=锚；buy_card4=燃烧；leave=nothing；buy_card2=跃跃欲试
+- 2026-09-25T18:45 第15层：Jev buy_relic2@0.23 → buy_card4。Buy Inferno: second AOE, passive 6 to all each turn kills Kin's growing followers; 76g still leaves enough for Battle Trance next.
+  - 选项：buy_card3=战斗专注；buy_relic2=面包；buy_card4=狱火；leave=nothing；buy_card2=坚毅
+- 2026-09-25T19:00 第37层：Jev buy_relic1@0.22 → buy_card3。祭品是S级爆发牌：2能量+抽3加快找到重锤++/薪火之源，自伤还触发狱火；永世沙漏需第9回合前打完，正是这种加速。
+  - 选项：remove=card removal；buy_card3=祭品；buy_relic0=弹珠袋；buy_relic2=多利之镜；buy_relic1=风箱；leave=nothing
+- 2026-09-25T19:01 第37层：Jev buy_card0@0.27 → buy_potion2。液态记忆可0费重打重锤++(42伤)或祭品，boss战最缺爆发；不买卡牌以免稀释27张牌组、加重凋萎惩罚。
+  - 选项：leave=nothing；buy_potion0=速度药水；buy_potion1=肌肉药水；buy_potion2=液态记忆；buy_card0=踩踏
+- 2026-09-25T20:13 第14层：Jev leave@0.24 → buy_card3。祭品是唯一的S级卡：0费得2能量抽3张，自伤还能触发撕裂；买后剩90金仍够删一张打击。
+  - 选项：remove=card removal；buy_card3=祭品；buy_card2=战斗专注；buy_relic2=腰带扣；buy_relic0=锚；leave=nothing
+- 2026-09-25T20:49 第30层：Jev leave@0.09 → buy_relic2。牌组没有力量来源，硫磺每回合永久叠力量，配合旋风斩++/多段攻击才能打穿帝王蟹 408 血和第三幕。
+  - 选项：buy_relic1=音叉；buy_relic2=硫磺；buy_relic0=不休陀螺；leave=nothing；buy_card1=拆卸
+- 2026-09-25T20:50 第30层：Jev buy_card2@0.21 → buy_card1。Sulfur stacks strength and Bash+ provides vulnerable, so Dismantle double-hits hardest vs Kaiser Crab; no other shop before boss, spend the gold on damage.
+  - 选项：leave=nothing；buy_card1=拆卸；buy_card3=放血；buy_card4=岩石铠甲；buy_card2=血墙
+- 2026-09-25T20:58 第44层：Jev leave@0.36 → buy_potion1。Boss is a 9-turn race vs 512 HP with Sulfur inflating enemy damage; free attack card adds burst, potions don't dilute the 29-card deck.
+  - 选项：leave=nothing；buy_potion1=攻击药水；buy_potion2=敏捷药水；buy_potion0=无色药水；buy_card3=挑衅
+- 2026-09-25T21:06 第6层：Jev buy_card0@0.20 → buy_card1。Whirlwind: needed AOE plus multi-hit to strip Vantom's 9 Slippery; leaves 51 gold for Shrug It Off next.
+  - 选项：buy_card1=旋风斩；remove=card removal；buy_card3=耸肩无视；buy_card0=熔融之拳；leave=nothing
+- 2026-09-25T21:19 第28层：Jev leave@0.32 → buy_card3。岿然不动 74金：30格挡的S级防御，牌组非基础格挡仅3张，下节点强制精英、boss蟹的49激光都靠它保命。
+  - 选项：buy_card3=岿然不动；leave=nothing；buy_potion0=无色药水；buy_potion2=能力药水；buy_potion1=敏捷药水
+- 2026-09-25T21:19 第28层：Jev leave@0.31 → buy_potion2。Kaiser Crab (408 HP) needs strength growth and deck only has 燃烧; power potion can roll 恶魔形态/燃烧 at boss start, cheap at 51 gold.
+  - 选项：leave=nothing；buy_potion0=无色药水；buy_potion2=能力药水；buy_potion1=敏捷药水；buy_card4=岩石铠甲
+- 2026-09-25T21:48 第5层：Jev remove@0.11 → buy_card1。上勾拳是本店最强单卡：13伤+虚弱减伤+易伤放大双重打击/旋风斩，直接提升打灵魂异鱼的战力，优于删一张打击。
+  - 选项：remove=card removal；buy_card1=上勾拳；leave=nothing；buy_card0=飞剑回旋镖；buy_card5=净化
+- 2026-09-25T21:50 第8层：Jev buy_card4@0.24 → buy_card2。Taunt: cheap 6 block + vulnerable, shoring up scarce non-basic block for Soul Fysh; Bloodletting's 3 HP cost without strength scaling is worse now.
+  - 选项：buy_card1=突破；buy_card2=挑衅；buy_card3=放血；buy_card4=岩石铠甲；leave=nothing
+- 2026-09-25T22:28 第23层：Jev leave@0.16 → buy_card3。Deck has zero strength and boss has 321 HP; Dominate plus Bash++/Molten Fist vulnerable-doubling converts 6+ vuln into ~7 Strength, cheap at 75g.
+  - 选项：buy_relic1=开心小花；buy_relic2=肮脏地毯；buy_relic0=古茶具套装；buy_card2=放血；buy_card3=主宰；leave=nothing
+- 2026-09-25T22:28 第23层：Jev leave@0.24 → buy_card2。Bloodletting adds crucial energy for Hellraiser and the Sandpit race; 3 HP is trivial at 88/88. Buy it now, consider Pommel next.
+  - 选项：buy_card2=放血；buy_card0=剑柄打击；leave=nothing；buy_potion0=格挡药水；buy_card1=御血术
+- 2026-09-25T22:29 第23层：Jev leave@0.32 → buy_card1。Full HP, so Hemokinesis's 2 HP cost is cheap; 15 damage per 1 energy is the best damage-per-gold vs the 321 HP Insatiable boss.
+  - 选项：buy_card0=剑柄打击；leave=nothing；buy_potion0=格挡药水；buy_card1=御血术；buy_potion1=明晰提取物
+- 2026-09-25T23:06 第9层：Jev leave@0.20 → buy_card4。Deck has zero strength; Rupture+Breakthrough is only scaling engine available, and gold must be spent before the boss.
+  - 选项：leave=nothing；buy_card2=跃跃欲试；buy_card4=撕裂；buy_potion0=迅捷药水；buy_potion2=敏捷药水
+- 2026-09-25T23:18 第6层：Jev buy_relic0@0.13 → buy_card4。燃烧 is the top priority: permanent strength, no powers in deck yet, cheap at 75g, and it leaves gold for strike removal afterwards.
+  - 选项：remove=card removal；buy_card1=剑柄打击；buy_card4=燃烧；buy_relic0=铜质鳞片；buy_card0=熔融之拳；leave=nothing
+- 2026-09-25T23:19 第6层：Jev buy_card1@0.31 → remove。Playbook priority: remove a Strike first (deck has 5). Permanent thinning; remaining 49 gold still buys the 24-gold Pommel Strike next.
+  - 选项：remove=card removal；buy_card1=剑柄打击；buy_card0=熔融之拳；leave=nothing；buy_card3=坚毅
+- 2026-09-25T23:30 第21层：Jev buy_card3@0.18 → buy_card4。狱火是永久伤害引擎：每回合免费6+力量AOE，配合突破与红头骨放大；无厌沙虫是沙坑倒计时DPS检定，缺的是输出而非格挡。
+  - 选项：buy_card3=巨像；buy_card4=狱火；leave=nothing；buy_card5=炸弹；buy_card0=闪电霹雳
+- 2026-09-25T23:59 第14层：Jev leave@0.12 → buy_card3。Taunt: permanent block (deck has only one non-basic block source) plus vulnerable that Molten Fist doubles; helps Kin followers die faster. Leaves gold for later buys.
+  - 选项：buy_card3=挑衅；leave=nothing；buy_card1=头槌；buy_potion0=攻击药水；buy_potion2=力量药水
+- 2026-09-25T23:59 第14层：Jev buy_potion1@0.21 → buy_potion2。牌组无力量来源，神官boss需爆发；力量药水+旋风斩多段全程增伤，本层后无商店，金币该花掉。
+  - 选项：leave=nothing；buy_card1=头槌；buy_potion0=攻击药水；buy_potion2=力量药水；buy_potion1=痊愈药水
+- 2026-09-26T00:17 第42层：Jev leave@0.24 → buy_card2。No shops ahead, so spend gold now: 放血 is free energy for 旋风斩 bursts and triggers 狱火's AOE; the remaining 54g still buys a potion next.
+  - 选项：leave=nothing；buy_potion0=迅捷药水；buy_potion1=无色药水；buy_potion2=铁心药水；buy_card2=放血
+- 2026-09-26T00:17 第42层：Jev leave@0.15 → buy_card0。25金买突破：自伤触发狱火6点群伤并加扯碎段数，廉价AOE补强三幕，金币本路线无商店可留。
+  - 选项：leave=nothing；buy_potion0=迅捷药水；buy_potion1=无色药水；buy_card0=突破；buy_card3=挑衅
+- 2026-09-26T00:34 第15层：Jev buy_card1@0.19 → remove。75g strike removal is top priority (5 strikes left); 218g remaining still covers Feed (150g) and a boss potion on follow-up purchases.
+  - 选项：remove=card removal；buy_card1=狂宴；buy_relic2=化学物X；buy_relic1=闪亮口红；buy_relic0=吃不完的糖；leave=nothing
+- 2026-09-26T00:34 第15层：Jev leave@0.21 → buy_potion2。Boss is Soul Fysh: pop Ability Potion turn 1 for Demon Form/Inflame scaling; only 49g and no card is affordable anyway.
+  - 选项：buy_potion0=易伤药水；buy_potion1=速度药水；buy_potion2=能力药水；leave=nothing
+- 2026-09-26T01:18 第28层：Jev leave@0.12 → buy_card4。第二张燃烧：77金买永久+2力量，与恶魔形态叠加正好应对帝皇蟹的408血；金币充裕、此店后再无商店，先拿成长。
+  - 选项：buy_relic1=战纹涂料；buy_relic2=木札；buy_relic0=赤牛；buy_card4=燃烧；buy_card0=御血术；leave=nothing
+- 2026-09-26T01:18 第28层：Jev leave@0.14 → buy_card0。御血术 38金：1费15伤高效攻击，补强帝皇蟹(408血)所需持续输出；删牌已做，无AOE/力量牌在售，余金留给药水。
+  - 选项：buy_relic1=战纹涂料；buy_relic2=木札；buy_relic0=赤牛；buy_card0=御血术；leave=nothing
+- 2026-09-26T01:19 第28层：Jev leave@0.07 → buy_card1。重锤仅76金，确定性大伤害；配合恶魔形态与双燃烧的力量成长，是帝王蟹408血与同回合杀钳的关键爆发，金币留着无用。
+  - 选项：buy_relic1=战纹涂料；buy_relic2=木札；buy_relic0=赤牛；leave=nothing；buy_card1=重锤
+- 2026-09-26T01:19 第28层：Jev leave@0.13 → buy_relic1。战纹涂料163金：随机升级技能，大概率强化跃跃欲试/挑衅/祭品，补足格挡短板；此后到boss无商店，金币不能留。
+  - 选项：buy_relic1=战纹涂料；buy_relic2=木札；buy_relic0=赤牛；leave=nothing；buy_potion2=能量药水
+- 2026-09-26T01:20 第28层：Jev buy_card2@0.34 → buy_potion1。Boss in 5 floors: fill last potion slot with 能力药水; second power potion = more free powers on boss T1. Gold better spent than saved.
+  - 选项：leave=nothing；buy_potion2=能量药水；buy_potion0=无色药水；buy_potion1=能力药水；buy_card2=武装
+- 2026-09-26T01:36 第4层：Jev buy_potion1@0.18 → buy_card1。Deck lacks damage; Bully at 35g combos with Bash's 2 vulnerable (8 base, ~12 effective) and beats a one-shot random colorless potion for the boss race.
+  - 选项：buy_card1=欺凌；buy_potion1=无色药水；leave=nothing
+- 2026-09-26T02:16 第23层：Jev leave@0.18 → buy_card3。9 HP with a forced elite next: Colossus is cheap, and we apply vulnerable easily (Bash/Taunt/Uppercut), halving elite damage for survival.
+  - 选项：buy_relic2=幽灵种子；buy_relic0=战纹涂料；buy_relic1=永冻冰晶；leave=nothing；buy_card3=巨像
+- 2026-09-26T02:17 第23层：Jev leave@0.20 → buy_card2。9 HP with a forced elite next: Blood Wall adds cheap 16 block (32 first with Unmovable), fits Barricade fortress, and leaves 166 gold for another purchase.
+  - 选项：buy_relic2=幽灵种子；buy_relic0=战纹涂料；buy_relic1=永冻冰晶；leave=nothing；buy_card2=血墙
+- 2026-09-26T02:35 第24层：Jev buy_card2@0.05 → buy_card3。Battle Trance (S-tier, 0-cost draw 3) adds consistency to dig for block and burst before the Crab boss; upgraded Strikes make removal less urgent at 22 HP.
+  - 选项：remove=card removal；buy_card3=战斗专注；leave=nothing；buy_card2=坚毅；buy_card0=完美打击
+- 2026-09-26T02:50 第15层：Jev buy_card0@0.16 → buy_card2。放血是A级能量牌：+2能量让旋风斩++爆发清信徒，也支撑痛击++接拆卸的连招；商店是本幕最后消费机会，余钱无用。
+  - 选项：buy_card2=放血；leave=nothing；buy_card0=熔融之拳；buy_card4=无惧疼痛；buy_card5=究极防御
+- 2026-09-26T02:58 第29层：Jev buy_card0@0.21 → buy_card2。血墙仅24金：16格挡补足短板（非基础格挡只2张），失2血还能触发狱火群伤，利于帝皇蟹双钳平衡。
+  - 选项：buy_card0=熔融之拳；buy_card1=剑柄打击；buy_card2=血墙；buy_card3=坚毅；leave=nothing
+- 2026-09-26T03:41 第31层：Jev buy_card4@0.27 → remove。Deck still has Strikes; removal at 75 is cheapest highest-value buy. Keep gold for strength/AOE later; boss 无厌沙虫 is a DPS race needing deck quality.
+  - 选项：remove=card removal；buy_card4=绯红披风；buy_relic1=节日拉炮；buy_relic2=幽灵种子；buy_relic0=爬行动物饰品；leave=nothing
+- 2026-09-26T05:14 第7层：Jev buy_card4@0.21 → buy_card3。火焰屏障是优质格挡，克制族母 9×2 多段攻击并反伤，补齐第二张非基础格挡；余钱 62 还够随后买剑柄打击，优于 100 金单删一张打击。
+  - 选项：buy_card1=剑柄打击；remove=card removal；buy_card4=无惧疼痛；buy_card3=火焰屏障；leave=nothing
+- 2026-09-26T05:28 第23层：Jev buy_card4@0.07 → buy_card3。HP 28%: block in hand is the death risk; 挑衅 gives cheap 6 block + vulnerable fuel for 拆卸++/欺凌/巨像, and leaves 56 gold.
+  - 选项：leave=nothing；buy_card4=岩石铠甲；buy_card3=挑衅；buy_card0=欺凌+；buy_card5=应急按钮
+- 2026-09-26T05:31 第30层：Jev leave@0.19 → buy_potion0。50 gold buys nothing else here; unequipped slots and hoarded gold are wasted, and +敏捷 is usable defense for the sand-worm boss fight.
+  - 选项：buy_potion0=速度药水；leave=nothing
+- 2026-09-26T05:43 第42层：Jev buy_potion2@0.32 → buy_card0。Only 1 AOE in deck; Stomp+ adds a second cheap/free AOE needed for Queen + Amalgam, and it's affordable (58/92). Potions are one-shot and weaker.
+  - 选项：buy_card0=踩踏+；leave=nothing；buy_potion0=无色药水；buy_potion2=力量药水；buy_potion1=预知之滴
+- 2026-09-26T06:45 第6层：Jev buy_card2@0.22 → buy_card3。挑衅是最优单买：1费6格挡加易伤，配合痛击放大全牌组伤害、补足格挡短板；余下49金还能再买攻击药水。
+  - 选项：buy_card2=巨像；buy_card3=挑衅；leave=nothing；buy_potion0=攻击药水；buy_potion2=肌肉药水
+- 2026-09-26T06:45 第6层：Jev buy_card0@0.26 → buy_potion0。余烬是陷阱牌(随机消耗)；金币应花掉，攻击药水补满空格，为灵魂异鱼boss留爆发伤害。
+  - 选项：buy_card0=余烬；buy_potion0=攻击药水；leave=nothing
+- 2026-09-26T07:05 第5层：Jev buy_card3@0.18 → remove。商店第一优先是删牌：5张打击太多，删一张能提升抽牌质量；巨像需配合痛击才强，双重打击对缺力量的牌组提升有限。
+  - 选项：buy_card1=双重打击；remove=card removal；buy_card3=巨像；leave=nothing；buy_potion1=鲜血药水
+- 2026-09-26T07:31 第39层：Jev leave@0.11 → buy_card0。Demon Form++ makes 1E AOE 突破 scale hard for the final boss damage race; no shops remain, so unspent gold is dead.
+  - 选项：buy_card0=突破；buy_card2=血墙；buy_card3=武装；buy_potion2=无色药水；leave=nothing
+- 2026-09-26T07:38 第4层：Jev buy_card2@0.22 → buy_card1。Deck has zero AOE and no strength; an 18-to-all attack (plus exhaust-pile payoff) is the biggest upgrade for Act 1 elites and multi-enemy fights. Removal can wait for later shops.
+  - 选项：remove=card removal；buy_card1=彼岸咆哮；leave=nothing；buy_card2=跃跃欲试；buy_card4=惊逃
+- 2026-09-26T07:56 第25层：Jev buy_card5@0.31 → buy_card2。16 block for 1E is premium; its 2 HP loss also triggers Inferno AOE, and the plan wants a sixth real block card before the Insatiable race.
+  - 选项：leave=nothing；buy_card4=岩石铠甲；buy_card2=血墙；buy_card0=愤怒；buy_card5=净化
+- 2026-09-26T08:57 第3层：Jev buy_card1@0.39 → buy_potion0。战斗专注/上勾拳 unaffordable; 余烬 and 杂耍 are trap cards. Attack potion fills the open slot, adding burst damage for upcoming elites and The Kin boss.
+  - 选项：buy_card1=余烬；buy_card4=杂耍；buy_potion0=攻击药水；leave=nothing
+- 2026-09-26T10:40 第14层：Jev buy_card2@0.29 → buy_card1。头槌仅26金：1费9伤优于打击，还能回收重锤/耸肩无视提升稳定性；挑衅虽好但贵且Bash已供易伤。钱要花掉，买它。
+  - 选项：buy_card1=头槌；buy_card2=挑衅；leave=nothing
+- 2026-09-26T11:18 第6层：Jev buy_card2@0.26 → buy_card0。牌组0张AOE，踩踏补上一幕头号缺口（群伤），74金可负担；之后再买耸肩无视、删打击仍够钱。
+  - 选项：buy_card2=耸肩无视；buy_card0=踩踏；remove=card removal；buy_relic1=自成型黏土；buy_relic2=腰带扣；leave=nothing
+- 2026-09-26T11:57 第20层：Jev buy_relic0@0.14 → buy_card1。Deck has zero AOE; Kaiser Crab needs both claws killed together. Stomp is cheap AOE and still leaves 167g for the 150 removal afterward.
+  - 选项：buy_card1=踩踏；remove=card removal；buy_relic1=古茶具套装；buy_relic2=羽翼护符；buy_relic0=闪亮口红；leave=nothing
+- 2026-09-26T12:56 第46层：Jev remove@0.10 → buy_card4。牌组无力量来源，实验体600血必须靠力量成长；燃烧(73金)正是计划核心，余钱下步再补药水/删牌。
+  - 选项：buy_card4=燃烧；remove=card removal；buy_relic2=拳刃；buy_relic0=波纹水盆；leave=nothing
+- 2026-09-26T12:56 第46层：Jev buy_card3@0.31 → buy_potion1。Boss in 2 floors; potions empty. Duplication Potion gives the biggest burst (double Feed/attacks) for Test Subject phases 2-3; then re-buy cheaper potions with remaining gold.
+  - 选项：leave=nothing；buy_potion2=技能药水；buy_potion0=速度药水；buy_potion1=复制药水；buy_card3=血墙
+- 2026-09-26T12:58 第46层：Jev buy_card3@0.18 → buy_card5。Equilibrium: 13 block plus retain banks 岿然不动/attacks across Test Subject's phase transitions and intangible turns; 29g left still covers Blood Wall next.
+  - 选项：leave=nothing；buy_potion2=技能药水；buy_potion0=速度药水；buy_card3=血墙；buy_card5=均衡
+- 2026-09-26T13:23 第3层：Jev buy_card2@0.27 → buy_card1。Deck has zero AOE and needs early attacks; Thunderclap adds AOE plus vulnerable for group fights and Soul Fysh damage. Armaments is dead weight and potion is lower priority.
+  - 选项：buy_card1=闪电霹雳；buy_card2=武装；buy_potion1=能量药水；leave=nothing
+- 2026-09-26T13:44 第9层：Jev buy_card0@0.18 → buy_card1。御血术 1E打15，牌组最缺爆发伤害；2点自伤可由燃烧之血抵消。药水腰带与高价遗物不值，先补输出打瀑布巨兽。
+  - 选项：buy_card1=御血术；buy_card0=预备打击；buy_relic0=药水腰带；buy_relic1=节日拉炮；buy_relic2=王室印章；leave=nothing
+- 2026-09-26T13:45 第9层：Jev buy_card4@0.23 → buy_card0。牌组缺伤害（距boss时钟差约2伤/回合）。预备打击7伤＋3临时力量，配合飞剑回旋镖/重锤提升爆发，51金划算；留119金以备下次删牌。
+  - 选项：buy_card0=预备打击；buy_relic0=药水腰带；buy_card4=地狱狂徒；leave=nothing；buy_potion1=格挡药水
+- 2026-09-26T13:54 第20层：Jev buy_relic0@0.09 → buy_card3。战斗专注仅38金，S级0费过牌，配合地狱狂徒与易伤爆发提升boss输出；200金删防御性价比低，遗物不对路。
+  - 选项：buy_card3=战斗专注；remove=card removal；buy_relic1=餐券；buy_relic2=化学物X；buy_relic0=赤牛；leave=nothing
+- 2026-09-26T14:16 第21层：Jev buy_card1@0.12 → buy_card2。HP 30%, long Knowledge Demon fight: True Grit gives 7 block for 1E and thins the deck via exhaust. No affordable power, AOE, or removal here.
+  - 选项：buy_card1=完美打击；buy_card2=坚毅；buy_card3=武装；leave=nothing
+- 2026-09-26T14:37 第3层：Jev buy_card1@0.19 → buy_card0。剑柄打击仅26金：1费9伤抽1，立即补强前期输出；余80金下轮还能买拆卸，删牌留待以后更划算。
+  - 选项：buy_card0=剑柄打击；remove=card removal；buy_card1=拆卸；buy_card2=放血；leave=nothing
+- 2026-09-26T14:59 第20层：Jev leave@0.10 → buy_card4。狱火是A级持续AOE引擎，与血墙/祭品自伤联动，长战每回合额外6点群体伤害；本店对当前牌组最有价值。
+  - 选项：buy_card0=头槌；buy_card3=巨像；buy_card4=狱火；leave=nothing；buy_card5=万向斩
+- 2026-09-26T15:05 第29层：Jev buy_card4@0.06 → buy_card1。Deck is ~15 dmg/turn short for Knowledge Demon; Howl adds strength-scaled AOE damage that replays from exhaust, best use of gold; FNOP lacks exhaust triggers.
+  - 选项：buy_card4=无惧疼痛；leave=nothing；buy_card1=彼岸咆哮；buy_card2=武装；buy_card5=净化
+- 2026-09-26T15:15 第36层：Jev buy_card1@0.17 → buy_potion0。Boss needs Demon Form/second Inflame scaling; power potion held for Aeonglass turn 1 is the only real lottery here, and Setup Strike adds too little.
+  - 选项：buy_card1=踩踏；buy_card0=预备打击；leave=nothing；buy_potion0=能力药水；buy_potion2=流动铜液
+- 2026-09-26T15:15 第36层：Jev buy_card0@0.39 → buy_card2。血墙仅24金：16格挡兼触发狱火，补足第4张非基础格挡牌，永世沙漏战需要；预备打击7伤太弱，踩踏71金买不起。
+  - 选项：buy_card0=预备打击；buy_card2=血墙；leave=nothing
+- 2026-09-26T15:25 第6层：Jev buy_card2@0.31 → buy_card1。Twin Strike is multi-hit: breaks Vantom's 9 Slippery and scales with Inflame. 210 gold still covers Shrug It Off plus a 100g Strike removal next.
+  - 选项：buy_card2=耸肩无视；buy_card1=双重打击；remove=card removal；buy_relic0=佛珠手链；buy_relic1=红面具；leave=nothing
+- 2026-09-26T16:55 第29层：Jev buy_relic0@0.16 → buy_card4。狱火 is the AOE engine the Kaiser Crab double-kill needs; 突破×3 + 放血 trigger it repeatedly and keep HP low for 红头骨. Cheap at 77, leaves gold for 放血 next.
+  - 选项：buy_card4=狱火；buy_relic0=弹珠袋；buy_relic1=五轮书；buy_relic2=幽灵种子；buy_card3=放血；leave=nothing
+- 2026-09-26T17:16 第3层：Jev buy_card4@0.37 → leave。Rupture is dead without self-damage cards; healing/draw potions waste gold at 76% HP. Save 63g toward a 100g Strike removal later.
+  - 选项：buy_card4=撕裂；buy_potion1=迅捷药水；buy_potion2=鲜血药水；leave=nothing
+- 2026-09-26T17:55 第5层：Jev buy_card0@0.15 → buy_card1。Uppercut best card here: 13 dmg plus weak/vulnerable patches the 19 dmg/turn gap vs Kin; leaves 55 gold to also grab Breakthrough AOE next.
+  - 选项：remove=card removal；buy_card1=上勾拳；buy_card0=突破；buy_card4=岩石铠甲；buy_card3=血墙；leave=nothing
+- 2026-09-26T18:42 第5层：Jev buy_relic1@0.23 → buy_card0。Twin Strike for 25g: cheap multi-hit that scales with future Strength and helps race Kin's followers; leaves gold for a block card or potion.
+  - 选项：buy_relic0=百年积木；buy_relic1=小血瓶；buy_card0=双重打击；buy_card4=撕裂；buy_card2=坚毅；leave=nothing
+- 2026-09-26T18:43 第5层：Jev buy_relic1@0.15 → buy_relic0。Centennial Puzzle: permanent draw-3 engine, triggers on first HP loss nearly every fight; deck lacks draw; much better value than 160g Blood Vial or a replaceable 7-block card.
+  - 选项：buy_relic0=百年积木；buy_relic1=小血瓶；buy_card4=撕裂；buy_card2=坚毅；leave=nothing
+- 2026-09-26T18:52 第21层：Jev leave@0.09 → buy_card2。Infernal Blade: 1 energy for a free attack, fueling Shuriken/Demon Form and thinning via exhaust; no premium cards or removal here, gold is otherwise dead.
+  - 选项：leave=nothing；buy_card1=欺凌；buy_card2=地狱之刃；buy_card5=自动化；buy_card4=惊逃
+- 2026-09-26T18:59 第5层：Jev buy_card4@0.16 → buy_card2。战斗专注是S级过牌，正是本局计划所需，74金后还能买药水；删牌可等后续商店。
+  - 选项：buy_card2=战斗专注；remove=card removal；buy_card4=无惧疼痛；leave=nothing；buy_card0=完美打击
+- 2026-09-26T19:54 第22层：Jev leave@0.14 → buy_card3。放血(A级0费加能量)补齐能量短板，配合过牌与易伤爆发打321血沙虫boss；金币应花掉，75金值得。
+  - 选项：leave=nothing；buy_card3=放血；buy_card4=撕裂；buy_card2=地狱之刃；buy_card5=连射
+- 2026-09-26T20:38 第31层：Jev remove@0.11 → buy_card4。Run wins via permanent strength; Inflame (77g) is take-on-sight, cheap, and ramps Baking Glove burst for the Insatiable race; preserves gold for later buys.
+  - 选项：remove=card removal；buy_card4=燃烧；buy_relic1=石化蟾蜍；buy_relic0=铜质鳞片；buy_card0=踩踏；leave=nothing
+- 2026-09-26T20:39 第31层：Jev buy_card2@0.11 → buy_card0。Cheap 36g AOE that discounts toward free in multi-attack turns; sandpit-timer boss needs burst damage, and Act 3 multi-enemy fights want AOE.
+  - 选项：buy_card0=踩踏；buy_card2=邪眼；buy_card3=重振精神；buy_card5=深谋远虑；leave=nothing
+- 2026-09-26T20:49 第46层：Jev leave@0.29 → buy_potion0。Boss is a long damage race: Weak cuts both Queen and Amalgam damage ~25% during the critical kill-Amalgam turns, without diluting the 33-card deck.
+  - 选项：buy_potion1=鲜血药水；buy_potion2=爆炸安瓿；buy_potion0=虚弱药水；leave=nothing；buy_card4=岩石铠甲
+- 2026-09-26T21:16 第9层：Jev remove@0.10 → buy_card0。Deck has 0 AOE and low damage; Stomp at 76 is cheap and scales with our Strikes. Remove a Strike with remaining gold next.
+  - 选项：buy_card0=踩踏；remove=card removal；buy_relic1=草莓；buy_relic2=拳刃；buy_relic0=永冻冰晶；leave=nothing
+- 2026-09-26T21:16 第9层：Jev buy_card2@0.33 → buy_card3。Taunt's block plus vulnerable speeds the Waterfall Giant damage race before its gun scales; Blood Wall duplicates an existing copy, potions weak at 78% HP.
+  - 选项：buy_card2=血墙；buy_card3=挑衅；buy_potion0=迅捷药水；buy_potion1=鲜血药水；leave=nothing
+- 2026-09-26T22:24 第14层：Jev buy_card2@0.32 → buy_card4。燃烧是本局缺失的永久力量来源，见到必拿；71金后仍有166，可再买耸肩无视/删牌，不买火龙果浪费金币。
+  - 选项：buy_card4=燃烧；buy_card2=耸肩无视；remove=card removal；buy_card0=剑柄打击；buy_relic2=火龙果；leave=nothing
+- 2026-09-26T22:55 第5层：Jev buy_card0@0.31 → buy_card1。拆卸 is a multi-hit attack: Bash's vulnerable doubles it and it strips 2 Slippery layers vs Vantom; cheap at 72g, leaving 202g for Strike removal next.
+  - 选项：remove=card removal；buy_card1=拆卸；buy_card0=踩踏；buy_relic2=尖叫酒壶；buy_relic1=不休陀螺；leave=nothing
+- 2026-09-26T23:02 第20层：Jev buy_card2@0.08 → buy_card3。Cheap 24g block+draw; deck has only 2 real block cards and needs a 3rd for act 2. Other cards are traps (Body Slam, Tremble) and potion costs more.
+  - 选项：buy_card3=耸肩无视；buy_potion2=迅捷药水；leave=nothing；buy_card0=全身撞击；buy_card2=战栗
+- 2026-09-26T23:48 第22层：Jev buy_relic1@0.26 → buy_card2。烙印 is a permanent Strength source, the deck's #1 gap per run plan; cheap at 62g and Whirlwind/Pyre scales with Strength. Pillow is a luxury, rest heals suffice.
+  - 选项：buy_relic1=皇家枕头；buy_relic0=音叉；buy_relic2=勇气投石索；buy_card2=烙印；leave=nothing
+- 2026-09-27T00:07 第6层：Jev buy_card0@0.34 → buy_card4。狱火是最强AOE能力牌且仅78金；两张突破各触发+6群伤，正好速杀同族信徒；余下111金留作删打击。
+  - 选项：remove=card removal；buy_card0=彼岸咆哮；buy_card4=狱火；buy_relic1=餐券；leave=nothing
+- 2026-09-27T00:07 第6层：Jev buy_card0@0.37 → remove。删一张打击精简牌组、提升旋风斩/狱火/突破的上手率；在售卡牌全是废牌（暴走/破灭/战鼓为陷阱，彼岸咆哮仅一次性）。其余金币留着无所谓，删打击是手册首选。
+  - 选项：remove=card removal；buy_card0=彼岸咆哮；leave=nothing；buy_card5=横祸；buy_card1=暴走
+- 2026-09-27T01:31 第42层：Jev buy_relic1@0.30 → buy_card4。Rupture is the run-plan target: Inferno+ loses HP every turn, converting into permanent strength ramp. Cheap at 74, still leaving gold for this last shop.
+  - 选项：buy_card4=撕裂；buy_relic1=纸蛙；leave=nothing；buy_card1=无情猛攻；buy_card2=坚毅
+- 2026-09-27T02:49 第21层：Jev buy_card0@0.00 → buy_card2。血墙24金：1费16格挡补格挡短板，掉2血可触发狱火AOE与怨恨双打；愤怒48金只会加厚攻击堆。
+  - 选项：buy_card0=愤怒；buy_card2=血墙；leave=nothing
+- 2026-09-27T04:02 第3层：Jev remove@0.00 → buy_card0。Deck has zero AOE and no strength. Breakthrough is cheap 52g AOE (9 to all) filling the biggest Act-1 hole, leaving gold for a later buy.
+  - 选项：remove=card removal；buy_card0=突破；leave=nothing；buy_card2=坚毅；buy_potion1=易伤药水
+- 2026-09-27T04:02 第3层：Jev leave@0.00 → buy_card2。坚毅 25g: 廉价高效格挡牌，还能消耗掉一张打击精简牌组；牌组缺非基础格挡，比一次性药水更持久。
+  - 选项：leave=nothing；buy_card2=坚毅；buy_potion1=易伤药水；buy_potion0=力量药水；buy_card1=愤怒
+- 2026-09-27T04:59 第20层：Jev buy_potion1@0.00 → buy_card1。预备打击是A级力量爆发牌：7伤+3临时力量，受打击木偶加成，放大双重打击/突破，为凯撒蟹同回合清双钳补伤害；48金最划算。
+  - 选项：buy_potion1=力量药水；buy_card1=预备打击；buy_potion0=明晰提取物；buy_potion2=流动铜液；buy_card2=战斗专注；leave=nothing
+- 2026-09-27T05:00 第20层：Jev buy_card2@0.00 → buy_card4。牌组仅4张格挡牌，覆甲每回合持续产格挡，利好凯撒蟹长战与三幕；金币花掉不囤（82金买不起100的删牌）。
+  - 选项：buy_card2=战斗专注；buy_potion0=明晰提取物；buy_potion2=流动铜液；buy_card4=岩石铠甲；leave=nothing
+- 2026-09-27T05:23 第21层：Jev buy_card4@0.09 → buy_relic2。帐篷让之后每个休息点都能同时回血+锻造，长期收益最高，直接弥补本局伤害与进boss血量缺口；剩余金币可再买无惧疼痛。
+  - 选项：buy_relic2=微型帐篷；buy_relic1=烛台；buy_relic0=闪亮口红；leave=nothing；buy_card4=无惧疼痛
+- 2026-09-27T05:23 第21层：Jev buy_card4@0.18 → buy_card0。牌组无力量成长，与我一战！+3力量放大双重打击/怨恨等多段，支撑7回合斩杀沙虫；金币该花就花，其余商品偏弱。
+  - 选项：leave=nothing；buy_card4=无惧疼痛；buy_card3=地狱之刃；buy_card0=与我一战！；buy_card5=箭雨
+- 2026-09-27T05:39 第37层：Jev buy_card3@0.16 → buy_potion2。No potions held; skill potion gives a free flexible card (block/exhaust for Withers) in the Aeonglass race, better than diluting a 28-card deck with Body Slam/Armaments.
+  - 选项：buy_potion2=技能药水；buy_potion0=速度药水；leave=nothing；buy_card3=武装；buy_card1=全身撞击
+- 2026-09-27T06:27 第14层：Jev buy_card0@0.00 → buy_card3。24金买1费7格挡+随机消耗，补格挡短板；剩48金正好再买突破，成为第三张AOE并持续触发撕裂。
+  - 选项：buy_card0=预备打击；buy_card1=突破；buy_card2=战栗；buy_card3=坚毅；leave=nothing
+- 2026-09-27T06:33 第21层：Jev remove@0.00 → buy_card1。Uppercut: 13 frontload + Vulnerable for clock-race boss (Insatiable) and Weak mitigation; run plan explicitly wants it over draw; removal too pricey.
+  - 选项：remove=card removal；buy_card1=上勾拳；buy_card2=战斗专注；buy_card0=踩踏；leave=nothing
+- 2026-09-27T06:40 第30层：Jev buy_potion0@0.00 → buy_potion1。Boss is a damage race vs sandpit clock; fire potion adds needed burst and fills an empty slot. Deck is bloated—skip the mediocre card.
+  - 选项：buy_potion0=技能药水；buy_potion1=火焰药水；buy_potion2=癫狂之触；leave=nothing；buy_card4=岩石铠甲
+- 2026-09-27T06:58 第20层：Jev buy_card4@0.08 → buy_card1。上勾拳 gives the deck's only Weak (cuts Knowledge Demon's 19/30 hits by 25%) plus 13 damage and Vulnerable; best per-gold, leaves 48 for a follow-up buy.
+  - 选项：buy_card4=无惧疼痛；buy_card1=上勾拳；buy_potion1=迅捷药水；buy_potion2=缚魂药水；buy_potion0=超巨化药水；leave=nothing
+- 2026-09-27T07:57 第22层：Jev buy_relic0@0.13 → buy_card3。Shrug It Off at 48 is premium block+draw for a block-starved deck, and leaves 168 gold to still remove a Strike next.
+  - 选项：remove=card removal；buy_card3=耸肩无视；buy_card0=上勾拳；buy_relic1=打击木偶；buy_relic0=弹珠袋；leave=nothing
+- 2026-09-27T09:10 第22层：Jev leave@0.16 → remove。Gold 367 lets us thin the deck first: remove a Strike to improve draw consistency for the Insatiable damage race; potions and Dismantle can follow.
+  - 选项：buy_potion0=迅捷药水；buy_potion2=敏捷药水；buy_potion1=预知之滴；remove=card removal；buy_relic0=战纹涂料；leave=nothing
+- 2026-09-27T09:11 第22层：Jev leave@0.18 → buy_potion2。11血且零药水：敏捷药水放大7张格挡牌，应对沙虫Boss的重击，剩218金仍够买战纹涂料。
+  - 选项：buy_potion0=迅捷药水；buy_potion2=敏捷药水；buy_potion1=预知之滴；buy_relic0=战纹涂料；buy_relic2=燃烧木棍；leave=nothing
+- 2026-09-27T09:11 第22层：Jev leave@0.17 → buy_card1。拆卸: 1费8×2伤害，弹珠袋每战给易伤，正好补足打沙虫所需的输出；72金便宜，余钱还能再买迅捷药水。
+  - 选项：buy_potion0=迅捷药水；buy_potion1=预知之滴；buy_relic0=战纹涂料；buy_relic2=燃烧木棍；buy_card1=拆卸；leave=nothing
+- 2026-09-27T09:17 第29层：Jev buy_relic0@0.17 → buy_card0。Whirlwind is cheap A-tier AOE; with double Rupture/Crimson Mantle strength and extra energy it directly closes the boss damage gap.
+  - 选项：buy_card0=旋风斩；buy_relic2=大锅；buy_relic1=碎石钻；buy_relic0=熔火之蛋；buy_card3=耸肩无视；leave=nothing
+- 2026-09-27T09:18 第29层：Jev buy_card5@0.37 → buy_card6。潦草急就：抽满手牌快速找到撕裂/绯红/狱火引擎，沙坑时钟下爆发关键；前方无商店，金币不花等于浪费（耸肩/战鼓价值低）。
+  - 选项：buy_card2=战鼓；buy_card3=耸肩无视；buy_card5=闪亮登场+；buy_card6=潦草急就；leave=nothing
+- 2026-09-27T09:24 第3层：Jev buy_card1@0.31 → buy_card2。血墙16格挡/2费补足牌组稀缺格挡，利于精英与神官光束战；余烬是陷阱牌；药水仅一次性，不如永久格挡牌。
+  - 选项：buy_card1=余烬；leave=nothing；buy_card2=血墙；buy_potion1=火焰药水；buy_potion2=技能药水
+- 2026-09-27T10:04 第23层：Jev buy_card4@0.22 → buy_card3。Taunt: cheap 6 block + vulnerable, synergizes with Bash++/Bully; leaves 49g for a burst potion. Plated Armor too weak at 73g.
+  - 选项：buy_card3=挑衅；buy_potion1=肌肉药水；buy_potion0=火焰药水；buy_card4=岩石铠甲；buy_potion2=流动铜液；leave=nothing
+- 2026-09-27T10:36 第15层：Jev buy_card4@0.38 → remove。Top shop priority is deleting a Strike (6 remain). Feel No Pain lacks exhaust sources; draw potions are weaker value than deck thinning before boss.
+  - 选项：buy_potion2=迅捷药水；buy_potion0=无色药水；buy_potion1=预知之滴；remove=card removal；buy_card4=无惧疼痛；leave=nothing
+
+## reward/card（246 次）
 - 2026-09-24T07:11 第20层：Jev skip@0.44 → card1。Headbutt+ is efficient damage and can recur key cards; deck needs more attacks for Act 2.
   - 选项：card1=头槌+(50)；skip=skip(50)
 - 2026-09-24T07:17 第6层：Jev card0@0.08 → card2。Armaments upgrades key cards and adds block; deck lacks upgrades and block, better than random attack or skip.
@@ -75,8 +2043,466 @@
   - 选项：card2=燃烧契约(56)；skip=skip(50)
 - 2026-09-24T08:45 第28层：Jev skip@0.25 → card2。Plated Armor+ adds scaling block for long boss fights; deck at 25 cards is within budget and needs sustained defense at low HP.
   - 选项：card2=岩石铠甲+(50)；skip=skip(50)
+- 2026-09-24T09:06 第20层：Jev card0@0.40 → card2。拆卸+ is premium: 20 damage for 1E with Bash/Uppercut vulnerable; deck lacks strong attacks.
+  - 选项：card0=欺凌(50)；card2=拆卸+(52)；skip=skip(50)
+- 2026-09-24T09:11 第28层：Jev card1@0.34 → card3。无惧疼痛是A级廉价能力牌，与牌组已有的恶魔之焰(消耗手牌)立刻联动，并为第二幕消耗格挡流打基础；踩踏3费偏笨重。
+  - 选项：card1=踩踏(72)；card3=无惧疼痛(74)；skip=skip(50)
+- 2026-09-24T09:26 第12层：Jev card1@0.02 → skip。Deck has zero self-damage cards, so 撕裂 is a dead draw; at 19 HP before Waterfall Giant, staying lean and blocking matters more than speculative scaling.
+  - 选项：card1=撕裂(50)；skip=skip(50)
+- 2026-09-24T09:34 第17层：Jev skip@0.25 → card0。Dark Embrace is a rare exhaust engine; deck already has Feel No Pain, Brand and self-replaying 彼岸咆哮 to trigger it. Stoke's random cards are unreliable.
+  - 选项：card0=黑暗之拥(61)；card1=添柴(63)；skip=skip(50)
+- 2026-09-24T09:46 第30层：Jev skip@0.26 → card2。Bloodletting: 0-cost 2 energy fuels the Dark Embrace/exhaust engine and low HP enables Red Skull; a third Pommel Strike and Taunt+ are both marginal at 23 cards.
+  - 选项：card2=放血(61)；card0=剑柄打击(57)；card1=挑衅+(55)；skip=skip(50)
+- 2026-09-24T09:56 第4层：Jev card1@0.39 → card2。预备打击 is a top Act-1 attack: 7 damage plus 3 Strength boosts the turn's follow-up Bash/Strikes; a second copy beats situational 主宰 and random-target 飞剑.
+  - 选项：card2=预备打击(68)；card0=主宰(66)；card1=飞剑回旋镖(54)；skip=skip(50)
+- 2026-09-24T10:01 第12层：Jev card1@0.39 → card0。Pommel Strike #3: 1E for 9 damage + draw keeps deck cycling toward block/damage, best value for the Waterfall Giant fight; duplicates acceptable.
+  - 选项：card0=剑柄打击(64)；card1=头槌(62)；card2=坚毅(54)；skip=skip(50)
+- 2026-09-24T10:33 第14层：Jev skip@0.31 → card1。突破 pairs with 撕裂 (+1 Strength per play), deals 9 AOE for 1E — better than the Strikes it can replace; cheap payoff for Act 2 multi-enemy fights.
+  - 选项：card1=突破(51)；skip=skip(50)
+- 2026-09-24T10:51 第4层：Jev card1@0.42 → card0。Shrug It Off gives reliable block plus draw, the deck's biggest gap; the Beast hits hard and Headbutt just adds redundant damage.
+  - 选项：card0=耸肩无视(81)；card1=头槌(80)；skip=skip(50)
+- 2026-09-24T10:56 第12层：Jev card0@0.32 → card1。岿然不动 provides crucial large block for Ceremonial Beast's big hits, and is a high-value rare that helps survive late game.
+  - 选项：card1=岿然不动(74)；card2=御血术(70)；card0=欺凌(56)；skip=skip(50)
+- 2026-09-24T11:12 第17层：Jev card1@0.11 → card2。Beast's turn 1 is free setup; Hellraiser is our only scaling, converting 8 strike-named cards into free damage while energy goes to blocking.
+  - 选项：card2=地狱狂徒(82)；card0=痛殴(80)；card1=焚烧(62)；skip=skip(50)
+- 2026-09-24T11:17 第23层：Jev skip@0.39 → card2。Only 27 HP with 4 block cards; 4 Plated Armor per turn adds cheap sustained defense for Act 2's longer fights, and deck size is fine.
+  - 选项：card2=岩石铠甲(53)；skip=skip(50)
+- 2026-09-24T11:25 第30层：Jev skip@0.34 → card1。Feel No Pain is A-tier; deck already has exhaust outlets (添柴, 熔融之拳, 岿然不动, 痛殴) and needs scaling block at 22 HP before the boss.
+  - 选项：card1=无惧疼痛(54)；skip=skip(50)
+- 2026-09-24T12:04 第7层：Jev card2@0.20 → card1。Crimson Mantle: rare block engine, fills deck's biggest need, scales every fight including the 230 HP Beast; 1 HP/turn is covered by Burning Blood. AoE not needed vs single-target boss.
+  - 选项：card2=踩踏(86)；card1=绯红披风(83)；card0=突破(62)；skip=skip(50)
+- 2026-09-24T12:13 第19层：Jev skip@0.07 → card2。0-cost Anger hits 9 with 3 strength, never competes for energy with block, feeds Pen Nib count and Thrash fuel; deck has few free attacks.
+  - 选项：card2=愤怒(50)；skip=skip(50)
+- 2026-09-24T12:14 第21层：Jev skip@0.25 → card2。Breakthrough is a cheap 1E AoE (12 dmg with +3 Strength) that greatly helps Act 2 multi-enemy fights; 1 HP cost is trivial.
+  - 选项：card2=突破(51)；skip=skip(50)
+- 2026-09-24T12:17 第27层：Jev skip@0.06 → card0。Upgraded Whirlwind with Inflame strength scaling is a premium AOE finisher for Act 2 multi-enemy fights; one more card is fine.
+  - 选项：card0=旋风斩+(53)；skip=skip(50)
+- 2026-09-24T12:28 第8层：Jev skip@0.11 → card1。Bloodletting: 0-cost 2 energy fuels Bash+Flame Barrier turns; HP is safe at 76% with Burning Blood. Second Flame Barrier is redundant with one already in deck.
+  - 选项：card1=放血(68)；card2=火焰屏障(66)；skip=skip(50)
+- 2026-09-24T12:32 第13层：Jev skip@0.04 → card2。Deck runs many 2-3 cost cards (痛击++, 彼岸咆哮, 恶魔之焰, 火焰屏障) with zero energy generation; ritual is the guide-endorsed energy enabler, useful for Waterfall Giant block turns.
+  - 选项：card2=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-24T12:42 第23层：Jev skip@0.42 → card2。Sulfur gives +1 strength each turn; a 0-cost Whirlwind turns that into big multi-hit AOE — key for killing Kaiser Crab's two claws in one turn.
+  - 选项：card1=武装+(55)；card2=旋风斩(53)；skip=skip(50)
+- 2026-09-24T12:46 第31层：Jev skip@0.28 → card0。1E 15-damage attack is premium; Sulfur-scaling rewards fast kills, and 2 HP cost is payable with Burning Blood. Deck has energy/draw to support one more.
+  - 选项：card0=御血术(52)；skip=skip(50)
+- 2026-09-24T12:52 第4层：Jev skip@0.14 → card0。坚毅是扎实的1费格挡（剃刀牙还会将其升级为9格挡+指定消耗），牌组正缺非基础防御牌；随机消耗在13张牌中多半命中打击，无风险。
+  - 选项：card0=坚毅(54)；skip=skip(50)
+- 2026-09-24T13:25 第27层：Jev skip@0.34 → card0。头槌+ is A-tier: 12 damage for 1E beats deck average, and returning a key card (火焰屏障/彼岸咆哮) to top of draw adds real value. Deck needs damage more than one more thin card.
+  - 选项：card0=头槌+(55)；skip=skip(50)
+- 2026-09-24T13:25 第28层：Jev skip@0.13 → card0。Taunt+ is an efficient 1E block +2 vulnerable; deck's only vulnerable source is Bash, and Molten Fist doubles it. Quality beats curbing 28-card size.
+  - 选项：card0=挑衅+(53)；skip=skip(50)
+- 2026-09-24T14:41 第23层：Jev skip@0.28 → card0。双重打击1费两段，配合撕裂+绯红披风每回合涨力量，收益持续放大；3费15格挡太笨重，抢不动Boss伤害节奏。
+  - 选项：card0=双重打击(52)；card2=跃跃欲试(50)；skip=skip(50)
+- 2026-09-24T14:48 第4层：Jev card1@0.11 → card0。S-tier power, perfect to play during Lagavulin's sleep turns; doubles block and counters its -2 dex debuff.
+  - 选项：card1=耸肩无视(81)；card0=坚定不移(76)；card2=御血术(76)；skip=skip(50)
+- 2026-09-24T15:21 第11层：Jev card1@0.24 → card0。Headbutt is reusable 9-damage plus discard recycling (re-fetch Molten Fist/Hemokinesis), best for the 230 HP Beast; True Grit's random exhaust risks key cards.
+  - 选项：card0=头槌(62)；card1=坚毅(59)；card2=熔融之拳(54)；skip=skip(50)
+- 2026-09-24T15:34 第6层：Jev card1@0.40 → card2。双重打击 1E 打 10 点、多段可成长且不消耗，长线对瀑布巨兽更稳；熔融之拳消耗后收益一次性。
+  - 选项：card2=双重打击(76)；card1=熔融之拳(72)；card0=撕裂(50)；skip=skip(50)
+- 2026-09-24T15:39 第15层：Jev card0@0.11 → card2。战斗专注是S级0费过3张：牌组零过牌，能更快找到防御/火焰屏障应对巨兽自爆；耸肩仅8格挡，价值次之。
+  - 选项：card0=耸肩无视(87)；card2=战斗专注(83)；skip=skip(50)
+- 2026-09-24T16:50 第36层：Jev skip@0.43 → card0。坚毅+ gives premium 1E block and selective exhaust to thin the 24-card deck and clear act-3 statuses; deck already has enough attacks/AOE (杀灭, 旋风斩).
+  - 选项：card0=坚毅+(51)；card1=突破+(51)；card2=重锤(51)；skip=skip(50)
+- 2026-09-24T17:32 第3层：Jev card1@0.28 → card0。燃烧 is premium scaling the deck lacks; +2 力量 boosts all 5 strikes and stays relevant vs Waterfall Giant/bosses. 挑衅 is a fine but replaceable common.
+  - 选项：card0=燃烧(68)；card1=挑衅(68)；skip=skip(50)
+- 2026-09-24T17:54 第8层：Jev card1@0.16 → card0。Twin Strike: 10 damage for 1E, multi-hit scales with the strength from 烙印 and beats Bash-less attack quality; Molten Fist exhausts, 坚毅's random exhaust risks key cards.
+  - 选项：card1=坚毅(59)；card0=双重打击(58)；card2=熔融之拳(54)；skip=skip(50)
+- 2026-09-24T18:42 第3层：Jev card0@0.27 → card2。Shrug It Off is the best long-term pick: solid block plus draw, helping find Bash and survive the Beast's plows; deck has enough basic attacks.
+  - 选项：card2=耸肩无视(81)；card0=头槌(80)；card1=双重打击(76)；skip=skip(50)
+- 2026-09-24T18:53 第5层：Jev card0@0.19 → card1。Cheap 1E attack with per-turn Strength fits the low-cost deck and Act 1 damage needs; 3E Bludgeon clogs energy vs the Beast.
+  - 选项：card1=预备打击(80)；card2=重锤(78)；card0=劫掠(59)；skip=skip(50)
+- 2026-09-24T18:56 第9层：Jev card2@0.23 → card1。预备打击 is A-tier: 1E for 7 damage plus +3 Strength this turn amplifies 御血术/剑柄打击; a 3-cost Bludgeon is clunky with only 3 energy and no energy relics.
+  - 选项：card2=重锤(66)；card1=预备打击(62)；card0=愤怒(50)；skip=skip(50)
+- 2026-09-24T19:11 第31层：Jev skip@0.02 → card2。23 dmg/energy is elite vs Knowledge Demon's 379 HP; minor self-damage offset by Burning Blood, deck still within size.
+  - 选项：card2=御血术+(51)；skip=skip(50)
+- 2026-09-24T19:29 第14层：Jev card1@0.43 → card0。Rupture already in deck: 突破 gives +1 strength per play plus 9-damage AOE and cheapens Stomp; 坚毅's random exhaust risks key cards like Rupture/Dominate.
+  - 选项：card0=突破(54)；card1=坚毅(59)；skip=skip(50)
+- 2026-09-24T19:47 第30层：Jev skip@0.43 → card0。双重打击两段伤害更吃撕裂与力量成长，优于第二张预备打击；25张牌仍可容纳一张优质攻击牌。
+  - 选项：card0=双重打击(54)；card1=预备打击(52)；skip=skip(50)
+- 2026-09-24T19:56 第35层：Jev skip@0.33 → card2。彼岸咆哮打出后每回合从消耗堆自动再放18点AOE，三幕群战引擎；能量已有薪火之源，强于普通挑衅。
+  - 选项：card1=挑衅(55)；card2=彼岸咆哮(53)；skip=skip(50)
+- 2026-09-24T20:03 第43层：Jev skip@0.10 → card0。Taunt+ adds block (deck's weak spot) plus 2 vulnerable, amplifying Molten Fist and Dismantle; deck can absorb one more card.
+  - 选项：card0=挑衅+(53)；skip=skip(50)
+- 2026-09-24T20:05 第45层：Jev skip@0.05 → card0。1E multi-hit AOE scales hard with deck's strength (金刚杵/撕裂/主宰/手里剑) and shreds multi-enemy act 3 fights and intangible; rare quality beats deck bloat.
+  - 选项：card0=焚烧(52)；skip=skip(50)
+- 2026-09-24T20:22 第14层：Jev card2@0.23 → card1。Twin Strike hits twice, scaling with 预备打击's temp strength, 易伤 and 打击木偶; Breakthrough's self-damage AOE is useless vs the single-target boss.
+  - 选项：card1=双重打击(52)；card2=突破(54)；skip=skip(50)
+- 2026-09-24T20:45 第3层：Jev card0@0.22 → card1。Double Strike: 10 dmg for 1E, doubles strength and vulnerable scaling, and the deck needs cheap front-loaded damage for act 1 elites; Setup Strike is situational and Perfect Strike too costly.
+  - 选项：card2=预备打击(62)；card1=双重打击(58)；card0=完美打击(50)；skip=skip(50)
+- 2026-09-24T20:47 第5层：Jev card2@0.17 → card0。御血术 1E 15伤，效率远超牌组均值，是A级自伤攻击；Soul Fysh 单目标 Boss，单体爆发优先于突破的小AoE。
+  - 选项：card0=御血术(64)；card2=突破(62)；card1=愤怒(50)；skip=skip(50)
+- 2026-09-24T20:58 第19层：Jev skip@0.03 → card0。Act 2 boss is a damage race; 20 damage plus a free follow-up attack outweighs one extra card in a 25-card deck.
+  - 选项：card0=无情猛攻+(54)；skip=skip(50)
+- 2026-09-24T20:59 第20层：Jev skip@0.40 → card2。Big 32-damage hit fuels the Act 2 boss damage race; combos with 无情猛攻++ (free play) and 薪火之源 energy. Deck can spare one slot.
+  - 选项：card2=重锤(54)；skip=skip(50)
+- 2026-09-24T21:05 第29层：Jev skip@0.30 → card1。1E attack with +3 strength this turn; deck has Twin Strike, Sword Boomerang, Dismantle and Bash++ vulnerable to multiply it. Slightly above average draw, deck still within 28.
+  - 选项：card1=预备打击(55)；skip=skip(50)
+- 2026-09-24T21:25 第45层：Jev skip@0.19 → card0。Deck has only 4 block cards and heavy Vulnerable sources (Bash, Uppercut, Molten Fist); Colossus halves boss damage, ideal vs Queen. A-tier pick.
+  - 选项：card0=巨像(51)；skip=skip(50)
+- 2026-09-24T21:32 第3层：Jev skip@0.02 → card0。Floor 3 Act 1 needs early damage; 0-cost Anger adds cheap damage now and copy value for elites, and upcoming boss fight demands output.
+  - 选项：card0=愤怒(50)；skip=skip(50)
+- 2026-09-24T22:13 第13层：Jev skip@0.19 → card1。Deck has zero scaling and no powers; Demon Form is the needed win condition for the 240+ HP boss fights and amplifies the 打击木偶 Strike shell.
+  - 选项：card0=祭品(92)；card1=恶魔形态(90)；card2=地狱狂徒(76)；skip=skip(50)
+- 2026-09-24T22:31 第15层：Jev card1@0.31 → card0。Burning Pact: strongest card, adds draw plus exhausts junk; Orichalcum already gives 6 block, so True Grit barely improves defense.
+  - 选项：card0=燃烧契约(64)；card1=坚毅(59)；skip=skip(50)
+- 2026-09-24T22:36 第17层：Jev card0@0.18 → card1。Crimson Mantle gives recurring block every turn, fixing the deck's biggest weakness for the low-HP Beast fight.
+  - 选项：card1=绯红披风(83)；card2=坚定不移(82)；card0=势不可当(62)；skip=skip(50)
+- 2026-09-24T22:39 第21层：Jev skip@0.23 → card2。头槌+ 是12伤1费的优质攻击，还能回收熔融之拳/突破++等关键牌；牌组仅23张，仍在合理区间，优于跳过。
+  - 选项：card2=头槌+(55)；skip=skip(50)
+- 2026-09-24T22:48 第11层：Jev skip@0.20 → card2。坚毅 7 block beats Defend, and its random exhaust thins Strikes/wounds vs Vantom; deck needs block more than a second Setup Strike.
+  - 选项：card0=预备打击(56)；card2=坚毅(54)；skip=skip(50)
+- 2026-09-24T23:24 第19层：Jev skip@0.22 → card2。坚毅+ 1费9格挡且附带消耗，优于普通防御，补足第二幕/知识恶魔长时间消耗战所需的格挡；22张牌仍可接受。
+  - 选项：card2=坚毅+(54)；skip=skip(50)
+- 2026-09-24T23:37 第9层：Jev skip@0.19 → card0。0费抽3提升过牌与爆发，帮助找旋风斩/痛击；第二张岿然容易卡手，奖励不该跳。
+  - 选项：card0=战斗专注(77)；card2=岿然不动(73)；skip=skip(50)
+- 2026-09-25T00:16 第14层：Jev card0@0.32 → card2。挑衅补足格挡(全牌组仅1张防御系)并提供易伤,还能触发菲涅耳透镜附加灵巧;对面是沉睡的乐加维林,格挡尤其珍贵。
+  - 选项：card2=挑衅(67)；card0=突破(62)；card1=预备打击(56)；skip=skip(50)
+- 2026-09-25T00:24 第5层：Jev card2@0.26 → card1。御血术1费15伤，是前期高效输出；加速击杀瀑布巨兽可减少蒸汽层数和自爆伤害，牌组正缺输出牌。
+  - 选项：card1=御血术(70)；card2=坚毅(65)；skip=skip(50)
+- 2026-09-25T00:33 第17层：Jev card1@0.41 → card2。祭品是S级0费引擎：+2能量抽3张，补足这套牌严重缺乏的过牌与爆发，且消耗不污染牌组；对巨型喷发战与整场爬升都最优。
+  - 选项：card1=狂宴(92)；card2=祭品(92)；skip=skip(50)
+- 2026-09-25T00:39 第27层：Jev card1@0.08 → skip。Deck is a lean 19 cards needing block/scaling for Knowledge Demon; Perfected Strike is only ~18 damage for 2E and dilutes an attack-heavy deck.
+  - 选项：card1=完美打击(50)；skip=skip(50)
+- 2026-09-25T00:58 第15层：Jev card2@0.21 → card1。放血：0费换2能量，配合战斗专注/两张剑柄打击可爆发出更多牌；牌组缺能量与成长，优于重复的踩踏和3费跃跃欲试。
+  - 选项：card1=放血(68)；card0=踩踏(66)；card2=跃跃欲试(56)；skip=skip(50)
+- 2026-09-25T01:08 第28层：Jev skip@0.42 → card2。Twin Strike doubles the +3 strength from 金刚杵/燃烧, hitting 16 for 1E; deck needs damage scaling for act 2 bosses and one more card is fine.
+  - 选项：card2=双重打击(54)；skip=skip(50)
+- 2026-09-25T01:19 第35层：Jev skip@0.12 → card0。御血术 1费16伤(含金刚杵)，效率高于牌组均值，助力三幕实验体速杀；血量充裕，燃烧之血可补。
+  - 选项：card0=御血术(55)；skip=skip(50)
+- 2026-09-25T01:33 第2层：Jev card2@0.24 → card1。预备打击+ is A-tier: 9 damage plus 4 Strength this turn makes every other attack (5 Strikes, Bash) hit much harder in Act 1. Boomerang's random split is unreliable vs The Kin.
+  - 选项：card1=预备打击+(74)；card2=飞剑回旋镖+(70)；skip=skip(50)
+- 2026-09-25T01:41 第14层：Jev skip@0.14 → card0。坚毅: reliable 1E 7-block, feeds 邪眼++ exhaust synergy and thins junk; needed survivability for Kin boss where 添柴's random cards are too unreliable.
+  - 选项：card0=坚毅(59)；card1=添柴(64)；skip=skip(50)
+- 2026-09-25T01:58 第28层：Jev card0@0.18 → card1。Hemokinesis+ gives 20 damage for 1 energy, fixing deck's low burst; third Battle Trance is redundant with two already, Taunt too weak.
+  - 选项：card0=战斗专注+(66)；card1=御血术+(64)；card2=挑衅(62)；skip=skip(50)
+- 2026-09-25T02:33 第14层：Jev card1@0.35 → card3。狱火每回合自伤1触发射裂+1力量程, 且怨恨每回合双打、扯碎成长; 牌组已是自伤体系, 优先能力牌。
+  - 选项：card1=双重打击(64)；card3=狱火(66)；skip=skip(50)
+- 2026-09-25T02:38 第17层：Jev card0@0.36 → card2。恶魔之焰：消耗冗余基础牌同时爆发，应对222血族母的速杀需求；势不可当需要格挡体系，而我方仅1张非基础格挡牌，太慢。
+  - 选项：card0=势不可当(66)；card2=恶魔之焰(68)；skip=skip(50)
+- 2026-09-25T03:00 第20层：Jev skip@0.14 → card2。拆卸+ is 1E for ~26-39 damage with my many vulnerable enablers (痛击++, 熔融之拳, 挑衅) and 燃烧++; efficient damage helps kill both Kaiser Crab claws.
+  - 选项：card0=跃跃欲试+(52)；card2=拆卸+(54)；skip=skip(50)
+- 2026-09-25T03:03 第27层：Jev skip@0.11 → card0。Burning Pact+ pairs with Feel No Pain (exhaust=block) and adds sorely-needed draw for consistency; Flame Barrier+ duplicates an existing card.
+  - 选项：card0=燃烧契约+(57)；card2=火焰屏障+(53)；skip=skip(50)
+- 2026-09-25T04:44 第17层：Jev card2@0.13 → card1。祭品0费抽3加2能量，触发撕裂加力量，消耗精简牌组；比2费薪火之源更契合当前牌组与boss爆发。
+  - 选项：card1=祭品(92)；card2=薪火之源(90)；card0=痛殴(86)；skip=skip(50)
+- 2026-09-25T04:55 第31层：Jev skip@0.41 → card2。力量流：双重打击两段各吃燃烧/撕裂/手里剑的永久力量与纸蛙易伤加成，比临时力量的预备打击更契合本局成长。
+  - 选项：card0=预备打击(56)；card2=双重打击(52)；skip=skip(50)
+- 2026-09-25T05:00 第5层：Jev card1@0.22 → card2。Sword Boomerang: 3 hits pairs with 预备打击/烙印 strength, strips Vantom's 9 Slippery fast, and scales better than Molten Fist's one-shot.
+  - 选项：card2=飞剑回旋镖(70)；card0=熔融之拳(66)；card1=闪电霹雳(54)；skip=skip(50)
+- 2026-09-25T05:14 第22层：Jev skip@0.10 → card2。Bloodletting+ is free energy burst for a 27-card deck with no energy cards; 3 HP is trivial with Burning Blood. Hemokinesis adds to an already attack-heavy deck. Take it.
+  - 选项：card1=御血术(57)；card2=放血+(61)；skip=skip(50)
+- 2026-09-25T05:21 第6层：Jev card2@0.35 → card0。燃烧提供永久力量成长，牌组正缺 scaling，多段攻击与易伤配合收益高，优先于消耗过牌。
+  - 选项：card0=燃烧(84)；card1=预备打击(80)；card2=燃烧契约(77)；skip=skip(50)
+- 2026-09-25T05:36 第21层：Jev skip@0.05 → card1。0-cost attack: 6 damage scales with 燃烧 strength, duplicates itself, and adds front-load for the Act 2 boss while energy is tight; strong pick despite deck size.
+  - 选项：card1=愤怒(50)；skip=skip(50)
+- 2026-09-25T05:54 第33层：Jev skip@0.29 → card0。Pyre: unconditional +1 energy from a cheap 2E power, immediately boosts both block and damage; Demon Form's 3E turn is too slow and unsafe at 19 HP.
+  - 选项：card0=薪火之源(80)；card1=恶魔形态(80)；card2=连环拳(51)；skip=skip(50)
+- 2026-09-25T06:07 第12层：Jev card1@0.24 → card2。血墙+ 20 block for 2E is premium defense for the Soul Fysh boss; it also triggers Spite, and the deck already has enough weak attacks (5 Strikes). Anger's copies would only bloat.
+  - 选项：card1=愤怒(50)；card2=血墙+(54)；skip=skip(50)
+- 2026-09-25T06:44 第35层：Jev skip@0.43 → card1。Flame Barrier+ adds 16 block plus multi-hit retaliation, key vs Test Subject's Multi-Claw; deck already has two Shrug It Off+.
+  - 选项：card1=火焰屏障+(56)；card2=耸肩无视+(54)；skip=skip(50)
+- 2026-09-25T07:22 第13层：Jev card2@0.26 → card1。Second Twin Strike scales with growing strength (撕裂+绯红披风) and multi-hit strips Vantom's 9 Slippery stacks; reliable 10 damage.
+  - 选项：card1=双重打击(74)；card2=预备打击(74)；skip=skip(50)
+- 2026-09-25T07:59 第3层：Jev card1@0.36 → skip。余烬是评级陷阱牌：随机消耗在精简牌组里可能吃掉痛击/旋风斩，2费18伤也不值得。跳过保持牌组干净。
+  - 选项：card1=余烬(50)；skip=skip(50)
+- 2026-09-25T08:26 第14层：Jev card2@0.17 → skip。Perfected Strike is a single big hit, wasted early on Vantom's 9 Slippery; deck already has enough attacks and stays lean.
+  - 选项：card2=完美打击(50)；skip=skip(50)
+- 2026-09-25T08:39 第28层：Jev skip@0.28 → card2。Feel No Pain makes it 1E: 3 block + a free random attack; adds damage without strain, deck still near 22.
+  - 选项：card2=地狱之刃(52)；skip=skip(50)
+- 2026-09-25T08:55 第9层：Jev skip@0.12 → card2。Deck lacks damage (16 cards, mostly Strikes); Anger is 0-cost 6 damage that copies itself, speeding the Waterfall Giant kill and feeding Pen Nib.
+  - 选项：card2=愤怒(50)；skip=skip(50)
+- 2026-09-25T09:53 第16层：Jev card1@0.24 → card2。1费全体9伤且吃力量成长，优于3费的跃跃欲试；第二张AOE为二幕多敌战（帝王蟹等）和长boss战做准备。
+  - 选项：card1=跃跃欲试(56)；card2=突破(56)；skip=skip(50)
+- 2026-09-25T10:00 第3层：Jev card1@0.39 → card2。狱火是A级持续AOE，牌组当前0群伤；每回合稳定6点全体伤害，自伤流核心，长期价值远高于另两张。
+  - 选项：card1=预备打击(80)；card2=狱火(80)；card0=血墙(60)；skip=skip(50)
+- 2026-09-25T10:01 第4层：Jev card2@0.22 → card0。放血是0费能量牌，且失去生命会触发狱火对所有敌人6伤，双重协同；牌组缺能量与成长，优于挑衅和2费血墙。
+  - 选项：card0=放血(68)；card1=挑衅(68)；card2=血墙(60)；skip=skip(50)
+- 2026-09-25T10:21 第20层：Jev skip@0.16 → card2。双重打击是1费10伤的优质多段攻击，配合狱火/易伤成长好；名字含“打击”可触发地狱狂徒，补充boss所需伤害，优于跳过。
+  - 选项：card2=双重打击(54)；skip=skip(50)
+- 2026-09-25T10:57 第6层：Jev card0@0.44 → card2。Deck has only one real block card; Flame Barrier's 12 block plus retaliation is strong for Ceremonial Beast's big hits and stays useful into Act 2.
+  - 选项：card2=火焰屏障(71)；card0=燃烧契约(69)；card1=怨恨(52)；skip=skip(50)
+- 2026-09-25T11:05 第8层：Jev card0@0.29 → card1。御血术与撕裂+狱火完美联动：自伤2点触发+1力量与6点全体伤害，且1费15伤补足前期输出，优于头槌与血墙。
+  - 选项：card1=御血术(76)；card2=头槌(74)；card0=血墙(59)；skip=skip(50)
+- 2026-09-25T11:09 第15层：Jev card2@0.09 → card0。第二张狱火使每次自伤触发双倍AOE，与撕裂/御血术/祭品联动，快速清同族双信徒，也补二幕群战。
+  - 选项：card0=狱火(58)；card2=头槌(62)；skip=skip(50)
+- 2026-09-25T11:17 第23层：Jev skip@0.22 → card2。HP 25% with 10 floors to boss: third Shrug (8 block + draw, doubles with 坚定不移) fixes the deck's weak non-basic block; 3E Bludgeon clashes with the cheap self-damage 撕裂/狱火 engine.
+  - 选项：card1=重锤(59)；card2=耸肩无视(63)；skip=skip(50)
+- 2026-09-25T11:37 第28层：Jev skip@0.24 → card0。With Demon Form++ stacking strength every turn, 跃跃欲试 scales into huge block for the long Knowledge Demon fight; deck lacks scalable defense.
+  - 选项：card0=跃跃欲试(55)；card1=地狱之刃(51)；skip=skip(50)
+- 2026-09-25T11:48 第38层：Jev skip@0.31 → card2。升级后的预备打击：1费9伤+本回合4力量，配合旋风斩++、杀灭、飞剑回旋镖与恶魔形态可爆发打永世沙漏；牌组正缺伤害，拿。
+  - 选项：card2=预备打击+(53)；skip=skip(50)
+- 2026-09-25T11:51 第44层：Jev skip@0.35 → card2。1E 13-damage AOE (upgraded) beats Strike, triggers 撕裂/怨恨 self-damage synergy, helps act-3 groups before boss; 31st card dilutes minimally.
+  - 选项：card2=突破+(50)；skip=skip(50)
+- 2026-09-25T11:59 第2层：Jev card0@0.08 → card2。选愤怒：0费6伤、能自我复制，既补前期最缺的输出，又放大烙印的力量收益，助boss快速压到150血触发击晕。
+  - 选项：card1=血墙(54)；card0=地狱之刃(52)；card2=愤怒(50)；skip=skip(50)
+- 2026-09-25T12:10 第20层：Jev skip@0.11 → card0。Deck has only 2 non-basic block cards; boss The Insatiable demands sustained blocking. Blood Wall+ gives 20 block for 2E — efficient, and self-damage is trivial.
+  - 选项：card0=血墙+(51)；skip=skip(50)
+- 2026-09-25T12:18 第30层：Jev skip@0.35 → card2。Unrelenting beats deck average: 2E for 14, then free 跃跃欲试/痛击++/剑柄打击++; Sandpit boss is a damage race.
+  - 选项：card2=无情猛攻(51)；skip=skip(50)
+- 2026-09-25T12:32 第39层：Jev skip@0.37 → card0。牌组无虚弱来源，上勾拳给虚弱+易伤，女王战减伤且放大对聚合体伤害；比跳过略优。
+  - 选项：card0=上勾拳(55)；skip=skip(50)
+- 2026-09-25T12:49 第13层：Jev card1@0.20 → card0。Taunt (A-tier): 6 block + vulnerable fixes my thin block package for Soul Fysh; Hell's Blade is random-value filler.
+  - 选项：card0=挑衅(62)；card1=地狱之刃(60)；skip=skip(50)
+- 2026-09-25T13:11 第38层：Jev skip@0.30 → card2。头槌: 1费攻击契合实验体一阶段(少打技能)，还能把岿然不动/火焰屏障放回牌顶保二阶段全挡，胜过牌组平均牌。
+  - 选项：card2=头槌(53)；skip=skip(50)
+- 2026-09-25T13:13 第42层：Jev skip@0.17 → card0。A-tier attack; adds burst (7 dmg +3 temp Str) to amplify multi-hit draws and avoids skills in Test Subject phase 1 (Enrage).
+  - 选项：card0=预备打击(52)；skip=skip(50)
+- 2026-09-25T14:09 第17层：Jev card0@0.13 → card1。Pyre is S-tier: +1 energy every turn wins long boss fights; deck has 2-3 cost cards and no energy relic.
+  - 选项：card2=痛殴(90)；card1=薪火之源(88)；card0=主宰(74)；skip=skip(50)
+- 2026-09-25T14:13 第23层：Jev skip@0.39 → card2。1费10伤高于牌组均值；牌组有痛击/挑衅/拆卸的易伤体系，翻倍易伤可让重锤爆发，26张仍在目标区间。
+  - 选项：card2=熔融之拳(50)；skip=skip(50)
+- 2026-09-25T14:36 第25层：Jev skip@0.13 → card1。0费8伤可自我复制，配手里剑/烘焙手套叠力量，能边打边留能量格挡，蟹王408血需要廉价持续输出。
+  - 选项：card1=愤怒+(50)；skip=skip(50)
+- 2026-09-25T14:36 第25层：Jev skip@0.22 → card2。突破+ is AOE for Kaiser Crab's twin claws; its HP loss triggers 狱火 (+6 AOE) and feeds 扯碎, and 宾邦 duplicates it. Better than 双重打击.
+  - 选项：card1=双重打击(55)；card2=突破+(59)；skip=skip(50)
+- 2026-09-25T14:37 第28层：Jev skip@0.08 → card0。旋风斩+ is multi-hit AOE that scales with this deck's strength (燃烧++×2, 预备打击, 手里剑) and lets both Kaiser Crab claws die the same turn.
+  - 选项：card0=旋风斩+(54)；card1=头槌(50)；skip=skip(50)
+- 2026-09-25T14:39 第29层：Jev skip@0.40 → card1。Deck lacks reliable block (only 4 block cards, 3 basic 防御); HP 19 with Kaiser Crab ahead; Flame Barrier's 12 block + thorns is A-tier defense.
+  - 选项：card1=火焰屏障(51)；skip=skip(50)
+- 2026-09-25T14:44 第4层：Jev card1@0.22 → card2。御血术: 1费15伤，一幕最高效输出，助快速把仪式兽打到150触发击晕；2点自伤极轻，燃烧之血可回，且契合未来自伤/力量流。
+  - 选项：card0=扯碎(86)；card2=御血术(82)；card1=飞剑回旋镖(60)；skip=skip(50)
+- 2026-09-25T14:59 第19层：Jev card1@0.37 → card2。拆卸 pairs with Bash++/Molten Fist vulnerable: 24+ damage for 1E, fills the deck's weak damage, and the deck lacks better exhaust fuel for Feel No Pain.
+  - 选项：card2=拆卸(64)；card0=头槌(62)；card1=无惧疼痛(60)；skip=skip(50)
+- 2026-09-25T15:00 第20层：Jev skip@0.03 → card2。坚毅+ 每回合提供9格挡（二幕格挡牌优先），还能消耗打击/状态精简牌组；愤怒会复制塞弃牌堆，拖累知识恶魔长战。
+  - 选项：card1=愤怒(50)；card2=坚毅+(54)；skip=skip(50)
+- 2026-09-25T15:09 第30层：Jev skip@0.25 → card1。突破+ is a pre-upgraded 13-damage AOE for 1E — above deck average; third AOE helps elites and act 3 multi-enemy fights. Deck size 25 is fine.
+  - 选项：card1=突破+(52)；skip=skip(50)
+- 2026-09-25T15:30 第28层：Jev skip@0.38 → card2。Second 突破: 1E AOE 9, loses HP to trigger 狱火's 6 AOE and add 扯碎 hits. 无情猛攻's free-attack payoff is weak here; deck stays at 25.
+  - 选项：card1=无情猛攻(55)；card2=突破(53)；skip=skip(50)
+- 2026-09-25T15:52 第8层：Jev skip@0.17 → card2。Costs 1 for 3 energy (net +2) and exhausts, fueling 邪眼's bonus block and 彼岸咆哮; deck is only 15 cards, so a burst-energy enabler is welcome.
+  - 选项：card2=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-25T16:00 第15层：Jev card1@0.36 → card2。Twin Strike: reliable 10 damage, multi-hit scales with future strength; Kin AOE already covered by 旋风斩+彼岸咆哮; Thunderclap redundant.
+  - 选项：card2=双重打击(58)；card0=飞剑回旋镖(56)；card1=闪电霹雳(50)；skip=skip(50)
+- 2026-09-25T16:20 第39层：Jev skip@0.38 → card1。Setup Strike is A-tier strength burst; pairs with Whirlwind/Howl multi-hits vs Aeonglass and triggers Nunchaku/Kunai counters.
+  - 选项：card1=预备打击(53)；skip=skip(50)
+- 2026-09-25T16:36 第9层：Jev skip@0.07 → card2。熔融之拳: 1费10伤, 与痛击++和挑衅的易伤翻倍联动, 一层boss急需输出; 无惧疼痛消耗源只有2张, 触发太少。
+  - 选项：card1=无惧疼痛(69)；card2=熔融之拳(68)；card0=完美打击(50)；skip=skip(50)
+- 2026-09-25T16:43 第2层：Jev card1@0.10 → card2。Shrug It Off is a premium common: block+draw fixes the deck's 0 block/0 draw gaps, and one Twin Strike isn't needed yet at floor 2 with more attack rewards coming.
+  - 选项：card2=耸肩无视(81)；card1=双重打击(76)；card0=坚毅(62)；skip=skip(50)
+- 2026-09-25T16:47 第8层：Jev card1@0.08 → skip。余烬是陷阱牌(F)：2费18伤随机消耗关键牌，牌组仅13张需精简，跳过更好。
+  - 选项：card1=余烬(50)；skip=skip(50)
+- 2026-09-25T16:49 第11层：Jev card2@0.29 → card1。0-cost +2 energy fuels 3E Howl from Beyond and Bash++; Feel No Pain lacks exhaust triggers in this deck, True Grit's random exhaust is worse.
+  - 选项：card0=无惧疼痛(69)；card1=放血(68)；card2=坚毅(67)；skip=skip(50)
+- 2026-09-25T16:54 第17层：Jev skip@0.18 → card2。Deck has zero strength source; 烙印 gives 0-cost permanent strength and its exhaust clears Soul Fysh's Beckons. Fiend Fire/Stoke are clunky here.
+  - 选项：card0=恶魔之焰(76)；card2=烙印(74)；card1=添柴(72)；skip=skip(50)
+- 2026-09-25T17:07 第29层：Jev skip@0.09 → card1。头槌+ 1费12伤且能把关键牌（邪眼/巨像++/彼岸咆哮）回收到牌堆顶，比重复的拆卸更灵活；牌组22张不算臃肿。
+  - 选项：card1=头槌+(62)；card2=拆卸(58)；skip=skip(50)
+- 2026-09-25T17:16 第4层：Jev card0@0.34 → card2。欺凌0费攻击与痛击易伤协同约12伤害且随时可打；跃跃欲试无力量时3费15格挡太差，闪电霹雳是弱势AOE陷阱。
+  - 选项：card1=跃跃欲试(56)；card2=欺凌(56)；card0=闪电霹雳(54)；skip=skip(50)
+- 2026-09-25T17:18 第7层：Jev skip@0.10 → card1。被遗忘的仪式 nets +2 energy for one turn and exhausts itself, enabling 燃烧+痛击 burst turns before 仪式兽; deck is only 16 cards, so a free-energy card beats skipping.
+  - 选项：card1=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-25T17:24 第17层：Jev card1@0.10 → card0。Unmovable doubles 防御/挑衅 block every turn — persistent block this deck lacks; better than one-shot Impervious for the long Beast fight and Act 2.
+  - 选项：card0=坚定不移(82)；card2=岿然不动(79)；card1=势不可当(62)；skip=skip(50)
+- 2026-09-25T17:29 第22层：Jev skip@0.18 → card0。双重打击+ 是已升级的两段攻击，完美吃燃烧力量与纸蛙易伤加成，优于牌组平均抽牌，知识恶魔需要加速输出。
+  - 选项：card0=双重打击+(52)；skip=skip(50)
+- 2026-09-25T17:46 第15层：Jev skip@0.20 → card0。1费产3能量且消耗，配合黑暗之拥还能抽1张，给252血boss爆发回合；随机攻击牌不稳，跳过不如它。
+  - 选项：card0=被遗忘的仪式(54)；card1=地狱之刃(52)；skip=skip(50)
+- 2026-09-25T17:49 第17层：Jev card0@0.41 → card2。No strength source in deck; Dominate turns Bash++/Uppercut++ vulnerable into permanent strength for multi-hits, and Dark Embrace draws on its exhaust. Boss is single-target.
+  - 选项：card0=焚烧(82)；card2=主宰(82)；card1=扯碎(74)；skip=skip(50)
+- 2026-09-25T18:32 第30层：Jev skip@0.30 → card2。挑衅+ 是A级好牌：1E换7格挡加2易伤，配不安油灯首次翻倍成4易伤，助蟹王同回合秒钳；低血也需格挡。
+  - 选项：card2=挑衅+(53)；skip=skip(50)
+- 2026-09-25T18:42 第7层：Jev card0@0.01 → skip。牌组仅16张、无过牌无能量遗物，已有同名3费格挡牌；再加一张3费会卡手，优先留薄牌组等AOE与过牌。
+  - 选项：card0=跃跃欲试(55)；skip=skip(50)
+- 2026-09-25T18:49 第19层：Jev card2@0.06 → card1。0费攻击配合力量成长、还能减踩踏费用；无厌沙虫是伤害竞速，牌组正缺输出来源。
+  - 选项：card1=愤怒(50)；card2=完美打击(50)；skip=skip(50)
+- 2026-09-25T18:51 第23层：Jev card1@0.39 → card2。突破：1E 9点AOE，自伤触发狱火再打6AOE（合计15），还给踩踏减费；易伤已由痛击/熔融之拳覆盖，而无厌沙虫是伤害竞速。
+  - 选项：card1=挑衅+(62)；card2=突破(62)；skip=skip(50)
+- 2026-09-25T19:02 第38层：Jev skip@0.04 → card2。双重打击+ 1E两段14伤，与燃烧(+2力量)双倍加成，正是永世沙漏速杀所需的高效伤害；牌组27张可再收一张。
+  - 选项：card2=双重打击+(51)；skip=skip(50)
+- 2026-09-25T19:19 第3层：Jev card0@0.23 → card2。邪眼: cheapest real block card (deck has none), 1E flexible vs boss 19/9x2, and exhaust synergy from 熔融之拳; Blood Wall's HP cost and 2E hurt more.
+  - 选项：card1=血墙(54)；card2=邪眼(54)；card0=怨恨(52)；skip=skip(50)
+- 2026-09-25T19:43 第6层：Jev card1@0.18 → card2。坚毅: 1E 7格挡更契合3能量曲线，随机消耗可顺手删掉占手的打击；牌组缺非基础格挡牌，血墙2E偏重、连环拳不解决防御。
+  - 选项：card0=血墙(59)；card2=坚毅(59)；card1=连环拳(54)；skip=skip(50)
+- 2026-09-25T19:52 第17层：Jev card1@0.17 → card2。Brand gives reusable 0-cost strength; deck lacks strength sources, scales Howl AOE, and triggers Inferno on self-damage.
+  - 选项：card0=薪火之源(80)；card1=坚定不移(76)；card2=烙印(66)；skip=skip(50)
+- 2026-09-25T19:59 第29层：Jev card2@0.14 → card0。Strength deck has only 2 non-basic block cards; 39 HP into forced elite and Kaiser Crab. 跃跃欲试 scales with strength (燃烧/主宰/烙印) into huge block.
+  - 选项：card0=跃跃欲试(55)；card2=无情猛攻+(57)；skip=skip(50)
+- 2026-09-25T20:05 第3层：Jev card2@0.44 → card1。血墙 fills the deck's zero non-basic block gap, gives 17 block with Smooth Stone, and Perfected Strike decays as strikes get removed and is poor versus Vantom's Slippery.
+  - 选项：card1=血墙(54)；card2=完美打击(50)；skip=skip(50)
+- 2026-09-25T20:06 第4层：Jev card1@0.37 → skip。No draw and no expensive payoff: a one-shot +2 energy card adds little. Act 1 needs attacks/AOE for Vantom's 9 Slippery; keep the deck lean.
+  - 选项：card1=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-25T20:24 第28层：Jev skip@0.30 → card2。突破是廉价AOE，与撕裂自伤成长协同；3张耸肩已够格挡，此牌补输出且不占高费，优于跳过。
+  - 选项：card2=突破(61)；card0=耸肩无视(57)；card1=挑衅(55)；skip=skip(50)
+- 2026-09-25T20:37 第8层：Jev card1@0.15 → card0。Block is the thinnest slot (only 4 Defend + 邪眼); True Grit's 7 block plus exhaust thins Strikes and clears Kin/Vantom statuses, scaling better than Twin Strike.
+  - 选项：card0=坚毅(59)；card1=双重打击(58)；skip=skip(50)
+- 2026-09-25T20:38 第12层：Jev card0@0.44 → card1。Net +2 energy from Ritual enables a 5-energy Whirlwind++ (40 AOE) to clear Kin followers; Thunderclap's 4 damage is too weak.
+  - 选项：card1=被遗忘的仪式(54)；card0=闪电霹雳(50)；card2=完美打击(50)；skip=skip(50)
+- 2026-09-25T20:47 第23层：Jev skip@0.14 → card1。挑衅: cheap 1E block + extra vulnerable source helps grind Kaiser Crab; 无情猛攻 2E off-plan without strength scaling, and deck still wants good commons.
+  - 选项：card1=挑衅(61)；card2=无情猛攻(57)；skip=skip(50)
+- 2026-09-25T20:53 第33层：Jev card0@0.27 → card1。痛殴 S-tier: multi-hit scaling with Sulfur, consumes Strikes, and deck lacks damage for act 3.
+  - 选项：card1=痛殴(80)；card2=地狱狂徒(76)；card0=岿然不动(74)；skip=skip(50)
+- 2026-09-25T20:54 第37层：Jev skip@0.28 → card2。Sulfur gives +1 strength per turn; Twin Strike+ hits twice, scaling well and adding efficient single-card damage versus Aeonglass's card-count wither.
+  - 选项：card2=双重打击+(51)；skip=skip(50)
+- 2026-09-25T21:16 第20层：Jev card0@0.14 → card2。Deck lacks non-basic block (only 2) for a long Crab fight; Flame Barrier+ is A-tier, gives 16 block plus punish damage, and AOE need is already met.
+  - 选项：card2=火焰屏障+(66)；card0=突破+(62)；card1=御血术(58)；skip=skip(50)
+- 2026-09-25T21:26 第33层：Jev skip@0.27 → card2。焚烧: 1费多段AOE，吃力量加成（燃烧/恶魔形态），正好用于帝皇蟹同回合击杀两只钳子；添柴无消耗体系配合，跳过。
+  - 选项：card1=添柴(55)；card2=焚烧(53)；skip=skip(50)
+- 2026-09-25T21:50 第7层：Jev card0@0.32 → card1。Second Whirlwind: AOE target is 2+, scales with strength, good vs Soul Fysh adds; deck damage before Beckons pile up.
+  - 选项：card1=旋风斩(66)；card0=挑衅(61)；card2=双重打击(58)；skip=skip(50)
+- 2026-09-25T21:51 第9层：Jev card0@0.21 → card2。Twin Strike: 10 damage per energy beats Pillage's 6, and extra draw feeds Soul Fysh's Beckons. Second copy stacks damage for the act boss.
+  - 选项：card1=劫掠(59)；card2=双重打击(58)；card0=时候未到(52)；skip=skip(50)
+- 2026-09-25T21:52 第11层：Jev card0@0.28 → card1。坚毅=1费7格挡，优于防御，补足稀缺格挡牌；消耗还能清灵魂异鱼的Beckon和诅咒。能量爆发不如稳定防守适合本局。
+  - 选项：card0=被遗忘的仪式(62)；card1=坚毅(62)；skip=skip(50)
+- 2026-09-25T22:58 第21层：Jev skip@0.29 → card1。Breakthrough gives the needed second AOE; its 1 HP loss triggers Inferno for 6 more to all enemies, and Demon Form scales it. Taunt is too marginal.
+  - 选项：card0=挑衅(61)；card1=突破(61)；skip=skip(50)
+- 2026-09-25T23:14 第20层：Jev skip@0.01 → card2。知识恶魔379血长线战，靠格挡活；撕裂+突破叠力量后跃跃欲试格挡极高，第二张提高上手率，优于跳过。
+  - 选项：card2=跃跃欲试(50)；skip=skip(50)
+- 2026-09-25T23:31 第22层：Jev skip@0.29 → card0。愤怒:0费攻击随燃烧++和红头骨(现在HP≤50%)放大,契合无厌沙虫的伤害竞速；复制品虽稀释牌组，但0费不争能量，优于空过。
+  - 选项：card0=愤怒(50)；skip=skip(50)
+- 2026-09-25T23:37 第33层：Jev card0@0.12 → card2。绯红披风每回合7格挡触发势不可当6伤，失血触发狱火6伤；牌组仅2张格挡牌且沙虫战很漫长。岿然不动只是一次性防御。
+  - 选项：card1=岿然不动(74)；card2=绯红披风(72)；card0=焚烧(62)；skip=skip(50)
+- 2026-09-26T00:26 第3层：Jev card2@0.14 → card1。狱火是可持续 AOE 兼成长牌，正好补牌组 0 AOE、0 能力、0 成长的短板，1 回合 1 血代价极低。
+  - 选项：card1=狱火(80)；card2=突破(76)；card0=岩石铠甲(60)；skip=skip(50)
+- 2026-09-26T01:04 第3层：Jev card0@0.29 → card1。恶魔形态是必拿的顶级成长牌，本局缺力量/AOE，瀑布巨兽和全程都要靠它叠力量；其余牌价值远低于此。
+  - 选项：card1=恶魔形态(80)；card2=突破(76)；card0=燃烧契约(69)；skip=skip(50)
+- 2026-09-26T01:21 第30层：Jev skip@0.29 → card2。Twin Strike: 2-hit attack scales with Demon Form + two Inflames, cheap 1E; deck only has 6 damage cards for Kaiser Crab's 408 HP. Take it.
+  - 选项：card2=双重打击(55)；skip=skip(50)
+- 2026-09-26T01:54 第31层：Jev skip@0.21 → card2。18-damage AOE that replays from the exhaust pile adds the damage this scaling-less deck needs for Insatiable's race and Act 3 fights.
+  - 选项：card2=彼岸咆哮(54)；skip=skip(50)
+- 2026-09-26T02:27 第12层：Jev skip@0.13 → card1。Perfect Strike hits ~20 for 2E with 7 strike-named cards; deck lacks damage for the 222-HP Matriarch, and Strikes stay for now.
+  - 选项：card1=完美打击(50)；skip=skip(50)
+- 2026-09-26T02:55 第21层：Jev skip@0.07 → card1。狱火持续AOE，配合御血术/突破/放血每回合多次触发，正适合同回合平衡帝皇蟹双钳；HP 92%、护喉甲可抵消自伤。
+  - 选项：card1=狱火(62)；card2=巨像(62)；skip=skip(50)
+- 2026-09-26T02:59 第30层：Jev skip@0.31 → card2。牌组非基础格挡仅3张且下一节点强制精英；此牌随力量成长（现约25挡/3E），高效补防。
+  - 选项：card2=跃跃欲试(50)；skip=skip(50)
+- 2026-09-26T03:10 第43层：Jev skip@0.31 → card2。HP 27 and only 6 block cards; 4 Plating/turn is cheap persistent defense for the long Aeonglass fight, and 棋子 draws a card on powers.
+  - 选项：card2=岩石铠甲(50)；skip=skip(50)
+- 2026-09-26T03:32 第19层：Jev card0@0.19 → card2。Deck plan is strength+vulnerable burst; multi-hit Twin Strike+ scales with strength and gives best single-target DPS for the Insatiable timer fight, while Howl++ already covers AOE.
+  - 选项：card1=突破+(61)；card2=双重打击+(57)；card0=被遗忘的仪式(53)；skip=skip(50)
+- 2026-09-26T04:21 第22层：Jev skip@0.25 → card2。HP only 46% heading to a damage-race boss; second Flame Barrier adds strong multi-hit defense plus chip damage, worth the 28th slot.
+  - 选项：card2=火焰屏障(53)；skip=skip(50)
+- 2026-09-26T04:22 第25层：Jev skip@0.10 → card0。预备打击 is a cheap 1E strength burst that amplifies 痛殴/拆卸/双重打击 hits for the Insatiable damage race; deck has vulnerable and AOE already, so it fits.
+  - 选项：card0=预备打击(52)；skip=skip(50)
+- 2026-09-26T04:42 第17层：Jev skip@0.20 → card2。烙印 0费永久加力量，可消耗诅咒/废牌，本局完全没有力量成长，打神官长战与二幕必需；手册明确见到就拿。
+  - 选项：card0=主宰(76)；card2=烙印(76)；skip=skip(50)
+- 2026-09-26T05:24 第20层：Jev card0@0.34 → card1。拆卸+ with 痛击++ 3易伤 = 20伤害/1费, repeatable, fits the vuln package; deck lacks damage for the 321HP sandpit boss. 坚毅 random exhaust too risky, 熔融之拳 exhausts.
+  - 选项：card1=拆卸+(63)；card2=坚毅(59)；card0=熔融之拳+(53)；skip=skip(50)
+- 2026-09-26T05:45 第44层：Jev skip@0.20 → card2。Uppercut+ gives 2 Weak (25% less Queen damage) plus 2 Vulnerable on a long boss fight; A-tier card, and skipping won't shrink the deck.
+  - 选项：card2=上勾拳+(53)；skip=skip(50)
+- 2026-09-26T06:52 第19层：Jev card1@0.32 → card0。御血术1费15伤是最高效单卡伤害，正好补足打帝皇蟹双钳的伤害需求；2点生命由燃烧之血抵消。预备打击的临时力量收益低于牌组已有燃烧+。
+  - 选项：card0=御血术(64)；card1=预备打击(62)；skip=skip(50)
+- 2026-09-26T07:05 第6层：Jev card2@0.32 → card1。飞剑回旋镖：多段伤害契合力量+多段计划，立即提升输出，三幕前抢伤害；撕裂仅靠御血术触发太慢。
+  - 选项：card1=飞剑回旋镖(60)；card2=撕裂(60)；card0=劫掠(59)；skip=skip(50)
+- 2026-09-26T07:38 第5层：Jev card1@0.24 → card0。Breakthrough: cheap 1E AOE (9 to all) for Act 1 multi-enemy fights; deck has only one clunky 3E AOE. 1 HP cost negligible; fits self-damage/strength plan.
+  - 选项：card0=突破(62)；card2=血墙(60)；card1=欺凌(56)；skip=skip(50)
+- 2026-09-26T07:44 第12层：Jev card1@0.15 → card2。Anger: 0-cost damage synergizes with Setup Strike's temporary Strength and preserves energy for block vs Soul Fysh; Perfected Strike conflicts with thinning Strikes.
+  - 选项：card1=完美打击(50)；card2=愤怒(50)；skip=skip(50)
+- 2026-09-26T07:52 第20层：Jev skip@0.38 → card1。Deck wants more block (only 4) before the sand-timer boss; 1E 7-block True Grit is a fine pick despite random exhaust risk.
+  - 选项：card1=坚毅(53)；skip=skip(50)
+- 2026-09-26T08:52 第15层：Jev card0@0.24 → card2。御血术+ 20伤害仅需1能量，速杀巨兽、压低喷发层数远胜3费的彼岸咆哮；休息点回血后2点自伤代价极低。
+  - 选项：card0=彼岸咆哮+(66)；card2=御血术+(64)；skip=skip(50)
+- 2026-09-26T09:15 第11层：Jev skip@0.28 → card0。Rupture converts Beckon HP loss at Soul Fysh into per-turn strength scaling, and enables future self-damage cards; cheap 1-card add.
+  - 选项：card0=撕裂(50)；skip=skip(50)
+- 2026-09-26T09:45 第14层：Jev skip@0.05 → card0。牌组缺伤害与成长；地狱之刃 1 费白送一张可免费打的攻击牌，消耗还能触发邪眼的额外 8 格挡，优于跳过。
+  - 选项：card0=地狱之刃(52)；skip=skip(50)
+- 2026-09-26T09:57 第24层：Jev card1@0.44 → card2。头槌+ 1费12伤高效，且能回收关键牌；40%血无需自伤牌，5张非基础格挡已够，boss需更多输出。
+  - 选项：card1=血墙(60)；card2=头槌+(60)；skip=skip(50)
+- 2026-09-26T10:11 第9层：Jev skip@0.18 → card2。Deck has zero draw and a curse/exhaust fodder; Burning Pact fetches key attacks, thins the deck, and helps break Vantom's 9 slippery stacks faster.
+  - 选项：card0=放血(68)；card2=燃烧契约(69)；skip=skip(50)
+- 2026-09-26T10:34 第4层：Jev skip@0.10 → card0。Energy burst (net +2) enables Bludgeon+Bash turns; deck is only 13 cards and guide rates it fit for high-cost decks. Skip offers no replacement value.
+  - 选项：card0=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-26T10:44 第21层：Jev skip@0.06 → card1。0费8伤优于仍要删的打击；与燃烧/预备打击的力量叠加良好，长战可省能量用于格挡，打知识恶魔的持续输出。
+  - 选项：card1=愤怒+(50)；skip=skip(50)
+- 2026-09-26T10:56 第5层：Jev card0@0.26 → card1。Pommel Strike adds cheap damage and draw, best early consistency; Howl is too expensive and AoE can come later.
+  - 选项：card1=剑柄打击(94)；card2=彼岸咆哮(92)；card0=飞剑回旋镖(60)；skip=skip(50)
+- 2026-09-26T10:58 第8层：Jev card0@0.43 → card2。Deck has 0 AOE; Breakthrough is cheap multi-target damage for Act 1 groups and Act 2, filling the biggest gap. Block already covered by Shrug x2/Blood Wall/Crimson Mantle.
+  - 选项：card0=火焰屏障(72)；card2=突破(76)；skip=skip(50)
+- 2026-09-26T11:16 第2层：Jev card0@0.07 → card2。被遗忘的仪式净赚2能量且消耗：前期让痛击+多张打击一回合爆发、抢血速杀，比随机不可控的地狱之刃可靠，也不污染后期牌组。
+  - 选项：card0=地狱之刃(52)；card2=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-26T14:12 第17层：Jev card1@0.20 → card2。缺永久力量成长：主宰配合痛击/上勾拳/挑衅的易伤叠加力量；地狱狂徒随机目标、依赖打击且无法集火信徒。
+  - 选项：card0=地狱狂徒(76)；card2=主宰(76)；card1=连环拳(54)；skip=skip(50)
+- 2026-09-26T14:15 第20层：Jev card1@0.37 → card2。Headbutt: solid 1E damage plus recursion (Flame Barrier vs multi-hits, Bash for vuln) for the long Knowledge Demon fight; True Grit's random exhaust risks key cards, and block is already adequate.
+  - 选项：card0=预备打击(68)；card2=头槌(68)；card1=坚毅(60)；skip=skip(50)
+- 2026-09-26T14:23 第9层：Jev card2@0.27 → card1。Deck has 0 draw; Burning Pact exhausts the curse/Strikes, draws 2, and enables Evil Eye++ for 22 block. Unrelenting is single-hit (bad vs Slippery) and True Grit exhausts randomly.
+  - 选项：card2=无情猛攻(74)；card1=燃烧契约(69)；card0=坚毅(65)；skip=skip(50)
+- 2026-09-26T14:30 第17层：Jev card1@0.02 → card2。薪火之源 is S-tier per guide (+1 energy every turn, code values it highest); with avg cost 1.1 and Bash/咆哮 in deck it pays off all fight, unlike Unmovable.
+  - 选项：card1=坚定不移(84)；card2=薪火之源(88)；skip=skip(50)
+- 2026-09-26T16:42 第14层：Jev skip@0.06 → card2。Second Molten Fist doubles Bash+/Dominate vulnerable for boss burst; Kin fight needs frontload to kill growing followers fast, more than a 7-block skill.
+  - 选项：card1=坚毅(60)；card2=熔融之拳(64)；skip=skip(50)
+- 2026-09-26T16:56 第30层：Jev skip@0.18 → card2。拆卸 1E=16 dmg with our many vulnerable appliers (Bash+, Uppercut, Molten Fist); we already run two Pommel Strikes, and 408-HP Kaiser Crab needs damage density.
+  - 选项：card1=剑柄打击(73)；card2=拆卸(73)；card0=预备打击(71)；skip=skip(50)
+- 2026-09-26T17:26 第19层：Jev card1@0.14 → card0。Pommel Strike beats a Strike and adds draw to hit the Insatiable damage clock; third copy is fine and code scores it highest.
+  - 选项：card0=剑柄打击(70)；card1=头槌(68)；skip=skip(50)
+- 2026-09-26T17:46 第46层：Jev skip@0.08 → card1。Shrug It Off is efficient block+draw; with 29 HP vs Aeonglass and only 4 block cards, a third copy directly supports the plan.
+  - 选项：card1=耸肩无视(55)；skip=skip(50)
+- 2026-09-26T19:09 第19层：Jev skip@0.10 → card0。Second Setup Strike: +3 temp strength amplifies our multi-hit attacks (Twin Strike, Breakthrough AOE) for Knowledge Demon's 379 HP; code rates it highest, deck still needs damage.
+  - 选项：card0=预备打击(63)；card2=双重打击+(59)；skip=skip(50)
+- 2026-09-26T19:15 第25层：Jev skip@0.19 → card2。Deck has only 5 real block cards and needs 3 more; True Grit adds block, feeds Feel No Pain/邪眼 exhaust synergy, and can eat the Ascender's Bane curse.
+  - 选项：card2=坚毅(53)；skip=skip(50)
+- 2026-09-26T19:29 第9层：Jev skip@0.15 → card0。劫掠 gives the deck's missing draw plus 6 damage, cycling into Whirlwinds/skills for the Kin AoE fight; stronger tempo than skip or Anger clutter.
+  - 选项：card0=劫掠(59)；card2=被遗忘的仪式(54)；card1=愤怒(50)；skip=skip(50)
+- 2026-09-26T19:43 第11层：Jev card2@0.44 → card1。Bloodletting: 0-cost energy accelerant for future Whirlwind/Demon Form, works with Blood Wall self-damage; Bludgeon clogs a 3-energy deck and blocks our turns.
+  - 选项：card1=放血(68)；card2=重锤(68)；card0=怨恨(52)；skip=skip(50)
+- 2026-09-26T20:07 第36层：Jev skip@0.37 → card1。Third Pommel Strike is an attack (good vs Enrage phase) that cycles and feeds Dark Embrace; 9 dmg+draw beats a blank in a 32-card deck lacking damage.
+  - 选项：card1=剑柄打击(55)；skip=skip(50)
+- 2026-09-26T21:03 第13层：Jev card0@0.15 → card2。Vantom战漫长且牌组格挡薄；1费每回合稳定4格挡，积累约40点，比无力量支撑的第二张旋风斩更能保命。
+  - 选项：card2=岩石铠甲(71)；card1=旋风斩(70)；card0=血墙(65)；skip=skip(50)
+- 2026-09-26T21:23 第17层：Jev card2@0.09 → card1。18 HP vs escalating Giant damage: Unmovable doubles 血墙/跃跃欲试 block (turn 1 free to cast) and scales with the strength plan; second Thrash is redundant.
+  - 选项：card1=坚定不移(76)；card2=痛殴(80)；skip=skip(50)
+- 2026-09-26T21:30 第3层：Jev card0@0.31 → card1。Best common: 8 block + draw, fills two gaps (0 non-basic block, 0 draw) for the Giant's Pressure Gun/explosion. Whirlwind without strength is weak per-energy; AOE comes later.
+  - 选项：card0=旋风斩(118)；card1=耸肩无视(113)；skip=skip(50)
+- 2026-09-26T21:49 第30层：Jev card0@0.17 → card1。Pommel Strike is the top-valued pick: 9 damage plus draw smooths into Demon Form, block and Inferno for the Knowledge Demon; Setup Strike's temporary strength is marginal here.
+  - 选项：card0=预备打击(72)；card1=剑柄打击(74)；skip=skip(50)
+- 2026-09-26T21:57 第3层：Jev card2@0.29 → card1。AOE #2 is a hard deck need; Whirlwind scales with the strength plan (multi-hit), while Bash already covers vulnerable and 跃跃欲试 is a trap.
+  - 选项：card2=上勾拳(107)；card1=旋风斩(104)；card0=跃跃欲试(62)；skip=skip(50)
+- 2026-09-26T22:32 第3层：Jev card1@0.27 → card0。Shrug It Off: 1E 8 block + draw fixes deck's zero draw and thin block, valuable all run; Bludgeon's 3E single hit clashes with multi-hit strength plan.
+  - 选项：card0=耸肩无视(87)；card1=重锤(83)；skip=skip(50)
+- 2026-09-26T23:02 第19层：Jev skip@0.21 → card1。Third Breakthrough is a cheap self-damage trigger fuelling Rupture (+1 Strength each play) plus AOE for Act 2 elites; synergy outweighs slight dilution.
+  - 选项：card1=突破(50)；skip=skip(50)
+- 2026-09-26T23:34 第14层：Jev skip@0.14 → card2。1费净+2能量的消耗牌，既补爆发回合，又常驻触发邪眼额外8格挡，打灵魂异鱼的伤害竞赛正缺这个，稀释很小。
+  - 选项：card2=被遗忘的仪式(54)；skip=skip(50)
+- 2026-09-26T23:40 第17层：Jev card2@0.14 → card0。Pyre is S-tier: +1 energy every turn fixes the energy-hungry 1-cost deck and speeds the boss kill. Crimson Mantle's 1 HP/turn is too risky at 17 HP.
+  - 选项：card0=薪火之源(80)；card2=绯红披风(78)；skip=skip(50)
+- 2026-09-26T23:44 第19层：Jev skip@0.35 → card2。4th Shrug It Off is still the most efficient block: 1E 8 block plus draw cycles itself; Blood Wall's 2E/self-damage is worse, skip loses needed elite/boss defense.
+  - 选项：card1=血墙(54)；card2=耸肩无视(58)；skip=skip(50)
+- 2026-09-26T23:53 第30层：Jev skip@0.20 → card1。狱火=常驻AOE/持续伤害，配烙印每回合白嫖6群伤，补足打沙虫时钟所需的免费输出；33张虽偏厚但这是A级核心牌。
+  - 选项：card1=狱火(51)；skip=skip(50)
+- 2026-09-27T00:01 第35层：Jev card0@0.15 → card1。拆卸+ is a strong 1E attack (20 dmg with vulnerability) and deck has Marble Bag, Bash++ and Taunt to enable it; helps kill the 199 HP Amalgam fast.
+  - 选项：card0=熔融之拳(51)；card1=拆卸+(55)；skip=skip(50)
+- 2026-09-27T00:29 第38层：Jev skip@0.30 → card0。True Grit+ gives 9 block (best per energy here) and targeted exhaust removes Withers/curse vs Aeonglass; block is a listed need.
+  - 选项：card0=坚毅+(55)；skip=skip(50)
+- 2026-09-27T04:47 第2层：Jev card1@0.00 → card2。Twin Strike is unconditional 1-cost 10 damage that scales with Strength multi-hit; Molten Fist needs Bash already in hand.
+  - 选项：card1=熔融之拳(86)；card2=双重打击(90)；skip=skip(50)
+- 2026-09-27T04:50 第8层：Jev card0@0.00 → card1。Deck has no heavy hitter; Bludgeon (32, 48 with Bash) pierces the Matriarch's 12 plated armor that blanks our small Strikes. Second Battle Trance is redundant.
+  - 选项：card0=战斗专注(72)；card1=重锤(70)；skip=skip(50)
+- 2026-09-27T04:57 第17层：Jev card2@0.00 → card1。坚定不移是S级格挡引擎：火焰屏障++可翻倍成32挡，正中本局最大短板（防御太薄）；地狱狂徒会自动打出打击，提前惊醒族母，与Boss计划冲突。
+  - 选项：card2=地狱狂徒(90)；card1=坚定不移(86)；card0=焚烧(81)；skip=skip(50)
+- 2026-09-27T05:21 第20层：Jev skip@0.00 → card2。0-cost multi-hit attack scales with the 烘焙手套 strength engine and helps the Insatiable damage race; better than a 5th Strike and skip-value gap favors taking it.
+  - 选项：card2=怨恨(52)；skip=skip(50)
+- 2026-09-27T05:25 第23层：Jev skip@0.16 → card0。力量成长（与我一战+3）让双重打击每段+3，是7回合斩杀沙虫最缺的前置伤害；挑衅已有一张，格挡够用。
+  - 选项：card0=双重打击(64)；card1=挑衅(66)；skip=skip(50)
+- 2026-09-27T06:17 第3层：Jev card1@0.00 → card2。0费攻击补前期伤害：本回合掉血后变2段，配合易伤更佳；地狱之刃随机且占费用，不如稳定输出。
+  - 选项：card1=地狱之刃(52)；card2=怨恨(52)；skip=skip(50)
+- 2026-09-27T06:26 第13层：Jev card0@0.00 → card2。Deck's biggest hole is block (1-2 sources) before an elite and The Kin; Taunt adds 6 block plus vulnerable to amplify AOE vs 190 HP priest. Feel No Pain is dead without exhaust.
+  - 选项：card0=无惧疼痛(87)；card2=挑衅(87)；card1=烙印(74)；skip=skip(50)
+- 2026-09-27T07:35 第24层：Jev card1@0.00 → card0。Cheap 1E damage+draw smooths a low-cost deck; AOE already covered by 3x突破 with Inferno, so 3E Stomp is redundant/clunky.
+  - 选项：card1=踩踏(84)；card0=剑柄打击(82)；card2=被遗忘的仪式+(50)；skip=skip(50)
+- 2026-09-27T07:39 第30层：Jev card1@0.00 → skip。Stoke needs exhaust payoffs (Feel No Pain/Dark Embrace) this deck lacks; 28 cards already diluted, and Kaiser Crab demands block/strength density, not random card churn.
+  - 选项：card1=添柴(55)；skip=skip(50)
+- 2026-09-27T07:43 第4层：Jev card2@0.42 → card0。Twin Strike: 10 dmg for 1E now, scales double with future Strength, best frontload vs Ceremonial Beast; AOE can come later.
+  - 选项：card0=双重打击(91)；card2=熔融之拳(87)；card1=突破(76)；skip=skip(50)
+- 2026-09-27T07:52 第17层：Jev card2@0.31 → card0。Rupture/tea strength makes Fiend Fire a scaling multi-hit burst that races the Beast to its 150 stun; deck lacks the block density Juggernaut needs.
+  - 选项：card0=恶魔之焰(78)；card2=势不可当(76)；skip=skip(50)
+- 2026-09-27T08:27 第12层：Jev card0@0.15 → card2。Deck needs block before Vantom (3/5); 坚毅 upgraded by 剃刀牙 gives 9 block. 劫掠's single 6-damage hit is weak vs 9 Slippery stacks.
+  - 选项：card0=劫掠(54)；card2=坚毅(58)；skip=skip(50)
+- 2026-09-27T08:58 第5层：Jev skip@0.07 → card1。0-cost attack helps damage race and discounts Stomp before Waterfall Giant; deck still needs cheap damage. Slight value edge over skip.
+  - 选项：card1=怨恨(52)；skip=skip(50)
+- 2026-09-27T09:03 第15层：Jev skip@0.27 → card0。Deck lacks frontload damage (10 dmg/turn gap); Anger is 0-cost 6 damage that speeds the Waterfall Giant race and doesn't compete for energy.
+  - 选项：card0=愤怒(50)；skip=skip(50)
+- 2026-09-27T09:14 第25层：Jev skip@0.23 → card1。血墙: 2E 16 block, and the 2 HP loss procs both Ruptures (+2 Strength) — block plus the deck's only scaling; skip has no synergy.
+  - 选项：card0=坚毅(60)；card1=血墙(60)；skip=skip(50)
+- 2026-09-27T09:30 第11层：Jev card1@0.09 → skip。余烬 is a trap: 2E 18 dmg with random exhaust risks eating 燃烧/痛击 in an 18-card deck; deck already has AOE and needs consistency, not a coin-flip card.
+  - 选项：card1=余烬(51)；skip=skip(50)
+- 2026-09-27T09:37 第5层：Jev skip@0.08 → card2。Cheap 1E AOE + vulnerable enables Molten Fist doubling and multi-enemy Act 1 fights; deck has only one expensive AOE, and plan calls for more.
+  - 选项：card2=闪电霹雳(54)；skip=skip(50)
+- 2026-09-27T09:38 第6层：Jev card2@0.38 → card1。Deck lacks block (1 block card) and needs exhaust to clear Beckon curses; 3rd AOE less valuable, and 9 damage self-hurts at 34 HP.
+  - 选项：card1=坚毅(65)；card2=突破(66)；skip=skip(50)
+- 2026-09-27T09:56 第11层：Jev skip@0.11 → card1。完美打击现约18-20伤(6张含“打击”牌)，2费高效，正好补对幻灵Boss的输出缺口；跳过也无更好替代。
+  - 选项：card1=完美打击(50)；skip=skip(50)
+- 2026-09-27T10:20 第17层：Jev card1@0.14 → card2。坚定不移 is S-tier: doubles first card block each turn (Crimson Mantle 7→14, Blood Wall 16→32), fixing the deck's block gap and scaling into Act 2.
+  - 选项：card2=坚定不移(76)；card1=焚烧(72)；card0=绯红披风(70)；skip=skip(50)
 
-## combat/plan-choice（13 次）
+## combat/plan-choice（163 次）
 - 2026-09-24T07:07 第14层：Jev plan3@0.17 → plan1。Take zero damage with Flame Barrier; enemy hits 18 total, block 10+14 covers it. Preserve HP for the elite fight.
   - 选项：plan1=；plan2=；plan3=
 - 2026-09-24T07:23 第17层：Jev plan1@0.16 → plan2。Applies Vulnerable for future turns while blocking 9 and taking only 13 damage; best mix of defense and setup.
@@ -103,50 +2529,756 @@
   - 选项：plan1=；plan2=；plan3=
 - 2026-09-24T08:21 第7层：Jev plan4@0.17 → plan2。Applies Vulnerable for future turns while taking only 4 damage; best balance of tempo and HP for the whole fight.
   - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T08:51 第7层：Jev plan1@0.20 → plan2。痛击堆到3层易伤，让接下来两回合伤害+50%，能更稳更快在第三回合斩杀；只多掉6血，燃烧之血可回。
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T08:56 第14层：Jev plan3@0.14 → plan1。Kill the 3HP worm before it buffs/statuses; only 4 HP cost, reduces enemy count and shortens the elite fight for long-term HP.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T08:56 第14层：Jev plan2@0.17 → plan1。Both take 0 damage; plan1 kills the buffing/status-card enemy, removing a group buff and a junk card, better long-term.
+  - 选项：plan1=；plan2=
+- 2026-09-24T08:56 第14层：Jev plan2@0.22 → plan1。Killing the 3 HP buff/status worm prevents its buff and card clog; 21 block already stops all incoming damage, so extra block is wasted.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T09:00 第17层：Jev plan1@0.11 → plan2。10 damage for only 2 HP keeps Rampage scaling toward the 150-HP stun; Offering's 3 drawn cards weren't usable with leftover energy.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T09:00 第17层：Jev plan2@0.18 → plan1。Offering draws 3 for 6 HP; Burning Blood refunds it, and extra cards set up next turn's energy boost.
+  - 选项：plan1=；plan2=
+- 2026-09-24T09:02 第17层：Jev plan2@0.28 → plan1。Both trigger the sub-150 stun; banking 10 extra damage outweighs 6 HP since the stun turn is damage-free.
+  - 选项：plan1=；plan2=
+- 2026-09-24T09:02 第17层：Jev plan2@0.21 → plan1。Balanced: 12 block limits loss to 5 HP while dealing 15 and applying Vulnerable, speeding up the race before boss strength escalates.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T09:03 第17层：Jev plan1@0.14 → plan3。Bash applies 2 Vulnerable, boosting two future turns; better for a long boss fight than Thunderclap's immediate damage.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T09:21 第9层：Jev plan4@0.20 → plan2。Balanced: 13 block limits loss to 3 HP while dealing damage, saving the speed potion for the boss where it matters more.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T09:33 第17层：Jev plan1@0.11 → plan2。Both kill-set equally; fight ends soon so +1 strength is worth less than 1 HP at 20/80 before the giant's explosion turn.
+  - 选项：plan1=；plan2=
+- 2026-09-24T09:33 第17层：Jev plan1@0.37 → plan2。Fight ends after this explosion; strength gain is worthless, so just keep the most HP (7 vs 6).
+  - 选项：plan1=；plan2=
+- 2026-09-24T09:50 第33层：Jev plan2@0.26 → plan1。Boss race vs withering drain: 49 dmg (near double plan2) with survivable 16 HP and vulnerable set up beats slower lines that let the 6/turn drain kill us.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T09:51 第33层：Jev plan1@0.38 → plan3。Balanced: deals 22, only 7 HP lost, gains 8 block, draws 2 cards; safer than plan1 and better draw than plan2/4.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T10:01 第12层：Jev plan1@0.17 → plan2。5 HP buys 6 extra damage, dropping the 9-attack eel to 7 HP — one hit kills it next turn, saving more HP than spent.
+  - 选项：plan1=；plan2=
+- 2026-09-24T10:15 第9层：Jev plan1@0.15 → plan3。Bash applies Vulnerable while 2 Defends cap damage at 6; with Ritual +1 Str/turn we out-scale, so preserve HP now and strike harder next turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T10:21 第17层：Jev plan1@0.07 → plan2。5 damage vs 240 HP is trivial; the 3 HP loss is pure waste in a long fight where HP matters for the explosion phase. Defend blocks fully.
+  - 选项：plan1=；plan2=
+- 2026-09-24T10:46 第29层：Jev plan2@0.29 → plan1。Max damage 34 and vulnerable on buffing enemy, setting up next-turn kill; HP cost acceptable with Lizard Tail and Burning Blood.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T10:56 第13层：Jev plan2@0.33 → plan1。Best damage-to-HP trade (13 dmg, only 4 lost, plus block and a draw) vs a strength-scaling elite; kills it sooner without risking low HP.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T10:57 第13层：Jev plan2@0.44 → plan1。Max damage (41) drops elite to 26 HP, likely killing next turn before it scales further; 9 HP loss is fine with Burning Blood heal.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T11:37 第12层：Jev plan1@0.36 → plan2。Plan2 deals 16, leaving the buffer at 10 to kill next turn, preventing a second buff, while only losing 7 HP; better trade than plan3.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T11:39 第12层：Jev plan2@0.31 → plan1。Deals 9 and stacks Vulnerable 4 (extra turn of +50%) for only 2 more HP than plan2; ends the buffing eel sooner, which cuts future damage more than the small HP loss.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T11:41 第15层：Jev plan2@0.45 → plan1。Elite fight, weak potion justified: max damage 19, vulnerable 4 stays longer, only 2 HP lost (Burning Blood heals it).
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T11:43 第17层：Jev plan3@0.18 → plan2。Applies Vulnerable 5 (equal best) with full block, keeping HP at 82 for the long boss whittle; the extra 14 dmg plan1 buys costs 10 HP needlessly.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T11:44 第17层：Jev plan1@0.07 → plan3。Plan3 trades 8 immediate damage for 3 extra Vulnerable turns (5 vs 2), yielding far more total damage over a long boss fight while keeping the same 31 HP as plan2.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T11:52 第12层：Jev plan1@0.12 → plan2。Barricade retains block; over-blocking (13 vs 9) banks 4 block for next turn and takes 0 damage. 4 chip damage is negligible on a 105 HP elite.
+  - 选项：plan1=；plan2=
+- 2026-09-24T12:27 第8层：Jev plan2@0.43 → plan1。Use block potion now to take only 2 damage and deal 20, speeding elite kill; HP is high and Regen potion remains.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T12:28 第8层：Jev plan1@0.21 → plan2。At 98% HP vs a sustained elite, extra 6 damage speeds the kill; 5 HP is cheap and Burning Blood heals it back.
+  - 选项：plan1=；plan2=
+- 2026-09-24T12:28 第8层：Jev plan2@0.20 → plan1。Elite buffs each turn; extra 9 damage sets up a reliable kill next turn, and 9 HP is cheap at 64/80 with Burning Blood healing.
+  - 选项：plan1=；plan2=
+- 2026-09-24T12:31 第12层：Jev plan4@0.33 → plan1。Kills an attacker, drops the buffing eel to 9 HP for an easy kill next turn, and the 3 HP lost to 放血 buys 8 extra damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T14:22 第33层：Jev plan2@0.48 → plan1。Triggers exhaust engine (Feel No Pain + Dark Embrace) and draws 3, applying Vulnerable; only 5 HP more than plan2, worth the setup for long boss fight.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T14:22 第33层：Jev plan2@0.04 → plan1。Bash+ leaves Vulnerable 4, amplifying several future turns; 7 less damage now is trivial in this long boss fight.
+  - 选项：plan1=；plan2=
+- 2026-09-24T14:23 第33层：Jev plan1@0.23 → plan2。痛击+挂3层易伤，让后续多回合攻击+50%，长期总伤害超过本回合多打的14点；两者存活血量相同。
+  - 选项：plan1=；plan2=
+- 2026-09-24T14:36 第17层：Jev plan2@0.34 → plan1。Deal 10 vs 4 damage for only 3 HP, which Burning Blood recovers; faster kill reduces eventual Steam Eruption explosion.
+  - 选项：plan1=；plan2=
+- 2026-09-24T14:52 第12层：Jev plan3@0.10 → plan2。Taunt+Bash sets Vulnerable 4 and costs only 3 HP; best value for a long elite, preserving HP while keeping damage up.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T15:01 第17层：Jev plan1@0.19 → plan2。Balanced: 25 dmg (boss to 81) while staying at 22 HP; plan3's 15 HP is fatal next hit, plan1 too slow for scaling boss.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T15:27 第17层：Jev plan1@0.05 → plan2。All plans trigger the 150-HP stun; plan2 is best damage-per-HP (40 dmg, only 19 lost), preserves HP for a long 252-HP boss fight, and avoids Anger's deck bloat.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T15:28 第17层：Jev plan1@0.30 → plan4。Max damage plus Vulnerable speeds the kill on a scaling boss; limited block cards make racing better than slow blocking lines.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T15:29 第17层：Jev plan1@0.26 → plan3。Race the boss: full-block turtling loses to 18/turn, so deal 24 while keeping 8 HP — enough to survive a partially-blocked follow-up and enable next-turn lethal.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T15:36 第12层：Jev plan1@0.14 → plan2。At 73% HP with healing relic, trade 5 HP for 6 extra damage to shorten this 75 HP elite fight.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T15:37 第12层：Jev plan1@0.14 → plan2。Leave elite at 6 HP so any attack kills next turn, saving a full 18-damage enemy turn; 12 HP is affordable with Burning Blood heal.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T15:44 第17层：Jev plan2@0.17 → plan1。Applies Vulnerable 3, boosting all future turns (enemy still has 72 HP, race matters since steam grows); plan2's extra 9 dmg isn't worth losing Vulnerable and 6 block.
+  - 选项：plan1=；plan2=
+- 2026-09-24T15:44 第17层：Jev plan2@0.06 → plan1。Applies Vulnerable 3 and takes no damage, setting up faster kill; 9 less damage now is outweighed by 50% amp and 6 block.
+  - 选项：plan1=；plan2=
+- 2026-09-24T16:44 第33层：Jev plan1@0.14 → plan2。Kill the 8 HP 火箭 to stop its 35 damage and keep full HP; avoiding 35/turn beats the rage block on 碾碎爪.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T16:45 第33层：Jev plan1@0.35 → plan2。Best defensive turn: full block (0 HP lost), applies Vulnerable for future turns; 6 damage from Twin Strike is negligible vs boss HP, saving 11 HP is worth the minor potion.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T16:45 第33层：Jev plan2@0.28 → plan1。Blocks almost all 22 (only 4 HP lost) while dealing 13 and stacking Vulnerable; better damage-per-HP than the passive plan, safer than the 12-17 HP aggressive lines.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T16:46 第33层：Jev plan2@0.10 → plan1。Boss still has 52 HP; 14 HP is worth more than 16 chip damage with a 22-damage hit next turn. Preserve HP for the long fight.
+  - 选项：plan1=；plan2=
+- 2026-09-24T17:29 第48层：Jev plan2@0.22 → plan1。Racing a 123 HP boss; 12 extra damage beats 9 block since both lines survive and blocking won't reduce turns-to-die meaningfully.
+  - 选项：plan1=；plan2=
+- 2026-09-24T17:56 第15层：Jev plan2@0.43 → plan1。Kills a worm, gains +1 permanent strength from 烙印, and leaves the best board for the fight; only 1 HP costlier than plan3.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T17:56 第15层：Jev plan2@0.28 → plan1。Kills a worm and deals 29 for only 5 HP (heals back via Burning Blood); plan4's minor block saves nothing long-term, plan2 loses 11 HP for same damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T18:00 第17层：Jev plan3@0.13 → plan1。Best damage-per-HP trade and leaves Vulnerable 4, hugely amplifying the next turns of a long grind fight; plan4 is strictly worse.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T18:10 第27层：Jev plan2@0.04 → plan1。Neither plan kills (REATTACH revives segments); both leave same vulnerable stacks and both centipedes alive. Plan1 saves 10 HP for the long elite fight.
+  - 选项：plan1=；plan2=
+- 2026-09-24T18:26 第33层：Jev plan2@0.10 → plan1。Gain 2 permanent Strength for only 1 HP; safe this turn (0 incoming) and accelerates boss kill.
+  - 选项：plan1=；plan2=
+- 2026-09-24T18:26 第33层：Jev plan1@0.34 → plan2。Long attrition boss fight at 26 HP; preserve HP, block max (15), damage difference to crab is negligible.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T18:39 第9层：Jev plan1@0.44 → plan2。At 8 HP, no kill is possible; full block takes 0 damage and keeps me alive, while plan1 drops to 5 HP and still leaves both eels alive.
+  - 选项：plan1=；plan2=
+- 2026-09-24T18:50 第9层：Jev plan1@0.49 → plan2。More damage (23) brings elite to 11 HP, making next-turn kill far easier; both plans risk death if we fail to kill, so lower threshold wins.
+  - 选项：plan1=；plan2=
+- 2026-09-24T18:50 第9层：Jev plan1@0.16 → plan2。Trading 5 HP for 8 damage brings elite to 17, killable next turn; avoiding a full extra 16-damage turn is worth more.
+  - 选项：plan1=；plan2=
+- 2026-09-24T19:02 第17层：Jev plan2@0.40 → plan1。Enemy debuffs (no attack) so go all-out; 45 dmg plus Vulnerable 3 amplifies next turns far more than plan2's +4 raw, same 2 HP cost.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T19:54 第33层：Jev plan1@0.39 → plan2。7 extra damage advances the kill a turn; 22 HP is still safe against an 11 attack (6 net), and Burning Blood refunds the 6.
+  - 选项：plan1=；plan2=
+- 2026-09-24T20:04 第45层：Jev plan2@0.33 → plan1。Kills flail knight and applies Vulnerable to the 58 HP ghost knight (main threat, source of Ethereal debuff); trading 8 HP for faster kill is worth it.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:04 第45层：Jev plan1@0.31 → plan3。Leaves Ghost Knight at 1 HP (thorns 3 kills it when it attacks), dealing 27 dmg for only 1 HP lost; plan1 wastes 6 extra HP on Offering with energy already unused.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:09 第48层：Jev plan1@0.33 → plan2。Long boss fight vs a strength-scaling 300HP enemy; +1 vulnerable (and likely strength from Dominate) speeds the kill far more than 5 HP saved now, with Burning Blood/Demon Tongue regen cushioning.
+  - 选项：plan1=；plan2=
+- 2026-09-24T20:17 第7层：Jev plan2@0.18 → plan1。Both leave the eel killable next turn (any attack kills 8 HP with vulnerable); plan1 preserves 5 more HP, and taking 0 next turn after the kill.
+  - 选项：plan1=；plan2=
+- 2026-09-24T20:24 第17层：Jev plan2@0.36 → plan3。At full HP, trading 18 HP for 23 damage plus Vulnerable-2 accelerates killing the 153 HP boss and saves the potion for later.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:24 第17层：Jev plan2@0.47 → plan3。At full HP the 12 extra damage taken is cheap; Bash applies Vulnerable 2 to boost our 16-attack deck, accelerating the kill on this boss.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T20:25 第17层：Jev plan2@0.23 → plan1。HP is comfortable (74/80). Bludgeon deals 32, shortening the boss fight; 14 extra damage for 5 more HP is a good race trade.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:29 第24层：Jev plan1@0.28 → plan3。防御+ limits loss to 7 HP at 76 HP; 拆卸's 8 damage isn't worth 8 extra HP, and the block potion should be saved for the act boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:33 第28层：Jev plan1@0.16 → plan2。Aggressive deck, 59 HP is healthy; dealing 26 (39% of its HP) plus Pommel draw races the elite down a turn, and Feed builds toward a kill bonus.
+  - 选项：plan1=；plan2=
+- 2026-09-24T20:37 第33层：Jev plan1@0.39 → plan2。Takes zero damage, sets Vulnerable for future turns, and builds 15 block; 10 extra damage now is trivial against 400+ HP Kaiser Crab.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T20:53 第17层：Jev plan1@0.42 → plan2。Molten Fist doubles Vulnerable to 2, keeping 拆卸 for a doubled, Vulnerable-amplified turn 2 beats 9 extra damage now.
+  - 选项：plan1=；plan2=
+- 2026-09-24T21:04 第29层：Jev plan1@0.12 → plan2。Full block kept, thorns chips the 7-hit attacker; playing Dominate early + 2 Vulnerable scales better over a long 145 HP elite than 11 extra damage.
+  - 选项：plan1=；plan2=
+- 2026-09-24T21:04 第29层：Jev plan2@0.47 → plan1。Pommel Strike + Bash+ applies Vulnerable 4, killing the 145 HP elite far faster than Bludgeon; 4 HP loss trivial at 64/82 with Burning Blood.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T21:23 第45层：Jev plan1@0.37 → plan2。Trades 13 HP for 19 damage—best value, drops Knight to 28 while keeping me at a safe 36/91; plan1/3 stall a slow deck, plan4 risks death at 27.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T21:52 第24层：Jev plan4@0.20 → plan1。Gains Inflame +2 strength permanently and deals 9 damage/vulnerable for only 6 more HP than defensive lines; elite tempo matters.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T22:08 第8层：Jev plan1@0.20 → plan2。20 dmg hits the Hardened Shell cap, leaving 18 HP so next turn kills; saves a full buffed enemy turn, worth 7 HP.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T22:08 第8层：Jev plan1@0.15 → plan2。Defend+Strike trades only 1 HP for 7 damage; repeating this wins in ~4 turns while barely losing HP. Plan1 wastes 7 HP for speed we don't need.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T22:50 第12层：Jev plan1@0.25 → plan2。Same 15 HP cost, but 痛击+ extends Vulnerable to 5, boosting all later attacks ~+50% and ending this scaling elite (Str 10) sooner than the +7 burst.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T22:50 第12层：Jev plan4@0.12 → plan1。Kills elite faster (36 dmg, enemy to 38) while 49 HP stays safe; enemy strength escalates, so racing beats slow grind.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T22:52 第12层：Jev plan1@0.24 → plan2。Plays 无情猛攻 for 15 damage while gaining 5 block, preserving HP and leaving elite at 28, killable in two turns.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-24T22:58 第17层：Jev plan1@0.15 → plan2。Apply Weak+Vulnerable while losing only 2 HP keeps 64 HP for the long 143-HP fight; extra 15 damage isn't worth 10 more HP.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T22:59 第17层：Jev plan1@0.25 → plan2。13 extra damage advances lethal against a strength-scaling boss; next turn it only buffs so the 8 HP is affordable. Favor the faster kill.
+  - 选项：plan1=；plan2=
+- 2026-09-24T22:59 第17层：Jev plan1@0.45 → plan2。Both draw 3; plan2 deals 11 more (18 vs 7). Vantom at 55 HP with +4 strength escalates, so trading 10 HP for tempo ends the fight sooner.
+  - 选项：plan1=；plan2=
+- 2026-09-24T23:21 第17层：Jev plan1@0.25 → plan2。啄击's 3 hits strip Slippery while strength is still low, so next turn's Prepare attacks all land full; act-end heal makes the 8 HP affordable.
+  - 选项：plan1=；plan2=
+- 2026-09-24T23:51 第8层：Jev plan2@0.15 → plan1。Trading 5 HP for 9 damage speeds the elite kill; plan3 wastes damage to the 20 shell cap. Headbutt also sets up next turn's draw.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T23:51 第8层：Jev plan3@0.14 → plan2。Enemy's 20-damage cap means plan1's extra 5 isn't worth 8 HP; plan2 deals 15 for 1 HP, same 3-turn kill, best economy.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-24T23:52 第8层：Jev plan2@0.04 → plan1。Deal 9 damage to progress kill; enemy buffs each turn, so stalling with block costs more HP next turn than the 8 block saves.
+  - 选项：plan1=；plan2=
+- 2026-09-25T00:00 第15层：Jev plan1@0.32 → plan2。Balanced: 12 damage speeds up the long 4-enemy elite fight, and landing at 39 HP activates Red Skull's strength for the rest of it.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T00:04 第17层：Jev plan2@0.19 → plan1。Only 2 HP lost for 15 damage; plan2's extra 6 damage costs 5 HP, plan3 wastes block. Best value in long boss fight.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T00:05 第17层：Jev plan2@0.47 → plan1。Enemy isn't attacking; with Vulnerable on self, avoid the 6 unblockable Beckon damage while dealing solid 27. Extra 9 dmg from plan2 isn't worth bleeding 6 HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T00:07 第17层：Jev plan1@0.15 → plan2。Plan2 drops to 36 HP, activating 红头骨's +3 Strength for the rest of the fight while dealing 12 now; the HP cost is fine since 易伤 expires soon.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T00:08 第17层：Jev plan3@0.05 → plan2。Non-attack turn, so deal damage, but at 29 HP keep buffer: 18 damage for only 6 HP, staying out of lethal range for the boss's next hit.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T00:18 第17层：Jev plan4@0.10 → plan1。Highest damage (22) with Weak plus Vulnerable, keeps 39 HP and mitigates the boss's next attack; best tempo and safety for this long boss fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T00:19 第17层：Jev plan1@0.07 → plan2。Boss fight, low HP: keeping 26 HP buffer beats 9 damage; block may trigger 招架盾, and 16 damage with strength keeps tempo.
+  - 选项：plan1=；plan2=
+- 2026-09-25T00:20 第17层：Jev plan1@0.19 → plan2。Bash+ applies Vulnerable 3, boosting the next two turns' damage; at low HP this boss fight is a race, so extra damage outweighs 3 HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T00:32 第17层：Jev plan1@0.23 → plan2。Maximizes damage and applies Vulnerable 4, setting up a kill next turn; the 8 HP cost is worth avoiding an extra turn of attack and higher steam eruption.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T00:54 第9层：Jev plan3@0.13 → plan1。Kills an attacking worm, deals most damage (45) for only 3 HP; Burning Blood heals it back post-fight.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T00:55 第9层：Jev plan1@0.15 → plan2。Blocks the hit (only 3 HP lost vs 8) while still killing one worm; next turn we easily finish the 9 HP worm with no HP cost. HP is precious for the act.
+  - 选项：plan1=；plan2=
+- 2026-09-25T01:05 第27层：Jev plan3@0.24 → plan1。Max damage (20) and fastest elite kill; the stone potion regenerates each combat via the toad relic, and 8 HP is affordable at 81/90.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T02:10 第40层：Jev plan2@0.05 → plan1。Long 3-knight elite (276 HP); 烙印 adds permanent +1 strength for only 1 extra HP, and all cards are Ethereal now, so play the powers early.
+  - 选项：plan1=；plan2=
+- 2026-09-25T02:22 第48层：Jev plan2@0.07 → plan1。烙印 trades 1 HP for permanent strength; extra damage and scaling outweigh 1 HP in long boss fight.
+  - 选项：plan1=；plan2=
+- 2026-09-25T02:48 第28层：Jev plan4@0.14 → plan2。燃烧 now locks in +2 strength for this 99-HP fight and later, Weak cuts the attacker's 16 to 12, plus 24 damage spread; worth 6 more HP than plan4.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T02:57 第17层：Jev plan1@0.36 → plan2。Bash+ stacks 4 Vulnerable on the priest (vs 2), boosting the free ritual turn and next turns; that outweighs 4 HP and one drawn card.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T02:57 第17层：Jev plan3@0.20 → plan1。燃烧+ nets +3 permanent strength; the extra 12 damage on the priest shortens this 253-HP fight, and 40 HP is still a safe buffer.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T03:17 第33层：Jev plan1@0.16 → plan2。挑衅 adds Weak so enemy hits softer: lose only 5 HP, end 20 HP with 105 damage and 火箭 at 32 — best survival/damage trade, sets up both-kill next turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T03:21 第9层：Jev plan2@0.13 → plan1。Block is scarce vs 23/turn; dealing 22 ends the elite a turn sooner, saving a full ~11 HP hit for only 6 HP now.
+  - 选项：plan1=；plan2=
+- 2026-09-25T04:10 第28层：Jev plan1@0.43 → plan2。Extends Vulnerable to 3, boosting future damage; both plans safe this turn.
+  - 选项：plan1=；plan2=
+- 2026-09-25T04:12 第28层：Jev plan1@0.41 → plan2。Deal 26 damage, leaving enemy at 27 HP; likely kill next turn, avoiding another 15 attack. Safe at 28 HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T04:32 第12层：Jev plan1@0.26 → plan2。Bash applies Vulnerable 2 in a long 140 HP elite fight, boosting all follow-up damage and helping reach the 70 HP shriek-stun; equal HP loss to plan1 for far more future value.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T04:33 第12层：Jev plan1@0.36 → plan2。Vulnerable 2 multiplies the next two attack turns, outpacing Tear Asunder's 6 extra damage and speeding the stun at 70 HP; equal HP loss.
+  - 选项：plan1=；plan2=
+- 2026-09-25T04:57 第33层：Jev plan2@0.41 → plan3。Bash+ leaves 3 Vulnerable (Paper Phrog = +75%) on the full-HP rocket claw for two extra turns; worth 6 HP, and it keeps claw HP even.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T05:01 第8层：Jev plan4@0.27 → plan1。Scaling elite must die fast: Bash+Strike deals max damage (17) and applies Vulnerable, while keeping the potion as a safety net for later turns.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T05:06 第15层：Jev plan2@0.42 → plan1。Max damage (20) and potion Weak 3 blunts this 10-strength elite's next three 23-damage hits; 72/90 HP is safe and Burning Blood refills after.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T05:07 第17层：Jev plan2@0.44 → plan1。Demon Form 已启动，此战靠成长取胜；plan1 仅损 2 HP 却能打掉 4 层滑溜，效率远胜 plan3，又比 plan2 多推进输出。
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T05:15 第24层：Jev plan1@0.20 → plan2。Trades only 2 HP for 8 damage on a 145 HP elite that scales; chipping it down faster cuts total incoming damage over the long fight.
+  - 选项：plan1=；plan2=
+- 2026-09-25T05:24 第11层：Jev plan1@0.14 → plan2。Bash+ gives Vulnerable 3 on the buffing eel (priority kill, two turns amplified), blocks 8, loses only 9 HP; best long-fight setup.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T06:37 第33层：Jev plan2@0.39 → plan1。Sandpit 3 is above the ≤2 danger line; 3 attacks trigger Shuriken for +1 permanent Strength and max damage; 8 HP is trivial with Plating 12/Regen 5.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T06:52 第42层：Jev plan1@0.07 → plan2。Getting enemy to 12 makes 狱火 chip + one attack lethal next turn; the 5 extra HP won't block a 42 hit anyway, so push damage.
+  - 选项：plan1=；plan2=
+- 2026-09-25T06:57 第48层：Jev plan1@0.15 → plan2。Maximizes survival (12 HP) and applies Vulnerable 2 to enable a lethal next turn; plan1 leaves 4 HP, too risky.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T07:21 第13层：Jev plan2@0.48 → plan4。Deal 12 dmg; keep block potion. At full HP the 16 loss is affordable, and the potion keeps equal-or-better insurance value for a spike turn or the boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T07:23 第15层：Jev plan4@0.30 → plan2。Same 9 HP cost as plan1 but deals 10 damage, dropping elite to 12 HP for a likely kill next turn; saves 8 HP vs plan4's marginal extra damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T07:26 第17层：Jev plan3@0.11 → plan2。Clears Slippery with 痛殴, blocks 8 with 防御+, saves potion for next turn's free PREPARE turn to maximize damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T07:34 第27层：Jev plan1@0.46 → plan2。零掉血并击杀威胁更大的7×2攻击者，剩余敌人仅6伤；第2幕精英保血优先于追求多打伤害，44血优势保留。
+  - 选项：plan1=；plan2=
+- 2026-09-25T08:03 第12层：Jev plan1@0.38 → plan3。Hitting the 20 damage cap kills the elite a turn sooner (4 vs 5+ turns), and at 76 HP with Burning Blood healing a 14 HP trade is affordable.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:04 第12层：Jev plan1@0.39 → plan2。Steady damage and 5 block; enemy at 14 is still killable next turn, saving 5 HP versus plan1 while avoiding plan3's slower kill.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:05 第14层：Jev plan2@0.21 → plan1。Good damage while blocking 8; spends only a weak temp-strength potion and pushes the eel toward its 70-HP stun faster without gutting HP.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T08:05 第14层：Jev plan2@0.27 → plan1。Full block, zero HP loss, keeps Muscle Potion for a harder moment; chipping 9 is fine in a 140 HP grind where Shriek stun buys a free turn.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T08:06 第14层：Jev plan4@0.15 → plan2。Can't reach the 70 stun threshold this turn. Plan2 blocks 16, trades only 5 HP for 7 damage, chips the elite while keeping HP healthy for the boss.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T08:07 第14层：Jev plan1@0.24 → plan3。Deal 12 now; 17 HP left should die next turn with 3 energy, minimizing total HP lost and ending the elite sooner.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:08 第14层：Jev plan1@0.28 → plan2。Block 8 caps loss at 4 HP while dealing 15, leaving eel at 14 — killable next turn; saves 8 HP vs plan1.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T08:10 第14层：Jev plan1@0.22 → plan2。Balanced race: 11 damage leaves eel at 9 (killable next turn by 弹回+打击 with block to spare) while keeping 26 HP; plan3's 33 HP loss risks the run.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:14 第17层：Jev plan2@0.05 → plan1。Deal 18 with zero HP loss; 6 extra damage on a 159 HP boss is negligible versus 6 HP saved for the long fight.
+  - 选项：plan1=；plan2=
+- 2026-09-25T08:14 第17层：Jev plan2@0.20 → plan1。Long boss fight; playing 呼唤 clears the status for 0 HP loss while still dealing damage. 6 damage isn't worth losing 6 HP mid-boss.
+  - 选项：plan1=；plan2=
+- 2026-09-25T08:15 第17层：Jev plan1@0.13 → plan2。Apply Vulnerable for boosted damage over the long attrition race while keeping 30 HP buffer; plan3's extra 9 damage isn't worth 6 more HP in this grindy boss.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:36 第24层：Jev plan3@0.16 → plan1。Play the scaling defensive power early; 8 damage now for 5 HP buys tempo in a long 145-HP elite fight, where the power compounds.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:39 第28层：Jev plan2@0.23 → plan1。No attacks triggers 孙子兵法 (+1 energy next turn) and only loses 3 HP, best for surviving 绯红披风 drain and finishing the elite.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:39 第28层：Jev plan2@0.35 → plan1。Turning on Vulnerable 3 on a 42 HP elite while also gaining Strength outvalues plan2's 6 immediate extra damage, speeding the kill with minimal HP loss.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T08:56 第14层：Jev plan1@0.14 → plan2。Same 20 damage as plan1 for only 5 more HP, plus applies Vulnerable 2 so next turn's attacks kill the 35 HP shell faster, saving a 14-damage hit.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T08:57 第14层：Jev plan2@0.17 → plan1。Hardened Shell caps damage per turn (~20), so max output ends the fight a turn earlier; 8 HP now beats eating an extra 18-damage turn. Plan2/3 stall.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T09:41 第48层：Jev plan2@0.12 → plan1。Racing Queen with 86 HP vs 195; both plans lose similar HP but plan1 deals max 36 dmg, squeezing the best damage-per-HP trade to close the kill.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T09:46 第8层：Jev plan1@0.37 → plan2。Saves 5 HP, keeps the same strength setup, and 武装 may upgrade a key card; elite fights are the right place to spend potions.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T09:54 第17层：Jev plan2@0.00 → plan1。Full HP 86; trade 5 HP for 8 extra damage on a 222-HP boss we must race. Damage now is worth it.
+  - 选项：plan1=；plan2=
+- 2026-09-25T10:05 第11层：Jev plan3@0.23 → plan1。Efficient: 13 block caps loss at 3 HP, 9 damage forward, keeps Speed potion for the boss/elite danger ahead.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T10:06 第11层：Jev plan4@0.36 → plan1。Paying 6 extra HP to land 狱火 turn 3 is worth it: permanent 6 dmg/turn over a long 96-HP elite, and we can't reach the 70 stun line anyway.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T10:06 第11层：Jev plan2@0.14 → plan1。Play 狱火 now: 6 all-enemy damage every turn in a long 96 HP elite fight far outvalues 6 HP, especially with RestSite next and 燃烧之血.
+  - 选项：plan1=；plan2=；plan3=
+- 2026-09-25T10:17 第17层：Jev plan1@0.09 → plan2。自爆伤害等于蒸汽层数，HP 必须高于它。17 血换 15 伤害不划算；耸肩无视补格挡、抽牌、只掉 8 血。
+  - 选项：plan1=；plan2=
+- 2026-09-25T10:59 第7层：Jev plan1@0.28 → plan2。Full block loses 0 HP; 8 damage + vulnerable on 11 HP enemy saves no attack, and HP is scarce with no potions before Act 1 boss.
+  - 选项：plan1=；plan2=
+- 2026-09-25T11:09 第17层：Jev plan3@0.37 → plan4。Best turn: plays Rupture engine plus whole-fight Dexterity while dealing 10 damage, only 3 HP from full — strictly better than plan1's identical setup with less damage.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T11:10 第17层：Jev plan1@0.09 → plan2。Blocks the 10 attack entirely (lose only 1 self-damage), deals 22 to the 63-HP priest, and draws a card. Fight is nearly over; skip the low-value power setup.
+  - 选项：plan1=；plan2=；plan3=；plan4=
+- 2026-09-25T11:35 第24层：Jev plan2@0.03 → plan1。Long elite fight (161 HP, 22-40 hits); Feel No Pain's ongoing block outvalues 7 chip damage, and 1 HP lost either way.
+  - 选项：plan1=；plan2=
+- 2026-09-25T12:03 第11层：Jev plan2@0.35 → plan1。Both lose 0 HP, but plan1 kills two worms vs one, cutting next turn's incoming damage — fewer live enemies is strictly better here.
+  - 选项：plan1=；plan2=
 
-## shop/buy（10 次）
-- 2026-09-24T07:25 第3层：Jev leave@0.31 → buy_card1。Cheap Twin Strike adds solid early damage; other cards too pricey or weak, potions not worth gold now.
-  - 选项：buy_card1=双重打击；leave=nothing；buy_potion2=能力药水；buy_potion0=再生药水；buy_potion1=明耀酊剂
-- 2026-09-24T07:36 第30层：Jev buy_card3@0.15 → leave。HP 21/80, low gold; none of these cards fix survival. Save gold for rest/potion before boss.
-  - 选项：buy_card2=放血；leave=nothing；buy_card3=火焰屏障；buy_card1=重锤；buy_card0=欺凌
-- 2026-09-24T07:50 第29层：Jev buy_relic0@0.17 → buy_relic1。磨刀石升级多张攻击牌，牌组攻击多，长期收益最高；金币充裕。
-  - 选项：buy_relic1=磨刀石；buy_relic0=餐券；buy_relic2=化学物X；leave=nothing；buy_potion2=虚弱药水
-- 2026-09-24T07:50 第29层：Jev buy_relic0@0.34 → buy_relic2。化学物X boosts X-cost cards; deck has 旋风斩, strong scaling for boss fights. High gold, worth it.
-  - 选项：buy_relic0=餐券；buy_relic2=化学物X；leave=nothing；buy_potion2=虚弱药水；buy_potion0=流动铜液
-- 2026-09-24T07:50 第29层：Jev leave@0.12 → buy_card4。无惧疼痛与消耗体系协同，提供持续格挡，价格合理，提升后期生存。
-  - 选项：leave=nothing；buy_potion2=虚弱药水；buy_potion0=流动铜液；buy_potion1=缚魂药水；buy_card4=无惧疼痛
-- 2026-09-24T07:56 第7层：Jev buy_relic0@0.21 → buy_relic1。Anchor gives 10 block every fight, strong early defense; affordable and helps survive Act 1 elites.
-  - 选项：buy_relic0=古茶具套装；buy_relic1=锚；buy_relic2=大锅；leave=nothing；buy_potion1=虚弱药水
-- 2026-09-24T07:56 第7层：Jev buy_potion2@0.23 → leave。No affordable card meaningfully improves this starter deck; save gold for a stronger shop or card removal later.
-  - 选项：leave=nothing；buy_potion1=虚弱药水；buy_potion0=易伤药水；buy_card0=欺凌；buy_potion2=熔炉的祝福
-- 2026-09-24T08:14 第14层：Jev buy_relic1@0.17 → buy_card3。Solid block+draw card for 48g, improves deck consistency; relics too expensive and less impactful now.
-  - 选项：buy_relic0=五轮书；buy_relic1=精致折扇；buy_relic2=王室印章；buy_card3=耸肩无视；leave=nothing
-- 2026-09-24T08:20 第5层：Jev buy_card3@0.10 → remove。Removing a Strike improves deck quality; other cards are mediocre and relics unaffordable.
-  - 选项：remove=card removal；buy_card3=耸肩无视；buy_card1=御血术；buy_card0=熔融之拳；buy_card4=岩石铠甲；leave=nothing
-- 2026-09-24T08:24 第15层：Jev buy_card0@0.16 → buy_card1。上勾拳36金性价比高，提供虚弱易伤，配合痛击与熔融之拳放大输出，卡组缺优质攻击。
-  - 选项：buy_card0=全身撞击；buy_card1=上勾拳；buy_card2=破灭；leave=nothing
+## selection/upgrade（80 次）
+- 2026-09-24T07:10 第18层：Jev card16@0.21 → card9。痛击升级后易伤3层，显著提升全牌组输出，优先于单卡数值升级。
+  - 选项：card10=狂宴；card9=痛击；card12=耸肩无视；card16=剑柄打击
+- 2026-09-24T07:31 第18层：Jev card10@0.07 → card14。祭品升级后0费抽5，是强力引擎；其余选项收益小，优先升级它。
+  - 选项：card14=祭品；card5=痛击；card8=岩石铠甲；card10=御血术
+- 2026-09-24T07:33 第25层：Jev card11@0.14 → card9。岩石铠甲升级后覆甲翻倍，长期防御收益最高，优于小幅伤害提升。
+  - 选项：card9=岩石铠甲；card6=御血术；card4=双重打击；card11=欺凌
+- 2026-09-24T08:26 第18层：Jev card13@0.32 → card16。恶魔形态升级后每回合+4力量，是后期核心成长引擎，优先升级收益最大。
+  - 选项：card13=耸肩无视；card16=恶魔形态；card14=踩踏；card12=地狱狂徒
+- 2026-09-24T09:10 第27层：Jev card13@0.36 → card11。祭品升级抽5张，0费过牌对这套24张、依赖易伤连击的牌组收益最大；痛击升级次之，耸肩已有两张升级优先级低。
+  - 选项：card11=祭品；card6=痛击；card10=岩石铠甲；card13=耸肩无视
+- 2026-09-24T10:20 第16层：Jev card11@0.36 → card9。痛击升级到3层易伤，配合拆卸/熔融之拳大幅提升对高血量boss的输出；牌组已不缺伤害，易伤收益最大。
+  - 选项：card9=痛击；card10=战斗专注；card16=耸肩无视；card11=剑柄打击
+- 2026-09-24T14:20 第32层：Jev card19@0.14 → card7。痛击升级：伤害10并给予3层易伤（熔融之拳可翻倍），是整场战斗的伤害倍增器，优于战斗专注多抽1张或多1点格挡。
+  - 选项：card7=痛击；card18=战斗专注；card19=耸肩无视；card21=耸肩无视
+- 2026-09-24T15:09 第8层：Jev card14@0.31 → card8。薪火之源升级优先级最高（指南列为可升级核心），长期每回合能量收益远超痛击+的易伤，早升级早受益。
+  - 选项：card7=痛击；card8=薪火之源；card12=耸肩无视；card14=燃烧
+- 2026-09-24T16:32 第28层：Jev card15@0.16 → card6。Bash+ adds damage and 3 Vulnerable per cast, amplified by wax Paper Phrog and feeding Bully/multi-hit attacks — biggest boss-fight boost.
+  - 选项：card6=痛击；card13=战斗专注；card16=战斗专注；card15=耸肩无视
+- 2026-09-24T17:55 第13层：Jev card12@0.21 → card9。Bash+ (10 dmg, 3 Vulnerable) is the most reliable Act 1 upgrade — drawn every fight, amplifies all strikes/Twin Strike for the boss, whereas Whirlwind+ needs energy and specific draws.
+  - 选项：card9=痛击；card13=战斗专注；card16=烙印；card12=旋风斩
+- 2026-09-24T18:54 第7层：Jev card14@0.33 → card9。痛击升级后 10 伤 3 层易伤，第 1 幕精英/boss 全靠它放大输出；战斗专注仅多抽 1 张，收益远小于此。
+  - 选项：card9=痛击；card16=战斗专注；card14=剑柄打击；card13=突破
+- 2026-09-24T19:44 第28层：Jev card22@0.14 → card19。薪火之源升级后每回合额外能量，永久收益最大；牌组高费牌多（踩踏×2、旋风斩），能量是瓶颈。
+  - 选项：card17=祭品；card8=痛击；card19=薪火之源；card22=耸肩无视
+- 2026-09-24T20:03 第44层：Jev card7@0.06 → card16。Offering+ (draw 5) is best in a 29-card deck; HP loss triggers Rupture and is healed by Demon Tongue. Bash+ and Trance+ are lesser.
+  - 选项：card16=祭品；card7=痛击；card22=战斗专注；card20=耸肩无视
+- 2026-09-24T20:35 第29层：Jev card13@0.26 → card16。Upgrading Inflame to +3 permanent strength scales every attack all run; deck is 19 attacks with multi-hit Twin Strike/Dismantle, far better than +1 damage or draw.
+  - 选项：card13=狂宴；card16=燃烧；card5=剑柄打击；card15=剑柄打击
+- 2026-09-24T21:17 第40层：Jev card9@0.10 → card8。Uppercut+ doubles Weak and Vulnerable every play, feeding this deck's vuln payoffs (Bully, Dominate, Molten Fist) and halving act-2 boss damage.
+  - 选项：card11=耸肩无视；card9=剑柄打击；card8=上勾拳；card21=主宰
+- 2026-09-24T21:22 第44层：Jev card8@0.30 → card10。Deck already has ample damage and exhaust payoffs; 耸肩无视+ (11 block + draw) is the most-played defensive card, best value for the upcoming boss fights.
+  - 选项：card10=耸肩无视；card8=剑柄打击；card20=主宰；card24=恶魔之焰
+- 2026-09-24T22:48 第9层：Jev card11@0.34 → card8。升级痛击：易伤从2层变3层，配合上勾拳/无情猛攻在boss战放大所有输出；痛击是后期仍需保留的核心易伤源。
+  - 选项：card8=痛击；card11=战斗专注；card12=耸肩无视；card14=上勾拳
+- 2026-09-24T23:18 第16层：Jev card11@0.15 → card16。恶魔形态升级收益最大（降费/加力量），是整套牌的后期核心，Act 1 后段投资它远胜痛击+或耸肩+。
+  - 选项：card16=恶魔形态；card6=痛击；card11=耸肩无视；card12=耸肩无视
+- 2026-09-25T00:53 第7层：Jev card9@0.14 → card7。痛击升级后10伤+3易伤，延长易伤一回合，放大拆卸与焚烧输出，是打第1幕精英与boss最稳的首升；战斗专注多抽1张收益较小。
+  - 选项：card7=痛击；card9=战斗专注；card11=焚烧；card10=挑衅
+- 2026-09-25T00:58 第16层：Jev card12@0.21 → card7。升级战斗专注→抽4张，0费提升整套牌稳定性，找痛击/火焰屏障/拆卸；踩踏3费过重，剑柄打击升级收益小。
+  - 选项：card7=战斗专注；card14=踩踏；card12=剑柄打击；card15=剑柄打击
+- 2026-09-25T01:08 第29层：Jev card12@0.12 → card21。燃烧升级后力量+3，与飞剑回旋镖、双重打击、拆卸、杀灭、旋风斩等多段攻击相乘，长期收益最高；踩踏/耸肩提升小幅，狂宴只多2伤害1上限。
+  - 选项：card12=踩踏；card17=耸肩无视；card15=狂宴；card21=燃烧
+- 2026-09-25T01:39 第13层：Jev card8@0.30 → card10。Demon Form is the deck's win condition and upgrade priority per guide; Bash, Battle Trance, and a second Setup Strike are far lower value.
+  - 选项：card10=恶魔形态；card6=痛击；card7=战斗专注；card8=预备打击
+- 2026-09-25T02:34 第16层：Jev card18@0.17 → card17。狱火升级提升每回合AOE伤害，与撕裂/扯碎自伤体系联动最强，收益随回合累积；其余仅为小幅数值提升。
+  - 选项：card14=耸肩无视；card15=恶魔之焰；card17=狱火；card18=上勾拳
+- 2026-09-25T02:54 第16层：Jev card13@0.27 → card12。升级燃烧得到3点力量，配合双重打击/拆卸/多段攻击是全局最强收益；三张剑柄打击仅小幅加伤，优先级低。
+  - 选项：card12=燃烧；card13=剑柄打击；card15=剑柄打击；card16=剑柄打击
+- 2026-09-25T04:09 第27层：Jev card15@0.24 → card9。薪火之源升级是最高优先级：每回合额外能量全场景收益，远超痛击/踩踏/狂宴的小幅数值提升。
+  - 选项：card7=痛击；card9=薪火之源；card18=踩踏；card15=狂宴
+- 2026-09-25T04:45 第18层：Jev card12@0.19 → card19。祭品是S级能量/过牌引擎，升级收益最高；痛击、耸肩无视升级价值明显更低，先升祭品。
+  - 选项：card19=祭品；card9=痛击；card12=耸肩无视；card16=耸肩无视
+- 2026-09-25T04:45 第18层：Jev card14@0.22 → card18。Inflame+ gives 3 Strength, scaling the self-damage multi-hit deck (Whirlwind, Tear Asunder) and Shuriken; core power upgrade beats marginal block/draw upgrades.
+  - 选项：card16=耸肩无视；card18=燃烧；card14=剑柄打击；card13=上勾拳
+- 2026-09-25T05:39 第27层：Jev card14@0.32 → card9。上勾拳是牌组唯一虚弱来源，升级令虚弱与易伤翻倍，攻防兼得；每回合4能量足以负担2费。
+  - 选项：card14=剑柄打击；card9=上勾拳；card13=痛殴；card11=燃烧契约
+- 2026-09-25T05:42 第29层：Jev card7@0.21 → card13。Pommel Strike+ adds damage and an extra draw on a 1-cost attack—best consistency boost for this 24-card deck; Bash+/Uppercut already supply vulnerable.
+  - 选项：card13=剑柄打击；card12=痛殴；card10=燃烧契约；card7=拆卸
+- 2026-09-25T06:14 第18层：Jev card11@0.21 → card16。痛殴是S级核心输出：升级后两段各+2伤害，吞掉打击兼精简牌组，随恶魔形态/手里剑力量成长，第2幕精英与Boss最需要。
+  - 选项：card16=痛殴；card11=突破；card9=放血；card14=挑衅
+- 2026-09-25T06:17 第21层：Jev card11@0.14 → card9。放血+ adds a third energy on a 0-cost card, fueling Demon Form turns and extra attacks for Shuriken; the 3 HP loss is trivial with Burning Blood/plating.
+  - 选项：card9=放血；card12=挑衅；card13=劫掠；card11=欺凌
+- 2026-09-25T09:09 第18层：Jev card12@0.27 → card18。狂宴升级后12伤害更易斩杀、+4最大生命，永久收益最高；微型大炮让升级攻击额外增伤，优先升级狂宴。
+  - 选项：card15=耸肩无视；card18=狂宴；card13=突破；card12=预备打击
+- 2026-09-25T11:26 第13层：Jev card14@0.14 → card15。恶魔形态是本局唯一永久力量来源，升级后每回合+4力量，是打 240 血瀑布巨兽和后续整局的成长核心。
+  - 选项：card15=恶魔形态；card9=痛击；card14=耸肩无视；card13=旋风斩
+- 2026-09-25T12:02 第8层：Jev card13@0.34 → card9。痛击是唯一的易伤来源；升级后 10 伤 3 层易伤，放大愤怒/双重打击/剑柄打击的多段输出，对 252 血boss收益最大。
+  - 选项：card9=痛击；card17=战斗专注；card13=剑柄打击；card15=剑柄打击
+- 2026-09-25T13:05 第32层：Jev card5@0.19 → card13。升级永久力量：燃烧+ 让每次攻击 +1 伤害，配合双重/剑柄多段和力量/复制药水，是无厌沙虫 DPS 竞速的最优成长；手册也要求首铸升级力量牌。
+  - 选项：card11=坚定不移；card15=耸肩无视；card13=燃烧；card5=剑柄打击
+- 2026-09-25T14:52 第12层：Jev card15@0.23 → card8。Bash+ (10 dmg, 3 vulnerable) boosts all attacks 50% for 3 turns — best for racing Ceremonial Beast to its 150 stun; Stone Armor+ and Trance+ are marginal by comparison.
+  - 选项：card8=痛击；card15=战斗专注；card11=岩石铠甲；card13=岩石铠甲
+- 2026-09-25T15:05 第27层：Jev card13@0.39 → card15。升级绯红披风：每回合多3点稳定格挡，知识恶魔这种十几回合持久战收益最高；覆甲会被未挡伤害削减，战斗专注只多抽1张，价值较低。
+  - 选项：card13=战斗专注；card9=岩石铠甲；card11=岩石铠甲；card15=绯红披风
+- 2026-09-25T15:07 第29层：Jev card7@0.31 → card13。战斗专注升级后抽4张，提升0费过牌与关键牌上手率；本局无力量来源、知识恶魔是十几回合耐久战，抽牌比再堆1张覆甲更关键。
+  - 选项：card13=战斗专注；card9=岩石铠甲；card11=岩石铠甲；card7=耸肩无视
+- 2026-09-25T17:41 第8层：Jev card13@0.17 → card9。上勾拳+将虚弱/易伤翻倍为2层，对252血仪式兽是攻防双赢；本牌组缺力量/AOE，痛击已升，此升级收益最大。
+  - 选项：card10=耸肩无视；card13=剑柄打击；card14=剑柄打击；card9=上勾拳
+- 2026-09-25T17:53 第25层：Jev card16@0.36 → card17。Inferno is the deck's only AOE and damage engine; Rupture+Inferno fires every turn, and Knowledge Demon's 30 HP heals demand faster scaling damage over block.
+  - 选项：card16=耸肩无视；card8=剑柄打击；card9=剑柄打击；card17=狱火
+- 2026-09-25T18:16 第11层：Jev card8@0.32 → card14。长战boss需每回合稳定格挡；岩石铠甲+每回合免费6格挡、随回合累积，首回合即可安全打出，续航最优。
+  - 选项：card14=岩石铠甲；card9=狂宴；card8=剑柄打击；card12=火焰屏障
+- 2026-09-25T18:17 第13层：Jev card7@0.28 → card14。Boss punishes slow kills (steam eruption grows); Inferno is my only AOE and main damage engine, block already covered by Rock Armor++/Blood Wall. Faster kill = less explosion damage.
+  - 选项：card8=狂宴；card7=剑柄打击；card14=狱火；card11=火焰屏障
+- 2026-09-25T20:14 第16层：Jev card13@0.25 → card16。升级恶魔形态每回合多+1力量，是打墨影幻灵与全局的成长核心；祭品升级只多抽牌，价值次之。
+  - 选项：card16=恶魔形态；card15=祭品；card7=痛击；card13=耸肩无视
+- 2026-09-25T20:37 第11层：Jev card10@0.30 → card11。Boss 是神官+两信徒，升级旋风斩把每点能量的 AOE 从 5 提到 8，对三目标总计提升最大，也是本牌组唯一 AOE。
+  - 选项：card10=剑柄打击；card11=旋风斩；card9=邪眼；card12=坚毅
+- 2026-09-25T20:51 第32层：Jev card12@0.37 → card16。帝王蟹须同回合击杀双钳，踩踏升级的群体伤害对两目标各+3并触发微型大炮加成，爆发价值最高。
+  - 选项：card18=战斗专注；card11=耸肩无视；card16=踩踏；card12=剑柄打击
+- 2026-09-25T22:19 第13层：Jev card9@0.19 → card8。族母多段攻击(19、9×2)，火焰屏障+升为16格挡并每次受击反6伤，与铜质鳞片叠加，防御收益最大。
+  - 选项：card12=耸肩无视；card9=剑柄打击；card13=剑柄打击；card8=火焰屏障
+- 2026-09-25T22:22 第16层：Jev card8@0.20 → card11。Shrug It Off+ gives 11 block plus a draw for 1E, the most flexible per-turn defense vs boss's 19 and 9×2; a Flame Barrier is already upgraded.
+  - 选项：card11=耸肩无视；card8=剑柄打击；card12=剑柄打击；card9=火焰屏障
+- 2026-09-25T22:34 第29层：Jev card7@0.39 → card19。Upgrading Unmovable strengthens the core of this deck's blocking (16-block Flame Barrier doubles) for the long Insatiable attrition race; Pommel/Shrug gains are smaller.
+  - 选项：card19=坚定不移；card12=耸肩无视；card7=剑柄打击；card9=剑柄打击
+- 2026-09-25T23:07 第11层：Jev card9@0.04 → card13。撕裂升级后每次失去生命+2力量，是全局唯一成长引擎；与突破自伤和鱼人Beckon扣血协同，比单纯提升几张伤害牌更赢长线。
+  - 选项：card11=突破；card10=彼岸咆哮；card9=燃烧契约；card13=撕裂
+- 2026-09-25T23:20 第9层：Jev card9@0.28 → card11。升级燃烧把永久力量从2提到3，是整套牌唯一的成长来源；手册明确优先升级永久力量牌，其余只是小数值提升。
+  - 选项：card11=燃烧；card9=剑柄打击；card12=剑柄打击；card8=头槌
+- 2026-09-26T02:46 第12层：Jev card10@0.19 → card9。痛击升级后易伤 3 层、伤害更高，配合拆卸与旋风斩打神官长战收益最大；战斗专注只多抽 1 张。
+  - 选项：card9=痛击；card13=战斗专注；card10=耸肩无视；card14=耸肩无视
+- 2026-09-26T03:42 第32层：Jev card11@0.23 → card16。升级绯红披风：长线计时战每回合多3格挡，收益最高且与招架盾、格挡体系协同；其余升级只加少量伤害或数值。
+  - 选项：card10=岩石铠甲；card16=绯红披风；card11=剑柄打击；card15=巨像
+- 2026-09-26T04:50 第29层：Jev card8@0.36 → card17。Upgrading Inflame (2→3 permanent Strength) is the top priority for the Knowledge Demon grind; deck already relies on Strength scaling with many multi-hit attacks.
+  - 选项：card8=耸肩无视；card20=踩踏；card17=燃烧；card14=剑柄打击
+- 2026-09-26T06:22 第18层：Jev card10@0.11 → card19。恶魔之焰升级后每张消耗牌7→10伤害，是当前无力量牌组对知识恶魔最大的爆发提升；其余升级价值都更低。
+  - 选项：card15=岩石铠甲；card18=踩踏；card19=恶魔之焰；card10=剑柄打击
+- 2026-09-26T06:22 第18层：Jev card15@0.17 → card10。Upgrading Pommel Strike (our only draw card) adds a draw plus damage, speeding the cycle to Bash/Molten Fist/Demon Flame for the Knowledge Demon race.
+  - 选项：card15=岩石铠甲；card18=踩踏；card10=剑柄打击；card9=头槌
+- 2026-09-26T06:27 第27层：Jev card12@0.26 → card15。踩踏升级大幅提升对知识恶魔的速杀爆发（12→更高），符合12回合内击杀的boss计划；格挡已由绯红披风/挑衅/坚毅覆盖。
+  - 选项：card12=岩石铠甲；card15=踩踏；card17=踩踏；card18=耸肩无视
+- 2026-09-26T07:19 第27层：Jev card13@0.13 → card20。Demon Form 3E→2E is the biggest tempo gain; it's the deck's only permanent strength source and must land early every fight.
+  - 选项：card20=恶魔形态；card19=祭品；card13=薪火之源；card16=战斗专注
+- 2026-09-26T12:00 第25层：Jev card12@0.20 → card6。No strength in deck and Mini Cannon rewards upgrading an attack: Bash+ gives extra damage plus 3-turn Vulnerable, the key burst amplifier for Kaiser Crab and upcoming elites.
+  - 选项：card6=痛击；card7=战斗专注；card8=岩石铠甲；card12=耸肩无视
+- 2026-09-26T12:40 第27层：Jev card13@0.23 → card18。Pommel Strike+ upgrades to 10 dmg + draw 2 (plus Micro Cannon bonus): best repeatable damage and cycling for the Insatiable's sandpit damage race.
+  - 选项：card13=岩石铠甲；card19=耸肩无视；card15=狂宴；card18=剑柄打击
+- 2026-09-26T12:51 第40层：Jev card14@0.29 → card22。Battle Trance+ draws 4 for 0 energy, fueling multi-hit burst needed for Test Subject's 600 HP; one Stone Armor+ already covers plating.
+  - 选项：card22=战斗专注；card12=岩石铠甲；card17=耸肩无视；card14=狂宴
+- 2026-09-26T17:04 第40层：Jev card6@0.25 → card18。Pyre is the run's energy engine; upgrading it (cost down / more energy) pays off every remaining turn, far more than 3 block or a draw tweak.
+  - 选项：card18=薪火之源；card21=战斗专注；card8=岩石铠甲；card6=耸肩无视
+- 2026-09-26T17:06 第43层：Jev card11@0.15 → card20。0费抽4能最快挖到狱火/薪火之源/突破引擎，对上600血三阶段实验体的长战，过牌稳定性优于少量格挡或血量。
+  - 选项：card20=战斗专注；card8=岩石铠甲；card6=耸肩无视；card11=狂宴
+- 2026-09-26T17:22 第16层：Jev card12@0.28 → card9。Bash+ gives 3 Vulnerable and +2 damage — the deck's only Vulnerable source, directly powering the Vantom race; Offering+ merely saves a few HP once.
+  - 选项：card18=祭品；card9=痛击；card12=耸肩无视；card22=耸肩无视
+- 2026-09-26T19:16 第29层：Jev card6@0.30 → card19。祭品升级收益最大：0费抽5+2能量，27张牌组急需过牌节奏找关键牌打知识恶魔；痛击/耸肩/战斗专注升级都更小。
+  - 选项：card19=祭品；card6=痛击；card10=战斗专注；card14=耸肩无视
+- 2026-09-26T20:59 第8层：Jev card11@0.30 → card9。痛击是唯一易伤来源，升级后10伤3层易伤覆盖两个输出回合，放大旋风斩等攻击，对墨影幻灵收益最稳；祭品耗血、卡组更缺血量。
+  - 选项：card10=祭品；card9=痛击；card12=剑柄打击；card11=旋风斩
+- 2026-09-26T21:40 第18层：Jev card16@0.34 → card9。Shrug It Off+ adds 3 block each cycle in a long Knowledge Demon fight; block is the deck's weakest area. Pommel/Breakthrough/Taunt upgrades are marginal.
+  - 选项：card9=耸肩无视；card10=剑柄打击；card16=突破；card15=挑衅
+- 2026-09-26T21:40 第18层：Jev card10@0.12 → card13。Hemokinesis+ gives 20 damage for 1E — deck's best single-target hit, and each play triggers Rupture (+1 Str) and Inferno (6 AOE) vs the 379-HP boss.
+  - 选项：card10=剑柄打击；card16=突破；card15=挑衅；card13=御血术
+- 2026-09-26T23:20 第29层：Jev card5@0.12 → card9。本局无恶魔形态，永久力量是短板；燃烧升级+1力量放大拆卸/旋风斩/剑柄等多段输出，为帝皇蟹同回合秒双钳做准备。
+  - 选项：card2=耸肩无视；card5=踩踏；card9=燃烧；card10=燃烧
+- 2026-09-27T00:18 第27层：Jev card13@0.17 → card14。The Insatiable is a long fight; Unmovable upgrade doubles per-turn block (likely cheaper too), scaling defense with Shrug/Colossus while AOE handles damage.
+  - 选项：card14=坚定不移；card13=耸肩无视；card11=剑柄打击；card15=剑柄打击
+- 2026-09-27T04:54 第16层：Jev card13@0.00 → card18。升级火焰屏障：16格挡且每次被击反伤6，对Boss的19与9×2连击收益最大，兼顾本战生存与输出，二幕也多一张可靠格挡。
+  - 选项：card13=剑柄打击；card12=突破；card17=烙印；card18=火焰屏障
+- 2026-09-27T05:15 第9层：Jev card12@0.16 → card8。Upgrading Bash (10 dmg, 3 Vulnerable) boosts damage and extends our only Vulnerable source — key for the Vantom boss and the whole run's damage gap.
+  - 选项：card8=痛击；card9=战斗专注；card12=耸肩无视；card10=火焰屏障
+- 2026-09-27T05:32 第32层：Jev card8@0.12 → card17。薪火之源升级每回合多能量，直接补沙虫13/回合伤害缺口，还能喂重锤/双重打击；0费过牌与狂宴的升级收益远小于此。
+  - 选项：card17=薪火之源；card9=战斗专注；card8=狂宴；card6=剑柄打击
+- 2026-09-27T05:44 第44层：Jev card5@0.15 → card8。战斗专注升级后 0 费抽 4，最快找到重锤/恶魔形态，并给烘焙手套和消耗引擎更多燃料；按升级优先级它高于狂宴/剑柄打击。
+  - 选项：card8=战斗专注；card7=狂宴；card5=剑柄打击；card18=剑柄打击
+- 2026-09-27T06:24 第12层：Jev card7@0.00 → card9。Upgrade Breakthrough: repeatable 1-energy AoE hits both Kin followers plus priest, and its self-damage fuels Rupture strength.
+  - 选项：card7=剑柄打击；card9=突破；card15=突破；card11=彼岸咆哮
+- 2026-09-27T06:31 第18层：Jev card19@0.00 → card20。烙印升级把每张消耗牌变成+2力（配合撕裂每次+3力），是唯一永久成长牌，boss 321血长战收益最高。
+  - 选项：card19=剑柄打击；card14=突破；card18=突破；card20=烙印
+- 2026-09-27T06:31 第18层：Jev card19@0.00 → card14。突破是撕裂循环的主要输出来源，几乎每回合都打；升级每次多伤害，对沙虫限时战最实在。咆哮单次收益低。
+  - 选项：card19=剑柄打击；card14=突破；card18=突破；card10=彼岸咆哮
+- 2026-09-27T07:24 第9层：Jev card11@0.00 → card14。Shrug It Off+ gives 11 block plus a draw — most-played card; deck is block-starved for Matriarch's 19/18 hits, and Breakthrough AOE is useless single-target.
+  - 选项：card11=战斗专注；card14=耸肩无视；card15=突破；card13=坚毅
+- 2026-09-27T07:27 第16层：Jev card10@0.00 → card15。Inflame+ is 3 permanent Strength, played free on the sleeping boss's setup turns; multiplies across all 12 attacks. Single-target boss means AOE and draw upgrades matter less.
+  - 选项：card10=战斗专注；card17=踩踏；card15=燃烧；card13=突破
+- 2026-09-27T07:54 第18层：Jev card19@0.24 → card18。Dismantle+: 10×2 with Bash vulnerable, and Rupture strength boosts both hits — best scaling finisher for the 7-turn Insatiable damage race.
+  - 选项：card19=恶魔之焰；card15=剑柄打击；card18=拆卸；card17=跃跃欲试
+- 2026-09-27T10:21 第18层：Jev card13@0.24 → card19。战斗专注升级为0费抽4张，是手册明确的升级优先项；知识恶魔长战需过牌找力量与格挡，收益高于其余三张的数值微增。
+  - 选项：card19=战斗专注；card17=绯红披风；card13=剑柄打击；card9=头槌
 
-## event/choose（9 次）
-- 2026-09-24T07:14 第1层：Jev o1@0.16 → o2。Rare card early is huge for Ironclad; one Injury is minor and can be removed later.
-  - 选项：o0=钓鱼竿；o1=羽翼之靴；o2=沉重石板
-- 2026-09-24T07:25 第4层：Jev o1@0.04 → o0。Ironclad wants damage; Sharp 2 on an attack improves kill speed and boss fights more than block.
-  - 选项：o0=读下封底；o1=随便读个一段
-- 2026-09-24T07:32 第23层：Jev o0@0.21 → o1。5 HP is cheap at 79% HP; colorless card reward is stronger than a random card, and we have healing relics.
-  - 选项：o0=分享知识；o1=把它扯下来
-- 2026-09-24T07:38 第1层：Jev o1@0.08 → o2。Two relics early is huge value; the added Strike/Defend is a minor cost for a strong run-long boost.
-  - 选项：o0=卷轴箱；o1=涅奥的护符；o2=巨大扭蛋
-- 2026-09-24T07:41 第7层：Jev o0@0.29 → o1。Card removal is stronger long-term; deck has 15 cards with basics, trimming improves consistency for the whole run.
-  - 选项：o0=光之门；o1=暗之门
-- 2026-09-24T07:59 第13层：Jev o2@0.25 → o0。Ironclad deck is attack-heavy; Sharp 2 on an attack adds permanent damage, best value for this run.
-  - 选项：o0=读下封底；o1=随便读个一段；o2=读完整本书
-- 2026-09-24T08:07 第1层：Jev o0@0.32 → o1。Boss relic choice: extra draw and energy in every elite fight is strong for the whole run; card pack is random and weaker.
-  - 选项：o0=卷轴箱；o1=轰鸣海螺；o2=寻龙尺
-- 2026-09-24T08:10 第6层：Jev o0@0.31 → o1。Lose only 5 HP for a colorless card reward; colorless cards are strong and HP is healthy at 75%.
-  - 选项：o0=分享知识；o1=把它扯下来
-- 2026-09-24T08:26 第18层：Jev o2@0.02 → o0。Upgrading 4 cards permanently strengthens deck for whole run; other options are temporary or risky.
-  - 选项：o0=美味饼干；o1=烘焙手套；o2=南瓜蜡烛
+## selection/add（51 次）
+- 2026-09-24T07:23 第17层：Jev card13@0.08 → card8。Shrug It Off gives block plus card draw, strong defensive value for the boss fight ahead.
+  - 选项：card11=恶魔之焰；card8=耸肩无视；card13=火焰屏障；card0=双重打击
+- 2026-09-24T10:34 第15层：Jev card1@0.03 → card0。Taunt gives block and vulnerable, strong vs single boss; Breakthrough needs Rupture/AOE to outperform.
+  - 选项：card0=挑衅；card1=突破
+- 2026-09-24T13:23 第23层：Jev card0@0.02 → card3。Twin Strike+ gives reliable 14 dmg (21 with Bash vulnerable) in two hits—strips Vantom's Slippery and triggers 锁镰; Molten Fist duplicates Bash/Fist, Breakthrough costs HP at 8/67.
+  - 选项：card4=头槌+；card3=双重打击+；card2=熔融之拳+；card0=突破+
+- 2026-09-24T14:27 第4层：Jev card10@0.17 → card0。拆卸1费配合痛击易伤可打16伤，效率远超3费重锤；欺凌和防御价值更低。牌组攻多，需要高性价比输出。
+  - 选项：card0=拆卸；card5=重锤；card10=欺凌；card1=防御
+- 2026-09-24T14:28 第5层：Jev card1@0.14 → card9。拆卸 is 1E 8 damage, doubled to 16 with our Bash's Vulnerable; cheapest, most efficient addition vs clunky Bludgeon or weak Bully.
+  - 选项：card9=拆卸；card5=重锤；card1=欺凌；card0=痛击
+- 2026-09-24T14:30 第7层：Jev card3@0.16 → card6。Dismantle: 1E for 8, doubled to 16 with Bash vulnerable, two hits shred Vantom's Slippery; best early attack here.
+  - 选项：card6=拆卸；card8=重锤；card0=突破；card3=欺凌
+- 2026-09-24T15:05 第5层：Jev card0@0.35 → card5。薪火之源是S级能量牌，每回合额外能量滚雪球，指南明确无脑拿；能量牌多张不嫌多，其余选项收益低得多。
+  - 选项：card5=薪火之源；card0=耸肩无视；card1=双重打击；card2=邪眼
+- 2026-09-24T15:26 第17层：Jev card6@0.35 → card5。御血术 is the strongest pick: 15 damage for 1 energy, top-tier vs Act 2 elites/boss; deck already has vulnerable support and no 2-cost congestion.
+  - 选项：card5=御血术；card6=头槌；card3=欺凌；card0=痛击
+- 2026-09-24T17:03 第46层：Jev card3@0.18 → card4。Battle Trance: 0-cost draw 3 boosts consistency to find vulnerable/block key cards; draw is always welcome, and a third copy still beats duplicate attacks.
+  - 选项：card2=旋风斩；card4=战斗专注；card3=头槌+；card5=挑衅+
+- 2026-09-24T18:15 第30层：Jev card2@0.22 → card5。1E 主宰 fits our vulnerable/multi-hit deck: vuln plus strength-per-stack scaling, cheap enough to keep blocking; 3E 彼岸咆哮 clunky, relying on an unreliable 烙印 exhaust loop.
+  - 选项：card4=彼岸咆哮；card5=主宰；card2=预备打击；card0=防御
+- 2026-09-24T19:09 第28层：Jev card2@0.14 → card8。0-cost draw 4 (S-tier) adds the consistency a 26-card deck needs; deck already has ample attacks, and a second copy is still strong with 黄金印 energy.
+  - 选项：card2=剑柄打击+；card12=痛殴；card8=战斗专注+；card1=预备打击+
+- 2026-09-24T19:45 第29层：Jev card0@0.26 → card4。祭品是S级核心：0费回2能量抽3张，掉6血被恶魔之舌抵消，还能触发撕裂叠力量，收益远超其他选项。
+  - 选项：card4=祭品；card2=踩踏；card0=预备打击；card3=被遗忘的仪式
+- 2026-09-24T20:08 第48层：Jev card3@0.06 → card6。祭品+是S级0费牌：2能量抽5张，恶魔之舌把失去的6血回满，还触发撕裂加力量；Boss前最强。
+  - 选项：card6=祭品+；card15=踩踏；card3=旋风斩；card1=战斗专注
+- 2026-09-24T20:28 第22层：Jev card5@0.35 → card8。岿然不动 is a top-tier defensive card; deck has 18 attacks/4 skills, desperately needs block for act 1 boss. Exhausts, always useful.
+  - 选项：card8=岿然不动；card5=头槌；card4=双重打击；card0=挑衅
+- 2026-09-24T20:58 第19层：Jev card6@0.19 → card3。薪火之源是S级能量成长，无脑拿；与已有1张叠加后每回合双能量，加速25张牌组运转，胜于A级的上勾拳/耸肩无视。
+  - 选项：card3=薪火之源；card6=耸肩无视；card0=上勾拳；card1=御血术
+- 2026-09-24T22:10 第12层：Jev card1@0.39 → card5。Dismantle is the best 1-cost card: 16 damage if the enemy is vulnerable (Bash++ already in deck), and cheap enough to pair with blocks next turn.
+  - 选项：card5=拆卸；card0=巨像；card1=痛击+；card2=打击
+- 2026-09-24T22:40 第22层：Jev card8@0.35 → card4。第二张绯红披风每回合+7格挡，补齐偏薄的防御应对Boss与第2幕；战斗专注+与已有++重复且受抽牌限制，头槌已两张，无情猛攻偏弱。
+  - 选项：card4=绯红披风；card8=战斗专注+；card1=头槌；card6=无情猛攻
+- 2026-09-25T00:11 第5层：Jev card0@0.30 → card3。双重打击1费10伤，效率最高、破滑溜/多段吃力量，第1幕补前期输出最优；头槌稍逊。
+  - 选项：card0=预备打击；card7=头槌；card3=双重打击；card1=突破
+- 2026-09-25T05:08 第17层：Jev card4@0.27 → card0。Battle Trance is S-tier: 0-cost draw 3 fixes consistency in a bloated 23-card deck entering Act 2; a second copy is still strong.
+  - 选项：card4=踩踏；card7=剑柄打击；card0=战斗专注；card3=烙印
+- 2026-09-25T07:01 第6层：Jev card7@0.37 → card5。双段攻击契合已成的撕裂/狱火力量流，稳定放大力量收益；头槌需弃牌堆配合，预备打击仅临时增益，血墙拖慢输出。
+  - 选项：card6=头槌；card7=预备打击；card5=双重打击；card4=飞剑回旋镖
+- 2026-09-25T07:01 第6层：Jev card7@0.29 → card2。血墙与已有的撕裂、狱火联动：每次失去2生命即+1力量并对全场6伤害，同时提供16格挡补足防御，最契合当前自伤流。
+  - 选项：card6=头槌；card7=预备打击；card4=飞剑回旋镖；card2=血墙
+- 2026-09-25T07:06 第14层：Jev card4@0.23 → card2。血墙配狱火+撕裂：掉2血换来16格挡并触发狱火群伤6×2、撕裂+2力；熔融之拳已有1张，第二张边际低。
+  - 选项：card6=双重打击；card4=熔融之拳；card2=血墙；card0=防御
+- 2026-09-25T12:00 第4层：Jev card7@0.25 → card0。缺 AOE 是输局主因；突破 1 费对全体 9 伤，仅失 1 血，兼顾自伤流与清小怪，优先于单体。
+  - 选项：card0=突破；card7=预备打击；card6=飞剑回旋镖；card4=完美打击
+- 2026-09-25T12:18 第31层：Jev card0@0.37 → card6。0费永久+1力量的烙印是本局唯一成长源，对无厌沙虫持久战价值最高；预备打击与挑衅只是短期节奏。
+  - 选项：card6=烙印；card0=预备打击；card1=预备打击；card4=挑衅
+- 2026-09-25T12:20 第33层：Jev card1@0.37 → card2。战士已有充足挑衅与预备打击；双重打击两次结算可放大口红/烙印/预备打击的力量，对321血沙虫输出更高。
+  - 选项：card0=挑衅；card1=预备打击；card2=双重打击
+- 2026-09-25T12:58 第24层：Jev card4@0.30 → card1。双重打击配合打击木偶与燃烧：1费约16伤且吃力量翻倍，最契合无厌沙虫长战；挑衅牌组已有，完美打击随删牌贬值。
+  - 选项：card1=双重打击；card2=挑衅；card4=完美打击；card6=愤怒
+- 2026-09-25T13:41 第19层：Jev card2@0.26 → card3。火焰屏障：12格挡+反击，49血面对二幕精英与蟹王Boss最缺的是格挡；恶魔形态已提供伤害成长，稳定防守优先。
+  - 选项：card2=头槌；card3=火焰屏障；card1=熔融之拳；card4=打击
+- 2026-09-25T14:11 第22层：Jev card4@0.18 → card2。突破 is AOE for Kaiser Crab's two claws, and its 1 HP loss triggers 撕裂 for permanent strength — best synergy with this deck.
+  - 选项：card2=突破；card6=头槌；card0=闪电霹雳；card4=愤怒
+- 2026-09-25T15:33 第30层：Jev card0@0.07 → card3。头槌1E 9伤且能回收痛击++/熔融之拳++等关键牌，长战提升稳定性；突破已有两张、预备打击只加一回合力量，价值更低。
+  - 选项：card6=突破；card3=头槌；card5=预备打击；card0=熔融之拳
+- 2026-09-25T17:09 第30层：Jev card0@0.21 → card2。薪火之源是S级：+1能量/回合，最缺资源（滚石/彼岸咆哮都3费）；26血下3费零防御的彼岸咆哮太险，打击防御无价值。
+  - 选项：card0=打击；card1=防御；card2=薪火之源；card3=彼岸咆哮
+- 2026-09-25T17:16 第5层：Jev card0@0.14 → card1。牌组攻击过多(10)、非基础格挡为0，仅4张防御；把防御放顶保证首回合能挡伤，打击是牌组最差牌。
+  - 选项：card0=打击；card1=防御
+- 2026-09-25T17:23 第17层：Jev card1@0.16 → card0。痛击+配合纸蛙易伤增伤75%，是快速打到150血触发击晕的关键；打击+仅多3点伤害。
+  - 选项：card0=痛击+；card1=打击+
+- 2026-09-25T17:28 第20层：Jev card4@0.37 → card5。双重打击两段伤害吃燃烧力量与纸蛙易伤(×1.75)，是本池最高价值牌；头槌已有3张，欺凌/挑衅收益低，保证下回合抽到它推进斩杀。
+  - 选项：card1=头槌；card5=双重打击；card3=挑衅；card4=欺凌
+- 2026-09-25T17:42 第9层：Jev card0@0.14 → card1。卡组仅5张格挡、且打击是首要删除对象；加第5张防御比第5张打击更能提升对仪式兽与精英的生存（格挡稀缺）。
+  - 选项：card0=打击；card1=防御
+- 2026-09-25T18:06 第33层：Jev card4@0.24 → card9。Strength-stacked deck (Rupture/Inferno/In flame); Whirlwind is the best finisher, dumping energy into multi-hits to close the boss's remaining 106 HP next turn.
+  - 选项：card1=剑柄打击；card9=旋风斩；card4=耸肩无视+；card11=耸肩无视+
+- 2026-09-25T18:13 第4层：Jev card3@0.10 → card2。挑衅=6格挡+易伤，不安油灯可翻倍成2层易伤；本牌组缺格挡与增伤，瀑布巨兽慢战最需稳血，优先选它。
+  - 选项：card0=预备打击；card3=头槌；card1=双重打击；card2=挑衅
+- 2026-09-25T18:13 第4层：Jev card3@0.28 → card1。双重打击10伤/1费最高，多段吃力量与已有易伤/油灯增伤；牌组缺AOE与输出，比7伤预备打击和随机消耗的坚毅更稳。
+  - 选项：card0=预备打击；card3=头槌；card1=双重打击；card5=坚毅
+- 2026-09-25T19:12 第6层：Jev card4@0.34 → card2。Second AOE (Breakthrough) is the top need for The Kin boss's fast-growing followers; Hellraiser needs a thin strike deck we don't have.
+  - 选项：card2=突破；card4=地狱狂徒；card0=打击；card1=打击
+- 2026-09-25T19:21 第6层：Jev card0@0.14 → card1。痛击：力量+2下造成10伤并挂2层易伤，下回合配合打击(12)或熔融之拳(翻倍易伤)正好斩杀22血的地精佣兵。
+  - 选项：card9=双重打击；card0=放血；card1=痛击；card2=打击
+- 2026-09-25T19:55 第20层：Jev card1@0.10 → card0。熔融之拳：1费10伤，翻倍易伤配合痛击++与主宰可拿约6点力量，正好补本局力量缺口；消耗还能精简牌组，优于无惧疼痛。
+  - 选项：card4=无惧疼痛；card0=熔融之拳；card1=完美打击；card2=战栗
+- 2026-09-26T00:26 第5层：Jev card1@0.28 → card0。狱火已就位：突破自伤1点即触发狱火6点群伤，1费等于全场15点，补足第二张AOE，后期多敌战核心。
+  - 选项：card0=突破；card1=头槌；card2=血墙；card4=坚毅
+- 2026-09-26T03:17 第5层：Jev card1@0.39 → card0。痛击是最强的牌：为熔融之拳/易伤爆发铺路，放到抽牌堆顶可以下回合立即再用；打击和重振精神价值低得多。
+  - 选项：card0=痛击；card1=重振精神；card2=打击；card3=打击
+- 2026-09-26T06:19 第17层：Jev card0@0.13 → card2。拆卸吃本套易伤引擎(痛击++/熔融之拳)对易伤目标1费约24伤，是斩杀37血boss、压低自爆层数的最快手段，1费也接得上痛击++。
+  - 选项：card3=踩踏；card0=剑柄打击；card2=拆卸；card6=无情猛攻
+- 2026-09-26T06:24 第20层：Jev card0@0.28 → card2。拆卸+配合痛击/挑衅/熔融之拳的易伤，1费约20伤，补足速杀知识恶魔的爆发；打击/防御太弱，头槌已有1张。
+  - 选项：card0=防御；card1=打击；card2=拆卸+；card3=头槌
+- 2026-09-26T14:07 第13层：Jev card3@0.18 → card5。火焰屏障: 12 block plus per-hit retaliation shines vs the Kin's multi-hit attacks, preserving HP; also the 4th block card the run plan calls for.
+  - 选项：card5=火焰屏障；card2=双重打击；card3=无情猛攻；card0=挑衅
+- 2026-09-26T19:02 第9层：Jev card1@0.36 → card5。双打击是多段攻击，与预备打击的临时力量及后续力量成长配合最好；本局缺输出与Boss爆发，1费10伤效率高。
+  - 选项：card3=头槌；card5=双重打击；card4=挑衅；card1=熔融之拳
+- 2026-09-26T21:26 第21层：Jev card3@0.24 → card1。Boomerang is 3-hit strength scaling — the run's core need; with Inflame it out-damages all options and suits the single-target boss fight. Stomps already cover AOE.
+  - 选项：card6=突破；card5=头槌；card3=熔融之拳；card1=飞剑回旋镖
+- 2026-09-26T21:26 第21层：Jev card3@0.29 → card5。Headbutt: A-tier reusable 9 dmg that recurs key cards (Block Wall, Uppercut, Stomp). Deck already has 2 AOE, so skip Breakthrough/Thunderclap; Molten Fist exhausts.
+  - 选项：card6=突破；card5=头槌；card3=熔融之拳；card7=闪电霹雳
+- 2026-09-26T21:59 第7层：Jev card1@0.38 → card5。剑柄打击=1费9伤+抽牌，补过牌与稳定输出；已有2张头槌和1张旋风斩，AOE不缺，boss为单体，痛击已有。
+  - 选项：card5=剑柄打击；card1=旋风斩；card0=头槌；card3=痛击
+- 2026-09-27T10:04 第25层：Jev card1@0.09 → card4。Pommel Strike: cheap 9 damage plus draw, A-tier consistency for the 20-card deck ahead of the Insatiable clock; Bludgeon is too slow/expensive at 0.95 avg cost.
+  - 选项：card4=剑柄打击；card3=重锤；card1=巨像；card2=欺凌
+- 2026-09-27T10:14 第8层：Jev card2@0.20 → card7。飞剑回旋镖是力量多段核心，3×3吃力量加成兼作AOE，补牌组缺失的输出类型；头槌/预备打击/熔融之拳均已有1张，重复价值低。
+  - 选项：card0=头槌；card2=预备打击；card4=熔融之拳；card7=飞剑回旋镖
 
-## selection/choose（9 次）
+## selection/enchant（45 次）
+- 2026-09-24T07:59 第13层：Jev card6@0.20 → card8。熔融之拳翻倍易伤，配合痛击+爆发最高；附魔提升最大，消耗牌也值得投资。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=痛击+；card5=双重打击；card6=剑柄打击；card7=突破；card8=熔融之拳；card9=御血术
+- 2026-09-24T10:41 第21层：Jev card5@0.21 → card12。1费4段AOE，附魔增伤按打击段数放大收益最高，多敌战与力量/易伤流都吃满，优于单段牌。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=痛击；card4=头槌；card5=无情猛攻；card6=踩踏；card7=飞剑回旋镖；card8=彼岸咆哮；card9=剑柄打击；card10=突破；card11=恶魔之焰；card12=焚烧
+- 2026-09-24T11:15 第21层：Jev card10@0.16 → card9。剑柄打击+（10伤害抽2）是全牌组最强、使用频率最高的牌；名字含“打击”可被地狱狂徒免费重复打出，附魔收益最大且抽牌连锁更多触发。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=防御；card5=防御；card6=防御；card7=防御；card8=痛击+；card9=剑柄打击+；card10=旋风斩；card11=耸肩无视+；card12=挑衅；card13=上勾拳+；card14=放血；card15=痛殴；card16=熔融之拳；card17=岿然不动；card18=添柴；card19=预备打击；card20=双重打击；card21=地狱狂徒；card22=耸肩无视
+- 2026-09-24T14:20 第31层：Jev card10@0.16 → card11。双重打击+ 是最廉价的多段攻击，附魔加成按段数翻倍，且长期留用；怨恨需掉血、击打/防御会被删。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=痛击；card4=打击；card5=熔融之拳；card6=剑柄打击；card7=彼岸咆哮；card8=痛殴；card9=怨恨+；card10=无情猛攻+；card11=双重打击+；card12=头槌+
+- 2026-09-24T14:34 第14层：Jev card13@0.12 → card12。拆卸是长期保留的多段攻击，配合牌组大量易伤(挑衅x2、痛击+)每次附魔收益翻倍，最能放大任何正面附魔。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=防御；card6=防御；card7=防御；card8=防御；card9=痛击+；card10=头槌；card11=余烬；card12=拆卸；card13=重锤；card14=欺凌；card15=突破；card16=耸肩无视+；card17=怨恨；card18=挑衅；card19=撕裂；card20=挑衅；card21=愤怒
+- 2026-09-24T20:02 第39层：Jev card9@0.19 → card14。彼岸咆哮 once in the exhaust pile replays itself every turn, so any enchantment's bonus multiplies across the whole fight — the highest long-term value pick.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=痛击；card4=踩踏；card5=熔融之拳；card6=拆卸；card7=预备打击；card8=突破；card9=头槌+；card10=踩踏；card11=旋风斩；card12=双重打击；card13=上勾拳；card14=彼岸咆哮
+- 2026-09-24T20:32 第27层：Jev card11@0.19 → card6。双重打击有两段判定，附魔加成每段都生效，并同时受益于打击木偶与预备打击的力量加成；1费常用牌，收益最稳。
+  - 选项：card0=打击+；card1=打击+；card2=痛击+；card3=涅奥之怒；card4=愤怒；card5=头槌；card6=双重打击；card7=预备打击；card8=剑柄打击；card9=踩踏；card10=预备打击；card11=重锤；card12=拆卸；card13=双重打击；card14=头槌；card15=狂宴；card16=打击+；card17=彼岸咆哮；card18=剑柄打击
+- 2026-09-24T21:22 第43层：Jev card12@0.22 → card13。拆卸 1费双段攻击，本牌组易伤来源充足（痛击/上勾拳/熔融之拳），附魔伤害按每次攻击结算可翻倍收益，且是长期核心输出。
+  - 选项：card0=打击；card1=打击；card2=痛击+；card3=熔融之拳；card4=余烬；card5=上勾拳+；card6=剑柄打击；card7=双重打击；card8=御血术；card9=突破；card10=欺凌；card11=头槌；card12=无情猛攻+；card13=拆卸；card14=重锤；card15=彼岸咆哮+；card16=飞剑回旋镖；card17=预备打击；card18=恶魔之焰；card19=剑柄打击
+- 2026-09-24T21:38 第9层：Jev card11@0.24 → card7。愤怒0费且每场几乎必打、还会自我复制，附魔收益按打出频率最高；打击迟早被删，痛击/完美打击费用高收益低。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=剑柄打击；card7=愤怒；card8=彼岸咆哮；card9=预备打击；card10=熔融之拳；card11=完美打击
+- 2026-09-24T21:47 第18层：Jev card10@0.15 → card9。剑柄打击是本牌组最佳常用牌（9伤+抽1），一费、不消耗、整局保留，任何附魔都能持续放大收益；打击会被删，稀有牌多消耗。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=防御；card5=防御；card6=防御；card7=防御；card8=痛击；card9=剑柄打击；card10=彼岸咆哮；card11=预备打击；card12=熔融之拳；card13=完美打击；card14=战斗专注；card15=挑衅；card16=坚定不移；card17=坚毅；card18=狂宴
+- 2026-09-25T02:46 第24层：Jev card16@0.07 → card15。狱火+与撕裂体系保证每回合先掉血，0费怨恨必双段命中；附魔的加伤/力量收益按两段翻倍，且0费最常打出，长期收益最高。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=防御；card5=防御；card6=防御；card7=防御；card8=痛击+；card9=撕裂；card10=头槌；card11=扯碎；card12=熔融之拳；card13=耸肩无视；card14=恶魔之焰；card15=怨恨；card16=狱火+；card17=上勾拳；card18=恶魔之焰；card19=欺凌；card20=燃烧；card21=御血术；card22=彼岸咆哮；card23=上勾拳；card24=耸肩无视
+- 2026-09-25T04:46 第21层：Jev card12@0.11 → card11。Enchant the 0-cost multi-hit AOE Whirlwind+: any per-hit or damage bonus scales best with strength, Shuriken, Rupture self-damage, and Act 2 multi-enemy fights.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=御血术；card7=扯碎+；card8=突破；card9=上勾拳；card10=剑柄打击；card11=旋风斩+；card12=重锤
+- 2026-09-25T05:36 第22层：Jev card15@0.17 → card21。旋风斩+是牌组最强牌：0费多段群伤，伤害型附魔每段都被放大；单发牌只加一次，基础打击只配删牌。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=防御；card6=防御；card7=防御+；card8=防御+；card9=痛击+；card10=飞剑回旋镖；card11=拆卸；card12=熔融之拳；card13=燃烧；card14=上勾拳；card15=完美打击+；card16=双重打击；card17=燃烧契约；card18=预备打击；card19=痛殴；card20=剑柄打击；card21=旋风斩+；card22=愤怒
+- 2026-09-25T06:39 第34层：Jev card11@0.25 → card10。痛殴+ is the S-tier multi-hit workhorse: played repeatedly, scales with Demon Form/Shuriken strength and any per-hit enchant, best long-run value.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=突破+；card7=怨恨；card8=欺凌；card9=劫掠；card10=痛殴+；card11=熔融之拳+；card12=踩踏；card13=痛殴
+- 2026-09-25T06:41 第34层：Jev card11@0.27 → card7。怨恨0费几乎每回合都能打出，放血++/突破+/血墙++稳定触发本回合掉血的双击；恶魔形态与手里剑让每点附魔增益按段数翻倍，收益最高。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=突破+；card7=怨恨；card8=欺凌；card9=劫掠；card11=熔融之拳+；card12=踩踏；card13=痛殴
+- 2026-09-25T06:43 第34层：Jev card11@0.16 → card13。痛殴 hits twice: Demon Form strength and 手里剑 scale both hits, doubling the enchant's payoff. Remaining multi-hit attack, cheap and repeatable; matches prior picks.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=突破+；card8=欺凌；card9=劫掠；card11=熔融之拳+；card12=踩踏；card13=痛殴
+- 2026-09-25T08:26 第15层：Jev card0@0.39 → card1。Strength scales this attack-heavy deck's multi-hit and AOE cards; exhaust triggers are scarce, so upgrading/reducing Inflame beats Feel No Pain.
+  - 选项：card0=无惧疼痛；card1=燃烧
+- 2026-09-25T10:27 第22层：Jev card7@0.20 → card5。痛击是牌组唯一易伤来源且永不删，2费归0最省能量，稳定爆发最利于同回合双杀双钳。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=铁斩波；card7=剑柄打击；card8=突破；card9=熔融之拳；card10=怨恨；card11=狂宴；card12=双重打击
+- 2026-09-25T12:15 第24层：Jev card0@0.07 → card12。剑柄打击+打出频率最高，任何附魔（加伤/抽牌/减费）收益最大，且过牌有助弥补本局无力量成长。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=防御；card5=防御；card6=防御；card7=防御；card8=痛击+；card9=烙印；card10=愤怒；card11=双重打击；card12=剑柄打击+；card13=突破；card14=剑柄打击+；card15=预备打击；card16=头槌；card17=跃跃欲试；card18=挑衅；card19=祭品+；card20=战斗专注+；card21=燃烧契约+；card22=血墙+；card23=预备打击；card24=挑衅
+- 2026-09-25T13:01 第30层：Jev card6@0.21 → card7。双重打击双段攻击：锋利2每段+2即共+4，且与打击木偶、燃烧力量加成叠加翻倍，是长期留下的主输出；打击终将被删。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击+；card5=痛击+；card6=剑柄打击；card7=双重打击；card8=御血术；card9=突破；card10=剑柄打击；card11=剑柄打击；card12=双重打击
+- 2026-09-25T16:09 第24层：Jev card8@0.30 → card6。Howl replays itself every turn from the exhaust pile, so Sharp 2 adds +2 damage to all enemies every turn — far more total value than any single-hit card.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=彼岸咆哮+；card7=剑柄打击+；card8=旋风斩；card9=痛殴；card10=双重打击；card11=狂宴；card12=突破+
+- 2026-09-25T18:29 第29层：Jev card8@0.11 → card21。怨恨 0费双段攻击：狱火/绯红披风自伤几乎每回合触发两段，附魔(伤害类)加成翻倍且不耗能量；本局瓶颈正是伤害。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=防御；card4=防御；card5=防御；card6=防御；card7=痛击+；card8=剑柄打击；card9=狂宴；card10=挑衅；card11=双重打击；card12=火焰屏障；card13=黑暗之拥；card14=岩石铠甲+；card15=血墙；card16=狱火+；card17=绯红披风；card18=头槌；card19=突破；card20=耸肩无视；card21=怨恨；card22=燃烧契约；card23=祭品
+- 2026-09-25T22:27 第21层：Jev card9@0.30 → card5。Pommel Strike is a cheap keeper, played first each turn and auto-played by Hellraiser, so Vigor 8 recurs; Strikes get deleted.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=痛击+；card5=剑柄打击；card6=熔融之拳；card7=剑柄打击；card8=御血术；card9=闪电霹雳+
+- 2026-09-25T22:50 第14层：Jev card7@0.11 → card6。御血术 is our best repeatable 1E attack: +2 damage every play, and its self-damage triggers 狱火. Strikes get removed; 熔融之拳 exhausts.
+  - 选项：card0=打击+；card1=打击；card2=打击；card3=打击；card4=痛击；card5=预备打击；card6=御血术；card7=熔融之拳
+- 2026-09-25T23:35 第31层：Jev card19@0.24 → card6。剑柄打击+是牌组最常打的高质量攻击（10伤+抽2），附魔收益每回合复利；抽牌还能帮无厌沙虫找狂乱逃离。
+  - 选项：card0=防御；card1=防御；card2=防御；card3=防御；card4=痛击+；card5=头槌；card6=剑柄打击+；card7=闪电霹雳；card8=燃烧+；card9=剑柄打击+；card10=坚毅；card11=坚韧之环；card12=薪火之源+；card13=突破；card14=岩石铠甲+；card15=狱火；card16=愤怒；card17=势不可当；card18=突破；card19=究极打击；card20=放血
+- 2026-09-26T00:30 第9层：Jev card7@0.34 → card6。无休手斧每回合回到手牌，可反复吃到+2伤害，本场累积收益最高；打击将删、痛击/熔融之拳/突破每场只打一两次。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=无休手斧；card7=剑柄打击；card8=熔融之拳；card9=剑柄打击；card10=突破；card11=剑柄打击
+- 2026-09-26T01:31 第42层：Jev card8@0.18 → card13。拆卸在易伤下攻击两次，按段/按百分比的附魔收益翻倍；牌组有痛击、挑衅++供易伤，1费最常打出，而能量已充足不必给重锤减费。
+  - 选项：card0=打击；card1=打击；card2=痛击；card3=愤怒；card4=交锋；card5=预备打击；card6=无情猛攻；card7=踩踏；card8=究极打击；card9=预备打击；card10=御血术；card11=重锤；card12=双重打击；card13=拆卸
+- 2026-09-26T02:26 第11层：Jev card10@0.38 → card11。Twin Strike scales per-hit with Sharp and future strength, fitting the multi-hit strength plan; Strikes get deleted, Molten Fist/Neow's Fury exhaust away.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=涅奥之怒；card7=头槌；card8=欺凌；card9=熔融之拳；card10=预备打击；card11=双重打击
+- 2026-09-26T02:55 第20层：Jev card11@0.16 → card4。牌组短板是格挡；打击按计划优先删除，防御留队更久且每场都用，附魔在此最持久。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=防御；card5=防御；card6=防御；card7=防御；card8=痛击+；card9=御血术+；card10=旋风斩+；card11=预备打击+；card12=耸肩无视；card13=拆卸；card14=燃烧；card15=战斗专注；card16=耸肩无视；card17=突破；card18=痛殴；card19=剑柄打击；card20=彼岸咆哮；card21=放血；card22=恶魔之焰；card23=踩踏
+- 2026-09-26T02:58 第27层：Jev card6@0.23 → card5。Sharp adds damage per hit: on 0-cost Whirlwind+ every hit on both claws gains +2, exactly the burst needed to kill Kaiser Crab's pincers the same turn.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=痛击+；card4=御血术+；card5=旋风斩+；card6=预备打击+；card7=拆卸；card8=突破；card9=痛殴；card10=剑柄打击；card11=彼岸咆哮；card12=恶魔之焰；card13=踩踏
+- 2026-09-26T04:27 第29层：Jev card9@0.34 → card11。At 11 HP block is life; 血墙 (16 Block, loses 2 HP) triggers Rupture/Inferno and gains most from a cost/block enchant, unlike basics we'll delete.
+  - 选项：card0=打击；card1=打击；card2=防御；card3=防御；card4=防御；card5=防御；card6=痛击；card7=双重打击；card8=撕裂；card9=狱火；card10=无情猛攻；card11=血墙；card12=突破；card13=彼岸咆哮；card14=巨像；card15=挑衅；card16=彼岸咆哮；card17=痛殴；card18=火焰屏障；card19=坚毅；card20=挑衅；card21=血墙；card22=耸肩无视；card23=耸肩无视；card24=剑柄打击
+- 2026-09-26T05:01 第8层：Jev card5@0.24 → card7。Sharp on Twin Strike adds +2 per hit (+4 total) and doubles future strength scaling; Strikes will be removed, Bash is a clunky 2-cost.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=痛击；card5=突破；card6=御血术；card7=双重打击
+- 2026-09-26T09:58 第28层：Jev card3@0.19 → card8。彼岸咆哮+是全牌组最强卡：3费24群伤，消耗后回合末再触发一次，帝王蟹双钳战可翻倍收益，攻击/减费类附魔收益最大。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=防御；card4=防御+；card5=防御；card6=防御；card7=痛击；card8=彼岸咆哮+；card9=头槌；card10=耸肩无视+；card11=剑柄打击；card12=挑衅+；card13=战斗专注+；card14=燃烧契约；card15=邪眼；card16=地狱之刃；card17=绯红披风；card18=巨像；card19=杀灭；card20=头槌+
+- 2026-09-26T11:32 第30层：Jev card6@0.38 → card4。耸肩无视 is the best skill here: 1E, 8 block plus draw, played nearly every fight — the enchantment's per-play value is maximized, unlike Defends being deleted and 2E Flame Barrier.
+  - 选项：card0=防御；card1=防御；card2=防御；card3=防御；card4=耸肩无视；card5=挑衅；card6=火焰屏障；card7=坚毅
+- 2026-09-26T15:07 第31层：Jev card4@0.13 → card9。Enchant a 重锤: 3-cost 32-damage burst gains most from cost cut/damage boost, helping close the damage gap vs Knowledge Demon.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=痛击+；card5=剑柄打击；card6=飞剑回旋镖；card7=愤怒；card8=双重打击；card9=重锤；card10=头槌；card11=重锤；card12=彼岸咆哮
+- 2026-09-26T16:36 第5层：Jev card7@0.29 → card6。Enchant the only AOE (Breakthrough): Sharp adds +2 per enemy hit, and the Kin boss fight rewards killing the two cultists fast; strikes get deleted, Bash/Molten Fist benefit only single-target.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=突破；card7=熔融之拳
+- 2026-09-26T18:52 第20层：Jev card10@0.37 → card4。双重打击+ 是1费双段核心输出：附魔若加伤害则每段都吃双倍收益，且与力量/手里剑完美契合，优于单段牌与3费踩踏。
+  - 选项：card0=防御；card1=痛击；card2=预备打击+；card3=头槌；card4=双重打击+；card5=岩石铠甲；card6=踩踏；card7=巨像；card8=耸肩无视；card9=剑柄打击；card10=恶魔形态；card11=打击+；card12=熔融之拳
+- 2026-09-26T20:31 第21层：Jev card5@0.26 → card2。痛击++ is the Vulnerable engine played first in every fight; enchanting it boosts setup damage that feeds all multi-hit burst. Strikes get deleted and Molten Fist exhausts.
+  - 选项：card0=打击；card1=打击；card2=痛击+；card3=欺凌+；card4=飞剑回旋镖；card5=熔融之拳；card6=双重打击；card7=双重打击；card8=预备打击
+- 2026-09-26T20:58 第5层：Jev card5@0.36 → card6。锋利+2每段伤害对旋风斩最超值：多段AOE破墨影幻灵9层滑溜并随能量放大，且是本局长留的核心牌；打击将被删。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=旋风斩；card7=剑柄打击；card8=劫掠
+- 2026-09-26T22:11 第22层：Jev card20@0.35 → card15。完美契合很可能是费用-1：上勾拳2费→1费，13伤+虚弱+易伤，是我们最常打的核心牌，攻防兼顾且不会浪费（旋风斩0费反而吃不到降价）。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=防御；card6=防御；card7=防御；card8=防御；card9=痛击+；card10=头槌；card11=全身撞击；card12=狱火；card13=剑柄打击；card14=旋风斩；card15=上勾拳；card16=耸肩无视；card17=耸肩无视；card18=头槌；card19=剑柄打击；card20=燃烧；card21=祭品；card22=双重打击；card23=欺凌；card24=突破
+- 2026-09-26T22:15 第5层：Jev card7@0.33 → card6。剑柄打击是长期保留的1费输出兼过牌，每场打出次数远多于2费痛击；+2伤害收益最高，打击很快会被删，不值得附魔。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=剑柄打击；card7=头槌
+- 2026-09-27T01:17 第23层：Jev card7@0.39 → card6。双重打击是唯一多段攻击，与烘焙手套每回合+1力量和增伤类附魔叠加收益最高；即便附魔带消耗缺点，也不像突破那样毁掉AOE引擎。
+  - 选项：card0=打击；card1=打击；card2=打击+；card3=痛击+；card4=上勾拳；card5=熔融之拳；card6=双重打击；card7=突破；card8=欺凌；card9=闪电霹雳
+- 2026-09-27T05:24 第22层：Jev card8@0.19 → card10。双重打击+是牌组最高效输出（1费14伤、双段吃力量），每场必打；沙虫限时斩杀与三幕都需要它，其余打击/防御迟早删除。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=防御；card4=防御；card5=防御；card6=防御；card7=痛击+；card8=火焰屏障；card9=黑暗之拥；card10=双重打击+；card11=耸肩无视+；card12=剑柄打击；card13=闪电霹雳；card14=狂宴；card15=战斗专注；card16=挑衅；card17=怨恨；card18=与我一战！
+- 2026-09-27T07:23 第6层：Jev card0@0.00 → card6。Twin Strike stays in the final deck, is played constantly and multi-hit scales best with strength; Strikes get removed and Bash is a weak 2E card.
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击；card6=双重打击；card7=余烬；card8=双重打击；card9=突破
+- 2026-09-27T10:14 第9层：Jev card8@0.30 → card10。锋利2加在多段攻击收益最高：飞剑回旋镖3段各+2共+6，且是力量流核心多段/AOE，优于单段打击或痛击。
+  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=打击；card5=痛击+；card6=头槌；card7=熔融之拳；card8=预备打击；card9=剑柄打击；card10=飞剑回旋镖
+
+## map/route（44 次）
+- 2026-09-24T07:17 第7层：Jev n0@0.25 → n1。Equal route value; Unknown node offers better upside than RestSite for a healthy Ironclad with healing relic.
+  - 选项：n0=Monster(11.6)；n1=Monster(11.6)
+- 2026-09-24T07:28 第11层：Jev n1@0.18 → n0。At 14% HP, rest site is essential to survive; route value close and continuation still leads to shop.
+  - 选项：n0=RestSite(8.2)；n1=Monster(8.8)
+- 2026-09-24T07:32 第22层：Jev n0@0.04 → n1。Unknown node with safer continuation (Monster->RestSite) and no forced Elite; preserves HP for boss at 79%.
+  - 选项：n0=Monster(15.8)；n1=Unknown(15.8)
+- 2026-09-24T08:55 第13层：Jev n0@0.31 → n1。Both routes include one elite; fighting it first at 48 HP with Red Mask weak, a potion, and a rest site before boss beats taking chip damage from the monster first.
+  - 选项：n0=Monster(2.7)；n1=Elite(2.7)
+- 2026-09-24T09:20 第7层：Jev n1@0.12 → n0。78% HP is safe; use RestSite for kettlebell's permanent Strength (or upgrade) right before the guaranteed Elite, rather than gamble on an Unknown.
+  - 选项：n0=RestSite(17.8)；n1=Unknown(17.8)
+- 2026-09-24T09:26 第12层：Jev n1@0.05 → n0。At 19 HP, rest first to heal before the Act 1 boss; risking an immediate monster could end the run.
+  - 选项：n0=RestSite(6.4)；n1=Monster(7)
+- 2026-09-24T09:54 第3层：Jev n0@0.11 → n1。Full HP with Burning Blood; early Act 1 monster fight gives a needed attack card reward plus gold, safer than an unknown event for deck-building.
+  - 选项：n0=Unknown(18)；n1=Monster(18)
+- 2026-09-24T10:40 第20层：Jev n1@0.03 → n0。HP 77% with Burning Blood and Lizard Tail safety; deck already 24 cards, so event value (removal/relic) beats one more monster reward.
+  - 选项：n0=Unknown(16.2)；n1=Monster(16.2)
+- 2026-09-24T14:30 第8层：Jev n1@0.16 → n0。Both routes contain one elite; taking the monster first adds a card reward, then treasure relic before the elite — safer with this unupgraded deck at 69% HP.
+  - 选项：n0=Monster(18.9)；n1=Elite(18.9)
+- 2026-09-24T15:38 第13层：Jev n1@0.04 → n0。Higher route value; Unknown may be event or shop to save HP, and a RestSite still follows before the boss.
+  - 选项：n0=Unknown(8)；n1=Monster(7.4)
+- 2026-09-24T15:46 第18层：Jev n1@0.25 → n0。Full HP with Burning Blood; highest route value and three straight fights give card rewards/gold to build act 2 power.
+  - 选项：n0=Monster(32.3)；n1=Monster(30.4)；n2=Monster(25.9)
+- 2026-09-24T20:20 第10层：Jev n2@0.23 → n1。HP 88%, Act 1, only one elite so far; take guaranteed relic/card, then shop. Deck has Strike Dummy and high attacks, elite is low risk.
+  - 选项：n0=Shop(10.5)；n1=Elite(14.4)；n2=Unknown(15.2)
+- 2026-09-25T04:36 第15层：Jev n0@0.29 → n1。Both rest sites are equal value; take the column-5 path and rest before the Act 1 boss at 66% HP.
+  - 选项：n0=RestSite(2.5)；n1=RestSite(2.5)
+- 2026-09-25T07:43 第1层：Jev n1@0.30 → n0。Equal route value; the Unknown node offers event/shop upside while the first Monster gives a needed early card reward, and Burning Blood heals after.
+  - 选项：n0=Monster(27.9)；n1=Monster(27.9)；n2=Monster(23.9)
+- 2026-09-25T13:23 第1层：Jev n0@0.05 → n1。Identical node type and route_value (32.68); column 4 sits nearer the boss column 3, less lateral drift for later rest/elite routing.
+  - 选项：n0=Monster(32.68)；n1=Monster(32.68)
+- 2026-09-25T17:38 第1层：Jev n1@0.30 → n0。Same top route value (29.48); starts with a fight for early attack cards, then an Unknown node for flexibility before more monsters.
+  - 选项：n0=Monster(29.48)；n1=Monster(29.48)；n2=Monster(23.58)
+- 2026-09-25T19:43 第5层：Jev n0@0.04 → n1。保底战斗收益+后续商店能花掉135金删打击/买格挡牌（当前0格挡牌），再休息；HP 89%打普通战安全，路线价值几乎持平。
+  - 选项：n0=Unknown(27.5)；n1=Monster(26.4)
+- 2026-09-25T23:27 第18层：Jev n1@0.30 → n0。Highest route value and leads to a Shop for strike removal/potions; HP 85% handles early monsters. Avoid n2's -13 route.
+  - 选项：n0=Monster(28.99)；n1=Monster(28.12)；n2=Monster(-13.31)
+- 2026-09-26T00:02 第18层：Jev n3@0.17 → n2。Nearly top route value, and the Unknown node breaks up a 3-fight chain, saving HP for the Kaiser Crab boss where two AOE-worthy claws await.
+  - 选项：n0=Monster(23.46)；n1=Monster(22.11)；n2=Monster(29.29)；n3=Monster(29.7)
+- 2026-09-26T02:11 第18层：Jev n1@0.25 → n2。路线价值最高(33.56)；HP 86% 可支撑连续两场战斗，且第三节点为 Unknown，有机会转商店/休息，优于纯三连战。
+  - 选项：n0=Monster(29.43)；n1=Monster(31.82)；n2=Monster(33.56)
+- 2026-09-26T02:32 第18层：Jev n1@0.23 → n2。Highest route value with a shop break (delete Strike/buy block) before more fights; HP 94% makes early combats safe, and 3 back-to-back fights (n1) is riskier.
+  - 选项：n0=Monster(-24.13)；n1=Monster(23.28)；n2=Monster(23.58)
+- 2026-09-26T04:50 第29层：Jev n1@0.26 → n0。At 100% HP with a rest site before the boss, an Act 2 elite relic is worth it; route value 5.3 beats Unknown's gamble.
+  - 选项：n0=Elite(5.3)；n1=Unknown(4)
+- 2026-09-26T06:24 第22层：Jev n1@0.14 → n0。Unknown path leads into an Act 2 elite at 78% HP with no permanent strength yet; Monster->RestSite keeps HP safe and heals before the Knowledge Demon prep.
+  - 选项：n0=Monster(19.67)；n1=Unknown(20.07)
+- 2026-09-26T08:23 第2层：Jev n0@0.24 → n1。Floor 2 with 73% HP: take the Monster fight for a needed attack card reward and gold; Burning Blood heals it back. Unknown events risk HP loss at A7.
+  - 选项：n0=Unknown(27.4)；n1=Monster(27.4)
+- 2026-09-26T09:43 第11层：Jev n1@0.23 → n0。Fight first for a needed card reward (no strength/AOE yet), then rest site right after; avoids the Elite path at 69% HP.
+  - 选项：n0=Monster(12)；n1=RestSite(12)；n2=Unknown(5.86)
+- 2026-09-26T13:20 第23层：Jev n0@0.33 → n1。At 12 HP an Unknown fight can kill; RestSite heals first, and its route then reaches Elite/Treasure with recovery secured.
+  - 选项：n0=Unknown(-7.8)；n1=RestSite(-8)
+- 2026-09-26T13:24 第6层：Jev n1@0.07 → n0。60% HP, no strength, one block card — optional elites need >80%; rest heals to ~72 and still reaches another RestSite before the boss.
+  - 选项：n0=RestSite(16.8)；n1=Elite(17.25)
+- 2026-09-26T15:27 第10层：Jev n1@0.15 → n0。HP 74% is below the 80% elite rule; only 2 block cards and Vantom demands high entry HP. Rest path also has another RestSite before boss.
+  - 选项：n0=RestSite(12.4)；n1=Elite(14.2)
+- 2026-09-26T22:20 第11层：Jev n1@0.08 → n0。84% HP with a rest site right after the elite; deck lacks powers/AOE and needs an elite relic before Soul Fysh. Monster route adds little.
+  - 选项：n0=Elite(11.78)；n1=Monster(11.78)
+- 2026-09-26T23:03 第21层：Jev n0@0.02 → n1。Low HP (43%) and code rates Unknown slightly better; an event often costs less HP than a fight while still offering upgrades/relics for the Strength plan.
+  - 选项：n0=Monster(-21.92)；n1=Unknown(-20.01)
+- 2026-09-27T00:27 第36层：Jev n0@0.27 → n1。Monster gives a guaranteed card reward + gold toward the shop while the deck still lacks a strength source for Aeonglass; HP 65% with 4 block cards and AOE can handle act 3 fights.
+  - 选项：n0=Unknown(28.08)；n1=Monster(27.75)
+- 2026-09-27T01:46 第5层：Jev n1@0.19 → n0。Monster gives a card reward, then rest before elite; unknown chain risks HP-taxing events, and 81% HP supports an elite route.
+  - 选项：n0=Monster(22.82)；n1=Unknown(23.5)
+- 2026-09-27T02:36 第2层：Jev n0@0.00 → n1。Shop with 114 gold: remove a Strike (100) to trim deck, break up fight chain, and route_value is marginally higher; early removal beats a random Unknown event.
+  - 选项：n0=Unknown(27.56)；n1=Shop(27.98)
+- 2026-09-27T02:38 第6层：Jev n0@0.00 → n1。Elite at 74% HP with zero block cards is too risky; shop path leads to Rest then Elite, so I can heal to full before fighting it.
+  - 选项：n0=Elite(19.2)；n1=Shop(20.72)
+- 2026-09-27T02:39 第8层：Jev n0@0.00 → n1。HP 74%<80% and deck has zero block cards; A8 elites kill there. Unknown route is safer, both reach Treasure.
+  - 选项：n0=Elite(20.6)；n1=Unknown(19.2)
+- 2026-09-27T02:46 第18层：Jev n0@0.00 → n1。Highest route value (6) and continuation Monster→Unknown→Shop gives a shop for card removal/block after one fight, avoiding three-combat chains.
+  - 选项：n0=Monster(3.81)；n1=Monster(6)；n2=Monster(2.67)
+- 2026-09-27T02:49 第21层：Jev n0@0.00 → n1。94% HP: a Monster fight is safe with Burning Blood, and we need card rewards (Whirlwind/block) plus gold. Unknown risks a low-value event with only 37 gold.
+  - 选项：n0=Unknown(21.24)；n1=Monster(21.24)
+- 2026-09-27T02:52 第29层：Jev n0@0.00 → n1。31 gold makes the shop nearly dead; Unknown offers a fight/event/relic and has better route value. Both paths hit the same Elite and Rest.
+  - 选项：n0=Shop(-7.2)；n1=Unknown(-6.2)
+- 2026-09-27T04:02 第3层：Jev n0@0.00 → n1。Both are Monster nodes; n1 has higher route value (23.62) and same continuation. HP 76% is fine for early Act 1 fights.
+  - 选项：n0=Monster(21.74)；n1=Monster(23.62)
+- 2026-09-27T06:18 第3层：Jev n0@0.00 → n1。Shop breaks up n0's three-fight run, and 126 gold buys a Strike removal — our top deck priority before Kin boss.
+  - 选项：n0=Monster(21.32)；n1=Shop(23.32)
+- 2026-09-27T06:24 第12层：Jev n0@0.00 → n1。69% HP handles a normal fight; Monster->Shop->Monster gives card reward plus a shop to remove a Strike (135 gold), safer than double Unknown events before the Kin boss.
+  - 选项：n0=Unknown(9.8)；n1=Monster(10.4)
+- 2026-09-27T06:31 第18层：Jev n0@0.00 → n1。Highest route value (27.34); HP 93% so the Monster is fine, and Unknown+Shop continuation beats n2's back-to-back combats before a shop.
+  - 选项：n0=Monster(-20.94)；n1=Monster(27.34)；n2=Monster(24.84)；n3=Monster(-26.29)
+- 2026-09-27T06:32 第20层：Jev n0@0.00 → n1。Shop with 146 gold lets me delete a Strike (deck still thick, only 3 block cards) and buy frontload/block for the Insatiable race; avoids the Monster->Monster->Monster chain at 80% HP.
+  - 选项：n0=Monster(28.2)；n1=Shop(27.49)
+- 2026-09-27T07:25 第11层：Jev n0@0.00 → n2。HP 74% is below the 80% elite bar, so skip Elite; Unknown (route_value 9.29) beats RestSite, and code already forces a pre-boss rest while we still need AOE/Inflammation drafts.
+  - 选项：n0=Elite(1.9)；n1=RestSite(7.7)；n2=Unknown(9.29)
+
+## selection/choose（30 次）
 - 2026-09-24T07:14 第1层：Jev card1@0.03 → card0。恶魔之焰是强力AOE爆发，配合消耗体系成长性高，早期清怪效率远超另两张。
   - 选项：card0=恶魔之焰；card1=主宰；card2=倾泻
 - 2026-09-24T07:20 第13层：Jev card0@0.23 → card1。Upgrading 薪火之源 gives permanent energy each turn, far stronger than a minor Headbutt damage bump.
@@ -165,29 +3297,127 @@
   - 选项：card0=预备打击；card1=打击；card2=剑柄打击；card3=痛击
 - 2026-09-24T08:43 第25层：Jev card1@0.16 → card2。Dark Shackles: free turn-long -9 strength shuts down boss/elite big hits, exhausts so no bloat. At 28 HP defense beats more damage.
   - 选项：card0=急躁；card1=金斧；card2=黑暗镣铐
+- 2026-09-24T09:28 第17层：Jev card0@0.39 → card2。燃烧: 1费永久+2力量，无依赖、契合壶铃/烙印与锁镰多段输出；残酷依赖易伤(仅痛击来源)，壁垒3费且无壁垒配合，均较次。
+  - 选项：card0=残酷；card1=壁垒；card2=燃烧
+- 2026-09-24T09:50 第33层：Jev card0@0.10 → card1。At 33% HP (31/94), stacking end-of-turn damage would kill me fast; Laziness caps plays but is survivable, matching the low-HP rule for Knowledge Demon.
+  - 选项：card0=瓦解；card1=懒惰
+- 2026-09-24T10:06 第17层：Jev card0@0.15 → card1。生产制造: 0费换2能量，配合无惧疼痛(消耗得格挡)与恶魔之焰爆发，弥补牌组2费牌能量缺口；计策慢速，心灵震慑伤害递减。
+  - 选项：card0=计策；card1=生产制造；card2=心灵震慑
+- 2026-09-24T10:38 第17层：Jev card2@0.18 → card0。焚烧: 1费四段AOE，补多段伤害打滑溜/群怪，搭配撕裂与库奈成长；全身撞击无壁垒，劫掠抽攻击不值。
+  - 选项：card0=焚烧；card1=全身撞击；card2=劫掠
+- 2026-09-24T11:58 第17层：Jev card1@0.38 → card2。武装是A级：5格挡+升级手牌（如岿然不动/痛击），本牌组0强化且走向Boss，攻防兼备最稳；战栗F级，狂怒仅一般。
+  - 选项：card0=战栗；card1=狂怒；card2=武装
+- 2026-09-24T12:12 第19层：Jev card1@0.12 → card0。Sword Boomerang is multi-hit, scaling with Inflame+ strength and Pen Nib; our block is adequate, and act 2 bosses need more damage.
+  - 选项：card0=飞剑回旋镖；card1=岩石铠甲
+- 2026-09-24T12:23 第1层：Jev card1@0.07 → card0。痛殴 is S-tier: 1-cost multi-hit attack that consumes a strike to grow, strong scaling for the whole run; AOE can be picked up later.
+  - 选项：card0=痛殴；card1=原始力量；card2=焚烧
+- 2026-09-24T12:48 第33层：Jev card0@0.18 → card1。放血是A级能量牌：32张厚牌组配硫磺力量流急需能量加速，0费灵活；自伤3点可控，原始力量/倾泻太情境化。
+  - 选项：card0=原始力量；card1=放血；card2=倾泻
+- 2026-09-24T13:12 第17层：Jev card0@0.12 → card2。放血是0费能量牌，A级，当前缺能量且已有燃烧契约；3点生命代价低，能放大锁镰与高费回合。战栗被痛击完爆，第二张契约不如放血。
+  - 选项：card0=战栗；card1=燃烧契约；card2=放血
+- 2026-09-24T13:23 第22层：Jev card2@0.25 → card1。坚定不移为S级格挡核心：本牌组约10张格挡牌（邪眼、火焰屏障、跃跃欲试、耸肩），首格挡翻倍收益巨大；绯红披风自伤在当前2血下太危险。
+  - 选项：card0=绯红披风；card1=坚定不移；card2=好勇斗狠
+- 2026-09-24T14:21 第33层：Jev card1@0.26 → card0。Deck already has heavy exhaust synergy (坚毅/燃烧契约/邪眼/无惧疼痛/彼岸咆哮); 黑暗之拥 is the payoff engine and S-tier here. 杂耍 is a trap, 岩石铠甲 just mediocre.
+  - 选项：card0=黑暗之拥；card1=杂耍；card2=岩石铠甲
+- 2026-09-24T14:24 第33层：Jev card0@0.28 → card1。HP 28: 瓦解's 7 damage per turn is lethal within 4 turns; 3-card cap is manageable with tea-set +1 energy and 2-cost block cards.
+  - 选项：card0=瓦解；card1=懒惰
+- 2026-09-24T15:15 第17层：Jev card0@0.34 → card1。Exhaust deck with Dark Embrace and Feel No Pain; Stoke turns hand into block, draw, and fuels 彼岸咆哮.
+  - 选项：card0=武装；card1=添柴；card2=连环拳
+- 2026-09-24T15:24 第14层：Jev card1@0.19 → card0。上勾拳提供13伤害+虚弱+易伤，攻防兼备；与熔融之拳(易伤翻倍)协同，牌组缺防御，A级卡优先。
+  - 选项：card0=上勾拳；card1=预备打击；card2=劫掠
+- 2026-09-24T21:09 第33层：Jev card1@0.23 → card2。Free Uppercut gives 13 damage plus weak (cuts boss damage) and vulnerable for our vuln-synergy deck; saves the most energy (2E).
+  - 选项：card0=预备打击；card1=御血术；card2=上勾拳；card3=主宰；card4=打击
+- 2026-09-25T08:12 第15层：Jev card2@0.23 → card1。Transform the worst card: a Strike (5 copies, only 6 damage). Keep Dismantle and Shrug It Off; the random replacement upgrades deck quality.
+  - 选项：card0=拆卸；card1=打击；card2=耸肩无视；card3=防御+；card4=防御
+- 2026-09-25T08:18 第1层：Jev card2@0.14 → card0。烙印: 0费永久力量成长，可消耗沉重石板带来的受伤诅咒；壁垒前期太慢，地狱狂徒需保留打击且随机目标，成型要求高。
+  - 选项：card0=烙印；card1=壁垒；card2=地狱狂徒
+- 2026-09-25T15:37 第35层：Jev card2@0.15 → card0。Upgrading 防御 gives +3 block per play (5→8), the biggest value among these; 御血术/头槌 only gain +1 damage, and block is critical for the 永世沙漏 boss.
+  - 选项：card0=防御；card1=御血术；card2=头槌
+- 2026-09-26T09:03 第14层：Jev card1@0.21 → card0。升级血墙（16→20 格挡）是本副核心防御牌，收益远超升级迟早要删的基础防御；HP 84% 时锻造优于休息。
+  - 选项：card0=血墙；card1=防御
+- 2026-09-26T20:54 第1层：Jev card0@0.24 → card1。祭品是S级核心：0费得2能量抽3张，启动与过牌极强，早拿早滚雪球；坚定不移需格挡体系，原始力量不稳定。
+  - 选项：card0=坚定不移；card1=祭品；card2=原始力量
+- 2026-09-26T23:26 第1层：Jev card0@0.26 → card1。狂宴：1费10伤可立即用，斩杀永久+3最大生命，是长期成长与生存核心；AOE/格挡可后续再补。
+  - 选项：card0=焚烧；card1=狂宴；card2=岿然不动
 
-## selection/upgrade（4 次）
-- 2026-09-24T07:10 第18层：Jev card16@0.21 → card9。痛击升级后易伤3层，显著提升全牌组输出，优先于单卡数值升级。
-  - 选项：card10=狂宴；card9=痛击；card12=耸肩无视；card16=剑柄打击
-- 2026-09-24T07:31 第18层：Jev card10@0.07 → card14。祭品升级后0费抽5，是强力引擎；其余选项收益小，优先升级它。
-  - 选项：card14=祭品；card5=痛击；card8=岩石铠甲；card10=御血术
-- 2026-09-24T07:33 第25层：Jev card11@0.14 → card9。岩石铠甲升级后覆甲翻倍，长期防御收益最高，优于小幅伤害提升。
-  - 选项：card9=岩石铠甲；card6=御血术；card4=双重打击；card11=欺凌
-- 2026-09-24T08:26 第18层：Jev card13@0.32 → card16。恶魔形态升级后每回合+4力量，是后期核心成长引擎，优先升级收益最大。
-  - 选项：card13=耸肩无视；card16=恶魔形态；card14=踩踏；card12=地狱狂徒
+## selection/take into my hand（20 次）
+- 2026-09-24T21:11 第33层：Jev card0@0.29 → card1。愤怒 is a free 0-energy 6 damage attack; with 2 energy it adds damage without competing with other plays, best immediate value on a non-attack turn.
+  - 选项：card0=预备打击；card1=愤怒；card2=飞剑回旋镖
+- 2026-09-24T23:42 第15层：Jev card1@0.23 → card0。0 energy this turn: only the 0-cost 深谋远虑 is playable; it draws 2 cards, possibly free attacks/block, while the 1-cost options would be dead picks against the 19 attack.
+  - 选项：card0=深谋远虑；card1=发现；card2=潦草急就
+- 2026-09-25T02:55 第17层：Jev card0@0.13 → card2。1E Inflame gives permanent +2 strength this boss fight, cheap and boosts all multi-hit attacks; 13 incoming is tankable at 82 HP. Hellraiser/Juggernaut cost 2E with no immediate payoff.
+  - 选项：card0=势不可当；card1=地狱狂徒；card2=燃烧
+- 2026-09-25T06:00 第42层：Jev card1@0.34 → card0。0 energy, no incoming attack: 烙印 is free and boosts damage; 狂怒 only gives unnecessary block, 耸肩 is unplayable.
+  - 选项：card0=烙印；card1=狂怒；card2=耸肩无视
+- 2026-09-25T07:52 第17层：Jev card1@0.17 → card0。No incoming attack and only 1 energy: 放血 turns 3 HP into 2 energy for immediate damage (more attacks/Feed), while Rage's block is wasted and 连环拳 is unaffordable.
+  - 选项：card0=放血；card1=狂怒；card2=连环拳
+- 2026-09-25T09:54 第17层：Jev card2@0.11 → card1。Incoming attack is 0 (boss asleep), so block is wasted; free 挑衅's vulnerable boosts this turn's attacks and cheapest if played.
+  - 选项：card0=火焰屏障；card1=挑衅；card2=岿然不动
+- 2026-09-25T11:56 第48层：Jev card0@0.36 → card2。+3 energy this turn is the best immediate swing: enables full 22 block or burst damage; 邪眼 gives only 8 block, and draw-3 is unusable at 0 energy.
+  - 选项：card0=战斗专注；card1=邪眼；card2=被遗忘的仪式
+- 2026-09-25T15:39 第36层：Jev card0@0.25 → card1。上勾拳 13伤+虚弱把21攻降到约16+易伤放大本回合其余攻击；5能量下即时价值最高，优于御血术的裸15伤。
+  - 选项：card1=上勾拳；card0=御血术；card4=被遗忘的仪式；card2=愤怒
+- 2026-09-25T18:04 第33层：Jev card0@0.07 → card2。Rupture deck: second Inferno doubles turn-start HP-loss triggers — +2 strength/turn and ~30 free damage vs Knowledge Demon's 30 heal; auto-damage beats card-limited Inflame.
+  - 选项：card0=无惧疼痛；card1=燃烧；card2=狱火
+- 2026-09-25T20:03 第33层：Jev card1@0.11 → card2。None block the 49 incoming; Unrelenting gives the biggest burst (14 damage) and makes the next attack free, maximizing this turn's output.
+  - 选项：card0=预备打击；card1=暴走；card2=无情猛攻
+- 2026-09-25T23:32 第24层：Jev card0@0.29 → card1。With vulnerable on the enemy (deck has Bash++/Thunderclap), Colossus halves the 19 hit to ~10 plus 4 block — best immediate mitigation; True Grit's random exhaust risks a key power.
+  - 选项：card0=坚毅；card1=巨像；card2=战栗
+- 2026-09-26T02:08 第17层：Jev card1@0.37 → card0。No incoming attack, so block is dead; 3 Vulnerable amplifies our Uppercut/Bash/Molten Fist for 3 turns, while Shrug's draw risks pulling Beckon.
+  - 选项：card0=战栗；card1=耸肩无视；card2=地狱之刃
+- 2026-09-26T04:31 第33层：Jev card2@0.06 → card1。5 HP vs 13 incoming: 妙计 gives 0-cost 4 block plus a draw, keeping 2 energy for more block; the others offer no immediate defense.
+  - 选项：card0=闪亮登场；card1=妙计；card2=飞溅
+- 2026-09-26T14:28 第17层：Jev card1@0.18 → card2。Vantom's 9 Slippery makes every hit deal 1, so cheapest hit wins: 0-cost Bully strips a layer for free, keeping 3 energy for more attacks this turn.
+  - 选项：card0=无情猛攻；card1=预备打击；card2=欺凌
+- 2026-09-26T15:43 第27层：Jev card0@0.37 → card1。狱火已在场：撕裂每回合开始掉血换+1力量，喂多段攻击；残酷需先垫易伤，黑暗之拥2费且无消耗源，二者无即时价值。
+  - 选项：card0=残酷；card1=撕裂；card2=黑暗之拥
+- 2026-09-26T18:45 第9层：Jev card0@0.35 → card2。0 energy means none are playable now; Cruelty is cheapest (1E) and best immediate value if energy appears, between 14 HP and only 7 incoming.
+  - 选项：card0=坚定不移；card1=地狱狂徒；card2=残酷
+- 2026-09-26T22:06 第17层：Jev card0@0.35 → card2。跃跃欲试 scales with my 2 Strength (Inflame): 15+10=25 block, fully negating the 17 hit at no HP cost; more and cheaper than 血墙's 16 block (+2 HP) and 重振精神's small block.
+  - 选项：card0=血墙；card1=重振精神；card2=跃跃欲试
+- 2026-09-27T06:39 第29层：Jev card17@0.00 → card10。Breakthrough+ deals 26 total to both mites for 1 energy, triggers self-damage synergy, and leaves 2 energy for more plays this turn.
+  - 选项：card17=重锤；card10=突破+；card11=踩踏；card13=燃烧+
+- 2026-09-27T08:31 第17层：Jev card0@0.21 → card1。4 hits strip 4 Slippery layers for 1 energy — best turn-1 play vs Vantom; single big hits only remove 1 layer each.
+  - 选项：card0=完美打击；card1=焚烧；card2=欺凌
+- 2026-09-27T10:24 第21层：Jev card0@0.23 → card1。痛殴 1E deals ~14 (8 plus an exhausted Strike) and leaves 2E to block the 9 incoming; Whirlwind spends all 3E for only ~15.
+  - 选项：card0=旋风斩；card1=痛殴；card2=灰烬打击
 
-## map/route（3 次）
-- 2026-09-24T07:17 第7层：Jev n0@0.25 → n1。Equal route value; Unknown node offers better upside than RestSite for a healthy Ironclad with healing relic.
-  - 选项：n0=Monster(11.6)；n1=Monster(11.6)
-- 2026-09-24T07:28 第11层：Jev n1@0.18 → n0。At 14% HP, rest site is essential to survive; route value close and continuation still leads to shop.
-  - 选项：n0=RestSite(8.2)；n1=Monster(8.8)
-- 2026-09-24T07:32 第22层：Jev n0@0.04 → n1。Unknown node with safer continuation (Monster->RestSite) and no forced Elite; preserves HP for boss at 79%.
-  - 选项：n0=Monster(15.8)；n1=Unknown(15.8)
+## rest/choose（16 次）
+- 2026-09-24T09:20 第8层：Jev o2@0.16 → o1。HP 78% is safe with Burning Blood; heal mostly overheals. Before elites/boss, upgrading Bash or a key attack beats a small +1 strength.
+  - 选项：o0=休息；o1=锻造；o2=锻炼
+- 2026-09-24T09:45 第28层：Jev o0@0.19 → o2。HP 70% is safe at A0 with Burning Blood; permanent +1 strength scales all run, synergizes with Red Skull and multi-hit attacks better than one upgrade.
+  - 选项：o0=休息；o1=锻造；o2=锻炼
+- 2026-09-24T16:32 第28层：Jev o0@0.32 → o1。HP 71% is safe; the 44-point heal overcaps at 98, wasting Royal Pillow. Upgrading Bash boosts vulnerable, amplified by wax Paper Phrog for the act 1 boss.
+  - 选项：o0=休息；o1=锻造；o2=挖掘
+- 2026-09-25T03:02 第24层：Jev o0@0.38 → o2。能量最稀缺：添火等于未来5场战斗每回合+1能量，覆盖精英与boss；59血有鲜血药水兜底，单张升级收益远不如它。
+  - 选项：o0=休息；o1=锻造；o2=添火
+- 2026-09-26T01:49 第25层：Jev o0@0.28 → o2。牌组零力量来源，永久+1力量配合15张攻击与易伤长期收益最高；69%血且boss前仍有休息点，回血可留到那时。
+  - 选项：o0=休息；o1=锻造；o2=锻炼
+- 2026-09-26T03:58 第47层：Jev o0@0.28 → o1。满血105/105，休息完全浪费；boss前升级关键牌（如力量/易伤核心或高伤害单卡）价值远高，且本局升级数偏低。
+  - 选项：o0=休息；o1=锻造
+- 2026-09-26T04:50 第29层：Jev o0@0.15 → o1。At full HP (68/68) healing is wasted entirely; upgrade a key power (Inflame/block) instead before the Act 2 boss.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-26T08:46 第8层：Jev o0@0.42 → o1。HP 55% is above the 50% rest threshold, next node is a normal monster, and two rest sites remain before the boss; a permanent upgrade (Bash/attack) helps the Waterfall Giant damage race more than 24 H
+  - 选项：o0=休息；o1=锻造
+- 2026-09-26T15:04 第28层：Jev o0@0.06 → o1。离知识恶魔伤害差得多，先升级能力牌（剃刀牙不会升级能力）；前方还有休息点可回血，63% 血不打精英。
+  - 选项：o0=休息；o1=锻造
+- 2026-09-26T21:04 第16层：Jev o0@0.03 → o1。满血无伤，休息浪费；升级核心牌（如剑柄打击/旋风斩）提升对墨影幻灵的输出与破滑溜能力。
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T02:52 第28层：Jev o0@0.00 → o1。68% HP, another rest before boss; Demon Form+ (2→3 Str/turn) is the key scaling for the 408-HP Kaiser Crab fight, and helps interim fights too.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T04:07 第9层：Jev o0@0.00 → o1。60% HP, next node is Treasure, another rest before boss; smith Bash for 3 vulnerable — our only damage multiplier for the Matriarch burst.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T04:51 第9层：Jev o0@0.00 → o1。HP 60% and next node is Treasure; 1-2 rest sites remain before the boss, so bank the upgrade now and heal at the last rest site.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T04:53 第16层：Jev o0@0.00 → o1。Heal 24 caps at 80 HP (only +10 effective); smithing a key attack adds permanent damage for the 222 HP boss.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T05:15 第11层：Jev o0@0.40 → o1。75% HP, two rest sites still ahead before boss; forced Monster next is survivable. Upgrade a key card now — deck lacks damage scaling for Vantom's 9 Slippery.
+  - 选项：o0=休息；o1=锻造
+- 2026-09-27T06:24 第12层：Jev o0@0.00 → o1。69% HP is above rest threshold and another rest sits before the boss; upgrade Rupture/Whirlwind to scale and kill Kin faster.
+  - 选项：o0=休息；o1=锻造
 
-## selection/add（1 次）
-- 2026-09-24T07:23 第17层：Jev card13@0.08 → card8。Shrug It Off gives block plus card draw, strong defensive value for the boss fight ahead.
-  - 选项：card11=恶魔之焰；card8=耸肩无视；card13=火焰屏障；card0=双重打击
-
-## selection/enchant（1 次）
-- 2026-09-24T07:59 第13层：Jev card6@0.20 → card8。熔融之拳翻倍易伤，配合痛击+爆发最高；附魔提升最大，消耗牌也值得投资。
-  - 选项：card0=打击；card1=打击；card2=打击；card3=打击；card4=痛击+；card5=双重打击；card6=剑柄打击；card7=突破；card8=熔融之拳；card9=御血术
+## selection/remove（2 次）
+- 2026-09-25T00:34 第18层：Jev card3@0.19 → card8。势不可当2费回报慢，牌组无格挡体系支撑；其余三张是即时伤害/AOE/高效输出，进第2幕更实用。
+  - 选项：card3=双重打击；card6=突破；card5=御血术；card8=势不可当
+- 2026-09-25T00:34 第18层：Jev card6@0.37 → card3。双重打击 unupgraded is weakest attack (10 dmg); returns upgraded as 7×2 and scales with future strength.
+  - 选项：card3=双重打击；card6=突破；card5=御血术；card4=剑柄打击
