@@ -735,6 +735,24 @@ describe("event", () => {
     expect(shown(mustDecision(plan(hpEvent(64, 80, [...smaller, options[1]!], 2))))).toEqual(["o0", "o1", "o2"]);
   });
 
+  it("the Lantern Key is returned for the gold below 80% HP (X8HF F21 55/80 -> 5; ZWX5 F28; 4V5T F23)", () => {
+    const lantern = (hp: number) => ({
+      ...hpEvent(hp, 80, []),
+      event: {
+        event_id: "THE_LANTERN_KEY", title: "灯火钥匙", description: "", is_finished: false,
+        options: [
+          { index: 0, text_key: "THE_LANTERN_KEY.pages.INITIAL.options.RETURN_THE_KEY", title: "交还钥匙", description: "获得[blue]100[/blue][gold]金币[/gold]。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          { index: 1, text_key: "THE_LANTERN_KEY.pages.INITIAL.options.KEEP_THE_KEY", title: "留下钥匙", description: "战斗来取得钥匙。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+        ],
+      },
+    });
+    const low = mustDecision(plan(lantern(55)));
+    expect(low.kind === "act" && low.intent).toEqual({ action: "choose_event_option", option_index: 0 });
+    expect(low.kind === "act" ? low.rationale : "").toMatch(/Mysterious Knight/);
+    // 64/80 is exactly 80%: the models may choose.
+    expect(shown(mustDecision(plan(lantern(64))))).toEqual(["o0", "o1"]);
+  });
+
   it("HP guard: nothing is removed when every option costs HP", () => {
     const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
     expect(shown(decision)).toEqual(["o0", "o1"]);

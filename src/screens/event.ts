@@ -103,6 +103,17 @@ export function eventOptionScore(
   return Math.round(score * 10) / 10;
 }
 
+/** The Lantern Key event (act 2): keep the key and fight for it, or return it for gold. */
+export const LANTERN_KEY_EVENT = "THE_LANTERN_KEY";
+/** HP share of max below which the Lantern Key is returned for the gold (the lessons' rule, 90% -> 80%). */
+export const LANTERN_KEY_MIN_HP = 0.8;
+
+/** The Lantern Key option that starts the fight ("留下钥匙": 「战斗来取得钥匙。」). */
+function isLanternKeyFight(option: Record<string, unknown>): boolean {
+  const text = `${str(option["text_key"])} ${str(option["title"])} ${str(option["description"])}`;
+  return /KEEP_THE_KEY|留下钥匙|keep the key|战斗|fight/i.test(text) && !/金币|gold/i.test(str(option["description"]));
+}
+
 /** How long a finished frame of the previous floor's event is waited out before it is clicked anyway. */
 export const STALE_EVENT_WAIT_MS = 10_000;
 
@@ -159,6 +170,16 @@ export function planEvent(env: DecisionEnv): Decision | null {
       const why = eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null);
       if (why) excluded.set(option, why);
     });
+  }
+  // The Lantern Key: keeping it is a fight with the Mysterious Knight (108 HP, Strength 6, Plating 6: an
+  // elite), paid with an unplayable Quest card and a card reward, not a relic. Three times a model kept
+  // it for "a relic" (4V5T F23 -28, ZWX5 F28 -47, X8HF F21 55 -> 5 HP): below LANTERN_KEY_MIN_HP of max
+  // HP code returns it for the gold, and no model is asked.
+  if (eventId === LANTERN_KEY_EVENT && maxHp > 0 && hp < maxHp * LANTERN_KEY_MIN_HP) {
+    const keep = unguarded.filter((option) => !excluded.has(option) && isLanternKeyFight(option));
+    if (keep.length > 0 && unguarded.some((option) => !excluded.has(option) && !keep.includes(option))) {
+      for (const option of keep) excluded.set(option, `keeping the key is an elite-strength fight (Mysterious Knight) at ${hp}/${maxHp} HP, below ${Math.round(LANTERN_KEY_MIN_HP * 100)}%`);
+    }
   }
   const pool = unguarded.filter((option) => !excluded.has(option));
   const guardNote = [...excluded].map(([option, why]) => `${str(option["title"])}: ${why}`).join("; ");

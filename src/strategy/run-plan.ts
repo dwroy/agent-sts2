@@ -199,10 +199,12 @@ export function planSavesPotion(plan: RunPlan | null | undefined, potionId: stri
   const roles = plan?.savePotions ?? [];
   if (roles.length === 0) return false;
   if (roles.includes("any")) return true;
+  // By id as well as text: the Dexterity Potion reads 「获得{DexterityPower}点敏捷」 and matched no role
+  // (GZ24 F8: drunk on an elite's T1 while the run plan kept [block, weak]); Regen is healing over turns.
   const role: PotionRole | null =
     /STRENGTH|FLEX/.test(potionId) ? "strength" :
-    /回复|heal|恢复/i.test(text) ? "heal" :
-    /格挡|block|无实体|intangible/i.test(text) ? "block" :
+    /REGEN|BLOOD_POTION|FAIRY/.test(potionId) || /回复|heal|恢复|再生|regen/i.test(text) ? "heal" :
+    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE/.test(potionId) || /格挡|block|无实体|intangible|敏捷|dexterity/i.test(text) ? "block" :
     /虚弱|weak/i.test(text) ? "weak" :
     /伤害|damage/i.test(text) ? "damage" : null;
   return role !== null && roles.includes(role);
