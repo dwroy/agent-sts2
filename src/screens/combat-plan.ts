@@ -28,7 +28,7 @@ import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, typ
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { floorsToBoss, planSavesPotion } from "../strategy/run-plan.js";
-import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
+import { fightKey, fightPlanJson, OFFENSIVE_POTIONS, planFit, planOffersPotion, planPotionCost, planPotionUse, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
@@ -120,14 +120,27 @@ export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolea
 export const BOSS_POTION_COST = 4;
 const BOSS_POTIONS_PER_TURN = 1;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
-/** Potions that add damage: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
-const OFFENSIVE_POTIONS = new Set([
-  "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
-  "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
-]);
 /** Potion text that blunts an enemy hit (the only kind a plan's "big_hit" applies to). */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
+
+/**
+ * Kill-first enemy when no fight plan names one, keyed by an enemy in the fight. The Queen: her Torch
+ * Head Amalgam is a minion, so MINION_CHIP (turn-solver.ts) valued damage into it at 25% and code
+ * hit the Queen while the Amalgam dealt every hit we took (CWU9 F48 T1-T3: 39 into the Queen, Amalgam
+ * alive to T9; ZPPV, CAYK). The Kin need no entry: the chip already sends damage to the priest, whose
+ * death ends the fight (WYF0 F17).
+ */
+export const DEFAULT_FOCUS: Record<string, string> = { QUEEN: "TORCH_HEAD_AMALGAM" };
+
+export function defaultFocus(combat: Record<string, unknown>): string | null {
+  const living = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false).map((enemy) => str(enemy["enemy_id"]));
+  for (const id of living) {
+    const focus = DEFAULT_FOCUS[id];
+    if (focus && living.includes(focus)) return focus;
+  }
+  return null;
+}
 
 /** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
 function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
@@ -247,8 +260,11 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       // Any Strength already, not just this turn's Buff intent (6A36: Sludge Spinner's Rage +3 every
       // third turn went to Strength 9 while damage stayed at hallway weight). A Buff move anywhere in
       // the cycle was too broad: 56 of 101 enemies, most of whose buffs are not Strength.
+      // The Queen's Buff (Burn Bright for Me) buffs her Amalgam, not herself (CWU9 F48: T3-T9 Buff only,
+      // every hit taken from the Amalgam): read as her scaling it outweighed the kill-first bonus.
       scaling:
         str(enemy["enemy_id"]) !== "WATERFALL_GIANT" &&
+        str(enemy["enemy_id"]) !== "QUEEN" &&
         (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
@@ -488,7 +504,12 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
   memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
   const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
   if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
-  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0);
+  // Throwing Axe replays the fight's first card, and Withering Presence counts the replay while
+  // cards_played_this_turn does not (XWPV F48: every Wither came one card earlier than counted; T7's
+  // plan stopped at two cards "before the 3rd adds a Wither", the 2nd added it). Counted from the start:
+  // before any card the first one is already two.
+  const axe = asArray(asRecord(env.state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + (axe ? 1 : 0);
   return { every, played, damage: memo.witherDamage };
 }
 
@@ -555,6 +576,19 @@ export function livingEnemySignature(raw: Record<string, unknown>): string {
  * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
  * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
  */
+/** Frantic Escapes still to play this fight: hand, draw pile and discard pile (agent_view lines). */
+export function franticEscapesLeft(raw: Record<string, unknown>, hand: CardModel[]): number {
+  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
+  let count = hand.filter((card) => card.cardId === "FRANTIC_ESCAPE").length;
+  for (const pile of [view["draw"], view["discard"]]) {
+    for (const entry of asArray(pile).map(asRecord)) {
+      if (str(asArray(entry["card_ids"])[0]) !== "FRANTIC_ESCAPE") continue;
+      count += Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(entry["line"]))?.[1] ?? 1);
+    }
+  }
+  return count;
+}
+
 export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
   if (!decision) return decision;
   const combat = asRecord(env.state.raw["combat"]);
@@ -610,8 +644,15 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
     const deep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter >= 2;
     if (kept.some((plan) => !plan.outcome.winsFight && deep(plan))) kept = kept.filter(deep);
   }
-  if (enemies.some((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0)) {
-    const asleep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sleepCost <= 0;
+  // Asleep only (Lagavulin Matriarch: one HP lost wakes it and loses 2-3 sleep turns, 1K5G). Slumber
+  // (Slumbering Beetle) drops by 1 per hit and wakes a turn early at most: its sleep cost stays a score
+  // penalty (RC9A F27 T1: the filter removed every Howl from Beyond line, the only AoE; the bowlbugs
+  // lived to T6 and the beetle woke at full HP anyway).
+  const sleepers = enemies.filter((enemy) => (enemy.asleep ?? 0) > 0);
+  if (sleepers.length > 0) {
+    const hitsSleeper = (plan: Plan) =>
+      sleepers.some((enemy) => (plan.outcome.enemyHpAfter.find((after) => after.index === enemy.index)?.hp ?? enemy.hp) < enemy.hp);
+    const asleep = (plan: Plan) => plan.outcome.winsFight || plan.outcome.sleepCost <= 0 || !hitsSleeper(plan);
     if (kept.some((plan) => !plan.outcome.winsFight && asleep(plan))) kept = kept.filter(asleep);
   }
   return kept;
@@ -713,6 +754,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
+    tender: powerAmount(player, "TENDER_POWER"),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -797,11 +839,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   const bigHit = nowIncoming - playerSim.block >= Math.max(12, playerSim.hp * 0.25);
   // Several enemies can share the id (CWMP F7: four Phantasmal Gardeners, index 0 was always taken
   // while the plan's Enlarge eel sat at 19 HP for six turns): the lowest-HP one of them, re-read each turn.
-  const focusIndex = fightPlan?.focus
+  const focusId = fightPlan?.focus ?? defaultFocus(combat);
+  const focusIndex = focusId
     ? numOrNull(
         asArray(combat["enemies"])
           .map(asRecord)
-          .filter((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === fightPlan.focus)
+          .filter((enemy) => enemy["is_alive"] !== false && str(enemy["enemy_id"]) === focusId)
           .sort((a, b) => num(a["current_hp"]) - num(b["current_hp"]))[0]?.["index"],
       )
     : null;
@@ -828,7 +871,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               potion.name,
               potion.slot,
               potion.valid_targets,
-              free || planCost(potion.potion_id)?.free
+              // The plan's "free" does not lift the run plan's boss keep (WB02 F29: a Block Potion tagged
+              // big_hit in a hallway went free, the +20 skipped, drunk 4 floors before the boss).
+              free || (planCost(potion.potion_id)?.free && !keptForBoss(potion.potion_id, potion.text))
                 ? 0
                 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0) + (keptForBoss(potion.potion_id, potion.text) ? RUN_PLAN_SAVE_COST : 0),
             ),
@@ -866,13 +911,25 @@ function planTurn(env: DecisionEnv): Decision | null {
   // potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on hallway
   // lethals; the boss was entered with 1 of 3 slots filled).
   const drinksPotion = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+  // A burst potion's turn: the line wins the fight or kills a real enemy (both crab claws together), or
+  // HP is low (6HRZ F33 T1: the Energy Potion kept for the double-claw kill drunk on a guarded T1 line;
+  // R2H1 F33 T2: in the HP guard's replacement line).
+  const killsRealEnemy = (plan: Plan): boolean => {
+    const dead = (enemy: EnemySim) => (plan.outcome.enemyHpAfter.find((after) => after.index === enemy.index)?.hp ?? enemy.hp) <= 0;
+    const real = enemies.filter((enemy) => enemy.hp > 0 && !enemy.minion && !enemy.illusion);
+    const together = real.filter((enemy) => enemy.crabRage || enemy.reattach);
+    if (together.length > 0 && together.some(dead) && !together.every(dead)) return false;
+    return real.some(dead);
+  };
+  const burstPays = (plan: Plan): boolean =>
+    plan.outcome.winsFight || killsRealEnemy(plan) || pressed || (playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.3);
   const drinksKeptPotion = (plan: Plan) =>
     fightPlan !== null &&
     plan.steps.some((step) => {
-      const use = step.cardId.startsWith("POTION:") ? fightPlan.potions[step.cardId.split(":")[1] ?? ""] : undefined;
+      const use = step.cardId.startsWith("POTION:") ? planPotionUse(fightPlan, step.cardId.split(":")[1] ?? "") : undefined;
       // A potion the plan keeps for a big hit is kept on the turns before it (MK1N F33 T2: the Block
       // Potion planned for the T4 Laser drunk on T2; WLY1).
-      return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed);
+      return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed) || (use === "burst" && !burstPays(plan));
     });
   // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
   // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
@@ -899,6 +956,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       const kept = solved.plans.filter(worth);
       if (kept.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: kept };
     }
+  }
+  // Code's own rank 1 respects the plan's kept potions too, not only the HP guard's replacements (WB02
+  // F33 T1: Fire Potion "as finisher" drunk on the Buff turn; 6HRZ, NMLV, R2H1): lines drinking one
+  // off its moment are dropped while a surviving line without it exists. Not on a costly or pressed
+  // turn, below 30% HP, or with the Sandpit at 1.
+  const sandpitOne = enemies.some((enemy) => enemy.hp > 0 && enemy.sandpit === 1);
+  if (fightPlan !== null && !pressed && !costly && !sandpitOne && playerSim.hp >= playerSim.maxHp * 0.3) {
+    const keep = solved.plans.filter((plan) => plan.outcome.winsFight || !drinksKeptPotion(plan));
+    if (keep.length < solved.plans.length && keep.some((plan) => !plan.outcome.dies)) solved = { ...solved, plans: keep };
   }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
@@ -945,7 +1011,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
   // 3. Code-decided cases.
-  if (best.outcome.winsFight) {
+  // Not with Tender on us: a lethal it makes one short is a turn of the Hunter Killer's hits (LSWU F21 T5:
+  // 6/126 left, dead at 13 HP). The line still ranks first below; it only loses the shortcut.
+  if (best.outcome.winsFight && playerSim.tender === 0) {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
@@ -1024,7 +1092,32 @@ function planTurn(env: DecisionEnv): Decision | null {
   const hallwayGuard =
     (kind === "monster" || kind === "unknown") && (actNumber >= 2 || (state.run?.ascension ?? 0) >= 5) && playerSim.hp < playerSim.maxHp * 0.6;
   const hallwayGuardSlack = Math.max(6, playerSim.hp * 0.15);
-  const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
+  // Which steps of a line are the plan's setup, with the Vulnerable the line's own earlier steps apply:
+  // Bash then Dominate is setup, Dominate first is not (WR2Y F33 T1).
+  const lineSetup = (plan: Plan): { setup: boolean[]; early: string[] } => {
+    const vulnerable = new Map(enemies.map((enemy) => [enemy.index, enemy.vulnerable]));
+    const early: string[] = [];
+    const setup = plan.steps.map((step) => {
+      const vulnerableBefore = step.target === null ? 0 : vulnerable.get(step.target) ?? 0;
+      const model = cardFor(step, hand);
+      if (model && model.vulnerable > 0) {
+        if (model.target === "all") for (const [index, stacks] of vulnerable) vulnerable.set(index, stacks + model.vulnerable);
+        else if (step.target !== null) vulnerable.set(step.target, vulnerableBefore + model.vulnerable);
+      }
+      if (step.cardId === "MOLTEN_FIST" && step.target !== null && vulnerableBefore > 0) vulnerable.set(step.target, (vulnerable.get(step.target) ?? 0) + vulnerableBefore);
+      if (fightPlan === null || !fightPlan.setup.includes(step.cardId)) return false;
+      if (step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") {
+        if (vulnerableBefore === 0) early.push(step.name);
+        return vulnerableBefore > 0;
+      }
+      return setupStep(step);
+    });
+    return { setup, early };
+  };
+  const setupCount = (plan: Plan) => {
+    const { setup } = lineSetup(plan);
+    return new Set(plan.steps.filter((_, index) => setup[index]).map((step) => step.cardId)).size;
+  };
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
   // crab every turn) was traded twice for 6 HP and never played; the crabs died at 7 and 38 HP left.
@@ -1036,6 +1129,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
   const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // The Insatiable: the Sandpit eats us at 0 whatever the HP, so HP the guard saves buys nothing once
+  // the boss's HP over the turns left (Sandpit + Frantic Escapes still to play) is more than the best
+  // line deals (WB02 F33: the guard swapped 4 lines, ~60 damage for ~35 HP; MAHA lost by 1 HP). The
+  // guard then only keeps lines that do not die this turn (already all that are offered).
+  const sandpitNow = Math.min(...enemies.filter((enemy) => enemy.hp > 0 && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!));
+  const sandpitRaceLost =
+    Number.isFinite(sandpitNow) &&
+    bossHpLeft / Math.max(1, sandpitNow + franticEscapesLeft(state.raw, hand)) > Math.max(0, ...surviving.map((plan) => plan.outcome.damageDealt));
   // Damage into enemies that are neither minions nor illusions.
   const realDamage = (plan: Plan): number =>
     enemies
@@ -1092,7 +1193,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     // Racing the Waterfall Giant's eruption, damage is the defence (KG0E F17: the guard swapped four
     // lines, ~66 damage, one to a 0-damage turn; the boss healed and the eruption outgrew us).
-    if (raceEruption) guarded = null;
+    if (raceEruption || sandpitRaceLost) guarded = null;
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -1125,7 +1226,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const after = plan.outcome.enemyHpAfter.find((entry) => entry.index === focusIndex);
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
-  const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
+  const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan), lineSetup(plan)) } : {});
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   options.forEach((plan, index) => {
@@ -1328,7 +1429,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
       const raceKept = proposed !== null && winsRace(picked, proposed);
-      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
+      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption || sandpitRaceLost) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
       const rank = options.indexOf(plan) + 1;

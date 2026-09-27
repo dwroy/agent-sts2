@@ -169,10 +169,44 @@ function stateAfter(type: string, at: RouteState, act: number): RouteState {
   }
 }
 
-type Weights = (type: string, at: RouteState) => number;
+/** Node weight at a projected state; `row` gives the node's own floor (elite timing, floors to boss). */
+type Weights = (type: string, at: RouteState, row: number) => number;
+
+/**
+ * Each Elite that cannot be avoided after a route's likely death (PFBK F18: the truncation dropped
+ * them, and a no-branch line with forced elites on F25/F27/F29 scored above routes with one; KEMS
+ * F18). -15 each when the run plan says to avoid elites.
+ */
+export const FORCED_ELITE_AFTER_DEATH = 10;
+export const FORCED_ELITE_AFTER_DEATH_AVOID = 15;
+
+/** Fewest Elite nodes on any path from this node's children to the end of the map (memoised). */
+function minElitesAhead(node: MapNode, nodes: Map<string, MapNode>, memo: Map<string, number>): number {
+  const nodeKey = key(node.row, node.col);
+  const cached = memo.get(nodeKey);
+  if (cached !== undefined) return cached;
+  let best = Infinity;
+  for (const child of node.children) {
+    const childNode = nodes.get(key(child.row, child.col));
+    if (!childNode) continue;
+    best = Math.min(best, (childNode.type === "Elite" ? 1 : 0) + minElitesAhead(childNode, nodes, memo));
+  }
+  const value = best === Infinity ? 0 : best;
+  memo.set(nodeKey, value);
+  return value;
+}
 
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
-function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>): number {
+function continuation(
+  node: MapNode,
+  at: RouteState,
+  nodes: Map<string, MapNode>,
+  weights: Weights,
+  act: number,
+  memo: Map<string, number>,
+  deathElite = FORCED_ELITE_AFTER_DEATH,
+  eliteMemo: Map<string, number> = new Map(),
+): number {
   const left = stateAfter(node.type, at, act);
   const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}`;
   const cached = memo.get(nodeKey);
@@ -183,9 +217,15 @@ function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>
     const childNode = nodes.get(key(child.row, child.col));
     if (!childNode) continue;
     // A likely death ends the route: nothing after it counts (4UWK F22: at 9/80 the Unknown room into a
-    // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7).
-    const here = weights(childNode.type, left);
-    best = Math.max(best, here <= LIKELY_DEATH ? here : here + continuation(childNode, left, nodes, weights, act, memo));
+    // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7), except
+    // the elites it cannot avoid after it (PFBK F18).
+    const here = weights(childNode.type, left, childNode.row);
+    best = Math.max(
+      best,
+      here <= LIKELY_DEATH
+        ? here - deathElite * minElitesAhead(childNode, nodes, eliteMemo)
+        : here + continuation(childNode, left, nodes, weights, act, memo, deathElite, eliteMemo),
+    );
   }
   if (best === -Infinity) best = 0;
   memo.set(nodeKey, best);
@@ -205,7 +245,7 @@ function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNod
     for (const child of current.children) {
       const childNode = nodes.get(key(child.row, child.col));
       if (!childNode) continue;
-      const value = weights(childNode.type, at) + continuation(childNode, at, nodes, weights, act, new Map());
+      const value = weights(childNode.type, at, childNode.row) + continuation(childNode, at, nodes, weights, act, new Map());
       if (value > bestValue) {
         bestValue = value;
         bestChild = childNode;
@@ -288,11 +328,17 @@ export function planMap(env: DecisionEnv): Decision | null {
   const act = floor <= 17 ? 1 : floor <= 33 ? 2 : 3;
   const actStart = [1, 18, 34][Math.min(act, 3) - 1]!;
   const floorInAct = Math.max(1, floor - actStart + 1);
+  // Each node at its own floor, not the current one (PFBK F18: every act-2 elite down to F29 was priced
+  // as "floor 1 of the act"): rows count floors from the node we stand on (act start: row 0 is the
+  // act's first floor after the one we are on).
+  const currentRow = numOrNull(asRecord(map["current_node"])["row"]);
+  const floorsAhead = (row: number) => Math.max(1, currentRow === null ? row + 1 : row - currentRow);
   // RUN_PLAN=v1: the plan's elite appetite shifts elite nodes.
-  const weightOf: Weights = (type, at) =>
-    nodeWeight(type, at.hp, at.gold, floorInAct, act) -
+  const weightOf: Weights = (type, at, row) =>
+    nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act) -
     (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0) +
-    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp, floorsToBoss(floor)) : 0);
+    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp, floorsToBoss(floor + floorsAhead(row))) : 0);
+  const deathElite = env.screenMemory.runPlan?.elites === "avoid" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   const options: PickOption[] = available.flatMap((node) => {
@@ -305,7 +351,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
     // Monster-first route scored level with a Rest-first one on a live run.
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
-    const value = weightOf(type, start) * urgency + continuation(self, start, nodes, weightOf, act, new Map());
+    const value = weightOf(type, start, row) * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite);
     return [
       {
         key: `n${index}`,

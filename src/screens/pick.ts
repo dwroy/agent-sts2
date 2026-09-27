@@ -20,6 +20,8 @@ export interface PickOption {
   score: number;
   /** Shown in the rationale when this option wins. */
   label?: string;
+  /** Kept among the model's options when the list is pruned to `maxModelOptions`, like skip/leave. */
+  keepInView?: boolean;
 }
 
 export interface PickDecisionParams {
@@ -80,7 +82,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       // Keep the "take nothing" option in view even when it ranks low: skipping is always a real choice.
       const keep = ranked.slice(0, params.maxModelOptions);
       for (const option of ranked) {
-        if ((option.key === "skip" || option.key === "leave") && !keep.includes(option)) keep.push(option);
+        if ((option.key === "skip" || option.key === "leave" || option.keepInView) && !keep.includes(option)) keep.push(option);
       }
       return buildPickDecision({ ...params, codeMargin: undefined, options: keep });
     }

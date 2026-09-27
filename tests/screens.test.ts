@@ -14,6 +14,7 @@ import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
+import { eventOptionScore } from "../src/screens/event.js";
 import { loadConfig } from "../src/config.js";
 import {
   baseState,
@@ -316,6 +317,53 @@ describe("map", () => {
     expect(value("n0")).toBeGreaterThan(value("n1"));
   });
 
+  it("PFBK F18: elites a route cannot avoid after its likely death still count", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 18;
+    run["current_hp"] = 76;
+    run["max_hp"] = 80;
+    run["gold"] = 50;
+    const map = raw["map"] as Record<string, unknown>;
+    map["current_node"] = { row: 0, col: 3 };
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    const at = (row: number, col: number) => ({ row, col });
+    map["available_nodes"] = [
+      { index: 0, row: 1, col: 1, node_type: "Monster" },
+      { index: 1, row: 1, col: 5, node_type: "Shop" },
+    ];
+    map["nodes"] = [
+      node(0, 3, "Ancient", [at(1, 1), at(1, 5)]),
+      // One elite, then a way round every other one.
+      node(1, 1, "Monster", [at(2, 1)]),
+      node(2, 1, "Monster", [at(3, 1)]),
+      node(3, 1, "Elite", [at(4, 1)]),
+      node(4, 1, "Monster", [at(5, 1)]),
+      node(5, 1, "RestSite"),
+      // Shop, "?", rest and a chest first, then four forced elites with no branch (F25/F27/F29).
+      node(1, 5, "Shop", [at(2, 5)]),
+      node(2, 5, "Unknown", [at(3, 5)]),
+      node(3, 5, "RestSite", [at(4, 5)]),
+      node(4, 5, "Treasure", [at(5, 5)]),
+      node(5, 5, "Elite", [at(6, 5)]),
+      node(6, 5, "Unknown", [at(7, 5)]),
+      node(7, 5, "Elite", [at(8, 5)]),
+      node(8, 5, "Treasure", [at(9, 5)]),
+      node(9, 5, "Elite", [at(10, 5)]),
+      node(10, 5, "Unknown", [at(11, 5)]),
+      node(11, 5, "Elite", [at(12, 5)]),
+      node(12, 5, "RestSite"),
+    ];
+    const decision = mustDecision(plan(raw));
+    const value = (key: string): number => {
+      if (decision.kind !== "ask") return key === "n0" ? 1 : 0;
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.parse(String(criteria[key]))["route_value"];
+    };
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
+    expect(value("n0")).toBeGreaterThan(value("n1"));
+  });
+
   it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {
     expect(nodeWeight("Elite", 0.85, 100, 8)).toBe(4);
     expect(nodeWeight("Elite", 0.8, 100, 8)).toBe(0);
@@ -576,6 +624,21 @@ describe("shop", () => {
     if (decision.kind === "act") expect(decision.intent.action).not.toBe("discard_potion");
   });
 
+  it("shows card energy cost and type, and keeps a potion in view with an empty slot (B98P F15, CWU9 F31)", () => {
+    const raw = shopPayload(true);
+    const shop = raw["shop"] as Record<string, unknown>;
+    const relic = (index: number, id: string) => ({ index, name: id, price: 150, is_stocked: true, enough_gold: true, relic_id: id, rarity: "Common" });
+    shop["relics"] = [relic(0, "VAJRA"), relic(1, "ANCHOR"), relic(2, "LANTERN"), relic(3, "BAG_OF_MARBLES"), relic(4, "ODDLY_SMOOTH_STONE"), relic(5, "BRONZE_SCALES")];
+    shop["potions"] = [{ index: 0, potion_id: "BLOOD_POTION", name: "Blood Potion", rarity: "Common", usage: "CombatOnly", price: 49, is_stocked: true, enough_gold: true }];
+    (raw["run"] as Record<string, unknown>)["gold"] = 900;
+    const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    expect(Object.keys(criteria)).toContain("buy_potion0");
+    const pommel = Object.values(criteria).map((text) => JSON.parse(String(text))).find((entry) => entry["buy"] === "Pommel Strike");
+    expect(pommel).toMatchObject({ cost: 1, type: "Attack" });
+  });
+
   it("closes an open inventory with nothing affordable", () => {
     const decision = mustDecision(plan(shopPayload(true, { broke: true })));
     expect(decision.kind).toBe("act");
@@ -675,6 +738,74 @@ describe("event", () => {
   it("HP guard: nothing is removed when every option costs HP", () => {
     const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
     expect(shown(decision)).toEqual(["o0", "o1"]);
+  });
+});
+
+describe("event fallback scores (90JG, BUUY, 7048, WYF0, YNMB)", () => {
+  const at = (hp: number, maxHp: number, forced = false) => ({ hp, maxHp, forced });
+  it("no longer ties every option at 0: the fallback takes the best one, not option 0", () => {
+    // 7048 F8 Abyssal Baths at 49/82 before a forced elite: +2 max HP and -3 HP vs heal 10.
+    const baths = eventOptionScore("获得[blue]2[/blue]点最大生命。失去[red]3[/red]点生命。", at(49, 82, true));
+    const leave = eventOptionScore("回复[blue]10[/blue]点生命。", at(49, 82, true));
+    expect(leave).toBeGreaterThan(baths);
+    // 90JG F9: an unplayable card vs -8 HP for a potion at 53/80.
+    expect(eventOptionScore("获得[gold]藏宝图[/gold]，一张不能被打出的牌。", at(53, 80))).toBeLessThan(eventOptionScore("失去8点生命。获得1瓶随机药水。", at(53, 80)));
+    // YNMB F1: Lava Rock pays only on a boss kill; Lost Coffer is a card reward and a potion.
+    expect(eventOptionScore("第一阶段的Boss敌人额外掉落2件遗物。", at(80, 80))).toBeLessThan(eventOptionScore("获得1次卡牌奖励和1瓶随机药水。", at(80, 80)));
+    // A potion slot beats a relic-less nothing; removal and upgrade are worth something.
+    expect(eventOptionScore("获得1个药水栏位并获得2瓶随机药水。", at(60, 80))).toBeGreaterThan(8);
+    expect(eventOptionScore("从你的牌组中移除1张牌。", at(60, 80))).toBeGreaterThan(0);
+  });
+
+  it("a removal naming a valued deck card scores below a small HP cost (WYF0 F27: Slippery Bridge took Demon Form+)", () => {
+    const ctx = { ...at(63, 80), deck: [{ name: "恶魔形态+", valued: true }, { name: "打击", valued: false }] };
+    expect(eventOptionScore("恶魔形态+将从你的牌组中被移除。", ctx)).toBeLessThan(eventOptionScore("失去3点生命，重新随机要删的牌。", ctx));
+  });
+
+  it("the fallback of a real event ask picks the best-scored option", () => {
+    const raw = {
+      ...eventPayload(),
+      run: runPayload({ floor: 9, current_hp: 53, max_hp: 80 }),
+      event: {
+        event_id: "TEST_EVENT", title: "Test", description: "", is_finished: false,
+        options: [
+          { index: 0, text_key: "MAP", title: "Map", description: "获得藏宝图，一张不能被打出的牌。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          { index: 1, text_key: "POTION", title: "Potion", description: "获得1瓶随机药水。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+        ],
+      },
+    };
+    const decision = mustDecision(plan(raw, { strictJev: false }));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    expect(decision.resolve({}).intent).toEqual({ action: "choose_event_option", option_index: 1 });
+  });
+});
+
+describe("stale event end page (YNMB F4/F7, X226 F6)", () => {
+  const frame = (eventId: string, floor: number, finished: boolean) => ({
+    ...eventPayload(),
+    run: runPayload({ floor }),
+    event: {
+      event_id: eventId, title: eventId, description: "", is_finished: finished,
+      options: finished
+        ? [{ index: 0, text_key: "PROCEED", title: "Proceed", description: "", is_locked: false, is_proceed: true, will_kill_player: false, has_relic_preview: false }]
+        : [
+            { index: 0, text_key: "A", title: "A", description: "失去18点生命。获得152金币。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+            { index: 1, text_key: "B", title: "B", description: "离开。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          ],
+    },
+  });
+  it("waits out the last floor's end page instead of clicking option 0 of the next event", () => {
+    const memory = createScreenMemory("EVENT");
+    const leave = mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: memory }));
+    expect(leave.kind === "act" && leave.label).toBe("event/leave");
+    // Floor 4, the same end page still shown: wait.
+    expect(plan(frame("SELF_HELP_BOOK", 4, true), { screenMemory: memory }).kind).toBe("wait");
+    // The new event arrives: chosen normally.
+    expect(plan(frame("JUNGLE_MAZE_ADVENTURE", 4, false), { screenMemory: memory }).kind).toBe("decision");
+    // The same end page on the same floor (a page reload) is still left as before.
+    const again = createScreenMemory("EVENT");
+    mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again }));
+    expect(mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again })).kind).toBe("act");
   });
 });
 
@@ -824,6 +955,36 @@ describe("in-combat selections", () => {
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", tight)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
     expect(combatExhaustScore("SHRUG_IT_OFF", "Skill", tight, true)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", { ...tight, hp: 40 })).toBeGreaterThan(0);
+  });
+
+  it("Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4)", async () => {
+    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const pick = (context: Record<string, unknown>, hand: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][]) =>
+      hand.map(([id, type, card, upgraded]) => ({ id, score: combatExhaustScore(id, type, { attacks: 12, incoming: 10, hp: 60, ...context }, false, card) - (upgraded ? 8 : 0) }))
+        .sort((a, b) => b.score - a.score)[0]!.id;
+    // 6HRZ T6: Strength 6, both claws alive; Exterminate (4 hits, all enemies) was exhausted at 55.
+    const crab = { strength: 6, multiEnemy: true };
+    const t6: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
+      ["EXTERMINATE", "Attack", { hits: 4, aoe: true }],
+      ["BREAKTHROUGH", "Attack", { aoe: true }],
+      ["DISMANTLE", "Attack", {}],
+      ["BASH", "Attack", { debuff: true }, true],
+      ["BATTLE_TRANCE", "Skill", {}],
+    ];
+    expect(pick(crab, t6)).not.toBe("EXTERMINATE");
+    // XWPV F48 T4: Fight Me scored 75 and went first; Artifact up, Bash is kept too.
+    const aeon = { strength: 4, artifact: true };
+    const t4: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
+      ["TWIN_STRIKE", "Attack", { hits: 2 }],
+      ["BLUDGEON", "Attack", {}],
+      ["FIGHT_ME", "Attack", { hits: 2 }],
+      ["SPITE", "Attack", {}],
+      ["BATTLE_TRANCE", "Skill", {}, true],
+    ];
+    expect(["SPITE", "BATTLE_TRANCE"]).toContain(pick(aeon, t4));
+    expect(combatExhaustScore("BASH", "Attack", { attacks: 12, incoming: 10, hp: 60, artifact: true }, false, { debuff: true })).toBeLessThanOrEqual(10);
+    // A plain Strike is still the first attack to go.
+    expect(pick({ strength: 2 }, [["STRIKE_IRONCLAD", "Attack", {}], ["DISMANTLE", "Attack", {}]])).toBe("STRIKE_IRONCLAD");
   });
 
   it("in-combat exhaust never takes Frantic Escape while the Sandpit is up (THMG F33 T4: 'scores 90 vs Strike 70')", async () => {

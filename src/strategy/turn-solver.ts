@@ -203,6 +203,12 @@ export interface PlayerSim {
    * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
    */
   noBlock?: boolean;
+  /**
+   * Tender N (TENDER_POWER, from the Hunter Killer's Tenderizing Goop): every card played lowers our
+   * Strength and Dexterity by N for the rest of the turn (LSWU F21 T5: a "lethal" Setup Strike +
+   * Whirlwind fell 6 short; the 5th Hunter Killer loss, C2WY, MF7A, BDAK, WM2X).
+   */
+  tender?: number;
 }
 
 export interface SolverInput {
@@ -718,6 +724,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
+  // Tender: this card is done at full Strength/Dexterity; every later one this turn is N lower.
+  if (card.type !== "Potion" && (player.tender ?? 0) > 0) {
+    next.strength -= player.tender ?? 0;
+    next.tempDex -= player.tender ?? 0;
+  }
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
@@ -746,7 +757,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.exhausted = [...next.exhausted, ...taken];
     next.hand = next.hand.filter((entry) => !taken.includes(entry));
     next.held = next.held.filter((entry) => !taken.includes(entry));
-    if (!next.noBlock && taken.length > 0) gainBlock(next, (card.block + next.tempDex) * taken.length, player);
+    if (!next.noBlock && taken.length > 0) gainBlock(next, Math.max(0, card.block + next.tempDex) * taken.length, player);
   }
   if (card.special === "ashwater") {
     const taken = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion" && (entry.cardId === "HOWL_FROM_BEYOND" || isJunk(entry)));
@@ -833,7 +844,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       if (next.unmovableSpent) shown = Math.floor(shown / 2);
       next.unmovableSpent = true;
     }
-    gainBlock(next, shown + (card.type === "Potion" ? 0 : next.tempDex), player);
+    gainBlock(next, Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex)), player);
   }
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;

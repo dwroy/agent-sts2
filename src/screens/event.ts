@@ -52,6 +52,60 @@ export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, ma
   return null;
 }
 
+/** Deck card an option can name: its shown name, and whether losing it costs the deck something. */
+export interface EventDeckCard {
+  name: string;
+  /** A Power, an upgraded card, or a rare: not what an event should take away. */
+  valued: boolean;
+}
+
+/** HP value weight: HP is worth more the lower it is (1.5 at 0 HP, 0.5 at full). */
+function hpWeight(hp: number, maxHp: number): number {
+  return maxHp > 0 ? 1 - hp / maxHp + 0.5 : 1;
+}
+
+/**
+ * Code's score of an event option, used when no model answers (the code arm, a failed ask). All
+ * options scored 0 and option 0 always won (90JG F9: an unplayable Spoils Map; BUUY F1: Scroll Boxes'
+ * junk cards; 7048 F8: -3 HP into a forced elite over +10 HP; WYF0 F27: Demon Form+ removed on the
+ * Slippery Bridge; YNMB F1: Lava Rock, paid only by an act-1 boss win). A rough sum of what the text
+ * says: curses and unplayable cards -30, HP lost by how low HP is, healing likewise (x1.5 before a
+ * forced fight), potion +8, potion slot +12, relic +10 (0 when a boss must drop it), card reward +8,
+ * removal +12 (-30 when it names a Power, upgraded or rare card of the deck), upgrade +6, gold /12.
+ */
+export function eventOptionScore(
+  description: string,
+  ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[] },
+): number {
+  const text = description.replace(/\[[^\]]*\]/g, "");
+  const weight = hpWeight(ctx.hp, ctx.maxHp);
+  let score = 0;
+  if (/不能被打出|unplayable/i.test(text) || /(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)/i.test(text)) score -= 30;
+  const cost = eventHpCost(text);
+  score -= cost.hp * weight + cost.maxHp * 1.5;
+  let heal = 0;
+  for (const match of text.matchAll(/(?:回复|恢复)(\d+)点生命|heal (\d+)/gi)) heal += Number(match[1] ?? match[2]);
+  if (/(?:回复|恢复)所有生命|heal to full|回满/i.test(text)) heal += Math.max(0, ctx.maxHp - ctx.hp);
+  heal = Math.min(heal, Math.max(0, ctx.maxHp - ctx.hp));
+  score += heal * weight * (ctx.forced ? 1.5 : 1);
+  for (const match of text.matchAll(/获得(\d+)点最大生命|gain (\d+) max hp/gi)) score += 0.6 * Number(match[1] ?? match[2]);
+  if (/药水栏|potion slot/i.test(text)) score += 12;
+  else if (/药水|potion/i.test(text) && !/(?:失去|消耗|lose)[^。.]{0,8}(?:药水|potion)/i.test(text)) score += 8;
+  // A relic that only a boss kill pays (Lava Rock) is worth nothing to a run that may die first.
+  if (/遗物|relic/i.test(text)) score += /boss|首领/i.test(text) ? 0 : 10;
+  if (/卡牌奖励|card reward/i.test(text)) score += 8;
+  if (/(?:移除|删除|remove)/i.test(text)) {
+    const named = (ctx.deck ?? []).find((card) => card.valued && card.name.length > 0 && text.includes(card.name));
+    score += named ? -30 : 12;
+  }
+  if (/升级|upgrade/i.test(text)) score += 6;
+  for (const match of text.matchAll(/获得(\d+)(?:枚)?金|gain (\d+) gold/gi)) score += Number(match[1] ?? match[2]) / 12;
+  return Math.round(score * 10) / 10;
+}
+
+/** How long a finished frame of the previous floor's event is waited out before it is clicked anyway. */
+export const STALE_EVENT_WAIT_MS = 10_000;
+
 export function planEvent(env: DecisionEnv): Decision | null {
   const { state } = env;
   const event = asRecord(state.raw["event"]);
@@ -63,6 +117,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // normally instead of clicking option 0 (F8HR F22: Field of Man-Sized Holes, option 0 added Normality).
   const staleFinish = bool(event["is_finished"]) && all.length > 1 && !all.some((option) => bool(option["is_proceed"]));
   const finished = bool(event["is_finished"]) && !staleFinish;
+  // The first frame of a new ? room can still be the last event's end page (YNMB F4: Self-Help Book's
+  // Proceed on floor 4; option 0 went into Jungle Maze Adventure, -18 HP; F7 again; X226 F6). The same
+  // event id on a later floor than it was seen on is that frame: wait for the new event.
+  const eventId = str(event["event_id"]);
+  const runId = str(state.raw["run_id"]);
+  const floor = state.run?.floor ?? null;
+  const seen = env.screenMemory.eventSeen;
+  const staleFloor = finished && seen !== undefined && seen.runId === runId && seen.eventId === eventId && floor !== null && seen.floor !== null && floor > seen.floor;
+  if (staleFloor) {
+    const since = seen.staleSince ?? Date.now();
+    if (seen.staleSince === undefined) env.screenMemory.eventSeen = { ...seen, staleSince: since };
+    if (Date.now() - since < STALE_EVENT_WAIT_MS) return null;
+  }
+  env.screenMemory.eventSeen = { runId, eventId, floor };
   if (finished) {
     const proceed = all.find((option) => bool(option["is_proceed"])) ?? all[0];
     const index = proceed ? numOrNull(proceed["index"]) ?? 0 : 0;
@@ -105,6 +173,16 @@ export function planEvent(env: DecisionEnv): Decision | null {
     };
   }
 
+  const deck: EventDeckCard[] = asArray(asRecord(state.run?.raw)["deck"]).map((entry) => {
+    const card = asRecord(entry);
+    const id = str(card["card_id"]);
+    const basic = /^(STRIKE|DEFEND)_/.test(id);
+    return {
+      name: str(card["name"]),
+      valued: !basic && (str(card["card_type"]) === "Power" || bool(card["upgraded"]) || str(card["rarity"]) === "Rare"),
+    };
+  });
+  const scoreCtx = { hp, maxHp, forced: forced !== null, deck };
   const options: PickOption[] = pool.flatMap((option) => {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
@@ -114,7 +192,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
         key: `o${index}`,
         label: title,
         intent: { action: "choose_event_option", option_index: index },
-        score: 0,
+        score: bool(option["is_proceed"]) ? 0 : eventOptionScore(str(option["description"]), scoreCtx),
         summary: {
           option: title,
           description: truncate(str(option["description"]), 200),

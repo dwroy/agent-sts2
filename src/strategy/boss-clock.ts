@@ -15,46 +15,59 @@ import { modelHandCard } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 
 export interface BossNeed {
-  /** Total HP to chew through (both claws for the crab). */
+  /** Total HP to chew through (both claws for the crab), at A7 and below. */
   hp: number;
+  /** The same at A8 and above (states.jsonl max_hp; heals and block turns added as for hp). */
+  hpA8: number;
   /** Turns a fight can reasonably last before the boss's script kills us. */
   turns: number;
   note: string;
 }
 
+/** Ascension from which bosses have their A8 HP. */
+export const BOSS_HP_ASCENSION = 8;
+
 /**
  * From the logged fights (lessons.md): HP, and the turn count the winners and near-misses managed.
- * Keys match a substring of run.boss_id.
+ * Keys match a substring of run.boss_id. A8 HP from the A8 ablation's states (XWPV, WB02, YNMB, CWU9,
+ * 90JG, 7048, N28L): the A7 numbers read the gap 2-10 a turn short (WB02 F31: "321 in clock").
  */
 export const BOSS_NEEDS: Record<string, BossNeed> = {
   // The two wins took 7-8 turns (58 and 51 a turn); the Bug Sting -> Laser opener ends longer fights
   // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough).
-  KAISER_CRAB: { hp: 428, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
+  KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
-  KNOWLEDGE_DEMON: { hp: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
-  THE_INSATIABLE: { hp: 321, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
+  KNOWLEDGE_DEMON: { hp: 439, hpA8: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
+  // 341 at A8 (XWPV, WB02 states).
+  THE_INSATIABLE: { hp: 321, hpA8: 341, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
   // 535 at A8 plus two 33-block Ebbs (M6P7: 33 a turn, left at 234).
-  AEONGLASS: { hp: 601, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
+  AEONGLASS: { hp: 578, hpA8: 601, turns: 8, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards" },
   // Queen 400 + Amalgam 199 at A7, plus 20 Queen block a turn while the Amalgam lives; wins took 9-12
-  // turns (P2E4: 47.5 a turn, Queen left at 219).
-  QUEEN: { hp: 640, turns: 10, note: "from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail" },
+  // turns (P2E4: 47.5 a turn, Queen left at 219). A8: Queen 419 (CWU9), ~69 a turn.
+  QUEEN: { hp: 640, hpA8: 690, turns: 10, note: "kill the Torch Head Amalgam first: from her third turn it hits 12x3/22 under Vulnerable, Weak and Frail while the Queen only buffs" },
   // Three phases, ~100 + 200 + 300 HP (7DFB F48: phase 2 at 27/200 on T7 with phase 3 still to come).
-  TEST_SUBJECT: { hp: 600, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
-  LAGAVULIN_MATRIARCH: { hp: 222, turns: 12, note: "sleeps two turns (play powers), then drains Strength/Dexterity" },
-  SOUL_FYSH: { hp: 221, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
-  THE_KIN: { hp: 307, turns: 10, note: "priest 190 plus two followers ~59: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)" },
-  VANTOM: { hp: 173, turns: 8, note: "9 Slippery stacks: multi-hit" },
-  WATERFALL_GIANT: { hp: 260, turns: 11, note: "240 HP plus two Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks" },
-  // 252 HP at A7 (RAWT, 8LQG); fights run ~13 turns with the Ringing one-card turns.
-  CEREMONIAL_BEAST: { hp: 252, turns: 13, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them" },
+  TEST_SUBJECT: { hp: 600, hpA8: 630, turns: 14, note: "three phases (~100/200/300 HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use" },
+  // 233 at A8 (N28L).
+  LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, turns: 12, note: "sleeps two turns (play powers), then drains Strength/Dexterity" },
+  // 221 at A8 (BUUY, VL2D).
+  SOUL_FYSH: { hp: 211, hpA8: 221, turns: 9, note: "shuffles Beckons into the deck, Intangible turns" },
+  // Priest 199 at A8 (WYF0).
+  THE_KIN: { hp: 307, hpA8: 322, turns: 10, note: "priest 190 (199 at A8) plus two followers ~59: AoE; the fight ends when the priest dies; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)" },
+  // 183 at A8 (XWPV, YNMB, RC9A).
+  VANTOM: { hp: 173, hpA8: 183, turns: 8, note: "9 Slippery stacks: multi-hit" },
+  // 250 at A8 plus two Siphon heals (7048: ~280 dealt over 10 turns).
+  WATERFALL_GIANT: { hp: 260, hpA8: 280, turns: 11, note: "240 HP (250 at A8) plus two Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks" },
+  // 252 HP at A7 (RAWT, 8LQG), 262 at A8 (90JG); fights run ~13 turns with the Ringing one-card turns.
+  CEREMONIAL_BEAST: { hp: 252, hpA8: 262, turns: 13, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them" },
 };
 
-export function bossNeed(bossId: string): (BossNeed & { id: string; perTurn: number }) | null {
+export function bossNeed(bossId: string, ascension = 0): (BossNeed & { id: string; perTurn: number }) | null {
   const upper = bossId.toUpperCase();
   const key = Object.keys(BOSS_NEEDS).find((id) => upper.includes(id));
   if (!key) return null;
-  const need = BOSS_NEEDS[key]!;
+  const entry = BOSS_NEEDS[key]!;
+  const need = { ...entry, hp: ascension >= BOSS_HP_ASCENSION ? entry.hpA8 : entry.hp };
   return { ...need, id: key, perTurn: Math.round(need.hp / need.turns) };
 }
 
@@ -74,6 +87,12 @@ export const ESTIMATE_SCALE = 1.4;
 const VULNERABLE_UPTIME = 1.2;
 /** Average Strength over a boss fight from one Demon Form (+2 a turn from turn 2, over ~9 turns). */
 const DEMON_FORM_STRENGTH = 7;
+/**
+ * A one-off Strength card (Inflame, Brand...) is drawn and played mid-fight on average: half its
+ * Strength over the fight (WB02 F31: 7 Strength counted from T1, 3 on T1-T2 and 5 after; estimate 37,
+ * dealt 20).
+ */
+const ONE_OFF_STRENGTH_SHARE = 0.5;
 
 /**
  * Rough damage a turn of the deck in a boss fight: the average attack damage per card drawn, limited
@@ -92,6 +111,7 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   // Blessed Antler).
   const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
+  const turns = bossNeed(str(run["boss_id"]))?.turns ?? 9;
   let damage = 0;
   let cost = 0;
   let attacks = 0;
@@ -109,9 +129,16 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
       attacks += 1;
       damage += (card.damage ?? 0) * Math.max(1, card.hits) * (crab && card.target === "all" ? 2 : 1);
     }
-    strength += card.cardId === "DEMON_FORM" ? DEMON_FORM_STRENGTH : Math.max(0, card.strength);
+    strength += card.cardId === "DEMON_FORM" ? DEMON_FORM_STRENGTH : Math.max(0, card.strength) * ONE_OFF_STRENGTH_SHARE;
     if (card.vulnerable > 0) vulnerable += 1;
   }
+  // Strength that grows every turn (XWPV F48: 1 on T1, 19 on T11; the run plans read a 48 gap, the deck
+  // dealt 41.6 a turn and 92 on T8-T10): Toasty Mittens +1 a turn from T1, i.e. (turns+1)/2 on average;
+  // Rupture fed by a self-damage power every turn (Crimson Mantle, Inferno) from when both are up,
+  // counted from T3: (turns-2)/2.
+  if (relicIds.includes("TOASTY_MITTENS")) strength += (turns + 1) / 2;
+  const deckIds = new Set(cards.map((card) => card.cardId));
+  if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) strength += Math.max(0, (turns - 2) / 2);
   const n = cards.length;
   // Energy caps how many of the drawn cards get played.
   const playedShare = Math.min(1, energy / Math.max(1, (HAND * cost) / n));
@@ -135,7 +162,7 @@ export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | n
   // On a boss floor the boss id is the one just killed; the next act's is not known yet (7DFB F33:
   // Dominate valued against the dead crab's numbers).
   if (BOSS_FLOORS.includes(state.run?.floor ?? 0)) return null;
-  const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]));
+  const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0);
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck) };
@@ -166,7 +193,7 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
 /** The run plan's view of the act boss and the deck's damage. */
 export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
   const bossId = str(asRecord(state.run?.raw)["boss_id"]);
-  const need = bossNeed(bossId);
+  const need = bossNeed(bossId, state.run?.ascension ?? 0);
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   return {
@@ -175,7 +202,7 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     fight_turns: need.turns,
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
-    estimate_note: "rough: cards, Strength and Vulnerable only; no draw, relics or potions",
+    estimate_note: "rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included) and Vulnerable only; no draw, other relics or potions",
     gap_per_turn: Math.max(0, need.perTurn - deck),
     boss_note: need.note,
   };

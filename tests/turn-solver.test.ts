@@ -826,8 +826,9 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
     const kept = hardRuleLines(surviving, [sleeper]);
     expect(kept.length).toBeGreaterThan(0);
     for (const plan of kept) expect(plan.outcome.sleepCost).toBe(0);
-    // Slumber counts as sleeping too; an awake enemy is left alone.
-    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(kept);
+    // Slumber is only a score penalty, not a filter (RC9A F27 T1: every AoE line was removed); an awake
+    // enemy is left alone.
+    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(surviving);
     expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0 }])).toEqual(surviving);
   });
 
@@ -1893,5 +1894,34 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
     const a = solveTurn(attacked).plans.find(hasOffering)!;
     const b = solveTurn(plain).plans.find((plan) => plan.steps.map((step) => step.cardId).join() === a.steps.map((step) => step.cardId).join())!;
     expect(a.score).toBeCloseTo(b.score);
+  });
+});
+
+describe("Tender on the player (LSWU F21 T5, Hunter Killer)", () => {
+  it("each card played lowers this turn's Strength and Dexterity for the cards after it", () => {
+    // Three Strikes into 18 HP: a lethal at full Strength, 6 + 5 + 4 = 15 with Tender 1.
+    const hand = [strike(0), strike(1), strike(2)];
+    const target = enemy({ hp: 18, attacks: [{ damage: 5, hits: 1 }] });
+    const plain = solveTurn({ hand, player: player({ hp: 40 }), enemies: [target], fightKind: "monster" });
+    expect(plain.plans[0]!.outcome.winsFight).toBe(true);
+    const tender = solveTurn({ hand, player: player({ hp: 40, tender: 1 }), enemies: [target], fightKind: "monster" });
+    expect(tender.plans.some((plan) => plan.outcome.winsFight)).toBe(false);
+    expect(Math.max(...tender.plans.map((plan) => plan.outcome.damageDealt))).toBe(15);
+    // Block too: Strike then two Defends gives 4 + 3.
+    const blocks = solveTurn({ hand: [strike(0), defend(1), defend(2)], player: player({ hp: 40, tender: 1 }), enemies: [enemy({ hp: 50, attacks: [{ damage: 30, hits: 1 }] })], fightKind: "monster" });
+    expect(Math.max(...blocks.plans.map((plan) => plan.outcome.blockGained))).toBeLessThanOrEqual(9);
+  });
+});
+
+describe("Slumber is a score penalty, not a filter (RC9A F27 T1)", () => {
+  it("keeps the AoE line that chips the slumbering beetle through its Plating", () => {
+    const howl = card(0, "HOWL_FROM_BEYOND", { cost: 3, target: "all", validTargets: [], damage: 24 });
+    const beetle = enemy({ index: 0, name: "Beetle", hp: 89, maxHp: 89, block: 18, slumber: 3 });
+    const rock = enemy({ index: 1, name: "Rock", hp: 46, maxHp: 46, attacks: [{ damage: 8, hits: 1 }] });
+    const silk = enemy({ index: 2, name: "Silk", hp: 43, maxHp: 43, attacks: [{ damage: 5, hits: 1 }] });
+    const result = solveTurn({ hand: [howl, strike(1), defend(2), strike(3)], player: player({ hp: 48, maxHp: 90 }), enemies: [beetle, rock, silk], fightKind: "monster", turn: 1 });
+    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
+    const kept = hardRuleLines(surviving, [beetle, rock, silk]);
+    expect(kept.some((plan) => plan.steps.some((step) => step.cardId === "HOWL_FROM_BEYOND"))).toBe(true);
   });
 });

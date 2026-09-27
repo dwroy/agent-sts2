@@ -25,10 +25,26 @@ import { bossNote } from "../project/run-journal.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
 export type FightApproach = "race" | "setup" | "defend";
-export type PotionUse = "early" | "big_hit" | "emergency" | "save" | "any";
+export type PotionUse = "early" | "big_hit" | "burst" | "emergency" | "save" | "any";
 
 const APPROACHES: FightApproach[] = ["race", "setup", "defend"];
-const POTION_USES: PotionUse[] = ["early", "big_hit", "emergency", "save", "any"];
+const POTION_USES: PotionUse[] = ["early", "big_hit", "burst", "emergency", "save", "any"];
+
+/** Potions that add damage or energy: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
+export const OFFENSIVE_POTIONS = new Set([
+  "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
+  "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
+]);
+
+/**
+ * The plan's use of a potion, with "big_hit" on an offensive potion read as "burst": DeepSeek had no
+ * word for "keep it for the kill turn" and borrowed big_hit (6HRZ F33 T1: Energy Potion "for the turn
+ * both claws die" drunk on T1's 21 hit; WB02 F33: Fire Potion "as finisher" drunk on T1; NMLV, R2H1).
+ */
+export function planPotionUse(plan: FightPlan | null, potionId: string): PotionUse | undefined {
+  const use = plan?.potions[potionId];
+  return use === "big_hit" && OFFENSIVE_POTIONS.has(potionId) ? "burst" : use;
+}
 
 export interface FightPlan {
   runId: string;
@@ -154,8 +170,9 @@ export const FIGHT_PLAN_TASK = [
   'Reply with JSON only: {"approach": "race" | "setup" | "defend",',
   '"setup_cards": [card ids from the deck to play in the first turns, most important first, max 3; [] for none],',
   '"focus_enemy": "<enemy_id to kill first, or empty>",',
-  '"potions": {"<potion id>": "early" | "big_hit" | "emergency" | "save" | "any"} for EVERY potion listed',
-  "(early = drink in turns 1-2; big_hit = drink on the turn of a big attack; emergency = only if HP gets low;",
+  '"potions": {"<potion id>": "early" | "big_hit" | "burst" | "emergency" | "save" | "any"} for EVERY potion listed',
+  "(early = drink in turns 1-2; big_hit = a block/weak potion drunk on the turn of a big enemy attack;",
+  "burst = an attack/strength/energy potion kept for the turn it kills an enemy or wins the fight; emergency = only if HP gets low;",
   "save = keep for a later fight; any = no preference),",
   '"key_turns": "<max 30 words: the dangerous turns and what to do on them>",',
   '"summary": "<max 40 words: the plan in plain words>"}',
@@ -191,7 +208,8 @@ export function parseFightPlan(
     const use = typeof value === "string" ? (value.trim().toLowerCase() as PotionUse) : null;
     if (!use || !POTION_USES.includes(use)) continue;
     const potion = belt.find((entry) => str(entry["potion_id"]) === key.trim() || str(entry["name"]) === key.trim());
-    if (potion) potions[str(potion["potion_id"])] = use;
+    // An offensive potion's "big_hit" is its burst turn (6HRZ, WB02: see planPotionUse).
+    if (potion) potions[str(potion["potion_id"])] = use === "big_hit" && OFFENSIVE_POTIONS.has(str(potion["potion_id"])) ? "burst" : use;
   }
   const approachRaw = typeof json["approach"] === "string" ? (json["approach"].trim().toLowerCase() as FightApproach) : "race";
   return {
@@ -239,9 +257,12 @@ export function planPotionCost(
   potionId: string,
   ctx: { turn: number; bigHit: boolean; pressed: boolean; offensive?: boolean },
 ): { free: boolean; extra: number } | null {
-  const use = plan?.potions[potionId];
+  const use = planPotionUse(plan, potionId);
   if (!use || use === "any") return null;
   if (ctx.pressed) return null;
+  // A burst potion keeps the default cost; lines drinking it off its kill turn are dropped in
+  // combat-plan.ts (drinksKeptPotion).
+  if (use === "burst") return null;
   if (use === "early") return ctx.turn <= 2 ? { free: true, extra: 0 } : null;
   // "big_hit" is the turn of a big enemy attack: no reason to drink an offensive potion then (B6AC F33
   // T1: Flex drunk for +19 damage when T2 had the better burst hand). Default cost.
@@ -253,8 +274,8 @@ export function planPotionCost(
 
 /** Whether an unmodelled potion should be offered to Jev this turn, per the plan (null = default rule). */
 export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: { turn: number; bigHit: boolean; pressed: boolean; costly: boolean; offensive?: boolean }): boolean | null {
-  const use = plan?.potions[potionId];
-  if (!use || use === "any") return null;
+  const use = planPotionUse(plan, potionId);
+  if (!use || use === "any" || use === "burst") return null;
   // "big_hit" on an attack potion is the plan's burst, not the enemy's big hit: the default rule offers
   // it (24HM F33: Attack Potion tagged big_hit, offered on no turn in 14, died holding it).
   if (use === "big_hit" && ctx.offensive) return null;
@@ -267,21 +288,33 @@ export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: 
   return false;
 }
 
-/** Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions against the plan. */
+/**
+ * Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions
+ * against the plan. `line` (from the turn planner) says which steps really are setup: Dominate and
+ * Molten Fist only count on a target already Vulnerable when they are played (WR2Y F33 T1: Dominate
+ * at 0 Vulnerable tagged "plays planned setup", +1 Strength instead of ~+6); those are named in
+ * `early`. Without it every planned card id counts.
+ */
 export function planFit(
   plan: FightPlan,
   steps: { cardId: string; name: string }[],
   focusDamage: number | null,
+  line?: { setup: boolean[]; early: string[] },
 ): string {
   const parts: string[] = [];
-  const setup = steps.filter((step) => plan.setup.includes(step.cardId)).map((step) => step.name);
-  if (setup.length > 0) parts.push(`plays planned setup ${setup.join(", ")}`);
+  const setup = steps.filter((step, index) => (line ? line.setup[index] === true : plan.setup.includes(step.cardId))).map((step) => step.name);
+  if (setup.length > 0) parts.push(`plays planned setup ${[...new Set(setup)].join(", ")}`);
+  if (line && line.early.length > 0) parts.push(`plays ${line.early.join(", ")} before the planned Vulnerable (almost no Strength from it)`);
   if (plan.focus && focusDamage !== null && focusDamage > 0) parts.push(`${focusDamage} damage to the kill-first enemy`);
   const drinks = steps.filter((step) => step.cardId.startsWith("POTION:"));
   for (const step of drinks) {
     // Modelled potions are "POTION:<potion id>:<slot>".
-    const use = plan.potions[step.cardId.split(":")[1] ?? ""];
-    if (use === "save" || use === "emergency") parts.push(`drinks ${step.name.replace(/^potion /, "")} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
+    const use = planPotionUse(plan, step.cardId.split(":")[1] ?? "");
+    const name = step.name.replace(/^potion /, "");
+    if (use === "save" || use === "emergency") parts.push(`drinks ${name} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
+    // WR2Y F33 T1: the Flex Potion kept for the double-claw kill turn, drunk on T1 for +8 at Jev 0.39.
+    if (use === "burst") parts.push(`drinks ${name}, the plan's potion for the kill turn`);
+    if (use === "big_hit") parts.push(`drinks ${name}, the plan's potion for a big enemy hit`);
   }
   return parts.length > 0 ? parts.join("; ") : "neutral";
 }

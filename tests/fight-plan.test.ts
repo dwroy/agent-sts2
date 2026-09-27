@@ -132,7 +132,8 @@ describe("parseFightPlan", () => {
     expect(parsed.approach).toBe("setup");
     expect(parsed.setup).toEqual(["INFLAME", "BASH"]);
     expect(parsed.focus).toBe("LAGAVULIN_MATRIARCH");
-    expect(parsed.potions).toEqual({ FIRE_POTION: "big_hit" });
+    // An offensive potion's big_hit is its burst turn (6HRZ, WB02).
+    expect(parsed.potions).toEqual({ FIRE_POTION: "burst" });
     expect(parsed.enemyIds).toEqual(["LAGAVULIN_MATRIARCH"]);
     expect(parsed.fight).toBe("1:9");
   });
@@ -189,6 +190,17 @@ describe("planFit", () => {
     ], 12);
     expect(fit).toBe("plays planned setup Inflame; 12 damage to the kill-first enemy; drinks Fire Potion the plan keeps for a later fight");
     expect(planFit(plan(), [{ cardId: "STRIKE_R", name: "Strike" }], 0)).toBe("neutral");
+  });
+
+  it("Dominate before the planned Vulnerable is not setup; burst potions are tagged (WR2Y F33 T1)", () => {
+    const p = plan({ setup: ["DOMINATE", "MOLTEN_FIST"], potions: { FLEX_POTION: "big_hit" } });
+    const steps = [
+      { cardId: "DOMINATE", name: "Dominate" },
+      { cardId: "POTION:FLEX_POTION:0", name: "potion Flex Potion" },
+      { cardId: "MOLTEN_FIST", name: "Molten Fist" },
+    ];
+    const fit = planFit(p, steps, null, { setup: [false, false, true], early: ["Dominate"] });
+    expect(fit).toBe("plays planned setup Molten Fist; plays Dominate before the planned Vulnerable (almost no Strength from it); drinks Flex Potion, the plan's potion for the kill turn");
   });
 });
 
@@ -462,6 +474,183 @@ describe("big_hit on an attack potion (24HM F33)", () => {
     const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
     expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
     expect(planOffersPotion(p, "BLOCK_POTION", calm)).toBe(false);
+  });
+});
+
+describe("burst potions and the boss keep (6HRZ F33 T1, WB02 F33 T1/F29, R2H1, NMLV)", () => {
+  const ctx = { turn: 1, bigHit: true, pressed: false };
+  it("reads big_hit on an offensive potion as burst, with the default cost and offer", () => {
+    const p = plan({ potions: { ENERGY_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
+    expect(planPotionCost(p, "ENERGY_POTION", ctx)).toBeNull();
+    expect(planPotionCost(p, "BLOCK_POTION", ctx)).toEqual({ free: true, extra: 0 });
+    expect(planOffersPotion(p, "ENERGY_POTION", { ...ctx, costly: false })).toBeNull();
+  });
+
+  const decisionText = (raw: Raw, potions: FightPlan["potions"]): string => {
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions });
+    const decision = planCombatTurn(e);
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, decision?.kind === "act" ? decision.rationale : null, e.screenMemory.combatPlan?.remaining]);
+  };
+
+  it("code's rank 1 does not drink a burst potion on a turn it kills nothing", () => {
+    const raw = bossTurnOne();
+    // Without a plan the solver drinks the Fire Potion on T1 (boss cost 4).
+    expect(decisionText(raw, {})).toMatch(/Fire Potion|use_potion/);
+    expect(decisionText(raw, { FIRE_POTION: "big_hit" })).not.toMatch(/Fire Potion|use_potion/);
+  });
+
+  it("drinks it on the kill turn", () => {
+    const raw = bossTurnOne();
+    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+    boss["current_hp"] = 24;
+    expect(decisionText(raw, { FIRE_POTION: "burst" })).toMatch(/Fire Potion|use_potion/);
+  });
+});
+
+describe("the run plan's boss keep beats a hallway plan's free big_hit (WB02 F29)", () => {
+  const hallway = (): Raw => {
+    const raw = combatPayload();
+    (raw["run"] as Raw)["floor"] = 29;
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得 12 点格挡。", requires_target: false, valid_target_indices: [] });
+    const combat = raw["combat"] as Raw;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }] }));
+    return raw;
+  };
+  /** Whether code's own pick (the act, or rank 1 of a question) drinks the potion. */
+  const codeDrinks = (keep: boolean): boolean => {
+    const e = env(hallway(), { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), kind: "monster", setup: [], focus: null, potions: { BLOCK_POTION: "big_hit" } });
+    if (keep) e.screenMemory.runPlan = { savePotions: ["block"] } as never;
+    const decision = planCombatTurn(e);
+    const picked = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria["plan1"] : decision?.kind === "act" ? decision.rationale : null;
+    return /Block Potion/.test(String(picked));
+  };
+  it("drinks it free without a run-plan keep; with one it is no longer code's pick", () => {
+    expect(codeDrinks(false)).toBe(true);
+    expect(codeDrinks(true)).toBe(false);
+  });
+});
+
+describe("Tender turns off the lethal shortcut (LSWU F21 T5)", () => {
+  it("a lethal line is still played, but not through combat/lethal", () => {
+    const raw = combatPayload({ enemyHp: 5 });
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[1]!["is_alive"] = false;
+    expect(planCombatTurn(env(raw))?.kind === "act" ? (planCombatTurn(env(raw)) as { label: string }).label : "ask").toBe("combat/lethal");
+    (combat["player"] as Raw)["powers"] = [{ index: 0, power_id: "TENDER_POWER", name: "Tender", amount: 1, is_debuff: true }];
+    const decision = planCombatTurn(env(raw));
+    expect(decision?.kind === "act" ? decision.label : "ask").not.toBe("combat/lethal");
+  });
+});
+
+describe("default kill-first target without a plan (CWU9 F48, WYF0 F17)", () => {
+  /** Every attack target of code's pick (act and remaining steps) or of every option asked. */
+  const targets = (raw: Raw): string => {
+    const e = env(raw);
+    const decision = planCombatTurn(e);
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.rationale : null, e.screenMemory.combatPlan?.remaining]);
+  };
+  const fight = (enemies: Raw[]): Raw => {
+    const raw = combatPayload();
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const combat = raw["combat"] as Raw;
+    const base = (combat["enemies"] as Raw[])[0]!;
+    combat["enemies"] = enemies.map((enemy) => ({ ...base, ...enemy }));
+    return raw;
+  };
+  const minion = [{ index: 0, power_id: "MINION_POWER", name: "Minion", amount: 1, is_debuff: false }];
+  const buff = [{ index: 0, intent_type: "Buff", label: "" }];
+  const hit = (damage: number) => [{ index: 0, intent_type: "Attack", label: String(damage), damage, hits: 1, total_damage: damage }];
+
+  it("the Queen fight hits the Torch Head Amalgam, not the Queen", () => {
+    const raw = fight([
+      { index: 0, enemy_id: "QUEEN", name: "QUEEN", current_hp: 419, max_hp: 419, powers: [], intents: buff },
+      { index: 1, enemy_id: "TORCH_HEAD_AMALGAM", name: "TORCH_HEAD_AMALGAM", current_hp: 199, max_hp: 199, powers: minion, intents: hit(13) },
+    ]);
+    const text = targets(raw);
+    expect(text).toContain("-> TORCH_HEAD_AMALGAM");
+    expect(text).not.toContain("-> QUEEN");
+  });
+
+  it("the Kin fight still hits the priest (the followers are minions)", () => {
+    const raw = fight([
+      { index: 0, enemy_id: "KIN_FOLLOWER", name: "KIN_FOLLOWER", current_hp: 59, max_hp: 59, powers: minion, intents: hit(5) },
+      { index: 1, enemy_id: "KIN_PRIEST", name: "KIN_PRIEST", current_hp: 199, max_hp: 199, powers: [], intents: hit(8) },
+      { index: 2, enemy_id: "KIN_FOLLOWER", name: "KIN_FOLLOWER", current_hp: 59, max_hp: 59, powers: minion, intents: hit(5) },
+    ]);
+    const text = targets(raw);
+    expect(text).toContain("-> KIN_PRIEST");
+    expect(text).not.toContain("-> KIN_FOLLOWER");
+  });
+});
+
+describe("setup lines count Dominate only after the Vulnerable (WR2Y F33 T1)", () => {
+  it("code plays Bash before the planned Dominate", () => {
+    const raw = bossTurnOne();
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const combat = raw["combat"] as Raw;
+    const hand = combat["hand"] as Raw[];
+    const bash = hand.find((card) => card["card_id"] === "BASH")!;
+    bash["dynamic_values"] = [{ name: "Damage", base_value: 8, current_value: 8 }, { name: "VulnerablePower", base_value: 2, current_value: 2 }];
+    combat["hand"] = [
+      ...hand.filter((card) => card["card_id"] !== "INFLAME"),
+      { ...bash, index: 3, card_id: "DOMINATE", name: "Dominate", card_type: "Skill", energy_cost: 1, dynamic_values: [{ name: "VulnerablePower", base_value: 1, current_value: 1 }] },
+    ];
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["DOMINATE"], potions: {} });
+    const decision = planCombatTurn(e);
+    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
+    expect(text).toMatch(/BASH[^"]*Dominate/);
+  });
+});
+
+describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
+  it("counts the axe's replay of the fight's first card", async () => {
+    const { witherInput } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["powers"] = [{ index: 0, power_id: "WITHERING_PRESENCE_POWER", name: "Withering", amount: 1, is_debuff: false }];
+    const plain = witherInput(env(raw), combat, [], 3);
+    ((raw["run"] as Raw)["relics"] as Raw[] | undefined) ?? ((raw["run"] as Raw)["relics"] = []);
+    ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "THROWING_AXE", name: "Throwing Axe" });
+    const axe = witherInput(env(raw), combat, [], 3);
+    expect(plain?.played).toBe(3);
+    expect(axe?.played).toBe(4);
+  });
+});
+
+describe("HP guard in a lost Sandpit race (WB02 F33)", () => {
+  it("does not swap damage for HP when the Sandpit ends the fight first anyway", () => {
+    const board = (sandpit: boolean): Raw => {
+      const raw = bossTurnOne();
+      ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+      const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+      // The test knowledge knows the Matriarch as a Boss; the Sandpit power is what matters here.
+      Object.assign(boss, { current_hp: 300, max_hp: 341 });
+      boss["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
+      boss["powers"] = sandpit ? [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: 3, is_debuff: false }] : [];
+      boss["intents"] = [{ index: 0, intent_type: "Attack", label: "20", damage: 20, hits: 1, total_damage: 20 }];
+      // A second Defend: the cheapest line (-10) is 10 HP under Strike + Bash (-20).
+      const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+      const defend = hand.find((card) => card["card_id"] === "DEFEND_R")!;
+      (raw["combat"] as Raw)["hand"] = [...hand.filter((card) => card["card_id"] !== "INFLAME"), { ...defend, index: 3 }];
+      return raw;
+    };
+    /** Whether the guard replaces the most-damage line (code's own pick, or Jev's pick of it). */
+    const guarded = (raw: Raw): boolean => {
+      const decision = planCombatTurn(env(raw));
+      if (decision?.kind === "act") return decision.label === "combat/plan-guarded";
+      const ask = decision as AskDecision;
+      const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
+      const key = Object.keys(criteria)
+        .filter((k) => k.startsWith("plan"))
+        .sort((a, b) => Number(JSON.parse(String(criteria[b]))["damage_dealt"] ?? 0) - Number(JSON.parse(String(criteria[a]))["damage_dealt"] ?? 0))[0]!;
+      const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+      return resolved.guard !== undefined || /guard/i.test(resolved.rationale);
+    };
+    expect(guarded(board(false))).toBe(true);
+    expect(guarded(board(true))).toBe(false);
   });
 });
 
