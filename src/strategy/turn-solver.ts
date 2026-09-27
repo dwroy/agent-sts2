@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { freeCardPick, type CardModel } from "./card-model.js";
+import { freeCardPick, upgradeCard, upgradeGain, type CardModel } from "./card-model.js";
 
 export interface EnemySim {
   index: number;
@@ -891,6 +891,19 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (!next.noBlock) next.flat += DEX_LASTING_PER_BLOCK_CARD * next.hand.filter((entry) => entry.type !== "Potion" && entry.block > 0).length;
   }
   if (card.special === "triple_next_attack") next.gigantic += 1;
+  // A card potion: its card joins the hand, free this turn (card-model GENERATED_CARD_POTIONS).
+  if (card.generates) next.hand = [...next.hand, card.generates];
+  // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
+  // upgraded numbers; each card's gain counts again for its later draws (BLESSING_LASTING).
+  if (card.special === "upgrade_hand") {
+    let gain = 0;
+    next.hand = next.hand.map((entry) => {
+      const upgraded = upgradeCard(entry);
+      if (upgraded !== entry) gain += Math.max(0, upgradeGain(entry, upgraded));
+      return upgraded;
+    });
+    next.flat += BLESSING_LASTING * gain;
+  }
   if (card.special === "free_card") {
     const pick = freeCardPick(next.hand);
     if (pick) {
@@ -1197,6 +1210,12 @@ export const DEX_POTION = 2;
  * how block-heavy the deck is. No block card in hand, no value (KFP1 T3: drunk with only Attacks).
  */
 export const DEX_LASTING_PER_BLOCK_CARD = 1.5;
+
+/**
+ * Blessing of the Forge: lasting value per point an upgrade adds to one play (before fight length): the
+ * upgraded cards come back in later hands of the fight, about once more each on average.
+ */
+export const BLESSING_LASTING = 0.5;
 
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;

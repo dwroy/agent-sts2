@@ -146,7 +146,7 @@ const DEBUFF_CARDS = new Set(["BASH", "UPPERCUT", "SHOCKWAVE", "THUNDERCLAP", "D
 export function cardRoles(cardId: string): Set<string> {
   const roles = new Set<string>();
   if (AOE.has(cardId)) roles.add("aoe");
-  if (damageRole(cardId) === "scaling") roles.add("strength");
+  if (STRENGTH_CARDS.has(cardId)) roles.add("strength");
   if (BLOCK.has(cardId)) roles.add("block");
   if (DRAW_CARDS.has(cardId)) roles.add("draw");
   if (EXHAUST_CARDS.has(cardId)) roles.add("exhaust");
@@ -161,10 +161,18 @@ export function isBigHit(cardId: string): boolean {
   return BIG_HITS.has(cardId);
 }
 
+/**
+ * Cards that give permanent Strength (the run plan's "strength" role). Not Pyre: it gives 1 energy at
+ * the start of each turn (game data: 「在回合开始时，获得{Energy}」), and T86W F9 counted it as the deck's one
+ * Strength source ("must-have strength (1 in deck) +14") with no Strength card in the deck.
+ */
+const STRENGTH_CARDS = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"]);
+/** Scaling that is not Strength: Pyre's energy a turn is more damage every turn after it is played. */
+const ENERGY_SCALING = new Set(["PYRE"]);
+
 /** Which kind of damage card this is (for the boss clock's gap bonus), or null. */
 export function damageRole(cardId: string): "scaling" | "aoe" | "frontload" | null {
-  const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"]);
-  if (STRENGTH.has(cardId)) return "scaling";
+  if (STRENGTH_CARDS.has(cardId) || ENERGY_SCALING.has(cardId)) return "scaling";
   if (AOE.has(cardId)) return "aoe";
   if (FRONTLOAD.has(cardId)) return "frontload";
   return null;

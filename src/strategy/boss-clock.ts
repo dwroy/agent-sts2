@@ -93,14 +93,26 @@ const HAND = 5;
 export const ESTIMATE_SCALE = 1.4;
 /** Damage multiplier with two or more Vulnerable sources in the deck. */
 const VULNERABLE_UPTIME = 1.2;
-/** Average Strength over a boss fight from one Demon Form (+2 a turn from turn 2, over ~9 turns). */
-const DEMON_FORM_STRENGTH = 7;
 /**
- * A one-off Strength card (Inflame, Brand...) is drawn and played mid-fight on average: half its
- * Strength over the fight (WB02 F31: 7 Strength counted from T1, 3 on T1-T2 and 5 after; estimate 37,
- * dealt 20).
+ * The turn a power (or any one card) is expected to be played: half a pass through the deck at HAND
+ * cards a turn, plus the turn it is drawn on (28 cards: ~T4). M9PL F33: Demon Form counted as up from
+ * T1 read the deck at 53 a turn for the crab; drawn T3 without the energy, played T5, the fight dealt
+ * 24.5 a turn. WB02 F31: Inflame counted from T1, 37 read against 20 dealt.
  */
-const ONE_OFF_STRENGTH_SHARE = 0.5;
+export function expectedPlayTurn(deckSize: number): number {
+  return deckSize / HAND / 2 + 1;
+}
+
+/**
+ * Strength a turn, averaged over a boss fight of `turns` turns, from a power played on `playTurn`:
+ * a one-off (Inflame) holds its amount from the next turn on; a per-turn one (Demon Form) adds its
+ * amount at the start of each later turn (1, 2, 3... times it). Only the clock's turns count.
+ */
+export function averagePowerStrength(amount: number, perTurn: boolean, playTurn: number, turns: number): number {
+  const up = Math.max(0, turns - playTurn);
+  if (turns <= 0 || up <= 0) return 0;
+  return perTurn ? (amount * up * (up + 1)) / 2 / turns : (amount * up) / turns;
+}
 
 /**
  * Rough damage a turn of the deck in a boss fight: the average attack damage per card drawn, limited
@@ -121,6 +133,8 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
   const need = bossNeed(str(run["boss_id"]));
   const turns = need?.turns ?? 9;
+  const playTurn = expectedPlayTurn(cards.length);
+  let energyBonus = 0;
   let damage = 0;
   let cost = 0;
   let attacks = 0;
@@ -138,7 +152,11 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
       attacks += 1;
       damage += (card.damage ?? 0) * Math.max(1, card.hits) * (crab && card.target === "all" ? 2 : 1);
     }
-    strength += card.cardId === "DEMON_FORM" ? DEMON_FORM_STRENGTH : Math.max(0, card.strength) * ONE_OFF_STRENGTH_SHARE;
+    // Demon Form: StrengthPower is its per-turn amount (3, 4 upgraded).
+    strength += averagePowerStrength(Math.max(0, card.strength), card.cardId === "DEMON_FORM", playTurn, turns);
+    // Pyre: its Energy (1, 2 upgraded: states.jsonl) at the start of each turn once it is up (T86W:
+    // card-value counted it as Strength).
+    if (card.cardId === "PYRE") energyBonus += averagePowerStrength(card.upgraded ? 2 : 1, false, playTurn, turns);
     if (card.vulnerable > 0) vulnerable += 1;
   }
   // Strength that grows every turn (XWPV F48: 1 on T1, 19 on T11; the run plans read a 48 gap, the deck
@@ -150,7 +168,7 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) strength += Math.max(0, (turns - 2) / 2);
   const n = cards.length;
   // Energy caps how many of the drawn cards get played.
-  const playedShare = Math.min(1, energy / Math.max(1, (HAND * cost) / n));
+  const playedShare = Math.min(1, (energy + energyBonus) / Math.max(1, (HAND * cost) / n));
   const attacksPlayed = HAND * (attacks / n) * playedShare;
   const base = HAND * (damage / n) * playedShare + strength * attacksPlayed;
   // Two Vulnerable sources keep the boss Vulnerable most turns.

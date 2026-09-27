@@ -506,7 +506,11 @@ export interface LineFacts {
   escapes?: number;
   /** Code's rank-1 line: the solver's best score under the intents' weights. */
   codeTop?: boolean;
-  /** How far below code's best shown line the solver scores this one (0 for the best), under the intents' weights. */
+  /**
+   * How far below code's best shown line the solver scores this one (0 for the best), under the intents'
+   * weights. Negative when code's pick is not the score-best line (it was picked for beating that line on
+   * every outcome): such a line is not "code's best line" (M9PL F25 T2: all four options said so).
+   */
   scoreGap?: number;
   /** Damage into the burst target this turn (LineField.burst). */
   burstDamage?: number;
@@ -614,7 +618,14 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
     ].filter(Boolean).join(", ");
     const counting = pit && pit.maxEscapes > 0 ? ", counting Sandpit turns bought as damage" : "";
     if (near) {
-      const where = line.codeTop || (line.scoreGap ?? 0) <= 0 ? "code's best line" : `near code's best line (score -${(line.scoreGap ?? 0).toFixed(1)})`;
+      const gap = line.scoreGap ?? 0;
+      const where = line.codeTop
+        ? "code's best line"
+        : gap < 0
+          ? `near code's best line (score +${(-gap).toFixed(1)}; code's pick beats the score-best line on every outcome)`
+          : gap === 0
+            ? "ties code's best line"
+            : `near code's best line (score -${gap.toFixed(1)})`;
       parts.push(`fits ${intent}: ${where} under ${intent} weights${trade && !line.codeTop ? ` (vs it: ${trade}${counting})` : ""}${bought ? ` (${bought})` : ""}`);
       if (objective === "scale_then_kill" && line.setup > 0 && line.setup >= field.maxSetup) parts.push("sets up (powers / Strength)");
       grade = "fits";
@@ -642,6 +653,38 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   }
   if (line.focusDamage !== null && line.focusDamage > 0) parts.push(`hits kill-priority ${field.focusName ?? "enemy"} for ${line.focusDamage}`);
   return { label: parts.length > 0 ? parts.join("; ") : "neutral", breaks, grade };
+}
+
+/**
+ * The label of a "drink it first, then re-plan" option for a potion the solver does not simulate: what
+ * it is for, whether an intent in force asks for that now, and that no line's numbers include it. Such
+ * options had no label at all (VUV4 F17 Blessing of the Forge, X8R8 F17 Attack Potion T1-T10: every
+ * question showed them bare beside labelled lines, Jev never took them until the last turn).
+ */
+export function potionOptionFit(ctx: {
+  role: PotionRole | null;
+  objective: FightObjective | null;
+  bossFight: boolean;
+  /** The act boss clock now (need a turn vs the deck's estimate), when this is the act boss. */
+  bossClock: BossClockNow | null;
+  /** HP the cheapest shown line loses this turn, and our HP. */
+  cheapestLoss: number;
+  hp: number;
+  /** The solver's cost of drinking a potion in this fight. */
+  useCost: number;
+}): string {
+  const role = ctx.role ?? "unclassified";
+  const unpriced = `its effect is in no line's numbers; drinking it first re-plans the turn (potion cost ~${Math.round(ctx.useCost)})`;
+  const behind = ctx.bossClock !== null && ctx.bossClock.need > ctx.bossClock.deck;
+  const offence = ctx.role === "damage" || ctx.role === "strength";
+  const defence = ctx.role === "block" || ctx.role === "weak" || ctx.role === "heal";
+  if (offence && (behind || tradesHpForDamage(ctx.objective))) {
+    const why = behind ? `the act boss clock is behind (~${Math.round(ctx.bossClock!.need)} a turn needed, deck ~${Math.round(ctx.bossClock!.deck)})` : `fight objective ${ctx.objective}`;
+    return `fits ${behind ? "the boss race" : ctx.objective}: a ${role} potion, ${why}; ${unpriced}`;
+  }
+  if (defence && ctx.cheapestLoss >= Math.max(10, ctx.hp * 0.3)) return `fits hp: a ${role} potion while the cheapest line loses ${ctx.cheapestLoss} HP; ${unpriced}`;
+  if (ctx.bossFight) return `neutral: a ${role} potion; the act boss is what potions are kept for, no intent asks for it this turn; ${unpriced}`;
+  return `costs the potion: a ${role} potion no intent asks for this turn; ${unpriced}`;
 }
 
 /** What the labels mean, for Jev (every question with intent_fit labels carries it). */

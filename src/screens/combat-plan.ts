@@ -31,7 +31,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
@@ -42,10 +42,25 @@ export const POTION_PRESSED_SHARE = 0.3;
  * then filtered unless the reserve is released: intent.ts reserveReleased).
  */
 export const RUN_PLAN_SAVE_COST = 20;
-/** Boss race behind the clock: the HP guard keeps a line dealing this much more… */
-export const BOSS_RACE_KEEP_DAMAGE = 20;
-/** …for at most this much more HP lost. */
-export const BOSS_RACE_KEEP_HP = 8;
+/** Boss race behind the clock: the HP guard keeps a line adding at least this share of a turn's need… */
+export const BOSS_RACE_MIN_SHARE = 0.25;
+/** …(and at least this much damage)… */
+export const BOSS_RACE_MIN_DAMAGE = 5;
+/** …for HP up to its worth at the race's exchange rate, or up to this share of max HP. */
+export const BOSS_RACE_HP_SHARE = 0.1;
+
+/**
+ * Act boss behind its clock: whether the HP guard keeps a line dealing `extraDamage` more for
+ * `extraLoss` more HP. Proportional, not the old fixed "20+ damage for 8 HP or less" (M9PL F33 T3: 19
+ * more damage for 6 HP swapped with the crab needing ~58 a turn; T86W F17 T4): the extra damage must be
+ * a real part of a turn's need (BOSS_RACE_MIN_SHARE), and the HP it costs at most what that damage is
+ * worth at our HP per boss HP (the exchange rate), or BOSS_RACE_HP_SHARE of max HP.
+ */
+export function bossRaceTrade(t: { extraDamage: number; extraLoss: number; hp: number; maxHp: number; bossHpLeft: number; needPerTurn: number }): boolean {
+  if (t.extraDamage < Math.max(BOSS_RACE_MIN_DAMAGE, BOSS_RACE_MIN_SHARE * t.needPerTurn)) return false;
+  const exchange = (t.extraDamage * t.hp) / Math.max(1, t.bossHpLeft);
+  return t.extraLoss <= Math.max(exchange, BOSS_RACE_HP_SHARE * t.maxHp);
+}
 /** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
 export const BOSS_DRINK_FIRST_LOSS = 10;
 
@@ -138,6 +153,18 @@ export const HALLWAY_LETHAL_POTION_LOSS = 5;
 export const HALLWAY_POTION_CONFIDENCE = 0.75;
 /** Map node types a hallway fight is fought in. */
 const FIGHT_NODES = ["Monster", "Unknown"];
+
+/**
+ * This fight's damage a turn so far (non-minion enemy HP lost over the turns since the first look), not
+ * counting turns that began with every enemy asleep or intangible; null when there is nothing measured
+ * yet (then the deck estimate stands in).
+ */
+export function measuredDamagePerTurn(start: { hp?: number; turn?: number; idle?: number[] } | undefined, enemyHpNow: number, turn: number): number | null {
+  if (start?.hp === undefined || start.turn === undefined || turn <= start.turn || start.hp <= enemyHpNow) return null;
+  const idle = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn).length;
+  const turns = turn - start.turn - idle;
+  return turns > 0 ? (start.hp - enemyHpNow) / turns : null;
+}
 
 /** Solver cost of drinking a potion (before any defensive saving). */
 export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolean, eliteNext: boolean): number {
@@ -408,7 +435,10 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
-  if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  if (o.lasting >= 5) {
+    const forge = plan.steps.some((step) => step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:"));
+    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  }
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -879,6 +909,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   const fightId = fightKey(state);
   const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
   if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
+  // A turn that starts with every non-minion enemy asleep or intangible is no turn of this fight's damage
+  // rate (T86W F17: the Matriarch slept T1-T3 for 1 damage; T4 read 1/3 a turn and "kills" in 700 turns).
+  const keyEnemies = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0);
+  if (keyEnemies.length > 0 && keyEnemies.every((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0 || enemy.intangible)) {
+    const idle = (env.screenMemory.fightStart.idle ??= []);
+    if (!idle.includes(state.turn ?? 1)) idle.push(state.turn ?? 1);
+  }
   const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   const hpFrac = playerSim.maxHp > 0 ? playerSim.hp / playerSim.maxHp : 1;
   // The run's hp_policy as this fight plays it: a low_hp preserve lapses once HP is back, and
@@ -890,10 +927,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Expected damage a turn: this fight's so far, else the deck estimate (boss-clock.ts).
   const fightTurn = state.turn ?? 1;
   const start = env.screenMemory.fightStart;
-  const perTurn =
-    start?.hp !== undefined && start.turn !== undefined && fightTurn > start.turn && start.hp > enemyHpNow
-      ? (start.hp - enemyHpNow) / (fightTurn - start.turn)
-      : deckDamagePerTurn(state, env.knowledge);
+  const perTurn = measuredDamagePerTurn(start, enemyHpNow, fightTurn) ?? deckDamagePerTurn(state, env.knowledge);
   // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
   // set up, or in a new boss phase (intent.ts objectiveInForce).
   const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {
@@ -978,6 +1012,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
       })
     : null;
+  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS).
+  const potionContext = { enemyTargets: enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index), strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
     solveTurn({
       hand: [
@@ -994,6 +1030,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               (free && !heldForBoss(potion.potion_id, potion.text)) || toadRock(potion.potion_id)
                 ? 0
                 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (heldForBoss(potion.potion_id, potion.text) ? RUN_PLAN_SAVE_COST : 0),
+              potionContext,
             ),
           )
           .filter((card): card is CardModel => card !== null)
@@ -1268,8 +1305,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Act-boss race (5th time: N28L, WB02, R2H1, EJXC F33 T5): the guard does not swap a line playing
   // Frantic Escape for one playing fewer (each Escape is a turn of the Sandpit: EJXC T5 swapped
   // "Strike, Frantic Escape, Twin Strike" -20 for "Strike, Twin Strike, Defend" -15, same damage, and the
-  // Sandpit ran out on T7 with the boss at 31), nor trade 20+ damage for 8 HP or less while the boss
-  // clock says we are behind (boss HP left over the clock's turns left is more than the swap deals).
+  // Sandpit ran out on T7 with the boss at 31), nor trade damage the race needs for HP it can pay
+  // (bossRaceTrade) while the boss clock says we are behind (boss HP left over the clock's turns left
+  // is more than the swap deals).
   const escapesIn = (plan: Plan) => plan.steps.filter((step) => step.cardId === "FRANTIC_ESCAPE").length;
   const bossRaceKeeps = (picked: Plan, replacement: Plan | null): boolean => {
     if (kind !== "boss" || replacement === null) return false;
@@ -1277,8 +1315,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     const behind = need !== null && bossHpLeft / clockTurnsLeft > replacement.outcome.damageDealt;
     return (
       behind &&
-      picked.outcome.damageDealt - replacement.outcome.damageDealt >= BOSS_RACE_KEEP_DAMAGE &&
-      picked.outcome.hpLoss - replacement.outcome.hpLoss <= BOSS_RACE_KEEP_HP
+      !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp) &&
+      bossRaceTrade({
+        extraDamage: picked.outcome.damageDealt - replacement.outcome.damageDealt,
+        extraLoss: picked.outcome.hpLoss - replacement.outcome.hpLoss,
+        hp: playerSim.hp,
+        maxHp: playerSim.maxHp,
+        bossHpLeft,
+        needPerTurn: bossHpLeft / clockTurnsLeft,
+      })
     );
   };
   // Elite/boss under kill_fast/race: the guard compares the HP lost until the kill, not this turn's
@@ -1399,7 +1444,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         focusDamage: fightPlan ? focusDamage(plan) : null,
         escapes: escapesIn(plan),
         codeTop: plan === top,
-        scoreGap: Math.max(0, top.score - plan.score),
+        // Signed: a line scoring above code's pick (picked for dominating the score-best) is not "best".
+        scoreGap: plan === top ? 0 : top.score - plan.score,
         burstDamage: burstDamage(plan),
       },
       field,
@@ -1427,6 +1473,16 @@ function planTurn(env: DecisionEnv): Decision | null {
           text: potion.text,
           ...(reservedPotion(potion.potion_id, potion.text) ? { reserve: `reserved for the act boss by the run plan; released: ${offerReleased}` } : {}),
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          // Labelled like the lines (never a bare pre-step): what it is for and whether an intent asks for it.
+          intent_fit: potionOptionFit({
+            role: potionRole(potion.potion_id, potion.text),
+            objective,
+            bossFight: kind === "boss",
+            bossClock: bossClockNow,
+            cheapestLoss: Math.min(...options.map((plan) => plan.outcome.hpLoss)),
+            hp: playerSim.hp,
+            useCost: potionUseCost,
+          }),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
