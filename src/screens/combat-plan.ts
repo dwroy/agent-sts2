@@ -28,7 +28,7 @@ import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, typ
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { floorsToBoss, planSavesPotion } from "../strategy/run-plan.js";
-import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
+import { fightKey, fightPlanJson, OFFENSIVE_POTIONS, planFit, planOffersPotion, planPotionCost, planPotionUse, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
@@ -120,11 +120,6 @@ export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolea
 export const BOSS_POTION_COST = 4;
 const BOSS_POTIONS_PER_TURN = 1;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
-/** Potions that add damage: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
-const OFFENSIVE_POTIONS = new Set([
-  "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
-  "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
-]);
 /** Potion text that blunts an enemy hit (the only kind a plan's "big_hit" applies to). */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
 const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
@@ -828,7 +823,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               potion.name,
               potion.slot,
               potion.valid_targets,
-              free || planCost(potion.potion_id)?.free
+              // The plan's "free" does not lift the run plan's boss keep (WB02 F29: a Block Potion tagged
+              // big_hit in a hallway went free, the +20 skipped, drunk 4 floors before the boss).
+              free || (planCost(potion.potion_id)?.free && !keptForBoss(potion.potion_id, potion.text))
                 ? 0
                 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0) + (keptForBoss(potion.potion_id, potion.text) ? RUN_PLAN_SAVE_COST : 0),
             ),
@@ -866,13 +863,25 @@ function planTurn(env: DecisionEnv): Decision | null {
   // potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on hallway
   // lethals; the boss was entered with 1 of 3 slots filled).
   const drinksPotion = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+  // A burst potion's turn: the line wins the fight or kills a real enemy (both crab claws together), or
+  // HP is low (6HRZ F33 T1: the Energy Potion kept for the double-claw kill drunk on a guarded T1 line;
+  // R2H1 F33 T2: in the HP guard's replacement line).
+  const killsRealEnemy = (plan: Plan): boolean => {
+    const dead = (enemy: EnemySim) => (plan.outcome.enemyHpAfter.find((after) => after.index === enemy.index)?.hp ?? enemy.hp) <= 0;
+    const real = enemies.filter((enemy) => enemy.hp > 0 && !enemy.minion && !enemy.illusion);
+    const together = real.filter((enemy) => enemy.crabRage || enemy.reattach);
+    if (together.length > 0 && together.some(dead) && !together.every(dead)) return false;
+    return real.some(dead);
+  };
+  const burstPays = (plan: Plan): boolean =>
+    plan.outcome.winsFight || killsRealEnemy(plan) || pressed || (playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.3);
   const drinksKeptPotion = (plan: Plan) =>
     fightPlan !== null &&
     plan.steps.some((step) => {
-      const use = step.cardId.startsWith("POTION:") ? fightPlan.potions[step.cardId.split(":")[1] ?? ""] : undefined;
+      const use = step.cardId.startsWith("POTION:") ? planPotionUse(fightPlan, step.cardId.split(":")[1] ?? "") : undefined;
       // A potion the plan keeps for a big hit is kept on the turns before it (MK1N F33 T2: the Block
       // Potion planned for the T4 Laser drunk on T2; WLY1).
-      return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed);
+      return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed) || (use === "burst" && !burstPays(plan));
     });
   // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
   // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
@@ -899,6 +908,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       const kept = solved.plans.filter(worth);
       if (kept.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: kept };
     }
+  }
+  // Code's own rank 1 respects the plan's kept potions too, not only the HP guard's replacements (WB02
+  // F33 T1: Fire Potion "as finisher" drunk on the Buff turn; 6HRZ, NMLV, R2H1): lines drinking one
+  // off its moment are dropped while a surviving line without it exists. Not on a costly or pressed
+  // turn, below 30% HP, or with the Sandpit at 1.
+  const sandpitOne = enemies.some((enemy) => enemy.hp > 0 && enemy.sandpit === 1);
+  if (fightPlan !== null && !pressed && !costly && !sandpitOne && playerSim.hp >= playerSim.maxHp * 0.3) {
+    const keep = solved.plans.filter((plan) => plan.outcome.winsFight || !drinksKeptPotion(plan));
+    if (keep.length < solved.plans.length && keep.some((plan) => !plan.outcome.dies)) solved = { ...solved, plans: keep };
   }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);

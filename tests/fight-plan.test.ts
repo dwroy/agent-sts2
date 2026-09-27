@@ -132,7 +132,8 @@ describe("parseFightPlan", () => {
     expect(parsed.approach).toBe("setup");
     expect(parsed.setup).toEqual(["INFLAME", "BASH"]);
     expect(parsed.focus).toBe("LAGAVULIN_MATRIARCH");
-    expect(parsed.potions).toEqual({ FIRE_POTION: "big_hit" });
+    // An offensive potion's big_hit is its burst turn (6HRZ, WB02).
+    expect(parsed.potions).toEqual({ FIRE_POTION: "burst" });
     expect(parsed.enemyIds).toEqual(["LAGAVULIN_MATRIARCH"]);
     expect(parsed.fight).toBe("1:9");
   });
@@ -462,6 +463,61 @@ describe("big_hit on an attack potion (24HM F33)", () => {
     const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
     expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
     expect(planOffersPotion(p, "BLOCK_POTION", calm)).toBe(false);
+  });
+});
+
+describe("burst potions and the boss keep (6HRZ F33 T1, WB02 F33 T1/F29, R2H1, NMLV)", () => {
+  const ctx = { turn: 1, bigHit: true, pressed: false };
+  it("reads big_hit on an offensive potion as burst, with the default cost and offer", () => {
+    const p = plan({ potions: { ENERGY_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
+    expect(planPotionCost(p, "ENERGY_POTION", ctx)).toBeNull();
+    expect(planPotionCost(p, "BLOCK_POTION", ctx)).toEqual({ free: true, extra: 0 });
+    expect(planOffersPotion(p, "ENERGY_POTION", { ...ctx, costly: false })).toBeNull();
+  });
+
+  const decisionText = (raw: Raw, potions: FightPlan["potions"]): string => {
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions });
+    const decision = planCombatTurn(e);
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, decision?.kind === "act" ? decision.rationale : null, e.screenMemory.combatPlan?.remaining]);
+  };
+
+  it("code's rank 1 does not drink a burst potion on a turn it kills nothing", () => {
+    const raw = bossTurnOne();
+    // Without a plan the solver drinks the Fire Potion on T1 (boss cost 4).
+    expect(decisionText(raw, {})).toMatch(/Fire Potion|use_potion/);
+    expect(decisionText(raw, { FIRE_POTION: "big_hit" })).not.toMatch(/Fire Potion|use_potion/);
+  });
+
+  it("drinks it on the kill turn", () => {
+    const raw = bossTurnOne();
+    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+    boss["current_hp"] = 24;
+    expect(decisionText(raw, { FIRE_POTION: "burst" })).toMatch(/Fire Potion|use_potion/);
+  });
+});
+
+describe("the run plan's boss keep beats a hallway plan's free big_hit (WB02 F29)", () => {
+  const hallway = (): Raw => {
+    const raw = combatPayload();
+    (raw["run"] as Raw)["floor"] = 29;
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得 12 点格挡。", requires_target: false, valid_target_indices: [] });
+    const combat = raw["combat"] as Raw;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }] }));
+    return raw;
+  };
+  /** Whether code's own pick (the act, or rank 1 of a question) drinks the potion. */
+  const codeDrinks = (keep: boolean): boolean => {
+    const e = env(hallway(), { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), kind: "monster", setup: [], focus: null, potions: { BLOCK_POTION: "big_hit" } });
+    if (keep) e.screenMemory.runPlan = { savePotions: ["block"] } as never;
+    const decision = planCombatTurn(e);
+    const picked = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria["plan1"] : decision?.kind === "act" ? decision.rationale : null;
+    return /Block Potion/.test(String(picked));
+  };
+  it("drinks it free without a run-plan keep; with one it is no longer code's pick", () => {
+    expect(codeDrinks(false)).toBe(true);
+    expect(codeDrinks(true)).toBe(false);
   });
 });
 
