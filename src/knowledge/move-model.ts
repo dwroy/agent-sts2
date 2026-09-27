@@ -83,7 +83,8 @@ export function awakeDamagePerTurn(enemyId: string): { perTurn: number; sleepTur
   if (!entry) return null;
   const visits: Record<string, number> = {};
   for (const successors of Object.values(entry.next)) for (const [move, n] of Object.entries(successors)) visits[move] = (visits[move] ?? 0) + n;
-  const isSleep = (move: string) => /SLEEP/.test(move);
+  // The Slumbering Beetle sleeps as SNORE_MOVE.
+  const isSleep = (move: string) => /SLEEP|SNORE/.test(move);
   let total = 0;
   let count = 0;
   for (const [move, n] of Object.entries(visits)) {

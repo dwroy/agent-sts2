@@ -7,7 +7,8 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombatTurn, potionsFirst, pressedAt } from "../src/screens/combat-plan.js";
+import { foesOf, incomingUntil, lossUntilKill, planCombatTurn, potionsFirst, pressedAt } from "../src/screens/combat-plan.js";
+import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
 import { planMap } from "../src/screens/map.js";
 import { planShop } from "../src/screens/shop.js";
 import { drinkFirstSafe, isModelledPotion, modelPotion } from "../src/strategy/card-model.js";
@@ -146,5 +147,38 @@ describe("shop: a full belt swaps an unreserved potion for one the run plan rese
     const decision = planShop(loggedEnv(logged("rvr6-shop-f37"), { combatPlanner: "card" })) as AskDecision;
     const resolved = decision.resolve({ pick: { type: "choice", choice: "swap_potion", confidence: 0.5, probabilities: {}, raw: {} } } as never);
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 0 });
+  });
+});
+
+describe("a later kill is priced with the sleepers' hits once they wake (NJSZ F25 T2: Slumbering Beetle + two bowlbugs)", () => {
+  const board = () => {
+    const fx = logged("njsz-f25-t2");
+    return foesOf(((fx.state["combat"] as Raw)["enemies"] as Raw[]).filter((enemy) => enemy["is_alive"] !== false));
+  };
+
+  it("the beetle sleeps as SNORE and rolls out at ~18.6 a turn once awake", () => {
+    const beetle = awakeDamagePerTurn("SLUMBERING_BEETLE")!;
+    expect(beetle.perTurn).toBeCloseTo(18.6, 1);
+    expect(beetle.sleepTurns).toBeGreaterThan(1);
+  });
+
+  it("next turn it is still asleep (Slumber 2); from T4 its hits count in the average until the kill", () => {
+    const foes = board();
+    const beetle = foes.find((foe) => foe.sleepLeft === 2)!;
+    expect(beetle.hit).toBeCloseTo(18.6, 1);
+    const bugs = foes.filter((foe) => foe !== beetle).reduce((sum, foe) => sum + foe.hit, 0);
+    expect(incomingUntil(foes, 1)).toBeCloseTo(bugs);
+    expect(incomingUntil(foes, 4)).toBeCloseTo(bugs + (3 / 4) * beetle.hit);
+  });
+
+  it("a bowlbug left alive longer costs its hits and the beetle's, turn by turn until the kill", () => {
+    const foes = board();
+    const [rock, silk, beetle] = [0, 1, 2].map((index) => foes.find((foe) => foe.index === index)!);
+    // Rock at 11 vs 21 after this turn (the logged rank 1 vs the guard's pick), 20 damage a turn.
+    const sooner = lossUntilKill(foes, [{ index: 0, hp: 11 }, { index: 1, hp: 26 }, { index: 2, hp: 89 }], 20, 0, 0);
+    const later = lossUntilKill(foes, [{ index: 0, hp: 21 }, { index: 1, hp: 26 }, { index: 2, hp: 89 }], 20, 0, 0);
+    expect(later).toBeGreaterThan(sooner);
+    expect(later - sooner).toBeGreaterThanOrEqual(Math.min(rock!.hit, silk!.hit));
+    expect(beetle!.sleepLeft).toBe(2);
   });
 });

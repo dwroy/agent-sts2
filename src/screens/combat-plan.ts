@@ -24,7 +24,7 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
+import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
 import { drinkFirstSafe, heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -33,7 +33,7 @@ import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { expectedLossPerTurn, fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
 import { RESERVE_RELEASE_HP, combatFit, combatPolicy, grindOutlasts, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
-import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
+import { bossNeed, deckBlockPerTurn, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
@@ -73,6 +73,53 @@ export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
   const bestLoss = Math.min(...dry.map((entry) => entry.outcome.hpLoss));
   const bestDamage = Math.max(...dry.map((entry) => entry.outcome.damageDealt));
   return plan.outcome.hpLoss >= bestLoss && plan.outcome.damageDealt <= bestDamage;
+}
+
+/** A living enemy as later turns see it: its hit a turn once awake and the turns it still sleeps. */
+export interface Foe {
+  index: number;
+  minion: boolean;
+  sleepLeft: number;
+  hit: number;
+}
+
+export function foesOf(enemies: Record<string, unknown>[]): Foe[] {
+  return enemies.map((enemy) => ({
+    index: num(enemy["index"]),
+    minion: asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER"),
+    sleepLeft: Math.max(powerAmount(enemy, "ASLEEP_POWER"), powerAmount(enemy, "SLUMBER_POWER")),
+    hit: awakeDamagePerTurn(str(enemy["enemy_id"]))?.perTurn ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0),
+  }));
+}
+
+/** Average hit a turn over the next `turns` enemy turns, each sleeper from the turn it wakes (t >= sleepLeft). */
+export function incomingUntil(foes: Foe[], turns: number): number {
+  let total = 0;
+  for (let t = 1; t <= turns; t += 1) total += foes.reduce((sum, foe) => sum + (t < foe.sleepLeft ? 0 : foe.hit), 0);
+  return turns > 0 ? total / turns : 0;
+}
+
+/**
+ * HP left to lose until every non-minion dies, from the enemy HP a line leaves: each later turn deals
+ * `perTurn` (the kill-priority enemy first, then the lowest HP, overflow carried on), then every living
+ * awake enemy hits, less the deck's block a turn.
+ */
+export function lossUntilKill(foes: Foe[], hpAfter: { index: number; hp: number }[], perTurn: number, blockPerTurn: number, focusIndex: number | null = null): number {
+  const alive = foes.map((foe) => ({ ...foe, hp: hpAfter.find((after) => after.index === foe.index)?.hp ?? 0 })).filter((foe) => foe.hp > 0);
+  let loss = 0;
+  for (let t = 1; t <= 30 && alive.some((foe) => foe.hp > 0 && !foe.minion); t += 1) {
+    let damage = Math.max(1, perTurn);
+    const order = alive.filter((foe) => foe.hp > 0).sort((a, b) => Number(b.index === focusIndex) - Number(a.index === focusIndex) || Number(a.minion) - Number(b.minion) || a.hp - b.hp);
+    for (const foe of order) {
+      const dealt = Math.min(foe.hp, damage);
+      foe.hp -= dealt;
+      damage -= dealt;
+      if (damage <= 0) break;
+    }
+    if (!alive.some((foe) => foe.hp > 0 && !foe.minion)) break;
+    loss += Math.max(0, alive.reduce((sum, foe) => sum + (foe.hp > 0 && t >= foe.sleepLeft ? foe.hit : 0), 0) - blockPerTurn);
+  }
+  return loss;
 }
 
 /**
@@ -1391,11 +1438,20 @@ function planTurn(env: DecisionEnv): Decision | null {
   // lived to T8 at -71; VF5C F27).
   const killTurns = (plan: Plan): number =>
     plan.outcome.winsFight ? 1 : 1 + Math.ceil(Math.max(0, bossHpLeft - realDamage(plan)) / Math.max(1, perTurn));
+  // Later turns of this fight are priced with each living enemy's move-model hit once awake, sleepers
+  // from the turn they wake (NJSZ F25: next turn's hit was ~0 with the Slumbering Beetle asleep and the
+  // bowlbugs stunned/debuffing; the beetle's 89 HP were then all dealt while it was awake at 16-26 a turn).
+  const foes = foesOf(asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false));
+  const blockPerTurn = deckBlockPerTurn(state, env.knowledge);
   const killsSooner = (picked: Plan, replacement: Plan | null): boolean => {
     if (replacement === null || (kind !== "elite" && kind !== "boss") || !tradesHpForDamage(objective)) return false;
     const later = killTurns(replacement) - killTurns(picked);
-    if (later <= 0) return false;
-    return picked.outcome.hpLoss <= replacement.outcome.hpLoss + later * nextIncoming && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
+    // A later kill turn costs the average hit until the kill, sleepers counted once awake, not only next turn's.
+    const byTurns = later > 0 && picked.outcome.hpLoss <= replacement.outcome.hpLoss + later * Math.max(nextIncoming, incomingUntil(foes, killTurns(replacement)));
+    // Several enemies: each one's own death turn, simulated (a sooner kill of one hitter).
+    const lossOf = (plan: Plan) => (plan.outcome.winsFight ? 0 : lossUntilKill(foes, plan.outcome.enemyHpAfter, perTurn, blockPerTurn, focusIndex));
+    const bySim = foes.filter((foe) => !foe.minion).length > 1 && picked.outcome.hpLoss + lossOf(picked) < replacement.outcome.hpLoss + lossOf(replacement);
+    return (byTurns || bySim) && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
   };
   // scale_then_kill: a line with more setup is kept unless it risks death (intent.ts guardProtectsSetup;
   // JF99 F33 T4/T7: Crimson Mantle traded twice for 6 HP and never played, the crabs died at 7 and 38
