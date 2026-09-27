@@ -865,11 +865,27 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   const firstCard = first ? cardFor(first, hand) : undefined;
   const drawsOrRandom = (firstCard?.draw ?? 0) + (firstCard?.special === "gamble" ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  env.screenMemory.drawCommit =
+    via !== "code" && plan.steps.length > 1 && drawsOrRandom > 0
+      ? { fight: fightKey(env.state), turn, via, steps: plan.steps.slice(1), enemies: livingEnemySignature(env.state.raw) }
+      : undefined;
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
       : null;
+}
+
+/** Whether `steps` play every one of `wanted` (card, upgrade and target; order free, extra plays allowed). */
+export function playsAll(steps: Step[], wanted: Step[]): boolean {
+  const key = (step: Step) => `${step.cardId}${step.upgraded ? "+" : ""}@${step.target ?? "-"}`;
+  const left = steps.map(key);
+  for (const step of wanted) {
+    const at = left.indexOf(key(step));
+    if (at < 0) return false;
+    left.splice(at, 1);
+  }
+  return true;
 }
 
 /** Living enemies as "index:enemy_id", in order. */
@@ -1705,6 +1721,33 @@ function planTurn(env: DecisionEnv): Decision | null {
       rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; ${hpText(top.outcome.hpLoss)}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
+
+  // 3b. Jev's (or DeepSeek's) line of this turn was cut short by a draw: continued, not asked again,
+  // while the re-plan still ranks a line playing all its remaining cards (the drawn cards may join)
+  // among code's top two (FEY6 F6 T1: Jev 0.86 for "Pommel Strike x2, True Grit"; after each draw the
+  // re-ask got 0.46 and 0.47 for other lines, -16 instead of -9; X226 the same after a potion's draw).
+  const drawn = env.screenMemory.drawCommit;
+  if (
+    drawn &&
+    drawn.fight === fightKey(state) &&
+    drawn.turn === (state.turn ?? null) &&
+    drawn.enemies === livingEnemySignature(state.raw) &&
+    drawn.steps.length > 0 &&
+    drawn.steps.every((step) => !step.cardId.startsWith("POTION:") && cardFor(step, hand) !== undefined)
+  ) {
+    const continued = surviving.slice(0, 2).find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && playsAll(plan.steps, drawn.steps));
+    if (continued) {
+      const rank = surviving.indexOf(continued) + 1;
+      commit(env, state.turn, continued, hand, drawn.via);
+      return {
+        kind: "act",
+        label: "combat/plan-continue",
+        intent: firstIntent(continued, hand, env),
+        rationale: `continuing the ${drawn.via === "jev" ? "Jev" : drawn.via === "deepseek" ? "DeepSeek" : "Claude"}-chosen plan after the draw (its ${drawn.steps.map(stepText).join(", ")} still in code's top 2, rank ${rank}): ${continued.steps.map(stepText).join(", ") || "end turn"}; ${hpText(continued.outcome.hpLoss)}, dmg ${continued.outcome.damageDealt}${calcNote}`,
+      };
+    }
+  }
+  env.screenMemory.drawCommit = undefined;
 
   // 4. A judgement call (or a dangerous turn with potions available): ask Jev.
   const focusDamage = (plan: Plan): number | null => {

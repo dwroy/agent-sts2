@@ -82,6 +82,13 @@ export interface ScreenMemory {
    */
   plannedAfter?: { turn: number | null; steps: import("../strategy/turn-solver.js").Step[] };
   /**
+   * A Jev/DeepSeek-chosen line cut short by a draw (or Gambler's Brew) this turn: its steps still to play.
+   * The re-plan after the draw continues it while it is still one of code's top two lines, instead of
+   * asking again (FEY6 F6 T1: 0.86 for "Pommel Strike x2, True Grit", then 0.46 and 0.47 for other lines
+   * on the re-asks after each draw).
+   */
+  drawCommit?: { fight: string; turn: number | null; via: CombatPlanMemo["via"]; steps: import("../strategy/turn-solver.js").Step[]; enemies: string };
+  /**
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
    */

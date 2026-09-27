@@ -86,3 +86,41 @@ describe("a line another shown line beats on HP and damage is never labelled cod
     expect(best[0]!.hp_lost).toBe(Math.min(...options.map((line) => line.hp_lost)));
   });
 });
+
+describe("a Jev line cut short by a draw is continued while code still ranks it top 2 (FEY6 F6 T1)", () => {
+  const firstAsk = () => {
+    const env = loggedEnv(logged("fey6-f6-t1"));
+    const decision = planCombatTurn(env) as AskDecision;
+    // Logged: Jev 0.86 for plan 1, "Pommel Strike x2, True Grit" (code rank 1).
+    const resolved = decision.resolve(answer("plan1", 0.86));
+    resolved.apply?.();
+    return env.screenMemory.drawCommit;
+  };
+
+  it("each re-plan after a Pommel Strike draw plays the rest of Jev's line instead of asking again", () => {
+    let commit = firstAsk();
+    expect(commit?.steps.map((step) => step.cardId)).toEqual(["POMMEL_STRIKE", "TRUE_GRIT"]);
+    // Drew Defend: logged re-ask, Jev 0.46 for another line. Now: the committed line continues.
+    const env2 = loggedEnv(logged("fey6-f6-t1-reask"), { screenMemory: { ...loggedEnv(logged("fey6-f6-t1-reask")).screenMemory, drawCommit: commit } });
+    const second = planCombatTurn(env2);
+    expect(second?.kind).toBe("act");
+    expect(second?.kind === "act" ? second.label : "").toBe("combat/plan-continue");
+    expect(second?.kind === "act" ? second.rationale : "").toMatch(/Jev-chosen plan after the draw/);
+    commit = env2.screenMemory.drawCommit;
+    expect(commit?.steps.map((step) => step.cardId)).toEqual(["TRUE_GRIT"]);
+    // Drew Uppercut with 1 energy left: logged re-ask, Jev 0.47 for Breakthrough (-17). Now True Grit.
+    const env3 = loggedEnv(logged("fey6-f6-t1-reask2"), { screenMemory: { ...loggedEnv(logged("fey6-f6-t1-reask2")).screenMemory, drawCommit: commit } });
+    const third = planCombatTurn(env3);
+    expect(third?.kind === "act" ? third.rationale : "").toMatch(/Jev-chosen plan after the draw.*: 坚毅/);
+  });
+
+  it("a remaining line code no longer ranks top 2 is asked again", () => {
+    const fx = logged("fey6-f6-t1-reask2");
+    const target = Number((((fx.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!)["index"]);
+    const strike = { cardIndex: 1, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target, targetName: null };
+    const base = loggedEnv(fx);
+    const env = loggedEnv(fx, { screenMemory: { ...base.screenMemory, drawCommit: { ...firstAsk()!, steps: [strike] } } });
+    expect(planCombatTurn(env)?.kind).toBe("ask");
+    expect(env.screenMemory.drawCommit).toBeUndefined();
+  });
+});
