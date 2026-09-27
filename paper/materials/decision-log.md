@@ -141,3 +141,5 @@
 - 2026-09-27 11:29 消融第 1 轮完成（code F17/F17、jev F24、ds F33、full F7）。full 组 X226 死于代码 bug（F6 事件过期『已结束』帧→点 proceed 落到新事件 JUNGLE_MAZE 选项 0，−18 血），与模型无关；为保证四组同一份代码，bug 先记录、实验结束后修。注意：ds 组的 Jev 桩会在 deciders 里记为 jev，分析时以 runs.jsonl 的 arm 字段为准。
 - 2026-09-27 11:30 卡死：11:27:50 游戏进程崩溃/退出（mod 连接 ECONNRESET，之后 8080 无响应，tasklist 里没有游戏进程），play 进程每 12 秒重启、连不上 mod。需 Dai 重新启动游戏（带 mod）；autoplay 会自动接上，当前消融组（jev，第 6 局）保持不变。
 - 2026-09-27 11:51 恢复：Dai 授权后由 Claude 用 cmd.exe start steam://rungameid/2868840 重新启动游戏，5 秒后 mod 可用，autoplay 从主菜单『继续』接上存档（F33 二幕 boss 战，消融组 jev 第 6 局）。游戏崩溃约 24 分钟。
+
+- 2026-09-27 ablation 10/20 post-mortems (R2H1 full F33 crab, BUUY code F17 Soul Fysh, LSWU jev F21 Hunter Killer). Queued (freeze): TENDER_POWER on player not modelled in solver (5th Hunter Killer loss; disable lethal shortcut meanwhile); Skill Potion never planned; gap ≥20 should scale AoE/strength bonus (gap/2) and halve mustHave block; event.ts all-0 scores (3rd code-arm run hurt).
