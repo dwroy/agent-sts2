@@ -11,6 +11,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
+import { awakeDamagePerTurn } from "../knowledge/move-model.js";
 import { modelHandCard } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 
@@ -177,6 +178,67 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   return Math.round((base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE + relicDamagePerTurn(relicIds, turns, crab)) * (need?.realised ?? 1));
 }
 
+/**
+ * Rough block a turn of the deck: block per card drawn, limited by energy like deckDamagePerTurn, with
+ * the same ESTIMATE_SCALE for draw and powers the count misses (HCBJ F17: ~5.6 against ~8 realised, the
+ * Matriarch's ~14.8 a turn less 6.8 lost).
+ */
+export function deckBlockPerTurn(state: GameState, knowledge: Knowledge): number {
+  const run = asRecord(state.run?.raw);
+  const cards = asArray(run["deck"]).map((entry, index) => modelHandCard(entry, index, knowledge));
+  if (cards.length === 0) return 0;
+  const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
+  let block = 0;
+  let cost = 0;
+  for (const card of cards) {
+    const playable = card.type !== "Curse" && card.type !== "Status" && (card.xCost || card.cost >= 0);
+    if (!playable) continue;
+    cost += card.xCost ? energy : Math.max(0, card.cost);
+    block += card.block;
+  }
+  const n = cards.length;
+  const playedShare = Math.min(1, energy / Math.max(1, (HAND * cost) / n));
+  return Math.round(HAND * (block / n) * playedShare * ESTIMATE_SCALE * 10) / 10;
+}
+
+/** HP fraction the clock assumes the boss is entered with before its last floor: the run plans' usual entry_hp target. */
+export const ASSUMED_ENTRY_HP = 0.85;
+
+/**
+ * Turns we can stay alive in the boss fight: its sleep turns plus entry HP over the net hit a turn
+ * (the move model's awake average less the deck's block a turn, at least 1). Null when the boss's moves
+ * are not modelled. HCBJ F17: the clock assumed 12 turns for the Matriarch; 52 HP against ~14.8 a turn
+ * and ~7 block lasted to T9 (3 asleep + 6 awake).
+ */
+export function survivableBossTurns(bossId: string, entryHp: number, blockPerTurn: number): number | null {
+  const damage = awakeDamagePerTurn(bossId);
+  if (!damage || entryHp <= 0) return null;
+  return damage.sleepTurns + entryHp / Math.max(1, damage.perTurn - blockPerTurn);
+}
+
+/** HP the boss will likely be entered with: current HP on the floor before it, else at least the assumed target. */
+export function clockEntryHp(state: GameState): number {
+  const hp = state.run?.current_hp ?? 0;
+  const max = state.run?.max_hp ?? 0;
+  const bossNext = BOSS_FLOORS.includes((state.run?.floor ?? 0) + 1);
+  return bossNext ? hp : Math.max(hp, Math.round(ASSUMED_ENTRY_HP * max));
+}
+
+/**
+ * The boss's need with its turns capped by the turns we can survive from the expected entry HP; the
+ * damage a turn follows (HCBJ F16: gap 1 at 12 turns read "trade HP for damage"; at ~9 turns it is ~7).
+ */
+export function cappedBossNeed(state: GameState, knowledge: Knowledge): (ReturnType<typeof bossNeed> & object) & { survivableTurns: number | null; entryHp: number } | null {
+  const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0);
+  if (!need) return null;
+  const entryHp = clockEntryHp(state);
+  const survivable = survivableBossTurns(need.id, entryHp, deckBlockPerTurn(state, knowledge));
+  if (survivable === null || survivable >= need.turns) return { ...need, survivableTurns: survivable === null ? null : Math.round(survivable * 10) / 10, entryHp };
+  const turns = Math.max(1, survivable);
+  return { ...need, turns: Math.round(turns * 10) / 10, perTurn: Math.round(need.hp / turns), survivableTurns: Math.round(survivable * 10) / 10, entryHp };
+}
+
 /** Mercury Hourglass: 3 to every enemy at the start of each turn (same number as the solver's). */
 const HOURGLASS_DAMAGE = 3;
 /** Festive Popper: once at the start of each fight (EJXC F33: ~9 of the ~58 relic damage). */
@@ -211,7 +273,7 @@ export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | n
   // On a boss floor the boss id is the one just killed; the next act's is not known yet (7DFB F33:
   // Dominate valued against the dead crab's numbers).
   if (BOSS_FLOORS.includes(state.run?.floor ?? 0)) return null;
-  const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0);
+  const need = cappedBossNeed(state, knowledge);
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck) };
@@ -249,16 +311,20 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
 
 /** The run plan's view of the act boss and the deck's damage. */
 export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
-  const bossId = str(asRecord(state.run?.raw)["boss_id"]);
-  const need = bossNeed(bossId, state.run?.ascension ?? 0);
+  const need = cappedBossNeed(state, knowledge);
   if (!need) return null;
+  const table = bossNeed(need.id, state.run?.ascension ?? 0)!;
   const deck = deckDamagePerTurn(state, knowledge);
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const relics = relicDamagePerTurn(relicIds, need.turns, need.id === "KAISER_CRAB");
+  // The same turns as the deck estimate's relic share (the table's).
+  const relics = relicDamagePerTurn(relicIds, table.turns, need.id === "KAISER_CRAB");
   return {
     boss: need.id,
     boss_hp: need.hp,
     fight_turns: need.turns,
+    ...(need.turns < table.turns
+      ? { turns_note: `${table.turns} turns in the table, capped at ${need.turns}: the turns ${need.entryHp} HP survives against the boss's hits less the deck's block` }
+      : {}),
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
     estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
