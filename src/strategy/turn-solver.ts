@@ -371,6 +371,11 @@ export interface Outcome {
   stuns?: string[];
   /** Their next hits, saved by the stun (0 when none). */
   stunSaved?: number;
+  /**
+   * HP of next turn's expected hit, past the HP this line leaves, that a block potion drunk now would
+   * have covered kept (N95W F25 T4). The HP guard counts it as loss.
+   */
+  blockPotionShort?: number;
   /** Enemies left at or below the start-of-turn damage (Mercury Hourglass): dead at our next turn start. */
   startTurnKills: string[];
   /** Withers this plan adds to the hand (Withering Presence). */
@@ -1287,6 +1292,8 @@ export const WOUND_COST = 2;
 export const GAMBIT_COST = 60;
 /** Cards Pact's End needs in the exhaust pile. */
 export const PACTS_END_EXHAUST = 3;
+/** HP weight per point of next turn's lethal hit a drunk block potion would have covered. */
+export const KEPT_BLOCK_POTION_WEIGHT = 2;
 /** Floor of what one more Sandpit turn is worth in damage (sandpitTurnValue raises it when behind). */
 export const SANDPIT_TURN_DAMAGE = 20;
 
@@ -1512,6 +1519,18 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (dies) score -= 100_000;
   const stunSaved = stunned.reduce((sum, enemy) => sum + (enemy.imbalanced ?? 0), 0);
   if (!dies) score += weights.hp * stunSaved;
+  // A block potion drunk now is gone for next turn: when next turn's expected hit reaches the HP this
+  // line leaves, the part of it the potion would have covered is counted (N95W F25 T4: 12 HP, Block
+  // Potion on an 8-damage Pulsate with Defend in hand and the energy for it; T5's Jab 19 met 5 block).
+  let potionShort = 0;
+  if (!winsFight && !dies && (input.nextIncoming ?? 0) > 0) {
+    const drunkBlock = sim.steps.reduce((sum, step) => {
+      const potion = input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId && card.type === "Potion");
+      return sum + (potion ? potion.block + (potion.plating ?? 0) : 0);
+    }, 0);
+    potionShort = Math.min(drunkBlock, Math.max(0, (input.nextIncoming ?? 0) - hpAfter + 1));
+    score -= weights.hp * KEPT_BLOCK_POTION_WEIGHT * potionShort;
+  }
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
@@ -1755,6 +1774,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       potionCost: sim.potionCost,
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunSaved } : {}),
+      ...(potionShort > 0 ? { blockPotionShort: potionShort } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,

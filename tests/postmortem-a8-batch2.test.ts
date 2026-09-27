@@ -216,3 +216,12 @@ describe("Entrench doubles the block up when played; at 0 block it is worth 0 (R
     expect(top).not.toMatch(/巩固/);
   });
 });
+
+describe("a block potion is kept when a Defend in hand takes the hit and next turn's hit reaches our HP (N95W F25 T4)", () => {
+  it("12/80, Pulsate 8, Jab next: Defend + the attacks, the Block Potion kept (logged: Block Potion + Flex + attacks, Defend unplayed; T5 Jab 19 met 5 block)", () => {
+    const { act, lines } = combatLines(logged("n95w-f25-t4"));
+    const top = act?.kind === "act" ? act.rationale : String(lines[0]!["plays"]);
+    expect(top).not.toMatch(/格挡药水/);
+    expect(top).toMatch(/防御/);
+  });
+});

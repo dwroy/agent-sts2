@@ -376,10 +376,12 @@ export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unkno
  */
 export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp)): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
-  const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
+  // A block potion drunk for a hit the hand could take is next turn's loss (turn-solver blockPotionShort).
+  const loss = (plan: Plan) => plan.outcome.hpLoss + (plan.outcome.blockPotionShort ?? 0);
+  const minLoss = Math.min(...options.map(loss));
   const bound = minLoss + slack;
-  if (chosen.outcome.hpLoss <= bound) return null;
-  return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+  if (loss(chosen) <= bound) return null;
+  return options.find((plan) => loss(plan) <= bound) ?? options.find((plan) => loss(plan) === minLoss) ?? null;
 }
 
 /** This fight's HP-guard record (screenMemory.hpGuard), read-only: the extra HP accepted so far. */
