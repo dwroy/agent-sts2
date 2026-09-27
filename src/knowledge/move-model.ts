@@ -53,3 +53,22 @@ export function expectedNextDamage(enemyId: string, currentMove: string): number
 export function hasBuffMove(enemyId: string): boolean {
   return (load()[enemyId]?.buffs ?? []).length > 0;
 }
+
+/** The enemy's biggest average attack in the model (a woken sleeper's first hit), or null when unknown. */
+export function maxMoveDamage(enemyId: string): number | null {
+  const damage = Object.values(load()[enemyId]?.damage ?? {});
+  return damage.length > 0 ? Math.max(...damage) : null;
+}
+
+/**
+ * Next turn's expected hit with growth: Ritual N adds N Strength at the end of every enemy turn, so an
+ * attack repeated next turn hits N more per hit than the one shown now (NX48 F35: SAVAGE 12 -> 21 -> 30
+ * -> 39 on Ritual 9; every option showed the model's average 22).
+ */
+export function nextDamageWithGrowth(base: number | null, ritual: number, shown: { damage: number; hits: number }[]): number | null {
+  if (ritual <= 0) return base;
+  const now = shown.filter((attack) => attack.damage > 0);
+  if (now.length === 0) return base === null ? null : base + ritual;
+  const grown = now.reduce((sum, attack) => sum + (attack.damage + ritual) * Math.max(1, attack.hits), 0);
+  return Math.max(base ?? 0, grown);
+}

@@ -22,9 +22,9 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { expectedNextDamage } from "../knowledge/move-model.js";
+import { expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
 import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
-import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
@@ -87,7 +87,7 @@ const MODELLED_ENEMY_POWERS = new Set([
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
-  "SANDPIT_POWER", "ASLEEP_POWER", "ENRAGE_POWER", "ADAPTABLE_POWER", "NEMESIS_POWER",
+  "SANDPIT_POWER", "ASLEEP_POWER", "ENRAGE_POWER", "ADAPTABLE_POWER", "NEMESIS_POWER", "VITAL_SPARK_POWER", "RAVENOUS_POWER",
   // Surrounded's back attack is in the intents (backAttack in turn-solver.ts); left unmodelled, it cut
   // our damage by 20% (PLC F33 T8: Twin Strike 11x2 planned as 8x2, Crusher left at 2 not 8).
   "BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER", "WITHERING_PRESENCE_POWER", "DEMISE_POWER",
@@ -286,6 +286,11 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       sandpit: powerAmount(enemy, "SANDPIT_POWER"),
       asleep: powerAmount(enemy, "ASLEEP_POWER"),
       slumber: powerAmount(enemy, "SLUMBER_POWER"),
+      ...(powerAmount(enemy, "ASLEEP_POWER") + powerAmount(enemy, "SLUMBER_POWER") > 0
+        ? { wakeHit: Math.round((maxMoveDamage(str(enemy["enemy_id"])) ?? 0) + powerAmount(enemy, "STRENGTH_POWER")) || undefined }
+        : {}),
+      vitalSpark: powerAmount(enemy, "VITAL_SPARK_POWER"),
+      ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
       // is what lost G7EJ and WQTRX (the explosion is modelled through `eruption` instead).
       // Any Strength already, not just this turn's Buff intent (6A36: Sludge Spinner's Rage +3 every
@@ -398,6 +403,7 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
+  if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
   if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
@@ -888,7 +894,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const nextIncoming = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
-    .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
+    .reduce((sum, enemy) => sum + (nextHitOf(enemy) ?? 0), 0);
   const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // Several enemies can share the id (CWMP F7: four Phantasmal Gardeners, index 0 was always taken
   // while the plan's Enlarge eel sat at 19 HP for six turns): the lowest-HP one of them, re-read each turn.
@@ -1115,7 +1121,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     commit(env, state.turn, best, hand, "code");
     return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
   }
-  const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
+  // A line that wakes a sleeper into next turn and is left within its first hit (+ next turn's other
+  // hits) risks death: dropped while a line without that risk survives (FH3M F30 T2: Offering's Inferno
+  // woke the Slumbering Beetle a turn early; 8 HP met ROLL_OUT 16 after the bowlbugs).
+  const wakeRisk = (plan: Plan) => !plan.outcome.winsFight && (plan.outcome.wakeHit ?? 0) > 0 && plan.outcome.hpAfter <= nextIncoming + (plan.outcome.wakeHit ?? 0) + WAKE_MARGIN;
+  const alive = solved.plans.filter((plan) => !plan.outcome.dies);
+  const surviving = hardRuleLines(alive.some((plan) => !wakeRisk(plan)) ? alive.filter((plan) => !wakeRisk(plan)) : alive, enemies);
   const options = distinctPlans(surviving, MAX_OPTIONS);
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
   // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
@@ -1392,7 +1403,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (env.jevContext === "v1") {
     const liveEnemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
     const nextThreat = new Map<number, number | null>(
-      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
+      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, nextHitOf(enemy)]),
     );
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
@@ -1767,4 +1778,14 @@ export function youAreMineTurn(combat: Record<string, unknown>): { amalgamIndex:
   const amalgam = living.find((enemy) => str(enemy["enemy_id"]) === "TORCH_HEAD_AMALGAM" && num(enemy["current_hp"]) > 0);
   const index = amalgam ? numOrNull(amalgam["index"]) : null;
   return index === null ? null : { amalgamIndex: index };
+}
+
+/** An enemy's expected hit next turn: its fixed cycle, else the move model, grown by Ritual (NX48 F35). */
+export function nextHitOf(enemy: Record<string, unknown>): number | null {
+  const base = multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]));
+  const shown = asArray(enemy["intents"]).map(asRecord).flatMap((intent) => {
+    const damage = numOrNull(intent["damage"]);
+    return damage === null ? [] : [{ damage, hits: Math.max(1, Math.round(numOrNull(intent["hits"]) ?? 1)) }];
+  });
+  return nextDamageWithGrowth(base, powerAmount(enemy, "RITUAL_POWER"), shown);
 }

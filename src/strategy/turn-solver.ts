@@ -65,6 +65,19 @@ export interface EnemySim {
    */
   asleep?: number;
   slumber?: number;
+  /** A sleeper's first hit once awake (move model's biggest attack); sleepTurnDamage when absent. */
+  wakeHit?: number;
+  /**
+   * Vital Spark N (Infested Prism): every Skill we play adds N to each of its hits this turn (KQK2 F25:
+   * T5 JAB 15 became 27 after three Skills; predicted -0, took -11).
+   */
+  vitalSpark?: number;
+  /**
+   * Ravenous N (Corpse Slug): when another enemy dies, this one eats: stunned this turn (its attack is
+   * lost) and +N Strength for good (5JU3 F11 T3: one slug killed, the other two skipped their attacks
+   * and hit 7x2 / 12 after).
+   */
+  ravenous?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /**
@@ -340,6 +353,12 @@ export interface Outcome {
    */
   sleepCost: number;
   /**
+   * First hits of sleepers this line wakes into next enemy turn (Slumber taken to 1 or below from 2+,
+   * Asleep 2+ woken), 0 when none: part of next turn's danger (FH3M F30 T2: Offering's Inferno woke the
+   * Slumbering Beetle a turn early, ROLL_OUT 16 met 4 HP).
+   */
+  wakeHit?: number;
+  /**
    * Lasting value set up this turn (powers such as Crimson Mantle, Stone Armor, Juggernaut). An axis,
    * so a line without them cannot dominate one that plays them (9NE1: 0-cost Mantle never played).
    */
@@ -362,7 +381,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; sparkBonus?: number; stunned?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -671,6 +690,12 @@ export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   enemy.alive = false;
+  // Ravenous: the others eat the dead one (stunned this turn, Strength for good).
+  for (const other of sim.enemies) {
+    if (other === enemy || !other.alive || !(other.ravenous ?? 0)) continue;
+    other.stunned = true;
+    other.strengthDelta += other.ravenous ?? 0;
+  }
   // A hit that lands on every enemy at once kills both crabs together (no rage in between).
   if (sim.sweeping) sim.pendingRage = true;
   else crabRage(sim);
@@ -838,6 +863,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
+  // Vital Spark: this turn's hits only.
+  if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.vitalSpark ?? 0) > 0) enemy.sparkBonus = (enemy.sparkBonus ?? 0) + (enemy.vitalSpark ?? 0);
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
@@ -1056,7 +1083,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
   const player = input.player;
   const hits: IncomingHit[] = [];
   for (const enemy of sim.enemies) {
-    if (!enemy.alive) continue;
+    if (!enemy.alive || enemy.stunned) continue;
     const start = input.enemies.find((entry) => entry.index === enemy.index);
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
@@ -1072,7 +1099,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         const shown = player.surrounded ? backAttack(attack.damage, enemy.index, player.facing ?? null, sim.facing) : attack.damage;
         // The shown intent already includes our Vulnerable (MAWLER 14 -> 21, SOUL_FYSH 16 -> 24 in
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
-        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
+        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0) + (enemy.sparkBonus ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
@@ -1083,6 +1110,27 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     }
   }
   return hits;
+}
+
+/** HP over next turn's hits (a woken sleeper's included) below which a line risks death. */
+export const WAKE_MARGIN = 3;
+/** Score cost of a line that risks death to a sleeper it wakes, per point of its first hit (HP weight). */
+export const WAKE_RISK_WEIGHT = 2;
+
+/**
+ * First hits next enemy turn of the sleepers this line wakes: Slumber taken to 1 or below from 2+ (it
+ * ticks to 0 on its own turn and attacks the next), Asleep 2+ woken (stunned now, attacks next).
+ */
+export function wokenHits(living: Sim["enemies"], input: SolverInput): number {
+  let total = 0;
+  for (const enemy of living) {
+    const start = input.enemies.find((entry) => entry.index === enemy.index);
+    if (!start || start.attacks.length > 0) continue;
+    const slumberWoken = (start.slumber ?? 0) >= 2 && (enemy.slumber ?? 0) <= 1;
+    const asleepWoken = (start.asleep ?? 0) >= 2 && (enemy.asleep ?? 0) === 0;
+    if (slumberWoken || asleepWoken) total += start.wakeHit ?? sleepTurnDamage(start);
+  }
+  return total;
 }
 
 /** Damage this turn that is worth waking a sleeper for (fraction of its HP). */
@@ -1446,6 +1494,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     sleepCost += weights.hp * enemy.sleepLost * sleepTurnDamage(start);
   }
   score -= sleepCost;
+  // A sleeper woken into next enemy turn: its first hit joins next turn's danger. A line left within
+  // NEXT_HIT_MARGIN of that hit risks death (FH3M F30, RC9A F27).
+  const wakeHit = winsFight ? 0 : wokenHits(living, input);
+  if (wakeHit > 0 && hpAfter <= (input.nextIncoming ?? 0) + wakeHit + WAKE_MARGIN) score -= weights.hp * wakeHit * WAKE_RISK_WEIGHT;
   // Debuffs only matter on enemies that survive the turn.
   let enrageCost = 0;
   for (const enemy of living) {
@@ -1512,6 +1564,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,
+      ...(wakeHit > 0 ? { wakeHit } : {}),
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
@@ -1521,7 +1574,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}`;
 }
 
