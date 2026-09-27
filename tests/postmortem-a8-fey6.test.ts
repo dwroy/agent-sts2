@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision } from "../src/project/types.js";
 import { hpClockTurns, measuredDamagePerTurn, planCombatTurn } from "../src/screens/combat-plan.js";
+import { planDecision } from "../src/screens/index.js";
 import { setupRisksDeath } from "../src/strategy/intent.js";
 import { asArray, asRecord } from "../src/util/json.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -122,5 +123,22 @@ describe("a Jev line cut short by a draw is continued while code still ranks it 
     const env = loggedEnv(fx, { screenMemory: { ...base.screenMemory, drawCommit: { ...firstAsk()!, steps: [strike] } } });
     expect(planCombatTurn(env)?.kind).toBe("ask");
     expect(env.screenMemory.drawCommit).toBeUndefined();
+  });
+});
+
+describe("map survival does not route through an optional elite the plan forbids (PCGH F25)", () => {
+  const optionsOf = () => {
+    const decision = planDecision(loggedEnv(logged("pcgh-map-f25"))).decision;
+    expect(decision?.kind).toBe("ask");
+    const criteria = Object.values((decision as AskDecision).questions)[0]!.criteria ?? {};
+    return Object.fromEntries(Object.entries(criteria).map(([key, value]) => [key, JSON.parse(String(value)) as Record<string, string>]));
+  };
+  it("(8,2)'s survival follows the (10,2) rest path avoid_elites takes, not the F29 rest behind the (10,3) elite", () => {
+    const fx = logged("pcgh-map-f25");
+    expect(fx.runPlan?.routeRisk).toBe("avoid_elites");
+    // Logged: code picked (8,2) labelled "alive through F28 at the F29 rest ~53%".
+    const options = optionsOf();
+    const left = Object.values(options).find((option) => option["position"] === "row 8, column 2")!;
+    expect(left["route_survival"]).not.toMatch(/F29 rest/);
   });
 });
