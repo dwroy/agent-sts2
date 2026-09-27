@@ -152,6 +152,11 @@ describe("run plan commitments (entry HP, saved potions, must-have roles)", () =
     expect(runPlanEliteShift(committed, 1, 5)).toBe(0);
     expect(planSavesPotion(committed, "BLOCK_POTION", "获得 12 点格挡。")).toBe(true);
     expect(planSavesPotion(committed, "FIRE_POTION", "造成 20 点伤害。")).toBe(false);
+    // GZ24 F8: the Dexterity Potion's text is 「获得{DexterityPower}点敏捷」; Regen heals over turns.
+    expect(planSavesPotion(committed, "DEXTERITY_POTION", "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。")).toBe(true);
+    expect(planSavesPotion(committed, "DEXTERITY_POTION", "")).toBe(true);
+    expect(planSavesPotion({ ...committed, savePotions: ["heal"] }, "REGEN_POTION", "")).toBe(true);
+    expect(planSavesPotion({ ...committed, savePotions: ["heal"] }, "REGEN_POTION", "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。")).toBe(true);
     expect(mustHaveBonus(committed, "THUNDERCLAP", ["STRIKE_R"]).bonus).toBe(MUST_HAVE_BONUS);
     expect(mustHaveBonus(committed, "THUNDERCLAP", ["STOMP", "INFERNO"]).bonus).toBe(4);
     expect(mustHaveBonus(committed, "DEFEND_R", []).bonus).toBe(0);

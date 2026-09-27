@@ -41,6 +41,17 @@ export const SAVE_POTIONS_WITHIN = 10;
 export const BOSS_DRINK_FIRST_LOSS = 10;
 
 /**
+ * A line drinking a potion at 0 energy that gains nothing this turn over the potion-free lines: no less
+ * HP lost, no more damage dealt, no win (GZ24 F8 T1: Dexterity Potion at 0 energy, 0 block from it).
+ */
+export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
+  if (dry.length === 0 || plan.outcome.winsFight || !plan.steps.some((step) => step.cardId.startsWith("POTION:"))) return false;
+  const bestLoss = Math.min(...dry.map((entry) => entry.outcome.hpLoss));
+  const bestDamage = Math.max(...dry.map((entry) => entry.outcome.damageDealt));
+  return plan.outcome.hpLoss >= bestLoss && plan.outcome.damageDealt <= bestDamage;
+}
+
+/**
  * Elite/boss: whether a potion-free line overrides Jev's low-confidence potion pick. A line that drinks
  * loses to a dry line losing no more HP; a drink-first pick (its line unknown until re-planned) only
  * to a dry line losing at most max(3, 10% HP). Never when the best dry line costs 30% of our HP.
@@ -572,23 +583,32 @@ export function livingEnemySignature(raw: Record<string, unknown>): string {
 }
 
 /**
+ * Frantic Escapes the Sandpit race can count on: those in hand this turn's energy pays for (cheapest
+ * first), plus one when the draw or discard pile holds any and this turn has a draw source (a draw
+ * card or a draw potion) to fetch it. Escapes left in the piles are not turns in hand (X8HF F33 T5:
+ * six in the discard pile counted as six turns, 218 / 8 read as a won race, the guard swapped ~79
+ * damage for 15; one Escape was played all fight).
+ */
+export function franticEscapesLeft(raw: Record<string, unknown>, hand: CardModel[], energy = Infinity, drawSource = false): number {
+  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
+  let count = 0;
+  let spent = 0;
+  for (const card of hand.filter((entry) => entry.cardId === "FRANTIC_ESCAPE" && entry.playable).sort((a, b) => a.cost - b.cost)) {
+    if (spent + card.cost > energy) break;
+    spent += card.cost;
+    count += 1;
+  }
+  const inPiles = [view["draw"], view["discard"]].some((pile) =>
+    asArray(pile).map(asRecord).some((entry) => str(asArray(entry["card_ids"])[0]) === "FRANTIC_ESCAPE"),
+  );
+  return count + (inPiles && drawSource ? 1 : 0);
+}
+
+/**
  * Sandpit hard guard (TTVY T6): never end the turn with the Sandpit about to reach 0 while an
  * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
  * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
  */
-/** Frantic Escapes still to play this fight: hand, draw pile and discard pile (agent_view lines). */
-export function franticEscapesLeft(raw: Record<string, unknown>, hand: CardModel[]): number {
-  const view = asRecord(asRecord(raw["agent_view"])["combat"]);
-  let count = hand.filter((card) => card.cardId === "FRANTIC_ESCAPE").length;
-  for (const pile of [view["draw"], view["discard"]]) {
-    for (const entry of asArray(pile).map(asRecord)) {
-      if (str(asArray(entry["card_ids"])[0]) !== "FRANTIC_ESCAPE") continue;
-      count += Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(entry["line"]))?.[1] ?? 1);
-    }
-  }
-  return count;
-}
-
 export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
   if (!decision) return decision;
   const combat = asRecord(env.state.raw["combat"]);
@@ -860,11 +880,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
-  const solveWith = (free: boolean) =>
+  const solveWith = (free: boolean, withPotions = true) =>
     solveTurn({
       hand: [
         ...hand,
-        ...potionsAll
+        ...(withPotions ? potionsAll : [])
           .map((potion) =>
             modelPotion(
               potion.potion_id,
@@ -966,6 +986,17 @@ function planTurn(env: DecisionEnv): Decision | null {
     const keep = solved.plans.filter((plan) => plan.outcome.winsFight || !drinksKeptPotion(plan));
     if (keep.length < solved.plans.length && keep.some((plan) => !plan.outcome.dies)) solved = { ...solved, plans: keep };
   }
+  // A potion drunk at 0 energy that adds no block or damage this turn is worth the same next turn (GZ24
+  // F8 T1: the elite veto refused the Dexterity line, the re-plan after three cards at 0 energy ranked
+  // "potion Dexterity Potion; hp -17, dmg 0" first; Shrug It Off, Blood Wall and Defend unplayable).
+  // Dropped while a potion-free line keeps as much HP and deals as much damage.
+  // The potion-free lines are solved apart when the ranking dropped them (GZ24: "only line").
+  if (playerSim.energy <= 0 && solved.plans.some(drinksPotion)) {
+    const shownDry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
+    const dry = shownDry.length > 0 ? shownDry : solveWith(false, false).plans.filter((plan) => !plan.outcome.dies);
+    const kept = solved.plans.filter((plan) => !zeroEnergyDrinkIdle(plan, dry));
+    if (dry.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: [...kept, ...dry.filter((plan) => !kept.includes(plan))] };
+  }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -989,9 +1020,20 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
     const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
     if (potionsNow.length > 0) return planCombatPerCard(env);
-    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
-    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
+    // A modelled draw potion (Swift, Clarity) is a draw source like a draw card: drunk first while
+    // energy is left and the piles hold cards (X8HF F33 T6: Sandpit 1, six Frantic Escapes in 27
+    // cards, Pommel Strike and Shrug It Off drew one each, Swift Potion carried to the death).
+    const drawPotions = noDraw || playerSim.energy <= 0 || drawPile === undefined
+      ? []
+      : potionsAll
+          .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0))
+          .filter((card): card is CardModel => card !== null && drawsCards(card));
+    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp, drawPotions);
+    const drinking = leastLoss.steps[0]?.cardId.startsWith("POTION:") === true && drawPotions.some((card) => card.cardId === leastLoss.steps[0]!.cardId);
+    const drawing = drinking || (leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card)));
     commit(env, state.turn, leastLoss, hand, "code");
+    // Re-planned after the drawn cards arrive.
+    if (drinking) env.screenMemory.combatPlan = null;
     return {
       kind: "act",
       label: "combat/least-loss",
@@ -1027,6 +1069,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const due = fightPlan
     ? potions.find((potion) => {
         if (drunkHere.includes(potion.potion_id)) return false;
+        // The run plan's boss keep outranks a hallway/elite plan's "early" (UP1C: a boss potion drunk on
+        // T1 of a fight the run plan had it kept through).
+        if (keptForBoss(potion.potion_id, potion.text)) return false;
         const use = fightPlan.potions[potion.potion_id];
         // big_hit only for a potion that blunts the hit (92MW F29 T1: Stable Serum "big_hit", drunk on a
         // 24 hit it does nothing against; the fight was won before its planned turns).
@@ -1134,9 +1179,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   // line deals (WB02 F33: the guard swapped 4 lines, ~60 damage for ~35 HP; MAHA lost by 1 HP). The
   // guard then only keeps lines that do not die this turn (already all that are offered).
   const sandpitNow = Math.min(...enemies.filter((enemy) => enemy.hp > 0 && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!));
+  const sandpitDrawSource =
+    !noDraw &&
+    (hand.some((card) => card.playable && card.cardId !== "FRANTIC_ESCAPE" && card.cost <= playerSim.energy && drawsCards(card) && card.hpLoss < playerSim.hp) ||
+      potionsAll.some((potion) => { const model = modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0); return model !== null && drawsCards(model); }));
   const sandpitRaceLost =
     Number.isFinite(sandpitNow) &&
-    bossHpLeft / Math.max(1, sandpitNow + franticEscapesLeft(state.raw, hand)) > Math.max(0, ...surviving.map((plan) => plan.outcome.damageDealt));
+    bossHpLeft / Math.max(1, sandpitNow + franticEscapesLeft(state.raw, hand, playerSim.energy, sandpitDrawSource)) > Math.max(0, ...surviving.map((plan) => plan.outcome.damageDealt));
   // Damage into enemies that are neither minions nor illusions.
   const realDamage = (plan: Plan): number =>
     enemies
@@ -1460,15 +1509,26 @@ function planTurn(env: DecisionEnv): Decision | null {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(plans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+export function leastLossPlan(plans: Plan[], hand: CardModel[], hp = Infinity, drawPotions: CardModel[] = []): Plan {
+  const mostDamage = (candidates: Plan[]): Plan =>
+    candidates.reduce((a, b) =>
+      b.outcome.damageDealt > a.outcome.damageDealt || (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a,
+    );
+  // A modelled draw potion goes first, before any draw card: it costs no energy, so every card it
+  // draws can still be paid for (X8HF F33 T6). The rest of the line is only a note: the turn is
+  // re-planned once the potion has drawn.
+  const potion = drawPotions.find(drawsCards);
+  if (potion && plans.length > 0) {
+    const base = mostDamage(plans);
+    const step: Step = { cardIndex: potion.index, cardId: potion.cardId, upgraded: false, cost: 0, name: potion.name, target: null, targetName: null };
+    return { ...base, steps: [step, ...base.steps.filter((entry) => entry.cardId !== potion.cardId)] };
+  }
   // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first).
   const drawAt = (plan: Plan): number =>
     plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp));
   const drawing = plans.filter((plan) => drawAt(plan) >= 0);
   if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
-  const most = drawing.reduce((a, b) =>
-    b.outcome.damageDealt > a.outcome.damageDealt || (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a,
-  );
+  const most = mostDamage(drawing);
   const at = drawAt(most);
   if (at === 0) return most;
   return { ...most, steps: [most.steps[at]!, ...most.steps.slice(0, at), ...most.steps.slice(at + 1)] };

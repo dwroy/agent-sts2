@@ -691,3 +691,123 @@ describe("Multi Claw next hit (YFG5, ZANM)", () => {
   });
 });
 
+
+describe("burst is for damage/strength/energy potions only (X8HF F33: Swift Potion carried to the death)", () => {
+  const swiftBelt = (raw: Raw): Raw => {
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, {
+      potion_id: "SWIFT_POTION", name: "Swift Potion", description: "抽[blue]3[/blue]张牌。", requires_target: false, valid_target_indices: [],
+    });
+    return raw;
+  };
+
+  it("parses burst on a draw, block or Dexterity potion as any; an attack potion keeps it", () => {
+    const raw = swiftBelt(bossTurnOne());
+    ((raw["run"] as Raw)["potions"] as Raw[])[1] = {
+      ...((raw["run"] as Raw)["potions"] as Raw[])[0]!, index: 1, potion_id: "FIRE_POTION", name: "Fire Potion", description: "造成20点伤害。", occupied: true, can_use: true,
+    };
+    const state = parseGameState(raw);
+    const parsed = parseFightPlan({ approach: "race", potions: { SWIFT_POTION: "burst", FIRE_POTION: "burst" } }, state, testKnowledge, {
+      runId: "TESTRUN123", fight: fightKey(state), kind: "boss", replans: 0,
+    });
+    expect(parsed.potions).toEqual({ SWIFT_POTION: "any", FIRE_POTION: "burst" });
+  });
+
+  it("an old plan's burst on Swift, Block or Dexterity costs and offers like no preference", async () => {
+    const { planPotionUse } = await import("../src/strategy/fight-plan.js");
+    const p = plan({ potions: { SWIFT_POTION: "burst", BLOCK_POTION: "burst", DEXTERITY_POTION: "burst", STRENGTH_POTION: "burst" } });
+    expect(planPotionUse(p, "SWIFT_POTION")).toBe("any");
+    expect(planPotionUse(p, "BLOCK_POTION")).toBe("any");
+    expect(planPotionUse(p, "DEXTERITY_POTION")).toBe("any");
+    expect(planPotionUse(p, "STRENGTH_POTION")).toBe("burst");
+    // The Swift line is not filtered as a kept potion: the same pick as with no plan entry at all.
+    const text = (potions: FightPlan["potions"]) => {
+      const e = env(swiftBelt(bossTurnOne()), { fightPlan: "v1" });
+      e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions });
+      const decision = planCombatTurn(e);
+      return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, e.screenMemory.combatPlan?.remaining]);
+    };
+    expect(text({ SWIFT_POTION: "burst" })).toBe(text({ SWIFT_POTION: "any" }));
+  });
+});
+
+describe("least-loss drinks a modelled draw potion first (X8HF F33 T6: Swift Potion never drunk, Sandpit 1)", () => {
+  const dying = (potionId: string, name: string, description: string, withPiles = true): Raw => {
+    const raw = combatPayload();
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: potionId, name, description, requires_target: false, valid_target_indices: [] });
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["current_hp"] = 4;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "20", damage: 20, hits: 1, total_damage: 20 }] }));
+    if (withPiles) raw["agent_view"] = { combat: { draw: [{ line: "狂乱逃离*6 [1费]：沙坑+1。", card_ids: ["FRANTIC_ESCAPE"] }, { line: "打击*4 [1费]：造成6点伤害。", card_ids: ["STRIKE_IRONCLAD"] }], discard: [] } };
+    return raw;
+  };
+
+  it("drinks Swift before playing the line, then re-plans", () => {
+    const e = env(dying("SWIFT_POTION", "Swift Potion", "抽[blue]3[/blue]张牌。"));
+    const decision = planCombatTurn(e);
+    expect(decision?.kind === "act" ? decision.label : "ask").toBe("combat/least-loss");
+    expect(decision?.kind === "act" ? decision.intent : null).toEqual({ action: "use_potion", option_index: 0 });
+    expect(e.screenMemory.combatPlan).toBeNull();
+  });
+
+  it("not with empty piles, and not a potion that draws nothing", () => {
+    const empty = planCombatTurn(env(dying("SWIFT_POTION", "Swift Potion", "抽[blue]3[/blue]张牌。", false)));
+    expect(empty?.kind === "act" ? empty.intent.action : null).not.toBe("use_potion");
+    const block = planCombatTurn(env(dying("WEAK_POTION", "Weak Potion", "给予3层虚弱。")));
+    expect(block?.kind === "act" && block.label === "combat/least-loss" && block.intent.action === "use_potion").toBe(false);
+  });
+});
+
+describe("no potion at 0 energy for nothing (GZ24 F8 T1: Dexterity Potion, 0 block from it)", () => {
+  it("drops a 0-energy potion line that gains no block or damage over a dry line", () => {
+    const raw = combatPayload();
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "DEXTERITY_POTION", name: "Dexterity Potion", description: "获得[blue]2[/blue]点[gold]敏捷[/gold]。", requires_target: false, valid_target_indices: [] });
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["energy"] = 0;
+    combat["hand"] = (combat["hand"] as Raw[]).map((card) => ({ ...card, playable: false, unplayable_reason: "not_enough_energy" }));
+    const decision = planCombatTurn(env(raw));
+    expect(JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? decision.intent : null)).not.toMatch(/use_potion|Dexterity/);
+  });
+
+  it("keeps a line where the potion adds something", async () => {
+    const { zeroEnergyDrinkIdle } = await import("../src/screens/combat-plan.js");
+    const outcome = (hpLoss: number, damageDealt: number) => ({ hpLoss, damageDealt, winsFight: false }) as never;
+    const dry = { steps: [], outcome: outcome(17, 0) } as never;
+    const idle = { steps: [{ cardId: "POTION:DEXTERITY_POTION:0" }], outcome: outcome(17, 0) } as never;
+    const blocks = { steps: [{ cardId: "POTION:BLOCK_POTION:0" }], outcome: outcome(5, 0) } as never;
+    expect(zeroEnergyDrinkIdle(idle, [dry])).toBe(true);
+    expect(zeroEnergyDrinkIdle(blocks, [dry])).toBe(false);
+    expect(zeroEnergyDrinkIdle(idle, [])).toBe(false);
+  });
+});
+
+describe("franticEscapesLeft counts escapes in hand, not the piles (X8HF F33 T5)", () => {
+  it("six in the discard pile are no turns without a draw source; affordable ones in hand are", async () => {
+    const { franticEscapesLeft } = await import("../src/screens/combat-plan.js");
+    const raw = { agent_view: { combat: { draw: [], discard: [{ line: "狂乱逃离*6 [1费]：沙坑+1。", card_ids: ["FRANTIC_ESCAPE"] }] } } };
+    const escape = (index: number, cost: number) => ({ index, cardId: "FRANTIC_ESCAPE", cost, playable: true }) as never;
+    expect(franticEscapesLeft(raw, [])).toBe(0);
+    expect(franticEscapesLeft(raw, [], 3, true)).toBe(1);
+    expect(franticEscapesLeft({}, [escape(0, 1), escape(1, 2)], 2)).toBe(1);
+    expect(franticEscapesLeft({}, [escape(0, 1), escape(1, 2)], 3)).toBe(2);
+    // X8HF T5: Sandpit 2, boss 218, best line ~79: 218 / 2 = 109 > 79, the race is lost (was 218 / 8).
+    expect(218 / (2 + franticEscapesLeft(raw, [], 4, false))).toBeGreaterThan(79);
+  });
+});
+
+describe("the run plan's boss keep stops the fight plan's early drink (UP1C; GZ24 F8)", () => {
+  it("a Regen Potion kept as heal is not auto-drunk on T1 of a hallway fight", () => {
+    const raw = combatPayload();
+    raw["turn"] = 1;
+    (raw["run"] as Raw)["floor"] = 29;
+    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "REGEN_POTION", name: "Regen Potion", description: "获得[green]5[/green]层[gold]再生[/gold]。", requires_target: false, valid_target_indices: [] });
+    const label = (keep: boolean): string => {
+      const e = env(raw, { fightPlan: "v1" });
+      e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), kind: "monster", setup: [], focus: null, potions: { REGEN_POTION: "early" } });
+      if (keep) e.screenMemory.runPlan = { savePotions: ["heal"] } as never;
+      const decision = planCombatTurn(e);
+      return decision?.kind === "act" ? decision.label : "ask";
+    };
+    expect(label(false)).toBe("combat/plan-potion");
+    expect(label(true)).not.toBe("combat/plan-potion");
+  });
+});

@@ -42,8 +42,18 @@ export const OFFENSIVE_POTIONS = new Set([
  * both claws die" drunk on T1's 21 hit; WB02 F33: Fire Potion "as finisher" drunk on T1; NMLV, R2H1).
  */
 export function planPotionUse(plan: FightPlan | null, potionId: string): PotionUse | undefined {
-  const use = plan?.potions[potionId];
-  return use === "big_hit" && OFFENSIVE_POTIONS.has(potionId) ? "burst" : use;
+  return readPotionUse(plan?.potions[potionId], potionId);
+}
+
+/**
+ * big_hit on an offensive potion is its burst turn; burst on any other potion (draw, block, Dexterity,
+ * utility) is no preference (X8HF F33: SWIFT_POTION tagged burst "for the kill turn", every drinking
+ * line dropped on T3-T6, carried to the death with Frantic Escapes in the discard pile).
+ */
+function readPotionUse(use: PotionUse | undefined, potionId: string): PotionUse | undefined {
+  if (use === "big_hit" && OFFENSIVE_POTIONS.has(potionId)) return "burst";
+  if (use === "burst" && !OFFENSIVE_POTIONS.has(potionId)) return "any";
+  return use;
 }
 
 export interface FightPlan {
@@ -208,8 +218,8 @@ export function parseFightPlan(
     const use = typeof value === "string" ? (value.trim().toLowerCase() as PotionUse) : null;
     if (!use || !POTION_USES.includes(use)) continue;
     const potion = belt.find((entry) => str(entry["potion_id"]) === key.trim() || str(entry["name"]) === key.trim());
-    // An offensive potion's "big_hit" is its burst turn (6HRZ, WB02: see planPotionUse).
-    if (potion) potions[str(potion["potion_id"])] = use === "big_hit" && OFFENSIVE_POTIONS.has(str(potion["potion_id"])) ? "burst" : use;
+    // An offensive potion's "big_hit" is its burst turn (6HRZ, WB02); "burst" on any other is "any" (X8HF: see readPotionUse).
+    if (potion) potions[str(potion["potion_id"])] = readPotionUse(use, str(potion["potion_id"]))!;
   }
   const approachRaw = typeof json["approach"] === "string" ? (json["approach"].trim().toLowerCase() as FightApproach) : "race";
   return {
