@@ -1327,6 +1327,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
   const allSegmentsDead = sim.enemies.every((enemy) => !enemy.reattach || !enemy.alive);
+  // Enemies that must die together, while two or more of them live at the start of the turn: reattaching
+  // segments, Kaiser Crab claws.
+  const togetherStart = input.enemies.filter((start) => start.hp > 0 && (start.reattach || start.crabRage));
+  const together = new Set(togetherStart.length > 1 ? togetherStart.map((start) => start.index) : []);
   // Crab Rage: one part dying alone only enrages the other; it is no kill until both are dead.
   const crabs = input.enemies.filter((start) => start.crabRage).map((start) => start.index);
   const allCrabsDead = sim.enemies.every((enemy) => !crabs.includes(enemy.index) || !enemy.alive);
@@ -1433,8 +1437,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     const dealt = Math.max(0, start.hp - Math.max(0, enemy.hp));
     if (enemy.illusion) return sum + dealt;
+    // Negative when the segment had less HP than it comes back with: killing it alone then costs the
+    // difference as well (4VC5 F24: a 7 HP Middle killed by Headbutt came back at 25, +18; Z7D7 F28
+    // T4: 6 HP killed by Anger, back at 25).
     if (enemy.reattach && !enemy.alive && !allSegmentsDead) {
-      const kept = Math.max(0, start.hp - (enemy.reattachHp ?? start.hp));
+      const kept = start.hp - (enemy.reattachHp ?? start.hp);
       return sum + Math.max(0, dealt - kept);
     }
     return sum;
@@ -1454,9 +1461,25 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   score += weights.damage * (sim.damageDealt - huskDamage - lostDamage - minionChip);
   // With several enemies, concentrated damage beats the same damage spread (GMT2 F39 T1: 26 split vs
   // 26 focused scored equal, the split left two cubes at 38 and 47 and none died on T2).
+  // Not among enemies that must die together (Decimillipede segments reattach, crab claws enrage): no
+  // one of them dies before the others, so the bonus goes to leveling them instead, the HP gap between
+  // the highest and lowest closed this turn (a segment killed alone counts at its reattach HP) (Z7D7
+  // F28: the fight plan said "spread AOE evenly so no segment dies alone", every line put all its
+  // damage into the Middle, 48 -> 0 by T4; it died alone and came back at 25).
   if (!winsFight && input.enemies.length > 1) {
-    const perEnemy = sim.enemies.map((enemy) => Math.max(0, input.enemies.find((start) => start.index === enemy.index)!.hp - Math.max(0, enemy.hp)));
-    score += weights.damage * CONCENTRATION_BONUS * Math.max(0, ...perEnemy);
+    const dealtTo = (enemy: EnemySim) => Math.max(0, input.enemies.find((start) => start.index === enemy.index)!.hp - Math.max(0, enemy.hp));
+    const rest = sim.enemies.filter((enemy) => !together.has(enemy.index));
+    score += weights.damage * CONCENTRATION_BONUS * Math.max(0, ...rest.map(dealtTo));
+    if (together.size > 1 && !allSegmentsDead) {
+      const gap = (hps: number[]) => (hps.length > 1 ? Math.max(...hps) - Math.min(...hps) : 0);
+      const before = gap(input.enemies.filter((start) => together.has(start.index)).map((start) => start.hp));
+      const after = gap(
+        sim.enemies
+          .filter((enemy) => together.has(enemy.index))
+          .map((enemy) => (enemy.alive ? enemy.hp : enemy.reattach ? (enemy.reattachHp ?? 0) : 0)),
+      );
+      score += weights.damage * CONCENTRATION_BONUS * (before - after);
+    }
   }
   if (input.focusIndex !== undefined && !winsFight) {
     const focus = sim.enemies.find((enemy) => enemy.index === input.focusIndex);
@@ -1475,8 +1498,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
-    // Not an illusion: its HP comes back (a Parafright buffed by the Obscura has Strength 5+).
-    if (start.scaling && !start.illusion) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
+    // Not an illusion: its HP comes back (a Parafright buffed by the Obscura has Strength 5+). Nor one
+    // of a group that dies together: hitting the growing one first kills nothing sooner (Z7D7 F28: the
+    // Middle's Strength 2 drew every line's damage).
+    if (start.scaling && !start.illusion && !together.has(enemy.index)) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
   }
   for (const enemy of kills) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
