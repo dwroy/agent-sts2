@@ -942,6 +942,36 @@ describe("in-combat selections", () => {
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", { ...tight, hp: 40 })).toBeGreaterThan(0);
   });
 
+  it("Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4)", async () => {
+    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const pick = (context: Record<string, unknown>, hand: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][]) =>
+      hand.map(([id, type, card, upgraded]) => ({ id, score: combatExhaustScore(id, type, { attacks: 12, incoming: 10, hp: 60, ...context }, false, card) - (upgraded ? 8 : 0) }))
+        .sort((a, b) => b.score - a.score)[0]!.id;
+    // 6HRZ T6: Strength 6, both claws alive; Exterminate (4 hits, all enemies) was exhausted at 55.
+    const crab = { strength: 6, multiEnemy: true };
+    const t6: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
+      ["EXTERMINATE", "Attack", { hits: 4, aoe: true }],
+      ["BREAKTHROUGH", "Attack", { aoe: true }],
+      ["DISMANTLE", "Attack", {}],
+      ["BASH", "Attack", { debuff: true }, true],
+      ["BATTLE_TRANCE", "Skill", {}],
+    ];
+    expect(pick(crab, t6)).not.toBe("EXTERMINATE");
+    // XWPV F48 T4: Fight Me scored 75 and went first; Artifact up, Bash is kept too.
+    const aeon = { strength: 4, artifact: true };
+    const t4: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
+      ["TWIN_STRIKE", "Attack", { hits: 2 }],
+      ["BLUDGEON", "Attack", {}],
+      ["FIGHT_ME", "Attack", { hits: 2 }],
+      ["SPITE", "Attack", {}],
+      ["BATTLE_TRANCE", "Skill", {}, true],
+    ];
+    expect(["SPITE", "BATTLE_TRANCE"]).toContain(pick(aeon, t4));
+    expect(combatExhaustScore("BASH", "Attack", { attacks: 12, incoming: 10, hp: 60, artifact: true }, false, { debuff: true })).toBeLessThanOrEqual(10);
+    // A plain Strike is still the first attack to go.
+    expect(pick({ strength: 2 }, [["STRIKE_IRONCLAD", "Attack", {}], ["DISMANTLE", "Attack", {}]])).toBe("STRIKE_IRONCLAD");
+  });
+
   it("in-combat exhaust never takes Frantic Escape while the Sandpit is up (THMG F33 T4: 'scores 90 vs Strike 70')", async () => {
     const { combatExhaustScore } = await import("../src/screens/selection.js");
     const context = { attacks: 8, incoming: 10, hp: 50 };
