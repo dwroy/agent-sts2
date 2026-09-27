@@ -1056,7 +1056,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow };
   const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   const setupLine =
-    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3 && !laterPhase
+    // Hallway fights set up only when the plan says so (MX1Q F23 T2: Inflame lines at 24/26 damage over
+    // 44/54 at the same HP, pulled in as "planned setup" against a Chomper pair).
+    fightPlan && fightPlan.setup.length > 0 && (state.turn ?? 1) <= 3 && !laterPhase &&
+    (kind === "elite" || kind === "boss" || fightPlan.approach === "setup")
       ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
       : undefined;
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
