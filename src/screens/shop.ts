@@ -116,7 +116,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         // relics are usually worth it, potions rarely are.
         score:
           shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
-          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id), gap?.gap ?? 0).bonus : 0),
+          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id), gap?.gap ?? 0, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)).bonus : 0),
         // Cards carry their energy cost and type like card rewards do (B98P F15: DeepSeek bought Expect a
         // Fight as "1E"; it costs 3).
         summary: {

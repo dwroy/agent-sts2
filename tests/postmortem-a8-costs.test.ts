@@ -8,8 +8,10 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planMap } from "../src/screens/map.js";
+import { planReward } from "../src/screens/reward.js";
 import { actEliteNeed } from "../src/knowledge/dossiers.js";
 import { mapFit, mapShift, routeRiskAt, routeRiskFilter } from "../src/strategy/intent.js";
+import { LOW_HP_BLOCK_BONUS, MUST_HAVE_BONUS, mustHaveBonus } from "../src/strategy/run-plan.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -103,5 +105,38 @@ describe("optional elites are avoided while the deck is under the act's lowest e
     expect(mapFit(null, "Elite", 0.9, { value: 1, best: 1 }, 99, undefined, 2, gate)).toBe("deck ~25/turn under the act's elites (30+)");
     expect(routeRiskFilter(null, [{ type: "Elite" }, { type: "Monster" }], 0.9, gate)).toEqual([{ type: "Monster" }]);
     expect(actEliteNeed(2)).toBeGreaterThan(25);
+  });
+});
+
+describe("block rewards two short of the plan's block target below half HP (PWSD F20, K8TC F14)", () => {
+  /** Code's value of each offered card on a logged card reward. */
+  const values = (name: string): Record<string, number> => {
+    const decision = planReward(loggedEnv(logged(name))) as Decision;
+    if (decision.kind !== "ask") return decision.kind === "act" ? { [JSON.stringify(decision.intent)]: 1 } : {};
+    const question = decision.questions["pick"]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    return Object.fromEntries(Object.values(question.criteria).map((text) => JSON.parse(text!) as Raw).map((option) => [String(option["card"]), Number(option["code_value"])]));
+  };
+
+  it("PWSD F20 at 25/80, block 1/3: Blood Wall above Battle Trance+ (logged: 72 halved vs 83)", () => {
+    const shown = values("pwsd-reward-f20");
+    expect(shown["血墙"]).toBeGreaterThan(shown["战斗专注+"]!);
+  });
+
+  it("K8TC F14 at 38/80, block 1/3: True Grit above Uppercut (logged: 72 halved vs 83)", () => {
+    const shown = values("k8tc-reward-f14");
+    expect(shown["坚毅"]).toBeGreaterThan(shown["上勾拳"]!);
+  });
+
+  it("the rule: +21 two short below half HP; the boss-gap halving only once the target is met", () => {
+    const plan = { needs: ["block"], blockTarget: 3 } as never;
+    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR"], 13, 0.31).bonus).toBe(LOW_HP_BLOCK_BONUS);
+    expect(LOW_HP_BLOCK_BONUS).toBe(MUST_HAVE_BONUS * 1.5);
+    // Above half HP, short of the target: the full bonus, not halved.
+    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR"], 13, 0.8).bonus).toBe(MUST_HAVE_BONUS);
+    // Target met: halved by the gap as before (UP1C F6).
+    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT"], 13, 0.31).bonus).toBe(2);
+    // EGX7 F23 (block 4/5): one short, no low-HP bonus.
+    expect(mustHaveBonus({ needs: ["block"], blockTarget: 5 } as never, "FLAME_BARRIER", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT", "BLOOD_WALL"], 13, 0.2).bonus).toBe(4);
   });
 });
