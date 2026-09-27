@@ -18,12 +18,19 @@ const skill = (index: number, id: string, cost = 1, dyn: Raw[] = []): Raw => ({
   index, card_id: id, name: id, upgraded: false, card_type: "Skill", rarity: "Common", costs_x: false, star_costs_x: false,
   energy_cost: cost, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: dyn,
 });
-const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS") => parseGameState(baseState("MAP", { run: runPayload({ deck, boss_id: bossId, floor: 25, act_id: "1" }) }));
+const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS", run: Raw = {}) =>
+  parseGameState(baseState("MAP", { run: runPayload({ deck, boss_id: bossId, floor: 25, act_id: "1", ascension: 8, ...run }) }));
 
 describe("boss clock", () => {
   it("knows the act bosses' HP and damage a turn", () => {
-    expect(bossNeed("KAISER_CRAB_BOSS")).toMatchObject({ id: "KAISER_CRAB", hp: 428, perTurn: 54 });
-    expect(bossNeed("KNOWLEDGE_DEMON_BOSS")?.perTurn).toBe(51);
+    expect(bossNeed("KAISER_CRAB_BOSS", 8)).toMatchObject({ id: "KAISER_CRAB", hp: 428, perTurn: 54 });
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.perTurn).toBe(51);
+    // A8 HP from the A8 states (XWPV, WB02, YNMB, CWU9); A7 and below keep the old numbers.
+    expect(bossNeed("VANTOM_BOSS", 8)?.hp).toBe(183);
+    expect(bossNeed("THE_INSATIABLE_BOSS", 8)?.hp).toBe(341);
+    expect(bossNeed("QUEEN_BOSS", 8)?.hp).toBe(690);
+    expect(bossNeed("VANTOM_BOSS", 7)?.hp).toBe(173);
+    expect(bossNeed("THE_INSATIABLE_BOSS")?.hp).toBe(321);
     expect(bossNeed("SLIME_BOSS")).toBeNull();
   });
 
@@ -56,11 +63,22 @@ describe("boss clock", () => {
 
   it("no clock on a boss floor (the boss id is the dead one), and energy relics count (7DFB)", () => {
     const starter = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
-    const onBoss = parseGameState(baseState("MAP", { run: runPayload({ deck: starter, boss_id: "KAISER_CRAB_BOSS", floor: 33 }) }));
+    const onBoss = mapState(starter, "KAISER_CRAB_BOSS", { floor: 33 });
     expect(damageGap(onBoss, testKnowledge)).toBeNull();
     const heavy = [...starter, attack(9, "BLUDGEON", 32, 3), attack(10, "BLUDGEON", 32, 3), attack(11, "BLUDGEON", 32, 3)];
     const plain = deckDamagePerTurn(mapState(heavy), testKnowledge);
-    const antler = deckDamagePerTurn(parseGameState(baseState("MAP", { run: runPayload({ deck: heavy, boss_id: "KAISER_CRAB_BOSS", floor: 25, relics: [{ index: 0, relic_id: "BLESSED_ANTLER" }] }) })), testKnowledge);
+    const antler = deckDamagePerTurn(mapState(heavy, "KAISER_CRAB_BOSS", { relics: [{ index: 0, relic_id: "BLESSED_ANTLER" }] }), testKnowledge);
     expect(antler).toBeGreaterThan(plain);
+  });
+
+  it("counts Strength that grows every turn: Toasty Mittens, Rupture fed by Crimson Mantle (XWPV F48)", () => {
+    const starter = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
+    const plain = deckDamagePerTurn(mapState(starter, "AEONGLASS_BOSS"), testKnowledge);
+    const mittens = deckDamagePerTurn(mapState(starter, "AEONGLASS_BOSS", { relics: [{ index: 0, relic_id: "TOASTY_MITTENS" }] }), testKnowledge);
+    expect(mittens).toBeGreaterThan(plain);
+    const power = (index: number, id: string): Raw => ({ ...skill(index, id), card_type: "Power" });
+    const ruptureOnly = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE")], "AEONGLASS_BOSS"), testKnowledge);
+    const withMantle = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE"), power(10, "CRIMSON_MANTLE")], "AEONGLASS_BOSS"), testKnowledge);
+    expect(withMantle).toBeGreaterThan(ruptureOnly);
   });
 });
