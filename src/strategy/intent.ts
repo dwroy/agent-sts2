@@ -505,11 +505,21 @@ export const PRESERVE_HP_WEIGHT = 10;
  * at 75/87 with a deck of ~25 a turn: 75 -> 32).
  */
 export interface EliteGate {
-  deck: number;
-  need: number;
+  deck?: number;
+  need?: number;
+  /**
+   * HP (heal potions out) under the bar an optional elite needs (map.ts optionalEliteBar: twice the
+   * act's elite cost). EN55 F7: 51% with a Blood Potion read as ~71% took the optional Terror Eel while
+   * Winged Boots could reach a rest; 41 -> dead.
+   */
+  hp?: number;
+  bar?: number;
 }
 export function eliteGateText(gate: EliteGate): string {
-  return `deck ~${gate.deck}/turn under the act's elites (${gate.need}+)`;
+  const parts: string[] = [];
+  if (gate.deck !== undefined && gate.need !== undefined) parts.push(`deck ~${gate.deck}/turn under the act's elites (${gate.need}+)`);
+  if (gate.hp !== undefined && gate.bar !== undefined) parts.push(`HP ${Math.round(gate.hp * 100)}% without heal potions, under the ${Math.round(gate.bar * 100)}% an optional elite needs`);
+  return parts.join("; ");
 }
 
 /** Route weight change for a node from the run plan's intents, at the projected HP on arrival (`act` prices hallway rooms). */

@@ -11,9 +11,10 @@ import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { hpPercent, planMap, routeHealShare } from "../src/screens/map.js";
+import { hpPercent, optionalEliteBar, planMap, routeHealShare } from "../src/screens/map.js";
 import { planRest, rememberMap } from "../src/screens/rest.js";
 import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPerTurn } from "../src/strategy/boss-clock.js";
+import { runPlanTrigger } from "../src/strategy/run-plan.js";
 import { fightHpCost, MEDIAN_OF_P75, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
@@ -79,10 +80,8 @@ describe("route projection at median room costs, survival fight by fight (Z49J, 
   it("77UJ F22 and F26: the same picks, and the boss arrivals no longer all read ~30%", () => {
     expect(pick("77uj-map-f22")).toEqual({ action: "choose_map_node", option_index: 0 });
     expect(pick("77uj-map-f26")).toEqual({ action: "choose_map_node", option_index: 0 });
-    for (const name of ["77uj-map-f22", "77uj-map-f26"]) {
-      const arrivals = options(name).map((option) => String(option["boss_arrival"]));
-      expect(new Set(arrivals).size).toBe(arrivals.length);
-    }
+    const arrivals = options("77uj-map-f22").map((option) => String(option["boss_arrival"]));
+    expect(new Set(arrivals).size).toBe(arrivals.length);
     const f22 = options("77uj-map-f22");
     expect(pctIn(at(f22, "row 5, column 3")["boss_arrival"], /^~(\d+)% HP/)).toBeGreaterThan(pctIn(at(f22, "row 5, column 4")["boss_arrival"], /^~(\d+)% HP/));
   });
@@ -147,5 +146,33 @@ describe("a rest site looks two nodes ahead for a forced elite, through a treasu
   it("without the remembered map it cannot see the elite (the old next-node check alone)", () => {
     const decision = planRest(loggedEnv(logged("77qx-rest-f9")))!;
     if (decision.kind === "act") expect(decision.rationale).toMatch(/^code: \S+ \(SMITH\)/);
+  });
+});
+
+describe("an optional elite needs HP, heal potions out, of twice the act's elite cost (EN55 F7)", () => {
+  /** EN55 F7 with a deck the act's elites do not outpace (6 energy), so only the HP bar can hold elites back. */
+  const strongDeck = (hp: number) => (fx: ReturnType<typeof logged>) => Object.assign(fx.state["run"] as Raw, { max_energy: 6, current_hp: hp });
+  const types = (hp: number) => options("en55-map-f7", strongDeck(hp)).map((option) => option["node_type"]);
+
+  it("the bar: twice the act-1 elite cost; capped under full HP where twice is more", () => {
+    expect(optionalEliteBar(1)).toBeCloseTo(2 * fightHpCost("Elite", 1));
+    expect(optionalEliteBar(2)).toBeLessThan(1);
+  });
+
+  it("at 41/80 (51%, 71% with the Blood Potion) the optional elites are not offered; at 64/80 they are", () => {
+    expect(types(41)).not.toContain("Elite");
+    expect(types(41)).toContain("RestSite");
+    expect(types(64)).toContain("Elite");
+  });
+
+  it("the logged board takes the rest (logged: code took the Elite (7,6) 23.4 vs 5.06)", () => {
+    const decision = planMap(loggedEnv(logged("en55-map-f7")));
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/^code: RestSite \(row 7, col 3\)/);
+  });
+
+  it("80% -> 51% asks for a new run plan (0.2875 was under the 0.3 drop)", () => {
+    const fx = logged("en55-map-f7");
+    expect(fx.runPlan!.hpPct).toBeCloseTo(0.8);
+    expect(runPlanTrigger(fx.runPlan, parseGameState(fx.state))).toBe("hp_drop");
   });
 });

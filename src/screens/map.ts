@@ -96,6 +96,17 @@ export function monsterWeight(hpOnArrival: number): number {
   return Math.max(-4, (-3 * (0.35 - hpOnArrival)) / 0.15);
 }
 
+/**
+ * HP (heal potions out) an optional elite needs: twice the act's elite cost, so that a bad elite fight
+ * still leaves one elite's cost (act 1: 74%). Capped at 90% where twice the cost is more than full HP
+ * (acts 2-3). EN55 F7: 51% HP (71% with an unmodelled Blood Potion) took the optional Terror Eel.
+ */
+export const OPTIONAL_ELITE_HP_FACTOR = 2;
+export const OPTIONAL_ELITE_HP_CAP = 0.9;
+export function optionalEliteBar(act: number): number {
+  return Math.min(OPTIONAL_ELITE_HP_CAP, OPTIONAL_ELITE_HP_FACTOR * fightHpCost("Elite", act));
+}
+
 /** Weight of a fight reached with no more HP than it is expected to cost (at exactly that HP). */
 export const LIKELY_DEATH = -20;
 
@@ -233,7 +244,13 @@ function stateAfter(type: string, at: RouteState, act: number): RouteState {
 }
 
 /** Node weight at a projected state; `row` gives the node's own floor (elite timing, floors to boss). */
-type Weights = (type: string, at: RouteState, row: number) => number;
+/** `optional`: an Elite a sibling node avoids (the route could take the other one). */
+type Weights = (type: string, at: RouteState, row: number, optional?: boolean) => number;
+
+/** Whether this child of `parent` is an Elite another child avoids. */
+function optionalEliteChild(parent: MapNode, child: MapNode, nodes: Map<string, MapNode>): boolean {
+  return child.type === "Elite" && parent.children.some((other) => nodes.get(key(other.row, other.col))?.type !== "Elite");
+}
 
 /**
  * Each Elite that cannot be avoided after a route's likely death (PFBK F18: the truncation dropped
@@ -293,7 +310,7 @@ function continuation(
     // The death's weight scales with the HP shortfall and a later one weighs less (deathDelay).
     // An elite every path of this option meets is not a later, better death: no delay discount
     // (KGR6 F19: the F28 elite at the end of a branchless line counted at half weight, 9 nodes ahead).
-    const here = weights(childNode.type, left, childNode.row);
+    const here = weights(childNode.type, left, childNode.row, optionalEliteChild(node, childNode, nodes));
     const delay = childNode.type === "Elite" && forcedRows.has(childNode.row) ? 1 : deathDelay(depth + 1);
     best = Math.max(
       best,
@@ -406,7 +423,7 @@ function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNod
     for (const child of current.children) {
       const childNode = nodes.get(key(child.row, child.col));
       if (!childNode) continue;
-      const value = weights(childNode.type, at, childNode.row) + continuation(childNode, at, nodes, weights, act, new Map());
+      const value = weights(childNode.type, at, childNode.row, optionalEliteChild(current, childNode, nodes)) + continuation(childNode, at, nodes, weights, act, new Map());
       if (value > bestValue) {
         bestValue = value;
         bestChild = childNode;
@@ -519,15 +536,25 @@ export function planMap(env: DecisionEnv): Decision | null {
   // A deck under the act's lowest elite need avoids optional elites, whatever the plan (intent.ts EliteGate).
   const eliteNeed = actEliteNeed(act);
   const deckDamage = Math.round(deckDamagePerTurn(state, env.knowledge) / (bossNeed(str(asRecord(state.run?.raw)["boss_id"]))?.realised ?? 1));
-  const gate: EliteGate | null = eliteNeed !== null && deckDamage > 0 && deckDamage < eliteNeed ? { deck: deckDamage, need: eliteNeed } : null;
+  const deckGate: EliteGate | null = eliteNeed !== null && deckDamage > 0 && deckDamage < eliteNeed ? { deck: deckDamage, need: eliteNeed } : null;
+  // HP without heal potions under twice an elite's cost avoids optional elites too, now and wherever
+  // the projection reaches one that low (the projection's heal share taken back out); a forced elite is
+  // priced by its survival, not avoided.
+  const eliteBar = optionalEliteBar(act);
+  const healShare = hpPct - hpPercent(env, false);
+  const gateAt = (hp: number): EliteGate | null => {
+    const bare = Math.max(0, hp - healShare);
+    return bare < eliteBar ? { ...deckGate, hp: bare, bar: eliteBar } : deckGate;
+  };
+  const gate = gateAt(hpPct);
   // A likely death is its own weight: no node-type shift or chain penalty on top (RVR6 F38: the elite's
   // -9 under avoid_elites + preserve stacked on -20 and tripled). An elite as the 3rd fight in a row
   // pays the chain penalty too, at its cost factor (N7KR F4: "? -> Monster -> Monster -> Elite").
-  const weightOf: Weights = (type, at, row) => {
+  const weightOf: Weights = (type, at, row, optional = false) => {
     const base = nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act);
     if (base <= LIKELY_DEATH) return base;
     const chain = type === "Monster" ? fightChainPenalty(at.fights, at.hp) : type === "Elite" ? eliteCostFactor(act) * fightChainPenalty(at.fights, at.hp) : 0;
-    return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act, gate);
+    return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act, type === "Elite" && optional ? gateAt(at.hp) : deckGate);
   };
   const deathElite = runPlan?.routeRisk === "avoid_elites" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
@@ -652,8 +679,10 @@ export function planMap(env: DecisionEnv): Decision | null {
     eliteHp: Math.max(...options.map((option) => (option.arrival.eliteHp === null ? 1 : option.arrival.eliteHp))),
     bossHp: Math.max(...options.map((option) => option.arrival.bossHp ?? 0)),
   };
+  // The HP gate is about optional elites: not on a choice of elites only.
+  const labelGate = offered.some((node) => str(node["node_type"], "Unknown") !== "Elite") ? gate : deckGate;
   const labelled: PickOption[] = options.map(({ type, row, arrival, ...option }) => {
-    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)), { ...arrival, best: bestArrival }, act, gate);
+    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)), { ...arrival, best: bestArrival }, act, labelGate);
     return {
       ...option,
       summary: { ...option.summary, ...(fit ? { intent_fit: fit } : {}) },

@@ -237,7 +237,10 @@ describe("map", () => {
   });
 
   it("describes each reachable node with a code-computed lookahead", () => {
-    const decision = mustDecision(plan(mapPayload()));
+    // At full HP: under twice an elite's cost the optional Elite is not offered (EN55 F7).
+    const raw = mapPayload();
+    (raw["run"] as Record<string, unknown>)["current_hp"] = 80;
+    const decision = mustDecision(plan(raw));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     expect(Object.keys(criteria)).toEqual(["n0", "n1", "n2"]);

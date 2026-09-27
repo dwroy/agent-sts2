@@ -171,7 +171,10 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
 describe("hp_policy, route_risk and avoid carried out", () => {
   it("route_risk avoid_elites: an Elite next node is not offered while another node is", () => {
     const options = (plan: RunPlan | null): string => {
-      const decision = planMap(env(mapPayload(), plan));
+      // At full HP, above the optional-elite HP bar (EN55 F7).
+      const raw = mapPayload();
+      (raw["run"] as Record<string, unknown>)["current_hp"] = 80;
+      const decision = planMap(env(raw, plan));
       return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
     };
     expect(options(null)).toMatch(/Elite/);

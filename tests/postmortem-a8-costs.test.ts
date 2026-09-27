@@ -84,8 +84,9 @@ describe("a forced elite on one option's branchless line is priced like the shar
 describe("an optional elite option is not a forced elite (EGX7 F27, PWSD F10)", () => {
   for (const [name, position] of [["egx7-map-f27", "row 10, column 2"], ["pwsd-map-f10", "row 10, column 5"]] as const) {
     it(`${name}: the Elite option reads optional; its forced elites are counted after it`, () => {
-      // With a deck the act's elites do not outpace (6 energy), so the Elite stays on offer.
-      const elite = at(options(name, (fx) => Object.assign(fx.state["run"] as Raw, { max_energy: 6 })), position);
+      // With a deck the act's elites do not outpace (6 energy) and full HP (the optional-elite HP bar,
+      // EN55 F7), so the Elite stays on offer.
+      const elite = at(options(name, (fx) => Object.assign(fx.state["run"] as Raw, { max_energy: 6, current_hp: (fx.state["run"] as Raw)["max_hp"] })), position);
       expect(elite["optional_elite"]).toMatch(/optional Elite/);
       expect(String(elite["forced_elites"])).toMatch(/^after this elite: none/);
       expect(elite["next_forced_elite"]).toBeUndefined();
