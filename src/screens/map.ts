@@ -9,7 +9,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
 import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskAt, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
 import { actEliteNeed } from "../knowledge/dossiers.js";
-import { bossNeed, damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
+import { damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
 import { eliteCostFactor, fightHpCost, roomProjectedCost, roomSurvival } from "../strategy/route-cost.js";
 import { isModelledPotion, potionRegen, regenHealHp } from "../strategy/card-model.js";
@@ -575,7 +575,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const runPlan = currentRunPlan(env.screenMemory, state);
   // A deck under the act's lowest elite need avoids optional elites, whatever the plan (intent.ts EliteGate).
   const eliteNeed = actEliteNeed(act);
-  const deckDamage = Math.round(deckDamagePerTurn(state, env.knowledge) / (bossNeed(str(asRecord(state.run?.raw)["boss_id"]))?.realised ?? 1));
+  const deckDamage = deckDamagePerTurn(state, env.knowledge, { realised: false });
   const deckGate: EliteGate | null = eliteNeed !== null && deckDamage > 0 && deckDamage < eliteNeed ? { deck: deckDamage, need: eliteNeed } : null;
   // HP without heal potions under twice an elite's cost avoids optional elites too, now and wherever
   // the projection reaches one that low (the projection's heal share taken back out); a forced elite is

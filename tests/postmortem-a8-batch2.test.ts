@@ -7,9 +7,11 @@
 
 import { describe, expect, it } from "vitest";
 
+import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
+import { damageGap, deckDamageParts, deckDamagePerTurn } from "../src/strategy/boss-clock.js";
 import { planShop, unspentGoldCost } from "../src/screens/shop.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -59,5 +61,33 @@ describe("leaving a shop costs the gold no later shop can spend (CWU9, RTF3, EHJ
     (fx.state["run"] as Raw)["current_hp"] = 100;
     const options = optionsOf(planShop(loggedEnv(fx, { combatPlanner: "turn" })));
     expect(options["leave"]).toBeDefined();
+  });
+});
+
+describe("boss clock: Inferno is per-turn damage, the crab's realised share is on the cards only (EHJZ F32)", () => {
+  const state = () => parseGameState(logged("ehjz-rest-f32").state);
+
+  it("two Infernos with five self-damage cards count (logged: deck 14/turn; the fight dealt 38, ~72 of 190 Inferno)", () => {
+    const parts = deckDamageParts(state(), loggedKnowledge)!;
+    expect(parts.powers).toBeGreaterThan(8);
+    const deck = deckDamagePerTurn(state(), loggedKnowledge);
+    expect(deck).toBeGreaterThanOrEqual(28);
+    expect(deck).toBeLessThanOrEqual(45);
+    expect(damageGap(state(), loggedKnowledge)!.deck).toBe(deck);
+  });
+
+  it("the realised share leaves the Inferno part whole", () => {
+    const parts = deckDamageParts(state(), loggedKnowledge)!;
+    expect(parts.realised).toBeLessThan(1);
+    const raw = deckDamagePerTurn(state(), loggedKnowledge, { realised: false });
+    const real = deckDamagePerTurn(state(), loggedKnowledge);
+    expect(raw - real).toBeCloseTo(parts.cards * (1 - parts.realised), 0);
+  });
+
+  it("without Inferno in the deck there is no power part", () => {
+    const fx = logged("ehjz-rest-f32");
+    const run = fx.state["run"] as Raw;
+    run["deck"] = (run["deck"] as Raw[]).filter((card) => card["card_id"] !== "INFERNO");
+    expect(deckDamageParts(parseGameState(fx.state), loggedKnowledge)!.powers).toBe(0);
   });
 });

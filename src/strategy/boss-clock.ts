@@ -25,7 +25,7 @@ export interface BossNeed {
   turns: number;
   note: string;
   /**
-   * Share of the deck estimate the boss lets through, measured (default 1): Soul Fysh's Beckons and
+   * Share of the deck estimate's card part the boss lets through, measured (default 1): Soul Fysh's Beckons and
    * Intangible turns (JF8N F17: estimate ~20, dealt 13.5), the Queen's 99 Weak from T3 and the chained
    * cards (H7W0 F48: ~39, dealt 27.5; CWU9 26.7).
    */
@@ -42,9 +42,11 @@ export const BOSS_HP_ASCENSION = 8;
  */
 export const BOSS_NEEDS: Record<string, BossNeed> = {
   // The two wins took 7-8 turns (58 and 51 a turn); the Bug Sting -> Laser opener ends longer fights
-  // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough). Realised: M9PL F33 23.6 a turn against an
-  // estimate of 53, Z49J F33 16.3 against 35 (Bug Sting's Weak, the claws' block, damage split in two).
-  KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, realised: 0.45, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
+  // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough). Realised, of the card part only (Bug
+  // Sting's Weak, the claws' block, damage split in two): M9PL F33 23.6 of ~44 (0.53), Z49J F33 ~10 of
+  // ~29 after 6 of relic damage (0.36), EHJZ F33 ~24 of ~30 after ~72 of Inferno over 5 turns (0.78).
+  // Applied to the whole estimate, 0.45 read EHJZ's Inferno deck at 14 against 38 dealt.
+  KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, realised: 0.55, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
   KNOWLEDGE_DEMON: { hp: 439, hpA8: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   // 341 at A8 (XWPV, WB02 states).
@@ -119,16 +121,35 @@ export function averagePowerStrength(amount: number, perTurn: boolean, playTurn:
 
 /**
  * Rough damage a turn of the deck in a boss fight: the average attack damage per card drawn, limited
- * by energy, plus permanent Strength times the attacks played. AoE counts double into the crab.
+ * by energy, plus permanent Strength times the attacks played. AoE counts double into the crab. The
+ * boss's realised share (BossNeed.realised) applies to the card part only; per-turn power damage
+ * (Inferno, Juggernaut, Rolling Boulder) and relic damage are not played cards and go through as is.
+ * `realised: false` leaves the share out (the elite gate compares the raw deck with elite needs).
  */
-export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): number {
+export function deckDamagePerTurn(state: GameState, knowledge: Knowledge, options: { realised?: boolean } = {}): number {
+  const parts = deckDamageParts(state, knowledge);
+  if (!parts) return 0;
+  return Math.round(parts.cards * (options.realised === false ? 1 : parts.realised) + parts.powers + parts.relics);
+}
+
+export interface DeckDamageParts {
+  /** Played cards: attacks, Strength on them, Vulnerable uptime, ESTIMATE_SCALE for draw. */
+  cards: number;
+  /** Per-turn power damage from its expected play turn, averaged over the clock's turns. */
+  powers: number;
+  relics: number;
+  /** The boss's measured share of the card part (1 when not measured). */
+  realised: number;
+}
+
+export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDamageParts | null {
   const run = asRecord(state.run?.raw);
   // The model takes the type from the game data; the deck entry's own card_type covers unknown ids.
   const cards = asArray(run["deck"]).map((entry, index) => {
     const model = modelHandCard(entry, index, knowledge);
     return model.type ? model : { ...model, type: str(asRecord(entry)["card_type"]) };
   });
-  if (cards.length === 0) return 0;
+  if (cards.length === 0) return null;
   const crab = str(run["boss_id"]).toUpperCase().includes("KAISER_CRAB");
   // max_energy leaves out the relics that add energy every turn (7DFB: 3 shown with Pael's Flesh and
   // Blessed Antler).
@@ -143,7 +164,13 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   let attacks = 0;
   let strength = 0;
   let vulnerable = 0;
-  for (const card of cards) {
+  const deck = asArray(run["deck"]);
+  let selfDamage = 0;
+  let blockCards = 0;
+  const inferno: number[] = [];
+  const juggernaut: number[] = [];
+  const boulder: number[] = [];
+  for (const [index, card] of cards.entries()) {
     // Deck entries carry no "playable" flag (that is a hand-card field): Curses, Statuses and
     // unplayable cards (cost -1) are the ones that never play.
     const playable = card.type !== "Curse" && card.type !== "Status" && (card.xCost || card.cost >= 0);
@@ -155,12 +182,18 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
       attacks += 1;
       damage += (card.damage ?? 0) * Math.max(1, card.hits) * (crab && card.target === "all" ? 2 : 1);
     }
+    const entry = deck[index];
     // Demon Form: StrengthPower is its per-turn amount (3, 4 upgraded).
     strength += averagePowerStrength(Math.max(0, card.strength), card.cardId === "DEMON_FORM", playTurn, turns);
     // Pyre: its Energy (1, 2 upgraded: states.jsonl) at the start of each turn once it is up (T86W:
     // card-value counted it as Strength).
     if (card.cardId === "PYRE") energyBonus += averagePowerStrength(card.upgraded ? 2 : 1, false, playTurn, turns);
     if (card.vulnerable > 0) vulnerable += 1;
+    if (card.hpLoss > 0) selfDamage += 1;
+    if (card.block > 0 || (card.plating ?? 0) > 0) blockCards += 1;
+    if ((card.inferno ?? 0) > 0) inferno.push(card.inferno ?? 0);
+    if (card.cardId === "JUGGERNAUT") juggernaut.push(dynAmount(entry, "JuggernautPower") ?? 6);
+    if (card.cardId === "ROLLING_BOULDER") boulder.push(dynAmount(entry, "Damage") ?? 5);
   }
   // Strength that grows every turn (XWPV F48: 1 on T1, 19 on T11; the run plans read a 48 gap, the deck
   // dealt 41.6 a turn and 92 on T8-T10): Toasty Mittens +1 a turn from T1, i.e. (turns+1)/2 on average;
@@ -177,7 +210,27 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   // Two Vulnerable sources keep the boss Vulnerable most turns.
   // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
-  return Math.round((base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE + relicDamagePerTurn(relicIds, turns, crab)) * (need?.realised ?? 1));
+  const cardPart = base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE;
+  // Per-turn power damage, from each copy's expected play turn (EHJZ F33: two Infernos read as 0, the
+  // fight dealt ~72 of its 190 with them). Inferno: its amount to every enemy on each HP loss of our
+  // turn, the turn-start 1 plus the self-damage cards played (Crimson Mantle's turn-start loss too).
+  // Juggernaut: its amount to one enemy per block card played. Rolling Boulder: 5 to every enemy at
+  // turn start, +5 each turn. No Combust in STS2's card data.
+  const selfPlayed = HAND * (selfDamage / n) * playedShare + (deckIds.has("CRIMSON_MANTLE") ? 1 : 0);
+  const blockPlayed = HAND * (blockCards / n) * playedShare;
+  const everyEnemy = crab ? 2 : 1;
+  let powers = 0;
+  for (const amount of inferno) powers += averagePowerStrength(amount * (1 + selfPlayed) * everyEnemy, false, playTurn, turns);
+  for (const amount of juggernaut) powers += averagePowerStrength(amount * blockPlayed, false, playTurn, turns);
+  for (const amount of boulder) powers += averagePowerStrength(amount * everyEnemy, true, playTurn, turns);
+  return { cards: cardPart, powers, relics: relicDamagePerTurn(relicIds, turns, crab), realised: need?.realised ?? 1 };
+}
+
+/** A card's dynamic value by name (deck entries carry them resolved). */
+function dynAmount(entry: unknown, name: string): number | null {
+  const values = asArray(asRecord(entry)["dynamic_values"]).map(asRecord);
+  const found = values.find((entry) => str(entry["name"]) === name);
+  return found ? num(found["current_value"]) : null;
 }
 
 /**
@@ -361,7 +414,7 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
       : {}),
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
-    estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
+    estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable, per-turn power damage (Inferno, Juggernaut, Rolling Boulder)${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
     gap_per_turn: Math.max(0, need.perTurn - deck),
     boss_note: need.note,
   };

@@ -127,8 +127,9 @@ describe("boss clock: multi-part bosses hit with their parts (Z49J F32 Kaiser Cr
     expect(String(bossClockJson(state, loggedKnowledge)!["turns_note"])).toMatch(/capped at [\d.]+: the turns 45 HP survives/);
   });
 
-  it("the crab lets ~45% of the deck estimate through (M9PL 23.6 of 53, Z49J 16.3 of 35)", () => {
-    expect(bossNeed("KAISER_CRAB")!.realised).toBeCloseTo(0.45);
+  it("the crab lets about half of the deck's card damage through (M9PL 0.53, Z49J 0.36, EHJZ 0.78)", () => {
+    expect(bossNeed("KAISER_CRAB")!.realised).toBeGreaterThan(0.35);
+    expect(bossNeed("KAISER_CRAB")!.realised).toBeLessThan(0.8);
   });
 
   it("The Kin boards read the cap too (K8TC F3, VUV4 F12)", () => {

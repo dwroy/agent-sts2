@@ -147,7 +147,7 @@ describe("the clock's turns are the turns we survive (HCBJ F16: gap 1 at 12 turn
     expect(moves.sleepTurns).toBeLessThan(3);
   });
 
-  it("the logged F16 board (52/80, boss next): turns capped near 8, the gap is ~11 a turn, not 1", () => {
+  it("the logged F16 board (52/80, boss next): turns capped near 8, the gap stays open (not 1; Inferno's turn-start hit counted since EHJZ)", () => {
     const state = parseGameState(logged("hcbj-map-f16").state);
     const need = cappedBossNeed(state, loggedKnowledge)!;
     expect(need.entryHp).toBe(52);
@@ -155,7 +155,7 @@ describe("the clock's turns are the turns we survive (HCBJ F16: gap 1 at 12 turn
     expect(need.turns).toBeGreaterThan(7);
     const gap = damageGap(state, loggedKnowledge)!;
     expect(gap.need).toBeGreaterThanOrEqual(28);
-    expect(gap.gap).toBeGreaterThanOrEqual(8);
+    expect(gap.gap).toBeGreaterThanOrEqual(3);
     expect(String(bossClockJson(state, loggedKnowledge)?.["turns_note"])).toMatch(/12 turns in the table, capped at 8/);
   });
 
