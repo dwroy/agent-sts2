@@ -811,3 +811,62 @@ describe("the run plan's boss keep stops the fight plan's early drink (UP1C; GZ2
     expect(label(true)).not.toBe("combat/plan-potion");
   });
 });
+
+describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, GZ24 F8 T1)", () => {
+  const fireLine = (decision: ReturnType<typeof planCombatTurn>): boolean =>
+    /Fire Potion|use_potion/.test(JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null));
+  const hallway = (floor: number): Raw => {
+    const raw = combatPayload();
+    (raw["run"] as Raw)["floor"] = floor;
+    return raw;
+  };
+
+  it("a potion the run plan keeps for the boss is not on offer within 10 floors of it (not only +20)", () => {
+    const keep = (floor: number) => {
+      const e = env(hallway(floor));
+      e.screenMemory.runPlan = { savePotions: ["damage"] } as never;
+      return planCombatTurn(e);
+    };
+    // Without the keep the Fire Potion line (+20 damage) is offered.
+    expect(fireLine(planCombatTurn(env(hallway(29))))).toBe(true);
+    expect(fireLine(keep(29))).toBe(false);
+    // Far from the boss the keep does not apply.
+    expect(fireLine(keep(5))).toBe(true);
+  });
+
+  it("a potion refused this turn is not offered again on the same turn's re-plan", () => {
+    const e = env(hallway(5));
+    const decision = planCombatTurn(e);
+    expect(decision?.kind).toBe("ask");
+    const ask = decision as AskDecision;
+    const criteria = (ask.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const key = Object.keys(criteria).find((k) => /Fire Potion/.test(criteria[k]!))!;
+    // Hallway bar: a potion line below rank 1 at 0.4 is refused, and remembered for this turn.
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(resolved.fallback).toBe(true);
+    resolved.apply?.();
+    expect(e.screenMemory.potionVeto?.ids).toEqual(["FIRE_POTION"]);
+    e.screenMemory.combatPlan = null;
+    expect(fireLine(planCombatTurn(e))).toBe(false);
+    // Next turn it is on offer again.
+    const next = env({ ...hallway(5), turn: 4 });
+    next.screenMemory.potionVeto = e.screenMemory.potionVeto;
+    expect(fireLine(planCombatTurn(next))).toBe(true);
+  });
+});
+
+describe("attack-potion veto when code's rank 1 drinks the same potion (RVL2 F31 T1)", () => {
+  it("is not applied: nothing would be kept, it only swaps lines", () => {
+    const eliteKnowledge = { ...testKnowledge, monster: (id: string) => (id === "JAW_WORM" ? { ...testKnowledge.monster(id)!, type: "Elite" } : testKnowledge.monster(id)) } as typeof testKnowledge;
+    const raw = combatPayload();
+    ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = 30;
+    const decision = planCombatTurn(env(raw, { knowledge: eliteKnowledge })) as AskDecision;
+    const criteria = (decision.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    // Rank 1 and rank 2 both drink the Fire Potion; the dry line costs 12 of 30 HP (no dry override).
+    expect(criteria["plan1"]).toMatch(/Fire Potion/);
+    expect(criteria["plan2"]).toMatch(/Fire Potion/);
+    const resolved = decision.resolve({ plan: { type: "choice", choice: "plan2", probabilities: { plan2: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(resolved.fallback).toBe(false);
+    expect(resolved.rationale).not.toMatch(/attack potion below code rank 1/);
+  });
+});

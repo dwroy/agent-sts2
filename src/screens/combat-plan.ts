@@ -997,6 +997,24 @@ function planTurn(env: DecisionEnv): Decision | null {
     const kept = solved.plans.filter((plan) => !zeroEnergyDrinkIdle(plan, dry));
     if (dry.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: [...kept, ...dry.filter((plan) => !kept.includes(plan))] };
   }
+  // Potions held back this turn: one the run plan keeps for the act boss (within SAVE_POTIONS_WITHIN
+  // floors, not a boss fight), and one a guard refused earlier this turn. EJXC F28 T1: the Flex Potion
+  // bought for the Insatiable (run plan save [damage, strength]) was vetoed at 0.40, then drunk on the
+  // same turn's re-plan at 0.51; the +20 cost alone never kept it, the boss was left at 31 HP. GZ24 F8.
+  // Lines drinking one are dropped while a surviving line without it exists, unless the line wins the
+  // fight; a boss keep also gives way at low HP (below 30%, pressed, or every dry line ends below 25%).
+  const vetoMemo = env.screenMemory.potionVeto;
+  const vetoed = vetoMemo && vetoMemo.fight === fightKey(state) && vetoMemo.turn === (state.turn ?? null) ? vetoMemo.ids : [];
+  const potionText = (potionId: string) => potionsAll.find((potion) => potion.potion_id === potionId)?.text ?? "";
+  const lowForKeep = pressed || playerSim.hp < playerSim.maxHp * 0.3;
+  const heldBack = (potionId: string) => vetoed.includes(potionId) || (!lowForKeep && keptForBoss(potionId, potionText(potionId)));
+  const drinksHeldBack = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:") && heldBack(step.cardId.split(":")[1] ?? ""));
+  if (solved.plans.some(drinksHeldBack)) {
+    const keep = solved.plans.filter((plan) => plan.outcome.winsFight || !drinksHeldBack(plan));
+    const alive = keep.filter((plan) => !plan.outcome.dies);
+    const lowAfter = alive.every((plan) => plan.outcome.hpAfter < playerSim.maxHp * 0.25);
+    if (alive.length > 0 && !lowAfter) solved = { ...solved, plans: keep };
+  }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -1047,7 +1065,16 @@ function planTurn(env: DecisionEnv): Decision | null {
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
-  const potions = potionCapped || dryCheap ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
+  const potions =
+    potionCapped || dryCheap
+      ? []
+      : potionsAll.filter(
+          (potion) =>
+            !isModelledPotion(potion.potion_id) &&
+            planOffer(potion.potion_id) !== false &&
+            // Refused earlier this turn, or kept for the boss on a turn that does not need it (above).
+            !(heldBack(potion.potion_id) && !costly && !best.outcome.dies),
+        );
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
@@ -1369,13 +1396,31 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
-  const fallback = (why: string, line: Plan = top): ResolvedAction => ({
+  const fallback = (why: string, line: Plan = top, vetoIds: string[] = []): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
     rationale: `${why}; using the code-best ${line === top ? "plan" : "potion-free plan"}`,
     confidence: null,
     fallback: true,
-    apply: () => commit(env, state.turn, line, hand, "code"),
+    apply: () => {
+      commit(env, state.turn, line, hand, "code");
+      // The refused potions stay refused for the rest of this turn's re-plans (see heldBack).
+      const drunk = new Set(line.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId.split(":")[1] ?? ""));
+      const ids = vetoIds.filter((id) => id !== "" && !drunk.has(id));
+      if (ids.length > 0) {
+        const fight = fightKey(state);
+        const turn = state.turn ?? null;
+        const before = env.screenMemory.potionVeto;
+        const kept = before && before.fight === fight && before.turn === turn ? before.ids : [];
+        env.screenMemory.potionVeto = { fight, turn, ids: [...new Set([...kept, ...ids])] };
+      }
+    },
   });
+  const potionIdsOf = (option: { potion?: unknown; plan?: Plan }): string[] => {
+    const slot = (option.potion as { option_index?: number } | undefined)?.option_index;
+    const fromSlot = slot === undefined ? [] : potionsAll.filter((potion) => potion.slot === slot).map((potion) => potion.potion_id);
+    const fromPlan = (option.plan?.steps ?? []).filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId.split(":")[1] ?? "");
+    return [...fromSlot, ...fromPlan];
+  };
 
   return {
     kind: "ask",
@@ -1435,17 +1480,21 @@ function planTurn(env: DecisionEnv): Decision | null {
         // -5 dry line, the top-scoring dry line lost 19).
         const leastDry = dry.filter((plan) => plan.outcome.hpLoss === bestDryLoss);
         const dryTop = dry.includes(top) && top.outcome.hpLoss === bestDryLoss ? top : (leastDry[0] ?? dry[0] ?? top);
-        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop);
+        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop, potionIdsOf(chosen));
       }
       // Boss, drink-first (the line is re-planned after the potion), every dry line losing 10+: the
       // potion stands (MF7A F17 T7, 24HM F33, H1FA F17 T2-T7: attack potions refused, died holding them).
       const dryLossNow = Math.min(...options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:"))).map((plan) => plan.outcome.hpLoss));
       const bossDrinkFirst = kind === "boss" && chosen.plan === undefined && dryLossNow >= BOSS_DRINK_FIRST_LOSS;
-      if (!hallwayFight && fromJev && offensiveDrink && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
-        return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
+      // Not when code's rank 1 drinks the same attack potion: nothing is kept, the veto would only swap
+      // in a costlier line (RVL2 F31 T1: -2 with Explosive Ampoule refused for -10 with the Ampoule).
+      const topDrinks = new Set(potionIdsOf({ plan: top }));
+      const sameOffensive = potionIdsOf(chosen).some((id) => OFFENSIVE_POTIONS.has(id) && topDrinks.has(id));
+      if (!hallwayFight && fromJev && offensiveDrink && !sameOffensive && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
+        return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`, top, potionIdsOf(chosen).filter((id) => !topDrinks.has(id)));
       }
       if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
-        return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
+        return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`, top, potionIdsOf(chosen).filter((id) => !topDrinks.has(id)));
       }
       if (chosen.potion) {
         return {
