@@ -51,6 +51,19 @@ export function roomHpCost(type: string, act: number): number {
   return fightHpCost(type, act);
 }
 
+/**
+ * The median fight loss is ~0.6 of its p75 (the table above, wherever n >= 20). HP is projected along a
+ * route at the median, room by room; the p75 stays the tail input of each fight's survival
+ * (fightSurvival). Chaining the p75 over 7-8 rooms drove every act-2 route to 0 HP before its last rest
+ * (Z49J F18, 77UJ F18-F28, 77QX F18: "~30% HP at the F33 boss, alive ~0%" on every option).
+ */
+export const MEDIAN_OF_P75 = 0.6;
+
+/** HP a room takes off the projection along a route: its expected cost (roomHpCost) at the median. */
+export function roomProjectedCost(type: string, act: number): number {
+  return MEDIAN_OF_P75 * roomHpCost(type, act);
+}
+
 /** Standard normal CDF (Abramowitz-Stegun 7.1.26 through erf). */
 function phi(z: number): number {
   const x = Math.abs(z) / Math.SQRT2;

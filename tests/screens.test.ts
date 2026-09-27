@@ -13,7 +13,7 @@ import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { fightHpCost, nodeWeight, shopWeight, SURVIVAL_WEIGHT } from "../src/screens/map.js";
-import { fightSurvival } from "../src/strategy/route-cost.js";
+import { fightSurvival, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { eventOptionScore } from "../src/screens/event.js";
 import { loadConfig } from "../src/config.js";
@@ -270,11 +270,12 @@ describe("map", () => {
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    // Monster -> Elite: the elite is reached at ~74%, where it is worth 0, not +4; the line's forced
-    // elite also costs its small chance of death there (KGR6 F19).
-    const arrival = 0.85 - fightHpCost("Monster", 1);
-    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - fightSurvival(arrival, fightHpCost("Elite", 1))));
-    expect(value("n1")).toBeCloseTo(2.4);
+    // Monster -> Elite: the elite is reached at ~78% (the hallway's median cost), where it is worth 0,
+    // not +4; every option pays its chance of death over the same stretch, fight by fight (77QX F18).
+    const arrival = 0.85 - roomProjectedCost("Monster", 1);
+    const first = fightSurvival(0.85, fightHpCost("Monster", 1));
+    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Elite", 1))));
+    expect(value("n1")).toBeCloseTo(2.4 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Monster", 1))));
   });
 
   it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {

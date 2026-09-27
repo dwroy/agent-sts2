@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -477,6 +477,10 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // 2 -> 9, 24HM 3 -> 10; 5 -> 10 elsewhere), costs 0-3 at random (states.jsonl): the hand's costs at their
   // expected SNECKO_COST. Unmodelled, K8TC carried it from F6 into the act boss that killed it.
   SNECKO_OIL: { target: "self", draw: 7, special: "snecko" },
+  // Blood Potion: heals 20% of max HP (RVL2 F30: 25 -> 39 at 74 max, HEAL_POTION_SHARE; EN55 F8 T9:
+  // 7 -> 23 at 80). The turn's HP loss is net of it (turn-solver BLOOD_POTION_HEAL). Unmodelled it stayed
+  // "its effect is in no line's numbers" from T1 to the 7-HP turn of EN55's fatal elite.
+  BLOOD_POTION: { target: "self", special: "heal" },
   // Pile-card potions: a card from a pile into the hand (modelPotion builds it from PotionContext).
   // Liquid Memories: 「将你弃牌堆中的一张牌放入你的手牌。这张牌在本回合可以免费打出」 (PWSD: carried F2-F23 T4).
   // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
@@ -633,7 +637,7 @@ export function isModelledPotion(potionId: string): boolean {
 }
 
 /** Self-buff specials whose effect does not depend on what was played before them. */
-const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating"]);
+const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating", "heal"]);
 
 /**
  * A modelled potion that is never worse drunk before the turn's cards than after them: it targets no

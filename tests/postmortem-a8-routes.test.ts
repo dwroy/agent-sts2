@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { BOOTS_CHARGE, BOOTS_LAST_CHARGE, bootsCost, deathDelay, likelyDeathWeight, LIKELY_DEATH, planMap } from "../src/screens/map.js";
-import { fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
+import { fightHpCost, fightSurvival, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { mapShift } from "../src/strategy/intent.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -66,8 +66,14 @@ describe("RVR6 F38: at 15/80 'die in the hallway now' no longer beats '? -> shop
 });
 
 describe("N7KR F4: 67/80, '? -> Monster -> Monster -> forced elite, no rest' vs a route with a rest before its elite", () => {
-  it("takes (4,2) (logged: Unknown (4,0) 21.44 vs Monster (4,2) 15.82, code picked the '?')", () => {
-    expect(pick("n7kr-map-f4")).toEqual({ action: "choose_map_node", option_index: 2 });
+  it("(4,2) is code's best (logged: Unknown (4,0) 21.44 vs Monster (4,2) 15.82, code picked the '?')", () => {
+    // At the rooms' median costs (Z49J/77QX) the margin is under the code margin: Jev is asked, with
+    // (4,2) the best route value and (4,0) labelled as costing the entry target.
+    const decision = planMap(loggedEnv(logged("n7kr-map-f4")));
+    if (decision?.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 2 });
+    const all = options("n7kr-map-f4");
+    const best = Object.values(all).reduce((a, b) => (Number(b["route_value"]) > Number(a["route_value"]) ? b : a));
+    expect(best["position"]).toBe("row 4, column 2");
   });
 
   it("(4,2) no longer reads 'every elite ahead can be routed around'; (4,0) costs entry_hp", () => {
@@ -96,12 +102,14 @@ describe("NJSZ F29: preserve prices '?' and Monster by their expected HP cost (4
     expect(mapShift(plan, "Unknown", 0.55, 4, 2)).toBeGreaterThan(mapShift(plan, "Monster", 0.55, 4, 2));
   });
 
-  it("the Monster arrives at the elite at ~a third of max HP, the '?' more than 10 points higher", () => {
+  it("the Monster arrives at the elite well under its cost, the '?' about a hallway's median cost higher", () => {
     const byType = Object.fromEntries(Object.values(options("njsz-map-f29")).map((option) => [option["node_type"], option]));
     const at = (text: unknown) => Number(/~(\d+)% HP/.exec(String(text))?.[1]);
+    // 44/80 at the rooms' median costs (Z49J/77QX): ~41% into a ~59% elite (it took 44 -> 12 there).
     expect(at(byType["Monster"]!["next_forced_elite"])).toBeGreaterThan(25);
-    expect(at(byType["Monster"]!["next_forced_elite"])).toBeLessThan(40);
-    expect(at(byType["Unknown"]!["next_forced_elite"]) - at(byType["Monster"]!["next_forced_elite"])).toBeGreaterThan(10);
+    expect(at(byType["Monster"]!["next_forced_elite"])).toBeLessThan(100 * fightHpCost("Elite", 2));
+    const gap = 100 * (roomProjectedCost("Monster", 2) - roomProjectedCost("Unknown", 2));
+    expect(at(byType["Unknown"]!["next_forced_elite"]) - at(byType["Monster"]!["next_forced_elite"])).toBeGreaterThanOrEqual(Math.floor(gap) - 1);
   });
 });
 

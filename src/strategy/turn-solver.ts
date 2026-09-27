@@ -576,6 +576,9 @@ export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | nu
   return best ?? (sandpit ? cards.find((card) => card.cardId === "FRANTIC_ESCAPE") ?? null : null);
 }
 
+/** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS; map.ts HEAL_POTION_SHARE). */
+export const BLOOD_POTION_HEAL = 0.2;
+
 /**
  * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
  * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
@@ -893,6 +896,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "clarity") next.flat += DRAW_VALUE * CLARITY_LATER_DRAWS;
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
+  // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
+  if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
   if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
   if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));

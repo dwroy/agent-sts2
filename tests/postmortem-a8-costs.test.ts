@@ -56,7 +56,9 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
 
   it("K8TC F3: (3,5), not the line into the forced F8 Bygone Effigy (logged: Jev took (3,4) at 0.89, 80 -> 34 there)", () => {
     expect(pick("k8tc-map-f3")).toEqual({ action: "choose_map_node", option_index: 1 });
-    expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs entry_hp 90%/);
+    // At the rooms' median costs (Z49J/77QX) the Effigy is reached at ~86%, above the entry line: the
+    // label is the route-value cost, still a cost.
+    expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs \d/);
   });
 });
 
@@ -65,10 +67,11 @@ describe("a forced elite on one option's branchless line is priced like the shar
     expect(pick("kgr6-map-f19")).toEqual({ action: "choose_map_node", option_index: 0 });
   });
 
-  it("the Shop line is labelled by its arrival at the F28 elite, below that elite's cost", () => {
+  it("the Shop line is labelled by its arrival at the F28 elite, below the entry line", () => {
+    // Median room costs since Z49J/77QX: ~6x% (was ~42% at the p75 of every room), under 85% - 15%.
     const shop = at(options("kgr6-map-f19"), "row 2, column 6");
-    expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~4\d% HP/);
-    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~4\d%/);
+    expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~[4-6]\d% HP/);
+    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
   });
 
   it("the label check covers code's best-scored route too", () => {
