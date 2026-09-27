@@ -41,6 +41,8 @@ export interface DecisionRecord {
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
   jev_hints?: string[];
+  /** Jev's pick broke a soft strategic intent (per run-plan version); see intent.ts. */
+  intent_deviation?: JsonValue;
   result: string;
 }
 

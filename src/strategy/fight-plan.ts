@@ -1,17 +1,15 @@
 /**
- * Fight plan (FIGHT_PLAN=v1, migration steps M2+M3 of paper/materials/architecture-review): DeepSeek
- * is asked once at the start of an elite or boss fight for the plan of the whole fight (approach, the
- * cards to set up early, which enemy to kill first, what each potion is for). It no longer answers
- * per-turn plan choices: those are code's (the turn solver) and Jev's, which look one turn ahead.
+ * Fight plan (FIGHT_PLAN=v1): DeepSeek is asked once at the start of a fight for its STRATEGY, in a
+ * closed vocabulary: the objective (kill_fast / preserve_hp / scale_then_kill / race), the order
+ * enemies die in (kill_priority), and the threat in words (context for Jev only). It names no card to
+ * play, no potion to drink and no turn: those are code's (the turn solver) and Jev's, who carry the
+ * objective out through intent.ts (solver weights, the HP guard, compliance labels on every option).
  *
- * Why: per-turn escalations cost 20–70 s each (a boss fight could spend minutes thinking), and on
- * the per-turn choice DeepSeek did no better than Jev (extra HP over the min-loss line: Jev 2.59,
- * DeepSeek 3.12; analysis/layer_attribution.py). What neither the solver nor Jev can see is the
- * multi-turn shape of the fight, which is what DeepSeek is asked for here.
- *
- * The plan reaches play three ways: fact tags on Jev's options ("plays the planned setup card"),
- * potion costs in the solver (a potion the plan saves costs more, one it plans early is free), and a
- * setup line within the HP-guard slack of code's pick turns a code-decided turn into a Jev question.
+ * Why the vocabulary replaced the old plan (approach, setup cards, potion timings, key turns): its
+ * potion orders contradicted the run plan (12 of 17 boss potions drunk early were drunk on the fight
+ * plan's "early"/"big_hit"; EJXC F28, WB02 F29, UP1C), big_hit/burst were misread both ways (6HRZ,
+ * X8HF, 24HM), setup was planned at 14 HP, and the setup cards it named were undone by the HP guard
+ * (notes/plan-adherence.md). Old logged plans are still read (normalizeFightPlan).
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
@@ -22,39 +20,17 @@ import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
 import { bossNote } from "../project/run-journal.js";
+import { deckDamagePerTurn } from "./boss-clock.js";
+import { FIGHT_OBJECTIVES, isOneOf, MEANING, type FightObjective } from "./intent.js";
+import { objectiveOfApproach, validateFightPlan } from "./plan-validator.js";
+import type { RunPlan } from "./run-plan.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
-export type FightApproach = "race" | "setup" | "defend";
-export type PotionUse = "early" | "big_hit" | "burst" | "emergency" | "save" | "any";
-
-const APPROACHES: FightApproach[] = ["race", "setup", "defend"];
-const POTION_USES: PotionUse[] = ["early", "big_hit", "burst", "emergency", "save", "any"];
-
-/** Potions that add damage or energy: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
+/** Potions that add damage or energy (the combat veto treats drinking them as offence). */
 export const OFFENSIVE_POTIONS = new Set([
   "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
   "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
 ]);
-
-/**
- * The plan's use of a potion, with "big_hit" on an offensive potion read as "burst": DeepSeek had no
- * word for "keep it for the kill turn" and borrowed big_hit (6HRZ F33 T1: Energy Potion "for the turn
- * both claws die" drunk on T1's 21 hit; WB02 F33: Fire Potion "as finisher" drunk on T1; NMLV, R2H1).
- */
-export function planPotionUse(plan: FightPlan | null, potionId: string): PotionUse | undefined {
-  return readPotionUse(plan?.potions[potionId], potionId);
-}
-
-/**
- * big_hit on an offensive potion is its burst turn; burst on any other potion (draw, block, Dexterity,
- * utility) is no preference (X8HF F33: SWIFT_POTION tagged burst "for the kill turn", every drinking
- * line dropped on T3-T6, carried to the death with Frantic Escapes in the discard pile).
- */
-function readPotionUse(use: PotionUse | undefined, potionId: string): PotionUse | undefined {
-  if (use === "big_hit" && OFFENSIVE_POTIONS.has(potionId)) return "burst";
-  if (use === "burst" && !OFFENSIVE_POTIONS.has(potionId)) return "any";
-  return use;
-}
 
 export interface FightPlan {
   runId: string;
@@ -62,17 +38,18 @@ export interface FightPlan {
   fight: string;
   kind: string;
   enemyIds: string[];
-  approach: FightApproach;
-  /** card_id of the cards to play in the first turns. */
-  setup: string[];
-  /** enemy_id to kill first; null when it does not matter. */
-  focus: string | null;
-  /** potion_id -> what it is for in this fight. */
-  potions: Record<string, PotionUse>;
-  keyTurns: string;
+  objective: FightObjective;
+  /** enemy_id order to kill in; the first living one is the solver's focus. */
+  killPriority: string[];
+  /** DeepSeek's words on the danger (context for Jev only). */
+  threat: string;
   summary: string;
   /** How many times this fight was re-planned (a new boss/elite enemy appeared). */
   replans: number;
+  /** Validator repairs of this plan, one reason each. */
+  validator: string[];
+  /** The run plan version in force when it was made. */
+  runPlanVersion?: number;
 }
 
 /** Enemy ids of the living enemies. */
@@ -101,8 +78,8 @@ function moveSummary(model: Record<string, { next: Record<string, Record<string,
 }
 
 /**
- * What DeepSeek is shown for the plan: the whole deck (the plan is about which cards to set up), the
- * relics, the potions by id, and each enemy with its current intent, powers and learned move cycle.
+ * What DeepSeek is shown for the plan: the whole deck (what it can scale with or race with), the
+ * relics' own text, the potions by id, and each enemy with its current intent, powers and move cycle.
  */
 export function fightPlanInput(
   state: GameState,
@@ -173,66 +150,113 @@ export function fightPlanInput(
 
 export const FIGHT_PLAN_TASK = [
   "TASK: fight plan (not an option choice; ignore the {choice, reason} reply format for this one).",
-  "An elite or boss fight is starting. Every turn will be played by code (an exact one-turn solver) and a small model;",
-  "both only see the current turn. Give them the plan for the WHOLE fight: the things one-turn play misses",
-  "(when to set up powers vs. race, which enemy to kill first, which potion is for which moment, the turns to fear).",
-  "Use the enemies' move cycles and your knowledge of this fight. Keep HP: the run continues after this fight.",
-  'Reply with JSON only: {"approach": "race" | "setup" | "defend",',
-  '"setup_cards": [card ids from the deck to play in the first turns, most important first, max 3; [] for none],',
-  '"focus_enemy": "<enemy_id to kill first, or empty>",',
-  '"potions": {"<potion id>": "early" | "big_hit" | "burst" | "emergency" | "save" | "any"} for EVERY potion listed',
-  "(early = drink in turns 1-2; big_hit = a block/weak potion drunk on the turn of a big enemy attack;",
-  "burst = an attack/strength/energy potion kept for the turn it kills an enemy or wins the fight; emergency = only if HP gets low;",
-  "save = keep for a later fight; any = no preference),",
-  '"key_turns": "<max 30 words: the dangerous turns and what to do on them>",',
-  '"summary": "<max 40 words: the plan in plain words>"}',
+  "A fight is starting. Every turn will be played by code (an exact one-turn solver) and a small model (Jev); they",
+  "choose every card, target and potion themselves. Give the STRATEGY for the whole fight only, in the vocabulary below:",
+  "never name a card to play, a potion to drink or a turn to do something on (such orders are ignored).",
+  "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
+  "run_plan holds the run's intents: follow them (its reserved potions are not used before the act boss whatever you say).",
+  'Reply with JSON only: {"objective": "kill_fast" | "preserve_hp" | "scale_then_kill" | "race",',
+  '"kill_priority": [enemy ids in the order to kill them; [] when it does not matter],',
+  '"threat": "<max 30 words: what is dangerous in this fight (context for Jev)>",',
+  '"summary": "<max 40 words: the strategy in plain words>"}',
+  "What code does with each objective:",
+  `kill_fast = ${MEANING.objective.kill_fast}; preserve_hp = ${MEANING.objective.preserve_hp};`,
+  `scale_then_kill = ${MEANING.objective.scale_then_kill}; race = ${MEANING.objective.race}.`,
+  "scale_then_kill below 40% HP or against a hit of half our HP is turned into preserve_hp; under the run's hp_policy",
+  "preserve, kill_fast/race stay only when code expects the fight to end within 3 turns.",
 ].join(" ");
 
-/** Validates DeepSeek's answer against the board: unknown cards, enemies and potions are dropped. */
+/** The first living kill-priority enemy that is not one of several that must die together. */
+export function fightFocus(plan: FightPlan | null, state: GameState): string | null {
+  if (!plan) return null;
+  const living = livingEnemyIds(state);
+  return plan.killPriority.find((id) => living.includes(id)) ?? null;
+}
+
+/**
+ * DeepSeek's answer as a validated plan: enemy ids and names checked against the board, the objective
+ * against the vocabulary, the board and the run plan (plan-validator.ts). Old-format replies
+ * (approach, focus_enemy) are read as objective and kill priority; their card and potion orders are
+ * dropped with a reason.
+ */
 export function parseFightPlan(
   json: Record<string, unknown>,
   state: GameState,
   knowledge: Knowledge,
   base: { runId: string; fight: string; kind: string; replans: number },
+  run: RunPlan | null = null,
 ): FightPlan {
-  const deck = deckEntries(state, knowledge);
-  const byName = new Map<string, string>();
-  for (const card of deck) {
-    byName.set(card.card_id.toUpperCase(), card.card_id);
-    byName.set(card.name, card.card_id);
-  }
-  const toCardId = (value: unknown): string | null => {
-    if (typeof value !== "string") return null;
-    const text = value.trim().replace(/\+$/, "");
-    return byName.get(text.toUpperCase()) ?? byName.get(text) ?? null;
-  };
-  const setup = [...new Set(asArray(json["setup_cards"] as JsonValue).map(toCardId).filter((id): id is string => id !== null))].slice(0, 3);
+  const notes: string[] = [];
   const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  const focusRaw = typeof json["focus_enemy"] === "string" ? json["focus_enemy"].trim() : "";
-  const focusEnemy = enemies.find((enemy) => str(enemy["enemy_id"]) === focusRaw || str(enemy["name"]) === focusRaw);
-  const belt = asArray(asRecord(state.run?.raw)["potions"])
-    .map(asRecord)
-    .filter((potion) => bool(potion["occupied"]));
-  const potions: Record<string, PotionUse> = {};
-  for (const [key, value] of Object.entries(asRecord(json["potions"] as JsonValue))) {
-    const use = typeof value === "string" ? (value.trim().toLowerCase() as PotionUse) : null;
-    if (!use || !POTION_USES.includes(use)) continue;
-    const potion = belt.find((entry) => str(entry["potion_id"]) === key.trim() || str(entry["name"]) === key.trim());
-    // An offensive potion's "big_hit" is its burst turn (6HRZ, WB02); "burst" on any other is "any" (X8HF: see readPotionUse).
-    if (potion) potions[str(potion["potion_id"])] = readPotionUse(use, str(potion["potion_id"]))!;
+  const toEnemyId = (value: unknown): string | null => {
+    const text = typeof value === "string" ? value.trim() : "";
+    if (!text) return null;
+    const enemy = enemies.find((entry) => str(entry["enemy_id"]) === text || str(entry["name"]) === text || str(entry["enemy_id"]) === text.toUpperCase());
+    return enemy ? str(enemy["enemy_id"]) : text;
+  };
+  const priorityRaw = Array.isArray(json["kill_priority"]) ? json["kill_priority"] : typeof json["focus_enemy"] === "string" && json["focus_enemy"] ? [json["focus_enemy"]] : [];
+  const killPriority = [...new Set(priorityRaw.map(toEnemyId).filter((id): id is string => id !== null))];
+  const objectiveRaw = typeof json["objective"] === "string" ? json["objective"].trim().toLowerCase() : null;
+  const hp = state.run?.current_hp ?? num(asRecord(asRecord(state.raw["combat"])["player"])["current_hp"]);
+  const maxHp = state.run?.max_hp ?? num(asRecord(asRecord(state.raw["combat"])["player"])["max_hp"]);
+  const hpPct = maxHp > 0 ? hp / maxHp : 1;
+  let objective: FightObjective;
+  if (isOneOf(FIGHT_OBJECTIVES, objectiveRaw)) objective = objectiveRaw;
+  else {
+    const legacy = objectiveOfApproach(typeof json["approach"] === "string" ? json["approach"].trim().toLowerCase() : null);
+    objective = legacy ?? (hpPct < 0.5 ? "preserve_hp" : "kill_fast");
+    notes.push(objectiveRaw ? `objective ${JSON.stringify(objectiveRaw)} unknown → ${objective}` : legacy ? `old-format approach ${String(json["approach"])} read as ${objective}` : `no objective → ${objective}`);
   }
-  const approachRaw = typeof json["approach"] === "string" ? (json["approach"].trim().toLowerCase() as FightApproach) : "race";
-  return {
+  const plan: FightPlan = {
     ...base,
     enemyIds: livingEnemyIds(state),
-    approach: APPROACHES.includes(approachRaw) ? approachRaw : "race",
-    setup,
-    // No kill-first target among enemies that must die together (Decimillipede segments reattach,
-    // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
-    focus: focusEnemy && !mustDieTogether(focusEnemy) ? str(focusEnemy["enemy_id"]) : null,
-    potions,
-    keyTurns: typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
+    objective,
+    killPriority,
+    threat: typeof json["threat"] === "string" ? truncate(json["threat"], 200) : typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
+    validator: [],
+    ...(run ? { runPlanVersion: run.version } : {}),
+  };
+  const combat = asRecord(state.raw["combat"]);
+  const block = num(asRecord(combat["player"])["block"]);
+  const incoming = Math.max(0, enemies.reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((total, intent) => total + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0), 0) - block);
+  const enemyHp = enemies.filter((enemy) => !asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER")).reduce((sum, enemy) => sum + num(enemy["current_hp"]), 0);
+  const perTurn = deckDamagePerTurn(state, knowledge);
+  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord).filter((potion) => bool(potion["occupied"]));
+  notes.push(
+    ...validateFightPlan(plan, json, run, {
+      hpPct,
+      hp,
+      incoming,
+      turnsToKill: perTurn > 0 ? Math.ceil(enemyHp / perTurn) : null,
+      enemyIds: enemies.map((enemy) => str(enemy["enemy_id"])),
+      // No kill-first target among enemies that must die together (Decimillipede segments reattach,
+      // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
+      together: enemies.filter(mustDieTogether).map((enemy) => str(enemy["enemy_id"])),
+      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "" })),
+      kind: base.kind,
+    }),
+  );
+  plan.validator = notes;
+  return plan;
+}
+
+/** A logged plan in the current shape (plans written before the intent vocabulary included). */
+export function normalizeFightPlan(raw: FightPlan | Record<string, unknown>): FightPlan {
+  const plan = raw as Partial<FightPlan> & Record<string, unknown>;
+  const focus = typeof plan["focus"] === "string" && plan["focus"] ? [plan["focus"]] : [];
+  return {
+    runId: String(plan.runId ?? ""),
+    fight: String(plan.fight ?? ""),
+    kind: String(plan.kind ?? ""),
+    enemyIds: asArray(plan.enemyIds as JsonValue).map(String),
+    objective: isOneOf(FIGHT_OBJECTIVES, plan.objective) ? plan.objective : objectiveOfApproach(plan["approach"]) ?? "kill_fast",
+    killPriority: Array.isArray(plan.killPriority) ? plan.killPriority.map(String) : focus,
+    threat: String(plan.threat ?? plan["keyTurns"] ?? ""),
+    summary: String(plan.summary ?? ""),
+    replans: Number(plan.replans ?? 0),
+    validator: Array.isArray(plan.validator) ? plan.validator : [],
+    ...(typeof plan.runPlanVersion === "number" ? { runPlanVersion: plan.runPlanVersion } : {}),
   };
 }
 
@@ -249,84 +273,14 @@ export function needsReplan(plan: FightPlan, state: GameState, knowledge: Knowle
   });
 }
 
-/** What Jev (and the decision log) see of the plan. */
+/** What Jev, the logs and a re-plan see of the plan. */
 export function fightPlanJson(plan: FightPlan): Record<string, JsonValue> {
   return {
-    approach: plan.approach,
-    setup_first: plan.setup,
-    kill_first: plan.focus ?? "",
-    potions: plan.potions,
-    dangerous_turns: plan.keyTurns,
+    objective: plan.objective,
+    kill_priority: plan.killPriority,
+    threat: plan.threat,
     summary: plan.summary,
   };
-}
-
-/** Extra solver cost of drinking this potion now, per the plan; null = leave the default cost. */
-export function planPotionCost(
-  plan: FightPlan | null,
-  potionId: string,
-  ctx: { turn: number; bigHit: boolean; pressed: boolean; offensive?: boolean },
-): { free: boolean; extra: number } | null {
-  const use = planPotionUse(plan, potionId);
-  if (!use || use === "any") return null;
-  if (ctx.pressed) return null;
-  // A burst potion keeps the default cost; lines drinking it off its kill turn are dropped in
-  // combat-plan.ts (drinksKeptPotion).
-  if (use === "burst") return null;
-  if (use === "early") return ctx.turn <= 2 ? { free: true, extra: 0 } : null;
-  // "big_hit" is the turn of a big enemy attack: no reason to drink an offensive potion then (B6AC F33
-  // T1: Flex drunk for +19 damage when T2 had the better burst hand). Default cost.
-  if (use === "big_hit" && ctx.offensive) return null;
-  if (use === "big_hit") return ctx.bigHit ? { free: true, extra: 0 } : { free: false, extra: 6 };
-  if (use === "emergency") return { free: false, extra: 10 };
-  return { free: false, extra: 20 };
-}
-
-/** Whether an unmodelled potion should be offered to Jev this turn, per the plan (null = default rule). */
-export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: { turn: number; bigHit: boolean; pressed: boolean; costly: boolean; offensive?: boolean }): boolean | null {
-  const use = planPotionUse(plan, potionId);
-  if (!use || use === "any" || use === "burst") return null;
-  // "big_hit" on an attack potion is the plan's burst, not the enemy's big hit: the default rule offers
-  // it (24HM F33: Attack Potion tagged big_hit, offered on no turn in 14, died holding it).
-  if (use === "big_hit" && ctx.offensive) return null;
-  if (ctx.pressed) return true;
-  // A costly turn does not unlock a potion the plan keeps for a later fight or for the big hit (J8E4
-  // F17 T2: Shackling Potion, kept for the Pressure Gun, drunk on a 15 Stomp).
-  if (ctx.costly && use !== "save" && use !== "big_hit") return true;
-  if (use === "early") return ctx.turn <= 2 ? true : null;
-  if (use === "big_hit") return ctx.bigHit;
-  return false;
-}
-
-/**
- * Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions
- * against the plan. `line` (from the turn planner) says which steps really are setup: Dominate and
- * Molten Fist only count on a target already Vulnerable when they are played (WR2Y F33 T1: Dominate
- * at 0 Vulnerable tagged "plays planned setup", +1 Strength instead of ~+6); those are named in
- * `early`. Without it every planned card id counts.
- */
-export function planFit(
-  plan: FightPlan,
-  steps: { cardId: string; name: string }[],
-  focusDamage: number | null,
-  line?: { setup: boolean[]; early: string[] },
-): string {
-  const parts: string[] = [];
-  const setup = steps.filter((step, index) => (line ? line.setup[index] === true : plan.setup.includes(step.cardId))).map((step) => step.name);
-  if (setup.length > 0) parts.push(`plays planned setup ${[...new Set(setup)].join(", ")}`);
-  if (line && line.early.length > 0) parts.push(`plays ${line.early.join(", ")} before the planned Vulnerable (almost no Strength from it)`);
-  if (plan.focus && focusDamage !== null && focusDamage > 0) parts.push(`${focusDamage} damage to the kill-first enemy`);
-  const drinks = steps.filter((step) => step.cardId.startsWith("POTION:"));
-  for (const step of drinks) {
-    // Modelled potions are "POTION:<potion id>:<slot>".
-    const use = planPotionUse(plan, step.cardId.split(":")[1] ?? "");
-    const name = step.name.replace(/^potion /, "");
-    if (use === "save" || use === "emergency") parts.push(`drinks ${name} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
-    // WR2Y F33 T1: the Flex Potion kept for the double-claw kill turn, drunk on T1 for +8 at Jev 0.39.
-    if (use === "burst") parts.push(`drinks ${name}, the plan's potion for the kill turn`);
-    if (use === "big_hit") parts.push(`drinks ${name}, the plan's potion for a big enemy hit`);
-  }
-  return parts.length > 0 ? parts.join("; ") : "neutral";
 }
 
 /** Appends one plan (or a failed attempt) to the fight-plan log. Never throws. */
@@ -358,7 +312,7 @@ export function loadFightPlan(file: string, runId: string, fight: string): Fight
       if (!line.includes(runId) || !line.includes(`"${fight}"`)) continue;
       try {
         const entry = JSON.parse(line) as { plan?: FightPlan };
-        if (entry.plan && entry.plan.runId === runId && entry.plan.fight === fight) return entry.plan;
+        if (entry.plan && entry.plan.runId === runId && entry.plan.fight === fight) return normalizeFightPlan(entry.plan);
       } catch {
         // a torn first line
       }

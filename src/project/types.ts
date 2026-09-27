@@ -91,8 +91,6 @@ export interface ScreenMemory {
   hpGuard?: { fight: string; turns: Record<string, number> };
   /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
   potionTurn?: { fight: string; turn: number | null; startCount: number };
-  /** Potion ids the fight plan's auto-drink used this fight: one each (H5MZ F39: both Power Potions went T1). */
-  planPotionsDrunk?: { fight: string; ids: string[] };
   /**
    * Potion ids a guard refused in this fight turn (elite/boss veto, hallway bar): the same turn's
    * re-plans do not offer them again (GZ24 F8 T1, EJXC F28 T1: refused, then drunk 3 s later at 0.51).
@@ -103,11 +101,11 @@ export interface ScreenMemory {
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
    */
   lastMap?: RememberedMap;
-  /** DeepSeek's plan for the current elite/boss fight (FIGHT_PLAN=v1); cleared out of combat. */
+  /** DeepSeek's strategic intents for the current fight (FIGHT_PLAN=v1); cleared out of combat. */
   fightPlan?: import("../strategy/fight-plan.js").FightPlan | null;
   /** Fight key (act:floor) whose plan request failed: not retried in the same fight. */
   fightPlanFailed?: string;
-  /** DeepSeek's run plan (RUN_PLAN=v1): strategy weights for build and route decisions. Kept across screens. */
+  /** DeepSeek's run plan (RUN_PLAN=v1): the run's strategic intents (intent.ts). Kept across screens. */
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
@@ -183,6 +181,11 @@ export interface ResolvedAction {
   decider?: "jev" | "deepseek" | "claude";
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
+  /**
+   * Jev picked an option that breaks a soft strategic intent (intent.ts compliance label): logged per
+   * run-plan version as `intent_deviation`.
+   */
+  deviation?: { intent: string; runPlanVersion: number | null; fightObjective?: string | null };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).

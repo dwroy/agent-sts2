@@ -7,9 +7,10 @@
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
-import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
+import { cardRoles, cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
+import { currentRunPlan, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
+import { planForbidsCard } from "../strategy/intent.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
@@ -65,7 +66,14 @@ export function planReward(env: DecisionEnv): Decision | null {
     const run = asRecord(state.run?.raw);
     const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
     const valueOf = rewardCardValuer(env);
-    const options: PickOption[] = offered.map((card, fallbackIndex) => {
+    // RUN_PLAN=v1: cards the run plan avoids (ids or roles) are not offered at all (hard intent).
+    const runPlan = currentRunPlan(env.screenMemory, state);
+    const forbidden = offered.map((card) => planForbidsCard(runPlan, str(card["card_id"]), cardRoles(str(card["card_id"])))).filter((why): why is string => why !== null);
+    const allowed = offered.filter((card) => planForbidsCard(runPlan, str(card["card_id"]), cardRoles(str(card["card_id"]))) === null);
+    if (allowed.length === 0 && actions.includes("skip_reward_cards")) {
+      return { kind: "act", label: "reward/card", intent: { action: "skip_reward_cards" }, rationale: `every offer is avoided by the run plan (${forbidden.join("; ")})` };
+    }
+    const options: PickOption[] = allowed.map((card, fallbackIndex) => {
       const index = numOrNull(card["index"]) ?? fallbackIndex;
       const cardId = str(card["card_id"]);
       const info = knowledge.card(cardId);

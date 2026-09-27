@@ -17,14 +17,13 @@ import {
   logRunPlan,
   parseRunPlan,
   runPlanCardBonus,
-  runPlanEliteShift,
   runPlanLine,
-  runPlanRestShift,
   runPlanTrigger,
   RUN_PLAN_AVOID_MALUS,
   RUN_PLAN_WANT_BONUS,
   type RunPlan,
 } from "../src/strategy/run-plan.js";
+import { mapShift, restShift } from "../src/strategy/intent.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 const plan = (over: Partial<RunPlan> = {}): RunPlan => ({
@@ -38,10 +37,17 @@ const plan = (over: Partial<RunPlan> = {}): RunPlan => ({
   avoid: ["ANGER"],
   remove: ["STRIKE_R"],
   blockTarget: 6,
-  elites: "normal",
-  rest: "auto",
+  hpPolicy: "balanced",
+  routeRisk: "normal",
+  entryHp: null,
+  reserve: [],
+  needs: [],
+  avoidRoles: [],
   bossPrep: "",
   summary: "scale with Strength",
+  version: 1,
+  changes: [],
+  validator: [],
   ...over,
 });
 
@@ -69,16 +75,16 @@ describe("runPlanTrigger", () => {
 });
 
 describe("parseRunPlan", () => {
-  it("keeps real card ids, deck-only removals, and valid enums", () => {
+  it("keeps real card ids, deck-only removals, and valid enums; unknown values are logged", () => {
     const parsed = parseRunPlan(
       {
         archetype: "Strength scaling",
         want: ["INFLAME", "Inflame", "NOT_A_CARD", "Shrug It Off"],
-        avoid: ["ANGER"],
+        avoid: ["ANGER", "draw"],
         remove: ["STRIKE_R", "ANGER"],
         block_target: 7.4,
-        elites: "seek",
-        rest: "nap",
+        hp_policy: "yolo",
+        route_risk: "seek_elites",
         boss_prep: "block for the big hit",
         summary: "take Strength, remove Strikes",
       },
@@ -88,11 +94,23 @@ describe("parseRunPlan", () => {
     );
     expect(parsed.want).toEqual(["INFLAME", "SHRUG_IT_OFF"]);
     expect(parsed.avoid).toEqual(["ANGER"]);
+    expect(parsed.avoidRoles).toEqual(["draw"]);
     expect(parsed.remove).toEqual(["STRIKE_R"]);
     expect(parsed.blockTarget).toBe(7);
-    expect(parsed.elites).toBe("seek");
-    expect(parsed.rest).toBe("auto");
+    expect(parsed.routeRisk).toBe("seek_elites");
+    expect(parsed.hpPolicy).toBe("balanced");
     expect(parsed.act).toBe(2);
+    expect(parsed.version).toBe(1);
+    expect(parsed.validator.join(" | ")).toMatch(/hp_policy: unknown value "yolo"/);
+    expect(parsed.validator.join(" | ")).toMatch(/want: dropped unknown "NOT_A_CARD"/);
+  });
+
+  it("reads the old reply fields (elites, rest, save_potions, must_have) as the new intents", () => {
+    const parsed = parseRunPlan({ elites: "avoid", rest: "heal", save_potions: ["block"], must_have: ["aoe"] }, mapState(), testKnowledge, "start");
+    expect(parsed.routeRisk).toBe("avoid_elites");
+    expect(parsed.hpPolicy).toBe("preserve");
+    expect(parsed.reserve).toEqual(["block"]);
+    expect(parsed.needs).toEqual(["aoe"]);
   });
 });
 
@@ -104,19 +122,22 @@ describe("plan weights", () => {
     expect(runPlanCardBonus(plan(), "SHRUG_IT_OFF", 6, true).bonus).toBe(0);
     expect(runPlanCardBonus(null, "INFLAME", 0, false).bonus).toBe(0);
   });
-  it("shifts elites and rest sites, never against a low-HP or pre-boss heal", () => {
-    expect(runPlanEliteShift(plan({ elites: "avoid" }), 0.9)).toBe(-3);
-    expect(runPlanEliteShift(plan({ elites: "seek" }), 0.9)).toBe(2);
-    expect(runPlanEliteShift(plan({ elites: "seek" }), 0.5)).toBe(0);
-    expect(runPlanRestShift(plan({ rest: "smith" }), "SMITH", 0.7, false)).toBe(3);
-    expect(runPlanRestShift(plan({ rest: "smith" }), "SMITH", 0.4, false)).toBe(0);
-    expect(runPlanRestShift(plan({ rest: "smith" }), "SMITH", 0.9, true)).toBe(0);
-    expect(runPlanRestShift(plan({ rest: "heal" }), "HEAL", 0.9, false)).toBe(3);
+  it("shifts elites and rest sites by route_risk and hp_policy, never against a pre-boss heal", () => {
+    expect(mapShift(plan({ routeRisk: "avoid_elites" }), "Elite", 0.9)).toBe(-6);
+    expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.9)).toBe(2);
+    expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.5)).toBe(0);
+    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-1.5);
+    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.7, false)).toBe(3);
+    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.4, false)).toBe(0);
+    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.9, true)).toBe(0);
+    expect(restShift(plan({ hpPolicy: "preserve" }), "HEAL", 0.6, false)).toBe(4);
+    expect(restShift(plan({ hpPolicy: "preserve" }), "HEAL", 0.9, false)).toBe(0);
   });
-  it("shows the plan in the run brief", () => {
+  it("shows the plan's intents in the run brief", () => {
     const state = mapState();
-    const brief = { ...buildRunBrief(state, testKnowledge), plan: runPlanLine(plan()) ?? undefined };
+    const brief = { ...buildRunBrief(state, testKnowledge), plan: runPlanLine(plan({ reserve: ["block"] })) ?? undefined };
     expect(String(briefJson(brief)["run_plan"])).toContain("want INFLAME");
+    expect(String(briefJson(brief)["run_plan"])).toContain("reserve block potions");
   });
 });
 
@@ -130,6 +151,10 @@ describe("run plan log", () => {
       logRunPlan(file, { run: "TESTRUN123", plan: plan({ summary: "new" }) as never });
       expect(loadRunPlan(file, "TESTRUN123")?.summary).toBe("new");
       expect(loadRunPlan(file, "NOPE")).toBeNull();
+      // A plan logged before the intent vocabulary is read as the new intents.
+      logRunPlan(file, { run: "OLDRUN", plan: { runId: "OLDRUN", act: 1, floor: 3, want: [], avoid: [], remove: [], elites: "avoid", rest: "auto", savePotions: ["block", "weak"], mustHave: ["aoe"], summary: "old" } as never });
+      const old = loadRunPlan(file, "OLDRUN")!;
+      expect(old).toMatchObject({ routeRisk: "avoid_elites", hpPolicy: "balanced", reserve: ["block", "weak"], needs: ["aoe"], version: 1, changes: [] });
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -137,26 +162,26 @@ describe("run plan log", () => {
 });
 
 describe("run plan commitments (entry HP, saved potions, must-have roles)", () => {
-  it("parses them from the reply", () => {
-    const parsed = parseRunPlan({ archetype: "x", entry_hp_pct: 0.9, save_potions: ["block", "weak", "damage"], must_have: ["aoe", "strength", "nonsense"] }, mapState(), testKnowledge, "act");
+  it("parses them from the reply, every reserve role (the old parser kept 2)", () => {
+    const parsed = parseRunPlan({ archetype: "x", entry_hp_pct: 0.9, reserve: ["block", "weak", "damage"], needs: ["aoe", "strength", "nonsense"] }, mapState(), testKnowledge, "act");
     expect(parsed.entryHp).toBe(0.9);
-    expect(parsed.savePotions).toEqual(["block", "weak"]);
-    expect(parsed.mustHave).toEqual(["aoe", "strength"]);
+    expect(parsed.reserve).toEqual(["block", "weak", "damage"]);
+    expect(parsed.needs).toEqual(["aoe", "strength"]);
   });
   it("turns them into weights: heal and avoid elites below the entry HP near the boss, saved potions, must-have roles", async () => {
     const { planSavesPotion, mustHaveBonus, MUST_HAVE_BONUS, floorsToBoss } = await import("../src/strategy/run-plan.js");
-    const committed = plan({ entryHp: 0.85, savePotions: ["block"], mustHave: ["aoe"] });
-    expect(runPlanRestShift(committed, "HEAL", 0.6, false, 4)).toBe(8);
-    expect(runPlanRestShift(committed, "HEAL", 0.6, false, 12)).toBe(0);
-    expect(runPlanEliteShift(committed, 0.8, 5)).toBe(-8);
-    expect(runPlanEliteShift(committed, 1, 5)).toBe(0);
+    const committed = plan({ entryHp: 0.85, reserve: ["block"], needs: ["aoe"] });
+    expect(restShift(committed, "HEAL", 0.6, false, 4)).toBe(8);
+    expect(restShift(committed, "HEAL", 0.6, false, 12)).toBe(0);
+    expect(mapShift(committed, "Elite", 0.8, 5)).toBe(-8);
+    expect(mapShift(committed, "Elite", 1, 5)).toBe(0);
     expect(planSavesPotion(committed, "BLOCK_POTION", "获得 12 点格挡。")).toBe(true);
     expect(planSavesPotion(committed, "FIRE_POTION", "造成 20 点伤害。")).toBe(false);
     // GZ24 F8: the Dexterity Potion's text is 「获得{DexterityPower}点敏捷」; Regen heals over turns.
     expect(planSavesPotion(committed, "DEXTERITY_POTION", "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。")).toBe(true);
     expect(planSavesPotion(committed, "DEXTERITY_POTION", "")).toBe(true);
-    expect(planSavesPotion({ ...committed, savePotions: ["heal"] }, "REGEN_POTION", "")).toBe(true);
-    expect(planSavesPotion({ ...committed, savePotions: ["heal"] }, "REGEN_POTION", "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。")).toBe(true);
+    expect(planSavesPotion({ ...committed, reserve: ["heal"] }, "REGEN_POTION", "")).toBe(true);
+    expect(planSavesPotion({ ...committed, reserve: ["heal"] }, "REGEN_POTION", "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。")).toBe(true);
     expect(mustHaveBonus(committed, "THUNDERCLAP", ["STRIKE_R"]).bonus).toBe(MUST_HAVE_BONUS);
     expect(mustHaveBonus(committed, "THUNDERCLAP", ["STOMP", "INFERNO"]).bonus).toBe(4);
     expect(mustHaveBonus(committed, "DEFEND_R", []).bonus).toBe(0);

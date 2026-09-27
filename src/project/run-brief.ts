@@ -32,6 +32,8 @@ export interface RunBrief {
   notes: string[];
   /** The run plan's one-line strategy (RUN_PLAN=v1), when there is one. */
   plan?: string;
+  /** The run's strategic intents, one line each with what they mean (intent.ts intentLines). */
+  strategy?: string[];
 }
 
 const MAX_NOTES = 8;
@@ -82,6 +84,7 @@ export function briefJson(brief: RunBrief): Record<string, JsonValue> {
     notes: brief.notes,
   };
   if (brief.plan) json["run_plan"] = brief.plan;
+  if (brief.strategy && brief.strategy.length > 0) json["strategy"] = brief.strategy;
   // Relic and potion text arrives as a template: the mod exposes `{Heal}` where the game shows a
   // number, and there is no rendered variant for relics the way there is for cards. Say so, so the
   // model does not read the placeholder as a literal string.

@@ -1,10 +1,15 @@
 /**
  * Run plan (RUN_PLAN=v1, migration step M3): DeepSeek sets the run's strategy at a few checkpoints —
  * the start of the run, the start of each act, after a heavy HP loss, and at most every
- * RUN_PLAN_REVIEW_FLOORS floors — and code turns it into weights on the build and route decisions.
- * It is strategy only: which cards to look for, avoid or remove, how many block cards the deck needs,
- * how hungry for elites to be, heal or smith at rest sites, what to prepare for the act boss. Card
- * play stays with the turn solver and Jev (Dai: "只是打法建议，出牌还是交给 jev 判断").
+ * RUN_PLAN_REVIEW_FLOORS floors — and code carries it out on the build, route, rest and combat
+ * decisions. It is strategy only, in the closed vocabulary of intent.ts (hp_policy, entry_hp_pct,
+ * route_risk, reserve, needs, avoid) plus the cards to look for and remove; intent.ts is the table of
+ * what each intent means to code and Jev. Card play stays with the turn solver and Jev (Dai: "只是打法
+ * 建议，出牌还是交给 jev 判断").
+ *
+ * Re-plans keep continuity: DeepSeek sees the intents in force and what happened since
+ * (since_last_plan), a field it leaves out keeps its value, and a changed intent must name a trigger
+ * the facts show (plan-validator.ts); rejected changes keep the old value.
  *
  * Why: most losses since the fight plan came in were cross-fight decisions no single fight plan
  * sees (entering elites or bosses with empty potion slots, a 3-block-card deck at the Queen, the
@@ -18,13 +23,41 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries } from "../project/deck.js";
 import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } from "../knowledge/dossiers.js";
-import { bossClockJson } from "./boss-clock.js";
+import { bossClockJson, damageGap } from "./boss-clock.js";
 import { cardRoles } from "./card-value.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, isOneOf, isReserved, MEANING, POTION_ROLES, recentChanges, ROUTE_RISKS, type ChangeTrigger, type HpPolicy, type RouteRisk } from "./intent.js";
+import { repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
-export type EliteAppetite = "seek" | "normal" | "avoid";
-export type RestPolicy = "heal" | "smith" | "auto";
+
+/** One accepted change of an intent between plan versions (plan-validator.ts). */
+export interface PlanChange {
+  floor: number;
+  act: number;
+  /** The run plan version the change made. */
+  version: number;
+  field: string;
+  from: JsonValue;
+  to: JsonValue;
+  trigger: ChangeTrigger;
+  /** The fact from the "since last plan" summary that supports the trigger. */
+  fact: string;
+}
+
+/** What the run looked like when a plan was made (the next re-plan's "since last plan" summary). */
+export interface PlanSnapshot {
+  floor: number;
+  act: number;
+  hpPct: number;
+  deck: string[];
+  relics: string[];
+  potions: string[];
+  /** Boss-clock gap a turn, null when unknown. */
+  gap: number | null;
+  /** Elites fought in this act (visited Elite map nodes). */
+  elites: number;
+}
 
 export interface RunPlan {
   runId: string;
@@ -37,23 +70,32 @@ export interface RunPlan {
   archetype: string;
   /** card_id: pick these when offered (card rewards, shops). */
   want: string[];
-  /** card_id: do not take these. */
+  /** card_id: never take these (hard: not offered at rewards and shops). */
   avoid: string[];
   /** card_id: remove these first (shop removal, events). */
   remove: string[];
   /** Block cards the deck should hold by the act boss. */
   blockTarget: number | null;
-  elites: EliteAppetite;
-  rest: RestPolicy;
+  /** Strategic intents (intent.ts has what each means for code and Jev). */
+  hpPolicy: HpPolicy;
+  routeRisk: RouteRisk;
+  /** HP fraction to enter the act boss with. */
+  entryHp: number | null;
+  /** Potion roles reserved for the act boss (any number; hard-filtered before it). */
+  reserve: PotionRole[];
+  /** Card roles the deck must get before the act boss. */
+  needs: CardRole[];
+  /** Card roles never to take (acquisition only). */
+  avoidRoles: CardRole[];
   bossPrep: string;
   summary: string;
-  /**
-   * Commitments code enforces (Dai: "ds 的规划要能有保障让 jev 可以落地"): the HP fraction to enter the
-   * act boss with, the potion roles kept for it, and the card roles the deck must get before it.
-   */
-  entryHp?: number | null;
-  savePotions?: PotionRole[];
-  mustHave?: CardRole[];
+  /** 1 for the run's first plan, +1 per re-plan (deviations are logged per version). */
+  version: number;
+  snapshot?: PlanSnapshot;
+  /** Accepted intent changes so far this run (last CHANGE_HISTORY). */
+  changes: PlanChange[];
+  /** Validator repairs and rejected changes of this version, one reason each. */
+  validator: string[];
 }
 
 /** A plan older than this many floors is reviewed at the next map. */
@@ -93,31 +135,91 @@ export function runPlanTrigger(plan: RunPlan | null | undefined, state: GameStat
 
 export const RUN_PLAN_TASK = [
   "TASK: run plan (not an option choice; ignore the {choice, reason} reply format for this one).",
-  "You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops,",
-  "removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions,",
-  "the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act.",
+  "You set the STRATEGY for the rest of this act and run, in the closed vocabulary below. Code and a small model (Jev)",
+  "execute it: they choose every card reward, shop buy, route, rest site, card play and potion themselves.",
+  "Give strategy only: never name a card to play, a potion to drink or a turn to do something on (such orders are ignored).",
+  "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
+  "Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead).",
   "act_boss_clock gives the boss's HP, the turns the fight can last, the damage a turn that needs, and code's rough",
-  "estimate of this deck's damage a turn (Strength counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling",
-  "and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary.",
+  "estimate of this deck's damage a turn. If gap_per_turn > 0, closing it comes first (needs strength/aoe/frontload, want",
+  "high-damage cards, remove Strikes/Defends that dilute them); state the gap in the summary.",
   'Reply with JSON only: {"archetype": "<the deck direction, max 12 words>",',
-  '"want": [card ids to pick when offered, most important first, max 6],',
-  '"avoid": [card ids not to take, max 6], "remove": [card ids in the deck to remove first, max 3],',
-  '"block_target": <number of block cards the deck should hold by the act boss>,',
-  '"elites": "seek" | "normal" | "avoid", "rest": "heal" | "smith" | "auto",',
-  '"boss_prep": "<max 30 words: what to have ready for the act boss>",',
-  '"entry_hp_pct": <0-1: HP fraction to enter the act boss with, from act_boss_dossier>,',
-  '"save_potions": [potion roles to keep for the act boss: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
-  '"must_have": [card roles the deck must get before the act boss: "aoe"|"strength"|"block"|"draw"|"exhaust"|"multi_hit"|"frontload"|"debuff"],',
-  '"summary": "<max 40 words: the plan in plain words>"}',
-  "act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP and potions that worked.",
-  "entry_hp_pct, save_potions and must_have are carried out by code and shown to the card-playing model as strong weights",
-  "(near the boss, rests lean to heal and elites are avoided below the entry HP; saved potions cost more before the boss and are",
-  "labelled 'kept for the boss'; must-have roles get a large pick bonus) — set them to what the boss needs, not more.",
+  '"hp_policy": "preserve" | "balanced" | "push", "entry_hp_pct": <0-1: HP fraction to enter the act boss with, from act_boss_dossier>,',
+  '"route_risk": "avoid_elites" | "normal" | "seek_elites",',
+  '"reserve": [potion roles kept for the act boss, any number: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
+  '"needs": [card roles the deck must get before the act boss: "aoe"|"strength"|"block"|"draw"|"exhaust"|"multi_hit"|"frontload"|"debuff"],',
+  '"avoid": [card ids or card roles never to take], "want": [card ids to pick when offered, most important first, max 6],',
+  '"remove": [card ids in the deck to remove first, max 3], "block_target": <block cards the deck should hold by the act boss>,',
+  '"boss_prep": "<max 30 words: what to have ready for the act boss (context for Jev)>",',
+  '"summary": "<max 40 words: the plan in plain words>",',
+  '"changes": [{"field": "<hp_policy|route_risk|entry_hp_pct|reserve|needs|avoid>", "from": <old>, "to": <new>,',
+  `"trigger": "<${CHANGE_TRIGGERS.join("|")}>", "fact": "<the fact from since_last_plan that shows it>"}]}`,
+  "What code does with each intent:",
+  `hp_policy preserve = ${MEANING.hp_policy.preserve}; balanced = ${MEANING.hp_policy.balanced}; push = ${MEANING.hp_policy.push}.`,
+  `route_risk avoid_elites = ${MEANING.route_risk.avoid_elites}; seek_elites = ${MEANING.route_risk.seek_elites}.`,
+  "entry_hp_pct: near the boss rests heal and elites are skipped below it. reserve: potions of those roles are never drunk",
+  "before the act boss (only below 25% HP or when every other line dies) and are free in the boss fight; a full belt then",
+  "loses new potions, so reserve only what the boss needs. needs: a large pick bonus for cards of the role. avoid: such",
+  "cards are not offered at all. act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP",
+  "and potions that worked.",
+  "Re-plans (previous_plan is set): previous_plan holds the intents in force and since_last_plan what happened since.",
+  "Keep every intent unless a trigger from the list justifies changing it; a field you leave out keeps its value.",
+  "Every changed field among hp_policy, route_risk, entry_hp_pct, reserve, needs and avoid must appear in changes with its",
+  "trigger and the supporting fact. A change without one, with a trigger the facts do not show, or one reversing a change",
+  "made in the last 3 floors with the same trigger is rejected and the old value kept.",
 ].join(" ");
 
-/** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
-export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger, deckLines: string[], relics: string[], potions: string[]): Record<string, JsonValue> {
+/** The intents in force, as the re-plan and the fight plan see them. */
+export function runPlanIntentsJson(plan: RunPlan): Record<string, JsonValue> {
+  return {
+    version: plan.version,
+    floor: plan.floor,
+    archetype: plan.archetype,
+    hp_policy: plan.hpPolicy,
+    entry_hp_pct: plan.entryHp,
+    route_risk: plan.routeRisk,
+    reserve: plan.reserve,
+    needs: plan.needs,
+    avoid: [...plan.avoid, ...plan.avoidRoles],
+    want: plan.want,
+    remove: plan.remove,
+    block_target: plan.blockTarget,
+    boss_prep: plan.bossPrep,
+    summary: plan.summary,
+    recent_changes: plan.changes.slice(-4).map((change) => `F${change.floor} ${change.field} ${JSON.stringify(change.from)}→${JSON.stringify(change.to)} (${change.trigger})`),
+  };
+}
+
+/** What the run looks like now, for the next re-plan's "since last plan" summary. */
+export function snapshotOf(state: GameState, knowledge: Knowledge): PlanSnapshot {
   const raw = asRecord(state.run?.raw);
+  const map = asRecord(state.raw["map"]);
+  const elites = asArray(map["nodes"]).map(asRecord).filter((node) => node["visited"] === true && str(node["node_type"]) === "Elite").length;
+  return {
+    floor: state.run?.floor ?? 0,
+    act: actOf(state),
+    hpPct: hpFraction(state),
+    deck: deckEntries(state, knowledge).map((card) => `${card.card_id}${card.upgraded ? "+" : ""}`),
+    relics: asArray(raw["relics"]).map((relic) => str(asRecord(relic)["relic_id"])).filter(Boolean),
+    potions: asArray(raw["potions"]).map(asRecord).filter((potion) => potion["occupied"] !== false && str(potion["potion_id"])).map((potion) => str(potion["potion_id"])),
+    gap: damageGap(state, knowledge)?.gap ?? null,
+    elites,
+  };
+}
+
+/** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
+export function runPlanInput(
+  state: GameState,
+  knowledge: Knowledge,
+  trigger: RunPlanTrigger,
+  deckLines: string[],
+  relics: string[],
+  potions: string[],
+  previous: RunPlan | null = null,
+  forcedRoute = false,
+): Record<string, JsonValue> {
+  const raw = asRecord(state.run?.raw);
+  const since = previous?.snapshot && previous.runId === str(state.raw["run_id"]) ? sinceLastPlan(previous.snapshot, snapshotOf(state, knowledge), forcedRoute) : null;
   return {
     trigger,
     act: actOf(state),
@@ -137,11 +239,28 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
     deck: deckLines,
     relics,
     potions,
+    ...(since ? { since_last_plan: since as unknown as JsonValue } : {}),
   };
 }
 
-export function parseRunPlan(json: Record<string, unknown>, state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger): RunPlan {
+/**
+ * DeepSeek's reply as a validated plan. Card ids are checked against the game data, enums against the
+ * vocabulary; on a re-plan (a `previous` plan of this run) a field left out keeps its value and every
+ * intent change is checked against its trigger and the facts (plan-validator.ts). Every repair and
+ * rejection is in `validator`.
+ */
+export function parseRunPlan(
+  json: Record<string, unknown>,
+  state: GameState,
+  knowledge: Knowledge,
+  trigger: RunPlanTrigger,
+  previous: RunPlan | null = null,
+  forcedRoute = false,
+): RunPlan {
+  const runId = str(state.raw["run_id"]);
+  const prev = previous && previous.runId === runId ? normalizeRunPlan(previous) : null;
   const deck = deckEntries(state, knowledge);
+  const notes: string[] = [];
   const byName = new Map<string, string>();
   for (const card of deck) {
     byName.set(card.card_id.toUpperCase(), card.card_id);
@@ -159,34 +278,125 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
     const text = value.trim().replace(/\+$/, "");
     return byName.get(text.toUpperCase()) ?? byName.get(text) ?? null;
   };
-  const ids = (value: unknown, pick: (entry: unknown) => string | null, max: number) =>
-    [...new Set(asArray(value as JsonValue).map(pick).filter((id): id is string => id !== null))].slice(0, max);
-  const elites = typeof json["elites"] === "string" && ["seek", "normal", "avoid"].includes(json["elites"]) ? (json["elites"] as EliteAppetite) : "normal";
-  const rest = typeof json["rest"] === "string" && ["heal", "smith", "auto"].includes(json["rest"]) ? (json["rest"] as RestPolicy) : "auto";
-  const blockTarget = typeof json["block_target"] === "number" && Number.isFinite(json["block_target"]) ? Math.max(0, Math.min(20, Math.round(json["block_target"]))) : null;
-  return {
-    runId: str(state.raw["run_id"]),
+  const has = (key: string) => json[key] !== undefined && json[key] !== null;
+  const list = (key: string, pick: (entry: unknown) => string | null, max: number): string[] => {
+    const entries = asArray(json[key] as JsonValue);
+    const kept = [...new Set(entries.map(pick).filter((id): id is string => id !== null))];
+    const dropped = entries.filter((entry) => pick(entry) === null);
+    if (dropped.length > 0) notes.push(`${key}: dropped unknown ${dropped.map((entry) => JSON.stringify(entry)).join(", ")}`);
+    return kept.slice(0, max);
+  };
+  const role = <T extends string>(roles: readonly T[]) => (entry: unknown): T | null => {
+    const text = typeof entry === "string" ? entry.trim().toLowerCase() : "";
+    return isOneOf(roles, text) ? text : null;
+  };
+  const enumOf = <T extends string>(key: string, values: readonly T[], legacy: Record<string, T> = {}, legacyKey?: string): T | undefined => {
+    const value = typeof json[key] === "string" ? (json[key] as string).trim().toLowerCase() : undefined;
+    if (value !== undefined) {
+      if (isOneOf(values, value)) return value;
+      notes.push(`${key}: unknown value ${JSON.stringify(json[key])} ignored`);
+      return undefined;
+    }
+    const old = legacyKey && typeof json[legacyKey] === "string" ? legacy[(json[legacyKey] as string).trim().toLowerCase()] : undefined;
+    return old;
+  };
+
+  // Intents: a field left out keeps the previous plan's value (a missing field is not a change).
+  const base: RunPlan = prev ?? {
+    runId, act: actOf(state), floor: state.run?.floor ?? 0, hpPct: hpFraction(state), trigger, archetype: "",
+    want: [], avoid: [], remove: [], blockTarget: null, hpPolicy: "balanced", routeRisk: "normal", entryHp: null,
+    reserve: [], needs: [], avoidRoles: [], bossPrep: "", summary: "", version: 0, changes: [], validator: [],
+  };
+  const avoidRaw = asArray(json["avoid"] as JsonValue);
+  const avoidRoles = avoidRaw.map(role(CARD_ROLES)).filter((entry): entry is CardRole => entry !== null);
+  const avoidIds = [...new Set(avoidRaw.filter((entry) => role(CARD_ROLES)(entry) === null).map(known).filter((id): id is string => id !== null))].slice(0, 6);
+  const avoidUnknown = avoidRaw.filter((entry) => role(CARD_ROLES)(entry) === null && known(entry) === null);
+  if (avoidUnknown.length > 0) notes.push(`avoid: dropped unknown ${avoidUnknown.map((entry) => JSON.stringify(entry)).join(", ")}`);
+  const entryRaw = json["entry_hp_pct"];
+  let entryHp = base.entryHp;
+  if (typeof entryRaw === "number" && Number.isFinite(entryRaw)) {
+    if (entryRaw > 0 && entryRaw <= 1) entryHp = Math.min(0.95, entryRaw);
+    else notes.push(`entry_hp_pct: ${entryRaw} is not a fraction 0-1, ignored`);
+  }
+  const reserveKey = has("reserve") ? "reserve" : "save_potions";
+  const needsKey = has("needs") ? "needs" : "must_have";
+  const proposal: RunPlan = {
+    ...base,
+    runId,
     act: actOf(state),
     floor: state.run?.floor ?? 0,
     hpPct: hpFraction(state),
     trigger,
-    archetype: typeof json["archetype"] === "string" ? truncate(json["archetype"], 80) : "",
-    want: ids(json["want"], known, 6),
-    avoid: ids(json["avoid"], known, 6),
-    remove: ids(json["remove"], inDeck, 3),
-    blockTarget,
-    elites,
-    rest,
-    bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : "",
-    summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
-    entryHp: typeof json["entry_hp_pct"] === "number" && json["entry_hp_pct"] > 0 && json["entry_hp_pct"] <= 1 ? Math.min(0.95, json["entry_hp_pct"]) : null,
-    savePotions: asArray(json["save_potions"] as JsonValue).filter((role): role is PotionRole => typeof role === "string" && POTION_ROLES.includes(role as PotionRole)).slice(0, 2),
-    mustHave: asArray(json["must_have"] as JsonValue).filter((role): role is CardRole => typeof role === "string" && CARD_ROLES.includes(role as CardRole)).slice(0, 3),
+    archetype: typeof json["archetype"] === "string" ? truncate(json["archetype"], 80) : base.archetype,
+    want: has("want") ? list("want", known, 6) : base.want,
+    avoid: has("avoid") ? avoidIds : base.avoid,
+    avoidRoles: has("avoid") ? [...new Set(avoidRoles)] : base.avoidRoles,
+    remove: has("remove") ? list("remove", inDeck, 3) : base.remove,
+    blockTarget: typeof json["block_target"] === "number" && Number.isFinite(json["block_target"]) ? Math.max(0, Math.min(20, Math.round(json["block_target"]))) : base.blockTarget,
+    hpPolicy: enumOf("hp_policy", HP_POLICIES, { heal: "preserve" }, "rest") ?? base.hpPolicy,
+    routeRisk: enumOf("route_risk", ROUTE_RISKS, { avoid: "avoid_elites", seek: "seek_elites", normal: "normal" }, "elites") ?? base.routeRisk,
+    entryHp,
+    // Any number of roles (the old parser kept 2: half the potions of a dropped 3rd role were drunk).
+    reserve: has(reserveKey) ? [...new Set(list(reserveKey, role(POTION_ROLES), 6) as PotionRole[])] : base.reserve,
+    needs: has(needsKey) ? (list(needsKey, role(CARD_ROLES), 4) as CardRole[]) : base.needs,
+    bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : base.bossPrep,
+    summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : base.summary,
+    version: base.version + 1,
+    snapshot: snapshotOf(state, knowledge),
+    changes: base.changes,
+    validator: [],
+  };
+  let plan = proposal;
+  if (prev) {
+    const checked = validateChanges(prev, proposal, json["changes"], prev.snapshot ? sinceLastPlan(prev.snapshot, proposal.snapshot!, forcedRoute) : null);
+    plan = checked.plan;
+    notes.push(...checked.notes);
+  }
+  notes.push(...repairRunPlan(plan, { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) }));
+  plan.validator = notes;
+  return plan;
+}
+
+/**
+ * A logged plan in the current shape: plans written before the intent vocabulary (elites, rest,
+ * savePotions, mustHave) are read as route_risk, hp_policy, reserve and needs.
+ */
+export function normalizeRunPlan(raw: RunPlan | Record<string, unknown>): RunPlan {
+  const plan = raw as Partial<RunPlan> & Record<string, unknown>;
+  const legacyRisk: Record<string, RouteRisk> = { avoid: "avoid_elites", seek: "seek_elites", normal: "normal" };
+  const hpPolicy = isOneOf(HP_POLICIES, plan.hpPolicy) ? plan.hpPolicy : plan["rest"] === "heal" ? "preserve" : "balanced";
+  const routeRisk = isOneOf(ROUTE_RISKS, plan.routeRisk) ? plan.routeRisk : legacyRisk[String(plan["elites"] ?? "normal")] ?? "normal";
+  return {
+    runId: String(plan.runId ?? ""),
+    act: Number(plan.act ?? 1),
+    floor: Number(plan.floor ?? 0),
+    hpPct: Number(plan.hpPct ?? 1),
+    trigger: (plan.trigger ?? "start") as RunPlanTrigger,
+    archetype: String(plan.archetype ?? ""),
+    want: asArray(plan.want as JsonValue).map(String),
+    avoid: asArray(plan.avoid as JsonValue).map(String),
+    remove: asArray(plan.remove as JsonValue).map(String),
+    blockTarget: typeof plan.blockTarget === "number" ? plan.blockTarget : null,
+    hpPolicy,
+    routeRisk,
+    entryHp: typeof plan.entryHp === "number" ? plan.entryHp : null,
+    reserve: asArray((plan.reserve ?? plan["savePotions"]) as JsonValue).filter((role): role is PotionRole => isOneOf(POTION_ROLES, role)),
+    needs: asArray((plan.needs ?? plan["mustHave"]) as JsonValue).filter((role): role is CardRole => isOneOf(CARD_ROLES, role)),
+    avoidRoles: asArray(plan.avoidRoles as JsonValue).filter((role): role is CardRole => isOneOf(CARD_ROLES, role)),
+    bossPrep: String(plan.bossPrep ?? ""),
+    summary: String(plan.summary ?? ""),
+    version: Number(plan.version ?? 1),
+    ...(plan.snapshot ? { snapshot: plan.snapshot } : {}),
+    changes: Array.isArray(plan.changes) ? plan.changes : [],
+    validator: Array.isArray(plan.validator) ? plan.validator : [],
   };
 }
 
-const POTION_ROLES: PotionRole[] = ["block", "weak", "damage", "strength", "heal", "any"];
-const CARD_ROLES: CardRole[] = ["aoe", "strength", "block", "draw", "exhaust", "multi_hit", "frontload", "debuff"];
+/** The run plan of the run being played, or null (a plan of another run is not this run's strategy). */
+export function currentRunPlan(memory: { runPlan?: RunPlan | null }, state: GameState): RunPlan | null {
+  const plan = memory.runPlan;
+  return plan && plan.runId === str(state.raw["run_id"]) ? plan : null;
+}
 
 /** Floors from this one to the act boss (17/33/48). */
 export function floorsToBoss(floor: number): number {
@@ -194,29 +404,18 @@ export function floorsToBoss(floor: number): number {
   return boss - floor;
 }
 
-/** Whether a potion is one the run plan keeps for the act boss. */
+/** Whether a potion is one the run plan reserves for the act boss. */
 export function planSavesPotion(plan: RunPlan | null | undefined, potionId: string, text: string): boolean {
-  const roles = plan?.savePotions ?? [];
-  if (roles.length === 0) return false;
-  if (roles.includes("any")) return true;
-  // By id as well as text: the Dexterity Potion reads 「获得{DexterityPower}点敏捷」 and matched no role
-  // (GZ24 F8: drunk on an elite's T1 while the run plan kept [block, weak]); Regen is healing over turns.
-  const role: PotionRole | null =
-    /STRENGTH|FLEX/.test(potionId) ? "strength" :
-    /REGEN|BLOOD_POTION|FAIRY/.test(potionId) || /回复|heal|恢复|再生|regen/i.test(text) ? "heal" :
-    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE/.test(potionId) || /格挡|block|无实体|intangible|敏捷|dexterity/i.test(text) ? "block" :
-    /虚弱|weak/i.test(text) ? "weak" :
-    /伤害|damage/i.test(text) ? "damage" : null;
-  return role !== null && roles.includes(role);
+  return isReserved(plan?.reserve, potionId, text);
 }
 
 /**
- * Card bonus for a must-have role the deck still lacks (fewer than 2 cards of it). A block role gets
+ * Card bonus for a needed role the deck still lacks (fewer than 2 cards of it). A block role gets
  * half while the boss clock's gap is BIG_GAP or more a turn (UP1C F6: Taunt 93 over Anger 50 on "must-have
  * block +14" against a damage-gap +4; the boss was fought at 64% of the clock with 10 block cards).
  */
 export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[], gapPerTurn = 0): { bonus: number; why: string | null } {
-  const roles = plan?.mustHave ?? [];
+  const roles = plan?.needs ?? [];
   if (roles.length === 0) return { bonus: 0, why: null };
   const mine = cardRoles(cardId);
   for (const role of roles) {
@@ -233,19 +432,21 @@ export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, 
 /** Boss-clock gap (damage a turn) from which damage outranks the must-have block bonus. */
 export const BIG_GAP = 8;
 
-/** Bonus for a card filling a must-have role the deck lacks. */
+/** Bonus for a card filling a needed role the deck lacks. */
 export const MUST_HAVE_BONUS = 14;
 
-/** One line for the run brief (Jev and DeepSeek see it on build and route questions). */
-export function runPlanLine(plan: RunPlan | null | undefined): string | null {
+/** The run brief's plan line (Jev and DeepSeek see it on build and route questions): intents first. */
+export function runPlanLine(plan: RunPlan | null | undefined, floor: number | null = null): string | null {
   if (!plan) return null;
+  const intents = `hp_policy ${plan.hpPolicy}${plan.entryHp ? ` (boss entry ${Math.round(plan.entryHp * 100)}%)` : ""}, route_risk ${plan.routeRisk}${plan.reserve.length > 0 ? `, reserve ${plan.reserve.join("/")} potions for the boss` : ""}${plan.needs.length > 0 ? `, needs ${plan.needs.join("/")}` : ""}`;
   const parts = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
   const want = plan.want.length > 0 ? ` | want ${plan.want.join(", ")}` : "";
-  const avoid = plan.avoid.length > 0 ? ` | avoid ${plan.avoid.join(", ")}` : "";
-  return truncate(`${parts}${want}${avoid}`, 300);
+  const avoid = plan.avoid.length + plan.avoidRoles.length > 0 ? ` | never take ${[...plan.avoid, ...plan.avoidRoles].join(", ")}` : "";
+  const changed = recentChanges(plan, floor).map((change) => ` | changed at F${change.floor}: ${change.field} ${JSON.stringify(change.from)}→${JSON.stringify(change.to)} (${change.trigger})`).join("");
+  return truncate(`${intents}. ${parts}${want}${avoid}${changed}`, 420);
 }
 
-/** Card-value adjustment from the plan (card rewards, shops). */
+/** Card-value adjustment from the plan (card rewards, shops); avoided cards are filtered, not priced. */
 export function runPlanCardBonus(plan: RunPlan | null | undefined, cardId: string, blockCards: number, isBlock: boolean): { bonus: number; why: string | null } {
   if (!plan) return { bonus: 0, why: null };
   if (plan.avoid.includes(cardId)) return { bonus: -RUN_PLAN_AVOID_MALUS, why: "run plan: avoid" };
@@ -260,28 +461,6 @@ export function runPlanCardBonus(plan: RunPlan | null | undefined, cardId: strin
     why.push(`run plan: block ${blockCards}/${plan.blockTarget}`);
   }
   return { bonus, why: why.length > 0 ? why.join("; ") : null };
-}
-
-/** Route weight change for an elite node. */
-export function runPlanEliteShift(plan: RunPlan | null | undefined, hpPct: number, toBoss = 99): number {
-  if (!plan) return 0;
-  // Enforced: near the boss, no elite that would leave the entry HP out of reach.
-  if (plan.entryHp && toBoss <= 8 && hpPct < plan.entryHp + 0.15) return -8;
-  if (plan.elites === "avoid") return -3;
-  if (plan.elites === "seek" && hpPct > 0.6) return 2;
-  return 0;
-}
-
-/** Rest-site score change for HEAL / SMITH. */
-export function runPlanRestShift(plan: RunPlan | null | undefined, option: string, hpPct: number, beforeBoss: boolean, toBoss = 99): number {
-  if (!plan) return 0;
-  // Enforced: within 6 floors of the boss, heal while below the plan's entry HP.
-  if (plan.entryHp && toBoss <= 6 && hpPct < plan.entryHp) return option === "HEAL" ? 8 : 0;
-  if (plan.rest === "auto") return 0;
-  if (plan.rest === "heal" && option === "HEAL") return 3;
-  // Smithing never overrides a low-HP heal or the pre-boss heal.
-  if (plan.rest === "smith" && option === "SMITH" && hpPct >= 0.5 && !beforeBoss) return 3;
-  return 0;
 }
 
 export function logRunPlan(file: string, entry: Record<string, JsonValue>): void {
@@ -311,7 +490,7 @@ export function loadRunPlan(file: string, runId: string): RunPlan | null {
       if (!line.includes(runId)) continue;
       try {
         const entry = JSON.parse(line) as { plan?: RunPlan };
-        if (entry.plan && entry.plan.runId === runId) return entry.plan;
+        if (entry.plan && entry.plan.runId === runId) return normalizeRunPlan(entry.plan);
       } catch {
         // a torn first line
       }

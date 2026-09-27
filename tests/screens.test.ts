@@ -1017,7 +1017,7 @@ describe("event card add uses the reward valuation (UP1C F3: Shrug It Off 106 vs
     const run = raw["run"] as Record<string, unknown>;
     run["deck"] = (run["deck"] as Record<string, unknown>[]).filter((entry) => entry["card_id"] !== "INFLAME");
     const memory = createScreenMemory("CARD_SELECTION");
-    memory.runPlan = { want: ["SHRUG_IT_OFF", "INFLAME"], avoid: [], remove: [], mustHave: ["strength"], blockTarget: null } as never;
+    memory.runPlan = { want: ["SHRUG_IT_OFF", "INFLAME"], avoid: [], remove: [], needs: ["strength"], avoidRoles: [], blockTarget: null } as never;
     const decision = mustDecision(plan(raw, { screenMemory: memory }));
     if (decision.kind === "act") {
       expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });

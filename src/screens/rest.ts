@@ -2,7 +2,8 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { damageGap, gapRestShift } from "../strategy/boss-clock.js";
-import { floorsToBoss, runPlanRestShift } from "../strategy/run-plan.js";
+import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
+import { restFit, restShift } from "../strategy/intent.js";
 import { deckEntries } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { GameState } from "../mod/schema.js";
@@ -15,6 +16,8 @@ export function planRest(env: DecisionEnv): Decision | null {
   if (Object.keys(rest).length === 0) return null;
 
   const options: PickOption[] = [];
+  // RUN_PLAN=v1: hp_policy and the entry-HP target (intent.ts restShift).
+  const runPlan = currentRunPlan(env.screenMemory, state);
   for (const raw of asArray(rest["options"]).map(asRecord)) {
     if (!bool(raw["is_enabled"])) continue;
     const index = numOrNull(raw["index"]);
@@ -40,7 +43,8 @@ export function planRest(env: DecisionEnv): Decision | null {
     const score =
       (id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss, floorsToBoss(floor)) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+        : id === "SMITH" ? 6 : 4) + restShift(runPlan, id, hpPct, beforeBoss, floorsToBoss(floor)) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+    const fit = restFit(runPlan, id, hpPct);
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,
@@ -52,7 +56,9 @@ export function planRest(env: DecisionEnv): Decision | null {
         option: title,
         kind: id,
         description: truncate(str(raw["description"]), 160),
+        ...(fit ? { intent_fit: fit } : {}),
       } satisfies JsonValue,
+      ...(fit?.startsWith("breaks") ? { intentBreak: fit } : {}),
     });
   }
 
@@ -72,6 +78,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.5,
     options,
+    planVersion: runPlan?.version ?? null,
     codeMargin: env.combatPlanner === "card" ? undefined : 3,
     state: {
       run_brief: briefJson(env.brief),

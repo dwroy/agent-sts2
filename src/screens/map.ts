@@ -6,9 +6,11 @@
  */
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { floorsToBoss, runPlanEliteShift } from "../strategy/run-plan.js";
+import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
+import { mapFit, mapShift, routeRiskFilter } from "../strategy/intent.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
+import type { GameState } from "../mod/schema.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 interface MapNode {
@@ -347,15 +349,18 @@ export function planMap(env: DecisionEnv): Decision | null {
   // act's first floor after the one we are on).
   const currentRow = numOrNull(asRecord(map["current_node"])["row"]);
   const floorsAhead = (row: number) => Math.max(1, currentRow === null ? row + 1 : row - currentRow);
-  // RUN_PLAN=v1: the plan's elite appetite shifts elite nodes.
+  // RUN_PLAN=v1: the run's hp_policy, route_risk and entry HP shift node weights (intent.ts mapShift).
+  const runPlan = currentRunPlan(env.screenMemory, state);
   const weightOf: Weights = (type, at, row) =>
     nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act) -
     (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0) +
-    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp, floorsToBoss(floor + floorsAhead(row))) : 0);
-  const deathElite = env.screenMemory.runPlan?.elites === "avoid" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
+    mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)));
+  const deathElite = runPlan?.routeRisk === "avoid_elites" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
-  const options: PickOption[] = available.flatMap((node) => {
+  // route_risk avoid_elites is hard on the next node: an Elite is not offered while another node is.
+  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") }))).map((entry) => entry.node);
+  const options: PickOption[] = offered.flatMap((node) => {
     const index = numOrNull(node["index"]);
     if (index === null) return [];
     const row = num(node["row"]);
@@ -372,6 +377,7 @@ export function planMap(env: DecisionEnv): Decision | null {
       here <= LIKELY_DEATH
         ? here * urgency - deathElite * minElitesAhead(self, nodes, new Map())
         : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency);
+    const fit = mapFit(runPlan, type, hpPct);
     return [
       {
         key: `n${index}`,
@@ -383,7 +389,9 @@ export function planMap(env: DecisionEnv): Decision | null {
           position: `row ${row}, column ${col}`,
           route_value: Number(value.toFixed(2)),
           likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3),
+          ...(fit ? { intent_fit: fit } : {}),
         } satisfies JsonValue,
+        ...(fit?.startsWith("breaks") ? { intentBreak: fit } : {}),
       } satisfies PickOption,
     ];
   });
@@ -399,6 +407,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.35,
     options,
+    planVersion: runPlan?.version ?? null,
     codeMargin: env.combatPlanner === "card" ? undefined : 2.5,
     state: {
       run_brief: briefJson(env.brief),
@@ -432,4 +441,28 @@ const POTION_RANKS: Record<string, number> = {
 export const POTION_RANK_DISCARDABLE = 5;
 export function potionRank(potionId: string): number {
   return POTION_RANKS[potionId] ?? 5;
+}
+
+/**
+ * Every route from the nodes open now meets an Elite within `depth` nodes (the run plan's
+ * forced_route trigger: an elite the plan cannot route around).
+ */
+export function everyRouteMeetsElite(state: GameState, depth = 3): boolean {
+  const map = asRecord(state.raw["map"]);
+  const nodes = new Map<string, { type: string; children: { row: number; col: number }[] }>();
+  for (const raw of asArray(map["nodes"]).map(asRecord)) {
+    nodes.set(key(num(raw["row"]), num(raw["col"])), {
+      type: str(raw["node_type"], "Unknown"),
+      children: asArray(raw["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
+    });
+  }
+  const reaches = (at: { row: number; col: number }, left: number): boolean => {
+    const node = nodes.get(key(at.row, at.col));
+    if (!node) return false;
+    if (node.type === "Elite") return true;
+    if (left <= 1 || node.children.length === 0) return false;
+    return node.children.every((child) => reaches(child, left - 1));
+  };
+  const available = asArray(map["available_nodes"]).map(asRecord);
+  return available.length > 0 && available.every((node) => reaches({ row: num(node["row"]), col: num(node["col"]) }, depth));
 }
