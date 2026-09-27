@@ -71,6 +71,19 @@ describe("boss clock", () => {
     expect(antler).toBeGreaterThan(plain);
   });
 
+  it("scales the estimate by what the boss lets through (JF8N Soul Fysh, H7W0 Queen) and counts Seal of Gold (KFPC F18)", () => {
+    const starter = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
+    const heavy = [...starter, attack(9, "BLUDGEON", 32, 3), attack(10, "CARNAGE", 20, 2)];
+    // Knowledge Demon and Soul Fysh both run 9 turns: only the realised share differs.
+    const demon = deckDamagePerTurn(mapState(heavy, "KNOWLEDGE_DEMON_BOSS"), testKnowledge);
+    const fysh = deckDamagePerTurn(mapState(heavy, "SOUL_FYSH_BOSS"), testKnowledge);
+    expect(fysh).toBe(Math.round(demon * 0.65));
+    expect(bossNeed("QUEEN_BOSS", 8)?.realised).toBe(0.75);
+    const plain = deckDamagePerTurn(mapState(heavy), testKnowledge);
+    const seal = deckDamagePerTurn(mapState(heavy, "KAISER_CRAB_BOSS", { relics: [{ index: 0, relic_id: "SEAL_OF_GOLD" }] }), testKnowledge);
+    expect(seal).toBeGreaterThan(plain);
+  });
+
   it("counts Strength that grows every turn: Toasty Mittens, Rupture fed by Crimson Mantle (XWPV F48)", () => {
     const starter = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
     const plain = deckDamagePerTurn(mapState(starter, "AEONGLASS_BOSS"), testKnowledge);

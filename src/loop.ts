@@ -883,11 +883,24 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.errors += 1;
       consecutiveFailures += 1;
       onEvent({ type: "note", message: `action ${resolved.intent.action} failed (${failure.kind}): ${failure.detail}` });
+      // A failed (often timed-out) action may still have gone through in the game (KFPC F4: two
+      // choose_event_option timeouts both applied, the memo replayed the answer on the next page, and
+      // neither click was logged). Log it as a decision, forget the answer and any committed plan, and
+      // re-read the state before acting again.
+      answerMemo = null;
+      screenMemory.combatPlan = null;
+      const failed: DecisionRecord = {
+        ...baseRecord,
+        latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
+        result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
+      };
+      log.write(failed);
+      logState(state, stateFingerprint, failed.ts);
       if (failure.kind === "fatal") {
         stop(`action failure: ${failure.detail}`);
         break;
       }
-      await sleep(pollIntervalMs);
+      await waitForStateChange({ client, previous: stateFingerprint, timeoutMs: 3_000, pollIntervalMs: 150 });
       continue;
     }
 

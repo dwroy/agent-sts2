@@ -1289,6 +1289,19 @@ describe("routing", () => {
   });
 });
 
+describe("fingerprint: event pages and max HP (KFPC F4)", () => {
+  it("changes when the event page or max HP changes, HP and actions unchanged", () => {
+    const page = eventPayload();
+    const next = eventPayload();
+    ((next["event"] as Record<string, unknown>)["options"] as Record<string, unknown>[])[0]!["title"] = "Decipher (-6 Max HP)";
+    expect(fingerprint(parseGameState(next))).not.toBe(fingerprint(parseGameState(page)));
+    const lower = eventPayload();
+    lower["run"] = { ...(lower["run"] as Record<string, unknown>), max_hp: 77 };
+    expect(fingerprint(parseGameState(lower))).not.toBe(fingerprint(parseGameState(page)));
+    expect(fingerprint(parseGameState(eventPayload()))).toBe(fingerprint(parseGameState(page)));
+  });
+});
+
 describe("gate and fingerprint", () => {
   it("rejects an action that is no longer advertised", () => {
     const state = parseGameState(combatPayload());
