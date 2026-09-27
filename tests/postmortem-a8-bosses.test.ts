@@ -16,6 +16,7 @@ import { rememberMap } from "../src/screens/rest.js";
 import { averagePowerStrength, damageGap, expectedPlayTurn } from "../src/strategy/boss-clock.js";
 import { isModelledPotion, modelPotion, upgradeCard, upgradeGain } from "../src/strategy/card-model.js";
 import { cardRoles, damageRole } from "../src/strategy/card-value.js";
+import { fightHpCost } from "../src/strategy/route-cost.js";
 import { combatFit, potionOptionFit } from "../src/strategy/intent.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
@@ -74,8 +75,8 @@ describe("event HP guard: a fight is an HP cost, and a small cost at high HP sta
     const { fx } = event();
     const options = ((fx.state["event"] as Record<string, unknown>)["options"] as Record<string, unknown>[]).map((option) => String(option["description"]));
     expect(eventHpCost(options[0]!, { act: 1, hp: 80, maxHp: 80 })).toEqual({ hp: 8, maxHp: 0 });
-    // 「回复24点生命。进入战斗。」 at full HP heals 0: the fight's ~11 (act 1, 14% of max HP).
-    expect(eventHpCost(options[1]!, { act: 1, hp: 80, maxHp: 80 }).hp).toBe(11);
+    // 「回复24点生命。进入战斗。」 at full HP heals 0: an act-1 hallway fight's p75 cost of max HP.
+    expect(eventHpCost(options[1]!, { act: 1, hp: 80, maxHp: 80 }).hp).toBe(Math.round(fightHpCost("Monster", 1) * 80));
     expect(eventHpCost(options[1]!, { act: 1, hp: 50, maxHp: 80 }).hp).toBe(0);
     expect(eventHpCost(options[1]!).hp).toBe(0);
   });

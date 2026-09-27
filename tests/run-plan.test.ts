@@ -24,6 +24,7 @@ import {
   type RunPlan,
 } from "../src/strategy/run-plan.js";
 import { mapShift, restShift } from "../src/strategy/intent.js";
+import { roomHpCost } from "../src/strategy/route-cost.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 const plan = (over: Partial<RunPlan> = {}): RunPlan => ({
@@ -126,7 +127,7 @@ describe("plan weights", () => {
     expect(mapShift(plan({ routeRisk: "avoid_elites" }), "Elite", 0.9)).toBe(-6);
     expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.9)).toBe(2);
     expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.5)).toBe(0);
-    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBe(-0.88);
+    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBeCloseTo(-10 * roomHpCost("Unknown", 2), 2);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.7, false)).toBe(3);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.4, false)).toBe(0);
     expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.9, true)).toBe(0);

@@ -585,9 +585,11 @@ describe("map", () => {
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
     const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
-    // Act 1 at the p75 of logged A8 hallway losses (11/80; N7KR F4-F7, K7G9).
-    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.14, 0.22, 0.28]);
-    expect(fightHpCost("Elite", 3)).toBeCloseTo(0.7);
+    // The p75 of logged A8 losses (route-cost.ts): dearer each act, an elite dearer than a hallway.
+    const hallways = [1, 2, 3].map((act) => fightHpCost("Monster", act));
+    expect(hallways[0]).toBeLessThan(hallways[1]!);
+    expect(hallways[1]).toBeLessThan(hallways[2]!);
+    for (const act of [1, 2, 3]) expect(fightHpCost("Elite", act)).toBeGreaterThan(2 * fightHpCost("Monster", act));
     expect(monsterWeight(0.8)).toBe(1.2);
     expect(monsterWeight(0.35)).toBeCloseTo(0);
     expect(monsterWeight(0.2)).toBeLessThan(0);

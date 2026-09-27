@@ -9,9 +9,9 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
 import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type RouteArrival } from "../strategy/intent.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
-import { ELITE_HP_COST_FACTOR, fightHpCost, roomHpCost, roomSurvival } from "../strategy/route-cost.js";
+import { eliteCostFactor, fightHpCost, roomHpCost, roomSurvival } from "../strategy/route-cost.js";
 
-export { ELITE_HP_COST_FACTOR, fightHpCost } from "../strategy/route-cost.js";
+export { eliteCostFactor, fightHpCost } from "../strategy/route-cost.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import type { GameState } from "../mod/schema.js";
@@ -470,7 +470,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const weightOf: Weights = (type, at, row) => {
     const base = nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act);
     if (base <= LIKELY_DEATH) return base;
-    const chain = type === "Monster" ? fightChainPenalty(at.fights, at.hp) : type === "Elite" ? ELITE_HP_COST_FACTOR * fightChainPenalty(at.fights, at.hp) : 0;
+    const chain = type === "Monster" ? fightChainPenalty(at.fights, at.hp) : type === "Elite" ? eliteCostFactor(act) * fightChainPenalty(at.fights, at.hp) : 0;
     return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act);
   };
   const deathElite = runPlan?.routeRisk === "avoid_elites" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
