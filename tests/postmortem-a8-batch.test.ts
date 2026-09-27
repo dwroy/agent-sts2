@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planSelection } from "../src/screens/selection.js";
 import { logged, loggedEnv } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -80,5 +81,39 @@ describe("the Regen Potion and Distilled Chaos are lines with numbers (PKB0 F17 
     const text = act?.kind === "act" ? act.rationale : String(lines[0]?.["plays"]);
     expect(text).toMatch(/potion 精炼混沌/);
     if (act?.kind === "act") expect(Number(/dmg (\d+)/.exec(act.rationale)?.[1])).toBeGreaterThan(10);
+  });
+});
+
+describe("a pile-card potion's pick follows the line that drank it (11LC F17 T1)", () => {
+  it("the Droplet of Precognition line counted Bash+: code takes Bash+ on the screen (logged: asked blind, Jev took Setup Strike at 0.26)", () => {
+    const combat = loggedEnv(logged("11lc-f17-t1"));
+    const decision = planCombatTurn(combat) as Decision;
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.rationale).toMatch(/potion 预知之滴, 痛击\+ from 预知之滴/);
+    // The loop hands the committed plan's remaining steps to the selection screen (planBeforeSelection).
+    const remaining = combat.screenMemory.combatPlan?.remaining ?? combat.screenMemory.plannedAfter?.steps;
+    const pick = loggedEnv(logged("11lc-f17-t1-pick"));
+    pick.screenMemory.planBeforeSelection = remaining;
+    const selection = planSelection(pick) as Decision;
+    expect(selection.kind).toBe("act");
+    if (selection.kind === "act") {
+      expect(selection.label).toBe("selection/plan-card");
+      expect(selection.intent).toEqual({ action: "select_deck_card", option_index: 5 });
+    }
+  });
+
+  it("a card potion's line (no named card): the offered card doing most this turn is marked as the plan's card for Jev", () => {
+    const pick = loggedEnv(logged("11lc-f17-t1-pick"));
+    pick.screenMemory.planBeforeSelection = [{ cardIndex: 201, cardId: "GEN:ATTACK_POTION:1", upgraded: false, name: "card from 攻击药水", target: 0, targetName: "瀑布巨兽" }];
+    const selection = planSelection(pick) as Decision;
+    expect(selection.kind).toBe("ask");
+    const question = Object.values((selection as AskDecision).questions)[0]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    const marked = Object.values(question.criteria).filter((value) => String(value).includes("plan_card"));
+    expect(marked).toHaveLength(1);
+  });
+
+  it("with no plan behind the screen it is still a question", () => {
+    expect(planSelection(loggedEnv(logged("11lc-f17-t1-pick")))?.kind).toBe("ask");
   });
 });

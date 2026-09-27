@@ -58,6 +58,11 @@ export interface CardModel {
   energyGain: number;
   /** Plating gained (Stone Armor): that much block at the end of this turn, and less each later turn. */
   plating?: number;
+  /**
+   * A pile-card potion's card (Droplet of Precognition, Liquid Memories): the pile card it takes, so the
+   * selection screen after the drink takes the one the plan counted (11LC F17 T1).
+   */
+  pileSource?: { cardId: string; upgraded: boolean; name: string };
   /** Regen gained (Regen Potion): that much HP at the end of this turn, one less each later turn. */
   regen?: number;
   /**
@@ -752,7 +757,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
-    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
+    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true, pileSource: { cardId: pileCard.cardId, upgraded: pileCard.upgraded, name: pileCard.name } }
     : card
     ? {
         index: 200 + slot,

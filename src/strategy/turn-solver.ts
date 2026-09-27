@@ -331,6 +331,8 @@ export interface Step {
   targetName: string | null;
   /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
   discards?: string[];
+  /** A pile-card potion's card: the pile card the plan counted (the selection screen takes it). */
+  pileSource?: { cardId: string; upgraded: boolean; name: string };
 }
 
 export interface Outcome {
@@ -899,6 +901,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
       ...(card.discards ? { discards: discarded } : {}),
+      ...(card.pileSource ? { pileSource: card.pileSource } : {}),
     },
   ];
   return next;
