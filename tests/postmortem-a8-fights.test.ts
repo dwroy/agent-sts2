@@ -12,7 +12,8 @@ import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
 import { planMap } from "../src/screens/map.js";
 import { planShop } from "../src/screens/shop.js";
 import { drinkFirstSafe, isModelledPotion, modelPotion } from "../src/strategy/card-model.js";
-import { expectedLossPerTurn, parseFightPlan } from "../src/strategy/fight-plan.js";
+import { expectedLossPerTurn, fightPlanInput, parseFightPlan } from "../src/strategy/fight-plan.js";
+import { moveModel } from "../src/knowledge/move-model.js";
 import { grindOutlasts, isReserved, objectiveInForce, potionRole } from "../src/strategy/intent.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
@@ -180,5 +181,15 @@ describe("a later kill is priced with the sleepers' hits once they wake (NJSZ F2
     expect(later).toBeGreaterThan(sooner);
     expect(later - sooner).toBeGreaterThanOrEqual(Math.min(rock!.hit, silk!.hit));
     expect(beetle!.sleepLeft).toBe(2);
+  });
+});
+
+describe("fight-plan input: enemy powers carry the game's text (HCBJ F14: SUCK_POWER went as an id, 'effect is unknown')", () => {
+  it("the Fossil Stalker's Suck reads +Strength per unblocked hit", () => {
+    const state = parseGameState(logged("hcbj-f14-t1").state);
+    const enemies = fightPlanInput(state, loggedKnowledge, "monster", moveModel())["enemies"] as Raw[];
+    const powers = (enemies.find((enemy) => enemy["enemy_id"] === "FOSSIL_STALKER")!["powers"] as string[]).join(" ");
+    expect(powers).toMatch(/^SUCK_POWER 3: 这个生物每次造成未被格挡的伤害时，都会获得1点力量/);
+    expect(powers).not.toMatch(/\[gold\]|\[blue\]/);
   });
 });

@@ -25,7 +25,7 @@ import { deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
 import { FIGHT_OBJECTIVES, INTENT_REASONS, isOneOf, MEANING, parseReasons, REASON_MEANING, type FightObjective, type IntentReason } from "./intent.js";
 import { DISAGREE, objectiveOfApproach, validateFightPlan } from "./plan-validator.js";
 import type { RunPlan } from "./run-plan.js";
-import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup, truncate, type JsonValue } from "../util/json.js";
 
 /** Potions that add damage or energy (the combat veto treats drinking them as offence). */
 export const OFFENSIVE_POTIONS = new Set([
@@ -113,9 +113,15 @@ export function fightPlanInput(
         .map(asRecord)
         .map((intent) => `${str(intent["intent_type"])} ${str(intent["label"])}`.trim())
         .join(", ");
+      // With the game's own text (HCBJ F14: SUCK_POWER 3 went as an id only and the plan read "effect is
+      // unknown"; it is +1 Strength per unblocked hit).
       const powers = asArray(enemy["powers"])
         .map(asRecord)
-        .map((power) => `${str(power["power_id"])}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}`);
+        .map((power) => {
+          const id = str(power["power_id"]);
+          const text = stripMarkup(str(power["description"]) || knowledge.power(id)?.description || "");
+          return `${id}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}${text ? `: ${truncate(text, 140)}` : ""}`;
+        });
       const out: Record<string, JsonValue> = {
         enemy_id: id,
         name: str(enemy["name"], info?.name ?? id),
