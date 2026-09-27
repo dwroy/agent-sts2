@@ -181,8 +181,15 @@ export function planCombat(env: DecisionEnv): Decision | null {
     }
   }
 
+  // At 0 energy with no 0-cost card to play, a draw / discard-draw / buff potion gains nothing this
+  // turn (S6AG F25 T6: Gambler's Brew at 0 energy, Jev 0.99, four cards drawn and none playable; MX1Q
+  // F25 T2, GZ24 F8 T1 before it). Only potions that act by themselves stay (NEEDS_PLAYS_POTIONS), and
+  // only they carry the "emergency" note on a lethal turn.
+  const noPlay = energy <= 0 && !hand.some((card) => card.playable && card.cost <= 0);
   for (const potion of potions) {
     if (!potion.can_use) continue;
+    const rescue = potionActsAlone(potion.potion_id);
+    if (noPlay && !rescue) continue;
     const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
     for (const targetIndex of targets) {
       const target = targetIndex === null ? null : enemyByIndex.get(targetIndex) ?? null;
@@ -197,13 +204,15 @@ export function planCombat(env: DecisionEnv): Decision | null {
           action: target === null ? `Drink ${potion.name}` : `Drink ${potion.name} on ${target.name}`,
           text: potion.text,
           note: endTurnWouldKill
-            ? "emergency: the mod reports that ending the turn would be lethal"
+            ? rescue
+              ? "emergency: the mod reports that ending the turn would be lethal"
+              : "the turn is lethal, but this potion only helps through cards played after it"
             : "uses a consumable; only worth it if it changes the outcome",
         },
         // A consumable is never the code-side default unless the turn is lethal, and even then it only
         // has to beat `end_turn` — a real play (block or a kill) still outranks it. Jev may pick a
         // potion whenever it judges one worthwhile.
-        score: endTurnWouldKill ? 5 : -50,
+        score: endTurnWouldKill ? (rescue ? 5 : 0) : -50,
         isEndTurn: false,
         lethal: false,
       });
@@ -385,4 +394,20 @@ export function planCombat(env: DecisionEnv): Decision | null {
       };
     },
   };
+}
+
+/**
+ * Potions that only pay off through cards played after them: draw / discard-draw, and Strength,
+ * Dexterity, Vulnerable or next-card buffs. At 0 energy with no 0-cost card they gain nothing this
+ * turn and the same next turn. Block, Weak, heal, direct damage, energy and free-card potions (Distilled
+ * Chaos, Attack/Skill Potion, Touch of Insanity) act by themselves.
+ */
+export const NEEDS_PLAYS_POTIONS = new Set([
+  "SWIFT_POTION", "GAMBLERS_BREW", "GLOWWATER_POTION", "CLARITY", "BOTTLED_POTENTIAL", "SNECKO_OIL",
+  "STRENGTH_POTION", "FLEX_POTION", "DEXTERITY_POTION", "SPEED_POTION", "FYSH_OIL", "DUPLICATOR",
+  "GIGANTIFICATION_POTION", "BLESSING_OF_THE_FORGE", "VULNERABLE_POTION", "DROPLET_OF_PRECOGNITION", "ASHWATER",
+]);
+
+export function potionActsAlone(potionId: string): boolean {
+  return !NEEDS_PLAYS_POTIONS.has(potionId);
 }

@@ -3,6 +3,7 @@
  * models keep making on Burning Blood's word (see eventHpGuard).
  */
 
+import { relicNotesFor } from "../knowledge/relic-notes.js";
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -208,6 +209,9 @@ export function planEvent(env: DecisionEnv): Decision | null {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
     const title = str(option["title"], `option ${index}`);
+    // What a named relic does (EJXC F13/F22: DeepSeek guessed Chosen Cheese and Mr. Struggles).
+    const notes = relicNotesFor(`${title} ${str(option["description"])}`);
+    const relicNotes: Record<string, JsonValue> = notes.length > 0 ? { relic_notes: notes } : {};
     return [
       {
         key: `o${index}`,
@@ -218,6 +222,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
           option: title,
           description: truncate(str(option["description"]), 200),
           lethal: bool(option["will_kill_player"]),
+          ...relicNotes,
         } satisfies JsonValue,
       } satisfies PickOption,
     ];

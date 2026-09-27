@@ -811,3 +811,145 @@ describe("the run plan's boss keep stops the fight plan's early drink (UP1C; GZ2
     expect(label(true)).not.toBe("combat/plan-potion");
   });
 });
+
+describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, GZ24 F8 T1)", () => {
+  const fireLine = (decision: ReturnType<typeof planCombatTurn>): boolean =>
+    /Fire Potion|use_potion/.test(JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null));
+  const hallway = (floor: number): Raw => {
+    const raw = combatPayload();
+    (raw["run"] as Raw)["floor"] = floor;
+    return raw;
+  };
+
+  it("a potion the run plan keeps for the boss is not on offer within 10 floors of it (not only +20)", () => {
+    const keep = (floor: number) => {
+      const e = env(hallway(floor));
+      e.screenMemory.runPlan = { savePotions: ["damage"] } as never;
+      return planCombatTurn(e);
+    };
+    // Without the keep the Fire Potion line (+20 damage) is offered.
+    expect(fireLine(planCombatTurn(env(hallway(29))))).toBe(true);
+    expect(fireLine(keep(29))).toBe(false);
+    // Far from the boss the keep does not apply.
+    expect(fireLine(keep(5))).toBe(true);
+  });
+
+  it("a potion refused this turn is not offered again on the same turn's re-plan", () => {
+    const e = env(hallway(5));
+    const decision = planCombatTurn(e);
+    expect(decision?.kind).toBe("ask");
+    const ask = decision as AskDecision;
+    const criteria = (ask.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const key = Object.keys(criteria).find((k) => /Fire Potion/.test(criteria[k]!))!;
+    // Hallway bar: a potion line below rank 1 at 0.4 is refused, and remembered for this turn.
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(resolved.fallback).toBe(true);
+    resolved.apply?.();
+    expect(e.screenMemory.potionVeto?.ids).toEqual(["FIRE_POTION"]);
+    e.screenMemory.combatPlan = null;
+    expect(fireLine(planCombatTurn(e))).toBe(false);
+    // Next turn it is on offer again.
+    const next = env({ ...hallway(5), turn: 4 });
+    next.screenMemory.potionVeto = e.screenMemory.potionVeto;
+    expect(fireLine(planCombatTurn(next))).toBe(true);
+  });
+});
+
+describe("attack-potion veto when code's rank 1 drinks the same potion (RVL2 F31 T1)", () => {
+  it("is not applied: nothing would be kept, it only swaps lines", () => {
+    const eliteKnowledge = { ...testKnowledge, monster: (id: string) => (id === "JAW_WORM" ? { ...testKnowledge.monster(id)!, type: "Elite" } : testKnowledge.monster(id)) } as typeof testKnowledge;
+    const raw = combatPayload();
+    ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = 30;
+    const decision = planCombatTurn(env(raw, { knowledge: eliteKnowledge })) as AskDecision;
+    const criteria = (decision.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    // Rank 1 and rank 2 both drink the Fire Potion; the dry line costs 12 of 30 HP (no dry override).
+    expect(criteria["plan1"]).toMatch(/Fire Potion/);
+    expect(criteria["plan2"]).toMatch(/Fire Potion/);
+    const resolved = decision.resolve({ plan: { type: "choice", choice: "plan2", probabilities: { plan2: 0.4 }, confidence: 0.4, raw: {} } });
+    expect(resolved.fallback).toBe(false);
+    expect(resolved.rationale).not.toMatch(/attack potion below code rank 1/);
+  });
+});
+
+describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambler's Brew, nothing playable after)", () => {
+  const lethalZero = (): Raw => {
+    const raw = combatPayload({ lethalEndTurn: true });
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["energy"] = 0;
+    combat["hand"] = (combat["hand"] as Raw[]).map((card) => ({ ...card, playable: false, unplayable_reason: "not_enough_energy" }));
+    const potions = (raw["run"] as Raw)["potions"] as Raw[];
+    Object.assign(potions[0]!, { potion_id: "GAMBLERS_BREW", name: "Gambler's Brew", description: "丢弃任意张牌，然后抽相同数量的牌。", requires_target: false, valid_target_indices: [] });
+    Object.assign(potions[1]!, { index: 1, potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得12点格挡。", occupied: true, usage: "CombatOnly", can_use: true, requires_target: false, valid_target_indices: [] });
+    return raw;
+  };
+  const text = (raw: Raw) => {
+    const decision = planCombat(env(raw, { combatPlanner: "card" }));
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions["play"] : decision?.kind === "act" ? decision.intent : null);
+  };
+
+  it("drops Gambler's Brew at 0 energy; the Block Potion keeps its emergency note", () => {
+    const shown = text(lethalZero());
+    expect(shown).not.toMatch(/Gambler/);
+    expect(shown).toMatch(/Block Potion[^}]*emergency/);
+  });
+
+  it("offers it with energy left, without the emergency note", () => {
+    const raw = lethalZero();
+    ((raw["combat"] as Raw)["player"] as Raw)["energy"] = 2;
+    const shown = text(raw);
+    expect(shown).toMatch(/Gambler[^}]*only helps through cards played after it/);
+  });
+});
+
+describe("HP guard in an act-boss race (N28L, WB02, R2H1, EJXC F33 T5)", () => {
+  /** Boss at 300, 20 incoming; Bash (3 energy, 30) -20 vs Defend, Defend, Strike (4 block each) -12. */
+  const board = (bossId: string, escape = false): Raw => {
+    const raw = bossTurnOne();
+    (raw["run"] as Raw)["boss_id"] = bossId;
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
+    Object.assign(boss, { current_hp: 300, max_hp: 341 });
+    boss["intents"] = [{ index: 0, intent_type: "Attack", label: "20", damage: 20, hits: 1, total_damage: 20 }];
+    const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+    const strike = hand.find((card) => card["card_id"] === "STRIKE_R")!;
+    const defend = hand.find((card) => card["card_id"] === "DEFEND_R")!;
+    const bash = hand.find((card) => card["card_id"] === "BASH")!;
+    const def4 = { ...defend, dynamic_values: [{ name: "Block", base_value: 4, current_value: 4 }] };
+    (raw["combat"] as Raw)["hand"] = [
+      strike,
+      { ...def4, index: 1 },
+      { ...bash, energy_cost: escape ? 2 : 3, dynamic_values: [{ name: "Damage", base_value: 30, current_value: 30 }] },
+      { ...def4, index: 3 },
+    ];
+    if (escape) {
+      // The Insatiable at 100 with Sandpit 3, a 1-cost Frantic Escape in hand.
+      Object.assign(boss, { current_hp: 100 });
+      boss["powers"] = [{ index: 0, power_id: "SANDPIT_POWER", name: "Sandpit", amount: 3, is_debuff: false }];
+      ((raw["combat"] as Raw)["hand"] as Raw[]).push({ ...defend, index: 4, card_id: "FRANTIC_ESCAPE", name: "Frantic Escape", energy_cost: 1, dynamic_values: [] });
+    }
+    return raw;
+  };
+  const played = (raw: Raw, pick: (criteria: Record<string, string>) => string): string => {
+    const decision = planCombatTurn(env(raw));
+    if (decision?.kind === "act") return `${decision.label} ${decision.rationale}`;
+    const ask = decision as AskDecision;
+    const criteria = (ask.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const key = pick(criteria);
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+    return `${resolved.guard ? "guarded" : "kept"} ${resolved.rationale}`;
+  };
+  const byPlays = (pattern: RegExp) => (criteria: Record<string, string>) => Object.keys(criteria).find((k) => pattern.test(criteria[k]!))!;
+
+  it("keeps 24 more damage for 8 HP while the clock says we are behind; swaps it without a clock", () => {
+    // Lagavulin Matriarch: 222 over 12 turns; 300 left over 12 is 25 a turn, more than the 6 of the swap.
+    const behind = played(board("LAGAVULIN_MATRIARCH"), byPlays(/"plays":"BASH/));
+    expect(behind).not.toMatch(/guard/i);
+    const noClock = played(board("SLIME_BOSS"), byPlays(/"plays":"BASH/));
+    expect(noClock).toMatch(/guard/i);
+  });
+
+  it("does not swap a Frantic Escape line for one without it", () => {
+    const shown = played(board("SLIME_BOSS", true), byPlays(/"plays":"(FRANTIC_ESCAPE, then BASH|BASH[^"]*, then FRANTIC_ESCAPE)/));
+    expect(shown).not.toMatch(/HP guard|guard bound/);
+  });
+});

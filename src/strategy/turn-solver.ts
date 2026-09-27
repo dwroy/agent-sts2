@@ -922,11 +922,11 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
         }
       }
     } else if (card.target === "random") {
-      // Expected value: spread hits across the living enemies, lowest HP first (kills are what matter).
+      // Worst case for us: each hit lands where it kills least (randomVictim), so a line never counts
+      // on a random hit killing the enemy that would otherwise attack (H8LC F23 T5, S6AG F25 T6).
       for (let hit = 0; hit < hits; hit += 1) {
-        const living = next.enemies.filter((enemy) => enemy.alive);
-        if (living.length === 0) break;
-        const victim = living[hit % living.length]!;
+        const victim = randomVictim(next);
+        if (!victim) break;
         hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
       }
     } else if (targetEnemy) {
@@ -982,10 +982,25 @@ function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
   sim.block += amount;
   sim.blockGained += amount;
   if ((player.juggernaut ?? 0) > 0) {
-    // Random enemy: expected value, lowest HP first (kills matter most).
-    const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
-    if (living[0]) hitEnemyRaw(sim, living[0], player.juggernaut ?? 0);
+    // Random enemy, worst case (S6AG F25 T6: the 8 was counted on the 6-HP Parafright, predicted -2;
+    // it hit the Obscura and the Parafright's Slam 16 killed us).
+    const victim = randomVictim(sim);
+    if (victim) hitEnemyRaw(sim, victim, player.juggernaut ?? 0);
   }
+}
+
+/**
+ * Where a random hit is assumed to land: the living enemy with the most HP + block left, i.e. the one
+ * it is least likely to kill. Hit by hit this is the adversary's split, so a kill is counted only when
+ * every split gives it (3 hits of 7 on two 10-HP enemies still kill one). The damage itself counts.
+ */
+function randomVictim(sim: Pick<Sim, "enemies">): Sim["enemies"][number] | undefined {
+  let best: Sim["enemies"][number] | undefined;
+  for (const enemy of sim.enemies) {
+    if (!enemy.alive) continue;
+    if (!best || enemy.hp + enemy.block > best.hp + best.block) best = enemy;
+  }
+  return best;
 }
 
 /** Non-attack damage (Juggernaut): ignores Vulnerable/Weak, still hits block. */

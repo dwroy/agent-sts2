@@ -94,6 +94,11 @@ export interface ScreenMemory {
   /** Potion ids the fight plan's auto-drink used this fight: one each (H5MZ F39: both Power Potions went T1). */
   planPotionsDrunk?: { fight: string; ids: string[] };
   /**
+   * Potion ids a guard refused in this fight turn (elite/boss veto, hallway bar): the same turn's
+   * re-plans do not offer them again (GZ24 F8 T1, EJXC F28 T1: refused, then drunk 3 s later at 0.51).
+   */
+  potionVeto?: { fight: string; turn: number | null; ids: string[] };
+  /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
    */

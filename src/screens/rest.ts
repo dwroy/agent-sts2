@@ -21,7 +21,9 @@ export function planRest(env: DecisionEnv): Decision | null {
     if (index === null) continue;
     const id = str(raw["option_id"]).toUpperCase();
     const title = str(raw["title"], id);
-    const hpPct = hpPercent(env);
+    // Pantograph heals 25 at the boss's start: the rest right before the boss counts it (UP1C F16: healed
+    // 60 -> 80 when 60 + 25 already entered at 80/80; smithing was free).
+    const hpPct = hpPercent(env, pantographHeal(state));
     // Code-side preference only matters when Jev cannot be used or is unsure.
     // Phase 2: heal below half HP, otherwise upgrade; anything unusual stays close so the model sees it.
     // The rest site right before an act boss (floor 16 of an act) heals unless HP is already high:
@@ -77,6 +79,7 @@ export function planRest(env: DecisionEnv): Decision | null {
         screen: "REST",
         hp: env.brief.hp,
         hp_percent: Math.round(hpPercent(env) * 100),
+        ...(pantographHeal(state) > 0 ? { boss_start_heal: `Pantograph heals ${PANTOGRAPH_HEAL} at the boss's start: ${Math.round(hpPercent(env, PANTOGRAPH_HEAL) * 100)}% HP entering it without resting` } : {}),
         upgradable_cards: upgradeable,
         next_nodes: nextNodeTypes(env.screenMemory, state),
       },
@@ -84,10 +87,20 @@ export function planRest(env: DecisionEnv): Decision | null {
   });
 }
 
-function hpPercent(env: DecisionEnv): number {
+function hpPercent(env: DecisionEnv, extra = 0): number {
   const hp = env.state.run?.current_hp ?? null;
   const max = env.state.run?.max_hp ?? null;
-  return hp !== null && max !== null && max > 0 ? hp / max : 1;
+  return hp !== null && max !== null && max > 0 ? Math.min(1, (hp + extra) / max) : 1;
+}
+
+/** Pantograph: HP healed at the start of a boss fight (CWU9, 0YV6, CAYK: +25 each time). */
+export const PANTOGRAPH_HEAL = 25;
+
+/** Pantograph's boss heal when the next floor is the act boss, else 0. */
+export function pantographHeal(state: GameState): number {
+  const floor = state.run?.floor ?? 1;
+  const relics = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  return relics.includes("PANTOGRAPH") && [17, 33, 48].includes(floor + 1) ? PANTOGRAPH_HEAL : 0;
 }
 
 /** Keeps the MAP screen's graph for the screens after it (the REST screen has no map). */

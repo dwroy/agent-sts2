@@ -210,19 +210,28 @@ export function planSavesPotion(plan: RunPlan | null | undefined, potionId: stri
   return role !== null && roles.includes(role);
 }
 
-/** Card bonus for a must-have role the deck still lacks (fewer than 2 cards of it). */
-export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[]): { bonus: number; why: string | null } {
+/**
+ * Card bonus for a must-have role the deck still lacks (fewer than 2 cards of it). A block role gets
+ * half while the boss clock's gap is BIG_GAP or more a turn (UP1C F6: Taunt 93 over Anger 50 on "must-have
+ * block +14" against a damage-gap +4; the boss was fought at 64% of the clock with 10 block cards).
+ */
+export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[], gapPerTurn = 0): { bonus: number; why: string | null } {
   const roles = plan?.mustHave ?? [];
   if (roles.length === 0) return { bonus: 0, why: null };
   const mine = cardRoles(cardId);
   for (const role of roles) {
     if (!mine.has(role)) continue;
     const have = deckIds.filter((id) => cardRoles(id).has(role)).length;
-    const bonus = have < 2 ? MUST_HAVE_BONUS : 4;
-    return { bonus, why: `run plan must-have ${role} (${have} in deck) +${bonus}` };
+    const full = have < 2 ? MUST_HAVE_BONUS : 4;
+    const halved = role === "block" && gapPerTurn >= BIG_GAP;
+    const bonus = halved ? Math.round(full / 2) : full;
+    return { bonus, why: `run plan must-have ${role} (${have} in deck) +${bonus}${halved ? ` (halved: deck ${gapPerTurn}/turn short of the boss)` : ""}` };
   }
   return { bonus: 0, why: null };
 }
+
+/** Boss-clock gap (damage a turn) from which damage outranks the must-have block bonus. */
+export const BIG_GAP = 8;
 
 /** Bonus for a card filling a must-have role the deck lacks. */
 export const MUST_HAVE_BONUS = 14;

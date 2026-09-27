@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
-import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX } from "../src/strategy/boss-clock.js";
+import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, GAP_BONUS_BIG_MAX, relicDamagePerTurn } from "../src/strategy/boss-clock.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;
@@ -48,7 +48,7 @@ describe("boss clock", () => {
     const gap = damageGap(state, testKnowledge)!;
     expect(gap.gap).toBeGreaterThan(8);
     expect(gapCardBonus(gap, "INFLAME").bonus).toBeGreaterThan(0);
-    expect(gapCardBonus(gap, "INFLAME").bonus).toBeLessThanOrEqual(GAP_BONUS_MAX);
+    expect(gapCardBonus(gap, "INFLAME").bonus).toBeLessThanOrEqual(GAP_BONUS_BIG_MAX);
     expect(gapCardBonus(gap, "THUNDERCLAP").bonus).toBeGreaterThan(0);
     expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBe(0);
     // AoE only counts against two-part bosses.
@@ -80,5 +80,39 @@ describe("boss clock", () => {
     const ruptureOnly = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE")], "AEONGLASS_BOSS"), testKnowledge);
     const withMantle = deckDamagePerTurn(mapState([...starter, power(9, "RUPTURE"), power(10, "CRIMSON_MANTLE")], "AEONGLASS_BOSS"), testKnowledge);
     expect(withMantle).toBeGreaterThan(ruptureOnly);
+  });
+});
+
+describe("relic damage in the deck estimate (EJXC F33: clock 23/turn, dealt 44 with ~8.3 from relics)", () => {
+  it("adds Mercury Hourglass, Mr. Struggles and Festive Popper per turn; both claws for the crab", () => {
+    // 7 turns: 3x7 + (1+...+7) + 9 = 58, ~8 a turn.
+    expect(relicDamagePerTurn(["MERCURY_HOURGLASS", "MR_STRUGGLES", "FESTIVE_POPPER"], 7)).toBe(8);
+    expect(relicDamagePerTurn(["MERCURY_HOURGLASS"], 8, true)).toBe(6);
+    expect(relicDamagePerTurn(["BURNING_BLOOD"], 7)).toBe(0);
+  });
+
+  it("the deck estimate and the run plan's note include it", () => {
+    const deck = [0, 1, 2, 3, 4].map((i) => attack(i, "STRIKE_IRONCLAD", 6)).concat([5, 6, 7, 8].map((i) => skill(i, "DEFEND_IRONCLAD")));
+    const relic = (id: string) => ({ index: 0, relic_id: id, name: id, description: "", stack: null, is_melted: false });
+    const without = deckDamagePerTurn(mapState(deck, "THE_INSATIABLE_BOSS"), testKnowledge);
+    const withRelics = mapState(deck, "THE_INSATIABLE_BOSS", { relics: [relic("MERCURY_HOURGLASS"), relic("MR_STRUGGLES")] });
+    expect(deckDamagePerTurn(withRelics, testKnowledge) - without).toBe(7);
+    expect(String(bossClockJson(withRelics, testKnowledge)?.["estimate_note"])).toMatch(/relic damage \(~7\/turn/);
+  });
+});
+
+describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)", () => {
+  it("from a gap of 8 a turn damage gets gap/2 and a must-have block card half its bonus", async () => {
+    const { mustHaveBonus } = await import("../src/strategy/run-plan.js");
+    const gap = (n: number) => ({ boss: "WATERFALL_GIANT", need: 25, deck: 25 - n, gap: n });
+    // Below 8: the old 0.4 slope.
+    expect(gapCardBonus(gap(7), "BLUDGEON").bonus).toBe(3);
+    expect(gapCardBonus(gap(9), "BLUDGEON").bonus).toBe(5);
+    expect(gapCardBonus(gap(9), "INFLAME").bonus).toBe(7);
+    expect(gapCardBonus(gap(40), "INFLAME").bonus).toBe(GAP_BONUS_BIG_MAX);
+    const plan = { mustHave: ["block"] } as never;
+    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 0).bonus).toBe(14);
+    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 9).bonus).toBe(7);
+    expect(mustHaveBonus({ mustHave: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
   });
 });

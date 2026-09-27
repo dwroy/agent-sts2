@@ -364,6 +364,123 @@ describe("map", () => {
     expect(value("n0")).toBeGreaterThan(value("n1"));
   });
 
+  it("RVL2 F26: a forced elite down the line is a likely death at low-HP urgency; a Blood Potion counts as HP", () => {
+    const routeValues = (bloodPotion: boolean): Record<string, number> => {
+      const raw = mapPayload();
+      const run = raw["run"] as Record<string, unknown>;
+      run["floor"] = 26;
+      run["current_hp"] = 14;
+      run["max_hp"] = 74;
+      run["gold"] = 60;
+      if (bloodPotion) Object.assign((run["potions"] as Record<string, unknown>[])[0]!, { potion_id: "BLOOD_POTION", name: "Blood Potion", occupied: true });
+      else (run["potions"] as Record<string, unknown>[])[0]!["occupied"] = false;
+      const map = raw["map"] as Record<string, unknown>;
+      map["current_node"] = { row: 8, col: 3 };
+      const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+      const at = (row: number, col: number) => ({ row, col });
+      map["available_nodes"] = [
+        { index: 0, row: 9, col: 2, node_type: "Monster" },
+        { index: 2, row: 9, col: 4, node_type: "RestSite" },
+      ];
+      map["nodes"] = [
+        node(8, 3, "Treasure", [at(9, 2), at(9, 4)]),
+        // (9,2): no elite on the way to the boss.
+        node(9, 2, "Monster", [at(10, 2)]),
+        node(10, 2, "RestSite", [at(11, 3)]),
+        node(11, 3, "Unknown", [at(12, 4)]),
+        node(12, 4, "Unknown", [at(13, 3)]),
+        node(13, 3, "Monster", [at(14, 3)]),
+        node(14, 3, "RestSite"),
+        // (9,4): rest, then one line into a forced elite at F31.
+        node(9, 4, "RestSite", [at(10, 5)]),
+        node(10, 5, "Unknown", [at(11, 6)]),
+        node(11, 6, "Unknown", [at(12, 6)]),
+        node(12, 6, "Monster", [at(13, 5)]),
+        node(13, 5, "Elite", [at(14, 3)]),
+      ];
+      const decision = mustDecision(plan(raw));
+      if (decision.kind !== "ask") return { n0: decision.intent.option_index === 0 ? 1 : 0, n2: decision.intent.option_index === 2 ? 1 : 0 };
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return { n0: JSON.parse(String(criteria["n0"]))["route_value"], n2: JSON.parse(String(criteria["n2"]))["route_value"] };
+    };
+    const withPotion = routeValues(true);
+    expect(withPotion.n0).toBeGreaterThan(withPotion.n2);
+    // Without it the forced elite still weighs like the Monster now (both likely deaths x3).
+    const without = routeValues(false);
+    expect(without.n2).toBeLessThan(-30);
+  });
+
+  it("RC9A F24: a likely death at the next node ends the route there too (38/80: Elite now vs a later forced elite)", () => {
+    const raw = mapPayload();
+    const run = raw["run"] as Record<string, unknown>;
+    run["floor"] = 24;
+    run["current_hp"] = 38;
+    run["max_hp"] = 80;
+    run["gold"] = 150;
+    (run["potions"] as Record<string, unknown>[])[0]!["occupied"] = false;
+    const map = raw["map"] as Record<string, unknown>;
+    map["current_node"] = { row: 6, col: 5 };
+    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    const at = (row: number, col: number) => ({ row, col });
+    map["available_nodes"] = [
+      { index: 0, row: 7, col: 5, node_type: "Elite" },
+      { index: 1, row: 7, col: 6, node_type: "Unknown" },
+    ];
+    map["nodes"] = [
+        node(6, 0, "Unknown", [at(7, 0)]),
+        node(6, 2, "Monster", [at(7, 2)]),
+        node(6, 4, "Elite", [at(7, 4)]),
+        node(6, 5, "RestSite", [at(7, 5), at(7, 6)]),
+        node(6, 6, "Unknown", [at(7, 6)]),
+        node(7, 0, "Monster", [at(8, 0)]),
+        node(7, 2, "Monster", [at(8, 2)]),
+        node(7, 4, "Unknown", [at(8, 4)]),
+        node(7, 5, "Elite", [at(8, 4)]),
+        node(7, 6, "Unknown", [at(8, 6)]),
+        node(8, 0, "Treasure", [at(9, 0)]),
+        node(8, 2, "Treasure", [at(9, 2)]),
+        node(8, 4, "Treasure", [at(9, 4), at(9, 5)]),
+        node(8, 6, "Treasure", [at(9, 5), at(9, 6)]),
+        node(9, 0, "RestSite", [at(10, 0)]),
+        node(9, 2, "Monster", [at(10, 1)]),
+        node(9, 4, "RestSite", [at(10, 3)]),
+        node(9, 5, "Monster", [at(10, 4), at(10, 6)]),
+        node(9, 6, "RestSite", [at(10, 6)]),
+        node(10, 0, "Elite", [at(11, 0)]),
+        node(10, 1, "Monster", [at(11, 0)]),
+        node(10, 3, "Monster", [at(11, 3)]),
+        node(10, 4, "Monster", [at(11, 3)]),
+        node(10, 6, "Monster", [at(11, 5), at(11, 6)]),
+        node(11, 0, "RestSite", [at(12, 0), at(12, 1)]),
+        node(11, 3, "RestSite", [at(12, 2)]),
+        node(11, 5, "Unknown", [at(12, 4)]),
+        node(11, 6, "Elite", [at(12, 6)]),
+        node(12, 0, "Monster", [at(13, 0)]),
+        node(12, 1, "Elite", [at(13, 2)]),
+        node(12, 2, "Unknown", [at(13, 2), at(13, 3)]),
+        node(12, 4, "Monster", [at(13, 4)]),
+        node(12, 6, "Monster", [at(13, 6)]),
+        node(13, 0, "Shop", [at(14, 0)]),
+        node(13, 2, "Monster", [at(14, 2)]),
+        node(13, 3, "Elite", [at(14, 2)]),
+        node(13, 4, "Elite", [at(14, 4)]),
+        node(13, 6, "Elite", [at(14, 6)]),
+        node(14, 0, "RestSite", [at(15, 3)]),
+        node(14, 2, "RestSite", [at(15, 3)]),
+        node(14, 4, "RestSite", [at(15, 3)]),
+        node(14, 6, "RestSite", [at(15, 3)]),
+        node(15, 3, "Boss", []),
+    ];
+    const decision = mustDecision(plan(raw));
+    if (decision.kind === "act") {
+      expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 1 });
+      return;
+    }
+    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+    const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
+    expect(value("n1")).toBeGreaterThan(value("n0"));
+  });
+
   it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {
     expect(nodeWeight("Elite", 0.85, 100, 8)).toBe(4);
     expect(nodeWeight("Elite", 0.8, 100, 8)).toBe(0);
@@ -680,6 +797,13 @@ describe("event", () => {
     return memory;
   };
 
+  it("names what a relic in the option does (EJXC F13: Chosen Cheese guessed as Strength)", () => {
+    const decision = mustDecision(plan(hpEvent(72, 80, [["Cheese", "失去[red]4[/red]点生命，获得[gold]天选芝士[/gold]。"], ["Cards", "获得两张普通牌。"]])));
+    const text = JSON.stringify(decision.kind === "ask" ? decision.questions : decision);
+    expect(text).toMatch(/relic_notes[^\]]*max HP at the end of every combat/);
+    expect(text.match(/relic_notes/g)?.length ?? 0).toBe(1);
+  });
+
   it("HP guard: an 8+ max-HP cost is not offered (1K5G F8: -13 max HP for Fresnel Lens)", () => {
     const decision = mustDecision(plan(hpEvent(60, 80, [["Bottle", "获得一瓶[aqua]发光水[/aqua]。"], ["Climb", "获得[gold]菲涅耳透镜[/gold]。失去[red]13[/red]点最大生命。"]])));
     expect(decision.kind).toBe("act");
@@ -862,6 +986,47 @@ describe("rest", () => {
     const stale = map("Elite");
     stale.lastMap!.floor = 20;
     expect(mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: stale })).kind).toBe("ask");
+  });
+});
+
+describe("rest before the boss with Pantograph (UP1C F16: healed 60 -> 80, Pantograph's 25 would have done it)", () => {
+  it("smiths at 60/80 on F16 with Pantograph, heals without it", () => {
+    const pick = (relics: string[]) => {
+      const raw = { ...restPayload(), run: runPayload({ floor: 16, current_hp: 60, max_hp: 80, relics: relics.map((id, index) => ({ index, relic_id: id, name: id, description: "", stack: null, is_melted: false })) }) };
+      const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
+      if (decision.kind === "act") return decision.intent.option_index === 0 ? "HEAL" : "SMITH";
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.stringify(criteria);
+    };
+    expect(pick(["BURNING_BLOOD"])).toBe("HEAL");
+    expect(pick(["BURNING_BLOOD", "PANTOGRAPH"])).toBe("SMITH");
+  });
+});
+
+describe("event card add uses the reward valuation (UP1C F3: Shrug It Off 106 vs Inflame 104)", () => {
+  it("a must-have Strength card the deck lacks outscores a wanted block card, with code_value and why", () => {
+    const card = (index: number, cardId: string, name: string, type: string) => ({
+      index, selected: false, card_id: cardId, name, upgraded: false, card_type: type, rarity: "Uncommon", costs_x: false, star_costs_x: false,
+      energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [],
+    });
+    const raw = baseState("CARD_SELECTION", {
+      available_actions: ["select_deck_card"],
+      selection: { kind: "deck_card_select", prompt: "选择一张牌加入你的牌组。", min_select: 1, max_select: 1, selected_count: 0, can_confirm: false, cards: [card(0, "SHRUG_IT_OFF", "Shrug It Off", "Skill"), card(1, "INFLAME", "Inflame", "Power")] },
+    });
+    // UP1C's deck had no Strength card.
+    const run = raw["run"] as Record<string, unknown>;
+    run["deck"] = (run["deck"] as Record<string, unknown>[]).filter((entry) => entry["card_id"] !== "INFLAME");
+    const memory = createScreenMemory("CARD_SELECTION");
+    memory.runPlan = { want: ["SHRUG_IT_OFF", "INFLAME"], avoid: [], remove: [], mustHave: ["strength"], blockTarget: null } as never;
+    const decision = mustDecision(plan(raw, { screenMemory: memory }));
+    if (decision.kind === "act") {
+      expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+      return;
+    }
+    const criteria = (decision.questions["pick"] as { criteria: Record<string, string> }).criteria;
+    const value = (key: string) => JSON.parse(criteria[key]!)["code_value"] as number;
+    expect(value("card1") - value("card0")).toBeGreaterThanOrEqual(10);
+    expect(criteria["card1"]).toMatch(/must-have strength/);
   });
 });
 

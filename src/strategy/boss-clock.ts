@@ -147,7 +147,29 @@ export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): numbe
   // Two Vulnerable sources keep the boss Vulnerable most turns.
   // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
-  return Math.round(base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE);
+  return Math.round(base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE) + relicDamagePerTurn(relicIds, turns, crab);
+}
+
+/** Mercury Hourglass: 3 to every enemy at the start of each turn (same number as the solver's). */
+const HOURGLASS_DAMAGE = 3;
+/** Festive Popper: once at the start of each fight (EJXC F33: ~9 of the ~58 relic damage). */
+const FESTIVE_POPPER_DAMAGE = 9;
+/** Stone Calendar: once at the end of its turn (Slay the Spire 1 numbers, 52 on turn 7; not measured here). */
+const STONE_CALENDAR = { damage: 52, turn: 7 };
+
+/**
+ * Relic damage a turn over a boss fight of `turns` turns, all enemies: Mercury Hourglass 3 a turn,
+ * Mr. Struggles the turn number (1+2+...+turns, i.e. (turns+1)/2 a turn), one-offs spread over the
+ * fight. Into the crab an all-enemy hit lands on both claws (EJXC F33: the clock read 23 a turn against
+ * 44 dealt, ~8.3 of it relics; the gap looked like 26 when it was ~4).
+ */
+export function relicDamagePerTurn(relicIds: string[], turns: number, bothClaws = false): number {
+  let total = 0;
+  if (relicIds.includes("MERCURY_HOURGLASS")) total += HOURGLASS_DAMAGE * turns;
+  if (relicIds.includes("MR_STRUGGLES")) total += (turns * (turns + 1)) / 2;
+  if (relicIds.includes("FESTIVE_POPPER")) total += FESTIVE_POPPER_DAMAGE;
+  if (relicIds.includes("STONE_CALENDAR") && turns >= STONE_CALENDAR.turn) total += STONE_CALENDAR.damage;
+  return Math.round((total / Math.max(1, turns)) * (bothClaws ? 2 : 1));
 }
 
 export interface DamageGap {
@@ -172,6 +194,9 @@ const BOSS_FLOORS = [17, 33, 48];
 
 /** Largest card-value bonus a damage card gets from the gap. */
 export const GAP_BONUS_MAX = 12;
+/** Gap a turn from which the bonus is gap/2, up to GAP_BONUS_BIG_MAX (same bar as run-plan BIG_GAP). */
+export const BIG_GAP_BONUS = 8;
+export const GAP_BONUS_BIG_MAX = 16;
 
 /** Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short. */
 export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: number; why: string | null } {
@@ -180,7 +205,12 @@ export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: nu
   if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
   // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
   if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
-  const bonus = Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
+  // From a gap of BIG_GAP_BONUS a turn, gap/2 (UP1C, GZ24: a 9 gap gave +4 against a +14 must-have
+  // block bonus; both bosses were fought at ~62% of the clock).
+  const bonus =
+    gap.gap >= BIG_GAP_BONUS
+      ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap.gap / 2) + (role === "scaling" ? 2 : 0))
+      : Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
   return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need} for ${gap.boss}: ${role} +${bonus}` };
 }
 
@@ -196,13 +226,15 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
   const need = bossNeed(bossId, state.run?.ascension ?? 0);
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
+  const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const relics = relicDamagePerTurn(relicIds, need.turns, need.id === "KAISER_CRAB");
   return {
     boss: need.id,
     boss_hp: need.hp,
     fight_turns: need.turns,
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
-    estimate_note: "rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included) and Vulnerable only; no draw, other relics or potions",
+    estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
     gap_per_turn: Math.max(0, need.perTurn - deck),
     boss_note: need.note,
   };
