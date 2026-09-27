@@ -319,11 +319,15 @@ export interface FightContext {
   /** Enemy ids on the board, and the ones that must die together (no kill-first target). */
   enemyIds: string[];
   together: string[];
+  /** Enemy ids with MINION_POWER (they leave when the last non-minion dies). */
+  minions?: string[];
   /** Potions in the belt: id and text. */
   potions: { id: string; text: string }[];
   kind: string;
   /** Enemies that grow every turn, with why (fight-plan.ts enemyScales); [] when none. */
   scaling?: string[];
+  /** Enemies whose move cycle grows them (fight-plan.ts cycleGrowth: a Buff move in the move model), with why. */
+  cycleScaling?: string[];
 }
 
 /** Prefix of a validator note that keeps DeepSeek's intent and only logs code's different estimate. */
@@ -353,6 +357,17 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
   const together = plan.killPriority.filter((id) => ctx.together.includes(id));
   if (together.length > 0) notes.push(`kill_priority: ${together.join(", ")} must die together (no kill-first), dropped`);
   plan.killPriority = plan.killPriority.filter((id) => ctx.enemyIds.includes(id) && !ctx.together.includes(id));
+  // Minions leave when the last non-minion dies: damage into them does not end the fight, so they go
+  // behind every non-minion (G8F1 F17, VF5C F17: [KIN_FOLLOWER, KIN_PRIEST], the followers took until
+  // T5/T8 while the priest stayed at 199 -> 159/187; the Kin fights ran 13 and 18 turns).
+  const minions = ctx.minions ?? [];
+  const leaders = plan.killPriority.filter((id) => !minions.includes(id));
+  const lastLeader = plan.killPriority.findLastIndex((id) => !minions.includes(id));
+  if (leaders.length > 0 && plan.killPriority.some((id, index) => minions.includes(id) && index < lastLeader)) {
+    const reordered = [...leaders, ...plan.killPriority.filter((id) => minions.includes(id))];
+    notes.push(`kill_priority: minion ${plan.killPriority.filter((id, index) => minions.includes(id) && index < lastLeader).join(", ")} moved behind ${leaders.at(-1)} (minions leave when the last non-minion dies) → ${reordered.join(" > ")}`);
+    plan.killPriority = reordered;
+  }
 
   // Tactical orders are not strategy: dropped (old-format replies, or a model ignoring the task).
   const potions = raw["potions"] && typeof raw["potions"] === "object" && !Array.isArray(raw["potions"]) ? (raw["potions"] as Record<string, unknown>) : {};
@@ -386,7 +401,10 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
   }
   const scaling = ctx.scaling ?? [];
   const reasons = plan.reasons ?? [];
-  if (reasons.includes("enemy_scales") && scaling.length === 0) notes.push(`${DISAGREE}reason enemy_scales, but code sees no growth power, Strength or Buff intent on the board`);
+  // The move cycle counts, not only this turn's board (Z7D7 F8/F17: Terror Eel, Waterfall Giant).
+  if (reasons.includes("enemy_scales") && scaling.length === 0 && (ctx.cycleScaling ?? []).length === 0) {
+    notes.push(`${DISAGREE}reason enemy_scales, but code sees no growth power, Strength or Buff intent on the board, nor a Buff move in the enemies' move cycles`);
+  }
   if (run && policyAt(run, ctx.hpPct) === "preserve" && (plan.objective === "kill_fast" || plan.objective === "race") && ctx.kind !== "boss") {
     // A boss is fought to the end whatever the policy: racing it is the boss plan, not a run choice.
     const fast = ctx.turnsToKill !== null && ctx.turnsToKill <= FAST_WIN_TURNS;

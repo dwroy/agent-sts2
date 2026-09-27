@@ -7,7 +7,8 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { LABEL_NOTE, mapFit, mapShift, routeRiskFilter } from "../strategy/intent.js";
+import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter } from "../strategy/intent.js";
+import { routeFacts, routeFactsText } from "../strategy/route-facts.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import type { GameState } from "../mod/schema.js";
@@ -31,12 +32,20 @@ const key = (row: number, col: number): string => `${row},${col}`;
  */
 export const HEAL_POTION_SHARE: Record<string, number> = { BLOOD_POTION: 0.2, REGEN_POTION: 0.1 };
 
+/**
+ * HP fraction for route projection, heal potions in the belt included. Not one the run plan reserves
+ * for the act boss while HP is above the reserve's release line: it is not drunk before then (Z7D7 F25:
+ * the Blood Potion kept for the boss read 50/80 as 82%, the elite after a shop was priced like one
+ * after a rest).
+ */
 function hpPercent(env: DecisionEnv): number {
   const hp = env.state.run?.current_hp ?? null;
   const max = env.state.run?.max_hp ?? null;
   if (hp === null || max === null || max <= 0) return 1;
+  const reserve = currentRunPlan(env.screenMemory, env.state)?.reserve;
+  const held = (potion: Record<string, unknown>) => hp / max >= RESERVE_RELEASE_HP && isReserved(reserve, str(potion["potion_id"]), str(potion["description"]));
   const potions = asArray(asRecord(env.state.run?.raw)["potions"]).map(asRecord);
-  const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) ? HEAL_POTION_SHARE[str(potion["potion_id"])] ?? 0 : 0), 0);
+  const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) && !held(potion) ? HEAL_POTION_SHARE[str(potion["potion_id"])] ?? 0 : 0), 0);
   return Math.min(1, hp / max + heal);
 }
 
@@ -388,6 +397,9 @@ export function planMap(env: DecisionEnv): Decision | null {
           position: `row ${row}, column ${col}`,
           route_value: Number(value.toFixed(2)),
           likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3),
+          // What no later choice changes on this route: forced elites (rest before each or not) and the
+          // longest run of fights every path takes (VQ7J F7, Z7D7 F25).
+          ...routeFactsText(routeFacts(nodes, [self], (nodeRow) => floor + floorsAhead(nodeRow), start.fights)),
         } as Record<string, JsonValue>,
         type,
         row,

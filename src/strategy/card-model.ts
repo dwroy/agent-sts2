@@ -250,6 +250,17 @@ export function energyOnExhaustOnly(template: string, rendered: string): boolean
   return energySentences.length > 0 && energySentences.every((sentence) => exhaustClause.test(sentence));
 }
 
+/**
+ * Whether every sentence naming a card var (`Energy`, `Cards`) is a "next turn" one: Relax's 「下个回合，
+ * 抽{Cards}张牌并获得{Energy}」 is next turn's income, not this turn's (FN0H F33 T2: "Relax, Bash+"
+ * predicted 13 damage; Relax took all 3 energy, Bash+ was never paid for, 0 dealt).
+ */
+export function nextTurnOnly(template: string, varName: string): boolean {
+  const nextTurn = /下个回合|下回合|next turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => nextTurn.test(sentence));
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -309,8 +320,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const hpLoss = dyn(card, "HpLoss") ?? (type === "Power" ? 0 : playHpLossOf(renderedText));
   // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP);
   // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
-  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) ? 0 : (dyn(card, "Energy") ?? 0);
-  const draw = dyn(card, "Cards") ?? 0;
+  // Relax's energy and draw are next turn's (nextTurnOnly), like a Power's income.
+  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
+  const draw = nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 

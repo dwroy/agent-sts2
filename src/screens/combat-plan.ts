@@ -18,6 +18,8 @@
 
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
+import type { GameState } from "../mod/schema.js";
+import type { Knowledge } from "../knowledge/index.js";
 import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
@@ -29,7 +31,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, LABEL_NEAR, LABEL_NOTE, objectiveDamage, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
@@ -564,6 +566,26 @@ export function exhaustPileSize(raw: Record<string, unknown>): number | undefine
   return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
 }
 
+/**
+ * Setup still to play: a power or permanent-Strength card in hand, or one in the draw pile (by the
+ * deck's own model of that card id).
+ */
+export function setupLeft(state: GameState, hand: CardModel[], knowledge: Knowledge): boolean {
+  const isSetup = (card: CardModel) => card.type === "Power" || card.strength > 0 || (card.strengthPerVulnerable ?? 0) > 0;
+  if (hand.some((card) => card.playable && isSetup(card))) return true;
+  const deckSetup = new Set(
+    asArray(asRecord(state.run?.raw)["deck"])
+      .map((entry, index) => {
+        const model = modelHandCard(entry, index, knowledge);
+        return model.type ? model : { ...model, type: str(asRecord(entry)["card_type"]) };
+      })
+      .filter(isSetup)
+      .map((card) => card.cardId),
+  );
+  const draw = asArray(asRecord(asRecord(state.raw["agent_view"])["combat"])["draw"]);
+  return draw.some((entry) => asArray(asRecord(entry)["card_ids"]).some((id) => deckSetup.has(str(id))));
+}
+
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
   const view = asRecord(asRecord(raw["agent_view"])["combat"]);
   const parse = (pile: unknown): DrawPileCard[] =>
@@ -851,11 +873,41 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Strategic intents (intent.ts): DeepSeek's run plan and fight plan, carried out here.
   const runPlan = activeRunPlan(env);
   const fightPlan = activeFightPlan(env);
-  const objective = fightPlan?.objective ?? null;
+  // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
+  // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
+  const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
+  const fightId = fightKey(state);
+  const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
+  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
+  const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   const hpFrac = playerSim.maxHp > 0 ? playerSim.hp / playerSim.maxHp : 1;
   // The run's hp_policy as this fight plays it: a low_hp preserve lapses once HP is back, and
   // kill_fast/race because the enemy scales puts damage first under preserve (intent.ts combatPolicy).
-  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac).policy;
+  // A phase boss's later phases count too (ZANM F48: phase 2 at 151 read as the whole race, the guard
+  // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
+  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
+  const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // Expected damage a turn: this fight's so far, else the deck estimate (boss-clock.ts).
+  const fightTurn = state.turn ?? 1;
+  const start = env.screenMemory.fightStart;
+  const perTurn =
+    start?.hp !== undefined && start.turn !== undefined && fightTurn > start.turn && start.hp > enemyHpNow
+      ? (start.hp - enemyHpNow) / (fightTurn - start.turn)
+      : deckDamagePerTurn(state, env.knowledge);
+  // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
+  // set up, or in a new boss phase (intent.ts objectiveInForce).
+  const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {
+    turnsLeft: perTurn > 0 ? bossHpLeft / perTurn : null,
+    laterPhase,
+    setupLeft: setupLeft(state, hand, env.knowledge),
+  });
+  const objective = objectiveNow.objective;
+  const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
+  const clockTurnsLeft = need ? Math.max(1, need.turns - ((state.turn ?? 1) - 1)) : 1;
+  // The act boss's clock now: HP left over the clock's turns left, against the deck's estimate.
+  const bossClockNow = need ? { need: bossHpLeft / clockTurnsLeft, deck: deckDamagePerTurn(state, env.knowledge) } : null;
+  // An act boss behind its clock is fought under balanced, not preserve (intent.ts combatPolicy).
+  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac, bossClockNow).policy;
   const guardScale = guardSlackScale(objective, hpPolicy, hpFrac);
   // Reserve: potions of the roles the run plan keeps for the act boss are hard-filtered from every
   // line and offer before it, in every non-boss fight (M6P7, T4PY, 0YG4: boss potions spent in
@@ -1040,10 +1092,17 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (solved.plans.some(drinksReserved)) {
     let dry = solved.plans.filter((plan) => !drinksReserved(plan));
     if (dry.length === 0) dry = solveWith(false, (potion) => !reservedPotion(potion.potion_id, potion.text)).plans;
-    reserveNote = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: dry.every((plan) => plan.outcome.dies) });
+    const dryAlive = dry.filter((plan) => !plan.outcome.dies);
+    reserveNote = reserveReleased({
+      bossFight: false,
+      hpFraction: hpFrac,
+      everyDryLineDies: dry.every((plan) => plan.outcome.dies),
+      dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+    });
     if (!reserveNote) solved = { ...solved, plans: dry };
     else if (!reserveOpen) {
-      // Released because every line without it dies: solved again with no save cost on it.
+      // Released because every line without it dies, or the safest one ends within next turn's hit:
+      // solved again with no save cost on it.
       reserveOpen = true;
       const again = solveWith(solvedFree);
       const kept = again.plans.filter((plan) => plan.outcome.winsFight || !drinksVetoed(plan));
@@ -1099,8 +1158,17 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
   const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
-  // Unmodelled potions follow the same reserve: offered only once released (below 25% HP, or every line dies).
-  const offerReleased = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: best.outcome.dies });
+  // Unmodelled potions follow the same reserve: offered only once released (below 25% HP, every line
+  // dies, or the safest line ends within next turn's hit + 3).
+  const aliveNow = solved.plans.filter((plan) => !plan.outcome.dies);
+  const offerReleased =
+    reserveNote ??
+    reserveReleased({
+      bossFight: false,
+      hpFraction: hpFrac,
+      everyDryLineDies: best.outcome.dies,
+      dry: aliveNow.length > 0 ? { hpAfter: Math.max(...aliveNow.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+    });
   const potions =
     potionCapped || dryCheap
       ? []
@@ -1168,10 +1236,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // and not charged to the fight's budget, while it leaves next turn's hit + 5 (ZH8J F17: the budget
   // was spent by T8, then Bludgeon's 32 damage became 6 on T9 and Tear Asunder was swapped on T10;
   // the boss was left at 92/222).
-  // A phase boss's later phases count too (ZANM F48: phase 2 at 151 read as the whole race, the guard
-  // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
-  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
-  const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
+  // (bossHpLeft counts a phase boss's later phases, above.)
   // The Insatiable: the Sandpit eats us at 0 whatever the HP, so HP the guard saves buys nothing once
   // the boss's HP over the turns left (Sandpit + Frantic Escapes still to play) is more than the best
   // line deals (WB02 F33: the guard swapped 4 lines, ~60 damage for ~35 HP; MAHA lost by 1 HP). The
@@ -1206,8 +1271,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Sandpit ran out on T7 with the boss at 31), nor trade 20+ damage for 8 HP or less while the boss
   // clock says we are behind (boss HP left over the clock's turns left is more than the swap deals).
   const escapesIn = (plan: Plan) => plan.steps.filter((step) => step.cardId === "FRANTIC_ESCAPE").length;
-  const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
-  const clockTurnsLeft = need ? Math.max(1, need.turns - ((state.turn ?? 1) - 1)) : 1;
   const bossRaceKeeps = (picked: Plan, replacement: Plan | null): boolean => {
     if (kind !== "boss" || replacement === null) return false;
     if (escapesIn(picked) > escapesIn(replacement)) return true;
@@ -1218,20 +1281,28 @@ function planTurn(env: DecisionEnv): Decision | null {
       picked.outcome.hpLoss - replacement.outcome.hpLoss <= BOSS_RACE_KEEP_HP
     );
   };
+  // Elite/boss under kill_fast/race: the guard compares the HP lost until the kill, not this turn's
+  // alone. A replacement that leaves the kill a turn later (enemy HP left / this fight's damage a turn,
+  // rounded up) pays one more turn of the enemy's expected hit for each extra turn (G8F1 F30: the guard
+  // swapped Bludgeon -15 for Flame Barrier -3 and T6's 30- and 21-damage lines for 23 and 7; the Prism
+  // lived to T8 at -71; VF5C F27).
+  const killTurns = (plan: Plan): number =>
+    plan.outcome.winsFight ? 1 : 1 + Math.ceil(Math.max(0, bossHpLeft - realDamage(plan)) / Math.max(1, perTurn));
+  const killsSooner = (picked: Plan, replacement: Plan | null): boolean => {
+    if (replacement === null || (kind !== "elite" && kind !== "boss") || !tradesHpForDamage(objective)) return false;
+    const later = killTurns(replacement) - killTurns(picked);
+    if (later <= 0) return false;
+    return picked.outcome.hpLoss <= replacement.outcome.hpLoss + later * nextIncoming && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
+  };
   // scale_then_kill: a line with more setup is kept unless it risks death (intent.ts guardProtectsSetup;
   // JF99 F33 T4/T7: Crimson Mantle traded twice for 6 HP and never played, the crabs died at 7 and 38
   // HP left). No other objective protects setup (0YG4 F43 T4: Dark Embrace + Blood Wall kept into a
   // Heavy Cleave).
   const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
     winsRace(picked, replacement) ||
+    killsSooner(picked, replacement) ||
     bossRaceKeeps(picked, replacement) ||
     (replacement !== null && guardProtectsSetup(objective, { setup: setupCount(picked), hpAfter: picked.outcome.hpAfter }, { setup: setupCount(replacement) }, nextIncoming, playerSim.maxHp));
-  // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
-  // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
-  const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
-  const fightId = fightKey(state);
-  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow };
-  const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   // Only under scale_then_kill (MX1Q F23 T2: Inflame lines at 24/26 damage over 44/54 at the same HP,
   // pulled in against a Chomper pair when any plan listed a setup card).
   const setupLine = promotesSetup(objective, state.turn ?? 1, laterPhase)
@@ -1366,7 +1437,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
 
   // The strategic intents in force, one line each with what they mean (intent.ts intentLines).
-  const strategy = intentLines(runPlan, fightPlan, state.run?.floor ?? null, hpFrac);
+  const strategy = intentLines(runPlan, fightPlan, state.run?.floor ?? null, hpFrac, { bossClock: bossClockNow, objective: objectiveNow });
   const questionState: Record<string, JsonValue> = {
     run_brief: briefJson(env.brief),
     fight: kind,
@@ -1579,7 +1650,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack)
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
-      const raceKept = proposed !== null && winsRace(picked, proposed);
+      const raceKept = proposed !== null && (winsRace(picked, proposed) || killsSooner(picked, proposed));
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption || sandpitRaceLost) ? null : proposed;
       const plan = replacement ?? picked;
       // Frantic Escape's HP is survival, not greed: not charged to the fight's budget (EJXC F33 T2-T3:

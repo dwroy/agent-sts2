@@ -25,8 +25,9 @@ import { deckEntries } from "../project/deck.js";
 import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } from "../knowledge/dossiers.js";
 import { bossClockJson, damageGap } from "./boss-clock.js";
 import { cardRoles } from "./card-value.js";
-import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, recentChanges, ROUTE_RISKS, type ChangeTrigger, type HpPolicy, type IntentReason, type ReasonField, type RouteRisk } from "./intent.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, originOf, recentChanges, ROUTE_RISKS, type ChangeTrigger, type OriginField, type PolicyOrigin, type HpPolicy, type IntentReason, type ReasonField, type RouteRisk } from "./intent.js";
 import { repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
+import { routeFacts, routeFactsText, type RouteNode } from "./route-facts.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "hp_rise" | "review";
@@ -91,6 +92,12 @@ export interface RunPlan {
   summary: string;
   /** Why each intent was chosen (intent.ts INTENT_REASONS): low_hp preserve / avoid_elites lapse once HP is back. */
   reasons?: Partial<Record<ReasonField, IntentReason>>;
+  /**
+   * Where hp_policy's and route_risk's current values came from (the change or first plan that set
+   * them, with the reason given then): a low-HP preserve lapses by its origin, not by a later re-plan's
+   * reason text (intent.ts setForLowHp; Z7D7 F24).
+   */
+  origins?: Partial<Record<OriginField, PolicyOrigin>>;
   /** 1 for the run's first plan, +1 per re-plan (deviations are logged per version). */
   version: number;
   snapshot?: PlanSnapshot;
@@ -260,7 +267,29 @@ export function runPlanInput(
     relics,
     potions,
     ...(since ? { since_last_plan: since as unknown as JsonValue } : {}),
+    ...(routeAhead(state) ? { route_ahead: routeAhead(state)! } : {}),
   };
+}
+
+/**
+ * The map ahead from the nodes open now (a map screen): the elites every path to the boss meets, with
+ * or without a rest before them, and the longest run of fights every path takes (VQ7J F6, Z7D7 F25:
+ * forced elites the plan could not see). Null off the map.
+ */
+export function routeAhead(state: GameState): Record<string, JsonValue> | null {
+  const map = asRecord(state.raw["map"]);
+  const nodes = new Map<string, RouteNode>();
+  for (const raw of asArray(map["nodes"]).map(asRecord)) {
+    const row = Number(raw["row"]);
+    const col = Number(raw["col"]);
+    nodes.set(`${row},${col}`, { row, col, type: str(raw["node_type"], "Unknown"), children: asArray(raw["children"]).map(asRecord).map((child) => ({ row: Number(child["row"]), col: Number(child["col"]) })) });
+  }
+  const starts = asArray(map["available_nodes"]).map(asRecord).map((node) => nodes.get(`${Number(node["row"])},${Number(node["col"])}`)).filter((node): node is RouteNode => node !== undefined);
+  if (starts.length === 0) return null;
+  const floor = state.run?.floor ?? 0;
+  const currentRow = asRecord(map["current_node"])["row"];
+  const floorOf = (row: number) => floor + Math.max(1, typeof currentRow === "number" ? row - currentRow : row + 1);
+  return routeFactsText(routeFacts(nodes, starts, floorOf));
 }
 
 /**
@@ -384,8 +413,31 @@ export function parseRunPlan(
     notes.push(...checked.notes);
   }
   notes.push(...repairRunPlan(plan, { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) }));
+  plan.origins = originsAfter(prev, plan);
   plan.validator = notes;
   return plan;
+}
+
+/**
+ * The origin of each field's value in a new plan version: kept from the previous version while the
+ * value is unchanged (a re-plan that only rewrites the reason does not move it), else this version's
+ * accepted change (or the first plan) with the reason given now.
+ */
+export function originsAfter(prev: RunPlan | null, plan: RunPlan): Partial<Record<OriginField, PolicyOrigin>> {
+  const out: Partial<Record<OriginField, PolicyOrigin>> = {};
+  for (const field of ["hp_policy", "route_risk"] as const) {
+    const value = field === "hp_policy" ? plan.hpPolicy : plan.routeRisk;
+    const before = prev ? (field === "hp_policy" ? prev.hpPolicy : prev.routeRisk) : null;
+    const reason = plan.reasons?.[field] ?? null;
+    if (prev && before === value) {
+      const kept = originOf(prev, field);
+      if (kept) out[field] = kept;
+      continue;
+    }
+    const change = plan.changes.find((entry) => entry.version === plan.version && entry.field === field && entry.to === value);
+    out[field] = { floor: plan.floor, version: plan.version, trigger: change?.trigger ?? "start", reason };
+  }
+  return out;
 }
 
 /**
@@ -417,6 +469,7 @@ export function normalizeRunPlan(raw: RunPlan | Record<string, unknown>): RunPla
     bossPrep: String(plan.bossPrep ?? ""),
     summary: String(plan.summary ?? ""),
     ...(plan.reasons && typeof plan.reasons === "object" ? { reasons: plan.reasons } : {}),
+    ...(plan.origins && typeof plan.origins === "object" ? { origins: plan.origins } : {}),
     version: Number(plan.version ?? 1),
     ...(plan.snapshot ? { snapshot: plan.snapshot } : {}),
     changes: Array.isArray(plan.changes) ? plan.changes : [],

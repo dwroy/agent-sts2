@@ -599,9 +599,14 @@ describe("the reserve is hard even on a costly turn, and released below 25% HP (
     return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? [decision.intent, decision.rationale] : null, e.screenMemory.combatPlan?.remaining]);
   };
   it("a costly turn drinks it without a reserve, never with one, and again below 25% HP", () => {
-    expect(shown(30, [])).toMatch(/Block Potion|use_potion/);
-    expect(shown(30, ["block"])).not.toMatch(/Block Potion|use_potion/);
+    expect(shown(60, [])).toMatch(/Block Potion|use_potion/);
+    expect(shown(60, ["block"])).not.toMatch(/Block Potion|use_potion/);
     expect(shown(18, ["block"])).toMatch(/Block Potion|use_potion/);
+  });
+
+  it("is released when the safest line without it risks death next turn (VF5C F27 T4, Z7D7 F28 T3)", () => {
+    // 30 HP, 24 incoming: the safest dry line ends at 11, under 15% of max HP (setupRisksDeath).
+    expect(shown(30, ["block"])).toMatch(/Block Potion|use_potion/);
   });
 });
 
