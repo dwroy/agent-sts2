@@ -204,3 +204,18 @@ describe("Potion-Shaped Rocks under Petrified Toad (H7W0 F42-F48)", () => {
     expect(potionRole("POTION_SHAPED_ROCK", "Deal 10 damage to target enemy.")).toBeNull();
   });
 });
+
+describe("the Queen's YOU_ARE_MINE turn (H7W0 F48 T2)", () => {
+  it("is found only while the Amalgam lives and the Queen's move is YOU_ARE_MINE", async () => {
+    const { youAreMineTurn } = await import("../src/screens/combat-plan.js");
+    const combat = (move: string, amalgamHp: number) => ({
+      enemies: [
+        { index: 0, enemy_id: "TORCH_HEAD_AMALGAM", current_hp: amalgamHp, is_alive: amalgamHp > 0 },
+        { index: 1, enemy_id: "QUEEN", current_hp: 419, move_id: move, is_alive: true },
+      ],
+    });
+    expect(youAreMineTurn(combat("YOU_ARE_MINE_MOVE", 211))).toEqual({ amalgamIndex: 0 });
+    expect(youAreMineTurn(combat("BURN_BRIGHT_FOR_ME_MOVE", 211))).toBeNull();
+    expect(youAreMineTurn(combat("YOU_ARE_MINE_MOVE", 0))).toBeNull();
+  });
+});
