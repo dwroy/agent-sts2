@@ -14,6 +14,7 @@ import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
+import { eventOptionScore } from "../src/screens/event.js";
 import { loadConfig } from "../src/config.js";
 import {
   baseState,
@@ -675,6 +676,74 @@ describe("event", () => {
   it("HP guard: nothing is removed when every option costs HP", () => {
     const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
     expect(shown(decision)).toEqual(["o0", "o1"]);
+  });
+});
+
+describe("event fallback scores (90JG, BUUY, 7048, WYF0, YNMB)", () => {
+  const at = (hp: number, maxHp: number, forced = false) => ({ hp, maxHp, forced });
+  it("no longer ties every option at 0: the fallback takes the best one, not option 0", () => {
+    // 7048 F8 Abyssal Baths at 49/82 before a forced elite: +2 max HP and -3 HP vs heal 10.
+    const baths = eventOptionScore("获得[blue]2[/blue]点最大生命。失去[red]3[/red]点生命。", at(49, 82, true));
+    const leave = eventOptionScore("回复[blue]10[/blue]点生命。", at(49, 82, true));
+    expect(leave).toBeGreaterThan(baths);
+    // 90JG F9: an unplayable card vs -8 HP for a potion at 53/80.
+    expect(eventOptionScore("获得[gold]藏宝图[/gold]，一张不能被打出的牌。", at(53, 80))).toBeLessThan(eventOptionScore("失去8点生命。获得1瓶随机药水。", at(53, 80)));
+    // YNMB F1: Lava Rock pays only on a boss kill; Lost Coffer is a card reward and a potion.
+    expect(eventOptionScore("第一阶段的Boss敌人额外掉落2件遗物。", at(80, 80))).toBeLessThan(eventOptionScore("获得1次卡牌奖励和1瓶随机药水。", at(80, 80)));
+    // A potion slot beats a relic-less nothing; removal and upgrade are worth something.
+    expect(eventOptionScore("获得1个药水栏位并获得2瓶随机药水。", at(60, 80))).toBeGreaterThan(8);
+    expect(eventOptionScore("从你的牌组中移除1张牌。", at(60, 80))).toBeGreaterThan(0);
+  });
+
+  it("a removal naming a valued deck card scores below a small HP cost (WYF0 F27: Slippery Bridge took Demon Form+)", () => {
+    const ctx = { ...at(63, 80), deck: [{ name: "恶魔形态+", valued: true }, { name: "打击", valued: false }] };
+    expect(eventOptionScore("恶魔形态+将从你的牌组中被移除。", ctx)).toBeLessThan(eventOptionScore("失去3点生命，重新随机要删的牌。", ctx));
+  });
+
+  it("the fallback of a real event ask picks the best-scored option", () => {
+    const raw = {
+      ...eventPayload(),
+      run: runPayload({ floor: 9, current_hp: 53, max_hp: 80 }),
+      event: {
+        event_id: "TEST_EVENT", title: "Test", description: "", is_finished: false,
+        options: [
+          { index: 0, text_key: "MAP", title: "Map", description: "获得藏宝图，一张不能被打出的牌。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          { index: 1, text_key: "POTION", title: "Potion", description: "获得1瓶随机药水。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+        ],
+      },
+    };
+    const decision = mustDecision(plan(raw, { strictJev: false }));
+    if (decision.kind !== "ask") throw new Error("expected an ask");
+    expect(decision.resolve({}).intent).toEqual({ action: "choose_event_option", option_index: 1 });
+  });
+});
+
+describe("stale event end page (YNMB F4/F7, X226 F6)", () => {
+  const frame = (eventId: string, floor: number, finished: boolean) => ({
+    ...eventPayload(),
+    run: runPayload({ floor }),
+    event: {
+      event_id: eventId, title: eventId, description: "", is_finished: finished,
+      options: finished
+        ? [{ index: 0, text_key: "PROCEED", title: "Proceed", description: "", is_locked: false, is_proceed: true, will_kill_player: false, has_relic_preview: false }]
+        : [
+            { index: 0, text_key: "A", title: "A", description: "失去18点生命。获得152金币。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+            { index: 1, text_key: "B", title: "B", description: "离开。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          ],
+    },
+  });
+  it("waits out the last floor's end page instead of clicking option 0 of the next event", () => {
+    const memory = createScreenMemory("EVENT");
+    const leave = mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: memory }));
+    expect(leave.kind === "act" && leave.label).toBe("event/leave");
+    // Floor 4, the same end page still shown: wait.
+    expect(plan(frame("SELF_HELP_BOOK", 4, true), { screenMemory: memory }).kind).toBe("wait");
+    // The new event arrives: chosen normally.
+    expect(plan(frame("JUNGLE_MAZE_ADVENTURE", 4, false), { screenMemory: memory }).kind).toBe("decision");
+    // The same end page on the same floor (a page reload) is still left as before.
+    const again = createScreenMemory("EVENT");
+    mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again }));
+    expect(mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again })).kind).toBe("act");
   });
 });
 

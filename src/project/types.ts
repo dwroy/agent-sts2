@@ -106,6 +106,11 @@ export interface ScreenMemory {
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
+  /**
+   * The event last seen and its floor, kept across screens: an end page of that event on a later floor
+   * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
+   */
+  eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
 }
 
 export interface RememberedMap {
