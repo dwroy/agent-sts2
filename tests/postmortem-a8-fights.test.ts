@@ -7,10 +7,23 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planCombatTurn, potionsFirst, pressedAt } from "../src/screens/combat-plan.js";
+import { planMap } from "../src/screens/map.js";
+import { planShop } from "../src/screens/shop.js";
+import { drinkFirstSafe, isModelledPotion, modelPotion } from "../src/strategy/card-model.js";
 import { expectedLossPerTurn, parseFightPlan } from "../src/strategy/fight-plan.js";
-import { grindOutlasts, objectiveInForce } from "../src/strategy/intent.js";
+import { grindOutlasts, isReserved, objectiveInForce, potionRole } from "../src/strategy/intent.js";
+import type { Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+
+type Raw = Record<string, unknown>;
+/** The options of a question: key -> parsed criteria. */
+function optionsOf(decision: Decision | null): Record<string, Raw> {
+  expect(decision?.kind).toBe("ask");
+  const question = Object.values((decision as AskDecision).questions)[0]!;
+  if (question.type !== "choice") throw new Error("not a choice");
+  return Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value!) as Raw]));
+}
 
 const strategyOf = (decision: Decision | null): string[] => ((decision as AskDecision).state["strategy"] as string[]) ?? [];
 
@@ -41,5 +54,97 @@ describe("a preserve_hp grind the enemy outlasts is logged and played as kill_fa
     const lines = strategyOf(decision).join("\n");
     expect(lines).toMatch(/in force now: objective kill_fast \(preserve_hp: the grind outlasts our HP/);
     expect(lines).toMatch(/in force now: hp_policy balanced \(damage first/);
+  });
+});
+
+describe("potions: a release holds for the turn, drinks come before the energy runs out (N7KR F8)", () => {
+  it("T1: the Dexterity Potion released for the chosen line stays released after the Skill Potion's card (logged: re-plan 'only distinct line: Taunt; hp -9')", () => {
+    const first = loggedEnv(logged("n7kr-f8-t1"));
+    planCombatTurn(first);
+    expect(first.screenMemory.reserveRelease?.note).toMatch(/safest line without it leaves 22 HP/);
+    const replan = loggedEnv(logged("n7kr-f8-t1-replan"));
+    replan.screenMemory.reserveRelease = first.screenMemory.reserveRelease;
+    const options = optionsOf(planCombatTurn(replan));
+    expect(String(options["plan1"]!["plays"])).toMatch(/^potion 敏捷药水, then 挑衅/);
+    expect(Number(options["plan1"]!["hp_lost"])).toBeLessThanOrEqual(7);
+    // Without the memory the re-plan filters it out again.
+    const fresh = planCombatTurn(loggedEnv(logged("n7kr-f8-t1-replan")));
+    expect(fresh?.kind === "act" ? fresh.rationale : "").toMatch(/only distinct line\): 挑衅 -> 花园幽灵鳗; hp -9/);
+  });
+
+  it("T1/T2: order-free potions are shown and played first, so a kill mid-line cannot strand them at 0 energy", () => {
+    for (const name of ["n7kr-f8-t1", "n7kr-f8-t2"]) {
+      const plays = Object.values(optionsOf(planCombatTurn(loggedEnv(logged(name))))).map((option) => String(option["plays"] ?? ""));
+      for (const line of plays.filter((text) => text.includes("敏捷药水"))) expect(line).toMatch(/^potion 敏捷药水/);
+    }
+  });
+
+  it("potionsFirst moves only order-free drinks (Strength, Dexterity, Block, Energy, Clarity), not targeted, card or draw potions", () => {
+    const step = (cardId: string, name = cardId) => ({ cardIndex: 0, cardId, upgraded: false, name, target: null, targetName: null });
+    const plan = { steps: [step("HEAVY_BLADE"), step("POTION:DEXTERITY_POTION:1"), step("POTION:FIRE_POTION:0"), step("POTION:SKILL_POTION:2")], outcome: {} as never, score: 0 } as Plan;
+    expect(potionsFirst(plan).steps.map((entry) => entry.cardId)).toEqual(["POTION:DEXTERITY_POTION:1", "HEAVY_BLADE", "POTION:FIRE_POTION:0", "POTION:SKILL_POTION:2"]);
+    expect(drinkFirstSafe("STRENGTH_POTION")).toBe(true);
+    expect(drinkFirstSafe("CLARITY")).toBe(true);
+    for (const id of ["FORTIFIER", "SWIFT_POTION", "ATTACK_POTION", "DUPLICATOR", "WEAK_POTION"]) expect(drinkFirstSafe(id)).toBe(false);
+  });
+});
+
+describe("potions: released at low HP means pressed (XMY2 F24: 19/80 against one Hunter Killer)", () => {
+  it("below 25% any non-boss fight is pressed, whatever the attackers", () => {
+    expect(pressedAt(19, 80, "monster", 1)).toBe(true);
+    expect(pressedAt(30, 80, "monster", 1)).toBe(false);
+    expect(pressedAt(30, 80, "monster", 2)).toBe(true);
+    expect(pressedAt(19, 80, "boss", 1)).toBe(false);
+  });
+});
+
+describe("potions: Clarity and Mazaleth's Gift are modelled (K7G9 carried Clarity 35 floors; XMY2 F17 drank the Gift on T9)", () => {
+  it("Clarity draws a card now and is a reserve 'damage' potion like Swift", () => {
+    expect(isModelledPotion("CLARITY")).toBe(true);
+    expect(modelPotion("CLARITY", "Clarity", 0, [], 0)?.draw).toBe(1);
+    expect(potionRole("CLARITY", "")).toBe("damage");
+  });
+
+  it("K7G9 F45 T1: Clarity is in code's lines, drunk first", () => {
+    const options = optionsOf(planCombatTurn(loggedEnv(logged("k7g9-f45-t1"))));
+    expect(String(options["plan1"]!["plays"])).toMatch(/^potion 明晰提取物/);
+  });
+
+  it("XMY2 F17 T1: the act-1 boss's rank 1 drinks Mazaleth's Gift (Ritual 1) first", () => {
+    expect(potionRole("MAZALETHS_GIFT", "")).toBe("strength");
+    const options = optionsOf(planCombatTurn(loggedEnv(logged("xmy2-f17-t1"))));
+    expect(String(options["plan1"]!["plays"])).toMatch(/^potion 马萨雷斯的赠礼/);
+  });
+});
+
+describe("potions: Beetle Juice is a block potion and a reserved potion is not dropped for a new one (HCBJ F11)", () => {
+  it("damage reduction and Thorns read as block, before 'damage'", () => {
+    const juice = loggedKnowledge.potion("BEETLE_JUICE")!.description;
+    expect(potionRole("BEETLE_JUICE", juice)).toBe("block");
+    expect(potionRole("SOME_POTION", "敌人的攻击造成的伤害减少25%")).toBe("block");
+    expect(isReserved(["damage", "strength"], "BEETLE_JUICE", juice)).toBe(false);
+  });
+
+  it("the logged board: Liquid Bronze goes for the Tiny Mailbox's potion, not Beetle Juice (logged: 'discarding 甲虫汁 (rank 5)')", () => {
+    const decision = planMap(loggedEnv(logged("hcbj-map-f11-discard")));
+    expect(decision?.kind === "act" ? decision.label : "").toBe("map/discard-potion");
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/流动铜液/);
+  });
+
+  it("a potion the run plan reserves is kept while an unreserved one can go", () => {
+    const fx = logged("hcbj-map-f11-discard");
+    const decision = planMap(loggedEnv(fx, { runPlan: { ...fx.runPlan!, reserve: ["block"] } }));
+    // Both are block potions now: with every one reserved the weakest of all goes.
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/流动铜液/);
+  });
+});
+
+describe("shop: a full belt swaps an unreserved potion for one the run plan reserves (RVR6 F37: 15/80, 376 gold)", () => {
+  it("offers 'discard Ashwater to buy Block Potion' above the card removal (logged: removal 30 vs Blood Vial 13.9; the Block Potion was never offered)", () => {
+    const options = optionsOf(planShop(loggedEnv(logged("rvr6-shop-f37"), { combatPlanner: "card" })));
+    expect(options["swap_potion"]!["buy"]).toMatch(/格挡药水 \(after discarding 灰水\)/);
+    const decision = planShop(loggedEnv(logged("rvr6-shop-f37"), { combatPlanner: "card" })) as AskDecision;
+    const resolved = decision.resolve({ pick: { type: "choice", choice: "swap_potion", confidence: 0.5, probabilities: {}, raw: {} } } as never);
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 0 });
   });
 });

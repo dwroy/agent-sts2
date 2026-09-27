@@ -396,7 +396,7 @@ export function objectiveInForce(
  * no role (JF8N F13: the Energy Potion 「获得{Energy}」 matched none and went on an elite; KFPC F29 the
  * Power Potion, FH3M/9V09 the Radiant Tincture).
  */
-export const BURST_POTIONS = /^(ENERGY_POTION|RADIANT_TINCTURE|ATTACK_POTION|POWER_POTION|SKILL_POTION|COLORLESS_POTION|DUPLICATOR|SWIFT_POTION|GIGANTIFICATION_POTION|CUNNING_POTION|BOTTLED_POTENTIAL)$/;
+export const BURST_POTIONS = /^(ENERGY_POTION|RADIANT_TINCTURE|ATTACK_POTION|POWER_POTION|SKILL_POTION|COLORLESS_POTION|DUPLICATOR|SWIFT_POTION|CLARITY|GIGANTIFICATION_POTION|CUNNING_POTION|BOTTLED_POTENTIAL)$/;
 /** Potion-Shaped Rocks (Petrified Toad refills them every fight): never reserved (H7W0 F42-F48). */
 export const ROCK_POTION = "POTION_SHAPED_ROCK";
 
@@ -406,9 +406,12 @@ export function potionRole(potionId: string, text: string): PotionRole | null {
   if (BURST_POTIONS.test(potionId)) return "damage";
   // By id as well as text: the Dexterity Potion reads 「获得{DexterityPower}点敏捷」 and matched no role
   // (GZ24 F8: drunk on an elite's T1 while the run plan kept [block, weak]); Regen is healing over turns.
-  return /STRENGTH|FLEX/.test(potionId) ? "strength" :
+  // Damage *reduction* is a block role, read before "damage" (HCBJ F11: Beetle Juice 「敌人的攻击…造成的伤害减少」
+  // was a damage potion and dropped for a Tiny Mailbox potion); the same words as combat-plan BLUNTS_HIT.
+  return /STRENGTH|FLEX|MAZALETH/.test(potionId) ? "strength" :
     /REGEN|BLOOD_POTION|FAIRY/.test(potionId) || /回复|heal|恢复|再生|regen/i.test(text) ? "heal" :
-    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE/.test(potionId) || /格挡|block|无实体|intangible|敏捷|dexterity/i.test(text) ? "block" :
+    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE|BEETLE_JUICE|LIQUID_BRONZE/.test(potionId) ||
+    /格挡|block|无实体|intangible|敏捷|dexterity|伤害减少|less damage|荆棘|thorns/i.test(text) ? "block" :
     /虚弱|weak/i.test(text) ? "weak" :
     /伤害|damage/i.test(text) ? "damage" : null;
 }

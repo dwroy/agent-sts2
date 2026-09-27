@@ -25,13 +25,13 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { drinkFirstSafe, heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { expectedLossPerTurn, fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, grindOutlasts, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { RESERVE_RELEASE_HP, combatFit, combatPolicy, grindOutlasts, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
@@ -73,6 +73,33 @@ export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
   const bestLoss = Math.min(...dry.map((entry) => entry.outcome.hpLoss));
   const bestDamage = Math.max(...dry.map((entry) => entry.outcome.damageDealt));
   return plan.outcome.hpLoss >= bestLoss && plan.outcome.damageDealt <= bestDamage;
+}
+
+/**
+ * A line with its order-free potions (card-model drinkFirstSafe: Strength, Dexterity, Block, Energy...)
+ * moved before its first card. The solver may place such a drink at the line's end, after the energy is
+ * spent; a kill mid-line then re-plans at 0 energy, where the drink "adds nothing this turn" and is
+ * dropped (N7KR F8 T2/T3: "Hammer, Dexterity Potion" rank 1 for its lasting Dexterity, the potion
+ * dropped twice after Hammer killed an eel, drunk at 6 HP on T4). Drunk first it is played as shown.
+ */
+export function potionsFirst(plan: Plan): Plan {
+  const firstCard = plan.steps.findIndex((step) => !step.cardId.startsWith("POTION:"));
+  if (firstCard < 0) return plan;
+  const moves = plan.steps.filter((step, index) => index > firstCard && step.cardId.startsWith("POTION:") && drinkFirstSafe(step.cardId.split(":")[1] ?? ""));
+  if (moves.length === 0) return plan;
+  const rest = plan.steps.filter((step) => !moves.includes(step));
+  return { ...plan, steps: [...rest.slice(0, firstCard), ...moves, ...rest.slice(firstCard)] };
+}
+
+/** Plans with the same steps (after reordering), the first kept. */
+function dedupePlans(plans: Plan[]): Plan[] {
+  const seen = new Set<string>();
+  return plans.filter((plan) => {
+    const id = plan.steps.map((step) => `${step.cardId}@${step.target ?? ""}`).join(",");
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
 }
 
 /**
@@ -164,6 +191,17 @@ export function measuredDamagePerTurn(start: { hp?: number; turn?: number; idle?
   const idle = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn).length;
   const turns = turn - start.turn - idle;
   return turns > 0 ? (start.hp - enemyHpNow) / turns : null;
+}
+
+/**
+ * Potions are for now: below 40% HP in an elite fight or a hallway fight against 2+ attackers, and below
+ * the reserve's release line (25%) in any non-boss fight, whatever the attackers (XMY2 F24: 19/80 against
+ * one Hunter Killer, the released potions still carried the hallway cost of 15 and no line drank them
+ * until every line died).
+ */
+export function pressedAt(hp: number, maxHp: number, kind: SolverInput["fightKind"], attackers: number): boolean {
+  if (maxHp <= 0 || kind === "boss") return false;
+  return hp < maxHp * RESERVE_RELEASE_HP || (hp < maxHp * 0.4 && (kind === "elite" || attackers >= 2));
 }
 
 /** Solver cost of drinking a potion (before any defensive saving). */
@@ -956,7 +994,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Released (below 25% HP now, or every dry line dies below): a reserved potion costs what any potion
   // costs, no save cost on top (5JU3 F11 T3-T4: at 16% HP the Gigantification Potion was released but
   // still carried RUN_PLAN_SAVE_COST 20, and no line drank it until every line died on T6).
-  let reserveOpen = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: false }) !== null;
+  const releaseMemo = env.screenMemory.reserveRelease;
+  const releasedThisTurn = releaseMemo && releaseMemo.fight === fightKey(state) && releaseMemo.turn === (state.turn ?? null) ? releaseMemo.note : null;
+  const rememberRelease = (note: string) => {
+    env.screenMemory.reserveRelease = { fight: fightKey(state), turn: state.turn ?? null, note };
+  };
+  let reserveOpen = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: false }) !== null || releasedThisTurn !== null;
   const heldForBoss = (potionId: string, text: string) => reservedPotion(potionId, text) && !reserveOpen;
   // Petrified Toad refills a Potion-Shaped Rock every fight: a rock drunk now is free, and a slot freed
   // for a real potion (H7W0 F42-F48: two rocks filled the belt, the Attack Potion reward was lost and
@@ -971,8 +1014,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // are for: drink them like in a boss fight (7Q5G T5, Y83U F30: potions kept until the "emergency"
   // turn, when it was too late).
   const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
-  const pressed =
-    playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
+  const pressed = pressedAt(playerSim.hp, playerSim.maxHp, kind, attackers);
   // Boss potions are not free (1R3C F17 T1: cost 0 drank all three on a 7-damage turn): a small
   // base cost, plus what a defensive one is worth saving for a bigger hit next turn.
   // A hallway fight right before a forced Elite: the potion is worth twice as much kept (NZR7 F6: both
@@ -1019,7 +1061,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     : null;
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS).
   const potionContext = { enemyTargets: enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index), strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
-  const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
+  // Lines are shown and played with their order-free potions drunk first (potionsFirst).
+  const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) => {
+    const result = solveRaw(free, withPotions);
+    return { ...result, plans: dedupePlans(result.plans.map(potionsFirst)) };
+  };
+  const solveRaw = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
     solveTurn({
       hand: [
         ...hand,
@@ -1086,7 +1133,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Swift Potion line was listed and Jev drank it at 0.11).
   if ((kind === "monster" || kind === "unknown") && solved.plans.some(drinksPotion)) {
     const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
-    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
+    // At low HP a few HP is a big share of what is left (XMY2 F24 at 19 HP): at most 20% of HP now.
+    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= Math.min(HALLWAY_LETHAL_POTION_LOSS, playerSim.hp * 0.2)) {
       solved = { ...solved, plans: dry };
       dryCheap = true;
     } else if (dry.length > 0) {
@@ -1135,12 +1183,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     let dry = solved.plans.filter((plan) => !drinksReserved(plan));
     if (dry.length === 0) dry = solveWith(false, (potion) => !reservedPotion(potion.potion_id, potion.text)).plans;
     const dryAlive = dry.filter((plan) => !plan.outcome.dies);
-    reserveNote = reserveReleased({
-      bossFight: false,
-      hpFraction: hpFrac,
-      everyDryLineDies: dry.every((plan) => plan.outcome.dies),
-      dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
-    });
+    reserveNote =
+      releasedThisTurn ??
+      reserveReleased({
+        bossFight: false,
+        hpFraction: hpFrac,
+        everyDryLineDies: dry.every((plan) => plan.outcome.dies),
+        dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+      });
+    if (reserveNote) rememberRelease(reserveNote);
     if (!reserveNote) solved = { ...solved, plans: dry };
     else if (!reserveOpen) {
       // Released because every line without it dies, or the safest one ends within next turn's hit:
@@ -1205,12 +1256,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   const aliveNow = solved.plans.filter((plan) => !plan.outcome.dies);
   const offerReleased =
     reserveNote ??
+    releasedThisTurn ??
     reserveReleased({
       bossFight: false,
       hpFraction: hpFrac,
       everyDryLineDies: best.outcome.dies,
       dry: aliveNow.length > 0 ? { hpAfter: Math.max(...aliveNow.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
     });
+  if (offerReleased && !releasedThisTurn) rememberRelease(offerReleased);
   const potions =
     potionCapped || dryCheap
       ? []

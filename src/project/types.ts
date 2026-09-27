@@ -107,6 +107,12 @@ export interface ScreenMemory {
    */
   potionVeto?: { fight: string; turn: number | null; ids: string[] };
   /**
+   * The reserve released in this fight turn, with why: it stays released for the turn's re-plans (N7KR
+   * F8 T1: released for a line drinking the Skill and Dexterity potions; after the Skill Potion's card
+   * the re-plan's safest dry line kept 23 > 22 and the Dexterity Potion was filtered out again).
+   */
+  reserveRelease?: { fight: string; turn: number | null; note: string };
+  /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
    */

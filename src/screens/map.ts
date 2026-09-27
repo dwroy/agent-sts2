@@ -404,8 +404,12 @@ export function planMap(env: DecisionEnv): Decision | null {
     (relics.includes("WHITE_BEAST_STATUE") && available.some((node) => ["Monster", "Elite", "Unknown", "Boss"].includes(str(node["node_type"])))) ||
     (relics.includes("TINY_MAILBOX") && available.some((node) => ["RestSite", "Rest"].includes(str(node["node_type"]))));
   if (beltFull && potionComing && state.available_actions.includes("discard_potion")) {
-    const weakest = belt
-      .filter((slot) => bool(slot["can_discard"], true))
+    // Not a potion the run plan keeps for the boss while another can go (HCBJ F11: Beetle Juice, a
+    // block potion under reserve [strength, damage] read as damage, dropped for the Tiny Mailbox's).
+    const reserve = currentRunPlan(env.screenMemory, state)?.reserve;
+    const discardable = belt.filter((slot) => bool(slot["can_discard"], true));
+    const unreserved = discardable.filter((slot) => !isReserved(reserve, str(slot["potion_id"]), str(slot["description"])));
+    const weakest = (unreserved.length > 0 ? unreserved : discardable)
       .map((slot) => ({ slot, rank: potionRank(str(slot["potion_id"])) }))
       .sort((a, b) => a.rank - b.rank)[0];
     if (weakest && weakest.rank <= POTION_RANK_DISCARDABLE) {
@@ -586,10 +590,10 @@ export function planMap(env: DecisionEnv): Decision | null {
  * potions are the least reliable; defensive, damage and Strength potions the most.
  */
 const POTION_RANKS: Record<string, number> = {
-  FOUL_POTION: 0, GAMBLERS_BREW: 2, CLARITY: 2, SWIFT_POTION: 3, LIQUID_MEMORIES: 3, COLORLESS_POTION: 3,
+  FOUL_POTION: 0, GAMBLERS_BREW: 2, CLARITY: 3, SWIFT_POTION: 3, LIQUID_MEMORIES: 3, COLORLESS_POTION: 3,
   SKILL_POTION: 4, ATTACK_POTION: 4, POWER_POTION: 5, ENERGY_POTION: 4, BLESSING_OF_THE_FORGE: 3, ASHWATER: 5,
   BLOCK_POTION: 7, FIRE_POTION: 7, EXPLOSIVE_AMPOULE: 7, WEAK_POTION: 6, VULNERABLE_POTION: 6, FEAR_POTION: 6,
-  DEXTERITY_POTION: 7, STRENGTH_POTION: 8, FLEX_POTION: 6, REGEN_POTION: 7, HEART_OF_IRON: 8, FORTIFIER: 9,
+  DEXTERITY_POTION: 7, STRENGTH_POTION: 8, BEETLE_JUICE: 7, MAZALETHS_GIFT: 7, FLEX_POTION: 6, REGEN_POTION: 7, HEART_OF_IRON: 8, FORTIFIER: 9,
   DUPLICATOR: 6, BLOOD_POTION: 6, FAIRY_IN_A_BOTTLE: 10, POTION_OF_BINDING: 7, GIGANTIFICATION_POTION: 7,
   // Petrified Toad refills it every fight: the first slot to free for a real potion (H7W0 F42).
   POTION_SHAPED_ROCK: 1,
