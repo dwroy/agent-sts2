@@ -934,6 +934,11 @@ export function describeIntent(intent: JsonValue | undefined): string {
  * restored from the log after a restart, else asked once; re-asked once when a new boss/elite enemy
  * appears. A failed request is not retried in the same fight (the turns are played without a plan).
  */
+/** Ascension from which every fight (not only elites/bosses) gets a DeepSeek fight plan. */
+const ALL_FIGHT_PLANS_FROM_ASCENSION = 8;
+/** …after this floor (act 1's first fights are left to code). */
+const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
+
 async function ensureFightPlan(
   env: DecisionEnv,
   deepseek: DeepSeekClient,
@@ -947,7 +952,10 @@ async function ensureFightPlan(
   const alive = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
   if (alive.length === 0) return;
   const kind = fightKind(combat, env);
-  if (kind !== "elite" && kind !== "boss") return;
+  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Dai asked for a
+  // DeepSeek plan in most fights. The first floors of act 1 stay code-only (starter deck, weak enemies).
+  const everyFight = (state.run?.ascension ?? 0) >= ALL_FIGHT_PLANS_FROM_ASCENSION && (state.run?.floor ?? 0) > ALL_FIGHT_PLANS_FROM_FLOOR;
+  if (kind !== "elite" && kind !== "boss" && !everyFight) return;
   const fight = fightKey(state);
   const runId = str(state.raw["run_id"]);
   const current = screenMemory.fightPlan;
