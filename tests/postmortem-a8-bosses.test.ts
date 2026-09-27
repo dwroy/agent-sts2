@@ -16,7 +16,7 @@ import { rememberMap } from "../src/screens/rest.js";
 import { averagePowerStrength, damageGap, expectedPlayTurn } from "../src/strategy/boss-clock.js";
 import { isModelledPotion, modelPotion, upgradeCard, upgradeGain } from "../src/strategy/card-model.js";
 import { cardRoles, damageRole } from "../src/strategy/card-value.js";
-import { potionOptionFit } from "../src/strategy/intent.js";
+import { combatFit, potionOptionFit } from "../src/strategy/intent.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 describe("boss clock: a power counts from its expected play turn (M9PL F32)", () => {
@@ -180,5 +180,24 @@ describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: b
     expect(potionOptionFit({ ...base, role: "block", cheapestLoss: 15 })).toMatch(/^fits hp/);
     expect(potionOptionFit({ ...base, role: "block" })).toMatch(/^neutral/);
     expect(potionOptionFit({ ...base, role: "weak", bossFight: false, bossClock: null })).toMatch(/^costs the potion/);
+  });
+});
+
+describe("only code's pick is labelled \"code's best line\" (M9PL F25 T2)", () => {
+  // Logged: four options all "fits kill_fast: code's best line", code's pick shown 4th; the other three
+  // scored above it (the pick beat the score-best line on every outcome), so scoreGap clamped to 0.
+  const field = { minLoss: 14, maxDamage: 52, maxSetup: 1, slack: 5, best: { hpLoss: 14, damage: 52, setup: 1 } };
+  const line = (over: Partial<Parameters<typeof combatFit>[2]>) => ({ hpLoss: 14, damage: 45, setup: 1, winsFight: false, focusDamage: null, ...over });
+  it("a line scoring above code's pick says so", () => {
+    expect(combatFit("kill_fast", "balanced", line({ codeTop: true, scoreGap: 0, damage: 52 }), field).label).toMatch(/code's best line/);
+    const above = combatFit("kill_fast", "balanced", line({ scoreGap: -3.2 }), field).label;
+    expect(above).not.toMatch(/code's best line under/);
+    expect(above).toMatch(/near code's best line \(score \+3\.2/);
+    expect(combatFit("kill_fast", "balanced", line({ scoreGap: 0 }), field).label).toMatch(/ties code's best line/);
+  });
+
+  it("the logged board: at most one option is code's best line", () => {
+    const { options } = linesOf(planCombatTurn(loggedEnv(logged("m9pl-f25-t2"))));
+    expect(Object.values(options).filter((option) => /code's best line under/.test(String(option["intent_fit"]))).length).toBeLessThanOrEqual(1);
   });
 });

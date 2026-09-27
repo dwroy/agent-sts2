@@ -506,7 +506,11 @@ export interface LineFacts {
   escapes?: number;
   /** Code's rank-1 line: the solver's best score under the intents' weights. */
   codeTop?: boolean;
-  /** How far below code's best shown line the solver scores this one (0 for the best), under the intents' weights. */
+  /**
+   * How far below code's best shown line the solver scores this one (0 for the best), under the intents'
+   * weights. Negative when code's pick is not the score-best line (it was picked for beating that line on
+   * every outcome): such a line is not "code's best line" (M9PL F25 T2: all four options said so).
+   */
   scoreGap?: number;
   /** Damage into the burst target this turn (LineField.burst). */
   burstDamage?: number;
@@ -614,7 +618,14 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
     ].filter(Boolean).join(", ");
     const counting = pit && pit.maxEscapes > 0 ? ", counting Sandpit turns bought as damage" : "";
     if (near) {
-      const where = line.codeTop || (line.scoreGap ?? 0) <= 0 ? "code's best line" : `near code's best line (score -${(line.scoreGap ?? 0).toFixed(1)})`;
+      const gap = line.scoreGap ?? 0;
+      const where = line.codeTop
+        ? "code's best line"
+        : gap < 0
+          ? `near code's best line (score +${(-gap).toFixed(1)}; code's pick beats the score-best line on every outcome)`
+          : gap === 0
+            ? "ties code's best line"
+            : `near code's best line (score -${gap.toFixed(1)})`;
       parts.push(`fits ${intent}: ${where} under ${intent} weights${trade && !line.codeTop ? ` (vs it: ${trade}${counting})` : ""}${bought ? ` (${bought})` : ""}`);
       if (objective === "scale_then_kill" && line.setup > 0 && line.setup >= field.maxSetup) parts.push("sets up (powers / Strength)");
       grade = "fits";

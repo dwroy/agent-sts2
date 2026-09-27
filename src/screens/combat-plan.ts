@@ -1405,7 +1405,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         focusDamage: fightPlan ? focusDamage(plan) : null,
         escapes: escapesIn(plan),
         codeTop: plan === top,
-        scoreGap: Math.max(0, top.score - plan.score),
+        // Signed: a line scoring above code's pick (picked for dominating the score-best) is not "best".
+        scoreGap: plan === top ? 0 : top.score - plan.score,
         burstDamage: burstDamage(plan),
       },
       field,
