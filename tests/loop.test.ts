@@ -707,4 +707,57 @@ describe("runLoop", () => {
     expect(report.totals.inputTokens).toBe(200);
     expect(report.totals.outputTokens).toBe(20);
   });
+
+  it("asks the planner for the run plan with no escalation chain, and never escalates a low-confidence Jev pick", async () => {
+    const base = testConfig();
+    const runPlanLog = join(tmpdir(), `run-plans-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+    logs.push(runPlanLog);
+    // Default config: the escalation chain is empty (Jev is the final decider).
+    expect(base.escalation.chain).toEqual([]);
+    const config: AppConfig = { ...base, runPlan: "v1", runPlanLog, deepseek: { maxCalls: 5 } as AppConfig["deepseek"] };
+    const { server } = await scriptedMod({ sequence: [mapPayload(), mapPayload(), mainMenuPayload()] });
+    const labels: string[] = [];
+    const planner = {
+      async askJson(_payload: unknown, label: string) {
+        labels.push(label);
+        return { json: { archetype: "Strength", hp_policy: "preserve", route_risk: "avoid_elites", summary: "careful" }, meta: { latencyMs: 1, inputTokens: 10, outputTokens: 5 } };
+      },
+    };
+    // Jev near-guesses every pick (0.1): nothing escalates, code's rank 1 is the fallback.
+    const unsure = {
+      model: "stub",
+      async ask(_state: unknown, questions: Record<string, { type: string; criteria?: Record<string, unknown> }>): Promise<JevAskResult> {
+        const answers: AnswerSet = {};
+        for (const [id, question] of Object.entries(questions)) {
+          const first = Object.keys(question.criteria ?? {})[0] ?? "";
+          answers[id] = { type: "choice", choice: first, probabilities: { [first]: 0.1 }, confidence: 0.1, raw: {} };
+        }
+        return { model: "stub", answers, inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: null };
+      },
+    } as unknown as JevClient;
+
+    const stats = await runLoop({
+      config,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: unsure,
+      planner: planner as never,
+      knowledge: testKnowledge,
+      maxRuns: 1,
+      maxDecisions: 5,
+      pollIntervalMs: 1,
+    });
+
+    expect(labels).toEqual(["run-plan"]);
+    expect(stats.deepseekCalls).toBe(1);
+    const planLine = JSON.parse(readFileSync(runPlanLog, "utf8").trim().split("\n")[0]!);
+    expect(planLine).toMatchObject({ version: 1, plan: { hpPolicy: "preserve", routeRisk: "avoid_elites" }, validator: [], changes: [] });
+    const decisions = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    expect(decisions.length).toBeGreaterThan(0);
+    for (const record of decisions) expect(record.escalation).toBeUndefined();
+    // avoid_elites: the Elite next node was not among the map options.
+    const route = decisions.find((record) => record.label === "map/route");
+    expect(route.chosen).not.toEqual({ action: "choose_map_node", option_index: 0 });
+    expect(JSON.stringify(route.questions ?? {})).not.toMatch(/Elite/);
+  });
 });
