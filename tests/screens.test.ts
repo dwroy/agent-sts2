@@ -797,6 +797,13 @@ describe("event", () => {
     return memory;
   };
 
+  it("names what a relic in the option does (EJXC F13: Chosen Cheese guessed as Strength)", () => {
+    const decision = mustDecision(plan(hpEvent(72, 80, [["Cheese", "失去[red]4[/red]点生命，获得[gold]天选芝士[/gold]。"], ["Cards", "获得两张普通牌。"]])));
+    const text = JSON.stringify(decision.kind === "ask" ? decision.questions : decision);
+    expect(text).toMatch(/relic_notes[^\]]*max HP at the end of every combat/);
+    expect(text.match(/relic_notes/g)?.length ?? 0).toBe(1);
+  });
+
   it("HP guard: an 8+ max-HP cost is not offered (1K5G F8: -13 max HP for Fresnel Lens)", () => {
     const decision = mustDecision(plan(hpEvent(60, 80, [["Bottle", "获得一瓶[aqua]发光水[/aqua]。"], ["Climb", "获得[gold]菲涅耳透镜[/gold]。失去[red]13[/red]点最大生命。"]])));
     expect(decision.kind).toBe("act");
