@@ -78,6 +78,12 @@ export interface EnemySim {
    * and hit 7x2 / 12 after).
    */
   ravenous?: number;
+  /**
+   * Imbalanced (Rock Bowlbug): when its attack this turn is fully blocked it is stunned and skips its
+   * next move. The value is that next move's expected hit (move model), what the stun saves (N95W F19
+   * T3: "Defend, Defend, True Grit" 17 block against Headbutt 15 would have stunned it).
+   */
+  imbalanced?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /**
@@ -361,6 +367,10 @@ export interface Outcome {
   potionCost: number;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
+  /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
+  stuns?: string[];
+  /** Their next hits, saved by the stun (0 when none). */
+  stunSaved?: number;
   /** Enemies left at or below the start-of-turn damage (Mercury Hourglass): dead at our next turn start. */
   startTurnKills: string[];
   /** Withers this plan adds to the hand (Withering Presence). */
@@ -1216,6 +1226,22 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
   return hits;
 }
 
+/**
+ * Imbalanced enemies stunned by this line: alive, attacking this turn, and every one of their hits met
+ * by block left in the attack order (Buffer's negated hits count as blocked: the biggest ones).
+ */
+function imbalanceStuns(sim: Sim, hits: IncomingHit[], block: number, buffer: number): Sim["enemies"] {
+  const negated = new Set(hits.map((hit, index) => ({ hit, index })).sort((a, b) => b.hit.amount - a.hit.amount).slice(0, buffer).map((entry) => entry.index));
+  const unblocked = new Set<number>();
+  let pool = block;
+  hits.forEach((hit, index) => {
+    if (negated.has(index)) return;
+    if (hit.amount > pool) unblocked.add(hit.enemy);
+    pool = Math.max(0, pool - hit.amount);
+  });
+  return sim.enemies.filter((enemy) => enemy.alive && (enemy.imbalanced ?? 0) > 0 && hits.some((hit) => hit.enemy === enemy.index) && !unblocked.has(enemy.index));
+}
+
 /** HP over next turn's hits (a woken sleeper's included) below which a line risks death. */
 export const WAKE_MARGIN = 3;
 /** Score cost of a line that risks death to a sleeper it wakes, per point of its first hit (HP weight). */
@@ -1434,6 +1460,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
+  // Imbalanced: an enemy whose every hit meets block (in attack order) is stunned for its next move.
+  const stunned = winsFight ? [] : imbalanceStuns(sim, hits, blockLeft, sim.buffer);
   // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
   const regenHeal = winsFight ? 0 : Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp));
   const selfLoss = input.player.hp - sim.hp - regenHeal;
@@ -1478,6 +1506,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   );
   let score = 0;
   if (dies) score -= 100_000;
+  const stunSaved = stunned.reduce((sum, enemy) => sum + (enemy.imbalanced ?? 0), 0);
+  if (!dies) score += weights.hp * stunSaved;
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
@@ -1720,6 +1750,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       unknownCards: sim.unknown,
       potionCost: sim.potionCost,
       sandpitAfter,
+      ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunSaved } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,
@@ -1936,7 +1967,7 @@ function vector(plan: Plan): number[] {
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5)];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

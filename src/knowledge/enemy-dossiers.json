@@ -469,12 +469,12 @@
    "act": 2,
    "hp": {
     "a7": 161,
-    "a8": 169
+    "a8": 171
    },
-   "danger": "活力火花:我方每打一张技能,棱柱本回合每段+2。JAB 15→RADIATE→WHIRLWIND 5×3。K39J 21血T1无格挡吃15,T3死;4UWK 9血进场",
-   "win_pattern": "赢局都是较高HP进场,掉20-39;攻击为主少打技能",
+   "danger": "活力火花:我方每打一张技能,棱柱本回合每段+2(N95W 4)。JAB 15→RADIATE→WHIRLWIND 5×3,防御之后刺击 15→19。K39J 21血T1无格挡吃15,T3死;4UWK 9血进场;KGR6 25.2/回合、N95W 24.6/回合,都在60%以下进场、5回合死、棱柱剩45-48",
+   "win_pattern": "赢局都是较高HP进场,掉20-39;攻击为主少打技能;每回合≥35在5回合内打完171",
    "entry_hp_pct": 0.7,
-   "need_damage_per_turn": null,
+   "need_damage_per_turn": 35,
    "must_have": [
     "frontload",
     "strength"
@@ -484,12 +484,15 @@
     "damage"
    ],
    "avoid": "低于30%血进场;回合里连打多张技能格挡",
-   "deaths": 2,
+   "deaths": 4,
    "evidence": [
     "K39JRY3WW4VM",
     "4UWKHE61JLK4",
     "THMGB35RGDSD",
-    "CRRPX9MWJZGM"
+    "CRRPX9MWJZGM",
+    "KQK207TQ9BQ1",
+    "KGR6WH5YJ743",
+    "N95WHBGC4CG9"
    ]
   },
   "MECHA_KNIGHT": {
@@ -811,8 +814,8 @@
     "a7": 84,
     "a8": 88
    },
-   "danger": "石虫头槌15(之后一回合晕),蜜虫Buff后痛殴18,丝虫毒液。X4QR 69→34(T1/T2各吃15/16),F8HR −34,K39J −32",
-   "win_pattern": "先打下一招是头槌/痛殴的那只;手里留防御",
+   "danger": "石虫头槌15:失衡——头槌被完全格挡(当回合格挡≥15)它才会晕、跳过下一招,挡不满就每回合都打15。蜜虫Buff后痛殴18,丝虫毒液。X4QR 69→34(T1/T2各吃15/16),F8HR −34,K39J −32;N95W F19 石虫头槌4回合没挡满一次 −18/−15/−5/−9(T3 防御+防御+坚毅17格挡本可让它晕)",
+   "win_pattern": "先打下一招是头槌/痛殴的那只;手里留防御;石虫头槌那回合凑够≥15格挡挡满,换它下回合晕",
    "entry_hp_pct": 0.5,
    "need_damage_per_turn": null,
    "must_have": [
@@ -828,7 +831,8 @@
     "X4QRH94TSFG2",
     "F8HR4M65MJCG",
     "K39JRY3WW4VM",
-    "12ZGL23T341Q"
+    "12ZGL23T341Q",
+    "N95WHBGC4CG9"
    ],
    "ids": [
     "BOWLBUG_ROCK",

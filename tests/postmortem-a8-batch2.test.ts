@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from "vitest";
 
+import { dossierFor } from "../src/knowledge/dossiers.js";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { damageGap, deckDamageParts, deckDamagePerTurn } from "../src/strategy/boss-clock.js";
@@ -139,5 +140,38 @@ describe("Pact's End deals nothing with fewer than 3 cards the exhaust pile can 
     const text = decision?.kind === "act" ? decision.rationale : JSON.stringify(decision);
     expect(text).not.toMatch(/code: 契约终结/);
     if (decision?.kind === "act") expect(decision.intent).not.toEqual({ action: "select_deck_card", option_index: 2 });
+  });
+});
+
+describe("Imbalanced: a fully blocked Rock Bowlbug is stunned for its next move (N95W F19 T3)", () => {
+  it("38/80, Headbutt 15: 'Defend, Defend, True Grit' (17 block) is offered and says it stuns; the HP guard falls back to it (logged: 'Defend, Defend, Strike', -5, then -9 on T4)", () => {
+    const fx = logged("n95w-f19-t3");
+    const { lines } = combatLines(fx);
+    const stun = lines.find((line) => line["stuns"] !== undefined)!;
+    expect(String(stun["plays"])).toMatch(/防御, then 防御, then 坚毅/);
+    expect(Number(stun["hp_lost"])).toBe(0);
+    expect(String(stun["stuns"])).toMatch(/盛碗虫（石）: its attack fully blocked \(Imbalanced\)/);
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    const rank1 = Object.keys((decision.questions["plan"] as { criteria: Record<string, string> }).criteria)[0]!;
+    const resolved = decision.resolve({ plan: { type: "choice", choice: rank1, confidence: 0.9, probabilities: {}, raw: {} } } as never);
+    // Whatever Jev picks, the turn's line blocks the Headbutt in full (the guard's fallback is the stun line).
+    expect(resolved.rationale).toMatch(/Jev chose/);
+    if (/HP guard/.test(resolved.rationale)) expect(resolved.rationale).toMatch(/防御, 防御, 坚毅/);
+  });
+
+  it("the dossier no longer says the Rock Bowlbug stuns itself after Headbutt", () => {
+    const rock = dossierFor("BOWLBUG_ROCK")!;
+    expect(rock.danger).not.toMatch(/之后一回合晕/);
+    expect(rock.danger).toMatch(/完全格挡/);
+  });
+});
+
+describe("Infested Prism dossier: A8 HP, need a turn, deaths and evidence (4th death, N95W)", () => {
+  it("hp.a8 171, need 35, deaths 4 with N95W and KGR6 in the evidence", () => {
+    const prism = dossierFor("INFESTED_PRISM")!;
+    expect(prism.hp?.a8).toBe(171);
+    expect(prism.need_damage_per_turn).toBe(35);
+    expect(prism.deaths).toBeGreaterThanOrEqual(4);
+    expect(prism.evidence).toEqual(expect.arrayContaining(["N95WHBGC4CG9", "KGR6WH5YJ743"]));
   });
 });

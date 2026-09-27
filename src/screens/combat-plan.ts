@@ -453,6 +453,10 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       ...(powerAmount(enemy, "ASLEEP_POWER") + powerAmount(enemy, "SLUMBER_POWER") > 0
         ? { wakeHit: Math.round((maxMoveDamage(str(enemy["enemy_id"])) ?? 0) + powerAmount(enemy, "STRENGTH_POWER")) || undefined }
         : {}),
+      // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
+      ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
+        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
+        : {}),
       vitalSpark: powerAmount(enemy, "VITAL_SPARK_POWER"),
       ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
       // Waterfall Giant shows Buff on every move, but that is only Steam Eruption stacking: racing it
@@ -577,6 +581,7 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
     const regen = plan.steps.some((step) => step.cardId.startsWith("POTION:REGEN_POTION:"));
     summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : regen ? "Regen heals on later turns (and any power set up)" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
   }
+  if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
