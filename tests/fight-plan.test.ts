@@ -191,6 +191,17 @@ describe("planFit", () => {
     expect(fit).toBe("plays planned setup Inflame; 12 damage to the kill-first enemy; drinks Fire Potion the plan keeps for a later fight");
     expect(planFit(plan(), [{ cardId: "STRIKE_R", name: "Strike" }], 0)).toBe("neutral");
   });
+
+  it("Dominate before the planned Vulnerable is not setup; burst potions are tagged (WR2Y F33 T1)", () => {
+    const p = plan({ setup: ["DOMINATE", "MOLTEN_FIST"], potions: { FLEX_POTION: "big_hit" } });
+    const steps = [
+      { cardId: "DOMINATE", name: "Dominate" },
+      { cardId: "POTION:FLEX_POTION:0", name: "potion Flex Potion" },
+      { cardId: "MOLTEN_FIST", name: "Molten Fist" },
+    ];
+    const fit = planFit(p, steps, null, { setup: [false, false, true], early: ["Dominate"] });
+    expect(fit).toBe("plays planned setup Molten Fist; plays Dominate before the planned Vulnerable (almost no Strength from it); drinks Flex Potion, the plan's potion for the kill turn");
+  });
 });
 
 describe("needsReplan", () => {
@@ -571,6 +582,26 @@ describe("default kill-first target without a plan (CWU9 F48, WYF0 F17)", () => 
     const text = targets(raw);
     expect(text).toContain("-> KIN_PRIEST");
     expect(text).not.toContain("-> KIN_FOLLOWER");
+  });
+});
+
+describe("setup lines count Dominate only after the Vulnerable (WR2Y F33 T1)", () => {
+  it("code plays Bash before the planned Dominate", () => {
+    const raw = bossTurnOne();
+    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+    const combat = raw["combat"] as Raw;
+    const hand = combat["hand"] as Raw[];
+    const bash = hand.find((card) => card["card_id"] === "BASH")!;
+    bash["dynamic_values"] = [{ name: "Damage", base_value: 8, current_value: 8 }, { name: "VulnerablePower", base_value: 2, current_value: 2 }];
+    combat["hand"] = [
+      ...hand.filter((card) => card["card_id"] !== "INFLAME"),
+      { ...bash, index: 3, card_id: "DOMINATE", name: "Dominate", card_type: "Skill", energy_cost: 1, dynamic_values: [{ name: "VulnerablePower", base_value: 1, current_value: 1 }] },
+    ];
+    const e = env(raw, { fightPlan: "v1" });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["DOMINATE"], potions: {} });
+    const decision = planCombatTurn(e);
+    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
+    expect(text).toMatch(/BASH[^"]*Dominate/);
   });
 });
 

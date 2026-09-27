@@ -1067,7 +1067,32 @@ function planTurn(env: DecisionEnv): Decision | null {
   const hallwayGuard =
     (kind === "monster" || kind === "unknown") && (actNumber >= 2 || (state.run?.ascension ?? 0) >= 5) && playerSim.hp < playerSim.maxHp * 0.6;
   const hallwayGuardSlack = Math.max(6, playerSim.hp * 0.15);
-  const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
+  // Which steps of a line are the plan's setup, with the Vulnerable the line's own earlier steps apply:
+  // Bash then Dominate is setup, Dominate first is not (WR2Y F33 T1).
+  const lineSetup = (plan: Plan): { setup: boolean[]; early: string[] } => {
+    const vulnerable = new Map(enemies.map((enemy) => [enemy.index, enemy.vulnerable]));
+    const early: string[] = [];
+    const setup = plan.steps.map((step) => {
+      const vulnerableBefore = step.target === null ? 0 : vulnerable.get(step.target) ?? 0;
+      const model = cardFor(step, hand);
+      if (model && model.vulnerable > 0) {
+        if (model.target === "all") for (const [index, stacks] of vulnerable) vulnerable.set(index, stacks + model.vulnerable);
+        else if (step.target !== null) vulnerable.set(step.target, vulnerableBefore + model.vulnerable);
+      }
+      if (step.cardId === "MOLTEN_FIST" && step.target !== null && vulnerableBefore > 0) vulnerable.set(step.target, (vulnerable.get(step.target) ?? 0) + vulnerableBefore);
+      if (fightPlan === null || !fightPlan.setup.includes(step.cardId)) return false;
+      if (step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") {
+        if (vulnerableBefore === 0) early.push(step.name);
+        return vulnerableBefore > 0;
+      }
+      return setupStep(step);
+    });
+    return { setup, early };
+  };
+  const setupCount = (plan: Plan) => {
+    const { setup } = lineSetup(plan);
+    return new Set(plan.steps.filter((_, index) => setup[index]).map((step) => step.cardId)).size;
+  };
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
   // crab every turn) was traded twice for 6 HP and never played; the crabs died at 7 and 38 HP left.
@@ -1168,7 +1193,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const after = plan.outcome.enemyHpAfter.find((entry) => entry.index === focusIndex);
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
-  const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
+  const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan), lineSetup(plan)) } : {});
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   options.forEach((plan, index) => {

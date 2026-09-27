@@ -288,21 +288,33 @@ export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: 
   return false;
 }
 
-/** Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions against the plan. */
+/**
+ * Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions
+ * against the plan. `line` (from the turn planner) says which steps really are setup: Dominate and
+ * Molten Fist only count on a target already Vulnerable when they are played (WR2Y F33 T1: Dominate
+ * at 0 Vulnerable tagged "plays planned setup", +1 Strength instead of ~+6); those are named in
+ * `early`. Without it every planned card id counts.
+ */
 export function planFit(
   plan: FightPlan,
   steps: { cardId: string; name: string }[],
   focusDamage: number | null,
+  line?: { setup: boolean[]; early: string[] },
 ): string {
   const parts: string[] = [];
-  const setup = steps.filter((step) => plan.setup.includes(step.cardId)).map((step) => step.name);
-  if (setup.length > 0) parts.push(`plays planned setup ${setup.join(", ")}`);
+  const setup = steps.filter((step, index) => (line ? line.setup[index] === true : plan.setup.includes(step.cardId))).map((step) => step.name);
+  if (setup.length > 0) parts.push(`plays planned setup ${[...new Set(setup)].join(", ")}`);
+  if (line && line.early.length > 0) parts.push(`plays ${line.early.join(", ")} before the planned Vulnerable (almost no Strength from it)`);
   if (plan.focus && focusDamage !== null && focusDamage > 0) parts.push(`${focusDamage} damage to the kill-first enemy`);
   const drinks = steps.filter((step) => step.cardId.startsWith("POTION:"));
   for (const step of drinks) {
     // Modelled potions are "POTION:<potion id>:<slot>".
-    const use = plan.potions[step.cardId.split(":")[1] ?? ""];
-    if (use === "save" || use === "emergency") parts.push(`drinks ${step.name.replace(/^potion /, "")} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
+    const use = planPotionUse(plan, step.cardId.split(":")[1] ?? "");
+    const name = step.name.replace(/^potion /, "");
+    if (use === "save" || use === "emergency") parts.push(`drinks ${name} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
+    // WR2Y F33 T1: the Flex Potion kept for the double-claw kill turn, drunk on T1 for +8 at Jev 0.39.
+    if (use === "burst") parts.push(`drinks ${name}, the plan's potion for the kill turn`);
+    if (use === "big_hit") parts.push(`drinks ${name}, the plan's potion for a big enemy hit`);
   }
   return parts.length > 0 ? parts.join("; ") : "neutral";
 }
