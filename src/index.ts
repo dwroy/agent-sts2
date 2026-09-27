@@ -312,6 +312,11 @@ async function main(argv: string[]): Promise<number> {
         });
         // Ablation arm "ds-only" (Dai, 2026-09-27): Jev answers nothing (confidence 0 on its first
         // option), so every escalating screen goes to DeepSeek and every other ask falls back to code.
+        // OBSOLETE since DeepSeek plans strategy only and the escalation chain defaults to empty: the
+        // arm only means something with ESCALATION_CHAIN=deepseek set explicitly.
+        if (process.env["ARM"] === "ds-only" && !config.escalation.chain.includes("deepseek")) {
+          process.stdout.write(`${style.yellow("ARM=ds-only is obsolete: without ESCALATION_CHAIN=deepseek nothing escalates, every ask falls back to code")}\n`);
+        }
         if (process.env["ARM"] === "ds-only" && runtime.jev) {
           const jev = runtime.jev;
           jev.ask = async (_state: unknown, questions: import("./jev/questions.js").QuestionSet) => {
@@ -344,6 +349,8 @@ async function main(argv: string[]): Promise<number> {
                     : [],
               )
             : [],
+          // DeepSeek plans strategy whenever it is configured and a plan is on, whatever the chain.
+          ...(config.deepseek && (config.runPlan === "v1" || config.fightPlan === "v1") ? { planner: new DeepSeekClient(config.deepseek) } : {}),
           knowledge: runtime.knowledge,
           maxRuns: number(values["max-runs"], 1),
           maxDecisions: number(values["max-decisions"], 2_000),

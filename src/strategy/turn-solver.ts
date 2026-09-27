@@ -260,6 +260,11 @@ export interface SolverInput {
    * 23 -> 16 HP into a 23 hit).
    */
   nextIncoming?: number;
+  /**
+   * Weight multipliers from the strategic intents (intent.ts solverScale: the fight objective and the
+   * run's hp_policy); 1/1/1 when absent.
+   */
+  intentScale?: { hp: number; damage: number; lasting: number };
   maxNodes?: number;
 }
 
@@ -1148,6 +1153,10 @@ export function weightsFor(input: SolverInput): Weights {
   // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
   // the same HP; Dismantle x2 on T7 would have killed the beetle).
   const vulnerable = 2.5 + Math.min(4, 1.5 * (input.vulnerablePayoffs ?? 0));
+  if (input.intentScale) {
+    hp *= input.intentScale.hp;
+    damage *= input.intentScale.damage;
+  }
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable, weak: 1.5, strength: 5 };
 }
 
@@ -1433,7 +1442,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // less the later it comes.
     const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, input, weights) * fightLength * earliness;
+    score += lastingValue(sim, input, weights) * fightLength * earliness * (input.intentScale?.lasting ?? 1);
     score += drawScoreAt(sim.draws, sim.energy);
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
     score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);

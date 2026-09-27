@@ -22,6 +22,8 @@ export interface PickOption {
   label?: string;
   /** Kept among the model's options when the list is pruned to `maxModelOptions`, like skip/leave. */
   keepInView?: boolean;
+  /** The soft strategic intent this option breaks (intent.ts label): Jev picking it is a deviation. */
+  intentBreak?: string;
 }
 
 export interface PickDecisionParams {
@@ -43,6 +45,8 @@ export interface PickDecisionParams {
   maxModelOptions?: number;
   /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
   escalateBelow?: number;
+  /** The run plan version in force (deviations are logged per version). */
+  planVersion?: number | null;
 }
 
 export function bestOption(options: PickOption[]): PickOption {
@@ -135,6 +139,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
           rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}`,
           confidence: answer.confidence,
           fallback: false,
+          ...deviationOf(trusted, params.planVersion),
         };
       }
 
@@ -149,9 +154,14 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}`,
         confidence: answer.confidence,
         fallback: false,
+        ...deviationOf(chosen, params.planVersion),
       };
     },
   };
+}
+
+function deviationOf(option: PickOption, version: number | null | undefined): Pick<ResolvedAction, "deviation"> {
+  return option.intentBreak ? { deviation: { intent: option.intentBreak, runPlanVersion: version ?? null } } : {};
 }
 
 /** " (why: …)" from an option's summary, when it carries a `why`. */

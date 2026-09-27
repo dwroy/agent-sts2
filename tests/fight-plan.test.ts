@@ -1,7 +1,8 @@
 /**
- * FIGHT_PLAN=v1: DeepSeek's one plan per elite/boss fight — parsing against the board, what it does to
- * potion costs and offers, the plan-fit tag, re-plans, the log round trip, and its effect on the turn
- * planner (no per-turn escalation; a setup line becomes a question for Jev).
+ * FIGHT_PLAN=v1: DeepSeek's strategic intents for a fight (objective, kill priority) — parsing and
+ * validation against the board and the run plan, re-plans, the log round trip (old-format plans
+ * included), and how code and Jev carry the intents out: solver weights, the HP guard, the reserve,
+ * compliance labels (no per-turn escalation).
  */
 
 import { mkdtempSync, rmSync } from "node:fs";
@@ -23,12 +24,12 @@ import {
   loadFightPlan,
   logFightPlan,
   needsReplan,
+  normalizeFightPlan,
   parseFightPlan,
-  planFit,
-  planOffersPotion,
-  planPotionCost,
   type FightPlan,
 } from "../src/strategy/fight-plan.js";
+import { combatFit } from "../src/strategy/intent.js";
+import type { RunPlan } from "../src/strategy/run-plan.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);
@@ -93,15 +94,24 @@ const plan = (over: Partial<FightPlan> = {}): FightPlan => ({
   fight: "1:9",
   kind: "boss",
   enemyIds: ["LAGAVULIN_MATRIARCH"],
-  approach: "setup",
-  setup: ["INFLAME"],
-  focus: "LAGAVULIN_MATRIARCH",
-  potions: { FIRE_POTION: "save" },
-  keyTurns: "",
-  summary: "Inflame first, then race",
+  objective: "scale_then_kill",
+  killPriority: ["LAGAVULIN_MATRIARCH"],
+  threat: "",
+  summary: "set up Strength, then race",
   replans: 0,
+  validator: [],
   ...over,
 });
+
+/** A run plan of the test run (the combat planner ignores plans of other runs). */
+const runPlan = (over: Partial<RunPlan> = {}): RunPlan => ({
+  runId: "TESTRUN123", act: 2, floor: 9, hpPct: 0.69, trigger: "start", archetype: "", want: [], avoid: [], remove: [], blockTarget: null,
+  hpPolicy: "balanced", routeRisk: "normal", entryHp: null, reserve: [], needs: [], avoidRoles: [], bossPrep: "", summary: "", version: 1, changes: [], validator: [],
+  ...over,
+});
+
+/** A copy of the test knowledge where the Jaw Worm is an Elite. */
+const eliteKnowledge = { ...testKnowledge, monster: (id: string) => (id === "JAW_WORM" ? { ...testKnowledge.monster(id)!, type: "Elite" } : testKnowledge.monster(id)) } as typeof testKnowledge;
 
 describe("FIGHT_PLAN config", () => {
   it("is off by default, v1 when set, and rejects other values", () => {
@@ -115,34 +125,94 @@ describe("parseFightPlan", () => {
   const state = parseGameState(bossTurnOne());
   const base = { runId: "TESTRUN123", fight: fightKey(state), kind: "boss", replans: 0 };
 
-  it("keeps deck cards, board enemies and belt potions; drops the rest", () => {
+  it("reads the objective and kill priority; unknown enemies and tactical orders are dropped with a reason", () => {
     const parsed = parseFightPlan(
       {
-        approach: "SETUP",
-        setup_cards: ["INFLAME+", "DEMON_FORM", "Bash", "INFLAME"],
-        focus_enemy: "Lagavulin Matriarch",
-        potions: { FIRE_POTION: "big_hit", BLOCK_POTION: "early", "Fire Potion": "nonsense" },
-        key_turns: "T3 big hit",
+        objective: "Scale_Then_Kill",
+        kill_priority: ["Lagavulin Matriarch", "NOBODY"],
+        potions: { FIRE_POTION: "early" },
+        setup_cards: ["INFLAME"],
+        threat: "T3 big hit",
         summary: "set up, then race",
       },
       state,
       testKnowledge,
       base,
     );
-    expect(parsed.approach).toBe("setup");
-    expect(parsed.setup).toEqual(["INFLAME", "BASH"]);
-    expect(parsed.focus).toBe("LAGAVULIN_MATRIARCH");
-    // An offensive potion's big_hit is its burst turn (6HRZ, WB02).
-    expect(parsed.potions).toEqual({ FIRE_POTION: "burst" });
+    expect(parsed.objective).toBe("scale_then_kill");
+    expect(parsed.killPriority).toEqual(["LAGAVULIN_MATRIARCH"]);
+    expect(parsed.threat).toBe("T3 big hit");
     expect(parsed.enemyIds).toEqual(["LAGAVULIN_MATRIARCH"]);
-    expect(parsed.fight).toBe("1:9");
+    const notes = parsed.validator.join(" | ");
+    expect(notes).toMatch(/kill_priority: NOBODY not in this fight, dropped/);
+    expect(notes).toMatch(/potion timing FIRE_POTION: early ignored/);
+    expect(notes).toMatch(/setup_cards ignored/);
   });
 
-  it("falls back to race and no focus on unusable values", () => {
-    const parsed = parseFightPlan({ approach: "yolo", focus_enemy: "NOBODY", setup_cards: "INFLAME" }, state, testKnowledge, base);
-    expect(parsed.approach).toBe("race");
-    expect(parsed.focus).toBeNull();
-    expect(parsed.setup).toEqual([]);
+  it("falls back to an objective from HP on unusable values, and reads old-format replies", () => {
+    const parsed = parseFightPlan({ objective: "yolo", focus_enemy: "NOBODY" }, state, testKnowledge, base);
+    expect(parsed.objective).toBe("kill_fast");
+    expect(parsed.killPriority).toEqual([]);
+    expect(parsed.validator.join(" | ")).toMatch(/objective "yolo" unknown/);
+    const old = parseFightPlan({ approach: "setup", focus_enemy: "Lagavulin Matriarch", key_turns: "T3" }, state, testKnowledge, base);
+    expect(old.objective).toBe("scale_then_kill");
+    expect(old.killPriority).toEqual(["LAGAVULIN_MATRIARCH"]);
+  });
+});
+
+describe("fight plan validator (不乱指挥)", () => {
+  const board = (hp: number, incoming = 6): GameState => {
+    const raw = bossTurnOne();
+    ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = hp;
+    (raw["run"] as Raw)["current_hp"] = hp;
+    ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: String(incoming), damage: incoming, hits: 1, total_damage: incoming }];
+    return parseGameState(raw);
+  };
+  const parse = (state: GameState, json: Record<string, unknown>, kind = "boss", run: RunPlan | null = null) =>
+    parseFightPlan(json, state, testKnowledge, { runId: "TESTRUN123", fight: fightKey(state), kind, replans: 0 }, run);
+
+  it("setup at low HP or against a huge hit becomes preserve_hp (DeepSeek planned setup at 14 HP)", () => {
+    const low = parse(board(14), { objective: "scale_then_kill" });
+    expect(low.objective).toBe("preserve_hp");
+    expect(low.validator.join(" | ")).toMatch(/scale_then_kill at 18% HP → preserve_hp/);
+    const hit = parse(board(55, 40), { objective: "scale_then_kill" });
+    expect(hit.objective).toBe("preserve_hp");
+    expect(parse(board(55), { objective: "scale_then_kill" }).objective).toBe("scale_then_kill");
+  });
+
+  it("a fight plan cannot release a potion the run plan reserves (run plan wins)", () => {
+    const state = parseGameState(combatPayload());
+    const parsed = parse(state, { objective: "kill_fast", potions: { FIRE_POTION: "early" } }, "elite", runPlan({ reserve: ["damage"] }));
+    expect(parsed.validator.join(" | ")).toMatch(/FIRE_POTION "early" ignored: the run plan reserves it for the act boss/);
+    // The plan has no potion field at all: nothing reaches the solver.
+    expect(Object.keys(parsed)).not.toContain("potions");
+  });
+
+  it("kill_fast under hp_policy preserve stays only when code expects a fast win", async () => {
+    const { validateFightPlan } = await import("../src/strategy/plan-validator.js");
+    const ctx = { hpPct: 0.7, hp: 56, incoming: 6, enemyIds: ["JAW_WORM"], together: [], potions: [], kind: "elite" };
+    const check = (turnsToKill: number | null, kind = "elite") => {
+      const fight = plan({ objective: "kill_fast", killPriority: [] });
+      const notes = validateFightPlan(fight, {}, runPlan({ hpPolicy: "preserve" }), { ...ctx, turnsToKill, kind });
+      return { objective: fight.objective, notes: notes.join(" | ") };
+    };
+    expect(check(2).objective).toBe("kill_fast");
+    expect(check(6)).toMatchObject({ objective: "preserve_hp", notes: expect.stringMatching(/under run hp_policy preserve, fight not winnable in 3 turns \(code estimate 6\)/) });
+    expect(check(null).objective).toBe("preserve_hp");
+    // A boss is fought to its end whatever the policy.
+    expect(check(9, "boss").objective).toBe("kill_fast");
+  });
+
+  it("drops an unknown enemy and enemies that must die together from the kill priority", () => {
+    const raw = combatPayload();
+    const enemies = (raw["combat"] as Raw)["enemies"] as Raw[];
+    enemies[1]!["enemy_id"] = "ROCKET";
+    enemies[1]!["powers"] = [{ index: 0, power_id: "CRAB_RAGE_POWER", name: "Rage", amount: 1, is_debuff: false }];
+    const first = String(enemies[0]!["enemy_id"]);
+    const parsed = parse(parseGameState(raw), { objective: "kill_fast", kill_priority: ["GHOST", "ROCKET", first] }, "elite");
+    expect(parsed.killPriority).toEqual([first]);
+    expect(parsed.validator.join(" | ")).toMatch(/GHOST not in this fight/);
+    expect(parsed.validator.join(" | ")).toMatch(/ROCKET must die together/);
   });
 });
 
@@ -158,49 +228,17 @@ describe("fightPlanInput", () => {
   });
 });
 
-describe("plan potion rules", () => {
-  const ctx = { turn: 1, bigHit: false, pressed: false };
-  it("frees early potions in turns 1-2, prices saved ones up, leaves unlisted ones alone", () => {
-    expect(planPotionCost(plan({ potions: { X: "early" } }), "X", ctx)).toEqual({ free: true, extra: 0 });
-    expect(planPotionCost(plan({ potions: { X: "early" } }), "X", { ...ctx, turn: 3 })).toBeNull();
-    expect(planPotionCost(plan({ potions: { X: "save" } }), "X", ctx)).toEqual({ free: false, extra: 20 });
-    expect(planPotionCost(plan({ potions: { X: "big_hit" } }), "X", { ...ctx, bigHit: true })).toEqual({ free: true, extra: 0 });
-    expect(planPotionCost(plan({ potions: { X: "big_hit" } }), "X", { ...ctx, bigHit: true, offensive: true })).toBeNull();
-    expect(planPotionCost(plan(), "OTHER", ctx)).toBeNull();
-    expect(planPotionCost(null, "X", ctx)).toBeNull();
-  });
-  it("never stands between a pressed turn and a potion", () => {
-    expect(planPotionCost(plan({ potions: { X: "save" } }), "X", { ...ctx, pressed: true })).toBeNull();
-    expect(planOffersPotion(plan({ potions: { X: "save" } }), "X", { ...ctx, costly: false, pressed: true })).toBe(true);
-  });
-  it("offers unmodelled potions by plan: early now, save never, unlisted by the default rule", () => {
-    const offer = { ...ctx, costly: false };
-    expect(planOffersPotion(plan({ potions: { X: "early" } }), "X", offer)).toBe(true);
-    expect(planOffersPotion(plan({ potions: { X: "save" } }), "X", offer)).toBe(false);
-    expect(planOffersPotion(plan({ potions: { X: "emergency" } }), "X", { ...offer, costly: true })).toBe(true);
-    expect(planOffersPotion(plan(), "Y", offer)).toBeNull();
-  });
-});
-
-describe("planFit", () => {
-  it("names planned setup cards, focus damage and potions drunk against the plan", () => {
-    const fit = planFit(plan(), [
-      { cardId: "INFLAME", name: "Inflame" },
-      { cardId: "POTION:FIRE_POTION:0", name: "potion Fire Potion" },
-    ], 12);
-    expect(fit).toBe("plays planned setup Inflame; 12 damage to the kill-first enemy; drinks Fire Potion the plan keeps for a later fight");
-    expect(planFit(plan(), [{ cardId: "STRIKE_R", name: "Strike" }], 0)).toBe("neutral");
-  });
-
-  it("Dominate before the planned Vulnerable is not setup; burst potions are tagged (WR2Y F33 T1)", () => {
-    const p = plan({ setup: ["DOMINATE", "MOLTEN_FIST"], potions: { FLEX_POTION: "big_hit" } });
-    const steps = [
-      { cardId: "DOMINATE", name: "Dominate" },
-      { cardId: "POTION:FLEX_POTION:0", name: "potion Flex Potion" },
-      { cardId: "MOLTEN_FIST", name: "Molten Fist" },
-    ];
-    const fit = planFit(p, steps, null, { setup: [false, false, true], early: ["Dominate"] });
-    expect(fit).toBe("plays planned setup Molten Fist; plays Dominate before the planned Vulnerable (almost no Strength from it); drinks Flex Potion, the plan's potion for the kill turn");
+describe("combatFit (compliance labels for Jev)", () => {
+  const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, slack: 5, focusName: "Louse" };
+  const line = (over: Partial<Parameters<typeof combatFit>[2]> = {}) => ({ hpLoss: 4, damage: 30, setup: 0, winsFight: false, focusDamage: null, ...over });
+  it("says which intent a line fits or breaks", () => {
+    expect(combatFit("preserve_hp", "balanced", line(), field)).toEqual({ label: "fits preserve_hp: loses the least HP", breaks: false });
+    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12 }), field)).toEqual({ label: "breaks preserve_hp: loses 8 more HP than the safest line", breaks: true });
+    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1 }), field).label).toBe("fits scale_then_kill: sets up (powers / Strength)");
+    expect(combatFit("scale_then_kill", "balanced", line(), field)).toEqual({ label: "breaks scale_then_kill: skips setup another line plays", breaks: true });
+    expect(combatFit("kill_fast", "balanced", line({ damage: 10 }), field).label).toBe("breaks kill_fast: 20 less damage than the best line");
+    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6 }), field).label).toBe("breaks hp_policy preserve: loses 8 more HP than the safest line; hits kill-priority Louse for 6");
+    expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field).breaks).toBe(false);
   });
 });
 
@@ -227,6 +265,13 @@ describe("fight plan log", () => {
       expect(loadFightPlan(file, "TESTRUN123", "1:9")?.summary).toBe("new");
       expect(loadFightPlan(file, "TESTRUN123", "1:10")).toBeNull();
       expect(loadFightPlan(join(dir, "missing.jsonl"), "TESTRUN123", "1:9")).toBeNull();
+      // A plan logged in the old format (approach, setup cards, focus, potion timings) is read as intents.
+      const old = { runId: "TESTRUN123", fight: "1:11", kind: "elite", enemyIds: [], approach: "defend", setup: ["INFLAME"], focus: "JAW_WORM", potions: { FIRE_POTION: "early" }, keyTurns: "T3 hits hard", summary: "old", replans: 0 };
+      logFightPlan(file, { run: "TESTRUN123", fight: "1:11", plan: old as never });
+      expect(loadFightPlan(file, "TESTRUN123", "1:11")).toEqual({
+        runId: "TESTRUN123", fight: "1:11", kind: "elite", enemyIds: [], objective: "preserve_hp", killPriority: ["JAW_WORM"], threat: "T3 hits hard", summary: "old", replans: 0, validator: [],
+      });
+      expect(normalizeFightPlan({ approach: "race" }).objective).toBe("race");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -247,7 +292,7 @@ describe("turn planner with a fight plan", () => {
     expect((on as AskDecision).escalate).toBeUndefined();
   });
 
-  it("puts a planned setup line in front of Jev with the plan and its fit tag", () => {
+  it("puts a setup line in front of Jev under scale_then_kill, with the intents and compliance labels", () => {
     const e = env(bossTurnOne(), { fightPlan: "v1" });
     e.screenMemory.fightPlan = plan({ fight: fightKey(e.state) });
     const decision = planCombatTurn(e);
@@ -258,31 +303,31 @@ describe("turn planner with a fight plan", () => {
     }
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
-    expect(ask.state["fight_plan"]).toMatchObject({ approach: "setup", setup_first: ["INFLAME"] });
+    expect(String((ask.state["strategy"] as string[])[0])).toMatch(/^fight objective scale_then_kill: play powers/);
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => String(text).includes("plays planned setup"))).toBe(true);
+    expect(Object.values(criteria).some((text) => String(text).includes("fits scale_then_kill: sets up"))).toBe(true);
   });
 
   it("ignores a plan made for another fight", () => {
     const e = env(bossTurnOne(), { fightPlan: "v1" });
     e.screenMemory.fightPlan = plan({ fight: "0:3" });
     const decision = planCombatTurn(e);
-    if (decision?.kind === "ask") expect(decision.state["fight_plan"]).toBeUndefined();
+    if (decision?.kind === "ask") expect(decision.state["strategy"]).toBeUndefined();
   });
 
-  it("counts planned setup cards: one of two played is not the plan (CAYK F48 T3)", () => {
+  it("scale_then_kill offers the line with both powers (CAYK F48 T3: one of two played is not the setup)", () => {
     const raw = bossTurnOne();
     const combat = raw["combat"] as Raw;
     const hand = combat["hand"] as Raw[];
     const inflame = hand[3]!;
     combat["hand"] = [...hand, { ...inflame, index: 4, card_id: "DEMON_FORM", name: "Demon Form", energy_cost: 1 }];
     const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["INFLAME", "DEMON_FORM"] });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state) });
     const decision = planCombatTurn(e);
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => String(text).includes("Inflame, Demon Form") || String(text).includes("Demon Form, Inflame"))).toBe(true);
+    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("fits scale_then_kill"))).toBe(true);
   });
 
   it("keeps a potion instead of drinking it for a hallway kill when a dry line costs little (CAYK F37-F40)", () => {
@@ -339,19 +384,23 @@ describe("turn planner with a fight plan", () => {
     expect(nodeWeight("Elite", 0.9, 100, 6, 1)).toBeGreaterThan(0);
   });
 
-  it("the HP guard never swaps into a line drinking a potion the plan keeps (MGJ8 F11 T1)", () => {
-    const raw = bossTurnOne();
-    const combat = raw["combat"] as Raw;
-    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "30", damage: 30, hits: 1, total_damage: 30 }];
-    const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { FIRE_POTION: "emergency" } });
-    const decision = planCombatTurn(e);
-    if (decision?.kind !== "ask") return;
-    const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
-    for (const key of Object.keys(criteria).filter((k) => k.startsWith("plan"))) {
-      const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
-      if (resolved.guard) expect(resolved.guard.plan).not.toContain("Fire Potion");
-    }
+  it("reserved potions are in no line or option of code's or Jev's before the boss (MGJ8 F11 T1, EJXC F28)", () => {
+    const raw = combatPayload();
+    ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = 30;
+    const shown = (reserve: RunPlan["reserve"]): string => {
+      const e = env(raw, { knowledge: eliteKnowledge });
+      e.screenMemory.runPlan = runPlan({ reserve });
+      const decision = planCombatTurn(e);
+      if (decision?.kind !== "ask") return JSON.stringify([decision?.kind === "act" ? [decision.intent, decision.rationale] : null, e.screenMemory.combatPlan?.remaining]);
+      const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      // Every option Jev could pick, and what the HP guard would play instead.
+      const resolved = Object.keys(criteria).map((key) => decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } }));
+      return JSON.stringify([criteria, resolved.map((entry) => [entry.intent, entry.guard])]);
+    };
+    // Without a reserve the elite fight drinks the Fire Potion (RVL2 F31 below).
+    expect(shown([])).toMatch(/Fire Potion|use_potion/);
+    expect(shown(["damage"])).not.toMatch(/Fire Potion|use_potion/);
+    expect(shown(["any"])).not.toMatch(/Fire Potion|use_potion/);
   });
 
   it("code's own elite/boss pick meets the HP guard bound (7DXA F33 T1-T2)", () => {
@@ -365,44 +414,6 @@ describe("turn planner with a fight plan", () => {
     const lost = Number(/hp -(\d+)/.exec(decision.rationale)?.[1] ?? "0");
     // Defend alone blocks 5 of 14: the cheapest line loses 9; the boss bound is max(4, 10% of 55).
     expect(lost).toBeLessThanOrEqual(9 + 5.5);
-  });
-
-  it("drinks an unmodelled defensive potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
-    const raw = bossTurnOne();
-    raw["turn"] = 5;
-    const combat = raw["combat"] as Raw;
-    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14x3", damage: 14, hits: 3, total_damage: 42 }];
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["potion_id"] = "LIQUID_MEMORIES";
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["requires_target"] = false;
-    // A potion that blunts the hit (big_hit is only for those: 92MW F29).
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["description"] = "获得 20 点格挡。";
-    const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
-    const decision = planCombatTurn(e);
-    expect(decision?.kind).toBe("act");
-    expect(decision?.kind === "act" ? decision.intent : null).toMatchObject({ action: "use_potion", option_index: 0 });
-    // Not on a quiet turn.
-    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "3", damage: 3, hits: 1, total_damage: 3 }];
-    const quiet = env(raw, { fightPlan: "v1" });
-    quiet.screenMemory.fightPlan = plan({ fight: fightKey(quiet.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
-    const calm = planCombatTurn(quiet);
-    expect(calm?.kind === "act" ? calm.intent.action : "ask").not.toBe("use_potion");
-  });
-
-  it("auto-drinks one potion per id a fight: a second copy is not planned (H5MZ F39 T1: both Power Potions)", () => {
-    const raw = bossTurnOne();
-    raw["turn"] = 5;
-    const combat = raw["combat"] as Raw;
-    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14x3", damage: 14, hits: 3, total_damage: 42 }];
-    const potion = ((raw["run"] as Raw)["potions"] as Raw[])[0]!;
-    Object.assign(potion, { potion_id: "LIQUID_MEMORIES", requires_target: false, description: "获得 20 点格挡。" });
-    const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions: { LIQUID_MEMORIES: "big_hit" } });
-    const first = planCombatTurn(e);
-    expect(first?.kind === "act" ? first.intent.action : "ask").toBe("use_potion");
-    // The same board again (the second copy): no second auto-drink this fight.
-    const again = planCombatTurn(e);
-    expect(again?.kind === "act" ? again.label : "ask").not.toBe("combat/plan-potion");
   });
 
   it("per-card fallback counts held Beckons at the end of the turn (F6NT F17 T11)", () => {
@@ -434,23 +445,40 @@ describe("turn planner with a fight plan", () => {
     expect(text).not.toContain("use_potion");
   });
 
-  it("the HP guard keeps a line playing a planned setup card while HP stays healthy (JF99 F33 T4)", () => {
-    const raw = bossTurnOne();
-    const combat = raw["combat"] as Raw;
-    (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
-    ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
-    const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["INFLAME"], potions: {} });
-    const decision = planCombatTurn(e);
-    if (decision?.kind === "act") {
-      expect(decision.label).not.toBe("combat/plan-guarded");
-      return;
-    }
-    const ask = decision as AskDecision;
-    const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    const key = Object.keys(criteria).find((k) => String(criteria[k]).includes("plays planned setup"))!;
-    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
-    expect(resolved.guard).toBeUndefined();
+  it("scale_then_kill protects a setup line from the HP guard unless it risks death (JF99 F33 T4, 5BXM F33)", () => {
+    /** 14 incoming; Demon Form (3 energy) takes all of it, Defend (10 block) + Bash loses 4. */
+    const board = (hp: number): Raw => {
+      const raw = bossTurnOne();
+      const combat = raw["combat"] as Raw;
+      (combat["player"] as Raw)["current_hp"] = hp;
+      (combat["enemies"] as Raw[])[0]!["intents"] = [{ index: 0, intent_type: "Attack", label: "14", damage: 14, hits: 1, total_damage: 14 }];
+      ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
+      combat["hand"] = (combat["hand"] as Raw[]).map((card) =>
+        card["card_id"] === "DEFEND_R" ? { ...card, dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] } :
+        card["card_id"] === "INFLAME" ? { ...card, card_id: "DEMON_FORM", name: "Demon Form", energy_cost: 3 } : card);
+      return raw;
+    };
+    /** Code's own play, or what is played when Jev picks the Demon Form line at 0.4. */
+    const play = (hp: number, objective: FightPlan["objective"] | null) => {
+      const e = env(board(hp), { fightPlan: "v1" });
+      if (objective) e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), objective });
+      const decision = planCombatTurn(e);
+      if (decision?.kind === "act") return { played: decision.rationale, deviation: undefined, label: undefined };
+      const criteria = (decision as AskDecision).questions["plan"]?.type === "choice" ? ((decision as AskDecision).questions["plan"] as { criteria: Record<string, string> }).criteria : {};
+      const key = Object.keys(criteria).find((k) => /"plays":"Demon Form"/.test(criteria[k]!))!;
+      const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
+      return { played: resolved.guard ? `guarded to ${resolved.guard.plan}` : resolved.rationale, deviation: resolved.deviation, label: JSON.parse(criteria[key]!)["intent_fit"] as string | undefined };
+    };
+    // No objective: the guard swaps Demon Form (-14) for Defend + Bash (-4).
+    expect(play(55, null).played).toMatch(/guarded to DEFEND_R, BASH/);
+    // scale_then_kill: the setup line is played (code's own pick, lasting value x1.5, not guarded).
+    expect(play(55, "scale_then_kill").played).toMatch(/Demon Form; hp -14/);
+    // preserve_hp: swapped, and Jev's pick is logged as a deviation of the objective.
+    const preserve = play(55, "preserve_hp");
+    expect(preserve.played).toMatch(/guarded to DEFEND_R, BASH/);
+    expect(preserve.deviation).toMatchObject({ intent: "breaks preserve_hp: loses 10 more HP than the safest line", fightObjective: "preserve_hp" });
+    // At 17 HP the setup line leaves 3 against a 14-ish next hit: it risks death, the guard swaps it.
+    expect(play(17, "scale_then_kill").played).toMatch(/guarded to DEFEND_R, BASH/);
   });
 
 });
@@ -467,68 +495,26 @@ describe("elite/boss potion veto (M812 F28/F33, 9YR9 F17, F3SS F33)", () => {
   });
 });
 
-describe("big_hit on an attack potion (24HM F33)", () => {
-  it("falls back to the default offer rule instead of waiting for an enemy big hit", async () => {
-    const { planOffersPotion } = await import("../src/strategy/fight-plan.js");
-    const p = plan({ potions: { ATTACK_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
-    const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
-    expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
-    expect(planOffersPotion(p, "BLOCK_POTION", calm)).toBe(false);
-  });
-});
-
-describe("burst potions and the boss keep (6HRZ F33 T1, WB02 F33 T1/F29, R2H1, NMLV)", () => {
-  const ctx = { turn: 1, bigHit: true, pressed: false };
-  it("reads big_hit on an offensive potion as burst, with the default cost and offer", () => {
-    const p = plan({ potions: { ENERGY_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
-    expect(planPotionCost(p, "ENERGY_POTION", ctx)).toBeNull();
-    expect(planPotionCost(p, "BLOCK_POTION", ctx)).toEqual({ free: true, extra: 0 });
-    expect(planOffersPotion(p, "ENERGY_POTION", { ...ctx, costly: false })).toBeNull();
-  });
-
-  const decisionText = (raw: Raw, potions: FightPlan["potions"]): string => {
-    const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions });
-    const decision = planCombatTurn(e);
-    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, decision?.kind === "act" ? decision.rationale : null, e.screenMemory.combatPlan?.remaining]);
-  };
-
-  it("code's rank 1 does not drink a burst potion on a turn it kills nothing", () => {
-    const raw = bossTurnOne();
-    // Without a plan the solver drinks the Fire Potion on T1 (boss cost 4).
-    expect(decisionText(raw, {})).toMatch(/Fire Potion|use_potion/);
-    expect(decisionText(raw, { FIRE_POTION: "big_hit" })).not.toMatch(/Fire Potion|use_potion/);
-  });
-
-  it("drinks it on the kill turn", () => {
-    const raw = bossTurnOne();
-    const boss = ((raw["combat"] as Raw)["enemies"] as Raw[])[0]!;
-    boss["current_hp"] = 24;
-    expect(decisionText(raw, { FIRE_POTION: "burst" })).toMatch(/Fire Potion|use_potion/);
-  });
-});
-
-describe("the run plan's boss keep beats a hallway plan's free big_hit (WB02 F29)", () => {
-  const hallway = (): Raw => {
+describe("the reserve is hard even on a costly turn, and released below 25% HP (WB02 F29)", () => {
+  const hallway = (hp: number): Raw => {
     const raw = combatPayload();
     (raw["run"] as Raw)["floor"] = 29;
     Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得 12 点格挡。", requires_target: false, valid_target_indices: [] });
     const combat = raw["combat"] as Raw;
-    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }] }));
+    (combat["player"] as Raw)["current_hp"] = hp;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "12", damage: 12, hits: 1, total_damage: 12 }] }));
     return raw;
   };
-  /** Whether code's own pick (the act, or rank 1 of a question) drinks the potion. */
-  const codeDrinks = (keep: boolean): boolean => {
-    const e = env(hallway(), { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), kind: "monster", setup: [], focus: null, potions: { BLOCK_POTION: "big_hit" } });
-    if (keep) e.screenMemory.runPlan = { savePotions: ["block"] } as never;
+  const shown = (hp: number, reserve: RunPlan["reserve"]): string => {
+    const e = env(hallway(hp));
+    e.screenMemory.runPlan = runPlan({ reserve });
     const decision = planCombatTurn(e);
-    const picked = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria["plan1"] : decision?.kind === "act" ? decision.rationale : null;
-    return /Block Potion/.test(String(picked));
+    return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? [decision.intent, decision.rationale] : null, e.screenMemory.combatPlan?.remaining]);
   };
-  it("drinks it free without a run-plan keep; with one it is no longer code's pick", () => {
-    expect(codeDrinks(false)).toBe(true);
-    expect(codeDrinks(true)).toBe(false);
+  it("a costly turn drinks it without a reserve, never with one, and again below 25% HP", () => {
+    expect(shown(30, [])).toMatch(/Block Potion|use_potion/);
+    expect(shown(30, ["block"])).not.toMatch(/Block Potion|use_potion/);
+    expect(shown(18, ["block"])).toMatch(/Block Potion|use_potion/);
   });
 });
 
@@ -585,8 +571,8 @@ describe("default kill-first target without a plan (CWU9 F48, WYF0 F17)", () => 
   });
 });
 
-describe("setup lines count Dominate only after the Vulnerable (WR2Y F33 T1)", () => {
-  it("code plays Bash before the planned Dominate", () => {
+describe("setup counts Dominate only after the Vulnerable (WR2Y F33 T1)", () => {
+  it("under scale_then_kill code plays Bash before Dominate", () => {
     const raw = bossTurnOne();
     ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
     const combat = raw["combat"] as Raw;
@@ -598,9 +584,9 @@ describe("setup lines count Dominate only after the Vulnerable (WR2Y F33 T1)", (
       { ...bash, index: 3, card_id: "DOMINATE", name: "Dominate", card_type: "Skill", energy_cost: 1, dynamic_values: [{ name: "VulnerablePower", base_value: 1, current_value: 1 }] },
     ];
     const e = env(raw, { fightPlan: "v1" });
-    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: ["DOMINATE"], potions: {} });
+    e.screenMemory.fightPlan = plan({ fight: fightKey(e.state) });
     const decision = planCombatTurn(e);
-    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
+    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision, e.screenMemory.combatPlan?.remaining]);
     expect(text).toMatch(/BASH[^"]*Dominate/);
   });
 });
@@ -692,44 +678,6 @@ describe("Multi Claw next hit (YFG5, ZANM)", () => {
 });
 
 
-describe("burst is for damage/strength/energy potions only (X8HF F33: Swift Potion carried to the death)", () => {
-  const swiftBelt = (raw: Raw): Raw => {
-    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, {
-      potion_id: "SWIFT_POTION", name: "Swift Potion", description: "抽[blue]3[/blue]张牌。", requires_target: false, valid_target_indices: [],
-    });
-    return raw;
-  };
-
-  it("parses burst on a draw, block or Dexterity potion as any; an attack potion keeps it", () => {
-    const raw = swiftBelt(bossTurnOne());
-    ((raw["run"] as Raw)["potions"] as Raw[])[1] = {
-      ...((raw["run"] as Raw)["potions"] as Raw[])[0]!, index: 1, potion_id: "FIRE_POTION", name: "Fire Potion", description: "造成20点伤害。", occupied: true, can_use: true,
-    };
-    const state = parseGameState(raw);
-    const parsed = parseFightPlan({ approach: "race", potions: { SWIFT_POTION: "burst", FIRE_POTION: "burst" } }, state, testKnowledge, {
-      runId: "TESTRUN123", fight: fightKey(state), kind: "boss", replans: 0,
-    });
-    expect(parsed.potions).toEqual({ SWIFT_POTION: "any", FIRE_POTION: "burst" });
-  });
-
-  it("an old plan's burst on Swift, Block or Dexterity costs and offers like no preference", async () => {
-    const { planPotionUse } = await import("../src/strategy/fight-plan.js");
-    const p = plan({ potions: { SWIFT_POTION: "burst", BLOCK_POTION: "burst", DEXTERITY_POTION: "burst", STRENGTH_POTION: "burst" } });
-    expect(planPotionUse(p, "SWIFT_POTION")).toBe("any");
-    expect(planPotionUse(p, "BLOCK_POTION")).toBe("any");
-    expect(planPotionUse(p, "DEXTERITY_POTION")).toBe("any");
-    expect(planPotionUse(p, "STRENGTH_POTION")).toBe("burst");
-    // The Swift line is not filtered as a kept potion: the same pick as with no plan entry at all.
-    const text = (potions: FightPlan["potions"]) => {
-      const e = env(swiftBelt(bossTurnOne()), { fightPlan: "v1" });
-      e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), setup: [], potions });
-      const decision = planCombatTurn(e);
-      return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, e.screenMemory.combatPlan?.remaining]);
-    };
-    expect(text({ SWIFT_POTION: "burst" })).toBe(text({ SWIFT_POTION: "any" }));
-  });
-});
-
 describe("least-loss drinks a modelled draw potion first (X8HF F33 T6: Swift Potion never drunk, Sandpit 1)", () => {
   const dying = (potionId: string, name: string, description: string, withPiles = true): Raw => {
     const raw = combatPayload();
@@ -794,24 +742,6 @@ describe("franticEscapesLeft counts escapes in hand, not the piles (X8HF F33 T5)
   });
 });
 
-describe("the run plan's boss keep stops the fight plan's early drink (UP1C; GZ24 F8)", () => {
-  it("a Regen Potion kept as heal is not auto-drunk on T1 of a hallway fight", () => {
-    const raw = combatPayload();
-    raw["turn"] = 1;
-    (raw["run"] as Raw)["floor"] = 29;
-    Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "REGEN_POTION", name: "Regen Potion", description: "获得[green]5[/green]层[gold]再生[/gold]。", requires_target: false, valid_target_indices: [] });
-    const label = (keep: boolean): string => {
-      const e = env(raw, { fightPlan: "v1" });
-      e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), kind: "monster", setup: [], focus: null, potions: { REGEN_POTION: "early" } });
-      if (keep) e.screenMemory.runPlan = { savePotions: ["heal"] } as never;
-      const decision = planCombatTurn(e);
-      return decision?.kind === "act" ? decision.label : "ask";
-    };
-    expect(label(false)).toBe("combat/plan-potion");
-    expect(label(true)).not.toBe("combat/plan-potion");
-  });
-});
-
 describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, GZ24 F8 T1)", () => {
   const fireLine = (decision: ReturnType<typeof planCombatTurn>): boolean =>
     /Fire Potion|use_potion/.test(JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null));
@@ -821,17 +751,22 @@ describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, 
     return raw;
   };
 
-  it("a potion the run plan keeps for the boss is not on offer within 10 floors of it (not only +20)", () => {
-    const keep = (floor: number) => {
+  it("a potion the run plan reserves for the boss is not on offer in any non-boss fight (not only +20)", () => {
+    const keep = (floor: number, reserve: RunPlan["reserve"] = ["damage"]) => {
       const e = env(hallway(floor));
-      e.screenMemory.runPlan = { savePotions: ["damage"] } as never;
+      e.screenMemory.runPlan = runPlan({ reserve });
       return planCombatTurn(e);
     };
-    // Without the keep the Fire Potion line (+20 damage) is offered.
+    // Without the reserve the Fire Potion line (+20 damage) is offered.
     expect(fireLine(planCombatTurn(env(hallway(29))))).toBe(true);
     expect(fireLine(keep(29))).toBe(false);
-    // Far from the boss the keep does not apply.
-    expect(fireLine(keep(5))).toBe(true);
+    // Far from the boss too (the old 10-floor window let 16 of 17 broken keeps through).
+    expect(fireLine(keep(5))).toBe(false);
+    expect(fireLine(keep(5, ["block"]))).toBe(true);
+    // A plan of another run is not this run's strategy.
+    const other = env(hallway(5));
+    other.screenMemory.runPlan = runPlan({ runId: "OTHER", reserve: ["damage"] });
+    expect(fireLine(planCombatTurn(other))).toBe(true);
   });
 
   it("a potion refused this turn is not offered again on the same turn's re-plan", () => {
@@ -857,7 +792,6 @@ describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, 
 
 describe("attack-potion veto when code's rank 1 drinks the same potion (RVL2 F31 T1)", () => {
   it("is not applied: nothing would be kept, it only swaps lines", () => {
-    const eliteKnowledge = { ...testKnowledge, monster: (id: string) => (id === "JAW_WORM" ? { ...testKnowledge.monster(id)!, type: "Elite" } : testKnowledge.monster(id)) } as typeof testKnowledge;
     const raw = combatPayload();
     ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = 30;
     const decision = planCombatTurn(env(raw, { knowledge: eliteKnowledge })) as AskDecision;
@@ -891,6 +825,18 @@ describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambl
     const shown = text(lethalZero());
     expect(shown).not.toMatch(/Gambler/);
     expect(shown).toMatch(/Block Potion[^}]*emergency/);
+  });
+
+  it("holds a reserved potion back unless the turn is lethal", () => {
+    const shown = (lethal: boolean, reserve: RunPlan["reserve"] = ["damage"]): string => {
+      const e = env(combatPayload({ lethalEndTurn: lethal }), { combatPlanner: "card" });
+      e.screenMemory.runPlan = runPlan({ reserve });
+      const decision = planCombat(e);
+      return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
+    };
+    expect(shown(false, [])).toMatch(/Fire Potion/);
+    expect(shown(false)).not.toMatch(/Fire Potion/);
+    expect(shown(true)).toMatch(/Fire Potion/);
   });
 
   it("offers it with energy left, without the emergency note", () => {

@@ -110,9 +110,9 @@ describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)
     expect(gapCardBonus(gap(9), "BLUDGEON").bonus).toBe(5);
     expect(gapCardBonus(gap(9), "INFLAME").bonus).toBe(7);
     expect(gapCardBonus(gap(40), "INFLAME").bonus).toBe(GAP_BONUS_BIG_MAX);
-    const plan = { mustHave: ["block"] } as never;
+    const plan = { needs: ["block"] } as never;
     expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 0).bonus).toBe(14);
     expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 9).bonus).toBe(7);
-    expect(mustHaveBonus({ mustHave: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
+    expect(mustHaveBonus({ needs: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
   });
 });

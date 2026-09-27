@@ -76,8 +76,8 @@ export function dossierJson(dossier: Dossier & { id: string }, ascension: number
     win_pattern: dossier.win_pattern,
     ...(dossier.entry_hp_pct !== undefined ? { entry_hp_pct: dossier.entry_hp_pct } : {}),
     ...(dossier.need_damage_per_turn ? { need_damage_per_turn: dossier.need_damage_per_turn } : {}),
-    ...(dossier.must_have?.length ? { must_have: dossier.must_have } : {}),
-    ...(dossier.save_potions?.length ? { save_potions: dossier.save_potions } : {}),
+    ...(dossier.must_have?.length ? { needs: dossier.must_have } : {}),
+    ...(dossier.save_potions?.length ? { reserve: dossier.save_potions } : {}),
     ...(dossier.avoid ? { avoid: dossier.avoid } : {}),
     ...(dossier.deaths ? { deaths: dossier.deaths } : {}),
   };

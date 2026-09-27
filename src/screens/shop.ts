@@ -10,9 +10,10 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
-import { cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
+import { cardRoles, cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
+import { currentRunPlan, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
+import { planForbidsCard } from "../strategy/intent.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
@@ -104,6 +105,8 @@ export function planShop(env: DecisionEnv): Decision | null {
       const text = str(raw["resolved_rules_text"]) || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "");
       stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
+      // RUN_PLAN=v1: a card the run plan avoids is not for sale to us (hard intent).
+      if (action === "buy_card" && planForbidsCard(currentRunPlan(env.screenMemory, state), id, cardRoles(id)) !== null) continue;
       options.push({
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,
