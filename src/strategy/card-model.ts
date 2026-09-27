@@ -422,6 +422,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   POTION_OF_BINDING: { target: "all", weak: 1, vulnerable: 1 },
   SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
   ENERGY_POTION: { target: "self", energyGain: 2 },
+  // +1 energy now and +1 at the start of the next 3 turns (RADIANCE_POWER 3; states.jsonl 377J, JRSF:
+  // energy 2 -> 3 on the drink, 4 of 3 on the next turns). Only this turn's energy is modelled, so the
+  // solver drinks it on a turn that needs it (9V09 F33 T2: two Frantic Escapes and three attacks at 3
+  // energy, Tincture carried to the death).
+  RADIANT_TINCTURE: { target: "self", energyGain: 1 },
   SWIFT_POTION: { target: "self", draw: 3 },
   FYSH_OIL: { target: "self", strength: 1 },
   // Debuff: Artifact negates it like any other (TQX5 T1: drunk into Artifact 3, nothing landed).
