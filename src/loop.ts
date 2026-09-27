@@ -18,7 +18,7 @@ import { DeepSeekClient } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanIntentsJson, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
+import { hpFraction, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanIntentsJson, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import { everyRouteMeetsElite } from "./screens/map.js";
 import { intentLines } from "./strategy/intent.js";
 import type { Knowledge } from "./knowledge/index.js";
@@ -527,7 +527,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const line = current ? runPlanLine(current, state.run?.floor ?? null) : null;
       if (line) env.brief.plan = line;
       // Every screen's Jev question carries the intents in force and what each means.
-      if (current) env.brief.strategy = intentLines(current, null, state.run?.floor ?? null);
+      if (current) env.brief.strategy = intentLines(current, null, state.run?.floor ?? null, hpFraction(state));
     }
     if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
       const deepseek = planner;
@@ -1020,6 +1020,7 @@ async function ensureFightPlan(
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
       validator: plan.validator,
+      disagreements: plan.disagreements ?? [],
       run_plan_version: runPlan?.version ?? null,
       ...(change ? { changes: [change] } : {}),
       latency_ms: meta.latencyMs,
@@ -1031,7 +1032,7 @@ async function ensureFightPlan(
       guide: meta.guideId ?? "",
       handbook: meta.handbookId ?? "",
     });
-    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.objective}; kill priority ${plan.killPriority.join(" > ") || "-"}; ${plan.summary}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}` });
+    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.objective}${(plan.reasons ?? []).length > 0 ? ` because ${plan.reasons!.join(", ")}` : ""}; kill priority ${plan.killPriority.join(" > ") || "-"}; ${plan.summary}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}${(plan.disagreements ?? []).length > 0 ? ` [${plan.disagreements!.join("; ")}]` : ""}` });
   } catch (error) {
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);

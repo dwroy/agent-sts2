@@ -28,7 +28,9 @@
  *                                   rest (+3 heal) and map (rest +1.5) at any distance
  *   reserve (run)         potion roles kept for the act boss: HARD filtered from every non-boss line
  *                                   and offer, released only below 25% HP or when every line without
- *                                   it dies; free in the boss fight
+ *                                   it dies (then no save cost at all); free in the boss fight; burst
+ *                                   potions (energy, card-making, Duplicator) are "damage" by id;
+ *                                   Potion-Shaped Rocks never reserved (free to drink with the Toad)
  *   needs / avoid (run)   needed card roles get the must-have pick bonus; avoided card ids/roles are
  *                                   not offered at rewards and shops (acquisition only)
  *   objective (fight)     preserve_hp      solver HP x1.4, damage x0.85; guard slack x0.5; no setup
@@ -42,6 +44,15 @@
  *                         race             damage x1.3, HP x0.85, lasting x0.5; guard slack x1.5; race rule
  *   kill_priority (fight) the first living enemy in the list is the solver's focus target
  *   threat, summary (fight), boss_prep (run)  free text, shown to Jev as context only (short)
+ *   reason (both)         why the intent was chosen, closed list (INTENT_REASONS): kill_fast/race
+ *                                   because enemy_scales / burst_window drop preserve's weights in
+ *                                   that fight (combatPolicy); preserve / avoid_elites because low_hp
+ *                                   lapse to balanced / normal while HP is at the target (policyAt)
+ *
+ * Labels (combatFit, mapFit, restFit) are graded from the same score that ranks the options: "fits"
+ * (code's best or within its close-call margin), "costs X HP / Y damage vs the best line for <intent>",
+ * or "neutral"; only a "costs" option is logged as a deviation when Jev picks it. The validator repairs
+ * an intent only on hard facts and logs judgment calls as disagreements (plan-validator.ts).
  */
 
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
@@ -65,6 +76,93 @@ export type ChangeTrigger = (typeof CHANGE_TRIGGERS)[number];
 
 export function isOneOf<T extends string>(list: readonly T[], value: unknown): value is T {
   return typeof value === "string" && (list as readonly string[]).includes(value);
+}
+
+// ---------------------------------------------------------------- reasons: why an intent was chosen
+
+/**
+ * Why DeepSeek chose an intent, from a closed list. Code reads the reason to pick the translation
+ * (5JU3 F9: kill_fast "ends fight quicker, less HP lost overall" against a Fossil Stalker gaining 3
+ * Strength a hit was read as a run-level preserve violation and turned into preserve_hp; NX48 F35:
+ * preserve set at 35% HP was still in force at 86%).
+ */
+export const INTENT_REASONS = ["enemy_scales", "burst_window", "low_hp", "boss_prep", "deck_weak", "deck_strong", "many_enemies", "short_fight"] as const;
+export type IntentReason = (typeof INTENT_REASONS)[number];
+export const REASON_MEANING: Record<IntentReason, string> = {
+  enemy_scales: "the enemy grows every turn (Strength, Ritual, Ravenous, escalating attacks): kill_fast/race keep full damage weight even under hp_policy preserve",
+  burst_window: "a short window for damage (sleeping, stunned or not yet debuffing enemy): damage now over block",
+  low_hp: "HP is low now: once HP is back at the target, preserve / avoid_elites lapse to balanced / normal until it falls again",
+  boss_prep: "HP and potions are kept for the act boss: the intent holds at any HP",
+  deck_weak: "the deck lacks damage or scaling",
+  deck_strong: "the deck already beats this",
+  many_enemies: "several attackers: fewer enemies alive is the defence",
+  short_fight: "the fight ends in a few turns anyway",
+};
+/** Names DeepSeek used for a reason that mean one of the list. */
+const REASON_SYNONYMS: Record<string, IntentReason> = {
+  scaling: "enemy_scales", enemy_scaling: "enemy_scales", scales: "enemy_scales", ritual: "enemy_scales", ravenous: "enemy_scales", strength_gain: "enemy_scales",
+  burst: "burst_window", window: "burst_window", damage_window: "burst_window",
+  hp_low: "low_hp", low_health: "low_hp", hp_drop: "low_hp",
+  boss: "boss_prep", save_for_boss: "boss_prep",
+  weak_deck: "deck_weak", strong_deck: "deck_strong",
+  multi_enemy: "many_enemies", multiple_enemies: "many_enemies", aoe: "many_enemies",
+  fast_fight: "short_fight", quick_fight: "short_fight",
+};
+
+/** Reason tags from a reply (a string or a list, at most two); unknown ones are returned to be logged. */
+export function parseReasons(raw: unknown): { reasons: IntentReason[]; dropped: string[] } {
+  const entries = Array.isArray(raw) ? raw : typeof raw === "string" && raw.trim() ? raw.split(/[,|/]/) : [];
+  const reasons: IntentReason[] = [];
+  const dropped: string[] = [];
+  for (const entry of entries) {
+    const text = typeof entry === "string" ? entry.trim().toLowerCase().replace(/[\s-]+/g, "_") : "";
+    if (!text) continue;
+    const reason = isOneOf(INTENT_REASONS, text) ? text : REASON_SYNONYMS[text];
+    if (reason) {
+      if (!reasons.includes(reason)) reasons.push(reason);
+    } else dropped.push(String(entry));
+  }
+  return { reasons: reasons.slice(0, 2), dropped };
+}
+
+/** Run-plan fields a reason can be given for. */
+export const REASON_FIELDS = ["hp_policy", "route_risk", "entry_hp_pct", "reserve"] as const;
+export type ReasonField = (typeof REASON_FIELDS)[number];
+
+/**
+ * The run's hp_policy at this HP: a preserve chosen because HP was low lapses to balanced once HP is
+ * back at the target (NX48: preserve set at 35% HP stayed on at 86% after the Ancient's heal, the
+ * solver kept HP x1.25 in the fight that killed us). Any other reason (boss_prep, none) holds.
+ */
+export function policyAt(plan: RunPlan | null | undefined, hpFraction: number): HpPolicy {
+  const policy = plan?.hpPolicy ?? "balanced";
+  if (policy === "preserve" && plan?.reasons?.hp_policy === "low_hp" && hpFraction >= hpTarget(plan)) return "balanced";
+  return policy;
+}
+
+/** The run's route_risk at this HP: avoid_elites chosen because HP was low lapses the same way. */
+export function routeRiskAt(plan: RunPlan | null | undefined, hpFraction: number): RouteRisk {
+  const risk = plan?.routeRisk ?? "normal";
+  if (risk === "avoid_elites" && plan?.reasons?.route_risk === "low_hp" && hpFraction >= hpTarget(plan)) return "normal";
+  return risk;
+}
+
+/** A fight objective that puts damage first whatever the run's hp_policy: kill_fast/race because the enemy scales or a burst window. */
+export function damageFirst(fight: Pick<FightPlan, "objective"> & { reasons?: IntentReason[] } | null | undefined): boolean {
+  if (!fight || (fight.objective !== "kill_fast" && fight.objective !== "race")) return false;
+  return (fight.reasons ?? []).some((reason) => reason === "enemy_scales" || reason === "burst_window");
+}
+
+/**
+ * The hp_policy a fight is played under: the run's policy at this HP, and balanced instead of preserve
+ * when the fight plan races a scaling enemy (5JU3 F9: preserve weights T2-T4 played 16, 6 and 0 damage
+ * lines against a Fossil Stalker gaining Strength every hit; -40 where the damage lines cost ~-32).
+ */
+export function combatPolicy(plan: RunPlan | null | undefined, fight: (Pick<FightPlan, "objective"> & { reasons?: IntentReason[] }) | null | undefined, hpFraction: number): { policy: HpPolicy; why: string | null } {
+  const base = policyAt(plan, hpFraction);
+  if (base !== (plan?.hpPolicy ?? "balanced")) return { policy: base, why: `hp_policy ${plan?.hpPolicy} was for low HP; HP ${Math.round(hpFraction * 100)}% is back at the ${Math.round(hpTarget(plan) * 100)}% target` };
+  if (base === "preserve" && damageFirst(fight)) return { policy: "balanced", why: `fight objective ${fight!.objective} because ${(fight!.reasons ?? []).join(", ")}: damage first under hp_policy preserve` };
+  return { policy: base, why: null };
 }
 
 /** What each intent means, in the words Jev and DeepSeek are shown. */
@@ -168,8 +266,19 @@ export function promotesSetup(objective: FightObjective | null, turn: number, la
 
 // ---------------------------------------------------------------- reserved potions
 
+/**
+ * Burst potions (energy, card generation, duplication): offence, reserved as "damage". Their text names
+ * no role (JF8N F13: the Energy Potion 「获得{Energy}」 matched none and went on an elite; KFPC F29 the
+ * Power Potion, FH3M/9V09 the Radiant Tincture).
+ */
+export const BURST_POTIONS = /^(ENERGY_POTION|RADIANT_TINCTURE|ATTACK_POTION|POWER_POTION|SKILL_POTION|COLORLESS_POTION|DUPLICATOR|SWIFT_POTION|GIGANTIFICATION_POTION|CUNNING_POTION|BOTTLED_POTENTIAL)$/;
+/** Potion-Shaped Rocks (Petrified Toad refills them every fight): never reserved (H7W0 F42-F48). */
+export const ROCK_POTION = "POTION_SHAPED_ROCK";
+
 /** A potion's role (the run plan reserves roles, not ids). */
 export function potionRole(potionId: string, text: string): PotionRole | null {
+  if (potionId === ROCK_POTION) return null;
+  if (BURST_POTIONS.test(potionId)) return "damage";
   // By id as well as text: the Dexterity Potion reads 「获得{DexterityPower}点敏捷」 and matched no role
   // (GZ24 F8: drunk on an elite's T1 while the run plan kept [block, weak]); Regen is healing over turns.
   return /STRENGTH|FLEX/.test(potionId) ? "strength" :
@@ -181,7 +290,7 @@ export function potionRole(potionId: string, text: string): PotionRole | null {
 
 export function isReserved(reserve: readonly PotionRole[] | undefined, potionId: string, text: string): boolean {
   const roles = reserve ?? [];
-  if (roles.length === 0) return false;
+  if (roles.length === 0 || potionId === ROCK_POTION) return false;
   if (roles.includes("any")) return true;
   const role = potionRole(potionId, text);
   return role !== null && roles.includes(role);
@@ -230,7 +339,7 @@ export function restShift(plan: RunPlan | null | undefined, option: string, hpPc
   if (plan.entryHp && toBoss <= 6 && hpPct < plan.entryHp) return option === "HEAL" ? 8 : 0;
   let shift = 0;
   if (entryRaised(plan) && plan.entryHp && hpPct < plan.entryHp && option === "HEAL") shift += 3;
-  const policy = plan.hpPolicy ?? "balanced";
+  const policy = policyAt(plan, hpPct);
   if (policy === "preserve" && hpPct < hpTarget(plan)) shift += option === "HEAL" ? 4 : option === "SMITH" ? -2 : 0;
   // Push smiths at healthy HP, never over the pre-boss heal.
   if (policy === "push" && hpPct >= 0.55 && !beforeBoss) shift += option === "SMITH" ? 3 : option === "HEAL" ? -2 : 0;
@@ -240,8 +349,8 @@ export function restShift(plan: RunPlan | null | undefined, option: string, hpPc
 /** Route weight change for a node from the run plan's intents, at the projected HP on arrival. */
 export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99): number {
   if (!plan) return 0;
-  const policy = plan.hpPolicy ?? "balanced";
-  const risk = plan.routeRisk ?? "normal";
+  const policy = policyAt(plan, hpOnArrival);
+  const risk = routeRiskAt(plan, hpOnArrival);
   const low = hpOnArrival < hpTarget(plan);
   switch (type) {
     case "Elite": {
@@ -265,8 +374,8 @@ export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArr
 }
 
 /** avoid_elites is hard on the next node: Elite options go while another node is open. */
-export function routeRiskFilter<T extends { type: string }>(plan: RunPlan | null | undefined, options: T[]): T[] {
-  if (plan?.routeRisk !== "avoid_elites") return options;
+export function routeRiskFilter<T extends { type: string }>(plan: RunPlan | null | undefined, options: T[], hpFraction = 0): T[] {
+  if (routeRiskAt(plan, hpFraction) !== "avoid_elites") return options;
   const others = options.filter((option) => option.type !== "Elite");
   return others.length > 0 ? others : options;
 }
@@ -283,8 +392,12 @@ export interface LineFacts {
   focusDamage: number | null;
   /** Frantic Escapes the line plays (each +1 Sandpit turn). */
   escapes?: number;
-  /** Code's rank-1 line: the solver's best score under the objective's weights. */
+  /** Code's rank-1 line: the solver's best score under the intents' weights. */
   codeTop?: boolean;
+  /** How far below code's best shown line the solver scores this one (0 for the best), under the intents' weights. */
+  scoreGap?: number;
+  /** Damage into the burst target this turn (LineField.burst). */
+  burstDamage?: number;
 }
 /** The Sandpit race (The Insatiable), when one is on. */
 export interface SandpitField {
@@ -307,7 +420,23 @@ export interface LineField {
   slack: number;
   focusName?: string;
   sandpit?: SandpitField;
+  /** Code's best line under the intents (rank 1): what every other line is priced against. */
+  best?: { hpLoss: number; damage: number; setup: number };
+  /** Score gap that is still "near the top" (code's own close-call margin). */
+  near?: number;
+  /**
+   * A turn whose damage into one enemy is what matters, whatever the objective (the Queen's
+   * YOU_ARE_MINE turn: the last one before 99 Weak/Frail/Vulnerable, H7W0 F48 T2).
+   */
+  burst?: { target: string; maxDamage: number; why: string };
 }
+
+/** Score gap within which a line is "near code's best" (combat-plan CLOSE_CALL). */
+export const LABEL_NEAR = 6;
+/** Burst-turn shortfall (damage into the target) from which a line breaks the burst (H7W0: 48 short). */
+export const BURST_BREAK = 30;
+
+export type FitGrade = "fits" | "neutral" | "costs";
 
 /**
  * A line's damage toward the fight's objective: this turn's damage plus each Sandpit turn it buys at
@@ -320,91 +449,139 @@ export function objectiveDamage(line: Pick<LineFacts, "damage" | "escapes">, san
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
+/** The intents a combat line is priced under, in words ("race", "hp_policy preserve"), or null for none. */
+function combatIntentName(objective: FightObjective | null, policy: HpPolicy): string | null {
+  const parts = [objective, policy !== "balanced" ? `hp_policy ${policy}` : null].filter(Boolean);
+  return parts.length > 0 ? parts.join(" + ") : null;
+}
+
 /**
- * The compliance label of one combat line: "fits <intent>: …" or "breaks <intent>: …" per intent,
- * joined. `breaks` is set when a soft intent is broken (a pick of it is logged as a deviation).
- * Damage is objective damage (Sandpit turns bought count as turns of damage), and code's rank-1 line
- * never breaks the fight objective: the solver ranked it with the objective's weights, so the label
- * cannot contradict it (9V09 F33 T2-T3: code's rank 1 labelled "breaks race" three times; Jev followed
- * the labels, 0 of 21 "breaks" options picked, and no Frantic Escape was played).
+ * The graded label of one combat line, derived from code's own objective-weighted score so the label
+ * can never contradict the ranking (5JU3 F11 T3-T4, KQK2 F7 T4, 9V09 F33 T2: code's rank 1 labelled
+ * "breaks", Jev skipped it every time; 0 of 76 "breaks" options picked across three runs):
+ *   "fits <intent>: code's best line / near code's best line …" when the solver scores it within
+ *   LABEL_NEAR of its best line under the intents' weights;
+ *   "costs X HP / Y damage vs the best line for <intent>" otherwise (what it gives up, and gains);
+ *   "neutral" when no intent is in force.
+ * `breaks` (logged as a deviation when Jev picks it) is only ever set on a "costs" line. The Queen's
+ * YOU_ARE_MINE turn ranks lines by damage into the Amalgam instead (field.burst).
  */
-export function combatFit(objective: FightObjective | null, policy: HpPolicy, line: LineFacts, field: LineField): { label: string; breaks: boolean } {
-  if (line.winsFight) return { label: "fits every intent: wins the fight", breaks: false };
+export function combatFit(objective: FightObjective | null, policy: HpPolicy, line: LineFacts, field: LineField): { label: string; breaks: boolean; grade: FitGrade } {
+  if (line.winsFight) return { label: "fits every intent: wins the fight", breaks: false, grade: "fits" };
   const parts: string[] = [];
-  let breaks = false;
-  const extraLoss = line.hpLoss - field.minLoss;
   const pit = field.sandpit;
   const escapes = line.escapes ?? 0;
-  const bought = pit && escapes > 0 ? ` (+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each)` : "";
-  const codeBest = (name: string, why: string) => parts.push(`fits ${name}: code's best line under ${name} weights (${why})`);
-  if (objective === "preserve_hp") {
-    if (extraLoss <= 0) parts.push("fits preserve_hp: loses the least HP");
-    else if (extraLoss <= 2) parts.push(`fits preserve_hp: within ${extraLoss} HP of the safest line`);
-    else if (line.codeTop) codeBest("preserve_hp", `${extraLoss} more HP than the safest line${bought}`);
-    else {
-      parts.push(`breaks preserve_hp: loses ${extraLoss} more HP than the safest line`);
+  const bought = pit && escapes > 0 ? `+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each` : "";
+  const near = line.codeTop === true || (line.scoreGap !== undefined && line.scoreGap <= (field.near ?? LABEL_NEAR));
+  let grade: FitGrade = "neutral";
+  let breaks = false;
+  if (field.burst) {
+    const dealt = line.burstDamage ?? 0;
+    const short = Math.round(field.burst.maxDamage - dealt);
+    if (short <= Math.max(5, field.burst.maxDamage * 0.1)) {
+      parts.push(`fits the burst turn: ${dealt} damage to ${field.burst.target} (${field.burst.why})`);
+      grade = "fits";
+    } else {
+      parts.push(`costs ${short} damage to ${field.burst.target} vs the best line this turn (${field.burst.why})`);
+      grade = "costs";
+      breaks = short >= BURST_BREAK;
+    }
+  }
+  const intent = combatIntentName(objective, policy);
+  if (intent && !field.burst) {
+    const best = field.best ?? { hpLoss: field.minLoss, damage: field.maxDamage, setup: field.maxSetup };
+    const moreHp = line.hpLoss - best.hpLoss;
+    const lessDamage = Math.round(best.damage - objectiveDamage(line, pit));
+    const lessSetup = objective === "scale_then_kill" && line.setup < best.setup;
+    const adverse = [moreHp > 0 ? `${moreHp} HP` : null, lessDamage > 0 ? `${lessDamage} damage` : null, lessSetup ? "the setup" : null].filter(Boolean);
+    const gains = [moreHp < 0 ? `saves ${-moreHp} HP` : null, lessDamage < 0 ? `${-lessDamage} more damage` : null].filter(Boolean);
+    const trade = [
+      moreHp > 0 ? `${moreHp} more HP` : moreHp < 0 ? `${-moreHp} less HP` : null,
+      lessDamage > 0 ? `${lessDamage} less damage` : lessDamage < 0 ? `${-lessDamage} more damage` : null,
+      lessSetup ? "less setup" : null,
+    ].filter(Boolean).join(", ");
+    const counting = pit && pit.maxEscapes > 0 ? ", counting Sandpit turns bought as damage" : "";
+    if (near) {
+      const where = line.codeTop || (line.scoreGap ?? 0) <= 0 ? "code's best line" : `near code's best line (score -${(line.scoreGap ?? 0).toFixed(1)})`;
+      parts.push(`fits ${intent}: ${where} under ${intent} weights${trade && !line.codeTop ? ` (vs it: ${trade}${counting})` : ""}${bought ? ` (${bought})` : ""}`);
+      if (objective === "scale_then_kill" && line.setup > 0 && line.setup >= field.maxSetup) parts.push("sets up (powers / Strength)");
+      grade = "fits";
+    } else {
+      const cost = adverse.length > 0 ? adverse.join(" / ") : `~${Math.round(line.scoreGap ?? 0)} score (lasting, kill or debuff value)`;
+      parts.push(`costs ${cost} vs the best line for ${intent}${gains.length > 0 ? ` (${gains.join(", ")})` : ""}${counting}${bought ? ` (${bought})` : ""}`);
+      grade = "costs";
       breaks = true;
     }
-  } else if (objective === "scale_then_kill") {
-    if (field.maxSetup <= 0) parts.push("fits scale_then_kill: nothing to set up this turn");
-    else if (line.setup >= field.maxSetup) parts.push("fits scale_then_kill: sets up (powers / Strength)");
-    else if (pit?.behind && escapes > 0 && escapes >= pit.maxEscapes) parts.push(`fits scale_then_kill: buys time to scale${bought}`);
-    else if (line.codeTop) codeBest("scale_then_kill", `less setup than another line${bought}`);
-    else {
-      parts.push("breaks scale_then_kill: skips setup another line plays");
-      breaks = true;
-    }
-  } else if (objective === "kill_fast" || objective === "race") {
-    const value = objectiveDamage(line, pit);
-    const short = Math.round(field.maxDamage - value);
-    if (short <= Math.max(2, field.maxDamage * 0.1)) parts.push(`fits ${objective}: most damage${bought ? `, counting the Sandpit turns bought${bought}` : ""}`);
-    else if (line.codeTop) codeBest(objective, `${short} less damage than the best line${bought ? `, counting the Sandpit turns bought${bought}` : ""}, for less HP or more lasting value`);
-    else {
-      parts.push(`breaks ${objective}: ${short} less damage than the best line${pit && pit.maxEscapes > 0 ? ", counting the Sandpit turns Frantic Escape buys" : ""}${bought}`);
-      breaks = true;
-    }
+    // hp_policy preserve's slack, said in HP (the score already weighs it).
+    const extraLoss = line.hpLoss - field.minLoss;
+    if (policy === "preserve" && objective !== "preserve_hp" && extraLoss > field.slack) parts.push(`${extraLoss} HP over the safest line (hp_policy preserve tolerates ~${Math.round(field.slack)})`);
   }
   // The Sandpit eats us at 0 whatever the HP: while the pit is no longer than the kill, a line
   // playing fewer Frantic Escapes than another gives a turn away (9V09, X8HF rule 2).
   if (pit?.behind && escapes < pit.maxEscapes) {
     const fewer = pit.maxEscapes - escapes;
     const why = `${plural(fewer, "Frantic Escape")} fewer than another line while the Sandpit (${pit.now}) is no longer than the kill (~${pit.turnsNeeded} turns)`;
-    if (line.codeTop) parts.push(`note: ${why}`);
+    if (near) parts.push(`note: ${why}`);
     else {
-      parts.push(`breaks the Sandpit race: ${why}`);
+      parts.push(`costs ${plural(fewer, "Sandpit turn")}: ${why}`);
+      grade = "costs";
       breaks = true;
     }
   }
-  if (policy === "preserve" && objective !== "preserve_hp" && extraLoss > field.slack) {
-    parts.push(`breaks hp_policy preserve: loses ${extraLoss} more HP than the safest line`);
-    breaks = true;
-  }
   if (line.focusDamage !== null && line.focusDamage > 0) parts.push(`hits kill-priority ${field.focusName ?? "enemy"} for ${line.focusDamage}`);
-  return { label: parts.length > 0 ? parts.join("; ") : "neutral", breaks };
+  return { label: parts.length > 0 ? parts.join("; ") : "neutral", breaks, grade };
 }
 
-/** Compliance label of a map node for Jev. */
-export function mapFit(plan: RunPlan | null | undefined, type: string, hpPct: number): string | null {
+/** What the labels mean, for Jev (every question with intent_fit labels carries it). */
+export const LABEL_NOTE =
+  "intent_fit labels are guidance with costs, not orders: 'fits' = code's best line, or near it, under the strategy's weights; 'costs X' = what the line gives up against that best line (and what it gains). You choose.";
+
+/** Route-value gap within which a node is "near code's best route" (map codeMargin). */
+export const MAP_NEAR = 2.5;
+
+/** The run intents that move route and rest scoring at this HP, in words, or null when none do. */
+function runIntentName(plan: RunPlan, hpPct: number): string | null {
+  const policy = policyAt(plan, hpPct);
+  const risk = routeRiskAt(plan, hpPct);
+  const parts = [policy !== "balanced" ? `hp_policy ${policy}` : null, risk !== "normal" ? `route_risk ${risk}` : null, plan.entryHp ? `entry_hp ${Math.round(plan.entryHp * 100)}%` : null].filter(Boolean);
+  return parts.length > 0 ? parts.join(", ") : null;
+}
+
+/**
+ * The label of a map node, from the same scoring that ranks the nodes (5JU3 F10: '?' labelled "breaks
+ * preserve" and Monster unlabelled, while the route scoring priced '?' cheaper; Jev took the Monster at
+ * 0.98 into the fight that killed us). `route` is the node's route_value and the best one offered;
+ * the note says what the run intents did to this node's weight.
+ */
+export function mapFit(plan: RunPlan | null | undefined, type: string, hpPct: number, route?: { value: number; best: number }, toBoss = 99): string | null {
   if (!plan) return null;
-  if (type === "Elite") {
-    if (plan.routeRisk === "avoid_elites") return "breaks route_risk avoid_elites";
-    if (plan.hpPolicy === "preserve") return "breaks hp_policy preserve: optional elite";
-    if (plan.routeRisk === "seek_elites" && hpPct > 0.6) return "fits route_risk seek_elites";
-  }
-  if ((type === "RestSite" || type === "Rest") && plan.hpPolicy === "preserve" && hpPct < hpTarget(plan)) return "fits hp_policy preserve: heal toward the target";
-  if (type === "Unknown" && plan.hpPolicy === "preserve" && hpPct < 0.6) return "breaks hp_policy preserve: '?' can cost HP";
-  return null;
+  const intents = runIntentName(plan, hpPct);
+  if (!intents) return null;
+  const shift = mapShift(plan, type, hpPct, toBoss);
+  const effect = shift !== 0 ? ` (the plan moves this ${type} ${shift > 0 ? "+" : ""}${shift})` : "";
+  if (!route) return `${intents}${effect}`;
+  const gap = route.best - route.value;
+  if (gap <= MAP_NEAR) return `fits ${intents}: ${gap <= 0.005 ? "code's best route" : `within ${gap.toFixed(1)} of code's best route`} under the plan${effect}`;
+  return `costs ${gap.toFixed(1)} route value vs the best node under ${intents}${effect}`;
 }
 
-/** Compliance label of a rest option for Jev. */
-export function restFit(plan: RunPlan | null | undefined, option: string, hpPct: number): string | null {
+/** Score gap within which a rest option is "near code's best" (rest codeMargin). */
+export const REST_NEAR = 3;
+
+/** The label of a rest option, from the same scoring that ranks the options (`score`: its score and the best one). */
+export function restFit(plan: RunPlan | null | undefined, option: string, hpPct: number, score?: { value: number; best: number }): string | null {
   if (!plan) return null;
   const target = hpTarget(plan);
-  if (plan.hpPolicy === "preserve" || (plan.entryHp && entryRaised(plan))) {
-    if (hpPct < target) return option === "HEAL" ? `fits hp_policy ${plan.hpPolicy}: heals toward ${Math.round(target * 100)}%` : `breaks hp_policy ${plan.hpPolicy}: HP ${Math.round(hpPct * 100)}% is below the ${Math.round(target * 100)}% target`;
-  }
-  if (plan.hpPolicy === "push" && hpPct >= 0.55 && option === "SMITH") return "fits hp_policy push: upgrade while HP allows";
-  return null;
+  const policy = policyAt(plan, hpPct);
+  const relevant = policy === "preserve" || policy === "push" || (plan.entryHp !== null && hpPct < plan.entryHp);
+  if (!relevant) return null;
+  const below = hpPct < target;
+  const why = below && option === "HEAL" ? `heals toward the ${Math.round(target * 100)}% target from ${Math.round(hpPct * 100)}%` : below ? `HP ${Math.round(hpPct * 100)}% is below the ${Math.round(target * 100)}% target` : `HP ${Math.round(hpPct * 100)}% is at the ${Math.round(target * 100)}% target`;
+  const name = `hp_policy ${policy}${plan.entryHp ? ` / entry_hp ${Math.round(plan.entryHp * 100)}%` : ""}`;
+  if (!score) return `${name}: ${why}`;
+  const gap = score.best - score.value;
+  if (gap <= REST_NEAR) return `fits ${name}: ${gap <= 0.005 ? "code's best option" : `within ${gap.toFixed(1)} of code's best option`} (${why})`;
+  return `costs ${gap.toFixed(1)} score vs the best option under ${name} (${why})`;
 }
 
 // ---------------------------------------------------------------- what Jev is told
@@ -413,20 +590,27 @@ export function restFit(plan: RunPlan | null | undefined, option: string, hpPct:
 export const CHANGE_NOTICE_FLOORS = 3;
 
 /** One line per current strategic intent, with what it means; recent changes after them. */
-export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | null | undefined, floor: number | null = null): string[] {
+export function intentLines(run: RunPlan | null | undefined, fight: FightPlan | null | undefined, floor: number | null = null, hpFraction: number | null = null): string[] {
   const lines: string[] = [];
+  const because = (reason: string | undefined) => (reason ? ` because ${reason}` : "");
   if (run) {
     const policy = run.hpPolicy ?? "balanced";
-    lines.push(`hp_policy ${policy}${run.entryHp ? ` (enter the act boss at ${Math.round(run.entryHp * 100)}%+ HP)` : ""}: ${MEANING.hp_policy[policy]}`);
+    lines.push(`hp_policy ${policy}${because(run.reasons?.hp_policy)}${run.entryHp ? ` (enter the act boss at ${Math.round(run.entryHp * 100)}%+ HP)` : ""}: ${MEANING.hp_policy[policy]}`);
     const risk = run.routeRisk ?? "normal";
-    if (risk !== "normal") lines.push(`route_risk ${risk}: ${MEANING.route_risk[risk]}`);
-    if ((run.reserve ?? []).length > 0) lines.push(`reserve ${run.reserve.join(", ")} potions for the act boss: not offered before it (only below 25% HP or when every other line dies)`);
+    if (risk !== "normal") lines.push(`route_risk ${risk}${because(run.reasons?.route_risk)}: ${MEANING.route_risk[risk]}`);
+    if (hpFraction !== null) {
+      const now = combatPolicy(run, fight, hpFraction);
+      if (now.why) lines.push(`in force now: hp_policy ${now.policy} (${now.why})`);
+      const riskNow = routeRiskAt(run, hpFraction);
+      if (riskNow !== risk) lines.push(`in force now: route_risk ${riskNow} (avoid_elites was for low HP; HP is back at the target)`);
+    }
+    if ((run.reserve ?? []).length > 0) lines.push(`reserve ${run.reserve.join(", ")} potions for the act boss${because(run.reasons?.reserve)}: not offered before it (only below 25% HP or when every other line dies)`);
     if ((run.needs ?? []).length > 0) lines.push(`deck needs ${run.needs.join(", ")} cards before the act boss`);
     if (run.bossPrep) lines.push(`boss prep (context): ${short(run.bossPrep)}`);
     for (const change of recentChanges(run, floor)) lines.push(`strategy changed at F${change.floor}: ${change.field} ${fmt(change.from)}→${fmt(change.to)} because ${change.trigger}${change.fact ? ` (${change.fact})` : ""}`);
   }
   if (fight) {
-    lines.push(`fight objective ${fight.objective}: ${MEANING.objective[fight.objective]}`);
+    lines.push(`fight objective ${fight.objective}${because((fight.reasons ?? []).join(", "))}: ${MEANING.objective[fight.objective]}`);
     if (fight.killPriority.length > 0) lines.push(`kill priority: ${fight.killPriority.join(" > ")}`);
     // The plan in DeepSeek's words, context only (9V09 F33: "Play every affordable Frantic Escape
     // early" never reached Jev, only the objective's one-line meaning did).

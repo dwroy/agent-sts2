@@ -13,7 +13,7 @@ import type { JsonValue } from "../util/json.js";
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
 import type { PlanChange, PlanSnapshot, RunPlan } from "./run-plan.js";
 import type { FightPlan } from "./fight-plan.js";
-import { CARD_ROLES, CHANGE_TRIGGERS, HP_TARGET, isOneOf, isReserved, type ChangeTrigger, type FightObjective, type HpPolicy, type RouteRisk } from "./intent.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, HP_TARGET, isOneOf, isReserved, policyAt, type ChangeTrigger, type FightObjective, type HpPolicy, type RouteRisk } from "./intent.js";
 
 // ---------------------------------------------------------------- run plan: since the last plan
 
@@ -151,6 +151,27 @@ function wrongWay(field: ChangeField, from: JsonValue, to: JsonValue, trigger: C
   return false;
 }
 
+/**
+ * Names DeepSeek gave a trigger that mean one of the list (KQK2 F6: "hp_drop", the name of the re-plan
+ * request itself, rejected two changes the facts supported: 50% HP under an 85% entry target).
+ */
+export const TRIGGER_SYNONYMS: Record<string, ChangeTrigger> = {
+  hp_drop: "hp_below_target", hp_dropped: "hp_below_target", hp_loss: "hp_below_target", hp_lost: "hp_below_target", low_hp: "hp_below_target",
+  hp_low: "hp_below_target", hp_fell: "hp_below_target", hp_below_entry: "hp_below_target", hp_below_entry_target: "hp_below_target",
+  hp_rise: "hp_recovered", hp_up: "hp_recovered", hp_gained: "hp_recovered", healed: "hp_recovered", heal: "hp_recovered", rest: "hp_recovered", hp_restored: "hp_recovered",
+  act: "act_changed", new_act: "act_changed", act_start: "act_changed", act_change: "act_changed",
+  relic_gained: "key_card_or_relic_gained", card_gained: "key_card_or_relic_gained", key_card_gained: "key_card_or_relic_gained", key_relic_gained: "key_card_or_relic_gained", new_relic: "key_card_or_relic_gained", new_card: "key_card_or_relic_gained",
+  potion_gained: "potion_lost_or_gained", potion_lost: "potion_lost_or_gained", potion_used: "potion_lost_or_gained", potions_changed: "potion_lost_or_gained",
+  elite_forced: "forced_route", forced_elite: "forced_route", no_route: "forced_route",
+  gap_widened: "boss_gap_widened", gap_closed: "boss_gap_closed",
+};
+
+/** The listed trigger a claimed name stands for, or null. */
+export function triggerOf(name: string): ChangeTrigger | null {
+  const text = name.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  return isOneOf(CHANGE_TRIGGERS, text) ? text : TRIGGER_SYNONYMS[text] ?? null;
+}
+
 interface ClaimedChange {
   trigger: string;
   fact: string;
@@ -195,8 +216,20 @@ export function validateChanges(prev: RunPlan, proposal: RunPlan, changesRaw: un
       notes.push(`rejected change ${field} ${JSON.stringify(from)}→${JSON.stringify(to)}: ${why}; kept ${JSON.stringify(from)}`);
     };
     // A new act is a new boss: every change is accepted, under the claimed trigger when the facts show it.
-    let trigger: ChangeTrigger | null = claim && isOneOf(CHANGE_TRIGGERS, claim.trigger) ? claim.trigger : null;
+    let trigger: ChangeTrigger | null = claim ? triggerOf(claim.trigger) : null;
     let fact = trigger && since ? triggerFact(trigger, since, target) : null;
+    const named = claim?.trigger ?? "";
+    if (trigger && named !== trigger) notes.push(`change ${field}: trigger ${JSON.stringify(named)} read as ${trigger}`);
+    // An unknown name is judged by the facts: the first listed trigger the summary shows and that points
+    // the way of the change.
+    if (claim && !trigger && since) {
+      const inferred = CHANGE_TRIGGERS.find((candidate) => candidate !== "act_changed" && triggerFact(candidate, since, target) !== null && !wrongWay(field, from, to, candidate));
+      if (inferred) {
+        trigger = inferred;
+        fact = triggerFact(inferred, since, target);
+        notes.push(`change ${field}: trigger ${JSON.stringify(named)} is not listed; read as ${inferred} from the facts`);
+      }
+    }
     if (actChanged && (!trigger || !fact)) {
       trigger = "act_changed";
       fact = `act ${prev.act}→${proposal.act}`;
@@ -289,14 +322,23 @@ export interface FightContext {
   /** Potions in the belt: id and text. */
   potions: { id: string; text: string }[];
   kind: string;
+  /** Enemies that grow every turn, with why (fight-plan.ts enemyScales); [] when none. */
+  scaling?: string[];
 }
 
-/** Below this HP fraction scale_then_kill is repaired to preserve_hp (DeepSeek planned setup at 14 HP). */
-export const SETUP_MIN_HP = 0.4;
+/** Prefix of a validator note that keeps DeepSeek's intent and only logs code's different estimate. */
+export const DISAGREE = "disagreement (kept): ";
+
+/** Hard floor: below this HP fraction scale_then_kill is repaired to preserve_hp (DeepSeek planned setup at 14 HP). */
+export const SETUP_MIN_HP = 0.25;
+/** Below this HP fraction a setup objective is logged as a disagreement (kept). */
+export const SETUP_LOW_HP = 0.4;
 /** Incoming this share of HP or more is lethal-ish: no setup turns. */
 export const SETUP_MAX_INCOMING = 0.5;
 /** A fight code expects to end within this many turns is "winnable fast". */
 export const FAST_WIN_TURNS = 3;
+/** Below this HP fraction kill_fast/race against a non-scaling enemy under preserve is repaired to preserve_hp. */
+export const RACE_MIN_HP = 0.4;
 
 /**
  * Validates a parsed fight plan (mutates it) against the board and the run plan. `raw` is DeepSeek's
@@ -328,20 +370,35 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
     if (value !== undefined && value !== null && !(Array.isArray(value) && value.length === 0) && value !== "") notes.push(`${key} ignored (card and turn orders are code's and Jev's)`);
   }
 
-  // Objective against the board and the run plan.
+  // Objective against the board and the run plan: repaired only on hard facts (HP under a hard floor,
+  // a hit of half our HP); a judgment call is kept and logged as a disagreement (5JU3 F9/F11: kill_fast
+  // against a Fossil Stalker and Ravenous slugs was turned into preserve_hp and both fights ran long;
+  // NX48 F35: DeepSeek chose scale_then_kill just to dodge the repair).
+  const pct = (value: number) => `${Math.round(value * 100)}%`;
   if (plan.objective === "scale_then_kill" && ctx.hpPct < SETUP_MIN_HP) {
-    notes.push(`objective scale_then_kill at ${Math.round(ctx.hpPct * 100)}% HP → preserve_hp`);
+    notes.push(`objective scale_then_kill at ${pct(ctx.hpPct)} HP → preserve_hp`);
     plan.objective = "preserve_hp";
   } else if (plan.objective === "scale_then_kill" && ctx.hp > 0 && ctx.incoming >= ctx.hp * SETUP_MAX_INCOMING) {
     notes.push(`objective scale_then_kill with ${ctx.incoming} incoming at ${ctx.hp} HP → preserve_hp`);
     plan.objective = "preserve_hp";
+  } else if (plan.objective === "scale_then_kill" && ctx.hpPct < SETUP_LOW_HP) {
+    notes.push(`${DISAGREE}scale_then_kill at ${pct(ctx.hpPct)} HP (code would defend below ${pct(SETUP_LOW_HP)}); the HP guard still refuses setup that risks death`);
   }
-  if (run?.hpPolicy === "preserve" && (plan.objective === "kill_fast" || plan.objective === "race")) {
-    const fast = ctx.turnsToKill !== null && ctx.turnsToKill <= FAST_WIN_TURNS;
+  const scaling = ctx.scaling ?? [];
+  const reasons = plan.reasons ?? [];
+  if (reasons.includes("enemy_scales") && scaling.length === 0) notes.push(`${DISAGREE}reason enemy_scales, but code sees no growth power, Strength or Buff intent on the board`);
+  if (run && policyAt(run, ctx.hpPct) === "preserve" && (plan.objective === "kill_fast" || plan.objective === "race") && ctx.kind !== "boss") {
     // A boss is fought to the end whatever the policy: racing it is the boss plan, not a run choice.
-    if (!fast && ctx.kind !== "boss") {
-      notes.push(`objective ${plan.objective} under run hp_policy preserve, fight not winnable in ${FAST_WIN_TURNS} turns (code estimate ${ctx.turnsToKill ?? "?"}) → preserve_hp`);
+    const fast = ctx.turnsToKill !== null && ctx.turnsToKill <= FAST_WIN_TURNS;
+    const scales = scaling.length > 0 || reasons.includes("enemy_scales");
+    if (!fast && !scales && ctx.hpPct < RACE_MIN_HP) {
+      notes.push(`objective ${plan.objective} under run hp_policy preserve at ${pct(ctx.hpPct)} HP, no enemy scales, fight not winnable in ${FAST_WIN_TURNS} turns (code estimate ${ctx.turnsToKill ?? "?"}) → preserve_hp`);
       plan.objective = "preserve_hp";
+    } else if (!fast) {
+      const why = scales ? `the enemy scales (${scaling.join(", ") || "DeepSeek's reason enemy_scales"}): damage first` : `HP ${pct(ctx.hpPct)} is above ${pct(RACE_MIN_HP)}`;
+      notes.push(`${DISAGREE}${plan.objective} under run hp_policy preserve, code expects ${ctx.turnsToKill ?? "?"} turns; kept because ${why}`);
+      // Scaling seen on the board is the reason, whether DeepSeek named it or not (it picks the translation).
+      if (scales && !reasons.includes("enemy_scales")) plan.reasons = [...reasons, "enemy_scales" as const].slice(-2);
     }
   }
   return notes;

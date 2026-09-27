@@ -197,10 +197,43 @@ describe("fight plan validator (不乱指挥)", () => {
       return { objective: fight.objective, notes: notes.join(" | ") };
     };
     expect(check(2).objective).toBe("kill_fast");
-    expect(check(6)).toMatchObject({ objective: "preserve_hp", notes: expect.stringMatching(/under run hp_policy preserve, fight not winnable in 3 turns \(code estimate 6\)/) });
-    expect(check(null).objective).toBe("preserve_hp");
+    // A judgment call at 70% HP: DeepSeek's kill_fast is kept, code's estimate logged as a disagreement.
+    expect(check(6)).toMatchObject({ objective: "kill_fast", notes: expect.stringMatching(/^disagreement \(kept\): kill_fast under run hp_policy preserve, code expects 6 turns; kept because HP 70% is above 40%/) });
+    expect(check(null).objective).toBe("kill_fast");
     // A boss is fought to its end whatever the policy.
     expect(check(9, "boss").objective).toBe("kill_fast");
+  });
+
+  it("repairs kill_fast under preserve only at low HP against enemies that do not scale (5JU3 F9/F11)", async () => {
+    const { validateFightPlan } = await import("../src/strategy/plan-validator.js");
+    const ctx = { hp: 30, incoming: 6, turnsToKill: 5, enemyIds: ["CORPSE_SLUG"], together: [], potions: [], kind: "monster" };
+    const check = (hpPct: number, scaling: string[], reasons: FightPlan["reasons"] = []) => {
+      const fight = plan({ objective: "kill_fast", killPriority: [], reasons });
+      const notes = validateFightPlan(fight, {}, runPlan({ hpPolicy: "preserve" }), { ...ctx, hpPct, scaling });
+      return { objective: fight.objective, reasons: fight.reasons, notes: notes.join(" | ") };
+    };
+    // 5JU3 F11: 30/80 against three Ravenous slugs: kept (the slugs scale), and the fact becomes the reason.
+    expect(check(0.375, ["CORPSE_SLUG RAVENOUS_POWER"])).toMatchObject({ objective: "kill_fast", reasons: ["enemy_scales"], notes: expect.stringMatching(/kept because the enemy scales \(CORPSE_SLUG RAVENOUS_POWER\)/) });
+    // DeepSeek's own reason counts even when code sees no scaling (logged).
+    const told = check(0.375, [], ["enemy_scales"]);
+    expect(told.objective).toBe("kill_fast");
+    expect(told.notes).toMatch(/reason enemy_scales, but code sees no growth power/);
+    // 30% HP, nothing scales, 5 turns: the hard floor repairs it.
+    expect(check(0.3, [])).toMatchObject({ objective: "preserve_hp", notes: expect.stringMatching(/at 30% HP, no enemy scales, fight not winnable in 3 turns \(code estimate 5\) → preserve_hp/) });
+  });
+
+  it("parses the reason tag, reads the board's scaling and logs disagreements apart from repairs", () => {
+    const raw = combatPayload();
+    const enemies = (raw["combat"] as Raw)["enemies"] as Raw[];
+    enemies[0]!["enemy_id"] = "FOSSIL_STALKER";
+    enemies[0]!["powers"] = [{ index: 0, power_id: "SUCK_POWER", name: "Suck", amount: 3, is_debuff: false }];
+    const state = parseGameState(raw);
+    const parsed = parse(state, { objective: "kill_fast", reason: ["scaling", "vibes"] }, "monster", runPlan({ hpPolicy: "preserve" }));
+    expect(parsed.reasons).toEqual(["enemy_scales"]);
+    expect(parsed.validator.join(" | ")).toMatch(/reason: dropped unknown "vibes"/);
+    expect(parsed.objective).toBe("kill_fast");
+    expect(parsed.validator.join(" | ")).not.toMatch(/disagreement/);
+    expect((parsed.disagreements ?? []).join(" | ")).toMatch(/FOSSIL_STALKER SUCK_POWER/);
   });
 
   it("drops an unknown enemy and enemies that must die together from the kill priority", () => {
@@ -228,44 +261,56 @@ describe("fightPlanInput", () => {
   });
 });
 
-describe("combatFit (compliance labels for Jev)", () => {
-  const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, slack: 5, focusName: "Louse" };
+describe("combatFit (graded labels for Jev, from code's own score)", () => {
+  const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, slack: 5, focusName: "Louse", best: { hpLoss: 4, damage: 30, setup: 1 } };
   const line = (over: Partial<Parameters<typeof combatFit>[2]> = {}) => ({ hpLoss: 4, damage: 30, setup: 0, winsFight: false, focusDamage: null, ...over });
-  it("says which intent a line fits or breaks", () => {
-    expect(combatFit("preserve_hp", "balanced", line(), field)).toEqual({ label: "fits preserve_hp: loses the least HP", breaks: false });
-    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12 }), field)).toEqual({ label: "breaks preserve_hp: loses 8 more HP than the safest line", breaks: true });
-    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1 }), field).label).toBe("fits scale_then_kill: sets up (powers / Strength)");
-    expect(combatFit("scale_then_kill", "balanced", line(), field)).toEqual({ label: "breaks scale_then_kill: skips setup another line plays", breaks: true });
-    expect(combatFit("kill_fast", "balanced", line({ damage: 10 }), field).label).toBe("breaks kill_fast: 20 less damage than the best line");
-    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6 }), field).label).toBe("breaks hp_policy preserve: loses 8 more HP than the safest line; hits kill-priority Louse for 6");
+  it("fits near code's best line, costs X HP / Y damage otherwise, neutral without intents", () => {
+    expect(combatFit("preserve_hp", "balanced", line({ codeTop: true, scoreGap: 0 }), field)).toEqual({ label: "fits preserve_hp: code's best line under preserve_hp weights", breaks: false, grade: "fits" });
+    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, scoreGap: 11 }), field)).toEqual({ label: "costs 8 HP vs the best line for preserve_hp", breaks: true, grade: "costs" });
+    // Within the close-call margin: fits, with the trade said (5JU3 F11 T3: a 9-damage kill line labelled "breaks").
+    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 7, damage: 39, scoreGap: 2 }), field).label).toBe("fits preserve_hp: near code's best line (score -2.0) under preserve_hp weights (vs it: 3 more HP, 9 more damage)");
+    expect(combatFit("kill_fast", "balanced", line({ damage: 10, hpLoss: 1, scoreGap: 20 }), field).label).toBe("costs 20 damage vs the best line for kill_fast (saves 3 HP)");
+    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1, codeTop: true }), field).label).toBe("fits scale_then_kill: code's best line under scale_then_kill weights; sets up (powers / Strength)");
+    expect(combatFit("scale_then_kill", "balanced", line({ scoreGap: 9 }), field)).toMatchObject({ label: "costs the setup vs the best line for scale_then_kill", breaks: true });
+    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6, scoreGap: 12 }), field).label).toBe("costs 8 HP vs the best line for hp_policy preserve; 8 HP over the safest line (hp_policy preserve tolerates ~5); hits kill-priority Louse for 6");
+    expect(combatFit(null, "balanced", line({ scoreGap: 30 }), field)).toEqual({ label: "neutral", breaks: false, grade: "neutral" });
     expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field).breaks).toBe(false);
   });
 
-  it("counts Sandpit turns bought as damage, and never has code's rank 1 break the objective (9V09 F33 T2)", () => {
+  it("never marks a line at or near the top as breaking, hp_policy included", () => {
+    // Code's rank 1 with less damage than another line (9V09 F33 T3 "Burning, Whirlwind+": +2 Strength).
+    const top = combatFit("race", "preserve", line({ damage: 10, hpLoss: 12, codeTop: true }), field);
+    expect(top.breaks).toBe(false);
+    expect(top.grade).toBe("fits");
+    expect(combatFit("race", "preserve", line({ hpLoss: 12, scoreGap: 5 }), field).breaks).toBe(false);
+    expect(combatFit("race", "preserve", line({ hpLoss: 12, scoreGap: 7 }), field).breaks).toBe(true);
+  });
+
+  it("counts Sandpit turns bought as damage (9V09 F33 T2)", () => {
     // T2, pit 4, boss 300: rank 1 "Pommel Strike+, Frantic Escape, Sword Boomerang+" 46 damage, rank 2
     // "Pommel Strike+, Sword Boomerang+, Feast+" 67. A pit turn is worth 49; 7 turns needed.
     const sandpit = { turnValue: 49, behind: true, now: 4, turnsNeeded: 7, maxEscapes: 1 };
-    const pit = { ...field, maxDamage: Math.max(objectiveDamage({ damage: 46, escapes: 1 }, sandpit), 67), maxSetup: 0, sandpit };
+    const pit = { ...field, maxDamage: Math.max(objectiveDamage({ damage: 46, escapes: 1 }, sandpit), 67), maxSetup: 0, sandpit, best: { hpLoss: 4, damage: 95, setup: 0 } };
     expect(pit.maxDamage).toBe(95);
     const escapeLine = combatFit("race", "balanced", line({ damage: 46, escapes: 1, codeTop: true }), pit);
-    expect(escapeLine).toEqual({ label: "fits race: most damage, counting the Sandpit turns bought (+1 Sandpit turn, ~49 damage each)", breaks: false });
-    const noEscape = combatFit("race", "balanced", line({ damage: 67 }), pit);
+    expect(escapeLine).toEqual({ label: "fits race: code's best line under race weights (+1 Sandpit turn, ~49 damage each)", breaks: false, grade: "fits" });
+    const noEscape = combatFit("race", "balanced", line({ damage: 67, scoreGap: 20 }), pit);
     expect(noEscape.breaks).toBe(true);
     expect(noEscape.label).toBe(
-      "breaks race: 28 less damage than the best line, counting the Sandpit turns Frantic Escape buys; breaks the Sandpit race: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
+      "costs 28 damage vs the best line for race, counting Sandpit turns bought as damage; costs 1 Sandpit turn: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
     );
-    // kill_fast the same; scale_then_kill: the Escape line buys time instead of "skipping setup".
-    expect(combatFit("kill_fast", "balanced", line({ damage: 46, escapes: 1 }), pit).breaks).toBe(false);
-    expect(combatFit("scale_then_kill", "balanced", line({ damage: 46, escapes: 1 }), { ...pit, maxSetup: 1 })).toEqual({ label: "fits scale_then_kill: buys time to scale (+1 Sandpit turn, ~49 damage each)", breaks: false });
-    // Not behind (the kill fits the pit): no Sandpit-race part.
-    expect(combatFit("race", "balanced", line({ damage: 67 }), { ...pit, maxDamage: 67, sandpit: { ...sandpit, behind: false, turnValue: 20 } }).label).toBe("fits race: most damage");
-    // Code's rank 1 with less damage and no Sandpit: fits, with the reason (the solver ranked it under race).
-    const top = combatFit("race", "balanced", line({ damage: 10, codeTop: true }), field);
-    expect(top).toEqual({ label: "fits race: code's best line under race weights (20 less damage than the best line, for less HP or more lasting value)", breaks: false });
-    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, codeTop: true }), field).breaks).toBe(false);
-    expect(combatFit("scale_then_kill", "balanced", line({ codeTop: true }), field).breaks).toBe(false);
-    // hp_policy is not the fight objective: still labelled on rank 1.
-    expect(combatFit("race", "preserve", line({ hpLoss: 12, codeTop: true }), field).breaks).toBe(true);
+    // Near the top: a note, not a cost.
+    expect(combatFit("race", "balanced", line({ damage: 67, scoreGap: 3 }), pit).label).toMatch(/; note: 1 Frantic Escape fewer/);
+  });
+
+  it("ranks the Queen's YOU_ARE_MINE turn by damage into the Amalgam (H7W0 F48 T2)", () => {
+    // Rank 4 "Colossus, Pommel Strike+ -> Amalgam, Crimson Mantle" 15 vs rank 2 "Bludgeon, Pommel Strike+ -> Amalgam" 63.
+    const queen = { ...field, burst: { target: "Torch Head Amalgam", maxDamage: 63, why: "YOU_ARE_MINE" } };
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 15, setup: 1, codeTop: true }), queen)).toEqual({
+      label: "costs 48 damage to Torch Head Amalgam vs the best line this turn (YOU_ARE_MINE)", breaks: true, grade: "costs",
+    });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 48, scoreGap: 9 }), queen)).toMatchObject({ breaks: false, grade: "costs" });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 63 }), queen)).toMatchObject({ label: "fits the burst turn: 63 damage to Torch Head Amalgam (YOU_ARE_MINE)", grade: "fits" });
   });
 });
 
@@ -345,7 +390,7 @@ describe("turn planner with a fight plan", () => {
     const ask = decision as AskDecision;
     expect(String((ask.state["strategy"] as string[])[0])).toMatch(/^fight objective scale_then_kill: play powers/);
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => String(text).includes("fits scale_then_kill: sets up"))).toBe(true);
+    expect(Object.values(criteria).some((text) => /fits scale_then_kill: [^;"]*; sets up \(powers \/ Strength\)/.test(String(text)))).toBe(true);
   });
 
   it("ignores a plan made for another fight", () => {
@@ -513,10 +558,12 @@ describe("turn planner with a fight plan", () => {
     expect(play(55, null).played).toMatch(/guarded to DEFEND_R, BASH/);
     // scale_then_kill: the setup line is played (code's own pick, lasting value x1.5, not guarded).
     expect(play(55, "scale_then_kill").played).toMatch(/Demon Form; hp -14/);
-    // preserve_hp: swapped, and Jev's pick is logged as a deviation of the objective.
+    // preserve_hp: swapped by the guard. Code's own preserve_hp score puts Demon Form within 5 of its
+    // best line (lasting value), so the label says so and the pick is no deviation of the objective.
     const preserve = play(55, "preserve_hp");
     expect(preserve.played).toMatch(/guarded to DEFEND_R, BASH/);
-    expect(preserve.deviation).toMatchObject({ intent: "breaks preserve_hp: loses 10 more HP than the safest line", fightObjective: "preserve_hp" });
+    expect(preserve.label).toMatch(/^fits preserve_hp: near code's best line \(score -5\.0\) under preserve_hp weights \(vs it: 10 more HP, 8 less damage\)/);
+    expect(preserve.deviation).toBeUndefined();
     // At 17 HP the setup line leaves 3 against a 14-ish next hit: it risks death, the guard swaps it.
     expect(play(17, "scale_then_kill").played).toMatch(/guarded to DEFEND_R, BASH/);
   });
@@ -975,7 +1022,7 @@ describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V0
     expect(escapes(plans[0]!)).toBe(2);
     expect(plans[0]!["intent_fit"]).toMatch(/^fits race/);
     for (const entry of plans) {
-      if (escapes(entry) < 2) expect(entry["intent_fit"]).toMatch(/breaks the Sandpit race: \d Frantic Escapes? fewer/);
+      if (escapes(entry) < 2) expect(entry["intent_fit"]).toMatch(/costs \d Sandpit turns?: \d Frantic Escapes? fewer/);
     }
     // The fight plan's own words are in the strategy context.
     expect(decision.state["strategy"]).toContain("fight plan (context): Play every affordable Frantic Escape early.");

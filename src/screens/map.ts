@@ -7,7 +7,7 @@
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { mapFit, mapShift, routeRiskFilter } from "../strategy/intent.js";
+import { LABEL_NOTE, mapFit, mapShift, routeRiskFilter } from "../strategy/intent.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import type { GameState } from "../mod/schema.js";
@@ -359,8 +359,8 @@ export function planMap(env: DecisionEnv): Decision | null {
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   // route_risk avoid_elites is hard on the next node: an Elite is not offered while another node is.
-  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") }))).map((entry) => entry.node);
-  const options: PickOption[] = offered.flatMap((node) => {
+  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") })), hpPct).map((entry) => entry.node);
+  const options: (Omit<PickOption, "summary"> & { summary: Record<string, JsonValue>; type: string; row: number })[] = offered.flatMap((node) => {
     const index = numOrNull(node["index"]);
     if (index === null) return [];
     const row = num(node["row"]);
@@ -377,7 +377,6 @@ export function planMap(env: DecisionEnv): Decision | null {
       here <= LIKELY_DEATH
         ? here * urgency - deathElite * minElitesAhead(self, nodes, new Map())
         : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency);
-    const fit = mapFit(runPlan, type, hpPct);
     return [
       {
         key: `n${index}`,
@@ -389,14 +388,25 @@ export function planMap(env: DecisionEnv): Decision | null {
           position: `row ${row}, column ${col}`,
           route_value: Number(value.toFixed(2)),
           likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3),
-          ...(fit ? { intent_fit: fit } : {}),
-        } satisfies JsonValue,
-        ...(fit?.startsWith("breaks") ? { intentBreak: fit } : {}),
-      } satisfies PickOption,
+        } as Record<string, JsonValue>,
+        type,
+        row,
+      },
     ];
   });
+  // Labels come from the same scoring that ranks the nodes (5JU3 F10: '?' labelled "breaks preserve"
+  // while Monster, priced dearer by the route scoring, had no label).
+  const bestValue = Math.max(...options.map((option) => option.score));
+  const labelled: PickOption[] = options.map(({ type, row, ...option }) => {
+    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)));
+    return {
+      ...option,
+      summary: { ...option.summary, ...(fit ? { intent_fit: fit } : {}) },
+      ...(fit?.startsWith("costs") ? { intentBreak: fit } : {}),
+    } satisfies PickOption;
+  });
 
-  if (options.length === 0) return null;
+  if (labelled.length === 0) return null;
 
   const current = asRecord(map["current_node"]);
   const boss = asRecord(map["boss_node"]);
@@ -406,7 +416,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     escalateBelow: 0.35,
-    options,
+    options: labelled,
     planVersion: runPlan?.version ?? null,
     codeMargin: env.combatPlanner === "card" ? undefined : 2.5,
     state: {
@@ -422,6 +432,7 @@ export function planMap(env: DecisionEnv): Decision | null {
         boss_node: `row ${num(boss["row"])}, column ${num(boss["col"])}`,
       },
       note: "route_value and likely_continuation are computed in code from the visible map graph. Do not recompute them.",
+      ...(runPlan ? { labels: LABEL_NOTE } : {}),
     },
   });
 }
@@ -436,6 +447,8 @@ const POTION_RANKS: Record<string, number> = {
   BLOCK_POTION: 7, FIRE_POTION: 7, EXPLOSIVE_AMPOULE: 7, WEAK_POTION: 6, VULNERABLE_POTION: 6, FEAR_POTION: 6,
   DEXTERITY_POTION: 7, STRENGTH_POTION: 8, FLEX_POTION: 6, REGEN_POTION: 7, HEART_OF_IRON: 8, FORTIFIER: 9,
   DUPLICATOR: 6, BLOOD_POTION: 6, FAIRY_IN_A_BOTTLE: 10, POTION_OF_BINDING: 7, GIGANTIFICATION_POTION: 7,
+  // Petrified Toad refills it every fight: the first slot to free for a real potion (H7W0 F42).
+  POTION_SHAPED_ROCK: 1,
 };
 /** Potions at or below this rank are dropped to make room for a guaranteed one. */
 export const POTION_RANK_DISCARDABLE = 5;

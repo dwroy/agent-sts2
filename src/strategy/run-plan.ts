@@ -25,11 +25,11 @@ import { deckEntries } from "../project/deck.js";
 import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } from "../knowledge/dossiers.js";
 import { bossClockJson, damageGap } from "./boss-clock.js";
 import { cardRoles } from "./card-value.js";
-import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, isOneOf, isReserved, MEANING, POTION_ROLES, recentChanges, ROUTE_RISKS, type ChangeTrigger, type HpPolicy, type RouteRisk } from "./intent.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, recentChanges, ROUTE_RISKS, type ChangeTrigger, type HpPolicy, type IntentReason, type ReasonField, type RouteRisk } from "./intent.js";
 import { repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
-export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
+export type RunPlanTrigger = "start" | "act" | "hp_drop" | "hp_rise" | "review";
 
 /** One accepted change of an intent between plan versions (plan-validator.ts). */
 export interface PlanChange {
@@ -89,6 +89,8 @@ export interface RunPlan {
   avoidRoles: CardRole[];
   bossPrep: string;
   summary: string;
+  /** Why each intent was chosen (intent.ts INTENT_REASONS): low_hp preserve / avoid_elites lapse once HP is back. */
+  reasons?: Partial<Record<ReasonField, IntentReason>>;
   /** 1 for the run's first plan, +1 per re-plan (deviations are logged per version). */
   version: number;
   snapshot?: PlanSnapshot;
@@ -121,16 +123,29 @@ export function hpFraction(state: GameState): number {
   return hp !== null && maxHp !== null && maxHp > 0 ? hp / maxHp : 1;
 }
 
-/** Why a new plan is due at this map screen, or null. */
+/**
+ * Why a new plan is due at this map screen, or null. A new act waits while the only node open is the
+ * act's Ancient (NX48 F17/F33: both act re-plans ran at 35% HP right before the Ancient healed to 86%,
+ * and the stale preserve held through F35). HP back up by RUN_PLAN_HP_DROP, or back at the target
+ * under a preserve made below it, asks again (hp_rise: rest sites and Ancient heals, NX48 F29/F32).
+ */
 export function runPlanTrigger(plan: RunPlan | null | undefined, state: GameState): RunPlanTrigger | null {
   const runId = str(state.raw["run_id"]);
   if (!plan || plan.runId !== runId) return "start";
   const act = actOf(state);
-  if (act !== plan.act) return "act";
+  if (act !== plan.act) return onlyAncientOpen(state) ? null : "act";
   const hp = hpFraction(state);
   if (plan.hpPct - hp >= RUN_PLAN_HP_DROP || (hp < RUN_PLAN_LOW_HP && plan.hpPct >= RUN_PLAN_LOW_HP)) return "hp_drop";
+  const target = hpTarget(plan);
+  if (hp - plan.hpPct >= RUN_PLAN_HP_DROP || (plan.hpPolicy === "preserve" && plan.hpPct < target && hp >= target)) return "hp_rise";
   if ((state.run?.floor ?? 0) - plan.floor >= RUN_PLAN_REVIEW_FLOORS) return "review";
   return null;
+}
+
+/** Every node open on the map is an Ancient (the act's first room, which heals). */
+function onlyAncientOpen(state: GameState): boolean {
+  const open = asArray(asRecord(state.raw["map"])["available_nodes"]).map(asRecord);
+  return open.length > 0 && open.every((node) => str(node["node_type"]) === "Ancient");
 }
 
 export const RUN_PLAN_TASK = [
@@ -152,6 +167,7 @@ export const RUN_PLAN_TASK = [
   '"remove": [card ids in the deck to remove first, max 3], "block_target": <block cards the deck should hold by the act boss>,',
   '"boss_prep": "<max 30 words: what to have ready for the act boss (context for Jev)>",',
   '"summary": "<max 40 words: the plan in plain words>",',
+  `"reasons": {"<hp_policy|route_risk|entry_hp_pct|reserve>": "<${INTENT_REASONS.join("|")}>"} (why you chose each intent),`,
   '"changes": [{"field": "<hp_policy|route_risk|entry_hp_pct|reserve|needs|avoid>", "from": <old>, "to": <new>,',
   `"trigger": "<${CHANGE_TRIGGERS.join("|")}>", "fact": "<the fact from since_last_plan that shows it>"}]}`,
   "What code does with each intent:",
@@ -162,6 +178,9 @@ export const RUN_PLAN_TASK = [
   "loses new potions, so reserve only what the boss needs. needs: a large pick bonus for cards of the role. avoid: such",
   "cards are not offered at all. act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP",
   "and potions that worked.",
+  "What code does with each reason: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
+  "reserve damage covers damage potions and burst potions: ENERGY_POTION, RADIANT_TINCTURE, ATTACK/POWER/SKILL/COLORLESS_POTION,",
+  "DUPLICATOR, SWIFT_POTION; Potion-Shaped Rocks are never reserved.",
   "Re-plans (previous_plan is set): previous_plan holds the intents in force and since_last_plan what happened since.",
   "Keep every intent unless a trigger from the list justifies changing it; a field you leave out keeps its value.",
   "Every changed field among hp_policy, route_risk, entry_hp_pct, reserve, needs and avoid must appear in changes with its",
@@ -186,6 +205,7 @@ export function runPlanIntentsJson(plan: RunPlan): Record<string, JsonValue> {
     block_target: plan.blockTarget,
     boss_prep: plan.bossPrep,
     summary: plan.summary,
+    reasons: (plan.reasons ?? {}) as JsonValue,
     recent_changes: plan.changes.slice(-4).map((change) => `F${change.floor} ${change.field} ${JSON.stringify(change.from)}→${JSON.stringify(change.to)} (${change.trigger})`),
   };
 }
@@ -318,6 +338,16 @@ export function parseRunPlan(
     if (entryRaw > 0 && entryRaw <= 1) entryHp = Math.min(0.95, entryRaw);
     else notes.push(`entry_hp_pct: ${entryRaw} is not a fraction 0-1, ignored`);
   }
+  const reasonsRaw = json["reasons"] && typeof json["reasons"] === "object" && !Array.isArray(json["reasons"]) ? (json["reasons"] as Record<string, unknown>) : null;
+  const reasons: Partial<Record<ReasonField, IntentReason>> = reasonsRaw ? {} : { ...(base.reasons ?? {}) };
+  if (reasonsRaw) {
+    for (const [key, value] of Object.entries(reasonsRaw)) {
+      const field = key.trim().toLowerCase();
+      const parsed = parseReasons(value);
+      if (isOneOf(REASON_FIELDS, field) && parsed.reasons[0]) reasons[field] = parsed.reasons[0];
+      else notes.push(`reasons: dropped ${JSON.stringify(key)}: ${JSON.stringify(value)}`);
+    }
+  }
   const reserveKey = has("reserve") ? "reserve" : "save_potions";
   const needsKey = has("needs") ? "needs" : "must_have";
   const proposal: RunPlan = {
@@ -341,6 +371,7 @@ export function parseRunPlan(
     needs: has(needsKey) ? (list(needsKey, role(CARD_ROLES), 4) as CardRole[]) : base.needs,
     bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : base.bossPrep,
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : base.summary,
+    ...(Object.keys(reasons).length > 0 ? { reasons } : {}),
     version: base.version + 1,
     snapshot: snapshotOf(state, knowledge),
     changes: base.changes,
@@ -385,6 +416,7 @@ export function normalizeRunPlan(raw: RunPlan | Record<string, unknown>): RunPla
     avoidRoles: asArray(plan.avoidRoles as JsonValue).filter((role): role is CardRole => isOneOf(CARD_ROLES, role)),
     bossPrep: String(plan.bossPrep ?? ""),
     summary: String(plan.summary ?? ""),
+    ...(plan.reasons && typeof plan.reasons === "object" ? { reasons: plan.reasons } : {}),
     version: Number(plan.version ?? 1),
     ...(plan.snapshot ? { snapshot: plan.snapshot } : {}),
     changes: Array.isArray(plan.changes) ? plan.changes : [],
