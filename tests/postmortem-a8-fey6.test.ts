@@ -9,10 +9,12 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision } from "../src/project/types.js";
 import { hpClockTurns, measuredDamagePerTurn, planCombatTurn } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/mod/schema.js";
 import { planDecision } from "../src/screens/index.js";
+import { fightPlanInput } from "../src/strategy/fight-plan.js";
 import { setupRisksDeath } from "../src/strategy/intent.js";
 import { asArray, asRecord } from "../src/util/json.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 const answer = (choice: string, confidence: number) => ({ plan: { type: "choice", choice, confidence, probabilities: {}, raw: {} } }) as never;
 
@@ -140,5 +142,18 @@ describe("map survival does not route through an optional elite the plan forbids
     const options = optionsOf();
     const left = Object.values(options).find((option) => option["position"] === "row 8, column 2")!;
     expect(left["route_survival"]).not.toMatch(/F29 rest/);
+  });
+});
+
+describe("the Obscura dossier DeepSeek reads says when to kill the Parafright (PCGH F23, P57H)", () => {
+  it("the fight-plan input carries the respawn, the kill rule, the anti-'ignore' line and PCGH's numbers", () => {
+    const state = parseGameState(logged("pcgh-f23-t4").state);
+    const enemies = fightPlanInput(state, loggedKnowledge, "monster", {})["enemies"] as Record<string, unknown>[];
+    const dossier = JSON.stringify(enemies.map((enemy) => enemy["dossier"]).find(Boolean));
+    expect(dossier).toMatch(/满血/);
+    expect(dossier).toMatch(/≤21/);
+    expect(dossier).toMatch(/全打胧光怪/);
+    expect(dossier).toMatch(/ignore the Parafright/);
+    expect(dossier).toMatch(/PCGH/);
   });
 });
