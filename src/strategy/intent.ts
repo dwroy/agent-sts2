@@ -220,9 +220,12 @@ export function combatPolicy(
   fight: (Pick<FightPlan, "objective"> & { reasons?: IntentReason[] }) | null | undefined,
   hpFraction: number,
   bossClock: BossClockNow | null = null,
+  grind: string | null = null,
 ): { policy: HpPolicy; why: string | null } {
   const base = policyAt(plan, hpFraction);
   if (base !== (plan?.hpPolicy ?? "balanced")) return { policy: base, why: `hp_policy ${plan?.hpPolicy} was for low HP; HP ${Math.round(hpFraction * 100)}% is back at the ${Math.round(hpTarget(plan) * 100)}% target` };
+  // HP kept cannot win a fight the grind outlasts (grindOutlasts): damage first.
+  if (base === "preserve" && grind) return { policy: "balanced", why: `damage first: ${grind}` };
   if (base === "preserve" && damageFirst(fight)) return { policy: "balanced", why: `fight objective ${fight!.objective} because ${(fight!.reasons ?? []).join(", ")}: damage first under hp_policy preserve` };
   // The act boss is fought to the end whatever the policy (plan-validator.ts): while its clock needs
   // more a turn than the deck deals, HP saved only stretches a race already behind (G8F1 F33: preserve
@@ -339,6 +342,25 @@ export function promotesSetup(objective: FightObjective | null, turn: number, la
   return objective === "scale_then_kill" && turn <= 3 && !laterPhase;
 }
 
+/** What a preserve_hp grind is checked against: turns the kill takes, HP lost a turn, HP now. */
+export interface GrindFacts {
+  turnsToKill: number | null;
+  lossPerTurn: number;
+  hp: number;
+}
+
+/**
+ * Why a grind cannot be won, or null: the turns the kill takes at this fight's damage a turn, times the
+ * HP lost a turn at the expected incoming, reach our HP (XMY2 F24: Hunter Killer 126 HP at ~11.5 a turn
+ * with 19 HP against 17/21 hits; K7G9 F45: "grind 320 HP down" at 20/72 against the Mecha Knight).
+ */
+export function grindOutlasts(grind: GrindFacts | null): string | null {
+  if (!grind || grind.turnsToKill === null || grind.lossPerTurn <= 0 || grind.hp <= 0) return null;
+  const turns = Math.ceil(grind.turnsToKill);
+  if (turns * grind.lossPerTurn < grind.hp) return null;
+  return `the grind outlasts our HP (~${turns} turns to kill, ~${Math.round(grind.lossPerTurn)} HP lost a turn, ${Math.round(grind.hp)} HP)`;
+}
+
 /** Expected turns left in the fight from which setup still pays (scale_then_kill). */
 export const SETUP_MIN_TURNS_LEFT = 3;
 
@@ -352,7 +374,12 @@ export const SETUP_MIN_TURNS_LEFT = 3;
  * still has ~10 turns for a Demon Form. A setup line that risks death is refused per line
  * (setupRisksDeath) whatever the objective.
  */
-export function objectiveInForce(objective: FightObjective | null, ctx: { turnsLeft: number | null; laterPhase: boolean; setupLeft: boolean }): { objective: FightObjective | null; why: string | null } {
+export function objectiveInForce(
+  objective: FightObjective | null,
+  ctx: { turnsLeft: number | null; laterPhase: boolean; setupLeft: boolean; grind?: GrindFacts | null },
+): { objective: FightObjective | null; why: string | null } {
+  const outlasts = objective === "preserve_hp" ? grindOutlasts(ctx.grind ?? null) : null;
+  if (outlasts) return { objective: "kill_fast", why: `preserve_hp: ${outlasts}; only a faster kill can win: kill` };
   if (objective !== "scale_then_kill") return { objective, why: null };
   if (ctx.laterPhase) return { objective: "kill_fast", why: "scale_then_kill: a new boss phase is no setup window: kill" };
   if (!ctx.setupLeft) return { objective: "kill_fast", why: "scale_then_kill: no power or permanent Strength card left in hand or draw pile: kill" };
@@ -807,6 +834,7 @@ export function intentLines(
   now: { bossClock?: BossClockNow | null; objective?: { objective: FightObjective | null; why: string | null } } = {},
 ): string[] {
   const bossClock = now.bossClock ?? null;
+  const nowObjective = now.objective ?? null;
   const lines: string[] = [];
   const because = (reason: string | undefined) => (reason ? ` because ${reason}` : "");
   if (run) {
@@ -815,7 +843,7 @@ export function intentLines(
     const risk = run.routeRisk ?? "normal";
     if (risk !== "normal") lines.push(`route_risk ${risk}${because(run.reasons?.route_risk)}: ${MEANING.route_risk[risk]}`);
     if (hpFraction !== null) {
-      const now = combatPolicy(run, fight, hpFraction, bossClock);
+      const now = combatPolicy(run, fight, hpFraction, bossClock, fight?.objective === "preserve_hp" && nowObjective?.objective === "kill_fast" ? nowObjective.why : null);
       if (now.why) lines.push(`in force now: hp_policy ${now.policy} (${now.why})`);
       const riskNow = routeRiskAt(run, hpFraction);
       if (riskNow !== risk) lines.push(`in force now: route_risk ${riskNow} (avoid_elites was for low HP; HP is back at the target)`);

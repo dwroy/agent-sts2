@@ -68,6 +68,8 @@ export interface ScreenMemory {
     /** Non-minion enemy HP and the turn when first seen (this fight's damage a turn). */
     hp?: number;
     turn?: number;
+    /** Our HP at that first look (this fight's HP lost a turn). */
+    playerHp?: number;
     /** Turns whose first look found every non-minion enemy asleep or intangible (not damage-rate turns). */
     idle?: number[];
   };

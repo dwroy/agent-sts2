@@ -30,8 +30,8 @@ import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
-import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { expectedLossPerTurn, fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
+import { combatFit, combatPolicy, grindOutlasts, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
@@ -908,7 +908,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
   const fightId = fightKey(state);
   const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
-  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
+  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1, playerHp: playerSim.hp };
   // A turn that starts with every non-minion enemy asleep or intangible is no turn of this fight's damage
   // rate (T86W F17: the Matriarch slept T1-T3 for 1 damage; T4 read 1/3 a turn and "kills" in 700 turns).
   const keyEnemies = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0);
@@ -930,10 +930,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   const perTurn = measuredDamagePerTurn(start, enemyHpNow, fightTurn) ?? deckDamagePerTurn(state, env.knowledge);
   // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
   // set up, or in a new boss phase (intent.ts objectiveInForce).
+  // HP lost a turn: this fight's so far, else the enemies' average hits less the deck's block.
+  const measuredLoss =
+    start.playerHp !== undefined && start.turn !== undefined && fightTurn > start.turn ? Math.max(0, (start.playerHp - playerSim.hp) / (fightTurn - start.turn)) : null;
+  const grind = kind === "boss" ? null : { turnsToKill: perTurn > 0 ? bossHpLeft / perTurn : null, lossPerTurn: measuredLoss ?? expectedLossPerTurn(state, env.knowledge), hp: playerSim.hp };
   const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {
     turnsLeft: perTurn > 0 ? bossHpLeft / perTurn : null,
     laterPhase,
     setupLeft: setupLeft(state, hand, env.knowledge),
+    grind,
   });
   const objective = objectiveNow.objective;
   const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
@@ -941,7 +946,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The act boss's clock now: HP left over the clock's turns left, against the deck's estimate.
   const bossClockNow = need ? { need: bossHpLeft / clockTurnsLeft, deck: deckDamagePerTurn(state, env.knowledge) } : null;
   // An act boss behind its clock is fought under balanced, not preserve (intent.ts combatPolicy).
-  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac, bossClockNow).policy;
+  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac, bossClockNow, fightPlan?.objective === "preserve_hp" && objective === "kill_fast" ? grindOutlasts(grind) : null).policy;
   const guardScale = guardSlackScale(objective, hpPolicy, hpFrac);
   // Reserve: potions of the roles the run plan keeps for the act boss are hard-filtered from every
   // line and offer before it, in every non-boss fight (M6P7, T4PY, 0YG4: boss potions spent in
