@@ -644,6 +644,38 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   return { label: parts.length > 0 ? parts.join("; ") : "neutral", breaks, grade };
 }
 
+/**
+ * The label of a "drink it first, then re-plan" option for a potion the solver does not simulate: what
+ * it is for, whether an intent in force asks for that now, and that no line's numbers include it. Such
+ * options had no label at all (VUV4 F17 Blessing of the Forge, X8R8 F17 Attack Potion T1-T10: every
+ * question showed them bare beside labelled lines, Jev never took them until the last turn).
+ */
+export function potionOptionFit(ctx: {
+  role: PotionRole | null;
+  objective: FightObjective | null;
+  bossFight: boolean;
+  /** The act boss clock now (need a turn vs the deck's estimate), when this is the act boss. */
+  bossClock: BossClockNow | null;
+  /** HP the cheapest shown line loses this turn, and our HP. */
+  cheapestLoss: number;
+  hp: number;
+  /** The solver's cost of drinking a potion in this fight. */
+  useCost: number;
+}): string {
+  const role = ctx.role ?? "unclassified";
+  const unpriced = `its effect is in no line's numbers; drinking it first re-plans the turn (potion cost ~${Math.round(ctx.useCost)})`;
+  const behind = ctx.bossClock !== null && ctx.bossClock.need > ctx.bossClock.deck;
+  const offence = ctx.role === "damage" || ctx.role === "strength";
+  const defence = ctx.role === "block" || ctx.role === "weak" || ctx.role === "heal";
+  if (offence && (behind || tradesHpForDamage(ctx.objective))) {
+    const why = behind ? `the act boss clock is behind (~${Math.round(ctx.bossClock!.need)} a turn needed, deck ~${Math.round(ctx.bossClock!.deck)})` : `fight objective ${ctx.objective}`;
+    return `fits ${behind ? "the boss race" : ctx.objective}: a ${role} potion, ${why}; ${unpriced}`;
+  }
+  if (defence && ctx.cheapestLoss >= Math.max(10, ctx.hp * 0.3)) return `fits hp: a ${role} potion while the cheapest line loses ${ctx.cheapestLoss} HP; ${unpriced}`;
+  if (ctx.bossFight) return `neutral: a ${role} potion; the act boss is what potions are kept for, no intent asks for it this turn; ${unpriced}`;
+  return `costs the potion: a ${role} potion no intent asks for this turn; ${unpriced}`;
+}
+
 /** What the labels mean, for Jev (every question with intent_fit labels carries it). */
 export const LABEL_NOTE =
   "intent_fit labels are guidance with costs, not orders: 'fits' = code's best line, or near it, under the strategy's weights; 'costs X' = what the line gives up against that best line (and what it gains). You choose.";

@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -79,6 +79,11 @@ export interface CardModel {
    * Bloodletting, Thorns) deals this much to every enemy.
    */
   inferno?: number;
+  /**
+   * A potion that puts a card into the hand, free this turn (Attack/Skill/Power/Colorless Potion): the
+   * card the solver may then play (GENERATED_CARD_POTIONS).
+   */
+  generates?: CardModel;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
   /**
@@ -452,7 +457,81 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // +2 Dexterity for the fight (DEXTERITY_POWER 2 in states.jsonl). Worth only the block cards it
   // raises: KFP1 T3 and 2WUM F33 T3 drank it with no block card left to play, 0 gained that turn.
   DEXTERITY_POTION: { target: "self", special: "dexterity" },
+  // Every card in hand upgraded for the fight (upgradeCard): this turn's plays after it and the upgraded
+  // cards' later draws (VUV4 F17: carried unmodelled, drunk at 0 energy on one Defend; T86W to the death).
+  BLESSING_OF_THE_FORGE: { target: "self", special: "upgrade_hand" },
+  // Card potions: drinking puts the card in hand (modelPotion builds it from GENERATED_CARD_POTIONS).
+  ATTACK_POTION: { target: "self" },
+  SKILL_POTION: { target: "self" },
+  POWER_POTION: { target: "self" },
+  COLORLESS_POTION: { target: "self" },
 };
+
+/**
+ * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
+ * card of that type, at a conservative value for the best of three offered. Ironclad's pool (game
+ * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
+ * (selection/take into my hand): Bludgeon 32 (X8R8 F17 T11), Uppercut 13, Fight Me 10x2, Demon Form
+ * (power, scored 39). Before this they were only a "drink first" option with no label, never code's
+ * rank 1, and were carried to the death (X8R8 Attack Potion T1-T10, M9PL Skill Potion to T9).
+ */
+export const GENERATED_CARD_POTIONS: Record<string, { type: string; target: TargetMode; damage?: number; block?: number; flatValue?: number }> = {
+  ATTACK_POTION: { type: "Attack", target: "single", damage: 14 },
+  SKILL_POTION: { type: "Skill", target: "self", block: 7 },
+  POWER_POTION: { type: "Power", target: "self", flatValue: 12 },
+  COLORLESS_POTION: { type: "Skill", target: "self", flatValue: 8 },
+};
+
+/** What the drinker's board adds to a generated card: living enemy indices, Strength now, Weak. */
+export interface PotionContext {
+  enemyTargets: number[];
+  strength: number;
+  weak: boolean;
+}
+
+/**
+ * Upgrade deltas measured on hand cards in states.jsonl (same card, upgraded vs not: base values).
+ * Cards not listed: +30% damage and block (at least +2), the median of the measured ones.
+ */
+const UPGRADE_DELTA: Record<string, { damage?: number; block?: number; hits?: number; vulnerable?: number; weak?: number; strength?: number; draw?: number; cost?: number }> = {
+  STRIKE_IRONCLAD: { damage: 3 }, DEFEND_IRONCLAD: { block: 3 }, BASH: { damage: 2, vulnerable: 1 }, ANGER: { damage: 2 },
+  BLOOD_WALL: { block: 4 }, BLUDGEON: { damage: 10 }, BREAKTHROUGH: { damage: 4 }, CINDER: { damage: 6 }, COLOSSUS: { block: 3 },
+  CONFLAGRATION: { hits: 1 }, DISMANTLE: { damage: 2 }, EVIL_EYE: { block: 3 }, FEED: { damage: 2 }, FIEND_FIRE: { damage: 3 },
+  FIGHT_ME: { damage: 1 }, FLAME_BARRIER: { block: 4 }, HEADBUTT: { damage: 3 }, HEMOKINESIS: { damage: 5 }, HOWL_FROM_BEYOND: { damage: 6 },
+  IMPERVIOUS: { block: 10 }, MANGLE: { damage: 6 }, MOLTEN_FIST: { damage: 4 }, POMMEL_STRIKE: { damage: 1, draw: 1 }, SECOND_WIND: { block: 2 },
+  SETUP_STRIKE: { damage: 2 }, SHRUG_IT_OFF: { block: 3 }, SPITE: { hits: 1 }, STOMP: { damage: 3 }, SWORD_BOOMERANG: { hits: 1 },
+  TAUNT: { block: 1, vulnerable: 1 }, TEAR_ASUNDER: { damage: 2 }, THRASH: { damage: 2 }, THUNDERCLAP: { damage: 3 }, TRUE_GRIT: { block: 2 },
+  TWIN_STRIKE: { damage: 2 }, ULTIMATE_STRIKE: { damage: 6 }, UNRELENTING: { damage: 6 }, UPPERCUT: { vulnerable: 1, weak: 1 }, WHIRLWIND: { damage: 3 },
+  INFLAME: { strength: 1 }, BATTLE_TRANCE: { draw: 1 }, BURNING_PACT: { draw: 1 }, OFFERING: { draw: 2 },
+  DARK_EMBRACE: { cost: 1 }, HELLRAISER: { cost: 1 }, STAMPEDE: { cost: 1 }, UNMOVABLE: { cost: 1 },
+};
+
+/** A hand card upgraded (Blessing of the Forge); an upgraded, Status or Curse card is returned as is. */
+export function upgradeCard(card: CardModel): CardModel {
+  if (card.upgraded || card.type === "Potion" || card.type === "Status" || card.type === "Curse") return card;
+  const delta = UPGRADE_DELTA[card.cardId] ?? {
+    damage: card.damage !== null && card.damage > 0 ? Math.max(2, Math.round(card.damage * 0.3)) : 0,
+    block: card.block > 0 ? Math.max(2, Math.round(card.block * 0.3)) : 0,
+  };
+  return {
+    ...card,
+    upgraded: true,
+    damage: card.damage === null ? null : card.damage + (delta.damage ?? 0),
+    hits: card.hits + (delta.hits ?? 0),
+    block: card.block > 0 ? card.block + (delta.block ?? 0) : card.block,
+    vulnerable: card.vulnerable + (delta.vulnerable ?? 0),
+    weak: card.weak + (delta.weak ?? 0),
+    strength: card.strength + (card.strength > 0 ? delta.strength ?? 0 : 0),
+    draw: card.draw + (card.draw > 0 ? delta.draw ?? 0 : 0),
+    cost: card.xCost ? card.cost : Math.max(0, card.cost - (delta.cost ?? 0)),
+  };
+}
+
+/** What an upgrade adds to one play of the card, in rough score points (damage, block, debuffs, draw). */
+export function upgradeGain(before: CardModel, after: CardModel): number {
+  const damage = (after.damage ?? 0) * Math.max(1, after.hits) - (before.damage ?? 0) * Math.max(1, before.hits);
+  return damage + (after.block - before.block) + 2.5 * (after.vulnerable - before.vulnerable + after.weak - before.weak) + 5 * (after.strength - before.strength) + 2 * (after.draw - before.draw) + 3 * (before.cost - after.cost);
+}
 
 /** Touch of Insanity is only worth drinking for a card costing at least this much. */
 export const FREE_CARD_MIN_COST = 2;
@@ -473,10 +552,48 @@ export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;
 }
 
-/** `slot` is the potion slot; the card index space is kept apart with 100 + slot. */
-export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number): CardModel | null {
+/**
+ * `slot` is the potion slot; the card index space is kept apart with 100 + slot (200 + slot for the card
+ * a card potion adds). `ctx` is the board a generated card is played on (targets, Strength, Weak).
+ */
+export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
+  const card = GENERATED_CARD_POTIONS[potionId];
+  const generates: CardModel | undefined = card
+    ? {
+        index: 200 + slot,
+        key: `g${slot}`,
+        cardId: `GEN:${potionId}:${slot}`,
+        name: `card from ${name}`,
+        type: card.type,
+        upgraded: false,
+        cost: 0,
+        xCost: false,
+        playable: true,
+        target: card.target,
+        validTargets: card.target === "single" ? (ctx?.enemyTargets ?? validTargets) : [],
+        // Like a hand card's shown number: current Strength in, Weak applied.
+        damage: card.damage === undefined ? null : Math.floor((card.damage + (ctx?.strength ?? 0)) * (ctx?.weak ? 0.75 : 1)),
+        hits: 1,
+        block: card.block ?? 0,
+        vulnerable: 0,
+        weak: 0,
+        strength: 0,
+        tempStrength: 0,
+        enemyStrength: 0,
+        enemyTempStrengthLoss: 0,
+        hpLoss: 0,
+        energyGain: 0,
+        draw: 0,
+        exhausts: false,
+        special: null,
+        known: true,
+        flatValue: card.flatValue ?? 0,
+        heldPenalty: 0,
+        text: "",
+      }
+    : undefined;
   return {
     index: 100 + slot,
     key: `p${slot}`,
@@ -507,5 +624,11 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     heldPenalty: 0,
     text: "",
     ...effect,
+    ...(generates ? { generates } : {}),
   };
+}
+
+/** A plan step that plays the card a card potion added (not a hand card: nothing to click until drunk). */
+export function isGeneratedStep(cardId: string): boolean {
+  return cardId.startsWith("GEN:");
 }

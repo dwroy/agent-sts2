@@ -31,7 +31,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
 import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
@@ -408,7 +408,10 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
-  if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  if (o.lasting >= 5) {
+    const forge = plan.steps.some((step) => step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:"));
+    summary["lasting_value"] = `${forge ? "upgrades the hand for the fight" : "sets up a power"}, worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  }
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -978,6 +981,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         clockPerTurn: bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0)?.perTurn ?? null,
       })
     : null;
+  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS).
+  const potionContext = { enemyTargets: enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index), strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
     solveTurn({
       hand: [
@@ -994,6 +999,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               (free && !heldForBoss(potion.potion_id, potion.text)) || toadRock(potion.potion_id)
                 ? 0
                 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (heldForBoss(potion.potion_id, potion.text) ? RUN_PLAN_SAVE_COST : 0),
+              potionContext,
             ),
           )
           .filter((card): card is CardModel => card !== null)
@@ -1427,6 +1433,16 @@ function planTurn(env: DecisionEnv): Decision | null {
           text: potion.text,
           ...(reservedPotion(potion.potion_id, potion.text) ? { reserve: `reserved for the act boss by the run plan; released: ${offerReleased}` } : {}),
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          // Labelled like the lines (never a bare pre-step): what it is for and whether an intent asks for it.
+          intent_fit: potionOptionFit({
+            role: potionRole(potion.potion_id, potion.text),
+            objective,
+            bossFight: kind === "boss",
+            bossClock: bossClockNow,
+            cheapestLoss: Math.min(...options.map((plan) => plan.outcome.hpLoss)),
+            hp: playerSim.hp,
+            useCost: potionUseCost,
+          }),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
