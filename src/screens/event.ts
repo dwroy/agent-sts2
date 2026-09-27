@@ -175,6 +175,37 @@ export function eventOptionScore(
   return Math.round(score * 10) / 10;
 }
 
+/** Text of an option that costs something besides HP: a curse or unplayable card, gold, a potion or a relic given up. */
+const OTHER_COST = /不能被打出|unplayable|(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)|(?:失去|交出|支付|lose|pay|give up)[^。.]{0,8}(?:金币|gold|药水|potion|遗物|relic)/i;
+
+/**
+ * An option's HP effect in words, against the run plan's entry target: 77UJ F22 Spirit Grafter at
+ * 53/80 under entry_hp 85%, "+25 HP" and "-10 HP" went to Jev as bare text and it took -10 at 0.04.
+ */
+export function eventHpEffect(heal: number, cost: { hp: number; maxHp: number }, hp: number, maxHp: number, entryHp: number | null, maxGain = 0): string | null {
+  if (maxHp <= 0 || (heal <= 0 && cost.hp <= 0 && cost.maxHp <= 0 && maxGain <= 0)) return null;
+  const pct = (value: number, max: number) => `${Math.round((100 * value) / Math.max(1, max))}%`;
+  const max = maxHp - cost.maxHp + maxGain;
+  const after = Math.max(0, Math.min(max, hp + heal - cost.hp + maxGain));
+  const changes = [heal > 0 ? `+${heal} HP` : "", cost.hp > 0 ? `-${cost.hp} HP` : "", maxGain > 0 ? `+${maxGain} max HP` : "", cost.maxHp > 0 ? `-${cost.maxHp} max HP` : ""].filter(Boolean);
+  const parts = [`${changes.join(", ")}: ${pct(hp, maxHp)} -> ${pct(after, max)}`];
+  if (entryHp !== null) {
+    const target = `entry_hp ${Math.round(entryHp * 100)}%`;
+    const before = hp / maxHp >= entryHp;
+    if (after / max >= entryHp) parts.push(before ? `at ${target}` : `reaches ${target}`);
+    else if (before) parts.push(`drops below ${target}`);
+    else parts.push(after / max > hp / maxHp ? `toward ${target}` : after / max < hp / maxHp ? `further below ${target}` : `below ${target}`);
+  }
+  return parts.join(", ");
+}
+
+/** Max HP an option's text gives ("获得[blue]10[/blue]最大生命"). */
+function eventMaxHpGain(text: string): number {
+  let gain = 0;
+  for (const match of text.matchAll(/获得(\d+)点?最大生命|gain (\d+) max hp/gi)) gain += Number(match[1] ?? match[2]);
+  return gain;
+}
+
 /** The Lantern Key event (act 2): keep the key and fight for it, or return it for gold. */
 export const LANTERN_KEY_EVENT = "THE_LANTERN_KEY";
 /** HP share of max below which the Lantern Key is returned for the gold (the lessons' rule, 90% -> 80%). */
@@ -284,6 +315,35 @@ export function planEvent(env: DecisionEnv): Decision | null {
     };
   });
   const scoreCtx = { hp, maxHp, forced: forced !== null, deck, act, reserved };
+  const entryHp = currentRunPlan(env.screenMemory, state)?.entryHp ?? null;
+  const healOf = (option: Record<string, unknown>) => eventHeal(str(option["description"]).replace(/\[[^\]]*\]/g, ""), hp, maxHp);
+  const costOf = (option: Record<string, unknown>) => costs[unguarded.indexOf(option)] ?? { hp: 0, maxHp: 0 };
+  // Under the run plan's entry target an option that only heals is code's pick (77UJ F22: +25 HP and a
+  // Metamorphosis against -10 HP and an upgrade at 66%, entry 85%; Jev took -10 at 0.04, 53 -> 43, and
+  // F24's rest reached 67 instead of 78).
+  if (entryHp !== null && maxHp > 0 && hp / maxHp < entryHp) {
+    const healers = pool.filter((option) => {
+      const text = str(option["description"]).replace(/\[[^\]]*\]/g, "");
+      const cost = costOf(option);
+      return !bool(option["is_proceed"]) && healOf(option) > 0 && cost.hp <= 0 && cost.maxHp <= 0 && !cost.spends && !FIGHT_OPTION.test(text) && !OTHER_COST.test(text);
+    });
+    const best = healers.sort((a, b) => healOf(b) - healOf(a) || eventOptionScore(str(b["description"]), scoreCtx) - eventOptionScore(str(a["description"]), scoreCtx))[0];
+    if (best) {
+      return {
+        kind: "act",
+        label: "event/heal",
+        intent: { action: "choose_event_option", option_index: numOrNull(best["index"]) ?? 0 },
+        rationale: `${str(best["title"])} heals ${healOf(best)} with no other cost at ${hp}/${maxHp}, under the run plan's entry_hp ${Math.round(entryHp * 100)}% (${eventHpEffect(healOf(best), costOf(best), hp, maxHp, entryHp)})`,
+      };
+    }
+  }
+  // The option's own HP numbers (a fight at its hallway cost net of its heal), not a potion it gives up.
+  const hpEffectOf = (option: Record<string, unknown>): Record<string, JsonValue> => {
+    const text = str(option["description"]).replace(/\[[^\]]*\]/g, "");
+    const cost = eventHpCost(text, { act, hp, maxHp });
+    const effect = eventHpEffect(FIGHT_OPTION.test(text) ? 0 : healOf(option), cost, hp, maxHp, entryHp, eventMaxHpGain(text));
+    return effect ? { hp_effect: effect } : {};
+  };
   const options: PickOption[] = pool.flatMap((option) => {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
@@ -301,6 +361,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
           option: title,
           description: truncate(str(option["description"]), 200),
           lethal: bool(option["will_kill_player"]),
+          ...hpEffectOf(option),
           ...(spendsOf(option) ? { reserved_potion: spendsText(spendsOf(option)!) } : {}),
           ...relicNotes,
         } satisfies JsonValue,

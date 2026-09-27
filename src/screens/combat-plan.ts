@@ -25,7 +25,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { drinkFirstSafe, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { drinkFirstSafe, expectedDraw, heldPenaltyOf, isGeneratedStep, isModelledPotion, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -300,6 +300,11 @@ function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
     return 0;
   }
   return Math.max(0, memo.startCount - count);
+}
+
+/** A line's HP change in a rationale: "hp -7", or "hp +2" when a heal outweighs the turn's loss. */
+function hpText(loss: number): string {
+  return loss < 0 ? `hp +${-loss}` : `hp -${loss}`;
 }
 
 /** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
@@ -715,7 +720,7 @@ function thisTurnIncoming(combat: Record<string, unknown>): number {
 }
 
 /**
- * The cards of the discard or draw pile (agent_view lines) as hand cards: the deck's entry of that card
+ * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
  * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
  */
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
@@ -731,14 +736,15 @@ export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "di
     const info = knowledge.card(cardId);
     const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
     const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
-    return [
-      {
-        ...model,
-        playable,
-        validTargets: model.target === "single" ? ctx.enemyTargets : [],
-        damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
-      },
-    ];
+    const card: CardModel = {
+      ...model,
+      playable,
+      validTargets: model.target === "single" ? ctx.enemyTargets : [],
+      damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+    };
+    // "剑柄打击*2 [1费]": one line per card id, with its count (drawPileCards reads it the same way).
+    const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+    return Array.from({ length: Math.max(1, count) }, () => card);
   });
 }
 
@@ -769,8 +775,11 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
-  const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
+  // Gambler's Brew draws what it draws: re-planned after it, like a draw.
+  const firstCard = first ? cardFor(first, hand) : undefined;
+  const drawsOrRandom = (firstCard?.draw ?? 0) + (firstCard?.special === "gamble" ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
@@ -1158,6 +1167,18 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
+    // Gambler's Brew draws from the draw pile, or the discard pile reshuffled when it is empty.
+    ...(beltIds.has("GAMBLERS_BREW")
+      ? {
+          expectedDraw: expectedDraw(
+            (() => {
+              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
+            })(),
+            potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW")?.slot ?? 0,
+          ),
+        }
+      : {}),
   };
   // Lines are shown and played with their order-free potions drunk first (potionsFirst).
   const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) => {
@@ -1382,8 +1403,26 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Not with Tender on us: a lethal it makes one short is a turn of the Hunter Killer's hits (LSWU F21 T5:
   // 6/126 left, dead at 13 HP). The line still ranks first below; it only loses the shortcut.
   if (best.outcome.winsFight && playerSim.tender === 0) {
-    commit(env, state.turn, best, hand, "code");
-    return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
+    // A lethal line that keeps the run plan's reserved potions beats one that drinks them (Z49J F24 T4:
+    // the Strength Potion kept for the crab went into a hallway lethal that Battle Trance, Sword
+    // Boomerang, Relentless and the Toad's rock made without it). The Toad's rock comes back every fight.
+    const spendsKept = (plan: Plan) =>
+      plan.steps.some((step) => {
+        const id = step.cardId.startsWith("POTION:") ? step.cardId.split(":")[1] ?? "" : "";
+        return id !== "" && !toadRock(id) && reservedPotion(id, potionText(id));
+      });
+    let lethal = best;
+    if (spendsKept(best)) {
+      const kept = (plans: Plan[]) => plans.find((plan) => plan.outcome.winsFight && !spendsKept(plan));
+      lethal = kept(solved.plans) ?? kept(solveWith(solvedFree, (potion) => toadRock(potion.potion_id) || !reservedPotion(potion.potion_id, potion.text)).plans) ?? best;
+    }
+    commit(env, state.turn, lethal, hand, "code");
+    return {
+      kind: "act",
+      label: "combat/lethal",
+      intent: firstIntent(lethal, hand, env),
+      rationale: `lethal: ${lethal.steps.map(stepText).join(", ")}${lethal !== best ? " (keeps the reserved potion: a lethal without it)" : ""}${calcNote}`,
+    };
   }
   // A line that wakes a sleeper into next turn and is left within its first hit (+ next turn's other
   // hits) risks death: dropped while a line without that risk survives (FH3M F30 T2: Offering's Inferno
@@ -1546,7 +1585,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-guarded",
         intent: firstIntent(guarded, hand, env),
-        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (hp -${guarded.outcome.hpLoss}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (${hpText(guarded.outcome.hpLoss)}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
       };
     }
     commit(env, state.turn, top, hand, "code");
@@ -1561,7 +1600,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "combat/plan",
       intent: firstIntent(top, hand, env),
-      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; hp -${top.outcome.hpLoss}, dmg ${top.outcome.damageDealt}${calcNote}`,
+      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; ${hpText(top.outcome.hpLoss)}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
 
@@ -1885,7 +1924,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const fit = fromJev ? fitFor(picked) : null;
       const deviation = fit?.breaks && (fightPlan || runPlan) ? { intent: fit.label, runPlanVersion: runPlan?.version ?? null, fightObjective: objective } : undefined;
       const guardNote = replacement
-        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; ${hpText(plan.outcome.hpLoss)}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),

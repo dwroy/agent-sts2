@@ -56,7 +56,9 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
 
   it("K8TC F3: (3,5), not the line into the forced F8 Bygone Effigy (logged: Jev took (3,4) at 0.89, 80 -> 34 there)", () => {
     expect(pick("k8tc-map-f3")).toEqual({ action: "choose_map_node", option_index: 1 });
-    expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs entry_hp 90%/);
+    // At the rooms' median costs (Z49J/77QX) the Effigy is reached at ~86%, above the entry line: the
+    // label is the route-value cost, still a cost.
+    expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs \d/);
   });
 });
 
@@ -65,10 +67,11 @@ describe("a forced elite on one option's branchless line is priced like the shar
     expect(pick("kgr6-map-f19")).toEqual({ action: "choose_map_node", option_index: 0 });
   });
 
-  it("the Shop line is labelled by its arrival at the F28 elite, below that elite's cost", () => {
+  it("the Shop line is labelled by its arrival at the F28 elite, below the entry line", () => {
+    // Median room costs since Z49J/77QX: ~6x% (was ~42% at the p75 of every room), under 85% - 15%.
     const shop = at(options("kgr6-map-f19"), "row 2, column 6");
-    expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~4\d% HP/);
-    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~4\d%/);
+    expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~[4-6]\d% HP/);
+    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
   });
 
   it("the label check covers code's best-scored route too", () => {
@@ -81,8 +84,9 @@ describe("a forced elite on one option's branchless line is priced like the shar
 describe("an optional elite option is not a forced elite (EGX7 F27, PWSD F10)", () => {
   for (const [name, position] of [["egx7-map-f27", "row 10, column 2"], ["pwsd-map-f10", "row 10, column 5"]] as const) {
     it(`${name}: the Elite option reads optional; its forced elites are counted after it`, () => {
-      // With a deck the act's elites do not outpace (6 energy), so the Elite stays on offer.
-      const elite = at(options(name, (fx) => Object.assign(fx.state["run"] as Raw, { max_energy: 6 })), position);
+      // With a deck the act's elites do not outpace (6 energy) and full HP (the optional-elite HP bar,
+      // EN55 F7), so the Elite stays on offer.
+      const elite = at(options(name, (fx) => Object.assign(fx.state["run"] as Raw, { max_energy: 6, current_hp: (fx.state["run"] as Raw)["max_hp"] })), position);
       expect(elite["optional_elite"]).toMatch(/optional Elite/);
       expect(String(elite["forced_elites"])).toMatch(/^after this elite: none/);
       expect(elite["next_forced_elite"]).toBeUndefined();
@@ -116,7 +120,12 @@ describe("block rewards two short of the plan's block target below half HP (PWSD
   /** Code's value of each offered card on a logged card reward. */
   const values = (name: string): Record<string, number> => {
     const decision = planReward(loggedEnv(logged(name))) as Decision;
-    if (decision.kind !== "ask") return decision.kind === "act" ? { [JSON.stringify(decision.intent)]: 1 } : {};
+    // Code's own pick: the card it names first, over the runner-up.
+    if (decision.kind === "act") {
+      const [, top, topScore, second, secondScore] = /^code: (\S+) \([^)]*\) scores (-?[\d.]+) vs (\S+) \([^)]*\) (-?[\d.]+)/.exec(decision.rationale) ?? [];
+      return top && second ? { [top]: Number(topScore), [second]: Number(secondScore) } : {};
+    }
+    if (decision.kind !== "ask") return {};
     const question = decision.questions["pick"]!;
     if (question.type !== "choice") throw new Error("not a choice");
     return Object.fromEntries(Object.values(question.criteria).map((text) => JSON.parse(text!) as Raw).map((option) => [String(option["card"]), Number(option["code_value"])]));

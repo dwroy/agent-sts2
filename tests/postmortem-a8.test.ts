@@ -115,9 +115,15 @@ describe("reserved potions are released when the safest dry line ends within nex
   });
 
   it("Z7D7 F28 T3: every line 27 -> 2, Heart of Iron is on offer", () => {
-    const options = optionsOf(planCombatTurn(loggedEnv(logged("z7d7-f28-t3"))));
-    const heart = Object.values(options).find((option) => String(option["plays"]).includes("铁心药水"));
-    expect(String(heart?.["reserve"])).toMatch(/released: the safest line without it leaves 2 HP/);
+    // With the Blood Potion and Gambler's Brew modelled (EN55, 77UJ) the HP guard plays the safest line,
+    // Heart of Iron in it; asked, its option says it is released.
+    const decision = planCombatTurn(loggedEnv(logged("z7d7-f28-t3")));
+    if (decision?.kind === "act") {
+      expect(decision.rationale).toMatch(/instead \(?[^)]*potion 铁心药水|playing potion 铁心药水/);
+    } else {
+      const heart = Object.values(optionsOf(decision)).find((option) => String(option["plays"]).includes("铁心药水"));
+      expect(String(heart?.["reserve"])).toMatch(/released: the safest line without it leaves 2 HP/);
+    }
   });
 });
 

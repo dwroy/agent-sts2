@@ -12,8 +12,9 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { awakeDamagePerTurn } from "../knowledge/move-model.js";
+import { dossierFor } from "../knowledge/dossiers.js";
 import { modelHandCard } from "./card-model.js";
-import { damageRole, isBigHit } from "./card-value.js";
+import { damageRole, isBigHit, isBlockCardId } from "./card-value.js";
 
 export interface BossNeed {
   /** Total HP to chew through (both claws for the crab), at A7 and below. */
@@ -41,8 +42,9 @@ export const BOSS_HP_ASCENSION = 8;
  */
 export const BOSS_NEEDS: Record<string, BossNeed> = {
   // The two wins took 7-8 turns (58 and 51 a turn); the Bug Sting -> Laser opener ends longer fights
-  // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough).
-  KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
+  // (GL2U: "gap 0" at 12 turns, 31.7 a turn was not enough). Realised: M9PL F33 23.6 a turn against an
+  // estimate of 53, Z49J F33 16.3 against 35 (Bug Sting's Weak, the claws' block, damage split in two).
+  KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, realised: 0.45, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
   // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
   KNOWLEDGE_DEMON: { hp: 439, hpA8: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
   // 341 at A8 (XWPV, WB02 states).
@@ -205,6 +207,30 @@ export function deckBlockPerTurn(state: GameState, knowledge: Knowledge): number
 /** HP fraction the clock assumes the boss is entered with before its last floor: the run plans' usual entry_hp target. */
 export const ASSUMED_ENTRY_HP = 0.85;
 
+/** Copies of a boss part in the fight (the Kin priest comes with two followers). */
+const PART_COUNT: Record<string, number> = { KIN_FOLLOWER: 2 };
+
+/**
+ * The boss's hit a turn once awake: its own move model, else the sum of its parts' (the dossier's ids:
+ * the crab's Crusher and Rocket, Laser included in the Rocket's average; the Kin priest and two
+ * followers). Z49J F32: KAISER_CRAB and THE_KIN have no move-model entry of their own, so the survival
+ * cap was a no-op ("need 54, gap 19" at 45 HP; the Laser killed on T4).
+ */
+export function bossDamagePerTurn(bossId: string): { perTurn: number; sleepTurns: number } | null {
+  const own = awakeDamagePerTurn(bossId);
+  if (own) return own;
+  const dossier = dossierFor(bossId);
+  const parts = dossier?.kind === "boss" ? dossier.ids ?? [] : [];
+  if (parts.length === 0) return null;
+  let perTurn = 0;
+  for (const part of parts) {
+    const damage = awakeDamagePerTurn(part);
+    if (!damage) return null;
+    perTurn += damage.perTurn * (PART_COUNT[part] ?? 1);
+  }
+  return { perTurn, sleepTurns: 0 };
+}
+
 /**
  * Turns we can stay alive in the boss fight: its sleep turns plus entry HP over the net hit a turn
  * (the move model's awake average less the deck's block a turn, at least 1). Null when the boss's moves
@@ -212,7 +238,7 @@ export const ASSUMED_ENTRY_HP = 0.85;
  * and ~7 block lasted to T9 (3 asleep + 6 awake).
  */
 export function survivableBossTurns(bossId: string, entryHp: number, blockPerTurn: number): number | null {
-  const damage = awakeDamagePerTurn(bossId);
+  const damage = bossDamagePerTurn(bossId);
   if (!damage || entryHp <= 0) return null;
   return damage.sleepTurns + entryHp / Math.max(1, damage.perTurn - blockPerTurn);
 }
@@ -267,6 +293,8 @@ export interface DamageGap {
   deck: number;
   /** Damage a turn the deck is short (0 when it is not). */
   gap: number;
+  /** The fight's turns when the entry HP caps them below the table's (cappedBossNeed), else absent. */
+  cappedTurns?: number;
 }
 
 export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | null {
@@ -276,7 +304,8 @@ export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | n
   const need = cappedBossNeed(state, knowledge);
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
-  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck) };
+  const capped = need.survivableTurns !== null && need.survivableTurns < (bossNeed(need.id)?.turns ?? Infinity);
+  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck), ...(capped ? { cappedTurns: need.turns } : {}) };
 }
 
 const BOSS_FLOORS = [17, 33, 48];
@@ -287,10 +316,14 @@ export const GAP_BONUS_MAX = 12;
 export const BIG_GAP_BONUS = 8;
 export const GAP_BONUS_BIG_MAX = 16;
 
-/** Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short. */
+/**
+ * Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short.
+ * While the entry HP caps the fight's turns, a block card closes the gap too: each turn it adds lowers
+ * the damage a turn needed (K8TC F14: the Kin's cap at ~6 turns raised Uppercut's bonus over True Grit's).
+ */
 export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: number; why: string | null } {
   if (!gap || gap.gap <= 0) return { bonus: 0, why: null };
-  const role = damageRole(cardId);
+  const role = damageRole(cardId) ?? (gap.cappedTurns !== undefined && isBlockCardId(cardId) && !cardId.startsWith("DEFEND_") ? "block" : null);
   if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
   // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
   if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
@@ -300,7 +333,8 @@ export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: nu
     gap.gap >= BIG_GAP_BONUS
       ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap.gap / 2) + (role === "scaling" ? 2 : 0))
       : Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
-  return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need} for ${gap.boss}: ${role} +${bonus}` };
+  const turns = gap.cappedTurns !== undefined ? ` in the ~${gap.cappedTurns} turns the entry HP lasts` : "";
+  return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need}${turns} for ${gap.boss}: ${role} +${bonus}` };
 }
 
 /** Rest-site shift: smith over a comfortable heal while the deck is well short of the boss. */

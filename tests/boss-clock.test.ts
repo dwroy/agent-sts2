@@ -52,14 +52,20 @@ describe("boss clock", () => {
     expect(gapCardBonus(gap, "INFLAME").bonus).toBeGreaterThan(0);
     expect(gapCardBonus(gap, "INFLAME").bonus).toBeLessThanOrEqual(GAP_BONUS_BIG_MAX);
     expect(gapCardBonus(gap, "THUNDERCLAP").bonus).toBeGreaterThan(0);
-    expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBe(0);
+    // A block card only while the entry HP caps the fight's turns (each turn it adds lowers the need).
+    expect(gap.cappedTurns).toBeDefined();
+    expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBeGreaterThan(0);
+    expect(gapCardBonus({ ...gap, cappedTurns: undefined }, "SHRUG_IT_OFF").bonus).toBe(0);
+    expect(gapCardBonus(gap, "DEFEND_IRONCLAD").bonus).toBe(0);
     // AoE only counts against two-part bosses.
     const demon = damageGap(mapState(starter, "KNOWLEDGE_DEMON_BOSS"), testKnowledge)!;
     expect(gapCardBonus(demon, "THUNDERCLAP").bonus).toBe(0);
     expect(gapRestShift(gap, "SMITH", 0.8, false)).toBe(2);
     expect(gapRestShift(gap, "SMITH", 0.5, false)).toBe(0);
     expect(gapRestShift(gap, "SMITH", 0.8, true)).toBe(0);
-    expect(bossClockJson(state, testKnowledge)).toMatchObject({ boss: "KAISER_CRAB", boss_hp: 428, need_damage_per_turn: 54 });
+    // The crab's hits (its claws' move models) cap the fight at the turns 85% HP lasts: 54 a turn or more.
+    expect(bossClockJson(state, testKnowledge)).toMatchObject({ boss: "KAISER_CRAB", boss_hp: 428 });
+    expect(Number(bossClockJson(state, testKnowledge)!["need_damage_per_turn"])).toBeGreaterThanOrEqual(54);
     expect(gapCardBonus({ ...gap, gap: 0 }, "INFLAME").bonus).toBe(0);
   });
 

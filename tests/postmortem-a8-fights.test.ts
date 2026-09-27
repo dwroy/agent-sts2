@@ -115,8 +115,10 @@ describe("potions: Clarity and Mazaleth's Gift are modelled (K7G9 carried Clarit
 
   it("XMY2 F17 T1: the act-1 boss's rank 1 drinks Mazaleth's Gift (Ritual 1) first", () => {
     expect(potionRole("MAZALETHS_GIFT", "")).toBe("strength");
-    const options = optionsOf(planCombatTurn(loggedEnv(logged("xmy2-f17-t1"))));
-    expect(String(options["plan1"]!["plays"])).toMatch(/^potion 马萨雷斯的赠礼/);
+    // With Gambler's Brew modelled too (77UJ, EN55) code's own margin plays it without asking.
+    const decision = planCombatTurn(loggedEnv(logged("xmy2-f17-t1")));
+    const first = decision?.kind === "act" ? decision.rationale.replace(/^code plan[^:]*: /, "") : String(optionsOf(decision)["plan1"]!["plays"]);
+    expect(first).toMatch(/^potion 马萨雷斯的赠礼/);
   });
 });
 

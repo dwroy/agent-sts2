@@ -505,11 +505,21 @@ export const PRESERVE_HP_WEIGHT = 10;
  * at 75/87 with a deck of ~25 a turn: 75 -> 32).
  */
 export interface EliteGate {
-  deck: number;
-  need: number;
+  deck?: number;
+  need?: number;
+  /**
+   * HP (heal potions out) under the bar an optional elite needs (map.ts optionalEliteBar: twice the
+   * act's elite cost). EN55 F7: 51% with a Blood Potion read as ~71% took the optional Terror Eel while
+   * Winged Boots could reach a rest; 41 -> dead.
+   */
+  hp?: number;
+  bar?: number;
 }
 export function eliteGateText(gate: EliteGate): string {
-  return `deck ~${gate.deck}/turn under the act's elites (${gate.need}+)`;
+  const parts: string[] = [];
+  if (gate.deck !== undefined && gate.need !== undefined) parts.push(`deck ~${gate.deck}/turn under the act's elites (${gate.need}+)`);
+  if (gate.hp !== undefined && gate.bar !== undefined) parts.push(`HP ${Math.round(gate.hp * 100)}% without heal potions, under the ${Math.round(gate.bar * 100)}% an optional elite needs`);
+  return parts.join("; ");
 }
 
 /** Route weight change for a node from the run plan's intents, at the projected HP on arrival (`act` prices hallway rooms). */
@@ -766,14 +776,21 @@ export interface RouteArrival {
   eliteCost: number;
   /** Rest before that elite on every, some or no path. */
   eliteRest: "every" | "some" | "none" | null;
+  /** null when the projection runs out of HP before the boss (ranOutFloor): no arrival HP to fit. */
   bossHp: number | null;
   /** Chance of reaching the boss alive on that path. */
   bossSurvival?: number | null;
   bossFloor: number | null;
+  /** Floor where the projected HP runs out on the safest path to the boss. */
+  ranOutFloor?: number;
 }
 
-/** Arrival HP this far below the run's entry-HP target breaks it (N7KR F4: "fits entry_hp 90%" into a no-rest forced elite at a projected 60%). */
-export const ENTRY_ARRIVAL_SLACK = 0.25;
+/**
+ * Arrival HP this far below the run's entry-HP target breaks it (N7KR F4: "fits entry_hp 90%" into a
+ * no-rest forced elite at a projected 60%). 0.25 on the p75 projection; the route projection is at the
+ * rooms' medians since Z49J/77QX, ~0.1 higher over the 3-4 rooms before a forced elite, so 0.15.
+ */
+export const ENTRY_ARRIVAL_SLACK = 0.15;
 /** Another option must arrive at least this much higher for the shortfall to be a cost of this one. */
 const ARRIVAL_BETTER = 0.05;
 

@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { freeCardPick, upgradeCard, upgradeGain, type CardModel } from "./card-model.js";
+import { freeCardPick, thisTurnScore, upgradeCard, upgradeGain, type CardModel } from "./card-model.js";
 
 export interface EnemySim {
   index: number;
@@ -317,6 +317,8 @@ export interface Step {
   name: string;
   target: number | null;
   targetName: string | null;
+  /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
+  discards?: string[];
 }
 
 export interface Outcome {
@@ -576,6 +578,27 @@ export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | nu
   return best ?? (sandpit ? cards.find((card) => card.cardId === "FRANTIC_ESCAPE") ?? null : null);
 }
 
+/** Gambler's Brew: hand cards past this many, the weakest by thisTurnScore, are the ones it may discard. */
+const GAMBLE_MAX_CARDS = 6;
+
+/**
+ * The ways to drink Gambler's Brew now: one per non-empty set of hand cards to discard (the weakest
+ * GAMBLE_MAX_CARDS by thisTurnScore when the hand is bigger), each as its own potion play.
+ */
+function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
+  const enemies = Math.max(1, sim.enemies.filter((enemy) => enemy.alive).length);
+  const cards = sim.hand
+    .filter((entry) => entry.type !== "Potion")
+    .sort((a, b) => thisTurnScore(a, 0, enemies) - thisTurnScore(b, 0, enemies))
+    .slice(0, GAMBLE_MAX_CARDS);
+  const ways: CardModel[] = [];
+  for (let mask = 1; mask < 1 << cards.length; mask += 1) ways.push({ ...brew, discards: cards.filter((_, bit) => mask & (1 << bit)).map((entry) => entry.key) });
+  return ways;
+}
+
+/** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS; map.ts HEAL_POTION_SHARE). */
+export const BLOOD_POTION_HEAL = 0.2;
+
 /**
  * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
  * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
@@ -739,7 +762,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
   const next = clone(sim);
-  next.hand = sim.hand.filter((entry) => entry !== card);
+  // A Gambler's Brew way is a copy of the belt's potion: the potion leaves the hand by its key.
+  next.hand = sim.hand.filter((entry) => entry !== card && !(card.discards && entry.key === card.key));
+  const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
   if (card.soulbound) next.hand = next.hand.filter((entry) => !entry.soulbound);
@@ -843,6 +868,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
+      ...(card.discards ? { discards: discarded } : {}),
     },
   ];
   return next;
@@ -893,11 +919,20 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "clarity") next.flat += DRAW_VALUE * CLARITY_LATER_DRAWS;
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
+  // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
+  if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
   if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
   if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
-  // A card potion: its card joins the hand, free this turn (card-model GENERATED_CARD_POTIONS).
-  if (card.generates) next.hand = [...next.hand, card.generates];
+  // Gambler's Brew: the hand cards this way of drinking it discards (gambleWays) are swapped for as many
+  // average draws from the pile (card-model expectedDraw).
+  if (card.special === "gamble") {
+    const discards = new Set(card.discards ?? []);
+    const draw = card.generates;
+    const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
+    next.hand = next.hand.filter((entry) => !discards.has(entry.key));
+    if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}`, cardId: `${draw.cardId}:${i}` }))];
+  } else if (card.generates) next.hand = [...next.hand, card.generates];
   // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
   // upgraded numbers; each card's gain counts again for its later draws (BLESSING_LASTING).
   if (card.special === "upgrade_hand") {
@@ -1805,12 +1840,12 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
-    for (const card of sim.hand) {
+    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {
-        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}`;
+        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}`;
         if (tried.has(dedupe)) continue;
         tried.add(dedupe);
         const next = play(sim, card, target, input.player);

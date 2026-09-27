@@ -112,8 +112,12 @@ export interface RunPlan {
 
 /** A plan older than this many floors is reviewed at the next map. */
 export const RUN_PLAN_REVIEW_FLOORS = 8;
-/** HP lost since the plan (fraction of max HP) that asks for a new one. */
-export const RUN_PLAN_HP_DROP = 0.3;
+/**
+ * HP lost since the plan (fraction of max HP) that asks for a new one (at least this much). EN55: 80%
+ * -> 51% (0.2875) under 0.3 never re-planned, and the plan's "elites only above 75% HP" was never seen
+ * again.
+ */
+export const RUN_PLAN_HP_DROP = 0.25;
 /** Below this HP fraction a plan made above it is renewed. */
 export const RUN_PLAN_LOW_HP = 0.4;
 

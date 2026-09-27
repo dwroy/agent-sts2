@@ -13,7 +13,7 @@ import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { fightHpCost, nodeWeight, shopWeight, SURVIVAL_WEIGHT } from "../src/screens/map.js";
-import { fightSurvival } from "../src/strategy/route-cost.js";
+import { fightSurvival, roomProjectedCost } from "../src/strategy/route-cost.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { eventOptionScore } from "../src/screens/event.js";
 import { loadConfig } from "../src/config.js";
@@ -237,7 +237,10 @@ describe("map", () => {
   });
 
   it("describes each reachable node with a code-computed lookahead", () => {
-    const decision = mustDecision(plan(mapPayload()));
+    // At full HP: under twice an elite's cost the optional Elite is not offered (EN55 F7).
+    const raw = mapPayload();
+    (raw["run"] as Record<string, unknown>)["current_hp"] = 80;
+    const decision = mustDecision(plan(raw));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     expect(Object.keys(criteria)).toEqual(["n0", "n1", "n2"]);
@@ -270,11 +273,12 @@ describe("map", () => {
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    // Monster -> Elite: the elite is reached at ~74%, where it is worth 0, not +4; the line's forced
-    // elite also costs its small chance of death there (KGR6 F19).
-    const arrival = 0.85 - fightHpCost("Monster", 1);
-    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - fightSurvival(arrival, fightHpCost("Elite", 1))));
-    expect(value("n1")).toBeCloseTo(2.4);
+    // Monster -> Elite: the elite is reached at ~78% (the hallway's median cost), where it is worth 0,
+    // not +4; every option pays its chance of death over the same stretch, fight by fight (77QX F18).
+    const arrival = 0.85 - roomProjectedCost("Monster", 1);
+    const first = fightSurvival(0.85, fightHpCost("Monster", 1));
+    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Elite", 1))));
+    expect(value("n1")).toBeCloseTo(2.4 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Monster", 1))));
   });
 
   it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {
@@ -2205,6 +2209,22 @@ describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected
     const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
     const keep = await pick(brew([c(0, "STRIKE_R", [["Damage", 6]]), c(1, "DEFEND_R", [["Block", 5]])], [], attack));
     expect(keep?.kind === "act" && keep.intent).toEqual({ action: "confirm_selection" });
+  });
+
+  it("the combat plan's Gambler's Brew discards come first, then the selection is confirmed (77UJ F33 T5)", async () => {
+    const { planSelection } = await import("../src/screens/selection.js");
+    const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
+    const picked: number[] = [];
+    for (let step = 0; step < 4; step += 1) {
+      const raw = brew(hand, picked, attack);
+      const e = env(raw, { combatPlanner: "turn" });
+      e.screenMemory.gambleDiscards = { turn: e.state.turn, cardIds: ["STRIKE_R", "PILLAGE"] };
+      const decision = planSelection(e);
+      if (decision?.kind !== "act") throw new Error("expected an act");
+      if (decision.intent.action === "confirm_selection") break;
+      picked.push(Number(decision.intent.option_index));
+    }
+    expect(picked.sort()).toEqual([0, 2]);
   });
 
   it("basics the energy cannot reach are redrawn", async () => {

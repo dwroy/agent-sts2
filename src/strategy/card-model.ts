@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -84,6 +84,8 @@ export interface CardModel {
    * card the solver may then play (GENERATED_CARD_POTIONS).
    */
   generates?: CardModel;
+  /** Gambler's Brew, one way to drink it: the keys of the hand cards it discards (turn-solver "gamble"). */
+  discards?: string[];
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
   /**
@@ -477,6 +479,15 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // 2 -> 9, 24HM 3 -> 10; 5 -> 10 elsewhere), costs 0-3 at random (states.jsonl): the hand's costs at their
   // expected SNECKO_COST. Unmodelled, K8TC carried it from F6 into the act boss that killed it.
   SNECKO_OIL: { target: "self", draw: 7, special: "snecko" },
+  // Blood Potion: heals 20% of max HP (RVL2 F30: 25 -> 39 at 74 max, HEAL_POTION_SHARE; EN55 F8 T9:
+  // 7 -> 23 at 80). The turn's HP loss is net of it (turn-solver BLOOD_POTION_HEAL). Unmodelled it stayed
+  // "its effect is in no line's numbers" from T1 to the 7-HP turn of EN55's fatal elite.
+  BLOOD_POTION: { target: "self", special: "heal" },
+  // Gambler's Brew: 「丢弃任意张牌，然后抽相同数量的牌。」 Every hand card worse than an average draw is
+  // discarded for one (turn-solver "gamble"; the expected draw from the draw pile: expectedDraw). 77UJ
+  // F33 T5 and EN55 F8 T9: carried unmodelled to the death, each time a draw of the pile's block cards
+  // would likely have lived.
+  GAMBLERS_BREW: { target: "self", special: "gamble" },
   // Pile-card potions: a card from a pile into the hand (modelPotion builds it from PotionContext).
   // Liquid Memories: 「将你弃牌堆中的一张牌放入你的手牌。这张牌在本回合可以免费打出」 (PWSD: carried F2-F23 T4).
   // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
@@ -512,6 +523,54 @@ export interface PotionContext {
   /** The pile card a pile-card potion would take (pileCardPick), as a hand card (Strength and Weak in). */
   discardPick?: CardModel | null;
   drawPick?: CardModel | null;
+  /** Gambler's Brew: the draw pile's average card (expectedDraw). */
+  expectedDraw?: CardModel | null;
+}
+
+/**
+ * The expected card of a draw from these pile cards, as one hand card: the pile's mean damage, block,
+ * Vulnerable and Weak (unplayable cards count as nothing), rounded, at its mean cost rounded. An
+ * expected-value model: Gambler's Brew draws are priced by it (turn-solver "gamble"). null for an empty
+ * pile.
+ */
+export function expectedDraw(pile: CardModel[], slot: number): CardModel | null {
+  if (pile.length === 0) return null;
+  const n = pile.length;
+  const played = pile.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse");
+  const mean = (value: (card: CardModel) => number) => played.reduce((sum, card) => sum + value(card), 0) / n;
+  const damage = mean((card) => (card.damage ?? 0) * Math.max(1, card.hits));
+  const targets = played.find((card) => card.target === "single")?.validTargets ?? [];
+  return {
+    index: 200 + slot,
+    key: `g${slot}`,
+    cardId: `GEN:GAMBLERS_BREW:${slot}`,
+    name: "an average draw",
+    type: Math.round(damage) > 0 ? "Attack" : "Skill",
+    upgraded: false,
+    cost: Math.round(played.length > 0 ? played.reduce((sum, card) => sum + Math.max(0, card.cost), 0) / played.length : 1),
+    xCost: false,
+    playable: true,
+    target: Math.round(damage) > 0 && targets.length > 0 ? "single" : "self",
+    validTargets: Math.round(damage) > 0 ? targets : [],
+    damage: Math.round(damage) > 0 ? Math.round(damage) : null,
+    hits: 1,
+    block: Math.round(mean((card) => card.block)),
+    vulnerable: Math.round(mean((card) => card.vulnerable)),
+    weak: Math.round(mean((card) => card.weak)),
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+  };
 }
 
 /** Potions that take a card from a pile into the hand, and whether it is free this turn. */
@@ -633,7 +692,7 @@ export function isModelledPotion(potionId: string): boolean {
 }
 
 /** Self-buff specials whose effect does not depend on what was played before them. */
-const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating"]);
+const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual", "plating", "heal"]);
 
 /**
  * A modelled potion that is never worse drunk before the turn's cards than after them: it targets no
@@ -659,7 +718,9 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
-  const generates: CardModel | undefined = pileCard
+  const generates: CardModel | undefined = effect.special === "gamble"
+    ? ctx?.expectedDraw ?? undefined
+    : pileCard
     ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
     : card
     ? {
