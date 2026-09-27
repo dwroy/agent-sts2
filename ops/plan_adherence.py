@@ -267,7 +267,7 @@ def card_roles(card_id: str) -> set[str]:
     roles = set()
     if card_id in s.get("AOE", ()):
         roles.add("aoe")
-    if card_id in s.get("STRENGTH", ()):
+    if card_id in s.get("STRENGTH_CARDS", s.get("STRENGTH", ())):
         roles.add("strength")
     if card_id in s.get("BLOCK", ()):
         roles.add("block")
