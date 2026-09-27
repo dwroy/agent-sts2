@@ -154,6 +154,18 @@ export const HALLWAY_POTION_CONFIDENCE = 0.75;
 /** Map node types a hallway fight is fought in. */
 const FIGHT_NODES = ["Monster", "Unknown"];
 
+/**
+ * This fight's damage a turn so far (non-minion enemy HP lost over the turns since the first look), not
+ * counting turns that began with every enemy asleep or intangible; null when there is nothing measured
+ * yet (then the deck estimate stands in).
+ */
+export function measuredDamagePerTurn(start: { hp?: number; turn?: number; idle?: number[] } | undefined, enemyHpNow: number, turn: number): number | null {
+  if (start?.hp === undefined || start.turn === undefined || turn <= start.turn || start.hp <= enemyHpNow) return null;
+  const idle = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn).length;
+  const turns = turn - start.turn - idle;
+  return turns > 0 ? (start.hp - enemyHpNow) / turns : null;
+}
+
 /** Solver cost of drinking a potion (before any defensive saving). */
 export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolean, eliteNext: boolean): number {
   if (pressed) return 0;
@@ -897,6 +909,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   const fightId = fightKey(state);
   const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
   if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
+  // A turn that starts with every non-minion enemy asleep or intangible is no turn of this fight's damage
+  // rate (T86W F17: the Matriarch slept T1-T3 for 1 damage; T4 read 1/3 a turn and "kills" in 700 turns).
+  const keyEnemies = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0);
+  if (keyEnemies.length > 0 && keyEnemies.every((enemy) => (enemy.asleep ?? 0) > 0 || (enemy.slumber ?? 0) > 0 || enemy.intangible)) {
+    const idle = (env.screenMemory.fightStart.idle ??= []);
+    if (!idle.includes(state.turn ?? 1)) idle.push(state.turn ?? 1);
+  }
   const laterPhase = maxHpNow > env.screenMemory.fightStart.maxHp;
   const hpFrac = playerSim.maxHp > 0 ? playerSim.hp / playerSim.maxHp : 1;
   // The run's hp_policy as this fight plays it: a low_hp preserve lapses once HP is back, and
@@ -908,10 +927,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Expected damage a turn: this fight's so far, else the deck estimate (boss-clock.ts).
   const fightTurn = state.turn ?? 1;
   const start = env.screenMemory.fightStart;
-  const perTurn =
-    start?.hp !== undefined && start.turn !== undefined && fightTurn > start.turn && start.hp > enemyHpNow
-      ? (start.hp - enemyHpNow) / (fightTurn - start.turn)
-      : deckDamagePerTurn(state, env.knowledge);
+  const perTurn = measuredDamagePerTurn(start, enemyHpNow, fightTurn) ?? deckDamagePerTurn(state, env.knowledge);
   // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
   // set up, or in a new boss phase (intent.ts objectiveInForce).
   const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {

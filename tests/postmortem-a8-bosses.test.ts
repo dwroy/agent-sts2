@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { bossRaceTrade, planCombatTurn } from "../src/screens/combat-plan.js";
+import { bossRaceTrade, measuredDamagePerTurn, planCombatTurn } from "../src/screens/combat-plan.js";
 import { eventHpCost, eventHpGuard, eventOptionScore, planEvent } from "../src/screens/event.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { averagePowerStrength, damageGap, expectedPlayTurn } from "../src/strategy/boss-clock.js";
@@ -216,5 +216,23 @@ describe("boss race: the HP guard's keep is proportional to the race (M9PL F33, 
     expect(bossRaceTrade({ extraDamage: 33, extraLoss: 9, hp: 70, maxHp: 80, bossHpLeft: 232, needPerTurn: 26 })).toBe(true);
     // Late in a race the same damage buys more HP: 33 for 14 with the boss at 120.
     expect(bossRaceTrade({ extraDamage: 33, extraLoss: 14, hp: 70, maxHp: 80, bossHpLeft: 120, needPerTurn: 26 })).toBe(true);
+  });
+});
+
+describe("this fight's damage a turn leaves out sleep turns (T86W F17 T4)", () => {
+  it("T1-T3 asleep for 1 damage: T4 reads nothing measured, not 1/3 a turn", () => {
+    expect(measuredDamagePerTurn({ hp: 233, turn: 1 }, 232, 4)).toBeCloseTo(1 / 3, 3);
+    expect(measuredDamagePerTurn({ hp: 233, turn: 1, idle: [1, 2, 3] }, 232, 4)).toBeNull();
+    // At T5 only the awake turn counts: 23 dealt (1 asleep, 22 on T4) is 23 a turn, not 5.75.
+    expect(measuredDamagePerTurn({ hp: 233, turn: 1, idle: [1, 2, 3] }, 210, 5)).toBe(23);
+  });
+
+  it("the board records a turn that starts with the boss asleep", () => {
+    const fx = logged("t86w-f17-t4");
+    const enemy = ((fx.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
+    (enemy["powers"] as Record<string, unknown>[]).push({ power_id: "ASLEEP_POWER", amount: 1 });
+    const env = loggedEnv(fx);
+    planCombatTurn(env);
+    expect(env.screenMemory.fightStart?.idle).toEqual([4]);
   });
 });
