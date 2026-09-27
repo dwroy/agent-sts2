@@ -11,7 +11,9 @@ import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { damageGap, deckDamageParts, deckDamagePerTurn } from "../src/strategy/boss-clock.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planSelection } from "../src/screens/selection.js";
 import { planShop, unspentGoldCost } from "../src/screens/shop.js";
+import { modelHandCard, thisTurnDamage } from "../src/strategy/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -118,5 +120,24 @@ describe("a Sandpit turn is worth the deck's turn, and only while our HP lasts p
     expect(escapes).toBeLessThan(2);
     if (act?.kind === "act") expect(act.rationale).not.toMatch(/dmg 0\b/);
     else expect(Number(lines[0]!["damage_dealt"])).toBeGreaterThan(0);
+  });
+});
+
+describe("Pact's End deals nothing with fewer than 3 cards the exhaust pile can reach (9LSQ F17 T1, H1FA)", () => {
+  it("the rule, on the logged card", () => {
+    const fx = logged("9lsq-f17-t1-attack-potion");
+    const card = ((fx.state["selection"] as Raw)["cards"] as Raw[]).find((entry) => entry["card_id"] === "PACTS_END")!;
+    const model = modelHandCard(card, 2, loggedKnowledge);
+    expect(thisTurnDamage(model, { exhaustReach: 2 })).toBe(0);
+    expect(thisTurnDamage(model, { exhaustReach: 3 })).toBeGreaterThan(0);
+    // Unknown piles: the card's own number.
+    expect(thisTurnDamage(model)).toBeGreaterThan(0);
+  });
+
+  it("the Attack Potion takes Fight Me or Bully, not Pact's End, with the exhaust pile empty (logged: Pact's End 27 vs Fight Me 21, never played)", () => {
+    const decision = planSelection(loggedEnv(logged("9lsq-f17-t1-attack-potion")));
+    const text = decision?.kind === "act" ? decision.rationale : JSON.stringify(decision);
+    expect(text).not.toMatch(/code: 契约终结/);
+    if (decision?.kind === "act") expect(decision.intent).not.toEqual({ action: "select_deck_card", option_index: 2 });
   });
 });
