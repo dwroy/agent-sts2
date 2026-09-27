@@ -9,7 +9,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
 import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskFilter, type RouteArrival } from "../strategy/intent.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
-import { eliteCostFactor, fightHpCost, roomHpCost, roomSurvival } from "../strategy/route-cost.js";
+import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost, roomSurvival } from "../strategy/route-cost.js";
 
 export { eliteCostFactor, fightHpCost } from "../strategy/route-cost.js";
 import { briefJson } from "../project/run-brief.js";
@@ -244,6 +244,8 @@ function minElitesAhead(node: MapNode, nodes: Map<string, MapNode>, memo: Map<st
   return value;
 }
 
+const NO_ROWS: ReadonlySet<number> = new Set();
+
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
 function continuation(
   node: MapNode,
@@ -256,6 +258,7 @@ function continuation(
   eliteMemo: Map<string, number> = new Map(),
   deathUrgency = 1,
   depth = 1,
+  forcedRows: ReadonlySet<number> = NO_ROWS,
 ): number {
   const left = stateAfter(node.type, at, act);
   const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}/${Math.min(depth, 6)}`;
@@ -273,12 +276,15 @@ function continuation(
     // over children dodges it where the map allows, so only a forced one keeps the penalty (RVL2 F26:
     // rest -> ? -> ? -> Monster -> forced Elite at a projected 9% scored -20, the Monster right now -60).
     // The death's weight scales with the HP shortfall and a later one weighs less (deathDelay).
+    // An elite every path of this option meets is not a later, better death: no delay discount
+    // (KGR6 F19: the F28 elite at the end of a branchless line counted at half weight, 9 nodes ahead).
     const here = weights(childNode.type, left, childNode.row);
+    const delay = childNode.type === "Elite" && forcedRows.has(childNode.row) ? 1 : deathDelay(depth + 1);
     best = Math.max(
       best,
       here <= LIKELY_DEATH
-        ? here * deathUrgency * deathDelay(depth + 1) - deathElite * minElitesAhead(childNode, nodes, eliteMemo)
-        : here + continuation(childNode, left, nodes, weights, act, memo, deathElite, eliteMemo, deathUrgency, depth + 1),
+        ? here * deathUrgency * delay - deathElite * minElitesAhead(childNode, nodes, eliteMemo)
+        : here + continuation(childNode, left, nodes, weights, act, memo, deathElite, eliteMemo, deathUrgency, depth + 1, forcedRows),
     );
   }
   if (best === -Infinity) best = 0;
@@ -341,6 +347,17 @@ function firstEliteArrival(node: MapNode, at: RouteState, nodes: Map<string, Map
   const value = avoidable ? null : best;
   memo.set(id, value);
   return value;
+}
+
+/** The first elite every path from these children meets, entered at `at` (null when some path meets none). */
+function firstEliteArrivalFrom(children: MapNode[], at: RouteState, nodes: Map<string, MapNode>, act: number, memo: Map<string, { hp: number; row: number } | null>): { hp: number; row: number } | null {
+  let best: { hp: number; row: number } | null = null;
+  for (const child of children) {
+    const next = firstEliteArrival(child, at, nodes, act, memo);
+    if (!next) return null;
+    if (!best || next.hp > best.hp) best = next;
+  }
+  return best;
 }
 
 /** Follow the highest-value children to describe where this choice leads. */
@@ -517,16 +534,31 @@ export function planMap(env: DecisionEnv): Decision | null {
     // scored -36 plus the rooms after it, above a "?" whose forced elite later counted in full).
     const here = weightOf(type, start, row);
     const survival = survivalOf(self);
+    // An Elite option another open node avoids is optional: the forced elites and the first elite every
+    // path meets are counted from its children (EGX7 F27: the optional (10,2) read "every path to the
+    // boss meets F28 (row 10, col 2): no rest before it"; Jev took it at 0.09).
+    const optionalElite = type === "Elite" && offered.some((other) => str(other["node_type"], "Unknown") !== "Elite");
+    const children = self.children.map((child) => nodes.get(key(child.row, child.col))).filter((child): child is MapNode => child !== undefined);
+    const facts = optionalElite ? routeFacts(nodes as Map<string, RouteNode>, children, floorOf, start.fights + 1) : routeFacts(nodes as Map<string, RouteNode>, [self], floorOf, start.fights);
+    // This option's own forced elite (every path from it meets one on that floor) that the shared
+    // checkpoint does not already price: its chance of death counts here, as the checkpoint's does, and
+    // a likely death there is not discounted for being far off (KGR6 F19: the Shop line reached the F28
+    // elite at ~42% of a ~55% cost after eight branchless floors, scored +6.5 vs -13.4 and was taken).
+    const lineElite = facts.forcedElites.find((forced) => checkpoint === null || forced.row > checkpoint.row);
+    const lineEliteHp = lineElite ? arrivalAt(self, start, nodes, act, { row: lineElite.row, inclusive: false }, new Map()).hp : null;
+    const lineSurvival = lineEliteHp !== null ? fightSurvival(lineEliteHp, fightHpCost("Elite", act)) : 1;
+    // The shared checkpoint keeps its discount: every option dies there alike, the later the better (RVR6 F38).
+    const forcedRows = new Set(facts.forcedElites.filter((forced) => forced.row !== checkpoint?.row).map((forced) => forced.row));
     const boots = offPath(row, col) ? bootsCost(act, bootsCharges) : null;
     const value =
       -(boots ?? 0) +
       (here <= LIKELY_DEATH
         ? here * urgency - deathElite * minElitesAhead(self, nodes, new Map())
-        : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency)) -
-      SURVIVAL_WEIGHT * (bestSurvival - survival);
-    const facts = routeFacts(nodes as Map<string, RouteNode>, [self], floorOf, start.fights);
+        : here * urgency + continuation(self, start, nodes, weightOf, act, new Map(), deathElite, new Map(), urgency, 1, forcedRows)) -
+      SURVIVAL_WEIGHT * (bestSurvival - survival) -
+      SURVIVAL_WEIGHT * (1 - lineSurvival);
     // Projected HP on arrival at the first elite every path meets and at the boss (stateAfter).
-    const elite = firstEliteArrival(self, start, nodes, act, eliteMemo);
+    const elite = optionalElite ? firstEliteArrivalFrom(children, stateAfter(type, start, act), nodes, act, eliteMemo) : firstEliteArrival(self, start, nodes, act, eliteMemo);
     const bossArrival = bossRow !== null ? arrivalAt(self, start, nodes, act, { row: bossRow, inclusive: false }, bossMemo) : null;
     const arrival: RouteArrival = {
       eliteHp: elite ? elite.hp : null,
@@ -550,7 +582,8 @@ export function planMap(env: DecisionEnv): Decision | null {
           likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3),
           // What no later choice changes on this route: forced elites (rest before each or not) and the
           // longest run of fights every path takes (VQ7J F7, Z7D7 F25).
-          ...routeFactsText(facts),
+          ...(optionalElite ? { optional_elite: "this node is an optional Elite (another open node avoids it)" } : {}),
+          ...(optionalElite ? { forced_elites: `after this elite: ${routeFactsText(facts).forced_elites}`, longest_forced_fight_run: facts.longestForcedFightRun } : routeFactsText(facts)),
           ...arrivalText(arrival, checkpoint ? survival : null),
           ...(boots !== null ? { winged_boots: `off the current path: uses a Winged Boots charge, ${bootsCharges - 1} left after${boots > 0 ? ` (priced -${boots}: charges are kept for act 3)` : ""}` } : {}),
         } as Record<string, JsonValue>,

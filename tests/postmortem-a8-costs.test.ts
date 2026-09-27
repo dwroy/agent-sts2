@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planMap } from "../src/screens/map.js";
+import { mapFit } from "../src/strategy/intent.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -48,4 +49,33 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
     expect(pick("k8tc-map-f3")).toEqual({ action: "choose_map_node", option_index: 1 });
     expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs entry_hp 90%/);
   });
+});
+
+describe("a forced elite on one option's branchless line is priced like the shared checkpoint (KGR6 F19)", () => {
+  it("takes the Monster (2,5), not the Shop into eight branchless floors and the F28 elite (logged: Shop -9.18 vs Monster -21.72)", () => {
+    expect(pick("kgr6-map-f19")).toEqual({ action: "choose_map_node", option_index: 0 });
+  });
+
+  it("the Shop line is labelled by its arrival at the F28 elite, below that elite's cost", () => {
+    const shop = at(options("kgr6-map-f19"), "row 2, column 6");
+    expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~4\d% HP/);
+    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~4\d%/);
+  });
+
+  it("the label check covers code's best-scored route too", () => {
+    const plan = logged("kgr6-map-f19").runPlan!;
+    const arrival = { eliteHp: 0.42, eliteFloor: 28, eliteCost: fightHpCost("Elite", 2), eliteRest: "every" as const, bossHp: 0.5, bossFloor: 33, best: { eliteHp: 1, bossHp: 0.9 } };
+    expect(mapFit(plan, "Shop", 0.74, { value: 6.5, best: 6.5 }, 14, arrival, 2)).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~42% .*code's best route by route value/);
+  });
+});
+
+describe("an optional elite option is not a forced elite (EGX7 F27, PWSD F10)", () => {
+  for (const [name, position] of [["egx7-map-f27", "row 10, column 2"], ["pwsd-map-f10", "row 10, column 5"]] as const) {
+    it(`${name}: the Elite option reads optional; its forced elites are counted after it`, () => {
+      const elite = at(options(name), position);
+      expect(elite["optional_elite"]).toMatch(/optional Elite/);
+      expect(String(elite["forced_elites"])).toMatch(/^after this elite: none/);
+      expect(elite["next_forced_elite"]).toBeUndefined();
+    });
+  }
 });

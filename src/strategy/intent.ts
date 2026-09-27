@@ -788,15 +788,18 @@ export function mapFit(
   if (!route) return `${intents}${effect}`;
   const gap = route.best - route.value;
   const pct = (value: number) => `${Math.round(value * 100)}%`;
-  // Never on code's own best route (labels come from the scoring that ranks the nodes).
-  if (plan.entryHp && arrival && gap > 0.005) {
+  if (plan.entryHp && arrival) {
     const floorLine = plan.entryHp - ENTRY_ARRIVAL_SLACK;
     const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
+    // A forced elite reached short is a fact of the route, on code's best one too (KGR6 F19: the Shop
+    // line "arrives at the F28 elite at ~42% HP (an elite costs ~55%)" was labelled "fits entry_hp 85%").
     if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
       const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
-      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+      const where = gap > 0.005 ? `${gap.toFixed(1)} route value below the best` : "code's best route by route value";
+      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${where}${effect}`;
     }
-    if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
+    // The boss arrival stays a comparison between routes: not on code's own best route.
+    if (gap > 0.005 && bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
       return `costs entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
     }
   }
