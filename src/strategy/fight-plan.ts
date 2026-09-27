@@ -19,13 +19,13 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
-import { moveModel } from "../knowledge/move-model.js";
+import { awakeDamagePerTurn, moveModel } from "../knowledge/move-model.js";
 import { bossNote } from "../project/run-journal.js";
-import { deckDamagePerTurn } from "./boss-clock.js";
+import { deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
 import { FIGHT_OBJECTIVES, INTENT_REASONS, isOneOf, MEANING, parseReasons, REASON_MEANING, type FightObjective, type IntentReason } from "./intent.js";
 import { DISAGREE, objectiveOfApproach, validateFightPlan } from "./plan-validator.js";
 import type { RunPlan } from "./run-plan.js";
-import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup, truncate, type JsonValue } from "../util/json.js";
 
 /** Potions that add damage or energy (the combat veto treats drinking them as offence). */
 export const OFFENSIVE_POTIONS = new Set([
@@ -113,9 +113,15 @@ export function fightPlanInput(
         .map(asRecord)
         .map((intent) => `${str(intent["intent_type"])} ${str(intent["label"])}`.trim())
         .join(", ");
+      // With the game's own text (HCBJ F14: SUCK_POWER 3 went as an id only and the plan read "effect is
+      // unknown"; it is +1 Strength per unblocked hit).
       const powers = asArray(enemy["powers"])
         .map(asRecord)
-        .map((power) => `${str(power["power_id"])}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}`);
+        .map((power) => {
+          const id = str(power["power_id"]);
+          const text = stripMarkup(str(power["description"]) || knowledge.power(id)?.description || "");
+          return `${id}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}${text ? `: ${truncate(text, 140)}` : ""}`;
+        });
       const out: Record<string, JsonValue> = {
         enemy_id: id,
         name: str(enemy["name"], info?.name ?? id),
@@ -171,7 +177,8 @@ export const FIGHT_PLAN_TASK = [
   "What code does with each reason: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
   "Code overrides the objective only on hard facts: scale_then_kill below 25% HP or against a hit of half our HP becomes",
   "preserve_hp; kill_fast/race under the run's hp_policy preserve become preserve_hp only below 40% HP against enemies",
-  "that do not scale, when code expects the fight to last more than 3 turns. Any other disagreement is logged and your",
+  "that do not scale, when code expects the fight to last more than 3 turns. A preserve_hp grind that would take more turns",
+  "than our HP lasts at the expected incoming is logged and played as kill_fast. Any other disagreement is logged and your",
   "objective is kept. In kill_priority, minions (MINION_POWER: they leave when the last non-minion dies) are moved",
   "behind the last non-minion.",
 ].join(" ");
@@ -257,11 +264,26 @@ export function parseFightPlan(
       kind: base.kind,
       scaling: enemies.map((enemy) => enemyScales(enemy)).filter((why): why is string => why !== null),
       cycleScaling: enemies.map((enemy) => cycleGrowth(str(enemy["enemy_id"]))).filter((why): why is string => why !== null),
+      lossPerTurn: expectedLossPerTurn(state, knowledge),
     });
   notes.push(...checked.filter((note) => !note.startsWith(DISAGREE)));
   plan.validator = notes;
   plan.disagreements = checked.filter((note) => note.startsWith(DISAGREE));
   return plan;
+}
+
+/**
+ * HP expected lost a turn in this fight: each living enemy's average hit once awake (move model, else
+ * its hit now) less the deck's block a turn (boss-clock deckBlockPerTurn), at least 0.
+ */
+export function expectedLossPerTurn(state: GameState, knowledge: Knowledge): number {
+  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  const hits = enemies.reduce((sum, enemy) => {
+    const model = awakeDamagePerTurn(str(enemy["enemy_id"]));
+    const now = asArray(enemy["intents"]).map(asRecord).reduce((total, intent) => total + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0);
+    return sum + (model ? model.perTurn : now);
+  }, 0);
+  return Math.max(0, Math.round((hits - deckBlockPerTurn(state, knowledge)) * 10) / 10);
 }
 
 /** A logged plan in the current shape (plans written before the intent vocabulary included). */

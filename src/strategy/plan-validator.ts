@@ -13,7 +13,7 @@ import type { JsonValue } from "../util/json.js";
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
 import type { PlanChange, PlanSnapshot, RunPlan } from "./run-plan.js";
 import type { FightPlan } from "./fight-plan.js";
-import { CARD_ROLES, CHANGE_TRIGGERS, HP_TARGET, isOneOf, isReserved, policyAt, type ChangeTrigger, type FightObjective, type HpPolicy, type RouteRisk } from "./intent.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, grindOutlasts, HP_TARGET, isOneOf, isReserved, policyAt, type ChangeTrigger, type FightObjective, type HpPolicy, type RouteRisk } from "./intent.js";
 
 // ---------------------------------------------------------------- run plan: since the last plan
 
@@ -328,6 +328,8 @@ export interface FightContext {
   scaling?: string[];
   /** Enemies whose move cycle grows them (fight-plan.ts cycleGrowth: a Buff move in the move model), with why. */
   cycleScaling?: string[];
+  /** HP expected lost a turn (the enemies' average hits less the deck's block a turn), null when unknown. */
+  lossPerTurn?: number | null;
 }
 
 /** Prefix of a validator note that keeps DeepSeek's intent and only logs code's different estimate. */
@@ -398,6 +400,12 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
     plan.objective = "preserve_hp";
   } else if (plan.objective === "scale_then_kill" && ctx.hpPct < SETUP_LOW_HP) {
     notes.push(`${DISAGREE}scale_then_kill at ${pct(ctx.hpPct)} HP (code would defend below ${pct(SETUP_LOW_HP)}); the HP guard still refuses setup that risks death`);
+  }
+  // Feasibility: a preserve_hp grind the enemy outlasts is kept as DeepSeek's objective, logged, and
+  // played as kill_fast (intent.ts objectiveInForce; XMY2 F24, K7G9 F45).
+  if (plan.objective === "preserve_hp" && ctx.kind !== "boss") {
+    const outlasts = grindOutlasts({ turnsToKill: ctx.turnsToKill, lossPerTurn: ctx.lossPerTurn ?? 0, hp: ctx.hp });
+    if (outlasts) notes.push(`${DISAGREE}preserve_hp: ${outlasts}; code plays the fight as kill_fast while that holds`);
   }
   const scaling = ctx.scaling ?? [];
   const reasons = plan.reasons ?? [];

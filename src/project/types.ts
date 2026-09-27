@@ -68,6 +68,8 @@ export interface ScreenMemory {
     /** Non-minion enemy HP and the turn when first seen (this fight's damage a turn). */
     hp?: number;
     turn?: number;
+    /** Our HP at that first look (this fight's HP lost a turn). */
+    playerHp?: number;
     /** Turns whose first look found every non-minion enemy asleep or intangible (not damage-rate turns). */
     idle?: number[];
   };
@@ -104,6 +106,12 @@ export interface ScreenMemory {
    * re-plans do not offer them again (GZ24 F8 T1, EJXC F28 T1: refused, then drunk 3 s later at 0.51).
    */
   potionVeto?: { fight: string; turn: number | null; ids: string[] };
+  /**
+   * The reserve released in this fight turn, with why: it stays released for the turn's re-plans (N7KR
+   * F8 T1: released for a line drinking the Skill and Dexterity potions; after the Skill Potion's card
+   * the re-plan's safest dry line kept 23 > 22 and the Dexterity Potion was filtered out again).
+   */
+  reserveRelease?: { fight: string; turn: number | null; note: string };
   /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).

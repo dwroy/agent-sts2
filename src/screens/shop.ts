@@ -13,7 +13,8 @@ import type { Decision, DecisionEnv } from "../project/types.js";
 import { cardRoles, cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
 import { currentRunPlan, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
-import { planForbidsCard } from "../strategy/intent.js";
+import { isReserved, planForbidsCard, potionRole } from "../strategy/intent.js";
+import { potionRank, POTION_RANK_DISCARDABLE } from "./map.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
@@ -141,6 +142,15 @@ export function planShop(env: DecisionEnv): Decision | null {
     if (bestPotion) bestPotion.keepInView = true;
   }
 
+  // A full belt: a potion the run plan keeps a role for can take the slot of one it does not (RVR6 F37:
+  // 15/80, 376 gold, reserve [block, damage, strength, weak]; Ashwater, no reserve role and never drunk in
+  // 18 floors, held the slot and the 50-gold Block Potion was never offered). Discarding is the option;
+  // the next decision re-reads the shop with the slot free.
+  if (emptyPotionSlots === 0 && actions.includes("discard_potion")) {
+    const swap = potionSwap(env, asArray(shop["potions"]).map(asRecord), state.run?.gold ?? 0, act, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
+    if (swap) options.push(swap);
+  }
+
   const removal = asRecord(shop["card_removal"]);
   if (bool(removal["available"]) && bool(removal["enough_gold"])) {
     const price = numOrNull(removal["price"]);
@@ -214,4 +224,42 @@ function shopScore(
   if (emptySlots > 0 && hpPct < 0.45) return 34 - cost / 25;
   if (act >= 2 && emptySlots > 0) return (emptySlots >= 2 ? 14 : 8) - cost / 25;
   return -5 - cost / 30;
+}
+
+/**
+ * Free a slot for a better potion: the belt's weakest potion the run plan does not reserve (rank <=
+ * POTION_RANK_DISCARDABLE), for a stocked, affordable potion of a role the plan reserves that ranks
+ * higher. Scored like buying that potion into an empty slot, less 1 for the potion given up.
+ */
+function potionSwap(env: DecisionEnv, stocked: Record<string, unknown>[], gold: number, act: number, hpPct: number): PickOption | null {
+  const reserve = currentRunPlan(env.screenMemory, env.state)?.reserve ?? [];
+  if (reserve.length === 0) return null;
+  const textOf = (id: string, text = "") => text || env.knowledge.potion(id)?.description || "";
+  const belt = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_discard);
+  const drop = belt
+    .filter((potion) => !isReserved(reserve, potion.potion_id, potion.text) && potionRank(potion.potion_id) <= POTION_RANK_DISCARDABLE)
+    .sort((a, b) => potionRank(a.potion_id) - potionRank(b.potion_id))[0];
+  if (!drop) return null;
+  const wanted = stocked
+    .filter((entry) => bool(entry["is_stocked"], true) && (numOrNull(entry["price"]) ?? Infinity) <= gold)
+    .map((entry) => ({ entry, id: str(entry["potion_id"]) }))
+    .filter(({ id }) => isReserved(reserve, id, textOf(id)) && potionRank(id) > potionRank(drop.potion_id))
+    .sort((a, b) => potionRank(b.id) - potionRank(a.id) || (numOrNull(a.entry["price"]) ?? 0) - (numOrNull(b.entry["price"]) ?? 0))[0];
+  if (!wanted) return null;
+  const price = numOrNull(wanted.entry["price"]);
+  const name = str(wanted.entry["name"], wanted.id);
+  const score = shopScore("buy_potion", wanted.id, null, deckProfile([]), act, 0, price, "", 1, hpPct) - 1;
+  return {
+    key: "swap_potion",
+    label: `discard ${drop.name} to buy ${name} (${price ?? "?"}g)`,
+    intent: { action: "discard_potion", option_index: drop.slot },
+    score,
+    keepInView: true,
+    summary: {
+      buy: `${name} (after discarding ${drop.name})`,
+      kind: "potion swap",
+      price,
+      text: `the belt is full: discards ${drop.name} (no role the run plan reserves) to free a slot; the run plan reserves ${potionRole(wanted.id, textOf(wanted.id)) ?? "this"} potions for the act boss`,
+    } satisfies JsonValue,
+  };
 }

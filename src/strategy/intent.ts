@@ -69,6 +69,9 @@
 import type { CardRole, PotionRole } from "../knowledge/dossiers.js";
 import type { FightPlan } from "./fight-plan.js";
 import type { RunPlan } from "./run-plan.js";
+import { roomHpCost } from "./route-cost.js";
+
+const round2 = (value: number): number => Math.round(value * 100) / 100;
 
 export const HP_POLICIES = ["preserve", "balanced", "push"] as const;
 export type HpPolicy = (typeof HP_POLICIES)[number];
@@ -217,9 +220,12 @@ export function combatPolicy(
   fight: (Pick<FightPlan, "objective"> & { reasons?: IntentReason[] }) | null | undefined,
   hpFraction: number,
   bossClock: BossClockNow | null = null,
+  grind: string | null = null,
 ): { policy: HpPolicy; why: string | null } {
   const base = policyAt(plan, hpFraction);
   if (base !== (plan?.hpPolicy ?? "balanced")) return { policy: base, why: `hp_policy ${plan?.hpPolicy} was for low HP; HP ${Math.round(hpFraction * 100)}% is back at the ${Math.round(hpTarget(plan) * 100)}% target` };
+  // HP kept cannot win a fight the grind outlasts (grindOutlasts): damage first.
+  if (base === "preserve" && grind) return { policy: "balanced", why: `damage first: ${grind}` };
   if (base === "preserve" && damageFirst(fight)) return { policy: "balanced", why: `fight objective ${fight!.objective} because ${(fight!.reasons ?? []).join(", ")}: damage first under hp_policy preserve` };
   // The act boss is fought to the end whatever the policy (plan-validator.ts): while its clock needs
   // more a turn than the deck deals, HP saved only stretches a race already behind (G8F1 F33: preserve
@@ -336,6 +342,25 @@ export function promotesSetup(objective: FightObjective | null, turn: number, la
   return objective === "scale_then_kill" && turn <= 3 && !laterPhase;
 }
 
+/** What a preserve_hp grind is checked against: turns the kill takes, HP lost a turn, HP now. */
+export interface GrindFacts {
+  turnsToKill: number | null;
+  lossPerTurn: number;
+  hp: number;
+}
+
+/**
+ * Why a grind cannot be won, or null: the turns the kill takes at this fight's damage a turn, times the
+ * HP lost a turn at the expected incoming, reach our HP (XMY2 F24: Hunter Killer 126 HP at ~11.5 a turn
+ * with 19 HP against 17/21 hits; K7G9 F45: "grind 320 HP down" at 20/72 against the Mecha Knight).
+ */
+export function grindOutlasts(grind: GrindFacts | null): string | null {
+  if (!grind || grind.turnsToKill === null || grind.lossPerTurn <= 0 || grind.hp <= 0) return null;
+  const turns = Math.ceil(grind.turnsToKill);
+  if (turns * grind.lossPerTurn < grind.hp) return null;
+  return `the grind outlasts our HP (~${turns} turns to kill, ~${Math.round(grind.lossPerTurn)} HP lost a turn, ${Math.round(grind.hp)} HP)`;
+}
+
 /** Expected turns left in the fight from which setup still pays (scale_then_kill). */
 export const SETUP_MIN_TURNS_LEFT = 3;
 
@@ -349,7 +374,12 @@ export const SETUP_MIN_TURNS_LEFT = 3;
  * still has ~10 turns for a Demon Form. A setup line that risks death is refused per line
  * (setupRisksDeath) whatever the objective.
  */
-export function objectiveInForce(objective: FightObjective | null, ctx: { turnsLeft: number | null; laterPhase: boolean; setupLeft: boolean }): { objective: FightObjective | null; why: string | null } {
+export function objectiveInForce(
+  objective: FightObjective | null,
+  ctx: { turnsLeft: number | null; laterPhase: boolean; setupLeft: boolean; grind?: GrindFacts | null },
+): { objective: FightObjective | null; why: string | null } {
+  const outlasts = objective === "preserve_hp" ? grindOutlasts(ctx.grind ?? null) : null;
+  if (outlasts) return { objective: "kill_fast", why: `preserve_hp: ${outlasts}; only a faster kill can win: kill` };
   if (objective !== "scale_then_kill") return { objective, why: null };
   if (ctx.laterPhase) return { objective: "kill_fast", why: "scale_then_kill: a new boss phase is no setup window: kill" };
   if (!ctx.setupLeft) return { objective: "kill_fast", why: "scale_then_kill: no power or permanent Strength card left in hand or draw pile: kill" };
@@ -366,7 +396,7 @@ export function objectiveInForce(objective: FightObjective | null, ctx: { turnsL
  * no role (JF8N F13: the Energy Potion 「获得{Energy}」 matched none and went on an elite; KFPC F29 the
  * Power Potion, FH3M/9V09 the Radiant Tincture).
  */
-export const BURST_POTIONS = /^(ENERGY_POTION|RADIANT_TINCTURE|ATTACK_POTION|POWER_POTION|SKILL_POTION|COLORLESS_POTION|DUPLICATOR|SWIFT_POTION|GIGANTIFICATION_POTION|CUNNING_POTION|BOTTLED_POTENTIAL)$/;
+export const BURST_POTIONS = /^(ENERGY_POTION|RADIANT_TINCTURE|ATTACK_POTION|POWER_POTION|SKILL_POTION|COLORLESS_POTION|DUPLICATOR|SWIFT_POTION|CLARITY|GIGANTIFICATION_POTION|CUNNING_POTION|BOTTLED_POTENTIAL)$/;
 /** Potion-Shaped Rocks (Petrified Toad refills them every fight): never reserved (H7W0 F42-F48). */
 export const ROCK_POTION = "POTION_SHAPED_ROCK";
 
@@ -376,9 +406,12 @@ export function potionRole(potionId: string, text: string): PotionRole | null {
   if (BURST_POTIONS.test(potionId)) return "damage";
   // By id as well as text: the Dexterity Potion reads 「获得{DexterityPower}点敏捷」 and matched no role
   // (GZ24 F8: drunk on an elite's T1 while the run plan kept [block, weak]); Regen is healing over turns.
-  return /STRENGTH|FLEX/.test(potionId) ? "strength" :
+  // Damage *reduction* is a block role, read before "damage" (HCBJ F11: Beetle Juice 「敌人的攻击…造成的伤害减少」
+  // was a damage potion and dropped for a Tiny Mailbox potion); the same words as combat-plan BLUNTS_HIT.
+  return /STRENGTH|FLEX|MAZALETH/.test(potionId) ? "strength" :
     /REGEN|BLOOD_POTION|FAIRY/.test(potionId) || /回复|heal|恢复|再生|regen/i.test(text) ? "heal" :
-    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE/.test(potionId) || /格挡|block|无实体|intangible|敏捷|dexterity/i.test(text) ? "block" :
+    /DEXTERITY|BLOCK_POTION|FORTIFIER|SPEED_POTION|GHOST_IN_A_JAR|HEART_OF_IRON|SHIP_IN_A_BOTTLE|BEETLE_JUICE|LIQUID_BRONZE/.test(potionId) ||
+    /格挡|block|无实体|intangible|敏捷|dexterity|伤害减少|less damage|荆棘|thorns/i.test(text) ? "block" :
     /虚弱|weak/i.test(text) ? "weak" :
     /伤害|damage/i.test(text) ? "damage" : null;
 }
@@ -456,8 +489,16 @@ export function restShift(plan: RunPlan | null | undefined, option: string, hpPc
   return shift;
 }
 
-/** Route weight change for a node from the run plan's intents, at the projected HP on arrival. */
-export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99): number {
+/**
+ * Route weight per unit of expected HP cost (fraction of max HP) of a hallway fight or "?" under
+ * hp_policy preserve below 60% HP: the shift follows what the room is expected to cost, so a "?" (0.4 of
+ * a fight) is never priced below a Monster at the same spot (NJSZ F29: preserve moved the "?" -1.5 and
+ * the Monster -0; the Monster took 44 -> 12 before the forced elite).
+ */
+export const PRESERVE_HP_WEIGHT = 10;
+
+/** Route weight change for a node from the run plan's intents, at the projected HP on arrival (`act` prices hallway rooms). */
+export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArrival: number, toBoss = 99, act = 2): number {
   if (!plan) return 0;
   const policy = policyAt(plan, hpOnArrival);
   const risk = routeRiskAt(plan, hpOnArrival);
@@ -474,9 +515,9 @@ export function mapShift(plan: RunPlan | null | undefined, type: string, hpOnArr
       return shift;
     }
     case "Unknown":
-      return policy === "preserve" && hpOnArrival < 0.6 ? -1.5 : 0;
+      return policy === "preserve" && hpOnArrival < 0.6 ? -round2(PRESERVE_HP_WEIGHT * roomHpCost(type, act)) : 0;
     case "Monster":
-      return policy === "preserve" && hpOnArrival < 0.5 ? -0.5 : policy === "push" && hpOnArrival > 0.6 ? 0.5 : 0;
+      return policy === "preserve" && hpOnArrival < 0.6 ? -round2(PRESERVE_HP_WEIGHT * roomHpCost(type, act)) : policy === "push" && hpOnArrival > 0.6 ? 0.5 : 0;
     case "RestSite":
     case "Rest":
       return (policy === "preserve" && low ? 1.5 : 0) + (entryRaised(plan) && plan.entryHp && hpOnArrival < plan.entryHp ? 1.5 : 0);
@@ -702,20 +743,63 @@ function runIntentName(plan: RunPlan, hpPct: number): string | null {
   return parts.length > 0 ? parts.join(", ") : null;
 }
 
+/** Projected HP (fraction of max) on arrival at the first elite every path meets and at the boss (map.ts). */
+export interface RouteArrival {
+  eliteHp: number | null;
+  eliteFloor: number | null;
+  /** An elite's expected HP cost this act. */
+  eliteCost: number;
+  /** Rest before that elite on every, some or no path. */
+  eliteRest: "every" | "some" | "none" | null;
+  bossHp: number | null;
+  /** Chance of reaching the boss alive on that path. */
+  bossSurvival?: number | null;
+  bossFloor: number | null;
+}
+
+/** Arrival HP this far below the run's entry-HP target breaks it (N7KR F4: "fits entry_hp 90%" into a no-rest forced elite at a projected 60%). */
+export const ENTRY_ARRIVAL_SLACK = 0.25;
+/** Another option must arrive at least this much higher for the shortfall to be a cost of this one. */
+const ARRIVAL_BETTER = 0.05;
+
 /**
  * The label of a map node, from the same scoring that ranks the nodes (5JU3 F10: '?' labelled "breaks
  * preserve" and Monster unlabelled, while the route scoring priced '?' cheaper; Jev took the Monster at
  * 0.98 into the fight that killed us). `route` is the node's route_value and the best one offered;
- * the note says what the run intents did to this node's weight.
+ * the note says what the run intents did to this node's weight. With an entry-HP target, `arrival`
+ * (projected HP at the first elite every path meets and at the boss, and the best of the options) makes
+ * the option "costs" when it arrives below target - 0.25, or at no more HP than the elite costs, while
+ * another option arrives higher (N7KR F4, K7G9 F43).
  */
-export function mapFit(plan: RunPlan | null | undefined, type: string, hpPct: number, route?: { value: number; best: number }, toBoss = 99): string | null {
+export function mapFit(
+  plan: RunPlan | null | undefined,
+  type: string,
+  hpPct: number,
+  route?: { value: number; best: number },
+  toBoss = 99,
+  arrival?: RouteArrival & { best: { eliteHp: number; bossHp: number } },
+  act = 2,
+): string | null {
   if (!plan) return null;
   const intents = runIntentName(plan, hpPct);
   if (!intents) return null;
-  const shift = mapShift(plan, type, hpPct, toBoss);
+  const shift = mapShift(plan, type, hpPct, toBoss, act);
   const effect = shift !== 0 ? ` (the plan moves this ${type} ${shift > 0 ? "+" : ""}${shift})` : "";
   if (!route) return `${intents}${effect}`;
   const gap = route.best - route.value;
+  const pct = (value: number) => `${Math.round(value * 100)}%`;
+  // Never on code's own best route (labels come from the scoring that ranks the nodes).
+  if (plan.entryHp && arrival && gap > 0.005) {
+    const floorLine = plan.entryHp - ENTRY_ARRIVAL_SLACK;
+    const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
+    if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
+      const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
+      return `costs entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+    }
+    if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
+      return `costs entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)}); ${gap.toFixed(1)} route value below the best${effect}`;
+    }
+  }
   if (gap <= MAP_NEAR) return `fits ${intents}: ${gap <= 0.005 ? "code's best route" : `within ${gap.toFixed(1)} of code's best route`} under the plan${effect}`;
   return `costs ${gap.toFixed(1)} route value vs the best node under ${intents}${effect}`;
 }
@@ -753,6 +837,7 @@ export function intentLines(
   now: { bossClock?: BossClockNow | null; objective?: { objective: FightObjective | null; why: string | null } } = {},
 ): string[] {
   const bossClock = now.bossClock ?? null;
+  const nowObjective = now.objective ?? null;
   const lines: string[] = [];
   const because = (reason: string | undefined) => (reason ? ` because ${reason}` : "");
   if (run) {
@@ -761,7 +846,7 @@ export function intentLines(
     const risk = run.routeRisk ?? "normal";
     if (risk !== "normal") lines.push(`route_risk ${risk}${because(run.reasons?.route_risk)}: ${MEANING.route_risk[risk]}`);
     if (hpFraction !== null) {
-      const now = combatPolicy(run, fight, hpFraction, bossClock);
+      const now = combatPolicy(run, fight, hpFraction, bossClock, fight?.objective === "preserve_hp" && nowObjective?.objective === "kill_fast" ? nowObjective.why : null);
       if (now.why) lines.push(`in force now: hp_policy ${now.policy} (${now.why})`);
       const riskNow = routeRiskAt(run, hpFraction);
       if (riskNow !== risk) lines.push(`in force now: route_risk ${riskNow} (avoid_elites was for low HP; HP is back at the target)`);

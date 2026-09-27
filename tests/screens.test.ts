@@ -269,7 +269,7 @@ describe("map", () => {
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    // Monster -> Elite: the elite is reached at ~75%, where it is worth 0, not +4.
+    // Monster -> Elite: the elite is reached at ~71%, where it is worth 0, not +4.
     expect(value("n0")).toBeCloseTo(1.2);
     expect(value("n1")).toBeCloseTo(2.4);
   });
@@ -585,7 +585,8 @@ describe("map", () => {
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
     const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
-    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.22, 0.28]);
+    // Act 1 at the p75 of logged A8 hallway losses (11/80; N7KR F4-F7, K7G9).
+    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.14, 0.22, 0.28]);
     expect(fightHpCost("Elite", 3)).toBeCloseTo(0.7);
     expect(monsterWeight(0.8)).toBe(1.2);
     expect(monsterWeight(0.35)).toBeCloseTo(0);

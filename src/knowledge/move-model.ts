@@ -72,3 +72,33 @@ export function nextDamageWithGrowth(base: number | null, ritual: number, shown:
   const grown = now.reduce((sum, attack) => sum + (attack.damage + ritual) * Math.max(1, attack.hits), 0);
   return Math.max(base ?? 0, grown);
 }
+
+/**
+ * An enemy's average hit a turn once awake: each move's average attack damage weighted by how often
+ * the model sees it played (its incoming transitions), sleep moves left out; with the expected number of
+ * sleep turns it opens with (a self-looping sleep move: 1 / (1 - P(stay asleep))). Null when unknown.
+ */
+export function awakeDamagePerTurn(enemyId: string): { perTurn: number; sleepTurns: number } | null {
+  const entry = load()[enemyId];
+  if (!entry) return null;
+  const visits: Record<string, number> = {};
+  for (const successors of Object.values(entry.next)) for (const [move, n] of Object.entries(successors)) visits[move] = (visits[move] ?? 0) + n;
+  // The Slumbering Beetle sleeps as SNORE_MOVE.
+  const isSleep = (move: string) => /SLEEP|SNORE/.test(move);
+  let total = 0;
+  let count = 0;
+  for (const [move, n] of Object.entries(visits)) {
+    if (isSleep(move)) continue;
+    total += (entry.damage[move] ?? 0) * n;
+    count += n;
+  }
+  if (count === 0) return null;
+  let sleepTurns = 0;
+  for (const [move, successors] of Object.entries(entry.next)) {
+    if (!isSleep(move)) continue;
+    const out = Object.values(successors).reduce((sum, n) => sum + n, 0);
+    const stay = successors[move] ?? 0;
+    if (out > stay) sleepTurns = Math.max(sleepTurns, 1 / (1 - stay / out));
+  }
+  return { perTurn: total / count, sleepTurns };
+}

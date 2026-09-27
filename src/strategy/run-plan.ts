@@ -60,6 +60,9 @@ export interface PlanSnapshot {
   elites: number;
 }
 
+/** Card roles a run plan may need at once (list order kept; more are cut with a validator note). */
+export const MAX_NEEDS = 5;
+
 export interface RunPlan {
   runId: string;
   /** Act (1-based) and floor the plan was made on. */
@@ -333,6 +336,8 @@ export function parseRunPlan(
     const kept = [...new Set(entries.map(pick).filter((id): id is string => id !== null))];
     const dropped = entries.filter((entry) => pick(entry) === null);
     if (dropped.length > 0) notes.push(`${key}: dropped unknown ${dropped.map((entry) => JSON.stringify(entry)).join(", ")}`);
+    // A cut is logged, not silent (N7KR v1/v2: "block" was the 5th need and vanished).
+    if (kept.length > max) notes.push(`${key}: kept the first ${max} of ${kept.length}, cut ${kept.slice(max).join(", ")}`);
     return kept.slice(0, max);
   };
   const role = <T extends string>(roles: readonly T[]) => (entry: unknown): T | null => {
@@ -397,7 +402,8 @@ export function parseRunPlan(
     entryHp,
     // Any number of roles (the old parser kept 2: half the potions of a dropped 3rd role were drunk).
     reserve: has(reserveKey) ? [...new Set(list(reserveKey, role(POTION_ROLES), 6) as PotionRole[])] : base.reserve,
-    needs: has(needsKey) ? (list(needsKey, role(CARD_ROLES), 4) as CardRole[]) : base.needs,
+    // Up to 5 roles (N7KR: the 4-role cut dropped "block", the 5th).
+    needs: has(needsKey) ? (list(needsKey, role(CARD_ROLES), MAX_NEEDS) as CardRole[]) : base.needs,
     bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : base.bossPrep,
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : base.summary,
     ...(Object.keys(reasons).length > 0 ? { reasons } : {}),

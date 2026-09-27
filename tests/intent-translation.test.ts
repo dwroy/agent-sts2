@@ -135,9 +135,10 @@ describe("map and rest labels from the same scores", () => {
       if (best - Number(node["route_value"]) <= 2.5) expect(label).toMatch(/^fits hp_policy preserve/);
       else expect(label).toMatch(/^costs \d+\.\d route value vs the best node under hp_policy preserve/);
     }
-    // 5JU3 F10 at 30/80: '?' 7.12 and Monster 7.0 are both near code's best, the '?' carries preserve's -1.5.
-    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.375, { value: 7.12, best: 7.12 })).toBe("fits hp_policy preserve: code's best route under the plan (the plan moves this Unknown -1.5)");
-    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Monster", 0.375, { value: 7.0, best: 7.12 })).toBe("fits hp_policy preserve: within 0.1 of code's best route under the plan (the plan moves this Monster -0.5)");
+    // 5JU3 F10 at 30/80 (act 1): '?' 7.12 and Monster 7.0 are both near code's best; preserve moves each by
+    // its expected HP cost, the '?' less than the Monster (NJSZ F29).
+    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.375, { value: 7.12, best: 7.12 }, 99, undefined, 1)).toBe("fits hp_policy preserve: code's best route under the plan (the plan moves this Unknown -0.56)");
+    expect(mapFit(runPlan({ hpPolicy: "preserve" }), "Monster", 0.375, { value: 7.0, best: 7.12 }, 99, undefined, 1)).toBe("fits hp_policy preserve: within 0.1 of code's best route under the plan (the plan moves this Monster -1.4)");
     expect(mapFit(runPlan(), "Monster", 0.375, { value: 1, best: 7.12 })).toBeNull();
   });
 

@@ -6,7 +6,9 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
-import { bossClockJson, bossNeed, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, GAP_BONUS_BIG_MAX, relicDamagePerTurn } from "../src/strategy/boss-clock.js";
+import { awakeDamagePerTurn } from "../src/knowledge/move-model.js";
+import { ASSUMED_ENTRY_HP, bossClockJson, bossNeed, cappedBossNeed, clockEntryHp, damageGap, deckDamagePerTurn, gapCardBonus, gapRestShift, GAP_BONUS_MAX, GAP_BONUS_BIG_MAX, relicDamagePerTurn, survivableBossTurns } from "../src/strategy/boss-clock.js";
+import { logged, loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;
@@ -127,5 +129,36 @@ describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)
     expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 0).bonus).toBe(14);
     expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 9).bonus).toBe(7);
     expect(mustHaveBonus({ needs: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
+  });
+});
+
+describe("the clock's turns are the turns we survive (HCBJ F16: gap 1 at 12 turns; 52 HP lasted 9)", () => {
+  it("the Matriarch's awake hit and sleep turns come from the move model", () => {
+    const moves = awakeDamagePerTurn("LAGAVULIN_MATRIARCH")!;
+    expect(moves.perTurn).toBeGreaterThan(13);
+    expect(moves.perTurn).toBeLessThan(17);
+    expect(moves.sleepTurns).toBeGreaterThan(2);
+    expect(moves.sleepTurns).toBeLessThan(3);
+  });
+
+  it("the logged F16 board (52/80, boss next): turns capped near 8, the gap is ~11 a turn, not 1", () => {
+    const state = parseGameState(logged("hcbj-map-f16").state);
+    const need = cappedBossNeed(state, loggedKnowledge)!;
+    expect(need.entryHp).toBe(52);
+    expect(need.turns).toBeLessThan(9);
+    expect(need.turns).toBeGreaterThan(7);
+    const gap = damageGap(state, loggedKnowledge)!;
+    expect(gap.need).toBeGreaterThanOrEqual(28);
+    expect(gap.gap).toBeGreaterThanOrEqual(8);
+    expect(String(bossClockJson(state, loggedKnowledge)?.["turns_note"])).toMatch(/12 turns in the table, capped at 8/);
+  });
+
+  it("before the boss's floor the clock assumes the usual entry HP, and never caps above the table", () => {
+    const raw = structuredClone(logged("hcbj-map-f16").state) as Record<string, Record<string, unknown>>;
+    raw["run"]!["floor"] = 10;
+    const state = parseGameState(raw);
+    expect(clockEntryHp(state)).toBe(Math.round(ASSUMED_ENTRY_HP * 80));
+    expect(survivableBossTurns("LAGAVULIN_MATRIARCH", 500, 0)!).toBeGreaterThan(12);
+    expect(cappedBossNeed(parseGameState({ ...raw, run: { ...raw["run"], current_hp: 80, max_hp: 80 } }), loggedKnowledge)!.turns).toBeLessThanOrEqual(12);
   });
 });

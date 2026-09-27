@@ -24,16 +24,16 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
-import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { awakeDamagePerTurn, expectedNextDamage, maxMoveDamage, nextDamageWithGrowth } from "../knowledge/move-model.js";
+import { drinkFirstSafe, heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
 import { distinctPlans, dominates, drawsCards, sandpitTurnValue, solveTurn, WAKE_MARGIN, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { currentRunPlan, type RunPlan } from "../strategy/run-plan.js";
-import { fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
-import { combatFit, combatPolicy, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
+import { expectedLossPerTurn, fightFocus, fightKey, OFFENSIVE_POTIONS, type FightPlan } from "../strategy/fight-plan.js";
+import { RESERVE_RELEASE_HP, combatFit, combatPolicy, grindOutlasts, objectiveInForce, LABEL_NEAR, LABEL_NOTE, objectiveDamage, potionOptionFit, potionRole, ROCK_POTION, type LineField, type SandpitField, guardProtectsSetup, guardSlackScale, hallwayGuardOn, intentLines, isReserved, promotesSetup, reserveReleased, setupRisksDeath, solverScale, tradesHpForDamage } from "../strategy/intent.js";
 import { forcedEliteWithin } from "./rest.js";
-import { bossNeed, deckDamagePerTurn } from "../strategy/boss-clock.js";
+import { bossNeed, deckBlockPerTurn, deckDamagePerTurn } from "../strategy/boss-clock.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
@@ -73,6 +73,80 @@ export function zeroEnergyDrinkIdle(plan: Plan, dry: Plan[]): boolean {
   const bestLoss = Math.min(...dry.map((entry) => entry.outcome.hpLoss));
   const bestDamage = Math.max(...dry.map((entry) => entry.outcome.damageDealt));
   return plan.outcome.hpLoss >= bestLoss && plan.outcome.damageDealt <= bestDamage;
+}
+
+/** A living enemy as later turns see it: its hit a turn once awake and the turns it still sleeps. */
+export interface Foe {
+  index: number;
+  minion: boolean;
+  sleepLeft: number;
+  hit: number;
+}
+
+export function foesOf(enemies: Record<string, unknown>[]): Foe[] {
+  return enemies.map((enemy) => ({
+    index: num(enemy["index"]),
+    minion: asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER"),
+    sleepLeft: Math.max(powerAmount(enemy, "ASLEEP_POWER"), powerAmount(enemy, "SLUMBER_POWER")),
+    hit: awakeDamagePerTurn(str(enemy["enemy_id"]))?.perTurn ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0),
+  }));
+}
+
+/** Average hit a turn over the next `turns` enemy turns, each sleeper from the turn it wakes (t >= sleepLeft). */
+export function incomingUntil(foes: Foe[], turns: number): number {
+  let total = 0;
+  for (let t = 1; t <= turns; t += 1) total += foes.reduce((sum, foe) => sum + (t < foe.sleepLeft ? 0 : foe.hit), 0);
+  return turns > 0 ? total / turns : 0;
+}
+
+/**
+ * HP left to lose until every non-minion dies, from the enemy HP a line leaves: each later turn deals
+ * `perTurn` (the kill-priority enemy first, then the lowest HP, overflow carried on), then every living
+ * awake enemy hits, less the deck's block a turn.
+ */
+export function lossUntilKill(foes: Foe[], hpAfter: { index: number; hp: number }[], perTurn: number, blockPerTurn: number, focusIndex: number | null = null): number {
+  const alive = foes.map((foe) => ({ ...foe, hp: hpAfter.find((after) => after.index === foe.index)?.hp ?? 0 })).filter((foe) => foe.hp > 0);
+  let loss = 0;
+  for (let t = 1; t <= 30 && alive.some((foe) => foe.hp > 0 && !foe.minion); t += 1) {
+    let damage = Math.max(1, perTurn);
+    const order = alive.filter((foe) => foe.hp > 0).sort((a, b) => Number(b.index === focusIndex) - Number(a.index === focusIndex) || Number(a.minion) - Number(b.minion) || a.hp - b.hp);
+    for (const foe of order) {
+      const dealt = Math.min(foe.hp, damage);
+      foe.hp -= dealt;
+      damage -= dealt;
+      if (damage <= 0) break;
+    }
+    if (!alive.some((foe) => foe.hp > 0 && !foe.minion)) break;
+    loss += Math.max(0, alive.reduce((sum, foe) => sum + (foe.hp > 0 && t >= foe.sleepLeft ? foe.hit : 0), 0) - blockPerTurn);
+  }
+  return loss;
+}
+
+/**
+ * A line with its order-free potions (card-model drinkFirstSafe: Strength, Dexterity, Block, Energy...)
+ * moved before its first card. The solver may place such a drink at the line's end, after the energy is
+ * spent; a kill mid-line then re-plans at 0 energy, where the drink "adds nothing this turn" and is
+ * dropped (N7KR F8 T2/T3: "Hammer, Dexterity Potion" rank 1 for its lasting Dexterity, the potion
+ * dropped twice after Hammer killed an eel, drunk at 6 HP on T4). Drunk first it is played as shown.
+ */
+export function potionsFirst(plan: Plan): Plan {
+  const firstCard = plan.steps.findIndex((step) => !step.cardId.startsWith("POTION:"));
+  if (firstCard < 0) return plan;
+  const moves = plan.steps.filter((step, index) => index > firstCard && step.cardId.startsWith("POTION:") && drinkFirstSafe(step.cardId.split(":")[1] ?? ""));
+  if (moves.length === 0) return plan;
+  const rest = plan.steps.filter((step) => !moves.includes(step));
+  return { ...plan, steps: [...rest.slice(0, firstCard), ...moves, ...rest.slice(firstCard)] };
+}
+
+/** Plans with the same steps (after reordering), the first kept. */
+function dedupePlans(plans: Plan[]): Plan[] {
+  const seen = new Set<string>();
+  return plans.filter((plan) => {
+    const id = plan.steps.map((step) => `${step.cardId}@${step.target ?? ""}`).join(",");
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
 }
 
 /**
@@ -164,6 +238,17 @@ export function measuredDamagePerTurn(start: { hp?: number; turn?: number; idle?
   const idle = (start.idle ?? []).filter((entry) => entry >= start.turn! && entry < turn).length;
   const turns = turn - start.turn - idle;
   return turns > 0 ? (start.hp - enemyHpNow) / turns : null;
+}
+
+/**
+ * Potions are for now: below 40% HP in an elite fight or a hallway fight against 2+ attackers, and below
+ * the reserve's release line (25%) in any non-boss fight, whatever the attackers (XMY2 F24: 19/80 against
+ * one Hunter Killer, the released potions still carried the hallway cost of 15 and no line drank them
+ * until every line died).
+ */
+export function pressedAt(hp: number, maxHp: number, kind: SolverInput["fightKind"], attackers: number): boolean {
+  if (maxHp <= 0 || kind === "boss") return false;
+  return hp < maxHp * RESERVE_RELEASE_HP || (hp < maxHp * 0.4 && (kind === "elite" || attackers >= 2));
 }
 
 /** Solver cost of drinking a potion (before any defensive saving). */
@@ -908,7 +993,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
   const fightId = fightKey(state);
   const enemyHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.hp, 0);
-  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1 };
+  if (!env.screenMemory.fightStart || env.screenMemory.fightStart.fight !== fightId) env.screenMemory.fightStart = { fight: fightId, maxHp: maxHpNow, hp: enemyHpNow, turn: state.turn ?? 1, playerHp: playerSim.hp };
   // A turn that starts with every non-minion enemy asleep or intangible is no turn of this fight's damage
   // rate (T86W F17: the Matriarch slept T1-T3 for 1 damage; T4 read 1/3 a turn and "kills" in 700 turns).
   const keyEnemies = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0);
@@ -930,10 +1015,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   const perTurn = measuredDamagePerTurn(start, enemyHpNow, fightTurn) ?? deckDamagePerTurn(state, env.knowledge);
   // scale_then_kill is played as kill_fast once the fight should end within ~3 turns, nothing is left to
   // set up, or in a new boss phase (intent.ts objectiveInForce).
+  // HP lost a turn: this fight's so far, else the enemies' average hits less the deck's block.
+  const measuredLoss =
+    start.playerHp !== undefined && start.turn !== undefined && fightTurn > start.turn ? Math.max(0, (start.playerHp - playerSim.hp) / (fightTurn - start.turn)) : null;
+  const grind = kind === "boss" ? null : { turnsToKill: perTurn > 0 ? bossHpLeft / perTurn : null, lossPerTurn: measuredLoss ?? expectedLossPerTurn(state, env.knowledge), hp: playerSim.hp };
   const objectiveNow = objectiveInForce(fightPlan?.objective ?? null, {
     turnsLeft: perTurn > 0 ? bossHpLeft / perTurn : null,
     laterPhase,
     setupLeft: setupLeft(state, hand, env.knowledge),
+    grind,
   });
   const objective = objectiveNow.objective;
   const need = kind === "boss" ? bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) : null;
@@ -941,7 +1031,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The act boss's clock now: HP left over the clock's turns left, against the deck's estimate.
   const bossClockNow = need ? { need: bossHpLeft / clockTurnsLeft, deck: deckDamagePerTurn(state, env.knowledge) } : null;
   // An act boss behind its clock is fought under balanced, not preserve (intent.ts combatPolicy).
-  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac, bossClockNow).policy;
+  const hpPolicy = combatPolicy(runPlan, fightPlan, hpFrac, bossClockNow, fightPlan?.objective === "preserve_hp" && objective === "kill_fast" ? grindOutlasts(grind) : null).policy;
   const guardScale = guardSlackScale(objective, hpPolicy, hpFrac);
   // Reserve: potions of the roles the run plan keeps for the act boss are hard-filtered from every
   // line and offer before it, in every non-boss fight (M6P7, T4PY, 0YG4: boss potions spent in
@@ -951,7 +1041,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Released (below 25% HP now, or every dry line dies below): a reserved potion costs what any potion
   // costs, no save cost on top (5JU3 F11 T3-T4: at 16% HP the Gigantification Potion was released but
   // still carried RUN_PLAN_SAVE_COST 20, and no line drank it until every line died on T6).
-  let reserveOpen = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: false }) !== null;
+  const releaseMemo = env.screenMemory.reserveRelease;
+  const releasedThisTurn = releaseMemo && releaseMemo.fight === fightKey(state) && releaseMemo.turn === (state.turn ?? null) ? releaseMemo.note : null;
+  const rememberRelease = (note: string) => {
+    env.screenMemory.reserveRelease = { fight: fightKey(state), turn: state.turn ?? null, note };
+  };
+  let reserveOpen = reserveReleased({ bossFight: false, hpFraction: hpFrac, everyDryLineDies: false }) !== null || releasedThisTurn !== null;
   const heldForBoss = (potionId: string, text: string) => reservedPotion(potionId, text) && !reserveOpen;
   // Petrified Toad refills a Potion-Shaped Rock every fight: a rock drunk now is free, and a slot freed
   // for a real potion (H7W0 F42-F48: two rocks filled the belt, the Attack Potion reward was lost and
@@ -966,8 +1061,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // are for: drink them like in a boss fight (7Q5G T5, Y83U F30: potions kept until the "emergency"
   // turn, when it was too late).
   const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
-  const pressed =
-    playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
+  const pressed = pressedAt(playerSim.hp, playerSim.maxHp, kind, attackers);
   // Boss potions are not free (1R3C F17 T1: cost 0 drank all three on a 7-damage turn): a small
   // base cost, plus what a defensive one is worth saving for a bigger hit next turn.
   // A hallway fight right before a forced Elite: the potion is worth twice as much kept (NZR7 F6: both
@@ -1014,7 +1108,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     : null;
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS).
   const potionContext = { enemyTargets: enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index), strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
-  const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
+  // Lines are shown and played with their order-free potions drunk first (potionsFirst).
+  const solveWith = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) => {
+    const result = solveRaw(free, withPotions);
+    return { ...result, plans: dedupePlans(result.plans.map(potionsFirst)) };
+  };
+  const solveRaw = (free: boolean, withPotions: boolean | ((potion: (typeof potionsAll)[number]) => boolean) = true) =>
     solveTurn({
       hand: [
         ...hand,
@@ -1081,7 +1180,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Swift Potion line was listed and Jev drank it at 0.11).
   if ((kind === "monster" || kind === "unknown") && solved.plans.some(drinksPotion)) {
     const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
-    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
+    // At low HP a few HP is a big share of what is left (XMY2 F24 at 19 HP): at most 20% of HP now.
+    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= Math.min(HALLWAY_LETHAL_POTION_LOSS, playerSim.hp * 0.2)) {
       solved = { ...solved, plans: dry };
       dryCheap = true;
     } else if (dry.length > 0) {
@@ -1130,12 +1230,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     let dry = solved.plans.filter((plan) => !drinksReserved(plan));
     if (dry.length === 0) dry = solveWith(false, (potion) => !reservedPotion(potion.potion_id, potion.text)).plans;
     const dryAlive = dry.filter((plan) => !plan.outcome.dies);
-    reserveNote = reserveReleased({
-      bossFight: false,
-      hpFraction: hpFrac,
-      everyDryLineDies: dry.every((plan) => plan.outcome.dies),
-      dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
-    });
+    reserveNote =
+      releasedThisTurn ??
+      reserveReleased({
+        bossFight: false,
+        hpFraction: hpFrac,
+        everyDryLineDies: dry.every((plan) => plan.outcome.dies),
+        dry: dryAlive.length > 0 ? { hpAfter: Math.max(...dryAlive.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
+      });
+    if (reserveNote) rememberRelease(reserveNote);
     if (!reserveNote) solved = { ...solved, plans: dry };
     else if (!reserveOpen) {
       // Released because every line without it dies, or the safest one ends within next turn's hit:
@@ -1200,12 +1303,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   const aliveNow = solved.plans.filter((plan) => !plan.outcome.dies);
   const offerReleased =
     reserveNote ??
+    releasedThisTurn ??
     reserveReleased({
       bossFight: false,
       hpFraction: hpFrac,
       everyDryLineDies: best.outcome.dies,
       dry: aliveNow.length > 0 ? { hpAfter: Math.max(...aliveNow.map((plan) => plan.outcome.hpAfter)), nextIncoming, maxHp: playerSim.maxHp } : null,
     });
+  if (offerReleased && !releasedThisTurn) rememberRelease(offerReleased);
   const potions =
     potionCapped || dryCheap
       ? []
@@ -1333,11 +1438,20 @@ function planTurn(env: DecisionEnv): Decision | null {
   // lived to T8 at -71; VF5C F27).
   const killTurns = (plan: Plan): number =>
     plan.outcome.winsFight ? 1 : 1 + Math.ceil(Math.max(0, bossHpLeft - realDamage(plan)) / Math.max(1, perTurn));
+  // Later turns of this fight are priced with each living enemy's move-model hit once awake, sleepers
+  // from the turn they wake (NJSZ F25: next turn's hit was ~0 with the Slumbering Beetle asleep and the
+  // bowlbugs stunned/debuffing; the beetle's 89 HP were then all dealt while it was awake at 16-26 a turn).
+  const foes = foesOf(asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false));
+  const blockPerTurn = deckBlockPerTurn(state, env.knowledge);
   const killsSooner = (picked: Plan, replacement: Plan | null): boolean => {
     if (replacement === null || (kind !== "elite" && kind !== "boss") || !tradesHpForDamage(objective)) return false;
     const later = killTurns(replacement) - killTurns(picked);
-    if (later <= 0) return false;
-    return picked.outcome.hpLoss <= replacement.outcome.hpLoss + later * nextIncoming && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
+    // A later kill turn costs the average hit until the kill, sleepers counted once awake, not only next turn's.
+    const byTurns = later > 0 && picked.outcome.hpLoss <= replacement.outcome.hpLoss + later * Math.max(nextIncoming, incomingUntil(foes, killTurns(replacement)));
+    // Several enemies: each one's own death turn, simulated (a sooner kill of one hitter).
+    const lossOf = (plan: Plan) => (plan.outcome.winsFight ? 0 : lossUntilKill(foes, plan.outcome.enemyHpAfter, perTurn, blockPerTurn, focusIndex));
+    const bySim = foes.filter((foe) => !foe.minion).length > 1 && picked.outcome.hpLoss + lossOf(picked) < replacement.outcome.hpLoss + lossOf(replacement);
+    return (byTurns || bySim) && !setupRisksDeath(picked.outcome.hpAfter, nextIncoming, playerSim.maxHp);
   };
   // scale_then_kill: a line with more setup is kept unless it risks death (intent.ts guardProtectsSetup;
   // JF99 F33 T4/T7: Crimson Mantle traded twice for 6 HP and never played, the crabs died at 7 and 38

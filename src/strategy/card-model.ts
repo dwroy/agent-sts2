@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -445,6 +445,14 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // energy, Tincture carried to the death).
   RADIANT_TINCTURE: { target: "self", energyGain: 1 },
   SWIFT_POTION: { target: "self", draw: 3 },
+  // Clarity: 「抽{Cards}张牌。在你的下{ClarityPower}个回合开始时，额外抽1张牌」. K7G9 F30 T7 (states.jsonl): hand
+  // 3 -> 4 on the drink, CLARITY_POWER 3 after it. One card now; the three later draws are lasting value
+  // (turn-solver CLARITY_LATER_DRAWS). Unmodelled, it was carried 35 floors in K7G9 (F1-F30, F39-F45).
+  CLARITY: { target: "self", draw: 1, special: "clarity" },
+  // Mazaleth's Gift: Ritual 1 (states.jsonl XMY2 F17 T9: RITUAL_POWER 1), +1 Strength at the end of
+  // each of our turns: a small Demon Form (turn-solver RITUAL_VALUE). Unmodelled, it hung as a
+  // "drink first" option from T1 to T9 of XMY2's act-1 boss.
+  MAZALETHS_GIFT: { target: "self", special: "ritual" },
   FYSH_OIL: { target: "self", strength: 1 },
   // Debuff: Artifact negates it like any other (TQX5 T1: drunk into Artifact 3, nothing landed).
   // Demise 9 measured (states.jsonl DEMISE_POWER amount 9).
@@ -550,6 +558,23 @@ export function freeCardPick<T extends CardModel>(cards: T[]): T | null {
 
 export function isModelledPotion(potionId: string): boolean {
   return potionId in POTION_EFFECTS;
+}
+
+/** Self-buff specials whose effect does not depend on what was played before them. */
+const ORDER_FREE_SPECIALS = new Set(["dexterity", "temp_dex", "buffer", "upgrade_hand", "ritual"]);
+
+/**
+ * A modelled potion that is never worse drunk before the turn's cards than after them: it targets no
+ * enemy, draws or adds no card, and acts on no "next card" (Strength, Dexterity, Block, Energy, Flex,
+ * Buffer, Blessing of the Forge). Fortifier (triples the block already gained), Duplicator,
+ * Gigantification, Ashwater, draw and card potions keep their place.
+ */
+export function drinkFirstSafe(potionId: string): boolean {
+  const effect = POTION_EFFECTS[potionId];
+  if (!effect || effect.target !== "self" || potionId in GENERATED_CARD_POTIONS) return false;
+  // Clarity draws one card: drunk first that card can still be played, and its later draws are the point.
+  if ((effect.draw ?? 0) > 0) return effect.special === "clarity";
+  return effect.special === undefined || effect.special === null || ORDER_FREE_SPECIALS.has(effect.special);
 }
 
 /**

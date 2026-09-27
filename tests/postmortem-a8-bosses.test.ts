@@ -74,8 +74,8 @@ describe("event HP guard: a fight is an HP cost, and a small cost at high HP sta
     const { fx } = event();
     const options = ((fx.state["event"] as Record<string, unknown>)["options"] as Record<string, unknown>[]).map((option) => String(option["description"]));
     expect(eventHpCost(options[0]!, { act: 1, hp: 80, maxHp: 80 })).toEqual({ hp: 8, maxHp: 0 });
-    // 「回复24点生命。进入战斗。」 at full HP heals 0: the fight's ~8 (act 1, 10% of max HP).
-    expect(eventHpCost(options[1]!, { act: 1, hp: 80, maxHp: 80 }).hp).toBe(8);
+    // 「回复24点生命。进入战斗。」 at full HP heals 0: the fight's ~11 (act 1, 14% of max HP).
+    expect(eventHpCost(options[1]!, { act: 1, hp: 80, maxHp: 80 }).hp).toBe(11);
     expect(eventHpCost(options[1]!, { act: 1, hp: 50, maxHp: 80 }).hp).toBe(0);
     expect(eventHpCost(options[1]!).hp).toBe(0);
   });
