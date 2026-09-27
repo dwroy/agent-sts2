@@ -16,6 +16,7 @@ import { expectedLossPerTurn, fightPlanInput, parseFightPlan } from "../src/stra
 import { moveModel } from "../src/knowledge/move-model.js";
 import { grindOutlasts, isReserved, objectiveInForce, potionRole } from "../src/strategy/intent.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
+import { parseRunPlan } from "../src/strategy/run-plan.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -191,5 +192,22 @@ describe("fight-plan input: enemy powers carry the game's text (HCBJ F14: SUCK_P
     const powers = (enemies.find((enemy) => enemy["enemy_id"] === "FOSSIL_STALKER")!["powers"] as string[]).join(" ");
     expect(powers).toMatch(/^SUCK_POWER 3: 这个生物每次造成未被格挡的伤害时，都会获得1点力量/);
     expect(powers).not.toMatch(/\[gold\]|\[blue\]/);
+  });
+});
+
+describe("run plan: up to 5 needs, a cut is logged (N7KR v1: 'block' was the 5th need and vanished)", () => {
+  // The logged v1 reply's needs (run-plans.jsonl raw, N7KR F1).
+  const raw = { hp_policy: "balanced", route_risk: "normal", entry_hp_pct: 0.9, reserve: ["damage", "strength", "block"], needs: ["frontload", "strength", "aoe", "exhaust", "block"] };
+
+  it("keeps all five", () => {
+    const plan = parseRunPlan(raw, parseGameState(logged("n7kr-map-f4").state), loggedKnowledge, "start", null);
+    expect(plan.needs).toEqual(["frontload", "strength", "aoe", "exhaust", "block"]);
+    expect(plan.validator.join(" ")).not.toMatch(/needs: kept the first/);
+  });
+
+  it("a sixth is cut with a validator note", () => {
+    const plan = parseRunPlan({ ...raw, needs: [...raw.needs, "draw"] }, parseGameState(logged("n7kr-map-f4").state), loggedKnowledge, "start", null);
+    expect(plan.needs).toHaveLength(5);
+    expect(plan.validator.join(" ")).toMatch(/needs: kept the first 5 of 6, cut draw/);
   });
 });
