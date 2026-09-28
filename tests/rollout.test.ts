@@ -408,3 +408,24 @@ describe("Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at erup
     expect(blocked.deaths).toBe(0);
   });
 });
+
+describe("the rollout policy's later turns hold the potions like 0-cost cards (Dai 2026-09-28)", () => {
+  it("a Fire Potion kept this turn is drunk by a later policy turn when its best line uses it", () => {
+    const fire: CardModel = card(100, "POTION:FIRE_POTION:0", { type: "Potion", cost: 0, damage: 20, exhausts: true });
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const enemy: EnemySim = { index: 0, name: "Jaw Worm", hp: 20, maxHp: 44, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 5, hits: 1 }] };
+    const hand = [defend(0), defend(1), defend(2), fire];
+    const solver: SolverInput = { hand, player, enemies: [enemy], fightKind: "monster", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    // This turn's potion-free line keeps it; every later hand is Defends, so only the potion can kill.
+    const keep = plans.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && plan.steps.length > 0)!;
+    const input: RolloutInput = {
+      solver, plans, enemies: [{ index: 0, id: "JAW_WORM", move: "CHOMP", strength: 0, powers: {} }], tables: {},
+      piles: { draw: Array.from({ length: 12 }, (_, i) => defend(20 + i)), discard: [], handBase: hand }, meta: META, playerPowers: {}, potions: 1, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 5, include: [keep], horizon: 3, samples: 2 },
+    };
+    const line = rolloutDecision(input).lines.find((entry) => entry.plan === keep)!;
+    expect(line.wins).toBe(line.samples);
+    expect(line.turnsToWin).toBe(2);
+  });
+});

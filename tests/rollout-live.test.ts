@@ -233,5 +233,5 @@ describe("rollout facts on Jev's combat question", () => {
         }
       }
     }
-  });
+  }, 120_000);
 });

@@ -15,7 +15,9 @@
  *          hit, hits, Strength and Block gain from the monster DB; Strength accumulates, our Vulnerable and
  *          the enemies' Weak apply; Vulnerable/Weak on enemies wear off one per enemy turn;
  *        - our draws come from the shuffled draw pile (the discard pile reshuffled in when it runs out);
- *        - our turns are played by the solver itself with a small node cap (the fast policy), no potions.
+ *        - our turns are played by the solver itself with a small node cap (the fast policy); the modelled
+ *          potions still held are in its hand like 0-cost cards that exist once (Dai 2026-09-28: no special
+ *          potion logic): drunk when its best line drinks one, gone for the rest of that sample.
  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
  *      w x model (calibrated win probability) + (1 - w) x a deck-damage clock, w from the gate of the
  *      encounter's segment (0 when the model's ranking advantage is not established).
@@ -812,8 +814,14 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
+  // Modelled potions still held in this sample: 0-cost cards that exist once (drunk: gone).
+  let held = s.hand.filter((card) => card.type === "Potion");
+  const drink = (line: Plan) => {
+    for (const step of line.steps) if (isPotion(step)) held = held.filter((card) => card.cardId !== step.cardId);
+  };
   // Turn 0: the candidate line as the solver scored it.
   records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  drink(plan);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
@@ -871,13 +879,15 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
     };
     const started = budget.now();
     const { drawPile: _d, wither: _w, focusIndex: _f, nextIncoming: _n, ...rest } = s;
-    const solved = solveTurn({ ...rest, hand, player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: 0, maxNodes: policyNodes });
+    const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
+    const solved = solveTurn({ ...rest, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
-    const best = solved.plans.find((p) => !p.steps.some(isPotion)) ?? solved.plans[0];
+    const best = solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(h, best, hand, handBase, player, enemies, piles, input, random, powers));
+    records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    drink(best);
   }
   return records;
 }
