@@ -16,8 +16,9 @@
  *   Jev       the final judge of every execution choice, shown DeepSeek's guidance with the facts.
  *
  * Every option carries a tempo note from this file (combatFit, potionOptionFit, mapFit, restFit): how
- * it sits with DeepSeek's guidance ("fits …" / "departs from …: …"). Jev picking a "departs" option is
- * logged as a tempo deviation (information only).
+ * it compares with DeepSeek's guidance ("matches …" / "differs from …: …"), stated as a fact. Jev picking
+ * a "differs" option is logged as `differs_from_tempo` (information only: code cannot tell whether the
+ * guidance or Jev was right; ops/plan_adherence.py judges differing picks by their outcomes).
  *
  * History: the intents used to be translated into solver weights, an HP guard, a hard reserve filter
  * (reserved potions never drunk before the boss), avoid_elites and elite gates on the map, entry-HP
@@ -344,7 +345,7 @@ export function reserveFact(ctx: {
     ctx.savedHp !== null && ctx.savedHp !== 0 ? (ctx.savedHp > 0 ? `saves ${ctx.savedHp} HP` : `costs ${-ctx.savedHp} HP more`) : null,
     ctx.extraDamage ? (ctx.extraDamage > 0 ? `+${ctx.extraDamage} damage` : `${ctx.extraDamage} damage`) : null,
   ].filter(Boolean);
-  const here = ctx.savedHp === null ? "drinking it now re-plans the turn" : `drinking ${ctx.name} now: ${gains.length > 0 ? gains.join(", ") : "no HP or damage gained"} vs the best line without it`;
+  const here = ctx.savedHp === null ? "drinking it now re-plans the turn" : `drinking ${ctx.name} now: ${gains.length > 0 ? gains.join(", ") : "no HP or damage gained"} vs the safest line without it`;
   parts.push(here);
   if (ctx.bossFight) parts.push("this is the act boss: nothing later to hold it for");
   else if (kept) {
@@ -435,9 +436,9 @@ export interface LineField {
   objectiveNote?: string;
 }
 
-/** Burst-turn shortfall (damage into the target) from which a line departs from the burst (H7W0: 48 short). */
+/** Burst-turn shortfall (damage into the target) from which a line's pick is logged as differing from the burst (H7W0: 48 short). */
 export const BURST_BREAK = 30;
-/** Damage short of the most-damage line (and HP over the safest) within which a line still "fits" a damage (HP) tempo. */
+/** Damage short of the highest-damage line (and HP over the safest) within which a line still "matches" a damage (HP) tempo. */
 export const TEMPO_DAMAGE_SLACK = 5;
 export const TEMPO_HP_SLACK = 2;
 
@@ -455,20 +456,20 @@ export function objectiveDamage(line: Pick<LineFacts, "damage" | "escapes">, san
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 /**
- * Facts of one combat line against code's reference line, and its tempo note against DeepSeek's fight
- * objective (and the run's hp_policy):
- *   label  "code's reference line" / "code rank N: vs the reference line 3 more HP, 12 more damage", the
- *          Sandpit turns it buys, damage into the kill-priority enemy;
- *   tempo  "fits DeepSeek's kill_fast: most damage of the lines" or "departs from DeepSeek's kill_fast:
- *          14 less damage than the most-damage line"; null with no objective or policy to weigh.
- * `breaks` (a tempo deviation when Jev picks it) is set only on a "departs" line. The Queen's
- * YOU_ARE_MINE turn and a Sandpit race behind the clock are tempo facts whatever the objective.
+ * Facts of one combat line against code's reference line (rank 1: a rule-based estimate, not a verdict),
+ * and its tempo note against DeepSeek's fight objective (and the run's hp_policy):
+ *   label  "same as reference (code rank 1, balanced weights)" / "reference rank 2: +3 HP lost, +12
+ *          damage vs rank 1", the Sandpit turns it buys, damage into the kill-priority enemy;
+ *   tempo  "matches DeepSeek's kill_fast: highest damage of the lines" or "differs from DeepSeek's
+ *          kill_fast: 14 less damage than the highest-damage line"; null with no objective or policy.
+ * `differs` (logged as differs_from_tempo when Jev picks it) is set only on a "differs from" line. The
+ * Queen's YOU_ARE_MINE turn and a Sandpit race behind the clock are tempo facts whatever the objective.
  */
-export function combatFit(objective: FightObjective | null, policy: HpPolicy, line: LineFacts, field: LineField): { label: string; tempo: string | null; breaks: boolean; grade: FitGrade } {
-  if (line.winsFight) return { label: "wins the fight", tempo: "fits every tempo: wins the fight", breaks: false, grade: "fits" };
+export function combatFit(objective: FightObjective | null, policy: HpPolicy, line: LineFacts, field: LineField): { label: string; tempo: string | null; differs: boolean; grade: FitGrade } {
+  if (line.winsFight) return { label: "wins the fight", tempo: "wins the fight", differs: false, grade: "fits" };
   const parts: string[] = [];
   const tempo: string[] = [];
-  let breaks = false;
+  let differs = false;
   let grade: FitGrade = "neutral";
   const pit = field.sandpit;
   const escapes = line.escapes ?? 0;
@@ -476,16 +477,17 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   const counted = objectiveDamage(line, pit);
   // Code's reference line and where this one sits against it.
   const best = field.best ?? { hpLoss: field.minLoss, damage: field.maxDamage, setup: field.maxSetup };
-  if (line.rank === 1) parts.push("code's reference line (balanced weights)");
+  if (line.rank === 1) parts.push("same as reference (code rank 1, balanced weights)");
   else {
     const moreHp = line.hpLoss - best.hpLoss;
-    const lessDamage = Math.round(best.damage - counted);
+    const moreDamage = Math.round(counted - best.damage);
+    const signed = (n: number) => (n > 0 ? `+${n}` : `${n}`);
     const trade = [
-      moreHp > 0 ? `${moreHp} more HP` : moreHp < 0 ? `${-moreHp} less HP` : null,
-      lessDamage > 0 ? `${lessDamage} less damage` : lessDamage < 0 ? `${-lessDamage} more damage` : null,
+      moreHp !== 0 ? `${signed(moreHp)} HP lost` : null,
+      moreDamage !== 0 ? `${signed(moreDamage)} damage` : null,
       line.setup < best.setup ? "less setup" : line.setup > best.setup ? "more setup" : null,
     ].filter(Boolean).join(", ");
-    parts.push(`code rank ${line.rank ?? "?"}${line.scoreGap !== undefined && line.scoreGap > 0 ? ` (score -${line.scoreGap.toFixed(1)})` : ""}: vs the reference line ${trade || "the same HP and damage (lasting, kill or debuff value differs)"}`);
+    parts.push(`reference rank ${line.rank ?? "?"}${line.scoreGap !== undefined && line.scoreGap > 0 ? ` (score -${line.scoreGap.toFixed(1)})` : ""}: ${trade ? `${trade} vs rank 1` : "same HP and damage as rank 1 (lasting, kill or debuff value differs)"}`);
   }
   if (pit && escapes > 0) parts.push(`+${plural(escapes, "Sandpit turn")}, ~${Math.round(pit.turnValue)} damage each${wasted > 0 ? `; ${wasted} past the turns our HP lasts, worth nothing` : ""}`);
   if (line.focusDamage !== null && line.focusDamage > 0) parts.push(`hits kill-priority ${field.focusName ?? "enemy"} for ${line.focusDamage}`);
@@ -494,12 +496,12 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
     const dealt = line.burstDamage ?? 0;
     const short = Math.round(field.burst.maxDamage - dealt);
     if (short <= Math.max(5, field.burst.maxDamage * 0.1)) {
-      tempo.push(`fits the burst turn: ${dealt} damage to ${field.burst.target} (${field.burst.why})`);
+      tempo.push(`matches the burst turn: ${dealt} damage to ${field.burst.target} (${field.burst.why})`);
       grade = "fits";
     } else {
-      tempo.push(`departs from the burst turn: ${short} less damage to ${field.burst.target} than the best line (${field.burst.why})`);
+      tempo.push(`differs from the burst turn: ${short} less damage to ${field.burst.target} than the highest-damage line (${field.burst.why})`);
       grade = "costs";
-      breaks = short >= BURST_BREAK;
+      differs = short >= BURST_BREAK;
     }
   } else {
     const damageTempo = objective === "kill_fast" || objective === "race";
@@ -508,31 +510,31 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
     if (damageTempo) {
       const short = Math.round(field.maxDamage - counted);
       if (short <= TEMPO_DAMAGE_SLACK) {
-        tempo.push(`fits ${name}: ${short <= 0 ? "most damage of the lines" : `within ${short} of the most damage`}${pit && pit.maxEscapes > 0 ? " (Sandpit turns bought counted as damage)" : ""}`);
+        tempo.push(`matches ${name}: ${short <= 0 ? "highest damage of the lines" : `within ${short} of the highest damage`}${pit && pit.maxEscapes > 0 ? " (Sandpit turns bought counted as damage)" : ""}`);
         grade = "fits";
       } else {
-        tempo.push(`departs from ${name}: ${short} less damage than the most-damage line${line.hpLoss < field.minLoss + 1 ? " (it is the safest line)" : ""}`);
+        tempo.push(`differs from ${name}: ${short} less damage than the highest-damage line${line.hpLoss < field.minLoss + 1 ? " (it is the safest line)" : ""}`);
         grade = "costs";
-        breaks = true;
+        differs = true;
       }
     } else if (hpTempo) {
       const extra = line.hpLoss - field.minLoss;
       if (extra <= TEMPO_HP_SLACK) {
-        tempo.push(`fits ${name}: ${extra <= 0 ? "least HP lost of the lines" : `within ${extra} HP of the safest line`}`);
+        tempo.push(`matches ${name}: ${extra <= 0 ? "least HP lost of the lines" : `within ${extra} HP of the safest line`}`);
         grade = "fits";
       } else {
-        tempo.push(`departs from ${name}: ${extra} HP more than the safest line`);
+        tempo.push(`differs from ${name}: ${extra} HP more than the safest line`);
         grade = "costs";
-        breaks = true;
+        differs = true;
       }
     } else if (objective === "scale_then_kill") {
       if (line.setup >= field.maxSetup) {
-        tempo.push(`fits DeepSeek's scale_then_kill${line.setup > 0 ? ": most setup (powers / permanent Strength) of the lines" : ": no line sets up more"}`);
+        tempo.push(`matches DeepSeek's scale_then_kill${line.setup > 0 ? ": most setup (powers / permanent Strength) of the lines" : ": no line sets up more"}`);
         grade = "fits";
       } else {
-        tempo.push("departs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)");
+        tempo.push("differs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)");
         grade = "costs";
-        breaks = true;
+        differs = true;
       }
     }
   }
@@ -541,11 +543,11 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
   const wantedEscapes = pit ? Math.min(pit.maxEscapes, pit.useful ?? Infinity) : 0;
   if (pit?.behind && escapes < wantedEscapes) {
     const fewer = wantedEscapes - escapes;
-    tempo.push(`departs from the Sandpit race: ${plural(fewer, "Frantic Escape")} fewer than another line while the Sandpit (${pit.now}) is no longer than the kill (~${pit.turnsNeeded} turns)`);
+    tempo.push(`differs from the Sandpit race: ${plural(fewer, "Frantic Escape")} fewer than another line while the Sandpit (${pit.now}) is no longer than the kill (~${pit.turnsNeeded} turns)`);
     grade = "costs";
-    breaks = true;
+    differs = true;
   }
-  return { label: parts.join("; "), tempo: tempo.length > 0 ? tempo.join("; ") : null, breaks, grade };
+  return { label: parts.join("; "), tempo: tempo.length > 0 ? tempo.join("; ") : null, differs, grade };
 }
 
 /**
@@ -574,7 +576,7 @@ export function potionOptionFit(ctx: {
 
 /** What the facts mean, for Jev (every question with facts carries it). */
 export const LABEL_NOTE =
-  "facts are code's numbers: code_rank / 'code rank N' is code's reference under balanced weights, 'vs the reference line' what an option gives up or gains against it; tempo says how an option sits with DeepSeek's guidance ('fits …' / 'departs from …'). Nothing is enforced: you choose.";
+  "facts are code's numbers. code_rank / 'reference rank N' is code's reference, computed by rules under balanced weights; it can be wrong. '+4 HP lost, +9 damage vs rank 1' compares an option with reference rank 1; 'same as reference' is rank 1 itself. tempo says whether an option matches or differs from DeepSeek's guidance ('matches …' / 'differs from …'), as a fact. Nothing is enforced: you choose.";
 
 // ---------------------------------------------------------------- tempo notes on routes and rests
 
@@ -596,7 +598,7 @@ export interface RouteArrival {
 }
 
 /**
- * Arrival HP this far below the run's entry-HP target breaks it (N7KR F4: "fits entry_hp 90%" into a
+ * Arrival HP this far below the run's entry-HP target differs from it (N7KR F4: "fits entry_hp 90%" into a
  * no-rest forced elite at a projected 60%). 0.25 on the p75 projection; the route projection is at the
  * rooms' medians since Z49J/77QX, ~0.1 higher over the 3-4 rooms before a forced elite, so 0.15.
  */
@@ -616,27 +618,27 @@ export function mapFit(
   type: string,
   hpPct: number,
   ctx: { optionalElite: boolean; eliteOffered: boolean; arrival?: RouteArrival & { best: { eliteHp: number; bossHp: number } } },
-): { tempo: string; breaks: boolean } | null {
+): { tempo: string; differs: boolean } | null {
   if (!plan) return null;
   const pct = (value: number) => `${Math.round(value * 100)}%`;
   const risk = routeRiskAt(plan, hpPct);
   const why = (field: "route_risk" | "hp_policy") => (plan.reasons?.[field] ? ` because ${plan.reasons[field]}` : "");
-  if (type === "Elite" && ctx.optionalElite && risk === "avoid_elites") return { tempo: `departs from DeepSeek's route_risk avoid_elites${why("route_risk")}: an optional elite`, breaks: true };
-  if (type === "Elite" && risk === "seek_elites") return { tempo: `fits DeepSeek's route_risk seek_elites${why("route_risk")}`, breaks: false };
-  if (type !== "Elite" && ctx.eliteOffered && risk === "seek_elites") return { tempo: `DeepSeek's route_risk seek_elites: an elite is open instead`, breaks: false };
+  if (type === "Elite" && ctx.optionalElite && risk === "avoid_elites") return { tempo: `differs from DeepSeek's route_risk avoid_elites${why("route_risk")}: an optional elite`, differs: true };
+  if (type === "Elite" && risk === "seek_elites") return { tempo: `matches DeepSeek's route_risk seek_elites${why("route_risk")}`, differs: false };
+  if (type !== "Elite" && ctx.eliteOffered && risk === "seek_elites") return { tempo: `DeepSeek's route_risk seek_elites: an elite is open instead`, differs: false };
   const arrival = ctx.arrival;
   if (plan.entryHp && arrival) {
     const floorLine = plan.entryHp - ENTRY_ARRIVAL_SLACK;
     const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
     if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
       const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
-      return { tempo: `departs from DeepSeek's entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)})`, breaks: true };
+      return { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)})`, differs: true };
     }
     if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
-      return { tempo: `departs from DeepSeek's entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)})`, breaks: true };
+      return { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)})`, differs: true };
     }
   }
-  if (type === "Elite" && ctx.optionalElite && policyAt(plan, hpPct) === "preserve") return { tempo: `departs from DeepSeek's hp_policy preserve${why("hp_policy")}: an optional elite`, breaks: true };
+  if (type === "Elite" && ctx.optionalElite && policyAt(plan, hpPct) === "preserve") return { tempo: `differs from DeepSeek's hp_policy preserve${why("hp_policy")}: an optional elite`, differs: true };
   return null;
 }
 
@@ -645,27 +647,27 @@ export function mapFit(
  * and hp_policy. Code no longer moves the rest scores for them (entry-HP heal +8, preserve heal +4 /
  * smith -2 made 80% HP heal by code: act-2 smiths 24% -> 5%, upgraded cards at act 2's end 5.6 -> 3.4).
  */
-export function restFit(plan: RunPlan | null | undefined, option: string, hpPct: number, toBoss = 99): { tempo: string; breaks: boolean } | null {
+export function restFit(plan: RunPlan | null | undefined, option: string, hpPct: number, toBoss = 99): { tempo: string; differs: boolean } | null {
   if (!plan || (option !== "HEAL" && option !== "SMITH")) return null;
   const pct = (value: number) => `${Math.round(value * 100)}%`;
   const lean = plan.restLean ?? "auto";
   if (lean === "heal" || lean === "smith") {
     return option === lean.toUpperCase()
-      ? { tempo: `fits DeepSeek's rest lean ${lean}`, breaks: false }
-      : { tempo: `departs from DeepSeek's rest lean ${lean}`, breaks: true };
+      ? { tempo: `matches DeepSeek's rest lean ${lean}`, differs: false }
+      : { tempo: `differs from DeepSeek's rest lean ${lean}`, differs: true };
   }
   const target = hpTarget(plan);
   const policy = policyAt(plan, hpPct);
   if (plan.entryHp && hpPct < plan.entryHp && toBoss <= 6) {
     return option === "HEAL"
-      ? { tempo: `fits DeepSeek's entry_hp ${pct(plan.entryHp)}: HP ${pct(hpPct)} with the boss ${toBoss} floors away`, breaks: false }
-      : { tempo: `departs from DeepSeek's entry_hp ${pct(plan.entryHp)}: HP ${pct(hpPct)} with the boss ${toBoss} floors away`, breaks: true };
+      ? { tempo: `matches DeepSeek's entry_hp ${pct(plan.entryHp)}: HP ${pct(hpPct)} with the boss ${toBoss} floors away`, differs: false }
+      : { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: HP ${pct(hpPct)} with the boss ${toBoss} floors away`, differs: true };
   }
   if (policy === "preserve" && hpPct < target) {
-    return option === "HEAL" ? { tempo: `fits DeepSeek's hp_policy preserve: HP ${pct(hpPct)} is below the ${pct(target)} target`, breaks: false } : { tempo: `departs from DeepSeek's hp_policy preserve: HP ${pct(hpPct)} is below the ${pct(target)} target`, breaks: true };
+    return option === "HEAL" ? { tempo: `matches DeepSeek's hp_policy preserve: HP ${pct(hpPct)} is below the ${pct(target)} target`, differs: false } : { tempo: `differs from DeepSeek's hp_policy preserve: HP ${pct(hpPct)} is below the ${pct(target)} target`, differs: true };
   }
   if (policy === "push" && hpPct >= 0.55) {
-    return option === "SMITH" ? { tempo: "fits DeepSeek's hp_policy push (HP spent for upgrades)", breaks: false } : { tempo: "departs from DeepSeek's hp_policy push (HP spent for upgrades)", breaks: true };
+    return option === "SMITH" ? { tempo: "matches DeepSeek's hp_policy push (HP spent for upgrades)", differs: false } : { tempo: "differs from DeepSeek's hp_policy push (HP spent for upgrades)", differs: true };
   }
   return null;
 }

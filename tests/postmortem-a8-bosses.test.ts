@@ -159,7 +159,7 @@ describe("Blessing of the Forge is priced on the hand it upgrades (VUV4 F17 T4, 
       expect(Number(/dmg (\d+)/.exec(act)?.[1])).toBeGreaterThan(18);
     } else {
       const forge = Object.values(options).find((option) => String(option["plays"]).includes("熔炉的祝福"));
-      expect(String(forge?.["reference"])).toMatch(/^code('s reference line| rank)/);
+      expect(String(forge?.["reference"])).toMatch(/^(same as reference|reference rank)/);
     }
   });
 });
@@ -187,7 +187,7 @@ describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: b
 describe("only code's pick is labelled \"code's reference line\" (M9PL F25 T2)", () => {
   it("the logged board: exactly one option is code's reference line", () => {
     const { options } = linesOf(planCombatTurn(loggedEnv(logged("m9pl-f25-t2"))));
-    expect(Object.values(options).filter((option) => /^code's reference line/.test(String(option["reference"]))).length).toBe(1);
+    expect(Object.values(options).filter((option) => /^same as reference/.test(String(option["reference"]))).length).toBe(1);
   });
 });
 

@@ -26,10 +26,10 @@ export interface PickOption {
   /** Kept among the model's options when the list is pruned to `maxModelOptions`, like skip/leave. */
   keepInView?: boolean;
   /**
-   * How this option departs from DeepSeek's tempo/strategy guidance (intent.ts): Jev picking it is logged
-   * as a tempo deviation (information only, never enforced).
+   * How this option differs from DeepSeek's tempo/strategy guidance (intent.ts): Jev picking it is logged
+   * as `differs_from_tempo` (a fact, never enforced or judged).
    */
-  intentBreak?: string;
+  differsFromTempo?: string;
   /** Code's reasons for its value (shown as `why` when the summary has none). */
   why?: string;
   /**
@@ -61,7 +61,7 @@ export interface PickDecisionParams {
   maxModelOptions?: number;
   /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
   escalateBelow?: number;
-  /** The run plan version in force (deviations are logged per version). */
+  /** The run plan version in force (picks that differ from its guidance are logged per version). */
   planVersion?: number | null;
 }
 
@@ -71,7 +71,7 @@ export function bestOption(options: PickOption[]): PickOption {
 
 /** What Jev is told about who does what (every question carries it). */
 export const ROLE_NOTE =
-  "Roles: DeepSeek sets the run's strategy and tempo (deepseek_guidance / strategy: potion timing and holding, heal vs smith, elite appetite, deck direction). Code gives facts and a reference rank (code_value, code_rank, why). You decide. Follow DeepSeek's tempo unless the facts clearly say otherwise (a route or line that likely dies, or costs far more HP than it gains); when you deviate, it is logged as a tempo deviation.";
+  "Roles: you decide. DeepSeek's strategy and tempo (deepseek_guidance / strategy: potion timing and holding, heal vs smith, elite appetite, deck direction) is guidance. Code gives facts and a reference rank (code_value, code_rank, why); the rank is computed by rules and can be wrong. Take DeepSeek's tempo as the default direction and use the facts to judge each move; pick what you judge best for winning the run; a pick that differs from the reference or from DeepSeek's tempo is logged as a fact, not as a mistake.";
 
 /** Options ranked by code score (rank 1 = code's reference), ties in list order. */
 function referenceRanks(options: PickOption[]): Map<PickOption, number> {
@@ -198,7 +198,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
           confidence: answer.confidence,
           fallback: false,
           reference: reference(trusted),
-          ...deviationOf(trusted, params.planVersion),
+          ...tempoDiffOf(trusted, params.planVersion),
         };
       }
 
@@ -214,14 +214,14 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         confidence: answer.confidence,
         fallback: false,
         reference: reference(chosen),
-        ...deviationOf(chosen, params.planVersion),
+        ...tempoDiffOf(chosen, params.planVersion),
       };
     },
   };
 }
 
-function deviationOf(option: PickOption, version: number | null | undefined): Pick<ResolvedAction, "deviation"> {
-  return option.intentBreak ? { deviation: { intent: option.intentBreak, runPlanVersion: version ?? null } } : {};
+function tempoDiffOf(option: PickOption, version: number | null | undefined): Pick<ResolvedAction, "tempoDiff"> {
+  return option.differsFromTempo ? { tempoDiff: { guidance: option.differsFromTempo, runPlanVersion: version ?? null } } : {};
 }
 
 /** " (why: …)" from an option's summary, when it carries a `why`. */

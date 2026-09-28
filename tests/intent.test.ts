@@ -133,13 +133,13 @@ describe("re-plan continuity (every change is DeepSeek's call; unsupported ones 
     expect(intentLines(plan, null, 12)).toContain("strategy changed at F11: hp_policy balanced→preserve because hp_below_target (HP 69%→38% (target 70%))");
     expect(intentLines(plan, null, 16).some((line) => line.startsWith("strategy changed"))).toBe(false);
     // The rest site at 50/80 (not near the boss): code's reference is smith (6 vs heal 5) either way;
-    // under preserve the options say heal fits DeepSeek's tempo and smith departs from it.
+    // under preserve the options say heal matches DeepSeek's tempo and smith differs from it.
     const rest = (plan: RunPlan | null) => planRest(env(baseState("REST", { ...restPayload(), run: runPayload({ current_hp: 50 }) }), plan));
     expect(codePick(rest(previous()))).toEqual({ action: "choose_rest_option", option_index: 1 });
     expect(codePick(rest(plan))).toEqual({ action: "choose_rest_option", option_index: 1 });
     const text = JSON.stringify(rest(plan));
-    expect(text).toMatch(/fits DeepSeek's hp_policy preserve: HP 63% is below the 80% target/);
-    expect(text).toMatch(/departs from DeepSeek's hp_policy preserve/);
+    expect(text).toMatch(/matches DeepSeek's hp_policy preserve: HP 63% is below the 80% target/);
+    expect(text).toMatch(/differs from DeepSeek's hp_policy preserve/);
   });
 
   it("keeps a change that points the other way from its trigger, logged", () => {
@@ -187,7 +187,7 @@ describe("hp_policy, route_risk and avoid are facts on the options, never filter
     expect(options(null)).toMatch(/Elite/);
     const avoided = options(runPlan({ routeRisk: "avoid_elites" }));
     expect(avoided).toMatch(/"node_type\\?":\\?"Elite/);
-    expect(avoided).toMatch(/departs from DeepSeek's route_risk avoid_elites: an optional elite/);
+    expect(avoided).toMatch(/differs from DeepSeek's route_risk avoid_elites: an optional elite/);
   });
 
   it("an avoided card or role is offered as a reward, with DeepSeek's avoid as a fact", () => {

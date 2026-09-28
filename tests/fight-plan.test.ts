@@ -270,27 +270,29 @@ describe("combatFit (reference facts and the tempo note against DeepSeek's objec
   const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, focusName: "Louse", best: { hpLoss: 4, damage: 30, setup: 0 } };
   const line = (over: Partial<Parameters<typeof combatFit>[2]> = {}) => ({ hpLoss: 4, damage: 30, setup: 0, winsFight: false, focusDamage: null, ...over });
   it("says where a line sits against code's reference line, and how it fits the objective", () => {
-    expect(combatFit("preserve_hp", "balanced", line({ rank: 1, scoreGap: 0 }), field)).toEqual({ label: "code's reference line (balanced weights)", tempo: "fits DeepSeek's preserve_hp: least HP lost of the lines", breaks: false, grade: "fits" });
+    expect(combatFit("preserve_hp", "balanced", line({ rank: 1, scoreGap: 0 }), field)).toEqual({ label: "same as reference (code rank 1, balanced weights)", tempo: "matches DeepSeek's preserve_hp: least HP lost of the lines", differs: false, grade: "fits" });
     expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, rank: 3, scoreGap: 11 }), field)).toEqual({
-      label: "code rank 3 (score -11.0): vs the reference line 8 more HP",
-      tempo: "departs from DeepSeek's preserve_hp: 8 HP more than the safest line",
-      breaks: true,
+      label: "reference rank 3 (score -11.0): +8 HP lost vs rank 1",
+      tempo: "differs from DeepSeek's preserve_hp: 8 HP more than the safest line",
+      differs: true,
       grade: "costs",
     });
-    expect(combatFit("kill_fast", "balanced", line({ damage: 10, hpLoss: 1, rank: 2, scoreGap: 20 }), field)).toMatchObject({ label: "code rank 2 (score -20.0): vs the reference line 3 less HP, 20 less damage", tempo: "departs from DeepSeek's kill_fast: 20 less damage than the most-damage line (it is the safest line)", breaks: true });
-    expect(combatFit("kill_fast", "balanced", line({ damage: 27, rank: 2 }), field)).toMatchObject({ tempo: "fits DeepSeek's kill_fast: within 3 of the most damage", breaks: false });
-    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1, rank: 1 }), field).tempo).toBe("fits DeepSeek's scale_then_kill: most setup (powers / permanent Strength) of the lines");
-    expect(combatFit("scale_then_kill", "balanced", line({ rank: 2 }), field)).toMatchObject({ tempo: "departs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)", breaks: true });
-    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6, rank: 2 }), field)).toMatchObject({ label: "code rank 2: vs the reference line 8 more HP; hits kill-priority Louse for 6", tempo: "departs from DeepSeek's hp_policy preserve: 8 HP more than the safest line" });
-    expect(combatFit(null, "balanced", line({ rank: 2, scoreGap: 30 }), field)).toMatchObject({ tempo: null, breaks: false, grade: "neutral" });
-    expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field)).toMatchObject({ label: "wins the fight", breaks: false });
+    expect(combatFit("kill_fast", "balanced", line({ damage: 10, hpLoss: 1, rank: 2, scoreGap: 20 }), field)).toMatchObject({ label: "reference rank 2 (score -20.0): -3 HP lost, -20 damage vs rank 1", tempo: "differs from DeepSeek's kill_fast: 20 less damage than the highest-damage line (it is the safest line)", differs: true });
+    expect(combatFit("kill_fast", "balanced", line({ damage: 27, rank: 2 }), field)).toMatchObject({ tempo: "matches DeepSeek's kill_fast: within 3 of the highest damage", differs: false });
+    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1, rank: 1 }), field).tempo).toBe("matches DeepSeek's scale_then_kill: most setup (powers / permanent Strength) of the lines");
+    expect(combatFit("scale_then_kill", "balanced", line({ rank: 2 }), field)).toMatchObject({ tempo: "differs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)", differs: true });
+    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6, rank: 2 }), field)).toMatchObject({ label: "reference rank 2: +8 HP lost vs rank 1; hits kill-priority Louse for 6", tempo: "differs from DeepSeek's hp_policy preserve: 8 HP more than the safest line" });
+    expect(combatFit(null, "balanced", line({ rank: 2, scoreGap: 30 }), field)).toMatchObject({ tempo: null, differs: false, grade: "neutral" });
+    expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field)).toMatchObject({ label: "wins the fight", tempo: "wins the fight", differs: false });
+    // A line that trades HP for damage says so in signed numbers against rank 1, not as a verdict.
+    expect(combatFit(null, "balanced", line({ hpLoss: 8, damage: 39, rank: 2 }), field).label).toBe("reference rank 2: +4 HP lost, +9 damage vs rank 1");
   });
 
-  it("code's reference line can still depart from DeepSeek's tempo: the note says so, whatever the rank", () => {
+  it("code's reference line can still differ from DeepSeek's tempo: the note says so, whatever the rank", () => {
     // 9V09 F33 T3 "Burning, Whirlwind+": code's rank 1 with less damage than another line.
     const top = combatFit("race", "preserve", line({ damage: 10, hpLoss: 12, rank: 1 }), field);
-    expect(top.label).toBe("code's reference line (balanced weights)");
-    expect(top).toMatchObject({ breaks: true, tempo: "departs from DeepSeek's race: 20 less damage than the most-damage line" });
+    expect(top.label).toBe("same as reference (code rank 1, balanced weights)");
+    expect(top).toMatchObject({ differs: true, tempo: "differs from DeepSeek's race: 20 less damage than the highest-damage line" });
   });
 
   it("counts Sandpit turns bought as damage (9V09 F33 T2)", () => {
@@ -300,11 +302,11 @@ describe("combatFit (reference facts and the tempo note against DeepSeek's objec
     const pit = { ...field, maxDamage: Math.max(objectiveDamage({ damage: 46, escapes: 1 }, sandpit), 67), maxSetup: 0, sandpit, best: { hpLoss: 4, damage: 95, setup: 0 } };
     expect(pit.maxDamage).toBe(95);
     const escapeLine = combatFit("race", "balanced", line({ damage: 46, escapes: 1, rank: 1 }), pit);
-    expect(escapeLine).toEqual({ label: "code's reference line (balanced weights); +1 Sandpit turn, ~49 damage each", tempo: "fits DeepSeek's race: most damage of the lines (Sandpit turns bought counted as damage)", breaks: false, grade: "fits" });
+    expect(escapeLine).toEqual({ label: "same as reference (code rank 1, balanced weights); +1 Sandpit turn, ~49 damage each", tempo: "matches DeepSeek's race: highest damage of the lines (Sandpit turns bought counted as damage)", differs: false, grade: "fits" });
     const noEscape = combatFit("race", "balanced", line({ damage: 67, rank: 2, scoreGap: 20 }), pit);
-    expect(noEscape.breaks).toBe(true);
+    expect(noEscape.differs).toBe(true);
     expect(noEscape.tempo).toBe(
-      "departs from DeepSeek's race: 28 less damage than the most-damage line (it is the safest line); departs from the Sandpit race: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
+      "differs from DeepSeek's race: 28 less damage than the highest-damage line (it is the safest line); differs from the Sandpit race: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
     );
   });
 
@@ -312,10 +314,10 @@ describe("combatFit (reference facts and the tempo note against DeepSeek's objec
     // Rank 4 "Colossus, Pommel Strike+ -> Amalgam, Crimson Mantle" 15 vs rank 2 "Bludgeon, Pommel Strike+ -> Amalgam" 63.
     const queen = { ...field, burst: { target: "Torch Head Amalgam", maxDamage: 63, why: "YOU_ARE_MINE" } };
     expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 15, setup: 1, rank: 1 }), queen)).toMatchObject({
-      tempo: "departs from the burst turn: 48 less damage to Torch Head Amalgam than the best line (YOU_ARE_MINE)", breaks: true, grade: "costs",
+      tempo: "differs from the burst turn: 48 less damage to Torch Head Amalgam than the highest-damage line (YOU_ARE_MINE)", differs: true, grade: "costs",
     });
-    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 48, rank: 2, scoreGap: 9 }), queen)).toMatchObject({ breaks: false, grade: "costs" });
-    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 63, rank: 3 }), queen)).toMatchObject({ tempo: "fits the burst turn: 63 damage to Torch Head Amalgam (YOU_ARE_MINE)", grade: "fits" });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 48, rank: 2, scoreGap: 9 }), queen)).toMatchObject({ differs: false, grade: "costs" });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 63, rank: 3 }), queen)).toMatchObject({ tempo: "matches the burst turn: 63 damage to Torch Head Amalgam (YOU_ARE_MINE)", grade: "fits" });
   });
 });
 
@@ -395,9 +397,10 @@ describe("turn planner with a fight plan", () => {
     const ask = decision as AskDecision;
     expect(String((ask.state["strategy"] as string[])[0])).toMatch(/^DeepSeek fight objective scale_then_kill: play powers/);
     expect(ask.guidance).toEqual(ask.state["strategy"]);
-    expect(String(ask.state["roles"])).toMatch(/DeepSeek sets the run's strategy and tempo.*Code gives facts.*You decide/);
+    expect(String(ask.state["roles"])).toMatch(/^Roles: you decide\. DeepSeek's strategy and tempo .* is guidance\. Code gives facts and a reference rank .*can be wrong/);
+    expect(String(ask.state["roles"])).not.toMatch(/deviat|breaks/);
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /fits DeepSeek's scale_then_kill: most setup/.test(String(text)))).toBe(true);
+    expect(Object.values(criteria).some((text) => /matches DeepSeek's scale_then_kill: most setup/.test(String(text)))).toBe(true);
   });
 
   it("ignores a plan made for another fight", () => {
@@ -419,7 +422,7 @@ describe("turn planner with a fight plan", () => {
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("fits DeepSeek's scale_then_kill"))).toBe(true);
+    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("matches DeepSeek's scale_then_kill"))).toBe(true);
   });
 
   it("a hallway kill that a dry line also makes keeps the potion without asking (CAYK F37-F40: lethal, dominated)", () => {
@@ -504,7 +507,7 @@ describe("turn planner with a fight plan", () => {
     const held = shown(["damage"]);
     expect(held).toMatch(/Fire Potion/);
     expect(held).toMatch(/the act boss fight then has one fewer damage potion \(DeepSeek plan holds damage potions for the boss/);
-    expect(held).toMatch(/departs from DeepSeek's reserve: drinks a potion it holds for the act boss/);
+    expect(held).toMatch(/differs from DeepSeek's reserve: drinks a potion it holds for the act boss/);
     expect(shown(["any"])).toMatch(/Fire Potion/);
   });
 
@@ -551,7 +554,7 @@ describe("turn planner with a fight plan", () => {
     expect(dry.length).toBeGreaterThan(0);
     expect(drinking.length).toBeGreaterThan(0);
     // The fact: the potion saves no HP here, only damage (it used to be filtered out: a dry line lost <= 5).
-    expect(String(drinking[0]!["potion_facts"])).toMatch(/drinking Fire Potion now: \+20 damage vs the best line without it/);
+    expect(String(drinking[0]!["potion_facts"])).toMatch(/drinking Fire Potion now: \+20 damage vs the safest line without it/);
   });
 
   it("a setup line Jev picks is played as picked: the old HP guard's swap is a fact on it (JF99 F33 T4, 5BXM F33)", () => {
@@ -572,12 +575,12 @@ describe("turn planner with a fight plan", () => {
       const e = env(board(hp), { fightPlan: "v1" });
       if (objective) e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), objective });
       const decision = planCombatTurn(e);
-      if (decision?.kind === "act") return { played: decision.rationale, intent: decision.intent, deviation: undefined, facts: {} as Raw };
+      if (decision?.kind === "act") return { played: decision.rationale, intent: decision.intent, tempoDiff: undefined, facts: {} as Raw };
       const criteria = (decision as AskDecision).questions["plan"]?.type === "choice" ? ((decision as AskDecision).questions["plan"] as { criteria: Record<string, string> }).criteria : {};
       const key = Object.keys(criteria).find((k) => /"plays":"Demon Form"/.test(criteria[k]!))!;
       const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
       const facts = JSON.parse(criteria[key]!) as Raw;
-      return { played: resolved.rationale, intent: resolved.intent, deviation: resolved.deviation, facts };
+      return { played: resolved.rationale, intent: resolved.intent, tempoDiff: resolved.tempoDiff, facts };
     };
     // No objective: Jev's Demon Form (-14) is played; the facts say it costs 10 HP more than the safest line.
     const free = play(55, null);
@@ -585,12 +588,12 @@ describe("turn planner with a fight plan", () => {
     expect(free.intent).toMatchObject({ action: "play_card", card_index: 3 });
     expect(String(free.facts["hp_vs_safest"])).toMatch(/^10 HP more than the safest line \(4\)/);
     // scale_then_kill: Demon Form fits the tempo.
-    expect(String(play(55, "scale_then_kill").facts["tempo"])).toMatch(/^fits DeepSeek's scale_then_kill/);
-    // preserve_hp: played as picked, logged as a tempo deviation.
+    expect(String(play(55, "scale_then_kill").facts["tempo"])).toMatch(/^matches DeepSeek's scale_then_kill/);
+    // preserve_hp: played as picked, logged as differs_from_tempo.
     const preserve = play(55, "preserve_hp");
     expect(preserve.intent).toMatchObject({ action: "play_card", card_index: 3 });
-    expect(String(preserve.facts["tempo"])).toBe("departs from DeepSeek's preserve_hp: 10 HP more than the safest line");
-    expect(preserve.deviation?.intent).toMatch(/departs from DeepSeek's preserve_hp/);
+    expect(String(preserve.facts["tempo"])).toBe("differs from DeepSeek's preserve_hp: 10 HP more than the safest line");
+    expect(preserve.tempoDiff?.guidance).toMatch(/differs from DeepSeek's preserve_hp/);
   });
 
 });
@@ -726,7 +729,7 @@ describe("no HP guard swap in a Sandpit race or out of one (WB02 F33)", () => {
       (raw["combat"] as Raw)["hand"] = [...hand.filter((card) => card["card_id"] !== "INFLAME"), { ...defend, index: 3 }];
       return raw;
     };
-    /** Whether the guard replaces the most-damage line (code's own pick, or Jev's pick of it). */
+    /** Whether the guard replaces the highest-damage line (code's own pick, or Jev's pick of it). */
     const guarded = (raw: Raw): boolean => {
       const decision = planCombatTurn(env(raw));
       if (decision?.kind === "act") return decision.label === "combat/plan-guarded";
@@ -1036,11 +1039,11 @@ describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V0
     const plans = Object.keys(criteria).filter((key) => key.startsWith("plan")).map((key) => JSON.parse(criteria[key]!) as Record<string, string>);
     const escapes = (entry: Record<string, string>) => (entry["plays"]!.match(/Frantic Escape/g) ?? []).length;
     // The reference line plays both Escapes (the Tincture pays for Bash too) and fits race.
-    const reference = plans.find((entry) => /^code's reference line/.test(entry["reference"]!))!;
+    const reference = plans.find((entry) => /^same as reference/.test(entry["reference"]!))!;
     expect(escapes(reference)).toBe(2);
-    expect(reference["tempo"]).toMatch(/^fits DeepSeek's race/);
+    expect(reference["tempo"]).toMatch(/^matches DeepSeek's race/);
     for (const entry of plans) {
-      if (escapes(entry) < 2) expect(entry["tempo"]).toMatch(/departs from the Sandpit race: \d Frantic Escapes? fewer/);
+      if (escapes(entry) < 2) expect(entry["tempo"]).toMatch(/differs from the Sandpit race: \d Frantic Escapes? fewer/);
     }
     // The fight plan's own words are in the strategy lines.
     expect(decision.state["strategy"]).toContain("DeepSeek fight plan: Play every affordable Frantic Escape early.");

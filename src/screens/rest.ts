@@ -79,7 +79,7 @@ export function planRest(env: DecisionEnv): Decision | null {
   const toBoss = floorsToBoss(state.run?.floor ?? 1);
   const labelled: PickOption[] = options.map(({ id, hpPct, ...option }) => {
     const fit = restFit(runPlan, id, hpPct, toBoss);
-    return { ...option, summary: { ...option.summary, ...(fit ? { tempo: fit.tempo } : {}) }, ...(fit?.breaks ? { intentBreak: fit.tempo } : {}) };
+    return { ...option, summary: { ...option.summary, ...(fit ? { tempo: fit.tempo } : {}) }, ...(fit?.differs ? { differsFromTempo: fit.tempo } : {}) };
   });
 
   if (options.length === 0) {

@@ -199,7 +199,7 @@ describe("event options carry their HP effect; under the entry target a pure hea
     const decision = planEvent(loggedEnv(logged("77uj-event-f22")))!;
     expect(decision.kind).toBe("ask");
     expect(referencePick(decision).intent).toEqual({ action: "choose_event_option", option_index: 0 });
-    expect(String(criteria(decision)["o0"]!["tempo"])).toMatch(/fits DeepSeek's entry_hp 85%: heals 25 with no HP cost/);
+    expect(String(criteria(decision)["o0"]!["tempo"])).toMatch(/matches DeepSeek's entry_hp 85%: heals 25 with no HP cost/);
     expect(String(criteria(decision)["o0"]!["why"])).toMatch(/\+25 HP heal/);
   });
 

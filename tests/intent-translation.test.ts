@@ -143,11 +143,11 @@ describe("map and rest options: code's reference rank and DeepSeek's tempo, apar
 
   it("rest options carry DeepSeek's tempo next to code's reference", () => {
     const plan = runPlan({ hpPolicy: "preserve" });
-    expect(restFit(plan, "HEAL", 0.5)).toEqual({ tempo: "fits DeepSeek's hp_policy preserve: HP 50% is below the 80% target", breaks: false });
-    expect(restFit(plan, "SMITH", 0.5)).toEqual({ tempo: "departs from DeepSeek's hp_policy preserve: HP 50% is below the 80% target", breaks: true });
+    expect(restFit(plan, "HEAL", 0.5)).toEqual({ tempo: "matches DeepSeek's hp_policy preserve: HP 50% is below the 80% target", differs: false });
+    expect(restFit(plan, "SMITH", 0.5)).toEqual({ tempo: "differs from DeepSeek's hp_policy preserve: HP 50% is below the 80% target", differs: true });
     const decision = planRest(env(baseState("REST", { ...restPayload(), run: runPayload({ current_hp: 50 }) }), plan, { strictJev: false })) as AskDecision;
     expect(decision.kind).toBe("ask");
-    expect(JSON.stringify(decision.questions)).toMatch(/fits DeepSeek's hp_policy preserve/);
+    expect(JSON.stringify(decision.questions)).toMatch(/matches DeepSeek's hp_policy preserve/);
   });
 });
 
@@ -196,7 +196,7 @@ describe("Potion-Shaped Rocks under Petrified Toad (H7W0 F42-F48)", () => {
       const e = env(board(toad), runPlan({ reserve: ["damage"] }), { strictJev: false });
       const decision = planCombatTurn(e);
       if (decision?.kind === "act") return /use_potion|POTION_SHAPED_ROCK/.test(JSON.stringify([decision.intent, e.screenMemory.combatPlan?.remaining]));
-      const reference = Object.values(questionOf(decision).options).find((option) => /^code's reference line|^wins the fight/.test(String(option["reference"])));
+      const reference = Object.values(questionOf(decision).options).find((option) => /^same as reference|^wins the fight/.test(String(option["reference"])));
       expect(JSON.stringify(decision?.questions)).not.toMatch(/one fewer/);
       return /Potion-Shaped Rock/.test(String(reference?.["plays"] ?? ""));
     };

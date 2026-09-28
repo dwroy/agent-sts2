@@ -61,7 +61,7 @@ describe("hp_policy preserve in an act-boss fight behind its clock (G8F1 F33)", 
     const options = optionsOf(decision);
     // Howl from Beyond, 27 damage for 17 HP: "breaks hp_policy preserve: loses 17 more HP" in the log.
     const howl = Object.values(options).find((option) => String(option["plays"]).includes("彼岸咆哮"));
-    expect(String(howl?.["reference"])).toMatch(/^code('s reference line| rank)/);
+    expect(String(howl?.["reference"])).toMatch(/^(same as reference|reference rank)/);
     expect(strategyOf(decision).join("\n")).toMatch(/code note: hp_policy reads as balanced now \(act boss behind its clock/);
   });
 });
@@ -171,9 +171,9 @@ describe("scale_then_kill is a phase: kill_fast once the fight is too short for 
       expect(decision.rationale).toMatch(/恶魔形态/);
       return;
     }
-    // Offered, and it is the line that fits DeepSeek's scale_then_kill (balanced weights may rank it lower).
+    // Offered, and it is the line that matches DeepSeek's scale_then_kill (balanced weights may rank it lower).
     const demon = Object.values(optionsOf(decision)).find((option) => String(option["plays"]).includes("恶魔形态"));
-    expect(String(demon?.["tempo"])).toMatch(/^fits DeepSeek's scale_then_kill/);
+    expect(String(demon?.["tempo"])).toMatch(/^matches DeepSeek's scale_then_kill/);
   });
 });
 
@@ -223,7 +223,7 @@ describe("HP lost until the kill is a fact on each line; no guard swaps (G8F1 F3
       expect(decision.rationale).toMatch(/御血术/);
       return;
     }
-    const reference = Object.values(optionsOf(decision)).find((option) => /^code's reference line/.test(String(option["reference"])));
+    const reference = Object.values(optionsOf(decision)).find((option) => /^same as reference/.test(String(option["reference"])));
     expect(String(reference?.["plays"])).toMatch(/御血术/);
     expect(String(reference?.["kill_eta"])).toMatch(/^~\d+ turns to the kill/);
   });
@@ -234,6 +234,6 @@ describe("HP lost until the kill is a fact on each line; no guard swaps (G8F1 F3
     const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: "plan3", confidence: 0.34, probabilities: {}, raw: {} } } as never);
     expect(resolved.rationale).toMatch(/^Jev chose plan 3\//);
     expect(resolved.guard).toBeUndefined();
-    expect(String(optionsOf(decision)["plan3"]!["reference"])).toMatch(/^code('s reference line| rank \d)/);
+    expect(String(optionsOf(decision)["plan3"]!["reference"])).toMatch(/^(same as reference|reference rank \d)/);
   });
 });

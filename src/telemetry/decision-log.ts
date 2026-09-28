@@ -42,8 +42,16 @@ export interface DecisionRecord {
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
   jev_hints?: string[];
   /**
-   * Jev's pick departs from DeepSeek's tempo/strategy guidance (per run-plan version; information only,
-   * kept under this name for ops/plan_adherence.py). `tempo_deviation` repeats the label.
+   * Which item of DeepSeek's tempo/strategy guidance Jev's pick differs from (the option's tempo note,
+   * factual: "differs from DeepSeek's race: 10 less damage than the highest-damage line"). Information
+   * only; whether the pick was right is judged by outcomes (ops/plan_adherence.py), not by this label.
+   */
+  differs_from_tempo?: string;
+  /** The guidance in force when differs_from_tempo was logged. */
+  tempo_context?: { run_plan_version: number | null; fight_objective: string | null };
+  /**
+   * Legacy (logs before 2026-09-28): the same fact under judgmental names. No longer written; kept in the
+   * type so old logs stay readable (ops/plan_adherence.py reads both).
    */
   intent_deviation?: JsonValue;
   tempo_deviation?: string;
@@ -53,6 +61,8 @@ export interface DecisionRecord {
   reference_rank?: number | null;
   reference_of?: number;
   matched_reference?: boolean;
+  /** Jev's pick is not code's reference rank 1 (a fact: the reference is rule-based and can be wrong). */
+  differs_from_reference?: boolean;
   result: string;
 }
 

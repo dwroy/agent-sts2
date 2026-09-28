@@ -366,7 +366,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
           ...hpEffectOf(option),
           ...(caution ? { hp_caution: caution } : {}),
           ...(spendsOf(option) ? { reserved_potion: spendsText(spendsOf(option)!) } : {}),
-          ...(heals ? { tempo: `fits DeepSeek's entry_hp ${Math.round(entryHp! * 100)}%: heals ${healOf(option)} with no HP cost` } : {}),
+          ...(heals ? { tempo: `matches DeepSeek's entry_hp ${Math.round(entryHp! * 100)}%: heals ${healOf(option)} with no HP cost` } : {}),
           ...relicNotes,
         } satisfies JsonValue,
       } satisfies PickOption,

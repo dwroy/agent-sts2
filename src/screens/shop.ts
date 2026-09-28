@@ -137,7 +137,7 @@ export function planShop(env: DecisionEnv): Decision | null {
           ...(planFacts.length > 0 ? { deepseek_plan: planFacts.join("; ") } : {}),
           ...(reservedRole ? { deepseek_plan: `a ${reservedRole} potion: DeepSeek holds ${reservedRole} potions for the act boss` } : {}),
         } satisfies JsonValue,
-        ...(avoided ? { intentBreak: avoided } : {}),
+        ...(avoided ? { differsFromTempo: avoided } : {}),
       };
       options.push(option);
     }

@@ -107,7 +107,7 @@ export interface RunPlan {
    * reason text (intent.ts setForLowHp; Z7D7 F24).
    */
   origins?: Partial<Record<OriginField, PolicyOrigin>>;
-  /** 1 for the run's first plan, +1 per re-plan (deviations are logged per version). */
+  /** 1 for the run's first plan, +1 per re-plan (picks that differ from it are logged per version). */
   version: number;
   snapshot?: PlanSnapshot;
   /** Accepted intent changes so far this run (last CHANGE_HISTORY). */

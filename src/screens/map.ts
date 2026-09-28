@@ -737,7 +737,7 @@ export function planMap(env: DecisionEnv): Decision | null {
       ...option,
       why: routeWhy(option.summary, type),
       summary: { ...option.summary, ...(fit ? { tempo: fit.tempo } : {}) },
-      ...(fit?.breaks ? { intentBreak: fit.tempo } : {}),
+      ...(fit?.differs ? { differsFromTempo: fit.tempo } : {}),
     } satisfies PickOption;
   });
 

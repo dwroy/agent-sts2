@@ -826,10 +826,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
-      ...(resolved.deviation ? { intent_deviation: { intent: resolved.deviation.intent, run_plan_version: resolved.deviation.runPlanVersion, fight_objective: resolved.deviation.fightObjective ?? null }, tempo_deviation: resolved.deviation.intent } : {}),
+      ...(resolved.tempoDiff ? { differs_from_tempo: resolved.tempoDiff.guidance, tempo_context: { run_plan_version: resolved.tempoDiff.runPlanVersion, fight_objective: resolved.tempoDiff.fightObjective ?? null } } : {}),
       // What DeepSeek's guidance Jev saw, and whether its pick was code's reference option.
       ...(decision.kind === "ask" && decision.guidance && decision.guidance.length > 0 ? { ds_guidance: decision.guidance } : {}),
-      ...(resolved.reference ? { reference_rank: resolved.reference.rank, reference_of: resolved.reference.of, matched_reference: resolved.reference.matched } : {}),
+      ...(resolved.reference ? { reference_rank: resolved.reference.rank, reference_of: resolved.reference.of, matched_reference: resolved.reference.matched, differs_from_reference: !resolved.reference.matched } : {}),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
