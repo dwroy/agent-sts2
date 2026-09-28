@@ -217,7 +217,7 @@
     "DARK_STRIKE_MOVE": 43
    },
    "INCANTATION_MOVE": {
-    "DARK_STRIKE_MOVE": 100
+    "DARK_STRIKE_MOVE": 101
    }
   }
  },
@@ -285,11 +285,11 @@
    },
    "GOOP_MOVE": {
     "GOOP_MOVE": 79,
-    "WHIP_SLAP_MOVE": 210
+    "WHIP_SLAP_MOVE": 211
    },
    "WHIP_SLAP_MOVE": {
-    "GLOMP_MOVE": 206,
-    "WHIP_SLAP_MOVE": 84
+    "GLOMP_MOVE": 207,
+    "WHIP_SLAP_MOVE": 85
    }
   }
  },
@@ -368,15 +368,15 @@
    "INCANTATION_MOVE"
   ],
   "damage": {
-   "DARK_STRIKE_MOVE": 8.5,
+   "DARK_STRIKE_MOVE": 8.4,
    "INCANTATION_MOVE": 0.0
   },
   "next": {
    "DARK_STRIKE_MOVE": {
-    "DARK_STRIKE_MOVE": 153
+    "DARK_STRIKE_MOVE": 155
    },
    "INCANTATION_MOVE": {
-    "DARK_STRIKE_MOVE": 59
+    "DARK_STRIKE_MOVE": 60
    }
   }
  },
@@ -579,7 +579,7 @@
   },
   "next": {
    "SPAWNED_MOVE": {
-    "FLEE_MOVE": 56
+    "FLEE_MOVE": 57
    }
   }
  },
@@ -617,15 +617,15 @@
   },
   "next": {
    "FRAIL_SPORES_MOVE": {
-    "SMASH_MOVE": 48,
+    "SMASH_MOVE": 49,
     "VULNERABLE_SPORES_MOVE": 28
    },
    "SMASH_MOVE": {
     "FRAIL_SPORES_MOVE": 42,
-    "VULNERABLE_SPORES_MOVE": 48
+    "VULNERABLE_SPORES_MOVE": 49
    },
    "VULNERABLE_SPORES_MOVE": {
-    "FRAIL_SPORES_MOVE": 25,
+    "FRAIL_SPORES_MOVE": 26,
     "SMASH_MOVE": 39
    }
   }
@@ -718,21 +718,26 @@
   },
   "next": {
    "ACID_GOOP": {
-    "FIRST_ACID_GOOP": 76
+    "FIRST_ACID_GOOP": 77
    },
    "FIRST_ACID_GOOP": {
-    "INHALE": 160
+    "INHALE": 161
    },
    "INHALE": {
-    "ACID_GOOP": 138
+    "ACID_GOOP": 139
    }
   }
  },
  "GAS_BOMB": {
   "damage": {
-   "EXPLODE_MOVE": 8.0
+   "EXPLODE_MOVE": 8.0,
+   "UNSET_MOVE": 0.0
   },
-  "next": {}
+  "next": {
+   "UNSET_MOVE": {
+    "EXPLODE_MOVE": 1
+   }
+  }
  },
  "GLOBE_HEAD": {
   "buffs": [
@@ -766,13 +771,13 @@
   },
   "next": {
    "DOUBLE_SMASH_MOVE": {
-    "HEHE_MOVE": 45
+    "HEHE_MOVE": 46
    },
    "GIMME_MOVE": {
-    "DOUBLE_SMASH_MOVE": 71
+    "DOUBLE_SMASH_MOVE": 72
    },
    "HEHE_MOVE": {
-    "GIMME_MOVE": 29
+    "GIMME_MOVE": 30
    }
   }
  },
@@ -879,13 +884,13 @@
   },
   "next": {
    "BOOMERANG_MOVE": {
-    "POWER_DANCE_MOVE": 94
+    "POWER_DANCE_MOVE": 99
    },
    "POWER_DANCE_MOVE": {
-    "QUICK_SLASH_MOVE": 121
+    "QUICK_SLASH_MOVE": 127
    },
    "QUICK_SLASH_MOVE": {
-    "BOOMERANG_MOVE": 122
+    "BOOMERANG_MOVE": 127
    }
   }
  },
@@ -901,16 +906,16 @@
   },
   "next": {
    "BEAM_MOVE": {
-    "RITUAL_MOVE": 81
+    "RITUAL_MOVE": 83
    },
    "ORB_OF_FRAILTY_MOVE": {
-    "ORB_OF_WEAKNESS_MOVE": 109
+    "ORB_OF_WEAKNESS_MOVE": 112
    },
    "ORB_OF_WEAKNESS_MOVE": {
-    "BEAM_MOVE": 97
+    "BEAM_MOVE": 99
    },
    "RITUAL_MOVE": {
-    "ORB_OF_FRAILTY_MOVE": 76
+    "ORB_OF_FRAILTY_MOVE": 78
    }
   }
  },
@@ -982,10 +987,10 @@
   },
   "next": {
    "CLUMP_SHOT": {
-    "STICKY_SHOT": 134
+    "STICKY_SHOT": 136
    },
    "STICKY_SHOT": {
-    "CLUMP_SHOT": 190
+    "CLUMP_SHOT": 193
    }
   }
  },
@@ -996,10 +1001,10 @@
   },
   "next": {
    "GOOP_MOVE": {
-    "TACKLE_MOVE": 101
+    "TACKLE_MOVE": 105
    },
    "TACKLE_MOVE": {
-    "GOOP_MOVE": 95
+    "GOOP_MOVE": 98
    }
   }
  },
@@ -1011,13 +1016,13 @@
   },
   "next": {
    "ADVANCED_GAS_MOVE": {
-    "BLOAT_MOVE": 45
+    "BLOAT_MOVE": 46
    },
    "BLOAT_MOVE": {
-    "SUPER_GAS_BLAST_MOVE": 72
+    "SUPER_GAS_BLAST_MOVE": 75
    },
    "SUPER_GAS_BLAST_MOVE": {
-    "BLOAT_MOVE": 43
+    "BLOAT_MOVE": 45
    }
   }
  },
@@ -1086,21 +1091,21 @@
  "MAWLER": {
   "damage": {
    "CLAW_MOVE": 9.2,
-   "RIP_AND_TEAR_MOVE": 18.2,
+   "RIP_AND_TEAR_MOVE": 18.1,
    "ROAR_MOVE": 0.0
   },
   "next": {
    "CLAW_MOVE": {
-    "RIP_AND_TEAR_MOVE": 30,
+    "RIP_AND_TEAR_MOVE": 31,
     "ROAR_MOVE": 29
    },
    "RIP_AND_TEAR_MOVE": {
     "CLAW_MOVE": 18,
-    "ROAR_MOVE": 4
+    "ROAR_MOVE": 5
    },
    "ROAR_MOVE": {
     "CLAW_MOVE": 16,
-    "RIP_AND_TEAR_MOVE": 14
+    "RIP_AND_TEAR_MOVE": 15
    }
   }
  },
@@ -1186,13 +1191,13 @@
   },
   "next": {
    "BUTT_MOVE": {
-    "SLICE_MOVE": 167
+    "SLICE_MOVE": 169
    },
    "HISS_MOVE": {
-    "BUTT_MOVE": 148
+    "BUTT_MOVE": 151
    },
    "SLICE_MOVE": {
-    "HISS_MOVE": 159
+    "HISS_MOVE": 161
    }
   }
  },
@@ -1427,13 +1432,13 @@
   },
   "next": {
    "BUBBLE_BURP_MOVE": {
-    "SEA_KICK_MOVE": 84
+    "SEA_KICK_MOVE": 85
    },
    "SEA_KICK_MOVE": {
-    "SPINNING_KICK_MOVE": 197
+    "SPINNING_KICK_MOVE": 198
    },
    "SPINNING_KICK_MOVE": {
-    "BUBBLE_BURP_MOVE": 150
+    "BUBBLE_BURP_MOVE": 151
    }
   }
  },
@@ -1458,17 +1463,17 @@
   "damage": {
    "CHOMP_MOVE": 7.0,
    "SHRINKER_MOVE": 0.0,
-   "STOMP_MOVE": 13.0
+   "STOMP_MOVE": 12.9
   },
   "next": {
    "CHOMP_MOVE": {
-    "STOMP_MOVE": 124
+    "STOMP_MOVE": 127
    },
    "SHRINKER_MOVE": {
-    "CHOMP_MOVE": 123
+    "CHOMP_MOVE": 124
    },
    "STOMP_MOVE": {
-    "CHOMP_MOVE": 55
+    "CHOMP_MOVE": 57
    }
   }
  },
@@ -1553,15 +1558,15 @@
   "next": {
    "OIL_SPRAY_MOVE": {
     "RAGE_MOVE": 66,
-    "SLAM_MOVE": 76
+    "SLAM_MOVE": 77
    },
    "RAGE_MOVE": {
     "OIL_SPRAY_MOVE": 39,
-    "SLAM_MOVE": 21
+    "SLAM_MOVE": 22
    },
    "SLAM_MOVE": {
     "OIL_SPRAY_MOVE": 41,
-    "RAGE_MOVE": 29
+    "RAGE_MOVE": 30
    }
   }
  },
@@ -1603,7 +1608,7 @@
   },
   "next": {
    "SPAWNED_MOVE": {
-    "TACKLE_MOVE": 47
+    "TACKLE_MOVE": 48
    },
    "TACKLE_MOVE": {
     "TACKLE_MOVE": 5
@@ -2044,10 +2049,10 @@
   "next": {
    "POKEY_POUNCE_MOVE": {
     "POKEY_POUNCE_MOVE": 25,
-    "STICKY_SHOT_MOVE": 37
+    "STICKY_SHOT_MOVE": 38
    },
    "STICKY_SHOT_MOVE": {
-    "POKEY_POUNCE_MOVE": 115
+    "POKEY_POUNCE_MOVE": 117
    }
   }
  },
@@ -2057,7 +2062,7 @@
   },
   "next": {
    "TACKLE_MOVE": {
-    "TACKLE_MOVE": 36
+    "TACKLE_MOVE": 38
    }
   }
  },
@@ -2146,8 +2151,8 @@
    "STOMP_MOVE"
   ],
   "damage": {
-   "EXPLODE_MOVE": 37.8,
-   "PRESSURE_GUN_MOVE": 22.2,
+   "EXPLODE_MOVE": 38.5,
+   "PRESSURE_GUN_MOVE": 22.5,
    "PRESSURE_UP_MOVE": 13.1,
    "PRESSURIZE_MOVE": 0.0,
    "RAM_MOVE": 10.0,
@@ -2156,27 +2161,27 @@
   },
   "next": {
    "PRESSURE_GUN_MOVE": {
-    "EXPLODE_MOVE": 8,
-    "PRESSURE_UP_MOVE": 66
+    "EXPLODE_MOVE": 9,
+    "PRESSURE_UP_MOVE": 69
    },
    "PRESSURE_UP_MOVE": {
     "EXPLODE_MOVE": 7,
-    "STOMP_MOVE": 59
+    "STOMP_MOVE": 62
    },
    "PRESSURIZE_MOVE": {
-    "STOMP_MOVE": 51
+    "STOMP_MOVE": 52
    },
    "RAM_MOVE": {
     "EXPLODE_MOVE": 5,
-    "SIPHON_MOVE": 93
+    "SIPHON_MOVE": 97
    },
    "SIPHON_MOVE": {
     "EXPLODE_MOVE": 15,
-    "PRESSURE_GUN_MOVE": 78
+    "PRESSURE_GUN_MOVE": 82
    },
    "STOMP_MOVE": {
     "EXPLODE_MOVE": 12,
-    "RAM_MOVE": 98
+    "RAM_MOVE": 102
    }
   }
  },
