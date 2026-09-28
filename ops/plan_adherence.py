@@ -375,6 +375,9 @@ def plan_reserves(plan: dict | None, potion_id: str, text: str) -> bool:
     roles = (plan or {}).get("reserve") or []
     if not roles:
         return False
+    # Petrified Toad makes a new Potion-Shaped Rock every combat; code never reserves it (99X7).
+    if potion_id == "POTION_SHAPED_ROCK":
+        return False
     if "any" in roles:
         return True
     r = potion_role(potion_id, text)
