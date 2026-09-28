@@ -157,3 +157,17 @@ describe("the clock's card bonus says which gap it is for (62PM F14: Taunt took 
     expect(bonus).toBeLessThan(10);
   });
 });
+
+describe("the clock's estimate_note names what this deck's estimate counted (62PM F15-F16: a fixed Toasty Mittens / Rupture+Crimson Mantle note)", () => {
+  it("62PM (neither in the deck or relics): the note names neither", () => {
+    const note = String(bossClockJson(parseGameState(logged("62pm-reward-f14").state), loggedKnowledge)!["estimate_note"]);
+    expect(note).not.toMatch(/Toasty Mittens|Crimson Mantle|Rupture|绯红披风|撕裂/);
+  });
+
+  it("94FP F32 (Rupture, Crimson Mantle and Inferno in the deck, Toasty Mittens held): the note names them", () => {
+    const note = String(bossClockJson(parseGameState(logged("94fp-rest-f32").state), loggedKnowledge)!["estimate_note"]);
+    expect(note).toMatch(/Rupture fed by/);
+    expect(note).toMatch(/Toasty Mittens/);
+    expect(note).toMatch(/Inferno x1/);
+  });
+});

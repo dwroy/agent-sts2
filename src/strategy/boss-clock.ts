@@ -142,6 +142,8 @@ export interface DeckDamageParts {
   relics: number;
   /** The boss's measured share of the card part (1 when not measured). */
   realised: number;
+  /** What the estimate counted beyond plain attacks, by name (the run plan's estimate_note). */
+  counted: string[];
 }
 
 export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDamageParts | null {
@@ -201,9 +203,19 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   // dealt 41.6 a turn and 92 on T8-T10): Toasty Mittens +1 a turn from T1, i.e. (turns+1)/2 on average;
   // Rupture fed by a self-damage power every turn (Crimson Mantle, Inferno) from when both are up,
   // counted from T3: (turns-2)/2.
-  if (relicIds.includes("TOASTY_MITTENS")) strength += (turns + 1) / 2;
+  const counted: string[] = [];
+  const strengthCards = [...new Set(cards.filter((card) => card.strength > 0).map((card) => card.name || card.cardId))];
+  if (strengthCards.length > 0) counted.push(`Strength from ${strengthCards.join(", ")}`);
+  if (relicIds.includes("TOASTY_MITTENS")) {
+    strength += (turns + 1) / 2;
+    counted.push("Toasty Mittens' Strength growth");
+  }
   const deckIds = new Set(cards.map((card) => card.cardId));
-  if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) strength += Math.max(0, (turns - 2) / 2);
+  if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) {
+    strength += Math.max(0, (turns - 2) / 2);
+    counted.push(`Rupture fed by ${["CRIMSON_MANTLE", "INFERNO"].filter((id) => deckIds.has(id)).map((id) => cards.find((card) => card.cardId === id)?.name || id).join(" and ")}`);
+  }
+  if (energyBonus > 0) counted.push("Pyre's energy");
   const n = cards.length;
   // Energy caps how many of the drawn cards get played.
   const playedShare = Math.min(1, (energy + energyBonus) / Math.max(1, (HAND * cost) / n));
@@ -213,6 +225,7 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
   const cardPart = base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE;
+  if (vulnerable >= 2 && !artifactBoss) counted.push(`Vulnerable uptime (${vulnerable} sources)`);
   // Per-turn power damage, from each copy's expected play turn (EHJZ F33: two Infernos read as 0, the
   // fight dealt ~72 of its 190 with them). Inferno: its amount to every enemy on each HP loss of our
   // turn, the turn-start 1 plus the self-damage cards played (Crimson Mantle's turn-start loss too).
@@ -225,7 +238,13 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   for (const amount of inferno) powers += averagePowerStrength(amount * (1 + selfPlayed) * everyEnemy, false, playTurn, turns);
   for (const amount of juggernaut) powers += averagePowerStrength(amount * blockPlayed, false, playTurn, turns);
   for (const amount of boulder) powers += averagePowerStrength(amount * everyEnemy, true, playTurn, turns);
-  return { cards: cardPart, powers, relics: relicDamagePerTurn(relicIds, turns, crab), realised: need?.realised ?? 1 };
+  const perTurnPowers = [
+    ...(inferno.length > 0 ? [`Inferno x${inferno.length}`] : []),
+    ...(juggernaut.length > 0 ? [`Juggernaut x${juggernaut.length}`] : []),
+    ...(boulder.length > 0 ? [`Rolling Boulder x${boulder.length}`] : []),
+  ];
+  if (perTurnPowers.length > 0) counted.push(`per-turn power damage (${perTurnPowers.join(", ")})`);
+  return { cards: cardPart, powers, relics: relicDamagePerTurn(relicIds, turns, crab), realised: need?.realised ?? 1, counted };
 }
 
 /** A card's dynamic value by name (deck entries carry them resolved). */
@@ -435,6 +454,7 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
   if (!need) return null;
   const table = bossNeed(need.id, state.run?.ascension ?? 0)!;
   const deck = deckDamagePerTurn(state, knowledge);
+  const counted = deckDamageParts(state, knowledge)?.counted ?? [];
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   // The same turns as the deck estimate's relic share (the table's).
   const relics = relicDamagePerTurn(relicIds, table.turns, need.id === "KAISER_CRAB");
@@ -447,7 +467,9 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
       : {}),
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
-    estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable, per-turn power damage (Inferno, Juggernaut, Rolling Boulder)${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
+    // What this deck's estimate counted, by name (62PM F15-F16: a fixed note naming Toasty Mittens and
+    // Rupture+Crimson Mantle, neither in the deck, and DeepSeek reasoned about both).
+    estimate_note: `rough: the deck's attacks at its energy, x${ESTIMATE_SCALE} (logged boss fights dealt ~40% more than the plain count: draw, mid-fight powers)${counted.length > 0 ? `; counted: ${counted.join("; ")}` : ""}${relics > 0 ? `; relic damage (~${relics}/turn of it)` : ""}; no potions`,
     gap_per_turn: Math.max(0, need.perTurn - deck),
     boss_note: need.note,
   };
