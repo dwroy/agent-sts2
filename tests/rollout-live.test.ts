@@ -148,6 +148,30 @@ describe("rollout facts on Jev's combat question", () => {
     expect(rolloutFacts(worst, none)).toEqual({ rollout: "rollout unavailable (no draw/discard piles in the state)" });
   });
 
+  it("up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best", async () => {
+    const { MAX_OPTIONS } = await import("../src/screens/combat-plan.js");
+    expect(MAX_OPTIONS).toBe(10);
+    let most = 0;
+    for (const name of BOARDS) {
+      const decision = plan(name, true);
+      if (decision?.kind !== "ask") continue;
+      const criteria = criteriaOf(decision);
+      const keys = planKeys(criteria);
+      most = Math.max(most, keys.length);
+      expect(keys.length, name).toBeLessThanOrEqual(MAX_OPTIONS + 2); // + a planned setup line, + the rollout's added line
+      const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown> | undefined;
+      if (!log?.["available"]) continue;
+      for (const key of keys) {
+        const f = facts(criteria, key);
+        expect(String(f["rollout"]), `${name} ${key}`).toMatch(/rollout|estimate/);
+        expect(String(f["rollout"]), `${name} ${key}`).not.toMatch(/unavailable/);
+        expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
+      }
+      expect(keys.filter((key) => facts(criteria, key)["rollout_best"] === true).length, name).toBe(1);
+    }
+    expect(most).toBeGreaterThan(4);
+  });
+
   it("keeps to the time budget under a mock clock, degrading the horizon/samples, and says so", () => {
     // 3 ms per clock read: the policy looks slow, the full 5 x 8 does not fit.
     rolloutLiveOptions.now = fakeClock(3);

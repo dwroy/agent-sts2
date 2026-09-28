@@ -143,7 +143,8 @@ function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
 // CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card
 // play is Jev's): with two or more distinct lines Jev is asked, unless code's line dominates every other
 // on every axis.
-const MAX_OPTIONS = 4;
+/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */
+export const MAX_OPTIONS = 10;
 
 /**
  * HP guardrail for elite/boss/dangerous plan choices: the models keep trading HP for damage ("Burning
