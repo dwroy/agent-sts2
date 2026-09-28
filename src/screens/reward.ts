@@ -7,45 +7,12 @@
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
-import { cardRoles, cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
+import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { currentRunPlan, planCardFacts } from "../strategy/run-plan.js";
-import { guidanceFor, planAvoidsCard } from "../strategy/intent.js";
+import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-
-/**
- * A card-reward valuation for the run's real deck: card value and the boss clock's damage gap (code's
- * reference), with DeepSeek's plan on the card as facts (want, avoid, needed roles, block target). The
- * plan used to move the value (want +20, avoid -15, must-have +14, low-HP block +21, block target +6)
- * and avoided cards were not offered; now they are facts next to the value. Shared with the event "add
- * a card" choices (UP1C F3).
- */
-export function rewardCardValuer(env: DecisionEnv): (cardId: string) => { value: number; reasons: string[]; plan: string[] } {
-  const { state, knowledge } = env;
-  const entries = deckEntries(state, knowledge);
-  const profile = deckProfile(entries);
-  const gap = damageGap(state, knowledge);
-  const run = asRecord(state.run?.raw);
-  const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
-  const floor = state.run?.floor ?? 0;
-  const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const deckIds = entries.map((entry) => entry.card_id);
-  const extraBlock = entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length;
-  const plan = currentRunPlan(env.screenMemory, state);
-  return (cardId) => {
-    const info = knowledge.card(cardId);
-    const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
-    // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
-    const clock = gapCardBonus(gap, cardId, info?.block ?? null);
-    return {
-      value: base.value + clock.bonus,
-      reasons: [...base.reasons, ...(clock.why ? [clock.why] : [])],
-      plan: planCardFacts(plan, cardId, extraBlock, isBlockCardId(cardId), deckIds),
-    };
-  };
-}
 
 export function planReward(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -63,19 +30,23 @@ export function planReward(env: DecisionEnv): Decision | null {
     }
     const entries = deckEntries(state, knowledge);
     const profile = deckProfile(entries);
+    const gap = damageGap(state, knowledge);
     const run = asRecord(state.run?.raw);
     const act = (numOrNull(Number(str(run["act_id"], "0"))) ?? 0) + 1;
-    const valueOf = rewardCardValuer(env);
-    // DeepSeek's plan on each card is a fact (want / avoid / needs); every offer is shown.
-    const runPlan = currentRunPlan(env.screenMemory, state);
+    const floor = state.run?.floor ?? 0;
     const options: PickOption[] = offered.map((card, fallbackIndex) => {
       const index = numOrNull(card["index"]) ?? fallbackIndex;
       const cardId = str(card["card_id"]);
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
-      const valued = valueOf(cardId);
-      const avoided = planAvoidsCard(runPlan, cardId, cardRoles(cardId));
+      const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+      const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
+      // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
+      const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
+      // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
+      const clock = gapCardBonus(gap, cardId);
+      const valued = { value: base.value + planned.bonus + clock.bonus, reasons: [...base.reasons, ...(planned.why ? [planned.why] : []), ...(clock.why ? [clock.why] : [])] };
       return {
         key: `card${index}`,
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
@@ -84,30 +55,37 @@ export function planReward(env: DecisionEnv): Decision | null {
         summary: {
           code_value: valued.value,
           why: valued.reasons.join("; ") || null,
-          ...(valued.plan.length > 0 ? { deepseek_plan: valued.plan.join("; ") } : {}),
           card: name,
           type: info?.type ?? null,
           rarity: info?.rarity ?? null,
           cost: info?.cost ?? null,
           text,
         } satisfies JsonValue,
-        ...(avoided ? { differsFromTempo: avoided } : {}),
       };
     });
-    const below = options.filter((option) => option.score < SKIP_BAR).map((option) => option.label).join(", ");
     options.push({
       key: "skip",
       label: "skip the card reward",
       intent: { action: "skip_reward_cards" },
       score: SKIP_BAR,
-      summary: {
-        card: "skip",
-        code_value: SKIP_BAR,
-        why: `the skip bar: a card code values under ${SKIP_BAR} makes the deck worse${below ? ` (under it: ${below})` : ""}`,
-        note: "take nothing; the deck stays lean",
-      } satisfies JsonValue,
-      ...((runPlan?.want ?? []).some((id) => offered.some((card) => str(card["card_id"]) === id)) ? { differsFromTempo: "differs from DeepSeek's want list: a wanted card is offered" } : {}),
+      summary: { card: "skip", code_value: SKIP_BAR, note: "take nothing; the deck stays lean" } satisfies JsonValue,
     });
+
+    // Phase 2: a card code values below the skip bar is not offered to the model at all. Say so when
+    // that leaves only the skip, instead of the pick helper's "only one legal option".
+    const shown = env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR);
+    if (shown.length === 1 && options.length > 1) {
+      const values = options
+        .filter((option) => option.key !== "skip")
+        .map((option) => `${option.label} ${option.score}`)
+        .join(", ");
+      return {
+        kind: "act",
+        label: "reward/card",
+        intent: { action: "skip_reward_cards" },
+        rationale: `all offers below skip bar ${SKIP_BAR} (${values})`,
+      };
+    }
 
     return buildPickDecision({
       label: "reward/card",
@@ -115,9 +93,9 @@ export function planReward(env: DecisionEnv): Decision | null {
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
       escalateBelow: 0.45,
-      options,
-      planVersion: runPlan?.version ?? null,
-      guidance: guidanceFor(runPlan, "reward"),
+      options: shown,
+      codeMargin: env.combatPlanner === "card" ? undefined : 6,
+      maxModelOptions: 3,
       state: {
         run_brief: briefJson(env.brief),
         deck_stats: env.brief.deck,

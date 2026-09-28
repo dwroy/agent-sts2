@@ -3,8 +3,8 @@
  * was actually played. No model is called; nothing is played.
  *
  * For each recorded decision of the chosen runs (combat plans, rewards, shops, map, rest, selections,
- * events) it rebuilds the board from logs/states.jsonl (matched by fingerprint), restores the run plan
- * in force then and that fight's DeepSeek plan when there was one, and runs the planner:
+ * events) it rebuilds the board from logs/states.jsonl (matched by fingerprint), restores that fight's
+ * DeepSeek plan when there was one, and runs the planner:
  *   same        code decides and plays the recorded action
  *   changed     code decides and plays something else
  *   now_asks    code used to decide, now it asks Jev
@@ -31,7 +31,6 @@ import { createScreenMemory, type Decision, type DecisionEnv } from "../src/proj
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planDecision } from "../src/screens/index.js";
 import { fightKey, loadFightPlan } from "../src/strategy/fight-plan.js";
-import { normalizeRunPlan, type RunPlan } from "../src/strategy/run-plan.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -106,20 +105,7 @@ const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.str
 // shop entry/exit (depends on whether the inventory was opened) are left out.
 const COMPARABLE = /^(combat\/(plan|plan-choice|plan-choice\+potion|lethal|least-loss|mod-lethal|plan-guarded|plan-potion|potion-now|end_turn)$|reward\/card$|shop\/buy$|map\/|rest\/choose$|selection\/)/;
 
-// The run plan in force at each decision (the last version logged before it): hp_policy, reserve and
-// route intents change what code decides (Z7D7 F25: the shop -> elite route only won under plan v8).
-const runPlans = new Map<string, { ts: string; plan: RunPlan }[]>();
-if (existsSync(config.runPlanLog)) {
-  for (const line of readFileSync(config.runPlanLog, "utf8").split("\n")) {
-    if (!line) continue;
-    const entry = JSON.parse(line) as { ts: string; run: string; plan?: Record<string, unknown> };
-    if (!targetRuns.has(entry.run) || !entry.plan) continue;
-    runPlans.set(entry.run, [...(runPlans.get(entry.run) ?? []), { ts: entry.ts, plan: normalizeRunPlan(entry.plan) }]);
-  }
-}
-const runPlanAt = (run: string, ts: string): RunPlan | null => (runPlans.get(run) ?? []).filter((entry) => entry.ts <= ts).at(-1)?.plan ?? null;
-
-function envFor(state: ReturnType<typeof parseGameState>, ts = ""): DecisionEnv {
+function envFor(state: ReturnType<typeof parseGameState>): DecisionEnv {
   const env: DecisionEnv = {
     state,
     knowledge,
@@ -135,7 +121,6 @@ function envFor(state: ReturnType<typeof parseGameState>, ts = ""): DecisionEnv 
     jevContext: config.jevContext,
     fightPlan: config.fightPlan,
   };
-  env.screenMemory.runPlan = runPlanAt(String(state.raw["run_id"] ?? ""), ts);
   if (config.fightPlan === "v1" && state.in_combat) {
     const plan = loadFightPlan(config.fightPlanLog, String(state.raw["run_id"] ?? ""), fightKey(state));
     if (plan) env.screenMemory.fightPlan = plan;
@@ -161,7 +146,7 @@ for await (const line of lines("logs/decisions.jsonl", Number.MAX_SAFE_INTEGER))
   if (!raw) continue;
   let decision: Decision | null = null;
   try {
-    decision = planFor(envFor(parseGameState(raw), record.ts));
+    decision = planFor(envFor(parseGameState(raw)));
   } catch {
     decision = null;
   }

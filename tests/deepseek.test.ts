@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { DeepSeekClient, JSON_ONLY_RETRY } from "../src/llm/deepseek.js";
+import { DeepSeekClient } from "../src/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 let server: TestServer | null = null;
@@ -65,42 +65,5 @@ describe("DeepSeekClient", () => {
     expect(client.guideId).toMatch(/^[0-9a-f]{8}$/);
     expect(client.handbookId).toBe("");
     expect(client.systemPrompt).not.toContain("经验手册");
-  });
-
-  it("a JSON task's reply that does not parse is asked again once (NJSZ F31: the Entomancer plan came back cut off)", async () => {
-    // The logged NJSZ F31 reply (fight-plans.jsonl error), cut off mid-string.
-    const cut = '{"objective":"kill_fast","kill_priority":[],"reason":["low_hp","enemy_scales"],"threat":"At 18 HP a single BEES (3x7=21)';
-    const replies = [cut, '{"objective":"kill_fast","kill_priority":[],"reason":["low_hp"],"threat":"Bees 3x7","summary":"race"}'];
-    const bodies: { messages: { role: string; content: string }[] }[] = [];
-    server = await startTestServer((req, res) => {
-      let text = "";
-      req.on("data", (chunk: Buffer) => (text += chunk.toString("utf8")));
-      req.on("end", () => {
-        bodies.push(JSON.parse(text) as (typeof bodies)[number]);
-        sendJson(res, 200, { choices: [{ message: { content: replies[bodies.length - 1] ?? "" } }], usage: { prompt_tokens: 10, completion_tokens: 2 } });
-      });
-    });
-    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
-    const { json } = await client.askJson({ task: "fight plan" }, "fight-plan");
-    expect(json["objective"]).toBe("kill_fast");
-    expect(bodies).toHaveLength(2);
-    const retry = bodies[1]!.messages;
-    expect(retry.map((message) => message.role)).toEqual(["system", "user", "assistant", "user"]);
-    expect(retry[2]!.content).toBe(cut);
-    expect(retry[3]!.content).toBe(JSON_ONLY_RETRY);
-  });
-
-  it("gives up after the one retry", async () => {
-    let calls = 0;
-    server = await startTestServer((req, res) => {
-      req.on("data", () => undefined);
-      req.on("end", () => {
-        calls += 1;
-        sendJson(res, 200, { choices: [{ message: { content: "not json" } }] });
-      });
-    });
-    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
-    await expect(client.askJson({ task: "fight plan" }, "fight-plan")).rejects.toThrow(/non-JSON twice/);
-    expect(calls).toBe(2);
   });
 });

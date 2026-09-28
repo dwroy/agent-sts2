@@ -16,11 +16,10 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/jev/client.js";
 import { runLoop, type LoopEvent } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
-import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {
   afterRunPayload,
   combatPayload,
-  eventPayload,
   gameOverPayload,
   gameOverSavedPayload,
   mainMenuPayload,
@@ -158,41 +157,6 @@ describe("runLoop", () => {
     expect(stats.stoppedBecause).toContain("run 1 ended");
     expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
     expect(stats.jevCalls).toBeGreaterThan(0);
-  });
-
-  it("after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4)", async () => {
-    const config = testConfig();
-    // Two event pages that look the same (the next page of Tablet of Truth kept HP and actions); the
-    // first choose_event_option times out in the mod but the game applies it.
-    const page = eventPayload();
-    const sequence = [page, eventPayload(), mainMenuPayload()];
-    let index = 0;
-    let failedOnce = false;
-    const actions: Record<string, unknown>[] = [];
-    const server = await startTestServer((req, res) => {
-      if (req.method === "GET" && req.url === "/state") return sendJson(res, 200, envelope(sequence[Math.min(index, sequence.length - 1)]));
-      let raw = "";
-      req.on("data", (chunk) => {
-        raw += chunk;
-      });
-      req.on("end", () => {
-        actions.push(JSON.parse(raw || "{}") as Record<string, unknown>);
-        index += 1;
-        if (!failedOnce) {
-          failedOnce = true;
-          return sendJson(res, 504, errorEnvelope("action_timeout", "choose_event_option timed out", true));
-        }
-        sendJson(res, 200, envelope({ action: "choose_event_option", status: "completed", stable: true, message: "scripted", state: sequence[Math.min(index, sequence.length - 1)] }));
-      });
-    });
-    servers.push(server);
-    const jev = stubJev();
-    await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: jev.client, knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1 });
-    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>);
-    // The timed-out click is a decision record, and the second page was decided afresh (not "reused").
-    expect(lines[0]).toMatchObject({ label: expect.stringMatching(/^event/), result: expect.stringMatching(/^failed \(wait\): action_timeout/) });
-    expect(lines.filter((line) => String(line["label"]).startsWith("event")).every((line) => line["reused_answer"] === false)).toBe(true);
-    expect(actions).toHaveLength(2);
   });
 
   it("writes one decision record per decision", async () => {
@@ -742,67 +706,5 @@ describe("runLoop", () => {
     expect(report.totals.jevCalls).toBe(2);
     expect(report.totals.inputTokens).toBe(200);
     expect(report.totals.outputTokens).toBe(20);
-  });
-
-  it("asks the planner for the run plan with no escalation chain, and never escalates a low-confidence Jev pick", async () => {
-    const base = testConfig();
-    const runPlanLog = join(tmpdir(), `run-plans-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-    logs.push(runPlanLog);
-    // Default config: the escalation chain is empty (Jev is the final decider).
-    expect(base.escalation.chain).toEqual([]);
-    const config: AppConfig = { ...base, runPlan: "v1", runPlanLog, deepseek: { maxCalls: 5 } as AppConfig["deepseek"] };
-    const { server } = await scriptedMod({ sequence: [mapPayload(), mapPayload(), mainMenuPayload()] });
-    const labels: string[] = [];
-    const planner = {
-      async askJson(_payload: unknown, label: string) {
-        labels.push(label);
-        return { json: { archetype: "Strength", hp_policy: "preserve", route_risk: "avoid_elites", summary: "careful" }, meta: { latencyMs: 1, inputTokens: 10, outputTokens: 5 } };
-      },
-    };
-    // Jev near-guesses every pick (0.1): nothing escalates, code's rank 1 is the fallback.
-    const unsure = {
-      model: "stub",
-      async ask(_state: unknown, questions: Record<string, { type: string; criteria?: Record<string, unknown> }>): Promise<JevAskResult> {
-        const answers: AnswerSet = {};
-        for (const [id, question] of Object.entries(questions)) {
-          const first = Object.keys(question.criteria ?? {})[0] ?? "";
-          answers[id] = { type: "choice", choice: first, probabilities: { [first]: 0.1 }, confidence: 0.1, raw: {} };
-        }
-        return { model: "stub", answers, inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: null };
-      },
-    } as unknown as JevClient;
-
-    const stats = await runLoop({
-      config,
-      mode: "play",
-      client: new ModClient({ baseUrl: server.url }),
-      jev: unsure,
-      planner: planner as never,
-      knowledge: testKnowledge,
-      maxRuns: 1,
-      maxDecisions: 5,
-      pollIntervalMs: 1,
-    });
-
-    expect(labels).toEqual(["run-plan"]);
-    expect(stats.deepseekCalls).toBe(1);
-    const planLine = JSON.parse(readFileSync(runPlanLog, "utf8").trim().split("\n")[0]!);
-    expect(planLine).toMatchObject({ version: 1, plan: { hpPolicy: "preserve", routeRisk: "avoid_elites" }, validator: [], changes: [] });
-    const decisions = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
-    expect(decisions.length).toBeGreaterThan(0);
-    for (const record of decisions) expect(record.escalation).toBeUndefined();
-    // avoid_elites is guidance: the Elite is offered with the tempo note, and Jev's pick of it is played
-    // and logged as differs_from_tempo with the guidance shown and the reference rank.
-    const route = decisions.find((record) => record.label === "map/route");
-    expect(JSON.stringify(route.questions ?? {})).toMatch(/Elite[^}]*differs from DeepSeek's route_risk avoid_elites/);
-    expect(route.decider).toBe("jev");
-    expect(route.ds_guidance).toEqual(expect.arrayContaining([expect.stringMatching(/^route_risk avoid_elites/)]));
-    expect(typeof route.reference_rank).toBe("number");
-    expect(typeof route.matched_reference).toBe("boolean");
-    expect(route.differs_from_reference).toBe(!route.matched_reference);
-    // Neutral fields only: the judgmental legacy keys are no longer written.
-    expect(route.intent_deviation).toBeUndefined();
-    expect(route.tempo_deviation).toBeUndefined();
-    if (route.chosen.option_index === 0) expect(route.differs_from_tempo).toMatch(/avoid_elites/);
   });
 });

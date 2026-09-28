@@ -310,28 +310,8 @@ async function main(argv: string[]): Promise<number> {
           refreshKnowledge: values["refresh-data"] === true,
           onEvent: (message) => process.stdout.write(`${style.dim(message)}\n`),
         });
-        // Ablation arm "ds-only" (Dai, 2026-09-27): Jev answers nothing (confidence 0 on its first
-        // option), so every escalating screen goes to DeepSeek and every other ask falls back to code.
-        // OBSOLETE since DeepSeek plans strategy only and the escalation chain defaults to empty: the
-        // arm only means something with ESCALATION_CHAIN=deepseek set explicitly.
-        if (process.env["ARM"] === "ds-only" && !config.escalation.chain.includes("deepseek")) {
-          process.stdout.write(`${style.yellow("ARM=ds-only is obsolete: without ESCALATION_CHAIN=deepseek nothing escalates, every ask falls back to code")}\n`);
-        }
-        if (process.env["ARM"] === "ds-only" && runtime.jev) {
-          const jev = runtime.jev;
-          jev.ask = async (_state: unknown, questions: import("./jev/questions.js").QuestionSet) => {
-            const answers: import("./jev/answers.js").AnswerSet = {};
-            for (const [key, question] of Object.entries(questions)) {
-              if (question.type !== "choice") continue;
-              const first = Object.keys(question.criteria)[0];
-              if (first) answers[key] = { type: "choice", choice: first, probabilities: { [first]: 0 }, confidence: 0, raw: { ablation: "ds-only" } };
-            }
-            return { model: "ablation-none", answers, inputTokens: 0, outputTokens: 0, latencyMs: 0, requestId: null };
-          };
-        }
         process.stdout.write(
           `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
-            `${process.env["ARM"] ? ` | ablation arm ${process.env["ARM"]}` : ""}` +
             `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
             `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
         );
@@ -349,8 +329,6 @@ async function main(argv: string[]): Promise<number> {
                     : [],
               )
             : [],
-          // DeepSeek plans strategy whenever it is configured and a plan is on, whatever the chain.
-          ...(config.deepseek && (config.runPlan === "v1" || config.fightPlan === "v1") ? { planner: new DeepSeekClient(config.deepseek) } : {}),
           knowledge: runtime.knowledge,
           maxRuns: number(values["max-runs"], 1),
           maxDecisions: number(values["max-decisions"], 2_000),

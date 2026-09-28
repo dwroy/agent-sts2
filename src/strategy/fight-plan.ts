@@ -1,14 +1,17 @@
 /**
- * Fight plan (FIGHT_PLAN=v1): DeepSeek is asked once at the start of a fight for its strategy and
- * tempo, as guidance: the objective (kill_fast / preserve_hp / scale_then_kill / race), the order
- * enemies die in (kill_priority), potion timing in words (potion_plan, and a word per potion), the
- * threat. It names no card play per turn. Jev plays every turn seeing it next to code's exact facts of
- * each line (intent.ts combatFit / reserveFact); nothing in the plan is enforced.
+ * Fight plan (FIGHT_PLAN=v1, migration steps M2+M3 of paper/materials/architecture-review): DeepSeek
+ * is asked once at the start of an elite or boss fight for the plan of the whole fight (approach, the
+ * cards to set up early, which enemy to kill first, what each potion is for). It no longer answers
+ * per-turn plan choices: those are code's (the turn solver) and Jev's, which look one turn ahead.
  *
- * History: the old plan's potion timings were code orders (early/big_hit auto-drinks, EJXC F28, WB02
- * F29), then the vocabulary-only plan dropped potion timing altogether while the run plan's reserve
- * hard-filtered potions (A8: 15/44 deaths holding potions). Potion timing is back as words Jev weighs.
- * Old logged plans are still read (normalizeFightPlan).
+ * Why: per-turn escalations cost 20–70 s each (a boss fight could spend minutes thinking), and on
+ * the per-turn choice DeepSeek did no better than Jev (extra HP over the min-loss line: Jev 2.59,
+ * DeepSeek 3.12; analysis/layer_attribution.py). What neither the solver nor Jev can see is the
+ * multi-turn shape of the fight, which is what DeepSeek is asked for here.
+ *
+ * The plan reaches play three ways: fact tags on Jev's options ("plays the planned setup card"),
+ * potion costs in the solver (a potion the plan saves costs more, one it plans early is free), and a
+ * setup line within the HP-guard slack of code's pick turns a code-decided turn into a Jev question.
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
@@ -17,21 +20,14 @@ import { dirname } from "node:path";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
-import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
-import { fillPotionText } from "../knowledge/potion-values.js";
-import { awakeDamagePerTurn, moveModel } from "../knowledge/move-model.js";
 import { bossNote } from "../project/run-journal.js";
-import { bossClockJson, deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
-import { FIGHT_OBJECTIVES, INTENT_REASONS, isOneOf, MEANING, parseReasons, REASON_MEANING, type FightObjective, type IntentReason } from "./intent.js";
-import { DISAGREE, objectiveOfApproach, validateFightPlan } from "./plan-validator.js";
-import type { RunPlan } from "./run-plan.js";
-import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
-/** Potions that add damage or energy (the combat veto treats drinking them as offence). */
-export const OFFENSIVE_POTIONS = new Set([
-  "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
-  "ATTACK_POTION", "POWDERED_DEMISE", "GIGANTIFICATION_POTION", "DUPLICATOR", "ENERGY_POTION", "POTION_SHAPED_ROCK",
-]);
+export type FightApproach = "race" | "setup" | "defend";
+export type PotionUse = "early" | "big_hit" | "emergency" | "save" | "any";
+
+const APPROACHES: FightApproach[] = ["race", "setup", "defend"];
+const POTION_USES: PotionUse[] = ["early", "big_hit", "emergency", "save", "any"];
 
 export interface FightPlan {
   runId: string;
@@ -39,26 +35,17 @@ export interface FightPlan {
   fight: string;
   kind: string;
   enemyIds: string[];
-  objective: FightObjective;
-  /** Why DeepSeek chose the objective (intent.ts INTENT_REASONS): picks the translation (damageFirst). */
-  reasons?: IntentReason[];
-  /** enemy_id order to kill in; the first living one is the solver's focus. */
-  killPriority: string[];
-  /** DeepSeek's words on the danger (context for Jev only). */
-  threat: string;
-  /** DeepSeek's potion timing for this fight in words (guidance for Jev). */
-  potionPlan?: string;
-  /** DeepSeek's word per potion id ("hold for the burst turn", "drink if HP < 50%"), guidance for Jev. */
-  potions?: Record<string, string>;
+  approach: FightApproach;
+  /** card_id of the cards to play in the first turns. */
+  setup: string[];
+  /** enemy_id to kill first; null when it does not matter. */
+  focus: string | null;
+  /** potion_id -> what it is for in this fight. */
+  potions: Record<string, PotionUse>;
+  keyTurns: string;
   summary: string;
   /** How many times this fight was re-planned (a new boss/elite enemy appeared). */
   replans: number;
-  /** Validator repairs of this plan, one reason each. */
-  validator: string[];
-  /** Judgment calls where code's estimate differs from DeepSeek's intent: kept, logged (not repaired). */
-  disagreements?: string[];
-  /** The run plan version in force when it was made. */
-  runPlanVersion?: number;
 }
 
 /** Enemy ids of the living enemies. */
@@ -87,8 +74,8 @@ function moveSummary(model: Record<string, { next: Record<string, Record<string,
 }
 
 /**
- * What DeepSeek is shown for the plan: the whole deck (what it can scale with or race with), the
- * relics' own text, the potions by id, and each enemy with its current intent, powers and move cycle.
+ * What DeepSeek is shown for the plan: the whole deck (the plan is about which cards to set up), the
+ * relics, the potions by id, and each enemy with its current intent, powers and learned move cycle.
  */
 export function fightPlanInput(
   state: GameState,
@@ -117,15 +104,9 @@ export function fightPlanInput(
         .map(asRecord)
         .map((intent) => `${str(intent["intent_type"])} ${str(intent["label"])}`.trim())
         .join(", ");
-      // With the game's own text (HCBJ F14: SUCK_POWER 3 went as an id only and the plan read "effect is
-      // unknown"; it is +1 Strength per unblocked hit).
       const powers = asArray(enemy["powers"])
         .map(asRecord)
-        .map((power) => {
-          const id = str(power["power_id"]);
-          const text = stripMarkup(str(power["description"]) || knowledge.power(id)?.description || "");
-          return `${id}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}${text ? `: ${truncate(text, 140)}` : ""}`;
-        });
+        .map((power) => `${str(power["power_id"])}${numOrNull(power["amount"]) === null ? "" : ` ${numOrNull(power["amount"])}`}`);
       const out: Record<string, JsonValue> = {
         enemy_id: id,
         name: str(enemy["name"], info?.name ?? id),
@@ -138,9 +119,6 @@ export function fightPlanInput(
       if (moves) out["moves_seen"] = moves;
       const note = info?.type === "Boss" ? bossNote(id) : null;
       if (note) out["boss_note"] = note;
-      // The enemy's dossier from past runs (danger turns, how wins went, what to keep for it).
-      const dossier = dossierFor(id);
-      if (dossier) out["dossier"] = dossierJson(dossier, state.run?.ascension ?? 0);
       return out;
     });
   const potions = asArray(raw["potions"])
@@ -148,7 +126,7 @@ export function fightPlanInput(
     .filter((potion) => bool(potion["occupied"]))
     .map((potion) => {
       const id = str(potion["potion_id"]);
-      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(fillPotionText(id, str(potion["description"]) || knowledge.potion(id)?.description || ""), 100)}`;
+      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(str(potion["description"]) || knowledge.potion(id)?.description || "", 100)}`;
     });
   return {
     fight: kind,
@@ -160,181 +138,69 @@ export function fightPlanInput(
     relics: describeRunRelicEffects(state, knowledge, 20),
     potions,
     enemies,
-    // The act boss's clock at the HP we have now: the turns it lasts and the damage a turn that needs
-    // (the run plan sees the same clock at the entry HP).
-    ...(kind === "boss" && hp !== null ? { boss_clock: bossClockJson(state, knowledge, hp) } : {}),
   };
 }
 
 export const FIGHT_PLAN_TASK = [
   "TASK: fight plan (not an option choice; ignore the {choice, reason} reply format for this one).",
-  "A fight is starting. Every turn code simulates each line exactly and a small model (Jev) chooses the line, the target and",
-  "any potion, seeing your plan next to those facts. Give the STRATEGY and TEMPO for the whole fight as guidance: the",
-  "objective, the kill order, and potion timing in words (which potion to hold for which turn or threat, when to spend it,",
-  "e.g. 'hold Flex for the turn after the Cultist buffs; drink the Block Potion if a hit would take 40% HP'). Do not name exact",
-  "card plays per turn. Nothing is enforced: Jev follows your tempo unless the facts of a turn clearly say otherwise.",
-  "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
-  "run_plan holds the run's strategy, including the potions it wants held for the act boss: say if this fight is worth one.",
-  "In a boss fight, boss_clock is code's clock at the HP we have now: survivable_turns (how long that HP lasts against the",
-  "boss's average hits less the deck's block) and the damage a turn that needs against the deck's estimate.",
-  'Reply with JSON only: {"objective": "kill_fast" | "preserve_hp" | "scale_then_kill" | "race",',
-  '"kill_priority": [enemy ids in the order to kill them; [] when it does not matter],',
-  `"reason": [1-2 of ${INTENT_REASONS.join("|")}: why this objective],`,
-  '"potion_plan": "<max 40 words: potion timing for this fight>",',
-  '"potions": {"<potion id from potions>": "<max 15 words: hold / when to drink it, in words code can check: \'drink turn 1\', \'hold for T3/T7\', \'drink if HP <35%\', \'drink now\'>"},',
-  '"threat": "<max 30 words: what is dangerous in this fight>",',
-  '"summary": "<max 40 words: the strategy in plain words; actions code can check on every line are shown to Jev as matched or not: \'fully block the Rock\'s Headbutt to stun it\', \'block the Beam turn\', the kill priority>"}',
-  "What each objective means to Jev:",
-  `kill_fast = ${MEANING.objective.kill_fast}; preserve_hp = ${MEANING.objective.preserve_hp};`,
-  `scale_then_kill = ${MEANING.objective.scale_then_kill}; race = ${MEANING.objective.race}.`,
-  "What each reason means: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
-  "Code checks ids and format only; where its estimate differs (e.g. a preserve_hp grind longer than our HP lasts) it logs the",
-  "disagreement and shows it to Jev as a fact. In kill_priority, minions (MINION_POWER: they leave when the last non-minion",
-  "dies) are moved behind the last non-minion.",
+  "An elite or boss fight is starting. Every turn will be played by code (an exact one-turn solver) and a small model;",
+  "both only see the current turn. Give them the plan for the WHOLE fight: the things one-turn play misses",
+  "(when to set up powers vs. race, which enemy to kill first, which potion is for which moment, the turns to fear).",
+  "Use the enemies' move cycles and your knowledge of this fight. Keep HP: the run continues after this fight.",
+  'Reply with JSON only: {"approach": "race" | "setup" | "defend",',
+  '"setup_cards": [card ids from the deck to play in the first turns, most important first, max 3; [] for none],',
+  '"focus_enemy": "<enemy_id to kill first, or empty>",',
+  '"potions": {"<potion id>": "early" | "big_hit" | "emergency" | "save" | "any"} for EVERY potion listed',
+  "(early = drink in turns 1-2; big_hit = drink on the turn of a big attack; emergency = only if HP gets low;",
+  "save = keep for a later fight; any = no preference),",
+  '"key_turns": "<max 30 words: the dangerous turns and what to do on them>",',
+  '"summary": "<max 40 words: the plan in plain words>"}',
 ].join(" ");
 
-/**
- * The first living kill-priority enemy; a minion only once no non-minion lives (a plan logged before
- * the validator moved minions last, G8F1 F17).
- */
-export function fightFocus(plan: FightPlan | null, state: GameState): string | null {
-  if (!plan) return null;
-  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  const living = enemies.map((enemy) => str(enemy["enemy_id"]));
-  const minionIds = new Set(enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])));
-  const leaderAlive = enemies.some((enemy) => !isMinion(enemy));
-  return plan.killPriority.find((id) => living.includes(id) && !(leaderAlive && minionIds.has(id))) ?? null;
-}
-
-/**
- * DeepSeek's answer as a validated plan: enemy ids and names checked against the board, the objective
- * against the vocabulary, the board and the run plan (plan-validator.ts). Old-format replies
- * (approach, focus_enemy) are read as objective and kill priority; their card and potion orders are
- * dropped with a reason.
- */
+/** Validates DeepSeek's answer against the board: unknown cards, enemies and potions are dropped. */
 export function parseFightPlan(
   json: Record<string, unknown>,
   state: GameState,
   knowledge: Knowledge,
   base: { runId: string; fight: string; kind: string; replans: number },
-  run: RunPlan | null = null,
 ): FightPlan {
-  const notes: string[] = [];
-  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  const toEnemyId = (value: unknown): string | null => {
-    const text = typeof value === "string" ? value.trim() : "";
-    if (!text) return null;
-    const enemy = enemies.find((entry) => str(entry["enemy_id"]) === text || str(entry["name"]) === text || str(entry["enemy_id"]) === text.toUpperCase());
-    return enemy ? str(enemy["enemy_id"]) : text;
-  };
-  const priorityRaw = Array.isArray(json["kill_priority"]) ? json["kill_priority"] : typeof json["focus_enemy"] === "string" && json["focus_enemy"] ? [json["focus_enemy"]] : [];
-  const killPriority = [...new Set(priorityRaw.map(toEnemyId).filter((id): id is string => id !== null))];
-  const { reasons, dropped } = parseReasons(json["reason"] ?? json["reasons"]);
-  if (dropped.length > 0) notes.push(`reason: dropped unknown ${dropped.map((entry) => JSON.stringify(entry)).join(", ")}`);
-  const objectiveRaw = typeof json["objective"] === "string" ? json["objective"].trim().toLowerCase() : null;
-  const hp = state.run?.current_hp ?? num(asRecord(asRecord(state.raw["combat"])["player"])["current_hp"]);
-  const maxHp = state.run?.max_hp ?? num(asRecord(asRecord(state.raw["combat"])["player"])["max_hp"]);
-  const hpPct = maxHp > 0 ? hp / maxHp : 1;
-  let objective: FightObjective;
-  if (isOneOf(FIGHT_OBJECTIVES, objectiveRaw)) objective = objectiveRaw;
-  else {
-    const legacy = objectiveOfApproach(typeof json["approach"] === "string" ? json["approach"].trim().toLowerCase() : null);
-    objective = legacy ?? (hpPct < 0.5 ? "preserve_hp" : "kill_fast");
-    notes.push(objectiveRaw ? `objective ${JSON.stringify(objectiveRaw)} unknown → ${objective}` : legacy ? `old-format approach ${String(json["approach"])} read as ${objective}` : `no objective → ${objective}`);
+  const deck = deckEntries(state, knowledge);
+  const byName = new Map<string, string>();
+  for (const card of deck) {
+    byName.set(card.card_id.toUpperCase(), card.card_id);
+    byName.set(card.name, card.card_id);
   }
-  const plan: FightPlan = {
+  const toCardId = (value: unknown): string | null => {
+    if (typeof value !== "string") return null;
+    const text = value.trim().replace(/\+$/, "");
+    return byName.get(text.toUpperCase()) ?? byName.get(text) ?? null;
+  };
+  const setup = [...new Set(asArray(json["setup_cards"] as JsonValue).map(toCardId).filter((id): id is string => id !== null))].slice(0, 3);
+  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  const focusRaw = typeof json["focus_enemy"] === "string" ? json["focus_enemy"].trim() : "";
+  const focusEnemy = enemies.find((enemy) => str(enemy["enemy_id"]) === focusRaw || str(enemy["name"]) === focusRaw);
+  const belt = asArray(asRecord(state.run?.raw)["potions"])
+    .map(asRecord)
+    .filter((potion) => bool(potion["occupied"]));
+  const potions: Record<string, PotionUse> = {};
+  for (const [key, value] of Object.entries(asRecord(json["potions"] as JsonValue))) {
+    const use = typeof value === "string" ? (value.trim().toLowerCase() as PotionUse) : null;
+    if (!use || !POTION_USES.includes(use)) continue;
+    const potion = belt.find((entry) => str(entry["potion_id"]) === key.trim() || str(entry["name"]) === key.trim());
+    if (potion) potions[str(potion["potion_id"])] = use;
+  }
+  const approachRaw = typeof json["approach"] === "string" ? (json["approach"].trim().toLowerCase() as FightApproach) : "race";
+  return {
     ...base,
     enemyIds: livingEnemyIds(state),
-    objective,
-    reasons,
-    killPriority,
-    threat: typeof json["threat"] === "string" ? truncate(json["threat"], 200) : typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
+    approach: APPROACHES.includes(approachRaw) ? approachRaw : "race",
+    setup,
+    // No kill-first target among enemies that must die together (Decimillipede segments reattach,
+    // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
+    focus: focusEnemy && !mustDieTogether(focusEnemy) ? str(focusEnemy["enemy_id"]) : null,
+    potions,
+    keyTurns: typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
-    ...(typeof json["potion_plan"] === "string" && json["potion_plan"].trim() ? { potionPlan: truncate(json["potion_plan"].trim(), 240) } : {}),
-    ...(potionNotes(json["potions"], state) ? { potions: potionNotes(json["potions"], state)! } : {}),
-    validator: [],
-    disagreements: [],
-    ...(run ? { runPlanVersion: run.version } : {}),
-  };
-  const combat = asRecord(state.raw["combat"]);
-  const block = num(asRecord(combat["player"])["block"]);
-  const incoming = Math.max(0, enemies.reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((total, intent) => total + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0), 0) - block);
-  const enemyHp = enemies.filter((enemy) => !asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER")).reduce((sum, enemy) => sum + num(enemy["current_hp"]), 0);
-  const perTurn = deckDamagePerTurn(state, knowledge);
-  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord).filter((potion) => bool(potion["occupied"]));
-  const checked = validateFightPlan(plan, json, run, {
-      hpPct,
-      hp,
-      incoming,
-      turnsToKill: perTurn > 0 ? Math.ceil(enemyHp / perTurn) : null,
-      enemyIds: enemies.map((enemy) => str(enemy["enemy_id"])),
-      // No kill-first target among enemies that must die together (Decimillipede segments reattach,
-      // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
-      together: enemies.filter(mustDieTogether).map((enemy) => str(enemy["enemy_id"])),
-      minions: enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])),
-      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: fillPotionText(str(potion["potion_id"]), str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "") })),
-      kind: base.kind,
-      scaling: enemies.map((enemy) => enemyScales(enemy)).filter((why): why is string => why !== null),
-      cycleScaling: enemies.map((enemy) => cycleGrowth(str(enemy["enemy_id"]))).filter((why): why is string => why !== null),
-      lossPerTurn: expectedLossPerTurn(state, knowledge),
-    });
-  notes.push(...checked.filter((note) => !note.startsWith(DISAGREE)));
-  plan.validator = notes;
-  plan.disagreements = checked.filter((note) => note.startsWith(DISAGREE));
-  return plan;
-}
-
-/**
- * DeepSeek's word per potion, for the potions in the belt (ids or names); unknown ones dropped. The old
- * timing vocabulary (early / big_hit / save / emergency) is kept as words.
- */
-function potionNotes(raw: unknown, state: GameState): Record<string, string> | null {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
-  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord).filter((potion) => bool(potion["occupied"]));
-  const out: Record<string, string> = {};
-  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
-    if (typeof value !== "string" || !value.trim()) continue;
-    const text = key.trim();
-    const potion = belt.find((entry) => str(entry["potion_id"]) === text || str(entry["potion_id"]) === text.toUpperCase() || str(entry["name"]) === text);
-    if (potion) out[str(potion["potion_id"])] = truncate(value.trim(), 100);
-  }
-  return Object.keys(out).length > 0 ? out : null;
-}
-
-/**
- * HP expected lost a turn in this fight: each living enemy's average hit once awake (move model, else
- * its hit now) less the deck's block a turn (boss-clock deckBlockPerTurn), at least 0.
- */
-export function expectedLossPerTurn(state: GameState, knowledge: Knowledge): number {
-  const enemies = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  const hits = enemies.reduce((sum, enemy) => {
-    const model = awakeDamagePerTurn(str(enemy["enemy_id"]));
-    const now = asArray(enemy["intents"]).map(asRecord).reduce((total, intent) => total + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0);
-    return sum + (model ? model.perTurn : now);
-  }, 0);
-  return Math.max(0, Math.round((hits - deckBlockPerTurn(state, knowledge)) * 10) / 10);
-}
-
-/** A logged plan in the current shape (plans written before the intent vocabulary included). */
-export function normalizeFightPlan(raw: FightPlan | Record<string, unknown>): FightPlan {
-  const plan = raw as Partial<FightPlan> & Record<string, unknown>;
-  const focus = typeof plan["focus"] === "string" && plan["focus"] ? [plan["focus"]] : [];
-  return {
-    runId: String(plan.runId ?? ""),
-    fight: String(plan.fight ?? ""),
-    kind: String(plan.kind ?? ""),
-    enemyIds: asArray(plan.enemyIds as JsonValue).map(String),
-    objective: isOneOf(FIGHT_OBJECTIVES, plan.objective) ? plan.objective : objectiveOfApproach(plan["approach"]) ?? "kill_fast",
-    ...(Array.isArray(plan.reasons) && plan.reasons.length > 0 ? { reasons: plan.reasons.filter((reason): reason is IntentReason => isOneOf(INTENT_REASONS, reason)) } : {}),
-    killPriority: Array.isArray(plan.killPriority) ? plan.killPriority.map(String) : focus,
-    threat: String(plan.threat ?? plan["keyTurns"] ?? ""),
-    summary: String(plan.summary ?? ""),
-    ...(typeof plan.potionPlan === "string" && plan.potionPlan ? { potionPlan: plan.potionPlan } : {}),
-    ...(plan.potions && typeof plan.potions === "object" && !Array.isArray(plan.potions) ? { potions: plan.potions } : {}),
-    replans: Number(plan.replans ?? 0),
-    validator: Array.isArray(plan.validator) ? plan.validator : [],
-    ...(Array.isArray(plan.disagreements) && plan.disagreements.length > 0 ? { disagreements: plan.disagreements } : {}),
-    ...(typeof plan.runPlanVersion === "number" ? { runPlanVersion: plan.runPlanVersion } : {}),
   };
 }
 
@@ -351,17 +217,69 @@ export function needsReplan(plan: FightPlan, state: GameState, knowledge: Knowle
   });
 }
 
-/** What Jev, the logs and a re-plan see of the plan. */
+/** What Jev (and the decision log) see of the plan. */
 export function fightPlanJson(plan: FightPlan): Record<string, JsonValue> {
   return {
-    objective: plan.objective,
-    reason: plan.reasons ?? [],
-    kill_priority: plan.killPriority,
-    threat: plan.threat,
+    approach: plan.approach,
+    setup_first: plan.setup,
+    kill_first: plan.focus ?? "",
+    potions: plan.potions,
+    dangerous_turns: plan.keyTurns,
     summary: plan.summary,
-    ...(plan.potionPlan ? { potion_plan: plan.potionPlan } : {}),
-    ...(plan.potions ? { potions: plan.potions } : {}),
   };
+}
+
+/** Extra solver cost of drinking this potion now, per the plan; null = leave the default cost. */
+export function planPotionCost(
+  plan: FightPlan | null,
+  potionId: string,
+  ctx: { turn: number; bigHit: boolean; pressed: boolean; offensive?: boolean },
+): { free: boolean; extra: number } | null {
+  const use = plan?.potions[potionId];
+  if (!use || use === "any") return null;
+  if (ctx.pressed) return null;
+  if (use === "early") return ctx.turn <= 2 ? { free: true, extra: 0 } : null;
+  // "big_hit" is the turn of a big enemy attack: no reason to drink an offensive potion then (B6AC F33
+  // T1: Flex drunk for +19 damage when T2 had the better burst hand). Default cost.
+  if (use === "big_hit" && ctx.offensive) return null;
+  if (use === "big_hit") return ctx.bigHit ? { free: true, extra: 0 } : { free: false, extra: 6 };
+  if (use === "emergency") return { free: false, extra: 10 };
+  return { free: false, extra: 20 };
+}
+
+/** Whether an unmodelled potion should be offered to Jev this turn, per the plan (null = default rule). */
+export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: { turn: number; bigHit: boolean; pressed: boolean; costly: boolean; offensive?: boolean }): boolean | null {
+  const use = plan?.potions[potionId];
+  if (!use || use === "any") return null;
+  // "big_hit" on an attack potion is the plan's burst, not the enemy's big hit: the default rule offers
+  // it (24HM F33: Attack Potion tagged big_hit, offered on no turn in 14, died holding it).
+  if (use === "big_hit" && ctx.offensive) return null;
+  if (ctx.pressed) return true;
+  // A costly turn does not unlock a potion the plan keeps for a later fight or for the big hit (J8E4
+  // F17 T2: Shackling Potion, kept for the Pressure Gun, drunk on a 15 Stomp).
+  if (ctx.costly && use !== "save" && use !== "big_hit") return true;
+  if (use === "early") return ctx.turn <= 2 ? true : null;
+  if (use === "big_hit") return ctx.bigHit;
+  return false;
+}
+
+/** Plan-fit tag of one option for Jev: which planned setup cards it plays, the focus damage, potions against the plan. */
+export function planFit(
+  plan: FightPlan,
+  steps: { cardId: string; name: string }[],
+  focusDamage: number | null,
+): string {
+  const parts: string[] = [];
+  const setup = steps.filter((step) => plan.setup.includes(step.cardId)).map((step) => step.name);
+  if (setup.length > 0) parts.push(`plays planned setup ${setup.join(", ")}`);
+  if (plan.focus && focusDamage !== null && focusDamage > 0) parts.push(`${focusDamage} damage to the kill-first enemy`);
+  const drinks = steps.filter((step) => step.cardId.startsWith("POTION:"));
+  for (const step of drinks) {
+    // Modelled potions are "POTION:<potion id>:<slot>".
+    const use = plan.potions[step.cardId.split(":")[1] ?? ""];
+    if (use === "save" || use === "emergency") parts.push(`drinks ${step.name.replace(/^potion /, "")} the plan keeps for ${use === "save" ? "a later fight" : "an emergency"}`);
+  }
+  return parts.length > 0 ? parts.join("; ") : "neutral";
 }
 
 /** Appends one plan (or a failed attempt) to the fight-plan log. Never throws. */
@@ -393,7 +311,7 @@ export function loadFightPlan(file: string, runId: string, fight: string): Fight
       if (!line.includes(runId) || !line.includes(`"${fight}"`)) continue;
       try {
         const entry = JSON.parse(line) as { plan?: FightPlan };
-        if (entry.plan && entry.plan.runId === runId && entry.plan.fight === fight) return normalizeFightPlan(entry.plan);
+        if (entry.plan && entry.plan.runId === runId && entry.plan.fight === fight) return entry.plan;
       } catch {
         // a torn first line
       }
@@ -405,42 +323,6 @@ export function loadFightPlan(file: string, runId: string, fight: string): Fight
 }
 
 /** An enemy that must die in the same turn as its partners (a lone kill brings it back or enrages the rest). */
-function isMinion(enemy: Record<string, unknown>): boolean {
-  return asArray(enemy["powers"] as JsonValue).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
-}
-
 function mustDieTogether(enemy: Record<string, unknown>): boolean {
   return asArray(enemy["powers"] as JsonValue).some((power) => /REATTACH_POWER|CRAB_RAGE_POWER/.test(str(asRecord(power)["power_id"])));
-}
-
-/**
- * Why an enemy grows over its move cycle (the move model: a move seen with a Buff intent, THRASH's
- * Vigor, the Waterfall Giant's Steam Eruption stacking), or null. For the validator's "no growth"
- * check only: Z7D7 F8 Terror Eel (Vigor 6 every other turn) and F17 Waterfall Giant (+3 Steam a turn)
- * were logged as "code sees no growth" from their T1 boards.
- */
-export function cycleGrowth(enemyId: string): string | null {
-  const buffs = moveModel()[enemyId]?.buffs ?? [];
-  return buffs.length > 0 ? `${enemyId} buff move${buffs.length > 1 ? "s" : ""} ${buffs.map((move) => move.replace(/_MOVE$/, "")).join("/")} in its cycle` : null;
-}
-
-/** Powers that make an enemy grow every turn it lives (Strength per turn or per hit, per death, per Skill). */
-export const SCALING_POWERS = ["RITUAL_POWER", "SUCK_POWER", "RAVENOUS_POWER", "TERRITORIAL_POWER", "ENRAGE_POWER", "ANGER_POWER", "GROWTH_POWER", "VITAL_SPARK_POWER"];
-
-/**
- * Why an enemy scales, from the board, or null: a growth power, Strength already gained, or a Buff
- * intent now (5JU3 F9: Fossil Stalker's SUCK_POWER, no buff move in the
- * model; NX48 F35 Devoted Sculptor RITUAL_POWER 9).
- */
-export function enemyScales(enemy: Record<string, unknown>): string | null {
-  const id = str(enemy["enemy_id"]);
-  if (id === "WATERFALL_GIANT" || id === "QUEEN") return null;
-  const powers = asArray(enemy["powers"] as JsonValue).map(asRecord);
-  const growth = powers.find((power) => SCALING_POWERS.includes(str(power["power_id"])));
-  if (growth) return `${id} ${str(growth["power_id"])}`;
-  const strength = powers.find((power) => str(power["power_id"]) === "STRENGTH_POWER" && num(power["amount"]) > 0);
-  if (strength) return `${id} Strength ${num(strength["amount"])}`;
-  // This turn's Buff intent only: a Buff move anywhere in the cycle is 56 of 101 enemies, most not Strength.
-  if (asArray(enemy["intents"] as JsonValue).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff")) return `${id} buffs this turn`;
-  return null;
 }

@@ -37,9 +37,9 @@ export interface AppConfig {
   sts2: Sts2Config;
   jev: JevConfig;
   enricher: EnricherConfig;
-  /** DeepSeek: the strategy planner (RUN_PLAN / FIGHT_PLAN), and an escalator only when ESCALATION_CHAIN names it. null when no key. */
+  /** Escalation model for Jev's near-guesses on high-stakes calls (phase 2). null when no key. */
   deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number; guideFile: string; handbookFile: string; reasoningEffort: string; combatReasoningEffort: string; reasoningLog: string } | null;
-  /** Escalation order, e.g. ["claude", "deepseek"]: the first one that answers wins. Default [] (Jev decides). */
+  /** Escalation order, e.g. ["claude", "deepseek"]: the first one that answers wins. */
   escalation: { chain: ("claude" | "deepseek")[]; claudeDir: string; claudeTimeoutMs: number; claudeMaxCalls: number };
   thresholds: { act: number; strong: number };
   budgets: { maxRequests: number; maxTokens: number };
@@ -61,8 +61,8 @@ export interface AppConfig {
    */
   jevContext: JevContextVersion;
   /**
-   * `v1`: DeepSeek sets each elite/boss fight's strategic intents once at its start (objective, kill
-   * priority: src/strategy/fight-plan.ts, intent.ts) and answers no per-turn combat choice. Default off.
+   * `v1`: DeepSeek plans each elite/boss fight once at its start (src/strategy/fight-plan.ts) and no
+   * longer answers per-turn combat plan choices. `off`: per-turn escalation as before. Default off.
    */
   fightPlan: "off" | "v1";
   /** JSONL log of the fight plans (FIGHT_PLAN=v1). */
@@ -286,10 +286,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
       }
     : null;
 
-  // Default empty: Jev is the final decider on every execution-level choice; DeepSeek only plans
-  // strategy (RUN_PLAN / FIGHT_PLAN). "claude", "deepseek" or "claude,deepseek" re-enables escalation
-  // of Jev's near-guesses for experiments; "none" is the same as empty.
-  const chainRaw = (readEnv(env, "ESCALATION_CHAIN") ?? "").toLowerCase();
+  const chainRaw = (readEnv(env, "ESCALATION_CHAIN") ?? "claude,deepseek").toLowerCase();
   const escalation = {
     chain: chainRaw
       .split(",")

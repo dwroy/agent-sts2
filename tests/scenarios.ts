@@ -26,7 +26,6 @@ export const testKnowledge: Knowledge = makeKnowledge({
     { id: "CULTIST", name: "Cultist", type: "Monster", min_hp: 48, max_hp: 54, moves: [] },
     { id: "LAGAVULIN_MATRIARCH", name: "Lagavulin Matriarch", type: "Boss", min_hp: 222, max_hp: 222, moves: [] },
     { id: "TEST_SUBJECT", name: "Test Subject", type: "Boss", min_hp: 100, max_hp: 100, moves: [] },
-    { id: "THE_INSATIABLE", name: "The Insatiable", type: "Boss", min_hp: 341, max_hp: 341, moves: [] },
   ],
   relics: [
     { id: "BURNING_BLOOD", name: "Burning Blood", description: "At the end of combat, heal 6 HP.", rarity: "Starter" },

@@ -10,37 +10,26 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { rewardCardValuer } from "./reward.js";
-import { currentRunPlan } from "../strategy/run-plan.js";
-import { guidanceFor } from "../strategy/intent.js";
 
 export function planBundle(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const bundles = asArray(state.raw["bundles"]).map(asRecord);
   if (bundles.length > 0) {
-    // Each bundle's cards valued as card rewards against the real deck (6FUF/24UZ: bundle questions had
-    // no code value, and Jev picked at 0.05-0.20).
-    const valueOf = rewardCardValuer(env);
     const options: PickOption[] = bundles.flatMap((bundle, fallbackIndex) => {
       const index = numOrNull(bundle["index"]) ?? fallbackIndex;
       const cards = asArray(bundle["cards"]).map(asRecord);
-      const valued = cards.map((card) => {
-        const id = str(card["card_id"]);
-        return { name: str(card["name"], knowledge.card(id)?.name ?? id), ...valueOf(id) };
-      });
-      const score = valued.length > 0 ? Math.round((valued.reduce((sum, card) => sum + card.value, 0) / valued.length) * 10) / 10 : 0;
-      const plan = valued.flatMap((card) => card.plan.map((fact) => `${card.name}: ${fact}`));
       return [
         {
           key: `b${index}`,
           label: str(bundle["title"], `bundle ${index}`),
           intent: { action: "choose_bundle", option_index: index },
-          score,
-          why: `average card-reward value of its cards: ${valued.map((card) => `${card.name} ${card.value}${card.reasons.length > 0 ? ` (${card.reasons.slice(0, 2).join(", ")})` : ""}`).join("; ")}`,
+          score: 0,
           summary: {
             bundle: str(bundle["title"], `bundle ${index}`),
-            cards: valued.map((card) => `${card.name} (value ${card.value})`),
-            ...(plan.length > 0 ? { deepseek_plan: plan.join("; ") } : {}),
+            cards: cards.map((card) => {
+              const id = str(card["card_id"]);
+              return str(card["name"], knowledge.card(id)?.name ?? id);
+            }),
           } satisfies JsonValue,
         } satisfies PickOption,
       ];
@@ -56,7 +45,6 @@ export function planBundle(env: DecisionEnv): Decision | null {
         actThreshold: env.thresholds.act,
         strictJev: env.strictJev,
         options,
-        guidance: guidanceFor(currentRunPlan(env.screenMemory, state), "bundle"),
         state: { run_brief: briefJson(env.brief), situation: { screen: "BUNDLE_SELECTION" } },
       });
     }

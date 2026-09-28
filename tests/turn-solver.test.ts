@@ -16,8 +16,6 @@ import {
   NEXT_PHASE_HP,
   pileValue,
   QUIET_SELF_DAMAGE_WEIGHT,
-  SANDPIT_TURN_DAMAGE,
-  sandpitTurnValue,
   solveTurn,
   weightsFor,
   WOUND_COST,
@@ -550,31 +548,9 @@ describe("mechanics from the 4-run review", () => {
     const result = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 18), segment(1, 40)], fightKind: "elite" });
     const killAlone = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
     const chip = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
-    // The lone kill only saves seg0's 8 this turn and costs the 7 it comes back with over its 18 (kept
-    // is negative, 4VC5); the chip keeps all 18 damage (elite weight 0.7). Leveling: the gap 22 closes
-    // to 4 on the chip, to 15 on the kill (seg0 back at 25), CONCENTRATION_BONUS 0.15 a point.
-    expect(chip.score - killAlone.score).toBeCloseTo(0.7 * 18 - 8 + 0.7 * 7 + 0.7 * 0.15 * (18 - 7), 5);
+    // The lone kill only saves seg0's 8 this turn; the chip keeps all 18 damage (elite weight 0.7).
+    expect(chip.score - killAlone.score).toBeCloseTo(0.7 * 18 - 8, 5);
     expect(result.plans[0]!.steps[0]?.target).toBe(1);
-  });
-
-  it("a segment killed alone costs the HP it comes back with (4VC5 F24: 44/7/46, Headbutt 7)", () => {
-    const segment = (index: number, hp: number): EnemySim =>
-      enemy({ index, name: `seg${index}`, hp, maxHp: 50, reattach: true, reattachHp: 25, attacks: [{ damage: 8, hits: 1 }] });
-    const hand = [card(0, "HEADBUTT", { damage: 7, validTargets: [0, 1, 2] })];
-    const result = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 44), segment(1, 7), segment(2, 46)], fightKind: "elite" });
-    const front = result.plans.find((plan) => plan.steps[0]?.target === 0)!;
-    const middle = result.plans.find((plan) => plan.steps[0]?.target === 1)!;
-    expect(front.score).toBeGreaterThan(middle.score);
-    expect(result.plans[0]!.steps[0]?.target).not.toBe(1);
-  });
-
-  it("damage into segments is not concentrated on the one with Strength (Z7D7 F28 T2: every line into the Middle)", () => {
-    const segment = (index: number, hp: number, strength = 0): EnemySim =>
-      enemy({ index, name: `seg${index}`, hp, maxHp: 52, reattach: true, reattachHp: 25, scaling: strength > 0, attacks: [{ damage: 8, hits: 1 }] });
-    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 9, validTargets: [0, 1, 2] }), card(1, "STRIKE_IRONCLAD", { damage: 9, validTargets: [0, 1, 2] })];
-    const result = solveTurn({ hand, player: player({ hp: 60 }), enemies: [segment(0, 50), segment(1, 38, 2), segment(2, 52)], fightKind: "elite" });
-    // The lowest (and growing) segment is not the target: the gap to the others only widens.
-    expect(result.plans[0]!.steps.some((step) => step.target === 1)).toBe(false);
   });
 
   it("damage into an illusion that survives the turn is worth nothing (VKPX F22)", () => {
@@ -709,51 +685,6 @@ describe("The Insatiable's Sandpit", () => {
     const best = result.plans[0]!;
     expect(best.steps.map((step) => step.cardId).sort()).toEqual(["DEFEND_IRONCLAD", "DEFEND_IRONCLAD", "FRANTIC_ESCAPE"]);
     expect(best.outcome.sandpitAfter).toBe(2);
-  });
-
-  it("values a Sandpit turn at the deck's turn while behind (9V09 F33 T2: two Escapes ranked below a 54-damage line)", () => {
-    // Pit 4, boss 300/341, ~45 a turn from the deck and 49 on the clock: the deck's turn, not the clock's
-    // need (9LSQ F33: 49 against a deck dealing 24); 7 turns needed, behind.
-    const clock = sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 });
-    expect(clock).toEqual({ value: 45, behind: true, turnsNeeded: 7, useful: Infinity });
-    // The clock's need only without a deck figure.
-    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, clockPerTurn: 49 }).value).toBe(49);
-    // Not behind (the kill fits the pit): the floor.
-    expect(sandpitTurnValue({ bossHpLeft: 100, sandpit: 4, deckPerTurn: 45, clockPerTurn: 49 })).toEqual({ value: SANDPIT_TURN_DAMAGE, behind: false, turnsNeeded: 3, useful: Infinity });
-    // The HP clock: with HP for 5 turns at pit 4 one Escape buys a turn we live to use; at pit 5 none.
-    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 4, deckPerTurn: 24, hpTurns: 5.07 }).useful).toBe(1);
-    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 5, deckPerTurn: 24, hpTurns: 5.07 }).useful).toBe(0);
-    // Never below the floor.
-    expect(sandpitTurnValue({ bossHpLeft: 300, sandpit: 2, deckPerTurn: 5 }).value).toBe(SANDPIT_TURN_DAMAGE);
-    // T2 re-plan: 2 energy, two 1-cost Escapes and two 1-cost 27-damage attacks.
-    const big = (index: number) => card(index, "SWORD_BOOMERANG", { upgraded: true, damage: 27 });
-    const input = {
-      hand: [escape(0), escape(1), big(2), big(3)],
-      player: player({ hp: 62, energy: 2 }),
-      enemies: [sandworm({ hp: 300, maxHp: 341, sandpit: 4, attacks: [{ damage: 6, hits: 2 }] })],
-      fightKind: "boss" as const,
-      turn: 2,
-    };
-    const ids = (sandpitTurnDamage?: number) => solveTurn({ ...input, ...(sandpitTurnDamage ? { sandpitTurnDamage } : {}) }).plans[0]!.steps.map((step) => step.cardId);
-    // The flat 20: 2 x 20 = 40 < 54, the attacks.
-    expect(ids()).toEqual(["SWORD_BOOMERANG", "SWORD_BOOMERANG"]);
-    // A turn at 49: both Escapes (pit 4 -> 5 after the enemy turn).
-    expect(ids(clock.value)).toEqual(["FRANTIC_ESCAPE", "FRANTIC_ESCAPE"]);
-  });
-
-  it("Radiant Tincture: +1 energy now, so Escape, Escape and an attack fit a 2-energy turn (9V09 F33 T2)", () => {
-    const tincture = modelPotion("RADIANT_TINCTURE", "Radiant Tincture", 0, [], 0)!;
-    expect(tincture.energyGain).toBe(1);
-    const big = card(2, "SWORD_BOOMERANG", { upgraded: true, damage: 27 });
-    const result = solveTurn({
-      hand: [escape(0), escape(1), big, tincture],
-      player: player({ hp: 62, energy: 2 }),
-      enemies: [sandworm({ hp: 300, maxHp: 341, sandpit: 4, attacks: [{ damage: 6, hits: 2 }] })],
-      fightKind: "boss",
-      turn: 2,
-      sandpitTurnDamage: 49,
-    });
-    expect(result.plans[0]!.steps.map((step) => step.cardId.split(":")[0]).sort()).toEqual(["FRANTIC_ESCAPE", "FRANTIC_ESCAPE", "POTION", "SWORD_BOOMERANG"]);
   });
 
   it("ignores the countdown on the turn the boss dies", () => {
@@ -895,9 +826,8 @@ describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and 
     const kept = hardRuleLines(surviving, [sleeper]);
     expect(kept.length).toBeGreaterThan(0);
     for (const plan of kept) expect(plan.outcome.sleepCost).toBe(0);
-    // Slumber is only a score penalty, not a filter (RC9A F27 T1: every AoE line was removed); an awake
-    // enemy is left alone.
-    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(surviving);
+    // Slumber counts as sleeping too; an awake enemy is left alone.
+    expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0, slumber: 2 }])).toEqual(kept);
     expect(hardRuleLines(surviving, [{ ...sleeper, asleep: 0 }])).toEqual(surviving);
   });
 
@@ -1963,70 +1893,5 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
     const a = solveTurn(attacked).plans.find(hasOffering)!;
     const b = solveTurn(plain).plans.find((plan) => plan.steps.map((step) => step.cardId).join() === a.steps.map((step) => step.cardId).join())!;
     expect(a.score).toBeCloseTo(b.score);
-  });
-});
-
-describe("Tender on the player (LSWU F21 T5, Hunter Killer)", () => {
-  it("each card played lowers this turn's Strength and Dexterity for the cards after it", () => {
-    // Three Strikes into 18 HP: a lethal at full Strength, 6 + 5 + 4 = 15 with Tender 1.
-    const hand = [strike(0), strike(1), strike(2)];
-    const target = enemy({ hp: 18, attacks: [{ damage: 5, hits: 1 }] });
-    const plain = solveTurn({ hand, player: player({ hp: 40 }), enemies: [target], fightKind: "monster" });
-    expect(plain.plans[0]!.outcome.winsFight).toBe(true);
-    const tender = solveTurn({ hand, player: player({ hp: 40, tender: 1 }), enemies: [target], fightKind: "monster" });
-    expect(tender.plans.some((plan) => plan.outcome.winsFight)).toBe(false);
-    expect(Math.max(...tender.plans.map((plan) => plan.outcome.damageDealt))).toBe(15);
-    // Block too: Strike then two Defends gives 4 + 3.
-    const blocks = solveTurn({ hand: [strike(0), defend(1), defend(2)], player: player({ hp: 40, tender: 1 }), enemies: [enemy({ hp: 50, attacks: [{ damage: 30, hits: 1 }] })], fightKind: "monster" });
-    expect(Math.max(...blocks.plans.map((plan) => plan.outcome.blockGained))).toBeLessThanOrEqual(9);
-  });
-});
-
-describe("Slumber is a score penalty, not a filter (RC9A F27 T1)", () => {
-  it("keeps the AoE line that chips the slumbering beetle through its Plating", () => {
-    const howl = card(0, "HOWL_FROM_BEYOND", { cost: 3, target: "all", validTargets: [], damage: 24 });
-    const beetle = enemy({ index: 0, name: "Beetle", hp: 89, maxHp: 89, block: 18, slumber: 3 });
-    const rock = enemy({ index: 1, name: "Rock", hp: 46, maxHp: 46, attacks: [{ damage: 8, hits: 1 }] });
-    const silk = enemy({ index: 2, name: "Silk", hp: 43, maxHp: 43, attacks: [{ damage: 5, hits: 1 }] });
-    const result = solveTurn({ hand: [howl, strike(1), defend(2), strike(3)], player: player({ hp: 48, maxHp: 90 }), enemies: [beetle, rock, silk], fightKind: "monster", turn: 1 });
-    const surviving = result.plans.filter((plan) => !plan.outcome.dies);
-    const kept = hardRuleLines(surviving, [beetle, rock, silk]);
-    expect(kept.some((plan) => plan.steps.some((step) => step.cardId === "HOWL_FROM_BEYOND"))).toBe(true);
-  });
-});
-
-describe("random hits are not counted as kills (S6AG F25 T6, H8LC F23 T5)", () => {
-  // S6AG: Juggernaut+ 8. The code's rank 1 "Stomp+, Shrug It Off" was predicted -2 because Shrug's 8
-  // was counted on the 6-HP Parafright; it hit the Obscura and 8 block met 16 + 10. The all-block line
-  // (Defend, Shrug It Off, True Grit: 20 block) survives whether or not the Parafright dies.
-  const enemies = (): EnemySim[] => [
-    enemy({ index: 0, name: "The Obscura", hp: 46, maxHp: 129, attacks: [{ damage: 10, hits: 1 }] }),
-    enemy({ index: 1, name: "Parafright", hp: 12, maxHp: 21, attacks: [{ damage: 16, hits: 1 }] }),
-  ];
-  const hand = (): CardModel[] => [
-    card(0, "STOMP", { damage: 6, validTargets: [0, 1] }),
-    card(1, "SHRUG_IT_OFF", { type: "Skill", target: "self", validTargets: [], block: 8 }),
-    defend(2),
-    card(3, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], block: 7 }),
-  ];
-  const ids = (plan: { steps: { cardId: string }[] }) => plan.steps.map((step) => step.cardId).sort().join(",");
-
-  it("Juggernaut's hit is not assumed to finish the Parafright; the 20-block line ranks first", () => {
-    const result = solveTurn({ hand: hand(), player: player({ hp: 13, maxHp: 86, energy: 3, juggernaut: 8 }), enemies: enemies(), fightKind: "monster", turn: 6 });
-    const gamble = result.plans.find((plan) => ids(plan) === "SHRUG_IT_OFF,STOMP");
-    if (gamble) expect(gamble.outcome.hpLoss).toBe(18);
-    expect(result.plans[0]!.outcome.hpLoss).toBeLessThanOrEqual(6);
-    expect(result.plans[0]!.outcome.dies).toBeFalsy();
-  });
-
-  it("a random multi-hit goes where it kills least; a kill every split gives still counts", () => {
-    const boomerang = card(0, "SWORD_BOOMERANG", { target: "random", validTargets: [], damage: 7, hits: 3 });
-    const solve = (hps: number[]) =>
-      solveTurn({ hand: [boomerang], player: player({ hp: 60, energy: 1 }), enemies: hps.map((hp, index) => enemy({ index, hp, maxHp: 50, attacks: [{ damage: 5, hits: 1 }] })), fightKind: "monster" })
-        .plans.find((plan) => plan.steps.length > 0)!;
-    // 40 + 6: all three hits could land on the 40, so the 6-HP attacker still hits us.
-    expect(solve([40, 6]).outcome.hpLoss).toBe(10);
-    // 10 + 10: whatever the split, one enemy takes two hits (14) and dies.
-    expect(solve([10, 10]).outcome.hpLoss).toBe(5);
   });
 });

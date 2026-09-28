@@ -18,9 +18,7 @@ import { DeepSeekClient } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { hpFraction, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanIntentsJson, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
-import { everyRouteMeetsElite } from "./screens/map.js";
-import { intentLines } from "./strategy/intent.js";
+import { loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -55,16 +53,8 @@ export interface LoopOptions {
    * That mode exists to exercise the plumbing against the real game without spending tokens.
    */
   jev: JevClient | null;
-  /**
-   * Escalation chain for Jev's near-guesses (ESCALATION_CHAIN, default empty: Jev's pick stands). An
-   * experiment switch only: DeepSeek's job is strategy, through `planner`.
-   */
+  /** Escalation chain for Jev's near-guesses (Claude via files, then DeepSeek); empty disables it. */
   escalators?: Escalator[];
-  /**
-   * DeepSeek for the strategy plans (RUN_PLAN / FIGHT_PLAN=v1), independent of the escalation chain.
-   * Without it a DeepSeek escalator is used for plans, as before.
-   */
-  planner?: PlanClient;
   knowledge: Knowledge;
   maxRuns?: number;
   maxDecisions?: number;
@@ -77,9 +67,6 @@ export interface LoopOptions {
   pollIntervalMs?: number;
   onEvent?: (event: LoopEvent) => void;
 }
-
-/** What the plans need of DeepSeek: one free-form JSON answer. */
-export type PlanClient = Pick<DeepSeekClient, "askJson">;
 
 export interface LoopStats {
   decisions: number;
@@ -211,8 +198,6 @@ function noteForAction(state: GameState, resolved: ResolvedAction, label: string
 export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const { config, mode, client, knowledge } = options;
   const jev = options.jev;
-  // DeepSeek for the strategy plans: the planner client, else a DeepSeek escalator (older callers).
-  const planner: PlanClient | undefined = options.planner ?? (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
   const pollIntervalMs = options.pollIntervalMs ?? 400;
   const maxDecisions = options.maxDecisions ?? 2_000;
   const maxRuns = options.maxRuns ?? 1;
@@ -474,13 +459,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
     if (!state.in_combat) {
-      screenMemory.gambleDiscards = undefined;
+      screenMemory.hpGuard = undefined;
+      screenMemory.potionTurn = undefined;
       screenMemory.facing = undefined;
       screenMemory.fightCards = undefined;
       screenMemory.planBeforeSelection = undefined;
       screenMemory.plannedAfter = undefined;
-      screenMemory.drawCommit = undefined;
-      screenMemory.pendingDrinks = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
       screenMemory.demonTongueTurn = undefined;
@@ -513,7 +497,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
-      const deepseek = planner;
+      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
         await ensureRunPlan(env, deepseek, journal, config.runPlanLog, onEvent, (tokens) => {
           stats.deepseekCalls += 1;
@@ -523,14 +507,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     if (config.runPlan === "v1") {
       if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]));
-      const current = screenMemory.runPlan && screenMemory.runPlan.runId === str(state.raw["run_id"]) ? screenMemory.runPlan : null;
-      const line = current ? runPlanLine(current, state.run?.floor ?? null) : null;
+      const line = screenMemory.runPlan && screenMemory.runPlan.runId === str(state.raw["run_id"]) ? runPlanLine(screenMemory.runPlan) : null;
       if (line) env.brief.plan = line;
-      // Every screen's Jev question carries the intents in force and what each means.
-      if (current) env.brief.strategy = intentLines(current, null, state.run?.floor ?? null, hpFraction(state));
     }
     if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
-      const deepseek = planner;
+      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
         await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, (tokens) => {
           stats.deepseekCalls += 1;
@@ -702,7 +683,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
               escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}) };
-              // The escalator's raw pick stays in `choice` (no screen swaps it any more; kept for old records).
+              // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
             } catch (error) {
@@ -827,10 +808,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
-      ...(resolved.tempoDiff ? { differs_from_tempo: resolved.tempoDiff.guidance, tempo_context: { run_plan_version: resolved.tempoDiff.runPlanVersion, fight_objective: resolved.tempoDiff.fightObjective ?? null } } : {}),
-      // What DeepSeek's guidance Jev saw, and whether its pick was code's reference option.
-      ...(decision.kind === "ask" && decision.guidance && decision.guidance.length > 0 ? { ds_guidance: decision.guidance } : {}),
-      ...(resolved.reference ? { reference_rank: resolved.reference.rank, reference_of: resolved.reference.of, matched_reference: resolved.reference.matched, differs_from_reference: !resolved.reference.matched } : {}),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
@@ -886,24 +863,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.errors += 1;
       consecutiveFailures += 1;
       onEvent({ type: "note", message: `action ${resolved.intent.action} failed (${failure.kind}): ${failure.detail}` });
-      // A failed (often timed-out) action may still have gone through in the game (KFPC F4: two
-      // choose_event_option timeouts both applied, the memo replayed the answer on the next page, and
-      // neither click was logged). Log it as a decision, forget the answer and any committed plan, and
-      // re-read the state before acting again.
-      answerMemo = null;
-      screenMemory.combatPlan = null;
-      const failed: DecisionRecord = {
-        ...baseRecord,
-        latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
-        result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
-      };
-      log.write(failed);
-      logState(state, stateFingerprint, failed.ts);
       if (failure.kind === "fatal") {
         stop(`action failure: ${failure.detail}`);
         break;
       }
-      await waitForStateChange({ client, previous: stateFingerprint, timeoutMs: 3_000, pollIntervalMs: 150 });
+      await sleep(pollIntervalMs);
       continue;
     }
 
@@ -977,7 +941,7 @@ const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
 
 async function ensureFightPlan(
   env: DecisionEnv,
-  deepseek: PlanClient,
+  deepseek: DeepSeekClient,
   journal: RunJournal,
   logFile: string,
   onEvent: (event: LoopEvent) => void,
@@ -1007,12 +971,13 @@ async function ensureFightPlan(
   const replans = current && current.fight === fight && current.runId === runId ? current.replans + 1 : 0;
   if (replans > 1) return;
   const memory = journal.render(state, knowledge, screenMemory.lastMap);
-  const runPlan = screenMemory.runPlan && screenMemory.runPlan.runId === runId ? screenMemory.runPlan : null;
   const payload: Record<string, JsonValue> = {
     task: FIGHT_PLAN_TASK,
     fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
     memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
-    ...(runPlan ? { run_plan: runPlanIntentsJson(runPlan) } : {}),
+    ...(screenMemory.runPlan && screenMemory.runPlan.runId === runId
+      ? { run_plan: { archetype: screenMemory.runPlan.archetype, boss_prep: screenMemory.runPlan.bossPrep, summary: screenMemory.runPlan.summary } }
+      : {}),
     ...(current && current.fight === fight ? { previous_plan: fightPlanJson(current), note: "A new boss/elite enemy appeared: revise the plan for the rest of the fight." } : {}),
   };
   onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
@@ -1021,11 +986,9 @@ async function ensureFightPlan(
     // per-turn combat effort.
     const { json, meta } = await deepseek.askJson(payload, "fight-plan");
     count(meta.inputTokens + meta.outputTokens);
-    const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans }, runPlan);
-    // A re-plan (a new boss/elite enemy appeared) is its own trigger: an objective change is logged.
-    const change = current && current.fight === fight && current.objective !== plan.objective ? { field: "objective", from: current.objective, to: plan.objective, trigger: "new_enemy" } : null;
+    const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
-    journal.noteFightPlan(state, plan.summary || plan.objective);
+    journal.noteFightPlan(state, plan.summary || plan.approach);
     logFightPlan(logFile, {
       run: runId,
       fight,
@@ -1035,10 +998,6 @@ async function ensureFightPlan(
       enemies: plan.enemyIds,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
-      validator: plan.validator,
-      disagreements: plan.disagreements ?? [],
-      run_plan_version: runPlan?.version ?? null,
-      ...(change ? { changes: [change] } : {}),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,
@@ -1048,7 +1007,7 @@ async function ensureFightPlan(
       guide: meta.guideId ?? "",
       handbook: meta.handbookId ?? "",
     });
-    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.objective}${(plan.reasons ?? []).length > 0 ? ` because ${plan.reasons!.join(", ")}` : ""}; kill priority ${plan.killPriority.join(" > ") || "-"}; ${plan.summary}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}${(plan.disagreements ?? []).length > 0 ? ` [${plan.disagreements!.join("; ")}]` : ""}` });
+    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
   } catch (error) {
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
@@ -1064,7 +1023,7 @@ async function ensureFightPlan(
  */
 async function ensureRunPlan(
   env: DecisionEnv,
-  deepseek: PlanClient,
+  deepseek: DeepSeekClient,
   journal: RunJournal,
   logFile: string,
   onEvent: (event: LoopEvent) => void,
@@ -1080,33 +1039,24 @@ async function ensureRunPlan(
   if (screenMemory.runPlanFailed === failKey) return;
   const memory = journal.render(state, knowledge, screenMemory.lastMap);
   const shown = fightPlanInput(state, knowledge, "run", {});
-  const previous = screenMemory.runPlan && screenMemory.runPlan.runId === runId ? screenMemory.runPlan : null;
-  const forcedRoute = everyRouteMeetsElite(state);
   const payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,
-    run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String), previous, forcedRoute),
+    run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String)),
     memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
-    // Continuity: the intents in force; since_last_plan (in run_state) says what changed since.
-    ...(previous ? { previous_plan: runPlanIntentsJson(previous) } : {}),
+    ...(screenMemory.runPlan ? { previous_plan: toJsonValue(screenMemory.runPlan) } : {}),
   };
   onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
     const { json, meta } = await deepseek.askJson(payload, "run-plan");
     count(meta.inputTokens + meta.outputTokens);
-    const plan = parseRunPlan(json, state, knowledge, trigger, previous, forcedRoute);
-    // Applied from the next decision on: every screen reads screenMemory.runPlan.
+    const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;
-    const accepted = plan.changes.filter((change) => change.version === plan.version);
     logRunPlan(logFile, {
       run: runId,
       floor: state.run?.floor ?? null,
       trigger,
-      version: plan.version,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
-      validator: plan.validator,
-      disagreements: plan.disagreements ?? [],
-      changes: toJsonValue(accepted),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,
@@ -1114,7 +1064,7 @@ async function ensureRunPlan(
       reasoning_tokens: meta.reasoningTokens ?? 0,
       effort: meta.effort ?? "",
     });
-    onEvent({ type: "note", message: `run plan v${plan.version} (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; hp_policy ${plan.hpPolicy}; route_risk ${plan.routeRisk}; reserve ${plan.reserve.join("/") || "-"}${accepted.length > 0 ? `; changed ${accepted.map((change) => `${change.field} (${change.trigger})`).join(", ")}` : ""}${plan.validator.length > 0 ? ` [validator: ${plan.validator.join("; ")}]` : ""}${(plan.disagreements ?? []).length > 0 ? ` [${plan.disagreements!.join("; ")}]` : ""}` });
+    onEvent({ type: "note", message: `run plan (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
   } catch (error) {
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);

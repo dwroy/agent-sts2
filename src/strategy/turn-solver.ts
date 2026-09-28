@@ -9,10 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { freeCardPick, thisTurnScore, upgradeCard, upgradeGain, type CardModel } from "./card-model.js";
-
-/** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
-export const SHRINK_DAMAGE_FACTOR = 0.7;
+import { freeCardPick, type CardModel } from "./card-model.js";
 
 export interface EnemySim {
   index: number;
@@ -68,25 +65,6 @@ export interface EnemySim {
    */
   asleep?: number;
   slumber?: number;
-  /** A sleeper's first hit once awake (move model's biggest attack); sleepTurnDamage when absent. */
-  wakeHit?: number;
-  /**
-   * Vital Spark N (Infested Prism): every Skill we play adds N to each of its hits this turn (KQK2 F25:
-   * T5 JAB 15 became 27 after three Skills; predicted -0, took -11).
-   */
-  vitalSpark?: number;
-  /**
-   * Ravenous N (Corpse Slug): when another enemy dies, this one eats: stunned this turn (its attack is
-   * lost) and +N Strength for good (5JU3 F11 T3: one slug killed, the other two skipped their attacks
-   * and hit 7x2 / 12 after).
-   */
-  ravenous?: number;
-  /**
-   * Imbalanced (Rock Bowlbug): when its attack this turn is fully blocked it is stunned and skips its
-   * next move. The value is that next move's expected hit (move model), what the stun saves (N95W F19
-   * T3: "Defend, Defend, True Grit" 17 block against Headbutt 15 would have stunned it).
-   */
-  imbalanced?: number;
   /** Minion: leaves when every non-minion enemy is dead. */
   minion?: boolean;
   /**
@@ -112,8 +90,6 @@ export interface EnemySim {
   reflect?: boolean;
   /** Demise N: loses N HP at the end of each of its turns (Powdered Demise). */
   demise?: number;
-  /** Shrink N (Beetle Juice): its attacks deal 30% less for N turns; a Shrink already up is in its intents. */
-  shrink?: number;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
   /** Personal Hive N (Entomancer): every attack hit on it adds N Dazed to our draw pile (M812 F28). */
@@ -146,23 +122,6 @@ export interface PlayerSim {
   freeAttacks?: number;
   /** Cards in the exhaust pile at the start of this decision, when known (Pact's End needs 3). */
   exhaustPile?: number;
-  /**
-   * Cards in the draw and discard piles together, when known: the most this turn's draws can bring into
-   * the hand (Fiend Fire counts them: 9VG8 F35 T6).
-   */
-  drawable?: number;
-  /**
-   * Duplication already up (DUPLICATION_POWER, from a Duplicator drunk earlier this turn): the next card
-   * is played twice (11LC F17 T2: re-planned after the drink as if it were not, Bash+ went single).
-   */
-  duplicate?: number;
-  /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
-  regen?: number;
-  /**
-   * Buffer already up (BUFFER_POWER, from a Lucky Tonic drunk earlier): each stack prevents the next HP
-   * loss, our own included (99X7 F9 T3: Breakthrough's 1 HP ate the Buffer drunk for the enemy turn, -17).
-   */
-  buffer?: number;
   /**
    * Most HP we can lose in one turn (Beating Remnant: 20). CCPR F48 T6-T7: every Test Subject line
    * really cost 20; uncapped, the guard and least-loss picked block lines over 48-damage ones.
@@ -244,14 +203,6 @@ export interface PlayerSim {
    * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
    */
   noBlock?: boolean;
-  /** A card was already exhausted this turn before this decision (Evil Eye's doubling), or every turn (Toasty Mittens). */
-  exhaustedThisTurn?: boolean;
-  /**
-   * Tender N (TENDER_POWER, from the Hunter Killer's Tenderizing Goop): every card played lowers our
-   * Strength and Dexterity by N for the rest of the turn (LSWU F21 T5: a "lethal" Setup Strike +
-   * Whirlwind fell 6 short; the 5th Hunter Killer loss, C2WY, MF7A, BDAK, WM2X).
-   */
-  tender?: number;
 }
 
 export interface SolverInput {
@@ -303,18 +254,6 @@ export interface SolverInput {
    * 23 -> 16 HP into a 23 hit).
    */
   nextIncoming?: number;
-  /**
-   * Weight multipliers from the strategic intents (intent.ts solverScale: the fight objective and the
-   * run's hp_policy); 1/1/1 when absent.
-   */
-  intentScale?: { hp: number; damage: number; lasting: number };
-  /**
-   * Damage one more Sandpit turn is worth this fight (sandpitTurnValue); SANDPIT_TURN_DAMAGE when
-   * absent, never below it.
-   */
-  sandpitTurnDamage?: number;
-  /** Escapes that buy a turn our HP lives to use (sandpitTurnValue `useful`); the rest are worth 0. */
-  sandpitUsefulEscapes?: number;
   maxNodes?: number;
 }
 
@@ -349,10 +288,6 @@ export interface Step {
   name: string;
   target: number | null;
   targetName: string | null;
-  /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
-  discards?: string[];
-  /** A pile-card potion's card: the pile card the plan counted (the selection screen takes it). */
-  pileSource?: { cardId: string; upgraded: boolean; name: string };
 }
 
 export interface Outcome {
@@ -379,38 +314,15 @@ export interface Outcome {
   potionCost: number;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
-  /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
-  stuns?: string[];
-  /** Their next hits, saved by the stun (0 when none). */
-  stunSaved?: number;
-  /**
-   * HP of next turn's expected hit, past the HP this line leaves, that a block potion drunk now would
-   * have covered kept (N95W F25 T4). A fact on the line (combat-plan lineFacts).
-   */
-  blockPotionShort?: number;
   /** Enemies left at or below the start-of-turn damage (Mercury Hourglass): dead at our next turn start. */
   startTurnKills: string[];
   /** Withers this plan adds to the hand (Withering Presence). */
   withersAdded: number;
   /**
-   * Damage a Demise put on this turn deals over the enemy's next turns (demiseLater), per enemy: not in
-   * damageDealt, but in the damage axis and the facts (99X7 F17: invisible, the drinking lines were
-   * dominated and never offered on T1).
-   */
-  demiseLater?: { index: number; name: string; damage: number; perTurn: number }[];
-  /** Buffer stacks this line's own HP losses use up (Breakthrough after a Lucky Tonic). */
-  bufferSpentBySelf?: number;
-  /**
    * Score lost to waking a sleeper with chip damage (its free turns, at HP weight); 0 when none. An
    * outcome axis too, so a waking line can never dominate one that lets it sleep (1K5G F17 T1).
    */
   sleepCost: number;
-  /**
-   * First hits of sleepers this line wakes into next enemy turn (Slumber taken to 1 or below from 2+,
-   * Asleep 2+ woken), 0 when none: part of next turn's danger (FH3M F30 T2: Offering's Inferno woke the
-   * Slumbering Beetle a turn early, ROLL_OUT 16 met 4 HP).
-   */
-  wakeHit?: number;
   /**
    * Lasting value set up this turn (powers such as Crimson Mantle, Stone Armor, Juggernaut). An axis,
    * so a line without them cannot dominate one that plays them (9NE1: 0-cost Mantle never played).
@@ -434,7 +346,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; sparkBonus?: number; stunned?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -450,10 +362,8 @@ interface Sim {
   tempDex: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
-  /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
+  /** Buffer stacks gained this turn: each negates one enemy hit. */
   buffer: number;
-  /** Buffer stacks used up by our own HP losses this turn (Breakthrough, Offering). */
-  bufferSpent: number;
   /** Duplication: the next card played resolves twice. */
   duplicate: number;
   /** Flame Barrier: damage back per enemy hit taken this turn. */
@@ -469,13 +379,6 @@ interface Sim {
   /** Each card drawn this turn, valued with and without an energy left at the end to use it. */
   draws: DrawValue[];
   cardsDrawn: number;
-  /**
-   * Of the cards drawn this turn, those still in the hand (not exhausted since): a hand-counting card
-   * (Fiend Fire) counts them. 9VG8 F35 T6: Offering+ drew 5, Fiend Fire+ counted 4 hits, not 9 (99, a kill).
-   */
-  drawnInHand: number;
-  /** Regen up at the end of this turn (already up plus drunk now): healed before the enemy attacks. */
-  regen: number;
   unknown: string[];
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
@@ -511,8 +414,6 @@ interface Sim {
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
    */
   exhausted: CardModel[];
-  /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
-  exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
   held: CardModel[];
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
@@ -598,10 +499,6 @@ export const EXHAUST_PICKERS = new Set(["BURNING_PACT", "TRUE_GRIT", "BRAND"]);
 export const HOWL_EXHAUST_VALUE = 50;
 /** Cards that exhaust the whole rest of the hand (Stoke: a random card for each). */
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
-/** Cards a hand can hold: draws past it are discarded. */
-export const HAND_LIMIT = 10;
-/** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
-export const GLOWWATER_DRAW = 10;
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -644,45 +541,13 @@ export function exhaustPick(cards: CardModel[], sandpit = false): CardModel | nu
   return best ?? (sandpit ? cards.find((card) => card.cardId === "FRANTIC_ESCAPE") ?? null : null);
 }
 
-/** Gambler's Brew: hand cards past this many, the weakest by thisTurnScore, are the ones it may discard. */
-const GAMBLE_MAX_CARDS = 6;
-
-/**
- * The ways to drink Gambler's Brew now: one per non-empty set of hand cards to discard (the weakest
- * GAMBLE_MAX_CARDS by thisTurnScore when the hand is bigger), each as its own potion play.
- */
-function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
-  const enemies = Math.max(1, sim.enemies.filter((enemy) => enemy.alive).length);
-  const cards = sim.hand
-    .filter((entry) => entry.type !== "Potion")
-    .sort((a, b) => thisTurnScore(a, 0, enemies) - thisTurnScore(b, 0, enemies))
-    .slice(0, GAMBLE_MAX_CARDS);
-  const ways: CardModel[] = [];
-  for (let mask = 1; mask < 1 << cards.length; mask += 1) ways.push({ ...brew, discards: cards.filter((_, bit) => mask & (1 << bit)).map((entry) => entry.key) });
-  return ways;
-}
-
-/** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS; map.ts HEAL_POTION_SHARE). */
-export const BLOOD_POTION_HEAL = 0.2;
-/**
- * Regen's heals after this turn ((n-1) + ... + 1 for Regen n), counted at this share: the fight may end
- * first, and HP near max takes less.
- */
-export const REGEN_LATER_SHARE = 0.5;
-
 /**
  * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
  * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
  * nothing and gives 2 energy for a Defend).
  */
-function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
-  if (amount <= 0) return false;
-  // Buffer prevents the loss (and uses a stack), before anything that triggers on losing HP.
-  if (sim.buffer > 0) {
-    sim.buffer -= 1;
-    sim.bufferSpent += 1;
-    return false;
-  }
+function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
+  if (amount <= 0) return;
   if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
   sim.hpLostThisTurn = true;
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
@@ -697,14 +562,13 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
       crabRage(sim);
     }
   }
-  return true;
 }
 
 /**
  * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
  * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
  */
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise" | "shrink", amount: number): number {
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise", amount: number): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
@@ -714,9 +578,6 @@ function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" 
   else if (kind === "weak") {
     if (enemy.weak === 0) enemy.newlyWeak = true;
     enemy.weak += amount;
-  } else if (kind === "shrink") {
-    if ((enemy.shrink ?? 0) === 0) enemy.newlyShrunk = true;
-    enemy.shrink = (enemy.shrink ?? 0) + amount;
   } else if (kind === "tempStrengthLoss") enemy.tempStrengthLoss = (enemy.tempStrengthLoss ?? 0) + amount;
   else enemy.demise = (enemy.demise ?? 0) + amount;
   return amount;
@@ -794,12 +655,6 @@ export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   enemy.alive = false;
-  // Ravenous: the others eat the dead one (stunned this turn, Strength for good).
-  for (const other of sim.enemies) {
-    if (other === enemy || !other.alive || !(other.ravenous ?? 0)) continue;
-    other.stunned = true;
-    other.strengthDelta += other.ravenous ?? 0;
-  }
   // A hit that lands on every enemy at once kills both crabs together (no rage in between).
   if (sim.sweeping) sim.pendingRage = true;
   else crabRage(sim);
@@ -843,9 +698,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
   const next = clone(sim);
-  // A Gambler's Brew way is a copy of the belt's potion: the potion leaves the hand by its key.
-  next.hand = sim.hand.filter((entry) => entry !== card && !(card.discards && entry.key === card.key));
-  const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  next.hand = sim.hand.filter((entry) => entry !== card);
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
   if (card.soulbound) next.hand = next.hand.filter((entry) => !entry.soulbound);
@@ -865,11 +718,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
-  // Tender: this card is done at full Strength/Dexterity; every later one this turn is N lower.
-  if (card.type !== "Potion" && (player.tender ?? 0) > 0) {
-    next.strength -= player.tender ?? 0;
-    next.tempDex -= player.tender ?? 0;
-  }
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
@@ -891,7 +739,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   const exhaustedBefore = next.exhausted.length;
-  let drawnBurned = 0;
   // Second Wind (LQLZ F21 T4: unmodelled, it exhausted Inferno and Forgotten Ritual; a replay ranked an
   // impossible line first): every non-Attack card in hand goes, Block for each.
   if (card.special === "second_wind") {
@@ -899,7 +746,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.exhausted = [...next.exhausted, ...taken];
     next.hand = next.hand.filter((entry) => !taken.includes(entry));
     next.held = next.held.filter((entry) => !taken.includes(entry));
-    if (!next.noBlock && taken.length > 0) gainBlock(next, Math.max(0, card.block + next.tempDex) * taken.length, player);
+    if (!next.noBlock && taken.length > 0) gainBlock(next, (card.block + next.tempDex) * taken.length, player);
   }
   if (card.special === "ashwater") {
     const taken = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion" && (entry.cardId === "HOWL_FROM_BEYOND" || isJunk(entry)));
@@ -911,10 +758,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // The random pick costs the average card left (K8RK F17 T2: plain True Grit took Bludgeon, the plan's
     // 32-damage race card; shown as "hp_lost 1").
     const pool = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion");
-    if (pool.length > 0) {
-      next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
-      next.exhaustedCount += 1;
-    }
+    if (pool.length > 0) next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
     // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
     // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
     next.held = [...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
@@ -927,31 +771,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.held = next.held.filter((entry) => entry !== pick);
       next.exhausted = [...next.exhausted, pick];
     }
-  } else if (card.special === "glowwater") {
-    // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 The hand (and any Status/Curse held) is exhausted, then the
-    // draw fills the hand from the pile (logs: 5 cards -> 10 drawn, F17 T1; 3 -> 10, F25 T4), each card
-    // the pile's expected one (card-model expectedDraw), as Gambler's Brew prices its draws.
-    drawnBurned = next.drawnInHand;
-    next.drawnInHand = 0;
-    next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
-    next.hand = next.hand.filter((entry) => entry.type === "Potion");
-    next.held = [];
-    const draw = card.generates;
-    if (draw) {
-      const count = Math.max(0, Math.min(GLOWWATER_DRAW, HAND_LIMIT, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn));
-      next.hand = [...next.hand, ...Array.from({ length: count }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}`, cardId: `${draw.cardId}:${i}` }))];
-      next.cardsDrawn += count;
-    }
   } else if (EXHAUST_HAND.has(card.cardId)) {
-    // The cards drawn earlier this turn go too (their values stay as draws: what they were is unknown).
-    drawnBurned = next.drawnInHand;
-    next.drawnInHand = 0;
     next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
   }
-  const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
-  next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
+  const burned = next.exhausted.length - exhaustedBefore;
   // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
     const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
@@ -972,8 +797,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(card.discards ? { discards: discarded } : {}),
-      ...(card.pileSource ? { pileSource: card.pileSource } : {}),
     },
   ];
   return next;
@@ -984,7 +807,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
 
-  if (card.hpLoss > 0 && loseHp(next, card.hpLoss, player)) {
+  if (card.hpLoss > 0) {
+    loseHp(next, card.hpLoss, player);
     if (next.rupture > 0) {
       next.strength += next.rupture;
       next.permStrength += next.rupture;
@@ -993,8 +817,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
-  // Vital Spark: this turn's hits only.
-  if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.vitalSpark ?? 0) > 0) enemy.sparkBonus = (enemy.sparkBonus ?? 0) + (enemy.vitalSpark ?? 0);
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
@@ -1007,15 +829,11 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
     // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
     let shown = card.block;
-    // Evil Eye: double Block when a card was exhausted this turn, before this turn's decision or earlier
-    // in this line (Q97B F23 T3: doubled from the state flag only, so "True Grit, Evil Eye" read 8, and a
-    // line exhausting only after it was never told apart).
-    if (card.cardId === "EVIL_EYE" && next.exhaustedCount > 0) shown *= 2;
     if (card.type !== "Potion" && player.unmovableArmed) {
       if (next.unmovableSpent) shown = Math.floor(shown / 2);
       next.unmovableSpent = true;
     }
-    gainBlock(next, Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex)), player);
+    gainBlock(next, shown + (card.type === "Potion" ? 0 : next.tempDex), player);
   }
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
@@ -1025,45 +843,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (!next.noBlock) next.flat += DEX_LASTING_PER_BLOCK_CARD * next.hand.filter((entry) => entry.type !== "Potion" && entry.block > 0).length;
   }
   if (card.special === "triple_next_attack") next.gigantic += 1;
-  if (card.special === "clarity") next.flat += DRAW_VALUE * CLARITY_LATER_DRAWS;
-  if (card.special === "ritual") next.flat += RITUAL_VALUE;
-  // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
-  if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
-  // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
-  if (card.special === "regen" && (card.regen ?? 0) > 0) {
-    const amount = card.regen ?? 0;
-    next.regen += amount;
-    next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
-  }
-  if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
-  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
-  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
-  // Gambler's Brew: the hand cards this way of drinking it discards (gambleWays) are swapped for as many
-  // average draws from the pile (card-model expectedDraw).
-  if (card.special === "gamble") {
-    const discards = new Set(card.discards ?? []);
-    const draw = card.generates;
-    const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
-    next.hand = next.hand.filter((entry) => !discards.has(entry.key));
-    if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}`, cardId: `${draw.cardId}:${i}` }))];
-  } else if (card.special === "chaos" && card.generates) {
-    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card, at a
-    // random enemy (worst case: randomVictim). They leave the pile: later draws come from below them.
-    const top: CardModel = { ...card.generates, cost: 0, target: card.generates.damage !== null ? "random" : "self", validTargets: [] };
-    for (let played = 0; played < (card.playsTop ?? 0); played += 1) resolveEffects(next, top, null, player, 0);
-    next.pileDrawn += card.playsTop ?? 0;
-  } else if (card.generates && card.special !== "glowwater") next.hand = [...next.hand, card.generates];
-  // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
-  // upgraded numbers; each card's gain counts again for its later draws (BLESSING_LASTING).
-  if (card.special === "upgrade_hand") {
-    let gain = 0;
-    next.hand = next.hand.map((entry) => {
-      const upgraded = upgradeCard(entry);
-      if (upgraded !== entry) gain += Math.max(0, upgradeGain(entry, upgraded));
-      return upgraded;
-    });
-    next.flat += BLESSING_LASTING * gain;
-  }
   if (card.special === "free_card") {
     const pick = freeCardPick(next.hand);
     if (pick) {
@@ -1079,10 +858,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "triple_block") {
     next.blockGained += next.block * 2;
     next.block *= 3;
-  }
-  if (card.special === "double_block") {
-    next.blockGained += next.block;
-    next.block *= 2;
   }
 
   if (card.damage !== null || card.special === "whirlwind") {
@@ -1107,7 +882,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.cardId === "PACTS_END" && (player.exhaustPile ?? 0) + next.exhausted.length < PACTS_END_EXHAUST) perHit = 0;
     if (card.special === "whirlwind") hits = cost;
     // Fiend Fire: one hit per card it exhausts, i.e. the rest of the hand (exhausted after this).
-    if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length + next.drawnInHand;
+    if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
@@ -1136,11 +911,11 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
         }
       }
     } else if (card.target === "random") {
-      // Worst case for us: each hit lands where it kills least (randomVictim), so a line never counts
-      // on a random hit killing the enemy that would otherwise attack (H8LC F23 T5, S6AG F25 T6).
+      // Expected value: spread hits across the living enemies, lowest HP first (kills are what matter).
       for (let hit = 0; hit < hits; hit += 1) {
-        const victim = randomVictim(next);
-        if (!victim) break;
+        const living = next.enemies.filter((enemy) => enemy.alive);
+        if (living.length === 0) break;
+        const victim = living[hit % living.length]!;
         hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
       }
     } else if (targetEnemy) {
@@ -1169,7 +944,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
     applyDebuff(enemy, "tempStrengthLoss", card.enemyTempStrengthLoss ?? 0);
     applyDebuff(enemy, "demise", card.demise ?? 0);
-    applyDebuff(enemy, "shrink", card.shrink ?? 0);
   }
 
   if (card.strength > 0) {
@@ -1187,10 +961,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.type === "Potion") next.potionCost += -card.flatValue;
   else next.flat += card.flatValue;
   if (card.draw > 0) {
-    // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
-    const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
-    const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
-    next.drawnInHand += Math.min(card.draw, room, handSpace);
     next.cardsDrawn += card.draw;
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
@@ -1201,25 +971,10 @@ function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
   sim.block += amount;
   sim.blockGained += amount;
   if ((player.juggernaut ?? 0) > 0) {
-    // Random enemy, worst case (S6AG F25 T6: the 8 was counted on the 6-HP Parafright, predicted -2;
-    // it hit the Obscura and the Parafright's Slam 16 killed us).
-    const victim = randomVictim(sim);
-    if (victim) hitEnemyRaw(sim, victim, player.juggernaut ?? 0);
+    // Random enemy: expected value, lowest HP first (kills matter most).
+    const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
+    if (living[0]) hitEnemyRaw(sim, living[0], player.juggernaut ?? 0);
   }
-}
-
-/**
- * Where a random hit is assumed to land: the living enemy with the most HP + block left, i.e. the one
- * it is least likely to kill. Hit by hit this is the adversary's split, so a kill is counted only when
- * every split gives it (3 hits of 7 on two 10-HP enemies still kill one). The damage itself counts.
- */
-function randomVictim(sim: Pick<Sim, "enemies">): Sim["enemies"][number] | undefined {
-  let best: Sim["enemies"][number] | undefined;
-  for (const enemy of sim.enemies) {
-    if (!enemy.alive) continue;
-    if (!best || enemy.hp + enemy.block > best.hp + best.block) best = enemy;
-  }
-  return best;
 }
 
 /** Non-attack damage (Juggernaut): ignores Vulnerable/Weak, still hits block. */
@@ -1265,7 +1020,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
   const player = input.player;
   const hits: IncomingHit[] = [];
   for (const enemy of sim.enemies) {
-    if (!enemy.alive || enemy.stunned) continue;
+    if (!enemy.alive) continue;
     const start = input.enemies.find((entry) => entry.index === enemy.index);
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
@@ -1281,10 +1036,9 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         const shown = player.surrounded ? backAttack(attack.damage, enemy.index, player.facing ?? null, sim.facing) : attack.damage;
         // The shown intent already includes our Vulnerable (MAWLER 14 -> 21, SOUL_FYSH 16 -> 24 in
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
-        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0) + (enemy.sparkBonus ?? 0)) * (player.vulnerable ? 1.5 : 1);
+        const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
-        if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible || sim.intangible) amount = Math.min(amount, 1);
         hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
@@ -1293,92 +1047,6 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     }
   }
   return hits;
-}
-
-/**
- * Imbalanced enemies stunned by this line: alive, attacking this turn, and every one of their hits met
- * by block left in the attack order (Buffer's negated hits count as blocked: the biggest ones).
- */
-function imbalanceStuns(sim: Sim, hits: IncomingHit[], block: number, buffer: number): Sim["enemies"] {
-  const negated = new Set(hits.map((hit, index) => ({ hit, index })).sort((a, b) => b.hit.amount - a.hit.amount).slice(0, buffer).map((entry) => entry.index));
-  const unblocked = new Set<number>();
-  let pool = block;
-  hits.forEach((hit, index) => {
-    if (negated.has(index)) return;
-    if (hit.amount > pool) unblocked.add(hit.enemy);
-    pool = Math.max(0, pool - hit.amount);
-  });
-  return sim.enemies.filter((enemy) => enemy.alive && (enemy.imbalanced ?? 0) > 0 && hits.some((hit) => hit.enemy === enemy.index) && !unblocked.has(enemy.index));
-}
-
-/**
- * HP lost to damage in order (`amounts`, each meeting the block left first) with `buffer` stacks up:
- * each stack prevents the next amount that would take HP.
- */
-export function bufferedLoss(amounts: number[], block: number, buffer: number): number {
-  return bufferedHits(amounts, block, buffer).through;
-}
-
-/** bufferedLoss with the stacks still up after the hits (Buffer lasts until used). */
-export function bufferedHits(amounts: number[], block: number, buffer: number): { through: number; stacksLeft: number } {
-  let pool = block;
-  let stacks = buffer;
-  let through = 0;
-  for (const amount of amounts) {
-    if (amount <= 0) continue;
-    const absorbed = Math.min(pool, amount);
-    pool -= absorbed;
-    const rest = amount - absorbed;
-    if (rest <= 0) continue;
-    if (stacks > 0) {
-      stacks -= 1;
-      continue;
-    }
-    through += rest;
-  }
-  return { through, stacksLeft: stacks };
-}
-
-/**
- * HP a Demise put on this turn takes from each living enemy over its next DEMISE_TURNS turns (at most
- * its HP): the damage a Powdered Demise line deals later, by enemy index. None on a minion while a
- * non-minion lives (it leaves when they die) nor on an illusion (99X7 F17: T5-T7 drunk on a Kin
- * Follower; a T1 drink on the Priest would have ticked ~54 by T7).
- */
-const NO_DEMISE: Map<number, number> = new Map();
-
-export function demiseLater(enemies: Sim["enemies"], input: SolverInput): Map<number, number> {
-  if (!enemies.some((enemy) => (enemy.demise ?? 0) > 0)) return NO_DEMISE;
-  const out = new Map<number, number>();
-  const leaderAlive = enemies.some((enemy) => enemy.alive && !enemy.minion);
-  for (const enemy of enemies) {
-    if (!enemy.alive || enemy.illusion || (enemy.minion && leaderAlive)) continue;
-    const start = input.enemies.find((entry) => entry.index === enemy.index);
-    const added = Math.max(0, (enemy.demise ?? 0) - (start?.demise ?? 0));
-    if (added > 0) out.set(enemy.index, Math.min(enemy.hp, added * DEMISE_TURNS));
-  }
-  return out;
-}
-
-/** HP over next turn's hits (a woken sleeper's included) below which a line risks death. */
-export const WAKE_MARGIN = 3;
-/** Score cost of a line that risks death to a sleeper it wakes, per point of its first hit (HP weight). */
-export const WAKE_RISK_WEIGHT = 2;
-
-/**
- * First hits next enemy turn of the sleepers this line wakes: Slumber taken to 1 or below from 2+ (it
- * ticks to 0 on its own turn and attacks the next), Asleep 2+ woken (stunned now, attacks next).
- */
-export function wokenHits(living: Sim["enemies"], input: SolverInput): number {
-  let total = 0;
-  for (const enemy of living) {
-    const start = input.enemies.find((entry) => entry.index === enemy.index);
-    if (!start || start.attacks.length > 0) continue;
-    const slumberWoken = (start.slumber ?? 0) >= 2 && (enemy.slumber ?? 0) <= 1;
-    const asleepWoken = (start.asleep ?? 0) >= 2 && (enemy.asleep ?? 0) === 0;
-    if (slumberWoken || asleepWoken) total += start.wakeHit ?? sleepTurnDamage(start);
-  }
-  return total;
 }
 
 /** Damage this turn that is worth waking a sleeper for (fraction of its HP). */
@@ -1401,34 +1069,8 @@ export const WOUND_COST = 2;
 export const GAMBIT_COST = 60;
 /** Cards Pact's End needs in the exhaust pile. */
 export const PACTS_END_EXHAUST = 3;
-/** HP weight per point of next turn's lethal hit a drunk block potion would have covered. */
-export const KEPT_BLOCK_POTION_WEIGHT = 2;
-/** Floor of what one more Sandpit turn is worth in damage (sandpitTurnValue raises it when behind). */
+/** Damage one more Sandpit turn is worth (the deck's rough output per turn into The Insatiable). */
 export const SANDPIT_TURN_DAMAGE = 20;
-
-/**
- * What one more Sandpit turn (a Frantic Escape) is worth in damage, and whether the race is behind:
- * the Sandpit's turns left (this one included) are no more than the turns the kill needs.
- * A turn is worth what the deck realistically deals in one (this fight's measured rate, else the
- * boss-clock estimate; the clock's need only without either), floor SANDPIT_TURN_DAMAGE; while not
- * behind the floor alone (the kill fits the pit). 9V09: the flat 20 ranked "Escape, Escape" third
- * behind a 54-damage line at pit 4, the boss needing ~49 a turn. 9LSQ F33: priced at the clock's 49
- * against a deck dealing ~24, T3 swapped a Strike for a second Escape and dealt 0.
- * `useful`: Escapes that buy a turn we live to use, the HP clock (turns our HP lasts at the expected
- * loss a turn) past the pit; more Escapes than that buy nothing (9LSQ: pit held at 4-6, dead of HP on T7).
- */
-export function sandpitTurnValue(ctx: { bossHpLeft: number; sandpit: number; deckPerTurn?: number | null; clockPerTurn?: number | null; hpTurns?: number | null }): {
-  value: number;
-  behind: boolean;
-  turnsNeeded: number;
-  useful: number;
-} {
-  const perTurn = Math.max(SANDPIT_TURN_DAMAGE, ctx.deckPerTurn ?? ctx.clockPerTurn ?? 0);
-  const turnsNeeded = Math.ceil(ctx.bossHpLeft / perTurn);
-  const behind = ctx.sandpit > 0 && ctx.sandpit <= turnsNeeded;
-  const useful = ctx.hpTurns === undefined || ctx.hpTurns === null || !Number.isFinite(ctx.hpTurns) ? Infinity : Math.max(0, Math.floor(ctx.hpTurns) - ctx.sandpit);
-  return { value: behind ? perTurn : SANDPIT_TURN_DAMAGE, behind, turnsNeeded, useful };
-}
 /** A Dazed added to the draw pile (Personal Hive): a dead draw that exhausts itself, cheaper than a Wound. */
 export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
@@ -1452,32 +1094,6 @@ export const DEX_POTION = 2;
  * how block-heavy the deck is. No block card in hand, no value (KFP1 T3: drunk with only Attacks).
  */
 export const DEX_LASTING_PER_BLOCK_CARD = 1.5;
-
-/**
- * Blessing of the Forge: lasting value per point an upgrade adds to one play (before fight length): the
- * upgraded cards come back in later hands of the fight, about once more each on average.
- */
-export const BLESSING_LASTING = 0.5;
-
-/** Clarity: the extra card drawn at the start of each of the next 3 turns, lasting value at DRAW_VALUE each. */
-export const CLARITY_LATER_DRAWS = 3;
-/**
- * Mazaleth's Gift (Ritual 1): lasting value, a third of Demon Form's POWER_VALUE 30 (3 Strength a turn
- * vs 1), before the fight-length and potion shares.
- */
-export const RITUAL_VALUE = 10;
-
-/**
- * Plating's lasting value per stack (Heart of Iron: 7), at Stone Armor's rate: POWER_VALUE 14 for its
- * 4 Plating (card-model.ts), block at the end of each later turn, one less each turn.
- */
-export const PLATING_LASTING = 14 / 4;
-/** Snecko Oil: a hand card's expected cost this turn (0-3 at random). */
-export const SNECKO_COST = 1.5;
-
-/** A Buffer stack carried into next turn: this share of next turn's expected hit, at most BUFFER_CARRY_CAP. */
-export const BUFFER_CARRY_SHARE = 0.5;
-export const BUFFER_CARRY_CAP = 20;
 
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;
@@ -1506,10 +1122,6 @@ export function weightsFor(input: SolverInput): Weights {
   // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
   // the same HP; Dismantle x2 on T7 would have killed the beetle).
   const vulnerable = 2.5 + Math.min(4, 1.5 * (input.vulnerablePayoffs ?? 0));
-  if (input.intentScale) {
-    hp *= input.intentScale.hp;
-    damage *= input.intentScale.damage;
-  }
   return { hp, damage, killBase: 6, killPerIncoming: 1.2, vulnerable, weak: 1.5, strength: 5 };
 }
 
@@ -1551,7 +1163,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     }
   }
   const living = sim.enemies.filter((enemy) => enemy.alive);
-  const demiseTicks = demiseLater(sim.enemies, input);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
@@ -1571,7 +1182,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const heldPenalty =
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
   const hits = winsFight ? [] : incomingHits(sim, input);
-  const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
+  let incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
+  if (sim.buffer > 0 && !winsFight) {
+    // Buffer negates whole hits: approximate by removing the biggest ones.
+    const biggest = hits.map((hit) => hit.amount).sort((a, b) => b - a);
+    incomingRaw = Math.max(0, incomingRaw - biggest.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
+  }
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
   // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
@@ -1579,18 +1195,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0) + platingNow;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
-  // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
-  // in order (a held Burn at the end of our turn first).
-  const buffered = sim.buffer > 0 && !winsFight ? bufferedHits([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : null;
-  const incomingAfterBlock = buffered ? buffered.through : Math.max(0, incomingRaw - blockLeft);
-  // Stacks gained this turn and still up after the enemy turn carry over (Buffer lasts until used): worth
-  // part of next turn's expected hit each.
-  const bufferCarried = buffered ? Math.max(0, buffered.stacksLeft - (input.player.buffer ?? 0)) : 0;
-  // Imbalanced: an enemy whose every hit meets block (in attack order) is stunned for its next move.
-  const stunned = winsFight ? [] : imbalanceStuns(sim, hits, blockLeft, sim.buffer);
-  // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
-  const regenHeal = winsFight ? 0 : Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp));
-  const selfLoss = input.player.hp - sim.hp - regenHeal;
+  const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
+  const selfLoss = input.player.hp - sim.hp;
   // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
   // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
   // part of this turn's HP loss, whether the Mantle is already up or played now (Y83U F30 T3: a
@@ -1614,10 +1220,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
   const allSegmentsDead = sim.enemies.every((enemy) => !enemy.reattach || !enemy.alive);
-  // Enemies that must die together, while two or more of them live at the start of the turn: reattaching
-  // segments, Kaiser Crab claws.
-  const togetherStart = input.enemies.filter((start) => start.hp > 0 && (start.reattach || start.crabRage));
-  const together = new Set(togetherStart.length > 1 ? togetherStart.map((start) => start.index) : []);
   // Crab Rage: one part dying alone only enrages the other; it is no kill until both are dead.
   const crabs = input.enemies.filter((start) => start.crabRage).map((start) => start.index);
   const allCrabsDead = sim.enemies.every((enemy) => !crabs.includes(enemy.index) || !enemy.alive);
@@ -1632,23 +1234,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   );
   let score = 0;
   if (dies) score -= 100_000;
-  const stunSaved = stunned.reduce((sum, enemy) => sum + (enemy.imbalanced ?? 0), 0);
-  if (!dies) score += weights.hp * stunSaved;
-  // A block potion drunk now is gone for next turn: when next turn's expected hit reaches the HP this
-  // line leaves, the part of it the potion would have covered is counted (N95W F25 T4: 12 HP, Block
-  // Potion on an 8-damage Pulsate with Defend in hand and the energy for it; T5's Jab 19 met 5 block).
-  let potionShort = 0;
-  if (!winsFight && !dies && (input.nextIncoming ?? 0) > 0) {
-    const drunkBlock = sim.steps.reduce((sum, step) => {
-      const potion = input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId && card.type === "Potion");
-      return sum + (potion ? potion.block + (potion.plating ?? 0) : 0);
-    }, 0);
-    potionShort = Math.min(drunkBlock, Math.max(0, (input.nextIncoming ?? 0) - hpAfter + 1));
-    score -= weights.hp * KEPT_BLOCK_POTION_WEIGHT * potionShort;
-  }
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
-  if (bufferCarried > 0 && !dies) score += weights.hp * bufferCarried * BUFFER_CARRY_SHARE * Math.min(input.nextIncoming ?? 0, BUFFER_CARRY_CAP);
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
   // died at 32/512 HP with us).
@@ -1661,10 +1248,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // so the countdown outlasts any damage race.
   if (sandpitAfter === 1) score -= weights.hp * 15;
   // Each Frantic Escape is one more turn before the pit eats us: about a turn of damage against a
-  // 341 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
-  // Worth the deck's turn while behind (9V09: sandpitTurnValue, ~49 not 20).
-  // Escapes past the HP clock buy a pit turn we do not live to use (9LSQ F33).
-  if (!winsFight && sandpitAfter !== null) score += Math.min(sim.escapes, input.sandpitUsefulEscapes ?? Infinity) * weights.damage * Math.max(SANDPIT_TURN_DAMAGE, input.sandpitTurnDamage ?? 0);
+  // 321 HP boss (Y08T F33: Escapes held on T2 and T3 at pit 3-4, eaten at T5 with 48 HP, boss 216/321).
+  if (!winsFight && sandpitAfter !== null) score += sim.escapes * weights.damage * SANDPIT_TURN_DAMAGE;
   // An enraged crab hits every later turn with the extra Strength (the lasting-Strength line below
   // counts 3 per point; this adds about two more attacks' worth at HP weight).
   if (sim.enraged > 0 && !winsFight) score -= weights.hp * sim.enraged * CRAB_RAGE_STRENGTH * 2;
@@ -1740,11 +1325,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
     const dealt = Math.max(0, start.hp - Math.max(0, enemy.hp));
     if (enemy.illusion) return sum + dealt;
-    // Negative when the segment had less HP than it comes back with: killing it alone then costs the
-    // difference as well (4VC5 F24: a 7 HP Middle killed by Headbutt came back at 25, +18; Z7D7 F28
-    // T4: 6 HP killed by Anger, back at 25).
     if (enemy.reattach && !enemy.alive && !allSegmentsDead) {
-      const kept = start.hp - (enemy.reattachHp ?? start.hp);
+      const kept = Math.max(0, start.hp - (enemy.reattachHp ?? start.hp));
       return sum + Math.max(0, dealt - kept);
     }
     return sum;
@@ -1764,25 +1346,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   score += weights.damage * (sim.damageDealt - huskDamage - lostDamage - minionChip);
   // With several enemies, concentrated damage beats the same damage spread (GMT2 F39 T1: 26 split vs
   // 26 focused scored equal, the split left two cubes at 38 and 47 and none died on T2).
-  // Not among enemies that must die together (Decimillipede segments reattach, crab claws enrage): no
-  // one of them dies before the others, so the bonus goes to leveling them instead, the HP gap between
-  // the highest and lowest closed this turn (a segment killed alone counts at its reattach HP) (Z7D7
-  // F28: the fight plan said "spread AOE evenly so no segment dies alone", every line put all its
-  // damage into the Middle, 48 -> 0 by T4; it died alone and came back at 25).
   if (!winsFight && input.enemies.length > 1) {
-    const dealtTo = (enemy: EnemySim) => Math.max(0, input.enemies.find((start) => start.index === enemy.index)!.hp - Math.max(0, enemy.hp));
-    const rest = sim.enemies.filter((enemy) => !together.has(enemy.index));
-    score += weights.damage * CONCENTRATION_BONUS * Math.max(0, ...rest.map(dealtTo));
-    if (together.size > 1 && !allSegmentsDead) {
-      const gap = (hps: number[]) => (hps.length > 1 ? Math.max(...hps) - Math.min(...hps) : 0);
-      const before = gap(input.enemies.filter((start) => together.has(start.index)).map((start) => start.hp));
-      const after = gap(
-        sim.enemies
-          .filter((enemy) => together.has(enemy.index))
-          .map((enemy) => (enemy.alive ? enemy.hp : enemy.reattach ? (enemy.reattachHp ?? 0) : 0)),
-      );
-      score += weights.damage * CONCENTRATION_BONUS * (before - after);
-    }
+    const perEnemy = sim.enemies.map((enemy) => Math.max(0, input.enemies.find((start) => start.index === enemy.index)!.hp - Math.max(0, enemy.hp)));
+    score += weights.damage * CONCENTRATION_BONUS * Math.max(0, ...perEnemy);
   }
   if (input.focusIndex !== undefined && !winsFight) {
     const focus = sim.enemies.find((enemy) => enemy.index === input.focusIndex);
@@ -1801,10 +1367,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage into an enemy that scales every turn is worth more: blocking while it grows lost run 7.
   for (const enemy of sim.enemies) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
-    // Not an illusion: its HP comes back (a Parafright buffed by the Obscura has Strength 5+). Nor one
-    // of a group that dies together: hitting the growing one first kills nothing sooner (Z7D7 F28: the
-    // Middle's Strength 2 drew every line's damage).
-    if (start.scaling && !start.illusion && !together.has(enemy.index)) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
+    // Not an illusion: its HP comes back (a Parafright buffed by the Obscura has Strength 5+).
+    if (start.scaling && !start.illusion) score += weights.damage * 0.6 * Math.max(0, start.hp - Math.max(0, enemy.hp));
   }
   for (const enemy of kills) {
     const start = input.enemies.find((entry) => entry.index === enemy.index)!;
@@ -1822,10 +1386,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     sleepCost += weights.hp * enemy.sleepLost * sleepTurnDamage(start);
   }
   score -= sleepCost;
-  // A sleeper woken into next enemy turn: its first hit joins next turn's danger. A line left within
-  // NEXT_HIT_MARGIN of that hit risks death (FH3M F30, RC9A F27).
-  const wakeHit = winsFight ? 0 : wokenHits(living, input);
-  if (wakeHit > 0 && hpAfter <= (input.nextIncoming ?? 0) + wakeHit + WAKE_MARGIN) score -= weights.hp * wakeHit * WAKE_RISK_WEIGHT;
   // Debuffs only matter on enemies that survive the turn.
   let enrageCost = 0;
   for (const enemy of living) {
@@ -1833,19 +1393,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const addedVulnerable = Math.max(0, enemy.vulnerable - start.vulnerable);
     const addedWeak = Math.max(0, enemy.weak - start.weak);
     score += weights.vulnerable * Math.min(addedVulnerable, 3);
-    // Demise: HP lost at the end of each of its turns, about three of them counted (demiseLater: nothing
-    // on a minion while its leader lives, it leaves with the leader; more on the kill-priority enemy and
-    // on one that scales, like damage into them).
-    const demise = demiseTicks.get(enemy.index) ?? 0;
-    if (demise > 0) {
-      const focus = input.focusIndex === enemy.index && !enemy.crabRage && !enemy.reattach ? FOCUS_BONUS : 0;
-      const grows = start.scaling && !start.illusion && !together.has(enemy.index) ? 0.6 : 0;
-      score += weights.damage * demise * (1 + focus + grows);
-    }
+    // Demise: HP lost at the end of each of its turns, about three of them counted.
+    const addedDemise = Math.max(0, (enemy.demise ?? 0) - (start.demise ?? 0));
+    if (addedDemise > 0) score += weights.damage * Math.min(enemy.hp, addedDemise * DEMISE_TURNS);
     if (start.attacks.length > 0 || enemy.weak > 0) score += weights.weak * Math.min(addedWeak, 3);
-    // Shrink's later turns (this turn's cut is in the incoming hits): like Weak's, a little more (30% vs 25%).
-    const addedShrink = Math.max(0, (enemy.shrink ?? 0) - (start.shrink ?? 0));
-    if (addedShrink > 0) score += weights.weak * 1.2 * Math.min(addedShrink - 1, 3);
     // Fight Me: the enemy's Strength is a lasting cost. Enrage's is weighed by the attacks it raises.
     const strengthCost = enemy.strengthDelta * ((enemy.enrage ?? 0) > 0 ? Math.max(3, weights.hp * ENRAGE_FUTURE_HITS) : 3);
     score -= strengthCost;
@@ -1856,7 +1407,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // less the later it comes.
     const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, input, weights) * fightLength * earliness * (input.intentScale?.lasting ?? 1);
+    score += lastingValue(sim, input, weights) * fightLength * earliness;
     score += drawScoreAt(sim.draws, sim.energy);
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
     score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
@@ -1898,14 +1449,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       unknownCards: sim.unknown,
       potionCost: sim.potionCost,
       sandpitAfter,
-      ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunSaved } : {}),
-      ...(potionShort > 0 ? { blockPotionShort: potionShort } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,
-      ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
-      ...(demiseTicks.size > 0 && !winsFight ? { demiseLater: [...demiseTicks.entries()].map(([index, damage]) => ({ index, name: sim.enemies.find((enemy) => enemy.index === index)!.name, damage, perTurn: Math.max(0, (sim.enemies.find((enemy) => enemy.index === index)!.demise ?? 0) - (input.enemies.find((entry) => entry.index === index)?.demise ?? 0)) })) } : {}),
-      ...(wakeHit > 0 ? { wakeHit } : {}),
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
@@ -1915,8 +1461,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}/${enemy.shrink ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.regen}`;
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}`).join("|");
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}`;
 }
 
 export interface SolveResult {
@@ -2014,9 +1560,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     potionFlat: 0,
     tempDex: 0,
     intangible: false,
-    buffer: input.player.buffer ?? 0,
-    bufferSpent: 0,
-    duplicate: input.player.duplicate ?? 0,
+    buffer: 0,
+    duplicate: 0,
     retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
@@ -2025,8 +1570,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     played: input.cardsPlayedThisTurn ?? 0,
     draws: [],
     cardsDrawn: 0,
-    drawnInHand: 0,
-    regen: input.player.regen ?? 0,
     unknown: [],
     feedKills: 0,
     dazedAdded: 0,
@@ -2043,7 +1586,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
     exhausted: [],
-    exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
     vigor: input.player.vigor ?? 0,
@@ -2085,12 +1627,12 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
-    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : [entry]))) {
+    for (const card of sim.hand) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {
-        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}`;
+        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}`;
         if (tried.has(dedupe)) continue;
         tried.add(dedupe);
         const next = play(sim, card, target, input.player);
@@ -2109,23 +1651,8 @@ export function solveTurn(input: SolverInput): SolveResult {
   return { plans, nodes, truncated };
 }
 
-/** This turn's damage plus what a Demise put on now deals over the next turns (demiseLater). */
-export function totalDamage(o: Pick<Outcome, "damageDealt" | "demiseLater">): number {
-  return o.damageDealt + (o.demiseLater ?? []).reduce((sum, entry) => sum + entry.damage, 0);
-}
-
-/** Outcome vectors, computed once per outcome (dominance checks compare every pair of plans). */
-const VECTORS = new WeakMap<Outcome, number[]>();
-
 function vector(plan: Plan): number[] {
-  const cached = VECTORS.get(plan.outcome);
-  if (cached) return cached;
-  const computed = outcomeVector(plan.outcome);
-  VECTORS.set(plan.outcome, computed);
-  return computed;
-}
-
-function outcomeVector(o: Outcome): number[] {
+  const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
   // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
@@ -2135,7 +1662,7 @@ function outcomeVector(o: Outcome): number[] {
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, totalDamage(o), -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -2159,17 +1686,13 @@ export function dominates(a: Plan, b: Plan): boolean {
 export function distinctPlans(plans: Plan[], limit: number): Plan[] {
   const front = plans.filter((plan) => !plans.some((other) => other !== plan && dominates(other, plan)));
   const picked: Plan[] = [];
-  const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
   for (const plan of front) {
     if (picked.length >= limit) break;
-    // Drinking a potion or keeping it is a different choice, whatever the numbers (N7KR F8 T1: with a
-    // held potion's reserve cost the Taunt line ranked first and hid the Dexterity Potion line, 2 HP apart).
     const similar = picked.some(
       (other) =>
-        drinks(other) === drinks(plan) &&
         other.outcome.winsFight === plan.outcome.winsFight &&
         Math.abs(other.outcome.hpLoss - plan.outcome.hpLoss) <= 2 &&
-        Math.abs(totalDamage(other.outcome) - totalDamage(plan.outcome)) <= 3 &&
+        Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter,
@@ -2178,6 +1701,7 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
   }
   // Potions are optional: when every pick drinks one, the best line that drinks none is shown too
   // (5FMU F15: all four hallway options carried the Strength Potion, so "keep it" was never offered).
+  const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
   if (limit >= 2 && picked.length > 0 && picked.every(drinks)) {
     const dry = plans.filter((plan) => !drinks(plan));
     const keep = dry.find((plan) => !dry.some((other) => other !== plan && dominates(other, plan)));

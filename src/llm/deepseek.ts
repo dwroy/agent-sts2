@@ -119,22 +119,14 @@ export class DeepSeekClient implements Escalator {
     payload: Record<string, JsonValue>,
     label: string,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
-    const user = JSON.stringify(payload);
-    let done = await this.complete(user, label);
-    let json = parseObject(done.content);
-    // One retry with a short follow-up (4 fight plans lost to non-JSON: H8LC F13, 5JU3 F4, X8R8 F5, NJSZ
-    // F31; the last two began as valid `{"objective":…` and look cut off). The first reply stays in the
-    // conversation so the model sees what it sent.
-    if (json === null) {
-      const first = done;
-      done = await this.complete(user, label, [
-        { role: "assistant", content: first.content },
-        { role: "user", content: JSON_ONLY_RETRY },
-      ]);
-      done = { ...done, latencyMs: first.latencyMs + done.latencyMs, meta: { ...done.meta, latencyMs: first.latencyMs + done.latencyMs } };
-      json = parseObject(done.content);
-      if (json === null) throw new Error(`DeepSeek returned non-JSON twice: ${first.content.slice(0, 80)} | ${done.content.slice(0, 80)}`);
+    const done = await this.complete(JSON.stringify(payload), label);
+    let json: Record<string, unknown>;
+    try {
+      json = JSON.parse(done.content) as Record<string, unknown>;
+    } catch {
+      throw new Error(`DeepSeek returned non-JSON: ${done.content.slice(0, 120)}`);
     }
+    if (typeof json !== "object" || json === null || Array.isArray(json)) throw new Error("DeepSeek returned a non-object");
     const memory = payload["memory"];
     this.logReasoning(label, done.effort, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", done.reasoning, done.latencyMs, memory, json);
     return { json, meta: done.meta };
@@ -143,7 +135,6 @@ export class DeepSeekClient implements Escalator {
   private async complete(
     user: string,
     label: string,
-    followUp: { role: "assistant" | "user"; content: string }[] = [],
   ): Promise<{ content: string; reasoning: string; effort: string; latencyMs: number; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
     const started = Date.now();
     const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
@@ -163,7 +154,6 @@ export class DeepSeekClient implements Escalator {
           messages: [
             { role: "system", content: this.system },
             { role: "user", content: user },
-            ...followUp,
           ],
         }),
         signal: controller.signal,
@@ -212,19 +202,6 @@ export class DeepSeekClient implements Escalator {
     } catch {
       // logging must never break play
     }
-  }
-}
-
-/** The follow-up sent once when a JSON task's reply does not parse. */
-export const JSON_ONLY_RETRY = "Your reply was not a valid JSON object (not parseable, or cut off). Reply again with the complete JSON object only: no text before or after it, keep every string short.";
-
-/** The reply as a JSON object, or null when it does not parse to one. */
-function parseObject(content: string): Record<string, unknown> | null {
-  try {
-    const value = JSON.parse(content) as unknown;
-    return typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
-  } catch {
-    return null;
   }
 }
 

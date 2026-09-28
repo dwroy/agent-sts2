@@ -5,18 +5,15 @@
  * each question local and avoids multi-step plans, which Jev is documented to handle poorly.
  */
 
-import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
-import { currentRunPlan } from "../strategy/run-plan.js";
-import { guidanceFor } from "../strategy/intent.js";
+import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { RUN_PLAN_WANT_BONUS } from "../strategy/run-plan.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
-import { rewardCardValuer } from "./reward.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
-import { exhaustPileSize } from "./combat-plan.js";
+import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -38,21 +35,6 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Discard/replace any number" (Gambler's Brew, min 0): confirming at once threw the potion away
   // (1ZQJ T4: "selected 0/0 required"). Code picks the dead cards one by one, then confirms.
   if (kind === "combat_hand_select" && min === 0 && /弃|替换|discard|replace/i.test(prompt)) {
-    // The discards the combat plan drank it for (turn-solver gambleWays), while they are in hand.
-    const planned = env.screenMemory.gambleDiscards;
-    if (planned && planned.turn === state.turn) {
-      const cards = asArray(selection["cards"]).map(asRecord);
-      const left = [...planned.cardIds];
-      for (const card of cards.filter((entry) => bool(entry["selected"]))) {
-        const at = left.indexOf(str(card["card_id"]));
-        if (at >= 0) left.splice(at, 1);
-      }
-      const next = cards.find((card) => !bool(card["selected"]) && left.includes(str(card["card_id"])));
-      if (next && selected < max) {
-        return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: numOrNull(next["index"]) ?? 0 }, rationale: `code: discard ${str(next["name"], str(next["card_id"]))} (the combat plan's Gambler's Brew discard)` };
-      }
-      if (canConfirm && selected > 0) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}: the combat plan's discards` };
-    }
     const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
     if (pick && selected < max) {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
@@ -87,7 +69,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       const incoming = incomingDamage(combat);
       const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
       const best = offered
-        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score)[0];
       if (best) {
@@ -126,7 +108,6 @@ export function planSelection(env: DecisionEnv): Decision | null {
     (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
-  const board = forThisTurn ? thisTurnBoard(state.raw, knowledge) : {};
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
   // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
@@ -148,63 +129,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
     return null;
   }
 
-  // The card a pile-card potion's line counted (Droplet of Precognition, Liquid Memories): the plan was
-  // solved with it, so code takes it (11LC F17 T1: the line drank the Droplet for Bash+, the screen asked
-  // Jev blind and Jev took Setup Strike at 0.26; Vulnerable 3 lost on the act boss).
-  const plannedSteps = forThisTurn ? env.screenMemory.planBeforeSelection ?? [] : [];
-  const pileStep = plannedSteps.find((step) => step.pileSource);
-  if (pileStep?.pileSource) {
-    const source = pileStep.pileSource;
-    const match =
-      candidates.find((card) => str(card["card_id"]) === source.cardId && bool(card["upgraded"]) === source.upgraded) ??
-      candidates.find((card) => str(card["card_id"]) === source.cardId);
-    if (match) {
-      const potion = /^GEN:([A-Z_]+):/.exec(pileStep.cardId)?.[1] ?? "the potion";
-      return {
-        kind: "act",
-        label: "selection/plan-card",
-        intent: { action: "select_deck_card", option_index: numOrNull(match["index"]) ?? 0 },
-        rationale: `code: take ${str(match["name"], source.name)} (the combat plan drank ${knowledge.potion(potion)?.name ?? potion} for it: ${pileStep.name})`,
-      };
-    }
-  }
-  // A card potion's line (Attack/Skill/Power/Colorless Potion) counted a card of its type for this turn,
-  // not a named one: the offered card that does most this turn is marked as the plan's card for Jev.
-  const cardPotionStep = plannedSteps.find((step) => /^GEN:(ATTACK|SKILL|POWER|COLORLESS)_POTION:/.test(step.cardId));
-
-  // What the offered card does now: free this turn when a card potion adds it (「这张牌在本回合可以免费打出」,
-  // X-cost aside), and its draw worth nothing once no energy is left to play what it draws (W8JD F31 T2:
-  // at 0 energy Battle Trance's 3 draws scored 9 and was "code's pick" over a free Evil Eye's 8 block;
-  // the turn then ended with nothing played, -6 against the line's -0).
-  // Likewise Vulnerable with no attack left to play: one stack is gone before our next turn.
-  const energyNow = num(asRecord(combat["player"])["energy"]);
-  const freeAttackInHand = asArray(combat["hand"]).map(asRecord).some((card) => str(card["card_type"]) === "Attack" && card["playable"] !== false && num(card["energy_cost"]) === 0);
-  const nowCard = (model: CardModel): CardModel => {
-    const free = cardPotionStep !== undefined && !model.xCost;
-    const card = free ? { ...model, cost: 0 } : model;
-    const left = energyNow - (card.xCost ? energyNow : Math.max(0, card.cost));
-    if (left > 0) return card;
-    return { ...card, draw: 0, drawsUntil: false, ...(freeAttackInHand ? {} : { vulnerable: Math.max(0, card.vulnerable - 1) }) };
-  };
   const entries = deckEntries(state, knowledge);
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
-  // A card added to the deck outside combat (an event's "choose 1 of N"): the card reward's valuation
-  // against the real deck, not the empty-deck value (UP1C F3: Inflame lost to Shrug It Off by 2).
-  const deckAdd = isAdd && !state.in_combat ? rewardCardValuer(env) : null;
-  const outOfCombat = !state.in_combat;
-  const runPlan = currentRunPlan(env.screenMemory, state);
-  const planSelectionFacts = (cardId: string, addFacts: string[]): Record<string, JsonValue> => {
-    const facts = [...addFacts];
-    if (kind === "deck_card_select" && !isAdd && runPlan?.remove.includes(cardId)) facts.push("DeepSeek plan removes this card first");
-    return facts.length > 0 ? { deepseek_plan: facts.join("; ") } : {};
-  };
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const cardId = str(card["card_id"]);
     const info = knowledge.card(cardId);
-    const added = deckAdd ? deckAdd(cardId) : null;
     const name = str(card["name"], info?.name ?? cardId);
     return {
       key: `card${index}`,
@@ -212,35 +144,26 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(nowCard(modelHandCard(card, index, knowledge)), incoming, Math.max(1, livingEnemies), board)
-        : added
-          ? added.value
+        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
-          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card), exhaustCardOf(modelHandCard(card, index, knowledge))) - (bool(card["upgraded"]) ? 8 : 0) -
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0) -
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
-            (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
-      ...(outOfCombat && !added ? { why: selectionWhy(isUpgrade ? "deck_upgrade_select" : kind, cardId, str(card["card_type"], info?.type ?? ""), bool(card["upgraded"])) } : {}),
-      // DeepSeek's removal targets and wanted cards are facts on the option (they were +40 / +20).
+            (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
+            // RUN_PLAN=v1: the plan's removal targets go first; its wanted cards are what an add takes.
+            (kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? 40 : 0) +
+            (isAdd && env.screenMemory.runPlan?.want.includes(cardId) ? RUN_PLAN_WANT_BONUS : 0),
       summary: {
-        ...(added ? { code_value: added.value, why: added.reasons.join("; ") || null } : {}),
-        ...(outOfCombat ? planSelectionFacts(cardId, added?.plan ?? []) : {}),
         card: name,
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),
         cost: numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
-        ...(forThisTurn && cardPotionStep && !bool(card["costs_x"]) ? { cost_now: "0: a card potion's card is free this turn" } : {}),
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
       } satisfies JsonValue,
     };
   });
-
-  if (cardPotionStep && options.length > 0) {
-    const best = options.reduce((top, option) => (option.score > top.score ? option : top));
-    best.summary = { ...(best.summary as Record<string, JsonValue>), plan_card: `the combat plan drank this potion for a card played this turn (${cardPotionStep.name}); this one does the most this turn (code's pick)` };
-  }
 
   const verb = forThisTurn
     ? "take into my hand"
@@ -269,7 +192,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const disintegration = candidates.find((card) => str(card["card_id"]) === "DISINTEGRATION");
     const rank = curseRank(combat, disintegration ? disintegrationAmount(disintegration) : 0, state.turn ?? 1);
     const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
-    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away; Disintegration last when it outlasts HP, else first with Rupture)` };
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
   }
 
   return buildPickDecision({
@@ -281,11 +204,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.4,
     options,
-    // In-combat mechanics (exhaust picks happen every turn with Baking Gloves; Headbutt's top card under
-    // a big hit): code decides. Deck choices out of combat (upgrade, remove, transform, add) go to Jev.
-    codeMargin: env.combatPlanner === "card" ? undefined : verb === "exhaust" || topDanger ? 0 : state.in_combat && verb !== "choose" && verb !== "enchant" ? 6 : undefined,
-    maxModelOptions: outOfCombat ? 6 : 4,
-    ...(outOfCombat ? { guidance: guidanceFor(runPlan, "build"), planVersion: runPlan?.version ?? null } : {}),
+    // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
+    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
+    maxModelOptions: 4,
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -331,11 +252,10 @@ function disintegrationAmount(card: Record<string, unknown>): number {
 }
 
 /**
- * Rank of a Knowledge Demon curse (lower is taken). Disintegration is the last one when it would take
- * more than the HP left before the demon dies (turns left from the damage dealt so far, 25 a turn
- * before any): Disintegration × turns + 20 > HP, Rupture or not. PU21 T9 (33 HP, ~8 turns left,
- * Disintegration 8) is that case; otherwise it is the first pick with Rupture; with HP to spare Waste
- * Away is the worst.
+ * Rank of a Knowledge Demon curse (lower is taken). Disintegration becomes the first pick with
+ * Rupture, and the last one when it would take more than the HP left before the demon dies (turns
+ * left from the damage dealt so far, 25 a turn before any): Disintegration × turns + 20 > HP. PU21 T9
+ * (33 HP, ~8 turns left, Disintegration 8) is that case; with HP to spare Waste Away is the worst.
  */
 export function curseRank(combat: Record<string, unknown>, offered: number, turn: number): (id: string) => number {
   const player = asRecord(combat["player"]);
@@ -349,10 +269,8 @@ export function curseRank(combat: Record<string, unknown>, offered: number, turn
   const hp = numOrNull(player["current_hp"]) ?? 0;
   const outlastsHp = (has("DISINTEGRATION_POWER") + offered) * turnsLeft + CURSE_HP_MARGIN > hp;
   return (id) => {
-    // HP first: Rupture's Strength is no use once Disintegration outlasts the HP left (94FP F33 T5: 36 HP,
-    // 307 boss HP at ~23 a turn, 7 x 14 + 20 = 118; Rupture ranked it first, the stacks took 7-15 a turn).
-    if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
     if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
+    if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
     return KNOWLEDGE_CURSE_ORDER[id]!;
   };
 }
@@ -384,25 +302,7 @@ interface ExhaustContext {
   sandpit?: boolean;
   /** Attack cards in hand right now. */
   handAttacks?: number;
-  /** Our Strength now: an attack's worth grows with it per hit (6HRZ F33 T6: Exterminate went at Strength 6). */
-  strength?: number;
-  /** An enemy has Artifact: Vulnerable/Weak cards are what strips it (XWPV F48: Bash+ exhausted at Artifact 2). */
-  artifact?: boolean;
-  /** Two or more non-minion enemies (Kaiser Crab): AoE is worth double. */
-  multiEnemy?: boolean;
-  /** Strike Dummy: cards named Strike deal 3 more. */
-  strikeDummy?: boolean;
 }
-
-/** What an exhaust candidate does, for the in-combat score (hits per play, applies a debuff, hits all). */
-export interface ExhaustCard {
-  hits?: number;
-  debuff?: boolean;
-  aoe?: boolean;
-}
-
-/** Cards whose Vulnerable/Weak strips an enemy's Artifact. */
-const DEBUFF_EXHAUST_KEEP = new Set(["BASH", "THUNDERCLAP", "TAUNT", "UPPERCUT", "SHOCKWAVE", "DISARM", "INTIMIDATE"]);
 
 /** A card that gives block: a Defend, a Block value, or block in its text. */
 function isBlockCard(card: Record<string, unknown>): boolean {
@@ -414,10 +314,6 @@ function isBlockCard(card: Record<string, unknown>): boolean {
 function isAttackCard(cardId: string, type: string, line: string): boolean {
   if (type) return type === "Attack";
   return cardId.startsWith("STRIKE_") || /造成\d+点伤害|deals? \d+ damage/i.test(line);
-}
-
-function exhaustCardOf(model: CardModel): ExhaustCard {
-  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all" };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -447,14 +343,7 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
     .map(asRecord)
     .some((enemy) => enemy["is_alive"] !== false && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "SANDPIT_POWER"));
   const handAttacks = hand.filter((card) => isAttackCard(str(card["card_id"]), typeOf(str(card["card_id"]), str(card["card_type"])), str(card["resolved_rules_text"]))).length;
-  const living = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  const powerOf = (entity: Record<string, unknown>, id: string): number =>
-    asArray(entity["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === id).reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0);
-  const strength = powerOf(asRecord(combat["player"]), "STRENGTH_POWER");
-  const artifact = living.some((enemy) => powerOf(enemy, "ARTIFACT_POWER") > 0);
-  const multiEnemy = living.filter((enemy) => powerOf(enemy, "MINION_POWER") <= 0).length >= 2;
-  const strikeDummy = asArray(asRecord(raw["run"])["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "STRIKE_DUMMY");
-  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks, strength, artifact, multiEnemy, strikeDummy };
+  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks };
 }
 
 /**
@@ -467,26 +356,7 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
 /** Exhaust-score malus for a card the committed plan still plays (below any junk, above nothing). */
 export const PLANNED_CARD_KEEP = 150;
 
-export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_"), card: ExhaustCard = {}): number {
-  const base = baseExhaustScore(cardId, type, context, blocks);
-  if (base >= 90 || base <= 0) return base;
-  // Toasty Mittens exhausts a card every turn: the static card value took Exterminate at Strength 6
-  // (6HRZ F33 T6), Fight Me 8 times (XWPV F48) and Bash+ with the boss's Artifact up (2Q37, 6HRZ,
-  // XWPV; 4th time). Strength scaling stays; an attack loses 2 per hit per Strength point; a Strike
-  // with Strike Dummy, AoE into two bodies, and debuffs against Artifact are kept.
-  if (damageRole(cardId) === "scaling") return Math.min(base, 5);
-  let score = base;
-  if (type === "Attack") {
-    const hits = Math.max(1, card.hits ?? 1);
-    score -= hits * Math.max(0, context.strength ?? 0) * 2;
-    if (context.strikeDummy && /STRIKE/.test(cardId)) score -= 10;
-    if (context.multiEnemy && (card.aoe || damageRole(cardId) === "aoe")) score -= 15;
-  }
-  if (context.artifact && (card.debuff || DEBUFF_EXHAUST_KEEP.has(cardId))) score = Math.min(score, 10);
-  return Math.max(1, score);
-}
-
-function baseExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks: boolean): number {
+export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_")): number {
   // Howl from Beyond plays itself once from the exhaust pile, then goes to the discard pile: a free hit.
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   // Frantic Escape is a Status, but against the Sandpit it is the only thing that pushes the countdown
@@ -510,22 +380,6 @@ function baseExhaustScore(cardId: string, type: string, context: ExhaustContext,
   if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : EXHAUST_DEFEND_UNDER_FIRE;
   if (cardId.startsWith("STRIKE_")) return 70;
   return Math.max(1, 100 - value);
-}
-
-/** Why code scores a deck selection option as it does (out of combat). */
-function selectionWhy(kind: string, cardId: string, type: string, upgraded: boolean): string {
-  const score = selectionScore(kind, cardId, type);
-  if (kind === "deck_upgrade_select") return cardId in UPGRADE_PRIORITY ? `upgrade priority ${score} (its upgrade gains the most)` : cardId.startsWith("STRIKE_") || cardId.startsWith("DEFEND_") ? "a basic card: its upgrade gains little" : `card value ${Math.round(score)}`;
-  if (kind === "deck_card_select" || kind === "deck_transform_select") {
-    const what = type === "Curse" ? "a curse" : type === "Status" ? "a status" : cardId.startsWith("STRIKE_") ? "a basic Strike" : cardId.startsWith("DEFEND_") ? "a basic Defend" : damageRole(cardId) === "scaling" ? "the deck's scaling (keep)" : `card value ${Math.round(100 - score)}`;
-    return `${what}: removal value ${Math.round(score)}${upgraded ? " (upgraded: -8)" : ""}`;
-  }
-  return `value ${Math.round(score)}`;
-}
-
-/** Code's upgrade priority of a card (rest-site facts and upgrade picks). */
-export function upgradePriority(cardId: string, type: string): number {
-  return selectionScore("deck_upgrade_select", cardId, type);
 }
 
 function selectionScore(kind: string, cardId: string, type: string): number {
@@ -622,23 +476,28 @@ function incomingDamage(combat: Record<string, unknown>): number {
   return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
 }
 
-export { thisTurnScore } from "../strategy/card-model.js";
-
 /**
- * The combat board a card picked for this turn is scored on (card-model ThisTurnBoard): the exhaust
- * pile plus the exhausting cards in hand, and the most Vulnerable on a living enemy. The exhaust pile is
- * left unknown when the state carries no piles.
+ * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
+ * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
+ * value, less its energy cost and HP cost.
  */
-export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
-  const combat = asRecord(raw["combat"]);
-  const pile = exhaustPileSize(raw);
-  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge).exhausts).length;
-  const vulnerable = Math.max(
-    0,
-    ...asArray(combat["enemies"])
-      .map(asRecord)
-      .filter((enemy) => enemy["is_alive"] !== false)
-      .map((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "VULNERABLE_POWER").reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0)),
-  );
-  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
+  // Colorless Potion, died to a 9-damage hit). Never worth taking.
+  if (card.cardId === "THE_GAMBIT") return -100;
+  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
+  const score =
+    damage +
+    block +
+    2.5 * Math.min(card.vulnerable, 3) +
+    1.5 * Math.min(card.weak, 3) +
+    5 * card.strength +
+    2 * card.tempStrength +
+    3 * card.draw +
+    4 * card.energyGain +
+    card.flatValue -
+    2 * Math.max(0, card.cost) -
+    card.hpLoss;
+  return Math.round(score);
 }

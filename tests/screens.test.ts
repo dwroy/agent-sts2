@@ -12,11 +12,8 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
-import { fightHpCost, nodeWeight, shopWeight, SURVIVAL_WEIGHT } from "../src/screens/map.js";
-import { fightSurvival, roomProjectedCost } from "../src/strategy/route-cost.js";
+import { nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
-import { eventOptionScore } from "../src/screens/event.js";
-import { questionOf, referencePick } from "./logged.js";
 import { loadConfig } from "../src/config.js";
 import {
   baseState,
@@ -238,10 +235,7 @@ describe("map", () => {
   });
 
   it("describes each reachable node with a code-computed lookahead", () => {
-    // At full HP: under twice an elite's cost the optional Elite is not offered (EN55 F7).
-    const raw = mapPayload();
-    (raw["run"] as Record<string, unknown>)["current_hp"] = 80;
-    const decision = mustDecision(plan(raw));
+    const decision = mustDecision(plan(mapPayload()));
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     expect(Object.keys(criteria)).toEqual(["n0", "n1", "n2"]);
@@ -274,12 +268,9 @@ describe("map", () => {
     if (decision.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    // Monster -> Elite: the elite is reached at ~78% (the hallway's median cost), where it is worth 0,
-    // not +4; every option pays its chance of death over the same stretch, fight by fight (77QX F18).
-    const arrival = 0.85 - roomProjectedCost("Monster", 1);
-    const first = fightSurvival(0.85, fightHpCost("Monster", 1));
-    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Elite", 1))));
-    expect(value("n1")).toBeCloseTo(2.4 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Monster", 1))));
+    // Monster -> Elite: the elite is reached at ~75%, where it is worth 0, not +4.
+    expect(value("n0")).toBeCloseTo(1.2);
+    expect(value("n1")).toBeCloseTo(2.4);
   });
 
   it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {
@@ -323,170 +314,6 @@ describe("map", () => {
     };
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
     expect(value("n0")).toBeGreaterThan(value("n1"));
-  });
-
-  it("PFBK F18: elites a route cannot avoid after its likely death still count", () => {
-    const raw = mapPayload();
-    const run = raw["run"] as Record<string, unknown>;
-    run["floor"] = 18;
-    run["current_hp"] = 76;
-    run["max_hp"] = 80;
-    run["gold"] = 50;
-    const map = raw["map"] as Record<string, unknown>;
-    map["current_node"] = { row: 0, col: 3 };
-    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
-    const at = (row: number, col: number) => ({ row, col });
-    map["available_nodes"] = [
-      { index: 0, row: 1, col: 1, node_type: "Monster" },
-      { index: 1, row: 1, col: 5, node_type: "Shop" },
-    ];
-    map["nodes"] = [
-      node(0, 3, "Ancient", [at(1, 1), at(1, 5)]),
-      // One elite, then a way round every other one.
-      node(1, 1, "Monster", [at(2, 1)]),
-      node(2, 1, "Monster", [at(3, 1)]),
-      node(3, 1, "Elite", [at(4, 1)]),
-      node(4, 1, "Monster", [at(5, 1)]),
-      node(5, 1, "RestSite"),
-      // Shop, "?", rest and a chest first, then four forced elites with no branch (F25/F27/F29).
-      node(1, 5, "Shop", [at(2, 5)]),
-      node(2, 5, "Unknown", [at(3, 5)]),
-      node(3, 5, "RestSite", [at(4, 5)]),
-      node(4, 5, "Treasure", [at(5, 5)]),
-      node(5, 5, "Elite", [at(6, 5)]),
-      node(6, 5, "Unknown", [at(7, 5)]),
-      node(7, 5, "Elite", [at(8, 5)]),
-      node(8, 5, "Treasure", [at(9, 5)]),
-      node(9, 5, "Elite", [at(10, 5)]),
-      node(10, 5, "Unknown", [at(11, 5)]),
-      node(11, 5, "Elite", [at(12, 5)]),
-      node(12, 5, "RestSite"),
-    ];
-    const decision = mustDecision(plan(raw));
-    const value = (key: string): number => {
-      if (decision.kind !== "ask") return key === "n0" ? 1 : 0;
-      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
-      return JSON.parse(String(criteria[key]))["route_value"];
-    };
-    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
-    expect(value("n0")).toBeGreaterThan(value("n1"));
-  });
-
-  it("RVL2 F26: a forced elite down the line is a likely death at low-HP urgency; a Blood Potion counts as HP", () => {
-    const routeValues = (bloodPotion: boolean): Record<string, number> => {
-      const raw = mapPayload();
-      const run = raw["run"] as Record<string, unknown>;
-      run["floor"] = 26;
-      run["current_hp"] = 14;
-      run["max_hp"] = 74;
-      run["gold"] = 60;
-      if (bloodPotion) Object.assign((run["potions"] as Record<string, unknown>[])[0]!, { potion_id: "BLOOD_POTION", name: "Blood Potion", occupied: true });
-      else (run["potions"] as Record<string, unknown>[])[0]!["occupied"] = false;
-      const map = raw["map"] as Record<string, unknown>;
-      map["current_node"] = { row: 8, col: 3 };
-      const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
-      const at = (row: number, col: number) => ({ row, col });
-      map["available_nodes"] = [
-        { index: 0, row: 9, col: 2, node_type: "Monster" },
-        { index: 2, row: 9, col: 4, node_type: "RestSite" },
-      ];
-      map["nodes"] = [
-        node(8, 3, "Treasure", [at(9, 2), at(9, 4)]),
-        // (9,2): no elite on the way to the boss.
-        node(9, 2, "Monster", [at(10, 2)]),
-        node(10, 2, "RestSite", [at(11, 3)]),
-        node(11, 3, "Unknown", [at(12, 4)]),
-        node(12, 4, "Unknown", [at(13, 3)]),
-        node(13, 3, "Monster", [at(14, 3)]),
-        node(14, 3, "RestSite"),
-        // (9,4): rest, then one line into a forced elite at F31.
-        node(9, 4, "RestSite", [at(10, 5)]),
-        node(10, 5, "Unknown", [at(11, 6)]),
-        node(11, 6, "Unknown", [at(12, 6)]),
-        node(12, 6, "Monster", [at(13, 5)]),
-        node(13, 5, "Elite", [at(14, 3)]),
-      ];
-      const decision = mustDecision(plan(raw));
-      if (decision.kind !== "ask") return { n0: decision.intent.option_index === 0 ? 1 : 0, n2: decision.intent.option_index === 2 ? 1 : 0 };
-      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
-      return { n0: JSON.parse(String(criteria["n0"]))["route_value"], n2: JSON.parse(String(criteria["n2"]))["route_value"] };
-    };
-    const withPotion = routeValues(true);
-    expect(withPotion.n0).toBeGreaterThan(withPotion.n2);
-    // Without it the forced elite still weighs like the Monster now (both likely deaths x3).
-    const without = routeValues(false);
-    expect(without.n2).toBeLessThan(-30);
-  });
-
-  it("RC9A F24: a likely death at the next node ends the route there too (38/80: Elite now vs a later forced elite)", () => {
-    const raw = mapPayload();
-    const run = raw["run"] as Record<string, unknown>;
-    run["floor"] = 24;
-    run["current_hp"] = 38;
-    run["max_hp"] = 80;
-    run["gold"] = 150;
-    (run["potions"] as Record<string, unknown>[])[0]!["occupied"] = false;
-    const map = raw["map"] as Record<string, unknown>;
-    map["current_node"] = { row: 6, col: 5 };
-    const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
-    const at = (row: number, col: number) => ({ row, col });
-    map["available_nodes"] = [
-      { index: 0, row: 7, col: 5, node_type: "Elite" },
-      { index: 1, row: 7, col: 6, node_type: "Unknown" },
-    ];
-    map["nodes"] = [
-        node(6, 0, "Unknown", [at(7, 0)]),
-        node(6, 2, "Monster", [at(7, 2)]),
-        node(6, 4, "Elite", [at(7, 4)]),
-        node(6, 5, "RestSite", [at(7, 5), at(7, 6)]),
-        node(6, 6, "Unknown", [at(7, 6)]),
-        node(7, 0, "Monster", [at(8, 0)]),
-        node(7, 2, "Monster", [at(8, 2)]),
-        node(7, 4, "Unknown", [at(8, 4)]),
-        node(7, 5, "Elite", [at(8, 4)]),
-        node(7, 6, "Unknown", [at(8, 6)]),
-        node(8, 0, "Treasure", [at(9, 0)]),
-        node(8, 2, "Treasure", [at(9, 2)]),
-        node(8, 4, "Treasure", [at(9, 4), at(9, 5)]),
-        node(8, 6, "Treasure", [at(9, 5), at(9, 6)]),
-        node(9, 0, "RestSite", [at(10, 0)]),
-        node(9, 2, "Monster", [at(10, 1)]),
-        node(9, 4, "RestSite", [at(10, 3)]),
-        node(9, 5, "Monster", [at(10, 4), at(10, 6)]),
-        node(9, 6, "RestSite", [at(10, 6)]),
-        node(10, 0, "Elite", [at(11, 0)]),
-        node(10, 1, "Monster", [at(11, 0)]),
-        node(10, 3, "Monster", [at(11, 3)]),
-        node(10, 4, "Monster", [at(11, 3)]),
-        node(10, 6, "Monster", [at(11, 5), at(11, 6)]),
-        node(11, 0, "RestSite", [at(12, 0), at(12, 1)]),
-        node(11, 3, "RestSite", [at(12, 2)]),
-        node(11, 5, "Unknown", [at(12, 4)]),
-        node(11, 6, "Elite", [at(12, 6)]),
-        node(12, 0, "Monster", [at(13, 0)]),
-        node(12, 1, "Elite", [at(13, 2)]),
-        node(12, 2, "Unknown", [at(13, 2), at(13, 3)]),
-        node(12, 4, "Monster", [at(13, 4)]),
-        node(12, 6, "Monster", [at(13, 6)]),
-        node(13, 0, "Shop", [at(14, 0)]),
-        node(13, 2, "Monster", [at(14, 2)]),
-        node(13, 3, "Elite", [at(14, 2)]),
-        node(13, 4, "Elite", [at(14, 4)]),
-        node(13, 6, "Elite", [at(14, 6)]),
-        node(14, 0, "RestSite", [at(15, 3)]),
-        node(14, 2, "RestSite", [at(15, 3)]),
-        node(14, 4, "RestSite", [at(15, 3)]),
-        node(14, 6, "RestSite", [at(15, 3)]),
-        node(15, 3, "Boss", []),
-    ];
-    const decision = mustDecision(plan(raw));
-    if (decision.kind === "act") {
-      expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 1 });
-      return;
-    }
-    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
-    const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
-    expect(value("n1")).toBeGreaterThan(value("n0"));
   });
 
   it("an optional mid-act elite needs more than 80% HP (UJS25 F24: Swarm Caster at 58/80)", () => {
@@ -593,11 +420,8 @@ describe("map", () => {
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
     const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
-    // The p75 of logged A8 losses (route-cost.ts): dearer each act, an elite dearer than a hallway.
-    const hallways = [1, 2, 3].map((act) => fightHpCost("Monster", act));
-    expect(hallways[0]).toBeLessThan(hallways[1]!);
-    expect(hallways[1]).toBeLessThan(hallways[2]!);
-    for (const act of [1, 2, 3]) expect(fightHpCost("Elite", act)).toBeGreaterThan(2 * fightHpCost("Monster", act));
+    expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.22, 0.28]);
+    expect(fightHpCost("Elite", 3)).toBeCloseTo(0.7);
     expect(monsterWeight(0.8)).toBe(1.2);
     expect(monsterWeight(0.35)).toBeCloseTo(0);
     expect(monsterWeight(0.2)).toBeLessThan(0);
@@ -619,7 +443,7 @@ describe("reward", () => {
     expect(decision.resolve(pickAnswer("skip")).intent).toEqual({ action: "skip_reward_cards" });
   });
 
-  it("offers below the skip bar are still shown to Jev, and the skip says they are under it (0NG Act 2)", () => {
+  it("says the offers were below the skip bar instead of 'only one legal option' (0NG Act 2)", () => {
     const raw = rewardCardPayload();
     const reward = raw["reward"] as Record<string, unknown>;
     reward["card_options"] = [
@@ -627,13 +451,10 @@ describe("reward", () => {
       { index: 1, card_id: "TANK", name: "Tank", upgraded: false, rules_text: "", resolved_rules_text: "", dynamic_values: [] },
     ];
     const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
-    expect(decision.kind).toBe("ask");
-    if (decision.kind !== "ask") return;
-    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
-    expect(Object.keys(criteria)).toEqual(["card0", "card1", "skip"]);
-    const skip = JSON.parse(criteria["skip"]!) as Record<string, unknown>;
-    expect(skip["code_rank"]).toBe(1);
-    expect(String(skip["why"])).toMatch(/^the skip bar: a card code values under 50 makes the deck worse \(under it: Havoc .*, Tank .*\)$/);
+    expect(decision.kind).toBe("act");
+    if (decision.kind !== "act") return;
+    expect(decision.intent).toEqual({ action: "skip_reward_cards" });
+    expect(decision.rationale).toMatch(/^all offers below skip bar 50 \(Havoc .*\d+, Tank .*\d+\)$/);
   });
 
   it("claims non-card rewards in code", () => {
@@ -755,21 +576,6 @@ describe("shop", () => {
     if (decision.kind === "act") expect(decision.intent.action).not.toBe("discard_potion");
   });
 
-  it("shows card energy cost and type, and keeps a potion in view with an empty slot (B98P F15, CWU9 F31)", () => {
-    const raw = shopPayload(true);
-    const shop = raw["shop"] as Record<string, unknown>;
-    const relic = (index: number, id: string) => ({ index, name: id, price: 150, is_stocked: true, enough_gold: true, relic_id: id, rarity: "Common" });
-    shop["relics"] = [relic(0, "VAJRA"), relic(1, "ANCHOR"), relic(2, "LANTERN"), relic(3, "BAG_OF_MARBLES"), relic(4, "ODDLY_SMOOTH_STONE"), relic(5, "BRONZE_SCALES")];
-    shop["potions"] = [{ index: 0, potion_id: "BLOOD_POTION", name: "Blood Potion", rarity: "Common", usage: "CombatOnly", price: 49, is_stocked: true, enough_gold: true }];
-    (raw["run"] as Record<string, unknown>)["gold"] = 900;
-    const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
-    if (decision.kind !== "ask") throw new Error("expected an ask");
-    const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
-    expect(Object.keys(criteria)).toContain("buy_potion0");
-    const pommel = Object.values(criteria).map((text) => JSON.parse(String(text))).find((entry) => entry["buy"] === "Pommel Strike");
-    expect(pommel).toMatchObject({ cost: 1, type: "Attack" });
-  });
-
   it("closes an open inventory with nothing affordable", () => {
     const decision = mustDecision(plan(shopPayload(true, { broke: true })));
     expect(decision.kind).toBe("act");
@@ -795,13 +601,6 @@ describe("event", () => {
   });
   const shown = (decision: Decision): string[] =>
     decision.kind === "ask" && decision.questions["pick"]?.type === "choice" ? Object.keys(decision.questions["pick"].criteria) : [];
-  /** The options code cautions about (hp_caution: it used to remove them). */
-  const cautioned = (decision: Decision): string[] =>
-    decision.kind === "ask" && decision.questions["pick"]?.type === "choice"
-      ? Object.entries(decision.questions["pick"].criteria).filter(([, text]) => JSON.parse(text!)["hp_caution"] !== undefined).map(([key]) => key)
-      : [];
-  const cautionOf = (decision: Decision, key: string): string =>
-    decision.kind === "ask" && decision.questions["pick"]?.type === "choice" ? String(JSON.parse(decision.questions["pick"].criteria[key]!)["hp_caution"] ?? "") : "";
   const mapBefore = (childType: string) => {
     const memory = createScreenMemory("EVENT");
     rememberMap(memory, parseGameState(baseState("MAP", {
@@ -818,28 +617,19 @@ describe("event", () => {
     return memory;
   };
 
-  it("names what a relic in the option does (EJXC F13: Chosen Cheese guessed as Strength)", () => {
-    const decision = mustDecision(plan(hpEvent(72, 80, [["Cheese", "失去[red]4[/red]点生命，获得[gold]天选芝士[/gold]。"], ["Cards", "获得两张普通牌。"]])));
-    const text = JSON.stringify(decision.kind === "ask" ? decision.questions : decision);
-    expect(text).toMatch(/relic_notes[^\]]*max HP at the end of every combat/);
-    expect(text.match(/relic_notes/g)?.length ?? 0).toBe(1);
-  });
-
-  it("HP caution: an 8+ max-HP cost is offered with the caution (1K5G F8: -13 max HP for Fresnel Lens)", () => {
+  it("HP guard: an 8+ max-HP cost is not offered (1K5G F8: -13 max HP for Fresnel Lens)", () => {
     const decision = mustDecision(plan(hpEvent(60, 80, [["Bottle", "获得一瓶[aqua]发光水[/aqua]。"], ["Climb", "获得[gold]菲涅耳透镜[/gold]。失去[red]13[/red]点最大生命。"]])));
-    expect(shown(decision)).toEqual(["o0", "o1"]);
-    expect(cautionOf(decision, "o1")).toBe("costs 13 max HP");
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_event_option", option_index: 0 });
   });
 
-  it("HP caution: HP paid right before a forced elite (XPA4 F14: -8 HP, then -17 at the elite), or below half HP", () => {
+  it("HP guard: no HP paid right before a forced elite (XPA4 F14: -8 HP, then -17 at the elite), or below half HP", () => {
     const options: [string, string][] = [["Relic", "失去8点生命。获得一件被遗忘的旧日遗物。"], ["Potion", "获得1瓶随机药水。"], ["Leave", "离开。"]];
     const forced = mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Elite") }));
-    expect(shown(forced)).toEqual(["o0", "o1", "o2"]);
-    expect(cautioned(forced)).toEqual(["o0"]);
-    expect(cautionOf(forced, "o0")).toMatch(/costs HP right before a forced Elite/);
-    expect(cautioned(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Monster") })))).toEqual([]);
-    // 45 - 8 = 37 < 40.
-    expect(cautionOf(mustDecision(plan(hpEvent(45, 80, options))), "o0")).toBe("leaves 37/80 HP (below half)");
+    expect(shown(forced)).toEqual(["o1", "o2"]);
+    expect(shown(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: mapBefore("Monster") })))).toEqual(["o0", "o1", "o2"]);
+    // 45 - 8 = 37 < 40: out whatever comes next.
+    expect(shown(mustDecision(plan(hpEvent(45, 80, options))))).toEqual(["o1", "o2"]);
   });
 
   it("HP guard: a forced Elite within 3 nodes on every path, no rest or shop before it, counts as forced (NZR7 F4: -18 HP, Monster, Monster, Elite)", () => {
@@ -859,119 +649,32 @@ describe("event", () => {
       })));
       return memory;
     };
-    const at = (memory: ReturnType<typeof chain>) => cautioned(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: memory })));
+    const at = (memory: ReturnType<typeof chain>) => shown(mustDecision(plan(hpEvent(62, 80, options), { screenMemory: memory })));
     const guarded = mustDecision(plan(hpEvent(62, 80, options), { screenMemory: chain(["Monster", "Monster", "Elite"]) }));
-    expect(shown(guarded)).toEqual(["o0", "o1"]);
-    expect(cautionOf(guarded, "o0")).toMatch(/forced Elite within 3 nodes/);
-    // A rest site before the Elite, the Elite 4 nodes out, or a branch that avoids it: no caution.
-    expect(at(chain(["Monster", "RestSite", "Elite"]))).toEqual([]);
-    expect(at(chain(["Monster", "Monster", "Monster", "Elite"]))).toEqual([]);
-    expect(at(chain(["Monster", "Monster", "Elite"], "Unknown"))).toEqual([]);
+    expect(guarded.kind === "act" && guarded.intent).toEqual({ action: "choose_event_option", option_index: 1 });
+    // A rest site before the Elite, the Elite 4 nodes out, or a branch that avoids it: still offered.
+    expect(at(chain(["Monster", "RestSite", "Elite"]))).toEqual(["o0", "o1"]);
+    expect(at(chain(["Monster", "Monster", "Monster", "Elite"]))).toEqual(["o0", "o1"]);
+    expect(at(chain(["Monster", "Monster", "Elite"], "Unknown"))).toEqual(["o0", "o1"]);
   });
 
-  it("HP caution: on Act 1 floors 1-3 an HP cost of 20%+ of max HP (6A36 F1: Loose Shears -16 at 64/80)", () => {
+  it("HP guard: on Act 1 floors 1-3 an HP cost of 20%+ of max HP is out (6A36 F1: Loose Shears -16 at 64/80)", () => {
     const options: [string, string][] = [
       ["Oyster", "获得[blue]11[/blue]点最大生命值。"],
       ["Holster", "获得[blue]1[/blue]个药水栏位并获得[blue]2[/blue]瓶随机[gold]药水[/gold]。"],
       ["Shears", "从你的[gold]牌组[/gold]中移除[blue]2[/blue]张牌，然后失去[red]16[/red]点生命。"],
     ];
-    // 64 - 16 = 48 is above half: only the early-floor rule cautions it.
-    expect(cautioned(mustDecision(plan(hpEvent(64, 80, options, 1))))).toEqual(["o2"]);
-    expect(cautioned(mustDecision(plan(hpEvent(64, 80, options, 14))))).toEqual([]);
-    // 15 of 80 is under 20%: no caution on floor 2.
+    // 64 - 16 = 48 is above half: only the early-floor rule takes it out.
+    expect(shown(mustDecision(plan(hpEvent(64, 80, options, 1))))).toEqual(["o0", "o1"]);
+    expect(shown(mustDecision(plan(hpEvent(64, 80, options, 14))))).toEqual(["o0", "o1", "o2"]);
+    // 15 of 80 is under 20%: still offered on floor 2.
     const smaller: [string, string][] = [options[0]!, ["Mushroom", "失去[red]15[/red]点生命，然后随机[gold]升级[/gold][blue]2[/blue]张牌。"]];
-    expect(cautioned(mustDecision(plan(hpEvent(64, 80, [...smaller, options[1]!], 2))))).toEqual([]);
-  });
-
-  it("keeping the Lantern Key below 80% HP carries the elite-fight caution; Jev decides (X8HF F21 55/80 -> 5; ZWX5 F28; 4V5T F23)", () => {
-    const lantern = (hp: number) => ({
-      ...hpEvent(hp, 80, []),
-      event: {
-        event_id: "THE_LANTERN_KEY", title: "灯火钥匙", description: "", is_finished: false,
-        options: [
-          { index: 0, text_key: "THE_LANTERN_KEY.pages.INITIAL.options.RETURN_THE_KEY", title: "交还钥匙", description: "获得[blue]100[/blue][gold]金币[/gold]。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-          { index: 1, text_key: "THE_LANTERN_KEY.pages.INITIAL.options.KEEP_THE_KEY", title: "留下钥匙", description: "战斗来取得钥匙。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-        ],
-      },
-    });
-    const low = mustDecision(plan(lantern(55)));
-    expect(shown(low)).toEqual(["o0", "o1"]);
-    expect(cautionOf(low, "o1")).toMatch(/Mysterious Knight/);
-    // 64/80 is exactly 80%: no caution.
-    expect(cautioned(mustDecision(plan(lantern(64))))).toEqual([]);
+    expect(shown(mustDecision(plan(hpEvent(64, 80, [...smaller, options[1]!], 2))))).toEqual(["o0", "o1", "o2"]);
   });
 
   it("HP guard: nothing is removed when every option costs HP", () => {
     const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
     expect(shown(decision)).toEqual(["o0", "o1"]);
-  });
-});
-
-describe("event fallback scores (90JG, BUUY, 7048, WYF0, YNMB)", () => {
-  const at = (hp: number, maxHp: number, forced = false) => ({ hp, maxHp, forced });
-  it("no longer ties every option at 0: the fallback takes the best one, not option 0", () => {
-    // 7048 F8 Abyssal Baths at 49/82 before a forced elite: +2 max HP and -3 HP vs heal 10.
-    const baths = eventOptionScore("获得[blue]2[/blue]点最大生命。失去[red]3[/red]点生命。", at(49, 82, true));
-    const leave = eventOptionScore("回复[blue]10[/blue]点生命。", at(49, 82, true));
-    expect(leave).toBeGreaterThan(baths);
-    // 90JG F9: an unplayable card vs -8 HP for a potion at 53/80.
-    expect(eventOptionScore("获得[gold]藏宝图[/gold]，一张不能被打出的牌。", at(53, 80))).toBeLessThan(eventOptionScore("失去8点生命。获得1瓶随机药水。", at(53, 80)));
-    // YNMB F1: Lava Rock pays only on a boss kill; Lost Coffer is a card reward and a potion.
-    expect(eventOptionScore("第一阶段的Boss敌人额外掉落2件遗物。", at(80, 80))).toBeLessThan(eventOptionScore("获得1次卡牌奖励和1瓶随机药水。", at(80, 80)));
-    // A potion slot beats a relic-less nothing; removal and upgrade are worth something.
-    expect(eventOptionScore("获得1个药水栏位并获得2瓶随机药水。", at(60, 80))).toBeGreaterThan(8);
-    expect(eventOptionScore("从你的牌组中移除1张牌。", at(60, 80))).toBeGreaterThan(0);
-  });
-
-  it("a removal naming a valued deck card scores below a small HP cost (WYF0 F27: Slippery Bridge took Demon Form+)", () => {
-    const ctx = { ...at(63, 80), deck: [{ name: "恶魔形态+", valued: true }, { name: "打击", valued: false }] };
-    expect(eventOptionScore("恶魔形态+将从你的牌组中被移除。", ctx)).toBeLessThan(eventOptionScore("失去3点生命，重新随机要删的牌。", ctx));
-  });
-
-  it("the fallback of a real event ask picks the best-scored option", () => {
-    const raw = {
-      ...eventPayload(),
-      run: runPayload({ floor: 9, current_hp: 53, max_hp: 80 }),
-      event: {
-        event_id: "TEST_EVENT", title: "Test", description: "", is_finished: false,
-        options: [
-          { index: 0, text_key: "MAP", title: "Map", description: "获得藏宝图，一张不能被打出的牌。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-          { index: 1, text_key: "POTION", title: "Potion", description: "获得1瓶随机药水。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-        ],
-      },
-    };
-    const decision = mustDecision(plan(raw, { strictJev: false }));
-    if (decision.kind !== "ask") throw new Error("expected an ask");
-    expect(decision.resolve({}).intent).toEqual({ action: "choose_event_option", option_index: 1 });
-  });
-});
-
-describe("stale event end page (YNMB F4/F7, X226 F6)", () => {
-  const frame = (eventId: string, floor: number, finished: boolean) => ({
-    ...eventPayload(),
-    run: runPayload({ floor }),
-    event: {
-      event_id: eventId, title: eventId, description: "", is_finished: finished,
-      options: finished
-        ? [{ index: 0, text_key: "PROCEED", title: "Proceed", description: "", is_locked: false, is_proceed: true, will_kill_player: false, has_relic_preview: false }]
-        : [
-            { index: 0, text_key: "A", title: "A", description: "失去18点生命。获得152金币。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-            { index: 1, text_key: "B", title: "B", description: "离开。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
-          ],
-    },
-  });
-  it("waits out the last floor's end page instead of clicking option 0 of the next event", () => {
-    const memory = createScreenMemory("EVENT");
-    const leave = mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: memory }));
-    expect(leave.kind === "act" && leave.label).toBe("event/leave");
-    // Floor 4, the same end page still shown: wait.
-    expect(plan(frame("SELF_HELP_BOOK", 4, true), { screenMemory: memory }).kind).toBe("wait");
-    // The new event arrives: chosen normally.
-    expect(plan(frame("JUNGLE_MAZE_ADVENTURE", 4, false), { screenMemory: memory }).kind).toBe("decision");
-    // The same end page on the same floor (a page reload) is still left as before.
-    const again = createScreenMemory("EVENT");
-    mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again }));
-    expect(mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again })).kind).toBe("act");
   });
 });
 
@@ -984,7 +687,7 @@ describe("rest", () => {
     expect(decision.resolve(pickAnswer("o1")).intent).toEqual({ action: "choose_rest_option", option_index: 1 });
   });
 
-  it("ranks heal first before a forced elite like before a boss, and asks Jev (G8AQ F24: 49/80, the only exit was an Elite)", () => {
+  it("heals before a forced elite like before a boss (G8AQ F24: 49/80, the only exit was an Elite)", () => {
     const raw = { ...restPayload(), run: runPayload({ floor: 24, current_hp: 49, max_hp: 80 }) };
     const map = (childType: string) => {
       const memory = createScreenMemory("REST");
@@ -1002,57 +705,14 @@ describe("rest", () => {
       return memory;
     };
     const forced = mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: map("Elite") }));
-    expect(forced.kind).toBe("ask");
-    expect(referencePick(forced).intent).toEqual({ action: "choose_rest_option", option_index: 0 });
-    expect(JSON.stringify(forced.kind === "ask" ? forced.questions : null)).toMatch(/boss or forced elite next/);
+    expect(forced.kind).toBe("act");
+    if (forced.kind === "act") expect(forced.intent).toEqual({ action: "choose_rest_option", option_index: 0 });
     // A Monster next: 61% is not low enough to heal outright, the model is asked.
     expect(mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: map("Monster") })).kind).toBe("ask");
     // A map from another floor (stale memory) says nothing.
     const stale = map("Elite");
     stale.lastMap!.floor = 20;
     expect(mustDecision(plan(raw, { combatPlanner: "turn", screenMemory: stale })).kind).toBe("ask");
-  });
-});
-
-describe("rest before the boss with Pantograph (UP1C F16: healed 60 -> 80, Pantograph's 25 would have done it)", () => {
-  it("code's reference smiths at 60/80 on F16 with Pantograph, heals without it", () => {
-    const pick = (relics: string[]) => {
-      const raw = { ...restPayload(), run: runPayload({ floor: 16, current_hp: 60, max_hp: 80, relics: relics.map((id, index) => ({ index, relic_id: id, name: id, description: "", stack: null, is_melted: false })) }) };
-      const decision = mustDecision(plan(raw, { combatPlanner: "turn" }));
-      expect(decision.kind).toBe("ask");
-      return referencePick(decision).intent?.option_index === 0 ? "HEAL" : "SMITH";
-    };
-    expect(pick(["BURNING_BLOOD"])).toBe("HEAL");
-    expect(pick(["BURNING_BLOOD", "PANTOGRAPH"])).toBe("SMITH");
-  });
-});
-
-describe("event card add uses the reward valuation (UP1C F3: Shrug It Off 106 vs Inflame 104)", () => {
-  it("a card DeepSeek's needs ask for says so next to code_value and why (no bonus)", () => {
-    const card = (index: number, cardId: string, name: string, type: string) => ({
-      index, selected: false, card_id: cardId, name, upgraded: false, card_type: type, rarity: "Uncommon", costs_x: false, star_costs_x: false,
-      energy_cost: 1, star_cost: 0, rules_text: "", resolved_rules_text: "", dynamic_values: [],
-    });
-    const raw = baseState("CARD_SELECTION", {
-      available_actions: ["select_deck_card"],
-      selection: { kind: "deck_card_select", prompt: "选择一张牌加入你的牌组。", min_select: 1, max_select: 1, selected_count: 0, can_confirm: false, cards: [card(0, "SHRUG_IT_OFF", "Shrug It Off", "Skill"), card(1, "INFLAME", "Inflame", "Power")] },
-    });
-    // UP1C's deck had no Strength card.
-    const run = raw["run"] as Record<string, unknown>;
-    run["deck"] = (run["deck"] as Record<string, unknown>[]).filter((entry) => entry["card_id"] !== "INFLAME");
-    const memory = createScreenMemory("CARD_SELECTION");
-    memory.runPlan = { runId: String(raw["run_id"] ?? ""), want: ["SHRUG_IT_OFF", "INFLAME"], avoid: [], remove: [], needs: ["strength"], avoidRoles: [], blockTarget: null } as never;
-    const decision = mustDecision(plan(raw, { screenMemory: memory }));
-    if (decision.kind === "act") {
-      expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
-      return;
-    }
-    const criteria = (decision.questions["pick"] as { criteria: Record<string, string> }).criteria;
-    const value = (key: string) => JSON.parse(criteria[key]!)["code_value"] as number;
-    expect(typeof value("card0")).toBe("number");
-    expect(typeof value("card1")).toBe("number");
-    expect(JSON.parse(criteria["card1"]!)["deepseek_plan"]).toMatch(/DeepSeek plan wants this card \(want #2\); fills DeepSeek's need strength \(deck has 0\)/);
-    expect(JSON.parse(criteria["card0"]!)["deepseek_plan"]).toMatch(/want #1/);
   });
 });
 
@@ -1164,36 +824,6 @@ describe("in-combat selections", () => {
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", tight)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
     expect(combatExhaustScore("SHRUG_IT_OFF", "Skill", tight, true)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", { ...tight, hp: 40 })).toBeGreaterThan(0);
-  });
-
-  it("Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4)", async () => {
-    const { combatExhaustScore } = await import("../src/screens/selection.js");
-    const pick = (context: Record<string, unknown>, hand: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][]) =>
-      hand.map(([id, type, card, upgraded]) => ({ id, score: combatExhaustScore(id, type, { attacks: 12, incoming: 10, hp: 60, ...context }, false, card) - (upgraded ? 8 : 0) }))
-        .sort((a, b) => b.score - a.score)[0]!.id;
-    // 6HRZ T6: Strength 6, both claws alive; Exterminate (4 hits, all enemies) was exhausted at 55.
-    const crab = { strength: 6, multiEnemy: true };
-    const t6: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
-      ["EXTERMINATE", "Attack", { hits: 4, aoe: true }],
-      ["BREAKTHROUGH", "Attack", { aoe: true }],
-      ["DISMANTLE", "Attack", {}],
-      ["BASH", "Attack", { debuff: true }, true],
-      ["BATTLE_TRANCE", "Skill", {}],
-    ];
-    expect(pick(crab, t6)).not.toBe("EXTERMINATE");
-    // XWPV F48 T4: Fight Me scored 75 and went first; Artifact up, Bash is kept too.
-    const aeon = { strength: 4, artifact: true };
-    const t4: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][] = [
-      ["TWIN_STRIKE", "Attack", { hits: 2 }],
-      ["BLUDGEON", "Attack", {}],
-      ["FIGHT_ME", "Attack", { hits: 2 }],
-      ["SPITE", "Attack", {}],
-      ["BATTLE_TRANCE", "Skill", {}, true],
-    ];
-    expect(["SPITE", "BATTLE_TRANCE"]).toContain(pick(aeon, t4));
-    expect(combatExhaustScore("BASH", "Attack", { attacks: 12, incoming: 10, hp: 60, artifact: true }, false, { debuff: true })).toBeLessThanOrEqual(10);
-    // A plain Strike is still the first attack to go.
-    expect(pick({ strength: 2 }, [["STRIKE_IRONCLAD", "Attack", {}], ["DISMANTLE", "Attack", {}]])).toBe("STRIKE_IRONCLAD");
   });
 
   it("in-combat exhaust never takes Frantic Escape while the Sandpit is up (THMG F33 T4: 'scores 90 vs Strike 70')", async () => {
@@ -1312,19 +942,6 @@ describe("routing", () => {
     const outcome = plan(raw);
     expect(outcome.kind).toBe("wait");
     expect(outcome.kind === "wait" ? outcome.reason : "").toContain("single-player");
-  });
-});
-
-describe("fingerprint: event pages and max HP (KFPC F4)", () => {
-  it("changes when the event page or max HP changes, HP and actions unchanged", () => {
-    const page = eventPayload();
-    const next = eventPayload();
-    ((next["event"] as Record<string, unknown>)["options"] as Record<string, unknown>[])[0]!["title"] = "Decipher (-6 Max HP)";
-    expect(fingerprint(parseGameState(next))).not.toBe(fingerprint(parseGameState(page)));
-    const lower = eventPayload();
-    lower["run"] = { ...(lower["run"] as Record<string, unknown>), max_hp: 77 };
-    expect(fingerprint(parseGameState(lower))).not.toBe(fingerprint(parseGameState(page)));
-    expect(fingerprint(parseGameState(eventPayload()))).toBe(fingerprint(parseGameState(page)));
   });
 });
 
@@ -1557,7 +1174,7 @@ describe("Sandpit guard", () => {
       { ...hand[0], index: 3 },
       { ...(combatPayload()["combat"] as { hand: Record<string, unknown>[] }).hand[0], index: 4 },
     ];
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     if (!decision) throw new Error("expected a decision");
     const shown: Record<string, unknown>[] =
@@ -1577,7 +1194,7 @@ describe("Sandpit guard", () => {
     const enemy = ((raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
     enemy["intents"] = [{ index: 0, intent_type: "Attack", label: "20x2", damage: 20, hits: 2, total_damage: 40 }];
     // An unmodelled potion on a dangerous turn: the plan goes to Jev.
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     expect(decision?.label).toMatch(/^combat\/plan-choice/);
     const enemies = decision && decision.kind === "ask" ? (decision.state["enemies"] as { powers: string[] }[]) : [];
@@ -1620,11 +1237,11 @@ describe("combat plan guards (batch 2)", () => {
     const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
     combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
     // An unmodelled potion on a dangerous turn: the plan goes to Jev.
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
     return raw;
   };
 
-  it("no HP guard swap: a plan losing far more HP than the cheapest one is played as picked, with that fact on it", async () => {
+  it("HP guard: a plan losing far more HP than the cheapest one is replaced (DeepSeek 'HP buffer is comfortable')", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat(), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
@@ -1637,9 +1254,11 @@ describe("combat plan guards (batch 2)", () => {
     expect(greedy.hpLost - minLoss).toBeGreaterThan(6);
     const escalated = { plan: { type: "choice", choice: greedy.key, probabilities: { [greedy.key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } } as AnswerSet;
     const resolved = decision.resolve(escalated);
-    expect(resolved.guard).toBeUndefined();
-    expect(resolved.rationale).not.toMatch(/HP guard/);
-    expect(JSON.parse(String(criteria[greedy.key]))["hp_vs_safest"]).toMatch(new RegExp(`^${greedy.hpLost - minLoss} HP more than the safest line \\(${minLoss}\\)`));
+    expect(resolved.guard?.kind).toBe("hp");
+    expect(resolved.guard?.choice).not.toBe(greedy.key);
+    const used = plans.find((entry) => entry.key === resolved.guard?.choice)!;
+    expect(used.hpLost).toBeLessThanOrEqual(minLoss + 6);
+    expect(resolved.rationale).toMatch(/HP guard/);
   });
 
   it("HP guard leaves a plan within the slack alone", async () => {
@@ -1687,14 +1306,10 @@ describe("potions at low HP outside boss fights", () => {
 
   it("offers an unmodelled potion below 40% HP against two attackers (7Q5G T5, Y83U F30)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const low = planCombatTurn(env(pressedCombat(25, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
+    const low = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
     expect(low?.label).toBe("combat/plan-choice+potion");
-    // At 55 HP the potion alone makes no question; when Jev is asked anyway it rides along with its facts.
-    const high = planCombatTurn(env(pressedCombat(55, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
-    if (high?.kind === "ask" && high.label === "combat/plan-choice+potion") {
-      expect(Object.keys(questionOf(high).options).filter((key) => key.startsWith("plan")).length).toBeGreaterThan(1);
-      expect(JSON.stringify(high.questions)).toMatch(/potion_facts/);
-    }
+    const high = planCombatTurn(env(pressedCombat(55, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
   it("a modelled potion costs nothing to use below 40% HP against two attackers", async () => {
@@ -1741,21 +1356,24 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
     plan: { type: "choice", choice, probabilities: { [choice]: confidence }, confidence, raw: {} },
   });
 
-  it("Jev's unmodelled potion pick stands at any confidence (no hallway potion veto); only an unusable answer falls back", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const decision = planCombatTurn(env(pressedCombat(25, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
+  it("an unmodelled potion below code rank 1 needs Jev at 0.75+; a near-guess falls back too", async () => {
+    const { planCombatTurn, HALLWAY_POTION_CONFIDENCE } = await import("../src/screens/combat-plan.js");
+    const decision = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
     const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
     expect(potionKey).toBeDefined();
-    // VC4L F23 T1: Gambler's Brew at 0.05 (it used to fall back below 0.75): Jev's call now.
+    // VC4L F23 T1: Gambler's Brew at 0.05.
     const guess = decision.resolve(planAnswer(potionKey, 0.05));
-    expect(guess.fallback).toBe(false);
-    expect(guess.intent?.action).toBe("use_potion");
-    expect(guess.reference).toMatchObject({ rank: null, matched: false });
-    const unusable = decision.resolve({});
-    expect(unusable.fallback).toBe(true);
-    expect(unusable.intent?.action).not.toBe("use_potion");
+    expect(guess.fallback).toBe(true);
+    expect(guess.intent?.action).not.toBe("use_potion");
+    // NZR7 F6: rank 4 at 0.57.
+    const middling = decision.resolve(planAnswer(potionKey, 0.57));
+    expect(middling.fallback).toBe(true);
+    expect(middling.intent?.action).not.toBe("use_potion");
+    const sure = decision.resolve(planAnswer(potionKey, HALLWAY_POTION_CONFIDENCE));
+    expect(sure.fallback).toBe(false);
+    expect(sure.intent?.action).toBe("use_potion");
     // An escalator's pick stands.
     const escalated = decision.resolve({ plan: { type: "choice", choice: potionKey, probabilities: {}, confidence: 0.6, raw: { escalated: "deepseek" } } });
     expect(escalated.intent?.action).toBe("use_potion");
@@ -1808,11 +1426,10 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
 
   it("offers an unmodelled potion in a hallway fight when the min-loss line leaves HP below 25% (7Q5G, MD3F)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const low = planCombatTurn(env(costlyCombat(22, 8, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
+    const low = planCombatTurn(env(costlyCombat(22, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
     expect(low?.label).toBe("combat/plan-choice+potion");
-    // At 60 HP the potion alone makes no question; asked anyway, it rides along.
-    const high = planCombatTurn(env(costlyCombat(60, 8, "ENTROPIC_BREW"), { combatPlanner: "turn" }));
-    if (high?.label === "combat/plan-choice+potion") expect(Object.keys(questionOf(high).options).filter((key) => key.startsWith("plan")).length).toBeGreaterThan(1);
+    const high = planCombatTurn(env(costlyCombat(60, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
   it("a modelled potion is free when the min-loss line loses 30% of current HP", async () => {
@@ -1821,15 +1438,13 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
       const e = env(costlyCombat(hp, damage, "FIRE_POTION"), { combatPlanner: "turn" });
       const decision = planCombatTurn(e);
       if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
-      const reference = Object.values(questionOf(decision).options).find((option) => /^same as reference/.test(String(option["reference"])));
-      return String(reference?.["plays"]).includes("Fire Potion");
+      const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
+      return String(criteria["plan1"]).includes("Fire Potion");
     };
     // 50 HP against 22: Defend still loses 17 (34%).
     expect(drinks(50, 22)).toBe(true);
-    // 50 HP against 8: Defend loses 3. Whatever code ranks first, a Fire Potion line says what it buys.
-    const cheap = planCombatTurn(env(costlyCombat(50, 8, "FIRE_POTION"), { combatPlanner: "turn" }));
-    const fire = Object.values(questionOf(cheap).options).find((option) => String(option["plays"]).includes("Fire Potion"));
-    if (fire) expect(String(fire["potion_facts"])).toMatch(/drinking Fire Potion now: .*vs the safest line without it/);
+    // 50 HP against 8: Defend loses 3.
+    expect(drinks(50, 8)).toBe(false);
   });
 });
 
@@ -1889,7 +1504,7 @@ describe("combat plan guards (batch 3)", () => {
     const hand = combat["hand"] as Record<string, unknown>[];
     const block10 = { dynamic_values: [{ name: "Block", base_value: 10, current_value: 10 }] };
     combat["hand"] = [hand[0], { ...hand[1], ...block10 }, { ...hand[1], index: 3, ...block10 }, { ...hand[2], index: 2 }];
-    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "ENTROPIC_BREW";
+    ((raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[])[0]!["potion_id"] = "LIQUID_MEMORIES";
     return raw;
   };
   const planLosses = (decision: Decision): { key: string; hpLost: number }[] => {
@@ -1900,7 +1515,18 @@ describe("combat plan guards (batch 3)", () => {
   };
   const escalated = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } }) as AnswerSet;
 
-  it("boss fight: a choice more than 4 HP over the cheapest plan is played as picked, with its extra HP as a fact", async () => {
+  it("HP guard slack: max(4, 10% HP) in boss/elite fights, max(6, 20%) otherwise, 0 past the fight budget", async () => {
+    const { hpGuardSlack, HP_GUARD_FIGHT_BUDGET } = await import("../src/screens/combat-plan.js");
+    expect(hpGuardSlack(30, "boss")).toBe(4);
+    expect(hpGuardSlack(70, "elite")).toBe(7);
+    expect(hpGuardSlack(30, "monster")).toBe(6);
+    expect(hpGuardSlack(70)).toBe(14);
+    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET)).toBe(7);
+    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
+    expect(hpGuardSlack(70, "monster", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
+  });
+
+  it("boss fight: a choice more than 4 HP over the cheapest plan is replaced", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat("LAGAVULIN_MATRIARCH"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
@@ -1909,46 +1535,102 @@ describe("combat plan guards (batch 3)", () => {
     const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
     expect(greedy.hpLost - minLoss).toBeGreaterThan(4);
     const resolved = decision.resolve(escalated(greedy.key));
-    expect(resolved.guard).toBeUndefined();
-    expect(resolved.rationale).toMatch(new RegExp(`plan ${greedy.key.slice(4)}/`));
-    const facts = JSON.parse(String((decision.questions["plan"] as { criteria: Record<string, string> }).criteria[greedy.key]));
-    expect(facts["hp_vs_safest"]).toMatch(/HP more than the safest line/);
+    expect(resolved.guard?.kind).toBe("hp");
+    expect(plans.find((entry) => entry.key === resolved.guard?.choice)!.hpLost).toBeLessThanOrEqual(minLoss + 4);
   });
 
-  it("no per-fight HP budget: the extra HP a pick accepts is not recorded, and a later pick is not swapped (Z2H3 is a fact now)", async () => {
+  it("tracks the extra HP accepted in a fight, and past 12 plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const first = env(guardCombat(), { combatPlanner: "turn" });
     const decision = planCombatTurn(first);
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const plans = planLosses(decision);
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
     const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
     const resolved = decision.resolve(escalated(greedy.key));
+    // resolve() is pure; the loop applies the played resolution.
+    expect(first.screenMemory.hpGuard).toBeUndefined();
     resolved.apply?.();
-    expect(JSON.stringify(first.screenMemory)).not.toMatch(/hpGuard/);
-    expect(first.screenMemory.combatPlan?.via ?? "deepseek").toBe("deepseek");
+    const used = plans.find((entry) => entry.key === (resolved.guard?.choice ?? greedy.key))!;
+    expect(first.screenMemory.hpGuard).toEqual({ fight: "1:9", turns: { "3": used.hpLost - minLoss } });
+
+    // The same fight with the budget spent: anything above the cheapest plan is replaced.
+    const spent = env(guardCombat(), { combatPlanner: "turn" });
+    spent.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
+    const again = planCombatTurn(spent);
+    if (again?.kind !== "ask") throw new Error("expected an ask");
+    const over = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
+    const guarded = again.resolve(escalated(over.key));
+    expect(guarded.guard?.kind).toBe("hp");
+    expect(plans.find((entry) => entry.key === guarded.guard?.choice)!.hpLost).toBe(minLoss);
+    expect(guarded.rationale).toMatch(/this fight already took/);
+    // Another fight (another floor) starts a fresh budget.
+    const next = guardCombat();
+    (next["run"] as Record<string, unknown>)["floor"] = 10;
+    const fresh = env(next, { combatPlanner: "turn" });
+    fresh.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
+    const freshDecision = planCombatTurn(fresh);
+    if (freshDecision?.kind !== "ask") throw new Error("expected an ask");
+    freshDecision.resolve(escalated(plans.find((entry) => entry.hpLost === minLoss)!.key)).apply?.();
+    expect(fresh.screenMemory.hpGuard).toEqual({ fight: "1:10", turns: { "3": 0 } });
   });
 
-  it("boss fight: a second potion in a turn is Jev's call, offered with its facts (1R3C F17 T1 is no longer code's auto-drink)", async () => {
+  it("HP guard budget: resolving twice (Jev, then the escalator) and re-planning in a turn count once (b63e836 regression)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    // A boss at 100 HP: the guard's slack (10) lets the next-cheapest plan through, so the turn accepts extra HP.
+    const board = (): Record<string, unknown> => {
+      const raw = guardCombat("LAGAVULIN_MATRIARCH");
+      const player = (raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>;
+      player["current_hp"] = 100;
+      player["max_hp"] = 100;
+      return raw;
+    };
+    const e = env(board(), { combatPlanner: "turn" });
+    const decision = planCombatTurn(e);
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    const plans = planLosses(decision);
+    const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
+    const pricier = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
+    const jevAnswer: AnswerSet = { plan: { type: "choice", choice: pricier.key, probabilities: { [pricier.key]: 0.4 }, confidence: 0.4, raw: {} } } as AnswerSet;
+    decision.resolve(jevAnswer);
+    const played = decision.resolve(escalated(pricier.key));
+    expect(e.screenMemory.hpGuard).toBeUndefined();
+    played.apply?.();
+    const used = plans.find((entry) => entry.key === (played.guard?.choice ?? pricier.key))!;
+    expect(used.hpLost - minLoss).toBeGreaterThan(0);
+    const once = { fight: "1:9", turns: { "3": used.hpLost - minLoss } };
+    expect(e.screenMemory.hpGuard).toEqual(once);
+    if (e.screenMemory.combatPlan) expect(e.screenMemory.combatPlan.via).toBe("deepseek");
+    // A re-plan of the same turn replaces the turn's entry rather than adding to it.
+    const again = planCombatTurn(env(board(), { combatPlanner: "turn", screenMemory: e.screenMemory }));
+    if (again?.kind !== "ask") throw new Error("expected an ask");
+    again.resolve(escalated(pricier.key)).apply?.();
+    expect(e.screenMemory.hpGuard).toEqual(once);
+  });
+
+  it("boss fight: no second potion in a turn while HP is high (1R3C F17 T1)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     const enemies = combat["enemies"] as Record<string, unknown>[];
     combat["enemies"] = [{ ...enemies[0], enemy_id: "LAGAVULIN_MATRIARCH", current_hp: 150, max_hp: 222, intents: [{ index: 0, intent_type: "Attack", label: "7", damage: 7, hits: 1, total_damage: 7 }] }];
     const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
-    potions[1] = { ...potions[0], index: 1, potion_id: "ENTROPIC_BREW", name: "Entropic Brew", requires_target: false, valid_target_indices: [] };
-    // No per-turn potion cap any more: the first and the second look of a turn are the same question.
-    const decide = (_startCount: number) => planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    potions[1] = { ...potions[0], index: 1, potion_id: "LIQUID_MEMORIES", name: "Liquid Memories", requires_target: false, valid_target_indices: [] };
+    const decide = (startCount: number) => {
+      const e = env(raw, { combatPlanner: "turn" });
+      e.screenMemory.potionTurn = { fight: "1:9", turn: 3, startCount };
+      return planCombatTurn(e);
+    };
     const usesPotion = (decision: Decision | null): boolean => {
       if (!decision) return false;
       if (decision.kind === "act") return decision.intent.action === "use_potion";
       const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
       return Object.entries(criteria).some(([key, text]) => !key.startsWith("plan") || /potion/i.test(String(text)));
     };
-    // First look this turn, and after one potion: potions are on the table (boss fight), never code's alone.
+    // First look this turn: potions are on the table (boss fight).
     expect(usesPotion(decide(2))).toBe(true);
-    const after = decide(3);
-    expect(usesPotion(after)).toBe(true);
-    expect(after?.kind).toBe("ask");
+    // One already drunk this turn (3 at the start, 2 now): none offered, none planned.
+    expect(usesPotion(decide(3))).toBe(false);
   });
 });
 
@@ -2162,22 +1844,6 @@ describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected
     expect(keep?.kind === "act" && keep.intent).toEqual({ action: "confirm_selection" });
   });
 
-  it("the combat plan's Gambler's Brew discards come first, then the selection is confirmed (77UJ F33 T5)", async () => {
-    const { planSelection } = await import("../src/screens/selection.js");
-    const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
-    const picked: number[] = [];
-    for (let step = 0; step < 4; step += 1) {
-      const raw = brew(hand, picked, attack);
-      const e = env(raw, { combatPlanner: "turn" });
-      e.screenMemory.gambleDiscards = { turn: e.state.turn, cardIds: ["STRIKE_R", "PILLAGE"] };
-      const decision = planSelection(e);
-      if (decision?.kind !== "act") throw new Error("expected an act");
-      if (decision.intent.action === "confirm_selection") break;
-      picked.push(Number(decision.intent.option_index));
-    }
-    expect(picked.sort()).toEqual([0, 2]);
-  });
-
   it("basics the energy cannot reach are redrawn", async () => {
     const attack = [{ intent_type: "Attack", damage: 12, hits: 1 }];
     const decision = await pick(brew([
@@ -2228,7 +1894,7 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
     raw["turn"] = 2;
     const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
     potions[0]!["can_use"] = true;
-    potions[0]!["potion_id"] = "ENTROPIC_BREW";
+    potions[0]!["potion_id"] = "LIQUID_MEMORIES";
     const combat = raw["combat"] as Record<string, unknown>;
     combat["hand"] = [
       card(0, "POMMEL_STRIKE", 1, [["Damage", 9]]),

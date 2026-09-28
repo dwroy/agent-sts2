@@ -62,39 +62,13 @@ export interface ScreenMemory {
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */
-  fightStart?: {
-    fight: string;
-    maxHp: number;
-    /** Non-minion enemy HP and the turn when first seen (this fight's damage a turn). */
-    hp?: number;
-    turn?: number;
-    /** Our HP at that first look (this fight's HP lost a turn). */
-    playerHp?: number;
-    /** Turns whose first look found every non-minion enemy asleep or intangible (not damage-rate turns). */
-    idle?: number[];
-    /** Non-minion enemy HP at each turn's first look (keyed by turn): what an idle turn dealt is left out. */
-    turnHp?: Record<string, number>;
-  };
+  fightStart?: { fight: string; maxHp: number };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
    * Grit the plan played next). Only read for the same turn.
    */
   plannedAfter?: { turn: number | null; steps: import("../strategy/turn-solver.js").Step[] };
-  /**
-   * A Jev/DeepSeek-chosen line cut short by a draw (or Gambler's Brew) this turn: its steps still to play.
-   * The re-plan after the draw continues it while it is still one of code's top two lines, instead of
-   * asking again (FEY6 F6 T1: 0.86 for "Pommel Strike x2, True Grit", then 0.46 and 0.47 for other lines
-   * on the re-asks after each draw).
-   */
-  drawCommit?: { fight: string; turn: number | null; via: CombatPlanMemo["via"]; steps: import("../strategy/turn-solver.js").Step[]; enemies: string };
-  /**
-   * The potion steps of the line Jev (or the escalator) chose this turn, not drunk yet. When the line is
-   * cut short (a draw, a random exhaust, a hand the plan did not expect) they are drunk before the
-   * re-plan, so a chosen drink never ends the turn undrunk (99X7 F17 T5/T6: "…, potion Powdered Demise"
-   * chosen, then "code plan (only line): end turn" without it).
-   */
-  pendingDrinks?: { fight: string; turn: number | null; via: CombatPlanMemo["via"]; steps: import("../strategy/turn-solver.js").Step[] };
   /**
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
@@ -109,26 +83,29 @@ export interface ScreenMemory {
   fightCards?: { fight: string; perTurn: Record<string, number>; witherDamage: number };
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
   demonTongueTurn?: string;
-  /** Gambler's Brew drunk by a plan this turn: the hand cards (ids) the plan discards with it. */
-  gambleDiscards?: { turn: number | null; cardIds: string[] };
+  /**
+   * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
+   * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a
+   * re-plan replaces it). Survives in-combat screen changes; cleared out of combat.
+   */
+  hpGuard?: { fight: string; turns: Record<string, number> };
+  /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
+  potionTurn?: { fight: string; turn: number | null; startCount: number };
+  /** Potion ids the fight plan's auto-drink used this fight: one each (H5MZ F39: both Power Potions went T1). */
+  planPotionsDrunk?: { fight: string; ids: string[] };
   /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
    */
   lastMap?: RememberedMap;
-  /** DeepSeek's strategic intents for the current fight (FIGHT_PLAN=v1); cleared out of combat. */
+  /** DeepSeek's plan for the current elite/boss fight (FIGHT_PLAN=v1); cleared out of combat. */
   fightPlan?: import("../strategy/fight-plan.js").FightPlan | null;
   /** Fight key (act:floor) whose plan request failed: not retried in the same fight. */
   fightPlanFailed?: string;
-  /** DeepSeek's run plan (RUN_PLAN=v1): the run's strategic intents (intent.ts). Kept across screens. */
+  /** DeepSeek's run plan (RUN_PLAN=v1): strategy weights for build and route decisions. Kept across screens. */
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
-  /**
-   * The event last seen and its floor, kept across screens: an end page of that event on a later floor
-   * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
-   */
-  eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
 }
 
 export interface RememberedMap {
@@ -194,18 +171,8 @@ export interface ResolvedAction {
   reask?: ReaskSpec;
   /** Set when a model other than Jev made the call (escalation). */
   decider?: "jev" | "deepseek" | "claude";
-  /** Set when code replaced the chosen option (no screen does since 2026-09-28; kept for the log shape). */
+  /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
-  /**
-   * Jev picked an option whose tempo note differs from DeepSeek's guidance (intent.ts): logged per
-   * run-plan version as `differs_from_tempo` (a fact; outcomes, not rules, judge it).
-   */
-  tempoDiff?: { guidance: string; runPlanVersion: number | null; fightObjective?: string | null };
-  /**
-   * Where Jev's pick sits in code's reference rank (1 = code's reference option): logged per decision
-   * with the DeepSeek guidance Jev was shown.
-   */
-  reference?: { rank: number | null; of: number; top: string | null; matched: boolean };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
@@ -231,8 +198,6 @@ export interface AskDecision {
    * keys, richer option facts, fight hints, a trimmed brief. The escalator keeps `state`/`questions`.
    */
   jevView?: { state: Record<string, JsonValue>; questions: QuestionSet; context: string; hints: string[] };
-  /** DeepSeek's guidance (strategy/tempo excerpt) shown with this question, for the decision log. */
-  guidance?: string[];
 }
 
 export interface ActDecision {

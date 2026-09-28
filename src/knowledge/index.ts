@@ -11,7 +11,6 @@ import { dirname, join } from "node:path";
 
 import type { ModClient } from "../mod/client.js";
 import { asArray, asRecord, numOrNull, str, stripMarkup } from "../util/json.js";
-import { fillPotionText, fillRelicText } from "./potion-values.js";
 
 export interface CardInfo {
   id: string;
@@ -25,8 +24,6 @@ export interface CardInfo {
   tags: string[];
   damage: number | null;
   block: number | null;
-  /** Card color (ironclad, colorless, curse, …), when the data has it. */
-  color?: string;
 }
 
 export interface MonsterInfo {
@@ -85,8 +82,6 @@ export interface Knowledge {
   potion(id: string | null | undefined): PotionInfo | null;
   power(id: string | null | undefined): PowerInfo | null;
   event(id: string | null | undefined): EventInfo | null;
-  /** Card ids whose game name is `name` (a name can be shared across characters). */
-  cardIdsByName?(name: string): string[];
   stats: KnowledgeStats;
   source: "live" | "cache";
 }
@@ -116,7 +111,6 @@ function parseCard(entry: unknown): CardInfo | null {
     tags: asArray(obj["tags"]).map((value) => str(value)).filter(Boolean),
     damage: numOrNull(obj["damage"]),
     block: numOrNull(obj["block"]),
-    ...(str(obj["color"]) ? { color: str(obj["color"]) } : {}),
   };
 }
 
@@ -141,8 +135,7 @@ function parseRelic(entry: unknown): RelicInfo | null {
   return {
     id,
     name: str(obj["name"], id),
-    // Its template numbers filled where known (potion-values.ts RELIC_VALUES), else marked unknown.
-    description: fillRelicText(id, str(obj["description"])),
+    description: stripMarkup(str(obj["description"])),
     rarity: str(obj["rarity"]),
   };
 }
@@ -154,8 +147,7 @@ function parsePotion(entry: unknown): PotionInfo | null {
   return {
     id,
     name: str(obj["name"], id),
-    // The template's numbers filled in (potion-values.ts): the mod leaves them as {Name}.
-    description: fillPotionText(id, str(obj["description"])),
+    description: stripMarkup(str(obj["description"])),
     rarity: str(obj["rarity"]),
     usage: str(obj["usage"]),
     target_type: str(obj["target_type"]),
@@ -210,16 +202,8 @@ export function makeKnowledge(collections: Partial<Record<CollectionName, unknow
   const powers = buildIndex(collections.powers ?? [], parsePower);
   const events = buildIndex(collections.events ?? [], parseEvent);
 
-  const cardNames = new Map<string, string[]>();
-  for (const card of cards.values()) {
-    const list = cardNames.get(card.name) ?? [];
-    list.push(card.id);
-    cardNames.set(card.name, list);
-  }
-
   return {
     card: (id) => (id ? cards.get(id) ?? null : null),
-    cardIdsByName: (name) => cardNames.get(name.trim()) ?? [],
     monster: (id) => (id ? monsters.get(id) ?? null : null),
     relic: (id) => (id ? relics.get(id) ?? null : null),
     potion: (id) => (id ? potions.get(id) ?? null : null),

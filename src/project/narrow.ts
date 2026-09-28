@@ -2,7 +2,6 @@
 
 import type { Knowledge } from "../knowledge/index.js";
 import type { PowerLine } from "../strategy/damage.js";
-import { fillPotionText } from "../knowledge/potion-values.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 
 export interface EnemyView {
@@ -216,7 +215,7 @@ export function potionViews(state: { raw: Record<string, unknown> }, knowledge: 
         key: `p${slot}`,
         potion_id: id,
         name: str(potion["name"], info?.name ?? id),
-        text: truncate(fillPotionText(id, str(potion["description"]) || info?.description || ""), 140),
+        text: truncate(str(potion["description"]) || info?.description || "", 140),
         can_use: bool(potion["can_use"]),
         can_discard: bool(potion["can_discard"]),
         requires_target: bool(potion["requires_target"]),
