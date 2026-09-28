@@ -2007,8 +2007,13 @@ export function solveTurn(input: SolverInput): SolveResult {
     nodes += 1;
     const plan = evaluate(sim, input, weights);
     const o = plan.outcome;
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}`;
-    const potionsDrunk = sim.steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+    const potionSteps = sim.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId);
+    const potionsDrunk = potionSteps.length;
+    // The potions drunk are part of the outcome: a line drinking a potion never merges with (and so never
+    // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
+    // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
+    // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
     const overPotionCap =
       input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);

@@ -1922,3 +1922,27 @@ describe("Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact 
     expect(lineOf(result.plans, ["FOUL_POTION"])!.outcome.hpLoss).toBe(1);
   });
 });
+
+describe("a potion line never merges with a potion-free line (2CCM6XK4PB37 F15 T2: code drank the Dexterity Potion as the only line)", () => {
+  it("0 energy, nothing playable: end turn stays a line next to the Dexterity Potion line", () => {
+    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [], 0)!;
+    const colossus = card(0, "COLOSSUS", { type: "Skill", target: "self", validTargets: [], block: 5, cost: 1 });
+    const result = solveTurn({
+      hand: [colossus, dex],
+      player: player({ hp: 56, energy: 0, block: 39 }),
+      enemies: [enemy({ hp: 36, maxHp: 65, attacks: [{ damage: 8, hits: 1 }] })],
+      fightKind: "monster",
+      turn: 2,
+    });
+    const drinks = (plan: { steps: { cardId: string }[] }) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+    const potionLine = result.plans.find(drinks)!;
+    const dry = result.plans.find((plan) => !drinks(plan))!;
+    expect(dry).toBeDefined();
+    expect(dry.steps).toEqual([]);
+    // Same end state, and the potion line scores a hair higher (lasting Dexterity): before the fix they shared
+    // a bucket (Math.round(score)) and the potion line replaced "end turn".
+    expect(potionLine.outcome.hpLoss).toBe(dry.outcome.hpLoss);
+    expect(potionLine.score).toBeGreaterThan(dry.score);
+    expect(Math.round(potionLine.score)).toBe(Math.round(dry.score));
+  });
+});
