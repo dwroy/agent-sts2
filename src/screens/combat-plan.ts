@@ -460,7 +460,7 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Record<string, JsonValue> {
+function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = [], startAoe: StartAoeSources = { hourglass: 0, inferno: 0 }): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
@@ -475,7 +475,8 @@ function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Rec
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
-  if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
+  // Every start-of-turn AoE, named (W8JD F31 T3: "mercury_hourglass_kills_next_turn" with no Hourglass; it was Inferno).
+  if (o.startTurnKills.length > 0) summary["start_of_turn_aoe_kills"] = `${o.startTurnKills.join(", ")} (at the start of my next turn, by ${startAoeText(plan, hand, startAoe)})`;
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
   if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
@@ -623,6 +624,24 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
   if (card && card.hpLoss > 0) env.screenMemory.demonTongueTurn = `${hpGuardFight(env)}:${env.state.turn}`;
 }
 
+/** Start-of-turn damage to every enemy already up: Mercury Hourglass's, and Inferno's (turnStartAoe). */
+export interface StartAoeSources {
+  hourglass: number;
+  inferno: number;
+}
+
+/** The start-of-turn AoE a line leaves, by source: "Inferno 6", "Mercury Hourglass 3", an Inferno played now. */
+export function startAoeText(plan: Plan, hand: CardModel[], sources: StartAoeSources): string {
+  const parts: string[] = [];
+  if (sources.hourglass > 0) parts.push(`Mercury Hourglass ${sources.hourglass}`);
+  if (sources.inferno > 0) parts.push(`Inferno ${sources.inferno}`);
+  const played = plan.steps
+    .map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId))
+    .reduce((sum, card) => sum + (card?.inferno ?? 0), 0);
+  if (played > 0 && sources.inferno === 0) parts.push(`Inferno ${played} (played this turn)`);
+  return parts.join(" + ") || "start-of-turn damage";
+}
+
 /** Intimidating Helmet's block per 2+ cost card (PU21 F12-F14: block 0 -> 4; its description is a template). */
 export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
@@ -634,10 +653,15 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  * Crimson Mantle's (both are HP lost on our turn). 9XZX T5 -> T6: Crusher 55 -> 49, Rocket 140 -> 134.
  */
 export function turnStartAoe(relicIds: string[], player: Record<string, unknown>): number {
+  const sources = turnStartAoeSources(relicIds, player);
+  return sources.hourglass + sources.inferno;
+}
+
+export function turnStartAoeSources(relicIds: string[], player: Record<string, unknown>): StartAoeSources {
   const hourglass = relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0;
   const inferno = powerAmount(player, "INFERNO_POWER");
   const lossEvents = inferno > 0 ? 1 + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0) : 0;
-  return hourglass + inferno * lossEvents;
+  return { hourglass, inferno: inferno * lossEvents };
 }
 const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;
@@ -1535,11 +1559,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (reserved) return [fit.differs ? fit.tempo : null, "drinks a potion DeepSeek holds for the act boss"].filter(Boolean).join("; ");
     return fit.differs ? fit.tempo : null;
   };
+  const aoeSources = turnStartAoeSources(relicIds, player);
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string; potionId?: string }>();
   options.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...lineFacts(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand, aoeSources), ...lineFacts(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   if (offerPotions) {
@@ -1618,7 +1643,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...planFacts(plan, ctx), ...lineFacts(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand, aoeSources), ...planFacts(plan, ctx), ...lineFacts(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({

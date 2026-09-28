@@ -189,3 +189,27 @@ describe("the boss fight plan sees the clock at the HP we have (RUUB F33: scale_
     expect(fightPlanInput(state, loggedKnowledge, "elite", {})["boss_clock"]).toBeUndefined();
   });
 });
+
+describe("start-of-turn AoE kills are named by source (W8JD F31 T3: 'mercury_hourglass_kills_next_turn' with no Hourglass; Inferno killed the larvae)", () => {
+  const lines = (name: string) => {
+    const decision = planCombatTurn(loggedEnv(logged(name)));
+    return Object.values(questionOf(decision).options);
+  };
+
+  it("T3: the lines that play Inferno say Inferno played this turn; no line names the Hourglass", () => {
+    const all = lines("w8jd-f31-t3");
+    expect(all.some((line) => "mercury_hourglass_kills_next_turn" in line)).toBe(false);
+    const killing = all.filter((line) => line["start_of_turn_aoe_kills"] !== undefined);
+    expect(killing.length).toBeGreaterThan(0);
+    for (const line of killing) {
+      expect(String(line["start_of_turn_aoe_kills"])).toMatch(/by Inferno \d+ \(played this turn\)/);
+      expect(String(line["plays"])).toMatch(/狱火/);
+    }
+  });
+
+  it("T3's end (Inferno up): the source is the Inferno already up", () => {
+    const killing = lines("w8jd-f31-t3-end").filter((line) => line["start_of_turn_aoe_kills"] !== undefined);
+    expect(killing.length).toBeGreaterThan(0);
+    for (const line of killing) expect(String(line["start_of_turn_aoe_kills"])).toMatch(/by Inferno \d+\)$/);
+  });
+});
