@@ -13,6 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
 import { loadFightValueGates, type FightValueGates } from "../src/strategy/rollout.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -29,10 +30,13 @@ afterEach(() => {
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.now = null;
   rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+  potionMcOptions.now = null;
 });
 
 function plan(name: string, enabled: boolean, jevContext: "v1" | "off" = "v1"): Decision | null {
   rolloutLiveOptions.enabled = enabled;
+  // The random-potion samples are cut by wall-clock time; a frozen clock keeps them identical across calls.
+  potionMcOptions.now = () => 0;
   return planCombatTurn(loggedEnv(logged(name), { jevContext }));
 }
 

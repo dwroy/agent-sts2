@@ -1418,7 +1418,7 @@ describe("potions at low HP outside boss fights", () => {
     return raw;
   };
 
-  it("offers an unsimulated potion under T1: the best potion-free option loses >= 12% of HP this turn (Dai 2026-09-28)", async () => {
+  it("offers an unsimulated potion under T1: the cheapest potion-free option loses >= 12% of HP this turn (Dai 2026-09-28)", async () => {
     const { planCombatTurn, UNSIMULATED_HP_SHARE } = await import("../src/screens/combat-plan.js");
     expect(UNSIMULATED_HP_SHARE).toBe(0.12);
     const hit = (hp: number, damage: number) => {
@@ -1432,7 +1432,7 @@ describe("potions at low HP outside boss fights", () => {
     const criteria = heavy?.kind === "ask" && heavy.questions["plan"]?.type === "choice" ? heavy.questions["plan"].criteria : {};
     const offer = JSON.parse(String(Object.entries(criteria).find(([key]) => !key.startsWith("plan"))![1]));
     expect(offer["plays"]).toMatch(/^drink .* first: .*; effect not simulated/);
-    expect(offer["offered_because"]).toMatch(/best potion-free option loses \d+ HP this turn \(>= 12% of 25\)/);
+    expect(offer["offered_because"]).toMatch(/cheapest potion-free option loses \d+ HP this turn \(>= 12% of 25\)/);
     // Nothing gets through: no offer (and no question on its account).
     expect(hit(80, 1)?.label).not.toBe("combat/plan-choice+potion");
   });

@@ -1312,8 +1312,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
   // fight plan says now.
   const mcForces = mcSources.size > 0 && randomPotions().some((mc) => mc.beats > 0);
-  const bestDry = options.find((plan) => !drinksPotion(plan)) ?? null;
-  const t1Hp = bestDry === null || bestDry.outcome.dies || bestDry.outcome.hpLoss >= UNSIMULATED_HP_SHARE * playerSim.hp;
+  // T1 asks whether every potion-free option is bad (Dai: 所有结果扣血都很多), so it reads the cheapest
+  // potion-free option, not code's top-ranked one (fn0h: fired at -17 while a 0-HP line existed).
+  const dryOptions = options.filter((plan) => !drinksPotion(plan));
+  const cheapestDry = dryOptions.length === 0 ? null : dryOptions.reduce((a, b) => (b.outcome.hpLoss < a.outcome.hpLoss ? b : a));
+  const t1Hp = cheapestDry === null || cheapestDry.outcome.dies || cheapestDry.outcome.hpLoss >= UNSIMULATED_HP_SHARE * playerSim.hp;
   if (clear && !mcForces && !(potions.length > 0 && (t1Hp || planPotionNow))) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
@@ -1398,9 +1401,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     : null;
   const rolloutBest = rollout?.available ? rollout.best : null;
   const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
-  // T1 for the unsimulated potions: the best potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
+  // T1 for the unsimulated potions: the cheapest potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
   // or its rollout has a dying sample.
-  const t1Death = rollout !== null && rollout.available && bestDry !== null && (rollout.byPlan.get(bestDry)?.deaths ?? 0) > 0;
+  const t1Death = rollout !== null && rollout.available && cheapestDry !== null && (rollout.byPlan.get(cheapestDry)?.deaths ?? 0) > 0;
   const offerPotions = potions.length > 0 && (t1Hp || t1Death || planPotionNow);
   const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
@@ -1436,7 +1439,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
   // Unsimulated potions: offered under T1 (or the fight plan's moment), with no invented numbers.
-  const t1Why = [t1Hp ? `the best potion-free option loses ${bestDry ? bestDry.outcome.hpLoss : "all"} HP this turn (>= ${Math.round(UNSIMULATED_HP_SHARE * 100)}% of ${playerSim.hp})` : "", t1Death ? "the best potion-free option dies in some rollout sample" : "", planPotionNow ? "the fight plan says now" : ""].filter(Boolean).join("; ");
+  const t1Why = [t1Hp ? `even the cheapest potion-free option loses ${cheapestDry ? cheapestDry.outcome.hpLoss : "all"} HP this turn (>= ${Math.round(UNSIMULATED_HP_SHARE * 100)}% of ${playerSim.hp})` : "", t1Death ? "the cheapest potion-free option dies in some rollout sample" : "", planPotionNow ? "the fight plan says now" : ""].filter(Boolean).join("; ");
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
