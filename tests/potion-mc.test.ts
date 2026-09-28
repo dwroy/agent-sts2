@@ -11,7 +11,7 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { MAX_OPTIONS, planCombatTurn, trimForPotionOptions } from "../src/screens/combat-plan.js";
 import type { CardModel } from "../src/strategy/card-model.js";
-import { MC_MIN_SAMPLES, MC_SAMPLES, potionMcOptions, runPotionMc, samplePotion, seedOf, type PotionMcSource } from "../src/strategy/potion-mc.js";
+import { beatsDryLine, MC_BEATS_DAMAGE, MC_BEATS_HP, MC_MIN_SAMPLES, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, samplePotion, seedOf, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -36,6 +36,43 @@ const input = (hand: CardModel[], hp = 30, damage = 10): SolverInput => ({ hand,
 const drinksFirst = (plan: Plan | null, potionId: string) => plan !== null && plan.steps[0]!.cardId.startsWith(`POTION:${potionId}:`);
 const pick = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
 const criteriaOf = (decision: Decision | null) => ((decision as AskDecision).jevView?.questions ?? (decision as AskDecision).questions)["plan"]!.criteria!;
+
+describe("beats the best potion-free line only by a real margin (6189 F17 T1: Gambler's Brew +0.1 damage read 'beats 12/12')", () => {
+  const outcome = (hpLoss: number, damageDealt: number, flags: { dies?: boolean; winsFight?: boolean } = {}) =>
+    ({ steps: [], score: 0, outcome: { hpLoss, damageDealt, dies: flags.dies ?? false, winsFight: flags.winsFight ?? false } }) as unknown as Plan;
+
+  it("the margin: MC_BEATS_HP HP saved, MC_BEATS_DAMAGE damage more, a mix worth as much, a win, or living where the dry line dies", () => {
+    const dry = outcome(10, 24);
+    expect(beatsDryLine(outcome(10, 25), dry)).toBe(false);
+    expect(beatsDryLine(outcome(9, 24), dry)).toBe(false);
+    expect(beatsDryLine(outcome(10 - MC_BEATS_HP, 24), dry)).toBe(true);
+    expect(beatsDryLine(outcome(10, 24 + MC_BEATS_DAMAGE), dry)).toBe(true);
+    expect(beatsDryLine(outcome(9, 24 + MC_BEATS_DAMAGE / 2), dry)).toBe(true);
+    expect(beatsDryLine(outcome(12, 34), dry)).toBe(true);
+    expect(beatsDryLine(outcome(10, 25, { winsFight: true }), dry)).toBe(true);
+    expect(beatsDryLine(outcome(0, 90, { dies: true }), dry)).toBe(false);
+    expect(beatsDryLine(outcome(30, 0), outcome(40, 0, { dies: true }))).toBe(true);
+  });
+
+  it("a potion that adds 1-2 damage at equal HP beats in no sample; the option shows the mean differences", () => {
+    const pool = [attack(0, "ONE", 1), attack(0, "TWO", 2), attack(0, "ONE_B", 1), attack(0, "TWO_B", 2)];
+    const source: PotionMcSource = { potionId: "ATTACK_POTION", name: "Attack Potion", slot: 0, text: "pick 1 of 3", kind: "choice", pools: { Attack: pool }, poolName: "test Attack" };
+    const board = input([attack(1, "STRIKE", 6, 1), attack(2, "STRIKE", 6, 1), attack(3, "STRIKE", 6, 1), attack(4, "STRIKE", 6, 1)], 300, 10);
+    const dryBest = solveTurn(board).plans[0]!;
+    expect(dryBest.outcome.damageDealt).toBe(18);
+    const mc = runPotionMc(board, source, dryBest, 11, 10_000);
+    const lines = mc.plans.filter((plan): plan is Plan => plan !== null);
+    // Every sample scores above the dry line (the old count), none by a real margin.
+    expect(lines.every((plan) => plan.score > dryBest.score)).toBe(true);
+    expect(mc.beats).toBe(0);
+    expect(mc.vsDry!.hpSaved).toBe(0);
+    expect(mc.vsDry!.damageGained).toBeGreaterThan(0);
+    expect(mc.vsDry!.damageGained).toBeLessThanOrEqual(2);
+    const criteria = potionMcCriteria(mc, dryBest, () => "", false);
+    expect(criteria["beats_best_potion_free_line"]).toMatch(/^0\/12 samples/);
+    expect(criteria["vs_best_potion_free_line"]).toMatch(/^mean HP saved \+0, mean damage \+\d/);
+  });
+});
 
 describe("(a) card-choice potions: offers from the real pool, the best card of each taken", () => {
   const pool = [attack(0, "BIG", 40), attack(0, "MID", 12), attack(0, "SMALL", 4), attack(0, "TINY", 1), attack(0, "CHIP", 2)];
