@@ -21,6 +21,10 @@
  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
  *      w x model (calibrated win probability) + (1 - w) x a deck-damage clock, w from the gate of the
  *      encounter's segment (0 when the model's ranking advantage is not established).
+ *   3b. Kill orders (two or more kinds of enemy, killOrders()): every shown line is rolled out once per order,
+ *      the policy aiming each later turn at the order's first group still alive (turn-solver focusIndex with
+ *      ORDER_FOCUS_BONUS); a line's numbers are its best order's, the others kept beside them. Orders that agree
+ *      on every group a sample looked at share that sample.
  *   4. A time budget per decision: the first sample of every line runs at the full horizon and times the
  *      policy; the rest is scheduled to fit (5 turns x 8 samples, else 3 turns, else fewer samples, else
  *      1 turn: the line itself + terminal). Horizon and samples used are recorded per line.
@@ -372,6 +376,14 @@ export interface RolloutOptions {
   now?: () => number;
   /** Lines to evaluate as well (tagged "offered"): the backtest adds every line Jev was shown. */
   include?: Plan[];
+  /**
+   * Kill orders for the later turns (killOrders()). With two or more, every `include` line is rolled out
+   * under each, with the same random numbers; its estimate is its best order's, the others kept beside it.
+   * The other candidates keep the solver's own later turns.
+   */
+  orders?: KillOrder[];
+  /** The kill-order policy's extra damage weight on its target (default ORDER_FOCUS_BONUS). */
+  orderFocusBonus?: number;
 }
 
 export interface RolloutInput {
@@ -395,8 +407,32 @@ export interface RolloutInput {
   options?: RolloutOptions;
 }
 
+/** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
+export interface OrderEstimate {
+  order: KillOrder;
+  /** Samples in which the order's first group is dead by the end of the horizon (the fight won counts). */
+  firstDown: number;
+  hpLoss: number;
+  turnsToWin: number | null;
+  deaths: number;
+  turnsToDeath: number | null;
+  winProb: number;
+  wins: number;
+  value: number;
+  valueModelTerminal: number | null;
+  modelForecast: { hpLoss: number; winProb: number } | null;
+  perTurn: TurnSpread[];
+}
+
 export interface LineEstimate {
   plan: Plan;
+  /**
+   * The kill order of the later turns behind this estimate (the best of `orders` by value), or null
+   * without kill orders (one kind of enemy, or a 1-turn estimate).
+   */
+  order: KillOrder | null;
+  /** Every kill order rolled out for the line, best first (empty without kill orders). */
+  orders: OrderEstimate[];
   /** Why it is a candidate: top (by score), damage, safe (least HP lost), setup. */
   tags: string[];
   score: number;
@@ -462,6 +498,8 @@ export function turnSpreads(trajectories: TurnRecord[][], horizon: number): Turn
 
 export interface RolloutResult {
   lines: LineEstimate[];
+  /** The kill orders compared (empty: none, the solver's own later turns). */
+  orders: KillOrder[];
   horizon: number;
   samples: number;
   elapsedMs: number;
@@ -829,7 +867,17 @@ interface Budget {
 }
 
 /** One sample of one line: the line itself, then up to horizon-1 policy turns. Returns the per-turn records. */
-function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number, budget: Budget, deadline = Infinity): TurnRecord[] | null {
+function simulate(
+  input: RolloutInput,
+  plan: Plan,
+  horizon: number,
+  seed: number,
+  budget: Budget,
+  deadline = Infinity,
+  order: KillOrder | null = null,
+  /** Set to how many of the order's groups the policy looked at (the trajectory depends on no others). */
+  used: { depth: number } = { depth: 0 },
+): TurnRecord[] | null {
   const random = rng(seed);
   const s = input.solver;
   const opts = input.options ?? {};
@@ -941,9 +989,15 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
     const started = budget.now();
-    const { drawPile: _d, wither: _w, focusIndex: _f, nextIncoming: _n, ...rest } = s;
+    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
-    const solved = solveTurn({ ...rest, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
+    // A kill order: this turn's target is the first of its groups with a member alive (the lowest-HP
+    // member of it); none left, or none given, and the solver's own score picks.
+    const aim = order ? orderTarget(order, enemies) : null;
+    if (aim) used.depth = Math.max(used.depth, aim.depth);
+    const target = aim?.target;
+    const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
+    const solved = solveTurn({ ...rest, ...focus, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
@@ -993,9 +1047,95 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   };
 }
 
+// ---------------------------------------------------------------- kill orders
+
+/** One position of a kill order: the living enemies of one id (identical enemies are not ordered among themselves). */
+export interface KillGroup {
+  id: string;
+  name: string;
+  /** Enemy indices of the group's living members. */
+  indices: number[];
+  /** Their HP together. */
+  hp: number;
+}
+
+/** An order to kill the enemy groups in: the later turns' policy targets the first group with a member alive. */
+export interface KillOrder {
+  /** Enemy ids joined by ">". */
+  key: string;
+  /** Names joined by " > " ("Louse x3" for a group). */
+  label: string;
+  groups: number[][];
+}
+
+/** Every permutation is compared up to this many groups (3! = 6 orders); past it, each group first. */
+export const MAX_FULL_ORDER_GROUPS = 3;
+/**
+ * The kill-order policy's extra damage weight on its target (turn-solver focusWeight). On 60 recorded
+ * multi-enemy boards (158 option lines, 5 turns x 8 samples) the order's first target was dead by T5 in
+ * 79.7% / 81.1% / 81.9% of samples at 0.5 (the fight plan's FOCUS_BONUS) / 1.5 / 3, the spread of further HP
+ * loss between a line's orders 0.9 / 1.6 / 2.5, deaths 18.7% / 19.5% / 20.2%: 1.5 makes the orders differ
+ * without the policy giving up its block.
+ */
+export const ORDER_FOCUS_BONUS = 1.5;
+
+function permutations<T>(items: T[]): T[][] {
+  if (items.length <= 1) return [items.slice()];
+  return items.flatMap((item, i) => permutations([...items.slice(0, i), ...items.slice(i + 1)]).map((rest) => [item, ...rest]));
+}
+
+function factorial(n: number): number {
+  return n <= 1 ? 1 : n * factorial(n - 1);
+}
+
+/**
+ * The kill orders to compare: every permutation of the groups up to `maxFull` groups; past it, each group
+ * first and the rest by HP (lowest first), `dropped` saying how many permutations were left out. Fewer than
+ * two groups: no orders.
+ */
+export function killOrders(groups: KillGroup[], maxFull = MAX_FULL_ORDER_GROUPS): { orders: KillOrder[]; dropped: number } {
+  if (groups.length < 2) return { orders: [], dropped: 0 };
+  const make = (seq: KillGroup[]): KillOrder => ({
+    key: seq.map((group) => group.id).join(">"),
+    label: seq.map((group) => (group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name)).join(" > "),
+    groups: seq.map((group) => group.indices.slice()),
+  });
+  if (groups.length <= maxFull) return { orders: permutations(groups).map(make), dropped: 0 };
+  const byHp = [...groups].sort((a, b) => a.hp - b.hp || a.id.localeCompare(b.id));
+  const orders = byHp.map((first) => make([first, ...byHp.filter((group) => group !== first)]));
+  return { orders, dropped: factorial(groups.length) - orders.length };
+}
+
+/**
+ * The enemy a kill order hits this turn: the lowest-HP living member of its first group with one, else none;
+ * `depth` is how many of the order's groups were looked at to find it.
+ */
+function orderTarget(order: KillOrder, enemies: SimEnemy[]): { target: number | undefined; depth: number } {
+  for (let i = 0; i < order.groups.length; i += 1) {
+    const group = order.groups[i]!;
+    const living = enemies.filter((e) => group.includes(e.index) && e.alive && e.hp > 0 && e.explodeAt === undefined);
+    if (living.length > 0) return { target: living.reduce((a, b) => (b.hp < a.hp || (b.hp === a.hp && b.index < a.index) ? b : a)).index, depth: i + 1 };
+  }
+  return { target: undefined, depth: order.groups.length };
+}
+
+/** Two orders agree on their first `depth` groups. */
+function samePrefix(a: KillOrder, b: KillOrder, depth: number): boolean {
+  for (let i = 0; i < depth; i += 1) if ((a.groups[i] ?? []).join(",") !== (b.groups[i] ?? []).join(",")) return false;
+  return true;
+}
+
 const SCHEDULE: { horizon: number; samples: number }[] = [
   { horizon: 5, samples: 8 },
   { horizon: 3, samples: 8 },
+  { horizon: 3, samples: 4 },
+  { horizon: 3, samples: 2 },
+];
+/** With kill orders, samples go before the horizon: an order only shows once its first target is dead. */
+const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
+  { horizon: 5, samples: 8 },
+  { horizon: 5, samples: 6 },
+  { horizon: 5, samples: 4 },
   { horizon: 3, samples: 4 },
   { horizon: 3, samples: 2 },
 ];
@@ -1036,8 +1176,27 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     };
   });
 
-  // (iii) rollout, sample by sample across all lines (common random numbers per sample index).
-  const trajectories: TurnRecord[][][] = candidates.map(() => []);
+  // (iii) rollout, sample by sample across all lines (common random numbers per sample index), and with
+  // kill orders across every (line, order) pair: the same draws and enemy moves for every order.
+  const orders: (KillOrder | null)[] = opts.orders && opts.orders.length >= 2 ? opts.orders : [null];
+  // Orders are compared for the lines shown (tagged "offered"); the other candidates, there only to find a
+  // better line to add, keep the solver's own later turns.
+  const units = candidates.flatMap(({ plan, tags }, line) => (orders.length > 1 && !tags.includes("offered") ? [null] : orders).map((order) => ({ line, plan, order })));
+  const trajectories: TurnRecord[][][] = units.map(() => []);
+  // One sample of one (line, order): an order agreeing with an order already run on every group that run
+  // looked at gets the same trajectory (same line, seed and horizon; the policy is deterministic), e.g.
+  // A > B > C and A > C > B while A lives through the horizon.
+  const shared = new Map<string, { order: KillOrder; depth: number; records: TurnRecord[] }[]>();
+  const run = (unit: { line: number; plan: Plan; order: KillOrder | null }, h: number, j: number): TurnRecord[] | null => {
+    const key = `${unit.line}:${h}:${j}`;
+    const done = unit.order ? (shared.get(key) ?? []) : [];
+    const hit = unit.order ? done.find((entry) => samePrefix(entry.order, unit.order!, entry.depth)) : undefined;
+    if (hit) return hit.records;
+    const used = { depth: 0 };
+    const records = simulate(input, unit.plan, h, seed * 7919 + 1 + j, budget, budget.budgetMs, unit.order, used);
+    if (unit.order && records) shared.set(key, [...done, { order: unit.order, depth: used.depth, records }]);
+    return records;
+  };
   let horizon = maxHorizon;
   let samples = maxSamples;
   const elapsed = () => now() - budget.start;
@@ -1045,11 +1204,15 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const turnsBefore = budget.policyTurns;
     const t = now();
     // First wave at the full horizon, timing the policy. Past the budget it is abandoned: 1 turn for all.
-    const first = candidates.map(({ plan }) => simulate(input, plan, maxHorizon, seed * 7919 + 1, budget, budget.budgetMs));
-    const perTurn = (now() - t) / Math.max(1, budget.policyTurns - turnsBefore);
+    const first = units.map((unit) => run(unit, maxHorizon, 0));
+    const waveMs = now() - t;
+    const perTurn = waveMs / Math.max(1, budget.policyTurns - turnsBefore);
     const left = budget.budgetMs - elapsed();
-    const cost = (h: number, m: number) => perTurn * candidates.length * (h - 1) * (m - 1);
-    const fit = SCHEDULE.filter((s) => s.horizon <= maxHorizon && s.samples <= maxSamples).find((s) => cost(s.horizon, s.samples) <= left);
+    // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
+    // wave's own time is the measure of a wave.
+    const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, maxHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
+    const schedule = orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE;
+    const fit = schedule.filter((s) => s.horizon <= maxHorizon && s.samples <= maxSamples).find((s) => cost(s.horizon, s.samples) <= left);
     if (first.some((r) => r === null) || elapsed() > budget.budgetMs || !fit) {
       horizon = 1;
       samples = 1;
@@ -1057,11 +1220,11 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     } else {
       first.forEach((records, i) => trajectories[i]!.push(records!));
       if (fit.horizon < maxHorizon) degraded.push(`horizon ${fit.horizon}`);
-      if (fit.samples < maxSamples) degraded.push(`samples ${fit.samples}`);
+      if (fit.samples < maxSamples) degraded.push(orders.length > 1 ? `samples ${fit.samples} per kill order` : `samples ${fit.samples}`);
       horizon = fit.horizon;
       samples = fit.samples;
       for (let j = 1; j < samples; j += 1) {
-        const wave = candidates.map(({ plan }) => simulate(input, plan, horizon, seed * 7919 + 1 + j, budget, budget.budgetMs));
+        const wave = units.map((unit) => run(unit, horizon, j));
         // A wave cut by the deadline is dropped: every line keeps the same number of complete samples.
         if (wave.some((r) => r === null)) {
           samples = j;
@@ -1076,61 +1239,95 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     samples = 1;
   }
 
+  const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length);
+  /** The rollout numbers of one (line, order) pair's samples. */
+  const estimate = (runs: TurnRecord[][], order: KillOrder | null) => {
+    const kept = runs.slice(0, samples);
+    const first = order?.groups[0] ?? [];
+    const firstDown = kept.filter((records) => {
+      const last = records[Math.min(horizon, records.length) - 1]!;
+      return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
+    }).length;
+    const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
+    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
+    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
+    const loss = mean(vals.map((v) => v.loss));
+    const win = mean(vals.map((v) => v.win));
+    // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
+    const alive = vals.filter((v) => !v.died);
+    const dead = vals.filter((v) => v.died);
+    const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
+    return {
+      hpLoss: loss,
+      turnsToWin: alive.length > 0 ? mean(alive.map((v) => v.turns)) : null,
+      deaths: dead.length,
+      turnsToDeath: dead.length > 0 ? mean(dead.map((v) => v.turns)) : null,
+      winProb: win,
+      wins,
+      value: -loss - DEATH_HP * (1 - win),
+      valueModelTerminal: model === null ? null : -model.hpLoss - DEATH_HP * (1 - model.winProb),
+      modelForecast: model,
+      perTurn: turnSpreads(kept, horizon),
+      firstDown,
+    };
+  };
+
   const lines: LineEstimate[] = candidates.map(({ plan, tags }, i) => {
     const current = plan.score / hpWeight;
     const o = one[i]!;
-    let loss = o.hpLoss;
-    let win = o.winProb;
-    let turns: number | null = o.turns;
-    let deaths = 0;
-    let turnsToDeath: number | null = null;
-    let lossM: number | null = null;
-    let winM: number | null = null;
-    let wins = plan.outcome.winsFight ? 1 : 0;
-    if (horizon > 1) {
-      wins = trajectories[i]!.slice(0, samples).filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
-      const vals = trajectories[i]!.slice(0, samples).map((records) => valueAt(records, horizon, ctx, t0, startHp));
-      const valsM = trajectories[i]!.slice(0, samples).map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
-      const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length);
-      loss = mean(vals.map((v) => v.loss));
-      win = mean(vals.map((v) => v.win));
-      // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
-      const alive = vals.filter((v) => !v.died);
-      const dead = vals.filter((v) => v.died);
-      turns = alive.length > 0 ? mean(alive.map((v) => v.turns)) : null;
-      deaths = dead.length;
-      turnsToDeath = dead.length > 0 ? mean(dead.map((v) => v.turns)) : null;
-      if (valsM.every((v) => v.lossModel !== null)) {
-        lossM = mean(valsM.map((v) => v.lossModel!));
-        winM = mean(valsM.map((v) => v.winModel!));
-      }
-    } else {
-      lossM = o.lossModel;
-      winM = o.winModel;
-    }
-    return {
+    const basis = { rolloutSamples: horizon > 1 ? samples : 0, horizon, modelN: o.n, w: gate.w, segment: gate.segment, gateN: gate.n };
+    const common = {
       plan,
       tags,
       score: plan.score,
       currentValue: current,
       oneTurn: { hpLoss: o.hpLoss, winProb: o.winProb, turns: o.turns, modelValue: o.modelValue, value: o.value },
-      hpLoss: loss,
-      turnsToWin: turns,
-      deaths,
-      turnsToDeath,
-      winProb: win,
-      wins,
-      value: -loss - DEATH_HP * (1 - win),
-      valueModelTerminal: lossM === null ? null : -lossM - DEATH_HP * (1 - (winM ?? 0)),
-      modelForecast: {
-        oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 },
-        rollout: lossM === null ? null : { hpLoss: lossM, winProb: winM ?? 0 },
-      },
       horizon,
       samples,
-      perTurn: horizon > 1 ? turnSpreads(trajectories[i]!.slice(0, samples), horizon) : [],
-      basis: { rolloutSamples: horizon > 1 ? samples : 0, horizon, modelN: o.n, w: gate.w, segment: gate.segment, gateN: gate.n },
+      basis,
+    };
+    if (horizon <= 1) {
+      const wins = plan.outcome.winsFight ? 1 : 0;
+      return {
+        ...common,
+        order: null,
+        orders: [],
+        hpLoss: o.hpLoss,
+        turnsToWin: o.turns,
+        deaths: 0,
+        turnsToDeath: null,
+        winProb: o.winProb,
+        wins,
+        value: -o.hpLoss - DEATH_HP * (1 - o.winProb),
+        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - DEATH_HP * (1 - (o.winModel ?? 0)),
+        modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 } },
+        perTurn: [],
+      };
+    }
+    // Every order of the line, best first (ties keep the orders' own order: deterministic).
+    const byOrder = units
+      .map((unit, u) => ({ unit, u }))
+      .filter(({ unit }) => unit.line === i)
+      .map(({ unit, u }) => ({ order: unit.order, ...estimate(trajectories[u]!, unit.order) }))
+      .map((entry, k) => ({ entry, k }))
+      .sort((a, b) => b.entry.value - a.entry.value || a.k - b.k)
+      .map(({ entry }) => entry);
+    const best = byOrder[0]!;
+    return {
+      ...common,
+      order: best.order,
+      orders: byOrder.filter((entry): entry is typeof entry & { order: KillOrder } => entry.order !== null),
+      hpLoss: best.hpLoss,
+      turnsToWin: best.turnsToWin,
+      deaths: best.deaths,
+      turnsToDeath: best.turnsToDeath,
+      winProb: best.winProb,
+      wins: best.wins,
+      value: best.value,
+      valueModelTerminal: best.valueModelTerminal,
+      modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: best.modelForecast },
+      perTurn: best.perTurn,
     };
   });
-  return { lines, horizon, samples, elapsedMs: elapsed(), degraded, policyTurns: budget.policyTurns, policyMs: budget.policyMs, policyNodes: budget.policyNodes };
+  return { lines, orders: orders.filter((order): order is KillOrder => order !== null), horizon, samples, elapsedMs: elapsed(), degraded, policyTurns: budget.policyTurns, policyMs: budget.policyMs, policyNodes: budget.policyNodes };
 }

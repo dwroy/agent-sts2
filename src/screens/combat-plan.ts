@@ -7,7 +7,9 @@
  *   Jev   — chooses between the strategically different plans that code cannot separate (e.g.
  *           block now vs. set up Strength vs. race), and decides about potions: every modelled
  *           potion is on a shown line, and code drinks on its own only when no potion-free line
- *           survives. A lethal that needs a potion is Jev's call too.
+ *           survives. A lethal that needs a potion is Jev's call too. Which enemy to kill first is
+ *           Jev's call: each kind of enemy has a "focus" line, and every line's rollout compares the
+ *           kill orders.
  *
  * A chosen plan is committed: its remaining steps are played without re-asking as long as the hand
  * is exactly what the plan expected. Anything unexpected (a draw, a random effect) invalidates it and
@@ -36,7 +38,9 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
-import { DRINK_FIRST_ROLLOUT, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type LiveRollout } from "../strategy/rollout-live.js";
+import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
+import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
+import { actThreatIds } from "../knowledge/monster-db.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -159,10 +163,126 @@ export function dryFirst(plans: Plan[]): Plan | undefined {
   return plans.find((plan) => !drinksPotion(plan)) ?? plans[0];
 }
 
+/** Test hook: per-target options and kill-order rollouts off (the question as before them). */
+export const targetOptions: { enabled: boolean } = { enabled: true };
+
+/**
+ * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not
+ * ordered among themselves), in board order: every living enemy but a Waterfall Giant husk, and an
+ * illusion only while it attacks (whether hitting it is worth anything is the rollout's and Jev's call).
+ */
+export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[]): KillGroup[] {
+  const idOf = new Map<number, string>();
+  asArray(combat["enemies"])
+    .map(asRecord)
+    .forEach((enemy, fallbackIndex) => idOf.set(numOrNull(enemy["index"]) ?? fallbackIndex, str(enemy["enemy_id"])));
+  const groups: KillGroup[] = [];
+  for (const enemy of enemies) {
+    if (enemy.hp <= 0 || enemy.maxHp >= 1_000_000) continue;
+    if (enemy.illusion && enemy.attacks.length === 0) continue;
+    const id = idOf.get(enemy.index) || enemy.name;
+    const group = groups.find((entry) => entry.id === id);
+    if (group) {
+      group.indices.push(enemy.index);
+      group.hp += enemy.hp;
+    } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp });
+  }
+  return groups;
+}
+
+/** Damage a line puts into a group of enemies (HP taken off, a kill counted to 0). */
+export function damageInto(plan: Plan, indices: number[], enemies: EnemySim[]): number {
+  return indices.reduce((sum, index) => {
+    const before = enemies.find((enemy) => enemy.index === index);
+    const after = plan.outcome.enemyHpAfter.find((entry) => entry.index === index);
+    return before && after ? sum + Math.max(0, before.hp - Math.max(0, after.hp)) : sum;
+  }, 0);
+}
+
+/**
+ * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,
+ * the line that puts the most damage into it, then the higher solver score, then the less HP lost. Lines
+ * drinking no potion first (potions have their own slots); none when no line reaches the group. Several
+ * groups can share one line.
+ */
+export function focusLines(plans: Plan[], groups: KillGroup[], enemies: EnemySim[]): Map<KillGroup, Plan> {
+  const out = new Map<KillGroup, Plan>();
+  const dry = plans.filter((plan) => !drinksPotion(plan));
+  for (const group of groups) {
+    const pool = dry.some((plan) => damageInto(plan, group.indices, enemies) > 0) ? dry : plans;
+    let best: Plan | null = null;
+    let bestDamage = 0;
+    for (const plan of pool) {
+      const damage = damageInto(plan, group.indices, enemies);
+      if (damage <= 0) continue;
+      if (
+        best === null ||
+        damage > bestDamage ||
+        (damage === bestDamage && (plan.score > best.score || (plan.score === best.score && plan.outcome.hpLoss < best.outcome.hpLoss)))
+      ) {
+        best = plan;
+        bestDamage = damage;
+      }
+    }
+    if (best) out.set(group, best);
+  }
+  return out;
+}
+
+/** A group's name on an option ("Louse x3" for identical enemies). */
+export function groupName(group: KillGroup): string {
+  return group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name;
+}
+
+/** Past-run lessons about the enemies of this fight shown to Jev (the experience base's top ones). */
+export const JEV_FIGHT_LESSONS = 3;
+
+/**
+ * The experience base's lessons about this fight's enemies (the slice DeepSeek gets, its current-enemy
+ * tier only: boss/elite/hallway entries matching an enemy here), best confidence and support first.
+ */
+export function fightLessons(state: GameState, max = JEV_FIGHT_LESSONS): ExperienceEntry[] {
+  const combat = asRecord(state.raw["combat"]);
+  const enemyIds = asArray(combat["enemies"]).map((enemy) => str(asRecord(enemy)["enemy_id"])).filter(Boolean);
+  if (enemyIds.length === 0) return [];
+  const actRaw = str(asRecord(state.run?.raw)["act_id"]);
+  const act = /^\d+$/.test(actRaw) ? Number(actRaw) + 1 : 1;
+  const asc = state.run?.ascension ?? 0;
+  const input = {
+    label: "combat/plan",
+    act,
+    asc,
+    bossId: state.run?.boss_id ?? (str(asRecord(state.run?.raw)["boss_id"]) || null),
+    offered: offeredOn(state),
+    threats: actThreatIds(act, asc),
+    enemies: enemyIds,
+  };
+  const matches = (entry: ExperienceEntry): boolean => {
+    const [kind, id] = [entry.scope.slice(0, entry.scope.indexOf(":")), entry.scope.slice(entry.scope.indexOf(":") + 1)];
+    if (kind !== "boss" && kind !== "elite" && kind !== "hallway") return false;
+    return enemyIds.some((enemy) => enemy === id || enemy.startsWith(`${id}_`) || (kind === "boss" && enemy.replace(/_BOSS$/, "") === id));
+  };
+  return selectLessons(input).filter(matches).slice(0, max);
+}
+
+/**
+ * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,
+ * kill-order advice included, on every combat question; advice, not orders).
+ */
+export function deepseekPlanLine(env: DecisionEnv): string | null {
+  const runId = str(env.state.raw["run_id"]);
+  const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === runId ? env.screenMemory.runPlan : null;
+  if (!plan) return env.brief.plan ? `DeepSeek's run plan (advice, not orders): ${env.brief.plan}` : null;
+  const line = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
+  const prep = plan.bossPrep ? ` | boss prep: ${plan.bossPrep}` : "";
+  if (!line && !prep) return null;
+  return `DeepSeek's run plan (F${plan.floor}; advice, not orders): ${line}${prep}`.replace(/\s+/g, " ").trim();
+}
+
 /**
  * Facts for Jev's potion judgement (on every combat question, kept short): belt slots and a full belt
  * wasting the next potion reward, floors to the act boss, an Elite ahead (DeepSeek's route plan, else a
- * forced one on the map), the act boss damage gap, and DeepSeek's run plan.
+ * forced one on the map) and the act boss damage gap. DeepSeek's run plan is its own key (deepseek_plan).
  */
 export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind"]): Record<string, JsonValue> {
   const { state } = env;
@@ -182,15 +302,7 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
     const gap = damageGap(state, env.knowledge);
     if (gap) out["act_boss_clock"] = `needs ~${gap.need} damage a turn, deck ~${gap.deck}${gap.gap > 0 ? ` (short ${gap.gap})` : " (enough)"}`;
   }
-  const runId = str(state.raw["run_id"]);
-  const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === runId ? env.screenMemory.runPlan : null;
-  if (plan) {
-    const line = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
-    const prep = /potion|药水/i.test(plan.bossPrep) ? ` | boss prep: ${plan.bossPrep}` : "";
-    if (line || prep) out["run_plan"] = `${line}${prep}`.replace(/\s+/g, " ").trim();
-  } else if (env.brief.plan) {
-    out["run_plan"] = env.brief.plan;
-  }
+  // DeepSeek's run plan is on the question whole (deepseek_plan), not here.
   return out;
 }
 
@@ -1303,10 +1415,29 @@ function planTurn(env: DecisionEnv): Decision | null {
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
-  // Code plays its line only when there is no other, or it beats every other on every axis; any real
-  // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
+  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
+  // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
+  // concentration, the fight plan's focus) rank code's own lines; they no longer decide which enemy Jev can
+  // aim at. They are shown only when Jev is asked (below); code's own line must beat them too.
+  const groups = allDie === null && targetOptions.enabled ? killGroups(combat, enemies) : [];
+  const focusOf = new Map<Plan, string[]>();
+  if (groups.length >= 2) {
+    for (const [group, line] of focusLines(surviving, groups, enemies)) focusOf.set(line, [...(focusOf.get(line) ?? []), groupName(group)]);
+  }
+  // Which enemy the damage goes into is Jev's call: code's line beats another only with at least as much
+  // damage into every kind of enemy as well (one kind: total damage, the dominance axis, decides as before).
+  const beatsOnTargets = (a: Plan, b: Plan): boolean =>
+    groups.length < 2 || groups.every((group) => damageInto(a, group.indices, enemies) >= damageInto(b, group.indices, enemies));
+  // Code plays its line only when there is no other, or it beats every other on every axis (and on damage
+  // into each kind of enemy, the focus lines included); any real choice between lines is Jev's (lethal,
+  // all-lines-die, mod-says-lethal are decided above).
   // A top line that drinks while a potion-free line survives is never code's to play: Jev decides.
-  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top)) && potionLethal.length === 0;
+  const clear =
+    (!second || options.every((plan) => plan === top || dominates(top, plan))) &&
+    [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
+    !setupClose &&
+    !(drySurvives && drinksPotion(top)) &&
+    potionLethal.length === 0;
   // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
   // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
   // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
@@ -1367,6 +1498,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
   const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
+  // The focus lines join the options shown (see `focusOf` above), in the cap like a potion's slot.
+  for (const line of focusOf.keys()) if (!options.includes(line)) options.push(line);
+  const kill = killOrders(groups);
+  const focusNote = (plan: Plan): Record<string, JsonValue> => (focusOf.has(plan) ? { focus: focusOf.get(plan)!.join(", ") } : {});
   // Rollout FACTS (rollout-live.ts): code's options and their order are settled above; the rollout only
   // adds numbers to each, and its best line as one more option when code did not show it. The HP guard,
   // the potion rules and code's rank keep working on code's own `options`.
@@ -1397,6 +1532,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         shown: [...options, ...mcMedians],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
         spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
+        orders: kill.orders,
+        ordersDropped: kill.dropped,
       })
     : null;
   const rolloutBest = rollout?.available ? rollout.best : null;
@@ -1407,7 +1544,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const offerPotions = potions.length > 0 && (t1Hp || t1Death || planPotionNow);
   const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
-  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : [])]);
+  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys()]);
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
   options.splice(0, options.length, ...planOptions);
   const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
@@ -1417,8 +1554,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
-    byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
+    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
+    byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
   });
   const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const rolloutRecord = rollout
@@ -1463,6 +1600,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
 
+  // DeepSeek's run plan and the experience base's lessons about these enemies: advice for Jev to weigh.
+  const deepseekPlan = deepseekPlanLine(env);
+  const lessons = fightLessons(state);
   const questionState: Record<string, JsonValue> = {
     run_brief: briefJson(env.brief),
     fight: kind,
@@ -1491,6 +1631,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: potionContextJson(env, kind),
+    ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
+    ...(lessons.length > 0
+      ? {
+          experience: {
+            note: "lessons from past runs about these enemies (experience base): evidence, not orders",
+            lessons: lessons.map((entry) => `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${entry.lesson}`),
+          },
+        }
+      : {}),
     ...(fightPlan ? { fight_plan: fightPlanJson(fightPlan) } : {}),
   };
 
@@ -1505,7 +1654,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -1567,7 +1716,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       // no potion Jev's pick does not drink.
       const chosenPotions = potionIdsOf(chosen.plan!);
       const noNewDrink = (plan: Plan) => potionIdsOf(plan).every((id) => chosenPotions.includes(id));
-      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && noNewDrink(plan) && dominates(plan, chosen.plan!)) : undefined;
+      // Only into a line that puts at least as much damage into every enemy: which enemy to hit is Jev's call.
+      const coversTargets = (plan: Plan) => groups.length < 2 || groups.every((group) => group.indices.every((index) => damageInto(plan, [index], enemies) >= damageInto(chosen.plan!, [index], enemies)));
+      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && noNewDrink(plan) && dominates(plan, chosen.plan!) && coversTargets(plan)) : undefined;
       const picked = dominator ?? chosen.plan!;
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
       // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
@@ -1620,13 +1771,19 @@ function planTurn(env: DecisionEnv): Decision | null {
         mcShown.length > 0 || potions.length > 0
           ? { random: mcShown.map(potionMcLog), unsimulated_offered: offerPotions ? potions.map((potion) => potion.potion_id) : [], t1: { hp: t1Hp, rollout_death: t1Death, fight_plan: planPotionNow } }
           : null;
-      if (!rolloutRecord && !potionsRecord) return resolved;
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : rolloutBestIsPotion ? pick.potion !== undefined && answer?.type === "choice" && answer.choice === mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : pick.plan === rolloutBest;
+      // The kill order behind the chosen line's rollout numbers (its best order), when orders were compared.
+      const chosenOrder = rollout?.available && pick?.plan ? (rollout.byPlan.get(pick.plan)?.order?.label ?? null) : null;
       return {
         ...resolved,
-        log: { ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } : {}), ...(potionsRecord ? { potions: potionsRecord } : {}) },
+        log: {
+          ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen, ...(chosenOrder ? { chosen_order: chosenOrder } : {}) } : {}),
+          ...(potionsRecord ? { potions: potionsRecord } : {}),
+          ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
+        },
       };
     },
   };

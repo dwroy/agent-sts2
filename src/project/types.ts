@@ -201,8 +201,11 @@ export interface ResolvedAction {
   decider?: "jev" | "deepseek" | "claude";
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
-  /** Extra decision-log fields (combat: the rollout facts' timing, and whether Jev picked the rollout's best line). */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; potions?: JsonValue };
+  /**
+   * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
+   * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
+   */
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string> };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
