@@ -135,6 +135,19 @@ export function reasoningConclusion(reasoning: string, criteria: Record<string, 
   return null;
 }
 
+/**
+ * DeepSeek's choice out of an answer that could not be used (reply not JSON, unknown option key: WXMB
+ * F11, "休息" with "…heal" reasoning, handed to Jev who smithed at 0.05): the conclusions of the given
+ * texts (its reasoning first, then its reason and raw reply). Taken only when at least one names exactly
+ * one option and no text concludes on another; else null (the caller falls back as before).
+ */
+export function recoverChoice(texts: string[], criteria: Record<string, string | null>): Conclusion | null {
+  const found = texts.map((text) => reasoningConclusion(text, criteria)).filter((c): c is Conclusion => c !== null);
+  const clear = found.find((c) => c.unambiguous);
+  if (!clear) return null;
+  return found.every((c) => c.option === clear.option) ? clear : null;
+}
+
 export interface ConsistencyCheck {
   ok: boolean;
   /** Why the answer is suspect ("empty reason", "reasoning concluded o0 but answered o1"). */

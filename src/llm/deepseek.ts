@@ -11,7 +11,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
-import { checkConsistency, reaskMessage, type ConsistencyCheck } from "./consistency.js";
+import { checkConsistency, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import type { Escalator } from "./file-escalation.js";
 
@@ -89,6 +89,27 @@ export class DeepSeekInconsistentError extends Error {
   }
 }
 
+/**
+ * DeepSeek answered but the answer is unusable (reply not JSON, or a choice that names no option key):
+ * what it did say, so the caller can recover the choice from its reasoning (recoverFrom) before
+ * falling back, and hand its reason on.
+ */
+export class DeepSeekAnswerError extends Error {
+  constructor(
+    message: string,
+    readonly detail: { choice: string; reason: string; reasoning: string; content: string },
+    readonly meta: Omit<DeepSeekAnswer, "choice" | "reason">,
+  ) {
+    super(message);
+    this.name = "DeepSeekAnswerError";
+  }
+
+  /** The option its reasoning (then its reason, then the raw reply) concluded on, when exactly one; else null. */
+  recoverFrom(criteria: Record<string, string | null>): Conclusion | null {
+    return recoverChoice([this.detail.reasoning, this.detail.reason, this.detail.content], criteria);
+  }
+}
+
 function consistencyAnswer(choice: string, reason: string, check: ConsistencyCheck): ConsistencyAnswer {
   return { choice, reason, issues: check.issues, conclusion: check.conclusion?.option ?? "", conclusion_line: check.conclusion?.line ?? "" };
 }
@@ -157,6 +178,68 @@ const EFFORTS = new Set(["max", "high", "low", "off"]);
 export const DEFAULT_EFFORT_BY_LABEL = "reward/card=high,rest/choose=high,selection/upgrade=high,selection/remove=high,selection/add=high,bundle/choose=high";
 
 /** "prefix=effort,…" as [prefix, effort] pairs, longest prefix first; unknown efforts are dropped. */
+/**
+ * The top-level JSON values in a reply, in order, when it is nothing but JSON values separated by
+ * whitespace (DeepSeek sometimes sends two objects back to back); null when anything else is in it.
+ */
+export function jsonValues(content: string): unknown[] | null {
+  const values: unknown[] = [];
+  let i = 0;
+  const n = content.length;
+  while (i < n) {
+    while (i < n && /\s/.test(content[i]!)) i += 1;
+    if (i >= n) break;
+    // One value: a balanced {...} / [...] (strings skipped), parsed on its own.
+    const open = content[i];
+    if (open !== "{" && open !== "[") return null;
+    let depth = 0;
+    let inString = false;
+    let end = -1;
+    for (let j = i; j < n; j += 1) {
+      const c = content[j]!;
+      if (inString) {
+        if (c === "\\") j += 1;
+        else if (c === '"') inString = false;
+      } else if (c === '"') inString = true;
+      else if (c === "{" || c === "[") depth += 1;
+      else if (c === "}" || c === "]") {
+        depth -= 1;
+        if (depth === 0) {
+          end = j + 1;
+          break;
+        }
+      }
+    }
+    if (end < 0) return null;
+    try {
+      values.push(JSON.parse(content.slice(i, end)));
+    } catch {
+      return null;
+    }
+    i = end;
+  }
+  return values.length > 0 ? values : null;
+}
+
+/**
+ * askJson's answer out of a reply. One object: that object. Several back to back (0B5Y F30 run-plan
+ * review: `{"choice": "review", "reason": "run plan"}` then the plan): the free-form tasks (run plan,
+ * fight plan) each ask for ONE object in their own format, never the per-decision {choice, reason}
+ * reply the cached system prompt describes, so an object with only those keys is an echo of that format
+ * and skipped; of the rest the LAST is taken (a model that restates its answer ends on the final one).
+ * Anything that is not purely JSON objects still fails.
+ */
+export function pickJsonObject(content: string): Record<string, unknown> {
+  const values = jsonValues(content);
+  if (values === null) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+  const objects = values.filter((value): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value));
+  if (objects.length === 0) throw new Error("DeepSeek returned a non-object");
+  if (objects.length === 1) return objects[0]!;
+  const echo = (o: Record<string, unknown>) => Object.keys(o).length > 0 && Object.keys(o).every((key) => key === "choice" || key === "reason");
+  const answers = objects.filter((o) => !echo(o));
+  return answers[answers.length - 1] ?? objects[objects.length - 1]!;
+}
+
 export function parseEffortTiers(spec: string): [string, string][] {
   return spec
     .split(",")
@@ -212,10 +295,19 @@ export class DeepSeekClient implements Escalator {
     const user = choiceMessage(state, instructions, criteria, memory);
     const messages: ChatMessage[] = [{ role: "user", content: user }];
     const done = await this.complete(messages, label);
-    const first = this.parseChoice(done.content);
+    let first: ReturnType<DeepSeekClient["parseChoice"]>;
+    try {
+      first = this.parseChoice(done.content);
+    } catch (error) {
+      const detail = { choice: "", reason: "", reasoning: done.reasoning, content: done.content };
+      throw new DeepSeekAnswerError(error instanceof Error ? error.message : String(error), detail, done.meta);
+    }
     this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
     const firstKey = resolveOptionKey(first.choice, criteria);
-    if (firstKey === null) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
+    if (firstKey === null) {
+      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content };
+      throw new DeepSeekAnswerError(`DeepSeek chose unknown option "${first.choice}"`, detail, done.meta);
+    }
     first.choice = firstKey;
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
     if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason };
@@ -287,13 +379,7 @@ export class DeepSeekClient implements Escalator {
     label: string,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
     const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
-    let json: Record<string, unknown>;
-    try {
-      json = JSON.parse(done.content) as Record<string, unknown>;
-    } catch {
-      throw new Error(`DeepSeek returned non-JSON: ${done.content.slice(0, 120)}`);
-    }
-    if (typeof json !== "object" || json === null || Array.isArray(json)) throw new Error("DeepSeek returned a non-object");
+    const json = pickJsonObject(done.content);
     const memory = payload["memory"];
     this.logReasoning(label, done, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", memory, json);
     return { json, meta: done.meta };

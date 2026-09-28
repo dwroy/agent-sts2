@@ -433,10 +433,10 @@ async function scriptedDeepSeek(replies: { content: string; reasoning?: string }
   return new DeepSeekClient({ apiKey: "test", baseUrl: server.url, model: "fake", timeoutMs: 5000, reasoningEffort: "max" });
 }
 
-async function playWith(sequence: Raw[], deepseek: DeepSeekClient) {
+async function playWith(sequence: Raw[], deepseek: DeepSeekClient, jev: JevClient = stubJev().client) {
   const config = loopConfig();
   const { server, actions } = await scriptedMod(sequence);
-  const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev().client, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
+  const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
   const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
   return { stats, actions, records };
 }
@@ -467,5 +467,50 @@ describe("DeepSeek consistency guard in the loop", () => {
     expect(record["decider"]).not.toBe("deepseek");
     expect(record["deepseek_fallback"]).toBe("deepseek answer inconsistent after re-ask");
     expect(record["deepseek_consistency"]).toMatchObject({ resolution: "fallback", first: { choice: "o1" }, second: { choice: "o1" } });
+  });
+});
+
+/* ---- an unusable DeepSeek answer: its reasoning first, then Jev with its words (WXMB F11 rest) ---------- */
+
+describe("DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11)", () => {
+  const rest = (): Raw => ({ ...restPayload(), run: crabRun({ current_hp: 24 }) });
+  /** A Jev that records the state it is shown. */
+  const seeingJev = () => {
+    const stub = stubJev(0.05);
+    const seen: Record<string, unknown>[] = [];
+    const client = { model: "stub", ask: async (state: Record<string, unknown>, questions: never) => (seen.push(state), stub.client.ask(state as never, questions)) } as unknown as JevClient;
+    return { client, seen, stub };
+  };
+
+  it("reply not JSON, reasoning concluded heal: heals as DeepSeek, logged 'recovered from reasoning', Jev not asked", async () => {
+    const deepseek = await scriptedDeepSeek([{ content: "choice: 休息 (heal)", reasoning: "64% HP, forced elite ahead.\nDecisive: heal." }]);
+    const jev = seeingJev();
+    const { actions, records, stats } = await playWith([rest(), mainMenuPayload()], deepseek, jev.client);
+    expect(actions[0]).toEqual({ action: "choose_rest_option", option_index: 0 });
+    expect(stats.deepseekCalls).toBe(1);
+    expect(jev.stub.calls).toBe(0);
+    const record = records.find((entry) => entry["label"] === "rest/choose")!;
+    expect(record["decider"]).toBe("deepseek");
+    expect(record["deepseek_fallback"]).toBeUndefined();
+    expect(record["deepseek"]).toMatchObject({ choice: "o0", recovered_from_reasoning: "Decisive: heal." });
+    expect(String(record["rationale"])).toContain("recovered from reasoning");
+  });
+
+  it("an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason", async () => {
+    const deepseek = await scriptedDeepSeek([{ content: '{"choice":"sleep well","reason":"64% HP, forced elite ahead; heal"}', reasoning: "Heal or smith? Hard to say." }]);
+    const jev = seeingJev();
+    // At 42/80 heal and smith score close: code does not settle it, Jev is asked.
+    const { actions, records } = await playWith([{ ...restPayload(), run: crabRun({ current_hp: 42 }) }, mainMenuPayload()], deepseek, jev.client);
+    expect(actions).toHaveLength(1);
+    const record = records.find((entry) => entry["label"] === "rest/choose")!;
+    expect(record["decider"]).not.toBe("deepseek");
+    expect(record["deepseek_fallback"]).toBe("deepseek failed");
+    expect(jev.seen[0]?.["deepseek_advice"]).toMatchObject({ reason: "64% HP, forced elite ahead; heal" });
+  });
+
+  it("reasoning and raw reply conclude on different options: not recovered", async () => {
+    const deepseek = await scriptedDeepSeek([{ content: "Final answer: o1", reasoning: "Decisive: heal." }]);
+    const { records } = await playWith([rest(), mainMenuPayload()], deepseek);
+    expect(records.find((entry) => entry["label"] === "rest/choose")?.["deepseek_fallback"]).toBe("deepseek failed");
   });
 });

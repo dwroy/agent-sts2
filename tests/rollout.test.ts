@@ -565,3 +565,43 @@ describe("turnSpreads (per-turn rollout facts)", () => {
     expect(spreads[1]).toMatchObject({ turn: 3, fighting: 2, alive: 2, won: 2, loss: { mean: 16, min: 2, max: 30 } });
   });
 });
+
+describe("powers played in the line stay up in later rollout turns (0B5Y F33 T1: Inferno ignored after T1)", () => {
+  const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+  const dummy: EnemySim = { index: 0, name: "Dummy", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const inferno = (i: number) => card(i, "INFERNO", { type: "Power", target: "self", validTargets: [], inferno: 6, powerAmount: 6, flatValue: 10 });
+  const mantle = (i: number) => card(i, "CRIMSON_MANTLE", { type: "Power", target: "self", validTargets: [], special: "crimson_mantle", powerAmount: 7, flatValue: 10 });
+  const run = (hand: CardModel[], ids: string[]) => {
+    const solver: SolverInput = { hand, player, enemies: [dummy], fightKind: "boss", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const plan = plans.find((p) => p.steps.map((s) => s.cardId).join(",") === ids.join(","))!;
+    expect(plan).toBeDefined();
+    const draw = Array.from({ length: 10 }, (_, k) => strike(20 + k));
+    const result = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "DUMMY", move: null, strength: 0, powers: {} }], tables: {},
+      piles: { draw, discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "DUMMY" }, playerPowers: {}, potions: 0, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 4, include: [plan], horizon: 3, samples: 2 },
+    });
+    return result.lines.find((entry) => entry.plan === plan)!;
+  };
+
+  it("Inferno played on T1 hits every enemy for 6 at the start of each later turn, and costs 1 HP a turn", () => {
+    const hand = [inferno(0), strike(1), strike(2)];
+    const withIt = run(hand, ["INFERNO", "STRIKE", "STRIKE"]);
+    const without = run(hand, ["STRIKE", "STRIKE"]);
+    // T2 and T3: three Strikes (18) each; the Inferno line adds its 6 at the start of each.
+    expect(without.perTurn[0]!.dmg.mean).toBe(18);
+    expect(without.perTurn[1]!.dmg.mean).toBe(18);
+    expect(withIt.perTurn[0]!.dmg.mean).toBe(24);
+    expect(withIt.perTurn[1]!.dmg.mean).toBe(24);
+    expect(withIt.perTurn[0]!.loss.mean).toBe(1);
+    expect(without.perTurn[0]!.loss.mean).toBe(0);
+  });
+
+  it("Crimson Mantle with Inferno: 7 block and a second loss event, so Inferno hits twice (12) each later turn", () => {
+    const hand = [inferno(0), mantle(1), strike(2)];
+    const line = run(hand, ["INFERNO", "CRIMSON_MANTLE", "STRIKE"]);
+    expect(line.perTurn[0]!.dmg.mean).toBe(18 + 12);
+    expect(line.perTurn[0]!.loss.mean).toBe(2);
+  });
+});

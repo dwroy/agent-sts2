@@ -89,6 +89,12 @@ export interface CardModel {
    */
   inferno?: number;
   /**
+   * A lasting Power's per-turn amount, read from the card's own var (POWER_AMOUNT_VARS: Demon Form's
+   * Strength, Juggernaut's damage, Crimson Mantle's block, Pyre's energy, Rupture's Strength, Inferno's
+   * damage). The rollout carries it into its later turns; unset when the card has no such var.
+   */
+  powerAmount?: number;
+  /**
    * A potion that puts a card into the hand, free this turn (Attack/Skill/Power/Colorless Potion), or the
    * pile card a pile-card potion takes, or the draw pile's expected card (Gambler's Brew, Glowwater,
    * Distilled Chaos): the card the solver may then play.
@@ -195,6 +201,17 @@ const POWER_VALUE: Record<string, number> = {
   AGGRESSION: 12,
   HELLRAISER: 10,
   TANK: 0,
+};
+
+/** The var holding a lasting Power's per-turn amount (CardModel.powerAmount). */
+const POWER_AMOUNT_VARS: Record<string, string> = {
+  DEMON_FORM: "StrengthPower",
+  JUGGERNAUT: "JuggernautPower",
+  CRIMSON_MANTLE: "CrimsonMantlePower",
+  PYRE: "Energy",
+  RUPTURE: "StrengthPower",
+  INFERNO: "InfernoPower",
+  METALLICIZE: "MetallicizePower",
 };
 
 const SPECIAL: Record<string, CardModel["special"]> = {
@@ -447,6 +464,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
     inferno: cardId === "INFERNO" ? dyn(card, "InfernoPower") ?? 6 : 0,
+    ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
