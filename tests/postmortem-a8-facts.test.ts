@@ -7,11 +7,12 @@
 import { describe, expect, it } from "vitest";
 
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
+import { planCombat } from "../src/screens/combat.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { planShop } from "../src/screens/shop.js";
 import { modelPotion } from "../src/strategy/card-model.js";
-import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge, questionOf, referencePick } from "./logged.js";
 
 const text = (value: unknown): string => JSON.stringify(value);
 
@@ -73,5 +74,43 @@ describe("a card potion's card is free and scored by what it does now (W8JD F31 
     const marked = offers.filter((offer) => offer["plan_card"] !== undefined);
     expect(marked.map((offer) => offer["card"])).toEqual(["邪眼"]);
     expect(offers.every((offer) => /free this turn/.test(String(offer["cost_now"])))).toBe(true);
+  });
+});
+
+describe("every line dies with an unmodelled potion in the belt (94FP F33 T10: 1 HP, the demon at 63, Stable Serum)", () => {
+  it("the least-loss line (Pommel Strike first, for the draw) is code's reference; the potion is an option beside it", () => {
+    const decision = planCombatTurn(loggedEnv(logged("94fp-f33-t10")));
+    expect(decision?.kind).toBe("ask");
+    expect(decision?.label).toBe("combat/least-loss+potion");
+    const { options } = questionOf(decision);
+    const lines = Object.entries(options).filter(([key]) => key.startsWith("plan"));
+    expect(lines.length).toBe(1);
+    expect(String(lines[0]![1]["every_line_dies"])).toMatch(/draw first/);
+    const potion = Object.entries(options).find(([key]) => /^p\d/.test(key));
+    expect(String(potion?.[1]["plays"])).toMatch(/稳定血清/);
+    expect(String(potion?.[1]["without_it"])).toMatch(/every simulated line dies/);
+    // Logged: card by card, Colossus first. The reference plays a Pommel Strike (剑柄打击) first.
+    const pick = referencePick(decision);
+    const hand = ((logged("94fp-f33-t10").state["combat"] as Record<string, unknown>)["hand"] as Record<string, unknown>[]);
+    const first = hand.find((card) => card["index"] === pick.intent?.card_index);
+    expect(pick.intent?.action).toBe("play_card");
+    expect(first?.["card_id"]).toBe("POMMEL_STRIKE");
+  });
+});
+
+describe("per-card incoming counts end-of-turn damage (94FP F33 T10: Colossus read 'incoming_damage_after_this 0' under Disintegration 15)", () => {
+  it("every option's incoming includes Disintegration, which meets block first", () => {
+    const decision = planCombat(loggedEnv(logged("94fp-f33-t10")));
+    expect(decision?.kind).toBe("ask");
+    if (decision?.kind !== "ask") return;
+    const question = decision.questions["play"]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    const options = Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value!) as Record<string, unknown>]));
+    const colossus = Object.values(options).find((option) => /巨像/.test(String(option["action"])))!;
+    // 1 HP: 10 block + Colossus 7 against Disintegration 15, then the Slap: the turn still kills.
+    expect(Number(colossus["incoming_damage_after_this"])).toBeGreaterThanOrEqual(1);
+    const end = options["end_turn"]!;
+    expect(end["lethal"]).toBe(true);
+    expect(Number(end["incoming_damage"])).toBeGreaterThanOrEqual(15);
   });
 });
