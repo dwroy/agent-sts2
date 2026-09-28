@@ -98,6 +98,46 @@ export function classifyJevError(error: unknown): JevError {
   return asJevError("unknown", "unexpected TypeSafe SDK failure");
 }
 
+/**
+ * Whether a Jev failure is worth asking again: server errors (5xx incl. Cloudflare 520 and 529),
+ * rate limits, and timeouts / dropped connections. Auth, permission and validation errors are
+ * permanent and stay fatal.
+ */
+export function isTransientJevError(error: unknown): boolean {
+  const jevError = classifyJevError(error);
+  if (jevError.kind === "server" || jevError.kind === "rate_limit" || jevError.kind === "connection") return true;
+  return jevError.status === 408;
+}
+
+/** Backoff between retries of a transient Jev failure: 4 retries at 2/4/8/16 s. */
+export const JEV_RETRY_DELAYS_MS: readonly number[] = [2_000, 4_000, 8_000, 16_000];
+
+export interface JevRetryOptions {
+  delaysMs?: readonly number[];
+  sleep?: (ms: number) => Promise<void>;
+  /** Called before each retry (attempt is 1-based), so the caller can log it. */
+  onRetry?: (info: { attempt: number; of: number; delayMs: number; error: JevError }) => void;
+}
+
+/**
+ * Run a Jev call, retrying transient failures with exponential backoff. Once the retries are spent,
+ * or on a permanent failure, the (classified) error is rethrown and the caller handles it as before.
+ */
+export async function withJevRetry<T>(fn: () => Promise<T>, options: JevRetryOptions = {}): Promise<T> {
+  const delays = options.delaysMs ?? JEV_RETRY_DELAYS_MS;
+  const sleep = options.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      return await fn();
+    } catch (error) {
+      const delayMs = delays[attempt];
+      if (delayMs === undefined || !isTransientJevError(error)) throw error;
+      options.onRetry?.({ attempt: attempt + 1, of: delays.length, delayMs, error: classifyJevError(error) });
+      await sleep(delayMs);
+    }
+  }
+}
+
 function readTokens(usage: unknown): { inputTokens: number; outputTokens: number } {
   const obj = typeof usage === "object" && usage !== null ? (usage as Record<string, unknown>) : {};
   const pick = (...keys: string[]): number => {
