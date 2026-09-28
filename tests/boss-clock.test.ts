@@ -230,6 +230,34 @@ describe("The Insatiable's mechanic factor, against the logged A8 fights", () =>
   });
 });
 
+describe("The Kaiser Crab's mechanic factor, against the logged A8 fights", () => {
+  interface Fight { key: string; outcome: string; turns: number; realised: number; raw: number }
+  const fights = (JSON.parse(readFileSync(join(DIR, "..", "boss-fights", "kaiser-crab-a8.json"), "utf8")) as { fights: Fight[] }).fights;
+  const deck = deckProfileForBoss(mapState(starter(), "KAISER_CRAB_BOSS"), testKnowledge)!;
+  const median = (values: number[]): number => {
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+  };
+  const ratios = (factor: (fight: Fight) => number) => fights.map((fight) => fight.realised / (calibrated(fight.raw) * factor(fight)));
+
+  it("keeps the estimate unbiased over the 23 fights (0B5Y/RWWG's ~0.7 are not the crab's rule)", () => {
+    expect(fights.length).toBeGreaterThanOrEqual(20);
+    const factor = (fight: Fight) => mechanicFactor("KAISER_CRAB", deck, fight.turns);
+    expect(factor(fights[0]!)).toBe(1);
+    const bias = median(ratios(factor));
+    expect(bias).toBeGreaterThan(0.85);
+    expect(bias).toBeLessThan(1.15);
+    const logErr = median(ratios(factor).map((ratio) => Math.abs(Math.log(ratio))));
+    const logErrDiscounted = median(ratios((fight) => factor(fight) * 0.7).map((ratio) => Math.abs(Math.log(ratio))));
+    expect(logErr).toBeLessThan(logErrDiscounted);
+    for (const key of ["0B5YKJFM0E8B", "RWWGRRYKD6LT"]) {
+      const fight = fights.find((row) => row.key === key)!;
+      expect(fight.realised / calibrated(fight.raw)).toBeLessThan(0.8);
+    }
+  });
+});
+
 describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () => {
   const at = (floor: number, hp: number, max: number, over: Raw = {}, screen = "MAP", raw: Raw = {}) =>
     parseGameState(baseState(screen, { run: runPayload({ deck: starter(), boss_id: "KNOWLEDGE_DEMON_BOSS", act_id: "1", floor, current_hp: hp, max_hp: max, ...over }), ...raw }));
