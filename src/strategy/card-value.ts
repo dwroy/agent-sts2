@@ -60,7 +60,8 @@ const EXHAUST = new Set([
 /** Exhaust payoffs and their bonus once the deck has at least 3 exhausting cards. */
 const EXHAUST_PAYOFF: Record<string, number> = { DARK_EMBRACE: 20, FEEL_NO_PAIN: 10 };
 
-const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL"]);
+// EXTERMINATE: 4 hits (6HRZ F33 T6).
+const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL", "EXTERMINATE"]);
 
 /**
  * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 173 HP, so
