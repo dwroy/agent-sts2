@@ -14,7 +14,7 @@ import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import type { JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
-import { DeepSeekClient } from "./llm/deepseek.js";
+import { DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
@@ -587,6 +587,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekFailed = false;
     let deepseekAsked: Record<string, JsonValue> | undefined;
     let deepseekFallback: string | undefined;
+    /** DeepSeek's answer failed the consistency guard: both answers and how it was resolved. */
+    let deepseekConsistency: JsonValue | undefined;
     if (decision.kind === "ask" && decision.deepseek) {
       const spec = decision.deepseek;
       const question = decision.questions[spec.question];
@@ -616,6 +618,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
           stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
           deepseekLatency = answer.latencyMs;
+          if (answer.consistency) {
+            stats.deepseekCalls += 1; // the re-ask
+            deepseekConsistency = toJsonValue(answer.consistency);
+            onEvent({ type: "note", message: `DeepSeek answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
+          }
           const picked = decision.resolve({
             [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek" } },
           } as AnswerSet);
@@ -637,6 +644,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               handbook: answer.handbookId ?? "",
               memory_chars: memoryChars(memory),
               memory_sections: memorySections(memory),
+              ...(deepseekConsistency === undefined ? {} : { consistency: deepseekConsistency }),
             };
             deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
             deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
@@ -647,6 +655,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
         } catch (error) {
           deepseekFailed = true;
+          if (error instanceof DeepSeekInconsistentError) {
+            stats.deepseekCalls += error.meta.calls - 1;
+            stats.deepseekTokens += error.meta.tokens;
+            deepseekConsistency = toJsonValue(error.record);
+          }
           onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}); falling back to Jev/code` });
         }
       } else if (deepseekClient && !deepseekBudgetLeft()) {
@@ -654,7 +667,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
       if (!deepseekResolved) {
         if (deepseekFailed) spec.onFail?.();
-        deepseekFallback = deepseekFailed ? "deepseek failed" : "deepseek unavailable or out of budget";
+        deepseekFallback = deepseekFailed
+          ? deepseekConsistency !== undefined ? "deepseek answer inconsistent after re-ask" : "deepseek failed"
+          : "deepseek unavailable or out of budget";
         // What the screen decides without DeepSeek: code, or Jev with DeepSeek only as its escalation.
         decision = spec.baseline;
       }
@@ -766,6 +781,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 escalator.name === "deepseek" ? { ...context, memory: { ...memory } } : context,
               );
               if (escalator.name === "deepseek") stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
+              const consistency = escalator.name === "deepseek" && "consistency" in answer ? (answer as { consistency?: unknown }).consistency : undefined;
+              if (consistency !== undefined) stats.deepseekCalls += 1; // the re-ask
               const override = decision.resolve({
                 ...result.answers,
                 [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name } },
@@ -779,7 +796,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
-              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}) };
+              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}), ...(consistency === undefined ? {} : { consistency: toJsonValue(consistency) }) };
               // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
@@ -909,6 +926,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // BUILD_DECIDER=deepseek: DeepSeek's own decision (not an escalation of a Jev answer).
       ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
+      ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {

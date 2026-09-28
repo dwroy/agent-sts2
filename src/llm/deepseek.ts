@@ -11,6 +11,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
+import { checkConsistency, reaskMessage, type ConsistencyCheck } from "./consistency.js";
 import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
@@ -47,6 +48,42 @@ export interface DeepSeekAnswer {
   reasoningTokens?: number;
   /** Thinking effort actually used for this call ("off" when thinking was disabled). */
   effort?: string;
+  /** Present when the first answer failed the consistency guard (see consistency.ts): both answers and the resolution. */
+  consistency?: ConsistencyRecord;
+}
+
+/** One answer as seen by the consistency guard (JSON-safe, for decisions.jsonl). */
+export interface ConsistencyAnswer {
+  choice: string;
+  reason: string;
+  issues: string[];
+  /** The option the reasoning concluded on, and its concluding line ("" when none could be mapped). */
+  conclusion: string;
+  conclusion_line: string;
+}
+
+export interface ConsistencyRecord {
+  first: ConsistencyAnswer;
+  /** The re-asked answer; `error` when the re-ask itself failed. */
+  second: ConsistencyAnswer | { error: string };
+  /**
+   * "reasked": the second answer is consistent and is played; "conclusion": the option named in a
+   * reasoning conclusion is played; "fallback": neither maps, the caller's fallback decides.
+   */
+  resolution: "reasked" | "conclusion" | "fallback";
+  choice: string;
+}
+
+/** Thrown when DeepSeek's answer stays inconsistent and no conclusion maps to one option: the caller falls back. */
+export class DeepSeekInconsistentError extends Error {
+  constructor(readonly record: ConsistencyRecord, readonly meta: { calls: number; tokens: number }) {
+    super(`DeepSeek answer inconsistent after re-ask (${record.first.issues.join("; ")})`);
+    this.name = "DeepSeekInconsistentError";
+  }
+}
+
+function consistencyAnswer(choice: string, reason: string, check: ConsistencyCheck): ConsistencyAnswer {
+  return { choice, reason, issues: check.issues, conclusion: check.conclusion?.option ?? "", conclusion_line: check.conclusion?.line ?? "" };
 }
 
 const SYSTEM = [
@@ -99,20 +136,68 @@ export class DeepSeekClient implements Escalator {
     // Run memory (journal, fight log, lookahead) rides in the user message, never the system prompt.
     const memory = context["memory"];
     const user = JSON.stringify({ state, ...(memory === undefined ? {} : { memory }), question: instructions, options: criteria });
-    const done = await this.complete(user, label);
+    const messages: ChatMessage[] = [{ role: "user", content: user }];
+    const done = await this.complete(messages, label);
+    const first = this.parseChoice(done.content);
+    this.logReasoning(label, done.effort, instructions, criteria, first.choice, first.rawReason, done.reasoning, done.latencyMs, memory);
+    if (!(first.choice in criteria)) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
+    const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
+    if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason };
+
+    // Suspect answer: ask once more, quoting the contradiction, in the same conversation.
+    const firstRecord = consistencyAnswer(first.choice, first.reason, firstCheck);
+    let second: ConsistencyRecord["second"];
+    let secondCheck: ConsistencyCheck | null = null;
+    let secondChoice = "";
+    let secondReason = "";
+    let meta = done.meta;
+    let calls = 1;
+    try {
+      calls += 1;
+      const again = await this.complete(
+        [...messages, { role: "assistant", content: done.content }, { role: "user", content: reaskMessage(first.choice, firstCheck) }],
+        label,
+      );
+      meta = sumMeta(done.meta, again.meta);
+      const parsed = this.parseChoice(again.content);
+      this.logReasoning(`${label} (re-ask)`, again.effort, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, again.reasoning, again.latencyMs, undefined);
+      secondChoice = parsed.choice;
+      secondReason = parsed.reason;
+      secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);
+      if (!(parsed.choice in criteria)) secondCheck = { ...secondCheck, ok: false, issues: [...secondCheck.issues, `unknown option "${parsed.choice}"`] };
+      second = consistencyAnswer(secondChoice, secondReason, secondCheck);
+    } catch (error) {
+      second = { error: error instanceof Error ? error.message.slice(0, 200) : String(error) };
+    }
+
+    if (secondCheck?.ok) {
+      return { ...meta, choice: secondChoice, reason: secondReason, consistency: { first: firstRecord, second, resolution: "reasked", choice: secondChoice } };
+    }
+    // Still inconsistent: act on a reasoning conclusion that names exactly one option (the re-ask's first).
+    const conclusions = [secondCheck?.conclusion ?? null, firstCheck.conclusion].filter((c): c is NonNullable<typeof c> => c !== null);
+    const target = conclusions.find((c) => c.unambiguous && c.option in criteria) ?? null;
+    const conflicting = conclusions.some((c) => c.unambiguous && target !== null && c.option !== target.option);
+    if (target && !conflicting) {
+      const reason = `reasoning concluded ${target.option}: ${target.line}`.slice(0, 200);
+      return { ...meta, choice: target.option, reason, consistency: { first: firstRecord, second, resolution: "conclusion", choice: target.option } };
+    }
+    throw new DeepSeekInconsistentError(
+      { first: firstRecord, second, resolution: "fallback", choice: "" },
+      { calls, tokens: meta.inputTokens + meta.outputTokens },
+    );
+  }
+
+  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown } {
     let parsed: { choice?: unknown; reason?: unknown };
     try {
-      parsed = JSON.parse(done.content) as { choice?: unknown; reason?: unknown };
+      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown };
     } catch {
-      throw new Error(`DeepSeek returned non-JSON: ${done.content.slice(0, 120)}`);
+      throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
     }
-    const choice = typeof parsed.choice === "string" ? parsed.choice.trim() : "";
-    this.logReasoning(label, done.effort, instructions, criteria, choice, parsed.reason, done.reasoning, done.latencyMs, memory);
-    if (!(choice in criteria)) throw new Error(`DeepSeek chose unknown option "${choice}"`);
     return {
-      ...done.meta,
-      choice,
+      choice: typeof parsed.choice === "string" ? parsed.choice.trim() : "",
       reason: typeof parsed.reason === "string" ? parsed.reason.trim() : "",
+      rawReason: parsed.reason,
     };
   }
 
@@ -124,7 +209,7 @@ export class DeepSeekClient implements Escalator {
     payload: Record<string, JsonValue>,
     label: string,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
-    const done = await this.complete(JSON.stringify(payload), label);
+    const done = await this.complete([{ role: "user", content: JSON.stringify(payload) }], label);
     let json: Record<string, unknown>;
     try {
       json = JSON.parse(done.content) as Record<string, unknown>;
@@ -138,7 +223,7 @@ export class DeepSeekClient implements Escalator {
   }
 
   private async complete(
-    user: string,
+    messages: ChatMessage[],
     label: string,
   ): Promise<{ content: string; reasoning: string; effort: string; latencyMs: number; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
     const started = Date.now();
@@ -158,7 +243,7 @@ export class DeepSeekClient implements Escalator {
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: this.system },
-            { role: "user", content: user },
+            ...messages,
           ],
         }),
         signal: controller.signal,
@@ -208,6 +293,23 @@ export class DeepSeekClient implements Escalator {
       // logging must never break play
     }
   }
+}
+
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+/** Usage of two calls on one question, summed (latency too: both were waited for). */
+function sumMeta(a: Omit<DeepSeekAnswer, "choice" | "reason">, b: Omit<DeepSeekAnswer, "choice" | "reason">): Omit<DeepSeekAnswer, "choice" | "reason"> {
+  return {
+    ...a,
+    latencyMs: a.latencyMs + b.latencyMs,
+    inputTokens: a.inputTokens + b.inputTokens,
+    outputTokens: a.outputTokens + b.outputTokens,
+    cacheHitTokens: (a.cacheHitTokens ?? 0) + (b.cacheHitTokens ?? 0),
+    reasoningTokens: (a.reasoningTokens ?? 0) + (b.reasoningTokens ?? 0),
+  };
 }
 
 function readOptional(file: string | undefined): string {

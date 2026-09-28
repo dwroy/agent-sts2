@@ -414,3 +414,56 @@ describe("BUILD_DECIDER=deepseek in the loop", () => {
     expect(records.filter((record) => String(record["label"]).startsWith("map/")).every((record) => record["decider"] !== "deepseek")).toBe(true);
   });
 });
+
+/* ---- consistency guard in the loop (run 2WNTQHYY4GAD, F12 rest) ------------------------------------ */
+
+async function scriptedDeepSeek(replies: { content: string; reasoning?: string }[]): Promise<DeepSeekClient> {
+  let calls = 0;
+  const server = await startTestServer((req, res) => {
+    req.on("data", () => undefined);
+    req.on("end", () => {
+      const reply = replies[Math.min(calls, replies.length - 1)]!;
+      calls += 1;
+      sendJson(res, 200, { choices: [{ message: { content: reply.content, reasoning_content: reply.reasoning ?? "" } }], usage: { prompt_tokens: 100, completion_tokens: 10 } });
+    });
+  });
+  servers.push(server);
+  return new DeepSeekClient({ apiKey: "test", baseUrl: server.url, model: "fake", timeoutMs: 5000, reasoningEffort: "max" });
+}
+
+async function playWith(sequence: Raw[], deepseek: DeepSeekClient) {
+  const config = loopConfig();
+  const { server, actions } = await scriptedMod(sequence);
+  const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev().client, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
+  const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
+  return { stats, actions, records };
+}
+
+describe("DeepSeek consistency guard in the loop", () => {
+  const rest = (): Raw => ({ ...restPayload(), run: crabRun({ current_hp: 24 }) });
+
+  it("reasoning 'Decisive: heal' with a smith answer and no reason: re-asked, heals, both answers logged", async () => {
+    const deepseek = await scriptedDeepSeek([
+      { content: '{"choice":"o1"}', reasoning: "HP 24/80, dying is worse.\nDecisive: heal." },
+      { content: '{"choice":"o0","reason":"24 HP; heal"}', reasoning: "Answer: o0 (heal)." },
+    ]);
+    const { actions, records, stats } = await playWith([rest(), mainMenuPayload()], deepseek);
+    expect(actions[0]).toEqual({ action: "choose_rest_option", option_index: 0 });
+    expect(stats.deepseekCalls).toBe(2);
+    const record = records.find((entry) => entry["label"] === "rest/choose")!;
+    expect(record["decider"]).toBe("deepseek");
+    expect(record["deepseek_consistency"]).toMatchObject({ resolution: "reasked", choice: "o0", first: { choice: "o1", reason: "" }, second: { choice: "o0", reason: "24 HP; heal" } });
+    expect(record["deepseek"]).toMatchObject({ choice: "o0", consistency: { resolution: "reasked" } });
+  });
+
+  it("still inconsistent with no usable conclusion: the existing fallback decides, and the answers are logged", async () => {
+    const deepseek = await scriptedDeepSeek([{ content: '{"choice":"o1"}' }]);
+    const { actions, records, stats } = await playWith([rest(), mainMenuPayload()], deepseek);
+    expect(actions).toHaveLength(1);
+    expect(stats.deepseekCalls).toBe(2);
+    const record = records.find((entry) => entry["label"] === "rest/choose")!;
+    expect(record["decider"]).not.toBe("deepseek");
+    expect(record["deepseek_fallback"]).toBe("deepseek answer inconsistent after re-ask");
+    expect(record["deepseek_consistency"]).toMatchObject({ resolution: "fallback", first: { choice: "o1" }, second: { choice: "o1" } });
+  });
+});
