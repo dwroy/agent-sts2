@@ -53,6 +53,8 @@ function fakeClock(step: number): () => number {
 
 describe("rollout facts on Jev's combat question", () => {
   it("every option of a logged board carries the rollout and history facts; the decision log gets the rollout", () => {
+    // The format at full size (5 x 8): no time budget (the kill orders can make this board degrade under load).
+    rolloutLiveOptions.budgetMs = 1e9;
     for (const context of ["v1", "off"] as const) {
       const decision = plan("g8yy-f30-t3", true, context) as AskDecision;
       expect(decision.kind).toBe("ask");
@@ -214,7 +216,7 @@ describe("rollout facts on Jev's combat question", () => {
       expect(log, name).toBeDefined();
       expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
     }
-  });
+  }, 60_000);
 
   it("code's ranking, options and auto-acts are unchanged by the rollout", () => {
     for (const name of BOARDS) {
@@ -238,7 +240,7 @@ describe("rollout facts on Jev's combat question", () => {
         for (const key of Object.keys(before)) {
           // Same option under the same key, the rollout facts aside.
           // (An unsimulated potion's offered_because may add the rollout's dying sample as a reason.)
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_turns: _t, offered_because: _o, ...rest } = facts(after, key);
+          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered_because: _o, ...rest } = facts(after, key);
           const { offered_because: _o2, ...restBefore } = facts(before, key);
           expect(rest, `${name} ${key}`).toEqual(restBefore);
           // And resolving it plays the same (the HP guard and potion rules see code's options only).

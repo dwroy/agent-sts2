@@ -10,8 +10,12 @@
  *   - `history_estimate`: the fight-value model's calibrated forecast (the rollout with the model as
  *     terminal, w = 1: the best forecast in notes/rollout-backtest.md), with the gate segment's n and the
  *     measured typical error for the fight kind; only when the segment has enough similar states. The gate
- *     weight w itself is never shown.
- * and the rollout's best line, which combat-plan.ts adds to the options when code did not show it.
+ *     weight w itself is never shown;
+ *   - with two or more distinct enemies (by id), `rollout_kill_order` and `rollout_other_orders`: every line is
+ *     rolled out under each kill order (rollout.ts killOrders: the later turns hit that enemy first), the
+ *     facts above are its best order's, and the other orders' numbers are listed compactly beside them.
+ * and the rollout's best (line, order) pair, whose line combat-plan.ts adds to the options when code did not
+ * show it.
  */
 
 import { readFileSync } from "node:fs";
@@ -26,6 +30,7 @@ import { modelHandCard, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
+  killOrders,
   loadFightValueGates,
   rolloutDecision,
   type DeckSummary,
@@ -34,12 +39,18 @@ import {
   type FightMeta,
   type FightValueGates,
   type Gate,
+  type KillGroup,
+  type KillOrder,
   type LineEstimate,
+  type OrderEstimate,
   type MoveModelData,
   type RolloutEnemy,
   type RolloutResult,
 } from "./rollout.js";
 import type { Plan, SolverInput } from "./turn-solver.js";
+
+/** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
+export { killOrders, type KillGroup, type KillOrder };
 
 /** Wall-clock budget of the whole rollout step of one decision (input building included). */
 export const ROLLOUT_BUDGET_MS = 1500;
@@ -53,8 +64,11 @@ export const ROLLOUT_SAMPLES = 8;
  */
 export const HISTORY_MAE: Record<FightKindName, number> = { hallway: 5.5, elite: 11.0, boss: 9.9 };
 
-/** Test hooks: the clock, the budget, and a switch (ROLLOUT_FACTS=off turns the facts off). */
-export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number } = {
+/**
+ * Test hooks: the clock, the budget, a switch (ROLLOUT_FACTS=off turns the facts off), and the kill-order
+ * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset).
+ */
+export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number } = {
   enabled: process.env["ROLLOUT_FACTS"] !== "off",
   now: null,
   budgetMs: ROLLOUT_BUDGET_MS,
@@ -223,6 +237,9 @@ export interface LiveRolloutArgs {
   piles: { draw: CardModel[]; discard: CardModel[] } | null;
   /** Wall clock already spent on this decision's budget (the random potions' Monte Carlo). */
   spentMs?: number;
+  /** Kill orders for the later turns (rollout.ts killOrders; two or more distinct enemies), and how many were left out. */
+  orders?: KillOrder[];
+  ordersDropped?: number;
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
@@ -244,6 +261,8 @@ export type LiveRollout =
       minRows: number;
       /** Modelled potions in the belt: the policy's later turns may drink them. */
       potionsHeld: boolean;
+      /** Kill-order permutations left out (more than MAX_FULL_ORDER_GROUPS groups). */
+      ordersDropped: number;
       elapsedMs: number;
     };
 
@@ -291,11 +310,21 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       mm,
       model,
       gates,
-      options: { horizon: ROLLOUT_HORIZON, samples: ROLLOUT_SAMPLES, budgetMs, seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}`), now, include: args.shown },
+      options: {
+        horizon: ROLLOUT_HORIZON,
+        samples: ROLLOUT_SAMPLES,
+        budgetMs,
+        seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}`),
+        now,
+        include: args.shown,
+        ...(args.orders && args.orders.length >= 2 ? { orders: args.orders } : {}),
+        ...(rolloutLiveOptions.orderFocusBonus !== undefined ? { orderFocusBonus: rolloutLiveOptions.orderFocusBonus } : {}),
+      },
     });
     const byPlan = new Map(result.lines.map((line) => [line.plan, line]));
     // A line code did not show is only added when it drinks no potion (every modelled potion already
-    // has its shown line; the rollout does not add a second drink).
+    // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its
+    // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
     const best = eligible.reduce<LineEstimate | null>((a, b) => (a === null || b.value > a.value ? b : a), null)?.plan ?? null;
     return {
@@ -308,6 +337,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
       potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
+      ordersDropped: args.ordersDropped ?? 0,
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -332,6 +362,24 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
+  if (line.order) {
+    // Orders with the same numbers and the same first target are one entry ("A > B > C | A > C > B": the
+    // samples never got past A, or went the same way after it).
+    const first = (entry: OrderEstimate) => entry.order.label.split(" > ")[0]!;
+    const numbers = (entry: OrderEstimate) => `further HP loss ${round1(entry.hpLoss)}, over ${entry.wins}/${samples}, dead ${entry.deaths}/${samples}, ${first(entry)} dead ${entry.firstDown}/${samples}`;
+    const merged: { labels: string[]; entry: OrderEstimate; text: string }[] = [];
+    for (const entry of line.orders) {
+      const text = numbers(entry);
+      const same = merged.find((m) => m.text === text);
+      if (same) same.labels.push(entry.order.label);
+      else merged.push({ labels: [entry.order.label], entry, text });
+    }
+    const [best, ...others] = merged;
+    const dropped = r.ordersDropped > 0 ? `; ${r.ordersDropped} other orders not tried` : "";
+    const tied = others.length > 0 && others.every((m) => Math.abs(m.entry.value - best!.entry.value) < 0.05) ? "; the orders came out the same here" : "";
+    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}); best of ${line.orders.length} kill orders compared${dropped}${tied}`;
+    if (others.length > 0) facts["rollout_other_orders"] = others.map((m) => `${m.labels.join(" | ")}: ${m.text}`).join("; ");
+  }
   const forecast = line.modelForecast.rollout;
   if (!forecast) facts["history_estimate"] = "unavailable (no fight-value model)";
   else {
@@ -385,5 +433,12 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     lines: r.result.lines.length,
     best: bestKey,
     best_added: added,
+    ...(r.result.orders.length > 0
+      ? {
+          orders: r.result.orders.length,
+          orders_dropped: r.ordersDropped,
+          best_order: r.best ? (r.byPlan.get(r.best)?.order?.label ?? null) : null,
+        }
+      : {}),
   };
 }

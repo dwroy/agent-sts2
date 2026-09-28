@@ -1488,7 +1488,7 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
   });
 
   it("potion_context: a forced Elite ahead, the belt, the act boss and the run plan are on the combat question", async () => {
-    const { planCombatTurn, potionContextJson } = await import("../src/screens/combat-plan.js");
+    const { deepseekPlanLine, planCombatTurn, potionContextJson } = await import("../src/screens/combat-plan.js");
     const { forcedEliteWithin } = await import("../src/screens/rest.js");
     const eliteNext = (childType: string) => {
       const memory = createScreenMemory("COMBAT");
@@ -1525,17 +1525,19 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
     const belt = (full.state.run!.raw as Record<string, unknown>)["potions"] as Record<string, unknown>[];
     for (const slot of belt) slot["occupied"] = true;
     expect(String(potionContextJson(full, "monster")["slots"])).toContain("belt full");
-    // DeepSeek's run plan (summary and a potion boss prep).
+    // DeepSeek's run plan, whole (summary and boss prep, whatever it is about), on its own key.
     const planned = env(pressedCombat(25, "FIRE_POTION"), { combatPlanner: "turn" });
     planned.screenMemory.runPlan = {
       runId: String(planned.state.raw["run_id"]), act: 1, floor: 1, hpPct: 1, trigger: "start", archetype: "strength", want: [], avoid: [], remove: [],
       blockTarget: null, elites: "normal", rest: "auto", bossPrep: "keep 2 potions for the boss", summary: "scale Strength, save potions for the boss",
     };
-    expect(potionContextJson(planned, "monster")["run_plan"]).toBe("strength — scale Strength, save potions for the boss | boss prep: keep 2 potions for the boss");
+    expect(potionContextJson(planned, "monster")["run_plan"]).toBeUndefined();
+    expect(deepseekPlanLine(planned)).toBe("DeepSeek's run plan (F1; advice, not orders): strength — scale Strength, save potions for the boss | boss prep: keep 2 potions for the boss");
     // On the question itself (both the escalator's state and Jev's view).
     const decision = planCombatTurn(planned);
     if (decision?.kind !== "ask") throw new Error("expected an ask");
-    expect(decision.state["potion_context"]).toMatchObject({ run_plan: expect.stringContaining("save potions") });
+    expect(decision.state["deepseek_plan"]).toContain("save potions");
+    expect(decision.jevView?.state["deepseek_plan"] ?? decision.state["deepseek_plan"]).toContain("boss prep: keep 2 potions");
     expect(decision.jevView?.state["potion_context"] ?? decision.state["potion_context"]).toBeDefined();
   });
 });

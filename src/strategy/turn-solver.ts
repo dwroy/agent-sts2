@@ -282,6 +282,11 @@ export interface SolverInput {
    * 128 damage into the Queen and 6 into the Amalgam over T1-T3, the Amalgam's 36-damage hits killed us).
    */
   focusIndex?: number;
+  /**
+   * Extra damage weight for `focusIndex` (default FOCUS_BONUS). The rollout's kill-order policy
+   * (rollout.ts) sets it higher: its later turns follow the order being evaluated.
+   */
+  focusWeight?: number;
   /** Cards in the deck that pay off on enemy Vulnerable (raises the Vulnerable weight). */
   vulnerablePayoffs?: number;
   /**
@@ -1379,7 +1384,14 @@ export function sleepTurnDamage(enemy: EnemySim): number {
 export const CONCENTRATION_BONUS = 0.15;
 /** Extra damage weight for the fight plan's kill-first enemy. */
 export const FOCUS_BONUS = 0.5;
-/** Share of damage into a surviving minion that counts while its summoner lives (it leaves with it). */
+/**
+ * Share of damage into a surviving minion that counts while its summoner lives (it leaves with it).
+ * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
+ * lines, the dominance and HP-guard picks, the fallback) and the rollout's own later turns, where it is
+ * the QE4K rule (turn-solver.test "chips the summoner"). It no longer decides what Jev sees: every kind of
+ * enemy has its own "focus" option (combat-plan.ts focusLines) and every shown line is rolled out under
+ * each kill order, a minion first included (rollout.ts killOrders; the order policy lifts the chip).
+ */
 export const MINION_CHIP = 0.25;
 /** A Wound shuffled into the deck (Painful Stabs): a dead draw later, in HP-equivalent points. */
 export const WOUND_COST = 2;
@@ -1713,7 +1725,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // cancelled the gap penalty (GGF8 F33: focus Rocket, the gap grew 30 -> 73, Rocket died alone).
     // Nor on a Decimillipede segment: one killed alone reattaches (4VC5 F24: focus Middle, 66 of 99
     // damage into it, it died alone on T2 and came back at 25 on T4).
-    if (focus && start && !focus.crabRage && !focus.reattach) score += weights.damage * FOCUS_BONUS * Math.max(0, start.hp - Math.max(0, focus.hp));
+    if (focus && start && !focus.crabRage && !focus.reattach) score += weights.damage * (input.focusWeight ?? FOCUS_BONUS) * Math.max(0, start.hp - Math.max(0, focus.hp));
   }
   // The Bomb: its damage lands on every enemy a few turns later, unless the fight is over by then.
   if (sim.bombs > 0 && !winsFight) {
