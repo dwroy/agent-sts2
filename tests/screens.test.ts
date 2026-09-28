@@ -975,6 +975,30 @@ describe("menus and overlays", () => {
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "embark" });
   });
 
+  it("holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Dai 2026-09-28)", () => {
+    const at = (ascension: number, actions: string[]) => {
+      const raw = characterSelectPayload(true);
+      raw["available_actions"] = actions;
+      (raw["character_select"] as Record<string, unknown>)["ascension"] = ascension;
+      return raw;
+    };
+    const before = process.env["TARGET_ASCENSION"];
+    try {
+      process.env["TARGET_ASCENSION"] = "8";
+      const down = mustDecision(plan(at(9, ["embark", "decrease_ascension"])));
+      if (down.kind === "act") expect(down.intent).toEqual({ action: "decrease_ascension" });
+      expect(gate(parseGameState(at(9, ["embark", "decrease_ascension"])), { action: "decrease_ascension" }).ok).toBe(true);
+      const go = mustDecision(plan(at(8, ["embark", "decrease_ascension"])));
+      if (go.kind === "act") expect(go.intent).toEqual({ action: "embark" });
+      delete process.env["TARGET_ASCENSION"];
+      const unset = mustDecision(plan(at(9, ["embark", "decrease_ascension"])));
+      if (unset.kind === "act") expect(unset.intent).toEqual({ action: "embark" });
+    } finally {
+      if (before === undefined) delete process.env["TARGET_ASCENSION"];
+      else process.env["TARGET_ASCENSION"] = before;
+    }
+  });
+
   it("selects the configured character", () => {
     const decision = mustDecision(plan(characterSelectPayload(false), { characterPreference: "IRONCLAD" }));
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_character", option_index: 0 });

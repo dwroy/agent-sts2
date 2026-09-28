@@ -93,10 +93,30 @@ export function planCapstone(env: DecisionEnv): Decision | null {
   });
 }
 
+/** TARGET_ASCENSION as a level, or null when unset or not a number. */
+export function targetAscension(raw: string | undefined): number | null {
+  if (raw === undefined || raw.trim() === "") return null;
+  const level = Number(raw);
+  return Number.isInteger(level) && level >= 0 ? level : null;
+}
+
 export function planCharacterSelect(env: DecisionEnv): Decision | null {
   const { state } = env;
   const select = asRecord(state.raw["character_select"]);
   if (Object.keys(select).length === 0) return null;
+
+  // Hold the ascension at TARGET_ASCENSION (Dai 2026-09-28: stay on A8 for 10 runs even after a win; a
+  // win unlocks the next level and the game then offers it by default). Unset: take what the game offers.
+  const targetLevel = targetAscension(process.env["TARGET_ASCENSION"]);
+  const ascension = numOrNull(select["ascension"]);
+  if (targetLevel !== null && ascension !== null) {
+    if (ascension > targetLevel && state.available_actions.includes("decrease_ascension")) {
+      return { kind: "act", label: "character/ascension", intent: { action: "decrease_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (TARGET_ASCENSION)` };
+    }
+    if (ascension < targetLevel && state.available_actions.includes("increase_ascension")) {
+      return { kind: "act", label: "character/ascension", intent: { action: "increase_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (TARGET_ASCENSION)` };
+    }
+  }
 
   if (bool(select["can_embark"]) && state.available_actions.includes("embark")) {
     return { kind: "act", label: "character/embark", intent: { action: "embark" }, rationale: "character chosen; setting off" };

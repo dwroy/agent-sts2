@@ -32,8 +32,6 @@ const INDEX_ACTIONS = new Set([
   "switch_profile",
   "resolve_rewards",
   "play_card",
-  "increase_ascension",
-  "decrease_ascension",
 ]);
 
 export function gate(state: GameState, intent: ActionRequest): GateResult {
