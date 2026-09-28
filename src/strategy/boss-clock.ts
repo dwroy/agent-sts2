@@ -353,6 +353,19 @@ export function testSubjectPhases(ascension: number): [number, number, number] {
   return ascension >= 8 ? [111, 212, 318] : [100, 200, 300];
 }
 
+/**
+ * The max HP of every phase still to come after the current one, for a boss that revives into a new
+ * phase (ADAPTABLE_POWER; the Test Subject is the only one logged: 100/200/300, A8 111/212/~318, the
+ * last phase without ADAPTABLE). The current phase is the one whose HP is nearest `maxHp`; an unknown
+ * reviver gets one more phase at 1.5x its max HP.
+ */
+export function laterPhaseHps(maxHp: number, ascension: number): number[] {
+  const phases = testSubjectPhases(ascension);
+  const at = phases.reduce((best, hp, i) => (Math.abs(hp - maxHp) < Math.abs(phases[best]! - maxHp) ? i : best), 0);
+  if (Math.abs(phases[at]! - maxHp) <= phases[at]! * 0.15) return phases.slice(at + 1);
+  return [Math.round(maxHp * 1.5)];
+}
+
 export interface BossClock {
   boss: string;
   ascension: number;

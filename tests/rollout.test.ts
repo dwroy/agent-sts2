@@ -432,6 +432,40 @@ describe("the rollout policy's later turns hold the potions like 0-cost cards (D
   });
 });
 
+describe("a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/~318)", () => {
+  it("laterPhaseHps: the phases after the current one, by the nearest phase HP; an unknown reviver gets one at 1.5x", async () => {
+    const { laterPhaseHps } = await import("../src/strategy/boss-clock.js");
+    expect(laterPhaseHps(111, 8)).toEqual([212, 318]);
+    expect(laterPhaseHps(212, 8)).toEqual([318]);
+    expect(laterPhaseHps(100, 0)).toEqual([200, 300]);
+    expect(laterPhaseHps(200, 0)).toEqual([300]);
+    expect(laterPhaseHps(300, 0)).toEqual([]);
+    expect(laterPhaseHps(60, 0)).toEqual([90]);
+  });
+
+  it("the rollout plays phase 2 at 212 and phase 3 at 318, not one more phase at the current 111", () => {
+    const big = (i: number) => card(i, "BIG", { damage: 120, cost: 1 });
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const boss: EnemySim = { index: 0, name: "Test Subject", hp: 10, maxHp: 111, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, revives: true, attacks: [] };
+    const hand = [big(0), defend(1), defend(2)];
+    const solver: SolverInput = { hand, player, enemies: [boss], fightKind: "boss", turn: 5 };
+    const plans = solveTurn(solver).plans;
+    const kill = plans.find((plan) => plan.outcome.kills.length > 0)!;
+    expect(kill.outcome.winsFight).toBe(false);
+    const line = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "TEST_SUBJECT", move: null, strength: 0, powers: { ADAPTABLE_POWER: 1 } }], tables: {},
+      piles: { draw: Array.from({ length: 20 }, (_, i) => big(20 + i)), discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "TEST_SUBJECT", asc: 8 },
+      playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 2, include: [kill], horizon: 5, samples: 2 },
+    }).lines.find((entry) => entry.plan === kill)!;
+    // T1 kills phase 1; T2 (360 damage) kills phase 2 (212, not 111: that alone would end the fight on T2);
+    // T3 kills phase 3 (318): the fight is over on turn 3.
+    expect(line.wins).toBe(line.samples);
+    expect(line.turnsToWin).toBe(3);
+    expect(line.perTurn[0]!.dmg.mean).toBe(212);
+    expect(line.perTurn[1]!.dmg.mean).toBe(318);
+  });
+});
+
 describe("turnSpreads (per-turn rollout facts)", () => {
   const rec = (loss: number, dmg: number, flags: { won?: boolean; died?: boolean } = {}): TurnRecord =>
     ({ loss, enemyPart: 0, dmg, snap: {} as Snapshot, won: flags.won ?? false, died: flags.died ?? false });

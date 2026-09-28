@@ -35,7 +35,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
-import { damageGap } from "../strategy/boss-clock.js";
+import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type LiveRollout } from "../strategy/rollout-live.js";
 
 /**
@@ -1260,7 +1260,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // the boss was left at 92/222).
   // A phase boss's later phases count too (ZANM F48: phase 2 at 151 read as the whole race, the guard
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
-  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
+  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : laterPhaseHps(enemy.maxHp, state.run?.ascension ?? 0).reduce((sum, hp) => sum + hp, 0));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
   // Damage into enemies that are neither minions nor illusions.
   const realDamage = (plan: Plan): number =>

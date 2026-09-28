@@ -34,6 +34,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { CardModel } from "./card-model.js";
+import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
@@ -546,6 +547,8 @@ interface SimEnemy {
    */
   explodeAt?: number;
   blast?: number;
+  /** A phase boss: the max HP of each phase still to come after the current one (set at its first revive). */
+  phasesLeft?: number[];
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -714,8 +717,22 @@ function applyPlan(
         e.hp = e.maxHp;
         e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
       } else if (e.base.revives) {
-        e.hp = e.maxHp;
-        e.base = { ...e.base, revives: false };
+        // A phase boss (Test Subject): the next phase at its own, higher max HP, Vulnerable and Strength
+        // cleared, and more phases after it while any are left (FSPK F48: phase 1 at 111 was revived at 111
+        // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
+        const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
+        const next = later[0] ?? e.maxHp;
+        e.phasesLeft = later.slice(1);
+        e.hp = next;
+        e.maxHp = next;
+        e.vulnerable = 0;
+        e.weak = 0;
+        e.strength = 0;
+        if (e.phasesLeft.length === 0) {
+          const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
+          e.powers = powers;
+        }
+        e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
       } else {
         e.alive = false;
       }
