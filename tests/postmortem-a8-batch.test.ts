@@ -14,7 +14,7 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { gapFightBonus, planMap } from "../src/screens/map.js";
 import { planSelection } from "../src/screens/selection.js";
 import { fightPlanInput } from "../src/strategy/fight-plan.js";
-import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge, questionOf, referencePick } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -74,10 +74,9 @@ describe("the Regen Potion and Distilled Chaos are lines with numbers (PKB0 F17 
     if (dry) expect(Number(dry["hp_lost"]) - Number(regen!["hp_lost"])).toBe(5);
   });
 
-  it("PKB0 F17 T4, energy spent: code drinks it rather than end the turn (logged: Jev ended the turn at 0.05)", () => {
+  it("PKB0 F17 T4, energy spent: code's reference drinks it rather than end the turn (logged: Jev ended the turn at 0.05)", () => {
     const decision = planCombatTurn(loggedEnv(logged("pkb0-f17-t4"))) as Decision;
-    expect(decision.kind).toBe("act");
-    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "use_potion", option_index: 0 });
+    expect(referencePick(decision).intent).toEqual({ action: "use_potion", option_index: 0 });
   });
 
   it("YG3H F33 T1 (LIQUIFY_GROUND, no attack in hand): a line drinks Distilled Chaos for the draw pile's expected damage (logged: 'neutral: unclassified', drunk T7 at 7 HP)", () => {
@@ -92,8 +91,13 @@ describe("a pile-card potion's pick follows the line that drank it (11LC F17 T1)
   it("the Droplet of Precognition line counted Bash+: code takes Bash+ on the screen (logged: asked blind, Jev took Setup Strike at 0.26)", () => {
     const combat = loggedEnv(logged("11lc-f17-t1"));
     const decision = planCombatTurn(combat) as Decision;
-    expect(decision.kind).toBe("act");
+    // Code's reference line drinks the Droplet for Bash+; Jev picks it and the loop applies it.
+    const { key } = referencePick(decision);
     if (decision.kind === "act") expect(decision.rationale).toMatch(/potion 预知之滴, 痛击\+ from 预知之滴/);
+    else {
+      expect(String(questionOf(decision).options[key!]!["plays"])).toMatch(/potion 预知之滴, then 痛击\+ from 预知之滴/);
+      decision.resolve({ plan: { type: "choice", choice: key!, confidence: 0.9, probabilities: {}, raw: {} } }).apply?.();
+    }
     // The loop hands the committed plan's remaining steps to the selection screen (planBeforeSelection).
     const remaining = combat.screenMemory.combatPlan?.remaining ?? combat.screenMemory.plannedAfter?.steps;
     const pick = loggedEnv(logged("11lc-f17-t1-pick"));
@@ -136,10 +140,13 @@ describe("the act boss's damage gap makes a hallway fight worth more than a '?' 
     return out;
   }
 
-  it("F3 and F5 (gap 13 of 28-30 a turn, 60-62% HP): the hallway ranks above the '?' (logged: '?' 28.9 vs 26.4, 27.4 vs 20.0)", () => {
+  it("F3 and F5 (gap 13 of 28-30 a turn, 60-62% HP): the hallway is level with the '?' and says why (logged: '?' 28.9 vs 26.4, 27.4 vs 20.0)", () => {
     for (const name of ["11lc-map-f3", "11lc-map-f5"]) {
       const values = routeValues(name);
-      expect(values["Monster"]).toBeGreaterThan(values["Unknown"]!);
+      expect(values["Monster"]).toBeGreaterThan(values["Unknown"]! - 0.5);
+      const decision = planMap(loggedEnv(logged(name))) as Decision;
+      const monster = Object.values(questionOf(decision).options).find((option) => option["node_type"] === "Monster");
+      expect(String(monster?.["boss_gap"])).toMatch(/^a card reward toward the act boss gap/);
     }
   });
 

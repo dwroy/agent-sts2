@@ -1,9 +1,11 @@
 /**
- * Plan validator ("不乱指挥"): DeepSeek's run and fight plans are checked before code or Jev act on
- * them. Unknown values are dropped, incoherent intents repaired, and on a re-plan every intent change
- * must name a trigger from the closed list that the facts since the last plan actually show. Each
- * repair or rejection is one reason string; the plan logs carry them (`validator`) so
- * ops/plan_adherence.py can count them.
+ * Plan validator: DeepSeek's run and fight plans are checked for FORMAT and IDS only (unknown values,
+ * enemy ids not on the board, cards not in the game, contradictory lists). Judgment calls are not
+ * repaired any more (Dai 2026-09-28: DeepSeek sets strategy and tempo, code gives facts): where code's
+ * estimate differs (push at low HP, setup at low HP, a change whose trigger the facts do not show, a
+ * grind longer than our HP lasts) the plan is kept and the difference is logged as a disagreement
+ * (`DISAGREE` prefix) and shown to Jev as a fact. The plan logs carry both (`validator`,
+ * `disagreements`) so ops/plan_adherence.py can count them.
  *
  * Pure functions over plain data: callers pass HP, floors and the board, so this module needs nothing
  * from the game-state readers.
@@ -193,8 +195,9 @@ function claims(raw: unknown): Map<string, ClaimedChange> {
 }
 
 /**
- * Checks each intent that differs from the previous plan against its claimed trigger. Rejected
- * changes keep the old value. Returns the plan with the accepted changes appended to its history.
+ * Records each intent that differs from the previous plan with its claimed trigger and the fact that
+ * supports it. Every change is taken (DeepSeek's call); one without a trigger the facts show is logged
+ * as a disagreement with an "unverified" fact. Returns the plan with the changes appended to its history.
  */
 export function validateChanges(prev: RunPlan, proposal: RunPlan, changesRaw: unknown, since: SinceSummary | null): { plan: RunPlan; accepted: PlanChange[]; notes: string[] } {
   const plan: RunPlan = { ...proposal, changes: [...prev.changes] };
@@ -211,12 +214,14 @@ export function validateChanges(prev: RunPlan, proposal: RunPlan, changesRaw: un
       continue;
     }
     const claim = claimed.get(field);
-    const reject = (why: string) => {
-      setField(plan, field, from);
-      notes.push(`rejected change ${field} ${JSON.stringify(from)}→${JSON.stringify(to)}: ${why}; kept ${JSON.stringify(from)}`);
+    let trigger: ChangeTrigger | null = claim ? triggerOf(claim.trigger) : null;
+    // A change code's facts do not support is DeepSeek's call: kept, and logged as a disagreement.
+    const disagree = (why: string) => {
+      notes.push(`${DISAGREE}change ${field} ${JSON.stringify(from)}→${JSON.stringify(to)}: ${why}`);
+      setField(plan, field, to);
+      accepted.push({ floor: proposal.floor, act: proposal.act, version: proposal.version, field, from, to, trigger: trigger ?? "unstated", fact: `unverified: ${why}` });
     };
     // A new act is a new boss: every change is accepted, under the claimed trigger when the facts show it.
-    let trigger: ChangeTrigger | null = claim ? triggerOf(claim.trigger) : null;
     let fact = trigger && since ? triggerFact(trigger, since, target) : null;
     const named = claim?.trigger ?? "";
     if (trigger && named !== trigger) notes.push(`change ${field}: trigger ${JSON.stringify(named)} read as ${trigger}`);
@@ -235,27 +240,27 @@ export function validateChanges(prev: RunPlan, proposal: RunPlan, changesRaw: un
       fact = `act ${prev.act}→${proposal.act}`;
     }
     if (!claim && !actChanged) {
-      reject("no trigger given");
+      disagree("no trigger given");
       continue;
     }
     if (!trigger) {
-      reject(`trigger ${JSON.stringify(claim?.trigger ?? "")} is not one of ${CHANGE_TRIGGERS.join(", ")}`);
+      disagree(`trigger ${JSON.stringify(claim?.trigger ?? "")} is not one of ${CHANGE_TRIGGERS.join(", ")}`);
       continue;
     }
     // A plan logged before snapshots existed (restored after a restart): the trigger cannot be checked.
     if (!since && !fact) fact = "unverified: the previous plan has no snapshot";
     if (!fact) {
-      reject(`trigger ${trigger} is not supported by the facts since the last plan`);
+      disagree(`trigger ${trigger} is not supported by the facts since the last plan`);
       continue;
     }
     if (wrongWay(field, from, to, trigger)) {
-      reject(`trigger ${trigger} points the other way`);
+      disagree(`trigger ${trigger} points the other way`);
       continue;
     }
     // Flip-flop: undoing a recent change needs a new reason, not the one that made it.
     const recent = [...prev.changes].reverse().find((change) => change.field === field && change.act === proposal.act && proposal.floor - change.floor <= FLIP_FLOP_FLOORS);
     if (recent && same(field, recent.from, to) && recent.trigger === trigger) {
-      reject(`reverses the F${recent.floor} change (${recent.trigger}) with the same trigger`);
+      disagree(`reverses the F${recent.floor} change (${recent.trigger}) with the same trigger`);
       continue;
     }
     setField(plan, field, to);
@@ -266,28 +271,28 @@ export function validateChanges(prev: RunPlan, proposal: RunPlan, changesRaw: un
   return { plan, accepted, notes };
 }
 
-/** HP below which push is repaired to balanced, and seek_elites to normal. */
+/** HP below which push, and seek_elites, are logged as disagreements. */
 export const PUSH_MIN_HP = 0.4;
 export const SEEK_MIN_HP = 0.5;
-/** Floors to the boss within which push below the entry target is repaired to balanced. */
+/** Floors to the boss within which push below the entry target is logged as a disagreement. */
 export const NEAR_BOSS_FLOORS = 8;
 
-/** Coherence repairs of a run plan (mutates it). */
+/**
+ * Format repairs of a run plan (mutates it: lists that contradict each other), and disagreements on
+ * judgment (kept, DISAGREE prefix): push at low HP or below the entry target near the boss, seek_elites
+ * at low HP or under preserve.
+ */
 export function repairRunPlan(plan: RunPlan, ctx: { hpPct: number; toBoss: number }): string[] {
   const notes: string[] = [];
   if (plan.hpPolicy === "push" && ctx.hpPct < PUSH_MIN_HP) {
-    plan.hpPolicy = "balanced";
-    notes.push(`hp_policy push at ${Math.round(ctx.hpPct * 100)}% HP → balanced`);
+    notes.push(`${DISAGREE}hp_policy push at ${Math.round(ctx.hpPct * 100)}% HP (code would play balanced below ${Math.round(PUSH_MIN_HP * 100)}%)`);
   } else if (plan.hpPolicy === "push" && plan.entryHp && ctx.hpPct < plan.entryHp && ctx.toBoss <= NEAR_BOSS_FLOORS) {
-    plan.hpPolicy = "balanced";
-    notes.push(`hp_policy push ${ctx.toBoss} floors from the boss below the ${Math.round(plan.entryHp * 100)}% entry target → balanced`);
+    notes.push(`${DISAGREE}hp_policy push ${ctx.toBoss} floors from the boss below the ${Math.round(plan.entryHp * 100)}% entry target`);
   }
   if (plan.routeRisk === "seek_elites" && plan.hpPolicy === "preserve") {
-    plan.routeRisk = "normal";
-    notes.push("route_risk seek_elites contradicts hp_policy preserve → normal");
+    notes.push(`${DISAGREE}route_risk seek_elites alongside hp_policy preserve`);
   } else if (plan.routeRisk === "seek_elites" && ctx.hpPct < SEEK_MIN_HP) {
-    plan.routeRisk = "normal";
-    notes.push(`route_risk seek_elites at ${Math.round(ctx.hpPct * 100)}% HP → normal`);
+    notes.push(`${DISAGREE}route_risk seek_elites at ${Math.round(ctx.hpPct * 100)}% HP`);
   }
   const clash = plan.avoidRoles.filter((role) => plan.needs.includes(role));
   if (clash.length > 0) {
@@ -351,7 +356,7 @@ export interface FightContext {
 /** Prefix of a validator note that keeps DeepSeek's intent and only logs code's different estimate. */
 export const DISAGREE = "disagreement (kept): ";
 
-/** Hard floor: below this HP fraction scale_then_kill is repaired to preserve_hp (DeepSeek planned setup at 14 HP). */
+/** Below this HP fraction scale_then_kill is a strong disagreement (DeepSeek planned setup at 14 HP). */
 export const SETUP_MIN_HP = 0.25;
 /** Below this HP fraction a setup objective is logged as a disagreement (kept). */
 export const SETUP_LOW_HP = 0.4;
@@ -359,7 +364,7 @@ export const SETUP_LOW_HP = 0.4;
 export const SETUP_MAX_INCOMING = 0.5;
 /** A fight code expects to end within this many turns is "winnable fast". */
 export const FAST_WIN_TURNS = 3;
-/** Below this HP fraction kill_fast/race against a non-scaling enemy under preserve is repaired to preserve_hp. */
+/** Below this HP fraction kill_fast/race against a non-scaling enemy under preserve is a disagreement. */
 export const RACE_MIN_HP = 0.4;
 
 /**
@@ -387,15 +392,14 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
     plan.killPriority = reordered;
   }
 
-  // Tactical orders are not strategy: dropped (old-format replies, or a model ignoring the task).
+  // Potion timing is guidance now (fight-plan.ts potionNotes); one that spends a potion the run plan
+  // holds for the act boss is a disagreement between the two plans, shown to Jev as a fact.
   const potions = raw["potions"] && typeof raw["potions"] === "object" && !Array.isArray(raw["potions"]) ? (raw["potions"] as Record<string, unknown>) : {};
   for (const [key, use] of Object.entries(potions)) {
     const potion = ctx.potions.find((entry) => entry.id === key.trim());
-    const drink = typeof use === "string" && !["save", "emergency"].includes(use.trim().toLowerCase());
+    const drink = typeof use === "string" && !/\b(save|hold|keep|emergency)\b/i.test(use);
     if (potion && drink && run && ctx.kind !== "boss" && isReserved(run.reserve, potion.id, potion.text)) {
-      notes.push(`potion ${potion.id} "${String(use)}" ignored: the run plan reserves it for the act boss (run plan wins)`);
-    } else {
-      notes.push(`potion timing ${key}: ${String(use)} ignored (potions are code's and Jev's)`);
+      notes.push(`${DISAGREE}potion ${potion.id} "${String(use)}": the run plan holds it for the act boss`);
     }
   }
   for (const key of ["setup_cards", "cards", "key_turns", "turns"]) {
@@ -403,25 +407,21 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
     if (value !== undefined && value !== null && !(Array.isArray(value) && value.length === 0) && value !== "") notes.push(`${key} ignored (card and turn orders are code's and Jev's)`);
   }
 
-  // Objective against the board and the run plan: repaired only on hard facts (HP under a hard floor,
-  // a hit of half our HP); a judgment call is kept and logged as a disagreement (5JU3 F9/F11: kill_fast
-  // against a Fossil Stalker and Ravenous slugs was turned into preserve_hp and both fights ran long;
-  // NX48 F35: DeepSeek chose scale_then_kill just to dodge the repair).
+  // Objective against the board and the run plan: DeepSeek's call, kept; code's different estimate is a
+  // disagreement (5JU3 F9/F11: repairs of kill_fast into preserve_hp ran both fights long; NX48 F35).
   const pct = (value: number) => `${Math.round(value * 100)}%`;
   if (plan.objective === "scale_then_kill" && ctx.hpPct < SETUP_MIN_HP) {
-    notes.push(`objective scale_then_kill at ${pct(ctx.hpPct)} HP → preserve_hp`);
-    plan.objective = "preserve_hp";
+    notes.push(`${DISAGREE}scale_then_kill at ${pct(ctx.hpPct)} HP (code would defend below ${pct(SETUP_MIN_HP)}); lines that risk death are still shown with that fact`);
   } else if (plan.objective === "scale_then_kill" && ctx.hp > 0 && ctx.incoming >= ctx.hp * SETUP_MAX_INCOMING) {
-    notes.push(`objective scale_then_kill with ${ctx.incoming} incoming at ${ctx.hp} HP → preserve_hp`);
-    plan.objective = "preserve_hp";
+    notes.push(`${DISAGREE}scale_then_kill with ${ctx.incoming} incoming at ${ctx.hp} HP`);
   } else if (plan.objective === "scale_then_kill" && ctx.hpPct < SETUP_LOW_HP) {
-    notes.push(`${DISAGREE}scale_then_kill at ${pct(ctx.hpPct)} HP (code would defend below ${pct(SETUP_LOW_HP)}); the HP guard still refuses setup that risks death`);
+    notes.push(`${DISAGREE}scale_then_kill at ${pct(ctx.hpPct)} HP (code would defend below ${pct(SETUP_LOW_HP)})`);
   }
   // Feasibility: a preserve_hp grind the enemy outlasts is kept as DeepSeek's objective, logged, and
   // played as kill_fast (intent.ts objectiveInForce; XMY2 F24, K7G9 F45).
   if (plan.objective === "preserve_hp" && ctx.kind !== "boss") {
     const outlasts = grindOutlasts({ turnsToKill: ctx.turnsToKill, lossPerTurn: ctx.lossPerTurn ?? 0, hp: ctx.hp });
-    if (outlasts) notes.push(`${DISAGREE}preserve_hp: ${outlasts}; code plays the fight as kill_fast while that holds`);
+    if (outlasts) notes.push(`${DISAGREE}preserve_hp: ${outlasts}; Jev is told the fight reads as kill_fast while that holds`);
   }
   const scaling = ctx.scaling ?? [];
   const reasons = plan.reasons ?? [];
@@ -434,8 +434,7 @@ export function validateFightPlan(plan: FightPlan, raw: Record<string, unknown>,
     const fast = ctx.turnsToKill !== null && ctx.turnsToKill <= FAST_WIN_TURNS;
     const scales = scaling.length > 0 || reasons.includes("enemy_scales");
     if (!fast && !scales && ctx.hpPct < RACE_MIN_HP) {
-      notes.push(`objective ${plan.objective} under run hp_policy preserve at ${pct(ctx.hpPct)} HP, no enemy scales, fight not winnable in ${FAST_WIN_TURNS} turns (code estimate ${ctx.turnsToKill ?? "?"}) → preserve_hp`);
-      plan.objective = "preserve_hp";
+      notes.push(`${DISAGREE}objective ${plan.objective} under run hp_policy preserve at ${pct(ctx.hpPct)} HP, no enemy scales, fight not winnable in ${FAST_WIN_TURNS} turns (code estimate ${ctx.turnsToKill ?? "?"})`);
     } else if (!fast) {
       const why = scales ? `the enemy scales (${scaling.join(", ") || "DeepSeek's reason enemy_scales"}): damage first` : `HP ${pct(ctx.hpPct)} is above ${pct(RACE_MIN_HP)}`;
       notes.push(`${DISAGREE}${plan.objective} under run hp_policy preserve, code expects ${ctx.turnsToKill ?? "?"} turns; kept because ${why}`);

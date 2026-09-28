@@ -1,10 +1,19 @@
-/** Rest sites (PLAN.md §6.7): HEAL vs SMITH and friends, driven by HP% and upgradeable cards. */
+/**
+ * Rest sites (PLAN.md §6.7): HEAL vs SMITH and friends. Code gives each option its facts (HP after the
+ * heal against DeepSeek's entry target and the floors to the boss; which card an upgrade would improve
+ * and by how much) and a reference score from HP and the boss clock alone; Jev decides with DeepSeek's
+ * rest lean in view. Code never picks between two rest options (it used to at a 3-point margin, with
+ * the plan's entry-HP heal +8 and preserve heal +4 / smith -2 on top: 80% HP healed without asking).
+ */
 
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { damageGap, gapRestShift } from "../strategy/boss-clock.js";
 import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { LABEL_NOTE, restFit, restShift } from "../strategy/intent.js";
+import { guidanceFor, LABEL_NOTE, restFit } from "../strategy/intent.js";
 import { deckEntries } from "../project/deck.js";
+import { modelHandCard, upgradeCard, upgradeGain, type CardModel } from "../strategy/card-model.js";
+import type { Knowledge } from "../knowledge/index.js";
+import { upgradePriority } from "./selection.js";
 import { briefJson } from "../project/run-brief.js";
 import type { GameState } from "../mod/schema.js";
 import type { Decision, DecisionEnv, RememberedMap, ScreenMemory } from "../project/types.js";
@@ -16,8 +25,9 @@ export function planRest(env: DecisionEnv): Decision | null {
   if (Object.keys(rest).length === 0) return null;
 
   const options: (Omit<PickOption, "summary"> & { summary: Record<string, JsonValue>; id: string; hpPct: number })[] = [];
-  // RUN_PLAN=v1: hp_policy and the entry-HP target (intent.ts restShift).
+  // DeepSeek's rest lean, hp_policy and entry-HP target: a tempo note on each option (intent.ts restFit).
   const runPlan = currentRunPlan(env.screenMemory, state);
+  const upgrades = upgradeFacts(state, knowledge);
   for (const raw of asArray(rest["options"]).map(asRecord)) {
     if (!bool(raw["is_enabled"])) continue;
     const index = numOrNull(raw["index"]);
@@ -45,7 +55,8 @@ export function planRest(env: DecisionEnv): Decision | null {
     const score =
       (id === "HEAL"
         ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4) + restShift(runPlan, id, hpPct, beforeBoss, floorsToBoss(floor)) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+        : id === "SMITH" ? 6 : 4) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+    const facts = restOptionFacts(id, state, hpPct, runPlan?.entryHp ?? null, nextBoss - floor, beforeBoss, upgrades);
     options.push({
       key: `o${index}`,
       label: `${title} (${id})`,
@@ -57,16 +68,18 @@ export function planRest(env: DecisionEnv): Decision | null {
         option: title,
         kind: id,
         description: truncate(str(raw["description"]), 160),
+        ...facts,
       },
+      why: restWhy(id, hpPct, beforeBoss, nearBoss),
       id,
       hpPct,
     });
   }
-  // Labels from the same scores that rank the options.
-  const bestScore = Math.max(...options.map((option) => option.score));
+  // Tempo notes against DeepSeek's rest lean, entry target and hp_policy.
+  const toBoss = floorsToBoss(state.run?.floor ?? 1);
   const labelled: PickOption[] = options.map(({ id, hpPct, ...option }) => {
-    const fit = restFit(runPlan, id, hpPct, { value: option.score, best: bestScore });
-    return { ...option, summary: { ...option.summary, ...(fit ? { intent_fit: fit } : {}) }, ...(fit?.startsWith("costs") ? { intentBreak: fit } : {}) };
+    const fit = restFit(runPlan, id, hpPct, toBoss);
+    return { ...option, summary: { ...option.summary, ...(fit ? { tempo: fit.tempo } : {}) }, ...(fit?.breaks ? { intentBreak: fit.tempo } : {}) };
   });
 
   if (options.length === 0) {
@@ -86,7 +99,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     escalateBelow: 0.5,
     options: labelled,
     planVersion: runPlan?.version ?? null,
-    codeMargin: env.combatPlanner === "card" ? undefined : 3,
+    guidance: guidanceFor(runPlan, "rest", hpPercent(env)),
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -97,9 +110,93 @@ export function planRest(env: DecisionEnv): Decision | null {
         upgradable_cards: upgradeable,
         next_nodes: nextNodeTypes(env.screenMemory, state),
       },
-      ...(runPlan ? { labels: LABEL_NOTE } : {}),
+      labels: LABEL_NOTE,
     },
   });
+}
+
+/** HEAL restores this share of max HP. */
+export const REST_HEAL_SHARE = 0.3;
+
+/** Why code scores a rest option as it does (its reference, from HP and the boss clock only). */
+function restWhy(id: string, hpPct: number, beforeBoss: boolean, nearBoss: boolean): string {
+  const pct = `${Math.round(hpPct * 100)}%`;
+  if (id === "HEAL") {
+    if (hpPct < 0.5) return `HP ${pct} is below half`;
+    if (beforeBoss && hpPct < 0.85) return `HP ${pct} with the boss or a forced elite next`;
+    if (nearBoss && hpPct < 0.65) return `HP ${pct} within 4 floors of the boss`;
+    return hpPct < 0.65 ? `HP ${pct} is below 65%` : `HP ${pct}: little to heal`;
+  }
+  if (id === "SMITH") return "an upgrade lasts the rest of the run";
+  return "other rest option";
+}
+
+/**
+ * The facts of a rest option: for HEAL the HP it leaves against the entry target and the boss distance
+ * (Pantograph counted before the boss), for SMITH the cards an upgrade improves most and by how much.
+ */
+export function restOptionFacts(
+  id: string,
+  state: GameState,
+  hpPct: number,
+  entryHp: number | null,
+  toBoss: number,
+  beforeBoss: boolean,
+  upgrades: string[],
+): Record<string, JsonValue> {
+  const pct = (value: number) => `${Math.round(value * 100)}%`;
+  const hp = state.run?.current_hp ?? null;
+  const max = state.run?.max_hp ?? null;
+  if (id === "HEAL" && hp !== null && max !== null && max > 0) {
+    const heal = Math.min(max - hp, Math.round(max * REST_HEAL_SHARE));
+    const after = Math.min(1, hpPct + heal / max);
+    const target = entryHp !== null ? `; DeepSeek's entry target ${pct(entryHp)} ${after >= entryHp ? "reached" : `still ${pct(entryHp - after)} short`}` : "";
+    return { heal_facts: `+${heal} HP: ${pct(hpPct)} -> ${pct(after)}${after >= 0.999 && heal < max * REST_HEAL_SHARE ? ` (${Math.round(max * REST_HEAL_SHARE) - heal} of the heal wasted at full HP)` : ""}; boss in ${toBoss} floor${toBoss === 1 ? "" : "s"}${beforeBoss ? " (boss or forced elite next)" : ""}${target}` };
+  }
+  if (id === "SMITH") {
+    return {
+      upgrade_facts: upgrades.length > 0 ? `best upgrades: ${upgrades.join("; ")}` : "no card left to upgrade",
+      hp_if_not_healing: `${pct(hpPct)} HP carried on${entryHp !== null ? ` (DeepSeek's entry target ${pct(entryHp)}, boss in ${toBoss} floors)` : ` (boss in ${toBoss} floors)`}`,
+    };
+  }
+  return {};
+}
+
+/** What an upgrade adds to a card, in its numbers ("+3 damage, +1 Vulnerable"). */
+function upgradeDelta(before: CardModel, after: CardModel): string {
+  const parts: string[] = [];
+  const damage = (after.damage ?? 0) * Math.max(1, after.hits) - (before.damage ?? 0) * Math.max(1, before.hits);
+  if (damage) parts.push(`${damage > 0 ? "+" : ""}${damage} damage`);
+  if (after.block !== before.block) parts.push(`+${after.block - before.block} block`);
+  if (after.vulnerable !== before.vulnerable) parts.push(`+${after.vulnerable - before.vulnerable} Vulnerable`);
+  if (after.weak !== before.weak) parts.push(`+${after.weak - before.weak} Weak`);
+  if (after.strength !== before.strength) parts.push(`+${after.strength - before.strength} Strength`);
+  if (after.draw !== before.draw) parts.push(`+${after.draw - before.draw} draw`);
+  if (after.cost !== before.cost) parts.push(`cost ${before.cost} -> ${after.cost}`);
+  return parts.join(", ");
+}
+
+/**
+ * The deck's best upgrades (up to three): code's upgrade priority (Demon Form, Offering, Bash, …, then
+ * card value), each with what the upgrade changes in the numbers the solver models.
+ */
+export function upgradeFacts(state: GameState, knowledge: Knowledge): string[] {
+  const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  const seen = new Set<string>();
+  return deck
+    .map((entry, index) => ({ entry, index, id: str(entry["card_id"]), type: str(entry["card_type"], knowledge.card(str(entry["card_id"]))?.type ?? "") }))
+    .filter(({ entry, id, type }) => !bool(entry["upgraded"]) && id !== "" && type !== "Curse" && type !== "Status")
+    .filter(({ id }) => (seen.has(id) ? false : (seen.add(id), true)))
+    .map((card) => ({ ...card, priority: upgradePriority(card.id, card.type) }))
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, 3)
+    .map(({ entry, index, id, priority }) => {
+      const model = modelHandCard(entry, index, knowledge);
+      const up = upgradeCard(model);
+      const delta = upgradeDelta(model, up);
+      const gain = Math.round(upgradeGain(model, up));
+      return `${str(entry["name"], knowledge.card(id)?.name ?? id)}: ${delta || "effect beyond the modelled numbers"}${gain > 0 ? ` (~${gain} points a play)` : ""}, upgrade priority ${Math.round(priority)}`;
+    });
 }
 
 function hpPercent(env: DecisionEnv, extra = 0): number {

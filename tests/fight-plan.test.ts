@@ -15,7 +15,7 @@ import { loadConfig } from "../src/config.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn, sandpitVetoExempt } from "../src/screens/combat-plan.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planCombat } from "../src/screens/combat.js";
 import { fightHpCost, LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
 import {
@@ -31,6 +31,7 @@ import {
 import { combatFit, CONTEXT_CHARS, intentLines, objectiveDamage } from "../src/strategy/intent.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
+import { questionOf } from "./logged.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);
 
@@ -125,12 +126,13 @@ describe("parseFightPlan", () => {
   const state = parseGameState(bossTurnOne());
   const base = { runId: "TESTRUN123", fight: fightKey(state), kind: "boss", replans: 0 };
 
-  it("reads the objective and kill priority; unknown enemies and tactical orders are dropped with a reason", () => {
+  it("reads the objective, kill priority and potion guidance; unknown enemies and card orders are dropped with a reason", () => {
     const parsed = parseFightPlan(
       {
         objective: "Scale_Then_Kill",
         kill_priority: ["Lagavulin Matriarch", "NOBODY"],
-        potions: { FIRE_POTION: "early" },
+        potions: { FIRE_POTION: "hold for the phase-2 burst", NOT_IN_BELT: "early" },
+        potion_plan: "keep the Fire Potion for the burst turn; spend it below 40% HP",
         setup_cards: ["INFLAME"],
         threat: "T3 big hit",
         summary: "set up, then race",
@@ -145,8 +147,11 @@ describe("parseFightPlan", () => {
     expect(parsed.enemyIds).toEqual(["LAGAVULIN_MATRIARCH"]);
     const notes = parsed.validator.join(" | ");
     expect(notes).toMatch(/kill_priority: NOBODY not in this fight, dropped/);
-    expect(notes).toMatch(/potion timing FIRE_POTION: early ignored/);
     expect(notes).toMatch(/setup_cards ignored/);
+    // Potion timing is guidance now: kept for Jev (belt potions only), never an order to code.
+    expect(parsed.potions).toEqual({ FIRE_POTION: "hold for the phase-2 burst" });
+    expect(parsed.potionPlan).toBe("keep the Fire Potion for the burst turn; spend it below 40% HP");
+    expect(intentLines(null, parsed, 9)).toEqual(expect.arrayContaining(["DeepSeek potion plan (guidance): keep the Fire Potion for the burst turn; spend it below 40% HP", "DeepSeek on FIRE_POTION: hold for the phase-2 burst"]));
   });
 
   it("falls back to an objective from HP on unusable values, and reads old-format replies", () => {
@@ -171,21 +176,21 @@ describe("fight plan validator (不乱指挥)", () => {
   const parse = (state: GameState, json: Record<string, unknown>, kind = "boss", run: RunPlan | null = null) =>
     parseFightPlan(json, state, testKnowledge, { runId: "TESTRUN123", fight: fightKey(state), kind, replans: 0 }, run);
 
-  it("setup at low HP or against a huge hit becomes preserve_hp (DeepSeek planned setup at 14 HP)", () => {
+  it("setup at low HP or against a huge hit is kept and logged as a disagreement (no judgment repairs)", () => {
     const low = parse(board(14), { objective: "scale_then_kill" });
-    expect(low.objective).toBe("preserve_hp");
-    expect(low.validator.join(" | ")).toMatch(/scale_then_kill at 18% HP → preserve_hp/);
+    expect(low.objective).toBe("scale_then_kill");
+    expect((low.disagreements ?? []).join(" | ")).toMatch(/scale_then_kill at 18% HP \(code would defend below 25%\)/);
     const hit = parse(board(55, 40), { objective: "scale_then_kill" });
-    expect(hit.objective).toBe("preserve_hp");
-    expect(parse(board(55), { objective: "scale_then_kill" }).objective).toBe("scale_then_kill");
+    expect(hit.objective).toBe("scale_then_kill");
+    expect((hit.disagreements ?? []).join(" | ")).toMatch(/scale_then_kill with 40 incoming at 55 HP/);
+    expect(parse(board(55), { objective: "scale_then_kill" }).disagreements ?? []).toEqual([]);
   });
 
-  it("a fight plan cannot release a potion the run plan reserves (run plan wins)", () => {
+  it("a fight plan spending a potion the run plan holds for the boss is a logged disagreement, and both reach Jev", () => {
     const state = parseGameState(combatPayload());
-    const parsed = parse(state, { objective: "kill_fast", potions: { FIRE_POTION: "early" } }, "elite", runPlan({ reserve: ["damage"] }));
-    expect(parsed.validator.join(" | ")).toMatch(/FIRE_POTION "early" ignored: the run plan reserves it for the act boss/);
-    // The plan has no potion field at all: nothing reaches the solver.
-    expect(Object.keys(parsed)).not.toContain("potions");
+    const parsed = parse(state, { objective: "kill_fast", potions: { FIRE_POTION: "drink early" } }, "elite", runPlan({ reserve: ["damage"] }));
+    expect((parsed.disagreements ?? []).join(" | ")).toMatch(/potion FIRE_POTION "drink early": the run plan holds it for the act boss/);
+    expect(parsed.potions).toEqual({ FIRE_POTION: "drink early" });
   });
 
   it("kill_fast under hp_policy preserve stays only when code expects a fast win", async () => {
@@ -204,7 +209,7 @@ describe("fight plan validator (不乱指挥)", () => {
     expect(check(9, "boss").objective).toBe("kill_fast");
   });
 
-  it("repairs kill_fast under preserve only at low HP against enemies that do not scale (5JU3 F9/F11)", async () => {
+  it("keeps kill_fast under preserve; only notes it at low HP against enemies that do not scale (5JU3 F9/F11)", async () => {
     const { validateFightPlan } = await import("../src/strategy/plan-validator.js");
     const ctx = { hp: 30, incoming: 6, turnsToKill: 5, enemyIds: ["CORPSE_SLUG"], together: [], potions: [], kind: "monster" };
     const check = (hpPct: number, scaling: string[], reasons: FightPlan["reasons"] = []) => {
@@ -218,8 +223,8 @@ describe("fight plan validator (不乱指挥)", () => {
     const told = check(0.375, [], ["enemy_scales"]);
     expect(told.objective).toBe("kill_fast");
     expect(told.notes).toMatch(/reason enemy_scales, but code sees no growth power/);
-    // 30% HP, nothing scales, 5 turns: the hard floor repairs it.
-    expect(check(0.3, [])).toMatchObject({ objective: "preserve_hp", notes: expect.stringMatching(/at 30% HP, no enemy scales, fight not winnable in 3 turns \(code estimate 5\) → preserve_hp/) });
+    // 30% HP, nothing scales, 5 turns: kept, code's estimate logged as a disagreement.
+    expect(check(0.3, [])).toMatchObject({ objective: "kill_fast", notes: expect.stringMatching(/^disagreement \(kept\): objective kill_fast under run hp_policy preserve at 30% HP, no enemy scales, fight not winnable in 3 turns \(code estimate 5\)/) });
   });
 
   it("parses the reason tag, reads the board's scaling and logs disagreements apart from repairs", () => {
@@ -261,29 +266,31 @@ describe("fightPlanInput", () => {
   });
 });
 
-describe("combatFit (graded labels for Jev, from code's own score)", () => {
-  const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, slack: 5, focusName: "Louse", best: { hpLoss: 4, damage: 30, setup: 1 } };
+describe("combatFit (reference facts and the tempo note against DeepSeek's objective)", () => {
+  const field = { minLoss: 4, maxDamage: 30, maxSetup: 1, focusName: "Louse", best: { hpLoss: 4, damage: 30, setup: 0 } };
   const line = (over: Partial<Parameters<typeof combatFit>[2]> = {}) => ({ hpLoss: 4, damage: 30, setup: 0, winsFight: false, focusDamage: null, ...over });
-  it("fits near code's best line, costs X HP / Y damage otherwise, neutral without intents", () => {
-    expect(combatFit("preserve_hp", "balanced", line({ codeTop: true, scoreGap: 0 }), field)).toEqual({ label: "fits preserve_hp: code's best line under preserve_hp weights", breaks: false, grade: "fits" });
-    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, scoreGap: 11 }), field)).toEqual({ label: "costs 8 HP vs the best line for preserve_hp", breaks: true, grade: "costs" });
-    // Within the close-call margin: fits, with the trade said (5JU3 F11 T3: a 9-damage kill line labelled "breaks").
-    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 7, damage: 39, scoreGap: 2 }), field).label).toBe("fits preserve_hp: near code's best line (score -2.0) under preserve_hp weights (vs it: 3 more HP, 9 more damage)");
-    expect(combatFit("kill_fast", "balanced", line({ damage: 10, hpLoss: 1, scoreGap: 20 }), field).label).toBe("costs 20 damage vs the best line for kill_fast (saves 3 HP)");
-    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1, codeTop: true }), field).label).toBe("fits scale_then_kill: code's best line under scale_then_kill weights; sets up (powers / Strength)");
-    expect(combatFit("scale_then_kill", "balanced", line({ scoreGap: 9 }), field)).toMatchObject({ label: "costs the setup vs the best line for scale_then_kill", breaks: true });
-    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6, scoreGap: 12 }), field).label).toBe("costs 8 HP vs the best line for hp_policy preserve; 8 HP over the safest line (hp_policy preserve tolerates ~5); hits kill-priority Louse for 6");
-    expect(combatFit(null, "balanced", line({ scoreGap: 30 }), field)).toEqual({ label: "neutral", breaks: false, grade: "neutral" });
-    expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field).breaks).toBe(false);
+  it("says where a line sits against code's reference line, and how it fits the objective", () => {
+    expect(combatFit("preserve_hp", "balanced", line({ rank: 1, scoreGap: 0 }), field)).toEqual({ label: "code's reference line (balanced weights)", tempo: "fits DeepSeek's preserve_hp: least HP lost of the lines", breaks: false, grade: "fits" });
+    expect(combatFit("preserve_hp", "balanced", line({ hpLoss: 12, rank: 3, scoreGap: 11 }), field)).toEqual({
+      label: "code rank 3 (score -11.0): vs the reference line 8 more HP",
+      tempo: "departs from DeepSeek's preserve_hp: 8 HP more than the safest line",
+      breaks: true,
+      grade: "costs",
+    });
+    expect(combatFit("kill_fast", "balanced", line({ damage: 10, hpLoss: 1, rank: 2, scoreGap: 20 }), field)).toMatchObject({ label: "code rank 2 (score -20.0): vs the reference line 3 less HP, 20 less damage", tempo: "departs from DeepSeek's kill_fast: 20 less damage than the most-damage line (it is the safest line)", breaks: true });
+    expect(combatFit("kill_fast", "balanced", line({ damage: 27, rank: 2 }), field)).toMatchObject({ tempo: "fits DeepSeek's kill_fast: within 3 of the most damage", breaks: false });
+    expect(combatFit("scale_then_kill", "balanced", line({ setup: 1, rank: 1 }), field).tempo).toBe("fits DeepSeek's scale_then_kill: most setup (powers / permanent Strength) of the lines");
+    expect(combatFit("scale_then_kill", "balanced", line({ rank: 2 }), field)).toMatchObject({ tempo: "departs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)", breaks: true });
+    expect(combatFit(null, "preserve", line({ hpLoss: 12, focusDamage: 6, rank: 2 }), field)).toMatchObject({ label: "code rank 2: vs the reference line 8 more HP; hits kill-priority Louse for 6", tempo: "departs from DeepSeek's hp_policy preserve: 8 HP more than the safest line" });
+    expect(combatFit(null, "balanced", line({ rank: 2, scoreGap: 30 }), field)).toMatchObject({ tempo: null, breaks: false, grade: "neutral" });
+    expect(combatFit("race", "balanced", line({ winsFight: true, damage: 0 }), field)).toMatchObject({ label: "wins the fight", breaks: false });
   });
 
-  it("never marks a line at or near the top as breaking, hp_policy included", () => {
-    // Code's rank 1 with less damage than another line (9V09 F33 T3 "Burning, Whirlwind+": +2 Strength).
-    const top = combatFit("race", "preserve", line({ damage: 10, hpLoss: 12, codeTop: true }), field);
-    expect(top.breaks).toBe(false);
-    expect(top.grade).toBe("fits");
-    expect(combatFit("race", "preserve", line({ hpLoss: 12, scoreGap: 5 }), field).breaks).toBe(false);
-    expect(combatFit("race", "preserve", line({ hpLoss: 12, scoreGap: 7 }), field).breaks).toBe(true);
+  it("code's reference line can still depart from DeepSeek's tempo: the note says so, whatever the rank", () => {
+    // 9V09 F33 T3 "Burning, Whirlwind+": code's rank 1 with less damage than another line.
+    const top = combatFit("race", "preserve", line({ damage: 10, hpLoss: 12, rank: 1 }), field);
+    expect(top.label).toBe("code's reference line (balanced weights)");
+    expect(top).toMatchObject({ breaks: true, tempo: "departs from DeepSeek's race: 20 less damage than the most-damage line" });
   });
 
   it("counts Sandpit turns bought as damage (9V09 F33 T2)", () => {
@@ -292,25 +299,23 @@ describe("combatFit (graded labels for Jev, from code's own score)", () => {
     const sandpit = { turnValue: 49, behind: true, now: 4, turnsNeeded: 7, maxEscapes: 1 };
     const pit = { ...field, maxDamage: Math.max(objectiveDamage({ damage: 46, escapes: 1 }, sandpit), 67), maxSetup: 0, sandpit, best: { hpLoss: 4, damage: 95, setup: 0 } };
     expect(pit.maxDamage).toBe(95);
-    const escapeLine = combatFit("race", "balanced", line({ damage: 46, escapes: 1, codeTop: true }), pit);
-    expect(escapeLine).toEqual({ label: "fits race: code's best line under race weights (+1 Sandpit turn, ~49 damage each)", breaks: false, grade: "fits" });
-    const noEscape = combatFit("race", "balanced", line({ damage: 67, scoreGap: 20 }), pit);
+    const escapeLine = combatFit("race", "balanced", line({ damage: 46, escapes: 1, rank: 1 }), pit);
+    expect(escapeLine).toEqual({ label: "code's reference line (balanced weights); +1 Sandpit turn, ~49 damage each", tempo: "fits DeepSeek's race: most damage of the lines (Sandpit turns bought counted as damage)", breaks: false, grade: "fits" });
+    const noEscape = combatFit("race", "balanced", line({ damage: 67, rank: 2, scoreGap: 20 }), pit);
     expect(noEscape.breaks).toBe(true);
-    expect(noEscape.label).toBe(
-      "costs 28 damage vs the best line for race, counting Sandpit turns bought as damage; costs 1 Sandpit turn: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
+    expect(noEscape.tempo).toBe(
+      "departs from DeepSeek's race: 28 less damage than the most-damage line (it is the safest line); departs from the Sandpit race: 1 Frantic Escape fewer than another line while the Sandpit (4) is no longer than the kill (~7 turns)",
     );
-    // Near the top: a note, not a cost.
-    expect(combatFit("race", "balanced", line({ damage: 67, scoreGap: 3 }), pit).label).toMatch(/; note: 1 Frantic Escape fewer/);
   });
 
-  it("ranks the Queen's YOU_ARE_MINE turn by damage into the Amalgam (H7W0 F48 T2)", () => {
+  it("the Queen's YOU_ARE_MINE turn is judged by damage into the Amalgam (H7W0 F48 T2)", () => {
     // Rank 4 "Colossus, Pommel Strike+ -> Amalgam, Crimson Mantle" 15 vs rank 2 "Bludgeon, Pommel Strike+ -> Amalgam" 63.
     const queen = { ...field, burst: { target: "Torch Head Amalgam", maxDamage: 63, why: "YOU_ARE_MINE" } };
-    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 15, setup: 1, codeTop: true }), queen)).toEqual({
-      label: "costs 48 damage to Torch Head Amalgam vs the best line this turn (YOU_ARE_MINE)", breaks: true, grade: "costs",
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 15, setup: 1, rank: 1 }), queen)).toMatchObject({
+      tempo: "departs from the burst turn: 48 less damage to Torch Head Amalgam than the best line (YOU_ARE_MINE)", breaks: true, grade: "costs",
     });
-    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 48, scoreGap: 9 }), queen)).toMatchObject({ breaks: false, grade: "costs" });
-    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 63 }), queen)).toMatchObject({ label: "fits the burst turn: 63 damage to Torch Head Amalgam (YOU_ARE_MINE)", grade: "fits" });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 48, rank: 2, scoreGap: 9 }), queen)).toMatchObject({ breaks: false, grade: "costs" });
+    expect(combatFit("scale_then_kill", "balanced", line({ burstDamage: 63, rank: 3 }), queen)).toMatchObject({ tempo: "fits the burst turn: 63 damage to Torch Head Amalgam (YOU_ARE_MINE)", grade: "fits" });
   });
 });
 
@@ -318,12 +323,12 @@ describe("intentLines: the plans' own words reach Jev (9V09 F33)", () => {
   it("shows the fight plan's summary and threat and the run plan's boss_prep, short, as context", () => {
     const fight = plan({ objective: "race", summary: "Play every affordable Frantic Escape early; race the Insatiable.", threat: "each unplayed Frantic Escape wastes a needed turn" });
     const lines = intentLines(runPlan({ bossPrep: "play every affordable Frantic Escape early" }), fight, 33);
-    expect(lines).toContain("fight plan (context): Play every affordable Frantic Escape early; race the Insatiable.");
-    expect(lines).toContain("threat (context): each unplayed Frantic Escape wastes a needed turn");
-    expect(lines).toContain("boss prep (context): play every affordable Frantic Escape early");
-    expect(lines.find((entry) => entry.startsWith("fight objective race"))).toMatch(/Frantic Escape\) is worth a full turn of damage/);
-    const long = intentLines(null, plan({ summary: "x ".repeat(400) }), 33).find((entry) => entry.startsWith("fight plan"))!;
-    expect(long.length).toBeLessThanOrEqual("fight plan (context): ".length + CONTEXT_CHARS);
+    expect(lines).toContain("DeepSeek fight plan: Play every affordable Frantic Escape early; race the Insatiable.");
+    expect(lines).toContain("DeepSeek threat: each unplayed Frantic Escape wastes a needed turn");
+    expect(lines).toContain("DeepSeek boss prep: play every affordable Frantic Escape early");
+    expect(lines.find((entry) => entry.startsWith("DeepSeek fight objective race"))).toMatch(/Frantic Escape\) is worth a full turn of damage/);
+    const long = intentLines(null, plan({ summary: "x ".repeat(400) }), 33).find((entry) => entry.startsWith("DeepSeek fight plan"))!;
+    expect(long.length).toBeLessThanOrEqual("DeepSeek fight plan: ".length + CONTEXT_CHARS);
   });
 });
 
@@ -354,7 +359,7 @@ describe("fight plan log", () => {
       const old = { runId: "TESTRUN123", fight: "1:11", kind: "elite", enemyIds: [], approach: "defend", setup: ["INFLAME"], focus: "JAW_WORM", potions: { FIRE_POTION: "early" }, keyTurns: "T3 hits hard", summary: "old", replans: 0 };
       logFightPlan(file, { run: "TESTRUN123", fight: "1:11", plan: old as never });
       expect(loadFightPlan(file, "TESTRUN123", "1:11")).toEqual({
-        runId: "TESTRUN123", fight: "1:11", kind: "elite", enemyIds: [], objective: "preserve_hp", killPriority: ["JAW_WORM"], threat: "T3 hits hard", summary: "old", replans: 0, validator: [],
+        runId: "TESTRUN123", fight: "1:11", kind: "elite", enemyIds: [], objective: "preserve_hp", killPriority: ["JAW_WORM"], threat: "T3 hits hard", summary: "old", potions: { FIRE_POTION: "early" }, replans: 0, validator: [],
       });
       expect(normalizeFightPlan({ approach: "race" }).objective).toBe("race");
     } finally {
@@ -377,7 +382,7 @@ describe("turn planner with a fight plan", () => {
     expect((on as AskDecision).escalate).toBeUndefined();
   });
 
-  it("puts a setup line in front of Jev under scale_then_kill, with the intents and compliance labels", () => {
+  it("puts a setup line in front of Jev under scale_then_kill, with DeepSeek's guidance and tempo notes", () => {
     const e = env(bossTurnOne(), { fightPlan: "v1" });
     e.screenMemory.fightPlan = plan({ fight: fightKey(e.state) });
     const decision = planCombatTurn(e);
@@ -388,9 +393,11 @@ describe("turn planner with a fight plan", () => {
     }
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
-    expect(String((ask.state["strategy"] as string[])[0])).toMatch(/^fight objective scale_then_kill: play powers/);
+    expect(String((ask.state["strategy"] as string[])[0])).toMatch(/^DeepSeek fight objective scale_then_kill: play powers/);
+    expect(ask.guidance).toEqual(ask.state["strategy"]);
+    expect(String(ask.state["roles"])).toMatch(/DeepSeek sets the run's strategy and tempo.*Code gives facts.*You decide/);
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /fits scale_then_kill: [^;"]*; sets up \(powers \/ Strength\)/.test(String(text)))).toBe(true);
+    expect(Object.values(criteria).some((text) => /fits DeepSeek's scale_then_kill: most setup/.test(String(text)))).toBe(true);
   });
 
   it("ignores a plan made for another fight", () => {
@@ -412,18 +419,24 @@ describe("turn planner with a fight plan", () => {
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("fits scale_then_kill"))).toBe(true);
+    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("fits DeepSeek's scale_then_kill"))).toBe(true);
   });
 
-  it("keeps a potion instead of drinking it for a hallway kill when a dry line costs little (CAYK F37-F40)", () => {
+  it("a hallway kill that a dry line also makes keeps the potion without asking (CAYK F37-F40: lethal, dominated)", () => {
     const raw = combatPayload({ enemyHp: 25 });
     const combat = raw["combat"] as Raw;
     combat["enemies"] = [{ ...(combat["enemies"] as Raw[])[0]!, intents: [{ index: 0, intent_type: "Attack", label: "4", damage: 4, hits: 1, total_damage: 4 }] }];
     const e = env(raw);
     const decision = planCombatTurn(e);
-    const steps = [decision?.kind === "act" ? decision.intent : null, ...(e.screenMemory.combatPlan?.remaining ?? []).map((step) => step.cardId)];
-    expect(JSON.stringify(steps)).not.toContain("use_potion");
-    expect(JSON.stringify(steps)).not.toContain("POTION:");
+    // Either a lethal without the potion, or Jev is asked with the dry line on offer and the potion's facts.
+    if (decision?.kind === "act") {
+      const steps = [decision.intent, ...(e.screenMemory.combatPlan?.remaining ?? []).map((step) => step.cardId)];
+      expect(JSON.stringify(steps)).not.toContain("use_potion");
+      return;
+    }
+    const text = JSON.stringify(decision?.questions);
+    expect(text).toMatch(/potion_facts/);
+    expect(Object.values(questionOf(decision).options).some((option) => !String(option["plays"] ?? "").includes("potion"))).toBe(true);
   });
 
   it("per-card fallback never offers a card whose HP cost kills us (C2WY F22 T6: Blood Wall at 1 HP)", () => {
@@ -472,7 +485,7 @@ describe("turn planner with a fight plan", () => {
     expect(nodeWeight("Elite", 0.9, 100, 6, 1)).toBeGreaterThan(0);
   });
 
-  it("reserved potions are in no line or option of code's or Jev's before the boss (MGJ8 F11 T1, EJXC F28)", () => {
+  it("a potion DeepSeek holds for the boss is offered with the fact of what it saves and what the boss then lacks (MGJ8 F11 T1, EJXC F28)", () => {
     const raw = combatPayload();
     ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = 30;
     const shown = (reserve: RunPlan["reserve"]): string => {
@@ -487,8 +500,12 @@ describe("turn planner with a fight plan", () => {
     };
     // Without a reserve the elite fight drinks the Fire Potion (RVL2 F31 below).
     expect(shown([])).toMatch(/Fire Potion|use_potion/);
-    expect(shown(["damage"])).not.toMatch(/Fire Potion|use_potion/);
-    expect(shown(["any"])).not.toMatch(/Fire Potion|use_potion/);
+    // Held for the boss: still offered (no hard filter), with the reserve fact and a tempo note.
+    const held = shown(["damage"]);
+    expect(held).toMatch(/Fire Potion/);
+    expect(held).toMatch(/the act boss fight then has one fewer damage potion \(DeepSeek plan holds damage potions for the boss/);
+    expect(held).toMatch(/departs from DeepSeek's reserve: drinks a potion it holds for the act boss/);
+    expect(shown(["any"])).toMatch(/Fire Potion/);
   });
 
   it("code's own elite/boss pick meets the HP guard bound (7DXA F33 T1-T2)", () => {
@@ -520,7 +537,7 @@ describe("turn planner with a fight plan", () => {
     expect(text).not.toContain('"hp_after_enemy_turn":8');
   });
 
-  it("keeps potions at low HP in a hallway fight when a dry line loses <= 5 (B6AC F30)", () => {
+  it("at low HP in a hallway fight a potion line is offered beside the dry line, with what it gains (B6AC F30)", () => {
     const raw = combatPayload();
     const combat = raw["combat"] as Raw;
     (combat["player"] as Raw)["current_hp"] = 26;
@@ -528,12 +545,16 @@ describe("turn planner with a fight plan", () => {
     combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy, i) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: String(4 - i), damage: 4 - i, hits: 1, total_damage: 4 - i }] }));
     const e = env(raw);
     const decision = planCombatTurn(e);
-    const text = JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? decision.intent : null, e.screenMemory.combatPlan?.remaining]);
-    expect(text).not.toContain("Fire Potion");
-    expect(text).not.toContain("use_potion");
+    const { options } = questionOf(decision);
+    const drinking = Object.values(options).filter((option) => String(option["plays"]).includes("Fire Potion"));
+    const dry = Object.values(options).filter((option) => !String(option["plays"]).includes("potion"));
+    expect(dry.length).toBeGreaterThan(0);
+    expect(drinking.length).toBeGreaterThan(0);
+    // The fact: the potion saves no HP here, only damage (it used to be filtered out: a dry line lost <= 5).
+    expect(String(drinking[0]!["potion_facts"])).toMatch(/drinking Fire Potion now: \+20 damage vs the best line without it/);
   });
 
-  it("scale_then_kill protects a setup line from the HP guard unless it risks death (JF99 F33 T4, 5BXM F33)", () => {
+  it("a setup line Jev picks is played as picked: the old HP guard's swap is a fact on it (JF99 F33 T4, 5BXM F33)", () => {
     /** 14 incoming; Demon Form (3 energy) takes all of it, Defend (10 block) + Bash loses 4. */
     const board = (hp: number): Raw => {
       const raw = bossTurnOne();
@@ -551,41 +572,30 @@ describe("turn planner with a fight plan", () => {
       const e = env(board(hp), { fightPlan: "v1" });
       if (objective) e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), objective });
       const decision = planCombatTurn(e);
-      if (decision?.kind === "act") return { played: decision.rationale, deviation: undefined, label: undefined };
+      if (decision?.kind === "act") return { played: decision.rationale, intent: decision.intent, deviation: undefined, facts: {} as Raw };
       const criteria = (decision as AskDecision).questions["plan"]?.type === "choice" ? ((decision as AskDecision).questions["plan"] as { criteria: Record<string, string> }).criteria : {};
       const key = Object.keys(criteria).find((k) => /"plays":"Demon Form"/.test(criteria[k]!))!;
       const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
-      return { played: resolved.guard ? `guarded to ${resolved.guard.plan}` : resolved.rationale, deviation: resolved.deviation, label: JSON.parse(criteria[key]!)["intent_fit"] as string | undefined };
+      const facts = JSON.parse(criteria[key]!) as Raw;
+      return { played: resolved.rationale, intent: resolved.intent, deviation: resolved.deviation, facts };
     };
-    // No objective: the guard swaps Demon Form (-14) for Defend + Bash (-4).
-    expect(play(55, null).played).toMatch(/guarded to DEFEND_R, BASH/);
-    // scale_then_kill: the setup line is played (code's own pick, lasting value x1.5, not guarded).
-    expect(play(55, "scale_then_kill").played).toMatch(/Demon Form; hp -14/);
-    // preserve_hp: swapped by the guard. Code's own preserve_hp score puts Demon Form within 5 of its
-    // best line (lasting value), so the label says so and the pick is no deviation of the objective.
+    // No objective: Jev's Demon Form (-14) is played; the facts say it costs 10 HP more than the safest line.
+    const free = play(55, null);
+    expect(free.played).toMatch(/Jev chose plan \d\/\d \(Demon Form\)/);
+    expect(free.intent).toMatchObject({ action: "play_card", card_index: 3 });
+    expect(String(free.facts["hp_vs_safest"])).toMatch(/^10 HP more than the safest line \(4\)/);
+    // scale_then_kill: Demon Form fits the tempo.
+    expect(String(play(55, "scale_then_kill").facts["tempo"])).toMatch(/^fits DeepSeek's scale_then_kill/);
+    // preserve_hp: played as picked, logged as a tempo deviation.
     const preserve = play(55, "preserve_hp");
-    expect(preserve.played).toMatch(/guarded to DEFEND_R, BASH/);
-    expect(preserve.label).toMatch(/^fits preserve_hp: near code's best line \(score -5\.0\) under preserve_hp weights \(vs it: 10 more HP, 8 less damage\)/);
-    expect(preserve.deviation).toBeUndefined();
-    // At 17 HP the setup line leaves 3 against a 14-ish next hit: it risks death, the guard swaps it.
-    expect(play(17, "scale_then_kill").played).toMatch(/guarded to DEFEND_R, BASH/);
+    expect(preserve.intent).toMatchObject({ action: "play_card", card_index: 3 });
+    expect(String(preserve.facts["tempo"])).toBe("departs from DeepSeek's preserve_hp: 10 HP more than the safest line");
+    expect(preserve.deviation?.intent).toMatch(/departs from DeepSeek's preserve_hp/);
   });
 
 });
 
-describe("elite/boss potion veto (M812 F28/F33, 9YR9 F17, F3SS F33)", () => {
-  it("refuses a drink-first pick only when the dry line is nearly free, and never when pressed", async () => {
-    const { dryLineOverridesPotion } = await import("../src/screens/combat-plan.js");
-    // Drink-first at 24 HP: the dry line losing 6 no longer vetoes it (it used to: min loss of any line).
-    expect(dryLineOverridesPotion(undefined, 6, 24)).toBe(false);
-    expect(dryLineOverridesPotion(undefined, 2, 60)).toBe(true);
-    // A drinking line losing as much as the dry line is still refused, unless the dry line costs 30% HP.
-    expect(dryLineOverridesPotion(5, 5, 60)).toBe(true);
-    expect(dryLineOverridesPotion(10, 10, 21)).toBe(false);
-  });
-});
-
-describe("the reserve is hard even on a costly turn, and released below 25% HP (WB02 F29)", () => {
+describe("a potion DeepSeek holds for the boss is never filtered on a costly hallway turn (WB02 F29)", () => {
   const hallway = (hp: number): Raw => {
     const raw = combatPayload();
     (raw["run"] as Raw)["floor"] = 29;
@@ -601,14 +611,12 @@ describe("the reserve is hard even on a costly turn, and released below 25% HP (
     const decision = planCombatTurn(e);
     return JSON.stringify(decision?.kind === "ask" ? decision.questions : [decision?.kind === "act" ? [decision.intent, decision.rationale] : null, e.screenMemory.combatPlan?.remaining]);
   };
-  it("a costly turn drinks it without a reserve, never with one, and again below 25% HP", () => {
+  it("a costly turn offers it with or without a reserve; the reserve is a fact, at any HP", () => {
     expect(shown(60, [])).toMatch(/Block Potion|use_potion/);
-    expect(shown(60, ["block"])).not.toMatch(/Block Potion|use_potion/);
+    expect(shown(60, ["block"])).toMatch(/Block Potion/);
+    expect(shown(60, ["block"])).toMatch(/one fewer block potion/);
     expect(shown(18, ["block"])).toMatch(/Block Potion|use_potion/);
-  });
-
-  it("is released when the safest line without it risks death next turn (VF5C F27 T4, Z7D7 F28 T3)", () => {
-    // 30 HP, 24 incoming: the safest dry line ends at 11, under 15% of max HP (setupRisksDeath).
+    // 30 HP, 24 incoming (VF5C F27 T4, Z7D7 F28 T3).
     expect(shown(30, ["block"])).toMatch(/Block Potion|use_potion/);
   });
 });
@@ -701,8 +709,8 @@ describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
   });
 });
 
-describe("HP guard in a lost Sandpit race (WB02 F33)", () => {
-  it("does not swap damage for HP when the Sandpit ends the fight first anyway", () => {
+describe("no HP guard swap in a Sandpit race or out of one (WB02 F33)", () => {
+  it("Jev's most-damage pick is played as picked; its extra HP is a fact on it", () => {
     const board = (sandpit: boolean): Raw => {
       const raw = bossTurnOne();
       ((raw["run"] as Raw)["potions"] as Raw[])[0]!["can_use"] = false;
@@ -730,8 +738,9 @@ describe("HP guard in a lost Sandpit race (WB02 F33)", () => {
       const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
       return resolved.guard !== undefined || /guard/i.test(resolved.rationale);
     };
-    expect(guarded(board(false))).toBe(true);
+    expect(guarded(board(false))).toBe(false);
     expect(guarded(board(true))).toBe(false);
+    expect(JSON.stringify((planCombatTurn(env(board(false))) as AskDecision).questions)).toMatch(/HP more than the safest line/);
   });
 });
 
@@ -837,7 +846,7 @@ describe("franticEscapesLeft counts escapes in hand, not the piles (X8HF F33 T5)
   });
 });
 
-describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, GZ24 F8 T1)", () => {
+describe("DeepSeek's boss keep is guidance, and Jev's potion pick stands (EJXC F28 T1, GZ24 F8 T1)", () => {
   const fireLine = (decision: ReturnType<typeof planCombatTurn>): boolean =>
     /Fire Potion|use_potion/.test(JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null));
   const hallway = (floor: number): Raw => {
@@ -846,7 +855,7 @@ describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, 
     return raw;
   };
 
-  it("a potion the run plan reserves for the boss is not on offer in any non-boss fight (not only +20)", () => {
+  it("a potion DeepSeek holds for the boss stays on offer in a non-boss fight, labelled as such", () => {
     const keep = (floor: number, reserve: RunPlan["reserve"] = ["damage"]) => {
       const e = env(hallway(floor));
       e.screenMemory.runPlan = runPlan({ reserve });
@@ -854,34 +863,27 @@ describe("run-plan boss keep and same-turn veto hold potions back (EJXC F28 T1, 
     };
     // Without the reserve the Fire Potion line (+20 damage) is offered.
     expect(fireLine(planCombatTurn(env(hallway(29))))).toBe(true);
-    expect(fireLine(keep(29))).toBe(false);
-    // Far from the boss too (the old 10-floor window let 16 of 17 broken keeps through).
-    expect(fireLine(keep(5))).toBe(false);
+    expect(fireLine(keep(29))).toBe(true);
+    expect(JSON.stringify(keep(29))).toMatch(/one fewer damage potion/);
     expect(fireLine(keep(5, ["block"]))).toBe(true);
+    expect(JSON.stringify(keep(5, ["block"]))).not.toMatch(/one fewer/);
     // A plan of another run is not this run's strategy.
     const other = env(hallway(5));
     other.screenMemory.runPlan = runPlan({ runId: "OTHER", reserve: ["damage"] });
-    expect(fireLine(planCombatTurn(other))).toBe(true);
+    expect(JSON.stringify(planCombatTurn(other))).not.toMatch(/one fewer/);
   });
 
-  it("a potion refused this turn is not offered again on the same turn's re-plan", () => {
+  it("Jev's potion line is played even at low confidence: no hallway potion veto", () => {
     const e = env(hallway(5));
     const decision = planCombatTurn(e);
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
     const criteria = (ask.questions["plan"] as { criteria: Record<string, string> }).criteria;
     const key = Object.keys(criteria).find((k) => /Fire Potion/.test(criteria[k]!))!;
-    // Hallway bar: a potion line below rank 1 at 0.4 is refused, and remembered for this turn.
-    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.4 }, confidence: 0.4, raw: {} } });
-    expect(resolved.fallback).toBe(true);
-    resolved.apply?.();
-    expect(e.screenMemory.potionVeto?.ids).toEqual(["FIRE_POTION"]);
-    e.screenMemory.combatPlan = null;
-    expect(fireLine(planCombatTurn(e))).toBe(false);
-    // Next turn it is on offer again.
-    const next = env({ ...hallway(5), turn: 4 });
-    next.screenMemory.potionVeto = e.screenMemory.potionVeto;
-    expect(fireLine(planCombatTurn(next))).toBe(true);
+    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.2 }, confidence: 0.2, raw: {} } });
+    expect(resolved.fallback).toBe(false);
+    expect(resolved.rationale).toMatch(/^Jev chose plan/);
+    expect(resolved.reference?.rank).toBeGreaterThan(0);
   });
 });
 
@@ -922,7 +924,7 @@ describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambl
     expect(shown).toMatch(/Block Potion[^}]*emergency/);
   });
 
-  it("holds a reserved potion back unless the turn is lethal", () => {
+  it("offers a potion DeepSeek holds for the boss with that fact, lethal turn or not", () => {
     const shown = (lethal: boolean, reserve: RunPlan["reserve"] = ["damage"]): string => {
       const e = env(combatPayload({ lethalEndTurn: lethal }), { combatPlanner: "card" });
       e.screenMemory.runPlan = runPlan({ reserve });
@@ -930,7 +932,8 @@ describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambl
       return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
     };
     expect(shown(false, [])).toMatch(/Fire Potion/);
-    expect(shown(false)).not.toMatch(/Fire Potion/);
+    expect(shown(false, [])).not.toMatch(/holds this potion's role/);
+    expect(shown(false)).toMatch(/Fire Potion[^}]*holds this potion's role for the act boss/);
     expect(shown(true)).toMatch(/Fire Potion/);
   });
 
@@ -942,7 +945,7 @@ describe("per-card fallback: no draw/buff potion at 0 energy (S6AG F25 T6: Gambl
   });
 });
 
-describe("HP guard in an act-boss race (N28L, WB02, R2H1, EJXC F33 T5)", () => {
+describe("act-boss race: Jev's damage line stands, the race's exchange rate is a fact (N28L, WB02, R2H1, EJXC F33 T5)", () => {
   /** Boss at 300, 20 incoming; Bash (3 energy, 30) -20 vs Defend, Defend, Strike (4 block each) -12. */
   const board = (bossId: string, escape = false): Raw => {
     const raw = bossTurnOne();
@@ -981,12 +984,14 @@ describe("HP guard in an act-boss race (N28L, WB02, R2H1, EJXC F33 T5)", () => {
   };
   const byPlays = (pattern: RegExp) => (criteria: Record<string, string>) => Object.keys(criteria).find((k) => pattern.test(criteria[k]!))!;
 
-  it("keeps 24 more damage for 8 HP while the clock says we are behind; swaps it without a clock", () => {
-    // Lagavulin Matriarch: 222 over 12 turns; 300 left over 12 is 25 a turn, more than the 6 of the swap.
+  it("keeps 24 more damage for 8 HP with or without a clock; behind the clock the line says it pays", () => {
+    // Lagavulin Matriarch: 222 over 12 turns; 300 left over 12 is 25 a turn, more than the 6 of the safe line.
     const behind = played(board("LAGAVULIN_MATRIARCH"), byPlays(/"plays":"BASH/));
-    expect(behind).not.toMatch(/guard/i);
-    const noClock = played(board("SLIME_BOSS"), byPlays(/"plays":"BASH/));
-    expect(noClock).toMatch(/guard/i);
+    expect(behind).toMatch(/^kept Jev chose/);
+    expect(played(board("SLIME_BOSS"), byPlays(/"plays":"BASH/))).toMatch(/^kept Jev chose/);
+    const decision = planCombatTurn(env(board("LAGAVULIN_MATRIARCH"))) as AskDecision;
+    const bash = Object.values((decision.questions["plan"] as { criteria: Record<string, string> }).criteria).find((text) => /"plays":"BASH/.test(text))!;
+    expect(JSON.parse(bash)["boss_race"]).toMatch(/behind the boss clock .*its extra damage pays for its extra HP/);
   });
 
   it("does not swap a Frantic Escape line for one without it", () => {
@@ -1022,7 +1027,7 @@ describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V0
     return raw;
   };
 
-  it("code's rank 1 plays the Escapes, fits race, and lines with fewer Escapes break the Sandpit race", () => {
+  it("code's reference line plays the Escapes, fits race, and lines with fewer Escapes depart from the Sandpit race", () => {
     const e = env(board(), { fightPlan: "v1" });
     e.screenMemory.fightPlan = plan({ fight: fightKey(e.state), objective: "race", enemyIds: ["THE_INSATIABLE"], killPriority: [], summary: "Play every affordable Frantic Escape early." });
     const decision = planCombatTurn(e) as AskDecision;
@@ -1030,24 +1035,14 @@ describe("The Insatiable race: labels, Sandpit turn value, Radiant Tincture (9V0
     const criteria = (decision.questions["plan"] as { criteria: Record<string, string> }).criteria;
     const plans = Object.keys(criteria).filter((key) => key.startsWith("plan")).map((key) => JSON.parse(criteria[key]!) as Record<string, string>);
     const escapes = (entry: Record<string, string>) => (entry["plays"]!.match(/Frantic Escape/g) ?? []).length;
-    // Rank 1 plays both Escapes (the Tincture pays for Bash too) and fits race.
-    expect(escapes(plans[0]!)).toBe(2);
-    expect(plans[0]!["intent_fit"]).toMatch(/^fits race/);
+    // The reference line plays both Escapes (the Tincture pays for Bash too) and fits race.
+    const reference = plans.find((entry) => /^code's reference line/.test(entry["reference"]!))!;
+    expect(escapes(reference)).toBe(2);
+    expect(reference["tempo"]).toMatch(/^fits DeepSeek's race/);
     for (const entry of plans) {
-      if (escapes(entry) < 2) expect(entry["intent_fit"]).toMatch(/costs \d Sandpit turns?: \d Frantic Escapes? fewer/);
+      if (escapes(entry) < 2) expect(entry["tempo"]).toMatch(/departs from the Sandpit race: \d Frantic Escapes? fewer/);
     }
-    // The fight plan's own words are in the strategy context.
-    expect(decision.state["strategy"]).toContain("fight plan (context): Play every affordable Frantic Escape early.");
-  });
-
-  it("the potion veto keeps Escapes while behind the clock", () => {
-    const behind = { behind: true, chosenEscapes: 2, swapInEscapes: 1, energyPotion: false, escapeCostInHand: 2, energy: 2 };
-    expect(sandpitVetoExempt(behind)).toBe(true);
-    expect(sandpitVetoExempt({ ...behind, behind: false })).toBe(false);
-    expect(sandpitVetoExempt({ ...behind, chosenEscapes: 1 })).toBe(false);
-    // Drink first: an energy potion while the Escapes in hand cost more than the energy left.
-    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: true, escapeCostInHand: 2, energy: 1 })).toBe(true);
-    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: true, escapeCostInHand: 2, energy: 3 })).toBe(false);
-    expect(sandpitVetoExempt({ ...behind, chosenEscapes: null, energyPotion: false, escapeCostInHand: 2, energy: 1 })).toBe(false);
+    // The fight plan's own words are in the strategy lines.
+    expect(decision.state["strategy"]).toContain("DeepSeek fight plan: Play every affordable Frantic Escape early.");
   });
 });

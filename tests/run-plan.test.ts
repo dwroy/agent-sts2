@@ -16,15 +16,12 @@ import {
   loadRunPlan,
   logRunPlan,
   parseRunPlan,
-  runPlanCardBonus,
+  planCardFacts,
   runPlanLine,
   runPlanTrigger,
-  RUN_PLAN_AVOID_MALUS,
-  RUN_PLAN_WANT_BONUS,
   type RunPlan,
 } from "../src/strategy/run-plan.js";
-import { mapShift, restShift } from "../src/strategy/intent.js";
-import { roomHpCost } from "../src/strategy/route-cost.js";
+import { mapFit, restFit } from "../src/strategy/intent.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 const plan = (over: Partial<RunPlan> = {}): RunPlan => ({
@@ -115,30 +112,32 @@ describe("parseRunPlan", () => {
   });
 });
 
-describe("plan weights", () => {
-  it("rates wanted cards up, avoided cards down, block cards up below the target", () => {
-    expect(runPlanCardBonus(plan(), "INFLAME", 6, false).bonus).toBe(RUN_PLAN_WANT_BONUS);
-    expect(runPlanCardBonus(plan(), "ANGER", 6, false).bonus).toBe(-RUN_PLAN_AVOID_MALUS);
-    expect(runPlanCardBonus(plan(), "SHRUG_IT_OFF", 3, true).bonus).toBe(6);
-    expect(runPlanCardBonus(plan(), "SHRUG_IT_OFF", 6, true).bonus).toBe(0);
-    expect(runPlanCardBonus(null, "INFLAME", 0, false).bonus).toBe(0);
+describe("DeepSeek's plan on cards, routes and rests: facts and tempo notes, not weights", () => {
+  it("says a card is wanted, avoided, or short of the block target", () => {
+    expect(planCardFacts(plan(), "INFLAME", 6, false)).toEqual(["DeepSeek plan wants this card (want #1)"]);
+    expect(planCardFacts(plan(), "ANGER", 6, false)).toEqual(["DeepSeek plan lists this card under avoid"]);
+    expect(planCardFacts(plan({ blockTarget: 5 }), "SHRUG_IT_OFF", 3, true)).toEqual(["block cards 3 of DeepSeek's target 5"]);
+    expect(planCardFacts(plan({ blockTarget: 5 }), "SHRUG_IT_OFF", 6, true)).toEqual([]);
+    expect(planCardFacts(null, "INFLAME", 0, false)).toEqual([]);
   });
-  it("shifts elites and rest sites by route_risk and hp_policy, never against a pre-boss heal", () => {
-    expect(mapShift(plan({ routeRisk: "avoid_elites" }), "Elite", 0.9)).toBe(-6);
-    expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.9)).toBe(2);
-    expect(mapShift(plan({ routeRisk: "seek_elites" }), "Elite", 0.5)).toBe(0);
-    expect(mapShift(plan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBeCloseTo(-10 * roomHpCost("Unknown", 2), 2);
-    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.7, false)).toBe(3);
-    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.4, false)).toBe(0);
-    expect(restShift(plan({ hpPolicy: "push" }), "SMITH", 0.9, true)).toBe(0);
-    expect(restShift(plan({ hpPolicy: "preserve" }), "HEAL", 0.6, false)).toBe(4);
-    expect(restShift(plan({ hpPolicy: "preserve" }), "HEAL", 0.9, false)).toBe(0);
+  it("route_risk and hp_policy are tempo notes on map and rest options", () => {
+    expect(mapFit(plan({ routeRisk: "avoid_elites" }), "Elite", 0.9, { optionalElite: true, eliteOffered: true })).toEqual({ tempo: "departs from DeepSeek's route_risk avoid_elites: an optional elite", breaks: true });
+    expect(mapFit(plan({ routeRisk: "seek_elites" }), "Elite", 0.9, { optionalElite: true, eliteOffered: true })).toEqual({ tempo: "fits DeepSeek's route_risk seek_elites", breaks: false });
+    expect(mapFit(plan(), "Elite", 0.9, { optionalElite: true, eliteOffered: true })).toBeNull();
+    expect(restFit(plan({ hpPolicy: "push" }), "SMITH", 0.7)).toEqual({ tempo: "fits DeepSeek's hp_policy push (HP spent for upgrades)", breaks: false });
+    expect(restFit(plan({ hpPolicy: "push" }), "HEAL", 0.7)?.breaks).toBe(true);
+    expect(restFit(plan({ hpPolicy: "preserve" }), "HEAL", 0.6)).toMatchObject({ breaks: false });
+    expect(restFit(plan({ hpPolicy: "preserve" }), "SMITH", 0.6)).toMatchObject({ breaks: true });
+    expect(restFit(plan({ hpPolicy: "preserve" }), "HEAL", 0.9)).toBeNull();
+    // DeepSeek's heal-vs-smith lean decides the note whatever the policy.
+    expect(restFit(plan({ hpPolicy: "preserve", restLean: "smith" }), "SMITH", 0.6)).toEqual({ tempo: "fits DeepSeek's rest lean smith", breaks: false });
   });
   it("shows the plan's intents in the run brief", () => {
     const state = mapState();
-    const brief = { ...buildRunBrief(state, testKnowledge), plan: runPlanLine(plan({ reserve: ["block"] })) ?? undefined };
+    const brief = { ...buildRunBrief(state, testKnowledge), plan: runPlanLine(plan({ reserve: ["block"], restLean: "smith" })) ?? undefined };
     expect(String(briefJson(brief)["run_plan"])).toContain("want INFLAME");
-    expect(String(briefJson(brief)["run_plan"])).toContain("reserve block potions");
+    expect(String(briefJson(brief)["run_plan"])).toContain("hold block potions for the boss");
+    expect(String(briefJson(brief)["run_plan"])).toContain("rest lean smith");
   });
 });
 
@@ -169,13 +168,12 @@ describe("run plan commitments (entry HP, saved potions, must-have roles)", () =
     expect(parsed.reserve).toEqual(["block", "weak", "damage"]);
     expect(parsed.needs).toEqual(["aoe", "strength"]);
   });
-  it("turns them into weights: heal and avoid elites below the entry HP near the boss, saved potions, must-have roles", async () => {
-    const { planSavesPotion, mustHaveBonus, MUST_HAVE_BONUS, floorsToBoss } = await import("../src/strategy/run-plan.js");
+  it("turns them into tempo notes and facts: heal below the entry HP near the boss, held potions, needed roles", async () => {
+    const { planSavesPotion, mustHaveFact, floorsToBoss } = await import("../src/strategy/run-plan.js");
     const committed = plan({ entryHp: 0.85, reserve: ["block"], needs: ["aoe"] });
-    expect(restShift(committed, "HEAL", 0.6, false, 4)).toBe(8);
-    expect(restShift(committed, "HEAL", 0.6, false, 12)).toBe(0);
-    expect(mapShift(committed, "Elite", 0.8, 5)).toBe(-8);
-    expect(mapShift(committed, "Elite", 1, 5)).toBe(0);
+    expect(restFit(committed, "HEAL", 0.6, 4)).toEqual({ tempo: "fits DeepSeek's entry_hp 85%: HP 60% with the boss 4 floors away", breaks: false });
+    expect(restFit(committed, "SMITH", 0.6, 4)?.breaks).toBe(true);
+    expect(restFit(committed, "SMITH", 0.6, 12)).toBeNull();
     expect(planSavesPotion(committed, "BLOCK_POTION", "获得 12 点格挡。")).toBe(true);
     expect(planSavesPotion(committed, "FIRE_POTION", "造成 20 点伤害。")).toBe(false);
     // GZ24 F8: the Dexterity Potion's text is 「获得{DexterityPower}点敏捷」; Regen heals over turns.
@@ -183,9 +181,9 @@ describe("run plan commitments (entry HP, saved potions, must-have roles)", () =
     expect(planSavesPotion(committed, "DEXTERITY_POTION", "")).toBe(true);
     expect(planSavesPotion({ ...committed, reserve: ["heal"] }, "REGEN_POTION", "")).toBe(true);
     expect(planSavesPotion({ ...committed, reserve: ["heal"] }, "REGEN_POTION", "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。")).toBe(true);
-    expect(mustHaveBonus(committed, "THUNDERCLAP", ["STRIKE_R"]).bonus).toBe(MUST_HAVE_BONUS);
-    expect(mustHaveBonus(committed, "THUNDERCLAP", ["STOMP", "INFERNO"]).bonus).toBe(4);
-    expect(mustHaveBonus(committed, "DEFEND_R", []).bonus).toBe(0);
+    expect(mustHaveFact(committed, "THUNDERCLAP", ["STRIKE_R"])).toBe("fills DeepSeek's need aoe (deck has 0)");
+    expect(mustHaveFact(committed, "THUNDERCLAP", ["STOMP", "INFERNO"])).toMatch(/deck has 2/);
+    expect(mustHaveFact(committed, "DEFEND_R", [])).toBeNull();
     expect(floorsToBoss(29)).toBe(4);
   });
 });

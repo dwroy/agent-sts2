@@ -65,3 +65,29 @@ export function loggedEnv(fx: Logged, over: { runPlan?: RunPlan | null; fightPla
     ...rest,
   };
 }
+
+/** An AskDecision's first choice question: its key and its options' parsed criteria. */
+export function questionOf(decision: import("../src/project/types.js").Decision | null): { name: string; options: Record<string, Raw> } {
+  if (!decision || decision.kind !== "ask") throw new Error(`expected a question, got ${decision?.kind ?? "null"}: ${decision && decision.kind === "act" ? decision.rationale : ""}`);
+  const [name, question] = Object.entries(decision.questions)[0]!;
+  if (question.type !== "choice") throw new Error("not a choice");
+  return { name, options: Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => { try { return [key, JSON.parse(value!) as Raw]; } catch { return [key, { text: value } as Raw]; } })) };
+}
+
+/**
+ * Code's reference pick: an act decision's intent, or the option a question ranks first (code_rank 1 on
+ * pick screens, "code's reference line" / a win in combat), resolved as if Jev had chosen it.
+ */
+export function referencePick(decision: import("../src/project/types.js").Decision | null): { key: string | null; intent: import("../src/mod/client.js").ActionRequest | null } {
+  if (!decision) return { key: null, intent: null };
+  if (decision.kind === "act") return { key: null, intent: decision.intent };
+  const { name, options } = questionOf(decision);
+  const key =
+    Object.entries(options).find(([, option]) => option["code_rank"] === 1)?.[0] ??
+    Object.entries(options).find(([, option]) => /^code's reference line/.test(String(option["reference"] ?? "")))?.[0] ??
+    Object.entries(options).find(([, option]) => option["reference"] === "wins the fight")?.[0] ??
+    null;
+  if (!key) return { key: null, intent: null };
+  const resolved = decision.resolve({ [name]: { type: "choice", choice: key, confidence: 1, probabilities: {}, raw: {} } });
+  return { key, intent: resolved.intent };
+}

@@ -16,7 +16,7 @@ import { playerPowers } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
 import { modelHandCard } from "../strategy/card-model.js";
 import { resolveDamage } from "../strategy/damage.js";
-import { isReserved, reserveReleased } from "../strategy/intent.js";
+import { isReserved } from "../strategy/intent.js";
 import { currentRunPlan } from "../strategy/run-plan.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -97,14 +97,11 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
-  // The run plan's reserve holds here too (intent.ts): outside the boss fight a reserved potion is only
-  // offered on a lethal turn or below 25% HP.
-  const bossFight = asArray(combat["enemies"]).some((enemy) => knowledge.monster(str(asRecord(enemy)["enemy_id"]))?.type === "Boss");
-  const released = reserveReleased({ bossFight, hpFraction: playerHp !== null && playerMaxHp ? playerHp / playerMaxHp : 1, everyDryLineDies: endTurnWouldKill });
+  // A potion DeepSeek holds for the act boss is offered like any other (holding it is guidance); its
+  // option says so (reserve).
   const reserve = currentRunPlan(env.screenMemory, state)?.reserve;
-  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).filter(
-    (potion) => potion.potion_id !== "FOUL_POTION" && (released !== null || !isReserved(reserve, potion.potion_id, potion.text)),
-  );
+  const bossFight = asArray(combat["enemies"]).some((enemy) => knowledge.monster(str(asRecord(enemy)["enemy_id"]))?.type === "Boss");
+  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).filter((potion) => potion.potion_id !== "FOUL_POTION");
 
   const candidates: Candidate[] = [];
   const enemyByIndex = new Map(enemies.map((enemy) => [enemy.index, enemy]));
@@ -217,6 +214,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
               ? "emergency: the mod reports that ending the turn would be lethal"
               : "the turn is lethal, but this potion only helps through cards played after it"
             : "uses a consumable; only worth it if it changes the outcome",
+          ...(!bossFight && isReserved(reserve, potion.potion_id, potion.text) ? { reserve: `DeepSeek holds this potion's role for the act boss: drinking it now leaves the boss fight one fewer` } : {}),
         },
         // A consumable is never the code-side default unless the turn is lethal, and even then it only
         // has to beat `end_turn` — a real play (block or a kill) still outranks it. Jev may pick a

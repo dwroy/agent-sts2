@@ -474,9 +474,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
     if (!state.in_combat) {
-      screenMemory.hpGuard = undefined;
-      screenMemory.potionTurn = undefined;
-      screenMemory.potionVeto = undefined;
       screenMemory.gambleDiscards = undefined;
       screenMemory.facing = undefined;
       screenMemory.fightCards = undefined;
@@ -704,7 +701,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
               escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}) };
-              // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
+              // The escalator's raw pick stays in `choice` (no screen swaps it any more; kept for old records).
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
             } catch (error) {
@@ -829,7 +826,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
-      ...(resolved.deviation ? { intent_deviation: { intent: resolved.deviation.intent, run_plan_version: resolved.deviation.runPlanVersion, fight_objective: resolved.deviation.fightObjective ?? null } } : {}),
+      ...(resolved.deviation ? { intent_deviation: { intent: resolved.deviation.intent, run_plan_version: resolved.deviation.runPlanVersion, fight_objective: resolved.deviation.fightObjective ?? null }, tempo_deviation: resolved.deviation.intent } : {}),
+      // What DeepSeek's guidance Jev saw, and whether its pick was code's reference option.
+      ...(decision.kind === "ask" && decision.guidance && decision.guidance.length > 0 ? { ds_guidance: decision.guidance } : {}),
+      ...(resolved.reference ? { reference_rank: resolved.reference.rank, reference_of: resolved.reference.of, matched_reference: resolved.reference.matched } : {}),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {

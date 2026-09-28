@@ -48,31 +48,27 @@ describe("a preserve_hp grind the enemy outlasts is logged and played as kill_fa
       expect(expectedLossPerTurn(state, loggedKnowledge)).toBeGreaterThan(0);
       const plan = parseFightPlan({ objective: "preserve_hp", kill_priority: [], reason: ["low_hp"] }, state, loggedKnowledge, { runId: "x", fight: fx.fightPlan!.fight, kind: fx.fightPlan!.kind, replans: 0 }, fx.runPlan);
       expect(plan.objective).toBe("preserve_hp");
-      expect(plan.disagreements?.join(" ")).toMatch(/preserve_hp: the grind outlasts our HP .*code plays the fight as kill_fast/);
+      expect(plan.disagreements?.join(" ")).toMatch(/preserve_hp: the grind outlasts our HP .*Jev is told the fight reads as kill_fast/);
     });
   }
 
-  it("XMY2 F24 T2 (the logged preserve_hp plan): Jev is told the fight is played as kill_fast, under balanced weights", () => {
+  it("XMY2 F24 T2 (the logged preserve_hp plan): Jev is told the fight reads as kill_fast; the tempo notes say so", () => {
     const decision = planCombatTurn(loggedEnv(logged("xmy2-f24-t2")));
     const lines = strategyOf(decision).join("\n");
-    expect(lines).toMatch(/in force now: objective kill_fast \(preserve_hp: the grind outlasts our HP/);
-    expect(lines).toMatch(/in force now: hp_policy balanced \(damage first/);
+    expect(lines).toMatch(/code note: the fight now reads as kill_fast \(preserve_hp: the grind outlasts our HP/);
+    expect(lines).toMatch(/code note: hp_policy reads as balanced now \(damage first/);
+    const tempos = Object.values(optionsOf(decision)).map((option) => String(option["tempo"] ?? "")).join("\n");
+    expect(tempos).toMatch(/DeepSeek's preserve_hp, read as kill_fast now/);
   });
 });
 
 describe("potions: a release holds for the turn, drinks come before the energy runs out (N7KR F8)", () => {
-  it("T1: the Dexterity Potion released for the chosen line stays released after the Skill Potion's card (logged: re-plan 'only distinct line: Taunt; hp -9')", () => {
-    const first = loggedEnv(logged("n7kr-f8-t1"));
-    planCombatTurn(first);
-    expect(first.screenMemory.reserveRelease?.note).toMatch(/safest line without it leaves 22 HP/);
-    const replan = loggedEnv(logged("n7kr-f8-t1-replan"));
-    replan.screenMemory.reserveRelease = first.screenMemory.reserveRelease;
-    const options = optionsOf(planCombatTurn(replan));
-    expect(String(options["plan1"]!["plays"])).toMatch(/^potion 敏捷药水, then 挑衅/);
-    expect(Number(options["plan1"]!["hp_lost"])).toBeLessThanOrEqual(7);
-    // Without the memory the re-plan filters it out again.
-    const fresh = planCombatTurn(loggedEnv(logged("n7kr-f8-t1-replan")));
-    expect(fresh?.kind === "act" ? fresh.rationale : "").toMatch(/only distinct line\): 挑衅 -> 花园幽灵鳗; hp -9/);
+  it("T1 re-plan: the Dexterity Potion held for the boss is on offer after the Skill Potion's card, no memory needed (logged: re-plan 'only distinct line: Taunt; hp -9')", () => {
+    const options = optionsOf(planCombatTurn(loggedEnv(logged("n7kr-f8-t1-replan"))));
+    const dex = Object.values(options).find((option) => /^potion 敏捷药水, then 挑衅/.test(String(option["plays"])));
+    expect(dex).toBeDefined();
+    expect(Number(dex!["hp_lost"])).toBeLessThanOrEqual(7);
+    expect(String(dex!["potion_facts"])).toMatch(/drinking 敏捷药水 now: saves \d+ HP/);
   });
 
   it("T1/T2: order-free potions are shown and played first, so a kill mid-line cannot strand them at 0 energy", () => {

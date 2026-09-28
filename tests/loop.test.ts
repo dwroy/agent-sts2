@@ -791,9 +791,14 @@ describe("runLoop", () => {
     const decisions = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line));
     expect(decisions.length).toBeGreaterThan(0);
     for (const record of decisions) expect(record.escalation).toBeUndefined();
-    // avoid_elites: the Elite next node was not among the map options.
+    // avoid_elites is guidance: the Elite is offered with the tempo note, and Jev's pick of it is played
+    // and logged as a tempo deviation with the guidance shown and the reference rank.
     const route = decisions.find((record) => record.label === "map/route");
-    expect(route.chosen).not.toEqual({ action: "choose_map_node", option_index: 0 });
-    expect(JSON.stringify(route.questions ?? {})).not.toMatch(/Elite/);
+    expect(JSON.stringify(route.questions ?? {})).toMatch(/Elite[^}]*departs from DeepSeek's route_risk avoid_elites/);
+    expect(route.decider).toBe("jev");
+    expect(route.ds_guidance).toEqual(expect.arrayContaining([expect.stringMatching(/^route_risk avoid_elites/)]));
+    expect(typeof route.reference_rank).toBe("number");
+    expect(typeof route.matched_reference).toBe("boolean");
+    if (route.chosen.option_index === 0) expect(route.tempo_deviation).toMatch(/avoid_elites/);
   });
 });

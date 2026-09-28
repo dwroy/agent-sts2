@@ -38,22 +38,25 @@ describe("leaving a shop costs the gold no later shop can spend (CWU9, RTF3, EHJ
     expect(unspentGoldCost(5000, 20)).toBe(40);
   });
 
-  it("EHJZ F31 (277 gold, belt empty, 2 floors before the boss): Jev picks among buys with the potions in view, no 'stop shopping' (logged: left at 0.24)", () => {
+  it("EHJZ F31 (277 gold, belt empty, 2 floors before the boss): leaving is offered with the unspent-gold fact, the potions in view (logged: left at 0.24)", () => {
     const options = optionsOf(planShop(loggedEnv(logged("ehjz-shop-f31"), { combatPlanner: "turn" })));
-    expect(options["leave"]).toBeUndefined();
+    expect(String(options["leave"]!["unspent_gold"])).toMatch(/^~277 of the 277 gold is likely unspendable before the F33 boss \(2 floors away\)/);
+    // Leaving is not code's reference: a buy is.
+    expect(Number(options["leave"]!["code_rank"])).toBeGreaterThan(1);
     const potions = Object.keys(options).filter((key) => key.startsWith("buy_potion"));
     expect(potions.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("RTF3 F37 (1237 gold, a slot empty): no 'stop shopping'; the relics and the Explosive Ampoule are offered (logged: left at 0.26)", () => {
+  it("RTF3 F37 (1237 gold, a slot empty): leaving says the gold dies unspent; the relics and the Explosive Ampoule are offered (logged: left at 0.26)", () => {
     const options = optionsOf(planShop(loggedEnv(logged("rtf3-shop-f37"), { combatPlanner: "turn" })));
-    expect(options["leave"]).toBeUndefined();
+    expect(String(options["leave"]!["unspent_gold"])).toMatch(/of the 1237 gold is likely unspendable before the F48 boss/);
     expect(Object.values(options).map((option) => option["buy"])).toEqual(expect.arrayContaining(["爆炸安瓿", "幽灵种子", "皇家枕头"]));
   });
 
-  it("RTF3 F29 (511 gold, 4 floors before the boss): no 'stop shopping' either (logged: left at 0.21)", () => {
+  it("RTF3 F29 (511 gold, 4 floors before the boss): leaving is offered with its unspent-gold fact (logged: left at 0.21)", () => {
     const options = optionsOf(planShop(loggedEnv(logged("rtf3-shop-f29"), { combatPlanner: "turn" })));
-    expect(options["leave"]).toBeUndefined();
+    expect(String(options["leave"]!["unspent_gold"])).toMatch(/of the 511 gold is likely unspendable before the F33 boss/);
+    for (const option of Object.values(options)) expect(option["why"]).toBeTruthy();
     expect(Object.values(options).map((option) => option["buy"])).toEqual(expect.arrayContaining(["缚魂药水"]));
   });
 
@@ -111,7 +114,7 @@ function combatLines(fx: ReturnType<typeof logged>, over: Parameters<typeof logg
 describe("a Sandpit turn is worth the deck's turn, and only while our HP lasts past the pit (9LSQ F33)", () => {
   it("T2: an Escape is labelled at the deck's damage a turn, not the clock's 49", () => {
     const { lines } = combatLines(logged("9lsq-f33-t2"));
-    const label = lines.map((line) => String(line["intent_fit"])).find((text) => /Sandpit turn, ~\d+ damage each/.test(text))!;
+    const label = lines.map((line) => String(line["reference"])).find((text) => /Sandpit turn, ~\d+ damage each/.test(text))!;
     const each = Number(/~(\d+) damage each/.exec(label)![1]);
     expect(each).toBeLessThan(40);
     expect(each).toBeGreaterThanOrEqual(20);
@@ -147,19 +150,18 @@ describe("Pact's End deals nothing with fewer than 3 cards the exhaust pile can 
 });
 
 describe("Imbalanced: a fully blocked Rock Bowlbug is stunned for its next move (N95W F19 T3)", () => {
-  it("38/80, Headbutt 15: 'Defend, Defend, True Grit' (17 block) is offered and says it stuns; the HP guard falls back to it (logged: 'Defend, Defend, Strike', -5, then -9 on T4)", () => {
+  it("38/80, Headbutt 15: a line that blocks it in full is offered and says it stuns (logged: 'Defend, Defend, Strike', -5, then -9 on T4)", () => {
     const fx = logged("n95w-f19-t3");
     const { lines } = combatLines(fx);
     const stun = lines.find((line) => line["stuns"] !== undefined)!;
-    expect(String(stun["plays"])).toMatch(/防御, then 防御, then 坚毅/);
     expect(Number(stun["hp_lost"])).toBe(0);
     expect(String(stun["stuns"])).toMatch(/盛碗虫（石）: its attack fully blocked \(Imbalanced\)/);
     const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
     const rank1 = Object.keys((decision.questions["plan"] as { criteria: Record<string, string> }).criteria)[0]!;
     const resolved = decision.resolve({ plan: { type: "choice", choice: rank1, confidence: 0.9, probabilities: {}, raw: {} } } as never);
-    // Whatever Jev picks, the turn's line blocks the Headbutt in full (the guard's fallback is the stun line).
+    // Jev's pick is played as picked.
     expect(resolved.rationale).toMatch(/Jev chose/);
-    if (/HP guard/.test(resolved.rationale)) expect(resolved.rationale).toMatch(/防御, 防御, 坚毅/);
+    expect(resolved.guard).toBeUndefined();
   });
 
   it("the dossier no longer says the Rock Bowlbug stuns itself after Headbutt", () => {

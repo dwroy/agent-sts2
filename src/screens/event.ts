@@ -11,7 +11,7 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { fightHpCost, potionHealHp } from "./map.js";
 import { potionBlockHp } from "../strategy/card-model.js";
 import { currentRunPlan } from "../strategy/run-plan.js";
-import { isReserved } from "../strategy/intent.js";
+import { guidanceFor, isReserved } from "../strategy/intent.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
 /** An option that starts a fight ("回复24点生命。进入战斗。", the Lantern Key's 「战斗来取得钥匙。」). */
@@ -78,11 +78,6 @@ export function reservedPotions(potions: Record<string, unknown>[], reserve: Par
     });
 }
 
-/** HP-equivalent of an option's cost, for "is another option cheaper" (max HP counts 1.5). */
-function costWeight(cost: { hp: number; maxHp: number }): number {
-  return cost.hp + 1.5 * cost.maxHp;
-}
-
 /** Nodes ahead the HP guard looks for a forced Elite (no rest site or shop before it). */
 export const FORCED_ELITE_DEPTH = 3;
 
@@ -102,7 +97,7 @@ export const EARLY_EVENT_HP_SHARE = 0.2;
  * a forced Boss next, or a forced Elite (next, or within FORCED_ELITE_DEPTH nodes) that the HP left
  * after the cost and the elite's expected cost (map.ts fightHpCost) would leave below half of max HP.
  * VUV4 F13 at 80/80: -8 HP for 77 gold was out for an elite 3 nodes away; 80 - 8 - 20 is 52 of 80.
- * The caller only removes an option when a cheaper one is left (planEvent).
+ * The caller shows it as the option's hp_caution (planEvent); it used to remove the option.
  */
 export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, maxHp: number, forced: string | null, floor: number | null = null, act = 1): string | null {
   if (cost.hp <= 0 && cost.maxHp <= 0) return null;
@@ -147,36 +142,63 @@ function hpWeight(hp: number, maxHp: number): number {
 export function eventOptionScore(
   description: string,
   ctx: { hp: number; maxHp: number; forced: boolean; deck?: EventDeckCard[]; act?: number; reserved?: ReservedPotion[] },
+  reasons: string[] = [],
 ): number {
   const text = description.replace(/\[[^\]]*\]/g, "");
   const weight = hpWeight(ctx.hp, ctx.maxHp);
   let score = 0;
-  if (/不能被打出|unplayable/i.test(text) || /(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)/i.test(text)) score -= 30;
+  if (/不能被打出|unplayable/i.test(text) || /(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)/i.test(text)) {
+    score -= 30;
+    reasons.push("a curse or unplayable card -30");
+  }
   // A fight the option starts is priced with what it heals first (eventHpCost), so its heal is not
   // counted again.
   const fight = ctx.act !== undefined && FIGHT_OPTION.test(text);
   const cost = eventHpCost(text, ctx.act !== undefined ? { act: ctx.act, hp: ctx.hp, maxHp: ctx.maxHp, reserved: ctx.reserved } : { act: 0, hp: ctx.hp, maxHp: 0, reserved: ctx.reserved });
   score -= cost.hp * weight + cost.maxHp * 1.5;
+  if (cost.hp > 0) reasons.push(`-${cost.hp} HP${fight ? " (a fight, at a hallway's cost)" : ""} x${weight.toFixed(2)}`);
+  if (cost.maxHp > 0) reasons.push(`-${cost.maxHp} max HP x1.5`);
+  if (cost.spends) reasons.push(`spends ${cost.spends.id}, held for the boss (~${cost.spends.hp} HP there)`);
   const heal = eventHeal(text, ctx.hp, ctx.maxHp);
-  if (fight) score += Math.max(0, heal - Math.round(fightHpCost("Monster", ctx.act ?? 1) * ctx.maxHp)) * weight * (ctx.forced ? 1.5 : 1);
-  else score += heal * weight * (ctx.forced ? 1.5 : 1);
-  for (const match of text.matchAll(/获得(\d+)点最大生命|gain (\d+) max hp/gi)) score += 0.6 * Number(match[1] ?? match[2]);
-  if (/药水栏|potion slot/i.test(text)) score += 12;
-  else if (/药水|potion/i.test(text) && !/(?:失去|消耗|lose)[^。.]{0,8}(?:药水|potion)/i.test(text)) score += 8;
+  const healValue = fight ? Math.max(0, heal - Math.round(fightHpCost("Monster", ctx.act ?? 1) * ctx.maxHp)) * weight * (ctx.forced ? 1.5 : 1) : heal * weight * (ctx.forced ? 1.5 : 1);
+  score += healValue;
+  if (healValue > 0) reasons.push(`+${heal} HP heal${ctx.forced ? " before a forced fight (x1.5)" : ""}`);
+  for (const match of text.matchAll(/获得(\d+)点最大生命|gain (\d+) max hp/gi)) {
+    score += 0.6 * Number(match[1] ?? match[2]);
+    reasons.push(`+${match[1] ?? match[2]} max HP`);
+  }
+  if (/药水栏|potion slot/i.test(text)) {
+    score += 12;
+    reasons.push("a potion slot +12");
+  } else if (/药水|potion/i.test(text) && !/(?:失去|消耗|lose)[^。.]{0,8}(?:药水|potion)/i.test(text)) {
+    score += 8;
+    reasons.push("a potion +8");
+  }
   // A relic that only a boss kill pays (Lava Rock) is worth nothing to a run that may die first.
-  if (/遗物|relic/i.test(text)) score += /boss|首领/i.test(text) ? 0 : 10;
-  if (/卡牌奖励|card reward/i.test(text)) score += 8;
+  if (/遗物|relic/i.test(text)) {
+    const relic = /boss|首领/i.test(text) ? 0 : 10;
+    score += relic;
+    reasons.push(relic > 0 ? "a relic +10" : "a relic paid only by a boss kill +0");
+  }
+  if (/卡牌奖励|card reward/i.test(text)) {
+    score += 8;
+    reasons.push("a card reward +8");
+  }
   if (/(?:移除|删除|remove)/i.test(text)) {
     const named = (ctx.deck ?? []).find((card) => card.valued && card.name.length > 0 && text.includes(card.name));
     score += named ? -30 : 12;
+    reasons.push(named ? `removes ${named.name}, a card worth keeping -30` : "a removal +12");
   }
-  if (/升级|upgrade/i.test(text)) score += 6;
-  for (const match of text.matchAll(/获得(\d+)\s*(?:枚)?\s*金|gain (\d+) gold/gi)) score += Number(match[1] ?? match[2]) / 12;
+  if (/升级|upgrade/i.test(text)) {
+    score += 6;
+    reasons.push("an upgrade +6");
+  }
+  for (const match of text.matchAll(/获得(\d+)\s*(?:枚)?\s*金|gain (\d+) gold/gi)) {
+    score += Number(match[1] ?? match[2]) / 12;
+    reasons.push(`+${match[1] ?? match[2]} gold /12`);
+  }
   return Math.round(score * 10) / 10;
 }
-
-/** Text of an option that costs something besides HP: a curse or unplayable card, gold, a potion or a relic given up. */
-const OTHER_COST = /不能被打出|unplayable|(?:获得|加入|添加|变成|gain|add|obtain|become)[^。.]{0,16}(?:诅咒|curse)|(?:失去|交出|支付|lose|pay|give up)[^。.]{0,8}(?:金币|gold|药水|potion|遗物|relic)/i;
 
 /**
  * An option's HP effect in words, against the run plan's entry target: 77UJ F22 Spirit Grafter at
@@ -259,40 +281,33 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const usable = all.filter((option) => !bool(option["is_locked"]));
   const safe = usable.filter((option) => !bool(option["will_kill_player"]));
   const unguarded = safe.length > 0 ? safe : usable;
-  // HP guard: options that cost HP too dearly are not shown, unless every option costs HP.
+  // Only a lethal option (will_kill_player) is left out; HP costs are cautions on the options below.
   const hp = state.run?.current_hp ?? 0;
   const maxHp = state.run?.max_hp ?? 0;
   // A forced Elite within the next FORCED_ELITE_DEPTH nodes on every path counts too (NZR7 F4).
   const forced =
     forcedNext(env.screenMemory, state, EVENT_NODES) ??
     (forcedEliteWithin(env.screenMemory, state, EVENT_NODES, FORCED_ELITE_DEPTH) ? `Elite within ${FORCED_ELITE_DEPTH} nodes` : null);
-  const excluded = new Map<Record<string, unknown>, string>();
+  // Code's cautions on an option (HP costs before a forced fight, the Lantern Key's elite fight at low
+  // HP) are facts on it now, not removals: Jev decides (only a lethal option is ever left out).
+  const cautions = new Map<Record<string, unknown>, string>();
   // The Lantern Key: keeping it is a fight with the Mysterious Knight (108 HP, Strength 6, Plating 6: an
   // elite), paid with an unplayable Quest card and a card reward, not a relic. Three times a model kept
-  // it for "a relic" (4V5T F23 -28, ZWX5 F28 -47, X8HF F21 55 -> 5 HP): below LANTERN_KEY_MIN_HP of max
-  // HP code returns it for the gold, and no model is asked.
+  // it for "a relic" (4V5T F23 -28, ZWX5 F28 -47, X8HF F21 55 -> 5 HP).
   if (eventId === LANTERN_KEY_EVENT && maxHp > 0 && hp < maxHp * LANTERN_KEY_MIN_HP) {
-    const keep = unguarded.filter((option) => !excluded.has(option) && isLanternKeyFight(option));
-    if (keep.length > 0 && unguarded.some((option) => !excluded.has(option) && !keep.includes(option))) {
-      for (const option of keep) excluded.set(option, `keeping the key is an elite-strength fight (Mysterious Knight) at ${hp}/${maxHp} HP, below ${Math.round(LANTERN_KEY_MIN_HP * 100)}%`);
-    }
+    for (const option of unguarded.filter(isLanternKeyFight)) cautions.set(option, `keeping the key is an elite-strength fight (Mysterious Knight: 108 HP, Strength 6, Plating 6) at ${hp}/${maxHp} HP, below ${Math.round(LANTERN_KEY_MIN_HP * 100)}%; it pays a Quest card and a card reward, not a relic`);
   }
   const act = Number(state.run?.act_id ?? 0) + 1 || 1;
   const reserved = reservedPotions(asArray(asRecord(state.run?.raw)["potions"]).map(asRecord), currentRunPlan(env.screenMemory, state)?.reserve, maxHp);
   const run = { act, hp, maxHp, reserved };
   const costs = unguarded.map((option) => eventHpCost(str(option["description"]), run));
-  // An option the guard flags is removed only while a cheaper unflagged one is left: never leave only
-  // a worse one (VUV4 F13: the -8 HP option removed for "a fight" that healed 0 and cost 21).
-  const flagged = unguarded.map((_, index) => eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null, act));
-  const cheapestKept = Math.min(...costs.filter((_, index) => flagged[index] === null).map(costWeight));
   unguarded.forEach((option, index) => {
-    const why = flagged[index];
-    if (why && !excluded.has(option) && costWeight(costs[index]!) > cheapestKept) excluded.set(option, why);
+    const why = eventHpGuard(costs[index]!, hp, maxHp, forced, state.run?.floor ?? null, act);
+    if (why && !cautions.has(option)) cautions.set(option, why);
   });
-  const pool = unguarded.filter((option) => !excluded.has(option));
-  const guardNote = [...excluded].map(([option, why]) => `${str(option["title"])}: ${why}`).join("; ");
+  const pool = unguarded;
   const spendsOf = (option: Record<string, unknown>) => costs[unguarded.indexOf(option)]?.spends;
-  const spendsText = (spends: ReservedPotion) => `spends reserved ${spends.id} (~${spends.hp} HP in the fight it is kept for)`;
+  const spendsText = (spends: ReservedPotion) => `spends ${spends.id}, which DeepSeek holds for the boss (~${spends.hp} HP in the fight it is kept for)`;
   if (pool.length === 0) return null;
   if (pool.length === 1 && safe.length > 0) {
     const only = pool[0] as Record<string, unknown>;
@@ -301,7 +316,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "event/only",
       intent: { action: "choose_event_option", option_index: numOrNull(only["index"]) ?? 0 },
-      rationale: `${excluded.size > 0 ? `only option left after the HP guard (${guardNote})` : "only one unlocked, non-lethal option"}${spends ? `; ${spendsText(spends)}` : ""}`,
+      rationale: `only one unlocked, non-lethal option${spends ? `; ${spendsText(spends)}` : ""}`,
     };
   }
 
@@ -318,25 +333,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const entryHp = currentRunPlan(env.screenMemory, state)?.entryHp ?? null;
   const healOf = (option: Record<string, unknown>) => eventHeal(str(option["description"]).replace(/\[[^\]]*\]/g, ""), hp, maxHp);
   const costOf = (option: Record<string, unknown>) => costs[unguarded.indexOf(option)] ?? { hp: 0, maxHp: 0 };
-  // Under the run plan's entry target an option that only heals is code's pick (77UJ F22: +25 HP and a
-  // Metamorphosis against -10 HP and an upgrade at 66%, entry 85%; Jev took -10 at 0.04, 53 -> 43, and
-  // F24's rest reached 67 instead of 78).
-  if (entryHp !== null && maxHp > 0 && hp / maxHp < entryHp) {
-    const healers = pool.filter((option) => {
-      const text = str(option["description"]).replace(/\[[^\]]*\]/g, "");
-      const cost = costOf(option);
-      return !bool(option["is_proceed"]) && healOf(option) > 0 && cost.hp <= 0 && cost.maxHp <= 0 && !cost.spends && !FIGHT_OPTION.test(text) && !OTHER_COST.test(text);
-    });
-    const best = healers.sort((a, b) => healOf(b) - healOf(a) || eventOptionScore(str(b["description"]), scoreCtx) - eventOptionScore(str(a["description"]), scoreCtx))[0];
-    if (best) {
-      return {
-        kind: "act",
-        label: "event/heal",
-        intent: { action: "choose_event_option", option_index: numOrNull(best["index"]) ?? 0 },
-        rationale: `${str(best["title"])} heals ${healOf(best)} with no other cost at ${hp}/${maxHp}, under the run plan's entry_hp ${Math.round(entryHp * 100)}% (${eventHpEffect(healOf(best), costOf(best), hp, maxHp, entryHp)})`,
-      };
-    }
-  }
+  const runPlan = currentRunPlan(env.screenMemory, state);
   // The option's own HP numbers (a fight at its hallway cost net of its heal), not a potion it gives up.
   const hpEffectOf = (option: Record<string, unknown>): Record<string, JsonValue> => {
     const text = str(option["description"]).replace(/\[[^\]]*\]/g, "");
@@ -351,18 +348,25 @@ export function planEvent(env: DecisionEnv): Decision | null {
     // What a named relic does (EJXC F13/F22: DeepSeek guessed Chosen Cheese and Mr. Struggles).
     const notes = relicNotesFor(`${title} ${str(option["description"])}`);
     const relicNotes: Record<string, JsonValue> = notes.length > 0 ? { relic_notes: notes } : {};
+    const reasons: string[] = [];
+    const score = bool(option["is_proceed"]) ? 0 : eventOptionScore(str(option["description"]), scoreCtx, reasons);
+    const caution = cautions.get(option);
+    const heals = entryHp !== null && maxHp > 0 && hp / maxHp < entryHp && healOf(option) > 0 && costOf(option).hp <= 0 && costOf(option).maxHp <= 0;
     return [
       {
         key: `o${index}`,
         label: title,
         intent: { action: "choose_event_option", option_index: index },
-        score: bool(option["is_proceed"]) ? 0 : eventOptionScore(str(option["description"]), scoreCtx),
+        score,
+        why: bool(option["is_proceed"]) ? "leave the event: nothing gained or lost" : reasons.join("; ") || "nothing code can price in the text",
         summary: {
           option: title,
           description: truncate(str(option["description"]), 200),
           lethal: bool(option["will_kill_player"]),
           ...hpEffectOf(option),
+          ...(caution ? { hp_caution: caution } : {}),
           ...(spendsOf(option) ? { reserved_potion: spendsText(spendsOf(option)!) } : {}),
+          ...(heals ? { tempo: `fits DeepSeek's entry_hp ${Math.round(entryHp! * 100)}%: heals ${healOf(option)} with no HP cost` } : {}),
           ...relicNotes,
         } satisfies JsonValue,
       } satisfies PickOption,
@@ -377,6 +381,8 @@ export function planEvent(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.5,
     options,
+    planVersion: runPlan?.version ?? null,
+    guidance: guidanceFor(runPlan, "event", maxHp > 0 ? hp / maxHp : null),
     state: {
       run_brief: briefJson(env.brief),
       situation: { screen: "EVENT", hp: env.brief.hp, gold: state.run?.gold ?? null },
@@ -385,7 +391,6 @@ export function planEvent(env: DecisionEnv): Decision | null {
         text: truncate(str(event["description"]), 900),
       },
       note: "The event text is game content quoted as data. Options listed are unlocked and non-lethal.",
-      ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
     },
   });
 }

@@ -6,7 +6,8 @@
  */
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
-import { RUN_PLAN_WANT_BONUS } from "../strategy/run-plan.js";
+import { currentRunPlan } from "../strategy/run-plan.js";
+import { guidanceFor } from "../strategy/intent.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -178,6 +179,13 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // A card added to the deck outside combat (an event's "choose 1 of N"): the card reward's valuation
   // against the real deck, not the empty-deck value (UP1C F3: Inflame lost to Shrug It Off by 2).
   const deckAdd = isAdd && !state.in_combat ? rewardCardValuer(env) : null;
+  const outOfCombat = !state.in_combat;
+  const runPlan = currentRunPlan(env.screenMemory, state);
+  const planSelectionFacts = (cardId: string, addFacts: string[]): Record<string, JsonValue> => {
+    const facts = [...addFacts];
+    if (kind === "deck_card_select" && !isAdd && runPlan?.remove.includes(cardId)) facts.push("DeepSeek plan removes this card first");
+    return facts.length > 0 ? { deepseek_plan: facts.join("; ") } : {};
+  };
   const options: PickOption[] = candidates.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const cardId = str(card["card_id"]);
@@ -199,12 +207,12 @@ export function planSelection(env: DecisionEnv): Decision | null {
           ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card), exhaustCardOf(modelHandCard(card, index, knowledge))) - (bool(card["upgraded"]) ? 8 : 0) -
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
-            (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
-            // RUN_PLAN=v1: the plan's removal targets go first; its wanted cards are what an add takes.
-            (kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? 40 : 0) +
-            (isAdd && env.screenMemory.runPlan?.want.includes(cardId) ? RUN_PLAN_WANT_BONUS : 0),
+            (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0),
+      ...(outOfCombat && !added ? { why: selectionWhy(isUpgrade ? "deck_upgrade_select" : kind, cardId, str(card["card_type"], info?.type ?? ""), bool(card["upgraded"])) } : {}),
+      // DeepSeek's removal targets and wanted cards are facts on the option (they were +40 / +20).
       summary: {
         ...(added ? { code_value: added.value, why: added.reasons.join("; ") || null } : {}),
+        ...(outOfCombat ? planSelectionFacts(cardId, added?.plan ?? []) : {}),
         card: name,
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),
@@ -258,9 +266,11 @@ export function planSelection(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.4,
     options,
-    // Exhaust picks happen every turn with Baking Gloves and are low-stakes: code always decides.
-    codeMargin: env.combatPlanner === "card" || verb === "choose" || verb === "enchant" ? undefined : verb === "exhaust" || topDanger ? 0 : 6,
-    maxModelOptions: 4,
+    // In-combat mechanics (exhaust picks happen every turn with Baking Gloves; Headbutt's top card under
+    // a big hit): code decides. Deck choices out of combat (upgrade, remove, transform, add) go to Jev.
+    codeMargin: env.combatPlanner === "card" ? undefined : verb === "exhaust" || topDanger ? 0 : state.in_combat && verb !== "choose" && verb !== "enchant" ? 6 : undefined,
+    maxModelOptions: outOfCombat ? 6 : 4,
+    ...(outOfCombat ? { guidance: guidanceFor(runPlan, "build"), planVersion: runPlan?.version ?? null } : {}),
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -482,6 +492,22 @@ function baseExhaustScore(cardId: string, type: string, context: ExhaustContext,
   if (cardId.startsWith("DEFEND_")) return context.incoming <= EXHAUST_LOW_INCOMING ? 80 : EXHAUST_DEFEND_UNDER_FIRE;
   if (cardId.startsWith("STRIKE_")) return 70;
   return Math.max(1, 100 - value);
+}
+
+/** Why code scores a deck selection option as it does (out of combat). */
+function selectionWhy(kind: string, cardId: string, type: string, upgraded: boolean): string {
+  const score = selectionScore(kind, cardId, type);
+  if (kind === "deck_upgrade_select") return cardId in UPGRADE_PRIORITY ? `upgrade priority ${score} (its upgrade gains the most)` : cardId.startsWith("STRIKE_") || cardId.startsWith("DEFEND_") ? "a basic card: its upgrade gains little" : `card value ${Math.round(score)}`;
+  if (kind === "deck_card_select" || kind === "deck_transform_select") {
+    const what = type === "Curse" ? "a curse" : type === "Status" ? "a status" : cardId.startsWith("STRIKE_") ? "a basic Strike" : cardId.startsWith("DEFEND_") ? "a basic Defend" : damageRole(cardId) === "scaling" ? "the deck's scaling (keep)" : `card value ${Math.round(100 - score)}`;
+    return `${what}: removal value ${Math.round(score)}${upgraded ? " (upgraded: -8)" : ""}`;
+  }
+  return `value ${Math.round(score)}`;
+}
+
+/** Code's upgrade priority of a card (rest-site facts and upgrade picks). */
+export function upgradePriority(cardId: string, type: string): number {
+  return selectionScore("deck_upgrade_select", cardId, type);
 }
 
 function selectionScore(kind: string, cardId: string, type: string): number {

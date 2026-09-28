@@ -102,27 +102,8 @@ export interface ScreenMemory {
   fightCards?: { fight: string; perTurn: Record<string, number>; witherDamage: number };
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
   demonTongueTurn?: string;
-  /**
-   * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
-   * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a
-   * re-plan replaces it). Survives in-combat screen changes; cleared out of combat.
-   */
-  hpGuard?: { fight: string; turns: Record<string, number> };
-  /** Potions in the belt at the start of this combat turn (the per-turn potion cap). */
-  potionTurn?: { fight: string; turn: number | null; startCount: number };
-  /**
-   * Potion ids a guard refused in this fight turn (elite/boss veto, hallway bar): the same turn's
-   * re-plans do not offer them again (GZ24 F8 T1, EJXC F28 T1: refused, then drunk 3 s later at 0.51).
-   */
-  potionVeto?: { fight: string; turn: number | null; ids: string[] };
   /** Gambler's Brew drunk by a plan this turn: the hand cards (ids) the plan discards with it. */
   gambleDiscards?: { turn: number | null; cardIds: string[] };
-  /**
-   * The reserve released in this fight turn, with why: it stays released for the turn's re-plans (N7KR
-   * F8 T1: released for a line drinking the Skill and Dexterity potions; after the Skill Potion's card
-   * the re-plan's safest dry line kept 23 > 22 and the Dexterity Potion was filtered out again).
-   */
-  reserveRelease?: { fight: string; turn: number | null; note: string };
   /**
    * The last map seen (MAP screen), kept across screens: the REST screen carries no map, and whether
    * the next node is a forced elite is on the map (G8AQ F24, XJWF F7).
@@ -206,13 +187,18 @@ export interface ResolvedAction {
   reask?: ReaskSpec;
   /** Set when a model other than Jev made the call (escalation). */
   decider?: "jev" | "deepseek" | "claude";
-  /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
+  /** Set when code replaced the chosen option (no screen does since 2026-09-28; kept for the log shape). */
   guard?: { kind: "hp"; choice: string; plan: string };
   /**
    * Jev picked an option that breaks a soft strategic intent (intent.ts compliance label): logged per
    * run-plan version as `intent_deviation`.
    */
   deviation?: { intent: string; runPlanVersion: number | null; fightObjective?: string | null };
+  /**
+   * Where Jev's pick sits in code's reference rank (1 = code's reference option): logged per decision
+   * with the DeepSeek guidance Jev was shown.
+   */
+  reference?: { rank: number | null; of: number; top: string | null; matched: boolean };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
@@ -238,6 +224,8 @@ export interface AskDecision {
    * keys, richer option facts, fight hints, a trimmed brief. The escalator keeps `state`/`questions`.
    */
   jevView?: { state: Record<string, JsonValue>; questions: QuestionSet; context: string; hints: string[] };
+  /** DeepSeek's guidance (strategy/tempo excerpt) shown with this question, for the decision log. */
+  guidance?: string[];
 }
 
 export interface ActDecision {
