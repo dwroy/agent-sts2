@@ -19,7 +19,7 @@ import type { RoutePlan } from "../screens/map.js";
 import { bossClock } from "../strategy/boss-clock.js";
 import { deckProfile } from "../strategy/card-value.js";
 import { actOf, runPlanLine } from "../strategy/run-plan.js";
-import { asArray, asRecord, bool, num, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
 import { deckEntries, deckStats } from "./deck.js";
 import type { Decision, RememberedMap, ResolvedAction, ScreenMemory } from "./types.js";
 
@@ -129,8 +129,6 @@ export interface JournalContext {
   knowledge?: Knowledge;
   screenMemory?: Partial<Pick<ScreenMemory, "lastMap" | "routePlan" | "runPlan">>;
 }
-
-const LOOKAHEAD_CAP = 600;
 
 /** Non-DeepSeek decisions worth keeping (deck, relics, potions, rests, events, route plans). */
 const KEY_LABELS = /^(reward\/(card|skip)|shop\/(buy|discard)|rest\/choose|event\/(choose|only)|chest\/relic|selection\/(?!confirm)|bundle\/choose|capstone\/choose|map\/(discard-potion|route-plan))/;
@@ -254,7 +252,7 @@ export class RunJournal {
       floor: state.run?.floor ?? null,
       label: entry.label,
       by: entry.by,
-      choice: oneLine(entry.choice, 70),
+      choice: compact(entry.choice),
       reason: entry.by === "deepseek" || entry.by === "claude" ? journalReason(entry.reason) : "",
     });
   }
@@ -262,7 +260,7 @@ export class RunJournal {
   /** DeepSeek's run plan (RUN_PLAN=v1), one of its decisions. */
   noteRunPlan(state: GameState, trigger: string, line: string | null): void {
     this.syncRun(state);
-    this.choices.push({ act: actOf(state), floor: state.run?.floor ?? null, label: "run-plan", by: "deepseek", choice: oneLine(`${trigger ? `(${trigger}) ` : ""}${line ?? ""}`, 160), reason: "" });
+    this.choices.push({ act: actOf(state), floor: state.run?.floor ?? null, label: "run-plan", by: "deepseek", choice: compact(`${trigger ? `(${trigger}) ` : ""}${line ?? ""}`), reason: "" });
   }
 
   private trackFight(state: GameState): void {
@@ -327,7 +325,7 @@ export class RunJournal {
     };
     const deck = run["deck"];
     if (Array.isArray(deck) && deck.length > 0) {
-      const snap = countBy(deck, (card) => `${str(card["card_id"])}${bool(card["upgraded"]) ? "+" : ""}`, (card) => `${str(card["name"], str(card["card_id"]))}${bool(card["upgraded"]) ? "+" : ""}`);
+      const snap = countBy(deck, (card) => `${str(card["card_id"])}${bool(card["upgraded"]) ? "+" : ""}`, (card) => upgradedName(str(card["name"], str(card["card_id"])), bool(card["upgraded"])));
       if (this.deckSnap) this.diffDeck(this.deckSnap, snap, source, push);
       this.deckSnap = snap;
     }
@@ -378,7 +376,7 @@ export class RunJournal {
       const nowUp = after.get(`${id}+`)?.count ?? 0;
       const upgraded = Math.max(0, Math.min(prevPlain - nowPlain, nowUp - prevUp));
       const plainName = (after.get(id) ?? before.get(id))?.name ?? (after.get(`${id}+`) ?? before.get(`${id}+`))?.name.replace(/\+$/, "") ?? id;
-      const upName = (after.get(`${id}+`) ?? before.get(`${id}+`))?.name ?? `${plainName}+`;
+      const upName = (after.get(`${id}+`) ?? before.get(`${id}+`))?.name ?? upgradedName(plainName, true);
       if (upgraded > 0) push(`升级 ${plainName}${times(upgraded)}(${source})`);
       const plainDelta = nowPlain - prevPlain + upgraded;
       const upDelta = nowUp - prevUp - upgraded;
@@ -469,7 +467,7 @@ export class RunJournal {
       const stats = deckStats(entries);
       const profile = deckProfile(entries);
       const strength = [...new Set(entries.filter((card) => givesStrength(card.card_id, card.description)).map((card) => card.name))];
-      const counted = countBy(entries as unknown as JsonValue[], (card) => `${str(card["name"])}${bool(card["upgraded"]) ? "+" : ""}`, (card) => `${str(card["name"])}${bool(card["upgraded"]) ? "+" : ""}`);
+      const counted = countBy(entries as unknown as JsonValue[], (card) => upgradedName(str(card["name"]), bool(card["upgraded"])), (card) => upgradedName(str(card["name"]), bool(card["upgraded"])));
       lines.push(`牌组 ${entries.length} 张: ${[...counted.values()].map((card) => `${card.name}${times(card.count)}`).join(", ")}`);
       lines.push(
         `构筑: ${stats.total} 张 (攻击 ${stats.attacks}/技能 ${stats.skills}/能力 ${stats.powers}) | 力量来源 ${strength.length > 0 ? strength.join("、") : "无"} | AOE ${profile.aoe} | 格挡牌 ${profile.block} | 过牌 ${profile.draw} | 成长 ${profile.scaling}`,
@@ -557,8 +555,8 @@ export class RunJournal {
     const act = actOf(state);
     const lines: string[] = [];
     for (const route of this.routes) {
-      const what = route.why ? `重规划（${oneLine(route.why, 90)}）` : "规划";
-      lines.push(`第${route.act}幕 F${route.floor ?? "?"} ${what}，当时 HP ${Math.round(route.hpPct * 100)}%: ${route.steps.map((step) => ROOM_SHORT[step.type] ?? step.type).join("→")}→王`);
+      const what = route.why ? `重规划（${compact(route.why)}）` : "规划";
+      lines.push(`第${route.act}幕 F${route.floor ?? "?"} ${what}，当时 HP ${Math.round(route.hpPct * 100)}%: ${routeText(route.steps)}`);
     }
     const plan = [...this.routes].reverse().find((route) => route.act === act);
     if (!plan) {
@@ -573,7 +571,7 @@ export class RunJournal {
       lines.push(
         `本幕进度: 已走 ${done.length}/${plan.steps.length}${done.length > 0 ? ` [${done.map((step) => ROOM_SHORT[step.type] ?? step.type).join("")}]` : ""}${off}` +
           (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${Math.round(next.hpOnArrival * 100)}%）` : "") +
-          ` | 剩余 ${left.length}: ${left.map((step) => ROOM_SHORT[step.type] ?? step.type).join("→")}→王`,
+          ` | 剩余 ${left.length}: ${routeText(left)}`,
       );
     }
     return lines.join("\n");
@@ -585,7 +583,7 @@ const KIND_RANK: Record<string, number> = { unknown: 0, monster: 1, elite: 2, bo
 const ROOM_SOURCE: Record<string, string> = { RestSite: "休息", Rest: "休息", Shop: "商店", Unknown: "事件", Ancient: "古神", Treasure: "宝箱", Monster: "战斗", Elite: "精英", Boss: "Boss" };
 
 function fightLine(fight: FightRecord, state: GameState): string {
-  const enemies = fight.enemies.map((name) => truncate(name, 10)).join("+") || "?";
+  const enemies = fight.enemies.join("+") || "?";
   const after = fight.over ? String(fight.hpAfter ?? "?") : `进行中 ${state.combat?.current_hp ?? state.run?.current_hp ?? "?"}`;
   const max = fight.maxHp !== null ? `/${fight.maxHp}` : "";
   return `F${fight.floor ?? "?"} ${enemies}: ${fight.hpBefore ?? "?"}→${after}${max}${fight.potionsUsed.length > 0 ? ` 药:${fight.potionsUsed.join(",")}` : ""}`;
@@ -631,6 +629,22 @@ function diffCounts(before: Counted, after: Counted): [string, { name: string; d
   return out;
 }
 
+/**
+ * A card's display name with one "+" when upgraded. The game's own name of an upgraded card already
+ * ends in "+" ("痛击+"); adding another rendered "痛击++" (audit 2026-09-28: 72 of 95 memories), which
+ * reads as upgraded twice.
+ */
+export function upgradedName(name: string, upgraded: boolean): string {
+  return upgraded && !name.endsWith("+") ? `${name}+` : name;
+}
+
+/** Route steps as room letters, ending at the boss once (the planned path already holds the Boss node). */
+export function routeText(steps: { type: string }[]): string {
+  const rooms = steps.map((step) => ROOM_SHORT[step.type] ?? step.type);
+  if (steps.at(-1)?.type !== "Boss") rooms.push(ROOM_SHORT["Boss"]!);
+  return rooms.join("→");
+}
+
 function times(count: number): string {
   return count > 1 ? `×${count}` : "";
 }
@@ -651,18 +665,20 @@ function givesStrength(cardId: string, description: string): boolean {
 
 /**
  * The escalator's free-text reason is its guess, not a fact (VC4L F22: "腐化≈费用归零" was quoted back
- * as memory on the next pick; Corrupted costs 2 HP a play). Kept short and labelled unverified.
+ * as memory on the next pick; Corrupted costs 2 HP a play). Labelled unverified, kept whole: Dai
+ * 2026-09-28, DeepSeek's history is compressed in format only, never cut (audit: a 40-char cap had cut
+ * the body of every reason).
  */
 export const UNVERIFIED_REASON_PREFIX = "（DeepSeek 当时的理由，未经核实）";
-export const REASON_CAP = 40;
 
 export function journalReason(reason: string): string {
-  const text = oneLine(reason, REASON_CAP);
+  const text = compact(reason);
   return text ? `${UNVERIFIED_REASON_PREFIX}${text}` : "";
 }
 
-function oneLine(text: string, max: number): string {
-  return truncate(text.replace(/\s+/g, " ").trim(), max);
+/** Whitespace folded to single spaces; nothing else removed. */
+export function compact(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
 }
 
 /* ---- lookahead ------------------------------------------------------------------------------ */
@@ -742,7 +758,7 @@ export function renderLookahead(
   const note = bossNote(state.run?.boss_id);
   // The monster DB's measured numbers (boss_db) replace the note's hand-written HP; its strategy stays.
   if (note) parts.push(`boss 要点: ${bossDossier(state.run?.boss_id, state.run?.ascension ?? 0) ? withoutHandHp(note) : note}`);
-  return truncate(parts.join(" | "), LOOKAHEAD_CAP);
+  return parts.join(" | ");
 }
 
 /** The note without its hand-written HP figures ("173 血，…"), when the monster DB has measured ones. */
@@ -754,12 +770,12 @@ export function withoutHandHp(note: string): string {
 
 /** The option actually played, as a short line: the chosen option's text, else the rationale. */
 export function describeChoice(decision: Decision, resolved: ResolvedAction, answers: JsonValue | undefined, escalation: JsonValue | undefined): string {
-  if (decision.kind === "act") return oneLine(decision.rationale, 80);
+  if (decision.kind === "act") return compact(decision.rationale);
   const questionKey = decision.escalate?.question ?? Object.keys(decision.questions).find((key) => decision.questions[key]?.type === "choice");
   const question = questionKey ? decision.questions[questionKey] : undefined;
   const key = resolved.guard?.choice ?? (str(asRecord(escalation)["choice"]) || str(asRecord(asRecord(answers)[questionKey ?? ""])["choice"]));
-  if (question?.type !== "choice" || !key) return oneLine(resolved.rationale, 80);
-  return oneLine(optionText(question.criteria[key] ?? null) ?? key, 80);
+  if (question?.type !== "choice" || !key) return compact(resolved.rationale);
+  return compact(optionText(question.criteria[key] ?? null) ?? key);
 }
 
 function optionText(criterion: string | null): string | null {
@@ -784,4 +800,9 @@ function optionText(criterion: string | null): string | null {
 
 export function memoryChars(memory: RunMemory): number {
   return Object.values(memory).reduce((sum, text) => sum + text.length, 0);
+}
+
+/** Characters per memory section (logged with every DeepSeek call, to watch the context grow). */
+export function memorySections(memory: RunMemory): Record<string, number> {
+  return Object.fromEntries(Object.entries(memory).map(([key, text]) => [key, text.length]));
 }

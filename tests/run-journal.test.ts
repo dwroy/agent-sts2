@@ -3,7 +3,8 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { describeChoice, memoryChars, pathSpans, renderLookahead, RunJournal, UNVERIFIED_REASON_PREFIX, withoutHandHp, type JournalEntry } from "../src/project/run-journal.js";
+import { describeChoice, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, withoutHandHp, type JournalEntry } from "../src/project/run-journal.js";
+import { runPlanLine } from "../src/strategy/run-plan.js";
 import type { RoutePlan } from "../src/screens/map.js";
 import type { AskDecision } from "../src/project/types.js";
 import { createScreenMemory, type RememberedMap } from "../src/project/types.js";
@@ -157,6 +158,7 @@ describe("run journal: the complete run context", () => {
     route = journal.render(f3, testKnowledge, { routePlan: replan }).route;
     expect(route).toContain("第1幕 F1 规划");
     expect(route).toContain("第1幕 F3 重规划（HP 30% is 30 points below），当时 HP 30%: 休→宝→王");
+    expect(route).not.toContain("王→王");
     expect(route).toContain("本幕进度: 已走 0/2");
     // The route plan decision itself is in the decisions.
     expect(journal.render(f3, testKnowledge, {}).decisions).toContain("F1 map/route-plan [DS]: route Monster -> Elite -> RestSite -> Shop");
@@ -173,6 +175,80 @@ describe("run journal: the complete run context", () => {
     expect(memory.boss_db).toContain("我方战绩");
     expect(memory.map_threats).toContain("精英");
     expect(memory.map_threats).toMatch(/n=\d+/);
+  });
+});
+
+describe("display: one plus per upgrade, one boss per route, nothing cut (audit 2026-09-28)", () => {
+  it("an upgraded card whose game name already ends in + is shown with one +", () => {
+    expect(upgradedName("痛击+", true)).toBe("痛击+");
+    expect(upgradedName("痛击", true)).toBe("痛击+");
+    expect(upgradedName("痛击", false)).toBe("痛击");
+    const base = runPayload() as Raw;
+    const deck = (base["deck"] as Raw[]).map((card) => (card["card_id"] === "BASH" ? { ...card, name: "痛击+", upgraded: true } : card));
+    const memory = new RunJournal().render(at("MAP", 5, { deck }), testKnowledge, {});
+    expect(memory.now).toContain("痛击+");
+    expect(memory.now).not.toContain("++");
+  });
+
+  it("an upgrade noticed between states is not rendered ++ either", () => {
+    const journal = new RunJournal();
+    const base = runPayload() as Raw;
+    const deck = base["deck"] as Raw[];
+    const plain = deck.map((card) => (card["card_id"] === "BASH" ? { ...card, name: "痛击", upgraded: false } : card));
+    journal.observe(at("REST", 6, { deck: plain }));
+    const up = deck.map((card) => (card["card_id"] === "BASH" ? { ...card, name: "痛击+", upgraded: true } : card));
+    journal.observe(at("REST", 6, { deck: up }));
+    journal.observe(at("SHOP", 7, { deck: up.filter((card) => card["card_id"] !== "BASH") }));
+    const text = journal.render(at("SHOP", 7), testKnowledge, {}).resources;
+    expect(text).toContain("升级 痛击(休息)");
+    expect(text).toContain("-卡 痛击+(商店)");
+    expect(text).not.toContain("++");
+  });
+
+  it("a planned path that ends at the Boss node shows the boss once, in the plan and in what is left", () => {
+    expect(routeText([{ type: "Monster" }, { type: "RestSite" }, { type: "Boss" }])).toBe("怪→休→王");
+    expect(routeText([{ type: "Monster" }, { type: "RestSite" }])).toBe("怪→休→王");
+    expect(routeText([{ type: "Boss" }])).toBe("王");
+    const journal = new RunJournal();
+    const plan: RoutePlan = {
+      runId: "TESTRUN123",
+      act: 1,
+      floor: 14,
+      hpPct: 0.8,
+      summary: "",
+      path: [
+        { row: 14, col: 0, type: "RestSite", hpOnArrival: 0.6 },
+        { row: 15, col: 0, type: "Boss", hpOnArrival: 0.9 },
+      ],
+    };
+    const state = at("MAP", 14, {}, { map: { available_nodes: [{ index: 0, row: 14, col: 0, node_type: "RestSite" }], nodes: [] } });
+    journal.observe(state, { screenMemory: { routePlan: plan } });
+    journal.record(state, entry({ label: "map/route-follow", by: "code", choice: "follow", intent: { action: "choose_map_node", option_index: 0 } }));
+    const route = journal.render(state, testKnowledge, { routePlan: plan }).route;
+    expect(route).toContain("当时 HP 80%: 休→王");
+    expect(route).toContain("剩余 1: 王");
+    expect(route).not.toContain("王→王");
+  });
+
+  it("the run plan, route re-plan reason and option text are kept whole", () => {
+    const summary = "want DEMON_FORM for scaling; ".repeat(20);
+    const line = runPlanLine({ runId: "R", act: 1, floor: 1, hpPct: 1, trigger: "start", archetype: "strength", want: ["DEMON_FORM"], avoid: [], remove: [], blockTarget: null, elites: "normal", rest: "auto", bossPrep: "", summary } as never)!;
+    expect(line).toContain(summary.trim());
+    expect(line).toContain("want DEMON_FORM");
+    const journal = new RunJournal();
+    const state = parseGameState(baseState("EVENT"));
+    journal.noteRunPlan(state, "start", line);
+    expect(journal.choices[0]!.choice.length).toBeGreaterThan(300);
+    const long = "x".repeat(200);
+    journal.record(state, entry({ label: "event/choose", choice: long }));
+    expect(journal.choices[1]!.choice).toBe(long);
+  });
+
+  it("the size of every memory section is measurable for the log", () => {
+    const memory = new RunJournal().render(at("MAP", 10, { boss_id: "VANTOM_BOSS", act_id: "0" }), testKnowledge, {});
+    const sections = memorySections(memory);
+    expect(Object.keys(sections)).toEqual(Object.keys(memory));
+    expect(Object.values(sections).reduce((a, b) => a + b, 0)).toBe(memoryChars(memory));
   });
 });
 
@@ -258,13 +334,15 @@ describe("run journal keeps the option's own text, not the escalator's guess (VC
     expect(choice).toBe("靠近: 一张攻击牌附魔腐化。");
   });
 
-  it("a kept reason is labelled unverified and capped at 40 chars", () => {
+  it("a kept reason is labelled unverified and kept whole (whitespace folded only)", () => {
     const journal = new RunJournal();
     const state = parseGameState(baseState("EVENT"));
-    journal.record(state, entry({ label: "event/choose", choice: "靠近: 一张攻击牌附魔腐化。", reason: "腐化附魔约等于费用归零，".repeat(10) }));
+    const long = "腐化附魔约等于费用归零，".repeat(10);
+    journal.record(state, entry({ label: "event/choose", choice: "靠近: 一张攻击牌附魔腐化。", reason: `${long}\n\n  Ascender's Bane is eternal,   so take the curse removal later.` }));
     const reason = journal.choices[0]!.reason;
     expect(reason.startsWith(UNVERIFIED_REASON_PREFIX)).toBe(true);
-    expect(reason.length - UNVERIFIED_REASON_PREFIX.length).toBeLessThanOrEqual(40);
+    expect(reason).toBe(`${UNVERIFIED_REASON_PREFIX}${long} Ascender's Bane is eternal, so take the curse removal later.`);
+    expect(reason).not.toContain("…");
     const rendered = journal.render(state, testKnowledge, {}).decisions;
     expect(rendered).toContain("靠近: 一张攻击牌附魔腐化。 — 未核实理由: 腐化附魔约等于费用归零");
     expect(rendered).toContain("未核实理由 = DeepSeek 当时所写，不是事实");

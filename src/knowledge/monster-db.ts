@@ -49,6 +49,8 @@ interface Threat {
   n_outcome_known?: number;
   win_rate?: number;
   hp_loss_won?: Stat;
+  /** Entry HP minus HP after the fight (after Burning Blood and other end-of-combat heals). */
+  net_hp_loss_won?: Stat;
   turns_won?: Stat;
   deaths?: number;
   death_runs?: string[];
@@ -272,4 +274,83 @@ export function monsterLine(id: string, asc: number): string | null {
   const hp = found ? monster.hp_by_asc![found.key]! : undefined;
   const cycle = moveCycle(id, asc);
   return `${monsterName(id)} (${id}) ${found ? ascLabel(found, asc) : ""}: HP ${round(hp?.median)} (n=${hp?.n ?? 0}) | 招式 ${cycle || "?"}`;
+}
+
+/** A room's measured HP cost: median and p75 of HP lost (after end-of-fight heals) in won fights. */
+export interface RoomCost {
+  median: number;
+  p75: number;
+  /** Won fights behind the numbers. */
+  n: number;
+  /** Encounters pooled. */
+  encounters: number;
+  /** The ascension the numbers come from (the nearest logged one when `asc` has too few fights). */
+  asc: number;
+}
+
+/** Fewest won fights for a pooled room cost; below it the nearest logged ascension is tried. */
+export const ROOM_COST_MIN_N = 5;
+
+function weightedMedian(pairs: [number, number][]): number {
+  const sorted = [...pairs].sort((a, b) => a[0] - b[0]);
+  const total = sorted.reduce((sum, [, weight]) => sum + weight, 0);
+  let seen = 0;
+  for (const [value, weight] of sorted) {
+    seen += weight;
+    if (seen >= total / 2) return value;
+  }
+  return sorted.at(-1)?.[0] ?? 0;
+}
+
+/**
+ * HP a hallway ("Monster") or elite room of this act costs, pooled over the act's encounters of that
+ * room type at this ascension: the n-weighted median of each encounter's median (and of its p75) of
+ * net HP lost in won fights (so after Burning Blood). Wins only: deaths are not in it. Null when no
+ * ascension has ROOM_COST_MIN_N won fights for this act and room type.
+ */
+export function roomHpCost(act: number, asc: number, room: "Monster" | "Elite"): RoomCost | null {
+  const kind = room === "Elite" ? "elite" : "hallway";
+  const encounters = Object.values(load().encounters).filter((encounter) => (encounter.acts?.[String(act)] ?? 0) > 0 && mode(encounter.rooms) === kind);
+  const ascs = [...new Set(encounters.flatMap((encounter) => Object.keys(encounter.by_asc ?? {})).filter((key) => /^\d+$/.test(key)).map(Number))].sort(
+    (a, b) => Math.abs(a - asc) - Math.abs(b - asc) || b - a,
+  );
+  for (const at of ascs) {
+    const medians: [number, number][] = [];
+    const p75s: [number, number][] = [];
+    for (const encounter of encounters) {
+      const loss = encounter.by_asc?.[String(at)]?.net_hp_loss_won;
+      const n = loss?.n ?? 0;
+      if (n <= 0 || typeof loss?.median !== "number") continue;
+      medians.push([loss.median, n]);
+      p75s.push([typeof loss.p75 === "number" ? loss.p75 : loss.median, n]);
+    }
+    const n = medians.reduce((sum, [, weight]) => sum + weight, 0);
+    if (n < ROOM_COST_MIN_N) continue;
+    return { median: Math.max(0, weightedMedian(medians)), p75: Math.max(0, weightedMedian(p75s)), n, encounters: medians.length, asc: at };
+  }
+  return null;
+}
+
+/** The act boss's HP lost in our won fights (median/p75, n) and win rate, at `asc` (nearest logged). */
+export function bossHpLoss(
+  bossId: string | null | undefined,
+  asc: number,
+): { median: number; p75: number; n: number; fights: number; winRate: number | null; asc: number; perTurn: { median: number; n: number } | null } | null {
+  if (!bossId) return null;
+  const byAsc = load().bosses[bossId.toUpperCase().replace(/_BOSS$/, "")];
+  const found = nearestAscension(byAsc, asc);
+  if (!byAsc || !found) return null;
+  const entry = byAsc[found.key]!;
+  const loss = entry.hp_loss_won;
+  if (!loss || !loss.n || typeof loss.median !== "number") return null;
+  const turn = entry.hp_loss_per_turn;
+  return {
+    median: loss.median,
+    p75: typeof loss.p75 === "number" ? loss.p75 : loss.median,
+    n: loss.n,
+    fights: entry.fights ?? 0,
+    winRate: entry.win_rate ?? null,
+    asc: Number(found.key),
+    perTurn: turn && turn.n && typeof turn.median === "number" ? { median: turn.median, n: turn.n } : null,
+  };
 }
