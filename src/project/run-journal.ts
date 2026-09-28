@@ -142,6 +142,9 @@ export interface QuestionContext {
   factsCovered?: boolean;
 }
 
+/** What one observed state changed in the journal (see RunJournal.observe). */
+export type JournalChange = "none" | "mark" | "items";
+
 export interface JournalEntry {
   label: string;
   by: string;
@@ -253,8 +256,18 @@ export class RunJournal {
     return this.seq;
   }
 
-  /** Called with every state read: resets on a new run, tracks fights, resources, HP and route plans. */
-  observe(state: GameState, context: JournalContext = {}): void {
+  /**
+   * Called with every state read: resets on a new run, tracks fights, resources, HP and route plans.
+   * Returns what the state changed in what the journal renders: "items" (a new item, a fight's shown
+   * values, the run, the floor count, a first resource snapshot), "mark" (only the current floor's HP /
+   * gold line, which a later state of the same floor overwrites) or "none". The loop logs every state
+   * that changed something, so a restarted process can replay the journal from the logs
+   * (journal-replay.ts).
+   */
+  observe(state: GameState, context: JournalContext = {}): JournalChange {
+    const floor = state.run?.floor ?? null;
+    const items = this.itemSignature();
+    const mark = floor === null ? "" : JSON.stringify(this.floors.get(floor) ?? null);
     this.syncRun(state);
     if (context.knowledge) this.knowledge = context.knowledge;
     if (state.run) {
@@ -263,6 +276,29 @@ export class RunJournal {
       this.trackFloor(state);
     }
     if (context.screenMemory) this.trackRoute(state, context.screenMemory.routePlan);
+    if (this.itemSignature() !== items) return "items";
+    return floor !== null && JSON.stringify(this.floors.get(floor) ?? null) !== mark ? "mark" : "none";
+  }
+
+  /** Items made so far this run (grows with every decision, fight, change and plan the journal files). */
+  get itemCount(): number {
+    return this.seq;
+  }
+
+  /** Everything the journal renders except the floor marks (see observe). */
+  private itemSignature(): string {
+    const fight = this.fights.at(-1);
+    return [
+      this.runId,
+      this.seq,
+      this.maxFloor,
+      this.routes.length,
+      this.deckSnap ? 1 : 0,
+      this.relicSnap ? 1 : 0,
+      this.potionSnap ? 1 : 0,
+      this.maxHpSnap ?? "",
+      fight ? [fight.enemies.length, fight.hpBefore, fight.hpAfter, fight.maxHp, fight.over, fight.died, fight.potionsUsed.length].join("|") : "",
+    ].join("#");
   }
 
   /** Called once per executed decision, with the state it was decided on. */

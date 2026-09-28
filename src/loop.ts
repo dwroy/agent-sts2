@@ -6,8 +6,6 @@
  * and the run boundary.
  */
 
-import { dirname, join } from "node:path";
-
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
@@ -23,11 +21,12 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
+import { ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
 import { describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberMap } from "./screens/rest.js";
-import { createDecisionLog, createStateLog, type DecisionRecord } from "./telemetry/decision-log.js";
+import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
 export type LoopMode = "shadow" | "play";
@@ -66,6 +65,11 @@ export interface LoopOptions {
   combatGraceMinutes?: number;
   pollIntervalMs?: number;
   onEvent?: (event: LoopEvent) => void;
+  /**
+   * On the first state of a run already in progress (a restart), rebuild the run journal, the route plan
+   * and the last map from that run's logs (journal-replay.ts). Default true.
+   */
+  restoreRun?: boolean;
 }
 
 export interface LoopStats {
@@ -203,9 +207,19 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const maxRuns = options.maxRuns ?? 1;
   const maxMinutes = options.maxMinutes ?? 60;
   const log = createDecisionLog(config.log.decisionLog);
-  const stateLog = createStateLog(join(dirname(config.log.decisionLog), "states.jsonl"));
-  const logState = (state: GameState, fp: string, ts: string): void =>
-    stateLog.write({ ts, fingerprint: fp, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`, state: state.raw });
+  const statesPath = stateLogPath(config.log.decisionLog);
+  const stateLog = createStateLog(statesPath);
+  /** When the loop read the current iteration's state (orders a replay of the logs after a restart). */
+  let observedTs = "";
+  // States that changed the run journal without a decision on them are logged too (`observed`), so a
+  // restarted process can replay the journal (journal-replay.ts).
+  const observedStates = new ObservedStateLog((state, fp, ts) =>
+    stateLog.write({ ts, observed_ts: ts, observed: true, fingerprint: fp, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`, state: state.raw }),
+  );
+  const logState = (state: GameState, fp: string, ts: string): void => {
+    observedStates.logging(state);
+    stateLog.write({ ts, observed_ts: observedTs, fingerprint: fp, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`, state: state.raw });
+  };
   const onEvent = options.onEvent ?? ((): void => {});
   const startedAt = Date.now();
   const deadline = startedAt + maxMinutes * 60_000;
@@ -271,6 +285,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const screenMemory: ScreenMemory = createScreenMemory();
   /** Run memory for DeepSeek (choices, this fight's turns, the road to the boss); resets per run id. */
   const journal = new RunJournal();
+  /** The run whose logs were replayed into the journal (once per run id and process). */
+  let restoredRun = "";
   /** The DeepSeek client among the escalators (run plan, fight plan, BUILD_DECIDER=deepseek), if any. */
   const deepseekClient = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient) ?? null;
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
@@ -485,9 +501,30 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
     }
+    // A restart mid-run: rebuild the run memory and the act's route plan from this run's logs before
+    // anything reads them (FA82FQHSJG2F F9: a fresh process re-planned the route without knowing F7 was
+    // an elite).
+    const runId = str(state.raw["run_id"]);
+    if (options.restoreRun !== false && runId && runId !== restoredRun && journal.runId !== runId) {
+      restoredRun = runId;
+      try {
+        const logs = readRunLogs({ states: statesPath, decisions: config.log.decisionLog, runPlans: config.runPlanLog }, runId);
+        if (logs.states.length > 0) {
+          const replay = replayRun(logs, knowledge, { journal });
+          if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
+          if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
+          const plan = replay.routePlan ? `; route plan (act ${replay.routePlan.act}, F${replay.routePlan.floor ?? "?"}) ${replay.routePlan.summary}` : "";
+          onEvent({ type: "note", message: `run ${runId} in progress: rebuilt the run memory from its logs (${replay.counts.states} states, ${replay.counts.recorded} decisions, ${replay.counts.runPlans} run plans, ${journal.itemCount} items)${plan}` });
+        }
+      } catch (error) {
+        onEvent({ type: "note", message: `could not rebuild run ${runId} from its logs: ${error instanceof Error ? error.message : String(error)}` });
+      }
+    }
     // The REST screen has no map: keep the last one for its "forced elite next" check.
     if (state.screen === "MAP") rememberMap(screenMemory, state);
-    journal.observe(state, { knowledge, screenMemory });
+    observedTs = new Date().toISOString();
+    const observedFp = fingerprint(state);
+    observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -512,10 +549,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
       const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
-        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, onEvent, (tokens) => {
+        const items = journal.itemCount;
+        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, (tokens) => {
           stats.deepseekCalls += 1;
           stats.deepseekTokens += tokens;
         });
+        if (journal.itemCount !== items) observedStates.touched(state, observedFp, observedTs);
       }
     }
     if (config.runPlan === "v1") {
@@ -578,7 +617,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     let decision = planned.decision;
     const planStarted = Date.now();
-    const stateFingerprint = fingerprint(state);
+    const stateFingerprint = observedFp;
     let resolved: ResolvedAction;
     let jevLatency = 0;
     let deepseekLatency = 0;
@@ -951,6 +990,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       asked: decision.kind === "ask" && (usedJev || fromMemo || deepseekResolved !== null) && !resolved.fallback,
       intent: resolved.intent,
     };
+    // What a restart needs to replay this decision into the journal (journal-replay.ts).
+    const replayFields = { ...(runId ? { run_id: runId } : {}), observed_ts: observedTs, journal: { choice: journalEntry.choice, reason: journalEntry.reason } };
+    /** Applies the resolution's memory effects; returns the route plan it made, for the log. */
+    const applyResolved = (): { route_plan?: JsonValue } => {
+      const before = screenMemory.routePlan;
+      resolved.apply?.();
+      return screenMemory.routePlan && screenMemory.routePlan !== before ? { route_plan: toJsonValue(screenMemory.routePlan) } : {};
+    };
 
     if (mode === "shadow") {
       if (stateFingerprint === lastShadowFingerprint) {
@@ -962,10 +1009,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
       lastShadowFingerprint = stateFingerprint;
-      resolved.apply?.();
+      const routePlan = applyResolved();
       journal.record(state, journalEntry);
       stats.decisions += 1;
-      const record: DecisionRecord = { ...baseRecord, result: "shadow (not dispatched)" };
+      const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan, result: "shadow (not dispatched)" };
       log.write(record);
       logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
@@ -1005,6 +1052,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.combatPlan = null;
       const failed: DecisionRecord = {
         ...baseRecord,
+        ...replayFields,
         latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
         result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
       };
@@ -1021,7 +1069,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     stats.acts += 1;
     stats.decisions += 1;
     // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
-    resolved.apply?.();
+    const routePlan = applyResolved();
     journal.record(state, journalEntry);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
@@ -1053,6 +1101,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     const record: DecisionRecord = {
       ...baseRecord,
+      ...replayFields,
+      ...routePlan,
       latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
     };
@@ -1062,6 +1112,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     await sleep(60);
   }
 
+  observedStates.flush();
   stats.elapsedMs = Date.now() - startedAt;
   log.close();
   return stats;
@@ -1174,6 +1225,7 @@ async function ensureRunPlan(
   deepseek: DeepSeekClient,
   journal: RunJournal,
   logFile: string,
+  observedTs: string,
   onEvent: (event: LoopEvent) => void,
   count: (tokens: number) => void,
 ): Promise<void> {
@@ -1205,6 +1257,8 @@ async function ensureRunPlan(
       run: runId,
       floor: state.run?.floor ?? null,
       trigger,
+      // The state the plan was made on (the journal filed it there; journal-replay.ts).
+      observed_ts: observedTs,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
       latency_ms: meta.latencyMs,
