@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planSelection } from "../src/screens/selection.js";
 import { planShop } from "../src/screens/shop.js";
 import { modelPotion } from "../src/strategy/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
@@ -54,5 +55,23 @@ describe("Beetle Juice is modelled (W8JD F31: 'its effect is in no line's number
     expect(drink).toBeDefined();
     expect(idle).toBeDefined();
     expect(Number(drink!["hp_lost"])).toBeLessThan(Number(idle!["hp_lost"]));
+  });
+});
+
+describe("a card potion's card is free and scored by what it does now (W8JD F31 T2: Battle Trance at 0 energy over Evil Eye)", () => {
+  it("the logged board (0 energy, Skill Potion drunk last in Jev's line): plan_card marks Evil Eye, and the offers say they are free", () => {
+    const fx = logged("w8jd-f31-t2-skill-potion");
+    const env = loggedEnv(fx);
+    // The loop hands the committed line's remaining step, the potion's card, to the selection screen.
+    env.screenMemory.planBeforeSelection = [{ cardIndex: 201, cardId: "GEN:SKILL_POTION:1", upgraded: false, name: "card from 技能药水", target: null, targetName: null }];
+    const decision = planSelection(env);
+    expect(decision?.kind).toBe("ask");
+    if (decision?.kind !== "ask") return;
+    const question = decision.questions["pick"]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    const offers = Object.values(question.criteria).map((value) => JSON.parse(value!) as Record<string, unknown>);
+    const marked = offers.filter((offer) => offer["plan_card"] !== undefined);
+    expect(marked.map((offer) => offer["card"])).toEqual(["邪眼"]);
+    expect(offers.every((offer) => /free this turn/.test(String(offer["cost_now"])))).toBe(true);
   });
 });

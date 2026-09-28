@@ -5,7 +5,7 @@
  * each question local and avoids multi-step plans, which Jev is documented to handle poorly.
  */
 
-import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { currentRunPlan } from "../strategy/run-plan.js";
 import { guidanceFor } from "../strategy/intent.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
@@ -172,6 +172,20 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // not a named one: the offered card that does most this turn is marked as the plan's card for Jev.
   const cardPotionStep = plannedSteps.find((step) => /^GEN:(ATTACK|SKILL|POWER|COLORLESS)_POTION:/.test(step.cardId));
 
+  // What the offered card does now: free this turn when a card potion adds it (「这张牌在本回合可以免费打出」,
+  // X-cost aside), and its draw worth nothing once no energy is left to play what it draws (W8JD F31 T2:
+  // at 0 energy Battle Trance's 3 draws scored 9 and was "code's pick" over a free Evil Eye's 8 block;
+  // the turn then ended with nothing played, -6 against the line's -0).
+  // Likewise Vulnerable with no attack left to play: one stack is gone before our next turn.
+  const energyNow = num(asRecord(combat["player"])["energy"]);
+  const freeAttackInHand = asArray(combat["hand"]).map(asRecord).some((card) => str(card["card_type"]) === "Attack" && card["playable"] !== false && num(card["energy_cost"]) === 0);
+  const nowCard = (model: CardModel): CardModel => {
+    const free = cardPotionStep !== undefined && !model.xCost;
+    const card = free ? { ...model, cost: 0 } : model;
+    const left = energyNow - (card.xCost ? energyNow : Math.max(0, card.cost));
+    if (left > 0) return card;
+    return { ...card, draw: 0, drawsUntil: false, ...(freeAttackInHand ? {} : { vulnerable: Math.max(0, card.vulnerable - 1) }) };
+  };
   const entries = deckEntries(state, knowledge);
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
@@ -198,7 +212,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
+        ? thisTurnScore(nowCard(modelHandCard(card, index, knowledge)), incoming, Math.max(1, livingEnemies), board)
         : added
           ? added.value
         : topDanger
@@ -217,6 +231,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),
         cost: numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+        ...(forThisTurn && cardPotionStep && !bool(card["costs_x"]) ? { cost_now: "0: a card potion's card is free this turn" } : {}),
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
       } satisfies JsonValue,
     };
