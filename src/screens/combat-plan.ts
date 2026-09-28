@@ -358,14 +358,45 @@ export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unkno
 
 /**
  * The plan to play instead of `chosen` when it loses too much HP, else null: the best-ranked plan
- * within the slack of the cheapest one (options are in code rank order).
+ * within the slack of the cheapest one (options are in code rank order). The bound is set by every
+ * option; only `eligible` ones may replace the pick (Jev's focus target, the rollout's deaths).
  */
-export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp)): Plan | null {
+export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp), eligible: (plan: Plan) => boolean = () => true): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
   const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
   const bound = minLoss + slack;
   if (chosen.outcome.hpLoss <= bound) return null;
-  return options.find((plan) => plan.outcome.hpLoss <= bound) ?? options.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+  const pool = options.filter((plan) => plan === chosen || eligible(plan));
+  const found = pool.find((plan) => plan.outcome.hpLoss <= bound) ?? pool.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+  return found === chosen ? null : found;
+}
+
+/**
+ * Jev's focus target: the live enemy (enemies, on a tie) its pick puts the most damage into; none when
+ * it damages no one.
+ */
+export function focusTargets(plan: Plan, enemies: EnemySim[]): number[] {
+  const live = enemies.filter((enemy) => enemy.hp > 0);
+  const damage = live.map((enemy) => ({ index: enemy.index, dealt: damageInto(plan, [enemy.index], enemies) }));
+  const most = Math.max(0, ...damage.map((entry) => entry.dealt));
+  return most > 0 ? damage.filter((entry) => entry.dealt === most).map((entry) => entry.index) : [];
+}
+
+/**
+ * Whether the HP guard may swap `pick` for `plan`: with two or more live enemies, `plan` puts at least as
+ * much damage into each of the pick's focus targets (RBJ402TKQZ6F F48 T1: Jev's line put all 140 damage
+ * into the Torch Head Amalgam, the rollout's best; the guard played a Setup Strike+ into the Queen); and
+ * the rollout, when it covers both, shows no more deaths for `plan` than for the pick (T5: it swapped the
+ * rollout's best, 6/8 deaths, for a line dying in 8/8).
+ */
+export function guardKeepsPick(pick: Plan, plan: Plan, enemies: EnemySim[], deathsOf: (plan: Plan) => number | null = () => null): boolean {
+  if (enemies.filter((enemy) => enemy.hp > 0).length >= 2) {
+    const focus = focusTargets(pick, enemies);
+    if (!focus.every((index) => damageInto(plan, [index], enemies) >= damageInto(pick, [index], enemies))) return false;
+  }
+  const mine = deathsOf(pick);
+  const theirs = deathsOf(plan);
+  return mine === null || theirs === null || theirs <= mine;
 }
 
 /** This fight's HP-guard record (screenMemory.hpGuard), read-only: the extra HP accepted so far. */
@@ -1730,11 +1761,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       // (The rollout's added line, outside code's options, is guarded against code's options like any pick.)
       // Nor into a potion the pick does not drink: a potion-free pick is guarded among potion-free lines.
       const guardOptions = [...options.filter((plan) => plan === picked || (!drinksKeptPotion(plan) && noNewDrink(plan))), ...(options.includes(picked) ? [] : [picked])];
+      // Nor off Jev's focus target, nor into a line the rollout sees dying more often (guardKeepsPick).
+      const rolloutDeaths = (plan: Plan): number | null => (rollout?.available ? (rollout.byPlan.get(plan)?.deaths ?? null) : null);
+      const keepsPick = (plan: Plan) => guardKeepsPick(picked, plan, enemies, rolloutDeaths);
       const proposed = hallway
         ? hallwayGuard && !picked.outcome.winsFight
-          ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack)
+          ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack, keepsPick)
           : null
-        : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack);
+        : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack, keepsPick);
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
