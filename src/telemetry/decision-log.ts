@@ -34,7 +34,11 @@ export interface DecisionRecord {
   /** `usage` counts the tokens spent on *this* decision; these are the calls behind it. */
   request_ids: string[];
   latency_ms: { plan: number; jev: number; action: number; deepseek?: number };
-  usage: { input_tokens: number; output_tokens: number };
+  /**
+   * Tokens spent on this decision by whoever decided it (Jev, or DeepSeek when decider=deepseek; a
+   * DeepSeek escalation's tokens are added too). DeepSeek also reports its cache-hit and reasoning tokens.
+   */
+  usage: { input_tokens: number; output_tokens: number; cache_hit_tokens?: number; reasoning_tokens?: number };
   /** Present when the decision was escalated to DeepSeek. */
   escalation?: JsonValue;
   /**

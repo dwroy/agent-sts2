@@ -8,6 +8,13 @@
  * and the current facts. Nothing is dropped as the run grows: each item is one terse line (Dai
  * 2026-09-28: DeepSeek always gets the complete run history). It rides in DeepSeek's *user* message on
  * every question type, so the system prompt stays byte-identical and cached. Jev never sees it.
+ *
+ * Layout for DeepSeek's prefix cache (Dai 2026-09-28): the sections are ordered from most to least stable
+ * and the message is built in that order. `act` (the act's threats and boss) changes three times a run;
+ * `history` is one chronological floor-by-floor journal of the floors already left behind, which only
+ * ever grows at its end (a floor is written once, when the run has moved past it; no counts, no current
+ * values, no re-sorting); everything that changes between two questions (this floor so far, current
+ * facts, route progress, lookahead, the knowledge slice) comes after it.
  */
 
 import { knowledgeSlice } from "../knowledge/experience.js";
@@ -17,14 +24,18 @@ import type { GameState } from "../mod/schema.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { RoutePlan } from "../screens/map.js";
 import { bossClock } from "../strategy/boss-clock.js";
-import { deckProfile } from "../strategy/card-value.js";
 import { actOf, runPlanLine } from "../strategy/run-plan.js";
 import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
-import { deckEntries, deckStats } from "./deck.js";
+import { deckEntries } from "./deck.js";
+import { deckProfileLine } from "./deck-profile.js";
 import type { Decision, RememberedMap, ResolvedAction, ScreenMemory } from "./types.js";
 
 /** One decision this run: every DeepSeek decision, plus the key non-combat picks of Jev and code. */
 export interface JournalChoice {
+  /** Order of creation in the run (history is chronological). */
+  seq: number;
+  /** The floor the journal files it under (never below a floor already left: history is append-only). */
+  at: number;
   act: number;
   floor: number | null;
   label: string;
@@ -35,6 +46,8 @@ export interface JournalChoice {
 
 /** One fight of the run, from its first combat state to the first state after it. */
 export interface FightRecord {
+  seq: number;
+  at: number;
   key: string;
   act: number;
   floor: number | null;
@@ -63,6 +76,8 @@ export interface FloorMark {
 
 /** A change to the deck, relics, potions or max HP, noticed by comparing consecutive states. */
 export interface ResourceEvent {
+  seq: number;
+  at: number;
   act: number;
   floor: number | null;
   text: string;
@@ -70,6 +85,8 @@ export interface ResourceEvent {
 
 /** A route plan DeepSeek made (BUILD_DECIDER=deepseek), in the order they were made. */
 export interface RouteRecord {
+  seq: number;
+  at: number;
   key: string;
   act: number;
   floor: number | null;
@@ -79,25 +96,30 @@ export interface RouteRecord {
 }
 
 /**
- * The run context DeepSeek receives with every question. Nothing is dropped: every decision, every
- * fight and every floor of the run is one terse line (or item) here; only the wording is compact.
+ * The run context DeepSeek receives with every question, in message order (most stable first, see the
+ * file comment). Nothing is dropped: every decision, fight, floor and resource change of the run is one
+ * terse line in `history` (floors left behind) or `this_floor` (the floor the run is on).
  */
 export interface RunMemory {
-  /** Current facts: HP, gold, deck, relics, potions, boss and its clock, DeepSeek's run plan. */
+  /**
+   * The current act, stable until the next act: its elites and dangerous hallway fights from the monster
+   * DB (the map ahead), the act boss and its monster-DB entry (measured HP, moves, our record).
+   */
+  act: string;
+  /**
+   * Every floor already left, in order, append-only: the floor's room, HP / gold at its end, then each
+   * decision (every DeepSeek decision and Jev's/code's key non-combat picks), fight (enemies, HP before →
+   * after, potions), deck/relic/potion/max-HP change and route plan made on it.
+   */
+  history: string;
+  /**
+   * Current facts: HP, gold, deck, relics, potions, the boss clock, DeepSeek's run plan. "" when the
+   * question's own facts already carry them (every BUILD_DECIDER=deepseek question and the run plan).
+   */
   now: string;
-  /** The act boss's monster-DB entry (measured HP, moves, our record), at this ascension. */
-  boss_db: string;
-  /** Every DeepSeek decision this run (and Jev's/code's key non-combat picks), by act. */
-  decisions: string;
-  /** Every fight this run, one line each: floor, enemies, HP before → after, potions used. */
-  fights: string;
-  /** The current act's elites and dangerous hallway fights from the monster DB (the map ahead). */
-  map_threats: string;
-  /** HP / gold per floor. */
-  hp_timeline: string;
-  /** Cards added/removed/upgraded, relics, potions gained/used/discarded, max HP changes. */
-  resources: string;
-  /** DeepSeek's route plans per act, re-plans and why, and the current act's progress. */
+  /** The current floor so far, in the history's format (a fight still going shows its HP now). */
+  this_floor: string;
+  /** Progress on DeepSeek's route plan for the current act (the plans themselves are in the history). */
   route: string;
   /** The road to the boss from here, and the boss's key mechanics. */
   lookahead: string;
@@ -113,6 +135,11 @@ export interface RunMemory {
 export interface QuestionContext {
   label?: string;
   criteria?: Record<string, string | null>;
+  /**
+   * The question carries its own current facts (deck, relics, potions, HP, gold, boss clock, run plan):
+   * `now` is left empty instead of repeating them.
+   */
+  factsCovered?: boolean;
 }
 
 export interface JournalEntry {
@@ -157,8 +184,6 @@ export function bossNote(bossId: string | null | undefined): string | null {
 }
 
 
-/** Cards that give lasting Strength (Setup Strike's is gone at the end of the turn). */
-const STRENGTH_IDS = new Set(["INFLAME", "DEMON_FORM", "RUPTURE", "SPOT_WEAKNESS", "LIMIT_BREAK", "FLEX"]);
 
 const TYPE_LABELS: [string, string][] = [
   ["Elite", "精英"],
@@ -211,6 +236,22 @@ export class RunJournal {
   private maxHpSnap: number | null = null;
   private discardFloors = new Set<number>();
   private knowledge: Knowledge | null = null;
+  /** Creation counter for the journal's items (history is chronological). */
+  private seq = 0;
+  /** Highest floor seen this run: every floor below it is closed and written to the history for good. */
+  private maxFloor = 0;
+
+  /** The floor an item made now is filed under: the state's floor, never below a floor already left. */
+  private placeFloor(state: GameState): number {
+    const floor = state.run?.floor ?? null;
+    if (floor !== null && floor > this.maxFloor) this.maxFloor = floor;
+    return this.maxFloor;
+  }
+
+  private nextSeq(): number {
+    this.seq += 1;
+    return this.seq;
+  }
 
   /** Called with every state read: resets on a new run, tracks fights, resources, HP and route plans. */
   observe(state: GameState, context: JournalContext = {}): void {
@@ -248,6 +289,8 @@ export class RunJournal {
 
   private pushChoice(state: GameState, entry: JournalEntry): void {
     this.choices.push({
+      seq: this.nextSeq(),
+      at: this.placeFloor(state),
       act: actOf(state),
       floor: state.run?.floor ?? null,
       label: entry.label,
@@ -260,7 +303,7 @@ export class RunJournal {
   /** DeepSeek's run plan (RUN_PLAN=v1), one of its decisions. */
   noteRunPlan(state: GameState, trigger: string, line: string | null): void {
     this.syncRun(state);
-    this.choices.push({ act: actOf(state), floor: state.run?.floor ?? null, label: "run-plan", by: "deepseek", choice: compact(`${trigger ? `(${trigger}) ` : ""}${line ?? ""}`), reason: "" });
+    this.choices.push({ seq: this.nextSeq(), at: this.placeFloor(state), act: actOf(state), floor: state.run?.floor ?? null, label: "run-plan", by: "deepseek", choice: compact(`${trigger ? `(${trigger}) ` : ""}${line ?? ""}`), reason: "" });
   }
 
   private trackFight(state: GameState): void {
@@ -279,6 +322,8 @@ export class RunJournal {
       if (!enemies.some((enemy) => enemy["is_alive"] !== false)) return;
       const hp = state.combat?.current_hp ?? state.run?.current_hp ?? null;
       fight = {
+        seq: this.nextSeq(),
+        at: this.placeFloor(state),
         key,
         act: actOf(state),
         floor: state.run?.floor ?? null,
@@ -321,7 +366,7 @@ export class RunJournal {
     const act = actOf(state);
     const source = this.sourceOf(state);
     const push = (text: string): void => {
-      this.events.push({ act, floor, text });
+      this.events.push({ seq: this.nextSeq(), at: this.placeFloor(state), act, floor, text });
     };
     const deck = run["deck"];
     if (Array.isArray(deck) && deck.length > 0) {
@@ -398,7 +443,8 @@ export class RunJournal {
 
   private trackFloor(state: GameState): void {
     const floor = state.run?.floor ?? null;
-    if (floor === null) return;
+    // A stale state of a floor already left must not rewrite that floor's line in the history.
+    if (floor === null || floor < this.placeFloor(state)) return;
     this.floors.set(floor, {
       act: actOf(state),
       floor,
@@ -413,7 +459,7 @@ export class RunJournal {
     if (!plan || plan.runId !== str(state.raw["run_id"])) return;
     const key = `${plan.act}:${plan.floor ?? "?"}:${plan.path.map((step) => `${step.row},${step.col}`).join(";")}`;
     if (this.routes.some((route) => route.key === key)) return;
-    this.routes.push({ key, act: plan.act, floor: plan.floor, hpPct: plan.hpPct, steps: plan.path.map((step) => ({ ...step })), why: plan.why ?? null });
+    this.routes.push({ seq: this.nextSeq(), at: this.placeFloor(state), key, act: plan.act, floor: plan.floor, hpPct: plan.hpPct, steps: plan.path.map((step) => ({ ...step })), why: plan.why ?? null });
   }
 
   private syncRun(state: GameState): void {
@@ -432,21 +478,21 @@ export class RunJournal {
     this.potionSnap = null;
     this.maxHpSnap = null;
     this.discardFloors = new Set();
+    this.seq = 0;
+    this.maxFloor = 0;
   }
 
-  /** The run context DeepSeek receives (every question type). */
+  /** The run context DeepSeek receives (every question type), in message order. */
   render(state: GameState, knowledge: Knowledge, context: JournalContext["screenMemory"] = {}, question: QuestionContext = {}): RunMemory {
     this.syncRun(state);
     this.knowledge ??= knowledge;
     this.trackRoute(state, context.routePlan);
+    const current = this.placeFloor(state);
     return {
-      now: this.renderNow(state, knowledge, context),
-      boss_db: bossDossier(state.run?.boss_id ?? str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) ?? "",
-      decisions: this.renderDecisions(),
-      fights: this.renderFights(state),
-      map_threats: renderThreats(state),
-      hp_timeline: this.renderTimeline(),
-      resources: this.renderResources(),
+      act: renderAct(state, knowledge),
+      history: this.renderHistory(state, (floor) => floor < current),
+      now: question.factsCovered ? "" : this.renderNow(state, knowledge, context),
+      this_floor: this.renderThisFloor(state, current),
       route: this.renderRoute(state),
       lookahead: renderLookahead(state, context.lastMap, this.position),
       knowledge: renderKnowledge(state, question),
@@ -457,21 +503,12 @@ export class RunJournal {
     const lines: string[] = [];
     const run = asRecord(state.run?.raw);
     lines.push(`现状: 第${actOf(state)}幕 F${state.run?.floor ?? "?"} | HP ${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"} | 金币 ${state.run?.gold ?? "?"}`);
-    const bossId = state.run?.boss_id ?? str(run["boss_id"]);
-    if (bossId) {
-      const name = knowledge.monster(bossId)?.name ?? knowledge.monster(bossId.replace(/_BOSS$/, ""))?.name;
-      lines.push(`本幕 boss: ${name && name !== bossId ? `${name} (${bossId})` : bossId}`);
-    }
+    // The act boss's name is in the act block.
     const entries = deckEntries(state, knowledge);
     if (entries.length > 0) {
-      const stats = deckStats(entries);
-      const profile = deckProfile(entries);
-      const strength = [...new Set(entries.filter((card) => givesStrength(card.card_id, card.description)).map((card) => card.name))];
       const counted = countBy(entries as unknown as JsonValue[], (card) => upgradedName(str(card["name"]), bool(card["upgraded"])), (card) => upgradedName(str(card["name"]), bool(card["upgraded"])));
       lines.push(`牌组 ${entries.length} 张: ${[...counted.values()].map((card) => `${card.name}${times(card.count)}`).join(", ")}`);
-      lines.push(
-        `构筑: ${stats.total} 张 (攻击 ${stats.attacks}/技能 ${stats.skills}/能力 ${stats.powers}) | 力量来源 ${strength.length > 0 ? strength.join("、") : "无"} | AOE ${profile.aoe} | 格挡牌 ${profile.block} | 过牌 ${profile.draw} | 成长 ${profile.scaling}`,
-      );
+      lines.push(`构筑: ${deckProfileLine(state, knowledge)}`);
     }
     const relics = asArray(run["relics"]).map((relic) => str(asRecord(relic)["name"], str(asRecord(relic)["relic_id"])));
     if (relics.length > 0) lines.push(`遗物: ${relics.join(", ")}`);
@@ -491,92 +528,124 @@ export class RunJournal {
     return lines.join("\n");
   }
 
-  private renderDecisions(): string {
-    if (this.choices.length === 0) return "";
-    const lines = ["本局全部决策（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）:"];
+  /**
+   * The floors `closed` accepts, chronologically: one line per floor (room, HP and gold at its end, max HP
+   * when it changed), then each item made on it in the order it happened. A closed floor's text never
+   * changes again, so the history of one question is a byte prefix of the next one's.
+   */
+  private renderHistory(state: GameState, closed: (floor: number) => boolean): string {
+    const all = this.items();
+    const floors = new Set<number>([...this.floors.keys()].filter(closed));
+    for (const item of all) if (closed(item.at)) floors.add(item.at);
+    if (floors.size === 0) return "";
+    const lines = [HISTORY_HEADER];
     let act = -1;
-    for (const entry of this.choices) {
-      if (entry.act !== act) {
-        act = entry.act;
-        lines.push(`第${act}幕:`);
-      }
-      const reason = entry.reason.replace(UNVERIFIED_REASON_PREFIX, "");
-      lines.push(`F${entry.floor ?? "?"} ${entry.label} [${entry.by === "deepseek" ? "DS" : entry.by}]: ${entry.choice}${reason ? ` — 未核实理由: ${reason}` : ""}`);
-    }
-    return lines.join("\n");
-  }
-
-  private renderFights(state: GameState): string {
-    if (this.fights.length === 0) return "";
-    const lines = ["本局全部战斗（每场一行: 层 敌人: HP 战前→战后 药水）:"];
-    let act = -1;
-    for (const fight of this.fights) {
-      if (fight.act !== act) {
-        act = fight.act;
-        lines.push(`第${act}幕:`);
-      }
-      lines.push(fightLine(fight, state));
-    }
-    return lines.join("\n");
-  }
-
-  private renderTimeline(): string {
-    if (this.floors.size === 0) return "";
-    const marks = [...this.floors.values()].sort((a, b) => a.floor - b.floor);
-    const lines = ["每层结束时 层+房间+HP(/上限，变化时标出)+¥金币 (怪/精/问/休/店/宝/王/古=房间，·=未知):"];
-    let act = -1;
-    let line: string[] = [];
     let lastMax: number | null = null;
-    for (const mark of marks) {
-      if (mark.act !== act) {
-        if (line.length > 0) lines.push(line.join(" "));
-        act = mark.act;
-        line = [`第${act}幕:`];
+    for (const floor of [...floors].sort((a, b) => a - b)) {
+      const mark = this.floors.get(floor);
+      const items = all.filter((item) => item.at === floor);
+      const firstAct = items[0]?.act ?? mark?.act ?? act;
+      if (firstAct !== act) {
+        act = firstAct;
+        lines.push(`第${act}幕:`);
       }
-      const max = mark.maxHp !== null && mark.maxHp !== lastMax ? `/${mark.maxHp}` : "";
-      lastMax = mark.maxHp ?? lastMax;
-      line.push(`F${mark.floor}${ROOM_SHORT[mark.room] ?? "·"}${mark.hp ?? "?"}${max}¥${mark.gold ?? "?"}`);
-    }
-    if (line.length > 0) lines.push(line.join(" "));
-    return lines.join("\n");
-  }
-
-  private renderResources(): string {
-    if (this.events.length === 0) return "";
-    const lines = ["牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）:"];
-    const acts = [...new Set(this.events.map((event) => event.act))];
-    for (const act of acts) {
-      lines.push(`第${act}幕: ${this.events.filter((event) => event.act === act).map((event) => `F${event.floor ?? "?"} ${event.text}`).join("; ")}`);
+      let head = `F${floor}`;
+      if (mark) {
+        const max = mark.maxHp !== null && mark.maxHp !== lastMax ? `/${mark.maxHp}` : "";
+        lastMax = mark.maxHp ?? lastMax;
+        head += ` ${ROOM_SHORT[mark.room] ?? "·"} HP${mark.hp ?? "?"}${max} ¥${mark.gold ?? "?"}`;
+      }
+      lines.push(head);
+      act = this.pushItems(lines, items, act, state);
     }
     return lines.join("\n");
   }
 
+  /** The floor the run is on, so far: the same item lines as the history (it joins it once left). */
+  private renderThisFloor(state: GameState, current: number): string {
+    const items = this.items().filter((item) => item.at >= current);
+    if (items.length === 0) return "";
+    const lines = [`本层至今（F${current}，尚未结束；格式同 history）:`];
+    this.pushItems(lines, items, items[0]!.act, state);
+    return lines.join("\n");
+  }
+
+  /** Every journal item, in the order it was made. */
+  private items(): JournalItem[] {
+    return [
+      ...this.choices.map((choice): JournalItem => ({ kind: "choice", seq: choice.seq, at: choice.at, act: choice.act, choice })),
+      ...this.fights.map((fight): JournalItem => ({ kind: "fight", seq: fight.seq, at: fight.at, act: fight.act, fight })),
+      ...this.events.map((event): JournalItem => ({ kind: "event", seq: event.seq, at: event.at, act: event.act, event })),
+      ...this.routes.map((route): JournalItem => ({ kind: "route", seq: route.seq, at: route.at, act: route.act, route })),
+    ].sort((a, b) => a.seq - b.seq);
+  }
+
+  /** Item lines (indented one space); consecutive resource changes share a line; an act change mid-floor gets its header. */
+  private pushItems(lines: string[], items: JournalItem[], act: number, state: GameState): number {
+    let events: string[] = [];
+    const flush = (): void => {
+      if (events.length > 0) lines.push(` ${events.join("; ")}`);
+      events = [];
+    };
+    for (const item of items) {
+      if (item.act !== act) {
+        flush();
+        act = item.act;
+        lines.push(`第${act}幕:`);
+      }
+      const other = (floor: number | null): string => (floor !== null && floor !== item.at ? `(F${floor}) ` : "");
+      if (item.kind === "event") {
+        events.push(`${other(item.event.floor)}${item.event.text}`);
+        continue;
+      }
+      flush();
+      if (item.kind === "choice") {
+        const entry = item.choice;
+        const reason = entry.reason.replace(UNVERIFIED_REASON_PREFIX, "");
+        lines.push(` ${other(entry.floor)}${entry.label} [${entry.by === "deepseek" ? "DS" : entry.by}]: ${entry.choice}${reason ? ` — 未核实理由: ${reason}` : ""}`);
+      } else if (item.kind === "fight") {
+        lines.push(` ${other(item.fight.floor)}战斗 ${fightLine(item.fight, state)}`);
+      } else {
+        const route = item.route;
+        const what = route.why ? `路线重规划（${compact(route.why)}）` : "路线规划";
+        lines.push(` ${what}（第${route.act}幕 F${route.floor ?? "?"} 定，当时 HP ${Math.round(route.hpPct * 100)}%）: ${routeText(route.steps)}`);
+      }
+    }
+    flush();
+    return act;
+  }
+
+  /** Progress on the current act's route plan (the plans themselves are history items). */
   private renderRoute(state: GameState): string {
     const act = actOf(state);
-    const lines: string[] = [];
-    for (const route of this.routes) {
-      const what = route.why ? `重规划（${compact(route.why)}）` : "规划";
-      lines.push(`第${route.act}幕 F${route.floor ?? "?"} ${what}，当时 HP ${Math.round(route.hpPct * 100)}%: ${routeText(route.steps)}`);
-    }
     const plan = [...this.routes].reverse().find((route) => route.act === act);
-    if (!plan) {
-      lines.push(`第${act}幕: 没有 DeepSeek 路线计划（逐节点选择）`);
-    } else {
-      const here = this.position && this.position.act === act ? this.position : null;
-      const done = here ? plan.steps.filter((step) => step.row <= here.row) : [];
-      const onPlan = here ? plan.steps.find((step) => step.row === here.row) : undefined;
-      const off = here && onPlan && onPlan.col !== here.col ? "（当前节点不在计划上）" : "";
-      const left = plan.steps.filter((step) => !here || step.row > here.row);
-      const next = left[0];
-      lines.push(
-        `本幕进度: 已走 ${done.length}/${plan.steps.length}${done.length > 0 ? ` [${done.map((step) => ROOM_SHORT[step.type] ?? step.type).join("")}]` : ""}${off}` +
-          (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${Math.round(next.hpOnArrival * 100)}%）` : "") +
-          ` | 剩余 ${left.length}: ${routeText(left)}`,
-      );
-    }
-    return lines.join("\n");
+    if (!plan) return `第${act}幕: 没有 DeepSeek 路线计划（逐节点选择）`;
+    const here = this.position && this.position.act === act ? this.position : null;
+    const done = here ? plan.steps.filter((step) => step.row <= here.row) : [];
+    const onPlan = here ? plan.steps.find((step) => step.row === here.row) : undefined;
+    const off = here && onPlan && onPlan.col !== here.col ? "（当前节点不在计划上）" : "";
+    const left = plan.steps.filter((step) => !here || step.row > here.row);
+    const next = left[0];
+    return (
+      `本幕进度（按 F${plan.floor ?? "?"} 的路线）: 已走 ${done.length}/${plan.steps.length}${done.length > 0 ? ` [${done.map((step) => ROOM_SHORT[step.type] ?? step.type).join("")}]` : ""}${off}` +
+      (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${Math.round(next.hpOnArrival * 100)}%）` : "") +
+      ` | 剩余 ${left.length}: ${routeText(left)}`
+    );
   }
 }
+
+type JournalItem = { seq: number; at: number; act: number } & (
+  | { kind: "choice"; choice: JournalChoice }
+  | { kind: "fight"; fight: FightRecord }
+  | { kind: "event"; event: ResourceEvent }
+  | { kind: "route"; route: RouteRecord }
+);
+
+/** The history's legend: static text, so it is part of the cached prefix. */
+const HISTORY_HEADER =
+  "本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；" +
+  "其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、" +
+  "「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。";
 
 const KIND_RANK: Record<string, number> = { unknown: 0, monster: 1, elite: 2, boss: 3 };
 
@@ -586,7 +655,7 @@ function fightLine(fight: FightRecord, state: GameState): string {
   const enemies = fight.enemies.join("+") || "?";
   const after = fight.over ? String(fight.hpAfter ?? "?") : `进行中 ${state.combat?.current_hp ?? state.run?.current_hp ?? "?"}`;
   const max = fight.maxHp !== null ? `/${fight.maxHp}` : "";
-  return `F${fight.floor ?? "?"} ${enemies}: ${fight.hpBefore ?? "?"}→${after}${max}${fight.potionsUsed.length > 0 ? ` 药:${fight.potionsUsed.join(",")}` : ""}`;
+  return `${enemies}: ${fight.hpBefore ?? "?"}→${after}${max}${fight.potionsUsed.length > 0 ? ` 药:${fight.potionsUsed.join(",")}` : ""}`;
 }
 
 function renderKnowledge(state: GameState, question: QuestionContext): string {
@@ -597,6 +666,24 @@ function renderKnowledge(state: GameState, question: QuestionContext): string {
     // the knowledge base is advice; the run context stands without it
     return "";
   }
+}
+
+/**
+ * The act block: the act's threats (the same for every run at this ascension) first, then the act boss
+ * and its monster-DB entry. Changes only when the act does.
+ */
+function renderAct(state: GameState, knowledge: Knowledge): string {
+  const parts: string[] = [];
+  const threats = renderThreats(state);
+  if (threats) parts.push(threats);
+  const bossId = state.run?.boss_id ?? str(asRecord(state.run?.raw)["boss_id"]);
+  if (bossId) {
+    const name = knowledge.monster(bossId)?.name ?? knowledge.monster(bossId.replace(/_BOSS$/, ""))?.name;
+    parts.push(`第${actOf(state)}幕 boss: ${name && name !== bossId ? `${name} (${bossId})` : bossId}`);
+    const dossier = bossDossier(bossId, state.run?.ascension ?? 0);
+    if (dossier) parts.push(dossier);
+  }
+  return parts.join("\n");
 }
 
 /** The current act's elites and dangerous hallway encounters (monster DB), one line each. */
@@ -658,10 +745,6 @@ function fightKey(state: GameState): string {
 }
 
 
-function givesStrength(cardId: string, description: string): boolean {
-  if (cardId === "SETUP_STRIKE") return false;
-  return STRENGTH_IDS.has(cardId) || /\bgains?\s+(?:\d+|X)\s+Strength/i.test(description);
-}
 
 /**
  * The escalator's free-text reason is its guess, not a fact (VC4L F22: "腐化≈费用归零" was quoted back

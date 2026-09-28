@@ -7,6 +7,7 @@
 
 import { fillRelicText } from "../knowledge/relic-values.js";
 import { UNKNOWN_VALUE } from "../knowledge/potion-values.js";
+import { deckProfileLine } from "../project/deck-profile.js";
 import type { DecisionEnv } from "../project/types.js";
 import { asArray, asRecord, bool, str, type JsonValue } from "../util/json.js";
 import { bossClockJson } from "./boss-clock.js";
@@ -44,9 +45,11 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
     floor,
     floors_to_act_boss: nextBoss === null || floor === null ? null : nextBoss - floor,
     ascension: state.run?.ascension ?? 0,
-    hp: `${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"}`,
+    hp: env.brief.hp,
     gold: state.run?.gold ?? null,
+    act_boss: str(run["boss_id"]) || state.run?.boss_id || null,
     deck_size: asArray(run["deck"]).length,
+    deck_profile: deckProfileLine(state, knowledge),
     deck: asArray(shown["deck"]).map(String),
     relics,
     potions,

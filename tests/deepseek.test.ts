@@ -16,14 +16,14 @@ afterEach(async () => {
 });
 
 describe("DeepSeekClient", () => {
-  it("keeps the system prompt identical across calls and sends the memory after the state", async () => {
+  it("keeps the system prompt identical across calls and sends the memory before the state (cache order)", async () => {
     const bodies: { messages: { role: string; content: string }[] }[] = [];
     server = await startTestServer((req, res) => {
       let text = "";
       req.on("data", (chunk: Buffer) => (text += chunk.toString("utf8")));
       req.on("end", () => {
         bodies.push(JSON.parse(text) as (typeof bodies)[number]);
-        sendJson(res, 200, { choices: [{ message: { content: '{"choice":"a","reason":"ok"}' } }], usage: { prompt_tokens: 10, completion_tokens: 2 } });
+        sendJson(res, 200, { choices: [{ message: { content: '{"choice":"a","reason":"ok"}' } }], usage: { prompt_tokens: 10, completion_tokens: 2, prompt_cache_hit_tokens: 6, completion_tokens_details: { reasoning_tokens: 1 } } });
       });
     });
     const dir = mkdtempSync(join(tmpdir(), "ds-test-"));
@@ -49,13 +49,16 @@ describe("DeepSeekClient", () => {
     expect(system).not.toContain("VANTOM");
 
     const user = one!.messages[1]!.content;
-    expect(Object.keys(JSON.parse(user) as object)).toEqual(["state", "memory", "question", "options"]);
+    expect(Object.keys(JSON.parse(user) as object)).toEqual(["memory", "state", "question", "options"]);
     expect(JSON.parse(user).memory).toEqual(memory1);
-    expect(JSON.parse(two!.messages[1]!.content).memory).toEqual(memory2);
+    // Empty sections are not sent.
+    expect(JSON.parse(two!.messages[1]!.content).memory).toEqual({ run_journal: memory2.run_journal, lookahead: memory2.lookahead });
 
-    const logged = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as { memory?: unknown; guide?: string });
+    const logged = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as { memory?: unknown; guide?: string; usage?: unknown });
     expect(logged[0]!.memory).toEqual(memory1);
     expect(logged[0]!.guide).toBe(client.guideId);
+    // Every call's usage is in the reasoning log.
+    expect(logged[0]!.usage).toEqual({ input_tokens: 10, cache_hit_tokens: 6, output_tokens: 2, reasoning_tokens: 1 });
   });
 
   it("works without a handbook: no heading, guideId is the guide hash alone", () => {

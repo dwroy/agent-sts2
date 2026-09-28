@@ -1,8 +1,10 @@
 /** Deck reading and summarising. Used by deck-shaping decisions (PLAN.md §5.2 "deck sizing"). */
 
 import type { Knowledge } from "../knowledge/index.js";
+import { fillPotionText } from "../knowledge/potion-values.js";
+import { fillRelicText } from "../knowledge/relic-values.js";
 import type { GameState } from "../mod/schema.js";
-import { asArray, asRecord, bool, numOrNull, str, truncate } from "../util/json.js";
+import { asArray, asRecord, bool, iconsToText, numOrNull, str, truncate } from "../util/json.js";
 
 export interface DeckEntry {
   index: number;
@@ -22,7 +24,8 @@ export function deckEntries(state: GameState, knowledge: Knowledge): DeckEntry[]
     const cardId = str(obj["card_id"]);
     const info = knowledge.card(cardId);
     const upgraded = bool(obj["upgraded"]);
-    const rendered = str(obj["resolved_rules_text"]) || info?.description || "";
+    // Icons first: an energy icon's ".png" would otherwise end the first sentence mid-path.
+    const rendered = iconsToText(str(obj["resolved_rules_text"]) || info?.description || "");
     return {
       index: numOrNull(obj["index"]) ?? fallbackIndex,
       card_id: cardId,
@@ -101,8 +104,9 @@ export function describeDeck(entries: DeckEntry[], max = 40): string {
     .slice(0, max)
     .map((entry) => {
       const cost = entry.cost === null ? "?" : String(entry.cost);
-      const plus = entry.upgraded ? "+" : "";
-      return `${entry.name}${plus} (${entry.type || "?"}, ${cost}E): ${entry.description}`;
+      // The game's name of an upgraded card already ends in "+" (痛击+); never add a second one.
+      const name = entry.upgraded && !entry.name.endsWith("+") ? `${entry.name}+` : entry.name;
+      return `${name} (${entry.type || "?"}, ${cost}E): ${entry.description}`;
     })
     .join("\n");
 }
@@ -126,7 +130,7 @@ export function describeRunRelicEffects(state: GameState, knowledge: Knowledge, 
       const id = str(obj["relic_id"]);
       const info = knowledge.relic(id);
       const name = str(obj["name"], info?.name ?? id);
-      const description = info?.description ?? "";
+      const description = fillRelicText(id, info?.description || str(obj["description"]));
       return description ? `${name}: ${truncate(description, 80)}` : null;
     })
     .filter((entry): entry is string => entry !== null)
@@ -140,7 +144,7 @@ export function describeRunPotions(state: GameState, knowledge: Knowledge): stri
       if (!bool(obj["occupied"])) return null;
       const id = str(obj["potion_id"]);
       const name = str(obj["name"], knowledge.potion(id)?.name ?? id);
-      const description = knowledge.potion(id)?.description ?? str(obj["description"]);
+      const description = fillPotionText(id, knowledge.potion(id)?.description || str(obj["description"]));
       return `${name}: ${truncate(description, 70)}`;
     })
     .filter((entry): entry is string => entry !== null);

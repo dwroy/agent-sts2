@@ -12,6 +12,7 @@ import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
 import { checkConsistency, reaskMessage, type ConsistencyCheck } from "./consistency.js";
+import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
@@ -99,6 +100,8 @@ const SYSTEM = [
   "(observational: n runs, mean final floor, act-boss pass rate; low-n rows are hints only). Use it as evidence-based guidance, not",
   "orders: weigh it with the exact facts in the state and code's numbers. High-confidence, well-supported lessons deserve real weight;",
   "when the current situation differs from what a lesson assumes, the facts win.",
+  "memory.act is this act's threats and boss; memory.history is the run so far, floor by floor (floors already left);",
+  "memory.this_floor is the current floor so far; state.facts, when present, is the exact current deck, relics, potions, HP and gold.",
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
 ].join(" ");
 
@@ -135,11 +138,12 @@ export class DeepSeekClient implements Escalator {
     const label = typeof context["label"] === "string" ? context["label"] : "";
     // Run memory (journal, fight log, lookahead) rides in the user message, never the system prompt.
     const memory = context["memory"];
-    const user = JSON.stringify({ state, ...(memory === undefined ? {} : { memory }), question: instructions, options: criteria });
+    // Memory first (act block, append-only history, then the volatile parts), then this question: see deepseek-message.ts.
+    const user = choiceMessage(state, instructions, criteria, memory);
     const messages: ChatMessage[] = [{ role: "user", content: user }];
     const done = await this.complete(messages, label);
     const first = this.parseChoice(done.content);
-    this.logReasoning(label, done.effort, instructions, criteria, first.choice, first.rawReason, done.reasoning, done.latencyMs, memory);
+    this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
     if (!(first.choice in criteria)) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
     if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason };
@@ -160,7 +164,7 @@ export class DeepSeekClient implements Escalator {
       );
       meta = sumMeta(done.meta, again.meta);
       const parsed = this.parseChoice(again.content);
-      this.logReasoning(`${label} (re-ask)`, again.effort, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, again.reasoning, again.latencyMs, undefined);
+      this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, undefined);
       secondChoice = parsed.choice;
       secondReason = parsed.reason;
       secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);
@@ -209,7 +213,7 @@ export class DeepSeekClient implements Escalator {
     payload: Record<string, JsonValue>,
     label: string,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
-    const done = await this.complete([{ role: "user", content: JSON.stringify(payload) }], label);
+    const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
     let json: Record<string, unknown>;
     try {
       json = JSON.parse(done.content) as Record<string, unknown>;
@@ -218,14 +222,14 @@ export class DeepSeekClient implements Escalator {
     }
     if (typeof json !== "object" || json === null || Array.isArray(json)) throw new Error("DeepSeek returned a non-object");
     const memory = payload["memory"];
-    this.logReasoning(label, done.effort, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", done.reasoning, done.latencyMs, memory, json);
+    this.logReasoning(label, done, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", memory, json);
     return { json, meta: done.meta };
   }
 
   private async complete(
     messages: ChatMessage[],
     label: string,
-  ): Promise<{ content: string; reasoning: string; effort: string; latencyMs: number; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+  ): Promise<CompletedCall> {
     const started = Date.now();
     const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
     const thinking = effort !== "off";
@@ -283,16 +287,28 @@ export class DeepSeekClient implements Escalator {
     }
   }
 
-  private logReasoning(label: string, effort: string, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, reasoning: string, latencyMs: number, memory: JsonValue | undefined, answer?: unknown): void {
+  private logReasoning(label: string, call: CompletedCall, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, memory: JsonValue | undefined, answer?: unknown): void {
     if (!this.config.reasoningLog) return;
     try {
       mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }) };
+      const { effort, reasoning, latencyMs, meta } = call;
+      // Token usage of this one call (cache hit = the prefix DeepSeek had cached; billed much cheaper).
+      const usage = { input_tokens: meta.inputTokens, cache_hit_tokens: meta.cacheHitTokens ?? 0, output_tokens: meta.outputTokens, reasoning_tokens: meta.reasoningTokens ?? 0 };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
     }
   }
+}
+
+/** One finished chat completion: the answer text, the chain of thought and the call's usage. */
+interface CompletedCall {
+  content: string;
+  reasoning: string;
+  effort: string;
+  latencyMs: number;
+  meta: Omit<DeepSeekAnswer, "choice" | "reason">;
 }
 
 interface ChatMessage {

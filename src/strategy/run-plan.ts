@@ -17,6 +17,7 @@ import { dirname } from "node:path";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries } from "../project/deck.js";
+import { deckProfileLine } from "../project/deck-profile.js";
 import { bossClockJson } from "./boss-clock.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
 
@@ -115,9 +116,11 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
     act_boss: str(raw["boss_id"]),
     act_boss_clock: bossClockJson(state, knowledge),
     deck_size: deckEntries(state, knowledge).length,
+    deck_profile: deckProfileLine(state, knowledge),
     deck: deckLines,
     relics,
     potions,
+    potion_slots: `${potions.length}/${asArray(raw["potions"]).length} used`,
   };
 }
 

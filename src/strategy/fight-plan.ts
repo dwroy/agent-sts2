@@ -86,10 +86,11 @@ export function fightPlanInput(
 ): Record<string, JsonValue> {
   const deck = new Map<string, { line: string; count: number }>();
   for (const card of deckEntries(state, knowledge)) {
-    const key = `${card.card_id}${card.upgraded ? "+" : ""}`;
-    const seen = deck.get(key);
+    // Grouped only when byte-identical: copies of one card can differ (enchanted Twin Strike 7×2 vs 5×2).
+    const line = `${card.card_id}${card.upgraded ? "+" : ""} ${card.name} (${card.type}, ${card.cost ?? "?"} energy): ${card.description}`;
+    const seen = deck.get(line);
     if (seen) seen.count += 1;
-    else deck.set(key, { line: `${card.card_id}${card.upgraded ? "+" : ""} ${card.name} (${card.type}, ${card.cost ?? "?"} energy): ${card.description}`, count: 1 });
+    else deck.set(line, { line, count: 1 });
   }
   const raw = asRecord(state.run?.raw);
   const hp = state.run?.current_hp ?? null;
