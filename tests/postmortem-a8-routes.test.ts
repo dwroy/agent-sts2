@@ -49,7 +49,7 @@ describe("K7G9 F43: '?' vs rest, both into the forced F45 Mecha Knight at 40/72"
     const byType = Object.fromEntries(Object.values(options("k7g9-map-f43")).map((option) => [option["node_type"], option]));
     expect(byType["Unknown"]!["next_forced_elite"]).toMatch(/F45 elite at ~4\d% HP \(an elite costs ~70%\)/);
     expect(byType["RestSite"]!["next_forced_elite"]).toMatch(/F45 elite at ~86% HP/);
-    expect(byType["Unknown"]!["tempo"]).toMatch(/^departs from DeepSeek's entry_hp 90%: arrives at the F45 elite at ~4\d% with no rest before it/);
+    expect(byType["Unknown"]!["tempo"]).toMatch(/^differs from DeepSeek's entry_hp 90%: arrives at the F45 elite at ~4\d% with no rest before it/);
     expect(byType["RestSite"]!["code_rank"]).toBe(1);
     expect(byType["RestSite"]!["tempo"]).toBeUndefined();
     expect(byType["RestSite"]!["boss_arrival"]).toMatch(/at the F48 boss/);
@@ -78,7 +78,7 @@ describe("N7KR F4: 67/80, '? -> Monster -> Monster -> forced elite, no rest' vs 
     const byPosition = Object.fromEntries(Object.values(all).map((option) => [option["position"], option]));
     expect(byPosition["row 4, column 2"]!["forced_elites"]).toMatch(/^every path to the boss meets an elite, not all on one floor \(F7\/F9/);
     expect(byPosition["row 4, column 2"]!["forced_elites"]).toMatch(/a rest before the first one only on some paths/);
-    expect(byPosition["row 4, column 0"]!["tempo"]).toMatch(/^departs from DeepSeek's entry_hp 90%: arrives at the F8 elite at ~\d+% with no rest before it/);
+    expect(byPosition["row 4, column 0"]!["tempo"]).toMatch(/^differs from DeepSeek's entry_hp 90%: arrives at the F8 elite at ~\d+% with no rest before it/);
   });
 
   it("an act-1 hallway is priced at the p75 of logged A8 losses (~11% of max HP)", () => {

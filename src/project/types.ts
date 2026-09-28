@@ -190,10 +190,10 @@ export interface ResolvedAction {
   /** Set when code replaced the chosen option (no screen does since 2026-09-28; kept for the log shape). */
   guard?: { kind: "hp"; choice: string; plan: string };
   /**
-   * Jev picked an option that breaks a soft strategic intent (intent.ts compliance label): logged per
-   * run-plan version as `intent_deviation`.
+   * Jev picked an option whose tempo note differs from DeepSeek's guidance (intent.ts): logged per
+   * run-plan version as `differs_from_tempo` (a fact; outcomes, not rules, judge it).
    */
-  deviation?: { intent: string; runPlanVersion: number | null; fightObjective?: string | null };
+  tempoDiff?: { guidance: string; runPlanVersion: number | null; fightObjective?: string | null };
   /**
    * Where Jev's pick sits in code's reference rank (1 = code's reference option): logged per decision
    * with the DeepSeek guidance Jev was shown.

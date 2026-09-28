@@ -73,13 +73,13 @@ describe("a forced elite on one option's branchless line is priced like the shar
     // Median room costs since Z49J/77QX: ~6x% (was ~42% at the p75 of every room), under 85% - 15%.
     const shop = at(options("kgr6-map-f19"), "row 2, column 6");
     expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~[4-6]\d% HP/);
-    expect(String(shop["tempo"])).toMatch(/^departs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
+    expect(String(shop["tempo"])).toMatch(/^differs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
   });
 
   it("the label check covers code's best-scored route too", () => {
     const plan = logged("kgr6-map-f19").runPlan!;
     const arrival = { eliteHp: 0.42, eliteFloor: 28, eliteCost: fightHpCost("Elite", 2), eliteRest: "every" as const, bossHp: 0.5, bossFloor: 33, best: { eliteHp: 1, bossHp: 0.9 } };
-    expect(mapFit(plan, "Shop", 0.74, { optionalElite: false, eliteOffered: false, arrival })?.tempo).toMatch(/^departs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~42%/);
+    expect(mapFit(plan, "Shop", 0.74, { optionalElite: false, eliteOffered: false, arrival })?.tempo).toMatch(/^differs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~42%/);
   });
 });
 

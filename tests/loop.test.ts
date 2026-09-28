@@ -792,13 +792,17 @@ describe("runLoop", () => {
     expect(decisions.length).toBeGreaterThan(0);
     for (const record of decisions) expect(record.escalation).toBeUndefined();
     // avoid_elites is guidance: the Elite is offered with the tempo note, and Jev's pick of it is played
-    // and logged as a tempo deviation with the guidance shown and the reference rank.
+    // and logged as differs_from_tempo with the guidance shown and the reference rank.
     const route = decisions.find((record) => record.label === "map/route");
-    expect(JSON.stringify(route.questions ?? {})).toMatch(/Elite[^}]*departs from DeepSeek's route_risk avoid_elites/);
+    expect(JSON.stringify(route.questions ?? {})).toMatch(/Elite[^}]*differs from DeepSeek's route_risk avoid_elites/);
     expect(route.decider).toBe("jev");
     expect(route.ds_guidance).toEqual(expect.arrayContaining([expect.stringMatching(/^route_risk avoid_elites/)]));
     expect(typeof route.reference_rank).toBe("number");
     expect(typeof route.matched_reference).toBe("boolean");
-    if (route.chosen.option_index === 0) expect(route.tempo_deviation).toMatch(/avoid_elites/);
+    expect(route.differs_from_reference).toBe(!route.matched_reference);
+    // Neutral fields only: the judgmental legacy keys are no longer written.
+    expect(route.intent_deviation).toBeUndefined();
+    expect(route.tempo_deviation).toBeUndefined();
+    if (route.chosen.option_index === 0) expect(route.differs_from_tempo).toMatch(/avoid_elites/);
   });
 });

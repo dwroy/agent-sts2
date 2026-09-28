@@ -1513,15 +1513,15 @@ function planTurn(env: DecisionEnv): Decision | null {
         });
       });
       facts["potion_facts"] = notes.filter(Boolean).join(" | ");
-      if (drunk.some((step) => heldForBoss(step.cardId.split(":")[1] ?? ""))) facts["tempo"] = [fit.tempo, "departs from DeepSeek's reserve: drinks a potion it holds for the act boss"].filter(Boolean).join("; ");
+      if (drunk.some((step) => heldForBoss(step.cardId.split(":")[1] ?? ""))) facts["tempo"] = [fit.tempo, "differs from DeepSeek's reserve: drinks a potion it holds for the act boss"].filter(Boolean).join("; ");
     }
     return facts;
   };
-  const tempoBreaks = (plan: Plan): string | null => {
+  const tempoDiffers = (plan: Plan): string | null => {
     const fit = fitFor(plan);
     const reserved = plan.steps.some((step) => step.cardId.startsWith("POTION:") && heldForBoss(step.cardId.split(":")[1] ?? ""));
-    if (reserved) return [fit.breaks ? fit.tempo : null, "drinks a potion DeepSeek holds for the act boss"].filter(Boolean).join("; ");
-    return fit.breaks ? fit.tempo : null;
+    if (reserved) return [fit.differs ? fit.tempo : null, "drinks a potion DeepSeek holds for the act boss"].filter(Boolean).join("; ");
+    return fit.differs ? fit.tempo : null;
   };
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string; potionId?: string }>();
@@ -1550,7 +1550,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               ? reserveFact({ plan: runPlan, potionId: potion.potion_id, text: potion.text, name: potion.name, bossFight: kind === "boss", savedHp: null, fightNote: fightPlan?.potions?.[potion.potion_id] ?? null })
               : null,
           }),
-          ...(held ? { tempo: "departs from DeepSeek's reserve: a potion it holds for the act boss" } : {}),
+          ...(held ? { tempo: "differs from DeepSeek's reserve: a potion it holds for the act boss" } : {}),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
@@ -1657,8 +1657,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (!chosen) return fallback(`Jev chose unknown option "${answer.choice}"`);
       const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
       const fromJev = answer.raw !== undefined && !escalatedBy;
-      const breaks = chosen.plan ? tempoBreaks(chosen.plan) : chosen.potionId && heldForBoss(chosen.potionId) ? "drinks a potion DeepSeek holds for the act boss" : null;
-      const deviation = fromJev && breaks && (fightPlan || runPlan) ? { intent: breaks, runPlanVersion: runPlan?.version ?? null, fightObjective: objective } : undefined;
+      const differs = chosen.plan ? tempoDiffers(chosen.plan) : chosen.potionId && heldForBoss(chosen.potionId) ? "drinks a potion DeepSeek holds for the act boss" : null;
+      const tempoDiff = fromJev && differs && (fightPlan || runPlan) ? { guidance: differs, runPlanVersion: runPlan?.version ?? null, fightObjective: objective } : undefined;
       if (chosen.potion) {
         return {
           intent: chosen.potion,
@@ -1666,7 +1666,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           confidence: answer.confidence,
           fallback: false,
           reference: referenceOf(chosen),
-          ...(deviation ? { deviation } : {}),
+          ...(tempoDiff ? { tempoDiff } : {}),
           apply: () => {
             env.screenMemory.combatPlan = null;
           },
@@ -1679,7 +1679,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         confidence: answer.confidence,
         fallback: false,
         reference: referenceOf(chosen),
-        ...(deviation ? { deviation } : {}),
+        ...(tempoDiff ? { tempoDiff } : {}),
         apply: () => commit(env, state.turn, plan, hand, escalatedBy ?? "jev"),
       };
     },

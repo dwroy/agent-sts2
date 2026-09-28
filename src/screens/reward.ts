@@ -91,7 +91,7 @@ export function planReward(env: DecisionEnv): Decision | null {
           cost: info?.cost ?? null,
           text,
         } satisfies JsonValue,
-        ...(avoided ? { intentBreak: avoided } : {}),
+        ...(avoided ? { differsFromTempo: avoided } : {}),
       };
     });
     const below = options.filter((option) => option.score < SKIP_BAR).map((option) => option.label).join(", ");
@@ -106,7 +106,7 @@ export function planReward(env: DecisionEnv): Decision | null {
         why: `the skip bar: a card code values under ${SKIP_BAR} makes the deck worse${below ? ` (under it: ${below})` : ""}`,
         note: "take nothing; the deck stays lean",
       } satisfies JsonValue,
-      ...((runPlan?.want ?? []).some((id) => offered.some((card) => str(card["card_id"]) === id)) ? { intentBreak: "departs from DeepSeek's want list: a wanted card is offered" } : {}),
+      ...((runPlan?.want ?? []).some((id) => offered.some((card) => str(card["card_id"]) === id)) ? { differsFromTempo: "differs from DeepSeek's want list: a wanted card is offered" } : {}),
     });
 
     return buildPickDecision({

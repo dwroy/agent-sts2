@@ -1821,7 +1821,7 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
       const e = env(costlyCombat(hp, damage, "FIRE_POTION"), { combatPlanner: "turn" });
       const decision = planCombatTurn(e);
       if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
-      const reference = Object.values(questionOf(decision).options).find((option) => /^code's reference line/.test(String(option["reference"])));
+      const reference = Object.values(questionOf(decision).options).find((option) => /^same as reference/.test(String(option["reference"])));
       return String(reference?.["plays"]).includes("Fire Potion");
     };
     // 50 HP against 22: Defend still loses 17 (34%).
@@ -1829,7 +1829,7 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
     // 50 HP against 8: Defend loses 3. Whatever code ranks first, a Fire Potion line says what it buys.
     const cheap = planCombatTurn(env(costlyCombat(50, 8, "FIRE_POTION"), { combatPlanner: "turn" }));
     const fire = Object.values(questionOf(cheap).options).find((option) => String(option["plays"]).includes("Fire Potion"));
-    if (fire) expect(String(fire["potion_facts"])).toMatch(/drinking Fire Potion now: .*vs the best line without it/);
+    if (fire) expect(String(fire["potion_facts"])).toMatch(/drinking Fire Potion now: .*vs the safest line without it/);
   });
 });
 

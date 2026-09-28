@@ -84,7 +84,7 @@ export function referencePick(decision: import("../src/project/types.js").Decisi
   const { name, options } = questionOf(decision);
   const key =
     Object.entries(options).find(([, option]) => option["code_rank"] === 1)?.[0] ??
-    Object.entries(options).find(([, option]) => /^code's reference line/.test(String(option["reference"] ?? "")))?.[0] ??
+    Object.entries(options).find(([, option]) => /^same as reference/.test(String(option["reference"] ?? "")))?.[0] ??
     Object.entries(options).find(([, option]) => option["reference"] === "wins the fight")?.[0] ??
     null;
   if (!key) return { key: null, intent: null };

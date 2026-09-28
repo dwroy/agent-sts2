@@ -55,14 +55,14 @@ describe("(a) a line drinking a potion DeepSeek holds for the boss is offered, w
     expect(decision.kind).toBe("ask");
     const { options } = questionOf(decision);
     const [key, fire] = Object.entries(options).find(([, option]) => String(option["plays"]).includes("Fire Potion"))!;
-    expect(String(fire["potion_facts"])).toMatch(/^drinking Fire Potion now: .*vs the best line without it; the act boss fight then has one fewer damage potion \(DeepSeek plan holds damage potions for the boss because boss_prep; boss prep: Strength for the crab\)/);
-    expect(String(fire["tempo"])).toMatch(/departs from DeepSeek's reserve: drinks a potion it holds for the act boss/);
+    expect(String(fire["potion_facts"])).toMatch(/^drinking Fire Potion now: .*vs the safest line without it; the act boss fight then has one fewer damage potion \(DeepSeek plan holds damage potions for the boss because boss_prep; boss prep: Strength for the crab\)/);
+    expect(String(fire["tempo"])).toMatch(/differs from DeepSeek's reserve: drinks a potion it holds for the act boss/);
     // DeepSeek's guidance is in the question and in the log record.
     expect(decision.guidance?.join("\n")).toMatch(/DeepSeek holds damage potions for the act boss because boss_prep/);
     const resolved = decision.resolve({ plan: { type: "choice", choice: key, confidence: 0.3, probabilities: {}, raw: {} } });
     expect(resolved.fallback).toBe(false);
     expect(JSON.stringify(resolved.intent)).toMatch(/use_potion|play_card/);
-    expect(resolved.deviation?.intent).toMatch(/drinks a potion DeepSeek holds for the act boss/);
+    expect(resolved.tempoDiff?.guidance).toMatch(/drinks a potion DeepSeek holds for the act boss/);
     expect(resolved.reference).toMatchObject({ of: Object.keys(options).filter((entry) => entry.startsWith("plan")).length });
   });
 });
@@ -94,14 +94,14 @@ describe("(c) rest options carry HP and upgrade facts, and code does not pick be
     expect(String(heal["heal_facts"])).toMatch(/^\+\d+ HP: 80% -> 100% .*boss in 5 floors; DeepSeek's entry target 85% reached/);
     expect(String(smith["upgrade_facts"])).toMatch(/^best upgrades: /);
     expect(String(smith["hp_if_not_healing"])).toMatch(/^80% HP carried on \(DeepSeek's entry target 85%, boss in 5 floors\)/);
-    expect(String(smith["tempo"])).toBe("fits DeepSeek's rest lean smith");
-    expect(String(heal["tempo"])).toBe("departs from DeepSeek's rest lean smith");
+    expect(String(smith["tempo"])).toBe("matches DeepSeek's rest lean smith");
+    expect(String(heal["tempo"])).toBe("differs from DeepSeek's rest lean smith");
     for (const option of [heal, smith]) {
       expect(typeof option["code_value"]).toBe("number");
       expect(option["code_rank"]).toBeGreaterThanOrEqual(1);
       expect(option["why"]).toBeTruthy();
     }
-    expect(decision.state["roles"]).toMatch(/You decide/);
+    expect(decision.state["roles"]).toMatch(/you decide/);
     expect(decision.guidance).toEqual(expect.arrayContaining(["rest lean: smith"]));
   });
 });

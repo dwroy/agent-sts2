@@ -78,7 +78,7 @@ describe("code's reference line is never one another shown line beats on HP and 
       .filter(([key]) => /^plan\d+$/.test(key))
       .map(([, value]) => JSON.parse(String(value)) as { hp_lost: number; damage_dealt: number; reference?: string });
     expect(options.length).toBeGreaterThan(1);
-    const best = options.filter((line) => /^code's reference line/.test(String(line.reference)));
+    const best = options.filter((line) => /^same as reference/.test(String(line.reference)));
     expect(best).toHaveLength(1);
     const beaten = options.some(
       (other) => other !== best[0] && other.hp_lost <= best[0]!.hp_lost && other.damage_dealt >= best[0]!.damage_dealt && (other.hp_lost < best[0]!.hp_lost || other.damage_dealt > best[0]!.damage_dealt),
