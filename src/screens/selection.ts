@@ -364,7 +364,17 @@ export interface ExhaustCard {
   hits?: number;
   debuff?: boolean;
   aoe?: boolean;
+  /** Damage per hit as the card reads now (with our Strength), from the card model. */
+  damage?: number | null;
+  /** Block the card gives as it reads now, from the card model. */
+  block?: number;
 }
+
+/** A basic Defend's printed block: a block card that gives more is kept below a Defend under fire. */
+const DEFEND_BASE_BLOCK = 5;
+
+/** A basic Strike's printed damage: the yardstick an attack is compared with (plus our Strength). */
+const STRIKE_BASE_DAMAGE = 6;
 
 /** Cards whose Vulnerable/Weak strips an enemy's Artifact. */
 const DEBUFF_EXHAUST_KEEP = new Set(["BASH", "THUNDERCLAP", "TAUNT", "UPPERCUT", "SHOCKWAVE", "DISARM", "INTIMIDATE"]);
@@ -382,7 +392,7 @@ function isAttackCard(cardId: string, type: string, line: string): boolean {
 }
 
 function exhaustCardOf(model: CardModel): ExhaustCard {
-  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all" };
+  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -446,6 +456,18 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
     score -= hits * Math.max(0, context.strength ?? 0) * 2;
     if (context.strikeDummy && /STRIKE/.test(cardId)) score -= 10;
     if (context.multiEnemy && (card.aoe || damageRole(cardId) === "aoe")) score -= 15;
+    // An attack that hits harder than a Strike is kept below a Defend under fire, the more so the
+    // harder it hits: the static card value let Toasty Mittens take Bludgeon (35 damage, 34 points)
+    // over a Defend (20) and Ultimate Strike over Dismantle (VNWR16YEJASM F33 T4/T6), and Bash+ over
+    // a Defend (981WMX8MQ7DK F33 T2), in a boss race short of damage. Basic Strikes still go first.
+    const perPlay = (card.damage ?? 0) * hits;
+    const strike = STRIKE_BASE_DAMAGE + Math.max(0, context.strength ?? 0);
+    if (!cardId.startsWith("STRIKE_") && perPlay > strike) score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * strike) / perPlay));
+  }
+  // Likewise a block card that out-blocks a Defend (Blood Wall's 16 went at 41 over a Defend's 20,
+  // 981WMX8MQ7DK F33 T2 once the attacks were kept).
+  if (!cardId.startsWith("DEFEND_") && type !== "Attack" && (card.block ?? 0) > DEFEND_BASE_BLOCK) {
+    score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * DEFEND_BASE_BLOCK) / (card.block ?? 1)));
   }
   if (context.artifact && (card.debuff || DEBUFF_EXHAUST_KEEP.has(cardId))) score = Math.min(score, 10);
   return Math.max(1, score);
