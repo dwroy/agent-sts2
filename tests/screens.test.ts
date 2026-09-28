@@ -1974,6 +1974,28 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
     // The husk after "death" is not raced.
     expect(eruptionRace({ ...giant(999_999_999, 40), max_hp: 999_999_999 }, 10, 12)).toBe(false);
   });
+
+  it("counts the Siphon heals: in the damage dealt so far and the ones still to come (Y0CWCD0C03FL: 4 Siphons healed 60)", async () => {
+    const { eruptionRace, giantTurnsToKill, SIPHON_HEAL } = await import("../src/screens/combat-plan.js");
+    expect(SIPHON_HEAL).toEqual({ base: 10, a8: 15 });
+    // Siphons on T4, T9, T14 (monster DB turns_seen). 200 HP at 25 a turn from T3: 8 turns without heals;
+    // with +15 on T4 and T9 it takes 10 (230 to deal).
+    expect(giantTurnsToKill(200, 25, 3, 0)).toBe(8);
+    expect(giantTurnsToKill(200, 25, 3, 15)).toBe(10);
+    // Killed on the Siphon turn itself: no heal.
+    expect(giantTurnsToKill(50, 25, 3, 15)).toBe(2);
+    // A8 T3, 250 -> 200 in 2 turns, eruption 18, 32 HP: the old rate (8 turns) projected 18 + 24 = 42 < 44;
+    // with the two Siphons 18 + 30 = 48: race.
+    const a8 = { ...giant(200, 18), max_hp: 250 };
+    expect(eruptionRace(a8, 32, 3, 8)).toBe(true);
+    // Below A8 a Siphon heals 10: 220 to deal, 9 turns, 18 + 27 = 45 >= 44 still; at 34 HP it is 45 < 46.
+    expect(eruptionRace(a8, 34, 3, 0)).toBe(false);
+    expect(eruptionRace(a8, 34, 3, 8)).toBe(true);
+    // Healed HP counts as damage dealt: A8 T11 at 100/250 after 2 Siphons is 180 in 10 turns (18 a turn, not 15).
+    // 7 turns either way here (+15 on T14): 42 + 21 = 63 vs 50 + 12.
+    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 50, 11, 8)).toBe(true);
+    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 52, 11, 8)).toBe(false);
+  });
 });
 
 describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected)", () => {

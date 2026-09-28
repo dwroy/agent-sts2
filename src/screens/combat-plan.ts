@@ -40,7 +40,7 @@ import { forcedEliteWithin } from "./rest.js";
 import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
-import { actThreatIds, bossOnBoard } from "../knowledge/monster-db.js";
+import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -514,22 +514,60 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
 const ERUPTION_BLOCK = 12;
 /** Damage per turn assumed before any has been seen (1ZQJ averaged 16). */
 const ERUPTION_FALLBACK_DAMAGE = 16;
+/**
+ * HP a Siphon heals (the monster DB has its turns, not its amount). Logged states.jsonl, the Giant's HP
+ * across a Siphon turn: +15 at A8 (41 Siphons), +10 at A0-A7 (28); less only near full HP.
+ */
+export const SIPHON_HEAL = { base: 10, a8: 15 };
+/** Siphon turns when the DB has none: T4, then every 5 turns (Stomp, Ram, Siphon, Pressure Gun, Pressure Up). */
+const SIPHON_FALLBACK = { first: 4, period: 5 };
+
+/** The Giant's Siphon turns from the monster DB (turns_seen of SIPHON_MOVE: 4, 9, 14, 19): first turn and period. */
+function siphonSchedule(): { first: number; period: number } {
+  const turns = moveTurns("WATERFALL_GIANT", "SIPHON_MOVE");
+  if (turns.length === 0) return SIPHON_FALLBACK;
+  const gaps = turns.slice(1).map((turn, i) => turn - turns[i]!).filter((gap) => gap > 0);
+  return { first: turns[0]!, period: gaps.length > 0 ? Math.min(...gaps) : SIPHON_FALLBACK.period };
+}
+
+/**
+ * Turns to kill the Giant at `perTurn` damage from `turn` on, with its Siphon heals: a Siphon turn the
+ * Giant lives through heals it at the end of that turn. Capped at 60.
+ */
+export function giantTurnsToKill(hp: number, perTurn: number, turn: number, heal: number, schedule = siphonSchedule()): number {
+  const siphons = (t: number) => t >= schedule.first && (t - schedule.first) % schedule.period === 0;
+  let left = hp;
+  let turns = 0;
+  for (let t = turn; left > 0 && turns < 60; t += 1) {
+    left -= perTurn;
+    turns += 1;
+    if (left > 0 && siphons(t)) left += heal;
+  }
+  return turns;
+}
 
 /**
  * Waterfall Giant too slow to kill (1ZQJ: 16 damage a turn into 240 HP, dead on T15 with the eruption
- * at 54; 21 HP + 17 block did not survive it). Turns to kill come from the damage dealt so far (or
- * 16 a turn on T1); the eruption grows 3 a turn. When the projected explosion is at least HP plus a
- * hand of block, waiting loses: race it.
+ * at 54; 21 HP + 17 block did not survive it). Damage per turn comes from the damage dealt so far: the HP
+ * taken off plus what its Siphons healed before this turn (or 16 a turn on T1); turns to kill add the
+ * Siphons still to come (Y0CWCD0C03FL: 4 Siphons healed 60, the old maxHp - hp rate saw none of it). The
+ * eruption grows 3 a turn. When the projected explosion is at least HP plus a hand of block, waiting
+ * loses: race it.
  */
-export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number): boolean {
+export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number, asc = 0): boolean {
   if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || enemy["is_alive"] === false) return false;
   const hp = num(enemy["current_hp"]);
   const maxHp = num(enemy["max_hp"]);
   if (hp <= 0 || maxHp >= 1_000_000) return false;
   const stacks = powerAmount(enemy, "STEAM_ERUPTION_POWER");
   const eruptionNow = stacks > 0 ? stacks : Math.max(12, 15 + 3 * (turn - 2));
-  const perTurn = turn > 1 ? Math.max(5, (maxHp - hp) / (turn - 1)) : ERUPTION_FALLBACK_DAMAGE;
-  const projected = eruptionNow + 3 * Math.ceil(hp / perTurn);
+  const heal = asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
+  const schedule = siphonSchedule();
+  // Healed so far: every Siphon before this turn (one at full HP heals less; rare past T4).
+  let healed = 0;
+  for (let t = schedule.first; t < turn; t += schedule.period) healed += heal;
+  const perTurn = turn > 1 ? Math.max(5, (maxHp - hp + healed) / (turn - 1)) : ERUPTION_FALLBACK_DAMAGE;
+  const projected = eruptionNow + 3 * giantTurnsToKill(hp, perTurn, turn, heal, schedule);
   return projected >= playerHp + ERUPTION_BLOCK;
 }
 
@@ -1181,7 +1219,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const notBlunting = (potionId: string) =>
     OFFENSIVE_POTIONS.has(potionId) || !BLUNTS_HIT.test(potionsAll.find((potion) => potion.potion_id === potionId)?.text ?? "");
   const drawPile = drawPileCards(state.raw);
-  const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
+  const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1, state.run?.ascension ?? 0));
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), the pile card a
   // pile-card potion would take (Liquid Memories, Droplet of Precognition: the selection screen's own
   // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).

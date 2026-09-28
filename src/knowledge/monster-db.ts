@@ -144,6 +144,15 @@ function moveText(move: MoveEntry, id: string, asc: number): string {
   return parts.join(" ");
 }
 
+/** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */
+export function moveTurns(id: string, moveId: string): number[] {
+  const seen = load().monsters[id]?.moves?.[moveId]?.turns_seen ?? {};
+  return Object.keys(seen)
+    .filter((key) => /^\d+$/.test(key))
+    .map(Number)
+    .sort((a, b) => a - b);
+}
+
 /** The enemy's move cycle from its turn-1 move, following the most frequent successor. */
 export function moveCycle(id: string, asc: number, maxMoves = 6): string {
   const monster = load().monsters[id];
