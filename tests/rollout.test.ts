@@ -21,6 +21,8 @@ import {
   loadFightValueGates,
   rolloutDecision,
   selectCandidates,
+  turnSpreads,
+  type TurnRecord,
   type EnemyTable,
   type FightMeta,
   type FightValueGates,
@@ -427,5 +429,24 @@ describe("the rollout policy's later turns hold the potions like 0-cost cards (D
     const line = rolloutDecision(input).lines.find((entry) => entry.plan === keep)!;
     expect(line.wins).toBe(line.samples);
     expect(line.turnsToWin).toBe(2);
+  });
+});
+
+describe("turnSpreads (per-turn rollout facts)", () => {
+  const rec = (loss: number, dmg: number, flags: { won?: boolean; died?: boolean } = {}): TurnRecord =>
+    ({ loss, enemyPart: 0, dmg, snap: {} as Snapshot, won: flags.won ?? false, died: flags.died ?? false });
+  it("turns 2..h: mean and min-max over the samples still fighting, alive and won counts over all", () => {
+    const spreads = turnSpreads(
+      [
+        [rec(3, 10), rec(4, 12), rec(2, 20, { won: true })],
+        [rec(3, 10), rec(10, 6), rec(30, 0, { died: true })],
+        [rec(3, 10), rec(0, 30, { won: true })],
+      ],
+      3,
+    );
+    expect(spreads).toHaveLength(2);
+    expect(spreads[0]).toMatchObject({ turn: 2, fighting: 3, alive: 3, won: 1, loss: { min: 0, max: 10 }, dmg: { min: 6, max: 30 } });
+    expect(spreads[0]!.loss.mean).toBeCloseTo(14 / 3);
+    expect(spreads[1]).toMatchObject({ turn: 3, fighting: 2, alive: 2, won: 2, loss: { mean: 16, min: 2, max: 30 } });
   });
 });

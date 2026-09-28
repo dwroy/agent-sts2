@@ -420,8 +420,43 @@ export interface LineEstimate {
   modelForecast: { oneTurn: { hpLoss: number; winProb: number } | null; rollout: { hpLoss: number; winProb: number } | null };
   horizon: number;
   samples: number;
+  /**
+   * The simulated later turns (2..horizon), across the samples: HP lost and damage dealt that turn
+   * (mean, min, max over the samples still fighting it), and how many samples are alive at its end and
+   * have won by then. Empty for a 1-turn estimate.
+   */
+  perTurn: TurnSpread[];
   /** modelN: the model's support (logged turns in the matching cell) at the line's end-of-turn state. */
   basis: { rolloutSamples: number; horizon: number; modelN: number; w: number; segment: string; gateN: number };
+}
+
+export interface TurnSpread {
+  /** 2 = next turn (1 is the line itself, exact). */
+  turn: number;
+  /** Samples still fighting this turn (of `samples`). */
+  fighting: number;
+  loss: { mean: number; min: number; max: number };
+  dmg: { mean: number; min: number; max: number };
+  alive: number;
+  won: number;
+}
+
+/** Per-turn spread of one line's samples (turns 2..horizon). */
+export function turnSpreads(trajectories: TurnRecord[][], horizon: number): TurnSpread[] {
+  const out: TurnSpread[] = [];
+  const stats = (xs: number[]) => ({ mean: xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length), min: xs.length ? Math.min(...xs) : 0, max: xs.length ? Math.max(...xs) : 0 });
+  for (let t = 1; t < horizon; t += 1) {
+    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died));
+    out.push({
+      turn: t + 1,
+      fighting: fighting.length,
+      loss: stats(fighting.map((records) => records[t]!.loss)),
+      dmg: stats(fighting.map((records) => records[t]!.dmg)),
+      alive: trajectories.filter((records) => !records.slice(0, t + 1).some((r) => r.died)).length,
+      won: trajectories.filter((records) => records.slice(0, t + 1).some((r) => r.won)).length,
+    });
+  }
+  return out;
 }
 
 export interface RolloutResult {
@@ -539,11 +574,13 @@ interface Piles {
 }
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
-interface TurnRecord {
+export interface TurnRecord {
   /** HP lost this turn (our own + the enemy turn), as the solver outcome counts it. */
   loss: number;
   /** Of it, the enemy turn's hits after block. */
   enemyPart: number;
+  /** Damage we dealt this turn (the played line's outcome). */
+  dmg: number;
   snap: Snapshot;
   won: boolean;
   died: boolean;
@@ -738,7 +775,7 @@ function applyPlan(
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
     player.strength += player.demonForm;
   }
-  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, snap, won, died };
+  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt, snap, won, died };
 }
 
 function drawOne(piles: Piles, random: () => number): CardModel | undefined {
@@ -1065,6 +1102,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       },
       horizon,
       samples,
+      perTurn: horizon > 1 ? turnSpreads(trajectories[i]!.slice(0, samples), horizon) : [],
       basis: { rolloutSamples: horizon > 1 ? samples : 0, horizon, modelN: o.n, w: gate.w, segment: gate.segment, gateN: gate.n },
     };
   });

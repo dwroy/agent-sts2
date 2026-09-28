@@ -5,6 +5,8 @@
  * are decided before it runs. What it adds per option shown to Jev:
  *   - `rollout`: expected further HP loss, how often the fight is over within the horizon, expected turns,
  *     with the horizon and samples actually used (degraded to fit the time budget);
+ *   - `rollout_turns`: turn by turn, the line's own turn (exact), then each simulated turn's HP lost and
+ *     damage dealt (mean and [min-max] over the samples) and how many samples are alive / have won;
  *   - `history_estimate`: the fight-value model's calibrated forecast (the rollout with the model as
  *     terminal, w = 1: the best forecast in notes/rollout-backtest.md), with the gate segment's n and the
  *     measured typical error for the fight kind; only when the segment has enough similar states. The gate
@@ -238,6 +240,8 @@ export type LiveRollout =
       encounterN: number;
       /** Similar states an encounter needs for its own gate (the gates' min_rows). */
       minRows: number;
+      /** Modelled potions in the belt: the policy's later turns may drink them. */
+      potionsHeld: boolean;
       elapsedMs: number;
     };
 
@@ -301,6 +305,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
+      potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -320,8 +325,10 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const { horizon, samples } = line;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
+  const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
+    rollout_turns: turnsText(plan, line, samples),
   };
   const forecast = line.modelForecast.rollout;
   if (!forecast) facts["history_estimate"] = "unavailable (no fight-value model)";
@@ -333,6 +340,22 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     facts["history_estimate"] = `further HP loss ${Math.round(forecast.hpLoss)}, win ${Math.round(forecast.winProb * 100)}% (this encounter n=${r.encounterN}${source}, typical error ±${HISTORY_MAE[r.meta.kind]}${few})`;
   }
   return facts;
+}
+
+/**
+ * The turn-by-turn picture of one line: turn 1 is the line itself, exact; later turns are the samples'
+ * HP lost and damage dealt that turn (mean, [min-max] over the samples still fighting it), and how many
+ * samples are alive / have won by its end. No discount: the spread shows how uncertain later turns are.
+ */
+export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
+  const o = plan.outcome;
+  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : ""}`;
+  const later = line.perTurn.map((t) =>
+    t.fighting === 0
+      ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`
+      : `T${t.turn}: hp -${round1(t.loss.mean)} [${Math.round(t.loss.min)}-${Math.round(t.loss.max)}], dmg ${round1(t.dmg.mean)} [${Math.round(t.dmg.min)}-${Math.round(t.dmg.max)}], alive ${t.alive}/${samples}, won ${t.won}/${samples}`,
+  );
+  return [first, ...later].join("; ");
 }
 
 /** A gate segment key in words: "ak:1|hallway" -> "act-1 hallway fights". */

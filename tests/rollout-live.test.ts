@@ -57,7 +57,10 @@ describe("rollout facts on Jev's combat question", () => {
       expect(keys.length).toBeGreaterThanOrEqual(2);
       for (const key of keys) {
         const f = facts(criteria, key);
-        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\): expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
+        // Turn by turn: turn 1 exact, then T2..T5 with the spread over the samples.
+        expect(String(f["rollout_turns"])).toMatch(/^T1 exact: hp -\d+, dmg \d+(, won|, dead)?(; T[2-5]: (hp -[\d.]+ \[\d+-\d+\], dmg [\d.]+ \[\d+-\d+\], alive \d\/8, won \d\/8|over \(alive \d\/8, won \d\/8\)))*$/);
+        expect(String(f["rollout_turns"]).split("; ")).toHaveLength(5);
+        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
         expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }
@@ -70,6 +73,13 @@ describe("rollout facts on Jev's combat question", () => {
       expect(decision.resolve(pick(other)).log?.rollout_best_chosen).toBe(false);
       expect(decision.resolve({} as AnswerSet).log?.rollout_best_chosen).toBeNull();
     }
+  });
+
+  it("with a modelled potion held, the rollout fact says later turns may use it", () => {
+    const decision = plan("v1mf-f33-t4", true) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = criteriaOf(decision);
+    for (const key of planKeys(criteria)) expect(String(facts(criteria, key)["rollout"]), key).toContain("(later turns may use the potions still held)");
   });
 
   it("a drink-first potion option says it is not rolled out", () => {
@@ -218,7 +228,7 @@ describe("rollout facts on Jev's combat question", () => {
         const after = criteriaOf(on);
         for (const key of Object.keys(before)) {
           // Same option under the same key, the rollout facts aside.
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, ...rest } = facts(after, key);
+          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_turns: _t, ...rest } = facts(after, key);
           expect(rest, `${name} ${key}`).toEqual(facts(before, key));
           // And resolving it plays the same (the HP guard and potion rules see code's options only).
           for (const confidence of [0.9, 0.3]) {
