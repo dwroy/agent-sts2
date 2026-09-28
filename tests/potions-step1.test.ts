@@ -203,3 +203,13 @@ describe("Glowwater: the hand exhausted, a new hand drawn (logged: 5 -> 10, 3 ->
     expect(glow!.outcome.damageDealt).toBe(18);
   });
 });
+
+describe("X-cost multi-hit cards", () => {
+  it("Volley hits X times (0 at X=0), like Whirlwind (LXB3 F33 T3)", () => {
+    const base = (combatOf(logged("k8tc-f17-t5"))["hand"] as Raw[])[0]!;
+    const volley = modelHandCard({ ...base, card_id: "VOLLEY", name: "连射", cost: 0, dynamic_vars: { Damage: 10 } }, 0, loggedKnowledge);
+    expect(volley.special).toBe("whirlwind");
+    expect(volley.hits).toBe(0);
+  });
+});
+

@@ -192,6 +192,8 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   ENTRENCH: "double_block",
   MOLTEN_FIST: "molten_fist",
   WHIRLWIND: "whirlwind",
+  // Volley: X hits at random enemies (LXB3 F33 T3: counted as one 10-damage hit at X=0, dealt 0).
+  VOLLEY: "whirlwind",
   SPITE: "spite",
   FEED: "feed",
   RUPTURE: "rupture",
