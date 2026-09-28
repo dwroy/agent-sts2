@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.2",
+  "version": "2026-09-29.1",
   "_about": "Experience knowledge base for DeepSeek: lessons distilled from notes/lessons.md (per-run post-mortems). scope = what the lesson is about; asc = ascension range; evidence = supporting run ids (n_support); contradicting = runs that went against it (n_contradict); confidence from support/contradiction; status retired = kept for history, never shown. See notes/experience-changelog.md.",
   "entries": [
     {
@@ -283,12 +283,13 @@
         "G6YVT0ALVQ65",
         "K8RK6JG2YF62",
         "VL2DGJ684H2K",
+        "WXMBVL6ZJ000",
         "XPA49DEKREQ1"
       ],
-      "n_support": 6,
+      "n_support": 7,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -309,12 +310,13 @@
         "S6AG9SH1ZP1K",
         "VL2DGJ684H2K",
         "WX16C8B1ZWZ0",
+        "WXMBVL6ZJ000",
         "XPA49DEKREQ1"
       ],
-      "n_support": 10,
+      "n_support": 11,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -341,23 +343,26 @@
         0,
         20
       ],
-      "lesson": "瀑布巨兽（A8 约 250 血 + 两次虹吸各回 15）被打死后下一回合自爆 = 蒸汽层数（≈15+3×(击杀回合−2)）：打得越慢自爆越大（T12 杀 45、T18 杀 63），所以要约 26–28/回合在 T9–10 前打完，并留足 HP+格挡扛自爆。",
+      "lesson": "瀑布巨兽（A8 250 血 + 两次虹吸各回 15）被打到 0 后变成 ABOUT_TO_BLOW，下一回合自爆 = 蒸汽喷发层数（3×回合+9：T10 39、T14 51、T17 60）。击杀后那一整回合唯一的来袭就是自爆：格挡牌、格挡/敏捷药水都留到这一回合，HP + 这回合格挡 ≥ 层数才能活。A8 25 场：T10 前打死 13/14 赢，T13–T15 打死 5/7，T17 以后 0/2，没打死 0/2；N7SA 80 满血 T14 击杀差 9，WCC7 51 进场 T17 击杀被 60 层打穿。所以要约 25/回合在 T10 前打完，进场 HP 越低要求的击杀回合越早。",
       "evidence": [
         "1ZQJXQ53KSBG",
         "62PMHB7T80Y8",
+        "7048QYLLYJLS",
         "ERPHN3SRCRC3",
         "G7EJ07RPR1NX",
         "J8E47LUXEV0Q",
         "KG0EDXDMLP5K",
         "LSWUK6D2EV89",
+        "N7SAK31B9ZZZ",
         "UP1CS059LCLT",
+        "WCC7RMRLWLZK",
         "WQTRXBJY0Q1S",
         "XKKNWSZMMSZN"
       ],
-      "n_support": 10,
+      "n_support": 13,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -367,7 +372,7 @@
         0,
         20
       ],
-      "lesson": "高压水枪在 T5/T10/T15（20/25/30）：这几回合全力格挡；格挡/虚弱/速度/镣铐药水留给水枪和自爆回合，别用在 STOMP 15 这种小攻击上。",
+      "lesson": "高压水枪在 T5/T10/T15（20/25/30）：这几回合全力格挡；格挡/虚弱/速度/镣铐/敏捷药水留给水枪和自爆回合，别用在 STOMP 15 这种小攻击上，也别在 boss 前的精英、走廊里喝（N7SA F15 精英 T1 喝掉格挡药水，boss 自爆差 9；WCC7 为巨兽买的敏捷药水 F4 就喝了）。",
       "evidence": [
         "0YV6J2SHFC0T",
         "1ZQJXQ53KSBG",
@@ -376,12 +381,14 @@
         "H8LCRD86HPZB",
         "J8E47LUXEV0Q",
         "KG0EDXDMLP5K",
+        "N7SAK31B9ZZZ",
+        "WCC7RMRLWLZK",
         "XKKNWSZMMSZN"
       ],
-      "n_support": 8,
+      "n_support": 10,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -391,7 +398,7 @@
         0,
         20
       ],
-      "lesson": "巨兽输局平均 0.3 张升级（赢局 2.2）、多为 0 力量：boss 前火堆在血量允许时锻造主力牌；时钟说「已达标」不可信（ERPH、62PM 实际只有 18–20/回合）。前两回合喝输出药爆发能大幅缩短战斗。",
+      "lesson": "巨兽输局平均 0.3 张升级（赢局 2.2）、多为 0 力量：boss 前火堆在血量允许时锻造主力牌；时钟说「已达标」不可信（ERPH、62PM 实际只有 18–20/回合，N7SA 20、WCC7 17，约为估值的 0.85）。一幕缺口 ≥12 时钱和锻造给当场能出伤害的牌（N7SA 的狱火+ 整场没打出），格挡牌够用后别再拿（WCC7 5 张格挡、4 张输出）；前两回合喝输出药爆发能大幅缩短战斗。",
       "evidence": [
         "1ZQJXQ53KSBG",
         "62PMHB7T80Y8",
@@ -399,16 +406,18 @@
         "G7EJ07RPR1NX",
         "J8E47LUXEV0Q",
         "KG0EDXDMLP5K",
+        "N7SAK31B9ZZZ",
         "NJSZDS6U5X9G",
         "P57H9Z324EEW",
         "RVR696LSKBE3",
+        "WCC7RMRLWLZK",
         "WQTRXBJY0Q1S",
         "XKKNWSZMMSZN"
       ],
-      "n_support": 11,
+      "n_support": 13,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -418,9 +427,10 @@
         2,
         20
       ],
-      "lesson": "无厌沙虫的沙坑数就是剩余回合（LIQUIFY 后 4，每个敌方回合 −1，归零即被吞，与 HP/格挡无关）：每张打得起的狂乱逃离都立刻打（沙坑 4 时也打），除非本回合斩杀；「沙坑 ≤2 再逃」是错的，已 5 次带血被吞。",
+      "lesson": "无厌沙虫的沙坑数就是剩余回合（LIQUIFY 后 4，每个敌方回合 −1，归零即被吞，与 HP/格挡无关）：沙坑是先到的那条死线时，每张打得起的狂乱逃离都立刻打（沙坑 4 时也打），除非本回合斩杀；「沙坑 ≤2 再逃」是错的，已 5 次带血被吞。但 HP 先到头时（沙坑 ≥3、HP 撑不过两回合来袭）多逃离没有价值：VNWR 打了 6 张逃离（6 费，0 伤害），死于 HP 时沙坑还剩 3。先看哪条线先到，再决定打逃离还是打伤害/格挡。",
       "evidence": [
         "4JVP9LTXYY9D",
+        "981WMX8MQ7DK",
         "9V09G0TKK5EQ",
         "EJXCAQ56PWLK",
         "FN0HCB4DVKZK",
@@ -433,13 +443,14 @@
         "XWPVR2NK3M5K",
         "Y08TU00D9VLH"
       ],
-      "n_support": 12,
-      "n_contradict": 2,
+      "n_support": 13,
+      "n_contradict": 3,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active",
       "contradicting": [
         "TTVYCS2ADZRM",
+        "VNWR16YEJASM",
         "YP9CGPJE19GP"
       ]
     },
@@ -485,33 +496,36 @@
         5,
         20
       ],
-      "lesson": "进场血量是沙虫胜负的第一因素：A8 20 局里 ≥75% 进场 7/10 赢，<75% 1/10（K7G9 66%），≤45% 0 胜（69HW 33/80 只打出 73）。二幕后段就按这条线分配火堆和选路；另备 1 瓶减伤药（镣铐/格挡）给 LUNGING_BITE 28–32。",
+      "lesson": "进场血量是沙虫胜负的前提：A8 23 局里 ≥75% 进场 7/15 赢，<75% 1/8，≤45% 0 胜（69HW 33/80 只打出 73）。满血也不够：LXB3（100%）、VNWR（90%）、981W（87%）都输在输出只有 17–23/回合。二幕后段按这条线分配火堆和选路；另备 1 瓶减伤药（镣铐/格挡）给 LUNGING_BITE 28–32。",
       "evidence": [
         "123ZSH58F5FS",
         "69HWH6MD1S34",
         "77UJNKSLHHL9",
         "7UJ19R15SSC5",
+        "981WMX8MQ7DK",
         "9V09G0TKK5EQ",
         "D3X1T7KBGK5T",
         "FN0HCB4DVKZK",
         "H7W047ZCEBSA",
         "JUXB9P5BGATV",
         "KFPCLA2M73Z2",
+        "LXB3B2WT9E0W",
         "M6P7KAWMF6BC",
         "M8123JA75Y1G",
         "MAHAHJY541KJ",
         "N1V27SUSFYWS",
         "RVR696LSKBE3",
+        "VNWR16YEJASM",
         "WB023SWBTUU3",
         "X8HF0SB0XGJ1",
         "XA8CMSK1V9H3",
         "XWPVR2NK3M5K",
         "YG3HAFACLMAR"
       ],
-      "n_support": 20,
+      "n_support": 23,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -522,11 +536,12 @@
         5,
         20
       ],
-      "lesson": "A8 沙虫 341 血，时钟要 ≥45–49/回合：JUXB 实打 46.6/回合只差 15 死，69HW 14.6/回合（整回合都在格挡）。永久力量张数、AOE 张数赢输局相同（A8 20 局各约 1.5、2.6），不是缺口的答案；答案是满血进场 + ≥3 张升级 + T1–T2 喝输出/能力药水爆发。一次狂乱逃离只值牌组那一回合的伤害。",
+      "lesson": "A8 沙虫 341 血，时钟要 ≥45–49/回合：JUXB 实打 46.6/回合只差 15 死，69HW 14.6/回合（整回合都在格挡）。时钟对沙虫高估约 85%（逃离每张占 1 费 1 牌）：VNWR 估 32 实打 17，981W 估 43 实打 23，缺口数字按 ×1.8 读。永久力量张数、AOE 张数赢输局相同（A8 20 局各约 1.5、2.6），不是缺口的答案；答案是满血进场 + ≥3 张升级 + T1–T2 喝输出/能力药水爆发。一次狂乱逃离只值牌组那一回合的伤害。",
       "evidence": [
         "123ZSH58F5FS",
         "69HWH6MD1S34",
         "77UJNKSLHHL9",
+        "981WMX8MQ7DK",
         "9LSQ6WUSCCYQ",
         "D3X1T7KBGK5T",
         "FN0HCB4DVKZK",
@@ -538,6 +553,7 @@
         "N1V27SUSFYWS",
         "RVR696LSKBE3",
         "SUUKNZNT3KDF",
+        "VNWR16YEJASM",
         "W8JDDTMSYA6T",
         "WB023SWBTUU3",
         "X8HF0SB0XGJ1",
@@ -545,10 +561,10 @@
         "XWPVR2NK3M5K",
         "YG3HAFACLMAR"
       ],
-      "n_support": 20,
+      "n_support": 22,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -601,8 +617,9 @@
         0,
         20
       ],
-      "lesson": "需要约 50–58/回合在 T9 第二次激光前打完：赢局都是满血 + T1 力量/肌肉药水 + 真群伤（闪电霹雳、旋风斩、踩踏、彼岸咆哮、突破、狱火）+ 力量成长；输局 18–36/回合。时钟对普通牌组高估约一半，狱火/手套牌组反而被低估。",
+      "lesson": "需要约 50–58/回合在 T9 第二次激光前打完：赢局都是满血 + T1 力量/肌肉药水 + 真群伤（闪电霹雳、旋风斩、踩踏、彼岸咆哮、突破、狱火）+ 力量成长；输局 18–38/回合。满血进场也会输：0B5Y 87/87 只打出 23/回合、RWWG 94/94 只有 28/回合，SFCE 19、V1MF 38。时钟对普通牌组按约 0.7 折算（0B5Y 实打是估值的 0.66、RWWG 0.73），狱火/手套牌组反而被低估；缺口 ≥15 时选牌和买东西只算永久力量和真群伤。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "1LJFBKUF51PE",
         "1WSHZ8ML4EVF",
         "6HRZZ5BP01U0",
@@ -621,19 +638,22 @@
         "NX48MBG3SPRJ",
         "PLCXM5MLTHP7",
         "R2H1RBZNZ1J0",
+        "RWWGRRYKD6LT",
+        "SFCEH58GXVT9",
         "T4PYMNJJFSU6",
         "TXLHYU13L102",
         "UMX6X5FPP30L",
+        "V1MF91VL7A2G",
         "WLY1995S45HT",
         "WR2Y98A43YCY",
         "YFG53EZ372D7",
         "Z49JD7340KUP",
         "ZWX5F97BUFVB"
       ],
-      "n_support": 26,
+      "n_support": 30,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -659,10 +679,21 @@
         "W6F4YXF3MT7A"
       ],
       "n_support": 12,
-      "n_contradict": 0,
+      "n_contradict": 8,
       "confidence": "high",
-      "last_seen": "2026-09-27",
-      "status": "active"
+      "last_seen": "2026-09-29",
+      "status": "retired",
+      "contradicting": [
+        "2WUMK6PK5QHD",
+        "D4JGCNEL40VL",
+        "EZ2LP1P5VRPT",
+        "JR66CJ9T8H7W",
+        "M75JX3KS80NB",
+        "NX48MBG3SPRJ",
+        "V1YTJTAX8N07",
+        "VE975EGP2G3V"
+      ],
+      "retired_reason": "「两只钳子必须同回合一起死」被 51 场螃蟹战推翻：先打死火箭的 12 场赢 9 场（A8 3/4），两只一直都活着的 39 场只赢 8 场；存活那只的 99 格挡只持续一回合（NX48 火箭死时碾碎爪还剩 107，三回合后仍赢）。击杀顺序改由 crab-kill-order 给出；真群伤的价值已写在 crab-dps。"
     },
     {
       "id": "crab-potions",
@@ -671,8 +702,9 @@
         3,
         20
       ],
-      "lesson": "为螃蟹留药：力量/肌肉/马萨雷斯/能力/铁心药水 T1 配群伤；格挡/虚弱药水留给 T4 激光（CHARGE_UP 的下一回合）。二幕精英和走廊里一律不喝这些药（多局 boss 药在路上被喝后死于 T4）。",
+      "lesson": "为螃蟹留药：力量/肌肉/马萨雷斯/能力/铁心药水 T1 配群伤；格挡/虚弱药水留给 T4 激光（CHARGE_UP 的下一回合）。二幕精英和走廊里一律不喝这些药：A8 ≥75% 进场的螃蟹战 0 瓶药 0/4、带药 5/14；0B5Y（F14 买的肌肉、F17 点名的力量都在走廊喝掉）和 RWWG（F30 买的力量+再生在 F31 走廊一起喝，只省约 2 血）都是满血 0 瓶进场死。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "1LJFBKUF51PE",
         "7DFB21JE2DTK",
         "7DXAW0ZBDFHP",
@@ -681,16 +713,50 @@
         "MK1NRF1ZW79B",
         "MX8KZU7ABQBQ",
         "RUUBXYZV5064",
+        "RWWGRRYKD6LT",
         "WLY1995S45HT",
         "WR2Y98A43YCY",
         "Z49JD7340KUP",
         "ZWX5F97BUFVB"
       ],
-      "n_support": 12,
+      "n_support": 14,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
+    },
+    {
+      "id": "crab-kill-order",
+      "scope": "boss:KAISER_CRAB",
+      "name": "帝王蟹",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "帝王蟹击杀顺序：单体伤害集中打火箭 ROCKET（209 血，T4/T9 激光 47–49、精准光束 27，伤害大头），碾碎爪 CRUSHER（219，虫蛰 9×2 挂虚弱/脆弱）放后面，群伤照打两只。先死一只时另一只 +99 格挡 +6 力量，但这 99 格挡只挡一回合：有记录的 51 场螃蟹战里，先打死火箭的 12 场赢 9 场（A8 3/4：EZ2L、NX48 火箭死时碾碎爪还剩 107、VE97），两只一直都活着的 39 场只赢 8 场（A8 2/19）。0B5Y、RWWG 两只轮流打、血量差始终 ≤32，死时两只都还剩 100+。打死火箭后的下一回合碾碎爪有 99 格挡：这回合出格挡/能力牌，别把攻击打进格挡。",
+      "evidence": [
+        "0B5YKJFM0E8B",
+        "2WUMK6PK5QHD",
+        "BDAKNTSWKU5F",
+        "D4JGCNEL40VL",
+        "EZ2LP1P5VRPT",
+        "JR66CJ9T8H7W",
+        "M75JX3KS80NB",
+        "NX48MBG3SPRJ",
+        "RWWGRRYKD6LT",
+        "V1YTJTAX8N07",
+        "VE975EGP2G3V"
+      ],
+      "n_support": 11,
+      "n_contradict": 3,
+      "confidence": "high",
+      "last_seen": "2026-09-29",
+      "status": "active",
+      "contradicting": [
+        "7Q5GTQNH1SZT",
+        "GGF8C3G76C7B",
+        "TEK4MLSEGC4P"
+      ]
     },
     {
       "id": "kd-dps",
@@ -699,7 +765,7 @@
         0,
         20
       ],
-      "lesson": "知识恶魔（A8 399 血 + 两次沉思各回 30 ≈ 459）需约 45–51/回合；十余次输局几乎都是输出只有需求的 45–61%，满血进场也输（SM9H、24HM、Y27B）。二幕构筑必须有永久力量（恶魔形态/燃烧/撕裂/手套），估算输出 <35/回合时力量牌和单体大伤最优先。",
+      "lesson": "知识恶魔（A8 399 血 + 两次沉思各回 30 ≈ 459）需约 45–51/回合，进场血低时更多（Z6AM 54 进场 7 回合就死，要约 61/回合，实打 42）；十余次输局几乎都是输出只有需求的 45–70%，满血进场也输（SM9H、24HM、Y27B）。二幕构筑必须有永久力量（恶魔形态/燃烧/撕裂/手套），估算输出 <35/回合时力量牌和单体大伤最优先。战斗里所有线都判输时按本回合伤害选线，不按掉血（Z6AM T4、T6 两次选防守线，少打 45）。",
       "evidence": [
         "24DPW2ED71QM",
         "24HMNKB4N32V",
@@ -723,12 +789,13 @@
         "SM9H2ZQVHPNY",
         "VKPXGMV8YV31",
         "VQSA3FRA2ML9",
-        "Y27BHTAKJH33"
+        "Y27BHTAKJH33",
+        "Z6AMPPWHQ5CV"
       ],
-      "n_support": 23,
+      "n_support": 24,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -834,21 +901,25 @@
         2,
         20
       ],
-      "lesson": "先杀聚合体（它活着时伤害打女王等于白打）；T1–T2 是仅有的无减益回合，力量药水和最大爆发要在这两回合打完，之后格挡打折、拖长无益。",
+      "lesson": "先杀火炬头聚合体：有记录的 4 场女王胜局（4JVP、BDAK、H5MZ、YN4E，A2–A7）都在 T4–T8 先打死聚合体再打女王；A8 5 场全输，聚合体都活过了 T5（EZ2L 把 161 伤害和 42 格挡打在女王身上，聚合体停在 90，它每回合 +2 力、打出全部伤害）。单体伤害全给聚合体，女王只吃群伤；T1–T2 是仅有的无减益回合，力量药水、恶魔形态/燃烧和最大爆发在这两回合打完，之后格挡打折、拖长无益。聚合体死后女王改为亲自攻击（将头砍下 7×5、处决 25），胜局都扛住了。",
       "evidence": [
         "4JVP9LTXYY9D",
+        "BDAKNTSWKU5F",
         "CAYKKMTJWBPM",
         "CWU9BG62JE50",
+        "EZ2LP1P5VRPT",
+        "H5MZ6BKA1HVS",
         "H7W047ZCEBSA",
         "P2E43JJVFGMK",
         "VE975EGP2G3V",
         "WY41FADPAGTW",
+        "YN4ETG9Z8ERN",
         "ZPPVDTSFJXJM"
       ],
-      "n_support": 8,
+      "n_support": 12,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -882,22 +953,23 @@
         0,
         20
       ],
-      "lesson": "实验体三阶段 100/200/300：一阶段 ENRAGE 每打一张技能牌 boss +2 力量（主宰、应急按钮也是技能）；二阶段多段爪每回合 +1 段，必须 3–4 回合打完（约 50–67/回合），挡不满就全力输出；进三阶段 HP 要 ≥75（猛扑 BIG_POUNCE 45）。",
+      "lesson": "实验体三阶段 111/212/313（A8）：一阶段 ENRAGE 每打一张技能牌 boss +2 力量（主宰、应急按钮也是技能）；一阶段别用恶魔之焰清手牌（FSPK 烧掉 8 张含格挡和能力，二阶段三回合只打 57 就死）。二阶段多段爪每回合 +1 段，必须 3–4 回合打完（约 50–67/回合），挡不满就全力输出；进三阶段 HP 要 ≥75（猛扑 BIG_POUNCE 45）。",
       "evidence": [
         "2WUMK6PK5QHD",
         "7DFB21JE2DTK",
         "CCPRXV86HPLH",
         "D3X1T7KBGK5T",
+        "FSPKJAYY3ET6",
         "M75JX3KS80NB",
         "VP5FZC9UCP63",
         "VQSA3FRA2ML9",
         "YFG53EZ372D7",
         "ZANMLV9UU31K"
       ],
-      "n_support": 9,
+      "n_support": 10,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -932,15 +1004,16 @@
         7,
         20
       ],
-      "lesson": "三阶段是隔回合无实体（开放回合实测 54/62 伤）：无实体回合打能力/格挡，开放回合全力输出；「靠多段小伤害」「无实体回合用均衡存牌」都是错的。",
+      "lesson": "三阶段（A8 313 血）天罚 NEMESIS 每两回合给一次无实体：无实体回合打能力/格挡，开放回合全力输出（实测 54/62/88 伤）；只有一半回合能打，按每个开放回合约 100 准备爆发。VQKX 二阶段 T4 一回合打掉 212，却在三阶段隔回合无实体下 3 回合只打 96，T6 大扑击 BIG_POUNCE 后剩 2 血死。rollout 让无实体一直持续或一直不来，三阶段的「赢 88%」不可信。「靠多段小伤害」「无实体回合用均衡存牌」都是错的。",
       "evidence": [
+        "VQKX9AD1YHKS",
         "YFG53EZ372D7",
         "ZANMLV9UU31K"
       ],
-      "n_support": 2,
+      "n_support": 3,
       "n_contradict": 0,
       "confidence": "med",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1074,10 +1147,11 @@
         0,
         20
       ],
-      "lesson": "蜂群术士（二幕常见的第一只强制精英，A8 165 血）已 7+ 次拖垮/致死：每段攻击命中往牌堆塞晕眩，要在约 T7 前打完（≥24–33/回合）。打它用单段大伤害、虚弱、火焰屏障，多段攻击/AOE 是负收益；二幕第一只精英前按它准备并至少带 1 瓶药。",
+      "lesson": "蜂群术士（二幕常见的第一只强制精英，A8 165 血）已 7+ 次拖垮/致死：每段攻击命中往牌堆塞晕眩，要在约 T7 前打完（≥24–33/回合）。打它用单段大伤害、虚弱、火焰屏障，多段攻击/AOE 是负收益；二幕第一只精英前按它准备并至少带 1 瓶药，但留给 boss 的能力/力量药别开：981W 按 rollout「约掉 65」T1 喝了留给沙虫的能力药水，实际只掉 19。",
       "evidence": [
         "2AX48ZA9H9DM",
         "6X8F3ALWG9RM",
+        "981WMX8MQ7DK",
         "B98PBQP6ZNDS",
         "CY8UG7ABBSAS",
         "EA7F0CU7V1QL",
@@ -1093,10 +1167,10 @@
         "UJS25W5ARGBV",
         "VF5CMUAQV4G4"
       ],
-      "n_support": 16,
+      "n_support": 17,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1207,7 +1281,7 @@
         0,
         20
       ],
-      "lesson": "骇鳗（一幕精英，A8 150 血）打过约 75 血线后晕一回合，随后恐惧给我们 99 层易伤、撞击 33：<15/回合的牌组出场 <20% 或阵亡；按 ~50% 最大生命定价，需约 30/回合在恐惧前斩杀，可选时只在 ≥74% 血打。",
+      "lesson": "骇鳗（一幕精英，A8 150 血）打过约 75 血线后晕一回合，随后恐惧给我们 99 层易伤、撞击 33：<15/回合的牌组出场 <20% 或阵亡；按 ~50% 最大生命定价，需约 30/回合在恐惧前斩杀，可选时只在 ≥74% 血打。它是 boss 前火堆前的唯一精英时按 p90 估（WCC7 86% 进场掉 48，boss 只能 51/80 进）。",
       "evidence": [
         "1K5G5HPXA2ZV",
         "5FMUSNUXEHGY",
@@ -1222,14 +1296,15 @@
         "PU21Z67J65NE",
         "S6AG9SH1ZP1K",
         "VL2DGJ684H2K",
+        "WCC7RMRLWLZK",
         "XPA49DEKREQ1",
         "Z2H318ZMMAD0",
         "Z7D7J1RUUJ61"
       ],
-      "n_support": 16,
+      "n_support": 17,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1269,7 +1344,7 @@
         0,
         20
       ],
-      "lesson": "鬼祟珊瑚群（一幕精英）有 HARDENED_SHELL（每回合最多掉 20），要磨 4–5 回合，一般掉 30–41；中低血不进，0 升级 0 力量的牌组宁可去火堆锻造。",
+      "lesson": "鬼祟珊瑚群（一幕精英）有 HARDENED_SHELL（每回合最多掉 20），要磨 4–5 回合，一般掉 30–41；中低血不进，0 升级 0 力量的牌组宁可去火堆锻造。它常是一幕末的强制精英：YKFW 前面连打三场、8/80 进场，3 回合只打掉 40/80 就死，前一个火堆（70%）应回血。",
       "evidence": [
         "9YR9335HNR88",
         "BG4W9DSX99DA",
@@ -1280,13 +1355,14 @@
         "VL2DGJ684H2K",
         "WX16C8B1ZWZ0",
         "XJWF15R19UXF",
+        "YKFWDENYQ6H8",
         "ZH8J9ZQXV5YC",
         "ZPPVDTSFJXJM"
       ],
-      "n_support": 11,
+      "n_support": 12,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1426,8 +1502,9 @@
         7,
         20
       ],
-      "lesson": "多只盛碗虫组合（石/丝/蜜/卵）是二幕高危走廊，按 −25~−55 估，进场不宜 <60%；石盛碗虫的头槌 15 被完全挡住会让它晕一回合（挡满线约省 20 血）。",
+      "lesson": "多只盛碗虫组合（石/丝/蜜/卵）是二幕高危走廊，按 −25~−55 估，进场不宜 <60%；石盛碗虫的头槌 15 被完全挡住会让它晕一回合（挡满线约省 20 血）。留给 boss 的力量药水别在这里喝（0B5Y F28 喝掉点名给帝王蟹 T1 的力量药水，boss 0 瓶死）。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "3T70E3TJPX1D",
         "4VC5BDRG4Y7B",
         "5507PUWLC09R",
@@ -1450,10 +1527,10 @@
         "XA8CMSK1V9H3",
         "ZW9SQYC7KBC3"
       ],
-      "n_support": 21,
+      "n_support": 22,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1506,7 +1583,7 @@
         0,
         20
       ],
-      "lesson": "棘刺蟾蜍（二幕走廊，A8 ~122 血，荆棘 5，尖刺爆发 23 + 舌鞭 17）：四次死局都是 ≤40% 进场且在二幕开头连续走廊之后；低血绝不再撞它，多段攻击每段吃 5 荆棘。",
+      "lesson": "棘刺蟾蜍（二幕走廊，A8 ~122 血，荆棘 5，尖刺爆发 23 + 舌鞭 17）：四次死局都是 ≤40% 进场且在二幕开头连续走廊之后；低血绝不再撞它，多段攻击每段吃 5 荆棘。满血附近打它不值得开 boss 药：RWWG 在这里一起喝了留给帝王蟹的力量和再生药水，rollout 只省约 2 血，boss 0 瓶进场。",
       "evidence": [
         "0YV6J2SHFC0T",
         "69HWH6MD1S34",
@@ -1518,14 +1595,15 @@
         "JGJS7QE62GLD",
         "LQLZTS1J5RZE",
         "NJSZDS6U5X9G",
+        "RWWGRRYKD6LT",
         "SCBC3F0QT8BC",
         "XMY29WWQDC1Y",
         "YP9CGPJE19GP"
       ],
-      "n_support": 13,
+      "n_support": 14,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1535,11 +1613,12 @@
         0,
         20
       ],
-      "lesson": "胧光怪 + 寄生惧魔（二幕走廊/问号，已 4 次致死）：幻象被打死下回合满血复活，伤害要打胧光怪（~129 血），牌组对它 <20/回合时很贵（−40~−53）；≤38% 进场必死，要 50+ 血。",
+      "lesson": "胧光怪 + 寄生惧魔（二幕走廊/问号，已 5 次致死）：幻象被打死下回合满血复活，伤害要打胧光怪（~129 血），打寄生惧魔只抵掉当回合的攻击；牌组对胧光怪 <20/回合时很贵（−40~−53）。≤38% 进场必死，要 50+ 血：FA82 36/90 进场，10 回合只打进胧光怪 99，寄生惧魔被打死 7 次。",
       "evidence": [
         "2VW5U020FUTV",
         "3T70E3TJPX1D",
         "4LC3YKCZV218",
+        "FA82FQHSJG2F",
         "H8LCRD86HPZB",
         "JUXB9P5BGATV",
         "P57H9Z324EEW",
@@ -1550,10 +1629,10 @@
         "VKPXGMV8YV31",
         "XJWF15R19UXF"
       ],
-      "n_support": 12,
+      "n_support": 13,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1590,7 +1669,7 @@
         7,
         20
       ],
-      "lesson": "地道虫钻地后常驻 ~37 格挡、每回合 BELOW 23，纯防守会被磨死：需要一回合打穿格挡（打穿即晕）的爆发（无情猛攻 + 大牌、易伤）；二幕按 −25~−45 估。",
+      "lesson": "地道虫（二幕走廊，A8 92 血）T2 钻地得 32–37 格挡，之后每回合 BELOW 23，被打穿格挡才会晕：A8 52 场全胜，但 ≤6 回合打完的 44 场中位只掉 13，拖到 ≥7 回合的 8 场中位掉 37.5（RWWG 钻地后连续 4 回合只挡不打，74→14，−60）。钻地期间每回合都要往它身上打伤害，最好一回合打穿（易伤、无情猛攻 + 大牌），纯格挡线越拖越亏；路线按中位 −14、p75 −25、p90 −35 估。",
       "evidence": [
         "2VW5U020FUTV",
         "3T70E3TJPX1D",
@@ -1602,14 +1681,15 @@
         "KQK207TQ9BQ1",
         "NEVMW4HGUJ1U",
         "NJSZDS6U5X9G",
+        "RWWGRRYKD6LT",
         "VE975EGP2G3V",
         "XA8CMSK1V9H3",
         "ZW9SQYC7KBC3"
       ],
-      "n_support": 13,
+      "n_support": 14,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1644,6 +1724,7 @@
       ],
       "lesson": "双啃咬机（A8 64+66 血，人工制品 2）每回合固定约 16 来袭，二幕常 −17~−40，21–35 血进场必死或残血。",
       "evidence": [
+        "FA82FQHSJG2F",
         "FH3MZ3G0HECD",
         "KGR6WH5YJ743",
         "KQK207TQ9BQ1",
@@ -1653,10 +1734,10 @@
         "X4QRH94TSFG2",
         "Z7D7J1RUUJ61"
       ],
-      "n_support": 8,
+      "n_support": 9,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -1740,18 +1821,19 @@
         8,
         20
       ],
-      "lesson": "三幕虔诚雕刻师（A8 172 血，仪式 9，SAVAGE 每回合 +9）必须约 6 回合内打完（≥29–43/回合）：24/回合的牌组 96% 进场仍死，按竞速打不要 scale。",
+      "lesson": "三幕虔诚雕刻师（A8 172 血，仪式 9，SAVAGE 每回合 +9）必须约 6 回合内打完（≥29–43/回合）：24/回合的牌组 96% 进场仍死，按竞速打不要 scale。力量类 boss 药只在省血 ≥10 时喝（VQKX 在这里喝第二瓶力量药水，多打 6、只省 3 血，boss 战没有它）。",
       "evidence": [
         "123ZSH58F5FS",
         "9VG86DYJH4CS",
         "NX48MBG3SPRJ",
         "RTF3KZLZPV2L",
-        "RVR696LSKBE3"
+        "RVR696LSKBE3",
+        "VQKX9AD1YHKS"
       ],
-      "n_support": 5,
+      "n_support": 6,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -2069,28 +2151,36 @@
         7,
         20
       ],
-      "lesson": "boss 时钟对牌组输出的估计两头都会错：一次性力量被当永久、能力牌按 T1 起算 → 高估（普通牌组实测约 0.45–0.8）；手套/撕裂/薪火/狱火/水银沙漏等成长和遗物伤害被漏掉 → 低估约 2 倍。时钟说「已达标」时按仍缺 ~30% 处理，并自己核对这些项。",
+      "lesson": "boss 时钟对牌组输出的估计两头都会错：一次性力量被当永久、能力牌按 T1 起算 → 高估（普通牌组实测约 0.45–0.87：帝王蟹 0.66–0.73、沙虫 0.53–0.54、瀑布巨兽 0.83–0.87、异鱼约 0.8）；手套/撕裂/薪火/狱火/水银沙漏、硫磺等成长和遗物伤害被漏掉 → 低估约 2 倍（EZ2L 买硫磺后时钟估 21，实打 45）。时钟的需求默认火堆能回到 85% 进场，当前血低时实际需求更高（Z6AM 报 46，实需约 61）。时钟说「已达标」时按仍缺 ~30% 处理，并自己核对这些项。",
       "evidence": [
         "02L476J8QWGH",
+        "0B5YKJFM0E8B",
         "64ZBJGP6MYZ3",
+        "981WMX8MQ7DK",
         "AGF0UBDPV7F1",
         "EHJZSGVU0VQ9",
         "EJXCAQ56PWLK",
         "ERPHN3SRCRC3",
+        "EZ2LP1P5VRPT",
         "G1Z0X3WBH4XQ",
         "M6P7KAWMF6BC",
         "M9PL14MGKZCN",
         "MX8KZU7ABQBQ",
         "NZWRZWY0URJJ",
+        "RWWGRRYKD6LT",
+        "VNWR16YEJASM",
         "WB023SWBTUU3",
+        "WCC7RMRLWLZK",
+        "WXMBVL6ZJ000",
         "XWPVR2NK3M5K",
         "YN4ETG9Z8ERN",
-        "Z49JD7340KUP"
+        "Z49JD7340KUP",
+        "Z6AMPPWHQ5CV"
       ],
-      "n_support": 15,
+      "n_support": 23,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -2196,24 +2286,26 @@
         0,
         20
       ],
-      "lesson": "删牌优先打击（两胜局打击删到 0–1 张），能删的进阶之灾先删；别删痛击（唯一稳定的易伤来源）。A8 二幕 boss 前打击+防御 ≥8 张的局过 20%（n=20），≤6 张 37%（n=19）；LMTA 0 次删牌、63CP/JUXB 各 1 次都带 4 打击 4 防御死。run plan 写了删打击就要在商店执行。",
+      "lesson": "删牌优先打击（两胜局打击删到 0–1 张），能删的进阶之灾先删；别删痛击（唯一稳定的易伤来源）。A8 二幕 boss 前打击+防御 ≥8 张的局过 20%（n=20），≤6 张 37%（n=19）；LMTA 0 次删牌、63CP/JUXB 各 1 次都带 4 打击 4 防御死。run plan 写了删打击就在当前商店执行，别「留给下个商店」（EZ2L F36 带 282 金没删，之后的商店都没有删牌，5 张打击打到三幕 boss；N7SA F5 同样，之后路上没有商店）。",
       "evidence": [
         "63CP940HCKAL",
         "64ZBJGP6MYZ3",
         "ADR6TU34MJAH",
         "CRRPX9MWJZGM",
         "CWMPAZUR32MW",
+        "EZ2LP1P5VRPT",
         "JUXB9P5BGATV",
         "LMTA6JC86RCC",
         "N1V27SUSFYWS",
+        "N7SAK31B9ZZZ",
         "SM9H2ZQVHPNY",
         "UJS25W5ARGBV",
         "W6F4YXF3MT7A"
       ],
-      "n_support": 11,
+      "n_support": 13,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -2864,12 +2956,13 @@
         3,
         20
       ],
-      "lesson": "烘焙手套（每回合 +1 力量、开局消耗一张手牌）是多局主要的永久力量来源，长 boss 战很强，配彼岸咆哮是通关引擎；代价是会吃掉关键牌/唯一格挡。牌组零力量来源时值得拿；有它时时钟缺口会被自动补上。",
+      "lesson": "烘焙手套（每回合 +1 力量、开局消耗一张手牌）是多局主要的永久力量来源，长 boss 战很强，配彼岸咆哮是通关引擎；代价是会吃掉关键牌/唯一格挡：沙虫战里手套消耗了最大的攻击牌（VNWR 重锤、究极打击；981W 唯一的易伤来源痛击+、完美打击）。牌组零力量来源时值得拿；有它时时钟缺口会被自动补上，但别再为 boss 拿第二张单张大伤害。",
       "evidence": [
         "2Q370C5EW0EU",
         "4UWKHE61JLK4",
         "6HRZZ5BP01U0",
         "7DXAW0ZBDFHP",
+        "981WMX8MQ7DK",
         "BDAKNTSWKU5F",
         "G1Z0X3WBH4XQ",
         "JF99S7FY4WFU",
@@ -2881,14 +2974,15 @@
         "RTF3KZLZPV2L",
         "SUUKNZNT3KDF",
         "VE975EGP2G3V",
+        "VNWR16YEJASM",
         "XWPVR2NK3M5K",
         "Y08TU00D9VLH",
         "YN4ETG9Z8ERN"
       ],
-      "n_support": 18,
+      "n_support": 20,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3291,20 +3385,23 @@
       "lesson": "能力药水留到 boss T1 喝（三选一按「持续收益×剩余回合」：恶魔形态 > 燃烧 > 薪火之源），是一幕 boss（Vantom）开局爆发的核心；不在走廊喝，两瓶同名时第二瓶明确 save。",
       "evidence": [
         "8XQMYEN4MZ36",
+        "981WMX8MQ7DK",
         "9NE1DHFGZC2K",
         "AGF0UBDPV7F1",
         "D3X1T7KBGK5T",
+        "FA82FQHSJG2F",
         "GGF8C3G76C7B",
         "H5MZ6BKA1HVS",
         "L34T7HND7EL8",
         "NZWRZWY0URJJ",
         "P4ZDR744B9JC",
+        "RWWGRRYKD6LT",
         "W6F4YXF3MT7A"
       ],
-      "n_support": 10,
+      "n_support": 13,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3341,19 +3438,24 @@
         7,
         20
       ],
-      "lesson": "力量药水（整场 +2）对单体、有缺口的 boss 约值 +25–35 伤：run plan 缺力量时商店 ~50 金见到应买，并明确留给 boss（女王在 T1–T2 喝），别在前面的精英里喝。",
+      "lesson": "力量药水（整场 +2）对单体、有缺口的 boss 约值 +25–35 伤：run plan 缺力量时商店 ~50 金见到应买，并明确留给 boss（女王在 T1–T2 喝），别在前面的精英、走廊里喝：EZ2L（F35 走廊斩杀线）、VQKX（F7 小啃兽、F35 雕刻师）、RWWG、0B5Y、WXMB 都把它喝在走廊，每次只多打 2–6 或省 ≤3 血，boss 战没有它。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "24UZ3PZNLKTQ",
+        "EZ2LP1P5VRPT",
         "MX8KZU7ABQBQ",
         "N28LRAMJ9SST",
         "NX48MBG3SPRJ",
         "P2E43JJVFGMK",
-        "TEK4MLSEGC4P"
+        "RWWGRRYKD6LT",
+        "TEK4MLSEGC4P",
+        "VQKX9AD1YHKS",
+        "WXMBVL6ZJ000"
       ],
-      "n_support": 6,
+      "n_support": 11,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3482,12 +3584,13 @@
         "M75JX3KS80NB",
         "RUUBXYZV5064",
         "T86WL2BHF6QW",
+        "VQKX9AD1YHKS",
         "VUV4MSZUA34L"
       ],
-      "n_support": 7,
+      "n_support": 8,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3679,12 +3782,13 @@
         "JF99S7FY4WFU",
         "MAHAHJY541KJ",
         "P4ZDR744B9JC",
+        "VQKX9AD1YHKS",
         "XKKNWSZMMSZN"
       ],
-      "n_support": 5,
+      "n_support": 6,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3735,10 +3839,12 @@
         2,
         20
       ],
-      "lesson": "点名留给 boss（某回合）的药，在走廊/精英里只在「不喝就死或能省 ≥15 血」时喝，离 boss ≤4–10 层尤其如此：十余局 boss 关键回合差的就是那一瓶。例外：走廊会掉到 <40% 且后面还有必经精英时就喝（4LC3 把能力药水留到 12 血，33/80 进感染棱柱死，药最后在走廊的 least-loss 里喝掉）。",
+      "lesson": "点名留给 boss（某回合）的药，在走廊/精英里只在「不喝就死或能省 ≥15 血」时喝，离 boss ≤4–10 层尤其如此：十余局 boss 关键回合差的就是那一瓶。V3 不限制喝药后 6 局每局走廊喝 6.7 瓶，进二幕 boss 平均 0.2 瓶（V2 1.8），6 局 boss 全输；DeepSeek 买来点名留 boss 的药（0B5Y 肌肉、RWWG 力量+再生、WXMB 力量、WCC7 敏捷、981W 能力）都在稳赢的走廊喝掉，多数只省 0–3 血。A8 ≥75% 进场的 boss 战：0 瓶 7/18 赢，带药 99/135。例外：走廊会掉到 <40% 且后面还有必经精英时就喝（4LC3 留到 12 血死；FA82 攥着能力、速度药水打到 3 血，下一场 36/90 进胧光怪死）。",
       "evidence": [
         "02L476J8QWGH",
+        "0B5YKJFM0E8B",
         "6HRZZ5BP01U0",
+        "981WMX8MQ7DK",
         "99X7VX66AU71",
         "AGF0UBDPV7F1",
         "B6ACRLQYB83N",
@@ -3747,16 +3853,21 @@
         "CCPRXV86HPLH",
         "D3X1T7KBGK5T",
         "EJXCAQ56PWLK",
+        "EZ2LP1P5VRPT",
+        "FA82FQHSJG2F",
+        "FSPKJAYY3ET6",
         "G6YVT0ALVQ65",
         "G8YYU94P2SBB",
         "GL2UHZGJ7P8M",
         "GZ24W7LC496Q",
         "JF99S7FY4WFU",
         "MX8KZU7ABQBQ",
+        "N7SAK31B9ZZZ",
         "NMLV5SYCFL8X",
         "NZR74LJP5VSM",
         "PPKTGCDHJHM9",
         "RUUBXYZV5064",
+        "RWWGRRYKD6LT",
         "TD8A2M6M4SWW",
         "TEK4MLSEGC4P",
         "TXKEQ0QV06GU",
@@ -3765,16 +3876,20 @@
         "UP1CS059LCLT",
         "VL2DGJ684H2K",
         "VP5FZC9UCP63",
+        "VQKX9AD1YHKS",
         "WB023SWBTUU3",
+        "WCC7RMRLWLZK",
+        "WXMBVL6ZJ000",
         "XA8CMSK1V9H3",
         "Z49JD7340KUP",
+        "Z6AMPPWHQ5CV",
         "ZANMLV9UU31K",
         "ZW9SQYC7KBC3"
       ],
-      "n_support": 33,
+      "n_support": 44,
       "n_contradict": 1,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active",
       "contradicting": [
         "4LC3YKCZV218"
@@ -3856,22 +3971,32 @@
         5,
         20
       ],
-      "lesson": "药栏空着进 boss 是警告信号（多局差的就是一瓶药）；药栏满时事件/奖励给的药拿不到，先丢最低价值的（污浊、稳定血清、石头、灰水）。",
+      "lesson": "药栏空着进 boss 是警告信号：A8 全部 208 场 boss 战里，≥75% 血进场时 0 瓶药 7/18 赢（一幕 7/12、二幕 0/6），带 ≥1 瓶 99/135（一幕 82/100、二幕 17/35）；带着的药 97% 在 boss 战里喝掉。这是观察数据（0 瓶的局牌组也偏弱），但方向一致。药栏满时事件/奖励给的药拿不到，先丢最低价值的（污浊、稳定血清、石头、灰水）。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "12ZGL23T341Q",
         "92MWCWJCFDAE",
+        "EJXCAQ56PWLK",
+        "N7SAK31B9ZZZ",
         "NMLV5SYCFL8X",
+        "NTENNYHDAJHK",
         "P0ATKY6W0F0P",
         "RVR696LSKBE3",
+        "RWWGRRYKD6LT",
+        "TEK4MLSEGC4P",
+        "UBLVBA0D1QXD",
+        "UP1CS059LCLT",
         "V1YTJTAX8N07",
         "VL2DGJ684H2K",
+        "VNWR16YEJASM",
+        "WXMBVL6ZJ000",
         "X4QRH94TSFG2",
         "YVWAWAPXJXGV"
       ],
-      "n_support": 9,
+      "n_support": 19,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-27",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -3920,7 +4045,7 @@
         0,
         20
       ],
-      "lesson": "事件里别以「燃烧之血会回」为由付血或让最大生命：一幕失去 ≥8 最大生命的选项不选（树叶药膏 −12、菲涅耳透镜 −13 都导致 boss 差几血）；下一层是强制精英/boss 且 HP<40% 时排除所有掉血选项；花最大生命换随机升级最多一次。",
+      "lesson": "事件里别以「燃烧之血会回」为由付血或让最大生命：一幕失去 ≥8 最大生命的选项不选（树叶药膏 −12、菲涅耳透镜 −13 都导致 boss 差几血）；下一层是强制精英/boss 且 HP<40% 时排除所有掉血选项；花最大生命换随机升级最多一次。可重复付血的选项（「再撑一会」）代价每次 +1 且结果随机：RWWG 连按 5 次掉 25 血（58→33）最后删掉的还是一开始就给的牌，981W 两次 −7。",
       "evidence": [
         "1K5G5HPXA2ZV",
         "1R3CUXT91TAE",
@@ -3928,13 +4053,15 @@
         "5R0G8U5TB6GY",
         "6A36WUWL64KE",
         "7MG7E5EYETA6",
+        "981WMX8MQ7DK",
         "KFPCLA2M73Z2",
+        "RWWGRRYKD6LT",
         "XPA49DEKREQ1"
       ],
-      "n_support": 8,
+      "n_support": 10,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -4381,6 +4508,7 @@
         "77QXNB8RFSQQ",
         "ADR6TU34MJAH",
         "CRY9LDHSKVFB",
+        "FA82FQHSJG2F",
         "MD3FLLNB7Q2W",
         "NJSZDS6U5X9G",
         "PWSDWBCPEX86",
@@ -4389,12 +4517,13 @@
         "TD8A2M6M4SWW",
         "VHLZ531VC9RE",
         "XJWF15R19UXF",
-        "XMY29WWQDC1Y"
+        "XMY29WWQDC1Y",
+        "YKFWDENYQ6H8"
       ],
-      "n_support": 14,
+      "n_support": 16,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -4490,8 +4619,9 @@
         0,
         20
       ],
-      "lesson": "有金币要安排商店：多局带 300–1300 金死（整幕 0 商店）；金币 ≥300、药栏空一半以上时一幕后段优先有商店的路；拿到大量金币（藏宝图、图章戒指）后确认路上还有能到的商店。",
+      "lesson": "有金币要安排商店：多局带 300–1300 金死（整幕 0 商店；0B5Y 二幕 0 商店带 366 金进帝王蟹，VQKX 三幕 p6 0 商店带 303 金进实验体）。金币本身不分 boss 胜负（A8 带 ≥300 金进二幕 boss 3/8，其余 15/55；二幕 0 商店 2/8，≥1 商店 16/55），代价在 run plan 要的删牌、药水没买到。所以 run plan 缺药或缺删牌且手里 ≥150 金时，路线要在 boss 前经过商店；拿到大量金币（藏宝图、图章戒指）后确认路上还有能到的商店。",
       "evidence": [
+        "0B5YKJFM0E8B",
         "5507PUWLC09R",
         "8LQGV1EFQDVX",
         "BHMPNWGFZ9JL",
@@ -4503,13 +4633,14 @@
         "MZCG9T5G6TBZ",
         "RTF3KZLZPV2L",
         "RVL2XJ07THJD",
+        "VQKX9AD1YHKS",
         "WR2Y98A43YCY",
         "XJWF15R19UXF"
       ],
-      "n_support": 13,
+      "n_support": 15,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -4607,12 +4738,13 @@
         "NTENNYHDAJHK",
         "T86WL2BHF6QW",
         "UJS25W5ARGBV",
+        "WCC7RMRLWLZK",
         "XPA49DEKREQ1"
       ],
-      "n_support": 20,
+      "n_support": 21,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -4683,12 +4815,13 @@
         "T4PYMNJJFSU6",
         "XJWF15R19UXF",
         "XKKNWSZMMSZN",
+        "YKFWDENYQ6H8",
         "YNMB8X87UEH1"
       ],
-      "n_support": 14,
+      "n_support": 15,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
@@ -4830,9 +4963,11 @@
         "CRY9LDHSKVFB",
         "CWU9BG62JE50",
         "EHJZSGVU0VQ9",
+        "EZ2LP1P5VRPT",
         "G8F1QPPZCM4T",
         "K8RK6JG2YF62",
         "LQLZTS1J5RZE",
+        "N7SAK31B9ZZZ",
         "PWSDWBCPEX86",
         "RTF3KZLZPV2L",
         "RVL2XJ07THJD",
@@ -4842,10 +4977,10 @@
         "ZPPVDTSFJXJM",
         "ZWX5F97BUFVB"
       ],
-      "n_support": 18,
+      "n_support": 20,
       "n_contradict": 0,
       "confidence": "high",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-09-29",
       "status": "active"
     },
     {
