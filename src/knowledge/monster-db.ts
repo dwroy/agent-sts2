@@ -330,3 +330,15 @@ export function roomHpCost(act: number, asc: number, room: "Monster" | "Elite"):
   }
   return null;
 }
+
+/** The act boss's HP lost in our won fights (median/p75, n) and win rate, at `asc` (nearest logged). */
+export function bossHpLoss(bossId: string | null | undefined, asc: number): { median: number; p75: number; n: number; fights: number; winRate: number | null; asc: number } | null {
+  if (!bossId) return null;
+  const byAsc = load().bosses[bossId.toUpperCase().replace(/_BOSS$/, "")];
+  const found = nearestAscension(byAsc, asc);
+  if (!byAsc || !found) return null;
+  const entry = byAsc[found.key]!;
+  const loss = entry.hp_loss_won;
+  if (!loss || !loss.n || typeof loss.median !== "number") return null;
+  return { median: loss.median, p75: typeof loss.p75 === "number" ? loss.p75 : loss.median, n: loss.n, fights: entry.fights ?? 0, winRate: entry.win_rate ?? null, asc: Number(found.key) };
+}

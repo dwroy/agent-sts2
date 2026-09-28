@@ -672,6 +672,48 @@ describe("event", () => {
     expect(shown(mustDecision(plan(hpEvent(64, 80, [...smaller, options[1]!], 2))))).toEqual(["o0", "o1", "o2"]);
   });
 
+  describe("BUILD_DECIDER=deepseek: only certainly-lethal options are removed, the rest carry HP facts", () => {
+    const ds = { buildDecider: "deepseek" } as Partial<DecisionEnv>;
+    const summaries = (decision: Decision): Record<string, Record<string, unknown>> =>
+      decision.kind === "ask" && decision.questions["pick"]?.type === "choice"
+        ? Object.fromEntries(Object.entries(decision.questions["pick"].criteria).map(([key, value]) => [key, JSON.parse(value ?? "{}") as Record<string, unknown>]))
+        : {};
+
+    it("a max-HP cost the guard removes is offered with its facts (2WNT F3: Climb -13 max HP was event/only)", () => {
+      const decision = mustDecision(plan(hpEvent(60, 80, [["Bottle", "获得一瓶[aqua]发光水[/aqua]。"], ["Climb", "获得[gold]菲涅耳透镜[/gold]。失去[red]13[/red]点最大生命。"]]), ds));
+      expect(decision.label).toBe("event/choose");
+      expect(shown(decision)).toEqual(["o0", "o1"]);
+      expect(summaries(decision)["o1"]).toMatchObject({ max_hp_cost: 13, hp_after: "60/67 (90% of max)" });
+      expect(summaries(decision)["o0"]!["hp_after"]).toBeUndefined();
+    });
+
+    it("below half HP and before a forced elite the HP option is offered, with hp_after and the elite's measured cost (SFCE F22: 用力去推 was event/only)", () => {
+      const options: [string, string][] = [["Relic", "失去8点生命。获得一件被遗忘的旧日遗物。"], ["Potion", "获得1瓶随机药水。"], ["Leave", "离开。"]];
+      const low = mustDecision(plan(hpEvent(45, 80, options), ds));
+      expect(shown(low)).toEqual(["o0", "o1", "o2"]);
+      expect(summaries(low)["o0"]).toMatchObject({ hp_cost: 8, hp_after: "37/80 (46% of max)" });
+      const forced = mustDecision(plan(hpEvent(62, 80, options), { ...ds, screenMemory: mapBefore("Elite") }));
+      expect(shown(forced)).toEqual(["o0", "o1", "o2"]);
+      const relic = summaries(forced)["o0"]!;
+      expect(relic["before_forced_fight"]).toBe("Elite");
+      expect(String(relic["hp_after_vs_forced_fight"])).toMatch(/^54 HP after is .* \(median [\d.]+, p75 [\d.]+ HP; .*n=\d+/);
+      expect(JSON.stringify(forced.kind === "ask" ? forced.state : {})).not.toContain("excluded_by_hp_guard");
+    });
+
+    it("an early-floor 20% HP cost is offered too; only an option costing all HP (or flagged lethal) is left out", () => {
+      const options: [string, string][] = [
+        ["Holster", "获得[blue]1[/blue]个药水栏位并获得[blue]2[/blue]瓶随机[gold]药水[/gold]。"],
+        ["Shears", "从你的[gold]牌组[/gold]中移除[blue]2[/blue]张牌，然后失去[red]16[/red]点生命。"],
+        ["Pact", "失去[red]20[/red]点生命。获得一件遗物。"],
+      ];
+      expect(shown(mustDecision(plan(hpEvent(64, 80, options, 1), ds)))).toEqual(["o0", "o1", "o2"]);
+      // 16 HP left: the 20-HP option would kill, the 16-HP one too.
+      const dying = mustDecision(plan(hpEvent(16, 80, options, 14), ds));
+      expect(dying.kind === "act" && dying.label).toBe("event/only");
+      expect(dying.kind === "act" && dying.intent).toEqual({ action: "choose_event_option", option_index: 0 });
+    });
+  });
+
   it("HP guard: nothing is removed when every option costs HP", () => {
     const decision = mustDecision(plan(hpEvent(30, 80, [["A", "失去5点生命。获得65金币。"], ["B", "变化你的1张打击和1张防御，然后失去12点最大生命。"]])));
     expect(shown(decision)).toEqual(["o0", "o1"]);
