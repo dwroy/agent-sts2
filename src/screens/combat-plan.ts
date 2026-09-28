@@ -1495,11 +1495,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...guardOptions.map((option) => option.outcome.hpLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),
-        rationale: `Jev chose plan ${shown.indexOf(picked) + 1}/${shown.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
+        rationale: `Jev chose ${pickNote(shown, chosen.plan!, picked)} with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
@@ -1527,6 +1527,19 @@ function planTurn(env: DecisionEnv): Decision | null {
       return { ...resolved, log: { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } };
     },
   };
+}
+
+function lineLabel(plan: Plan): string {
+  return plan.steps.map(stepText).join(", ") || "end turn";
+}
+
+/**
+ * "plan i/N (its line)" for Jev's pick, and the line actually played when the low-confidence dominance
+ * swap replaced it (the rationale used to print the played line's number next to the chosen line's label).
+ */
+export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
+  const head = `plan ${shown.indexOf(chosen) + 1}/${shown.length} (${lineLabel(chosen)})`;
+  return picked === chosen ? head : `${head}; plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) is as good or better on every axis, playing it`;
 }
 
 /**
