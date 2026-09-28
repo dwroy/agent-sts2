@@ -1426,30 +1426,19 @@ describe("potions at low HP outside boss fights", () => {
     expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
-  it("a modelled potion costs nothing to use below 40% HP against two attackers", async () => {
+  it("a modelled potion has no use cost: its line is shown at any HP, and code's own line never drinks it", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    // Fire Potion's 20 damage is worth less than the hallway use cost of 15; at low HP it is free.
-    // Enough incoming that no potion-free line is cheap (a dry line losing <= 5 keeps the potion even
-    // when pressed: B6AC F30).
-    const heavier = (hp: number) => {
-      const raw = pressedCombat(hp, "FIRE_POTION");
-      const combat = raw["combat"] as Record<string, unknown>;
-      combat["enemies"] = (combat["enemies"] as Record<string, unknown>[]).map((enemy) => ({
-        ...enemy,
-        intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }],
-      }));
-      return raw;
-    };
-    const drinks = (hp: number): boolean => {
-      const e = env(heavier(hp), { combatPlanner: "turn" });
+    for (const hp of [25, 55]) {
+      const e = env(pressedCombat(hp, "FIRE_POTION"), { combatPlanner: "turn" });
       const decision = planCombatTurn(e);
-      if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
+      if (decision?.kind === "act") {
+        expect(decision.intent.action, `hp ${hp}`).not.toBe("use_potion");
+        expect(JSON.stringify(e.screenMemory.combatPlan?.remaining ?? []), `hp ${hp}`).not.toContain("POTION:");
+        continue;
+      }
       const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
-      // plan1 is the score-best line.
-      return String(criteria["plan1"]).includes("Fire Potion");
-    };
-    expect(drinks(25)).toBe(true);
-    expect(drinks(55)).toBe(false);
+      expect(Object.entries(criteria).some(([key, text]) => key.startsWith("plan") && String(text).includes("Fire Potion")), `hp ${hp}`).toBe(true);
+    }
   });
 });
 
@@ -1470,31 +1459,22 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
     plan: { type: "choice", choice, probabilities: { [choice]: confidence }, confidence, raw: {} },
   });
 
-  it("an unmodelled potion below code rank 1 needs Jev at 0.75+; a near-guess falls back too", async () => {
-    const { planCombatTurn, HALLWAY_POTION_CONFIDENCE } = await import("../src/screens/combat-plan.js");
+  it("Jev's potion pick stands at any confidence (the hallway 0.75 bar is gone)", async () => {
+    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const decision = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
     const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
     expect(potionKey).toBeDefined();
-    // VC4L F23 T1: Gambler's Brew at 0.05.
-    const guess = decision.resolve(planAnswer(potionKey, 0.05));
-    expect(guess.fallback).toBe(true);
-    expect(guess.intent?.action).not.toBe("use_potion");
-    // NZR7 F6: rank 4 at 0.57.
-    const middling = decision.resolve(planAnswer(potionKey, 0.57));
-    expect(middling.fallback).toBe(true);
-    expect(middling.intent?.action).not.toBe("use_potion");
-    const sure = decision.resolve(planAnswer(potionKey, HALLWAY_POTION_CONFIDENCE));
-    expect(sure.fallback).toBe(false);
-    expect(sure.intent?.action).toBe("use_potion");
-    // An escalator's pick stands.
-    const escalated = decision.resolve({ plan: { type: "choice", choice: potionKey, probabilities: {}, confidence: 0.6, raw: { escalated: "deepseek" } } });
-    expect(escalated.intent?.action).toBe("use_potion");
+    for (const confidence of [0.05, 0.57, 0.9]) {
+      const resolved = decision.resolve(planAnswer(potionKey, confidence));
+      expect(resolved.fallback).toBe(false);
+      expect(resolved.intent?.action).toBe("use_potion");
+    }
   });
 
-  it("the hallway potion cost doubles right before a forced Elite", async () => {
-    const { potionUseCostFor, HALLWAY_POTION_COST } = await import("../src/screens/combat-plan.js");
+  it("potion_context: a forced Elite ahead, the belt, the act boss and the run plan are on the combat question", async () => {
+    const { planCombatTurn, potionContextJson } = await import("../src/screens/combat-plan.js");
     const { forcedEliteWithin } = await import("../src/screens/rest.js");
     const eliteNext = (childType: string) => {
       const memory = createScreenMemory("COMBAT");
@@ -1515,11 +1495,34 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
     const fight = parseGameState(combatPayload());
     expect(forcedEliteWithin(eliteNext("Elite"), fight, ["Monster", "Unknown"], 1)).toBe(true);
     expect(forcedEliteWithin(eliteNext("Monster"), fight, ["Monster", "Unknown"], 1)).toBe(false);
-    expect(potionUseCostFor("monster", false, false)).toBe(HALLWAY_POTION_COST);
-    expect(potionUseCostFor("monster", false, true)).toBe(2 * HALLWAY_POTION_COST);
-    expect(potionUseCostFor("unknown", false, true)).toBe(2 * HALLWAY_POTION_COST);
-    expect(potionUseCostFor("elite", false, true)).toBe(5);
-    expect(potionUseCostFor("monster", true, true)).toBe(0);
+    const withMap = (childType: string) => {
+      const e = env(pressedCombat(25, "FIRE_POTION"), { combatPlanner: "turn" });
+      e.screenMemory = { ...eliteNext(childType), ...{ lastScreen: e.screenMemory.lastScreen } } as typeof e.screenMemory;
+      return e;
+    };
+    const ahead = potionContextJson(withMap("Elite"), "monster");
+    expect(ahead["elite_ahead"]).toBe("forced Elite within 3 nodes");
+    expect(String(ahead["slots"])).toMatch(/^\d+\/\d+ used/);
+    expect(ahead["act_boss"]).toBe("in 8 floors (floor 17)");
+    expect(potionContextJson(withMap("Monster"), "monster")["elite_ahead"]).toBeUndefined();
+    expect(potionContextJson(withMap("Monster"), "boss")["act_boss"]).toBe("this fight");
+    // A full belt says the next potion reward is wasted.
+    const full = env(pressedCombat(25, "FIRE_POTION"), { combatPlanner: "turn" });
+    const belt = (full.state.run!.raw as Record<string, unknown>)["potions"] as Record<string, unknown>[];
+    for (const slot of belt) slot["occupied"] = true;
+    expect(String(potionContextJson(full, "monster")["slots"])).toContain("belt full");
+    // DeepSeek's run plan (summary and a potion boss prep).
+    const planned = env(pressedCombat(25, "FIRE_POTION"), { combatPlanner: "turn" });
+    planned.screenMemory.runPlan = {
+      runId: String(planned.state.raw["run_id"]), act: 1, floor: 1, hpPct: 1, trigger: "start", archetype: "strength", want: [], avoid: [], remove: [],
+      blockTarget: null, elites: "normal", rest: "auto", bossPrep: "keep 2 potions for the boss", summary: "scale Strength, save potions for the boss",
+    };
+    expect(potionContextJson(planned, "monster")["run_plan"]).toBe("strength — scale Strength, save potions for the boss | boss prep: keep 2 potions for the boss");
+    // On the question itself (both the escalator's state and Jev's view).
+    const decision = planCombatTurn(planned);
+    if (decision?.kind !== "ask") throw new Error("expected an ask");
+    expect(decision.state["potion_context"]).toMatchObject({ run_plan: expect.stringContaining("save potions") });
+    expect(decision.jevView?.state["potion_context"] ?? decision.state["potion_context"]).toBeDefined();
   });
 });
 
@@ -1546,20 +1549,6 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
     expect(high?.label).not.toBe("combat/plan-choice+potion");
   });
 
-  it("a modelled potion is free when the min-loss line loses 30% of current HP", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const drinks = (hp: number, damage: number): boolean => {
-      const e = env(costlyCombat(hp, damage, "FIRE_POTION"), { combatPlanner: "turn" });
-      const decision = planCombatTurn(e);
-      if (decision?.kind === "act") return decision.intent.action === "use_potion" || (e.screenMemory.combatPlan?.remaining ?? []).some((step) => step.cardId.startsWith("POTION:"));
-      const criteria = decision?.kind === "ask" && decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
-      return String(criteria["plan1"]).includes("Fire Potion");
-    };
-    // 50 HP against 22: Defend still loses 17 (34%).
-    expect(drinks(50, 22)).toBe(true);
-    // 50 HP against 8: Defend loses 3.
-    expect(drinks(50, 8)).toBe(false);
-  });
 });
 
 describe("Crimson Mantle already in play", () => {
@@ -1723,7 +1712,7 @@ describe("combat plan guards (batch 3)", () => {
     expect(e.screenMemory.hpGuard).toEqual(once);
   });
 
-  it("boss fight: no second potion in a turn while HP is high (1R3C F17 T1)", async () => {
+  it("boss fight: a second potion in a turn is offered too (the 1R3C one-a-turn cap is gone)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
@@ -1744,8 +1733,9 @@ describe("combat plan guards (batch 3)", () => {
     };
     // First look this turn: potions are on the table (boss fight).
     expect(usesPotion(decide(2))).toBe(true);
-    // One already drunk this turn (3 at the start, 2 now): none offered, none planned.
-    expect(usesPotion(decide(3))).toBe(false);
+    // One already drunk this turn (3 at the start, 2 now): still offered, Jev's call (the boss
+    // one-potion-a-turn cap is gone, Dai 2026-09-28).
+    expect(usesPotion(decide(3))).toBe(true);
   });
 });
 

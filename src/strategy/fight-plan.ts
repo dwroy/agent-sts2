@@ -231,24 +231,6 @@ export function fightPlanJson(plan: FightPlan): Record<string, JsonValue> {
   };
 }
 
-/** Extra solver cost of drinking this potion now, per the plan; null = leave the default cost. */
-export function planPotionCost(
-  plan: FightPlan | null,
-  potionId: string,
-  ctx: { turn: number; bigHit: boolean; pressed: boolean; offensive?: boolean },
-): { free: boolean; extra: number } | null {
-  const use = plan?.potions[potionId];
-  if (!use || use === "any") return null;
-  if (ctx.pressed) return null;
-  if (use === "early") return ctx.turn <= 2 ? { free: true, extra: 0 } : null;
-  // "big_hit" is the turn of a big enemy attack: no reason to drink an offensive potion then (B6AC F33
-  // T1: Flex drunk for +19 damage when T2 had the better burst hand). Default cost.
-  if (use === "big_hit" && ctx.offensive) return null;
-  if (use === "big_hit") return ctx.bigHit ? { free: true, extra: 0 } : { free: false, extra: 6 };
-  if (use === "emergency") return { free: false, extra: 10 };
-  return { free: false, extra: 20 };
-}
-
 /** Whether an unmodelled potion should be offered to Jev this turn, per the plan (null = default rule). */
 export function planOffersPotion(plan: FightPlan | null, potionId: string, ctx: { turn: number; bigHit: boolean; pressed: boolean; costly: boolean; offensive?: boolean }): boolean | null {
   const use = plan?.potions[potionId];

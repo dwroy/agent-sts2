@@ -1889,9 +1889,14 @@ export function solveTurn(input: SolverInput): SolveResult {
     const overPotionCap =
       input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);
-    // Same outcome: prefer the shorter plan (fewer steps = fewer chances for the board to surprise us).
-    // Over the potion cap it is not a plan to offer, but the search goes on (a later card may win).
-    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || (Math.abs(plan.score - existing.score) < 1e-9 && plan.steps.length < existing.steps.length))) {
+    // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
+    // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
+    // board to surprise us). Over the potion cap it is not a plan to offer, but the search goes on (a
+    // later card may win).
+    const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
+    const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
+    const samePotions = tie && potionsDrunk === potionStepCount(existing.steps);
+    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length))) {
       byOutcome.set(signature, plan);
     }
     if (nodes >= maxNodes) {
@@ -1929,6 +1934,10 @@ export function solveTurn(input: SolverInput): SolveResult {
   return result;
 }
 
+function potionStepCount(steps: Step[]): number {
+  return steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
@@ -1940,7 +1949,9 @@ function vector(plan: Plan): number[] {
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
+  // drinking one must never dominate the same line without it.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

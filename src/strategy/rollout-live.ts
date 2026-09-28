@@ -288,7 +288,8 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       options: { horizon: ROLLOUT_HORIZON, samples: ROLLOUT_SAMPLES, budgetMs, seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}`), now, include: args.shown },
     });
     const byPlan = new Map(result.lines.map((line) => [line.plan, line]));
-    // A line code did not show is only added when it drinks no potion (the potion rules stay code's).
+    // A line code did not show is only added when it drinks no potion (every modelled potion already
+    // has its shown line; the rollout does not add a second drink).
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
     const best = eligible.reduce<LineEstimate | null>((a, b) => (a === null || b.value > a.value ? b : a), null)?.plan ?? null;
     return {
