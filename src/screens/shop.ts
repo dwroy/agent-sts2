@@ -111,7 +111,7 @@ export function planShop(env: DecisionEnv): Decision | null {
       if (!enough) continue;
       const hpPct = (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1);
       const valued = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, hpPct);
-      const clock = action === "buy_card" ? gapCardBonus(gap, id) : { bonus: 0, why: null };
+      const clock = action === "buy_card" ? gapCardBonus(gap, id, knowledge.card(id)?.block ?? null) : { bonus: 0, why: null };
       const scored = valued.score + clock.bonus;
       const planFacts = action === "buy_card" ? planCardFacts(runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id), deckNow.map((entry) => entry.card_id)) : [];
       const avoided = action === "buy_card" ? planAvoidsCard(runPlan, id, cardRoles(id)) : null;

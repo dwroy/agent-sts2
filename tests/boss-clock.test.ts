@@ -56,8 +56,11 @@ describe("boss clock", () => {
     expect(gapCardBonus(gap, "THUNDERCLAP").bonus).toBeGreaterThan(0);
     // A block card only while the entry HP caps the fight's turns (each turn it adds lowers the need).
     expect(gap.cappedTurns).toBeDefined();
-    expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBeGreaterThan(0);
-    expect(gapCardBonus({ ...gap, cappedTurns: undefined }, "SHRUG_IT_OFF").bonus).toBe(0);
+    // Its bonus is survivability (its 8 block's share of the boss's hit, times the gap), and says so.
+    expect(gapCardBonus(gap, "SHRUG_IT_OFF", 8).bonus).toBeGreaterThan(0);
+    expect(gapCardBonus(gap, "SHRUG_IT_OFF", 8).why).toMatch(/^survivability, not damage/);
+    expect(gapCardBonus(gap, "THUNDERCLAP").why).toMatch(/^damage gap/);
+    expect(gapCardBonus({ ...gap, cappedTurns: undefined }, "SHRUG_IT_OFF", 8).bonus).toBe(0);
     expect(gapCardBonus(gap, "DEFEND_IRONCLAD").bonus).toBe(0);
     // AoE only counts against two-part bosses.
     const demon = damageGap(mapState(starter, "KNOWLEDGE_DEMON_BOSS"), testKnowledge)!;

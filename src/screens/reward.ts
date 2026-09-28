@@ -38,7 +38,7 @@ export function rewardCardValuer(env: DecisionEnv): (cardId: string) => { value:
     const info = knowledge.card(cardId);
     const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
     // Boss clock: damage cards while the deck is short of the act boss's damage a turn.
-    const clock = gapCardBonus(gap, cardId);
+    const clock = gapCardBonus(gap, cardId, info?.block ?? null);
     return {
       value: base.value + clock.bonus,
       reasons: [...base.reasons, ...(clock.why ? [clock.why] : [])],

@@ -11,6 +11,7 @@ import { planCombat } from "../src/screens/combat.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { planShop } from "../src/screens/shop.js";
+import { planReward } from "../src/screens/reward.js";
 import { bossClockJson } from "../src/strategy/boss-clock.js";
 import { modelPotion } from "../src/strategy/card-model.js";
 import { parseGameState } from "../src/mod/schema.js";
@@ -142,5 +143,17 @@ describe("the boss clock's Knowledge Demon HP (94FP F17-F32: '459HP, needs ~80/t
     expect(clock["boss"]).toBe("KNOWLEDGE_DEMON");
     expect(clock["boss_hp"]).toBe(399);
     expect(String(clock["boss_note"])).toMatch(/Ponder heals/);
+  });
+});
+
+describe("the clock's card bonus says which gap it is for (62PM F14: Taunt took a damage card's +10 as 'block')", () => {
+  it("the logged F14 reward: Taunt's value is survivability, smaller than the damage gap's bonus", () => {
+    const decision = planReward(loggedEnv(logged("62pm-reward-f14")));
+    const { options } = questionOf(decision);
+    const taunt = Object.values(options).find((option) => option["card"] === "挑衅")!;
+    expect(String(taunt["why"])).toMatch(/survivability, not damage: .*6 block is ~0\.\d+ of the boss's ~\d+ a turn/);
+    const bonus = Number(/block \+(\d+)/.exec(String(taunt["why"]))?.[1]);
+    // Logged: "... for WATERFALL_GIANT: block +10", the damage gap's own bonus.
+    expect(bonus).toBeLessThan(10);
   });
 });

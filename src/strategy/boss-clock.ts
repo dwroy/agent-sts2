@@ -350,6 +350,8 @@ export interface DamageGap {
   gap: number;
   /** The fight's turns when the entry HP caps them below the table's (cappedBossNeed), else absent. */
   cappedTurns?: number;
+  /** The boss's hit a turn once awake (bossDamagePerTurn), when the turns are capped by it. */
+  bossHit?: number;
 }
 
 export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | null {
@@ -360,7 +362,8 @@ export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | n
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   const capped = need.survivableTurns !== null && need.survivableTurns < (bossNeed(need.id)?.turns ?? Infinity);
-  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck), ...(capped ? { cappedTurns: need.turns } : {}) };
+  const bossHit = capped ? bossDamagePerTurn(need.id)?.perTurn : undefined;
+  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck), ...(capped ? { cappedTurns: need.turns } : {}), ...(bossHit ? { bossHit: Math.round(bossHit * 10) / 10 } : {}) };
 }
 
 const BOSS_FLOORS = [17, 33, 48];
@@ -371,25 +374,53 @@ export const GAP_BONUS_MAX = 12;
 export const BIG_GAP_BONUS = 8;
 export const GAP_BONUS_BIG_MAX = 16;
 
+/** The gap bonus's curve: from a gap of BIG_GAP_BONUS a turn gap/2 (UP1C, GZ24), below it 0.4 a point. */
+function gapBonus(gap: number, scaling: boolean): number {
+  return gap >= BIG_GAP_BONUS
+    ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap / 2) + (scaling ? 2 : 0))
+    : Math.min(GAP_BONUS_MAX, Math.round(gap * 0.4) + (scaling ? 2 : 0));
+}
+
 /**
- * Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short.
- * While the entry HP caps the fight's turns, a block card closes the gap too: each turn it adds lowers
- * the damage a turn needed (K8TC F14: the Kin's cap at ~6 turns raised Uppercut's bonus over True Grit's).
+ * Block a play of a block card gives over a boss fight when the game data has no flat Block for it:
+ * Stone Armor's Plating 4 (4+3+2+1), Crimson Mantle's 7 a turn over about 3 turns.
  */
-export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: number; why: string | null } {
+const BLOCK_OVER_FIGHT: Record<string, number> = { STONE_ARMOR: 10, CRIMSON_MANTLE: 21 };
+
+/**
+ * Card-value bonus while the deck is short of the act boss's damage a turn, and which gap it is for.
+ *
+ * - damage: a damage card (scaling, frontload, AoE into the crab) by the damage gap.
+ * - survivability: while the entry HP caps the fight's turns, a block card buys turns instead, and each
+ *   turn lowers the damage a turn needed. Its bonus is that share of the gap: its block over the boss's
+ *   hit a turn (the share of a turn it lasts), times the gap (62PM F14: Taunt's 6 block took the same
+ *   +10 as a damage card, "block +10" over Sword Boomerang; 6FUF the same). `block` is the card's own
+ *   (game data); without one it gets none.
+ */
+export function gapCardBonus(gap: DamageGap | null, cardId: string, block: number | null = null): { bonus: number; why: string | null; kind?: "damage" | "survivability" } {
   if (!gap || gap.gap <= 0) return { bonus: 0, why: null };
-  const role = damageRole(cardId) ?? (gap.cappedTurns !== undefined && isBlockCardId(cardId) && !cardId.startsWith("DEFEND_") ? "block" : null);
-  if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
-  // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
-  if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
-  // From a gap of BIG_GAP_BONUS a turn, gap/2 (UP1C, GZ24: a 9 gap gave +4 against a +14 must-have
-  // block bonus; both bosses were fought at ~62% of the clock).
-  const bonus =
-    gap.gap >= BIG_GAP_BONUS
-      ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap.gap / 2) + (role === "scaling" ? 2 : 0))
-      : Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
+  const damage = damageRole(cardId);
   const turns = gap.cappedTurns !== undefined ? ` in the ~${gap.cappedTurns} turns the entry HP lasts` : "";
-  return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need}${turns} for ${gap.boss}: ${role} +${bonus}` };
+  if (!damage) {
+    if (gap.cappedTurns === undefined || !isBlockCardId(cardId) || cardId.startsWith("DEFEND_")) return { bonus: 0, why: null };
+    const amount = block ?? BLOCK_OVER_FIGHT[cardId] ?? null;
+    if (amount === null || amount <= 0 || !gap.bossHit) {
+      return { bonus: 0, why: `survivability, not damage: the entry HP caps ${gap.boss} at ~${gap.cappedTurns} turns; this card's block over the fight is unknown, no bonus`, kind: "survivability" };
+    }
+    const share = Math.min(1, amount / gap.bossHit);
+    const worth = share * gap.gap;
+    const bonus = gapBonus(worth, false);
+    return {
+      bonus,
+      why: `survivability, not damage: the entry HP caps ${gap.boss} at ~${gap.cappedTurns} turns; ${amount} block is ~${share.toFixed(2)} of the boss's ~${Math.round(gap.bossHit)} a turn, that share of the ${gap.gap}/turn damage gap (deck ~${gap.deck} of ${gap.need}) ~${Math.round(worth)}: block +${bonus}`,
+      kind: "survivability",
+    };
+  }
+  if (damage === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN") return { bonus: 0, why: null };
+  // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
+  if (gap.boss === "AEONGLASS" && damage === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
+  const bonus = gapBonus(gap.gap, damage === "scaling");
+  return { bonus, why: `damage gap: deck ~${gap.deck}/turn of ${gap.need}${turns} for ${gap.boss}: ${damage} +${bonus}`, kind: "damage" };
 }
 
 /** Rest-site shift: smith over a comfortable heal while the deck is well short of the boss. */
