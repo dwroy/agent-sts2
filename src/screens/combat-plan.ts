@@ -31,6 +31,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
+import { DRINK_FIRST_ROLLOUT, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type LiveRollout } from "../strategy/rollout-live.js";
 
 /** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
 export const POTION_PRESSED_SHARE = 0.3;
@@ -566,6 +567,17 @@ export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "di
   });
 }
 
+/**
+ * The draw and discard piles as base cards (no Strength/Weak: the rollout applies its own), for the
+ * rollout facts; null when the state carries neither pile.
+ */
+export function rolloutPiles(state: GameState, knowledge: Knowledge, enemyTargets: number[]): { draw: CardModel[]; discard: CardModel[] } | null {
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  if (!Array.isArray(view["draw"]) && !Array.isArray(view["discard"])) return null;
+  const ctx = { enemyTargets, strength: 0, weak: false };
+  return { draw: pileCardModels(state, knowledge, "draw", ctx), discard: pileCardModels(state, knowledge, "discard", ctx) };
+}
+
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
   const view = asRecord(asRecord(raw["agent_view"])["combat"]);
   const parse = (pile: unknown): DrawPileCard[] =>
@@ -918,8 +930,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // to take, a draw potion a known pile); otherwise it stays an unmodelled option as before.
   const modelledIds = new Set(potionsAll.filter((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null).map((potion) => potion.potion_id));
   const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
+  // The solver input behind `solved` (the rollout facts replay the turn from it).
+  let solvedInput: SolverInput | null = null;
   const solveWith = (free: boolean) =>
-    solveTurn({
+    solveTurn((solvedInput = {
       hand: [
         ...hand,
         ...potionsAll
@@ -950,7 +964,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       vulnerablePayoffs: new Set(asArray(asRecord(state.run?.raw)["deck"]).map((card) => str(asRecord(card)["card_id"])).filter((id) => VULNERABLE_PAYOFFS.has(id))).size,
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
-    });
+    }));
   let solved = solveWith(false);
   // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
   // (7Q5G/MD3F: hallway fights at -16..-46 HP with a potion kept in the belt): even the line that
@@ -1228,13 +1242,34 @@ function planTurn(env: DecisionEnv): Decision | null {
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
   const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
+  // Rollout FACTS (rollout-live.ts): code's options and their order are settled above; the rollout only
+  // adds numbers to each, and its best line as one more option when code did not show it. The HP guard,
+  // the potion rules and code's rank keep working on code's own `options`.
+  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && solvedInput !== null
+    ? liveRollout({
+        state,
+        knowledge: env.knowledge,
+        memory: env.screenMemory,
+        solver: solvedInput,
+        plans: surviving,
+        shown: options,
+        piles: rolloutPiles(state, env.knowledge, enemyTargets),
+      })
+    : null;
+  const rolloutBest = rollout?.available ? rollout.best : null;
+  const shown = rolloutBest && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  const factsOf = (plan: Plan): Record<string, JsonValue> =>
+    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === rolloutBest ? { rollout_best: true } : {}) } : {};
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
-  options.forEach((plan, index) => {
+  shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
+  const rolloutRecord = rollout
+    ? rolloutLog(rollout, rolloutBest ? `plan${shown.indexOf(rolloutBest) + 1}` : null, rolloutBest !== null && !options.includes(rolloutBest))
+    : null;
   // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
   // for), when pressed at low HP, or when even the cheapest line costs a lot of HP.
   const offerPotions = dangerous || kind === "boss" || pressed || costly || planPotionNow;
@@ -1248,6 +1283,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
           text: potion.text,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
@@ -1296,8 +1332,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     );
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
-    options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan) });
+    shown.forEach((plan, index) => {
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -1328,14 +1364,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     apply: () => commit(env, state.turn, line, hand, "code"),
   });
 
-  return {
-    kind: "ask",
-    label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
-    state: questionState,
-    questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
-    ...(jevView ? { jevView } : {}),
-    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
-    resolve(answers): ResolvedAction {
+  const resolvePlan = (answers: Parameters<AskDecision["resolve"]>[0]): ResolvedAction => {
+    {
       const answer = answers["plan"];
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");
       const chosen = byKey.get(answer.choice);
@@ -1415,7 +1445,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // The guard does not swap into a line that drinks a potion the fight plan keeps for later (MGJ8
       // F11 T1: -10 swapped for a line drinking the Fortifier kept for an emergency; the boss at F17
       // then died 3 HP short of us, Dismember hitting 28 into 7 block).
-      const guardOptions = options.filter((plan) => plan === picked || !drinksKeptPotion(plan));
+      // (The rollout's added line, outside code's options, is guarded against code's options like any pick.)
+      const guardOptions = [...options.filter((plan) => plan === picked || !drinksKeptPotion(plan)), ...(options.includes(picked) ? [] : [picked])];
       const proposed = hallway
         ? hallwayGuard && !picked.outcome.winsFight
           ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack)
@@ -1425,13 +1456,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
-      const rank = options.indexOf(plan) + 1;
+      const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${options.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),
-        rationale: `Jev chose plan ${options.indexOf(picked) + 1}/${options.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${options.indexOf(picked) + 1}${guardNote}${calcNote}`,
+        rationale: `Jev chose plan ${shown.indexOf(picked) + 1}/${shown.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
@@ -1440,6 +1471,23 @@ function planTurn(env: DecisionEnv): Decision | null {
           if (!hallway) recordHpGuard(env, state.turn, raceKept ? 0 : extra);
         },
       };
+    }
+  };
+
+  return {
+    kind: "ask",
+    label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
+    state: questionState,
+    questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
+    ...(jevView ? { jevView } : {}),
+    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
+    resolve(answers): ResolvedAction {
+      const resolved = resolvePlan(answers);
+      if (!rolloutRecord) return resolved;
+      const answer = answers["plan"];
+      const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
+      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : pick.plan === rolloutBest;
+      return { ...resolved, log: { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } };
     },
   };
 }

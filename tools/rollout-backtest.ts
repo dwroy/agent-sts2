@@ -30,7 +30,8 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
 import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { deckModels, enemyTable, powersOf, type MonsterDbMove } from "../src/strategy/rollout-live.js";
 import { loadFightValueModel, type FightValueModel } from "../src/strategy/fight-value.js";
 import { loadFightValueGates, rolloutDecision, type FightValueGates, type EnemyTable, type FightMeta, type MoveModelData, type RolloutEnemy } from "../src/strategy/rollout.js";
 import { solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
@@ -170,65 +171,6 @@ function stepText(step: Step): string {
 
 function playsText(plan: Plan): string {
   return plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then ");
-}
-
-interface MonsterDbMove {
-  next?: Record<string, number>;
-  damage_by_asc?: Record<string, { base_per_hit?: Record<string, number>; hits?: Record<string, number> }>;
-  self_powers_gained?: Record<string, Record<string, number>>;
-  block_gained?: Record<string, number>;
-  avg_total_shown?: number;
-}
-
-function mode(counts: Record<string, number> | undefined): number | null {
-  if (!counts) return null;
-  const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-  return best ? Number(best[0]) : null;
-}
-
-function enemyTable(id: string, asc: number, db: Record<string, { moves?: Record<string, MonsterDbMove> }>, mm: MoveModelData): EnemyTable | undefined {
-  const moves = db[id]?.moves;
-  const learned = mm[id];
-  if (!moves && !learned) return undefined;
-  const table: EnemyTable = { moves: {}, next: {} };
-  for (const [move, entry] of Object.entries(moves ?? {})) {
-    const byAsc = entry.damage_by_asc ?? {};
-    const key = byAsc[String(asc)] ? String(asc) : Object.keys(byAsc).sort((a, b) => Math.abs(Number(a) - asc) - Math.abs(Number(b) - asc))[0];
-    const d = key ? byAsc[key] : undefined;
-    const base = mode(d?.base_per_hit);
-    const hits = mode(d?.hits) ?? 1;
-    const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
-    table.moves[move] = {
-      damage: base ?? (avg > 0 ? avg / hits : 0),
-      hits,
-      strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
-      block: mode(entry.block_gained) ?? 0,
-    };
-  }
-  for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
-    if (!table.moves[move]) table.moves[move] = { damage, hits: 1, strength: 0, block: 0 };
-  }
-  table.next = learned?.next ?? Object.fromEntries(Object.entries(moves ?? {}).map(([m, e]) => [m, e.next ?? {}]));
-  return table;
-}
-
-function powersOf(holder: Record<string, unknown>): Record<string, number> {
-  const out: Record<string, number> = {};
-  for (const p of asArray(holder["powers"])) {
-    const power = asRecord(p);
-    const id = String(power["power_id"] ?? "");
-    if (id) out[id] = typeof power["amount"] === "number" ? (power["amount"] as number) : 1;
-  }
-  return out;
-}
-
-function deckModels(state: GameState, knowledge: Knowledge): CardModel[] {
-  return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
-    const own = asRecord(raw);
-    const info = knowledge.card(String(own["card_id"]));
-    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + i }, 900 + i, knowledge);
-    return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0) };
-  });
 }
 
 const cardKey = (c: { cardId: string; upgraded: boolean }) => `${c.cardId}${c.upgraded ? "+" : ""}`;

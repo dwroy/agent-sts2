@@ -2,9 +2,9 @@
  * Multi-turn rollout of a turn's candidate lines, with the fight-value model as the terminal estimate,
  * gated by its measured effect (tools/build-fight-value.py -> src/knowledge/fight-value-gates.json).
  *
- * OFFLINE: nothing in the decision code calls this. It is backtested by tools/rollout-backtest.ts
- * (notes/rollout-backtest.md). Everything here is a pure function of its inputs (models, piles, RNG seed,
- * and an injectable clock for the time budget).
+ * Backtested by tools/rollout-backtest.ts (notes/rollout-backtest.md). Live, it only supplies FACTS to Jev's
+ * combat question (src/strategy/rollout-live.ts): it never ranks, filters or auto-plays a line. Everything
+ * here is a pure function of its inputs (models, piles, RNG seed, and an injectable clock for the time budget).
  *
  * Per decision:
  *   1. Candidates: the top K lines by solver score, plus the line with the most damage, the least HP lost
@@ -405,6 +405,8 @@ export interface LineEstimate {
   hpLoss: number;
   turnsToWin: number;
   winProb: number;
+  /** Samples (of `samples`) in which the fight was won within the horizon. */
+  wins: number;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -942,7 +944,9 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     let turns = o.turns;
     let lossM: number | null = null;
     let winM: number | null = null;
+    let wins = plan.outcome.winsFight ? 1 : 0;
     if (horizon > 1) {
+      wins = trajectories[i]!.slice(0, samples).filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
       const vals = trajectories[i]!.slice(0, samples).map((records) => valueAt(records, horizon, ctx, t0, startHp));
       const valsM = trajectories[i]!.slice(0, samples).map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
       const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length);
@@ -966,6 +970,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       hpLoss: loss,
       turnsToWin: turns,
       winProb: win,
+      wins,
       value: -loss - DEATH_HP * (1 - win),
       valueModelTerminal: lossM === null ? null : -lossM - DEATH_HP * (1 - (winM ?? 0)),
       modelForecast: {

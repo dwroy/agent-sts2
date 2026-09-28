@@ -50,6 +50,10 @@ export interface DecisionRecord {
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
   jev_hints?: string[];
+  /** Combat plan choice: the rollout behind the facts shown to Jev ({ms, horizon, samples, degraded, best, …}). */
+  rollout?: JsonValue;
+  /** Combat plan choice: Jev's pick was the rollout's best line (null: no pick, or no rollout). */
+  rollout_best_chosen?: boolean | null;
   result: string;
 }
 

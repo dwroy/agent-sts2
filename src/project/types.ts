@@ -71,6 +71,8 @@ export interface ScreenMemory {
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */
   fightStart?: { fight: string; maxHp: number };
+  /** The fight's encounter (first enemy ids seen, sorted, "+"-joined) for the rollout facts (rollout-live.ts). */
+  rolloutEncounter?: { fight: string; enc: string };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
@@ -190,6 +192,8 @@ export interface ResolvedAction {
   decider?: "jev" | "deepseek" | "claude";
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
+  /** Extra decision-log fields (combat: the rollout facts' timing, and whether Jev picked the rollout's best line). */
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).

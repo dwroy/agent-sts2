@@ -1,7 +1,7 @@
 /**
  * Offline rollout (src/strategy/rollout.ts): deterministic under a seed, degrades to fit its time budget,
- * the gating math agrees with the builder's gates file, the features mirror the Python builder, and no
- * decision code imports it.
+ * the gating math agrees with the builder's gates file, the features mirror the Python builder, and decision
+ * code reaches it only through the combat facts (rollout-live.ts; tests/rollout-live.test.ts).
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -275,16 +275,20 @@ describe("rollout (offline)", () => {
     expect(high.hpLoss).toBeGreaterThanOrEqual(low.hpLoss);
   });
 
-  it("is not wired into any decision code", () => {
-    const offenders: string[] = [];
-    const walk = (dir: string): void => {
-      for (const name of readdirSync(dir)) {
-        const path = join(dir, name);
-        if (statSync(path).isDirectory()) walk(path);
-        else if (path.endsWith(".ts") && !path.endsWith("rollout.ts") && /rollout(\.js)?["']/.test(readFileSync(path, "utf8"))) offenders.push(path);
-      }
+  it("reaches decision code only through rollout-live.ts, and that only from the combat question's facts", () => {
+    const importers = (module: string): string[] => {
+      const found: string[] = [];
+      const walk = (dir: string): void => {
+        for (const name of readdirSync(dir)) {
+          const path = join(dir, name);
+          if (statSync(path).isDirectory()) walk(path);
+          else if (path.endsWith(".ts") && new RegExp(`from "[./]*(strategy/)?${module}\\.js"`).test(readFileSync(path, "utf8"))) found.push(path.slice(ROOT.length + 1));
+        }
+      };
+      walk(join(ROOT, "src"));
+      return found.sort();
     };
-    walk(join(ROOT, "src"));
-    expect(offenders).toEqual([]);
+    expect(importers("rollout")).toEqual(["src/strategy/rollout-live.ts"]);
+    expect(importers("rollout-live")).toEqual(["src/screens/combat-plan.ts"]);
   });
 });

@@ -83,14 +83,14 @@ describe("fight value (offline stub)", () => {
     }
   });
 
-  it("is not wired into any decision code yet", () => {
+  it("is read only by the rollout (rollout.ts, and rollout-live.ts for Jev's combat facts)", () => {
     const offenders: string[] = [];
     const walk = (dir: string): void => {
       for (const name of readdirSync(dir)) {
         const path = join(dir, name);
         if (statSync(path).isDirectory()) walk(path);
-        // rollout.ts (the offline rollout, itself unwired: tests/rollout.test.ts) is the one allowed reader.
-        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && !path.endsWith("rollout.ts") && readFileSync(path, "utf8").includes("fight-value")) offenders.push(path);
+        // rollout.ts and rollout-live.ts (facts for Jev, never the ranking: tests/rollout.test.ts) are the allowed readers.
+        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && !path.endsWith("rollout.ts") && !path.endsWith("rollout-live.ts") && readFileSync(path, "utf8").includes("fight-value")) offenders.push(path);
       }
     };
     walk(join(ROOT, "src"));

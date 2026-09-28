@@ -928,6 +928,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
+      // Combat: the rollout facts' timing and whether Jev picked the rollout's best line (rollout-live.ts).
+      ...(resolved.log ?? {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
       label: decision.label,
