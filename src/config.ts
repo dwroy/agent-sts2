@@ -78,8 +78,9 @@ export interface AppConfig {
    */
   buildDecider: "deepseek" | "jev";
   /**
-   * With BUILD_DECIDER=deepseek, whether in-combat questions may still escalate to DeepSeek on Jev's
-   * near-guesses. `off` (default): combat, potions and in-combat card picks stay with code and Jev.
+   * With BUILD_DECIDER=deepseek, whether in-combat card picks (the only in-combat questions that still
+   * carry an escalation; turn plans no longer do) may escalate to DeepSeek on Jev's near-guesses. `off`
+   * (default): combat, potions and in-combat card picks stay with code and Jev.
    */
   combatDeepseek: "off" | "on";
   mode: Mode;

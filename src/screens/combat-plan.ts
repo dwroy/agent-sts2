@@ -137,8 +137,9 @@ function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
   return Math.max(0, memo.startCount - count);
 }
 
-/** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
-const CLOSE_CALL = 6;
+// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card
+// play is Jev's): with two or more distinct lines Jev is asked, unless code's line dominates every other
+// on every axis.
 const MAX_OPTIONS = 4;
 
 /**
@@ -1176,7 +1177,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
-  const clear = (!second || top.score - second.score >= CLOSE_CALL) && !setupClose;
+  // Code plays its line only when there is no other, or it beats every other on every axis; any real
+  // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
+  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose;
   if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
@@ -1203,7 +1206,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
     commit(env, state.turn, top, hand, "code");
     const margin = second
-      ? `+${(top.score - second.score).toFixed(1)} over next`
+      ? "dominates every other line"
       : surviving.length === 1
         ? "only line"
         : top === best
@@ -1331,12 +1334,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
-    // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
-    // 15 such escalations, so a near-guess from Jev falls back to that plan instead (see resolve).
-    // FIGHT_PLAN=v1: DeepSeek planned the fight at its start and answers no per-turn choice.
-    ...((kind === "elite" || kind === "boss" || dangerous) && env.fightPlan !== "v1"
-      ? { escalate: { question: "plan", below: 0.5, why: `${kind} fight${dangerous ? ", dangerous turn" : ""}` } }
-      : {}),
+    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
     resolve(answers): ResolvedAction {
       const answer = answers["plan"];
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");
@@ -1351,10 +1349,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
       // Not on a near-guess (M75J F37: Blood Potion at 0.14 on 78/111 HP, healed to full by the next event).
       const potionTurn = drinks && (costly || dangerous) && answer.confidence >= 0.25;
-      // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
-      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
-        return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
-      }
+      // (The hallway near-guess fallback to code's rank 1 under 0.3 is gone: Jev's pick stands. The
+      // potion vetoes below are unchanged.)
       // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
       // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
       // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.

@@ -222,7 +222,7 @@ describe("fight plan log", () => {
 });
 
 describe("turn planner with a fight plan", () => {
-  it("does not escalate per-turn choices when FIGHT_PLAN=v1", () => {
+  it("never escalates per-turn choices to DeepSeek, with or without a fight plan (combat is Jev's)", () => {
     const raw = bossTurnOne();
     // A dangerous boss turn: 40 incoming at 55 HP.
     const combat = raw["combat"] as Raw;
@@ -230,7 +230,7 @@ describe("turn planner with a fight plan", () => {
     const off = planCombatTurn(env(raw));
     const on = planCombatTurn(env(raw, { fightPlan: "v1" }));
     expect(off?.kind).toBe("ask");
-    expect((off as AskDecision).escalate).toBeDefined();
+    expect((off as AskDecision).escalate).toBeUndefined();
     expect(on?.kind).toBe("ask");
     expect((on as AskDecision).escalate).toBeUndefined();
   });
