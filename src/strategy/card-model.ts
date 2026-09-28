@@ -68,7 +68,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -590,6 +590,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
   LIQUID_MEMORIES: { target: "self" },
   DROPLET_OF_PRECOGNITION: { target: "self" },
+  // Radiant Tincture: 「获得{Energy}。在你的下{RadiancePower}个回合开始时，额外获得1点能量。」 Energy 1,
+  // RadiancePower 3 (potion-values.ts; states.jsonl Y3XT F48 T7: RADIANCE_POWER 3 on the drink, 2 the next
+  // turn). One energy now; the three later ones are lasting value (turn-solver RADIANCE_LATER_ENERGY) and
+  // the rollout's later turns' energy. Unmodelled, Y3XT's last boss never offered it T1-T3.
+  RADIANT_TINCTURE: { target: "self", energyGain: 1, special: "radiance" },
   // Cure All: 「获得{Energy}。抽{Cards}张牌。」 Energy 1, draw 2 (potion-values.ts).
   CURE_ALL: { target: "self", energyGain: 1, draw: 2 },
   // Bottled Potential: 「将你的所有牌洗入你的抽牌堆。抽{Cards}张牌。」 the hand goes back into the pile (not

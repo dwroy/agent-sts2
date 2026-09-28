@@ -66,6 +66,7 @@ const facts = (criteria: Record<string, string | null>, key: string) => JSON.par
 const pick = (key: string, confidence = 0.9): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
 
 describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
+  // Two full-budget solves of a board whose belt holds Radiant Tincture (a line since it is modelled).
   it("shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap", () => {
     setExperienceForTests(LESSONS);
     const decision = ez2l() as AskDecision;
@@ -96,7 +97,7 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     // The decision log names the focus of each labelled option.
     const log = decision.resolve(pick(amalgam.key)).log as Record<string, unknown>;
     expect(Object.values(log["focus"] as Record<string, string>)).toContain(AMALGAM);
-  });
+  }, 30_000);
 
   it("Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)", () => {
     const decision = ez2l() as AskDecision;
@@ -160,7 +161,7 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     const a = criteriaOf(ez2l() as AskDecision);
     const b = criteriaOf(ez2l() as AskDecision);
     expect(b).toEqual(a);
-  });
+  }, 30_000);
 
   it("stays inside the time budget with the real clock, degrading the samples per order first", () => {
     const decision = ez2l({ budgetMs: ROLLOUT_BUDGET_MS }) as AskDecision;
