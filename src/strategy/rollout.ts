@@ -663,6 +663,12 @@ function applyPlan(
       }
     }
   }
+  // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
+  // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
+  // a Sandpit fight the best line was just the one losing the least HP (LXB3 F33: eaten at 81 HP).
+  if (o.sandpitAfter !== null) {
+    for (const e of enemies) if ((e.base.sandpit ?? 0) > 0) e.base = { ...e.base, sandpit: o.sandpitAfter };
+  }
   // A segment killed alone reattaches (63CP F25: the head died T2 and came back at 25 HP on T4); the
   // solver already scores this, the rollout ended the fight's threat at the kill.
   const segmentsLeft = enemies.some((e) => e.alive && e.base.reattach);

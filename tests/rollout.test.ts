@@ -180,6 +180,24 @@ describe("rollout (offline)", () => {
     }
   });
 
+  it("the Sandpit counts down across rollout turns: at 0 every sample is eaten (LXB3 F33)", () => {
+    const run = (sandpit: number | undefined) => {
+      const input = scenario(1e9, fakeClock(0.01));
+      const solver: SolverInput = {
+        ...input.solver,
+        player: { ...input.solver.player, hp: 80 },
+        enemies: [{ ...input.solver.enemies[0]!, hp: 300, maxHp: 300, attacks: [{ damage: 3, hits: 1 }], ...(sandpit ? { sandpit } : {}) }],
+      };
+      const table: EnemyTable = { moves: { NIBBLE: { damage: 3, hits: 1, strength: 0, block: 0 } }, next: { NIBBLE: { NIBBLE: 1 } } };
+      return rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id: "WORM", move: "NIBBLE", strength: 0, powers: {} }], tables: { WORM: table } });
+    };
+    for (const line of run(3).lines) {
+      expect(line.deaths).toBe(line.samples);
+      expect(line.turnsToDeath).toBeLessThanOrEqual(3);
+    }
+    for (const line of run(undefined).lines) expect(line.deaths).toBe(0);
+  });
+
   it("degrades to fit the time budget: 5 turns, then 3, then fewer samples, then 1 turn", () => {
     const run = (budget: number) => rolloutDecision(scenario(budget, fakeClock(1)));
     const full = run(1e9);
