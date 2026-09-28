@@ -1137,7 +1137,43 @@ describe("turn-start settle guard", () => {
     const e = env(raw, { combatPlanner: "turn" });
     expect(turnStartUnsettled(e, 1_000)).toBe(true);
     expect(turnStartUnsettled(e, 4_000)).toBe(true);
-    expect(turnStartUnsettled(e, 6_100)).toBe(false);
+    // No frame of this fight has shown a hand or energy yet: still the last fight's counters.
+    expect(turnStartUnsettled(e, 6_100)).toBe(true);
+    expect(turnStartUnsettled(e, 1_000 + 30_100)).toBe(false);
+  });
+
+  it("a new fight's first frame is not 'stable' because the last fight ended on the same counters (YKFW F14 T1)", async () => {
+    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const frame = (floor: number, hand: unknown[], energy: number, played: number) => {
+      const raw = combatPayload();
+      raw["turn"] = 1;
+      (raw["run"] as Record<string, unknown>)["floor"] = floor;
+      const combat = raw["combat"] as Record<string, unknown>;
+      const player = combat["player"] as Record<string, unknown>;
+      player["energy"] = energy;
+      player["cards_played_this_turn"] = played;
+      if (hand.length === 0) combat["hand"] = [];
+      return raw;
+    };
+    // F13 T1: played out (3 cards), empty hand, 0 energy, the killing blow; seen for a long time.
+    const e = env(frame(13, [], 0, 3), { combatPlanner: "turn" });
+    turnStartUnsettled(e, 0);
+    turnStartUnsettled(e, 60_000);
+    // F14's first frame, 0.5 s after the map click, still with F13's counters: wait.
+    const next = env(frame(14, [], 0, 3), { combatPlanner: "turn" });
+    next.screenMemory.turnBoard = e.screenMemory.turnBoard;
+    expect(turnStartUnsettled(next, 60_500)).toBe(true);
+    expect(turnStartUnsettled(next, 66_000)).toBe(true);
+    // The real draw lands: act on it once it holds (the combat payload holds a short hand: 1.5 s).
+    const drawn = env(frame(14, [1], 3, 0), { combatPlanner: "turn" });
+    drawn.screenMemory.turnBoard = next.screenMemory.turnBoard;
+    expect(turnStartUnsettled(drawn, 66_100)).toBe(true);
+    expect(turnStartUnsettled(drawn, 67_700)).toBe(false);
+    // Played out later in F14's T1: the usual 5 s rule, this fight's counters.
+    const done = env(frame(14, [], 0, 4), { combatPlanner: "turn" });
+    done.screenMemory.turnBoard = drawn.screenMemory.turnBoard;
+    expect(turnStartUnsettled(done, 70_000)).toBe(true);
+    expect(turnStartUnsettled(done, 75_100)).toBe(false);
   });
 
   it("does not wait on a normal turn start", async () => {

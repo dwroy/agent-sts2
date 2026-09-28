@@ -90,7 +90,16 @@ export interface ScreenMemory {
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
    */
-  turnBoard?: { turn: number | null; handLen: number; energy: number; changedAt: number };
+  turnBoard?: {
+    /** Which fight the counters are from (run, act, floor): a new fight starts the board over. */
+    fight?: string;
+    /** A frame of this fight has shown a hand or energy: its counters are this fight's own. */
+    live?: boolean;
+    turn: number | null;
+    handLen: number;
+    energy: number;
+    changedAt: number;
+  };
   /** Enemy index we last targeted (Surrounded facing); cleared out of combat. */
   facing?: number | null;
   /**

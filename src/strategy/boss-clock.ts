@@ -112,8 +112,6 @@ export function calibrated(raw: number): number {
 }
 /** Damage multiplier with two or more Vulnerable sources in the deck. */
 const VULNERABLE_UPTIME = 1.2;
-/** Share of max HP a boss is entered with when it is still some floors away (logged A8 median ~0.9). */
-export const ENTRY_HP_SHARE = 0.85;
 /** Vantom's Slippery stacks. */
 const SLIPPERY_STACKS = 9;
 
@@ -310,6 +308,16 @@ export function mechanicFactor(id: string, deck: DeckProfile, turns: number): nu
       return 0.82;
     case "LAGAVULIN_MATRIARCH":
       return 0.78;
+    // The Insatiable: fitted on the 23 logged A8 fights (tools/boss-fights-extract.py THE_INSATIABLE,
+    // tests/boss-fights/insatiable-a8.json), the realised damage a turn over the calibrated estimate at
+    // the fight's real length has median 1.10 (LAD factor 1.04; median |log error| 0.28 at 1.0). Frantic
+    // Escapes (median 3 a fight, ~0.45 a turn) do not show in it: they cost a card and an energy but the
+    // fight's other turns are full-damage ones. The 0.50/0.51 of VNWR16YEJASM and 981WMX8MQ7DK (and
+    // 69HWH6MD1S34's 0.41, 33 HP entry) were play, not the mechanic: Toasty Mittens exhausting Bludgeon /
+    // Ultimate Strike / Bash+, 6 Escapes on 27 energy, the HP guard swapping out damage lines. A 0.54
+    // factor would put the median |log error| at 0.71. So no discount.
+    case "THE_INSATIABLE":
+      return 1;
     default:
       return 1;
   }
@@ -354,6 +362,11 @@ export function eruptionTurns(entryHp: number, lossPerTurn: number): number {
 /** HP lost a turn in the Test Subject's first phase. */
 const TEST_SUBJECT_PHASE1_LOSS = 3;
 
+/** Test Subject phase 3 turns (of `turns`) under Nemesis' Intangible: its first turn and every other one. */
+export function testSubjectIntangibleTurns(turns: number): number {
+  return Math.ceil(turns / 2);
+}
+
 /** Test Subject phase HP by ascension (phase 3 at A8 is not logged yet: +6% like phase 2). */
 export function testSubjectPhases(ascension: number): [number, number, number] {
   return ascension >= 8 ? [111, 212, 318] : [100, 200, 300];
@@ -393,12 +406,39 @@ export interface BossClock {
   phases?: { phase: number; hp: number; turns: number; need: number }[];
 }
 
-/** The expected entry HP: the current HP, or ENTRY_HP_SHARE of max HP when a rest can still heal. */
+/** A rest heals this share of max HP (route-projection's REST_HEAL; the rest screen's "30% of max"). */
+export const REST_HEAL_SHARE = 0.3;
+/** Regal Pillow's extra heal on a rest (981WMX8MQ7DK F32: 37 -> 79 of 91 = 27 + 15). */
+export const REGAL_PILLOW_HEAL = 15;
+
+/**
+ * Whether the pre-boss rest (the floor before the act boss) is still ahead: on an earlier floor, or on
+ * that floor with its rest options not yet used.
+ */
+export function restAheadOfBoss(state: GameState): boolean {
+  const floor = state.run?.floor ?? null;
+  if (floor === null) return false;
+  const boss = BOSS_FLOORS.find((entry) => entry >= floor);
+  if (boss === undefined || floor >= boss) return false;
+  if (floor < boss - 1) return true;
+  const rest = asRecord(state.raw["rest"]);
+  return state.screen === "REST" && asArray(rest["options"]).map(asRecord).some((option) => option["is_enabled"] === true && str(option["option_id"]).toUpperCase() === "HEAL");
+}
+
+/**
+ * The expected entry HP: the current HP plus one rest's heal (30% of max, Regal Pillow's +15) while the
+ * pre-boss rest is ahead, capped at max HP. It used to be max(HP, 85% of max) whenever any rest was ahead
+ * (Z6AMPPWHQ5CV: 30/80 at F31 read as a 68 HP entry, "need 46"; the rest gave 54 and the demon needed ~61).
+ * The fights before the rest are not taken off, and a smith instead heals nothing: an upper bound.
+ */
 export function expectedEntryHp(state: GameState): number {
   const hp = state.run?.current_hp ?? null;
   const max = state.run?.max_hp ?? null;
   if (max === null || max <= 0) return hp ?? 70;
-  return Math.round(Math.max(hp ?? max, ENTRY_HP_SHARE * max));
+  const now = hp ?? max;
+  if (!restAheadOfBoss(state)) return now;
+  const pillow = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "REGAL_PILLOW") ? REGAL_PILLOW_HEAL : 0;
+  return Math.round(Math.min(max, now + REST_HEAL_SHARE * max + pillow));
 }
 
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */
@@ -431,8 +471,12 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     // 60 HP at phase 2, dead on the 5th claw).
     const turns2 = Math.max(3, Math.min(5, Math.round(hpAt2 / 15)));
     const turns3 = 6;
+    // Phase 3 has Nemesis: Intangible on its first turn and every other turn after (logged: VQKX T5/T7,
+    // ZANM T5/T7/T9, W6F4, CRRP, YFG5), every hit 1 while it lasts. Only the other turns deal damage
+    // (VQKX F48: 3 / 88 / 5 over T5-T7; the clock had counted 6 full turns, "need 53").
+    const damageTurns3 = turns3 - testSubjectIntangibleTurns(turns3);
     const need2 = Math.round(p2 / turns2);
-    const need3 = Math.round(p3 / turns3);
+    const need3 = Math.round(p3 / damageTurns3);
     const fightTurns = turns1 + turns2 + turns3;
     const deckNow = estimateAt(turns1 + turns2);
     const need = Math.max(need2, need3);
@@ -441,7 +485,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
       hp: p1 + p2 + p3,
       hpNote: `three phases ${p1}/${p2}/${p3}${ascension >= 8 ? " (A8; phase 3 not yet logged)" : ""}`,
       fightTurns,
-      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}`,
+      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}, ${damageTurns3} of them without Nemesis' Intangible`,
       need,
       deck: deckNow,
       gap: Math.max(0, need - deckNow),

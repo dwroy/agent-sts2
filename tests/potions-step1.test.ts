@@ -101,6 +101,19 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
     expect(endTurn(plans).outcome.hpLoss - juice.outcome.hpLoss).toBe(hit - Math.floor(hit * 0.7));
   });
 
+  it("Shackling Potion: every enemy hits 7 less per hit this turn (VQKX: carried unmodelled F11-F28)", () => {
+    const shackle = modelPotion("SHACKLING_POTION", "Shackling Potion", 0, [], 0)!;
+    expect(shackle.target).toBe("all");
+    expect(shackle.enemyTempStrengthLoss).toBe(7);
+    const enemies: EnemySim[] = [
+      { index: 0, name: "A", hp: 50, maxHp: 50, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 12, hits: 2 }] },
+      { index: 1, name: "B", hp: 50, maxHp: 50, block: 0, vulnerable: 0, weak: 0, artifact: 1, intangible: false, attacks: [{ damage: 10, hits: 1 }] },
+    ];
+    const plans = solveTurn({ hand: [shackle], player: { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false }, enemies, fightKind: "elite" }).plans;
+    // A: 2 hits of 12 -> 5 (-14); B's Artifact takes the loss.
+    expect(endTurn(plans).outcome.hpLoss - only(plans, "POTION:SHACKLING_POTION")!.outcome.hpLoss).toBe(14);
+  });
+
   it("Snecko Oil draws and makes the hand's costs their expected 1.5 (K8TC F17 T5: Bash at 2 is then playable after two 1-cost cards)", () => {
     const snecko = modelPotion("SNECKO_OIL", "Snecko Oil", 1, [], 0)!;
     expect(snecko.draw).toBe(7);

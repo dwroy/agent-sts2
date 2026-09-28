@@ -410,8 +410,11 @@ export interface RolloutInput {
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
 export interface OrderEstimate {
   order: KillOrder;
-  /** Samples in which the order's first group is dead by the end of the horizon (the fight won counts). */
-  firstDown: number;
+  /**
+   * Samples in which the order's first group is dead by the end of the horizon (the fight won counts);
+   * null when that group is an illusion, which revives (FA82/981W Parafright: "dead by T5 8/8").
+   */
+  firstDown: number | null;
   hpLoss: number;
   turnsToWin: number | null;
   deaths: number;
@@ -587,6 +590,10 @@ interface SimEnemy {
   blast?: number;
   /** A phase boss: the max HP of each phase still to come after the current one (set at its first revive). */
   phasesLeft?: number[];
+  /** Our turns of Intangible left, this one included (every hit into it is 1). */
+  intangibleTurns: number;
+  /** Nemesis (Test Subject phase 3): enemy turns until it next gains 1 Intangible, else undefined. */
+  nemesisIn?: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -674,7 +681,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -778,6 +785,13 @@ function applyPlan(
         if (e.phasesLeft.length === 0) {
           const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
           e.powers = powers;
+          // The Test Subject's last phase comes with Nemesis and starts Intangible (every logged phase 3's
+          // first turn): Intangible through the enemy turn, then re-granted, so on our next turn too.
+          if (e.id === "TEST_SUBJECT") {
+            e.powers = { ...e.powers, NEMESIS_POWER: 1 };
+            e.intangibleTurns = 1;
+            e.nemesisIn = 1;
+          }
         }
         e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
       } else {
@@ -822,6 +836,14 @@ function applyPlan(
       e.block = m?.block ?? 0;
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
+      e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
+      if (e.nemesisIn !== undefined) {
+        e.nemesisIn -= 1;
+        if (e.nemesisIn <= 0) {
+          e.intangibleTurns += 1;
+          e.nemesisIn = 2;
+        }
+      }
       e.move = nextMove(table, e.move, random);
     }
     for (const e of enemies) {
@@ -917,6 +939,10 @@ function simulate(
       vulnerable: e.vulnerable,
       weak: e.weak,
       alive: e.hp > 0,
+      // Intangible now lasts its stacks; Nemesis re-grants it at the end of every 2nd enemy turn, so it is
+      // on every other turn (VQKX F48 T6: "win 88%" with Intangible never coming back, T7 212 -> 208).
+      intangibleTurns: e.intangible ? Math.max(1, info?.powers?.["INTANGIBLE_POWER"] ?? 1) : 0,
+      ...((info?.powers?.["NEMESIS_POWER"] ?? 0) > 0 ? { nemesisIn: e.intangible ? 2 : 1 } : {}),
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -951,6 +977,7 @@ function simulate(
       .filter((e) => e.alive)
       .map((e) => ({
         ...laterTurnSim(e.base),
+        intangible: e.intangibleTurns > 0,
         hp: e.hp,
         maxHp: e.maxHp,
         block: e.block,
@@ -1057,6 +1084,8 @@ export interface KillGroup {
   indices: number[];
   /** Their HP together. */
   hp: number;
+  /** An illusion (Parafright): back at full HP next turn when killed, so never "dead" for an order. */
+  illusion?: boolean;
 }
 
 /** An order to kill the enemy groups in: the later turns' policy targets the first group with a member alive. */
@@ -1066,6 +1095,8 @@ export interface KillOrder {
   /** Names joined by " > " ("Louse x3" for a group). */
   label: string;
   groups: number[][];
+  /** The first group is an illusion: it revives, so no "first target dead" count is kept for it. */
+  firstRevives?: boolean;
 }
 
 /** Every permutation is compared up to this many groups (3! = 6 orders); past it, each group first. */
@@ -1099,6 +1130,7 @@ export function killOrders(groups: KillGroup[], maxFull = MAX_FULL_ORDER_GROUPS)
     key: seq.map((group) => group.id).join(">"),
     label: seq.map((group) => (group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name)).join(" > "),
     groups: seq.map((group) => group.indices.slice()),
+    ...(seq[0]?.illusion ? { firstRevives: true } : {}),
   });
   if (groups.length <= maxFull) return { orders: permutations(groups).map(make), dropped: 0 };
   const byHp = [...groups].sort((a, b) => a.hp - b.hp || a.id.localeCompare(b.id));
@@ -1244,10 +1276,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const estimate = (runs: TurnRecord[][], order: KillOrder | null) => {
     const kept = runs.slice(0, samples);
     const first = order?.groups[0] ?? [];
-    const firstDown = kept.filter((records) => {
-      const last = records[Math.min(horizon, records.length) - 1]!;
-      return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
-    }).length;
+    const firstDown = order?.firstRevives
+      ? null
+      : kept.filter((records) => {
+          const last = records[Math.min(horizon, records.length) - 1]!;
+          return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
+        }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
     const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
     const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));

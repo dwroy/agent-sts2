@@ -93,6 +93,41 @@ function consistencyAnswer(choice: string, reason: string, check: ConsistencyChe
   return { choice, reason, issues: check.issues, conclusion: check.conclusion?.option ?? "", conclusion_line: check.conclusion?.line ?? "" };
 }
 
+/** Option fields that name the option (event/rest "option", reward/selection "card", shop "buy", ...). */
+const OPTION_NAME_FIELDS = ["option", "card", "name", "label", "title", "buy", "relic", "potion", "bundle", "action"] as const;
+
+const norm = (text: string): string => text.trim().toLowerCase();
+
+/**
+ * Map an answer that is not an option key to the key it names. DeepSeek sometimes answers with an
+ * option's label ("沉溺") instead of its key ("o1"). The answer must equal (trimmed, case-insensitive)
+ * a key, or a name field of exactly one option's criteria (or the whole criteria text when it is a plain
+ * string); anything ambiguous or unmatched returns null so the caller keeps failing as before.
+ */
+export function resolveOptionKey(answer: string, criteria: Record<string, string | null>): string | null {
+  if (answer in criteria) return answer;
+  const wanted = norm(answer);
+  if (!wanted) return null;
+  const keys = Object.keys(criteria);
+  const byKey = keys.filter((key) => norm(key) === wanted);
+  if (byKey.length === 1) return byKey[0] ?? null;
+  const matches = keys.filter((key) => {
+    const text = criteria[key];
+    if (typeof text !== "string") return false;
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return norm(text) === wanted;
+    }
+    if (typeof parsed === "string") return norm(parsed) === wanted;
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return false;
+    const record = parsed as Record<string, unknown>;
+    return OPTION_NAME_FIELDS.some((field) => typeof record[field] === "string" && norm(record[field] as string) === wanted);
+  });
+  return matches.length === 1 ? (matches[0] ?? null) : null;
+}
+
 const SYSTEM = [
   "You are an expert Slay the Spire 2 player advising a bot (Ironclad, climbing ascension levels).",
   "You get the game state and one question with a fixed set of option keys. Code has already computed",
@@ -179,7 +214,9 @@ export class DeepSeekClient implements Escalator {
     const done = await this.complete(messages, label);
     const first = this.parseChoice(done.content);
     this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
-    if (!(first.choice in criteria)) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
+    const firstKey = resolveOptionKey(first.choice, criteria);
+    if (firstKey === null) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
+    first.choice = firstKey;
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
     if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason };
 
@@ -200,6 +237,7 @@ export class DeepSeekClient implements Escalator {
       meta = sumMeta(done.meta, again.meta);
       const parsed = this.parseChoice(again.content);
       this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, undefined);
+      parsed.choice = resolveOptionKey(parsed.choice, criteria) ?? parsed.choice;
       secondChoice = parsed.choice;
       secondReason = parsed.reason;
       secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);

@@ -185,7 +185,7 @@ export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[])
     if (group) {
       group.indices.push(enemy.index);
       group.hp += enemy.hp;
-    } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp });
+    } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
   }
   return groups;
 }

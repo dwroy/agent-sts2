@@ -473,14 +473,43 @@ describe("a phase boss revives into its real later phases (FSPK F48: Test Subjec
     const line = rolloutDecision({
       solver, plans, enemies: [{ index: 0, id: "TEST_SUBJECT", move: null, strength: 0, powers: { ADAPTABLE_POWER: 1 } }], tables: {},
       piles: { draw: Array.from({ length: 20 }, (_, i) => big(20 + i)), discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "TEST_SUBJECT", asc: 8 },
-      playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 2, include: [kill], horizon: 5, samples: 2 },
+      playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 2, include: [kill], horizon: 5, samples: 8 },
     }).lines.find((entry) => entry.plan === kill)!;
     // T1 kills phase 1; T2 (360 damage) kills phase 2 (212, not 111: that alone would end the fight on T2);
-    // T3 kills phase 3 (318): the fight is over on turn 3.
+    // phase 3 (318) starts Intangible (Nemesis): T3's three hits deal 1 each; T4 kills it.
     expect(line.wins).toBe(line.samples);
-    expect(line.turnsToWin).toBe(3);
+    expect(line.turnsToWin).toBe(4);
     expect(line.perTurn[0]!.dmg.mean).toBe(212);
-    expect(line.perTurn[1]!.dmg.mean).toBe(318);
+    expect(line.perTurn[1]!.dmg.mean).toBe(3);
+    expect(line.perTurn[2]!.dmg.mean).toBe(315);
+  });
+
+  it("Nemesis: Intangible every other turn in phase 3 (VQKX F48 T6: \"win 88%\" with Intangible never coming back)", () => {
+    const big = (i: number) => card(i, "BIG", { damage: 100, cost: 1 });
+    const player: PlayerSim = { hp: 200, maxHp: 200, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const run = (intangible: boolean) => {
+      const boss: EnemySim = { index: 0, name: "Test Subject", hp: 600, maxHp: 600, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible, attacks: [] };
+      const hand = [big(0), big(1), big(2)];
+      const solver: SolverInput = { hand, player, enemies: [boss], fightKind: "boss", turn: 6 };
+      const plans = solveTurn(solver).plans;
+      const all = plans.find((plan) => plan.steps.length === 3)!;
+      return rolloutDecision({
+        solver, plans, enemies: [{ index: 0, id: "TEST_SUBJECT", move: null, strength: 0, powers: { NEMESIS_POWER: 1, ...(intangible ? { INTANGIBLE_POWER: 1 } : {}) } }], tables: {},
+        piles: { draw: Array.from({ length: 30 }, (_, i) => big(20 + i)), discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "TEST_SUBJECT", asc: 8 },
+        playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 3, include: [all], horizon: 5, samples: 8 },
+      }).lines.find((entry) => entry.plan === all)!;
+    };
+    // Not Intangible now (T6): 300 now, Intangible next turn (3), 300 after: dead on the third turn.
+    const now = run(false);
+    expect(now.plan.outcome.damageDealt).toBe(300);
+    expect(now.plan.outcome.damageDealt).toBe(300);
+    expect(now.turnsToWin).toBe(3);
+    // Intangible now (T5): 3 now, 300, 3, 300: dead on the fourth turn, not the third.
+    const later = run(true);
+    expect(later.plan.outcome.damageDealt).toBe(3);
+    expect(later.perTurn[0]!.dmg.mean).toBe(300);
+    expect(later.perTurn[1]!.dmg.mean).toBe(3);
+    expect(later.turnsToWin).toBe(4);
   });
 });
 

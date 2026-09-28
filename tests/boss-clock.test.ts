@@ -26,7 +26,9 @@ import {
   gapCardBonus,
   gapRestShift,
   GAP_BONUS_MAX,
+  expectedEntryHp,
   mechanicFactor,
+  REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
 import { loggedKnowledge } from "./logged.js";
@@ -121,8 +123,10 @@ describe("boss clock", () => {
     const f7 = bossClock(board("64ZBJGP6MYZ3:7"), loggedKnowledge)!;
     expect(f7.boss).toBe("VANTOM");
     expect(f7.hpNote).toMatch(/183 \(A8\) \+ \d+ \(Slippery/);
-    expect(f7.need).toBeGreaterThanOrEqual(28);
-    expect(f7.gap).toBeGreaterThanOrEqual(5);
+    // 66/87 plus the F16 rest's 26: a full-HP entry (the fights before it not taken off).
+    expect(f7.entryHp).toBe(87);
+    expect(f7.need).toBeGreaterThanOrEqual(27);
+    expect(f7.gap).toBeGreaterThanOrEqual(3);
     const f16 = bossClock(board("64ZBJGP6MYZ3:16"), loggedKnowledge)!;
     expect(f16.need).toBeGreaterThanOrEqual(28);
     expect(f16.gap).toBeGreaterThan(0);
@@ -138,22 +142,30 @@ describe("boss clock", () => {
   it("02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)", () => {
     const clock = bossClock(board("02L476J8QWGH:6"), loggedKnowledge)!;
     expect(clock.hp).toBe(262);
-    expect(clock.fightTurns).toBe(10);
-    expect(clock.need).toBe(26);
+    // 26/80 plus one rest (24): a 50 HP entry survives ~8 turns (it was read as 68, 10 turns, 26 a turn).
+    expect(clock.entryHp).toBe(50);
+    expect(clock.fightTurns).toBe(8);
+    expect(clock.need).toBe(33);
     expect(clock.gap).toBeGreaterThan(0);
     expect(clock.mechanic).toMatch(/Ringing/);
   });
 
-  it("D3X1 Test Subject: phase 2 is the deadline (~53 a turn), not a flat 600/14", () => {
+  it("D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~106 under Nemesis), not a flat 600/14", () => {
     const clock = bossClock(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     const phase2 = clock.phases!.find((phase) => phase.phase === 2)!;
     expect(phase2.hp).toBe(212);
-    expect(phase2.turns).toBe(4);
-    expect(phase2.need).toBe(53);
-    expect(clock.need).toBeGreaterThanOrEqual(53);
+    // 68/85 plus the F47 rest: an 85 HP entry lasts ~5 turns of Multi Claw.
+    expect(phase2.turns).toBe(5);
+    expect(phase2.need).toBe(42);
     expect(clock.gap).toBeGreaterThanOrEqual(10);
     const json = bossClockJson(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     expect(json["phases"]).toBeDefined();
+    // Phase 3 (318) under Nemesis: Intangible every other turn, so 3 of the 6 turns deal damage (VQKX F48:
+    // 3 / 88 / 5 over T5-T7), 106 a turn, not 53.
+    const phase3 = clock.phases!.find((phase) => phase.phase === 3)!;
+    expect(phase3.need).toBe(106);
+    expect(clock.need).toBe(106);
+    expect(clock.turnsNote).toMatch(/3 of them without Nemesis' Intangible/);
     expect(String(json["harder_because"])).toMatch(/Multi Claw/);
   });
 
@@ -188,5 +200,57 @@ describe("boss clock", () => {
   it("no gap on a boss floor (the boss id is the dead one)", () => {
     const onBoss = parseGameState(baseState("MAP", { run: runPayload({ deck: starter(), boss_id: "KAISER_CRAB_BOSS", floor: 33 }) }));
     expect(damageGap(onBoss, testKnowledge)).toBeNull();
+  });
+});
+
+describe("The Insatiable's mechanic factor, against the logged A8 fights", () => {
+  interface Fight { key: string; outcome: string; turns: number; realised: number; raw: number }
+  const fights = (JSON.parse(readFileSync(join(DIR, "..", "boss-fights", "insatiable-a8.json"), "utf8")) as { fights: Fight[] }).fights;
+  const deck = deckProfileForBoss(mapState(starter(), "THE_INSATIABLE_BOSS"), testKnowledge)!;
+  const median = (values: number[]): number => {
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]! ) / 2;
+  };
+  const ratios = (factor: (fight: Fight) => number) => fights.map((fight) => fight.realised / (calibrated(fight.raw) * factor(fight)));
+
+  it("keeps the estimate unbiased over the 23 fights (VNWR/981W's ~0.5 were play, not the Sandpit)", () => {
+    expect(fights.length).toBeGreaterThanOrEqual(20);
+    const factor = (fight: Fight) => mechanicFactor("THE_INSATIABLE", deck, fight.turns);
+    const bias = median(ratios(factor));
+    expect(bias).toBeGreaterThan(0.9);
+    expect(bias).toBeLessThan(1.25);
+    const logErr = median(ratios(factor).map((ratio) => Math.abs(Math.log(ratio))));
+    const logErrHalved = median(ratios((fight) => factor(fight) * 0.54).map((ratio) => Math.abs(Math.log(ratio))));
+    expect(logErr).toBeLessThan(logErrHalved);
+    for (const key of ["VNWR16YEJASM", "981WMX8MQ7DK"]) {
+      const fight = fights.find((row) => row.key === key)!;
+      expect(fight.realised / calibrated(fight.raw)).toBeLessThan(0.6);
+    }
+  });
+});
+
+describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () => {
+  const at = (floor: number, hp: number, max: number, over: Raw = {}, screen = "MAP", raw: Raw = {}) =>
+    parseGameState(baseState(screen, { run: runPayload({ deck: starter(), boss_id: "KNOWLEDGE_DEMON_BOSS", act_id: "1", floor, current_hp: hp, max_hp: max, ...over }), ...raw }));
+
+  it("Z6AMPPWHQ5CV F31 30/80: 30 + 24 = 54, not 85% (68); the demon's need rises to match", () => {
+    expect(expectedEntryHp(at(31, 30, 80))).toBe(54);
+    expect(expectedEntryHp(at(20, 59, 80))).toBe(80); // capped at max
+    const low = bossClock(at(31, 30, 80), testKnowledge)!;
+    const high = bossClock(at(31, 30, 80), testKnowledge, 68)!;
+    expect(low.entryHp).toBe(54);
+    expect(low.need).toBeGreaterThan(high.need);
+  });
+
+  it("Regal Pillow adds its heal (981WMX8MQ7DK F32: 37 -> 79 of 91)", () => {
+    expect(expectedEntryHp(at(31, 37, 91, { relics: [{ index: 0, relic_id: "REGAL_PILLOW" }] }))).toBe(37 + 27 + REGAL_PILLOW_HEAL);
+  });
+
+  it("on the pre-boss rest floor: counted while its heal is still offered, not after", () => {
+    const rest = { rest: { options: [{ index: 0, option_id: "HEAL", title: "休息", is_enabled: true }, { index: 1, option_id: "SMITH", title: "锻造", is_enabled: true }] } };
+    expect(expectedEntryHp(at(32, 30, 80, {}, "REST", rest))).toBe(54);
+    expect(expectedEntryHp(at(32, 54, 80))).toBe(54);
+    expect(expectedEntryHp(at(33, 54, 80))).toBe(54);
   });
 });

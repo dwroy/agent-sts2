@@ -10,7 +10,7 @@ import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
-import type { JevClient } from "./jev/client.js";
+import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
@@ -70,6 +70,8 @@ export interface LoopOptions {
    * and the last map from that run's logs (journal-replay.ts). Default true.
    */
   restoreRun?: boolean;
+  /** Backoff before each retry of a transient Jev failure (5xx/429/timeout); default 2/4/8/16 s. */
+  jevRetryDelaysMs?: readonly number[];
 }
 
 export interface LoopStats {
@@ -203,6 +205,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const { config, mode, client, knowledge } = options;
   const jev = options.jev;
   const pollIntervalMs = options.pollIntervalMs ?? 400;
+  const jevRetry = {
+    ...(options.jevRetryDelaysMs ? { delaysMs: options.jevRetryDelaysMs } : {}),
+    onRetry: (info: { attempt: number; of: number; delayMs: number; error: { kind: string; status: number | null; message: string } }) =>
+      onEvent({
+        type: "note",
+        message: `Jev call failed transiently (${info.error.kind}${info.error.status === null ? "" : ` ${info.error.status}`}: ${info.error.message}); retry ${info.attempt}/${info.of} in ${Math.round(info.delayMs / 1000)}s`,
+      }),
+  };
   const maxDecisions = options.maxDecisions ?? 2_000;
   const maxRuns = options.maxRuns ?? 1;
   const maxMinutes = options.maxMinutes ?? 60;
@@ -776,7 +786,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       asked = toJsonValue(jevQuestions) as Record<string, JsonValue>;
       let firstAnswers: AnswerSet = {};
       try {
-        const result = await jev.ask(jevState, jevQuestions);
+        const result = await withJevRetry(() => jev.ask(jevState, jevQuestions), jevRetry);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
         stats.jevCalls += 1;
@@ -860,9 +870,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         if (!resolved.intent && resolved.reask) {
           reasked = true;
           const spec = resolved.reask;
-          const followUp = await jev.ask(jevState, {
-            pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria },
-          });
+          const followUp = await withJevRetry(
+            () => jev.ask(jevState, { pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria } }),
+            jevRetry,
+          );
           stats.jevCalls += 1;
           if (followUp.requestId) requestIds.push(followUp.requestId);
           stats.inputTokens += followUp.inputTokens;

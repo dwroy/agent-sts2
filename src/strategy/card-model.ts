@@ -486,6 +486,10 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   DUPLICATOR: { target: "self", special: "duplicate_next" }, // the next card is played twice // Buffer 1: the next HP loss is prevented
   VULNERABLE_POTION: { target: "single", vulnerable: 3 }, // STS2 id (FEAR_POTION is the STS1 name)
   POTION_OF_BINDING: { target: "all", weak: 1, vulnerable: 1 },
+  // Shackling Potion: 「所有敌人在这个回合失去{StrengthPower}点力量」, StrengthPower 7 (potion-values.ts): every
+  // enemy's attacks this turn 7 less per hit, like Mangle's temporary loss (Artifact takes it). Unmodelled,
+  // VQKX carried it from F11 through four -25 to -29 fights and gave it away at F28.
+  SHACKLING_POTION: { target: "all", enemyTempStrengthLoss: 7 },
   SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
   ENERGY_POTION: { target: "self", energyGain: 2 },
   SWIFT_POTION: { target: "self", draw: 3 },

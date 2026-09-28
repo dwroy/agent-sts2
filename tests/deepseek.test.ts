@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
-import { DeepSeekClient, effortFor, parseEffortTiers } from "../src/llm/deepseek.js";
+import { DeepSeekClient, effortFor, parseEffortTiers, resolveOptionKey } from "../src/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 let server: TestServer | null = null;
@@ -69,6 +69,52 @@ describe("DeepSeekClient", () => {
     expect(client.guideId).toMatch(/^[0-9a-f]{8}$/);
     expect(client.handbookId).toBe("");
     expect(client.systemPrompt).not.toContain("经验手册");
+  });
+});
+
+describe("DeepSeek answering with an option's label instead of its key", () => {
+  const eventCriteria = {
+    o0: JSON.stringify({ option: "拒绝", description: "离开", lethal: false }),
+    o1: JSON.stringify({ option: "沉溺", description: "失去 4 HP，最大生命 +2", lethal: false }),
+  };
+
+  it("maps an exact (trimmed, case-insensitive) label to its key", () => {
+    expect(resolveOptionKey("沉溺", eventCriteria)).toBe("o1");
+    expect(resolveOptionKey(" 沉溺 ", eventCriteria)).toBe("o1");
+    expect(resolveOptionKey("o0", eventCriteria)).toBe("o0");
+    expect(resolveOptionKey("O0", eventCriteria)).toBe("o0");
+    const reward = { card0: JSON.stringify({ card: "Bludgeon", code_value: 30 }), skip: JSON.stringify({ card: "skip" }) };
+    expect(resolveOptionKey("bludgeon", reward)).toBe("card0");
+    const shop = { buy_potion1: JSON.stringify({ buy: "Fire Potion", price: 50 }), leave: JSON.stringify({ buy: "nothing" }) };
+    expect(resolveOptionKey("Fire Potion", shop)).toBe("buy_potion1");
+    expect(resolveOptionKey("Plain text", { a: "Plain text", b: "Other" })).toBe("a");
+  });
+
+  it("keeps failing on an ambiguous or unmatched answer", () => {
+    const twoStrikes = { c0: JSON.stringify({ card: "Strike" }), c1: JSON.stringify({ card: "Strike" }), c2: JSON.stringify({ card: "Defend" }) };
+    expect(resolveOptionKey("Strike", twoStrikes)).toBeNull();
+    expect(resolveOptionKey("沉", eventCriteria)).toBeNull();
+    expect(resolveOptionKey("离开", eventCriteria)).toBeNull(); // description text is not a name
+    expect(resolveOptionKey("", eventCriteria)).toBeNull();
+  });
+
+  it("choose() returns the key when DeepSeek replies with the label", async () => {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content: '{"choice":"沉溺","reason":"+2 max HP"}' } }], usage: { prompt_tokens: 1, completion_tokens: 1 } }));
+    });
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    const answer = await client.choose({ floor: 13 }, "Which option should I choose?", eventCriteria, { label: "event/choose" });
+    expect(answer.choice).toBe("o1");
+  });
+
+  it("choose() still throws on an unknown answer", async () => {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content: '{"choice":"读下封底","reason":"x"}' } }], usage: { prompt_tokens: 1, completion_tokens: 1 } }));
+    });
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    await expect(client.choose({}, "Which?", eventCriteria, { label: "event/choose" })).rejects.toThrow('chose unknown option "读下封底"');
   });
 });
 
