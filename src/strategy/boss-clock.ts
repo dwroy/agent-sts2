@@ -26,6 +26,9 @@ import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/
 import { modelHandCard } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 
+/** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
+export const BRIMSTONE_STRENGTH = 2;
+
 export interface BossProfile {
   /** HP below ascension 8 (all parts / phases). */
   hp: number;
@@ -209,8 +212,11 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   // Energy caps how many of the drawn cards get played.
   const playedShare = Math.min(1, energy / Math.max(1, (HAND * cost) / n));
   const perCard = (HAND / n) * playedShare;
-  const relicStrengthRate = relicIds.includes("TOASTY_MITTENS") ? 1 : 0;
-  if (relicStrengthRate > 0) growth.push("Toasty Mittens +1/turn");
+  // Brimstone: Strength at the start of each of our turns (enemies +1). EZ2L F48: ignored, the clock
+  // read a 99/turn gap while the deck dealt ~45/turn.
+  const relicStrengthRate = (relicIds.includes("TOASTY_MITTENS") ? 1 : 0) + (relicIds.includes("BRIMSTONE") ? BRIMSTONE_STRENGTH : 0);
+  if (relicIds.includes("TOASTY_MITTENS")) growth.push("Toasty Mittens +1/turn");
+  if (relicIds.includes("BRIMSTONE")) growth.push(`Brimstone +${BRIMSTONE_STRENGTH}/turn`);
   // Rupture: +1 Strength each time a self-damage card is played on our turn.
   const ruptureRate = ruptures > 0 ? ruptures * selfDamage * perCard : 0;
   if (ruptureRate > 0) growth.push(`Rupture fed by ${selfDamage} self-damage cards (~+${ruptureRate.toFixed(1)}/turn)`);

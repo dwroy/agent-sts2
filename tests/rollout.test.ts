@@ -212,6 +212,24 @@ describe("rollout (offline)", () => {
     for (const line of r.lines) expect(line.hpLoss).toBeLessThanOrEqual(20 + 1e-9);
   });
 
+  it("an illusion killed comes back at full HP: the fight goes on until the real enemy dies (FA82 F27)", () => {
+    const run = (illusion: boolean) => {
+      const input = scenario(1e9, fakeClock(0.01));
+      const solver: SolverInput = {
+        ...input.solver,
+        enemies: [
+          { ...input.solver.enemies[0]!, index: 0, name: "Obscura", hp: 90, maxHp: 90, attacks: [] },
+          { ...input.solver.enemies[0]!, index: 1, name: "Parafright", hp: 1, maxHp: 21, attacks: [{ damage: 12, hits: 1 }], ...(illusion ? { illusion: true } : {}) },
+        ],
+      };
+      const still: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+      const bite: EnemyTable = { moves: { HIT: { damage: 12, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+      return rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id: "OBSCURA", move: "WAIT", strength: 0, powers: {} }, { index: 1, id: "PARAFRIGHT", move: "HIT", strength: 0, powers: {} }], tables: { OBSCURA: still, PARAFRIGHT: bite } });
+    };
+    const mean = (r: ReturnType<typeof run>) => r.lines.reduce((a, l) => a + l.hpLoss, 0) / r.lines.length;
+    expect(mean(run(true))).toBeGreaterThan(mean(run(false)));
+  });
+
   it("degrades to fit the time budget: 5 turns, then 3, then fewer samples, then 1 turn", () => {
     const run = (budget: number) => rolloutDecision(scenario(budget, fakeClock(1)));
     const full = run(1e9);
