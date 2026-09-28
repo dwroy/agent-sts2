@@ -23,7 +23,7 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
-import { describeChoice, memoryChars, RunJournal } from "./project/run-journal.js";
+import { describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberMap } from "./screens/rest.js";
@@ -636,6 +636,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               guide: answer.guideId ?? "",
               handbook: answer.handbookId ?? "",
               memory_chars: memoryChars(memory),
+              memory_sections: memorySections(memory),
             };
             deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
             deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };

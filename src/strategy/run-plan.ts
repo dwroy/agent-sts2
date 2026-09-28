@@ -18,7 +18,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries } from "../project/deck.js";
 import { bossClockJson } from "./boss-clock.js";
-import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
 export type EliteAppetite = "seek" | "normal" | "avoid";
@@ -151,15 +151,15 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
     floor: state.run?.floor ?? 0,
     hpPct: hpFraction(state),
     trigger,
-    archetype: typeof json["archetype"] === "string" ? truncate(json["archetype"], 80) : "",
+    archetype: typeof json["archetype"] === "string" ? json["archetype"].trim() : "",
     want: ids(json["want"], known, 6),
     avoid: ids(json["avoid"], known, 6),
     remove: ids(json["remove"], inDeck, 3),
     blockTarget,
     elites,
     rest,
-    bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : "",
-    summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
+    bossPrep: typeof json["boss_prep"] === "string" ? json["boss_prep"].trim() : "",
+    summary: typeof json["summary"] === "string" ? json["summary"].trim() : "",
   };
 }
 
@@ -169,7 +169,8 @@ export function runPlanLine(plan: RunPlan | null | undefined): string | null {
   const parts = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
   const want = plan.want.length > 0 ? ` | want ${plan.want.join(", ")}` : "";
   const avoid = plan.avoid.length > 0 ? ` | avoid ${plan.avoid.join(", ")}` : "";
-  return truncate(`${parts}${want}${avoid}`, 300);
+  // Whole: DeepSeek's own plan is part of its history (Dai 2026-09-28: compress the format, never cut).
+  return `${parts}${want}${avoid}`.replace(/\s+/g, " ").trim();
 }
 
 /** Card-value adjustment from the plan (card rewards, shops). */

@@ -112,7 +112,7 @@ export class DeepSeekClient implements Escalator {
     return {
       ...done.meta,
       choice,
-      reason: typeof parsed.reason === "string" ? parsed.reason.slice(0, 200) : "",
+      reason: typeof parsed.reason === "string" ? parsed.reason.trim() : "",
     };
   }
 
