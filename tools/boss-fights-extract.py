@@ -7,8 +7,12 @@ removed / turns (the whole max HP for a won fight: its last hit is not logged), 
 Sandpit counter went up (Frantic Escapes, Insatiable only). Outcome: won when the run got past the
 boss's floor, else died (HP or the Sandpit).
 
+A boss of several bodies takes its enemy ids comma-separated (Kaiser Crab: CRUSHER,ROCKET): HP and max
+HP are summed over them.
+
 Usage:
   python3 tools/boss-fights-extract.py THE_INSATIABLE [--asc 8] [--logs DIR] > fights.jsonl
+  python3 tools/boss-fights-extract.py CRUSHER,ROCKET --logs ../jev-sts2/logs > crab.jsonl
   npx tsx tools/boss-clock-calibrate.ts fights.jsonl --rows
 """
 import argparse
@@ -26,7 +30,8 @@ def main() -> None:
     parser.add_argument("--asc", type=int, default=8)
     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
     args = parser.parse_args()
-    mark = f'"enemy_id":"{args.enemy_id}"'.encode()
+    ids = args.enemy_id.split(",")
+    marks = [f'"enemy_id":"{enemy_id}"'.encode() for enemy_id in ids]
 
     runs = {}
     with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
@@ -41,7 +46,7 @@ def main() -> None:
     first = {}
     with open(os.path.join(args.logs, "states.jsonl"), "rb") as handle:
         for line in handle:
-            if mark not in line:
+            if not any(mark in line for mark in marks):
                 continue
             try:
                 state = json.loads(line)["state"]
@@ -50,12 +55,16 @@ def main() -> None:
             run = state.get("run") or {}
             if not state.get("in_combat") or run.get("ascension") != args.asc:
                 continue
-            boss = [e for e in (state.get("combat") or {}).get("enemies", []) if e.get("enemy_id") == args.enemy_id]
+            boss = [e for e in (state.get("combat") or {}).get("enemies", []) if e.get("enemy_id") in ids]
             if not boss:
                 continue
             run_id = state.get("run_id")
+            if run_id not in first and len({e.get("enemy_id") for e in boss}) < len(ids):
+                continue  # the fight's first frame has every body
             sandpit = [p.get("amount") for p in boss[0].get("powers", []) if p.get("power_id") == "SANDPIT_POWER"]
-            frames[run_id].append((state.get("turn") or 0, boss[0].get("current_hp"), boss[0].get("max_hp"), sandpit[0] if sandpit else None))
+            hp = sum(max(0, e.get("current_hp") or 0) for e in boss)
+            max_hp = sum(e.get("max_hp") or 0 for e in boss)
+            frames[run_id].append((state.get("turn") or 0, hp, max_hp, sandpit[0] if sandpit else None))
             first.setdefault(run_id, (state, run.get("floor")))
 
     for run_id, rows in frames.items():

@@ -12,6 +12,7 @@
  */
 
 import type { DeckEntry } from "../project/deck.js";
+import { BOSSES } from "./boss-clock.js";
 
 const TIER: Record<string, number> = {
   // S
@@ -64,16 +65,21 @@ const EXHAUST_PAYOFF: Record<string, number> = { DARK_EMBRACE: 20, FEEL_NO_PAIN:
 const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL", "EXTERMINATE"]);
 
 /**
- * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 173 HP, so
- * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 230 HP;
+ * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 183 HP (A8), so
+ * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 262 HP (A8);
  * Waterfall Giant explodes for its Steam Eruption stacks (15, +3 a turn), so block and a fast kill;
- * Knowledge Demon has 379 HP and heals, so Strength/scaling. `bossId` is the current act's boss.
+ * Knowledge Demon has 399 HP (A8) and heals, so Strength/scaling. `bossId` is the current act's boss.
+ * Boss HP in the texts comes from the boss clock's A8 table (RWWG: the crab said 408, it is 428 at A8).
  */
+function bossA8Hp(id: string): number {
+  return BOSSES[id]?.hpA8 ?? 0;
+}
+
 function bossBonus(cardId: string, bossId: string): { bonus: number; why: string | null } {
   const boss = bossId.toUpperCase();
   if (boss.includes("VANTOM")) {
     if (MULTI_HIT.has(cardId)) return { bonus: 10, why: "multi-hit strips Vantom's Slippery" };
-    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for Vantom's 173 HP" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for Vantom's ${bossA8Hp("VANTOM")} HP` };
   }
   if (boss.includes("KIN")) {
     if (AOE.has(cardId)) return { bonus: 10, why: "AoE for the Kin followers" };
@@ -86,19 +92,19 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
     if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "a fast kill before the Giant's eruption stacks" };
   }
   // Both act-2 bosses are damage races entered at full HP and lost short of damage (24HM: 24.9 a turn
-  // of 33.5 needed into the demon; WLY1: 21.6 a turn into the crab's 408 HP, Thunderclap skipped at 33).
+  // of 33.5 needed into the demon; WLY1: 21.6 a turn into the crab's HP, Thunderclap skipped at 33).
   if (boss.includes("KNOWLEDGE_DEMON")) {
-    if (SCALING.has(cardId)) return { bonus: 10, why: "Strength/scaling for the Knowledge Demon's 379 HP" };
+    if (SCALING.has(cardId)) return { bonus: 10, why: `Strength/scaling for the Knowledge Demon's ${bossA8Hp("KNOWLEDGE_DEMON")} HP` };
     if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Knowledge Demon's heals" };
   }
-  // Kaiser Crab: two claws (Rocket, Crusher) with 408 HP between them: AoE hits both.
+  // Kaiser Crab: two claws (Rocket, Crusher) with 428 HP between them at A8: AoE hits both.
   if (boss.includes("KAISER_CRAB")) {
     if (AOE.has(cardId)) return { bonus: 12, why: "AoE hits both of the Kaiser Crab's claws" };
-    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for the Kaiser Crab's 408 HP" };
-    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Kaiser Crab's 408 HP" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for the Kaiser Crab's ${bossA8Hp("KAISER_CRAB")} HP` };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: `damage for the Kaiser Crab's ${bossA8Hp("KAISER_CRAB")} HP` };
   }
   if (boss.includes("CEREMONIAL") || boss.includes("BEAST")) {
-    if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Beast's 230 HP" };
+    if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: `damage for the Beast's ${bossA8Hp("CEREMONIAL_BEAST")} HP` };
   }
   // Soul Fysh shuffles Beckons into the deck (XPA4: 8 in the deck at death): exhaust clears them, damage
   // ends it before they pile up, and Battle Trance draws them (twice in that fight).

@@ -166,6 +166,52 @@ describe("rollout (offline)", () => {
     expect(mean(joined, (l) => l.hpLoss)).toBeGreaterThan(mean(plain, (l) => l.hpLoss));
   });
 
+  it("a burrowed Tunneler keeps its block in later turns, and breaking it stuns Below (RWWG F20)", () => {
+    const TUNNELER: EnemyTable = {
+      moves: {
+        BELOW_MOVE: { damage: 23, hits: 1, strength: 0, block: 0 },
+        BITE_MOVE: { damage: 13, hits: 1, strength: 0, block: 0 },
+        BURROW_MOVE: { damage: 0, hits: 1, strength: 0, block: 32, burrows: true },
+      },
+      next: { BELOW_MOVE: { BELOW_MOVE: 99, BITE_MOVE: 63 }, BITE_MOVE: { BURROW_MOVE: 1 }, BURROW_MOVE: { BELOW_MOVE: 1 }, STUNNED: { BITE_MOVE: 1 } },
+    };
+    const run = (block: number, burrowed: boolean, hand: CardModel[]) => {
+      const input = scenario(1e9, fakeClock(0.01));
+      const solver: SolverInput = {
+        ...input.solver,
+        hand,
+        player: { ...input.solver.player, hp: 90, maxHp: 90 },
+        enemies: [{ index: 0, name: "Tunneler", hp: 13, maxHp: 87, block, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 23, hits: 1 }], ...(burrowed ? { burrowed: true } : {}) }],
+      };
+      return rolloutDecision({
+        ...input,
+        solver,
+        plans: solveTurn(solver).plans,
+        piles: { draw: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (i % 2 ? defend(10 + i) : strike(10 + i))), discard: [], handBase: hand },
+        enemies: [{ index: 0, id: "TUNNELER", move: "BELOW_MOVE", strength: 0, powers: burrowed ? { BURROWED_POWER: 1 } : {} }],
+        tables: { TUNNELER },
+        options: { budgetMs: 1e9, seed: 7, now: fakeClock(0.01), k: 8 },
+      });
+    };
+    // Pure block against 37 block: the 32+ it keeps stays up, 13 HP is not "~2 turns to the end".
+    const blockHand = [defend(0), defend(1), defend(2), defend(3), defend(4)];
+    const kept = run(37, true, blockHand).lines[0]!;
+    const plain = run(37, false, blockHand).lines[0]!;
+    expect(plain.turnsToWin).not.toBeNull();
+    // Seed 7: dropped block wins 8/8 in ~2.5 turns losing 10; kept block wins 0/8 in 5 turns, losing ~49.
+    expect(plain.wins).toBe(plain.samples);
+    expect(plain.turnsToWin!).toBeLessThanOrEqual(3);
+    expect(kept.wins).toBeLessThan(plain.wins);
+    expect(kept.turnsToWin === null || kept.turnsToWin >= 4).toBe(true);
+    expect(kept.hpLoss).toBeGreaterThan(plain.hpLoss + 20);
+    // Breaking the block stuns it: Below 23 does not land, and it surfaces (Bite, then Burrow again).
+    const strikes = [strike(0), strike(1), strike(2), defend(3), defend(4)];
+    const broken = run(12, true, strikes);
+    const line = broken.lines.find((l) => l.plan.outcome.enemyHpAfter[0]!.block === 0)!;
+    expect(line).toBeDefined();
+    expect(line.plan.outcome.incomingAfterBlock).toBe(0);
+  });
+
   it("when every sample dies, there are no turns to win: deaths and the turn of death instead (69HW F33)", () => {
     const input = scenario(1e9, fakeClock(0.01));
     const solver: SolverInput = {

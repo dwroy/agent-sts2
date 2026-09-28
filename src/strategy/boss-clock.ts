@@ -318,6 +318,16 @@ export function mechanicFactor(id: string, deck: DeckProfile, turns: number): nu
     // factor would put the median |log error| at 0.71. So no discount.
     case "THE_INSATIABLE":
       return 1;
+    // Kaiser Crab: fitted on the 23 logged A8 fights (tools/boss-fights-extract.py CRUSHER,ROCKET,
+    // tests/boss-fights/kaiser-crab-a8.json), realised damage a turn over the calibrated estimate at the
+    // fight's real length has median 0.96 (geometric mean 0.89, LAD factor 0.95, bootstrap 90% CI of the
+    // median 0.76-1.05); median |log error| 0.26 at 1.0, 0.33 at 0.7. The two bodies are already in the
+    // raw estimate (AoE counted per body). 0B5YKJFM0E8B (0.65) and RWWGRRYKD6LT (0.76) are in the low
+    // half but not outliers (6HRZ 0.41 and M9PL 0.50 are lower, VE97 1.55 and ZWX5 1.60 higher), so the
+    // ~0.7 the two suggested does not hold on the full data. No discount. (The last 7 fights, 09-28, sit at
+    // a median 0.77: worth re-running the fit as more come in.)
+    case "KAISER_CRAB":
+      return 1;
     default:
       return 1;
   }

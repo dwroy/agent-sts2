@@ -345,6 +345,8 @@ export interface EnemyMove {
   hits: number;
   strength: number;
   block: number;
+  /** Burrow (Tunneler): the move gains BURROWED_POWER. */
+  burrows?: boolean;
 }
 
 export interface EnemyTable {
@@ -623,6 +625,11 @@ interface SimEnemy {
   intangibleTurns: number;
   /** Nemesis (Test Subject phase 3): enemy turns until it next gains 1 Intangible, else undefined. */
   nemesisIn?: number;
+  /**
+   * Burrowed (Tunneler, BURROWED_POWER: "Block is not removed at the start of this creature's turn.
+   * Stunned if all Block is removed."): its block carries over, and breaking it stuns it for its move.
+   */
+  burrowed: boolean;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -872,7 +879,8 @@ function applyPlan(
     e.hp = a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
-    if (hit) e.block = 0;
+    if (a.block !== undefined) e.block = a.block;
+    else if (hit) e.block = 0;
     if (e.hp <= 0) enemyDown(e, turn, input);
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
@@ -908,8 +916,17 @@ function applyPlan(
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
       const m = e.move && table ? table.moves[e.move] : undefined;
-      e.strength += m?.strength ?? 0;
-      e.block = m?.block ?? 0;
+      // Burrowed with all its block gone this turn: stunned, the move is lost (the solver already left its
+      // hit out) and it surfaces; after the stun it goes on as the move model saw it (Tunneler: Bite).
+      const stunned = e.burrowed && e.block <= 0;
+      if (stunned) e.burrowed = false;
+      else {
+        e.strength += m?.strength ?? 0;
+        // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
+        // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
+        e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
+        if (m?.burrows) e.burrowed = true;
+      }
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
       e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
@@ -920,7 +937,9 @@ function applyPlan(
           e.nemesisIn = 2;
         }
       }
-      e.move = nextMove(table, e.move, random);
+      // Still burrowed: it keeps using its burrowed move (Below) until the block breaks.
+      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
+      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
     }
     for (const e of enemies) {
       if (e.alive || e.reattachIn === undefined) continue;
@@ -1036,6 +1055,7 @@ function simulate(
       // on every other turn (VQKX F48 T6: "win 88%" with Intangible never coming back, T7 212 -> 208).
       intangibleTurns: e.intangible ? Math.max(1, info?.powers?.["INTANGIBLE_POWER"] ?? 1) : 0,
       ...((info?.powers?.["NEMESIS_POWER"] ?? 0) > 0 ? { nemesisIn: e.intangible ? 2 : 1 } : {}),
+      burrowed: e.burrowed === true,
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -1076,6 +1096,8 @@ function simulate(
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
+        // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
+        burrowed: e.burrowed,
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };

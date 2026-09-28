@@ -26,6 +26,16 @@ describe("cardValue", () => {
     expect(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 20).value);
   });
 
+  it("boss HP in the reasons is the A8 table's (RWWG: the crab said 408, it is 428 at A8)", () => {
+    const reasons = (cardId: string, type: string, bossId: string) => cardValue(cardId, "Uncommon", type, deck(15), 2, 20, bossId).reasons;
+    expect(reasons("INFLAME", "Power", "KAISER_CRAB_BOSS")).toContain("scaling for the Kaiser Crab's 428 HP");
+    expect(reasons("HEADBUTT", "Attack", "KAISER_CRAB_BOSS")).toContain("damage for the Kaiser Crab's 428 HP");
+    expect(reasons("INFLAME", "Power", "KNOWLEDGE_DEMON_BOSS")).toContain("Strength/scaling for the Knowledge Demon's 399 HP");
+    expect(reasons("INFLAME", "Power", "VANTOM_BOSS")).toContain("scaling for Vantom's 183 HP");
+    expect(reasons("HEADBUTT", "Attack", "CEREMONIAL_BEAST_BOSS")).toContain("damage for the Beast's 262 HP");
+    expect(reasons("INFLAME", "Power", "KAISER_CRAB_BOSS").join(" ")).not.toContain("408");
+  });
+
   it("Aeonglass: the big-hit bonus goes to real big hits only (L34T: Setup Strike, a 3rd Pommel Strike)", () => {
     const pommel = cardValue("POMMEL_STRIKE", "Common", "Attack", deck(15), 3, 40).value;
     expect(cardValue("POMMEL_STRIKE", "Common", "Attack", deck(15), 3, 40, "AEONGLASS_BOSS").value).toBe(pommel);
