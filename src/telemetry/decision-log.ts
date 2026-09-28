@@ -5,7 +5,7 @@
  */
 
 import { appendFileSync, mkdirSync } from "node:fs";
-import { dirname } from "node:path";
+import { basename, dirname, join } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
 
@@ -58,6 +58,14 @@ export interface DecisionRecord {
   rollout?: JsonValue;
   /** Combat plan choice: Jev's pick was the rollout's best line (null: no pick, or no rollout). */
   rollout_best_chosen?: boolean | null;
+  /** The run the decision was made in (the state's run_id), so a restart can find its rows. */
+  run_id?: string;
+  /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */
+  observed_ts?: string;
+  /** What the run journal filed for this decision (the choice text and the model's raw reason), for replay. */
+  journal?: { choice: string; reason: string };
+  /** The route plan this decision made (map/route-plan), so a restart resumes it instead of re-planning. */
+  route_plan?: JsonValue;
   result: string;
 }
 
@@ -95,7 +103,17 @@ export function createDecisionLog(path: string): DecisionLog {
  * a replay fixture (`replay --ask` over the exact boards the loop saw).
  */
 export interface StateLog {
-  write(entry: { ts: string; fingerprint: string; screen: string; session: string; state: unknown }): void;
+  write(entry: { ts: string; fingerprint: string; screen: string; session: string; state: unknown; observed_ts?: string; observed?: boolean }): void;
+}
+
+/**
+ * Where the states behind a decision log go: logs/decisions.jsonl -> logs/states.jsonl; any other name
+ * gets its own file next to it (x.jsonl -> x.states.jsonl), so two decision logs in one directory (tests)
+ * never share their states, which a restart replays (journal-replay.ts).
+ */
+export function stateLogPath(decisionLog: string): string {
+  const name = basename(decisionLog);
+  return join(dirname(decisionLog), name === "decisions.jsonl" ? "states.jsonl" : `${name.replace(/\.jsonl$/, "")}.states.jsonl`);
 }
 
 export function createStateLog(path: string): StateLog {
