@@ -7,7 +7,7 @@
  *   Jev   — chooses between the strategically different plans that code cannot separate (e.g.
  *           block now vs. set up Strength vs. race), and decides about potions: every modelled
  *           potion is on a shown line, and code drinks on its own only when no potion-free line
- *           survives (or to win the fight this turn).
+ *           survives. A lethal that needs a potion is Jev's call too.
  *
  * A chosen plan is committed: its remaining steps are played without re-asking as long as the hand
  * is exactly what the plan expected. Anything unexpected (a draw, a random effect) invalidates it and
@@ -39,7 +39,7 @@ import { DRINK_FIRST_ROLLOUT, liveRollout, rolloutFacts, rolloutLiveOptions, rol
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
  * only (no use cost), every modelled potion in the belt is on at least one shown line, and Jev gets the
  * facts to judge keeping it (potion_context). Code drinks on its own only when no potion-free line
- * survives the turn, or the drinking line wins the fight and no potion-free line does. The per-rule
+ * survives the turn; a lethal that needs a potion is asked (potionLethalLines). The per-rule
  * potion filters and vetoes (hallway save/damage/confidence thresholds, the elite/boss dry-line veto,
  * the attack-potion confidence veto, the boss one-potion-a-turn cap) are gone.
  */
@@ -1158,18 +1158,23 @@ function planTurn(env: DecisionEnv): Decision | null {
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
   // 3. Code-decided cases. Code drinks on its own only when no potion-free line does the job: a lethal
-  // is played potion-free when one is (the fight is won either way).
-  if (best.outcome.winsFight) {
-    const lethal = dryFirst(solved.plans.filter((plan) => plan.outcome.winsFight)) ?? best;
-    commit(env, state.turn, lethal, hand, "code");
-    return { kind: "act", label: "combat/lethal", intent: firstIntent(lethal, hand, env), rationale: `lethal: ${lethal.steps.map(stepText).join(", ")}${calcNote}` };
+  // is played by code only potion-free. When only lines that drink win the fight this turn, the lethal
+  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.
+  const lethalLines = best.outcome.winsFight ? solved.plans.filter((plan) => plan.outcome.winsFight) : [];
+  const dryLethal = lethalLines.find((plan) => !drinksPotion(plan));
+  if (dryLethal) {
+    commit(env, state.turn, dryLethal, hand, "code");
+    return { kind: "act", label: "combat/lethal", intent: firstIntent(dryLethal, hand, env), rationale: `lethal: ${dryLethal.steps.map(stepText).join(", ")}${calcNote}` };
   }
+  const potionLethal = potionLethalLines(lethalLines);
   // (The fight plan's auto-drink of an unmodelled potion at its planned moment is gone: the potion is
   // offered to Jev on that turn instead, planPotionNow below.)
   const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
   // Every modelled potion in the belt is on a shown line (the best line drinking it), next to the
   // potion-free ones: whether to spend it is Jev's call.
   const options = withPotionLines(distinctPlans(surviving, MAX_OPTIONS), surviving, potionsAll.filter((potion) => isModelledPotion(potion.potion_id)).map((potion) => potion.potion_id), MAX_OPTIONS);
+  // A potion lethal: every way to win this turn (one line per set of potions it spends) is shown.
+  for (const line of potionLethal) if (!options.includes(line)) options.push(line);
   // Some potion-free line survives the turn: then code never drinks on its own.
   const drySurvives = surviving.some((plan) => !drinksPotion(plan));
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
@@ -1274,7 +1279,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Code plays its line only when there is no other, or it beats every other on every axis; any real
   // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
   // A top line that drinks while a potion-free line survives is never code's to play: Jev decides.
-  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top));
+  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top)) && potionLethal.length === 0;
   if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
@@ -1347,7 +1352,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan), ...factsOf(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   const rolloutRecord = rollout
@@ -1419,7 +1424,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -1523,7 +1528,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   return {
     kind: "ask",
-    label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
+    label: potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
@@ -1537,6 +1542,30 @@ function planTurn(env: DecisionEnv): Decision | null {
       return { ...resolved, log: { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } };
     },
   };
+}
+
+/** Most lines shown for a potion lethal (one per set of potions spent, fewest potions first). */
+export const MAX_POTION_LETHAL_LINES = 4;
+
+/**
+ * The lines that win the fight this turn when none of them is potion-free: the best (by score) of each
+ * set of potions spent, those spending fewer potions first. Empty when there is no lethal or a dry one.
+ */
+export function potionLethalLines(lethal: Plan[]): Plan[] {
+  if (lethal.length === 0 || lethal.some((plan) => !drinksPotion(plan))) return [];
+  const bySet = new Map<string, Plan>();
+  for (const plan of lethal) {
+    const set = [...potionIdsOf(plan)].sort().join("+");
+    if (!bySet.has(set)) bySet.set(set, plan);
+  }
+  return [...bySet.values()].sort((a, b) => potionIdsOf(a).length - potionIdsOf(b).length || b.score - a.score).slice(0, MAX_POTION_LETHAL_LINES);
+}
+
+/** The flag on a line that wins the fight only by drinking: which potions it spends. */
+export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
+  if (!plan.outcome.winsFight || !drinksPotion(plan)) return {};
+  const names = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
+  return { potion_lethal: `WINS THE FIGHT THIS TURN, spending ${names.join(" + ")}; no potion-free line wins this turn` };
 }
 
 function lineLabel(plan: Plan): string {

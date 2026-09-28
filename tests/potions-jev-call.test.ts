@@ -14,7 +14,7 @@ import { loadConfig } from "../src/config.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { dryFirst, MAX_OPTIONS, planCombatTurn, withPotionLines } from "../src/screens/combat-plan.js";
+import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalNote, withPotionLines } from "../src/screens/combat-plan.js";
 import { dominates, solveTap, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
@@ -230,5 +230,44 @@ describe("Foul Potion is offered (no ban) with its damage to us in the numbers",
     const foul = texts.map((text) => JSON.parse(text) as Record<string, unknown>).find((facts) => String(facts["plays"]).includes("Foul Potion"));
     expect(foul).toBeDefined();
     expect(Number(foul!["hp_lost"])).toBeGreaterThanOrEqual(7);
+  });
+});
+
+describe("a lethal that needs a potion is Jev's call (Dai 2026-09-28)", () => {
+  const line = (name: string, potions: string[], score: number, wins = true): Plan =>
+    ({
+      steps: [{ cardIndex: 0, cardId: name, upgraded: false, name, target: null }, ...potions.map((id) => ({ cardIndex: -1, cardId: `POTION:${id}:0`, upgraded: false, name: `potion ${id}`, target: null }))],
+      outcome: { winsFight: wins },
+      score,
+    }) as unknown as Plan;
+
+  it("potionLethalLines: one line per set of potions spent, fewest potions first; none when a dry lethal exists", () => {
+    const fire = line("A", ["FIRE"], 50);
+    const fire2 = line("B", ["FIRE"], 40);
+    const both = line("C", ["FIRE", "BLOCK"], 60);
+    const block = line("D", ["BLOCK"], 30);
+    expect(potionLethalLines([both, fire, fire2, block])).toEqual([fire, block, both]);
+    expect(potionLethalLines([fire, line("E", [], 10)])).toEqual([]);
+    expect(potionLethalLines([])).toEqual([]);
+    expect(potionLethalNote(fire)["potion_lethal"]).toMatch(/WINS THE FIGHT THIS TURN, spending FIRE/);
+    expect(potionLethalNote(line("E", [], 10))).toEqual({});
+  });
+
+  it("synthetic board: only the Fire Potion wins, so code asks; a dry lethal is still auto-played", () => {
+    const board = (enemyHp: number): Raw => {
+      const raw = twoPotions(55, 4);
+      const combat = raw["combat"] as Raw;
+      combat["enemies"] = [{ ...(combat["enemies"] as Raw[])[0]!, current_hp: enemyHp }];
+      return raw;
+    };
+    const wet = planCombatTurn(env(board(25)));
+    expect(wet?.kind).toBe("ask");
+    const texts = plansOf(wet);
+    expect(texts.some((text) => text.includes("potion_lethal") && text.includes("Fire Potion"))).toBe(true);
+    const e = env(board(6));
+    const dry = planCombatTurn(e);
+    expect(dry?.kind).toBe("act");
+    expect(dry?.label).toBe("combat/lethal");
+    expect(autoLine(e, dry)).not.toMatch(/use_potion|POTION:/);
   });
 });

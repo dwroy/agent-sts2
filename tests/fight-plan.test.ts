@@ -280,10 +280,24 @@ describe("turn planner with a fight plan", () => {
     expect(dry.label).toBe("combat/lethal");
     expect(dry.steps).not.toContain("use_potion");
     expect(dry.steps).not.toContain("POTION:");
-    // Only the potion wins (25 HP): the fight is won this turn, code may drink.
-    const wet = played(25);
-    expect(wet.label).toBe("combat/lethal");
-    expect(wet.steps).toMatch(/use_potion|POTION:FIRE_POTION/);
+    // Only the potion wins (25 HP): Jev's call (Dai 2026-09-28), the winning line shown and flagged.
+    const wet = planCombatTurn(env(board(25)));
+    expect(wet?.kind).toBe("ask");
+    expect(wet?.label).toBe("combat/plan-choice+potion-lethal");
+    const criteria = (wet as AskDecision).questions["plan"]!.criteria!;
+    const lethal = Object.entries(criteria).filter(([, text]) => String(text).includes("potion_lethal"));
+    expect(lethal.length).toBe(1);
+    expect(String(lethal[0]![1])).toMatch(/"result":"wins the fight this turn"/);
+    expect(String(lethal[0]![1])).toMatch(/WINS THE FIGHT THIS TURN, spending Fire Potion/);
+    // Potion-free lines are shown next to it; with no usable answer code does not drink.
+    expect(Object.values(criteria).some((text) => !String(text).includes("potion "))).toBe(true);
+    expect((wet as AskDecision).resolve({}).intent?.action).not.toBe("use_potion");
+    // Jev's pick of the lethal line is played as chosen, its drink included.
+    const e = env(board(25));
+    const ask = planCombatTurn(e) as AskDecision;
+    const picked = ask.resolve({ plan: { type: "choice", choice: lethal[0]![0], probabilities: {}, confidence: 0.9, raw: {} } });
+    picked.apply?.();
+    expect(JSON.stringify([picked.intent, ...(e.screenMemory.combatPlan?.remaining ?? []), ...(e.screenMemory.pendingDrinks?.steps ?? [])])).toMatch(/use_potion|POTION:FIRE_POTION/);
   });
 
   it("per-card fallback never offers a card whose HP cost kills us (C2WY F22 T6: Blood Wall at 1 HP)", () => {
