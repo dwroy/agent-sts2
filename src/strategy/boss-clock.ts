@@ -362,6 +362,11 @@ export function eruptionTurns(entryHp: number, lossPerTurn: number): number {
 /** HP lost a turn in the Test Subject's first phase. */
 const TEST_SUBJECT_PHASE1_LOSS = 3;
 
+/** Test Subject phase 3 turns (of `turns`) under Nemesis' Intangible: its first turn and every other one. */
+export function testSubjectIntangibleTurns(turns: number): number {
+  return Math.ceil(turns / 2);
+}
+
 /** Test Subject phase HP by ascension (phase 3 at A8 is not logged yet: +6% like phase 2). */
 export function testSubjectPhases(ascension: number): [number, number, number] {
   return ascension >= 8 ? [111, 212, 318] : [100, 200, 300];
@@ -466,8 +471,12 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     // 60 HP at phase 2, dead on the 5th claw).
     const turns2 = Math.max(3, Math.min(5, Math.round(hpAt2 / 15)));
     const turns3 = 6;
+    // Phase 3 has Nemesis: Intangible on its first turn and every other turn after (logged: VQKX T5/T7,
+    // ZANM T5/T7/T9, W6F4, CRRP, YFG5), every hit 1 while it lasts. Only the other turns deal damage
+    // (VQKX F48: 3 / 88 / 5 over T5-T7; the clock had counted 6 full turns, "need 53").
+    const damageTurns3 = turns3 - testSubjectIntangibleTurns(turns3);
     const need2 = Math.round(p2 / turns2);
-    const need3 = Math.round(p3 / turns3);
+    const need3 = Math.round(p3 / damageTurns3);
     const fightTurns = turns1 + turns2 + turns3;
     const deckNow = estimateAt(turns1 + turns2);
     const need = Math.max(need2, need3);
@@ -476,7 +485,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
       hp: p1 + p2 + p3,
       hpNote: `three phases ${p1}/${p2}/${p3}${ascension >= 8 ? " (A8; phase 3 not yet logged)" : ""}`,
       fightTurns,
-      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}`,
+      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}, ${damageTurns3} of them without Nemesis' Intangible`,
       need,
       deck: deckNow,
       gap: Math.max(0, need - deckNow),

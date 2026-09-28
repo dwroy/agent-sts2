@@ -590,6 +590,10 @@ interface SimEnemy {
   blast?: number;
   /** A phase boss: the max HP of each phase still to come after the current one (set at its first revive). */
   phasesLeft?: number[];
+  /** Our turns of Intangible left, this one included (every hit into it is 1). */
+  intangibleTurns: number;
+  /** Nemesis (Test Subject phase 3): enemy turns until it next gains 1 Intangible, else undefined. */
+  nemesisIn?: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -677,7 +681,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -781,6 +785,13 @@ function applyPlan(
         if (e.phasesLeft.length === 0) {
           const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
           e.powers = powers;
+          // The Test Subject's last phase comes with Nemesis and starts Intangible (every logged phase 3's
+          // first turn): Intangible through the enemy turn, then re-granted, so on our next turn too.
+          if (e.id === "TEST_SUBJECT") {
+            e.powers = { ...e.powers, NEMESIS_POWER: 1 };
+            e.intangibleTurns = 1;
+            e.nemesisIn = 1;
+          }
         }
         e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
       } else {
@@ -825,6 +836,14 @@ function applyPlan(
       e.block = m?.block ?? 0;
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
+      e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
+      if (e.nemesisIn !== undefined) {
+        e.nemesisIn -= 1;
+        if (e.nemesisIn <= 0) {
+          e.intangibleTurns += 1;
+          e.nemesisIn = 2;
+        }
+      }
       e.move = nextMove(table, e.move, random);
     }
     for (const e of enemies) {
@@ -920,6 +939,10 @@ function simulate(
       vulnerable: e.vulnerable,
       weak: e.weak,
       alive: e.hp > 0,
+      // Intangible now lasts its stacks; Nemesis re-grants it at the end of every 2nd enemy turn, so it is
+      // on every other turn (VQKX F48 T6: "win 88%" with Intangible never coming back, T7 212 -> 208).
+      intangibleTurns: e.intangible ? Math.max(1, info?.powers?.["INTANGIBLE_POWER"] ?? 1) : 0,
+      ...((info?.powers?.["NEMESIS_POWER"] ?? 0) > 0 ? { nemesisIn: e.intangible ? 2 : 1 } : {}),
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -954,6 +977,7 @@ function simulate(
       .filter((e) => e.alive)
       .map((e) => ({
         ...laterTurnSim(e.base),
+        intangible: e.intangibleTurns > 0,
         hp: e.hp,
         maxHp: e.maxHp,
         block: e.block,

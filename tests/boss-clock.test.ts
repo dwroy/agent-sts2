@@ -150,17 +150,22 @@ describe("boss clock", () => {
     expect(clock.mechanic).toMatch(/Ringing/);
   });
 
-  it("D3X1 Test Subject: phase 2 is the deadline (~53 a turn), not a flat 600/14", () => {
+  it("D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~106 under Nemesis), not a flat 600/14", () => {
     const clock = bossClock(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     const phase2 = clock.phases!.find((phase) => phase.phase === 2)!;
     expect(phase2.hp).toBe(212);
     // 68/85 plus the F47 rest: an 85 HP entry lasts ~5 turns of Multi Claw.
     expect(phase2.turns).toBe(5);
     expect(phase2.need).toBe(42);
-    expect(clock.need).toBeGreaterThanOrEqual(53);
     expect(clock.gap).toBeGreaterThanOrEqual(10);
     const json = bossClockJson(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     expect(json["phases"]).toBeDefined();
+    // Phase 3 (318) under Nemesis: Intangible every other turn, so 3 of the 6 turns deal damage (VQKX F48:
+    // 3 / 88 / 5 over T5-T7), 106 a turn, not 53.
+    const phase3 = clock.phases!.find((phase) => phase.phase === 3)!;
+    expect(phase3.need).toBe(106);
+    expect(clock.need).toBe(106);
+    expect(clock.turnsNote).toMatch(/3 of them without Nemesis' Intangible/);
     expect(String(json["harder_because"])).toMatch(/Multi Claw/);
   });
 
