@@ -11,7 +11,9 @@ import { planCombat } from "../src/screens/combat.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { planShop } from "../src/screens/shop.js";
+import { bossClockJson } from "../src/strategy/boss-clock.js";
 import { modelPotion } from "../src/strategy/card-model.js";
+import { parseGameState } from "../src/mod/schema.js";
 import { logged, loggedEnv, loggedKnowledge, questionOf, referencePick } from "./logged.js";
 
 const text = (value: unknown): string => JSON.stringify(value);
@@ -131,5 +133,14 @@ describe("Knowledge Demon curse: the HP check comes before Rupture (94FP F33 T5:
     // 299 dealt over 4 turns: ~75 a turn, 2 turns left; 7 x 2 + 20 = 34.
     expect(curseRank(combat(60), 7, 5)("DISINTEGRATION")).toBe(0);
     expect(curseRank(combat(30), 7, 5)("DISINTEGRATION")).toBeGreaterThan(curseRank(combat(30), 7, 5)("WASTE_AWAY"));
+  });
+});
+
+describe("the boss clock's Knowledge Demon HP (94FP F17-F32: '459HP, needs ~80/turn'; the fight's max_hp was 399)", () => {
+  it("the F32 rest board: the clock counts 399", () => {
+    const clock = bossClockJson(parseGameState(logged("94fp-rest-f32").state), loggedKnowledge)!;
+    expect(clock["boss"]).toBe("KNOWLEDGE_DEMON");
+    expect(clock["boss_hp"]).toBe(399);
+    expect(String(clock["boss_note"])).toMatch(/Ponder heals/);
   });
 });

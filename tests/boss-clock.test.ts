@@ -26,7 +26,9 @@ const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS", run: Raw = {}) =>
 describe("boss clock", () => {
   it("knows the act bosses' HP and damage a turn", () => {
     expect(bossNeed("KAISER_CRAB_BOSS", 8)).toMatchObject({ id: "KAISER_CRAB", hp: 428, perTurn: 54 });
-    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.perTurn).toBe(51);
+    // 399 at A8 (94FP F33 states; the dossier), not 459 (399 + two Ponder heals): 399 / 9.
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.hp).toBe(399);
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.perTurn).toBe(44);
     // A8 HP from the A8 states (XWPV, WB02, YNMB, CWU9); A7 and below keep the old numbers.
     expect(bossNeed("VANTOM_BOSS", 8)?.hp).toBe(183);
     expect(bossNeed("THE_INSATIABLE_BOSS", 8)?.hp).toBe(341);

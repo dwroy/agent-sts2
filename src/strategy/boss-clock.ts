@@ -47,8 +47,10 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   // ~29 after 6 of relic damage (0.36), EHJZ F33 ~24 of ~30 after ~72 of Inferno over 5 turns (0.78).
   // Applied to the whole estimate, 0.45 read EHJZ's Inferno deck at 14 against 38 dealt.
   KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, realised: 0.55, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
-  // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
-  KNOWLEDGE_DEMON: { hp: 439, hpA8: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
+  // 379 HP, 399 at A8 (states.jsonl max_hp: 94FP, 5BXM; the dossier's a7/a8). The Ponder heals are not
+  // added: 459 (399 + two 30-HP heals) read 15% high, "Knowledge Demon 459HP, needs ~80/turn" in every
+  // 94FP run plan from F17, while the fight took ~43 a turn to leave it at 5 (the two heals ~37 in all).
+  KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, turns: 9, note: "Ponder heals it (~30, T4/T8; not in the HP), curses the deck every few turns; Strength scaling wins" },
   // 341 at A8 (XWPV, WB02 states).
   THE_INSATIABLE: { hp: 321, hpA8: 341, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
