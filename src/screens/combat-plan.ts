@@ -1493,7 +1493,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         facts["boss_race"] = `behind the boss clock (~${Math.round(bossHpLeft / turnsLeft)} a turn needed): its extra damage ${pays ? "pays" : "does not pay"} for its extra HP at the race's rate`;
       }
     }
-    if ((plan.outcome.blockPotionShort ?? 0) > 0) facts["block_potion_short"] = `a block potion drunk for a hit the hand could take: ~${plan.outcome.blockPotionShort} more HP lost to next turn's hit than if it were kept`;
+    if ((plan.outcome.blockPotionShort ?? 0) > 0) facts["block_potion_short"] = `a block potion drunk for a hit the hand could take: ~${Math.round(plan.outcome.blockPotionShort ?? 0)} more HP lost to next turn's hit than if it were kept`;
     // What each potion this line drinks saves here, and what holding it means for the boss.
     const drunk = plan.steps.filter((step) => step.cardId.startsWith("POTION:"));
     if (drunk.length > 0 && !toadRock(drunk[0]!.cardId.split(":")[1] ?? "")) {
