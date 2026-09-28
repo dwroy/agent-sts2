@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 3962 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T13:29:13.905Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1698}.
+DB: `src/knowledge/monster-db.json` from 3968 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T13:35:52.994Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1704}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -80,9 +80,9 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | PHROG_PARASITE | elite | 138 [135-141] (8) | **142** | 147.5 [145-150] (16) | 149 | 67 [66-68] | 24.6 (16) | - | 1 | 1 | PHROG_PARASITE (with spawned bodies) |
 | PUNCH_CONSTRUCT | hallway | 185 (1) | 185 | 200 (4) | **194** | 60 | 36.4 (4) | - | 2 | 2 | CUBEX_CONSTRUCT+CUBEX_CONSTRUCT+PUNCH_CONSTRUCT |
 | QUEEN | boss | 599 (2) | 599 | 630 (5) | **629** | 419 | - (0) | 69 | 10 | 5 | boss QUEEN |
-| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (13) | **79** | 80 | 16 (13) | **20** | 0 | 0 | SKULKING_COLONY |
+| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (14) | **79** | 80 | 16 (14) | **20** | 0 | 0 | SKULKING_COLONY |
 | SLIMED_BERSERKER | hallway | 261 (2) | 261 | 281 (1) | 281 | 281 | - (0) | 40 | 1 | 1 | SLIMED_BERSERKER |
-| SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 41 [41-42] (49) | **40** | 41 [41-42] | 13.7 (49) | - | 1 | 1 | SLUDGE_SPINNER |
+| SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 41.5 [41-42] (50) | **40** | 41.5 [41-42] | 13.8 (50) | - | 1 | 1 | SLUDGE_SPINNER |
 | SLUMBERING_BEETLE | hallway | 174 [172-176] (10) | 172 | 178.5 [176-182] (24) | 181 | 89 | 29.8 (21) | 30 | 10 | 7 | BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE |
 | SOUL_FYSH | boss | 211 (6) | 211 | 221 (17) | 221 | 221 | 20.1 (14) | **25** | 10 | 8 | boss SOUL_FYSH |
 | SOUL_NEXUS | elite | 234 (1) | 234 | 254 (3) | **246** | 254 | 33.9 (2) | **45** | 2 | 1 | SOUL_NEXUS |
@@ -98,7 +98,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | VANTOM | boss | 173 (8) | 173 | 183 (23) | 183 | 183 | 22.9 (19) | 23 | 9 | 5 | boss VANTOM |
 | WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (23) | 250 | 250 | 25 (17) | 25 | 12 | 8 | boss WATERFALL_GIANT |
 
-Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 79), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111.5), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 41), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
+Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 79), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111.5), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 41.5), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
 
 Dossier need_damage_per_turn more than 20% off what A8 winners dealt: CEREMONIAL_BEAST (hand 20 vs DB 26.2), SKULKING_COLONY (hand 20 vs DB 16), SOUL_FYSH (hand 25 vs DB 20.1), SOUL_NEXUS (hand 45 vs DB 33.9), THE_KIN (hand 31 vs DB 40.5).
 
