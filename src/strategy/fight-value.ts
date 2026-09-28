@@ -4,9 +4,8 @@
  * turn): further HP loss until the fight ends (the coming enemy turn included; a death counts all the HP
  * we had), the probability we win the fight, and the turns still to play.
  *
- * OFFLINE STUB: nothing in the decision code calls this yet. Intended uses (notes/fight-value-backtest.md):
- * the terminal estimate of a multi-turn rollout, and a fact shown to Jev per option ("expected further HP
- * loss X, win Y%, based on n similar states").
+ * Used only through the rollout (rollout.ts): its terminal estimate, and the `history_estimate` fact shown to
+ * Jev per combat option (rollout-live.ts: "further HP loss X, win Y%, similar states n=..."). It never ranks.
  *
  * The model is gradient-boosted trees over named features (the names in fight-value.json `features`,
  * computed by base_features() in the Python builder) plus monster/encounter target encodings. `n` is the

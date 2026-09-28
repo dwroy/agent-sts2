@@ -44,10 +44,16 @@ export interface DecisionRecord {
   deepseek?: JsonValue;
   /** Why a DeepSeek-decided screen was decided by Jev/code instead. */
   deepseek_fallback?: string;
+  /** DeepSeek's answer failed the consistency guard: {first, second, resolution, choice} (see src/llm/consistency.ts). */
+  deepseek_consistency?: JsonValue;
   /** Jev context version of this question (JEV_CONTEXT), present when not "off". */
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
   jev_hints?: string[];
+  /** Combat plan choice: the rollout behind the facts shown to Jev ({ms, horizon, samples, degraded, best, …}). */
+  rollout?: JsonValue;
+  /** Combat plan choice: Jev's pick was the rollout's best line (null: no pick, or no rollout). */
+  rollout_best_chosen?: boolean | null;
   result: string;
 }
 

@@ -1844,6 +1844,12 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
   };
 }
 
+/**
+ * Offline tools only (tools/rollout-backtest.ts reads the live planner's solver input and plans through it).
+ * No decision code sets it; null is a no-op.
+ */
+export const solveTap: { onSolve: ((input: SolverInput, result: SolveResult) => void) | null } = { onSolve: null };
+
 /** Returns every distinct end-of-turn outcome's best plan, best first. */
 export function solveTurn(input: SolverInput): SolveResult {
   const maxNodes = input.maxNodes ?? 60_000;
@@ -1899,7 +1905,9 @@ export function solveTurn(input: SolverInput): SolveResult {
 
   visit(root);
   const plans = [...byOutcome.values()].map((plan) => drawFirst(plan, input, weights)).sort((a, b) => b.score - a.score);
-  return { plans, nodes, truncated };
+  const result = { plans, nodes, truncated };
+  solveTap.onSolve?.(input, result);
+  return result;
 }
 
 function vector(plan: Plan): number[] {
