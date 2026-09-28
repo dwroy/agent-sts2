@@ -82,11 +82,18 @@ export function truncate(text: string, max: number): string {
 }
 
 /**
- * The game renders energy as an inline image; its res:// path reached the models verbatim
- * ("获得res://…energy_icon.pngres://…energy_icon.png" = gain 2 energy). One "[能量]" per icon.
+ * The game renders energy (and the Regent's stars) as inline images; their res:// paths reached the
+ * models verbatim ("获得res://…energy_icon.pngres://…energy_icon.png" = gain 2 energy). A run of N
+ * adjacent icons reads "N点能量" / "N颗星"; any other inline image is dropped.
  */
 export function iconsToText(text: string): string {
-  return text.replace(/(?:\[img\])?res:\/\/\S*?energy_icon\.png(?:\[\/img\])?/g, "[能量]").replace(/(?:\[img\])?res:\/\/\S*?\.png(?:\[\/img\])?/g, "");
+  const icon = (kind: string): string => `(?:\\[img\\])?res:\\/\\/[^\\s\\[\\]]*?${kind}\\.png(?:\\[\\/img\\])?`;
+  const run = (kind: string): RegExp => new RegExp(`(?:${icon(kind)}\\s*)*${icon(kind)}`, "g");
+  const count = (match: string): number => match.match(/\.png/g)?.length ?? 1;
+  return text
+    .replace(run("energy_icon"), (match) => `${count(match)}点能量`)
+    .replace(run("star_icon"), (match) => `${count(match)}颗星`)
+    .replace(new RegExp(icon("[^\\s\\[\\]]*?"), "g"), "");
 }
 
 /** Collapses whitespace and drops the mod's `[blue]…[/blue]` markup for model consumption. */

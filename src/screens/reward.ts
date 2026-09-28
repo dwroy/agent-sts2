@@ -110,7 +110,7 @@ export function planReward(env: DecisionEnv): Decision | null {
     return buildPickDecision({
       ...params,
       options,
-      deepseek: { facts: buildFacts(env, { deck_needs: deckNeeds }), baseline, note: `code_value below the skip line (${SKIP_BAR}) means code would skip it.` },
+      deepseek: { facts: buildFacts(env), baseline, note: `code_value below the skip line (${SKIP_BAR}) means code would skip it.` },
     });
   }
 

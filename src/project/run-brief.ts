@@ -6,6 +6,8 @@
  */
 
 import type { Knowledge } from "../knowledge/index.js";
+import { UNKNOWN_VALUE } from "../knowledge/potion-values.js";
+import { fillRelicText } from "../knowledge/relic-values.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import {
@@ -85,8 +87,8 @@ export function briefJson(brief: RunBrief): Record<string, JsonValue> {
   // Relic and potion text arrives as a template: the mod exposes `{Heal}` where the game shows a
   // number, and there is no rendered variant for relics the way there is for cards. Say so, so the
   // model does not read the placeholder as a literal string.
-  if ([...brief.relic_effects, ...brief.potions].some((entry) => entry.includes("{"))) {
-    json["relic_effects_note"] = "{X} marks a value the mod does not expose; the effect text around it is accurate";
+  if ([...brief.relic_effects, ...brief.potions].some((entry) => entry.includes(UNKNOWN_VALUE))) {
+    json["relic_effects_note"] = `${UNKNOWN_VALUE} marks a value the mod does not expose; the effect text around it is accurate`;
   }
   return json;
 }
@@ -127,7 +129,8 @@ export function combatRelicEffects(state: GameState, knowledge: Knowledge): stri
       const id = str(relic["relic_id"]);
       const info = knowledge.relic(id);
       const name = str(relic["name"], info?.name ?? id);
-      return info?.description ? `${name}: ${truncate(info.description, 80)}` : name;
+      const description = fillRelicText(id, info?.description || str(relic["description"]));
+      return description ? `${name}: ${truncate(description, 80)}` : name;
     });
 }
 
@@ -147,8 +150,8 @@ export function combatBriefJson(brief: RunBrief, state: GameState, knowledge: Kn
     potions: brief.potions,
   };
   if (brief.notes.length > 0) json["notes"] = brief.notes;
-  if ([...relics, ...brief.potions].some((entry) => entry.includes("{"))) {
-    json["relic_effects_note"] = "{X} marks a value the mod does not expose; the effect text around it is accurate";
+  if ([...relics, ...brief.potions].some((entry) => entry.includes(UNKNOWN_VALUE))) {
+    json["relic_effects_note"] = `${UNKNOWN_VALUE} marks a value the mod does not expose; the effect text around it is accurate`;
   }
   return json;
 }

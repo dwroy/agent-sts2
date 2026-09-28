@@ -6,7 +6,10 @@
  *
  * Measured (A8 runs to 09-28): Burning Blood heals 6 after a fight (841 of 914 fights ending below max
  * HP); Bag of Marbles puts 1 Vulnerable on each enemy at T1 (294 of 311); Toasty Mittens +1 Strength a
- * turn (NZWR: Strength 13 by T11 with Inflame).
+ * turn (NZWR: Strength 13 by T11 with Inflame). Measured 09-28 over all logged combat states: Lantern
+ * +1 energy on turn 1 (185 of 229 first turns; the rest had other energy sources); Pael's Flesh +1
+ * energy from turn 3 (342 of 398 turns ≥3, 0 on turns 1–2 in 232 of 284); Parrying Shield hits a
+ * random enemy for 6 when the turn ends with ≥10 block (6 dealt at every block 10–30, never below 10).
  */
 
 import { stripMarkup } from "../util/json.js";
@@ -16,6 +19,9 @@ export const RELIC_VALUES: Record<string, Record<string, number>> = {
   BURNING_BLOOD: { Heal: 6 },
   BAG_OF_MARBLES: { VulnerablePower: 1 },
   TOASTY_MITTENS: { StrengthPower: 1 },
+  LANTERN: { Energy: 1 },
+  PAELS_FLESH: { Energy: 1 },
+  PARRYING_SHIELD: { Block: 10, Damage: 6 },
 };
 
 /** A relic description with its `{Name}` placeholders filled from RELIC_VALUES, the rest marked unknown. */

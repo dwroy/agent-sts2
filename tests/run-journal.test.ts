@@ -65,22 +65,29 @@ describe("run journal: the complete run context", () => {
     expect(decisions).toBe(60);
     const final = at("MAP", 48, { current_hp: 40 });
     const memory = journal.render(final, testKnowledge, {});
+    // Floors 1–47 are history; floor 48 (the one the run is on) is this_floor.
+    const all = `${memory.history}\n${memory.this_floor}`;
+    const floorBlock = (floor: number): string => {
+      const lines = all.split("\n");
+      const start = lines.findIndex((line) => line.startsWith(`F${floor} `) || line === `F${floor}` || line.startsWith(`本层至今（F${floor}`));
+      const end = lines.findIndex((line, index) => index > start && /^(F\d+|本层至今)/.test(line));
+      return lines.slice(start, end < 0 ? undefined : end).join("\n");
+    };
     for (let floor = 1; floor <= 48; floor += 1) {
-      expect(memory.decisions).toContain(`F${floor} event/choose [DS]: pick-${floor}-a — 未核实理由: why-${floor}`);
-      if (floor % 4 === 1) expect(memory.decisions).toContain(`F${floor} rest/choose [code]: rest-${floor}`);
+      const block = floorBlock(floor);
+      expect(block).toContain(` event/choose [DS]: pick-${floor}-a — 未核实理由: why-${floor}`);
+      if (floor % 4 === 1) expect(block).toContain(` rest/choose [code]: rest-${floor}`);
       const hp = 80 - (floor % 30);
-      if (floor % 2 === 0) expect(memory.fights).toContain(`F${floor} JAW_WORM+CULTIST: ${hp}→${hp - 5}/80`);
-      expect(memory.hp_timeline).toContain(`F${floor}`);
+      if (floor % 2 === 0) expect(block).toContain(` 战斗 JAW_WORM+CULTIST: ${hp}→${hp - 5}/80`);
+      if (floor < 48) expect(memory.history).toMatch(new RegExp(`^F${floor} · HP${hp - 5}(/80)? ¥`, "m"));
     }
-    expect(memory.decisions).not.toContain("reward/proceed");
-    expect(memory.decisions.split("\n").filter((line) => line.startsWith("F"))).toHaveLength(60);
-    expect(memory.fights.split("\n").filter((line) => line.startsWith("F"))).toHaveLength(24);
-    for (const act of [1, 2, 3]) {
-      expect(memory.decisions).toContain(`第${act}幕:`);
-      expect(memory.fights).toContain(`第${act}幕:`);
-    }
+    expect(memory.this_floor).toContain("本层至今（F48");
+    expect(all).not.toContain("reward/proceed");
+    expect(all.split("\n").filter((line) => / (event|rest)\/choose \[/.test(line))).toHaveLength(60);
+    expect(all.split("\n").filter((line) => line.startsWith(" 战斗 "))).toHaveLength(24);
+    for (const act of [1, 2, 3]) expect(memory.history).toContain(`第${act}幕:`);
     // No per-turn detail in the fights: one line each, nothing about turns.
-    expect(memory.fights).not.toMatch(/回合|T3/);
+    expect(all.split("\n").filter((line) => line.startsWith(" 战斗 ")).join("\n")).not.toMatch(/回合|T3/);
     expect(memoryChars(memory)).toBeGreaterThan(3000);
 
     const next = at("MAP", 1, {}, { run_id: "OTHERRUN" });
@@ -88,9 +95,8 @@ describe("run journal: the complete run context", () => {
     expect(journal.choices).toEqual([]);
     expect(journal.fights).toEqual([]);
     const fresh = journal.render(next, testKnowledge, {});
-    expect(fresh.decisions).toBe("");
-    expect(fresh.fights).toBe("");
-    expect(fresh.hp_timeline).not.toContain("F48");
+    expect(fresh.history).toBe("");
+    expect(fresh.this_floor).toBe("");
   });
 
   it("tracks the deck, relics, potions and max HP from the states it sees", () => {
@@ -114,16 +120,14 @@ describe("run journal: the complete run context", () => {
     journal.observe(at("REST", 7, { deck: [...upgraded, anger], relics, potions: [potions[1]!, twoPotions[1]!], max_hp: 86 }));
     const removed = upgraded.filter((card) => card["card_id"] !== "DEFEND_R");
     journal.observe(at("SHOP", 8, { deck: [...removed, anger], relics, potions: [potions[1]!, twoPotions[1]!], max_hp: 86 }));
-    const text = journal.render(at("SHOP", 8, { deck: [...removed, anger], relics, max_hp: 86 }), testKnowledge, {}).resources;
-    expect(text).toContain("F4 +卡 Anger(奖励)");
-    expect(text).toContain("F5 +遗物 Anchor(宝箱)");
-    expect(text).toContain("F5 +药 Block Potion(宝箱)");
-    expect(text).toContain("F5 上限 80→86(宝箱)");
-    expect(text).toContain("F6 用药 Fire Potion(战斗)");
-    expect(text).toContain("F7 升级 STRIKE_R(休息)");
-    expect(text).toContain("F8 -卡 DEFEND_R(商店)");
-    const fights = journal.render(at("SHOP", 8), testKnowledge, {}).fights;
-    expect(fights).toContain("F6 JAW_WORM+CULTIST: 55→55/80 药:Fire Potion");
+    const memory = journal.render(at("SHOP", 8, { deck: [...removed, anger], relics, max_hp: 86 }), testKnowledge, {});
+    expect(memory.history).toMatch(/^F4 · HP55 ¥214\n \+卡 Anger\(奖励\)$/m);
+    expect(memory.history).toMatch(/^F5 · HP55\/86 ¥214\n \+遗物 Anchor\(宝箱\); \+药 Block Potion\(宝箱\); 上限 80→86\(宝箱\)$/m);
+    expect(memory.history).toContain(" 用药 Fire Potion(战斗)");
+    expect(memory.history).toContain(" 战斗 JAW_WORM+CULTIST: 55→55/80 药:Fire Potion");
+    expect(memory.history).toMatch(/^F7 · HP55 ¥214\n 升级 STRIKE_R\(休息\)$/m);
+    // F8 is the floor the run is on.
+    expect(memory.this_floor).toContain(" -卡 DEFEND_R(商店)");
   });
 
   it("shows every route plan, re-plans with their reason, and the current act's progress", () => {
@@ -149,32 +153,37 @@ describe("run journal: the complete run context", () => {
     const f2 = mapAt(2, [{ index: 0, row: 2, col: 0, node_type: "Elite" }]);
     journal.observe(f2, { screenMemory: { routePlan: plan } });
     journal.record(f2, entry({ label: "map/route-follow", by: "code", choice: "follow", intent: { action: "choose_map_node", option_index: 0 } }));
-    let route = journal.render(f2, testKnowledge, { routePlan: plan }).route;
-    expect(route).toContain("第1幕 F1 规划，当时 HP 100%: 怪→精→休→店→王");
-    expect(route).toContain("本幕进度: 已走 2/4 [怪精] | 下一步 休（预计 HP 60%） | 剩余 2: 休→店→王");
+    let memory = journal.render(f2, testKnowledge, { routePlan: plan });
+    expect(memory.history).toContain(" 路线规划（第1幕 F1 定，当时 HP 100%）: 怪→精→休→店→王");
+    expect(memory.route).toBe("本幕进度（按 F1 的路线）: 已走 2/4 [怪精] | 下一步 休（预计 HP 60%） | 剩余 2: 休→店→王");
     const replan: RoutePlan = { ...plan, floor: 3, hpPct: 0.3, why: "HP 30% is 30 points below", path: [{ row: 3, col: 2, type: "RestSite", hpOnArrival: 0.3 }, { row: 4, col: 2, type: "Treasure", hpOnArrival: 0.6 }] };
     const f3 = mapAt(3, [{ index: 0, row: 3, col: 2, node_type: "RestSite" }]);
     journal.observe(f3, { screenMemory: { routePlan: replan } });
-    route = journal.render(f3, testKnowledge, { routePlan: replan }).route;
-    expect(route).toContain("第1幕 F1 规划");
-    expect(route).toContain("第1幕 F3 重规划（HP 30% is 30 points below），当时 HP 30%: 休→宝→王");
-    expect(route).not.toContain("王→王");
-    expect(route).toContain("本幕进度: 已走 0/2");
-    // The route plan decision itself is in the decisions.
-    expect(journal.render(f3, testKnowledge, {}).decisions).toContain("F1 map/route-plan [DS]: route Monster -> Elite -> RestSite -> Shop");
+    memory = journal.render(f3, testKnowledge, { routePlan: replan });
+    expect(memory.history).toContain(" 路线规划（第1幕 F1 定");
+    expect(memory.this_floor).toContain(" 路线重规划（HP 30% is 30 points below）（第1幕 F3 定，当时 HP 30%）: 休→宝→王");
+    expect(`${memory.history}${memory.this_floor}`).not.toContain("王→王");
+    expect(memory.route).toContain("本幕进度（按 F3 的路线）: 已走 0/2");
+    // The route plan decision itself is in the history.
+    expect(memory.history).toContain("\nF1 · HP55/80 ¥214\n 路线规划（第1幕 F1 定，当时 HP 100%）: 怪→精→休→店→王\n map/route-plan [DS]: route Monster -> Elite -> RestSite -> Shop\nF2 ");
   });
 
   it("every question gets the same sections, including the boss's monster-DB entry and the act's threats", () => {
     const journal = new RunJournal();
     const state = at("MAP", 10, { boss_id: "VANTOM_BOSS", act_id: "0" });
     const memory = journal.render(state, testKnowledge, {});
-    expect(Object.keys(memory)).toEqual(["now", "boss_db", "decisions", "fights", "map_threats", "hp_timeline", "resources", "route", "lookahead", "knowledge"]);
+    // Most stable first: the act block, the append-only history, then what changes between questions.
+    expect(Object.keys(memory)).toEqual(["act", "history", "now", "this_floor", "route", "lookahead", "knowledge"]);
     expect(memory.now).toContain("现状: 第1幕 F10 | HP 55/80 | 金币 214");
     expect(memory.now).toContain("牌组 5 张: STRIKE_R×2, DEFEND_R, BASH+, INFLAME");
-    expect(memory.boss_db).toMatch(/VANTOM\) A8: HP .* \(n=\d+\)/);
-    expect(memory.boss_db).toContain("我方战绩");
-    expect(memory.map_threats).toContain("精英");
-    expect(memory.map_threats).toMatch(/n=\d+/);
+    expect(memory.now).toContain("构筑: 5 张 (攻击 3/技能 1/能力 1) | 升级 1 |");
+    expect(memory.act).toMatch(/VANTOM\) A8: HP .* \(n=\d+\)/);
+    expect(memory.act).toContain("我方战绩");
+    expect(memory.act).toContain("第1幕 boss: ");
+    expect(memory.act).toContain("精英");
+    expect(memory.act.indexOf("精英")).toBeLessThan(memory.act.indexOf("第1幕 boss"));
+    // A question that carries its own facts gets no second copy of them.
+    expect(journal.render(state, testKnowledge, {}, { factsCovered: true }).now).toBe("");
   });
 });
 
@@ -199,7 +208,8 @@ describe("display: one plus per upgrade, one boss per route, nothing cut (audit 
     const up = deck.map((card) => (card["card_id"] === "BASH" ? { ...card, name: "痛击+", upgraded: true } : card));
     journal.observe(at("REST", 6, { deck: up }));
     journal.observe(at("SHOP", 7, { deck: up.filter((card) => card["card_id"] !== "BASH") }));
-    const text = journal.render(at("SHOP", 7), testKnowledge, {}).resources;
+    const memory = journal.render(at("SHOP", 7), testKnowledge, {});
+    const text = `${memory.history}\n${memory.this_floor}`;
     expect(text).toContain("升级 痛击(休息)");
     expect(text).toContain("-卡 痛击+(商店)");
     expect(text).not.toContain("++");
@@ -224,10 +234,10 @@ describe("display: one plus per upgrade, one boss per route, nothing cut (audit 
     const state = at("MAP", 14, {}, { map: { available_nodes: [{ index: 0, row: 14, col: 0, node_type: "RestSite" }], nodes: [] } });
     journal.observe(state, { screenMemory: { routePlan: plan } });
     journal.record(state, entry({ label: "map/route-follow", by: "code", choice: "follow", intent: { action: "choose_map_node", option_index: 0 } }));
-    const route = journal.render(state, testKnowledge, { routePlan: plan }).route;
-    expect(route).toContain("当时 HP 80%: 休→王");
-    expect(route).toContain("剩余 1: 王");
-    expect(route).not.toContain("王→王");
+    const memory = journal.render(state, testKnowledge, { routePlan: plan });
+    expect(memory.this_floor).toContain("当时 HP 80%）: 休→王");
+    expect(memory.route).toContain("剩余 1: 王");
+    expect(`${memory.this_floor}${memory.route}`).not.toContain("王→王");
   });
 
   it("the run plan, route re-plan reason and option text are kept whole", () => {
@@ -343,7 +353,8 @@ describe("run journal keeps the option's own text, not the escalator's guess (VC
     expect(reason.startsWith(UNVERIFIED_REASON_PREFIX)).toBe(true);
     expect(reason).toBe(`${UNVERIFIED_REASON_PREFIX}${long} Ascender's Bane is eternal, so take the curse removal later.`);
     expect(reason).not.toContain("…");
-    const rendered = journal.render(state, testKnowledge, {}).decisions;
+    const later = parseGameState(baseState("MAP", { run: runPayload({ floor: 99 }) }));
+    const rendered = journal.render(later, testKnowledge, {}).history;
     expect(rendered).toContain("靠近: 一张攻击牌附魔腐化。 — 未核实理由: 腐化附魔约等于费用归零");
     expect(rendered).toContain("未核实理由 = DeepSeek 当时所写，不是事实");
     journal.record(state, entry({ label: "reward/card", choice: "took Inflame", reason: "" }));

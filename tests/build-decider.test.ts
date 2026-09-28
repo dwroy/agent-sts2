@@ -258,7 +258,7 @@ class FakeDeepSeek extends DeepSeekClient {
     this.calls.push({ label, state, criteria });
     const choice = this.pickFn(criteria, label);
     if (choice instanceof Error) throw choice;
-    return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2 };
+    return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1 };
   }
 }
 
@@ -353,9 +353,11 @@ describe("BUILD_DECIDER=deepseek in the loop", () => {
     expect(actions[0]).toEqual({ action: "choose_reward_card", option_index: 2 });
     expect(jev.calls).toBe(0);
     expect(deepseek.calls).toHaveLength(1);
-    expect(deepseek.calls[0]?.state["facts"]).toMatchObject({ hp: "55/80", deck_size: 5 });
+    expect(deepseek.calls[0]?.state["facts"]).toMatchObject({ hp: "55/80 (69%)", deck_size: 5 });
     const record = records.find((entry) => entry["label"] === "reward/card")!;
     expect(record).toMatchObject({ decider: "deepseek", deepseek: { by: "deepseek", direct: true, choice: "card2", reason: "fake reason for card2" } });
+    // DeepSeek's own tokens are the decision's usage (they were logged as zeros before).
+    expect(record["usage"]).toEqual({ input_tokens: 10, output_tokens: 2, cache_hit_tokens: 7, reasoning_tokens: 1 });
     expect(String(record["rationale"])).toContain("fake reason for card2");
     expect(stats.deepseekCalls).toBe(1);
   });

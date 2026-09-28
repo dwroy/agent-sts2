@@ -612,7 +612,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           await sleep(pollIntervalMs);
           continue;
         }
-        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria });
+        // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
+        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         try {
           stats.deepseekCalls += 1;
@@ -677,7 +678,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     let asked: Record<string, JsonValue> | undefined;
     let rawAnswers: JsonValue | undefined;
-    let usage = { input_tokens: 0, output_tokens: 0 };
+    let usage: { input_tokens: number; output_tokens: number; cache_hit_tokens?: number; reasoning_tokens?: number } = { input_tokens: 0, output_tokens: 0 };
     const requestIds: string[] = [];
     let reasked = false;
     let escalation: JsonValue | undefined;
@@ -687,6 +688,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (deepseekResolved) {
       resolved = deepseekResolved;
       asked = deepseekAsked;
+      // DeepSeek's own tokens (zero when the answer was reused from the memo: no call was made).
+      if (deepseekRecord && deepseekRecord["reused"] !== true) usage = deepseekUsage(deepseekRecord);
     } else if (decision.kind === "act") {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false };
     } else if (!jev) {
@@ -761,7 +764,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             jev_probabilities: toJsonValue(jevAnswer.probabilities),
           };
           // Only DeepSeek gets the run memory, in its user message (its system prompt stays cached).
-          const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria });
+          const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria, factsCovered: "facts" in decision.state });
           // BUILD_DECIDER=deepseek: combat stays with code and Jev (COMBAT_DEEPSEEK=on restores the
           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
@@ -797,6 +800,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
+              if (escalator.name === "deepseek") {
+                usage = {
+                  input_tokens: usage.input_tokens + answer.inputTokens,
+                  output_tokens: usage.output_tokens + answer.outputTokens,
+                  cache_hit_tokens: (usage.cache_hit_tokens ?? 0) + (answer.cacheHitTokens ?? 0),
+                  reasoning_tokens: (usage.reasoning_tokens ?? 0) + (answer.reasoningTokens ?? 0),
+                };
+              }
               escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}), ...(consistency === undefined ? {} : { consistency: toJsonValue(consistency) }) };
               // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
@@ -818,7 +829,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           stats.inputTokens += followUp.inputTokens;
           stats.outputTokens += followUp.outputTokens;
           jevLatency += followUp.latencyMs;
-          usage = { input_tokens: usage.input_tokens + followUp.inputTokens, output_tokens: usage.output_tokens + followUp.outputTokens };
+          usage = { ...usage, input_tokens: usage.input_tokens + followUp.inputTokens, output_tokens: usage.output_tokens + followUp.outputTokens };
           const answer = followUp.answers["pick"];
           if (answer && answer.type === "choice") {
             const intent = spec.map[answer.choice];
@@ -1174,7 +1185,8 @@ async function ensureRunPlan(
   if (!trigger) return;
   const failKey = `${runId}:${state.run?.floor ?? "?"}`;
   if (screenMemory.runPlanFailed === failKey) return;
-  const memory = journal.render(state, knowledge, screenMemory, { label: "run-plan" });
+  // run_state and previous_plan carry the current facts: `now` stays empty.
+  const memory = journal.render(state, knowledge, screenMemory, { label: "run-plan", factsCovered: true });
   const shown = fightPlanInput(state, knowledge, "run", {});
   const payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,
@@ -1210,4 +1222,10 @@ async function ensureRunPlan(
     logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200) });
     onEvent({ type: "note", message: `run plan failed: ${message.slice(0, 160)}` });
   }
+}
+
+/** A direct DeepSeek decision's token usage, from its decision record. */
+function deepseekUsage(record: Record<string, JsonValue>): { input_tokens: number; output_tokens: number; cache_hit_tokens: number; reasoning_tokens: number } {
+  const n = (key: string): number => (typeof record[key] === "number" ? (record[key] as number) : 0);
+  return { input_tokens: n("input_tokens"), output_tokens: n("output_tokens"), cache_hit_tokens: n("cache_hit_tokens"), reasoning_tokens: n("reasoning_tokens") };
 }
