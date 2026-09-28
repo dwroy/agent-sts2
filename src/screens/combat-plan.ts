@@ -170,6 +170,7 @@ export const targetOptions: { enabled: boolean } = { enabled: true };
  * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not
  * ordered among themselves), in board order: every living enemy but a Waterfall Giant husk, and an
  * illusion only while it attacks (whether hitting it is worth anything is the rollout's and Jev's call).
+ * The one non-minion group among minions is marked `leader`.
  */
 export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[]): KillGroup[] {
   const idOf = new Map<number, string>();
@@ -187,6 +188,12 @@ export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[])
       group.hp += enemy.hp;
     } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
   }
+  // A leader: the one group that is not minions when every other group is (MINION_POWER; they leave when the
+  // last non-minion dies, the solver's and the rollout's won check): its death ends the fight (The Kin's
+  // Priest). The rollout ranks kill orders by its HP left when no order ends the fight (rollout.ts rankOrders).
+  const isMinions = (group: KillGroup) => group.indices.every((index) => enemies.find((enemy) => enemy.index === index)?.minion === true);
+  const leaders = groups.filter((group) => !isMinions(group));
+  if (groups.length >= 2 && leaders.length === 1 && !leaders[0]!.illusion) leaders[0]!.leader = true;
   return groups;
 }
 

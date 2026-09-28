@@ -13,7 +13,9 @@
  *     weight w itself is never shown;
  *   - with two or more distinct enemies (by id), `rollout_kill_order` and `rollout_other_orders`: every line is
  *     rolled out under each kill order (rollout.ts killOrders: the later turns hit that enemy first), the
- *     facts above are its best order's, and the other orders' numbers are listed compactly beside them.
+ *     facts above are its best order's, and the other orders' numbers are listed compactly beside them. With a
+ *     leader (its death ends the fight, the others are minions) each order also shows the leader's HP left at
+ *     the horizon, and the orders are ranked by that progress when none ends the fight (rollout.ts rankOrders).
  * and the rollout's best (line, order) pair, whose line combat-plan.ts adds to the options when code did not
  * show it.
  */
@@ -369,7 +371,10 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     const first = (entry: OrderEstimate) => entry.order.label.split(" > ")[0]!;
     // An illusion first (Parafright) revives each turn: its "dead" count would read as a kill it never is.
     const firstFate = (entry: OrderEstimate) => (entry.firstDown === null ? `${first(entry)} is an illusion (revives at full HP; never dead for good)` : `${first(entry)} dead ${entry.firstDown}/${samples}`);
-    const numbers = (entry: OrderEstimate) => `further HP loss ${round1(entry.hpLoss)}, over ${entry.wins}/${samples}, dead ${entry.deaths}/${samples}, ${firstFate(entry)}`;
+    // A leader (its death ends the fight; the others are minions): its HP left at the horizon, every order.
+    const leaderName = line.order.leader?.name ?? null;
+    const leaderFate = (entry: OrderEstimate) => (entry.leader && leaderName ? `, ${leaderName} HP left at T${horizon} ~${Math.round(entry.leader.hpLeft)} (dead ${entry.leader.dead}/${samples})` : "");
+    const numbers = (entry: OrderEstimate) => `further HP loss ${round1(entry.hpLoss)}, over ${entry.wins}/${samples}, dead ${entry.deaths}/${samples}, ${firstFate(entry)}${leaderFate(entry)}`;
     const merged: { labels: string[]; entry: OrderEstimate; text: string }[] = [];
     for (const entry of line.orders) {
       const text = numbers(entry);
@@ -379,8 +384,13 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     }
     const [best, ...others] = merged;
     const dropped = r.ordersDropped > 0 ? `; ${r.ordersDropped} other orders not tried` : "";
-    const tied = others.length > 0 && others.every((m) => Math.abs(m.entry.value - best!.entry.value) < 0.05) ? "; the orders came out the same here" : "";
-    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); best of ${line.orders.length} kill orders compared${dropped}${tied}`;
+    const sameLeader = (m: (typeof merged)[number]) => Math.abs((m.entry.leader?.hpLeft ?? 0) - (best!.entry.leader?.hpLeft ?? 0)) < 0.5;
+    const tied = others.length > 0 && others.every((m) => Math.abs(m.entry.value - best!.entry.value) < 0.05 && sameLeader(m)) ? "; the orders came out the same here" : "";
+    const leaderNote =
+      leaderName && best!.entry.leader
+        ? `; ${leaderName}'s death ends the fight (the others are minions): HP left at T${horizon} ~${Math.round(best!.entry.leader.hpLeft)}, dead ${best!.entry.leader.dead}/${samples}${line.ordersByLeader ? `; no order ends the fight within ${horizon} turns, so the orders are ranked by least ${leaderName} HP left, then HP lost and deaths` : ""}`
+        : "";
+    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); best of ${line.orders.length} kill orders compared${dropped}${tied}${leaderNote}`;
     if (others.length > 0) facts["rollout_other_orders"] = others.map((m) => `${m.labels.join(" | ")}: ${m.text}`).join("; ");
   }
   const forecast = line.modelForecast.rollout;

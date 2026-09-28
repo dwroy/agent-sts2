@@ -16,7 +16,7 @@ import type { AskDecision, Decision } from "../src/project/types.js";
 import { focusLines, focusTargets, guardKeepsPick, hpGuardReplacement, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/screens/combat-plan.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/strategy/rollout-live.js";
-import { killOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/strategy/rollout.js";
+import { killOrders, LEADER_HP_TIE, rankOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/strategy/rollout.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -143,7 +143,9 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
       const both = `${order} | ${others}`;
       expect(both, key).toContain(`${AMALGAM} > ${QUEEN}`);
       expect(both, key).toContain(`${QUEEN} > ${AMALGAM}`);
-      expect(others, key).toMatch(/further HP loss [\d.]+, over \d\/8, dead \d\/8, \S+ dead \d\/8$/);
+      expect(others, key).toMatch(/further HP loss [\d.]+, over \d\/8, dead \d\/8, \S+ dead \d\/8, 女王 HP left at T5 ~\d+ \(dead \d\/8\)$/);
+      // The Queen is the leader (the Amalgam is her minion): her HP left is on every order.
+      expect(order, key).toMatch(/女王's death ends the fight \(the others are minions\): HP left at T5 ~\d+, dead \d\/8/);
       expect(String(f["rollout"]), key).toMatch(/^5-turn rollout \(8 samples\)/);
     }
     const bestKey = planKeys(criteria).find((key) => facts(criteria, key)["rollout_best"] === true)!;
@@ -416,6 +418,77 @@ describe("kill-order rollout (offline)", () => {
     expect(text).not.toMatch(/Minion dead/);
     expect(text).toMatch(/Minion is an illusion/);
     expect(text).toMatch(/Leader dead/);
+  });
+
+  it("The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left", () => {
+    const base = input(false);
+    const follower = (index: number, hp: number): EnemySim => ({ index, name: "Follower", hp, maxHp: hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, minion: true, attacks: [{ damage: 7, hits: 1 }] });
+    const enemies: EnemySim[] = [
+      follower(0, 63),
+      follower(1, 62),
+      { index: 2, name: "Priest", hp: 199, maxHp: 199, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 4, hits: 1 }] },
+    ];
+    const solver: SolverInput = { ...base.solver, enemies, fightKind: "boss", player: { ...base.solver.player, hp: 120, maxHp: 120 } };
+    const plans = solveTurn(solver).plans;
+    const combat = { enemies: [{ index: 0, enemy_id: "KIN_FOLLOWER" }, { index: 1, enemy_id: "KIN_FOLLOWER" }, { index: 2, enemy_id: "KIN_PRIEST" }] };
+    const groups = killGroups(combat, enemies);
+    expect(groups.map((g) => [g.id, g.leader ?? false])).toEqual([["KIN_FOLLOWER", false], ["KIN_PRIEST", true]]);
+    const { orders } = killOrders(groups);
+    expect(orders.map((o) => [o.label, o.leader?.name])).toEqual([["Follower x2 > Priest", "Priest"], ["Priest > Follower x2", "Priest"]]);
+    const kin = { KIN_FOLLOWER: { moves: { SLASH: { damage: 7, hits: 1, strength: 0, block: 0 } }, next: { SLASH: { SLASH: 1 } } }, KIN_PRIEST: { moves: { ORB: { damage: 4, hits: 1, strength: 0, block: 0 } }, next: { ORB: { ORB: 1 } } } };
+    const r = rolloutDecision({
+      ...base,
+      solver,
+      plans,
+      enemies: enemies.map((e, i) => ({ index: e.index, id: i < 2 ? "KIN_FOLLOWER" : "KIN_PRIEST", move: i < 2 ? "SLASH" : "ORB", strength: 0, powers: {} })),
+      tables: kin,
+      meta: { ...base.meta, kind: "boss", enc: "THE_KIN" },
+      options: { ...base.options!, include: plans.slice(0, 3), orders },
+    });
+    const shown = r.lines.filter((l) => l.tags.includes("offered"));
+    expect(shown.length).toBeGreaterThan(0);
+    for (const line of shown) {
+      const priestFirst = line.orders.find((o) => o.order.label === "Priest > Follower x2")!;
+      const followersFirst = line.orders.find((o) => o.order.label === "Follower x2 > Priest")!;
+      // 199 HP against ~3 Strikes a turn: dead in no sample, the fight over in none.
+      expect(priestFirst.wins + followersFirst.wins).toBe(0);
+      expect(priestFirst.leader!.dead).toBe(0);
+      // Aiming at the Priest leaves it lower; the followers-first order loses less HP (the old ranking's pick).
+      expect(priestFirst.leader!.hpLeft).toBeLessThan(followersFirst.leader!.hpLeft - LEADER_HP_TIE);
+      expect(followersFirst.value).toBeGreaterThanOrEqual(priestFirst.value);
+      expect(line.ordersByLeader).toBe(true);
+      expect(line.order!.label).toBe("Priest > Follower x2");
+      expect(line.value).toBe(priestFirst.value);
+    }
+    const line = shown.find((l) => l.order!.label === "Priest > Follower x2")!;
+    const live = { available: true, byPlan: new Map([[line.plan, line]]), result: r, potionsHeld: false, ordersDropped: 0 } as unknown as LiveRollout;
+    const facts = rolloutFacts(line.plan, live);
+    expect(String(facts["rollout_kill_order"])).toMatch(/Priest's death ends the fight \(the others are minions\): HP left at T5 ~\d+, dead 0\/8; no order ends the fight within 5 turns, so the orders are ranked by least Priest HP left, then HP lost and deaths/);
+    expect(String(facts["rollout_other_orders"])).toMatch(/^Follower x2 > Priest: .*Priest HP left at T5 ~\d+ \(dead 0\/8\)$/);
+  });
+
+  it("rankOrders: value alone once any order ends the fight or without a leader; leader progress before deaths", () => {
+    const e = (value: number, hpLeft: number | null, wins = 0, deaths = 0) => ({ value, wins, deaths, leader: hpLeft === null ? null : { hpLeft } });
+    // Leader rule: least leader HP left first; within LEADER_HP_TIE, value.
+    expect(rankOrders([e(-10, 150), e(-20, 100)]).ranked.map((x) => x.value)).toEqual([-20, -10]);
+    expect(rankOrders([e(-20, 100), e(-10, 100 + LEADER_HP_TIE)]).ranked.map((x) => x.value)).toEqual([-10, -20]);
+    expect(rankOrders([e(-10, 150), e(-20, 100)]).byLeader).toBe(true);
+    // Deaths within the horizon are in the value only: the leader's progress still goes first.
+    expect(rankOrders([e(-10, 150, 0, 0), e(-50, 40, 0, 2)]).ranked.map((x) => x.value)).toEqual([-50, -10]);
+    // An order that ends the fight in a sample: value, as before.
+    const won = rankOrders([e(-10, 150), e(-20, 0, 1)]);
+    expect(won.byLeader).toBe(false);
+    expect(won.ranked.map((x) => x.value)).toEqual([-10, -20]);
+    // No leader (two kinds of non-minion enemy): value.
+    expect(rankOrders([e(-10, null), e(-20, null)]).ranked.map((x) => x.value)).toEqual([-10, -20]);
+  });
+
+  it("no leader when two groups are not minions, or the only other group is an illusion", () => {
+    const e = (index: number, name: string, o: Partial<EnemySim> = {}): EnemySim => ({ index, name, hp: 50, maxHp: 50, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 5, hits: 1 }], ...o });
+    const combat = (ids: string[]) => ({ enemies: ids.map((id, index) => ({ index, enemy_id: id })) });
+    expect(killGroups(combat(["A", "B"]), [e(0, "A"), e(1, "B")]).some((g) => g.leader)).toBe(false);
+    expect(killGroups(combat(["A", "B", "M"]), [e(0, "A"), e(1, "B"), e(2, "M", { minion: true })]).some((g) => g.leader)).toBe(false);
+    expect(killGroups(combat(["A", "P"]), [e(0, "A"), e(1, "P", { illusion: true })]).some((g) => g.leader)).toBe(false);
   });
 
   it("under a tight clock the samples per order go first, and it says so", () => {

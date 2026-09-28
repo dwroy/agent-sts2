@@ -25,6 +25,12 @@
  *      the policy aiming each later turn at the order's first group still alive (turn-solver focusIndex with
  *      ORDER_FOCUS_BONUS); a line's numbers are its best order's, the others kept beside them. Orders that agree
  *      on every group a sample looked at share that sample.
+ *      Leader rule (rankOrders()): when one group's death ends the fight (every other group is a minion, which
+ *      leaves with it: The Kin's Priest and its Followers) and no order of the line ends the fight within the
+ *      horizon, the orders are ranked by fight-ending progress first: the least expected leader HP left at the
+ *      horizon (within LEADER_HP_TIE), then value. A 199-HP Priest that no order kills in 5 turns otherwise
+ *      ranks "Followers first" on HP lost and deaths within the horizon alone (2CCM6XK4PB37 F17), which only
+ *      puts the loss past the horizon.
  *   4. A time budget per decision: the first sample of every line runs at the full horizon and times the
  *      policy; the rest is scheduled to fit (5 turns x 8 samples, else 3 turns, else fewer samples, else
  *      1 turn: the line itself + terminal). Horizon and samples used are recorded per line.
@@ -417,6 +423,11 @@ export interface OrderEstimate {
    * null when that group is an illusion, which revives (FA82/981W Parafright: "dead by T5 8/8").
    */
   firstDown: number | null;
+  /**
+   * With a leader (KillOrder.leader): its expected HP left at the end of the horizon (0 in a sample that
+   * ended the fight) and the samples in which it is dead by then; null without one.
+   */
+  leader: { hpLeft: number; dead: number } | null;
   hpLoss: number;
   turnsToWin: number | null;
   deaths: number;
@@ -438,6 +449,8 @@ export interface LineEstimate {
   order: KillOrder | null;
   /** Every kill order rolled out for the line, best first (empty without kill orders). */
   orders: OrderEstimate[];
+  /** The orders were ranked by the leader rule (rankOrders()), not by value alone. */
+  ordersByLeader?: boolean;
   /** Why it is a candidate: top (by score), damage, safe (least HP lost), setup. */
   tags: string[];
   score: number;
@@ -1206,6 +1219,8 @@ export interface KillGroup {
   hp: number;
   /** An illusion (Parafright): back at full HP next turn when killed, so never "dead" for an order. */
   illusion?: boolean;
+  /** Its death ends the fight: every other group is minions (MINION_POWER), which leave with it. */
+  leader?: boolean;
 }
 
 /** An order to kill the enemy groups in: the later turns' policy targets the first group with a member alive. */
@@ -1217,6 +1232,8 @@ export interface KillOrder {
   groups: number[][];
   /** The first group is an illusion: it revives, so no "first target dead" count is kept for it. */
   firstRevives?: boolean;
+  /** The group whose death ends the fight (KillGroup.leader), the same in every order of a board. */
+  leader?: { indices: number[]; name: string };
 }
 
 /** Every permutation is compared up to this many groups (3! = 6 orders); past it, each group first. */
@@ -1246,11 +1263,14 @@ function factorial(n: number): number {
  */
 export function killOrders(groups: KillGroup[], maxFull = MAX_FULL_ORDER_GROUPS): { orders: KillOrder[]; dropped: number } {
   if (groups.length < 2) return { orders: [], dropped: 0 };
+  const nameOf = (group: KillGroup) => (group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name);
+  const leader = groups.find((group) => group.leader);
   const make = (seq: KillGroup[]): KillOrder => ({
     key: seq.map((group) => group.id).join(">"),
-    label: seq.map((group) => (group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name)).join(" > "),
+    label: seq.map(nameOf).join(" > "),
     groups: seq.map((group) => group.indices.slice()),
     ...(seq[0]?.illusion ? { firstRevives: true } : {}),
+    ...(leader ? { leader: { indices: leader.indices.slice(), name: nameOf(leader) } } : {}),
   });
   if (groups.length <= maxFull) return { orders: permutations(groups).map(make), dropped: 0 };
   const byHp = [...groups].sort((a, b) => a.hp - b.hp || a.id.localeCompare(b.id));
@@ -1272,6 +1292,38 @@ function orderTarget(order: KillOrder, enemies: SimEnemy[]): { target: number | 
 }
 
 /** Two orders agree on their first `depth` groups. */
+/** Leader HP left at the horizon within this much of the lowest counts as the same progress (then value decides). */
+export const LEADER_HP_TIE = 5;
+
+/**
+ * A line's kill orders, best first. By value (ties: the orders' own order), except under the leader rule:
+ * every order has a leader whose death ends the fight and none ended the fight in any sample within the
+ * horizon. Then fight-ending progress goes first: the least expected leader HP left (within LEADER_HP_TIE
+ * of the lowest), then value. Without it, a leader too big to kill in the horizon never counts: HP lost and
+ * deaths within the horizon alone rank its minions first (The Kin, 2CCM6XK4PB37 F17: 6 of 7 best orders
+ * "Followers x2 > Priest", the Priest at 156 of 199 when we died on T10). Deaths are not a separate key:
+ * a minions-first order that survives the horizon with the leader untouched has only moved the death later
+ * (the replayed Kin board: Priest first dies within 5 turns in 2-8/8 samples, Followers first in fewer, and
+ * the Priest is left at ~150-175 instead of ~50-120); they stay in the value, and every order's deaths are
+ * shown beside it.
+ */
+export function rankOrders<T extends { value: number; wins: number; leader: { hpLeft: number } | null }>(entries: T[]): { ranked: T[]; byLeader: boolean } {
+  const indexed = entries.map((entry, k) => ({ entry, k }));
+  const byLeader = entries.length >= 2 && entries.every((entry) => entry.leader !== null && entry.wins === 0);
+  if (!byLeader) return { ranked: indexed.sort((a, b) => b.entry.value - a.entry.value || a.k - b.k).map(({ entry }) => entry), byLeader };
+  const leastLeft = Math.min(...entries.map((entry) => entry.leader!.hpLeft));
+  const key = (entry: T) => [entry.leader!.hpLeft > leastLeft + LEADER_HP_TIE ? 1 : 0, -entry.value];
+  const ranked = indexed
+    .sort((a, b) => {
+      const ka = key(a.entry);
+      const kb = key(b.entry);
+      for (let i = 0; i < ka.length; i += 1) if (ka[i] !== kb[i]) return ka[i]! - kb[i]!;
+      return a.k - b.k;
+    })
+    .map(({ entry }) => entry);
+  return { ranked, byLeader };
+}
+
 function samePrefix(a: KillOrder, b: KillOrder, depth: number): boolean {
   for (let i = 0; i < depth; i += 1) if ((a.groups[i] ?? []).join(",") !== (b.groups[i] ?? []).join(",")) return false;
   return true;
@@ -1403,6 +1455,18 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
           return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
+    const leaderIndices = order?.leader?.indices;
+    const leaderLeft = leaderIndices
+      ? kept.map((records) => {
+          const last = records[Math.min(horizon, records.length) - 1]!;
+          if (last.won) return 0;
+          return leaderIndices.reduce((sum, index) => {
+            const e = last.snap.E.find((x) => x[0] === index);
+            return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
+          }, 0);
+        })
+      : null;
+    const leader = leaderLeft ? { hpLeft: mean(leaderLeft), dead: leaderLeft.filter((hp) => hp <= 0).length } : null;
     const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
     const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
     const loss = mean(vals.map((v) => v.loss));
@@ -1423,6 +1487,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       modelForecast: model,
       perTurn: turnSpreads(kept, horizon),
       firstDown,
+      leader,
     };
   };
 
@@ -1458,19 +1523,19 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         perTurn: [],
       };
     }
-    // Every order of the line, best first (ties keep the orders' own order: deterministic).
-    const byOrder = units
-      .map((unit, u) => ({ unit, u }))
-      .filter(({ unit }) => unit.line === i)
-      .map(({ unit, u }) => ({ order: unit.order, ...estimate(trajectories[u]!, unit.order) }))
-      .map((entry, k) => ({ entry, k }))
-      .sort((a, b) => b.entry.value - a.entry.value || a.k - b.k)
-      .map(({ entry }) => entry);
+    // Every order of the line, best first (rankOrders; ties keep the orders' own order: deterministic).
+    const { ranked: byOrder, byLeader } = rankOrders(
+      units
+        .map((unit, u) => ({ unit, u }))
+        .filter(({ unit }) => unit.line === i)
+        .map(({ unit, u }) => ({ order: unit.order, ...estimate(trajectories[u]!, unit.order) })),
+    );
     const best = byOrder[0]!;
     return {
       ...common,
       order: best.order,
       orders: byOrder.filter((entry): entry is typeof entry & { order: KillOrder } => entry.order !== null),
+      ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
       turnsToWin: best.turnsToWin,
       deaths: best.deaths,
