@@ -8,16 +8,12 @@ import { describe, expect, it } from "vitest";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { BOOTS_CHARGE, BOOTS_LAST_CHARGE, bootsCost, deathDelay, likelyDeathWeight, LIKELY_DEATH, planMap } from "../src/screens/map.js";
 import { fightHpCost, fightSurvival, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
-import { mapShift } from "../src/strategy/intent.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, referencePick } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
-/** Code's pick on a logged map (the recorded run plan in force). */
-const pick = (name: string): unknown => {
-  const decision = planMap(loggedEnv(logged(name)));
-  return decision?.kind === "act" ? decision.intent : decision?.kind;
-};
+/** Code's reference pick on a logged map (the recorded run plan in force); Jev decides. */
+const pick = (name: string): unknown => referencePick(planMap(loggedEnv(logged(name)))).intent;
 /** Every option with its summary, with no code margin (the "card" planner asks Jev every time). */
 function options(name: string): Record<string, Raw> {
   const decision = planMap(loggedEnv(logged(name), { combatPlanner: "card" })) as Decision;
@@ -53,8 +49,9 @@ describe("K7G9 F43: '?' vs rest, both into the forced F45 Mecha Knight at 40/72"
     const byType = Object.fromEntries(Object.values(options("k7g9-map-f43")).map((option) => [option["node_type"], option]));
     expect(byType["Unknown"]!["next_forced_elite"]).toMatch(/F45 elite at ~4\d% HP \(an elite costs ~70%\)/);
     expect(byType["RestSite"]!["next_forced_elite"]).toMatch(/F45 elite at ~86% HP/);
-    expect(byType["Unknown"]!["intent_fit"]).toMatch(/^costs entry_hp 90%: arrives at the F45 elite at ~4\d% with no rest before it/);
-    expect(byType["RestSite"]!["intent_fit"]).toMatch(/^fits .*code's best route/);
+    expect(byType["Unknown"]!["tempo"]).toMatch(/^departs from DeepSeek's entry_hp 90%: arrives at the F45 elite at ~4\d% with no rest before it/);
+    expect(byType["RestSite"]!["code_rank"]).toBe(1);
+    expect(byType["RestSite"]!["tempo"]).toBeUndefined();
     expect(byType["RestSite"]!["boss_arrival"]).toMatch(/at the F48 boss/);
   });
 });
@@ -81,7 +78,7 @@ describe("N7KR F4: 67/80, '? -> Monster -> Monster -> forced elite, no rest' vs 
     const byPosition = Object.fromEntries(Object.values(all).map((option) => [option["position"], option]));
     expect(byPosition["row 4, column 2"]!["forced_elites"]).toMatch(/^every path to the boss meets an elite, not all on one floor \(F7\/F9/);
     expect(byPosition["row 4, column 2"]!["forced_elites"]).toMatch(/a rest before the first one only on some paths/);
-    expect(byPosition["row 4, column 0"]!["intent_fit"]).toMatch(/^costs entry_hp 90%: arrives at the F8 elite at ~\d+% with no rest before it/);
+    expect(byPosition["row 4, column 0"]!["tempo"]).toMatch(/^departs from DeepSeek's entry_hp 90%: arrives at the F8 elite at ~\d+% with no rest before it/);
   });
 
   it("an act-1 hallway is priced at the p75 of logged A8 losses (~11% of max HP)", () => {
@@ -95,11 +92,8 @@ describe("NJSZ F29: preserve prices '?' and Monster by their expected HP cost (4
     expect(pick("njsz-map-f29")).toEqual({ action: "choose_map_node", option_index: 1 });
   });
 
-  it("the shift follows the room's cost: a '?' is never below a Monster at the same spot", () => {
-    const plan = logged("njsz-map-f29").runPlan!;
-    expect(mapShift(plan, "Unknown", 0.55, 4, 2)).toBeCloseTo(-10 * roomHpCost("Unknown", 2));
-    expect(mapShift(plan, "Monster", 0.55, 4, 2)).toBeCloseTo(-10 * roomHpCost("Monster", 2));
-    expect(mapShift(plan, "Unknown", 0.55, 4, 2)).toBeGreaterThan(mapShift(plan, "Monster", 0.55, 4, 2));
+  it("a '?' costs less HP than a Monster at the same spot (its expected share of fights)", () => {
+    expect(roomHpCost("Unknown", 2)).toBeLessThan(roomHpCost("Monster", 2));
   });
 
   it("the Monster arrives at the elite well under its cost, the '?' about a hallway's median cost higher", () => {

@@ -11,10 +11,10 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planMap } from "../src/screens/map.js";
 import { modelHandCard } from "../src/strategy/card-model.js";
 import { fightFocus, parseFightPlan } from "../src/strategy/fight-plan.js";
-import { combatPolicy, mapShift, objectiveInForce, originOf, policyAt, reserveReleased } from "../src/strategy/intent.js";
+import { combatPolicy, objectiveInForce, originOf, policyAt } from "../src/strategy/intent.js";
 import { routeFacts, type RouteNode } from "../src/strategy/route-facts.js";
 import { parseRunPlan, routeAhead } from "../src/strategy/run-plan.js";
-import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge, referencePick } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
@@ -55,15 +55,14 @@ describe("hp_policy preserve in an act-boss fight behind its clock (G8F1 F33)", 
     expect(combatPolicy(fx.runPlan, fx.fightPlan, 44 / 87, null).policy).toBe("preserve");
   });
 
-  it("the logged T2 board: no label prices a damage line against preserve, and Jev is told why", () => {
+  it("the logged T2 board: Jev is told the clock reads preserve as balanced; the Howl line carries its facts", () => {
     const fx = logged("g8f1-f33-t2");
     const decision = planCombatTurn(loggedEnv(fx));
     const options = optionsOf(decision);
-    for (const option of Object.values(options)) expect(String(option["intent_fit"] ?? "")).not.toMatch(/hp_policy preserve/);
     // Howl from Beyond, 27 damage for 17 HP: "breaks hp_policy preserve: loses 17 more HP" in the log.
     const howl = Object.values(options).find((option) => String(option["plays"]).includes("彼岸咆哮"));
-    expect(String(howl?.["intent_fit"])).toMatch(/^fits/);
-    expect(strategyOf(decision).join("\n")).toMatch(/in force now: hp_policy balanced \(act boss behind its clock/);
+    expect(String(howl?.["reference"])).toMatch(/^code('s reference line| rank)/);
+    expect(strategyOf(decision).join("\n")).toMatch(/code note: hp_policy reads as balanced now \(act boss behind its clock/);
   });
 });
 
@@ -80,7 +79,7 @@ describe("a low-HP preserve ends by its origin, not by a later re-plan's reason 
   it("FN0H v5: the F31 preserve is off at 94% after the forced rest", () => {
     const fx = logged("fn0h-f33-t2");
     expect(policyAt(fx.runPlan, 78 / 83)).toBe("balanced");
-    expect(strategyOf(planCombatTurn(loggedEnv(fx))).join("\n")).toMatch(/in force now: hp_policy balanced \(hp_policy preserve was for low HP/);
+    expect(strategyOf(planCombatTurn(loggedEnv(fx))).join("\n")).toMatch(/code note: hp_policy reads as balanced now \(hp_policy preserve was for low HP/);
   });
 
   it("the origin is kept in plan state across a re-plan that only rewrites the reason", () => {
@@ -99,13 +98,7 @@ describe("a low-HP preserve ends by its origin, not by a later re-plan's reason 
   });
 });
 
-describe("reserved potions are released when the safest dry line ends within next turn's hit + 3", () => {
-  it("the rule", () => {
-    const base = { bossFight: false, hpFraction: 31 / 80, everyDryLineDies: false };
-    expect(reserveReleased({ ...base, dry: { hpAfter: 2, nextIncoming: 20, maxHp: 80 } })).toMatch(/leaves 2 HP/);
-    expect(reserveReleased({ ...base, dry: { hpAfter: 40, nextIncoming: 20, maxHp: 80 } })).toBeNull();
-  });
-
+describe("potions DeepSeek holds are on offer when the safest dry line ends within next turn's hit", () => {
   it("VF5C F27 T4: the only dry line left 2 of 31 HP; the Weak Potion and Explosive Ampoule are drunk now", () => {
     const fx = logged("vf5c-f27-t4");
     const e = loggedEnv(fx);
@@ -115,14 +108,13 @@ describe("reserved potions are released when the safest dry line ends within nex
   });
 
   it("Z7D7 F28 T3: every line 27 -> 2, Heart of Iron is on offer", () => {
-    // With the Blood Potion and Gambler's Brew modelled (EN55, 77UJ) the HP guard plays the safest line,
-    // Heart of Iron in it; asked, its option says it is released.
+    // Heart of Iron is on a line with its facts: what it saves against the best line without it.
     const decision = planCombatTurn(loggedEnv(logged("z7d7-f28-t3")));
     if (decision?.kind === "act") {
-      expect(decision.rationale).toMatch(/instead \(?[^)]*potion 铁心药水|playing potion 铁心药水/);
+      expect(decision.rationale).toMatch(/铁心药水/);
     } else {
       const heart = Object.values(optionsOf(decision)).find((option) => String(option["plays"]).includes("铁心药水"));
-      expect(String(heart?.["reserve"])).toMatch(/released: the safest line without it leaves 2 HP/);
+      expect(String(heart?.["potion_facts"])).toMatch(/drinking 铁心药水 now: saves \d+ HP/);
     }
   });
 });
@@ -161,14 +153,13 @@ describe("scale_then_kill is a phase: kill_fast once the fight is too short for 
     expect(objectiveInForce("preserve_hp", { turnsLeft: 1, laterPhase: false, setupLeft: false }).objective).toBe("preserve_hp");
   });
 
-  it("VQ7J T3 (Inferno in the draw pile) is still setup; T4 (nothing left) is labelled kill_fast", () => {
+  it("VQ7J T3 (Inferno in the draw pile) is still setup; T4 (nothing left) reads as kill_fast", () => {
     const t3 = planCombatTurn(loggedEnv(logged("vq7j-f11-t3")));
-    expect(Object.values(optionsOf(t3)).map((option) => String(option["intent_fit"])).join("\n")).toMatch(/scale_then_kill/);
+    expect(Object.values(optionsOf(t3)).map((option) => String(option["tempo"])).join("\n")).toMatch(/DeepSeek's scale_then_kill/);
     const t4 = planCombatTurn(loggedEnv(logged("vq7j-f11-t4")));
-    const labels = Object.values(optionsOf(t4)).map((option) => String(option["intent_fit"] ?? "")).join("\n");
-    expect(labels).toMatch(/kill_fast/);
-    expect(labels).not.toMatch(/scale_then_kill/);
-    expect(strategyOf(t4).join("\n")).toMatch(/in force now: objective kill_fast \(scale_then_kill: /);
+    const labels = Object.values(optionsOf(t4)).map((option) => String(option["tempo"] ?? "")).join("\n");
+    expect(labels).toMatch(/DeepSeek's scale_then_kill, read as kill_fast now/);
+    expect(strategyOf(t4).join("\n")).toMatch(/code note: the fight now reads as kill_fast \(scale_then_kill: /);
   });
 
   it("G8F1 F33 T4: a long boss fight left, Demon Form is still played (no turn cutoff)", () => {
@@ -176,9 +167,13 @@ describe("scale_then_kill is a phase: kill_fast once the fight is too short for 
     // Logged: "code plan (+21.5 over next): 恶魔形态; hp -11, dmg 0".
     expect(fx.decision.rationale).toMatch(/恶魔形态/);
     const decision = planCombatTurn(loggedEnv(fx));
-    const text = decision?.kind === "act" ? decision.rationale : JSON.stringify(Object.values(optionsOf(decision))[0]);
-    expect(text).toMatch(/恶魔形态/);
-    if (decision?.kind === "ask") expect(String(Object.values(optionsOf(decision))[0]!["intent_fit"])).toMatch(/^fits scale_then_kill/);
+    if (decision?.kind === "act") {
+      expect(decision.rationale).toMatch(/恶魔形态/);
+      return;
+    }
+    // Offered, and it is the line that fits DeepSeek's scale_then_kill (balanced weights may rank it lower).
+    const demon = Object.values(optionsOf(decision)).find((option) => String(option["plays"]).includes("恶魔形态"));
+    expect(String(demon?.["tempo"])).toMatch(/^fits DeepSeek's scale_then_kill/);
   });
 });
 
@@ -210,37 +205,35 @@ describe("route: forced elites, rest before them, and a reserved heal potion (Z7
     expect(routeAhead(parseGameState(logged("z7d7-map-f25").state))).toMatchObject({ forced_elites: expect.stringMatching(/F28 \(row 10, col 0\/2\): a rest before it only on some paths/) });
   });
 
-  it("the rest line into the elite wins once the Blood Potion kept for the boss is not counted as HP", () => {
+  it("code's reference is the rest line into the elite once the Blood Potion kept for the boss is not counted as HP", () => {
     const fx = logged("z7d7-map-f25");
     const decision = planMap(loggedEnv(fx));
     // Logged: "Treasure (row 8, col 0) scores 13.48 vs Treasure (row 8, col 1) 8.38" (shop -> elite).
-    expect(decision?.kind === "act" ? decision.intent : decision?.kind === "ask" ? "ask" : null).toEqual({ action: "choose_map_node", option_index: 1 });
-  });
-
-  it("the near-boss elite rule is never milder for the elite reached with more HP", () => {
-    const plan = logged("z7d7-map-f25").runPlan!;
-    expect(mapShift(plan, "Elite", 0.92, 5)).toBeGreaterThanOrEqual(mapShift(plan, "Elite", 0.62, 5));
-    expect(mapShift(plan, "Elite", 0.62, 5)).toBeLessThanOrEqual(-8);
+    expect(decision?.kind).toBe("ask");
+    expect(referencePick(decision).intent).toEqual({ action: "choose_map_node", option_index: 1 });
   });
 });
 
-describe("the HP guard compares HP lost until the kill (G8F1 F30 T6, kill_fast elite)", () => {
-  it("code's 39-damage line is played, not swapped for a line that leaves the kill a turn later", () => {
+describe("HP lost until the kill is a fact on each line; no guard swaps (G8F1 F30 T6, VF5C F27 T2)", () => {
+  it("G8F1 F30 T6: the 39-damage Hemokinesis line is code's reference, and says when the kill comes", () => {
     const fx = logged("g8f1-f30-t6");
-    const e = loggedEnv(fx);
-    const decision = planCombatTurn(e);
+    const decision = planCombatTurn(loggedEnv(fx));
     // Logged: "HP guard: plan 1 (Pommel Strike, Hemokinesis, Strike) loses 14 HP … playing plan 2".
-    expect(decision?.kind).toBe("act");
-    expect(decision?.kind === "act" ? decision.label : "").toBe("combat/plan");
-    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/^code plan .*御血术/);
+    if (decision?.kind === "act") {
+      expect(decision.rationale).toMatch(/御血术/);
+      return;
+    }
+    const reference = Object.values(optionsOf(decision)).find((option) => /^code's reference line/.test(String(option["reference"])));
+    expect(String(reference?.["plays"])).toMatch(/御血术/);
+    expect(String(reference?.["kill_eta"])).toMatch(/^~\d+ turns to the kill/);
   });
 
-  it("the guard still swaps when the extra damage does not bring the kill a turn sooner (VF5C F27 T2)", () => {
+  it("VF5C F27 T2: Jev's plan 3 at 0.34 is played as picked, its extra HP a fact", () => {
     const decision = planCombatTurn(loggedEnv(logged("vf5c-f27-t2")));
     expect(decision?.kind).toBe("ask");
-    // Jev's logged pick: plan 3 (Defend, Bash, Strike: 17 damage, -12) at 0.34; the Entomancer's 147 HP
-    // takes as many turns either way, so the -1 line is played.
     const resolved = (decision as AskDecision).resolve({ plan: { type: "choice", choice: "plan3", confidence: 0.34, probabilities: {}, raw: {} } } as never);
-    expect(resolved.rationale).toMatch(/HP guard: plan 3/);
+    expect(resolved.rationale).toMatch(/^Jev chose plan 3\//);
+    expect(resolved.guard).toBeUndefined();
+    expect(String(optionsOf(decision)["plan3"]!["reference"])).toMatch(/^code('s reference line| rank \d)/);
   });
 });

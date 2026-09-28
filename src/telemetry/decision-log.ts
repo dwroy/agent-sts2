@@ -41,8 +41,18 @@ export interface DecisionRecord {
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
   jev_hints?: string[];
-  /** Jev's pick broke a soft strategic intent (per run-plan version); see intent.ts. */
+  /**
+   * Jev's pick departs from DeepSeek's tempo/strategy guidance (per run-plan version; information only,
+   * kept under this name for ops/plan_adherence.py). `tempo_deviation` repeats the label.
+   */
   intent_deviation?: JsonValue;
+  tempo_deviation?: string;
+  /** DeepSeek's guidance (strategy/tempo excerpt) shown with the question. */
+  ds_guidance?: string[];
+  /** Jev's pick in code's reference rank (1 = code's reference option), of how many shown. */
+  reference_rank?: number | null;
+  reference_of?: number;
+  matched_reference?: boolean;
   result: string;
 }
 

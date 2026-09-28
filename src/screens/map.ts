@@ -1,13 +1,14 @@
 /**
- * Route choice (PLAN.md §6.2): code enumerates the lookahead from each reachable node, Jev picks.
- *
- * Node weights shift with the Run Brief — elites are worth more with a healthy deck and high HP,
- * rests more when HP is low, shops more when there is gold to spend and a card worth removing.
+ * Route choice (PLAN.md §6.2): code enumerates the lookahead from each reachable node and gives each
+ * its facts (projected arrival HP at the next forced elite and the boss, survival on the way, the deck's
+ * damage against the act's elites, HP against what an optional elite usually costs) and a reference
+ * route value under balanced node weights; Jev picks with DeepSeek's route guidance in view. Every open
+ * node is offered: route_risk avoid_elites and the elite gates are facts, not filters.
  */
 
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { currentRunPlan, floorsToBoss } from "../strategy/run-plan.js";
-import { isReserved, LABEL_NOTE, mapFit, mapShift, RESERVE_RELEASE_HP, routeRiskAt, routeRiskFilter, type EliteGate, type RouteArrival } from "../strategy/intent.js";
+import { currentRunPlan } from "../strategy/run-plan.js";
+import { guidanceFor, isReserved, LABEL_NOTE, mapFit, type RouteArrival } from "../strategy/intent.js";
 import { actEliteNeed } from "../knowledge/dossiers.js";
 import { damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
@@ -62,11 +63,14 @@ export function routeHealShare(potionId: string, maxHp = 80): number {
   return regen > 0 ? potionHealHp(potionId, maxHp) / maxHp : HEAL_POTION_SHARE[potionId] ?? 0;
 }
 
+/** Below this HP fraction a heal potion DeepSeek holds for the boss counts toward the route anyway. */
+export const HELD_HEAL_COUNTS_BELOW = 0.25;
+
 /**
- * HP fraction for route projection, modelled heal potions in the belt included (`withHeal`). Not one the
- * run plan reserves for the act boss while HP is above the reserve's release line: it is not drunk
- * before then (Z7D7 F25: the Blood Potion kept for the boss read 50/80 as 82%, the elite after a shop was
- * priced like one after a rest).
+ * HP fraction for route projection, modelled heal potions in the belt included (`withHeal`). Not one
+ * DeepSeek holds for the act boss while HP is above HELD_HEAL_COUNTS_BELOW: following its tempo, it is
+ * not drunk before then (Z7D7 F25: the Blood Potion kept for the boss read 50/80 as 82%, the elite after
+ * a shop was priced like one after a rest). The route's elite facts show the HP with and without them.
  */
 export function hpPercent(env: DecisionEnv, withHeal = true): number {
   const hp = env.state.run?.current_hp ?? null;
@@ -74,7 +78,7 @@ export function hpPercent(env: DecisionEnv, withHeal = true): number {
   if (hp === null || max === null || max <= 0) return 1;
   if (!withHeal) return Math.min(1, hp / max);
   const reserve = currentRunPlan(env.screenMemory, env.state)?.reserve;
-  const held = (potion: Record<string, unknown>) => hp / max >= RESERVE_RELEASE_HP && isReserved(reserve, str(potion["potion_id"]), str(potion["description"]));
+  const held = (potion: Record<string, unknown>) => hp / max >= HELD_HEAL_COUNTS_BELOW && isReserved(reserve, str(potion["potion_id"]), str(potion["description"]));
   const potions = asArray(asRecord(env.state.run?.raw)["potions"]).map(asRecord);
   const heal = potions.reduce((sum, potion) => sum + (bool(potion["occupied"], true) && !held(potion) ? routeHealShare(str(potion["potion_id"]), max) : 0), 0);
   return Math.min(1, hp / max + heal);
@@ -292,10 +296,9 @@ function optionalEliteChild(parent: MapNode, child: MapNode, nodes: Map<string, 
 /**
  * Each Elite that cannot be avoided after a route's likely death (PFBK F18: the truncation dropped
  * them, and a no-branch line with forced elites on F25/F27/F29 scored above routes with one; KEMS
- * F18). -15 each when the run plan says to avoid elites.
+ * F18).
  */
 export const FORCED_ELITE_AFTER_DEATH = 10;
-export const FORCED_ELITE_AFTER_DEATH_AVOID = 15;
 
 /** Fewest Elite nodes on any path from this node's children to the end of the map (memoised). */
 function minElitesAhead(node: MapNode, nodes: Map<string, MapNode>, memo: Map<string, number>): number {
@@ -571,38 +574,34 @@ export function planMap(env: DecisionEnv): Decision | null {
   // act's first floor after the one we are on).
   const currentRow = numOrNull(asRecord(map["current_node"])["row"]);
   const floorsAhead = (row: number) => Math.max(1, currentRow === null ? row + 1 : row - currentRow);
-  // RUN_PLAN=v1: the run's hp_policy, route_risk and entry HP shift node weights (intent.ts mapShift).
+  // DeepSeek's route guidance is shown with the facts; it no longer moves the node weights.
   const runPlan = currentRunPlan(env.screenMemory, state);
-  // A deck under the act's lowest elite need avoids optional elites, whatever the plan (intent.ts EliteGate).
+  // The deck's damage a turn against the act's elites (dossiers: the lowest damage a turn their kills
+  // needed), and HP without heal potions against what an optional elite usually costs: facts on every
+  // Elite option (they used to take an optional elite off the list and price elites -6: EGX7 F27).
   const eliteNeed = actEliteNeed(act);
   const deckDamage = deckDamagePerTurn(state, env.knowledge, { realised: false });
-  const deckGate: EliteGate | null = eliteNeed !== null && deckDamage > 0 && deckDamage < eliteNeed ? { deck: deckDamage, need: eliteNeed } : null;
-  // HP without heal potions under twice an elite's cost avoids optional elites too, now and wherever
-  // the projection reaches one that low (the projection's heal share taken back out); a forced elite is
-  // priced by its survival, not avoided.
   const eliteBar = optionalEliteBar(act);
-  const healShare = hpPct - hpPercent(env, false);
-  const gateAt = (hp: number): EliteGate | null => {
-    const bare = Math.max(0, hp - healShare);
-    return bare < eliteBar ? { ...deckGate, hp: bare, bar: eliteBar } : deckGate;
-  };
-  const gate = gateAt(hpPct);
-  // A likely death is its own weight: no node-type shift or chain penalty on top (RVR6 F38: the elite's
-  // -9 under avoid_elites + preserve stacked on -20 and tripled). An elite as the 3rd fight in a row
-  // pays the chain penalty too, at its cost factor (N7KR F4: "? -> Monster -> Monster -> Elite").
+  const bareHp = hpPercent(env, false);
+  const eliteFacts = (): Record<string, JsonValue> => ({
+    ...(eliteNeed !== null && deckDamage > 0 ? { elite_deck_damage: `deck ~${Math.round(deckDamage)} damage a turn vs this act's elites' ~${eliteNeed}+ (the lowest a turn their kills needed in past runs)` } : {}),
+    elite_hp: `HP ${Math.round(bareHp * 100)}% without heal potions${hpPct > bareHp + 0.005 ? ` (${Math.round(hpPct * 100)}% counting them)` : ""}; an elite this act costs ~${Math.round(fightHpCost("Elite", act) * 100)}% (p75), and an optional elite usually wants ~${Math.round(eliteBar * 100)}%+`,
+  });
+  // A likely death is its own weight: no chain penalty on top (RVR6 F38). An elite as the 3rd fight in a
+  // row pays the chain penalty too, at its cost factor (N7KR F4: "? -> Monster -> Monster -> Elite").
   // The act boss's damage gap: a hallway fight (a card reward) gains worth over '?' (gapFightBonus).
   const bossGap = damageGap(state, env.knowledge);
-  const weightOf: Weights = (type, at, row, optional = false) => {
+  const weightOf: Weights = (type, at, row) => {
     const base = nodeWeight(type, at.hp, at.gold, floorInAct + floorsAhead(row), act);
     if (base <= LIKELY_DEATH) return base;
     const chain = type === "Monster" ? fightChainPenalty(at.fights, at.hp) : type === "Elite" ? eliteCostFactor(act) * fightChainPenalty(at.fights, at.hp) : 0;
-    return base - chain + mapShift(runPlan, type, at.hp, floorsToBoss(floor + floorsAhead(row)), act, type === "Elite" && optional ? gateAt(at.hp) : deckGate);
+    return base - chain;
   };
-  const deathElite = runPlan?.routeRisk === "avoid_elites" ? FORCED_ELITE_AFTER_DEATH_AVOID : FORCED_ELITE_AFTER_DEATH;
+  const deathElite = FORCED_ELITE_AFTER_DEATH;
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
-  // route_risk avoid_elites is hard on the next node: an Elite is not offered while another node is.
-  const offered = routeRiskFilter(runPlan, available.map((node) => ({ node, type: str(node["node_type"], "Unknown") })), hpPct, gate).map((entry) => entry.node);
+  // Every open node is offered (avoid_elites and the elite gates used to drop an Elite here).
+  const offered = available;
   const selfOf = (node: Record<string, unknown>): MapNode => {
     const row = num(node["row"]);
     const col = num(node["col"]);
@@ -618,9 +617,8 @@ export function planMap(env: DecisionEnv): Decision | null {
   const sharedElite = routeFacts(nodes as Map<string, RouteNode>, offered.map(selfOf), floorOf, 0).forcedElites[0];
   const checkpoint = sharedElite ? { row: sharedElite.row, inclusive: true } : null;
   const arrivalMemo = new Map<string, Arrival>();
-  // Later forks are projected as they will be decided: optional elites avoided under route_risk
-  // avoid_elites or the elite gate, at the HP projected there (routeRiskFilter).
-  const avoidEliteAt = (hp: number): boolean => routeRiskAt(runPlan, hp) === "avoid_elites" || gateAt(hp) !== null;
+  // Later forks are projected on their safest path (arrivalAt takes the child with the best survival).
+  const avoidEliteAt = undefined;
   const survivalOf = (self: MapNode): number => (checkpoint ? arrivalAt(self, start, nodes, act, checkpoint, arrivalMemo, avoidEliteAt).p : 1);
   const restMemo = new Map<string, Arrival>();
   const bossMemo = new Map<string, Arrival>();
@@ -716,6 +714,7 @@ export function planMap(env: DecisionEnv): Decision | null {
           ...(gapBonus > 0 && bossGap
             ? { boss_gap: `a card reward toward the act boss gap (deck ~${bossGap.deck} of ${bossGap.need} damage a turn for ${bossGap.boss}): +${gapBonus.toFixed(1)} route value` }
             : {}),
+          ...(type === "Elite" ? eliteFacts() : {}),
           ...(boots !== null ? { winged_boots: `off the current path: uses a Winged Boots charge, ${bootsCharges - 1} left after${boots > 0 ? ` (priced -${boots}: charges are kept for act 3)` : ""}` } : {}),
         } as Record<string, JsonValue>,
         type,
@@ -724,21 +723,21 @@ export function planMap(env: DecisionEnv): Decision | null {
       },
     ];
   });
-  // Labels come from the same scoring that ranks the nodes (5JU3 F10: '?' labelled "breaks preserve"
-  // while Monster, priced dearer by the route scoring, had no label).
-  const bestValue = Math.max(...options.map((option) => option.score));
+  // Tempo notes against DeepSeek's route guidance, next to the facts (5JU3 F10: labels must not
+  // contradict the route facts).
   const bestArrival = {
     eliteHp: Math.max(...options.map((option) => (option.arrival.eliteHp === null ? 1 : option.arrival.eliteHp))),
     bossHp: Math.max(...options.map((option) => option.arrival.bossHp ?? 0)),
   };
-  // The HP gate is about optional elites: not on a choice of elites only.
-  const labelGate = offered.some((node) => str(node["node_type"], "Unknown") !== "Elite") ? gate : deckGate;
-  const labelled: PickOption[] = options.map(({ type, row, arrival, ...option }) => {
-    const fit = mapFit(runPlan, type, hpPct, { value: option.score, best: bestValue }, floorsToBoss(floor + floorsAhead(row)), { ...arrival, best: bestArrival }, act, labelGate);
+  const eliteOffered = offered.some((node) => str(node["node_type"], "Unknown") === "Elite");
+  const labelled: PickOption[] = options.map(({ type, arrival, row: _row, ...option }) => {
+    const optionalElite = type === "Elite" && offered.some((node) => str(node["node_type"], "Unknown") !== "Elite");
+    const fit = mapFit(runPlan, type, hpPct, { optionalElite, eliteOffered, arrival: { ...arrival, best: bestArrival } });
     return {
       ...option,
-      summary: { ...option.summary, ...(fit ? { intent_fit: fit } : {}) },
-      ...(fit?.startsWith("costs") ? { intentBreak: fit } : {}),
+      why: routeWhy(option.summary, type),
+      summary: { ...option.summary, ...(fit ? { tempo: fit.tempo } : {}) },
+      ...(fit?.breaks ? { intentBreak: fit.tempo } : {}),
     } satisfies PickOption;
   });
 
@@ -754,7 +753,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     escalateBelow: 0.35,
     options: labelled,
     planVersion: runPlan?.version ?? null,
-    codeMargin: env.combatPlanner === "card" ? undefined : 2.5,
+    guidance: guidanceFor(runPlan, "map", hpPct),
     state: {
       run_brief: briefJson(env.brief),
       situation: {
@@ -767,10 +766,18 @@ export function planMap(env: DecisionEnv): Decision | null {
         current_node: `row ${num(current["row"])}, column ${num(current["col"])}`,
         boss_node: `row ${num(boss["row"])}, column ${num(boss["col"])}`,
       },
-      note: "route_value and likely_continuation are computed in code from the visible map graph. Do not recompute them.",
-      ...(runPlan ? { labels: LABEL_NOTE } : {}),
+      note: "route_value (code's reference, balanced node weights) and likely_continuation are computed in code from the visible map graph. Do not recompute them.",
+      labels: LABEL_NOTE,
     },
   });
+}
+
+/** The route value in words: what drives it (the node, the survival stretch, arrival HP). */
+function routeWhy(summary: Record<string, JsonValue>, type: string): string {
+  const parts = [`${type} now, then ${String(summary["likely_continuation"] ?? "").split(" -> ").slice(1).join(" -> ") || "the map's end"}`];
+  if (summary["route_survival"]) parts.push(String(summary["route_survival"]));
+  if (summary["boss_arrival"]) parts.push(String(summary["boss_arrival"]));
+  return parts.join("; ");
 }
 
 /**

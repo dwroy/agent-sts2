@@ -1,15 +1,14 @@
 /**
- * Fight plan (FIGHT_PLAN=v1): DeepSeek is asked once at the start of a fight for its STRATEGY, in a
- * closed vocabulary: the objective (kill_fast / preserve_hp / scale_then_kill / race), the order
- * enemies die in (kill_priority), and the threat in words (context for Jev only). It names no card to
- * play, no potion to drink and no turn: those are code's (the turn solver) and Jev's, who carry the
- * objective out through intent.ts (solver weights, the HP guard, compliance labels on every option).
+ * Fight plan (FIGHT_PLAN=v1): DeepSeek is asked once at the start of a fight for its strategy and
+ * tempo, as guidance: the objective (kill_fast / preserve_hp / scale_then_kill / race), the order
+ * enemies die in (kill_priority), potion timing in words (potion_plan, and a word per potion), the
+ * threat. It names no card play per turn. Jev plays every turn seeing it next to code's exact facts of
+ * each line (intent.ts combatFit / reserveFact); nothing in the plan is enforced.
  *
- * Why the vocabulary replaced the old plan (approach, setup cards, potion timings, key turns): its
- * potion orders contradicted the run plan (12 of 17 boss potions drunk early were drunk on the fight
- * plan's "early"/"big_hit"; EJXC F28, WB02 F29, UP1C), big_hit/burst were misread both ways (6HRZ,
- * X8HF, 24HM), setup was planned at 14 HP, and the setup cards it named were undone by the HP guard
- * (notes/plan-adherence.md). Old logged plans are still read (normalizeFightPlan).
+ * History: the old plan's potion timings were code orders (early/big_hit auto-drinks, EJXC F28, WB02
+ * F29), then the vocabulary-only plan dropped potion timing altogether while the run plan's reserve
+ * hard-filtered potions (A8: 15/44 deaths holding potions). Potion timing is back as words Jev weighs.
+ * Old logged plans are still read (normalizeFightPlan).
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
@@ -46,6 +45,10 @@ export interface FightPlan {
   killPriority: string[];
   /** DeepSeek's words on the danger (context for Jev only). */
   threat: string;
+  /** DeepSeek's potion timing for this fight in words (guidance for Jev). */
+  potionPlan?: string;
+  /** DeepSeek's word per potion id ("hold for the burst turn", "drink if HP < 50%"), guidance for Jev. */
+  potions?: Record<string, string>;
   summary: string;
   /** How many times this fight was re-planned (a new boss/elite enemy appeared). */
   replans: number;
@@ -161,26 +164,27 @@ export function fightPlanInput(
 
 export const FIGHT_PLAN_TASK = [
   "TASK: fight plan (not an option choice; ignore the {choice, reason} reply format for this one).",
-  "A fight is starting. Every turn will be played by code (an exact one-turn solver) and a small model (Jev); they",
-  "choose every card, target and potion themselves. Give the STRATEGY for the whole fight only, in the vocabulary below:",
-  "never name a card to play, a potion to drink or a turn to do something on (such orders are ignored).",
+  "A fight is starting. Every turn code simulates each line exactly and a small model (Jev) chooses the line, the target and",
+  "any potion, seeing your plan next to those facts. Give the STRATEGY and TEMPO for the whole fight as guidance: the",
+  "objective, the kill order, and potion timing in words (which potion to hold for which turn or threat, when to spend it,",
+  "e.g. 'hold Flex for the turn after the Cultist buffs; drink the Block Potion if a hit would take 40% HP'). Do not name exact",
+  "card plays per turn. Nothing is enforced: Jev follows your tempo unless the facts of a turn clearly say otherwise.",
   "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
-  "run_plan holds the run's intents: follow them (its reserved potions are not used before the act boss whatever you say).",
+  "run_plan holds the run's strategy, including the potions it wants held for the act boss: say if this fight is worth one.",
   'Reply with JSON only: {"objective": "kill_fast" | "preserve_hp" | "scale_then_kill" | "race",',
   '"kill_priority": [enemy ids in the order to kill them; [] when it does not matter],',
   `"reason": [1-2 of ${INTENT_REASONS.join("|")}: why this objective],`,
-  '"threat": "<max 30 words: what is dangerous in this fight (context for Jev)>",',
+  '"potion_plan": "<max 40 words: potion timing for this fight>",',
+  '"potions": {"<potion id from potions>": "<max 15 words: hold / when to drink it>"},',
+  '"threat": "<max 30 words: what is dangerous in this fight>",',
   '"summary": "<max 40 words: the strategy in plain words>"}',
-  "What code does with each objective:",
+  "What each objective means to Jev:",
   `kill_fast = ${MEANING.objective.kill_fast}; preserve_hp = ${MEANING.objective.preserve_hp};`,
   `scale_then_kill = ${MEANING.objective.scale_then_kill}; race = ${MEANING.objective.race}.`,
-  "What code does with each reason: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
-  "Code overrides the objective only on hard facts: scale_then_kill below 25% HP or against a hit of half our HP becomes",
-  "preserve_hp; kill_fast/race under the run's hp_policy preserve become preserve_hp only below 40% HP against enemies",
-  "that do not scale, when code expects the fight to last more than 3 turns. A preserve_hp grind that would take more turns",
-  "than our HP lasts at the expected incoming is logged and played as kill_fast. Any other disagreement is logged and your",
-  "objective is kept. In kill_priority, minions (MINION_POWER: they leave when the last non-minion dies) are moved",
-  "behind the last non-minion.",
+  "What each reason means: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
+  "Code checks ids and format only; where its estimate differs (e.g. a preserve_hp grind longer than our HP lasts) it logs the",
+  "disagreement and shows it to Jev as a fact. In kill_priority, minions (MINION_POWER: they leave when the last non-minion",
+  "dies) are moved behind the last non-minion.",
 ].join(" ");
 
 /**
@@ -240,6 +244,8 @@ export function parseFightPlan(
     killPriority,
     threat: typeof json["threat"] === "string" ? truncate(json["threat"], 200) : typeof json["key_turns"] === "string" ? truncate(json["key_turns"], 200) : "",
     summary: typeof json["summary"] === "string" ? truncate(json["summary"], 240) : "",
+    ...(typeof json["potion_plan"] === "string" && json["potion_plan"].trim() ? { potionPlan: truncate(json["potion_plan"].trim(), 240) } : {}),
+    ...(potionNotes(json["potions"], state) ? { potions: potionNotes(json["potions"], state)! } : {}),
     validator: [],
     disagreements: [],
     ...(run ? { runPlanVersion: run.version } : {}),
@@ -273,6 +279,23 @@ export function parseFightPlan(
 }
 
 /**
+ * DeepSeek's word per potion, for the potions in the belt (ids or names); unknown ones dropped. The old
+ * timing vocabulary (early / big_hit / save / emergency) is kept as words.
+ */
+function potionNotes(raw: unknown, state: GameState): Record<string, string> | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord).filter((potion) => bool(potion["occupied"]));
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof value !== "string" || !value.trim()) continue;
+    const text = key.trim();
+    const potion = belt.find((entry) => str(entry["potion_id"]) === text || str(entry["potion_id"]) === text.toUpperCase() || str(entry["name"]) === text);
+    if (potion) out[str(potion["potion_id"])] = truncate(value.trim(), 100);
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+/**
  * HP expected lost a turn in this fight: each living enemy's average hit once awake (move model, else
  * its hit now) less the deck's block a turn (boss-clock deckBlockPerTurn), at least 0.
  */
@@ -300,6 +323,8 @@ export function normalizeFightPlan(raw: FightPlan | Record<string, unknown>): Fi
     killPriority: Array.isArray(plan.killPriority) ? plan.killPriority.map(String) : focus,
     threat: String(plan.threat ?? plan["keyTurns"] ?? ""),
     summary: String(plan.summary ?? ""),
+    ...(typeof plan.potionPlan === "string" && plan.potionPlan ? { potionPlan: plan.potionPlan } : {}),
+    ...(plan.potions && typeof plan.potions === "object" && !Array.isArray(plan.potions) ? { potions: plan.potions } : {}),
     replans: Number(plan.replans ?? 0),
     validator: Array.isArray(plan.validator) ? plan.validator : [],
     ...(Array.isArray(plan.disagreements) && plan.disagreements.length > 0 ? { disagreements: plan.disagreements } : {}),
@@ -328,6 +353,8 @@ export function fightPlanJson(plan: FightPlan): Record<string, JsonValue> {
     kill_priority: plan.killPriority,
     threat: plan.threat,
     summary: plan.summary,
+    ...(plan.potionPlan ? { potion_plan: plan.potionPlan } : {}),
+    ...(plan.potions ? { potions: plan.potions } : {}),
   };
 }
 

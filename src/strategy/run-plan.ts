@@ -1,15 +1,14 @@
 /**
- * Run plan (RUN_PLAN=v1, migration step M3): DeepSeek sets the run's strategy at a few checkpoints —
- * the start of the run, the start of each act, after a heavy HP loss, and at most every
- * RUN_PLAN_REVIEW_FLOORS floors — and code carries it out on the build, route, rest and combat
- * decisions. It is strategy only, in the closed vocabulary of intent.ts (hp_policy, entry_hp_pct,
- * route_risk, reserve, needs, avoid) plus the cards to look for and remove; intent.ts is the table of
- * what each intent means to code and Jev. Card play stays with the turn solver and Jev (Dai: "只是打法
- * 建议，出牌还是交给 jev 判断").
+ * Run plan (RUN_PLAN=v1): DeepSeek sets the run's strategy and tempo at a few checkpoints — the start
+ * of the run, the start of each act, after a heavy HP loss, and at most every RUN_PLAN_REVIEW_FLOORS
+ * floors — as guidance: hp_policy, entry_hp_pct, route_risk, the potions to hold for the act boss
+ * (reserve) and potion timing (potion_tempo), the heal-vs-smith lean (rest_lean), pacing (tempo), and
+ * the deck direction (needs, want, avoid, remove). Nothing is enforced: code shows each option's fit
+ * with it as a fact, and Jev decides (Dai 2026-09-28: "ds给时机和节奏，喝不喝还是需要代码和jev来操作").
  *
  * Re-plans keep continuity: DeepSeek sees the intents in force and what happened since
- * (since_last_plan), a field it leaves out keeps its value, and a changed intent must name a trigger
- * the facts show (plan-validator.ts); rejected changes keep the old value.
+ * (since_last_plan), and a field it leaves out keeps its value. A change without a trigger the facts
+ * show is kept and logged as a disagreement (plan-validator.ts checks format and ids only).
  *
  * Why: most losses since the fight plan came in were cross-fight decisions no single fight plan
  * sees (entering elites or bosses with empty potion slots, a 3-block-card deck at the Queen, the
@@ -25,8 +24,8 @@ import { deckEntries } from "../project/deck.js";
 import { actThreats, dossierFor, dossierJson, type CardRole, type PotionRole } from "../knowledge/dossiers.js";
 import { bossClockJson, damageGap } from "./boss-clock.js";
 import { cardRoles } from "./card-value.js";
-import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, originOf, recentChanges, ROUTE_RISKS, type ChangeTrigger, type OriginField, type PolicyOrigin, type HpPolicy, type IntentReason, type ReasonField, type RouteRisk } from "./intent.js";
-import { avoidElitesDisagreement, repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
+import { CARD_ROLES, CHANGE_TRIGGERS, HP_POLICIES, hpTarget, INTENT_REASONS, isOneOf, isReserved, MEANING, parseReasons, POTION_ROLES, REASON_FIELDS, REASON_MEANING, originOf, recentChanges, REST_LEANS, ROUTE_RISKS, type ChangeTrigger, type OriginField, type PolicyOrigin, type HpPolicy, type IntentReason, type ReasonField, type RestLean, type RouteRisk } from "./intent.js";
+import { avoidElitesDisagreement, DISAGREE, repairRunPlan, sinceLastPlan, validateChanges } from "./plan-validator.js";
 import { routeFacts, routeFactsText, type RouteNode } from "./route-facts.js";
 import { asArray, asRecord, str, truncate, type JsonValue } from "../util/json.js";
 
@@ -41,8 +40,9 @@ export interface PlanChange {
   field: string;
   from: JsonValue;
   to: JsonValue;
-  trigger: ChangeTrigger;
-  /** The fact from the "since last plan" summary that supports the trigger. */
+  /** The trigger DeepSeek gave (or the facts show); "unstated" when it gave none the facts support. */
+  trigger: ChangeTrigger | "unstated";
+  /** The fact from the "since last plan" summary that supports the trigger ("unverified: …" when none). */
   fact: string;
 }
 
@@ -74,7 +74,7 @@ export interface RunPlan {
   archetype: string;
   /** card_id: pick these when offered (card rewards, shops). */
   want: string[];
-  /** card_id: never take these (hard: not offered at rewards and shops). */
+  /** card_id: DeepSeek would not take these (a fact on reward and shop options). */
   avoid: string[];
   /** card_id: remove these first (shop removal, events). */
   remove: string[];
@@ -85,11 +85,17 @@ export interface RunPlan {
   routeRisk: RouteRisk;
   /** HP fraction to enter the act boss with. */
   entryHp: number | null;
-  /** Potion roles reserved for the act boss (any number; hard-filtered before it). */
+  /** Potion roles DeepSeek wants held for the act boss (guidance: a fact on every line that drinks one). */
   reserve: PotionRole[];
+  /** DeepSeek's potion timing in words ("keep Flex for the boss burst turn; spend in elites below 50%"). */
+  potionTempo?: string;
+  /** DeepSeek's pacing for the act in words (elite appetite, when to spend HP). */
+  tempo?: string;
+  /** DeepSeek's heal-vs-smith lean at rest sites. */
+  restLean?: RestLean;
   /** Card roles the deck must get before the act boss. */
   needs: CardRole[];
-  /** Card roles never to take (acquisition only). */
+  /** Card roles DeepSeek would not take (a fact on reward and shop options). */
   avoidRoles: CardRole[];
   bossPrep: string;
   summary: string;
@@ -122,11 +128,6 @@ export const RUN_PLAN_REVIEW_FLOORS = 8;
 export const RUN_PLAN_HP_DROP = 0.25;
 /** Below this HP fraction a plan made above it is renewed. */
 export const RUN_PLAN_LOW_HP = 0.4;
-
-/** Card-value bonus for planned cards, malus for avoided ones. */
-// 12 was too weak: 4UWK F15 Body Slam, the plan's first want, lost 86 to 73 to Thrash.
-export const RUN_PLAN_WANT_BONUS = 20;
-export const RUN_PLAN_AVOID_MALUS = 15;
 
 export function actOf(state: GameState): number {
   const raw = str(asRecord(state.run?.raw)["act_id"]);
@@ -166,42 +167,48 @@ function onlyAncientOpen(state: GameState): boolean {
 
 export const RUN_PLAN_TASK = [
   "TASK: run plan (not an option choice; ignore the {choice, reason} reply format for this one).",
-  "You set the STRATEGY for the rest of this act and run, in the closed vocabulary below. Code and a small model (Jev)",
-  "execute it: they choose every card reward, shop buy, route, rest site, card play and potion themselves.",
-  "Give strategy only: never name a card to play, a potion to drink or a turn to do something on (such orders are ignored).",
+  "You set the STRATEGY and the TEMPO for the rest of this act and run, as guidance. Code computes the facts of every option",
+  "(HP cost, route survival and arrival HP, card value, what a potion drunk now saves) and a reference rank; a small model",
+  "(Jev) makes every execution choice (card rewards, shop buys, routes, rest sites, events, card play, potions) seeing your",
+  "guidance next to those facts. Nothing you write is enforced: Jev follows your tempo unless the facts clearly say otherwise.",
+  "Tempo guidance is welcome: when to hold or spend potions (e.g. 'keep Flex for the boss burst turn; spend potions in elites",
+  "if HP < 50%'), whether rest sites should lean to healing or smithing, how hungry to be for elites, when HP may be spent.",
+  "Do not name exact card plays per turn.",
   "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
   "Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead).",
   "act_boss_clock gives the boss's HP, the turns the fight can last, the damage a turn that needs, and code's rough",
   "estimate of this deck's damage a turn. If gap_per_turn > 0, closing it comes first (needs strength/aoe/frontload, want",
-  "high-damage cards, remove Strikes/Defends that dilute them); state the gap in the summary.",
+  "high-damage cards, remove Strikes/Defends that dilute them, upgrades at rest sites); state the gap in the summary.",
   'Reply with JSON only: {"archetype": "<the deck direction, max 12 words>",',
   '"hp_policy": "preserve" | "balanced" | "push", "entry_hp_pct": <0-1: HP fraction to enter the act boss with, from act_boss_dossier>,',
   '"route_risk": "avoid_elites" | "normal" | "seek_elites",',
-  '"reserve": [potion roles kept for the act boss, any number: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
+  '"reserve": [potion roles to hold for the act boss: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
+  '"potion_tempo": "<max 40 words: which potions to hold for what, and when to spend them instead>",',
+  '"rest_lean": "heal" | "smith" | "auto",',
+  '"tempo": "<max 40 words: pacing for this act: elites, rests, when HP may be spent>",',
   '"needs": [card roles the deck must get before the act boss: "aoe"|"strength"|"block"|"draw"|"exhaust"|"multi_hit"|"frontload"|"debuff"],',
-  '"avoid": [card ids or card roles never to take], "want": [card ids to pick when offered, most important first, max 6],',
+  '"avoid": [card ids or card roles not to take], "want": [card ids to pick when offered, most important first, max 6],',
   '"remove": [card ids in the deck to remove first, max 3], "block_target": <block cards the deck should hold by the act boss>,',
-  '"boss_prep": "<max 30 words: what to have ready for the act boss (context for Jev)>",',
+  '"boss_prep": "<max 30 words: what to have ready for the act boss>",',
   '"summary": "<max 40 words: the plan in plain words>",',
   `"reasons": {"<hp_policy|route_risk|entry_hp_pct|reserve>": "<${INTENT_REASONS.join("|")}>"} (why you chose each intent),`,
   '"changes": [{"field": "<hp_policy|route_risk|entry_hp_pct|reserve|needs|avoid>", "from": <old>, "to": <new>,',
   `"trigger": "<${CHANGE_TRIGGERS.join("|")}>", "fact": "<the fact from since_last_plan that shows it>"}]}`,
-  "What code does with each intent:",
+  "What each intent means to Jev (shown as guidance next to the facts, never enforced):",
   `hp_policy preserve = ${MEANING.hp_policy.preserve}; balanced = ${MEANING.hp_policy.balanced}; push = ${MEANING.hp_policy.push}.`,
   `route_risk avoid_elites = ${MEANING.route_risk.avoid_elites}; seek_elites = ${MEANING.route_risk.seek_elites}.`,
-  "entry_hp_pct: near the boss rests heal and elites are skipped below it. reserve: potions of those roles are never drunk",
-  "before the act boss (only below 25% HP or when every other line dies) and are free in the boss fight; a full belt then",
-  "loses new potions, so reserve only what the boss needs. needs: a large pick bonus for cards of the role. avoid: such",
-  "cards are not offered at all. act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP",
+  "entry_hp_pct: the HP to reach the boss with; route and rest options show their arrival HP against it. reserve / potion_tempo:",
+  "every line that drinks a held potion shows what it saves now and that the boss then has one fewer; a potion held to the",
+  "death helps nobody (A8: 15 of 44 deaths still held potions), so say when to spend them. needs / want / avoid: shown on card",
+  "rewards and shop items as facts. act_boss_dossier and act_threats come from past runs: what kills, what wins, the entry HP",
   "and potions that worked.",
-  "What code does with each reason: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
+  "What each reason means: " + INTENT_REASONS.map((reason) => `${reason} = ${REASON_MEANING[reason]}`).join("; ") + ".",
   "reserve damage covers damage potions and burst potions: ENERGY_POTION, RADIANT_TINCTURE, ATTACK/POWER/SKILL/COLORLESS_POTION,",
-  "DUPLICATOR, SWIFT_POTION; Potion-Shaped Rocks are never reserved.",
+  "DUPLICATOR, SWIFT_POTION; Potion-Shaped Rocks are never held.",
   "Re-plans (previous_plan is set): previous_plan holds the intents in force and since_last_plan what happened since.",
-  "Keep every intent unless a trigger from the list justifies changing it; a field you leave out keeps its value.",
-  "Every changed field among hp_policy, route_risk, entry_hp_pct, reserve, needs and avoid must appear in changes with its",
-  "trigger and the supporting fact. A change without one, with a trigger the facts do not show, or one reversing a change",
-  "made in the last 3 floors with the same trigger is rejected and the old value kept.",
+  "Keep every intent unless something in since_last_plan changes it; a field you leave out keeps its value.",
+  "List every changed field among hp_policy, route_risk, entry_hp_pct, reserve, needs and avoid in changes with its trigger",
+  "and the supporting fact (a change without one is kept and logged for review).",
 ].join(" ");
 
 /** The intents in force, as the re-plan and the fight plan see them. */
@@ -214,6 +221,9 @@ export function runPlanIntentsJson(plan: RunPlan): Record<string, JsonValue> {
     entry_hp_pct: plan.entryHp,
     route_risk: plan.routeRisk,
     reserve: plan.reserve,
+    potion_tempo: plan.potionTempo ?? "",
+    rest_lean: plan.restLean ?? "auto",
+    tempo: plan.tempo ?? "",
     needs: plan.needs,
     avoid: [...plan.avoid, ...plan.avoidRoles],
     want: plan.want,
@@ -361,6 +371,10 @@ export function parseRunPlan(
     return old;
   };
 
+  const textField = <K extends "potionTempo" | "tempo">(key: string, field: K, kept: string | undefined): Partial<Pick<RunPlan, K>> => {
+    const value = typeof json[key] === "string" ? truncate((json[key] as string).trim(), 240) : kept;
+    return value ? ({ [field]: value } as Partial<Pick<RunPlan, K>>) : {};
+  };
   // Intents: a field left out keeps the previous plan's value (a missing field is not a change).
   const base: RunPlan = prev ?? {
     runId, act: actOf(state), floor: state.run?.floor ?? 0, hpPct: hpFraction(state), trigger, archetype: "",
@@ -388,6 +402,7 @@ export function parseRunPlan(
       else notes.push(`reasons: dropped ${JSON.stringify(key)}: ${JSON.stringify(value)}`);
     }
   }
+  const restLean = enumOf("rest_lean", REST_LEANS, { heal: "heal", smith: "smith", auto: "auto" }, "rest") ?? base.restLean;
   const reserveKey = has("reserve") ? "reserve" : "save_potions";
   const needsKey = has("needs") ? "needs" : "must_have";
   const proposal: RunPlan = {
@@ -408,6 +423,9 @@ export function parseRunPlan(
     entryHp,
     // Any number of roles (the old parser kept 2: half the potions of a dropped 3rd role were drunk).
     reserve: has(reserveKey) ? [...new Set(list(reserveKey, role(POTION_ROLES), 6) as PotionRole[])] : base.reserve,
+    ...textField("potion_tempo", "potionTempo", base.potionTempo),
+    ...textField("tempo", "tempo", base.tempo),
+    ...(restLean ? { restLean } : {}),
     // Up to 5 roles (N7KR: the 4-role cut dropped "block", the 5th).
     needs: has(needsKey) ? (list(needsKey, role(CARD_ROLES), MAX_NEEDS) as CardRole[]) : base.needs,
     bossPrep: typeof json["boss_prep"] === "string" ? truncate(json["boss_prep"], 200) : base.bossPrep,
@@ -425,11 +443,13 @@ export function parseRunPlan(
     notes.push(...checked.notes);
   }
   notes.push(...repairRunPlan(plan, { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) }));
-  // Judgment calls code does not repair: logged apart from the repairs, as the fight plan's are.
+  // Judgment calls code does not repair: logged apart from the format repairs, as the fight plan's are.
   const eliteNote = avoidElitesDisagreement(plan, damageGap(state, knowledge), { hpPct: hpFraction(state), toBoss: floorsToBoss(state.run?.floor ?? 0) });
   plan.origins = originsAfter(prev, plan);
-  plan.validator = notes;
-  if (eliteNote) plan.disagreements = [eliteNote];
+  plan.validator = notes.filter((note) => !note.startsWith(DISAGREE));
+  const disagreements = [...notes.filter((note) => note.startsWith(DISAGREE)), ...(eliteNote ? [eliteNote] : [])];
+  if (disagreements.length > 0) plan.disagreements = disagreements;
+  else delete plan.disagreements;
   return plan;
 }
 
@@ -479,6 +499,9 @@ export function normalizeRunPlan(raw: RunPlan | Record<string, unknown>): RunPla
     routeRisk,
     entryHp: typeof plan.entryHp === "number" ? plan.entryHp : null,
     reserve: asArray((plan.reserve ?? plan["savePotions"]) as JsonValue).filter((role): role is PotionRole => isOneOf(POTION_ROLES, role)),
+    ...(typeof plan.potionTempo === "string" && plan.potionTempo ? { potionTempo: plan.potionTempo } : {}),
+    ...(typeof plan.tempo === "string" && plan.tempo ? { tempo: plan.tempo } : {}),
+    ...(isOneOf(REST_LEANS, plan.restLean) ? { restLean: plan.restLean } : isOneOf(REST_LEANS, plan["rest"]) ? { restLean: plan["rest"] as RestLean } : {}),
     needs: asArray((plan.needs ?? plan["mustHave"]) as JsonValue).filter((role): role is CardRole => isOneOf(CARD_ROLES, role)),
     avoidRoles: asArray(plan.avoidRoles as JsonValue).filter((role): role is CardRole => isOneOf(CARD_ROLES, role)),
     bossPrep: String(plan.bossPrep ?? ""),
@@ -511,70 +534,51 @@ export function planSavesPotion(plan: RunPlan | null | undefined, potionId: stri
 }
 
 /**
- * Card bonus for a needed role the deck still lacks (fewer than 2 cards of it). A block role gets
- * half while the boss clock's gap is BIG_GAP or more a turn (UP1C F6: Taunt 93 over Anger 50 on "must-have
- * block +14" against a damage-gap +4; the boss was fought at 64% of the clock with 10 block cards), but
- * only once the plan's block target is met: short of it, the deck cannot hold the boss's turns either
- * (K8TC F14: Fortitude halved to +7 at block 1/3, 38/80; the Kin took 61 HP in five enemy turns). Two
- * or more short of the target below half HP, block gets the bonus plus the half the gap would take
- * (LOW_HP_BLOCK_BONUS: PWSD F20 at 25/80, block 1/3, Blood Wall 72 lost to Battle Trance+ 83; died at F23).
+ * The fact of a card against DeepSeek's needed roles: "fills DeepSeek's need block (deck has 2 of
+ * target 4)". It used to be a pick bonus (+14, +21 for block at low HP) on almost every candidate, since
+ * needs was nearly always aoe/block/frontload/strength (A8: skips 37% -> 23%, act-1 bosses lost on
+ * damage); now it is a fact next to the card's own value.
  */
-export function mustHaveBonus(plan: RunPlan | null | undefined, cardId: string, deckIds: string[], gapPerTurn = 0, hpFraction = 1): { bonus: number; why: string | null } {
+export function mustHaveFact(plan: RunPlan | null | undefined, cardId: string, deckIds: string[]): string | null {
   const roles = plan?.needs ?? [];
-  if (roles.length === 0) return { bonus: 0, why: null };
   const mine = cardRoles(cardId);
-  for (const role of roles) {
-    if (!mine.has(role)) continue;
-    const have = deckIds.filter((id) => cardRoles(id).has(role)).length;
-    const target = role === "block" ? plan?.blockTarget ?? null : null;
-    if (target !== null && have <= target - 2 && hpFraction < LOW_HP_BLOCK) {
-      return { bonus: LOW_HP_BLOCK_BONUS, why: `run plan must-have ${role} (${have} of ${target} in deck, HP ${Math.round(hpFraction * 100)}%) +${LOW_HP_BLOCK_BONUS}` };
-    }
-    const full = have < 2 ? MUST_HAVE_BONUS : 4;
-    const halved = role === "block" && gapPerTurn >= BIG_GAP && (target === null || have >= target);
-    const bonus = halved ? Math.round(full / 2) : full;
-    return { bonus, why: `run plan must-have ${role} (${have} in deck) +${bonus}${halved ? ` (halved: deck ${gapPerTurn}/turn short of the boss)` : ""}` };
-  }
-  return { bonus: 0, why: null };
+  const filled = roles.filter((role) => mine.has(role));
+  if (filled.length === 0) return null;
+  return filled
+    .map((role) => {
+      const have = deckIds.filter((id) => cardRoles(id).has(role)).length;
+      const target = role === "block" ? plan?.blockTarget ?? null : null;
+      return `fills DeepSeek's need ${role} (deck has ${have}${target !== null ? ` of target ${target}` : ""})`;
+    })
+    .join("; ");
 }
-
-/** Below this HP a block role two short of the plan's block target gets LOW_HP_BLOCK_BONUS. */
-export const LOW_HP_BLOCK = 0.5;
-
-/** Boss-clock gap (damage a turn) from which damage outranks the must-have block bonus. */
-export const BIG_GAP = 8;
-
-/** Bonus for a card filling a needed role the deck lacks. */
-export const MUST_HAVE_BONUS = 14;
-/** The must-have bonus plus the half the boss-gap rule takes off it (14 + 7). */
-export const LOW_HP_BLOCK_BONUS = MUST_HAVE_BONUS + MUST_HAVE_BONUS / 2;
 
 /** The run brief's plan line (Jev and DeepSeek see it on build and route questions): intents first. */
 export function runPlanLine(plan: RunPlan | null | undefined, floor: number | null = null): string | null {
   if (!plan) return null;
-  const intents = `hp_policy ${plan.hpPolicy}${plan.entryHp ? ` (boss entry ${Math.round(plan.entryHp * 100)}%)` : ""}, route_risk ${plan.routeRisk}${plan.reserve.length > 0 ? `, reserve ${plan.reserve.join("/")} potions for the boss` : ""}${plan.needs.length > 0 ? `, needs ${plan.needs.join("/")}` : ""}`;
+  const intents = `hp_policy ${plan.hpPolicy}${plan.entryHp ? ` (boss entry ${Math.round(plan.entryHp * 100)}%)` : ""}, route_risk ${plan.routeRisk}${plan.reserve.length > 0 ? `, hold ${plan.reserve.join("/")} potions for the boss` : ""}${plan.restLean && plan.restLean !== "auto" ? `, rest lean ${plan.restLean}` : ""}${plan.needs.length > 0 ? `, needs ${plan.needs.join("/")}` : ""}`;
   const parts = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
   const want = plan.want.length > 0 ? ` | want ${plan.want.join(", ")}` : "";
-  const avoid = plan.avoid.length + plan.avoidRoles.length > 0 ? ` | never take ${[...plan.avoid, ...plan.avoidRoles].join(", ")}` : "";
+  const avoid = plan.avoid.length + plan.avoidRoles.length > 0 ? ` | avoid ${[...plan.avoid, ...plan.avoidRoles].join(", ")}` : "";
   const changed = recentChanges(plan, floor).map((change) => ` | changed at F${change.floor}: ${change.field} ${JSON.stringify(change.from)}→${JSON.stringify(change.to)} (${change.trigger})`).join("");
   return truncate(`${intents}. ${parts}${want}${avoid}${changed}`, 420);
 }
 
-/** Card-value adjustment from the plan (card rewards, shops); avoided cards are filtered, not priced. */
-export function runPlanCardBonus(plan: RunPlan | null | undefined, cardId: string, blockCards: number, isBlock: boolean): { bonus: number; why: string | null } {
-  if (!plan) return { bonus: 0, why: null };
-  if (plan.avoid.includes(cardId)) return { bonus: -RUN_PLAN_AVOID_MALUS, why: "run plan: avoid" };
-  let bonus = 0;
-  const why: string[] = [];
-  if (plan.want.includes(cardId)) {
-    bonus += RUN_PLAN_WANT_BONUS;
-    why.push("run plan: wanted");
+/** DeepSeek's plan on one card (card rewards, shops, event adds): facts, not a score change. */
+export function planCardFacts(plan: RunPlan | null | undefined, cardId: string, blockCards: number, isBlock: boolean, deckIds: string[] = []): string[] {
+  if (!plan) return [];
+  const facts: string[] = [];
+  const wanted = plan.want.indexOf(cardId);
+  if (wanted >= 0) facts.push(`DeepSeek plan wants this card (want #${wanted + 1})`);
+  if (plan.avoid.includes(cardId)) facts.push("DeepSeek plan lists this card under avoid");
+  else {
+    const role = (plan.avoidRoles ?? []).find((entry) => cardRoles(cardId).has(entry));
+    if (role && wanted < 0) facts.push(`DeepSeek plan lists ${role} cards under avoid`);
   }
-  if (isBlock && plan.blockTarget !== null && blockCards < plan.blockTarget) {
-    bonus += 6;
-    why.push(`run plan: block ${blockCards}/${plan.blockTarget}`);
-  }
-  return { bonus, why: why.length > 0 ? why.join("; ") : null };
+  const must = mustHaveFact(plan, cardId, deckIds);
+  if (must) facts.push(must);
+  else if (isBlock && plan.blockTarget !== null && blockCards < plan.blockTarget) facts.push(`block cards ${blockCards} of DeepSeek's target ${plan.blockTarget}`);
+  return facts;
 }
 
 export function logRunPlan(file: string, entry: Record<string, JsonValue>): void {

@@ -1,5 +1,7 @@
 /**
- * Shop (PLAN.md §6.5). Worth is judgement (Jev); affordability and stock are arithmetic (code).
+ * Shop (PLAN.md §6.5). Worth is judgement (Jev); affordability, stock and each item's value with its
+ * reasons are code's facts, and leaving is always an option with what the gold left is still worth.
+ * DeepSeek's plan on a card (want / avoid / needs) is a fact on it, not a filter.
  *
  * One purchase per decision and then re-read: the stock changes, gold changes, and the second
  * question is genuinely different from the first.
@@ -12,8 +14,8 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { cardRoles, cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
-import { currentRunPlan, floorsToBoss, mustHaveBonus, runPlanCardBonus } from "../strategy/run-plan.js";
-import { isReserved, planForbidsCard, potionRole } from "../strategy/intent.js";
+import { currentRunPlan, floorsToBoss, planCardFacts } from "../strategy/run-plan.js";
+import { guidanceFor, isReserved, planAvoidsCard, potionRole } from "../strategy/intent.js";
 import { potionRank, POTION_RANK_DISCARDABLE } from "./map.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
@@ -79,7 +81,6 @@ export function planShop(env: DecisionEnv): Decision | null {
   }
 
   const options: PickOption[] = [];
-  const freeValue = new Map<PickOption, number>();
   const stock: JsonValue[] = [];
   const deckNow = deckEntries(state, knowledge);
   const gap = damageGap(state, knowledge);
@@ -88,6 +89,7 @@ export function planShop(env: DecisionEnv): Decision | null {
   const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
   const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
   const floor = state.run?.floor ?? 0;
+  const runPlan = currentRunPlan(env.screenMemory, state);
 
   const collect = (
     list: unknown,
@@ -107,18 +109,21 @@ export function planShop(env: DecisionEnv): Decision | null {
       const text = str(raw["resolved_rules_text"]) || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "");
       stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
-      // RUN_PLAN=v1: a card the run plan avoids is not for sale to us (hard intent).
-      if (action === "buy_card" && planForbidsCard(currentRunPlan(env.screenMemory, state), id, cardRoles(id)) !== null) continue;
-      const scored =
-          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
-          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus + mustHaveBonus(env.screenMemory.runPlan, id, deckNow.map((entry) => entry.card_id), gap?.gap ?? 0, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)).bonus : 0);
+      const hpPct = (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1);
+      const valued = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, hpPct);
+      const clock = action === "buy_card" ? gapCardBonus(gap, id) : { bonus: 0, why: null };
+      const scored = valued.score + clock.bonus;
+      const planFacts = action === "buy_card" ? planCardFacts(runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id), deckNow.map((entry) => entry.card_id)) : [];
+      const avoided = action === "buy_card" ? planAvoidsCard(runPlan, id, cardRoles(id)) : null;
+      const reservedRole = action === "buy_potion" && isReserved(runPlan?.reserve, id, text) ? potionRole(id, text) : null;
       const option: PickOption = {
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,
         intent: { action, option_index: index },
-        // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
-        // relics are usually worth it, potions rarely are.
+        // Value relative to leaving (0): a card must beat ~60 to earn a slot in the deck, relics are
+        // usually worth it, potions rarely are.
         score: scored,
+        why: [...valued.why, ...(clock.why ? [clock.why] : [])].join("; "),
         // Cards carry their energy cost and type like card rewards do (B98P F15: DeepSeek bought Expect a
         // Fight as "1E"; it costs 3).
         summary: {
@@ -129,11 +134,12 @@ export function planShop(env: DecisionEnv): Decision | null {
             ? { cost: numOrNull(raw["energy_cost"]) ?? (info as { cost?: number } | null)?.cost ?? null, type: str(raw["card_type"], (info as { type?: string } | null)?.type ?? "") }
             : {}),
           text: truncate(text, 140),
+          ...(planFacts.length > 0 ? { deepseek_plan: planFacts.join("; ") } : {}),
+          ...(reservedRole ? { deepseek_plan: `a ${reservedRole} potion: DeepSeek holds ${reservedRole} potions for the act boss` } : {}),
         } satisfies JsonValue,
+        ...(avoided ? { intentBreak: avoided } : {}),
       };
       options.push(option);
-      // The value of the item itself, the gold aside.
-      freeValue.set(option, scored + pricePenalty(action, price ?? 150, emptyPotionSlots));
     }
   };
 
@@ -164,39 +170,41 @@ export function planShop(env: DecisionEnv): Decision | null {
       label: `pay ${price ?? "?"}g to remove a card`,
       intent: { action: "remove_card_at_shop" },
       score: profile.basics >= 4 || entriesHaveCurse ? 30 : 8,
-      summary: { buy: "card removal", kind: "service", price, text: "removes one card from the deck; a smith/removal is usually strong" } satisfies JsonValue,
-    });
-  }
-
-  // Leaving is not free: gold left over past what the shops before the boss can still absorb is worth
-  // nothing to the fight that decides the act (CWU9 F31 721 gold, RTF3 F37 1237, EHJZ F31 277 two floors
-  // before the boss: each time Jev left at < 0.3 confidence and the gold died unspent).
-  const gold = state.run?.gold ?? 0;
-  const leaveCost = unspentGoldCost(gold, floor);
-  const leaveScore = -leaveCost;
-  const best = options.reduce<PickOption | null>((top, option) => (top === null || option.score > top.score ? option : top), null);
-  // A buy that clears leaving by a wide margin takes "stop shopping" off the list: what Jev still picks
-  // between are the buys worth their gold now (a buy that hurts the deck even for free is dropped too).
-  // Each purchase re-reads the shop, so leaving comes back once the gold or the good stock runs out.
-  const leaveDominated = best !== null && best.score - leaveScore >= LEAVE_DOMINATED && best.score >= 0;
-  if (leaveDominated) {
-    for (let index = options.length - 1; index >= 0; index -= 1) {
-      if ((freeValue.get(options[index]!) ?? 1) <= 0) options.splice(index, 1);
-    }
-  } else {
-    options.push({
-      key: "leave",
-      label: "stop shopping",
-      intent: { action: "close_shop_inventory" },
-      score: Math.round(leaveScore * 100) / 100,
+      why: entriesHaveCurse ? "the deck holds a curse" : profile.basics >= 4 ? `${profile.basics} basic Strikes/Defends dilute the deck` : "few basics left to remove",
       summary: {
-        buy: "nothing",
-        note: leaveCost > 0
-          ? `close the inventory and leave the shop: ~${Math.round(leaveCost * 25)} of the ${gold} gold has no shop left to spend it in before the F${floor + floorsToBoss(floor)} boss`
-          : "close the inventory and leave the shop",
+        buy: "card removal",
+        kind: "service",
+        price,
+        text: "removes one card from the deck; a smith/removal is usually strong",
+        ...((runPlan?.remove ?? []).length > 0 ? { deepseek_plan: `DeepSeek plan removes first: ${runPlan!.remove.join(", ")}` } : {}),
       } satisfies JsonValue,
     });
   }
+
+  // Leaving is always offered, with what the gold left is still worth: gold past what the shops before
+  // the boss can still absorb is worth nothing to the fight that decides the act (CWU9 F31 721 gold,
+  // RTF3 F37 1237, EHJZ F31 277 two floors before the boss). It used to be taken off the list while the
+  // best buy beat it by 20; now that is a fact Jev weighs.
+  const gold = state.run?.gold ?? 0;
+  const leaveCost = unspentGoldCost(gold, floor);
+  const leaveScore = -leaveCost;
+  const toBoss = floorsToBoss(floor);
+  options.push({
+    key: "leave",
+    label: "stop shopping",
+    intent: { action: "close_shop_inventory" },
+    score: Math.round(leaveScore * 100) / 100,
+    why: leaveCost > 0
+      ? `~${Math.round(leaveCost * 25)} of the ${gold} gold is likely unspendable before the F${floor + toBoss} boss (shops ahead absorb ~${Math.round(gold - leaveCost * 25)})`
+      : `the ${gold} gold can still be spent in shops before the F${floor + toBoss} boss`,
+    summary: {
+      buy: "nothing",
+      note: "close the inventory and leave the shop",
+      unspent_gold: leaveCost > 0
+        ? `~${Math.round(leaveCost * 25)} of the ${gold} gold is likely unspendable before the F${floor + toBoss} boss (${toBoss} floors away)`
+        : `${gold} gold kept: shops before the F${floor + toBoss} boss (${toBoss} floors away) can still absorb it`,
+    } satisfies JsonValue,
+  });
 
   const entries = deckEntries(state, knowledge);
   return buildPickDecision({
@@ -206,9 +214,10 @@ export function planShop(env: DecisionEnv): Decision | null {
     strictJev: env.strictJev,
     escalateBelow: 0.4,
     options,
-    codeMargin: env.combatPlanner === "card" ? undefined : 10,
-    // Five, not three: relics outscored Dark Shackles on a live run and hid it from the supervisor.
-    maxModelOptions: 5,
+    planVersion: runPlan?.version ?? null,
+    guidance: guidanceFor(runPlan, "shop"),
+    // Six, not three: relics outscored Dark Shackles on a live run and hid it from the supervisor.
+    maxModelOptions: 6,
     // With nothing affordable the only option is to leave, so skip the model call entirely.
     skipModelWhenSingle: true,
     state: {
@@ -225,8 +234,6 @@ export function planShop(env: DecisionEnv): Decision | null {
   });
 }
 
-/** Best buy minus leaving at which "stop shopping" is no longer offered. */
-export const LEAVE_DOMINATED = 20;
 /** Gold the shops left before the act boss can still usefully absorb, 10+ floors out. */
 const FUTURE_SHOP_GOLD = 450;
 
@@ -241,13 +248,6 @@ export function unspentGoldCost(gold: number, floor: number): number {
   return Math.min(40, surplus / 25);
 }
 
-/** The price part of shopScore (what the item costs in score). */
-function pricePenalty(action: "buy_card" | "buy_relic" | "buy_potion", cost: number, emptySlots: number): number {
-  if (action === "buy_card") return cost / 25;
-  if (action === "buy_relic") return cost / 40;
-  return emptySlots > 0 ? cost / 25 : cost / 30;
-}
-
 function shopScore(
   action: "buy_card" | "buy_relic" | "buy_potion",
   id: string,
@@ -259,22 +259,22 @@ function shopScore(
   bossId = "",
   emptySlots = 0,
   hpPct = 1,
-): number {
+): { score: number; why: string[] } {
   const cost = price ?? 150;
   if (action === "buy_card") {
     const card = info as { rarity?: string; type?: string } | null;
-    const value = cardValue(id, card?.rarity ?? "", card?.type ?? "", profile, act, floor, bossId).value;
-    return value - 62 - cost / 25;
+    const valued = cardValue(id, card?.rarity ?? "", card?.type ?? "", profile, act, floor, bossId);
+    return { score: valued.value - 62 - cost / 25, why: [`card value ${valued.value} (${valued.reasons.join(", ") || "base"}) - 62 to earn a deck slot - ${cost}g/25`] };
   }
-  if (action === "buy_relic") return 18 - cost / 40;
+  if (action === "buy_relic") return { score: 18 - cost / 40, why: [`a relic ~18 - ${cost}g/40`] };
   // Empty potion slots from act 2 on: a potion is a turn saved in the next elite or boss (SUUK F39,
   // 12ZG F21, F8HR F20: empty belts, gold spent on removals and cards, died holding no potion).
   // Low HP with an empty slot: the potion is the next fight, above a removal's 30 (X4QR F21: 21/80
   // after, 261 gold on Flame Barrier, a removal and Feel No Pain; Explosive Ampoule and Fire Potion left).
-  if (emptySlots > 0 && hpPct < 0.45) return 34 - cost / 25;
+  if (emptySlots > 0 && hpPct < 0.45) return { score: 34 - cost / 25, why: [`HP ${Math.round(hpPct * 100)}% with an empty potion slot: the potion is for the next fight`] };
   // An empty slot in any act: a potion is worth more than the gold held for it (it outranks leaving).
-  if (emptySlots > 0) return (act >= 2 && emptySlots >= 2 ? 14 : 8) - cost / 25;
-  return -5 - cost / 30;
+  if (emptySlots > 0) return { score: (act >= 2 && emptySlots >= 2 ? 14 : 8) - cost / 25, why: [`fills an empty potion slot (${emptySlots} empty)`] };
+  return { score: -5 - cost / 30, why: ["the belt is full: buying needs a free slot"] };
 }
 
 /**
@@ -299,18 +299,19 @@ function potionSwap(env: DecisionEnv, stocked: Record<string, unknown>[], gold: 
   if (!wanted) return null;
   const price = numOrNull(wanted.entry["price"]);
   const name = str(wanted.entry["name"], wanted.id);
-  const score = shopScore("buy_potion", wanted.id, null, deckProfile([]), act, 0, price, "", 1, hpPct) - 1;
+  const score = shopScore("buy_potion", wanted.id, null, deckProfile([]), act, 0, price, "", 1, hpPct).score - 1;
   return {
     key: "swap_potion",
     label: `discard ${drop.name} to buy ${name} (${price ?? "?"}g)`,
     intent: { action: "discard_potion", option_index: drop.slot },
     score,
     keepInView: true,
+    why: `swaps a potion DeepSeek does not hold for the boss for one of a role it holds (${potionRole(wanted.id, textOf(wanted.id)) ?? "?"})`,
     summary: {
       buy: `${name} (after discarding ${drop.name})`,
       kind: "potion swap",
       price,
-      text: `the belt is full: discards ${drop.name} (no role the run plan reserves) to free a slot; the run plan reserves ${potionRole(wanted.id, textOf(wanted.id)) ?? "this"} potions for the act boss`,
+      text: `the belt is full: discards ${drop.name} (no role DeepSeek holds) to free a slot; DeepSeek holds ${potionRole(wanted.id, textOf(wanted.id)) ?? "this"} potions for the act boss`,
     } satisfies JsonValue,
   };
 }

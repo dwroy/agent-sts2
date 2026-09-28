@@ -234,6 +234,8 @@ export interface PlayerSim {
    * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
    */
   noBlock?: boolean;
+  /** A card was already exhausted this turn before this decision (Evil Eye's doubling), or every turn (Toasty Mittens). */
+  exhaustedThisTurn?: boolean;
   /**
    * Tender N (TENDER_POWER, from the Hunter Killer's Tenderizing Goop): every card played lowers our
    * Strength and Dexterity by N for the rest of the turn (LSWU F21 T5: a "lethal" Setup Strike +
@@ -373,7 +375,7 @@ export interface Outcome {
   stunSaved?: number;
   /**
    * HP of next turn's expected hit, past the HP this line leaves, that a block potion drunk now would
-   * have covered kept (N95W F25 T4). The HP guard counts it as loss.
+   * have covered kept (N95W F25 T4). A fact on the line (combat-plan lineFacts).
    */
   blockPotionShort?: number;
   /** Enemies left at or below the start-of-turn damage (Mercury Hourglass): dead at our next turn start. */
@@ -489,6 +491,8 @@ interface Sim {
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
    */
   exhausted: CardModel[];
+  /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
+  exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
   held: CardModel[];
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
@@ -576,6 +580,8 @@ export const HOWL_EXHAUST_VALUE = 50;
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 /** Cards a hand can hold: draws past it are discarded. */
 export const HAND_LIMIT = 10;
+/** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
+export const GLOWWATER_DRAW = 10;
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -875,7 +881,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // The random pick costs the average card left (K8RK F17 T2: plain True Grit took Bludgeon, the plan's
     // 32-damage race card; shown as "hp_lost 1").
     const pool = [...next.hand, ...next.held].filter((entry) => entry.type !== "Potion");
-    if (pool.length > 0) next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
+    if (pool.length > 0) {
+      next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
+      next.exhaustedCount += 1;
+    }
     // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
     // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
     next.held = [...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
@@ -888,6 +897,21 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.held = next.held.filter((entry) => entry !== pick);
       next.exhausted = [...next.exhausted, pick];
     }
+  } else if (card.special === "glowwater") {
+    // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 The hand (and any Status/Curse held) is exhausted, then the
+    // draw fills the hand from the pile (logs: 5 cards -> 10 drawn, F17 T1; 3 -> 10, F25 T4), each card
+    // the pile's expected one (card-model expectedDraw), as Gambler's Brew prices its draws.
+    drawnBurned = next.drawnInHand;
+    next.drawnInHand = 0;
+    next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+    next.held = [];
+    const draw = card.generates;
+    if (draw) {
+      const count = Math.max(0, Math.min(GLOWWATER_DRAW, HAND_LIMIT, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn));
+      next.hand = [...next.hand, ...Array.from({ length: count }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}`, cardId: `${draw.cardId}:${i}` }))];
+      next.cardsDrawn += count;
+    }
   } else if (EXHAUST_HAND.has(card.cardId)) {
     // The cards drawn earlier this turn go too (their values stay as draws: what they were is unknown).
     drawnBurned = next.drawnInHand;
@@ -897,6 +921,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.held = [];
   }
   const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
+  next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
   // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
     const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
@@ -953,6 +978,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
     // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
     let shown = card.block;
+    // Evil Eye: double Block when a card was exhausted this turn, before this turn's decision or earlier
+    // in this line (Q97B F23 T3: doubled from the state flag only, so "True Grit, Evil Eye" read 8, and a
+    // line exhausting only after it was never told apart).
+    if (card.cardId === "EVIL_EYE" && next.exhaustedCount > 0) shown *= 2;
     if (card.type !== "Potion" && player.unmovableArmed) {
       if (next.unmovableSpent) shown = Math.floor(shown / 2);
       next.unmovableSpent = true;
@@ -994,7 +1023,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const top: CardModel = { ...card.generates, cost: 0, target: card.generates.damage !== null ? "random" : "self", validTargets: [] };
     for (let played = 0; played < (card.playsTop ?? 0); played += 1) resolveEffects(next, top, null, player, 0);
     next.pileDrawn += card.playsTop ?? 0;
-  } else if (card.generates) next.hand = [...next.hand, card.generates];
+  } else if (card.generates && card.special !== "glowwater") next.hand = [...next.hand, card.generates];
   // Blessing of the Forge: every card in hand upgraded for the fight. Later plays this turn use the
   // upgraded numbers; each card's gain counts again for its later draws (BLESSING_LASTING).
   if (card.special === "upgrade_hand") {
@@ -1789,7 +1818,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.regen}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.regen}`;
 }
 
 export interface SolveResult {
@@ -1915,6 +1944,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
     exhausted: [],
+    exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
     vigor: input.player.vigor ?? 0,

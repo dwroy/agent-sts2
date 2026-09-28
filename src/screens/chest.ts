@@ -5,6 +5,9 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
+/** Code's only relic value: its rarity (the effect is Jev's judgement). */
+const RELIC_RARITY_VALUE: Record<string, number> = { Starter: 0, Common: 1, Uncommon: 2, Rare: 3, Shop: 2, Boss: 3, Ancient: 3, Event: 2 };
+
 export function planChest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const chest = asRecord(state.raw["chest"]);
@@ -25,7 +28,8 @@ export function planChest(env: DecisionEnv): Decision | null {
           key: `r${index}`,
           label: name,
           intent: { action: "choose_treasure_relic", option_index: index },
-          score: 0,
+          score: RELIC_RARITY_VALUE[str(relic["rarity"], knowledge.relic(id)?.rarity ?? "")] ?? 1,
+          why: `rarity ${str(relic["rarity"], knowledge.relic(id)?.rarity ?? "") || "unknown"} (code does not value relic effects; judge the text)`,
           summary: {
             relic: name,
             rarity: str(relic["rarity"], knowledge.relic(id)?.rarity ?? ""),

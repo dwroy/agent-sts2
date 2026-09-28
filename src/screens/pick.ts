@@ -1,9 +1,12 @@
 /**
  * Shared builder for the "choose one of these" screens (PLAN.md §6.2–§6.7).
  *
- * Every non-combat screen is the same shape: code builds a small list of legal options with the
- * numbers already worked out, Jev picks one, and a confidence gate decides whether to trust it or
- * fall back to the code-side score.
+ * Every non-combat screen is the same shape: code builds the legal options with their facts worked
+ * out (code_value, why, a reference rank), DeepSeek's guidance for the topic rides along, and Jev
+ * picks (Dai 2026-09-28: DeepSeek sets strategy and tempo, code gives facts, Jev decides). Code acts
+ * alone only on a single option, or when every other option is dominated on every fact (an identical
+ * duplicate, or an option a screen marks `dominatedBy`). `codeMargin` is kept for in-combat mechanics
+ * screens only (exhaust picks), never for build, route, rest, shop or event choices.
  */
 
 import type { ActionRequest } from "../mod/client.js";
@@ -22,8 +25,18 @@ export interface PickOption {
   label?: string;
   /** Kept among the model's options when the list is pruned to `maxModelOptions`, like skip/leave. */
   keepInView?: boolean;
-  /** The soft strategic intent this option breaks (intent.ts label): Jev picking it is a deviation. */
+  /**
+   * How this option departs from DeepSeek's tempo/strategy guidance (intent.ts): Jev picking it is logged
+   * as a tempo deviation (information only, never enforced).
+   */
   intentBreak?: string;
+  /** Code's reasons for its value (shown as `why` when the summary has none). */
+  why?: string;
+  /**
+   * Another option is at least as good on every fact this one has, and better on one: dropped (while
+   * another option is left), so a lone survivor is acted on without asking.
+   */
+  dominatedBy?: string;
 }
 
 export interface PickDecisionParams {
@@ -38,10 +51,13 @@ export interface PickDecisionParams {
   /** Trust the model's choice regardless of confidence (config `strictJev`). */
   strictJev: boolean;
   /**
-   * Phase 2: when the code score of the best option beats the runner-up by at least this much, code
-   * decides and the model is not asked. Otherwise only the top `maxModelOptions` are shown.
+   * In-combat mechanics screens only (exhaust picks): when the code score of the best option beats the
+   * runner-up by at least this much, code decides. Build, route, rest, shop and event screens never pass
+   * it: Jev decides those (the reference rank is a fact on each option).
    */
   codeMargin?: number;
+  /** DeepSeek's guidance relevant to this question (run/fight plan excerpt), shown to Jev and logged. */
+  guidance?: string[];
   maxModelOptions?: number;
   /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
   escalateBelow?: number;
@@ -53,17 +69,53 @@ export function bestOption(options: PickOption[]): PickOption {
   return options.reduce((a, b) => (b.score > a.score ? b : a));
 }
 
+/** What Jev is told about who does what (every question carries it). */
+export const ROLE_NOTE =
+  "Roles: DeepSeek sets the run's strategy and tempo (deepseek_guidance / strategy: potion timing and holding, heal vs smith, elite appetite, deck direction). Code gives facts and a reference rank (code_value, code_rank, why). You decide. Follow DeepSeek's tempo unless the facts clearly say otherwise (a route or line that likely dies, or costs far more HP than it gains); when you deviate, it is logged as a tempo deviation.";
+
+/** Options ranked by code score (rank 1 = code's reference), ties in list order. */
+function referenceRanks(options: PickOption[]): Map<PickOption, number> {
+  const ranked = [...options].sort((a, b) => b.score - a.score);
+  return new Map(ranked.map((option, index) => [option, index + 1]));
+}
+
+const round1 = (value: number): number => Math.round(value * 10) / 10;
+
+/** The option summary with code's facts: code_value, code_rank (1 = reference) and why. */
+function annotated(option: PickOption, rank: number): JsonValue {
+  const summary = option.summary;
+  if (!summary || typeof summary !== "object" || Array.isArray(summary)) return summary;
+  const record = summary as Record<string, JsonValue>;
+  return {
+    ...record,
+    ...(record["code_value"] === undefined ? { code_value: round1(option.score) } : {}),
+    code_rank: rank,
+    ...(record["why"] === undefined || record["why"] === null ? { why: option.why ?? null } : {}),
+  };
+}
+
 export function buildPickDecision(params: PickDecisionParams): Decision {
-  const { options, actThreshold } = params;
-  if (options.length === 0) throw new Error(`pick decision with no options: ${params.label}`);
+  const { actThreshold } = params;
+  if (params.options.length === 0) throw new Error(`pick decision with no options: ${params.label}`);
+  // Dominated options go while another is left; identical duplicates (two plain Strikes to remove) are
+  // one choice.
+  const undominated = params.options.filter((option) => option.dominatedBy === undefined);
+  const pool = undominated.length > 0 ? undominated : params.options;
+  const options = pool.filter(
+    (option, index) => option.label === undefined || !pool.some((other, at) => at < index && other.label === option.label && other.score === option.score),
+  );
+  const dropped = params.options.filter((option) => !options.includes(option));
 
   if (options.length === 1 && params.skipModelWhenSingle !== false) {
     const only = options[0] as PickOption;
+    const why = dropped.length > 0
+      ? `every other option is dominated (${dropped.map((option) => `${option.label ?? option.key}${option.dominatedBy ? `: ${option.dominatedBy}` : ": identical"}`).join("; ")})`
+      : "only one legal option";
     return {
       kind: "act",
       label: params.label,
       intent: only.intent,
-      rationale: `only one legal option: ${only.label ?? only.key}`,
+      rationale: `${why}: ${only.label ?? only.key}`,
     };
   }
 
@@ -71,38 +123,44 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     const ranked = [...options].sort((a, b) => b.score - a.score);
     const top = ranked[0] as PickOption;
     const second = ranked[1] as PickOption;
-    // Identical cards (e.g. two unupgraded Strikes to remove) tie on score but are the same choice.
-    const sameThing = top.label !== undefined && top.label === second.label && top.score === second.score;
-    if (top.score - second.score >= params.codeMargin || sameThing) {
+    if (top.score - second.score >= params.codeMargin) {
       return {
         kind: "act",
         label: params.label,
         intent: top.intent,
-        // The winner's reasons (card value, run plan, boss clock) so a bonus can be traced in the log.
         rationale: `code: ${top.label ?? top.key} scores ${top.score} vs ${second.label ?? second.key} ${second.score}${whyOf(top)}`,
       };
     }
-    if (params.maxModelOptions !== undefined && ranked.length > params.maxModelOptions) {
-      // Keep the "take nothing" option in view even when it ranks low: skipping is always a real choice.
-      const keep = ranked.slice(0, params.maxModelOptions);
-      for (const option of ranked) {
-        if ((option.key === "skip" || option.key === "leave" || option.keepInView) && !keep.includes(option)) keep.push(option);
-      }
-      return buildPickDecision({ ...params, codeMargin: undefined, options: keep });
+  }
+  if (params.maxModelOptions !== undefined && options.length > params.maxModelOptions) {
+    // Keep the "take nothing" option in view even when it ranks low: skipping is always a real choice.
+    const ranked = [...options].sort((a, b) => b.score - a.score);
+    const keep = ranked.slice(0, params.maxModelOptions);
+    for (const option of ranked) {
+      if ((option.key === "skip" || option.key === "leave" || option.keepInView) && !keep.includes(option)) keep.push(option);
     }
+    return buildPickDecision({ ...params, maxModelOptions: undefined, codeMargin: undefined, options: keep });
   }
 
+  const ranks = referenceRanks(options);
   const byKey = new Map(options.map((option) => [option.key, option]));
   const criteria: Record<string, string | null> = {};
   for (const option of options) {
-    criteria[option.key] = typeof option.summary === "string" ? option.summary : JSON.stringify(option.summary);
+    const summary = annotated(option, ranks.get(option) ?? 0);
+    criteria[option.key] = typeof summary === "string" ? summary : JSON.stringify(summary);
   }
+  const guidance = (params.guidance ?? []).filter(Boolean);
+  const reference = (chosen: PickOption): NonNullable<ResolvedAction["reference"]> => {
+    const top = [...ranks.entries()].find(([, rank]) => rank === 1)?.[0];
+    return { rank: ranks.get(chosen) ?? null, of: options.length, top: top?.key ?? null, matched: ranks.get(chosen) === 1 };
+  };
 
   return {
     kind: "ask",
     label: params.label,
-    state: params.state,
+    state: { ...params.state, roles: ROLE_NOTE, ...(guidance.length > 0 ? { deepseek_guidance: guidance } : {}) },
     questions: { pick: choiceQ(params.instructions, criteria), ...(params.extras ?? {}) },
+    ...(guidance.length > 0 ? { guidance } : {}),
     ...(params.escalateBelow === undefined ? {} : { escalate: { question: "pick", below: params.escalateBelow, why: params.label } }),
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
@@ -136,9 +194,10 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         }
         return {
           intent: trusted.intent,
-          rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}`,
+          rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}; code rank ${ranks.get(trusted) ?? "?"}/${options.length}`,
           confidence: answer.confidence,
           fallback: false,
+          reference: reference(trusted),
           ...deviationOf(trusted, params.planVersion),
         };
       }
@@ -151,9 +210,10 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       }
       return {
         intent: chosen.intent,
-        rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}`,
+        rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}; code rank ${ranks.get(chosen) ?? "?"}/${options.length}`,
         confidence: answer.confidence,
         fallback: false,
+        reference: reference(chosen),
         ...deviationOf(chosen, params.planVersion),
       };
     },

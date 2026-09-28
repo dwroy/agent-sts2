@@ -14,7 +14,7 @@ import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
 import { planReward } from "../src/screens/reward.js";
 import type { CardModel } from "../src/strategy/card-model.js";
-import { intentLines, solverScale } from "../src/strategy/intent.js";
+import { intentLines } from "../src/strategy/intent.js";
 import { repairRunPlan } from "../src/strategy/plan-validator.js";
 import { parseRunPlan, snapshotOf, type RunPlan } from "../src/strategy/run-plan.js";
 import { solveTurn } from "../src/strategy/turn-solver.js";
@@ -48,31 +48,33 @@ function codePick(decision: Decision | null): unknown {
 
 const mapState = (run: Raw = {}) => parseGameState(baseState("MAP", { run: runPayload(run) }));
 
-describe("run plan validator repairs (不乱指挥)", () => {
-  it("repairs incoherent intents and logs one reason each", () => {
+describe("run plan validator: format repairs only, judgment calls kept as disagreements", () => {
+  it("repairs contradictory lists, and logs HP judgment calls without changing the plan", () => {
     const plan = runPlan({ hpPolicy: "push", routeRisk: "seek_elites", needs: ["aoe"], avoidRoles: ["aoe", "draw"], want: ["INFLAME"], avoid: ["INFLAME", "ANGER"], reserve: ["any", "block"] });
     const notes = repairRunPlan(plan, { hpPct: 0.35, toBoss: 12 });
-    expect(plan).toMatchObject({ hpPolicy: "balanced", routeRisk: "normal", avoidRoles: ["draw"], avoid: ["ANGER"], reserve: ["any"] });
+    expect(plan).toMatchObject({ hpPolicy: "push", routeRisk: "seek_elites", avoidRoles: ["draw"], avoid: ["ANGER"], reserve: ["any"] });
     expect(notes).toEqual([
-      "hp_policy push at 35% HP → balanced",
-      "route_risk seek_elites at 35% HP → normal",
+      "disagreement (kept): hp_policy push at 35% HP (code would play balanced below 40%)",
+      "disagreement (kept): route_risk seek_elites at 35% HP",
       "avoid roles aoe are also needed: dropped from avoid",
       "cards INFLAME both wanted and avoided: dropped from avoid",
       "reserve lists 'any' with other roles → any",
     ]);
   });
 
-  it("push below the entry target near the boss is balanced; seek_elites under preserve is normal", () => {
+  it("push below the entry target near the boss, and seek_elites under preserve, are disagreements", () => {
     const near = runPlan({ hpPolicy: "push", entryHp: 0.8 });
-    expect(repairRunPlan(near, { hpPct: 0.7, toBoss: 5 })).toEqual(["hp_policy push 5 floors from the boss below the 80% entry target → balanced"]);
+    expect(repairRunPlan(near, { hpPct: 0.7, toBoss: 5 })).toEqual(["disagreement (kept): hp_policy push 5 floors from the boss below the 80% entry target"]);
+    expect(near.hpPolicy).toBe("push");
     const far = runPlan({ hpPolicy: "push", entryHp: 0.8 });
     expect(repairRunPlan(far, { hpPct: 0.7, toBoss: 14 })).toEqual([]);
     const preserve = runPlan({ hpPolicy: "preserve", routeRisk: "seek_elites" });
-    expect(repairRunPlan(preserve, { hpPct: 0.9, toBoss: 14 })).toEqual(["route_risk seek_elites contradicts hp_policy preserve → normal"]);
+    expect(repairRunPlan(preserve, { hpPct: 0.9, toBoss: 14 })).toEqual(["disagreement (kept): route_risk seek_elites alongside hp_policy preserve"]);
+    expect(preserve.routeRisk).toBe("seek_elites");
   });
 });
 
-describe("re-plan continuity (changes need a trigger the facts show)", () => {
+describe("re-plan continuity (every change is DeepSeek's call; unsupported ones are logged)", () => {
   /** The plan in force: made on F9 at 55/80 with a snapshot of the run then. */
   const previous = (): RunPlan => runPlan({ snapshot: snapshotOf(mapState(), testKnowledge) });
   /** The run two floors later: HP 30/80, one potion used. */
@@ -85,10 +87,12 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
     expect(plan.changes).toEqual([]);
   });
 
-  it("rejects a change without a trigger, or with one the facts do not show, and keeps the old value", () => {
+  it("keeps a change without a trigger, or with one the facts do not show, and logs it as a disagreement", () => {
     const none = parseRunPlan({ hp_policy: "preserve" }, later(), testKnowledge, "review", previous());
-    expect(none.hpPolicy).toBe("balanced");
-    expect(none.validator).toEqual(['rejected change hp_policy "balanced"→"preserve": no trigger given; kept "balanced"']);
+    expect(none.hpPolicy).toBe("preserve");
+    expect(none.validator).toEqual([]);
+    expect(none.disagreements).toEqual(['disagreement (kept): change hp_policy "balanced"→"preserve": no trigger given']);
+    expect(none.changes[0]).toMatchObject({ field: "hp_policy", trigger: "unstated", fact: "unverified: no trigger given" });
     const unsupported = parseRunPlan(
       { route_risk: "avoid_elites", changes: [{ field: "route_risk", from: "normal", to: "avoid_elites", trigger: "key_card_or_relic_gained", fact: "got Inflame" }] },
       later(),
@@ -96,19 +100,19 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
       "review",
       previous(),
     );
-    expect(unsupported.routeRisk).toBe("normal");
-    expect(unsupported.validator[0]).toMatch(/trigger key_card_or_relic_gained is not supported by the facts/);
+    expect(unsupported.routeRisk).toBe("avoid_elites");
+    expect(unsupported.disagreements?.[0]).toMatch(/trigger key_card_or_relic_gained is not supported by the facts/);
     // An unknown trigger name is judged by the facts (KQK2 F6): HP 69%→38% supports avoid_elites.
     const unknown = parseRunPlan({ route_risk: "avoid_elites", changes: [{ field: "route_risk", trigger: "vibes" }] }, later(), testKnowledge, "review", previous());
     expect(unknown.routeRisk).toBe("avoid_elites");
     expect(unknown.validator[0]).toMatch(/trigger "vibes" is not listed; read as hp_below_target from the facts/);
-    // No fact supports it (HP up to 90%, same belt): rejected.
+    // No fact supports it (HP up to 90%, same belt): kept, logged.
     const idle = parseRunPlan({ route_risk: "avoid_elites", changes: [{ field: "route_risk", trigger: "vibes" }] }, mapState({ floor: 11, current_hp: 72 }), testKnowledge, "review", previous());
-    expect(idle.routeRisk).toBe("normal");
-    expect(idle.validator[0]).toMatch(/trigger "vibes" is not one of/);
+    expect(idle.routeRisk).toBe("avoid_elites");
+    expect(idle.disagreements?.[0]).toMatch(/trigger "vibes" is not one of/);
   });
 
-  it("accepts a supported change, logs it, and applies it from the next decision on (rest heals)", () => {
+  it("accepts a supported change, logs it, and shows it from the next decision on (rest tempo notes)", () => {
     const plan = parseRunPlan(
       { hp_policy: "preserve", reserve: ["block"], changes: [
         { field: "hp_policy", from: "balanced", to: "preserve", trigger: "hp_below_target", fact: "HP 69% -> 38%" },
@@ -128,19 +132,23 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
     // Jev is told for a few floors after the change.
     expect(intentLines(plan, null, 12)).toContain("strategy changed at F11: hp_policy balanced→preserve because hp_below_target (HP 69%→38% (target 70%))");
     expect(intentLines(plan, null, 16).some((line) => line.startsWith("strategy changed"))).toBe(false);
-    // The rest site at 50/80 (not near the boss): smith (6) vs heal (5) before, heal under preserve.
-    const rest = (plan: RunPlan | null) => codePick(planRest(env(baseState("REST", { ...restPayload(), run: runPayload({ current_hp: 50 }) }), plan)));
-    expect(rest(previous())).toEqual({ action: "choose_rest_option", option_index: 1 });
-    expect(rest(plan)).toEqual({ action: "choose_rest_option", option_index: 0 });
+    // The rest site at 50/80 (not near the boss): code's reference is smith (6 vs heal 5) either way;
+    // under preserve the options say heal fits DeepSeek's tempo and smith departs from it.
+    const rest = (plan: RunPlan | null) => planRest(env(baseState("REST", { ...restPayload(), run: runPayload({ current_hp: 50 }) }), plan));
+    expect(codePick(rest(previous()))).toEqual({ action: "choose_rest_option", option_index: 1 });
+    expect(codePick(rest(plan))).toEqual({ action: "choose_rest_option", option_index: 1 });
+    const text = JSON.stringify(rest(plan));
+    expect(text).toMatch(/fits DeepSeek's hp_policy preserve: HP 63% is below the 80% target/);
+    expect(text).toMatch(/departs from DeepSeek's hp_policy preserve/);
   });
 
-  it("rejects a change that points the other way from its trigger", () => {
+  it("keeps a change that points the other way from its trigger, logged", () => {
     const plan = parseRunPlan({ hp_policy: "push", changes: [{ field: "hp_policy", trigger: "hp_below_target" }] }, later(), testKnowledge, "hp_drop", previous());
-    expect(plan.hpPolicy).toBe("balanced");
-    expect(plan.validator[0]).toMatch(/trigger hp_below_target points the other way/);
+    expect(plan.hpPolicy).toBe("push");
+    expect(plan.disagreements?.[0]).toMatch(/trigger hp_below_target points the other way/);
   });
 
-  it("rejects a flip-flop: undoing a change of the last 3 floors with the same trigger", () => {
+  it("logs a flip-flop: undoing a change of the last 3 floors with the same trigger", () => {
     const changed = parseRunPlan(
       { reserve: ["block"], changes: [{ field: "reserve", trigger: "potion_lost_or_gained", fact: "Fire Potion used" }] },
       later(),
@@ -152,8 +160,8 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
     // F12: a Block Potion bought, and DeepSeek drops the reserve again for the same reason.
     const block = { ...(runPayload()["potions"] as Raw[])[0]!, potion_id: "BLOCK_POTION", name: "Block Potion" };
     const flip = parseRunPlan({ reserve: [], changes: [{ field: "reserve", trigger: "potion_lost_or_gained" }] }, later({ floor: 12, potions: [block] }), testKnowledge, "review", changed);
-    expect(flip.reserve).toEqual(["block"]);
-    expect(flip.validator[0]).toMatch(/reverses the F11 change \(potion_lost_or_gained\) with the same trigger/);
+    expect(flip.reserve).toEqual([]);
+    expect(flip.disagreements?.[0]).toMatch(/reverses the F11 change \(potion_lost_or_gained\) with the same trigger/);
     // A new, supported reason may undo it: HP back from 38% to 90%.
     const back = parseRunPlan({ hp_policy: "balanced", changes: [{ field: "hp_policy", trigger: "hp_recovered" }] }, later({ floor: 13, current_hp: 72 }), testKnowledge, "review",
       parseRunPlan({ hp_policy: "preserve", changes: [{ field: "hp_policy", trigger: "hp_below_target" }] }, later(), testKnowledge, "hp_drop", previous()));
@@ -168,56 +176,39 @@ describe("re-plan continuity (changes need a trigger the facts show)", () => {
   });
 });
 
-describe("hp_policy, route_risk and avoid carried out", () => {
-  it("route_risk avoid_elites: an Elite next node is not offered while another node is", () => {
+describe("hp_policy, route_risk and avoid are facts on the options, never filters", () => {
+  it("route_risk avoid_elites: an Elite next node is still offered, with the tempo note", () => {
     const options = (plan: RunPlan | null): string => {
-      // At full HP, above the optional-elite HP bar (EN55 F7).
       const raw = mapPayload();
       (raw["run"] as Record<string, unknown>)["current_hp"] = 80;
       const decision = planMap(env(raw, plan));
       return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision);
     };
     expect(options(null)).toMatch(/Elite/);
-    expect(options(runPlan({ routeRisk: "avoid_elites" }))).not.toMatch(/"node_type\\?":\\?"Elite/);
+    const avoided = options(runPlan({ routeRisk: "avoid_elites" }));
+    expect(avoided).toMatch(/"node_type\\?":\\?"Elite/);
+    expect(avoided).toMatch(/departs from DeepSeek's route_risk avoid_elites: an optional elite/);
   });
 
-  it("hp_policy preserve lowers elites and '?' at low HP on the map", async () => {
-    const { mapShift } = await import("../src/strategy/intent.js");
-    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Elite", 0.95)).toBe(-3);
-    // By the room's expected HP cost x 10 (act 2 by default; route-cost.ts roomHpCost) (NJSZ F29).
-    const { roomHpCost } = await import("../src/strategy/route-cost.js");
-    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Unknown", 0.5)).toBeCloseTo(-10 * roomHpCost("Unknown", 2), 2);
-    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "Monster", 0.5)).toBeCloseTo(-10 * roomHpCost("Monster", 2), 2);
-    expect(mapShift(runPlan({ hpPolicy: "preserve" }), "RestSite", 0.6)).toBe(1.5);
-    expect(mapShift(runPlan(), "Elite", 0.95)).toBe(0);
-  });
-
-  it("an avoided card or role is not offered as a reward", () => {
+  it("an avoided card or role is offered as a reward, with DeepSeek's avoid as a fact", () => {
     const shown = (plan: RunPlan | null): string => JSON.stringify(planReward(env(rewardCardPayload(), plan)));
     expect(shown(null)).toMatch(/Pommel Strike/);
-    expect(shown(runPlan({ want: [], avoid: ["POMMEL_STRIKE"] }))).not.toMatch(/Pommel Strike/);
-    expect(shown(runPlan({ want: [], avoidRoles: ["strength"] }))).not.toMatch(/Inflame \(/);
+    expect(shown(runPlan({ want: [], avoid: ["POMMEL_STRIKE"] }))).toMatch(/DeepSeek plan lists this card under avoid[^}]*Pommel Strike/);
+    expect(shown(runPlan({ want: [], avoidRoles: ["strength"] }))).toMatch(/DeepSeek plan lists strength cards under avoid/);
   });
 
-  it("hp_policy preserve and preserve_hp change the solver's pick from damage to block", () => {
+  it("the solver's reference rank does not move with the plan: balanced weights", () => {
     const base = (index: number, cardId: string, over: Partial<CardModel>): CardModel => ({
       index, key: `c${index}`, cardId, name: cardId, type: "Attack", upgraded: false, cost: 1, xCost: false, playable: true, target: "single", validTargets: [0],
       damage: null, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0,
       draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...over,
     });
-    const pick = (scale?: { hp: number; damage: number; lasting: number }) =>
-      solveTurn({
-        hand: [base(0, "STRIKE", { damage: 12 }), base(1, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 })],
-        player: { hp: 55, maxHp: 80, block: 0, energy: 1, weak: false, vulnerable: false, intangible: false },
-        enemies: [{ index: 0, name: "Worm", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 8, hits: 1 }] }],
-        fightKind: "monster",
-        ...(scale ? { intentScale: scale } : {}),
-      }).plans[0]!.steps.map((step) => step.cardId).join(",");
-    expect(pick()).toBe("STRIKE");
-    expect(pick(solverScale(null, "preserve", 55 / 80))).toBe("DEFEND");
-    expect(pick(solverScale("preserve_hp", "balanced", 55 / 80))).toBe("DEFEND");
-    expect(pick(solverScale("kill_fast", "balanced", 55 / 80))).toBe("STRIKE");
-    // push is off below 50% HP (its safety limit).
-    expect(solverScale(null, "push", 0.4)).toEqual({ hp: 1, damage: 1, lasting: 1 });
+    const pick = solveTurn({
+      hand: [base(0, "STRIKE", { damage: 12 }), base(1, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 })],
+      player: { hp: 55, maxHp: 80, block: 0, energy: 1, weak: false, vulnerable: false, intangible: false },
+      enemies: [{ index: 0, name: "Worm", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 8, hits: 1 }] }],
+      fightKind: "monster",
+    }).plans[0]!.steps.map((step) => step.cardId).join(",");
+    expect(pick).toBe("STRIKE");
   });
 });

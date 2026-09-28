@@ -13,19 +13,16 @@ import { eventHpCost, eventOptionScore, planEvent, reservedPotions } from "../sr
 import { planMap } from "../src/screens/map.js";
 import { planReward } from "../src/screens/reward.js";
 import { actEliteNeed } from "../src/knowledge/dossiers.js";
-import { mapFit, mapShift, routeRiskAt, routeRiskFilter } from "../src/strategy/intent.js";
+import { mapFit, routeRiskAt } from "../src/strategy/intent.js";
 import { modelPotion, pileCardPick } from "../src/strategy/card-model.js";
-import { LOW_HP_BLOCK_BONUS, MUST_HAVE_BONUS, mustHaveBonus } from "../src/strategy/run-plan.js";
+import { mustHaveFact } from "../src/strategy/run-plan.js";
 import { eliteCostFactor, fightHpCost, fightSurvival, roomHpCost } from "../src/strategy/route-cost.js";
-import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge, referencePick } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
-/** Code's pick on a logged map (the recorded run plan in force). */
-const pick = (name: string): unknown => {
-  const decision = planMap(loggedEnv(logged(name)));
-  return decision?.kind === "act" ? decision.intent : decision?.kind;
-};
+/** Code's reference pick on a logged map (the recorded run plan in force); Jev decides. */
+const pick = (name: string): unknown => referencePick(planMap(loggedEnv(logged(name)))).intent;
 /** Every option with its summary, with no code margin (the "card" planner asks Jev every time). */
 function options(name: string, edit: (fx: ReturnType<typeof logged>) => void = () => {}): Raw[] {
   const fx = logged(name);
@@ -54,11 +51,16 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
     expect(pick("pwsd-map-f6")).toEqual({ action: "choose_map_node", option_index: 1 });
   });
 
-  it("K8TC F3: (3,5), not the line into the forced F8 Bygone Effigy (logged: Jev took (3,4) at 0.89, 80 -> 34 there)", () => {
-    expect(pick("k8tc-map-f3")).toEqual({ action: "choose_map_node", option_index: 1 });
-    // At the rooms' median costs (Z49J/77QX) the Effigy is reached at ~86%, above the entry line: the
-    // label is the route-value cost, still a cost.
-    expect(String(at(options("k8tc-map-f3"), "row 3, column 4")["intent_fit"])).toMatch(/^costs \d/);
+  it("K8TC F3: Jev sees (3,4) leads into the forced F8 Bygone Effigy and (3,5) does not (logged: Jev took (3,4) at 0.89, 80 -> 34 there)", () => {
+    // Without the plan's weights the two hallways are a near tie in route value; the facts tell them apart:
+    // (3,4) meets the forced F8 Bygone Effigy on every path, (3,5) routes around every elite.
+    const all = options("k8tc-map-f3");
+    const left = at(all, "row 3, column 4");
+    const right = at(all, "row 3, column 5");
+    expect(Math.abs(Number(left["route_value"]) - Number(right["route_value"]))).toBeLessThan(1);
+    expect(String(left["forced_elites"])).toMatch(/every path to the boss meets F8/);
+    expect(String(left["next_forced_elite"])).toMatch(/^arrives at the F8 elite at ~8\d% HP/);
+    expect(String(right["forced_elites"])).toMatch(/^none: every elite ahead can be routed around/);
   });
 });
 
@@ -71,13 +73,13 @@ describe("a forced elite on one option's branchless line is priced like the shar
     // Median room costs since Z49J/77QX: ~6x% (was ~42% at the p75 of every room), under 85% - 15%.
     const shop = at(options("kgr6-map-f19"), "row 2, column 6");
     expect(String(shop["next_forced_elite"])).toMatch(/^arrives at the F28 elite at ~[4-6]\d% HP/);
-    expect(String(shop["intent_fit"])).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
+    expect(String(shop["tempo"])).toMatch(/^departs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~[4-6]\d%/);
   });
 
   it("the label check covers code's best-scored route too", () => {
     const plan = logged("kgr6-map-f19").runPlan!;
     const arrival = { eliteHp: 0.42, eliteFloor: 28, eliteCost: fightHpCost("Elite", 2), eliteRest: "every" as const, bossHp: 0.5, bossFloor: 33, best: { eliteHp: 1, bossHp: 0.9 } };
-    expect(mapFit(plan, "Shop", 0.74, { value: 6.5, best: 6.5 }, 14, arrival, 2)).toMatch(/^costs entry_hp 85%: arrives at the F28 elite at ~42% .*code's best route by route value/);
+    expect(mapFit(plan, "Shop", 0.74, { optionalElite: false, eliteOffered: false, arrival })?.tempo).toMatch(/^departs from DeepSeek's entry_hp 85%: arrives at the F28 elite at ~42%/);
   });
 });
 
@@ -94,29 +96,26 @@ describe("an optional elite option is not a forced elite (EGX7 F27, PWSD F10)", 
   }
 });
 
-describe("optional elites are avoided while the deck is under the act's lowest elite need (EGX7 F27)", () => {
+describe("an optional elite under the act's lowest elite need carries that fact; it is never filtered (EGX7 F27)", () => {
   it("EGX7 F27 at 75/87, deck ~25/turn vs act-2 elites 30+: the Monster (10,3), not the Entomancer (logged: Elite 9.6 vs Monster 8.3, Jev 0.09 took it, 75 -> 32)", () => {
-    expect(pick("egx7-map-f27")).toEqual({ action: "choose_map_node", option_index: 1 });
-    // The run plan's route_risk had lapsed (low-HP origin, 86% >= 85%): the deck decides, not the provenance.
+    const elite = at(options("egx7-map-f27"), "row 10, column 2");
+    expect(String(elite["elite_deck_damage"])).toMatch(/^deck ~\d+ damage a turn vs this act's elites' ~\d+\+/);
+    expect(String(elite["elite_hp"])).toMatch(/^HP 86% without heal potions; an elite this act costs ~\d+% \(p75\), and an optional elite usually wants ~\d+%\+/);
+    // The run plan's route_risk had lapsed (low-HP origin, 86% >= 85%): the deck's facts are what Jev weighs.
     const plan = logged("egx7-map-f27").runPlan!;
     expect(routeRiskAt(plan, 75 / 87)).toBe("normal");
   });
 
-  it("PWSD F10 at 70/80, deck ~18/turn vs act-1 elites 20+: rests (logged: Elite 15.6 vs RestSite 7.4, 72 -> 23 at the F11 Bygone Effigy)", () => {
-    expect(pick("pwsd-map-f10")).toEqual({ action: "choose_map_node", option_index: 0 });
-  });
-
-  it("the gate's words and weight, with or without a run plan", () => {
-    const gate = { deck: 25, need: 30 };
-    expect(mapShift(null, "Elite", 0.9, 99, 2, gate)).toBe(-6);
-    expect(mapShift(null, "Monster", 0.9, 99, 2, gate)).toBe(0);
-    expect(mapFit(null, "Elite", 0.9, { value: 1, best: 1 }, 99, undefined, 2, gate)).toBe("deck ~25/turn under the act's elites (30+)");
-    expect(routeRiskFilter(null, [{ type: "Elite" }, { type: "Monster" }], 0.9, gate)).toEqual([{ type: "Monster" }]);
+  it("PWSD F10 at 70/80, deck ~18/turn vs act-1 elites 20+: the elite is offered with both facts (logged: Elite 15.6 vs RestSite 7.4, 72 -> 23 at the F11 Bygone Effigy)", () => {
+    const all = options("pwsd-map-f10");
+    const elite = all.find((option) => option["node_type"] === "Elite")!;
+    expect(String(elite["elite_deck_damage"])).toMatch(/^deck ~1\d damage a turn vs this act's elites' ~2\d\+/);
+    expect(String(elite["elite_hp"])).toMatch(/^HP 8\d% without heal potions/);
     expect(actEliteNeed(2)).toBeGreaterThan(25);
   });
 });
 
-describe("block rewards two short of the plan's block target below half HP (PWSD F20, K8TC F14)", () => {
+describe("block rewards short of DeepSeek's block target: a fact, not +21 (PWSD F20, K8TC F14)", () => {
   /** Code's value of each offered card on a logged card reward. */
   const values = (name: string): Record<string, number> => {
     const decision = planReward(loggedEnv(logged(name))) as Decision;
@@ -131,26 +130,30 @@ describe("block rewards two short of the plan's block target below half HP (PWSD
     return Object.fromEntries(Object.values(question.criteria).map((text) => JSON.parse(text!) as Raw).map((option) => [String(option["card"]), Number(option["code_value"])]));
   };
 
-  it("PWSD F20 at 25/80, block 1/3: Blood Wall above Battle Trance+ (logged: 72 halved vs 83)", () => {
+  /** The DeepSeek-plan fact on each offered card. */
+  const planFacts = (name: string): Record<string, string> => {
+    const decision = planReward(loggedEnv(logged(name))) as Decision;
+    if (decision.kind !== "ask") return {};
+    const question = decision.questions["pick"]!;
+    if (question.type !== "choice") throw new Error("not a choice");
+    return Object.fromEntries(Object.values(question.criteria).map((text) => JSON.parse(text!) as Raw).map((option) => [String(option["card"]), String(option["deepseek_plan"] ?? "")]));
+  };
+
+  it("PWSD F20 at 25/80, block 1/3: Blood Wall says it fills the block need, 1 of 3 (logged: 72 halved vs 83)", () => {
     const shown = values("pwsd-reward-f20");
-    expect(shown["血墙"]).toBeGreaterThan(shown["战斗专注+"]!);
+    expect(shown["血墙"]).toBeGreaterThan(0);
+    expect(shown["战斗专注+"]).toBeGreaterThan(0);
+    expect(planFacts("pwsd-reward-f20")["血墙"]).toMatch(/fills DeepSeek's need block \(deck has \d of target 3\)/);
   });
 
-  it("K8TC F14 at 38/80, block 1/3: True Grit above Uppercut (logged: 72 halved vs 83)", () => {
-    const shown = values("k8tc-reward-f14");
-    expect(shown["坚毅"]).toBeGreaterThan(shown["上勾拳"]!);
+  it("K8TC F14 at 38/80, block 1/3: True Grit says it fills the block need (logged: 72 halved vs 83)", () => {
+    expect(planFacts("k8tc-reward-f14")["坚毅"]).toMatch(/fills DeepSeek's need block/);
   });
 
-  it("the rule: +21 two short below half HP; the boss-gap halving only once the target is met", () => {
+  it("the fact names the role, the count and the target", () => {
     const plan = { needs: ["block"], blockTarget: 3 } as never;
-    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR"], 13, 0.31).bonus).toBe(LOW_HP_BLOCK_BONUS);
-    expect(LOW_HP_BLOCK_BONUS).toBe(MUST_HAVE_BONUS * 1.5);
-    // Above half HP, short of the target: the full bonus, not halved.
-    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR"], 13, 0.8).bonus).toBe(MUST_HAVE_BONUS);
-    // Target met: halved by the gap as before (UP1C F6).
-    expect(mustHaveBonus(plan, "BLOOD_WALL", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT"], 13, 0.31).bonus).toBe(2);
-    // EGX7 F23 (block 4/5): one short, no low-HP bonus.
-    expect(mustHaveBonus({ needs: ["block"], blockTarget: 5 } as never, "FLAME_BARRIER", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT", "BLOOD_WALL"], 13, 0.2).bonus).toBe(4);
+    expect(mustHaveFact(plan, "BLOOD_WALL", ["STONE_ARMOR"])).toBe("fills DeepSeek's need block (deck has 1 of target 3)");
+    expect(mustHaveFact({ needs: ["block"], blockTarget: 5 } as never, "FLAME_BARRIER", ["STONE_ARMOR", "SHRUG_IT_OFF", "TRUE_GRIT", "BLOOD_WALL"])).toBe("fills DeepSeek's need block (deck has 4 of target 5)");
   });
 });
 
@@ -160,10 +163,9 @@ describe("potions carried unmodelled to the death are lines now (PWSD, KGR6, EGX
     return JSON.stringify(decision?.kind === "ask" ? decision.questions : decision?.kind === "act" ? [decision.intent, decision.rationale] : null);
   };
 
-  it("K8TC F17 T5 (the Kin, 20/80): Snecko Oil is drunk in code's line (logged: 'its effect is in no line's numbers', carried to the death)", () => {
+  it("K8TC F17 T5 (the Kin, 20/80): Snecko Oil is drunk in code's reference line (logged: 'its effect is in no line's numbers', carried to the death)", () => {
     const decision = planCombatTurn(loggedEnv(logged("k8tc-f17-t5")));
-    expect(decision?.kind).toBe("act");
-    expect(decision?.kind === "act" ? decision.intent : null).toEqual({ action: "use_potion", option_index: 1 });
+    expect(referencePick(decision).intent).toEqual({ action: "use_potion", option_index: 1 });
   });
 
   it("KGR6 F23 T4 (14/80, two Chompers): Heart of Iron's Plating 7 is in the lines and saves HP (logged: Jev's rank 1 left 1 HP)", () => {
@@ -175,7 +177,7 @@ describe("potions carried unmodelled to the death are lines now (PWSD, KGR6, EGX
 
   it("EGX7 F31 T1 at 0 energy: the Power Potion line is kept and played (logged: dropped as idle, drunk a turn late)", () => {
     const decision = planCombatTurn(loggedEnv(logged("egx7-f31-t1-replan")));
-    expect(decision?.kind === "act" ? decision.intent : decision?.kind).toEqual({ action: "use_potion", option_index: 0 });
+    expect(referencePick(decision).intent).toEqual({ action: "use_potion", option_index: 0 });
   });
 
   it("Liquid Memories takes the discard pile's best card for this turn, free; Droplet the draw pile's, at its cost", () => {
@@ -205,7 +207,7 @@ describe("the event HP guard prices a reserved potion given away (KGR6 F27, Ston
   it("no longer leaves only 'lose Heart of Iron' (logged: event/only, the -6 HP push removed before the forced F28 elite)", () => {
     const decision = planEvent(loggedEnv(fx())) as Decision;
     expect(decision.kind === "act" ? decision.intent : null).not.toEqual({ action: "choose_event_option", option_index: 0 });
-    expect(JSON.stringify(decision.kind === "ask" ? decision.questions : decision)).toMatch(/spends reserved HEART_OF_IRON/);
+    expect(JSON.stringify(decision.kind === "ask" ? decision.questions : decision)).toMatch(/spends HEART_OF_IRON, which DeepSeek holds for the boss/);
   });
 
   it("code's score takes the push (-6 HP, keeps the block potion) over +10 max HP for it", () => {

@@ -69,24 +69,21 @@ describe("the measured damage rate leaves out the idle turn that woke the boss, 
   });
 });
 
-describe("a line another shown line beats on HP and damage is never labelled code's best (PCGH F23 T4)", () => {
-  it("the logged kill_fast board: Bash+, Strike (-32, 19) costs; Bash+, Headbutt (-13, 21) is the reference", () => {
+describe("code's reference line is never one another shown line beats on HP and damage (PCGH F23 T4)", () => {
+  it("the logged kill_fast board: Bash+, Strike (-32, 19) is not the reference; Bash+, Headbutt (-13, 21) is", () => {
     const decision = planCombatTurn(loggedEnv(logged("pcgh-f23-t4")));
     expect(decision?.kind).toBe("ask");
     const options = Object.values((decision as AskDecision).questions)
       .flatMap((question) => Object.entries(question.criteria ?? {}))
       .filter(([key]) => /^plan\d+$/.test(key))
-      .map(([, value]) => JSON.parse(String(value)) as { hp_lost: number; damage_dealt: number; intent_fit?: string });
+      .map(([, value]) => JSON.parse(String(value)) as { hp_lost: number; damage_dealt: number; reference?: string });
     expect(options.length).toBeGreaterThan(1);
-    for (const line of options) {
-      const beaten = options.some(
-        (other) => other !== line && other.hp_lost <= line.hp_lost && other.damage_dealt >= line.damage_dealt && (other.hp_lost < line.hp_lost || other.damage_dealt > line.damage_dealt) && !/lasting|sets up/.test(JSON.stringify(line)),
-      );
-      if (beaten) expect(line.intent_fit).not.toMatch(/code's best line|fits/);
-    }
-    const best = options.filter((line) => /code's best line under/.test(String(line.intent_fit)));
+    const best = options.filter((line) => /^code's reference line/.test(String(line.reference)));
     expect(best).toHaveLength(1);
-    expect(best[0]!.hp_lost).toBe(Math.min(...options.map((line) => line.hp_lost)));
+    const beaten = options.some(
+      (other) => other !== best[0] && other.hp_lost <= best[0]!.hp_lost && other.damage_dealt >= best[0]!.damage_dealt && (other.hp_lost < best[0]!.hp_lost || other.damage_dealt > best[0]!.damage_dealt),
+    );
+    expect(beaten).toBe(false);
   });
 });
 
@@ -108,7 +105,7 @@ describe("a Jev line cut short by a draw is continued while code still ranks it 
     const second = planCombatTurn(env2);
     expect(second?.kind).toBe("act");
     expect(second?.kind === "act" ? second.label : "").toBe("combat/plan-continue");
-    expect(second?.kind === "act" ? second.rationale : "").toMatch(/Jev-chosen plan after the draw/);
+    expect(second?.kind === "act" ? second.rationale : "").toMatch(/Jev-chosen plan after the draw \(its .* still playable, undominated/);
     commit = env2.screenMemory.drawCommit;
     expect(commit?.steps.map((step) => step.cardId)).toEqual(["TRUE_GRIT"]);
     // Drew Uppercut with 1 energy left: logged re-ask, Jev 0.47 for Breakthrough (-17). Now True Grit.
@@ -117,10 +114,11 @@ describe("a Jev line cut short by a draw is continued while code still ranks it 
     expect(third?.kind === "act" ? third.rationale : "").toMatch(/Jev-chosen plan after the draw.*: 坚毅/);
   });
 
-  it("a remaining line code no longer ranks top 2 is asked again", () => {
+  it("a remaining line no surviving line plays is asked again", () => {
     const fx = logged("fey6-f6-t1-reask2");
     const target = Number((((fx.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!)["index"]);
-    const strike = { cardIndex: 1, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target, targetName: null };
+    // A Strike on an enemy index no longer on the board: no line plays it.
+    const strike = { cardIndex: 1, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target: target + 7, targetName: null };
     const base = loggedEnv(fx);
     const env = loggedEnv(fx, { screenMemory: { ...base.screenMemory, drawCommit: { ...firstAsk()!, steps: [strike] } } });
     expect(planCombatTurn(env)?.kind).toBe("ask");
@@ -128,20 +126,21 @@ describe("a Jev line cut short by a draw is continued while code still ranks it 
   });
 });
 
-describe("map survival does not route through an optional elite the plan forbids (PCGH F25)", () => {
+describe("map survival is projected on the safest path; avoid_elites is a tempo note (PCGH F25)", () => {
   const optionsOf = () => {
     const decision = planDecision(loggedEnv(logged("pcgh-map-f25"))).decision;
     expect(decision?.kind).toBe("ask");
     const criteria = Object.values((decision as AskDecision).questions)[0]!.criteria ?? {};
     return Object.fromEntries(Object.entries(criteria).map(([key, value]) => [key, JSON.parse(String(value)) as Record<string, string>]));
   };
-  it("(8,2)'s survival follows the (10,2) rest path avoid_elites takes, not the F29 rest behind the (10,3) elite", () => {
+  it("(8,2) carries its survival and arrival facts; the plan's avoid_elites moves no route value", () => {
     const fx = logged("pcgh-map-f25");
     expect(fx.runPlan?.routeRisk).toBe("avoid_elites");
     // Logged: code picked (8,2) labelled "alive through F28 at the F29 rest ~53%".
     const options = optionsOf();
     const left = Object.values(options).find((option) => option["position"] === "row 8, column 2")!;
-    expect(left["route_survival"]).not.toMatch(/F29 rest/);
+    expect(left["route_survival"]).toMatch(/^alive through F\d+ at the F\d+ (rest|boss) ~\d+% of the time/);
+    expect(left["why"]).toBeTruthy();
   });
 });
 

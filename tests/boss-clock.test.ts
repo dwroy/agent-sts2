@@ -122,9 +122,9 @@ describe("relic damage in the deck estimate (EJXC F33: clock 23/turn, dealt 44 w
   });
 });
 
-describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)", () => {
-  it("from a gap of 8 a turn damage gets gap/2 and a must-have block card half its bonus", async () => {
-    const { mustHaveBonus } = await import("../src/strategy/run-plan.js");
+describe("damage gap bonus, and DeepSeek's needs as a fact (UP1C F6: Taunt +14 over Anger +4; GZ24)", () => {
+  it("from a gap of 8 a turn damage gets gap/2; a needed role is a fact, not a bonus", async () => {
+    const { mustHaveFact } = await import("../src/strategy/run-plan.js");
     const gap = (n: number) => ({ boss: "WATERFALL_GIANT", need: 25, deck: 25 - n, gap: n });
     // Below 8: the old 0.4 slope.
     expect(gapCardBonus(gap(7), "BLUDGEON").bonus).toBe(3);
@@ -132,9 +132,10 @@ describe("damage gap vs must-have block (UP1C F6: Taunt +14 over Anger +4; GZ24)
     expect(gapCardBonus(gap(9), "INFLAME").bonus).toBe(7);
     expect(gapCardBonus(gap(40), "INFLAME").bonus).toBe(GAP_BONUS_BIG_MAX);
     const plan = { needs: ["block"] } as never;
-    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 0).bonus).toBe(14);
-    expect(mustHaveBonus(plan, "TAUNT", ["STRIKE_R"], 9).bonus).toBe(7);
-    expect(mustHaveBonus({ needs: ["strength"] } as never, "INFLAME", ["STRIKE_R"], 9).bonus).toBe(14);
+    expect(mustHaveFact(plan, "TAUNT", ["STRIKE_R"])).toBe("fills DeepSeek's need block (deck has 0)");
+    expect(mustHaveFact({ needs: ["block"], blockTarget: 4 } as never, "TAUNT", ["STRIKE_R", "SHRUG_IT_OFF"])).toBe("fills DeepSeek's need block (deck has 1 of target 4)");
+    expect(mustHaveFact({ needs: ["strength"] } as never, "INFLAME", ["STRIKE_R"])).toBe("fills DeepSeek's need strength (deck has 0)");
+    expect(mustHaveFact({ needs: ["strength"] } as never, "TAUNT", ["STRIKE_R"])).toBeNull();
   });
 });
 

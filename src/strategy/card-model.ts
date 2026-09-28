@@ -73,7 +73,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "upgrade_hand" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -502,6 +502,9 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // F33 T5 and EN55 F8 T9: carried unmodelled to the death, each time a draw of the pile's block cards
   // would likely have lived.
   GAMBLERS_BREW: { target: "self", special: "gamble" },
+  // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 the hand exhausted, then a new hand of the pile's expected
+  // cards (turn-solver "glowwater"). Unmodelled it was a "drink first" option with no numbers.
+  GLOWWATER_POTION: { target: "self", special: "glowwater" },
   // Regen Potion: 「获得{RegenPower}层再生」, REGEN_POWER 5 on the drink (states.jsonl PKB0 F17 T8); Regen heals
   // its amount at the end of our turn, before the enemy attacks, then drops by 1 (5+4+3+2+1 = 15 over five
   // turns). This turn's 5 is in the line's HP; the later heals are lasting value (turn-solver
@@ -776,11 +779,11 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
   // Distilled Chaos without a known draw pile: nothing to price its cards by.
-  if (effect.special === "chaos" && !ctx?.expectedDraw) return null;
+  if ((effect.special === "chaos" || effect.special === "glowwater") && !ctx?.expectedDraw) return null;
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
-  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos"
+  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
     ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true, pileSource: { cardId: pileCard.cardId, upgraded: pileCard.upgraded, name: pileCard.name } }

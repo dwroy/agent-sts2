@@ -17,7 +17,7 @@ import { averagePowerStrength, damageGap, expectedPlayTurn } from "../src/strate
 import { isModelledPotion, modelPotion, upgradeCard, upgradeGain } from "../src/strategy/card-model.js";
 import { cardRoles, damageRole } from "../src/strategy/card-value.js";
 import { fightHpCost } from "../src/strategy/route-cost.js";
-import { combatFit, potionOptionFit } from "../src/strategy/intent.js";
+import { potionOptionFit } from "../src/strategy/intent.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 describe("boss clock: a power counts from its expected play turn (M9PL F32)", () => {
@@ -131,7 +131,7 @@ describe("card potions are lines the solver ranks (X8R8 F17 T8, M9PL F33 T3)", (
 
   it("M9PL F33 T3: the Skill Potion is on labelled lines, not a bare pre-step", () => {
     const { act, options } = linesOf(planCombatTurn(loggedEnv(logged("m9pl-f33-t3"))));
-    const drinking = act ? [act] : Object.values(options).filter((option) => String(option["plays"]).includes("技能药水")).map((option) => String(option["intent_fit"]));
+    const drinking = act ? [act] : Object.values(options).filter((option) => String(option["plays"]).includes("技能药水")).map((option) => String(option["potion_facts"]));
     expect(drinking.length).toBeGreaterThan(0);
     for (const label of drinking) expect(label).not.toBe("undefined");
   });
@@ -159,13 +159,13 @@ describe("Blessing of the Forge is priced on the hand it upgrades (VUV4 F17 T4, 
       expect(Number(/dmg (\d+)/.exec(act)?.[1])).toBeGreaterThan(18);
     } else {
       const forge = Object.values(options).find((option) => String(option["plays"]).includes("熔炉的祝福"));
-      expect(String(forge?.["intent_fit"])).toMatch(/^fits|^costs/);
+      expect(String(forge?.["reference"])).toMatch(/^code('s reference line| rank)/);
     }
   });
 });
 
 describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: bare 'drink first' options)", () => {
-  it("the X8R8 T8 board with an unmodelled potion: its option carries intent_fit", () => {
+  it("the X8R8 T8 board with an unmodelled potion: its option carries potion_facts", () => {
     const fx = logged("x8r8-f17-t8");
     const potions = ((fx.state["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[]);
     // Beetle Juice is not simulated (Gambler's Brew is since 77UJ/EN55, Regen since PKB0).
@@ -173,34 +173,21 @@ describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: b
     const { options } = linesOf(planCombatTurn(loggedEnv(fx)));
     const drink = Object.entries(options).find(([key]) => /^p\d/.test(key));
     expect(drink).toBeDefined();
-    expect(String(drink![1]["intent_fit"])).toMatch(/in no line's numbers/);
+    expect(String(drink![1]["potion_facts"])).toMatch(/in no line's numbers/);
   });
 
-  it("the label says what the potion is for under the intents", () => {
-    const base = { objective: null, bossFight: true, bossClock: { need: 32, deck: 27 }, cheapestLoss: 0, hp: 40, useCost: 4 } as const;
-    expect(potionOptionFit({ ...base, role: "damage" })).toMatch(/^fits the boss race/);
-    expect(potionOptionFit({ ...base, role: "block", cheapestLoss: 15 })).toMatch(/^fits hp/);
-    expect(potionOptionFit({ ...base, role: "block" })).toMatch(/^neutral/);
-    expect(potionOptionFit({ ...base, role: "weak", bossFight: false, bossClock: null })).toMatch(/^costs the potion/);
+  it("the facts say what the potion is, what the turn costs, the boss clock, and DeepSeek's hold", () => {
+    const base = { bossFight: true, bossClock: { need: 32, deck: 27 }, cheapestLoss: 0, hp: 40 } as const;
+    expect(potionOptionFit({ ...base, role: "damage" })).toBe("a damage potion; its effect is in no line's numbers (drinking it first re-plans the turn); the cheapest line alone loses 0 of 40 HP; the act boss clock is behind (~32 a turn needed, deck ~27)");
+    expect(potionOptionFit({ ...base, role: "block", cheapestLoss: 15 })).toMatch(/the cheapest line alone loses 15 of 40 HP/);
+    expect(potionOptionFit({ ...base, role: "weak", bossFight: false, bossClock: null, reserve: "the act boss fight then has one fewer weak potion" })).toMatch(/one fewer weak potion$/);
   });
 });
 
-describe("only code's pick is labelled \"code's best line\" (M9PL F25 T2)", () => {
-  // Logged: four options all "fits kill_fast: code's best line", code's pick shown 4th; the other three
-  // scored above it (the pick beat the score-best line on every outcome), so scoreGap clamped to 0.
-  const field = { minLoss: 14, maxDamage: 52, maxSetup: 1, slack: 5, best: { hpLoss: 14, damage: 52, setup: 1 } };
-  const line = (over: Partial<Parameters<typeof combatFit>[2]>) => ({ hpLoss: 14, damage: 45, setup: 1, winsFight: false, focusDamage: null, ...over });
-  it("a line scoring above code's pick says so", () => {
-    expect(combatFit("kill_fast", "balanced", line({ codeTop: true, scoreGap: 0, damage: 52 }), field).label).toMatch(/code's best line/);
-    const above = combatFit("kill_fast", "balanced", line({ scoreGap: -3.2 }), field).label;
-    expect(above).not.toMatch(/code's best line under/);
-    expect(above).toMatch(/near code's best line \(score \+3\.2/);
-    expect(combatFit("kill_fast", "balanced", line({ scoreGap: 0 }), field).label).toMatch(/ties code's best line/);
-  });
-
-  it("the logged board: at most one option is code's best line", () => {
+describe("only code's pick is labelled \"code's reference line\" (M9PL F25 T2)", () => {
+  it("the logged board: exactly one option is code's reference line", () => {
     const { options } = linesOf(planCombatTurn(loggedEnv(logged("m9pl-f25-t2"))));
-    expect(Object.values(options).filter((option) => /code's best line under/.test(String(option["intent_fit"]))).length).toBeLessThanOrEqual(1);
+    expect(Object.values(options).filter((option) => /^code's reference line/.test(String(option["reference"]))).length).toBe(1);
   });
 });
 

@@ -18,15 +18,12 @@ import { bossClockJson, bossDamagePerTurn, bossNeed, cappedBossNeed, deckBlockPe
 import { runPlanTrigger } from "../src/strategy/run-plan.js";
 import { expectedDraw, modelPotion } from "../src/strategy/card-model.js";
 import { fightHpCost, MEDIAN_OF_P75, roomHpCost, roomProjectedCost } from "../src/strategy/route-cost.js";
-import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge, questionOf, referencePick } from "./logged.js";
 
 type Raw = Record<string, unknown>;
 
-/** Code's pick on a logged map (the recorded run plan in force). */
-const pick = (name: string): unknown => {
-  const decision = planMap(loggedEnv(logged(name)));
-  return decision?.kind === "act" ? decision.intent : decision?.kind;
-};
+/** Code's reference pick on a logged map (the recorded run plan in force); Jev decides. */
+const pick = (name: string): unknown => referencePick(planMap(loggedEnv(logged(name)))).intent;
 /** Every option with its summary, with no code margin (the "card" planner asks Jev every time). */
 function options(name: string, edit: (fx: ReturnType<typeof logged>) => void = () => {}): Raw[] {
   const fx = logged(name);
@@ -138,17 +135,22 @@ describe("boss clock: multi-part bosses hit with their parts (Z49J F32 Kaiser Cr
 });
 
 describe("a rest site looks two nodes ahead for a forced elite, through a treasure room (77QX F9)", () => {
-  it("77QX F9 at 52/80: heals (logged: smithed at 65%, the F11 Terror Eel behind a treasure room took 52 -> 17)", () => {
+  it("77QX F9 at 52/80: code's reference heals and the heal says the forced elite is next; Jev decides (logged: smithed at 65%, the F11 Terror Eel behind a treasure room took 52 -> 17)", () => {
     const env = loggedEnv(logged("77qx-rest-f9"));
     rememberMap(env.screenMemory, parseGameState(logged("77qx-map-f8").state));
     const decision = planRest(env)!;
-    expect(decision.kind).toBe("act");
-    if (decision.kind === "act") expect(decision.rationale).toMatch(/^code: \S+ \(HEAL\)/);
+    expect(decision.kind).toBe("ask");
+    const { options } = questionOf(decision);
+    const heal = Object.values(options).find((option) => option["kind"] === "HEAL")!;
+    expect(heal["code_rank"]).toBe(1);
+    expect(String(heal["heal_facts"])).toMatch(/boss or forced elite next/);
   });
 
   it("without the remembered map it cannot see the elite (the old next-node check alone)", () => {
     const decision = planRest(loggedEnv(logged("77qx-rest-f9")))!;
-    if (decision.kind === "act") expect(decision.rationale).toMatch(/^code: \S+ \(SMITH\)/);
+    const smith = Object.values(questionOf(decision).options).find((option) => option["kind"] === "SMITH")!;
+    expect(smith["code_rank"]).toBe(1);
+    expect(String(smith["upgrade_facts"])).toMatch(/^best upgrades: /);
   });
 });
 
@@ -162,15 +164,20 @@ describe("an optional elite needs HP, heal potions out, of twice the act's elite
     expect(optionalEliteBar(2)).toBeLessThan(1);
   });
 
-  it("at 41/80 (51%, 71% with the Blood Potion) the optional elites are not offered; at 64/80 they are", () => {
-    expect(types(41)).not.toContain("Elite");
+  it("at 41/80 (51%, 71% with the Blood Potion) the optional elites are offered with the HP facts; at 64/80 too", () => {
+    expect(types(41)).toContain("Elite");
     expect(types(41)).toContain("RestSite");
     expect(types(64)).toContain("Elite");
+    const elite = options("en55-map-f7", strongDeck(41)).find((option) => option["node_type"] === "Elite")!;
+    expect(String(elite["elite_hp"])).toMatch(/^HP 51% without heal potions \(71% counting them\); an elite this act costs ~\d+% \(p75\), and an optional elite usually wants ~7\d%\+/);
   });
 
-  it("the logged board takes the rest (logged: code took the Elite (7,6) 23.4 vs 5.06)", () => {
+  it("the logged board: the elite and the rest are both offered, each with its facts (logged: code took the Elite (7,6) 23.4 vs 5.06)", () => {
     const decision = planMap(loggedEnv(logged("en55-map-f7")));
-    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/^code: RestSite \(row 7, col 3\)/);
+    expect(decision?.kind).toBe("ask");
+    const all = Object.values(questionOf(decision).options);
+    expect(all.map((option) => option["node_type"])).toEqual(expect.arrayContaining(["Elite", "RestSite"]));
+    for (const option of all) expect(option["why"]).toBeTruthy();
   });
 
   it("80% -> 51% asks for a new run plan (0.2875 was under the 0.3 drop)", () => {
@@ -180,7 +187,7 @@ describe("an optional elite needs HP, heal potions out, of twice the act's elite
   });
 });
 
-describe("event options carry their HP effect, and under the entry target a pure heal is code's pick (77UJ F22)", () => {
+describe("event options carry their HP effect; under the entry target a pure heal is code's reference, Jev decides (77UJ F22)", () => {
   const criteria = (decision: Decision | null): Record<string, Raw> => {
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const question = Object.values((decision as AskDecision).questions)[0]!;
@@ -188,13 +195,12 @@ describe("event options carry their HP effect, and under the entry target a pure
     return Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value!) as Raw]));
   };
 
-  it("Spirit Grafter at 53/80 under entry_hp 85%: code takes Let It In, +25 HP (logged: Jev took Rejection, -10 HP, at 0.04)", () => {
+  it("Spirit Grafter at 53/80 under entry_hp 85%: Let It In (+25 HP) is code's reference and fits the entry target (logged: Jev took Rejection, -10 HP, at 0.04)", () => {
     const decision = planEvent(loggedEnv(logged("77uj-event-f22")))!;
-    expect(decision.kind).toBe("act");
-    if (decision.kind === "act") {
-      expect(decision.intent).toEqual({ action: "choose_event_option", option_index: 0 });
-      expect(decision.rationale).toMatch(/heals 25 with no other cost .*entry_hp 85%/);
-    }
+    expect(decision.kind).toBe("ask");
+    expect(referencePick(decision).intent).toEqual({ action: "choose_event_option", option_index: 0 });
+    expect(String(criteria(decision)["o0"]!["tempo"])).toMatch(/fits DeepSeek's entry_hp 85%: heals 25 with no HP cost/);
+    expect(String(criteria(decision)["o0"]!["why"])).toMatch(/\+25 HP heal/);
   });
 
   it("with no entry target Jev is asked, and each option says what it does to HP", () => {

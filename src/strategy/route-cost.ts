@@ -1,6 +1,6 @@
 /**
  * Expected HP cost of map rooms and the chance of coming out of one alive, shared by route scoring
- * (screens/map.ts), the run intents' route weights (intent.ts mapShift) and the event HP guard.
+ * (screens/map.ts) and the event HP cautions (screens/event.ts).
  */
 
 /**
