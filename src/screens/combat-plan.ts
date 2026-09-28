@@ -115,6 +115,9 @@ const OFFENSIVE_POTIONS = new Set([
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
 
 /** A line drinks a potion (modelled potions are steps "POTION:<potion id>:<slot>"). */
+/** Leaders the kill-order leader rule skips (evidence says kill the minion first). */
+export const LEADER_RULE_EXEMPT = new Set(["QUEEN"]);
+
 export function drinksPotion(plan: Plan): boolean {
   return plan.steps.some((step) => step.cardId.startsWith("POTION:"));
 }
@@ -193,7 +196,11 @@ export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[])
   // Priest). The rollout ranks kill orders by its HP left when no order ends the fight (rollout.ts rankOrders).
   const isMinions = (group: KillGroup) => group.indices.every((index) => enemies.find((enemy) => enemy.index === index)?.minion === true);
   const leaders = groups.filter((group) => !isMinions(group));
-  if (groups.length >= 2 && leaders.length === 1 && !leaders[0]!.illusion) leaders[0]!.leader = true;
+  // Not the Queen: her Torch Head Amalgam is a minion, but every logged Queen win killed the Amalgam first
+  // (experience queen-plan, n=8; A8 0/5 with the Amalgam alive past T5) — the rollout does not capture why,
+  // so her fight keeps ranking orders by value.
+  const exempt = (group: KillGroup) => LEADER_RULE_EXEMPT.has(group.id);
+  if (groups.length >= 2 && leaders.length === 1 && !leaders[0]!.illusion && !exempt(leaders[0]!)) leaders[0]!.leader = true;
   return groups;
 }
 

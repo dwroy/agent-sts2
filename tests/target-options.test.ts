@@ -143,9 +143,9 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
       const both = `${order} | ${others}`;
       expect(both, key).toContain(`${AMALGAM} > ${QUEEN}`);
       expect(both, key).toContain(`${QUEEN} > ${AMALGAM}`);
-      expect(others, key).toMatch(/further HP loss [\d.]+, over \d\/8, dead \d\/8, \S+ dead \d\/8, 女王 HP left at T5 ~\d+ \(dead \d\/8\)$/);
-      // The Queen is the leader (the Amalgam is her minion): her HP left is on every order.
-      expect(order, key).toMatch(/女王's death ends the fight \(the others are minions\): HP left at T5 ~\d+, dead \d\/8/);
+      expect(others, key).toMatch(/further HP loss [\d.]+, over \d\/8, dead \d\/8, \S+ dead \d\/8$/);
+      // The Queen is exempt from the leader rule (LEADER_RULE_EXEMPT: every logged win killed the Amalgam first).
+      expect(order, key).not.toMatch(/death ends the fight/);
       expect(String(f["rollout"]), key).toMatch(/^5-turn rollout \(8 samples\)/);
     }
     const bestKey = planKeys(criteria).find((key) => facts(criteria, key)["rollout_best"] === true)!;
