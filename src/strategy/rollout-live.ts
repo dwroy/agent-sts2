@@ -234,7 +234,9 @@ export type LiveRollout =
       best: Plan | null;
       meta: FightMeta;
       gate: Gate;
-      /** Similar states the gate needs before the history estimate is shown. */
+      /** This encounter's own decision points in the gates file (its `enc:` segment; 0 when absent). */
+      encounterN: number;
+      /** Similar states an encounter needs for its own gate (the gates' min_rows). */
       minRows: number;
       elapsedMs: number;
     };
@@ -296,6 +298,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       best,
       meta,
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
+      encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
       elapsedMs: elapsed(),
     };
@@ -321,11 +324,24 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   };
   const forecast = line.modelForecast.rollout;
   if (!forecast) facts["history_estimate"] = "unavailable (no fight-value model)";
-  else if (r.gate.n < r.minRows) facts["history_estimate"] = `few similar states (n=${r.gate.n})`;
   else {
-    facts["history_estimate"] = `further HP loss ${Math.round(forecast.hpLoss)}, win ${Math.round(forecast.winProb * 100)}% (similar states n=${r.gate.n}, typical error ±${HISTORY_MAE[r.meta.kind]} HP for ${r.meta.kind} fights)`;
+    // The encounter's own support, and the segment the estimate's gate actually comes from (never a
+    // backed-off segment's n presented as this encounter's).
+    const source = r.gate.segment === `enc:${r.meta.enc}` ? "" : `; estimate from ${segmentName(r.gate.segment)} n=${r.gate.n}`;
+    const few = r.encounterN < r.minRows ? "; few similar states for this encounter" : "";
+    facts["history_estimate"] = `further HP loss ${Math.round(forecast.hpLoss)}, win ${Math.round(forecast.winProb * 100)}% (this encounter n=${r.encounterN}${source}, typical error ±${HISTORY_MAE[r.meta.kind]}${few})`;
   }
   return facts;
+}
+
+/** A gate segment key in words: "ak:1|hallway" -> "act-1 hallway fights". */
+export function segmentName(segment: string): string {
+  const ak = /^ak:(\d+)\|(\w+)$/.exec(segment);
+  if (ak) return `act-${ak[1]} ${ak[2]} fights`;
+  const k = /^k:(\w+)$/.exec(segment);
+  if (k) return `${k[1]} fights`;
+  if (segment.startsWith("enc:")) return `encounter ${segment.slice(4)}`;
+  return segment === "global" ? "all fights" : segment;
 }
 
 /** The fact on a "drink first, then re-plan" option: its turn is unknown until the potion is drunk. */

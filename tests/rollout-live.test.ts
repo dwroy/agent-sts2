@@ -13,7 +13,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
+import { loadFightValueGates, type FightValueGates } from "../src/strategy/rollout.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -57,7 +58,7 @@ describe("rollout facts on Jev's combat question", () => {
       for (const key of keys) {
         const f = facts(criteria, key);
         expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\): expected further HP loss [\d.]+, fight over within 5 turns in \d\/8, expected turns to win ~[\d.]+$/);
-        expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(similar states n=\d+, typical error ±[\d.]+ HP for hallway fights\)$/);
+        expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }
       expect(keys.filter((key) => facts(criteria, key)["rollout_best"] === true)).toHaveLength(1);
@@ -129,6 +130,18 @@ describe("rollout facts on Jev's combat question", () => {
     expect(r.byPlan.get(r.best!)!.value).toBe(Math.max(...values));
     expect(r.byPlan.has(worst)).toBe(true);
     expect(rolloutFacts(worst, r)["rollout"]).toMatch(/^5-turn rollout/);
+    // The encounter's own n, and the backed-off segment named as the estimate's source.
+    const gates = loadFightValueGates()!;
+    const history = (g: FightValueGates) =>
+      String(rolloutFacts(worst, liveRollout({ state: env.state, knowledge: env.knowledge, memory: env.screenMemory, solver, plans, shown: [worst], piles: { draw: [strike(10), defend(11)], discard: [] }, gates: g }))["history_estimate"]);
+    const enc = env.screenMemory.rolloutEncounter!.enc;
+    const act = r.meta.act;
+    const few = { ...gates, segments: { ...gates.segments, [`enc:${enc}`]: { ...gates.segments[`ak:${act}|hallway`]!, level: "enc" as const, n_rows: 37, uses: `ak:${act}|hallway` } } };
+    expect(history(few)).toMatch(new RegExp(`\\(this encounter n=37; estimate from act-${act} hallway fights n=${gates.segments[`ak:${act}|hallway`]!.n_rows}, typical error ±5\\.5; few similar states for this encounter\\)$`));
+    const own = { ...gates, segments: { ...gates.segments, [`enc:${enc}`]: { ...gates.segments[`ak:${act}|hallway`]!, level: "enc" as const, n_rows: 300, uses: `enc:${enc}` } } };
+    expect(history(own)).toMatch(/\(this encounter n=300, typical error ±5\.5\)$/);
+    expect(segmentName("ak:1|hallway")).toBe("act-1 hallway fights");
+    expect(segmentName("k:boss")).toBe("boss fights");
     // No piles: skipped.
     const none = liveRollout({ state: env.state, knowledge: env.knowledge, memory: env.screenMemory, solver, plans, shown: [worst], piles: null });
     expect(none.available).toBe(false);
