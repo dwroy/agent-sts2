@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 3975 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T14:03:13.614Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1711}.
+DB: `src/knowledge/monster-db.json` from 3983 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T14:16:54.824Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1719}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -80,7 +80,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | PHROG_PARASITE | elite | 138 [135-141] (8) | **142** | 147.5 [145-150] (16) | 149 | 67 [66-68] | 24.6 (16) | - | 1 | 1 | PHROG_PARASITE (with spawned bodies) |
 | PUNCH_CONSTRUCT | hallway | 185 (1) | 185 | 200 (4) | **194** | 60 | 36.4 (4) | - | 2 | 2 | CUBEX_CONSTRUCT+CUBEX_CONSTRUCT+PUNCH_CONSTRUCT |
 | QUEEN | boss | 599 (2) | 599 | 630 (5) | **629** | 419 | - (0) | 69 | 10 | 5 | boss QUEEN |
-| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (14) | **79** | 80 | 16 (14) | **20** | 0 | 0 | SKULKING_COLONY |
+| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (15) | **79** | 80 | 16 (14) | **20** | 1 | 0 | SKULKING_COLONY |
 | SLIMED_BERSERKER | hallway | 261 (2) | 261 | 281 (1) | 281 | 281 | - (0) | 40 | 1 | 1 | SLIMED_BERSERKER |
 | SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 41.5 [41-42] (50) | **40** | 41.5 [41-42] | 13.8 (50) | - | 1 | 1 | SLUDGE_SPINNER |
 | SLUMBERING_BEETLE | hallway | 174 [172-176] (10) | 172 | 178.5 [176-182] (24) | 181 | 89 | 29.8 (21) | 30 | 10 | 7 | BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE |
