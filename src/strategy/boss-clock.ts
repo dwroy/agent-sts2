@@ -329,10 +329,11 @@ export function clockEntryHp(state: GameState): number {
  * The boss's need with its turns capped by the turns we can survive from the expected entry HP; the
  * damage a turn follows (HCBJ F16: gap 1 at 12 turns read "trade HP for damage"; at ~9 turns it is ~7).
  */
-export function cappedBossNeed(state: GameState, knowledge: Knowledge): (ReturnType<typeof bossNeed> & object) & { survivableTurns: number | null; entryHp: number } | null {
+export function cappedBossNeed(state: GameState, knowledge: Knowledge, hpNow: number | null = null): (ReturnType<typeof bossNeed> & object) & { survivableTurns: number | null; entryHp: number } | null {
   const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0);
   if (!need) return null;
-  const entryHp = clockEntryHp(state);
+  // In the boss fight itself: the HP we have now (the fight plan's clock, RUUB F33).
+  const entryHp = hpNow ?? clockEntryHp(state);
   const survivable = survivableBossTurns(need.id, entryHp, deckBlockPerTurn(state, knowledge));
   if (survivable === null || survivable >= need.turns) return { ...need, survivableTurns: survivable === null ? null : Math.round(survivable * 10) / 10, entryHp };
   const turns = Math.max(1, survivable);
@@ -448,9 +449,13 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
   return option === "SMITH" ? 2 : 0;
 }
 
-/** The run plan's view of the act boss and the deck's damage. */
-export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
-  const need = cappedBossNeed(state, knowledge);
+/**
+ * The run plan's view of the act boss and the deck's damage; with `hpNow`, the boss fight's own view at
+ * that HP (the fight plan's input: RUUB F33 was planned scale_then_kill from the dossier's full-HP
+ * "7-9 turns" while the run plan's clock said 50 HP lasts ~4.2; it lasted 4).
+ */
+export function bossClockJson(state: GameState, knowledge: Knowledge, hpNow: number | null = null): Record<string, JsonValue> | null {
+  const need = cappedBossNeed(state, knowledge, hpNow);
   if (!need) return null;
   const table = bossNeed(need.id, state.run?.ascension ?? 0)!;
   const deck = deckDamagePerTurn(state, knowledge);
@@ -462,6 +467,7 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     boss: need.id,
     boss_hp: need.hp,
     fight_turns: need.turns,
+    ...(need.survivableTurns !== null ? { survivable_turns: need.survivableTurns, survivable_note: `turns ${need.entryHp} HP lasts against the boss's average hit a turn (move model) less the deck's block a turn` } : {}),
     ...(need.turns < table.turns
       ? { turns_note: `${table.turns} turns in the table, capped at ${need.turns}: the turns ${need.entryHp} HP survives against the boss's hits less the deck's block` }
       : {}),

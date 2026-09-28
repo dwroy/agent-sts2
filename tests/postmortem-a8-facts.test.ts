@@ -12,7 +12,8 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { planShop } from "../src/screens/shop.js";
 import { planReward } from "../src/screens/reward.js";
-import { bossClockJson } from "../src/strategy/boss-clock.js";
+import { BOSS_NEEDS, bossClockJson } from "../src/strategy/boss-clock.js";
+import { fightPlanInput } from "../src/strategy/fight-plan.js";
 import { modelPotion } from "../src/strategy/card-model.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { logged, loggedEnv, loggedKnowledge, questionOf, referencePick } from "./logged.js";
@@ -169,5 +170,22 @@ describe("the clock's estimate_note names what this deck's estimate counted (62P
     expect(note).toMatch(/Rupture fed by/);
     expect(note).toMatch(/Toasty Mittens/);
     expect(note).toMatch(/Inferno x1/);
+  });
+});
+
+describe("the boss fight plan sees the clock at the HP we have (RUUB F33: scale_then_kill from the dossier's full-HP 7-9 turns; 50 HP lasted 4)", () => {
+  it("the logged F33 T1 board (50/80, Kaiser Crab): the fight plan input carries the turns 50 HP lasts, below the table's", () => {
+    const state = parseGameState(logged("ruub-f33-t1").state);
+    const clock = fightPlanInput(state, loggedKnowledge, "boss", {})["boss_clock"] as Record<string, unknown>;
+    expect(clock).toBeDefined();
+    expect(clock["boss"]).toBe("KAISER_CRAB");
+    const survivable = Number(clock["survivable_turns"]);
+    expect(survivable).toBeGreaterThan(0);
+    expect(survivable).toBeLessThan(BOSS_NEEDS["KAISER_CRAB"]!.turns);
+    expect(String(clock["survivable_note"])).toMatch(/^turns 50 HP lasts/);
+    // The damage a turn needed follows the capped turns.
+    expect(Number(clock["need_damage_per_turn"])).toBeGreaterThan(Math.round(428 / BOSS_NEEDS["KAISER_CRAB"]!.turns));
+    // Not in hallway fights.
+    expect(fightPlanInput(state, loggedKnowledge, "elite", {})["boss_clock"]).toBeUndefined();
   });
 });
