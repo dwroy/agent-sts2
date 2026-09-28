@@ -14,7 +14,8 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
+import { enemyTable, liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
+import { readFileSync } from "node:fs";
 import { loadFightValueGates, type FightValueGates } from "../src/strategy/rollout.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -257,4 +258,16 @@ describe("rollout facts on Jev's combat question", () => {
       }
     }
   }, 120_000);
+});
+
+describe("enemy tables", () => {
+  it("the Tunneler's Burrow is marked as gaining Burrowed (RWWG F20)", () => {
+    const knowledge = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+    const db = JSON.parse(readFileSync(join(knowledge, "monster-db.json"), "utf8")).monsters;
+    const mm = JSON.parse(readFileSync(join(knowledge, "move-model.json"), "utf8"));
+    const table = enemyTable("TUNNELER", 8, db, mm)!;
+    expect(table.moves["BURROW_MOVE"]).toMatchObject({ burrows: true });
+    expect(table.moves["BURROW_MOVE"]!.block).toBeGreaterThan(0);
+    expect(table.moves["BELOW_MOVE"]!.burrows).toBeUndefined();
+  });
 });

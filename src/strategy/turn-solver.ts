@@ -359,7 +359,8 @@ export interface Outcome {
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
   restocked: string[];
-  enemyHpAfter: { index: number; name: string; hp: number; vulnerable: number; weak: number }[];
+  /** `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). */
+  enemyHpAfter: { index: number; name: string; hp: number; vulnerable: number; weak: number; block?: number }[];
   incomingAfterBlock: number;
   energyLeft: number;
   vulnerableApplied: number;
@@ -1818,7 +1819,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       restocked: restocked.map((enemy) => enemy.name),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
-        .map((enemy) => ({ index: enemy.index, name: enemy.name, hp: Math.max(0, enemy.hp), vulnerable: enemy.vulnerable, weak: enemy.weak })),
+        .map((enemy) => ({ index: enemy.index, name: enemy.name, hp: Math.max(0, enemy.hp), vulnerable: enemy.vulnerable, weak: enemy.weak, block: Math.max(0, enemy.block) })),
       incomingAfterBlock,
       energyLeft: sim.energy,
       vulnerableApplied: sim.vulnerableApplied,

@@ -130,6 +130,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       hits,
       strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
       block: mode(entry.block_gained) ?? 0,
+      ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
