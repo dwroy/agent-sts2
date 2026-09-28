@@ -362,3 +362,49 @@ describe("rollout (offline)", () => {
     expect(importers("rollout-live")).toEqual(["src/screens/combat-plan.ts"]);
   });
 });
+
+describe("Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at eruption 51, dead on T15)", () => {
+  const giant = (hp: number, eruption: number): EnemySim => ({
+    index: 0, name: "Waterfall Giant", hp, maxHp: 240, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, eruption, attacks: [{ damage: 10, hits: 1 }],
+  });
+
+  it("the solver: a kill is not a win; the outcome carries the blast at the end of the next turn", () => {
+    const player: PlayerSim = { hp: 24, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false };
+    const result = solveTurn({ hand: [strike(0), strike(1), defend(2)], player, enemies: [giant(10, 51)], fightKind: "boss", turn: 14 });
+    const kill = result.plans.find((plan) => plan.outcome.kills.length > 0)!;
+    expect(kill).toBeDefined();
+    expect(kill.outcome.winsFight).toBe(false);
+    expect(kill.outcome.explodesNext).toBe(51);
+    // No Steam Eruption: a kill is a win as before.
+    const plain = solveTurn({ hand: [strike(0), strike(1), defend(2)], player, enemies: [giant(10, 0)], fightKind: "boss", turn: 14 });
+    expect(plain.plans[0]!.outcome.winsFight).toBe(true);
+    expect(plain.plans[0]!.outcome.explodesNext).toBeUndefined();
+  });
+
+  it("the rollout: the kill line lives only if next turn's hand blocks the blast; a small blast is a win next turn", () => {
+    const run = (hp: number, eruption: number, draw: CardModel[]) => {
+      const player: PlayerSim = { hp, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+      const hand = [strike(0), strike(1), defend(2)];
+      const solver: SolverInput = { hand, player, enemies: [giant(10, eruption)], fightKind: "boss", turn: 14 };
+      const plans = solveTurn(solver).plans;
+      const kill = plans.find((plan) => plan.outcome.kills.length > 0)!;
+      const result = rolloutDecision({
+        solver, plans, enemies: [{ index: 0, id: "WATERFALL_GIANT", move: "RAM", strength: 0, powers: { STEAM_ERUPTION_POWER: eruption } }],
+        tables: {}, piles: { draw, discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "WATERFALL_GIANT", t: 14 }, playerPowers: {}, potions: 0, mm: {},
+        model: null, gates: null, options: { budgetMs: 10_000, seed: 3, include: [kill] },
+      });
+      return result.lines.find((line) => line.plan === kill)!;
+    };
+    // 24 HP, a 51 blast, next hand all Strikes: dead in every sample (the old rollout: "win 100%").
+    const dead = run(24, 51, Array.from({ length: 10 }, (_, i) => strike(20 + i)));
+    expect(dead.wins).toBe(0);
+    expect(dead.deaths).toBe(dead.samples);
+    // A 20 blast at 24 HP: survived, the fight is over after the next turn.
+    const safe = run(24, 20, Array.from({ length: 10 }, (_, i) => strike(20 + i)));
+    expect(safe.deaths).toBe(0);
+    expect(safe.wins).toBe(safe.samples);
+    // 40 HP, 51 blast, next hand of Defends (3 energy: 15 block): 40 + 15 > 51, lived through.
+    const blocked = run(40, 51, Array.from({ length: 10 }, (_, i) => defend(20 + i)));
+    expect(blocked.deaths).toBe(0);
+  });
+});

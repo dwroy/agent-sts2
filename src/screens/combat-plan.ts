@@ -413,11 +413,17 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
+export function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
-    result: o.winsFight ? "wins the fight this turn" : o.dies ? "I DIE at the end of the turn" : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
+    result: o.winsFight
+      ? "wins the fight this turn"
+      : o.dies
+        ? "I DIE at the end of the turn"
+        : (o.explodesNext ?? 0) > 0
+          ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
+          : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
     hp_lost: o.hpLoss,
     damage_dealt: o.damageDealt,
   };
@@ -484,7 +490,11 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
     hp_after: o.hpAfter,
     hp_after_pct: ctx.maxHp > 0 ? Math.round((o.hpAfter / ctx.maxHp) * 100) : null,
     dmg: o.damageDealt,
-    lethal_now: o.winsFight ? "wins the fight" : keyKills.length > 0 ? `kills ${keyKills.join(", ")}` : "no",
+    lethal_now: o.winsFight
+      ? "wins the fight"
+      : keyKills.length > 0
+        ? `kills ${keyKills.join(", ")}${(o.explodesNext ?? 0) > 0 ? ` (explodes for ${o.explodesNext} at the end of my next turn)` : ""}`
+        : "no",
     enemy_threat_next: o.winsFight ? 0 : known ? Math.round(threat) : "unknown",
     setup_turn: ctx.noAttack && powers.length > 0,
     scaling_gained: scaling.length > 0 ? scaling.join("; ") : "none",

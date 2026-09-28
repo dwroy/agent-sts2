@@ -456,6 +456,8 @@ function shuffle<T>(items: T[], random: () => number): T[] {
 }
 
 const isPotion = (step: { cardId: string }): boolean => step.cardId.startsWith("POTION:");
+/** A Waterfall Giant husk's HP (the game shows 999,999,999). */
+const HUSK_HP = 999_999_999;
 
 /** Top k by score, then the most damage, the least HP lost and the most setup, without repeats. */
 export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { plan: Plan; tags: string[] }[] {
@@ -501,6 +503,12 @@ interface SimEnemy {
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
+  /**
+   * Waterfall Giant husk (killed with Steam Eruption stacks): the simulated turn at whose end it explodes
+   * for `blast` (through that turn's block), after which the fight is over if we live.
+   */
+  explodeAt?: number;
+  blast?: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -591,6 +599,8 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
         else delete powers[id];
       }
       const intent = e.base.attacks.reduce((s, a) => s + a.damage * a.hits, 0);
+      // A Giant husk is no HP to chew through, only its blast to survive (the terminal reads it so).
+      if (e.explodeAt !== undefined) return [e.index, e.id, 1, e.maxHp, 0, e.alive, false, e.blast ?? intent, e.move, powers] as SnapEnemy;
       return [e.index, e.id, e.hp, e.maxHp, e.block, e.alive && e.hp > 0, e.base.minion === true, intent, e.move, powers] as SnapEnemy;
     }),
   };
@@ -598,6 +608,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
 
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
 function applyPlan(
+  turn: number,
   plan: Plan,
   hand: CardModel[],
   handBase: (CardModel | null)[],
@@ -652,7 +663,15 @@ function applyPlan(
     e.weak = a.weak;
     if (hit) e.block = 0;
     if (e.hp <= 0) {
-      if ((e.base.stock ?? 0) > 0) {
+      if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
+        // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
+        e.hp = HUSK_HP;
+        e.maxHp = HUSK_HP;
+        e.blast = e.base.eruption ?? 0;
+        e.explodeAt = turn + 1;
+        e.move = "ABOUT_TO_BLOW";
+        e.base = { ...e.base, hp: HUSK_HP, maxHp: HUSK_HP, attacks: [] };
+      } else if ((e.base.stock ?? 0) > 0) {
         e.hp = e.maxHp;
         e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
       } else if (e.base.revives) {
@@ -680,14 +699,20 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
-  const won = o.winsFight || enemies.every((e) => !e.alive || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
+  const allDown = () => enemies.every((e) => !e.alive || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
+  let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   player.hp = o.hpAfter;
   player.block = player.keepsBlock ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
+  // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
+  if (!won && !died) {
+    for (const e of enemies) if (e.alive && e.explodeAt === turn) e.alive = false;
+    won = allDown();
+  }
   if (!won && !died) {
     for (const e of enemies) {
-      if (!e.alive) continue;
+      if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
       const m = e.move && table ? table.moves[e.move] : undefined;
       e.strength += m?.strength ?? 0;
@@ -764,7 +789,11 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
+    // A Giant husk already on the board: it explodes this turn when its intent shows the blast, else next turn.
+    const husk = e.maxHp >= HUSK_HP && (e.eruption ?? 0) > 0;
+    const shownBlast = e.attacks.reduce((sum, a) => sum + a.damage * a.hits, 0);
     return {
+      ...(husk ? { explodeAt: shownBlast > 0 ? 0 : 1, blast: shownBlast > 0 ? shownBlast : e.eruption ?? 0 } : {}),
       index: e.index,
       id: info?.id ?? e.name,
       move: info?.move ?? null,
@@ -784,7 +813,7 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
   // Turn 0: the candidate line as the solver scored it.
-  records.push(applyPlan(plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
@@ -808,7 +837,7 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
-        attacks: moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
     const pSim: PlayerSim = {
@@ -848,7 +877,7 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
     budget.policyNodes += solved.nodes;
     const best = solved.plans.find((p) => !p.steps.some(isPotion)) ?? solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(best, hand, handBase, player, enemies, piles, input, random, powers));
+    records.push(applyPlan(h, best, hand, handBase, player, enemies, piles, input, random, powers));
   }
   return records;
 }

@@ -336,8 +336,10 @@ export interface Step {
 }
 
 export interface Outcome {
-  /** Every enemy dead by the end of this turn. */
+  /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
   winsFight: boolean;
+  /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
+  explodesNext?: number;
   /** HP the player loses to the enemy turn (plus self-damage this turn). */
   hpLoss: number;
   hpAfter: number;
@@ -1323,6 +1325,8 @@ export const SANDPIT_TURN_DAMAGE = 20;
 export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
 export const BOMB_SURE = 0.8;
+/** Block a next-turn hand is expected to put up against the Waterfall Giant's explosion. */
+export const ERUPTION_NEXT_BLOCK = 12;
 /** Damage weight multiplier while racing the Waterfall Giant's eruption (raceEruption). */
 export const ERUPTION_RACE_DAMAGE = 1.5;
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
@@ -1430,7 +1434,13 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   const nextPhase = restocked.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
-  const winsFight = !nextPhase && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
+  // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
+  // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
+  // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
+  // not a win: the fight goes on until the explosion is survived.
+  const erupting = sim.enemies.filter((enemy) => !enemy.alive && (enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const explodesNext = erupting.reduce((sum, enemy) => sum + (enemy.eruption ?? 0), 0);
+  const winsFight = !nextPhase && erupting.length === 0 && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
@@ -1502,6 +1512,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const stunSaved = stunned.reduce((sum, enemy) => sum + (enemy.imbalanced ?? 0), 0);
   if (!dies) score += weights.hp * stunSaved;
   if (winsFight) score += 10_000;
+  // A Giant kill ends the fight once its explosion is survived: HP (plus block that stays) above the
+  // blast is a win next turn; within a hand's block of it (ERUPTION_NEXT_BLOCK) a likely one; below,
+  // the blast past HP and that block counts as HP lost.
+  if (explodesNext > 0 && !dies) {
+    const kept = input.player.keepsBlock ? Math.max(0, blockLeft - incomingRaw) : 0;
+    const margin = hpAfter + kept - explodesNext;
+    if (margin > 0) score += 10_000;
+    else if (margin + ERUPTION_NEXT_BLOCK > 0) score += 5_000;
+    else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
+  }
   score -= weights.hp * hpLoss;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
@@ -1544,7 +1564,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
-  const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
+  // A Giant killed this turn stops growing: its blast is the stacks it died with.
+  const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 || !enemy.alive ? 0 : 3)));
   // Racing a Giant that is too slow to kill (raceEruption): HP spent on damage is the way through.
   // Racing still keeps enough HP for the next hit before the explosion (J8E4 F17 T10: the last 25 of 28
   // HP spent without a kill, the Pressure Gun and explosion followed).
@@ -1727,6 +1748,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
+      ...(explodesNext > 0 ? { explodesNext } : {}),
     },
   };
 }
