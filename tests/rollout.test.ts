@@ -218,12 +218,13 @@ describe("rollout (offline)", () => {
       const solver: SolverInput = {
         ...input.solver,
         enemies: [
-          { ...input.solver.enemies[0]!, index: 0, name: "Obscura", hp: 90, maxHp: 90, attacks: [{ damage: 4, hits: 1 }] },
-          { ...input.solver.enemies[0]!, index: 1, name: "Parafright", hp: 6, maxHp: 21, attacks: [{ damage: 6, hits: 1 }], ...(illusion ? { illusion: true } : {}) },
+          { ...input.solver.enemies[0]!, index: 0, name: "Obscura", hp: 90, maxHp: 90, attacks: [] },
+          { ...input.solver.enemies[0]!, index: 1, name: "Parafright", hp: 1, maxHp: 21, attacks: [{ damage: 12, hits: 1 }], ...(illusion ? { illusion: true } : {}) },
         ],
       };
-      const table: EnemyTable = { moves: { HIT: { damage: 5, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
-      return rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [0, 1].map((index) => ({ index, id: index === 0 ? "OBSCURA" : "PARAFRIGHT", move: "HIT", strength: 0, powers: {} })), tables: { OBSCURA: table, PARAFRIGHT: table } });
+      const still: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+      const bite: EnemyTable = { moves: { HIT: { damage: 12, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+      return rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id: "OBSCURA", move: "WAIT", strength: 0, powers: {} }, { index: 1, id: "PARAFRIGHT", move: "HIT", strength: 0, powers: {} }], tables: { OBSCURA: still, PARAFRIGHT: bite } });
     };
     const mean = (r: ReturnType<typeof run>) => r.lines.reduce((a, l) => a + l.hpLoss, 0) / r.lines.length;
     expect(mean(run(true))).toBeGreaterThan(mean(run(false)));
