@@ -213,3 +213,21 @@ describe("start-of-turn AoE kills are named by source (W8JD F31 T3: 'mercury_hou
     for (const line of killing) expect(String(line["start_of_turn_aoe_kills"])).toMatch(/by Inferno \d+\)$/);
   });
 });
+
+describe("no 'calc mismatch' when Plating explains the mod's lethal flag (W8JD F31 T3: Plating 4, the solver right)", () => {
+  it("the logged T3 end: the mod says lethal, the solver's end-turn line survives on Plating; no mismatch in any resolution", () => {
+    const fx = logged("w8jd-f31-t3-end");
+    expect((fx.state["combat"] as Record<string, unknown>)["end_turn_will_kill_player"]).toBe(true);
+    expect(fx.decision.rationale).toMatch(/calc mismatch/);
+    const decision = planCombatTurn(loggedEnv(fx));
+    const { name, options } = questionOf(decision);
+    expect(decision?.kind).toBe("ask");
+    if (decision?.kind !== "ask") return;
+    for (const key of Object.keys(options)) {
+      const resolved = decision.resolve({ [name]: { type: "choice", choice: key, confidence: 0.9, probabilities: {}, raw: {} } });
+      expect(resolved.rationale).not.toMatch(/calc mismatch/);
+    }
+    // Ending the turn is still offered (the mod's flag no longer forces a play).
+    expect(Object.values(options).some((option) => /nothing/.test(String(option["plays"])))).toBe(true);
+  });
+});

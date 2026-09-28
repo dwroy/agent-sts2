@@ -1282,7 +1282,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!best) return planCombatPerCard(env);
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
-  const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
+  // The mod's lethal flag leaves out the block Plating and Metallicize add at the end of our turn; the
+  // solver counts it (SCBC3; W8JD F25 T5 and F31 T3: "calc mismatch" twice, the solver right both times).
+  // A "lethal" that block explains is not the solver missing something.
+  const platingExplains = endNow !== undefined && !endNow.outcome.dies && endNow.outcome.hpAfter <= (playerSim.endTurnBlock ?? 0);
+  const modSaysLethal = bool(combat["end_turn_will_kill_player"]) && !platingExplains;
   const calcNote =
     endNow && endNow.outcome.dies !== modSaysLethal
       ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
