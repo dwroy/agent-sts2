@@ -132,6 +132,8 @@ export interface ScreenMemory {
    * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
    */
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
+  /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
+  eventEnchants?: { runId: string; floor: number | null; lines: string[] };
 }
 
 export interface RememberedMap {

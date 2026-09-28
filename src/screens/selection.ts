@@ -232,6 +232,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         task: verb,
         prompt,
         selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`,
+        ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
         ...(forThisTurn
           ? {
               note: "this card is only for this turn — judge its immediate effect",
@@ -252,8 +253,19 @@ export function planSelection(env: DecisionEnv): Decision | null {
   return buildPickDecision({
     ...params,
     options: options.map((option) => ({ ...option, why })),
-    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}` } }) },
+    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`, ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
+}
+
+/**
+ * The enchantment an enchant screen applies: the game's prompt does not name it (「选择1张牌来附魔。」), so
+ * the enchantments the event just before named, with their measured effects (knowledge/enchant-text.ts).
+ */
+export function enchantmentNote(env: DecisionEnv): string {
+  const memo = env.screenMemory.eventEnchants;
+  const fresh = memo !== undefined && memo.runId === str(env.state.raw["run_id"]) && memo.floor === (env.state.run?.floor ?? null);
+  if (!fresh || memo.lines.length === 0) return "not named by the game: effect text unavailable";
+  return memo.lines.length === 1 ? memo.lines[0]! : `one of the event's: ${memo.lines.join(" | ")}`;
 }
 
 /** What code's value means on each out-of-combat selection (DeepSeek's view). */

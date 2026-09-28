@@ -1,5 +1,6 @@
 /** Deck reading and summarising. Used by deck-shaping decisions (PLAN.md §5.2 "deck sizing"). */
 
+import { enchantEffect } from "../knowledge/enchant-text.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { fillPotionText } from "../knowledge/potion-values.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
@@ -15,10 +16,38 @@ export interface DeckEntry {
   rarity: string;
   cost: number | null;
   description: string;
+  /** The card's enchantment ("迅速: the first time …"), when the state's deck lines name one. */
+  enchant?: string;
+}
+
+/**
+ * The enchantment of each enchanted deck card: agent_view's deck lines carry mods ["Enchantment", name]
+ * (run.deck does not); the deck card is the copy whose rendered text is the line's.
+ */
+function enchantsByDeckIndex(state: GameState): Map<number, string> {
+  const out = new Map<number, string>();
+  const lines = asArray(asRecord(asRecord(state.raw["agent_view"])["run"])["deck"]).map(asRecord);
+  const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  const squash = (text: string) => iconsToText(text).replace(/\s+/g, "");
+  for (const line of lines) {
+    const mods = asArray(line["mods"]).map((mod) => str(mod));
+    const at = mods.indexOf("Enchantment");
+    if (at < 0) continue;
+    const name = mods.slice(at + 1).find((mod) => /[^\x00-\x7f]/.test(mod)) ?? mods[at + 1];
+    if (!name) continue;
+    const cardId = str(asArray(line["card_ids"])[0]);
+    const text = squash(str(line["line"]).split("：").slice(1).join("："));
+    deck.forEach((card, i) => {
+      const index = numOrNull(card["index"]) ?? i;
+      if (str(card["card_id"]) === cardId && !out.has(index) && squash(str(card["resolved_rules_text"])) === text) out.set(index, name);
+    });
+  }
+  return out;
 }
 
 export function deckEntries(state: GameState, knowledge: Knowledge): DeckEntry[] {
   const run = asRecord(state.run?.raw);
+  const enchants = enchantsByDeckIndex(state);
   return asArray(run["deck"]).map((entry, fallbackIndex) => {
     const obj = asRecord(entry);
     const cardId = str(obj["card_id"]);
@@ -35,6 +64,9 @@ export function deckEntries(state: GameState, knowledge: Knowledge): DeckEntry[]
       rarity: str(obj["rarity"], info?.rarity ?? ""),
       cost: numOrNull(obj["energy_cost"]) ?? info?.cost ?? null,
       description: truncate(rendered.split(".")[0] ?? rendered, 90),
+      ...(enchants.has(numOrNull(obj["index"]) ?? fallbackIndex)
+        ? { enchant: `${enchants.get(numOrNull(obj["index"]) ?? fallbackIndex)!}: ${enchantEffect(enchants.get(numOrNull(obj["index"]) ?? fallbackIndex)!, null)}` }
+        : {}),
     };
   });
 }
@@ -106,7 +138,7 @@ export function describeDeck(entries: DeckEntry[], max = 40): string {
       const cost = entry.cost === null ? "?" : String(entry.cost);
       // The game's name of an upgraded card already ends in "+" (痛击+); never add a second one.
       const name = entry.upgraded && !entry.name.endsWith("+") ? `${entry.name}+` : entry.name;
-      return `${name} (${entry.type || "?"}, ${cost}E): ${entry.description}`;
+      return `${name} (${entry.type || "?"}, ${cost}E)${entry.enchant ? ` [enchanted ${entry.enchant}]` : ""}: ${entry.description}`;
     })
     .join("\n");
 }

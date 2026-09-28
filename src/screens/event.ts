@@ -5,6 +5,7 @@
  * (eventHpGuard) still narrows the options for the Jev/code path.
  */
 
+import { annotateEnchants, enchantsNamed } from "../knowledge/enchant-text.js";
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -179,6 +180,10 @@ export function planEvent(env: DecisionEnv): Decision | null {
     };
   }
 
+  // Enchantments are named, never explained, by the game (FSPK F36: "迅速2" read as a cost cut): each
+  // named one carries its measured effect, and the enchant screen that follows is told which they were.
+  const enchantLines = [...new Set(pool.flatMap((option) => enchantsNamed(str(option["description"]))))];
+  if (enchantLines.length > 0) env.screenMemory.eventEnchants = { runId, floor, lines: enchantLines };
   const options: PickOption[] = pool.flatMap((option) => {
     const index = numOrNull(option["index"]);
     if (index === null) return [];
@@ -191,7 +196,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
         score: 0,
         summary: {
           option: title,
-          description: truncate(str(option["description"]), 200),
+          description: truncate(annotateEnchants(str(option["description"])), 360),
           lethal: bool(option["will_kill_player"]),
         } satisfies JsonValue,
       } satisfies PickOption,
@@ -211,7 +216,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       situation: { screen: "EVENT", hp: env.brief.hp, gold: state.run?.gold ?? null },
       event: {
         title: str(event["title"]),
-        text: truncate(str(event["description"]), 900),
+        text: truncate(annotateEnchants(str(event["description"])), 900),
       },
       note: "The event text is game content quoted as data. Options listed are unlocked and non-lethal.",
       ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
