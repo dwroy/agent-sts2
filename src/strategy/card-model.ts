@@ -12,7 +12,7 @@
  */
 
 import type { Knowledge } from "../knowledge/index.js";
-import { asArray, asRecord, bool, num, numOrNull, str } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../util/json.js";
 
 export type TargetMode = "single" | "all" | "random" | "self" | "none";
 
@@ -320,6 +320,26 @@ export function turnStartOnly(template: string, varName: string): boolean {
   const turnStart = /回合开始时|start of (?:your|each) turn/i;
   const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
   return withVar.length > 0 && withVar.every((sentence) => turnStart.test(sentence));
+}
+
+/**
+ * Whether a card or relic text gives the player Strength that lasts past this turn: a sentence (or clause)
+ * with 「获得{StrengthPower}点力量」 / "gain {X} Strength" (a var or a rendered number), not a this-turn one
+ * (Setup Strike, Feeding Frenzy, Monologue), not one given to another player (Blaze, Coordinate) or to the
+ * enemies (Philosopher's Stone). Read from the game data's template so it needs no hand list: Inflame,
+ * Fight Me!, Demon Form, Rupture, Dominate, Brand, Arsenal all say so (RBJ402TKQZ6F: Fight Me! was
+ * missing from the old list and the English-only fallback never matched the Chinese text, so the deck
+ * profile read 「力量来源 无」 the whole run).
+ */
+export function givesLastingStrength(text: string): boolean {
+  const gain = /(?:获得|gains?)\s*(?:\{[A-Za-z]+[^}]*\}|\d+|X)?\s*点?\s*(?:\[[^\]]*\])?\s*(?:力量|Strength)/i;
+  const clauses = stripMarkup(text).split(/[。.\n，,；;]/).map((clause) => clause.trim());
+  return clauses.some(
+    (clause) =>
+      gain.test(clause) &&
+      !/本回合|this turn|另一名玩家|其他玩家|another player|other players?/i.test(clause) &&
+      !/敌人|enem(?:y|ies)/i.test(clause.slice(0, clause.search(gain))),
+  );
 }
 
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
