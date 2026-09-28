@@ -197,7 +197,7 @@ export class DeepSeekClient implements Escalator {
     if (!this.config.reasoningLog) return;
     try {
       mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory }), ...(answer === undefined ? {} : { answer }) };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
@@ -216,4 +216,11 @@ function readOptional(file: string | undefined): string {
 
 function shortHash(text: string): string {
   return text ? createHash("sha256").update(text).digest("hex").slice(0, 8) : "";
+}
+
+/** Characters of run context in a memory block (the sum of its string sections). */
+function contextChars(memory: JsonValue): number {
+  if (typeof memory === "string") return memory.length;
+  if (memory === null || typeof memory !== "object" || Array.isArray(memory)) return JSON.stringify(memory).length;
+  return Object.values(memory).reduce<number>((sum, value) => sum + (typeof value === "string" ? value.length : JSON.stringify(value ?? null).length), 0);
 }

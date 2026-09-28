@@ -48,7 +48,7 @@ for (const line of readFileSync(file, "utf8").split("\n")) {
   const payload: Record<string, JsonValue> = {
     task: FIGHT_PLAN_TASK,
     fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
-    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    memory: { ...memory },
   };
   if (dump) console.log(JSON.stringify(payload, null, 1));
   const { json, meta } = await deepseek.askJson(payload, "fight-plan");

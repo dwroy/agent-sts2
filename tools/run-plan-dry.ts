@@ -36,7 +36,7 @@ for (const line of readFileSync(file, "utf8").split("\n")) {
   const payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,
     run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String)),
-    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    memory: { ...memory },
   };
   const { json, meta } = await deepseek.askJson(payload, "run-plan");
   const plan = parseRunPlan(json, state, knowledge, trigger);

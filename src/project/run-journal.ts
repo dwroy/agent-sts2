@@ -1,23 +1,30 @@
 /**
- * Run memory for the DeepSeek escalator (phase 2).
+ * Run memory for DeepSeek (phase 2).
  *
- * DeepSeek is stateless: every call saw one screen and nothing of the run behind it, so it could not
- * tell a deck built around Strength from a pile of Strikes, what it had itself decided three floors
- * ago, or that the boss is five floors away with no shop on any path. The journal keeps that, per
- * run and in process, and renders it into three short strings (≤ ~1,500 chars together) that ride in
- * DeepSeek's *user* message, so its system prompt stays byte-identical and cached. Jev never sees it.
+ * DeepSeek is stateless: every call saw one screen and nothing of the run behind it. The journal keeps
+ * the whole run, per run id and in process, from the states actually observed and the decisions actually
+ * played: every DeepSeek decision (and Jev's/code's key non-combat picks), every fight with HP before and
+ * after, HP and gold per floor, every deck/relic/potion/max-HP change, the route plans and their progress,
+ * and the current facts. Nothing is dropped as the run grows: each item is one terse line (Dai
+ * 2026-09-28: DeepSeek always gets the complete run history). It rides in DeepSeek's *user* message on
+ * every question type, so the system prompt stays byte-identical and cached. Jev never sees it.
  */
 
 import type { Knowledge } from "../knowledge/index.js";
+import { actThreats, bossDossier } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ActionRequest } from "../mod/client.js";
+import type { RoutePlan } from "../screens/map.js";
+import { bossClock } from "../strategy/boss-clock.js";
 import { deckProfile } from "../strategy/card-value.js";
-import { asArray, asRecord, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { actOf, runPlanLine } from "../strategy/run-plan.js";
+import { asArray, asRecord, bool, num, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, deckStats } from "./deck.js";
-import type { Decision, RememberedMap, ResolvedAction } from "./types.js";
+import type { Decision, RememberedMap, ResolvedAction, ScreenMemory } from "./types.js";
 
-/** One decision the escalator made this run (not combat: the fight log covers that). */
+/** One decision this run: every DeepSeek decision, plus the key non-combat picks of Jev and code. */
 export interface JournalChoice {
+  act: number;
   floor: number | null;
   label: string;
   by: string;
@@ -25,21 +32,73 @@ export interface JournalChoice {
   reason: string;
 }
 
-/** One player turn of the current fight. */
-export interface FightTurn {
-  turn: number | null;
-  hpStart: number | null;
-  choice: string;
-  by: string;
-  /** Whether a model (not code alone) chose this turn's line: a later model answer replaces a code act. */
-  asked: boolean;
-  hpLost: number | null;
-  enemiesAfter: string | null;
+/** One fight of the run, from its first combat state to the first state after it. */
+export interface FightRecord {
+  key: string;
+  act: number;
+  floor: number | null;
+  /** "boss" | "elite" | "monster" | "unknown" (the strongest enemy type seen). */
+  kind: string;
+  enemies: string[];
+  hpBefore: number | null;
+  hpMin: number | null;
+  hpAfter: number | null;
+  maxHp: number | null;
+  turns: number;
+  potionsUsed: string[];
+  over: boolean;
+  died: boolean;
 }
 
+/** HP, max HP, gold and room at the end of a floor (the last state seen on it). */
+export interface FloorMark {
+  act: number;
+  floor: number;
+  hp: number | null;
+  maxHp: number | null;
+  gold: number | null;
+  room: string;
+}
+
+/** A change to the deck, relics, potions or max HP, noticed by comparing consecutive states. */
+export interface ResourceEvent {
+  act: number;
+  floor: number | null;
+  text: string;
+}
+
+/** A route plan DeepSeek made (BUILD_DECIDER=deepseek), in the order they were made. */
+export interface RouteRecord {
+  key: string;
+  act: number;
+  floor: number | null;
+  hpPct: number;
+  steps: { row: number; col: number; type: string; hpOnArrival: number }[];
+  why: string | null;
+}
+
+/**
+ * The run context DeepSeek receives with every question. Nothing is dropped: every decision, every
+ * fight and every floor of the run is one terse line (or item) here; only the wording is compact.
+ */
 export interface RunMemory {
-  run_journal: string;
-  fight_log: string;
+  /** Current facts: HP, gold, deck, relics, potions, boss and its clock, DeepSeek's run plan. */
+  now: string;
+  /** The act boss's monster-DB entry (measured HP, moves, our record), at this ascension. */
+  boss_db: string;
+  /** Every DeepSeek decision this run (and Jev's/code's key non-combat picks), by act. */
+  decisions: string;
+  /** Every fight this run, one line each: floor, enemies, HP before → after, potions used. */
+  fights: string;
+  /** The current act's elites and dangerous hallway fights from the monster DB (the map ahead). */
+  map_threats: string;
+  /** HP / gold per floor. */
+  hp_timeline: string;
+  /** Cards added/removed/upgraded, relics, potions gained/used/discarded, max HP changes. */
+  resources: string;
+  /** DeepSeek's route plans per act, re-plans and why, and the current act's progress. */
+  route: string;
+  /** The road to the boss from here, and the boss's key mechanics. */
   lookahead: string;
 }
 
@@ -52,10 +111,16 @@ export interface JournalEntry {
   intent: ActionRequest | null;
 }
 
-const MAX_CHOICES = 8;
-const MAX_TURNS = 5;
-/** Per-section caps; the three together stay under ~1,500 chars. */
-const CAP = { run_journal: 800, fight_log: 420, lookahead: 280 } as const;
+/** What else the journal reads besides the state: monster types, the route plan, the run plan, the map. */
+export interface JournalContext {
+  knowledge?: Knowledge;
+  screenMemory?: Partial<Pick<ScreenMemory, "lastMap" | "routePlan" | "runPlan">>;
+}
+
+const LOOKAHEAD_CAP = 600;
+
+/** Non-DeepSeek decisions worth keeping (deck, relics, potions, rests, events, route plans). */
+const KEY_LABELS = /^(reward\/(card|skip)|shop\/(buy|discard)|rest\/choose|event\/(choose|only)|chest\/relic|selection\/(?!confirm)|bundle\/choose|capstone\/choose|map\/(discard-potion|route-plan))/;
 
 /** What each act boss does, in one line (ironclad-guide.md §7/§9). Keyed by boss id without "_BOSS". */
 export const BOSS_NOTES: Record<string, string> = {
@@ -80,6 +145,7 @@ export function bossNote(bossId: string | null | undefined): string | null {
   return BOSS_NOTES[key] ?? null;
 }
 
+
 /** Cards that give lasting Strength (Setup Strike's is gone at the end of the turn). */
 const STRENGTH_IDS = new Set(["INFLAME", "DEMON_FORM", "RUPTURE", "SPOT_WEAKNESS", "LIMIT_BREAK", "FLEX"]);
 
@@ -91,25 +157,60 @@ const TYPE_LABELS: [string, string][] = [
   ["Treasure", "宝箱"],
 ];
 
+/** One-character room labels for the HP timeline and routes. */
+const ROOM_SHORT: Record<string, string> = {
+  Monster: "怪",
+  Elite: "精",
+  RestSite: "休",
+  Rest: "休",
+  Shop: "店",
+  Unknown: "问",
+  Treasure: "宝",
+  Boss: "王",
+  Ancient: "古",
+};
+
+
+const SOURCE_BY_SCREEN: Record<string, string> = {
+  REWARD: "奖励",
+  COMBAT: "战斗",
+  SHOP: "商店",
+  EVENT: "事件",
+  CHEST: "宝箱",
+  REST: "休息",
+  MAP: "地图",
+};
+
+type Counted = Map<string, { name: string; count: number }>;
+
 export class RunJournal {
   runId = "";
   choices: JournalChoice[] = [];
-  fight: { key: string; turns: FightTurn[]; over: boolean } | null = null;
-  /** The map node last chosen, and the map floor it was chosen from (the next MAP screen supersedes it). */
-  position: { row: number; col: number; fromFloor: number | null } | null = null;
+  /** Every fight this run. */
+  fights: FightRecord[] = [];
+  floors = new Map<number, FloorMark>();
+  events: ResourceEvent[] = [];
+  routes: RouteRecord[] = [];
+  /** The map node last chosen, the map floor it was chosen from, its act and type (the next MAP screen supersedes it). */
+  position: { row: number; col: number; fromFloor: number | null; act?: number; type?: string } | null = null;
+  private rooms = new Map<number, string>();
+  private deckSnap: Counted | null = null;
+  private relicSnap: Counted | null = null;
+  private potionSnap: Counted | null = null;
+  private maxHpSnap: number | null = null;
+  private discardFloors = new Set<number>();
+  private knowledge: Knowledge | null = null;
 
-  /** Called with every state read: resets on a new run and closes the fight log when combat ends. */
-  observe(state: GameState): void {
+  /** Called with every state read: resets on a new run, tracks fights, resources, HP and route plans. */
+  observe(state: GameState, context: JournalContext = {}): void {
     this.syncRun(state);
-    if (!inCombat(state) && this.fight && !this.fight.over) {
-      const last = this.fight.turns.at(-1);
-      if (last && last.hpLost === null) {
-        const hp = state.run?.current_hp ?? null;
-        last.hpLost = last.hpStart !== null && hp !== null ? last.hpStart - hp : null;
-        last.enemiesAfter = "战斗结束";
-      }
-      this.fight.over = true;
+    if (context.knowledge) this.knowledge = context.knowledge;
+    if (state.run) {
+      this.trackFight(state);
+      this.trackResources(state);
+      this.trackFloor(state);
     }
+    if (context.screenMemory) this.trackRoute(state, context.screenMemory.routePlan);
   }
 
   /** Called once per executed decision, with the state it was decided on. */
@@ -119,51 +220,189 @@ export class RunJournal {
       const node = asArray(asRecord(state.raw["map"])["available_nodes"])
         .map(asRecord)
         .find((candidate) => num(candidate["index"], -1) === entry.intent?.option_index);
-      if (node) this.position = { row: num(node["row"]), col: num(node["col"]), fromFloor: state.run?.floor ?? null };
+      if (node) {
+        const type = str(node["node_type"], "Unknown");
+        const floor = state.run?.floor ?? null;
+        this.position = { row: num(node["row"]), col: num(node["col"]), fromFloor: floor, act: actOf(state), type };
+        if (floor !== null) this.rooms.set(floor + 1, type);
+      }
     }
-    if (entry.label.startsWith("combat/") && inCombat(state)) {
-      this.recordTurn(state, entry);
-      return;
+    if (entry.intent?.action === "discard_potion" || entry.label.endsWith("discard-potion")) {
+      if (state.run?.floor != null) this.discardFloors.add(state.run.floor);
     }
-    if (entry.by !== "deepseek" && entry.by !== "claude") return;
+    // Combat turns are not decisions here: each fight is one line (the fights section).
+    if (entry.label.startsWith("combat/") || inCombat(state)) return;
+    if (entry.by === "deepseek" || entry.by === "claude" || KEY_LABELS.test(entry.label)) this.pushChoice(state, entry);
+  }
+
+  private pushChoice(state: GameState, entry: JournalEntry): void {
     this.choices.push({
+      act: actOf(state),
       floor: state.run?.floor ?? null,
       label: entry.label,
       by: entry.by,
       choice: oneLine(entry.choice, 70),
-      reason: journalReason(entry.reason),
+      reason: entry.by === "deepseek" || entry.by === "claude" ? journalReason(entry.reason) : "",
     });
-    if (this.choices.length > MAX_CHOICES) this.choices.splice(0, this.choices.length - MAX_CHOICES);
   }
 
-  /** DeepSeek's plan for an elite/boss fight (FIGHT_PLAN=v1): kept with the run's other escalator choices. */
-  noteFightPlan(state: GameState, summary: string): void {
+  /** DeepSeek's run plan (RUN_PLAN=v1), one of its decisions. */
+  noteRunPlan(state: GameState, trigger: string, line: string | null): void {
     this.syncRun(state);
-    this.choices.push({ floor: state.run?.floor ?? null, label: "combat/fight-plan", by: "deepseek", choice: oneLine(summary, 70), reason: "" });
-    if (this.choices.length > MAX_CHOICES) this.choices.splice(0, this.choices.length - MAX_CHOICES);
+    this.choices.push({ act: actOf(state), floor: state.run?.floor ?? null, label: "run-plan", by: "deepseek", choice: oneLine(`${trigger ? `(${trigger}) ` : ""}${line ?? ""}`, 160), reason: "" });
   }
 
-  private recordTurn(state: GameState, entry: JournalEntry): void {
-    const key = fightKey(state);
-    if (!this.fight || this.fight.key !== key) this.fight = { key, turns: [], over: false };
-    const hp = state.combat?.current_hp ?? state.run?.current_hp ?? null;
-    const turns = this.fight.turns;
-    const last = turns.at(-1);
-    if (last && last.turn === state.turn) {
-      // Continuations of the turn's plan add nothing; a model's answer replaces an earlier code act.
-      if (entry.asked && !last.asked && !entry.label.endsWith("plan-continue")) {
-        last.choice = oneLine(entry.choice, 60);
-        last.by = entry.by;
-        last.asked = true;
-      }
+  private trackFight(state: GameState): void {
+    const current = this.fights.at(-1);
+    const open = current && !current.over ? current : null;
+    if (!inCombat(state)) {
+      if (open) this.closeFight(open, state);
       return;
     }
-    if (last && last.hpLost === null) {
-      last.hpLost = last.hpStart !== null && hp !== null ? last.hpStart - hp : null;
-      last.enemiesAfter = describeEnemies(state);
+    const key = fightKey(state);
+    const enemies = asArray(asRecord(state.combat?.raw ?? state.raw["combat"])["enemies"]).map(asRecord);
+    let fight = open && open.key === key ? open : null;
+    if (!fight) {
+      if (open) this.closeFight(open, state);
+      // A stale frame after a won fight has no living enemy: not a new fight.
+      if (!enemies.some((enemy) => enemy["is_alive"] !== false)) return;
+      const hp = state.combat?.current_hp ?? state.run?.current_hp ?? null;
+      fight = {
+        key,
+        act: actOf(state),
+        floor: state.run?.floor ?? null,
+        kind: this.rooms.get(state.run?.floor ?? -1) === "Elite" ? "elite" : "unknown",
+        enemies: [],
+        hpBefore: hp,
+        hpMin: hp,
+        hpAfter: null,
+        maxHp: state.combat?.max_hp ?? state.run?.max_hp ?? null,
+        turns: 0,
+        potionsUsed: [],
+        over: false,
+        died: false,
+      };
+      this.fights.push(fight);
     }
-    turns.push({ turn: state.turn, hpStart: hp, choice: oneLine(entry.choice, 60), by: entry.by, asked: entry.asked, hpLost: null, enemiesAfter: null });
-    if (turns.length > MAX_TURNS) turns.splice(0, turns.length - MAX_TURNS);
+    const hp = state.combat?.current_hp ?? state.run?.current_hp ?? null;
+    if (hp !== null && (fight.hpMin === null || hp < fight.hpMin)) fight.hpMin = hp;
+    if (state.turn !== null && state.turn > fight.turns) fight.turns = state.turn;
+    for (const enemy of enemies) {
+      const id = str(enemy["enemy_id"]);
+      const name = str(enemy["name"], id || "?");
+      if (!fight.enemies.includes(name)) fight.enemies.push(name);
+      const type = this.knowledge?.monster(id)?.type ?? "";
+      const kind = type === "Boss" ? "boss" : type === "Elite" ? "elite" : type === "Normal" ? "monster" : "unknown";
+      if (KIND_RANK[kind]! > KIND_RANK[fight.kind]!) fight.kind = kind;
+    }
+  }
+
+  private closeFight(fight: FightRecord, state: GameState): void {
+    fight.over = true;
+    fight.hpAfter = state.run?.current_hp ?? state.combat?.current_hp ?? fight.hpMin;
+    fight.died = (fight.hpAfter !== null && fight.hpAfter <= 0) || state.screen === "GAME_OVER";
+    if (fight.hpAfter !== null && (fight.hpMin === null || fight.hpAfter < fight.hpMin)) fight.hpMin = fight.hpAfter;
+  }
+
+  private trackResources(state: GameState): void {
+    const run = asRecord(state.run?.raw);
+    const floor = state.run?.floor ?? null;
+    const act = actOf(state);
+    const source = this.sourceOf(state);
+    const push = (text: string): void => {
+      this.events.push({ act, floor, text });
+    };
+    const deck = run["deck"];
+    if (Array.isArray(deck) && deck.length > 0) {
+      const snap = countBy(deck, (card) => `${str(card["card_id"])}${bool(card["upgraded"]) ? "+" : ""}`, (card) => `${str(card["name"], str(card["card_id"]))}${bool(card["upgraded"]) ? "+" : ""}`);
+      if (this.deckSnap) this.diffDeck(this.deckSnap, snap, source, push);
+      this.deckSnap = snap;
+    }
+    const relics = run["relics"];
+    if (Array.isArray(relics)) {
+      const snap = countBy(relics, (relic) => str(relic["relic_id"]), (relic) => str(relic["name"], str(relic["relic_id"])));
+      if (this.relicSnap) {
+        for (const [, change] of diffCounts(this.relicSnap, snap)) {
+          push(change.delta > 0 ? `+遗物 ${change.name}${times(change.delta)}(${source})` : `-遗物 ${change.name}${times(-change.delta)}`);
+        }
+      }
+      this.relicSnap = snap;
+    }
+    const potions = run["potions"];
+    if (Array.isArray(potions)) {
+      const occupied = potions.filter((slot) => bool(asRecord(slot)["occupied"]) && str(asRecord(slot)["potion_id"]));
+      const snap = countBy(occupied, (slot) => str(slot["potion_id"]), (slot) => str(slot["name"], str(slot["potion_id"])));
+      if (this.potionSnap) {
+        const fight = this.fights.at(-1);
+        for (const [, change] of diffCounts(this.potionSnap, snap)) {
+          if (change.delta > 0) {
+            push(`+药 ${change.name}${times(change.delta)}(${source})`);
+          } else if (inCombat(state) && fight && !fight.over) {
+            for (let n = 0; n < -change.delta; n += 1) fight.potionsUsed.push(change.name);
+            push(`用药 ${change.name}${times(-change.delta)}(战斗)`);
+          } else {
+            const discarded = floor !== null && this.discardFloors.has(floor);
+            push(`${discarded ? "弃药" : "药水离开(战外)"} ${change.name}${times(-change.delta)}`);
+          }
+        }
+      }
+      this.potionSnap = snap;
+    }
+    const maxHp = state.run?.max_hp ?? null;
+    if (maxHp !== null && maxHp > 0) {
+      if (this.maxHpSnap !== null && maxHp !== this.maxHpSnap) push(`上限 ${this.maxHpSnap}→${maxHp}(${source})`);
+      this.maxHpSnap = maxHp;
+    }
+  }
+
+  private diffDeck(before: Counted, after: Counted, source: string, push: (text: string) => void): void {
+    const base = (key: string): string => key.replace(/\+$/, "");
+    const ids = new Set([...before.keys(), ...after.keys()].map(base));
+    for (const id of ids) {
+      const prevPlain = before.get(id)?.count ?? 0;
+      const prevUp = before.get(`${id}+`)?.count ?? 0;
+      const nowPlain = after.get(id)?.count ?? 0;
+      const nowUp = after.get(`${id}+`)?.count ?? 0;
+      const upgraded = Math.max(0, Math.min(prevPlain - nowPlain, nowUp - prevUp));
+      const plainName = (after.get(id) ?? before.get(id))?.name ?? (after.get(`${id}+`) ?? before.get(`${id}+`))?.name.replace(/\+$/, "") ?? id;
+      const upName = (after.get(`${id}+`) ?? before.get(`${id}+`))?.name ?? `${plainName}+`;
+      if (upgraded > 0) push(`升级 ${plainName}${times(upgraded)}(${source})`);
+      const plainDelta = nowPlain - prevPlain + upgraded;
+      const upDelta = nowUp - prevUp - upgraded;
+      for (const [delta, name] of [[plainDelta, plainName], [upDelta, upName]] as [number, string][]) {
+        if (delta > 0) push(`+卡 ${name}${times(delta)}(${source})`);
+        if (delta < 0) push(`-卡 ${name}${times(-delta)}(${source})`);
+      }
+    }
+  }
+
+  private sourceOf(state: GameState): string {
+    if (inCombat(state)) return "战斗";
+    const room = this.rooms.get(state.run?.floor ?? -1);
+    const byScreen = SOURCE_BY_SCREEN[state.screen];
+    if (byScreen && state.screen !== "MAP") return byScreen;
+    if (room) return ROOM_SOURCE[room] ?? room;
+    return byScreen ?? (state.screen.toLowerCase() || "?");
+  }
+
+  private trackFloor(state: GameState): void {
+    const floor = state.run?.floor ?? null;
+    if (floor === null) return;
+    this.floors.set(floor, {
+      act: actOf(state),
+      floor,
+      hp: state.run?.current_hp ?? null,
+      maxHp: state.run?.max_hp ?? null,
+      gold: state.run?.gold ?? null,
+      room: this.rooms.get(floor) ?? this.floors.get(floor)?.room ?? "",
+    });
+  }
+
+  private trackRoute(state: GameState, plan: RoutePlan | undefined): void {
+    if (!plan || plan.runId !== str(state.raw["run_id"])) return;
+    const key = `${plan.act}:${plan.floor ?? "?"}:${plan.path.map((step) => `${step.row},${step.col}`).join(";")}`;
+    if (this.routes.some((route) => route.key === key)) return;
+    this.routes.push({ key, act: plan.act, floor: plan.floor, hpPct: plan.hpPct, steps: plan.path.map((step) => ({ ...step })), why: plan.why ?? null });
   }
 
   private syncRun(state: GameState): void {
@@ -171,23 +410,42 @@ export class RunJournal {
     if (!runId || runId === this.runId) return;
     this.runId = runId;
     this.choices = [];
-    this.fight = null;
+    this.fights = [];
+    this.floors = new Map();
+    this.events = [];
+    this.routes = [];
     this.position = null;
+    this.rooms = new Map();
+    this.deckSnap = null;
+    this.relicSnap = null;
+    this.potionSnap = null;
+    this.maxHpSnap = null;
+    this.discardFloors = new Set();
   }
 
-  /** The memory block DeepSeek receives. */
-  render(state: GameState, knowledge: Knowledge, map: RememberedMap | undefined): RunMemory {
+  /** The run context DeepSeek receives (every question type). */
+  render(state: GameState, knowledge: Knowledge, context: JournalContext["screenMemory"] = {}): RunMemory {
     this.syncRun(state);
+    this.knowledge ??= knowledge;
+    this.trackRoute(state, context.routePlan);
     return {
-      run_journal: this.renderJournal(state, knowledge),
-      fight_log: this.renderFight(state),
-      lookahead: renderLookahead(state, map, this.position),
+      now: this.renderNow(state, knowledge, context),
+      boss_db: bossDossier(state.run?.boss_id ?? str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0) ?? "",
+      decisions: this.renderDecisions(),
+      fights: this.renderFights(state),
+      map_threats: renderThreats(state),
+      hp_timeline: this.renderTimeline(),
+      resources: this.renderResources(),
+      route: this.renderRoute(state),
+      lookahead: renderLookahead(state, context.lastMap, this.position),
     };
   }
 
-  private renderJournal(state: GameState, knowledge: Knowledge): string {
+  private renderNow(state: GameState, knowledge: Knowledge, context: JournalContext["screenMemory"] = {}): string {
     const lines: string[] = [];
-    const bossId = state.run?.boss_id ?? str(asRecord(state.run?.raw)["boss_id"]);
+    const run = asRecord(state.run?.raw);
+    lines.push(`现状: 第${actOf(state)}幕 F${state.run?.floor ?? "?"} | HP ${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"} | 金币 ${state.run?.gold ?? "?"}`);
+    const bossId = state.run?.boss_id ?? str(run["boss_id"]);
     if (bossId) {
       const name = knowledge.monster(bossId)?.name ?? knowledge.monster(bossId.replace(/_BOSS$/, ""))?.name;
       lines.push(`本幕 boss: ${name && name !== bossId ? `${name} (${bossId})` : bossId}`);
@@ -197,32 +455,160 @@ export class RunJournal {
       const stats = deckStats(entries);
       const profile = deckProfile(entries);
       const strength = [...new Set(entries.filter((card) => givesStrength(card.card_id, card.description)).map((card) => card.name))];
+      const counted = countBy(entries as unknown as JsonValue[], (card) => `${str(card["name"])}${bool(card["upgraded"]) ? "+" : ""}`, (card) => `${str(card["name"])}${bool(card["upgraded"]) ? "+" : ""}`);
+      lines.push(`牌组 ${entries.length} 张: ${[...counted.values()].map((card) => `${card.name}${times(card.count)}`).join(", ")}`);
       lines.push(
         `构筑: ${stats.total} 张 (攻击 ${stats.attacks}/技能 ${stats.skills}/能力 ${stats.powers}) | 力量来源 ${strength.length > 0 ? strength.join("、") : "无"} | AOE ${profile.aoe} | 格挡牌 ${profile.block} | 过牌 ${profile.draw} | 成长 ${profile.scaling}`,
       );
     }
-    const header = lines.join("\n");
-    const choices = this.choices.map((entry) => `F${entry.floor ?? "?"} ${entry.label} [${entry.by}]: ${entry.choice}${entry.reason ? ` — ${entry.reason}` : ""}`);
-    // Oldest choices go first when the section runs long.
-    while (choices.length > 0 && header.length + choices.join("\n").length + 12 > CAP.run_journal) choices.shift();
-    const body = choices.length > 0 ? `${header}\n本局兜底决策:\n${choices.join("\n")}` : header;
-    return truncate(body, CAP.run_journal);
+    const relics = asArray(run["relics"]).map((relic) => str(asRecord(relic)["name"], str(asRecord(relic)["relic_id"])));
+    if (relics.length > 0) lines.push(`遗物: ${relics.join(", ")}`);
+    const belt = asArray(run["potions"]).map(asRecord);
+    if (belt.length > 0) {
+      const held = belt.filter((slot) => bool(slot["occupied"])).map((slot) => str(slot["name"], str(slot["potion_id"])));
+      lines.push(`药水 ${held.length}/${belt.length}: ${held.length > 0 ? held.join(", ") : "无"}`);
+    }
+    try {
+      const clock = bossClock(state, knowledge);
+      if (clock) lines.push(`boss 时钟: ${clock.boss} 约 ${clock.hp} 血，约 ${clock.fightTurns} 回合，需 ${clock.need}/回合，牌组估 ${clock.deck}/回合，缺口 ${clock.gap}`);
+    } catch {
+      // the clock is a convenience; the facts above stand without it
+    }
+    const plan = context.runPlan && context.runPlan.runId === this.runId ? runPlanLine(context.runPlan) : null;
+    if (plan) lines.push(`你的本局计划 (F${context.runPlan!.floor ?? "?"} 定): ${plan}`);
+    return lines.join("\n");
   }
 
-  private renderFight(state: GameState): string {
-    if (!inCombat(state) || !this.fight || this.fight.key !== fightKey(state)) return "";
-    // Only completed turns: the current turn's line is still being played (no HP lost yet), and
-    // showing it confuses the escalator about what has already happened this turn.
-    const done = this.fight.turns.filter((turn) => turn.turn === null || turn.turn !== state.turn);
-    if (done.length === 0) return "";
-    const lines = done.map((turn) => {
-      const lost = turn.hpLost === null ? "" : `, 失血 ${turn.hpLost}`;
-      const after = turn.enemiesAfter ? ` | 之后敌人: ${turn.enemiesAfter}` : "";
-      return `T${turn.turn ?? "?"} HP ${turn.hpStart ?? "?"}${lost} | ${turn.by}: ${turn.choice}${after}`;
-    });
-    while (lines.length > 1 && lines.join("\n").length > CAP.fight_log) lines.shift();
-    return truncate(lines.join("\n"), CAP.fight_log);
+  private renderDecisions(): string {
+    if (this.choices.length === 0) return "";
+    const lines = ["本局全部决策（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）:"];
+    let act = -1;
+    for (const entry of this.choices) {
+      if (entry.act !== act) {
+        act = entry.act;
+        lines.push(`第${act}幕:`);
+      }
+      const reason = entry.reason.replace(UNVERIFIED_REASON_PREFIX, "");
+      lines.push(`F${entry.floor ?? "?"} ${entry.label} [${entry.by === "deepseek" ? "DS" : entry.by}]: ${entry.choice}${reason ? ` — 未核实理由: ${reason}` : ""}`);
+    }
+    return lines.join("\n");
   }
+
+  private renderFights(state: GameState): string {
+    if (this.fights.length === 0) return "";
+    const lines = ["本局全部战斗（每场一行: 层 敌人: HP 战前→战后 药水）:"];
+    let act = -1;
+    for (const fight of this.fights) {
+      if (fight.act !== act) {
+        act = fight.act;
+        lines.push(`第${act}幕:`);
+      }
+      lines.push(fightLine(fight, state));
+    }
+    return lines.join("\n");
+  }
+
+  private renderTimeline(): string {
+    if (this.floors.size === 0) return "";
+    const marks = [...this.floors.values()].sort((a, b) => a.floor - b.floor);
+    const lines = ["每层结束时 层+房间+HP(/上限，变化时标出)+¥金币 (怪/精/问/休/店/宝/王/古=房间，·=未知):"];
+    let act = -1;
+    let line: string[] = [];
+    let lastMax: number | null = null;
+    for (const mark of marks) {
+      if (mark.act !== act) {
+        if (line.length > 0) lines.push(line.join(" "));
+        act = mark.act;
+        line = [`第${act}幕:`];
+      }
+      const max = mark.maxHp !== null && mark.maxHp !== lastMax ? `/${mark.maxHp}` : "";
+      lastMax = mark.maxHp ?? lastMax;
+      line.push(`F${mark.floor}${ROOM_SHORT[mark.room] ?? "·"}${mark.hp ?? "?"}${max}¥${mark.gold ?? "?"}`);
+    }
+    if (line.length > 0) lines.push(line.join(" "));
+    return lines.join("\n");
+  }
+
+  private renderResources(): string {
+    if (this.events.length === 0) return "";
+    const lines = ["牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）:"];
+    const acts = [...new Set(this.events.map((event) => event.act))];
+    for (const act of acts) {
+      lines.push(`第${act}幕: ${this.events.filter((event) => event.act === act).map((event) => `F${event.floor ?? "?"} ${event.text}`).join("; ")}`);
+    }
+    return lines.join("\n");
+  }
+
+  private renderRoute(state: GameState): string {
+    const act = actOf(state);
+    const lines: string[] = [];
+    for (const route of this.routes) {
+      const what = route.why ? `重规划（${oneLine(route.why, 90)}）` : "规划";
+      lines.push(`第${route.act}幕 F${route.floor ?? "?"} ${what}，当时 HP ${Math.round(route.hpPct * 100)}%: ${route.steps.map((step) => ROOM_SHORT[step.type] ?? step.type).join("→")}→王`);
+    }
+    const plan = [...this.routes].reverse().find((route) => route.act === act);
+    if (!plan) {
+      lines.push(`第${act}幕: 没有 DeepSeek 路线计划（逐节点选择）`);
+    } else {
+      const here = this.position && this.position.act === act ? this.position : null;
+      const done = here ? plan.steps.filter((step) => step.row <= here.row) : [];
+      const onPlan = here ? plan.steps.find((step) => step.row === here.row) : undefined;
+      const off = here && onPlan && onPlan.col !== here.col ? "（当前节点不在计划上）" : "";
+      const left = plan.steps.filter((step) => !here || step.row > here.row);
+      const next = left[0];
+      lines.push(
+        `本幕进度: 已走 ${done.length}/${plan.steps.length}${done.length > 0 ? ` [${done.map((step) => ROOM_SHORT[step.type] ?? step.type).join("")}]` : ""}${off}` +
+          (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${Math.round(next.hpOnArrival * 100)}%）` : "") +
+          ` | 剩余 ${left.length}: ${left.map((step) => ROOM_SHORT[step.type] ?? step.type).join("→")}→王`,
+      );
+    }
+    return lines.join("\n");
+  }
+}
+
+const KIND_RANK: Record<string, number> = { unknown: 0, monster: 1, elite: 2, boss: 3 };
+
+const ROOM_SOURCE: Record<string, string> = { RestSite: "休息", Rest: "休息", Shop: "商店", Unknown: "事件", Ancient: "古神", Treasure: "宝箱", Monster: "战斗", Elite: "精英", Boss: "Boss" };
+
+function fightLine(fight: FightRecord, state: GameState): string {
+  const enemies = fight.enemies.map((name) => truncate(name, 10)).join("+") || "?";
+  const after = fight.over ? String(fight.hpAfter ?? "?") : `进行中 ${state.combat?.current_hp ?? state.run?.current_hp ?? "?"}`;
+  const max = fight.maxHp !== null ? `/${fight.maxHp}` : "";
+  return `F${fight.floor ?? "?"} ${enemies}: ${fight.hpBefore ?? "?"}→${after}${max}${fight.potionsUsed.length > 0 ? ` 药:${fight.potionsUsed.join(",")}` : ""}`;
+}
+
+/** The current act's elites and dangerous hallway encounters (monster DB), one line each. */
+function renderThreats(state: GameState): string {
+  if (!state.run) return "";
+  const lines = actThreats(actOf(state), state.run.ascension ?? 0);
+  if (lines.length === 0) return "";
+  return [`第${actOf(state)}幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:`, ...lines].join("\n");
+}
+
+function countBy(items: JsonValue[] | unknown[], key: (item: Record<string, unknown>) => string, name: (item: Record<string, unknown>) => string): Counted {
+  const counted: Counted = new Map();
+  for (const item of items) {
+    const record = asRecord(item as JsonValue);
+    const id = key(record);
+    if (!id) continue;
+    const entry = counted.get(id);
+    if (entry) entry.count += 1;
+    else counted.set(id, { name: name(record), count: 1 });
+  }
+  return counted;
+}
+
+function diffCounts(before: Counted, after: Counted): [string, { name: string; delta: number }][] {
+  const out: [string, { name: string; delta: number }][] = [];
+  for (const id of new Set([...before.keys(), ...after.keys()])) {
+    const delta = (after.get(id)?.count ?? 0) - (before.get(id)?.count ?? 0);
+    if (delta !== 0) out.push([id, { name: (after.get(id) ?? before.get(id))!.name, delta }]);
+  }
+  return out;
+}
+
+function times(count: number): string {
+  return count > 1 ? `×${count}` : "";
 }
 
 function inCombat(state: GameState): boolean {
@@ -233,11 +619,6 @@ function fightKey(state: GameState): string {
   return `${state.run?.act_id ?? "?"}:${state.run?.floor ?? "?"}`;
 }
 
-function describeEnemies(state: GameState): string {
-  const enemies = asArray(asRecord(state.combat?.raw)["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
-  if (enemies.length === 0) return "无";
-  return enemies.map((enemy) => `${truncate(str(enemy["name"], str(enemy["enemy_id"], "?")), 10)} ${numOrNull(enemy["current_hp"]) ?? "?"}/${numOrNull(enemy["max_hp"]) ?? "?"}`).join(", ");
-}
 
 function givesStrength(cardId: string, description: string): boolean {
   if (cardId === "SETUP_STRIKE") return false;
@@ -335,8 +716,14 @@ export function renderLookahead(
     }
   }
   const note = bossNote(state.run?.boss_id);
-  if (note) parts.push(`boss 要点: ${note}`);
-  return truncate(parts.join(" | "), CAP.lookahead);
+  // The monster DB's measured numbers (boss_db) replace the note's hand-written HP; its strategy stays.
+  if (note) parts.push(`boss 要点: ${bossDossier(state.run?.boss_id, state.run?.ascension ?? 0) ? withoutHandHp(note) : note}`);
+  return truncate(parts.join(" | "), LOOKAHEAD_CAP);
+}
+
+/** The note without its hand-written HP figures ("173 血，…"), when the monster DB has measured ones. */
+export function withoutHandHp(note: string): string {
+  return note.replace(/\d+\s*血\s*/g, "").replace(/^[，,：:\s]+/, "").replace(/([（(])[，,]/g, "$1");
 }
 
 /* ---- choice text ---------------------------------------------------------------------------- */
@@ -372,5 +759,5 @@ function optionText(criterion: string | null): string | null {
 }
 
 export function memoryChars(memory: RunMemory): number {
-  return memory.run_journal.length + memory.fight_log.length + memory.lookahead.length;
+  return Object.values(memory).reduce((sum, text) => sum + text.length, 0);
 }

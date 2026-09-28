@@ -7,6 +7,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { monsterLine, monstersNamedIn } from "../knowledge/monster-db.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
@@ -169,10 +170,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
     deepseek: {
       facts: buildFacts(env, {
         event: { id: eventId, title: str(event["title"]) },
+        ...eventEnemies(event, state.run?.ascension ?? 0),
         ...(forced ? { forced_fight_ahead: forced } : {}),
         ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
       }),
       note: "Options that would kill you or cost HP past the HP guard are not listed (excluded_by_hp_guard says which).",
     },
   });
+}
+
+/** The monster-DB entry of each enemy the event's text or options name (an event that starts a fight). */
+function eventEnemies(event: Record<string, unknown>, ascension: number): Record<string, JsonValue> {
+  const text = [str(event["title"]), str(event["description"]), ...asArray(event["options"]).map((option) => `${str(asRecord(option)["title"])} ${str(asRecord(option)["description"])}`)].join(" ");
+  const lines = monstersNamedIn(text)
+    .map((id) => monsterLine(id, ascension))
+    .filter((line): line is string => line !== null);
+  return lines.length > 0 ? { named_enemies_from_monster_db: lines } : {};
 }

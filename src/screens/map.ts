@@ -397,6 +397,8 @@ export interface RoutePlan {
   path: RoutePlanStep[];
   /** DeepSeek's summary of the path (the option text). */
   summary: string;
+  /** Why the previous plan of this act was replaced (a re-plan), for the run memory. */
+  why?: string;
 }
 
 interface RouteContext {
@@ -550,6 +552,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
       hpPct: context.hpPct,
       path: entry.path.map((node, step) => ({ row: node.row, col: node.col, type: node.type, hpOnArrival: entry.hpOnArrival[step]! })),
       summary: String(facts["path"]),
+      ...(replanWhy ? { why: replanWhy } : {}),
     };
     return {
       key: `p${at + 1}`,

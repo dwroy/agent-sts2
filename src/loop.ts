@@ -486,7 +486,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     // The REST screen has no map: keep the last one for its "forced elite next" check.
     if (state.screen === "MAP") rememberMap(screenMemory, state);
-    journal.observe(state);
+    journal.observe(state, { knowledge, screenMemory });
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -609,8 +609,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           await sleep(pollIntervalMs);
           continue;
         }
-        const memory = journal.render(state, knowledge, screenMemory.lastMap);
-        onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"})` });
+        const memory = journal.render(state, knowledge, screenMemory);
+        onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         try {
           stats.deepseekCalls += 1;
           const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
@@ -744,7 +744,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             jev_probabilities: toJsonValue(jevAnswer.probabilities),
           };
           // Only DeepSeek gets the run memory, in its user message (its system prompt stays cached).
-          const memory = journal.render(state, knowledge, screenMemory.lastMap);
+          const memory = journal.render(state, knowledge, screenMemory);
           // BUILD_DECIDER=deepseek: combat stays with code and Jev (COMBAT_DEEPSEEK=on restores the
           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
@@ -1085,11 +1085,11 @@ async function ensureFightPlan(
   if (screenMemory.fightPlanFailed === fight && !(current && current.fight === fight)) return;
   const replans = current && current.fight === fight && current.runId === runId ? current.replans + 1 : 0;
   if (replans > 1) return;
-  const memory = journal.render(state, knowledge, screenMemory.lastMap);
+  const memory = journal.render(state, knowledge, screenMemory);
   const payload: Record<string, JsonValue> = {
     task: FIGHT_PLAN_TASK,
     fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
-    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    memory: { ...memory },
     ...(screenMemory.runPlan && screenMemory.runPlan.runId === runId
       ? { run_plan: { archetype: screenMemory.runPlan.archetype, boss_prep: screenMemory.runPlan.bossPrep, summary: screenMemory.runPlan.summary } }
       : {}),
@@ -1103,7 +1103,6 @@ async function ensureFightPlan(
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
-    journal.noteFightPlan(state, plan.summary || plan.approach);
     logFightPlan(logFile, {
       run: runId,
       fight,
@@ -1121,8 +1120,9 @@ async function ensureFightPlan(
       effort: meta.effort ?? "",
       guide: meta.guideId ?? "",
       handbook: meta.handbookId ?? "",
+      memory_chars: memoryChars(memory),
     });
-    onEvent({ type: "note", message: `fight plan (${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
+    onEvent({ type: "note", message: `fight plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
   } catch (error) {
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
@@ -1152,12 +1152,12 @@ async function ensureRunPlan(
   if (!trigger) return;
   const failKey = `${runId}:${state.run?.floor ?? "?"}`;
   if (screenMemory.runPlanFailed === failKey) return;
-  const memory = journal.render(state, knowledge, screenMemory.lastMap);
+  const memory = journal.render(state, knowledge, screenMemory);
   const shown = fightPlanInput(state, knowledge, "run", {});
   const payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,
     run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String)),
-    memory: { run_journal: memory.run_journal, lookahead: memory.lookahead },
+    memory: { ...memory },
     ...(screenMemory.runPlan ? { previous_plan: toJsonValue(screenMemory.runPlan) } : {}),
   };
   onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
@@ -1166,6 +1166,7 @@ async function ensureRunPlan(
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;
+    journal.noteRunPlan(state, trigger, runPlanLine(plan));
     logRunPlan(logFile, {
       run: runId,
       floor: state.run?.floor ?? null,
@@ -1178,8 +1179,9 @@ async function ensureRunPlan(
       cache_hit_tokens: meta.cacheHitTokens ?? 0,
       reasoning_tokens: meta.reasoningTokens ?? 0,
       effort: meta.effort ?? "",
+      memory_chars: memoryChars(memory),
     });
-    onEvent({ type: "note", message: `run plan (${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
+    onEvent({ type: "note", message: `run plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
   } catch (error) {
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
