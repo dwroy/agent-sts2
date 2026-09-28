@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 4167 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T19:52:04.537Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1903}.
+DB: `src/knowledge/monster-db.json` from 4171 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T20:03:46.771Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1907}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -76,7 +76,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | MYTE | hallway | 128.5 [123-133] (8) | 130 | 133 [129-136] (33) | **137** | 66.5 [64-69] | 33.2 (31) | - | 4 | 2 | MYTE+MYTE |
 | OVICOPTER | hallway | 126 [124-129] (6) | **130** | 129 [126-132] (30) | **137** | 129 [126-132] | 32.2 (28) | - | 2 | 0 | OVICOPTER |
 | OWL_MAGISTRATE | hallway | 231 (3) | 231 | 247 (3) | **243** | 247 | 38 (2) | 40 | 1 | 0 | OWL_MAGISTRATE |
-| PHANTASMAL_GARDENER | elite | 116 [115-118] (8) | 116 | 118 [114-122] (19) | 122 | 30 [27-32] | 29.5 (18) | - | 3 | 2 | PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER |
+| PHANTASMAL_GARDENER | elite | 116 [115-118] (8) | 116 | 118 [114-122] (20) | 122 | 30 [27-32] | 29.5 (19) | - | 3 | 2 | PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER |
 | PHROG_PARASITE | elite | 138 [135-141] (8) | **142** | 148 [145-150] (17) | 149 | 67 [66-68] | 24.7 (17) | - | 1 | 1 | PHROG_PARASITE (with spawned bodies) |
 | PUNCH_CONSTRUCT | hallway | 185 (1) | 185 | 200 (6) | **194** | 60 | 40 (6) | - | 2 | 2 | CUBEX_CONSTRUCT+CUBEX_CONSTRUCT+PUNCH_CONSTRUCT |
 | QUEEN | boss | 599 (2) | 599 | 630 (6) | **629** | 419 | 90 (1) | **69** | 10 | 5 | boss QUEEN |
