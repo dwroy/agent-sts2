@@ -114,3 +114,22 @@ describe("per-card incoming counts end-of-turn damage (94FP F33 T10: Colossus re
     expect(Number(end["incoming_damage"])).toBeGreaterThanOrEqual(15);
   });
 });
+
+describe("Knowledge Demon curse: the HP check comes before Rupture (94FP F33 T5: 36 HP, Disintegration taken over Sloth)", () => {
+  it("the logged T5 pick is Sloth (懒惰), not Disintegration (瓦解)", () => {
+    const decision = planSelection(loggedEnv(logged("94fp-f33-t5-curse")));
+    expect(decision?.kind).toBe("act");
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/-> 懒惰/);
+  });
+
+  it("with HP to spare Rupture still makes Disintegration the pick", async () => {
+    const { curseRank } = await import("../src/screens/selection.js");
+    const combat = (hp: number) => ({
+      player: { current_hp: hp, powers: [{ power_id: "RUPTURE_POWER", amount: 1 }] },
+      enemies: [{ current_hp: 100, max_hp: 399, is_alive: true }],
+    });
+    // 299 dealt over 4 turns: ~75 a turn, 2 turns left; 7 x 2 + 20 = 34.
+    expect(curseRank(combat(60), 7, 5)("DISINTEGRATION")).toBe(0);
+    expect(curseRank(combat(30), 7, 5)("DISINTEGRATION")).toBeGreaterThan(curseRank(combat(30), 7, 5)("WASTE_AWAY"));
+  });
+});

@@ -269,7 +269,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const disintegration = candidates.find((card) => str(card["card_id"]) === "DISINTEGRATION");
     const rank = curseRank(combat, disintegration ? disintegrationAmount(disintegration) : 0, state.turn ?? 1);
     const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
-    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away; Disintegration last when it outlasts HP, else first with Rupture)` };
   }
 
   return buildPickDecision({
@@ -331,10 +331,11 @@ function disintegrationAmount(card: Record<string, unknown>): number {
 }
 
 /**
- * Rank of a Knowledge Demon curse (lower is taken). Disintegration becomes the first pick with
- * Rupture, and the last one when it would take more than the HP left before the demon dies (turns
- * left from the damage dealt so far, 25 a turn before any): Disintegration × turns + 20 > HP. PU21 T9
- * (33 HP, ~8 turns left, Disintegration 8) is that case; with HP to spare Waste Away is the worst.
+ * Rank of a Knowledge Demon curse (lower is taken). Disintegration is the last one when it would take
+ * more than the HP left before the demon dies (turns left from the damage dealt so far, 25 a turn
+ * before any): Disintegration × turns + 20 > HP, Rupture or not. PU21 T9 (33 HP, ~8 turns left,
+ * Disintegration 8) is that case; otherwise it is the first pick with Rupture; with HP to spare Waste
+ * Away is the worst.
  */
 export function curseRank(combat: Record<string, unknown>, offered: number, turn: number): (id: string) => number {
   const player = asRecord(combat["player"]);
@@ -348,8 +349,10 @@ export function curseRank(combat: Record<string, unknown>, offered: number, turn
   const hp = numOrNull(player["current_hp"]) ?? 0;
   const outlastsHp = (has("DISINTEGRATION_POWER") + offered) * turnsLeft + CURSE_HP_MARGIN > hp;
   return (id) => {
-    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
+    // HP first: Rupture's Strength is no use once Disintegration outlasts the HP left (94FP F33 T5: 36 HP,
+    // 307 boss HP at ~23 a turn, 7 x 14 + 20 = 118; Rupture ranked it first, the stacks took 7-15 a turn).
     if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
+    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
     return KNOWLEDGE_CURSE_ORDER[id]!;
   };
 }
