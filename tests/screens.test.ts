@@ -13,7 +13,7 @@ import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { fightHpCost, nodeWeight, shopWeight, SURVIVAL_WEIGHT } from "../src/screens/map.js";
-import { fightSurvival, roomProjectedCost } from "../src/strategy/route-cost.js";
+import { fightOutcomes, fightSurvival } from "../src/strategy/route-cost.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { eventOptionScore } from "../src/screens/event.js";
 import { questionOf, referencePick } from "./logged.js";
@@ -276,10 +276,12 @@ describe("map", () => {
     const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
     // Monster -> Elite: the elite is reached at ~78% (the hallway's median cost), where it is worth 0,
     // not +4; every option pays its chance of death over the same stretch, fight by fight (77QX F18).
-    const arrival = 0.85 - roomProjectedCost("Monster", 1);
-    const first = fightSurvival(0.85, fightHpCost("Monster", 1));
-    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Elite", 1))));
-    expect(value("n1")).toBeCloseTo(2.4 - SURVIVAL_WEIGHT * (1 - first * fightSurvival(arrival, fightHpCost("Monster", 1))));
+    // The second fight's survival is taken over the HP the first one leaves (fightOutcomes), not at its
+    // median (TD8A, ZW9S: losses add up).
+    const after = fightOutcomes(0.85, fightHpCost("Monster", 1));
+    const through = (type: string) => after.reduce((sum, outcome) => sum + outcome.w * fightSurvival(Math.round(outcome.hp * 100) / 100, fightHpCost(type, 1)), 0);
+    expect(value("n0")).toBeCloseTo(1.2 - SURVIVAL_WEIGHT * (1 - through("Elite")), 1);
+    expect(value("n1")).toBeCloseTo(2.4 - SURVIVAL_WEIGHT * (1 - through("Monster")), 1);
   });
 
   it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {
@@ -294,7 +296,7 @@ describe("map", () => {
     expect(nodeWeight("Shop", 1, 577, 12, 1)).toBeCloseTo(14.54);
   });
 
-  it("G6YV F12: 577 gold at 60% HP, Shop -> Monster -> Elite beats Rest -> Elite -> Monster", () => {
+  it("G6YV F12: 577 gold at 60% HP, Rest -> Elite -> Monster ranks above Shop -> Monster -> Elite (the elite at ~53% kills ~1 in 5)", () => {
     const raw = mapPayload();
     const run = raw["run"] as Record<string, unknown>;
     run["floor"] = 12;
@@ -321,8 +323,11 @@ describe("map", () => {
       const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
       return JSON.parse(String(criteria[key]))["route_value"];
     };
-    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 0 });
-    expect(value("n0")).toBeGreaterThan(value("n1"));
+    // Recalibrated survival (route-cost SURVIVAL_LOSS_*): act-1 elites entered at 50-60% killed 2 of 7 in the
+    // A8 logs; at ~53% after the hallway the shop line's elite is a ~22% death, at ~90% after the rest ~2%.
+    // Was: the shop first on a "12% death chance" at the old 0.6 / 0.6 curve.
+    if (decision.kind === "act") expect(decision.intent).toEqual({ action: "choose_map_node", option_index: 1 });
+    expect(value("n1")).toBeGreaterThan(value("n0"));
   });
 
   it("PFBK F18: elites a route cannot avoid after its likely death still count", () => {

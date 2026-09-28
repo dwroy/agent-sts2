@@ -43,8 +43,9 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
     for (const act of [1, 2, 3]) expect(eliteCostFactor(act)).toBeGreaterThan(2);
     // A "?" room: its share of fights times a "?" fight's cost, below a hallway's.
     for (const act of [1, 2, 3]) expect(roomHpCost("Unknown", act)).toBeLessThan(roomHpCost("Monster", act));
-    // Survival at the priced cost stays 0.75 (the p75).
-    expect(fightSurvival(fightHpCost("Elite", 2), fightHpCost("Elite", 2))).toBeCloseTo(0.75, 2);
+    // Survival at the priced cost: ~0.58 (death is the in-fight loss, before Burning Blood, reaching the HP
+    // brought in; fit to the logged A8 deaths by entry HP).
+    expect(fightSurvival(fightHpCost("Elite", 2), fightHpCost("Elite", 2))).toBeCloseTo(0.58, 2);
   });
 
   it("PWSD F6 at 80/80: rests before the act-1 elite (logged: Elite 24.9 vs RestSite 22.4, code took the elite, 80 -> 40)", () => {
@@ -52,12 +53,14 @@ describe("room costs: the p75 of logged A8 losses per act (PWSD, KGR6, EGX7, K8T
   });
 
   it("K8TC F3: Jev sees (3,4) leads into the forced F8 Bygone Effigy and (3,5) does not (logged: Jev took (3,4) at 0.89, 80 -> 34 there)", () => {
-    // Without the plan's weights the two hallways are a near tie in route value; the facts tell them apart:
-    // (3,4) meets the forced F8 Bygone Effigy on every path, (3,5) routes around every elite.
+    // Without the plan's weights the two hallways are close in route value, the forced elite's line a little
+    // lower (its death risk); the facts tell them apart: (3,4) meets the forced F8 Bygone Effigy on every
+    // path, (3,5) routes around every elite.
     const all = options("k8tc-map-f3");
     const left = at(all, "row 3, column 4");
     const right = at(all, "row 3, column 5");
-    expect(Math.abs(Number(left["route_value"]) - Number(right["route_value"]))).toBeLessThan(1);
+    expect(Number(right["route_value"]) - Number(left["route_value"])).toBeGreaterThan(0);
+    expect(Number(right["route_value"]) - Number(left["route_value"])).toBeLessThan(2.5);
     expect(String(left["forced_elites"])).toMatch(/every path to the boss meets F8/);
     expect(String(left["next_forced_elite"])).toMatch(/^arrives at the F8 elite at ~8\d% HP/);
     expect(String(right["forced_elites"])).toMatch(/^none: every elite ahead can be routed around/);

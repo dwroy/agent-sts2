@@ -33,10 +33,10 @@ describe("likely deaths scale with the shortfall and come later rather than soon
     expect(deathDelay(20)).toBe(0.5);
   });
 
-  it("survival through a fight: 0.5 at 0.6 x its priced cost, 0.75 at the cost", () => {
-    expect(fightSurvival(0.33, 0.55)).toBeCloseTo(0.5, 2);
-    expect(fightSurvival(0.55, 0.55)).toBeCloseTo(0.75, 2);
-    expect(fightSurvival(0.86, 0.7)).toBeGreaterThan(0.8);
+  it("survival through a fight: 0.5 at 0.85 x its priced cost, ~0.58 at the cost (logged A8 deaths by entry HP)", () => {
+    expect(fightSurvival(0.85 * 0.55, 0.55)).toBeCloseTo(0.5, 2);
+    expect(fightSurvival(0.55, 0.55)).toBeCloseTo(0.58, 2);
+    expect(fightSurvival(0.86, 0.7)).toBeGreaterThan(0.65);
   });
 });
 
@@ -47,7 +47,7 @@ describe("K7G9 F43: '?' vs rest, both into the forced F45 Mecha Knight at 40/72"
 
   it("the options say what each arrives at the forced elite with, and the '?' costs entry_hp", () => {
     const byType = Object.fromEntries(Object.values(options("k7g9-map-f43")).map((option) => [option["node_type"], option]));
-    expect(byType["Unknown"]!["next_forced_elite"]).toMatch(/F45 elite at ~4\d% HP \(an elite costs ~70%\)/);
+    expect(byType["Unknown"]!["next_forced_elite"]).toMatch(/F45 elite at ~4\d% HP \(an elite costs ~42% at the median, ~70% in a bad fight \(p75\); alive through it ~\d+% of the time at that HP\)/);
     expect(byType["RestSite"]!["next_forced_elite"]).toMatch(/F45 elite at ~86% HP/);
     expect(byType["Unknown"]!["tempo"]).toMatch(/^differs from DeepSeek's entry_hp 90%: arrives at the F45 elite at ~4\d% with no rest before it/);
     expect(byType["RestSite"]!["code_rank"]).toBe(1);

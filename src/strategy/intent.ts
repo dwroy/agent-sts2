@@ -888,6 +888,12 @@ export interface RouteArrival {
   bossFloor: number | null;
   /** Floor where the projected HP runs out on the safest path to the boss. */
   ranOutFloor?: number;
+  /** Chance of coming out of that elite alive at eliteHp. */
+  eliteSurvival?: number | null;
+  /** Floors of the rests the boss projection heals at (the only way its HP rises). */
+  bossRestFloors?: number[];
+  /** The last elite on the boss projection's path: its floor and the HP it leaves. */
+  bossAfterElite?: { floor: number; hp: number } | null;
 }
 
 /**
@@ -925,7 +931,7 @@ export function mapFit(
     const { eliteHp, eliteFloor, bossHp, bossFloor, best } = arrival;
     if (eliteHp !== null && eliteFloor !== null && (eliteHp < floorLine || eliteHp <= arrival.eliteCost) && best.eliteHp - eliteHp >= ARRIVAL_BETTER) {
       const rest = arrival.eliteRest === "none" ? " with no rest before it" : "";
-      return { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)}; another route arrives at ~${pct(best.eliteHp)})`, differs: true };
+      return { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: arrives at the F${eliteFloor} elite at ~${pct(eliteHp)}${rest} (an elite costs ~${pct(arrival.eliteCost)} in a bad fight (p75)${arrival.eliteSurvival != null ? `, alive through it ~${pct(arrival.eliteSurvival)}` : ""}; another route arrives at ~${pct(best.eliteHp)})`, differs: true };
     }
     if (bossHp !== null && bossFloor !== null && bossHp < floorLine && best.bossHp - bossHp >= ARRIVAL_BETTER) {
       return { tempo: `differs from DeepSeek's entry_hp ${pct(plan.entryHp)}: reaches the F${bossFloor} boss at ~${pct(bossHp)} on its safest path (another route ~${pct(best.bossHp)})`, differs: true };

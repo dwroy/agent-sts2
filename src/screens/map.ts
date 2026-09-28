@@ -12,7 +12,7 @@ import { guidanceFor, isReserved, LABEL_NOTE, mapFit, type RouteArrival } from "
 import { actEliteNeed } from "../knowledge/dossiers.js";
 import { damageGap, deckDamagePerTurn, type DamageGap } from "../strategy/boss-clock.js";
 import { routeFacts, routeFactsText, type RouteNode } from "../strategy/route-facts.js";
-import { eliteCostFactor, fightHpCost, roomProjectedCost, roomSurvival } from "../strategy/route-cost.js";
+import { eliteCostFactor, fightHpCost, fightSurvival, MEDIAN_OF_P75, roomOutcomes, roomProjectedCost, roomSurvival } from "../strategy/route-cost.js";
 import { isModelledPotion, potionRegen, regenHealHp } from "../strategy/card-model.js";
 
 export { eliteCostFactor, fightHpCost } from "../strategy/route-cost.js";
@@ -261,7 +261,7 @@ const GOLD_AFTER_SHOP = 50;
  * Projected state after a node. Later nodes are valued at the HP the route leaves, not at entry HP:
  * 0NG F27 took "Monster -> Elite" at 70% with the elite valued as if fought at 70%, and reached it at
  * 44/71. Rests heal and shops spend, so a fight behind a rest is valued at the healed HP. Rooms cost
- * their median (roomProjectedCost); each fight's survival is priced at its p75 (roomSurvival).
+ * their median (roomProjectedCost); survival along a route spreads each room over its losses (arrivalAt).
  */
 function stateAfter(type: string, at: RouteState, act: number): RouteState {
   switch (type) {
@@ -371,6 +371,10 @@ interface Arrival {
   row: number;
   /** Row of the first room whose projected cost takes the HP to 0 on this path (null: it never runs out). */
   ranOut?: number | null;
+  /** Rows of the rests on the (median) path, each healing REST_HEAL. */
+  rests?: number[];
+  /** The last elite on the (median) path and the HP it leaves. */
+  afterElite?: { row: number; hp: number } | null;
 }
 
 const isRest = (type: string): boolean => type === "RestSite" || type === "Rest";
@@ -386,19 +390,21 @@ interface Stop {
 }
 
 /**
+ * The median projection of arrivalAt (HP at the rooms' medians, stateAfter): the HP figures shown next to
+ * the elite's arrival HP, where the HP runs out, and the rests and last elite on the way.
  * Best chance over the paths from `node` (entered at `at`) of getting through every room up to the stop
  * alive, with the projected HP there. HP is projected at the rooms' medians (stateAfter); each room's
  * survival is roomSurvival at that HP (its p75 as the tail), and a path's is their product: hallways, "?"
  * rooms and elites alike (77QX F18: the forced elite was charged in full, a chain of five hallways only
  * as discounted likely deaths).
  */
-function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, act: number, target: Stop, memo: Map<string, Arrival>, avoidEliteAt?: (hp: number) => boolean): Arrival {
+function medianArrival(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, act: number, target: Stop, memo: Map<string, Arrival>, avoidEliteAt?: (hp: number) => boolean): Arrival {
   const id = `${key(node.row, node.col)}@${at.hp.toFixed(3)}/${Math.min(at.fights, 2)}`;
   const cached = memo.get(id);
   if (cached) return cached;
   let value: Arrival;
-  if (target.restAfter !== undefined && isRest(node.type) && node.row > target.restAfter && node.row < target.row) value = { p: 1, hp: at.hp, row: node.row };
-  else if (node.row >= target.row) value = { p: target.inclusive ? roomSurvival(node.type, at.hp, act) : 1, hp: at.hp, row: node.row };
+  if (target.restAfter !== undefined && isRest(node.type) && node.row > target.restAfter && node.row < target.row) value = { p: 1, hp: at.hp, row: node.row, rests: [] };
+  else if (node.row >= target.row) value = { p: target.inclusive ? roomSurvival(node.type, at.hp, act) : 1, hp: at.hp, row: node.row, rests: [] };
   else {
     const survive = roomSurvival(node.type, at.hp, act);
     const left = stateAfter(node.type, at, act);
@@ -410,10 +416,59 @@ function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, a
     const children = node.children.map((child) => nodes.get(key(child.row, child.col))).filter((child): child is MapNode => child !== undefined);
     const avoid = avoidEliteAt?.(left.hp) === true && children.some((child) => child.type !== "Elite");
     for (const childNode of avoid ? children.filter((child) => child.type !== "Elite") : children) {
-      const next = arrivalAt(childNode, left, nodes, act, target, memo, avoidEliteAt);
+      const next = medianArrival(childNode, left, nodes, act, target, memo, avoidEliteAt);
       if (!best || next.p > best.p + 1e-9 || (Math.abs(next.p - best.p) <= 1e-9 && next.hp > best.hp)) best = next;
     }
-    value = best ? { ...best, p: survive * best.p, ranOut: ranOut ?? best.ranOut ?? null } : { p: survive, hp: left.hp, row: node.row, ranOut };
+    const rests = isRest(node.type) ? [node.row] : [];
+    const elite = node.type === "Elite" && left.hp > 0 ? { row: node.row, hp: left.hp } : null;
+    value = best
+      ? { ...best, p: survive * best.p, ranOut: ranOut ?? best.ranOut ?? null, rests: [...rests, ...(best.rests ?? [])], afterElite: elite ?? best.afterElite ?? null }
+      : { p: survive, hp: left.hp, row: node.row, ranOut, rests, afterElite: elite };
+  }
+  memo.set(id, value);
+  return value;
+}
+
+/**
+ * Chance of getting through every room up to the stop alive, and the mean HP there when alive, with
+ * each room's outcomes spread over its loss distribution (roomOutcomes): the HP a fight leaves is the
+ * next room's entry HP, so two hard fights in a row count as such, not as two fights at the median.
+ * Each later fork takes the child with the best chance from the HP the room before it left.
+ */
+function arrivalAt(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, act: number, target: Stop, memo: Map<string, Arrival>, avoidEliteAt?: (hp: number) => boolean): Arrival {
+  const hp = Math.round(at.hp * 100) / 100;
+  const id = `${key(node.row, node.col)}@${hp.toFixed(2)}/${Math.min(at.fights, 2)}`;
+  const cached = memo.get(id);
+  if (cached) return cached;
+  const start = { ...at, hp };
+  let value: Arrival;
+  if (target.restAfter !== undefined && isRest(node.type) && node.row > target.restAfter && node.row < target.row) value = { p: 1, hp, row: node.row };
+  else if (node.row >= target.row) value = { p: target.inclusive ? roomSurvival(node.type, hp, act) : 1, hp, row: node.row };
+  else {
+    const base = stateAfter(node.type, start, act);
+    const fight = node.type === "Monster" || node.type === "Elite" || node.type === "Unknown";
+    const outcomes = fight ? roomOutcomes(node.type, hp, act).map((outcome) => ({ state: { ...base, hp: outcome.hp }, w: outcome.w })) : [{ state: base, w: 1 }];
+    const children = node.children.map((child) => nodes.get(key(child.row, child.col))).filter((child): child is MapNode => child !== undefined);
+    let p = 0;
+    let hpSum = 0;
+    let row = node.row;
+    let heaviest = -1;
+    for (const outcome of outcomes) {
+      const avoid = avoidEliteAt?.(outcome.state.hp) === true && children.some((child) => child.type !== "Elite");
+      let best: Arrival | null = null;
+      for (const childNode of avoid ? children.filter((child) => child.type !== "Elite") : children) {
+        const next = arrivalAt(childNode, outcome.state, nodes, act, target, memo, avoidEliteAt);
+        if (!best || next.p > best.p + 1e-9 || (Math.abs(next.p - best.p) <= 1e-9 && next.hp > best.hp)) best = next;
+      }
+      const reached = best ?? { p: 1, hp: outcome.state.hp, row: node.row };
+      p += outcome.w * reached.p;
+      hpSum += outcome.w * reached.p * reached.hp;
+      if (outcome.w * reached.p > heaviest) {
+        heaviest = outcome.w * reached.p;
+        row = reached.row;
+      }
+    }
+    value = { p, hp: p > 0 ? hpSum / p : 0, row };
   }
   memo.set(id, value);
   return value;
@@ -493,12 +548,20 @@ function fightsSoFar(nodes: Map<string, MapNode>, current: unknown): number {
 /** Arrival facts in words for a route option. */
 function arrivalText(arrival: RouteArrival, survival: number | null): Record<string, JsonValue> {
   const pct = (value: number) => `${Math.round(value * 100)}%`;
+  // How the boss figure follows from the elite's: the HP the last elite leaves at its median cost, then
+  // the rests after it (a projection's HP only rises at a rest).
+  const after = arrival.bossAfterElite ?? null;
+  const restsAfter = (arrival.bossRestFloors ?? []).filter((floor) => after === null || floor > after.floor);
+  const heals = restsAfter.length > 0 ? `+${pct(REST_HEAL)} at each rest (F${restsAfter.join("/F")})` : "no rest after it";
+  const bossPath = after !== null ? ` (~${pct(after.hp)} after the F${after.floor} elite, then ${heals})` : restsAfter.length > 0 ? ` (${heals})` : "";
   return {
     ...(arrival.eliteHp !== null && arrival.eliteFloor !== null
-      ? { next_forced_elite: `arrives at the F${arrival.eliteFloor} elite at ~${pct(arrival.eliteHp)} HP (an elite costs ~${pct(arrival.eliteCost)})` }
+      ? {
+          next_forced_elite: `arrives at the F${arrival.eliteFloor} elite at ~${pct(arrival.eliteHp)} HP (an elite costs ~${pct(MEDIAN_OF_P75 * arrival.eliteCost)} at the median, ~${pct(arrival.eliteCost)} in a bad fight (p75)${arrival.eliteSurvival != null ? `; alive through it ~${pct(arrival.eliteSurvival)} of the time at that HP` : ""})`,
+        }
       : {}),
     ...(arrival.bossHp !== null && arrival.bossFloor !== null
-      ? { boss_arrival: `~${pct(arrival.bossHp)} HP at the F${arrival.bossFloor} boss on the safest path, alive there ~${pct(arrival.bossSurvival ?? 1)} of the time` }
+      ? { boss_arrival: `~${pct(arrival.bossHp)} HP at the F${arrival.bossFloor} boss on the safest path if it gets there${bossPath}, alive there ~${pct(arrival.bossSurvival ?? 1)} of the time` }
       : arrival.ranOutFloor !== undefined && arrival.bossFloor !== null
       ? { boss_arrival: `HP runs out at F${arrival.ranOutFloor} on its safest path before the F${arrival.bossFloor} boss (alive there ~${pct(arrival.bossSurvival ?? 0)} of the time)` }
       : {}),
@@ -622,6 +685,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const survivalOf = (self: MapNode): number => (checkpoint ? arrivalAt(self, start, nodes, act, checkpoint, arrivalMemo, avoidEliteAt).p : 1);
   const restMemo = new Map<string, Arrival>();
   const bossMemo = new Map<string, Arrival>();
+  const bossMedianMemo = new Map<string, Arrival>();
   const eliteMemo = new Map<string, { hp: number; row: number } | null>();
   // Winged Boots: nodes off the current node's children spend a charge.
   const bootsRelic = asArray(asRecord(state.run?.raw)["relics"]).map(asRecord).find((relic) => str(relic["relic_id"]) === "WINGED_BOOTS");
@@ -679,18 +743,26 @@ export function planMap(env: DecisionEnv): Decision | null {
       SURVIVAL_WEIGHT * (1 - toRest.p);
     // Projected HP on arrival at the first elite every path meets and at the boss (stateAfter).
     const elite = optionalElite ? firstEliteArrivalFrom(children, stateAfter(type, start, act), nodes, act, eliteMemo) : firstEliteArrival(self, start, nodes, act, eliteMemo);
+    // Survival to the boss over the rooms' loss distributions (arrivalAt); the HP there on the median
+    // path (medianArrival), the same projection as the elite's arrival HP, so the boss figure is that
+    // HP less the elite's median cost plus the rests on the way (TD8A F18: "~41% at the F24 elite (costs
+    // ~59%)" next to "~93% at the boss" with the three rests after it unsaid).
     const bossArrival = bossRow !== null ? arrivalAt(self, start, nodes, act, { row: bossRow, inclusive: false }, bossMemo, avoidEliteAt) : null;
+    const bossMedian = bossRow !== null ? medianArrival(self, start, nodes, act, { row: bossRow, inclusive: false }, bossMedianMemo, avoidEliteAt) : null;
     // A projection that runs out of HP before the boss says so: its "+30% at the last rest" is no arrival HP.
-    const ranOut = bossArrival?.ranOut ?? null;
+    const ranOut = bossMedian?.ranOut ?? null;
     const arrival: RouteArrival = {
       eliteHp: elite ? elite.hp : null,
       eliteFloor: elite ? floorOf(elite.row) : null,
       eliteCost: fightHpCost("Elite", act),
       eliteRest: facts.forcedElites.find((forced) => forced.row === elite?.row)?.rest ?? facts.eliteOnEveryPath?.rest ?? null,
-      bossHp: bossArrival && ranOut === null ? bossArrival.hp : null,
+      eliteSurvival: elite ? fightSurvival(elite.hp, fightHpCost("Elite", act)) : null,
+      bossHp: bossMedian && ranOut === null ? bossMedian.hp : null,
       bossSurvival: bossArrival ? bossArrival.p : null,
       bossFloor: bossRow !== null ? floorOf(bossRow) : null,
       ...(ranOut !== null ? { ranOutFloor: floorOf(ranOut) } : {}),
+      bossRestFloors: (bossMedian?.rests ?? []).map(floorOf),
+      bossAfterElite: bossMedian?.afterElite ? { floor: floorOf(bossMedian.afterElite.row), hp: bossMedian.afterElite.hp } : null,
     };
     const restText = toRest.row >= (bossRow ?? Infinity) ? `the F${floorOf(toRest.row)} boss` : `the F${floorOf(toRest.row)} rest`;
     const through = horizon >= 0 ? ` through F${floorOf(horizon)}` : "";
@@ -710,7 +782,7 @@ export function planMap(env: DecisionEnv): Decision | null {
           ...(optionalElite ? { optional_elite: "this node is an optional Elite (another open node avoids it)" } : {}),
           ...(optionalElite ? { forced_elites: `after this elite: ${routeFactsText(facts).forced_elites}`, longest_forced_fight_run: facts.longestForcedFightRun } : routeFactsText(facts)),
           ...arrivalText(arrival, checkpoint ? survival : null),
-          route_survival: `alive${through} at ${restText} ~${Math.round(toRest.p * 100)}% of the time on its safest path (median room costs, p75 risk)`,
+          route_survival: `alive${through} at ${restText} ~${Math.round(toRest.p * 100)}% of the time on its safest path (each room's loss over its logged A8 spread, the HP one room leaves carried into the next)`,
           ...(gapBonus > 0 && bossGap
             ? { boss_gap: `a card reward toward the act boss gap (deck ~${bossGap.deck} of ${bossGap.need} damage a turn for ${bossGap.boss}): +${gapBonus.toFixed(1)} route value` }
             : {}),
