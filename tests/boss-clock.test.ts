@@ -190,3 +190,30 @@ describe("boss clock", () => {
     expect(damageGap(onBoss, testKnowledge)).toBeNull();
   });
 });
+
+describe("The Insatiable's mechanic factor, against the logged A8 fights", () => {
+  interface Fight { key: string; outcome: string; turns: number; realised: number; raw: number }
+  const fights = (JSON.parse(readFileSync(join(DIR, "..", "boss-fights", "insatiable-a8.json"), "utf8")) as { fights: Fight[] }).fights;
+  const deck = deckProfileForBoss(mapState(starter(), "THE_INSATIABLE_BOSS"), testKnowledge)!;
+  const median = (values: number[]): number => {
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]! ) / 2;
+  };
+  const ratios = (factor: (fight: Fight) => number) => fights.map((fight) => fight.realised / (calibrated(fight.raw) * factor(fight)));
+
+  it("keeps the estimate unbiased over the 23 fights (VNWR/981W's ~0.5 were play, not the Sandpit)", () => {
+    expect(fights.length).toBeGreaterThanOrEqual(20);
+    const factor = (fight: Fight) => mechanicFactor("THE_INSATIABLE", deck, fight.turns);
+    const bias = median(ratios(factor));
+    expect(bias).toBeGreaterThan(0.9);
+    expect(bias).toBeLessThan(1.25);
+    const logErr = median(ratios(factor).map((ratio) => Math.abs(Math.log(ratio))));
+    const logErrHalved = median(ratios((fight) => factor(fight) * 0.54).map((ratio) => Math.abs(Math.log(ratio))));
+    expect(logErr).toBeLessThan(logErrHalved);
+    for (const key of ["VNWR16YEJASM", "981WMX8MQ7DK"]) {
+      const fight = fights.find((row) => row.key === key)!;
+      expect(fight.realised / calibrated(fight.raw)).toBeLessThan(0.6);
+    }
+  });
+});

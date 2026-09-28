@@ -310,6 +310,16 @@ export function mechanicFactor(id: string, deck: DeckProfile, turns: number): nu
       return 0.82;
     case "LAGAVULIN_MATRIARCH":
       return 0.78;
+    // The Insatiable: fitted on the 23 logged A8 fights (tools/boss-fights-extract.py THE_INSATIABLE,
+    // tests/boss-fights/insatiable-a8.json), the realised damage a turn over the calibrated estimate at
+    // the fight's real length has median 1.10 (LAD factor 1.04; median |log error| 0.28 at 1.0). Frantic
+    // Escapes (median 3 a fight, ~0.45 a turn) do not show in it: they cost a card and an energy but the
+    // fight's other turns are full-damage ones. The 0.50/0.51 of VNWR16YEJASM and 981WMX8MQ7DK (and
+    // 69HWH6MD1S34's 0.41, 33 HP entry) were play, not the mechanic: Toasty Mittens exhausting Bludgeon /
+    // Ultimate Strike / Bash+, 6 Escapes on 27 energy, the HP guard swapping out damage lines. A 0.54
+    // factor would put the median |log error| at 0.71. So no discount.
+    case "THE_INSATIABLE":
+      return 1;
     default:
       return 1;
   }
