@@ -880,11 +880,12 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   const term = terminal(ctx, last.snap, t0 + upto - 1);
   const base = loss + Math.max(0, own);
   return {
-    loss: base + term.gated.hpLoss,
+    // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP).
+    loss: Math.min(startHp, base + term.gated.hpLoss),
     win: term.gated.winProb,
     turns: upto + term.gated.turns,
     died: false,
-    lossModel: term.model ? base + term.model.hpLoss : null,
+    lossModel: term.model ? Math.min(startHp, base + term.model.hpLoss) : null,
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
   };

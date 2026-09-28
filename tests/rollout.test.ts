@@ -198,6 +198,18 @@ describe("rollout (offline)", () => {
     for (const line of run(undefined).lines) expect(line.deaths).toBe(0);
   });
 
+  it("expected further HP loss never exceeds the HP we have (GG0Y F33)", () => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      player: { ...input.solver.player, hp: 20 },
+      enemies: [{ ...input.solver.enemies[0]!, hp: 400, maxHp: 400, attacks: [{ damage: 4, hits: 1 }] }],
+    };
+    const table: EnemyTable = { moves: { POKE: { damage: 4, hits: 1, strength: 0, block: 0 } }, next: { POKE: { POKE: 1 } } };
+    const r = rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id: "WALL", move: "POKE", strength: 0, powers: {} }], tables: { WALL: table } });
+    for (const line of r.lines) expect(line.hpLoss).toBeLessThanOrEqual(20 + 1e-9);
+  });
+
   it("degrades to fit the time budget: 5 turns, then 3, then fewer samples, then 1 turn", () => {
     const run = (budget: number) => rolloutDecision(scenario(budget, fakeClock(1)));
     const full = run(1e9);
