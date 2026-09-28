@@ -57,6 +57,8 @@ const MODELLED_ENEMY_POWERS = new Set([
   "GUARDED_POWER", "SOAR_POWER", "SKITTISH_POWER", "REFLECT_POWER", "SUCK_POWER", "PAINFUL_STABS_POWER", "PAPER_CUTS_POWER",
   "CRAB_RAGE_POWER", "BURROWED_POWER", "RAMPART_POWER", "STEAM_ERUPTION_POWER", "REATTACH_POWER",
   "SANDPIT_POWER", "ASLEEP_POWER", "ENRAGE_POWER", "ADAPTABLE_POWER", "NEMESIS_POWER",
+  // Infested Prism: every Skill gives us Tainted (`vitalSpark`); left unmodelled it cut our damage by 20%.
+  "VITAL_SPARK_POWER",
   // Surrounded's back attack is in the intents (backAttack in turn-solver.ts); left unmodelled, it cut
   // our damage by 20% (PLC F33 T8: Twin Strike 11x2 planned as 8x2, Crusher left at 2 not 8).
   "BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER", "WITHERING_PRESENCE_POWER", "DEMISE_POWER",
@@ -260,6 +262,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
+      vitalSpark: powerAmount(enemy, "VITAL_SPARK_POWER"),
       revives: powerAmount(enemy, "ADAPTABLE_POWER") > 0,
       stock: powerAmount(enemy, "STOCK_POWER"),
       // Plow (Ceremonial Beast): stunned the first time HP drops to its amount (150), like Shriek (RAWT

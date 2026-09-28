@@ -294,3 +294,38 @@ describe("Pact's End deals nothing with fewer than 3 cards the exhaust pile can 
     else expect(JSON.stringify(decision)).not.toMatch(/code: take 契约终结/);
   });
 });
+
+describe("Vital Spark: every Skill in the line adds Tainted to each enemy hit this turn (4LC3 F31 T7, Infested Prism)", () => {
+  // VITAL_SPARK_POWER 4: "all Skill cards have Tainted 4"; TAINTED_POWER: extra attack damage this turn.
+  // Logged: Whirlwind 6x3 -> 10x3 after Defend -> 14x3 after Shrug It Off; 17 HP + 13 Block, dead.
+  it("17/80 vs Whirlwind 6x3: 'Ashen Strike, Defend, Shrug It Off' dies (logged: shown as -5, 12 HP left), and every line dies", () => {
+    const fx = logged("4lc3-f31-t7-tainted");
+    const input = boardInput(fx);
+    expect(input.enemies[0]!.vitalSpark).toBe(4);
+    expect(input.enemies[0]!.unmodelled).toBe(false);
+    const plans = solveTurn(input).plans;
+    const line = plans.find((plan) => plays(plan) === "灰烬打击 -> 感染棱柱, 防御, 耸肩无视")!;
+    expect(line).toBeDefined();
+    expect(line.outcome.hpLoss).toBe(14 * 3 - 13);
+    expect(line.outcome.dies).toBe(true);
+    // Shrug It Off alone: 10x3 against 8 Block.
+    expect(plans.find((plan) => plays(plan) === "耸肩无视")!.outcome.hpLoss).toBe(22);
+    expect(plans.every((plan) => plan.outcome.dies)).toBe(true);
+    const decision = planCombatTurn(loggedEnv(fx));
+    expect(decision?.kind === "act" && decision.label).toBe("combat/least-loss");
+  });
+
+  it("a small board: each Skill adds N to every hit this turn, an Attack adds nothing", () => {
+    const prism = enemy({ hp: 60, maxHp: 60, vitalSpark: 2, attacks: [{ damage: 5, hits: 3 }] });
+    const loss = (hand: CardModel[], line: string, target: EnemySim = prism) =>
+      solveTurn({ hand, fightKind: "monster", player: player({ hp: 40 }), enemies: [target] }).plans.find((plan) => plays(plan) === line)?.outcome.hpLoss;
+    expect(loss([defend(0)], "DEFEND_IRONCLAD")).toBe(7 * 3 - 5);
+    expect(loss([defend(0), defend(1)], "DEFEND_IRONCLAD, DEFEND_IRONCLAD")).toBe(9 * 3 - 10);
+    expect(loss([strike(0)], "STRIKE_IRONCLAD -> E")).toBe(15);
+    expect(loss([strike(0), defend(1)], "STRIKE_IRONCLAD -> E, DEFEND_IRONCLAD")).toBe(7 * 3 - 5);
+    // Weak already up: Tainted adds before Weak (logged T3: 3x3 shown, base 5; Tainted 2 -> 5x3, 4 -> 6x3).
+    const weak = { ...prism, weak: 2, attacks: [{ damage: 3, hits: 3 }] };
+    expect(loss([defend(0)], "DEFEND_IRONCLAD", weak)).toBe(5 * 3 - 5);
+    expect(loss([defend(0), defend(1)], "DEFEND_IRONCLAD, DEFEND_IRONCLAD", weak)).toBe(6 * 3 - 10);
+  });
+});

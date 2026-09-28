@@ -110,6 +110,13 @@ export interface EnemySim {
   /** Enrage N (Test Subject phase 1): +N Strength for every Skill the player plays. */
   enrage?: number;
   /**
+   * Vital Spark N (Infested Prism, VITAL_SPARK_POWER: "all Skill cards have Tainted N"): every Skill we
+   * play gives us Tainted N, and Tainted (TAINTED_POWER: "take extra attack damage this turn") adds 1 to
+   * every enemy attack hit this turn per stack, before Weak like Strength (4LC3 F31: Whirlwind 6x3 ->
+   * 10x3 -> 14x3 over Defend and Shrug It Off; Weak 3x3 -> 5x3 -> 6x3 on T3). Gone at our next turn.
+   */
+  vitalSpark?: number;
+  /**
    * Adaptable (Test Subject): another phase follows. At 0 HP it spends a turn reviving (no attack) and
    * comes back at full, higher max HP, so killing it does not win the fight.
    */
@@ -442,6 +449,8 @@ interface Sim {
   mantles: number;
   /** A Crab Rage survivor was enraged this turn. */
   enraged: number;
+  /** Tainted gained this turn (Vital Spark): +1 per stack to every enemy attack hit. Tainted already up is in the intents. */
+  tainted: number;
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
   feelNoPain: number;
@@ -942,6 +951,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
+  // Vital Spark (Infested Prism): every Skill gives us Tainted, and every attack hit this turn grows by it
+  // (4LC3 F31 T7: "Ashen Strike, Defend, Shrug It Off" shown as -5, the 6x3 became 14x3 and killed us).
+  if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.vitalSpark ?? 0) > 0) next.tainted += enemy.vitalSpark ?? 0;
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
@@ -1221,6 +1233,12 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
+        if (sim.tainted > 0) {
+          const tainted = sim.tainted * (player.vulnerable ? 1.5 : 1);
+          // Tainted adds before Weak. Under a Weak already up, the largest base behind the shown number
+          // (4LC3 F31 T3: 3 shown is base 5; Tainted 2 made it floor(7 x 0.75) = 5, Tainted 4 made it 6).
+          amount = enemy.weak > 0 && !enemy.newlyWeak ? Math.floor((Math.ceil((amount + 1) / 0.75) - 1 + tainted) * 0.75) : Math.floor(amount + tainted);
+        }
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
         if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
@@ -1709,7 +1727,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}`;
 }
 
 export interface SolveResult {
@@ -1826,6 +1844,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     escapes: 0,
     mantles: 0,
     enraged: 0,
+    tainted: 0,
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
     attacksPlayed: 0,
