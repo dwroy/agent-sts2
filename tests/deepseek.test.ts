@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
-import { DeepSeekClient, effortFor, parseEffortTiers, resolveOptionKey } from "../src/llm/deepseek.js";
+import { DeepSeekClient, effortFor, parseEffortTiers, pickJsonObject, resolveOptionKey } from "../src/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 let server: TestServer | null = null;
@@ -165,5 +165,26 @@ describe("DeepSeek thinking effort per label", () => {
     expect(bodies.map((body) => body.reasoning_effort)).toEqual(["high", "max"]);
     const logged = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as { label: string; effort: string });
     expect(logged.map((row) => [row.label, row.effort])).toEqual([["reward/card", "high"], ["shop/buy", "max"]]);
+  });
+});
+
+describe("askJson's reply parsing (0B5Y F30: run-plan review returned two objects back to back)", () => {
+  it("takes the task's object after a {choice, reason} echo of the decision format", () => {
+    const reply = '{"choice": "review", "reason": "run plan"}\n\n{"archetype": "力量成长 + 真群伤", "want": ["DEMON_FORM", "WHIRLWIND"], "summary": "s {x} \\"q\\""}';
+    expect(pickJsonObject(reply)).toEqual({ archetype: "力量成长 + 真群伤", want: ["DEMON_FORM", "WHIRLWIND"], summary: 's {x} "q"' });
+  });
+
+  it("one object as before; of several task objects the last; a lone echo is still returned for the caller to reject", () => {
+    expect(pickJsonObject(' {"a": 1} ')).toEqual({ a: 1 });
+    expect(pickJsonObject('{"archetype": "old"}{"archetype": "new"}')).toEqual({ archetype: "new" });
+    expect(pickJsonObject('{"choice": "x", "reason": "y"}')).toEqual({ choice: "x", reason: "y" });
+  });
+
+  it("still fails on garbage: prose, a truncated object, trailing text, a non-object", () => {
+    expect(() => pickJsonObject("Here is the plan: {}")).toThrow(/non-JSON/);
+    expect(() => pickJsonObject('{"a": 1')).toThrow(/non-JSON/);
+    expect(() => pickJsonObject('{"a": 1} and more')).toThrow(/non-JSON/);
+    expect(() => pickJsonObject("")).toThrow(/non-JSON/);
+    expect(() => pickJsonObject("[1, 2]")).toThrow(/non-object/);
   });
 });
