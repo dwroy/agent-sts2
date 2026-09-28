@@ -92,9 +92,23 @@ print(f"完成 {len(finished)} 局，胜 {wins}；过第一幕 boss（≥18 层�
 
 # ---- API requests
 jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0 and decider(r) not in ("deepseek",) and not (r.get("escalation") or {}).get("by") == "deepseek")
-jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0)
-jev_in = sum(r["usage"]["input_tokens"] for r in recs)
-jev_out = sum(r["usage"]["output_tokens"] for r in recs)
+def _jev_usage(r):
+    """Jev's own tokens of a record. Since 09-28 `usage` also counts DeepSeek's tokens (then it carries
+    cache_hit_tokens): all of them on a DeepSeek-decided screen, the escalation's on an escalated one."""
+    u = r["usage"]
+    if "cache_hit_tokens" not in u:
+        return u["input_tokens"], u["output_tokens"]
+    if r.get("decider") == "deepseek":
+        return 0, 0
+    e = r.get("escalation") or {}
+    if e.get("by", "deepseek") == "deepseek":
+        return u["input_tokens"] - (e.get("input_tokens") or 0), u["output_tokens"] - (e.get("output_tokens") or 0)
+    return u["input_tokens"], u["output_tokens"]
+
+
+jev_calls = sum(1 for r in recs if _jev_usage(r)[0] > 0)
+jev_in = sum(_jev_usage(r)[0] for r in recs)
+jev_out = sum(_jev_usage(r)[1] for r in recs)
 esc = [r for r in recs if r.get("escalation")]
 ds = [r for r in esc if r["escalation"].get("by", "deepseek") == "deepseek"]
 # Direct DeepSeek decisions (no Jev first): their stats live under r["deepseek"]; fold them in for totals.
@@ -104,18 +118,34 @@ def _num(v):
 
 ds_direct = [r for r in recs if not r.get("escalation") and (r.get("deepseek") or r.get("decider") == "deepseek")]
 cl = [r for r in esc if r["escalation"].get("by") == "claude"]
-ds_tokens = sum(r["escalation"].get("tokens", 0) for r in ds)
 print("\n## 接口请求")
 print(f"Jev 请求 {jev_calls} 次，token {jev_in:,} 入 / {jev_out:,} 出，约 ${(jev_in + jev_out) / 1e6 * JEV_PRICE:.3f}")
 lat = sorted(r["latency_ms"]["jev"] for r in recs if r["latency_ms"]["jev"] > 0)
 if lat:
     print(f"Jev 延迟 p50 {lat[len(lat)//2]} ms，p95 {lat[int(len(lat)*0.95)]} ms")
-ds_in = sum(r["escalation"].get("input_tokens", 0) for r in ds)
-ds_hit = sum(r["escalation"].get("cache_hit_tokens", 0) for r in ds)
-ds_out = sum(r["escalation"].get("output_tokens", 0) for r in ds)
-ds_reason = sum(r["escalation"].get("reasoning_tokens", 0) for r in ds)
+# Direct DeepSeek decisions count too (a memo-reused answer made no call).
+ds_calls = [r["escalation"] for r in ds] + [r["deepseek"] for r in ds_direct if isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused")]
+ds_tokens = sum(_num(c.get("tokens")) for c in ds_calls)
+ds_in = sum(_num(c.get("input_tokens")) for c in ds_calls)
+ds_hit = sum(_num(c.get("cache_hit_tokens")) for c in ds_calls)
+ds_out = sum(_num(c.get("output_tokens")) for c in ds_calls)
+ds_reason = sum(_num(c.get("reasoning_tokens")) for c in ds_calls)
 ds_cost = ((ds_in - ds_hit) * DS_MISS + ds_hit * DS_HIT + ds_out * DS_OUT) / 1e6
 print(f"DeepSeek 兜底 {len(ds)} 次、直接决策 {len(ds_direct)} 次，token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
+# DeepSeek's prefix cache: hit tokens / input tokens over the recent runs (decisions, escalations and the
+# run/fight plans), when the logs carry the numbers.
+RECENT_RUNS = 5
+recent = [rid for rid in runs][-RECENT_RUNS:]
+cache_rows = [(r["_run"], c) for r, c in [(r, r["escalation"]) for r in ds] + [(r, r["deepseek"]) for r in ds_direct if isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused")]]
+for name in ("run-plans.jsonl", "fight-plans.jsonl"):
+    path = os.path.join(ROOT, "logs", name)
+    if os.path.exists(path):
+        cache_rows += [(p.get("run"), p) for p in load(path)]
+cache_rows = [(rid, c) for rid, c in cache_rows if rid in recent and _num(c.get("input_tokens")) > 0 and "cache_hit_tokens" in c]
+if cache_rows:
+    c_in = sum(_num(c["input_tokens"]) for _, c in cache_rows)
+    c_hit = sum(_num(c["cache_hit_tokens"]) for _, c in cache_rows)
+    print(f"DeepSeek 缓存命中率（最近 {len(recent)} 局，{len(cache_rows)} 次调用）: 命中 {c_hit:,} / 输入 {c_in:,} tokens = {c_hit / c_in:.0%}")
 ds_lat = sorted([r["escalation"].get("latency_ms", 0) for r in ds] + [_num((r.get("deepseek") or {}).get("latency_ms")) or _num(r.get("latency_ms")) for r in ds_direct])
 if ds_lat:
     print(f"DeepSeek 延迟 p50 {ds_lat[len(ds_lat)//2]/1000:.1f} 秒，最长 {ds_lat[-1]/1000:.1f} 秒")
