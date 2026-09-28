@@ -89,7 +89,8 @@ describe("fight value (offline stub)", () => {
       for (const name of readdirSync(dir)) {
         const path = join(dir, name);
         if (statSync(path).isDirectory()) walk(path);
-        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && readFileSync(path, "utf8").includes("fight-value")) offenders.push(path);
+        // rollout.ts (the offline rollout, itself unwired: tests/rollout.test.ts) is the one allowed reader.
+        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && !path.endsWith("rollout.ts") && readFileSync(path, "utf8").includes("fight-value")) offenders.push(path);
       }
     };
     walk(join(ROOT, "src"));

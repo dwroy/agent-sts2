@@ -27,6 +27,10 @@ Usage:
   python3 tools/build-fight-value.py extract [--states PATH] [--rows PATH]
   python3 tools/build-fight-value.py train   [--rows PATH] [--decisions PATH] [--out PATH] [--notes PATH]
   python3 tools/build-fight-value.py all
+  python3 tools/build-fight-value.py folds --fold-dir DIR        (out-of-fold models + gates for the rollout backtest)
+  python3 tools/build-fight-value.py rollout-report --work DIR   (after tools/rollout-backtest.ts; see notes/rollout-backtest.md)
+`train` also writes src/knowledge/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
+current solver weights, and the win-probability calibration). Rebuild after each run: `python3 tools/build-fight-value.py all`.
 Parsing (fight boundaries, room kind, enemy identity across a fight) is tools/build-monster-db.py's.
 """
 import argparse
@@ -792,6 +796,748 @@ def ranking_test(rows, feats, preds, choice_flags):
     return out
 
 
+# ---------------------------------------------------------------- gates (Part A: when to trust the model)
+#
+# The model's say in a line's value is earned per segment of decision points, by measured effect and
+# sample size, never by fight kind: segment = encounter (the fight's initial enemy ids), backing off to
+# (act, fight kind), then fight kind over all acts, then everything, when fewer than GATE_MIN_ROWS of its
+# decision points are in comparable pairs (the kind is a pooling level for thin data, not a switch).
+# Effect = the fair same-state ranking test (pairs of turns from different fights with the same encounter,
+# turn, our HP//10 and enemy HP//20 at the start; which of the two played lines ended the fight with less
+# HP lost) on out-of-fold predictions: the concordance of the blend w x model + (1 - w) x current, minus
+# that of the current weights alone, for w on GATE_GRID (w = 1 is the model alone), with a cluster
+# bootstrap over the similar-state groups (pairs inside one group are not independent).
+#   w_cap = the grid weight with the highest lower CI bound (lcb)
+#   w     = w_cap x n / (n + GATE_N0) x smoothstep(clamp(lcb / GATE_A_FULL, 0, 1))
+# so w is 0 until some blend's advantage has a lower bound above 0, and grows smoothly with that bound
+# and the number of pairs n.
+# Common scale (HP-equivalent): model value = -(HP lost on our own turn) - E[further HP loss]
+# - DEATH_HP x (1 - calibrated win prob); current value = turn-solver score / its HP weight.
+
+GATE_MIN_ROWS = 120  # an encounter carries its own gate from this many similar-state decision points (rows in pairs)
+GATE_N0 = 100.0
+GATE_A_FULL = 0.02
+GATE_BOOT = 400
+GATE_CI = 0.90  # two-sided; the lower bound is the 5th percentile
+GATE_GRID = (0.25, 0.5, 0.75, 1.0)
+DEATH_HP = 40.0
+CAL_MIN_GAIN = 0.0005  # a calibration map is used only if it lowers the nested out-of-fold Brier by this much
+
+
+def smoothstep(x):
+    x = min(1.0, max(0.0, x))
+    return x * x * (3 - 2 * x)
+
+
+def gate_weight(n, lcb, w_cap=1.0):
+    """The blend weight of the model in one segment (fight-value-gates.json `w`; rollout.ts gateWeight).
+    n = decision points (rows) behind the segment's pairs: pairs inside a group share rows, so the pair count
+    overstates the evidence (FUZZY_WURM_CRAWLER: 1658 pairs from 183 rows)."""
+    if n <= 0:
+        return 0.0
+    return w_cap * (n / (n + GATE_N0)) * smoothstep(lcb / GATE_A_FULL)
+
+
+def iso_fit(xs, ys, max_points=40):
+    """Isotonic regression (pool adjacent violators) -> [[x, y], ...] knots for linear interpolation."""
+    order = sorted(range(len(xs)), key=lambda i: xs[i])
+    blocks = []  # [sum_x, sum_y, n]
+    for i in order:
+        blocks.append([xs[i], ys[i], 1])
+        while len(blocks) > 1 and blocks[-2][1] / blocks[-2][2] >= blocks[-1][1] / blocks[-1][2]:
+            sx, sy, n = blocks.pop()
+            blocks[-1][0] += sx
+            blocks[-1][1] += sy
+            blocks[-1][2] += n
+    # Thin to at most max_points knots by merging the lightest neighbours (merged means stay ordered).
+    while len(blocks) > max_points:
+        k = min(range(len(blocks) - 1), key=lambda j: blocks[j][2] + blocks[j + 1][2])
+        sx, sy, n = blocks.pop(k + 1)
+        blocks[k][0] += sx
+        blocks[k][1] += sy
+        blocks[k][2] += n
+    return [[round(b[0] / b[2], 5), round(b[1] / b[2], 5)] for b in blocks]
+
+
+def iso_apply(knots, x):
+    """Linear interpolation between the knots, flat outside (rollout.ts calibrate())."""
+    if not knots:
+        return x
+    if x <= knots[0][0]:
+        return knots[0][1]
+    if x >= knots[-1][0]:
+        return knots[-1][1]
+    j = bisect.bisect_right([k[0] for k in knots], x)
+    (x0, y0), (x1, y1) = knots[j - 1], knots[j]
+    return y0 if x1 == x0 else y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+
+
+def _logit(p):
+    p = min(1 - 1e-4, max(1e-4, p))
+    return math.log(p / (1 - p))
+
+
+def platt_fit(xs, ys):
+    """Logistic regression of the outcome on logit(p) (Newton steps): [a, b]."""
+    z = [_logit(x) for x in xs]
+    a, b = 1.0, 0.0
+    for _ in range(30):
+        g0 = g1 = h00 = h01 = h11 = 0.0
+        for zi, y in zip(z, ys):
+            p = 1 / (1 + math.exp(-(a * zi + b)))
+            r, w = p - y, p * (1 - p)
+            g0 += r * zi
+            g1 += r
+            h00 += w * zi * zi
+            h01 += w * zi
+            h11 += w
+        h00 += 1e-6
+        h11 += 1e-6
+        det = h00 * h11 - h01 * h01
+        if det <= 0:
+            break
+        a -= (h11 * g0 - h01 * g1) / det
+        b -= (-h01 * g0 + h00 * g1) / det
+    return [round(a, 5), round(b, 5)]
+
+
+def cal_apply(cal, p):
+    """{"method": "none" | "isotonic" | "platt", ...} -> calibrated p (rollout.ts calibrate())."""
+    if not cal or cal["method"] == "none":
+        return p
+    if cal["method"] == "platt":
+        a, b = cal["ab"]
+        return 1 / (1 + math.exp(-(a * _logit(p) + b)))
+    return iso_apply(cal["knots"], p)
+
+
+def cal_fit(method, xs, ys):
+    if method == "platt":
+        return {"method": "platt", "ab": platt_fit(xs, ys)}
+    if method == "isotonic":
+        return {"method": "isotonic", "knots": iso_fit(xs, ys)}
+    return {"method": "none"}
+
+
+def solver_hp_weight(row):
+    S = row["S"]
+    hp_frac = S["hp"] / max(1, S["mhp"] or 80)
+    return 1.0 + 1.5 * max(0.0, 0.6 - hp_frac) / 0.6
+
+
+def choose_calibration(rows, preds, fold_of_run):
+    """Per fight kind: none / isotonic / Platt, whichever has the lowest nested out-of-fold Brier (a map must
+    beat raw by CAL_MIN_GAIN). Returns the chosen method per kind, the check table, and per-row nested p."""
+    folds = sorted(set(fold_of_run.values()))
+    check = {}
+    methods = {}
+    p_nested = [None] * len(rows)
+    for kind in FIGHT_KINDS:
+        idx = [i for i, r in enumerate(rows) if r["kind"] == kind]
+        ys = {i: 1 if rows[i]["outcome"] == "won" else 0 for i in idx}
+        nested = {m: {} for m in ("none", "isotonic", "platt")}
+        for k in folds:
+            tr = [i for i in idx if fold_of_run[rows[i]["run"]] != k]
+            te = [i for i in idx if fold_of_run[rows[i]["run"]] == k]
+            for m in nested:
+                cal = cal_fit(m, [preds[i]["gbm"][1] for i in tr], [ys[i] for i in tr])
+                for i in te:
+                    nested[m][i] = cal_apply(cal, preds[i]["gbm"][1])
+        scores = {m: brier([nested[m][i] for i in idx], [ys[i] for i in idx]) for m in nested}
+        best = min(scores, key=scores.get)
+        if scores["none"] - scores[best] < CAL_MIN_GAIN:
+            best = "none"
+        methods[kind] = best
+        for i in idx:
+            p_nested[i] = nested[best][i]
+        check[kind] = {"n": len(idx), "method": best, **{f"brier_{m}": round(v, 4) for m, v in scores.items()},
+                       "reliability_raw": [[b[0], b[1], round(b[2], 3), round(b[3], 3)] for b in reliability([preds[i]["gbm"][1] for i in idx], [ys[i] for i in idx])],
+                       "reliability_chosen": [[b[0], b[1], round(b[2], 3), round(b[3], 3)] for b in reliability([nested[best][i] for i in idx], [ys[i] for i in idx])]}
+    return methods, check, p_nested
+
+
+def gate_records(rows, preds, p_cal, choice_flags):
+    """Per test row: the similar-state key, the realised outcome, and both values on the HP scale."""
+    recs = []
+    for row, p, pc, flag in zip(rows, preds, p_cal, choice_flags):
+        S = row["S"]
+        died = row["outcome"] == "died"
+        y = S["hp"] if died else max(0, S["hp"] - row["final_hp"])
+        own = max(0, S["hp"] - row["E"]["hp"])
+        vm = -own - p["gbm"][0] - DEATH_HP * (1 - pc)
+        vw = solver_weights_value(row) / solver_hp_weight(row)
+        ehp = sum(max(0, e[2]) for e in S["E"] if e[5] and not e[6])
+        recs.append({
+            "key": (row["enc"], row["t"], S["hp"] // 10, ehp // 20), "fid": row["fid"], "y": y, "win": 0 if died else 1,
+            "vm": vm, "vw": vw, "p_raw": p["gbm"][1], "p_cal": pc, "enc": row["enc"], "act": row["act"], "kind": row["kind"],
+            "choice": flag,
+        })
+    return recs
+
+
+def pair_groups(recs):
+    """Similar-state groups -> list of pairs (a, b, a_better) across fights with different outcomes."""
+    groups = collections.defaultdict(list)
+    for r in recs:
+        groups[r["key"]].append(r)
+    out = {}
+    for key, g in groups.items():
+        pairs = []
+        for i in range(len(g)):
+            for j in range(i + 1, len(g)):
+                a, b = g[i], g[j]
+                if a["fid"] == b["fid"] or a["y"] == b["y"]:
+                    continue
+                pairs.append((a, b, a["y"] < b["y"]))
+        if pairs:
+            out[key] = pairs
+    return out
+
+
+def _conc(va, vb, a_better):
+    if va == vb:
+        return 0.5
+    return 1.0 if (va > vb) == a_better else 0.0
+
+
+def group_sums(pairs, weights=GATE_GRID):
+    """[current correct, blend correct for each weight...], pairs, rows: one similar-state group."""
+    out = [0.0] * (1 + len(weights))
+    for a, b, better in pairs:
+        out[0] += _conc(a["vw"], b["vw"], better)
+        for k, w in enumerate(weights):
+            out[1 + k] += _conc(w * a["vm"] + (1 - w) * a["vw"], w * b["vm"] + (1 - w) * b["vw"], better)
+    rows_in = len({id(a) for a, _, _ in pairs} | {id(b) for _, b, _ in pairs})
+    return out, len(pairs), rows_in
+
+
+def segment_stats(entries, rng, boots=GATE_BOOT):
+    """Concordance of the current weights and of each blend, each blend's advantage and its cluster-bootstrap CI."""
+    n = sum(e[1] for e in entries)
+    rows_in = sum(e[2] for e in entries)
+    grid = list(GATE_GRID)
+    if n == 0:
+        return {"n_pairs": 0, "n_rows": 0, "conc_current": None, "conc_model": None, "advantage": 0.0, "ci": [None, None],
+                "w_cap": 1.0, "blend": {}}
+    tot = [sum(e[0][k] for e in entries) for k in range(1 + len(grid))]
+    diffs = [[] for _ in grid]
+    m = len(entries)
+    for _ in range(boots):
+        t = [0.0] * (1 + len(grid))
+        tn = 0
+        for _ in range(m):
+            e = entries[rng.randrange(m)]
+            for k in range(len(t)):
+                t[k] += e[0][k]
+            tn += e[1]
+        for k in range(len(grid)):
+            diffs[k].append((t[1 + k] - t[0]) / tn if tn else 0.0)
+    blend = {}
+    for k, w in enumerate(grid):
+        d = sorted(diffs[k])
+        lo = d[int(boots * (1 - GATE_CI) / 2)]
+        hi = d[min(boots - 1, int(boots * (1 + GATE_CI) / 2))]
+        blend[str(w)] = {"conc": round(tot[1 + k] / n, 4), "advantage": round((tot[1 + k] - tot[0]) / n, 4), "ci": [round(lo, 4), round(hi, 4)]}
+    w_cap = max(grid, key=lambda w: (blend[str(w)]["ci"][0], w))
+    chosen = blend[str(w_cap)]
+    return {"n_pairs": n, "n_rows": rows_in, "conc_current": round(tot[0] / n, 4), "conc_model": blend["1.0"]["conc"],
+            "advantage_model": blend["1.0"]["advantage"], "ci_model": blend["1.0"]["ci"],
+            "w_cap": w_cap, "advantage": chosen["advantage"], "ci": chosen["ci"], "blend": blend}
+
+
+def segment_keys(rec):
+    """Most specific first: encounter, act x fight kind, fight kind (all acts), everything."""
+    return ["enc:" + rec["enc"], f"ak:{rec['act']}|{rec['kind']}", f"k:{rec['kind']}", "global"]
+
+
+def build_segments(groups, rng, boots=GATE_BOOT, model_only=False):
+    """Every segment's stats, the level each encounter uses (its own, or backed off), and w.
+    model_only: the rule measured on the model alone (w_cap = 1), for the nested comparison."""
+    members = collections.defaultdict(list)
+    meta = {}
+    for key, pairs in groups.items():
+        rec = pairs[0][0]
+        entry = group_sums(pairs)
+        for seg in segment_keys(rec):
+            members[seg].append(entry)
+        meta.setdefault("enc:" + rec["enc"], {"act": rec["act"], "kind": rec["kind"]})
+        meta.setdefault(f"ak:{rec['act']}|{rec['kind']}", {"act": rec["act"], "kind": rec["kind"]})
+        meta.setdefault(f"k:{rec['kind']}", {"kind": rec["kind"]})
+    segs = {}
+    for seg in sorted(members):
+        st = segment_stats(members[seg], rng, boots)
+        if model_only:
+            st["w_cap"], st["advantage"], st["ci"] = 1.0, st["advantage_model"], st["ci_model"]
+        st.update(meta.get(seg, {}))
+        st["level"] = seg.split(":")[0] if seg != "global" else "global"
+        segs[seg] = st
+    for seg, st in segs.items():
+        uses = seg
+        if st["level"] == "enc" and st["n_rows"] < GATE_MIN_ROWS:
+            uses = f"ak:{st['act']}|{st['kind']}"
+        if uses.startswith("ak:") and segs.get(uses, {}).get("n_rows", 0) < GATE_MIN_ROWS:
+            uses = f"k:{st['kind']}"
+        if uses.startswith("k:") and segs.get(uses, {}).get("n_rows", 0) < GATE_MIN_ROWS:
+            uses = "global"
+        st["uses"] = uses
+    for seg, st in segs.items():
+        own = segs[st["uses"]]
+        st["w"] = round(gate_weight(own["n_rows"], own["ci"][0] if own["ci"][0] is not None else 0.0, own["w_cap"]), 4)
+    return segs
+
+
+def resolve_segment(segs, enc, act, kind):
+    """The segment an encounter's decision uses and its w (rollout.ts gateFor)."""
+    for key in ("enc:" + enc, f"ak:{act}|{kind}", f"k:{kind}", "global"):
+        if key in segs:
+            return segs[key]["uses"], segs[key]["w"]
+    return None, 0.0
+
+
+def gate_nested_check(recs, boots=200):
+    """Honest check of the gating rule: w per segment from 4/5 of the similar-state groups, scored on the
+    held-out 1/5 (groups assigned to folds by a hash of their key). Both rules: blend-aware (w_cap from the
+    grid) and model-only (the model alone must beat the current weights)."""
+    groups = pair_groups(recs)
+    fold = {key: int(run_hash("|".join(map(str, key)) + "#gate") * 5) % 5 for key in groups}
+    rng = random.Random(11)
+    labels = ["current", "model", "gated", "gated model-only", "blend 0.5"]
+    tallies = collections.defaultdict(lambda: [0.0] * (len(labels) + 1))
+    for k in range(5):
+        train_groups = {key: p for key, p in groups.items() if fold[key] != k}
+        segs = build_segments(train_groups, rng, boots)
+        segs_m = build_segments(train_groups, rng, boots, model_only=True)
+        for key, pairs in groups.items():
+            if fold[key] != k:
+                continue
+            rec = pairs[0][0]
+            _, w = resolve_segment(segs, rec["enc"], rec["act"], rec["kind"])
+            _, wm = resolve_segment(segs_m, rec["enc"], rec["act"], rec["kind"])
+            for a, b, better in pairs:
+                vals = [_conc(a["vw"], b["vw"], better), _conc(a["vm"], b["vm"], better)]
+                for ww in (w, wm, 0.5):
+                    vals.append(_conc(ww * a["vm"] + (1 - ww) * a["vw"], ww * b["vm"] + (1 - ww) * b["vw"], better))
+                subsets = ["all", rec["kind"]] + (["choice points"] if a["choice"] and b["choice"] else [])
+                for label in subsets:
+                    t = tallies[label]
+                    for j, v in enumerate(vals):
+                        t[j] += v
+                    t[-1] += 1
+    return {label: {"pairs": int(t[-1]), **{labels[j]: t[j] / t[-1] for j in range(len(labels))}} for label, t in tallies.items() if t[-1]}
+
+
+def build_gates(rows, preds, fold_of_run, choice_flags):
+    """fight-value-gates.json: calibration (chosen per kind by nested Brier, fitted on all out-of-fold rows)
+    and the segment table."""
+    t0 = time.time()
+    methods, cal_check, p_nested = choose_calibration(rows, preds, fold_of_run)
+    recs = gate_records(rows, preds, p_nested, choice_flags)
+    groups = pair_groups(recs)
+    segs = build_segments(groups, random.Random(5))
+    calibration = {}
+    for kind in FIGHT_KINDS:
+        sel = [i for i, r in enumerate(rows) if r["kind"] == kind]
+        calibration[kind] = cal_fit(methods[kind], [preds[i]["gbm"][1] for i in sel], [1 if rows[i]["outcome"] == "won" else 0 for i in sel])
+    nested = gate_nested_check(recs)
+    print(f"[gates] {len(segs)} segments, {sum(len(p) for p in groups.values())} pairs in {time.time() - t0:.0f}s", file=sys.stderr)
+    return {"segments": segs, "calibration": calibration, "calibration_check": cal_check, "nested": nested,
+            "recs": len(recs), "pairs": sum(len(p) for p in groups.values())}
+
+
+def write_gates(path, gates, rows):
+    out = {
+        "note": "Generated by tools/build-fight-value.py train (Part A gating). OFFLINE: not read by any decision code. "
+                "Per segment of decision points (encounter; backed off to act x fight kind, then fight kind, then global, below "
+                f"{GATE_MIN_ROWS} similar-state decision points): the fair same-state ranking test of blends of the fight-value model with the "
+                "current turn-solver weights, against the current weights alone, on out-of-fold predictions, with a cluster-bootstrap "
+                "CI; the model's blend weight w. Line value (HP-equivalent) = w x model value + (1 - w) x current value; model value = "
+                f"-own-turn HP loss - E[further HP loss] - {DEATH_HP:g} x (1 - calibrated win prob); current value = solver score / "
+                "solver HP weight. Win probabilities: calibration per fight kind (none / isotonic knots / Platt), chosen by nested "
+                "out-of-fold Brier. See notes/rollout-backtest.md.",
+        "generated_from": {"rows": len(rows), "fights": len({r["fid"] for r in rows}), "runs": len({r["run"] for r in rows}),
+                           "last_ts": max(r["ts1"] for r in rows), "pairs": gates["pairs"]},
+        "params": {"min_rows": GATE_MIN_ROWS, "n0": GATE_N0, "a_full": GATE_A_FULL, "bootstrap": GATE_BOOT, "ci": GATE_CI,
+                   "grid": list(GATE_GRID), "death_hp": DEATH_HP,
+                   "formula": "w = w_cap * n/(n+n0) * smoothstep(clamp(ci_lo/a_full, 0, 1)); n = rows; w_cap = grid weight with the highest ci_lo"},
+        "calibration": gates["calibration"],
+        "calibration_check": gates["calibration_check"],
+        "nested_check": {k: {kk: round(vv, 4) if isinstance(vv, float) else vv for kk, vv in v.items()} for k, v in gates["nested"].items()},
+        "segments": gates["segments"],
+    }
+    with open(path, "w", encoding="utf8") as handle:
+        json.dump(out, handle, ensure_ascii=False, separators=(",", ":"))
+        handle.write("\n")
+
+
+def gate_notes(gates):
+    segs = gates["segments"]
+    L = ["## Gates (Part A): where the model earns a say", ""]
+    L.append(f"Segments = encounters (backed off to act x kind, then kind, then global, below {GATE_MIN_ROWS} decision points in pairs). Advantage = concordance of "
+             f"the blend w_cap x model + (1 - w_cap) x current minus the current weights' (w_cap on {list(GATE_GRID)}, the one with the "
+             f"highest lower bound); w = w_cap x n/(n+{GATE_N0:g}) x smoothstep(CI low / {GATE_A_FULL}). {GATE_BOOT} cluster-bootstrap "
+             f"resamples of the similar-state groups, {int(GATE_CI * 100)}% CI. Written to src/knowledge/fight-value-gates.json.")
+    L.append("")
+    own = [(k, s) for k, s in segs.items() if s["uses"] == k]
+    L.append(f"- {len(segs)} segments ({sum(1 for s in segs.values() if s['level'] == 'enc')} encounters); {len(own)} carry their own gate, "
+             f"{sum(1 for _, s in own if s['w'] > 0.05)} of them with w > 0.05; {sum(1 for s in segs.values() if s['level'] == 'enc' and s['w'] > 0.05)} "
+             "encounters end up with w > 0.05 (own or backed off).")
+    L.append("")
+    L.append("| segment | pairs | rows | conc. current | conc. model | model adv. [90% CI] | w_cap | blend adv. [90% CI] | w | used by |")
+    L.append("|---|---|---|---|---|---|---|---|---|---|")
+    users = collections.Counter(s["uses"] for s in segs.values())
+    for k, s in sorted(own, key=lambda kv: -kv[1]["n_pairs"]):
+        L.append(f"| {k} | {s['n_pairs']} | {s['n_rows']} | {s['conc_current']} | {s['conc_model']} | {s['advantage_model']:+.3f} "
+                 f"[{s['ci_model'][0]:+.3f}, {s['ci_model'][1]:+.3f}] | {s['w_cap']} | {s['advantage']:+.3f} [{s['ci'][0]:+.3f}, {s['ci'][1]:+.3f}] | "
+                 f"{s['w']:.2f} | {users[k]} |")
+    L.append("")
+    L.append("Nested check (w fitted on 4/5 of the similar-state groups, scored on the held-out 1/5; concordance, 0.5 = chance):")
+    L.append("")
+    L.append("| subset | pairs | current | model | gated (blend-aware) | gated (model-only rule) | fixed 0.5 blend |")
+    L.append("|---|---|---|---|---|---|---|")
+    for label in ["all"] + FIGHT_KINDS + ["choice points"]:
+        r = gates["nested"].get(label)
+        if r:
+            L.append(f"| {label} | {r['pairs']} | {r['current']:.3f} | {r['model']:.3f} | {r['gated']:.3f} | {r['gated model-only']:.3f} | {r['blend 0.5']:.3f} |")
+    L.append("")
+    L.append("Win-probability calibration (per fight kind; Brier of out-of-fold predictions, each map fitted on the other folds):")
+    L.append("")
+    L.append("| kind | n | raw | isotonic | Platt | used |")
+    L.append("|---|---|---|---|---|---|")
+    for kind, c in gates["calibration_check"].items():
+        L.append(f"| {kind} | {c['n']} | {c['brier_none']:.4f} | {c['brier_isotonic']:.4f} | {c['brier_platt']:.4f} | {c['method']} |")
+    L.append("")
+    return "\n".join(L)
+
+
+# ---------------------------------------------------------------- rollout backtest report (Part C)
+
+EVALUATORS = [("i", "cur", "(i) current score"), ("ii", "ii", "(ii) 1 turn + gated terminal"), ("iii", "iii", "(iii) 5-turn rollout + gated terminal"),
+              ("ii_m", "iiModel", "(ii') 1 turn + model, w = 1"), ("iii_m", "iiiModel", "(iii') rollout + model terminal, w = 1")]
+
+
+def load_evals(work):
+    out = []
+    for name in sorted(os.listdir(work)):
+        if name.startswith("eval-") and name.endswith(".jsonl"):
+            with open(os.path.join(work, name), encoding="utf8") as handle:
+                out += [json.loads(line) for line in handle if line.strip()]
+    return out
+
+
+def pair_test(points, labels, rng, boots=GATE_BOOT):
+    """Fair same-state pairing on decision points: concordance per evaluator and the cluster-bootstrap CI of
+    each evaluator's difference to (i)."""
+    groups = collections.defaultdict(list)
+    for p in points:
+        groups[p["key"]].append(p)
+    sums = []
+    for g in groups.values():
+        s = [0.0] * len(labels)
+        n = 0
+        for i in range(len(g)):
+            for j in range(i + 1, len(g)):
+                a, b = g[i], g[j]
+                if a["fid"] == b["fid"] or a["y"] == b["y"]:
+                    continue
+                n += 1
+                for k, lab in enumerate(labels):
+                    s[k] += _conc(a["v"][lab], b["v"][lab], a["y"] < b["y"])
+        if n:
+            sums.append((s, n))
+    n = sum(x[1] for x in sums)
+    if not n:
+        return None
+    res = {"pairs": n, "groups": len(sums), "conc": {lab: sum(x[0][k] for x in sums) / n for k, lab in enumerate(labels)}, "ci": {}}
+    m = len(sums)
+    diffs = {lab: [] for lab in labels[1:]}
+    for _ in range(boots):
+        t = [0.0] * len(labels)
+        tn = 0
+        for _ in range(m):
+            s, c = sums[rng.randrange(m)]
+            for k in range(len(labels)):
+                t[k] += s[k]
+            tn += c
+        for k, lab in enumerate(labels[1:], start=1):
+            diffs[lab].append((t[k] - t[0]) / tn)
+    for lab, d in diffs.items():
+        d.sort()
+        res["ci"][lab] = (d[int(boots * 0.05)], d[min(boots - 1, int(boots * 0.95))])
+    return res
+
+
+def rollout_report(work, rows_path, notes_path, gates_path):
+    rows = {}
+    for r in load_rows(rows_path):
+        rows[f"{r['run']}|{r['floor']}|{r['t']}"] = r
+    evals = load_evals(work)
+    errors = collections.Counter(e["error"].split(":")[0] for e in evals if "error" in e)
+    ok = [e for e in evals if "error" not in e]
+    points = []
+    unmatched = 0
+    for e in ok:
+        row = rows.get(e["key"])
+        played = [l for l in e["lines"] if l["played"]]
+        if row is None or not played:
+            unmatched += 1
+            continue
+        l = played[0]
+        S = row["S"]
+        died = row["outcome"] == "died"
+        y = S["hp"] if died else max(0, S["hp"] - row["final_hp"])
+        ehp = sum(max(0, x[2]) for x in S["E"] if x[5] and not x[6])
+        v = {lab: l[field] for lab, field, _ in EVALUATORS}
+        if v["ii_m"] is None:
+            v["ii_m"] = v["ii"]
+        if v["iii_m"] is None:
+            v["iii_m"] = v["iii"]
+        # Regret: the played line's value minus the best offered line's, per evaluator (0 = it agrees with
+        # the choice). It does not carry the state's own strength (deck, relics), only the choice.
+        offered = [x for x in e["lines"] if x["offer"]] or [l]
+        for lab, field, _ in EVALUATORS:
+            alt = "ii" if lab == "ii_m" else "iii" if lab == "iii_m" else field
+            vals = [x[field] if x[field] is not None else x[alt] for x in offered]
+            v["r_" + lab] = v[lab] - max(vals)
+        points.append({"key": (row["enc"], row["t"], S["hp"] // 10, ehp // 20), "fid": row["fid"], "y": y, "win": 0 if died else 1,
+                       "kind": row["kind"], "seg": l["seg"], "w": l["w"], "v": v, "line": l, "e": e})
+    labels = [lab for lab, _, _ in EVALUATORS]
+    rlabels = ["r_" + lab for lab in labels]
+    rng = random.Random(21)
+    subsets = [("all", lambda p: True)] + [(k, (lambda k: lambda p: p["kind"] == k)(k)) for k in FIGHT_KINDS]
+    subsets += [("gate w > 0.05", lambda p: p["w"] > 0.05), ("gate w <= 0.05", lambda p: p["w"] <= 0.05)]
+    segs = collections.Counter(p["seg"] for p in points)
+    for seg, _ in segs.most_common():
+        subsets.append((f"segment {seg}", (lambda s: lambda p: p["seg"] == s)(seg)))
+    table = []
+    rtable = []
+    for name, sel in subsets:
+        pts = [p for p in points if sel(p)]
+        res = pair_test(pts, labels, rng)
+        if res and res["pairs"] >= 20:
+            table.append((name, len(pts), res))
+        res = pair_test(pts, rlabels, rng)
+        if res and res["pairs"] >= 20:
+            rtable.append((name, len(pts), res))
+    # Pooled: realised loss when the evaluator's best offered line was played vs when it was not.
+    pooled = {}
+    for lab in labels:
+        for kind in ["all"] + FIGHT_KINDS:
+            pts = [p for p in points if (kind == "all" or p["kind"] == kind) and len([x for x in p["e"]["lines"] if x["offer"]]) >= 2]
+            top = [p["y"] for p in pts if p["v"]["r_" + lab] >= -1e-9]
+            other = [p["y"] for p in pts if p["v"]["r_" + lab] < -1e-9]
+            pooled[(lab, kind)] = (len(top), sum(top) / max(1, len(top)), len(other), sum(other) / max(1, len(other)))
+    # Agreement with realised outcomes: HP-loss forecast of the played line (from the turn's start to the
+    # fight's end) and win probability.
+    def mae_of(pts, f):
+        return sum(abs(f(p) - p["y"]) for p in pts) / max(1, len(pts))
+    forecast = []
+    for name, sel in [("all", lambda p: True)] + [(k, (lambda k: lambda p: p["kind"] == k)(k)) for k in FIGHT_KINDS]:
+        pts = [p for p in points if sel(p)]
+        if not pts:
+            continue
+        lm = lambda p, k, alt: p["line"][k] if p["line"].get(k) is not None else p["line"][alt]
+        forecast.append((name, len(pts), {
+            "this turn only (solver)": mae_of(pts, lambda p: p["line"]["hpLoss0"]),
+            "(ii) 1 turn + terminal": mae_of(pts, lambda p: p["line"]["iiLoss"]),
+            "(iii) rollout + terminal": mae_of(pts, lambda p: p["line"]["iiiLoss"]),
+            "ii_m": mae_of(pts, lambda p: lm(p, "iiLossM", "iiLoss")),
+            "iii_m": mae_of(pts, lambda p: lm(p, "iiiLossM", "iiiLoss")),
+        }, {
+            "(ii)": brier([p["line"]["iiWin"] for p in pts], [p["win"] for p in pts]),
+            "(iii)": brier([p["line"]["iiiWin"] for p in pts], [p["win"] for p in pts]),
+            "ii_m": brier([lm(p, "iiWinM", "iiWin") for p in pts], [p["win"] for p in pts]),
+            "iii_m": brier([lm(p, "iiiWinM", "iiiWin") for p in pts], [p["win"] for p in pts]),
+        }, sum(p["win"] for p in pts) / len(pts)))
+    # Within a decision: which offered line each evaluator ranks first, and how often that is the line played.
+    agree = collections.defaultdict(lambda: [0, 0])
+    same_top = collections.defaultdict(lambda: [0, 0])
+    for p in points:
+        offered = [l for l in p["e"]["lines"] if l["offer"]]
+        if len(offered) < 2:
+            continue
+        tops = {}
+        for lab, field, _ in EVALUATORS:
+            vals = [(l[field] if l[field] is not None else l["ii" if lab == "ii_m" else "iii"]) for l in offered]
+            tops[lab] = offered[max(range(len(offered)), key=lambda i: vals[i])]
+            agree[lab][0] += 1 if tops[lab]["played"] else 0
+            agree[lab][1] += 1
+        for lab in labels[1:]:
+            same_top[lab][0] += 1 if tops[lab] is tops["i"] else 0
+            same_top[lab][1] += 1
+    ms = sorted(e["ms"] for e in ok)
+    pct = lambda q: ms[min(len(ms) - 1, int(len(ms) * q))] if ms else 0
+    horizons = collections.Counter((e["horizon"], e["samples"]) for e in ok)
+    pol_turns = sum(e["policyTurns"] for e in ok)
+    pol_ms = sum(e["policyMs"] for e in ok)
+    pol_nodes = sum(e["policyNodes"] for e in ok)
+    piles = collections.Counter(e["piles"] for e in ok)
+    matched = sum(e["matched"] for e in ok)
+    offered_n = sum(e["offered"] for e in ok)
+    gates = json.load(open(gates_path, encoding="utf8")) if os.path.exists(gates_path) else {"segments": {}}
+    own = [(k, s) for k, s in gates["segments"].items() if s["uses"] == k]
+
+    L = ["# Rollout and gated fight value: backtest", "",
+         "Generated by `python3 tools/build-fight-value.py rollout-report` from `npx tsx tools/rollout-backtest.ts` "
+         "(numbers below are from the run that wrote this file). OFFLINE: `src/strategy/rollout.ts` and "
+         "`src/knowledge/fight-value-gates.json` are not read by any decision code.", "", ROLLOUT_FINDINGS]
+    L.append("## Setup")
+    L.append("")
+    L.append(f"- Decision points: {len(evals)} logged plan choices (A7+, first of the turn, joined to a fight-value row); "
+             f"{len(ok)} replayed ({dict(errors) or 'no errors'}), {len(points)} with the played line identified and evaluated.")
+    L.append(f"- Offered lines matched to the replayed solver's plans by plays text: {matched}/{offered_n} "
+             f"({matched / max(1, offered_n):.1%}); the live planner is re-run on the logged board with empty per-fight memory "
+             "and FIGHT_PLAN off, so a few offers differ.")
+    L.append(f"- Piles: {dict(piles)} (logged = the state's agent_view draw/discard piles; deck-minus-hand = approximation when the log has none).")
+    L.append(f"- Candidates per decision: top 6 by score + most damage + least HP lost + most setup + every offered line "
+             f"(mean {sum(len(e['lines']) for e in ok) / max(1, len(ok)):.1f}).")
+    L.append("- Rollout: 5 turns x 8 samples (common random numbers across lines), enemies by move model + monster DB "
+             "(base damage, hits, Strength and Block per move), our turns by the solver capped at 1500 nodes, no potions after turn 0; "
+             "terminal = w x model (calibrated) + (1 - w) x deck-damage clock, w from the gate of the encounter's segment.")
+    L.append("- Played line = the HP guard's replacement when the rationale says so, else the answer's choice.")
+    L.append("- Realised outcome = HP lost from the start of the turn to the fight's end (death: all HP), from the fight-value rows.")
+    L.append("")
+    L.append("## Runtime per decision (all candidate lines)")
+    L.append("")
+    L.append(f"- median {pct(0.5)} ms, p95 {pct(0.95)} ms, max {ms[-1] if ms else 0} ms over all {len(ms)} decisions "
+             "(budget 1500 ms; 16 shards in parallel on 32 cores, so slower than alone).")
+    solo_dir = os.path.join(work, "solo")
+    solo = load_evals(solo_dir) if os.path.isdir(solo_dir) else []
+    solo = [e for e in solo if "ms" in e]
+    if solo:
+        sm = sorted(e["ms"] for e in solo)
+        st = sum(e["policyTurns"] for e in solo)
+        L.append(f"- Alone (one process, {len(sm)} decisions = 1/8 of them): median {sm[len(sm) // 2]} ms, p95 {sm[int(len(sm) * 0.95)]} ms, "
+                 f"max {sm[-1]} ms; policy {sum(e['policyMs'] for e in solo) / max(1, st):.2f} ms per simulated turn.")
+    L.append(f"- (horizon, samples) used: {dict(horizons.most_common())}.")
+    L.append(f"- Fast policy: {pol_turns} solver turns, {pol_ms / max(1, pol_turns):.2f} ms and {pol_nodes / max(1, pol_turns):.0f} nodes per turn on average.")
+    L.append("")
+    L.append("## Fair same-state pairing test (played line's value vs realised outcome)")
+    L.append("")
+    L.append("Pairs of decision points from different fights with the same encounter, turn, our HP//10 and enemy HP//20 at the start; "
+             "an evaluator is right when it values the played line of the pair that lost less HP by the fight's end higher. "
+             "0.5 = chance. CI: 90% cluster bootstrap (groups resampled) of the difference to (i).")
+    L.append("")
+    L.append("| subset | points | pairs (groups) | (i) current | (ii) 1-turn gated | (iii) rollout gated | (ii') model w=1 | (iii') rollout model | ii - i [CI] | iii - i [CI] |")
+    L.append("|---|---|---|---|---|---|---|---|---|---|")
+    for name, npts, r in table:
+        c = r["conc"]
+        ci = r["ci"]
+        L.append(f"| {name} | {npts} | {r['pairs']} ({r['groups']}) | {c['i']:.3f} | {c['ii']:.3f} | {c['iii']:.3f} | {c['ii_m']:.3f} | {c['iii_m']:.3f} | "
+                 f"{c['ii'] - c['i']:+.3f} [{ci['ii'][0]:+.3f}, {ci['ii'][1]:+.3f}] | {c['iii'] - c['i']:+.3f} [{ci['iii'][0]:+.3f}, {ci['iii'][1]:+.3f}] |")
+    L.append("")
+    L.append("Same test on the regret (played line's value minus the best offered line's value, per evaluator): it keeps only "
+             "what the evaluator says about the CHOICE, not the strength of the state (deck, relics, draw pile), which the plain "
+             "values above also carry.")
+    L.append("")
+    L.append("| subset | points | pairs (groups) | (i) | (ii) | (iii) | (ii') | (iii') | ii - i [CI] | iii - i [CI] |")
+    L.append("|---|---|---|---|---|---|---|---|---|---|")
+    for name, npts, r in rtable:
+        c = r["conc"]
+        ci = r["ci"]
+        L.append(f"| {name} | {npts} | {r['pairs']} ({r['groups']}) | {c['r_i']:.3f} | {c['r_ii']:.3f} | {c['r_iii']:.3f} | {c['r_ii_m']:.3f} | {c['r_iii_m']:.3f} | "
+                 f"{c['r_ii'] - c['r_i']:+.3f} [{ci['r_ii'][0]:+.3f}, {ci['r_ii'][1]:+.3f}] | {c['r_iii'] - c['r_i']:+.3f} [{ci['r_iii'][0]:+.3f}, {ci['r_iii'][1]:+.3f}] |")
+    L.append("")
+    L.append("Pooled (decisions with 2+ offers): mean realised HP loss to the fight's end when the evaluator's best offered line was played, and when it was not.")
+    L.append("")
+    L.append("| evaluator | subset | n played its top | mean loss | n played another | mean loss | difference |")
+    L.append("|---|---|---|---|---|---|---|")
+    for lab, _, title in EVALUATORS:
+        for kind in ["all"] + FIGHT_KINDS:
+            nt, mt, no, mo = pooled[(lab, kind)]
+            L.append(f"| {title} | {kind} | {nt} | {mt:.1f} | {no} | {mo:.1f} | {mo - mt:+.1f} |")
+    L.append("")
+    L.append("## Forecast of the played line vs what happened")
+    L.append("")
+    L.append("Expected HP lost from the start of the turn to the fight's end for the played line, against the realised loss; "
+             "gated = terminal w x model + (1 - w) x clock; model = terminal from the model alone (w = 1).")
+    L.append("")
+    L.append("| subset | points | win rate | MAE: this turn only | MAE (ii) gated | MAE (ii') model | MAE (iii) gated | MAE (iii') model | Brier (ii) | Brier (ii') | Brier (iii) | Brier (iii') |")
+    L.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
+    for name, npts, m, b, wr in forecast:
+        L.append(f"| {name} | {npts} | {wr:.3f} | {m['this turn only (solver)']:.2f} | {m['(ii) 1 turn + terminal']:.2f} | {m['ii_m']:.2f} | "
+                 f"{m['(iii) rollout + terminal']:.2f} | {m['iii_m']:.2f} | {b['(ii)']:.4f} | {b['ii_m']:.4f} | {b['(iii)']:.4f} | {b['iii_m']:.4f} |")
+    L.append("")
+    L.append("## Within a decision")
+    L.append("")
+    L.append("Among the offered lines (decisions with 2+ offers): how often each evaluator's best line is the one played, and how often it is (i)'s best.")
+    L.append("")
+    L.append("| evaluator | top = played | top = (i)'s top |")
+    L.append("|---|---|---|")
+    for lab, _, title in EVALUATORS:
+        a = agree[lab]
+        s = same_top.get(lab)
+        L.append(f"| {title} | {a[0] / max(1, a[1]):.3f} ({a[1]}) | {'-' if s is None else f'{s[0] / max(1, s[1]):.3f}'} |")
+    L.append("")
+    L.append("## Gate table (src/knowledge/fight-value-gates.json)")
+    L.append("")
+    L.append(f"- {len(gates['segments'])} segments, {len(own)} with their own gate; {sum(1 for _, s in own if s['w'] > 0.05)} of those with w > 0.05; "
+             f"{sum(1 for s in gates['segments'].values() if s['level'] == 'enc' and s['w'] > 0.05)} of "
+             f"{sum(1 for s in gates['segments'].values() if s['level'] == 'enc')} encounters end up with w > 0.05. "
+             "Full table and the nested check: notes/fight-value-backtest.md.")
+    L.append("")
+    L.append("| segment | rows | conc. current | model adv. [CI] | w_cap | blend adv. [CI] | w |")
+    L.append("|---|---|---|---|---|---|---|")
+    for k, s in sorted(own, key=lambda kv: -kv[1]["n_rows"]):
+        L.append(f"| {k} | {s['n_rows']} | {s['conc_current']} | {s['advantage_model']:+.3f} [{s['ci_model'][0]:+.3f}, {s['ci_model'][1]:+.3f}] | "
+                 f"{s['w_cap']} | {s['advantage']:+.3f} [{s['ci'][0]:+.3f}, {s['ci'][1]:+.3f}] | {s['w']:.2f} |")
+    L.append("")
+    L.append("## Rebuild (after each run)")
+    L.append("")
+    L.append("```")
+    L.append("export PATH=$HOME/.local/node/bin:$PATH")
+    L.append("# 1. model + gates + calibration (src/knowledge/fight-value.json, fight-value-gates.json, notes/fight-value-backtest.md), ~5 min")
+    L.append("python3 tools/build-fight-value.py all      # extract logs -> .cache/fight-value-rows.jsonl, then train")
+    L.append("# 2. optional backtest of the rollout (this file), ~5 min")
+    L.append("python3 tools/build-fight-value.py folds --fold-dir /tmp/rb/folds")
+    L.append("npx tsx tools/rollout-backtest.ts extract --work /tmp/rb")
+    L.append("for i in $(seq 0 15); do npx tsx tools/rollout-backtest.ts run --work /tmp/rb --shard $i --shards 16 --fold-dir /tmp/rb/folds & done; wait")
+    L.append("mkdir -p /tmp/rb/solo && ln -sf /tmp/rb/decisions.jsonl /tmp/rb/solo/ && npx tsx tools/rollout-backtest.ts run --work /tmp/rb/solo --shard 3 --shards 8 --fold-dir /tmp/rb/folds")
+    L.append("python3 tools/build-fight-value.py rollout-report --work /tmp/rb")
+    L.append("```")
+    L.append("")
+    with open(notes_path, "w", encoding="utf8") as handle:
+        handle.write("\n".join(L) + "\n")
+    print(f"rollout-report: {len(points)} points -> {notes_path}")
+
+
+ROLLOUT_FINDINGS = """## Reading (hand-written 2026-09-28 from the run below; regenerate the numbers, re-read this)
+
+- Evaluators, all on one HP-equivalent scale: (i) the current solver score / its HP weight; (ii) the line's own
+  turn + the fight-value terminal of its end-of-turn state, blended with (i) by the gate weight w of the
+  encounter's segment; (iii) the line + 4 more simulated turns x 8 samples + the gated terminal. The terminal
+  model and the gates are OUT OF FOLD (build-fight-value.py folds: each decision is scored by a model and gates
+  that never saw its run); the enemy move tables (move model, monster DB) are in-sample aggregates.
+- Plain pairing test (played line's value, pairs of similar start states): (iii) 0.679 vs (i) 0.575,
+  +0.104 [+0.061, +0.145]. This flatters any evaluator that sees the whole state (deck, draw pile): part of
+  it is "this run's deck is stronger", not "this line is better".
+- Regret test (the played line's value minus the best offered line's, same pairs) isolates the CHOICE:
+  (iii) 0.579 vs (i) 0.537, +0.042 [+0.011, +0.068] overall; hallway +0.042 [+0.010, +0.074]; elite
+  +0.079 [+0.028, +0.131]; boss +0.024 [-0.017, +0.068] (not established). (ii) adds nothing over (i)
+  (+0.003 [-0.008, +0.013]): the 1-turn terminal mostly re-ranks within noise, and w = 0 for every elite
+  and boss segment, where (ii) is (i) by construction.
+- Pooled, when the rollout's favourite offered line was the one played, the fight cost 1.8 HP less
+  (boss 6.7, elite 4.7; (i): 3.2 and 3.1). Confounded (the state differs), but it points the same way.
+- Forecasts for Jev: the model terminal (w = 1) is the best forecast of HP lost to the fight's end (MAE 7.3
+  rollout / 7.6 one turn vs 14.2 for "this turn only"; boss 9.9 vs 30.9) and of the win (Brier 0.079).
+  The GATED terminal is a poor forecast (boss MAE 24-64): with w = 0 it falls back to the deck-damage
+  clock, which is fine as a ranking fallback but not as a number to show. Show the model's numbers with
+  their n; use w only to weight the model in the RANKING.
+- The rollout disagrees with (i)'s top line in 44% of decisions (Jev played (i)'s top 59% of the time,
+  the rollout's 49%): wiring it in as the ranking is a large behaviour change, not a tweak.
+- Runtime: alone, median 47 ms, p95 367 ms, max 1.41 s per decision (all 7-8 candidate lines, 5 turns x 8
+  samples in 96% of decisions); the fast policy (solver capped at 1500 nodes, ~27 nodes used) costs
+  ~0.5 ms per simulated turn. Under 16-way parallel load the max was 1.6 s: the deadline is checked
+  between simulated turns, so a decision can overrun the 1.5 s budget by one turn plus bookkeeping.
+- Limits: the draw pile order is unknown (shuffled per sample; the logged pile contents are used, so the
+  "deck minus hand" approximation was never needed here); cards drawn during the candidate line are
+  counted as drawn and discarded; after turn 0 no potions; powers carried: Strength (incl. Demon Form),
+  Metallicize, Plating, Juggernaut, Barricade, Feel No Pain (others only through the solver's score);
+  enemy Debuff/status moves are not modelled; our own play after turn 0 is the solver's top line, not
+  Jev's; outcomes are those of the bot's own later play (policy bias, as for the fight value model).
+
+"""
+
+
 def decision_flags(rows, decisions_path):
     """Mark turns where a plan was chosen among several lines (Jev / DeepSeek / code-fallback plan-choice)."""
     spans = sorted((r["ts0"], r["ts1"], i) for i, r in enumerate(rows) if r.get("ts0"))
@@ -839,7 +1585,7 @@ def fmt_table(table, groups, models, cols):
     return "\n".join(lines)
 
 
-def train(rows_path, decisions_path, out_path, notes_path, trees):
+def train(rows_path, decisions_path, out_path, notes_path, trees, gates_path=None):
     t0 = time.time()
     mm = load_move_model()
     all_rows = load_rows(rows_path)
@@ -876,12 +1622,49 @@ def train(rows_path, decisions_path, out_path, notes_path, trees):
         report[sname] = {"train": round(sum(n_train) / len(n_train)), "test": len(te), "folds": len(tests),
                          "test_runs": len({r["run"] for r in trs}), "table": table, "rel": rel, "rank": rank,
                          "bosses": per_boss(trs, tes, preds_all)}
+        if sname.startswith("by run") and gates_path:
+            gates = build_gates(trs, preds_all, fold_of, fs)
+            write_gates(gates_path, gates, rows)
+            report["_gates"] = gates
+    gates = report.pop("_gates", None)
     final = Suite().fit(rows, feats, trees=trees)
     print(f"[{time.time() - t0:.0f}s] final model on all {len(rows)} rows", file=sys.stderr)
     export(final, rows, feats, out_path, report)
     imp = {"hp_loss": importance(final.gbm["hp_loss"]), "win": importance(final.gbm["win"]), "turns": importance(final.gbm["turns"])}
-    write_notes(notes_path, report, rows, count_asc, flags, deciders, time.time() - t0, imp)
+    write_notes(notes_path, report, rows, count_asc, flags, deciders, time.time() - t0, imp, gates)
     return report
+
+
+def fold_models(rows_path, decisions_path, fold_dir, trees):
+    """Out-of-fold models for the rollout backtest: per run fold k, the model trained without fold k's runs
+    (fight-value-<k>.json) and gates measured on the other folds' out-of-fold predictions (gates-<k>.json),
+    plus folds.json (run -> fold). tools/rollout-backtest.ts --fold-dir evaluates each decision with the
+    model and gates that never saw its run."""
+    t0 = time.time()
+    os.makedirs(fold_dir, exist_ok=True)
+    mm = load_move_model()
+    rows = [r for r in load_rows(rows_path) if isinstance(r["asc"], int) and r["asc"] >= MIN_ASC and r["kind"] in FIGHT_KINDS]
+    feats = [base_features(r, mm) for r in rows]
+    flags, _ = decision_flags(rows, decisions_path)
+    runs = sorted({r["run"] for r in rows})
+    fold_of = {rid: min(4, int(run_hash(rid) * 5)) for rid in runs}
+    te_all, preds_all = [], []
+    for k in range(5):
+        tr = [i for i, r in enumerate(rows) if fold_of[r["run"]] != k]
+        te = [i for i, r in enumerate(rows) if fold_of[r["run"]] == k]
+        suite = Suite().fit([rows[i] for i in tr], [feats[i] for i in tr], trees=trees)
+        preds_all += suite.predict([rows[i] for i in te], [feats[i] for i in te])
+        te_all += te
+        export(suite, [rows[i] for i in tr], [feats[i] for i in tr], os.path.join(fold_dir, f"fight-value-{k}.json"), {"x": {"table": {}}})
+        print(f"[{time.time() - t0:.0f}s] fold {k}", file=sys.stderr)
+    for k in range(5):
+        sel = [j for j, i in enumerate(te_all) if fold_of[rows[i]["run"]] != k]
+        gates = build_gates([rows[te_all[j]] for j in sel], [preds_all[j] for j in sel], {r: f for r, f in fold_of.items() if f != k},
+                            [flags[te_all[j]] for j in sel])
+        write_gates(os.path.join(fold_dir, f"gates-{k}.json"), gates, [rows[te_all[j]] for j in sel])
+    with open(os.path.join(fold_dir, "folds.json"), "w", encoding="utf8") as handle:
+        json.dump(fold_of, handle)
+    print(f"folds: done in {time.time() - t0:.0f}s -> {fold_dir}")
 
 
 def export(suite, rows, feats, out_path, report):
@@ -916,6 +1699,14 @@ def export(suite, rows, feats, out_path, report):
         inp = example_input(rows[i], feats[i])
         examples.append({"input": inp, "output": {k: round(v, 6) for k, v in reference_value(out, inp).items()}})
     out["examples"] = examples
+    # Raw end-of-turn rows and their base_features(): rollout.ts featuresOf() must reproduce them.
+    picks = [i for i in sorted(rng.sample(range(len(rows)), 40)) if len(living(rows[i]["E"])) >= 1][:4]
+    boss = next((i for i in range(len(rows)) if rows[i]["kind"] == "boss" and any(e[9] for e in living(rows[i]["E"]))), None)
+    if boss is not None:
+        picks.append(boss)
+    keep = ("act", "t", "asc", "kind", "enc", "deck", "relics", "max_en", "E")
+    out["feature_examples"] = [{"row": {k: rows[i][k] for k in keep},
+                                "features": {k: round(v, 6) if isinstance(v, float) else v for k, v in feats[i].items()}} for i in picks]
     with open(out_path, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, separators=(",", ":"))
         handle.write("\n")
@@ -982,11 +1773,17 @@ FINDINGS = """## Reading (hand-written 2026-09-28 from the run below; regenerate
 - Other biases: the enemy damage feature is the displayed intent (mod), deck features come from run.deck (no
   draw pile in the logs), end-of-fight heals are not netted out (hp_loss is to the last combat state), and
   A7/A8 are pooled (A8 dominates, 7177 of 9860 A7+ rows).
+- Gates (section below): with a cluster bootstrap over similar-state groups the model's own ranking edge is
+  not established anywhere large (all: +0.007 [-0.017, +0.030]; the ±0.004 above ignored that pairs in one
+  group share rows). A BLEND is: w_cap x model + (1 - w_cap) x current beats the current weights in hallways
+  (+0.048 [+0.026, +0.069]); in elites and bosses no blend does, so w = 0 there. Nested check: gated 0.669
+  vs current 0.637 (choice points 0.639 vs 0.593). Calibration: nested out-of-fold, isotonic and Platt make
+  hallway/elite Brier WORSE (the over-confident bins above do not survive out of fold); only boss uses isotonic.
 
 """
 
 
-def write_notes(path, report, rows, count_asc, flags, deciders, seconds, imp):
+def write_notes(path, report, rows, count_asc, flags, deciders, seconds, imp, gates=None):
     L = []
     L.append("# Fight value model: backtest")
     L.append("")
@@ -1046,6 +1843,8 @@ def write_notes(path, report, rows, count_asc, flags, deciders, seconds, imp):
             L.append(f"| {b['boss']} | {b['n']} ({b['fights']}) | {b['win_rate']:.2f} | {b['mae_b0']:.1f} | {b['mae_table']:.1f} | {b['mae_gbm']:.1f} | "
                      f"{b['brier_b0']:.3f} | {b['brier_table']:.3f} | {b['brier_gbm']:.3f} |")
         L.append("")
+    if gates:
+        L.append(gate_notes(gates))
     L.append("## Feature importance (final model, share of split gain)")
     L.append("")
     for target, pairs in imp.items():
@@ -1058,7 +1857,10 @@ def write_notes(path, report, rows, count_asc, flags, deciders, seconds, imp):
 def main(argv=None):
     logs = bmd._default_logs()
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("stage", choices=["extract", "train", "all"])
+    parser.add_argument("stage", choices=["extract", "train", "all", "rollout-report", "folds"])
+    parser.add_argument("--fold-dir", default="/tmp/rb/folds", help="folds: where the out-of-fold models and gates go")
+    parser.add_argument("--work", default="/tmp/rb", help="rollout-report: the work dir of tools/rollout-backtest.ts")
+    parser.add_argument("--rollout-notes", default=os.path.join(ROOT, "notes/rollout-backtest.md"))
     parser.add_argument("--states", default=os.path.join(logs, "states.jsonl"))
     parser.add_argument("--runs", default=os.path.join(logs, "runs.jsonl"))
     parser.add_argument("--decisions", default=os.path.join(logs, "decisions.jsonl"))
@@ -1066,15 +1868,22 @@ def main(argv=None):
     parser.add_argument("--rows", default=DEFAULT_ROWS)
     parser.add_argument("--out", default=os.path.join(ROOT, "src/knowledge/fight-value.json"))
     parser.add_argument("--notes", default=os.path.join(ROOT, "notes/fight-value-backtest.md"))
+    parser.add_argument("--gates", default=os.path.join(ROOT, "src/knowledge/fight-value-gates.json"))
     parser.add_argument("--trees", type=int, default=150)
     args = parser.parse_args(argv)
     start = time.time()
+    if args.stage == "folds":
+        fold_models(args.rows, args.decisions, args.fold_dir, args.trees)
+        return 0
+    if args.stage == "rollout-report":
+        rollout_report(args.work, args.rows, args.rollout_notes, args.gates)
+        return 0
     if args.stage in ("extract", "all"):
         b = extract(args.states, args.runs, args.game_data, args.rows)
         print(f"extract: {b.rows} rows from {b.fights} fights (by ascension {dict(b.by_asc)}) in {time.time() - start:.0f}s -> {args.rows}")
     if args.stage in ("train", "all"):
         os.makedirs(os.path.dirname(args.notes), exist_ok=True)
-        train(args.rows, args.decisions, args.out, args.notes, args.trees)
+        train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
     return 0
 
