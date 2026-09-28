@@ -18,9 +18,10 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
+import { fillPotionText } from "../knowledge/potion-values.js";
 import { awakeDamagePerTurn, moveModel } from "../knowledge/move-model.js";
 import { bossNote } from "../project/run-journal.js";
-import { deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
+import { bossClockJson, deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
 import { FIGHT_OBJECTIVES, INTENT_REASONS, isOneOf, MEANING, parseReasons, REASON_MEANING, type FightObjective, type IntentReason } from "./intent.js";
 import { DISAGREE, objectiveOfApproach, validateFightPlan } from "./plan-validator.js";
 import type { RunPlan } from "./run-plan.js";
@@ -147,7 +148,7 @@ export function fightPlanInput(
     .filter((potion) => bool(potion["occupied"]))
     .map((potion) => {
       const id = str(potion["potion_id"]);
-      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(str(potion["description"]) || knowledge.potion(id)?.description || "", 100)}`;
+      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(fillPotionText(id, str(potion["description"]) || knowledge.potion(id)?.description || ""), 100)}`;
     });
   return {
     fight: kind,
@@ -159,6 +160,9 @@ export function fightPlanInput(
     relics: describeRunRelicEffects(state, knowledge, 20),
     potions,
     enemies,
+    // The act boss's clock at the HP we have now: the turns it lasts and the damage a turn that needs
+    // (the run plan sees the same clock at the entry HP).
+    ...(kind === "boss" && hp !== null ? { boss_clock: bossClockJson(state, knowledge, hp) } : {}),
   };
 }
 
@@ -171,6 +175,8 @@ export const FIGHT_PLAN_TASK = [
   "card plays per turn. Nothing is enforced: Jev follows your tempo unless the facts of a turn clearly say otherwise.",
   "Only the card, relic and potion text you are shown is true: do not assume an effect that is not written there.",
   "run_plan holds the run's strategy, including the potions it wants held for the act boss: say if this fight is worth one.",
+  "In a boss fight, boss_clock is code's clock at the HP we have now: survivable_turns (how long that HP lasts against the",
+  "boss's average hits less the deck's block) and the damage a turn that needs against the deck's estimate.",
   'Reply with JSON only: {"objective": "kill_fast" | "preserve_hp" | "scale_then_kill" | "race",',
   '"kill_priority": [enemy ids in the order to kill them; [] when it does not matter],',
   `"reason": [1-2 of ${INTENT_REASONS.join("|")}: why this objective],`,
@@ -266,7 +272,7 @@ export function parseFightPlan(
       // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
       together: enemies.filter(mustDieTogether).map((enemy) => str(enemy["enemy_id"])),
       minions: enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])),
-      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "" })),
+      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: fillPotionText(str(potion["potion_id"]), str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "") })),
       kind: base.kind,
       scaling: enemies.map((enemy) => enemyScales(enemy)).filter((why): why is string => why !== null),
       cycleScaling: enemies.map((enemy) => cycleGrowth(str(enemy["enemy_id"]))).filter((why): why is string => why !== null),

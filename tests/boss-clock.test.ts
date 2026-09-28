@@ -26,7 +26,9 @@ const mapState = (deck: Raw[], bossId = "KAISER_CRAB_BOSS", run: Raw = {}) =>
 describe("boss clock", () => {
   it("knows the act bosses' HP and damage a turn", () => {
     expect(bossNeed("KAISER_CRAB_BOSS", 8)).toMatchObject({ id: "KAISER_CRAB", hp: 428, perTurn: 54 });
-    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.perTurn).toBe(51);
+    // 399 at A8 (94FP F33 states; the dossier), not 459 (399 + two Ponder heals): 399 / 9.
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.hp).toBe(399);
+    expect(bossNeed("KNOWLEDGE_DEMON_BOSS", 8)?.perTurn).toBe(44);
     // A8 HP from the A8 states (XWPV, WB02, YNMB, CWU9); A7 and below keep the old numbers.
     expect(bossNeed("VANTOM_BOSS", 8)?.hp).toBe(183);
     expect(bossNeed("THE_INSATIABLE_BOSS", 8)?.hp).toBe(341);
@@ -54,8 +56,11 @@ describe("boss clock", () => {
     expect(gapCardBonus(gap, "THUNDERCLAP").bonus).toBeGreaterThan(0);
     // A block card only while the entry HP caps the fight's turns (each turn it adds lowers the need).
     expect(gap.cappedTurns).toBeDefined();
-    expect(gapCardBonus(gap, "SHRUG_IT_OFF").bonus).toBeGreaterThan(0);
-    expect(gapCardBonus({ ...gap, cappedTurns: undefined }, "SHRUG_IT_OFF").bonus).toBe(0);
+    // Its bonus is survivability (its 8 block's share of the boss's hit, times the gap), and says so.
+    expect(gapCardBonus(gap, "SHRUG_IT_OFF", 8).bonus).toBeGreaterThan(0);
+    expect(gapCardBonus(gap, "SHRUG_IT_OFF", 8).why).toMatch(/^survivability, not damage/);
+    expect(gapCardBonus(gap, "THUNDERCLAP").why).toMatch(/^damage gap/);
+    expect(gapCardBonus({ ...gap, cappedTurns: undefined }, "SHRUG_IT_OFF", 8).bonus).toBe(0);
     expect(gapCardBonus(gap, "DEFEND_IRONCLAD").bonus).toBe(0);
     // AoE only counts against two-part bosses.
     const demon = damageGap(mapState(starter, "KNOWLEDGE_DEMON_BOSS"), testKnowledge)!;

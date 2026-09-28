@@ -5,7 +5,7 @@
  * each question local and avoids multi-step plans, which Jev is documented to handle poorly.
  */
 
-import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { currentRunPlan } from "../strategy/run-plan.js";
 import { guidanceFor } from "../strategy/intent.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
@@ -172,6 +172,20 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // not a named one: the offered card that does most this turn is marked as the plan's card for Jev.
   const cardPotionStep = plannedSteps.find((step) => /^GEN:(ATTACK|SKILL|POWER|COLORLESS)_POTION:/.test(step.cardId));
 
+  // What the offered card does now: free this turn when a card potion adds it (「这张牌在本回合可以免费打出」,
+  // X-cost aside), and its draw worth nothing once no energy is left to play what it draws (W8JD F31 T2:
+  // at 0 energy Battle Trance's 3 draws scored 9 and was "code's pick" over a free Evil Eye's 8 block;
+  // the turn then ended with nothing played, -6 against the line's -0).
+  // Likewise Vulnerable with no attack left to play: one stack is gone before our next turn.
+  const energyNow = num(asRecord(combat["player"])["energy"]);
+  const freeAttackInHand = asArray(combat["hand"]).map(asRecord).some((card) => str(card["card_type"]) === "Attack" && card["playable"] !== false && num(card["energy_cost"]) === 0);
+  const nowCard = (model: CardModel): CardModel => {
+    const free = cardPotionStep !== undefined && !model.xCost;
+    const card = free ? { ...model, cost: 0 } : model;
+    const left = energyNow - (card.xCost ? energyNow : Math.max(0, card.cost));
+    if (left > 0) return card;
+    return { ...card, draw: 0, drawsUntil: false, ...(freeAttackInHand ? {} : { vulnerable: Math.max(0, card.vulnerable - 1) }) };
+  };
   const entries = deckEntries(state, knowledge);
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
@@ -198,7 +212,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
+        ? thisTurnScore(nowCard(modelHandCard(card, index, knowledge)), incoming, Math.max(1, livingEnemies), board)
         : added
           ? added.value
         : topDanger
@@ -217,6 +231,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),
         cost: numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+        ...(forThisTurn && cardPotionStep && !bool(card["costs_x"]) ? { cost_now: "0: a card potion's card is free this turn" } : {}),
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
       } satisfies JsonValue,
     };
@@ -254,7 +269,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const disintegration = candidates.find((card) => str(card["card_id"]) === "DISINTEGRATION");
     const rank = curseRank(combat, disintegration ? disintegrationAmount(disintegration) : 0, state.turn ?? 1);
     const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
-    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away; Disintegration last when it outlasts HP, else first with Rupture)` };
   }
 
   return buildPickDecision({
@@ -316,10 +331,11 @@ function disintegrationAmount(card: Record<string, unknown>): number {
 }
 
 /**
- * Rank of a Knowledge Demon curse (lower is taken). Disintegration becomes the first pick with
- * Rupture, and the last one when it would take more than the HP left before the demon dies (turns
- * left from the damage dealt so far, 25 a turn before any): Disintegration × turns + 20 > HP. PU21 T9
- * (33 HP, ~8 turns left, Disintegration 8) is that case; with HP to spare Waste Away is the worst.
+ * Rank of a Knowledge Demon curse (lower is taken). Disintegration is the last one when it would take
+ * more than the HP left before the demon dies (turns left from the damage dealt so far, 25 a turn
+ * before any): Disintegration × turns + 20 > HP, Rupture or not. PU21 T9 (33 HP, ~8 turns left,
+ * Disintegration 8) is that case; otherwise it is the first pick with Rupture; with HP to spare Waste
+ * Away is the worst.
  */
 export function curseRank(combat: Record<string, unknown>, offered: number, turn: number): (id: string) => number {
   const player = asRecord(combat["player"]);
@@ -333,8 +349,10 @@ export function curseRank(combat: Record<string, unknown>, offered: number, turn
   const hp = numOrNull(player["current_hp"]) ?? 0;
   const outlastsHp = (has("DISINTEGRATION_POWER") + offered) * turnsLeft + CURSE_HP_MARGIN > hp;
   return (id) => {
-    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
+    // HP first: Rupture's Strength is no use once Disintegration outlasts the HP left (94FP F33 T5: 36 HP,
+    // 307 boss HP at ~23 a turn, 7 x 14 + 20 = 118; Rupture ranked it first, the stacks took 7-15 a turn).
     if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
+    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
     return KNOWLEDGE_CURSE_ORDER[id]!;
   };
 }

@@ -56,12 +56,18 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const enemies = enemyViews({ raw: combat }, knowledge);
   const living = enemies.filter((enemy) => enemy.alive);
   const ourPowers = playerPowers(player);
+  // Damage at the end of our turn (Disintegration, Constrict): it meets block first, and what block it
+  // leaves meets the enemy attacks (the planner's endTurnHpLoss, turn-solver). 94FP F33 T10: 1 HP under
+  // Disintegration 15, Colossus read "incoming_damage_after_this 0" and was played first at 0.17.
+  const endTurnDamage = ourPowers
+    .filter((power) => power.id === "DISINTEGRATION_POWER" || power.id === "CONSTRICT_POWER")
+    .reduce((sum, power) => sum + Math.max(0, power.amount ?? 0), 0);
   // Incoming damage is resolved with the same rules: our Vulnerable raises it, the enemy's Weak
   // lowers it, our Intangible caps it, and block is consumed across every attacker in order.
-  const incomingOutcome = (() => {
-    let block = playerBlock;
-    let hpLoss = 0;
-    let total = 0;
+  const incomingWith = (startBlock: number) => {
+    let block = Math.max(0, startBlock - endTurnDamage);
+    let hpLoss = Math.max(0, endTurnDamage - startBlock);
+    let total = endTurnDamage;
     const modifiers = new Set<string>();
     for (const enemy of living) {
       for (const attack of enemy.attacks) {
@@ -81,19 +87,28 @@ export function planCombat(env: DecisionEnv): Decision | null {
       }
     }
     return { hpLoss, total, modifiers: [...modifiers], blockAfter: block };
-  })();
+  };
+  const incomingOutcome = incomingWith(playerBlock);
   // Cards that hurt while held at the end of the turn (Beckon 6 HP each, Burn 2): neither the enemy
   // intents nor the mod's lethal flag count them (F6NT F17 T11: 8 HP, two Beckons drawn by Burning
   // Pact, end turn shown as "incoming 0, not lethal"; they dealt 12).
   const heldModels = asArray(combat["hand"]).map((entry, fallbackIndex) => modelHandCard(entry, fallbackIndex, knowledge));
-  const heldPenaltyOf = new Map(heldModels.map((model) => [model.index, model.heldPenalty ?? 0] as const));
+  const heldHpLossOf = new Map(heldModels.map((model) => [model.index, model.heldHpLoss ?? 0] as const));
+  const heldDamageOf = new Map(heldModels.map((model) => [model.index, Math.max(0, (model.heldPenalty ?? 0) - (model.heldHpLoss ?? 0))] as const));
   const heldHpLoss = heldModels.reduce((sum, model) => sum + (model.heldHpLoss ?? 0), 0);
   const heldDamage = heldModels.reduce((sum, model) => sum + Math.max(0, (model.heldPenalty ?? 0) - (model.heldHpLoss ?? 0)), 0);
   // HP lost at the start of our next turn (Crimson Mantle 1 a copy, Inferno 1) comes before we act
   // (24HM F33 T14: 1 HP predicted after the enemy turn, the Mantle's 1 killed us at the start of T15).
   const mantle = ourPowers.find((power) => power.id === "CRIMSON_MANTLE_POWER")?.amount ?? 0;
   const startTurnHpLoss = (mantle > 0 ? Math.max(1, Math.floor(mantle / 7)) : 0) + (ourPowers.some((power) => power.id === "INFERNO_POWER" && (power.amount ?? 0) > 0) ? 1 : 0);
-  const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss + startTurnHpLoss;
+  /** HP lost by the end of the enemy turn with this much block up, a held card played (its penalty gone). */
+  const incomingFor = (block: number, playedIndex: number | null = null): number => {
+    const outcome = block === playerBlock ? incomingOutcome : incomingWith(block);
+    const held = heldDamage - (playedIndex === null ? 0 : heldDamageOf.get(playedIndex) ?? 0);
+    const heldLoss = heldHpLoss - (playedIndex === null ? 0 : heldHpLossOf.get(playedIndex) ?? 0);
+    return outcome.hpLoss + Math.max(0, held - outcome.blockAfter) + heldLoss + startTurnHpLoss;
+  };
+  const incoming = incomingFor(playerBlock);
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
@@ -140,7 +155,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
     const blockGain = card.block ?? 0;
     const hpCost = hpCostByIndex.get(card.index) ?? 0;
     // Playing a card that hurts while held (a playable Beckon) takes its penalty out of the turn.
-    const incomingAfter = Math.max(0, incoming - (heldPenaltyOf.get(card.index) ?? 0) - (playerBlock + blockGain)) + hpCost;
+    const incomingAfter = incomingFor(playerBlock + blockGain, card.index) + hpCost;
     // Paying its HP cost kills us before anything else happens: not an option.
     if (hpCost > 0 && playerHp !== null && hpCost >= playerHp) return;
 

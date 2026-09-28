@@ -278,7 +278,7 @@ export const BOSS_POTION_COST = 4;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
 /** Potion text that blunts an enemy hit. */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
-const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
+const DEFENSIVE = new Set(["BEETLE_JUICE", "FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
 /**
  * Kill-first enemy when no fight plan names one, keyed by an enemy in the fight. The Queen: her Torch
@@ -383,6 +383,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
       demise: powerAmount(enemy, "DEMISE_POWER"),
+      shrink: powerAmount(enemy, "SHRINK_POWER"),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
@@ -459,7 +460,7 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Record<string, JsonValue> {
+function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = [], startAoe: StartAoeSources = { hourglass: 0, inferno: 0 }): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
@@ -474,7 +475,8 @@ function describePlan(plan: Plan, playerHp: number, hand: CardModel[] = []): Rec
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
-  if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
+  // Every start-of-turn AoE, named (W8JD F31 T3: "mercury_hourglass_kills_next_turn" with no Hourglass; it was Inferno).
+  if (o.startTurnKills.length > 0) summary["start_of_turn_aoe_kills"] = `${o.startTurnKills.join(", ")} (at the start of my next turn, by ${startAoeText(plan, hand, startAoe)})`;
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
   if ((o.wakeHit ?? 0) > 0) summary["woken_enemy_hits_next_turn"] = `about ${o.wakeHit} more incoming next enemy turn (a sleeper this line wakes)`;
@@ -622,6 +624,24 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
   if (card && card.hpLoss > 0) env.screenMemory.demonTongueTurn = `${hpGuardFight(env)}:${env.state.turn}`;
 }
 
+/** Start-of-turn damage to every enemy already up: Mercury Hourglass's, and Inferno's (turnStartAoe). */
+export interface StartAoeSources {
+  hourglass: number;
+  inferno: number;
+}
+
+/** The start-of-turn AoE a line leaves, by source: "Inferno 6", "Mercury Hourglass 3", an Inferno played now. */
+export function startAoeText(plan: Plan, hand: CardModel[], sources: StartAoeSources): string {
+  const parts: string[] = [];
+  if (sources.hourglass > 0) parts.push(`Mercury Hourglass ${sources.hourglass}`);
+  if (sources.inferno > 0) parts.push(`Inferno ${sources.inferno}`);
+  const played = plan.steps
+    .map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId))
+    .reduce((sum, card) => sum + (card?.inferno ?? 0), 0);
+  if (played > 0 && sources.inferno === 0) parts.push(`Inferno ${played} (played this turn)`);
+  return parts.join(" + ") || "start-of-turn damage";
+}
+
 /** Intimidating Helmet's block per 2+ cost card (PU21 F12-F14: block 0 -> 4; its description is a template). */
 export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
@@ -633,10 +653,15 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  * Crimson Mantle's (both are HP lost on our turn). 9XZX T5 -> T6: Crusher 55 -> 49, Rocket 140 -> 134.
  */
 export function turnStartAoe(relicIds: string[], player: Record<string, unknown>): number {
+  const sources = turnStartAoeSources(relicIds, player);
+  return sources.hourglass + sources.inferno;
+}
+
+export function turnStartAoeSources(relicIds: string[], player: Record<string, unknown>): StartAoeSources {
   const hourglass = relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0;
   const inferno = powerAmount(player, "INFERNO_POWER");
   const lossEvents = inferno > 0 ? 1 + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0) : 0;
-  return hourglass + inferno * lossEvents;
+  return { hourglass, inferno: inferno * lossEvents };
 }
 const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;
@@ -1257,7 +1282,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!best) return planCombatPerCard(env);
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
-  const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
+  // The mod's lethal flag leaves out the block Plating and Metallicize add at the end of our turn; the
+  // solver counts it (SCBC3; W8JD F25 T5 and F31 T3: "calc mismatch" twice, the solver right both times).
+  // A "lethal" that block explains is not the solver missing something.
+  const platingExplains = endNow !== undefined && !endNow.outcome.dies && endNow.outcome.hpAfter <= (playerSim.endTurnBlock ?? 0);
+  const modSaysLethal = bool(combat["end_turn_will_kill_player"]) && !platingExplains;
   const calcNote =
     endNow && endNow.outcome.dies !== modSaysLethal
       ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
@@ -1266,6 +1295,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
   //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
+  //    An unmodelled potion does not change that line (94FP F33 T10: a Stable Serum in the belt sent the
+  //    turn card by card, Jev played Colossus first at 0.17 and missed the Pommel Strike draw that killed
+  //    the act-2 boss): the line is asked with the potion beside it as an option, facts on both.
+  let allDie: { line: Plan; drawing: boolean; drinking: boolean } | null = null;
   if (best.outcome.dies) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
     // turn follows (a fresh draw before the enemy acts). 12ZG F23 T6: never used, died to a 24 Pounce.
@@ -1273,8 +1306,6 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.paelsEyeFight = fightId;
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
     }
-    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
-    if (potionsNow.length > 0) return planCombatPerCard(env);
     // A modelled draw potion (Swift, Clarity) is a draw source like a draw card: drunk first while
     // energy is left and the piles hold cards (X8HF F33 T6).
     const drawPotions = noDraw || playerSim.energy <= 0 || drawPile === undefined
@@ -1285,17 +1316,20 @@ function planTurn(env: DecisionEnv): Decision | null {
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp, drawPotions);
     const drinking = leastLoss.steps[0]?.cardId.startsWith("POTION:") === true && drawPotions.some((card) => card.cardId === leastLoss.steps[0]!.cardId);
     const drawing = drinking || (leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card)));
-    commit(env, state.turn, leastLoss, hand, "code");
-    // Re-planned after the drawn cards arrive.
-    if (drinking) env.screenMemory.combatPlan = null;
-    return {
-      kind: "act",
-      label: "combat/least-loss",
-      intent: firstIntent(leastLoss, hand, env),
-      rationale: drawing
-        ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
-        : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
-    };
+    if (!potionsAll.some((potion) => !isModelledPotion(potion.potion_id))) {
+      commit(env, state.turn, leastLoss, hand, "code");
+      // Re-planned after the drawn cards arrive.
+      if (drinking) env.screenMemory.combatPlan = null;
+      return {
+        kind: "act",
+        label: "combat/least-loss",
+        intent: firstIntent(leastLoss, hand, env),
+        rationale: drawing
+          ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
+          : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
+      };
+    }
+    allDie = { line: leastLoss, drawing, drinking };
   }
 
   // Unmodelled potions: offered as "drink first, then re-plan" options (a potion DeepSeek holds for the
@@ -1331,7 +1365,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const wakeRisk = (plan: Plan) => !plan.outcome.winsFight && (plan.outcome.wakeHit ?? 0) > 0 && plan.outcome.hpAfter <= nextIncoming + (plan.outcome.wakeHit ?? 0) + WAKE_MARGIN;
   const alive = solved.plans.filter((plan) => !plan.outcome.dies);
   const surviving = hardRuleLines(alive.some((plan) => !wakeRisk(plan)) ? alive.filter((plan) => !wakeRisk(plan)) : alive, enemies);
-  const options = distinctPlans(surviving, MAX_OPTIONS);
+  // Every line dies: the least-loss line is the one line offered (beside the unmodelled potions).
+  const options = allDie ? [allDie.line] : distinctPlans(surviving, MAX_OPTIONS);
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
   // and so be missing from the options (YP9 T3). The reference line is then an option that dominates it.
   const top = options.includes(best) ? best : options.find((plan) => dominates(plan, best)) ?? options[0] ?? best;
@@ -1363,7 +1398,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (setupLine && !options.includes(setupLine)) options.push(setupLine);
   // Unmodelled potions are always offered on a turn Jev is asked; they alone make a turn a question on
   // dangerous turns, in boss fights, when pressed at low HP, or when even the cheapest line costs a lot.
-  const offerPotions = potions.length > 0 && (options.length > 1 || dangerous || kind === "boss" || pressed || costly);
+  const offerPotions = potions.length > 0 && (allDie !== null || options.length > 1 || dangerous || kind === "boss" || pressed || costly);
 
   // Code acts alone: the only line left once every other is dominated on every outcome (distinctPlans).
   if (options.length === 1 && !offerPotions) {
@@ -1475,6 +1510,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const lineFacts = (plan: Plan): Record<string, JsonValue> => {
     const fit = fitFor(plan);
     const facts: Record<string, JsonValue> = { reference: fit.label };
+    if (allDie && plan === allDie.line) {
+      facts["every_line_dies"] = allDie.drawing
+        ? "every simulated line dies this turn; this line plays its draw first, for a kill or block the hand does not have (the turn is re-planned after the draw), on the most-damage drawing line"
+        : `every simulated line dies this turn; this one keeps the most HP (${plan.outcome.hpAfter})`;
+    }
     if (fit.tempo) facts["tempo"] = fit.tempo;
     const extra = plan.outcome.hpLoss - safest.outcome.hpLoss;
     if (extra > 0 && !plan.outcome.winsFight) facts["hp_vs_safest"] = `${extra} HP more than the safest line (${safest.outcome.hpLoss}), for ${plan.outcome.damageDealt - safest.outcome.damageDealt >= 0 ? "+" : ""}${plan.outcome.damageDealt - safest.outcome.damageDealt} damage`;
@@ -1523,11 +1563,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (reserved) return [fit.differs ? fit.tempo : null, "drinks a potion DeepSeek holds for the act boss"].filter(Boolean).join("; ");
     return fit.differs ? fit.tempo : null;
   };
+  const aoeSources = turnStartAoeSources(relicIds, player);
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string; potionId?: string }>();
   options.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...lineFacts(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand, aoeSources), ...lineFacts(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
   if (offerPotions) {
@@ -1540,6 +1581,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         criteria[key] = JSON.stringify({
           plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
           text: potion.text,
+          ...(allDie ? { without_it: "every simulated line dies this turn (the line shown is the least-loss one)" } : {}),
           potion_facts: potionOptionFit({
             role: potionRole(potion.potion_id, potion.text),
             bossFight: kind === "boss",
@@ -1605,7 +1647,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     options.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand), ...planFacts(plan, ctx), ...lineFacts(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp, hand, aoeSources), ...planFacts(plan, ctx), ...lineFacts(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -1633,7 +1675,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     rationale: `${why}; using code's reference plan`,
     confidence: null,
     fallback: true,
-    apply: () => commit(env, state.turn, referenceTop, hand, "code"),
+    apply: () => {
+      commit(env, state.turn, referenceTop, hand, "code");
+      if (allDie?.drinking && referenceTop === allDie.line) env.screenMemory.combatPlan = null;
+    },
   });
   const referenceOf = (chosen: { plan?: Plan }): NonNullable<ResolvedAction["reference"]> => {
     const rank = chosen.plan ? reference.indexOf(chosen.plan) + 1 : null;
@@ -1642,7 +1687,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   return {
     kind: "ask",
-    label: offerPotions ? "combat/plan-choice+potion" : "combat/plan-choice",
+    label: allDie ? "combat/least-loss+potion" : offerPotions ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
@@ -1680,7 +1725,11 @@ function planTurn(env: DecisionEnv): Decision | null {
         fallback: false,
         reference: referenceOf(chosen),
         ...(tempoDiff ? { tempoDiff } : {}),
-        apply: () => commit(env, state.turn, plan, hand, escalatedBy ?? "jev"),
+        apply: () => {
+          commit(env, state.turn, plan, hand, escalatedBy ?? "jev");
+          // A draw potion drunk first: re-planned after the drawn cards arrive.
+          if (allDie?.drinking && plan === allDie.line) env.screenMemory.combatPlan = null;
+        },
       };
     },
   };

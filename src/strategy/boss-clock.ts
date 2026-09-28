@@ -47,8 +47,10 @@ export const BOSS_NEEDS: Record<string, BossNeed> = {
   // ~29 after 6 of relic damage (0.36), EHJZ F33 ~24 of ~30 after ~72 of Inferno over 5 turns (0.78).
   // Applied to the whole estimate, 0.45 read EHJZ's Inferno deck at 14 against 38 dealt.
   KAISER_CRAB: { hp: 408, hpA8: 428, turns: 8, realised: 0.55, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other" },
-  // 379 HP (399 at A8) plus two 30-HP Ponder heals (T4, T8) (P0AT: 21 a turn, left at 206; 5BXM A8).
-  KNOWLEDGE_DEMON: { hp: 439, hpA8: 459, turns: 9, note: "heals, curses the deck every few turns; Strength scaling wins" },
+  // 379 HP, 399 at A8 (states.jsonl max_hp: 94FP, 5BXM; the dossier's a7/a8). The Ponder heals are not
+  // added: 459 (399 + two 30-HP heals) read 15% high, "Knowledge Demon 459HP, needs ~80/turn" in every
+  // 94FP run plan from F17, while the fight took ~43 a turn to leave it at 5 (the two heals ~37 in all).
+  KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, turns: 9, note: "Ponder heals it (~30, T4/T8; not in the HP), curses the deck every few turns; Strength scaling wins" },
   // 341 at A8 (XWPV, WB02 states).
   THE_INSATIABLE: { hp: 321, hpA8: 341, turns: 7, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn" },
   // 512 HP plus two 33-block Ebb turns, and no loss lived past T8 (L34T: 48 a turn, left at 173).
@@ -140,6 +142,8 @@ export interface DeckDamageParts {
   relics: number;
   /** The boss's measured share of the card part (1 when not measured). */
   realised: number;
+  /** What the estimate counted beyond plain attacks, by name (the run plan's estimate_note). */
+  counted: string[];
 }
 
 export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDamageParts | null {
@@ -199,9 +203,19 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   // dealt 41.6 a turn and 92 on T8-T10): Toasty Mittens +1 a turn from T1, i.e. (turns+1)/2 on average;
   // Rupture fed by a self-damage power every turn (Crimson Mantle, Inferno) from when both are up,
   // counted from T3: (turns-2)/2.
-  if (relicIds.includes("TOASTY_MITTENS")) strength += (turns + 1) / 2;
+  const counted: string[] = [];
+  const strengthCards = [...new Set(cards.filter((card) => card.strength > 0).map((card) => card.name || card.cardId))];
+  if (strengthCards.length > 0) counted.push(`Strength from ${strengthCards.join(", ")}`);
+  if (relicIds.includes("TOASTY_MITTENS")) {
+    strength += (turns + 1) / 2;
+    counted.push("Toasty Mittens' Strength growth");
+  }
   const deckIds = new Set(cards.map((card) => card.cardId));
-  if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) strength += Math.max(0, (turns - 2) / 2);
+  if (deckIds.has("RUPTURE") && (deckIds.has("CRIMSON_MANTLE") || deckIds.has("INFERNO"))) {
+    strength += Math.max(0, (turns - 2) / 2);
+    counted.push(`Rupture fed by ${["CRIMSON_MANTLE", "INFERNO"].filter((id) => deckIds.has(id)).map((id) => cards.find((card) => card.cardId === id)?.name || id).join(" and ")}`);
+  }
+  if (energyBonus > 0) counted.push("Pyre's energy");
   const n = cards.length;
   // Energy caps how many of the drawn cards get played.
   const playedShare = Math.min(1, (energy + energyBonus) / Math.max(1, (HAND * cost) / n));
@@ -211,6 +225,7 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   // A boss that starts with Artifact eats the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   const artifactBoss = str(run["boss_id"]).toUpperCase().includes("AEONGLASS");
   const cardPart = base * (vulnerable >= 2 && !artifactBoss ? VULNERABLE_UPTIME : 1) * ESTIMATE_SCALE;
+  if (vulnerable >= 2 && !artifactBoss) counted.push(`Vulnerable uptime (${vulnerable} sources)`);
   // Per-turn power damage, from each copy's expected play turn (EHJZ F33: two Infernos read as 0, the
   // fight dealt ~72 of its 190 with them). Inferno: its amount to every enemy on each HP loss of our
   // turn, the turn-start 1 plus the self-damage cards played (Crimson Mantle's turn-start loss too).
@@ -223,7 +238,13 @@ export function deckDamageParts(state: GameState, knowledge: Knowledge): DeckDam
   for (const amount of inferno) powers += averagePowerStrength(amount * (1 + selfPlayed) * everyEnemy, false, playTurn, turns);
   for (const amount of juggernaut) powers += averagePowerStrength(amount * blockPlayed, false, playTurn, turns);
   for (const amount of boulder) powers += averagePowerStrength(amount * everyEnemy, true, playTurn, turns);
-  return { cards: cardPart, powers, relics: relicDamagePerTurn(relicIds, turns, crab), realised: need?.realised ?? 1 };
+  const perTurnPowers = [
+    ...(inferno.length > 0 ? [`Inferno x${inferno.length}`] : []),
+    ...(juggernaut.length > 0 ? [`Juggernaut x${juggernaut.length}`] : []),
+    ...(boulder.length > 0 ? [`Rolling Boulder x${boulder.length}`] : []),
+  ];
+  if (perTurnPowers.length > 0) counted.push(`per-turn power damage (${perTurnPowers.join(", ")})`);
+  return { cards: cardPart, powers, relics: relicDamagePerTurn(relicIds, turns, crab), realised: need?.realised ?? 1, counted };
 }
 
 /** A card's dynamic value by name (deck entries carry them resolved). */
@@ -308,10 +329,11 @@ export function clockEntryHp(state: GameState): number {
  * The boss's need with its turns capped by the turns we can survive from the expected entry HP; the
  * damage a turn follows (HCBJ F16: gap 1 at 12 turns read "trade HP for damage"; at ~9 turns it is ~7).
  */
-export function cappedBossNeed(state: GameState, knowledge: Knowledge): (ReturnType<typeof bossNeed> & object) & { survivableTurns: number | null; entryHp: number } | null {
+export function cappedBossNeed(state: GameState, knowledge: Knowledge, hpNow: number | null = null): (ReturnType<typeof bossNeed> & object) & { survivableTurns: number | null; entryHp: number } | null {
   const need = bossNeed(str(asRecord(state.run?.raw)["boss_id"]), state.run?.ascension ?? 0);
   if (!need) return null;
-  const entryHp = clockEntryHp(state);
+  // In the boss fight itself: the HP we have now (the fight plan's clock, RUUB F33).
+  const entryHp = hpNow ?? clockEntryHp(state);
   const survivable = survivableBossTurns(need.id, entryHp, deckBlockPerTurn(state, knowledge));
   if (survivable === null || survivable >= need.turns) return { ...need, survivableTurns: survivable === null ? null : Math.round(survivable * 10) / 10, entryHp };
   const turns = Math.max(1, survivable);
@@ -348,6 +370,8 @@ export interface DamageGap {
   gap: number;
   /** The fight's turns when the entry HP caps them below the table's (cappedBossNeed), else absent. */
   cappedTurns?: number;
+  /** The boss's hit a turn once awake (bossDamagePerTurn), when the turns are capped by it. */
+  bossHit?: number;
 }
 
 export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | null {
@@ -358,7 +382,8 @@ export function damageGap(state: GameState, knowledge: Knowledge): DamageGap | n
   if (!need) return null;
   const deck = deckDamagePerTurn(state, knowledge);
   const capped = need.survivableTurns !== null && need.survivableTurns < (bossNeed(need.id)?.turns ?? Infinity);
-  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck), ...(capped ? { cappedTurns: need.turns } : {}) };
+  const bossHit = capped ? bossDamagePerTurn(need.id)?.perTurn : undefined;
+  return { boss: need.id, need: need.perTurn, deck, gap: Math.max(0, need.perTurn - deck), ...(capped ? { cappedTurns: need.turns } : {}), ...(bossHit ? { bossHit: Math.round(bossHit * 10) / 10 } : {}) };
 }
 
 const BOSS_FLOORS = [17, 33, 48];
@@ -369,25 +394,53 @@ export const GAP_BONUS_MAX = 12;
 export const BIG_GAP_BONUS = 8;
 export const GAP_BONUS_BIG_MAX = 16;
 
+/** The gap bonus's curve: from a gap of BIG_GAP_BONUS a turn gap/2 (UP1C, GZ24), below it 0.4 a point. */
+function gapBonus(gap: number, scaling: boolean): number {
+  return gap >= BIG_GAP_BONUS
+    ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap / 2) + (scaling ? 2 : 0))
+    : Math.min(GAP_BONUS_MAX, Math.round(gap * 0.4) + (scaling ? 2 : 0));
+}
+
 /**
- * Card-value bonus for a damage card (scaling, frontload, AoE into the crab) while the deck is short.
- * While the entry HP caps the fight's turns, a block card closes the gap too: each turn it adds lowers
- * the damage a turn needed (K8TC F14: the Kin's cap at ~6 turns raised Uppercut's bonus over True Grit's).
+ * Block a play of a block card gives over a boss fight when the game data has no flat Block for it:
+ * Stone Armor's Plating 4 (4+3+2+1), Crimson Mantle's 7 a turn over about 3 turns.
  */
-export function gapCardBonus(gap: DamageGap | null, cardId: string): { bonus: number; why: string | null } {
+const BLOCK_OVER_FIGHT: Record<string, number> = { STONE_ARMOR: 10, CRIMSON_MANTLE: 21 };
+
+/**
+ * Card-value bonus while the deck is short of the act boss's damage a turn, and which gap it is for.
+ *
+ * - damage: a damage card (scaling, frontload, AoE into the crab) by the damage gap.
+ * - survivability: while the entry HP caps the fight's turns, a block card buys turns instead, and each
+ *   turn lowers the damage a turn needed. Its bonus is that share of the gap: its block over the boss's
+ *   hit a turn (the share of a turn it lasts), times the gap (62PM F14: Taunt's 6 block took the same
+ *   +10 as a damage card, "block +10" over Sword Boomerang; 6FUF the same). `block` is the card's own
+ *   (game data); without one it gets none.
+ */
+export function gapCardBonus(gap: DamageGap | null, cardId: string, block: number | null = null): { bonus: number; why: string | null; kind?: "damage" | "survivability" } {
   if (!gap || gap.gap <= 0) return { bonus: 0, why: null };
-  const role = damageRole(cardId) ?? (gap.cappedTurns !== undefined && isBlockCardId(cardId) && !cardId.startsWith("DEFEND_") ? "block" : null);
-  if (!role || (role === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN")) return { bonus: 0, why: null };
-  // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
-  if (gap.boss === "AEONGLASS" && role === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
-  // From a gap of BIG_GAP_BONUS a turn, gap/2 (UP1C, GZ24: a 9 gap gave +4 against a +14 must-have
-  // block bonus; both bosses were fought at ~62% of the clock).
-  const bonus =
-    gap.gap >= BIG_GAP_BONUS
-      ? Math.min(GAP_BONUS_BIG_MAX, Math.round(gap.gap / 2) + (role === "scaling" ? 2 : 0))
-      : Math.min(GAP_BONUS_MAX, Math.round(gap.gap * 0.4) + (role === "scaling" ? 2 : 0));
+  const damage = damageRole(cardId);
   const turns = gap.cappedTurns !== undefined ? ` in the ~${gap.cappedTurns} turns the entry HP lasts` : "";
-  return { bonus, why: `deck ~${gap.deck}/turn of ${gap.need}${turns} for ${gap.boss}: ${role} +${bonus}` };
+  if (!damage) {
+    if (gap.cappedTurns === undefined || !isBlockCardId(cardId) || cardId.startsWith("DEFEND_")) return { bonus: 0, why: null };
+    const amount = block ?? BLOCK_OVER_FIGHT[cardId] ?? null;
+    if (amount === null || amount <= 0 || !gap.bossHit) {
+      return { bonus: 0, why: `survivability, not damage: the entry HP caps ${gap.boss} at ~${gap.cappedTurns} turns; this card's block over the fight is unknown, no bonus`, kind: "survivability" };
+    }
+    const share = Math.min(1, amount / gap.bossHit);
+    const worth = share * gap.gap;
+    const bonus = gapBonus(worth, false);
+    return {
+      bonus,
+      why: `survivability, not damage: the entry HP caps ${gap.boss} at ~${gap.cappedTurns} turns; ${amount} block is ~${share.toFixed(2)} of the boss's ~${Math.round(gap.bossHit)} a turn, that share of the ${gap.gap}/turn damage gap (deck ~${gap.deck} of ${gap.need}) ~${Math.round(worth)}: block +${bonus}`,
+      kind: "survivability",
+    };
+  }
+  if (damage === "aoe" && gap.boss !== "KAISER_CRAB" && gap.boss !== "THE_KIN") return { bonus: 0, why: null };
+  // Against Aeonglass small attacks feed Withering Presence: the gap counts only scaling and big hits.
+  if (gap.boss === "AEONGLASS" && damage === "frontload" && !isBigHit(cardId)) return { bonus: 0, why: null };
+  const bonus = gapBonus(gap.gap, damage === "scaling");
+  return { bonus, why: `damage gap: deck ~${gap.deck}/turn of ${gap.need}${turns} for ${gap.boss}: ${damage} +${bonus}`, kind: "damage" };
 }
 
 /** Rest-site shift: smith over a comfortable heal while the deck is well short of the boss. */
@@ -396,12 +449,17 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
   return option === "SMITH" ? 2 : 0;
 }
 
-/** The run plan's view of the act boss and the deck's damage. */
-export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
-  const need = cappedBossNeed(state, knowledge);
+/**
+ * The run plan's view of the act boss and the deck's damage; with `hpNow`, the boss fight's own view at
+ * that HP (the fight plan's input: RUUB F33 was planned scale_then_kill from the dossier's full-HP
+ * "7-9 turns" while the run plan's clock said 50 HP lasts ~4.2; it lasted 4).
+ */
+export function bossClockJson(state: GameState, knowledge: Knowledge, hpNow: number | null = null): Record<string, JsonValue> | null {
+  const need = cappedBossNeed(state, knowledge, hpNow);
   if (!need) return null;
   const table = bossNeed(need.id, state.run?.ascension ?? 0)!;
   const deck = deckDamagePerTurn(state, knowledge);
+  const counted = deckDamageParts(state, knowledge)?.counted ?? [];
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   // The same turns as the deck estimate's relic share (the table's).
   const relics = relicDamagePerTurn(relicIds, table.turns, need.id === "KAISER_CRAB");
@@ -409,12 +467,15 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     boss: need.id,
     boss_hp: need.hp,
     fight_turns: need.turns,
+    ...(need.survivableTurns !== null ? { survivable_turns: need.survivableTurns, survivable_note: `turns ${need.entryHp} HP lasts against the boss's average hit a turn (move model) less the deck's block a turn` } : {}),
     ...(need.turns < table.turns
       ? { turns_note: `${table.turns} turns in the table, capped at ${need.turns}: the turns ${need.entryHp} HP survives against the boss's hits less the deck's block` }
       : {}),
     need_damage_per_turn: need.perTurn,
     deck_damage_per_turn_estimate: deck,
-    estimate_note: `rough: cards, Strength (Toasty Mittens and Rupture+Crimson Mantle growth included), Vulnerable, per-turn power damage (Inferno, Juggernaut, Rolling Boulder)${relics > 0 ? ` and relic damage (~${relics}/turn of it)` : ""}; no draw or potions`,
+    // What this deck's estimate counted, by name (62PM F15-F16: a fixed note naming Toasty Mittens and
+    // Rupture+Crimson Mantle, neither in the deck, and DeepSeek reasoned about both).
+    estimate_note: `rough: the deck's attacks at its energy, x${ESTIMATE_SCALE} (logged boss fights dealt ~40% more than the plain count: draw, mid-fight powers)${counted.length > 0 ? `; counted: ${counted.join("; ")}` : ""}${relics > 0 ? `; relic damage (~${relics}/turn of it)` : ""}; no potions`,
     gap_per_turn: Math.max(0, need.perTurn - deck),
     boss_note: need.note,
   };
