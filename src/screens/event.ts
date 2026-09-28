@@ -52,6 +52,9 @@ export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, ma
   return null;
 }
 
+/** How long a finished frame of the previous floor's event is waited out before it is clicked anyway. */
+export const STALE_EVENT_WAIT_MS = 10_000;
+
 export function planEvent(env: DecisionEnv): Decision | null {
   const { state } = env;
   const event = asRecord(state.raw["event"]);
@@ -63,6 +66,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // normally instead of clicking option 0 (F8HR F22: Field of Man-Sized Holes, option 0 added Normality).
   const staleFinish = bool(event["is_finished"]) && all.length > 1 && !all.some((option) => bool(option["is_proceed"]));
   const finished = bool(event["is_finished"]) && !staleFinish;
+  // The first frame of a new ? room can still be the last event's end page (YNMB F4: Self-Help Book's
+  // Proceed on floor 4; option 0 went into Jungle Maze Adventure, -18 HP; F7 again; X226 F6). The same
+  // event id on a later floor than it was seen on is that frame: wait for the new event.
+  const eventId = str(event["event_id"]);
+  const runId = str(state.raw["run_id"]);
+  const floor = state.run?.floor ?? null;
+  const seen = env.screenMemory.eventSeen;
+  const staleFloor = finished && seen !== undefined && seen.runId === runId && seen.eventId === eventId && floor !== null && seen.floor !== null && floor > seen.floor;
+  if (staleFloor) {
+    const since = seen.staleSince ?? Date.now();
+    if (seen.staleSince === undefined) env.screenMemory.eventSeen = { ...seen, staleSince: since };
+    if (Date.now() - since < STALE_EVENT_WAIT_MS) return null;
+  }
+  env.screenMemory.eventSeen = { runId, eventId, floor };
   if (finished) {
     const proceed = all.find((option) => bool(option["is_proceed"])) ?? all[0];
     const index = proceed ? numOrNull(proceed["index"]) ?? 0 : 0;

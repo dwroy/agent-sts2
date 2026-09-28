@@ -945,6 +945,48 @@ describe("routing", () => {
   });
 });
 
+describe("fingerprint: event pages and max HP (KFPC F4)", () => {
+  it("changes when the event page or max HP changes, HP and actions unchanged", () => {
+    const page = eventPayload();
+    const next = eventPayload();
+    ((next["event"] as Record<string, unknown>)["options"] as Record<string, unknown>[])[0]!["title"] = "Decipher (-6 Max HP)";
+    expect(fingerprint(parseGameState(next))).not.toBe(fingerprint(parseGameState(page)));
+    const lower = eventPayload();
+    lower["run"] = { ...(lower["run"] as Record<string, unknown>), max_hp: 77 };
+    expect(fingerprint(parseGameState(lower))).not.toBe(fingerprint(parseGameState(page)));
+    expect(fingerprint(parseGameState(eventPayload()))).toBe(fingerprint(parseGameState(page)));
+  });
+});
+
+describe("stale event end page (YNMB F4/F7, X226 F6)", () => {
+  const frame = (eventId: string, floor: number, finished: boolean) => ({
+    ...eventPayload(),
+    run: runPayload({ floor }),
+    event: {
+      event_id: eventId, title: eventId, description: "", is_finished: finished,
+      options: finished
+        ? [{ index: 0, text_key: "PROCEED", title: "Proceed", description: "", is_locked: false, is_proceed: true, will_kill_player: false, has_relic_preview: false }]
+        : [
+            { index: 0, text_key: "A", title: "A", description: "失去18点生命。获得152金币。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+            { index: 1, text_key: "B", title: "B", description: "离开。", is_locked: false, is_proceed: false, will_kill_player: false, has_relic_preview: false },
+          ],
+    },
+  });
+  it("waits out the last floor's end page instead of clicking option 0 of the next event", () => {
+    const memory = createScreenMemory("EVENT");
+    const leave = mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: memory }));
+    expect(leave.kind === "act" && leave.label).toBe("event/leave");
+    // Floor 4, the same end page still shown: wait.
+    expect(plan(frame("SELF_HELP_BOOK", 4, true), { screenMemory: memory }).kind).toBe("wait");
+    // The new event arrives: chosen normally.
+    expect(plan(frame("JUNGLE_MAZE_ADVENTURE", 4, false), { screenMemory: memory }).kind).toBe("decision");
+    // The same end page on the same floor (a page reload) is still left as before.
+    const again = createScreenMemory("EVENT");
+    mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again }));
+    expect(mustDecision(plan(frame("SELF_HELP_BOOK", 3, true), { screenMemory: again })).kind).toBe("act");
+  });
+});
+
 describe("gate and fingerprint", () => {
   it("rejects an action that is no longer advertised", () => {
     const state = parseGameState(combatPayload());

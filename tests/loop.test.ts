@@ -16,10 +16,11 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/jev/client.js";
 import { runLoop, type LoopEvent } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
-import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {
   afterRunPayload,
   combatPayload,
+  eventPayload,
   gameOverPayload,
   gameOverSavedPayload,
   mainMenuPayload,
@@ -157,6 +158,41 @@ describe("runLoop", () => {
     expect(stats.stoppedBecause).toContain("run 1 ended");
     expect(actions.map((intent) => intent["action"])).toEqual(["play_card", "play_card"]);
     expect(stats.jevCalls).toBeGreaterThan(0);
+  });
+
+  it("after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4)", async () => {
+    const config = testConfig();
+    // Two event pages that look the same (the next page of Tablet of Truth kept HP and actions); the
+    // first choose_event_option times out in the mod but the game applies it.
+    const page = eventPayload();
+    const sequence = [page, eventPayload(), mainMenuPayload()];
+    let index = 0;
+    let failedOnce = false;
+    const actions: Record<string, unknown>[] = [];
+    const server = await startTestServer((req, res) => {
+      if (req.method === "GET" && req.url === "/state") return sendJson(res, 200, envelope(sequence[Math.min(index, sequence.length - 1)]));
+      let raw = "";
+      req.on("data", (chunk) => {
+        raw += chunk;
+      });
+      req.on("end", () => {
+        actions.push(JSON.parse(raw || "{}") as Record<string, unknown>);
+        index += 1;
+        if (!failedOnce) {
+          failedOnce = true;
+          return sendJson(res, 504, errorEnvelope("action_timeout", "choose_event_option timed out", true));
+        }
+        sendJson(res, 200, envelope({ action: "choose_event_option", status: "completed", stable: true, message: "scripted", state: sequence[Math.min(index, sequence.length - 1)] }));
+      });
+    });
+    servers.push(server);
+    const jev = stubJev();
+    await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: jev.client, knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1 });
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>);
+    // The timed-out click is a decision record, and the second page was decided afresh (not "reused").
+    expect(lines[0]).toMatchObject({ label: expect.stringMatching(/^event/), result: expect.stringMatching(/^failed \(wait\): action_timeout/) });
+    expect(lines.filter((line) => String(line["label"]).startsWith("event")).every((line) => line["reused_answer"] === false)).toBe(true);
+    expect(actions).toHaveLength(2);
   });
 
   it("writes one decision record per decision", async () => {
