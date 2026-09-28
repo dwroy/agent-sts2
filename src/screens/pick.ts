@@ -71,7 +71,7 @@ export function bestOption(options: PickOption[]): PickOption {
 
 /** What Jev is told about who does what (every question carries it). */
 export const ROLE_NOTE =
-  "Roles: you decide. DeepSeek's strategy and tempo (deepseek_guidance / strategy: potion timing and holding, heal vs smith, elite appetite, deck direction) is guidance. Code gives facts and a reference rank (code_value, code_rank, why); the rank is computed by rules and can be wrong. Weigh both and pick what you judge best for winning the run; a pick that differs from the reference or from DeepSeek's tempo is logged as a fact, not as a mistake.";
+  "Roles: you decide. DeepSeek's strategy and tempo (deepseek_guidance / strategy: potion timing and holding, heal vs smith, elite appetite, deck direction) is guidance. Code gives facts and a reference rank (code_value, code_rank, why); the rank is computed by rules and can be wrong. Take DeepSeek's tempo as the default direction and use the facts to judge each move; pick what you judge best for winning the run; a pick that differs from the reference or from DeepSeek's tempo is logged as a fact, not as a mistake.";
 
 /** Options ranked by code score (rank 1 = code's reference), ties in list order. */
 function referenceRanks(options: PickOption[]): Map<PickOption, number> {
