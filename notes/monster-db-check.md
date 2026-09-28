@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 4132 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T18:39:01.162Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1868}.
+DB: `src/knowledge/monster-db.json` from 4139 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T18:52:45.744Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1875}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -20,7 +20,7 @@ Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at 
 | THE_INSATIABLE | 321 (6) | 321 | 341 (23) | 341 | 8.8 (23) | 8.9 | 8.2 (8) | 8 |  |
 | THE_KIN | 307 (7) | **250** | 324 (22) | **260** | 8.8 (22) | 10.1 | 10.2 (12) | 10 | hand hp = priest + ~60 into followers on purpose; DB = priest + 2 followers |
 | VANTOM | 173 (8) | 173 | 183 (25) | 183 | 6.5 (25) | 7.3 | 11 (21) | 11 |  |
-| WATERFALL_GIANT | 240 (9) | **260** | 250 (25) | **270** | 5.1 (25) | 5.1 | 13.2 (18) | 14 | hand hp adds ~20 Siphon heal on purpose |
+| WATERFALL_GIANT | 240 (9) | **260** | 250 (26) | **270** | 5.1 (26) | 5.1 | 13.2 (18) | 14 | hand hp adds ~20 Siphon heal on purpose |
 
 Test Subject phases: hand A8 [111, 212, 318], A<8 [100, 200, 300]; DB (max_hp sequence of the one enemy, n fights): A0: 100 > 200 > 300 (n=2); A1: 100 > 200 > 300 (n=1); A2: 100 > 200 (n=1); A3: 100 > 200 > 300 (n=1); A5: 100 > 200 > 300 (n=1); A7: 100 > 200 > 300 (n=2), 100 > 200 (n=1); A8: 111 > 212 (n=2), 111 > 212 > 313 (n=1). Phase 3 at A8 is still unlogged.
 
@@ -39,7 +39,7 @@ Loss/turn = (entry HP - HP at the end, all of it on a death) / our turns, 75th p
 - **THE_INSATIABLE** — A7: THE_INSATIABLE 321 (n=6, x1/fight); win 0.8 of 6, deaths 1 | A8: THE_INSATIABLE 341 (n=23, x1/fight); win 0.3 of 23, deaths 15
 - **THE_KIN** — A7: KIN_FOLLOWER 58.5 (n=14, x2/fight), KIN_PRIEST 190 (n=7, x1/fight); win 0.6 of 7, deaths 3 | A8: KIN_FOLLOWER 62.5 (n=44, x2/fight), KIN_PRIEST 199 (n=22, x1/fight); win 0.5 of 22, deaths 10
 - **VANTOM** — A7: VANTOM 173 (n=8, x1/fight); win 1 of 8, deaths 0 | A8: VANTOM 183 (n=25, x1/fight); win 0.8 of 25, deaths 4
-- **WATERFALL_GIANT** — A7: WATERFALL_GIANT 240 (n=9, x1/fight); win 0.8 of 9, deaths 2 | A8: WATERFALL_GIANT 250 (n=25, x1/fight); win 0.7 of 25, deaths 7
+- **WATERFALL_GIANT** — A7: WATERFALL_GIANT 240 (n=9, x1/fight); win 0.8 of 9, deaths 2 | A8: WATERFALL_GIANT 250 (n=26, x1/fight); win 0.7 of 26, deaths 8
 
 ## (b) enemy dossiers (git redesign-end:src/knowledge/enemy-dossiers.json)
 
@@ -82,7 +82,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | QUEEN | boss | 599 (2) | 599 | 630 (6) | **629** | 419 | 90 (1) | **69** | 10 | 5 | boss QUEEN |
 | SKULKING_COLONY | elite | 75 (11) | 75 | 80 (16) | **79** | 80 | 16 (15) | **20** | 1 | 0 | SKULKING_COLONY |
 | SLIMED_BERSERKER | hallway | 261 (2) | 261 | 281 (2) | 281 | 281 | 70.2 (1) | **40** | 1 | 1 | SLIMED_BERSERKER |
-| SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 41.5 [41-42] (52) | **40** | 41.5 [41-42] | 13.8 (52) | - | 1 | 1 | SLUDGE_SPINNER |
+| SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 42 [41-42] (53) | **40** | 42 [41-42] | 14 (53) | - | 1 | 1 | SLUDGE_SPINNER |
 | SLUMBERING_BEETLE | hallway | 174 [172-176] (10) | 172 | 178 [176-182] (27) | 181 | 89 | 29.7 (24) | 30 | 10 | 7 | BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE |
 | SOUL_FYSH | boss | 211 (6) | 211 | 221 (19) | 221 | 221 | 20.1 (15) | **25** | 11 | 8 | boss SOUL_FYSH |
 | SOUL_NEXUS | elite | 234 (1) | 234 | 254 (3) | **246** | 254 | 33.9 (2) | **45** | 2 | 1 | SOUL_NEXUS |
@@ -96,9 +96,9 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | THIEVING_HOPPER | hallway | 79 (14) | 79 | 84 (49) | 84 | 84 | 21 (49) | - | 0 | 0 | THIEVING_HOPPER |
 | TUNNELER | hallway | 87 (17) | 87 | 92 (52) | **91** | 92 | 18.4 (52) | - | 1 | 1 | TUNNELER |
 | VANTOM | boss | 173 (8) | 173 | 183 (25) | 183 | 183 | 22.9 (21) | 23 | 9 | 5 | boss VANTOM |
-| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (25) | 250 | 250 | 26.3 (18) | 25 | 13 | 8 | boss WATERFALL_GIANT |
+| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (26) | 250 | 250 | 26.3 (18) | 25 | 14 | 8 | boss WATERFALL_GIANT |
 
-Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 77), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 41.5), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
+Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 77), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 42), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
 
 Dossier need_damage_per_turn more than 20% off what A8 winners dealt: CEREMONIAL_BEAST (hand 20 vs DB 26.2), QUEEN (hand 69 vs DB 90), SKULKING_COLONY (hand 20 vs DB 16), SLIMED_BERSERKER (hand 40 vs DB 70.2), SOUL_FYSH (hand 25 vs DB 20.1), SOUL_NEXUS (hand 45 vs DB 33.9), THE_KIN (hand 31 vs DB 40.5).
 
