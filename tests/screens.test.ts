@@ -1418,12 +1418,23 @@ describe("potions at low HP outside boss fights", () => {
     return raw;
   };
 
-  it("offers an unmodelled potion below 40% HP against two attackers (7Q5G T5, Y83U F30)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const low = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
-    expect(low?.label).toBe("combat/plan-choice+potion");
-    const high = planCombatTurn(env(pressedCombat(55, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
-    expect(high?.label).not.toBe("combat/plan-choice+potion");
+  it("offers an unsimulated potion under T1: the best potion-free option loses >= 12% of HP this turn (Dai 2026-09-28)", async () => {
+    const { planCombatTurn, UNSIMULATED_HP_SHARE } = await import("../src/screens/combat-plan.js");
+    expect(UNSIMULATED_HP_SHARE).toBe(0.12);
+    const hit = (hp: number, damage: number) => {
+      const raw = pressedCombat(hp, "LIQUID_MEMORIES");
+      const combat = raw["combat"] as Record<string, unknown>;
+      combat["enemies"] = (combat["enemies"] as Record<string, unknown>[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: String(damage), damage, hits: 1, total_damage: damage }] }));
+      return planCombatTurn(env(raw, { combatPlanner: "turn" }));
+    };
+    const heavy = hit(25, 10);
+    expect(heavy?.label).toBe("combat/plan-choice+potion");
+    const criteria = heavy?.kind === "ask" && heavy.questions["plan"]?.type === "choice" ? heavy.questions["plan"].criteria : {};
+    const offer = JSON.parse(String(Object.entries(criteria).find(([key]) => !key.startsWith("plan"))![1]));
+    expect(offer["plays"]).toMatch(/^drink .* first: .*; effect not simulated/);
+    expect(offer["offered_because"]).toMatch(/best potion-free option loses \d+ HP this turn \(>= 12% of 25\)/);
+    // Nothing gets through: no offer (and no question on its account).
+    expect(hit(80, 1)?.label).not.toBe("combat/plan-choice+potion");
   });
 
   it("a modelled potion has no use cost: its line is shown at any HP, and code's own line never drinks it", async () => {
@@ -1461,7 +1472,10 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
 
   it("Jev's potion pick stands at any confidence (the hallway 0.75 bar is gone)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const decision = planCombatTurn(env(pressedCombat(25, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
+    const raw = pressedCombat(25, "LIQUID_MEMORIES");
+    const combat = raw["combat"] as Record<string, unknown>;
+    combat["enemies"] = (combat["enemies"] as Record<string, unknown>[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "10", damage: 10, hits: 1, total_damage: 10 }] }));
+    const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
     const potionKey = Object.keys(criteria).find((key) => !key.startsWith("plan"))!;
@@ -2004,6 +2018,10 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
     potions[0]!["can_use"] = true;
     potions[0]!["potion_id"] = "LIQUID_MEMORIES";
     const combat = raw["combat"] as Record<string, unknown>;
+    // Disintegration 15 at 40 HP: the best potion-free line loses 8+ (>= 12%), so the unsimulated potion is offered (T1).
+    const player = combat["player"] as Record<string, unknown>;
+    player["current_hp"] = 40;
+    player["powers"] = [{ index: 0, power_id: "DISINTEGRATION_POWER", amount: 15, is_debuff: true }];
     combat["hand"] = [
       card(0, "POMMEL_STRIKE", 1, [["Damage", 9]]),
       card(1, "TAUNT", 1, [["Block", 7], ["VulnerablePower", 1]]),

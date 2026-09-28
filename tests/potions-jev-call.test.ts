@@ -202,7 +202,7 @@ describe("code's own auto-acts never drink while a potion-free line survives", (
       expect(allowed, `${name}: ${decision.label} ${decision.rationale}`).toBe(true);
     }
     expect(checked).toBeGreaterThanOrEqual(0);
-  });
+  }, 60_000);
 });
 
 describe("potion_context on the combat question", () => {

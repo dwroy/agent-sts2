@@ -298,6 +298,11 @@ export interface SolverInput {
    */
   nextIncoming?: number;
   maxNodes?: number;
+  /**
+   * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
+   * the rest of the turn" (potion-mc.ts). Unset: any first play.
+   */
+  firstKey?: string;
 }
 
 export interface DrawPileCard {
@@ -569,6 +574,8 @@ export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 export const HAND_LIMIT = 10;
 /** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
 export const GLOWWATER_DRAW = 10;
+/** Bottled Potential: cards drawn after the hand is shuffled back (potion-values.ts Cards 5). */
+export const BOTTLED_DRAW = 5;
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -627,6 +634,17 @@ function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
   const ways: CardModel[] = [];
   for (let mask = 1; mask < 1 << cards.length; mask += 1) ways.push({ ...brew, discards: cards.filter((_, bit) => mask & (1 << bit)).map((entry) => entry.key) });
   return ways;
+}
+
+/**
+ * The ways to drink a card-choice potion (one Monte Carlo sample of its offer): one per card offered, that
+ * card taken into the hand (free this turn), the step named for it.
+ */
+function choiceWays(potion: CardModel): CardModel[] {
+  return (potion.choices ?? []).map((card) => {
+    const { choices: _offer, ...rest } = potion;
+    return { ...rest, generates: card, name: `${potion.name} (take ${card.name})` };
+  });
 }
 
 /** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS). */
@@ -804,8 +822,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
   const next = clone(sim);
-  // A Gambler's Brew way is a copy of the belt's potion: the potion leaves the hand by its key.
-  next.hand = sim.hand.filter((entry) => entry !== card && !(card.discards && entry.key === card.key));
+  // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
+  // leaves the hand by its key.
+  next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
@@ -888,18 +907,22 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.held = next.held.filter((entry) => entry !== pick);
       next.exhausted = [...next.exhausted, pick];
     }
-  } else if (card.special === "glowwater") {
+  } else if (card.special === "glowwater" || card.special === "bottled") {
     // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 The hand (and any Status/Curse held) is exhausted, then the
     // draw fills the hand from the pile (logs: 5 cards -> 10 drawn, F17 T1; 3 -> 10, F25 T4), each card
     // the pile's expected one (card-model expectedDraw), as Gambler's Brew prices its draws.
-    drawnBurned = next.drawnInHand;
+    // Bottled Potential: the hand is shuffled back into the draw pile (not exhausted), then 5 are drawn.
+    const bottled = card.special === "bottled";
+    if (!bottled) drawnBurned = next.drawnInHand;
     next.drawnInHand = 0;
-    next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
+    if (!bottled) next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
+    const room = bottled ? Number.POSITIVE_INFINITY : (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn;
+    const count = Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, HAND_LIMIT, room));
     const draw = card.generates;
-    if (draw) {
-      const count = Math.max(0, Math.min(GLOWWATER_DRAW, HAND_LIMIT, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn));
+    if (card.drawn) drawCards(next, card.drawn.slice(0, count), player, bottled);
+    else if (draw) {
       next.hand = [...next.hand, ...Array.from({ length: count }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
       next.cardsDrawn += count;
     }
@@ -1004,23 +1027,33 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
   }
   if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
-  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
-  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
+  // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
+  if (card.adds) addToHand(next, card.adds);
+  if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
+  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
+  // costs; else the expected SNECKO_COST).
+  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: card.sneckoCosts?.[entry.key] ?? SNECKO_COST }));
   // Gambler's Brew: the hand cards this way of drinking it discards (gambleWays) are swapped for as many
-  // average draws from the pile (card-model expectedDraw).
+  // average draws from the pile (card-model expectedDraw), or a sample's real next cards.
   if (card.special === "gamble") {
     const discards = new Set(card.discards ?? []);
     const draw = card.generates;
     const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
     next.hand = next.hand.filter((entry) => !discards.has(entry.key));
-    if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
-  } else if (card.special === "chaos" && card.generates) {
-    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card, at a
-    // random enemy (worst case: randomVictim). They leave the pile: later draws come from below them.
-    const top: CardModel = { ...card.generates, cost: 0, target: card.generates.damage !== null ? "random" : "self", validTargets: [] };
-    for (let played = 0; played < (card.playsTop ?? 0); played += 1) resolveEffects(next, top, null, player, 0);
+    if (card.drawn) drawCards(next, card.drawn.slice(0, swapped), player);
+    else if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
+  } else if (card.special === "chaos" && (card.generates || card.drawn)) {
+    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card (or a
+    // sample's real top cards), at a random enemy (worst case: randomVictim). They leave the pile: later
+    // draws come from below them.
+    const tops = card.drawn ? card.drawn.slice(0, card.playsTop ?? 0) : Array.from({ length: card.playsTop ?? 0 }, () => card.generates!);
+    for (const drawn of tops) {
+      if (!drawn.playable || drawn.type === "Status" || drawn.type === "Curse") continue;
+      const top: CardModel = { ...drawn, cost: 0, target: drawn.damage !== null ? "random" : "self", validTargets: [] };
+      resolveEffects(next, top, null, player, 0);
+    }
     next.pileDrawn += card.playsTop ?? 0;
-  } else if (card.generates && card.special !== "glowwater") next.hand = [...next.hand, card.generates];
+  } else if (card.generates && card.special !== "glowwater" && card.special !== "bottled") next.hand = [...next.hand, card.generates];
   if (card.special === "free_card") {
     const pick = freeCardPick(next.hand);
     if (pick) {
@@ -1154,6 +1187,27 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
   }
+}
+
+/** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
+function addToHand(sim: Sim, cards: CardModel[]): void {
+  const space = Math.max(0, HAND_LIMIT - sim.hand.filter((entry) => entry.type !== "Potion").length - sim.held.length - sim.drawnInHand);
+  const fits = cards.slice(0, space);
+  sim.hand = [...sim.hand, ...fits.filter((card) => card.playable)];
+  sim.held = [...sim.held, ...fits.filter((card) => !card.playable)];
+}
+
+/**
+ * Known cards drawn (a Monte Carlo sample's pile order): no more than the piles hold (unless `reshuffled`:
+ * the whole deck is back in the pile), none past the 10-card hand (the rest are discarded). They are taken
+ * from the known pile, so later expected-value draws come from below them.
+ */
+function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled = false): void {
+  const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
+  const taken = cards.slice(0, Math.min(cards.length, room));
+  addToHand(sim, taken);
+  sim.cardsDrawn += taken.length;
+  sim.pileDrawn += taken.length;
 }
 
 function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
@@ -1937,12 +1991,13 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
-    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : [entry]))) {
+    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
+      if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {
-        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}`;
+        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}${card.generates ? `>${card.generates.cardId}` : ""}`;
         if (tried.has(dedupe)) continue;
         tried.add(dedupe);
         const next = play(sim, card, target, input.player);

@@ -24,7 +24,10 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
+import type { CardInfo } from "../knowledge/index.js";
+import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
@@ -1041,7 +1044,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
     });
-  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION")?.slot;
+  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
@@ -1061,7 +1064,18 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card
   // to take, a draw potion a known pile); otherwise it stays an unmodelled option as before.
-  const modelledIds = new Set(potionsAll.filter((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null).map((potion) => potion.potion_id));
+  // Random potions (card-model CHOICE_POTIONS / DRAW_POTIONS) are simulated by Monte Carlo on their own
+  // (potion-mc.ts) and offered as "drink now, then re-plan": never a line of this solve.
+  const mcSources = new Map<number, PotionMcSource>();
+  for (const potion of potionsAll) {
+    const source = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
+    if (source) mcSources.set(potion.slot, source);
+  }
+  const modelledIds = new Set(
+    potionsAll
+      .filter((potion) => !mcSources.has(potion.slot) && modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null)
+      .map((potion) => potion.potion_id),
+  );
   const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
   // The solver input behind `solved` (the rollout facts replay the turn from it).
   let solvedInput: SolverInput | null = null;
@@ -1070,6 +1084,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       hand: [
         ...hand,
         ...potionsAll
+          .filter((potion) => !mcSources.has(potion.slot))
           .map((potion) =>
             modelPotion(
               potion.potion_id,
@@ -1099,6 +1114,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
     }));
   const solved = solve();
+  // The random potions' Monte Carlo, run once when a decision needs it (every question does).
+  const dryBest = solved.plans.find((plan) => !drinksPotion(plan) && !plan.outcome.dies) ?? solved.plans.find((plan) => !drinksPotion(plan)) ?? null;
+  let mcResults: PotionMc[] | null = null;
+  const randomPotions = (): PotionMc[] => (mcResults ??= runRandomPotions([...mcSources.values()], solvedInput, dryBest, `${fightKey(state)}:${state.turn ?? "?"}:${handSignature(hand)}`));
   // A turn that costs a lot of HP whatever is played (7Q5G/MD3F: hallway fights at -16..-46 HP with a
   // potion kept in the belt): even the line that keeps the most HP loses >= 30% of current HP, or
   // leaves HP below 25% of max. Unmodelled potions are offered then.
@@ -1128,6 +1147,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
   //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
+  // Every simulated line dies, but a random potion may not: the least-loss line goes to the question.
+  let allDie: Plan | null = null;
   if (best.outcome.dies) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
     // turn follows (a fresh draw before the enemy acts). 12ZG F23 T6: never used, died to a 24 Pounce.
@@ -1136,8 +1157,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.paelsEyeFight = fightId;
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
     }
-    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
-    if (potionsNow.length > 0) return planCombatPerCard(env);
+    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
+    // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
+    const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
+    if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
+    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp);
+  }
+  if (best.outcome.dies && allDie === null) {
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
     const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
@@ -1152,7 +1178,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
 
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
-  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
+  // Unsimulated potions (neither modelled nor random): offered under T1 (below), a fight plan's keep noted.
+  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
@@ -1169,7 +1196,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionLethal = potionLethalLines(lethalLines);
   // (The fight plan's auto-drink of an unmodelled potion at its planned moment is gone: the potion is
   // offered to Jev on that turn instead, planPotionNow below.)
-  const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
+  const surviving = allDie ? [allDie] : hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
   // Every modelled potion in the belt is on a shown line (the best line drinking it), next to the
   // potion-free ones: whether to spend it is Jev's call.
   const options = withPotionLines(distinctPlans(surviving, MAX_OPTIONS), surviving, potionsAll.filter((potion) => isModelledPotion(potion.potion_id)).map((potion) => potion.potion_id), MAX_OPTIONS);
@@ -1186,7 +1213,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
   // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
   // end the turn on the solver's word then; play the line that keeps the most HP.
-  if (modSaysLethal && top.steps.length === 0) {
+  if (modSaysLethal && top.steps.length === 0 && allDie === null) {
     const anyPlayed = surviving.filter((plan) => plan.steps.length > 0);
     const dryPlayed = anyPlayed.filter((plan) => !drinksPotion(plan));
     const played = dryPlayed.length > 0 ? dryPlayed : anyPlayed;
@@ -1280,7 +1307,14 @@ function planTurn(env: DecisionEnv): Decision | null {
   // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
   // A top line that drinks while a potion-free line survives is never code's to play: Jev decides.
   const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top)) && potionLethal.length === 0;
-  if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
+  // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
+  // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
+  // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
+  // fight plan says now.
+  const mcForces = mcSources.size > 0 && randomPotions().some((mc) => mc.beats > 0);
+  const bestDry = options.find((plan) => !drinksPotion(plan)) ?? null;
+  const t1Hp = bestDry === null || bestDry.outcome.dies || bestDry.outcome.hpLoss >= UNSIMULATED_HP_SHARE * playerSim.hp;
+  if (clear && !mcForces && !(potions.length > 0 && (t1Hp || planPotionNow))) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
     // asked, and T4's laser killed us exactly). Not recorded against the fight's budget: that is for
@@ -1333,19 +1367,47 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Rollout FACTS (rollout-live.ts): code's options and their order are settled above; the rollout only
   // adds numbers to each, and its best line as one more option when code did not show it. The HP guard,
   // the potion rules and code's rank keep working on code's own `options`.
-  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && solvedInput !== null
+  const mcShown = mcSources.size > 0 ? randomPotions() : [];
+  const mcMedians = mcShown.map((mc) => mc.median).filter((plan): plan is Plan => plan !== null);
+  // The rollout plays each random potion's median sample line; its later turns may drink the random
+  // potions still held at their expected value (card-model's model of them, as before).
+  const rolloutSolver: SolverInput | null =
+    solvedInput === null
+      ? null
+      : {
+          ...(solvedInput as SolverInput),
+          hand: [
+            ...(solvedInput as SolverInput).hand,
+            ...potionsAll
+              .filter((potion) => mcSources.has(potion.slot))
+              .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext))
+              .filter((card): card is CardModel => card !== null),
+          ],
+        };
+  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && rolloutSolver !== null
     ? liveRollout({
         state,
         knowledge: env.knowledge,
         memory: env.screenMemory,
-        solver: solvedInput,
+        solver: rolloutSolver,
         plans: surviving,
-        shown: options,
+        shown: [...options, ...mcMedians],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
+        spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
       })
     : null;
   const rolloutBest = rollout?.available ? rollout.best : null;
-  const shown = rolloutBest && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
+  // T1 for the unsimulated potions: the best potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
+  // or its rollout has a dying sample.
+  const t1Death = rollout !== null && rollout.available && bestDry !== null && (rollout.byPlan.get(bestDry)?.deaths ?? 0) > 0;
+  const offerPotions = potions.length > 0 && (t1Hp || t1Death || planPotionNow);
+  const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
+  // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
+  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : [])]);
+  const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
+  options.splice(0, options.length, ...planOptions);
+  const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
     rollout ? { ...rolloutFacts(plan, rollout), ...(plan === rolloutBest ? { rollout_best: true } : {}) } : {};
   const criteria: Record<string, string | null> = {};
@@ -1355,23 +1417,39 @@ function planTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
+  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const rolloutRecord = rollout
-    ? rolloutLog(rollout, rolloutBest ? `plan${shown.indexOf(rolloutBest) + 1}` : null, rolloutBest !== null && !options.includes(rolloutBest))
+    ? rolloutLog(
+        rollout,
+        rolloutBest ? (rolloutBestIsPotion ? mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : `plan${shown.indexOf(rolloutBest) + 1}`) : null,
+        rolloutBest !== null && !rolloutBestIsPotion && !options.includes(rolloutBest),
+      )
     : null;
-  // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
-  // for), when pressed at low HP, or when even the cheapest line costs a lot of HP.
-  const offerPotions = dangerous || kind === "boss" || pressed || costly || planPotionNow;
+  // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
+  // distribution; the rollout facts are the median sample's line's.
+  const othersHeld = potionsAll.length > 1;
+  for (const mc of mcShown) {
+    const key = mcKey(mc);
+    const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
+    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === rolloutBest ? { rollout_best: true } : {}) } : {};
+    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
+    byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
+  }
+  // Unsimulated potions: offered under T1 (or the fight plan's moment), with no invented numbers.
+  const t1Why = [t1Hp ? `the best potion-free option loses ${bestDry ? bestDry.outcome.hpLoss : "all"} HP this turn (>= ${Math.round(UNSIMULATED_HP_SHARE * 100)}% of ${playerSim.hp})` : "", t1Death ? "the best potion-free option dies in some rollout sample" : "", planPotionNow ? "the fight plan says now" : ""].filter(Boolean).join("; ");
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
       for (const target of targets.slice(0, 2)) {
         const key = target === null ? potion.key : `${potion.key}->e${target}`;
         const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;
+        const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;
         criteria[key] = JSON.stringify({
-          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
-          text: potion.text,
-          simulated: "no: this potion's effect is not modelled, so no HP or damage numbers for it",
+          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
+          simulated: "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+          offered_because: t1Why,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : {}),
           ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
@@ -1528,20 +1606,128 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   return {
     kind: "ask",
-    label: potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
+    label: potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions || mcShown.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
     // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
     resolve(answers): ResolvedAction {
       const resolved = resolvePlan(answers);
-      if (!rolloutRecord) return resolved;
+      const potionsRecord: JsonValue | null =
+        mcShown.length > 0 || potions.length > 0
+          ? { random: mcShown.map(potionMcLog), unsimulated_offered: offerPotions ? potions.map((potion) => potion.potion_id) : [], t1: { hp: t1Hp, rollout_death: t1Death, fight_plan: planPotionNow } }
+          : null;
+      if (!rolloutRecord && !potionsRecord) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
-      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : pick.plan === rolloutBest;
-      return { ...resolved, log: { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } };
+      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : rolloutBestIsPotion ? pick.potion !== undefined && answer?.type === "choice" && answer.choice === mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : pick.plan === rolloutBest;
+      return {
+        ...resolved,
+        log: { ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } : {}), ...(potionsRecord ? { potions: potionsRecord } : {}) },
+      };
     },
   };
+}
+
+/**
+ * T1, the gate of the unsimulated potions (Dai 2026-09-28: 12%): the best potion-free option loses at least
+ * this share of current HP this turn (or dies in a rollout sample).
+ */
+export const UNSIMULATED_HP_SHARE = 0.12;
+
+/**
+ * Plan lines trimmed so that `reserved` potion options fit the cap: the lowest-ranked removable line goes
+ * first (never the first, one in `keep`, the only potion-free line, or the only line drinking a potion).
+ */
+export function trimForPotionOptions(options: Plan[], reserved: number, keep: Set<Plan>, limit = MAX_OPTIONS): Plan[] {
+  const out = [...options];
+  while (out.length + reserved > limit) {
+    let removed = false;
+    for (let index = out.length - 1; index > 0; index -= 1) {
+      const plan = out[index]!;
+      if (keep.has(plan)) continue;
+      const others = out.filter((other) => other !== plan);
+      if (!drinksPotion(plan) && !others.some((other) => !drinksPotion(other))) continue;
+      if (!potionIdsOf(plan).every((id) => others.some((other) => potionIdsOf(other).includes(id)))) continue;
+      out.splice(index, 1);
+      removed = true;
+      break;
+    }
+    if (!removed) break;
+  }
+  return out;
+}
+
+/** A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in). */
+export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel {
+  const raw = {
+    card_id: info.id,
+    name: info.name,
+    dynamic_values: info.vars,
+    rules_text: info.descriptionRaw,
+    resolved_rules_text: info.description,
+    target_type: info.target,
+    requires_target: info.target === "AnyEnemy",
+    playable: true,
+    energy_cost: 0,
+    costs_x: info.xCost,
+    upgraded: false,
+    index: 0,
+  };
+  const model = modelHandCard(raw, 0, knowledge);
+  return {
+    ...model,
+    cost: 0,
+    playable: true,
+    validTargets: model.target === "single" ? ctx.enemyTargets : [],
+    damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+  };
+}
+
+/**
+ * What a random potion's Monte Carlo draws from, or null when it cannot be simulated here (no card pool in
+ * the game data, no known pile): it is then an unsimulated potion.
+ */
+export function randomPotionSource(potion: PotionView, state: GameState, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }, noDraw: boolean): PotionMcSource | null {
+  const kind = randomPotionKind(potion.potion_id);
+  if (kind === null) return null;
+  const base = { potionId: potion.potion_id, name: potion.name, slot: potion.slot, text: potion.text, kind };
+  if (kind === "choice") {
+    const spec = CHOICE_POTIONS[potion.potion_id]!;
+    const character = str(asRecord(state.run?.raw)["character_id"]).toLowerCase();
+    const color = spec.pool === "colorless" ? "colorless" : character;
+    if (!color) return null;
+    const all = knowledge.cards();
+    const pools: Record<string, CardModel[]> = {};
+    for (const type of spec.types) {
+      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, ctx));
+    }
+    if (spec.types.some((type) => (pools[type] ?? []).length === 0)) return null;
+    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}` };
+  }
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  if (!Array.isArray(view["draw"]) && !Array.isArray(view["discard"])) return null;
+  const piles = { draw: pileCardModels(state, knowledge, "draw", ctx), discard: pileCardModels(state, knowledge, "discard", ctx) };
+  if (piles.draw.length + piles.discard.length === 0 && potion.potion_id !== "BOTTLED_POTENTIAL") return null;
+  return { ...base, piles, ...(noDraw ? { noDraw } : {}) };
+}
+
+/**
+ * Every random potion's Monte Carlo for one decision, sharing potionMcOptions.budgetMs (each gets an equal
+ * share of what is left). `solver` is the turn's solver input; its potions are left out of the samples.
+ */
+export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput | null, dryBest: Plan | null, boardKey: string): PotionMc[] {
+  if (solver === null || sources.length === 0) return [];
+  const dry: SolverInput = { ...solver, hand: solver.hand.filter((card) => card.type !== "Potion") };
+  const out: PotionMc[] = [];
+  let spent = 0;
+  sources.forEach((source, index) => {
+    const budget = Math.max(0, (potionMcOptions.budgetMs - spent) / (sources.length - index));
+    const mc = runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
+    spent += mc.ms;
+    out.push(mc);
+  });
+  return out;
 }
 
 /** Most lines shown for a potion lethal (one per set of potions spent, fewest potions first). */

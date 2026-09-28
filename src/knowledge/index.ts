@@ -25,6 +25,12 @@ export interface CardInfo {
   tags: string[];
   damage: number | null;
   block: number | null;
+  /** Card pool: "ironclad", "silent", …, "colorless", "curse", "status". */
+  color: string;
+  /** The rules template ({Damage} …) and its vars (base values), as the mod's hand cards carry them. */
+  descriptionRaw: string;
+  vars: Record<string, unknown>[];
+  xCost: boolean;
 }
 
 export interface MonsterInfo {
@@ -78,6 +84,8 @@ export interface KnowledgeStats {
 
 export interface Knowledge {
   card(id: string | null | undefined): CardInfo | null;
+  /** Every card in the game data (the random-card potions draw from these pools). */
+  cards(): CardInfo[];
   monster(id: string | null | undefined): MonsterInfo | null;
   relic(id: string | null | undefined): RelicInfo | null;
   potion(id: string | null | undefined): PotionInfo | null;
@@ -112,6 +120,10 @@ function parseCard(entry: unknown): CardInfo | null {
     tags: asArray(obj["tags"]).map((value) => str(value)).filter(Boolean),
     damage: numOrNull(obj["damage"]),
     block: numOrNull(obj["block"]),
+    color: str(obj["color"]),
+    descriptionRaw: str(obj["description_raw"]),
+    vars: asArray(obj["vars"]).map(asRecord),
+    xCost: obj["is_x_cost"] === true,
   };
 }
 
@@ -206,6 +218,7 @@ export function makeKnowledge(collections: Partial<Record<CollectionName, unknow
 
   return {
     card: (id) => (id ? cards.get(id) ?? null : null),
+    cards: () => [...cards.values()],
     monster: (id) => (id ? monsters.get(id) ?? null : null),
     relic: (id) => (id ? relics.get(id) ?? null : null),
     potion: (id) => (id ? potions.get(id) ?? null : null),

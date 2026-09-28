@@ -221,6 +221,8 @@ export interface LiveRolloutArgs {
   shown: Plan[];
   /** Base draw and discard piles from the state, or null when the state has none. */
   piles: { draw: CardModel[]; discard: CardModel[] } | null;
+  /** Wall clock already spent on this decision's budget (the random potions' Monte Carlo). */
+  spentMs?: number;
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
@@ -276,7 +278,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
-    const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - elapsed());
+    const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const result = rolloutDecision({
       solver: args.solver,
       plans: args.plans,
