@@ -721,6 +721,10 @@ function applyPlan(
       } else if ((e.base.stock ?? 0) > 0) {
         e.hp = e.maxHp;
         e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
+      } else if (e.base.illusion) {
+        // An illusion (Parafright) is back at full HP next turn (FA82 F27: killed turn after turn, the
+        // rollout called it dead for good and the Obscura, the real target, sat at 77).
+        e.hp = e.maxHp;
       } else if (e.base.revives) {
         // A phase boss (Test Subject): the next phase at its own, higher max HP, Vulnerable and Strength
         // cleared, and more phases after it while any are left (FSPK F48: phase 1 at 111 was revived at 111
@@ -760,7 +764,7 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
-  const allDown = () => enemies.every((e) => !e.alive || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
+  const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   player.hp = o.hpAfter;

@@ -89,6 +89,9 @@ describe("boss clock", () => {
     const mittens = deckProfileForBoss(mapState(starter(), "KNOWLEDGE_DEMON_BOSS", { relics: [{ index: 0, relic_id: "TOASTY_MITTENS" }] }), testKnowledge)!;
     expect(averageStrength(mittens, 10)).toBeCloseTo(5.5, 5);
     expect(averageStrength(plain, 10)).toBe(0);
+    // Brimstone: +2 a turn from T1 (EZ2L F48: ignored, the gap read 99 while the deck dealt ~45).
+    const brimstone = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", { relics: [{ index: 0, relic_id: "BRIMSTONE" }] }), testKnowledge)!;
+    expect(averageStrength(brimstone, 10)).toBeCloseTo(11, 5);
     const rupture = deckProfileForBoss(mapState([...starter(), power(9, "RUPTURE"), attack(10, "HEMOKINESIS", 15, 1, { dynamic_values: [{ name: "Damage", base_value: 15, current_value: 15 }, { name: "HpLoss", base_value: 2, current_value: 2 }] })]), testKnowledge)!;
     expect(rupture.ruptureRate).toBeGreaterThan(0);
   });
