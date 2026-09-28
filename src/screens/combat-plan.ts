@@ -1415,10 +1415,29 @@ function planTurn(env: DecisionEnv): Decision | null {
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
-  // Code plays its line only when there is no other, or it beats every other on every axis; any real
-  // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
+  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
+  // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
+  // concentration, the fight plan's focus) rank code's own lines; they no longer decide which enemy Jev can
+  // aim at. They are shown only when Jev is asked (below); code's own line must beat them too.
+  const groups = allDie === null && targetOptions.enabled ? killGroups(combat, enemies) : [];
+  const focusOf = new Map<Plan, string[]>();
+  if (groups.length >= 2) {
+    for (const [group, line] of focusLines(surviving, groups, enemies)) focusOf.set(line, [...(focusOf.get(line) ?? []), groupName(group)]);
+  }
+  // Which enemy the damage goes into is Jev's call: code's line beats another only with at least as much
+  // damage into every kind of enemy as well (one kind: total damage, the dominance axis, decides as before).
+  const beatsOnTargets = (a: Plan, b: Plan): boolean =>
+    groups.length < 2 || groups.every((group) => damageInto(a, group.indices, enemies) >= damageInto(b, group.indices, enemies));
+  // Code plays its line only when there is no other, or it beats every other on every axis (and on damage
+  // into each kind of enemy, the focus lines included); any real choice between lines is Jev's (lethal,
+  // all-lines-die, mod-says-lethal are decided above).
   // A top line that drinks while a potion-free line survives is never code's to play: Jev decides.
-  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top)) && potionLethal.length === 0;
+  const clear =
+    (!second || options.every((plan) => plan === top || dominates(top, plan))) &&
+    [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
+    !setupClose &&
+    !(drySurvives && drinksPotion(top)) &&
+    potionLethal.length === 0;
   // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
   // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
   // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
@@ -1479,18 +1498,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     return before && after ? Math.max(0, before.hp - after.hp) : null;
   };
   const fitOf = (plan: Plan): Record<string, JsonValue> => (fightPlan ? { fight_plan_fit: planFit(fightPlan, plan.steps, focusDamage(plan)) } : {});
-  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
-  // into each is shown, labelled "focus: <enemy>", in the options' cap like a potion's slot. The score's
-  // tactical weights (minion chip, concentration, the fight plan's focus) rank code's own lines; they no
-  // longer decide which enemy Jev can aim at. Added after code's own decisions above, which are unchanged.
-  const groups = allDie === null && targetOptions.enabled ? killGroups(combat, enemies) : [];
-  const focusOf = new Map<Plan, string[]>();
-  if (groups.length >= 2) {
-    for (const [group, line] of focusLines(surviving, groups, enemies)) {
-      focusOf.set(line, [...(focusOf.get(line) ?? []), groupName(group)]);
-      if (!options.includes(line)) options.push(line);
-    }
-  }
+  // The focus lines join the options shown (see `focusOf` above), in the cap like a potion's slot.
+  for (const line of focusOf.keys()) if (!options.includes(line)) options.push(line);
   const kill = killOrders(groups);
   const focusNote = (plan: Plan): Record<string, JsonValue> => (focusOf.has(plan) ? { focus: focusOf.get(plan)!.join(", ") } : {});
   // Rollout FACTS (rollout-live.ts): code's options and their order are settled above; the rollout only

@@ -167,8 +167,10 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
   });
 });
 
-describe("code's auto-acts are unchanged by the per-target options", () => {
-  it("every logged board: the same act, intent and rationale; an ask keeps its options, the focus lines come on top", () => {
+describe("code's auto-acts with the per-target options", () => {
+  it("every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act", () => {
+    let moved = 0;
+    let multiActs = 0;
     for (const name of BOARDS) {
       rolloutLiveOptions.enabled = false;
       potionMcOptions.now = () => 0;
@@ -176,16 +178,33 @@ describe("code's auto-acts are unchanged by the per-target options", () => {
       const off = planCombatTurn(loggedEnv(logged(name), { jevContext: "v1" }));
       targetOptions.enabled = true;
       const on = planCombatTurn(loggedEnv(logged(name), { jevContext: "v1" }));
-      expect(on?.kind, name).toBe(off?.kind);
-      expect(on?.label, name).toBe(off?.label);
-      if (off?.kind === "act" && on?.kind === "act") {
-        expect(on.intent, name).toEqual(off.intent);
-        expect(on.rationale, name).toBe(off.rationale);
+      const fx = logged(name);
+      const combat = fx.state["combat"] as Record<string, unknown>;
+      const kinds = new Set(
+        (combat["enemies"] as Record<string, unknown>[]).filter((e) => e["is_alive"] !== false && Number(e["current_hp"]) > 0).map((e) => String(e["enemy_id"])),
+      ).size;
+      if (off?.kind === "act") {
+        if (kinds >= 2) multiActs += 1;
+        if (on?.kind === "ask" && kinds >= 2) {
+          // Code's line did not beat some line on damage into some kind of enemy: Jev's question now.
+          moved += 1;
+          continue;
+        }
+        expect(on?.kind, name).toBe("act");
+        expect(on?.label, name).toBe(off.label);
+        expect((on as typeof off).intent, name).toEqual(off.intent);
+        expect((on as typeof off).rationale, name).toBe(off.rationale);
         continue;
       }
+      expect(on?.kind, name).toBe(off?.kind);
+      expect(on?.label, name).toBe(off?.label);
       if (off?.kind !== "ask" || on?.kind !== "ask") continue;
       const before = criteriaOf(off);
       const after = criteriaOf(on);
+      if (kinds < 2) {
+        expect(after, name).toEqual(before);
+        continue;
+      }
       const plays = (criteria: Record<string, string | null>) => planKeys(criteria).map((key) => String(facts(criteria, key)["plays"]));
       const shown = plays(after);
       // Every line shown before is still shown, unless the cap gave its slot to a focus line.
@@ -196,7 +215,34 @@ describe("code's auto-acts are unchanged by the per-target options", () => {
       // Code's own fallback (no usable answer) is the same line.
       expect(on.resolve({} as AnswerSet).intent, name).toEqual(off.resolve({} as AnswerSet).intent);
     }
+    expect(moved).toBeLessThanOrEqual(multiActs);
   }, 120_000);
+
+  it("a line that beats the rest on every axis but puts less into one kind of enemy is not code's to play: Jev is asked", () => {
+    // EZ2L F48 T2 with one card: Strike. "Strike -> Queen" and "Strike -> Amalgam" deal the same; with a
+    // Vulnerable Queen, the Queen line deals more on every axis, and code used to play it.
+    targetOptions.enabled = false;
+    rolloutLiveOptions.enabled = false;
+    potionMcOptions.now = () => 0;
+    const fx = logged("ez2l-f48-t2");
+    const combat = fx.state["combat"] as Record<string, unknown>;
+    const hand = combat["hand"] as Record<string, unknown>[];
+    const strike = hand.find((card) => String(card["card_id"]).startsWith("STRIKE"))!;
+    combat["hand"] = [{ ...strike, index: 0 }];
+    // No potions: the question would be Jev's anyway.
+    const run = fx.state["run"] as Record<string, unknown>;
+    run["potions"] = (run["potions"] as Record<string, unknown>[]).map((slot) => ({ ...slot, occupied: false, potion_id: null }));
+    const off = planCombatTurn(loggedEnv(fx, { jevContext: "v1" }));
+    expect(off?.kind, off?.kind === "ask" ? off.label : "").toBe("act");
+    expect(off?.label, off?.kind === "act" ? off.rationale : "").toBe("combat/plan");
+    targetOptions.enabled = true;
+    const on = planCombatTurn(loggedEnv(fx, { jevContext: "v1" })) as AskDecision;
+    expect(on.kind).toBe("ask");
+    const criteria = criteriaOf(on);
+    const focus = planKeys(criteria).map((key) => String(facts(criteria, key)["focus"] ?? ""));
+    expect(focus.join("|")).toContain(AMALGAM);
+    expect(focus.join("|")).toContain(QUEEN);
+  });
 });
 
 describe("kill groups and orders", () => {
