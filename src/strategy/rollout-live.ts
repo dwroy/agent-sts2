@@ -320,7 +320,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}, expected turns to win ~${round1(line.turnsToWin)}${cut}`,
+    rollout: `${head}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
   };
   const forecast = line.modelForecast.rollout;
   if (!forecast) facts["history_estimate"] = "unavailable (no fight-value model)";

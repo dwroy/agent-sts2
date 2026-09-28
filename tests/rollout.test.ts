@@ -164,6 +164,22 @@ describe("rollout (offline)", () => {
     expect(mean(joined, (l) => l.hpLoss)).toBeGreaterThan(mean(plain, (l) => l.hpLoss));
   });
 
+  it("when every sample dies, there are no turns to win: deaths and the turn of death instead (69HW F33)", () => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      player: { ...input.solver.player, hp: 12 },
+      enemies: [{ ...input.solver.enemies[0]!, hp: 300, maxHp: 300, attacks: [{ damage: 30, hits: 1 }] }],
+    };
+    const table: EnemyTable = { moves: { SLAM: { damage: 30, hits: 1, strength: 0, block: 0 } }, next: { SLAM: { SLAM: 1 } } };
+    const r = rolloutDecision({ ...input, solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id: "BIG", move: "SLAM", strength: 0, powers: {} }], tables: { BIG: table } });
+    for (const line of r.lines) {
+      expect(line.deaths).toBe(line.samples);
+      expect(line.turnsToWin).toBeNull();
+      expect(line.turnsToDeath).toBeGreaterThanOrEqual(1);
+    }
+  });
+
   it("degrades to fit the time budget: 5 turns, then 3, then fewer samples, then 1 turn", () => {
     const run = (budget: number) => rolloutDecision(scenario(budget, fakeClock(1)));
     const full = run(1e9);

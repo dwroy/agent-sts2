@@ -367,7 +367,7 @@ async function run(): Promise<void> {
           iiiModel: l.valueModelTerminal === null ? null : +l.valueModelTerminal.toFixed(2),
           iiiLoss: +l.hpLoss.toFixed(2),
           iiiWin: +l.winProb.toFixed(4),
-          iiiTurns: +l.turnsToWin.toFixed(2),
+          iiiTurns: l.turnsToWin === null ? null : +l.turnsToWin.toFixed(2),
           iiLossM: l.modelForecast.oneTurn ? +l.modelForecast.oneTurn.hpLoss.toFixed(2) : null,
           iiWinM: l.modelForecast.oneTurn ? +l.modelForecast.oneTurn.winProb.toFixed(4) : null,
           iiiLossM: l.modelForecast.rollout ? +l.modelForecast.rollout.hpLoss.toFixed(2) : null,

@@ -57,7 +57,7 @@ describe("rollout facts on Jev's combat question", () => {
       expect(keys.length).toBeGreaterThanOrEqual(2);
       for (const key of keys) {
         const f = facts(criteria, key);
-        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\): expected further HP loss [\d.]+, fight over within 5 turns in \d\/8, expected turns to win ~[\d.]+$/);
+        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\): expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
         expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }

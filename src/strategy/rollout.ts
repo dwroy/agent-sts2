@@ -403,7 +403,11 @@ export interface LineEstimate {
   oneTurn: { hpLoss: number; winProb: number; turns: number; modelValue: number | null; value: number };
   /** (iii) the rollout: expected HP lost from now to the fight's end, turns to the fight's end, win prob. */
   hpLoss: number;
-  turnsToWin: number;
+  /** Mean turns to the fight's end over the samples that survive the horizon; null when every sample dies. */
+  turnsToWin: number | null;
+  /** Samples (of `samples`) in which we die within the horizon, and the mean turn of death among them. */
+  deaths: number;
+  turnsToDeath: number | null;
   winProb: number;
   /** Samples (of `samples`) in which the fight was won within the horizon. */
   wins: number;
@@ -847,6 +851,7 @@ interface SampleValue {
   loss: number;
   win: number;
   turns: number;
+  died: boolean;
   lossModel: number | null;
   winModel: number | null;
 }
@@ -857,10 +862,10 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    if (r.died) return { loss: startHp, win: 0, turns: i + 1, lossModel: startHp, winModel: 0, n: 0 };
+    if (r.died) return { loss: startHp, win: 0, turns: i + 1, died: true, lossModel: startHp, winModel: 0, n: 0 };
     if (r.won) {
       loss += r.loss;
-      return { loss, win: 1, turns: i + 1, lossModel: loss, winModel: 1, n: 0 };
+      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -872,6 +877,7 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
     loss: base + term.gated.hpLoss,
     win: term.gated.winProb,
     turns: upto + term.gated.turns,
+    died: false,
     lossModel: term.model ? base + term.model.hpLoss : null,
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
@@ -966,7 +972,9 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const o = one[i]!;
     let loss = o.hpLoss;
     let win = o.winProb;
-    let turns = o.turns;
+    let turns: number | null = o.turns;
+    let deaths = 0;
+    let turnsToDeath: number | null = null;
     let lossM: number | null = null;
     let winM: number | null = null;
     let wins = plan.outcome.winsFight ? 1 : 0;
@@ -977,7 +985,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length);
       loss = mean(vals.map((v) => v.loss));
       win = mean(vals.map((v) => v.win));
-      turns = mean(vals.map((v) => v.turns));
+      // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
+      const alive = vals.filter((v) => !v.died);
+      const dead = vals.filter((v) => v.died);
+      turns = alive.length > 0 ? mean(alive.map((v) => v.turns)) : null;
+      deaths = dead.length;
+      turnsToDeath = dead.length > 0 ? mean(dead.map((v) => v.turns)) : null;
       if (valsM.every((v) => v.lossModel !== null)) {
         lossM = mean(valsM.map((v) => v.lossModel!));
         winM = mean(valsM.map((v) => v.winModel!));
@@ -994,6 +1007,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       oneTurn: { hpLoss: o.hpLoss, winProb: o.winProb, turns: o.turns, modelValue: o.modelValue, value: o.value },
       hpLoss: loss,
       turnsToWin: turns,
+      deaths,
+      turnsToDeath,
       winProb: win,
       wins,
       value: -loss - DEATH_HP * (1 - win),
