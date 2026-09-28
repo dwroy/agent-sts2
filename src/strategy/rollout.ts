@@ -480,6 +480,10 @@ const POWER_EFFECTS: Record<string, { demonForm?: [number, number]; metallicize?
   BARRICADE: { barricade: true },
 };
 
+/** Enemy turns a lone dead Decimillipede segment stays down, and the HP it returns with when REATTACH_POWER is unread. */
+const REATTACH_TURNS = 2;
+const REATTACH_HP = 25;
+
 interface SimEnemy {
   index: number;
   id: string;
@@ -491,6 +495,8 @@ interface SimEnemy {
   vulnerable: number;
   weak: number;
   alive: boolean;
+  /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
+  reattachIn?: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -653,6 +659,14 @@ function applyPlan(
       }
     }
   }
+  // A segment killed alone reattaches (63CP F25: the head died T2 and came back at 25 HP on T4); the
+  // solver already scores this, the rollout ended the fight's threat at the kill.
+  const segmentsLeft = enemies.some((e) => e.alive && e.base.reattach);
+  for (const e of enemies) {
+    if (e.alive || !e.base.reattach) continue;
+    if (!segmentsLeft) e.reattachIn = undefined;
+    else if (e.reattachIn === undefined) e.reattachIn = REATTACH_TURNS;
+  }
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
@@ -671,6 +685,17 @@ function applyPlan(
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
       e.move = nextMove(table, e.move, random);
+    }
+    for (const e of enemies) {
+      if (e.alive || e.reattachIn === undefined) continue;
+      e.reattachIn -= 1;
+      if (e.reattachIn > 0) continue;
+      e.alive = true;
+      e.reattachIn = undefined;
+      e.hp = Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP);
+      e.block = 0;
+      e.vulnerable = 0;
+      e.weak = 0;
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
