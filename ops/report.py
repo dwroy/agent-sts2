@@ -242,7 +242,8 @@ def refresh_knowledge() -> None:
     mm = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/src/knowledge/move-model.json")
     cmd = (f'python3 {tools}/build-monster-db.py --quiet --move-model-out {mm}; '
            f'python3 {tools}/monster-db-check.py >/dev/null 2>&1; '
-           f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1')
+           f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1; '
+           f'python3 {tools}/build-room-costs.py >/dev/null 2>&1')
     log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
     subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
 
