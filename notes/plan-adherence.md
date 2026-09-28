@@ -7,31 +7,32 @@ script's docstring; `--json` for raw events, `--events RUNID` for one run).
 
 - **Boss potions (run plan save_potions)**: kept until the act boss 17/36 (47%). Broken by: code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2; only 4/19 at low HP / dying lines, 18/19 inside code's 10-floor keep window. In 13/19 the fight plan of that same fight told code/Jev to drink it (early or big_hit): the two DeepSeek plans contradict each other.
 - **Parser loss**: DeepSeek often lists 3 save_potions roles; parseRunPlan keeps 2. Potions of the dropped role: 8/16 (50%) kept anyway.
-- **Entry HP**: met 56/95 (59%); misses average 19.3pp. Broken by: no_opportunity 36, map_scoring 2, deepseek 1 (no_opportunity = no smithing below target and no optional elite near the boss: the HP went in fights).
-- **Must-have roles**: deck had >= 2 cards of the role at the boss 243/354 (69%); a card reward offering a lacking role was taken 299/372 (80%) (misses: code 59, jev 8, deepseek 6).
-- **Avoid**: avoided cards stayed out 543/548 (99%) (added anyway: code 3, deepseek 1, jev 1); elites avoided 283/297 (95%) (taken by: map_scoring 9, deepseek 3, jev 2).
-- **Kill-first enemy**: 2004/2348 (85%) of targeted plays hit it (misses: code 175, jev=rank1 100, hp_guard 39, jev 18, fallback 10, potion_veto 2).
+- **Entry HP**: met 60/102 (59%); misses average 19.8pp. Broken by: no_opportunity 39, map_scoring 2, deepseek 1 (no_opportunity = no smithing below target and no optional elite near the boss: the HP went in fights).
+- **Must-have roles**: deck had >= 2 cards of the role at the boss 260/384 (68%); a card reward offering a lacking role was taken 326/406 (80%) (misses: code 64, jev 10, deepseek 6).
+- **Avoid**: avoided cards stayed out 559/564 (99%) (added anyway: code 3, deepseek 1, jev 1); elites avoided 294/308 (95%) (taken by: map_scoring 9, deepseek 3, jev 2).
+- **Kill-first enemy**: 2112/2482 (85%) of targeted plays hit it (misses: code 184, jev=rank1 112, hp_guard 42, jev 20, fallback 10, potion_veto 2).
 - **Fight-plan potions**: early 163/176, save 183/194, emergency 150/170 honoured; big_hit 21/56 and burst(from big_hit) 11/78 are the weak spots (mostly offensive potions drunk on T1-2, the case code later re-read as burst).
 - **Setup cards**: played on the first T1-2 turn in hand 787/878 (90%) (misses: code 26, jev=rank1 19, hp_guard 19, jev 8, jev(stub)=rank1 7, potion_veto 6, fallback 6).
 - **Plan labels on Jev's options**: setup-labelled line: code rank 1 73%, Jev's pick 90%, finally played 83% (the HP guard is what undoes Jev's setup picks); potion-keep labels: Jev 73%, finally 79% (the potion veto repairs some).
-- **Intent era (from 0f2e648)**, 47 finished run(s): 56 validator repairs, 343 run-plan versions, 402 changes accepted / 7 rejected; execution after a change 276/287; 8 Jev intent deviations; intent_fit on 76% of Jev decisions; reserve kept 57/94, 10 bug(s).
+- **Intent era (from 0f2e648)**, 52 finished run(s): 59 validator repairs, 386 run-plan versions, 445 changes accepted / 7 rejected; execution after a change 294/306; 10 Jev picks that differ from DeepSeek's tempo; a tempo note on 76% of Jev decisions; reserve kept 60/101, 11 bug(s).
+- **Outcomes of differing picks (section O; correlation, not proof: Jev differs more in hard spots)**: combat, Jev's pick = reference rank 1 in 5334 decisions (turn HP loss 5.2, fight won 85%), differs in 1625 (turn HP loss 5.3, fight won 85%); non-combat matches 696 (act boss passed 66%) vs differs 100 (61%). Boss turns at Jev confidence < 0.5: 1208 (for manual review).
 
-Plan adherence: 161 finished runs with DeepSeek plans (+1 unfinished, not aggregated).
+Plan adherence: 166 finished runs with DeepSeek plans (+1 unfinished, not aggregated).
 honoured / broken per commitment; 'broken by' = who made the choice that broke it (see --help / docstring).
 
-### ALL finished runs (161 runs)
+### ALL finished runs (166 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 36 | 17 (47%) | 19 (53%) | 2 | code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2 (justified 4/19, inside 10-floor window 18/19; that fight's plan said: early 7, big_hit 6, burst 4, emergency 1, save 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 16 | 8 (50%) | 8 (50%) | 1 | code 3, jev=rank1 1, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 4/8, inside 10-floor window 7/8; that fight's plan said: early 3, big_hit 2, emergency 1, save 1, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 95 | 56 (59%) | 39 (41%) | 0 | no_opportunity 36, map_scoring 2, deepseek 1 (missed by 19.3pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 354 | 243 (69%) | 111 (31%) [64 partial] | 0 | code 51, no_opportunity 38, code,jev 9, jev 7, deepseek 4, code,deepseek 2 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 372 | 299 (80%) | 73 (20%) | 0 | code 59, jev 8, deepseek 6 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 548 | 543 (99%) | 5 (1%) | 0 | code 3, deepseek 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 297 | 283 (95%) | 14 (5%) | 75 | map_scoring 9, deepseek 3, jev 2 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 2348 | 2004 (85%) | 344 (15%) | 0 | code 175, jev=rank1 100, hp_guard 39, jev 18, fallback 10, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 1249 | 1048 (84%) | 201 (16%) | 0 | code 94, jev=rank1 61, hp_guard 26, jev 12, fallback 7, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 102 | 60 (59%) | 42 (41%) | 0 | no_opportunity 39, map_scoring 2, deepseek 1 (missed by 19.8pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 384 | 260 (68%) | 124 (32%) [74 partial] | 0 | code 55, no_opportunity 45, code,jev 11, jev 7, deepseek 4, code,deepseek 2 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 406 | 326 (80%) | 80 (20%) | 0 | code 64, jev 10, deepseek 6 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 564 | 559 (99%) | 5 (1%) | 0 | code 3, deepseek 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 308 | 294 (95%) | 14 (5%) | 81 | map_scoring 9, deepseek 3, jev 2 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 2482 | 2112 (85%) | 370 (15%) | 0 | code 184, jev=rank1 112, hp_guard 42, jev 20, fallback 10, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 1316 | 1100 (84%) | 216 (16%) | 0 | code 100, jev=rank1 67, hp_guard 27, jev 14, fallback 7, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 784 | 589 (75%) | 195 (25%) | 39 | jev 49, code 45, jev=rank1 41, not_drunk 38, hp_guard 15, potion_veto 7 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 878 | 787 (90%) | 91 (10%) | 764 | code 26, jev=rank1 19, hp_guard 19, jev 8, jev(stub)=rank1 7, potion_veto 6, fallback 6 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 1032 | 811 (79%) | 221 (21%) | 10 | jev=rank1 68, hp_guard 62, jev 49, jev(stub)=rank1 26, fallback 13, potion_veto 3 |
@@ -130,36 +131,36 @@ Fight-plan potion timing (metric 6), per planned use:
 | save | 50 | 0 | 0 | - |
 | emergency | 20 | 0 | 0 | - |
 
-### era intent (from 0f2e648) (47 runs)
+### era intent (from 0f2e648) (52 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 0 | 0 (-) | 0 (-) | 0 | - |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 0 | 0 (-) | 0 (-) | 0 | - |
-| 2 run plan: act-boss entry HP >= target | 61 | 37 (61%) | 24 (39%) | 0 | no_opportunity 23, map_scoring 1 (missed by 22.2pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 253 | 169 (67%) | 84 (33%) [50 partial] | 0 | code 40, no_opportunity 28, code,jev 9, jev 7 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 275 | 223 (81%) | 52 (19%) | 0 | code 44, jev 8 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 183 | 183 (100%) | 0 (0%) | 0 | - |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 136 | 132 (97%) | 4 (3%) | 33 | map_scoring 3, jev 1 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1071 | 918 (86%) | 153 (14%) | 0 | jev=rank1 75, code 57, jev 12, hp_guard 6, fallback 3 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 561 | 476 (85%) | 85 (15%) | 0 | jev=rank1 40, code 32, jev 7, hp_guard 4, fallback 2 |
+| 2 run plan: act-boss entry HP >= target | 68 | 41 (60%) | 27 (40%) | 0 | no_opportunity 26, map_scoring 1 (missed by 22.6pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 283 | 186 (66%) | 97 (34%) [60 partial] | 0 | code 44, no_opportunity 35, code,jev 11, jev 7 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 309 | 250 (81%) | 59 (19%) | 0 | code 49, jev 10 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 199 | 199 (100%) | 0 (0%) | 0 | - |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 147 | 143 (97%) | 4 (3%) | 39 | map_scoring 3, jev 1 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1205 | 1026 (85%) | 179 (15%) | 0 | jev=rank1 87, code 66, jev 14, hp_guard 9, fallback 3 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 628 | 528 (84%) | 100 (16%) | 0 | jev=rank1 46, code 38, jev 9, hp_guard 5, fallback 2 |
 | 6 fight plan: potion drunk at the planned moment | 0 | 0 (-) | 0 (-) | 0 | - |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 0 | 0 (-) | 0 (-) | 0 | - |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 0 | 0 (-) | 0 (-) | 0 | - |
 
-### arm normal (151 runs)
+### arm normal (156 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 23 | 12 (52%) | 11 (48%) | 0 | code 4, hp_guard 3, jev 2, jev=rank1 1, plan_potion 1 (justified 1/11, inside 10-floor window 11/11; that fight's plan said: early 6, big_hit 4, burst 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 11 | 5 (45%) | 6 (55%) | 1 | code 2, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 3/6, inside 10-floor window 5/6; that fight's plan said: early 3, big_hit 2, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 79 | 45 (57%) | 34 (43%) | 0 | no_opportunity 32, map_scoring 2 (missed by 20.1pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 307 | 206 (67%) | 101 (33%) [58 partial] | 0 | code 46, no_opportunity 36, code,jev 9, jev 7, deepseek 2, code,deepseek 1 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 329 | 266 (81%) | 63 (19%) | 0 | code 52, jev 8, deepseek 3 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 507 | 503 (99%) | 4 (1%) | 0 | code 2, deepseek 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 265 | 252 (95%) | 13 (5%) | 69 | map_scoring 8, deepseek 3, jev 2 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 2139 | 1811 (85%) | 328 (15%) | 0 | code 160, jev=rank1 100, hp_guard 39, jev 18, fallback 9, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 1134 | 945 (83%) | 189 (17%) | 0 | code 83, jev=rank1 61, hp_guard 26, jev 12, fallback 6, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 86 | 49 (57%) | 37 (43%) | 0 | no_opportunity 35, map_scoring 2 (missed by 20.6pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 337 | 223 (66%) | 114 (34%) [68 partial] | 0 | code 50, no_opportunity 43, code,jev 11, jev 7, deepseek 2, code,deepseek 1 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 363 | 293 (81%) | 70 (19%) | 0 | code 57, jev 10, deepseek 3 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 523 | 519 (99%) | 4 (1%) | 0 | code 2, deepseek 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 276 | 263 (95%) | 13 (5%) | 75 | map_scoring 8, deepseek 3, jev 2 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 2273 | 1919 (84%) | 354 (16%) | 0 | code 169, jev=rank1 112, hp_guard 42, jev 20, fallback 9, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 1201 | 997 (83%) | 204 (17%) | 0 | code 89, jev=rank1 67, hp_guard 27, jev 14, fallback 6, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 651 | 479 (74%) | 172 (26%) | 37 | jev 47, code 39, jev=rank1 38, not_drunk 28, hp_guard 13, potion_veto 7 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 755 | 682 (90%) | 73 (10%) | 632 | jev=rank1 19, code 18, hp_guard 18, jev 8, potion_veto 6, fallback 4 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 900 | 719 (80%) | 181 (20%) | 10 | jev=rank1 61, hp_guard 57, jev 48, fallback 12, potion_veto 3 |
@@ -256,19 +257,19 @@ Fight-plan potion timing (metric 6), per planned use:
 | save | 29 | 1 | 0 | - |
 | emergency | 30 | 1 | 0 | - |
 
-### runs with commitment fields (entryHp/savePotions/mustHave) (69 runs)
+### runs with commitment fields (entryHp/savePotions/mustHave) (74 runs)
 
 | metric | n | honoured | broken | n/a | broken by |
 |---|---:|---:|---:|---:|---|
 | 1 run plan: boss potions kept until the act boss (per potion x act) | 36 | 17 (47%) | 19 (53%) | 2 | code 9, jev 3, hp_guard 3, jev=rank1 2, plan_potion 2 (justified 4/19, inside 10-floor window 18/19; that fight's plan said: early 7, big_hit 6, burst 4, emergency 1, save 1) |
 | 1' potions DeepSeek also asked to keep, role dropped by the parser (3rd role) | 16 | 8 (50%) | 8 (50%) | 1 | code 3, jev=rank1 1, potion_veto 1, jev 1, hp_guard 1, plan_potion 1 (justified 4/8, inside 10-floor window 7/8; that fight's plan said: early 3, big_hit 2, emergency 1, save 1, burst 1) |
-| 2 run plan: act-boss entry HP >= target | 95 | 56 (59%) | 39 (41%) | 0 | no_opportunity 36, map_scoring 2, deepseek 1 (missed by 19.3pp on average) |
-| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 354 | 243 (69%) | 111 (31%) [64 partial] | 0 | code 51, no_opportunity 38, code,jev 9, jev 7, deepseek 4, code,deepseek 2 |
-| 3b run plan: card reward offering a lacking must-have role -> taken | 372 | 299 (80%) | 73 (20%) | 0 | code 59, jev 8, deepseek 6 |
-| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 272 | 270 (99%) | 2 (1%) | 0 | code 1, jev 1 |
-| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 200 | 194 (97%) | 6 (3%) | 47 | map_scoring 5, jev 1 |
-| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1661 | 1435 (86%) | 226 (14%) | 0 | code 104, jev=rank1 82, hp_guard 18, jev 12, fallback 8, potion_veto 2 |
-| 5' fight plan: turns mostly aimed at the kill-first enemy | 876 | 743 (85%) | 133 (15%) | 0 | code 60, jev=rank1 46, hp_guard 13, jev 7, fallback 6, potion_veto 1 |
+| 2 run plan: act-boss entry HP >= target | 102 | 60 (59%) | 42 (41%) | 0 | no_opportunity 39, map_scoring 2, deepseek 1 (missed by 19.8pp on average) |
+| 3a run plan: must-have role in deck (>=2 cards) at boss entry | 384 | 260 (68%) | 124 (32%) [74 partial] | 0 | code 55, no_opportunity 45, code,jev 11, jev 7, deepseek 4, code,deepseek 2 |
+| 3b run plan: card reward offering a lacking must-have role -> taken | 406 | 326 (80%) | 80 (20%) | 0 | code 64, jev 10, deepseek 6 |
+| 4a run plan: avoided cards not taken (offers skipped vs cards added) | 288 | 286 (99%) | 2 (1%) | 0 | code 1, jev 1 |
+| 4b run plan: elites avoided on the map (avoid / entry-HP rule) | 211 | 205 (97%) | 6 (3%) | 53 | map_scoring 5, jev 1 |
+| 5 fight plan: targeted plays at the kill-first enemy (per play) | 1795 | 1543 (86%) | 252 (14%) | 0 | code 113, jev=rank1 94, hp_guard 21, jev 14, fallback 8, potion_veto 2 |
+| 5' fight plan: turns mostly aimed at the kill-first enemy | 943 | 795 (84%) | 148 (16%) | 0 | code 66, jev=rank1 52, hp_guard 14, jev 9, fallback 6, potion_veto 1 |
 | 6 fight plan: potion drunk at the planned moment | 284 | 237 (83%) | 47 (17%) | 22 | not_drunk 20, code 13, jev=rank1 8, jev 3, hp_guard 2, potion_veto 1 |
 | 7 fight plan: setup card played on the first T1-2 turn it is in hand | 318 | 281 (88%) | 37 (12%) | 271 | code 14, jev(stub)=rank1 7, fallback 6, hp_guard 5, jev 2, jev=rank1 2, potion_veto 1 |
 | 8 Jev questions with plan labels: plan-consistent line finally played | 342 | 251 (73%) | 91 (27%) | 2 | jev(stub)=rank1 26, jev=rank1 26, hp_guard 19, fallback 10, jev 10 |
@@ -294,33 +295,33 @@ Fight-plan potion timing (metric 6), per planned use:
 | save | 115 | 2 | 0 | - |
 | emergency | 69 | 2 | 0 | - |
 
-## Intent era (from 0f2e648): validator, re-plans, execution, deviations, reserve
+## Intent era (from 0f2e648): validator, re-plans, execution, picks differing from tempo, reserve
 
-### finished intent-era runs (47)
+### finished intent-era runs (52)
 
-- **I1 validator repairs**: 56 (34 on 343 run plans, 22 on 495 fight plans). By type: fight: kill_fast/race→preserve_hp (hp_policy preserve) 18, run: unknown want dropped 13, run: other 11, run: unknown avoid dropped 4, run: reserve any+roles→any 3, fight: together-enemy dropped from kill_priority 3, run: seek_elites→normal (hp_policy preserve) 1, run: unknown remove dropped 1, run: push→balanced (near boss below entry) 1, fight: unknown enemy dropped 1.
-- **I2 re-plans**: 343 run-plan versions (7.3 per run, max 17); by checkpoint: hp_rise 118, hp_drop 109, start 47, act 37, review 32; failed requests: run 0, fight 3.
-  - changes accepted 402: by field run: hp_policy 163, run: route_risk 126, run: reserve 58, run: needs 41, run: entry_hp_pct 14; by trigger hp_below_target 174, hp_recovered 114, act_changed 64, potion_lost_or_gained 31, key_card_or_relic_gained 7, boss_gap_closed 5, boss_gap_widened 5, forced_route 2.
+- **I1 validator repairs**: 59 (36 on 386 run plans, 23 on 553 fight plans). By type: fight: kill_fast/race→preserve_hp (hp_policy preserve) 18, run: unknown want dropped 14, run: other 12, run: unknown avoid dropped 4, fight: together-enemy dropped from kill_priority 4, run: reserve any+roles→any 3, run: seek_elites→normal (hp_policy preserve) 1, run: unknown remove dropped 1, run: push→balanced (near boss below entry) 1, fight: unknown enemy dropped 1.
+- **I2 re-plans**: 386 run-plan versions (7.4 per run, max 17); by checkpoint: hp_rise 134, hp_drop 123, start 52, act 41, review 36; failed requests: run 0, fight 3.
+  - changes accepted 445: by field run: hp_policy 176, run: route_risk 139, run: reserve 66, run: needs 48, run: entry_hp_pct 15, fight: objective 1; by trigger hp_below_target 189, hp_recovered 124, act_changed 69, potion_lost_or_gained 37, boss_gap_widened 10, key_card_or_relic_gained 7, boss_gap_closed 6, forced_route 2, new_enemy 1.
   - changes rejected 7: by reason unsupported 3, no_trigger 2, invalid_trigger 2; by field reserve 3, route_risk 2, hp_policy 1, needs 1.
-- **I3 execution after an accepted change**: honoured 276/287 (96%), n/a 263 (no check or no opportunity).
-- **I4 intent deviations**: 8 Jev decisions labelled "breaks …" (0% of 2572 Jev decisions); by intent ? 5, hp_policy preserve 2, the Sandpit race 1; by screen COMBAT 8. Jev decisions with an intent_fit label: 1956/2572 (76%).
-- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 57/94 (61%), broken 37 (by code 17, jev=rank1 10, jev 7, map_scoring 2, hp_guard 1; exceptions HP < 25% 19, option tagged released 6; discarded 2), n/a 10 (of which released by a reserve change 0). **BUG: 10 reserved potion(s) drunk outside the exceptions**: XMY29WWQDC1Y REGEN_POTION F23 T5 monster by jev at 28% (combat/play); Z49JD7340KUP POTION_SHAPED_ROCK F21 T2 monster by code at 75% (combat/lethal); Z49JD7340KUP POTION_SHAPED_ROCK F23 T1 monster by jev=rank1 at 82% (combat/plan-choice); Z49JD7340KUP STRENGTH_POTION F24 T4 monster by code at 26% (combat/lethal); Z49JD7340KUP POTION_SHAPED_ROCK F28 T2 monster by code at 62% (combat/plan); Z49JD7340KUP POTION_SHAPED_ROCK F31 T1 elite by code at 68% (combat/plan); Z49JD7340KUP POTION_SHAPED_ROCK F31 T1 elite by code at 68% (combat/plan); 123ZSH58F5FS POTION_OF_BINDING F24 T3 monster by code at 41% (combat/plan); PCGH29GVGSCE HEART_OF_IRON F23 T6 monster by code at 30% (combat/plan); EHJZSGVU0VQ9 FORTIFIER F29 T3 elite by hp_guard at 35% (combat/plan-guarded)
+- **I3 execution after an accepted change**: honoured 294/306 (96%), n/a 293 (no check or no opportunity).
+- **I4 picks that differ from DeepSeek's tempo** (a fact, not a verdict; outcomes in section O): 10 Jev decisions (0% of 2820 Jev decisions); by guidance item kill_fast 7, hp_policy preserve 2, the Sandpit race 1; by screen COMBAT 10. Jev decisions with a tempo note (intent_fit / tempo) on some option: 2136/2820 (76%).
+- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 60/101 (59%), broken 41 (by code 18, jev=rank1 11, jev 9, map_scoring 2, hp_guard 1; exceptions HP < 25% 20, option tagged released 8; discarded 2), n/a 10 (of which released by a reserve change 0). **BUG: 11 reserved potion(s) drunk outside the exceptions**: XMY29WWQDC1Y REGEN_POTION F23 T5 monster by jev at 28% (combat/play); Z49JD7340KUP POTION_SHAPED_ROCK F21 T2 monster by code at 75% (combat/lethal); Z49JD7340KUP POTION_SHAPED_ROCK F23 T1 monster by jev=rank1 at 82% (combat/plan-choice); Z49JD7340KUP STRENGTH_POTION F24 T4 monster by code at 26% (combat/lethal); Z49JD7340KUP POTION_SHAPED_ROCK F28 T2 monster by code at 62% (combat/plan); Z49JD7340KUP POTION_SHAPED_ROCK F31 T1 elite by code at 68% (combat/plan); Z49JD7340KUP POTION_SHAPED_ROCK F31 T1 elite by code at 68% (combat/plan); 123ZSH58F5FS POTION_OF_BINDING F24 T3 monster by code at 41% (combat/plan); PCGH29GVGSCE HEART_OF_IRON F23 T6 monster by code at 30% (combat/plan); EHJZSGVU0VQ9 FORTIFIER F29 T3 elite by hp_guard at 35% (combat/plan-guarded); RUUBXYZV5064 WEAK_POTION F23 T3 monster by code at 31% (combat/plan)
 
 | accepted change | check | honoured | broken | n/a | broken by |
 |---|---|---:|---:|---:|---|
 | entry_hp_pct → 0.85 | none | 0 | 0 | 5 | - |
-| entry_hp_pct → 0.9 | no_elite_near_boss | 4 | 1 | 0 | map_scoring 1 |
-| entry_hp_pct → 0.9 | rest_heal_near_boss | 8 | 0 | 0 | - |
+| entry_hp_pct → 0.9 | no_elite_near_boss | 5 | 1 | 0 | map_scoring 1 |
+| entry_hp_pct → 0.9 | rest_heal_near_boss | 9 | 0 | 0 | - |
 | entry_hp_pct → 0.9 | rest_heal_near_boss/no_elite_near_boss | 0 | 0 | 6 | - |
-| hp_policy → "balanced" | none | 0 | 0 | 66 | - |
-| hp_policy → "preserve" | no_optional_elite | 58 | 0 | 0 | - |
-| hp_policy → "preserve" | rest_heal_below_target | 107 | 0 | 0 | - |
-| hp_policy → "preserve" | rest_heal_below_target/no_optional_elite | 0 | 0 | 23 | - |
+| hp_policy → "balanced" | none | 0 | 0 | 71 | - |
+| hp_policy → "preserve" | no_optional_elite | 61 | 0 | 0 | - |
+| hp_policy → "preserve" | rest_heal_below_target | 113 | 0 | 0 | - |
+| hp_policy → "preserve" | rest_heal_below_target/no_optional_elite | 0 | 0 | 26 | - |
 | hp_policy → "push" | rest_smith_healthy | 0 | 0 | 1 | - |
-| needs → ["aoe", "block", "draw", "frontload", "strength"] | needs_reward | 0 | 0 | 2 | - |
+| needs → ["aoe", "block", "draw", "frontload", "strength"] | needs_reward | 0 | 0 | 4 | - |
 | needs → ["aoe", "block", "exhaust", "frontload", "strength"] | needs_reward | 1 | 0 | 0 | - |
-| needs → ["aoe", "block", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 2 | - |
-| needs → ["aoe", "block", "frontload", "strength"] | needs_reward | 1 | 0 | 5 | - |
+| needs → ["aoe", "block", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 3 | - |
+| needs → ["aoe", "block", "frontload", "strength"] | needs_reward | 1 | 0 | 6 | - |
 | needs → ["aoe", "block", "frontload", "strength"] | none | 0 | 0 | 1 | - |
 | needs → ["aoe", "block", "multi_hit", "strength"] | needs_reward | 3 | 0 | 0 | - |
 | needs → ["aoe", "block", "strength"] | none | 0 | 0 | 1 | - |
@@ -328,7 +329,8 @@ Fight-plan potion timing (metric 6), per planned use:
 | needs → ["aoe", "draw", "frontload", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["aoe", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 2 | - |
 | needs → ["aoe", "frontload", "multi_hit", "strength"] | none | 0 | 0 | 1 | - |
-| needs → ["block", "draw", "frontload", "multi_hit", "strength"] | needs_reward | 1 | 0 | 3 | - |
+| needs → ["aoe", "frontload", "strength"] | none | 0 | 0 | 1 | - |
+| needs → ["block", "draw", "frontload", "multi_hit", "strength"] | needs_reward | 2 | 0 | 3 | - |
 | needs → ["block", "draw", "frontload", "strength"] | needs_reward | 1 | 0 | 1 | - |
 | needs → ["block", "draw", "frontload"] | needs_reward | 1 | 0 | 0 | - |
 | needs → ["block", "draw", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
@@ -338,7 +340,7 @@ Fight-plan potion timing (metric 6), per planned use:
 | needs → ["block", "exhaust", "frontload", "strength"] | needs_reward | 0 | 0 | 1 | - |
 | needs → ["block", "frontload", "multi_hit", "strength"] | needs_reward | 1 | 1 | 1 | code 1 |
 | needs → ["block", "frontload", "multi_hit", "strength"] | none | 0 | 0 | 1 | - |
-| needs → ["block", "frontload", "strength"] | none | 0 | 0 | 2 | - |
+| needs → ["block", "frontload", "strength"] | none | 0 | 0 | 3 | - |
 | needs → ["block", "multi_hit", "strength"] | none | 0 | 0 | 1 | - |
 | needs → ["draw", "frontload", "strength"] | none | 0 | 0 | 1 | - |
 | reserve → ["any", "block", "damage", "heal"] | reserve_added_kept | 2 | 0 | 0 | - |
@@ -346,45 +348,380 @@ Fight-plan potion timing (metric 6), per planned use:
 | reserve → ["any", "block"] | reserve_added_kept | 0 | 0 | 2 | - |
 | reserve → ["block", "damage", "heal", "strength", "weak"] | reserve_added_kept | 0 | 0 | 1 | - |
 | reserve → ["block", "damage", "heal", "strength"] | reserve_added_kept | 3 | 1 | 2 | jev 1 |
-| reserve → ["block", "damage", "heal"] | reserve_added_kept | 0 | 0 | 5 | - |
-| reserve → ["block", "damage", "strength", "weak"] | reserve_added_kept | 2 | 5 | 4 | code 4, jev=rank1 1 |
+| reserve → ["block", "damage", "heal"] | reserve_added_kept | 0 | 0 | 6 | - |
+| reserve → ["block", "damage", "strength", "weak"] | reserve_added_kept | 2 | 5 | 5 | code 4, jev=rank1 1 |
 | reserve → ["block", "damage", "strength"] | none | 0 | 0 | 3 | - |
-| reserve → ["block", "damage", "strength"] | reserve_added_kept | 2 | 1 | 11 | code 1 |
-| reserve → ["block", "damage", "weak"] | reserve_added_kept | 0 | 0 | 8 | - |
+| reserve → ["block", "damage", "strength"] | reserve_added_kept | 2 | 1 | 12 | code 1 |
+| reserve → ["block", "damage", "weak"] | reserve_added_kept | 1 | 1 | 10 | code 1 |
 | reserve → ["block", "damage"] | none | 0 | 0 | 1 | - |
-| reserve → ["block", "damage"] | reserve_added_kept | 0 | 0 | 1 | - |
+| reserve → ["block", "damage"] | reserve_added_kept | 0 | 0 | 2 | - |
 | reserve → ["block", "heal", "strength"] | reserve_added_kept | 0 | 0 | 1 | - |
 | reserve → ["block", "heal", "weak"] | reserve_added_kept | 2 | 0 | 0 | - |
 | reserve → ["block", "strength", "weak"] | reserve_added_kept | 1 | 0 | 1 | - |
 | reserve → ["block", "strength"] | reserve_added_kept | 0 | 0 | 1 | - |
 | reserve → ["damage", "heal"] | reserve_added_kept | 0 | 0 | 2 | - |
 | reserve → ["damage", "strength", "weak"] | reserve_added_kept | 2 | 0 | 0 | - |
+| reserve → ["damage", "strength"] | reserve_added_kept | 1 | 0 | 0 | - |
 | reserve → ["damage", "weak"] | reserve_added_kept | 1 | 0 | 1 | - |
 | reserve → ["damage"] | none | 0 | 0 | 1 | - |
-| route_risk → "avoid_elites" | no_optional_elite | 69 | 1 | 39 | jev 1 |
-| route_risk → "normal" | none | 0 | 0 | 47 | - |
+| route_risk → "avoid_elites" | no_optional_elite | 73 | 1 | 43 | jev 1 |
+| route_risk → "normal" | none | 0 | 0 | 53 | - |
 | route_risk → "seek_elites" | elite_when_healthy | 1 | 1 | 0 | jev 1 |
 
-### unfinished intent-era runs, not in the aggregates above (1: 94FPBTS15SQT)
+### unfinished intent-era runs, not in the aggregates above (1: 99X7VX66AU71)
 
-- **I1 validator repairs**: 2 (2 on 9 run plans, 0 on 13 fight plans). By type: run: other 1, run: unknown want dropped 1.
-- **I2 re-plans**: 9 run-plan versions (9.0 per run, max 9); by checkpoint: hp_rise 4, hp_drop 2, start 1, review 1, act 1; failed requests: run 0, fight 0.
-  - changes accepted 10: by field run: route_risk 4, run: needs 3, run: hp_policy 2, run: reserve 1; by trigger act_changed 3, hp_below_target 3, hp_recovered 2, boss_gap_closed 1, boss_gap_widened 1.
+- **I1 validator repairs**: 3 (3 on 3 run plans, 0 on 4 fight plans). By type: run: unknown avoid dropped 2, run: unknown want dropped 1.
+- **I2 re-plans**: 3 run-plan versions (3.0 per run, max 3); by checkpoint: start 1, hp_drop 1, hp_rise 1; failed requests: run 0, fight 0.
+  - changes accepted 5: by field run: hp_policy 2, run: route_risk 2, run: avoid 1; by trigger hp_below_target 2, hp_recovered 2, boss_gap_widened 1.
   - changes rejected 0: by reason -; by field -.
-- **I3 execution after an accepted change**: honoured 3/3 (100%), n/a 8 (no check or no opportunity).
-- **I4 intent deviations**: 0 Jev decisions labelled "breaks …" (0% of 57 Jev decisions); by intent -; by screen -. Jev decisions with an intent_fit label: 41/57 (72%).
-- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 1/1 (100%), broken 0 (by -; exceptions -; discarded 0), n/a 0 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
+- **I3 execution after an accepted change**: honoured 1/1 (100%), n/a 4 (no check or no opportunity).
+- **I4 picks that differ from DeepSeek's tempo** (a fact, not a verdict; outcomes in section O): 0 Jev decisions (0% of 34 Jev decisions); by guidance item -; by screen -. Jev decisions with a tempo note (intent_fit / tempo) on some option: 18/34 (53%).
+- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept 0/0 (-), broken 0 (by -; exceptions -; discarded 0), n/a 0 (of which released by a reserve change 0). No reserved potion drunk outside the exceptions.
 
 | accepted change | check | honoured | broken | n/a | broken by |
 |---|---|---:|---:|---:|---|
+| avoid → ["DRUM_OF_BATTLE", "HAVOC", "IRON_WAVE", "JUGGLING"] | avoid_reward | 0 | 0 | 1 | - |
 | hp_policy → "balanced" | none | 0 | 0 | 1 | - |
 | hp_policy → "preserve" | rest_heal_below_target | 1 | 0 | 0 | - |
-| needs → ["aoe", "block", "draw", "frontload", "strength"] | needs_reward | 0 | 0 | 1 | - |
-| needs → ["aoe", "block", "frontload", "multi_hit", "strength"] | needs_reward | 0 | 0 | 1 | - |
-| needs → ["block", "frontload", "strength"] | none | 0 | 0 | 1 | - |
-| reserve → ["block", "damage", "weak"] | reserve_added_kept | 0 | 0 | 1 | - |
-| route_risk → "avoid_elites" | no_optional_elite | 2 | 0 | 1 | - |
-| route_risk → "normal" | none | 0 | 0 | 2 | - |
+| route_risk → "avoid_elites" | no_optional_elite | 0 | 0 | 1 | - |
+| route_risk → "normal" | none | 0 | 0 | 1 | - |
+
+
+## O. Outcomes of Jev's picks that differ from code's reference (correlation, not proof)
+
+Code's reference rank and tempo labels are rule-based and have been wrong (PCGH F23 T4, 9V09, FEY6), so a pick that differs from them is not scored as broken here: it is compared with picks that match reference rank 1 by what happened next. **These are correlations with strong confounders, not causal estimates**: Jev differs more often in hard spots (low confidence, elites and bosses, low HP, turns where every line is bad), so the differing group starts from worse positions; the reference itself was chosen by rules that changed between eras; decisions in the same fight / act share one outcome.
+
+- differs = Jev's pick is not code's reference rank 1 (`differs_from_reference` / `matched_reference` in new logs; older logs: the code rank in the rationale, a drink-first potion option, or the highest route_value / code_value on map and reward screens; rest, shop and event picks in older logs have no reference to recover: 'unknown').
+- combat: HP lost from the decision to the first decision of the next turn (turn loss) and to the first decision after the fight (fight loss; post-fight healing such as Burning Blood is included, a death counts the HP left), fight won = the run did not end in that fight. 'fights' counts each (run, floor) once per side (a fight with both kinds of picks is in both).
+
+### ALL (166 finished runs)
+
+Combat plan choices by Jev:
+
+| pick | n | turn HP loss (mean) | fight HP loss from here (mean) | fight won (per decision) | fights | fights won |
+|---|---:|---:|---:|---:|---:|---:|
+| matches | 5334 | 5.2 | 10.6 | 85% | 1878 | 92% |
+| differs | 1625 | 5.3 | 11.0 | 85% | 946 | 90% |
+
+By fight kind and Jev confidence (matches vs differs: n, turn HP loss, fight HP loss, fight won):
+
+| split | matches n | turn | fight | won | differs n | turn | fight | won |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| hallway | 2985 | 4.5 | 5.0 | 96% | 851 | 4.8 | 5.6 | 96% |
+| elite | 741 | 6.5 | 12.9 | 85% | 321 | 6.4 | 12.7 | 88% |
+| boss | 1608 | 5.7 | 20.0 | 64% | 453 | 5.5 | 19.7 | 60% |
+| conf <0.3 | 1499 | 5.3 | 9.8 | 85% | 454 | 5.8 | 15.4 | 74% |
+| conf 0.3-0.5 | 1270 | 5.3 | 10.0 | 85% | 631 | 5.1 | 9.2 | 88% |
+| conf 0.5-0.7 | 1047 | 5.0 | 10.5 | 84% | 343 | 5.1 | 8.8 | 90% |
+| conf >=0.7 | 1518 | 5.0 | 12.0 | 84% | 197 | 5.5 | 10.0 | 89% |
+| hallway <0.3 | 868 | 4.4 | 4.6 | 96% | 67 | 6.2 | 8.8 | 91% |
+| hallway 0.3-0.5 | 711 | 4.7 | 4.6 | 96% | 412 | 4.9 | 5.8 | 97% |
+| hallway 0.5-0.7 | 597 | 4.3 | 4.8 | 95% | 235 | 4.6 | 4.7 | 97% |
+| hallway >=0.7 | 809 | 4.7 | 5.9 | 96% | 137 | 4.5 | 5.2 | 97% |
+| elite <0.3 | 165 | 7.2 | 12.2 | 89% | 155 | 5.8 | 11.3 | 89% |
+| elite 0.3-0.5 | 179 | 7.1 | 13.5 | 87% | 89 | 6.2 | 10.0 | 89% |
+| elite 0.5-0.7 | 156 | 5.5 | 12.3 | 84% | 48 | 7.6 | 18.4 | 88% |
+| elite >=0.7 | 241 | 6.3 | 13.2 | 83% | 29 | 8.5 | 19.3 | 86% |
+| boss <0.3 | 466 | 6.2 | 18.6 | 63% | 232 | 5.6 | 20.1 | 59% |
+| boss 0.3-0.5 | 380 | 5.7 | 18.5 | 65% | 130 | 5.1 | 19.5 | 60% |
+| boss 0.5-0.7 | 294 | 6.0 | 21.1 | 60% | 60 | 5.2 | 16.8 | 63% |
+| boss >=0.7 | 468 | 4.9 | 21.9 | 65% | 31 | 7.2 | 22.4 | 58% |
+
+Realised vs predicted (approximate; turns the fight went on after, both lines' predictions logged). HP: the solver's hp_lost for Jev's line and for the reference line vs the HP actually lost by the next turn; damage: enemy HP lost by the next turn (block, regeneration, spawns and minions make it rough):
+
+| pick | n | Jev line predicted HP loss | reference predicted HP loss | realised HP loss | realised - reference predicted | realised - own predicted | n dmg | reference predicted dmg | Jev line predicted dmg | realised dmg |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| matches | 4450 | 6.7 | 6.7 | 5.8 | -0.9 | -0.9 | 4450 | 15.7 | 15.7 | 19.4 |
+| differs | 1191 | 7.0 | 7.9 | 6.1 | -1.8 | -0.9 | 1191 | 18.9 | 17.7 | 22.9 |
+
+Non-combat picks by Jev (per decision; every pick in a run-act shares that act's outcome, approximate):
+
+| screen | pick | n | run-acts | HP% at next act-boss entry (mean, reached) | reached boss | act boss passed | floors survived afterwards (mean) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| all | matches | 696 | 266 | 89.0 | 92% | 66% | 20.1 |
+| all | differs | 100 | 77 | 88.0 | 86% | 61% | 16.6 |
+| all | unknown | 594 | 226 | 86.0 | 82% | 50% | 15.9 |
+| map | matches | 579 | 245 | 90.0 | 93% | 67% | 20.6 |
+| map | differs | 16 | 15 | 88.0 | 69% | 44% | 15.8 |
+| rest | unknown | 85 | 79 | 90.0 | 98% | 64% | 16.7 |
+| shop | unknown | 167 | 101 | 86.0 | 79% | 49% | 13.7 |
+| reward | matches | 117 | 90 | 84.0 | 87% | 63% | 17.4 |
+| reward | differs | 84 | 67 | 88.0 | 89% | 64% | 16.8 |
+| event | unknown | 342 | 163 | 85.0 | 80% | 48% | 16.7 |
+
+Boss fights, Jev confidence < 0.5: 1208 of 2061 Jev boss plan choices (362 differ from the reference) in 225 fights, 64% of those fights won. The counterfactual (what the other line would have done) cannot be known from the logs: see the per-era lists.
+
+### pre-892278c (105 finished runs)
+
+Combat plan choices by Jev:
+
+| pick | n | turn HP loss (mean) | fight HP loss from here (mean) | fight won (per decision) | fights | fights won |
+|---|---:|---:|---:|---:|---:|---:|
+| matches | 3337 | 5.0 | 9.6 | 86% | 1227 | 93% |
+| differs | 1262 | 5.0 | 10.6 | 84% | 705 | 90% |
+
+By fight kind and Jev confidence (matches vs differs: n, turn HP loss, fight HP loss, fight won):
+
+| split | matches n | turn | fight | won | differs n | turn | fight | won |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| hallway | 1849 | 4.2 | 4.5 | 97% | 616 | 4.5 | 5.4 | 97% |
+| elite | 499 | 5.9 | 11.2 | 91% | 271 | 6.0 | 10.9 | 89% |
+| boss | 989 | 6.0 | 18.3 | 63% | 375 | 5.1 | 18.8 | 60% |
+| conf <0.3 | 1277 | 5.3 | 9.8 | 85% | 411 | 5.6 | 15.3 | 73% |
+| conf 0.3-0.5 | 978 | 5.2 | 9.2 | 86% | 490 | 4.7 | 8.8 | 89% |
+| conf 0.5-0.7 | 699 | 4.6 | 9.3 | 87% | 247 | 4.5 | 7.0 | 90% |
+| conf >=0.7 | 383 | 4.1 | 10.4 | 86% | 114 | 5.4 | 9.0 | 91% |
+
+Realised vs predicted (approximate; turns the fight went on after, both lines' predictions logged). HP: the solver's hp_lost for Jev's line and for the reference line vs the HP actually lost by the next turn; damage: enemy HP lost by the next turn (block, regeneration, spawns and minions make it rough):
+
+| pick | n | Jev line predicted HP loss | reference predicted HP loss | realised HP loss | realised - reference predicted | realised - own predicted | n dmg | reference predicted dmg | Jev line predicted dmg | realised dmg |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| matches | 2672 | 6.6 | 6.6 | 5.6 | -1.0 | -1.0 | 2672 | 16.3 | 16.3 | 20.5 |
+| differs | 885 | 6.7 | 8.1 | 5.8 | -2.3 | -0.9 | 885 | 19.5 | 17.2 | 22.8 |
+
+Non-combat picks by Jev (per decision; every pick in a run-act shares that act's outcome, approximate):
+
+| screen | pick | n | run-acts | HP% at next act-boss entry (mean, reached) | reached boss | act boss passed | floors survived afterwards (mean) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| all | matches | 446 | 177 | 90.0 | 93% | 70% | 21.7 |
+| all | differs | 48 | 43 | 90.0 | 88% | 67% | 17.5 |
+| all | unknown | 185 | 129 | 88.0 | 89% | 58% | 17.5 |
+| map | matches | 409 | 173 | 90.0 | 93% | 69% | 21.8 |
+| map | differs | 8 | 8 | 91.0 | 75% | 62% | 20.0 |
+| rest | unknown | 64 | 59 | 89.0 | 98% | 59% | 16.9 |
+| shop | unknown | 42 | 38 | 89.0 | 86% | 52% | 14.2 |
+| reward | matches | 37 | 34 | 88.0 | 95% | 78% | 21.2 |
+| reward | differs | 40 | 36 | 90.0 | 90% | 68% | 17.0 |
+| event | unknown | 79 | 68 | 87.0 | 84% | 59% | 19.8 |
+
+Boss fights, Jev confidence < 0.5: 987 of 1364 Jev boss plan choices (307 differ from the reference) in 175 fights, 66% of those fights won. The counterfactual (what the other line would have done) cannot be known from the logs: listed below for manual review.
+
+(latest 40 of 987; all in --json under outcomes.pre-892278c.boss_low_conf.list)
+
+| run | floor | turn | conf | differs | HP | turn loss | fight loss | fight won | ts |
+|---|---:|---:|---:|---|---|---:|---:|---|---|
+| ZWX5F97BUFVB | 17 | 8 | 0 | False | 54/80 | 9 | 39 | True | 2026-09-27T07:29:51 |
+| ZWX5F97BUFVB | 17 | 8 | 0 | False | 54/80 | 9 | 39 | True | 2026-09-27T07:29:52 |
+| ZWX5F97BUFVB | 17 | 9 | 0 | False | 45/80 | 22 | 30 | True | 2026-09-27T07:29:58 |
+| ZWX5F97BUFVB | 17 | 9 | 0 | False | 45/80 | 22 | 30 | True | 2026-09-27T07:29:59 |
+| ZWX5F97BUFVB | 17 | 10 | 0 | False | 23/80 | 14 | 8 | True | 2026-09-27T07:30:04 |
+| ZWX5F97BUFVB | 17 | 10 | 0 | False | 23/80 | 14 | 8 | True | 2026-09-27T07:30:06 |
+| ZWX5F97BUFVB | 17 | 11 | 0 | False | 9/80 | 0 | -6 | True | 2026-09-27T07:30:10 |
+| ZWX5F97BUFVB | 17 | 11 | 0 | False | 9/80 | 0 | -6 | True | 2026-09-27T07:30:11 |
+| ZWX5F97BUFVB | 33 | 1 | 0 | False | 69/80 | 6 | 69 | False | 2026-09-27T07:40:56 |
+| ZWX5F97BUFVB | 33 | 1 | 0 | False | 69/80 | 6 | 69 | False | 2026-09-27T07:40:57 |
+| ZWX5F97BUFVB | 33 | 1 | 0 | False | 68/80 | 5 | 68 | False | 2026-09-27T07:41:01 |
+| ZWX5F97BUFVB | 33 | 2 | 0 | False | 63/80 | 17 | 63 | False | 2026-09-27T07:41:06 |
+| ZWX5F97BUFVB | 33 | 2 | 0 | False | 63/80 | 17 | 63 | False | 2026-09-27T07:41:08 |
+| ZWX5F97BUFVB | 33 | 3 | 0 | False | 46/80 | 13 | 46 | False | 2026-09-27T07:41:14 |
+| ZWX5F97BUFVB | 33 | 3 | 0 | False | 46/80 | 13 | 46 | False | 2026-09-27T07:41:17 |
+| PFBKJTWPY8DK | 17 | 2 | 0.11 | False | 79/80 | 9 | 15 | True | 2026-09-27T07:50:33 |
+| PFBKJTWPY8DK | 17 | 2 | 0.09 | True | 79/80 | 9 | 15 | True | 2026-09-27T07:50:35 |
+| PFBKJTWPY8DK | 17 | 5 | 0.31 | False | 68/80 | 1 | 4 | True | 2026-09-27T07:50:59 |
+| WR2Y98A43YCY | 17 | 3 | 0.41 | False | 55/80 | 0 | 12 | True | 2026-09-27T08:07:58 |
+| WR2Y98A43YCY | 33 | 1 | 0.39 | False | 84/102 | 1 | 84 | False | 2026-09-27T08:18:46 |
+| WR2Y98A43YCY | 33 | 2 | 0.29 | True | 83/102 | 12 | 83 | False | 2026-09-27T08:18:56 |
+| WR2Y98A43YCY | 33 | 4 | 0.17 | False | 71/102 | 22 | 71 | False | 2026-09-27T08:19:21 |
+| WR2Y98A43YCY | 33 | 5 | 0.25 | True | 49/102 | 8 | 49 | False | 2026-09-27T08:19:30 |
+| RVL2XJ07THJD | 17 | 2 | 0.24 | False | 59/80 | 1 | 27 | True | 2026-09-27T08:31:42 |
+| RVL2XJ07THJD | 17 | 3 | 0.23 | False | 58/80 | 22 | 26 | True | 2026-09-27T08:31:51 |
+| RVL2XJ07THJD | 17 | 3 | 0.43 | True | 58/80 | 22 | 26 | True | 2026-09-27T08:31:52 |
+| RVL2XJ07THJD | 17 | 3 | 0.49 | False | 58/80 | 22 | 26 | True | 2026-09-27T08:31:54 |
+| RVL2XJ07THJD | 17 | 5 | 0.29 | False | 35/80 | 2 | 3 | True | 2026-09-27T08:32:09 |
+| RVL2XJ07THJD | 17 | 5 | 0.21 | True | 35/80 | 2 | 3 | True | 2026-09-27T08:32:10 |
+| UP1CS059LCLT | 17 | 5 | 0.29 | False | 73/80 | 1 | 1 | False | 2026-09-27T08:53:32 |
+| UP1CS059LCLT | 17 | 6 | 0.09 | True | 72/80 | 0 | 0 | False | 2026-09-27T08:53:40 |
+| UP1CS059LCLT | 17 | 6 | 0.06 | False | 72/80 | 3 | 5 | False | 2026-09-27T08:53:41 |
+| UP1CS059LCLT | 17 | 7 | 0.22 | True | 69/80 | 0 | 2 | False | 2026-09-27T08:53:47 |
+| UP1CS059LCLT | 17 | 7 | 0.11 | False | 69/80 | 0 | 2 | False | 2026-09-27T08:53:48 |
+| UP1CS059LCLT | 17 | 8 | 0.34 | False | 69/80 | 2 | 2 | False | 2026-09-27T08:53:56 |
+| UP1CS059LCLT | 17 | 11 | 0.25 | True | 64/80 | 0 | 0 | False | 2026-09-27T08:54:16 |
+| UP1CS059LCLT | 17 | 12 | 0.28 | False | 57/80 | 0 | 0 | False | 2026-09-27T08:54:26 |
+| UP1CS059LCLT | 17 | 15 | 0.04 | False | 48/80 | 24 | 24 | False | 2026-09-27T08:54:47 |
+| UP1CS059LCLT | 17 | 16 | 0.18 | True | 24/80 | 0 | 0 | False | 2026-09-27T08:54:55 |
+| UP1CS059LCLT | 17 | 18 | 0.02 | False | 15/80 | 0 | 15 | False | 2026-09-27T08:55:10 |
+
+### 892278c..0f2e648 (9 finished runs)
+
+Combat plan choices by Jev:
+
+| pick | n | turn HP loss (mean) | fight HP loss from here (mean) | fight won (per decision) | fights | fights won |
+|---|---:|---:|---:|---:|---:|---:|
+| matches | 271 | 4.9 | 9.3 | 92% | 102 | 91% |
+| differs | 110 | 5.7 | 10.8 | 85% | 59 | 86% |
+
+By fight kind and Jev confidence (matches vs differs: n, turn HP loss, fight HP loss, fight won):
+
+| split | matches n | turn | fight | won | differs n | turn | fight | won |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| hallway | 175 | 5.2 | 4.3 | 97% | 70 | 6.1 | 7.2 | 90% |
+| elite | 13 | 9.0 | 19.5 | 100% | 10 | 6.4 | 23.2 | 100% |
+| boss | 83 | 3.5 | 18.3 | 80% | 30 | 4.7 | 15.1 | 67% |
+| conf <0.3 | 81 | 5.5 | 11.1 | 88% | 22 | 6.0 | 16.9 | 82% |
+| conf 0.3-0.5 | 82 | 4.5 | 9.0 | 93% | 54 | 5.4 | 8.7 | 89% |
+| conf 0.5-0.7 | 62 | 4.9 | 10.0 | 92% | 26 | 6.3 | 11.2 | 77% |
+| conf >=0.7 | 46 | 4.3 | 6.0 | 96% | 8 | 5.2 | 7.4 | 88% |
+
+Realised vs predicted (approximate; turns the fight went on after, both lines' predictions logged). HP: the solver's hp_lost for Jev's line and for the reference line vs the HP actually lost by the next turn; damage: enemy HP lost by the next turn (block, regeneration, spawns and minions make it rough):
+
+| pick | n | Jev line predicted HP loss | reference predicted HP loss | realised HP loss | realised - reference predicted | realised - own predicted | n dmg | reference predicted dmg | Jev line predicted dmg | realised dmg |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| matches | 241 | 5.8 | 5.8 | 5.4 | -0.4 | -0.4 | 241 | 15.0 | 15.0 | 18.9 |
+| differs | 95 | 8.0 | 6.9 | 6.5 | -0.4 | -1.5 | 95 | 19.6 | 17.2 | 23.9 |
+
+Non-combat picks by Jev (per decision; every pick in a run-act shares that act's outcome, approximate):
+
+| screen | pick | n | run-acts | HP% at next act-boss entry (mean, reached) | reached boss | act boss passed | floors survived afterwards (mean) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| all | matches | 22 | 10 | 89.0 | 100% | 59% | 17.0 |
+| all | differs | 4 | 4 | 80.0 | 100% | 50% | 19.2 |
+| all | unknown | 5 | 4 | 78.0 | 80% | 40% | 13.4 |
+| map | matches | 17 | 9 | 89.0 | 100% | 47% | 15.1 |
+| map | differs | 1 | 1 | 65.0 | 100% | 0% | 16.0 |
+| rest | unknown | 1 | 1 | 94.0 | 100% | 100% | 24.0 |
+| shop | unknown | 1 | 1 | - | 0% | 0% | 8.0 |
+| reward | matches | 5 | 4 | 89.0 | 100% | 100% | 23.2 |
+| reward | differs | 3 | 3 | 85.0 | 100% | 67% | 20.3 |
+| event | unknown | 3 | 2 | 72.0 | 100% | 33% | 11.7 |
+
+Boss fights, Jev confidence < 0.5: 83 of 113 Jev boss plan choices (25 differ from the reference) in 11 fights, 55% of those fights won. The counterfactual (what the other line would have done) cannot be known from the logs: listed below for manual review.
+
+(latest 40 of 83; all in --json under outcomes.892278c..0f2e648.boss_low_conf.list)
+
+| run | floor | turn | conf | differs | HP | turn loss | fight loss | fight won | ts |
+|---|---:|---:|---:|---|---|---:|---:|---|---|
+| P57H9Z324EEW | 17 | 12 | 0.3 | False | 48/90 | 3 | 4 | True | 2026-09-27T10:19:34 |
+| P57H9Z324EEW | 17 | 12 | 0.42 | False | 46/90 | 1 | 2 | True | 2026-09-27T10:19:35 |
+| P57H9Z324EEW | 17 | 13 | 0.15 | False | 45/90 | 1 | 1 | True | 2026-09-27T10:19:43 |
+| P57H9Z324EEW | 17 | 13 | 0.35 | False | 45/90 | 1 | 1 | True | 2026-09-27T10:19:45 |
+| P57H9Z324EEW | 17 | 14 | 0.32 | True | 44/90 | 0 | 0 | True | 2026-09-27T10:19:50 |
+| P57H9Z324EEW | 17 | 14 | 0.2 | True | 44/90 | 11 | 11 | True | 2026-09-27T10:19:51 |
+| P57H9Z324EEW | 17 | 14 | 0.06 | False | 42/90 | 9 | 9 | True | 2026-09-27T10:19:54 |
+| JF8NMA78VE0Y | 17 | 2 | 0.48 | False | 52/80 | 8 | 52 | False | 2026-09-27T10:36:52 |
+| JF8NMA78VE0Y | 17 | 2 | 0.2 | False | 52/80 | 8 | 52 | False | 2026-09-27T10:36:53 |
+| JF8NMA78VE0Y | 17 | 8 | 0.34 | True | 25/80 | 2 | 25 | False | 2026-09-27T10:37:40 |
+| JF8NMA78VE0Y | 17 | 9 | 0.17 | True | 23/80 | 0 | 23 | False | 2026-09-27T10:37:49 |
+| JF8NMA78VE0Y | 17 | 11 | 0.39 | False | 16/80 | 0 | 16 | False | 2026-09-27T10:38:04 |
+| KFPCLA2M73Z2 | 17 | 5 | 0.39 | False | 52/71 | 2 | 5 | True | 2026-09-27T10:48:59 |
+| H7W047ZCEBSA | 17 | 1 | 0.14 | False | 65/90 | 0 | 0 | True | 2026-09-27T11:13:44 |
+| H7W047ZCEBSA | 17 | 2 | 0.22 | True | 65/90 | 6 | 29 | True | 2026-09-27T11:13:53 |
+| H7W047ZCEBSA | 17 | 2 | 0.24 | False | 65/90 | 6 | 29 | True | 2026-09-27T11:13:55 |
+| H7W047ZCEBSA | 17 | 3 | 0.48 | False | 59/90 | 2 | 23 | True | 2026-09-27T11:14:01 |
+| H7W047ZCEBSA | 17 | 3 | 0.26 | False | 59/90 | 2 | 23 | True | 2026-09-27T11:14:05 |
+| H7W047ZCEBSA | 17 | 4 | 0.01 | False | 57/90 | 1 | 21 | True | 2026-09-27T11:14:12 |
+| H7W047ZCEBSA | 17 | 4 | 0.43 | False | 57/90 | 1 | 21 | True | 2026-09-27T11:14:13 |
+| H7W047ZCEBSA | 17 | 5 | 0.23 | True | 56/90 | 2 | 20 | True | 2026-09-27T11:14:20 |
+| H7W047ZCEBSA | 17 | 5 | 0.3 | False | 56/90 | 2 | 20 | True | 2026-09-27T11:14:23 |
+| H7W047ZCEBSA | 17 | 6 | 0.46 | True | 54/90 | 2 | 18 | True | 2026-09-27T11:14:28 |
+| H7W047ZCEBSA | 17 | 6 | 0.43 | False | 54/90 | 2 | 18 | True | 2026-09-27T11:14:31 |
+| H7W047ZCEBSA | 17 | 7 | 0.16 | True | 52/90 | 3 | 16 | True | 2026-09-27T11:14:39 |
+| H7W047ZCEBSA | 17 | 7 | 0.34 | False | 50/90 | 1 | 14 | True | 2026-09-27T11:14:41 |
+| H7W047ZCEBSA | 17 | 8 | 0.37 | False | 49/90 | 1 | 13 | True | 2026-09-27T11:14:50 |
+| H7W047ZCEBSA | 17 | 9 | 0.24 | False | 48/90 | 1 | 12 | True | 2026-09-27T11:14:55 |
+| H7W047ZCEBSA | 17 | 9 | 0.47 | False | 48/90 | 1 | 12 | True | 2026-09-27T11:14:58 |
+| H7W047ZCEBSA | 17 | 10 | 0.27 | False | 47/90 | 8 | 11 | True | 2026-09-27T11:15:09 |
+| H7W047ZCEBSA | 17 | 11 | 0.27 | True | 39/90 | 2 | 3 | True | 2026-09-27T11:15:15 |
+| H7W047ZCEBSA | 17 | 11 | 0.28 | False | 39/90 | 2 | 3 | True | 2026-09-27T11:15:16 |
+| H7W047ZCEBSA | 17 | 12 | 0.32 | True | 37/90 | 1 | 1 | True | 2026-09-27T11:15:21 |
+| H7W047ZCEBSA | 17 | 12 | 0.34 | False | 37/90 | 1 | 1 | True | 2026-09-27T11:15:23 |
+| H7W047ZCEBSA | 17 | 14 | 0.1 | False | 35/90 | 0 | 0 | True | 2026-09-27T11:15:42 |
+| H7W047ZCEBSA | 17 | 14 | 0.24 | True | 35/90 | 0 | 0 | True | 2026-09-27T11:15:44 |
+| H7W047ZCEBSA | 48 | 1 | 0.22 | False | 77/128 | 16 | 42 | False | 2026-09-27T11:38:56 |
+| H7W047ZCEBSA | 48 | 2 | 0.2 | True | 61/128 | 1 | 26 | False | 2026-09-27T11:39:04 |
+| H7W047ZCEBSA | 48 | 5 | 0.17 | False | 20/128 | 15 | 20 | False | 2026-09-27T11:39:35 |
+| FH3MZ3G0HECD | 17 | 6 | 0.09 | False | 56/86 | -6 | -6 | True | 2026-09-27T11:50:09 |
+
+### intent (from 0f2e648) (52 finished runs)
+
+Combat plan choices by Jev:
+
+| pick | n | turn HP loss (mean) | fight HP loss from here (mean) | fight won (per decision) | fights | fights won |
+|---|---:|---:|---:|---:|---:|---:|
+| matches | 1726 | 5.5 | 12.8 | 82% | 549 | 91% |
+| differs | 253 | 6.6 | 12.9 | 86% | 182 | 89% |
+
+By fight kind and Jev confidence (matches vs differs: n, turn HP loss, fight HP loss, fight won):
+
+| split | matches n | turn | fight | won | differs n | turn | fight | won |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| hallway | 961 | 5.1 | 6.1 | 94% | 165 | 5.3 | 5.8 | 97% |
+| elite | 229 | 7.8 | 16.1 | 72% | 40 | 9.2 | 22.6 | 80% |
+| boss | 536 | 5.4 | 23.4 | 62% | 48 | 9.0 | 29.6 | 54% |
+| conf <0.3 | 141 | 4.7 | 8.7 | 84% | 21 | 7.6 | 17.6 | 71% |
+| conf 0.3-0.5 | 210 | 6.3 | 14.1 | 80% | 87 | 7.1 | 12.2 | 85% |
+| conf 0.5-0.7 | 286 | 5.8 | 13.5 | 75% | 70 | 6.7 | 13.9 | 91% |
+| conf >=0.7 | 1089 | 5.4 | 12.9 | 83% | 75 | 5.7 | 11.6 | 87% |
+
+Realised vs predicted (approximate; turns the fight went on after, both lines' predictions logged). HP: the solver's hp_lost for Jev's line and for the reference line vs the HP actually lost by the next turn; damage: enemy HP lost by the next turn (block, regeneration, spawns and minions make it rough):
+
+| pick | n | Jev line predicted HP loss | reference predicted HP loss | realised HP loss | realised - reference predicted | realised - own predicted | n dmg | reference predicted dmg | Jev line predicted dmg | realised dmg |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| matches | 1537 | 6.8 | 6.8 | 6.1 | -0.7 | -0.7 | 1537 | 14.7 | 14.7 | 17.7 |
+| differs | 211 | 7.5 | 7.2 | 6.9 | -0.3 | -0.6 | 211 | 15.9 | 20.0 | 22.9 |
+
+Non-combat picks by Jev (per decision; every pick in a run-act shares that act's outcome, approximate):
+
+| screen | pick | n | run-acts | HP% at next act-boss entry (mean, reached) | reached boss | act boss passed | floors survived afterwards (mean) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| all | matches | 228 | 79 | 88.0 | 88% | 59% | 17.2 |
+| all | differs | 48 | 30 | 88.0 | 83% | 56% | 15.5 |
+| all | unknown | 404 | 93 | 85.0 | 79% | 47% | 15.1 |
+| map | matches | 153 | 63 | 90.0 | 90% | 61% | 18.2 |
+| map | differs | 7 | 6 | 90.0 | 57% | 29% | 10.9 |
+| rest | unknown | 20 | 19 | 94.0 | 95% | 75% | 15.7 |
+| shop | unknown | 124 | 62 | 85.0 | 77% | 48% | 13.5 |
+| reward | matches | 75 | 52 | 82.0 | 83% | 53% | 15.1 |
+| reward | differs | 41 | 28 | 87.0 | 88% | 61% | 16.3 |
+| event | unknown | 260 | 93 | 84.0 | 78% | 44% | 15.8 |
+
+Boss fights, Jev confidence < 0.5: 138 of 584 Jev boss plan choices (30 differ from the reference) in 39 fights, 56% of those fights won. The counterfactual (what the other line would have done) cannot be known from the logs: listed below for manual review.
+
+(latest 40 of 138; all in --json under outcomes.intent (from 0f2e648).boss_low_conf.list)
+
+| run | floor | turn | conf | differs | HP | turn loss | fight loss | fight won | ts |
+|---|---:|---:|---:|---|---|---:|---:|---|---|
+| XMY29WWQDC1Y | 17 | 9 | 0.21 | True | 18/80 | 0 | 0 | True | 2026-09-27T15:26:37 |
+| XMY29WWQDC1Y | 17 | 9 | 0.17 | False | 18/80 | 0 | 0 | True | 2026-09-27T15:26:38 |
+| K7G9M8K4DWFW | 17 | 6 | 0.49 | False | 45/80 | 13 | 16 | True | 2026-09-27T16:02:32 |
+| K7G9M8K4DWFW | 33 | 4 | 0.36 | False | 9/80 | 0 | 1 | True | 2026-09-27T16:14:14 |
+| KGR6WH5YJ743 | 17 | 7 | 0.03 | False | 34/80 | 18 | 13 | True | 2026-09-27T16:47:25 |
+| EGX7ANDV6X9S | 17 | 4 | 0.26 | True | 69/80 | 0 | 0 | True | 2026-09-27T17:01:11 |
+| EGX7ANDV6X9S | 17 | 10 | 0.24 | False | 29/80 | 15 | 15 | True | 2026-09-27T17:02:05 |
+| K8TC1FU87KGB | 17 | 5 | 0.48 | False | 20/80 | 19 | 20 | False | 2026-09-27T17:21:17 |
+| Z49JD7340KUP | 33 | 2 | 0.46 | False | 38/80 | 4 | 4 | False | 2026-09-27T17:39:31 |
+| 77UJNKSLHHL9 | 33 | 2 | 0.45 | False | 36/80 | 6 | 36 | False | 2026-09-27T17:59:45 |
+| 9VG86DYJH4CS | 17 | 6 | 0.41 | False | 41/80 | 0 | 0 | True | 2026-09-27T18:26:59 |
+| 9VG86DYJH4CS | 17 | 8 | 0.49 | False | 32/80 | 15 | 15 | True | 2026-09-27T18:27:15 |
+| 11LCXLX58AKG | 17 | 4 | 0.12 | True | 56/80 | 1 | 56 | False | 2026-09-27T18:45:40 |
+| 11LCXLX58AKG | 17 | 5 | 0.42 | True | 55/80 | 21 | 55 | False | 2026-09-27T18:45:48 |
+| YG3HAFACLMAR | 17 | 8 | 0.49 | True | 28/80 | 9 | 9 | True | 2026-09-27T18:55:44 |
+| YG3HAFACLMAR | 17 | 8 | 0.47 | False | 28/80 | 9 | 9 | True | 2026-09-27T18:55:45 |
+| YG3HAFACLMAR | 17 | 8 | 0.41 | False | 28/80 | 9 | 9 | True | 2026-09-27T18:55:47 |
+| YG3HAFACLMAR | 33 | 2 | 0.24 | False | 52/80 | 11 | 52 | False | 2026-09-27T19:06:48 |
+| YG3HAFACLMAR | 33 | 3 | 0.35 | False | 41/80 | 11 | 41 | False | 2026-09-27T19:06:54 |
+| YG3HAFACLMAR | 33 | 3 | 0.49 | False | 41/80 | 11 | 41 | False | 2026-09-27T19:06:55 |
+| PKB0Z630CLXT | 17 | 4 | 0.05 | False | 35/80 | 20 | 20 | False | 2026-09-27T19:39:28 |
+| PKB0Z630CLXT | 17 | 5 | 0.31 | True | 15/80 | 0 | 0 | False | 2026-09-27T19:39:34 |
+| PCGH29GVGSCE | 17 | 5 | 0.2 | True | 39/80 | 7 | 8 | True | 2026-09-27T19:47:36 |
+| PCGH29GVGSCE | 17 | 6 | 0.33 | False | 32/80 | 1 | 1 | True | 2026-09-27T19:47:43 |
+| RTF3KZLZPV2L | 17 | 1 | 0.48 | False | 62/80 | 0 | 0 | True | 2026-09-27T20:17:33 |
+| RTF3KZLZPV2L | 17 | 1 | 0.23 | True | 62/80 | 0 | 46 | True | 2026-09-27T20:17:38 |
+| RTF3KZLZPV2L | 33 | 1 | 0.49 | False | 80/80 | 0 | 0 | True | 2026-09-27T20:25:22 |
+| RTF3KZLZPV2L | 33 | 1 | 0.46 | False | 80/80 | 0 | 0 | True | 2026-09-27T20:25:23 |
+| RTF3KZLZPV2L | 33 | 1 | 0.47 | False | 80/80 | 0 | 0 | True | 2026-09-27T20:25:26 |
+| RTF3KZLZPV2L | 33 | 1 | 0.41 | False | 80/80 | 0 | 0 | True | 2026-09-27T20:25:27 |
+| EHJZSGVU0VQ9 | 33 | 2 | 0.38 | True | 57/106 | 11 | 57 | False | 2026-09-27T21:22:50 |
+| 5507PUWLC09R | 33 | 1 | 0.46 | False | 57/80 | 0 | 0 | False | 2026-09-27T21:42:52 |
+| 1DR1H19X0N10 | 17 | 2 | 0.35 | True | 68/80 | 0 | 68 | False | 2026-09-27T22:06:39 |
+| 1DR1H19X0N10 | 17 | 6 | 0.47 | False | 64/80 | 0 | 64 | False | 2026-09-27T22:07:18 |
+| EA7F0CU7V1QL | 17 | 10 | 0.04 | False | 36/80 | 8 | 2 | True | 2026-09-27T22:19:08 |
+| MZCG9T5G6TBZ | 17 | 4 | 0.24 | False | 37/80 | 0 | -9 | True | 2026-09-27T22:34:59 |
+| MZCG9T5G6TBZ | 17 | 6 | 0.13 | True | 25/80 | 8 | -21 | True | 2026-09-27T22:35:13 |
+| 94FPBTS15SQT | 17 | 6 | 0.12 | False | 79/80 | 0 | 0 | True | 2026-09-27T23:36:36 |
+| 94FPBTS15SQT | 17 | 7 | 0.44 | False | 79/80 | 7 | 12 | True | 2026-09-27T23:36:45 |
+| 62PMHB7T80Y8 | 17 | 2 | 0.34 | False | 43/80 | 15 | 43 | False | 2026-09-28T00:00:33 |
+
+### redesign (from 2ba29ef): no finished runs with Jev picks yet (no run log carries the redesign fields)
 
 
 ### Per run (honoured/scored)
@@ -552,11 +889,16 @@ Fight-plan potion timing (metric 6), per planned use:
 | Q97BWZJ011BB | 2026-09-27T22:53 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 23 | False | - | A1:100/85 | 3/5 | 5/7 | 3/3 | 2/2 | 29/29 | - | - | - |
 | 6FUF0MPRB8BT | 2026-09-27T23:08 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 17 | False | - | A1:100/90 | 3/4 | 3/3 | 1/1 | 2/2 | 19/31 | - | - | - |
 | 24UZ3PZNLKTQ | 2026-09-27T23:19 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 17 | False | - | A1:100/85 | 3/4 | 3/4 | 1/1 | - | 12/12 | - | - | - |
-| 94FPBTS15SQT | 2026-09-27T23:27 | normal | intent (from 0f2e648) | ? | ? | unfinished | - | A1:100/85 A2:66/85 | 5/8 | 5/6 | 8/8 | 5/5 | 32/37 | - | - | - |
+| 94FPBTS15SQT | 2026-09-27T23:27 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 33 | False | - | A1:100/85 A2:66/85 | 5/8 | 5/6 | 8/8 | 5/5 | 32/37 | - | - | - |
+| 62PMHB7T80Y8 | 2026-09-27T23:50 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 17 | False | - | A1:54/85 | 3/5 | 5/7 | 1/1 | 1/1 | 7/8 | - | - | - |
+| 7MG7E5EYETA6 | 2026-09-28T00:02 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 23 | False | - | A1:89/85 | 3/5 | 5/6 | 1/1 | 1/1 | 16/20 | - | - | - |
+| RUUBXYZV5064 | 2026-09-28T00:14 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 33 | False | - | A1:100/85 A2:62/90 | 4/7 | 6/9 | 5/5 | 1/1 | 18/24 | - | - | - |
+| W8JDDTMSYA6T | 2026-09-28T00:33 | normal | intent (from 0f2e648) | fcbe2a8+dirty | 31 | False | - | A1:86/85 | 2/5 | 6/6 | 1/1 | 3/3 | 35/45 | - | - | - |
+| 99X7VX66AU71 | 2026-09-28T00:54 | normal | redesign (from 2ba29ef) | ? | ? | unfinished | - | - | - | 3/3 | - | - | 7/10 | - | - | - |
 
-### Per run, intent era (I1-I5; older runs: n/a)
+### Per run, intent era (I1-I5; older runs: n/a; 'differs from tempo' = I4)
 
-| run | run-plan versions | repairs run/fight | changes accepted | changes rejected | exec after change | deviations by intent | Jev decisions with intent_fit | reserve kept |
+| run | run-plan versions | repairs run/fight | changes accepted | changes rejected | exec after change | differs from tempo, by item | Jev decisions with a tempo note | reserve kept |
 |---|---:|---|---|---|---|---|---|---|
 | 5JU3FNJXZFD4 | 3 | 0/2 | hp_policy 1, route_risk 1 | 0 | 3/3 | 0 | 15/20 | - |
 | 9V09G0TKK5EQ | 5 | 1/4 | needs 2, hp_policy 3, route_risk 2, reserve 2 | no_trigger 1 | 7/8 | 0 | 35/54 | 5/5 |
@@ -577,7 +919,7 @@ Fight-plan potion timing (metric 6), per planned use:
 | RVR696LSKBE3 | 12 | 1/0 | hp_policy 9, route_risk 8, reserve 3, entry_hp_pct 1 | 0 | 9/10 | 0 | 38/59 | 3/4 |
 | K7G9M8K4DWFW | 17 | 1/0 | hp_policy 7, route_risk 5, reserve 3, needs 3, entry_hp_pct 1 | 0 | 11/11 | 0 | 102/129 | 2/3 |
 | N7KRS0FSHZ3H | 2 | 0/0 | hp_policy 1, route_risk 1 | 0 | - | 0 | 11/17 | 0/1 |
-| PWSDWBCPEX86 | 9 | 0/0 | hp_policy 5, route_risk 3, entry_hp_pct 1, reserve 1 | 0 | 4/4 | ? 1 | 52/60 | 1/3 |
+| PWSDWBCPEX86 | 9 | 0/0 | hp_policy 5, route_risk 3, entry_hp_pct 1, reserve 1 | 0 | 4/4 | kill_fast 1 | 52/60 | 1/3 |
 | KGR6WH5YJ743 | 7 | 0/0 | needs 1, hp_policy 3, route_risk 3, reserve 1 | 0 | 2/2 | 0 | 43/51 | 1/1 |
 | EGX7ANDV6X9S | 10 | 5/0 | hp_policy 5, route_risk 3, reserve 1 | 0 | 3/4 | 0 | 62/79 | 1/3 |
 | K8TC1FU87KGB | 5 | 0/0 | hp_policy 3, route_risk 1 | 0 | 4/4 | 0 | 24/31 | 1/1 |
@@ -585,13 +927,13 @@ Fight-plan potion timing (metric 6), per planned use:
 | 77UJNKSLHHL9 | 9 | 0/1 | route_risk 7, reserve 2, hp_policy 5 | 0 | 4/4 | 0 | 56/72 | - |
 | EN55E3C1WLHP | 1 | 0/0 | 0 | 0 | - | 0 | 24/31 | - |
 | 77QXNB8RFSQQ | 9 | 0/1 | hp_policy 5, needs 2, route_risk 4, entry_hp_pct 1, reserve 1 | 0 | 4/4 | 0 | 28/39 | 0/1 |
-| 9VG86DYJH4CS | 12 | 0/0 | hp_policy 6, route_risk 6, reserve 3, needs 3, entry_hp_pct 1 | 0 | 5/5 | ? 1 | 67/82 | - |
+| 9VG86DYJH4CS | 12 | 0/0 | hp_policy 6, route_risk 6, reserve 3, needs 3, entry_hp_pct 1 | 0 | 5/5 | kill_fast 1 | 67/82 | - |
 | 11LCXLX58AKG | 3 | 0/0 | hp_policy 2, reserve 1 | 0 | 2/2 | 0 | 24/36 | - |
-| YG3HAFACLMAR | 12 | 0/0 | hp_policy 5, route_risk 5, reserve 2, needs 1 | 0 | 16/16 | ? 2 | 64/84 | 2/3 |
+| YG3HAFACLMAR | 12 | 0/0 | hp_policy 5, route_risk 5, reserve 2, needs 1 | 0 | 16/16 | kill_fast 2 | 64/84 | 2/3 |
 | 123ZSH58F5FS | 9 | 2/0 | reserve 3, hp_policy 5, route_risk 5, entry_hp_pct 1, needs 2 | 0 | 3/3 | 0 | 29/50 | 2/3 BUG 1 |
 | PKB0Z630CLXT | 8 | 0/0 | needs 2, hp_policy 4, route_risk 2 | 0 | 4/4 | 0 | 31/40 | - |
 | PCGH29GVGSCE | 13 | 2/0 | hp_policy 3, route_risk 3, reserve 1, needs 1 | 0 | 8/9 | 0 | 46/58 | 0/1 BUG 1 |
-| FEY65PFTP8BH | 5 | 1/0 | hp_policy 4, route_risk 1 | 0 | 3/3 | ? 1 | 21/28 | 1/1 |
+| FEY65PFTP8BH | 5 | 1/0 | hp_policy 4, route_risk 1 | 0 | 3/3 | kill_fast 1 | 21/28 | 1/1 |
 | RTF3KZLZPV2L | 9 | 2/0 | hp_policy 6, reserve 2, entry_hp_pct 1, needs 3, route_risk 3 | unsupported 1 | 3/3 | 0 | 34/63 | 3/3 |
 | 9LSQ6WUSCCYQ | 10 | 2/0 | needs 2, route_risk 3, entry_hp_pct 1, reserve 1 | 0 | 11/11 | 0 | 30/45 | 2/2 |
 | N95WHBGC4CG9 | 7 | 1/0 | hp_policy 5, route_risk 5, reserve 1 | 0 | 5/5 | 0 | 28/41 | 3/5 |
@@ -605,7 +947,12 @@ Fight-plan potion timing (metric 6), per planned use:
 | Q97BWZJ011BB | 6 | 0/0 | hp_policy 5, route_risk 1, entry_hp_pct 1, reserve 1 | 0 | 6/6 | 0 | 67/79 | - |
 | 6FUF0MPRB8BT | 4 | 1/0 | hp_policy 1, route_risk 1, reserve 1 | 0 | 7/7 | 0 | 17/24 | 2/3 |
 | 24UZ3PZNLKTQ | 3 | 0/0 | 0 | 0 | - | 0 | 18/26 | - |
-| 94FPBTS15SQT | 9 | 2/0 | needs 3, route_risk 4, reserve 1, hp_policy 2 | 0 | 3/3 | 0 | 41/57 | 1/1 |
+| 94FPBTS15SQT | 9 | 2/0 | needs 3, route_risk 4, reserve 1, hp_policy 2 | 0 | 3/3 | 0 | 56/76 | 1/1 |
+| 62PMHB7T80Y8 | 6 | 0/0 | needs 1, hp_policy 1, reserve 1 | 0 | 3/3 | 0 | 23/28 | - |
+| 7MG7E5EYETA6 | 7 | 0/0 | route_risk 6, hp_policy 5, reserve 1 | 0 | 3/3 | 0 | 28/37 | 0/1 |
+| RUUBXYZV5064 | 11 | 0/1 | hp_policy 5, reserve 2, needs 2, route_risk 3, entry_hp_pct 1 | 0 | 8/9 | 0 | 33/45 | 1/3 BUG 1 |
+| W8JDDTMSYA6T | 10 | 0/0 | reserve 3, needs 1, objective 1 | 0 | 1/1 | kill_fast 2 | 40/62 | 1/2 |
+| 99X7VX66AU71 | 3 | 3/0 | hp_policy 2, route_risk 2, avoid 1 | 0 | 1/1 | 0 | 18/34 | - |
 ## Spot checks against the raw logs (by hand, 2026-09-27)
 
 - **EJXCAQ56PWLK F28 (elite, Entomancer) T1 -- Flex and Speed drunk.** decisions.jsonl: 10:06:42Z Jev chose plan 2/4
@@ -692,4 +1039,13 @@ Fight-plan potion timing (metric 6), per planned use:
   I5 exceptions are read from the logged HP (fingerprint hp / state max_hp), the least-loss label and the
   option's "released" tag; the per-card fallback's "lethal turn" release is not visible and would show as a BUG
   (check the event with --events before trusting a flagged case).
+- Section O (outcomes of differing picks) is correlational. Jev differs from code's reference more often in
+  hard spots (low confidence, elites and bosses, low HP, turns where every line loses a lot), the reference
+  was produced by rules that changed between eras (and has been wrong), and decisions in one fight or one act
+  share an outcome, so neither "differs did worse" nor "differs did better" is proof about the choice itself.
+  Turn HP loss uses the HP at the next turn's first Jev/code decision (a fight that ended this turn uses the
+  post-fight HP, which includes end-of-combat healing); realised damage is the drop in enemy HP (block,
+  regeneration, spawns and minions distort it); non-combat outcomes (boss-entry HP, floors survived, boss
+  passed) are per run-act and shared by every pick in it. Old rest / shop / event picks have no recoverable
+  reference rank ("unknown"). The boss low-confidence list cannot say what the other line would have done.
 

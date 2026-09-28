@@ -136,6 +136,9 @@ Eras (runs.jsonl start = first decision of the run)
     892278c..0f2e648    from 892278c, before the intent merge
     intent (from 0f2e648)   the run has a new-format plan (run plan with `version`/`hpPolicy`, fight plan with
                         `objective`) or started at/after 2026-09-27 11:57:05Z (0f2e648, 19:57:05 +0800)
+    redesign (from 2ba29ef)  the first run whose decisions carry ds_guidance / matched_reference /
+                        differs_from_reference / differs_from_tempo (phase2 2ba29ef, 2026-09-28: DeepSeek guides,
+                        code gives facts and a reference rank, Jev decides), and every run started after it
     "period" in the per-run table is this era.
 
 Intent-era metrics (plans in the new closed vocabulary: jev-sts2/src/strategy/intent.ts, plan-validator.ts).
@@ -163,9 +166,26 @@ no new-format source and stay empty.
      needs added roles      a card reward offering a card of the added role the deck lacks (< 2): one taken
      avoid added            a card reward offering an added avoided card id / role card: not taken
    Other changes (balanced, normal, lowered entry HP, removals) have nothing to check: n/a.
- I4 intent deviations   decisions carrying `intent_deviation` (Jev picked an option labelled "breaks …"),
-   by intent (the text after "breaks" up to ":"), per run; plus the share of Jev decisions (decider jev) whose
-   question carried an `intent_fit` label on at least one option.
+ I4 picks differing from tempo   decisions carrying `differs_from_tempo` (2026-09-28 on) or the legacy
+   `intent_deviation` / `tempo_deviation` (Jev picked an option whose tempo note says "differs from …", formerly
+   "departs from …" / "breaks …"), by guidance item (the text after that phrase up to ":"), per run; plus the share
+   of Jev decisions (decider jev) whose question carried a tempo note (`intent_fit` / `tempo`) on some option.
+   A fact, not a verdict: whether such picks did well is section O.
+
+ O  outcomes of differing picks (all eras; finished runs; Jev picks only).  differs = Jev's pick is not code's
+   reference rank 1: `differs_from_reference` / `matched_reference` / `reference_rank` in new logs; in old logs
+   the code rank in the rationale ("code rank N" / "code reference rank N"), a drink-first potion option (never
+   the reference), or the option with the highest route_value (map) / code_value (reward) / code_rank 1.
+   Rest, shop and event picks in old logs have no recoverable reference: "unknown".
+     combat (combat/plan-choice[+potion]): HP lost to the next turn's first decision and to the first decision
+       after the fight (0 HP when the run died there), fight won, per fight kind (hallway/elite/boss) and Jev
+       confidence (<0.3, 0.3-0.5, 0.5-0.7, >=0.7); realised vs the solver's predicted hp_lost / damage_dealt for
+       Jev's line and for the reference line (the option labelled "same as reference" / "code's reference line";
+       before that label existed plan N was code rank N).
+     non-combat (map, rest, shop, reward, event): HP% at the next act-boss entry, whether the boss was reached
+       and passed, floors survived afterwards.  Every pick in a run-act shares one outcome.
+     boss low confidence: Jev boss plan choices at confidence < 0.5, counted and listed for manual review.
+   Correlations with confounders (Jev differs more in hard spots), not causal estimates.
  I5 reserve (new rule)  like metric 1 with plan.reserve: a potion of a reserved role held while a plan of the
    same act reserves it; kept = in the belt when the act-boss fight starts (drunk inside it is fine); broken =
    drunk/discarded before.  Exceptions (code releases the reserve): HP < 25% at the drink, a least-loss line
@@ -200,6 +220,14 @@ GAME_DATA = os.path.join(ROOT, "jev-sts2", ".cache", "game-data.json")
 CUTOFF = "2026-09-27T08:48:01Z"  # 892278c, 16:48:01 +0800
 INTENT_CUTOFF = "2026-09-27T11:57:05Z"  # 0f2e648, 19:57:05 +0800 (strategy-intent merge)
 ERA_PRE, ERA_MID, ERA_INTENT = "pre-892278c", "892278c..0f2e648", "intent (from 0f2e648)"
+# Redesign merge (phase2 2ba29ef, 2026-09-28: DeepSeek guides, code gives facts and a reference rank, Jev
+# decides). Detected per run: the first run whose decisions carry ds_guidance / matched_reference /
+# differs_from_reference / differs_from_tempo, and every run started after it.
+ERA_REDESIGN = "redesign (from 2ba29ef)"
+ERAS = (ERA_PRE, ERA_MID, ERA_INTENT, ERA_REDESIGN)
+REDESIGN_KEYS = ("ds_guidance", "matched_reference", "differs_from_reference", "differs_from_tempo")
+CONF_BUCKETS = ((0.0, 0.3, "<0.3"), (0.3, 0.5, "0.3-0.5"), (0.5, 0.7, "0.5-0.7"), (0.7, 1.01, ">=0.7"))
+NONCOMBAT_PREFIX = ("map/", "rest/", "shop/", "reward/", "event/")
 RESERVE_RELEASE_HP = 0.25  # intent.ts RESERVE_RELEASE_HP
 HP_TARGET = {"preserve": 0.8, "balanced": 0.7, "push": 0.6}  # intent.ts HP_TARGET
 BOSS_FLOORS = (17, 33, 48)
@@ -434,8 +462,14 @@ def classify_rejection(text: str) -> tuple[str, str]:
 
 
 def deviation_intents(label: str) -> list[str]:
-    """The intents a "breaks …" label breaks: 'breaks preserve_hp: …; breaks hp_policy preserve: …'."""
-    out = [m.group(1).strip() for m in re.finditer(r"breaks ([^:;]+)", label or "")]
+    """The guidance items a tempo note says the pick differs from. Reads every wording the logs used:
+    'differs from DeepSeek's race: …' (2026-09-28 on), 'departs from …' and 'breaks …' (older)."""
+    out = [re.sub(r"^DeepSeek's ", "", m.group(1).strip())
+           for m in re.finditer(r"(?:breaks|departs from|differs from) ([^:;]+)", label or "")]
+    if not out and label:
+        # 2026-09-27 wording: "costs 27 damage vs the best line for kill_fast (saves 6 HP)"
+        m = re.search(r"vs the best line for ([a-z_]+)", label)
+        out = [m.group(1)] if m else ["drinks a potion held for the act boss"] if "holds for the act boss" in label else [label.split(":")[0][:60]]
     return out or ["?"]
 
 
@@ -523,7 +557,7 @@ def load_timelines(target: set[str], monsters: dict):
         for q in qs.values():
             crit = q.get("criteria")
             break
-        has_fit = any("intent_fit" in str(v) for q in qs.values() if isinstance(q, dict)
+        has_fit = any(("intent_fit" in str(v) or '"tempo"' in str(v)) for q in qs.values() if isinstance(q, dict)
                       for v in (q.get("criteria") or {}).values())
         ans = None
         for a in (d.get("answers") or {}).values():
@@ -535,7 +569,12 @@ def load_timelines(target: set[str], monsters: dict):
             "rationale": d.get("rationale") or "", "criteria": crit,
             "jev_choice": (ans or {}).get("choice"), "jev_conf": (ans or {}).get("confidence"),
             "esc": d.get("escalation"), "fp": fp,
-            "deviation": d.get("intent_deviation"), "has_fit": has_fit,
+            # a pick that differs from DeepSeek's tempo: new neutral field first, legacy names after
+            "deviation": ({"intent": d["differs_from_tempo"], **(d.get("tempo_context") or {})} if d.get("differs_from_tempo")
+                          else d.get("intent_deviation") or ({"intent": d["tempo_deviation"]} if d.get("tempo_deviation") else None)),
+            "has_fit": has_fit,
+            "ref": {k: d[k] for k in ("differs_from_reference", "matched_reference", "reference_rank", "reference_of") if k in d},
+            "redesign": any(k in d for k in REDESIGN_KEYS),
         })
     states = collections.defaultdict(dict)
     with open(os.path.join(LOGS, "states.jsonl"), "rb") as fh:
@@ -590,7 +629,7 @@ def who_of(d: dict, arm: str | None) -> str:
     if decider == "jev" or (decider is None and rat.startswith("Jev chose")):
         base = "jev(stub)" if stub else "jev"
         # Jev's pick was also code's rank 1: the plan was broken by a line code ranked first too
-        return base + "=rank1" if re.search(r"code rank 1\b", rat) else base
+        return base + "=rank1" if re.search(r"code (?:reference )?rank 1\b", rat) else base
     return "code"
 
 
@@ -1342,6 +1381,123 @@ class RunAnalysis:
                         floor=r["floor"], turn=r["turn"], version=dv.get("run_plan_version") if isinstance(dv, dict) else None,
                         objective=dv.get("fight_objective") if isinstance(dv, dict) else None, label=label[:200])
 
+    # --- O: outcomes of Jev's picks that differ from code's reference (correlational, not causal)
+    def _differs(self, r) -> bool | None:
+        """Jev's pick is not code's reference rank 1. New logs: differs_from_reference / matched_reference;
+        old logs: the code rank in the rationale (combat), or the option values (map route_value, reward
+        code_value, any code_rank field). None when the reference cannot be recovered."""
+        ref = r.get("ref") or {}
+        if "differs_from_reference" in ref:
+            return bool(ref["differs_from_reference"])
+        if "matched_reference" in ref:
+            return not ref["matched_reference"]
+        if isinstance(ref.get("reference_rank"), int):
+            return ref["reference_rank"] != 1
+        rat = r["rationale"]
+        m = re.search(r"code (?:reference )?rank (\d+)", rat)
+        if m:
+            return m.group(1) != "1"
+        if r["label"].startswith("combat/plan-choice") and re.match(r"Jev chose to drink", rat):
+            return True  # a drink-first potion option is never code's reference line
+        crit = crit_json(r)
+        pick = r.get("jev_choice")
+        if not crit or pick not in crit:
+            return None
+        for field in ("code_rank",):
+            ranks = {k: o.get(field) for k, o in crit.items() if isinstance(o.get(field), (int, float))}
+            if pick in ranks:
+                return ranks[pick] != 1
+        for field in ("route_value", "code_value"):
+            vals = {k: o.get(field) for k, o in crit.items() if isinstance(o.get(field), (int, float))}
+            if pick in vals and len(vals) >= 2:
+                return vals[pick] < max(vals.values()) - 1e-9
+        return None
+
+    def _next_hp(self, i: int, same_turn_ok=False):
+        """(hp at the start of the next turn of this fight, hp right after the fight, fight ended this turn)
+        from the decisions after row i; hp 0 when the run died in this fight."""
+        r = self.rows[i]
+        fl, turn = r["floor"], r["turn"]
+        turn_end = fight_end = None
+        for j in range(i + 1, len(self.rows)):
+            q = self.rows[j]
+            hp = q["fp"].get("hp")
+            in_fight = q["screen"] == "COMBAT" and q["floor"] == fl
+            if in_fight and turn_end is None and isinstance(q["turn"], int) and isinstance(turn, int) and q["turn"] > turn:
+                turn_end = hp
+            if not in_fight:
+                fight_end = hp
+                break
+        ended_this_turn = turn_end is None
+        if fight_end is None and self.died_on(fl):
+            fight_end = 0
+        if turn_end is None:
+            turn_end = fight_end
+        return turn_end, fight_end, ended_this_turn
+
+    def _enemy_damage(self, i: int) -> int | None:
+        """Enemy HP lost between row i and the first decision of the next turn (approximate)."""
+        r = self.rows[i]
+        before = {e["i"]: e.get("hp") or 0 for e in r["st"].get("enemies") or [] if e.get("alive")}
+        if r["state_missing"] or not before:
+            return None
+        for j in range(i + 1, len(self.rows)):
+            q = self.rows[j]
+            if q["screen"] != "COMBAT" or q["floor"] != r["floor"]:
+                return sum(before.values())  # fight over: every enemy's HP went
+            if isinstance(q["turn"], int) and isinstance(r["turn"], int) and q["turn"] > r["turn"]:
+                if q["state_missing"]:
+                    return None
+                after = {e["i"]: (e.get("hp") or 0) if e.get("alive") else 0 for e in q["st"].get("enemies") or []}
+                return sum(max(0, hp - after.get(k, 0)) for k, hp in before.items())
+        return None
+
+    def m_outcomes(self):
+        if self.meta is None:
+            return  # unfinished: no fight / run outcome yet
+        final_floor = self.meta.get("floor") or 0
+        won_run = bool(self.meta.get("victory"))
+        entries = self.boss_entries()
+        for i, r in enumerate(self.rows):
+            if r["decider"] != "jev":
+                continue
+            conf = r.get("jev_conf")
+            bucket = next((b for lo, hi, b in CONF_BUCKETS if isinstance(conf, (int, float)) and lo <= conf < hi), "?")
+            differs = self._differs(r)
+            hp = r["fp"].get("hp")
+            mx = r["st"].get("max_hp")
+            if r["label"].startswith("combat/plan-choice"):
+                kind = {"monster": "hallway"}.get(self.fight_kind.get(r["floor"]), self.fight_kind.get(r["floor"], "?"))
+                turn_end, fight_end, ended = self._next_hp(i)
+                crit = crit_json(r)
+                own = crit.get(r.get("jev_choice") or "") or {}
+                refk = next((k for k, o in crit.items() if re.match(r"(same as reference|code's reference line)", str(o.get("reference", "")))), None)
+                if refk is None and "plan1" in crit and not any("reference" in o for o in crit.values()):
+                    refk = "plan1"  # before the reference label, plan N was code rank N (9031/9042 Jev picks agree)
+                refo = crit.get(refk or "") or {}
+                pred = lambda o, k: o.get(k) if isinstance(o.get(k), (int, float)) else None
+                self.ev("outcome_combat", "n/a", who="jev", differs=differs, kind=kind, conf=conf, bucket=bucket,
+                        floor=r["floor"], turn=r["turn"], hp=hp, max_hp=mx,
+                        turn_loss=(hp - turn_end) if hp is not None and turn_end is not None else None,
+                        fight_loss=(hp - fight_end) if hp is not None and fight_end is not None else None,
+                        ended_this_turn=ended, won=not self.died_on(r["floor"]),
+                        own_pred_loss=pred(own, "hp_lost"), ref_pred_loss=pred(refo, "hp_lost"),
+                        own_pred_dmg=pred(own, "damage_dealt"), ref_pred_dmg=pred(refo, "damage_dealt"),
+                        real_dmg=self._enemy_damage(i) if not ended else None,
+                        potion_first=bool(re.match(r"Jev chose to drink", r["rationale"])), ts=r["ts"])
+            elif r["label"].startswith(NONCOMBAT_PREFIX):
+                act = r["st"].get("act")
+                boss_floor = BOSS_FLOORS[act - 1] if isinstance(act, int) and 1 <= act <= len(BOSS_FLOORS) else None
+                entry = entries.get(act)
+                ehp = entry["fp"].get("hp") if entry else None
+                emx = entry["st"].get("max_hp") if entry else None
+                self.ev("outcome_noncombat", "n/a", who="jev", differs=differs, screen=r["label"].split("/")[0],
+                        bucket=bucket, conf=conf, floor=r["floor"], act=act,
+                        boss_hp_pct=round(100 * ehp / emx) if ehp is not None and emx else None,
+                        reached_boss=entry is not None,
+                        floors_after=max(0, final_floor - (r["floor"] or 0)),
+                        boss_passed=(won_run or (boss_floor is not None and final_floor > boss_floor)) if boss_floor else None)
+
     def analyse(self):
         self.m_save_potions()
         # roles DeepSeek asked to keep that parse_run_plan dropped (it keeps only the first 2 roles)
@@ -1353,6 +1509,7 @@ class RunAnalysis:
             self.m_intent_plans()
             self.m_change_exec()
             self.m_deviations()
+        self.m_outcomes()
         return self
 
 
@@ -1574,9 +1731,9 @@ def fmt_intent(title: str, s: dict) -> list[str]:
         f"  - changes rejected {j['total']}: by reason {kv(j['by_reason'])}; by field {kv(j['by_field'])}.",
         f"- **I3 execution after an accepted change**: honoured {x['honoured']}/{x['honoured'] + x['broken']} "
         f"({pct(x['honoured'], x['honoured'] + x['broken'])}), n/a {x['na']} (no check or no opportunity).",
-        f"- **I4 intent deviations**: {d['decisions']} Jev decisions labelled \"breaks …\" ({d['deviation_share_of_jev']} of "
-        f"{d['jev_decisions']} Jev decisions); by intent {kv(d['by_intent'])}; by screen {kv(d['by_screen'])}. "
-        f"Jev decisions with an intent_fit label: {d['jev_with_intent_fit']}/{d['jev_decisions']} ({d['fit_share']}).",
+        f"- **I4 picks that differ from DeepSeek's tempo** (a fact, not a verdict; outcomes in section O): {d['decisions']} Jev decisions "
+        f"({d['deviation_share_of_jev']} of {d['jev_decisions']} Jev decisions); by guidance item {kv(d['by_intent'])}; by screen {kv(d['by_screen'])}. "
+        f"Jev decisions with a tempo note (intent_fit / tempo) on some option: {d['jev_with_intent_fit']}/{d['jev_decisions']} ({d['fit_share']}).",
         f"- **I5 reserve (whole act; released < 25% HP / every line dies)**: kept {v['kept']}/{v['n']} ({pct(v['kept'], v['n'])}), "
         f"broken {v['broken']} (by {kv(v['broken_by'])}; exceptions {kv(v['exceptions'])}; discarded {v['discarded']}), "
         f"n/a {v['na']} (of which released by a reserve change {v['released_by_change']}). "
@@ -1590,6 +1747,165 @@ def fmt_intent(title: str, s: dict) -> list[str]:
         for row in x["rows"]:
             lines.append(f"| {row['change']} | {row['check']} | {row['honoured']} | {row['broken']} | {row['na']} | {kv(row['broken_by']) } |")
         lines.append("")
+    return lines
+
+
+def _mean(xs, nd=1):
+    xs = [x for x in xs if isinstance(x, (int, float)) and not isinstance(x, bool)]
+    return round(sum(xs) / len(xs), nd) if xs else None
+
+
+def _share(flags):
+    flags = [f for f in flags if f is not None]
+    return f"{100.0 * sum(1 for f in flags if f) / len(flags):.0f}%" if flags else "-"
+
+
+def _combat_cell(es: list[dict]) -> dict:
+    fights = {}
+    for e in es:
+        fights.setdefault((e["run"], e["floor"]), e["won"])
+    return {"n": len(es), "turn_loss": _mean([e["turn_loss"] for e in es]), "fight_loss": _mean([e["fight_loss"] for e in es]),
+            "won": _share([e["won"] for e in es]), "fights": len(fights), "fights_won": _share(list(fights.values()))}
+
+
+def _noncombat_cell(es: list[dict]) -> dict:
+    run_acts = {(e["run"], e["act"]) for e in es}
+    return {"n": len(es), "run_acts": len(run_acts), "boss_hp": _mean([e["boss_hp_pct"] for e in es if e["reached_boss"]], 0),
+            "reached": _share([e["reached_boss"] for e in es]), "passed": _share([e["boss_passed"] for e in es]),
+            "floors_after": _mean([e["floors_after"] for e in es])}
+
+
+def _side(d) -> str:
+    return "differs" if d is True else "matches" if d is False else "unknown"
+
+
+def summarize_outcomes(analyses: list) -> dict:
+    """Section O: outcomes of Jev picks that match vs differ from code's reference rank 1, per era."""
+    out: dict[str, Any] = {}
+    by_era = collections.defaultdict(list)
+    for a in analyses:
+        by_era[a.period].extend(a.events)
+    by_era["ALL"] = [e for a in analyses for e in a.events]
+    for era in ("ALL",) + ERAS:
+        ev = by_era.get(era) or []
+        cb = [e for e in ev if e["metric"] == "outcome_combat"]
+        nc = [e for e in ev if e["metric"] == "outcome_noncombat"]
+        o: dict[str, Any] = {"runs": len({e["run"] for e in cb + nc}), "combat": {}, "combat_kind": {}, "combat_bucket": {},
+                             "combat_kind_bucket": {}, "predicted": {}, "noncombat": {}, "noncombat_screen": {}}
+        for side in ("matches", "differs", "unknown"):
+            cs = [e for e in cb if _side(e["differs"]) == side]
+            o["combat"][side] = _combat_cell(cs)
+            for kind in ("hallway", "elite", "boss"):
+                o["combat_kind"].setdefault(kind, {})[side] = _combat_cell([e for e in cs if e["kind"] == kind])
+                for _lo, _hi, b in CONF_BUCKETS:
+                    o["combat_kind_bucket"].setdefault(f"{kind} {b}", {})[side] = _combat_cell([e for e in cs if e["kind"] == kind and e["bucket"] == b])
+            for _lo, _hi, b in CONF_BUCKETS:
+                o["combat_bucket"].setdefault(b, {})[side] = _combat_cell([e for e in cs if e["bucket"] == b])
+            # realised vs predicted: turns the fight went on after (the prediction is "before healing" at the
+            # end of the enemy turn; a fight that ended this turn has post-fight HP instead)
+            ps = [e for e in cs if not e["ended_this_turn"] and e["turn_loss"] is not None and e["ref_pred_loss"] is not None and e["own_pred_loss"] is not None]
+            o["predicted"][side] = {
+                "n": len(ps), "own_pred_loss": _mean([e["own_pred_loss"] for e in ps]), "ref_pred_loss": _mean([e["ref_pred_loss"] for e in ps]),
+                "real_loss": _mean([e["turn_loss"] for e in ps]),
+                "real_minus_ref_pred": _mean([e["turn_loss"] - e["ref_pred_loss"] for e in ps]),
+                "real_minus_own_pred": _mean([e["turn_loss"] - e["own_pred_loss"] for e in ps]),
+                "n_dmg": sum(1 for e in ps if e["real_dmg"] is not None and e["ref_pred_dmg"] is not None),
+                "ref_pred_dmg": _mean([e["ref_pred_dmg"] for e in ps if e["real_dmg"] is not None and e["ref_pred_dmg"] is not None]),
+                "own_pred_dmg": _mean([e["own_pred_dmg"] for e in ps if e["real_dmg"] is not None and e["own_pred_dmg"] is not None]),
+                "real_dmg": _mean([e["real_dmg"] for e in ps if e["real_dmg"] is not None and e["ref_pred_dmg"] is not None]),
+            }
+            ns = [e for e in nc if _side(e["differs"]) == side]
+            o["noncombat"][side] = _noncombat_cell(ns)
+            for scr in ("map", "rest", "shop", "reward", "event"):
+                o["noncombat_screen"].setdefault(scr, {})[side] = _noncombat_cell([e for e in ns if e["screen"] == scr])
+        low = [e for e in cb if e["kind"] == "boss" and isinstance(e["conf"], (int, float)) and e["conf"] < 0.5]
+        o["boss_low_conf"] = {
+            "n": len(low), "of": sum(1 for e in cb if e["kind"] == "boss"),
+            "differs": sum(1 for e in low if e["differs"] is True), "fights": len({(e["run"], e["floor"]) for e in low}),
+            "fights_won": _share(list({(e["run"], e["floor"]): e["won"] for e in low}.values())),
+            "list": [{k: e.get(k) for k in ("run", "floor", "turn", "conf", "differs", "hp", "max_hp", "turn_loss", "fight_loss", "won", "ts")} for e in low],
+        }
+        out[era] = o
+    return out
+
+
+BOSS_LIST_MAX = 40
+
+
+def fmt_outcomes(s: dict) -> list[str]:
+    def cell(c, keys):
+        return " | ".join("-" if c.get(k) is None else str(c.get(k)) for k in keys)
+    ck = ("n", "turn_loss", "fight_loss", "won", "fights", "fights_won")
+    lines = ["## O. Outcomes of Jev's picks that differ from code's reference (correlation, not proof)", "",
+             "Code's reference rank and tempo labels are rule-based and have been wrong (PCGH F23 T4, 9V09, FEY6), so a pick that differs "
+             "from them is not scored as broken here: it is compared with picks that match reference rank 1 by what happened next. "
+             "**These are correlations with strong confounders, not causal estimates**: Jev differs more often in hard spots (low "
+             "confidence, elites and bosses, low HP, turns where every line is bad), so the differing group starts from worse positions; "
+             "the reference itself was chosen by rules that changed between eras; decisions in the same fight / act share one outcome.", "",
+             "- differs = Jev's pick is not code's reference rank 1 (`differs_from_reference` / `matched_reference` in new logs; older "
+             "logs: the code rank in the rationale, a drink-first potion option, or the highest route_value / code_value on map and "
+             "reward screens; rest, shop and event picks in older logs have no reference to recover: 'unknown').",
+             "- combat: HP lost from the decision to the first decision of the next turn (turn loss) and to the first decision after the "
+             "fight (fight loss; post-fight healing such as Burning Blood is included, a death counts the HP left), fight won = the run did "
+             "not end in that fight. 'fights' counts each (run, floor) once per side (a fight with both kinds of picks is in both).", ""]
+    for era in ("ALL",) + ERAS:
+        o = s.get(era)
+        if not o:
+            continue
+        c = o["combat"]
+        if not any(c[side]["n"] for side in c) and not any(o["noncombat"][side]["n"] for side in o["noncombat"]):
+            lines += [f"### {era}: no finished runs with Jev picks" + (" yet (no run log carries the redesign fields)" if era == ERA_REDESIGN else ""), ""]
+            continue
+        lines += [f"### {era} ({o['runs']} finished runs)", "",
+                  "Combat plan choices by Jev:", "",
+                  "| pick | n | turn HP loss (mean) | fight HP loss from here (mean) | fight won (per decision) | fights | fights won |",
+                  "|---|---:|---:|---:|---:|---:|---:|"]
+        for side in ("matches", "differs", "unknown"):
+            if c[side]["n"]:
+                lines.append(f"| {side} | {cell(c[side], ck)} |")
+        lines += ["", "By fight kind and Jev confidence (matches vs differs: n, turn HP loss, fight HP loss, fight won):", "",
+                  "| split | matches n | turn | fight | won | differs n | turn | fight | won |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+        sk = ("n", "turn_loss", "fight_loss", "won")
+        rows = [(k, v) for k, v in o["combat_kind"].items()] + [(f"conf {k}", v) for k, v in o["combat_bucket"].items()] + \
+               ([(k, v) for k, v in o["combat_kind_bucket"].items()] if era == "ALL" else [])
+        for name, v in rows:
+            if v["matches"]["n"] or v["differs"]["n"]:
+                lines.append(f"| {name} | {cell(v['matches'], sk)} | {cell(v['differs'], sk)} |")
+        p = o["predicted"]
+        lines += ["", "Realised vs predicted (approximate; turns the fight went on after, both lines' predictions logged). HP: the "
+                  "solver's hp_lost for Jev's line and for the reference line vs the HP actually lost by the next turn; damage: enemy HP "
+                  "lost by the next turn (block, regeneration, spawns and minions make it rough):", "",
+                  "| pick | n | Jev line predicted HP loss | reference predicted HP loss | realised HP loss | realised - reference predicted | realised - own predicted | n dmg | reference predicted dmg | Jev line predicted dmg | realised dmg |",
+                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+        for side in ("matches", "differs"):
+            if p[side]["n"]:
+                lines.append(f"| {side} | {cell(p[side], ('n', 'own_pred_loss', 'ref_pred_loss', 'real_loss', 'real_minus_ref_pred', 'real_minus_own_pred', 'n_dmg', 'ref_pred_dmg', 'own_pred_dmg', 'real_dmg'))} |")
+        nk = ("n", "run_acts", "boss_hp", "reached", "passed", "floors_after")
+        lines += ["", "Non-combat picks by Jev (per decision; every pick in a run-act shares that act's outcome, approximate):", "",
+                  "| screen | pick | n | run-acts | HP% at next act-boss entry (mean, reached) | reached boss | act boss passed | floors survived afterwards (mean) |",
+                  "|---|---|---:|---:|---:|---:|---:|---:|"]
+        for side in ("matches", "differs", "unknown"):
+            if o["noncombat"][side]["n"]:
+                lines.append(f"| all | {side} | {cell(o['noncombat'][side], nk)} |")
+        for scr, v in o["noncombat_screen"].items():
+            for side in ("matches", "differs", "unknown"):
+                if v[side]["n"]:
+                    lines.append(f"| {scr} | {side} | {cell(v[side], nk)} |")
+        b = o["boss_low_conf"]
+        lines += ["", f"Boss fights, Jev confidence < 0.5: {b['n']} of {b['of']} Jev boss plan choices ({b['differs']} differ from the "
+                  f"reference) in {b['fights']} fights, {b['fights_won']} of those fights won. The counterfactual (what the other line "
+                  "would have done) cannot be known from the logs: " + ("listed below for manual review." if era != "ALL" else "see the per-era lists."), ""]
+        if era != "ALL" and b["list"]:
+            shown = b["list"][-BOSS_LIST_MAX:]
+            if len(b["list"]) > len(shown):
+                lines.append(f"(latest {len(shown)} of {len(b['list'])}; all in --json under outcomes.{era}.boss_low_conf.list)")
+            lines.append("")
+            lines.append("| run | floor | turn | conf | differs | HP | turn loss | fight loss | fight won | ts |")
+            lines.append("|---|---:|---:|---:|---|---|---:|---:|---|---|")
+            for e in shown:
+                lines.append(f"| {e['run']} | {e['floor']} | {e['turn']} | {e['conf']} | {e['differs']} | {e['hp']}/{e['max_hp']} | "
+                             f"{e['turn_loss']} | {e['fight_loss']} | {e['won']} | {e['ts'][:19]} |")
+            lines.append("")
     return lines
 
 
@@ -1635,6 +1951,8 @@ def main():
     timelines = load_timelines(target, monsters)
 
     analyses = []
+    # the redesign era starts with the first run whose decisions carry the redesign fields
+    redesign_start = min((rows[0]["ts"] for rows in timelines.values() if rows and any(r.get("redesign") for r in rows)), default=None)
     for rid in sorted(target, key=lambda r: (timelines.get(r) or [{"ts": ""}])[0]["ts"]):
         rows = timelines.get(rid) or []
         if not rows:
@@ -1645,6 +1963,8 @@ def main():
         fp = sorted(fight_plans.get(rid, []), key=lambda p: p["ts"])
         new = any(is_new_run_entry(p) for p in rp) or any(is_new_fight_entry(p) for p in fp)
         period = ERA_INTENT if new or rows[0]["ts"] >= INTENT_CUTOFF else ERA_MID if rows[0]["ts"] >= CUTOFF else ERA_PRE
+        if redesign_start is not None and (rows[0]["ts"] >= redesign_start or any(r.get("redesign") for r in rows)):
+            period = ERA_REDESIGN
         for p in rp:
             if is_new_run_entry(p):
                 # new vocabulary read by the old metrics where a field maps (docstring); the parser no
@@ -1660,7 +1980,7 @@ def main():
 
     done = [a for a in analyses if a.meta is not None]
     groups = {"ALL finished runs": done}
-    for per in (ERA_PRE, ERA_MID, ERA_INTENT):
+    for per in ERAS:
         groups[f"era {per}"] = [a for a in done if a.period == per]
     for arm in ("normal", "full", "ds"):
         groups[f"arm {arm}"] = [a for a in done if a.arm == arm]
@@ -1672,6 +1992,7 @@ def main():
     intent_live = [a for a in analyses if a.new and a.meta is None]
     intent_summary = {"finished": summarize_intent(intent_done), "unfinished": summarize_intent(intent_live)}
     intent_rows = [intent_row(a) for a in analyses]
+    outcomes = summarize_outcomes(done)
 
     if args.events:
         for a in analyses:
@@ -1680,7 +2001,7 @@ def main():
                     print(json.dumps(e, ensure_ascii=False, default=str))
         return
     if args.json:
-        json.dump({"summaries": summaries, "intent": intent_summary, "runs": rows, "intent_runs": intent_rows,
+        json.dump({"summaries": summaries, "intent": intent_summary, "outcomes": outcomes, "runs": rows, "intent_runs": intent_rows,
                    "events": [e for a in analyses for e in a.events]}, sys.stdout, ensure_ascii=False, indent=1, default=str)
         print()
         return
@@ -1693,7 +2014,7 @@ def main():
             continue
         out.append("")
         out += fmt_table(f"{g} ({len(rs)} runs)", summaries[g])
-    out += ["", "## Intent era (from 0f2e648): validator, re-plans, execution, deviations, reserve", ""]
+    out += ["", "## Intent era (from 0f2e648): validator, re-plans, execution, picks differing from tempo, reserve", ""]
     if not intent_done and not intent_live:
         out.append("No runs yet with new-format (intent) plans.")
     else:
@@ -1701,6 +2022,7 @@ def main():
         if intent_live:
             out += fmt_intent(f"unfinished intent-era runs, not in the aggregates above ({len(intent_live)}: "
                               f"{', '.join(a.rid for a in intent_live)})", intent_summary["unfinished"])
+    out += [""] + fmt_outcomes(outcomes)
     if args.runs or args.md:
         run_lines = ["", "### Per run (honoured/scored)", "",
                      "| run | start (UTC) | arm | period | code | floor | win | save_pot | entry HP% A:hp/target | must deck | must reward | avoid card | avoid elite | focus plays | potion timing | setup | labels |",
@@ -1709,12 +2031,12 @@ def main():
             run_lines.append("| " + " | ".join(str(r[k]) for k in ("run", "start", "arm", "period", "code", "floor", "win", "save_pot", "entry_hp",
                                                                    "must_deck", "must_rew", "avoid_card", "avoid_elite", "focus", "pot_time", "setup", "labels")) + " |")
         ir = [r for r in intent_rows if r["versions"] != "n/a"]
-        run_lines += ["", "### Per run, intent era (I1-I5; older runs: n/a)", ""]
+        run_lines += ["", "### Per run, intent era (I1-I5; older runs: n/a; 'differs from tempo' = I4)", ""]
         if not ir:
             run_lines.append("No runs yet with new-format (intent) plans.")
         else:
             run_lines += ["| run | run-plan versions | repairs run/fight | changes accepted | changes rejected | exec after change | "
-                          "deviations by intent | Jev decisions with intent_fit | reserve kept |",
+                          "differs from tempo, by item | Jev decisions with a tempo note | reserve kept |",
                           "|---|---:|---|---|---|---|---|---|---|"]
             for r in ir:
                 run_lines.append("| " + " | ".join(str(r[k]) for k in ("run", "versions", "repairs", "accepted", "rejected", "exec",
@@ -1734,14 +2056,14 @@ def main():
                     if e["outcome"] in ("broken", "partial") and e["metric"] in ("save_potions", "avoid_card", "potion_timing", "plan_label", "entry_hp"):
                         spot.append("- " + json.dumps({k: v for k, v in e.items() if k != "run"}, ensure_ascii=False, default=str))
                 spot.append("")
-        md = [MD_HEAD] + headlines(summaries, intent_summary) + out + run_lines + [SPOT_CHECKS] + spot + [MD_TAIL]
+        md = [MD_HEAD] + headlines(summaries, intent_summary, outcomes) + out + run_lines + [SPOT_CHECKS] + spot + [MD_TAIL]
         os.makedirs(os.path.dirname(os.path.abspath(args.md)), exist_ok=True)
         with open(args.md, "w", encoding="utf8") as fh:
             fh.write("\n".join(md) + "\n")
         print(f"\nwrote {args.md}", file=sys.stderr)
 
 
-def headlines(summaries: dict, intent: dict | None = None) -> list[str]:
+def headlines(summaries: dict, intent: dict | None = None, outcomes: dict | None = None) -> list[str]:
     """Plain-language headline bullets, numbers filled from the summaries."""
     a = summaries["ALL finished runs"]
     c = summaries.get("runs with commitment fields (entryHp/savePotions/mustHave)") or a
@@ -1796,8 +2118,18 @@ def headlines(summaries: dict, intent: dict | None = None) -> list[str]:
                 f"- **Intent era (from 0f2e648)**, {which} run(s): {s['repairs']['total']} validator repairs, "
                 f"{s['replans']['versions']} run-plan versions, {s['accepted']['total']} changes accepted / {s['rejected']['total']} rejected; "
                 f"execution after a change {s['execution']['honoured']}/{s['execution']['honoured'] + s['execution']['broken']}; "
-                f"{s['deviations']['decisions']} Jev intent deviations; intent_fit on {s['deviations']['fit_share']} of Jev decisions; "
+                f"{s['deviations']['decisions']} Jev picks that differ from DeepSeek's tempo; a tempo note on {s['deviations']['fit_share']} of Jev decisions; "
                 f"reserve kept {v['kept']}/{v['n']}, {len(v['bugs'])} bug(s).", ""]
+    if outcomes is not None and outcomes.get("ALL"):
+        o = outcomes["ALL"]
+        m, d = o["combat"]["matches"], o["combat"]["differs"]
+        nm, nd = o["noncombat"]["matches"], o["noncombat"]["differs"]
+        b = o["boss_low_conf"]
+        lines[-1:] = [
+            f"- **Outcomes of differing picks (section O; correlation, not proof: Jev differs more in hard spots)**: combat, Jev's pick "
+            f"= reference rank 1 in {m['n']} decisions (turn HP loss {m['turn_loss']}, fight won {m['won']}), differs in {d['n']} (turn HP "
+            f"loss {d['turn_loss']}, fight won {d['won']}); non-combat matches {nm['n']} (act boss passed {nm['passed']}) vs differs "
+            f"{nd['n']} ({nd['passed']}). Boss turns at Jev confidence < 0.5: {b['n']} (for manual review).", ""]
     return lines
 
 
@@ -1855,6 +2187,15 @@ MD_TAIL = """
   I5 exceptions are read from the logged HP (fingerprint hp / state max_hp), the least-loss label and the
   option's "released" tag; the per-card fallback's "lethal turn" release is not visible and would show as a BUG
   (check the event with --events before trusting a flagged case).
+- Section O (outcomes of differing picks) is correlational. Jev differs from code's reference more often in
+  hard spots (low confidence, elites and bosses, low HP, turns where every line loses a lot), the reference
+  was produced by rules that changed between eras (and has been wrong), and decisions in one fight or one act
+  share an outcome, so neither "differs did worse" nor "differs did better" is proof about the choice itself.
+  Turn HP loss uses the HP at the next turn's first Jev/code decision (a fight that ended this turn uses the
+  post-fight HP, which includes end-of-combat healing); realised damage is the drop in enemy HP (block,
+  regeneration, spawns and minions distort it); non-combat outcomes (boss-entry HP, floors survived, boss
+  passed) are per run-act and shared by every pick in it. Old rest / shop / event picks have no recoverable
+  reference rank ("unknown"). The boss low-confidence list cannot say what the other line would have done.
 """
 
 
