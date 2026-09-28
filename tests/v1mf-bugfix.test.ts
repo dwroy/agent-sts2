@@ -37,8 +37,9 @@ describe("V1MF F33 T4: a chosen line's drink is drunk when the line is cut short
     const fx = logged("v1mf-f33-t4-end");
     expect(fx.decision.rationale).toMatch(/no playable cards/);
     const env = loggedEnv(fx);
+    // Without a pending drink the Demise is Jev's call (potions are Jev's, Dai 2026-09-28): asked, not drunk.
     const fight = planCombatTurn(loggedEnv(fx));
-    expect(fight?.kind === "act" && fight.intent.action).toBe("end_turn");
+    expect(fight?.kind === "act" && fight.intent.action === "use_potion").toBe(false);
     env.screenMemory.pendingDrinks = { fight: fightOf(env), turn: env.state.turn ?? null, via: "jev", steps: [drink] };
     const decision = planCombatTurn(env);
     if (decision?.kind !== "act") throw new Error("expected an act");
@@ -51,7 +52,7 @@ describe("V1MF F33 T4: a chosen line's drink is drunk when the line is cut short
     const env = loggedEnv(logged("v1mf-f33-t4-end"));
     env.screenMemory.pendingDrinks = { fight: fightOf(env), turn: (env.state.turn ?? 0) - 1, via: "jev", steps: [drink] };
     const decision = planCombatTurn(env);
-    expect(decision?.kind === "act" && decision.intent.action).toBe("end_turn");
+    expect(decision?.kind === "act" && decision.intent.action === "use_potion").toBe(false);
     expect(env.screenMemory.pendingDrinks).toBeUndefined();
   });
 
@@ -62,8 +63,8 @@ describe("V1MF F33 T4: a chosen line's drink is drunk when the line is cut short
     expect(decision.kind).toBe("ask");
     const plan = decision.questions["plan"];
     if (plan?.type !== "choice") throw new Error("expected a choice");
-    // The logged pick: plan 2 "防御, 飞剑回旋镖, 坚毅, potion 消亡粉末 -> 火箭".
-    const chosen = Object.entries(plan.criteria).find(([key, text]) => key.startsWith("plan") && /坚毅, then potion 消亡粉末 -> 火箭/.test(String(text)));
+    // The logged pick was "防御, 飞剑回旋镖, 坚毅, potion 消亡粉末 -> 火箭"; any line drinking the Demise after a card.
+    const chosen = Object.entries(plan.criteria).find(([key, text]) => key.startsWith("plan") && /then potion 消亡粉末 -> 火箭/.test(String(text)));
     if (!chosen) throw new Error("the logged line is not offered");
     decision.resolve(answer(chosen[0], 0.67)).apply?.();
     expect(env.screenMemory.pendingDrinks?.steps.map((step) => step.cardId)).toEqual(["POTION:POWDERED_DEMISE:0"]);

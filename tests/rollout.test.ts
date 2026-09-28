@@ -21,6 +21,8 @@ import {
   loadFightValueGates,
   rolloutDecision,
   selectCandidates,
+  turnSpreads,
+  type TurnRecord,
   type EnemyTable,
   type FightMeta,
   type FightValueGates,
@@ -360,5 +362,159 @@ describe("rollout (offline)", () => {
     };
     expect(importers("rollout")).toEqual(["src/strategy/rollout-live.ts"]);
     expect(importers("rollout-live")).toEqual(["src/screens/combat-plan.ts"]);
+  });
+});
+
+describe("Waterfall Giant explodes when killed (N7SAK F17: killed on T14 at eruption 51, dead on T15)", () => {
+  const giant = (hp: number, eruption: number): EnemySim => ({
+    index: 0, name: "Waterfall Giant", hp, maxHp: 240, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, eruption, attacks: [{ damage: 10, hits: 1 }],
+  });
+
+  it("the solver: a kill is not a win; the outcome carries the blast at the end of the next turn", () => {
+    const player: PlayerSim = { hp: 24, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false };
+    const result = solveTurn({ hand: [strike(0), strike(1), defend(2)], player, enemies: [giant(10, 51)], fightKind: "boss", turn: 14 });
+    const kill = result.plans.find((plan) => plan.outcome.kills.length > 0)!;
+    expect(kill).toBeDefined();
+    expect(kill.outcome.winsFight).toBe(false);
+    expect(kill.outcome.explodesNext).toBe(51);
+    // No Steam Eruption: a kill is a win as before.
+    const plain = solveTurn({ hand: [strike(0), strike(1), defend(2)], player, enemies: [giant(10, 0)], fightKind: "boss", turn: 14 });
+    expect(plain.plans[0]!.outcome.winsFight).toBe(true);
+    expect(plain.plans[0]!.outcome.explodesNext).toBeUndefined();
+  });
+
+  it("the rollout: the kill line lives only if next turn's hand blocks the blast; a small blast is a win next turn", () => {
+    const run = (hp: number, eruption: number, draw: CardModel[]) => {
+      const player: PlayerSim = { hp, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+      const hand = [strike(0), strike(1), defend(2)];
+      const solver: SolverInput = { hand, player, enemies: [giant(10, eruption)], fightKind: "boss", turn: 14 };
+      const plans = solveTurn(solver).plans;
+      const kill = plans.find((plan) => plan.outcome.kills.length > 0)!;
+      const result = rolloutDecision({
+        solver, plans, enemies: [{ index: 0, id: "WATERFALL_GIANT", move: "RAM", strength: 0, powers: { STEAM_ERUPTION_POWER: eruption } }],
+        tables: {}, piles: { draw, discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "WATERFALL_GIANT", t: 14 }, playerPowers: {}, potions: 0, mm: {},
+        model: null, gates: null, options: { budgetMs: 10_000, seed: 3, include: [kill] },
+      });
+      return result.lines.find((line) => line.plan === kill)!;
+    };
+    // 24 HP, a 51 blast, next hand all Strikes: dead in every sample (the old rollout: "win 100%").
+    const dead = run(24, 51, Array.from({ length: 10 }, (_, i) => strike(20 + i)));
+    expect(dead.wins).toBe(0);
+    expect(dead.deaths).toBe(dead.samples);
+    // A 20 blast at 24 HP: survived, the fight is over after the next turn.
+    const safe = run(24, 20, Array.from({ length: 10 }, (_, i) => strike(20 + i)));
+    expect(safe.deaths).toBe(0);
+    expect(safe.wins).toBe(safe.samples);
+    // 40 HP, 51 blast, next hand of Defends (3 energy: 15 block): 40 + 15 > 51, lived through.
+    const blocked = run(40, 51, Array.from({ length: 10 }, (_, i) => defend(20 + i)));
+    expect(blocked.deaths).toBe(0);
+  });
+});
+
+describe("the rollout policy's later turns hold the potions like 0-cost cards (Dai 2026-09-28)", () => {
+  it("a Fire Potion kept this turn is drunk by a later policy turn when its best line uses it", () => {
+    const fire: CardModel = card(100, "POTION:FIRE_POTION:0", { type: "Potion", cost: 0, damage: 20, exhausts: true });
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const enemy: EnemySim = { index: 0, name: "Jaw Worm", hp: 20, maxHp: 44, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 5, hits: 1 }] };
+    const hand = [defend(0), defend(1), defend(2), fire];
+    const solver: SolverInput = { hand, player, enemies: [enemy], fightKind: "monster", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    // This turn's potion-free line keeps it; every later hand is Defends, so only the potion can kill.
+    const keep = plans.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && plan.steps.length > 0)!;
+    const input: RolloutInput = {
+      solver, plans, enemies: [{ index: 0, id: "JAW_WORM", move: "CHOMP", strength: 0, powers: {} }], tables: {},
+      piles: { draw: Array.from({ length: 12 }, (_, i) => defend(20 + i)), discard: [], handBase: hand }, meta: META, playerPowers: {}, potions: 1, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 5, include: [keep], horizon: 3, samples: 2 },
+    };
+    const line = rolloutDecision(input).lines.find((entry) => entry.plan === keep)!;
+    expect(line.wins).toBe(line.samples);
+    expect(line.turnsToWin).toBe(2);
+  });
+});
+
+describe("a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/~318)", () => {
+  it("laterPhaseHps: the phases after the current one, by the nearest phase HP; an unknown reviver gets one at 1.5x", async () => {
+    const { laterPhaseHps } = await import("../src/strategy/boss-clock.js");
+    expect(laterPhaseHps(111, 8)).toEqual([212, 318]);
+    expect(laterPhaseHps(212, 8)).toEqual([318]);
+    expect(laterPhaseHps(100, 0)).toEqual([200, 300]);
+    expect(laterPhaseHps(200, 0)).toEqual([300]);
+    expect(laterPhaseHps(300, 0)).toEqual([]);
+    expect(laterPhaseHps(60, 0)).toEqual([90]);
+  });
+
+  it("the rollout plays phase 2 at 212 and phase 3 at 318, not one more phase at the current 111", () => {
+    const big = (i: number) => card(i, "BIG", { damage: 120, cost: 1 });
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const boss: EnemySim = { index: 0, name: "Test Subject", hp: 10, maxHp: 111, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, revives: true, attacks: [] };
+    const hand = [big(0), defend(1), defend(2)];
+    const solver: SolverInput = { hand, player, enemies: [boss], fightKind: "boss", turn: 5 };
+    const plans = solveTurn(solver).plans;
+    const kill = plans.find((plan) => plan.outcome.kills.length > 0)!;
+    expect(kill.outcome.winsFight).toBe(false);
+    const line = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "TEST_SUBJECT", move: null, strength: 0, powers: { ADAPTABLE_POWER: 1 } }], tables: {},
+      piles: { draw: Array.from({ length: 20 }, (_, i) => big(20 + i)), discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "TEST_SUBJECT", asc: 8 },
+      playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 2, include: [kill], horizon: 5, samples: 2 },
+    }).lines.find((entry) => entry.plan === kill)!;
+    // T1 kills phase 1; T2 (360 damage) kills phase 2 (212, not 111: that alone would end the fight on T2);
+    // T3 kills phase 3 (318): the fight is over on turn 3.
+    expect(line.wins).toBe(line.samples);
+    expect(line.turnsToWin).toBe(3);
+    expect(line.perTurn[0]!.dmg.mean).toBe(212);
+    expect(line.perTurn[1]!.dmg.mean).toBe(318);
+  });
+});
+
+describe("cards a line exhausts leave the rollout's piles (FSPK F48 T1: Fiend Fire's hand came back)", () => {
+  const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+  const dummy: EnemySim = { index: 0, name: "Dummy", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const run = (hand: CardModel[], line: (plan: { steps: { cardId: string }[] }) => boolean) => {
+    const solver: SolverInput = { hand, player, enemies: [dummy], fightKind: "boss", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const plan = plans.find(line)!;
+    const result = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "DUMMY", move: null, strength: 0, powers: {} }], tables: {},
+      piles: { draw: [], discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "DUMMY" }, playerPowers: {}, potions: 0, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 4, include: [plan], horizon: 3, samples: 2 },
+    });
+    return { plan, line: result.lines.find((entry) => entry.plan === plan)! };
+  };
+
+  it("Fiend Fire alone: the four Strikes it burns are not drawn again next turn", () => {
+    const fiend = card(0, "FIEND_FIRE", { cost: 2, damage: 7, exhausts: true, special: "fiend_fire" });
+    const hand = [fiend, strike(1), strike(2), strike(3), strike(4)];
+    const { plan, line } = run(hand, (p) => p.steps.length === 1 && p.steps[0]!.cardId === "FIEND_FIRE");
+    expect(plan.outcome.exhausted?.sort()).toEqual([1, 2, 3, 4]);
+    // Nothing left to draw: turn 2 deals nothing (it drew the burnt Strikes back before: 18).
+    expect(line.perTurn[0]!.dmg.mean).toBe(0);
+  });
+
+  it("a random exhaust (plain True Grit) takes one unplayed card out; the rest is discarded and drawn again", () => {
+    const grit = card(0, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], block: 7, randomExhaust: true });
+    const hand = [grit, strike(1), strike(2)];
+    const { plan, line } = run(hand, (p) => p.steps.length === 1 && p.steps[0]!.cardId === "TRUE_GRIT");
+    expect(plan.outcome.randomExhausts).toBe(1);
+    // One Strike comes back next turn (6), not both (12).
+    expect(line.perTurn[0]!.dmg.mean).toBe(6);
+  });
+});
+
+describe("turnSpreads (per-turn rollout facts)", () => {
+  const rec = (loss: number, dmg: number, flags: { won?: boolean; died?: boolean } = {}): TurnRecord =>
+    ({ loss, enemyPart: 0, dmg, snap: {} as Snapshot, won: flags.won ?? false, died: flags.died ?? false });
+  it("turns 2..h: mean and min-max over the samples still fighting, alive and won counts over all", () => {
+    const spreads = turnSpreads(
+      [
+        [rec(3, 10), rec(4, 12), rec(2, 20, { won: true })],
+        [rec(3, 10), rec(10, 6), rec(30, 0, { died: true })],
+        [rec(3, 10), rec(0, 30, { won: true })],
+      ],
+      3,
+    );
+    expect(spreads).toHaveLength(2);
+    expect(spreads[0]).toMatchObject({ turn: 2, fighting: 3, alive: 3, won: 1, loss: { min: 0, max: 10 }, dmg: { min: 6, max: 30 } });
+    expect(spreads[0]!.loss.mean).toBeCloseTo(14 / 3);
+    expect(spreads[1]).toMatchObject({ turn: 3, fighting: 2, alive: 2, won: 2, loss: { mean: 16, min: 2, max: 30 } });
   });
 });

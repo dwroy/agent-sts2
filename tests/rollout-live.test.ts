@@ -13,6 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
 import { loadFightValueGates, type FightValueGates } from "../src/strategy/rollout.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -29,10 +30,13 @@ afterEach(() => {
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.now = null;
   rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+  potionMcOptions.now = null;
 });
 
 function plan(name: string, enabled: boolean, jevContext: "v1" | "off" = "v1"): Decision | null {
   rolloutLiveOptions.enabled = enabled;
+  // The random-potion samples are cut by wall-clock time; a frozen clock keeps them identical across calls.
+  potionMcOptions.now = () => 0;
   return planCombatTurn(loggedEnv(logged(name), { jevContext }));
 }
 
@@ -57,7 +61,10 @@ describe("rollout facts on Jev's combat question", () => {
       expect(keys.length).toBeGreaterThanOrEqual(2);
       for (const key of keys) {
         const f = facts(criteria, key);
-        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\): expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
+        // Turn by turn: turn 1 exact, then T2..T5 with the spread over the samples.
+        expect(String(f["rollout_turns"])).toMatch(/^T1 exact: hp -\d+, dmg \d+(, won|, dead)?(; T[2-5]: (hp -[\d.]+ \[\d+-\d+\], dmg [\d.]+ \[\d+-\d+\], alive \d\/8, won \d\/8|over \(alive \d\/8, won \d\/8\)))*$/);
+        expect(String(f["rollout_turns"]).split("; ")).toHaveLength(5);
+        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
         expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }
@@ -70,6 +77,13 @@ describe("rollout facts on Jev's combat question", () => {
       expect(decision.resolve(pick(other)).log?.rollout_best_chosen).toBe(false);
       expect(decision.resolve({} as AnswerSet).log?.rollout_best_chosen).toBeNull();
     }
+  });
+
+  it("with a modelled potion held, the rollout fact says later turns may use it", () => {
+    const decision = plan("v1mf-f33-t4", true) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = criteriaOf(decision);
+    for (const key of planKeys(criteria)) expect(String(facts(criteria, key)["rollout"]), key).toContain("(later turns may use the potions still held)");
   });
 
   it("a drink-first potion option says it is not rolled out", () => {
@@ -104,7 +118,7 @@ describe("rollout facts on Jev's combat question", () => {
       }
     }
     expect(addedSomewhere).toBe(true);
-  });
+  }, 60_000);
 
   it("liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)", () => {
     const card = (index: number, cardId: string, o: Partial<CardModel>): CardModel => ({
@@ -148,6 +162,31 @@ describe("rollout facts on Jev's combat question", () => {
     expect(rolloutFacts(worst, none)).toEqual({ rollout: "rollout unavailable (no draw/discard piles in the state)" });
   });
 
+  it("up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best", async () => {
+    const { MAX_OPTIONS } = await import("../src/screens/combat-plan.js");
+    expect(MAX_OPTIONS).toBe(10);
+    let most = 0;
+    for (const name of BOARDS) {
+      const decision = plan(name, true);
+      if (decision?.kind !== "ask") continue;
+      const criteria = criteriaOf(decision);
+      const keys = planKeys(criteria);
+      most = Math.max(most, keys.length);
+      expect(keys.length, name).toBeLessThanOrEqual(MAX_OPTIONS + 2); // + a planned setup line, + the rollout's added line
+      const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown> | undefined;
+      if (!log?.["available"]) continue;
+      for (const key of keys) {
+        const f = facts(criteria, key);
+        expect(String(f["rollout"]), `${name} ${key}`).toMatch(/rollout|estimate/);
+        expect(String(f["rollout"]), `${name} ${key}`).not.toMatch(/unavailable/);
+        expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
+      }
+      // The rollout's best: one line, or a random potion's option (its median sample's line).
+      expect(Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length, name).toBe(1);
+    }
+    expect(most).toBeGreaterThan(4);
+  }, 60_000);
+
   it("keeps to the time budget under a mock clock, degrading the horizon/samples, and says so", () => {
     // 3 ms per clock read: the policy looks slow, the full 5 x 8 does not fit.
     rolloutLiveOptions.now = fakeClock(3);
@@ -182,6 +221,10 @@ describe("rollout facts on Jev's combat question", () => {
       for (const context of ["v1", "off"] as const) {
         const off = plan(name, false, context);
         const on = plan(name, true, context);
+        // The one designed dependence (Dai 2026-09-28): an unsimulated potion is offered when the best
+        // potion-free option dies in a rollout sample (T1), which only the rollout knows.
+        const t1 = on?.kind === "ask" ? ((on.resolve(pick("plan1")).log?.potions as { t1?: { hp: boolean; rollout_death: boolean } } | undefined)?.t1 ?? null) : null;
+        if (t1 && t1.rollout_death && !t1.hp) continue;
         expect(on?.kind, name).toBe(off?.kind);
         expect(on?.label, name).toBe(off?.label);
         if (off?.kind === "act" && on?.kind === "act") {
@@ -194,8 +237,10 @@ describe("rollout facts on Jev's combat question", () => {
         const after = criteriaOf(on);
         for (const key of Object.keys(before)) {
           // Same option under the same key, the rollout facts aside.
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, ...rest } = facts(after, key);
-          expect(rest, `${name} ${key}`).toEqual(facts(before, key));
+          // (An unsimulated potion's offered_because may add the rollout's dying sample as a reason.)
+          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_turns: _t, offered_because: _o, ...rest } = facts(after, key);
+          const { offered_because: _o2, ...restBefore } = facts(before, key);
+          expect(rest, `${name} ${key}`).toEqual(restBefore);
           // And resolving it plays the same (the HP guard and potion rules see code's options only).
           for (const confidence of [0.9, 0.3]) {
             const a = off.resolve(pick(key, confidence));
@@ -209,5 +254,5 @@ describe("rollout facts on Jev's combat question", () => {
         }
       }
     }
-  });
+  }, 120_000);
 });

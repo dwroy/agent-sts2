@@ -15,7 +15,9 @@
  *          hit, hits, Strength and Block gain from the monster DB; Strength accumulates, our Vulnerable and
  *          the enemies' Weak apply; Vulnerable/Weak on enemies wear off one per enemy turn;
  *        - our draws come from the shuffled draw pile (the discard pile reshuffled in when it runs out);
- *        - our turns are played by the solver itself with a small node cap (the fast policy), no potions.
+ *        - our turns are played by the solver itself with a small node cap (the fast policy); the modelled
+ *          potions still held are in its hand like 0-cost cards that exist once (Dai 2026-09-28: no special
+ *          potion logic): drunk when its best line drinks one, gone for the rest of that sample.
  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
  *      w x model (calibrated win probability) + (1 - w) x a deck-damage clock, w from the gate of the
  *      encounter's segment (0 when the model's ranking advantage is not established).
@@ -32,6 +34,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { CardModel } from "./card-model.js";
+import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
@@ -418,8 +421,43 @@ export interface LineEstimate {
   modelForecast: { oneTurn: { hpLoss: number; winProb: number } | null; rollout: { hpLoss: number; winProb: number } | null };
   horizon: number;
   samples: number;
+  /**
+   * The simulated later turns (2..horizon), across the samples: HP lost and damage dealt that turn
+   * (mean, min, max over the samples still fighting it), and how many samples are alive at its end and
+   * have won by then. Empty for a 1-turn estimate.
+   */
+  perTurn: TurnSpread[];
   /** modelN: the model's support (logged turns in the matching cell) at the line's end-of-turn state. */
   basis: { rolloutSamples: number; horizon: number; modelN: number; w: number; segment: string; gateN: number };
+}
+
+export interface TurnSpread {
+  /** 2 = next turn (1 is the line itself, exact). */
+  turn: number;
+  /** Samples still fighting this turn (of `samples`). */
+  fighting: number;
+  loss: { mean: number; min: number; max: number };
+  dmg: { mean: number; min: number; max: number };
+  alive: number;
+  won: number;
+}
+
+/** Per-turn spread of one line's samples (turns 2..horizon). */
+export function turnSpreads(trajectories: TurnRecord[][], horizon: number): TurnSpread[] {
+  const out: TurnSpread[] = [];
+  const stats = (xs: number[]) => ({ mean: xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length), min: xs.length ? Math.min(...xs) : 0, max: xs.length ? Math.max(...xs) : 0 });
+  for (let t = 1; t < horizon; t += 1) {
+    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died));
+    out.push({
+      turn: t + 1,
+      fighting: fighting.length,
+      loss: stats(fighting.map((records) => records[t]!.loss)),
+      dmg: stats(fighting.map((records) => records[t]!.dmg)),
+      alive: trajectories.filter((records) => !records.slice(0, t + 1).some((r) => r.died)).length,
+      won: trajectories.filter((records) => records.slice(0, t + 1).some((r) => r.won)).length,
+    });
+  }
+  return out;
 }
 
 export interface RolloutResult {
@@ -456,6 +494,8 @@ function shuffle<T>(items: T[], random: () => number): T[] {
 }
 
 const isPotion = (step: { cardId: string }): boolean => step.cardId.startsWith("POTION:");
+/** A Waterfall Giant husk's HP (the game shows 999,999,999). */
+const HUSK_HP = 999_999_999;
 
 /** Top k by score, then the most damage, the least HP lost and the most setup, without repeats. */
 export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { plan: Plan; tags: string[] }[] {
@@ -501,6 +541,14 @@ interface SimEnemy {
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
+  /**
+   * Waterfall Giant husk (killed with Steam Eruption stacks): the simulated turn at whose end it explodes
+   * for `blast` (through that turn's block), after which the fight is over if we live.
+   */
+  explodeAt?: number;
+  blast?: number;
+  /** A phase boss: the max HP of each phase still to come after the current one (set at its first revive). */
+  phasesLeft?: number[];
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -529,11 +577,13 @@ interface Piles {
 }
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
-interface TurnRecord {
+export interface TurnRecord {
   /** HP lost this turn (our own + the enemy turn), as the solver outcome counts it. */
   loss: number;
   /** Of it, the enemy turn's hits after block. */
   enemyPart: number;
+  /** Damage we dealt this turn (the played line's outcome). */
+  dmg: number;
   snap: Snapshot;
   won: boolean;
   died: boolean;
@@ -591,6 +641,8 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
         else delete powers[id];
       }
       const intent = e.base.attacks.reduce((s, a) => s + a.damage * a.hits, 0);
+      // A Giant husk is no HP to chew through, only its blast to survive (the terminal reads it so).
+      if (e.explodeAt !== undefined) return [e.index, e.id, 1, e.maxHp, 0, e.alive, false, e.blast ?? intent, e.move, powers] as SnapEnemy;
       return [e.index, e.id, e.hp, e.maxHp, e.block, e.alive && e.hp > 0, e.base.minion === true, intent, e.move, powers] as SnapEnemy;
     }),
   };
@@ -598,6 +650,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
 
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
 function applyPlan(
+  turn: number,
   plan: Plan,
   hand: CardModel[],
   handBase: (CardModel | null)[],
@@ -632,13 +685,18 @@ function applyPlan(
     if (card.exhausts || card.type === "Power") continue;
     piles.discard.push(handBase[at] ?? card);
   }
-  hand.forEach((card, i) => {
-    if (!played.has(i) && card.type !== "Potion") piles.discard.push(handBase[i] ?? card);
-  });
-  // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's outcome).
+  // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit
+  // exhaust) leave the fight; the rest of the hand is discarded (FSPK F48 T1: Fiend Fire's hand came back
+  // through the discard pile, "fight over 8/8", actual -60 and death).
+  const exhausted = new Set(o.exhausted ?? []);
+  const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
+  for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
+  for (const i of unplayed) piles.discard.push(handBase[i] ?? hand[i]!);
+  // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
+  // outcome), except those an exhaust effect took after they were drawn.
   for (let i = 0; i < o.cardsDrawn; i += 1) {
     const card = drawOne(piles, random);
-    if (card) piles.discard.push(card);
+    if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
   }
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
@@ -652,12 +710,34 @@ function applyPlan(
     e.weak = a.weak;
     if (hit) e.block = 0;
     if (e.hp <= 0) {
-      if ((e.base.stock ?? 0) > 0) {
+      if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
+        // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
+        e.hp = HUSK_HP;
+        e.maxHp = HUSK_HP;
+        e.blast = e.base.eruption ?? 0;
+        e.explodeAt = turn + 1;
+        e.move = "ABOUT_TO_BLOW";
+        e.base = { ...e.base, hp: HUSK_HP, maxHp: HUSK_HP, attacks: [] };
+      } else if ((e.base.stock ?? 0) > 0) {
         e.hp = e.maxHp;
         e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
       } else if (e.base.revives) {
-        e.hp = e.maxHp;
-        e.base = { ...e.base, revives: false };
+        // A phase boss (Test Subject): the next phase at its own, higher max HP, Vulnerable and Strength
+        // cleared, and more phases after it while any are left (FSPK F48: phase 1 at 111 was revived at 111
+        // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
+        const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
+        const next = later[0] ?? e.maxHp;
+        e.phasesLeft = later.slice(1);
+        e.hp = next;
+        e.maxHp = next;
+        e.vulnerable = 0;
+        e.weak = 0;
+        e.strength = 0;
+        if (e.phasesLeft.length === 0) {
+          const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
+          e.powers = powers;
+        }
+        e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
       } else {
         e.alive = false;
       }
@@ -680,14 +760,20 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
-  const won = o.winsFight || enemies.every((e) => !e.alive || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
+  const allDown = () => enemies.every((e) => !e.alive || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
+  let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   player.hp = o.hpAfter;
   player.block = player.keepsBlock ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
+  // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
+  if (!won && !died) {
+    for (const e of enemies) if (e.alive && e.explodeAt === turn) e.alive = false;
+    won = allDown();
+  }
   if (!won && !died) {
     for (const e of enemies) {
-      if (!e.alive) continue;
+      if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
       const m = e.move && table ? table.moves[e.move] : undefined;
       e.strength += m?.strength ?? 0;
@@ -711,7 +797,7 @@ function applyPlan(
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
     player.strength += player.demonForm;
   }
-  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, snap, won, died };
+  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt, snap, won, died };
 }
 
 function drawOne(piles: Piles, random: () => number): CardModel | undefined {
@@ -764,7 +850,11 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
+    // A Giant husk already on the board: it explodes this turn when its intent shows the blast, else next turn.
+    const husk = e.maxHp >= HUSK_HP && (e.eruption ?? 0) > 0;
+    const shownBlast = e.attacks.reduce((sum, a) => sum + a.damage * a.hits, 0);
     return {
+      ...(husk ? { explodeAt: shownBlast > 0 ? 0 : 1, blast: shownBlast > 0 ? shownBlast : e.eruption ?? 0 } : {}),
       index: e.index,
       id: info?.id ?? e.name,
       move: info?.move ?? null,
@@ -783,8 +873,14 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
+  // Modelled potions still held in this sample: 0-cost cards that exist once (drunk: gone).
+  let held = s.hand.filter((card) => card.type === "Potion");
+  const drink = (line: Plan) => {
+    for (const step of line.steps) if (isPotion(step)) held = held.filter((card) => card.cardId !== step.cardId);
+  };
   // Turn 0: the candidate line as the solver scored it.
-  records.push(applyPlan(plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  drink(plan);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
@@ -808,7 +904,7 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
-        attacks: moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
     const pSim: PlayerSim = {
@@ -842,13 +938,15 @@ function simulate(input: RolloutInput, plan: Plan, horizon: number, seed: number
     };
     const started = budget.now();
     const { drawPile: _d, wither: _w, focusIndex: _f, nextIncoming: _n, ...rest } = s;
-    const solved = solveTurn({ ...rest, hand, player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: 0, maxNodes: policyNodes });
+    const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
+    const solved = solveTurn({ ...rest, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
-    const best = solved.plans.find((p) => !p.steps.some(isPotion)) ?? solved.plans[0];
+    const best = solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(best, hand, handBase, player, enemies, piles, input, random, powers));
+    records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    drink(best);
   }
   return records;
 }
@@ -1026,6 +1124,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       },
       horizon,
       samples,
+      perTurn: horizon > 1 ? turnSpreads(trajectories[i]!.slice(0, samples), horizon) : [],
       basis: { rolloutSamples: horizon > 1 ? samples : 0, horizon, modelN: o.n, w: gate.w, segment: gate.segment, gateN: gate.n },
     };
   });

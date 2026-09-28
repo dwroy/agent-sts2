@@ -68,7 +68,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -77,6 +77,8 @@ export interface CardModel {
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
   heldHpLoss?: number;
+  /** Damage the card (Foul Potion) deals to us when played: our block takes it first, the rest is HP lost. */
+  selfDamage?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
@@ -94,6 +96,17 @@ export interface CardModel {
   generates?: CardModel;
   /** Gambler's Brew, one way to drink it: the keys of the hand cards it discards (turn-solver "gamble"). */
   discards?: string[];
+  /**
+   * One Monte Carlo sample of a random potion (potion-mc.ts). `choices`: the cards offered, one taken
+   * (Attack Potion's 3 random Attacks; the solver tries each as `generates`). `drawn`: the cards drawn,
+   * in the order of a sampled pile (Swift Potion, Snecko Oil, Gambler's Brew, Glowwater, Distilled Chaos,
+   * Bottled Potential). `adds`: cards put straight into the hand (Orobic Acid). `sneckoCosts`: Snecko
+   * Oil's random cost for each card in hand after the drink, by card key.
+   */
+  choices?: CardModel[];
+  drawn?: CardModel[];
+  adds?: CardModel[];
+  sneckoCosts?: Record<string, number>;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
   /** Shrink applied to the target for this many turns: its attacks deal SHRINK_DAMAGE_FACTOR (Beetle Juice). */
@@ -447,10 +460,15 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 /**
  * Potions as zero-cost "cards" for the turn solver. The mod does not resolve potion numbers (the
  * description stays a template), so these are STS1-analogue ESTIMATES, to be calibrated from logs.
- * Unlisted potions are not modelled and stay with the model (Jev) on dangerous turns.
+ * Unlisted potions are not simulated: Jev is offered "drink first, then re-plan" under T1 (combat-plan).
+ * The random potions (CHOICE_POTIONS, DRAW_POTIONS) are listed with their expected-value models here for
+ * the rollout's later turns; this turn they are simulated by Monte Carlo (potion-mc.ts).
  */
 const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
   FIRE_POTION: { target: "single", damage: 20 },
+  // Foul Potion: 「对所有玩家和敌人造成{Damage}点伤害」, Damage 12 (potion-values.ts). It hits us too
+  // (39J9: two drunk at 22 HP): the line's hp_lost carries it (turn-solver selfDamage, through our block).
+  FOUL_POTION: { target: "all", damage: 12, selfDamage: 12 },
   // Exhausts any cards in hand: Howl from Beyond (it then replays every turn) and junk (H14T F39 T4:
   // Ashwater -> Howl was the lethal at 2 HP; unmodelled, every line "died").
   ASHWATER: { target: "self", special: "ashwater" },
@@ -530,6 +548,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Droplet of Precognition: 「选择你抽牌堆中的一张牌加入你的手牌」 at its own cost (EGX7: carried F7-F31).
   LIQUID_MEMORIES: { target: "self" },
   DROPLET_OF_PRECOGNITION: { target: "self" },
+  // Cure All: 「获得{Energy}。抽{Cards}张牌。」 Energy 1, draw 2 (potion-values.ts).
+  CURE_ALL: { target: "self", energyGain: 1, draw: 2 },
+  // Bottled Potential: 「将你的所有牌洗入你的抽牌堆。抽{Cards}张牌。」 the hand goes back into the pile (not
+  // exhausted), then 5 cards (turn-solver "bottled"; priced like Glowwater's draw: expectedDraw).
+  BOTTLED_POTENTIAL: { target: "self", special: "bottled" },
   // Card potions: drinking puts the card in hand (modelPotion builds it from GENERATED_CARD_POTIONS).
   ATTACK_POTION: { target: "self" },
   SKILL_POTION: { target: "self" },
@@ -539,7 +562,9 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
 
 /**
  * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
- * card of that type, at a conservative value for the best of three offered. Ironclad's pool (game
+ * card of that type, at a conservative value for the best of three offered. Since the Monte Carlo
+ * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
+ * potions still held, at their expected value) and the solver-level tests do. Ironclad's pool (game
  * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
  * (selection/take into my hand): Bludgeon 32 (X8R8 F17 T11), Uppercut 13, Fight Me 10x2, Demon Form
  * (power, scored 39). Before this they were only a "drink first" option with no numbers (X8R8 Attack
@@ -712,14 +737,14 @@ export function potionRegen(potionId: string): number {
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
-  // Distilled Chaos, Glowwater and Gambler's Brew without a known draw pile: nothing to price their cards by.
-  if ((effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble") && !ctx?.expectedDraw) return null;
+  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew without a known draw pile: nothing to price their cards by.
+  if ((effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled") && !ctx?.expectedDraw) return null;
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
   // A pile-card potion with nothing to take is not a line.
   if (pile && !pileCard) return null;
-  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater"
+  const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater" || effect.special === "bottled"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
     ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
@@ -758,6 +783,18 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
       }
     : undefined;
   return {
+    ...potionShell(potionId, name, slot, validTargets, useCost),
+    ...effect,
+    ...(generates ? { generates } : {}),
+  };
+}
+
+/**
+ * A potion as a 0-cost "card" with no effect yet: the solver plays it as step `POTION:<id>:<slot>`.
+ * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's.
+ */
+export function potionShell(potionId: string, name: string, slot: number, validTargets: number[], useCost = 0): CardModel {
+  return {
     index: 100 + slot,
     key: `p${slot}`,
     cardId: `POTION:${potionId}:${slot}`,
@@ -767,6 +804,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     cost: 0,
     xCost: false,
     playable: true,
+    target: "self",
     validTargets,
     damage: null,
     hits: 1,
@@ -786,9 +824,52 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     flatValue: -useCost,
     heldPenalty: 0,
     text: "",
-    ...effect,
-    ...(generates ? { generates } : {}),
   };
+}
+
+/** A potion's modelled effect (POTION_EFFECTS), without the cards it generates; null when unmodelled. */
+export function potionEffect(potionId: string): (Partial<CardModel> & { target: TargetMode }) | null {
+  return POTION_EFFECTS[potionId] ?? null;
+}
+
+/**
+ * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
+ * "drink now, then re-plan with the real cards", never as a fixed-value line.
+ *
+ * Card-choice potions: 「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」 3 random cards of the
+ * type from the character's pool (Colorless Potion: the colorless pool), one taken, free this turn. Orobic
+ * Acid takes all three (one Attack, one Skill, one Power). Pools: the game data's Common/Uncommon/Rare
+ * cards of that color and type, drawn uniformly (the data carries no offer weights).
+ */
+export const CHOICE_POTIONS: Record<string, { pool: "character" | "colorless"; types: string[]; takeAll: boolean }> = {
+  ATTACK_POTION: { pool: "character", types: ["Attack"], takeAll: false },
+  SKILL_POTION: { pool: "character", types: ["Skill"], takeAll: false },
+  POWER_POTION: { pool: "character", types: ["Power"], takeAll: false },
+  COLORLESS_POTION: { pool: "colorless", types: ["Attack", "Skill", "Power"], takeAll: false },
+  OROBIC_ACID: { pool: "character", types: ["Attack", "Skill", "Power"], takeAll: true },
+};
+
+/**
+ * Draw potions: the cards come from the draw pile in an unknown order (then the discard pile, reshuffled),
+ * so each sample is one shuffled order of the known piles. `cards`: how many the potion draws (Gambler's
+ * Brew: as many as discarded, up to a full hand; Distilled Chaos: plays that many from the top).
+ */
+export const DRAW_POTIONS: Record<string, { cards: number }> = {
+  SWIFT_POTION: { cards: 3 },
+  CLARITY: { cards: 1 },
+  CURE_ALL: { cards: 2 },
+  SNECKO_OIL: { cards: 7 },
+  GAMBLERS_BREW: { cards: 10 },
+  GLOWWATER_POTION: { cards: 10 },
+  DISTILLED_CHAOS: { cards: 3 },
+  BOTTLED_POTENTIAL: { cards: 5 },
+};
+
+/** Which Monte Carlo class a potion is in: "choice" (random cards offered), "draw" (a random pile order), or null. */
+export function randomPotionKind(potionId: string): "choice" | "draw" | null {
+  if (potionId in CHOICE_POTIONS) return "choice";
+  if (potionId in DRAW_POTIONS) return "draw";
+  return null;
 }
 
 /** A plan step that plays the card a potion added (not a hand card: nothing to click until drunk). */

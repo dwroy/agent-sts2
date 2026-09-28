@@ -132,6 +132,8 @@ export interface ScreenMemory {
    * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
    */
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
+  /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
+  eventEnchants?: { runId: string; floor: number | null; lines: string[] };
 }
 
 export interface RememberedMap {
@@ -200,7 +202,7 @@ export interface ResolvedAction {
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
   /** Extra decision-log fields (combat: the rollout facts' timing, and whether Jev picked the rollout's best line). */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; potions?: JsonValue };
   /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).

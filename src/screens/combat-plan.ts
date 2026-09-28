@@ -4,9 +4,10 @@
  *   code  — enumerates every play order for the hand, simulates the turn, scores the end states
  *           (turn-solver.ts). Lethal, "only one line survives", and clear-best plans are played
  *           without asking anyone.
- *   Jev   — chooses between the few strategically different plans that code cannot separate
- *           (e.g. block now vs. set up Strength vs. race), and decides about potions when the turn
- *           is dangerous.
+ *   Jev   — chooses between the strategically different plans that code cannot separate (e.g.
+ *           block now vs. set up Strength vs. race), and decides about potions: every modelled
+ *           potion is on a shown line, and code drinks on its own only when no potion-free line
+ *           survives. A lethal that needs a potion is Jev's call too.
  *
  * A chosen plan is committed: its remaining steps are played without re-asking as long as the hand
  * is exactly what the plan expected. Anything unexpected (a draw, a random effect) invalidates it and
@@ -23,30 +24,28 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
+import type { CardInfo } from "../knowledge/index.js";
+import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
-import { fightKey, fightPlanJson, planFit, planOffersPotion, planPotionCost, type FightPlan } from "../strategy/fight-plan.js";
+import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
+import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type LiveRollout } from "../strategy/rollout-live.js";
 
-/** Elite/boss: a best potion-free line losing this share of current HP never overrides Jev's potion pick. */
-export const POTION_PRESSED_SHARE = 0.3;
-/** Boss: a drink-first attack potion is not refused when every potion-free line loses this much. */
-export const BOSS_DRINK_FIRST_LOSS = 10;
-
 /**
- * Elite/boss: whether a potion-free line overrides Jev's low-confidence potion pick. A line that drinks
- * loses to a dry line losing no more HP; a drink-first pick (its line unknown until re-planned) only
- * to a dry line losing at most max(3, 10% HP). Never when the best dry line costs 30% of our HP.
+ * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
+ * only (no use cost), every modelled potion in the belt is on at least one shown line, and Jev gets the
+ * facts to judge keeping it (potion_context). Code drinks on its own only when no potion-free line
+ * survives the turn; a lethal that needs a potion is asked (potionLethalLines). The per-rule
+ * potion filters and vetoes (hallway save/damage/confidence thresholds, the elite/boss dry-line veto,
+ * the attack-potion confidence veto, the boss one-potion-a-turn cap) are gone.
  */
-export function dryLineOverridesPotion(chosenLoss: number | undefined, bestDryLoss: number, hp: number): boolean {
-  if (bestDryLoss >= POTION_PRESSED_SHARE * hp) return false;
-  return chosenLoss !== undefined ? bestDryLoss <= chosenLoss : bestDryLoss <= Math.max(3, 0.1 * hp);
-}
 
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
 const MODELLED_ENEMY_POWERS = new Set([
@@ -92,34 +91,17 @@ const POWER_NOTES: Record<string, string> = {
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
 };
 
-/** Solver cost of drinking a potion in a hallway fight (doubled right before a forced Elite). */
-export const HALLWAY_POTION_COST = 15;
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
 const VULNERABLE_PAYOFFS = new Set(["DISMANTLE", "BULLY", "MOLTEN_FIST", "DOMINATE"]);
 /** Beating Remnant: at most this much HP lost in a turn. */
 export const BEATING_REMNANT_CAP = 20;
-/** Otherwise a hallway potion line must save this much HP over the best potion-free line (or win, or add damage). */
-export const HALLWAY_POTION_MIN_SAVE = 8;
-export const HALLWAY_POTION_MIN_DAMAGE = 20;
-/** A hallway potion line is dropped when a potion-free line loses at most this much HP. */
-export const HALLWAY_LETHAL_POTION_LOSS = 5;
-/** Jev confidence a hallway potion line below code rank 1 needs to be played. */
-export const HALLWAY_POTION_CONFIDENCE = 0.75;
-/** Map node types a hallway fight is fought in. */
-const FIGHT_NODES = ["Monster", "Unknown"];
+/** Map node types a fight can be fought in (the forced-Elite lookahead of potion_context). */
+const FIGHT_NODES = ["Monster", "Unknown", "Elite"];
+/** Nodes ahead potion_context looks for a forced Elite. */
+const ELITE_LOOKAHEAD = 3;
+/** Act boss floors. */
+const BOSS_FLOORS = [17, 33, 48];
 
-/** Solver cost of drinking a potion (before any defensive saving). */
-export function potionUseCostFor(kind: SolverInput["fightKind"], pressed: boolean, eliteNext: boolean): number {
-  if (pressed) return 0;
-  if (kind === "boss") return BOSS_POTION_COST;
-  if (kind === "elite") return 5;
-  return HALLWAY_POTION_COST * (eliteNext ? 2 : 1);
-}
-
-/** Solver cost of drinking a potion in a boss fight (before any defensive saving). */
-export const BOSS_POTION_COST = 4;
-const BOSS_POTIONS_PER_TURN = 1;
-/** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
 /** Potions that add damage: a plan's "big_hit" (the enemy's big attack turn) is no moment for them (B6AC F33 T1). */
 const OFFENSIVE_POTIONS = new Set([
   "FIRE_POTION", "EXPLOSIVE_AMPOULE", "STRENGTH_POTION", "FLEX_POTION", "VULNERABLE_POTION", "FEAR_POTION",
@@ -127,40 +109,134 @@ const OFFENSIVE_POTIONS = new Set([
 ]);
 /** Potion text that blunts an enemy hit (the only kind a plan's "big_hit" applies to). */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
-const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
-/** Potions drunk this combat turn: the belt count at the turn's first look minus the count now. */
-function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
-  const fight = `${str(asRecord(env.state.run?.raw)["act_id"])}:${env.state.run?.floor ?? "?"}`;
-  const memo = env.screenMemory.potionTurn;
-  if (!memo || memo.fight !== fight || memo.turn !== env.state.turn) {
-    env.screenMemory.potionTurn = { fight, turn: env.state.turn, startCount: count };
-    return 0;
+/** A line drinks a potion (modelled potions are steps "POTION:<potion id>:<slot>"). */
+export function drinksPotion(plan: Plan): boolean {
+  return plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+}
+
+/** The potion ids a line drinks. */
+function potionIdsOf(plan: Plan): string[] {
+  return plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId.split(":")[1] ?? "");
+}
+
+/**
+ * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the
+ * choice): for a potion no option drinks, the best-ranked line of `plans` that drinks it is added. Past
+ * `limit`, it takes the place of the lowest-ranked option that is not code's first, not the only
+ * potion-free line and not the only line drinking some other potion; with none such it is added anyway.
+ */
+export function withPotionLines(options: Plan[], plans: Plan[], potionIds: string[], limit: number): Plan[] {
+  const out = [...options];
+  for (const id of [...new Set(potionIds)]) {
+    if (out.some((plan) => potionIdsOf(plan).includes(id))) continue;
+    const line = plans.find((plan) => potionIdsOf(plan).includes(id));
+    if (!line) continue;
+    if (out.length >= limit) {
+      const removable = (plan: Plan, index: number): boolean => {
+        if (index === 0) return false;
+        const others = out.filter((other) => other !== plan);
+        if (!drinksPotion(plan) && !others.some((other) => !drinksPotion(other))) return false;
+        return potionIdsOf(plan).every((own) => others.some((other) => potionIdsOf(other).includes(own)));
+      };
+      for (let index = out.length - 1; index > 0; index -= 1) {
+        if (removable(out[index]!, index)) {
+          out.splice(index, 1);
+          break;
+        }
+      }
+    }
+    out.push(line);
   }
-  return Math.max(0, memo.startCount - count);
+  return out;
+}
+
+/**
+ * The line code plays on its own among `plans` (rank order): the first that drinks no potion, else the
+ * first. Code never drinks a potion while a potion-free line is on the table.
+ */
+export function dryFirst(plans: Plan[]): Plan | undefined {
+  return plans.find((plan) => !drinksPotion(plan)) ?? plans[0];
+}
+
+/**
+ * Facts for Jev's potion judgement (on every combat question, kept short): belt slots and a full belt
+ * wasting the next potion reward, floors to the act boss, an Elite ahead (DeepSeek's route plan, else a
+ * forced one on the map), the act boss damage gap, and DeepSeek's run plan.
+ */
+export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind"]): Record<string, JsonValue> {
+  const { state } = env;
+  const run = asRecord(state.run?.raw);
+  const belt = asArray(run["potions"]).map(asRecord);
+  const used = belt.filter((slot) => bool(slot["occupied"])).length;
+  const out: Record<string, JsonValue> = {
+    slots: `${used}/${belt.length} used${belt.length > 0 && used >= belt.length ? " (belt full: a potion reward after this fight is wasted unless one is drunk)" : ""}`,
+  };
+  const floor = state.run?.floor ?? null;
+  const bossFloor = floor === null ? null : (BOSS_FLOORS.find((entry) => entry >= floor) ?? null);
+  if (kind === "boss") out["act_boss"] = "this fight";
+  else if (floor !== null && bossFloor !== null) out["act_boss"] = `in ${bossFloor - floor} floors (floor ${bossFloor})`;
+  const elite = eliteAhead(env);
+  if (elite) out["elite_ahead"] = elite;
+  if (kind !== "boss") {
+    const gap = damageGap(state, env.knowledge);
+    if (gap) out["act_boss_clock"] = `needs ~${gap.need} damage a turn, deck ~${gap.deck}${gap.gap > 0 ? ` (short ${gap.gap})` : " (enough)"}`;
+  }
+  const runId = str(state.raw["run_id"]);
+  const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === runId ? env.screenMemory.runPlan : null;
+  if (plan) {
+    const line = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
+    const prep = /potion|药水/i.test(plan.bossPrep) ? ` | boss prep: ${plan.bossPrep}` : "";
+    if (line || prep) out["run_plan"] = `${line}${prep}`.replace(/\s+/g, " ").trim();
+  } else if (env.brief.plan) {
+    out["run_plan"] = env.brief.plan;
+  }
+  return out;
+}
+
+/** "Elite in N floors (route plan)" / "forced Elite within 3 nodes", or null. */
+function eliteAhead(env: DecisionEnv): string | null {
+  const { state, screenMemory } = env;
+  const runId = str(state.raw["run_id"]);
+  const map = screenMemory.lastMap;
+  const route = screenMemory.routePlan;
+  const floor = state.run?.floor ?? null;
+  // The map was last shown on the floor before this fight: this room is on row current.row + 1.
+  const act = floor === null ? null : floor <= 17 ? 1 : floor <= 33 ? 2 : 3;
+  if (route && route.runId === runId && route.act === act && map && map.runId === runId && map.current && floor !== null && map.floor === floor - 1) {
+    const here = map.current.row + 1;
+    const next = route.path.find((step) => step.row > here && step.type === "Elite");
+    if (next) return `Elite in ${next.row - here} floor${next.row - here === 1 ? "" : "s"} (route plan)`;
+  }
+  return forcedEliteWithin(screenMemory, state, FIGHT_NODES, ELITE_LOOKAHEAD) ? `forced Elite within ${ELITE_LOOKAHEAD} nodes` : null;
 }
 
 // CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card
 // play is Jev's): with two or more distinct lines Jev is asked, unless code's line dominates every other
 // on every axis.
-const MAX_OPTIONS = 4;
+/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */
+export const MAX_OPTIONS = 10;
 
 /**
  * HP guardrail for elite/boss/dangerous plan choices: the models keep trading HP for damage ("Burning
  * Blood heals it", "HP buffer is comfortable"; WX16, 7Q5G, YP9, DG1 — the guide alone did not stop
  * it). A non-winning plan may lose at most this much more than the cheapest plan offered.
  *
- * Boss and elite fights get the tight bound, max(4, 10% HP): Z2H3 T7/T8 DeepSeek split the trade
- * across re-plans, each step inside max(6, 20% HP) ≈ 9, about 12 HP over two turns, and died with the
- * boss at 33. Once a fight's accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the
- * cheapest plan, unless the choice wins the fight.
+ * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai
+ * 2026-09-28: loosened from max(4, 10%) / max(6, 20%) so that more of the trade-off is Jev's call).
+ * Z2H3 T7/T8 DeepSeek split a trade across re-plans and died with the boss at 33: once a fight's
+ * accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the cheapest plan, unless the
+ * choice wins the fight.
  */
-export const HP_GUARD_FIGHT_BUDGET = 12;
+/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */
+export const HP_GUARD_FIGHT_BUDGET = 24;
+/** The per-turn slack is never below this (any fight kind). */
+export const HP_GUARD_MIN_SLACK = 8;
 
 export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unknown", extraSoFar = 0): number {
   if (extraSoFar > HP_GUARD_FIGHT_BUDGET) return 0;
-  if (kind === "boss" || kind === "elite") return Math.max(4, hp * 0.1);
-  return Math.max(6, hp * 0.2);
+  if (kind === "boss" || kind === "elite") return Math.max(HP_GUARD_MIN_SLACK, hp * 0.1);
+  return Math.max(HP_GUARD_MIN_SLACK, hp * 0.2);
 }
 
 /**
@@ -189,7 +265,7 @@ function hpGuardFight(env: DecisionEnv): string {
 /**
  * Records the extra HP of the plan committed this turn, once per turn: a re-plan in the same turn
  * replaces the turn's entry (b63e836 added it on every resolve, Jev's and the escalator's, and on
- * every re-plan; the 12 HP budget was gone by turn 2-3).
+ * every re-plan; the then 12 HP budget was gone by turn 2-3).
  */
 export function recordHpGuard(env: DecisionEnv, turn: number | null, extra: number): void {
   const fight = hpGuardFight(env);
@@ -340,11 +416,17 @@ function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
 }
 
-function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
+export function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   const o = plan.outcome;
   const summary: Record<string, JsonValue> = {
     plays: plan.steps.length === 0 ? "nothing (end the turn now)" : plan.steps.map(stepText).join(", then "),
-    result: o.winsFight ? "wins the fight this turn" : o.dies ? "I DIE at the end of the turn" : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
+    result: o.winsFight
+      ? "wins the fight this turn"
+      : o.dies
+        ? "I DIE at the end of the turn"
+        : (o.explodesNext ?? 0) > 0
+          ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
+          : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
     hp_lost: o.hpLoss,
     damage_dealt: o.damageDealt,
   };
@@ -411,7 +493,11 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
     hp_after: o.hpAfter,
     hp_after_pct: ctx.maxHp > 0 ? Math.round((o.hpAfter / ctx.maxHp) * 100) : null,
     dmg: o.damageDealt,
-    lethal_now: o.winsFight ? "wins the fight" : keyKills.length > 0 ? `kills ${keyKills.join(", ")}` : "no",
+    lethal_now: o.winsFight
+      ? "wins the fight"
+      : keyKills.length > 0
+        ? `kills ${keyKills.join(", ")}${(o.explodesNext ?? 0) > 0 ? ` (explodes for ${o.explodesNext} at the end of my next turn)` : ""}`
+        : "no",
     enemy_threat_next: o.winsFight ? 0 : known ? Math.round(threat) : "unknown",
     setup_turn: ctx.noAttack && powers.length > 0,
     scaling_gained: scaling.length > 0 ? scaling.join("; ") : "none",
@@ -890,19 +976,22 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
   }
 
+  // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
+  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
+  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {
     // A hand of Dazed is not the end of the options: a potion can still block, draw or kill (CY8U F25
-    // T7: 5/5 Dazed, Snecko Oil never considered, Bees 35 into 30 HP and 0 block).
+    // T7: 5/5 Dazed, Snecko Oil never considered, Bees 35 into 30 HP and 0 block). Code drinks on its
+    // own only into a lethal hit; otherwise, with a potion in the belt, the turn is planned (end turn
+    // vs. the potion lines) and the potion is Jev's call.
     const rescue = noPlayRescuePotion(env, enemies, playerSim);
     if (rescue) return rescue;
-    return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
+    if (potionsAll.length === 0 || !state.available_actions.includes("use_potion")) {
+      return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "no playable cards; ending the turn" };
+    }
   }
 
-  // Foul Potion hits us too (39J9: two drunk at 22 HP cost 12 of it); never drink it in a fight.
-  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter(
-    (potion) => potion.can_use && potion.potion_id !== "FOUL_POTION",
-  );
   // Permanent max-HP potions have no timing value: drink them as soon as they can be used.
   const juice = potionsAll.find((potion) => potion.potion_id === "FRUIT_JUICE");
   if (juice) {
@@ -914,20 +1003,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
   const pressed =
     playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
-  // Boss potions are not free (1R3C F17 T1: cost 0 drank all three on a 7-damage turn): a small
-  // base cost, plus what a defensive one is worth saving for a bigger hit next turn.
-  // A hallway fight right before a forced Elite: the potion is worth twice as much kept (NZR7 F6: both
-  // drunk on a 0-loss turn, 0 potions into the F7 elite).
-  const eliteNext = (kind === "monster" || kind === "unknown") && forcedEliteWithin(env.screenMemory, state, FIGHT_NODES, 1);
-  const potionUseCost = potionUseCostFor(kind, pressed, eliteNext);
-  // Defensive potions are worth saving when next turn's hit is expected to be bigger than this one
-  // (Vantom: Fortifier spent on the 12-damage lance, then nothing left for the 28-damage Dismember).
+  // No potion use cost (Dai 2026-09-28): a potion line is scored on its simulated outcome like any
+  // line; whether it is worth spending is Jev's call, with potion_context as its facts.
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
   const nextIncoming = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
     .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
-  const saveDefence = Math.max(0, nextIncoming - nowIncoming) * 0.6;
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
   // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
@@ -949,10 +1031,6 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Potion: SM9H F33, never drunk until T8 with 5 of 7 energy unspent on T1) follows the default rule.
   const notBlunting = (potionId: string) =>
     OFFENSIVE_POTIONS.has(potionId) || !BLUNTS_HIT.test(potionsAll.find((potion) => potion.potion_id === potionId)?.text ?? "");
-  const planCost = (potionId: string) => planPotionCost(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, offensive: notBlunting(potionId) });
-  // Boss fights: one potion a turn (unless it wins the fight or the turn ends below 30% HP).
-  const potionsUsed = potionsUsedThisTurn(env, potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).length);
-  const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
   // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), the pile card a
@@ -966,7 +1044,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
     });
-  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION")?.slot;
+  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
@@ -986,22 +1064,34 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
   // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card
   // to take, a draw potion a known pile); otherwise it stays an unmodelled option as before.
-  const modelledIds = new Set(potionsAll.filter((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null).map((potion) => potion.potion_id));
+  // Random potions (card-model CHOICE_POTIONS / DRAW_POTIONS) are simulated by Monte Carlo on their own
+  // (potion-mc.ts) and offered as "drink now, then re-plan": never a line of this solve.
+  const mcSources = new Map<number, PotionMcSource>();
+  for (const potion of potionsAll) {
+    const source = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
+    if (source) mcSources.set(potion.slot, source);
+  }
+  const modelledIds = new Set(
+    potionsAll
+      .filter((potion) => !mcSources.has(potion.slot) && modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null)
+      .map((potion) => potion.potion_id),
+  );
   const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
   // The solver input behind `solved` (the rollout facts replay the turn from it).
   let solvedInput: SolverInput | null = null;
-  const solveWith = (free: boolean) =>
+  const solve = () =>
     solveTurn((solvedInput = {
       hand: [
         ...hand,
         ...potionsAll
+          .filter((potion) => !mcSources.has(potion.slot))
           .map((potion) =>
             modelPotion(
               potion.potion_id,
               potion.name,
               potion.slot,
               potion.valid_targets,
-              free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
+              0,
               potionContext,
             ),
           )
@@ -1014,7 +1104,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       fightKind: kind,
       turn: state.turn ?? 1,
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
-      potionLimit,
+      potionLimit: null,
       raceEruption,
       wither,
       ...focusInput,
@@ -1023,21 +1113,19 @@ function planTurn(env: DecisionEnv): Decision | null {
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
     }));
-  let solved = solveWith(false);
-  // A turn that costs a lot of HP whatever is played is what potions are for, in any fight
-  // (7Q5G/MD3F: hallway fights at -16..-46 HP with a potion kept in the belt): even the line that
-  // keeps the most HP loses >= 30% of current HP, or leaves HP below 25% of max. Potions are free
-  // then, and unmodelled ones are offered.
+  const solved = solve();
+  // The random potions' Monte Carlo, run once when a decision needs it (every question does).
+  const dryBest = solved.plans.find((plan) => !drinksPotion(plan) && !plan.outcome.dies) ?? solved.plans.find((plan) => !drinksPotion(plan)) ?? null;
+  let mcResults: PotionMc[] | null = null;
+  const randomPotions = (): PotionMc[] => (mcResults ??= runRandomPotions([...mcSources.values()], solvedInput, dryBest, `${fightKey(state)}:${state.turn ?? "?"}:${handSignature(hand)}`));
+  // A turn that costs a lot of HP whatever is played (7Q5G/MD3F: hallway fights at -16..-46 HP with a
+  // potion kept in the belt): even the line that keeps the most HP loses >= 30% of current HP, or
+  // leaves HP below 25% of max. Unmodelled potions are offered then.
   const minLossAfter = (plans: Plan[]): number => Math.max(...plans.map((plan) => plan.outcome.hpAfter));
   const costly =
     solved.plans.length > 0 &&
     playerSim.maxHp > 0 &&
     (playerSim.hp - minLossAfter(solved.plans) >= playerSim.hp * 0.3 || minLossAfter(solved.plans) < playerSim.maxHp * 0.25);
-  if (costly && !pressed && potionsAll.some((potion) => isModelledPotion(potion.potion_id))) solved = solveWith(true);
-  // A hallway turn whose best line drinks a potion, when a potion-free line costs little: keep the
-  // potion (CAYK F37-F40: two Vulnerable and an Energy potion bought for the Queen went on hallway
-  // lethals; the boss was entered with 1 of 3 slots filled).
-  const drinksPotion = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
   const drinksKeptPotion = (plan: Plan) =>
     fightPlan !== null &&
     plan.steps.some((step) => {
@@ -1046,32 +1134,6 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Potion planned for the T4 Laser drunk on T2; WLY1).
       return use === "save" || use === "emergency" || (use === "big_hit" && !bigHit && !pressed);
     });
-  // Not only lethals: MGJ8 F13 drank a Vulnerable potion on a turn with no HP at risk.
-  // Pressed (low HP, 2+ attackers) is no exception when a dry line costs this little (B6AC F30: 26/94,
-  // Dexterity potion for 2 HP and Heart of Iron at Jev 0.10; the boss killed us 4 HP short).
-  let dryCheap = false;
-  // Any potion line on offer, not only a top-ranked one (GMT2 F38 T2: end turn ranked first, the tied
-  // Swift Potion line was listed and Jev drank it at 0.11).
-  if ((kind === "monster" || kind === "unknown") && solved.plans.some(drinksPotion)) {
-    const dry = solved.plans.filter((plan) => !drinksPotion(plan) && !plan.outcome.dies);
-    if (dry.length > 0 && Math.min(...dry.map((plan) => plan.outcome.hpLoss)) <= HALLWAY_LETHAL_POTION_LOSS) {
-      solved = { ...solved, plans: dry };
-      dryCheap = true;
-    } else if (dry.length > 0) {
-      // A hallway potion line must buy something over the best potion-free line: the fight, 8+ HP, or
-      // 20+ damage (TXKE F46: two Swift Potions drunk at 0 energy, the draws unplayable, nothing saved;
-      // the final boss was entered with empty slots).
-      const bestDryLoss = Math.min(...dry.map((plan) => plan.outcome.hpLoss));
-      const bestDryDamage = Math.max(...dry.map((plan) => plan.outcome.damageDealt));
-      const worth = (plan: Plan) =>
-        !drinksPotion(plan) ||
-        plan.outcome.winsFight ||
-        bestDryLoss - plan.outcome.hpLoss >= HALLWAY_POTION_MIN_SAVE ||
-        plan.outcome.damageDealt - bestDryDamage >= HALLWAY_POTION_MIN_DAMAGE;
-      const kept = solved.plans.filter(worth);
-      if (kept.length > 0 && kept.length < solved.plans.length) solved = { ...solved, plans: kept };
-    }
-  }
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
 
@@ -1085,6 +1147,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
   //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
+  // Every simulated line dies, but a random potion may not: the least-loss line goes to the question.
+  let allDie: Plan | null = null;
   if (best.outcome.dies) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
     // turn follows (a fresh draw before the enemy acts). 12ZG F23 T6: never used, died to a 24 Pounce.
@@ -1093,8 +1157,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.paelsEyeFight = fightId;
       return { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "every line dies: ending the turn with no card played for Pael's Eye's extra turn" };
     }
-    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id));
-    if (potionsNow.length > 0) return planCombatPerCard(env);
+    const potionsNow = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
+    // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
+    const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
+    if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
+    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp);
+  }
+  if (best.outcome.dies && allDie === null) {
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
     const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
@@ -1108,50 +1177,33 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
   }
 
-  const cheapestAfter = Math.max(...solved.plans.filter((plan) => !plan.outcome.dies).map((plan) => plan.outcome.hpAfter), best.outcome.hpAfter);
-  const potionCapped = potionLimit === 0 && cheapestAfter >= playerSim.maxHp * 0.3;
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
-  const potions = potionCapped || dryCheap ? [] : potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && planOffer(potion.potion_id) !== false);
+  // Unsimulated potions (neither modelled nor random): offered under T1 (below), a fight plan's keep noted.
+  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
 
-  // 3. Code-decided cases.
-  if (best.outcome.winsFight) {
-    commit(env, state.turn, best, hand, "code");
-    return { kind: "act", label: "combat/lethal", intent: firstIntent(best, hand, env), rationale: `lethal: ${best.steps.map(stepText).join(", ")}${calcNote}` };
+  // 3. Code-decided cases. Code drinks on its own only when no potion-free line does the job: a lethal
+  // is played by code only potion-free. When only lines that drink win the fight this turn, the lethal
+  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.
+  const lethalLines = best.outcome.winsFight ? solved.plans.filter((plan) => plan.outcome.winsFight) : [];
+  const dryLethal = lethalLines.find((plan) => !drinksPotion(plan));
+  if (dryLethal) {
+    commit(env, state.turn, dryLethal, hand, "code");
+    return { kind: "act", label: "combat/lethal", intent: firstIntent(dryLethal, hand, env), rationale: `lethal: ${dryLethal.steps.map(stepText).join(", ")}${calcNote}` };
   }
-  // The plan's moment for an unmodelled potion (early in turns 1-2, big_hit on a big hit): drink it,
-  // then re-plan (VQSA F33 T14: both potions planned for big hits were only offered, Jev played cards
-  // at 0.58, 32 -> 5 HP; both were drunk at 4 HP two turns later).
-  // One auto-drink per potion id a fight: the plan keys potions by id, so a second copy is not planned
-  // for this fight (H5MZ F39 T1: both Power Potions drunk "early"; the plan kept one for the Queen).
-  const drunkMemo = env.screenMemory.planPotionsDrunk;
-  const drunkHere = drunkMemo && drunkMemo.fight === fightKey(state) ? drunkMemo.ids : [];
-  const due = fightPlan
-    ? potions.find((potion) => {
-        if (drunkHere.includes(potion.potion_id)) return false;
-        const use = fightPlan.potions[potion.potion_id];
-        // big_hit only for a potion that blunts the hit (92MW F29 T1: Stable Serum "big_hit", drunk on a
-        // 24 hit it does nothing against; the fight was won before its planned turns).
-        return (use === "early" && (state.turn ?? 1) <= 2) || (use === "big_hit" && bigHit && !OFFENSIVE_POTIONS.has(potion.potion_id) && BLUNTS_HIT.test(potion.text));
-      })
-    : undefined;
-  if (due) {
-    const target = due.requires_target ? (focusIndex !== null && due.valid_targets.includes(focusIndex) ? focusIndex : due.valid_targets[0]) : undefined;
-    if (!due.requires_target || target !== undefined) {
-      env.screenMemory.combatPlan = null;
-      env.screenMemory.planPotionsDrunk = { fight: fightKey(state), ids: [...drunkHere, due.potion_id] };
-      return {
-        kind: "act",
-        label: "combat/plan-potion",
-        intent: target === undefined ? { action: "use_potion", option_index: due.slot } : { action: "use_potion", option_index: due.slot, target_index: target },
-        rationale: `fight plan: drink ${due.name} now (${fightPlan!.potions[due.potion_id]})`,
-      };
-    }
-  }
-  const surviving = hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
-  const options = distinctPlans(surviving, MAX_OPTIONS);
+  const potionLethal = potionLethalLines(lethalLines);
+  // (The fight plan's auto-drink of an unmodelled potion at its planned moment is gone: the potion is
+  // offered to Jev on that turn instead, planPotionNow below.)
+  const surviving = allDie ? [allDie] : hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
+  // Every modelled potion in the belt is on a shown line (the best line drinking it), next to the
+  // potion-free ones: whether to spend it is Jev's call.
+  const options = withPotionLines(distinctPlans(surviving, MAX_OPTIONS), surviving, potionsAll.filter((potion) => isModelledPotion(potion.potion_id)).map((potion) => potion.potion_id), MAX_OPTIONS);
+  // A potion lethal: every way to win this turn (one line per set of potions it spends) is shown.
+  for (const line of potionLethal) if (!options.includes(line)) options.push(line);
+  // Some potion-free line survives the turn: then code never drinks on its own.
+  const drySurvives = surviving.some((plan) => !drinksPotion(plan));
   // The score-best plan can be dominated on every shown axis (its extra score is a power's flat value)
   // and so be missing from the options. YP9 T3: Crimson Mantle's line (hp -28) was committed as the
   // "only line" while the one option shown was the same turn with Defend+ (hp -20). Play what is shown.
@@ -1161,8 +1213,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
   // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
   // end the turn on the solver's word then; play the line that keeps the most HP.
-  if (modSaysLethal && top.steps.length === 0) {
-    const played = surviving.filter((plan) => plan.steps.length > 0);
+  if (modSaysLethal && top.steps.length === 0 && allDie === null) {
+    const anyPlayed = surviving.filter((plan) => plan.steps.length > 0);
+    const dryPlayed = anyPlayed.filter((plan) => !drinksPotion(plan));
+    const played = dryPlayed.length > 0 ? dryPlayed : anyPlayed;
     if (played.length > 0) {
       const safest = played.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter || (b.outcome.hpAfter === a.outcome.hpAfter && b.outcome.blockGained > a.outcome.blockGained) ? b : a));
       commit(env, state.turn, safest, hand, "code");
@@ -1190,12 +1244,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     })()) &&
     !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
-  // max(6, 15% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
+  // max(8, 20% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
   // F22 room at 17/80 with no potions).
   const actNumber = Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1;
   const hallwayGuard =
     (kind === "monster" || kind === "unknown") && (actNumber >= 2 || (state.run?.ascension ?? 0) >= 5) && playerSim.hp < playerSim.maxHp * 0.6;
-  const hallwayGuardSlack = Math.max(6, playerSim.hp * 0.15);
+  const hallwayGuardSlack = hpGuardSlack(playerSim.hp, "monster");
   const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each
@@ -1206,7 +1260,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // the boss was left at 92/222).
   // A phase boss's later phases count too (ZANM F48: phase 2 at 151 read as the whole race, the guard
   // let a -37 line through and phase 3 began at 49 HP; Test Subject is ~100/200/300).
-  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : enemy.maxHp <= 120 ? 500 : enemy.maxHp <= 220 ? 300 : Math.round(enemy.maxHp * 1.5));
+  const laterPhases = (enemy: EnemySim) => (!enemy.revives ? 0 : laterPhaseHps(enemy.maxHp, state.run?.ascension ?? 0).reduce((sum, hp) => sum + hp, 0));
   const bossHpLeft = enemies.filter((enemy) => !enemy.minion).reduce((sum, enemy) => sum + enemy.hp + laterPhases(enemy), 0);
   // Damage into enemies that are neither minions nor illusions.
   const realDamage = (plan: Plan): number =>
@@ -1251,17 +1305,30 @@ function planTurn(env: DecisionEnv): Decision | null {
   const second = options.find((plan) => plan !== top);
   // Code plays its line only when there is no other, or it beats every other on every axis; any real
   // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
-  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose;
-  if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
+  // A top line that drinks while a potion-free line survives is never code's to play: Jev decides.
+  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose && !(drySurvives && drinksPotion(top)) && potionLethal.length === 0;
+  // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
+  // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
+  // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
+  // fight plan says now.
+  const mcForces = mcSources.size > 0 && randomPotions().some((mc) => mc.beats > 0);
+  // T1 asks whether every potion-free option is bad (Dai: 所有结果扣血都很多), so it reads the cheapest
+  // potion-free option, not code's top-ranked one (fn0h: fired at -17 while a 0-HP line existed).
+  const dryOptions = options.filter((plan) => !drinksPotion(plan));
+  const cheapestDry = dryOptions.length === 0 ? null : dryOptions.reduce((a, b) => (b.outcome.hpLoss < a.outcome.hpLoss ? b : a));
+  const t1Hp = cheapestDry === null || cheapestDry.outcome.dies || cheapestDry.outcome.hpLoss >= UNSIMULATED_HP_SHARE * playerSim.hp;
+  if (clear && !mcForces && !(potions.length > 0 && (t1Hp || planPotionNow))) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
     // asked, and T4's laser killed us exactly). Not recorded against the fight's budget: that is for
     // extra HP a model chose to accept.
+    // The guard picks among potion-free lines while one survives (code never drinks on its own).
+    const autoGuardLines = surviving.filter((plan) => !drinksKeptPotion(plan) && (!drySurvives || !drinksPotion(plan)));
     let guarded =
       (kind === "elite" || kind === "boss") && !top.outcome.winsFight
-        ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
+        ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
         : hallwayGuard && !top.outcome.winsFight
-          ? hpGuardReplacement(top, surviving.filter((plan) => !drinksKeptPotion(plan)), playerSim.hp, hallwayGuardSlack)
+          ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hallwayGuardSlack)
           : null;
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     // Racing the Waterfall Giant's eruption, damage is the defence (KG0E F17: the guard swapped four
@@ -1303,44 +1370,89 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Rollout FACTS (rollout-live.ts): code's options and their order are settled above; the rollout only
   // adds numbers to each, and its best line as one more option when code did not show it. The HP guard,
   // the potion rules and code's rank keep working on code's own `options`.
-  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && solvedInput !== null
+  const mcShown = mcSources.size > 0 ? randomPotions() : [];
+  const mcMedians = mcShown.map((mc) => mc.median).filter((plan): plan is Plan => plan !== null);
+  // The rollout plays each random potion's median sample line; its later turns may drink the random
+  // potions still held at their expected value (card-model's model of them, as before).
+  const rolloutSolver: SolverInput | null =
+    solvedInput === null
+      ? null
+      : {
+          ...(solvedInput as SolverInput),
+          hand: [
+            ...(solvedInput as SolverInput).hand,
+            ...potionsAll
+              .filter((potion) => mcSources.has(potion.slot))
+              .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext))
+              .filter((card): card is CardModel => card !== null),
+          ],
+        };
+  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && rolloutSolver !== null
     ? liveRollout({
         state,
         knowledge: env.knowledge,
         memory: env.screenMemory,
-        solver: solvedInput,
+        solver: rolloutSolver,
         plans: surviving,
-        shown: options,
+        shown: [...options, ...mcMedians],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
+        spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
       })
     : null;
   const rolloutBest = rollout?.available ? rollout.best : null;
-  const shown = rolloutBest && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
+  // T1 for the unsimulated potions: the cheapest potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
+  // or its rollout has a dying sample.
+  const t1Death = rollout !== null && rollout.available && cheapestDry !== null && (rollout.byPlan.get(cheapestDry)?.deaths ?? 0) > 0;
+  const offerPotions = potions.length > 0 && (t1Hp || t1Death || planPotionNow);
+  const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
+  // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
+  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : [])]);
+  const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
+  options.splice(0, options.length, ...planOptions);
+  const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
     rollout ? { ...rolloutFacts(plan, rollout), ...(plan === rolloutBest ? { rollout_best: true } : {}) } : {};
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...fitOf(plan), ...factsOf(plan) });
+    criteria[key] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: plan.steps.map(stepText).join(", ") || "end turn" });
   });
+  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const rolloutRecord = rollout
-    ? rolloutLog(rollout, rolloutBest ? `plan${shown.indexOf(rolloutBest) + 1}` : null, rolloutBest !== null && !options.includes(rolloutBest))
+    ? rolloutLog(
+        rollout,
+        rolloutBest ? (rolloutBestIsPotion ? mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : `plan${shown.indexOf(rolloutBest) + 1}`) : null,
+        rolloutBest !== null && !rolloutBestIsPotion && !options.includes(rolloutBest),
+      )
     : null;
-  // Unmodelled potions are offered on dangerous turns, and always in boss fights (nothing to save them
-  // for), when pressed at low HP, or when even the cheapest line costs a lot of HP.
-  const offerPotions = dangerous || kind === "boss" || pressed || costly || planPotionNow;
+  // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
+  // distribution; the rollout facts are the median sample's line's.
+  const othersHeld = potionsAll.length > 1;
+  for (const mc of mcShown) {
+    const key = mcKey(mc);
+    const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
+    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === rolloutBest ? { rollout_best: true } : {}) } : {};
+    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
+    byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
+  }
+  // Unsimulated potions: offered under T1 (or the fight plan's moment), with no invented numbers.
+  const t1Why = [t1Hp ? `even the cheapest potion-free option loses ${cheapestDry ? cheapestDry.outcome.hpLoss : "all"} HP this turn (>= ${Math.round(UNSIMULATED_HP_SHARE * 100)}% of ${playerSim.hp})` : "", t1Death ? "the cheapest potion-free option dies in some rollout sample" : "", planPotionNow ? "the fight plan says now" : ""].filter(Boolean).join("; ");
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
       for (const target of targets.slice(0, 2)) {
         const key = target === null ? potion.key : `${potion.key}->e${target}`;
         const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;
+        const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;
         criteria[key] = JSON.stringify({
-          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
-          text: potion.text,
+          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
+          simulated: "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+          offered_because: t1Why,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : {}),
           ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
@@ -1377,6 +1489,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         }),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
+    // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
+    potion_context: potionContextJson(env, kind),
     ...(fightPlan ? { fight_plan: fightPlanJson(fightPlan) } : {}),
   };
 
@@ -1391,7 +1505,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -1414,7 +1528,9 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
-  const fallback = (why: string, line: Plan = top): ResolvedAction => ({
+  // Code's own line when Jev gives no usable answer: never one that drinks while a potion-free option is shown.
+  const autoTop = drinksPotion(top) ? (dryFirst(options) ?? top) : top;
+  const fallback = (why: string, line: Plan = autoTop): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
     rationale: `${why}; using the code-best ${line === top ? "plan" : "potion-free plan"}`,
     confidence: null,
@@ -1431,54 +1547,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       const hallway = !(kind === "elite" || kind === "boss" || dangerous);
       const escalatedBy = answer.raw === undefined ? undefined : (answer.raw as { escalated?: "deepseek" | "claude" }).escalated;
       const fromJev = answer.raw !== undefined && !escalatedBy;
-      const drinks = chosen.potion !== undefined || (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:")) ?? false);
-      // A turn that costs a lot whatever is played is what potions are for: Jev's potion pick stands
-      // there (C2WY F22 T4-T5: Attack Potion picks overridden at 27 -> 18 -> 1 HP, died with 3 potions).
-      // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
-      // Not on a near-guess (M75J F37: Blood Potion at 0.14 on 78/111 HP, healed to full by the next event).
-      const potionTurn = drinks && (costly || dangerous) && answer.confidence >= 0.25;
-      // (The hallway near-guess fallback to code's rank 1 under 0.3 is gone: Jev's pick stands. The
-      // potion vetoes below are unchanged.)
-      // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
-      // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
-      // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
-      const hallwayFight = kind === "monster" || kind === "unknown";
-      // Elite/boss: an attack potion on a line below code's rank 1 that does not win needs Jev at 0.5+
-      // (Y27B F33 T2: Flex drunk at 0.32 on a fully blocked turn for ~10 damage; kept, it was the +20
-      // that kills the demon at 12/379 before the overwhelm).
-      const offensiveDrink =
-        (chosen.potion !== undefined && OFFENSIVE_POTIONS.has(potionsAll.find((potion) => potion.slot === (chosen.potion as { option_index?: number }).option_index)?.potion_id ?? "")) ||
-        (chosen.plan?.steps.some((step) => step.cardId.startsWith("POTION:") && OFFENSIVE_POTIONS.has(step.cardId.split(":")[1] ?? "")) ?? false);
-      // Elite/boss: a potion line picked by Jev under 0.5 when a potion-free option loses no more HP
-      // (VHLZ F17 T2: Speed Potion at 80/80 and 0.19 with a 0-loss dry line; F14 T1 Glowwater at 0.20):
-      // the dry option instead.
-      // A drink-first pick (no line: the turn is re-planned after the potion) is only refused when the
-      // best dry line is nearly free; measured against the least loss of any line the dry line always
-      // won (M812 F28/F33: vetoed at 24 and 10 HP; 9YR9 F17, F3SS F33: potions carried to the death).
-      // Nor is a potion refused when the best dry line still costs 30% of our HP.
-      // Not when Jev agrees with code's rank 1 (WLY1 F33 T1: the Flex line, 42 damage, was vetoed for a
-      // 26-damage dry line losing the same HP).
-      if (!hallwayFight && fromJev && drinks && chosen.plan !== top && answer.confidence < 0.5 && !(chosen.plan?.outcome.winsFight ?? false)) {
-        const dry = options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
-        const bestDryLoss = dry.length > 0 ? Math.min(...dry.map((plan) => plan.outcome.hpLoss)) : Infinity;
-        // Refusing the potion plays a dry line, not code's rank 1 when that drinks (F3SS F33 T3: the
-        // fallback drank the Dexterity Potion anyway).
-        // The veto rests on the least-loss dry line, so that is the one played (P2E4 F48 T2: justified by a
-        // -5 dry line, the top-scoring dry line lost 19).
-        const leastDry = dry.filter((plan) => plan.outcome.hpLoss === bestDryLoss);
-        const dryTop = dry.includes(top) && top.outcome.hpLoss === bestDryLoss ? top : (leastDry[0] ?? dry[0] ?? top);
-        if (dryLineOverridesPotion(chosen.plan?.outcome.hpLoss, bestDryLoss, playerSim.hp)) return fallback(`Jev chose a potion at ${answer.confidence.toFixed(2)} in a ${kind} fight while a potion-free line loses no more HP`, dryTop);
-      }
-      // Boss, drink-first (the line is re-planned after the potion), every dry line losing 10+: the
-      // potion stands (MF7A F17 T7, 24HM F33, H1FA F17 T2-T7: attack potions refused, died holding them).
-      const dryLossNow = Math.min(...options.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:"))).map((plan) => plan.outcome.hpLoss));
-      const bossDrinkFirst = kind === "boss" && chosen.plan === undefined && dryLossNow >= BOSS_DRINK_FIRST_LOSS;
-      if (!hallwayFight && fromJev && offensiveDrink && !bossDrinkFirst && chosen.plan !== top && !(chosen.plan?.outcome.winsFight ?? false) && answer.confidence < 0.5) {
-        return fallback(`Jev chose an attack potion below code rank 1 at ${answer.confidence.toFixed(2)} in a ${kind} fight`);
-      }
-      if (hallwayFight && fromJev && drinks && !potionTurn && chosen.plan !== top && answer.confidence < HALLWAY_POTION_CONFIDENCE) {
-        return fallback(`Jev chose a potion line below code rank 1 (${answer.confidence.toFixed(2)} < ${HALLWAY_POTION_CONFIDENCE}) in a hallway fight`);
-      }
+      // Potions are Jev's call: no potion pick is vetoed (the hallway confidence bar, the elite/boss
+      // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28).
       if (chosen.potion) {
         return {
           intent: chosen.potion,
@@ -1493,7 +1563,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       // A near-guess from Jev in an elite/boss fight (DeepSeek no longer re-asks) never plays a line
       // another option beats on every axis (SVN2 F17 T3: a 0-damage line at 0.36 over one with the same
       // HP loss and 15 damage).
-      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && dominates(plan, chosen.plan!)) : undefined;
+      // Code never adds a drink of its own: a swap (dominator, HP guard) goes only to a line drinking
+      // no potion Jev's pick does not drink.
+      const chosenPotions = potionIdsOf(chosen.plan!);
+      const noNewDrink = (plan: Plan) => potionIdsOf(plan).every((id) => chosenPotions.includes(id));
+      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && noNewDrink(plan) && dominates(plan, chosen.plan!)) : undefined;
       const picked = dominator ?? chosen.plan!;
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
       // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
@@ -1504,7 +1578,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // F11 T1: -10 swapped for a line drinking the Fortifier kept for an emergency; the boss at F17
       // then died 3 HP short of us, Dismember hitting 28 into 7 block).
       // (The rollout's added line, outside code's options, is guarded against code's options like any pick.)
-      const guardOptions = [...options.filter((plan) => plan === picked || !drinksKeptPotion(plan)), ...(options.includes(picked) ? [] : [picked])];
+      // Nor into a potion the pick does not drink: a potion-free pick is guarded among potion-free lines.
+      const guardOptions = [...options.filter((plan) => plan === picked || (!drinksKeptPotion(plan) && noNewDrink(plan))), ...(options.includes(picked) ? [] : [picked])];
       const proposed = hallway
         ? hallwayGuard && !picked.outcome.winsFight
           ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack)
@@ -1513,14 +1588,14 @@ function planTurn(env: DecisionEnv): Decision | null {
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
-      const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...options.map((option) => option.outcome.hpLoss)));
+      const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...guardOptions.map((option) => option.outcome.hpLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${chosen.label}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),
-        rationale: `Jev chose plan ${shown.indexOf(picked) + 1}/${shown.length} (${chosen.label}) with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
+        rationale: `Jev chose ${pickNote(shown, chosen.plan!, picked)} with confidence ${answer.confidence.toFixed(2)}; code rank ${options.includes(picked) ? options.indexOf(picked) + 1 : "- (rollout's best line, added)"}${guardNote}${calcNote}`,
         confidence: answer.confidence,
         fallback: false,
         ...(replacement ? { guard: { kind: "hp" as const, choice: `plan${rank}`, plan: plan.steps.map(stepText).join(", ") || "end turn" } } : {}),
@@ -1534,20 +1609,165 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   return {
     kind: "ask",
-    label: offerPotions && potions.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
+    label: potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions || mcShown.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
     // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
     resolve(answers): ResolvedAction {
       const resolved = resolvePlan(answers);
-      if (!rolloutRecord) return resolved;
+      const potionsRecord: JsonValue | null =
+        mcShown.length > 0 || potions.length > 0
+          ? { random: mcShown.map(potionMcLog), unsimulated_offered: offerPotions ? potions.map((potion) => potion.potion_id) : [], t1: { hp: t1Hp, rollout_death: t1Death, fight_plan: planPotionNow } }
+          : null;
+      if (!rolloutRecord && !potionsRecord) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
-      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : pick.plan === rolloutBest;
-      return { ...resolved, log: { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } };
+      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : rolloutBestIsPotion ? pick.potion !== undefined && answer?.type === "choice" && answer.choice === mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : pick.plan === rolloutBest;
+      return {
+        ...resolved,
+        log: { ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen } : {}), ...(potionsRecord ? { potions: potionsRecord } : {}) },
+      };
     },
   };
+}
+
+/**
+ * T1, the gate of the unsimulated potions (Dai 2026-09-28: 12%): the best potion-free option loses at least
+ * this share of current HP this turn (or dies in a rollout sample).
+ */
+export const UNSIMULATED_HP_SHARE = 0.12;
+
+/**
+ * Plan lines trimmed so that `reserved` potion options fit the cap: the lowest-ranked removable line goes
+ * first (never the first, one in `keep`, the only potion-free line, or the only line drinking a potion).
+ */
+export function trimForPotionOptions(options: Plan[], reserved: number, keep: Set<Plan>, limit = MAX_OPTIONS): Plan[] {
+  const out = [...options];
+  while (out.length + reserved > limit) {
+    let removed = false;
+    for (let index = out.length - 1; index > 0; index -= 1) {
+      const plan = out[index]!;
+      if (keep.has(plan)) continue;
+      const others = out.filter((other) => other !== plan);
+      if (!drinksPotion(plan) && !others.some((other) => !drinksPotion(other))) continue;
+      if (!potionIdsOf(plan).every((id) => others.some((other) => potionIdsOf(other).includes(id)))) continue;
+      out.splice(index, 1);
+      removed = true;
+      break;
+    }
+    if (!removed) break;
+  }
+  return out;
+}
+
+/** A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in). */
+export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel {
+  const raw = {
+    card_id: info.id,
+    name: info.name,
+    dynamic_values: info.vars,
+    rules_text: info.descriptionRaw,
+    resolved_rules_text: info.description,
+    target_type: info.target,
+    requires_target: info.target === "AnyEnemy",
+    playable: true,
+    energy_cost: 0,
+    costs_x: info.xCost,
+    upgraded: false,
+    index: 0,
+  };
+  const model = modelHandCard(raw, 0, knowledge);
+  return {
+    ...model,
+    cost: 0,
+    playable: true,
+    validTargets: model.target === "single" ? ctx.enemyTargets : [],
+    damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+  };
+}
+
+/**
+ * What a random potion's Monte Carlo draws from, or null when it cannot be simulated here (no card pool in
+ * the game data, no known pile): it is then an unsimulated potion.
+ */
+export function randomPotionSource(potion: PotionView, state: GameState, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }, noDraw: boolean): PotionMcSource | null {
+  const kind = randomPotionKind(potion.potion_id);
+  if (kind === null) return null;
+  const base = { potionId: potion.potion_id, name: potion.name, slot: potion.slot, text: potion.text, kind };
+  if (kind === "choice") {
+    const spec = CHOICE_POTIONS[potion.potion_id]!;
+    const character = str(asRecord(state.run?.raw)["character_id"]).toLowerCase();
+    const color = spec.pool === "colorless" ? "colorless" : character;
+    if (!color) return null;
+    const all = knowledge.cards();
+    const pools: Record<string, CardModel[]> = {};
+    for (const type of spec.types) {
+      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, ctx));
+    }
+    if (spec.types.some((type) => (pools[type] ?? []).length === 0)) return null;
+    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}` };
+  }
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  if (!Array.isArray(view["draw"]) && !Array.isArray(view["discard"])) return null;
+  const piles = { draw: pileCardModels(state, knowledge, "draw", ctx), discard: pileCardModels(state, knowledge, "discard", ctx) };
+  if (piles.draw.length + piles.discard.length === 0 && potion.potion_id !== "BOTTLED_POTENTIAL") return null;
+  return { ...base, piles, ...(noDraw ? { noDraw } : {}) };
+}
+
+/**
+ * Every random potion's Monte Carlo for one decision, sharing potionMcOptions.budgetMs (each gets an equal
+ * share of what is left). `solver` is the turn's solver input; its potions are left out of the samples.
+ */
+export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput | null, dryBest: Plan | null, boardKey: string): PotionMc[] {
+  if (solver === null || sources.length === 0) return [];
+  const dry: SolverInput = { ...solver, hand: solver.hand.filter((card) => card.type !== "Potion") };
+  const out: PotionMc[] = [];
+  let spent = 0;
+  sources.forEach((source, index) => {
+    const budget = Math.max(0, (potionMcOptions.budgetMs - spent) / (sources.length - index));
+    const mc = runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
+    spent += mc.ms;
+    out.push(mc);
+  });
+  return out;
+}
+
+/** Most lines shown for a potion lethal (one per set of potions spent, fewest potions first). */
+export const MAX_POTION_LETHAL_LINES = 4;
+
+/**
+ * The lines that win the fight this turn when none of them is potion-free: the best (by score) of each
+ * set of potions spent, those spending fewer potions first. Empty when there is no lethal or a dry one.
+ */
+export function potionLethalLines(lethal: Plan[]): Plan[] {
+  if (lethal.length === 0 || lethal.some((plan) => !drinksPotion(plan))) return [];
+  const bySet = new Map<string, Plan>();
+  for (const plan of lethal) {
+    const set = [...potionIdsOf(plan)].sort().join("+");
+    if (!bySet.has(set)) bySet.set(set, plan);
+  }
+  return [...bySet.values()].sort((a, b) => potionIdsOf(a).length - potionIdsOf(b).length || b.score - a.score).slice(0, MAX_POTION_LETHAL_LINES);
+}
+
+/** The flag on a line that wins the fight only by drinking: which potions it spends. */
+export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
+  if (!plan.outcome.winsFight || !drinksPotion(plan)) return {};
+  const names = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
+  return { potion_lethal: `WINS THE FIGHT THIS TURN, spending ${names.join(" + ")}; no potion-free line wins this turn` };
+}
+
+function lineLabel(plan: Plan): string {
+  return plan.steps.map(stepText).join(", ") || "end turn";
+}
+
+/**
+ * "plan i/N (its line)" for Jev's pick, and the line actually played when the low-confidence dominance
+ * swap replaced it (the rationale used to print the played line's number next to the chosen line's label).
+ */
+export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
+  const head = `plan ${shown.indexOf(chosen) + 1}/${shown.length} (${lineLabel(chosen)})`;
+  return picked === chosen ? head : `${head}; plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) is as good or better on every axis, playing it`;
 }
 
 /**
@@ -1637,15 +1857,15 @@ function startFacing(combat: Record<string, unknown>): number | null {
 }
 
 /**
- * No playable card and the enemy turn is lethal (or costs 30%+ HP in an elite/boss fight): drink a
- * potion first. A hit-blunting potion before a drawing one before any other; then the turn re-plans.
+ * No playable card and the enemy turn is lethal: drink a potion first. A hit-blunting potion before a
+ * drawing one before any other; then the turn re-plans. Only into a lethal hit (the only potion-free
+ * line, ending the turn, dies); any other turn's potion is Jev's call (the elite/boss 30%-of-HP rule is
+ * gone, Dai 2026-09-28).
  */
 export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player: PlayerSim): Decision | null {
   const incoming = Math.max(0, enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((total, attack) => total + attack.damage * attack.hits, 0), 0) - player.block);
-  const kind = fightKind(asRecord(env.state.raw["combat"]), env);
-  const urgent = incoming >= player.hp || ((kind === "elite" || kind === "boss") && incoming >= player.hp * 0.3);
-  if (!urgent) return null;
-  const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && potion.potion_id !== "FOUL_POTION");
+  if (incoming < player.hp) return null;
+  const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
   // A debuff potion into Artifact does nothing (M6P7 F48 T8: Weak Potion into Aeonglass's Artifact).
   const artifactUp = enemies.some((enemy) => enemy.hp > 0 && (enemy.artifact ?? 0) > 0);
   const useful = (potion: { text: string }) => !(artifactUp && /虚弱|weak|易伤|vulnerable/i.test(potion.text) && !/格挡|block/i.test(potion.text));

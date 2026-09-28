@@ -298,6 +298,11 @@ export interface SolverInput {
    */
   nextIncoming?: number;
   maxNodes?: number;
+  /**
+   * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
+   * the rest of the turn" (potion-mc.ts). Unset: any first play.
+   */
+  firstKey?: string;
 }
 
 export interface DrawPileCard {
@@ -336,8 +341,10 @@ export interface Step {
 }
 
 export interface Outcome {
-  /** Every enemy dead by the end of this turn. */
+  /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
   winsFight: boolean;
+  /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
+  explodesNext?: number;
   /** HP the player loses to the enemy turn (plus self-damage this turn). */
   hpLoss: number;
   hpAfter: number;
@@ -381,6 +388,14 @@ export interface Outcome {
   lasting: number;
   /** Block left over after the enemy turn's hits (block beyond incoming); 0 when the fight is won. */
   blockWasted?: number;
+  /**
+   * Cards this line's effects exhausted (Fiend Fire's hand, Burning Pact's pick, Second Wind …): the hand
+   * card indices, the drawn cards among them, and random exhausts whose card is unknown. The rollout takes
+   * them out of the piles for the rest of the fight (the played card with Exhaust goes by its keyword).
+   */
+  exhausted?: number[];
+  drawnExhausted?: number;
+  randomExhausts?: number;
 }
 
 export interface Plan {
@@ -476,6 +491,10 @@ interface Sim {
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
    */
   exhausted: CardModel[];
+  /** Cards drawn this turn that an exhaust effect took afterwards (Fiend Fire, Glowwater): not discarded. */
+  drawnExhausted: number;
+  /** Random exhausts from the hand (plain True Grit): which card went is unknown. */
+  randomExhausts: number;
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
@@ -567,6 +586,8 @@ export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 export const HAND_LIMIT = 10;
 /** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
 export const GLOWWATER_DRAW = 10;
+/** Bottled Potential: cards drawn after the hand is shuffled back (potion-values.ts Cards 5). */
+export const BOTTLED_DRAW = 5;
 
 /** Status/Curse: exhausting it is free (better: its held penalty goes with it). */
 function isJunk(card: CardModel): boolean {
@@ -625,6 +646,17 @@ function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
   const ways: CardModel[] = [];
   for (let mask = 1; mask < 1 << cards.length; mask += 1) ways.push({ ...brew, discards: cards.filter((_, bit) => mask & (1 << bit)).map((entry) => entry.key) });
   return ways;
+}
+
+/**
+ * The ways to drink a card-choice potion (one Monte Carlo sample of its offer): one per card offered, that
+ * card taken into the hand (free this turn), the step named for it.
+ */
+function choiceWays(potion: CardModel): CardModel[] {
+  return (potion.choices ?? []).map((card) => {
+    const { choices: _offer, ...rest } = potion;
+    return { ...rest, generates: card, name: `${potion.name} (take ${card.name})` };
+  });
 }
 
 /** Blood Potion: heals this share of max HP (card-model POTION_EFFECTS). */
@@ -802,8 +834,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
   const next = clone(sim);
-  // A Gambler's Brew way is a copy of the belt's potion: the potion leaves the hand by its key.
-  next.hand = sim.hand.filter((entry) => entry !== card && !(card.discards && entry.key === card.key));
+  // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
+  // leaves the hand by its key.
+  next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
@@ -873,6 +906,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (pool.length > 0) {
       next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
       next.exhaustedCount += 1;
+      next.randomExhausts += 1;
     }
     // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
     // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
@@ -886,18 +920,22 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.held = next.held.filter((entry) => entry !== pick);
       next.exhausted = [...next.exhausted, pick];
     }
-  } else if (card.special === "glowwater") {
+  } else if (card.special === "glowwater" || card.special === "bottled") {
     // Glowwater: 「消耗你的手牌。抽{Cards}张牌。」 The hand (and any Status/Curse held) is exhausted, then the
     // draw fills the hand from the pile (logs: 5 cards -> 10 drawn, F17 T1; 3 -> 10, F25 T4), each card
     // the pile's expected one (card-model expectedDraw), as Gambler's Brew prices its draws.
-    drawnBurned = next.drawnInHand;
+    // Bottled Potential: the hand is shuffled back into the draw pile (not exhausted), then 5 are drawn.
+    const bottled = card.special === "bottled";
+    if (!bottled) drawnBurned = next.drawnInHand;
     next.drawnInHand = 0;
-    next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
+    if (!bottled) next.exhausted = [...next.exhausted, ...next.held, ...next.hand.filter((entry) => entry.type !== "Potion")];
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
+    const room = bottled ? Number.POSITIVE_INFINITY : (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn;
+    const count = Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, HAND_LIMIT, room));
     const draw = card.generates;
-    if (draw) {
-      const count = Math.max(0, Math.min(GLOWWATER_DRAW, HAND_LIMIT, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn));
+    if (card.drawn) drawCards(next, card.drawn.slice(0, count), player, bottled);
+    else if (draw) {
       next.hand = [...next.hand, ...Array.from({ length: count }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
       next.cardsDrawn += count;
     }
@@ -910,6 +948,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.held = [];
   }
   const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
+  next.drawnExhausted += drawnBurned;
   next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
   // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
@@ -947,6 +986,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       next.strength += next.rupture;
       next.permStrength += next.rupture;
     }
+  }
+  // Damage to us (Foul Potion): like an enemy hit, block first, Intangible caps it at 1, the rest is HP lost.
+  if ((card.selfDamage ?? 0) > 0) {
+    const amount = player.intangible || next.intangible ? Math.min(1, card.selfDamage ?? 0) : card.selfDamage ?? 0;
+    const blocked = Math.min(next.block, amount);
+    next.block -= blocked;
+    loseHp(next, amount - blocked, player);
   }
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
@@ -995,23 +1041,33 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
   }
   if (card.special === "plating") next.flat += PLATING_LASTING * (card.plating ?? 0);
-  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn.
-  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: SNECKO_COST }));
+  // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
+  if (card.adds) addToHand(next, card.adds);
+  if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
+  // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
+  // costs; else the expected SNECKO_COST).
+  if (card.special === "snecko") next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.xCost || entry.cost < 0 ? entry : { ...entry, cost: card.sneckoCosts?.[entry.key] ?? SNECKO_COST }));
   // Gambler's Brew: the hand cards this way of drinking it discards (gambleWays) are swapped for as many
-  // average draws from the pile (card-model expectedDraw).
+  // average draws from the pile (card-model expectedDraw), or a sample's real next cards.
   if (card.special === "gamble") {
     const discards = new Set(card.discards ?? []);
     const draw = card.generates;
     const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
     next.hand = next.hand.filter((entry) => !discards.has(entry.key));
-    if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
-  } else if (card.special === "chaos" && card.generates) {
-    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card, at a
-    // random enemy (worst case: randomVictim). They leave the pile: later draws come from below them.
-    const top: CardModel = { ...card.generates, cost: 0, target: card.generates.damage !== null ? "random" : "self", validTargets: [] };
-    for (let played = 0; played < (card.playsTop ?? 0); played += 1) resolveEffects(next, top, null, player, 0);
+    if (card.drawn) drawCards(next, card.drawn.slice(0, swapped), player);
+    else if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
+  } else if (card.special === "chaos" && (card.generates || card.drawn)) {
+    // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card (or a
+    // sample's real top cards), at a random enemy (worst case: randomVictim). They leave the pile: later
+    // draws come from below them.
+    const tops = card.drawn ? card.drawn.slice(0, card.playsTop ?? 0) : Array.from({ length: card.playsTop ?? 0 }, () => card.generates!);
+    for (const drawn of tops) {
+      if (!drawn.playable || drawn.type === "Status" || drawn.type === "Curse") continue;
+      const top: CardModel = { ...drawn, cost: 0, target: drawn.damage !== null ? "random" : "self", validTargets: [] };
+      resolveEffects(next, top, null, player, 0);
+    }
     next.pileDrawn += card.playsTop ?? 0;
-  } else if (card.generates && card.special !== "glowwater") next.hand = [...next.hand, card.generates];
+  } else if (card.generates && card.special !== "glowwater" && card.special !== "bottled") next.hand = [...next.hand, card.generates];
   if (card.special === "free_card") {
     const pick = freeCardPick(next.hand);
     if (pick) {
@@ -1145,6 +1201,27 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
   }
+}
+
+/** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
+function addToHand(sim: Sim, cards: CardModel[]): void {
+  const space = Math.max(0, HAND_LIMIT - sim.hand.filter((entry) => entry.type !== "Potion").length - sim.held.length - sim.drawnInHand);
+  const fits = cards.slice(0, space);
+  sim.hand = [...sim.hand, ...fits.filter((card) => card.playable)];
+  sim.held = [...sim.held, ...fits.filter((card) => !card.playable)];
+}
+
+/**
+ * Known cards drawn (a Monte Carlo sample's pile order): no more than the piles hold (unless `reshuffled`:
+ * the whole deck is back in the pile), none past the 10-card hand (the rest are discarded). They are taken
+ * from the known pile, so later expected-value draws come from below them.
+ */
+function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled = false): void {
+  const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
+  const taken = cards.slice(0, Math.min(cards.length, room));
+  addToHand(sim, taken);
+  sim.cardsDrawn += taken.length;
+  sim.pileDrawn += taken.length;
 }
 
 function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
@@ -1316,6 +1393,8 @@ export const SANDPIT_TURN_DAMAGE = 20;
 export const DAZED_COST = 1.5;
 /** Share of The Bomb's delayed damage counted in elite/boss fights (it may end first; hallway less). */
 export const BOMB_SURE = 0.8;
+/** Block a next-turn hand is expected to put up against the Waterfall Giant's explosion. */
+export const ERUPTION_NEXT_BLOCK = 12;
 /** Damage weight multiplier while racing the Waterfall Giant's eruption (raceEruption). */
 export const ERUPTION_RACE_DAMAGE = 1.5;
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
@@ -1423,7 +1502,13 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   const nextPhase = restocked.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
-  const winsFight = !nextPhase && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
+  // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
+  // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
+  // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
+  // not a win: the fight goes on until the explosion is survived.
+  const erupting = sim.enemies.filter((enemy) => !enemy.alive && (enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const explodesNext = erupting.reduce((sum, enemy) => sum + (enemy.eruption ?? 0), 0);
+  const winsFight = !nextPhase && erupting.length === 0 && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
@@ -1495,6 +1580,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const stunSaved = stunned.reduce((sum, enemy) => sum + (enemy.imbalanced ?? 0), 0);
   if (!dies) score += weights.hp * stunSaved;
   if (winsFight) score += 10_000;
+  // A Giant kill ends the fight once its explosion is survived: HP (plus block that stays) above the
+  // blast is a win next turn; within a hand's block of it (ERUPTION_NEXT_BLOCK) a likely one; below,
+  // the blast past HP and that block counts as HP lost.
+  if (explodesNext > 0 && !dies) {
+    const kept = input.player.keepsBlock ? Math.max(0, blockLeft - incomingRaw) : 0;
+    const margin = hpAfter + kept - explodesNext;
+    if (margin > 0) score += 10_000;
+    else if (margin + ERUPTION_NEXT_BLOCK > 0) score += 5_000;
+    else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
+  }
   score -= weights.hp * hpLoss;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
@@ -1537,7 +1632,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Waterfall Giant: its explosion is the Steam Eruption stacks (+3 a turn while it lives), and next
   // turn's hand blocks ~12 of it. Below that line every HP lost now is a lost fight (G7EJ, WQTRX:
   // both went into the explosion with too little HP after racing damage), so HP counts double.
-  const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 ? 0 : 3)));
+  // A Giant killed this turn stops growing: its blast is the stacks it died with.
+  const eruption = Math.max(0, ...sim.enemies.filter((enemy) => (enemy.eruption ?? 0) > 0).map((enemy) => enemy.eruption! + (enemy.maxHp >= 1_000_000 || !enemy.alive ? 0 : 3)));
   // Racing a Giant that is too slow to kill (raceEruption): HP spent on damage is the way through.
   // Racing still keeps enough HP for the next hit before the explosion (J8E4 F17 T10: the last 25 of 28
   // HP spent without a kill, the Pressure Gun and explosion followed).
@@ -1720,6 +1816,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
+      ...(explodesNext > 0 ? { explodesNext } : {}),
+      ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
+      ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
+      ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
     },
   };
 }
@@ -1855,6 +1955,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
     exhausted: [],
+    drawnExhausted: 0,
+    randomExhausts: 0,
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
@@ -1889,9 +1991,14 @@ export function solveTurn(input: SolverInput): SolveResult {
     const overPotionCap =
       input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);
-    // Same outcome: prefer the shorter plan (fewer steps = fewer chances for the board to surprise us).
-    // Over the potion cap it is not a plan to offer, but the search goes on (a later card may win).
-    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || (Math.abs(plan.score - existing.score) < 1e-9 && plan.steps.length < existing.steps.length))) {
+    // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
+    // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
+    // board to surprise us). Over the potion cap it is not a plan to offer, but the search goes on (a
+    // later card may win).
+    const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
+    const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
+    const samePotions = tie && potionsDrunk === potionStepCount(existing.steps);
+    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length))) {
       byOutcome.set(signature, plan);
     }
     if (nodes >= maxNodes) {
@@ -1903,12 +2010,13 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
-    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : [entry]))) {
+    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
+      if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];
       for (const target of targets) {
-        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}`;
+        const dedupe = `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}@${target ?? "-"}${card.discards ? `/${card.discards.join(",")}` : ""}${card.generates ? `>${card.generates.cardId}` : ""}`;
         if (tried.has(dedupe)) continue;
         tried.add(dedupe);
         const next = play(sim, card, target, input.player);
@@ -1929,6 +2037,10 @@ export function solveTurn(input: SolverInput): SolveResult {
   return result;
 }
 
+function potionStepCount(steps: Step[]): number {
+  return steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
@@ -1940,7 +2052,9 @@ function vector(plan: Plan): number[] {
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
+  // drinking one must never dominate the same line without it.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
