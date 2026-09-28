@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 4124 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T18:27:39.383Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1860}.
+DB: `src/knowledge/monster-db.json` from 4132 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-28T18:39:01.162Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1868}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -18,7 +18,7 @@ Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at 
 | SOUL_FYSH | 211 (6) | 211 | 221 (19) | 221 | 5.1 (19) | 5.1 | 12.5 (15) | 12 |  |
 | TEST_SUBJECT | 100 (3) | **600** | 111 (3) | **641** | 12.6 (3) | **7.5** | - (0) | 12 | hand hp = sum of 3 phases; DB = phase 1 (phases below) |
 | THE_INSATIABLE | 321 (6) | 321 | 341 (23) | 341 | 8.8 (23) | 8.9 | 8.2 (8) | 8 |  |
-| THE_KIN | 307 (7) | **250** | 324 (21) | **260** | 8.9 (21) | 10.1 | 10.2 (12) | 10 | hand hp = priest + ~60 into followers on purpose; DB = priest + 2 followers |
+| THE_KIN | 307 (7) | **250** | 324 (22) | **260** | 8.8 (22) | 10.1 | 10.2 (12) | 10 | hand hp = priest + ~60 into followers on purpose; DB = priest + 2 followers |
 | VANTOM | 173 (8) | 173 | 183 (25) | 183 | 6.5 (25) | 7.3 | 11 (21) | 11 |  |
 | WATERFALL_GIANT | 240 (9) | **260** | 250 (25) | **270** | 5.1 (25) | 5.1 | 13.2 (18) | 14 | hand hp adds ~20 Siphon heal on purpose |
 
@@ -37,7 +37,7 @@ Loss/turn = (entry HP - HP at the end, all of it on a death) / our turns, 75th p
 - **SOUL_FYSH** — A7: SOUL_FYSH 211 (n=6, x1/fight); win 1 of 6, deaths 0 | A8: SOUL_FYSH 221 (n=19, x1/fight); win 0.8 of 19, deaths 4
 - **TEST_SUBJECT** — A7: TEST_SUBJECT 100 (n=3, x1/fight); phases {'100 > 200 > 300 (TEST_SUBJECT)': 2, '100 > 200 (TEST_SUBJECT)': 1}; win 0 of 3, deaths 3 | A8: TEST_SUBJECT 111 (n=3, x1/fight); phases {'111 > 212 (TEST_SUBJECT)': 2, '111 > 212 > 313 (TEST_SUBJECT)': 1}; win 0 of 3, deaths 3
 - **THE_INSATIABLE** — A7: THE_INSATIABLE 321 (n=6, x1/fight); win 0.8 of 6, deaths 1 | A8: THE_INSATIABLE 341 (n=23, x1/fight); win 0.3 of 23, deaths 15
-- **THE_KIN** — A7: KIN_FOLLOWER 58.5 (n=14, x2/fight), KIN_PRIEST 190 (n=7, x1/fight); win 0.6 of 7, deaths 3 | A8: KIN_FOLLOWER 62.5 (n=42, x2/fight), KIN_PRIEST 199 (n=21, x1/fight); win 0.6 of 21, deaths 9
+- **THE_KIN** — A7: KIN_FOLLOWER 58.5 (n=14, x2/fight), KIN_PRIEST 190 (n=7, x1/fight); win 0.6 of 7, deaths 3 | A8: KIN_FOLLOWER 62.5 (n=44, x2/fight), KIN_PRIEST 199 (n=22, x1/fight); win 0.5 of 22, deaths 10
 - **VANTOM** — A7: VANTOM 173 (n=8, x1/fight); win 1 of 8, deaths 0 | A8: VANTOM 183 (n=25, x1/fight); win 0.8 of 25, deaths 4
 - **WATERFALL_GIANT** — A7: WATERFALL_GIANT 240 (n=9, x1/fight); win 0.8 of 9, deaths 2 | A8: WATERFALL_GIANT 250 (n=25, x1/fight); win 0.7 of 25, deaths 7
 
@@ -64,7 +64,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | FLAIL_KNIGHT | elite | 276 (2) | 276 | 294 (2) | **290** | 108 | 65.3 (2) | - | 0 | 0 | FLAIL_KNIGHT+MAGI_KNIGHT+SPECTRAL_KNIGHT |
 | FLYCONID | hallway | 80 (4) | 49 | 87 [85-89] (23) | 51 | 52 [51-53] | 21.8 (23) | - | 1 | 1 | FLYCONID+SNAPPING_JAXFRUIT |
 | FROG_KNIGHT | hallway | 191 (4) | 191 | 199 (3) | 199 | 199 | 33.2 (1) | 30 | 3 | 2 | FROG_KNIGHT |
-| FUZZY_WURM_CRAWLER | hallway | 56 [55-57] (13) | 56 | 59 [58-59] (59) | 59 | 59 [58-59] | 19.7 (59) | - | 1 | 1 | FUZZY_WURM_CRAWLER |
+| FUZZY_WURM_CRAWLER | hallway | 56 [55-57] (13) | 56 | 59 [58-59] (60) | 59 | 59 [58-59] | 16.9 (60) | - | 1 | 1 | FUZZY_WURM_CRAWLER |
 | GLOBE_HEAD | hallway | 148 (3) | 148 | 158 (2) | **155** | 158 | 45.1 (2) | - | 0 | 0 | GLOBE_HEAD |
 | HUNTER_KILLER | hallway | 121 (8) | 121 | 126 (31) | **127** | 126 | 25.2 (28) | 25 | 6 | 3 | HUNTER_KILLER |
 | INFESTED_PRISM | elite | 161 (3) | 161 | 171 (15) | 171 | 171 | 34.2 (11) | 35 | 6 | 4 | INFESTED_PRISM |
@@ -90,7 +90,7 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | TERROR_EEL | elite | 140 (8) | 140 | 150 (22) | 150 | 150 | 25 (21) | 30 | 1 | 1 | TERROR_EEL |
 | TEST_SUBJECT | boss | 100 (3) | **600** | 111 (3) | **630** | 111 | - (0) | 43 | 10 | 7 | boss TEST_SUBJECT |
 | THE_INSATIABLE | boss | 321 (6) | 321 | 341 (23) | 341 | 341 | 42.6 (8) | 49 | 21 | 6 | boss THE_INSATIABLE |
-| THE_KIN | boss | 307 (7) | 307 | 324 (21) | **322** | - | 40.5 (12) | **31** | 13 | 4 | boss THE_KIN |
+| THE_KIN | boss | 307 (7) | 307 | 324 (22) | **322** | - | 40.5 (12) | **31** | 14 | 4 | boss THE_KIN |
 | THE_LOST | hallway | 199 (2) | 199 | 210 (5) | **209** | 99 | 52.5 (5) | - | 0 | 0 | THE_FORGOTTEN+THE_LOST |
 | THE_OBSCURA | hallway | 123 (5) | 123 | 129 (34) | 129 | 129 | 25.8 (29) | 30 | 6 | 3 | THE_OBSCURA |
 | THIEVING_HOPPER | hallway | 79 (14) | 79 | 84 (49) | 84 | 84 | 21 (49) | - | 0 | 0 | THIEVING_HOPPER |
