@@ -22,6 +22,7 @@ import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { bossNote } from "../project/run-journal.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { fillPotionText } from "../knowledge/potion-values.js";
 
 export type FightApproach = "race" | "setup" | "defend";
 export type PotionUse = "early" | "big_hit" | "emergency" | "save" | "any";
@@ -126,7 +127,7 @@ export function fightPlanInput(
     .filter((potion) => bool(potion["occupied"]))
     .map((potion) => {
       const id = str(potion["potion_id"]);
-      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(str(potion["description"]) || knowledge.potion(id)?.description || "", 100)}`;
+      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(fillPotionText(id, str(potion["description"]) || knowledge.potion(id)?.description || ""), 100)}`;
     });
   return {
     fight: kind,

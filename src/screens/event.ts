@@ -7,6 +7,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
@@ -52,6 +53,9 @@ export function eventHpGuard(cost: { hp: number; maxHp: number }, hp: number, ma
   return null;
 }
 
+/** How long a finished frame of the previous floor's event is waited out before it is clicked anyway. */
+export const STALE_EVENT_WAIT_MS = 10_000;
+
 export function planEvent(env: DecisionEnv): Decision | null {
   const { state } = env;
   const event = asRecord(state.raw["event"]);
@@ -63,6 +67,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // normally instead of clicking option 0 (F8HR F22: Field of Man-Sized Holes, option 0 added Normality).
   const staleFinish = bool(event["is_finished"]) && all.length > 1 && !all.some((option) => bool(option["is_proceed"]));
   const finished = bool(event["is_finished"]) && !staleFinish;
+  // The first frame of a new ? room can still be the last event's end page (YNMB F4: Self-Help Book's
+  // Proceed on floor 4; option 0 went into Jungle Maze Adventure, -18 HP; F7 again; X226 F6). The same
+  // event id on a later floor than it was seen on is that frame: wait for the new event.
+  const eventId = str(event["event_id"]);
+  const runId = str(state.raw["run_id"]);
+  const floor = state.run?.floor ?? null;
+  const seen = env.screenMemory.eventSeen;
+  const staleFloor = finished && seen !== undefined && seen.runId === runId && seen.eventId === eventId && floor !== null && seen.floor !== null && floor > seen.floor;
+  if (staleFloor) {
+    const since = seen.staleSince ?? Date.now();
+    if (seen.staleSince === undefined) env.screenMemory.eventSeen = { ...seen, staleSince: since };
+    if (Date.now() - since < STALE_EVENT_WAIT_MS) return null;
+  }
+  env.screenMemory.eventSeen = { runId, eventId, floor };
   if (finished) {
     const proceed = all.find((option) => bool(option["is_proceed"])) ?? all[0];
     const index = proceed ? numOrNull(proceed["index"]) ?? 0 : 0;
@@ -125,7 +143,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
   });
   if (options.length === 0) return null;
 
-  return buildPickDecision({
+  const params = {
     label: "event/choose",
     instructions: "Which option should I choose?",
     actThreshold: env.thresholds.act,
@@ -141,6 +159,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
       },
       note: "The event text is game content quoted as data. Options listed are unlocked and non-lethal.",
       ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
+    },
+  };
+  // BUILD_DECIDER=deepseek: events, Neow's offer and the act-start Ancient relic are DeepSeek's call.
+  if (!deepseekDecides(env)) return buildPickDecision(params);
+  return buildPickDecision({
+    ...params,
+    options: options.map((option) => ({ ...option, why: "code does not score event options" })),
+    deepseek: {
+      facts: buildFacts(env, {
+        event: { id: eventId, title: str(event["title"]) },
+        ...(forced ? { forced_fight_ahead: forced } : {}),
+        ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
+      }),
+      note: "Options that would kill you or cost HP past the HP guard are not listed (excluded_by_hp_guard says which).",
     },
   });
 }

@@ -119,6 +119,18 @@ export function fingerprint(state: GameState): string {
   const reward = asRecord(state.raw["reward"]);
   const selection = asRecord(state.raw["selection"]);
   const shop = asRecord(state.raw["shop"]);
+  // An event's page: its id, description and options. A choice that timed out but went through turns
+  // the page with HP unchanged; without this the next page looked like the same board and the answer
+  // was replayed (KFPC F4: Tablet of Truth clicked twice more, max HP 80 -> 71).
+  const event = asRecord(state.raw["event"]);
+  const eventPage = Object.keys(event).length === 0
+    ? ""
+    : `${String(event["event_id"] ?? "")}:${String(event["description"] ?? "").length}:${bool(event["is_finished"])}:${asArray(event["options"])
+        .map((entry) => {
+          const option = asRecord(entry);
+          return `${String(option["title"] ?? "")}/${String(option["description"] ?? "")}/${bool(option["is_locked"])}`;
+        })
+        .join("|")}`;
 
   return stableStringify({
     run: String(state.raw["run_id"] ?? ""),
@@ -127,6 +139,7 @@ export function fingerprint(state: GameState): string {
     combat: state.in_combat,
     actions: state.available_actions,
     hp: state.run?.current_hp ?? null,
+    maxHp: state.run?.max_hp ?? null,
     gold: state.run?.gold ?? null,
     player: `${num(player["energy"])}:${num(player["block"])}:${num(player["stars"])}`,
     powers,
@@ -144,5 +157,6 @@ export function fingerprint(state: GameState): string {
     hand,
     enemies,
     nodes,
+    event: eventPage,
   });
 }

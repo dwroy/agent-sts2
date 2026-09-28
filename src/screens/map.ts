@@ -10,6 +10,7 @@ import { runPlanEliteShift } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 
 interface MapNode {
   row: number;
@@ -326,7 +327,7 @@ export function planMap(env: DecisionEnv): Decision | null {
 
   const current = asRecord(map["current_node"]);
   const boss = asRecord(map["boss_node"]);
-  return buildPickDecision({
+  const baseline = buildPickDecision({
     label: "map/route",
     instructions: "Which node should I travel to next?",
     actThreshold: env.thresholds.act,
@@ -349,6 +350,249 @@ export function planMap(env: DecisionEnv): Decision | null {
       note: "route_value and likely_continuation are computed in code from the visible map graph. Do not recompute them.",
     },
   });
+  // BUILD_DECIDER=deepseek: DeepSeek plans the act's route once; code follows it node by node.
+  if (!deepseekDecides(env)) return baseline;
+  return routePlanDecision(env, baseline, {
+    nodes,
+    available: available.flatMap((node) => {
+      const index = numOrNull(node["index"]);
+      return index === null ? [] : [{ index, row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") }];
+    }),
+    current: typeof current["row"] === "number" ? { row: num(current["row"]), col: num(current["col"]) } : null,
+    start,
+    weights: weightOf,
+    act,
+    hpPct,
+    urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
+  });
+}
+
+/* ---- route plan (BUILD_DECIDER=deepseek) ---------------------------------------------------------- */
+
+/**
+ * HP drop (fraction of max HP) below the HP the plan projected for the next node that makes DeepSeek
+ * re-plan the route (Dai 2026-09-28: plan the act's route once, re-ask only when the plan is broken or HP
+ * moved a lot).
+ */
+export const ROUTE_REPLAN_HP_DROP = 0.3;
+/** Candidate paths shown to DeepSeek. */
+export const ROUTE_CANDIDATES = 8;
+/** Cap on the paths enumerated from the available nodes to the boss. */
+const MAX_PATHS = 4000;
+
+export interface RoutePlanStep {
+  row: number;
+  col: number;
+  type: string;
+  /** Projected HP fraction on arrival at this node (code's route model, resting at rest sites). */
+  hpOnArrival: number;
+}
+
+export interface RoutePlan {
+  runId: string;
+  act: number;
+  floor: number | null;
+  /** HP fraction when the plan was made. */
+  hpPct: number;
+  path: RoutePlanStep[];
+  /** DeepSeek's summary of the path (the option text). */
+  summary: string;
+}
+
+interface RouteContext {
+  nodes: Map<string, MapNode>;
+  available: { index: number; row: number; col: number; type: string }[];
+  current: { row: number; col: number } | null;
+  start: RouteState;
+  weights: Weights;
+  act: number;
+  hpPct: number;
+  urgency: number;
+}
+
+/** Every path from the available nodes to the boss (or the map's end), capped. */
+export function enumeratePaths(starts: MapNode[], nodes: Map<string, MapNode>, limit = MAX_PATHS): MapNode[][] {
+  const paths: MapNode[][] = [];
+  const walk = (node: MapNode, sofar: MapNode[]): void => {
+    if (paths.length >= limit) return;
+    const path = [...sofar, node];
+    const children = node.type === "Boss" ? [] : node.children.map((child) => nodes.get(key(child.row, child.col))).filter((child): child is MapNode => child !== undefined);
+    if (children.length === 0) {
+      paths.push(path);
+      return;
+    }
+    for (const child of children) walk(child, path);
+  };
+  for (const start of starts) walk(start, []);
+  return paths;
+}
+
+interface ScoredPath {
+  path: MapNode[];
+  value: number;
+  hpOnArrival: number[];
+  hpAtEnd: number;
+}
+
+function scorePath(path: MapNode[], context: RouteContext): ScoredPath {
+  let at = context.start;
+  let value = 0;
+  const hpOnArrival: number[] = [];
+  let dead = false;
+  path.forEach((node, step) => {
+    hpOnArrival.push(at.hp);
+    if (dead) return;
+    const weight = context.weights(node.type, at);
+    value += step === 0 ? weight * context.urgency : weight;
+    // A likely death ends the route: nothing after it counts (as in continuation()).
+    if (weight <= LIKELY_DEATH) dead = true;
+    at = stateAfter(node.type, at, context.act);
+  });
+  return { path, value, hpOnArrival, hpAtEnd: at.hp };
+}
+
+/** The candidate paths DeepSeek chooses from: the best by code's value, the best from each first node, and the extremes. */
+export function candidatePaths(context: RouteContext): ScoredPath[] {
+  const starts = context.available.map((node) => context.nodes.get(key(node.row, node.col)) ?? { row: node.row, col: node.col, type: node.type, children: [] });
+  const scored = enumeratePaths(starts, context.nodes).map((path) => scorePath(path, context)).sort((a, b) => b.value - a.value);
+  const signature = (entry: ScoredPath): string => entry.path.map((node) => `${node.row},${node.col}`).join(">");
+  const types = (entry: ScoredPath): string => entry.path.map((node) => node.type).join(">");
+  const chosen = new Map<string, ScoredPath>();
+  const seenTypes = new Set<string>();
+  const add = (entry: ScoredPath | undefined): void => {
+    if (!entry || chosen.has(signature(entry))) return;
+    // Two paths with the same room sequence are the same choice; keep the better-valued one.
+    if (seenTypes.has(types(entry))) return;
+    seenTypes.add(types(entry));
+    chosen.set(signature(entry), entry);
+  };
+  // Every first step is represented by its best path.
+  for (const start of starts) add(scored.find((entry) => entry.path[0] === start));
+  const count = (entry: ScoredPath, test: (type: string) => boolean): number => entry.path.filter((node) => test(node.type)).length;
+  const byMost = (test: (type: string) => boolean, sign: 1 | -1) => [...scored].sort((a, b) => sign * (count(b, test) - count(a, test)) || b.value - a.value)[0];
+  add(byMost((type) => type === "Elite", 1));
+  add(byMost((type) => type === "Elite", -1));
+  add(byMost((type) => type === "RestSite" || type === "Rest", 1));
+  add(byMost((type) => type === "Shop", 1));
+  for (const entry of scored) {
+    if (chosen.size >= ROUTE_CANDIDATES) break;
+    add(entry);
+  }
+  return [...chosen.values()].sort((a, b) => b.value - a.value);
+}
+
+function pathFacts(entry: ScoredPath, maxHp: number): Record<string, JsonValue> {
+  const hp = (fraction: number): string => `~${Math.round(fraction * maxHp)}/${maxHp}`;
+  const count = (test: (type: string) => boolean): number => entry.path.filter((node) => test(node.type)).length;
+  const bossAt = entry.path.findIndex((node) => node.type === "Boss");
+  const restAt = entry.path.findIndex((node) => node.type === "RestSite" || node.type === "Rest");
+  const beforeRest = restAt >= 0 ? entry.path.slice(0, restAt) : entry.path;
+  return {
+    path: entry.path.map((node) => node.type).join(" -> "),
+    first_node: `row ${entry.path[0]!.row}, column ${entry.path[0]!.col} (${entry.path[0]!.type})`,
+    fights: count((type) => type === "Monster" || type === "Elite"),
+    elites: count((type) => type === "Elite"),
+    unknown_rooms: count((type) => type === "Unknown"),
+    shops: count((type) => type === "Shop"),
+    rests: count((type) => type === "RestSite" || type === "Rest"),
+    treasure: count((type) => type === "Treasure"),
+    fights_before_first_rest: restAt >= 0 ? beforeRest.filter((node) => node.type === "Monster" || node.type === "Elite").length : "no rest on this path",
+    hp_on_arrival_at_elites: entry.path.flatMap((node, step) => (node.type === "Elite" ? [`step ${step + 1}: ${hp(entry.hpOnArrival[step]!)}`] : [])),
+    hp_at_boss: bossAt >= 0 ? hp(entry.hpOnArrival[bossAt]!) : hp(entry.hpAtEnd),
+    forks_on_path: entry.path.filter((node) => node.children.length > 1).length,
+  };
+}
+
+/** The next planned node: the first plan step on a row after the current node (the first step before any). */
+export function nextPlannedStep(plan: RoutePlan, current: { row: number; col: number } | null): RoutePlanStep | null {
+  return plan.path.find((step) => current === null || step.row > current.row) ?? null;
+}
+
+function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteContext): Decision {
+  const { state, screenMemory } = env;
+  const runId = str(state.raw["run_id"]);
+  const act = context.act;
+  const plan = screenMemory.routePlan && screenMemory.routePlan.runId === runId && screenMemory.routePlan.act === act ? screenMemory.routePlan : null;
+  const planText = (entry: RoutePlan): string => entry.path.map((step) => step.type).join(" -> ");
+  let replanWhy: string | null = null;
+  if (plan) {
+    const next = nextPlannedStep(plan, context.current);
+    const target = next ? context.available.find((node) => node.row === next.row && node.col === next.col) : undefined;
+    if (next && target) {
+      const drop = next.hpOnArrival - context.hpPct;
+      if (drop < ROUTE_REPLAN_HP_DROP) {
+        const step = plan.path.indexOf(next) + 1;
+        return {
+          kind: "act",
+          label: "map/route-follow",
+          intent: { action: "choose_map_node", option_index: target.index },
+          rationale: `following DeepSeek's route plan (floor ${plan.floor ?? "?"}): step ${step}/${plan.path.length} ${next.type} at row ${next.row}, col ${next.col}; plan ${planText(plan)}`,
+        };
+      }
+      replanWhy = `HP ${Math.round(context.hpPct * 100)}% is ${Math.round(drop * 100)} points below the ${Math.round(next.hpOnArrival * 100)}% the plan projected for the next node (re-plan at ${Math.round(ROUTE_REPLAN_HP_DROP * 100)})`;
+    } else {
+      replanWhy = next ? `the planned next node (row ${next.row}, col ${next.col}, ${next.type}) is not available` : "the plan has no node ahead";
+    }
+  }
+  if (screenMemory.routePlanFailed === `${runId}:${act}`) return baseline;
+  // A broken plan with only one way on: take it and re-plan at the next fork.
+  if (plan && context.available.length < 2) return baseline;
+  const candidates = candidatePaths(context);
+  if (candidates.length < 2) return baseline;
+  const maxHp = state.run?.max_hp ?? 80;
+  const options: PickOption[] = candidates.map((entry, at) => {
+    const first = context.available.find((node) => node.row === entry.path[0]!.row && node.col === entry.path[0]!.col)!;
+    const facts = pathFacts(entry, maxHp);
+    const newPlan: RoutePlan = {
+      runId,
+      act,
+      floor: state.run?.floor ?? null,
+      hpPct: context.hpPct,
+      path: entry.path.map((node, step) => ({ row: node.row, col: node.col, type: node.type, hpOnArrival: entry.hpOnArrival[step]! })),
+      summary: String(facts["path"]),
+    };
+    return {
+      key: `p${at + 1}`,
+      label: `route ${String(facts["path"])}`,
+      intent: { action: "choose_map_node", option_index: first.index },
+      score: Number(entry.value.toFixed(2)),
+      why: "sum of code's node weights along the path at the projected HP (elites valued by HP and act, rests by HP, shops by gold, fight chains penalised)",
+      summary: facts,
+      apply: () => {
+        screenMemory.routePlan = newPlan;
+      },
+    } satisfies PickOption;
+  });
+  const decision = buildPickDecision({
+    label: "map/route-plan",
+    instructions:
+      "Plan this act's route: which path should I follow to the act boss? Code follows the path you pick node by node and asks you again only if the path breaks or HP falls well below the projection.",
+    actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
+    options,
+    state: {
+      run_brief: briefJson(env.brief),
+      situation: { screen: "MAP", floor: state.run?.floor ?? null, act, hp_percent: Math.round(context.hpPct * 100), gold: state.run?.gold ?? null },
+      ...(replanWhy ? { replan_because: replanWhy, previous_plan: plan ? planText(plan) : null } : {}),
+      note: "Each option is a full path from the next node to the boss. HP projections assume resting at rest sites and ~10%/22%/28% of max HP per hallway fight in acts 1/2/3 (elites x2.5).",
+    },
+    deepseek: {
+      facts: buildFacts(env, replanWhy ? { replan_because: replanWhy } : {}),
+      baseline,
+      onFail: () => {
+        screenMemory.routePlanFailed = `${runId}:${act}`;
+      },
+    },
+  });
+  if (replanWhy && decision.kind === "ask") {
+    // Log why the route was re-planned with the decision that re-plans it.
+    const inner = decision.resolve.bind(decision);
+    decision.resolve = (answers) => {
+      const result = inner(answers);
+      return { ...result, rationale: `route re-plan (${replanWhy}; was ${plan ? planText(plan) : "none"}): ${result.rationale}` };
+    };
+  }
+  return decision;
 }
 
 /**

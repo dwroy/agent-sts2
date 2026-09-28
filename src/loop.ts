@@ -271,6 +271,15 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const screenMemory: ScreenMemory = createScreenMemory();
   /** Run memory for DeepSeek (choices, this fight's turns, the road to the boss); resets per run id. */
   const journal = new RunJournal();
+  /** The DeepSeek client among the escalators (run plan, fight plan, BUILD_DECIDER=deepseek), if any. */
+  const deepseekClient = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient) ?? null;
+  const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
+  /**
+   * The last direct DeepSeek decision (BUILD_DECIDER=deepseek), keyed by the question's content: a board
+   * that moved without changing the question (an animation, a re-read before dispatch) is not asked
+   * twice. Cleared on every dispatch.
+   */
+  let deepseekMemo: { key: string; resolved: ResolvedAction; record: Record<string, JsonValue> } | null = null;
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -464,6 +473,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.facing = undefined;
       screenMemory.fightCards = undefined;
       screenMemory.planBeforeSelection = undefined;
+      screenMemory.gambleDiscards = undefined;
       screenMemory.plannedAfter = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
@@ -493,6 +503,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       shopDiscardPotions: config.shop.discardPotions,
       jevContext: config.jevContext,
       fightPlan: config.fightPlan,
+      // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
+      buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -563,11 +575,89 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       break;
     }
 
-    const decision = planned.decision;
+    let decision = planned.decision;
     const planStarted = Date.now();
     const stateFingerprint = fingerprint(state);
     let resolved: ResolvedAction;
     let jevLatency = 0;
+    let deepseekLatency = 0;
+    /** BUILD_DECIDER=deepseek: DeepSeek's own decision on this screen, and its log record. */
+    let deepseekResolved: ResolvedAction | null = null;
+    let deepseekRecord: Record<string, JsonValue> | undefined;
+    let deepseekFailed = false;
+    let deepseekAsked: Record<string, JsonValue> | undefined;
+    let deepseekFallback: string | undefined;
+    if (decision.kind === "ask" && decision.deepseek) {
+      const spec = decision.deepseek;
+      const question = decision.questions[spec.question];
+      const memoKey = `${str(state.raw["run_id"])}|${state.run?.floor ?? ""}|${decision.label}|${JSON.stringify(question ?? null)}`;
+      if (deepseekMemo && deepseekMemo.key === memoKey) {
+        stats.debounced += 1;
+        deepseekResolved = deepseekMemo.resolved;
+        deepseekRecord = { ...deepseekMemo.record, reused: true };
+      } else if (deepseekClient && deepseekBudgetLeft() && question?.type === "choice") {
+        // The board may have moved while planning: never pay ~10 s for a position that no longer exists.
+        let stale = false;
+        try {
+          stale = fingerprint(await client.state()) !== stateFingerprint;
+        } catch {
+          // let the ask go ahead; the dispatch re-read catches a broken mod
+        }
+        if (stale) {
+          stats.staleSkips += 1;
+          onEvent({ type: "note", message: `board changed before asking DeepSeek on ${state.screen}; re-planning` });
+          await sleep(pollIntervalMs);
+          continue;
+        }
+        const memory = journal.render(state, knowledge, screenMemory.lastMap);
+        onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"})` });
+        try {
+          stats.deepseekCalls += 1;
+          const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+          stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
+          deepseekLatency = answer.latencyMs;
+          const picked = decision.resolve({
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek" } },
+          } as AnswerSet);
+          if (picked.intent) {
+            deepseekResolved = { ...picked, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}: ${answer.reason} | ${picked.rationale}` };
+            deepseekRecord = {
+              by: "deepseek",
+              direct: true,
+              choice: answer.choice,
+              reason: answer.reason,
+              latency_ms: answer.latencyMs,
+              tokens: answer.inputTokens + answer.outputTokens,
+              input_tokens: answer.inputTokens,
+              output_tokens: answer.outputTokens,
+              cache_hit_tokens: answer.cacheHitTokens ?? 0,
+              reasoning_tokens: answer.reasoningTokens ?? 0,
+              effort: answer.effort ?? "",
+              guide: answer.guideId ?? "",
+              handbook: answer.handbookId ?? "",
+              memory_chars: memoryChars(memory),
+            };
+            deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
+            deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
+            onEvent({ type: "note", message: `DeepSeek (${(answer.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${answer.choice} — ${answer.reason}` });
+          } else {
+            deepseekFailed = true;
+            onEvent({ type: "note", message: `DeepSeek's ${answer.choice} on ${decision.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
+          }
+        } catch (error) {
+          deepseekFailed = true;
+          onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}); falling back to Jev/code` });
+        }
+      } else if (deepseekClient && !deepseekBudgetLeft()) {
+        onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
+      }
+      if (!deepseekResolved) {
+        if (deepseekFailed) spec.onFail?.();
+        deepseekFallback = deepseekFailed ? "deepseek failed" : "deepseek unavailable or out of budget";
+        // What the screen decides without DeepSeek: code, or Jev with DeepSeek only as its escalation.
+        decision = spec.baseline;
+      }
+    }
     let asked: Record<string, JsonValue> | undefined;
     let rawAnswers: JsonValue | undefined;
     let usage = { input_tokens: 0, output_tokens: 0 };
@@ -577,7 +667,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     let usedJev = false;
     let fromMemo = false;
-    if (decision.kind === "act") {
+    if (deepseekResolved) {
+      resolved = deepseekResolved;
+      asked = deepseekAsked;
+    } else if (decision.kind === "act") {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false };
     } else if (!jev) {
       // No-Jev mode: the resolver sees an empty answer set and takes its deterministic path.
@@ -652,11 +745,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           };
           // Only DeepSeek gets the run memory, in its user message (its system prompt stays cached).
           const memory = journal.render(state, knowledge, screenMemory.lastMap);
+          // BUILD_DECIDER=deepseek: combat stays with code and Jev (COMBAT_DEEPSEEK=on restores the
+          // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
+          const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
           for (const escalator of options.escalators ?? []) {
             const capped =
               escalator.name === "claude"
                 ? stats.claudeCalls >= config.escalation.claudeMaxCalls
-                : stats.deepseekCalls >= (config.deepseek?.maxCalls ?? 0);
+                : stats.deepseekCalls >= (config.deepseek?.maxCalls ?? 0) || deepseekBarred;
             if (capped) continue;
             try {
               if (escalator.name === "claude") stats.claudeCalls += 1;
@@ -788,8 +884,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       floor: state.run?.floor ?? null,
       turn: state.turn,
       label: decision.label,
-      decider:
-        decision.kind === "act"
+      decider: deepseekResolved
+        ? ("deepseek" as const)
+        : decision.kind === "act"
           ? ("code" as const)
           : resolved.fallback || (!usedJev && !fromMemo)
             ? ("code-fallback" as const)
@@ -802,20 +899,23 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       confidence: resolved.confidence,
       fallback: resolved.fallback,
       reasked,
-      no_jev: !usedJev && !fromMemo && decision.kind === "ask",
+      no_jev: !usedJev && !fromMemo && !deepseekResolved && decision.kind === "ask",
       reused_answer: fromMemo,
       request_ids: requestIds,
-      latency_ms: { plan: Date.now() - planStarted - jevLatency, jev: jevLatency, action: 0 },
+      latency_ms: { plan: Date.now() - planStarted - jevLatency - deepseekLatency, jev: jevLatency, action: 0, ...(deepseekLatency > 0 ? { deepseek: deepseekLatency } : {}) },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
+      // BUILD_DECIDER=deepseek: DeepSeek's own decision (not an escalation of a Jev answer).
+      ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
+      ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
       label: decision.label,
       by: baseRecord.decider,
-      choice: describeChoice(decision, resolved, rawAnswers, escalation),
-      reason: str(asRecord(escalation)["reason"]),
-      asked: decision.kind === "ask" && (usedJev || fromMemo) && !resolved.fallback,
+      choice: describeChoice(decision, resolved, rawAnswers, deepseekRecord ?? escalation),
+      reason: str(asRecord(deepseekRecord ?? escalation)["reason"]),
+      asked: decision.kind === "ask" && (usedJev || fromMemo || deepseekResolved !== null) && !resolved.fallback,
       intent: resolved.intent,
     };
 
@@ -863,11 +963,25 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.errors += 1;
       consecutiveFailures += 1;
       onEvent({ type: "note", message: `action ${resolved.intent.action} failed (${failure.kind}): ${failure.detail}` });
+      // A failed (often timed-out) action may still have gone through in the game (KFPC F4: two
+      // choose_event_option timeouts both applied, the memo replayed the answer on the next page, and
+      // neither click was logged). Log it as a decision, forget the answer and any committed plan, and
+      // re-read the state before acting again.
+      answerMemo = null;
+      deepseekMemo = null;
+      screenMemory.combatPlan = null;
+      const failed: DecisionRecord = {
+        ...baseRecord,
+        latency_ms: { ...baseRecord.latency_ms, action: Date.now() - actionStarted },
+        result: `failed (${failure.kind}): ${failure.detail}`.slice(0, 300),
+      };
+      log.write(failed);
+      logState(state, stateFingerprint, failed.ts);
       if (failure.kind === "fatal") {
         stop(`action failure: ${failure.detail}`);
         break;
       }
-      await sleep(pollIntervalMs);
+      await waitForStateChange({ client, previous: stateFingerprint, timeoutMs: 3_000, pollIntervalMs: 150 });
       continue;
     }
 
@@ -878,6 +992,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     journal.record(state, journalEntry);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
+    deepseekMemo = null;
     // Remember the one action whose effect the state does not reflect: a skipped card reward stays
     // claimable, so without this the planner claims it again on the next iteration.
     if (resolved.intent.action === "skip_reward_cards") screenMemory.cardRewardSkipped = true;

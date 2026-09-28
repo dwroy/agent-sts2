@@ -70,6 +70,19 @@ export interface AppConfig {
   /** `v1`: DeepSeek sets a run plan (strategy only) at run/act start, heavy HP loss and every few floors. */
   runPlan: "off" | "v1";
   runPlanLog: string;
+  /**
+   * Who decides deck building (card rewards, shop, removals/upgrades/transforms, events, relics, bundles),
+   * the route and rest sites. `deepseek` (default): DeepSeek directly, code's values given as facts; the
+   * route is planned once per act and followed by code. Jev, then code, when DeepSeek fails or is out of
+   * budget. `jev`: the baseline (Jev, DeepSeek only on Jev's near-guesses).
+   */
+  buildDecider: "deepseek" | "jev";
+  /**
+   * With BUILD_DECIDER=deepseek, whether in-combat card picks (the only in-combat questions that still
+   * carry an escalation; turn plans no longer do) may escalate to DeepSeek on Jev's near-guesses. `off`
+   * (default): combat, potions and in-combat card picks stay with code and Jev.
+   */
+  combatDeepseek: "off" | "on";
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
@@ -276,7 +289,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
         apiKey: deepseekKey,
         baseUrl: readEnv(env, "DEEPSEEK_BASE_URL") ?? "https://api.deepseek.com",
         model: readEnv(env, "DEEPSEEK_MODEL") ?? "deepseek-chat",
-        maxCalls: Number(readEnv(env, "DEEPSEEK_MAX_CALLS") ?? "150") || 150,
+        // BUILD_DECIDER=deepseek: ~25 (act-1 death) to ~80 (full run) build/route/rest questions a run,
+        // plus run plans; 300 leaves room for restarts within a run.
+        maxCalls: Number(readEnv(env, "DEEPSEEK_MAX_CALLS") ?? "300") || 300,
         timeoutMs: Number(readEnv(env, "DEEPSEEK_TIMEOUT_MS") ?? "30000") || 30000,
         guideFile: readEnv(env, "DEEPSEEK_GUIDE_FILE") ?? "src/knowledge/ironclad-guide.md",
         handbookFile: readEnv(env, "DEEPSEEK_HANDBOOK_FILE") ?? "src/knowledge/ds-handbook.md",
@@ -321,6 +336,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const runPlan: "off" | "v1" = runPlanRaw === "v1" ? "v1" : "off";
   const runPlanLog = readEnv(env, "RUN_PLAN_LOG") ?? "logs/run-plans.jsonl";
+  const buildDeciderRaw = (readEnv(env, "BUILD_DECIDER") ?? "deepseek").toLowerCase();
+  if (buildDeciderRaw !== "deepseek" && buildDeciderRaw !== "jev") {
+    problems.push({ field: "BUILD_DECIDER", message: `expected deepseek or jev, got "${buildDeciderRaw}"` });
+  }
+  const buildDecider: "deepseek" | "jev" = buildDeciderRaw === "jev" ? "jev" : "deepseek";
+  const combatDeepseekRaw = (readEnv(env, "COMBAT_DEEPSEEK") ?? "off").toLowerCase();
+  if (combatDeepseekRaw !== "off" && combatDeepseekRaw !== "on") {
+    problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
+  }
+  const combatDeepseek: "off" | "on" = combatDeepseekRaw === "on" ? "on" : "off";
 
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
@@ -400,6 +425,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     fightPlanLog,
     runPlan,
     runPlanLog,
+    buildDecider,
+    combatDeepseek,
     deepseek,
     escalation,
     mode,

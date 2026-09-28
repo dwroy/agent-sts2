@@ -14,6 +14,8 @@ import { cardValue, deckProfile, isBlockCardId } from "../strategy/card-value.js
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
 import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
+import { fillRelicText } from "../knowledge/relic-values.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -103,15 +105,29 @@ export function planShop(env: DecisionEnv): Decision | null {
       const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
       stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
+      const base = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
+      const planned = action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)) : { bonus: 0, why: null };
+      const clock = action === "buy_card" ? gapCardBonus(gap, id) : { bonus: 0, why: null };
+      const cardInfo = action === "buy_card" ? (info as { rarity?: string; type?: string } | null) : null;
+      const valued = action === "buy_card" ? cardValue(id, cardInfo?.rarity ?? "", cardInfo?.type ?? "", profile, act, floor, str(asRecord(state.run?.raw)["boss_id"])) : null;
       options.push({
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,
         intent: { action, option_index: index },
         // Phase 2 value, relative to leaving (0): a card must beat ~60 to earn a slot in the deck,
         // relics are usually worth it, potions rarely are.
-        score:
-          shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1)) +
-          (action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)).bonus + gapCardBonus(gap, id).bonus : 0),
+        score: base + planned.bonus + clock.bonus,
+        why: [
+          action === "buy_card"
+            ? `card value ${valued?.value ?? "?"}${valued && valued.reasons.length > 0 ? ` (${valued.reasons.join("; ")})` : ""} - 62 - price/25`
+            : action === "buy_relic"
+              ? "relic: 18 - price/40"
+              : `potion: ${emptyPotionSlots} empty slot(s), act ${act}`,
+          ...(planned.why ? [planned.why] : []),
+          ...(clock.why ? [clock.why] : []),
+        ].join("; "),
+        // DeepSeek sees the relic's text with its numbers filled where known.
+        ...(action === "buy_relic" ? { facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? "") } } : {}),
         summary: {
           buy: name,
           kind: kindLabel,
@@ -134,6 +150,7 @@ export function planShop(env: DecisionEnv): Decision | null {
       label: `pay ${price ?? "?"}g to remove a card`,
       intent: { action: "remove_card_at_shop" },
       score: profile.basics >= 4 || entriesHaveCurse ? 30 : 8,
+      why: `${profile.basics} basic Strikes/Defends${entriesHaveCurse ? " and a curse" : ""} in the deck`,
       summary: { buy: "card removal", kind: "service", price, text: "removes one card from the deck; a smith/removal is usually strong" } satisfies JsonValue,
     });
   }
@@ -143,11 +160,12 @@ export function planShop(env: DecisionEnv): Decision | null {
     label: "stop shopping",
     intent: { action: "close_shop_inventory" },
     score: 0,
+    why: "the bar: anything scoring below 0 is worse than leaving",
     summary: { buy: "nothing", note: "close the inventory and leave the shop" } satisfies JsonValue,
   });
 
   const entries = deckEntries(state, knowledge);
-  return buildPickDecision({
+  const params = {
     label: "shop/buy",
     instructions: "What should I buy right now, if anything?",
     actThreshold: env.thresholds.act,
@@ -170,7 +188,10 @@ export function planShop(env: DecisionEnv): Decision | null {
       deck: describeDeck(entries),
       note: "one purchase is made per decision; the shop is re-read afterwards.",
     },
-  });
+  };
+  // BUILD_DECIDER=deepseek: every affordable item, the removal and leaving go to DeepSeek.
+  if (!deepseekDecides(env) || options.length < 2) return buildPickDecision(params);
+  return buildPickDecision({ ...params, deepseek: { facts: buildFacts(env, { shop_stock: stock }), note: "One purchase per question; you are asked again after each purchase. Pick leave to stop." } });
 }
 
 function shopScore(

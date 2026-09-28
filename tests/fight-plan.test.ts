@@ -222,7 +222,7 @@ describe("fight plan log", () => {
 });
 
 describe("turn planner with a fight plan", () => {
-  it("does not escalate per-turn choices when FIGHT_PLAN=v1", () => {
+  it("never escalates per-turn choices to DeepSeek, with or without a fight plan (combat is Jev's)", () => {
     const raw = bossTurnOne();
     // A dangerous boss turn: 40 incoming at 55 HP.
     const combat = raw["combat"] as Raw;
@@ -230,7 +230,7 @@ describe("turn planner with a fight plan", () => {
     const off = planCombatTurn(env(raw));
     const on = planCombatTurn(env(raw, { fightPlan: "v1" }));
     expect(off?.kind).toBe("ask");
-    expect((off as AskDecision).escalate).toBeDefined();
+    expect((off as AskDecision).escalate).toBeUndefined();
     expect(on?.kind).toBe("ask");
     expect((on as AskDecision).escalate).toBeUndefined();
   });
@@ -462,6 +462,21 @@ describe("big_hit on an attack potion (24HM F33)", () => {
     const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
     expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
     expect(planOffersPotion(p, "BLOCK_POTION", calm)).toBe(false);
+  });
+});
+
+describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
+  it("counts the axe's replay of the fight's first card", async () => {
+    const { witherInput } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["powers"] = [{ index: 0, power_id: "WITHERING_PRESENCE_POWER", name: "Withering", amount: 1, is_debuff: false }];
+    const plain = witherInput(env(raw), combat, [], 3);
+    ((raw["run"] as Raw)["relics"] as Raw[] | undefined) ?? ((raw["run"] as Raw)["relics"] = []);
+    ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "THROWING_AXE", name: "Throwing Axe" });
+    const axe = witherInput(env(raw), combat, [], 3);
+    expect(plain?.played).toBe(3);
+    expect(axe?.played).toBe(4);
   });
 });
 

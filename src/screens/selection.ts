@@ -11,9 +11,11 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
+import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
+import { exhaustPileSize } from "./combat-plan.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -35,6 +37,21 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Discard/replace any number" (Gambler's Brew, min 0): confirming at once threw the potion away
   // (1ZQJ T4: "selected 0/0 required"). Code picks the dead cards one by one, then confirms.
   if (kind === "combat_hand_select" && min === 0 && /弃|替换|discard|replace/i.test(prompt)) {
+    // The discards the combat plan drank it for (turn-solver gambleWays), while they are in hand.
+    const planned = env.screenMemory.gambleDiscards;
+    if (planned && planned.turn === state.turn) {
+      const cards = asArray(selection["cards"]).map(asRecord);
+      const left = [...planned.cardIds];
+      for (const card of cards.filter((entry) => bool(entry["selected"]))) {
+        const at = left.indexOf(str(card["card_id"]));
+        if (at >= 0) left.splice(at, 1);
+      }
+      const next = cards.find((card) => !bool(card["selected"]) && left.includes(str(card["card_id"])));
+      if (next && selected < max) {
+        return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: numOrNull(next["index"]) ?? 0 }, rationale: `code: discard ${str(next["name"], str(next["card_id"]))} (the combat plan's Gambler's Brew discard)` };
+      }
+      if (canConfirm && selected > 0) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}: the combat plan's discards` };
+    }
     const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
     if (pick && selected < max) {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
@@ -69,7 +86,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       const incoming = incomingDamage(combat);
       const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
       const best = offered
-        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies) }))
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score)[0];
       if (best) {
@@ -108,6 +125,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
+  const board = forThisTurn ? thisTurnBoard(state.raw, knowledge) : {};
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
   // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
@@ -144,7 +162,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
@@ -195,7 +213,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
   }
 
-  return buildPickDecision({
+  const params = {
     label: `selection/${verb}`,
     instructions: forThisTurn
       ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
@@ -226,8 +244,25 @@ export function planSelection(env: DecisionEnv): Decision | null {
       deck: describeDeck(entries),
       candidates: options.map((option) => option.summary as JsonValue),
     },
+  };
+  // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
+  // DeepSeek's call; in-combat picks stay with code and Jev.
+  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop) return buildPickDecision(params);
+  const why = SELECTION_WHY[isAdd ? "add" : verb] ?? "code's ranking for this pick";
+  return buildPickDecision({
+    ...params,
+    options: options.map((option) => ({ ...option, why })),
+    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}` } }) },
   });
 }
+
+/** What code's value means on each out-of-combat selection (DeepSeek's view). */
+const SELECTION_WHY: Record<string, string> = {
+  upgrade: "upgrade priority: Demon Form, Offering, Bash, Pyre, Corruption … first, then card value; Strikes/Defends 10",
+  remove: "removal order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value; Strength cards -50; run plan removals +40",
+  transform: "transform order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value",
+  add: "card value for the deck (run plan wanted +bonus)",
+};
 
 /**
  * Code-side preference for deck selection screens (phase 2). Upgrade: the cards whose upgrade matters
@@ -476,28 +511,24 @@ function incomingDamage(combat: Record<string, unknown>): number {
   return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
 }
 
+
 /**
- * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
- * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
- * value, less its energy cost and HP cost.
+ * The combat board a card picked for this turn is scored on (ThisTurnBoard): the exhaust pile plus the
+ * exhausting cards in hand, and the most Vulnerable on a living enemy. The exhaust pile is left unknown
+ * when the state carries no piles.
  */
-export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
-  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
-  // Colorless Potion, died to a 9-damage hit). Never worth taking.
-  if (card.cardId === "THE_GAMBIT") return -100;
-  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
-  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
-  const score =
-    damage +
-    block +
-    2.5 * Math.min(card.vulnerable, 3) +
-    1.5 * Math.min(card.weak, 3) +
-    5 * card.strength +
-    2 * card.tempStrength +
-    3 * card.draw +
-    4 * card.energyGain +
-    card.flatValue -
-    2 * Math.max(0, card.cost) -
-    card.hpLoss;
-  return Math.round(score);
+export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
+  const combat = asRecord(raw["combat"]);
+  const pile = exhaustPileSize(raw);
+  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge).exhausts).length;
+  const vulnerable = Math.max(
+    0,
+    ...asArray(combat["enemies"])
+      .map(asRecord)
+      .filter((enemy) => enemy["is_alive"] !== false)
+      .map((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "VULNERABLE_POWER").reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0)),
+  );
+  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
 }
+
+export { thisTurnDamage, thisTurnScore, type ThisTurnBoard } from "../strategy/card-model.js";

@@ -1,0 +1,416 @@
+/**
+ * BUILD_DECIDER=deepseek (Dai 2026-09-28): card rewards, shops, events, rest sites, relic choices, deck
+ * picks outside combat and the act's route are DeepSeek's decisions, with code's values as facts; Jev
+ * then code when DeepSeek fails; combat stays with code and Jev. The route is planned once per act and
+ * followed by code.
+ */
+
+import { readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+
+import type { AppConfig } from "../src/config.js";
+import { loadConfig } from "../src/config.js";
+import type { AnswerSet } from "../src/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/jev/client.js";
+import { fillRelicText } from "../src/knowledge/relic-values.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
+import { runLoop } from "../src/loop.js";
+import { ModClient } from "../src/mod/client.js";
+import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { buildRunBrief } from "../src/project/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
+import { planDecision } from "../src/screens/index.js";
+import { ROUTE_REPLAN_HP_DROP } from "../src/screens/map.js";
+import type { RunPlan } from "../src/strategy/run-plan.js";
+import type { JsonValue } from "../src/util/json.js";
+import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import {
+  baseState,
+  chestPayload,
+  combatPayload,
+  eventPayload,
+  mainMenuPayload,
+  restPayload,
+  rewardCardPayload,
+  runPayload,
+  selectionPayload,
+  shopPayload,
+  testKnowledge,
+} from "./scenarios.js";
+
+type Raw = Record<string, unknown>;
+const config = loadConfig({} as NodeJS.ProcessEnv);
+
+function env(raw: Raw, overrides: Partial<DecisionEnv> = {}): DecisionEnv {
+  const state: GameState = parseGameState(raw);
+  return {
+    state,
+    knowledge: testKnowledge,
+    brief: buildRunBrief(state, testKnowledge),
+    thresholds: config.thresholds,
+    runStart: "auto",
+    characterPreference: null,
+    allowFtueModals: false,
+    strictJev: true,
+    combatPlanner: "turn",
+    screenMemory: createScreenMemory(state.screen),
+    shopDiscardPotions: [],
+    buildDecider: "deepseek",
+    ...overrides,
+  };
+}
+
+function decide(e: DecisionEnv): Decision {
+  const outcome = planDecision(e);
+  if (outcome.kind !== "decision") throw new Error(`expected a decision, got ${outcome.kind}: ${outcome.reason}`);
+  return outcome.decision;
+}
+
+/** The DeepSeek-direct view of a decision: its options (parsed) and facts. */
+function deepseekView(decision: Decision): { options: Record<string, Record<string, JsonValue>>; facts: Record<string, JsonValue>; instructions: string } {
+  if (decision.kind !== "ask" || !decision.deepseek) throw new Error(`expected a DeepSeek decision, got ${decision.kind} ${decision.label}`);
+  const question = decision.questions[decision.deepseek.question];
+  if (question?.type !== "choice") throw new Error("expected a choice question");
+  const options = Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value ?? "{}") as Record<string, JsonValue>]));
+  return { options, facts: decision.state["facts"] as Record<string, JsonValue>, instructions: question.instructions };
+}
+
+const plan: RunPlan = {
+  runId: "TESTRUN123", act: 2, floor: 18, hpPct: 0.9, trigger: "act", archetype: "Strength", want: ["INFLAME"], avoid: [], remove: ["STRIKE_R"],
+  blockTarget: 4, elites: "normal", rest: "smith", bossPrep: "scale Strength", summary: "Strength scaling for the crab",
+};
+
+const crabRun = (over: Raw = {}): Raw => runPayload({ boss_id: "KAISER_CRAB_BOSS", floor: 20, act_id: "1", ascension: 8, ...over });
+
+describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
+  it("card reward: every offer and the skip, with code's value and why; run facts; the Jev/code decision kept as fallback", () => {
+    const raw = { ...rewardCardPayload(), run: crabRun() };
+    const e = env(raw);
+    e.screenMemory.runPlan = plan;
+    const decision = decide(e);
+    const view = deepseekView(decision);
+    expect(decision.label).toBe("reward/card");
+    expect(Object.keys(view.options).sort()).toEqual(["card0", "card1", "card2", "skip"]);
+    for (const option of Object.values(view.options)) {
+      expect(option["code_value"]).toEqual(expect.any(Number));
+      expect(option["code_rank"]).toEqual(expect.any(Number));
+    }
+    expect(view.options["card2"]?.["why"]).toMatch(/run plan: wanted/);
+    expect(view.facts["act_boss_clock"]).toMatchObject({ boss: "KAISER_CRAB", need_damage_per_turn: expect.any(Number), deck_damage_per_turn_estimate: expect.any(Number), survivable_turns: expect.any(Number), harder_because: expect.any(String) });
+    expect(view.facts["your_run_plan"]).toMatchObject({ archetype: "Strength", want: ["INFLAME"], rest: "smith" });
+    for (const key of ["hp", "gold", "deck", "relics", "potions", "potion_slots", "deck_size", "floors_to_act_boss"]) expect(view.facts[key]).toBeDefined();
+    expect(view.instructions).toMatch(/You decide this yourself/);
+    // The fallback is the decision the screen makes without DeepSeek.
+    const baseline = decide(env(raw, { buildDecider: undefined }));
+    expect(decision.kind === "ask" && decision.deepseek?.baseline.label).toBe(baseline.label);
+    expect(baseline.kind === "ask" ? baseline.deepseek : undefined).toBeUndefined();
+    // DeepSeek's answer resolves to the reward action.
+    const resolved = decision.kind === "ask" ? decision.resolve({ pick: { type: "choice", choice: "skip", probabilities: { skip: 1 }, confidence: 1, raw: {} } } as AnswerSet) : null;
+    expect(resolved?.intent).toEqual({ action: "skip_reward_cards" });
+  });
+
+  it("shop: purchases, removal and leaving, with code's value and why", () => {
+    const view = deepseekView(decide(env({ ...shopPayload(true), run: crabRun() })));
+    expect(Object.keys(view.options).sort()).toEqual(["buy_card0", "buy_relic0", "leave", "remove"]);
+    expect(view.options["buy_card0"]?.["why"]).toMatch(/card value/);
+    expect(view.options["remove"]?.["why"]).toMatch(/basic Strikes\/Defends/);
+    expect(view.facts["shop_stock"]).toBeDefined();
+  });
+
+  it("rest site: heal vs smith with the heal amount and the cards that can be upgraded", () => {
+    const view = deepseekView(decide(env({ ...restPayload(), run: crabRun({ current_hp: 60 }) })));
+    expect(Object.keys(view.options)).toHaveLength(2);
+    expect(view.facts["rest_site"]).toMatchObject({ heal_amount: expect.stringMatching(/24 HP/), upgradable_cards: expect.any(Array) });
+  });
+
+  it("event: the unlocked, non-lethal options, noting code does not score them", () => {
+    const decision = decide(env(eventPayload()));
+    const view = deepseekView(decision);
+    expect(Object.keys(view.options).sort()).toEqual(["o0", "o3"]);
+    expect(view.options["o0"]?.["why"]).toMatch(/does not score/);
+    expect(view.facts["event"]).toMatchObject({ id: "BIG_FISH" });
+  });
+
+  it("chest relic and relic text: numbers filled where measured, unknown ones marked, never invented", () => {
+    const view = deepseekView(decide(env(chestPayload(true))));
+    expect(Object.keys(view.options)).toHaveLength(2);
+    expect(fillRelicText("BURNING_BLOOD", "在战斗结束时，回复[green]{Heal}[/green]点生命。")).toBe("在战斗结束时，回复6点生命。");
+    expect(fillRelicText("SOME_RELIC", "Gain {Block} Block.")).toContain("数值未知");
+  });
+
+  it("deck picks outside combat go to DeepSeek; in-combat picks stay with code and Jev", () => {
+    const upgrade = decide(env(selectionPayload()));
+    expect(upgrade.kind === "ask" && upgrade.deepseek).toBeTruthy();
+    const inCombat = selectionPayload();
+    inCombat["in_combat"] = true;
+    const combatPick = decide(env(inCombat));
+    expect(combatPick.kind === "ask" ? combatPick.deepseek : undefined).toBeUndefined();
+  });
+
+  it("without BUILD_DECIDER=deepseek the screens are the baseline", () => {
+    for (const raw of [rewardCardPayload(), shopPayload(true), restPayload(), eventPayload(), chestPayload(true)]) {
+      const decision = decide(env(raw, { buildDecider: "jev" }));
+      expect(decision.kind === "ask" ? decision.deepseek : undefined).toBeUndefined();
+    }
+  });
+});
+
+/* ---- route plan ---------------------------------------------------------------------------------- */
+
+const node = (row: number, col: number, type: string, children: [number, number][], extra: Raw = {}): Raw => ({
+  row, col, node_type: type, state: "NotTravelable", visited: false, is_current: false, is_available: false, is_start: false, is_boss: type === "Boss",
+  is_second_boss: false, parents: [], children: children.map(([r, c]) => ({ row: r, col: c })), ...extra,
+});
+
+/**
+ * current (4,2) -> A (5,1) Monster | B (5,3) Monster; A -> C (6,1) RestSite | D (6,2) Elite; B -> D | E (6,3) Shop;
+ * C, D, E -> Boss (7,3).
+ */
+function routeMap(current: [number, number], available: [number, number, string][], run: Raw = {}): Raw {
+  return baseState("MAP", {
+    available_actions: ["choose_map_node"],
+    run: runPayload({ floor: 5, act_id: "0", current_hp: 70, max_hp: 80, ...run }),
+    map: {
+      current_node: { row: current[0], col: current[1] },
+      boss_node: { row: 7, col: 3 },
+      available_nodes: available.map(([row, col, type], index) => ({ index, row, col, node_type: type, state: "Travelable" })),
+      nodes: [
+        node(4, 2, "Monster", [[5, 1], [5, 3]], { visited: true }),
+        node(5, 1, "Monster", [[6, 1], [6, 2]]),
+        node(5, 3, "Monster", [[6, 2], [6, 3]], current[0] >= 5 ? { visited: true } : {}),
+        node(6, 1, "RestSite", [[7, 3]]),
+        node(6, 2, "Elite", [[7, 3]]),
+        node(6, 3, "Shop", [[7, 3]]),
+        node(6, 4, "Monster", [[7, 3]]),
+        node(7, 3, "Boss", []),
+      ],
+      local_vote: null,
+    },
+  });
+}
+
+const firstFork = (): Raw => routeMap([4, 2], [[5, 1, "Monster"], [5, 3, "Monster"]]);
+const secondFork = (run: Raw = {}): Raw => routeMap([5, 3], [[6, 2, "Elite"], [6, 3, "Shop"]], run);
+const brokenFork = (): Raw => routeMap([5, 3], [[6, 2, "Elite"], [6, 4, "Monster"]]);
+
+/** Plans the route and plays DeepSeek's pick of the path through the shop. */
+function planThroughShop(e: DecisionEnv): string {
+  const decision = decide(e);
+  expect(decision.label).toBe("map/route-plan");
+  const view = deepseekView(decision);
+  const key = Object.keys(view.options).find((option) => String(view.options[option]?.["path"]).includes("Shop"))!;
+  const resolved = decision.kind === "ask" ? decision.resolve({ pick: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: {} } } as AnswerSet) : null;
+  expect(resolved?.intent).toEqual({ action: "choose_map_node", option_index: 1 });
+  resolved?.apply?.();
+  return key;
+}
+
+describe("BUILD_DECIDER=deepseek: the act's route is planned once and followed", () => {
+  it("asks for whole paths to the boss with route facts", () => {
+    const view = deepseekView(decide(env(firstFork())));
+    const paths = Object.values(view.options).map((option) => String(option["path"]));
+    expect(paths).toContain("Monster -> Shop -> Boss");
+    expect(paths).toContain("Monster -> RestSite -> Boss");
+    const shop = Object.values(view.options).find((option) => String(option["path"]).includes("Shop"))!;
+    for (const key of ["fights", "elites", "rests", "shops", "unknown_rooms", "hp_at_boss", "hp_on_arrival_at_elites", "forks_on_path", "fights_before_first_rest", "code_value"]) expect(shop[key]).toBeDefined();
+  });
+
+  it("follows the plan without asking, re-plans when the next planned node is missing or HP fell far below the projection", () => {
+    const e = env(firstFork());
+    planThroughShop(e);
+    const memory = e.screenMemory;
+    expect(memory.routePlan?.path.map((step) => step.type)).toEqual(["Monster", "Shop", "Boss"]);
+    // Next fork: the plan's Shop is available -> code follows it.
+    const follow = decide(env(secondFork(), { screenMemory: memory }));
+    expect(follow).toMatchObject({ kind: "act", label: "map/route-follow", intent: { action: "choose_map_node", option_index: 1 } });
+    // The Shop is gone -> DeepSeek re-plans, and the log says why.
+    const broken = decide(env(brokenFork(), { screenMemory: memory }));
+    expect(broken.label).toBe("map/route-plan");
+    expect(JSON.stringify(broken.kind === "ask" ? broken.state : {})).toMatch(/not available/);
+    // HP fell well below what the plan projected for the next node -> re-plan.
+    const low = decide(env(secondFork({ current_hp: Math.round(80 * (0.875 - ROUTE_REPLAN_HP_DROP - 0.1)) }), { screenMemory: memory }));
+    expect(low.label).toBe("map/route-plan");
+    expect(JSON.stringify(low.kind === "ask" ? low.state : {})).toMatch(/below the/);
+  });
+
+  it("after a failed route plan the act's map screens use the Jev/code route choice", () => {
+    const e = env(firstFork());
+    const decision = decide(e);
+    if (decision.kind !== "ask" || !decision.deepseek) throw new Error("expected a DeepSeek decision");
+    decision.deepseek.onFail?.();
+    const next = decide(env(secondFork(), { screenMemory: e.screenMemory }));
+    expect(next.label).toBe("map/route");
+    expect(next.kind === "ask" ? next.deepseek : undefined).toBeUndefined();
+  });
+});
+
+/* ---- loop ---------------------------------------------------------------------------------------- */
+
+class FakeDeepSeek extends DeepSeekClient {
+  calls: { label: string; state: Record<string, JsonValue>; criteria: Record<string, string | null> }[] = [];
+  constructor(private readonly pickFn: (criteria: Record<string, string | null>, label: string) => string | Error) {
+    super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
+  }
+  override async choose(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
+    const label = String(context["label"] ?? "");
+    this.calls.push({ label, state, criteria });
+    const choice = this.pickFn(criteria, label);
+    if (choice instanceof Error) throw choice;
+    return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2 };
+  }
+}
+
+interface StubJev {
+  client: JevClient;
+  calls: number;
+  labels: string[];
+}
+
+function stubJev(confidence = 0.9): StubJev {
+  const state = { calls: 0, labels: [] as string[] };
+  const client = {
+    model: "stub",
+    async ask(_state: unknown, questions: Record<string, { type: string; criteria?: Record<string, unknown> | string[] }>): Promise<JevAskResult> {
+      state.calls += 1;
+      const answers: AnswerSet = {};
+      for (const [id, question] of Object.entries(questions)) {
+        if (question.type === "choice" && question.criteria && !Array.isArray(question.criteria)) {
+          const first = Object.keys(question.criteria)[0] ?? "";
+          answers[id] = { type: "choice", choice: first, probabilities: { [first]: confidence }, confidence, raw: {} };
+        } else {
+          answers[id] = { type: "noul", noul: 0.5, raw: {} };
+        }
+      }
+      return { model: "stub", answers, inputTokens: 100, outputTokens: 10, latencyMs: 1, requestId: `req_${state.calls}` };
+    },
+  } as unknown as JevClient;
+  return {
+    client,
+    get calls() {
+      return state.calls;
+    },
+    labels: state.labels,
+  } as StubJev;
+}
+
+const servers: TestServer[] = [];
+const logs: string[] = [];
+afterEach(async () => {
+  await Promise.all(servers.splice(0).map((server) => server.close()));
+  for (const path of logs.splice(0)) rmSync(path, { force: true });
+});
+
+function loopConfig(over: Partial<AppConfig> = {}): AppConfig {
+  const path = join(tmpdir(), `jev-sts2-build-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+  logs.push(path);
+  const base = loadConfig({} as NodeJS.ProcessEnv);
+  return {
+    ...base,
+    combatPlanner: "turn",
+    deepseek: { apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", maxCalls: 50, timeoutMs: 100, guideFile: "", handbookFile: "", reasoningEffort: "off", combatReasoningEffort: "", reasoningLog: "" },
+    escalation: { ...base.escalation, chain: ["deepseek"] },
+    log: { ...base.log, decisionLog: path },
+    ...over,
+  };
+}
+
+async function scriptedMod(sequence: Raw[]): Promise<{ server: TestServer; actions: Raw[] }> {
+  let index = 0;
+  const actions: Raw[] = [];
+  const at = (position: number): Raw => sequence[Math.min(position, sequence.length - 1)] as Raw;
+  const server = await startTestServer((req, res) => {
+    if (req.method === "GET" && req.url === "/state") return sendJson(res, 200, envelope(at(index)));
+    let raw = "";
+    req.on("data", (chunk) => {
+      raw += chunk;
+    });
+    req.on("end", () => {
+      const intent = JSON.parse(raw || "{}") as Raw;
+      actions.push(intent);
+      index += 1;
+      sendJson(res, 200, envelope({ action: intent["action"], status: "completed", stable: true, message: "scripted", state: at(index) }));
+    });
+  });
+  servers.push(server);
+  return { server, actions };
+}
+
+async function play(sequence: Raw[], deepseek: FakeDeepSeek, jev: StubJev, over: Partial<AppConfig> = {}) {
+  const config = loopConfig(over);
+  const { server, actions } = await scriptedMod(sequence);
+  const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: jev.client, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
+  const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
+  return { stats, actions, records };
+}
+
+describe("BUILD_DECIDER=deepseek in the loop", () => {
+  it("a card reward is decided by DeepSeek, logged as decider deepseek with its reason; Jev is not asked", async () => {
+    const deepseek = new FakeDeepSeek(() => "card2");
+    const jev = stubJev();
+    const { actions, records, stats } = await play([rewardCardPayload(), mainMenuPayload()], deepseek, jev);
+    expect(actions[0]).toEqual({ action: "choose_reward_card", option_index: 2 });
+    expect(jev.calls).toBe(0);
+    expect(deepseek.calls).toHaveLength(1);
+    expect(deepseek.calls[0]?.state["facts"]).toMatchObject({ hp: "55/80", deck_size: 5 });
+    const record = records.find((entry) => entry["label"] === "reward/card")!;
+    expect(record).toMatchObject({ decider: "deepseek", deepseek: { by: "deepseek", direct: true, choice: "card2", reason: "fake reason for card2" } });
+    expect(String(record["rationale"])).toContain("fake reason for card2");
+    expect(stats.deepseekCalls).toBe(1);
+  });
+
+  it("falls back to Jev, then code, when DeepSeek errors (and does not ask it again as an escalation)", async () => {
+    const deepseek = new FakeDeepSeek(() => new Error("DeepSeek HTTP 503"));
+    const jev = stubJev(0.1);
+    const { actions, records } = await play([rewardCardPayload(), mainMenuPayload()], deepseek, jev);
+    expect(actions).toHaveLength(1);
+    expect(deepseek.calls).toHaveLength(1);
+    const record = records.find((entry) => entry["label"] === "reward/card")!;
+    expect(record["decider"]).not.toBe("deepseek");
+    expect(record["deepseek_fallback"]).toBe("deepseek failed");
+  });
+
+  it("out of DeepSeek budget: the screen is the baseline decision, no DeepSeek call", async () => {
+    const deepseek = new FakeDeepSeek(() => "card2");
+    const jev = stubJev();
+    const base = loopConfig();
+    const { records } = await play([rewardCardPayload(), mainMenuPayload()], deepseek, jev, { deepseek: { ...base.deepseek!, maxCalls: 0 } });
+    expect(deepseek.calls).toHaveLength(0);
+    expect(records.find((entry) => entry["label"] === "reward/card")?.["deepseek_fallback"]).toBe("deepseek unavailable or out of budget");
+  });
+
+  it("combat still goes to Jev: no DeepSeek call, even on a near-guess", async () => {
+    const deepseek = new FakeDeepSeek(() => new Error("must not be asked"));
+    const jev = stubJev(0.1);
+    const { records } = await play([combatPayload(), mainMenuPayload()], deepseek, jev);
+    expect(deepseek.calls).toHaveLength(0);
+    expect(jev.calls).toBeGreaterThan(0);
+    expect(records.filter((entry) => String(entry["label"]).startsWith("combat/")).every((entry) => entry["decider"] !== "deepseek")).toBe(true);
+  });
+
+  it("route: planned once by DeepSeek at the first fork, the next fork followed in code; a missing node re-plans", async () => {
+    const pickShop = (criteria: Record<string, string | null>) => Object.keys(criteria).find((key) => String(criteria[key]).includes("Shop"))!;
+    const deepseek = new FakeDeepSeek(pickShop);
+    const jev = stubJev();
+    const followed = await play([firstFork(), secondFork(), mainMenuPayload()], deepseek, jev);
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["map/route-plan"]);
+    expect(followed.actions).toEqual([{ action: "choose_map_node", option_index: 1 }, { action: "choose_map_node", option_index: 1 }]);
+    expect(followed.records.map((record) => record["label"])).toEqual(expect.arrayContaining(["map/route-plan", "map/route-follow"]));
+    expect(String(followed.records.find((record) => record["label"] === "map/route-plan")?.["rationale"])).toContain("Monster -> Shop -> Boss");
+
+    const again = new FakeDeepSeek(pickShop);
+    const replanned = await play([firstFork(), brokenFork(), mainMenuPayload()], again, stubJev());
+    expect(again.calls.map((call) => call.label)).toEqual(["map/route-plan", "map/route-plan"]);
+    expect(String(replanned.records.filter((record) => record["label"] === "map/route-plan")[1]?.["rationale"])).toMatch(/route re-plan \(the planned next node/);
+  });
+
+  it("route: when DeepSeek fails the act's forks use the Jev/code route choice", async () => {
+    const deepseek = new FakeDeepSeek(() => new Error("timeout"));
+    const jev = stubJev();
+    const { actions, records } = await play([firstFork(), secondFork(), mainMenuPayload()], deepseek, jev);
+    expect(deepseek.calls).toHaveLength(1);
+    expect(actions).toHaveLength(2);
+    expect(records.filter((record) => String(record["label"]).startsWith("map/")).every((record) => record["decider"] !== "deepseek")).toBe(true);
+  });
+});

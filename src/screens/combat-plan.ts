@@ -23,7 +23,9 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import type { Knowledge } from "../knowledge/index.js";
+import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -135,8 +137,9 @@ function potionsUsedThisTurn(env: DecisionEnv, count: number): number {
   return Math.max(0, memo.startCount - count);
 }
 
-/** Plans closer than this (in score points ≈ HP) are a judgement call and go to Jev. */
-const CLOSE_CALL = 6;
+// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card
+// play is Jev's): with two or more distinct lines Jev is asked, unless code's line dominates every other
+// on every axis.
 const MAX_OPTIONS = 4;
 
 /**
@@ -252,6 +255,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
       demise: powerAmount(enemy, "DEMISE_POWER"),
+      shrink: powerAmount(enemy, "SHRINK_POWER"),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
@@ -262,6 +266,10 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
       burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
+      // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
+      ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
+        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
+        : {}),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -349,6 +357,8 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
   if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
+  if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -483,7 +493,12 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
   memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
   const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
   if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
-  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0);
+  // Throwing Axe replays the fight's first card, and Withering Presence counts the replay while
+  // cards_played_this_turn does not (XWPV F48: every Wither came one card earlier than counted; T7's
+  // plan stopped at two cards "before the 3rd adds a Wither", the 2nd added it). Counted from the start:
+  // before any card the first one is already two.
+  const axe = asArray(asRecord(env.state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + (axe ? 1 : 0);
   return { every, played, damage: memo.witherDamage };
 }
 
@@ -496,9 +511,59 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  */
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
-  const pile = asRecord(asRecord(raw["agent_view"])["combat"])["exhaust"];
+  return pileSize(raw, "exhaust");
+}
+
+/** Cards in the draw and discard piles together (what this turn's draws can bring in), or undefined. */
+export function drawablePileSize(raw: Record<string, unknown>): number | undefined {
+  const draw = pileSize(raw, "draw");
+  const discard = pileSize(raw, "discard");
+  return draw === undefined && discard === undefined ? undefined : (draw ?? 0) + (discard ?? 0);
+}
+
+/** Cards in one agent_view.combat pile (grouped "name*N" lines), or undefined when the view lacks it. */
+export function pileSize(raw: Record<string, unknown>, which: "draw" | "discard" | "exhaust"): number | undefined {
+  const pile = asRecord(asRecord(raw["agent_view"])["combat"])[which];
   if (pile === undefined) return undefined;
   return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
+}
+
+/** Enemy attack damage coming this turn, less the block already up (as the selection screen reads it). */
+function thisTurnIncoming(combat: Record<string, unknown>): number {
+  const attacks = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
+  return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
+}
+
+/**
+ * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
+ * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
+ */
+export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  return asArray(view[pile]).flatMap((raw, position) => {
+    const entry = asRecord(raw);
+    const cardId = str(asArray(entry["card_ids"])[0]);
+    if (!cardId) return [];
+    const line = str(entry["line"]);
+    const upgraded = /^[^[*：:]*?\+\s*(?:\*\d+\s*)?\[/.test(line);
+    const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? { card_id: cardId, upgraded };
+    const info = knowledge.card(cardId);
+    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
+    const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
+    const card: CardModel = {
+      ...model,
+      playable,
+      validTargets: model.target === "single" ? ctx.enemyTargets : [],
+      damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+    };
+    // "剑柄打击*2 [1费]": one line per card id, with its count (drawPileCards reads it the same way).
+    const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+    return Array.from({ length: Math.max(1, count) }, () => card);
+  });
 }
 
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
@@ -528,8 +593,10 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
-  const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
+  // Gambler's Brew draws what it draws: re-planned after it, like a draw.
+  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
@@ -632,11 +699,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     const base = env.knowledge.card(model.cardId)?.cost ?? null;
     return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
   });
-  // Evil Eye doubles when a card was exhausted this turn: with Baking Gloves that is every turn.
+  // Evil Eye doubles when a card was exhausted this turn (with Baking Gloves that is every turn), or
+  // earlier in the same line: the solver counts both (turn-solver exhaustedCount).
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
-  for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   const noDraw = relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0;
   if (noDraw) {
@@ -672,6 +739,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   const playerSim: PlayerSim = {
     freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
+    ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
+    // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
+    duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    regen: powerAmount(player, "REGEN_POWER"),
+    // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
+    buffer: powerAmount(player, "BUFFER_POWER"),
     hp: num(player["current_hp"]),
     maxHp: num(player["max_hp"]),
     block: num(player["block"]),
@@ -702,12 +775,16 @@ function planTurn(env: DecisionEnv): Decision | null {
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
-    unmovableArmed: powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0,
+    // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled
+    // number until one is played (G8YY F30 T3: Defend 12 and Shrug It Off 18 planned, 12 + 9 gained).
+    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER")),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
+    tender: powerAmount(player, "TENDER_POWER"),
+    exhaustedThisTurn,
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -727,6 +804,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
+      if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       env.screenMemory.combatPlan =
         memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
@@ -807,6 +885,39 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
+  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), the pile card a
+  // pile-card potion would take (Liquid Memories, Droplet of Precognition: the selection screen's own
+  // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).
+  const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
+  const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  const beltIds = new Set(potionsAll.map((potion) => potion.potion_id));
+  const pickFrom = (pile: "discard" | "draw", free: boolean) =>
+    pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
+      ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
+      vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
+    });
+  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION")?.slot;
+  const potionContext: PotionContext = {
+    ...pileContext,
+    ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
+    ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
+    // Drawn from the draw pile, or the discard pile reshuffled when it is empty.
+    ...(drawSlot !== undefined
+      ? {
+          expectedDraw: expectedDraw(
+            (() => {
+              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
+            })(),
+            drawSlot,
+          ),
+        }
+      : {}),
+  };
+  // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card
+  // to take, a draw potion a known pile); otherwise it stays an unmodelled option as before.
+  const modelledIds = new Set(potionsAll.filter((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null).map((potion) => potion.potion_id));
+  const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
   const solveWith = (free: boolean) =>
     solveTurn({
       hand: [
@@ -819,6 +930,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               potion.slot,
               potion.valid_targets,
               free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
+              potionContext,
             ),
           )
           .filter((card): card is CardModel => card !== null)
@@ -1065,7 +1177,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   const second = options.find((plan) => plan !== top);
-  const clear = (!second || top.score - second.score >= CLOSE_CALL) && !setupClose;
+  // Code plays its line only when there is no other, or it beats every other on every axis; any real
+  // choice between lines is Jev's (lethal, all-lines-die, mod-says-lethal are decided above).
+  const clear = (!second || options.every((plan) => plan === top || dominates(top, plan))) && !setupClose;
   if (clear && !planPotionNow && !((dangerous || kind === "boss" || pressed || costly) && potions.length > 0)) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
@@ -1092,7 +1206,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
     commit(env, state.turn, top, hand, "code");
     const margin = second
-      ? `+${(top.score - second.score).toFixed(1)} over next`
+      ? "dominates every other line"
       : surviving.length === 1
         ? "only line"
         : top === best
@@ -1220,12 +1334,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     state: questionState,
     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
     ...(jevView ? { jevView } : {}),
-    // Hallway, non-dangerous turns are not escalated: the supervisor picked code's rank-1 plan in 12 of
-    // 15 such escalations, so a near-guess from Jev falls back to that plan instead (see resolve).
-    // FIGHT_PLAN=v1: DeepSeek planned the fight at its start and answers no per-turn choice.
-    ...((kind === "elite" || kind === "boss" || dangerous) && env.fightPlan !== "v1"
-      ? { escalate: { question: "plan", below: 0.5, why: `${kind} fight${dangerous ? ", dangerous turn" : ""}` } }
-      : {}),
+    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
     resolve(answers): ResolvedAction {
       const answer = answers["plan"];
       if (!answer || answer.type !== "choice") return fallback("no usable answer from Jev");
@@ -1240,10 +1349,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Low HP alone is not enough (VC4L, NZR7 were pressed turns losing 0-7 HP).
       // Not on a near-guess (M75J F37: Blood Potion at 0.14 on 78/111 HP, healed to full by the next event).
       const potionTurn = drinks && (costly || dangerous) && answer.confidence >= 0.25;
-      // Potion lines are not exempt from the near-guess fallback (VC4L F23 T1: Gambler's Brew at 0.05).
-      if (hallway && fromJev && answer.confidence < 0.3 && chosen.plan !== top && !potionTurn) {
-        return fallback(`Jev near-guess (${answer.confidence.toFixed(2)}) on a hallway turn`);
-      }
+      // (The hallway near-guess fallback to code's rank 1 under 0.3 is gone: Jev's pick stands. The
+      // potion vetoes below are unchanged.)
       // Hallway (monster/unknown) fights: a potion line below code's rank 1 needs a confident Jev (NZR7
       // F6: rank 4 at 0.57 and 0.53 for 13 and 3 more damage, 0 potions into the elite; JGJS F23: rank 3
       // at 0.58/0.59, then an energy potion at 0.55 the escalator had just kept). Escalator picks stand.
@@ -1466,6 +1573,22 @@ export function multiClawNext(enemy: Record<string, unknown>): number | null {
   const intent = asArray(enemy["intents"]).map(asRecord).find((entry) => num(entry["damage"]) > 0);
   if (!intent) return null;
   return num(intent["damage"]) * (Math.max(1, num(intent["hits"])) + 1);
+}
+
+/**
+ * Vambrace (「每场战斗中，你第一次从卡牌中获得的格挡值翻倍」) not yet used this fight: a Block card in hand
+ * shows twice its own Block (base plus Dexterity). The relic carries no counter, so the shown numbers
+ * tell: after the first Block, cards show their plain values (G8YY F30 T5: Defend 6).
+ */
+export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: number): boolean {
+  if (!relicIds.includes("VAMBRACE")) return false;
+  return hand.some((entry) => {
+    const block = asArray(asRecord(entry)["dynamic_values"]).map(asRecord).find((value) => str(value["name"]) === "Block");
+    if (!block) return false;
+    const own = (numOrNull(block["enchanted_value"]) ?? numOrNull(block["base_value"]) ?? 0) + dexterity;
+    const shown = numOrNull(block["current_value"]) ?? own;
+    return own > 0 && shown >= 2 * own - 1;
+  });
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
