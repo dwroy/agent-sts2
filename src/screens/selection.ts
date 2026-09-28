@@ -13,8 +13,7 @@ import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
-import { PACTS_END_EXHAUST } from "../strategy/turn-solver.js";
+import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
 import { exhaustPileSize } from "./combat-plan.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -37,6 +36,21 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // "Discard/replace any number" (Gambler's Brew, min 0): confirming at once threw the potion away
   // (1ZQJ T4: "selected 0/0 required"). Code picks the dead cards one by one, then confirms.
   if (kind === "combat_hand_select" && min === 0 && /弃|替换|discard|replace/i.test(prompt)) {
+    // The discards the combat plan drank it for (turn-solver gambleWays), while they are in hand.
+    const planned = env.screenMemory.gambleDiscards;
+    if (planned && planned.turn === state.turn) {
+      const cards = asArray(selection["cards"]).map(asRecord);
+      const left = [...planned.cardIds];
+      for (const card of cards.filter((entry) => bool(entry["selected"]))) {
+        const at = left.indexOf(str(card["card_id"]));
+        if (at >= 0) left.splice(at, 1);
+      }
+      const next = cards.find((card) => !bool(card["selected"]) && left.includes(str(card["card_id"])));
+      if (next && selected < max) {
+        return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: numOrNull(next["index"]) ?? 0 }, rationale: `code: discard ${str(next["name"], str(next["card_id"]))} (the combat plan's Gambler's Brew discard)` };
+      }
+      if (canConfirm && selected > 0) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}: the combat plan's discards` };
+    }
     const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
     if (pick && selected < max) {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
@@ -479,53 +493,6 @@ function incomingDamage(combat: Record<string, unknown>): number {
   return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
 }
 
-/**
- * What a card does this turn, in rough HP-equivalent points: damage (every enemy for AoE), block up
- * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
- * value, less its energy cost and HP cost.
- */
-export function thisTurnScore(card: CardModel, incoming: number, enemies: number, board: ThisTurnBoard = {}): number {
-  // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
-  // Colorless Potion, died to a 9-damage hit). Never worth taking.
-  if (card.cardId === "THE_GAMBIT") return -100;
-  const damage = thisTurnDamage(card, board) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
-  const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
-  const score =
-    damage +
-    block +
-    2.5 * Math.min(card.vulnerable, 3) +
-    1.5 * Math.min(card.weak, 3) +
-    5 * card.strength +
-    2 * card.tempStrength +
-    3 * card.draw +
-    4 * card.energyGain +
-    card.flatValue -
-    2 * Math.max(0, card.cost) -
-    card.hpLoss;
-  return Math.round(score);
-}
-
-/** What the board lets a card deal this turn (thisTurnScore). */
-export interface ThisTurnBoard {
-  /**
-   * Cards the exhaust pile can hold this turn: its size now plus the exhausting cards in hand. Pact's
-   * End needs 3 (the solver's PACTS_END_EXHAUST); below that it deals nothing (9LSQ F17 T1, H1FA twice:
-   * an Attack Potion took it over Fight Me with the exhaust pile empty, and it sat in hand).
-   */
-  exhaustReach?: number;
-  /** Most Vulnerable on a living enemy: Bully deals 2 more per stack. */
-  vulnerable?: number;
-}
-
-/** Bully: extra damage per Vulnerable stack on its target (as in the solver). */
-const BULLY_PER_VULNERABLE = 2;
-
-/** A card's damage per hit this turn on this board. */
-export function thisTurnDamage(card: CardModel, board: ThisTurnBoard = {}): number {
-  if (card.cardId === "PACTS_END" && board.exhaustReach !== undefined && board.exhaustReach < PACTS_END_EXHAUST) return 0;
-  if (card.cardId === "BULLY") return (card.damage ?? 0) + BULLY_PER_VULNERABLE * (board.vulnerable ?? 0);
-  return card.damage ?? 0;
-}
 
 /**
  * The combat board a card picked for this turn is scored on (ThisTurnBoard): the exhaust pile plus the
@@ -545,3 +512,5 @@ export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionE
   );
   return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
 }
+
+export { thisTurnDamage, thisTurnScore, type ThisTurnBoard } from "../strategy/card-model.js";

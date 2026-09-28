@@ -59,6 +59,8 @@ export interface ScreenMemory {
    * combatPlan): an exhaust pick keeps the cards the plan still means to play. Cleared out of combat.
    */
   planBeforeSelection?: import("../strategy/turn-solver.js").Step[];
+  /** Gambler's Brew drunk by a plan this turn: the hand cards (ids) the plan discards with it. */
+  gambleDiscards?: { turn: number | null; cardIds: string[] };
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */

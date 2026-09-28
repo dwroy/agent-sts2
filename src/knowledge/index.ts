@@ -11,6 +11,7 @@ import { dirname, join } from "node:path";
 
 import type { ModClient } from "../mod/client.js";
 import { asArray, asRecord, numOrNull, str, stripMarkup } from "../util/json.js";
+import { fillPotionText } from "./potion-values.js";
 
 export interface CardInfo {
   id: string;
@@ -147,7 +148,8 @@ function parsePotion(entry: unknown): PotionInfo | null {
   return {
     id,
     name: str(obj["name"], id),
-    description: stripMarkup(str(obj["description"])),
+    // The template's numbers filled in (potion-values.ts): the mod leaves them as {Name}.
+    description: fillPotionText(id, str(obj["description"])),
     rarity: str(obj["rarity"]),
     usage: str(obj["usage"]),
     target_type: str(obj["target_type"]),

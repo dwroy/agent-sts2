@@ -23,7 +23,9 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
-import { heldPenaltyOf, isModelledPotion, modelHandCard, modelPotion, stripVigor, type CardModel } from "../strategy/card-model.js";
+import { expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import type { Knowledge } from "../knowledge/index.js";
+import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -252,6 +254,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
       demise: powerAmount(enemy, "DEMISE_POWER"),
+      shrink: powerAmount(enemy, "SHRINK_POWER"),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
@@ -524,6 +527,44 @@ export function pileSize(raw: Record<string, unknown>, which: "draw" | "discard"
   return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
 }
 
+/** Enemy attack damage coming this turn, less the block already up (as the selection screen reads it). */
+function thisTurnIncoming(combat: Record<string, unknown>): number {
+  const attacks = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
+  return Math.max(0, attacks - (numOrNull(asRecord(combat["player"])["block"]) ?? 0));
+}
+
+/**
+ * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
+ * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
+ */
+export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  return asArray(view[pile]).flatMap((raw, position) => {
+    const entry = asRecord(raw);
+    const cardId = str(asArray(entry["card_ids"])[0]);
+    if (!cardId) return [];
+    const line = str(entry["line"]);
+    const upgraded = /^[^[*：:]*?\+\s*(?:\*\d+\s*)?\[/.test(line);
+    const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? { card_id: cardId, upgraded };
+    const info = knowledge.card(cardId);
+    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
+    const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
+    const card: CardModel = {
+      ...model,
+      playable,
+      validTargets: model.target === "single" ? ctx.enemyTargets : [],
+      damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+    };
+    // "剑柄打击*2 [1费]": one line per card id, with its count (drawPileCards reads it the same way).
+    const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
+    return Array.from({ length: Math.max(1, count) }, () => card);
+  });
+}
+
 export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | undefined {
   const view = asRecord(asRecord(raw["agent_view"])["combat"]);
   const parse = (pile: unknown): DrawPileCard[] =>
@@ -551,8 +592,10 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   const first = plan.steps[0];
-  const drawsOrRandom = first ? cardFor(first, hand)?.draw ?? 0 : 0;
+  // Gambler's Brew draws what it draws: re-planned after it, like a draw.
+  const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
@@ -698,6 +741,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
     // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
     duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    regen: powerAmount(player, "REGEN_POWER"),
     // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
     buffer: powerAmount(player, "BUFFER_POWER"),
     hp: num(player["current_hp"]),
@@ -759,6 +803,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
+      if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       env.screenMemory.combatPlan =
         memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
@@ -839,6 +884,39 @@ function planTurn(env: DecisionEnv): Decision | null {
   const potionLimit = kind === "boss" ? Math.max(0, BOSS_POTIONS_PER_TURN - potionsUsed) : null;
   const drawPile = drawPileCards(state.raw);
   const raceEruption = asArray(combat["enemies"]).some((enemy) => eruptionRace(asRecord(enemy), playerSim.hp, state.turn ?? 1));
+  // The board a card potion's card is played on (card-model GENERATED_CARD_POTIONS), the pile card a
+  // pile-card potion would take (Liquid Memories, Droplet of Precognition: the selection screen's own
+  // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).
+  const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
+  const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  const beltIds = new Set(potionsAll.map((potion) => potion.potion_id));
+  const pickFrom = (pile: "discard" | "draw", free: boolean) =>
+    pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
+      ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
+      vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
+    });
+  const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION")?.slot;
+  const potionContext: PotionContext = {
+    ...pileContext,
+    ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
+    ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
+    // Drawn from the draw pile, or the discard pile reshuffled when it is empty.
+    ...(drawSlot !== undefined
+      ? {
+          expectedDraw: expectedDraw(
+            (() => {
+              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
+            })(),
+            drawSlot,
+          ),
+        }
+      : {}),
+  };
+  // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card
+  // to take, a draw potion a known pile); otherwise it stays an unmodelled option as before.
+  const modelledIds = new Set(potionsAll.filter((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null).map((potion) => potion.potion_id));
+  const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
   const solveWith = (free: boolean) =>
     solveTurn({
       hand: [
@@ -851,6 +929,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               potion.slot,
               potion.valid_targets,
               free || planCost(potion.potion_id)?.free ? 0 : potionUseCost + (DEFENSIVE.has(potion.potion_id) ? saveDefence : 0) + (planCost(potion.potion_id)?.extra ?? 0),
+              potionContext,
             ),
           )
           .filter((card): card is CardModel => card !== null)
