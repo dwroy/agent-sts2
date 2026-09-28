@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
-import { actThreatIds } from "./monster-db.js";
+import { actThreatIds, bossOnBoard } from "./monster-db.js";
 
 export type Confidence = "low" | "med" | "high";
 
@@ -233,6 +233,8 @@ export function relevance(entry: ExperienceEntry, input: SliceInput): number | n
     case "event":
       return input.offered.events.includes(id) ? 0 : null;
     case "boss":
+      // Scoped to the boss id while the board shows its parts (KAISER_CRAB: CRUSHER + ROCKET).
+      if (bossOnBoard(id, input.enemies)) return 0;
       return boss && id === boss ? (input.enemies && input.enemies.length > 0 ? 0 : 1) : null;
     case "elite":
     case "hallway":

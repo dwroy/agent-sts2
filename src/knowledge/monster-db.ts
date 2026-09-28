@@ -354,3 +354,30 @@ export function bossHpLoss(
     perTurn: turn && turn.n && typeof turn.median === "number" ? { median: turn.median, n: turn.n } : null,
   };
 }
+
+/**
+ * Enemy ids a boss fight shows on the board, by boss id (experience scopes use the boss id: boss:KAISER_CRAB
+ * while the board shows CRUSHER and ROCKET). The logged parts in the monster DB, plus these known ones so a
+ * DB without the boss still maps it.
+ */
+const KNOWN_BOSS_PARTS: Record<string, string[]> = {
+  KAISER_CRAB: ["CRUSHER", "ROCKET"],
+  THE_KIN: ["KIN_PRIEST", "KIN_FOLLOWER"],
+  QUEEN: ["QUEEN", "TORCH_HEAD_AMALGAM"],
+};
+
+export function bossPartIds(bossId: string): string[] {
+  const id = bossId.toUpperCase().replace(/_BOSS$/, "");
+  const logged = Object.values(load().bosses[id] ?? {}).flatMap((threat) => Object.keys(threat.parts ?? {}));
+  return [...new Set([id, ...(KNOWN_BOSS_PARTS[id] ?? []), ...logged])];
+}
+
+/** An enemy on the board belongs to this boss's fight (the boss itself, a `_BOSS` variant or one of its parts). */
+export function bossOnBoard(bossId: string, enemies: readonly string[] | undefined): boolean {
+  if (!enemies || enemies.length === 0) return false;
+  const parts = bossPartIds(bossId);
+  return enemies.some((enemy) => {
+    const bare = enemy.toUpperCase().replace(/_BOSS$/, "");
+    return parts.some((part) => bare === part || bare.startsWith(`${part}_`));
+  });
+}

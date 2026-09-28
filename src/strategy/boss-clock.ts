@@ -53,7 +53,7 @@ export interface BossProfile {
  */
 export const BOSSES: Record<string, BossProfile> = {
   // Crusher 209 + Rocket 199 (A8: 219 + 209). The two wins took 7-8 turns; Bug Sting -> Laser opener.
-  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws, kill both in one turn; Bug Sting then Laser from T3-T4; a claw killed alone enrages the other", mechanic: "two bodies: single-target damage is split; AoE hits both" },
+  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser 47-49 on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (51 logged crab fights: Rocket died first 9/12 won, both alive to the end 8/39; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
   // 379 (A8 399) plus two 30-HP Ponder heals; the T11 Overwhelming (12x3 and more) ends long fights (NZWR).
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
   THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
@@ -62,7 +62,7 @@ export const BOSSES: Record<string, BossProfile> = {
   // Queen 400 (A8 419) plus ~20 block a turn while the Amalgam lives (~60). The Amalgam (199, A8 211) leaves
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
-  QUEEN: { hp: 460, hpA8: 480, scriptTurns: 8, lossPerTurn: 13.3, note: "from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam (211) adds its HP only if killed first" },
+  QUEEN: { hp: 460, hpA8: 480, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam (211) adds its HP only if killed first" },
   // Three phases, 100/200/300 (A8 111/212, phase 3 not logged yet: ~318 assumed at the same +6%).
   TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases (~100/200/300 HP, A8 111/212/~318); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts 10x3 and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
