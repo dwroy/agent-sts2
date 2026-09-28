@@ -231,6 +231,17 @@ export const MAX_HALLWAY_THREATS = 8;
  * for route and run plans: which elites to take and which fights to avoid are real numbers.
  */
 export function actThreats(act: number, asc: number): string[] {
+  return actThreatKeys(act, asc)
+    .map((key) => encounterLine(key, asc))
+    .filter((line): line is string => line !== null);
+}
+
+/** The monster ids in the act's elites and dangerous hallway encounters (the experience slice's threats). */
+export function actThreatIds(act: number, asc: number): string[] {
+  return [...new Set(actThreatKeys(act, asc).flatMap((key) => key.split("+")))];
+}
+
+function actThreatKeys(act: number, asc: number): string[] {
   const encounters = Object.entries(load().encounters).filter(([, encounter]) => (encounter.acts?.[String(act)] ?? 0) > 0);
   const elites = encounters.filter(([, encounter]) => mode(encounter.rooms) === "elite");
   const hallways = encounters
@@ -239,9 +250,7 @@ export function actThreats(act: number, asc: number): string[] {
     .filter((entry) => entry.deaths > 0 || entry.p75 >= DANGEROUS_HALLWAY_P75)
     .sort((a, b) => b.deaths - a.deaths || b.p75 - a.p75)
     .slice(0, MAX_HALLWAY_THREATS);
-  return [...elites.map(([key]) => key), ...hallways.map((entry) => entry.key)]
-    .map((key) => encounterLine(key, asc))
-    .filter((line): line is string => line !== null);
+  return [...elites.map(([key]) => key), ...hallways.map((entry) => entry.key)];
 }
 
 /** Monster ids whose Chinese name appears in the text (an event that starts a fight names its enemy). */

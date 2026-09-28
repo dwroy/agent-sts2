@@ -609,7 +609,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           await sleep(pollIntervalMs);
           continue;
         }
-        const memory = journal.render(state, knowledge, screenMemory);
+        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         try {
           stats.deepseekCalls += 1;
@@ -744,7 +744,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             jev_probabilities: toJsonValue(jevAnswer.probabilities),
           };
           // Only DeepSeek gets the run memory, in its user message (its system prompt stays cached).
-          const memory = journal.render(state, knowledge, screenMemory);
+          const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria });
           // BUILD_DECIDER=deepseek: combat stays with code and Jev (COMBAT_DEEPSEEK=on restores the
           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
@@ -1085,7 +1085,7 @@ async function ensureFightPlan(
   if (screenMemory.fightPlanFailed === fight && !(current && current.fight === fight)) return;
   const replans = current && current.fight === fight && current.runId === runId ? current.replans + 1 : 0;
   if (replans > 1) return;
-  const memory = journal.render(state, knowledge, screenMemory);
+  const memory = journal.render(state, knowledge, screenMemory, { label: "fight-plan" });
   const payload: Record<string, JsonValue> = {
     task: FIGHT_PLAN_TASK,
     fight_state: fightPlanInput(state, knowledge, kind, moveModel()),
@@ -1152,7 +1152,7 @@ async function ensureRunPlan(
   if (!trigger) return;
   const failKey = `${runId}:${state.run?.floor ?? "?"}`;
   if (screenMemory.runPlanFailed === failKey) return;
-  const memory = journal.render(state, knowledge, screenMemory);
+  const memory = journal.render(state, knowledge, screenMemory, { label: "run-plan" });
   const shown = fightPlanInput(state, knowledge, "run", {});
   const payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,

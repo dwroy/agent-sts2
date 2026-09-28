@@ -89,6 +89,22 @@ FAKE_MOD_FIXTURES=fixtures/states.jsonl npm run fake-mod
 | `record` | Captures distinct raw `/state` snapshots to `fixtures/states.jsonl`. Read-only. |
 | `replay` | Re-runs the decision layer over recorded states, offline. `--ask` re-queries Jev. |
 
+## Experience knowledge base (DeepSeek)
+
+Every DeepSeek question carries `memory.knowledge`: the slice of the experience base that matches it
+(`src/knowledge/experience.ts`), bounded to about 25 lessons, most relevant first.
+
+| File | What it is | How it changes |
+| --- | --- | --- |
+| `src/knowledge/experience.json` | Curated lessons from `notes/lessons.md` (scope, ascension range, evidence runs, n, confidence, active/retired) | By hand, after post-mortems; log each rebuild in `notes/experience-changelog.md` |
+| `src/knowledge/outcome-stats.json` | Outcome stats from the logs: per card / relic / event option / rest choice, n on every row | `npm run knowledge:stats` (= `python3 tools/build-outcome-stats.py`; `--ascension all`, `--logs DIR`, `--self-test`) |
+
+The slice: lessons about the offered cards/relics/potions/events and the act boss are always kept;
+then the act's elites and dangerous hallways (ranked higher on route/rest/run-plan questions), the
+general topics of the screen (deck, shop, rest, route, elite, event, neow, potion, plan) and the act.
+Retired lessons are never shown. `npx tsx tools/knowledge-slice.ts <states.jsonl> [label]` prints the
+slice for recorded states without calling any API.
+
 ## Safety model
 
 The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/loop.ts`:

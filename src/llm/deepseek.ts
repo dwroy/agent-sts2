@@ -57,6 +57,11 @@ const SYSTEM = [
   "Do NOT recompute damage, block or HP arithmetic: the numbers in the options are exact (they already include",
   "strength, vulnerable, weak, block and enemy intents). Compare the options on their differences, weigh the few",
   "things code cannot see (future turns, deck plan, potion value), decide, and stop. Do not second-guess a decision once made.",
+  "memory.knowledge, when present, is the slice of our experience base that matches this question: lessons distilled from past",
+  "runs' post-mortems (scope, 置信 高/中/低 = confidence, n = supporting runs, 反例 = contradicting runs) and outcome statistics from our logs",
+  "(observational: n runs, mean final floor, act-boss pass rate; low-n rows are hints only). Use it as evidence-based guidance, not",
+  "orders: weigh it with the exact facts in the state and code's numbers. High-confidence, well-supported lessons deserve real weight;",
+  "when the current situation differs from what a lesson assumes, the facts win.",
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
 ].join(" ");
 

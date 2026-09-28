@@ -166,7 +166,7 @@ describe("run journal: the complete run context", () => {
     const journal = new RunJournal();
     const state = at("MAP", 10, { boss_id: "VANTOM_BOSS", act_id: "0" });
     const memory = journal.render(state, testKnowledge, {});
-    expect(Object.keys(memory)).toEqual(["now", "boss_db", "decisions", "fights", "map_threats", "hp_timeline", "resources", "route", "lookahead"]);
+    expect(Object.keys(memory)).toEqual(["now", "boss_db", "decisions", "fights", "map_threats", "hp_timeline", "resources", "route", "lookahead", "knowledge"]);
     expect(memory.now).toContain("现状: 第1幕 F10 | HP 55/80 | 金币 214");
     expect(memory.now).toContain("牌组 5 张: STRIKE_R×2, DEFEND_R, BASH+, INFLAME");
     expect(memory.boss_db).toMatch(/VANTOM\) A8: HP .* \(n=\d+\)/);

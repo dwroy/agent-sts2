@@ -10,6 +10,7 @@
  * every question type, so the system prompt stays byte-identical and cached. Jev never sees it.
  */
 
+import { knowledgeSlice } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { actThreats, bossDossier } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
@@ -100,6 +101,18 @@ export interface RunMemory {
   route: string;
   /** The road to the boss from here, and the boss's key mechanics. */
   lookahead: string;
+  /**
+   * The experience knowledge base's slice for this question (knowledge/experience.ts): lessons from past
+   * runs whose scope matches the offered items, the act boss, the act's threats and this decision's
+   * topics, with confidence and n; plus outcome stats of what is offered. "" when nothing applies.
+   */
+  knowledge: string;
+}
+
+/** The question being asked, so the knowledge slice can match its screen type and options. */
+export interface QuestionContext {
+  label?: string;
+  criteria?: Record<string, string | null>;
 }
 
 export interface JournalEntry {
@@ -424,7 +437,7 @@ export class RunJournal {
   }
 
   /** The run context DeepSeek receives (every question type). */
-  render(state: GameState, knowledge: Knowledge, context: JournalContext["screenMemory"] = {}): RunMemory {
+  render(state: GameState, knowledge: Knowledge, context: JournalContext["screenMemory"] = {}, question: QuestionContext = {}): RunMemory {
     this.syncRun(state);
     this.knowledge ??= knowledge;
     this.trackRoute(state, context.routePlan);
@@ -438,6 +451,7 @@ export class RunJournal {
       resources: this.renderResources(),
       route: this.renderRoute(state),
       lookahead: renderLookahead(state, context.lastMap, this.position),
+      knowledge: renderKnowledge(state, question),
     };
   }
 
@@ -575,6 +589,16 @@ function fightLine(fight: FightRecord, state: GameState): string {
   const after = fight.over ? String(fight.hpAfter ?? "?") : `进行中 ${state.combat?.current_hp ?? state.run?.current_hp ?? "?"}`;
   const max = fight.maxHp !== null ? `/${fight.maxHp}` : "";
   return `F${fight.floor ?? "?"} ${enemies}: ${fight.hpBefore ?? "?"}→${after}${max}${fight.potionsUsed.length > 0 ? ` 药:${fight.potionsUsed.join(",")}` : ""}`;
+}
+
+function renderKnowledge(state: GameState, question: QuestionContext): string {
+  if (!state.run) return "";
+  try {
+    return knowledgeSlice(state, question.label ?? "", question.criteria ?? {}).text;
+  } catch {
+    // the knowledge base is advice; the run context stands without it
+    return "";
+  }
 }
 
 /** The current act's elites and dangerous hallway encounters (monster DB), one line each. */
