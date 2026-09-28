@@ -261,8 +261,9 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     byState.delete(key);
     for (const decision of decisions) {
       counts.decisions += 1;
-      // Only an executed decision is recorded (a failed action is logged, not recorded).
-      if (str(decision["result"]).startsWith("failed")) continue;
+      // Only an executed decision is recorded (a failed action, or a paid decision the board moved past
+      // before it was sent, "not dispatched", is logged, not recorded).
+      if (/^(failed|not dispatched)/.test(str(decision["result"]))) continue;
       options.beforeRecord?.(state, decision, journal, memory);
       journal.record(state, journalEntry(decision));
       counts.recorded += 1;

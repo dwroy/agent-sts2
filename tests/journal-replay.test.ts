@@ -57,16 +57,16 @@ describe("replaying a run's rows rebuilds the journal the live process had", () 
     const tick = (): string => new Date((clock += 1000)).toISOString();
     const observed = new ObservedStateLog((state, fingerprint, ts) => stateRows.push({ ts, observed_ts: ts, observed: true, fingerprint, state: state.raw as JsonValue }));
     let n = 0;
-    const poll = (raw: Raw, decision?: Omit<JournalEntry, "asked" | "intent"> & { failed?: boolean }): void => {
+    const poll = (raw: Raw, decision?: Omit<JournalEntry, "asked" | "intent"> & { failed?: boolean; undispatched?: boolean }): void => {
       const state = parseGameState(raw);
       const observedTs = tick();
       const fingerprint = `fp${(n += 1)}`;
       observed.observed(state, fingerprint, observedTs, live.observe(state, { knowledge: testKnowledge }));
       if (!decision) return;
       const entry: JournalEntry = { label: decision.label, by: decision.by, choice: decision.choice, reason: decision.reason, asked: true, intent: null };
-      if (!decision.failed) live.record(state, entry);
+      if (!decision.failed && !decision.undispatched) live.record(state, entry);
       const ts = tick();
-      decisionRows.push({ ts, fingerprint, label: entry.label, decider: entry.by, run_id: "TESTRUN123", observed_ts: observedTs, journal: { choice: entry.choice, reason: entry.reason }, result: decision.failed ? "failed (timeout): x" : "completed: ok" });
+      decisionRows.push({ ts, fingerprint, label: entry.label, decider: entry.by, run_id: "TESTRUN123", observed_ts: observedTs, journal: { choice: entry.choice, reason: entry.reason }, result: decision.failed ? "failed (timeout): x" : decision.undispatched ? "not dispatched: state changed while deciding" : "completed: ok" });
       observed.logging(state);
       stateRows.push({ ts, observed_ts: observedTs, fingerprint, state: state.raw as JsonValue });
     };
@@ -87,6 +87,8 @@ describe("replaying a run's rows rebuilds the journal the live process had", () 
     // A transition frame that only moves gold (superseded by the next state of the floor), then a failed action.
     poll(baseState("MAP", { run: run(2, { current_hp: 44, gold: 250, deck: upgradedDeck }) }));
     poll(baseState("MAP", { run: run(2, { current_hp: 44, gold: 260, deck: upgradedDeck }) }), { label: "map/route", by: "jev", choice: "Monster", failed: true });
+    // A DeepSeek shop call the board moved past (Y3XT F36: Lord's Parasol): logged, never recorded.
+    poll(baseState("MAP", { run: run(2, { current_hp: 44, gold: 260, deck: upgradedDeck }) }), { label: "shop/buy", by: "deepseek", choice: "buy Fight Me", reason: "Strength", undispatched: true });
     poll(baseState("MAP", { run: run(2, { current_hp: 44, gold: 260, deck: upgradedDeck }) }), { label: "map/route", by: "jev", choice: "Monster" });
     // F3: a potion drunk between two logged states, max HP up at a rest.
     poll(fight(3, 1, 44, 20, { deck: upgradedDeck }), { label: "combat/plan", by: "code", choice: "Strike" });

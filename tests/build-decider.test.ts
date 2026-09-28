@@ -417,6 +417,36 @@ describe("BUILD_DECIDER=deepseek in the loop", () => {
   });
 });
 
+describe("a paid DeepSeek decision the board moved past is still logged (Y3XT F36/F46: Lord's Parasol shops)", () => {
+  it("the state changes while DeepSeek decides: a 'not dispatched' row carries its answer and tokens; no action is sent", async () => {
+    let moved = false;
+    const deepseek = new FakeDeepSeek(() => {
+      // Lord's Parasol hands over the whole stock while the call runs: the shop is gone on the re-read.
+      moved = true;
+      return "buy_card0";
+    });
+    const actions: Raw[] = [];
+    const server = await startTestServer((req, res) => {
+      if (req.method === "GET" && req.url === "/state") return sendJson(res, 200, envelope(moved ? mainMenuPayload() : { ...shopPayload(true), run: crabRun() }));
+      req.on("data", () => undefined);
+      req.on("end", () => {
+        actions.push({});
+        sendJson(res, 200, envelope({ action: "none", status: "completed", stable: true, message: "scripted", state: mainMenuPayload() }));
+      });
+    });
+    servers.push(server);
+    const config = loopConfig();
+    const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev().client, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 5, pollIntervalMs: 1 });
+    const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
+    expect(actions).toHaveLength(0);
+    expect(deepseek.calls).toHaveLength(1);
+    const record = records.find((entry) => entry["label"] === "shop/buy")!;
+    expect(record).toMatchObject({ decider: "deepseek", deepseek: { by: "deepseek", choice: "buy_card0" }, result: "not dispatched: state changed while deciding" });
+    expect(record["usage"]).toEqual({ input_tokens: 10, output_tokens: 2, cache_hit_tokens: 7, reasoning_tokens: 1 });
+    expect(stats.deepseekCalls).toBe(1);
+  });
+});
+
 /* ---- consistency guard in the loop (run 2WNTQHYY4GAD, F12 rest) ------------------------------------ */
 
 async function scriptedDeepSeek(replies: { content: string; reasoning?: string }[]): Promise<DeepSeekClient> {
