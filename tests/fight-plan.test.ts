@@ -400,7 +400,10 @@ describe("turn planner with a fight plan", () => {
     expect(String(ask.state["roles"])).toMatch(/^Roles: you decide\. DeepSeek's strategy and tempo .* is guidance\. Code gives facts and a reference rank .*can be wrong/);
     expect(String(ask.state["roles"])).not.toMatch(/deviat|breaks/);
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /matches DeepSeek's scale_then_kill: most setup/.test(String(text)))).toBe(true);
+    // Every offered line plays Inflame: the setup is in front of Jev, and a setup label every line would
+    // carry is left out (it told nothing apart: 99X7/G8YY post-mortems).
+    expect(Object.values(criteria).every((text) => /Inflame/.test(String(text)))).toBe(true);
+    expect(Object.values(criteria).some((text) => /DeepSeek's scale_then_kill/.test(String(text)))).toBe(false);
   });
 
   it("ignores a plan made for another fight", () => {
@@ -422,7 +425,9 @@ describe("turn planner with a fight plan", () => {
     expect(decision?.kind).toBe("ask");
     const ask = decision as AskDecision;
     const criteria = ask.questions["plan"]?.type === "choice" ? ask.questions["plan"].criteria : {};
-    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)) && String(text).includes("matches DeepSeek's scale_then_kill"))).toBe(true);
+    expect(Object.values(criteria).some((text) => /Inflame, then Demon Form|Demon Form, then Inflame/.test(String(text)))).toBe(true);
+    // Every line plays both: no "differs from scale_then_kill" on any of them.
+    expect(Object.values(criteria).some((text) => /differs from DeepSeek's scale_then_kill/.test(String(text)))).toBe(false);
   });
 
   it("a hallway kill that a dry line also makes keeps the potion without asking (CAYK F37-F40: lethal, dominated)", () => {

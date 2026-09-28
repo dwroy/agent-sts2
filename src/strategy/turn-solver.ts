@@ -159,6 +159,11 @@ export interface PlayerSim {
   /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
   regen?: number;
   /**
+   * Buffer already up (BUFFER_POWER, from a Lucky Tonic drunk earlier): each stack prevents the next HP
+   * loss, our own included (99X7 F9 T3: Breakthrough's 1 HP ate the Buffer drunk for the enemy turn, -17).
+   */
+  buffer?: number;
+  /**
    * Most HP we can lose in one turn (Beating Remnant: 20). CCPR F48 T6-T7: every Test Subject line
    * really cost 20; uncapped, the guard and least-loss picked block lines over 48-damage ones.
    */
@@ -388,6 +393,14 @@ export interface Outcome {
   /** Withers this plan adds to the hand (Withering Presence). */
   withersAdded: number;
   /**
+   * Damage a Demise put on this turn deals over the enemy's next turns (demiseLater), per enemy: not in
+   * damageDealt, but in the damage axis and the facts (99X7 F17: invisible, the drinking lines were
+   * dominated and never offered on T1).
+   */
+  demiseLater?: { index: number; name: string; damage: number; perTurn: number }[];
+  /** Buffer stacks this line's own HP losses use up (Breakthrough after a Lucky Tonic). */
+  bufferSpentBySelf?: number;
+  /**
    * Score lost to waking a sleeper with chip damage (its free turns, at HP weight); 0 when none. An
    * outcome axis too, so a waking line can never dominate one that lets it sleep (1K5G F17 T1).
    */
@@ -437,8 +450,10 @@ interface Sim {
   tempDex: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
-  /** Buffer stacks gained this turn: each negates one enemy hit. */
+  /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
   buffer: number;
+  /** Buffer stacks used up by our own HP losses this turn (Breakthrough, Offering). */
+  bufferSpent: number;
   /** Duplication: the next card played resolves twice. */
   duplicate: number;
   /** Flame Barrier: damage back per enemy hit taken this turn. */
@@ -660,8 +675,14 @@ export const REGEN_LATER_SHARE = 0.5;
  * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
  * nothing and gives 2 energy for a Defend).
  */
-function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
-  if (amount <= 0) return;
+function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
+  if (amount <= 0) return false;
+  // Buffer prevents the loss (and uses a stack), before anything that triggers on losing HP.
+  if (sim.buffer > 0) {
+    sim.buffer -= 1;
+    sim.bufferSpent += 1;
+    return false;
+  }
   if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
   sim.hpLostThisTurn = true;
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
@@ -676,6 +697,7 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
       crabRage(sim);
     }
   }
+  return true;
 }
 
 /**
@@ -962,8 +984,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
 
-  if (card.hpLoss > 0) {
-    loseHp(next, card.hpLoss, player);
+  if (card.hpLoss > 0 && loseHp(next, card.hpLoss, player)) {
     if (next.rupture > 0) {
       next.strength += next.rupture;
       next.permStrength += next.rupture;
@@ -1290,6 +1311,55 @@ function imbalanceStuns(sim: Sim, hits: IncomingHit[], block: number, buffer: nu
   return sim.enemies.filter((enemy) => enemy.alive && (enemy.imbalanced ?? 0) > 0 && hits.some((hit) => hit.enemy === enemy.index) && !unblocked.has(enemy.index));
 }
 
+/**
+ * HP lost to damage in order (`amounts`, each meeting the block left first) with `buffer` stacks up:
+ * each stack prevents the next amount that would take HP.
+ */
+export function bufferedLoss(amounts: number[], block: number, buffer: number): number {
+  return bufferedHits(amounts, block, buffer).through;
+}
+
+/** bufferedLoss with the stacks still up after the hits (Buffer lasts until used). */
+export function bufferedHits(amounts: number[], block: number, buffer: number): { through: number; stacksLeft: number } {
+  let pool = block;
+  let stacks = buffer;
+  let through = 0;
+  for (const amount of amounts) {
+    if (amount <= 0) continue;
+    const absorbed = Math.min(pool, amount);
+    pool -= absorbed;
+    const rest = amount - absorbed;
+    if (rest <= 0) continue;
+    if (stacks > 0) {
+      stacks -= 1;
+      continue;
+    }
+    through += rest;
+  }
+  return { through, stacksLeft: stacks };
+}
+
+/**
+ * HP a Demise put on this turn takes from each living enemy over its next DEMISE_TURNS turns (at most
+ * its HP): the damage a Powdered Demise line deals later, by enemy index. None on a minion while a
+ * non-minion lives (it leaves when they die) nor on an illusion (99X7 F17: T5-T7 drunk on a Kin
+ * Follower; a T1 drink on the Priest would have ticked ~54 by T7).
+ */
+const NO_DEMISE: Map<number, number> = new Map();
+
+export function demiseLater(enemies: Sim["enemies"], input: SolverInput): Map<number, number> {
+  if (!enemies.some((enemy) => (enemy.demise ?? 0) > 0)) return NO_DEMISE;
+  const out = new Map<number, number>();
+  const leaderAlive = enemies.some((enemy) => enemy.alive && !enemy.minion);
+  for (const enemy of enemies) {
+    if (!enemy.alive || enemy.illusion || (enemy.minion && leaderAlive)) continue;
+    const start = input.enemies.find((entry) => entry.index === enemy.index);
+    const added = Math.max(0, (enemy.demise ?? 0) - (start?.demise ?? 0));
+    if (added > 0) out.set(enemy.index, Math.min(enemy.hp, added * DEMISE_TURNS));
+  }
+  return out;
+}
+
 /** HP over next turn's hits (a woken sleeper's included) below which a line risks death. */
 export const WAKE_MARGIN = 3;
 /** Score cost of a line that risks death to a sleeper it wakes, per point of its first hit (HP weight). */
@@ -1405,6 +1475,10 @@ export const PLATING_LASTING = 14 / 4;
 /** Snecko Oil: a hand card's expected cost this turn (0-3 at random). */
 export const SNECKO_COST = 1.5;
 
+/** A Buffer stack carried into next turn: this share of next turn's expected hit, at most BUFFER_CARRY_CAP. */
+export const BUFFER_CARRY_SHARE = 0.5;
+export const BUFFER_CARRY_CAP = 20;
+
 /** Enemy turns a Demise is counted for (it ticks until the enemy dies). */
 export const DEMISE_TURNS = 3;
 
@@ -1477,6 +1551,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     }
   }
   const living = sim.enemies.filter((enemy) => enemy.alive);
+  const demiseTicks = demiseLater(sim.enemies, input);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
@@ -1496,12 +1571,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const heldPenalty =
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
   const hits = winsFight ? [] : incomingHits(sim, input);
-  let incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
-  if (sim.buffer > 0 && !winsFight) {
-    // Buffer negates whole hits: approximate by removing the biggest ones.
-    const biggest = hits.map((hit) => hit.amount).sort((a, b) => b - a);
-    incomingRaw = Math.max(0, incomingRaw - biggest.slice(0, sim.buffer).reduce((sum, hit) => sum + hit, 0));
-  }
+  const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
   // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
@@ -1509,7 +1579,13 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0) + platingNow;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
-  const incomingAfterBlock = Math.max(0, incomingRaw - blockLeft);
+  // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
+  // in order (a held Burn at the end of our turn first).
+  const buffered = sim.buffer > 0 && !winsFight ? bufferedHits([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : null;
+  const incomingAfterBlock = buffered ? buffered.through : Math.max(0, incomingRaw - blockLeft);
+  // Stacks gained this turn and still up after the enemy turn carry over (Buffer lasts until used): worth
+  // part of next turn's expected hit each.
+  const bufferCarried = buffered ? Math.max(0, buffered.stacksLeft - (input.player.buffer ?? 0)) : 0;
   // Imbalanced: an enemy whose every hit meets block (in attack order) is stunned for its next move.
   const stunned = winsFight ? [] : imbalanceStuns(sim, hits, blockLeft, sim.buffer);
   // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
@@ -1572,6 +1648,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   }
   if (winsFight) score += 10_000;
   score -= weights.hp * hpLoss;
+  if (bufferCarried > 0 && !dies) score += weights.hp * bufferCarried * BUFFER_CARRY_SHARE * Math.min(input.nextIncoming ?? 0, BUFFER_CARRY_CAP);
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
   // died at 32/512 HP with us).
@@ -1756,9 +1833,15 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const addedVulnerable = Math.max(0, enemy.vulnerable - start.vulnerable);
     const addedWeak = Math.max(0, enemy.weak - start.weak);
     score += weights.vulnerable * Math.min(addedVulnerable, 3);
-    // Demise: HP lost at the end of each of its turns, about three of them counted.
-    const addedDemise = Math.max(0, (enemy.demise ?? 0) - (start.demise ?? 0));
-    if (addedDemise > 0) score += weights.damage * Math.min(enemy.hp, addedDemise * DEMISE_TURNS);
+    // Demise: HP lost at the end of each of its turns, about three of them counted (demiseLater: nothing
+    // on a minion while its leader lives, it leaves with the leader; more on the kill-priority enemy and
+    // on one that scales, like damage into them).
+    const demise = demiseTicks.get(enemy.index) ?? 0;
+    if (demise > 0) {
+      const focus = input.focusIndex === enemy.index && !enemy.crabRage && !enemy.reattach ? FOCUS_BONUS : 0;
+      const grows = start.scaling && !start.illusion && !together.has(enemy.index) ? 0.6 : 0;
+      score += weights.damage * demise * (1 + focus + grows);
+    }
     if (start.attacks.length > 0 || enemy.weak > 0) score += weights.weak * Math.min(addedWeak, 3);
     // Shrink's later turns (this turn's cut is in the incoming hits): like Weak's, a little more (30% vs 25%).
     const addedShrink = Math.max(0, (enemy.shrink ?? 0) - (start.shrink ?? 0));
@@ -1820,6 +1903,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
       sleepCost,
+      ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
+      ...(demiseTicks.size > 0 && !winsFight ? { demiseLater: [...demiseTicks.entries()].map(([index, damage]) => ({ index, name: sim.enemies.find((enemy) => enemy.index === index)!.name, damage, perTurn: Math.max(0, (sim.enemies.find((enemy) => enemy.index === index)!.demise ?? 0) - (input.enemies.find((entry) => entry.index === index)?.demise ?? 0)) })) } : {}),
       ...(wakeHit > 0 ? { wakeHit } : {}),
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost,
@@ -1929,7 +2014,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     potionFlat: 0,
     tempDex: 0,
     intangible: false,
-    buffer: 0,
+    buffer: input.player.buffer ?? 0,
+    bufferSpent: 0,
     duplicate: input.player.duplicate ?? 0,
     retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
@@ -2023,8 +2109,23 @@ export function solveTurn(input: SolverInput): SolveResult {
   return { plans, nodes, truncated };
 }
 
+/** This turn's damage plus what a Demise put on now deals over the next turns (demiseLater). */
+export function totalDamage(o: Pick<Outcome, "damageDealt" | "demiseLater">): number {
+  return o.damageDealt + (o.demiseLater ?? []).reduce((sum, entry) => sum + entry.damage, 0);
+}
+
+/** Outcome vectors, computed once per outcome (dominance checks compare every pair of plans). */
+const VECTORS = new WeakMap<Outcome, number[]>();
+
 function vector(plan: Plan): number[] {
-  const o = plan.outcome;
+  const cached = VECTORS.get(plan.outcome);
+  if (cached) return cached;
+  const computed = outcomeVector(plan.outcome);
+  VECTORS.set(plan.outcome, computed);
+  return computed;
+}
+
+function outcomeVector(o: Outcome): number[] {
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
   // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
@@ -2034,7 +2135,7 @@ function vector(plan: Plan): number[] {
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, totalDamage(o), -living, debuffs, o.strengthGained, drawn, -o.potionCost, o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -2058,13 +2159,17 @@ export function dominates(a: Plan, b: Plan): boolean {
 export function distinctPlans(plans: Plan[], limit: number): Plan[] {
   const front = plans.filter((plan) => !plans.some((other) => other !== plan && dominates(other, plan)));
   const picked: Plan[] = [];
+  const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
   for (const plan of front) {
     if (picked.length >= limit) break;
+    // Drinking a potion or keeping it is a different choice, whatever the numbers (N7KR F8 T1: with a
+    // held potion's reserve cost the Taunt line ranked first and hid the Dexterity Potion line, 2 HP apart).
     const similar = picked.some(
       (other) =>
+        drinks(other) === drinks(plan) &&
         other.outcome.winsFight === plan.outcome.winsFight &&
         Math.abs(other.outcome.hpLoss - plan.outcome.hpLoss) <= 2 &&
-        Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
+        Math.abs(totalDamage(other.outcome) - totalDamage(plan.outcome)) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter,
@@ -2073,7 +2178,6 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
   }
   // Potions are optional: when every pick drinks one, the best line that drinks none is shown too
   // (5FMU F15: all four hallway options carried the Strength Potion, so "keep it" was never offered).
-  const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
   if (limit >= 2 && picked.length > 0 && picked.every(drinks)) {
     const dry = plans.filter((plan) => !drinks(plan));
     const keep = dry.find((plan) => !dry.some((other) => other !== plan && dominates(other, plan)));

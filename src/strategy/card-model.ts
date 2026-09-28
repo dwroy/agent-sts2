@@ -284,6 +284,16 @@ export function nextTurnOnly(template: string, varName: string): boolean {
   return withVar.length > 0 && withVar.every((sentence) => nextTurn.test(sentence));
 }
 
+/**
+ * Whether every sentence naming a card var is a "at the start of your turn" one: Demon Form's Strength
+ * comes each later turn, not on play.
+ */
+export function turnStartOnly(template: string, varName: string): boolean {
+  const turnStart = /回合开始时|start of (?:your|each) turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => turnStart.test(sentence));
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -291,7 +301,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const template = str(card["rules_text"]);
   const index = numOrNull(card["index"]) ?? fallbackIndex;
   const requiresTarget = bool(card["requires_target"]);
-  const type = info?.type || "";
+  // The game data's type, else the entry's own (deck entries and test boards carry card_type).
+  const type = info?.type || str(card["card_type"]) || "";
   const target = targetMode(str(card["target_type"]), template, requiresTarget);
 
   let damage = dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
@@ -335,6 +346,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     default:
       break;
   }
+  // Strength that starts next turn (Demon Form: 「在你的回合开始时，获得{StrengthPower}点力量」) is none this
+  // turn: its value is the power's lasting value (G8YY F30 T2: +3 counted into Squash and Strike, "kills
+  // the Rock" for 19; it took 13).
+  if (strength > 0 && turnStartOnly(template, "StrengthPower")) strength = 0;
   if (special === "body_slam") damage = dyn(card, "CalculatedDamage") ?? 0;
   if (special === "whirlwind") hits = 0; // set to X at play time
 
@@ -861,6 +876,34 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     ...(generates ? { generates } : {}),
   };
 }
+
+/**
+ * A potion's rough worth when drunk later in the fight or boss it is held for, in HP-equivalent points:
+ * its damage at the boss damage weight, its block as HP, lasting buffs at about a fight's worth. A price
+ * for holding it (combat-plan reserve cost), not a simulation: the turn it would be drunk on is unknown.
+ */
+export function potionHeldValue(potionId: string): number {
+  const effect = POTION_EFFECTS[potionId];
+  if (!effect) return POTION_HELD_DEFAULT;
+  const card = GENERATED_CARD_POTIONS[potionId];
+  const special: Record<string, number> = {
+    triple_block: 16, temp_dex: 12, buffer: 14, intangible: 20, heal: 16, regen: 12, dexterity: 10, plating: 14,
+    duplicate_next: 10, triple_next_attack: 18, free_card: 10, upgrade_hand: 10, clarity: 8, ritual: 12, snecko: 8,
+    gamble: 6, glowwater: 8, chaos: 10, ashwater: 6,
+  };
+  let value = 0;
+  value += 0.8 * (effect.damage ?? card?.damage ?? 0) * (effect.hits ?? 1);
+  value += effect.block ?? card?.block ?? 0;
+  value += 8 * (effect.strength ?? 0) + 2 * (effect.tempStrength ?? 0);
+  value += 3 * Math.min(3, effect.weak ?? 0) + 3 * Math.min(3, effect.vulnerable ?? 0);
+  value += 0.8 * (effect.demise ?? 0) * 3 + 3 * Math.min(3, effect.shrink ?? 0);
+  // A card potion's card: its lasting value over a boss fight's length (turn-solver fightLength 1.8).
+  value += 5 * (effect.energyGain ?? 0) + 3 * (effect.draw ?? 0) + 1.8 * (card?.flatValue ?? 0);
+  if (effect.special) value += special[effect.special] ?? 0;
+  return value > 0 ? value : POTION_HELD_DEFAULT;
+}
+/** A held potion the table does not price. */
+export const POTION_HELD_DEFAULT = 10;
 
 /** A plan step that plays the card a card potion added (not a hand card: nothing to click until drunk). */
 export function isGeneratedStep(cardId: string): boolean {
