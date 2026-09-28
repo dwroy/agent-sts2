@@ -3,6 +3,7 @@
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { planChest } from "./chest.js";
 import { planCombat } from "./combat.js";
+import { fightKey } from "../strategy/fight-plan.js";
 import { guardSandpit, planCombatTurn } from "./combat-plan.js";
 import { planEvent } from "./event.js";
 import { planMap } from "./map.js";
@@ -156,6 +157,9 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
  * played this turn, the hand size and energy must hold still for a while before they are trusted:
  * 700 ms normally, 1.5 s for a hand under 5 cards, 3 s for no energy or a junk-only hand.
  */
+/** The longest a new fight's first frames may show only the last fight's counters before we act anyway. */
+export const STALE_FIGHT_WAIT_MS = 30_000;
+
 export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean {
   const combat = (env.state.raw["combat"] ?? {}) as Record<string, unknown>;
   const player = (combat["player"] ?? {}) as Record<string, unknown>;
@@ -163,16 +167,28 @@ export function turnStartUnsettled(env: DecisionEnv, now = Date.now()): boolean 
   const played = Number(player["cards_played_this_turn"] ?? 0);
   const energy = Number(player["energy"] ?? 0);
   const hand = Array.isArray(combat["hand"]) ? (combat["hand"] as Record<string, unknown>[]) : [];
+  // The board is keyed by fight: the last fight ended on the same "T1, no hand, no energy" frame a new
+  // fight's first frame shows, so without the key that frame counted as long stable (YKFW F14 T1: the
+  // turn was ended 0.5 s after the map click with F13's "3 cards played", no card played).
+  const fight = `${String(env.state.raw["run_id"] ?? "")}:${fightKey(env.state)}`;
+  const staleStart = hand.length === 0 && energy === 0;
   const seen = env.screenMemory.turnBoard;
-  if (!seen || seen.turn !== turn || seen.handLen !== hand.length || seen.energy !== energy) {
-    env.screenMemory.turnBoard = { turn, handLen: hand.length, energy, changedAt: now };
+  if (!seen || seen.fight !== fight || seen.turn !== turn || seen.handLen !== hand.length || seen.energy !== energy) {
+    const live = seen?.fight === fight && seen.live === true;
+    env.screenMemory.turnBoard = { fight, live, turn, handLen: hand.length, energy, changedAt: now };
   }
+  const board = env.screenMemory.turnBoard!;
+  if (!staleStart) board.live = true;
   // Cards played this turn means the draw has landed, except on a frame with no hand and no energy: at
   // a fight's start that is the previous fight's counters (M75J F37 T1, TXKE F38: "1 card played", 0
   // energy, empty hand; the turn was ended at once, 4 energy and a 5-card hand lost to a 16 hit).
-  const staleStart = hand.length === 0 && energy === 0;
   if (played > 0 && !staleStart) return false;
-  if (staleStart && (turn ?? 1) <= 1) return now - env.screenMemory.turnBoard!.changedAt < 5_000;
+  if (staleStart && (turn ?? 1) <= 1) {
+    // Until this fight has shown a hand or energy, its counters are the last fight's: wait for the real
+    // draw (a long cap only so a restart onto an emptied T1 hand cannot hang).
+    if (!board.live) return now - board.changedAt < STALE_FIGHT_WAIT_MS;
+    return now - board.changedAt < 5_000;
+  }
   // What the premature reads looked like: no energy yet, or a hand holding only the Status/Curse cards
   // an enemy just added (the real draw not in yet).
   const onlyJunk =
