@@ -80,6 +80,13 @@ export interface ScreenMemory {
    */
   plannedAfter?: { turn: number | null; steps: import("../strategy/turn-solver.js").Step[] };
   /**
+   * The potion steps of the line Jev (or the escalator) chose this turn, not drunk yet. When the line is
+   * cut short (a random exhaust, a draw, a hand the plan did not expect) they are drunk before the
+   * re-plan, so a chosen drink never ends the turn undrunk (V1MF F33 T4: "…, potion Powdered Demise"
+   * chosen, True Grit emptied the hand, then "no playable cards; ending the turn" without it).
+   */
+  pendingDrinks?: { fight: string; turn: number | null; via: CombatPlanMemo["via"]; steps: import("../strategy/turn-solver.js").Step[] };
+  /**
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
    */

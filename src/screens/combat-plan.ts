@@ -608,11 +608,52 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
   const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  // A chosen line's later drinks are kept apart: drunk even if the line is cut short (pendingDrinks).
+  const drinks = via !== "code" ? plan.steps.slice(1).filter((step) => step.cardId.startsWith("POTION:")) : [];
+  env.screenMemory.pendingDrinks = drinks.length > 0 ? { fight: fightKey(env.state), turn, via, steps: drinks } : undefined;
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
     plan.steps.length > 1 && drawsOrRandom === 0
       ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
       : null;
+}
+
+/**
+ * The next drink of a cut-short chosen line (pendingDrinks) that can still be drunk this turn: the same
+ * potion in the same belt slot, usable, its target alive (else the living enemy with that name, else
+ * none: dropped). null when there is none.
+ */
+export function pendingDrink(env: DecisionEnv, enemies: EnemySim[]): { step: Step; intent: ActionRequest; via: CombatPlanMemo["via"] } | null {
+  const pending = env.screenMemory.pendingDrinks;
+  if (!pending || pending.fight !== fightKey(env.state) || pending.turn !== (env.state.turn ?? null)) {
+    env.screenMemory.pendingDrinks = undefined;
+    return null;
+  }
+  if (!env.state.available_actions.includes("use_potion")) return null;
+  const belt = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge);
+  for (const step of [...pending.steps]) {
+    const [, id, slotText] = step.cardId.split(":");
+    const potion = belt.find((entry) => entry.slot === Number(slotText) && entry.potion_id === id && entry.can_use);
+    let target = step.target;
+    if (target !== null && !enemies.some((enemy) => enemy.index === target && enemy.hp > 0)) {
+      target = enemies.find((enemy) => enemy.hp > 0 && enemy.name === step.targetName)?.index ?? null;
+    }
+    if (!potion || (step.target !== null && (target === null || !potion.valid_targets.includes(target)))) {
+      dropPendingDrink(env, step);
+      continue;
+    }
+    const intent: ActionRequest = target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target };
+    return { step, intent, via: pending.via };
+  }
+  return null;
+}
+
+/** A drink of the chosen line done (or no longer possible): off the pending list. */
+function dropPendingDrink(env: DecisionEnv, step: Step): void {
+  const pending = env.screenMemory.pendingDrinks;
+  if (!pending) return;
+  const steps = pending.steps.filter((entry) => entry !== step && !(entry.cardId === step.cardId && entry.target === step.target));
+  env.screenMemory.pendingDrinks = steps.length > 0 ? { ...pending, steps } : undefined;
 }
 
 /** Living enemies as "index:enemy_id", in order. */
@@ -814,6 +855,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
     if (intent) {
+      dropPendingDrink(env, next);
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
@@ -831,6 +873,19 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
   env.screenMemory.combatPlan = null;
+
+  // The chosen line was cut short with a drink still to come: drink it now, before any end-turn path
+  // ("no playable cards", "only line: end turn") or a re-plan (V1MF F33 T4).
+  const pending = pendingDrink(env, enemies);
+  if (pending) {
+    dropPendingDrink(env, pending.step);
+    return {
+      kind: "act",
+      label: "combat/plan-potion",
+      intent: pending.intent,
+      rationale: `drinking ${pending.step.name.replace(/^potion /, "")}${pending.step.targetName ? ` -> ${pending.step.targetName}` : ""} from the ${pending.via === "jev" ? "Jev" : pending.via === "deepseek" ? "DeepSeek" : "Claude"}-chosen line before re-planning (the line was cut short; its drink is still to come this turn)`,
+    };
+  }
 
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {

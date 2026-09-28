@@ -475,6 +475,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.planBeforeSelection = undefined;
       screenMemory.gambleDiscards = undefined;
       screenMemory.plannedAfter = undefined;
+      screenMemory.pendingDrinks = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
       screenMemory.demonTongueTurn = undefined;

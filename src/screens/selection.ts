@@ -166,7 +166,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
-          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card)) - (bool(card["upgraded"]) ? 8 : 0) -
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card), exhaustCardOf(modelHandCard(card, index, knowledge))) - (bool(card["upgraded"]) ? 8 : 0) -
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
             (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
@@ -337,7 +337,25 @@ interface ExhaustContext {
   sandpit?: boolean;
   /** Attack cards in hand right now. */
   handAttacks?: number;
+  /** Our Strength now: an attack's worth grows with it per hit (6HRZ F33 T6: Exterminate went at Strength 6). */
+  strength?: number;
+  /** An enemy has Artifact: Vulnerable/Weak cards are what strips it (XWPV F48: Bash+ exhausted at Artifact 2). */
+  artifact?: boolean;
+  /** Two or more non-minion enemies (Kaiser Crab): AoE is worth double. */
+  multiEnemy?: boolean;
+  /** Strike Dummy: cards named Strike deal 3 more. */
+  strikeDummy?: boolean;
 }
+
+/** What an exhaust candidate does, for the in-combat score (hits per play, applies a debuff, hits all). */
+export interface ExhaustCard {
+  hits?: number;
+  debuff?: boolean;
+  aoe?: boolean;
+}
+
+/** Cards whose Vulnerable/Weak strips an enemy's Artifact. */
+const DEBUFF_EXHAUST_KEEP = new Set(["BASH", "THUNDERCLAP", "TAUNT", "UPPERCUT", "SHOCKWAVE", "DISARM", "INTIMIDATE"]);
 
 /** A card that gives block: a Defend, a Block value, or block in its text. */
 function isBlockCard(card: Record<string, unknown>): boolean {
@@ -349,6 +367,10 @@ function isBlockCard(card: Record<string, unknown>): boolean {
 function isAttackCard(cardId: string, type: string, line: string): boolean {
   if (type) return type === "Attack";
   return cardId.startsWith("STRIKE_") || /造成\d+点伤害|deals? \d+ damage/i.test(line);
+}
+
+function exhaustCardOf(model: CardModel): ExhaustCard {
+  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all" };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -378,7 +400,14 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
     .map(asRecord)
     .some((enemy) => enemy["is_alive"] !== false && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "SANDPIT_POWER"));
   const handAttacks = hand.filter((card) => isAttackCard(str(card["card_id"]), typeOf(str(card["card_id"]), str(card["card_type"])), str(card["resolved_rules_text"]))).length;
-  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks };
+  const living = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+  const powerOf = (entity: Record<string, unknown>, id: string): number =>
+    asArray(entity["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === id).reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0);
+  const strength = powerOf(asRecord(combat["player"]), "STRENGTH_POWER");
+  const artifact = living.some((enemy) => powerOf(enemy, "ARTIFACT_POWER") > 0);
+  const multiEnemy = living.filter((enemy) => powerOf(enemy, "MINION_POWER") <= 0).length >= 2;
+  const strikeDummy = asArray(asRecord(raw["run"])["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "STRIKE_DUMMY");
+  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks, strength, artifact, multiEnemy, strikeDummy };
 }
 
 /**
@@ -391,7 +420,26 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
 /** Exhaust-score malus for a card the committed plan still plays (below any junk, above nothing). */
 export const PLANNED_CARD_KEEP = 150;
 
-export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_")): number {
+export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_"), card: ExhaustCard = {}): number {
+  const base = baseExhaustScore(cardId, type, context, blocks);
+  if (base >= 90 || base <= 0) return base;
+  // Toasty Mittens exhausts a card every turn: the static card value took Exterminate at Strength 6
+  // (6HRZ F33 T6), Fight Me 8 times (XWPV F48) and Bash+ with the boss's Artifact up (2Q37, 6HRZ,
+  // XWPV; 4th time). Strength scaling stays; an attack loses 2 per hit per Strength point; a Strike
+  // with Strike Dummy, AoE into two bodies, and debuffs against Artifact are kept.
+  if (damageRole(cardId) === "scaling") return Math.min(base, 5);
+  let score = base;
+  if (type === "Attack") {
+    const hits = Math.max(1, card.hits ?? 1);
+    score -= hits * Math.max(0, context.strength ?? 0) * 2;
+    if (context.strikeDummy && /STRIKE/.test(cardId)) score -= 10;
+    if (context.multiEnemy && (card.aoe || damageRole(cardId) === "aoe")) score -= 15;
+  }
+  if (context.artifact && (card.debuff || DEBUFF_EXHAUST_KEEP.has(cardId))) score = Math.min(score, 10);
+  return Math.max(1, score);
+}
+
+function baseExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks: boolean): number {
   // Howl from Beyond plays itself once from the exhaust pile, then goes to the discard pile: a free hit.
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   // Frantic Escape is a Status, but against the Sandpit it is the only thing that pushes the countdown
