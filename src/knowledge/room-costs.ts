@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 
 export interface MeasuredRoom {
   n: number;
+  /** Of the n rooms, those the run died in (counted as losing all their entry HP). */
+  deaths?: number;
   median: number;
   p75: number;
   mean: number;

@@ -41,13 +41,13 @@ export interface RoomCostModel {
 const where = (at: number, asc: number): string => (at === asc ? `A${asc}` : `A${at} (A${asc} has too few)`);
 
 /**
- * A room type's cost: the logged HP change across such rooms (room-costs.json, all logged rooms that did
- * not end the run); for fights without that, the monster DB's won-fight losses pooled over the act's
+ * A room type's cost: the logged HP change across such rooms (room-costs.json, deaths counted as all the
+ * entry HP); for fights without that, the monster DB's won-fight losses pooled over the act's
  * encounters; else the old fixed model.
  */
 function entry(act: number, asc: number, room: "Monster" | "Elite" | "Unknown", fallback: () => RoomCostEntry): RoomCostEntry {
   const measured = measuredRoom(act, asc, room);
-  if (measured) return { median: Math.max(0, measured.median), p75: Math.max(0, measured.p75), source: `logged ${where(measured.asc, asc)} act-${act} ${room} rooms, n=${measured.n}` };
+  if (measured) return { median: Math.max(0, measured.median), p75: Math.max(0, measured.p75), source: `logged ${where(measured.asc, asc)} act-${act} ${room} rooms, n=${measured.n}${measured.deaths ? ` incl. ${measured.deaths} deaths` : ""}` };
   if (room !== "Unknown") {
     const db = roomHpCost(act, asc, room);
     if (db) return { median: db.median, p75: db.p75, source: `monster DB ${where(db.asc, asc)} won fights, n=${db.n} over ${db.encounters} encounters` };
@@ -123,7 +123,7 @@ export function roomCostNote(model: RoomCostModel): string {
   const one = (label: string, cost: RoomCostEntry): string => `${label} ${r(cost.median)} HP (p75 ${r(cost.p75)}; ${cost.source})`;
   return (
     `HP projection per room, act ${model.act}: ${one("hallway fight", model.monster)}, ${one("elite", model.elite)}, ${one('"?" room', model.unknown)}; ` +
-    `logged costs are entry HP minus HP on the next floor (after Burning Blood, potions, events), rooms that ended the run excluded; ` +
+    `logged costs are entry HP minus HP on the next floor (after Burning Blood, potions, events); a room the run died in counts as all its entry HP; ` +
     `a rest site is assumed to heal ${Math.round(REST_HEAL * 100)}% of max HP (smithing instead heals nothing). ` +
     "hp figures chain the median costs; hp_risk is the one room on the path whose p75 cost (the rooms before it at the median) leaves the least HP; HP that runs out is not healed by a later rest."
   );
