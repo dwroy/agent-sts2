@@ -15,7 +15,7 @@ import { setExperienceForTests, type ExperienceEntry } from "../src/knowledge/ex
 import type { AskDecision, Decision } from "../src/project/types.js";
 import { focusLines, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/screens/combat-plan.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/strategy/rollout-live.js";
 import { killOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/strategy/rollout.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -394,6 +394,27 @@ describe("kill-order rollout (offline)", () => {
       expect(of("Leader > Minion > Other").hpLoss).toBe(of("Leader > Other > Minion").hpLoss);
       expect(of("Leader > Minion > Other").perTurn).toEqual(of("Leader > Other > Minion").perTurn);
     }
+  });
+
+  it("an attacking illusion first (Parafright) gets no \"dead by T5\" count: it revives (981W F30); it stays a kill-order target", () => {
+    const base = input(false);
+    base.solver.enemies[1] = { ...base.solver.enemies[1]!, minion: false, illusion: true };
+    const combat = { enemies: [{ index: 0, enemy_id: "LEADER" }, { index: 1, enemy_id: "MINION" }] };
+    const groups = killGroups(combat, base.solver.enemies);
+    expect(groups.map((g) => [g.id, g.illusion ?? false])).toEqual([["LEADER", false], ["MINION", true]]);
+    const { orders } = killOrders(groups);
+    expect(orders.map((o) => [o.label, o.firstRevives ?? false])).toEqual([["Leader > Minion", false], ["Minion > Leader", true]]);
+    const r = rolloutDecision({ ...base, options: { ...base.options!, orders } });
+    const line = r.lines.find((l) => l.tags.includes("offered") && l.orders.length === 2)!;
+    expect(line.orders.find((o) => o.order.label === "Minion > Leader")!.firstDown).toBeNull();
+    expect(line.orders.find((o) => o.order.label === "Leader > Minion")!.firstDown).toBe(0);
+    const plan = line.plan;
+    const live = { available: true, byPlan: new Map([[plan, line]]), result: r, potionsHeld: false, ordersDropped: 0 } as unknown as LiveRollout;
+    const facts = rolloutFacts(plan, live);
+    const text = `${facts["rollout_kill_order"]} ${facts["rollout_other_orders"] ?? ""}`;
+    expect(text).not.toMatch(/Minion dead/);
+    expect(text).toMatch(/Minion is an illusion/);
+    expect(text).toMatch(/Leader dead/);
   });
 
   it("under a tight clock the samples per order go first, and it says so", () => {

@@ -410,8 +410,11 @@ export interface RolloutInput {
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
 export interface OrderEstimate {
   order: KillOrder;
-  /** Samples in which the order's first group is dead by the end of the horizon (the fight won counts). */
-  firstDown: number;
+  /**
+   * Samples in which the order's first group is dead by the end of the horizon (the fight won counts);
+   * null when that group is an illusion, which revives (FA82/981W Parafright: "dead by T5 8/8").
+   */
+  firstDown: number | null;
   hpLoss: number;
   turnsToWin: number | null;
   deaths: number;
@@ -1057,6 +1060,8 @@ export interface KillGroup {
   indices: number[];
   /** Their HP together. */
   hp: number;
+  /** An illusion (Parafright): back at full HP next turn when killed, so never "dead" for an order. */
+  illusion?: boolean;
 }
 
 /** An order to kill the enemy groups in: the later turns' policy targets the first group with a member alive. */
@@ -1066,6 +1071,8 @@ export interface KillOrder {
   /** Names joined by " > " ("Louse x3" for a group). */
   label: string;
   groups: number[][];
+  /** The first group is an illusion: it revives, so no "first target dead" count is kept for it. */
+  firstRevives?: boolean;
 }
 
 /** Every permutation is compared up to this many groups (3! = 6 orders); past it, each group first. */
@@ -1099,6 +1106,7 @@ export function killOrders(groups: KillGroup[], maxFull = MAX_FULL_ORDER_GROUPS)
     key: seq.map((group) => group.id).join(">"),
     label: seq.map((group) => (group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name)).join(" > "),
     groups: seq.map((group) => group.indices.slice()),
+    ...(seq[0]?.illusion ? { firstRevives: true } : {}),
   });
   if (groups.length <= maxFull) return { orders: permutations(groups).map(make), dropped: 0 };
   const byHp = [...groups].sort((a, b) => a.hp - b.hp || a.id.localeCompare(b.id));
@@ -1244,10 +1252,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const estimate = (runs: TurnRecord[][], order: KillOrder | null) => {
     const kept = runs.slice(0, samples);
     const first = order?.groups[0] ?? [];
-    const firstDown = kept.filter((records) => {
-      const last = records[Math.min(horizon, records.length) - 1]!;
-      return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
-    }).length;
+    const firstDown = order?.firstRevives
+      ? null
+      : kept.filter((records) => {
+          const last = records[Math.min(horizon, records.length) - 1]!;
+          return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
+        }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
     const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
     const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));

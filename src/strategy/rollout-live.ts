@@ -366,7 +366,9 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     // Orders with the same numbers and the same first target are one entry ("A > B > C | A > C > B": the
     // samples never got past A, or went the same way after it).
     const first = (entry: OrderEstimate) => entry.order.label.split(" > ")[0]!;
-    const numbers = (entry: OrderEstimate) => `further HP loss ${round1(entry.hpLoss)}, over ${entry.wins}/${samples}, dead ${entry.deaths}/${samples}, ${first(entry)} dead ${entry.firstDown}/${samples}`;
+    // An illusion first (Parafright) revives each turn: its "dead" count would read as a kill it never is.
+    const firstFate = (entry: OrderEstimate) => (entry.firstDown === null ? `${first(entry)} is an illusion (revives at full HP; never dead for good)` : `${first(entry)} dead ${entry.firstDown}/${samples}`);
+    const numbers = (entry: OrderEstimate) => `further HP loss ${round1(entry.hpLoss)}, over ${entry.wins}/${samples}, dead ${entry.deaths}/${samples}, ${firstFate(entry)}`;
     const merged: { labels: string[]; entry: OrderEstimate; text: string }[] = [];
     for (const entry of line.orders) {
       const text = numbers(entry);
@@ -377,7 +379,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
     const [best, ...others] = merged;
     const dropped = r.ordersDropped > 0 ? `; ${r.ordersDropped} other orders not tried` : "";
     const tied = others.length > 0 && others.every((m) => Math.abs(m.entry.value - best!.entry.value) < 0.05) ? "; the orders came out the same here" : "";
-    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}); best of ${line.orders.length} kill orders compared${dropped}${tied}`;
+    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); best of ${line.orders.length} kill orders compared${dropped}${tied}`;
     if (others.length > 0) facts["rollout_other_orders"] = others.map((m) => `${m.labels.join(" | ")}: ${m.text}`).join("; ");
   }
   const forecast = line.modelForecast.rollout;
