@@ -19,7 +19,8 @@
     "typecheck": "tsc -p tsconfig.test.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "fake-mod": "node tools/fake-mod.mjs"
+    "fake-mod": "node tools/fake-mod.mjs",
+    "knowledge:stats": "python3 tools/build-outcome-stats.py"
   },
   "dependencies": {
     "@typesafe-ai/sdk": "^0.6.0"
