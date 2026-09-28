@@ -19,6 +19,15 @@ describe("cardValue", () => {
     expect(cardValue("HEADBUTT", "Common", "Attack", deck(15), 1, 10, "WATERFALL_GIANT").value).toBe(hit + 6);
   });
 
+  it("Fight Me! is valued like Inflame from our own outcome stats, not the F tier (RBJ4, 6189: code rank last)", () => {
+    const fightMe = cardValue("FIGHT_ME", "Uncommon", "Attack", deck(15), 1, 6).value;
+    expect(fightMe).toBeGreaterThanOrEqual(cardValue("INFLAME", "Uncommon", "Power", deck(15), 1, 6).value);
+    const noScaling = { ...deck(15), scaling: 0 };
+    expect(cardValue("FIGHT_ME", "Uncommon", "Attack", noScaling, 1, 6).reasons).toContain("no scaling for bosses");
+    // In the deck it counts as scaling.
+    expect(deckProfile([{ index: 0, card_id: "FIGHT_ME", name: "Fight Me!", upgraded: false, type: "Attack", rarity: "Uncommon", cost: 2, description: "" }]).scaling).toBe(1);
+  });
+
   it("Knowledge Demon favours Strength/scaling", () => {
     const plain = cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20).value;
     expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, "KNOWLEDGE_DEMON").value).toBe(plain + 10);

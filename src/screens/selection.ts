@@ -12,10 +12,10 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
-import { expectedNextDamage } from "../knowledge/move-model.js";
+import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/card-value.js";
+import { expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
-import { exhaustPileSize } from "./combat-plan.js";
+import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -199,18 +199,29 @@ export function planSelection(env: DecisionEnv): Decision | null {
           ? "enchant"
           : "choose";
 
-  // Knowledge Demon's Curse of Knowledge: code picks. Disintegration (6 a turn, stacking) over a fight
-  // this long cost ~100 HP and lost DG1CDGW8Y5JE and VKPXGMV8YV31 from full HP; Sloth (3 plays a
-  // turn) rarely binds a 3-energy deck, Mind Rot costs a card a turn. Rupture turns Disintegration
-  // into Strength, so then it is the pick. Waste Away (-1 energy every turn, the third offer) is the
-  // worst: PU21 took it as "only this turn" and played 2 energy a turn to the end. It is only taken when
-  // Disintegration would eat the HP left before the demon dies (see curseRank).
+  // Knowledge Demon's Curse of Knowledge: code picks, each curse costed in HP for this deck and board
+  // (curseCosts). Disintegration (6 a turn, stacking) over a long fight cost ~100 HP and lost
+  // DG1CDGW8Y5JE and VKPXGMV8YV31 from full HP; Sloth (3 cards a turn) costs nothing to a deck that
+  // plays 3 a turn, but Y3XT F33 T5 took it with Hellraiser up: the auto-played Strikes used the cap and
+  // Impervious / Defend / a finisher were locked T6-T8 (64 -> 12 HP). Rupture turns Disintegration into
+  // Strength, so then it is the pick; Disintegration that would eat the HP left is the last one.
   const curseIds = candidates.map((card) => str(card["card_id"]));
-  if (curseIds.length > 1 && curseIds.every((id) => id in KNOWLEDGE_CURSE_ORDER)) {
+  if (curseIds.length > 1 && curseIds.every((id) => KNOWLEDGE_CURSES.has(id))) {
+    const turn = state.turn ?? 1;
     const disintegration = candidates.find((card) => str(card["card_id"]) === "DISINTEGRATION");
-    const rank = curseRank(combat, disintegration ? disintegrationAmount(disintegration) : 0, state.turn ?? 1);
-    const best = options[curseIds.map((id, i) => [rank(id), i] as const).sort((a, b) => a[0] - b[0])[0]![1]]!;
-    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
+    const sloth = candidates.find((card) => str(card["card_id"]) === "SLOTH");
+    const costs = curseCosts(combat, {
+      turn,
+      disintegration: disintegration ? disintegrationAmount(disintegration) : 0,
+      slothCap: sloth ? dynamicValue(sloth, /Sloth/i) ?? SLOTH_DEFAULT_CAP : SLOTH_DEFAULT_CAP,
+      handPlays: fightPlaysPerTurn(env, turn),
+      deck: asArray(asRecord(state.run?.raw)["deck"]).map(asRecord),
+      maxEnergy: numOrNull(asRecord(state.run?.raw)["max_energy"]) ?? CURSE_FALLBACK_ENERGY,
+    });
+    const ranked = curseIds.map((id, i) => [costs.rank(id), i] as const).sort((a, b) => a[0] - b[0]);
+    const best = options[ranked[0]![1]]!;
+    const shown = curseIds.map((id) => `${id} ${costs.text(id)}`).join("; ");
+    return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (HP cost for this deck: ${shown}; ${costs.basis})` };
   }
 
   const params = {
@@ -281,30 +292,68 @@ const SELECTION_WHY: Record<string, string> = {
  * most (Bash's extra Vulnerable, then the strongest cards). Remove/transform: curses and statuses,
  * then Strikes, then Defends. Higher is better.
  */
-const KNOWLEDGE_CURSE_ORDER: Record<string, number> = { SLOTH: 1, MIND_ROT: 2, DISINTEGRATION: 3, WASTE_AWAY: 4 };
+const KNOWLEDGE_CURSES = new Set(["SLOTH", "MIND_ROT", "DISINTEGRATION", "WASTE_AWAY"]);
 
 /** Damage per turn assumed when none has been dealt yet (the curses come on T1/T5/T9). */
 const CURSE_FALLBACK_DAMAGE = 25;
-/** HP kept in hand for the demon's own attacks when Disintegration is weighed against Waste Away. */
+/** HP kept in hand for the demon's own attacks when Disintegration is weighed against the others. */
 const CURSE_HP_MARGIN = 20;
+/** Enemy damage per turn when the move model does not know the enemy (Knowledge Demon's cycle: ~15). */
+const CURSE_FALLBACK_INCOMING = 15;
+/** Energy per turn when the run does not say. */
+const CURSE_FALLBACK_ENERGY = 3;
+/** Cards drawn at the start of a turn. */
+const CURSE_HAND_DRAW = 5;
+/** Block of a block card when the deck's cards carry no Block value. */
+const CURSE_FALLBACK_BLOCK = 6;
+/** Sloth's cap when the card does not carry it. */
+const SLOTH_DEFAULT_CAP = 3;
 
 /** The Disintegration a curse card adds (6, 7, 8 on the three offers). */
 function disintegrationAmount(card: Record<string, unknown>): number {
-  for (const entry of asArray(card["dynamic_values"])) {
-    const value = asRecord(entry);
-    if (/Disintegration/i.test(str(value["name"]))) return numOrNull(value["current_value"]) ?? 0;
-  }
+  const dynamic = dynamicValue(card, /Disintegration/i);
+  if (dynamic !== null) return dynamic;
   const text = /(\d+)点伤害|(\d+) damage/i.exec(str(card["resolved_rules_text"]));
   return text ? Number(text[1] ?? text[2]) : 0;
 }
 
+function dynamicValue(card: Record<string, unknown>, name: RegExp): number | null {
+  for (const entry of asArray(card["dynamic_values"])) {
+    const value = asRecord(entry);
+    if (name.test(str(value["name"]))) return numOrNull(value["current_value"]);
+  }
+  return null;
+}
+
+export interface CurseInputs {
+  turn: number;
+  /** Disintegration the offered card adds (0 when not offered). */
+  disintegration: number;
+  /** Sloth's cards-per-turn cap. */
+  slothCap: number;
+  /** Mean cards played by hand per finished turn of this fight (combat-plan fightPlaysPerTurn), or null. */
+  handPlays: number | null;
+  /** The run's deck (state.run.deck). */
+  deck: Record<string, unknown>[];
+  maxEnergy: number;
+}
+
 /**
- * Rank of a Knowledge Demon curse (lower is taken). Disintegration becomes the first pick with
- * Rupture, and the last one when it would take more than the HP left before the demon dies (turns
- * left from the damage dealt so far, 25 a turn before any): Disintegration × turns + 20 > HP. PU21 T9
- * (33 HP, ~8 turns left, Disintegration 8) is that case; with HP to spare Waste Away is the worst.
+ * Each Knowledge Demon curse's cost in HP over the rest of the fight, measured on this deck and board:
+ * - damage per turn so far (25 before any), enemy HP left -> turns left N;
+ * - cards a turn C = cards played by hand per turn this fight (energy before any turn) + the Strikes
+ *   Hellraiser plays by itself (draws x the deck's share of cards named Strike: they count toward Sloth
+ *   and cost no energy);
+ * - a curse that takes x cards a turn (Sloth: C - cap; Mind Rot: one draw, x = min(1, C / draws);
+ *   Waste Away: one energy of the hand-played cards, x = hand plays / energy) cuts the damage by x/C:
+ *   the fight lasts N' = N / (1 - x/C) turns, each extra one a turn of the enemy's damage (move model,
+ *   15 when unknown), and the lost cards' block (the deck's block-card share of the hand-played
+ *   cards x their mean Block) is lost on each of the N' turns;
+ * - Disintegration costs its amount x N (Rupture: -1, it is the pick), and when it with the one
+ *   already on us and a 20 HP margin exceeds the HP it ranks last whatever the others cost (PU21 T9).
  */
-export function curseRank(combat: Record<string, unknown>, offered: number, turn: number): (id: string) => number {
+export function curseCosts(combat: Record<string, unknown>, inputs: CurseInputs): { rank: (id: string) => number; text: (id: string) => string; basis: string } {
+  const { turn, deck } = inputs;
   const player = asRecord(combat["player"]);
   const powers = asArray(player["powers"]).map(asRecord);
   const has = (id: string): number => numOrNull(powers.find((power) => str(power["power_id"]) === id)?.["amount"]) ?? 0;
@@ -312,13 +361,49 @@ export function curseRank(combat: Record<string, unknown>, offered: number, turn
   const left = enemies.reduce((sum, enemy) => sum + (numOrNull(enemy["current_hp"]) ?? 0), 0);
   const dealt = enemies.reduce((sum, enemy) => sum + Math.max(0, (numOrNull(enemy["max_hp"]) ?? 0) - (numOrNull(enemy["current_hp"]) ?? 0)), 0);
   const perTurn = turn > 1 ? Math.max(10, dealt / (turn - 1)) : CURSE_FALLBACK_DAMAGE;
-  const turnsLeft = Math.ceil(left / perTurn);
+  const turnsLeft = left / perTurn;
   const hp = numOrNull(player["current_hp"]) ?? 0;
-  const outlastsHp = (has("DISINTEGRATION_POWER") + offered) * turnsLeft + CURSE_HP_MARGIN > hp;
-  return (id) => {
-    if (id === "DISINTEGRATION" && has("RUPTURE_POWER") > 0) return 0;
-    if (id === "DISINTEGRATION" && outlastsHp) return KNOWLEDGE_CURSE_ORDER["WASTE_AWAY"]! + 1;
-    return KNOWLEDGE_CURSE_ORDER[id]!;
+  const incoming = enemies.reduce((sum, enemy) => sum + (meanMoveDamage(str(enemy["enemy_id"])) ?? 0), 0) || CURSE_FALLBACK_INCOMING;
+
+  const energy = Math.max(1, inputs.maxEnergy);
+  const handPlays = inputs.handPlays ?? energy;
+  const draws = Math.max(1, CURSE_HAND_DRAW - has("MIND_ROT_POWER"));
+  const hellraiser = has("HELLRAISER_POWER") > 0;
+  const isAuto = (card: Record<string, unknown>): boolean => hellraiser && str(card["card_id"]).includes("STRIKE");
+  const autoPlays = deck.length > 0 ? (draws * deck.filter(isAuto).length) / deck.length : 0;
+  const cards = Math.max(1, handPlays + autoPlays);
+  const handCards = deck.filter((card) => !isAuto(card));
+  const blockCards = handCards.filter((card) => isBlockCardId(str(card["card_id"])));
+  const blockShare = handCards.length > 0 ? blockCards.length / handCards.length : 0;
+  const blocks = blockCards.map((card) => dynamicValue(card, /^Block$/i)).filter((value): value is number => value !== null);
+  const meanBlock = blocks.length > 0 ? blocks.reduce((sum, value) => sum + value, 0) / blocks.length : CURSE_FALLBACK_BLOCK;
+
+  const lostCards: Record<string, number> = {
+    SLOTH: Math.max(0, cards - inputs.slothCap),
+    MIND_ROT: Math.min(1, cards / draws),
+    WASTE_AWAY: handPlays / energy,
+  };
+  const cardCost = (lost: number): number => {
+    const share = Math.min(0.9, lost / cards);
+    if (share <= 0) return 0;
+    const longer = turnsLeft / (1 - share);
+    return (longer - turnsLeft) * incoming + Math.min(incoming, lost * blockShare * meanBlock) * longer;
+  };
+  const disintegrationTotal = has("DISINTEGRATION_POWER") + inputs.disintegration;
+  const outlastsHp = disintegrationTotal * turnsLeft + CURSE_HP_MARGIN > hp;
+  const cost = (id: string): number => {
+    if (id === "DISINTEGRATION") return has("RUPTURE_POWER") > 0 ? -1 : inputs.disintegration * turnsLeft;
+    return cardCost(lostCards[id] ?? 0);
+  };
+  return {
+    rank: (id) => (id === "DISINTEGRATION" && has("RUPTURE_POWER") === 0 && outlastsHp ? 1e6 : 0) + cost(id),
+    text: (id) =>
+      id === "DISINTEGRATION"
+        ? has("RUPTURE_POWER") > 0
+          ? "Rupture: Strength"
+          : `${Math.round(cost(id))}${outlastsHp ? " (outlasts the HP)" : ""}`
+        : `${Math.round(cost(id))} (${(lostCards[id] ?? 0).toFixed(1)} cards a turn)`,
+    basis: `${Math.round(perTurn)} dmg/turn, ${turnsLeft.toFixed(1)} turns left, ${cards.toFixed(1)} cards/turn (${autoPlays.toFixed(1)} auto), ${Math.round(incoming)} incoming`,
   };
 }
 

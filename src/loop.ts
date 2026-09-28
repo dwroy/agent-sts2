@@ -1063,17 +1063,34 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
 
+    /**
+     * A decision that paid for a model call but is not dispatched is still logged (result "not
+     * dispatched: ..."), so its tokens reach runs.jsonl. Y3XT F36/F46: Lord's Parasol gave the whole
+     * shop while DeepSeek's shop/buy call ran (84 s, 45 s); the board changed, the loop re-planned, and
+     * both calls (48k tokens) were only in deepseek-reasoning.jsonl.
+     */
+    const logUndispatched = (why: string): void => {
+      const paid = baseRecord.usage.input_tokens + baseRecord.usage.output_tokens > 0;
+      if (!paid || fromMemo) return;
+      const record: DecisionRecord = { ...baseRecord, ...replayFields, result: `not dispatched: ${why}` };
+      log.write(record);
+      logState(state, stateFingerprint, record.ts);
+      onEvent({ type: "decision", record, totals: totals() });
+    };
+
     // Re-read before touching the game: actions are not idempotent (PLAN.md §8.1).
     let fresh: GameState;
     try {
       fresh = await client.state();
     } catch (error) {
       onEvent({ type: "note", message: `pre-dispatch state re-read failed: ${classifyFailure(error).detail}` });
+      logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300));
       await sleep(pollIntervalMs);
       continue;
     }
     if (fingerprint(fresh) !== stateFingerprint) {
       onEvent({ type: "note", message: "state changed while deciding; re-planning" });
+      logUndispatched("state changed while deciding");
       continue;
     }
 

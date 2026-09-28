@@ -1038,6 +1038,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "triple_next_attack") next.gigantic += 1;
   if (card.special === "clarity") next.flat += DRAW_VALUE * CLARITY_LATER_DRAWS;
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
+  if (card.special === "radiance") next.flat += RADIANCE_ENERGY_VALUE * RADIANCE_LATER_ENERGY;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
   if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
   // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
@@ -1430,6 +1431,13 @@ export const DEX_LASTING_PER_BLOCK_CARD = 1.5;
 
 /** Clarity: the extra card drawn at the start of each of the next 3 turns, lasting value at DRAW_VALUE each. */
 export const CLARITY_LATER_DRAWS = 3;
+/** Radiant Tincture: the extra energy at the start of each of the next 3 turns (RadiancePower 3). */
+export const RADIANCE_LATER_ENERGY = 3;
+/**
+ * Lasting value of one later turn's extra energy: a card played that would have stayed in hand, a
+ * little above a drawn card's DRAW_VALUE 3 (which still needs the energy).
+ */
+export const RADIANCE_ENERGY_VALUE = 4;
 /**
  * Mazaleth's Gift (Ritual 1): lasting value, a third of Demon Form's POWER_VALUE 30 (3 Strength a turn
  * vs 1), before the fight-length and potion shares.

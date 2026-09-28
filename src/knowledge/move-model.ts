@@ -32,6 +32,14 @@ export function moveModel(): Record<string, EnemyModel> {
   return load();
 }
 
+/** Mean attack damage per move over the enemy's learned moves (a turn's hit on average), or null. */
+export function meanMoveDamage(enemyId: string): number | null {
+  const entry = load()[enemyId];
+  if (!entry) return null;
+  const values = Object.values(entry.damage);
+  return values.length > 0 ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
 /** Expected attack damage of this enemy's move next turn, or null when unknown. */
 export function expectedNextDamage(enemyId: string, currentMove: string): number | null {
   const entry = load()[enemyId];

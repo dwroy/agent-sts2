@@ -46,7 +46,7 @@ import { fileURLToPath } from "node:url";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { mantleHpCost, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -671,6 +671,8 @@ interface SimPlayer {
   rupture: number;
   /** Pyre: energy at the start of every turn. */
   pyre: number;
+  /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
+  radiance: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
@@ -850,6 +852,7 @@ function applyPlan(
   for (const step of plan.steps) {
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
+      if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
@@ -1038,6 +1041,7 @@ function simulate(
     mantle: input.playerPowers["CRIMSON_MANTLE_POWER"] ?? 0,
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
+    radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
     otherStartLoss: 0,
@@ -1118,7 +1122,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: input.meta.max_en + player.pyre,
+      energy: input.meta.max_en + player.pyre + (player.radiance > 0 ? 1 : 0),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -1148,6 +1152,8 @@ function simulate(
       retaliate: input.playerPowers["THORNS_POWER"] ?? 0,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
+    // Radiance: this turn's extra energy is in pSim; one turn of it used.
+    player.radiance = Math.max(0, player.radiance - 1);
     const started = budget.now();
     const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));

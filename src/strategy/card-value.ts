@@ -29,6 +29,12 @@ const TIER: Record<string, number> = {
   ANGER: 50, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
   PILLAGE: 54, ONE_TWO_PUNCH: 54, INFERNAL_BLADE: 52, EVIL_EYE: 54, TRUE_GRIT: 54, ARMAMENTS: 48, // its upgrade effect is unmodelled: the solver never plays it for value (WX16, BG4W)
   MOLTEN_FIST: 54, OUTRAGE: 52, RUPTURE: 50, INFERNO: 66, JUGGERNAUT: 56, WHIRLWIND: 66,
+  // Fight Me! 25 (F tier) -> 74, Inflame's: 5x2 and 3 permanent Strength (the enemy gains 1). Our A8 runs
+  // (outcome-stats.json 2026-09-29, 147 runs): taken in Act 1, boss pass 0.91 (n=11) vs 0.59 offered and
+  // not taken (n=27), the second-largest gap of the cards with n>=5 both ways (baseline 0.69); Act 2
+  // 0.22 (n=9) vs 0.17 (n=6); mean final floor +5.9 / +6.0. It carried the damage of RBJ4 (a win) and
+  // 6189 (T9 kill of the Giant, Strength 9), both times from code's rank last.
+  FIGHT_ME: 74,
   // C
   BREAKTHROUGH: 62, // AoE 9 for 1 energy, 1 HP; 54 -> 62 (1K5G F14 passed it for Taunt, no AoE at the boss)
   IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 46,
@@ -36,7 +42,7 @@ const TIER: Record<string, number> = {
   PACTS_END: 40, BARRICADE: 44, ASHEN_STRIKE: 44, PRIMAL_FORCE: 36, CASCADE: 40, NOT_YET: 44, MIDNIGHT: 36,
   THE_BOMB: 48, // colorless: 40 to every enemy after 3 turns, good in long boss fights (1ZQJ never played it)
   // F
-  HAVOC: 20, FIGHT_ME: 25, THE_GAMBIT: 0, BLAZE: 10, DEMONIC_SHIELD: 10, TANK: 5,
+  HAVOC: 20, THE_GAMBIT: 0, BLAZE: 10, DEMONIC_SHIELD: 10, TANK: 5,
 };
 
 export const SKIP_BAR = 50;
@@ -44,7 +50,7 @@ export const SKIP_BAR = 50;
 const AOE = new Set(["INFERNO", "THUNDERCLAP", "BREAKTHROUGH", "STOMP", "CONFLAGRATION", "WHIRLWIND", "HOWL_FROM_BEYOND", "FIEND_FIRE", "SWORD_BOOMERANG"]);
 const DRAW = new Set(["POMMEL_STRIKE", "SHRUG_IT_OFF", "BATTLE_TRANCE", "BURNING_PACT", "OFFERING", "DRUM_OF_BATTLE", "PILLAGE"]);
 /** Lasting Strength/scaling. Not Setup Strike: its Strength is gone at the end of the turn. */
-const SCALING = new Set(["DEMON_FORM", "INFLAME", "CORRUPTION", "FEEL_NO_PAIN", "CRIMSON_MANTLE", "PYRE", "RUPTURE", "BRAND", "DOMINATE", "FEED", "JUGGERNAUT", "HELLRAISER", "UNMOVABLE", "BARRICADE"]);
+const SCALING = new Set(["DEMON_FORM", "INFLAME", "FIGHT_ME", "CORRUPTION", "FEEL_NO_PAIN", "CRIMSON_MANTLE", "PYRE", "RUPTURE", "BRAND", "DOMINATE", "FEED", "JUGGERNAUT", "HELLRAISER", "UNMOVABLE", "BARRICADE"]);
 /** Single cards of 14+ damage (Aeonglass: few, big cards). */
 const BIG_HITS = new Set(["BLUDGEON", "CARNAGE", "HEMOKINESIS", "TEAR_ASUNDER", "FIEND_FIRE", "WHIRLWIND", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "MANGLE", "UPPERCUT", "RAMPAGE"]);
 const FRONTLOAD = new Set(["BREAK", "BLUDGEON", "HEMOKINESIS", "UPPERCUT", "CARNAGE", "TWIN_STRIKE", "POMMEL_STRIKE", "THRASH", "HEADBUTT", "DISMANTLE", "MANGLE", "UNRELENTING", "STOMP", "CONFLAGRATION", "HOWL_FROM_BEYOND", "FEED", "SETUP_STRIKE", "TEAR_ASUNDER", "WHIRLWIND", "RAMPAGE", "MOLTEN_FIST", "CINDER", "FIEND_FIRE"]);
@@ -134,7 +140,7 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // Test Subject: 600 HP over three phases; the two wins had 28 and 40 Strength, the losses 16 or none
   // (7DFB, ZANM, 2WUM). Multi Claw grows every turn in phase 2: block too.
   if (boss.includes("TEST_SUBJECT")) {
-    if (SCALING.has(cardId) || cardId === "FIGHT_ME") return { bonus: 10, why: "Strength scaling for Test Subject's 600 HP" };
+    if (SCALING.has(cardId)) return { bonus: 10, why: "Strength scaling for Test Subject's 600 HP" };
     if (BLOCK.has(cardId)) return { bonus: 4, why: "block for Test Subject's Multi Claw" };
   }
   if (boss.includes("LAGAVULIN_MATRIARCH")) {

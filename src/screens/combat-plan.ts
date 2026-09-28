@@ -760,6 +760,33 @@ const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;
 
 /**
+ * Cards played per turn in this fight, sampled on every combat decision (the highest
+ * cards_played_this_turn seen per turn). The mod's count leaves out cards a power plays by itself
+ * (Hellraiser's Strikes; Y3XT F33: 0 at T6 with a Strike already auto-played).
+ */
+export function recordFightPlays(env: DecisionEnv, playedThisTurn: number): NonNullable<DecisionEnv["screenMemory"]["fightCards"]> {
+  const fight = hpGuardFight(env);
+  if (env.screenMemory.fightCards?.fight !== fight) env.screenMemory.fightCards = { fight, perTurn: {}, witherDamage: WITHER_BASE_DAMAGE };
+  const memo = env.screenMemory.fightCards;
+  const turn = String(env.state.turn ?? "?");
+  memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
+  return memo;
+}
+
+/**
+ * Mean cards played by hand per finished turn of this fight (turns before `turn`), or null before
+ * any turn was sampled (Knowledge Demon's curse pick, selection.ts).
+ */
+export function fightPlaysPerTurn(env: DecisionEnv, turn: number): number | null {
+  const memo = env.screenMemory.fightCards;
+  if (!memo || memo.fight !== hpGuardFight(env)) return null;
+  const counts = Object.entries(memo.perTurn)
+    .filter(([key]) => Number(key) < turn)
+    .map(([, count]) => count);
+  return counts.length > 0 ? counts.reduce((sum, count) => sum + count, 0) / counts.length : null;
+}
+
+/**
  * Withering Presence (Aeonglass, TQX5): cards played this fight so far (the power's amount stays 6;
  * the count is ours, per turn from cards_played_this_turn), and the damage a new Wither will deal (the
  * Withers seen in hand; they grow +3 each Increasing Intensity).
@@ -770,11 +797,7 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
     .filter((enemy) => enemy["is_alive"] !== false)
     .reduce((found, enemy) => found || (powerAmount(enemy, "WITHERING_PRESENCE_POWER") > 0 ? WITHER_EVERY : 0), 0);
   if (every === 0) return undefined;
-  const fight = hpGuardFight(env);
-  if (env.screenMemory.fightCards?.fight !== fight) env.screenMemory.fightCards = { fight, perTurn: {}, witherDamage: WITHER_BASE_DAMAGE };
-  const memo = env.screenMemory.fightCards;
-  const turn = String(env.state.turn ?? "?");
-  memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
+  const memo = recordFightPlays(env, playedThisTurn);
   const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
   if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
   // Throwing Axe replays the fight's first card, and Withering Presence counts the replay while
@@ -1126,6 +1149,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
   // included (Y0KJ F48: counted 15 by T7 against the game's 26; Hellraiser's auto-played Strikes and
   // the plan's later steps were missed, so Bash's Wither on T6 was not foreseen).
+  recordFightPlays(env, num(player["cards_played_this_turn"]));
   const wither = witherInput(env, combat, hand, num(player["cards_played_this_turn"]));
 
   // 1. A committed plan whose board is exactly as expected: keep executing it.

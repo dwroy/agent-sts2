@@ -12,6 +12,8 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import type { Decision, DecisionEnv } from "../src/project/types.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
+import { curseCosts } from "../src/screens/selection.js";
+import { str } from "../src/util/json.js";
 import { nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { loadConfig } from "../src/config.js";
@@ -804,6 +806,58 @@ describe("in-combat selections", () => {
     const decision = mustDecision(plan(combatSelection("choose_card_select", "选择一张牌", curses, { hp: 33, maxHp: 89, enemyHp: 182, enemyMaxHp: 379, turn: 9 })));
     expect(decision.kind).toBe("act");
     if (decision.kind === "act") expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 1 });
+  });
+
+  // Y3XT F33 T5: the deck (31 cards), demon 185/399, 64 HP, Mind Rot and Hellraiser up (11 cards named Strike),
+  // 3/3/3/4 cards played by hand T1-T4. Sloth was taken by the fixed order and locked Impervious T7.
+  const y3xtDeck = "STRIKE_IRONCLAD STRIKE_IRONCLAD STRIKE_IRONCLAD STRIKE_IRONCLAD DEFEND_IRONCLAD:5 DEFEND_IRONCLAD:5 DEFEND_IRONCLAD:5 DEFEND_IRONCLAD:5 BASH ASCENDERS_BANE INFLAME BLOOD_WALL:16 SHRUG_IT_OFF:8 STONE_ARMOR SETUP_STRIKE POMMEL_STRIKE FORGOTTEN_RITUAL BREAKTHROUGH HEMOKINESIS HELLRAISER PERFECTED_STRIKE TWIN_STRIKE POMMEL_STRIKE HEMOKINESIS IMPERVIOUS:30 SHRUG_IT_OFF:8 PERFECTED_STRIKE HEADBUTT SETUP_STRIKE UPPERCUT SHRUG_IT_OFF:8"
+    .split(" ")
+    .map((entry) => {
+      const [id, block] = entry.split(":");
+      return { card_id: id, dynamic_values: block ? [{ name: "Block", current_value: Number(block) }] : [] };
+    });
+  const y3xtCombat = (powers: string[]) => ({
+    player: { current_hp: 64, max_hp: 80, powers: powers.map((id) => ({ power_id: id, amount: 1 })) },
+    enemies: [{ enemy_id: "KNOWLEDGE_DEMON", current_hp: 185, max_hp: 399, is_alive: true }],
+  });
+  const y3xtInputs = { turn: 5, disintegration: 7, slothCap: 3, handPlays: 3.25, deck: y3xtDeck, maxEnergy: 3 };
+
+  it("Knowledge Demon: Sloth costs more than Disintegration with Hellraiser playing Strikes (Y3XT F33 T5)", () => {
+    const costs = curseCosts(y3xtCombat(["MIND_ROT_POWER", "HELLRAISER_POWER"]), y3xtInputs);
+    expect(costs.rank("DISINTEGRATION")).toBeLessThan(costs.rank("SLOTH"));
+    expect(costs.text("SLOTH")).toMatch(/1\.7 cards a turn/);
+  });
+
+  it("Knowledge Demon: Sloth is free to a deck that plays 3 cards a turn by hand and nothing by itself", () => {
+    const costs = curseCosts(y3xtCombat(["MIND_ROT_POWER"]), { ...y3xtInputs, handPlays: 3 });
+    expect(costs.rank("SLOTH")).toBe(0);
+    expect(costs.rank("SLOTH")).toBeLessThan(costs.rank("DISINTEGRATION"));
+    // Measured 4 hand plays a turn: Sloth takes one of them and costs HP.
+    expect(curseCosts(y3xtCombat(["MIND_ROT_POWER"]), { ...y3xtInputs, handPlays: 4 }).rank("SLOTH")).toBeGreaterThan(0);
+  });
+
+  it("Knowledge Demon: the plan reads the fight's hand plays and picks Disintegration over Sloth with Hellraiser up", () => {
+    const raw = combatSelection(
+      "choose_card_select",
+      "选择一张牌",
+      [
+        selectCard(0, "DISINTEGRATION", "瓦解", "Status", -1, "在你的回合结束时，受到7点伤害。", [{ name: "DisintegrationPower", value: 7 }]),
+        selectCard(1, "SLOTH", "懒惰", "Status", -1, "你在每个回合不能打出超过3张牌。", [{ name: "SlothPower", value: 3 }]),
+      ],
+      { hp: 64, maxHp: 80, enemyHp: 185, enemyMaxHp: 399, turn: 5 },
+    );
+    const combat = raw["combat"] as { player: Record<string, unknown> };
+    combat.player["powers"] = [{ power_id: "MIND_ROT_POWER", amount: 1 }, { power_id: "HELLRAISER_POWER", amount: 1 }];
+    raw["run"] = { ...(raw["run"] as Record<string, unknown>), deck: y3xtDeck, max_energy: 3 };
+    const state = parseGameState(raw);
+    const memory = createScreenMemory(state.screen);
+    memory.fightCards = { fight: `${str((raw["run"] as Record<string, unknown>)["act_id"])}:${state.run?.floor ?? "?"}`, perTurn: { "1": 3, "2": 3, "3": 3, "4": 4, "5": 2 }, witherDamage: 3 };
+    const decision = mustDecision(plan(raw, { screenMemory: memory }));
+    expect(decision.kind).toBe("act");
+    if (decision.kind === "act") {
+      expect(decision.intent).toEqual({ action: "select_deck_card", option_index: 0 });
+      expect(decision.rationale).toMatch(/SLOTH \d+ \(1\.7 cards a turn\)/);
+    }
   });
 
   // 6A36 F3: Burning Pact's exhaust took Strikes by the removal ranking (Strike 80 > Defend 70).
