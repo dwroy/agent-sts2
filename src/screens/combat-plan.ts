@@ -150,17 +150,20 @@ const MAX_OPTIONS = 4;
  * Blood heals it", "HP buffer is comfortable"; WX16, 7Q5G, YP9, DG1 — the guide alone did not stop
  * it). A non-winning plan may lose at most this much more than the cheapest plan offered.
  *
- * Boss and elite fights get the tight bound, max(4, 10% HP): Z2H3 T7/T8 DeepSeek split the trade
- * across re-plans, each step inside max(6, 20% HP) ≈ 9, about 12 HP over two turns, and died with the
- * boss at 33. Once a fight's accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the
- * cheapest plan, unless the choice wins the fight.
+ * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai
+ * 2026-09-28: loosened from max(4, 10%) / max(6, 20%) so that more of the trade-off is Jev's call).
+ * Z2H3 T7/T8 DeepSeek split a trade across re-plans and died with the boss at 33: once a fight's
+ * accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the cheapest plan, unless the
+ * choice wins the fight.
  */
 export const HP_GUARD_FIGHT_BUDGET = 12;
+/** The per-turn slack is never below this (any fight kind). */
+export const HP_GUARD_MIN_SLACK = 8;
 
 export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unknown", extraSoFar = 0): number {
   if (extraSoFar > HP_GUARD_FIGHT_BUDGET) return 0;
-  if (kind === "boss" || kind === "elite") return Math.max(4, hp * 0.1);
-  return Math.max(6, hp * 0.2);
+  if (kind === "boss" || kind === "elite") return Math.max(HP_GUARD_MIN_SLACK, hp * 0.1);
+  return Math.max(HP_GUARD_MIN_SLACK, hp * 0.2);
 }
 
 /**
@@ -1190,12 +1193,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     })()) &&
     !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
-  // max(6, 15% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
+  // max(8, 20% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
   // F22 room at 17/80 with no potions).
   const actNumber = Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1;
   const hallwayGuard =
     (kind === "monster" || kind === "unknown") && (actNumber >= 2 || (state.run?.ascension ?? 0) >= 5) && playerSim.hp < playerSim.maxHp * 0.6;
-  const hallwayGuardSlack = Math.max(6, playerSim.hp * 0.15);
+  const hallwayGuardSlack = hpGuardSlack(playerSim.hp, "monster");
   const setupCount = (plan: Plan) => new Set(plan.steps.filter(setupStep).map((step) => step.cardId)).size;
   // The HP guard does not swap out the plan's setup cards while the line leaves enough HP (35% of max
   // and next turn's expected hit): JF99 F33 T4/T7, Crimson Mantle (Inferno+ 9 on the board, 9 to each

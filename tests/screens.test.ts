@@ -1365,13 +1365,13 @@ describe("combat plan guards (batch 2)", () => {
       .map(([key, text]) => ({ key, hpLost: Number(JSON.parse(String(text))["hp_lost"]) }));
     const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
     const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
-    expect(greedy.hpLost - minLoss).toBeGreaterThan(6);
+    expect(greedy.hpLost - minLoss).toBeGreaterThan(8);
     const escalated = { plan: { type: "choice", choice: greedy.key, probabilities: { [greedy.key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } } as AnswerSet;
     const resolved = decision.resolve(escalated);
     expect(resolved.guard?.kind).toBe("hp");
     expect(resolved.guard?.choice).not.toBe(greedy.key);
     const used = plans.find((entry) => entry.key === resolved.guard?.choice)!;
-    expect(used.hpLost).toBeLessThanOrEqual(minLoss + 6);
+    expect(used.hpLost).toBeLessThanOrEqual(minLoss + 8);
     expect(resolved.rationale).toMatch(/HP guard/);
   });
 
@@ -1629,28 +1629,29 @@ describe("combat plan guards (batch 3)", () => {
   };
   const escalated = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } }) as AnswerSet;
 
-  it("HP guard slack: max(4, 10% HP) in boss/elite fights, max(6, 20%) otherwise, 0 past the fight budget", async () => {
+  it("HP guard slack: max(8, 10% HP) in boss/elite fights, max(8, 20%) otherwise, 0 past the fight budget", async () => {
     const { hpGuardSlack, HP_GUARD_FIGHT_BUDGET } = await import("../src/screens/combat-plan.js");
-    expect(hpGuardSlack(30, "boss")).toBe(4);
-    expect(hpGuardSlack(70, "elite")).toBe(7);
-    expect(hpGuardSlack(30, "monster")).toBe(6);
+    expect(hpGuardSlack(30, "boss")).toBe(8);
+    expect(hpGuardSlack(70, "elite")).toBe(8);
+    expect(hpGuardSlack(100, "elite")).toBe(10);
+    expect(hpGuardSlack(30, "monster")).toBe(8);
     expect(hpGuardSlack(70)).toBe(14);
-    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET)).toBe(7);
+    expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET)).toBe(8);
     expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
     expect(hpGuardSlack(70, "monster", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
   });
 
-  it("boss fight: a choice more than 4 HP over the cheapest plan is replaced", async () => {
+  it("boss fight: a choice more than 8 HP over the cheapest plan is replaced", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat("LAGAVULIN_MATRIARCH"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const plans = planLosses(decision);
     const minLoss = Math.min(...plans.map((entry) => entry.hpLost));
     const greedy = plans.reduce((a, b) => (b.hpLost > a.hpLost ? b : a));
-    expect(greedy.hpLost - minLoss).toBeGreaterThan(4);
+    expect(greedy.hpLost - minLoss).toBeGreaterThan(8);
     const resolved = decision.resolve(escalated(greedy.key));
     expect(resolved.guard?.kind).toBe("hp");
-    expect(plans.find((entry) => entry.key === resolved.guard?.choice)!.hpLost).toBeLessThanOrEqual(minLoss + 4);
+    expect(plans.find((entry) => entry.key === resolved.guard?.choice)!.hpLost).toBeLessThanOrEqual(minLoss + 8);
   });
 
   it("tracks the extra HP accepted in a fight, and past 12 plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {

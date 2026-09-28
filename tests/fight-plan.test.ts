@@ -351,8 +351,8 @@ describe("turn planner with a fight plan", () => {
     const decision = planCombatTurn(e);
     if (decision?.kind !== "act") return;
     const lost = Number(/hp -(\d+)/.exec(decision.rationale)?.[1] ?? "0");
-    // Defend alone blocks 5 of 14: the cheapest line loses 9; the boss bound is max(4, 10% of 55).
-    expect(lost).toBeLessThanOrEqual(9 + 5.5);
+    // Defend alone blocks 5 of 14: the cheapest line loses 9; the boss bound is max(8, 10% of 55).
+    expect(lost).toBeLessThanOrEqual(9 + 8);
   });
 
   it("drinks an unmodelled defensive potion at the plan's moment instead of only offering it (VQSA F33 T14)", () => {
