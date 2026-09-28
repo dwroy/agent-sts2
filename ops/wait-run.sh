@@ -6,6 +6,9 @@ OPS="$HOME/Projects/sts2-jev/ops"
 LOG="$OPS/autoplay.log"
 n0=$(wc -l < "$LOG")
 until [ "$(wc -l < "$LOG")" -gt "$n0" ]; do sleep 30; done
-python3 "$HOME/Projects/sts2-jev/jev-sts2/tools/build-move-model.py"
+# Monster DB + per-fight move model (replaces build-move-model.py, which mixed fights; 2026-09-28).
+T="$HOME/Projects/sts2-jev/jev-sts2/tools"
+python3 "$T/build-monster-db.py" --quiet --move-model-out "$HOME/Projects/sts2-jev/jev-sts2/src/knowledge/move-model.json"
+python3 "$T/monster-db-check.py" >/dev/null 2>&1 || true
 tail -1 "$LOG"
 echo "runs since last rule update: $(( $(wc -l < "$LOG") - $(cat "$OPS/rule-update.mark" 2>/dev/null || echo 0) ))"
