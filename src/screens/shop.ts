@@ -16,6 +16,7 @@ import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
+import { potionHpSaved } from "../strategy/potion-value.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -82,7 +83,9 @@ export function planShop(env: DecisionEnv): Decision | null {
   const stock: JsonValue[] = [];
   const deckNow = deckEntries(state, knowledge);
   const gap = damageGap(state, knowledge);
-  const emptyPotionSlots = asArray(asRecord(state.run?.raw)["potions"]).filter((slot) => !bool(asRecord(slot)["occupied"])).length;
+  const belt = asArray(asRecord(state.run?.raw)["potions"]);
+  const emptyPotionSlots = belt.filter((slot) => !bool(asRecord(slot)["occupied"])).length;
+  const byDeepseek = deepseekDecides(env);
   const profile = deckProfile(deckNow);
   const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
   const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
@@ -105,7 +108,10 @@ export function planShop(env: DecisionEnv): Decision | null {
       const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
       stock.push({ kind: kindLabel, name, price, affordable: enough });
       if (!enough) continue;
-      const base = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
+      const oldBase = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
+      // DeepSeek: a potion's value is the HP it is expected to save in the act boss fight (its facts).
+      const potion = byDeepseek && action === "buy_potion" ? shopPotionValue(id, price, emptyPotionSlots, belt.length, oldBase, env) : null;
+      const base = potion ? potion.score : oldBase;
       const planned = action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)) : { bonus: 0, why: null };
       const clock = action === "buy_card" ? gapCardBonus(gap, id) : { bonus: 0, why: null };
       const cardInfo = action === "buy_card" ? (info as { rarity?: string; type?: string } | null) : null;
@@ -122,12 +128,15 @@ export function planShop(env: DecisionEnv): Decision | null {
             ? `card value ${valued?.value ?? "?"}${valued && valued.reasons.length > 0 ? ` (${valued.reasons.join("; ")})` : ""} - 62 - price/25`
             : action === "buy_relic"
               ? "relic: 18 - price/40"
-              : `potion: ${emptyPotionSlots} empty slot(s), act ${act}`,
+              : potion
+                ? potion.why
+                : `potion: ${emptyPotionSlots} empty slot(s), act ${act}`,
           ...(planned.why ? [planned.why] : []),
           ...(clock.why ? [clock.why] : []),
         ].join("; "),
         // DeepSeek sees the relic's text with its numbers filled where known.
         ...(action === "buy_relic" ? { facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? "") } } : {}),
+        ...(potion ? { facts: potion.facts } : {}),
         summary: {
           buy: name,
           kind: kindLabel,
@@ -192,6 +201,38 @@ export function planShop(env: DecisionEnv): Decision | null {
   // BUILD_DECIDER=deepseek: every affordable item, the removal and leaving go to DeepSeek.
   if (!deepseekDecides(env) || options.length < 2) return buildPickDecision(params);
   return buildPickDecision({ ...params, deepseek: { facts: buildFacts(env, { shop_stock: stock }), note: "One purchase per question; you are asked again after each purchase. Pick leave to stop." } });
+}
+
+/**
+ * A shop potion for DeepSeek: with an empty slot, code_value = the HP it is expected to save in the act
+ * boss fight - price/25 (the card's gold rate); an effect the model does not cover counts 0 HP. With no
+ * empty slot the old score stands and the fact says a discard comes first. Facts, not a purchase rule.
+ */
+export function shopPotionValue(
+  potionId: string,
+  price: number | null,
+  empty: number,
+  slots: number,
+  oldScore: number,
+  env: DecisionEnv,
+): { score: number; why: string; facts: Record<string, JsonValue> } {
+  const cost = price ?? 150;
+  const slotFact = empty > 0 ? `${empty} of ${slots} potion slots empty` : `no empty potion slot (${slots} full): buying needs a discard first`;
+  if (empty <= 0) return { score: oldScore, why: `potion: ${slotFact}`, facts: { potion_slots: slotFact } };
+  const worth = potionId === "FOUL_POTION" ? null : potionHpSaved(potionId, env.state, env.knowledge);
+  if (!worth) {
+    return {
+      score: -cost / 25,
+      why: `potion: ${slotFact}; its HP effect is not modelled by code (counted 0 HP), so code_value is only -price/25`,
+      facts: { potion_slots: slotFact, expected_hp_saved_in_boss: "not modelled" },
+    };
+  }
+  const hp = Math.round(worth.hp * 10) / 10;
+  return {
+    score: worth.hp - cost / 25,
+    why: `potion: ${slotFact}; expected ~${hp} HP saved in the act boss fight (${worth.why}); code_value = ${hp} - price/25`,
+    facts: { potion_slots: slotFact, expected_hp_saved_in_boss: `~${hp} HP: ${worth.why}` },
+  };
 }
 
 function shopScore(
