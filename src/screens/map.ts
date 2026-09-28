@@ -11,6 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
+import { projectPath, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
 
 interface MapNode {
   row: number;
@@ -364,6 +365,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     act,
     hpPct,
     urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
+    costs: roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80),
   });
 }
 
@@ -410,6 +412,8 @@ interface RouteContext {
   act: number;
   hpPct: number;
   urgency: number;
+  /** Measured room costs (monster DB) the route facts project HP with. */
+  costs: RoomCostModel;
 }
 
 /** Every path from the available nodes to the boss (or the map's end), capped. */
@@ -432,16 +436,29 @@ export function enumeratePaths(starts: MapNode[], nodes: Map<string, MapNode>, l
 interface ScoredPath {
   path: MapNode[];
   value: number;
+  /** HP fraction on arrival at each step at the measured median room costs (0 once it has run out). */
   hpOnArrival: number[];
-  hpAtEnd: number;
+  projection: PathProjection;
 }
 
+/**
+ * Code's value of a path (the heuristic weights) at the HP the measured room costs project: the route
+ * facts and the value use the same projection (audit 2026-09-28: the old 22%/55%-of-max-HP act-2 costs put
+ * every QZQU F18 route at ~0/80 at the boss).
+ */
 function scorePath(path: MapNode[], context: RouteContext): ScoredPath {
+  const max = context.costs.maxHp;
+  const projection = projectPath(
+    path.map((node) => node.type),
+    context.hpPct * max,
+    context.costs,
+  );
   let at = context.start;
   let value = 0;
   const hpOnArrival: number[] = [];
   let dead = false;
   path.forEach((node, step) => {
+    at = { ...at, hp: Math.max(0, Math.min(1, projection.arrival[step]! / max)) };
     hpOnArrival.push(at.hp);
     if (dead) return;
     const weight = context.weights(node.type, at);
@@ -450,7 +467,7 @@ function scorePath(path: MapNode[], context: RouteContext): ScoredPath {
     if (weight <= LIKELY_DEATH) dead = true;
     at = stateAfter(node.type, at, context.act);
   });
-  return { path, value, hpOnArrival, hpAtEnd: at.hp };
+  return { path, value, hpOnArrival, projection };
 }
 
 /** The candidate paths DeepSeek chooses from: the best by code's value, the best from each first node, and the extremes. */
@@ -483,8 +500,32 @@ export function candidatePaths(context: RouteContext): ScoredPath[] {
   return [...chosen.values()].sort((a, b) => b.value - a.value);
 }
 
+/** Projected HP in route facts: "~52/80", or that it ran out at an earlier step. */
+function hpText(hp: number, maxHp: number): string {
+  return hp > 0 ? `~${Math.round(hp)}/${maxHp}` : "HP ran out earlier on this path";
+}
+
+/** The risk line of a path: the one room whose p75 cost leaves the least HP, and whether that is all of it. */
+function riskText(entry: ScoredPath, maxHp: number): string {
+  const { projection, path } = entry;
+  const low = projection.riskLow;
+  if (!low) return "no fight or \"?\" room on this path";
+  const room = `step ${low.step + 1} (${path[low.step]!.type}, arriving ~${Math.round(projection.arrival[low.step]!)}/${maxHp})`;
+  if (low.hp > 0) return `worst single room at its p75 cost: ~${Math.round(low.hp)}/${maxHp} left after ${room}`;
+  const rest = path.findIndex((node, at) => at > low.step && (node.type === "RestSite" || node.type === "Rest"));
+  return `a p75 fight at ${room} would take all HP${rest >= 0 ? `, before the rest at step ${rest + 1}` : ""}`;
+}
+
+/** "step 6: ~47/80 on arrival, ~13 left at its median cost, ~2 at p75". */
+function eliteText(entry: ScoredPath, step: number, maxHp: number): string {
+  const arrive = entry.projection.arrival[step]!;
+  if (arrive <= 0) return `step ${step + 1}: HP ran out earlier on this path`;
+  const left = (hp: number): string => (hp > 0 ? `~${Math.round(hp)}` : "none");
+  return `step ${step + 1}: ~${Math.round(arrive)}/${maxHp} on arrival, ${left(entry.projection.arrival[step + 1] ?? entry.projection.end)} left at its median cost, ${left(entry.projection.riskAfter[step]!)} at p75`;
+}
+
 function pathFacts(entry: ScoredPath, maxHp: number): Record<string, JsonValue> {
-  const hp = (fraction: number): string => `~${Math.round(fraction * maxHp)}/${maxHp}`;
+  const hp = (step: number): string => hpText(entry.projection.arrival[step]!, maxHp);
   const count = (test: (type: string) => boolean): number => entry.path.filter((node) => test(node.type)).length;
   const bossAt = entry.path.findIndex((node) => node.type === "Boss");
   const restAt = entry.path.findIndex((node) => node.type === "RestSite" || node.type === "Rest");
@@ -499,8 +540,12 @@ function pathFacts(entry: ScoredPath, maxHp: number): Record<string, JsonValue> 
     rests: count((type) => type === "RestSite" || type === "Rest"),
     treasure: count((type) => type === "Treasure"),
     fights_before_first_rest: restAt >= 0 ? beforeRest.filter((node) => node.type === "Monster" || node.type === "Elite").length : "no rest on this path",
-    hp_on_arrival_at_elites: entry.path.flatMap((node, step) => (node.type === "Elite" ? [`step ${step + 1}: ${hp(entry.hpOnArrival[step]!)}`] : [])),
-    hp_at_boss: bossAt >= 0 ? hp(entry.hpOnArrival[bossAt]!) : hp(entry.hpAtEnd),
+    hp_on_arrival_at_elites: entry.path.flatMap((node, step) =>
+      node.type === "Elite" ? [eliteText(entry, step, maxHp)] : [],
+    ),
+    hp_at_boss: bossAt >= 0 ? hp(bossAt) : hpText(entry.projection.end, maxHp),
+    ...(entry.projection.runsOut !== null ? { hp_runs_out_at_median_costs: `step ${entry.projection.runsOut + 1} (${entry.path[entry.projection.runsOut]!.type})` } : {}),
+    hp_risk: riskText(entry, maxHp),
     forks_on_path: entry.path.filter((node) => node.children.length > 1).length,
   };
 }
@@ -577,7 +622,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
       run_brief: briefJson(env.brief),
       situation: { screen: "MAP", floor: state.run?.floor ?? null, act, hp_percent: Math.round(context.hpPct * 100), gold: state.run?.gold ?? null },
       ...(replanWhy ? { replan_because: replanWhy, previous_plan: plan ? planText(plan) : null } : {}),
-      note: "Each option is a full path from the next node to the boss. HP projections assume resting at rest sites and ~10%/22%/28% of max HP per hallway fight in acts 1/2/3 (elites x2.5).",
+      note: `Each option is a full path from the next node to the boss. ${roomCostNote(context.costs)}`,
     },
     deepseek: {
       facts: buildFacts(env, replanWhy ? { replan_because: replanWhy } : {}),
