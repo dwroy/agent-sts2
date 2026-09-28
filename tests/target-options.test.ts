@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import { setExperienceForTests, type ExperienceEntry } from "../src/knowledge/experience.js";
 import type { AskDecision, Decision } from "../src/project/types.js";
-import { focusLines, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/screens/combat-plan.js";
+import { focusLines, focusTargets, guardKeepsPick, hpGuardReplacement, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/screens/combat-plan.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/strategy/rollout-live.js";
 import { killOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/strategy/rollout.js";
@@ -426,5 +426,57 @@ describe("kill-order rollout (offline)", () => {
     expect(r.degraded.length).toBeGreaterThan(0);
     expect(r.degraded.join(",")).toMatch(/per kill order|1-turn|horizon 3/);
     expect(r.elapsedMs).toBeLessThanOrEqual(400 + 50);
+  });
+});
+
+describe("HP guard keeps Jev's focus target (RBJ402TKQZ6F F48)", () => {
+  const enemy = (index: number, name: string, hp: number): EnemySim => ({ index, name, hp, maxHp: hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false }) as EnemySim;
+  // Amalgam 211 and Queen 419 at T1.
+  const enemies = [enemy(0, AMALGAM, 211), enemy(1, QUEEN, 419)];
+  const line = (label: string, hpLoss: number, amalgamAfter: number, queenAfter: number): Plan =>
+    ({
+      steps: [{ label }],
+      score: 0,
+      outcome: {
+        winsFight: false, hpLoss, hpAfter: 87 - hpLoss, dies: false, damageDealt: 211 - amalgamAfter + 419 - queenAfter,
+        enemyHpAfter: [{ index: 0, name: AMALGAM, hp: amalgamAfter, vulnerable: 0, weak: 0 }, { index: 1, name: QUEEN, hp: queenAfter, vulnerable: 0, weak: 0 }],
+      },
+    }) as unknown as Plan;
+  // Jev's plan6: everything into the Amalgam, -23; code's plan2: -13, its Setup Strike+ into the Queen.
+  const jevPick = line("all into the Amalgam", 23, 71, 419);
+  const queenLine = line("Setup Strike+ into the Queen", 13, 211, 400);
+  const amalgamBlock = line("less into the Amalgam, most block", 12, 150, 419);
+  const amalgamCheap = line("as much into the Amalgam, more block", 13, 71, 419);
+
+  it("the focus target is the enemy the pick damaged most", () => {
+    expect(focusTargets(jevPick, enemies)).toEqual([0]);
+    expect(focusTargets(queenLine, enemies)).toEqual([1]);
+    expect(focusTargets(line("end turn", 20, 211, 419), enemies)).toEqual([]);
+  });
+
+  it("never swaps into a line with less damage into the focus target", () => {
+    expect(guardKeepsPick(jevPick, queenLine, enemies)).toBe(false);
+    expect(guardKeepsPick(jevPick, amalgamBlock, enemies)).toBe(false);
+    expect(guardKeepsPick(jevPick, amalgamCheap, enemies)).toBe(true);
+    const keeps = (plan: Plan) => guardKeepsPick(jevPick, plan, enemies);
+    // Before: the cheaper Queen line replaced the pick. Now no eligible line is within the bound: no swap.
+    expect(hpGuardReplacement(jevPick, [queenLine, jevPick], 87, 8)).toBe(queenLine);
+    expect(hpGuardReplacement(jevPick, [queenLine, jevPick], 87, 8, keeps)).toBeNull();
+    // A line with the same damage into the Amalgam is still a swap; the bound is set by every line.
+    expect(hpGuardReplacement(jevPick, [queenLine, amalgamCheap, jevPick], 87, 8, keeps)).toBe(amalgamCheap);
+    // One enemy: the focus rule does not apply (the guard trades damage for HP as before).
+    const solo = [enemies[0]!];
+    expect(guardKeepsPick(jevPick, amalgamBlock, solo)).toBe(true);
+  });
+
+  it("never swaps into a line the rollout sees dying more often (F48 T5)", () => {
+    const deaths = new Map<Plan, number>([[jevPick, 6], [amalgamCheap, 8]]);
+    const deathsOf = (plan: Plan) => deaths.get(plan) ?? null;
+    expect(guardKeepsPick(jevPick, amalgamCheap, enemies, deathsOf)).toBe(false);
+    deaths.set(amalgamCheap, 6);
+    expect(guardKeepsPick(jevPick, amalgamCheap, enemies, deathsOf)).toBe(true);
+    // No rollout for the line: no death rule.
+    deaths.delete(amalgamCheap);
+    expect(guardKeepsPick(jevPick, amalgamCheap, enemies, deathsOf)).toBe(true);
   });
 });

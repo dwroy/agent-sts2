@@ -28,6 +28,7 @@ import {
   GAP_BONUS_MAX,
   expectedEntryHp,
   mechanicFactor,
+  rawDeckDamage,
   REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
@@ -96,6 +97,32 @@ describe("boss clock", () => {
     expect(averageStrength(brimstone, 10)).toBeCloseTo(11, 5);
     const rupture = deckProfileForBoss(mapState([...starter(), power(9, "RUPTURE"), attack(10, "HEMOKINESIS", 15, 1, { dynamic_values: [{ name: "Damage", base_value: 15, current_value: 15 }, { name: "HpLoss", base_value: 2, current_value: 2 }] })]), testKnowledge)!;
     expect(rupture.ruptureRate).toBeGreaterThan(0);
+  });
+
+  it("counts relic Strength from T1 (Vajra, Girya lifts), Seal of Gold's energy and Pyre's (RBJ402TKQZ6F)", () => {
+    const relics = (list: Raw[]) => ({ relics: list.map((relic, index) => ({ index, ...relic })) });
+    // RBJ402TKQZ6F F48: 3 lifts + Vajra = 4 Strength at T1.
+    const lifted = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", relics([{ relic_id: "GIRYA", stack: 3 }, { relic_id: "VAJRA" }])), testKnowledge)!;
+    expect(averageStrength(lifted, 7)).toBeCloseTo(4, 5);
+    expect(lifted.growth.join("; ")).toContain("Girya +3");
+    const unlifted = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", relics([{ relic_id: "GIRYA", stack: 0 }])), testKnowledge)!;
+    expect(averageStrength(unlifted, 7)).toBe(0);
+    // Sparkling Rouge: +1 from T3 (10 turns -> 8/10).
+    const rouge = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", relics([{ relic_id: "SPARKLING_ROUGE" }])), testKnowledge)!;
+    expect(averageStrength(rouge, 10)).toBeCloseTo(0.8, 5);
+    // Seal of Gold: +1 energy while the gold pays 3 a turn.
+    const plain = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS"), testKnowledge)!;
+    const seal = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", { gold: 296, ...relics([{ relic_id: "SEAL_OF_GOLD" }]) }), testKnowledge)!;
+    expect(seal.energy).toBe(plain.energy + 1);
+    const broke = deckProfileForBoss(mapState(starter(), "QUEEN_BOSS", { gold: 2, ...relics([{ relic_id: "SEAL_OF_GOLD" }]) }), testKnowledge)!;
+    expect(broke.energy).toBe(plain.energy);
+    // Pyre: energy at the start of each turn from the turn after it is played.
+    const pyreCard = { ...power(9, "PYRE", [{ name: "Energy", base_value: 2, current_value: 2 }]), energy_cost: 2, rules_text: "在回合开始时，获得{Energy:energyIcons()}。" };
+    const pyre = deckProfileForBoss(mapState([...starter(), pyreCard], "QUEEN_BOSS"), testKnowledge)!;
+    expect(pyre.lateEnergy).toBe(2);
+    expect(pyre.lateEnergyScale).toBeGreaterThan(1);
+    const noPyre = deckProfileForBoss(mapState([...starter(), { ...pyreCard, rules_text: "", dynamic_values: [] }], "QUEEN_BOSS"), testKnowledge)!;
+    expect(rawDeckDamage(pyre, "QUEEN_BOSS", 8)).toBeGreaterThan(rawDeckDamage(noPyre, "QUEEN_BOSS", 8));
   });
 
   it("boss mechanics: Ringing turns, Knowledge Demon curses, Queen's Weak, the Giant's eruption", () => {

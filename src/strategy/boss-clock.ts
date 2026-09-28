@@ -23,7 +23,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { modelHandCard } from "./card-model.js";
+import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
@@ -91,11 +91,46 @@ export function bossHp(profile: BossProfile, ascension: number): number {
   return ascension >= 8 ? profile.hpA8 : profile.hp;
 }
 
-/** Relics that give 1 energy on (almost) every turn. */
+/**
+ * Relics that give 1 energy on (almost) every turn. Seal of Gold is counted apart: it pays gold for it
+ * (SEAL_OF_GOLD_COST).
+ */
 const ENERGY_RELICS = new Set([
   "BLESSED_ANTLER", "BLOOD_SOAKED_ROSE", "BREAD", "ECTOPLASM", "PAELS_FLESH", "PHILOSOPHERS_STONE", "PRISMATIC_GEM",
   "PUMPKIN_CANDLE", "SOZU", "SPIKED_GAUNTLETS", "VELVET_CHOKER", "WHISPERING_EARRING",
 ]);
+/**
+ * Seal of Gold: 1 energy at the start of each turn for this much gold (A8, logged: 4 energy on max_energy
+ * 3; RBJ402TKQZ6F F33 gold 296 → 290 → 287 → 284 …). With less gold than a typical fight's turns cost, only
+ * that share of the turns get it.
+ */
+const SEAL_OF_GOLD_COST = 3;
+const TYPICAL_FIGHT_TURNS = 8;
+/**
+ * Strength relics that hold from turn `from` on, measured on the logged combat states' player Strength
+ * (states.jsonl, T1-T6 with each relic): Vajra +1 from T1; Girya +1 per lift (its stack: RBJ402TKQZ6F
+ * boss openings 1/2/4 with 1/2/3 lifts, the last with Vajra); Ember Tea +2 while it has fights left
+ * (stack > 0); Sparkling Rouge +1 from T3. Rainbow Ring and Red Skull are conditional (all three card
+ * types a turn / HP at or below the threshold) and Shuriken / Sword of Jade are not logged: not counted.
+ */
+export function relicFlatStrength(relics: { id: string; stack: number }[]): { amount: number; from: number; name: string }[] {
+  const out: { amount: number; from: number; name: string }[] = [];
+  for (const { id, stack } of relics) {
+    if (id === "VAJRA") out.push({ amount: 1, from: 1, name: "Vajra +1" });
+    else if (id === "GIRYA" && stack > 0) out.push({ amount: stack, from: 1, name: `Girya +${stack} (${stack} lifts)` });
+    else if (id === "EMBER_TEA" && stack > 0) out.push({ amount: 2, from: 1, name: "Ember Tea +2" });
+    else if (id === "SPARKLING_ROUGE") out.push({ amount: 1, from: 3, name: "Sparkling Rouge +1 from T3" });
+  }
+  return out;
+}
+/**
+ * Share of an energy power's extra plays (Pyre, Demesne) the clock counts. On the 13 logged A8 boss fights
+ * with Pyre (tools/boss-fights-extract.py over every boss, 2026-09-29) the full count read them 15% high
+ * (median log error -0.15, median |log error| 0.22); without it they were unbiased (0.00, 0.18): Pyre
+ * costs 2 on its turn and the hand, not the energy, caps later turns. A quarter gave the lowest median
+ * |log error| (0.15).
+ */
+const LATE_ENERGY_SHARE = 0.25;
 /** Cards drawn a turn (no draw cards counted: this is a floor, not a ceiling). */
 const HAND = 5;
 /**
@@ -134,6 +169,14 @@ export interface DeckProfile {
   vulnerableSources: number;
   /** Permanent Strength from one-off cards (Inflame), played around `setupTurn`. */
   flatStrength: number;
+  /** Strength from relics that holds from a given turn (Vajra, Girya lifts: relicFlatStrength). */
+  relicFlat: { amount: number; from: number }[];
+  /**
+   * Energy a turn from powers played around `setupTurn` (Pyre, Demesne), and what it does to the
+   * card-damage part: `damage`, `aoeDamage` and `hits` times `lateEnergyScale` once it is in play.
+   */
+  lateEnergy: number;
+  lateEnergyScale: number;
   /** Strength gained each turn from the power's play turn (Demon Form 3, Demon Form+ 4). */
   demonFormRate: number;
   /** Strength a turn from relics from T1 (Toasty Mittens). */
@@ -166,8 +209,11 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   if (cards.length === 0) return null;
   // max_energy leaves out the relics that add energy every turn (7DFB: 3 shown with Pael's Flesh and
   // Blessed Antler).
-  const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length;
+  const relics = asArray(run["relics"]).map((relic) => ({ id: str(asRecord(relic)["relic_id"]), stack: num(asRecord(relic)["stack"]) }));
+  const relicIds = relics.map((relic) => relic.id);
+  const sealTurns = Math.floor(num(run["gold"]) / SEAL_OF_GOLD_COST);
+  const seal = relicIds.includes("SEAL_OF_GOLD") ? Math.min(1, sealTurns / TYPICAL_FIGHT_TURNS) : 0;
+  const energy = Math.max(3, num(run["max_energy"]) || 3) + relicIds.filter((id) => ENERGY_RELICS.has(id)).length + seal;
   const n = cards.length;
   let damage = 0;
   let aoe = 0;
@@ -178,6 +224,7 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   let ruptures = 0;
   let selfDamage = 0;
   let vulnerable = 0;
+  let lateEnergy = 0;
   const growth: string[] = [];
   for (const { entry, model: card } of cards) {
     // Deck entries carry no "playable" flag (that is a hand-card field): Curses, Statuses and
@@ -204,12 +251,22 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     } else {
       flatStrength += Math.max(0, card.strength);
     }
+    // A power's energy at the start of each turn (Pyre, Pyre+ 2: RBJ402TKQZ6F F48 4 → 6 energy from T4).
+    if (card.type === "Power") {
+      const income = dynValue(entry, "Energy") ?? 0;
+      const template = str(asRecord(entry)["rules_text"]) || knowledge.card(card.cardId)?.descriptionRaw || "";
+      if (income > 0 && turnStartOnly(template, "Energy")) lateEnergy += income;
+    }
     if (card.hpLoss > 0 || card.cardId === "CRIMSON_MANTLE") selfDamage += 1;
     if (card.vulnerable > 0) vulnerable += 1;
   }
   // Energy caps how many of the drawn cards get played.
   const playedShare = Math.min(1, energy / Math.max(1, (HAND * cost) / n));
   const perCard = (HAND / n) * playedShare;
+  const lateEnergyScale = playedShare > 0 ? Math.min(1, (energy + lateEnergy) / Math.max(1, (HAND * cost) / n)) / playedShare : 1;
+  if (lateEnergy > 0) growth.push(`+${lateEnergy} energy/turn from powers`);
+  const relicFlat = relicFlatStrength(relics);
+  for (const source of relicFlat) growth.push(source.name);
   // Brimstone: Strength at the start of each of our turns (enemies +1). EZ2L F48: ignored, the clock
   // read a 99/turn gap while the deck dealt ~45/turn.
   const relicStrengthRate = (relicIds.includes("TOASTY_MITTENS") ? 1 : 0) + (relicIds.includes("BRIMSTONE") ? BRIMSTONE_STRENGTH : 0);
@@ -229,6 +286,9 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     avgHit: hits > 0 ? damage / hits : 0,
     vulnerableSources: vulnerable,
     flatStrength,
+    relicFlat: relicFlat.map(({ amount, from }) => ({ amount, from })),
+    lateEnergy,
+    lateEnergyScale,
     demonFormRate: demonForm,
     relicStrengthRate,
     ruptureRate,
@@ -255,7 +315,9 @@ export function averageStrength(deck: DeckProfile, turns: number): number {
   const mittens = rampAverage(deck.relicStrengthRate, 1, turns);
   // Rupture: from the turn after it is played, fed at its rate.
   const rupture = rampAverage(deck.ruptureRate, setup + 1, turns);
-  return flat + demon + mittens + rupture;
+  // Relic Strength that holds from its turn on (Vajra, Girya lifts from T1).
+  const relicFlat = turns > 0 ? (deck.relicFlat ?? []).reduce((sum, { amount, from }) => sum + (amount * Math.max(0, turns - from + 1)) / turns, 0) : 0;
+  return flat + demon + mittens + rupture + relicFlat;
 }
 
 /** Raw deck damage a turn in a T-turn fight against this boss: cards, Strength growth, Vulnerable, bodies. */
@@ -263,7 +325,10 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   const id = bossProfile(bossId)?.id ?? "";
   const bodies = id === "KAISER_CRAB" ? 2 : 1;
   // AoE counts once per body into the crab.
-  let perTurn = deck.damage + deck.aoeDamage * (bodies - 1) + averageStrength(deck, turns) * deck.hits;
+  // Energy powers (Pyre) pay for more of the drawn cards from the turn after they are played, at the
+  // fitted LATE_ENERGY_SHARE.
+  const late = LATE_ENERGY_SHARE * (turns > 0 && (deck.lateEnergyScale ?? 1) > 1 ? ((deck.lateEnergyScale - 1) * Math.max(0, turns - deck.setupTurn)) / turns : 0);
+  let perTurn = (1 + late) * (deck.damage + deck.aoeDamage * (bodies - 1) + averageStrength(deck, turns) * deck.hits);
   // Two Vulnerable sources keep the boss Vulnerable most turns. A boss that starts with Artifact eats
   // the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   if (deck.vulnerableSources >= 2 && id !== "AEONGLASS") perTurn *= VULNERABLE_UPTIME;
