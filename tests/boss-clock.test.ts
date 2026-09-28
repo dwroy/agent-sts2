@@ -26,7 +26,9 @@ import {
   gapCardBonus,
   gapRestShift,
   GAP_BONUS_MAX,
+  expectedEntryHp,
   mechanicFactor,
+  REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
 import { loggedKnowledge } from "./logged.js";
@@ -121,8 +123,10 @@ describe("boss clock", () => {
     const f7 = bossClock(board("64ZBJGP6MYZ3:7"), loggedKnowledge)!;
     expect(f7.boss).toBe("VANTOM");
     expect(f7.hpNote).toMatch(/183 \(A8\) \+ \d+ \(Slippery/);
-    expect(f7.need).toBeGreaterThanOrEqual(28);
-    expect(f7.gap).toBeGreaterThanOrEqual(5);
+    // 66/87 plus the F16 rest's 26: a full-HP entry (the fights before it not taken off).
+    expect(f7.entryHp).toBe(87);
+    expect(f7.need).toBeGreaterThanOrEqual(27);
+    expect(f7.gap).toBeGreaterThanOrEqual(3);
     const f16 = bossClock(board("64ZBJGP6MYZ3:16"), loggedKnowledge)!;
     expect(f16.need).toBeGreaterThanOrEqual(28);
     expect(f16.gap).toBeGreaterThan(0);
@@ -138,8 +142,10 @@ describe("boss clock", () => {
   it("02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)", () => {
     const clock = bossClock(board("02L476J8QWGH:6"), loggedKnowledge)!;
     expect(clock.hp).toBe(262);
-    expect(clock.fightTurns).toBe(10);
-    expect(clock.need).toBe(26);
+    // 26/80 plus one rest (24): a 50 HP entry survives ~8 turns (it was read as 68, 10 turns, 26 a turn).
+    expect(clock.entryHp).toBe(50);
+    expect(clock.fightTurns).toBe(8);
+    expect(clock.need).toBe(33);
     expect(clock.gap).toBeGreaterThan(0);
     expect(clock.mechanic).toMatch(/Ringing/);
   });
@@ -148,8 +154,9 @@ describe("boss clock", () => {
     const clock = bossClock(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     const phase2 = clock.phases!.find((phase) => phase.phase === 2)!;
     expect(phase2.hp).toBe(212);
-    expect(phase2.turns).toBe(4);
-    expect(phase2.need).toBe(53);
+    // 68/85 plus the F47 rest: an 85 HP entry lasts ~5 turns of Multi Claw.
+    expect(phase2.turns).toBe(5);
+    expect(phase2.need).toBe(42);
     expect(clock.need).toBeGreaterThanOrEqual(53);
     expect(clock.gap).toBeGreaterThanOrEqual(10);
     const json = bossClockJson(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
@@ -215,5 +222,30 @@ describe("The Insatiable's mechanic factor, against the logged A8 fights", () =>
       const fight = fights.find((row) => row.key === key)!;
       expect(fight.realised / calibrated(fight.raw)).toBeLessThan(0.6);
     }
+  });
+});
+
+describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () => {
+  const at = (floor: number, hp: number, max: number, over: Raw = {}, screen = "MAP", raw: Raw = {}) =>
+    parseGameState(baseState(screen, { run: runPayload({ deck: starter(), boss_id: "KNOWLEDGE_DEMON_BOSS", act_id: "1", floor, current_hp: hp, max_hp: max, ...over }), ...raw }));
+
+  it("Z6AMPPWHQ5CV F31 30/80: 30 + 24 = 54, not 85% (68); the demon's need rises to match", () => {
+    expect(expectedEntryHp(at(31, 30, 80))).toBe(54);
+    expect(expectedEntryHp(at(20, 59, 80))).toBe(80); // capped at max
+    const low = bossClock(at(31, 30, 80), testKnowledge)!;
+    const high = bossClock(at(31, 30, 80), testKnowledge, 68)!;
+    expect(low.entryHp).toBe(54);
+    expect(low.need).toBeGreaterThan(high.need);
+  });
+
+  it("Regal Pillow adds its heal (981WMX8MQ7DK F32: 37 -> 79 of 91)", () => {
+    expect(expectedEntryHp(at(31, 37, 91, { relics: [{ index: 0, relic_id: "REGAL_PILLOW" }] }))).toBe(37 + 27 + REGAL_PILLOW_HEAL);
+  });
+
+  it("on the pre-boss rest floor: counted while its heal is still offered, not after", () => {
+    const rest = { rest: { options: [{ index: 0, option_id: "HEAL", title: "休息", is_enabled: true }, { index: 1, option_id: "SMITH", title: "锻造", is_enabled: true }] } };
+    expect(expectedEntryHp(at(32, 30, 80, {}, "REST", rest))).toBe(54);
+    expect(expectedEntryHp(at(32, 54, 80))).toBe(54);
+    expect(expectedEntryHp(at(33, 54, 80))).toBe(54);
   });
 });

@@ -112,8 +112,6 @@ export function calibrated(raw: number): number {
 }
 /** Damage multiplier with two or more Vulnerable sources in the deck. */
 const VULNERABLE_UPTIME = 1.2;
-/** Share of max HP a boss is entered with when it is still some floors away (logged A8 median ~0.9). */
-export const ENTRY_HP_SHARE = 0.85;
 /** Vantom's Slippery stacks. */
 const SLIPPERY_STACKS = 9;
 
@@ -403,12 +401,39 @@ export interface BossClock {
   phases?: { phase: number; hp: number; turns: number; need: number }[];
 }
 
-/** The expected entry HP: the current HP, or ENTRY_HP_SHARE of max HP when a rest can still heal. */
+/** A rest heals this share of max HP (route-projection's REST_HEAL; the rest screen's "30% of max"). */
+export const REST_HEAL_SHARE = 0.3;
+/** Regal Pillow's extra heal on a rest (981WMX8MQ7DK F32: 37 -> 79 of 91 = 27 + 15). */
+export const REGAL_PILLOW_HEAL = 15;
+
+/**
+ * Whether the pre-boss rest (the floor before the act boss) is still ahead: on an earlier floor, or on
+ * that floor with its rest options not yet used.
+ */
+export function restAheadOfBoss(state: GameState): boolean {
+  const floor = state.run?.floor ?? null;
+  if (floor === null) return false;
+  const boss = BOSS_FLOORS.find((entry) => entry >= floor);
+  if (boss === undefined || floor >= boss) return false;
+  if (floor < boss - 1) return true;
+  const rest = asRecord(state.raw["rest"]);
+  return state.screen === "REST" && asArray(rest["options"]).map(asRecord).some((option) => option["is_enabled"] === true && str(option["option_id"]).toUpperCase() === "HEAL");
+}
+
+/**
+ * The expected entry HP: the current HP plus one rest's heal (30% of max, Regal Pillow's +15) while the
+ * pre-boss rest is ahead, capped at max HP. It used to be max(HP, 85% of max) whenever any rest was ahead
+ * (Z6AMPPWHQ5CV: 30/80 at F31 read as a 68 HP entry, "need 46"; the rest gave 54 and the demon needed ~61).
+ * The fights before the rest are not taken off, and a smith instead heals nothing: an upper bound.
+ */
 export function expectedEntryHp(state: GameState): number {
   const hp = state.run?.current_hp ?? null;
   const max = state.run?.max_hp ?? null;
   if (max === null || max <= 0) return hp ?? 70;
-  return Math.round(Math.max(hp ?? max, ENTRY_HP_SHARE * max));
+  const now = hp ?? max;
+  if (!restAheadOfBoss(state)) return now;
+  const pillow = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "REGAL_PILLOW") ? REGAL_PILLOW_HEAL : 0;
+  return Math.round(Math.min(max, now + REST_HEAL_SHARE * max + pillow));
 }
 
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */
