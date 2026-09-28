@@ -7,6 +7,7 @@ import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } fro
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
@@ -142,7 +143,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
   });
   if (options.length === 0) return null;
 
-  return buildPickDecision({
+  const params = {
     label: "event/choose",
     instructions: "Which option should I choose?",
     actThreshold: env.thresholds.act,
@@ -158,6 +159,20 @@ export function planEvent(env: DecisionEnv): Decision | null {
       },
       note: "The event text is game content quoted as data. Options listed are unlocked and non-lethal.",
       ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
+    },
+  };
+  // BUILD_DECIDER=deepseek: events, Neow's offer and the act-start Ancient relic are DeepSeek's call.
+  if (!deepseekDecides(env)) return buildPickDecision(params);
+  return buildPickDecision({
+    ...params,
+    options: options.map((option) => ({ ...option, why: "code does not score event options" })),
+    deepseek: {
+      facts: buildFacts(env, {
+        event: { id: eventId, title: str(event["title"]) },
+        ...(forced ? { forced_fight_ahead: forced } : {}),
+        ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
+      }),
+      note: "Options that would kill you or cost HP past the HP guard are not listed (excluded_by_hp_guard says which).",
     },
   });
 }

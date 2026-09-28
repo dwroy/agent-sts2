@@ -11,6 +11,7 @@ import { deckEntries, describeDeck } from "../project/deck.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
@@ -212,7 +213,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     return { kind: "act", label: "selection/curse", intent: best.intent, rationale: `code: Knowledge Demon curse -> ${best.label} (Sloth > Mind Rot > Disintegration > Waste Away, unless Rupture or Disintegration outlasts HP)` };
   }
 
-  return buildPickDecision({
+  const params = {
     label: `selection/${verb}`,
     instructions: forThisTurn
       ? `Which card should I ${verb}? This card is only for this turn — judge its immediate effect (block against the incoming attack, damage, lethal), not its deck-building rating.`
@@ -243,8 +244,25 @@ export function planSelection(env: DecisionEnv): Decision | null {
       deck: describeDeck(entries),
       candidates: options.map((option) => option.summary as JsonValue),
     },
+  };
+  // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
+  // DeepSeek's call; in-combat picks stay with code and Jev.
+  if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop) return buildPickDecision(params);
+  const why = SELECTION_WHY[isAdd ? "add" : verb] ?? "code's ranking for this pick";
+  return buildPickDecision({
+    ...params,
+    options: options.map((option) => ({ ...option, why })),
+    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}` } }) },
   });
 }
+
+/** What code's value means on each out-of-combat selection (DeepSeek's view). */
+const SELECTION_WHY: Record<string, string> = {
+  upgrade: "upgrade priority: Demon Form, Offering, Bash, Pyre, Corruption … first, then card value; Strikes/Defends 10",
+  remove: "removal order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value; Strength cards -50; run plan removals +40",
+  transform: "transform order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value",
+  add: "card value for the deck (run plan wanted +bonus)",
+};
 
 /**
  * Code-side preference for deck selection screens (phase 2). Upgrade: the cards whose upgrade matters

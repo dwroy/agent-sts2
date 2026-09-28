@@ -8,6 +8,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { GameState } from "../mod/schema.js";
 import type { Decision, DecisionEnv, RememberedMap, ScreenMemory } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -35,11 +36,19 @@ export function planRest(env: DecisionEnv): Decision | null {
     // Within 4 floors of the boss, below 65% there are fights left to lose HP in before the last rest
     // (T4PY F29: smithed at 46/80, entered the crab at 55/80 after two fights, died on T4).
     const nearBoss = nextBoss - floor <= 4;
-    const score =
-      (id === "HEAL"
-        ? hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1
-        : id === "SMITH" ? 6 : 4) + runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss) + gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+    const healScore = hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1;
+    const planShift = runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss);
+    const gapShift = gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+    const score = (id === "HEAL" ? healScore : id === "SMITH" ? 6 : 4) + planShift + gapShift;
+    const why = [
+      id === "HEAL"
+        ? `HP ${Math.round(hpPct * 100)}%${beforeBoss ? ", boss or forced elite within 2 floors" : nearBoss ? ", boss within 4 floors" : ""}: heal ${healScore}`
+        : id === "SMITH" ? "smith 6" : `${id} 4`,
+      ...(planShift ? [`run plan rest ${env.screenMemory.runPlan?.rest ?? ""} ${planShift > 0 ? "+" : ""}${planShift}`] : []),
+      ...(gapShift ? [`boss clock gap +${gapShift}`] : []),
+    ].join("; ");
     options.push({
+      why,
       key: `o${index}`,
       label: `${title} (${id})`,
       intent: bool(raw["requires_target"]) && asArray(raw["valid_target_indices"]).length > 0
@@ -63,7 +72,9 @@ export function planRest(env: DecisionEnv): Decision | null {
 
   const entries = deckEntries(state, knowledge);
   const upgradeable = entries.filter((entry) => !entry.upgraded).length;
-  return buildPickDecision({
+  const floor = state.run?.floor ?? 1;
+  const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
+  const params = {
     label: "rest/choose",
     instructions: "What should I do at this rest site?",
     actThreshold: env.thresholds.act,
@@ -80,6 +91,25 @@ export function planRest(env: DecisionEnv): Decision | null {
         upgradable_cards: upgradeable,
         next_nodes: nextNodeTypes(env.screenMemory, state),
       },
+    },
+  };
+  // BUILD_DECIDER=deepseek: heal or smith (and the card to smith, on the next screen) is DeepSeek's call.
+  if (!deepseekDecides(env)) return buildPickDecision(params);
+  const heal = Math.round((state.run?.max_hp ?? 0) * 0.3);
+  return buildPickDecision({
+    ...params,
+    deepseek: {
+      facts: buildFacts(env, {
+        rest_site: {
+          heal_amount: `~${heal} HP (30% of max)`,
+          hp_after_heal: `${Math.min(state.run?.max_hp ?? 0, (state.run?.current_hp ?? 0) + heal)}/${state.run?.max_hp ?? "?"}`,
+          upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
+          floors_to_act_boss: nextBoss - floor,
+          next_nodes: nextNodeTypes(env.screenMemory, state),
+          forced_next: forcedNext(env.screenMemory, state),
+        },
+      }),
+      note: "If you smith, you pick the card to upgrade on the next screen.",
     },
   });
 }

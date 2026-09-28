@@ -12,6 +12,7 @@ import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
 import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 
 export function planReward(env: DecisionEnv): Decision | null {
@@ -71,38 +72,45 @@ export function planReward(env: DecisionEnv): Decision | null {
       summary: { card: "skip", code_value: SKIP_BAR, note: "take nothing; the deck stays lean" } satisfies JsonValue,
     });
 
-    // Phase 2: a card code values below the skip bar is not offered to the model at all. Say so when
-    // that leaves only the skip, instead of the pick helper's "only one legal option".
-    const shown = env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR);
-    if (shown.length === 1 && options.length > 1) {
-      const values = options
-        .filter((option) => option.key !== "skip")
-        .map((option) => `${option.label} ${option.score}`)
-        .join(", ");
-      return {
-        kind: "act",
-        label: "reward/card",
-        intent: { action: "skip_reward_cards" },
-        rationale: `all offers below skip bar ${SKIP_BAR} (${values})`,
-      };
-    }
-
-    return buildPickDecision({
+    const deckNeeds = { act_boss: str(run["boss_id"]) || null, act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block };
+    const params = {
       label: "reward/card",
       instructions: "Which of these card rewards should I take, if any?",
       actThreshold: env.thresholds.act,
       strictJev: env.strictJev,
       escalateBelow: 0.45,
-      options: shown,
       codeMargin: env.combatPlanner === "card" ? undefined : 6,
       maxModelOptions: 3,
       state: {
         run_brief: briefJson(env.brief),
         deck_stats: env.brief.deck,
-        deck_needs: { act_boss: str(run["boss_id"]) || null, act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block },
+        deck_needs: deckNeeds,
         deck: describeDeck(entries),
         note: "skipping is a legitimate choice: a card that does not fit the plan makes the deck worse.",
       },
+    };
+
+    // Phase 2: a card code values below the skip bar is not offered to the model at all. Say so when
+    // that leaves only the skip, instead of the pick helper's "only one legal option".
+    const shown = env.combatPlanner === "card" ? options : options.filter((option) => option.key === "skip" || option.score >= SKIP_BAR);
+    const baseline: Decision =
+      shown.length === 1 && options.length > 1
+        ? {
+            kind: "act",
+            label: "reward/card",
+            intent: { action: "skip_reward_cards" },
+            rationale: `all offers below skip bar ${SKIP_BAR} (${options
+              .filter((option) => option.key !== "skip")
+              .map((option) => `${option.label} ${option.score}`)
+              .join(", ")})`,
+          }
+        : buildPickDecision({ ...params, options: shown });
+    // BUILD_DECIDER=deepseek: every offer and the skip go to DeepSeek, with code's value and why.
+    if (!deepseekDecides(env)) return baseline;
+    return buildPickDecision({
+      ...params,
+      options,
+      deepseek: { facts: buildFacts(env, { deck_needs: deckNeeds }), baseline, note: `code_value below the skip line (${SKIP_BAR}) means code would skip it.` },
     });
   }
 

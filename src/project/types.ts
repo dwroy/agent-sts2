@@ -38,6 +38,12 @@ export interface DecisionEnv {
   jevContext?: "off" | "v1";
   /** DeepSeek's whole-fight plan at the start of elite/boss fights (config FIGHT_PLAN); undefined means "off". */
   fightPlan?: "off" | "v1";
+  /**
+   * Who decides deck building, route and rest sites (config BUILD_DECIDER). "deepseek": those screens ask
+   * DeepSeek directly with code's values as facts, falling back to the Jev/code decision; undefined or
+   * "jev": Jev with DeepSeek as the low-confidence escalation (the baseline).
+   */
+  buildDecider?: "deepseek" | "jev";
 }
 
 export interface ScreenMemory {
@@ -108,6 +114,10 @@ export interface ScreenMemory {
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
+  /** DeepSeek's route for the current act (BUILD_DECIDER=deepseek); code follows it node by node. */
+  routePlan?: import("../screens/map.js").RoutePlan;
+  /** "runId:act" whose route-plan request failed: the rest of the act uses the Jev/code route choice. */
+  routePlanFailed?: string;
   /**
    * The event last seen and its floor, kept across screens: an end page of that event on a later floor
    * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
@@ -205,6 +215,13 @@ export interface AskDecision {
    * keys, richer option facts, fight hints, a trimmed brief. The escalator keeps `state`/`questions`.
    */
   jevView?: { state: Record<string, JsonValue>; questions: QuestionSet; context: string; hints: string[] };
+  /**
+   * BUILD_DECIDER=deepseek: DeepSeek answers `question` directly (state/questions are its view: every
+   * option with code's value and why, plus the run facts). When DeepSeek is unavailable, fails or is out
+   * of budget, the loop plays `baseline` instead: the decision the screen makes without DeepSeek (Jev,
+   * then code).
+   */
+  deepseek?: { question: string; baseline: Decision; onFail?: () => void };
 }
 
 export interface ActDecision {

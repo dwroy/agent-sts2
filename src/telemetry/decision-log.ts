@@ -33,10 +33,17 @@ export interface DecisionRecord {
   reused_answer: boolean;
   /** `usage` counts the tokens spent on *this* decision; these are the calls behind it. */
   request_ids: string[];
-  latency_ms: { plan: number; jev: number; action: number };
+  latency_ms: { plan: number; jev: number; action: number; deepseek?: number };
   usage: { input_tokens: number; output_tokens: number };
   /** Present when the decision was escalated to DeepSeek. */
   escalation?: JsonValue;
+  /**
+   * BUILD_DECIDER=deepseek: DeepSeek decided this screen itself ({by, direct, choice, reason, latency_ms,
+   * tokens, …}); kept apart from `escalation`, whose records compare against a Jev answer.
+   */
+  deepseek?: JsonValue;
+  /** Why a DeepSeek-decided screen was decided by Jev/code instead. */
+  deepseek_fallback?: string;
   /** Jev context version of this question (JEV_CONTEXT), present when not "off". */
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */

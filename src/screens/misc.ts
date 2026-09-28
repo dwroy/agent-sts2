@@ -10,6 +10,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 
 export function planBundle(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -44,8 +45,9 @@ export function planBundle(env: DecisionEnv): Decision | null {
         instructions: "Which starting card bundle should I take?",
         actThreshold: env.thresholds.act,
         strictJev: env.strictJev,
-        options,
+        options: deepseekDecides(env) ? options.map((option) => ({ ...option, why: "code does not score bundles" })) : options,
         state: { run_brief: briefJson(env.brief), situation: { screen: "BUNDLE_SELECTION" } },
+        ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env) } } : {}),
       });
     }
   }
@@ -85,8 +87,9 @@ export function planCapstone(env: DecisionEnv): Decision | null {
     instructions: "Which option should I take?",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
-    options,
+    options: deepseekDecides(env) ? options.map((option) => ({ ...option, why: "code does not score these options" })) : options,
     state: { run_brief: briefJson(env.brief), situation: { screen: "CAPSTONE_SELECTION" } },
+    ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env) } } : {}),
   });
 }
 
