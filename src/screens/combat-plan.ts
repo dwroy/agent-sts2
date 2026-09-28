@@ -225,7 +225,8 @@ export const MAX_OPTIONS = 10;
  * accepted extra loss is past HP_GUARD_FIGHT_BUDGET the bound is 0: the cheapest plan, unless the
  * choice wins the fight.
  */
-export const HP_GUARD_FIGHT_BUDGET = 12;
+/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */
+export const HP_GUARD_FIGHT_BUDGET = 24;
 /** The per-turn slack is never below this (any fight kind). */
 export const HP_GUARD_MIN_SLACK = 8;
 
@@ -261,7 +262,7 @@ function hpGuardFight(env: DecisionEnv): string {
 /**
  * Records the extra HP of the plan committed this turn, once per turn: a re-plan in the same turn
  * replaces the turn's entry (b63e836 added it on every resolve, Jev's and the escalator's, and on
- * every re-plan; the 12 HP budget was gone by turn 2-3).
+ * every re-plan; the then 12 HP budget was gone by turn 2-3).
  */
 export function recordHpGuard(env: DecisionEnv, turn: number | null, extra: number): void {
   const fight = hpGuardFight(env);

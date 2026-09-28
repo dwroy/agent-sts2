@@ -1625,6 +1625,9 @@ describe("combat plan guards (batch 3)", () => {
     expect(hpGuardSlack(100, "elite")).toBe(10);
     expect(hpGuardSlack(30, "monster")).toBe(8);
     expect(hpGuardSlack(70)).toBe(14);
+    expect(HP_GUARD_FIGHT_BUDGET).toBe(24);
+    // 13 extra HP was past the old 12 budget; within the 24 one the slack still applies.
+    expect(hpGuardSlack(70, "boss", 13)).toBe(8);
     expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET)).toBe(8);
     expect(hpGuardSlack(70, "boss", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
     expect(hpGuardSlack(70, "monster", HP_GUARD_FIGHT_BUDGET + 1)).toBe(0);
@@ -1643,7 +1646,7 @@ describe("combat plan guards (batch 3)", () => {
     expect(plans.find((entry) => entry.key === resolved.guard?.choice)!.hpLost).toBeLessThanOrEqual(minLoss + 8);
   });
 
-  it("tracks the extra HP accepted in a fight, and past 12 plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {
+  it("tracks the extra HP accepted in a fight, and past the budget (24) plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {
     const { planCombatTurn } = await import("../src/screens/combat-plan.js");
     const first = env(guardCombat(), { combatPlanner: "turn" });
     const decision = planCombatTurn(first);
@@ -1660,7 +1663,7 @@ describe("combat plan guards (batch 3)", () => {
 
     // The same fight with the budget spent: anything above the cheapest plan is replaced.
     const spent = env(guardCombat(), { combatPlanner: "turn" });
-    spent.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
+    spent.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 25 } };
     const again = planCombatTurn(spent);
     if (again?.kind !== "ask") throw new Error("expected an ask");
     const over = plans.filter((entry) => entry.hpLost > minLoss).reduce((a, b) => (b.hpLost < a.hpLost ? b : a));
@@ -1672,7 +1675,7 @@ describe("combat plan guards (batch 3)", () => {
     const next = guardCombat();
     (next["run"] as Record<string, unknown>)["floor"] = 10;
     const fresh = env(next, { combatPlanner: "turn" });
-    fresh.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 13 } };
+    fresh.screenMemory.hpGuard = { fight: "1:9", turns: { "1": 25 } };
     const freshDecision = planCombatTurn(fresh);
     if (freshDecision?.kind !== "ask") throw new Error("expected an ask");
     freshDecision.resolve(escalated(plans.find((entry) => entry.hpLost === minLoss)!.key)).apply?.();
