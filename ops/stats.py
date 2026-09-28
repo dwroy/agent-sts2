@@ -97,6 +97,8 @@ jev_in = sum(r["usage"]["input_tokens"] for r in recs)
 jev_out = sum(r["usage"]["output_tokens"] for r in recs)
 esc = [r for r in recs if r.get("escalation")]
 ds = [r for r in esc if r["escalation"].get("by", "deepseek") == "deepseek"]
+# Direct DeepSeek decisions (no Jev first): their stats live under r["deepseek"]; fold them in for totals.
+ds_direct = [r for r in recs if not r.get("escalation") and (r.get("deepseek") or r.get("decider") == "deepseek")]
 cl = [r for r in esc if r["escalation"].get("by") == "claude"]
 ds_tokens = sum(r["escalation"].get("tokens", 0) for r in ds)
 print("\n## 接口请求")
@@ -109,8 +111,8 @@ ds_hit = sum(r["escalation"].get("cache_hit_tokens", 0) for r in ds)
 ds_out = sum(r["escalation"].get("output_tokens", 0) for r in ds)
 ds_reason = sum(r["escalation"].get("reasoning_tokens", 0) for r in ds)
 ds_cost = ((ds_in - ds_hit) * DS_MISS + ds_hit * DS_HIT + ds_out * DS_OUT) / 1e6
-print(f"DeepSeek 请求 {len(ds)} 次，token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
-ds_lat = sorted(r["escalation"].get("latency_ms", 0) for r in ds)
+print(f"DeepSeek 兜底 {len(ds)} 次、直接决策 {len(ds_direct)} 次，token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
+ds_lat = sorted([r["escalation"].get("latency_ms", 0) for r in ds] + [(r.get("deepseek") or {}).get("latency_ms", r.get("latency_ms", 0)) or 0 for r in ds_direct])
 if ds_lat:
     print(f"DeepSeek 延迟 p50 {ds_lat[len(ds_lat)//2]/1000:.1f} 秒，最长 {ds_lat[-1]/1000:.1f} 秒")
 cl_lat = sorted(r["escalation"].get("latency_ms", 0) for r in cl)

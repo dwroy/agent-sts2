@@ -105,7 +105,8 @@ def main():
     tokens_in = sum(r["usage"]["input_tokens"] for r in recs)
     tokens_out = sum(r["usage"]["output_tokens"] for r in recs)
     jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0 and decider(r) != "deepseek")
-    ds_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek")
+    # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
+    ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek") or r.get("deepseek") or r.get("decider") == "deepseek")
     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
     elapsed = 0
     if recs:
@@ -234,5 +235,21 @@ def ablation_arm():
     return {"arm": cur.get("arm")}
 
 
+def refresh_knowledge() -> None:
+    """After each run: monster DB, per-fight move model, outcome stats (background; never blocks the next run)."""
+    import subprocess
+    tools = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/tools")
+    mm = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/src/knowledge/move-model.json")
+    cmd = (f'python3 {tools}/build-monster-db.py --quiet --move-model-out {mm}; '
+           f'python3 {tools}/monster-db-check.py >/dev/null 2>&1; '
+           f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1')
+    log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
+    subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+
+
 if __name__ == "__main__":
     main()
+    try:
+        refresh_knowledge()
+    except Exception:
+        pass
