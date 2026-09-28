@@ -102,9 +102,20 @@ def main():
 
     by_decider = collections.Counter(decider(r) for r in recs)
     by_label_decider = collections.Counter((r["label"], decider(r)) for r in recs)
-    tokens_in = sum(r["usage"]["input_tokens"] for r in recs)
-    tokens_out = sum(r["usage"]["output_tokens"] for r in recs)
-    jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0 and decider(r) != "deepseek")
+    # usage holds Jev's tokens; since 2026-09-28 19:00 it also adds DeepSeek's (the row's `deepseek` field
+    # has DeepSeek's own), so split them: Jev = usage minus DeepSeek when usage carries cache_hit_tokens.
+    def _ds(r, k):
+        d = r.get("deepseek") if isinstance(r.get("deepseek"), dict) else {}
+        return d.get(k) or 0
+    def _jev(r, k):
+        u = r.get("usage") or {}
+        return max(0, (u.get(k) or 0) - (_ds(r, k) if "cache_hit_tokens" in u else 0))
+    tokens_in = sum(_jev(r, "input_tokens") for r in recs)
+    tokens_out = sum(_jev(r, "output_tokens") for r in recs)
+    ds_in = sum(_ds(r, "input_tokens") for r in recs)
+    ds_out = sum(_ds(r, "output_tokens") for r in recs)
+    ds_hit = sum(_ds(r, "cache_hit_tokens") for r in recs)
+    jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and decider(r) != "deepseek")
     # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
     ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek") or r.get("deepseek") or r.get("decider") == "deepseek")
     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
@@ -153,7 +164,7 @@ def main():
     title = "胜利" if victory else ("阵亡" if ended else "未结束")
     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
     out.append("")
-    out.append(f"- 决策 {len(recs)} 个；Jev 调用 {jev_calls} 次，Claude {cl_calls} 次，DeepSeek {ds_calls} 次；token {tokens_in:,} 入 / {tokens_out:,} 出，约 ${(tokens_in + tokens_out) / 1e6 * PRICE_PER_M:.4f}；用时 {elapsed/60:.1f} 分钟")
+    out.append(f"- 决策 {len(recs)} 个；Jev 调用 {jev_calls} 次，Claude {cl_calls} 次，DeepSeek {ds_calls} 次；token {tokens_in:,} 入 / {tokens_out:,} 出，约 ${(tokens_in + tokens_out) / 1e6 * PRICE_PER_M:.4f}（Jev）；DeepSeek token {ds_in:,} 入（缓存命中 {ds_hit:,}，{(ds_hit / ds_in * 100 if ds_in else 0):.0f}%）/ {ds_out:,} 出；用时 {elapsed/60:.1f} 分钟")
     out.append(f"- 决策者：" + "，".join(f"{k} {v}" for k, v in by_decider.most_common()))
     out.append("")
     out.append("### 战斗掉血（按层）")
@@ -205,7 +216,7 @@ def main():
             handle.write(json.dumps({
                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
-                "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out,
+                "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
                 "deciders": dict(by_decider),
                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
                 **ablation_arm(),
