@@ -40,7 +40,7 @@ import { forcedEliteWithin } from "./rest.js";
 import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
-import { actThreatIds } from "../knowledge/monster-db.js";
+import { actThreatIds, bossOnBoard } from "../knowledge/monster-db.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -79,7 +79,7 @@ const POWER_NOTES: Record<string, string> = {
   SANDPIT_POWER: " (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
   ASLEEP_POWER: " (asleep, no attacks: the first HP damage wakes it at once, block damage does not; set up powers instead of chipping it)",
   SLUMBER_POWER: " (sleeping, no attacks: -1 each turn and -1 per hit that takes HP; wakes at 0)",
-  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +6 Strength: kill both in the same turn or wear both down evenly; start-of-turn damage to all enemies (Mercury Hourglass 3, Inferno) kills a partner left that low; enemy Block you see now is gone by the start of your next turn)",
+  CRAB_RAGE_POWER: " (when its partner dies it gains 99 Block and +6 Strength: the Block lasts one turn: past runs won 9/12 when the Rocket died first and 8/39 with both alive to the end, so put single-target damage into the Rocket and block the turn after it dies; start-of-turn damage to all enemies (Mercury Hourglass 3, Inferno) kills a partner left that low; enemy Block you see now is gone by the start of your next turn)",
   // Test Subject (2WUMK6PK5QHD): three phases, 100 / 200 / 300 HP.
   ADAPTABLE_POWER: " (another phase follows: at 0 HP it spends one turn reviving (no attack), then returns at full, higher max HP with Vulnerable/Strength cleared; killing this phase does NOT end the fight, keep HP for the next one)",
   ENRAGE_POWER: " (+N Strength every time I play a Skill, raising this turn's attack too: prefer Attacks)",
@@ -234,8 +234,12 @@ export function groupName(group: KillGroup): string {
   return group.indices.length > 1 ? `${group.name} x${group.indices.length}` : group.name;
 }
 
-/** Past-run lessons about the enemies of this fight shown to Jev (the experience base's top ones). */
-export const JEV_FIGHT_LESSONS = 3;
+/**
+ * Past-run lessons about the enemies of this fight shown to Jev (the experience base's top ones). 4 covers
+ * every boss's active entries: at 3 the Kaiser Crab's kill order (n=11) was cut behind its entry-HP, DPS
+ * and potion lessons.
+ */
+export const JEV_FIGHT_LESSONS = 4;
 
 /**
  * The experience base's lessons about this fight's enemies (the slice DeepSeek gets, its current-enemy
@@ -260,7 +264,8 @@ export function fightLessons(state: GameState, max = JEV_FIGHT_LESSONS): Experie
   const matches = (entry: ExperienceEntry): boolean => {
     const [kind, id] = [entry.scope.slice(0, entry.scope.indexOf(":")), entry.scope.slice(entry.scope.indexOf(":") + 1)];
     if (kind !== "boss" && kind !== "elite" && kind !== "hallway") return false;
-    return enemyIds.some((enemy) => enemy === id || enemy.startsWith(`${id}_`) || (kind === "boss" && enemy.replace(/_BOSS$/, "") === id));
+    if (kind === "boss") return bossOnBoard(id, enemyIds);
+    return enemyIds.some((enemy) => enemy === id || enemy.startsWith(`${id}_`));
   };
   return selectLessons(input).filter(matches).slice(0, max);
 }

@@ -44,7 +44,8 @@ const LESSONS: ExperienceEntry[] = [
   { id: "q1", scope: "boss:QUEEN", asc: [2, 20], lesson: "先杀聚合体（它活着时伤害打女王等于白打）", evidence: [], n_support: 8, n_contradict: 0, confidence: "high", last_seen: "2026-09-28", status: "active" },
   { id: "q2", scope: "boss:QUEEN", asc: [0, 20], lesson: "进女王要 ≥70% 血", evidence: [], n_support: 3, n_contradict: 1, confidence: "med", last_seen: "2026-09-28", status: "active" },
   { id: "q3", scope: "boss:QUEEN", asc: [0, 20], lesson: "低置信的一条", evidence: [], n_support: 1, n_contradict: 0, confidence: "low", last_seen: "2026-09-28", status: "active" },
-  { id: "q4", scope: "boss:QUEEN", asc: [0, 20], lesson: "第四条（超出前 3）", evidence: [], n_support: 1, n_contradict: 2, confidence: "low", last_seen: "2026-09-28", status: "active" },
+  { id: "q4", scope: "boss:QUEEN", asc: [0, 20], lesson: "第四条（低置信）", evidence: [], n_support: 1, n_contradict: 2, confidence: "low", last_seen: "2026-09-28", status: "active" },
+  { id: "q5", scope: "boss:QUEEN", asc: [0, 20], lesson: "第五条（超出前 4）", evidence: [], n_support: 1, n_contradict: 3, confidence: "low", last_seen: "2026-09-28", status: "active" },
   { id: "j1", scope: "hallway:JAW_WORM", asc: [0, 20], lesson: "别的敌人", evidence: [], n_support: 9, n_contradict: 0, confidence: "high", last_seen: "2026-09-28", status: "active" },
   { id: "c1", scope: "card:BASH", asc: [0, 20], lesson: "卡牌条目", evidence: [], n_support: 9, n_contradict: 0, confidence: "high", last_seen: "2026-09-28", status: "active" },
 ];
@@ -111,7 +112,7 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     }
   });
 
-  it("gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 3 lessons about these enemies", () => {
+  it("gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies", () => {
     setExperienceForTests(LESSONS);
     const decision = ez2l() as AskDecision;
     const state = decision.jevView!.state;
@@ -124,10 +125,10 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     expect(JSON.stringify(state["potion_context"])).not.toContain("run_plan");
     const experience = state["experience"] as { note: string; lessons: string[] };
     expect(experience.note).toMatch(/evidence, not orders/);
-    expect(experience.lessons).toHaveLength(3);
+    expect(experience.lessons).toHaveLength(4);
     expect(experience.lessons[0]).toBe("[boss:QUEEN | confidence high, n=8] 先杀聚合体（它活着时伤害打女王等于白打）");
     expect(experience.lessons[1]).toContain("against 1");
-    expect(experience.lessons.join("\n")).not.toMatch(/第四条|别的敌人|卡牌条目/);
+    expect(experience.lessons.join("\n")).not.toMatch(/第五条|别的敌人|卡牌条目/);
   });
 
   it("rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them", () => {

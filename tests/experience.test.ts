@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { knowledgeSlice, offeredOn, selectLessons, setExperienceForTests, type ExperienceEntry, type OutcomeStats, type SliceInput } from "../src/knowledge/experience.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { RunJournal } from "../src/project/run-journal.js";
-import { baseState, runPayload, testKnowledge } from "./scenarios.js";
+import { fightLessons } from "../src/screens/combat-plan.js";
+import { baseState, combatPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -100,6 +101,36 @@ describe("experience slice selection", () => {
     const offered = offeredOn(rewardState());
     expect(offered.cards).toEqual(["INFLAME", "ANGER"]);
     expect(offered.cards).not.toContain("STRIKE_R");
+  });
+});
+
+describe("boss lessons on a board of boss parts", () => {
+  function crabBoard(bossId: string | null) {
+    const payload = combatPayload();
+    payload["run"] = runPayload({ floor: 33, act_id: "1", boss_id: bossId, ascension: 8 });
+    const combat = payload["combat"] as Record<string, unknown>;
+    const [first, second] = combat["enemies"] as Record<string, unknown>[];
+    combat["enemies"] = [
+      { ...first, enemy_id: "CRUSHER", name: "碾碎爪" },
+      { ...second, enemy_id: "ROCKET", name: "火箭" },
+    ];
+    return parseGameState(payload);
+  }
+
+  it("matches boss:KAISER_CRAB to CRUSHER + ROCKET in the DeepSeek slice, boss id known or not", () => {
+    const enemies = ["CRUSHER", "ROCKET"];
+    expect(selectLessons(input({ label: "combat/plan", bossId: null, enemies }), ENTRIES).map((entry) => entry.id)).toContain("crab-hp");
+    expect(selectLessons(input({ label: "combat/plan", bossId: null, enemies: ["KIN_PRIEST", "KIN_FOLLOWER"] }), [lesson("kin", "boss:THE_KIN")]).map((entry) => entry.id)).toEqual(["kin"]);
+    expect(selectLessons(input({ label: "combat/plan", bossId: null, enemies: ["TORCH_HEAD_AMALGAM"] }), [lesson("queen", "boss:QUEEN")]).map((entry) => entry.id)).toEqual(["queen"]);
+    expect(selectLessons(input({ label: "combat/plan", bossId: null, enemies: ["JAW_WORM"] }), ENTRIES).map((entry) => entry.id)).not.toContain("crab-hp");
+  });
+
+  it("gives Jev crab-kill-order on a crab board", () => {
+    for (const bossId of ["KAISER_CRAB_BOSS", null]) {
+      const ids = fightLessons(crabBoard(bossId)).map((entry) => entry.id);
+      expect(ids).toContain("crab-kill-order");
+      expect(ids.every((id) => id.startsWith("crab"))).toBe(true);
+    }
   });
 });
 
