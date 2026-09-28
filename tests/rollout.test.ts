@@ -140,6 +140,30 @@ describe("rollout (offline)", () => {
     expect(pick(c)).not.toEqual(pick(a));
   });
 
+  it("a Decimillipede segment killed alone reattaches: the fight is not over (63CP F25)", () => {
+    const run = (reattach: boolean) => {
+      const input = scenario(1e9, fakeClock(0.01));
+      const seg = (index: number, hp: number): EnemySim => ({
+        index, name: `Segment ${index}`, hp, maxHp: 60, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false,
+        attacks: [{ damage: 6, hits: 1 }], ...(reattach ? { reattach: true, reattachHp: 25 } : {}),
+      });
+      const solver: SolverInput = { ...input.solver, enemies: [seg(0, 5), seg(1, 40)], fightKind: "elite" };
+      const table: EnemyTable = { moves: { BITE: { damage: 6, hits: 1, strength: 0, block: 0 } }, next: { BITE: { BITE: 1 } } };
+      return rolloutDecision({
+        ...input,
+        solver,
+        plans: solveTurn(solver).plans,
+        enemies: [0, 1].map((index) => ({ index, id: "DECIMILLIPEDE", move: "BITE", strength: 0, powers: {} })),
+        tables: { DECIMILLIPEDE: table },
+      });
+    };
+    const mean = (r: ReturnType<typeof run>, f: (l: (typeof r.lines)[number]) => number) => r.lines.reduce((a, l) => a + f(l), 0) / r.lines.length;
+    const plain = run(false);
+    const joined = run(true);
+    expect(mean(joined, (l) => l.winProb)).toBeLessThan(mean(plain, (l) => l.winProb));
+    expect(mean(joined, (l) => l.hpLoss)).toBeGreaterThan(mean(plain, (l) => l.hpLoss));
+  });
+
   it("degrades to fit the time budget: 5 turns, then 3, then fewer samples, then 1 turn", () => {
     const run = (budget: number) => rolloutDecision(scenario(budget, fakeClock(1)));
     const full = run(1e9);
