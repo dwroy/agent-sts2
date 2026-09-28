@@ -100,6 +100,8 @@ export interface CardModel {
   discards?: string[];
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
+  /** Shrink applied to the target for this many turns: its attacks deal SHRINK_DAMAGE_FACTOR (Beetle Juice). */
+  shrink?: number;
   /**
    * Soulbound (the Queen's Chains of Binding: the first 3 cards drawn each turn): once one Soulbound
    * card is played, the others cannot be played this turn (88HN: blocked_by_hook in states.jsonl).
@@ -440,7 +442,8 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Exhausts any cards in hand: Howl from Beyond (it then replays every turn) and junk (H14T F39 T4:
   // Ashwater -> Howl was the lethal at 2 HP; unmodelled, every line "died").
   ASHWATER: { target: "self", special: "ashwater" },
-  POTION_SHAPED_ROCK: { target: "single", damage: 10 }, // measured: 15 on a Vulnerable target
+  // 15 measured (states.jsonl V5S6 F12/F14, 2WUM, W6F4: 26 -> 11, 18 -> 3; potion damage ignores Vulnerable).
+  POTION_SHAPED_ROCK: { target: "single", damage: 15 },
   EXPLOSIVE_AMPOULE: { target: "all", damage: 10 },
   BLOCK_POTION: { target: "self", block: 12 },
   STRENGTH_POTION: { target: "self", strength: 2 },
@@ -473,6 +476,10 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Debuff: Artifact negates it like any other (TQX5 T1: drunk into Artifact 3, nothing landed).
   // Demise 9 measured (states.jsonl DEMISE_POWER amount 9).
   POWDERED_DEMISE: { target: "single", demise: 9 },
+  // Beetle Juice: 「敌人的攻击在下{Repeat}个回合中造成的伤害减少{DamageDecrease}%」 = SHRINK_POWER 4 on the target,
+  // its attacks 30% less (states.jsonl: intents 23 -> 16, 20 -> 14, 14 -> 9; potion-values.ts). Unmodelled,
+  // W8JD carried it from F29 to the 1-HP turn of F31 ("its effect is in no line's numbers").
+  BEETLE_JUICE: { target: "single", shrink: 4 },
   // The next Attack deals triple damage (PLC F33: kept from T1 to death with Bludgeon in hand).
   GIGANTIFICATION_POTION: { target: "self", special: "triple_next_attack" },
   // A card in hand costs 0 for the rest of the combat, chosen on a combat_hand_select screen ("选择一张

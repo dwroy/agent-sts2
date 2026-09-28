@@ -18,6 +18,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { deckEntries, describeRunRelicEffects } from "../project/deck.js";
 import { dossierFor, dossierJson } from "../knowledge/dossiers.js";
+import { fillPotionText } from "../knowledge/potion-values.js";
 import { awakeDamagePerTurn, moveModel } from "../knowledge/move-model.js";
 import { bossNote } from "../project/run-journal.js";
 import { deckBlockPerTurn, deckDamagePerTurn } from "./boss-clock.js";
@@ -147,7 +148,7 @@ export function fightPlanInput(
     .filter((potion) => bool(potion["occupied"]))
     .map((potion) => {
       const id = str(potion["potion_id"]);
-      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(str(potion["description"]) || knowledge.potion(id)?.description || "", 100)}`;
+      return `${id} ${str(potion["name"], knowledge.potion(id)?.name ?? id)}: ${truncate(fillPotionText(id, str(potion["description"]) || knowledge.potion(id)?.description || ""), 100)}`;
     });
   return {
     fight: kind,
@@ -266,7 +267,7 @@ export function parseFightPlan(
       // Kaiser Crab claws enrage): 4VC5 F24, GGF8 F33.
       together: enemies.filter(mustDieTogether).map((enemy) => str(enemy["enemy_id"])),
       minions: enemies.filter(isMinion).map((enemy) => str(enemy["enemy_id"])),
-      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "" })),
+      potions: belt.map((potion) => ({ id: str(potion["potion_id"]), text: fillPotionText(str(potion["potion_id"]), str(potion["description"]) || knowledge.potion(str(potion["potion_id"]))?.description || "") })),
       kind: base.kind,
       scaling: enemies.map((enemy) => enemyScales(enemy)).filter((why): why is string => why !== null),
       cycleScaling: enemies.map((enemy) => cycleGrowth(str(enemy["enemy_id"]))).filter((why): why is string => why !== null),

@@ -168,8 +168,8 @@ describe("a potion the solver does not simulate is still labelled (VUV4, X8R8: b
   it("the X8R8 T8 board with an unmodelled potion: its option carries potion_facts", () => {
     const fx = logged("x8r8-f17-t8");
     const potions = ((fx.state["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[]);
-    // Beetle Juice is not simulated (Gambler's Brew is since 77UJ/EN55, Regen since PKB0).
-    Object.assign(potions[0]!, { potion_id: "BEETLE_JUICE", name: "甲虫汁", description: "敌人的攻击在下3个回合中造成的伤害减少25%。" });
+    // Stable Serum is not simulated (Gambler's Brew is since 77UJ/EN55, Regen since PKB0, Beetle Juice since W8JD).
+    Object.assign(potions[0]!, { potion_id: "STABLE_SERUM", name: "稳定血清", description: "[gold]保留[/gold]你的[gold]手牌[/gold][blue]{Repeat}[/blue]回合。" });
     const { options } = linesOf(planCombatTurn(loggedEnv(fx)));
     const drink = Object.entries(options).find(([key]) => /^p\d/.test(key));
     expect(drink).toBeDefined();

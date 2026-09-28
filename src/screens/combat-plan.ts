@@ -278,7 +278,7 @@ export const BOSS_POTION_COST = 4;
 /** Block/Weak potions: worth keeping for a bigger hit next turn (saveDefence). */
 /** Potion text that blunts an enemy hit. */
 const BLUNTS_HIT = /格挡|block|无实体|intangible|伤害减少|less damage|荆棘|thorns|虚弱|weak/i;
-const DEFENSIVE = new Set(["FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
+const DEFENSIVE = new Set(["BEETLE_JUICE", "FORTIFIER", "BLOCK_POTION", "SPEED_POTION", "LUCKY_TONIC", "SHIP_IN_A_BOTTLE", "WEAK_POTION", "POTION_OF_BINDING"]);
 
 /**
  * Kill-first enemy when no fight plan names one, keyed by an enemy in the fight. The Queen: her Torch
@@ -383,6 +383,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
       demise: powerAmount(enemy, "DEMISE_POWER"),
+      shrink: powerAmount(enemy, "SHRINK_POWER"),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),

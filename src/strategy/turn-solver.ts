@@ -11,6 +11,9 @@
 
 import { freeCardPick, thisTurnScore, upgradeCard, upgradeGain, type CardModel } from "./card-model.js";
 
+/** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
+export const SHRINK_DAMAGE_FACTOR = 0.7;
+
 export interface EnemySim {
   index: number;
   name: string;
@@ -109,6 +112,8 @@ export interface EnemySim {
   reflect?: boolean;
   /** Demise N: loses N HP at the end of each of its turns (Powdered Demise). */
   demise?: number;
+  /** Shrink N (Beetle Juice): its attacks deal 30% less for N turns; a Shrink already up is in its intents. */
+  shrink?: number;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
   /** Personal Hive N (Entomancer): every attack hit on it adds N Dazed to our draw pile (M812 F28). */
@@ -416,7 +421,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; sparkBonus?: number; stunned?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; sparkBonus?: number; stunned?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -677,7 +682,7 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): void {
  * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
  * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
  */
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise", amount: number): number {
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise" | "shrink", amount: number): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
@@ -687,6 +692,9 @@ function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" 
   else if (kind === "weak") {
     if (enemy.weak === 0) enemy.newlyWeak = true;
     enemy.weak += amount;
+  } else if (kind === "shrink") {
+    if ((enemy.shrink ?? 0) === 0) enemy.newlyShrunk = true;
+    enemy.shrink = (enemy.shrink ?? 0) + amount;
   } else if (kind === "tempStrengthLoss") enemy.tempStrengthLoss = (enemy.tempStrengthLoss ?? 0) + amount;
   else enemy.demise = (enemy.demise ?? 0) + amount;
   return amount;
@@ -1140,6 +1148,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
     applyDebuff(enemy, "tempStrengthLoss", card.enemyTempStrengthLoss ?? 0);
     applyDebuff(enemy, "demise", card.demise ?? 0);
+    applyDebuff(enemy, "shrink", card.shrink ?? 0);
   }
 
   if (card.strength > 0) {
@@ -1254,6 +1263,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0) + (enemy.sparkBonus ?? 0)) * (player.vulnerable ? 1.5 : 1);
         let amount = Math.floor(shown + strengthChange);
         if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
+        if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible || sim.intangible) amount = Math.min(amount, 1);
         hits.push({ enemy: enemy.index, amount: Math.max(0, amount) });
@@ -1750,6 +1760,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const addedDemise = Math.max(0, (enemy.demise ?? 0) - (start.demise ?? 0));
     if (addedDemise > 0) score += weights.damage * Math.min(enemy.hp, addedDemise * DEMISE_TURNS);
     if (start.attacks.length > 0 || enemy.weak > 0) score += weights.weak * Math.min(addedWeak, 3);
+    // Shrink's later turns (this turn's cut is in the incoming hits): like Weak's, a little more (30% vs 25%).
+    const addedShrink = Math.max(0, (enemy.shrink ?? 0) - (start.shrink ?? 0));
+    if (addedShrink > 0) score += weights.weak * 1.2 * Math.min(addedShrink - 1, 3);
     // Fight Me: the enemy's Strength is a lasting cost. Enrage's is weighed by the attacks it raises.
     const strengthCost = enemy.strengthDelta * ((enemy.enrage ?? 0) > 0 ? Math.max(3, weights.hp * ENRAGE_FUTURE_HITS) : 3);
     score -= strengthCost;
@@ -1817,7 +1830,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.slumber ?? 0}/${enemy.asleep ?? 0}/${enemy.sparkBonus ?? 0}/${enemy.stunned ? 1 : 0}/${enemy.shrink ?? 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.regen}`;
 }
 
