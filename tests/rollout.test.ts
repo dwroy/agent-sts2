@@ -466,6 +466,40 @@ describe("a phase boss revives into its real later phases (FSPK F48: Test Subjec
   });
 });
 
+describe("cards a line exhausts leave the rollout's piles (FSPK F48 T1: Fiend Fire's hand came back)", () => {
+  const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+  const dummy: EnemySim = { index: 0, name: "Dummy", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const run = (hand: CardModel[], line: (plan: { steps: { cardId: string }[] }) => boolean) => {
+    const solver: SolverInput = { hand, player, enemies: [dummy], fightKind: "boss", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const plan = plans.find(line)!;
+    const result = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "DUMMY", move: null, strength: 0, powers: {} }], tables: {},
+      piles: { draw: [], discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "DUMMY" }, playerPowers: {}, potions: 0, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 4, include: [plan], horizon: 3, samples: 2 },
+    });
+    return { plan, line: result.lines.find((entry) => entry.plan === plan)! };
+  };
+
+  it("Fiend Fire alone: the four Strikes it burns are not drawn again next turn", () => {
+    const fiend = card(0, "FIEND_FIRE", { cost: 2, damage: 7, exhausts: true, special: "fiend_fire" });
+    const hand = [fiend, strike(1), strike(2), strike(3), strike(4)];
+    const { plan, line } = run(hand, (p) => p.steps.length === 1 && p.steps[0]!.cardId === "FIEND_FIRE");
+    expect(plan.outcome.exhausted?.sort()).toEqual([1, 2, 3, 4]);
+    // Nothing left to draw: turn 2 deals nothing (it drew the burnt Strikes back before: 18).
+    expect(line.perTurn[0]!.dmg.mean).toBe(0);
+  });
+
+  it("a random exhaust (plain True Grit) takes one unplayed card out; the rest is discarded and drawn again", () => {
+    const grit = card(0, "TRUE_GRIT", { type: "Skill", target: "self", validTargets: [], block: 7, randomExhaust: true });
+    const hand = [grit, strike(1), strike(2)];
+    const { plan, line } = run(hand, (p) => p.steps.length === 1 && p.steps[0]!.cardId === "TRUE_GRIT");
+    expect(plan.outcome.randomExhausts).toBe(1);
+    // One Strike comes back next turn (6), not both (12).
+    expect(line.perTurn[0]!.dmg.mean).toBe(6);
+  });
+});
+
 describe("turnSpreads (per-turn rollout facts)", () => {
   const rec = (loss: number, dmg: number, flags: { won?: boolean; died?: boolean } = {}): TurnRecord =>
     ({ loss, enemyPart: 0, dmg, snap: {} as Snapshot, won: flags.won ?? false, died: flags.died ?? false });

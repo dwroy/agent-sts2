@@ -685,13 +685,18 @@ function applyPlan(
     if (card.exhausts || card.type === "Power") continue;
     piles.discard.push(handBase[at] ?? card);
   }
-  hand.forEach((card, i) => {
-    if (!played.has(i) && card.type !== "Potion") piles.discard.push(handBase[i] ?? card);
-  });
-  // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's outcome).
+  // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit
+  // exhaust) leave the fight; the rest of the hand is discarded (FSPK F48 T1: Fiend Fire's hand came back
+  // through the discard pile, "fight over 8/8", actual -60 and death).
+  const exhausted = new Set(o.exhausted ?? []);
+  const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
+  for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
+  for (const i of unplayed) piles.discard.push(handBase[i] ?? hand[i]!);
+  // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
+  // outcome), except those an exhaust effect took after they were drawn.
   for (let i = 0; i < o.cardsDrawn; i += 1) {
     const card = drawOne(piles, random);
-    if (card) piles.discard.push(card);
+    if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
   }
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;

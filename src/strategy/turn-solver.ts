@@ -388,6 +388,14 @@ export interface Outcome {
   lasting: number;
   /** Block left over after the enemy turn's hits (block beyond incoming); 0 when the fight is won. */
   blockWasted?: number;
+  /**
+   * Cards this line's effects exhausted (Fiend Fire's hand, Burning Pact's pick, Second Wind …): the hand
+   * card indices, the drawn cards among them, and random exhausts whose card is unknown. The rollout takes
+   * them out of the piles for the rest of the fight (the played card with Exhaust goes by its keyword).
+   */
+  exhausted?: number[];
+  drawnExhausted?: number;
+  randomExhausts?: number;
 }
 
 export interface Plan {
@@ -483,6 +491,10 @@ interface Sim {
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
    */
   exhausted: CardModel[];
+  /** Cards drawn this turn that an exhaust effect took afterwards (Fiend Fire, Glowwater): not discarded. */
+  drawnExhausted: number;
+  /** Random exhausts from the hand (plain True Grit): which card went is unknown. */
+  randomExhausts: number;
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
@@ -894,6 +906,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (pool.length > 0) {
       next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
       next.exhaustedCount += 1;
+      next.randomExhausts += 1;
     }
     // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
     // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
@@ -935,6 +948,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.held = [];
   }
   const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
+  next.drawnExhausted += drawnBurned;
   next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
   // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
@@ -1803,6 +1817,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       lasting: lastingValue(sim, input, weights) - enrageCost,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
       ...(explodesNext > 0 ? { explodesNext } : {}),
+      ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
+      ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
+      ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
     },
   };
 }
@@ -1938,6 +1955,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
     exhausted: [],
+    drawnExhausted: 0,
+    randomExhausts: 0,
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,
