@@ -28,6 +28,12 @@ export interface DeepSeekConfig {
   reasoningEffort?: string;
   /** Effort for combat questions (label "combat/..."), whose numbers code has already computed; defaults to reasoningEffort. */
   combatReasoningEffort?: string;
+  /**
+   * Per-label effort tiers, "label-prefix=effort,…" (DEEPSEEK_EFFORT_BY_LABEL; default
+   * DEFAULT_EFFORT_BY_LABEL): the longest matching prefix wins; labels that match none use
+   * reasoningEffort. Applies only while thinking is on (reasoningEffort not "off").
+   */
+  effortByLabel?: string;
   /** JSONL file receiving each call's full chain of thought (for later review); "" disables. */
   reasoningLog?: string;
 }
@@ -104,6 +110,35 @@ const SYSTEM = [
   "memory.this_floor is the current floor so far; state.facts, when present, is the exact current deck, relics, potions, HP and gold.",
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
 ].join(" ");
+
+/** Thinking efforts the code sends (see DeepSeekConfig.reasoningEffort); anything else in a tier is ignored. */
+const EFFORTS = new Set(["max", "high", "low", "off"]);
+
+/**
+ * Thinking output is the largest DeepSeek cost (Dai 2026-09-28): picks with a code value and few
+ * options think at "high"; the run plan, route plan, shop, events, transform and enchant keep the
+ * default (max). Re-asks share their question's label, so they get the same tier.
+ */
+export const DEFAULT_EFFORT_BY_LABEL = "reward/card=high,rest/choose=high,selection/upgrade=high,selection/remove=high,selection/add=high,bundle/choose=high";
+
+/** "prefix=effort,…" as [prefix, effort] pairs, longest prefix first; unknown efforts are dropped. */
+export function parseEffortTiers(spec: string): [string, string][] {
+  return spec
+    .split(",")
+    .map((entry) => entry.split("=").map((part) => part.trim()) as [string, string?])
+    .filter((pair): pair is [string, string] => Boolean(pair[0]) && pair[1] !== undefined && EFFORTS.has(pair[1]))
+    .sort((a, b) => b[0].length - a[0].length);
+}
+
+/** The thinking effort of a call with this label (" (re-ask)" suffix ignored). */
+export function effortFor(label: string, config: Pick<DeepSeekConfig, "reasoningEffort" | "combatReasoningEffort" | "effortByLabel">): string {
+  const base = config.reasoningEffort || "off";
+  const name = label.replace(/ \(re-ask\)$/, "");
+  if (name.startsWith("combat/") && config.combatReasoningEffort) return config.combatReasoningEffort;
+  if (base === "off") return base;
+  const tier = parseEffortTiers(config.effortByLabel ?? DEFAULT_EFFORT_BY_LABEL).find(([prefix]) => name.startsWith(prefix));
+  return tier?.[1] ?? base;
+}
 
 export class DeepSeekClient implements Escalator {
   readonly name = "deepseek" as const;
@@ -231,7 +266,7 @@ export class DeepSeekClient implements Escalator {
     label: string,
   ): Promise<CompletedCall> {
     const started = Date.now();
-    const effort = (label.startsWith("combat/") ? this.config.combatReasoningEffort : undefined) || this.config.reasoningEffort || "off";
+    const effort = effortFor(label, this.config);
     const thinking = effort !== "off";
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.config.timeoutMs);

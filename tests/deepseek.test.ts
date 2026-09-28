@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { DeepSeekClient } from "../src/llm/deepseek.js";
+import { loadConfig } from "../src/config.js";
+import { DeepSeekClient, effortFor, parseEffortTiers } from "../src/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 let server: TestServer | null = null;
@@ -68,5 +69,55 @@ describe("DeepSeekClient", () => {
     expect(client.guideId).toMatch(/^[0-9a-f]{8}$/);
     expect(client.handbookId).toBe("");
     expect(client.systemPrompt).not.toContain("经验手册");
+  });
+});
+
+describe("DeepSeek thinking effort per label", () => {
+  const base = { reasoningEffort: "max", combatReasoningEffort: "high" };
+
+  it("the default tiers: picks with a code value think at high, the run's big calls keep max", () => {
+    for (const label of ["reward/card", "rest/choose", "selection/upgrade", "selection/remove", "selection/add", "bundle/choose", "reward/card (re-ask)"]) {
+      expect(effortFor(label, base)).toBe("high");
+    }
+    for (const label of ["run-plan", "map/route-plan", "shop/buy", "event/choose", "selection/transform", "selection/enchant", "fight-plan", "chest/relic", "something/new"]) {
+      expect(effortFor(label, base)).toBe("max");
+    }
+    expect(effortFor("combat/plan-choice", base)).toBe("high");
+    expect(effortFor("combat/plan-choice", { reasoningEffort: "max" })).toBe("max");
+  });
+
+  it("DEEPSEEK_EFFORT_BY_LABEL overrides by prefix (longest wins), ignores unknown efforts, and never turns thinking on", () => {
+    const effortByLabel = "selection=high, selection/enchant=max, shop/buy=low, event/choose=extreme";
+    expect(effortFor("selection/remove", { ...base, effortByLabel })).toBe("high");
+    expect(effortFor("selection/enchant", { ...base, effortByLabel })).toBe("max");
+    expect(effortFor("shop/buy", { ...base, effortByLabel })).toBe("low");
+    expect(effortFor("event/choose", { ...base, effortByLabel })).toBe("max");
+    expect(effortFor("reward/card", { ...base, effortByLabel: "-" })).toBe("max");
+    expect(effortFor("reward/card", { reasoningEffort: "off" })).toBe("off");
+    expect(parseEffortTiers("a=high,ab=low,bad,c=")).toEqual([["ab", "low"], ["a", "high"]]);
+    const config = loadConfig({ DEEPSEEK_API_KEY: "k", DEEPSEEK_EFFORT_BY_LABEL: "reward/card=max" } as unknown as NodeJS.ProcessEnv);
+    expect(config.deepseek?.effortByLabel).toBe("reward/card=max");
+    expect(loadConfig({ DEEPSEEK_API_KEY: "k" } as unknown as NodeJS.ProcessEnv).deepseek?.effortByLabel).toBeUndefined();
+  });
+
+  it("the effort actually used is sent and logged per call", async () => {
+    const bodies: { reasoning_effort?: string }[] = [];
+    server = await startTestServer((req, res) => {
+      let text = "";
+      req.on("data", (chunk: Buffer) => (text += chunk.toString("utf8")));
+      req.on("end", () => {
+        bodies.push(JSON.parse(text) as (typeof bodies)[number]);
+        sendJson(res, 200, { choices: [{ message: { content: '{"choice":"a","reason":"ok"}', reasoning_content: "thinking" } }], usage: { prompt_tokens: 10, completion_tokens: 2 } });
+      });
+    });
+    const dir = mkdtempSync(join(tmpdir(), "ds-effort-"));
+    const log = join(dir, "reasoning.jsonl");
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000, reasoningEffort: "max", reasoningLog: log });
+    const a = await client.choose({}, "Which?", { a: "A", b: "B" }, { label: "reward/card" });
+    await client.choose({}, "Which?", { a: "A", b: "B" }, { label: "shop/buy" });
+    expect(a.effort).toBe("high");
+    expect(bodies.map((body) => body.reasoning_effort)).toEqual(["high", "max"]);
+    const logged = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as { label: string; effort: string });
+    expect(logged.map((row) => [row.label, row.effort])).toEqual([["reward/card", "high"], ["shop/buy", "max"]]);
   });
 });
