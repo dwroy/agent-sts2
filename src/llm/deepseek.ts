@@ -11,7 +11,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
-import { checkConsistency, reaskMessage, type ConsistencyCheck } from "./consistency.js";
+import { checkConsistency, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import type { Escalator } from "./file-escalation.js";
 
@@ -86,6 +86,27 @@ export class DeepSeekInconsistentError extends Error {
   constructor(readonly record: ConsistencyRecord, readonly meta: { calls: number; tokens: number }) {
     super(`DeepSeek answer inconsistent after re-ask (${record.first.issues.join("; ")})`);
     this.name = "DeepSeekInconsistentError";
+  }
+}
+
+/**
+ * DeepSeek answered but the answer is unusable (reply not JSON, or a choice that names no option key):
+ * what it did say, so the caller can recover the choice from its reasoning (recoverFrom) before
+ * falling back, and hand its reason on.
+ */
+export class DeepSeekAnswerError extends Error {
+  constructor(
+    message: string,
+    readonly detail: { choice: string; reason: string; reasoning: string; content: string },
+    readonly meta: Omit<DeepSeekAnswer, "choice" | "reason">,
+  ) {
+    super(message);
+    this.name = "DeepSeekAnswerError";
+  }
+
+  /** The option its reasoning (then its reason, then the raw reply) concluded on, when exactly one; else null. */
+  recoverFrom(criteria: Record<string, string | null>): Conclusion | null {
+    return recoverChoice([this.detail.reasoning, this.detail.reason, this.detail.content], criteria);
   }
 }
 
@@ -274,10 +295,19 @@ export class DeepSeekClient implements Escalator {
     const user = choiceMessage(state, instructions, criteria, memory);
     const messages: ChatMessage[] = [{ role: "user", content: user }];
     const done = await this.complete(messages, label);
-    const first = this.parseChoice(done.content);
+    let first: ReturnType<DeepSeekClient["parseChoice"]>;
+    try {
+      first = this.parseChoice(done.content);
+    } catch (error) {
+      const detail = { choice: "", reason: "", reasoning: done.reasoning, content: done.content };
+      throw new DeepSeekAnswerError(error instanceof Error ? error.message : String(error), detail, done.meta);
+    }
     this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
     const firstKey = resolveOptionKey(first.choice, criteria);
-    if (firstKey === null) throw new Error(`DeepSeek chose unknown option "${first.choice}"`);
+    if (firstKey === null) {
+      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content };
+      throw new DeepSeekAnswerError(`DeepSeek chose unknown option "${first.choice}"`, detail, done.meta);
+    }
     first.choice = firstKey;
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
     if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason };

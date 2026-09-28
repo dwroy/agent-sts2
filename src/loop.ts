@@ -12,7 +12,7 @@ import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
-import { DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
@@ -23,7 +23,7 @@ import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
 import { describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
-import { createScreenMemory, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
@@ -305,7 +305,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    * that moved without changing the question (an animation, a re-read before dispatch) is not asked
    * twice. Cleared on every dispatch.
    */
-  let deepseekMemo: { key: string; resolved: ResolvedAction; record: Record<string, JsonValue> } | null = null;
+  // Assigned inside a closure (the DeepSeek accept step): the cast keeps TS from narrowing it to null.
+  let deepseekMemo = null as { key: string; resolved: ResolvedAction; record: Record<string, JsonValue> } | null;
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -637,6 +638,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekFailed = false;
     let deepseekAsked: Record<string, JsonValue> | undefined;
     let deepseekFallback: string | undefined;
+    /** What DeepSeek said before its answer failed (reason, reasoning conclusion): passed on to Jev. */
+    let deepseekNote: Record<string, string> | undefined;
     /** DeepSeek's answer failed the consistency guard: both answers and how it was resolved. */
     let deepseekConsistency: JsonValue | undefined;
     if (decision.kind === "ask" && decision.deepseek) {
@@ -664,6 +667,42 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
+        const ask = decision;
+        /** Plays DeepSeek's choice; false when it does not resolve to an action. */
+        const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
+          const picked = ask.resolve({
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek" } },
+          } as AnswerSet);
+          if (!picked.intent) {
+            onEvent({ type: "note", message: `DeepSeek's ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
+            return false;
+          }
+          const how = recovered ? ` (recovered from reasoning: ${recovered.line})` : "";
+          deepseekResolved = { ...picked, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}${how}: ${answer.reason} | ${picked.rationale}` };
+          deepseekRecord = {
+            by: "deepseek",
+            direct: true,
+            choice: answer.choice,
+            reason: answer.reason,
+            latency_ms: answer.latencyMs,
+            tokens: answer.inputTokens + answer.outputTokens,
+            input_tokens: answer.inputTokens,
+            output_tokens: answer.outputTokens,
+            cache_hit_tokens: answer.cacheHitTokens ?? 0,
+            reasoning_tokens: answer.reasoningTokens ?? 0,
+            effort: answer.effort ?? "",
+            guide: answer.guideId ?? "",
+            handbook: answer.handbookId ?? "",
+            memory_chars: memoryChars(memory),
+            memory_sections: memorySections(memory),
+            ...(deepseekConsistency === undefined ? {} : { consistency: deepseekConsistency }),
+            ...(recovered ? { recovered_from_reasoning: recovered.line } : {}),
+          };
+          deepseekAsked = toJsonValue(ask.questions) as Record<string, JsonValue>;
+          deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
+          onEvent({ type: "note", message: `DeepSeek (${(answer.latencyMs / 1000).toFixed(1)} s) ${ask.label}: ${answer.choice}${how} — ${answer.reason}` });
+          return true;
+        };
         try {
           stats.deepseekCalls += 1;
           const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
@@ -674,44 +713,34 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             deepseekConsistency = toJsonValue(answer.consistency);
             onEvent({ type: "note", message: `DeepSeek answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
           }
-          const picked = decision.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek" } },
-          } as AnswerSet);
-          if (picked.intent) {
-            deepseekResolved = { ...picked, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}: ${answer.reason} | ${picked.rationale}` };
-            deepseekRecord = {
-              by: "deepseek",
-              direct: true,
-              choice: answer.choice,
-              reason: answer.reason,
-              latency_ms: answer.latencyMs,
-              tokens: answer.inputTokens + answer.outputTokens,
-              input_tokens: answer.inputTokens,
-              output_tokens: answer.outputTokens,
-              cache_hit_tokens: answer.cacheHitTokens ?? 0,
-              reasoning_tokens: answer.reasoningTokens ?? 0,
-              effort: answer.effort ?? "",
-              guide: answer.guideId ?? "",
-              handbook: answer.handbookId ?? "",
-              memory_chars: memoryChars(memory),
-              memory_sections: memorySections(memory),
-              ...(deepseekConsistency === undefined ? {} : { consistency: deepseekConsistency }),
-            };
-            deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
-            deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
-            onEvent({ type: "note", message: `DeepSeek (${(answer.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${answer.choice} — ${answer.reason}` });
-          } else {
-            deepseekFailed = true;
-            onEvent({ type: "note", message: `DeepSeek's ${answer.choice} on ${decision.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
-          }
+          if (!accept(answer, null)) deepseekFailed = true;
         } catch (error) {
           deepseekFailed = true;
           if (error instanceof DeepSeekInconsistentError) {
             stats.deepseekCalls += error.meta.calls - 1;
             stats.deepseekTokens += error.meta.tokens;
             deepseekConsistency = toJsonValue(error.record);
+            const first = error.record.first;
+            deepseekNote = { reason: first.reason, ...(first.conclusion_line ? { conclusion: first.conclusion_line } : {}) };
           }
-          onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}); falling back to Jev/code` });
+          onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)})` });
+          if (error instanceof DeepSeekAnswerError) {
+            // Its answer was unusable, but its reasoning may still name one option (WXMB F11: reasoned
+            // "heal", answer unparsed, Jev smithed at 0.05): act on that before handing the question on.
+            stats.deepseekTokens += error.meta.inputTokens + error.meta.outputTokens;
+            deepseekLatency = error.meta.latencyMs;
+            const recovered = error.recoverFrom(question.criteria);
+            if (recovered) {
+              const reason = error.detail.reason || `reasoning concluded ${recovered.option}`;
+              if (accept({ ...error.meta, choice: recovered.option, reason }, recovered)) deepseekFailed = false;
+            }
+            if (deepseekFailed) {
+              deepseekNote = { ...(error.detail.reason ? { reason: error.detail.reason } : {}), ...(recovered ? { conclusion: recovered.line } : {}) };
+              onEvent({ type: "note", message: `DeepSeek's choice on ${decision.label} could not be recovered from its reasoning; falling back to Jev/code` });
+            }
+          } else {
+            onEvent({ type: "note", message: `falling back to Jev/code on ${decision.label}` });
+          }
         }
       } else if (deepseekClient && !deepseekBudgetLeft()) {
         onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
@@ -723,6 +752,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           : "deepseek unavailable or out of budget";
         // What the screen decides without DeepSeek: code, or Jev with DeepSeek only as its escalation.
         decision = spec.baseline;
+        // DeepSeek's own words, when it gave any, ride in the state Jev is shown (its option keys may
+        // differ from Jev's, so only the text).
+        if (deepseekNote && Object.keys(deepseekNote).length > 0 && decision.kind === "ask") decision = withAdvisorNote(decision, deepseekNote);
       }
     }
     let asked: Record<string, JsonValue> | undefined;
@@ -1287,6 +1319,20 @@ async function ensureRunPlan(
     logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200) });
     onEvent({ type: "note", message: `run plan failed: ${message.slice(0, 160)}` });
   }
+}
+
+/**
+ * The baseline question with DeepSeek's failed answer as context: its reason and reasoning conclusion go
+ * into the state Jev is shown (`deepseek_advice`), both the plain view and JEV_CONTEXT's. A copy: the
+ * screen's baseline object is left as built.
+ */
+export function withAdvisorNote(decision: AskDecision, note: Record<string, string>): AskDecision {
+  const advice: Record<string, JsonValue> = { note: "DeepSeek (the build advisor) answered this question but its answer could not be used; its own words:", ...note };
+  return {
+    ...decision,
+    state: { ...decision.state, deepseek_advice: advice },
+    ...(decision.jevView ? { jevView: { ...decision.jevView, state: { ...decision.jevView.state, deepseek_advice: advice } } } : {}),
+  };
 }
 
 /** A direct DeepSeek decision's token usage, from its decision record. */
