@@ -184,7 +184,9 @@ export const RUN_PLAN_TASK = [
   '"route_risk": "avoid_elites" | "normal" | "seek_elites",',
   '"reserve": [potion roles to hold for the act boss: "block"|"weak"|"damage"|"strength"|"heal"|"any"],',
   '"potion_tempo": "<max 40 words: which potions to hold for what, and when to spend them instead>",',
-  '"rest_lean": "heal" | "smith" | "auto",',
+  '"rest_lean": "heal" | "smith" | "auto", (state the heal HP line in tempo, e.g. "heal below 55%, else smith Demon Form"; weigh it:',
+  "an upgrade helps every later fight, a heal is ~30% HP once; the redesign's first two runs healed at all 9 rests and died",
+  'with 0 upgrades),',
   '"tempo": "<max 40 words: pacing for this act: elites, rests, when HP may be spent>",',
   '"needs": [card roles the deck must get before the act boss: "aoe"|"strength"|"block"|"draw"|"exhaust"|"multi_hit"|"frontload"|"debuff"],',
   '"avoid": [card ids or card roles not to take], "want": [card ids to pick when offered, most important first, max 6],',
@@ -334,17 +336,39 @@ export function parseRunPlan(
     byName.set(card.card_id.toUpperCase(), card.card_id);
     byName.set(card.name, card.card_id);
   }
-  // Any real card id for want/avoid (not only the deck's); deck ids or names for remove.
+  // Any real card id for want/avoid (not only the deck's): an id, a game name (恶魔形态), the id in words
+  // (Demon Form), or "ID name" together (DEMON_FORM 恶魔形态), through the game data (99X7 v1: six wants
+  // and four avoids in Chinese names, G8YY v1 "DEMON_FORM 恶魔形态", all dropped when only deck names were
+  // known). Deck ids or names for remove.
+  const color = deck.map((card) => knowledge.card(card.card_id)?.color ?? "").find((entry) => entry && entry !== "colorless" && entry !== "curse" && entry !== "status") ?? "";
+  const byGameName = (name: string): string | null => {
+    const ids = knowledge.cardIdsByName?.(name) ?? [];
+    return ids.find((id) => knowledge.card(id)?.color === color) ?? ids[0] ?? null;
+  };
+  const candidates = (value: string): string[] => {
+    const text = value.trim().replace(/[+＋]+$/, "").trim();
+    const out = [text];
+    const id = /[A-Z][A-Z0-9_]{2,}/.exec(text.replace(/['’]/g, ""))?.[0];
+    if (id) out.push(id);
+    const name = text.replace(/[A-Za-z0-9_()（）[\]:：,，+＋-]+/g, " ").trim();
+    if (name && name !== text) out.push(...name.split(/\s+/));
+    return out;
+  };
   const known = (value: unknown): string | null => {
     if (typeof value !== "string") return null;
-    const text = value.trim().replace(/\+$/, "");
-    const id = byName.get(text.toUpperCase()) ?? byName.get(text) ?? text.toUpperCase().replace(/\s+/g, "_");
-    return knowledge.card(id) ? id : null;
+    for (const text of candidates(value)) {
+      const id = byName.get(text.toUpperCase()) ?? byName.get(text) ?? byGameName(text) ?? text.toUpperCase().replace(/\s+/g, "_");
+      if (knowledge.card(id)) return id;
+    }
+    return null;
   };
   const inDeck = (value: unknown): string | null => {
     if (typeof value !== "string") return null;
-    const text = value.trim().replace(/\+$/, "");
-    return byName.get(text.toUpperCase()) ?? byName.get(text) ?? null;
+    for (const text of candidates(value)) {
+      const id = byName.get(text.toUpperCase()) ?? byName.get(text) ?? null;
+      if (id) return id;
+    }
+    return null;
   };
   const has = (key: string) => json[key] !== undefined && json[key] !== null;
   const list = (key: string, pick: (entry: unknown) => string | null, max: number): string[] => {

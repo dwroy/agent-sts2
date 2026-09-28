@@ -320,6 +320,111 @@ export function isReserved(reserve: readonly PotionRole[] | undefined, potionId:
 }
 
 /**
+ * DeepSeek's latest word on one potion, read from its own text: "now" (drink it this turn: "drink turn 1",
+ * "never save it", the turn it names for it, or an HP condition met), "hold" (keep it: for a later turn,
+ * an HP condition not met, "hold / save / emergency only"), or null (it says nothing about this potion).
+ * The fight plan's word on the potion comes first (it is the latest guidance), then the fight plan's
+ * potion_plan sentence naming it, then the run plan's potion_tempo sentence naming it. The run plan's
+ * reserve (a role held for the act boss) is the fallback "hold" outside the boss fight.
+ * G8YY F31 T1: run plan v14 and the fight plan said "drink the Blood Potion now, never save it", the line
+ * still read "differs from DeepSeek's reserve"; 99X7 F17 T1 "Drink Powdered Demise turn 1".
+ */
+export interface PotionStance {
+  stance: "now" | "hold";
+  /** DeepSeek's words the stance was read from. */
+  words: string;
+  /** Where the words come from. */
+  source: "fight plan" | "run plan";
+}
+
+const NOW_WORDS = /\b(?:never|don'?t|do not)\s+(?:save|hold|keep)|\b(?:drink|use|pop|spend|throw|open with)\b[^.;]*?\b(?:now|immediately|asap|right away|at once|first turn|opener|opening|this fight|this turn|on sight)\b|现在|立刻|立即|马上/i;
+const DRINK_WORDS = /\b(?:drink|use|pop|spend|throw)\b|喝/i;
+const HOLD_WORDS = /\b(?:hold|save|keep|reserve|emergency|only if|only when|for the boss|later)\b|留|保留|省/i;
+
+/** Turns a sentence names ("T3/T7", "turn 1", "turns 3 and 7"). */
+function namedTurns(text: string): number[] {
+  const turns: number[] = [];
+  for (const match of text.matchAll(/\bT(\d{1,2})(?:\s*\/\s*T?(\d{1,2}))*(?:\s*\/\s*T?(\d{1,2}))?/g)) {
+    for (const part of match[0].split("/")) {
+      const n = Number(part.replace(/\D/g, ""));
+      if (n > 0) turns.push(n);
+    }
+  }
+  for (const match of text.matchAll(/\bturns?\s+(\d{1,2})(?:\s*(?:,|and|or|\/)\s*(\d{1,2}))?/gi)) {
+    for (const group of [match[1], match[2]]) if (group) turns.push(Number(group));
+  }
+  return [...new Set(turns)];
+}
+
+/** An HP condition in the words ("HP <35%", "below ~30% HP"), as a fraction, or null. */
+function hpCondition(text: string): number | null {
+  const match = /(?:hp|health)\s*(?:<|≤|<=|below|under)\s*~?(\d{1,2})\s*%|(?:<|below|under)\s*~?(\d{1,2})\s*%\s*(?:hp|health|max)?/i.exec(text);
+  const value = match ? Number(match[1] ?? match[2]) : NaN;
+  return Number.isFinite(value) && value > 0 ? value / 100 : null;
+}
+
+/** The stance of one piece of text on this turn at this HP, or null when it says neither. */
+export function stanceOf(words: string, turn: number, hpFraction: number): "now" | "hold" | null {
+  const text = words.trim();
+  if (!text) return null;
+  const threshold = hpCondition(text);
+  if (threshold !== null) return hpFraction < threshold ? "now" : "hold";
+  const turns = namedTurns(text);
+  if (turns.includes(turn)) return "now";
+  if (NOW_WORDS.test(text)) return "now";
+  // "drink turn 1" read on turn 3: overdue, still for now.
+  if (turns.length > 0 && DRINK_WORDS.test(text) && !HOLD_WORDS.test(text) && turns.every((t) => t < turn)) return "now";
+  if (turns.length > 0 && turns.some((t) => t > turn)) return "hold";
+  if (HOLD_WORDS.test(text)) return "hold";
+  return null;
+}
+
+/** Names a text may use for a potion: its id, the id as words ("Powdered Demise"), its game name. */
+function potionNames(potionId: string, name: string): string[] {
+  const words = potionId.toLowerCase().replace(/_potion$/, "").replace(/_/g, " ");
+  return [potionId.toLowerCase(), potionId.toLowerCase().replace(/_/g, " "), words, name.replace(/^potion /, "").toLowerCase()].filter((entry) => entry.length >= 2);
+}
+
+/** The sentences of `text` naming the potion. */
+function sentencesNaming(text: string | undefined, potionId: string, name: string): string[] {
+  if (!text) return [];
+  const names = potionNames(potionId, name);
+  return text
+    .split(/(?<=[.;。；!?])\s*|\n/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence && names.some((entry) => sentence.toLowerCase().includes(entry)));
+}
+
+export function potionStance(ctx: {
+  potionId: string;
+  name: string;
+  text: string;
+  run: RunPlan | null | undefined;
+  fight: FightPlan | null | undefined;
+  turn: number;
+  hpFraction: number;
+  bossFight: boolean;
+}): PotionStance | null {
+  const note = ctx.fight?.potions?.[ctx.potionId];
+  if (note) {
+    const stance = stanceOf(note, ctx.turn, ctx.hpFraction);
+    if (stance) return { stance, words: note, source: "fight plan" };
+  }
+  for (const sentence of sentencesNaming(ctx.fight?.potionPlan, ctx.potionId, ctx.name)) {
+    const stance = stanceOf(sentence, ctx.turn, ctx.hpFraction);
+    if (stance) return { stance, words: sentence, source: "fight plan" };
+  }
+  for (const sentence of sentencesNaming(ctx.run?.potionTempo, ctx.potionId, ctx.name)) {
+    const stance = stanceOf(sentence, ctx.turn, ctx.hpFraction);
+    if (stance) return { stance, words: sentence, source: "run plan" };
+  }
+  if (!ctx.bossFight && isReserved(ctx.run?.reserve, ctx.potionId, ctx.text)) {
+    return { stance: "hold", words: `holds ${(ctx.run?.reserve ?? []).join("/")} potions for the act boss`, source: "run plan" };
+  }
+  return null;
+}
+
+/**
  * The fact on a line or offer that drinks a potion DeepSeek wants held for the act boss (guidance, not
  * a filter): what drinking it now saves here, and what holding it means for the boss. Before, the
  * reserve was hard (no line drank it before the boss unless HP < 25% or every other line died): A8
@@ -337,9 +442,11 @@ export function reserveFact(ctx: {
   extraDamage?: number | null;
   /** DeepSeek's fight-plan word on this potion, when it gave one. */
   fightNote?: string | null;
+  /** DeepSeek's latest word on it (potionStance), when read: it decides "held for the boss" over the reserve role. */
+  stance?: PotionStance | null;
 }): string | null {
   const role = potionRole(ctx.potionId, ctx.text);
-  const kept = isReserved(ctx.plan?.reserve, ctx.potionId, ctx.text);
+  const kept = ctx.stance === undefined ? isReserved(ctx.plan?.reserve, ctx.potionId, ctx.text) : ctx.stance?.stance === "hold";
   const parts: string[] = [];
   const gains = [
     ctx.savedHp !== null && ctx.savedHp !== 0 ? (ctx.savedHp > 0 ? `saves ${ctx.savedHp} HP` : `costs ${-ctx.savedHp} HP more`) : null,
@@ -347,12 +454,13 @@ export function reserveFact(ctx: {
   ].filter(Boolean);
   const here = ctx.savedHp === null ? "drinking it now re-plans the turn" : `drinking ${ctx.name} now: ${gains.length > 0 ? gains.join(", ") : "no HP or damage gained"} vs the safest line without it`;
   parts.push(here);
-  if (ctx.bossFight) parts.push("this is the act boss: nothing later to hold it for");
+  if (ctx.stance?.stance === "now") parts.push(`DeepSeek's latest word on it is to drink it now (${ctx.stance.source}: ${short(ctx.stance.words)})`);
+  else if (ctx.bossFight) parts.push(kept && ctx.stance ? `this is the act boss, but DeepSeek holds it for later in this fight (${ctx.stance.source}: ${short(ctx.stance.words)})` : "this is the act boss: nothing later to hold it for");
   else if (kept) {
     const why = ctx.plan?.reasons?.reserve ? ` because ${ctx.plan.reasons.reserve}` : "";
     parts.push(`the act boss fight then has one fewer ${role ?? "such"} potion (DeepSeek plan holds ${(ctx.plan?.reserve ?? []).join("/")} potions for the boss${why}${ctx.plan?.bossPrep ? `; boss prep: ${short(ctx.plan.bossPrep)}` : ""})`);
   }
-  if (ctx.fightNote) parts.push(`DeepSeek fight plan on ${ctx.name}: ${short(ctx.fightNote)}`);
+  if (ctx.fightNote && !(ctx.stance && ctx.stance.words === ctx.fightNote)) parts.push(`DeepSeek fight plan on ${ctx.name}: ${short(ctx.fightNote)}`);
   return parts.join("; ");
 }
 
@@ -399,6 +507,8 @@ export interface LineFacts {
   scoreGap?: number;
   /** Damage into the burst target this turn (LineField.burst). */
   burstDamage?: number;
+  /** The line against DeepSeek's checkable instructions this turn (fightChecks / checkLine), in field order. */
+  checks?: CheckResult[];
 }
 /** The Sandpit race (The Insatiable), when one is on. */
 export interface SandpitField {
@@ -419,6 +529,12 @@ export interface LineField {
   /** Most objective damage of any shown line (objectiveDamage: this turn's damage plus Sandpit turns bought). */
   maxDamage: number;
   maxSetup: number;
+  /** Least damage, most HP lost and least setup of the shown lines: a label every line would get is left out. */
+  minDamage?: number;
+  maxLoss?: number;
+  minSetup?: number;
+  /** Per fight check (same order as LineFacts.checks): whether any shown line meets it, and the most / least focus damage. */
+  checks?: { anyMet: boolean; maxAmount: number; minAmount: number }[];
   focusName?: string;
   sandpit?: SandpitField;
   /** Code's reference line (rank 1): what the "vs reference" facts compare against. */
@@ -434,6 +550,133 @@ export interface LineField {
    * note then says "DeepSeek's scale_then_kill, read as kill_fast now".
    */
   objectiveNote?: string;
+}
+
+// ---------------------------------------------------------------- DeepSeek's specific fight instructions
+
+/** An enemy as the fight-plan checks see it this turn. */
+export interface CheckEnemy {
+  index: number;
+  id: string;
+  name: string;
+  /** Words of its move this turn ("headbutt", "beam"), from the move id. */
+  move: string[];
+  /** It attacks this turn. */
+  attacks: boolean;
+  /** Imbalanced (a fully blocked attack stuns it). */
+  imbalanced: boolean;
+  minion: boolean;
+}
+
+/**
+ * One instruction of DeepSeek's fight plan that maps to a fact code computes for every line, applicable
+ * this turn: "stun the Rock by fully blocking its headbutt" (the line's stuns), "block the Beam turn" /
+ * "block every attack" (the line leaves nothing unblocked), the kill priority (damage into that enemy).
+ */
+export interface FightCheck {
+  kind: "stun" | "block" | "focus";
+  /** The enemy it is about (stun, focus) or the move named (block). */
+  enemy?: CheckEnemy;
+  move?: string;
+  /** DeepSeek's words it was read from. */
+  words: string;
+}
+
+/** How one line does against one check. */
+export interface CheckResult {
+  check: FightCheck;
+  met: boolean;
+  /** The line's fact for it: "stuns 盛碗虫（石）", "leaves 6 unblocked", "22 into 同族神官". */
+  detail: string;
+  /** Focus damage (for the "most into the kill-priority enemy" comparison). */
+  amount?: number;
+}
+
+const STUN_WORDS = /\bstun|imbalanc|眩晕|失衡/i;
+const BLOCK_ALL_WORDS = /\bblock (?:every|all|each)\b[^.;]*\b(?:attack|hit)s?\b|\bfully block (?:every|all|each|the)?\s*(?:incoming|attack|hit)|挡住所有|全部格挡/i;
+
+/** The sentences of the plan's own words (summary, threat, potion plan). */
+function planSentences(plan: FightPlan): string[] {
+  return [plan.summary, plan.threat]
+    .filter(Boolean)
+    .join(". ")
+    .split(/(?<=[.;。；!?])\s*|\n/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+}
+
+/** Whether a sentence names this enemy (id, id words, name, or a word of its id: "Rock" for BOWLBUG_ROCK). */
+function namesEnemy(sentence: string, enemy: CheckEnemy): boolean {
+  const lower = sentence.toLowerCase();
+  if (lower.includes(enemy.id.toLowerCase()) || sentence.includes(enemy.name)) return true;
+  if (lower.includes(enemy.id.toLowerCase().replace(/_/g, " "))) return true;
+  const parts = enemy.id.toLowerCase().split("_").filter((part) => part.length >= 4);
+  return parts.some((part) => new RegExp(`\\b${part}\\b`).test(lower)) || enemy.move.some((word) => word.length >= 4 && new RegExp(`\\b${word}`).test(lower));
+}
+
+/**
+ * DeepSeek's instructions for this fight that code can check on every line this turn (fightPlan summary
+ * and threat): a stun of an Imbalanced enemy attacking now, blocking a named move it uses now (or every
+ * attack), the kill-priority enemy while another lives. G8YY F30 T1: "Fully block its headbutt … to stun
+ * it" was read only as kill_fast = most damage; the line that stunned the Rock read "differs".
+ */
+export function fightChecks(plan: FightPlan | null | undefined, enemies: CheckEnemy[], focus: CheckEnemy | null): FightCheck[] {
+  if (!plan) return [];
+  const checks: FightCheck[] = [];
+  const sentences = planSentences(plan);
+  for (const sentence of sentences) {
+    if (!STUN_WORDS.test(sentence) || !/block|挡/i.test(sentence)) continue;
+    for (const enemy of enemies) {
+      if (!enemy.imbalanced || !enemy.attacks) continue;
+      // "Fully block its headbutt … to stun it": the enemy named here or in the sentence before.
+      const index = sentences.indexOf(sentence);
+      if (namesEnemy(sentence, enemy) || (index > 0 && namesEnemy(sentences[index - 1]!, enemy)) || enemies.filter((other) => other.imbalanced).length === 1) {
+        if (!checks.some((check) => check.kind === "stun" && check.enemy?.index === enemy.index)) checks.push({ kind: "stun", enemy, words: sentence });
+      }
+    }
+  }
+  if (!checks.some((check) => check.kind === "stun")) {
+    for (const sentence of sentences) {
+      if (!/\bblock|挡/i.test(sentence)) continue;
+      const attacking = enemies.filter((enemy) => enemy.attacks);
+      if (attacking.length === 0) break;
+      const named = attacking.find((enemy) => enemy.move.some((word) => word.length >= 3 && new RegExp(`\\b${word}`, "i").test(sentence)));
+      if (named) {
+        checks.push({ kind: "block", move: named.move.join(" "), enemy: named, words: sentence });
+        break;
+      }
+      if (BLOCK_ALL_WORDS.test(sentence)) {
+        checks.push({ kind: "block", words: sentence });
+        break;
+      }
+    }
+  }
+  if (focus && enemies.length > 1 && plan.killPriority.length > 0) checks.push({ kind: "focus", enemy: focus, words: `kill priority ${plan.killPriority.join(" > ")}` });
+  return checks;
+}
+
+/**
+ * A power whose text is only about block (Feel No Pain 「每当有一张牌被消耗时，获得3点格挡」, Barricade): not
+ * scaling setup for scale_then_kill unless DeepSeek names it.
+ */
+export function blockOnlyPower(text: string): boolean {
+  return /格挡|block|护甲|plating|荆棘|thorns|多层护甲/i.test(text) && !/力量|strength|伤害|damage|能量|energy|抽|draw/i.test(text);
+}
+
+/** A line against one check: what it does, from its outcome. */
+export function checkLine(check: FightCheck, line: { stuns: string[]; unblocked: number; focusDamage: number | null; kills?: string[] }): CheckResult {
+  if (check.kind === "stun") {
+    if ((line.kills ?? []).includes(check.enemy!.name)) return { check, met: true, detail: `kills ${check.enemy!.name} before its attack (nothing left to stun)` };
+    const met = line.stuns.includes(check.enemy!.name);
+    return { check, met, detail: met ? `fully blocks ${check.enemy!.name}'s attack: stunned (Imbalanced), it skips its next move` : `${check.enemy!.name}'s attack is not fully blocked: no stun` };
+  }
+  if (check.kind === "block") {
+    const met = line.unblocked <= 0;
+    const what = check.move ? `this turn's hits (${check.enemy?.name ?? ""} ${check.move})`.replace(/\s+\)/, ")") : "this turn's hits";
+    return { check, met, amount: line.unblocked, detail: met ? `blocks all of ${what}` : `leaves ${line.unblocked} of ${what} unblocked` };
+  }
+  const amount = line.focusDamage ?? 0;
+  return { check, met: true, amount, detail: `${amount} into kill-priority ${check.enemy!.name}` };
 }
 
 /** Burst-turn shortfall (damage into the target) from which a line's pick is logged as differing from the burst (H7W0: 48 short). */
@@ -454,6 +697,11 @@ export function objectiveDamage(line: Pick<LineFacts, "damage" | "escapes">, san
 }
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+/** DeepSeek's words in a tempo note, clipped. */
+const clip = (text: string) => {
+  const flat = text.replace(/\s+/g, " ").trim();
+  return flat.length <= 100 ? flat : `${flat.slice(0, 99)}…`;
+};
 
 /**
  * Facts of one combat line against code's reference line (rank 1: a rule-based estimate, not a verdict),
@@ -504,37 +752,82 @@ export function combatFit(objective: FightObjective | null, policy: HpPolicy, li
       differs = short >= BURST_BREAK;
     }
   } else {
+    // DeepSeek's own instructions this turn first (a stun, a move to block, the kill priority), where some
+    // shown line does them; the objective keyword second, and only where the lines differ on it.
+    const specific: string[] = [];
+    let primary = false;
+    (line.checks ?? []).forEach((result, i) => {
+      const across = field.checks?.[i];
+      if (!across) return;
+      if (result.check.kind === "focus") {
+        if (across.maxAmount - across.minAmount <= TEMPO_DAMAGE_SLACK) return;
+        const short = Math.round(across.maxAmount - (result.amount ?? 0));
+        if (short <= TEMPO_DAMAGE_SLACK) specific.push(`matches DeepSeek's kill priority: ${result.detail}${short > 0 ? ` (within ${short} of the most)` : " (the most of the lines)"}`);
+        else {
+          specific.push(`differs from DeepSeek's kill priority: ${result.detail}, ${short} less than another line`);
+          differs = true;
+        }
+        return;
+      }
+      if (!across.anyMet) {
+        // No line blocks all of it: the lines that leave the least unblocked are the closest.
+        if (result.check.kind !== "block" || across.maxAmount - across.minAmount <= TEMPO_HP_SLACK) return;
+        primary = true;
+        const more = Math.round((result.amount ?? 0) - across.minAmount);
+        if (more <= TEMPO_HP_SLACK) specific.push(`matches DeepSeek's plan: ${result.detail}, ${more > 0 ? `within ${more} of the least` : "the least"} of the lines ("${clip(result.check.words)}")`);
+        else {
+          specific.push(`differs from DeepSeek's plan ("${clip(result.check.words)}"): ${result.detail}, ${more} more than another line`);
+          differs = true;
+        }
+        return;
+      }
+      primary = true;
+      if (result.met) specific.push(`matches DeepSeek's plan: ${result.detail} ("${clip(result.check.words)}")`);
+      else {
+        specific.push(`differs from DeepSeek's plan ("${clip(result.check.words)}"): ${result.detail}`);
+        differs = true;
+      }
+    });
+    if (specific.length > 0) {
+      tempo.push(...specific);
+      grade = differs ? "costs" : "fits";
+    }
     const damageTempo = objective === "kill_fast" || objective === "race";
     const hpTempo = objective === "preserve_hp" || (objective === null && policy === "preserve");
     const name = field.objectiveNote ?? (objective ? `DeepSeek's ${objective}` : `DeepSeek's hp_policy ${policy}`);
+    // Under a specific instruction the objective is context: said, not a match or a difference.
+    const objectiveTempo = (fits: boolean, text: string): void => {
+      if (primary) {
+        tempo.push(`(objective: ${text})`);
+        return;
+      }
+      tempo.push(text);
+      if (specific.length === 0) grade = fits ? "fits" : "costs";
+      if (!fits) differs = true;
+    };
     if (damageTempo) {
       const short = Math.round(field.maxDamage - counted);
-      if (short <= TEMPO_DAMAGE_SLACK) {
-        tempo.push(`matches ${name}: ${short <= 0 ? "highest damage of the lines" : `within ${short} of the highest damage`}${pit && pit.maxEscapes > 0 ? " (Sandpit turns bought counted as damage)" : ""}`);
-        grade = "fits";
+      if (field.minDamage !== undefined && field.maxDamage - field.minDamage <= TEMPO_DAMAGE_SLACK) {
+        // Every line deals about the same: no damage label.
+      } else if (short <= TEMPO_DAMAGE_SLACK) {
+        objectiveTempo(true, `matches ${name}: ${short <= 0 ? "highest damage of the lines" : `within ${short} of the highest damage`}${pit && pit.maxEscapes > 0 ? " (Sandpit turns bought counted as damage)" : ""}`);
       } else {
-        tempo.push(`differs from ${name}: ${short} less damage than the highest-damage line${line.hpLoss < field.minLoss + 1 ? " (it is the safest line)" : ""}`);
-        grade = "costs";
-        differs = true;
+        objectiveTempo(false, `differs from ${name}: ${short} less damage than the highest-damage line${line.hpLoss < field.minLoss + 1 ? " (it is the safest line)" : ""}`);
       }
     } else if (hpTempo) {
       const extra = line.hpLoss - field.minLoss;
-      if (extra <= TEMPO_HP_SLACK) {
-        tempo.push(`matches ${name}: ${extra <= 0 ? "least HP lost of the lines" : `within ${extra} HP of the safest line`}`);
-        grade = "fits";
+      if (field.maxLoss !== undefined && field.maxLoss - field.minLoss <= TEMPO_HP_SLACK) {
+        // Every line loses about the same: no HP label.
+      } else if (extra <= TEMPO_HP_SLACK) {
+        objectiveTempo(true, `matches ${name}: ${extra <= 0 ? "least HP lost of the lines" : `within ${extra} HP of the safest line`}`);
       } else {
-        tempo.push(`differs from ${name}: ${extra} HP more than the safest line`);
-        grade = "costs";
-        differs = true;
+        objectiveTempo(false, `differs from ${name}: ${extra} HP more than the safest line`);
       }
     } else if (objective === "scale_then_kill") {
-      if (line.setup >= field.maxSetup) {
-        tempo.push(`matches DeepSeek's scale_then_kill${line.setup > 0 ? ": most setup (powers / permanent Strength) of the lines" : ": no line sets up more"}`);
-        grade = "fits";
-      } else {
-        tempo.push("differs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)");
-        grade = "costs";
-        differs = true;
+      // No line sets up, or every line sets up the same: nothing to tell apart.
+      if (field.maxSetup > 0 && !(field.minSetup !== undefined && field.minSetup === field.maxSetup)) {
+        if (line.setup >= field.maxSetup) objectiveTempo(true, "matches DeepSeek's scale_then_kill: most setup (powers / permanent Strength) of the lines");
+        else objectiveTempo(false, "differs from DeepSeek's scale_then_kill: another line sets up more (powers / permanent Strength)");
       }
     }
   }

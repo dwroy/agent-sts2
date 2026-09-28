@@ -57,13 +57,47 @@ export const UNKNOWN_VALUE = "?(数值未知)";
  * (energy and star icons as words), the rest marked UNKNOWN_VALUE; markup stripped.
  */
 export function fillPotionText(potionId: string, text: string): string {
-  const values = POTION_VALUES[potionId] ?? {};
-  const filled = text.replace(/\{([A-Za-z]+)(?::([A-Za-z]+)\((\d*)\))?\}/g, (_whole, name: string, format: string | undefined, arg: string | undefined) => {
+  return fillTemplate(POTION_VALUES[potionId] ?? {}, text);
+}
+
+/**
+ * Relic numbers known to the code (measured or used by the solver). The game data's relic descriptions are
+ * templates too (G8YY F20 shop: 拳刃 「为它附魔：动量{Momentum}」): what is not known here reads as
+ * UNKNOWN_VALUE, never as a raw {Name}.
+ */
+export const RELIC_VALUES: Record<string, Record<string, number>> = {
+  // combat-plan MERCURY_HOURGLASS_DAMAGE (PLC F33: Rocket 108 -> 105 at turn start).
+  MERCURY_HOURGLASS: { Damage: 3 },
+  // combat-plan INTIMIDATING_HELMET_BLOCK (PU21 F12-F14: block 0 -> 4).
+  INTIMIDATING_HELMET: { Block: 4 },
+  // combat-plan BEATING_REMNANT_CAP (CCPR F48: every Test Subject line cost 20).
+  BEATING_REMNANT: { HpLoss: 20, Damage: 20 },
+  // combat-plan kusarigamaOf: every 3rd attack, 6 to a random enemy.
+  KUSARIGAMA: { Cards: 3, Damage: 6 },
+  // relic-notes: heal 25 at the start of each boss fight; +1 max HP a combat.
+  PANTOGRAPH: { Heal: 25 },
+  CHOSEN_CHEESE: { MaxHp: 1 },
+};
+
+/** A relic description with its placeholders filled from RELIC_VALUES (unknown ones marked), markup stripped. */
+export function fillRelicText(relicId: string, text: string): string {
+  return fillTemplate(RELIC_VALUES[relicId] ?? {}, text);
+}
+
+/**
+ * A game text with its `{Name}` / `{Name:format()}` placeholders filled from `values` (energy and star
+ * icons as words), the rest marked UNKNOWN_VALUE; markup stripped. Conditional templates
+ * (`{X.StringValue:cond:…|…}`) keep their fallback wording.
+ */
+export function fillTemplate(values: Record<string, number>, text: string): string {
+  const conditional = text.replace(/\{[A-Za-z.]+:cond:[^|{}]*(?:\{[^}]*\}[^|{}]*)*\|([^}]*)\}/g, (_whole, fallback: string) => fallback);
+  const filled = conditional.replace(/\{([A-Za-z]+)(?::([A-Za-z]+)\((\d*)\))?\}/g, (_whole, name: string, format: string | undefined, arg: string | undefined) => {
     const value = arg ? Number(arg) : values[name];
-    if (value === undefined) return UNKNOWN_VALUE;
+    if (value === undefined) return format === "energyIcons" ? `${UNKNOWN_VALUE}点能量` : format === "starIcons" ? `${UNKNOWN_VALUE}颗星` : UNKNOWN_VALUE;
     if (format === "energyIcons") return `${value}点能量`;
     if (format === "starIcons") return `${value}颗星`;
     return String(value);
   });
-  return stripMarkup(filled);
+  // Anything still in braces (a format this reader does not know) is unknown, not a raw template.
+  return stripMarkup(filled.replace(/\{[A-Za-z][^{}]*\}/g, UNKNOWN_VALUE));
 }

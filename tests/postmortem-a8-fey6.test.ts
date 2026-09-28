@@ -80,8 +80,14 @@ describe("code's reference line is never one another shown line beats on HP and 
     expect(options.length).toBeGreaterThan(1);
     const best = options.filter((line) => /^same as reference/.test(String(line.reference)));
     expect(best).toHaveLength(1);
+    // The rule: no shown line beats it on HP and damage with no less setup ("less setup vs rank 1").
     const beaten = options.some(
-      (other) => other !== best[0] && other.hp_lost <= best[0]!.hp_lost && other.damage_dealt >= best[0]!.damage_dealt && (other.hp_lost < best[0]!.hp_lost || other.damage_dealt > best[0]!.damage_dealt),
+      (other) =>
+        other !== best[0] &&
+        !/less setup/.test(String(other.reference)) &&
+        other.hp_lost <= best[0]!.hp_lost &&
+        other.damage_dealt >= best[0]!.damage_dealt &&
+        (other.hp_lost < best[0]!.hp_lost || other.damage_dealt > best[0]!.damage_dealt),
     );
     expect(beaten).toBe(false);
   });

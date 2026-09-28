@@ -155,7 +155,11 @@ describe("scale_then_kill is a phase: kill_fast once the fight is too short for 
 
   it("VQ7J T3 (Inferno in the draw pile) is still setup; T4 (nothing left) reads as kill_fast", () => {
     const t3 = planCombatTurn(loggedEnv(logged("vq7j-f11-t3")));
-    expect(Object.values(optionsOf(t3)).map((option) => String(option["tempo"])).join("\n")).toMatch(/DeepSeek's scale_then_kill/);
+    // Still scale_then_kill (no "read as kill_fast" note); no line in hand sets up, so no setup label that
+    // every line would carry ("no line sets up more" was on every line: 99X7/G8YY post-mortems).
+    expect(strategyOf(t3).join("\n")).toMatch(/DeepSeek fight objective scale_then_kill/);
+    expect(strategyOf(t3).join("\n")).not.toMatch(/code note: the fight now reads as kill_fast/);
+    expect(Object.values(optionsOf(t3)).map((option) => String(option["tempo"])).join("\n")).not.toMatch(/no line sets up more/);
     const t4 = planCombatTurn(loggedEnv(logged("vq7j-f11-t4")));
     const labels = Object.values(optionsOf(t4)).map((option) => String(option["tempo"] ?? "")).join("\n");
     expect(labels).toMatch(/DeepSeek's scale_then_kill, read as kill_fast now/);

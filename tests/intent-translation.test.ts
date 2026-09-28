@@ -161,7 +161,7 @@ describe("reserve roles", () => {
     expect(isReserved(["any"], "POTION_SHAPED_ROCK", "Deal 10 damage.")).toBe(false);
   });
 
-  it("a potion DeepSeek holds costs nothing extra in the reference rank, at any HP (5JU3 F11 T3: Gigantification still priced +20)", () => {
+  it("a potion DeepSeek holds costs about its worth in the reference rank, nothing when pressed (99X7 F15 T2; 5JU3 F11 T3: no hard +20)", () => {
     /** Hallway, two attackers (17 incoming), the Fire Potion in the belt; HP as given. */
     const board = (hp: number): Raw => {
       const raw = combatPayload();
@@ -175,10 +175,16 @@ describe("reserve roles", () => {
       if (decision?.kind === "ask") return JSON.stringify(Object.values(decision.questions).map((q) => (q.type === "choice" ? Object.keys(q.criteria).map((key) => JSON.parse(q.criteria[key]!)["plays"]) : null)));
       return JSON.stringify([decision?.kind === "act" ? decision.intent : null, e.screenMemory.combatPlan?.remaining?.map((step) => step.cardId)]);
     };
-    // The same lines with and without the reserve, at 15% HP and at 38%: the reserve is a fact on them.
+    // At 15% HP potions are for now: the same lines with and without the reserve.
     expect(play(12, runPlan({ reserve: ["damage"] }))).toBe(play(12, null));
-    expect(play(30, runPlan({ reserve: ["damage"] }))).toBe(play(30, null));
-    expect(play(30, runPlan({ reserve: ["damage"] }))).toMatch(/Fire Potion/);
+    // At 38% the held Fire Potion is still offered, but it costs the reference rank: the lines that keep
+    // it are offered beside it (a soft cost, not a filter).
+    const held = play(30, runPlan({ reserve: ["damage"] }));
+    expect(held).toMatch(/Fire Potion/);
+    expect(held).not.toBe(play(30, null));
+    expect(JSON.parse(held)[0].some((line: string) => !/Fire Potion/.test(line))).toBe(true);
+    // A run plan that says to drink it now takes the cost off again (G8YY F31: "drink it now, never save it").
+    expect(play(30, runPlan({ reserve: ["damage"], potionTempo: "Drink the Fire Potion now, never save it." }))).toBe(play(30, null));
   });
 });
 
