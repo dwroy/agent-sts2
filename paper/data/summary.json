@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-28T04:57:52.178Z",
+  "generated_at": "2026-09-28T05:02:31.187Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 140967223,
-    "deepseek-reasoning.jsonl": 93836602,
+    "decisions.jsonl": 141084964,
+    "deepseek-reasoning.jsonl": 93941025,
     "runs.jsonl": 97210,
-    "states.jsonl": 2960458133,
-    "fight-plans.jsonl": 2159067,
-    "run-plans.jsonl": 2751506
+    "states.jsonl": 2962842323,
+    "fight-plans.jsonl": 2163251,
+    "run-plans.jsonl": 2754723
   },
   "runs_total": 263,
   "runs_by_outcome": {
@@ -167,8 +167,8 @@
     "9": 3,
     "11": 2,
     "13": 2,
-    "17": 61,
-    "21": 4,
+    "17": 60,
+    "21": 5,
     "22": 9,
     "23": 10,
     "24": 12,
@@ -440,7 +440,7 @@
       "win_rate_finished": 0.0,
       "mean_floor_finished": 26.59,
       "median_floor_finished": 27,
-      "reached_act2": 79,
+      "reached_act2": 80,
       "reached_act3": 13,
       "run_ids": [
         "SCBC3F0QT8BC",
@@ -694,7 +694,7 @@
       "win_rate_finished": 0.025,
       "mean_floor_finished": 28.71,
       "median_floor_finished": 28,
-      "reached_act2": 145,
+      "reached_act2": 146,
       "reached_act3": 40,
       "run_ids": [
         "5FMUSNUXEHGY",
@@ -935,7 +935,7 @@
       "win_rate_finished": 0.033,
       "mean_floor_finished": 28.59,
       "median_floor_finished": 30,
-      "reached_act2": 176,
+      "reached_act2": 177,
       "reached_act3": 49,
       "run_ids": [
         "DG1CDGW8Y5JE",
@@ -1189,21 +1189,21 @@
   },
   "api": {
     "jev": {
-      "calls": 17796,
-      "in_tokens": 28990076,
-      "out_tokens": 810941,
-      "cost_usd": 1.2517,
+      "calls": 17812,
+      "in_tokens": 29017064,
+      "out_tokens": 811684,
+      "cost_usd": 1.2528,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
-      "calls": 3370,
-      "in_tokens": 26398886,
-      "cache_hit_tokens": 22067072,
-      "out_tokens": 11344546,
-      "reasoning_tokens": 11187683,
+      "calls": 3371,
+      "in_tokens": 26409407,
+      "cache_hit_tokens": 22076288,
+      "out_tokens": 11349198,
+      "reasoning_tokens": 11192283,
       "calls_without_token_split": 19,
-      "cost_usd": 15.0511,
-      "latency_p50_s": 11.11,
+      "cost_usd": 15.0572,
+      "latency_p50_s": 11.12,
       "override_rate": 0.52,
       "hp_guard_triggers": 161,
       "pricing_usd_per_m": {
@@ -1218,41 +1218,41 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 16.3028,
+  "api_cost_total_usd": 16.31,
   "decisions": {
-    "play_total": 103284,
-    "attributed_to_runs": 101576,
+    "play_total": 103362,
+    "attributed_to_runs": 101654,
     "unattributed_menu_timeline": 1708,
     "shadow": 20,
     "by_layer": {
-      "code": 72103,
-      "jev": 13117,
-      "deepseek": 3374,
+      "code": 72156,
+      "jev": 13130,
+      "deepseek": 3375,
       "claude": 186,
-      "code-fallback": 1667,
-      "jev-plan": 10209,
+      "code-fallback": 1669,
+      "jev-plan": 10218,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
     "decider_inferred": 342
   },
   "escalations": {
-    "rows": 3556,
+    "rows": 3557,
     "by_variant": {
       "deepseek_nonthinking": 207,
       "claude": 186,
       "deepseek_thinking": 1650,
-      "deepseek_memory": 1513
+      "deepseek_memory": 1514
     }
   },
   "deepseek_reasoning_log": {
-    "records": 5488,
-    "matched_to_escalations": 3163,
+    "records": 5494,
+    "matched_to_escalations": 3164,
     "models": {
-      "deepseek-flash": 5488
+      "deepseek-flash": 5494
     }
   },
-  "states_lines_scanned": 103216,
+  "states_lines_scanned": 103294,
   "console_logs": 448,
   "commits": {
     "total": 535,
@@ -1260,7 +1260,7 @@
     "experiment": 516
   },
   "postmortems": {
-    "runs_with_heading": 244,
+    "runs_with_heading": 245,
     "preloop_listed": 13
   }
 }
