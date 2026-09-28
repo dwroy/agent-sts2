@@ -963,10 +963,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
   }
 
-  // Foul Potion hits us too (39J9: two drunk at 22 HP cost 12 of it); never drink it in a fight.
-  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter(
-    (potion) => potion.can_use && potion.potion_id !== "FOUL_POTION",
-  );
+  // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
+  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
+  const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {
     // A hand of Dazed is not the end of the options: a potion can still block, draw or kill (CY8U F25
@@ -1356,6 +1355,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         criteria[key] = JSON.stringify({
           plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first, then re-plan the turn`,
           text: potion.text,
+          simulated: "no: this potion's effect is not modelled, so no HP or damage numbers for it",
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
           ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
         });
@@ -1637,7 +1637,7 @@ function startFacing(combat: Record<string, unknown>): number | null {
 export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player: PlayerSim): Decision | null {
   const incoming = Math.max(0, enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((total, attack) => total + attack.damage * attack.hits, 0), 0) - player.block);
   if (incoming < player.hp) return null;
-  const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use && potion.potion_id !== "FOUL_POTION");
+  const potions = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
   // A debuff potion into Artifact does nothing (M6P7 F48 T8: Weak Potion into Aeonglass's Artifact).
   const artifactUp = enemies.some((enemy) => enemy.hp > 0 && (enemy.artifact ?? 0) > 0);
   const useful = (potion: { text: string }) => !(artifactUp && /虚弱|weak|易伤|vulnerable/i.test(potion.text) && !/格挡|block/i.test(potion.text));

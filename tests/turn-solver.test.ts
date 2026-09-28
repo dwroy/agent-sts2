@@ -1895,3 +1895,30 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
     expect(a.score).toBeCloseTo(b.score);
   });
 });
+
+describe("Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact numbers)", () => {
+  const foul = modelPotion("FOUL_POTION", "Foul Potion", 0, [], 0)!;
+  const lineOf = (plans: ReturnType<typeof solveTurn>["plans"], ids: string[]) =>
+    plans.find((plan) => plan.steps.map((step) => step.cardId.split(":")[0] === "POTION" ? step.cardId.split(":")[1] : step.cardId).join(",") === ids.join(","));
+
+  it("its 12 damage to us is in the line's hp_lost, through our block, and 12 to every enemy", () => {
+    const result = solveTurn({
+      hand: [defend(0), foul],
+      player: player({ hp: 40, energy: 1 }),
+      enemies: [enemy({ hp: 30, attacks: [] }), enemy({ index: 1, name: "Second", hp: 30, attacks: [] })],
+      fightKind: "monster",
+    });
+    const alone = lineOf(result.plans, ["FOUL_POTION"])!;
+    expect(alone.outcome.hpLoss).toBe(12);
+    expect(alone.outcome.damageDealt).toBe(24);
+    const blocked = lineOf(result.plans, ["DEFEND_IRONCLAD", "FOUL_POTION"]);
+    if (blocked) expect(blocked.outcome.hpLoss).toBe(7);
+    // The potion-free lines lose nothing: the Foul line is never better on HP.
+    expect(Math.min(...result.plans.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:"))).map((plan) => plan.outcome.hpLoss))).toBe(0);
+  });
+
+  it("Intangible caps it at 1", () => {
+    const result = solveTurn({ hand: [foul], player: player({ hp: 40, intangible: true }), enemies: [enemy({ hp: 30, attacks: [] })], fightKind: "monster" });
+    expect(lineOf(result.plans, ["FOUL_POTION"])!.outcome.hpLoss).toBe(1);
+  });
+});

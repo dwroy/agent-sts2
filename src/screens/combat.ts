@@ -95,7 +95,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
-  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).filter((potion) => potion.potion_id !== "FOUL_POTION");
+  // Foul Potion included (Dai 2026-09-28: Jev decides); these per-card options simulate no potion.
+  const potions = potionViews({ raw: asRecord(state.run?.raw) }, knowledge);
 
   const candidates: Candidate[] = [];
   const enemyByIndex = new Map(enemies.map((enemy) => [enemy.index, enemy]));
@@ -196,6 +197,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
         summary: {
           action: target === null ? `Drink ${potion.name}` : `Drink ${potion.name} on ${target.name}`,
           text: potion.text,
+          simulated: "no: this potion's effect is not in any number here",
           note: endTurnWouldKill
             ? "emergency: the mod reports that ending the turn would be lethal"
             : "uses a consumable; only worth it if it changes the outcome",

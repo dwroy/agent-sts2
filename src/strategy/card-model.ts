@@ -77,6 +77,8 @@ export interface CardModel {
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
   heldHpLoss?: number;
+  /** Damage the card (Foul Potion) deals to us when played: our block takes it first, the rest is HP lost. */
+  selfDamage?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
@@ -451,6 +453,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
  */
 const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }> = {
   FIRE_POTION: { target: "single", damage: 20 },
+  // Foul Potion: 「对所有玩家和敌人造成{Damage}点伤害」, Damage 12 (potion-values.ts). It hits us too
+  // (39J9: two drunk at 22 HP): the line's hp_lost carries it (turn-solver selfDamage, through our block).
+  FOUL_POTION: { target: "all", damage: 12, selfDamage: 12 },
   // Exhausts any cards in hand: Howl from Beyond (it then replays every turn) and junk (H14T F39 T4:
   // Ashwater -> Howl was the lethal at 2 HP; unmodelled, every line "died").
   ASHWATER: { target: "self", special: "ashwater" },

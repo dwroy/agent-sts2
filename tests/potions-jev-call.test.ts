@@ -217,3 +217,18 @@ describe("potion_context on the combat question", () => {
     expect(JSON.stringify(context).length).toBeLessThan(600);
   });
 });
+
+describe("Foul Potion is offered (no ban) with its damage to us in the numbers", () => {
+  it("a Foul Potion line is shown and its hp_lost includes the 12 to us", () => {
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    combat["enemies"] = (combat["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Buff", label: "" }] }));
+    const belt = (raw["run"] as Raw)["potions"] as Raw[];
+    belt[0] = { ...belt[0], potion_id: "FOUL_POTION", name: "Foul Potion", requires_target: false, target_type: "TargetedNoCreature", valid_target_indices: [] };
+    const decision = planCombatTurn(env(raw));
+    const texts = plansOf(decision);
+    const foul = texts.map((text) => JSON.parse(text) as Record<string, unknown>).find((facts) => String(facts["plays"]).includes("Foul Potion"));
+    expect(foul).toBeDefined();
+    expect(Number(foul!["hp_lost"])).toBeGreaterThanOrEqual(7);
+  });
+});

@@ -948,6 +948,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       next.permStrength += next.rupture;
     }
   }
+  // Damage to us (Foul Potion): like an enemy hit, block first, Intangible caps it at 1, the rest is HP lost.
+  if ((card.selfDamage ?? 0) > 0) {
+    const amount = player.intangible || next.intangible ? Math.min(1, card.selfDamage ?? 0) : card.selfDamage ?? 0;
+    const blocked = Math.min(next.block, amount);
+    next.block -= blocked;
+    loseHp(next, amount - blocked, player);
+  }
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
