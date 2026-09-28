@@ -32,7 +32,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -393,13 +393,7 @@ function powerAmount(holder: Record<string, unknown>, id: string): number {
   return 0;
 }
 
-/**
- * Crimson Mantle: each copy costs 1 HP at the start of our turn (and gives 7, or 10 upgraded, block).
- * The power only shows the block total, so the copies are counted from it.
- */
-export function mantleHpCost(amount: number): number {
-  return amount > 0 ? Math.max(1, Math.floor(amount / 7)) : 0;
-}
+export { mantleHpCost };
 
 export function enemySims(combat: Record<string, unknown>): EnemySim[] {
   return asArray(combat["enemies"])

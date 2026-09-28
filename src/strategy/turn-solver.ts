@@ -1494,6 +1494,14 @@ export const CRAB_GAP_WEIGHT = 0.5;
 export const CRAB_LOW_MARGIN = 10;
 export const CRAB_HIGH_HP = 60;
 
+/**
+ * Crimson Mantle: each copy costs 1 HP at the start of our turn (and gives 7, or 10 upgraded, block).
+ * The power only shows the block total, so the copies are counted from it.
+ */
+export function mantleHpCost(amount: number): number {
+  return amount > 0 ? Math.max(1, Math.floor(amount / 7)) : 0;
+}
+
 /** Damage to every enemy at the start of our next turn, with an Inferno played this turn added. */
 export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput): number {
   return (input.player.turnStartAoe ?? 0) + Math.max(0, sim.inferno - (input.player.inferno ?? 0));

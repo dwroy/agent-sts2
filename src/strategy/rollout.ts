@@ -40,7 +40,7 @@ import { fileURLToPath } from "node:url";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { mantleHpCost, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -557,13 +557,42 @@ export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { 
   return [...picked.entries()].map(([plan, tags]) => ({ plan, tags }));
 }
 
-/** Power cards whose lasting effect the rollout carries (amounts: base / upgraded). */
-const POWER_EFFECTS: Record<string, { demonForm?: [number, number]; metallicize?: [number, number]; juggernaut?: [number, number]; barricade?: boolean }> = {
-  DEMON_FORM: { demonForm: [2, 3] },
-  METALLICIZE: { metallicize: [3, 4] },
-  JUGGERNAUT: { juggernaut: [5, 7] },
-  BARRICADE: { barricade: true },
+/** A lasting power the rollout carries into its later turns (a SimPlayer field). */
+type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable";
+
+/**
+ * Power cards whose lasting effect the rollout carries: the SimPlayer field, the power it shows as (for
+ * the terminal snapshot) and the fallback amounts (base / upgraded, from the logged cards' vars) when the
+ * card has no powerAmount. A power played in the line stays up for every later rollout turn (0B5Y F33
+ * T1: a line with Inferno and one without showed the same T2/T3 damage, 16 and 30.4). Feel No Pain and
+ * Stone Armor ride on their own card fields (feelNoPain, plating); Inflame's Strength is the outcome's.
+ */
+const POWER_EFFECTS: Record<string, { effect: LastingPower; power: string; amount: [number, number] }> = {
+  DEMON_FORM: { effect: "demonForm", power: "DEMON_FORM_POWER", amount: [3, 4] },
+  METALLICIZE: { effect: "endTurnBlock", power: "METALLICIZE_POWER", amount: [3, 4] },
+  JUGGERNAUT: { effect: "juggernaut", power: "JUGGERNAUT_POWER", amount: [6, 8] },
+  BARRICADE: { effect: "keepsBlock", power: "BARRICADE_POWER", amount: [1, 1] },
+  INFERNO: { effect: "inferno", power: "INFERNO_POWER", amount: [6, 9] },
+  CRIMSON_MANTLE: { effect: "mantle", power: "CRIMSON_MANTLE_POWER", amount: [7, 10] },
+  RUPTURE: { effect: "rupture", power: "RUPTURE_POWER", amount: [1, 2] },
+  PYRE: { effect: "pyre", power: "PYRE_POWER", amount: [1, 2] },
+  UNMOVABLE: { effect: "unmovable", power: "UNMOVABLE_POWER", amount: [1, 1] },
 };
+
+/** HP lost at the start of our next turn (Crimson Mantle's per copy, Inferno's 1, anything else already up). */
+function startTurnHpLossOf(player: SimPlayer): number {
+  return player.otherStartLoss + mantleHpCost(player.mantle) + (player.inferno > 0 ? 1 : 0);
+}
+
+/** HP-loss events at the start of our turn: each one triggers Inferno and Rupture. */
+function startLossEvents(player: SimPlayer): number {
+  return (player.inferno > 0 ? 1 : 0) + (player.mantle > 0 ? 1 : 0);
+}
+
+/** Damage to every enemy at the start of our next turn (combat-plan turnStartAoe): relics plus Inferno per loss event. */
+function turnStartAoeOf(player: SimPlayer): number {
+  return player.relicAoe + player.inferno * startLossEvents(player);
+}
 
 /** Enemy turns a lone dead Decimillipede segment stays down, and the HP it returns with when REATTACH_POWER is unread. */
 const REATTACH_TURNS = 2;
@@ -614,6 +643,22 @@ interface SimPlayer {
   juggernaut: number;
   feelNoPain: number;
   potions: number;
+  /** Inferno up (INFERNO_POWER amount): every HP loss on our turn hits every enemy for it. */
+  inferno: number;
+  /** Crimson Mantle up (CRIMSON_MANTLE_POWER: block at the start of our turn, 1 HP per copy). */
+  mantle: number;
+  /** Rupture stacks: Strength per HP loss on our turn. */
+  rupture: number;
+  /** Pyre: energy at the start of every turn. */
+  pyre: number;
+  /** Unmovable: the first card Block each turn is doubled. */
+  unmovable: boolean;
+  /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
+  relicAoe: number;
+  /** Start-of-turn HP loss from anything but Crimson Mantle and Inferno. */
+  otherStartLoss: number;
+  /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
+  startDealt: number;
 }
 
 interface Piles {
@@ -662,7 +707,8 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
     ...card,
     index,
     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)),
-    block: card.block > 0 ? Math.max(0, card.block + player.dexterity) : card.block,
+    // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
+    block: card.block > 0 ? Math.max(0, card.block + player.dexterity) * (player.unmovable ? 2 : 1) : card.block,
     validTargets: card.target === "single" ? targets : [],
   };
 }
@@ -693,6 +739,76 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
   };
 }
 
+/** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead. */
+function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
+  if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
+    // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
+    e.hp = HUSK_HP;
+    e.maxHp = HUSK_HP;
+    e.blast = e.base.eruption ?? 0;
+    e.explodeAt = turn + 1;
+    e.move = "ABOUT_TO_BLOW";
+    e.base = { ...e.base, hp: HUSK_HP, maxHp: HUSK_HP, attacks: [] };
+  } else if ((e.base.stock ?? 0) > 0) {
+    e.hp = e.maxHp;
+    e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
+  } else if (e.base.illusion) {
+    // An illusion (Parafright) is back at full HP next turn (FA82 F27: killed turn after turn, the
+    // rollout called it dead for good and the Obscura, the real target, sat at 77).
+    e.hp = e.maxHp;
+  } else if (e.base.revives) {
+    // A phase boss (Test Subject): the next phase at its own, higher max HP, Vulnerable and Strength
+    // cleared, and more phases after it while any are left (FSPK F48: phase 1 at 111 was revived at 111
+    // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
+    const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
+    const next = later[0] ?? e.maxHp;
+    e.phasesLeft = later.slice(1);
+    e.hp = next;
+    e.maxHp = next;
+    e.vulnerable = 0;
+    e.weak = 0;
+    e.strength = 0;
+    if (e.phasesLeft.length === 0) {
+      const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
+      e.powers = powers;
+      // The Test Subject's last phase comes with Nemesis and starts Intangible (every logged phase 3's
+      // first turn): Intangible through the enemy turn, then re-granted, so on our next turn too.
+      if (e.id === "TEST_SUBJECT") {
+        e.powers = { ...e.powers, NEMESIS_POWER: 1 };
+        e.intangibleTurns = 1;
+        e.nemesisIn = 1;
+      }
+    }
+    e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
+  } else {
+    e.alive = false;
+  }
+}
+
+/**
+ * The start of our next turn: Crimson Mantle's block, Rupture's Strength per HP-loss event, and the
+ * start-of-turn AoE (Inferno per loss event, Mercury Hourglass) through each enemy's block. The HP those
+ * losses cost is already in the line's outcome (the solver's startTurnHpLoss). Returns the damage dealt.
+ */
+function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
+  player.block += player.mantle;
+  player.strength += player.rupture * startLossEvents(player);
+  const aoe = turnStartAoeOf(player);
+  if (aoe <= 0) return 0;
+  let dealt = 0;
+  for (const e of enemies) {
+    if (!e.alive || e.explodeAt !== undefined) continue;
+    const hit = e.intangibleTurns > 0 ? Math.min(1, aoe) : aoe;
+    const blocked = Math.min(e.block, hit);
+    e.block -= blocked;
+    const lost = Math.min(e.hp, hit - blocked);
+    e.hp -= lost;
+    dealt += lost;
+    if (e.hp <= 0) enemyDown(e, turn, input);
+  }
+  return dealt;
+}
+
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
 function applyPlan(
   turn: number,
@@ -721,10 +837,13 @@ function applyPlan(
     played.add(at);
     const card = hand[at]!;
     const effect = POWER_EFFECTS[card.cardId];
-    if (effect?.demonForm) player.demonForm += effect.demonForm[card.upgraded ? 1 : 0];
-    if (effect?.metallicize) player.endTurnBlock += effect.metallicize[card.upgraded ? 1 : 0];
-    if (effect?.juggernaut) player.juggernaut += effect.juggernaut[card.upgraded ? 1 : 0];
-    if (effect?.barricade) player.keepsBlock = true;
+    if (effect && card.type === "Power") {
+      const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
+      if (effect.effect === "keepsBlock") player.keepsBlock = true;
+      else if (effect.effect === "unmovable") player.unmovable = true;
+      else player[effect.effect] += amount;
+      playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
+    }
     if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
     if (card.plating) player.endTurnBlock += card.plating;
     if (card.exhausts || card.type === "Power") continue;
@@ -754,50 +873,7 @@ function applyPlan(
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (hit) e.block = 0;
-    if (e.hp <= 0) {
-      if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
-        // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
-        e.hp = HUSK_HP;
-        e.maxHp = HUSK_HP;
-        e.blast = e.base.eruption ?? 0;
-        e.explodeAt = turn + 1;
-        e.move = "ABOUT_TO_BLOW";
-        e.base = { ...e.base, hp: HUSK_HP, maxHp: HUSK_HP, attacks: [] };
-      } else if ((e.base.stock ?? 0) > 0) {
-        e.hp = e.maxHp;
-        e.base = { ...e.base, stock: (e.base.stock ?? 1) - 1 };
-      } else if (e.base.illusion) {
-        // An illusion (Parafright) is back at full HP next turn (FA82 F27: killed turn after turn, the
-        // rollout called it dead for good and the Obscura, the real target, sat at 77).
-        e.hp = e.maxHp;
-      } else if (e.base.revives) {
-        // A phase boss (Test Subject): the next phase at its own, higher max HP, Vulnerable and Strength
-        // cleared, and more phases after it while any are left (FSPK F48: phase 1 at 111 was revived at 111
-        // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
-        const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
-        const next = later[0] ?? e.maxHp;
-        e.phasesLeft = later.slice(1);
-        e.hp = next;
-        e.maxHp = next;
-        e.vulnerable = 0;
-        e.weak = 0;
-        e.strength = 0;
-        if (e.phasesLeft.length === 0) {
-          const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
-          e.powers = powers;
-          // The Test Subject's last phase comes with Nemesis and starts Intangible (every logged phase 3's
-          // first turn): Intangible through the enemy turn, then re-granted, so on our next turn too.
-          if (e.id === "TEST_SUBJECT") {
-            e.powers = { ...e.powers, NEMESIS_POWER: 1 };
-            e.intangibleTurns = 1;
-            e.nemesisIn = 1;
-          }
-        }
-        e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
-      } else {
-        e.alive = false;
-      }
-    }
+    if (e.hp <= 0) enemyDown(e, turn, input);
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
@@ -861,7 +937,13 @@ function applyPlan(
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
     player.strength += player.demonForm;
   }
-  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt, snap, won, died };
+  const carried = player.startDealt;
+  player.startDealt = 0;
+  if (!won && !died) {
+    player.startDealt = startOfTurn(turn, player, enemies, input);
+    won = allDown();
+  }
+  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died };
 }
 
 function drawOne(piles: Piles, random: () => number): CardModel | undefined {
@@ -920,7 +1002,18 @@ function simulate(
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     potions: input.potions,
+    inferno: base.inferno ?? 0,
+    mantle: input.playerPowers["CRIMSON_MANTLE_POWER"] ?? 0,
+    rupture: base.rupture ?? 0,
+    pyre: input.playerPowers["PYRE_POWER"] ?? 0,
+    unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
+    relicAoe: 0,
+    otherStartLoss: 0,
+    startDealt: 0,
   };
+  // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
+  player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player));
+  player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
@@ -990,7 +1083,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: input.meta.max_en,
+      energy: input.meta.max_en + player.pyre,
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -1000,7 +1093,7 @@ function simulate(
       vigor: 0,
       regen: 0,
       facing: null,
-      unmovableArmed: false,
+      unmovableArmed: player.unmovable,
       exhaustedThisTurn: false,
       noBlock: false,
       tender: 0,
@@ -1008,6 +1101,11 @@ function simulate(
       endTurnBlock: player.endTurnBlock,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
+      // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
+      inferno: player.inferno,
+      rupture: player.rupture,
+      startTurnHpLoss: startTurnHpLossOf(player),
+      turnStartAoe: turnStartAoeOf(player),
       drawable: piles.draw.length + piles.discard.length,
       rage: 0,
       colossus: false,
