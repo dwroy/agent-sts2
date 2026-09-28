@@ -61,7 +61,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | null;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -171,6 +171,8 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
+  // Entrench: doubles the block up when it is played (0 block: worth 0; RTF3 F17/F28).
+  ENTRENCH: "double_block",
   MOLTEN_FIST: "molten_fist",
   WHIRLWIND: "whirlwind",
   SPITE: "spite",
@@ -250,6 +252,27 @@ export function energyOnExhaustOnly(template: string, rendered: string): boolean
   return energySentences.length > 0 && energySentences.every((sentence) => exhaustClause.test(sentence));
 }
 
+/**
+ * Whether every sentence naming a card var (`Energy`, `Cards`) is a "next turn" one: Relax's 「下个回合，
+ * 抽{Cards}张牌并获得{Energy}」 is next turn's income, not this turn's (FN0H F33 T2: "Relax, Bash+"
+ * predicted 13 damage; Relax took all 3 energy, Bash+ was never paid for, 0 dealt).
+ */
+export function nextTurnOnly(template: string, varName: string): boolean {
+  const nextTurn = /下个回合|下回合|next turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => nextTurn.test(sentence));
+}
+
+/**
+ * Whether every sentence naming a card var is a "at the start of your turn" one: Demon Form's Strength
+ * comes each later turn, not on play.
+ */
+export function turnStartOnly(template: string, varName: string): boolean {
+  const turnStart = /回合开始时|start of (?:your|each) turn/i;
+  const withVar = sentences(template.replace(new RegExp(`\\{${varName}[^}]*\\}`, "g"), "CARDVAR")).filter((sentence) => sentence.includes("CARDVAR"));
+  return withVar.length > 0 && withVar.every((sentence) => turnStart.test(sentence));
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -301,6 +324,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     default:
       break;
   }
+  // Strength that starts next turn (Demon Form: 「在你的回合开始时，获得{StrengthPower}点力量」) is none this
+  // turn: its value is the power's lasting value (G8YY F30 T2: +3 counted into Squash and Strike, "kills
+  // the Rock" for 19; it took 13).
+  if (strength > 0 && turnStartOnly(template, "StrengthPower")) strength = 0;
   if (special === "body_slam") damage = dyn(card, "CalculatedDamage") ?? 0;
   if (special === "whirlwind") hits = 0; // set to X at play time
 
@@ -309,8 +336,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const hpLoss = dyn(card, "HpLoss") ?? (type === "Power" ? 0 : playHpLossOf(renderedText));
   // A Power's Energy var is per-turn income from next turn on (Pyre), not energy this turn (24DP);
   // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
-  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) ? 0 : (dyn(card, "Energy") ?? 0);
-  const draw = dyn(card, "Cards") ?? 0;
+  // Relax's energy and draw are next turn's (nextTurnOnly), like a Power's income.
+  const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
+  const draw = nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -324,8 +352,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape") {
-    known = true; // its whole value is the Sandpit count, scored by the solver
+  } else if (special === "frantic_escape" || special === "double_block") {
+    known = true; // its whole value is the Sandpit count / the block doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
     // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).

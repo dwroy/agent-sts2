@@ -262,6 +262,10 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
       burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
+      // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
+      ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
+        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
+        : {}),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -349,6 +353,8 @@ function describePlan(plan: Plan, playerHp: number): Record<string, JsonValue> {
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
   if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
+  if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
   return summary;
@@ -483,7 +489,12 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
   memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
   const held = hand.filter((card) => card.cardId === "WITHER").map((card) => card.heldPenalty);
   if (held.length > 0) memo.witherDamage = Math.max(memo.witherDamage, ...held);
-  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0);
+  // Throwing Axe replays the fight's first card, and Withering Presence counts the replay while
+  // cards_played_this_turn does not (XWPV F48: every Wither came one card earlier than counted; T7's
+  // plan stopped at two cards "before the 3rd adds a Wither", the 2nd added it). Counted from the start:
+  // before any card the first one is already two.
+  const axe = asArray(asRecord(env.state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + (axe ? 1 : 0);
   return { every, played, damage: memo.witherDamage };
 }
 
@@ -496,7 +507,19 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  */
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
-  const pile = asRecord(asRecord(raw["agent_view"])["combat"])["exhaust"];
+  return pileSize(raw, "exhaust");
+}
+
+/** Cards in the draw and discard piles together (what this turn's draws can bring in), or undefined. */
+export function drawablePileSize(raw: Record<string, unknown>): number | undefined {
+  const draw = pileSize(raw, "draw");
+  const discard = pileSize(raw, "discard");
+  return draw === undefined && discard === undefined ? undefined : (draw ?? 0) + (discard ?? 0);
+}
+
+/** Cards in one agent_view.combat pile (grouped "name*N" lines), or undefined when the view lacks it. */
+export function pileSize(raw: Record<string, unknown>, which: "draw" | "discard" | "exhaust"): number | undefined {
+  const pile = asRecord(asRecord(raw["agent_view"])["combat"])[which];
   if (pile === undefined) return undefined;
   return asArray(pile).reduce<number>((sum, entry) => sum + Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(str(asRecord(entry)["line"]))?.[1] ?? 1), 0);
 }
@@ -632,11 +655,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     const base = env.knowledge.card(model.cardId)?.cost ?? null;
     return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
   });
-  // Evil Eye doubles when a card was exhausted this turn: with Baking Gloves that is every turn.
+  // Evil Eye doubles when a card was exhausted this turn (with Baking Gloves that is every turn), or
+  // earlier in the same line: the solver counts both (turn-solver exhaustedCount).
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
   const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
-  for (const card of hand) if (card.cardId === "EVIL_EYE" && exhaustedThisTurn) card.block *= 2;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   const noDraw = relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0;
   if (noDraw) {
@@ -672,6 +695,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const playerSim: PlayerSim = {
     freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
+    ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
+    // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
+    duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
+    buffer: powerAmount(player, "BUFFER_POWER"),
     hp: num(player["current_hp"]),
     maxHp: num(player["max_hp"]),
     block: num(player["block"]),
@@ -702,12 +730,16 @@ function planTurn(env: DecisionEnv): Decision | null {
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
-    unmovableArmed: powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0,
+    // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled
+    // number until one is played (G8YY F30 T3: Defend 12 and Shrug It Off 18 planned, 12 + 9 gained).
+    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER")),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
+    tender: powerAmount(player, "TENDER_POWER"),
+    exhaustedThisTurn,
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -1466,6 +1498,22 @@ export function multiClawNext(enemy: Record<string, unknown>): number | null {
   const intent = asArray(enemy["intents"]).map(asRecord).find((entry) => num(entry["damage"]) > 0);
   if (!intent) return null;
   return num(intent["damage"]) * (Math.max(1, num(intent["hits"])) + 1);
+}
+
+/**
+ * Vambrace (「每场战斗中，你第一次从卡牌中获得的格挡值翻倍」) not yet used this fight: a Block card in hand
+ * shows twice its own Block (base plus Dexterity). The relic carries no counter, so the shown numbers
+ * tell: after the first Block, cards show their plain values (G8YY F30 T5: Defend 6).
+ */
+export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: number): boolean {
+  if (!relicIds.includes("VAMBRACE")) return false;
+  return hand.some((entry) => {
+    const block = asArray(asRecord(entry)["dynamic_values"]).map(asRecord).find((value) => str(value["name"]) === "Block");
+    if (!block) return false;
+    const own = (numOrNull(block["enchanted_value"]) ?? numOrNull(block["base_value"]) ?? 0) + dexterity;
+    const shown = numOrNull(block["current_value"]) ?? own;
+    return own > 0 && shown >= 2 * own - 1;
+  });
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */

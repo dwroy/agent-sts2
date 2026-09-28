@@ -14,6 +14,8 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardValue, damageRole, deckProfile } from "../strategy/card-value.js";
 import { expectedNextDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, type CardModel } from "../strategy/card-model.js";
+import { PACTS_END_EXHAUST } from "../strategy/turn-solver.js";
+import { exhaustPileSize } from "./combat-plan.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -69,7 +71,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       const incoming = incomingDamage(combat);
       const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
       const best = offered
-        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies) }))
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score)[0];
       if (best) {
@@ -108,6 +110,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
     (kind === "choose_card_select" || /加入你的手牌|放入你的手牌|into your hand/i.test(prompt));
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
+  const board = forThisTurn ? thisTurnBoard(state.raw, knowledge) : {};
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
   // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
@@ -144,7 +147,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
       score: forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies))
+        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
@@ -481,11 +484,11 @@ function incomingDamage(combat: Record<string, unknown>): number {
  * to the incoming attack (a little beyond), debuffs, Strength, draw and energy, a power's lasting
  * value, less its energy cost and HP cost.
  */
-export function thisTurnScore(card: CardModel, incoming: number, enemies: number): number {
+export function thisTurnScore(card: CardModel, incoming: number, enemies: number, board: ThisTurnBoard = {}): number {
   // The Gambit: any unblocked attack kills us for the rest of the fight (S780: picked at 79/80 HP from a
   // Colorless Potion, died to a 9-damage hit). Never worth taking.
   if (card.cardId === "THE_GAMBIT") return -100;
-  const damage = (card.damage ?? 0) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
+  const damage = thisTurnDamage(card, board) * Math.max(1, card.hits) * (card.target === "all" ? enemies : 1);
   const block = Math.min(card.block, incoming) + 0.3 * Math.max(0, card.block - incoming);
   const score =
     damage +
@@ -500,4 +503,45 @@ export function thisTurnScore(card: CardModel, incoming: number, enemies: number
     2 * Math.max(0, card.cost) -
     card.hpLoss;
   return Math.round(score);
+}
+
+/** What the board lets a card deal this turn (thisTurnScore). */
+export interface ThisTurnBoard {
+  /**
+   * Cards the exhaust pile can hold this turn: its size now plus the exhausting cards in hand. Pact's
+   * End needs 3 (the solver's PACTS_END_EXHAUST); below that it deals nothing (9LSQ F17 T1, H1FA twice:
+   * an Attack Potion took it over Fight Me with the exhaust pile empty, and it sat in hand).
+   */
+  exhaustReach?: number;
+  /** Most Vulnerable on a living enemy: Bully deals 2 more per stack. */
+  vulnerable?: number;
+}
+
+/** Bully: extra damage per Vulnerable stack on its target (as in the solver). */
+const BULLY_PER_VULNERABLE = 2;
+
+/** A card's damage per hit this turn on this board. */
+export function thisTurnDamage(card: CardModel, board: ThisTurnBoard = {}): number {
+  if (card.cardId === "PACTS_END" && board.exhaustReach !== undefined && board.exhaustReach < PACTS_END_EXHAUST) return 0;
+  if (card.cardId === "BULLY") return (card.damage ?? 0) + BULLY_PER_VULNERABLE * (board.vulnerable ?? 0);
+  return card.damage ?? 0;
+}
+
+/**
+ * The combat board a card picked for this turn is scored on (ThisTurnBoard): the exhaust pile plus the
+ * exhausting cards in hand, and the most Vulnerable on a living enemy. The exhaust pile is left unknown
+ * when the state carries no piles.
+ */
+export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
+  const combat = asRecord(raw["combat"]);
+  const pile = exhaustPileSize(raw);
+  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge).exhausts).length;
+  const vulnerable = Math.max(
+    0,
+    ...asArray(combat["enemies"])
+      .map(asRecord)
+      .filter((enemy) => enemy["is_alive"] !== false)
+      .map((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "VULNERABLE_POWER").reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0)),
+  );
+  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
 }

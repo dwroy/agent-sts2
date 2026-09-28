@@ -465,6 +465,21 @@ describe("big_hit on an attack potion (24HM F33)", () => {
   });
 });
 
+describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
+  it("counts the axe's replay of the fight's first card", async () => {
+    const { witherInput } = await import("../src/screens/combat-plan.js");
+    const raw = combatPayload();
+    const combat = raw["combat"] as Raw;
+    (combat["enemies"] as Raw[])[0]!["powers"] = [{ index: 0, power_id: "WITHERING_PRESENCE_POWER", name: "Withering", amount: 1, is_debuff: false }];
+    const plain = witherInput(env(raw), combat, [], 3);
+    ((raw["run"] as Raw)["relics"] as Raw[] | undefined) ?? ((raw["run"] as Raw)["relics"] = []);
+    ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "THROWING_AXE", name: "Throwing Axe" });
+    const axe = witherInput(env(raw), combat, [], 3);
+    expect(plain?.played).toBe(3);
+    expect(axe?.played).toBe(4);
+  });
+});
+
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
     const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");
