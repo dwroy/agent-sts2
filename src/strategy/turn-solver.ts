@@ -620,6 +620,13 @@ export interface Outcome {
   heldDamage?: number;
   /** With heldDamage: the cards it comes from, by name ("毒素 ×2", "Wither added by this turn's cards"). */
   heldDamageFrom?: string[];
+  /**
+   * HP the cards held at the turn's end take straight off (Beckon), when any: no block meets it, so it is not in
+   * incomingAfterBlock but is in hpLoss (5HHL F17 T7: "37 in all, 25 the enemy hits", the 12 two Beckons unnamed).
+   */
+  heldHpLoss?: number;
+  /** With heldHpLoss: the cards it comes from, by name ("呼唤 ×2"). */
+  heldHpLossFrom?: string[];
 }
 
 export interface Plan {
@@ -2018,6 +2025,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
     ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
   ]);
+  const heldHpLossFrom = countedNames(heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).map((card) => card.name));
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -2420,6 +2428,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
       ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
+      ...(heldHpLoss > 0 ? { heldHpLoss, heldHpLossFrom } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };

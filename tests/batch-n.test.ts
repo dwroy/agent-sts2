@@ -10,11 +10,17 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import type { AnswerSet } from "../src/jev/answers.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
+import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
 import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
+import type { CardModel } from "../src/strategy/card-model.js";
 import { isFightPlanReply } from "../src/strategy/fight-plan.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { solveTurn, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { logged, loggedEnv } from "./logged.js";
 import { board, play, scriptedDeepSeek, setupOneshotTests } from "./oneshot-support.js";
 import { baseState, combatPayload, mainMenuPayload, runPayload } from "./scenarios.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
@@ -194,5 +200,43 @@ describe("fight plan: askJson checks the reply is a fight plan (batch M left its
       const fightPlanCalls = bodies.filter((body) => String(((body["messages"] as Raw[])[1] as Raw)["content"]).includes("TASK: fight plan"));
       expect(fightPlanCalls).toHaveLength(1);
     });
+  });
+});
+
+describe("\"ending now kills\" note names the HP the held cards take straight off (5HHL F17 T7: two Beckons, 12 of the 37 unnamed)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  const card = (index: number, cardId: string, name: string, overrides: Partial<CardModel> = {}): CardModel => ({
+    index, key: `c${index}`, cardId, name, type: "Status", upgraded: false, cost: -1, xCost: false, playable: false, target: "none", validTargets: [],
+    damage: null, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0,
+    draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...overrides,
+  });
+  const enemy: EnemySim = { index: 0, name: "Soul Fysh", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const player: PlayerSim = { hp: 40, maxHp: 80, block: 0, energy: 1, weak: false, vulnerable: false, intangible: false };
+
+  it("the logged board: \"37 HP lost in all, 25 of it the enemy hits after block, 12 HP lost to cards held (呼唤 ×2)\"", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("batch-n/5hhl-f17-t7-beckon");
+    expect(fx.decision.rationale).toMatch(/37 HP lost in all, 25 of it the enemy hits after block\]/);
+    const decision = planCombatTurn(loggedEnv(fx)) as unknown as { kind: string; resolve?: (answers: AnswerSet) => { rationale: string }; questions?: Record<string, { type: string; criteria: Record<string, string> }> };
+    const question = Object.values(decision.questions ?? {})[0]!;
+    const key = Object.keys(question.criteria).find((k) => k.startsWith("plan"))!;
+    const resolved = decision.resolve!({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    expect(resolved.rationale).toContain("[ending now kills by what the mod's lethal flag does not count: 37 HP lost in all, 25 of it the enemy hits after block, 12 HP lost to cards held (呼唤 ×2)]");
+  });
+
+  it("solver: the held HP loss by name and count, apart from held damage", () => {
+    const beckon = (i: number) => card(i, "BECKON", "呼唤", { heldPenalty: 6, heldHpLoss: 6 });
+    const burn = card(2, "BURN", "灼伤", { heldPenalty: 2 });
+    const out = solveTurn({ hand: [beckon(0), beckon(1), burn], player, enemies: [enemy], fightKind: "boss" });
+    const end = out.plans.find((plan) => plan.steps.length === 0)!;
+    expect(end.outcome.heldHpLoss).toBe(12);
+    expect(end.outcome.heldHpLossFrom).toEqual(["呼唤 ×2"]);
+    expect(end.outcome.heldDamage).toBe(2);
+    expect(end.outcome.heldDamageFrom).toEqual(["灼伤"]);
+    expect(endTurnLethalNote({ ...end, outcome: { ...end.outcome, dies: true } }, false, 40)).toBe(
+      ` [ending now kills by what the mod's lethal flag does not count: ${end.outcome.hpLoss} HP lost in all, 0 of it the enemy hits after block, 2 damage from cards held (灼伤), 12 HP lost to cards held (呼唤 ×2)]`,
+    );
   });
 });

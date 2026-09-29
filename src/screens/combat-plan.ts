@@ -1417,7 +1417,11 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
   const from = endNow.outcome.heldDamageFrom ?? [];
-  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}`;
+  // HP the held cards take straight off (Beckon), by name (5HHL F17 T7: "37 in all, 25 the enemy hits", the
+  // 12 from two Beckons unnamed).
+  const heldHpLoss = endNow.outcome.heldHpLoss ?? 0;
+  const lossFrom = endNow.outcome.heldHpLossFrom ?? [];
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}${heldHpLoss > 0 ? `, ${heldHpLoss} HP lost to cards held${lossFrom.length > 0 ? ` (${lossFrom.join(", ")})` : ""}` : ""}`;
   return sandpit
     ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
     : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
