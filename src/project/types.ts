@@ -223,6 +223,11 @@ export interface CombatPlanMemo {
    * cards in the hand, so the hand only has to hold what the rest of the line plays (combat-plan.ts).
    */
   afterSelection?: boolean;
+  /**
+   * After a Blessing of the Forge step: every card in the hand may come back upgraded, so the hand is compared
+   * without the upgrade marks (combat-plan.ts; the line's cards are the same cards, only better).
+   */
+  upgradeAll?: boolean;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {

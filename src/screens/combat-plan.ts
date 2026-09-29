@@ -1116,6 +1116,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand),
           handLen: handLenAfter(first!, hand),
+          ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
           via,
           enemies: livingEnemySignature(env.state.raw),
           ...(potions !== undefined ? { potions } : {}),
@@ -1142,6 +1143,16 @@ function leftByChoice(memo: CombatPlanMemo, hand: CardModel[]): boolean {
     left = left.filter((entry) => entry !== card);
   }
   return true;
+}
+
+/** A Blessing of the Forge step: it upgrades the hand, so the next step expects the same cards upgraded. */
+function upgradesHand(step: Step): boolean {
+  return step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:");
+}
+
+/** A hand signature with the upgrade marks dropped (sorted again: "+" moves a card's place). */
+function withoutUpgrades(signature: string): string {
+  return signature === "" ? "" : signature.split(",").map((id) => id.replace(/\+$/, "")).sort().join(",");
 }
 
 /** Hand size after a step: a card leaves the hand, a potion does not. */
@@ -1382,7 +1393,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Resumed after an in-combat card choice: the choice may have exhausted (True Grit+) or upgraded (Armaments)
   // hand cards, so the hand only has to be the expected one less what the choice took, still holding the rest
   // of the line (2MK4V7V3Q5BM F8 T2).
-  const sameHand = memo !== null && (memo.expectedHand === handSignature(hand) || (memo.afterSelection === true && leftByChoice(memo, hand)));
+  // After Blessing of the Forge the same hand, some or all of it upgraded (BXAZ-like lines re-planned at "+").
+  const sameHand =
+    memo !== null &&
+    (memo.expectedHand === handSignature(hand) ||
+      (memo.afterSelection === true && leftByChoice(memo, hand)) ||
+      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))));
   const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && sameHand;
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
@@ -1397,7 +1413,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
-      const { potions: _checked, afterSelection: _resumed, ...kept } = memo;
+      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
@@ -1406,6 +1422,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               remaining: memo.remaining.slice(1),
               expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
               handLen: handLenAfter(next, hand),
+              ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(potions !== undefined ? { potions } : {}),
             }
           : null;

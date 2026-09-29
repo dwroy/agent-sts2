@@ -404,3 +404,25 @@ describe("10. The map's route values rest with the game's heal and the rest reli
     expect(rationale("REGAL_PILLOW")).not.toBe(rationale(null));
   });
 });
+
+describe("11. Blessing of the Forge drunk as a line's step: the upgraded hand is the one expected, the line goes on (BXAZV0R9ZHWK F17 T5)", () => {
+  it("\"potion 熔炉的祝福, then 心神不宁+, …\": after the drink every card shows \"+\", the next step is played, not re-planned", () => {
+    rolloutLiveOptions.enabled = false;
+    const ask = loggedEnv(logged("bxaz-f17-t5-forge"));
+    const criteria = planCriteria(planCombatTurn(ask));
+    const chosen = Object.entries(criteria).find(([key, text]) => key.startsWith("plan") && /"plays":"potion 熔炉的祝福, then 心神不宁\+/.test(text));
+    if (!chosen) throw new Error("the forge line is not offered");
+    const first = (planCombatTurn(ask) as AskDecision).resolve(choose(chosen[0], 0.9));
+    first.apply?.();
+    expect(first.intent).toMatchObject({ action: "use_potion", option_index: 0 });
+    // The board after the drink: the belt slot empty, every hand card upgraded.
+    const after = logged("bxaz-f17-t5-forge");
+    const combat = after.state["combat"] as Raw;
+    combat["hand"] = (combat["hand"] as Raw[]).map((card) => ({ ...card, upgraded: true, name: `${String(card["name"])}+` }));
+    const potions = (after.state["run"] as Raw)["potions"] as Raw[];
+    potions[0] = { index: 0, occupied: false, can_discard: false };
+    const decision = planCombatTurn({ ...loggedEnv(after), screenMemory: ask.screenMemory });
+    expect(decision?.label).toBe("combat/plan-continue");
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/Jev-chosen plan: 心神不宁\+/);
+  });
+});
