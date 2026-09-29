@@ -104,6 +104,15 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
   });
 });
 
+describe("the Terror Eel's Vigor in the real DB (XLJQ6FPQAU7N F7)", () => {
+  it("Crash's base damage leaves Vigor out; Thrash gives the Vigor the rollout adds to the next attack", () => {
+    const a9 = enemyTable("TERROR_EEL", 9, realMonsters() as never, {})!;
+    expect(a9.moves["CRASH_MOVE"]!.damage).toBe(18);
+    expect(a9.moves["THRASH_MOVE"]!.vigor).toBe(6);
+    expect(enemyTable("TERROR_EEL", 8, realMonsters() as never, {})!.moves["CRASH_MOVE"]!.damage).toBe(16);
+  });
+});
+
 function realMonsters(): MonsterMoveData {
   return (JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../src/knowledge/monster-db.json"), "utf8")) as { monsters: MonsterMoveData }).monsters;
 }

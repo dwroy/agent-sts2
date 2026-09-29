@@ -44,8 +44,9 @@ def _default_logs():
 SCREEN_RE = re.compile(rb'"screen":"([A-Z_]+)"')
 SKIP_SCREENS = {b"MAIN_MENU", b"CHARACTER_SELECT", b"TIMELINE", b"UNLOCK", b"SETTINGS"}
 AGENT_VIEW = b',"agent_view":'
-# Incoming-damage modifiers that make the shown intent differ from base + Strength.
-ENEMY_DAMAGE_MODS = {"WEAK_POWER", "SHRINK_POWER"}
+# Incoming-damage modifiers that make the shown intent differ from base + Strength. Vigor adds to the
+# enemy's next attack (Terror Eel's Thrash -> Crash 16 + 6 at A8: base 22 was the most common "base").
+ENEMY_DAMAGE_MODS = {"WEAK_POWER", "SHRINK_POWER", "VIGOR_POWER"}
 PLAYER_DAMAGE_MODS = {"VULNERABLE_POWER", "INTANGIBLE_POWER", "TANK_POWER"}
 END_OF_COMBAT_HEAL = {"BURNING_BLOOD", "BLACK_BLOOD", "MEAT_ON_THE_BONE"}
 

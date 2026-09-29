@@ -130,6 +130,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
       block: mode(entry.block_gained) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
+      ...(mode(entry.self_powers_gained?.["VIGOR_POWER"]) ? { vigor: mode(entry.self_powers_gained?.["VIGOR_POWER"])! } : {}),
       ...(logged?.estimated ? { estimated: true } : {}),
     };
   }

@@ -353,6 +353,8 @@ export interface EnemyMove {
   block: number;
   /** Burrow (Tunneler): the move gains BURROWED_POWER. */
   burrows?: boolean;
+  /** Vigor the move gives itself (Terror Eel's Thrash: 6): added to its next attack's hits. */
+  vigor?: number;
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
 }
@@ -634,6 +636,11 @@ interface SimEnemy {
   maxHp: number;
   block: number;
   strength: number;
+  /**
+   * Vigor (VIGOR_POWER, 「你的下一张攻击牌伤害增加」): added to each hit of its next attack, then gone
+   * (XLJQ6FPQAU7N F7: Thrash's 6 made the Crash after Terror 18 + 6 = 24, x1.5 under Vulnerable = 36).
+   */
+  vigor: number;
   vulnerable: number;
   weak: number;
   alive: boolean;
@@ -726,7 +733,7 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
-  return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength) * scale)), hits: Math.max(1, m.hits) }];
+  return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
 }
 
 /** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
@@ -777,7 +784,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -917,6 +924,16 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
+  // Shriek/Plow: taken to its threshold on the decision's turn, it is stunned and this turn's move is lost
+  // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
+  // did not make neither spends its Vigor nor gains Strength or Block (XLJQ F7 T5: stunned at 65 with
+  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Later turns' solver calls do not model Shriek (laterTurnSim).
+  const shrieked = new Set<number>();
+  for (const e of enemies) {
+    const a = after.get(e.index);
+    const threshold = e.base.shriek ?? 0;
+    if (turn === 0 && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+  }
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
@@ -963,9 +980,12 @@ function applyPlan(
       const m = e.move && table ? table.moves[e.move] : undefined;
       // Burrowed with all its block gone this turn: stunned, the move is lost (the solver already left its
       // hit out) and it surfaces; after the stun it goes on as the move model saw it (Tunneler: Bite).
-      const stunned = e.burrowed && e.block <= 0;
+      const stunned = (e.burrowed && e.block <= 0) || shrieked.has(e.index);
       if (stunned) e.burrowed = false;
       else {
+        // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
+        if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
+        e.vigor += m?.vigor ?? 0;
         e.strength += m?.strength ?? 0;
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
@@ -1107,6 +1127,7 @@ function simulate(
       maxHp: e.maxHp,
       block: e.block,
       strength: info?.strength ?? 0,
+      vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,
       alive: e.hp > 0,

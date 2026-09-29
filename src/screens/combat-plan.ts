@@ -72,6 +72,10 @@ const MODELLED_ENEMY_POWERS = new Set([
   "STOCK_POWER",
   // Entomancer: a Dazed per hit (`dazedPerHit`); left unmodelled it cut our damage by 20% (M812 F28).
   "PERSONAL_HIVE_POWER",
+  // Terror Eel: Vigor adds to its own next attack (in the intent when that is this turn's; the rollout
+  // carries it to later turns). Left unmodelled it cut our damage by 20% (XLJQ6FPQAU7N F7: T3/T5/T6
+  // predicted 26/16/19, dealt 33/21/26).
+  "VIGOR_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -93,6 +97,7 @@ const POWER_NOTES: Record<string, string> = {
   ILLUSION_POWER: " (illusion: back at full HP next turn even if killed; damage into it is wasted, killing it only cancels this turn's attack; it leaves when its summoner dies: hit the summoner)",
   STOCK_POWER: " (revives left: at 0 HP it comes straight back at full, higher max HP with Stock -1, and that turn does Boot Up (10 Block, +3 Strength, no attack), then attacks harder every turn; a kill with Stock left does NOT end the fight: its real HP is current HP + Stock x max HP, so block rather than race it)",
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
+  VIGOR_POWER: " (its next attack deals this much more per hit: already in the intent when that attack is this turn's, else it waits for the next one)",
 };
 
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */

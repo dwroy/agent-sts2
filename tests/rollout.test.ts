@@ -652,3 +652,55 @@ describe("powers played in the line stay up in later rollout turns (0B5Y F33 T1:
     expect(line.perTurn[0]!.loss.mean).toBe(2);
   });
 });
+
+describe("enemy Vigor (XLJQ6FPQAU7N F7: Thrash's Vigor 6 made Crash 18 + 6)", () => {
+  const EEL: EnemyTable = {
+    moves: {
+      THRASH_MOVE: { damage: 4, hits: 3, strength: 0, block: 0, vigor: 6 },
+      CRASH_MOVE: { damage: 18, hits: 1, strength: 0, block: 0 },
+      TERROR_MOVE: { damage: 0, hits: 1, strength: 0, block: 0 },
+    },
+    next: { THRASH_MOVE: { CRASH_MOVE: 1 }, CRASH_MOVE: { TERROR_MOVE: 1 }, TERROR_MOVE: { CRASH_MOVE: 1 }, STUNNED: { TERROR_MOVE: 1 } },
+  };
+  const run = (move: string, powers: Record<string, number>, attacks: { damage: number; hits: number }[], extra: Partial<EnemySim> = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200 },
+      enemies: [{ index: 0, name: "Terror Eel", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks, ...extra }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "TERROR_EEL", move, strength: 0, powers }],
+      tables: { TERROR_EEL: EEL },
+    }).lines[0]!;
+  };
+  const lossOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.loss.mean;
+
+  it("Vigor up now lands on its next attack, then is spent", () => {
+    // Terror now (no attack), Crash on turn 2 with the Vigor, Terror, Crash on turn 4 without it.
+    const vigor = run("TERROR_MOVE", { VIGOR_POWER: 6 }, []);
+    expect(lossOn(vigor, 2)).toBe(24);
+    expect(lossOn(vigor, 3)).toBe(0);
+    expect(lossOn(vigor, 4)).toBe(18);
+    expect(lossOn(run("TERROR_MOVE", {}, []), 2)).toBe(18);
+  });
+
+  it("Thrash gives itself Vigor: the Crash after it hits for 18 + 6", () => {
+    expect(lossOn(run("THRASH_MOVE", {}, [{ damage: 4, hits: 3 }]), 2)).toBe(24);
+  });
+
+  it("stunned by Shriek on this turn, it keeps its Vigor and goes on from STUNNED", () => {
+    // 80 HP, Shriek at 75: any Strike line crosses it, the shown Crash 24 is cancelled; Terror next, then Crash 24.
+    const line = run("CRASH_MOVE", { VIGOR_POWER: 6, SHRIEK_POWER: 75 }, [{ damage: 24, hits: 1 }], { hp: 80, maxHp: 150, shriek: 75 });
+    expect(line.plan.outcome.incomingAfterBlock).toBe(0);
+    expect(lossOn(line, 2)).toBe(0);
+    expect(lossOn(line, 3)).toBe(24);
+  });
+});
