@@ -691,7 +691,8 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   const key = new Set(ctx.enemies.filter((enemy) => !enemy.minion && !enemy.illusion).map((enemy) => enemy.name));
   const keyKills = o.kills.filter((name) => key.has(name));
   // Next turn's expected hit, from the move model, for the enemies this line leaves alive; Weak the
-  // line leaves on an enemy cuts its hit by a quarter.
+  // line leaves on an enemy cuts its hit by a quarter when it outlasts this enemy turn: Weak 1 is gone
+  // by then (logged: enemy Weak 1 at the end of our turn, 0 at our next turn, 51/51; Weak 2 -> 1, 16/16).
   // An illusion the line kills is back next turn at full HP, its debuffs gone (FA82FQHSJG2F F27: killed
   // turn after turn, it hit again every time); one already dead now is back too.
   let threat = 0;
@@ -704,7 +705,7 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
     const next = killed ? ctx.revivingThreat?.get(enemy.index) : ctx.nextThreat.get(enemy.index);
     if (next === null || next === undefined) continue;
     known = true;
-    threat += next * (!killed && (after?.weak ?? 0) > 0 ? 0.75 : 1);
+    threat += next * (!killed && (after?.weak ?? 0) >= 2 ? 0.75 : 1);
   }
   if (!o.winsFight && ctx.revivedThreat !== undefined && ctx.revivedThreat !== null) {
     known = true;

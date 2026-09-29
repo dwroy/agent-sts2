@@ -132,6 +132,11 @@ describe("plan fact tags", () => {
     expect(planFacts(weak, ctx({ nextThreat: new Map([[0, null]]) }))["enemy_threat_next"]).toBe("unknown");
   });
 
+  it("a Weak 1 the line leaves has worn off by the attack after this enemy turn (consistency #14)", () => {
+    const weak1: Plan = { steps: [], outcome: outcome({ enemyHpAfter: [{ index: 0, name: "Boss", hp: 90, vulnerable: 0, weak: 1 }] }), score: 0 };
+    expect(planFacts(weak1, ctx())["enemy_threat_next"]).toBe(20);
+  });
+
   it("lists potions drunk and block wasted", () => {
     const plan: Plan = { steps: [step(5, "POTION:BLOCK_POTION:0", "Block Potion")], outcome: outcome({ blockWasted: 7 }), score: 0 };
     expect(planFacts(plan, ctx())).toMatchObject({ potions_used: "Block Potion", block_wasted: 7 });
