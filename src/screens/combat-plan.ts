@@ -743,6 +743,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
+  if ((o.nextTurnEnergy ?? 0) > 0) summary["next_turn_energy"] = `+${o.nextTurnEnergy} energy next turn (Pael's Tear: this line ends the turn with energy unspent)`;
   if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
@@ -883,6 +884,11 @@ export const PAPER_PHROG_VULNERABLE = 1.75;
  * 7MDJ/JEGB/CWU9/88HN turns: HP lost = shown incoming - block - cards held, e.g. CWU9 F44 T1 11 -> 9 with 2).
  */
 export const CLOAK_CLASP_BLOCK = 1;
+/**
+ * Pael's Tear: 「如果你在拥有未花费的能量情况下结束回合，则下个回合额外获得{Energy}」 — logged over 24 runs holding it:
+ * a turn ended with 1, 2 or 3 energy unspent began the next at 5 (45, 12 and 3 turns; 0 unspent: 3, base 3).
+ */
+export const PAELS_TEARS_ENERGY = 2;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1392,6 +1398,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
+    ...(relicIds.includes("PAELS_TEARS") ? { paelsTears: PAELS_TEARS_ENERGY } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).

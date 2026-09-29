@@ -3,14 +3,58 @@
  * (tests/logged-states/batch-h, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
 import { actOfFloor, planMap } from "../src/screens/map.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { distinctPlans, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
+
+function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
+  return {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: cardId,
+    type: "Attack",
+    upgraded: false,
+    cost: 1,
+    xCost: false,
+    playable: true,
+    target: "single",
+    validTargets: [0],
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+    ...overrides,
+  };
+}
+const strike = (i: number, damage = 6) => card(i, "STRIKE_IRONCLAD", { name: "打击", damage, damageBase: damage });
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
 
 const keysOf = (decision: AskDecision): string[] => {
   const question = decision.questions["pick"]!;
@@ -78,5 +122,75 @@ describe("1. White Beast Statue: code no longer discards a potion on the map; a 
     (rest.state["map"] as Raw)["available_nodes"] = nodes;
     const decision = planMap(loggedEnv(rest));
     expect(decision?.kind === "ask" ? keysOf(decision) : []).not.toContain("n0:discard");
+  });
+});
+
+describe("2. Pael's Tear: a line ending with energy unspent gives the next turn +2 energy, in the solver and the rollout (Y36HXZ80A8LL F19-F25)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("solver: with the relic, a Strike held back leaves 1 energy for +2 next turn, valued and kept among the distinct lines", () => {
+    const hand = [strike(0), strike(1), strike(2)];
+    const input = (paelsTears?: number): SolverInput => ({ hand, player: player(paelsTears ? { paelsTears } : {}), enemies: [enemy({ hp: 100, maxHp: 100, attacks: [{ damage: 5, hits: 1 }] })], fightKind: "monster", turn: 2 });
+    const plans = solveTurn(input(2)).plans;
+    const two = plans.find((plan) => plan.steps.length === 2)!;
+    const three = plans.find((plan) => plan.steps.length === 3)!;
+    expect(two.outcome.energyLeft).toBe(1);
+    expect(two.outcome.nextTurnEnergy).toBe(2);
+    expect(three.outcome.nextTurnEnergy).toBeUndefined();
+    expect(distinctPlans(plans, 4)).toContain(two);
+    // Without the relic the held-back energy is worth nothing: the 2-Strike line is dominated by the 3-Strike one.
+    const plain = solveTurn(input()).plans;
+    const plainTwo = plain.find((plan) => plan.steps.length === 2)!;
+    expect(plainTwo.outcome.nextTurnEnergy).toBeUndefined();
+    expect(two.score - plainTwo.score).toBeGreaterThan(0);
+    expect(distinctPlans(plain, 4)).not.toContain(plainTwo);
+  });
+
+  it("rollout: ending the turn with the energy unspent makes next turn's 3-cost card playable (1 base energy + 2)", () => {
+    const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const META: FightMeta = { act: 1, t: 1, asc: 9, kind: "hallway", enc: "X", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 30, blk: 0, up: 0 }, relics: 1, max_en: 1 };
+    const poke = card(0, "POKE", { damage: 1, damageBase: 1 });
+    const big = (i: number) => card(i, "BIG", { cost: 3, damage: 30, damageBase: 30 });
+    const run = (paelsTears?: number) => {
+      const solver: SolverInput = { hand: [poke], player: player({ energy: 1, ...(paelsTears ? { paelsTears } : {}) }), enemies: [enemy({ hp: 20, maxHp: 20 })], fightKind: "monster", turn: 1 };
+      const endTurn = solveTurn(solver).plans.find((plan) => plan.steps.length === 0)!;
+      let t = 0;
+      return rolloutDecision({
+        solver,
+        plans: [endTurn],
+        enemies: [{ index: 0, id: "X", move: "WAIT", strength: 0, powers: {} }],
+        tables: { X: WAIT },
+        piles: { draw: Array.from({ length: 10 }, (_, i) => big(10 + i)), discard: [], handBase: [poke] },
+        meta: META,
+        playerPowers: {},
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 1, horizon: 3, samples: 4, now: () => (t += 0.01) },
+      }).lines[0]!;
+    };
+    const tears = run(2);
+    expect(tears.wins).toBe(4);
+    expect(tears.turnsToWin).toBe(2);
+    expect(run().wins).toBe(0);
+  });
+
+  it("the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const decision = planCombatTurn(loggedEnv(logged("batch-h/y36h-f21-t2-paels-tears")));
+    if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind}`);
+    const question = decision.questions["plan"]!;
+    const lines = Object.values(question.type === "choice" ? question.criteria : {}).map((text) => JSON.parse(String(text)) as Raw);
+    const kept = lines.filter((line) => line["next_turn_energy"] !== undefined);
+    expect(kept.length).toBeGreaterThan(0);
+    for (const line of kept) {
+      expect(Number(line["energy_unused"])).toBeGreaterThan(0);
+      expect(String(line["next_turn_energy"])).toMatch(/^\+2 energy next turn \(Pael's Tear/);
+    }
   });
 });
