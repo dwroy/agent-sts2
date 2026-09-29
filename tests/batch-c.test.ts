@@ -12,6 +12,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
+import { checkConsistency } from "../src/llm/consistency.js";
 import type { AskDecision } from "../src/project/types.js";
 import { bossNote } from "../src/project/run-journal.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
@@ -318,5 +319,24 @@ describe("6. The Giant husk on its blast turn (Steam Eruption gone, DeathBlow sh
     for (const f of facts) expect(String(f["rollout"]), String(f["plays"])).toMatch(/fight over within 5 turns in 8\/8/);
     const best = facts.find((f) => f["rollout_best"] === true)!;
     expect(Number(best["hp_lost"])).toBe(Math.min(...facts.map((f) => Number(f["hp_lost"]))));
+  });
+});
+
+describe("7. A conclusion naming several options contradicts nothing (XMK1JFZ0VD2Q F7 rest: re-asked on 'options are \"o0\" and \"o1\"')", () => {
+  const REST = {
+    o0: JSON.stringify({ option: "休息", kind: "HEAL", description: "回复最大生命值的30%（24）。" }),
+    o1: JSON.stringify({ option: "锻造", kind: "SMITH", description: "升级你牌组中的1张牌。" }),
+  };
+  // The logged reasoning's last lines (01:46:04.872Z), answered o1.
+  const reasoning = [
+    "We have 75/80 HP, healing would waste (only +5). Smith is clearly right. Inflame+ is standard. Choose smith.",
+    "Actually code_value for smith is 6, rank 1. So smith.",
+    'The choice key: options are "o0" and "o1". Choice should be one option key exactly as given — "o1".',
+    "Reason: HP 94% heal wasted; smith Inflame for permanent strength, fixes Vantom clock gap.",
+  ].join("\n\n");
+
+  it("the logged answer passes; a one-option conclusion that differs is still caught", () => {
+    expect(checkConsistency("o1", "HP 94%: heal wastes 5; smith Inflame+", reasoning, REST)).toMatchObject({ ok: true, issues: [] });
+    expect(checkConsistency("o0", "heal", "HP 94%.\nDecisive: smith.", REST).issues).toEqual(["reasoning concluded o1 but answered o0"]);
   });
 });
