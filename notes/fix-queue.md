@@ -1,7 +1,7 @@
 # Fix queue (pure bugs waiting for the next batch on step1-bugfix)
 
 ## PRIORITY (regression, fix first)
-- Thrash (batch B f0c5d1a): turn-solver.ts thrashAbsorb (~:1373-1392, called ~:1265 at ea6ca1c; step1-bugfix ~:1388/:1280) adds the exhausted attack's damage to the Thrash play itself; in the game Thrash hits for its printed number and the absorbed damage applies to LATER Thrash plays that fight (all 12 Thrash plays in 3SBP). Caused a false lethal at 3SBP F12 T2 (Byrdonis survived at 17, hit 15, Defend left in hand) and inflated Vantom T7 (26 predicted, 12 actual). Also carry the absorbed damage across later turns in the rollout (batch B note: TTVY's Thrash had base 17).
+- ~~Thrash (batch B f0c5d1a): turn-solver.ts thrashAbsorb (~:1373-1392, called ~:1265 at ea6ca1c; step1-bugfix ~:1388/:1280) adds the exhausted attack's damage to the Thrash play itself; in the game Thrash hits for its printed number and the absorbed damage applies to LATER Thrash plays that fight (all 12 Thrash plays in 3SBP). Caused a false lethal at 3SBP F12 T2 (Byrdonis survived at 17, hit 15, Defend left in hand) and inflated Vantom T7 (26 predicted, 12 actual). Also carry the absorbed damage across later turns in the rollout (batch B note: TTVY's Thrash had base 17).~~ fixed 1b4a5c8 (batch E, v3 94648bf)
 
 
 **Batch C (step1-bugfix a649307, merged into v3 54d6d9e at 16:45) fixed every item listed below up to and including the X7LU/XTB4/2XWM/7XK6 and KY3Y/9Q7V/XMK1/PHMV/YQL8 sections (commits ef5eb16…a649307; ops/report.py fight splitting too). Open items start at "From the route-review work".**
@@ -46,28 +46,28 @@ From batch C (2026-09-29 16:50), not fixed:
 Evidence for Dai: Soul Fysh clock factor fitted — A8 (n=20) median realised/estimate 0.86, A9 (n=8) 1.09 (XTB4 0.37 an outlier) → left unchanged.
 
 From post-mortems 0NZB 2ZCK 7KDM 3SBP (2026-09-29 16:55):
-- combat-plan.ts reads player.cards_exhausted_this_turn (2e92460 :1118; step1-bugfix ~:1176), a field that never appears in states.jsonl → after an exhaust + re-ask, Evil Eye's bonus block is dropped (0NZB: "Evil Eye + Juggernaut" shown −12, really 0). Count exhausts this turn from the logged frames instead.
-- combat-plan.ts withPotionLines (~:176-199, called ~:1550) adds "drink" lines whose drink changes nothing (Flex after the last attack); with near-equal numbers the rollout noise tagged one best (3SBP boss T3: 62.5 vs 64.1) and Jev drank it. Drop drink lines whose effect is zero in that line (a pure no-op, not a potion cost).
-- Feel No Pain misses end-of-turn exhausts of ethereal cards (Dazed, Clumsy, Ascender's Bane): the solver/rollout never exhaust ethereal cards at end of turn (evaluate, turn-solver.ts ~:1643 / step1-bugfix ~:1758; Feel No Pain only at ~:1027-1031). 7KDM HP forecasts 9–12 too pessimistic at T5/T7/T8. Ascender's Bane is in every A9 deck.
-- run-journal.ts:894-895 dedupes next nodes by type ("下一个节点强制: Treasure" with two different Treasure nodes). Minor.
+- ~~combat-plan.ts reads player.cards_exhausted_this_turn (2e92460 :1118; step1-bugfix ~:1176), a field that never appears in states.jsonl → after an exhaust + re-ask, Evil Eye's bonus block is dropped (0NZB: "Evil Eye + Juggernaut" shown −12, really 0). Count exhausts this turn from the logged frames instead.~~ fixed 1fb3c13 (batch E, v3 94648bf)
+- ~~combat-plan.ts withPotionLines (~:176-199, called ~:1550) adds "drink" lines whose drink changes nothing (Flex after the last attack); with near-equal numbers the rollout noise tagged one best (3SBP boss T3: 62.5 vs 64.1) and Jev drank it. Drop drink lines whose effect is zero in that line (a pure no-op, not a potion cost).~~ fixed 0dafcda (no-effect drink line reuses the dry line's rollout; not removed) (batch E, v3 94648bf)
+- ~~Feel No Pain misses end-of-turn exhausts of ethereal cards (Dazed, Clumsy, Ascender's Bane): the solver/rollout never exhaust ethereal cards at end of turn (evaluate, turn-solver.ts ~:1643 / step1-bugfix ~:1758; Feel No Pain only at ~:1027-1031). 7KDM HP forecasts 9–12 too pessimistic at T5/T7/T8. Ascender's Bane is in every A9 deck.~~ fixed b66bcf9 (batch E, v3 94648bf)
+- ~~run-journal.ts:894-895 dedupes next nodes by type ("下一个节点强制: Treasure" with two different Treasure nodes). Minor.~~ fixed 246ff27 (batch E, v3 94648bf)
 - Not a bug but noted: near-ties are not tagged tied (a line differing only by a useless drink won best by 1.6 of noise) — fixed at the source by the zero-effect drink item above.
 
 From post-mortems 9GRP N01X 83FL 7MDJ 5NFG (2026-09-29 17:05):
-- HIGH: run-plan echo accepted — when DeepSeek's run-plan reply is only a {choice, reason} echo, pickJsonObject still returns it (deepseek.ts ~:249 at 54d6d9e), ensureRunPlan stores it unchecked (loop.ts ~:1480-1481), parseRunPlan (run-plan.ts:127-167) turns it into an all-empty plan that REPLACES the valid one (9GRP F9, F25; YFG5 F44 on 09-26). DeepSeek's reasoning had full plans both times. Reject/recover (from reasoning) instead of overwriting.
-- Route review candidates come only from the current node's children (map.ts ~:957 positionRoutes) → Winged Boots detours never offered now that the HP-drop re-plan is gone (9GRP F28: boots could reach a rest site at (11,2)). Add boots-reachable nodes when charges remain.
+- ~~HIGH: run-plan echo accepted — when DeepSeek's run-plan reply is only a {choice, reason} echo, pickJsonObject still returns it (deepseek.ts ~:249 at 54d6d9e), ensureRunPlan stores it unchecked (loop.ts ~:1480-1481), parseRunPlan (run-plan.ts:127-167) turns it into an all-empty plan that REPLACES the valid one (9GRP F9, F25; YFG5 F44 on 09-26). DeepSeek's reasoning had full plans both times. Reject/recover (from reasoning) instead of overwriting.~~ fixed 46a05c6 (batch E, v3 94648bf)
+- ~~Route review candidates come only from the current node's children (map.ts ~:957 positionRoutes) → Winged Boots detours never offered now that the HP-drop re-plan is gone (9GRP F28: boots could reach a rest site at (11,2)). Add boots-reachable nodes when charges remain.~~ fixed 71c4f56 (batch E, v3 94648bf)
 - rest.ts:43 pre-boss heal ignores boss-start heal relics (Pantograph) (5NFG F16; heal amount is a {Heal} placeholder, loss unverified). Minor.
 - Unmodelled cards/relics that decided or shaped deaths: Primal Force (N01X), Rolling Boulder power (83FL; coverage #12), Biiig Hug's Soot, Cloak Clasp (7MDJ forecasts +2–4 HP/turn).
 
 From post-mortems KYC0 2MK4 (2026-09-29 17:23; line numbers at v3 54d6d9e):
-- loop.ts:482-494 clears combatPlan whenever a card-selection screen opens mid-combat; back in combat combat-plan.ts:1278 finds no plan, so the rest of Jev's line is lost and Jev is re-asked. 2MK4 F8 T2: line Headbutt, Defend, Defend (−0, rollout 4/8 alive); after the Headbutt pick (hand and enemies unchanged) the re-ask had no "Defend, Defend" option, Jev took Strike+Defend, 11→6. KYC0: 4 re-asks after True Grit+ picks (F6 T1, F9 T1, F9 T4, F24 T5), all re-chose the original line.
-- Enemies with different ids but the same Chinese name are indistinguishable in option text and kill orders: turn-solver.ts:1129, combat-plan.ts:681-682, rollout.ts:1944-1948, rollout-live.ts:635/:645. KYC0 F28 Decimillipede: three segments all "残杀千足虫"; T1 plans 5/8/9 identical text, T2 plans 9/10; 4 of 6 kill orders merged under one label, so the jev-hints advice (spread damage, kill them together) can't be followed.
-- reward.ts:127-134 drops a potion from an event when the potion belt is full, with no discard-to-take option (KYC0 F20 洗劫, YQL8 F28).
+- ~~loop.ts:482-494 clears combatPlan whenever a card-selection screen opens mid-combat; back in combat combat-plan.ts:1278 finds no plan, so the rest of Jev's line is lost and Jev is re-asked. 2MK4 F8 T2: line Headbutt, Defend, Defend (−0, rollout 4/8 alive); after the Headbutt pick (hand and enemies unchanged) the re-ask had no "Defend, Defend" option, Jev took Strike+Defend, 11→6. KYC0: 4 re-asks after True Grit+ picks (F6 T1, F9 T1, F9 T4, F24 T5), all re-chose the original line.~~ fixed 4d59170 (batch E, v3 94648bf)
+- ~~Enemies with different ids but the same Chinese name are indistinguishable in option text and kill orders: turn-solver.ts:1129, combat-plan.ts:681-682, rollout.ts:1944-1948, rollout-live.ts:635/:645. KYC0 F28 Decimillipede: three segments all "残杀千足虫"; T1 plans 5/8/9 identical text, T2 plans 9/10; 4 of 6 kill orders merged under one label, so the jev-hints advice (spread damage, kill them together) can't be followed.~~ fixed 2de27ae (batch E, v3 94648bf)
+- ~~reward.ts:127-134 drops a potion from an event when the potion belt is full, with no discard-to-take option (KYC0 F20 洗劫, YQL8 F28).~~ fixed 89ab236 (event path, DeepSeek decider) (batch E, v3 94648bf)
 
 From fix batch D (2026-09-29 17:31; line numbers at v3 cf87de6), not fixed:
-- loop.ts:804-807 + deepseek.ts DeepSeekAnswerError: when an invalid option key is recovered from the reasoning, the answer's route/route_reason are not carried over → route review still logged as "the answer has no route".
-- map.ts:150/174 candidate-path search sustain estimate (stateAfter) still uses a fixed 0.3 heal without relics (the projection shown to DeepSeek is fixed).
-- boss-clock.ts:727 expectedEntryHp rounds the 30% heal (+1 at some max HP; the game floors) and ignores Stone Humidifier.
-- combat-plan.ts:~1059 Blessing of the Forge drunk mid Jev line upgrades the hand → hand signature changes → line re-planned; the expected hand isn't updated to the upgraded cards.
+- ~~loop.ts:804-807 + deepseek.ts DeepSeekAnswerError: when an invalid option key is recovered from the reasoning, the answer's route/route_reason are not carried over → route review still logged as "the answer has no route".~~ fixed 0809eb7 (batch E, v3 94648bf)
+- ~~map.ts:150/174 candidate-path search sustain estimate (stateAfter) still uses a fixed 0.3 heal without relics (the projection shown to DeepSeek is fixed).~~ fixed 562215f (batch E, v3 94648bf)
+- ~~boss-clock.ts:727 expectedEntryHp rounds the 30% heal (+1 at some max HP; the game floors) and ignores Stone Humidifier.~~ fixed 562215f (batch E, v3 94648bf)
+- ~~combat-plan.ts:~1059 Blessing of the Forge drunk mid Jev line upgrades the hand → hand signature changes → line re-planned; the expected hand isn't updated to the upgraded cards.~~ fixed eca3384 (batch E, v3 94648bf)
 - To verify first (game behaviour unconfirmed): turn-solver.ts:1044-1045 One-Two Punch / Unrelenting replayed by Duplicator/Replay apply once; rollout.ts:1724 resets freeAttacks each turn (does FREE_ATTACK_POWER carry to next turn if Unrelenting was the last attack?).
 - Not modelled: Eternal Feather rest heal by deck size (seen in one run, amount unconfirmed).
 
@@ -88,3 +88,12 @@ From post-mortems AD5P CJ88 (2026-09-29 18:02; line numbers at v3 3e41460):
 - rollout-live.ts:420-434 pickRolloutBest on saturated boards: every line is a candidate (:424) and is ordered by enemy HP left first (:431-432); deaths within the 5 turns are not compared. CJ88 F17 Vantom T2 (asked twice): plan2 "−14, 5/8 and 4/8 samples dead" tagged best over plan1 "−2/−0, 1 dead"; Jev ignored it and took 0 that turn. Deaths (then loss) must rank before enemy HP left.
 - Hellraiser unmodelled (card-model.ts:217 only a lasting value 10; solver/rollout don't auto-play drawn Strikes) — add to the unmodelled-cards list (CJ88 F17 onwards, not the cause of death).
 - To verify: shop.ts:31-35 leaves FAKE_MERCHANT immediately although open_shop_inventory is available; never tried (CJ88 F21, 32/80 HP, 228 gold). Check what the fake merchant sells before changing.
+
+From fix batch E (2026-09-29 18:26; line numbers at v3 94648bf), not fixed:
+- rollout.ts:1274 Thrash's random exhaust in the rollout draws from all unplayed cards, not only attacks; growth uses the smallest attack's damage (conservative).
+- turn-solver.ts:1807 Feel No Pain block from end-of-turn ethereal exhausts doesn't trigger Juggernaut; Dark Embrace draw not modelled.
+- event.ts:265 "discard one to take this" only exists with BUILD_DECIDER=deepseek (jev mode still drops the potion); one discard per option, so an option giving 3 potions frees only one slot.
+- reward.ts:134 combat-reward potions still dropped on a full belt (the reward screen can't discard; making room before the fight ends is a trade-off → left, possibly for Dai).
+- To verify: Thrash growth under Duplication / One-Two Punch replays.
+- combat-plan exhaustedSinceTurnStart: after a mid-turn restart the first seen frame is the baseline (undercounts, conservative).
+- Test runtime: rollout-live.test.ts and potion-mc.test.ts run every fixture in tests/logged-states; potion-mc timed out once under load (1.8 s alone). Consider a per-test timeout or a fixture subset.
