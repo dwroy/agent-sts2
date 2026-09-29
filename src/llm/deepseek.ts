@@ -658,8 +658,21 @@ export function routeKeys(state: Record<string, unknown>): string[] {
 /**
  * The route an answer's reasoning (then its reason) settled on when the JSON left "route" out: the last place a text
  * names one of `keys` as the route ("route: keep", "\"route\": \"p1\"", "switch the route to p2") or keeps the
- * route ("keep route", "keep the safe route", when "keep" is a key). Null when no text does.
+ * route ("keep route", "keep the safe route", when "keep" is a key). Null when no text does. A mention that is not a
+ * decision is passed over: negated ("don't keep the route", "rather than switch the route to p2", "no need to keep
+ * the route") or asked ("keep the route?"); until batch K "don't keep the route" read as keep.
  */
+/** Words that make the route mention after them within its clause not a decision (a few words may come between). */
+const ROUTE_NEGATION = /\b(?:don'?t|do not|doesn'?t|does not|didn'?t|did not|not|never|no longer|no need to|won'?t|will not|wouldn'?t|would not|shouldn'?t|should not|can'?t|cannot|can not|instead of|rather than|without|avoid|against|stop)\b(?:\s+\S+){0,3}\s*$/i;
+
+/** Whether the route mention at `at` in `text` is a decision: not negated in its clause, not in a question. */
+function decided(text: string, at: number): boolean {
+  const clauseStart = Math.max(...[".", "!", "?", "\n", ";", ",", ":"].map((mark) => text.lastIndexOf(mark, at - 1))) + 1;
+  if (ROUTE_NEGATION.test(text.slice(clauseStart, at))) return false;
+  const sentenceEnd = text.slice(at).search(/[.!?\n]/);
+  return sentenceEnd < 0 || text[at + sentenceEnd] !== "?";
+}
+
 export function recoverRoute(texts: string[], keys: string[]): { route: string; line: string } | null {
   if (keys.length === 0) return null;
   const escape = (key: string) => key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -672,7 +685,7 @@ export function recoverRoute(texts: string[], keys: string[]): { route: string; 
     let best: { at: number; route: string; line: string } | null = null;
     const consider = (at: number, route: string) => {
       const exact = keys.find((key) => key.toLowerCase() === route.toLowerCase());
-      if (!exact || (best && best.at > at)) return;
+      if (!exact || (best && best.at > at) || !decided(text, at)) return;
       const start = text.lastIndexOf("\n", at) + 1;
       const end = text.indexOf("\n", at);
       best = { at, route: exact, line: text.slice(start, end < 0 ? undefined : end).trim().slice(0, 120) };

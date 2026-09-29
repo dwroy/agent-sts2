@@ -6,6 +6,7 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import { recoverRoute } from "../src/llm/deepseek.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -219,4 +220,23 @@ describe("4. Attack-counting relics count every play of an Attack: a replay (Sol
     solveTap.onSolve = null;
     expect(inputs[0]!.player.shuriken).toEqual({ every: 3, strength: 1, count: 2 });
   }, 30_000);
+});
+
+describe("5. recoverRoute: a negated or asked route mention is not the decision (\"don't keep the route\" read as keep); the last clear decision is", () => {
+  const KEYS = ["keep", "p1", "p2"];
+
+  it("negations and questions are passed over; the last decision stands", () => {
+    expect(recoverRoute(["Switch the route to p2: the elite while HP is up. Don't keep the route."], KEYS)?.route).toBe("p2");
+    expect(recoverRoute(["route: p1 looks greedy. We should not keep the safe route here, so route: p2"], KEYS)?.route).toBe("p2");
+    expect(recoverRoute(["switch the route to p1 instead of keeping the route"], KEYS)?.route).toBe("p1");
+    expect(recoverRoute(["Keep the route? The shop matters more. Switch the route to p2."], KEYS)?.route).toBe("p2");
+    expect(recoverRoute(["There is no need to keep the route; route: p1."], KEYS)?.route).toBe("p1");
+    // Only negated or asked mentions: nothing recovered (not "keep").
+    expect(recoverRoute(["I won't keep the route."], KEYS)).toBeNull();
+    expect(recoverRoute(["Should we keep the route?"], KEYS)).toBeNull();
+    // Plain decisions as before.
+    expect(recoverRoute(["Decision: HEAL (o0). Route: keep."], KEYS)?.route).toBe("keep");
+    expect(recoverRoute(["Final: card0, keep route."], KEYS)?.route).toBe("keep");
+    expect(recoverRoute(['keep route for now... no: switch the route to p2, the elite while HP is up. {"route": "p2"}'], KEYS)?.route).toBe("p2");
+  });
 });
