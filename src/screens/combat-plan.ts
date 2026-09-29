@@ -669,6 +669,14 @@ export interface FactContext {
   enemies: EnemySim[];
   /** Expected attack damage next turn per enemy index (move model), null when unknown. */
   nextThreat: Map<number, number | null>;
+  /**
+   * Illusions (ILLUSION_POWER, the Parafright) come back at full HP the turn after they die and hit with
+   * their usual move (move-model revivingForecast; the rollout revives them the same way, 115b517): that
+   * hit per living illusion's index, for a line that kills it, and summed over the illusions already dead
+   * on the board (revivingIllusions). Absent: no illusion.
+   */
+  revivingThreat?: Map<number, number | null>;
+  revivedThreat?: number | null;
   /** No living enemy shows an attack intent this turn. */
   noAttack: boolean;
 }
@@ -687,15 +695,23 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   const keyKills = o.kills.filter((name) => key.has(name));
   // Next turn's expected hit, from the move model, for the enemies this line leaves alive; Weak the
   // line leaves on an enemy cuts its hit by a quarter.
+  // An illusion the line kills is back next turn at full HP, its debuffs gone (FA82FQHSJG2F F27: killed
+  // turn after turn, it hit again every time); one already dead now is back too.
   let threat = 0;
   let known = false;
   for (const enemy of ctx.enemies) {
     const after = o.enemyHpAfter.find((entry) => entry.index === enemy.index);
-    if (o.winsFight || (after && after.hp <= 0)) continue;
-    const next = ctx.nextThreat.get(enemy.index);
+    if (o.winsFight) continue;
+    const killed = after !== undefined && after.hp <= 0;
+    if (killed && !enemy.illusion) continue;
+    const next = killed ? ctx.revivingThreat?.get(enemy.index) : ctx.nextThreat.get(enemy.index);
     if (next === null || next === undefined) continue;
     known = true;
-    threat += next * ((after?.weak ?? 0) > 0 ? 0.75 : 1);
+    threat += next * (!killed && (after?.weak ?? 0) > 0 ? 0.75 : 1);
+  }
+  if (!o.winsFight && ctx.revivedThreat !== undefined && ctx.revivedThreat !== null) {
+    known = true;
+    threat += ctx.revivedThreat;
   }
   const scaling: string[] = [];
   if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
@@ -1799,7 +1815,19 @@ function planTurn(env: DecisionEnv): Decision | null {
     const nextThreat = new Map<number, number | null>(
       liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
     );
-    const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
+    const illusions = liveEnemies.filter((enemy) => powerAmount(enemy, "ILLUSION_POWER") > 0);
+    const dead = revivingIllusions(combat).map((enemy) => revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null).filter((hit): hit is number => hit !== null);
+    const ctx: FactContext = {
+      maxHp: playerSim.maxHp,
+      hand,
+      enemies,
+      nextThreat,
+      noAttack: enemies.every((enemy) => enemy.attacks.length === 0),
+      ...(illusions.length > 0
+        ? { revivingThreat: new Map(illusions.map((enemy) => [numOrNull(enemy["index"]) ?? liveEnemies.indexOf(enemy), revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null])) }
+        : {}),
+      ...(dead.length > 0 ? { revivedThreat: dead.reduce((sum, hit) => sum + hit, 0) } : {}),
+    };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
       jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });

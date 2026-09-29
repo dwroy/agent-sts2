@@ -109,6 +109,23 @@ describe("plan fact tags", () => {
     expect(facts["enemy_threat_next"]).toBe(4);
   });
 
+  it("an illusion the line kills, or one already dead, is back next turn: its hit counts (FA82 F27, QUG1 F23; the rollout's 115b517)", () => {
+    const enemies = [enemy(), enemy({ index: 1, name: "Parafright", minion: true, illusion: true } as Partial<EnemySim>)];
+    const killsIt: Plan = { steps: [], outcome: outcome({ kills: ["Parafright"], enemyHpAfter: [{ index: 0, name: "Boss", hp: 90, vulnerable: 0, weak: 0 }, { index: 1, name: "Parafright", hp: 0, vulnerable: 0, weak: 2 }] }), score: 0 };
+    const nextThreat = new Map([[0, 20], [1, 12]]);
+    // Its current move is cancelled, it revives, then hits with its usual move (Slam 14 here); Weak is gone with the revive.
+    expect(planFacts(killsIt, ctx({ enemies, nextThreat, revivingThreat: new Map([[1, 14]]) }))["enemy_threat_next"]).toBe(34);
+    // Unknown usual move: the boss's alone (as before).
+    expect(planFacts(killsIt, ctx({ enemies, nextThreat }))["enemy_threat_next"]).toBe(20);
+    // Left alive it hits as the move model says.
+    const leavesIt: Plan = { steps: [], outcome: outcome({ enemyHpAfter: [{ index: 0, name: "Boss", hp: 90, vulnerable: 0, weak: 0 }, { index: 1, name: "Parafright", hp: 5, vulnerable: 0, weak: 0 }] }), score: 0 };
+    expect(planFacts(leavesIt, ctx({ enemies, nextThreat, revivingThreat: new Map([[1, 14]]) }))["enemy_threat_next"]).toBe(32);
+    // Dead before this turn: back next turn whatever the line does, unless the line wins.
+    expect(planFacts(leavesIt, ctx({ revivedThreat: 12 }))["enemy_threat_next"]).toBe(32);
+    const win: Plan = { steps: [], outcome: outcome({ winsFight: true, kills: ["Boss"] }), score: 0 };
+    expect(planFacts(win, ctx({ revivedThreat: 12 }))["enemy_threat_next"]).toBe(0);
+  });
+
   it("cuts next turn's threat by Weak the line leaves, and says unknown without a move model", () => {
     const weak: Plan = { steps: [], outcome: outcome({ enemyHpAfter: [{ index: 0, name: "Boss", hp: 90, vulnerable: 0, weak: 2 }] }), score: 0 };
     expect(planFacts(weak, ctx())["enemy_threat_next"]).toBe(15);
