@@ -1,7 +1,8 @@
 /**
  * Route review riding on the card-reward and rest-site questions (BUILD_DECIDER=deepseek; Dai 2026-09-29):
- * DeepSeek plans the act's route once and code follows it; every card reward and (one-shot) rest site it
- * decides also shows it the route from the room we are in, and the same answer says whether to keep it.
+ * DeepSeek plans the act's route once and code follows it; every card reward and rest site it decides (the
+ * one-shot rest plan or the step-by-step rest question) also shows it the route from the room we are in, and
+ * the same answer says whether to keep it.
  * No extra call: the route rides in the question's state (state.route_review) and the answer's `route`.
  *
  * What it shows (facts only): HP now against the plan's projection for the next node, the plan's next elite

@@ -113,6 +113,16 @@ export function planRest(env: DecisionEnv): Decision | null {
       forced_next: forcedNext(env.screenMemory, state),
     },
   });
+  // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
+  // and the step-by-step question alike, with the HP each rest option leaves: heal adds its amount, the other
+  // actions leave HP as it is.
+  const hpNow = state.run?.current_hp ?? 0;
+  const kindOf = (key: string): string => str(rawByKey.get(key)?.["option_id"]).toUpperCase();
+  const hpAfter = new Map(options.map((option) => [option.key, kindOf(option.key) === "HEAL" ? Math.min(state.run?.max_hp ?? hpNow, hpNow + heal) : hpNow]));
+  const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: hpAfter.get(option.key) ?? hpNow })));
+  const reviewNote = review ? ` ${review.note} hp_if_option: each route's HP at its first elite and boss after each rest option.` : "";
+  const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
+  const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
   // BUILD_ONESHOT: the rest action and the card it takes (smith X) in one question; code plays both.
   if (oneshotOn(env) && !oneshotFailedHere(env, "rest")) {
     const cards = deckCards(state, knowledge);
@@ -125,41 +135,37 @@ export function planRest(env: DecisionEnv): Decision | null {
       for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
       return withFollowUp(env, option, follow, cards, ref, "rest", followUpTargetScore(env, follow.task));
     });
-    // The act's route rides on the same question while a fork is left (route-review.ts), with the HP each
-    // rest option leaves: heal adds its amount, the other actions leave HP as it is.
-    const hpNow = state.run?.current_hp ?? 0;
-    const kindOf = (key: string): string => str(rawByKey.get(key)?.["option_id"]).toUpperCase();
-    const hpAfter = new Map(options.map((option) => [option.key, kindOf(option.key) === "HEAL" ? Math.min(state.run?.max_hp ?? hpNow, hpNow + heal) : hpNow]));
-    const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: hpAfter.get(option.key) ?? hpNow })));
     const note = "Each smith option names its card: code upgrades that card on the next screen without asking again.";
-    return withRouteReview(
-      env,
+    return withReview(
       buildPickDecision({
         ...params,
-        ...(review ? { state: { ...params.state, route_review: review.state } } : {}),
+        ...reviewState,
         label: "rest/plan",
         instructions: "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick.",
         options: expanded,
         deepseek: {
           facts,
-          note: review ? `${note} ${review.note} hp_if_option: each route's HP at its first elite and boss after each rest option.` : note,
+          note: `${note}${reviewNote}`,
           // Without DeepSeek: the rest site's own Jev/code question (heal or smith; the card on the next screen).
           baseline: buildPickDecision(params),
           oneshot: { fallback: () => (env.screenMemory.oneshotFailed = visitKey(env, "rest")) },
           offeredCards: [...offered],
         },
       }),
-      review,
-      (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow,
     );
   }
-  return buildPickDecision({
-    ...params,
-    deepseek: {
-      facts,
-      note: "If you smith, you pick the card to upgrade on the next screen.",
-    },
-  });
+  // Step by step (BUILD_ONESHOT off, or the one-shot answer was unusable): the card to smith is asked on the
+  // next screen; the route block rides here as on the one-shot question.
+  return withReview(
+    buildPickDecision({
+      ...params,
+      ...reviewState,
+      deepseek: {
+        facts,
+        note: `If you smith, you pick the card to upgrade on the next screen.${reviewNote}`,
+      },
+    }),
+  );
 }
 
 function hpPercent(env: DecisionEnv): number {

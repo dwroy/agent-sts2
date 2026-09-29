@@ -265,12 +265,27 @@ describe("rest site: the route rides on the one-shot rest question, with each op
     expect(memory.pendingPick).toMatchObject({ step: 2 });
   });
 
-  it("the step-by-step rest question (after an unusable one-shot answer) has no route block", () => {
+  it("the step-by-step rest question (after an unusable one-shot answer) carries the same route block; a change is a step after the rest action", () => {
     const memory = memoryAt(REST);
-    ask(decide(env(board(REST, "rest"), memory))).deepseek.oneshot?.fallback();
+    const oneshot = decide(env(board(REST, "rest"), memory));
+    ask(oneshot).deepseek.oneshot?.fallback();
     const next = decide(env(board(REST, "rest"), memory));
     expect(next.label).toBe("rest/choose");
-    expect(blockOf(next)).toBeUndefined();
+    const block = blockOf(next)!;
+    expect(block).toEqual(blockOf(oneshot));
+    for (const route of Object.values(block.routes)) expect(Object.keys(route["hp_if_option"] as Record<string, string>)).toEqual(["o0 HEAL (HP 77)", "o1 SMITH (HP 67)"]);
+    expect(instructionsOf(next)).toMatch(/"route": "keep" \(the default: follow the plan\)/);
+    expect(instructionsOf(next)).toMatch(/hp_if_option/);
+    expect(choose(next, "o1", undefined, "keep").routeReview).toEqual({ answer: "keep", outcome: "keep", reason: "" });
+    const key = Object.keys(block.routes).find((route) => route !== "keep")!;
+    const resolved = choose(next, "o0", undefined, key, "heal, then the other branch");
+    expect(resolved.intent).toEqual({ action: "choose_rest_option", option_index: 0 });
+    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o0", key] });
+    expect(resolved.routeReview?.change).toMatchObject({ step: 2, key, why: "rest-site review" });
+    resolved.apply?.();
+    // Projected from the healed HP.
+    expect(memory.routePlan).toMatchObject({ floor: 7, hpPct: 1, why: "rest-site review" });
+    expect(memory.planSeq).toEqual({ runId: "W2TBR2YUMQ5Y", n: 1 });
   });
 });
 
