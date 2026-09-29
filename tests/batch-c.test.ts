@@ -16,10 +16,10 @@ import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.j
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { checkConsistency } from "../src/llm/consistency.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
-import type { AskDecision } from "../src/project/types.js";
+import { createScreenMemory, type AskDecision } from "../src/project/types.js";
 import { bossNote } from "../src/project/run-journal.js";
 import { revealsLater } from "../src/screens/act-start.js";
-import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
+import { guardSandpit, livingEnemySignature, planCombatTurn } from "../src/screens/combat-plan.js";
 import { planEvent, relicFacts } from "../src/screens/event.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
 import { bossNote as clockBossNote, bossProfile } from "../src/strategy/boss-clock.js";
@@ -61,14 +61,20 @@ describe("1. A cut-short line's drink is re-planned with the new hand, not drunk
 });
 
 describe("2. A finished Jev line is \"stop here\"; One-Two Punch read; a Giant kill into its blast is not dominant (9Q7VBZ7TP29K F17 T14)", () => {
-  /** Jev's "One-Two Punch" alone chosen on the logged ask board; the memory after it is applied. */
+  /**
+   * Jev's "One-Two Punch" alone chosen on the logged ask board; the memory after it is applied. With One-Two
+   * Punch modelled in hand (batch D) that line deals nothing and Sword Boomerang alone dominates it, so it is no
+   * longer offered: the memo is the one commit() stored for it (a finished one-step Jev line, the hand after it).
+   */
   function afterJevLine() {
-    const ask = loggedEnv(logged("9q7v-f17-t14-ask"));
-    const criteria = planCriteria(planCombatTurn(ask));
-    const chosen = Object.entries(criteria).find(([, text]) => /"plays":"连环拳"/.test(text));
-    if (!chosen) throw new Error("the logged line is not offered");
-    (planCombatTurn(ask) as AskDecision).resolve(choose(chosen[0], 0.75)).apply?.();
-    return { memory: ask.screenMemory, after: logged("9q7v-f17-t14-after") };
+    const after = logged("9q7v-f17-t14-after");
+    const hand = ((after.state["combat"] as Record<string, unknown>)["hand"] as Record<string, unknown>[]).map((card) => `${String(card["card_id"])}${card["upgraded"] ? "+" : ""}`);
+    const ask = logged("9q7v-f17-t14-ask");
+    const askHand = ((ask.state["combat"] as Record<string, unknown>)["hand"] as Record<string, unknown>[]).map((card) => `${String(card["card_id"])}${card["upgraded"] ? "+" : ""}`);
+    expect([...hand, "ONE_TWO_PUNCH"].sort()).toEqual([...askHand].sort());
+    const memory = createScreenMemory("COMBAT");
+    memory.combatPlan = { turn: Number(ask.state["turn"]), remaining: [], expectedHand: [...hand].sort().join(","), handLen: hand.length, via: "jev", enemies: livingEnemySignature(ask.state) };
+    return { memory, after };
   }
 
   it("after Jev's one-step line, code does not play the Sword Boomerang it turned down: Jev's call, ending the turn offered", () => {

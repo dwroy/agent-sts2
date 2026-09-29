@@ -1036,6 +1036,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     enemy.skittish = 0;
   }
   if (card.special === "duplicate_next") next.duplicate += 1;
+  // One-Two Punch: its next Attacks are played twice (as ONE_TWO_PUNCH_POWER once up); Unrelenting: the next
+  // Attack costs 0 (as FREE_ATTACK_POWER), granted after its own play took any free attack already up.
+  if (card.special === "double_next_attacks") next.duplicateAttacks += card.nextAttacks ?? 1;
+  if (card.special === "free_next_attack") next.freeAttacks += 1;
   if (card.putsOnTop) next.topPlaced = true;
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
