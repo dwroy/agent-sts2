@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt, moveBaseDamages, powerScheduleAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHpAt, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
@@ -62,28 +62,28 @@ export interface BossProfile {
  */
 export const BOSSES: Record<string, BossProfile> = {
   // Crusher 209 + Rocket 199 (A8: 219 + 209). The two wins took 7-8 turns; Bug Sting -> Laser opener.
-  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser 47-49 on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (51 logged crab fights: Rocket died first 9/12 won, both alive to the end 8/39; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
+  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser {DMG:ROCKET:LASER_MOVE}, {BEHIND:ROCKET:LASER_MOVE} from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (51 logged crab fights: Rocket died first 9/12 won, both alive to the end 8/39; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
   // 379 (A8 399) plus two 30-HP Ponder heals; the T11 Overwhelming (12x3 and more) ends long fights (NZWR).
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
-  THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
+  THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at {POWER:THE_INSATIABLE:SANDPIT_POWER}, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
   // 512 (A8 535) plus two 33-block Ebb turns (L34T: 48 a turn, left at 173; M6P7: 33 a turn, left at 234).
-  AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards", mechanic: "Artifact eats Vulnerable; +66 block from Ebb; small cards feed Withers" },
+  AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact {POWER:AEONGLASS:ARTIFACT_POWER} at start; Ebb gains {BLOCK:AEONGLASS:EBB_MOVE} block every 3rd turn; a Wither every {POWER:AEONGLASS:WITHERING_PRESENCE_POWER} cards played: few big cards", mechanic: "Artifact eats Vulnerable; two Ebbs of {BLOCK:AEONGLASS:EBB_MOVE} block; small cards feed Withers" },
   // Queen 400 (A8 419) plus ~20 block a turn while the Amalgam lives (~60). The Amalgam (199, A8 211) leaves
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
-  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam (211) adds its HP only if killed first" },
+  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
   // Three phases, 100/200/300 (A8 111/212, phase 3 not logged yet: ~318 assumed at the same +6%).
-  TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts 10x3 and gains a hit every turn (D3X1: dead on its 5th)" },
+  TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
   SOUL_FYSH: { hp: 211, hpA8: 221, scriptTurns: 12, lossPerTurn: 5.1, note: "shuffles Beckons into the deck, Intangible turns", mechanic: "Intangible turns (each hit deals 1) and Beckons clogging the draw" },
   // Priest 190 (A8 199) plus two followers ~59 (A8 62/63); the fight ends with the priest, winners dealt
   // ~60 into the followers on the way.
-  THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
-  VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "9 Slippery stacks: multi-hit", mechanic: "Slippery 9: its next 9 HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
+  THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
+  VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "{POWER:VANTOM:SLIPPERY_POWER} Slippery stacks: multi-hit", mechanic: "Slippery {POWER:VANTOM:SLIPPERY_POWER}: its next {POWER:VANTOM:SLIPPERY_POWER} HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
   WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
-  CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
+  CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to {POWER:CEREMONIAL_BEAST:PLOW_POWER}; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
 
 /** @deprecated name kept for callers; the profiles above. */
@@ -154,17 +154,43 @@ export function bossHpSource(profile: BossProfile & { id?: string }, ascension: 
   return db.exact ? `(A${db.asc})` : `(A${ascension} not logged: A${db.asc}'s)`;
 }
 
-/** The profile's note with the DB numbers at this ascension (the Kin's priest and followers, the Test Subject's phases, the Giant's Siphon and Pressure Gun). */
+/**
+ * The profile's note with the DB numbers at this ascension (the Kin's priest and followers and its T11
+ * Beam, the Test Subject's phases, the Giant's Siphon and Pressure Gun, and every {KIND:ID...} placeholder:
+ * fillDbNumbers).
+ */
 export function bossNote(profile: BossProfile & { id?: string }, ascension: number): string {
   const part = (id: string) => (profile.id ? bossHpAt(profile.id, ascension, [id])?.hp : undefined);
   const follower = part("KIN_FOLLOWER");
   const giant = giantNumbers(ascension);
-  return profile.note
-    .replace("{KIN_PRIEST}", String(part("KIN_PRIEST") ?? (ascension >= 8 ? 199 : 190)))
-    .replace("{KIN_FOLLOWER}", String(follower !== undefined ? Math.round(follower / 2) : ascension >= 8 ? 62 : 59))
-    .replace("{PHASES}", testSubjectPhases(ascension).join("/"))
-    .replace("{SIPHON}", `${giant.siphon} HP`)
-    .replace("{GUN}", giant.gun.join("/"));
+  const beam = kinBeamT11(ascension);
+  return fillDbNumbers(
+    profile.note
+      .replace("{KIN_PRIEST}", String(part("KIN_PRIEST") ?? (ascension >= 8 ? 199 : 190)))
+      .replace("{KIN_FOLLOWER}", String(follower !== undefined ? Math.round(follower / 2) : ascension >= 8 ? 62 : 59))
+      .replace("{KIN_BEAM_T11}", beam === null ? "?" : String(beam))
+      .replace("{PHASES}", testSubjectPhases(ascension).join("/"))
+      .replace("{SIPHON}", `${giant.siphon} HP`)
+      .replace("{GUN}", giant.gun.join("/")),
+    ascension,
+  );
+}
+
+/** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
+export function bossMechanic(profile: BossProfile, ascension: number): string {
+  return fillDbNumbers(profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)), ascension);
+}
+
+/**
+ * The Kin Priest's T11 Beam at this ascension: its hits x (base + the Strength of the two Rituals before
+ * it, T4 and T8), from the monster DB (A8: 3 x (3 + 2 x 2) = 21; A9's Ritual +3: 27). null without DB data.
+ */
+export function kinBeamT11(ascension: number): number | null {
+  const monsters = monsterMoves();
+  const beam = moveDamageAt(monsters, "KIN_PRIEST", "BEAM_MOVE", ascension);
+  const ritual = selfGainAt(monsters["KIN_PRIEST"]?.moves?.["RITUAL_MOVE"], "STRENGTH_POWER", ascension);
+  if (!beam || ritual === null) return null;
+  return beam.hits * ((beam.base ?? beam.perHit) + 2 * ritual);
 }
 
 /**
@@ -683,7 +709,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     ascension,
     entryHp,
     survivableTurns: survive,
-    mechanic: profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)),
+    mechanic: bossMechanic(profile, ascension),
     note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
     lossPerTurn: loss.value,

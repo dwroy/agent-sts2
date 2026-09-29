@@ -107,6 +107,11 @@ function load(): MonsterDb {
   return cached;
 }
 
+/** The monsters part of the loaded DB (moves by id), for moveDamageAt and the like. */
+export function monsterMoves(): Record<string, MonsterEntry> {
+  return load().monsters;
+}
+
 /** For tests: use this DB instead of the file (null reloads the file). */
 export function setMonsterDbForTests(db: MonsterDb | null): void {
   cached = db;
