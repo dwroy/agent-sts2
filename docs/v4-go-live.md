@@ -1,23 +1,35 @@
 # V4 上线说明（给 Dai）
 
-写于 2026-09-30，依据 v4 9841bbc（含 M1、M2b、M3a–c、M4a–b）加 v4-logdb 的 M4c（每局配置落盘）。M2a 路线（v4-brain）写本文时**还没合入 v4**。本文只是说明：没有改 ops/，没有改运行环境，也没有上线。
+写于 2026-09-30，依据 v4-sync（v4 13ac482：v3 c52587c 已合入，含 M1、M2a、M2b、M3a–c、M4a–c），第 1 节按上线前审查的 7 项修复更新过。本文只是说明：没有改 ops/，没有改运行环境，也没有上线。
 
-一句话：默认配置下，大脑发出的请求和 v3 逐字节相同。上线后**默认就会改变对局行为**的是三项，都是代码改动、没有开关：构筑题面去掉代码分数（M2b）、执行闸（M3b）、Jev 题面的药水和机制经验（M3a，在 JEV_CONTEXT=v1 下生效，线上 .env 就是 v1）。知识前缀和 Claude 都要写环境变量才会开。
+一句话：V4 上线后**默认就会改变对局行为**，不能再说「默认请求和 v3 逐字节相同」。`KNOWLEDGE_PREFIX=off`（默认）时，DeepSeek 请求的系统提示、消息格式和参数仍是 v3 的；但题面内容已经不同（M2a 路线、M2b 构筑事实），带路线的题在路线不合法时会多问 DeepSeek 一次。默认开、**没有开关**的有六项：路由器、路线（M2a）、构筑事实（M2b）、带路线题的补问、执行闸（M3b，含发送前复核）、Jev 题面的药水和机制经验（M3a，在 JEV_CONTEXT=v1 下生效，线上 .env 就是 v1）。三个新日志默认开，各有环境变量可关。知识前缀和 Claude 都要写环境变量才会开。
 
 ## 1. V4 相对 v3 改了什么
 
+默认开、没有开关（要回退只能换代码）：
+
+| 模块 | 改了什么 |
+|---|---|
+| 大脑路由器 | DeepSeek 的决策调用都走路由器（src/brain）：统一校验答案、按题型选引擎、失败时回退，每题写一行 brain.jsonl。默认引擎是 deepseek、不带工具，v3 自己的修复（一致性补问、从推理里找回选择）照旧；除带路线的题外，路由器对 DeepSeek 只记录问题、不补问。 |
+| 路线（M2a） | map/route-plan 在整张地图上要一串节点（地图写成文字行，标出所在位置、走过的点、飞行靴次数、所有 boss 点，A10 有第二个 boss）。代码只查合法性（checkRoute：下一步、连线、一步一行、飞行靴跳跃次数、以 boss 结尾）并给出所选路线的事实（到达血量的中位数和 p75、休息点、到下个休息点前的战斗数、下一个精英、boss），不给候选路线、代码分数或名次（f66bf8d）。路线块跟着选牌、休息点、事件的最后一题走，回答 keep 或新路线；幕初古神题看整张地图。大脑失败时这一层用代码的贪心走法（不给大脑看）。 |
+| 带路线题的补问 | 带路线的题（map/route-plan、map/route-review，以及附带路线块的选牌、休息、事件题）路线不合法时，**对 DeepSeek 也补问一次**（specs.ts：pickSpec 带路线时 `reask: true`、routePlanSpec `reask: true`）。补问后还不合法：附带路线的题 choice 照用、路线不变；路线规划题判失败，走代码的贪心走法。补问的调用计入 DEEPSEEK_MAX_CALLS。 |
+| 构筑事实（M2b） | 选牌、商店、休息、事件、选牌屏的题面去掉代码分数和名次、角色张数、门槛和建议，只留事实和日志统计（没有数据写「无数据」），也不删选项（docs/v4-build-facts.md）。路线块里的分数也已由 M2a 去掉。回放 20 题：新题面首答合法 18/20（旧题面 20/20；商店步骤写法、选多张牌的写法各错 1 题，补问也没救回），构筑决定一致 11/18 |
+| 执行闸（M3b） | 动作的索引指向的牌、目标、药水、节点、选项，决策时核对一次，**发送前重新读状态再核对一次**。不一致就不发、重新规划，决策日志写 `gate_reject`（`at`: decision 或 dispatch）。同一局面（状态指纹）连续被拒 3 次（两处的拒绝都算，只有动作真正发出后才清零）：战斗里改为结束回合，其他屏走代码的基线决策，不再问模型和 Jev；一直拒下去时 25 次轮询后打出 `stuck for 25 polls`。回放：113 次历史上的过期喝药拒掉 102 次，误拒 0/1,648 |
+| Jev 题面（M3a） | Jev 的出牌题多两段：「药水经验」（留药打 boss 的经验和实测数据，加上整局计划里提到药水的原话）和「机制经验」。只当证据，不设门槛。回放 20 次走廊喝药：喝的次数 18/20 没变，16/20 的喝药概率下降，每题多约 1,800 token。没有单独开关：`JEV_CONTEXT=off` 会把 v3 已有的 v1 视图一起关掉，不建议 |
+
+要写环境变量才开，或者能用环境变量关：
+
 | 模块 | 改了什么 | 默认 | 开关 |
 |---|---|---|---|
-| 大脑（路由器、引擎） | DeepSeek 的决策调用都走路由器（src/brain）：统一校验、补问一次、失败回退。可以按题型交给 Claude（订阅登录态，不用 API key）；Claude 额度用完、限流或超时时自动退回 DeepSeek，并记下原因。每题写一行 logs/brain.jsonl | 开，引擎是 deepseek、不带工具，请求和 v3 逐字节相同（有测试锁定） | `BRAIN_ENGINE`、`BRAIN_ENGINE_<题型>`（题型取 label 第一段的大写：MAP、EVENT、SHOP、REST、REWARD、SELECTION、RUN_PLAN、FIGHT_PLAN）、`BRAIN_FALLBACK`、`BRAIN_CLAUDE_MODEL(_<题型>)`（opus 固定成 claude-opus-5-5，不写时是 claude-sonnet-5）、`BRAIN_CLAUDE_MAX_CALLS`（每个进程的上限，默认 150）、`BRAIN_CLAUDE_TOOLS`、`BRAIN_LOG` |
-| 知识前缀 | 系统提示 = v3 规则 + 「和数据冲突时以数据为准」 + 本进阶的全量知识：旧攻略、全部经验、怪物库、遭遇战绩、统计表。当前数据下 A9 是 170,145 字，DeepSeek 约 12 万 token，缓存热了以后命中约 95%。memory 里不再重复经验条目。M1 回放 30 题：全部合法；p50 从 24.6 s 降到 12.6 s；成本持平（$0.365 对 $0.340）；和原选择一致的比例从 80% 到 87% | 关 | `KNOWLEDGE_PREFIX=full` |
-| 路线（M2a） | 写本文时还没合入 v4。v4-brain 在做：完整地图交给大脑自由规划，代码只查合法性（包括飞行靴、A10 的第二个 boss）并给出所选路线的事实，旧的候选路线代码删掉 | — | 合入后以它的说明为准 |
-| 构筑事实（M2b） | 选牌、商店、休息、事件、选牌屏的题面去掉代码分数和名次、角色张数、门槛和建议，只留事实和日志统计（没有数据写「无数据」），也不删选项（docs/v4-build-facts.md）。路线题和构筑题里附带的路线块还带分数，等 M2a。回放 20 题：新题面首答合法 18/20（旧题面 20/20；商店步骤写法、选多张牌的写法各错 1 题，补问也没救回），构筑决定一致 11/18 | 开 | 没有开关；要回退只能换代码 |
-| Jev 题面（M3a） | Jev 的出牌题多两段：「药水经验」（留药打 boss 的经验和实测数据，加上整局计划里提到药水的原话）和「机制经验」。只当证据，不设门槛。每次问 Jev 的原文写进 logs/jev-prompts.jsonl。回放 20 次走廊喝药：喝的次数 18/20 没变，16/20 的喝药概率下降，每题多约 1,800 token | 开（线上是 JEV_CONTEXT=v1） | 没有单独开关：`JEV_CONTEXT=off` 会把 v3 已有的 v1 视图一起关掉，不建议。`JEV_PROMPT_LOG=off` 只关原文日志 |
-| 执行闸（M3b） | 动作发出前核对：它的索引指向的牌、目标、药水、节点、选项，是不是决策时看到的那个。不一致就不发，重新规划，决策日志里写 `gate_reject`。回放：113 次历史上的过期喝药拒掉 102 次，误拒 0/1,648 | 开 | 没有开关 |
-| 日志库和评估（M3c、M4b、M4c） | tools/logdb（DuckDB 分析库）、tools/eval/metrics.py、calibration.py 都在对局外运行。对局进程每局开局时写一行 logs/run-config.jsonl：提交号、分支、引擎和模型、知识前缀的哈希和 token 估计、Jev 和进阶配置，不含 key。metrics.py `--group-by config` 按这一行分组（docs/eval.md §8） | run-config 默认开 | `RUN_CONFIG_LOG=off` 关 |
-| 学习者（M4a） | learner/run.ts 把复盘、经验更新、批量修 bug 写成任务文件，交给 claude（订阅）或 codex 执行 | 对局外，上线用不到它 | 运维 prompt 的修改建议在 learner/proposal-ops-prompt.md，等你审 |
+| Claude 引擎 | 可以按题型交给 Claude（订阅登录态，不用 API key）。程序路径：`BRAIN_CLAUDE_BIN`，不写时按 PATH → ~/.local/bin/claude 找成绝对路径（ops/run.sh 的 PATH 只加了 ~/.local/node/bin）。配置里任何地方用到 claude（默认引擎、按题型、回退引擎）时，开局前跑一次 `claude --version`：失败就在控制台打 `ERROR: claude is unavailable for this run`、写进 run-config 的 `claude_check` 和 `warnings`，整个进程不再启动它（有回退就直接问回退引擎）。程序启动失败（找不到、不能执行）冷却 30 分钟；额度用完、登录失效冷却 30 分钟，限流 2 分钟，过载 1 分钟；每次调用默认 2 分钟超时，连续 2 次超时（补问的也算）冷却 10 分钟。两次都答得不合法（或补问失败、超时）时按 `BRAIN_FALLBACK` 退一次回退引擎，再不行才落到 Jev/代码。退回 DeepSeek 时同样受 `DEEPSEEK_MAX_CALLS` 约束，答了但答案不能用的那次也计数 | 关（引擎是 deepseek） | `BRAIN_ENGINE`、`BRAIN_ENGINE_<题型>`（题型取 label 第一段的大写：MAP、EVENT、SHOP、REST、REWARD、SELECTION、RUN_PLAN、FIGHT_PLAN）、`BRAIN_FALLBACK`、`BRAIN_CLAUDE_BIN`、`BRAIN_CLAUDE_MODEL(_<题型>)`（opus 固定成 claude-opus-5-5，不写时是 claude-sonnet-5）、`BRAIN_CLAUDE_TIMEOUT_MS`（默认 120000）、`BRAIN_CLAUDE_MAX_CALLS`（每个进程的上限，默认 150）、`BRAIN_CLAUDE_TOOLS` |
+| 知识前缀 | 系统提示 = v3 规则 + 「和数据冲突时以数据为准」 + 本进阶的全量知识：旧攻略、全部经验、怪物库、遭遇战绩、统计表。当前数据下 A9 是 170,145 字，DeepSeek 约 12 万 token，缓存热了以后命中约 95%。memory 里不再重复经验条目。M1 回放 30 题：全部合法；p50 从 24.6 s 降到 12.6 s；成本持平（$0.365 对 $0.340）；和原选择一致的比例从 80% 到 87%。前缀没有长度上限：估计超过 15 万 DeepSeek token（knowledge.ts `PREFIX_WARN_TOKENS`）时，控制台打 `WARNING: KNOWLEDGE_PREFIX=full`、写进 run-config 的 `warnings`；某题遇到上下文超长的错误时，这一题退回 v3 提示（不带前缀）重问一次，brain.jsonl 那一行的 `knowledge.error` 写原因 | 关 | `KNOWLEDGE_PREFIX=full` |
+| brain.jsonl | 大脑每题一行：请求、答案、校验问题、补问、回退原因（`fell_back_from.kind`）、用量 | 开，在决策日志旁边 | `BRAIN_LOG=<路径>`；`BRAIN_LOG=off` 关 |
+| jev-prompts.jsonl | 每次问 Jev 的原文 | 开 | `JEV_PROMPT_LOG=off` 关 |
+| run-config.jsonl（M4c） | 每局开局写一行：提交号、分支、引擎和模型、知识前缀的哈希和 token 估计、Jev 和进阶配置，不含 key；开局告警在 `warnings`。metrics.py `--group-by config` 按这一行分组（docs/eval.md §8） | 开 | `RUN_CONFIG_LOG=off` 关 |
 
-新增的日志文件：brain.jsonl、jev-prompts.jsonl、run-config.jsonl，都在 logs/。
+对局外、上线用不到的：tools/logdb（DuckDB 分析库）、tools/eval/metrics.py、calibration.py（M3c、M4b）；learner/run.ts（M4a，把复盘、经验更新、批量修 bug 写成任务文件交给 claude 或 codex；运维 prompt 的修改建议在 learner/proposal-ops-prompt.md，等你审）。
+
+新增的日志文件都在 logs/，按审查实测：brain.jsonl 约 1–1.5 MB/局，jev-prompts.jsonl 约 1.3–2 MB/局，run-config.jsonl 约 3 KB/局；三个加起来 24 小时约 70 MB。
 
 ## 2. 两种切换方式
 
@@ -137,9 +149,9 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 - [ ] tools/eval/versions.json 的 V4 条目填好 `commit`（上线提交）和 `source`（decision-log 那一条），然后提交。不填的话，V4 的局按祖先关系会算进 V3.route-review。
 - [ ] 知识数据已刷新（见 2a 的命令；方式 b 不用），experience.json 是 v3 最新的版本。`KNOWLEDGE_PREFIX=full` 时跑 `npx tsx tools/gkb-dump.ts --ascension <进阶> --sizes-only`，确认能渲染、大小正常（A9 约 17 万字）。
 - [ ] 日志库同步一次：`$P tools/logdb/sync.py`。新表 run_config 要同步过才有；旧库 query.py 会提示去同步。
-- [ ] 用 Claude 时：本机 `claude` 登录态有效，订阅额度够一批（约 10 局 × 9 题）；`BRAIN_FALLBACK=deepseek` 已设。额度用完不会卡住，只会退回 DeepSeek，brain.jsonl 里记 `fallback_kind=quota`。
+- [ ] 用 Claude 时：本机 `claude` 登录态有效，订阅额度够一批（约 10 局 × 9 题）；`BRAIN_FALLBACK=deepseek` 已设。额度用完不会卡住，只会退回 DeepSeek，brain.jsonl 里记 `fell_back_from.kind` 为 `quota`。第一局开局后看控制台没有 `ERROR: claude is unavailable`，run-config 的 `claude_check.ok` 是 true、`bin` 是绝对路径（run.sh 的 PATH 里没有 ~/.local/bin，代码自己会找；装在别处就写 `BRAIN_CLAUDE_BIN`）。
 - [ ] 日志大小：
-  - 新增三个文件：brain.jsonl 每题一行，估计每局不到 1 MB；jev-prompts.jsonl 每局约 45 次 Jev 调用，估计每局不到 1 MB；run-config.jsonl 每局约 3 KB。
+  - 新增三个文件（审查实测）：brain.jsonl 约 1–1.5 MB/局；jev-prompts.jsonl 约 1.3–2 MB/局；run-config.jsonl 约 3 KB/局；24 小时合计约 70 MB。
   - 大头仍是 states.jsonl：每局约 11 MB，现在 3.9 GB。
   - 磁盘剩 900 GB。
 - [ ] 第一局开局后检查：
@@ -154,7 +166,7 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 
 - 合并提交 96a2be7，带进 v3 在 389bdb7 之后的 48 个提交（5 次合并、4 次知识数据刷新、2 次经验和攻略更新，其余是修复批次 I–L）。
 - 冲突 11 个文件，处理方式：
-  - src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求仍和（合并后的）v3 逐字节相同。
+  - src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求的系统提示和请求格式仍和（合并后的）v3 相同（题面内容因 M2a、M2b 不同，见第 1 节）。
   - src/project/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
   - src/screens/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
   - src/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
