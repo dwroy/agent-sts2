@@ -806,3 +806,39 @@ describe("debuffs enemy moves put on us carry into the rollout's later turns (XL
     expect(enemyTable("TERROR_EEL", 9, db.monsters, {})!.moves["TERROR_MOVE"]!.playerPowers).toEqual({ VULNERABLE_POWER: 99 });
   });
 });
+
+describe("Plating wears off one stack a turn in the rollout (「覆甲会在你的回合开始时减少1层」)", () => {
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const run = (playerPowers: Record<string, number>, endTurnBlock: number, hand: CardModel[]) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, endTurnBlock },
+      enemies: [{ index: 0, name: "E", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 1 }] }],
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "HIT", strength: 0, powers: {} }],
+      tables: { E: HIT },
+      playerPowers,
+    }).lines[0]!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+  const strikes = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+
+  it("Plating 3 now: 2, 1, 0 block at the end of the next turns; Metallicize 3 stays", () => {
+    expect(losses(run({ PLATING_POWER: 3 }, 3, strikes))).toEqual([8, 9, 10, 10]);
+    expect(losses(run({ METALLICIZE_POWER: 3 }, 3, strikes))).toEqual([7, 7, 7, 7]);
+  });
+
+  it("Plating played in the line (Stone Armor 4) decays the same way", () => {
+    const armor = card(0, "STONE_ARMOR", { type: "Power", target: "self", validTargets: [], plating: 4, special: "plating" });
+    const line = run({}, 0, [armor, strike(1), strike(2), strike(3), strike(4)]);
+    expect(line.plan.steps.map((step) => step.cardId)).toContain("STONE_ARMOR");
+    expect(losses(line)).toEqual([7, 8, 9, 10]);
+  });
+});

@@ -697,7 +697,13 @@ interface SimPlayer {
   block: number;
   keepsBlock: boolean;
   demonForm: number;
+  /** Block at the end of every turn that does not wear off (Metallicize). */
   endTurnBlock: number;
+  /**
+   * Plating (PLATING_POWER, 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层。」): block at the
+   * end of our turn, one stack less at the start of each of our turns.
+   */
+  plating: number;
   juggernaut: number;
   feelNoPain: number;
   potions: number;
@@ -788,7 +794,7 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
 
 function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, blockEnd: number, energyLeft: number, handLeft: number, playerPowers: Record<string, number>): Snapshot {
   const pw: Record<string, number> = { ...playerPowers };
-  for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns]] as const) {
+  for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns], ["PLATING_POWER", player.plating]] as const) {
     if (v !== 0) pw[id] = v;
     else delete pw[id];
   }
@@ -866,6 +872,7 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
  * losses cost is already in the line's outcome (the solver's startTurnHpLoss). Returns the damage dealt.
  */
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
+  player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
@@ -922,7 +929,7 @@ function applyPlan(
       playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
     }
     if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
-    if (card.plating) player.endTurnBlock += card.plating;
+    if (card.plating) player.plating += card.plating;
     if (card.exhausts || card.type === "Power") continue;
     piles.discard.push(handBase[at] ?? card);
   }
@@ -1126,7 +1133,9 @@ function simulate(
     block: base.block,
     keepsBlock: base.keepsBlock === true,
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
-    endTurnBlock: base.endTurnBlock ?? 0,
+    // The decision's end-of-turn block is Plating + Metallicize (combat-plan): Plating wears off, split it out.
+    endTurnBlock: Math.max(0, (base.endTurnBlock ?? 0) - (input.playerPowers["PLATING_POWER"] ?? 0)),
+    plating: Math.min(base.endTurnBlock ?? 0, input.playerPowers["PLATING_POWER"] ?? 0),
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     potions: input.potions,
@@ -1244,7 +1253,7 @@ function simulate(
       noBlock: false,
       tender: 0,
       keepsBlock: player.keepsBlock,
-      endTurnBlock: player.endTurnBlock,
+      endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
       // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
