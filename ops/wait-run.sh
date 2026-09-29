@@ -11,5 +11,7 @@ T="$HOME/Projects/sts2-jev/jev-sts2-v3/tools"
 python3 "$T/build-monster-db.py" --quiet --move-model-out "$HOME/Projects/sts2-jev/jev-sts2-v3/src/knowledge/move-model.json"
 python3 "$T/monster-db-check.py" >/dev/null 2>&1 || true
 python3 "$T/build-outcome-stats.py" >/dev/null 2>&1 || true
+python3 "$T/build-boss-damage.py" >/dev/null 2>&1 || true
+python3 "$T/build-card-upgrades.py" >/dev/null 2>&1 || true
 tail -1 "$LOG"
 echo "runs since last rule update: $(( $(wc -l < "$LOG") - $(cat "$OPS/rule-update.mark" 2>/dev/null || echo 0) ))"
