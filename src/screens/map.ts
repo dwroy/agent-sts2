@@ -913,6 +913,13 @@ export interface PositionRoutes {
   planFor: (key: string, hp: number, why: string) => RoutePlan | null;
 }
 
+/** Winged Boots charges left (the relic's `stack`; 0 without the relic or once they are spent). */
+export function wingedBootsLeft(run: Record<string, unknown> | undefined): number {
+  const boots = asArray(asRecord(run)["relics"]).map(asRecord).find((relic) => str(relic["relic_id"]) === "WINGED_BOOTS");
+  if (!boots || bool(boots["is_melted"])) return 0;
+  return Math.max(0, num(boots["stack"]));
+}
+
 /**
  * The node we are in on a REWARD or REST screen (their states carry no map position): the node chosen from
  * the map remembered one floor earlier (RememberedMap.chosen), else the only available node of `rooms` on
@@ -950,14 +957,19 @@ export function positionRoutes(env: DecisionEnv, rooms: readonly string[]): Posi
   const nodes = new Map<string, MapNode>(map.nodes.map((node) => [key(node.row, node.col), { row: node.row, col: node.col, type: node.type, children: node.children }]));
   const node = nodes.get(key(here.row, here.col));
   if (!node || node.children.length === 0) return null;
+  // Winged Boots with charges left: any node of the next row can be taken (the MAP screen lists them all), not
+  // only this node's children (9GRPS5DC8KHN F28: a rest site at (11,2) the boots could reach was never offered).
+  const boots = wingedBootsLeft(state.run?.raw);
+  const reachable = boots > 0 ? [...nodes.values()].filter((entry) => entry.row === here.row + 1).sort((a, b) => a.col - b.col) : node.children;
+  const onLine = (step: { row: number; col: number }): boolean => node.children.some((child) => child.row === step.row && child.col === step.col);
   const next = nextPlannedStep(plan, here);
-  if (!next || !node.children.some((child) => child.row === next.row && child.col === next.col)) return null;
+  if (!next || !reachable.some((child) => child.row === next.row && child.col === next.col)) return null;
   const hpPct = hpPercent(env);
   const maxHp = state.run?.max_hp ?? 80;
   const urgencyOf = (hp: number): number => (hp < 0.4 ? 3 : hp < 0.55 ? 1.8 : 1);
   const context: RouteContext = {
     nodes,
-    available: node.children.map((child, index) => ({ index, row: child.row, col: child.col, type: nodes.get(key(child.row, child.col))?.type ?? "Unknown" })),
+    available: reachable.map((child, index) => ({ index, row: child.row, col: child.col, type: nodes.get(key(child.row, child.col))?.type ?? "Unknown" })),
     current: { row: here.row, col: here.col },
     start: { hp: hpPct, gold: state.run?.gold ?? 0, fights: here.fights },
     weights: weightOf,
@@ -973,9 +985,14 @@ export function positionRoutes(env: DecisionEnv, rooms: readonly string[]): Posi
   const kept = scorePath(remaining.map((step) => nodes.get(key(step.row, step.col)) ?? { row: step.row, col: step.col, type: step.type, children: [] }), context);
   const types = (entry: ScoredPath): string => entry.path.map((step) => step.type).join(">");
   const others = candidates.filter((entry) => types(entry) !== types(kept)).slice(0, ROUTE_CANDIDATES - 1);
+  // A first step off this node's lines spends a Winged Boots charge: said so in its facts.
+  const factsOf = (entry: ScoredPath): Record<string, JsonValue> => ({
+    ...pathFacts(entry, maxHp),
+    ...(entry.path[0] && !onLine(entry.path[0]) ? { winged_boots: `its first step is off this node's lines: uses 1 of the ${boots} Winged Boots charge${boots === 1 ? "" : "s"} left` } : {}),
+  });
   const routes: PositionRoute[] = [
-    { key: "keep", value: kept.value, entry: kept, facts: pathFacts(kept, maxHp) },
-    ...others.map((entry, at) => ({ key: `p${at + 1}`, value: entry.value, entry, facts: pathFacts(entry, maxHp) })),
+    { key: "keep", value: kept.value, entry: kept, facts: factsOf(kept) },
+    ...others.map((entry, at) => ({ key: `p${at + 1}`, value: entry.value, entry, facts: factsOf(entry) })),
   ];
   const floorOf = (row: number): number => floor + (row - here.row);
   const entryOf = (routeKey: string): ScoredPath | undefined => routes.find((route) => route.key === routeKey)?.entry;
