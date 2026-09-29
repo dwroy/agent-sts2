@@ -1433,6 +1433,8 @@ function applyPlan(
   }
   // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
   const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
+  // Slippery stacks the retaliation took (a stack per hit it hurt).
+  const slipperyUsed = new Map((o.retaliated ?? []).map((r) => [r.index, r.slipperyUsed ?? 0]));
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
@@ -1441,7 +1443,7 @@ function applyPlan(
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (a.artifact !== undefined) e.artifact = a.artifact;
-    if (a.slippery !== undefined) e.slippery = a.slippery;
+    if (a.slippery !== undefined) e.slippery = Math.max(0, a.slippery - (slipperyUsed.get(e.index) ?? 0));
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
     if (a.shrink !== undefined) e.shrink = a.shrink;

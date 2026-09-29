@@ -372,3 +372,43 @@ describe("4c. Draw potions (Distilled Chaos, Glowwater, Gambler's Brew) when the
     expect(glow.generates!.name).toBe("an average draw");
   });
 });
+
+describe("5. Retaliation (Thorns, Flame Barrier) into Slippery (1 per hit, a stack each) and Hardened Shell (its cap on the enemy turn) (W6F4YXF3MT7A F17 Vantom, TQCZFBK7T09Y F11 Skulking Colony)", () => {
+  const retaliatedOn = (over: Partial<EnemySim>, retaliate: number, hits: number) => {
+    const input: SolverInput = { hand: [], player: player({ energy: 0, hp: 80, retaliate }), enemies: [enemy({ attacks: [{ damage: 4, hits }], ...over })], fightKind: "monster", turn: 1 };
+    return solveTurn(input).plans.find((plan) => plan.steps.length === 0)!.outcome.retaliated;
+  };
+
+  it("solver, Slippery 2: three hits of Thorns 3 take 1 + 1 + 3 (and two stacks); without it 9", () => {
+    expect(retaliatedOn({}, 3, 3)).toEqual([{ index: 0, amount: 9 }]);
+    expect(retaliatedOn({ slippery: 2 }, 3, 3)).toEqual([{ index: 0, amount: 5, slipperyUsed: 2 }]);
+    expect(retaliatedOn({ slippery: 5 }, 3, 3)).toEqual([{ index: 0, amount: 3, slipperyUsed: 3 }]);
+  });
+
+  it("solver, Hardened Shell 20: Flame Barrier 10 on three hits takes 20, not 30 (a fresh cap on the enemy turn)", () => {
+    expect(retaliatedOn({ hpLossCap: 20 }, 10, 3)).toEqual([{ index: 0, amount: 20 }]);
+    expect(retaliatedOn({ hpLossCap: 20 }, 3, 3)).toEqual([{ index: 0, amount: 9 }]);
+  });
+
+  it("rollout: the stacks retaliation takes are gone on the later turns (Thorns 3, one hit a turn, Slippery 2: 1 + 1 + 3 + 3)", () => {
+    const HIT: EnemyTable = { moves: { HIT: { damage: 4, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const solver: SolverInput = { hand: [], player: player({ energy: 0, hp: 80, retaliate: 3 }), enemies: [enemy({ hp: 100, maxHp: 100, slippery: 2, attacks: [{ damage: 4, hits: 1 }] })], fightKind: "monster", turn: 1 };
+    const plan = solveTurn(solver).plans.find((entry) => entry.steps.length === 0)!;
+    let t = 0;
+    const line = rolloutDecision({
+      solver,
+      plans: [plan],
+      enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: { SLIPPERY_POWER: 2 } }],
+      tables: { X: HIT },
+      piles: { draw: Array.from({ length: 20 }, (_, i) => idle(10 + i)), discard: [], handBase: [] },
+      meta: META,
+      playerPowers: { THORNS_POWER: 3 },
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 1, horizon: 4, samples: 2, now: () => (t += 0.01) },
+    }).lines[0]!;
+    expect(line.enemyHpLeft).toBe(100 - (1 + 1 + 3 + 3));
+  });
+});

@@ -602,7 +602,7 @@ export interface Outcome {
    * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
    * enemyHpAfter (our turn's end); the rollout takes it off their HP.
    */
-  retaliated?: { index: number; amount: number }[];
+  retaliated?: { index: number; amount: number; slipperyUsed?: number }[];
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
   /**
@@ -2142,16 +2142,22 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
   // Retaliation (Flame Barrier, Thorns) dealt on the enemy turn, per attacker: the rollout takes it off their HP.
-  const retaliated: { index: number; amount: number }[] = [];
+  const retaliated: { index: number; amount: number; slipperyUsed?: number }[] = [];
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
-    // kills stops attacking), capped by the attacker's HP.
+    // kills stops attacking), capped by the attacker's HP. Slippery: each hit's loss is 1 and takes a stack
+    // (W6F4YXF3MT7A F17 Vantom: Thorns 3 into Slippery 3 took 1 HP and one stack). Hardened Shell: at most its
+    // cap on the enemy turn, a turn of its own (TQCZFBK7T09Y F11 T1: 20 lost on our turn, then 3 of Thorns).
     let back = 0;
     for (const enemy of living) {
       const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
-      const amount = Math.min(Math.max(0, enemy.hp), landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      const each = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
+      const slipperyUsed = Math.min(landed, Math.max(0, enemy.slippery ?? 0));
+      let amount = slipperyUsed + (landed - slipperyUsed) * each;
+      if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) amount = Math.min(amount, enemy.hpLossCap);
+      amount = Math.min(Math.max(0, enemy.hp), amount);
       back += amount;
-      if (amount > 0) retaliated.push({ index: enemy.index, amount });
+      if (amount > 0) retaliated.push({ index: enemy.index, amount, ...(slipperyUsed > 0 ? { slipperyUsed } : {}) });
     }
     score += weights.damage * back;
   }
