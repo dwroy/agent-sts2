@@ -229,6 +229,7 @@ const POWER_AMOUNT_VARS: Record<string, string> = {
   RUPTURE: "StrengthPower",
   INFERNO: "InfernoPower",
   METALLICIZE: "MetallicizePower",
+  ROLLING_BOULDER: "RollingBoulderPower",
 };
 
 const SPECIAL: Record<string, CardModel["special"]> = {

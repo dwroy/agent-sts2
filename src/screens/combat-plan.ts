@@ -884,15 +884,17 @@ export const CLOAK_CLASP_BLOCK = 1;
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
 /**
- * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), and Inferno
+ * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
  * (INFERNO_POWER amount, 6 / 9 upgraded) once for its own start-of-turn HP loss and once more for a
- * Crimson Mantle's (both are HP lost on our turn). 9XZX T5 -> T6: Crusher 55 -> 49, Rocket 140 -> 134.
+ * Crimson Mantle's (both are HP lost on our turn), and Rolling Boulder's amount. 9XZX T5 -> T6: Crusher
+ * 55 -> 49, Rocket 140 -> 134.
  */
 export function turnStartAoe(relicIds: string[], player: Record<string, unknown>): number {
   const hourglass = relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0;
   const inferno = powerAmount(player, "INFERNO_POWER");
   const lossEvents = inferno > 0 ? 1 + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0) : 0;
-  return hourglass + inferno * lossEvents;
+  // Rolling Boulder: its amount is what the next start of turn deals to every enemy (then +5; the rollout grows it).
+  return hourglass + inferno * lossEvents + powerAmount(player, "ROLLING_BOULDER_POWER");
 }
 const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;

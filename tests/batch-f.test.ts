@@ -14,6 +14,7 @@ import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss
 import type { CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
+import { turnStartAoe } from "../src/screens/combat-plan.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -194,5 +195,59 @@ describe("4a. Cloak Clasp: 1 Block at the end of the turn for each card still in
     // One energy: Defend (5) leaves two cards held: 10 - 5 - 2 = 3.
     const one = solveTurn({ ...input(true), player: player({ energy: 1, blockPerHeldCard: 1 }) }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "DEFEND_IRONCLAD")!;
     expect(one.outcome.hpLoss).toBe(3);
+  });
+});
+
+describe("4b. Rolling Boulder: every start of turn hits every enemy for its amount, then 5 more (83FLGYXZG9QH, KYC0RYEN0NVW)", () => {
+  const boulderRun = (powers: Record<string, number>, hp: number, turnStartAoeNow: number) => {
+    const solver: SolverInput = { hand: [defend(0)], player: player({ energy: 0, turnStartAoe: turnStartAoeNow }), enemies: [enemy({ hp, maxHp: hp })], fightKind: "monster", turn: 2 };
+    return rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: [], discard: [defend(10), defend(11), defend(12), defend(13), defend(14)], handBase: [defend(0)] },
+      meta: META,
+      playerPowers: powers,
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 3, now: fastClock() },
+    }).lines[0]!;
+  };
+
+  it("the board's power: 5 at the next start of turn, 10 at the one after (15 HP dies on the second, not the third)", () => {
+    // combat-plan's start-of-turn AoE counts the power's amount (it was left out: 0).
+    expect(turnStartAoe([], { powers: [{ power_id: "ROLLING_BOULDER_POWER", amount: 10 }] })).toBe(10);
+    expect(turnStartAoe(["MERCURY_HOURGLASS"], { powers: [{ power_id: "ROLLING_BOULDER_POWER", amount: 5 }] })).toBe(8);
+    const line = boulderRun({ ROLLING_BOULDER_POWER: 5 }, 15, 5);
+    expect(line.winProb).toBe(1);
+    expect(line.turnsToWin).toBe(2);
+    // Mercury Hourglass alongside: 3 + 5, then 3 + 10.
+    const both = boulderRun({ ROLLING_BOULDER_POWER: 5 }, 21, 8);
+    expect(both.turnsToWin).toBe(2);
+  });
+
+  it("played in the line: the card's amount from the next start of turn on", () => {
+    const boulder = card(0, "ROLLING_BOULDER", { type: "Power", target: "self", validTargets: [], cost: 0, powerAmount: 5, flatValue: 26 });
+    const solver: SolverInput = { hand: [boulder], player: player({ energy: 3 }), enemies: [enemy({ hp: 15, maxHp: 15 })], fightKind: "monster", turn: 2 };
+    const plays = solveTurn(solver).plans.find((plan) => plan.steps.some((step) => step.cardId === "ROLLING_BOULDER"))!;
+    const result = rolloutDecision({
+      solver,
+      plans: [plays],
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: [], discard: [defend(10), defend(11), defend(12), defend(13), defend(14)], handBase: [boulder] },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 3, now: fastClock() },
+    });
+    expect(result.lines[0]!.winProb).toBe(1);
+    expect(result.lines[0]!.turnsToWin).toBe(2);
   });
 });

@@ -691,7 +691,7 @@ export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { 
 }
 
 /** A lasting power the rollout carries into its later turns (a SimPlayer field). */
-type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable";
+type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder";
 
 /**
  * Power cards whose lasting effect the rollout carries: the SimPlayer field, the power it shows as (for
@@ -710,7 +710,15 @@ const POWER_EFFECTS: Record<string, { effect: LastingPower; power: string; amoun
   RUPTURE: { effect: "rupture", power: "RUPTURE_POWER", amount: [1, 2] },
   PYRE: { effect: "pyre", power: "PYRE_POWER", amount: [1, 2] },
   UNMOVABLE: { effect: "unmovable", power: "UNMOVABLE_POWER", amount: [1, 1] },
+  ROLLING_BOULDER: { effect: "boulder", power: "ROLLING_BOULDER_POWER", amount: [5, 5] },
 };
+
+/**
+ * Rolling Boulder (「在你的回合开始时，对所有敌人造成5点伤害，然后将该伤害增加5点」): the power's amount is the
+ * next start of turn's damage to every enemy, 5 more after each (logged ROLLING_BOULDER_POWER 5, 10, 15, … 35
+ * over M6P7 F48 T3-T9; KYC0 F28: played T1, the segments 52/48/38 -> 47/43/33 at T2's start, amount 10).
+ */
+export const BOULDER_STEP = 5;
 
 /** HP lost at the start of our next turn (Crimson Mantle's per copy, Inferno's 1, anything else already up). */
 function startTurnHpLossOf(player: SimPlayer): number {
@@ -722,9 +730,9 @@ function startLossEvents(player: SimPlayer): number {
   return (player.inferno > 0 ? 1 : 0) + (player.mantle > 0 ? 1 : 0);
 }
 
-/** Damage to every enemy at the start of our next turn (combat-plan turnStartAoe): relics plus Inferno per loss event. */
+/** Damage to every enemy at the start of our next turn (combat-plan turnStartAoe): relics, Inferno per loss event, Rolling Boulder. */
 function turnStartAoeOf(player: SimPlayer): number {
-  return player.relicAoe + player.inferno * startLossEvents(player);
+  return player.relicAoe + player.inferno * startLossEvents(player) + player.boulder;
 }
 
 /** Enemy turns a lone dead Decimillipede segment stays down, and the HP it returns with when REATTACH_POWER is unread. */
@@ -863,8 +871,10 @@ interface SimPlayer {
   clarityTurns: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
-  /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
+  /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno and Rolling Boulder. */
   relicAoe: number;
+  /** Rolling Boulder: the next start of turn's damage to every enemy; BOULDER_STEP more after each. */
+  boulder: number;
   /** Start-of-turn HP loss from anything but Crimson Mantle and Inferno. */
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
@@ -1126,6 +1136,7 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   player.block += player.mantle;
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
+  if (player.boulder > 0) player.boulder += BOULDER_STEP;
   if (aoe <= 0) return 0;
   let dealt = 0;
   for (const e of enemies) {
@@ -1571,6 +1582,7 @@ function simulate(
     strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
+    boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
     otherStartLoss: 0,
     startDealt: 0,
     playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
@@ -1598,7 +1610,7 @@ function simulate(
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
   // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
-  player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player));
+  player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player) - player.boulder);
   player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
