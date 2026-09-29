@@ -365,3 +365,45 @@ describe("7a. Rollout: an Imbalanced enemy is stunned by a fully blocked hit, ne
     expect(open.perTurn[0]!.loss.min).toBe(15);
   });
 });
+
+describe("7c. Rollout under a tight budget: the first wave shrinks to 3 turns on demand, and a finished wave is kept (ZGZ0EQDDNJPT boss: 3 of 5 questions fell back to 1 turn)", () => {
+  const T: EnemyTable = { moves: { HIT: { damage: 8, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const META: FightMeta = { act: 1, t: 1, asc: 9, kind: "hallway", enc: "X", deck: { n: 10, atk: 5, skl: 5, pow: 0, junk: 0, dmg: 6, blk: 5, up: 0 }, relics: 0, max_en: 3 };
+  const hand = [0, 1, 2, 3, 4].map((i) => (i % 2 ? strike(i) : card(i, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 5 })));
+  const solver: SolverInput = { hand, player: player(), enemies: [enemy({ hp: 300, maxHp: 300, attacks: [{ damage: 8, hits: 1 }] })], fightKind: "monster", turn: 1 };
+  const plans = solveTurn(solver).plans.slice(0, 6);
+  /** A clock that moves 1 ms on every reading: the time a rollout takes is the work it does. */
+  const run = (budgetMs: number) => {
+    let t = 0;
+    return rolloutDecision({
+      solver,
+      plans,
+      enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+      tables: { X: T },
+      piles: { draw: Array.from({ length: 20 }, (_, i) => ({ ...hand[i % 5]!, index: 10 + i, key: `c${10 + i}` })), discard: [], handBase: hand },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs, seed: 1, now: () => (t += 1) },
+    });
+  };
+
+  it("too little time for the full horizon: 3 turns for the rest of the first wave, not the 1-turn fallback", () => {
+    const r = run(60);
+    expect(r.degraded).not.toContain("1-turn");
+    expect(r.degraded).toContain("first wave at 3 turns");
+    expect(r.lines[0]!.horizon).toBe(3);
+  });
+
+  it("the first wave finished just past the budget: its sample is kept (horizon 5, 1 sample), not thrown away", () => {
+    const r = run(100);
+    expect(r.degraded).toEqual(["samples 1 (clock)"]);
+    expect(r.lines[0]!.horizon).toBe(5);
+    expect(r.lines[0]!.samples).toBe(1);
+    // Enough time: as before.
+    expect(run(4000).degraded).toEqual([]);
+  });
+});

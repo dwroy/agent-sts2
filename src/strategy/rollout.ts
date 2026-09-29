@@ -2130,6 +2130,8 @@ const SCHEDULE: { horizon: number; samples: number }[] = [
   { horizon: 3, samples: 4 },
   { horizon: 3, samples: 2 },
 ];
+/** The horizon the first wave drops to when it cannot finish at the full one in the time left. */
+const SHORT_HORIZON = 3;
 /** With kill orders, samples go before the horizon: an order only shows once its first target is dead. */
 const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
   { horizon: 5, samples: 8 },
@@ -2211,23 +2213,49 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const turnsBefore = budget.policyTurns;
     const t = now();
     // First wave at the full horizon, timing the policy. Past the budget it is abandoned: 1 turn for all.
-    const first = units.map((unit) => run(unit, maxHorizon, 0));
+    // Shrunk on demand: when the first unit's time says the wave cannot finish at the full horizon in the time
+    // left, the rest of it (and the samples after) run at SHORT_HORIZON turns, so the lines still get a rollout
+    // instead of the 1-turn fallback (ZGZ0EQDDNJPT boss T1/T3: 16 and 10 lines x 2 kill orders after a 400 ms
+    // random-potion sample, both fell back; 3 of the fight's 5 questions).
+    let firstHorizon = maxHorizon;
+    const first: (TurnRecord[] | null)[] = [];
+    for (const unit of units) {
+      const records = run(unit, firstHorizon, 0);
+      first.push(records);
+      // The first unit's time says the rest would not finish at this horizon in the time left (one clock reading).
+      const rest = units.length - first.length;
+      if (first.length === 1 && records !== null && rest > 0 && firstHorizon > SHORT_HORIZON) {
+        const at = now();
+        if ((at - t) * rest > budget.budgetMs - (at - budget.start)) firstHorizon = SHORT_HORIZON;
+      }
+    }
+    if (firstHorizon < maxHorizon) degraded.push(`first wave at ${firstHorizon} turns`);
     const waveMs = now() - t;
     const perTurn = waveMs / Math.max(1, budget.policyTurns - turnsBefore);
     const left = budget.budgetMs - elapsed();
     // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
     // wave's own time is the measure of a wave.
-    const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, maxHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
+    const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, firstHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
     // The schedule at the asked sizes: each step clamped to maxHorizon x maxSamples (asking for fewer than 8
-    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1).
+    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1);
+    // after a shrunk first wave, no step longer than it (plus its one sample, which always fits).
     const schedule = (orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE)
-      .map((s) => ({ horizon: Math.min(s.horizon, maxHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .map((s) => ({ horizon: Math.min(s.horizon, firstHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .concat(firstHorizon < maxHorizon ? [{ horizon: firstHorizon, samples: 1 }] : [])
       .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
     const fit = schedule.find((s) => cost(s.horizon, s.samples) <= left);
-    if (first.some((r) => r === null) || elapsed() > budget.budgetMs || !fit) {
+    if (first.some((r) => r === null)) {
       horizon = 1;
       samples = 1;
       degraded.push("1-turn");
+    } else if (elapsed() > budget.budgetMs || !fit) {
+      // The first wave finished, just past the budget: its one sample per line is kept (it was thrown away for
+      // the 1-turn fallback), no more waves.
+      first.forEach((records, i) => trajectories[i]!.push(records!));
+      horizon = firstHorizon;
+      samples = 1;
+      if (firstHorizon < maxHorizon) degraded.push(`horizon ${firstHorizon}`);
+      degraded.push("samples 1 (clock)");
     } else {
       first.forEach((records, i) => trajectories[i]!.push(records!));
       if (fit.horizon < maxHorizon) degraded.push(`horizon ${fit.horizon}`);
