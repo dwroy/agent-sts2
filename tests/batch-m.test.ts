@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { DeepSeekAnswerError, DeepSeekClient, frozenGuideFacts, pickJsonObject, truncatedJsonObject } from "../src/llm/deepseek.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -324,5 +324,32 @@ describe("6. The standalone removal screen shows the run plan's +40 apart, as a 
     const other = Object.values(criteria).find((option) => option["card"] !== "打击" && option["card"] !== "防御")!;
     expect(other["why"]).toMatch(/^removal order: /);
     expect(other["why"]).not.toContain("this card:");
+  });
+});
+
+describe("7. \"Mod says lethal, solver says alive\" names what the solver counts at the turn's end (86C3 F25 T5: 28 intents vs 28 HP, Plating 2)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  const endLine = (outcome: Partial<Plan["outcome"]>): Plan => ({ steps: [], score: 0, outcome: { dies: false, hpLoss: 0, incomingAfterBlock: 0, heldDamage: 0, sandpitAfter: null, ...outcome } }) as unknown as Plan;
+
+  it("the logged board: Plating's end-of-turn block named, with the HP the enemy turn takes", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    const decision = planCombatTurn(loggedEnv(logged("batch-m/86c3-f25-t5-plating"))) as unknown as { rationale: string };
+    expect(decision.rationale).toContain(
+      "[calc mismatch: solver says ending now does not kill, mod says lethal: the mod's flag counts the intents against the block up now; the solver also counts Plating/Metallicize block at the turn's end 2 (the enemy turn takes 26 of 28 HP)]",
+    );
+  });
+
+  it("several guards listed; none found: said so, not a bare mismatch", () => {
+    const guards = [{ what: "Feel No Pain block for the Ethereal cards exhausted at the end", amount: 3 }, { what: "Buffer stacks, each preventing a whole HP loss", amount: 1 }];
+    expect(endTurnLethalNote(endLine({ incomingAfterBlock: 0, endTurnGuards: guards }), true, 10)).toBe(
+      " [calc mismatch: solver says ending now does not kill, mod says lethal: the mod's flag counts the intents against the block up now; the solver also counts Feel No Pain block for the Ethereal cards exhausted at the end 3, Buffer stacks, each preventing a whole HP loss 1 (the enemy turn takes 0 of 10 HP)]",
+    );
+    expect(endTurnLethalNote(endLine({ incomingAfterBlock: 9 }), true, 10)).toBe(
+      " [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 9 of 10 HP)]",
+    );
+    // The other direction is as before.
+    expect(endTurnLethalNote(endLine({ dies: true, incomingAfterBlock: 30, hpLoss: 30 }), false, 10)).toBe(" [calc mismatch: solver says ending now kills, mod says safe]");
   });
 });

@@ -607,6 +607,13 @@ export interface Outcome {
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
   /**
+   * What the turn's end brings against the enemy turn beyond the block up when the line ends, when any (the mod's
+   * end-turn lethal flag counts the intents against the block up now only): block gained at the end (Plating and
+   * Metallicize up, Plating played this turn, Feel No Pain on the Ethereal cards held, Cloak Clasp), Regen's heal
+   * first, Buffer stacks. 86C3 F25 T5: 28 intents vs 28 HP, "mod says lethal"; Plating 2 made it 26.
+   */
+  endTurnGuards?: { what: string; amount: number }[];
+  /**
    * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
    * the enemy hits and is part of incomingAfterBlock.
    */
@@ -2004,6 +2011,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
   const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
+  // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
+  const endTurnGuards = winsFight
+    ? []
+    : [
+        { what: "Plating/Metallicize block at the turn's end", amount: input.player.endTurnBlock ?? 0 },
+        { what: "Plating played this turn, blocking at its end", amount: platingNow },
+        { what: "Feel No Pain block for the Ethereal cards exhausted at the end", amount: etherealBlock },
+        { what: "Cloak Clasp block for the cards held", amount: claspBlock },
+        { what: "Regen healing before the enemy acts", amount: Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp)) },
+        { what: "Buffer stacks, each preventing a whole HP loss", amount: sim.buffer },
+      ].filter((guard) => guard.amount > 0);
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2365,6 +2383,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      ...(endTurnGuards.length > 0 ? { endTurnGuards } : {}),
       ...(sim.dazedAdded > 0 && !winsFight ? { dazedAdded: sim.dazedAdded } : {}),
       ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,

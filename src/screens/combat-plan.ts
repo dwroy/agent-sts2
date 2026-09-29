@@ -1404,6 +1404,15 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   const heldDamage = endNow.outcome.heldDamage ?? 0;
   const enemyPart = Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage);
   const endOnlyByOwnLosses = endNow.outcome.dies && !modSaysLethal && enemyPart < hp;
+  // Mod says lethal, the solver lives: what the solver counts at the turn's end that the flag does not (86C3 F25 T5:
+  // 28 intents vs 28 HP, Plating 2 took it to 26; the note said only "calc mismatch").
+  if (modSaysLethal && !endReachesZero) {
+    const guards = endNow.outcome.endTurnGuards ?? [];
+    const left = `the enemy turn takes ${endNow.outcome.incomingAfterBlock} of ${hp} HP`;
+    return guards.length > 0
+      ? ` [calc mismatch: solver says ending now does not kill, mod says lethal: the mod's flag counts the intents against the block up now; the solver also counts ${guards.map((guard) => `${guard.what} ${guard.amount}`).join(", ")} (${left})]`
+      : ` [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (${left})]`;
+  }
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
   const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}`;
