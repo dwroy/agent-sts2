@@ -234,12 +234,12 @@ describe("2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (
 describe("3. Plating's decay is said with the card text (7YT0NJC2LEYQ F12 took Stone Armor as \"48 block over 12 turns\", QBCV838592ZQ F16 smithed it as 4 -> 6 a turn)", () => {
   it("the text gets the total each stack count gives (4: 10, 6: 21); other texts are unchanged", () => {
     const four = annotatePlating("获得[blue]4[/blue]层[gold]覆甲[/gold]。");
-    expect(four).toContain("Plating decays");
-    expect(four).toContain("4 stacks: 4+3+2+1 = 10 block over 4 turns");
+    expect(four).toContain("[Plating: block = stacks at your turn's end, then 1 stack less each turn;");
+    expect(four).toContain("4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]");
     expect(annotatePlating(four)).toBe(four);
     const smith = annotatePlating("获得4层覆甲。 -> 获得6层覆甲。");
-    expect(smith).toContain("4 stacks: 4+3+2+1 = 10 block");
-    expect(smith).toContain("6 stacks: 6+5+4+3+2+1 = 21 block");
+    expect(smith).toContain("4 stacks 4+3+2+1 = 10 block");
+    expect(smith).toContain("6 stacks 6+5+…+1 = 21 block in all, not the same every turn]");
     expect(annotatePlating("获得5点格挡。")).toBe("获得5点格挡。");
   });
 
@@ -251,11 +251,11 @@ describe("3. Plating's decay is said with the card text (7YT0NJC2LEYQ F12 took S
     const criteria = question.type === "choice" ? question.criteria : {};
     const armor = Object.values(criteria).map((text) => JSON.parse(String(text)) as Raw).find((option) => option["card"] === "岩石铠甲")!;
     expect(String(armor["text"])).toMatch(/^获得4层覆甲。/);
-    expect(String(armor["text"])).toContain("4+3+2+1 = 10 block over 4 turns");
+    expect(String(armor["text"])).toContain("4 stacks 4+3+2+1 = 10 block in all");
   });
 
   it("Heart of Iron's potion text (Plating 7) says it too", () => {
-    expect(fillPotionText("HEART_OF_IRON", "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。")).toContain("7 stacks: 7+6+5+4+3+2+1 = 28 block over 7 turns");
+    expect(fillPotionText("HEART_OF_IRON", "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。")).toContain("7 stacks 7+6+…+1 = 28 block in all");
   });
 });
 

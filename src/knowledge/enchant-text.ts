@@ -81,10 +81,10 @@ export function enchantsNamed(text: string): string[] {
  * fact is added after the text (the total each stack count gives); nothing about the card's value.
  */
 export function annotatePlating(text: string): string {
-  if (text.includes("Plating decays")) return text;
+  if (text.includes("[Plating: ")) return text;
   const stacks = [...new Set([...stripMarkup(text).matchAll(/(\d+)\s*层\s*覆甲/g)].map((match) => Number(match[1])))].filter((n) => n > 0);
   if (stacks.length === 0) return text;
-  const totals = stacks.map((n) => `${n} stacks: ${n <= 8 ? `${Array.from({ length: n }, (_, i) => n - i).join("+")} = ` : ""}${(n * (n + 1)) / 2} block over ${n} turns`).join("; ");
-  return `${text} [Plating decays: block equal to the stacks at the end of your turn, then 1 stack less at the start of each turn (not the same block every turn); ${totals}]`;
+  const sum = (n: number) => (n <= 4 ? Array.from({ length: n }, (_, i) => n - i).join("+") : `${n}+${n - 1}+…+1`);
+  const totals = stacks.map((n) => `${n} stacks ${sum(n)} = ${(n * (n + 1)) / 2} block`).join(", ");
+  return `${text} [Plating: block = stacks at your turn's end, then 1 stack less each turn; ${totals} in all, not ${stacks.length === 1 ? stacks[0] : "the same"} every turn]`;
 }
-
