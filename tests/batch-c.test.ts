@@ -4,13 +4,16 @@
  * synthetic or logged fixtures (tests/logged-states), never the refreshing knowledge files.
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
 import type { AskDecision } from "../src/project/types.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
+import { illusionFocusOrders, type KillOrder } from "../src/strategy/rollout.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { dominates, type Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -205,5 +208,49 @@ describe("4. An enchantment named after the card it goes on gets its effect (PHM
     // The colon right after 附魔 still reads as before; a sentence break is not crossed.
     expect(enchantsNamed("选择一张能力牌附魔：迅速2。")).toEqual(["迅速2: the first time the card is played, draw 2 cards (「第一次打出时抽2张牌」)"]);
     expect(enchantsNamed("附魔。获得：10点格挡")).toEqual([]);
+  });
+});
+
+describe("Extra: a line aiming only at the illusion is rolled out aiming at it on the later turns too (ZY3992X5VEVS F23 T3-T5)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("the logged T3 board: the rollout's best is no longer the Parafright line (logged: Dominate -> Parafright, True Grit)", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("zy39-f23-t3b");
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string>;
+    const facts = Object.values(criteria).map((text) => JSON.parse(text) as Record<string, unknown>);
+    const parafright = facts.filter((f) => /寄生惧魔/.test(String(f["plays"])) && !/胧光怪/.test(String(f["plays"])));
+    expect(parafright.length).toBeGreaterThan(0);
+    for (const f of parafright) {
+      expect(f["rollout_best"]).toBeUndefined();
+      expect(String(f["rollout_kill_order"])).toMatch(/^寄生惧魔 > 胧光怪: .*keep aiming at it first/);
+    }
+    expect(facts.some((f) => f["rollout_best"] === true && /胧光怪/.test(String(f["plays"])))).toBe(true);
+  });
+
+  it("illusionFocusOrders: only lines that put nothing into another enemy are held to the illusion-first order", () => {
+    const orders: KillOrder[] = [
+      { key: "OBSCURA>PARAFRIGHT", label: "Obscura > Parafright", groups: [[0], [1]], leader: { indices: [0], name: "Obscura" } },
+      { key: "PARAFRIGHT>OBSCURA", label: "Parafright > Obscura", groups: [[1], [0]], firstRevives: true, leader: { indices: [0], name: "Obscura" } },
+    ];
+    const enemies = [
+      { index: 0, name: "Obscura", hp: 91, maxHp: 129, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] },
+      { index: 1, name: "Parafright", hp: 21, maxHp: 21, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, illusion: true, attacks: [] },
+    ];
+    const line = (targets: number[], obscuraAfter: number): Plan =>
+      ({
+        steps: targets.map((target, i) => ({ cardIndex: i, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target, targetName: null })),
+        outcome: { enemyHpAfter: [{ index: 0, name: "Obscura", hp: obscuraAfter, vulnerable: 0, weak: 0 }, { index: 1, name: "Parafright", hp: 0, vulnerable: 0, weak: 0 }] },
+      }) as unknown as Plan;
+    expect(illusionFocusOrders(line([1, 1], 91), orders, enemies).map((order) => order?.key)).toEqual(["PARAFRIGHT>OBSCURA"]);
+    // Damage into The Obscura too (an AoE, a split line): every order.
+    expect(illusionFocusOrders(line([1], 85), orders, enemies)).toHaveLength(2);
+    expect(illusionFocusOrders(line([0, 1], 85), orders, enemies)).toHaveLength(2);
+    expect(illusionFocusOrders(line([], 91), orders, enemies)).toHaveLength(2);
   });
 });

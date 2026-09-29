@@ -1894,6 +1894,25 @@ export interface KillOrder {
 
 /** Every permutation is compared up to this many groups (3! = 6 orders); past it, each group first. */
 export const MAX_FULL_ORDER_GROUPS = 3;
+
+/**
+ * The kill orders a line is rolled out under. A line that aims at an illusion (Parafright) and puts no damage
+ * into any other enemy is rolled out with that illusion first: the later turns do what this turn does. Its best
+ * order was "summoner first" (the illusion's hit saved now, the summoner's progress after), so it read as the
+ * best line turn after turn while that "after" never came (ZY3992X5VEVS F23 T3-T5: the Parafright-kill lines
+ * were the rollout's best, The Obscura took 0 three turns running; the illusion-first rollout is what doing it
+ * again each turn costs). Any other line: every order.
+ */
+export function illusionFocusOrders(plan: Plan, orders: (KillOrder | null)[], enemies: EnemySim[]): (KillOrder | null)[] {
+  const targets = plan.steps.filter((step) => step.target !== null).map((step) => step.target!);
+  if (targets.length === 0) return orders;
+  const own = orders.filter((order): order is KillOrder => order !== null && order.firstRevives === true && targets.every((target) => order.groups[0]!.includes(target)));
+  if (own.length === 0) return orders;
+  const focus = own[0]!.groups[0]!;
+  const after = new Map(plan.outcome.enemyHpAfter.map((enemy) => [enemy.index, enemy.hp]));
+  const elsewhere = enemies.some((enemy) => !focus.includes(enemy.index) && enemy.hp > 0 && (after.get(enemy.index) ?? enemy.hp) < enemy.hp);
+  return elsewhere ? orders : own;
+}
 /**
  * The kill-order policy's extra damage weight on its target (turn-solver focusWeight). On 60 recorded
  * multi-enemy boards (158 option lines, 5 turns x 8 samples) the order's first target was dead by T5 in
@@ -2047,8 +2066,9 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   // kill orders across every (line, order) pair: the same draws and enemy moves for every order.
   const orders: (KillOrder | null)[] = opts.orders && opts.orders.length >= 2 ? opts.orders : [null];
   // Orders are compared for the lines shown (tagged "offered"); the other candidates, there only to find a
-  // better line to add, keep the solver's own later turns.
-  const units = candidates.flatMap(({ plan, tags }, line) => (orders.length > 1 && !tags.includes("offered") ? [null] : orders).map((order) => ({ line, plan, order })));
+  // better line to add, keep the solver's own later turns. A line that aims only at an illusion this turn
+  // keeps aiming at it (illusionFocusOrders).
+  const units = candidates.flatMap(({ plan, tags }, line) => (orders.length > 1 && !tags.includes("offered") ? [null] : illusionFocusOrders(plan, orders, input.solver.enemies)).map((order) => ({ line, plan, order })));
   const trajectories: TurnRecord[][][] = units.map(() => []);
   // One sample of one (line, order): an order agreeing with an order already run on every group that run
   // looked at gets the same trajectory (same line, seed and horizon; the policy is deterministic), e.g.

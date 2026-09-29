@@ -640,7 +640,10 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
       leaderName && best!.entry.leader
         ? `; ${leaderName}'s death ends the fight (the others are minions): HP left at T${horizon} ~${Math.round(best!.entry.leader.hpLeft)}, dead ${best!.entry.leader.dead}/${samples}${line.ordersByLeader ? `; no order ends the fight within ${horizon} turns, so the orders are ranked by least ${leaderName} HP left, then HP lost and deaths` : ""}`
         : "";
-    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); best of ${line.orders.length} kill orders compared${dropped}${tied}${leaderNote}`;
+    // A line aiming only at an illusion is rolled out aiming at it on the later turns too (illusionFocusOrders).
+    const kept = line.order.firstRevives === true && line.orders.length < r.result.orders.length;
+    const compared = kept ? `this line aims only at ${first(best!.entry)} now, so its later turns keep aiming at it first (what doing this again each turn costs)` : `best of ${line.orders.length} kill orders compared`;
+    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); ${compared}${dropped}${tied}${leaderNote}`;
     if (others.length > 0) facts["rollout_other_orders"] = others.map((m) => `${m.labels.join(" | ")}: ${m.text}`).join("; ");
   }
   const forecast = line.modelForecast.rollout;
