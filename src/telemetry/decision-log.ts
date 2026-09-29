@@ -26,6 +26,7 @@ export interface DecisionRecord {
   rationale: string;
   confidence: number | null;
   fallback: boolean;
+  /** A model was asked a second time for this decision: Jev's follow-up, or DeepSeek's re-ask by the consistency guard. */
   reasked: boolean;
   /** True when a Jev-eligible decision was resolved by code because the loop ran without Jev. */
   no_jev: boolean;

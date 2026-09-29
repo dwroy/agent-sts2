@@ -766,7 +766,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let rawAnswers: JsonValue | undefined;
     let usage: { input_tokens: number; output_tokens: number; cache_hit_tokens?: number; reasoning_tokens?: number } = { input_tokens: 0, output_tokens: 0 };
     const requestIds: string[] = [];
-    let reasked = false;
+    // A second ask for this decision: DeepSeek's re-ask after its consistency guard (BXAZV0R9ZHWK F11 rest:
+    // "reasoning concluded o0 but answered o1", re-asked, the row still read reasked: false), or Jev's
+    // follow-up below.
+    let reasked = deepseekConsistency !== undefined;
     let escalation: JsonValue | undefined;
 
     let usedJev = false;
@@ -872,7 +875,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               );
               if (escalator.name === "deepseek") stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
               const consistency = escalator.name === "deepseek" && "consistency" in answer ? (answer as { consistency?: unknown }).consistency : undefined;
-              if (consistency !== undefined) stats.deepseekCalls += 1; // the re-ask
+              if (consistency !== undefined) {
+                stats.deepseekCalls += 1; // the re-ask
+                reasked = true;
+              }
               const override = decision.resolve({
                 ...result.answers,
                 [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name } },
