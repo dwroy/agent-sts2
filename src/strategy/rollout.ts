@@ -780,6 +780,12 @@ interface SimEnemy {
   /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
   shrink: number;
   /**
+   * Shriek / Plow (Terror Eel, Ceremonial Beast: stunned the first time its HP drops to the threshold, that
+   * turn's move lost) not yet triggered: the later turns' solver calls model it too (they dropped it, so a Beast
+   * taken under 150 on a later turn still Plowed: coverage review #15, forecast 47.0 vs actual 17.7 HP).
+   */
+  shriekArmed: boolean;
+  /**
    * Thorns and damage halving (Guarded, Soar), Dazed per hit (Personal Hive), Tainted per Skill (Vital Spark):
    * the decision's, then what its moves give. A move's Thorns or Soar lasts until its next move resolves
    * (logged: Spiny Toad Thorns 5 only while it shows Spike Explosion, Toadpole 2 only on Spike Spit, the
@@ -1040,6 +1046,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     flutter: 0,
     growth: 0,
     shrink: 0,
+    shriekArmed: false,
     thorns: 0,
     halved: false,
     dazedPerHit: 0,
@@ -1133,6 +1140,7 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
+    if (e.hp <= (e.base.shriek ?? 0)) e.shriekArmed = false;
     if (e.hp <= 0) enemyDown(e, turn, input, enemies);
   }
   return dealt;
@@ -1274,15 +1282,16 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
-  // Shriek/Plow: taken to its threshold on the decision's turn, it is stunned and this turn's move is lost
+  // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
   // did not make neither spends its Vigor nor gains Strength or Block (XLJQ F7 T5: stunned at 65 with
-  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Later turns' solver calls do not model Shriek (laterTurnSim).
+  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Once crossed it is spent.
   const shrieked = new Set<number>();
   for (const e of enemies) {
     const a = after.get(e.index);
     const threshold = e.base.shriek ?? 0;
-    if (turn === 0 && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+    if (e.shriekArmed && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+    if (a && a.hp <= threshold) e.shriekArmed = false;
     // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
     if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
@@ -1609,6 +1618,7 @@ function simulate(
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
       shrink: e.shrink ?? 0,
+      shriekArmed: (e.shriek ?? 0) > 0 && e.hp > (e.shriek ?? 0),
       plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
       halved: e.halved === true,
@@ -1692,6 +1702,8 @@ function simulate(
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        // Shriek / Plow still to come (laterTurnSim drops the decision's).
+        ...(e.shriekArmed && (e.base.shriek ?? 0) > 0 ? { shriek: e.base.shriek! } : {}),
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),

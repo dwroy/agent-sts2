@@ -907,3 +907,31 @@ describe("12. Enemy HP left counts a phase boss's later phases, an illusion at f
     expect(lineHp({ spawnsOnDeath: "4 x Wriggler" }, { spawns: { BOSS: [{ id: "WRIGGLER", name: "Wriggler", hp: 20, count: 4, move: null }] } })).toEqual({ kill: 80, block: 90 });
   });
 });
+
+describe("10e. Shriek / Plow crossed on a later simulated turn stuns it too (coverage #15: the Beast's forecast 47 vs 17.7)", () => {
+  it("taken under 150 on T2 by the policy: that turn's Plow is lost; once only", () => {
+    const table: EnemyTable = { moves: { SMASH: { damage: 30, hits: 1, strength: 0, block: 0 }, STUNNED: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { SMASH: { SMASH: 1 }, STUNNED: { SMASH: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "boss", enc: "CEREMONIAL_BEAST", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [defend(0)];
+    const solver = { hand, player: player({ hp: 200, maxHp: 200 }), enemies: [enemy({ name: "Beast", hp: 160, maxHp: 262, shriek: 150, attacks: [{ damage: 30, hits: 1 }] })], fightKind: "boss" as const, turn: 1 };
+    const r = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans.filter((plan) => plan.steps.length === 1),
+      enemies: [{ index: 0, id: "CEREMONIAL_BEAST", move: "SMASH", strength: 0, powers: { PLOW_POWER: 150 } }],
+      tables: { CEREMONIAL_BEAST: table },
+      piles: { draw: Array.from({ length: 15 }, (_, i) => strike(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 3 },
+    });
+    const [t2, t3] = r.lines[0]!.perTurn;
+    // T2: three Strikes take it 160 -> 142, under 150: stunned, no Smash (it was 30).
+    expect(t2!.loss.mean).toBe(0);
+    // T3: spent, it Smashes again.
+    expect(t3!.loss.mean).toBe(30);
+  });
+});
