@@ -35,14 +35,14 @@ From post-mortems KY3Y 9Q7V XMK1 PHMV YQL8 (2026-09-29 15:15):
 - Evidence for Dai (clock, strategy-adjacent): boss clock at A9 optimistic — damage delivered 0.66 (KY3Y) / 0.76 (9Q7V) of the estimate; XMK1 predicted 8.4 loss/turn, 10 turns vs ~17/turn, 6 turns — the pooled unblocked share (boss-clock.ts:125-135) ignores the deck's block density.
 
 From the route-review work (2026-09-29 17:00):
-- When the consistency check re-asks DeepSeek, the second answer is only {choice, reason}, so the route review is lost ("the answer has no route") — include the route block and field in the re-ask.
-- rest/choose (step-by-step fallback when the one-shot rest plan is unusable) has no route block.
-- hp_if_option assumes a 30% heal; relics that change the rest heal are not modelled.
+- ~~When the consistency check re-asks DeepSeek, the second answer is only {choice, reason}, so the route review is lost ("the answer has no route") — include the route block and field in the re-ask.~~ fixed adb9ec9 (batch D, v3 cf87de6)
+- ~~rest/choose (step-by-step fallback when the one-shot rest plan is unusable) has no route block.~~ fixed 8ee27fb (batch D, v3 cf87de6)
+- ~~hp_if_option assumes a 30% heal; relics that change the rest heal are not modelled.~~ fixed 981ae07 (batch D, v3 cf87de6)
 
 From batch C (2026-09-29 16:50), not fixed:
-- A potion step in the middle of a Jev line always forces a re-plan: the line memo expects the hand to shrink after each step, a potion doesn't leave the hand → "grown" hand. Of 178 logged Jev lines starting with a potion, 7 continued, 93 were re-asked to Jev.
-- One-Two Punch and Unrelenting are not modelled in hand (only as powers after being played) — Jev's options understate them.
-- The solver still counts damage into the Waterfall Giant husk on the blast turn ("dmg 88") — mostly cosmetic.
+- ~~A potion step in the middle of a Jev line always forces a re-plan: the line memo expects the hand to shrink after each step, a potion doesn't leave the hand → "grown" hand. Of 178 logged Jev lines starting with a potion, 7 continued, 93 were re-asked to Jev.~~ fixed a38c85c, 85d8354 (batch D, v3 cf87de6)
+- ~~One-Two Punch and Unrelenting are not modelled in hand (only as powers after being played) — Jev's options understate them.~~ fixed 3d8a9b1 (batch D, v3 cf87de6)
+- ~~The solver still counts damage into the Waterfall Giant husk on the blast turn ("dmg 88") — mostly cosmetic.~~ fixed 3932ec9 (batch D, v3 cf87de6)
 Evidence for Dai: Soul Fysh clock factor fitted — A8 (n=20) median realised/estimate 0.86, A9 (n=8) 1.09 (XTB4 0.37 an outlier) → left unchanged.
 
 From post-mortems 0NZB 2ZCK 7KDM 3SBP (2026-09-29 16:55):
@@ -62,3 +62,11 @@ From post-mortems KYC0 2MK4 (2026-09-29 17:23; line numbers at v3 54d6d9e):
 - loop.ts:482-494 clears combatPlan whenever a card-selection screen opens mid-combat; back in combat combat-plan.ts:1278 finds no plan, so the rest of Jev's line is lost and Jev is re-asked. 2MK4 F8 T2: line Headbutt, Defend, Defend (−0, rollout 4/8 alive); after the Headbutt pick (hand and enemies unchanged) the re-ask had no "Defend, Defend" option, Jev took Strike+Defend, 11→6. KYC0: 4 re-asks after True Grit+ picks (F6 T1, F9 T1, F9 T4, F24 T5), all re-chose the original line.
 - Enemies with different ids but the same Chinese name are indistinguishable in option text and kill orders: turn-solver.ts:1129, combat-plan.ts:681-682, rollout.ts:1944-1948, rollout-live.ts:635/:645. KYC0 F28 Decimillipede: three segments all "残杀千足虫"; T1 plans 5/8/9 identical text, T2 plans 9/10; 4 of 6 kill orders merged under one label, so the jev-hints advice (spread damage, kill them together) can't be followed.
 - reward.ts:127-134 drops a potion from an event when the potion belt is full, with no discard-to-take option (KYC0 F20 洗劫, YQL8 F28).
+
+From fix batch D (2026-09-29 17:31; line numbers at v3 cf87de6), not fixed:
+- loop.ts:804-807 + deepseek.ts DeepSeekAnswerError: when an invalid option key is recovered from the reasoning, the answer's route/route_reason are not carried over → route review still logged as "the answer has no route".
+- map.ts:150/174 candidate-path search sustain estimate (stateAfter) still uses a fixed 0.3 heal without relics (the projection shown to DeepSeek is fixed).
+- boss-clock.ts:727 expectedEntryHp rounds the 30% heal (+1 at some max HP; the game floors) and ignores Stone Humidifier.
+- combat-plan.ts:~1059 Blessing of the Forge drunk mid Jev line upgrades the hand → hand signature changes → line re-planned; the expected hand isn't updated to the upgraded cards.
+- To verify first (game behaviour unconfirmed): turn-solver.ts:1044-1045 One-Two Punch / Unrelenting replayed by Duplicator/Replay apply once; rollout.ts:1724 resets freeAttacks each turn (does FREE_ATTACK_POWER carry to next turn if Unrelenting was the last attack?).
+- Not modelled: Eternal Feather rest heal by deck size (seen in one run, amount unconfirmed).
