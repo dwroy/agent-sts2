@@ -5,7 +5,7 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { checkConsistency, reasoningConclusion } from "../src/llm/consistency.js";
+import { checkConsistency, reaskFields, reaskMessage, reasoningConclusion } from "../src/llm/consistency.js";
 import { DeepSeekClient, DeepSeekInconsistentError } from "../src/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
@@ -151,5 +151,19 @@ describe("reasoning conclusion", () => {
     const cards = { card0: JSON.stringify({ card: "打击" }), card1: JSON.stringify({ card: "双重打击" }) };
     expect(reasoningConclusion("结论：双重打击", cards)).toMatchObject({ option: "card1", unambiguous: true });
     expect(reasoningConclusion("选择 锻造", REST)?.option).toBe("o1");
+  });
+});
+
+describe("the re-ask asks for the question's other fields again", () => {
+  const check = checkConsistency("o1", "smith", "Decisive: o0.", REST);
+
+  it("a plain question: {choice, reason} only", () => {
+    expect(reaskMessage("o1", check, reaskFields({ facts: {} }, {}))).toMatch(/JSON only, \{"choice": "<option key>", "reason": "<max 25 words>"\}\.$/);
+  });
+
+  it("the act-start joint question: its route from act_routes; a first answer with cards: the cards", () => {
+    const message = reaskMessage("o1", check, reaskFields({ act_routes: { r1: {}, r2: {} } }, { cards: ["c3", "c4"] }));
+    expect(message).toContain("state.act_routes");
+    expect(message).toMatch(/\{"choice": "<option key>", "reason": "<max 25 words>", "route": "<r1 \| r2>", "cards": \[<the deck cards the option takes>\]\}\.$/);
   });
 });

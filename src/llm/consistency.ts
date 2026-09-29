@@ -169,13 +169,42 @@ export function checkConsistency(choice: string, reason: string, reasoning: stri
   return { ok: issues.length === 0, issues, conclusion };
 }
 
-/** The follow-up message for a suspect answer. */
-export function reaskMessage(choice: string, check: ConsistencyCheck): string {
+/**
+ * The fields of the question's own answer format beyond {choice, reason} that a re-ask must ask for again,
+ * as `"name": <what>` fragments with a sentence saying what they are: the route review riding on a card reward
+ * or rest site (state.route_review: "route", "route_reason"; the re-ask asked for {choice, reason} only and the
+ * second answer dropped the route, "the answer has no route"), the act-start joint question's route
+ * (state.act_routes), and the deck cards a one-shot option takes when the first answer named them ("cards").
+ */
+export function reaskFields(state: Record<string, unknown>, first: { cards?: string[] }): { fields: string[]; note: string } {
+  const record = (value: unknown): Record<string, unknown> => (value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
+  const fields: string[] = [];
+  const notes: string[] = [];
+  const reviewRoutes = Object.keys(record(record(state["route_review"])["routes"]));
+  const actRoutes = Object.keys(record(state["act_routes"]));
+  if (reviewRoutes.length > 0) {
+    fields.push(`"route": "<${reviewRoutes.join(" | ")}>"`, '"route_reason": "<max 15 words>"');
+    notes.push('Settle the route again too (state.route_review): "route" is "keep" (follow the plan) or another key of state.route_review.routes.');
+  } else if (actRoutes.length > 0) {
+    fields.push(`"route": "<${actRoutes.join(" | ")}>"`);
+    notes.push('Name the act\'s route again too: "route" is a key of state.act_routes.');
+  }
+  if ((first.cards ?? []).length > 0) fields.push('"cards": [<the deck cards the option takes>]');
+  return { fields, note: notes.join(" ") };
+}
+
+/**
+ * The follow-up message for a suspect answer. `extra` (reaskFields): the other fields the question's answer
+ * format has, asked for again with the choice.
+ */
+export function reaskMessage(choice: string, check: ConsistencyCheck, extra: { fields: string[]; note: string } = { fields: [], note: "" }): string {
   const parts: string[] = [];
   if (check.conclusion && check.conclusion.unambiguous && check.conclusion.option !== choice) {
     parts.push(`Your reasoning concluded "${check.conclusion.line}" (option ${check.conclusion.option}) but you answered ${choice}.`);
   }
   if (check.issues.includes("empty reason")) parts.push(`Your answer ${choice} came with an empty reason.`);
-  parts.push('Answer again with the option key you actually choose and a reason: JSON only, {"choice": "<option key>", "reason": "<max 25 words>"}.');
+  if (extra.note) parts.push(extra.note);
+  const format = ['"choice": "<option key>"', '"reason": "<max 25 words>"', ...extra.fields].join(", ");
+  parts.push(`Answer again with the option key you actually choose and a reason: JSON only, {${format}}.`);
   return parts.join(" ");
 }

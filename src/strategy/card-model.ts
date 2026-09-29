@@ -69,7 +69,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -107,6 +107,8 @@ export interface CardModel {
    * damage). The rollout carries it into its later turns; unset when the card has no such var.
    */
   powerAmount?: number;
+  /** One-Two Punch (special "double_next_attacks"): how many of the next Attacks this turn are played twice (its Attacks var). */
+  nextAttacks?: number;
   /**
    * A potion that puts a card into the hand, free this turn (Attack/Skill/Power/Colorless Potion), or the
    * pile card a pile-card potion takes, or the draw pile's expected card (Gambler's Brew, Glowwater,
@@ -253,6 +255,13 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   DOMINATE: "dominate", // Strength per Vulnerable on the target, after its own Vulnerable (solver)
   FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
   CRIMSON_MANTLE: "crimson_mantle", // 1 HP at the start of every turn (the solver checks it can afford it)
+  // One-Two Punch: 「在这个回合，你打出的下{Attacks}张攻击牌会被额外打出一次。」 (Attacks 1, upgraded 2): the next
+  // Attacks are played twice (solver duplicateAttacks, as ONE_TWO_PUNCH_POWER once it is up). Unmodelled in hand,
+  // it was a 5-point unknown and the line it doubles read single.
+  ONE_TWO_PUNCH: "double_next_attacks",
+  // Unrelenting: 「造成{Damage}点伤害。 你打出的下一张攻击牌耗能变为0。」: the next Attack costs 0 (solver
+  // freeAttacks, as FREE_ATTACK_POWER once it is up). In hand only its damage was modelled.
+  UNRELENTING: "free_next_attack",
 };
 
 function targetMode(targetType: string, template: string, requiresTarget: boolean): TargetMode {
@@ -531,8 +540,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape" || special === "double_block") {
-    known = true; // its whole value is the Sandpit count / the block doubled, scored by the solver
+  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks") {
+    known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
     // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
@@ -577,6 +586,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
     ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
     ...(cardId === "FEEL_NO_PAIN" ? { feelNoPain: dyn(card, "Power") ?? 3 } : {}),
+    ...(special === "double_next_attacks" ? { nextAttacks: dyn(card, "Attacks") ?? 1 } : {}),
     enemyStrength,
     enemyTempStrengthLoss,
     // Beckon's HpLoss var is what holding it costs, not a price for playing it (PU21: every Beckon

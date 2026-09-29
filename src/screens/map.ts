@@ -11,7 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { projectPath, roomCost, roomCostBrief, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
+import { projectPath, restHealOf, roomCost, roomCostBrief, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
 import type { GameState } from "../mod/schema.js";
 import type { RememberedMap } from "../project/types.js";
 import { oneshotOn } from "./oneshot.js";
@@ -298,7 +298,9 @@ export function makeRouteWeights(act: number, costs: RoomCostModel, runPlan?: De
 
 function routeWeights(env: DecisionEnv, floor: number): { act: number; weightOf: Weights; costs: RoomCostModel } {
   const act = actOfFloor(floor);
-  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80);
+  // Rest relics (Regal Pillow, Stone Humidifier) change what every later rest heals.
+  const relics = asArray(asRecord(env.state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80, restHealOf(relics));
   return { act, weightOf: makeRouteWeights(act, costs, env.screenMemory.runPlan), costs };
 }
 
@@ -617,8 +619,9 @@ function riskText(entry: ScoredPath, maxHp: number): string {
   const { projection, path } = entry;
   const low = projection.riskLow;
   if (!low) return "no fight or \"?\" room on this path";
-  const room = `step ${low.step + 1} (${path[low.step]!.type}, arriving ~${Math.round(projection.arrival[low.step]!)}/${maxHp})`;
-  if (low.hp > 0) return `worst single room at its p75 cost: ~${Math.round(low.hp)}/${maxHp} left after ${room}`;
+  const max = projection.maxArrival[low.step] ?? maxHp;
+  const room = `step ${low.step + 1} (${path[low.step]!.type}, arriving ~${Math.round(projection.arrival[low.step]!)}/${max})`;
+  if (low.hp > 0) return `worst single room at its p75 cost: ~${Math.round(low.hp)}/${max} left after ${room}`;
   const rest = path.findIndex((node, at) => at > low.step && (node.type === "RestSite" || node.type === "Rest"));
   return `a p75 fight at ${room} would take all HP${rest >= 0 ? `, before the rest at step ${rest + 1}` : ""}`;
 }
@@ -628,11 +631,11 @@ function eliteText(entry: ScoredPath, step: number, maxHp: number): string {
   const arrive = entry.projection.arrival[step]!;
   if (arrive <= 0) return `step ${step + 1}: HP ran out earlier on this path`;
   const left = (hp: number): string => (hp > 0 ? `~${Math.round(hp)}` : "none");
-  return `step ${step + 1}: ~${Math.round(arrive)}/${maxHp} on arrival, ${left(entry.projection.arrival[step + 1] ?? entry.projection.end)} left at its median cost, ${left(entry.projection.riskAfter[step]!)} at p75`;
+  return `step ${step + 1}: ~${Math.round(arrive)}/${entry.projection.maxArrival[step] ?? maxHp} on arrival, ${left(entry.projection.arrival[step + 1] ?? entry.projection.end)} left at its median cost, ${left(entry.projection.riskAfter[step]!)} at p75`;
 }
 
 function pathFacts(entry: ScoredPath, maxHp: number): Record<string, JsonValue> {
-  const hp = (step: number): string => hpText(entry.projection.arrival[step]!, maxHp);
+  const hp = (step: number): string => hpText(entry.projection.arrival[step]!, entry.projection.maxArrival[step] ?? maxHp);
   const count = (test: (type: string) => boolean): number => entry.path.filter((node) => test(node.type)).length;
   const bossAt = entry.path.findIndex((node) => node.type === "Boss");
   const restAt = entry.path.findIndex((node) => node.type === "RestSite" || node.type === "Rest");
@@ -650,7 +653,7 @@ function pathFacts(entry: ScoredPath, maxHp: number): Record<string, JsonValue> 
     hp_on_arrival_at_elites: entry.path.flatMap((node, step) =>
       node.type === "Elite" ? [eliteText(entry, step, maxHp)] : [],
     ),
-    hp_at_boss: bossAt >= 0 ? hp(bossAt) : hpText(entry.projection.end, maxHp),
+    hp_at_boss: bossAt >= 0 ? hp(bossAt) : hpText(entry.projection.end, entry.projection.maxEnd ?? maxHp),
     ...(entry.projection.runsOut !== null ? { hp_runs_out_at_median_costs: `step ${entry.projection.runsOut + 1} (${entry.path[entry.projection.runsOut]!.type})` } : {}),
     hp_risk: riskText(entry, maxHp),
     forks_on_path: entry.path.filter((node) => node.children.length > 1).length,
@@ -871,9 +874,9 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
     hpAtBoss: (routeKey, hp, maxHp) => {
       const entry = routes.find((route) => route.key === routeKey)?.entry;
       if (!entry) return "?";
-      const projection = projectPath(entry.path.map((node) => node.type), hp, roomCostModel(act, asc, maxHp));
+      const projection = projectPath(entry.path.map((node) => node.type), hp, roomCostModel(act, asc, maxHp, context.costs.rest));
       const boss = entry.path.findIndex((node) => node.type === "Boss");
-      return hpText(boss >= 0 ? projection.arrival[boss]! : projection.end, maxHp);
+      return boss >= 0 ? hpText(projection.arrival[boss]!, projection.maxArrival[boss] ?? maxHp) : hpText(projection.end, projection.maxEnd);
     },
   };
 }
@@ -904,8 +907,8 @@ export interface PositionRoutes {
   floorOf: (row: number) => number;
   /** The room costs the projection uses, in one line. */
   note: string;
-  /** HP on arrival at a route's first elite and at its boss when the route starts at `hp` (absolute). */
-  hpAlong: (key: string, hp: number) => string;
+  /** HP on arrival at a route's first elite and at its boss when the route starts at `hp` (absolute) and `max` (max HP now by default). */
+  hpAlong: (key: string, hp: number, max?: number) => string;
   /** The route plan a candidate becomes when it starts at `hp` (absolute), with the plan's why. */
   planFor: (key: string, hp: number, why: string) => RoutePlan | null;
 }
@@ -984,16 +987,16 @@ export function positionRoutes(env: DecisionEnv, rooms: readonly string[]): Posi
     routes,
     floorOf,
     note: roomCostBrief(context.costs),
-    hpAlong: (routeKey, hp) => {
+    hpAlong: (routeKey, hp, max = maxHp) => {
       const entry = entryOf(routeKey);
       if (!entry) return "?";
-      const projection = projectPath(entry.path.map((step) => step.type), hp, context.costs);
+      const projection = projectPath(entry.path.map((step) => step.type), hp, context.costs, max);
       const elite = entry.path.findIndex((step) => step.type === "Elite");
       const boss = entry.path.findIndex((step) => step.type === "Boss");
-      const at = (left: number, what: string): string => (left > 0 ? `~${Math.round(left)}/${maxHp} at ${what}` : `HP runs out before ${what}`);
+      const at = (left: number, top: number, what: string): string => (left > 0 ? `~${Math.round(left)}/${top} at ${what}` : `HP runs out before ${what}`);
       return [
-        ...(elite >= 0 ? [at(projection.arrival[elite]!, `the elite F${floorOf(entry.path[elite]!.row)}`)] : []),
-        at(boss >= 0 ? projection.arrival[boss]! : projection.end, "the boss"),
+        ...(elite >= 0 ? [at(projection.arrival[elite]!, projection.maxArrival[elite]!, `the elite F${floorOf(entry.path[elite]!.row)}`)] : []),
+        boss >= 0 ? at(projection.arrival[boss]!, projection.maxArrival[boss]!, "the boss") : at(projection.end, projection.maxEnd, "the boss"),
       ].join(", ");
     },
     planFor: (routeKey, hp, why) => {

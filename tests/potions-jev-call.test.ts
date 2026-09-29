@@ -15,6 +15,7 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
 import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalNote, withPotionLines } from "../src/screens/combat-plan.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { dominates, solveTap, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
@@ -269,5 +270,69 @@ describe("a lethal that needs a potion is Jev's call (Dai 2026-09-28)", () => {
     expect(dry?.kind).toBe("act");
     expect(dry?.label).toBe("combat/lethal");
     expect(autoLine(e, dry)).not.toMatch(/use_potion|POTION:/);
+  });
+});
+
+describe("a potion step of a chosen line is checked on the belt, not the hand (178 Jev lines opening with a drink: 7 went on, 93 were asked again)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+
+  /** Fire Potion (slot 0) and Strength Potion (slot 1); Strike, Defend, Bash in hand. */
+  function strengthBoard(): Raw {
+    const raw = twoPotions(55, 8);
+    const belt = (raw["run"] as Raw)["potions"] as Raw[];
+    belt[1] = { ...belt[1], potion_id: "STRENGTH_POTION", name: "Strength Potion", description: "获得 2 点力量。" };
+    return raw;
+  }
+  const drunk = (raw: Raw, slot: number): Raw => {
+    const belt = (raw["run"] as Raw)["potions"] as Raw[];
+    belt[slot] = { index: slot, potion_id: null, name: null, description: null, occupied: false, can_use: false, can_discard: false, requires_target: false, valid_target_indices: [] };
+    return raw;
+  };
+  const played = (raw: Raw, cardId: string): Raw => {
+    const combat = raw["combat"] as Raw;
+    const hand = combat["hand"] as Raw[];
+    const at = hand.findIndex((card) => card["card_id"] === cardId);
+    combat["hand"] = hand.filter((_, i) => i !== at).map((card, index) => ({ ...card, index }));
+    return raw;
+  };
+  /** Jev picks the shown line that plays exactly this. */
+  const pickLine = (e: DecisionEnv, plays: string) => {
+    const decision = planCombatTurn(e) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria as Record<string, string | null>;
+    const key = Object.keys(criteria).find((k) => k.startsWith("plan") && JSON.parse(String(criteria[k]))["plays"] === plays);
+    expect(key, Object.values(criteria).join("\n")).toBeDefined();
+    const resolved = decision.resolve({ plan: { type: "choice", choice: key!, probabilities: { [key!]: 0.9 }, confidence: 0.9, raw: {} } });
+    resolved.apply?.();
+    return resolved;
+  };
+  const next = (raw: Raw, e: DecisionEnv) => planCombatTurn(env(raw, { screenMemory: e.screenMemory }));
+
+  it("a line opening with a drink: once the belt shows it drunk (the hand the same), the line goes on", () => {
+    rolloutLiveOptions.enabled = false;
+    const e = env(strengthBoard());
+    expect(pickLine(e, "potion Strength Potion, then STRIKE_R -> JAW_WORM, then BASH -> JAW_WORM").intent).toEqual({ action: "use_potion", option_index: 1 });
+    const after = next(drunk(strengthBoard(), 1), e);
+    expect(after?.label).toBe("combat/plan-continue");
+    expect(after?.kind === "act" ? after.intent : null).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
+    // Not drunk (the belt as before): the board is not the one the line expects.
+    const e2 = env(strengthBoard());
+    pickLine(e2, "potion Strength Potion, then STRIKE_R -> JAW_WORM, then BASH -> JAW_WORM");
+    expect(e2.screenMemory.combatPlan).toMatchObject({ handLen: 3, potions: "0:FIRE_POTION" });
+    expect(next(strengthBoard(), e2)?.label).not.toBe("combat/plan-continue");
+  });
+
+  it("a drink in the middle of a line: the card after it is played on", () => {
+    rolloutLiveOptions.enabled = false;
+    const e = env(strengthBoard());
+    expect(pickLine(e, "DEFEND_R, then potion Strength Potion, then BASH -> JAW_WORM, then potion Fire Potion -> JAW_WORM").intent).toEqual({ action: "play_card", card_index: 1 });
+    const second = next(played(strengthBoard(), "DEFEND_R"), e);
+    expect(second?.kind === "act" ? [second.label, second.intent] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 1 }]);
+    const third = next(drunk(played(strengthBoard(), "DEFEND_R"), 1), e);
+    expect(third?.kind === "act" ? [third.label, third.intent] : null).toEqual(["combat/plan-continue", { action: "play_card", card_index: 1, target_index: 0 }]);
+    const fourth = next(drunk(played(played(strengthBoard(), "DEFEND_R"), "BASH"), 1), e);
+    expect(fourth?.kind === "act" ? [fourth.label, fourth.intent] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 0, target_index: 0 }]);
   });
 });
