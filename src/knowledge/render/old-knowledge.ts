@@ -1,9 +1,12 @@
 /**
  * The old hand-written knowledge (docs/v4-architecture.md §3): the Ironclad guide, the DeepSeek handbook and
  * Jev's fight hints, whole, marked as unverified and below the data. The hints' {DMG:…}-style placeholders are
- * filled from the monster DB at the run's ascension (monster-db fillDbNumbers), as Jev reads them.
+ * filled from the monster DB at the run's ascension (monster-db fillDbNumbers), and their counted records
+ * ({CRAB_KILLS_EN}, {LAG_NO_STRENGTH_EN}) from the fight data (boss-clock fillGuideFacts), as Jev reads them
+ * (jev-hints.ts hintText).
  */
 
+import { fillGuideFacts } from "../../strategy/boss-clock.js";
 import { fillDbNumbers } from "../monster-db.js";
 import { KNOWLEDGE_FILES, KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 
@@ -22,7 +25,7 @@ export const OLD_KNOWLEDGE_NOTE =
 function hintsText(data: KnowledgeData, asc: number, keyword?: string): string[] {
   const needle = keyword?.toLowerCase();
   return data.jevHints.hints
-    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: fillDbNumbers(hint.text, asc, data.monsterDb.monsters) }))
+    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: fillGuideFacts(fillDbNumbers(hint.text, asc, data.monsterDb.monsters)) }))
     .filter(({ hint, when, text }) => !needle || [hint.id, when, text].some((part) => part.toLowerCase().includes(needle)))
     .map(({ hint, when, text }) => `- [${hint.id}] 条件 ${when}：${text}（证据 ${hint.evidence?.length ?? 0} 局${hint.evidence?.length ? `: ${hint.evidence.join(", ")}` : ""}）`);
 }
