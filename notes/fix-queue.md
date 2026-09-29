@@ -129,3 +129,9 @@ From fix batch G (2026-09-29 20:32; line numbers at step1-bugfix = v3 d32b992), 
 - turn-solver.ts:1168 Feel No Pain block ignores random exhausts (unupgraded True Grit); Dark Embrace already counted.
 - To verify: rollout.ts:1132 Test Subject phase revive doesn't clear Demise (game behaviour unknown).
 - deepseek.ts:374 recovering an unknown option from the reasoning keeps route but drops `discard` → a recovered discard option is judged invalid and falls back.
+
+From experience update 2026-09-29.6 (2026-09-29 20:51; line numbers at v3 2f72f9a):
+- Giant "block needed after the kill ≤13: 18 of 33 won 17" is stale (with Y36H 19 of 34 won 18) in ironclad-guide.md:55, :120, ds-handbook.md:71, run-journal.ts:181, boss-clock.ts:85 — compute it from data like 22109ed did for the kill-turn record.
+- ironclad-guide.md:54, run-journal.ts:180 count unupgraded True Grit as clearing Soul Fysh's Beckon; unupgraded True Grit exhausts a random card (experience card-true-grit).
+- Investigate: ARKG "calc mismatch" in the logs — cause not located.
+- Experience text vs code (potion entries, wait for Dai's potion-entry decision): potion-code-discard (Little Mailbox part outdated since 0c71951; White Beast Statue still true), potion-fysh-oil (full-belt discard, unverified after G), potion-swift ("valued 0", outdated).
