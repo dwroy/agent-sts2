@@ -1462,3 +1462,63 @@ describe("non-attack damage meets the enemy's Intangible, Slippery and caps (con
     expect(line.perTurn.map((t) => t.dmg.mean)).toEqual([1, 1, 1, 1]);
   });
 });
+
+describe("the lasting part of a potion drunk in the line reaches the later turns (consistency #13: Heart of Iron's Plating)", () => {
+  const potion = (id: string, overrides: Partial<CardModel>) => card(100, `POTION:${id}:0`, { type: "Potion", target: "self", validTargets: [], cost: 0, ...overrides });
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const run = (drink: CardModel | null, o: { draw?: CardModel[]; table?: EnemyTable; hp?: number; foe?: Partial<EnemySim> } = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = drink ? [drink] : [strike(0)];
+    const table = o.table ?? HIT;
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: o.hp ?? 200, maxHp: 200, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 1 }], ...o.foe }],
+      fightKind: "boss",
+    };
+    const plans = solveTurn(solver).plans;
+    const plan = drink ? plans.find((p) => p.steps.some((step) => step.cardId === drink.cardId))! : plans[0]!;
+    expect(plan).toBeDefined();
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans,
+      piles: { draw: o.draw ?? Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand.map(() => null) },
+      enemies: [{ index: 0, id: "E", move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { E: table },
+      potions: drink ? 1 : 0,
+      options: { budgetMs: 1e9, seed: 3, include: [plan], now: fakeClock(0.01) },
+    }).lines.find((line) => line.plan === plan)!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+
+  it("Heart of Iron: Plating 7 blocks 6, 5, 4, 3 of the later 10-damage hits", () => {
+    expect(losses(run(potion("HEART_OF_IRON", { plating: 7, special: "plating" })))).toEqual([4, 5, 6, 7]);
+  });
+
+  it("Dexterity Potion: +2 block on every later Defend", () => {
+    const defends = Array.from({ length: 40 }, (_, k) => defend(10 + k));
+    // Three Defends a turn: 15 block, 21 with the +2.
+    expect(losses(run(null, { draw: defends }))).toEqual([0, 0, 0, 0]);
+    const heavy: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    expect(losses(run(null, { draw: defends, table: heavy }))).toEqual([5, 5, 5, 5]);
+    expect(losses(run(potion("DEXTERITY_POTION", { special: "dexterity" }), { draw: defends, table: heavy }))).toEqual([0, 0, 0, 0]);
+  });
+
+  it("Regen 5: heals 4, 3, 2, 1 at the end of the later turns", () => {
+    expect(losses(run(potion("REGEN_POTION", { special: "regen", regen: 5 }), { hp: 150 }))).toEqual([6, 7, 8, 9]);
+  });
+
+  it("Mazaleth's Gift: +1 Strength at the end of every turn; Beetle Juice: the enemy's hits 30% less for 4 turns", () => {
+    const gift = run(potion("MAZALETHS_GIFT", { special: "ritual" }));
+    expect(gift.perTurn.map((t) => t.dmg.mean)).toEqual([21, 24, 27, 30]);
+    const juice = potion("BEETLE_JUICE", { target: "single", validTargets: [0], shrink: 4 });
+    expect(losses(run(juice))).toEqual([7, 7, 7, 10]);
+  });
+
+  it("Clarity: one more card drawn at the start of each of the next 3 turns", () => {
+    const free = Array.from({ length: 40 }, (_, k) => card(10 + k, "STRIKE", { damage: 6, cost: 0 }));
+    expect(run(potion("CLARITY", { special: "clarity", draw: 1 }), { draw: free }).perTurn.map((t) => t.dmg.mean)).toEqual([36, 36, 36, 30]);
+  });
+});

@@ -46,7 +46,7 @@ import { fileURLToPath } from "node:url";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -752,6 +752,8 @@ interface SimEnemy {
   flutter: number;
   /** Strength it gains at the end of each of its turns (STRENGTH_GROWTH_POWERS; a move's Ritual adds from its next turn). */
   growth: number;
+  /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
+  shrink: number;
   /**
    * Thorns and damage halving (Guarded, Soar), Dazed per hit (Personal Hive), Tainted per Skill (Vital Spark):
    * the decision's, then what its moves give. A move's Thorns or Soar lasts until its next move resolves
@@ -809,6 +811,15 @@ interface SimPlayer {
   radiance: number;
   /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
   strikeReplay: number;
+  /**
+   * The lasting parts of potions (the solver prices them, the later turns dropped them): Regen up at the
+   * start of the turn (healed at its end, one less each turn), Ritual (Mazaleth's Gift: +1 Strength at the end
+   * of each turn), Clarity's extra card on the next turns (CLARITY_POWER, turns left). Heart of Iron's
+   * Plating and Dexterity Potion's +2 go to plating / dexterity.
+   */
+  regen: number;
+  ritual: number;
+  clarityTurns: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
@@ -891,10 +902,10 @@ export interface TurnRecord {
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
-  const scale = (enemy.weak > 0 ? 0.75 : 1) * (playerVulnerable ? 1.5 : 1);
+  const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
-  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1))), hits: Math.max(1, m.hits) }];
+  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits: Math.max(1, m.hits) }];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
 }
 
@@ -1116,6 +1127,7 @@ function applyPlan(
   const o = plan.outcome;
   const startHp = player.hp;
   const ownLoss = Math.max(0, o.hpLoss - o.incomingAfterBlock);
+  let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
   for (const step of plan.steps) {
@@ -1123,6 +1135,15 @@ function applyPlan(
       player.potions = Math.max(0, player.potions - 1);
       if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
       if (step.cardId.startsWith("POTION:SOLDIERS_STEW:")) player.strikeReplay += 1;
+      // What the potion leaves for the later turns (its turn is the solver's outcome already).
+      const potion = hand.find((card) => card.type === "Potion" && card.cardId === step.cardId);
+      if (potion) {
+        player.plating += potion.plating ?? 0;
+        if (potion.special === "dexterity") player.dexterity += DEX_POTION;
+        if (potion.special === "regen") regenDrunk += potion.regen ?? 0;
+        if (potion.special === "ritual") player.ritual += 1;
+        if (potion.special === "clarity") player.clarityTurns += CLARITY_LATER_DRAWS;
+      }
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
@@ -1190,6 +1211,7 @@ function applyPlan(
     if (a.slippery !== undefined) e.slippery = a.slippery;
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
+    if (a.shrink !== undefined) e.shrink = a.shrink;
     // Strength it gained for good this turn (Fight Me!, Enrage per Skill, Crab Rage on the survivor).
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
@@ -1213,6 +1235,9 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
+  // Regen healed at this turn's end (in the outcome): one less next turn. Ritual: Strength at the end of it.
+  player.regen = Math.max(0, player.regen + regenDrunk - 1);
+  player.strength += player.ritual;
   // This turn's temporary Strength/Dexterity ends with it (Setup Strike's +3 was every later turn's).
   player.strength -= player.tempStrength;
   player.dexterity -= player.tempDexterity;
@@ -1288,6 +1313,7 @@ function applyPlan(
       }
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
+      e.shrink = Math.max(0, e.shrink - 1);
       e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
       // Fade (Soul Fysh): Intangible through our next turn (93 of 577 logged Soul Fysh turns).
       if (!stunned) e.intangibleTurns += m?.selfPowers?.INTANGIBLE_POWER ?? 0;
@@ -1448,6 +1474,9 @@ function simulate(
     ringingNext: false,
     mindRot: input.playerPowers["MIND_ROT_POWER"] ?? 0,
     wasteAway: input.playerPowers["WASTE_AWAY_POWER"] ?? 0,
+    regen: base.regen ?? input.playerPowers["REGEN_POWER"] ?? 0,
+    ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
+    clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
@@ -1484,6 +1513,7 @@ function simulate(
       curlUp: e.curlUp ?? 0,
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
+      shrink: e.shrink ?? 0,
       plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
       halved: e.halved === true,
@@ -1532,7 +1562,9 @@ function simulate(
     const handBase: CardModel[] = [];
     const targets = enemies.filter((e) => e.alive).map((e) => e.index);
     // Mind Rot draws fewer; Tangled makes this turn's Attacks dearer; Chains of Binding binds the first cards drawn.
-    for (let i = 0; i < Math.max(0, handSize - player.mindRot); i += 1) {
+    const clarity = player.clarityTurns > 0 ? 1 : 0;
+    player.clarityTurns = Math.max(0, player.clarityTurns - 1);
+    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot); i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
@@ -1559,6 +1591,7 @@ function simulate(
         flutter: e.flutter,
         thorns: e.thorns,
         halved: e.halved,
+        shrink: e.shrink,
         dazedPerHit: e.dazedPerHit,
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
@@ -1579,7 +1612,7 @@ function simulate(
       duplicate: 0,
       buffer: 0,
       vigor: 0,
-      regen: 0,
+      regen: player.regen,
       facing: null,
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,

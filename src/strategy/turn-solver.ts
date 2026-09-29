@@ -408,6 +408,8 @@ export interface Outcome {
     curlUp?: number;
     flutter?: number;
     strengthGained?: number;
+    /** Shrink turns left on it (Beetle Juice's 4: its attacks 30% less). */
+    shrink?: number;
   }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -1969,6 +1971,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           curlUp: enemy.curlUp ?? 0,
           flutter: enemy.flutter ?? 0,
           strengthGained: enemy.strengthDelta,
+          shrink: enemy.shrink ?? 0,
         })),
       incomingAfterBlock,
       energyLeft: sim.energy,
