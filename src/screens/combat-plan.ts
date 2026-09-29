@@ -32,7 +32,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, hpText, mantleHpCost, musicBoxCopy, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -1213,10 +1213,20 @@ function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined
     .join("|");
 }
 
-function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
+function expectedHandAfterFirst(plan: Plan, hand: CardModel[], musicBox: boolean): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  return handSignature(handAfterPlay(cardFor(first, hand), hand));
+  return handSignature(handAfterPlay(cardFor(first, hand), hand, musicBox));
+}
+
+/**
+ * Music Box armed on this frame: held, and no Attack played yet this turn, so the next Attack card played comes back
+ * as an Ethereal copy (turn-solver PlayerSim.musicBox). YVYZ F48 T3: the copy read as "hand grew" and the line was
+ * re-planned three times that turn.
+ */
+function musicBoxArmed(state: DecisionEnv["state"]): boolean {
+  const held = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "MUSIC_BOX");
+  return held && num(asRecord(asRecord(state.raw["combat"])["player"])["attacks_played_this_turn"]) === 0;
 }
 
 /**
@@ -1224,8 +1234,10 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
  * (巨石, 巨石+ from Primal Force+; the solver's giantRockFrom), so the line goes on instead of reading the rocks as a
  * surprise and re-planning (as eca3384 for Blessing of the Forge's upgrades).
  */
-function handAfterPlay(played: CardModel | undefined, hand: CardModel[]): CardModel[] {
+function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBox: boolean): CardModel[] {
   const left = hand.filter((card) => card !== played);
+  // Music Box armed: the Attack comes back as an Ethereal copy.
+  if (played?.type === "Attack" && musicBox) return [...left, musicBoxCopy(played)];
   if (played?.special !== "primal_force") return left;
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
@@ -1252,8 +1264,8 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
       ? {
           turn,
           remaining: plan.steps.slice(1),
-          expectedHand: expectedHandAfterFirst(plan, hand),
-          handLen: handLenAfter(first!, hand),
+          expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
+          handLen: handLenAfter(first!, hand, musicBoxArmed(env.state)),
           ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
           ...(first!.takes ? { take: takeSignature(first!.takes) } : {}),
           via,
@@ -1294,9 +1306,10 @@ function withoutUpgrades(signature: string): string {
   return signature === "" ? "" : signature.split(",").map((id) => id.replace(/\+$/, "")).sort().join(",");
 }
 
-/** Hand size after a step: a card leaves the hand, a potion does not. */
-function handLenAfter(step: Step, hand: CardModel[]): number {
-  return cardFor(step, hand) ? hand.length - 1 : hand.length;
+/** Hand size after a step: a card leaves the hand, a potion does not; an armed Music Box gives an Attack back as a copy. */
+function handLenAfter(step: Step, hand: CardModel[], musicBox: boolean): number {
+  const card = cardFor(step, hand);
+  return card ? hand.length - 1 + (card.type === "Attack" && musicBox ? 1 : 0) : hand.length;
 }
 
 /**
@@ -1380,7 +1393,8 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
  * (lethal_risks "incoming_damage"): a death from what the turn's end costs besides (held Beckons' HP loss, a Mantle,
  * Disintegration) is not a calculation mismatch (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in
  * all, "mod says safe"; one Beckon was held and T13 began at 7 = 40 - 27 - 6, as the solver has it). Damage from cards
- * held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest (K7G9M8K4DWFW F45 T3).
+ * held (Burn, Wither, Toxic: named as they are) meets block like a hit but is no intent either: the enemy hits' part is
+ * the rest (K7G9M8K4DWFW F45 T3).
  * Nor is the Sandpit reaching 0, which eats the player whatever the HP (UNRLW0W3XWLD F33 T8: Sandpit 1, the
  * end-turn line read "0 HP lost in all, 0 of it the enemy hits after block", the Sandpit unnamed).
  */
@@ -1391,9 +1405,19 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   const heldDamage = endNow.outcome.heldDamage ?? 0;
   const enemyPart = Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage);
   const endOnlyByOwnLosses = endNow.outcome.dies && !modSaysLethal && enemyPart < hp;
+  // Mod says lethal, the solver lives: what the solver counts at the turn's end that the flag does not (86C3 F25 T5:
+  // 28 intents vs 28 HP, Plating 2 took it to 26; the note said only "calc mismatch").
+  if (modSaysLethal && !endReachesZero) {
+    const guards = endNow.outcome.endTurnGuards ?? [];
+    const left = `the enemy turn takes ${endNow.outcome.incomingAfterBlock} of ${hp} HP`;
+    return guards.length > 0
+      ? ` [calc mismatch: solver says ending now does not kill, mod says lethal: the mod's flag counts the intents against the block up now; the solver also counts ${guards.map((guard) => `${guard.what} ${guard.amount}`).join(", ")} (${left})]`
+      : ` [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (${left})]`;
+  }
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
-  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}`;
+  const from = endNow.outcome.heldDamageFrom ?? [];
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}`;
   return sandpit
     ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
     : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
@@ -1508,6 +1532,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
+    // Music Box: the turn's first Attack card comes back as an Ethereal copy (armed while none is played yet).
+    ...(relicIds.includes("MUSIC_BOX") ? { musicBox: { count: num(player["attacks_played_this_turn"]) } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1608,8 +1634,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
-              expectedHand: handSignature(handAfterPlay(nextCard, hand)),
-              handLen: handLenAfter(next, hand),
+              expectedHand: handSignature(handAfterPlay(nextCard, hand, musicBoxArmed(state))),
+              handLen: handLenAfter(next, hand, musicBoxArmed(state)),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(next.takes ? { take: takeSignature(next.takes) } : {}),
               ...(potions !== undefined ? { potions } : {}),
@@ -2011,7 +2037,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-guarded",
         intent: firstIntent(guarded, hand, env),
-        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (hp -${guarded.outcome.hpLoss}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (${hpText(guarded.outcome.hpLoss)}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
       };
     }
     commit(env, state.turn, top, hand, "code");
@@ -2026,7 +2052,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "combat/plan",
       intent: firstIntent(top, hand, env),
-      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; hp -${top.outcome.hpLoss}, dmg ${top.outcome.damageDealt}${calcNote}`,
+      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; ${hpText(top.outcome.hpLoss)}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
 
@@ -2322,7 +2348,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...guardOptions.map((option) => option.outcome.hpLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; ${hpText(plan.outcome.hpLoss)}) instead`
         : "";
       return {
         intent: firstIntent(plan, hand, env),

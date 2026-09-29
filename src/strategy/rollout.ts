@@ -1960,6 +1960,8 @@ function simulate(
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
+      // Music Box: a new turn, its first Attack card makes a copy again.
+      ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
