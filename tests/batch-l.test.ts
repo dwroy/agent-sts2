@@ -4,12 +4,15 @@
  * potion-mc sweeps), never the refreshing knowledge files.
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
+import { DeepSeekClient, severalOptionKeys } from "../src/llm/deepseek.js";
+import { selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
 import type { PickOption } from "../src/screens/pick.js";
 import { logged, loggedEnv } from "./logged.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 type Raw = Record<string, unknown>;
 
@@ -87,5 +90,57 @@ describe("2. White Beast Statue with a full belt: a \"drink it now, then travel\
     run["relics"] = (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "WHITE_BEAST_STATUE");
     const env = loggedEnv(fx);
     expect(statuePotionOptions(env, [{ index: 0, row: 4, col: 6, type: "Monster" }])(go).map((option) => option.key)).toEqual(["go"]);
+  });
+});
+
+describe("4. A one-option question answered with several keys (RRMY F24 \"card2,card1\", judged failed and passed to Jev): the first is taken, said so in the reason", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+  // The RRMY F24 second pick of Feast's two commons (card5 True Grit taken on the first pick).
+  const criteria = Object.fromEntries(
+    ["card0", "card1", "card2", "card3", "card4", "card6", "card7"].map((key, at) => [key, JSON.stringify({ card: ["重击", "雷霆一击", "突破", "耸肩无视", "铁斩波", "愤怒", "双重打击"][at], code_value: 50 - at })]),
+  );
+  const reply = (content: string) =>
+    startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content } }], usage: { prompt_tokens: 1, completion_tokens: 1 } }));
+    });
+
+  it("severalOptionKeys: keys or names, comma / 、 / space separated, all must name an option", () => {
+    expect(severalOptionKeys("card2,card1", criteria)).toEqual(["card2", "card1"]);
+    expect(severalOptionKeys("card2, card1", criteria)).toEqual(["card2", "card1"]);
+    expect(severalOptionKeys("突破、雷霆一击", criteria)).toEqual(["card2", "card1"]);
+    expect(severalOptionKeys("card2 card1", criteria)).toEqual(["card2", "card1"]);
+    expect(severalOptionKeys("card2,card5", criteria)).toBeNull(); // card5 is not offered any more
+    expect(severalOptionKeys("card2", criteria)).toBeNull();
+  });
+
+  it("choose() acts on the first key and keeps the answer's words, with the note", async () => {
+    server = await reply('{"choice":"card2,card1","reason":"Need AoE for Kaiser Crab: Breakthrough and Thunderclap hit both claws."}');
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    const answer = await client.choose({ floor: 24 }, "Which card should I add?", criteria, { label: "selection/add" });
+    expect(answer.choice).toBe("card2");
+    expect(answer.reason).toBe("Need AoE for Kaiser Crab: Breakthrough and Thunderclap hit both claws. [the answer named 2 options (card2,card1) on a one-option question: the first, card2, taken]");
+  });
+
+  it("a JSON list as the choice reads the same", async () => {
+    server = await reply('{"choice":["card1","card2"],"reason":"AoE"}');
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    expect((await client.choose({}, "Which card should I add?", criteria, { label: "selection/add" })).choice).toBe("card1");
+  });
+
+  it("a part naming no option still fails as before", async () => {
+    server = await reply('{"choice":"card2,读下封底","reason":"x"}');
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    await expect(client.choose({}, "Which card should I add?", criteria, { label: "selection/add" })).rejects.toThrow('chose unknown option "card2,读下封底"');
+  });
+
+  it("the selection's pick count says one card per answer (\"2 of 2\" read as \"pick two now\")", () => {
+    expect(selectingText(1, 2, 2)).toBe("pick 2 of 2: one card per answer");
+    expect(selectingText(0, 2, 2)).toBe("pick 1 of 2: one card per answer; the next pick is asked after this one");
+    expect(selectingText(0, 0, 3)).toBe("pick 1 of 3 (at least 0): one card per answer; any further pick is asked after this one");
   });
 });

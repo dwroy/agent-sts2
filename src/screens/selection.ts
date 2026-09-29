@@ -270,7 +270,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         screen: "CARD_SELECTION",
         task: verb,
         prompt,
-        selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`,
+        selecting: selectingText(selected, min, max),
         ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
         ...(forThisTurn
           ? {
@@ -293,8 +293,17 @@ export function planSelection(env: DecisionEnv): Decision | null {
     ...params,
     ...(unranked ? { unranked: true } : {}),
     options: options.map((option) => ({ ...option, why })),
-    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`, ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
+    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
+}
+
+/**
+ * Which pick of the screen this question is. "2 of 2" alone read as "select 2 cards now" (RRMYC7MCSYX8 F24: the
+ * second pick of Feast's two commons answered "card2,card1"): one card per answer, said so.
+ */
+export function selectingText(selected: number, min: number, max: number): string {
+  const next = selected + 1 < max ? `; ${min > selected + 1 ? "the next pick" : "any further pick"} is asked after this one` : "";
+  return `pick ${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}: one card per answer${next}`;
 }
 
 /**

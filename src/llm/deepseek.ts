@@ -182,6 +182,23 @@ export function resolveOptionKey(answer: string, criteria: Record<string, string
 }
 
 /**
+ * The option keys of an answer that names several on a one-option question ("card2,card1", RRMYC7MCSYX8 F24: the
+ * second pick of an "add 2 cards" screen read as "pick both now"), in the answer's order; null unless every part
+ * names an option (keys or names, resolveOptionKey) and there are at least two parts. The caller takes the first:
+ * the answer lists its pick first, and a re-ask would cost another full call (20-90 s at max effort) for the same
+ * question; the other keys are noted in the reason, and a multi-pick screen asks again for its next card.
+ */
+export function severalOptionKeys(answer: string, criteria: Record<string, string | null>): string[] | null {
+  for (const separator of [/\s*[,，、;；|/]\s*/, /\s+/]) {
+    const parts = answer.split(separator).map((part) => part.trim()).filter(Boolean);
+    if (parts.length < 2) continue;
+    const keys = parts.map((part) => resolveOptionKey(part, criteria));
+    if (keys.every((key): key is string => key !== null)) return keys;
+  }
+  return null;
+}
+
+/**
  * Dai 2026-09-29: where the hand-written strategy guide or handbook disagrees with the experience base or the
  * measured data, the data wins. Part of the fixed system prompt (byte-identical across calls, cache-friendly).
  */
@@ -400,7 +417,13 @@ export class DeepSeekClient implements Escalator {
     // A one-shot option key is "option:card" (o1:c5); an answer that gives them apart ({"choice": "o1",
     // "cards": ["c5"]}) names the same option.
     const joined = first.cards?.length === 1 ? `${first.choice}:${first.cards[0]}` : "";
-    const firstKey = resolveOptionKey(first.choice, criteria) ?? (joined in criteria ? joined : null);
+    let firstKey = resolveOptionKey(first.choice, criteria) ?? (joined in criteria ? joined : null);
+    // Several options named on a one-option question: the first, and said so in the reason (severalOptionKeys).
+    const several = firstKey === null ? severalOptionKeys(first.choice, criteria) : null;
+    if (several) {
+      firstKey = several[0]!;
+      first.reason = `${first.reason}${first.reason ? " " : ""}[the answer named ${several.length} options (${first.choice}) on a one-option question: the first, ${firstKey}, taken]`;
+    }
     if (firstKey === null) {
       // The route (a route review's keep/change, the act route) does not depend on the option key: it rides along,
       // so a choice recovered from the reasoning keeps it.
@@ -476,7 +499,8 @@ export class DeepSeekClient implements Escalator {
       throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
     }
     return {
-      choice: typeof parsed.choice === "string" ? parsed.choice.trim() : "",
+      // A list ({"choice": ["card2", "card1"]}) reads as the keys it names, in order (severalOptionKeys).
+      choice: typeof parsed.choice === "string" ? parsed.choice.trim() : Array.isArray(parsed.choice) ? parsed.choice.filter((key): key is string => typeof key === "string").join(",") : "",
       reason: typeof parsed.reason === "string" ? parsed.reason.trim() : "",
       rawReason: parsed.reason,
       ...(Array.isArray(parsed.cards) ? { cards: parsed.cards.filter((card): card is string => typeof card === "string").map((card) => card.trim()) } : {}),
