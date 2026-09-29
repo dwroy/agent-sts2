@@ -224,11 +224,11 @@ describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank t
   const solve = (fightKind: "monster" | "boss") =>
     solveTurn({ hand: hand(), player: player({ hp: 61, maxHp: 83, energy: 4 }), enemies: enemies(), fightKind, turn: 1 });
 
-  it("a potion's lasting value is small in a hallway fight, full in a boss fight", () => {
+  it("a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Dai)", () => {
     const hallway = solve("monster").plans.find(drinks)!;
     const boss = solve("boss").plans.find(drinks)!;
     expect(boss.outcome.lasting).toBeCloseTo(10);
-    expect(hallway.outcome.lasting).toBeLessThan(5);
+    expect(hallway.outcome.lasting).toBeCloseTo(10);
   });
 
   it("the hallway's best line keeps the potion, and the options always include a line without it", () => {
@@ -1939,10 +1939,9 @@ describe("a potion line never merges with a potion-free line (2CCM6XK4PB37 F15 T
     const dry = result.plans.find((plan) => !drinks(plan))!;
     expect(dry).toBeDefined();
     expect(dry.steps).toEqual([]);
-    // Same end state, and the potion line scores a hair higher (lasting Dexterity): before the fix they shared
-    // a bucket (Math.round(score)) and the potion line replaced "end turn".
+    // Same end state, and the potion line scores higher (lasting Dexterity): before the fix they shared a bucket
+    // (Math.round(score), when a hallway potion's lasting value counted 25%) and the potion line replaced "end turn".
     expect(potionLine.outcome.hpLoss).toBe(dry.outcome.hpLoss);
     expect(potionLine.score).toBeGreaterThan(dry.score);
-    expect(Math.round(potionLine.score)).toBe(Math.round(dry.score));
   });
 });

@@ -7,10 +7,49 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
+
+function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
+  return {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: cardId,
+    type: "Attack",
+    upgraded: false,
+    cost: 1,
+    xCost: false,
+    playable: true,
+    target: "single",
+    validTargets: [0],
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+    ...overrides,
+  };
+}
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
 
 /** A logged board with `potionId` in potion slot `slot` (usable, no target). */
 function withPotion(fx: Logged, slot: number, potionId: string, name: string, description: string): Logged {
@@ -47,4 +86,32 @@ describe("1a. Dai: a potion is a 0-cost one-shot card. An unsimulated potion is 
     expect(option["damage_dealt"]).toBeUndefined();
     expect(decision.resolve({ plan: { type: "choice", choice: "p1", probabilities: { p1: 0.5 }, confidence: 0.5, raw: {} } }).intent).toEqual({ action: "use_potion", option_index: 1 });
   }, 30_000);
+});
+
+describe("1b. Dai: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, \"worth more saved for an elite or the boss\")", () => {
+  const strengthPotion = () => modelPotion("STRENGTH_POTION", "力量药水", 0, [], 0)!;
+  // The same effect as a 0-cost card that exhausts (a one-shot card).
+  const strengthCard = () => card(5, "ONE_SHOT_STRENGTH", { type: "Skill", cost: 0, target: "self", validTargets: [], strength: 2, exhausts: true });
+  const lastingOf = (extra: CardModel, fightKind: SolverInput["fightKind"]) => {
+    const input: SolverInput = { hand: [card(0, "STRIKE", { damage: 6 }), extra], player: player(), enemies: [enemy()], fightKind, turn: 1 };
+    return solveTurn(input).plans.find((plan) => plan.steps.some((step) => step.cardId === extra.cardId))!.outcome.lasting;
+  };
+
+  it("Strength Potion in a hallway fight: the same lasting value as in a boss fight and as the same effect on a 0-cost one-shot card", () => {
+    const card = lastingOf(strengthCard(), "monster");
+    expect(card).toBeGreaterThan(0);
+    expect(lastingOf(strengthPotion(), "monster")).toBeCloseTo(card);
+    expect(lastingOf(strengthPotion(), "unknown")).toBeCloseTo(card);
+    expect(lastingOf(strengthPotion(), "boss")).toBeCloseTo(lastingOf(strengthCard(), "boss"));
+  });
+
+  it("Heart of Iron's Plating in a hallway fight: valued like Plating from a card", () => {
+    const iron = modelPotion("HEART_OF_IRON", "铁心药水", 0, [], 0)!;
+    const armor = card(6, "ONE_SHOT_PLATING", { type: "Skill", cost: 0, target: "self", validTargets: [], plating: 7, special: "plating", exhausts: true });
+    const hit: EnemySim = enemy({ attacks: [{ damage: 10, hits: 1 }] });
+    const lasting = (extra: CardModel) =>
+      solveTurn({ hand: [extra], player: player(), enemies: [hit], fightKind: "monster", turn: 1, laterIncoming: [10, 10, 10, 10] }).plans.find((plan) => plan.steps.length === 1)!.outcome.lasting;
+    expect(lasting(armor)).toBeGreaterThan(0);
+    expect(lasting(iron)).toBeCloseTo(lasting(armor));
+  });
 });

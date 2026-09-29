@@ -639,9 +639,6 @@ interface Sim {
   flat: number;
   /** Resource cost of potions used this turn (not scaled like lasting value). */
   potionCost: number;
-  /** Of permStrength and flat, the part potions gave (scaled by POTION_LASTING for the fight kind). */
-  potionStrength: number;
-  potionFlat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
@@ -676,9 +673,8 @@ interface Sim {
   regen: number;
   /** Soldier's Stew: extra plays of every Strike card from now on this turn. */
   strikeReplay: number;
-  /** Plating gained this turn from a Plating potion (Heart of Iron), and the part of it potions gave. */
+  /** Plating gained this turn (Stone Armor, a Plating potion: Heart of Iron). */
   plating: number;
-  platingPotion: number;
   unknown: string[];
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
@@ -1115,16 +1111,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twiceAttack) next.duplicateAttacks -= 1;
   // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
   const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
-  const strengthBefore = next.permStrength;
-  const flatBefore = next.flat;
   resolveEffects(next, card, target, player, cost);
   if (twice) resolveEffects(next, card, target, player, cost);
   if (twiceAttack) resolveEffects(next, card, target, player, cost);
   for (let replay = 0; replay < replays; replay += 1) resolveEffects(next, card, target, player, cost);
-  if (card.type === "Potion") {
-    next.potionStrength += next.permStrength - strengthBefore;
-    next.potionFlat += next.flat - flatBefore;
-  }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
@@ -1353,7 +1343,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // absorb of the attacks forecast for them (platingAbsorbed), not a flat rate.
   if (card.special === "plating") {
     next.plating += card.plating ?? 0;
-    if (card.type === "Potion") next.platingPotion += card.plating ?? 0;
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds) addToHand(next, card.adds);
@@ -1892,17 +1881,12 @@ export function weightsFor(input: SolverInput): Weights {
 }
 
 /**
- * Share of a potion's lasting value (Strength Potion, Dexterity Potion, Touch of Insanity) counted by
- * fight kind. A potion is spent once; in a hallway fight that ends in a few turns its buff pays little
- * and the potion is worth more saved for an elite or the boss (5FMU F15: Strength Potion drunk T1 of a
- * hallway fight two floors before the boss, every offered line carried it as "worth about 10 score").
+ * Lasting value of the turn (Strength, powers), a potion's part like a card's (Dai: a potion is a 0-cost one-shot
+ * card, no cost). Until batch K a potion's part counted 25% in hallway and unknown fights (POTION_LASTING: "the
+ * potion is worth more saved for an elite or the boss"), a keep-the-potion cost in the score.
  */
-export const POTION_LASTING: Record<SolverInput["fightKind"], number> = { monster: 0.25, unknown: 0.25, elite: 1, boss: 1 };
-
-/** Lasting value of the turn (Strength, powers), a potion's part scaled by POTION_LASTING. */
-function lastingValue(sim: Sim, input: SolverInput, weights: Weights): number {
-  const potion = weights.strength * sim.potionStrength + sim.potionFlat;
-  return weights.strength * sim.permStrength + sim.flat - potion * (1 - POTION_LASTING[input.fightKind]);
+function lastingValue(sim: Sim, weights: Weights): number {
+  return weights.strength * sim.permStrength + sim.flat;
 }
 
 /** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
@@ -1981,9 +1965,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
   // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
-  // Plating's later turns: the HP it can absorb (a potion's part at its fight-kind share, POTION_LASTING).
+  // Plating's later turns: the HP it can absorb (a potion's part like a card's).
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
-  const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
+  const platingValue = sim.plating > 0 ? weights.hp * platingHp : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
@@ -2282,7 +2266,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // less the later it comes.
     const fightLength = (input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8) * later;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, input, weights) * fightLength * earliness;
+    score += lastingValue(sim, weights) * fightLength * earliness;
     score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
     // Pael's Tear: energy left unspent gives the next turn its extra energy, valued as Radiant Tincture's later energy.
@@ -2355,7 +2339,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
-      lasting: lastingValue(sim, input, weights) - enrageCost + platingValue,
+      lasting: lastingValue(sim, weights) - enrageCost + platingValue,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
       ...(explodesNext > 0 ? { explodesNext, eruptionMargin: hpAfter + (input.player.keepsBlock ? Math.max(0, blockLeft - incomingRaw) : 0) - explodesNext } : {}),
       ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
@@ -2417,7 +2401,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}#${sim.hpLossEvents}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
 }
 
 export interface SolveResult {
@@ -2513,8 +2497,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     weakApplied: 0,
     flat: 0,
     potionCost: 0,
-    potionStrength: 0,
-    potionFlat: 0,
     tempDex: 0,
     intangible: false,
     buffer: input.player.buffer ?? 0,
@@ -2532,7 +2514,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnInHand: 0,
     regen: input.player.regen ?? 0,
     plating: 0,
-    platingPotion: 0,
     strikeReplay: input.player.strikeReplay ?? 0,
     unknown: [],
     feedKills: 0,
