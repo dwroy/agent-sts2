@@ -455,6 +455,7 @@ export interface Outcome {
    */
   revived?: { names: string[]; sources: string[]; reviveHp: number; hp: number; ownLoss: number };
   blockGained: number;
+  /** Damage that took HP off enemies, less what went into a Waterfall Giant husk (nothing to take off there). */
   damageDealt: number;
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
@@ -483,6 +484,8 @@ export interface Outcome {
     shrink?: number;
     /** Stunned by the line (Ravenous eating a corpse): its move this enemy turn is lost. */
     stunned?: boolean;
+    /** A Waterfall Giant husk (999,999,999 max HP): its HP is not there to take off, it explodes. */
+    husk?: boolean;
   }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -2113,7 +2116,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       dies,
       ...(revived ? { revived } : {}),
       blockGained: sim.blockGained,
-      damageDealt: sim.damageDealt,
+      // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
+      // F17 T8: every line on the blast turn read "dmg 88", "瀑布巨兽 999999889 HP").
+      damageDealt: sim.damageDealt - huskDamage,
       kills: kills.map((enemy) => enemy.name),
       restocked: restocked.map((enemy) => enemy.name),
       ...(spawning.length > 0 ? { spawns: spawning.map((enemy) => `${enemy.name}: ${enemy.spawnsOnDeath}`) } : {}),
@@ -2133,6 +2138,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           strengthGained: enemy.strengthDelta,
           shrink: enemy.shrink ?? 0,
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
+          ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,
       energyLeft: sim.energy,

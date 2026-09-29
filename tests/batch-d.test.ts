@@ -74,3 +74,21 @@ describe("One-Two Punch and Unrelenting in hand (only their powers were read, on
     expect(lines.find((line) => line["plays"] === "飞剑回旋镖")).toMatchObject({ damage_dealt: 18 });
   });
 });
+
+describe("Waterfall Giant husk on its blast turn: damage into it is not shown as dealt (YQL8D59999AX F17 T8, \"dmg 88\")", () => {
+  it("every line reads damage 0 and names the husk, not 999,999,889 HP", () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("yql8-f17-t8-husk");
+    const decision = planCombatTurn(loggedEnv(fx));
+    // The husk explodes for 35 at the end of this turn; the solver still scores only surviving it.
+    expect(decision?.kind).toBe("ask");
+    const lines = Object.values((decision as AskDecision).questions["plan"]!.criteria!).map((text) => JSON.parse(String(text)) as Record<string, unknown>);
+    expect(lines.length).toBeGreaterThan(1);
+    expect(lines.some((line) => /与我一战！/.test(String(line["plays"])))).toBe(true);
+    for (const line of lines) {
+      expect(line["damage_dealt"], String(line["plays"])).toBe(0);
+      expect(String(line["enemies_after"]), String(line["plays"])).toMatch(/^瀑布巨兽 husk \(cannot be killed, it explodes/);
+      expect(JSON.stringify(line)).not.toMatch(/9999999/);
+    }
+  });
+});
