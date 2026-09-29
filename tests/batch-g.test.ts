@@ -11,7 +11,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { describePlan, planCombatTurn } from "../src/screens/combat-plan.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
@@ -405,5 +405,17 @@ describe("7c. Rollout under a tight budget: the first wave shrinks to 3 turns on
     expect(r.lines[0]!.samples).toBe(1);
     // Enough time: as before.
     expect(run(4000).degraded).toEqual([]);
+  });
+});
+
+describe("8. An unused free Attack (Unrelenting) kept into next turn is said in the line's facts, not scored", () => {
+  it("\"Unrelenting\" alone: free_attacks_kept says 1 stays up; a line that spends it says nothing", () => {
+    const unrelenting = card(0, "UNRELENTING", { cost: 2, damage: 12, damageBase: 12, special: "free_next_attack" });
+    const solver: SolverInput = { hand: [unrelenting, strike(1)], player: player({ energy: 2 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 2 };
+    const plans = solveTurn(solver).plans;
+    const alone = plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "UNRELENTING")!;
+    expect(String(describePlan(alone, 60)["free_attacks_kept"])).toMatch(/^1 free Attack \(Unrelenting\) left unused: it stays up into next turn/);
+    const spent = plans.find((plan) => plan.steps.length === 2 && plan.steps[0]!.cardId === "UNRELENTING")!;
+    expect(describePlan(spent, 60)["free_attacks_kept"]).toBeUndefined();
   });
 });

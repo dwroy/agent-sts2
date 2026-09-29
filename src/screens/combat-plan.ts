@@ -749,6 +749,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
   if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  // Unrelenting's free Attack left unused stays up into the next turn (FREE_ATTACK_POWER carries over, 2a38a76);
+  // the score of this turn does not count it, so it is said (a fact, not a weight).
+  if (!o.winsFight && (o.freeAttacksLeft ?? 0) > 0) summary["free_attacks_kept"] = `${o.freeAttacksLeft} free Attack${o.freeAttacksLeft === 1 ? "" : "s"} (Unrelenting) left unused: ${o.freeAttacksLeft === 1 ? "it stays" : "they stay"} up into next turn (the next Attack played costs 0)`;
   if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
