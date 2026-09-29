@@ -90,7 +90,7 @@ describe("tied options on Jev's question (a logged board, the rollout's tie forc
     try {
       const decision = planCombatTurn(loggedEnv(logged("g8yy-f30-t3"), { jevContext: "v1" })) as AskDecision;
       expect(decision.kind).toBe("ask");
-      for (const criteria of [decision.jevView!.questions["plan"]!.criteria!, decision.questions["plan"]!.criteria!]) {
+      for (const criteria of [decision.jevView!.questions["plan"]!.criteria!, decision.questions["plan"]!.criteria!] as Record<string, string>[]) {
         const facts = (key: string) => JSON.parse(criteria[key]!) as Record<string, unknown>;
         const keys = Object.keys(criteria).filter((key) => /^plan\d+$/.test(key));
         expect(keys.length).toBeGreaterThanOrEqual(3);

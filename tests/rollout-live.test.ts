@@ -41,7 +41,8 @@ function plan(name: string, enabled: boolean, jevContext: "v1" | "off" = "v1"): 
   return planCombatTurn(loggedEnv(logged(name), { jevContext }));
 }
 
-const criteriaOf = (decision: AskDecision) => (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria!;
+// A choice question's criteria (option key -> facts JSON).
+const criteriaOf = (decision: AskDecision) => (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string | null>;
 const planKeys = (criteria: Record<string, string | null>) => Object.keys(criteria).filter((key) => /^plan\d+$/.test(key));
 const facts = (criteria: Record<string, string | null>, key: string) => JSON.parse(criteria[key]!) as Record<string, unknown>;
 const pick = (key: string, confidence = 0.9): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
