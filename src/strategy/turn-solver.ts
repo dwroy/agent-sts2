@@ -514,6 +514,8 @@ export interface Outcome {
   sandpitAfter: number | null;
   /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
   stuns?: string[];
+  /** The same enemies by index (the rollout stuns them for their next move). */
+  stunIndexes?: number[];
   /** Their next hits, saved by the stun (0 when none). */
   stunSaved?: number;
   /** Buffer stacks this line's own HP losses use up (Breakthrough after a Lucky Tonic). */
@@ -2240,7 +2242,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       unknownCards: sim.unknown,
       potionCost: sim.potionCost,
       sandpitAfter,
-      ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunSaved } : {}),
+      ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,

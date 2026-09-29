@@ -24,6 +24,7 @@ import { discardSlotsOf } from "../src/screens/potion-discard.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { pileValue, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 
 type Raw = Record<string, unknown>;
 
@@ -326,5 +327,41 @@ describe("5. Pantograph's boss-start heal (+25) in the boss clock's entry HP and
     // Dead before the boss stays dead.
     expect(projectPath(path, 30, healed).arrival[2]).toBe(-5);
     expect(roomCostNote(healed)).toContain("the boss fight starts with +25 HP (Pantograph)");
+  });
+});
+
+describe("7a. Rollout: an Imbalanced enemy is stunned by a fully blocked hit, never at random (KTRT1M2SVVL3 F23 T3, Bowlbug Rock)", () => {
+  // The move model's Headbutt -> {Headbutt 7, STUNNED 3}: the stun is the Rock's Imbalanced, not chance.
+  const ROCK: EnemyTable = { moves: { HEADBUTT_MOVE: { damage: 15, hits: 1, strength: 0, block: 0 }, STUNNED: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HEADBUTT_MOVE: { HEADBUTT_MOVE: 7, STUNNED: 3 }, STUNNED: { HEADBUTT_MOVE: 1 } } };
+  const META: FightMeta = { act: 2, t: 3, asc: 9, kind: "hallway", enc: "TEST_ROCK", deck: { n: 2, atk: 1, skl: 1, pow: 0, junk: 0, dmg: 6, blk: 20, up: 0 }, relics: 0, max_en: 1 };
+  const wall = card(0, "WALL", { type: "Skill", target: "self", validTargets: [], block: 20 });
+  const poke = card(1, "POKE", { damage: 1, damageBase: 1 });
+  let t = 0;
+  const run = (cardId: string) => {
+    const solver: SolverInput = { hand: [wall, poke], player: player({ energy: 1 }), enemies: [enemy({ hp: 500, maxHp: 500, attacks: [{ damage: 15, hits: 1 }], imbalanced: 15 })], fightKind: "monster", turn: 3 };
+    const plan = solveTurn(solver).plans.find((entry) => entry.steps.length === 1 && entry.steps[0]!.cardId === cardId)!;
+    return rolloutDecision({
+      solver,
+      plans: [plan],
+      enemies: [{ index: 0, id: "TEST_ROCK", move: "HEADBUTT_MOVE", strength: 0, powers: { IMBALANCED_POWER: 1 } }],
+      tables: { TEST_ROCK: ROCK },
+      // Nothing to block with later: the next turn's loss is the Rock's hit, or none when it is stunned.
+      piles: { draw: Array.from({ length: 10 }, (_, i) => card(10 + i, "POKE", { damage: 1, damageBase: 1 })), discard: [], handBase: [wall, poke] },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 3, horizon: 2, samples: 40, now: () => (t += 0.01) },
+    }).lines[0]!;
+  };
+
+  it("the hit fully blocked: stunned next turn in every sample; not blocked: it hits next turn in every sample", () => {
+    const blocked = run("WALL");
+    expect(blocked.plan.outcome.stuns).toHaveLength(1);
+    expect(blocked.perTurn[0]!.loss.max).toBe(0);
+    const open = run("POKE");
+    expect(open.perTurn[0]!.loss.min).toBe(15);
   });
 });

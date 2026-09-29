@@ -1012,11 +1012,17 @@ export function usualMove(table: EnemyTable | undefined): string | null {
   return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 }
 
-function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number): string | null {
+/** The move-model state after an enemy's stun (the Bowlbug Rock's Imbalanced). */
+const STUNNED_MOVE = "STUNNED";
+
+function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number, exclude?: string): string | null {
   if (!table || !move) return move;
   const successors = table.next[move];
   if (!successors) return move;
-  const entries = Object.entries(successors);
+  // An Imbalanced enemy's stun comes from our block, not by chance (exclude "STUNNED"), unless nothing else follows.
+  const all = Object.entries(successors);
+  const kept = exclude ? all.filter(([m]) => m !== exclude) : all;
+  const entries = kept.length > 0 ? kept : all;
   const total = entries.reduce((s, [, n]) => s + n, 0);
   let r = random() * total;
   for (const [m, n] of entries) {
@@ -1446,6 +1452,8 @@ function applyPlan(
     // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
     // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
     const applied: EnemyMove[] = [];
+    // Imbalanced enemies whose hits this turn's line fully blocked (the solver's stuns).
+    const blockStunned = new Set(o.stunIndexes ?? []);
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -1512,8 +1520,13 @@ function applyPlan(
         }
       }
       // Still burrowed: it keeps using its burrowed move (Below) until the block breaks.
+      // Imbalanced (Bowlbug Rock, 「如果这名敌人的攻击被完全格挡，它会被眩晕」): its hit fully blocked this turn, its next
+      // move is the stun; otherwise never a stun (the move model's HEADBUTT -> STUNNED 110/367 was a free 30%
+      // stun each turn whatever we blocked: KTRT1M2SVVL3 F23 T3, leaving the Rock alive read safer than killing it).
+      const imbalanced = (e.powers["IMBALANCED_POWER"] ?? 0) > 0;
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
-      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
+      else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
+      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
     }
     // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
     // block at the start of each of our turns while the Shield lives (40 logged fights, 25 every turn).
@@ -1804,7 +1817,14 @@ function simulate(
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
-      }));
+      }))
+      // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
+      // its next hit (about this one) saved.
+      .map((sim) => {
+        const e = enemies.find((entry) => entry.index === sim.index);
+        const imbalanced = e && (e.powers["IMBALANCED_POWER"] ?? 0) > 0 ? sim.attacks.reduce((sum, attack) => sum + attack.damage * attack.hits, 0) : 0;
+        return imbalanced > 0 ? { ...sim, imbalanced } : sim;
+      });
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
     const pSim: PlayerSim = {
       ...base,
