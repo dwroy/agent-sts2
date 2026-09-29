@@ -41,6 +41,8 @@ import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, 
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
+import { jevExperience, jevLessonLine } from "./jev-experience.js";
+import type { RunPlan } from "../strategy/run-plan.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -335,13 +337,18 @@ export function fightLessons(state: GameState, max = JEV_FIGHT_LESSONS): Experie
   return selectLessons(input).filter(matches).slice(0, max);
 }
 
+/** DeepSeek's run plan in force for this run (screen memory), or null. */
+export function currentRunPlan(env: DecisionEnv): RunPlan | null {
+  const runId = str(env.state.raw["run_id"]);
+  return env.screenMemory.runPlan && env.screenMemory.runPlan.runId === runId ? env.screenMemory.runPlan : null;
+}
+
 /**
  * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,
  * kill-order advice included, on every combat question; advice, not orders).
  */
 export function deepseekPlanLine(env: DecisionEnv): string | null {
-  const runId = str(env.state.raw["run_id"]);
-  const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === runId ? env.screenMemory.runPlan : null;
+  const plan = currentRunPlan(env);
   if (!plan) return env.brief.plan ? `DeepSeek's run plan (advice, not orders): ${env.brief.plan}` : null;
   const line = [plan.archetype, plan.summary].filter(Boolean).join(" — ");
   const prep = plan.bossPrep ? ` | boss prep: ${plan.bossPrep}` : "";
@@ -2099,7 +2106,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       ? {
           experience: {
             note: "lessons from past runs about these enemies (experience base): evidence, not orders",
-            lessons: lessons.map((entry) => `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${entry.lesson}`),
+            lessons: lessons.map(jevLessonLine),
           },
         }
       : {}),
@@ -2142,6 +2149,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     });
     const jevState: Record<string, JsonValue> = { ...questionState, run_brief: combatBriefJson(env.brief, state, env.knowledge) };
     if (hints.length > 0) jevState["fight_hints"] = hints.map((hint) => hintText(hint, state.run?.ascension ?? 0));
+    // V4 M3: evidence on keeping potions for the act boss (the run plan's words included) and on this fight's
+    // mechanics, beyond the lessons about these enemies. Evidence only: no option, score or rollout changes.
+    const extra = jevExperience({ state, kind, runPlan: currentRunPlan(env), ...(env.brief.plan ? { briefPlan: env.brief.plan } : {}), knowledge: env.knowledge, shown: lessons.map((entry) => entry.id) });
+    if (extra.potion) jevState["potion_experience"] = extra.potion;
+    if (extra.mechanics) jevState["mechanics_experience"] = extra.mechanics;
     jevView = {
       state: jevState,
       questions: { plan: choiceQ("Which plan should I play this turn?", jevCriteria) },
