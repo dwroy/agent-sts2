@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { JEV_DATA_OVER_GUIDES, planCombatTurn } from "../src/screens/combat-plan.js";
-import { DATA_OVER_GUIDES, DeepSeekClient } from "../src/llm/deepseek.js";
+import { DATA_OVER_GUIDES, DeepSeekClient, recoverRoute } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { ROLLOUT_BUDGET_MS, boardRolloutInput, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -17,6 +17,7 @@ import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
 import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 type Raw = Record<string, unknown>;
 
@@ -410,5 +411,45 @@ describe("5. Retaliation (Thorns, Flame Barrier) into Slippery (1 per hit, a sta
       options: { budgetMs: 1e9, seed: 1, horizon: 4, samples: 2, now: () => (t += 0.01) },
     }).lines[0]!;
     expect(line.enemyHpLeft).toBe(100 - (1 + 1 + 3 + 3));
+  });
+});
+
+describe("6. A route review answered without \"route\": taken from the reasoning, and the system prompt's reply format names the extra fields (DHGT6Z3Q7VAP F9 rest/plan, F23 reward/card: \"the answer has no route\")", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+
+  // The logged reasoning tails (deepseek-reasoning.jsonl 12:53:57 and 13:03:58) and the F23 reason.
+  const F9 = "If we heal to 59 now: elite at F12 ~84/86, boss ~80/86. Much safer.\n\nDecision: HEAL (o0). Route: keep.\n\nReason: 40% HP, two elites + boss ahead; plan assumes this heal; smith won't close the 14/turn damage gap.\n\nRoute_reason: keep plan, heal restores route viability.\n\nLet me write JSON.";
+  const F23 = "I lean Headbutt+ for the damage and utility, given code's ranking and the damage gap. Final: card0, keep route.";
+  const KEYS = ["keep", "p1", "p2"];
+
+  it("recoverRoute: the last route the text settles on, a key of the question's routes", () => {
+    expect(recoverRoute([F9], KEYS)).toEqual({ route: "keep", line: "Decision: HEAL (o0). Route: keep." });
+    expect(recoverRoute([F23], KEYS)?.route).toBe("keep");
+    expect(recoverRoute(["", "Headbutt+ adds needed 12 dmg; block can come later. Keep safe route."], KEYS)?.route).toBe("keep");
+    expect(recoverRoute(['keep route for now... no: switch the route to p2, the elite while HP is up. {"route": "p2"}'], KEYS)?.route).toBe("p2");
+    expect(recoverRoute(["Route: p9 would be nice"], KEYS)).toBeNull();
+    expect(recoverRoute(["Decision: o0."], KEYS)).toBeNull();
+    expect(recoverRoute([F9], [])).toBeNull();
+  });
+
+  it("DeepSeekClient.choose: the reply {choice, reason} with a route review in the state gets the reasoning's route (marked recovered); the system prompt asks for the extra fields", async () => {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () =>
+        sendJson(res, 200, { choices: [{ message: { content: '{"choice": "o0", "reason": "40% HP with two elites and the Giant ahead"}', reasoning_content: F9 } }], usage: { prompt_tokens: 900, completion_tokens: 200 } }),
+      );
+    });
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000, reasoningEffort: "max" });
+    expect(client.systemPrompt).toContain('plus every other field the question asks for (such as "route" and "route_reason" when it has a route review');
+    const state = { route_review: { routes: { keep: { path: "Elite -> Boss" }, p1: { path: "Shop -> Boss" } } } };
+    const answer = await client.choose(state, "Rest?", { o0: '{"option":"休息"}', "o1:c0": '{"option":"锻造"}' }, { label: "rest/plan" });
+    expect(answer).toMatchObject({ choice: "o0", route: "keep", routeReason: 'recovered from the reasoning: "Decision: HEAL (o0). Route: keep."' });
+    // No route block in the state: nothing is added.
+    const plain = await client.choose({}, "Rest?", { o0: '{"option":"休息"}', "o1:c0": '{"option":"锻造"}' }, { label: "rest/plan" });
+    expect(plain.route).toBeUndefined();
   });
 });
