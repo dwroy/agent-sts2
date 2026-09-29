@@ -8,6 +8,13 @@ potions drunk in it), keyed by ascension, act (floors 1-17 / 18-33 / 34+) and th
 as losing all its entry HP (its type from the map node chosen into it, decisions.jsonl), so the numbers
 are not survivors-only; rooms that crossed an act are not counted.
 
+The ? rooms that turned out to be a fight (a combat decision on that floor, decisions.jsonl) are counted again
+as "UnknownFight" (Unknown keeps all of them). Rooms with a fight (Monster, Elite, UnknownFight) also carry
+fight_median / fight_p75: the HP lost inside the fight (first to last combat decision on the floor; the room
+the run died in: all its entry HP), without Burning Blood's heal after it (2026-09-29 knowledge check: the
+guide sent low-HP routes through ? rooms with no word of the fights they open, strategy/boss-clock.ts
+unknownFightsText).
+
 Output: {"meta": {...}, "by_asc": {"8": {"2": {"Monster": {"n", "deaths", "median", "p75", "mean"}, ...}}}}.
 
 Usage:
@@ -18,6 +25,7 @@ import argparse
 import collections
 import json
 import os
+import re
 import statistics
 import sys
 import time
@@ -89,13 +97,27 @@ def scan(states_path):
     return runs, deaths, first_ts, last_ts
 
 
-def map_choices(decisions_path):
-    """(run id, floor) -> the option index of the last map node chosen on that floor."""
+FLOOR_RE = re.compile(rb'"floor":(\d+)')
+FP_RUN_RE = re.compile(rb'\\"run\\":\\"([A-Z0-9]+)\\"')
+FP_HP_RE = re.compile(rb'\\"hp\\":(-?\d+)')
+
+
+def map_choices(decisions_path, fights=None):
+    """(run id, floor) -> the option index of the last map node chosen on that floor. With `fights` (a dict), also
+    (run id, floor) -> [HP at the first, HP at the last combat decision] for every floor with a fight."""
     chosen = {}
     if not os.path.exists(decisions_path):
         return chosen
     with open(decisions_path, "rb") as handle:
         for line in handle:
+            if fights is not None and b'"screen":"COMBAT"' in line[:400]:
+                head = line[:3000]
+                floor, run, hp = FLOOR_RE.search(head), FP_RUN_RE.search(head), FP_HP_RE.search(head)
+                if floor and run and hp:
+                    key = (run.group(1).decode(), int(floor.group(1)))
+                    value = int(hp.group(1))
+                    fights.setdefault(key, [value, value])[1] = value
+                continue
             if b"choose_map_node" not in line:
                 continue
             try:
@@ -109,15 +131,28 @@ def map_choices(decisions_path):
     return chosen
 
 
-def build(runs, deaths, chosen):
+def build(runs, deaths, chosen, fights=None):
+    fights = fights or {}
     losses = collections.defaultdict(list)
+    fight_losses = collections.defaultdict(list)
     died = collections.Counter()
+
+    def add(key, loss, fight_loss):
+        losses[key].append(loss)
+        if fight_loss is not None and key[2] in ("Monster", "Elite", "UnknownFight"):
+            fight_losses[key].append(fight_loss)
+
     for run_id, floors in runs.items():
         for floor, mark in floors.items():
             before = floors.get(floor - 1)
             if not before or mark["type"] is None or mark["asc"] is None or act_of(floor) != act_of(floor - 1):
                 continue
-            losses[(str(mark["asc"]), str(act_of(floor)), mark["type"])].append(before["last"] - mark["first"])
+            key = (str(mark["asc"]), str(act_of(floor)), mark["type"])
+            fight = fights.get((run_id, floor))
+            fight_loss = fight[0] - fight[1] if fight else None
+            add(key, before["last"] - mark["first"], fight_loss)
+            if mark["type"] == "Unknown" and fight:
+                add((key[0], key[1], "UnknownFight"), before["last"] - mark["first"], fight_loss)
         # The room the run died in: entered from the last map of the floor before, lost all its entry HP.
         death_floor = deaths.get(run_id)
         before = floors.get(death_floor - 1) if death_floor is not None else None
@@ -127,8 +162,12 @@ def build(runs, deaths, chosen):
         if room in (None, "Boss"):
             continue
         key = (str(before["asc"]), str(act_of(death_floor)), room)
-        losses[key].append(before["last"])
+        add(key, before["last"], before["last"])
         died[key] += 1
+        if room == "Unknown" and (run_id, death_floor) in fights:
+            fight_key = (key[0], key[1], "UnknownFight")
+            add(fight_key, before["last"], before["last"])
+            died[fight_key] += 1
     by_asc = {}
     for (asc, act, room), values in sorted(losses.items()):
         by_asc.setdefault(asc, {}).setdefault(act, {})[room] = {
@@ -138,6 +177,10 @@ def build(runs, deaths, chosen):
             "p75": round(quantile(values, 0.75), 1),
             "mean": round(statistics.mean(values), 1),
         }
+        inside = fight_losses.get((asc, act, room))
+        if inside:
+            by_asc[asc][act][room]["fight_median"] = round(quantile(inside, 0.5), 1)
+            by_asc[asc][act][room]["fight_p75"] = round(quantile(inside, 0.75), 1)
     return by_asc
 
 
@@ -148,17 +191,20 @@ def main():
     args = parser.parse_args()
     started = time.time()
     runs, deaths, first_ts, last_ts = scan(os.path.join(args.logs, "states.jsonl"))
-    chosen = map_choices(os.path.join(args.logs, "decisions.jsonl"))
+    fights = {}
+    chosen = map_choices(os.path.join(args.logs, "decisions.jsonl"), fights)
     out = {
         "meta": {
             "note": "Generated by tools/build-room-costs.py from logs/states.jsonl MAP frames. HP lost in each map room "
             "(entry HP minus HP on the next floor's first MAP frame; negative = healed), by ascension, act and room type. "
-            "A room the run died in counts as losing all its entry HP (deaths = how many); rooms that crossed an act are not counted.",
+            "A room the run died in counts as losing all its entry HP (deaths = how many); rooms that crossed an act are not counted. "
+            "UnknownFight: the ? rooms that were a fight (also in Unknown). fight_median/fight_p75: HP lost inside the fight "
+            "(first to last combat decision; a death: all the entry HP).",
             "runs": len(runs),
             "first_seen": first_ts,
             "last_seen": last_ts,
         },
-        "by_asc": build(runs, deaths, chosen),
+        "by_asc": build(runs, deaths, chosen, fights),
     }
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:

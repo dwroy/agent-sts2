@@ -17,14 +17,14 @@
     {
       "id": "matriarch-asleep",
       "when": { "enemies": ["LAGAVULIN_MATRIARCH"], "enemy_powers": ["ASLEEP_POWER", "SLUMBER_POWER"] },
-      "text": "While the Matriarch sleeps, HP damage wakes it and costs its free turns. Play powers and set-up cards instead of chipping it.",
-      "evidence": ["Z2H318ZMMAD0", "1K5G5HPXA2ZV", "KFP1104FQM27", "PYTG6PC12PEN"]
+      "text": "HP damage wakes the sleeping Matriarch, costing free turns: play powers and set-up cards, not chip damage; a 25%+ HP burst is fine.",
+      "evidence": ["Z2H318ZMMAD0", "1K5G5HPXA2ZV", "KFP1104FQM27", "PYTG6PC12PEN", "0NZBAVFAT3JG", "EZ2LP1P5VRPT"]
     },
     {
       "id": "matriarch-sleep-turns",
       "when": { "enemies": ["LAGAVULIN_MATRIARCH"], "enemy_powers": ["ASLEEP_POWER", "SLUMBER_POWER"] },
-      "text": "Sleep turns are free turns: spend all energy on powers or lasting block. On its last sleep turn (Asleep 1) attacking costs nothing extra.",
-      "evidence": ["KFP1104FQM27", "5FMUSNUXEHGY"]
+      "text": "Sleep turns pay off only with powers or lasting block to play ({LAG_NO_STRENGTH_EN}). On Asleep 1, attacking costs nothing extra.",
+      "evidence": ["KFP1104FQM27", "5FMUSNUXEHGY", "BXAZV0R9ZHWK", "QBCV838592ZQ", "WQ67U1UY1D8V"]
     },
     {
       "id": "matriarch-siphon",
@@ -35,13 +35,13 @@
     {
       "id": "crab-rocket-first",
       "when": { "enemies": ["CRUSHER", "ROCKET"] },
-      "text": "Focus the Rocket first (runs won 9/12 vs 8/39 keeping both alive). The survivor's 99 Block lasts one turn: block that turn.",
+      "text": "Focus the Rocket first ({CRAB_KILLS_EN}). The survivor's 99 Block lasts one turn: block that turn.",
       "evidence": ["EZ2LP1P5VRPT", "NX48MBG3SPRJ", "VE975EGP2G3V", "0B5YKJFM0E8B", "RWWGRRYKD6LT"]
     },
     {
       "id": "crab-charge",
       "when": { "enemies": ["ROCKET"] },
-      "text": "Rocket's charge-up is followed by a laser of {DMG:ROCKET:LASER_MOVE} ({BEHIND:ROCKET:LASER_MOVE} from behind): on the charge turn save HP and block, no HP-for-damage trades.",
+      "text": "Rocket's charge-up is followed by a laser of {DMG:ROCKET:LASER_MOVE} ({BEHIND:ROCKET:LASER_MOVE} from behind) plus Strength: on the charge turn save HP and block, no HP-for-damage trades.",
       "evidence": ["TXLHYU13L102", "9XZX4ZJ1ZKUA"]
     },
     {
@@ -137,8 +137,8 @@
     {
       "id": "hp-trade-boss",
       "when": { "fight": ["boss", "elite"] },
-      "text": "Extra HP traded for damage decided many lost boss fights. Burning Blood heals only after combat. Prefer lower hp_lost unless the line kills soon.",
-      "evidence": ["DG1CDGW8Y5JE", "G7EJ07RPR1NX", "WQTRXBJY0Q1S", "WX16C8B1ZWZ0", "Z2H318ZMMAD0", "TXLHYU13L102"]
+      "text": "Burning Blood heals only after combat: prefer lower hp_lost unless the line kills soon. Exception: against Vantom's Slippery, prefer the line with more hits.",
+      "evidence": ["DG1CDGW8Y5JE", "G7EJ07RPR1NX", "WQTRXBJY0Q1S", "WX16C8B1ZWZ0", "Z2H318ZMMAD0", "TXLHYU13L102", "3SBPKG9603WD"]
     },
     {
       "id": "vulnerable-trade",

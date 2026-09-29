@@ -14,6 +14,12 @@ export interface MeasuredRoom {
   median: number;
   p75: number;
   mean: number;
+  /**
+   * HP lost inside the fight (first to last combat decision on the floor; a death: all the entry HP), for the
+   * rooms that had one (Monster, Elite, UnknownFight: a ? room that turned out to be a fight).
+   */
+  fight_median?: number;
+  fight_p75?: number;
 }
 
 type RoomCosts = Record<string, Record<string, Record<string, MeasuredRoom>>>;
@@ -51,4 +57,9 @@ export function measuredRoom(act: number, asc: number, room: string): (MeasuredR
     if (entry && entry.n >= MEASURED_ROOM_MIN_N) return { ...entry, asc: at };
   }
   return null;
+}
+
+/** This ascension's own measured room (no nearest-ascension fallback), or null. */
+export function measuredRoomExact(asc: number, act: number, room: string): MeasuredRoom | null {
+  return load()[String(asc)]?.[String(act)]?.[room] ?? null;
 }
