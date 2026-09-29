@@ -7,15 +7,18 @@
  * with the Ancient as its only available node (screenMemory.lastMap; the EVENT state itself has no map).
  * At act 1 the run opens on Neow before any map is shown, so Neow and the route stay two questions.
  *
- * DeepSeek answers {"choice": <option key>, "route": <route key>}; code takes the option (and the deck
- * card(s) it names, as other one-shot events), stores the route as the act's route plan and follows it from
- * the first map. When the option's outcome was not known in advance (random relics, cards chosen later),
- * DeepSeek reviews the route once at that first map (keep or change; default keep). An answer without a
- * valid route falls back to the two questions of before (the event, then the route plan at the map).
+ * M2: the brain gets the act's whole map (state.act_route, strategy/route-map.ts) standing on the Ancient and answers
+ * {"choice": <option key>, "route": "<node ids from the Ancient's next nodes to the boss>"}; code takes the option (and
+ * the deck card(s) it names, as other one-shot events), stores the route as the act's route plan and follows it from
+ * the first map. The route is checked like map/route-plan's (the AnswerSpec re-asks once with the errors); a route
+ * still missing or illegal then does not block the option: it is taken, and the first map asks for the route. When
+ * the option's outcome was not known in advance (random relics, cards chosen later), the brain reviews the route
+ * once at that first map (keep or change; default keep).
  */
 
 import { eventHpCost } from "./event.js";
-import { actStartRoutes, runSnapshot, type RoutePlan } from "./map.js";
+import { checkRoute, routeIds } from "../strategy/route-map.js";
+import { actPlan, actStartMap, makeRoutePlan, routeBlockState, routeCosts, runSnapshot, type RoutePlan } from "./route-plan.js";
 import { buildPickDecision, type PickOption, type PlanAnswer, type PlannedOption } from "./pick.js";
 import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
@@ -76,12 +79,10 @@ const IN_FIGHT = /每场战斗|每回合|(?:战斗|回合)(?:开始|结束)时|�
 
 /** The instructions of the joint question. */
 export const ACT_START_NOTE =
-  "Act start: choose the Ancient's option and this act's route together. state.act_routes are whole paths from the first map node " +
-  "to the act boss with code's route facts at your HP now (an option that changes HP or max HP shows its effect in route_effect, " +
-  'and each route its hp_at_boss_if_option). Reply with JSON only: {"choice": "<option key>", "route": "<route key from act_routes>", ' +
-  '"reason": "<max 30 words>"} (and "cards" when the option lists eligible_cards). Code takes the option, then follows the route node ' +
-  "by node; you are asked again only if the route breaks, and once after an option whose outcome is random, to keep or change the route; " +
-  "card rewards and rest sites also show the route to keep or change.";
+  "幕初：远古的选项和本幕路线一起定。state.act_route 是本幕完整地图（你在远古节点上，节点 id 规则见 map_legend）。" +
+  '回答 JSON：{"choice": "<选项 key>", "route": "<节点 id，用空格分隔：从 next_nodes 之一出发，沿连线（或用飞行靴）一直到 boss>", "reason": "<30 字以内>"}' +
+  '（选项列出 eligible_cards 时再加 "cards"）。选项改变 HP、最大生命或金币时写在它的 route_effect 里。代码先执行选项，再按路线逐个节点走，' +
+  "只在路线走不通时再问你；选项结果随机时，揭晓后在第一张地图问一次保留还是换路线；之后的选牌、休息点和事件的最后一问也会附上路线让你保留或修改。";
 
 interface Inputs {
   params: Parameters<typeof buildPickDecision>[0];
@@ -98,19 +99,23 @@ interface Inputs {
  * null otherwise (the event is then asked on its own).
  */
 export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null {
-  const routes = actStartRoutes(env);
-  if (!routes) return null;
+  const map = actStartMap(env);
+  // The act already has a route plan (a restart after the joint question): the event is asked on its own.
+  if (!map || map.bosses.length === 0 || actPlan(env, map.act)) return null;
   const { state } = env;
   const ref = nextPlanRef(env, "act");
   const cards = deckCards(state, env.knowledge);
   const hp = state.run?.current_hp ?? 0;
   const maxHp = state.run?.max_hp ?? 0;
   const gold = state.run?.gold ?? 0;
+  const costs = routeCosts(env, map.act);
   const offered = new Set<string>();
   const effects = new Map<string, RouteEffect>();
-  const byKey = new Map(routes.routes.map((route) => [route.key, route]));
 
-  /** The option with the route: the answer must name one; choosing it stores the route as the act's plan. */
+  /**
+   * The option with the route: a legal route in the answer becomes the act's plan (projected from the HP the option
+   * leaves); a missing or illegal one does not block the option (the first map asks for the route).
+   */
   const withRoute = (option: PickOption, base: PickOption, effect: RouteEffect | null, later: string | null): PickOption => ({
     ...option,
     summary: {
@@ -119,26 +124,28 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
       ...(later ? { outcome: `${later}: you review the route once after it resolves` } : {}),
     },
     plan: (answer: PlanAnswer) => {
-      const route = answer.route ? byKey.get(answer.route) : undefined;
-      if (!route) return { invalid: `the answer names no route from act_routes (route: ${answer.route ?? "missing"})` };
       const inner = option.plan?.(answer) ?? null;
       if (inner && "invalid" in inner) return inner;
       const steps = inner ? asArray(inner.steps).map((step) => str(step)) : [option.key];
-      const plan: RoutePlan = {
-        ...route.plan,
-        // The first map move comes after the option and its card picks.
-        oneshot: { ref, firstStep: steps.length + 1, firstPending: true },
-        ...(later ? { review: { why: `${base.label ?? base.key}: ${later}`, before: runSnapshot(state) } } : {}),
-      };
+      const ids = routeIds(answer.route);
+      const legal = ids !== null && checkRoute(map, ids).length === 0;
+      const plan: RoutePlan | null = legal
+        ? {
+            ...makeRoutePlan(env, map, ids, effect ? { hp: effect.hp, max: effect.maxHp } : { hp, max: maxHp }, costs),
+            // The first map move comes after the option and its card picks.
+            oneshot: { ref, firstStep: steps.length + 1, firstPending: true },
+            ...(later ? { review: { why: `${base.label ?? base.key}: ${later}`, before: runSnapshot(state) } } : {}),
+          }
+        : null;
       return {
         id: ref,
-        steps: [...steps, route.key],
-        journal: `${inner?.journal ?? base.label ?? base.key}; route ${route.plan.summary}`,
+        steps: plan ? [...steps, ids!.join(" ")] : steps,
+        journal: `${inner?.journal ?? base.label ?? base.key}; ${plan ? `route ${plan.summary}` : `no legal route (${answer.route ? "illegal" : "none given"}): the first map asks for it`}`,
         // A "discard potion(s), then …" option plays its first discard now.
         ...(inner?.intent ? { intent: inner.intent } : {}),
         apply: () => {
           inner?.apply?.();
-          env.screenMemory.routePlan = plan;
+          if (plan) env.screenMemory.routePlan = plan;
         },
       } satisfies PlannedOption;
     },
@@ -154,26 +161,11 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
     const parts = follow ? withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task)) : [planOnly(env, option, ref)];
     return parts.map((part) => withRoute(part, option, effect, later));
   });
-  // Routes whose code_value reads the same share a rank (consistency R9), as in the DeepSeek pick.
-  const shownValue = (value: number): number => Number(value.toFixed(2));
-  const rankOf = (route: (typeof routes.routes)[number]): number => 1 + routes.routes.filter((other) => shownValue(other.value) > shownValue(route.value)).length;
-  const actRoutes: Record<string, JsonValue> = Object.fromEntries(
-    routes.routes.map((route) => [
-      route.key,
-      {
-        ...route.facts,
-        code_value: Number(route.value.toFixed(2)),
-        code_rank: rankOf(route),
-        why: "sum of code's node weights along the path at the projected HP (elites valued by HP and act, rests by HP, shops by gold, fight chains penalised)",
-        ...(effects.size > 0 ? { hp_at_boss_if_option: Object.fromEntries([...effects].map(([key, effect]) => [key, routes.hpAtBoss(route.key, effect.hp, effect.maxHp)])) } : {}),
-      },
-    ]),
-  );
   return buildPickDecision({
     ...inputs.params,
     label: "event/act-plan",
     instructions: "Which of the Ancient's options should I take, and which route should I follow this act?",
-    state: { ...inputs.state, act_routes: actRoutes, route_note: `Each route is a full path from the first node to the boss. ${routes.note}` },
+    state: { ...inputs.state, act_route: routeBlockState({ map, start: { hp, max: maxHp }, costs }) },
     options: expanded,
     deepseek: {
       facts: inputs.facts,

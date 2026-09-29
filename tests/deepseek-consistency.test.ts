@@ -161,9 +161,15 @@ describe("the re-ask asks for the question's other fields again", () => {
     expect(reaskMessage("o1", check, reaskFields({ facts: {} }, {}))).toMatch(/JSON only, \{"choice": "<option key>", "reason": "<max 25 words>"\}\.$/);
   });
 
-  it("the act-start joint question: its route from act_routes; a first answer with cards: the cards", () => {
-    const message = reaskMessage("o1", check, reaskFields({ act_routes: { r1: {}, r2: {} } }, { cards: ["c3", "c4"] }));
-    expect(message).toContain("state.act_routes");
-    expect(message).toMatch(/\{"choice": "<option key>", "reason": "<max 25 words>", "route": "<r1 \| r2>", "cards": \[<the deck cards the option takes>\]\}\.$/);
+  it("the act-start joint question: its route on state.act_route's map; a first answer with cards: the cards", () => {
+    const message = reaskMessage("o1", check, reaskFields({ act_route: { map: ["F1 r0c1 普通战 → r1c0"] } }, { cards: ["c3", "c4"] }));
+    expect(message).toContain("state.act_route");
+    expect(message).toMatch(/\{"choice": "<option key>", "reason": "<max 25 words>", "route": "<node ids from next_nodes to the boss>", "cards": \[<the deck cards the option takes>\]\}\.$/);
+  });
+
+  it("a route review riding on the question: keep or a new node sequence, with route_reason", () => {
+    const message = reaskMessage("o1", check, reaskFields({ route_review: { map: ["F1 r0c1 普通战 → r1c0"] } }, {}));
+    expect(message).toContain("state.route_review");
+    expect(message).toMatch(/"route": "<keep \| node ids from next_nodes to the boss>", "route_reason": "<max 15 words>"\}\.$/);
   });
 });

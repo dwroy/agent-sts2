@@ -5,8 +5,9 @@
  * listed (skip, leave, not buying included), and each card, relic, event option and rest action carries its outcome
  * statistics or 「无数据」, with the basis note in the facts.
  *
- * The route blocks some of these questions carry (route_review, act_routes) are the V4 route work's (v4-brain) and are
- * not audited here; neither are the route questions themselves (map/*).
+ * The route blocks some of these questions carry (route_review, act_route: the whole map, the plan and its facts; V4 M2
+ * route work) are audited with them: they carry facts only too. The route questions themselves (map/*) are checked in
+ * tests/build-decider.test.ts and tests/route-projection.test.ts.
  *
  * The last test locks the new card-reward question: its options exactly as the brain sees them.
  */
@@ -60,8 +61,6 @@ const BANNED_TEXT: RegExp[] = [
   /skip (?:bar|line)/i, /\bthe bar\b/i, /\bscor(?:e|es|ed|ing)\b/i, /\[code /, /expected_hp_saved/,
   /\| (?:AOE|格挡牌|过牌|成长|伤害牌) \d/,
 ];
-/** Blocks of the V4 route work (v4-brain), not audited here. */
-const ROUTE_KEYS = new Set(["route_review", "act_routes", "route_note"]);
 
 type Audit = { label: string; options: Record<string, Record<string, JsonValue>>; state: Record<string, JsonValue>; facts: Record<string, JsonValue>; instructions: string };
 
@@ -70,7 +69,7 @@ function audit(decision: Decision): Audit {
   const pick = question.questions[question.deepseek.question];
   if (pick?.type !== "choice") throw new Error("expected a choice question");
   const options = Object.fromEntries(Object.entries(pick.criteria).map(([key, value]) => [key, JSON.parse(value ?? "{}") as Record<string, JsonValue>]));
-  const state = Object.fromEntries(Object.entries(question.state).filter(([key]) => !ROUTE_KEYS.has(key)));
+  const state = question.state;
   return { label: question.label, options, state, facts: question.state["facts"] as Record<string, JsonValue>, instructions: pick.instructions };
 }
 
@@ -80,7 +79,6 @@ function walk(value: JsonValue | undefined, keys: string[], strings: string[]): 
   else if (Array.isArray(value)) for (const item of value) walk(item, keys, strings);
   else if (value && typeof value === "object") {
     for (const [key, child] of Object.entries(value)) {
-      if (ROUTE_KEYS.has(key)) continue;
       keys.push(key);
       walk(child, keys, strings);
     }
@@ -95,9 +93,9 @@ function expectNoScores(view: Audit): void {
   for (const key of keys) expect(BANNED_KEYS.has(key), `${view.label}: key ${key}`).toBe(false);
   for (const text of strings) for (const pattern of BANNED_TEXT) expect(pattern.test(text), `${view.label}: ${pattern} in ${text.slice(0, 120)}`).toBe(false);
   // The instructions: the shared note (which says code does not score the options), and the question's own text and
-  // notes up to a route block's own note, when the question carries one.
+  // notes, a route block's note included.
   expect(view.instructions).toContain(DEEPSEEK_DECIDES_NOTE);
-  const instructions = view.instructions.replace(DEEPSEEK_DECIDES_NOTE, "").split(/ The act's route rides| state\.act_routes| Act start:/)[0]!;
+  const instructions = view.instructions.replace(DEEPSEEK_DECIDES_NOTE, "");
   for (const pattern of BANNED_TEXT) expect(pattern.test(instructions), `${view.label} instructions: ${pattern} in ${instructions.slice(0, 200)}`).toBe(false);
   // The deck line: counts by the game's card types, no code-made roles.
   expect(String(view.facts["deck_profile"])).toMatch(/^\d+ 张 \(攻击 \d+\/技能 \d+\/能力 \d+(?:\/诅咒或状态 \d+)?\) \| 升级 \d+ \| (?:平均费用 [\d.]+ \| )?力量来源 [^|]+$/);
@@ -180,10 +178,11 @@ describe("V4 M2 audit: build questions carry facts, not code's scores", () => {
     expectBasis(view);
   });
 
-  it("event/act-plan: the Ancient's options (route blocks aside)", () => {
+  it("event/act-plan: the Ancient's options and the act's whole map (act_route)", () => {
     const view = audit(decide(env(board("u6ru-f18-ancient", "event"), afterMap("u6ru-f18-ancient"))));
     expect(view.label).toBe("event/act-plan");
     expect(Object.keys(view.options)).toEqual(["o0", "o1", "o2"]);
+    expect((view.state["act_route"] as Record<string, JsonValue>)["map"]).toEqual(expect.any(Array));
     expect(Object.keys((view.facts["event"] as Record<string, JsonValue>)["option_outcome_stats"] as Record<string, JsonValue>)).toEqual(["o0", "o1", "o2"]);
     expectNoScores(view);
   });

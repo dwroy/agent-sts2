@@ -17,6 +17,11 @@ import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
 import type { ToolDef } from "../src/tools/types.js";
 import type { JsonValue } from "../src/util/json.js";
+import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
+import { input } from "./route-fixture.js";
+
+/** The act-start joint question's map (tests/route-fixture.ts). */
+const actRoute = JSON.parse(JSON.stringify(routeView(buildRouteMap(input())))) as JsonValue;
 
 type Reply = { content?: string; reasoning?: string; tool_calls?: { id: string; function: { name: string; arguments: string } }[] };
 
@@ -192,15 +197,29 @@ describe("brain with the default configuration sends v3's exact DeepSeek request
     expect(rows(log)[0]).toMatchObject({ engine: "deepseek", error_kind: "error" });
   });
 
-  it("an answer the spec finds wanting is played as v3 played it (no router re-ask), its problems logged", async () => {
+  it("the act-start question's route (M2): a missing or illegal route is re-asked once in the same conversation; BRAIN_DEEPSEEK_REASK=off plays v3's answer", async () => {
     const ds = client();
-    const withRoutes: Record<string, JsonValue> = { ...state, act_routes: { r0: "left", r1: "right" } };
-    reply({ content: '{"choice": "card0", "reason": "ok"}' });
+    const withMap: Record<string, JsonValue> = { ...state, act_route: actRoute };
+    reply({ content: '{"choice": "card0", "reason": "ok"}' }, { content: '{"choice": "card0", "reason": "ok", "route": ["r1c0", "r2c0", "r3c1", "r4c1"]}' });
     const { brain, log } = brainOf(ds);
-    const routed = await brain.choose(withRoutes, "Pick a card and the act route.", criteria, context);
+    const routed = await brain.choose(withMap, "Pick a card and the act route.", criteria, context);
     expect(routed.choice).toBe("card0");
+    // A list of ids reads as the same ids.
+    expect(routed.route).toBe("r1c0 r2c0 r3c1 r4c1");
+    expect(routed.brain).toMatchObject({ engine: "deepseek", attempts: 2 });
+    expect(bodies).toHaveLength(2);
+    const second = JSON.parse(bodies[1]!) as { messages: { role: string; content: string }[] };
+    expect(second.messages.map((m) => m.role)).toEqual(["system", "user", "assistant", "user"]);
+    expect(second.messages[3]!.content).toContain('missing "route": the node ids from one of state.act_route.next_nodes to the boss');
+    expect(rows(log)[0]).toMatchObject({ reasks: 1, attempts: 2, problems: [], first: { problems: ['missing "route": the node ids from one of state.act_route.next_nodes to the boss'] } });
+    // Switched off: one call, v3's answer played as it is, the problem logged.
+    bodies.length = 0;
+    reply({ content: '{"choice": "card0", "reason": "ok", "route": "r1c2 r2c0"}' });
+    const off = brainOf(client(), { BRAIN_DEEPSEEK_REASK: "off" });
+    const once = await off.brain.choose(withMap, "Pick a card and the act route.", criteria, context);
+    expect(once.route).toBe("r1c2 r2c0");
     expect(bodies).toHaveLength(1);
-    expect(rows(log)[0]!["problems"]).toEqual(['missing "route" (one of r0, r1)']);
+    expect(rows(off.log)[0]!["problems"]).toEqual(["route: 第 2 步 r1c2 → r2c0：没有连线（r1c2 只连到 r2c1、r2c2；没有飞行靴次数）", "route: 终点 r2c0（问号）不是 boss：路线要一直走到 boss（r4c1、r5c1）"]);
   });
 });
 
@@ -235,22 +254,18 @@ describe("DeepSeek engine beyond v3", () => {
     expect(second.messages[3]).toMatchObject({ tool_call_id: "call_1", content: "骇鳗: A8 HP 150 (n=22)" });
   });
 
-  it("the router's re-ask (BRAIN_DEEPSEEK_REASK=on) continues the conversation with the problems", async () => {
+  it("the router's re-ask continues the conversation with the problems (valid choices listed for a pick)", async () => {
     const ds = client();
-    const withRoutes: Record<string, JsonValue> = { ...state, act_routes: { r0: "left", r1: "right" } };
-    reply({ content: '{"choice": "card0", "reason": "ok"}' }, { content: '{"choice": "card0", "reason": "ok", "route": "r1"}' });
-    const { brain, log } = brainOf(ds, { BRAIN_DEEPSEEK_REASK: "on" });
-    const routed = await brain.choose(withRoutes, "Pick a card and the act route.", criteria, context);
-    expect(routed.choice).toBe("card0");
-    expect(routed.route).toBe("r1");
-    expect(routed.brain).toMatchObject({ engine: "deepseek", attempts: 2 });
+    const withMap: Record<string, JsonValue> = { ...state, act_route: actRoute };
+    reply({ content: '{"choice": "card0", "reason": "ok", "route": "r9c9"}' }, { content: '{"choice": "card0", "reason": "ok", "route": "r1c2 r2c2 r3c2 r4c1"}' });
+    const { brain } = brainOf(ds, { BRAIN_DEEPSEEK_REASK: "on" });
+    const routed = await brain.choose(withMap, "Pick a card and the act route.", criteria, context);
+    expect(routed.route).toBe("r1c2 r2c2 r3c2 r4c1");
     const first = JSON.parse(bodies[0]!) as { messages: { role: string; content: string }[] };
     const second = JSON.parse(bodies[1]!) as { messages: { role: string; content: string }[] };
-    expect(second.messages.map((m) => m.role)).toEqual(["system", "user", "assistant", "user"]);
     expect(second.messages[1]!.content).toBe(first.messages[1]!.content);
-    expect(second.messages[2]!.content).toBe('{"choice":"card0","reason":"ok"}');
-    expect(second.messages[3]!.content).toContain('missing "route" (one of r0, r1)');
+    expect(second.messages[2]!.content).toBe('{"choice":"card0","reason":"ok","route":"r9c9"}');
+    expect(second.messages[3]!.content).toContain("route: 第 1 步 r9c9：地图上没有这个节点");
     expect(second.messages[3]!.content).toContain("Valid choices: card0, card1, skip.");
-    expect(rows(log)[0]).toMatchObject({ reasks: 1, attempts: 2, problems: [], first: { problems: ['missing "route" (one of r0, r1)'] } });
   });
 });

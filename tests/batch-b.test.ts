@@ -735,12 +735,12 @@ describe("10. Small ones", () => {
   });
 });
 
-describe("10b. Options whose code value reads the same share a rank (consistency R9: two routes at 29.28 were ranks 1 and 2)", () => {
-  it("1, 1, 3 by the value as shown (two decimals)", async () => {
+describe("10b. No code value or rank on any DeepSeek pick, route questions included (V4 M2; was consistency R9's shared ranks)", () => {
+  it("a map/* pick shows each option's facts only; code's order stays for the fallback", async () => {
     const { buildPickDecision } = await import("../src/screens/pick.js");
     const option = (key: string, score: number) => ({ key, intent: { action: "choose_map_node" as const, option_index: Number(key.slice(1)) }, label: key, score, summary: { path: key } });
     const decision = buildPickDecision({
-      label: "map/route-plan",
+      label: "map/statue-potion",
       instructions: "Which path?",
       actThreshold: 0.5,
       strictJev: true,
@@ -749,8 +749,8 @@ describe("10b. Options whose code value reads the same share a rank (consistency
       deepseek: { facts: {} },
     }) as AskDecision;
     const criteria = (decision.questions["pick"] as { criteria: Record<string, string> }).criteria;
-    const rank = (key: string) => JSON.parse(criteria[key]!)["code_rank"];
-    expect([rank("p1"), rank("p2"), rank("p3")]).toEqual([1, 1, 3]);
+    expect(Object.values(criteria).map((text) => JSON.parse(text))).toEqual([{ path: "p1" }, { path: "p2" }, { path: "p3" }]);
+    expect(JSON.stringify(decision.questions)).not.toMatch(/code_value|code_rank|code's value/);
   });
 });
 

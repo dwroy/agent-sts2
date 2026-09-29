@@ -336,6 +336,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
   /** DeepSeek calls spent on a question another engine was asked first: only its fallback's. */
   const fallbackCalls = (label: string, via: BrainMeta | undefined): number => (!deepseekFirst(label) && via?.engine === "deepseek" ? via.attempts : 0);
+  /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
+  const reaskCalls = (label: string, via: BrainMeta | undefined): number => (deepseekFirst(label) && via?.engine === "deepseek" ? (via.reask_calls ?? 0) : 0);
   /** A plan's calls (run plan, fight plan): DeepSeek's (v3: one per plan) unless another engine answered. */
   const countPlan = (tokens: number, via: BrainMeta | undefined): void => {
     if (!via) stats.deepseekCalls += 1;
@@ -763,7 +765,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (spec.plan) {
             // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen.
             const { json, meta } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
-            stats.deepseekCalls += fallbackCalls(decision.label, meta.brain);
+            stats.deepseekCalls += fallbackCalls(decision.label, meta.brain) + reaskCalls(decision.label, meta.brain);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
             const reason = str(json["reason"]).trim();
@@ -804,7 +806,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             }
           } else {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
-            stats.deepseekCalls += fallbackCalls(decision.label, answer.brain);
+            stats.deepseekCalls += fallbackCalls(decision.label, answer.brain) + reaskCalls(decision.label, answer.brain);
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
             deepseekLatency = answer.latencyMs;
             if (answer.consistency) {

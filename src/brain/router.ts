@@ -73,6 +73,8 @@ type Attempt = BrainAnswer & { first?: { answer: unknown; problems: string[] }; 
 
 export interface BrainLogRow {
   ts: string;
+  /** The run the question belongs to (the same value as decisions.jsonl's run_id), when known. */
+  run_id?: string;
   label: string;
   engine: EngineName;
   model: string;
@@ -139,9 +141,15 @@ export class BrainRouter {
     return this.deps.config.byPrefix[labelPrefix(label)] ?? this.deps.config.engine;
   }
 
-  /** Whether an engine gets tools (BRAIN_TOOLS / BRAIN_<ENGINE>_TOOLS; DeepSeek off by default: v3 parity). */
+  /**
+   * Whether an engine gets tools (BRAIN_TOOLS / BRAIN_<ENGINE>_TOOLS). Defaults: DeepSeek off (v3 parity); with
+   * KNOWLEDGE_PREFIX=full every engine off (the whole knowledge base is in the system prompt; set on explicitly to
+   * add them); otherwise the others on.
+   */
   toolsFor(engine: EngineName): boolean {
-    return this.deps.config.engines[engine].tools ?? this.deps.config.tools ?? engine !== "deepseek";
+    const set = this.deps.config.engines[engine].tools ?? this.deps.config.tools;
+    if (set !== null && set !== undefined) return set;
+    return engine !== "deepseek" && this.deps.config.knowledgePrefix !== "full";
   }
 
   /** Calls made to an engine so far in this process (re-asks included). */
@@ -164,7 +172,15 @@ export class BrainRouter {
   private reaskFor(engine: EngineName, req: BrainRequest): boolean {
     const set = this.deps.config.engines[engine].reask ?? this.deps.config.reask;
     if (set !== null) return set;
+    if (req.spec.reask) return true;
     return engine !== "deepseek" || Boolean(req.tools && req.tools.length > 0);
+  }
+
+  /** An answer's problems: the ones that make it unusable (hard) and the ones only worth a re-ask (soft). */
+  private static check(req: BrainRequest, result: BrainAnswer): { hard: string[]; soft: string[] } {
+    if (result.answer === null) return { hard: result.problems.length > 0 ? result.problems : ["no answer"], soft: [] };
+    const hard = req.spec.validate(result.answer);
+    return { hard, soft: hard.length === 0 && req.spec.softValidate ? req.spec.softValidate(result.answer) : [] };
   }
 
   /** The engine, or an EngineFailure("unavailable") saying why not. */
@@ -234,13 +250,19 @@ export class BrainRouter {
     return result;
   }
 
-  /** One engine: its answer validated, re-asked once when it fails and re-asking is on. */
+  /**
+   * One engine: its answer validated, re-asked once when it fails and re-asking is on. Soft problems
+   * (AnswerSpec.softValidate) are re-asked the same way, but an answer with only soft problems stays usable: the
+   * re-asked answer when it has no hard problems, else the first one.
+   */
   private async attempt(name: EngineName, request: BrainRequest): Promise<Attempt> {
     const engine = this.engine(name);
     const req: BrainRequest = this.toolsFor(name) ? request : { ...request, tools: [] };
     const first = await this.call(engine, req);
-    const firstProblems = first.answer === null ? (first.problems.length > 0 ? first.problems : ["no answer"]) : req.spec.validate(first.answer);
+    const firstCheck = BrainRouter.check(req, first);
+    const firstProblems = [...firstCheck.hard, ...firstCheck.soft];
     if (firstProblems.length === 0) return { ...first, problems: [] };
+    const usableFirst = firstCheck.hard.length === 0;
     if (!this.reaskFor(name, req)) return { ...first, problems: firstProblems };
     const previous = first.raw ?? (first.answer === null ? "" : JSON.stringify(first.answer));
     let second: BrainAnswer;
@@ -248,25 +270,31 @@ export class BrainRouter {
       second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } });
     } catch (error) {
       if (isAnswerFailure(error)) throw error;
-      return { ...first, answer: null, problems: [...firstProblems, `re-ask failed: ${message(error).slice(0, 200)}`], first: { answer: first.answer, problems: firstProblems }, reasks: 1 };
+      const problems = [...firstProblems, `re-ask failed: ${message(error).slice(0, 200)}`];
+      return { ...first, answer: usableFirst ? first.answer : null, problems, first: { answer: first.answer, problems: firstProblems }, reasks: 1, reaskCalls: 1 };
     }
-    const secondProblems = second.answer === null ? (second.problems.length > 0 ? second.problems : ["no answer"]) : req.spec.validate(second.answer);
+    const secondCheck = BrainRouter.check(req, second);
+    const secondProblems = [...secondCheck.hard, ...secondCheck.soft];
     const sum = (a: number | undefined, b: number | undefined): number | undefined => (a === undefined && b === undefined ? undefined : (a ?? 0) + (b ?? 0));
     const usage: BrainAnswer["usage"] = { inputTokens: first.usage.inputTokens + second.usage.inputTokens, outputTokens: first.usage.outputTokens + second.usage.outputTokens };
     for (const key of ["cacheHitTokens", "cacheWriteTokens", "reasoningTokens", "costUsd"] as const) {
       const total = sum(first.usage[key], second.usage[key]);
       if (total !== undefined) usage[key] = total;
     }
+    // The re-asked answer when it is usable; else the first one when that was (its soft problems stand); else none.
+    const keepFirst = secondCheck.hard.length > 0 && usableFirst;
+    const chosen = keepFirst ? first : second;
     return {
-      ...second,
+      ...chosen,
       attempts: first.attempts + second.attempts,
       latencyMs: first.latencyMs + second.latencyMs,
       usage,
       toolCalls: [...first.toolCalls, ...second.toolCalls],
-      answer: secondProblems.length === 0 ? second.answer : null,
-      problems: secondProblems,
+      answer: secondCheck.hard.length === 0 ? second.answer : keepFirst ? first.answer : null,
+      problems: keepFirst ? [...firstProblems, ...secondProblems.map((problem) => `re-ask: ${problem}`)] : secondProblems,
       first: { answer: first.answer, problems: firstProblems },
       reasks: 1,
+      reaskCalls: second.attempts,
     };
   }
 
@@ -305,6 +333,7 @@ export class BrainRouter {
     }
     const row: BrainLogRow = {
       ts: new Date().toISOString(),
+      ...(req.runId ? { run_id: req.runId } : {}),
       label: req.label,
       engine,
       model,

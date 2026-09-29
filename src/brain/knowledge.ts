@@ -22,7 +22,6 @@ import { SLICE_LESSONS_HEADING, SLICE_STATS_HEADING } from "../knowledge/experie
 import { loadKnowledgeData, loadPostmortems, type Postmortems, type RenderContext } from "../knowledge/render/data.js";
 import { renderKnowledgePrefix } from "../knowledge/render/knowledge-prefix.js";
 import { SYSTEM } from "../llm/deepseek.js";
-import { fillGuideFacts } from "../strategy/boss-clock.js";
 import type { BrainRequest, KnowledgeNote } from "./types.js";
 
 /** Between the rules and the prefix: what follows, what wins over it, and what memory.knowledge now holds. */
@@ -88,8 +87,8 @@ export class KnowledgePrompt {
     const hit = this.cached;
     if (hit && hit.key === key && hit.data === data && hit.postmortems === postmortems) return hit;
     const render = this.opts.render ?? ((c: RenderContext, p: Postmortems) => renderKnowledgePrefix(c, p));
-    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled as v3 fills them in its guide and handbook.
-    const prefix = fillGuideFacts(render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir }, postmortems));
+    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled by the renderer (knowledge/render/data.ts).
+    const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir }, postmortems);
     const system = fullSystemPrompt(prefix);
     this.renders += 1;
     const note: KnowledgeNote = { mode: "full", ascension: ctx.ascension, prefix_sha: sha(prefix), prefix_chars: prefix.length };

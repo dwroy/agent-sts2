@@ -172,23 +172,23 @@ export function checkConsistency(choice: string, reason: string, reasoning: stri
 
 /**
  * The fields of the question's own answer format beyond {choice, reason} that a re-ask must ask for again,
- * as `"name": <what>` fragments with a sentence saying what they are: the route review riding on a card reward
- * or rest site (state.route_review: "route", "route_reason"; the re-ask asked for {choice, reason} only and the
- * second answer dropped the route, "the answer has no route"), the act-start joint question's route
- * (state.act_routes), and the deck cards a one-shot option takes when the first answer named them ("cards").
+ * as `"name": <what>` fragments with a sentence saying what they are: the route review riding on a card reward,
+ * rest site or event (state.route_review: "route", "route_reason"; the re-ask asked for {choice, reason} only and the
+ * second answer dropped the route, "the answer has no route"), the act-start joint question's route (state.act_route;
+ * M2: node ids on the whole map), and the deck cards a one-shot option takes when the first answer named them ("cards").
  */
 export function reaskFields(state: Record<string, unknown>, first: { cards?: string[]; discard?: number[] }): { fields: string[]; note: string } {
   const record = (value: unknown): Record<string, unknown> => (value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
   const fields: string[] = [];
   const notes: string[] = [];
-  const reviewRoutes = Object.keys(record(record(state["route_review"])["routes"]));
-  const actRoutes = Object.keys(record(state["act_routes"]));
-  if (reviewRoutes.length > 0) {
-    fields.push(`"route": "<${reviewRoutes.join(" | ")}>"`, '"route_reason": "<max 15 words>"');
-    notes.push('Settle the route again too (state.route_review): "route" is "keep" (follow the plan) or another key of state.route_review.routes.');
-  } else if (actRoutes.length > 0) {
-    fields.push(`"route": "<${actRoutes.join(" | ")}>"`);
-    notes.push('Name the act\'s route again too: "route" is a key of state.act_routes.');
+  // M2: the route blocks carry the whole map; the route is "keep" or node ids from next_nodes to the boss.
+  const hasMap = (value: unknown): boolean => Array.isArray(record(value)["map"]);
+  if (hasMap(state["route_review"])) {
+    fields.push('"route": "<keep | node ids from next_nodes to the boss>"', '"route_reason": "<max 15 words>"');
+    notes.push('Settle the route again too (state.route_review): "route" is "keep" (follow the plan) or a new node sequence from one of next_nodes to the boss.');
+  } else if (hasMap(state["act_route"])) {
+    fields.push('"route": "<node ids from next_nodes to the boss>"');
+    notes.push("Name the act's route again too (state.act_route): the node ids from one of next_nodes to the boss.");
   }
   if ((first.cards ?? []).length > 0) fields.push('"cards": [<the deck cards the option takes>]');
   if ((first.discard ?? []).length > 0) fields.push('"discard": [<the potion slots to discard first>]');

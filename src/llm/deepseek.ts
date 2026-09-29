@@ -549,7 +549,12 @@ export class DeepSeekClient implements Escalator {
       reason: typeof parsed.reason === "string" ? parsed.reason.trim() : "",
       rawReason: parsed.reason,
       ...(Array.isArray(parsed.cards) ? { cards: parsed.cards.filter((card): card is string => typeof card === "string").map((card) => card.trim()) } : {}),
-      ...(typeof parsed.route === "string" && parsed.route.trim() ? { route: parsed.route.trim() } : {}),
+      // A route is "keep" or node ids (M2); a list of ids reads as the same ids in one string.
+      ...(typeof parsed.route === "string" && parsed.route.trim()
+        ? { route: parsed.route.trim() }
+        : Array.isArray(parsed.route) && parsed.route.some((id) => typeof id === "string" && id.trim())
+          ? { route: parsed.route.filter((id): id is string => typeof id === "string").map((id) => id.trim()).join(" ") }
+          : {}),
       ...(typeof parsed.route_reason === "string" && parsed.route_reason.trim() ? { routeReason: parsed.route_reason.trim() } : {}),
       ...(discardSlotsOf(parsed.discard) ? { discard: discardSlotsOf(parsed.discard)! } : {}),
     };

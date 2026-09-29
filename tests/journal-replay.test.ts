@@ -174,6 +174,14 @@ class RecordingDeepSeek extends DeepSeekClient {
   constructor(private readonly pickFn: Pick) {
     super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
   }
+  /** map/route-plan: the route through the Shop from wherever the map stands. */
+  override async choosePlan(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}) {
+    const label = String(context["label"] ?? "");
+    this.calls.push({ label, memory: context["memory"], criteria, state });
+    const next = (state["route_map"] as Record<string, JsonValue>)["next_nodes"] as string[];
+    const route = next.includes("r6c3") ? "r6c3 r7c3" : "r5c3 r6c3 r7c3";
+    return { json: { route, reason: "the shop" }, meta: { latencyMs: 5, inputTokens: 20, outputTokens: 4, cacheHitTokens: 9, reasoningTokens: 2 } };
+  }
   override async choose(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
     const label = String(context["label"] ?? "");
     this.calls.push({ label, memory: context["memory"], criteria, state });
@@ -279,8 +287,7 @@ function loopConfig(dir: string): AppConfig {
   };
 }
 
-const pick = (criteria: Record<string, string | null>, label: string): string =>
-  label === "map/route-plan" ? Object.keys(criteria).find((key) => String(criteria[key]).includes("Shop"))! : Object.keys(criteria)[0]!;
+const pick = (criteria: Record<string, string | null>): string => Object.keys(criteria)[0]!;
 
 async function play(config: AppConfig, sequence: { raw: Raw; transient?: boolean }[], options: { maxDecisions?: number; restoreRun?: boolean; pick?: Pick } = {}) {
   const deepseek = new RecordingDeepSeek(options.pick ?? pick);
@@ -319,8 +326,8 @@ describe("the loop restarted mid-run", () => {
     // The rows carry what the replay needs.
     const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Row);
     const plan = records.find((record) => record["label"] === "map/route-plan")!;
-    expect(plan).toMatchObject({ run_id: "TESTRUN123", journal: { choice: expect.stringContaining("Shop") } });
-    expect((plan["route_plan"] as Row)["summary"]).toBe("Monster -> Shop -> Boss");
+    expect(plan).toMatchObject({ run_id: "TESTRUN123", journal: { choice: expect.stringContaining("商店") } });
+    expect((plan["route_plan"] as Row)["summary"]).toBe("r5c3 普通战 → r6c3 商店 → r7c3 Boss");
     const stateRows = readFileSync(stateLogPath(config.log.decisionLog), "utf8").trim().split("\n").map((line) => JSON.parse(line) as Row);
     expect(stateRows.filter((row) => row["observed"] === true).map((row) => row["screen"])).toEqual(["REST"]);
   });
@@ -349,21 +356,21 @@ describe("the loop restarted mid-run", () => {
     await play(config, [steps.firstFork], { maxDecisions: 1 });
     const after = await play(config, [steps.reward, steps.secondFork, steps.event, steps.menu]);
     expect(after.deepseek.calls.map((call) => call.label)).toEqual(["reward/card", "event/choose"]);
-    expect(after.deepseek.calls[0]!.state["route_review"]).toMatchObject({ routes: { keep: { path: "Shop -> Boss" }, p1: { path: "Elite -> Boss" } } });
+    expect(after.deepseek.calls[0]!.state["route_review"]).toMatchObject({ plan: "r6c3 商店 → r7c3 Boss", next_nodes: ["r6c2", "r6c3"] });
   });
 
   it("a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)", async () => {
     const config = loopConfig(tempDir());
-    const change: Pick = (criteria, label) => (label === "reward/card" ? { choice: Object.keys(criteria)[0]!, route: "p1" } : pick(criteria, label));
+    const change: Pick = (criteria, label) => (label === "reward/card" ? { choice: Object.keys(criteria)[0]!, route: "r6c2 r7c3" } : pick(criteria));
     await play(config, [steps.firstFork, steps.lastFrame, steps.reward], { maxDecisions: 2, pick: change });
     const after = await play(config, [steps.secondFork, steps.event, steps.menu], { pick: change });
-    expect(after.notes.some((note) => note.includes("route plan (act 1, F6) Elite -> Boss"))).toBe(true);
+    expect(after.notes.some((note) => note.includes("route plan (act 1, F6) r6c2 精英 → r7c3 Boss"))).toBe(true);
     // The Elite the review chose, followed in code: no re-plan.
     expect(after.actions[0]).toEqual({ action: "choose_map_node", option_index: 0 });
     expect(after.deepseek.calls.map((call) => call.label)).toEqual(["event/choose"]);
     const memory = after.deepseek.calls[0]!.memory as Record<string, string>;
     expect(memory["history"]).toContain("路线重规划（card-reward review）");
-    expect(memory["history"]).toContain("map/route-change [DS]: route (card-reward review): Elite -> Boss");
+    expect(memory["history"]).toContain("map/route-change [DS]: route (card-reward review): r6c2 精英 → r7c3 Boss");
     // The same memory as a loop that never stopped.
     const straight = await play(loopConfig(tempDir()), [steps.firstFork, steps.lastFrame, steps.reward, steps.secondFork, steps.event, steps.menu], { pick: change });
     expect(JSON.stringify(memory)).toBe(JSON.stringify(straight.deepseek.calls[2]!.memory));

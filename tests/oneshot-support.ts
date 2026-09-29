@@ -133,12 +133,20 @@ export function setupOneshotTests(): void {
 /* ---- loop runs ---------------------------------------------------------------------------------- */
 
 export class FakeDeepSeek extends DeepSeekClient {
-  calls: { label: string; state: Record<string, JsonValue>; criteria: Record<string, string | null>; plan: boolean }[] = [];
+  calls: { label: string; state: Record<string, JsonValue>; criteria: Record<string, string | null>; plan: boolean; reask?: boolean }[] = [];
   constructor(
     private readonly pick: (criteria: Record<string, string | null>, label: string) => string | { choice: string; cards?: string[]; route?: string; routeReason?: string },
     private readonly plans: (label: string, n: number) => Record<string, unknown> = () => ({ plan: [], reason: "nothing" }),
+    /** The router's re-ask (a route the AnswerSpec rejected, M2): the reply to the problems, by default the first answer again. */
+    private readonly reasks: (label: string, previous: string) => string = (_label, previous) => previous,
   ) {
     super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
+  }
+  override async chat(messages: Record<string, unknown>[], label: string) {
+    this.calls.push({ label, state: {}, criteria: {}, plan: false, reask: true });
+    const previous = String(messages[messages.length - 2]?.["content"] ?? "");
+    const meta = { latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1 };
+    return { content: this.reasks(label, previous), reasoning: "", toolCalls: [], message: {}, meta };
   }
   override async choose(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
     const label = String(context["label"] ?? "");

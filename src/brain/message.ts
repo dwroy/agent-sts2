@@ -22,7 +22,8 @@ export function userMessage(req: BrainRequest): string {
 
 /** The re-ask turn: what was wrong with the previous answer and, for a choice, the valid keys. */
 export function reaskMessage(req: BrainRequest, problems: string[]): string {
-  const keys = req.options ? ` Valid choices: ${Object.keys(req.options).join(", ")}.` : "";
+  // A plan answer (a shop list, a route) is not one option key: its problems say what is valid.
+  const keys = req.options && req.spec.kind === "pick" ? ` Valid choices: ${Object.keys(req.options).join(", ")}.` : "";
   return `Your previous answer cannot be used: ${problems.join("; ")}.${keys} Reply again with the whole corrected answer as one JSON object in the same format.`;
 }
 
