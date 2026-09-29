@@ -325,10 +325,36 @@ export const SHOP_PLAN_NOTE =
   "the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan " +
   "(an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).";
 
+/**
+ * The shopping list of an answer: its "plan", else the list written into "choice" (VTREB5A9XWS7 F6:
+ * {"choice": "buy_potion2, remove:c0, buy_card1", "reason": …}, judged "no plan list" and asked again step by
+ * step, 150.8 s more): a JSON list, or the steps separated by commas, semicolons or arrows. Every step is then
+ * checked like a plan's, so only a list of real steps is taken. null when there is neither.
+ */
+function shopPlanList(json: Record<string, unknown>): { list: unknown[]; fromChoice: boolean } | null {
+  if (Array.isArray(json["plan"])) return { list: json["plan"], fromChoice: false };
+  const choice = json["choice"];
+  if (Array.isArray(choice)) return choice.length > 0 ? { list: choice, fromChoice: true } : null;
+  if (typeof choice !== "string") return null;
+  const text = choice.trim();
+  if (text.startsWith("[")) {
+    try {
+      const parsed: unknown = JSON.parse(text);
+      return Array.isArray(parsed) ? { list: parsed, fromChoice: true } : null;
+    } catch {
+      return null;
+    }
+  }
+  const list = text.split(/\s*(?:[,，、;；]|->|→|=>)\s*/).map((step) => step.replace(/^["'“”]+|["'“”]+$/g, "").trim()).filter((step) => step !== "");
+  if (list.length === 0 || list.some((step) => /^(null|none|undefined)$/i.test(step))) return null;
+  return { list, fromChoice: true };
+}
+
 /** A plan's steps from DeepSeek's answer, validated against this state; the reason it is invalid otherwise. */
-export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): { steps: ShopPlanStep[]; reason: string } | { invalid: string } {
-  const plan = json["plan"];
-  if (!Array.isArray(plan)) return { invalid: 'no "plan" list in the answer' };
+export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): { steps: ShopPlanStep[]; reason: string; fromChoice?: true } | { invalid: string } {
+  const found = shopPlanList(json);
+  if (!found) return { invalid: 'no "plan" list in the answer' };
+  const plan = found.list;
   const shop = asRecord(env.state.raw["shop"]);
   const stock = liveStock(shop);
   const belt = beltOf(env.state);
@@ -379,7 +405,7 @@ export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): 
   // The first step is played at once: it must be possible now (the later ones are checked when they come).
   const first = stepProblem(steps[0]!, env);
   if (first) return { invalid: `first step ${steps[0]!.key}: ${first}` };
-  return { steps, reason: str(json["reason"]).trim() };
+  return { steps, reason: str(json["reason"]).trim(), ...(found.fromChoice ? { fromChoice: true as const } : {}) };
 }
 
 /** Why a step cannot be played on the live shop now, or null. */
@@ -591,9 +617,11 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
           const first = parsed.steps[0]!;
           const { intent, text } = stepAction(first);
           const list = parsed.steps.map((step) => stepAction(step).text).join(", ");
+          // The list came in the answer's "choice" field (no "plan"): taken, and said so.
+          const from = parsed.fromChoice ? ' (list read from the answer\'s "choice")' : "";
           return {
             intent,
-            rationale: `plan ${ref}: ${list}; step 1: ${text}`,
+            rationale: `plan ${ref}${from}: ${list}; step 1: ${text}`,
             confidence: null,
             fallback: false,
             decider: "deepseek",

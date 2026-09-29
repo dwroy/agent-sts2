@@ -15,6 +15,8 @@ import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
+import { ask, decide, env as oneshotEnv } from "./oneshot-support.js";
+import { parseShopPlan } from "../src/screens/shop.js";
 
 type Raw = Record<string, unknown>;
 
@@ -244,5 +246,36 @@ describe("3. Plating's decay is said with the card text (7YT0NJC2LEYQ F12 took S
 
   it("Heart of Iron's potion text (Plating 7) says it too", () => {
     expect(fillPotionText("HEART_OF_IRON", "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。")).toContain("7 stacks: 7+6+5+4+3+2+1 = 28 block over 7 turns");
+  });
+});
+
+describe("4. One-shot shop: a shopping list written into \"choice\" is taken (VTREB5A9XWS7 F6: judged \"no plan list\", 150.8 s of step-by-step questions)", () => {
+  const shopDecision = () => decide(oneshotEnv(logged("batch-i/vtre-f6-shop").state));
+  const resolveWith = (json: Record<string, unknown>) => ask(shopDecision()).deepseek.plan!.resolve(json);
+
+  it("the logged reply {choice: \"buy_potion2, remove:c0, buy_card1\"}: the list is the plan, and the rationale says where it came from", () => {
+    const e = oneshotEnv(logged("batch-i/vtre-f6-shop").state);
+    const parsed = parseShopPlan({ choice: "buy_potion2, remove:c0, buy_card1", reason: "Block potion first" }, e);
+    if ("invalid" in parsed) throw new Error(parsed.invalid);
+    expect(parsed.steps.map((step) => step.key)).toEqual(["buy_potion2", "remove:c0", "buy_card1", "leave"]);
+    expect(parsed.fromChoice).toBe(true);
+    const out = resolveWith({ choice: "buy_potion2, remove:c0, buy_card1", reason: "Block potion first" });
+    if ("invalid" in out) throw new Error(out.invalid);
+    expect(out.intent).toMatchObject({ action: "buy_potion", option_index: 2 });
+    expect(out.rationale).toContain('list read from the answer\'s "choice"');
+    // A JSON list in "choice", or arrows between the steps, the same.
+    expect(parseShopPlan({ choice: '["buy_potion2", "buy_card1"]' }, e)).toMatchObject({ steps: [{ key: "buy_potion2" }, { key: "buy_card1" }, { kind: "leave" }] });
+    expect(parseShopPlan({ choice: ["buy_card1"] }, e)).toMatchObject({ steps: [{ key: "buy_card1" }, { kind: "leave" }] });
+    expect(parseShopPlan({ choice: "buy_card1 -> buy_potion2" }, e)).toMatchObject({ steps: [{ key: "buy_card1" }, { key: "buy_potion2" }, { kind: "leave" }] });
+  });
+
+  it("still invalid: no list anywhere, or a \"choice\" that is not a list of real steps; a \"plan\" answer is as before", () => {
+    const e = oneshotEnv(logged("batch-i/vtre-f6-shop").state);
+    expect(parseShopPlan({ choice: "null", reason: "x" }, e)).toEqual({ invalid: 'no "plan" list in the answer' });
+    expect(parseShopPlan({ reason: "x" }, e)).toEqual({ invalid: 'no "plan" list in the answer' });
+    expect(parseShopPlan({ choice: "buy the block potion and remove a strike" }, e)).toMatchObject({ invalid: expect.stringMatching(/^unknown step/) });
+    const plain = parseShopPlan({ plan: ["buy_card1"], choice: "whatever" }, e);
+    expect(plain).toMatchObject({ steps: [{ key: "buy_card1" }, { kind: "leave" }] });
+    expect("fromChoice" in plain).toBe(false);
   });
 });
