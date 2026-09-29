@@ -3,6 +3,10 @@
  * (tests/logged-states/batch-h, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
  */
 
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
@@ -12,6 +16,9 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
+import { planRest } from "../src/screens/rest.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -240,5 +247,42 @@ describe("3. Liquid Memories drunk mid-line: the selection takes the card the li
     noteScreenChange(memory, parseGameState(after.state));
     const next = planCombatTurn({ ...loggedEnv(after), screenMemory: memory });
     expect(next).toMatchObject({ kind: "act", label: "combat/plan-continue", intent: { action: "play_card", card_index: at, target_index: 0 } });
+  });
+});
+
+describe("4. DeepSeek: an unknown option recovered from the reasoning keeps the answer's \"discard\" slots (batch G note, deepseek.ts)", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+
+  it("\"heal\" is no key, the reasoning concludes o0, the answer names slot 2: the recovered answer discards slot 2, then heals", async () => {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () =>
+        sendJson(res, 200, { choices: [{ message: { content: '{"choice": "heal", "discard": [2], "reason": "heal; drop the Block Potion for the mailbox"}', reasoning_content: "HP 30/80.\nDecision: o0." } }], usage: { prompt_tokens: 900, completion_tokens: 200 } }),
+      );
+    });
+    const log = join(mkdtempSync(join(tmpdir(), "ds-discard-")), "reasoning.jsonl");
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000, reasoningEffort: "max", reasoningLog: log });
+    // The logged F11 rest (Tiny Mailbox, one free slot for two potions): o0 heal, o0:discard, o1 smith.
+    const fx = logged("batch-g/zgz0-f11-rest-mailbox");
+    const env: DecisionEnv = { ...loggedEnv(fx), buildDecider: "deepseek", oneshot: "off" };
+    const decision = planRest(env) as AskDecision;
+    const question = decision.questions["pick"]!;
+    const criteria = question.type === "choice" ? question.criteria : {};
+    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:discard", "o1"]);
+    const error = await client.choose({}, "Rest?", criteria, { label: "rest/choose" }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(DeepSeekAnswerError);
+    const failed = error as DeepSeekAnswerError;
+    expect(failed.detail.discard).toEqual([2]);
+    const recovered = failed.recoverFrom(criteria)!;
+    expect(recovered.option).toBe("o0");
+    const answer = failed.answerFrom(recovered);
+    expect(answer).toMatchObject({ choice: "o0", discard: [2] });
+    // As the loop's accept hands it to resolve: the discard variant, slot 2 first.
+    const resolved = decision.resolve(deepseekPick(answer.choice, answer.discard ? { discard: answer.discard } : {}));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 2 });
   });
 });

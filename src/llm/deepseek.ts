@@ -112,7 +112,7 @@ export class DeepSeekInconsistentError extends Error {
 export class DeepSeekAnswerError extends Error {
   constructor(
     message: string,
-    readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string },
+    readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string; discard?: number[] },
     readonly meta: Omit<DeepSeekAnswer, "choice" | "reason">,
   ) {
     super(message);
@@ -122,6 +122,22 @@ export class DeepSeekAnswerError extends Error {
   /** The option its reasoning (then its reason, then the raw reply) concluded on, when exactly one; else null. */
   recoverFrom(criteria: Record<string, string | null>): Conclusion | null {
     return recoverChoice([this.detail.reasoning, this.detail.reason, this.detail.content], criteria);
+  }
+
+  /**
+   * The answer to act on with the option its reasoning concluded on (recoverFrom): the fields that do not depend
+   * on the option key go with it, the route and route_reason (a route review, the act route) and the potion slots
+   * a "discard, then …" option discards (without them a recovered discard option was judged invalid).
+   */
+  answerFrom(recovered: Conclusion): DeepSeekAnswer {
+    const { route, routeReason, discard } = this.detail;
+    return {
+      ...this.meta,
+      choice: recovered.option,
+      reason: this.detail.reason || `reasoning concluded ${recovered.option}`,
+      ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
+      ...(discard && discard.length > 0 ? { discard } : {}),
+    };
   }
 }
 
@@ -371,7 +387,7 @@ export class DeepSeekClient implements Escalator {
     if (firstKey === null) {
       // The route (a route review's keep/change, the act route) does not depend on the option key: it rides along,
       // so a choice recovered from the reasoning keeps it.
-      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content, ...routeOf(first) };
+      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content, ...routeOf(first), ...(first.discard && first.discard.length > 0 ? { discard: first.discard } : {}) };
       throw new DeepSeekAnswerError(`DeepSeek chose unknown option "${first.choice}"`, detail, done.meta);
     }
     first.choice = firstKey;
