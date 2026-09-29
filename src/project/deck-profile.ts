@@ -16,7 +16,7 @@ export function deckProfileLine(state: GameState, knowledge: Knowledge): string 
   const stats = deckStats(entries);
   const profile = deckProfile(entries);
   const cards = entries
-    .filter((card) => givesLastingStrength(knowledge.card(card.card_id)?.descriptionRaw || card.description))
+    .filter((card) => isStrengthCard(card.card_id, knowledge, card.description))
     .map((card) => (card.upgraded && !card.name.endsWith("+") ? `${card.name}+` : card.name));
   const strength = [...new Set([...cards, ...strengthRelics(state, knowledge)])];
   return [
@@ -40,9 +40,29 @@ function strengthRelics(state: GameState, knowledge: Knowledge): string[] {
   return asArray(asRecord(state.run?.raw)["relics"]).flatMap((value) => {
     const relic = asRecord(value);
     const id = str(relic["relic_id"]);
-    const info = knowledge.relic(id);
-    if (!givesLastingStrength(str(relic["description"]) || info?.description || "")) return [];
-    const name = str(relic["name"], info?.name ?? id);
+    if (!isStrengthRelic(id, knowledge, str(relic["description"]))) return [];
+    const name = str(relic["name"], knowledge.relic(id)?.name ?? id);
     return [id === "GIRYA" ? `${name}(锻炼 ${num(relic["stack"])} 次)` : name];
   });
+}
+
+/** Whether a deck card gives lasting Strength (the line's 「力量来源」): the game data's template, else the card's own text. */
+export function isStrengthCard(cardId: string, knowledge: Knowledge, text = ""): boolean {
+  return givesLastingStrength(knowledge.card(cardId)?.descriptionRaw || text);
+}
+
+/** Whether a relic gives lasting Strength: its live description, else the game data's. */
+export function isStrengthRelic(relicId: string, knowledge: Knowledge, text = ""): boolean {
+  return givesLastingStrength(text || knowledge.relic(relicId)?.description || "");
+}
+
+/**
+ * Every card and relic id in the game data that gives lasting Strength, by the line's own test (the evaluator's
+ * "Strength source at the act-1 boss": tools/eval/strength-sources.ts, docs/eval.md). Deck ids carry "+" when
+ * upgraded; upgrades are not listed apart.
+ */
+export function strengthSourceIds(knowledge: Knowledge): { cards: string[]; relics: string[] } {
+  const cards = knowledge.cards().filter((card) => isStrengthCard(card.id, knowledge, card.description));
+  const relics = knowledge.relics().filter((relic) => isStrengthRelic(relic.id, knowledge));
+  return { cards: cards.map((card) => card.id).sort(), relics: relics.map((relic) => relic.id).sort() };
 }

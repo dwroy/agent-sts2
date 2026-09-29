@@ -12,6 +12,7 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
 - **并发**：同时只有一个 sync（`sync.lock`，query.py 顺带的同步拿不到锁就跳过）；查询持共享读锁，sync 只在删除/替换分片的那一刻持排他锁，所以查询不会看到一半替换的表。
 - **key 不进库**：进库的自由文本（rationale、模型的简短理由、计划摘要、chosen）都过 `scrub()`，像 key 的串（`sk-…`、`Bearer …`、`api_key: …`）换成 `[REDACTED]`；问题、推理、memory 原文不进库，只存长度和源文件字节偏移。
 - **表 = Parquet 上的视图**：`tools/logdb/views.sql`（`${DB}` 由 query.py 换成库目录）。存储的只有「一行 JSONL 一行记录」的五张表；fights / turns / floors / runs 每次查询时从 frames 现算，所以永远和原始数据一致，改口径只要改 SQL。
+- **每张表有一个零行分片** `part-0-empty.parquet`，带表的全部列，视图靠它绑定列（各分片按列名合并）。`extract.TABLES` 里表的列变了时，sync 重写这个零行分片（旧分片不动，新列在旧分片上是 NULL），所以给一个源加列不用重建另一个源。
 
 ## 2. 用法
 
@@ -33,6 +34,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 - 环境变量：`LOGDB_DIR`（库目录）、`LOGDB_LOGS`（日志目录）、`LOGDB_PYTHON`（TS 工具用的 Python）。
 - **`logs_query` 工具**（src/tools/logs-query.ts，在 `buildTools` 里）：输入 `{sql, max_rows?}`（默认 50 行，最多 200），子进程跑 `query.py --json --no-sync`，30 秒超时，子进程环境里不带任何 key，返回文本表；description 里列了表和主要字段。工具不同步，靠对局后的同步或 query.py 保持新鲜。
 - 测试：`.cache/logdb-venv/bin/python tests/logdb_test.py`（没有 duckdb 时只跑抽取器测试，其余跳过）；vitest 的 tests/logdb.test.ts 会调它，并测 `logs_query`（假脚本；有 venv 时再对样本库实跑）。样本在 tests/logdb-data/（`make-fixture.py` 生成）。
+- 评估指标脚本 tools/eval/metrics.py 建在这个库上，见 docs/eval.md。
 
 ## 3. 表
 
@@ -46,7 +48,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 
 **runs_raw** ← runs.jsonl（结束了的局）：`run_id, ended, victory, floor, character, ascension, code, decisions, jev_calls, deepseek_calls, claude_calls, tokens, ds_tokens_in, ds_tokens_out, ds_cache_hit, deciders`（JSON 文本）`, death_fight`（致死怪物中文名列表）`, arm`。
 
-**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器，格式定下来前按 BrainAnswer 的驼峰名和下划线名都认）：`src, off, len, ts, run_id, label, label_head, engine, model, effort, guide`（brain：system 哈希）`, input_tokens, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts, tool_calls, fallback_from, options, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars, answer_chars, parse_error`。
+**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器 src/brain/router.ts 的 `BrainLogRow`，一行一个问题）：`src, off, len, ts, run_id`（brain 行不带，靠 llm_calls 按时间归局）`, label, label_head, engine, model, effort`（brain 行没有）`, guide`（brain：`system_sha`）`, input_tokens`（brain：`usage.inputTokens`，含缓存命中和缓存写入）`, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts`（brain：模型调用次数，含补问；报错为 0）`, tool_calls`（次数）`, fallback_from`（回退前失败的引擎名）`, options`（选项 key）`, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars`（brain：各段长度之和，和 v3 的 memoryChars 一样）`, answer_chars, parse_error`（brain：没有答案也没有引擎错误，即答案解析或校验失败）；只有 brain 行有的：`cache_write_tokens, system_chars, reasks, fallback_kind`（quota / rate_limit / timeout …）`, error_kind, error`（过 scrub，最多 500 字）。
 
 **run_plans** ← run-plans.jsonl：`off, len, ts, run_id, floor, trigger, version, archetype, summary, want, avoid, input_tokens, output_tokens, cache_hit_tokens, reasoning_tokens, latency_ms, effort, error`。
 
@@ -60,7 +62,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 
 **turns**：每场每回合一行，取这回合第一帧和最后一帧。`run_id, fight_no, ascension, act, floor, encounter, room, turn, start_hp, start_block, start_energy, intent_damage`（回合开始时活着的敌人显示的攻击总和）`, enemies_alive, enemy_hp, end_hp, end_block, hp_lost`（本回合开始到下回合开始的掉血，含自伤和敌人回合；最后一回合到战斗最后血量，死了是全部）`, enemy_turn_hp_lost`（本回合最后一帧到下回合开始）`, last_turn, cards_played`（出的牌 id，来自 decisions）`, cards_n, potions_used, potions_n, start_powers, first_ts, first_off, frames`。
 
-**llm_calls**：llm_calls_raw 加上所属的局：自己带 run_id 就用它，否则取调用时间之前最近开始的那局（容差 3 秒：每局第一问 Neow 比第一帧早几毫秒记下），而且调用不晚于那局最后一帧 15 分钟；另加 `total_tokens`。
+**llm_calls**：llm_calls_raw 加上所属的局：自己带 run_id 就用它，否则取调用时间之前最近开始的那局（容差 3 秒：每局第一问 Neow 比第一帧早几毫秒记下），而且调用不晚于那局最后一帧 15 分钟；另加 `total_tokens` 和 `duplicate`：brain.jsonl 里引擎是 deepseek、而 deepseek-reasoning.jsonl 在它的时间窗（行时间减 latency 再前后各 2 秒）内有同 label 的行——路由器的 DeepSeek 引擎不带工具时跑的是 v3 的客户端，同一次调用两个文件都记（辅助视图 `llm_call_dups`）。**数调用和 token 时去掉 `duplicate`**（deepseek-reasoning 那行留着）。
 
 **state_index**：`off, len, ts, observed, run_id, act, floor, turn, screen, fingerprint` → 点查原始状态（`query.py --raw states <off>`，或者自己 seek）。
 
@@ -73,7 +75,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 - 房间类型和 monster-db.json 有 18 个遭遇差 1–2 场（hallway ↔ unknown_room，精英 1 场）：monster-db 用战后下一个地图帧的节点，没有就按怪物类型猜；这里用本层地图帧，没有就用上一层选的节点。死在问号房里的战斗 monster-db 记成走廊，本库记 unknown_room；战后没有本层地图帧时 monster-db 会拿到下一层的节点，本库不会。遭遇的场次、胜率、掉血都一样。
 - deepseek-reasoning.jsonl 从 09-28 11:03 起才有 token（usage）；更早的调用 token 为 NULL（对应决策行的 ds_tokens 里有总数）。label 从 09-24 08:42 起才有。
 - decisions 的 card_id / potion_id 靠 fingerprint 解析，fingerprint 里没有就是 NULL（turns.cards_played 里去掉，cards_n 照算）。
-- brain.jsonl 的字段是按 src/brain/types.ts 猜的，路由器的落盘格式定了以后要核对 `extract.brain_call_row` 并把 `VERSIONS["brain"]` 加 1（只重建这个源）。
+- brain.jsonl 按 src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。路由器不写 run_id 和 effort；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
 - 改了抽取器（extract.py）要把对应源的 `VERSIONS` 加 1；改视图（views.sql）不用重建。
 
 ## 5. 正确性核对（2026-09-29，354 局）

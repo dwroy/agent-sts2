@@ -7,7 +7,9 @@ share their state's ts, fingerprints are JSON strings):
                 Burning Blood heals after) -> elite on floor 3 (a potion drunk, died on turn 2): in runs.jsonl.
   RUNB00000002  A8: floor 2 hallway fight (won) -> floor 3 rest site (heal): still going, not in runs.jsonl.
 Plus a main-menu frame between them, one broken states line, two DeepSeek calls (one logged a few ms before
-run A's first frame, like the Neow question), one brain.jsonl call, one run plan.
+run A's first frame, like the Neow question), three brain.jsonl rows in src/brain/router.ts's format (a Claude
+answer with a tool call; the DeepSeek engine's row for the reward/card call that deepseek-reasoning.jsonl also
+logged, i.e. a duplicate; a Claude timeout with no answer), one run plan.
 
 Run it again after changing it: python3 tests/logdb-data/make-fixture.py
 """
@@ -179,11 +181,28 @@ def main():
     ]
     with open(os.path.join(HERE, "deepseek-reasoning.jsonl"), "w", encoding="utf8") as out:
         out.write("\n".join(json.dumps(c, ensure_ascii=False) for c in calls) + "\n")
+    brain = [
+        # A Claude answer (router row: BrainLogRow), one tool call.
+        {"ts": "2026-09-20T11:00:05.200Z", "label": "rest/choose", "engine": "claude", "model": "claude-opus-5-5", "system_sha": "abcd12345678",
+         "system_chars": 18000, "memory": {"act": "一幕", "history": "F1 涅奥"}, "question": "Heal or smith?",
+         "options": {"o0": "{\"heal\":24}", "o1": None}, "payload": {"facts": {"hp": "77/80"}}, "tools": ["kb_stats"],
+         "tool_calls": [{"name": "kb_stats", "input": {}, "output": "…", "ms": 3}], "answer": {"choice": "o0", "reason": "low HP"},
+         "problems": [], "reasks": 0, "attempts": 1, "latency_ms": 7000,
+         "usage": {"inputTokens": 30000, "cacheHitTokens": 18000, "cacheWriteTokens": 12000, "outputTokens": 400, "reasoningTokens": 100, "costUsd": 0.12},
+         "reasoning_chars": 350},
+        # The DeepSeek engine without tools: v3's client logged the same call in deepseek-reasoning.jsonl 4 ms earlier.
+        {"ts": "2026-09-20T11:00:03.504Z", "label": "reward/card", "engine": "deepseek", "model": "deepseek-flash", "system_sha": "ffff00001111",
+         "system_chars": 9000, "question": "Which card?", "options": {"card1": "{}", "skip": None}, "payload": {}, "tools": [], "tool_calls": [],
+         "answer": {"choice": "skip", "reason": "lean deck"}, "problems": [], "reasks": 0, "attempts": 1, "latency_ms": 4000,
+         "usage": {"inputTokens": 20000, "cacheHitTokens": 15000, "outputTokens": 300, "reasoningTokens": 250, "costUsd": 0.002}},
+        # Claude timed out and no fallback was configured: no answer, the error kept.
+        {"ts": "2026-09-20T11:00:05.900Z", "label": "event/choose", "engine": "claude", "model": "claude-opus-5-5", "system_sha": "abcd12345678",
+         "system_chars": 18000, "question": "Which option?", "options": {"o0": None}, "payload": {}, "tools": [], "tool_calls": [], "answer": None,
+         "problems": [], "reasks": 0, "attempts": 0, "latency_ms": 0, "usage": {"inputTokens": 0, "outputTokens": 0},
+         "error": "claude timed out after 60000 ms", "error_kind": "timeout"},
+    ]
     with open(os.path.join(HERE, "brain.jsonl"), "w", encoding="utf8") as out:
-        out.write(json.dumps({"ts": "2026-09-20T11:00:05.200Z", "label": "rest/choose", "engine": "claude", "model": "opus", "system_hash": "abcd",
-                              "question": "Heal or smith?", "answer": {"choice": "o0", "reason": "low HP"}, "attempts": 1, "latencyMs": 7000,
-                              "usage": {"inputTokens": 30000, "outputTokens": 400}, "toolCalls": [{"name": "kb_stats", "input": {}, "output": "…", "ms": 3}]},
-                             ensure_ascii=False) + "\n")
+        out.write("\n".join(json.dumps(row, ensure_ascii=False) for row in brain) + "\n")
     with open(os.path.join(HERE, "run-plans.jsonl"), "w", encoding="utf8") as out:
         out.write(json.dumps({"ts": "2026-09-20T11:00:00.500Z", "run": b, "floor": 1, "trigger": "start",
                               "plan": {"archetype": "strength", "summary": "take strength", "want": ["INFLAME"], "avoid": ["CLASH"]},

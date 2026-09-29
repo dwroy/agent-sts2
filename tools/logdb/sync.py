@@ -144,8 +144,18 @@ class LogDb:
         for table in extract.TABLES:
             os.makedirs(self.table_dir(table), exist_ok=True)
             empty = os.path.join(self.table_dir(table), EMPTY)
-            if not os.path.exists(empty):
+            if os.path.exists(empty) and self.shard_columns(empty) == [name for name, _ in extract.TABLES[table]]:
+                continue
+            # A new table, or its columns changed (extract.TABLES): the zero-row shard carries the schema the view
+            # binds to, so columns added for one source exist even while only older shards of another are there.
+            with read_lock(self.db, shared=False):
                 self.copy_to(f"SELECT {select_list(table)} WHERE false", empty)
+
+    def shard_columns(self, path):
+        try:
+            return [row[0] for row in self.duck().execute(f"DESCRIBE SELECT * FROM read_parquet('{path}')").fetchall()]
+        except Exception:  # an unreadable shard is rewritten
+            return None
 
     def listed_shards(self, manifest):
         return {(rec["table"], shard) for rec in manifest["sources"].values() for shard in rec.get("shards", [])}

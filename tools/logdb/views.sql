@@ -294,12 +294,25 @@ LEFT JOIN death d ON d.run_id = coalesce(r.run_id, fr.run_id);
 CREATE OR REPLACE VIEW run_spans AS
 SELECT run_id, min(ts) AS started, max(ts) AS last_seen FROM frames WHERE run_id IS NOT NULL GROUP BY run_id;
 
+-- brain.jsonl rows that repeat a deepseek-reasoning.jsonl call: the router's DeepSeek engine without tools runs
+-- v3's client, which logs the call there as well (same label, a few ms before the router's row; with a re-ask,
+-- both calls fall inside the row's latency). The deepseek-reasoning rows are the ones counted.
+CREATE OR REPLACE VIEW llm_call_dups AS
+SELECT DISTINCT b.off
+FROM llm_calls_raw b
+JOIN llm_calls_raw d ON d.src = 'deepseek-reasoning' AND d.label = b.label
+  AND d.ts BETWEEN b.ts - to_milliseconds(coalesce(b.latency_ms, 0)) - INTERVAL 2 SECOND AND b.ts + INTERVAL 2 SECOND
+WHERE b.src = 'brain' AND b.engine = 'deepseek';
+
 -- Model calls with the run they were made in: the call's own run_id, else the run whose frames surround
 -- its time (the latest run started before it, if the call is within 15 minutes of that run's last frame).
 -- A run's first question (the Neow event) is logged a few ms before the run's first frame, hence the 3 s.
+-- duplicate: a brain.jsonl row for a call deepseek-reasoning.jsonl also logged (llm_call_dups); leave it out
+-- when counting calls or tokens.
 CREATE OR REPLACE VIEW llm_calls AS
 SELECT c.* EXCLUDE (run_id),
   coalesce(c.run_id, CASE WHEN c.ts <= s.last_seen + INTERVAL 15 MINUTE THEN s.run_id END) AS run_id,
-  coalesce(c.input_tokens, 0) + coalesce(c.output_tokens, 0) AS total_tokens
+  coalesce(c.input_tokens, 0) + coalesce(c.output_tokens, 0) AS total_tokens,
+  (c.src = 'brain' AND c.off IN (SELECT off FROM llm_call_dups)) AS duplicate
 FROM llm_calls_raw c
 ASOF LEFT JOIN run_spans s ON c.ts + INTERVAL 3 SECOND >= s.started;

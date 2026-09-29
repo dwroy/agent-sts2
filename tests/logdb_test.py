@@ -98,9 +98,22 @@ class ExtractTest(unittest.TestCase):
         old, new = [extract.deepseek_call_row(raw, 0) for raw in lines("deepseek-reasoning.jsonl")]
         self.assertEqual((old["label"], old["input_tokens"], old["reasoning_chars"], old["engine"]), (None, None, 95, "deepseek"))
         self.assertEqual((new["label_head"], new["input_tokens"], new["cache_hit_tokens"], new["memory_chars"]), ("reward", 20000, 15000, 2))
-        brain = extract.brain_call_row(lines("brain.jsonl")[0], 0)
-        self.assertEqual((brain["engine"], brain["model"], brain["input_tokens"], brain["latency_ms"], brain["tool_calls"], brain["choice"]),
-                         ("claude", "opus", 30000, 7000, 1, "o0"))
+        claude, deepseek, timeout = [extract.brain_call_row(raw, 0) for raw in lines("brain.jsonl")]
+        self.assertEqual((claude["engine"], claude["model"], claude["guide"], claude["latency_ms"], claude["tool_calls"], claude["choice"], claude["reason"]),
+                         ("claude", "claude-opus-5-5", "abcd12345678", 7000, 1, "o0", "low HP"))
+        self.assertEqual((claude["input_tokens"], claude["cache_hit_tokens"], claude["cache_write_tokens"], claude["output_tokens"], claude["reasoning_tokens"], claude["cost_usd"]),
+                         (30000, 18000, 12000, 400, 100, 0.12))
+        self.assertEqual((claude["options"], claude["memory_chars"], claude["reasoning_chars"], claude["system_chars"], claude["reasks"], claude["attempts"]),
+                         (["o0", "o1"], 7, 350, 18000, 0, 1))
+        self.assertEqual((claude["parse_error"], claude["error_kind"], claude["fallback_from"], claude["run_id"], claude["effort"]), (False, None, None, None, None))
+        self.assertEqual((deepseek["engine"], deepseek["label"], deepseek["input_tokens"], deepseek["cache_write_tokens"], deepseek["memory_chars"]),
+                         ("deepseek", "reward/card", 20000, None, None))
+        self.assertEqual((timeout["choice"], timeout["answer_chars"], timeout["parse_error"], timeout["error_kind"], timeout["error"], timeout["attempts"]),
+                         (None, None, False, "timeout", "claude timed out after 60000 ms", 0))
+        fell = extract.brain_call_row(json.dumps({"ts": "2026-09-20T11:00:00.000Z", "label": "map/route-plan", "engine": "deepseek", "answer": None,
+                                                  "problems": ["route: not a path"], "fell_back_from": {"engine": "claude", "error": "limit", "kind": "quota"},
+                                                  "memory": "journal", "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
+        self.assertEqual((fell["fallback_from"], fell["fallback_kind"], fell["parse_error"], fell["memory_chars"], fell["options"]), ("claude", "quota", True, 7, None))
         self.assertEqual(extract.line_ts(lines("runs.jsonl")[0]), None)
         self.assertEqual(extract.line_ts(lines("states.jsonl")[0]), "2026-09-20T10:00:00.000Z")
 
@@ -148,7 +161,7 @@ class SyncTest(Workspace):
         self.assertEqual(self.count("frames"), (21, 21))
         self.assertEqual(self.count("decisions"), (18, 18))
         self.assertEqual(self.count("runs_raw"), (1, 1))
-        self.assertEqual(self.count("llm_calls_raw"), (3, 3))
+        self.assertEqual(self.count("llm_calls_raw"), (5, 5))
         self.assertEqual(self.count("run_plans"), (1, 1))
         manifest = self.manifest()
         for key, rec in manifest["sources"].items():
@@ -251,6 +264,20 @@ class SyncTest(Workspace):
         self.sync()
         self.assertEqual(self.count("frames"), (21, 21))
 
+    def test_new_columns_bind_while_only_old_shards_exist(self):
+        # brain.jsonl absent: only deepseek-reasoning shards (written before a column was added) are in llm_calls_raw.
+        os.remove(os.path.join(self.logs, "brain.jsonl"))
+        saved = list(extract.TABLES["llm_calls_raw"])
+        extract.TABLES["llm_calls_raw"] = [c for c in saved if c[0] != "error_kind"]
+        try:
+            self.sync()
+        finally:
+            extract.TABLES["llm_calls_raw"] = saved
+        self.assertNotIn("error_kind", [r[0] for r in self.q("DESCRIBE llm_calls_raw")])
+        self.sync()  # the columns changed: the zero-row shard is rewritten, the old shards stay
+        self.assertIn("error_kind", [r[0] for r in self.q("DESCRIBE llm_calls_raw")])
+        self.assertEqual(self.q("SELECT count(*), count(error_kind) FROM llm_calls")[0], (2, 0))
+
     def test_missing_source_files_are_fine(self):
         os.remove(os.path.join(self.logs, "brain.jsonl"))
         self.sync()
@@ -328,13 +355,15 @@ class ViewsTest(unittest.TestCase):
         self.assertEqual((b["finished"], b["victory"], b["floor"], b["ascension"], b["code"]), (False, None, 3, 8, None))
 
     def test_llm_calls_get_their_run(self):
-        calls = self.rows("SELECT src, run_id, label, engine, total_tokens FROM llm_calls ORDER BY ts")
-        self.assertEqual([(c["src"], c["run_id"], c["label"], c["engine"]) for c in calls], [
-            ("deepseek-reasoning", "RUNA00000001", None, "deepseek"),  # logged just before the run's first frame
-            ("deepseek-reasoning", "RUNB00000002", "reward/card", "deepseek"),
-            ("brain", "RUNB00000002", "rest/choose", "claude"),
+        calls = self.rows("SELECT src, run_id, label, engine, total_tokens, duplicate FROM llm_calls ORDER BY ts")
+        self.assertEqual([(c["src"], c["run_id"], c["label"], c["engine"], c["duplicate"]) for c in calls], [
+            ("deepseek-reasoning", "RUNA00000001", None, "deepseek", False),  # logged just before the run's first frame
+            ("deepseek-reasoning", "RUNB00000002", "reward/card", "deepseek", False),
+            ("brain", "RUNB00000002", "reward/card", "deepseek", True),  # the same call, logged again by the router
+            ("brain", "RUNB00000002", "rest/choose", "claude", False),
+            ("brain", "RUNB00000002", "event/choose", "claude", False),
         ])
-        self.assertEqual([c["total_tokens"] for c in calls], [0, 20300, 30400])
+        self.assertEqual([c["total_tokens"] for c in calls], [0, 20300, 20300, 30400, 0])
 
     def test_decisions_and_plans(self):
         rows = self.rows("SELECT label, decider, action, card_id, potion_id, rationale FROM decisions ORDER BY off")

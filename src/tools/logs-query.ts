@@ -51,7 +51,7 @@ const DESCRIPTION = [
   "fights 每场战斗（run_id, fight_no, ascension, act, floor, encounter 如 CORPSE_SLUG+CORPSE_SLUG, monsters 列表, room = hallway/elite/boss/unknown_room, entry_hp, max_hp, turns, outcome = won/died, hp_loss 战内掉血, net_hp_loss 含战后回血, potions_in 带进场的药水, potions_used 喝掉的药水, cards_played, deck_size, relics）；",
   "turns 每回合（run_id, fight_no, floor, encounter, turn, start_hp, start_block, intent_damage 敌人意图总伤害, enemies_alive, enemy_hp, hp_lost 到下回合开始的掉血, cards_played 出牌 id 列表, potions_used）；",
   "decisions 每个决策（ts, run_id, floor, turn, label 如 reward/card、combat/plan-choice, decider = jev/deepseek/code/code-fallback, action, card_id, options, choice, confidence, rollout_best, rollout_tied, rollout_best_chosen, ds_choice, escalated, hp, gold, rationale）；",
-  "llm_calls 每次模型调用（ts, run_id, label, engine, model, effort, input_tokens, cache_hit_tokens, output_tokens, reasoning_tokens, latency_ms, choice, reason；问题和推理原文不在库里）；",
+  "llm_calls 每次模型调用（ts, run_id, label, engine, model, effort, input_tokens, cache_hit_tokens, output_tokens, reasoning_tokens, latency_ms, choice, reason, duplicate 为真是 brain.jsonl 重记的同一次 DeepSeek 调用、计数时去掉；问题和推理原文不在库里）；",
   "run_plans 整局计划（ts, run_id, floor, trigger, archetype, summary, want, avoid）。",
   "列表列用 list_contains(monsters, 'X')、len(x)、unnest(x)；时间是 UTC。完整字段见 docs/logdb.md。",
 ].join("");
