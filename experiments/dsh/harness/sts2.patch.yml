@@ -1,0 +1,35 @@
+# Invocation patch over the shipped sdk-minimal profile (dsh 0.1.7-rc.2) for the STS2 decision experiment.
+# The only model-facing tool is the plugin's decision tool: no shell, no filesystem, no network tools.
+# Rows that would run commands or upload data are disabled; the plugin is inserted last.
+
+# no shell / terminal / subprocess / sandbox (the danger-full-access policy goes with them)
+- id: persistent-bash
+  disabled: true
+- id: persistent-pwsh
+  disabled: true
+- id: terminal-bash
+  disabled: true
+- id: terminal-pwsh
+  disabled: true
+- id: pty
+  disabled: true
+- id: sandbox-policy
+  disabled: true
+- id: sandbox
+  disabled: true
+- id: subprocess
+  disabled: true
+- id: jobs
+  disabled: true
+# no MCP tools
+- id: mcp-resources
+  disabled: true
+# no extra request fields to DeepSeek (session-log upload, plugin inventory)
+- id: session-log-deepseek
+  disabled: true
+- id: plugin-package-inventory-deepseek
+  disabled: true
+
+- insert:
+    - id: sts2-decision
+      name: './sts2-decision.mjs'
