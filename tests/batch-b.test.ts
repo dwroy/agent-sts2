@@ -746,3 +746,27 @@ describe("10b. Options whose code value reads the same share a rank (consistency
     expect([rank("p1"), rank("p2"), rank("p3")]).toEqual([1, 1, 3]);
   });
 });
+
+describe("10c. The rollout's shown-intent fallback does not re-apply our Vulnerable and its Weak (consistency #20)", () => {
+  it("an enemy with no move table hits for what was shown, not x1.5 again", () => {
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "UNKNOWN_FOE", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [strike(0)];
+    const solver = { hand, player: player({ hp: 70, vulnerable: true }), enemies: [enemy({ hp: 300, maxHp: 300, attacks: [{ damage: 15, hits: 1 }] })], fightKind: "monster" as const, turn: 1 };
+    const r = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans.slice(0, 1),
+      enemies: [{ index: 0, id: "UNKNOWN_FOE", move: "WHATEVER", strength: 0, powers: {} }],
+      tables: {},
+      piles: { draw: Array.from({ length: 10 }, (_, i) => strike(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: { VULNERABLE_POWER: 5 },
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 3 },
+    });
+    // Still Vulnerable next turn: the shown 15 already had it (it read 22).
+    expect(r.lines[0]!.perTurn[0]!.loss.mean).toBe(15);
+  });
+});

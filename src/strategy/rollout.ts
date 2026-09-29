@@ -793,6 +793,11 @@ interface SimEnemy {
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
   shown: { damage: number; hits: number }[];
+  /**
+   * What the shown intents already carry (its Weak and Shrink, our Vulnerable at the decision): the fallback
+   * takes it out before this turn's (consistency #20: it re-applied them, 15 shown under our Vulnerable read 22).
+   */
+  shownScale?: number;
 }
 
 interface SimPlayer {
@@ -925,7 +930,7 @@ export interface TurnRecord {
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
-  if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
+  if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits: Math.max(1, m.hits) }];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
@@ -1603,6 +1608,7 @@ function simulate(
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
+      shownScale: (e.weak > 0 ? 0.75 : 1) * ((e.shrink ?? 0) > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (base.vulnerable ? 1.5 : 1),
       // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
       // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
