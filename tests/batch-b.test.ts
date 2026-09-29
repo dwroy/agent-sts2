@@ -843,3 +843,64 @@ describe("11. A saturated board ranks lines by the leader's HP left first, as th
     expect(r.lines.some((estimate) => estimate.order === null)).toBe(true);
   });
 });
+
+describe("12. Enemy HP left counts a phase boss's later phases, an illusion at full, stock and spawns (7XK6DUJYMYY3 F48 T1-T3)", () => {
+  const meta: FightMeta = { act: 3, t: 1, asc: 8, kind: "boss", enc: "TEST_SUBJECT", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
+  const table: EnemyTable = { moves: { HIT: { damage: 3, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const lineHp = (target: Partial<EnemySim>, extra: Partial<RolloutInput> = {}) => {
+    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6, hits: 2 }), defend(1)];
+    const solver = { hand, player: player({ hp: 60, energy: 1 }), enemies: [enemy({ hp: 10, maxHp: 40, attacks: [{ damage: 3, hits: 1 }], ...target })], fightKind: "boss" as const, turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const r = rolloutDecision({
+      solver,
+      plans,
+      enemies: [{ index: 0, id: "BOSS", move: "HIT", strength: 0, powers: {} }],
+      tables: { BOSS: table },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => defend(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      ...extra,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 1 },
+    });
+    const of = (id: string) => r.lines.find((line) => line.plan.steps[0]?.cardId === id)!.enemyHpLeft;
+    return { kill: of("STRIKE_IRONCLAD"), block: of("DEFEND_IRONCLAD") };
+  };
+
+  it("finishing phase 1 leaves less to take off than chipping it (the next phase 60 counted either way)", () => {
+    // maxHp 40 is no logged Test Subject phase: its next phase is 1.5x, 60 (boss-clock laterPhaseHps).
+    expect(lineHp({ revives: true })).toEqual({ kill: 60, block: 70 });
+    // No later phase: the kill leaves nothing.
+    expect(lineHp({})).toEqual({ kill: 0, block: 10 });
+  });
+
+  it("an illusion is always at its max HP: damage into it takes nothing off (it read as progress)", () => {
+    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6, hits: 2, validTargets: [1] }), defend(1)];
+    const solver = { hand, player: player({ hp: 60, energy: 1 }), enemies: [enemy({ index: 0, name: "Obscura", hp: 100, maxHp: 100, attacks: [{ damage: 3, hits: 1 }] }), enemy({ index: 1, name: "Parafright", hp: 10, maxHp: 21, illusion: true, attacks: [{ damage: 3, hits: 1 }] })], fightKind: "elite" as const, turn: 1 };
+    const r = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "THE_OBSCURA", move: "HIT", strength: 0, powers: {} }, { index: 1, id: "PARAFRIGHT", move: "HIT", strength: 0, powers: { ILLUSION_POWER: 1 } }],
+      tables: { THE_OBSCURA: table, PARAFRIGHT: table },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => defend(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 1 },
+    });
+    const of = (id: string) => r.lines.find((line) => line.plan.steps[0]?.cardId === id)!.enemyHpLeft;
+    expect(of("STRIKE_IRONCLAD")).toBe(121);
+    expect(of("DEFEND_IRONCLAD")).toBe(121);
+  });
+
+  it("an Axebot's stock and a spawner's spawns count", () => {
+    expect(lineHp({ stock: 1 })).toEqual({ kill: 40, block: 50 });
+    expect(lineHp({ spawnsOnDeath: "4 x Wriggler" }, { spawns: { BOSS: [{ id: "WRIGGLER", name: "Wriggler", hp: 20, count: 4, move: null }] } })).toEqual({ kill: 80, block: 90 });
+  });
+});

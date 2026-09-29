@@ -932,6 +932,12 @@ export interface TurnRecord {
   timeUp?: boolean;
   /** Revives this turn spent (its `loss` is all the HP we had, then what their HP lost: the solver's hpLoss). */
   revived?: number;
+  /**
+   * Each enemy's HP still to take off by board index at the end of our turn (remainingHp: a phase boss's later
+   * phases, an Axebot's stock, an illusion at full, a segment that will reattach, a spawner's spawns included);
+   * absent in a hand-made record (the snapshot's HP then).
+   */
+  hpLeft?: Record<number, number>;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1315,6 +1321,7 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
+  const hpLeft = Object.fromEntries(enemies.map((e) => [e.index, remainingHp(e, input)]));
   // Regen healed at this turn's end (in the outcome): one less next turn. Ritual: Strength at the end of it.
   player.regen = Math.max(0, player.regen + regenDrunk - 1);
   player.strength += player.ritual;
@@ -1463,7 +1470,7 @@ function applyPlan(
     player.startDealt = startOfTurn(turn, player, enemies, input);
     won = allDown();
   }
-  return { loss: startHp - player.hp + (o.revived?.reviveHp ?? 0), enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died, ...(o.revived ? { revived: o.revived.sources.length } : {}) };
+  return { loss: startHp - player.hp + (o.revived?.reviveHp ?? 0), enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died, ...(o.revived ? { revived: o.revived.sources.length } : {}), hpLeft };
 }
 
 /** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
@@ -1775,16 +1782,36 @@ interface SampleValue {
 /** The living enemies' HP in a snapshot (a won fight: 0). */
 function enemyHpOf(record: TurnRecord): number {
   if (record.won) return 0;
+  if (record.hpLeft) return Object.values(record.hpLeft).reduce((sum, hp) => sum + hp, 0);
   return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
 }
 
-/** The HP left of the enemies at `indices` (a leader) in a snapshot (a won fight: 0). */
+/** The HP left of the enemies at `indices` (a leader) in a snapshot (a won fight: 0), counted as enemyHpOf does. */
 function groupHpOf(record: TurnRecord, indices: number[]): number {
   if (record.won) return 0;
   return indices.reduce((sum, index) => {
+    if (record.hpLeft) return sum + (record.hpLeft[index] ?? 0);
     const e = record.snap.E.find((x) => x[0] === index);
     return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
   }, 0);
+}
+
+/**
+ * An enemy's HP still to take off before it is gone for good (the "enemy HP left" that tells saturated lines
+ * apart): a phase boss's later phases too (a line finishing Test Subject's phase 1 read worse than one leaving
+ * it at 50, the next phase's 212 counted only once there: 7XK6DUJYMYY3 F48 T1-T3, 0-18 damage lines best), an
+ * Axebot's stock at its max HP, an illusion always at its max HP (it revives at full: damage into it is
+ * wasted, 115b517), a dead segment that will reattach at its Reattach HP, a spawner's spawns (Phrog Parasite).
+ * A Giant husk is no HP to take off (its blast is survived, not dealt with).
+ */
+function remainingHp(e: SimEnemy, input: RolloutInput): number {
+  if (e.explodeAt !== undefined) return 0;
+  if (e.base.illusion) return e.maxHp;
+  if (!e.alive) return e.reattachIn !== undefined ? Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP) : 0;
+  const phases = e.base.revives ? (e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc)).reduce((sum, hp) => sum + hp, 0) : 0;
+  const stock = Math.max(0, e.base.stock ?? 0) * e.maxHp;
+  const spawns = e.base.spawnsOnDeath ? (input.spawns?.[e.id] ?? []).reduce((sum, spawn) => sum + spawn.hp * spawn.count, 0) : 0;
+  return Math.max(0, e.hp) + phases + stock + spawns;
 }
 
 /**
