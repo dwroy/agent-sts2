@@ -41,6 +41,9 @@ export interface MoveEntry {
   /** Surrounded (Kaiser Crab): the logged turns the move came from behind us (x1.5) and from in front. */
   back_attack_by_asc?: Record<string, { behind?: number; facing?: number }>;
   status_cards?: Record<string, number>;
+  /** The status cards a StatusCard move put in our piles over its enemy turn (card id -> n), and the pile they landed in. */
+  status_card_ids?: Record<string, number>;
+  status_card_pile?: Record<string, number>;
   /** Block a Defend move gave (pooled), and by ascension. */
   block_gained?: Record<string, number>;
   block_gained_by_asc?: Record<string, Record<string, number>>;

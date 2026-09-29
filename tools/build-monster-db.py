@@ -59,8 +59,37 @@ END_OF_COMBAT_HEAL = {"BURNING_BLOOD", "BLACK_BLOOD", "MEAT_ON_THE_BONE"}
 # ---------------------------------------------------------------- reading
 
 
+# One draw/discard/exhaust pile entry of agent_view.combat ('"line":"打击*3 [1费]：…","card_ids":["STRIKE_IRONCLAD"]'),
+# and the count in its line.
+PILE_ENTRY_RE = re.compile(rb'"line":"((?:[^"\\]|\\.)*)","card_ids":\["([A-Z0-9_]+)"')
+PILE_COUNT_RE = re.compile(rb'^[^\[]*?\*(\d+)\s*\[')
+
+
+def pile_statuses(raw, cut):
+    """{pile: Counter(status card id)} of agent_view.combat's draw, discard and exhaust piles, or None without them."""
+    if not STATUS_CARDS:
+        return None
+    view = raw[cut:]
+    starts = [view.find(b'"%s":[' % name) for name in (b"draw", b"discard", b"exhaust", b"enemies")]
+    if min(starts) < 0 or starts != sorted(starts):
+        return None
+    out = {}
+    for name, a, b in zip(("draw", "discard", "exhaust"), starts, starts[1:]):
+        counts = collections.Counter()
+        for match in PILE_ENTRY_RE.finditer(view, a, b):
+            card_id = match.group(2).decode()
+            if card_id in STATUS_CARDS:
+                count = PILE_COUNT_RE.match(match.group(1))
+                counts[card_id] += int(count.group(1)) if count else 1
+        out[name] = counts
+    return out
+
+
 def iter_entries(path):
-    """Yield (screen, entry) for every state line worth reading, streaming the file."""
+    """Yield (screen, entry) for every state line worth reading, streaming the file.
+
+    A combat state also carries `_piles`, the status cards in its draw/discard/exhaust piles (pile_statuses),
+    read from the agent_view part that is otherwise cut before parsing."""
     with open(path, "rb") as handle:
         for raw in handle:
             match = SCREEN_RE.search(raw, 0, 20000)
@@ -73,6 +102,8 @@ def iter_entries(path):
                     entry = json.loads(raw[:cut] + b"}}")
                 except ValueError:
                     entry = None
+                if entry is not None and match.group(1) == b"COMBAT":
+                    entry["_piles"] = pile_statuses(raw, cut)
             if entry is None:
                 try:
                     entry = json.loads(raw)
@@ -187,7 +218,15 @@ def track(fight, turn, enemies):
     return [(serial, enemy) for serial, _, _, _, _, enemy in out]
 
 
-def snapshot(combat, tracked):
+def status_counts(combat, piles):
+    """{pile: Counter(status id)} with the hand (state.combat.hand), or None when the piles are not logged."""
+    if piles is None:
+        return None
+    hand = collections.Counter(c.get("card_id") for c in combat.get("hand") or [] if isinstance(c, dict) and c.get("card_id") in STATUS_CARDS)
+    return {**piles, "hand": hand}
+
+
+def snapshot(combat, tracked, piles=None):
     player = combat.get("player") or {}
     enemies = {}
     for serial, enemy in tracked:
@@ -200,10 +239,11 @@ def snapshot(combat, tracked):
             "hp": enemy.get("current_hp"),
             "alive": enemy.get("is_alive", True),
         }
-    return {"player": {"powers": powers_of(player), "hp": player.get("current_hp"), "block": player.get("block") or 0}, "enemies": enemies}
+    return {"player": {"powers": powers_of(player), "hp": player.get("current_hp"), "block": player.get("block") or 0}, "enemies": enemies,
+            "statuses": status_counts(combat, piles)}
 
 
-def observe_combat(fight, state, ts):
+def observe_combat(fight, state, ts, piles=None):
     combat = state.get("combat") or {}
     turn = state.get("turn")
     fight.last_ts = ts
@@ -211,7 +251,7 @@ def observe_combat(fight, state, ts):
     if player.get("current_hp") is not None:
         fight.last_hp = player["current_hp"]
     tracked = track(fight, turn, combat.get("enemies") or [])
-    snap = snapshot(combat, tracked)
+    snap = snapshot(combat, tracked, piles)
     if fight.initial is None and snap["enemies"]:
         fight.initial = sorted(e["id"] for e in snap["enemies"].values())
         fight.initial_serials = set(snap["enemies"])
@@ -239,7 +279,7 @@ def observe_combat(fight, state, ts):
                 for intent in enemy["intents"]:
                     if intent.get("damage") is not None:
                         fight.turn_shown[(turn, serial)].add((int(intent["damage"]), enemy["powers"].get("STRENGTH_POWER", 0), mods))
-    first = fight.turn_first.setdefault(turn, {"player": snap["player"], "enemies": {}})
+    first = fight.turn_first.setdefault(turn, {"player": snap["player"], "enemies": {}, "statuses": snap["statuses"]})
     for serial, enemy in snap["enemies"].items():
         # The move of a turn: the first logged state that shows one (the move-model's rule).
         if serial not in first["enemies"] and enemy["move"]:
@@ -306,6 +346,10 @@ def new_move():
         "back_frames": collections.defaultdict(list),
         "player_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
         "status_cards": collections.Counter(),
+        # The status cards a StatusCard move put in our piles (Counter(card id)) and where they landed
+        # (Counter("draw" / "discard")), from the piles across its enemy turn when it was the only one adding any.
+        "status_ids": collections.Counter(),
+        "status_pile": collections.Counter(),
         # asc -> Counter(HP healed): a Heal move's HP gain across its enemy turn (Siphon 15 at A8, Ponder).
         "heal_by_asc": collections.defaultdict(collections.Counter),
         "turns": collections.Counter(),
@@ -345,7 +389,7 @@ class Builder:
                     self.close(self.open[other], None, None)
                 fight = Fight(run_id, run, state, ts)
                 self.open[run_id] = fight
-            observe_combat(fight, state, ts)
+            observe_combat(fight, state, ts, entry.get("_piles"))
             return
         fight = self.open.get(run_id)
         if fight is not None and (screen == "GAME_OVER" or not state.get("in_combat")):
@@ -483,6 +527,7 @@ class Builder:
             first = fight.turn_first[turn]
             nxt = fight.turn_first.get(turn + 1)
             last = fight.turn_last.get(turn)
+            status_added = status_delta(last, nxt, first)
             for index, enemy in first["enemies"].items():
                 eid, move_id = enemy["id"], enemy["move"]
                 move = self.monsters[eid]["moves"][move_id]
@@ -510,6 +555,9 @@ class Builder:
                             move["base"][akey][dmg - strength] += 1
                     if intent.get("status_card_count"):
                         move["status_cards"][int(intent["status_card_count"])] += 1
+                        if status_added is not None and status_added[0] == index:
+                            move["status_ids"].update(status_added[1])
+                            move["status_pile"].update(status_added[2])
                 if nxt is None:
                     continue
                 after = nxt["enemies"].get(index)
@@ -546,6 +594,30 @@ class Builder:
                         if (delta > 0 and GAME_POWER_TYPES.get(pid) == "Debuff") or (delta < 0 and pid in DRAINED and not temporary):
                             move["player"][pid][delta] += 1
                             move["player_by_asc"][akey][pid][delta] += 1
+
+
+def status_delta(last, nxt, first):
+    """The status cards one enemy's StatusCard move added over this enemy turn: (serial, Counter(id), Counter(pile)).
+
+    None unless exactly one enemy showed a StatusCard intent and both our last state of the turn and the next
+    turn's first carry the piles. New = the rise in hand + draw + discard + exhaust (the hand is discarded
+    or exhausted at the end of the turn, nothing leaves the four); where they landed: the draw pile when
+    they are in the next turn's draw pile or hand beyond the last state's draw pile, else the discard pile."""
+    if last is None or nxt is None:
+        return None
+    movers = [serial for serial, enemy in first["enemies"].items() if any(i.get("status_card_count") for i in enemy["intents"])]
+    before, after = last.get("statuses"), nxt.get("statuses")
+    if len(movers) != 1 or before is None or after is None:
+        return None
+    total = lambda piles: sum((piles[name] for name in ("hand", "draw", "discard", "exhaust")), collections.Counter())
+    added = total(after) - total(before)
+    if not added:
+        return None
+    drawn_side = (after["draw"] + after["hand"]) - before["draw"]
+    piles = collections.Counter()
+    for card_id, n in added.items():
+        piles["draw" if drawn_side.get(card_id, 0) >= n else "discard"] += n
+    return movers[0], added, piles
 
 
 # ---------------------------------------------------------------- output
@@ -679,6 +751,9 @@ def build_output(builder, game):
                 entry["player_powers_applied_by_asc"] = by_asc_obj(move["player_by_asc"])
             if move["status_cards"]:
                 entry["status_cards"] = counter_obj(move["status_cards"])
+            if move["status_ids"]:
+                entry["status_card_ids"] = counter_obj(move["status_ids"])
+                entry["status_card_pile"] = counter_obj(move["status_pile"])
             if move["heal_by_asc"]:
                 entry["heal_by_asc"] = {str(asc): counter_obj(c) for asc, c in sorted(move["heal_by_asc"].items(), key=lambda kv: (isinstance(kv[0], str), kv[0]))}
             moves[move_id] = entry
@@ -769,7 +844,8 @@ def build_output(builder, game):
                 "after Strength, Weak, Vulnerable); base_per_hit = shown - enemy Strength, only from turns without enemy Weak/Shrink or our "
                 "Vulnerable/Intangible. self_powers_gained/player_powers_applied/block_gained = power and block deltas across the enemy turn after a "
                 "move with a Buff/Debuff/Defend intent (other effects of that enemy turn can leak in); *_by_asc = the same split by ascension. "
-                "heal_by_asc = a Heal move's HP gain across its enemy turn (less near max HP). "
+                "heal_by_asc = a Heal move's HP gain across its enemy turn (less near max HP). status_card_ids / status_card_pile = the status "
+                "cards a StatusCard move added to our piles over its enemy turn and the pile they landed in (turns with one such move). "
                 "powers.amount_at_first_sight_by_asc / turn_at_first_sight_by_asc = each instance's first logged amount and the turn it was on. "
                 "Surrounded (Kaiser Crab): a back-attack enemy's frame is a base sample only when its turn also showed the other facing's "
                 "number (behind = floor((base + Strength) x 1.5)); back_attack_by_asc counts the turns it came from behind or in front. threat: hp_loss_won = entry HP - HP on the last "
@@ -802,6 +878,7 @@ def move_model_view(db):
 
 GAME_TYPES = {}
 GAME_POWER_TYPES = {}
+STATUS_CARDS = set()
 DRAINED = {"STRENGTH_POWER", "DEXTERITY_POWER", "FOCUS_POWER"}
 # Powers that give or take Strength/Dexterity until the end of the turn ("在本回合结束前"): their expiry is
 # not the enemy move's doing.
@@ -859,6 +936,8 @@ def build(states, runs_path, game_path):
     GAME_POWER_TYPES.update({p["id"]: p.get("type") for p in game.get("powers") or []})
     TEMPORARY_POWERS.clear()
     TEMPORARY_POWERS.update(p["id"] for p in game.get("powers") or [] if "本回合结束前" in (p.get("description") or ""))
+    STATUS_CARDS.clear()
+    STATUS_CARDS.update(c["id"] for c in game.get("cards") or [] if c.get("type") == "Status")
     builder = Builder(load_runs(runs_path))
     for screen, entry in iter_entries(states):
         builder.feed(screen, entry)
@@ -901,21 +980,26 @@ def main(argv=None):
 
 def _synthetic_lines():
     """A two-fight run: a hallway fight won at A8, then an elite fight we die in."""
-    def state(screen, run_id, turn, floor, hp, enemies=None, in_combat=False, map_=None, game_over=None, player_powers=None):
+    def state(screen, run_id, turn, floor, hp, enemies=None, in_combat=False, map_=None, game_over=None, player_powers=None, piles=None, hand=None):
         run = {"ascension": 8, "act_id": "0", "floor": floor, "current_hp": hp, "max_hp": 80, "boss_id": "VANTOM_BOSS",
                "relics": [{"relic_id": "BURNING_BLOOD"}]}
         combat = None
         if enemies is not None:
-            combat = {"player": {"current_hp": hp, "powers": player_powers or []}, "enemies": enemies}
+            combat = {"player": {"current_hp": hp, "powers": player_powers or []}, "enemies": enemies, "hand": [{"card_id": c} for c in hand or []]}
+        view = {"big": "x" * 10}
+        if piles is not None:
+            line = lambda card_id, n: {"line": f"{card_id}{'*' + str(n) if n > 1 else ''} [1费]：…", "card_ids": [card_id], "keywords": [], "mods": []}
+            view = {"combat": {"hand": [], **{name: [line(c, n) for c, n in piles.get(name, {}).items()] for name in ("draw", "discard", "exhaust")}, "enemies": []}}
         s = {"run_id": run_id, "screen": screen, "turn": turn, "in_combat": in_combat, "combat": combat, "run": run,
-             "map": map_, "game_over": game_over, "agent_view": {"big": "x" * 10}}
+             "map": map_, "game_over": game_over, "agent_view": view}
         return json.dumps({"ts": f"2026-09-28T00:00:{len(lines):02d}Z", "fingerprint": "{\"screen\":\"X\"}", "screen": screen, "state": s},
                           separators=(",", ":"), ensure_ascii=False)
 
-    def enemy(index, eid, hp, max_hp, move, dmg=None, hits=None, powers=None, block=0, types=("Attack",)):
+    def enemy(index, eid, hp, max_hp, move, dmg=None, hits=None, powers=None, block=0, types=("Attack",), status_cards=None):
         intents = []
         for t in types:
-            intents.append({"intent_type": t, "damage": dmg if t == "Attack" else None, "hits": hits if t == "Attack" else None})
+            intents.append({"intent_type": t, "damage": dmg if t == "Attack" else None, "hits": hits if t == "Attack" else None,
+                            **({"status_card_count": status_cards} if t == "StatusCard" else {})})
         return {"index": index, "enemy_id": eid, "current_hp": hp, "max_hp": max_hp, "block": block, "is_alive": hp > 0,
                 "powers": [{"power_id": p, "amount": a} for p, a in (powers or {}).items()], "move_id": move, "intents": intents}
 
@@ -970,6 +1054,12 @@ def _synthetic_lines():
     # Run R7, floor 17: a Siphon (Buff + Heal) takes the Giant from 200 to 215.
     lines.append(state("COMBAT", "R7", 1, 17, 80, [enemy(0, "GIANT", 200, 250, "SIPHON_MOVE", types=("Buff", "Heal"))], True))
     lines.append(state("COMBAT", "R7", 2, 17, 80, [enemy(0, "GIANT", 215, 250, "STOMP_MOVE", 15, 1)], True))
+    # Run R8, floor 3: a Goop adds 2 Slimed to the discard pile (a Dazed held at the end of the turn goes to the
+    # exhaust pile: not new); the next Goop's turn has no piles logged, so it is not a sample.
+    goop = lambda: [enemy(0, "SLIMER", 30, 30, "GOOP_MOVE", types=("StatusCard",), status_cards=2)]
+    lines.append(state("COMBAT", "R8", 1, 3, 80, goop(), True, piles={"draw": {"STRIKE": 3}}, hand=["DAZED"]))
+    lines.append(state("COMBAT", "R8", 2, 3, 80, goop(), True, piles={"draw": {"STRIKE": 3}, "discard": {"SLIMED": 2}, "exhaust": {"DAZED": 1}}))
+    lines.append(state("COMBAT", "R8", 3, 3, 80, goop(), True))
     return lines
 
 
@@ -987,7 +1077,8 @@ def self_test():
                              {"id": "VANTOM", "name": "墨影幻灵", "type": "Boss", "min_hp": 183, "max_hp": 183, "moves": []},
                              {"id": "BRUTE", "name": "蛮", "type": "Elite", "min_hp": 100, "max_hp": 100, "moves": []}],
                 "powers": [{"id": "STRENGTH_POWER", "name": "力量", "description": "+{Amount}", "type": "Buff"},
-                           {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"}]}}, handle)
+                           {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"}],
+                "cards": [{"id": "SLIMED", "type": "Status"}, {"id": "DAZED", "type": "Status"}, {"id": "STRIKE", "type": "Attack"}]}}, handle)
         db = build(states, None, game)
     slime = db["monsters"]["SLIME"]
     assert slime["kind"] == "hallway", slime["kind"]
@@ -1047,6 +1138,10 @@ def self_test():
     siphon = db["monsters"]["GIANT"]["moves"]["SIPHON_MOVE"]
     assert siphon["heal_by_asc"] == {"8": {"15": 1}}, siphon
     assert "heal_by_asc" not in db["monsters"]["GIANT"]["moves"]["STOMP_MOVE"]
+    # The status cards a move adds, and where: 2 Slimed into the discard pile, once (the unlogged turn is no sample).
+    goop = db["monsters"]["SLIMER"]["moves"]["GOOP_MOVE"]
+    assert goop["status_cards"] == {"2": 3}, goop
+    assert goop["status_card_ids"] == {"SLIMED": 2} and goop["status_card_pile"] == {"discard": 2}, goop
     print("self-test ok")
     return 0
 

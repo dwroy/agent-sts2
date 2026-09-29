@@ -1156,3 +1156,45 @@ describe("Waterfall Giant and Knowledge Demon in the later turns: the eruption g
     expect(healOf("KNOWLEDGE_DEMON", "SLAP_MOVE", undefined, 8)).toBe(0);
   });
 });
+
+describe("status cards enemy moves add go into the rollout's piles (coverage gap 2: ~800 fights, none added)", () => {
+  const beckon = card(700, "BECKON", { type: "Status", playable: false, target: "self", validTargets: [], heldPenalty: 6, heldHpLoss: 6 });
+  const wound = card(701, "WOUND", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const FYSH: EnemyTable = {
+    moves: { BECKON_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, statusCards: [{ cardId: "BECKON", count: 2, pile: "discard" }] }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { BECKON_MOVE: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  };
+  const run = (statusCards?: Record<string, CardModel>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Soul Fysh", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      // Nothing left to draw: next turn's hand is the discard pile reshuffled, the Strike and whatever Beckon added.
+      piles: { draw: [], discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "SOUL_FYSH", move: "BECKON_MOVE", strength: 0, powers: {} }],
+      tables: { SOUL_FYSH: FYSH },
+      ...(statusCards ? { statusCards } : {}),
+    }).lines[0]!;
+  };
+
+  it("Beckon's two Beckons are drawn next turn and held: 12 HP", () => {
+    expect(run({ BECKON: beckon, WOUND: wound }).perTurn[0]!.loss.mean).toBe(12);
+  });
+
+  it("statusCardsOf: the intent's count, the DB's card and pile; an unnamed card is left to the stand-in", async () => {
+    const { statusCardsOf } = await import("../src/strategy/rollout-live.js");
+    expect(statusCardsOf({ status_cards: { "2": 30 }, status_card_ids: { BECKON: 58, DAZED: 1 }, status_card_pile: { discard: 59 } })).toEqual({ statusCards: [{ cardId: "BECKON", count: 2, pile: "discard" }] });
+    expect(statusCardsOf({ status_cards: { "3": 9 }, status_card_ids: { DAZED: 27 }, status_card_pile: { draw: 20, discard: 7 } })).toEqual({ statusCards: [{ cardId: "DAZED", count: 3, pile: "draw" }] });
+    expect(statusCardsOf({ status_cards: { "3": 9 } })).toEqual({ statusCards: [{ cardId: null, count: 3, pile: "discard" }] });
+    expect(statusCardsOf({ n_seen: 4 })).toEqual({});
+  });
+});

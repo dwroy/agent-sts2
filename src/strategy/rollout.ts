@@ -373,7 +373,16 @@ export interface EnemyMove {
   selfPowers?: Partial<Record<EnemySelfPower, number>>;
   /** HP it heals itself (Waterfall Giant's Siphon, Knowledge Demon's Ponder; rollout-live healOf). */
   heal?: number;
+  /**
+   * Status cards it puts in our piles (monster DB status_cards, status_card_ids, status_card_pile): Soul
+   * Fysh's Beckon 2, Vantom's Dismember, Chomper's Screech 3 … `cardId` null when the DB does not know
+   * which card (built before it recorded them): UNKNOWN_STATUS stands in, a dead draw.
+   */
+  statusCards?: { cardId: string | null; count: number; pile: "draw" | "discard" }[];
 }
+
+/** The status a move adds when the monster DB does not say which: a Wound (「不能被打出」, nothing else), a dead draw. */
+export const UNKNOWN_STATUS = "WOUND";
 
 /** The self-buffs of enemy moves the rollout applies (EnemyMove.selfPowers). */
 export const ENEMY_SELF_POWERS = ["RITUAL_POWER", "INTANGIBLE_POWER", "THORNS_POWER", "SOAR_POWER", "FLUTTER_POWER", "PERSONAL_HIVE_POWER", "VITAL_SPARK_POWER", "STEAM_ERUPTION_POWER"] as const;
@@ -448,6 +457,11 @@ export interface RolloutInput {
   model: FightValueModel | null;
   gates: FightValueGates | null;
   options?: RolloutOptions;
+  /**
+   * Base card models of the status cards enemy moves put in our piles (EnemyMove.statusCards), by card id,
+   * UNKNOWN_STATUS included (rollout-live builds them as the piles' own). Absent: no status is added.
+   */
+  statusCards?: Record<string, CardModel>;
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -1143,6 +1157,12 @@ function applyPlan(
         // simulated turn exploded up to 12 low), and Siphon / Ponder heal.
         if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
         if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
+        // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
+        // already there; ~800 logged fights had them added).
+        for (const status of m?.statusCards ?? []) {
+          const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
+          if (card) addToPile(piles, card, status.count, status.pile, random);
+        }
         if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
@@ -1222,6 +1242,14 @@ function applyPlan(
     won = allDown();
   }
   return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died };
+}
+
+/** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
+function addToPile(piles: Piles, card: CardModel, count: number, pile: "draw" | "discard", random: () => number): void {
+  for (let k = 0; k < count; k += 1) {
+    if (pile === "discard") piles.discard.push(card);
+    else piles.draw.splice(Math.floor(random() * (piles.draw.length + 1)), 0, card);
+  }
 }
 
 function drawOne(piles: Piles, random: () => number): CardModel | undefined {

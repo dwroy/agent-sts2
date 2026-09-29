@@ -36,10 +36,12 @@ import {
   gateFor,
   ENEMY_SELF_POWERS,
   killOrders,
+  UNKNOWN_STATUS,
   loadFightValueGates,
   PLAYER_DEBUFFS,
   rolloutDecision,
   type DeckSummary,
+  type EnemyMove,
   type EnemySelfPower,
   type EnemyTable,
   type FightKindName,
@@ -158,6 +160,29 @@ export function healOf(id: string, move: string, entry: MoveEntry | undefined, a
   return 0;
 }
 
+/**
+ * The status cards a move puts in our piles (rollout.ts EnemyMove.statusCards): the intent's most common
+ * count (status_cards), the most common card it added (status_card_ids; null when the DB has none) and pile
+ * (status_card_pile, the discard pile when unknown).
+ */
+export function statusCardsOf(entry: MoveEntry): Pick<EnemyMove, "statusCards"> {
+  const count = mode(entry.status_cards);
+  if (!count) return {};
+  const cardId = Object.entries(entry.status_card_ids ?? {}).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const pile = (entry.status_card_pile?.["draw"] ?? 0) > (entry.status_card_pile?.["discard"] ?? 0) ? "draw" : "discard";
+  return { statusCards: [{ cardId, count, pile }] };
+}
+
+/**
+ * A status card as a pile card (combat-plan pileCardModels' model of the ones already in the piles): its
+ * game text's held penalty (Beckon 6, Burn 2), never played.
+ */
+export function statusCardModel(cardId: string, knowledge: Knowledge, index: number): CardModel {
+  const info = knowledge.card(cardId);
+  const model = modelHandCard({ card_id: cardId, upgraded: false, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0), validTargets: [] };
+}
+
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
 export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveModelData): EnemyTable | undefined {
   const moves = db[id]?.moves;
@@ -180,6 +205,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...selfPowersOf(entry, asc),
       ...(healOf(id, move, entry, asc) > 0 ? { heal: healOf(id, move, entry, asc) } : {}),
+      ...statusCardsOf(entry),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated ? { estimated: true } : {}),
     };
@@ -400,6 +426,10 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       const table = enemyTable(e.id, meta.asc, db, mm);
       if (table) tables[e.id] = table;
     }
+    // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
+    const statusIds = new Set<string>([UNKNOWN_STATUS]);
+    for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+    const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
     const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
     const handBase = args.solver.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null));
     const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
@@ -418,6 +448,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       mm,
       model,
       gates,
+      statusCards,
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,
