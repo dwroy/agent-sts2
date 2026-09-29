@@ -69,7 +69,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -229,6 +229,9 @@ const POWER_AMOUNT_VARS: Record<string, string> = {
 
 const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
+  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: an Attack from the
+  // hand, its damage on both hits; D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8 dealt 2 x 24 = 48).
+  THRASH: "thrash",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
   // Entrench: doubles the block up when it is played (0 block: worth 0; RTF3 F17/F28).
@@ -595,9 +598,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
-    // Thrash: "消耗你的手牌中随机一张攻击牌" (MAHA F33 T7: played before Anger, which it ate; the boss
-    // was left at 1/321).
-    randomExhaust: /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
+    // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card
+    // (MAHA F33 T7: played before Anger, which it ate; the boss was left at 1/321).
+    randomExhaust: special !== "thrash" && /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }

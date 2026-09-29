@@ -1236,7 +1236,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
       if (Math.floor(exact) === shown) shown = exact;
     }
-    let perHit = shown + next.strength * weakFactor;
+    let perHit = shown + next.strength * weakFactor + thrashAbsorb(next, card, player);
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
@@ -1333,6 +1333,35 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
   }
+}
+
+/**
+ * Thrash (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): an Attack in the hand is exhausted and its
+ * damage (printed base, our Strength is already in Thrash's own number) added to both of this play's hits
+ * (D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8, 2 x 24 = 48 dealt; the solver counted 32 and took any card).
+ * One Attack: that one. Several: the pick is random, so the least damage is counted (never a kill the pick may
+ * not give, like randomVictim), the average Attack's value is lost, and no other Attack is planned after it
+ * (which one went is unknown; the loop re-plans on the new hand). Skills and Powers stay playable.
+ * Returns the damage added per hit.
+ */
+function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): number {
+  if (card.special !== "thrash") return 0;
+  const attacks = next.hand.filter((entry) => entry.type === "Attack");
+  if (attacks.length === 0) return 0;
+  const added = (entry: CardModel) => Math.max(0, entry.damageBase ?? entry.damage ?? 0);
+  const least = attacks.reduce((a, b) => (added(b) < added(a) ? b : a));
+  if (attacks.length === 1) {
+    next.hand = next.hand.filter((entry) => entry !== least);
+    next.exhausted = [...next.exhausted, least];
+  } else {
+    next.flat -= attacks.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / attacks.length;
+    next.randomExhausts += 1;
+    next.held = [...next.held, ...attacks];
+    next.hand = next.hand.filter((entry) => entry.type !== "Attack");
+  }
+  next.exhaustedCount += 1;
+  if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
+  return added(least) * (player.weak ? 0.75 : 1);
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
