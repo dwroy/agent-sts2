@@ -20,7 +20,7 @@ import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 import { deckCards, deckFollowUp, eligibleCards, eventPage, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import { actStartPlan } from "./act-start.js";
-import { continueAfterDiscard, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { continueAfterDiscard, DISCARD_ANSWER_NOTE, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -258,7 +258,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
     return [lost, variant];
   };
   const discardNote = pool.some((raw) => potionSlotsNeeded(str(raw["description"]), state.run?.raw) > 0) && slots.length > 0
-    ? ' A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.'
+    ? ` ${DISCARD_ANSWER_NOTE}`
     : "";
   // BUILD_DECIDER=deepseek: events, Neow's offer and the act-start Ancient relic are DeepSeek's call.
   if (!byDeepseek) return buildPickDecision({ ...params, options: options.flatMap(withDiscards) });

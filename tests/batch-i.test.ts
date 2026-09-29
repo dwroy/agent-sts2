@@ -26,6 +26,7 @@ import { DeepSeekClient } from "../src/llm/deepseek.js";
 import { fillGuideFacts, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { ask, decide, env as oneshotEnv } from "./oneshot-support.js";
 import { parseShopPlan } from "../src/screens/shop.js";
+import { DISCARD_ANSWER_NOTE } from "../src/screens/potion-discard.js";
 
 type Raw = Record<string, unknown>;
 
@@ -394,5 +395,18 @@ describe("7. \"solver says dead, mod says safe\" from cards held (Burn) is not a
     const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
     expect(resolved.rationale).not.toContain("calc mismatch");
     expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: \d+ HP lost in all, 0 of it the enemy hits after block, 8 damage from cards held \(Burn\)\]/);
+  });
+});
+
+describe("8. The \"discard potion(s), then …\" answer note of rest sites and events is the shared DISCARD_ANSWER_NOTE (was a copy in each)", () => {
+  it("rest.ts and event.ts use the constant; the sentence is written once, in potion-discard.ts", () => {
+    const SCREENS = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "screens");
+    const sentence = 'also needs "discard": [potion slot numbers from its discardable_potions] in your answer';
+    expect(DISCARD_ANSWER_NOTE).toContain(sentence);
+    for (const name of ["rest.ts", "event.ts"]) {
+      const source = readFileSync(join(SCREENS, name), "utf8");
+      expect(source, name).not.toContain(sentence);
+      expect(source, name).toMatch(/discardNote = [^;]*\$\{DISCARD_ANSWER_NOTE\}/);
+    }
   });
 });
