@@ -1335,6 +1335,9 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   return guardSandpit(env, planTurn(env));
 }
 
+/** How long a line waits, after its Liquid Memories, for the screen that puts the taken card into the hand. */
+const TAKE_WAIT_MS = 4_000;
+
 function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
   // Before any early return: the turn's first frame sets the exhaust pile it started with.
@@ -1489,6 +1492,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (memo && asExpected && memo.remaining.length > 0) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
+    // Liquid Memories drunk, its card not taken yet (a combat frame before the "put a card into your hand" screen):
+    // the card the line plays next is the one still to come, so this frame's hand is the expected one without it.
+    // Wait for the screen (selection.ts takes it) instead of re-planning the line; not for long, in case none comes.
+    const takePending = !intent && memo.take !== undefined && next.pileCard !== undefined && takeSignature(next.pileCard) === memo.take && memo.expectedHand === handSignature(hand);
+    if (takePending) {
+      const since = (env.screenMemory.takeWaitSince ??= Date.now());
+      if (Date.now() - since <= TAKE_WAIT_MS) return null;
+    }
+    env.screenMemory.takeWaitSince = undefined;
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
@@ -1520,6 +1532,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
   env.screenMemory.combatPlan = null;
+  env.screenMemory.takeWaitSince = undefined;
 
   // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).

@@ -6,6 +6,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { noteScreenChange } from "../src/loop.js";
+import { parseGameState } from "../src/mod/schema.js";
+import type { AnswerSet } from "../src/jev/answers.js";
 import { planReward } from "../src/screens/reward.js";
 import { annotatePlating } from "../src/knowledge/enchant-text.js";
 import { fillPotionText } from "../src/knowledge/potion-values.js";
@@ -277,5 +280,50 @@ describe("4. One-shot shop: a shopping list written into \"choice\" is taken (VT
     const plain = parseShopPlan({ plan: ["buy_card1"], choice: "whatever" }, e);
     expect(plain).toMatchObject({ steps: [{ key: "buy_card1" }, { kind: "leave" }] });
     expect("fromChoice" in plain).toBe(false);
+  });
+});
+
+describe("5. Liquid Memories drunk mid-line: a combat frame before the \"put a card into your hand\" screen waits for it, the line is kept (batch H note, after 9729bdb)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  /** The 8KD7 F11 T2 drink frame with the drink done: the belt empty, the hand as it was (the card not taken yet). */
+  const drunkFrame = () => {
+    const fx = logged("batch-h/8kd7-f11-t2-drink");
+    const run = fx.state["run"] as Raw;
+    run["potions"] = (run["potions"] as Raw[]).map((slot) => (slot["potion_id"] === "LIQUID_MEMORIES" ? { ...slot, potion_id: null, name: null, occupied: false, can_use: false } : slot));
+    fx.state["available_actions"] = ["end_turn", "play_card", "save_and_quit"];
+    return fx;
+  };
+
+  it("Jev's \"Stone Armor, Liquid Memories, Bash+ from it\": the frame between the drink and the screen returns nothing and keeps the line (batch-h 3 plays it on after the screen)", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const env0 = loggedEnv(logged("batch-h/8kd7-f11-t2-ask"));
+    const memory = env0.screenMemory;
+    const ask0 = planCombatTurn(env0);
+    if (ask0?.kind !== "ask") throw new Error(`expected an ask, got ${ask0?.kind}`);
+    const question = ask0.questions["plan"]!;
+    const criteria = question.type === "choice" ? question.criteria : {};
+    const key = Object.keys(criteria).find((k) => /液态记忆/.test(String(JSON.parse(String(criteria[k]))["plays"])) && /痛击\+ from 液态记忆/.test(String(JSON.parse(String(criteria[k]))["plays"])))!;
+    const chosen = ask0.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    chosen.apply?.();
+    const drink = planCombatTurn({ ...loggedEnv(logged("batch-h/8kd7-f11-t2-drink")), screenMemory: memory });
+    expect(drink).toMatchObject({ kind: "act", intent: { action: "use_potion", option_index: 0 } });
+    if (drink?.kind === "act") drink.apply?.();
+    const line = memory.combatPlan;
+    expect(line?.take).toBe("BASH+");
+    // The frame before the screen: nothing to do yet, the line still there.
+    const between = drunkFrame();
+    noteScreenChange(memory, parseGameState(between.state));
+    expect(planCombatTurn({ ...loggedEnv(between), screenMemory: memory })).toBeNull();
+    expect(memory.combatPlan).toBe(line);
+    expect(memory.potionTake).toMatchObject({ cardId: "BASH", upgraded: true });
+    // Not forever: with no screen after the wait, the turn is planned again.
+    memory.takeWaitSince = Date.now() - 60_000;
+    expect(planCombatTurn({ ...loggedEnv(between), screenMemory: memory })).not.toBeNull();
+    expect(memory.takeWaitSince).toBeUndefined();
   });
 });

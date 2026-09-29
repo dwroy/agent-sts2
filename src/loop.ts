@@ -489,6 +489,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.planBeforeSelection = undefined;
       screenMemory.gambleDiscards = undefined;
       screenMemory.potionTake = undefined;
+      screenMemory.takeWaitSince = undefined;
       screenMemory.plannedAfter = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
