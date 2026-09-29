@@ -11,9 +11,55 @@ import { describe, expect, it } from "vitest";
 
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
-import type { LineEstimate } from "../src/strategy/rollout.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+
+function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
+  return {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: cardId,
+    type: "Attack",
+    upgraded: false,
+    cost: 1,
+    xCost: false,
+    playable: true,
+    target: "single",
+    validTargets: [0],
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+    ...overrides,
+  };
+}
+const strike = (i: number, damage = 6) => card(i, "STRIKE_IRONCLAD", { name: "打击", damage, damageBase: damage });
+const defend = (i: number) => card(i, "DEFEND_IRONCLAD", { name: "防御", type: "Skill", target: "self", validTargets: [], block: 5 });
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
+const META: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "TEST_DUMMY", deck: { n: 2, atk: 2, skl: 0, pow: 0, junk: 0, dmg: 10, blk: 0, up: 0 }, relics: 0, max_en: 3 };
+const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+const fastClock = () => {
+  let t = 0;
+  return () => (t += 0.01);
+};
 
 describe("1. A saturated board ranks deaths first, then this turn's loss, before enemy HP left (CJ88575SQS6H F17 T2)", () => {
   // Every line "expected further HP loss 50" = our HP, no sample won: saturated.
@@ -130,5 +176,23 @@ describe("3. Hand-written knowledge per ascension, as the data has it (experienc
     expect(guide).not.toContain("长战先杀信徒（先杀左边）");
     expect(guide).not.toContain("先杀信徒能减少受到的伤害");
     expect(guide).toMatch(/Kin Priest.*单体伤害压神官/);
+  });
+});
+
+describe("4a. Cloak Clasp: 1 Block at the end of the turn for each card still in hand (7MDJ256RY2UU)", () => {
+  it("three cards held, 10 incoming: the end-turn line loses 7, not 10; played cards leave the count", () => {
+    const hand = [defend(0), defend(1), strike(2)];
+    const input = (clasp: boolean): SolverInput => ({
+      hand,
+      player: player({ energy: 0, ...(clasp ? { blockPerHeldCard: 1 } : {}) }),
+      enemies: [enemy({ attacks: [{ damage: 10, hits: 1 }] })],
+      fightKind: "monster",
+      turn: 2,
+    });
+    expect(solveTurn(input(false)).plans[0]!.outcome.hpLoss).toBe(10);
+    expect(solveTurn(input(true)).plans[0]!.outcome.hpLoss).toBe(7);
+    // One energy: Defend (5) leaves two cards held: 10 - 5 - 2 = 3.
+    const one = solveTurn({ ...input(true), player: player({ energy: 1, blockPerHeldCard: 1 }) }).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "DEFEND_IRONCLAD")!;
+    expect(one.outcome.hpLoss).toBe(3);
   });
 });

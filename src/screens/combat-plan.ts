@@ -875,6 +875,11 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
 export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Paper Phrog: Vulnerable enemies take 75% more, not 50% (its game text). */
 export const PAPER_PHROG_VULNERABLE = 1.75;
+/**
+ * Cloak Clasp: block at the end of our turn per card in hand (its description's {Block} is a template; logged
+ * 7MDJ/JEGB/CWU9/88HN turns: HP lost = shown incoming - block - cards held, e.g. CWU9 F44 T1 11 -> 9 with 2).
+ */
+export const CLOAK_CLASP_BLOCK = 1;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1357,6 +1362,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
+    ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),

@@ -241,6 +241,11 @@ export interface PlayerSim {
    * Inferno's amount for its own 1 HP loss). It kills a crab left at or below it (PLC F33 T9, 9XZX T7).
    */
   turnStartAoe?: number;
+  /**
+   * Block at the end of our turn for each card still in hand (Cloak Clasp: 「在你的回合结束时，每有一张手牌，
+   * 就获得1点格挡」; logged 7MDJ/JEGB/CWU9/88HN: HP lost = incoming - block - cards held).
+   */
+  blockPerHeldCard?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
   /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
@@ -1823,7 +1828,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
-  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow;
+  // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
+  const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
