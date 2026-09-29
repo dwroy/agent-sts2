@@ -122,7 +122,11 @@ export function planShop(env: DecisionEnv): Decision | null {
         action === "buy_card" ? knowledge.card(id) : action === "buy_relic" ? knowledge.relic(id) : knowledge.potion(id);
       // A card as the shop renders it (its cost and text now, energy icons as text), like a card reward
       // (U6RU F22: Production, 0 cost and "gain 2 energy, exhaust", reached DeepSeek as icon paths with no cost).
-      const text = iconsToText((action === "buy_card" ? str(raw["resolved_rules_text"]) : "") || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? ""));
+      // A relic's template numbers filled where known (Jev's question and the step-by-step fallback read this text).
+      const text = iconsToText(
+        (action === "buy_card" ? str(raw["resolved_rules_text"]) : "") ||
+          (knowledge.card(id)?.description ?? (knowledge.relic(id) ? fillRelicText(id, knowledge.relic(id)!.description) : undefined) ?? knowledge.potion(id)?.description ?? ""),
+      );
       const cardFields: Record<string, JsonValue> =
         action === "buy_card"
           ? { type: str(raw["card_type"], knowledge.card(id)?.type ?? "") || null, rarity: str(raw["rarity"], knowledge.card(id)?.rarity ?? "") || null, cost: bool(raw["costs_x"]) ? "X" : (numOrNull(raw["energy_cost"]) ?? knowledge.card(id)?.cost ?? null) }

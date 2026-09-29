@@ -13,6 +13,7 @@
 import type { ActionRequest } from "../mod/client.js";
 import type { AnswerSet } from "../jev/answers.js";
 import { noulQ, type QuestionSet } from "../jev/questions.js";
+import { fillPotionText } from "../knowledge/potion-values.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../util/json.js";
 import type { PickOption, PlanAnswer, PlannedOption } from "./pick.js";
@@ -31,14 +32,21 @@ export const DISCARD_SUFFIX = ":discard";
 export const DISCARD_ANSWER_NOTE =
   'A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.';
 
-/** The potions the game lets be discarded on this screen (none when discarding is not an available action). */
+/**
+ * The potions the game lets be discarded on this screen (none when discarding is not an available action). The
+ * description with its numbers filled (fillPotionText): the mod sends a template (5LRZ7HJ7YGSY F37: 「获得{MaxHp}点
+ * 最大生命值」 for Fruit Juice, 「回复你最大生命值的{HealPercent}%」 for Blood Potion in the statue questions).
+ */
 export function discardableSlots(env: DecisionEnv): DiscardSlot[] {
   const { state } = env;
   if (!state.available_actions.includes("discard_potion")) return [];
   return asArray(asRecord(state.run?.raw)["potions"])
     .map(asRecord)
     .filter((slot) => bool(slot["occupied"]) && bool(slot["can_discard"], true) && numOrNull(slot["index"]) !== null)
-    .map((slot) => ({ index: numOrNull(slot["index"])!, name: str(slot["name"], str(slot["potion_id"])), description: str(slot["description"]) }));
+    .map((slot) => {
+      const id = str(slot["potion_id"]);
+      return { index: numOrNull(slot["index"])!, name: str(slot["name"], id), description: fillPotionText(id, str(slot["description"]) || env.knowledge.potion(id)?.description || "") };
+    });
 }
 
 /** An option text that gives potion(s) (「获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。」). */
@@ -121,7 +129,7 @@ export function discardVariant(env: DecisionEnv, option: PickOption, then: Disca
       journal: `discarded ${names}, then ${then.title}`,
     };
   };
-  const listed = Object.fromEntries(slots.map((slot) => [String(slot.index), `${slot.name}${slot.description ? `: ${slot.description.replace(/\[\/?[a-z]+\]/g, "")}` : ""}`]));
+  const listed = Object.fromEntries(slots.map((slot) => [String(slot.index), `${slot.name}${slot.description ? `: ${slot.description}` : ""}`]));
   return {
     ...option,
     key: `${option.key}${DISCARD_SUFFIX}`,
