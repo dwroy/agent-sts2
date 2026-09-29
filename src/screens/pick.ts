@@ -9,7 +9,7 @@
 import type { ActionRequest } from "../mod/client.js";
 import { choiceQ, type QuestionSet } from "../jev/questions.js";
 import type { Decision, ResolvedAction } from "../project/types.js";
-import type { JsonValue } from "../util/json.js";
+import { asArray, asRecord, type JsonValue } from "../util/json.js";
 
 export interface PickOption {
   key: string;
@@ -26,6 +26,27 @@ export interface PickOption {
   why?: string;
   /** Memory effect when DeepSeek's choice of this option is played (the route plan). */
   apply?: () => void;
+  /**
+   * One-shot (BUILD_ONESHOT): what DeepSeek's choice of this option plans beyond its own action (the deck
+   * card(s) the next screen takes, the act's route), given the answer's `cards` list and `route` key; null
+   * when it plans nothing more; `invalid` when the answer lacks what the option needs (the answer is then
+   * unusable and the loop falls back).
+   */
+  plan?: (answer: PlanAnswer) => PlannedOption | { invalid: string } | null;
+}
+
+/** The parts of a one-shot answer beyond its option key. */
+export interface PlanAnswer {
+  cards: string[];
+  route?: string;
+}
+
+/** What a one-shot option plans: its reference, steps, memory effect and run-journal text. */
+export interface PlannedOption {
+  id: string;
+  steps: JsonValue;
+  apply?: () => void;
+  journal?: string;
 }
 
 export interface PickDecisionParams {
@@ -51,7 +72,15 @@ export interface PickDecisionParams {
    * BUILD_DECIDER=deepseek: DeepSeek decides among every option (no code margin, no trimming), shown with
    * code's value and why, and these run facts. The decision without it is kept as the fallback.
    */
-  deepseek?: { facts: Record<string, JsonValue>; note?: string; baseline?: Decision; onFail?: () => void };
+  deepseek?: {
+    facts: Record<string, JsonValue>;
+    note?: string;
+    baseline?: Decision;
+    onFail?: () => void;
+    /** A one-shot question: an unusable answer re-plans into the step-by-step questions (AskDecision.deepseek.oneshot). */
+    oneshot?: { fallback: () => void };
+    offeredCards?: string[];
+  };
 }
 
 export function bestOption(options: PickOption[]): PickOption {
@@ -204,7 +233,13 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
     label: params.label,
     state: { ...params.state, facts: deepseek.facts },
     questions: { pick: choiceQ(instructions, criteria) },
-    deepseek: { question: "pick", baseline, ...(deepseek.onFail ? { onFail: deepseek.onFail } : {}) },
+    deepseek: {
+      question: "pick",
+      baseline,
+      ...(deepseek.onFail ? { onFail: deepseek.onFail } : {}),
+      ...(deepseek.oneshot ? { oneshot: deepseek.oneshot } : {}),
+      ...(deepseek.offeredCards && deepseek.offeredCards.length > 0 ? { offeredCards: deepseek.offeredCards } : {}),
+    },
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
       const chosen = answer && answer.type === "choice" ? byKey.get(answer.choice) : undefined;
@@ -213,13 +248,25 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
         const best = bestOption(params.options);
         return { intent: best.intent, rationale: `no usable DeepSeek answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
       }
+      // A one-shot option names what its follow-up takes: the answer's `cards` and `route` ride in its raw.
+      const raw = asRecord(answer?.raw);
+      const cards = asArray(raw["cards"]).filter((card): card is string => typeof card === "string");
+      const route = typeof raw["route"] === "string" ? raw["route"] : undefined;
+      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}) }) ?? null;
+      if (outcome && "invalid" in outcome) {
+        return { intent: null, rationale: `DeepSeek chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
+      }
+      const planned = outcome;
+      const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
         intent: chosen.intent,
         rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code value ${Number(chosen.score.toFixed(2))}, rank ${ranked.indexOf(chosen) + 1} of ${ranked.length})`,
         confidence: answer && answer.type === "choice" ? answer.confidence : null,
         fallback: false,
         decider: "deepseek",
-        ...(chosen.apply ? { apply: chosen.apply } : {}),
+        ...(apply ? { apply } : {}),
+        ...(planned ? { plan: { id: planned.id, steps: planned.steps } } : {}),
+        ...(planned?.journal ? { journal: planned.journal } : {}),
       };
     },
   };

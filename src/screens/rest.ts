@@ -9,6 +9,8 @@ import type { GameState } from "../mod/schema.js";
 import type { Decision, DecisionEnv, RememberedMap, ScreenMemory } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
+import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp, type DeckFollowUp } from "./oneshot.js";
+import { followUpTargetScore } from "./selection.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -16,6 +18,8 @@ export function planRest(env: DecisionEnv): Decision | null {
   if (Object.keys(rest).length === 0) return null;
 
   const options: PickOption[] = [];
+  /** Each option's game entry (its id and text tell which deck selection it opens). */
+  const rawByKey = new Map<string, Record<string, unknown>>();
   for (const raw of asArray(rest["options"]).map(asRecord)) {
     if (!bool(raw["is_enabled"])) continue;
     const index = numOrNull(raw["index"]);
@@ -47,6 +51,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       ...(planShift ? [`run plan rest ${env.screenMemory.runPlan?.rest ?? ""} ${planShift > 0 ? "+" : ""}${planShift}`] : []),
       ...(gapShift ? [`boss clock gap +${gapShift}`] : []),
     ].join("; ");
+    rawByKey.set(`o${index}`, raw);
     options.push({
       why,
       key: `o${index}`,
@@ -96,19 +101,47 @@ export function planRest(env: DecisionEnv): Decision | null {
   // BUILD_DECIDER=deepseek: heal or smith (and the card to smith, on the next screen) is DeepSeek's call.
   if (!deepseekDecides(env)) return buildPickDecision(params);
   const heal = Math.round((state.run?.max_hp ?? 0) * 0.3);
+  const facts = buildFacts(env, {
+    rest_site: {
+      heal_amount: `~${heal} HP (30% of max)`,
+      hp_after_heal: `${Math.min(state.run?.max_hp ?? 0, (state.run?.current_hp ?? 0) + heal)}/${state.run?.max_hp ?? "?"}`,
+      upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
+      floors_to_act_boss: nextBoss - floor,
+      next_nodes: nextNodeTypes(env.screenMemory, state),
+      forced_next: forcedNext(env.screenMemory, state),
+    },
+  });
+  // BUILD_ONESHOT: the rest action and the card it takes (smith X) in one question; code plays both.
+  if (oneshotOn(env) && !oneshotFailedHere(env, "rest")) {
+    const cards = deckCards(state, knowledge);
+    const ref = nextPlanRef(env, "rest");
+    const offered = new Set<string>();
+    const expanded = options.flatMap((option) => {
+      const raw = rawByKey.get(option.key) ?? {};
+      const follow: DeckFollowUp | null = str(raw["option_id"]).toUpperCase() === "SMITH" ? { task: "upgrade", count: 1, upTo: false, text: "SMITH" } : deckFollowUp(str(raw["description"]));
+      if (!follow) return [planOnly(env, option, ref)];
+      for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
+      return withFollowUp(env, option, follow, cards, ref, "rest", followUpTargetScore(env, follow.task));
+    });
+    return buildPickDecision({
+      ...params,
+      label: "rest/plan",
+      instructions: "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick.",
+      options: expanded,
+      deepseek: {
+        facts,
+        note: "Each smith option names its card: code upgrades that card on the next screen without asking again.",
+        // Without DeepSeek: the rest site's own Jev/code question (heal or smith; the card on the next screen).
+        baseline: buildPickDecision(params),
+        oneshot: { fallback: () => (env.screenMemory.oneshotFailed = visitKey(env, "rest")) },
+        offeredCards: [...offered],
+      },
+    });
+  }
   return buildPickDecision({
     ...params,
     deepseek: {
-      facts: buildFacts(env, {
-        rest_site: {
-          heal_amount: `~${heal} HP (30% of max)`,
-          hp_after_heal: `${Math.min(state.run?.max_hp ?? 0, (state.run?.current_hp ?? 0) + heal)}/${state.run?.max_hp ?? "?"}`,
-          upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
-          floors_to_act_boss: nextBoss - floor,
-          next_nodes: nextNodeTypes(env.screenMemory, state),
-          forced_next: forcedNext(env.screenMemory, state),
-        },
-      }),
+      facts,
       note: "If you smith, you pick the card to upgrade on the next screen.",
     },
   });
