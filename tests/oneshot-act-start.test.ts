@@ -112,7 +112,7 @@ describe("act-start Ancient: its option and the act's route in one question", ()
     const resolved = choose(decision, "o0", undefined, "p2");
     expect(resolved.intent).toEqual({ action: "choose_event_option", option_index: 0 });
     expect(resolved.plan).toEqual({ id: "U6RUE7LBUFJF:F18:act#1", steps: ["o0", "p2"] });
-    expect(resolved.journal).toMatch(/^营养汤; route Monster -> Shop/);
+    expect(resolved.journal).toBe(`营养汤; route ${String(routes["p2"]?.["path"])}`);
     resolved.apply?.();
     expect(memory.routePlan).toMatchObject({ act: 2, summary: routes["p2"]?.["path"], oneshot: { ref: "U6RUE7LBUFJF:F18:act#1", firstStep: 2, firstPending: true } });
     expect(memory.routePlan?.review).toBeUndefined();
