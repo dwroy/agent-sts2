@@ -252,6 +252,50 @@ export function pickJsonObject(content: string): Record<string, unknown> {
   return answers[answers.length - 1] ?? objects[objects.length - 1]!;
 }
 
+/**
+ * JSON objects written inside prose (a reasoning that drafts its answer before the reply): each balanced
+ * {...} that parses on its own, in order; nested objects of one that parsed are not listed apart.
+ */
+export function embeddedJsonObjects(text: string): Record<string, unknown>[] {
+  const found: Record<string, unknown>[] = [];
+  let i = text.indexOf("{");
+  while (i >= 0) {
+    let depth = 0;
+    let inString = false;
+    let end = -1;
+    for (let j = i; j < text.length; j += 1) {
+      const c = text[j]!;
+      if (inString) {
+        if (c === "\\") j += 1;
+        else if (c === '"') inString = false;
+      } else if (c === '"') inString = true;
+      else if (c === "{") depth += 1;
+      else if (c === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          end = j + 1;
+          break;
+        }
+      }
+    }
+    let parsed: unknown = null;
+    if (end > 0) {
+      try {
+        parsed = JSON.parse(text.slice(i, end));
+      } catch {
+        parsed = null;
+      }
+    }
+    if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+      found.push(parsed as Record<string, unknown>);
+      i = text.indexOf("{", end);
+    } else {
+      i = text.indexOf("{", i + 1);
+    }
+  }
+  return found;
+}
+
 export function parseEffortTiers(spec: string): [string, string][] {
   return spec
     .split(",")
@@ -438,7 +482,8 @@ export class DeepSeekClient implements Escalator {
   async askJson(
     payload: Record<string, JsonValue>,
     label: string,
-  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    accept?: (json: Record<string, unknown>) => boolean,
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true }> {
     const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
     const memory = payload["memory"];
     const question = typeof payload["task"] === "string" ? payload["task"] : label;
@@ -449,6 +494,19 @@ export class DeepSeekClient implements Escalator {
       const message = error instanceof Error ? error.message : String(error);
       this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
       throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+    }
+    // Not the task's format (9GRPA F9, F25: a lone {choice, reason} echo became an all-empty run plan that
+    // replaced the valid one): the last object in that format its reasoning drafted, else an error.
+    if (accept && !accept(json)) {
+      const drafted = embeddedJsonObjects(done.reasoning).filter(accept);
+      const recovered = drafted[drafted.length - 1];
+      if (!recovered) {
+        const message = `DeepSeek's ${label} reply is not in the task's format and its reasoning drafted none: ${done.content.slice(0, 120)}`;
+        this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      }
+      this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, ...recovered });
+      return { json: recovered, meta: done.meta, recovered: true };
     }
     this.logReasoning(label, done, question, {}, "", json["summary"] ?? "", memory, json);
     return { json, meta: done.meta };

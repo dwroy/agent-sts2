@@ -3,14 +3,22 @@
  * (tests/logged-states), never the refreshing knowledge files.
  */
 
+import { mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
 import { afterEach, describe, expect, it } from "vitest";
+
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 
 import { planCombatTurn, enemySims } from "../src/screens/combat-plan.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { isRunPlanReply } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 type Raw = Record<string, unknown>;
 
@@ -109,5 +117,57 @@ describe("1. Thrash hits for its printed number; the absorbed damage is for its 
     const line = result.lines.find((entry) => entry.plan.steps.map((step) => step.cardId).join(",") === "THRASH");
     expect(line?.winProb).toBe(1);
     expect(line?.turnsToWin).toBe(2);
+  });
+});
+
+describe("2. A run-plan reply that only echoes {choice, reason} never replaces the plan (9GRPA F9, F25)", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+
+  async function replying(content: string, reasoning: string): Promise<{ client: DeepSeekClient; rows: () => Record<string, unknown>[] }> {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content, reasoning_content: reasoning } }], usage: { prompt_tokens: 900, completion_tokens: 200 } }));
+    });
+    const log = join(mkdtempSync(join(tmpdir(), "ds-run-plan-")), "reasoning.jsonl");
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000, reasoningEffort: "max", reasoningLog: log });
+    return { client, rows: () => readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>) };
+  }
+
+  // F25's reasoning (cut): it drafted the whole plan, then replied {"choice": null, "reason": null}.
+  const F25_REASONING = [
+    "Mention elite skip.",
+    "",
+    "Let me now write JSON:",
+    "",
+    '{\n "archetype": "Permanent Strength + big single-target hits; light block",\n "want": ["DEMON_FORM","INFLAME","BLUDGEON","THRASH","UPPERCUT","SHRUG_IT_OFF"],\n "avoid": ["HAVOC","CINDER"],\n "remove": [],\n "block_target": 6,\n "elites": "avoid",\n "rest": "auto",\n "boss_prep": "Enter ≥75% with 1–2 potions",\n "summary": "Gap ~24/turn (27 vs 51): take Demon Form/Inflame"\n}',
+    "",
+    'Count summary words: Gap(1) ... The wrapper says {"choice": ..., "reason": ...} but the task overrides it.',
+  ].join("\n");
+
+  it("isRunPlanReply: the echoes are not plans; any plan field is", () => {
+    expect(isRunPlanReply({ choice: "review", reason: "n/a" })).toBe(false);
+    expect(isRunPlanReply({ choice: null, reason: null })).toBe(false);
+    expect(isRunPlanReply({ archetype: "", summary: " " })).toBe(false);
+    expect(isRunPlanReply({ archetype: "Strength" })).toBe(true);
+    expect(isRunPlanReply({ want: [] })).toBe(true);
+  });
+
+  it("F25: the echo is replaced by the plan its reasoning drafted (the last one), and the row says so", async () => {
+    const { client, rows } = await replying('{"choice": null, "reason": null}', F25_REASONING);
+    const reply = await client.askJson({ task: "Write the run plan." }, "run-plan", isRunPlanReply);
+    expect(reply.recovered).toBe(true);
+    expect(reply.json).toMatchObject({ archetype: "Permanent Strength + big single-target hits; light block", elites: "avoid", block_target: 6 });
+    expect(rows()[0]).toMatchObject({ label: "run-plan", answer: expect.objectContaining({ recovered_from_reasoning: true }) });
+  });
+
+  it("F9: no draft in the reasoning: an error (the caller keeps the plan in force), with a log row", async () => {
+    const { client, rows } = await replying('{"choice": "review", "reason": "n/a"}', "Decision: avoid. Final JSON.");
+    const error = await client.askJson({ task: "Write the run plan." }, "run-plan", isRunPlanReply).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(DeepSeekAnswerError);
+    expect(rows()[0]).toMatchObject({ label: "run-plan", parse_error: expect.stringMatching(/not in the task's format/) });
   });
 });

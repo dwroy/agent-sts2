@@ -124,6 +124,17 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
   };
 }
 
+/**
+ * A reply that is a run plan: at least one of the plan's fields given (9GRPA F9 {"choice": "review", "reason":
+ * "n/a"}, F25 {"choice": null, "reason": null}: echoes of the decision format, parsed into an all-empty plan
+ * that replaced the valid one).
+ */
+export function isRunPlanReply(json: Record<string, unknown>): boolean {
+  const text = (key: string) => typeof json[key] === "string" && (json[key] as string).trim() !== "";
+  const list = (key: string) => Array.isArray(json[key]);
+  return text("archetype") || text("summary") || text("boss_prep") || text("elites") || text("rest") || list("want") || list("avoid") || list("remove") || typeof json["block_target"] === "number";
+}
+
 export function parseRunPlan(json: Record<string, unknown>, state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger): RunPlan {
   const deck = deckEntries(state, knowledge);
   const byName = new Map<string, string>();

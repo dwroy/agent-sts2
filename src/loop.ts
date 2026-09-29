@@ -16,7 +16,7 @@ import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type De
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
+import { isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -1475,7 +1475,8 @@ async function ensureRunPlan(
   };
   onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
-    const { json, meta } = await deepseek.askJson(payload, "run-plan");
+    // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
+    const { json, meta, recovered } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;
@@ -1488,6 +1489,7 @@ async function ensureRunPlan(
       observed_ts: observedTs,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
+      ...(recovered ? { recovered_from_reasoning: true } : {}),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,
