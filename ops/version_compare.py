@@ -185,7 +185,8 @@ with open(os.path.join(LOGS, "decisions.jsonl"), encoding="utf8") as fh:
             p["unsim_rows"] += 1
         # DeepSeek
         ds = d.get("deepseek")
-        if isinstance(ds, dict):
+        # Memo-reused answers and one-shot plan steps made no call.
+        if isinstance(ds, dict) and not ds.get("reused"):
             p["ds_calls"] += 1
             p["ds_in"] += ds.get("input_tokens") or 0
             p["ds_hit"] += ds.get("cache_hit_tokens") or 0

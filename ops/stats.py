@@ -131,7 +131,8 @@ ds_hit = sum(_num(c.get("cache_hit_tokens")) for c in ds_calls)
 ds_out = sum(_num(c.get("output_tokens")) for c in ds_calls)
 ds_reason = sum(_num(c.get("reasoning_tokens")) for c in ds_calls)
 ds_cost = ((ds_in - ds_hit) * DS_MISS + ds_hit * DS_HIT + ds_out * DS_OUT) / 1e6
-print(f"DeepSeek 兜底 {len(ds)} 次、直接决策 {len(ds_direct)} 次，token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
+_ds_paid = [r for r in ds_direct if not (isinstance(r.get("deepseek"), dict) and r["deepseek"].get("reused"))]
+print(f"DeepSeek 兜底 {len(ds)} 次、直接决策 {len(_ds_paid)} 次（另有 {len(ds_direct) - len(_ds_paid)} 步沿用已有答案或一次性计划），token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
 # DeepSeek's prefix cache: hit tokens / input tokens over the recent runs (decisions, escalations and the
 # run/fight plans), when the logs carry the numbers.
 RECENT_RUNS = 5
@@ -146,7 +147,7 @@ if cache_rows:
     c_in = sum(_num(c["input_tokens"]) for _, c in cache_rows)
     c_hit = sum(_num(c["cache_hit_tokens"]) for _, c in cache_rows)
     print(f"DeepSeek 缓存命中率（最近 {len(recent)} 局，{len(cache_rows)} 次调用）: 命中 {c_hit:,} / 输入 {c_in:,} tokens = {c_hit / c_in:.0%}")
-ds_lat = sorted([r["escalation"].get("latency_ms", 0) for r in ds] + [_num((r.get("deepseek") or {}).get("latency_ms")) or _num(r.get("latency_ms")) for r in ds_direct])
+ds_lat = sorted([r["escalation"].get("latency_ms", 0) for r in ds] + [_num((r.get("deepseek") or {}).get("latency_ms")) or _num(r.get("latency_ms")) for r in ds_direct if not (isinstance(r.get("deepseek"), dict) and r["deepseek"].get("reused"))])
 if ds_lat:
     print(f"DeepSeek 延迟 p50 {ds_lat[len(ds_lat)//2]/1000:.1f} 秒，最长 {ds_lat[-1]/1000:.1f} 秒")
 cl_lat = sorted(r["escalation"].get("latency_ms", 0) for r in cl)

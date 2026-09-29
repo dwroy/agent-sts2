@@ -121,7 +121,10 @@ def main():
     ds_hit = sum(_ds(r, "cache_hit_tokens", True) for r in recs)
     jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and decider(r) != "deepseek")
     # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
-    ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek") or r.get("deepseek") or r.get("decider") == "deepseek")
+    # Paid DeepSeek calls only: one-shot plan steps and memo-reused answers carry `deepseek.reused` and made no call.
+    ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek")
+                   or (isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused"))
+                   or (r.get("decider") == "deepseek" and not isinstance(r.get("deepseek"), dict)))
     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
     elapsed = 0
     if recs:
