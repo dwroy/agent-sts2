@@ -154,3 +154,10 @@ From fix batch I (2026-09-29 22:07; line numbers at v3 3899c2a), not fixed:
 - rollout.ts:1417 / turn-solver.ts:2138 retaliation (Thorns, Flame Barrier) ignores Slippery (1 per hit) and Hardened Shell's cap → overcounted on those enemies.
 - turn-solver.ts:1996 Clay ignores start-of-turn HP loss (Crimson Mantle, Inferno 1) → block a turn late. Minor.
 - tests/logged.ts game-data.json is a subset, so code_value of logged boards differs from the logged value (7YT0 F12 Stone Armor 71 logged vs 65) — tests can't assert code_value.
+
+From post-mortems DHGT JJ65 ULQP (2026-09-29 22:08; line numbers at v3 3899c2a):
+- rollout-live.ts:587 skips the rollout when both draw and discard piles are empty ("no draw/discard piles in the state") — ULQP F6 T2 after Glowwater drew the whole deck; Jev answered at 0.18 with no rollout numbers. Simulate with the exhaust/hand only (reshuffle of nothing).
+- Shuriken and Captain's Wheel not simulated (only text in run-brief.ts:104-111). DHGT F33: T1 predicted 116, did 132 (Strength 0→1→2 after the 3rd and 6th attacks); T3 started with the Wheel's 18 block, rollouts had −9.7 for that turn.
+- Stable Serum: also seen DHGT F33 T1 (Jev drank at 0.08) — already queued under batch I leftovers.
+- ops/report.py:181-182 (:196) a fight's end HP comes from the last combat decision, so damage after it is missed: DHGT F17 auto note 86→61 (−25), real 86→33 (−53 incl. the Giant's −28 explosion); death fights miss the final hit.
+- Recurring: DHGT F9 and F23 answers without a route field ("the answer has no route") on 2f72f9a (after adb9ec9/0809eb7) — find which path still drops it.
