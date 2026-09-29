@@ -1225,7 +1225,9 @@ function applyPlan(
     if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
     if (card.plating) player.plating += card.plating;
     if (card.exhausts || card.type === "Power") continue;
-    piles.discard.push(handBase[at] ?? card);
+    // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
+    const back = handBase[at] ?? card;
+    piles.discard.push(card.special === "frantic_escape" ? { ...back, cost: Math.max(back.cost, card.cost) + 1 } : back);
   }
   // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit
   // exhaust) leave the fight; the rest of the hand is discarded (FSPK F48 T1: Fiend Fire's hand came back

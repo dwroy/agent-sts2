@@ -514,3 +514,68 @@ describe("6. On-death spawns are a kill, not a win (Phrog Parasite, Gremlin Merc
     expect(after.hpLoss).toBeGreaterThan(0);
   });
 });
+
+
+describe("7. Status cards with a cost are playable in the piles and the rollout, by their game text (Beckon, Slimed, Toxic, Frantic Escape, Debris)", () => {
+  /** The game data's status cards (.cache/game-data.json), as a fixture. */
+  const STATUS_CARDS = [
+  {"id": "BECKON", "name": "呼唤", "type": "Status", "rarity": "Status", "cost": 1, "target": "None", "description": "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", "description_raw": "在你的回合结束时，如果这张牌在你的手牌中， 你失去{HpLoss}点生命。", "keywords": [], "tags": [], "damage": null, "block": null, "color": "status", "vars": [{"name": "HpLoss", "base_value": 6, "current_value": 6, "enchanted_value": 6, "is_modified": false, "was_just_upgraded": false}], "is_x_cost": false},
+  {"id": "DAZED", "name": "晕眩", "type": "Status", "rarity": "Status", "cost": -1, "target": "None", "description": "不能被打出。 虚无。", "description_raw": "", "keywords": ["Ethereal", "Unplayable"], "tags": [], "damage": null, "block": null, "color": "status", "vars": [], "is_x_cost": false},
+  {"id": "DEBRIS", "name": "碎屑", "type": "Status", "rarity": "Status", "cost": 1, "target": "None", "description": "消耗。", "description_raw": "", "keywords": ["Exhaust"], "tags": [], "damage": null, "block": null, "color": "status", "vars": [], "is_x_cost": false},
+  {"id": "FRANTIC_ESCAPE", "name": "狂乱逃离", "type": "Status", "rarity": "Status", "cost": 1, "target": "Self", "description": "远离。 将沙坑的计数加1。 这张牌的耗能加1。", "description_raw": "远离。 将沙坑的计数加1。 这张牌的耗能加1。", "keywords": [], "tags": [], "damage": null, "block": null, "color": "status", "vars": [], "is_x_cost": false},
+  {"id": "SLIMED", "name": "黏液", "type": "Status", "rarity": "Status", "cost": 1, "target": "None", "description": "抽1张牌。 消耗。", "description_raw": "抽1张牌。", "keywords": ["Exhaust"], "tags": [], "damage": null, "block": null, "color": "status", "vars": [{"name": "Cards", "base_value": 1, "current_value": 1, "enchanted_value": 1, "is_modified": false, "was_just_upgraded": false}], "is_x_cost": false},
+  {"id": "TOXIC", "name": "毒素", "type": "Status", "rarity": "Status", "cost": 1, "target": "None", "description": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。", "description_raw": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。", "keywords": ["Exhaust"], "tags": [], "damage": 5, "block": null, "color": "status", "vars": [{"name": "Damage", "base_value": 5, "current_value": 5, "enchanted_value": 5, "is_modified": false, "was_just_upgraded": false}], "is_x_cost": false},
+  {"id": "WOUND", "name": "伤口", "type": "Status", "rarity": "Status", "cost": -1, "target": "None", "description": "不能被打出。", "description_raw": "", "keywords": ["Unplayable"], "tags": [], "damage": null, "block": null, "color": "status", "vars": [], "is_x_cost": false},
+  ];
+  const statusKnowledge = async () => {
+    const { makeKnowledge } = await import("../src/knowledge/index.js");
+    return makeKnowledge({ cards: STATUS_CARDS, monsters: [], relics: [], potions: [], powers: [], events: [], characters: [] } as never, "cache");
+  };
+
+  it("the piles: cost and effect from the game text; only Dazed and Wound are unplayable", async () => {
+    const { pileCardModels } = await import("../src/screens/combat-plan.js");
+    const knowledge = await statusKnowledge();
+    const fx = logged("en55-f8-t9");
+    const view = (fx.state["agent_view"] as Raw)["combat"] as Raw;
+    const line = (name: string, id: string, cost: string, text = "") => ({ line: `${name} [${cost}费]：${text}`, card_ids: [id], keywords: [], mods: [] });
+    view["draw"] = [line("呼唤", "BECKON", "1"), line("黏液", "SLIMED", "1", "抽1张牌。 消耗。"), line("毒素", "TOXIC", "1"), line("狂乱逃离", "FRANTIC_ESCAPE", "2"), line("碎屑", "DEBRIS", "1"), line("晕眩", "DAZED", "-1"), line("伤口", "WOUND", "-1")];
+    const state = parseGameState(fx.state);
+    const pile = pileCardModels(state, knowledge, "draw", { enemyTargets: [0], strength: 0, weak: false });
+    const byId = Object.fromEntries(pile.map((card) => [card.cardId, card]));
+    for (const id of ["BECKON", "SLIMED", "TOXIC", "FRANTIC_ESCAPE", "DEBRIS"]) expect(byId[id]!.playable, id).toBe(true);
+    for (const id of ["DAZED", "WOUND"]) expect(byId[id]!.playable, id).toBe(false);
+    expect(byId["BECKON"]).toMatchObject({ cost: 1, heldPenalty: 6, heldHpLoss: 6, exhausts: false });
+    expect(byId["SLIMED"]).toMatchObject({ cost: 1, draw: 1, exhausts: true });
+    expect(byId["TOXIC"]).toMatchObject({ cost: 1, heldPenalty: 5, exhausts: true });
+    // Frantic Escape at the line's cost (2 after one play), its Sandpit effect.
+    expect(byId["FRANTIC_ESCAPE"]).toMatchObject({ cost: 2, special: "frantic_escape" });
+    expect(byId["DEBRIS"]).toMatchObject({ cost: 1, exhausts: true });
+  });
+
+  it("the rollout: a Beckon drawn is played away when there is energy for it", async () => {
+    const { statusCardModel } = await import("../src/strategy/rollout-live.js");
+    const knowledge = await statusKnowledge();
+    const beckon = (index: number) => statusCardModel("BECKON", knowledge, index);
+    expect(beckon(0)).toMatchObject({ playable: true, cost: 1, heldHpLoss: 6 });
+    const table: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "X", deck: { n: 10, atk: 5, skl: 5, pow: 0, junk: 0, dmg: 30, blk: 25, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [defend(0)];
+    const solver = { hand, player: player({ hp: 60, energy: 1 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster" as const, turn: 1 };
+    const r = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans.slice(0, 1),
+      enemies: [{ index: 0, id: "X", move: "WAIT", strength: 0, powers: {} }],
+      tables: { X: table },
+      piles: { draw: Array.from({ length: 5 }, (_, i) => beckon(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 3 },
+    });
+    // Five Beckons drawn at 3 energy: three played away, two held (12 HP), not all five (30).
+    expect(r.lines[0]!.perTurn[0]!.loss.mean).toBe(12);
+  });
+});

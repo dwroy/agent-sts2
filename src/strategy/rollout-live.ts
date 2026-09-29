@@ -30,7 +30,7 @@ import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
 import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
-import { modelHandCard, type CardModel } from "./card-model.js";
+import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
@@ -188,9 +188,7 @@ export function statusCardsOf(entry: MoveEntry): Pick<EnemyMove, "statusCards"> 
  * game text's held penalty (Beckon 6, Burn 2), never played.
  */
 export function statusCardModel(cardId: string, knowledge: Knowledge, index: number): CardModel {
-  const info = knowledge.card(cardId);
-  const model = modelHandCard({ card_id: cardId, upgraded: false, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
-  return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0), validTargets: [] };
+  return { ...offHandCardModel(null, cardId, false, index, knowledge), validTargets: [] };
 }
 
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
@@ -287,9 +285,7 @@ export function deckSummary(runRaw: Record<string, unknown>): DeckSummary {
 export function deckModels(state: GameState, knowledge: Knowledge): CardModel[] {
   return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
     const own = asRecord(raw);
-    const info = knowledge.card(str(own["card_id"]));
-    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + i }, 900 + i, knowledge);
-    return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0) };
+    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge);
   });
 }
 

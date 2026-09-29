@@ -607,6 +607,31 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 }
 
 /**
+ * A card that is not in the hand (the draw and discard piles, a status an enemy move adds) as a hand card: the
+ * deck's own entry when there is one, else the game data's (its cost and vars: Slimed draws 1, Beckon costs 1;
+ * `cost`: the pile line's own, Frantic Escape's grows with each play), and playable by its text: only an
+ * Unplayable card (Dazed, Wound, Burn, Soot, Wither) or one with no cost is not. Beckon, Slimed, Toxic, Frantic
+ * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
+ * escaped the Insatiable's Sandpit nor cleared a Beckon).
+ */
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null): CardModel {
+  const info = knowledge.card(cardId);
+  const raw = own ?? {
+    card_id: cardId,
+    upgraded,
+    name: info?.name ?? cardId,
+    dynamic_values: info?.vars ?? [],
+    rules_text: info?.descriptionRaw ?? "",
+    resolved_rules_text: info?.description ?? "",
+    energy_cost: info?.cost ?? 0,
+    costs_x: info?.xCost ?? false,
+  };
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
+  return { ...model, playable: !unplayable && (model.xCost || model.cost >= 0) };
+}
+
+/**
  * Potions as zero-cost "cards" for the turn solver. The mod does not resolve potion numbers (the
  * description stays a template), so these are STS1-analogue ESTIMATES, to be calibrated from logs.
  * Unlisted potions are not simulated: Jev is offered "drink first, then re-plan" under T1 (combat-plan).
