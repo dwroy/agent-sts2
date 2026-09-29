@@ -891,8 +891,14 @@ export function renderLookahead(
         return `${label} ${min === max ? min : `${min}–${max}`}`;
       });
       parts.push(`到 boss 前各路线: ${counts.join(", ")}`);
-      const next = [...new Set(spans.next)];
-      if (next.length > 0) parts.push(next.length === 1 ? `下一个节点强制: ${next[0]}` : `下一个节点可选: ${next.join("/")}`);
+      // Forced only with one next node: two nodes of one type are still a choice (their paths differ after
+      // them; "下一个节点强制: Treasure" was shown with two Treasure nodes ahead).
+      const types = [...new Set(spans.next)];
+      const counted = types.map((type) => {
+        const n = spans.next.filter((entry) => entry === type).length;
+        return n > 1 ? `${type} x${n}` : type;
+      });
+      if (spans.next.length > 0) parts.push(spans.next.length === 1 ? `下一个节点强制: ${spans.next[0]}` : `下一个节点可选: ${counted.join("/")}`);
     }
   }
   // The note's numbers come from the monster DB at this ascension (bossNote), so nothing is stripped.
