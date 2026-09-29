@@ -72,3 +72,19 @@ export function enchantsNamed(text: string): string[] {
   }
   return out;
 }
+
+/**
+ * Plating (覆甲, PLATING_POWER: 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层。」): the stacks are block at
+ * the end of each of our turns, one stack less at the start of each turn, hit or not (logged 7YT0NJC2LEYQ F15/F17:
+ * Stone Armor's 4 went 4, 3, 2, 1, 0 over T2-T6). A card text says only 「获得4层覆甲」: 7YT0 F12 took Stone Armor as
+ * "4 a turn, 48 over 12 turns" (it is 10 in all), QBCV F16 smithed it as "4 -> 6 block every turn". The decay
+ * fact is added after the text (the total each stack count gives); nothing about the card's value.
+ */
+export function annotatePlating(text: string): string {
+  if (text.includes("Plating decays")) return text;
+  const stacks = [...new Set([...stripMarkup(text).matchAll(/(\d+)\s*层\s*覆甲/g)].map((match) => Number(match[1])))].filter((n) => n > 0);
+  if (stacks.length === 0) return text;
+  const totals = stacks.map((n) => `${n} stacks: ${n <= 8 ? `${Array.from({ length: n }, (_, i) => n - i).join("+")} = ` : ""}${(n * (n + 1)) / 2} block over ${n} turns`).join("; ");
+  return `${text} [Plating decays: block equal to the stacks at the end of your turn, then 1 stack less at the start of each turn (not the same block every turn); ${totals}]`;
+}
+

@@ -17,6 +17,7 @@ import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
+import { annotatePlating } from "../knowledge/enchant-text.js";
 import { potionHpSaved } from "../strategy/potion-value.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
@@ -162,7 +163,7 @@ export function planShop(env: DecisionEnv): Decision | null {
           kind: kindLabel,
           ...cardFields,
           price,
-          text: truncate(text, 140),
+          text: annotatePlating(truncate(text, 140)),
         } satisfies JsonValue,
       };
       everything.push({ option, affordable: enough, id, price });

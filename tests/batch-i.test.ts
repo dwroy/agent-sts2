@@ -6,6 +6,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planReward } from "../src/screens/reward.js";
+import { annotatePlating } from "../src/knowledge/enchant-text.js";
+import { fillPotionText } from "../src/knowledge/potion-values.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
@@ -213,5 +216,33 @@ describe("2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (
     inputs.length = 0;
     planCombatTurn(loggedEnv(logged("batch-i/v6tw-f33-t2-clay")));
     expect(inputs[0]!.player).toMatchObject({ clayBlock: 3, clayPending: 3 });
+  });
+});
+
+describe("3. Plating's decay is said with the card text (7YT0NJC2LEYQ F12 took Stone Armor as \"48 block over 12 turns\", QBCV838592ZQ F16 smithed it as 4 -> 6 a turn)", () => {
+  it("the text gets the total each stack count gives (4: 10, 6: 21); other texts are unchanged", () => {
+    const four = annotatePlating("获得[blue]4[/blue]层[gold]覆甲[/gold]。");
+    expect(four).toContain("Plating decays");
+    expect(four).toContain("4 stacks: 4+3+2+1 = 10 block over 4 turns");
+    expect(annotatePlating(four)).toBe(four);
+    const smith = annotatePlating("获得4层覆甲。 -> 获得6层覆甲。");
+    expect(smith).toContain("4 stacks: 4+3+2+1 = 10 block");
+    expect(smith).toContain("6 stacks: 6+5+4+3+2+1 = 21 block");
+    expect(annotatePlating("获得5点格挡。")).toBe("获得5点格挡。");
+  });
+
+  it("the logged F12 card reward: Stone Armor's option text carries the decay", () => {
+    const env = loggedEnv(logged("batch-i/7yt0-f12-stone-armor-reward"));
+    const decision = planReward(env);
+    if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind}`);
+    const question = decision.questions["pick"]!;
+    const criteria = question.type === "choice" ? question.criteria : {};
+    const armor = Object.values(criteria).map((text) => JSON.parse(String(text)) as Raw).find((option) => option["card"] === "岩石铠甲")!;
+    expect(String(armor["text"])).toMatch(/^获得4层覆甲。/);
+    expect(String(armor["text"])).toContain("4+3+2+1 = 10 block over 4 turns");
+  });
+
+  it("Heart of Iron's potion text (Plating 7) says it too", () => {
+    expect(fillPotionText("HEART_OF_IRON", "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。")).toContain("7 stacks: 7+6+5+4+3+2+1 = 28 block over 7 turns");
   });
 });
