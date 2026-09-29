@@ -79,6 +79,10 @@
 4. **经验库**：每满 5 局新复盘，派 agent 在 jev-sts2-exp 的 exp-update 分支更新 src/knowledge/experience.json，先 merge v3。方法和格式照 paper/materials/experience-changelog.md 的上一节，改动也记在那里。不许写喝药规则，然后合入 v3。
 5. **攒证据**：策略类的问题只在复盘和 notes/for-dai.md 里积累证据，不动代码。
 
+## 知识库（Dai 2026-09-29）
+- **知识库一视同仁（Dai 2026-09-29）**：攻略（ironclad-guide.md）、DeepSeek 手册（ds-handbook.md）、Jev 提示（jev-hints.json）、代码的卡牌参考分（card-value.ts 的 TIER 表和角色分类）、boss 笔记，和经验库（experience.json）一样都算知识库，不区分来源，只分新旧。每次更新经验库时，同时核对这些内容：和我们的复盘数据冲突的，改成数据版本（写明局数）；数据说明无效的就删掉；还没有数据覆盖的先保留。改动记在 paper/materials/experience-changelog.md。
+- 给 DeepSeek 和 Jev 的提示里加一句：攻略或手册和经验库、实测数据冲突时，以数据为准。这条算小改动，随下一批修复一起做。
+
 ## 定时任务 3：论文数据每日快照，每天 4:07（cron `7 4 * * *`）
 静默完成，只在失败时告诉 Dai。
 1. `python3 ops/paper_dataset.py`（完整快照）。
