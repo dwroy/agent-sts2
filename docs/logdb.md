@@ -48,7 +48,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 
 **runs_raw** ← runs.jsonl（结束了的局）：`run_id, ended, victory, floor, character, ascension, code, decisions, jev_calls, deepseek_calls, claude_calls, tokens, ds_tokens_in, ds_tokens_out, ds_cache_hit, deciders`（JSON 文本）`, death_fight`（致死怪物中文名列表）`, arm`。
 
-**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器 src/brain/router.ts 的 `BrainLogRow`，一行一个问题）：`src, off, len, ts, run_id`（brain 行不带，靠 llm_calls 按时间归局）`, label, label_head, engine, model, effort`（brain 行没有）`, guide`（brain：`system_sha`）`, input_tokens`（brain：`usage.inputTokens`，含缓存命中和缓存写入）`, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts`（brain：模型调用次数，含补问；报错为 0）`, tool_calls`（次数）`, fallback_from`（回退前失败的引擎名）`, options`（选项 key）`, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars`（brain：各段长度之和，和 v3 的 memoryChars 一样）`, answer_chars, parse_error`（brain：没有答案也没有引擎错误，即答案解析或校验失败）；只有 brain 行有的：`cache_write_tokens, system_chars, reasks, fallback_kind`（quota / rate_limit / timeout …）`, error_kind, error`（过 scrub，最多 500 字）。
+**llm_calls_raw** ← deepseek-reasoning.jsonl（`src = 'deepseek-reasoning'`，`engine = 'deepseek'`）和 brain.jsonl（`src = 'brain'`，V4 路由器 src/brain/router.ts 的 `BrainLogRow`，一行一个问题）：`src, off, len, ts, run_id`（brain 行 2026-09-30 M2 起带 run_id，和 decisions.jsonl 同值；更早的行不带，靠 llm_calls 按时间归局）`, label, label_head, engine, model, effort`（brain 行没有）`, guide`（brain：`system_sha`）`, input_tokens`（brain：`usage.inputTokens`，含缓存命中和缓存写入）`, cache_hit_tokens, output_tokens, reasoning_tokens, cost_usd, latency_ms, attempts`（brain：模型调用次数，含补问；报错为 0）`, tool_calls`（次数）`, fallback_from`（回退前失败的引擎名）`, options`（选项 key）`, choice, reason`（简短理由）`, question_chars, reasoning_chars, memory_chars`（brain：各段长度之和，和 v3 的 memoryChars 一样）`, answer_chars, parse_error`（brain：没有答案也没有引擎错误，即答案解析或校验失败）；只有 brain 行有的：`cache_write_tokens, system_chars, reasks, fallback_kind`（quota / rate_limit / timeout …）`, error_kind, error`（过 scrub，最多 500 字）。
 
 **run_plans** ← run-plans.jsonl：`off, len, ts, run_id, floor, trigger, version, archetype, summary, want, avoid, input_tokens, output_tokens, cache_hit_tokens, reasoning_tokens, latency_ms, effort, error`。
 
@@ -75,7 +75,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 - 房间类型和 monster-db.json 有 18 个遭遇差 1–2 场（hallway ↔ unknown_room，精英 1 场）：monster-db 用战后下一个地图帧的节点，没有就按怪物类型猜；这里用本层地图帧，没有就用上一层选的节点。死在问号房里的战斗 monster-db 记成走廊，本库记 unknown_room；战后没有本层地图帧时 monster-db 会拿到下一层的节点，本库不会。遭遇的场次、胜率、掉血都一样。
 - deepseek-reasoning.jsonl 从 09-28 11:03 起才有 token（usage）；更早的调用 token 为 NULL（对应决策行的 ds_tokens 里有总数）。label 从 09-24 08:42 起才有。
 - decisions 的 card_id / potion_id 靠 fingerprint 解析，fingerprint 里没有就是 NULL（turns.cards_played 里去掉，cards_n 照算）。
-- brain.jsonl 按 src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。路由器不写 run_id 和 effort；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
+- brain.jsonl 按 src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。路由器不写 effort；run_id 从 2026-09-30（M2）起写（抽取器本来就读，不用改版本）；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
 - 改了抽取器（extract.py）要把对应源的 `VERSIONS` 加 1；改视图（views.sql）不用重建。
 
 ## 5. 正确性核对（2026-09-29，354 局）
