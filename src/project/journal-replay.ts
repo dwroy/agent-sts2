@@ -24,7 +24,7 @@ import { closeSync, existsSync, openSync, readSync, statSync } from "node:fs";
 import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import type { RoutePlan } from "../screens/map.js";
-import { rememberMap } from "../screens/rest.js";
+import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
@@ -276,7 +276,10 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       // before it was sent, "not dispatched", is logged, not recorded).
       if (/^(failed|not dispatched)/.test(str(decision["result"]))) continue;
       options.beforeRecord?.(state, decision, journal, memory);
-      journal.record(state, journalEntry(decision));
+      const entry = journalEntry(decision);
+      journal.record(state, entry);
+      // The node a logged map move chose (the rooms after it have no map position), as the live loop notes it.
+      rememberChosenNode(memory, state, entry.intent);
       counts.recorded += 1;
       const plan = routePlanOf(decision, state, memory.routePlan);
       if (plan) {

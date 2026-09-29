@@ -341,6 +341,13 @@ describe("the loop restarted mid-run", () => {
     expect(empty.notes.some((note) => /run TESTRUN123 \(F6\): no logged rows to rebuild the run memory from.*history, run plan and route plan are lost/.test(note))).toBe(true);
   });
 
+  it("the replay notes the node a logged map move chose, and the fight chain at the map's node", async () => {
+    const config = loopConfig(tempDir());
+    await play(config, [steps.firstFork], { maxDecisions: 1 });
+    const logs = readRunLogs({ states: stateLogPath(config.log.decisionLog), decisions: config.log.decisionLog, runPlans: config.runPlanLog }, "TESTRUN123");
+    expect(replayRun(logs, testKnowledge).lastMap).toMatchObject({ floor: 5, current: { row: 4, col: 2 }, chosen: { row: 5, col: 3, type: "Monster" }, fights: 1 });
+  });
+
   it("without the replay (the old behaviour) the restarted loop re-plans the route with an empty history", async () => {
     const config = loopConfig(tempDir());
     await play(config, [steps.firstFork, steps.lastFrame, steps.reward], { maxDecisions: 2 });

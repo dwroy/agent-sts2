@@ -11,6 +11,7 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp, type DeckFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
+import { fightChainAt } from "./map.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -158,7 +159,7 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
   const map = asRecord(state.raw["map"]);
   const rawNodes = asArray(map["nodes"]).map(asRecord);
   if (rawNodes.length === 0) return;
-  memory.lastMap = {
+  const next: RememberedMap = {
     runId: str(state.raw["run_id"]),
     floor: state.run?.floor ?? null,
     nodes: rawNodes.map((node) => ({
@@ -171,7 +172,30 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
     current: mapPoint(map["current_node"]),
     boss: mapPoint(map["boss_node"]),
     act: state.run?.act_id ?? null,
+    fights: fightChainAt(map),
   };
+  // A later frame of the same map screen (the travel animation) keeps the node already chosen from it.
+  const previous = memory.lastMap;
+  if (previous?.chosen && previous.runId === next.runId && previous.floor === next.floor && previous.act === next.act && samePoint(previous.current ?? null, next.current ?? null)) next.chosen = previous.chosen;
+  memory.lastMap = next;
+}
+
+/**
+ * Notes the node a map move chose on the remembered map (the loop, when it sends the move; the replay,
+ * for a logged move): the REWARD and REST screens after it carry no map position.
+ */
+export function rememberChosenNode(memory: ScreenMemory, state: GameState, intent: { action: string; option_index?: number | null } | null | undefined): void {
+  if (!intent || intent.action !== "choose_map_node" || state.screen !== "MAP") return;
+  const map = memory.lastMap;
+  if (!map || map.runId !== str(state.raw["run_id"]) || map.floor !== (state.run?.floor ?? null)) return;
+  const node = asArray(asRecord(state.raw["map"])["available_nodes"])
+    .map(asRecord)
+    .find((entry) => numOrNull(entry["index"]) === (intent.option_index ?? null));
+  if (node) map.chosen = { row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") };
+}
+
+function samePoint(a: { row: number; col: number } | null, b: { row: number; col: number } | null): boolean {
+  return a === null || b === null ? a === b : a.row === b.row && a.col === b.col;
 }
 
 function mapPoint(value: unknown): { row: number; col: number } | null {

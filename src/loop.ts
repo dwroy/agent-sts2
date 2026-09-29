@@ -25,7 +25,7 @@ import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project
 import { compact, describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
-import { rememberMap } from "./screens/rest.js";
+import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
@@ -1245,6 +1245,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
     const routePlan = applyResolved();
     journal.record(state, journalEntry);
+    // The node a map move chose: the REWARD and REST screens after it carry no map position.
+    rememberChosenNode(screenMemory, state, resolved.intent);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     deepseekMemo = null;

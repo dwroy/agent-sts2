@@ -170,6 +170,13 @@ export interface RememberedMap {
   boss?: { row: number; col: number } | null;
   /** act_id the map belongs to: a map from the previous act says nothing about this one. */
   act?: string | null;
+  /**
+   * The node chosen from this map (the room we are in until the next MAP screen): set when the map move
+   * is sent, and by the replay after a restart. The REWARD and REST states carry no map position.
+   */
+  chosen?: { row: number; col: number; type: string } | null;
+  /** Hallway/elite fights in a row ending at `current` (the route model's fight chain). */
+  fights?: number;
 }
 
 export interface CombatPlanMemo {
