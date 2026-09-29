@@ -43,7 +43,7 @@ describe("knowledge text: no hand-set HP thresholds where the experience base ha
       (JSON.parse(read("experience.json")) as { entries: { id: string; status: string }[] }).entries.map((entry) => [entry.id, entry.status]),
     );
     for (const name of ["ds-handbook.md", "ironclad-guide.md"]) {
-      for (const [id] of read(name).matchAll(/\b(?:elite|rest|shop|event|route|potion)-[a-z-]+(?= n=|，n=|,)/g)) {
+      for (const [id] of read(name).matchAll(/\b(?:elite|rest|shop|event|route|potion)-[a-z-]+(?=[、，,）)\s]|$)/g)) {
         expect(entries.get(id), `${name}: ${id}`).toBe("active");
       }
     }

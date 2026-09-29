@@ -4,11 +4,16 @@
  * synthetic or logged fixtures (tests/logged-states), never the refreshing knowledge files.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
 import type { AskDecision } from "../src/project/types.js";
+import { bossNote } from "../src/project/run-journal.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
@@ -252,5 +257,29 @@ describe("Extra: a line aiming only at the illusion is rolled out aiming at it o
     expect(illusionFocusOrders(line([1], 85), orders, enemies)).toHaveLength(2);
     expect(illusionFocusOrders(line([0, 1], 85), orders, enemies)).toHaveLength(2);
     expect(illusionFocusOrders(line([], 91), orders, enemies)).toHaveLength(2);
+  });
+});
+
+describe("Extra: hand-written knowledge agrees with the experience base (d986a74)", () => {
+  const knowledge = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+  const read = (name: string) => readFileSync(join(knowledge, name), "utf8");
+
+  it("The Obscura: damage into it every turn, the Parafright only with spare damage or to save 15+ HP (hint and guide)", () => {
+    const hint = (JSON.parse(read("jev-hints.json")) as { hints: { id: string; text: string }[] }).hints.find((entry) => entry.id === "obscura-summoner")!;
+    expect(hint.text).toMatch(/Damage The Obscura every turn; Parafright only with spare damage or to save 15\+ HP/);
+    expect(hint.text).not.toMatch(/Damage into it is wasted/);
+    const guide = read("ironclad-guide.md");
+    expect(guide).not.toContain("之后能在约 3 回合内打死胧光怪就集中打它");
+    expect(guide).toMatch(/每回合都要有伤害进胧光怪；寄生惧魔只用多余的伤害打/);
+  });
+
+  it("Soul Fysh's Beckons go only to a card that exhausts another card from the hand (boss note and guide)", () => {
+    expect(bossNote("SOUL_FYSH_BOSS", 9)).toMatch(/能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅、重振精神、恶魔之焰/);
+    expect(read("ironclad-guide.md")).not.toContain("→ 用消耗牌清掉");
+  });
+
+  it("the guide and handbook quote no experience n (it goes stale with every update); the Earring's first-turn cost is in the handbook", () => {
+    for (const name of ["ds-handbook.md", "ironclad-guide.md"]) expect(read(name), name).not.toMatch(/\bn=\d/);
+    expect(read("ds-handbook.md")).toMatch(/每场战斗（精英、boss 也一样）的第 1 回合由瓦库代打.*7 个第 1 回合我方只打出 1 张牌、喝了 5 瓶药/);
   });
 });
