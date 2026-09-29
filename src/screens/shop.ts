@@ -22,7 +22,7 @@ import { potionHpSaved } from "../strategy/potion-value.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { ResolvedAction } from "../project/types.js";
-import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, sameCard, usePlanRef, visitKey, type CardIdentity } from "./oneshot.js";
+import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, rankedValue, sameCard, usePlanRef, visitKey, type CardIdentity } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 
 export function planShop(env: DecisionEnv): Decision | null {
@@ -559,7 +559,7 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
     .filter((card) => !card.eternal)
     .map((card) => ({ card, ranked: removalScore(card) }))
     .sort((a, b) => b.ranked.score - a.ranked.score)
-    .map(({ card, ranked }) => `${card.key} ${card.name} ${ranked.score}`);
+    .map(({ card, ranked }) => `${card.key} ${card.name} ${rankedValue(ranked)}`);
   const removalFacts: Record<string, JsonValue> = inputs.removal.available ? { price: inputs.removal.price, affordable_now: inputs.removal.affordable } : { available: false };
   const params = {
     label: "shop/plan",
@@ -580,7 +580,15 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
           : {}),
       },
       your_cards: yourCards,
-      ...(inputs.removal.available && cards.length > 0 ? { code_removal_order: { order: removalOrder, why: removalScore(cards[0]!).why } } : {}),
+      ...(inputs.removal.available && cards.length > 0
+        ? {
+            code_removal_order: {
+              order: removalOrder,
+              why: removalScore(cards[0]!).why,
+              note: 'code\'s reference ranking (advice, not an order): "remove:<card key>" removes the card you name, whatever its rank',
+            },
+          }
+        : {}),
       ...(previous ? { already_done_this_visit: previous.done } : {}),
       ...(replan ? { replan_reason: `the shop changed under your plan: ${replan}` } : {}),
     },

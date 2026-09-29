@@ -16,7 +16,8 @@ import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { modelPotion, potionShell, type CardModel } from "../src/strategy/card-model.js";
 import { solveTap, solveTurn, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { loggedKnowledge } from "./logged.js";
-import { selectingText } from "../src/screens/selection.js";
+import { ask, board, decide, env as oneshotEnv } from "./oneshot-support.js";
+import { pendingPickStep, selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
 import type { PickOption } from "../src/screens/pick.js";
@@ -270,4 +271,46 @@ describe("5. Surrounded facing: every targeted action that went through turns us
     },
     30_000,
   );
+});
+
+describe("1. Shop removal: the card DeepSeek names is the one removed; code's order is a reference, its run-plan part said apart (UNRL F14: \"打击 120, 防御 110, 受伤 100\" read as code's verdict over the curse)", () => {
+  /** The U6RU F22 shop (5 Eternal Strikes) with an Injury curse added and a run plan that removes Defends. */
+  function shop() {
+    const raw = board("u6ru-f22-shop", "open");
+    const run = raw["run"] as Raw;
+    const deck = run["deck"] as Raw[];
+    const defend = deck.find((card) => card["card_id"] === "DEFEND_IRONCLAD")!;
+    deck.push({ ...defend, index: deck.length, card_id: "INJURY", name: "受伤", card_type: "Curse", rarity: "Curse", energy_cost: -1, resolved_rules_text: "不能被打出。", rules_text: "不能被打出。", dynamic_values: [] });
+    const memory = createScreenMemory("SHOP");
+    memory.runPlan = { remove: ["DEFEND_IRONCLAD"], want: [], avoid: [] } as never;
+    const e = oneshotEnv(raw, memory);
+    return { raw, e };
+  }
+
+  it("the order shows the run plan's part and says it is a reference", () => {
+    const { e } = shop();
+    const question = ask(decide(e));
+    const order = question.state["code_removal_order"] as { order: string[]; note: string };
+    expect(order.order[0]).toMatch(/^c\d+ 防御 110 \(70 \+ 40 as your run plan's removal target\)$/);
+    expect(order.order[1]).toMatch(/^c\d+ 受伤 100$/);
+    expect(order.note).toMatch(/reference ranking \(advice, not an order\): "remove:<card key>" removes the card you name/);
+  });
+
+  it("remove:<the curse> names the curse for the removal screen, and that screen removes it over the higher-ranked Defend", () => {
+    const { raw, e } = shop();
+    const question = ask(decide(e));
+    const cards = question.state["your_cards"] as Record<string, string>;
+    const injury = Object.keys(cards).find((key) => cards[key]!.includes("受伤"))!;
+    const resolved = question.deepseek.plan!.resolve({ plan: [`remove:${injury}`], reason: "the curse" });
+    if ("invalid" in resolved) throw new Error(resolved.invalid);
+    resolved.apply!();
+    expect(e.screenMemory.pendingPick).toMatchObject({ task: "remove", names: ["受伤"] });
+    // The removal screen: every removable card offered, the Defends first.
+    const deck = (raw["run"] as Raw)["deck"] as Raw[];
+    const offered = deck.filter((card) => card["card_id"] !== "STRIKE_IRONCLAD" && card["card_id"] !== "ASCENDERS_BANE").map((card, index) => ({ ...card, index, selected: false }));
+    const screen = { ...raw, screen: "CARD_SELECTION", selection: { kind: "deck_card_select", prompt: "选择1张牌移除。", cards: offered, selected: 0, min: 1, max: 1 } };
+    const next = oneshotEnv(screen, e.screenMemory);
+    const step = pendingPickStep(next, "deck_card_select", "选择1张牌移除。", 0, 1);
+    expect(step).toMatchObject({ kind: "act", intent: { action: "select_deck_card", option_index: offered.findIndex((card) => card["card_id"] === "INJURY") } });
+  });
 });

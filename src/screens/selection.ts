@@ -365,11 +365,11 @@ export function followUpTargetScore(env: DecisionEnv, task: DeckTask): TargetSco
   return (card) => {
     if (!kind) return { score: 0, why: `code does not rank cards to ${task}` };
     const id = card.identity.card_id;
-    const score =
-      selectionScore(kind, id, card.type) -
-      (task !== "upgrade" && card.identity.upgraded ? 8 : 0) +
-      (task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0);
-    return { score, why: SELECTION_WHY[task] ?? "code's ranking" };
+    const base = selectionScore(kind, id, card.type) - (task !== "upgrade" && card.identity.upgraded ? 8 : 0);
+    // The run plan's part said apart: UNRLW0W3XWLD F14 read "打击 120, 防御 110, 受伤 100" as code's own verdict
+    // over the curse (DeepSeek: "the delta is only due to the +40 run-plan bonus"), and removed a Strike.
+    const planned = task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0;
+    return { score: base + planned, why: SELECTION_WHY[task] ?? "code's ranking", ...(planned > 0 ? { parts: `${base} + ${planned} as your run plan's removal target` } : {}) };
   };
 }
 
