@@ -1090,6 +1090,14 @@ export function forgeUpgrades(state: GameState, knowledge: Knowledge): Record<st
   return out;
 }
 
+/**
+ * Entropic Brew (「在所有空药水栏位中获得随机药水」): the potions a drink gives, its own slot included (logged 8 of 8
+ * drinks in a fight: 1WSH, 2WUM, 4JVP, CJ88, EZ2L, SVN2, TTVY, VKPX, VSRG filled every empty slot and the Brew's own).
+ */
+export function entropicBrewPotions(state: GameState): number {
+  return 1 + asArray(asRecord(state.run?.raw)["potions"]).filter((slot) => asRecord(slot)["occupied"] === false).length;
+}
+
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
@@ -2090,13 +2098,22 @@ function planTurn(env: DecisionEnv): Decision | null {
         const key = target === null ? potion.key : `${potion.key}->e${target}`;
         const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;
         const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;
+        // Entropic Brew: its effect is known (random potions into its own slot and every empty one), only which potions
+        // is not; the turn is re-planned with them.
+        const brewGives = potion.potion_id === "ENTROPIC_BREW" ? entropicBrewPotions(state) : null;
         criteria[key] = JSON.stringify({
-          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
-          simulated: "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+          plays:
+            brewGives !== null
+              ? `drink ${potion.name} first: ${potion.text} (${brewGives} random potion${brewGives === 1 ? "" : "s"}: its own slot and the ${brewGives - 1} empty one${brewGives === 2 ? "" : "s"}), then re-plan the turn with them`
+              : `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
+          simulated:
+            brewGives !== null
+              ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
+              : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered_because: t1Why,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : {}),
-          ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
+          ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },

@@ -253,14 +253,15 @@ describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-pla
 });
 
 describe("(c) unsimulated potions: offered with no invented numbers", () => {
-  it("Entropic Brew under T1: 'drink first: <text>; effect not simulated', no hp/damage numbers", () => {
+  it("Entropic Brew under T1: 'drink first: <text> (N random potions …), then re-plan', no hp/damage numbers", () => {
     rolloutLiveOptions.enabled = false;
     const fx = logged("k7g9-f45-t1");
     const run = fx.state["run"] as Record<string, unknown>;
     run["potions"] = (run["potions"] as Record<string, unknown>[]).map((p) => (p["index"] === 1 ? { ...p, potion_id: "ENTROPIC_BREW", name: "Entropic Brew", description: "在所有空药水栏位中获得随机药水。" } : p));
     const decision = planCombatTurn(loggedEnv(fx));
     const option = JSON.parse(String(criteriaOf(decision)["p1"])) as Record<string, string>;
-    expect(option["plays"]).toBe("drink Entropic Brew first: 在所有空药水栏位中获得随机药水。; effect not simulated, then re-plan the turn");
+    // What it gives is known (batch J): its own slot and the two empty ones filled with random potions.
+    expect(option["plays"]).toBe("drink Entropic Brew first: 在所有空药水栏位中获得随机药水。 (3 random potions: its own slot and the 2 empty ones), then re-plan the turn with them");
     expect(option["hp_lost"]).toBeUndefined();
     expect(option["damage_dealt"]).toBeUndefined();
     expect(option["offered_because"]).toMatch(/12%/);

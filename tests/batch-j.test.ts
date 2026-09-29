@@ -284,3 +284,22 @@ describe("4a. Stable Serum: the hand is kept at this turn's end and the next (RE
     for (const line of serum) expect(String(line["rollout"])).toMatch(/-turn rollout .*expected further HP loss/);
   });
 });
+
+describe("4b. Entropic Brew (混沌药水): its option says what it does, random potions into its own slot and every empty one (22 questions \"effect not simulated\", CJ88575SQS6H, VSRG9P80R1ZB)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("the logged F17 T3 board (Brew and one empty slot): \"2 random potions\", re-planned with them; no \"effect not simulated\"", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const lines = planLines(planCombatTurn(loggedEnv(logged("batch-j/cj88-f17-t3-brew"))));
+    const brew = lines.filter((line) => /混沌药水/.test(String(line["plays"])));
+    expect(brew).toHaveLength(1);
+    expect(String(brew[0]!["plays"])).toContain("(2 random potions: its own slot and the 1 empty one), then re-plan the turn with them");
+    expect(String(brew[0]!["plays"])).not.toContain("not simulated");
+    expect(String(brew[0]!["rollout"])).toMatch(/^not rolled out: the potions it gives are random/);
+  });
+});
+
