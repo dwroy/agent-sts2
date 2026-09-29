@@ -11,7 +11,8 @@ describe("monster DB facts for DeepSeek", () => {
     expect(nearestAscension({ "0": 1, "7": 1, "8": 1 }, 9)).toEqual({ key: "8", exact: false });
     expect(nearestAscension({ "6": 1, "8": 1 }, 7)).toEqual({ key: "8", exact: false });
     expect(bossDossier("VANTOM_BOSS", 8)).toMatch(/A8: HP .*\(n=\d+\)/);
-    expect(bossDossier("VANTOM_BOSS", 9)).toContain("A9 无记录 (n=0)，以下为最近的 A8");
+    // An ascension no run has reached (the logged ones grow with every refresh: VANTOM has A9 rows now).
+    expect(bossDossier("VANTOM_BOSS", 20)).toMatch(/A20 无记录 \(n=0\)，以下为最近的 A\d+/);
     expect(bossDossier("NOT_A_BOSS", 8)).toBeNull();
   });
 
