@@ -160,5 +160,9 @@ describe("message layout", () => {
     expect(normalisePick(req, { choice: "沉溺", reason: "x" })).toEqual({ choice: "o1", reason: "x" });
     expect(normalisePick(req, { choice: "o2", cards: ["c5"] })).toEqual({ choice: "o2:c5", cards: ["c5"] });
     expect(normalisePick(req, { choice: "nope" })).toEqual({ choice: "nope" });
+    // Several options on a one-option question (v3 7eb1de7): the first, said so in the reason.
+    expect(normalisePick(req, { choice: "o1, o0", reason: "x" })).toEqual({ choice: "o1", reason: "x [the answer named 2 options (o1, o0) on a one-option question: the first, o1, taken]" });
+    expect(normalisePick(req, { choice: ["沉溺", "拒绝"], reason: "" })).toEqual({ choice: "o1", reason: "[the answer named 2 options (沉溺,拒绝) on a one-option question: the first, o1, taken]" });
+    expect(normalisePick(req, { choice: "o1, nope" })).toEqual({ choice: "o1, nope" });
   });
 });

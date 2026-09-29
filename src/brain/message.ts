@@ -6,7 +6,7 @@
  * order so prefix caches hit. The router's re-ask follows as one more user turn quoting the problems.
  */
 import { choiceMessage, taskMessage } from "../llm/deepseek-message.js";
-import { embeddedJsonObjects, pickJsonObject, resolveOptionKey } from "../llm/deepseek.js";
+import { embeddedJsonObjects, pickJsonObject, resolveOptionKey, severalOptionKeys } from "../llm/deepseek.js";
 import type { JsonValue } from "../util/json.js";
 import type { BrainRequest } from "./types.js";
 
@@ -55,13 +55,23 @@ export function parseAnswerText(text: string): Record<string, unknown> | null {
 
 /**
  * A pick answer with its choice mapped to an option key where it names one (an option's label instead of its key,
- * or "o1" with "cards": ["c5"] for the one-shot key "o1:c5"); other answers unchanged.
+ * or "o1" with "cards": ["c5"] for the one-shot key "o1:c5"); other answers unchanged. Several options named on a
+ * one-option question ("card2,card1", or a list as the choice; v3 7eb1de7, RRMYC7MCSYX8 F24) take the first, said so
+ * in the reason, as v3's DeepSeek choose() does (llm/deepseek.ts severalOptionKeys).
  */
 export function normalisePick(req: BrainRequest, answer: Record<string, unknown>): Record<string, unknown> {
-  if (req.spec.kind !== "pick" || !req.options || typeof answer["choice"] !== "string") return answer;
-  const choice = answer["choice"].trim();
+  if (req.spec.kind !== "pick" || !req.options) return answer;
+  const given = answer["choice"];
+  const listed = Array.isArray(given) ? given.filter((key): key is string => typeof key === "string").join(",") : null;
+  if (typeof given !== "string" && listed === null) return answer;
+  const choice = (typeof given === "string" ? given : listed!).trim();
   const cards = Array.isArray(answer["cards"]) ? answer["cards"].filter((card): card is string => typeof card === "string") : [];
   const joined = cards.length === 1 ? `${choice}:${cards[0]}` : "";
   const key = resolveOptionKey(choice, req.options) ?? (joined && joined in req.options ? joined : null);
-  return key && key !== answer["choice"] ? { ...answer, choice: key } : answer;
+  if (key) return key !== given ? { ...answer, choice: key } : answer;
+  const several = severalOptionKeys(choice, req.options);
+  if (!several) return listed === null ? answer : { ...answer, choice };
+  const reason = typeof answer["reason"] === "string" ? answer["reason"] : "";
+  const note = `[the answer named ${several.length} options (${choice}) on a one-option question: the first, ${several[0]}, taken]`;
+  return { ...answer, choice: several[0], reason: `${reason}${reason ? " " : ""}${note}` };
 }
