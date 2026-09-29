@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 4340 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-29T01:39:46.916Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1909, '9': 167}.
+DB: `src/knowledge/monster-db.json` from 4600 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-29T09:03:04.853Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1909, '9': 427}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -14,11 +14,11 @@ Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at 
 | KNOWLEDGE_DEMON | 379 (5) | 379 | 399 (19) | 399 | 7.2 (19) | 6.3 | 9 (7) | **11** |  |
 | LAGAVULIN_MATRIARCH | 222 (4) | 222 | 233 (24) | 233 | 6 (24) | 5.8 | 12 (17) | 12 |  |
 | SOUL_FYSH | 211 (6) | 211 | 221 (20) | 221 | 5.1 (20) | 5.1 | 12.5 (15) | 12 |  |
-| TEST_SUBJECT | 100 (3) | **600** | 111 (3) | **641** | 12.6 (3) | **7.5** | - (0) | 12 | hand hp = sum of 3 phases; DB = phase 1 (phases below) |
+| TEST_SUBJECT | 100 (3) | **600** | 111 (3) | **636** | 12.6 (3) | **7.5** | - (0) | 12 | hand hp = sum of 3 phases; DB = phase 1 (phases below) |
 | THE_INSATIABLE | 321 (6) | 321 | 341 (23) | 341 | 8.8 (23) | 8.9 | 8.2 (8) | 8 |  |
 | VANTOM | 173 (8) | 173 | 183 (25) | 183 | 6.5 (25) | 7.3 | 11 (21) | 11 |  |
 
-Test Subject phases: hand A8 [111, 212, 318], A<8 [100, 200, 300]; DB (max_hp sequence of the one enemy, n fights): A0: 100 > 200 > 300 (n=2); A1: 100 > 200 > 300 (n=1); A2: 100 > 200 (n=1); A3: 100 > 200 > 300 (n=1); A5: 100 > 200 > 300 (n=1); A7: 100 > 200 > 300 (n=2), 100 > 200 (n=1); A8: 111 > 212 (n=2), 111 > 212 > 313 (n=1). Phase 3 at A8 is still unlogged.
+Test Subject phases: hand A8 [111, 212, 313], A<8 [100, 200, 300]; DB (max_hp sequence of the one enemy, n fights): A0: 100 > 200 > 300 (n=2); A1: 100 > 200 > 300 (n=1); A2: 100 > 200 (n=1); A3: 100 > 200 > 300 (n=1); A5: 100 > 200 > 300 (n=1); A7: 100 > 200 > 300 (n=2), 100 > 200 (n=1); A8: 111 > 212 (n=2), 111 > 212 > 313 (n=1); A9: 111 > 212 (n=1). Phase 3 at A8 is still unlogged.
 
 Loss/turn = (entry HP - HP at the end, all of it on a death) / our turns, 75th percentile over the A8 fights with a known outcome, as the boss-clock comment defines it. Won-fight turns = our turn count in A8 wins.
 
@@ -47,52 +47,52 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | AEONGLASS | boss | 512 (2) | 512 | 535 (3) | 535 | 535 | - (0) | 75 | 10 | 8 | boss AEONGLASS |
 | AXEBOT | hallway | - (0) | 249 | 79 [77-82] (4) | **262** | 79 [77-82] | 10.5 (4) | - | 2 | 2 | AXEBOT |
-| BOWLBUG_ROCK | hallway | 83 [81-85] (9) | 84 | 85 [82-88] (29) | 88 | 47 [46-49] | 28.3 (29) | - | 13 | 0 | BOWLBUG_NECTAR+BOWLBUG_ROCK |
+| BOWLBUG_ROCK | hallway | 83 [81-85] (9) | 84 | 85 [82-88] (29) | 88 | 47 [46-49] | 28.3 (29) | - | 14 | 0 | BOWLBUG_NECTAR+BOWLBUG_ROCK |
 | BYGONE_EFFIGY | elite | 127 (6) | 127 | 132 (25) | **133** | 132 | 26.4 (21) | - | 5 | 1 | BYGONE_EFFIGY |
 | BYRDONIS | elite | 82.5 [81-84] (8) | 84 | 90 (15) | **88** | 90 | 22.5 (15) | - | 1 | 0 | BYRDONIS |
 | CEREMONIAL_BEAST | boss | 252 (3) | 252 | 262 (22) | 262 | 262 | 26.2 (19) | **20** | 5 | 2 | boss CEREMONIAL_BEAST |
 | CHOMPER | hallway | 123 [121-126] (8) | 126 | 130 [128-133] (32) | 130 | 65 [63-67] | 26 (31) | - | 4 | 4 | CHOMPER+CHOMPER |
-| DECIMILLIPEDE | elite | 132 [126-132] (11) | 130 | 148 [144-150] (19) | 150 | 50 [46-52] | 29.6 (13) | 30 | 10 | 6 | DECIMILLIPEDE_SEGMENT_BACK+DECIMILLIPEDE_SEGMENT_FRONT+DECIMILLIPEDE_SEGMENT_MIDDLE |
+| DECIMILLIPEDE | elite | 132 [126-132] (11) | 130 | 148 [144-150] (19) | 150 | 50 [46-52] | 29.6 (13) | 30 | 12 | 6 | DECIMILLIPEDE_SEGMENT_BACK+DECIMILLIPEDE_SEGMENT_FRONT+DECIMILLIPEDE_SEGMENT_MIDDLE |
 | DEVOTED_SCULPTOR | hallway | 162 (7) | 162 | 172 (17) | 172 | 172 | 43 (15) | 40 | 2 | 2 | DEVOTED_SCULPTOR |
-| ENTOMANCER | elite | 145 (7) | 145 | 165 (23) | 165 | 165 | 33 (19) | 33 | 9 | 5 | ENTOMANCER |
+| ENTOMANCER | elite | 145 (7) | 145 | 165 (23) | 165 | 165 | 33 (19) | 33 | 11 | 5 | ENTOMANCER |
 | EXOSKELETON | hallway | 104.5 [102-106] (14) | 104 | 111 [110-114] (25) | **109** | 28 [26-30] | 37 (25) | - | 1 | 0 | EXOSKELETON+EXOSKELETON+EXOSKELETON+EXOSKELETON |
 | FABRICATOR | hallway | 150 (3) | 150 | 155 (3) | **158** | 155 | 38.8 (3) | - | 1 | 1 | FABRICATOR |
-| FLAIL_KNIGHT | elite | 276 (2) | 276 | 294 (2) | **290** | 108 | 65.3 (2) | - | 0 | 0 | FLAIL_KNIGHT+MAGI_KNIGHT+SPECTRAL_KNIGHT |
+| FLAIL_KNIGHT | elite | 276 (2) | 276 | 294 (2) | **290** | 108 | 65.3 (2) | - | 1 | 0 | FLAIL_KNIGHT+MAGI_KNIGHT+SPECTRAL_KNIGHT |
 | FLYCONID | hallway | 80 (4) | 49 | 87 [85-89] (23) | 51 | 52 [51-53] | 21.8 (23) | - | 1 | 1 | FLYCONID+SNAPPING_JAXFRUIT |
 | FROG_KNIGHT | hallway | 191 (4) | 191 | 199 (3) | 199 | 199 | 33.2 (1) | 30 | 3 | 2 | FROG_KNIGHT |
 | FUZZY_WURM_CRAWLER | hallway | 56 [55-57] (13) | 56 | 59 [58-59] (61) | 59 | 59 [58-59] | 14.8 (61) | - | 1 | 1 | FUZZY_WURM_CRAWLER |
 | GLOBE_HEAD | hallway | 148 (3) | 148 | 158 (3) | **155** | 158 | 39.5 (3) | - | 0 | 0 | GLOBE_HEAD |
-| HUNTER_KILLER | hallway | 121 (8) | 121 | 126 (32) | **127** | 126 | 25.2 (29) | 25 | 6 | 3 | HUNTER_KILLER |
+| HUNTER_KILLER | hallway | 121 (8) | 121 | 126 (32) | **127** | 126 | 25.2 (29) | 25 | 7 | 3 | HUNTER_KILLER |
 | INFESTED_PRISM | elite | 161 (3) | 161 | 171 (15) | 171 | 171 | 34.2 (11) | 35 | 7 | 4 | INFESTED_PRISM |
-| KAISER_CRAB | boss | 408 (8) | 408 | 428 (23) | 428 | - | 47.6 (5) | 54 | 35 | 17 | boss KAISER_CRAB |
+| KAISER_CRAB | boss | 408 (8) | 408 | 428 (23) | 428 | - | 47.6 (5) | 54 | 36 | 17 | boss KAISER_CRAB |
 | KNOWLEDGE_DEMON | boss | 379 (5) | 379 | 399 (19) | 399 | 399 | 57 (7) | 51 | 29 | 17 | boss KNOWLEDGE_DEMON |
 | LAGAVULIN_MATRIARCH | boss | 222 (4) | 222 | 233 (24) | 233 | 233 | 23.3 (17) | 19 | 17 | 9 | boss LAGAVULIN_MATRIARCH |
 | LOUSE_PROGENITOR | hallway | 134 [134-136] (7) | 134 | 139 [138-141] (28) | 141 | 139 [138-141] | 27.8 (26) | 25 | 4 | 2 | LOUSE_PROGENITOR |
 | MECHA_KNIGHT | elite | 300 (5) | 300 | 320 (4) | **315** | 320 | 40 (3) | 33 | 4 | 2 | MECHA_KNIGHT |
 | MYTE | hallway | 128.5 [123-133] (8) | 130 | 133 [129-136] (33) | **137** | 66.5 [64-69] | 33.2 (31) | - | 4 | 2 | MYTE+MYTE |
-| OVICOPTER | hallway | 126 [124-129] (6) | **130** | 129 [126-132] (30) | **137** | 129 [126-132] | 32.2 (28) | - | 2 | 0 | OVICOPTER |
+| OVICOPTER | hallway | 126 [124-129] (6) | **130** | 129 [126-132] (30) | **137** | 129 [126-132] | 32.2 (28) | - | 3 | 0 | OVICOPTER |
 | OWL_MAGISTRATE | hallway | 231 (3) | 231 | 247 (3) | **243** | 247 | 38 (2) | 40 | 1 | 0 | OWL_MAGISTRATE |
-| PHANTASMAL_GARDENER | elite | 116 [115-118] (8) | 116 | 118 [114-122] (20) | 122 | 30 [27-32] | 29.5 (19) | - | 3 | 2 | PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER |
+| PHANTASMAL_GARDENER | elite | 116 [115-118] (8) | 116 | 118 [114-122] (20) | 122 | 30 [27-32] | 29.5 (19) | - | 4 | 2 | PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER+PHANTASMAL_GARDENER |
 | PHROG_PARASITE | elite | 138 [135-141] (8) | **142** | 148 [145-150] (17) | 149 | 67 [66-68] | 24.7 (17) | - | 1 | 1 | PHROG_PARASITE (with spawned bodies) |
 | PUNCH_CONSTRUCT | hallway | 185 (1) | 185 | 200 (6) | **194** | 60 | 40 (6) | - | 2 | 2 | CUBEX_CONSTRUCT+CUBEX_CONSTRUCT+PUNCH_CONSTRUCT |
 | QUEEN | boss | 599 (2) | 599 | 630 (6) | **629** | 419 | 90 (1) | **69** | 10 | 5 | boss QUEEN |
-| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (17) | **79** | 80 | 16 (16) | **20** | 1 | 0 | SKULKING_COLONY |
+| SKULKING_COLONY | elite | 75 (11) | 75 | 80 (17) | **79** | 80 | 16 (16) | **20** | 2 | 0 | SKULKING_COLONY |
 | SLIMED_BERSERKER | hallway | 261 (2) | 261 | 281 (2) | 281 | 281 | 70.2 (1) | **40** | 1 | 1 | SLIMED_BERSERKER |
 | SLUDGE_SPINNER | hallway | 38 [37-39] (17) | 38 | 42 [41-42] (55) | **40** | 42 [41-42] | 14 (55) | - | 1 | 1 | SLUDGE_SPINNER |
-| SLUMBERING_BEETLE | hallway | 174 [172-176] (10) | 172 | 178 [176-182] (27) | 181 | 89 | 29.7 (24) | 30 | 11 | 7 | BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE |
-| SOUL_FYSH | boss | 211 (6) | 211 | 221 (20) | 221 | 221 | 20.1 (15) | **25** | 12 | 8 | boss SOUL_FYSH |
+| SLUMBERING_BEETLE | hallway | 174 [172-176] (10) | 172 | 178 [176-182] (27) | 181 | 89 | 29.7 (24) | 30 | 12 | 7 | BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE |
+| SOUL_FYSH | boss | 211 (6) | 211 | 221 (20) | 221 | 221 | 20.1 (15) | **25** | 13 | 8 | boss SOUL_FYSH |
 | SOUL_NEXUS | elite | 234 (1) | 234 | 254 (3) | **246** | 254 | 33.9 (2) | **45** | 2 | 1 | SOUL_NEXUS |
-| SPINY_TOAD | hallway | 117 [116-119] (10) | 118 | 123 [121-124] (30) | 122 | 123 [121-124] | 30.8 (26) | - | 6 | 3 | SPINY_TOAD |
+| SPINY_TOAD | hallway | 117 [116-119] (10) | 118 | 123 [121-124] (30) | 122 | 123 [121-124] | 30.8 (26) | - | 7 | 3 | SPINY_TOAD |
 | TERROR_EEL | elite | 140 (8) | 140 | 150 (22) | 150 | 150 | 25 (21) | 30 | 2 | 1 | TERROR_EEL |
-| TEST_SUBJECT | boss | 100 (3) | **600** | 111 (3) | **630** | 111 | - (0) | 43 | 10 | 7 | boss TEST_SUBJECT |
-| THE_INSATIABLE | boss | 321 (6) | 321 | 341 (23) | 341 | 341 | 42.6 (8) | 49 | 22 | 6 | boss THE_INSATIABLE |
-| THE_KIN | boss | 307 (7) | 307 | 324 (23) | **322** | - | 40.5 (13) | **31** | 14 | 4 | boss THE_KIN |
+| TEST_SUBJECT | boss | 100 (3) | **600** | 111 (3) | **630** | 111 | - (0) | 43 | 11 | 7 | boss TEST_SUBJECT |
+| THE_INSATIABLE | boss | 321 (6) | 321 | 341 (23) | 341 | 341 | 42.6 (8) | 49 | 23 | 6 | boss THE_INSATIABLE |
+| THE_KIN | boss | 307 (7) | 307 | 324 (23) | **322** | - | 40.5 (13) | **31** | 16 | 4 | boss THE_KIN |
 | THE_LOST | hallway | 199 (2) | 199 | 210 (6) | **209** | 99 | 46.7 (6) | - | 0 | 0 | THE_FORGOTTEN+THE_LOST |
-| THE_OBSCURA | hallway | 123 (5) | 123 | 129 (35) | 129 | 129 | 25.8 (30) | 30 | 7 | 3 | THE_OBSCURA |
+| THE_OBSCURA | hallway | 123 (5) | 123 | 129 (35) | 129 | 129 | 25.8 (30) | 30 | 8 | 3 | THE_OBSCURA |
 | THIEVING_HOPPER | hallway | 79 (14) | 79 | 84 (49) | 84 | 84 | 21 (49) | - | 0 | 0 | THIEVING_HOPPER |
 | TUNNELER | hallway | 87 (17) | 87 | 92 (52) | **91** | 92 | 18.4 (52) | - | 1 | 1 | TUNNELER |
-| VANTOM | boss | 173 (8) | 173 | 183 (25) | 183 | 183 | 22.9 (21) | 23 | 9 | 5 | boss VANTOM |
-| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (27) | 250 | 250 | 26.3 (18) | 25 | 18 | 8 | boss WATERFALL_GIANT |
+| VANTOM | boss | 173 (8) | 173 | 183 (25) | 183 | 183 | 22.9 (21) | 23 | 11 | 5 | boss VANTOM |
+| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (27) | 250 | 250 | 26.3 (18) | 25 | 21 | 8 | boss WATERFALL_GIANT |
 
 Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 79), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 42), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
 

@@ -51,3 +51,9 @@ From post-mortems 0NZB 2ZCK 7KDM 3SBP (2026-09-29 16:55):
 - Feel No Pain misses end-of-turn exhausts of ethereal cards (Dazed, Clumsy, Ascender's Bane): the solver/rollout never exhaust ethereal cards at end of turn (evaluate, turn-solver.ts ~:1643 / step1-bugfix ~:1758; Feel No Pain only at ~:1027-1031). 7KDM HP forecasts 9–12 too pessimistic at T5/T7/T8. Ascender's Bane is in every A9 deck.
 - run-journal.ts:894-895 dedupes next nodes by type ("下一个节点强制: Treasure" with two different Treasure nodes). Minor.
 - Not a bug but noted: near-ties are not tagged tied (a line differing only by a useless drink won best by 1.6 of noise) — fixed at the source by the zero-effect drink item above.
+
+From post-mortems 9GRP N01X 83FL 7MDJ 5NFG (2026-09-29 17:05):
+- HIGH: run-plan echo accepted — when DeepSeek's run-plan reply is only a {choice, reason} echo, pickJsonObject still returns it (deepseek.ts ~:249 at 54d6d9e), ensureRunPlan stores it unchecked (loop.ts ~:1480-1481), parseRunPlan (run-plan.ts:127-167) turns it into an all-empty plan that REPLACES the valid one (9GRP F9, F25; YFG5 F44 on 09-26). DeepSeek's reasoning had full plans both times. Reject/recover (from reasoning) instead of overwriting.
+- Route review candidates come only from the current node's children (map.ts ~:957 positionRoutes) → Winged Boots detours never offered now that the HP-drop re-plan is gone (9GRP F28: boots could reach a rest site at (11,2)). Add boots-reachable nodes when charges remain.
+- rest.ts:43 pre-boss heal ignores boss-start heal relics (Pantograph) (5NFG F16; heal amount is a {Heal} placeholder, loss unverified). Minor.
+- Unmodelled cards/relics that decided or shaped deaths: Primal Force (N01X), Rolling Boulder power (83FL; coverage #12), Biiig Hug's Soot, Cloak Clasp (7MDJ forecasts +2–4 HP/turn).
