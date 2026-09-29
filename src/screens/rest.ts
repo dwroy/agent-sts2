@@ -13,12 +13,19 @@ import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere,
 import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
-import { baseRestHeal, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
+import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
+import { continueAfterDiscard, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const rest = asRecord(state.raw["rest"]);
   if (Object.keys(rest).length === 0) return null;
+  // The second half of a rest option chosen with potion discards first (Tiny Mailbox's heal into a full belt).
+  const pending = continueAfterDiscard(env, "rest", "rest", (option, title) => {
+    const raw = asArray(rest["options"]).map(asRecord).find((entry) => numOrNull(entry["index"]) === option && bool(entry["is_enabled"]) && str(entry["title"], str(entry["option_id"]).toUpperCase()) === title);
+    return raw ? { action: "choose_rest_option", option_index: option } : null;
+  });
+  if (pending !== undefined) return pending;
 
   const options: PickOption[] = [];
   /** Each option's game entry (its id and text tell which deck selection it opens). */
@@ -71,6 +78,21 @@ export function planRest(env: DecisionEnv): Decision | null {
     });
   }
 
+  // A rest option that gives potions into a belt without room (Tiny Mailbox: 「从小邮箱获得2瓶随机药水」 on the heal
+  // only, never on a smith; ZGZ0EQDDNJPT F10 code discarded Fysh Oil on the map for it, F11 smithed, the boss
+  // with a slot empty): the plain option says what is lost, and a "discard, then …" variant lets the decider free
+  // slots first; which potions, if any, is its call.
+  const slots = discardableSlots(env);
+  const withDiscard = (option: PickOption): PickOption[] => {
+    const raw = rawByKey.get(option.key);
+    const need = raw ? potionSlotsNeeded(str(raw["description"]), state.run?.raw) : 0;
+    const title = raw ? str(raw["title"], str(raw["option_id"]).toUpperCase()) : "";
+    const variant = raw ? discardVariant(env, option, { place: "rest", option: numOrNull(raw["index"]) ?? 0, title }, need, slots) : null;
+    if (!variant) return [option];
+    const lost = { ...option, summary: { ...(option.summary as Record<string, JsonValue>), potion_slots: `${need === 1 ? "1 potion" : `${need} potions`} this option gives ${need === 1 ? "has" : "have"} no free slot and ${need === 1 ? "is" : "are"} lost unless potions are discarded first (option ${variant.key})` } };
+    return [lost, variant];
+  };
+
   if (options.length === 0) {
     if (state.available_actions.includes("proceed")) {
       return { kind: "act", label: "rest/proceed", intent: { action: "proceed" }, rationale: "nothing to choose at this rest site" };
@@ -88,7 +110,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     escalateBelow: 0.5,
-    options,
+    options: options.flatMap(withDiscard),
     codeMargin: env.combatPlanner === "card" ? undefined : 3,
     state: {
       run_brief: briefJson(env.brief),
@@ -125,26 +147,29 @@ export function planRest(env: DecisionEnv): Decision | null {
   // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
   // and the step-by-step question alike, with the HP each rest option leaves: heal adds its amount, the other
   // actions leave HP as it is.
-  const kindOf = (key: string): string => str(rawByKey.get(key)?.["option_id"]).toUpperCase();
+  const kindOf = (key: string): string => str(rawByKey.get(key.split(":")[0] ?? key)?.["option_id"]).toUpperCase();
   const after = (key: string): { hp: number; max: number } => (kindOf(key) === "HEAL" ? healed : { hp: hpNow, max: maxNow });
   const hpAfter = new Map(options.map((option) => [option.key, after(option.key).hp]));
   const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: after(option.key).hp, max: after(option.key).max })));
   const reviewNote = review ? ` ${review.note} hp_if_option: each route's HP at its first elite and boss after each rest option.` : "";
   const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
   const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
+  const discardNote = params.options.some((option) => option.key.endsWith(DISCARD_SUFFIX))
+    ? ' A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.'
+    : "";
   // BUILD_ONESHOT: the rest action and the card it takes (smith X) in one question; code plays both.
   if (oneshotOn(env) && !oneshotFailedHere(env, "rest")) {
     const cards = deckCards(state, knowledge);
     const ref = nextPlanRef(env, "rest");
     const offered = new Set<string>();
-    const expanded = options.flatMap((option) => {
+    const expanded = params.options.flatMap((option) => {
       const raw = rawByKey.get(option.key) ?? {};
       const follow: DeckFollowUp | null = str(raw["option_id"]).toUpperCase() === "SMITH" ? { task: "upgrade", count: 1, upTo: false, text: "SMITH" } : deckFollowUp(str(raw["description"]));
       if (!follow) return [planOnly(env, option, ref)];
       for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
       return withFollowUp(env, option, follow, cards, ref, "rest", followUpTargetScore(env, follow.task));
     });
-    const note = "Each smith option names its card: code upgrades that card on the next screen without asking again.";
+    const note = `Each smith option names its card: code upgrades that card on the next screen without asking again.${discardNote}`;
     return withReview(
       buildPickDecision({
         ...params,
@@ -171,7 +196,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       ...reviewState,
       deepseek: {
         facts,
-        note: `If you smith, you pick the card to upgrade on the next screen.${reviewNote}`,
+        note: `If you smith, you pick the card to upgrade on the next screen.${discardNote}${reviewNote}`,
       },
     }),
   );
@@ -260,11 +285,8 @@ function mapPoint(value: unknown): { row: number; col: number } | null {
 /** Nodes ahead a rest site looks for a forced Elite in (as an event does: FORCED_ELITE_DEPTH). */
 export const FORCED_ELITE_REST_DEPTH = 3;
 
-/**
- * Relics that heal at the start of a boss fight: Pantograph (缩放仪, 「在Boss战开始时，回复{Heal}点生命值」; logged
- * JRN33CL7EB50 F32 -> F33: 31 -> 58 with Blood Vial's 2, i.e. 25; CAYK F32 -> F33 64 -> 85 = max).
- */
-export const BOSS_START_HEAL: Record<string, number> = { PANTOGRAPH: 25 };
+/** Relics that heal at the start of a boss fight (route-projection.ts; Pantograph 25). */
+export { BOSS_START_HEAL };
 
 /**
  * The boss-start heal facts at the rest site before an act boss (the boss within 2 floors): what the relic heals

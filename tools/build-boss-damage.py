@@ -42,6 +42,8 @@ BOSSES = {
     "CEREMONIAL_BEAST": ["CEREMONIAL_BEAST"],
 }
 BOSS_OF = {enemy: boss for boss, enemies in BOSSES.items() for enemy in enemies}
+# The Waterfall Giant's husk after the kill shows this HP (999999999) until it blows up.
+GIANT_HUSK_HP = 100000000
 
 
 def fight_won(run, floor):
@@ -74,6 +76,9 @@ def main() -> None:
     # (run, floor) -> {turn: (hp, shown attack)} from the turn's first logged frame
     fights = collections.defaultdict(dict)
     meta = {}
+    # (run, floor) -> (turn, our HP, eruption stacks) at the Waterfall Giant's kill: the first frame showing its
+    # husk (the kill leaves a body of 999999999 HP that blows up for the stacks; Y36HXZ80A8LL T9: 36 HP, 41).
+    giant_kills = {}
     for line in grep.stdout:
         try:
             state = json.loads(line)["state"]
@@ -89,6 +94,10 @@ def main() -> None:
         boss = BOSS_OF[bodies[0]["enemy_id"]]
         key = (state.get("run_id"), run.get("floor"))
         turn = state.get("turn")
+        for enemy in bodies:
+            if enemy.get("enemy_id") == "WATERFALL_GIANT" and (enemy.get("max_hp") or 0) >= GIANT_HUSK_HP and key not in giant_kills and turn is not None:
+                stacks = next((p.get("amount") for p in enemy.get("powers") or [] if p.get("power_id") == "STEAM_ERUPTION_POWER"), None)
+                giant_kills[key] = (turn, (combat.get("player") or {}).get("current_hp"), stacks)
         if turn is None or turn in fights[key]:
             continue
         hp = (combat.get("player") or {}).get("current_hp")
@@ -107,6 +116,9 @@ def main() -> None:
 
     pooled = collections.defaultdict(lambda: {"shown": 0, "lost": 0, "turns": 0, "fights": 0})
     rows = []
+    # The Waterfall Giant's fights by ascension: kill turn (None: not killed), outcome, HP and stacks at the kill
+    # (strategy/boss-clock.ts giantKillRecord: the kill-turn record the notes quote, from the data).
+    kills = collections.defaultdict(list)
     for key, turns in fights.items():
         boss, asc = meta[key]
         run_id, floor = key
@@ -133,6 +145,10 @@ def main() -> None:
             acc["turns"] += 1
         rows.append({"key": run_id, "floor": floor, "boss": boss, "ascension": asc, "outcome": "won" if won else "died", "turns": last,
                      "entry_hp": entry, "final_hp": final, "loss_per_turn": round((entry - final) / max(1, last), 2)})
+        if boss == "WATERFALL_GIANT":
+            kill = giant_kills.get(key)
+            kills[str(asc)].append({"run": (run_id or "")[:4], "turn": kill[0] if kill else None, "won": won,
+                                    "hp": kill[1] if kill else None, "stacks": kill[2] if kill else None})
 
     out = {}
     for boss in sorted(pooled):
@@ -141,6 +157,8 @@ def main() -> None:
             continue
         out[boss] = {"unblocked_share": round(acc["lost"] / acc["shown"], 3), "fights": acc["fights"], "turns": acc["turns"],
                      "shown": acc["shown"], "hp_lost": acc["lost"]}
+        if boss == "WATERFALL_GIANT":
+            out[boss]["kills"] = {asc: sorted(rows_, key=lambda r: (r["turn"] is None, r["turn"] or 0, r["run"])) for asc, rows_ in sorted(kills.items())}
     with open(args.out, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")

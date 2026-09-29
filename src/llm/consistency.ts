@@ -165,7 +165,8 @@ export function checkConsistency(choice: string, reason: string, reasoning: stri
   const issues: string[] = [];
   if (!reason.trim()) issues.push("empty reason");
   const conclusion = reasoningConclusion(reasoning, criteria);
-  if (conclusion && conclusion.unambiguous && conclusion.option !== choice) issues.push(`reasoning concluded ${conclusion.option} but answered ${choice}`);
+  // A conclusion on an option names its variants too ("o0" and the answer o0:discard or o1:c5 with the detail).
+  if (conclusion && conclusion.unambiguous && conclusion.option !== choice && !choice.startsWith(`${conclusion.option}:`)) issues.push(`reasoning concluded ${conclusion.option} but answered ${choice}`);
   return { ok: issues.length === 0, issues, conclusion };
 }
 
@@ -176,7 +177,7 @@ export function checkConsistency(choice: string, reason: string, reasoning: stri
  * second answer dropped the route, "the answer has no route"), the act-start joint question's route
  * (state.act_routes), and the deck cards a one-shot option takes when the first answer named them ("cards").
  */
-export function reaskFields(state: Record<string, unknown>, first: { cards?: string[] }): { fields: string[]; note: string } {
+export function reaskFields(state: Record<string, unknown>, first: { cards?: string[]; discard?: number[] }): { fields: string[]; note: string } {
   const record = (value: unknown): Record<string, unknown> => (value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
   const fields: string[] = [];
   const notes: string[] = [];
@@ -190,6 +191,7 @@ export function reaskFields(state: Record<string, unknown>, first: { cards?: str
     notes.push('Name the act\'s route again too: "route" is a key of state.act_routes.');
   }
   if ((first.cards ?? []).length > 0) fields.push('"cards": [<the deck cards the option takes>]');
+  if ((first.discard ?? []).length > 0) fields.push('"discard": [<the potion slots to discard first>]');
   return { fields, note: notes.join(" ") };
 }
 

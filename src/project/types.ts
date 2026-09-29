@@ -159,12 +159,13 @@ export interface ScreenMemory {
    */
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
   /**
-   * An event option chosen with a potion discarded first (every slot full, the option gives a potion; event.ts):
-   * the discard is played, then this option on the same event page.
+   * An option chosen with potion(s) discarded first (screens/potion-discard.ts: a rest site's Tiny Mailbox heal, an
+   * event option giving potions, with the belt full): the discards are played, then this option on `place`.
    */
-  eventAfterDiscard?: {
+  afterDiscard?: {
+    /** "rest", or "event:<event id>". */
+    place: string;
     runId: string;
-    eventId: string;
     floor: number | null;
     option: number;
     title: string;

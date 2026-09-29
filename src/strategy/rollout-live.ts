@@ -398,13 +398,17 @@ export type LiveRollout =
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
 
 /**
- * The line a drink line is without its potion(s) when the drink changes nothing this turn: the same card steps
- * (card, hand index, target) and the same outcome but the potions' resource cost (3SBPKG9603WD boss T3: Flex
+ * The line a drink line is without its potion(s) when the drink changes nothing: every drink's effect is this
+ * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome but the potions' resource cost (3SBPKG9603WD boss T3: Flex
  * after the last attack, 62.5 vs 64.1 by sampling noise, and Jev drank it). Null when there is none. The drink
  * line stays an option (Dai: potions are never filtered); it is only told apart.
  */
 export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
   if (!drinks(plan)) return null;
+  // Only a drink whose whole effect is this turn's can be told "no effect" by this turn's outcome: one that lasts
+  // (Powdered Demise, a debuff, a power: turn-solver turnOnlyDrink) never is (ARKG3JFT26HC F17 boss: Demise
+  // marked no effect on 30 of 34 questions and given the dry line's rollout).
+  if ((plan.outcome.lastingDrinks ?? 0) > 0) return null;
   const cards = (line: Plan): string =>
     line.steps
       .filter((step) => !step.cardId.startsWith("POTION:"))

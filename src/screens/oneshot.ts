@@ -389,7 +389,20 @@ export function withFollowUp(
   ];
 }
 
-/** An option of a one-shot question with no card to name: the plan is the option alone. */
+/**
+ * An option of a one-shot question with no card to name: the plan is the option alone, or the option's own plan
+ * (a "discard potion(s), then …" option: the slots its answer names) under the one-shot reference.
+ */
 export function planOnly(env: DecisionEnv, option: PickOption, ref: string): PickOption {
-  return { ...option, plan: () => ({ id: ref, steps: [option.key], apply: () => usePlanRef(env.screenMemory, str(env.state.raw["run_id"])) }) };
+  const own = option.plan;
+  const use = () => usePlanRef(env.screenMemory, str(env.state.raw["run_id"]));
+  return {
+    ...option,
+    plan: (answer: PlanAnswer) => {
+      const inner = own?.(answer) ?? null;
+      if (inner && "invalid" in inner) return inner;
+      if (!inner) return { id: ref, steps: [option.key], apply: use };
+      return { ...inner, id: ref, apply: () => (use(), inner.apply?.()) };
+    },
+  };
 }

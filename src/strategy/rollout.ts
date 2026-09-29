@@ -810,6 +810,8 @@ interface SimEnemy {
   growth: number;
   /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
   shrink: number;
+  /** Demise (Powdered Demise): HP it loses at the end of each of its turns, until it dies. */
+  demise: number;
   /**
    * Shriek / Plow (Terror Eel, Ceremonial Beast: stunned the first time its HP drops to the threshold, that
    * turn's move lost) not yet triggered: the later turns' solver calls model it too (they dropped it, so a Beast
@@ -1012,11 +1014,17 @@ export function usualMove(table: EnemyTable | undefined): string | null {
   return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 }
 
-function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number): string | null {
+/** The move-model state after an enemy's stun (the Bowlbug Rock's Imbalanced). */
+const STUNNED_MOVE = "STUNNED";
+
+function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number, exclude?: string): string | null {
   if (!table || !move) return move;
   const successors = table.next[move];
   if (!successors) return move;
-  const entries = Object.entries(successors);
+  // An Imbalanced enemy's stun comes from our block, not by chance (exclude "STUNNED"), unless nothing else follows.
+  const all = Object.entries(successors);
+  const kept = exclude ? all.filter(([m]) => m !== exclude) : all;
+  const entries = kept.length > 0 ? kept : all;
   const total = entries.reduce((s, [, n]) => s + n, 0);
   let r = random() * total;
   for (const [m, n] of entries) {
@@ -1090,6 +1098,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     flutter: 0,
     growth: 0,
     shrink: 0,
+    demise: 0,
     shriekArmed: false,
     thorns: 0,
     halved: false,
@@ -1391,6 +1400,8 @@ function applyPlan(
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
     if (a.shrink !== undefined) e.shrink = a.shrink;
+    // Demise the line put on it (the outcome carries it only when up).
+    e.demise = a.demise ?? e.demise;
     // Strength it gained for good this turn (Fight Me!, Enrage per Skill, Crab Rage on the survivor).
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
@@ -1446,6 +1457,8 @@ function applyPlan(
     // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
     // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
     const applied: EnemyMove[] = [];
+    // Imbalanced enemies whose hits this turn's line fully blocked (the solver's stuns).
+    const blockStunned = new Set(o.stunIndexes ?? []);
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -1512,9 +1525,22 @@ function applyPlan(
         }
       }
       // Still burrowed: it keeps using its burrowed move (Below) until the block breaks.
+      // Imbalanced (Bowlbug Rock, 「如果这名敌人的攻击被完全格挡，它会被眩晕」): its hit fully blocked this turn, its next
+      // move is the stun; otherwise never a stun (the move model's HEADBUTT -> STUNNED 110/367 was a free 30%
+      // stun each turn whatever we blocked: KTRT1M2SVVL3 F23 T3, leaving the Rock alive read safer than killing it).
+      const imbalanced = (e.powers["IMBALANCED_POWER"] ?? 0) > 0;
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
-      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
+      else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
+      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
     }
+    // Demise: HP lost at the end of each of its turns, stunned or not, until it dies (the solver only priced about
+    // three turns of it; ARKG3JFT26HC F17: 9 a turn on the Soul Fysh never counted in any later turn).
+    for (const e of enemies) {
+      if (!e.alive || e.explodeAt !== undefined || e.demise <= 0) continue;
+      e.hp -= e.demise;
+      if (e.hp <= 0) enemyDown(e, turn, input, enemies);
+    }
+    won = allDown();
     // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
     // block at the start of each of our turns while the Shield lives (40 logged fights, 25 every turn).
     for (const holder of enemies) {
@@ -1710,6 +1736,7 @@ function simulate(
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
       shrink: e.shrink ?? 0,
+      demise: e.demise ?? 0,
       shriekArmed: (e.shriek ?? 0) > 0 && e.hp > (e.shriek ?? 0),
       plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
@@ -1794,6 +1821,7 @@ function simulate(
         thorns: e.thorns,
         halved: e.halved,
         shrink: e.shrink,
+        demise: e.demise,
         dazedPerHit: e.dazedPerHit,
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
@@ -1804,7 +1832,14 @@ function simulate(
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
-      }));
+      }))
+      // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
+      // its next hit (about this one) saved.
+      .map((sim) => {
+        const e = enemies.find((entry) => entry.index === sim.index);
+        const imbalanced = e && (e.powers["IMBALANCED_POWER"] ?? 0) > 0 ? sim.attacks.reduce((sum, attack) => sum + attack.damage * attack.hits, 0) : 0;
+        return imbalanced > 0 ? { ...sim, imbalanced } : sim;
+      });
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
     const pSim: PlayerSim = {
       ...base,
@@ -1839,6 +1874,9 @@ function simulate(
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
+      // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
+      hellraiser: player.hellraiser,
+      darkEmbrace: player.darkEmbrace,
       // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
       inferno: player.inferno,
       rupture: player.rupture,
@@ -2107,6 +2145,8 @@ const SCHEDULE: { horizon: number; samples: number }[] = [
   { horizon: 3, samples: 4 },
   { horizon: 3, samples: 2 },
 ];
+/** The horizon the first wave drops to when it cannot finish at the full one in the time left. */
+const SHORT_HORIZON = 3;
 /** With kill orders, samples go before the horizon: an order only shows once its first target is dead. */
 const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
   { horizon: 5, samples: 8 },
@@ -2188,23 +2228,49 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const turnsBefore = budget.policyTurns;
     const t = now();
     // First wave at the full horizon, timing the policy. Past the budget it is abandoned: 1 turn for all.
-    const first = units.map((unit) => run(unit, maxHorizon, 0));
+    // Shrunk on demand: when the first unit's time says the wave cannot finish at the full horizon in the time
+    // left, the rest of it (and the samples after) run at SHORT_HORIZON turns, so the lines still get a rollout
+    // instead of the 1-turn fallback (ZGZ0EQDDNJPT boss T1/T3: 16 and 10 lines x 2 kill orders after a 400 ms
+    // random-potion sample, both fell back; 3 of the fight's 5 questions).
+    let firstHorizon = maxHorizon;
+    const first: (TurnRecord[] | null)[] = [];
+    for (const unit of units) {
+      const records = run(unit, firstHorizon, 0);
+      first.push(records);
+      // The first unit's time says the rest would not finish at this horizon in the time left (one clock reading).
+      const rest = units.length - first.length;
+      if (first.length === 1 && records !== null && rest > 0 && firstHorizon > SHORT_HORIZON) {
+        const at = now();
+        if ((at - t) * rest > budget.budgetMs - (at - budget.start)) firstHorizon = SHORT_HORIZON;
+      }
+    }
+    if (firstHorizon < maxHorizon) degraded.push(`first wave at ${firstHorizon} turns`);
     const waveMs = now() - t;
     const perTurn = waveMs / Math.max(1, budget.policyTurns - turnsBefore);
     const left = budget.budgetMs - elapsed();
     // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
     // wave's own time is the measure of a wave.
-    const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, maxHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
+    const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, firstHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
     // The schedule at the asked sizes: each step clamped to maxHorizon x maxSamples (asking for fewer than 8
-    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1).
+    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1);
+    // after a shrunk first wave, no step longer than it (plus its one sample, which always fits).
     const schedule = (orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE)
-      .map((s) => ({ horizon: Math.min(s.horizon, maxHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .map((s) => ({ horizon: Math.min(s.horizon, firstHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .concat(firstHorizon < maxHorizon ? [{ horizon: firstHorizon, samples: 1 }] : [])
       .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
     const fit = schedule.find((s) => cost(s.horizon, s.samples) <= left);
-    if (first.some((r) => r === null) || elapsed() > budget.budgetMs || !fit) {
+    if (first.some((r) => r === null)) {
       horizon = 1;
       samples = 1;
       degraded.push("1-turn");
+    } else if (elapsed() > budget.budgetMs || !fit) {
+      // The first wave finished, just past the budget: its one sample per line is kept (it was thrown away for
+      // the 1-turn fallback), no more waves.
+      first.forEach((records, i) => trajectories[i]!.push(records!));
+      horizon = firstHorizon;
+      samples = 1;
+      if (firstHorizon < maxHorizon) degraded.push(`horizon ${firstHorizon}`);
+      degraded.push("samples 1 (clock)");
     } else {
       first.forEach((records, i) => trajectories[i]!.push(records!));
       if (fit.horizon < maxHorizon) degraded.push(`horizon ${fit.horizon}`);

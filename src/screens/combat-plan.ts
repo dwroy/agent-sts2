@@ -738,7 +738,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
   if ((o.spawns ?? []).length > 0) summary["spawns_on_death"] = `${o.spawns!.join("; ")}: they arrive as it dies, the fight is NOT over`;
   // A Waterfall Giant husk has no HP to take off (999,999,999): named as the husk, not by that number.
-  if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.husk ? "husk (cannot be killed, it explodes; damage into it counts for nothing)" : `${enemy.hp} HP`}${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}`).join("; ");
+  if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.husk ? "husk (cannot be killed, it explodes; damage into it counts for nothing)" : `${enemy.hp} HP`}${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}${enemy.demise ? `, Demise ${enemy.demise} (loses ${enemy.demise} HP at the end of each of its turns)` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
@@ -749,6 +749,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   // Powers pay off every later turn; without saying so the models swapped power lines for ones that
   // saved a few HP now (JEGBU7JHEL1A: Rupture and Crimson Mantle never played in a 379 HP boss fight).
   if (o.lasting >= 5) summary["lasting_value"] = `sets up a power worth about ${Math.round(o.lasting)} score over the fight (a few HP now is often worth it in a long fight)`;
+  // Unrelenting's free Attack left unused stays up into the next turn (FREE_ATTACK_POWER carries over, 2a38a76);
+  // the score of this turn does not count it, so it is said (a fact, not a weight).
+  if (!o.winsFight && (o.freeAttacksLeft ?? 0) > 0) summary["free_attacks_kept"] = `${o.freeAttacksLeft} free Attack${o.freeAttacksLeft === 1 ? "" : "s"} (Unrelenting) left unused: ${o.freeAttacksLeft === 1 ? "it stays" : "they stay"} up into next turn (the next Attack played costs 0)`;
   if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
@@ -1078,7 +1081,8 @@ export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | un
       const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line);
       const text = line.replace(/\[[^\]]*\]/g, "");
       const block = /获得\d+点格挡|gain \d+ block/i.test(text) && !/造成\d+点伤害|deal \d+ damage/i.test(text);
-      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty, ...(block ? { block } : {}) };
+      const strike = asArray(asRecord(entry)["card_ids"]).some((id) => typeof id === "string" && isStrikeCard({ cardId: id }));
+      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty, ...(block ? { block } : {}), ...(strike ? { strike } : {}) };
       return Array.from({ length: count }, () => card);
     });
   const draw = parse(view["draw"]);
@@ -1109,7 +1113,18 @@ function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined
 function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  return handSignature(hand.filter((card) => card !== cardFor(first, hand)));
+  return handSignature(handAfterPlay(cardFor(first, hand), hand));
+}
+
+/**
+ * The hand after a card is played from it: the card gone, and after Primal Force every Attack left a Giant Rock
+ * (巨石, 巨石+ from Primal Force+; the solver's giantRockFrom), so the line goes on instead of reading the rocks as a
+ * surprise and re-planning (as eca3384 for Blessing of the Forge's upgrades).
+ */
+function handAfterPlay(played: CardModel | undefined, hand: CardModel[]): CardModel[] {
+  const left = hand.filter((card) => card !== played);
+  if (played?.special !== "primal_force") return left;
+  return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
@@ -1379,6 +1394,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
+    // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
+    hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
+    darkEmbrace: powerAmount(player, "DARK_EMBRACE_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
     // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled
@@ -1440,7 +1458,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
-              expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
+              expectedHand: handSignature(handAfterPlay(nextCard, hand)),
               handLen: handLenAfter(next, hand),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(potions !== undefined ? { potions } : {}),
