@@ -307,6 +307,12 @@ class FixtureTest(unittest.TestCase):
         for part in ("## 1. 推演", "## 2. 路线投影", "## 3. boss 时钟", "| A9 17ac095 |", "RUNE00000005", "中位 \\|误差\\|"):
             self.assertIn(part, text)
         self.assertNotIn("RUNF00000006", text)
+        # By configuration (version + brain setup, metrics.py): these runs have no run-config rows.
+        if None not in metrics.Git().resolve(["17ac095", "0c93138"]).values():
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(cal.main(args[:-2] + ["--group-by", "config", "--json", "--no-boss"]), 0)
+            self.assertEqual(json.loads(out.getvalue())["groups"], {"V3 · 未记录配置": ["RUNE00000005"], "V3.oneshot · 未记录配置": ["RUNF00000006"]})
         # The metrics table carries the three calibration rows (and leaves them out on request).
         margs = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(ROOT, "tests", "eval-data", "strength-sets.json"),
                  "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md"]

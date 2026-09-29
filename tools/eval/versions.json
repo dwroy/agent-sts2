@@ -1,11 +1,12 @@
 {
-  "doc": "Named code versions for tools/eval/metrics.py --group-by version / family (docs/eval.md section 2). A run belongs to the last entry whose commit is an ancestor of (or equal to) the run's code commit (runs.jsonl `code`, `+dirty` stripped); runs older than the first entry are 'before <first name>'. Keep the entries in time order; give each the decision-log line (or tag) that says when it went live. Add V4 here (its first playing commit) before comparing V4 runs.",
+  "doc": "Named code versions for tools/eval/metrics.py --group-by version / family (docs/eval.md section 2). A run belongs to the last entry whose commit is an ancestor of (or equal to) the run's code commit (runs.jsonl `code`, `+dirty` stripped); runs older than the first entry are 'before <first name>'. Keep the entries in time order; give each the decision-log line (or tag) that says when it went live. An entry whose commit is null is announced but not live: it is skipped until its commit is filled in (V4: fill in its first playing commit when it goes live, docs/v4-go-live.md). The brain setup of a run (engines, models, knowledge prefix) is not a version: it is in logs/run-config.jsonl, see metrics.py --group-by config.",
   "versions": [
     {"name": "baseline", "family": "baseline", "commit": "910671b", "source": "decision-log 2026-09-28 11:12: rollback to the pre-ablation tree 1910898 plus the move model; stage-1 fixes then merged one at a time"},
     {"name": "V2", "family": "V2", "commit": "189fc29", "source": "tag V2-start; decision-log 2026-09-28 22:19 (V2 = the 10-run window 189fc29..98a16de)"},
     {"name": "V3-pre", "family": "V3-pre", "commit": "debdecc", "source": "tag V3-pre; decision-log 2026-09-28 23:22"},
     {"name": "V3", "family": "V3", "commit": "17ac095", "source": "tag V3; decision-log 2026-09-28 23:22 (per-target focus options, kill-order rollouts)"},
     {"name": "V3.oneshot", "family": "V3", "commit": "0c93138", "source": "decision-log 2026-09-29 12:50 (one-shot DeepSeek decisions for shop, rest site and events)"},
-    {"name": "V3.route-review", "family": "V3", "commit": "ea6ca1c", "source": "decision-log 2026-09-29 16:00 (route review in the card-reward and rest questions; HP-drop re-plan removed)"}
+    {"name": "V3.route-review", "family": "V3", "commit": "ea6ca1c", "source": "decision-log 2026-09-29 16:00 (route review in the card-reward and rest questions; HP-drop re-plan removed)"},
+    {"name": "V4", "family": "V4", "commit": null, "source": "上线时填：commit = 第一个跑对局的 V4 提交（切换方式 a：jev-sts2-v4run 的 HEAD；方式 b：v4 合进 v3 的合并提交），source = decision-log 里上线的那一条。留空时这一条不参与分组"}
   ]
 }

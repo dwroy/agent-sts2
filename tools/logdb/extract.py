@@ -13,7 +13,7 @@ import json
 import re
 
 # Bumped per source when its extractor or columns change: sync.py rebuilds that source's shards.
-VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1}
+VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1}
 
 KEY_RE = re.compile(r"(sk-(?:ant-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._~+/-]{16,}|(?:api[_-]?key|x-api-key)[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{12,})", re.I)
 AGENT_VIEW = b',"agent_view":'
@@ -80,6 +80,21 @@ TABLES = {
         ("version", "INTEGER"), ("archetype", "VARCHAR"), ("summary", "VARCHAR"), ("want", "VARCHAR[]"), ("avoid", "VARCHAR[]"),
         ("input_tokens", "INTEGER"), ("output_tokens", "INTEGER"), ("cache_hit_tokens", "INTEGER"), ("reasoning_tokens", "INTEGER"),
         ("latency_ms", "INTEGER"), ("effort", "VARCHAR"), ("error", "VARCHAR"),
+    ],
+    "run_config": [
+        ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("run_id", "VARCHAR"), ("ascension", "INTEGER"), ("character", "VARCHAR"),
+        ("floor", "INTEGER"), ("restart", "BOOLEAN"), ("pid", "INTEGER"), ("process_started", "TIMESTAMP"),
+        ("code", "VARCHAR"), ("commit", "VARCHAR"), ("dirty", "BOOLEAN"), ("dirty_files", "VARCHAR[]"), ("branch", "VARCHAR"), ("worktree", "VARCHAR"),
+        ("brain_active", "BOOLEAN"), ("brain_engine", "VARCHAR"), ("brain_by_prefix", "VARCHAR"), ("brain_fallback", "VARCHAR"),
+        ("brain_label", "VARCHAR"), ("brain_engines", "VARCHAR[]"),
+        ("claude_model", "VARCHAR"), ("claude_max_calls", "INTEGER"), ("claude_effort", "VARCHAR"),
+        ("deepseek_model", "VARCHAR"), ("deepseek_max_calls", "INTEGER"), ("deepseek_effort", "VARCHAR"),
+        ("knowledge_prefix", "VARCHAR"), ("prefix_sha", "VARCHAR"), ("prefix_chars", "INTEGER"), ("prefix_tokens_deepseek", "INTEGER"),
+        ("prefix_tokens_claude", "INTEGER"), ("system_sha", "VARCHAR"), ("system_chars", "INTEGER"), ("experience_version", "VARCHAR"),
+        ("knowledge_error", "VARCHAR"),
+        ("jev_enabled", "BOOLEAN"), ("jev_model", "VARCHAR"), ("jev_context", "VARCHAR"),
+        ("loop_mode", "VARCHAR"), ("build_decider", "VARCHAR"), ("build_oneshot", "VARCHAR"), ("run_plan", "VARCHAR"), ("fight_plan", "VARCHAR"),
+        ("target_ascension", "INTEGER"), ("arm", "VARCHAR"), ("config_sha", "VARCHAR"), ("config", "VARCHAR"),
     ],
 }
 
@@ -579,6 +594,112 @@ def run_plan_row(raw, off):
     }
 
 
+# ---------------------------------------------------------------- run-config.jsonl -> run_config
+
+
+def as_dict(value):
+    return value if isinstance(value, dict) else {}
+
+
+def brain_label(brain):
+    """A short name for a brain setup, for grouping: the default engine with its model, then each question kind
+    (label prefix) answered by another engine or model, e.g. "deepseek:deepseek-flash; MAP=claude:claude-opus-5-5"
+    (kinds with the same engine and model joined: "EVENT,MAP=..."). "none" when the run had no brain (no DeepSeek)."""
+    if not isinstance(brain, dict) or not brain.get("engine"):
+        return None
+    if brain.get("active") is False:
+        return "none"
+    engines = as_dict(brain.get("engines"))
+    default = brain["engine"]
+    by_prefix = as_dict(brain.get("by_prefix"))
+
+    def token(engine, prefix=None):
+        spec = as_dict(engines.get(engine))
+        model = (as_dict(spec.get("model_by_prefix")).get(prefix) if prefix else None) or spec.get("model")
+        return f"{engine}:{model}" if model else str(engine)
+
+    base = token(default)
+    prefixes = set(by_prefix) | {p for spec in engines.values() for p in as_dict(as_dict(spec).get("model_by_prefix"))}
+    kinds = {}
+    for prefix in sorted(prefixes):
+        engine = by_prefix.get(prefix, default)
+        name = token(engine, prefix)
+        if name != base:
+            kinds.setdefault(name, []).append(prefix)
+    return "; ".join([base] + [f"{','.join(ps)}={name}" for name, ps in sorted(kinds.items(), key=lambda kv: kv[1])])
+
+
+def run_config_row(raw, off):
+    """logs/run-config.jsonl: one row per run (a second one when a restarted process ran it with another setup), as
+    src/telemetry/run-config.ts writes it (RunConfigRow): run, code, brain engines and models, knowledge prompt
+    hashes and sizes, Jev and loop settings, config_sha. It holds no key (the writer checks); `config` keeps the
+    whole row as JSON text (scrubbed) for ad-hoc json_extract queries."""
+    record = json.loads(raw)
+    code = as_dict(record.get("code"))
+    brain = as_dict(record.get("brain"))
+    engines = as_dict(brain.get("engines"))
+    claude = as_dict(engines.get("claude"))
+    knowledge = as_dict(record.get("knowledge"))
+    tokens = as_dict(knowledge.get("prefix_tokens_est"))
+    deepseek = as_dict(record.get("deepseek"))
+    jev = as_dict(record.get("jev"))
+    loop = as_dict(record.get("loop"))
+    proc = as_dict(record.get("process"))
+    files = code.get("dirty_files")
+    by_prefix = brain.get("by_prefix")
+    return {
+        "off": off,
+        "len": len(raw),
+        "ts": to_ts(record.get("ts")),
+        "run_id": run_id_of(record.get("run_id")),
+        "ascension": to_int(record.get("ascension")),
+        "character": to_str(record.get("character")),
+        "floor": to_int(record.get("floor")),
+        "restart": to_bool(record.get("restart")),
+        "pid": to_int(proc.get("pid")),
+        "process_started": to_ts(proc.get("started")),
+        "code": to_str(code.get("code")),
+        "commit": to_str(code.get("commit")),
+        "dirty": to_bool(code.get("dirty")),
+        "dirty_files": [f for f in files if isinstance(f, str)] if isinstance(files, list) else None,
+        "branch": to_str(code.get("branch")),
+        "worktree": to_str(code.get("worktree")),
+        "brain_active": to_bool(brain.get("active")),
+        "brain_engine": to_str(brain.get("engine")),
+        "brain_by_prefix": json.dumps(by_prefix, sort_keys=True, separators=(",", ":")) if isinstance(by_prefix, dict) else None,
+        "brain_fallback": to_str(brain.get("fallback")),
+        "brain_label": brain_label(brain) if brain else None,
+        "brain_engines": sorted(engines) if engines else None,
+        "claude_model": to_str(claude.get("model")),
+        "claude_max_calls": to_int(claude.get("max_calls")),
+        "claude_effort": to_str(claude.get("effort")),
+        "deepseek_model": to_str(deepseek.get("model")),
+        "deepseek_max_calls": to_int(deepseek.get("max_calls")),
+        "deepseek_effort": to_str(deepseek.get("reasoning_effort")),
+        "knowledge_prefix": to_str(knowledge.get("prefix")),
+        "prefix_sha": to_str(knowledge.get("prefix_sha")),
+        "prefix_chars": to_int(knowledge.get("prefix_chars")),
+        "prefix_tokens_deepseek": to_int(tokens.get("deepseek")),
+        "prefix_tokens_claude": to_int(tokens.get("claude")),
+        "system_sha": to_str(knowledge.get("system_sha")),
+        "system_chars": to_int(knowledge.get("system_chars")),
+        "experience_version": to_str(knowledge.get("experience_version")),
+        "knowledge_error": scrub(knowledge.get("error"), 500) if knowledge.get("error") else None,
+        "jev_enabled": to_bool(jev.get("enabled")),
+        "jev_model": to_str(jev.get("model")),
+        "jev_context": to_str(jev.get("context")),
+        "loop_mode": to_str(loop.get("mode")),
+        "build_decider": to_str(loop.get("build_decider")),
+        "build_oneshot": to_str(loop.get("build_oneshot")),
+        "run_plan": to_str(loop.get("run_plan")),
+        "fight_plan": to_str(loop.get("fight_plan")),
+        "target_ascension": to_int(record.get("target_ascension")),
+        "arm": to_str(record.get("arm")),
+        "config_sha": to_str(record.get("config_sha")),
+        "config": scrub(record, 8000),
+    }
+
+
 # source key -> (file name in logs/, table, extractor)
 SOURCES = {
     "states": ("states.jsonl", "frames", frame_row),
@@ -587,4 +708,5 @@ SOURCES = {
     "deepseek-reasoning": ("deepseek-reasoning.jsonl", "llm_calls_raw", deepseek_call_row),
     "brain": ("brain.jsonl", "llm_calls_raw", brain_call_row),
     "run-plans": ("run-plans.jsonl", "run_plans", run_plan_row),
+    "run-config": ("run-config.jsonl", "run_config", run_config_row),
 }

@@ -10,10 +10,11 @@ $P tools/eval/metrics.py --ascension 9 --md                    # A9，按版本�
 $P tools/eval/metrics.py --ascension 8 --since 2026-09-29T13:26 --group-by day
 $P tools/eval/metrics.py --ascension 9 --group-by family --md  # V3 的子版本合成一列
 $P tools/eval/metrics.py --group-by commit --per-run           # 按提交号，并列出每一局
+$P tools/eval/metrics.py --ascension 9 --group-by config --md  # 版本 + 大脑引擎/模型 + 知识前缀（§8）
 $P tools/eval/metrics.py --json > out.json                     # 每局的数和每组的汇总
 ```
 
-- 选项：`--ascension N`（可重复）、`--since / --until`（按开局时间，ISO；不带时区按 UTC，例如 `2026-09-29T21:26+08:00` 是本地时间）、`--group-by version|family|commit|ascension|day`（默认 version；day 按本地日期 UTC+8）、`--md`、`--json`、`--per-run`（附每局一行）、`--total`（加一列「全部」）、`--min-n`（默认 10，局数少于它的组和指标标 `*`）、`--no-sync`、`--db / --logs`、`--versions`（版本表）、`--strength-sets`（力量来源清单的 JSON，默认现算，见 §3）、`--no-calibration`（不算 §7 的三行校准）、`--boss-clocks`（校准用现成的 boss 时钟 JSONL，不跑 tsx）、`--game-data`。
+- 选项：`--ascension N`（可重复）、`--since / --until`（按开局时间，ISO；不带时区按 UTC，例如 `2026-09-29T21:26+08:00` 是本地时间）、`--group-by version|family|config|commit|ascension|day`（默认 version；day 按本地日期 UTC+8；config 见 §8）、`--md`、`--json`、`--per-run`（附每局一行）、`--total`（加一列「全部」）、`--min-n`（默认 10，局数少于它的组和指标标 `*`）、`--no-sync`、`--db / --logs`、`--versions`（版本表）、`--strength-sets`（力量来源清单的 JSON，默认现算，见 §3）、`--no-calibration`（不算 §7 的三行校准）、`--boss-clocks`（校准用现成的 boss 时钟 JSONL，不跑 tsx）、`--game-data`。
 - 默认先做一次增量同步（tools/logdb/sync.py），自己 nice 19 + ionice idle，DuckDB 2 线程；A9 全部 ~3 秒（其中校准 ~2 秒：按偏移读 decisions.jsonl 的原始行、跑一次 tsx 重算 boss 时钟），`--no-calibration` ~1 秒。
 - **只算已结束的局**：runs.jsonl 里有、states.jsonl 里有帧的局。正在打的局不算（它的指标是半截的）；09-24 那几局没写 runs.jsonl 的也不算。
 
@@ -33,7 +34,7 @@ $P tools/eval/metrics.py --json > out.json                     # 每局的数和
 
    比第一条还早的局记为 `before baseline`；消融实验的局（runs.jsonl 的 `arm`）单独成组，如 `before baseline [arm jev]`。子版本只列了改变决策方式的大改动；其间的修复批次（A–I）和经验库更新（2026-09-29.2–.7）并在所在的版本里，要细看用 `--group-by commit`。`--group-by family` 把 V3、V3.oneshot、V3.route-review 合成 V3。
 3. **兜底**：提交号为空、或者 git 里找不到（被 rebase 掉）时，按开局时间归到在它之前提交的最后一个版本（`--json` 里 `version_how = "time"`）。2026-09-29 的 354 局已结束对局全部按 git 认出，没有用到兜底。
-4. **V4 开跑前**：在 versions.json 末尾加一条 V4（第一个上线跑的提交）。执行大脑用哪个引擎是环境变量（BRAIN_ENGINE…），不在 `code` 里：同一版本不同引擎的对比先看每组的「按引擎」几行；要按配置分组，得让 runs.jsonl 记下配置（像 `arm` 那样），见 §5。
+4. **V4**：versions.json 末尾已有一条 V4，`commit` 为 null（「上线时填」）；commit 为空的条目不参与分组。上线时填上第一个跑对局的 V4 提交和 decision-log 那一条（docs/v4-go-live.md）。执行大脑用哪个引擎、知识前缀开没开是环境变量，不在 `code` 里：每局开局时对局进程把配置写进 logs/run-config.jsonl，`--group-by config` 按它分组（§8）。
 
 version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需要：提交号在每局里都有。
 
@@ -73,7 +74,7 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 - **力量来源按文本判断**：条件型遗物（彩虹戒指、红骷髅、手里剑、勇气投石索）也算来源；壶铃不看锻炼了几次（0 次也算）。战斗中才获得的力量不算来源——打出的牌本来就在牌组里，药水、预备打击的力量只管一回合（A9 的 49 场一幕 boss 战里 35 场战中出现过力量，只有 30 场有来源）。
 - **喝药只算战斗里的**：地图上喝的（果汁等）不算；v3 基本不在战斗外喝药。
 - **大脑调用含整局计划**：runs.jsonl 的 `deepseek_calls` / `ds_tokens_*` 不含 run-plan 调用，所以这里的数比 runs.jsonl 大（例：Y36H 29 次 vs 26 次）。Jev（小脑，战斗里挑选）不在这里；它的 token 在 runs.jsonl 的 `tokens`。brain.jsonl 一行是一个问题（含补问，`attempts` 是模型调用次数），deepseek-reasoning.jsonl 一行是一次 API 调用。
-- **配置不在版本里**：同一个提交可以用不同环境变量跑（BUILD_ONESHOT、BRAIN_ENGINE、进阶目标……）。进阶用 `--ascension` 分开；引擎看按引擎的几行；其他配置目前只能靠时间（`--since/--until`）切。建议 V4 在 runs.jsonl 里记下 BRAIN_ENGINE 等配置。
+- **配置不在版本里**：同一个提交可以用不同环境变量跑（BUILD_ONESHOT、BRAIN_ENGINE、进阶目标……）。V4 起每局的配置在 logs/run-config.jsonl（§8），`--group-by config` 分组；更早的局没有记录（「未记录配置」），只能靠时间（`--since/--until`）切。
 - **版本表手工维护**：新版本上线要加一行；子版本的粒度是人定的。
 - **样本小**：一个版本 5–20 局时，终层、token 这类局间差异大的量区间很宽，版本间的差多半落在区间里，只能看方向；通过率的 Wilson 区间在 n = 10 时约 ±30 个百分点。
 - 时间：库里是 UTC；`--since/--until` 不带时区按 UTC；`--group-by day` 和 `--per-run` 的开局时间按本地（UTC+8）。
@@ -97,7 +98,7 @@ $P tools/eval/calibration.py --ascension 8 --since 2026-09-28T03:12 --md
 $P tools/eval/calibration.py --ascension 9 --json [--rows]            # 汇总、覆盖率、最坏的例子；--rows 附每一行对齐结果
 ```
 
-选项和 metrics.py 一样（`--ascension`、`--since/--until`、`--group-by version|family|commit|day`、`--min-n`、`--no-sync`、`--db/--logs/--versions`），另有 `--top`（最坏的例子列几个，默认 10）、`--no-boss`（不算 boss 时钟）、`--boss-clocks FILE`（用现成的 boss-clock-recompute.ts 输出）、`--game-data`。先增量同步，再查日志库；预测本身不在库的列里，按库里的偏移（decisions.off / frames.off）去读 decisions.jsonl、states.jsonl 的那几行，不整读文件。A9 全部约 3 秒。只算已结束的局（同 metrics.py）。
+选项和 metrics.py 一样（`--ascension`、`--since/--until`、`--group-by version|family|config|commit|day`、`--min-n`、`--no-sync`、`--db/--logs/--versions`），另有 `--top`（最坏的例子列几个，默认 10）、`--no-boss`（不算 boss 时钟）、`--boss-clocks FILE`（用现成的 boss-clock-recompute.ts 输出）、`--game-data`。先增量同步，再查日志库；预测本身不在库的列里，按库里的偏移（decisions.off / frames.off）去读 decisions.jsonl、states.jsonl 的那几行，不整读文件。A9 全部约 3 秒。只算已结束的局（同 metrics.py）。
 
 分组：每个进阶一组「全部」，再按幕（一幕/二幕/三幕：推演和 boss 按战斗的幕，路线按计划的幕），再按代码版本（versions.json，和 metrics.py 同一套认法）。误差一律是**预测 − 实际**（HP）：推演为正是多报掉血，路线为正是投影的到达血量比实际高（偏乐观）。每张表给 n、中位误差、平均误差、p10/p90、中位 |误差|、±2 以内、多报 >2、少报 <−2 的比例；n < `--min-n` 标 `*`。
 
@@ -132,3 +133,22 @@ $P tools/eval/calibration.py --ascension 9 --json [--rows]            # 汇总�
 ### 7.5 进版本表的三行（metrics.py）
 
 metrics.py 默认对选中的局跑一遍 calibration（`--no-calibration` 关掉），每局留一个摘要（calibration.run_digest），组内合并成三行：推演本回合掉血 ±2 以内的回合比例；路线投影离计划 2–3 层的中位误差和中位 |误差|；boss 时钟实打/估值的中位。回合、节点、boss 战在组内合并，彼此不独立（同一场战斗的回合、同一局的节点），所以只给 n，不给区间。
+
+## 8. 每局配置（logs/run-config.jsonl）和 `--group-by config`
+
+V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识前缀……），runs.jsonl 只有提交号，分不开。所以对局进程在**第一次看到一个新 run id 时**写一行配置（src/telemetry/run-config.ts，loop.ts 里一处调用）：
+
+- 路径：默认和决策日志同目录（logs/run-config.jsonl）；`RUN_CONFIG_LOG=<路径>` 改，`RUN_CONFIG_LOG=off` 关。
+- 字段：`ts, run_id, ascension, character, floor`（进程第一次看到这局时的层：> 1 说明是局中重启接手）`, restart, process {pid, started}`；`code {commit, code`（短号 + `+dirty`，同 ops/run.sh）`, dirty, dirty_files`（改动的受跟踪文件名，最多 20 个：每局后刷新的知识数据）`, branch, worktree}`，进程启动时读一次（跑的是启动时加载的代码）；`brain {active, engine, by_prefix, fallback, reask, tools, log, engines {<引擎>: {model`（实际发送的 id，opus → claude-opus-5-5；DeepSeek 是 DEEPSEEK_MODEL）`, model_by_prefix, timeout_ms, effort, reask, tools, max_calls}}, claude {schema, max_budget_usd}}`（只列这套配置会问到的引擎：默认、按题型、回退）；`knowledge {prefix, ascension, prefix_sha, prefix_chars, prefix_tokens_est {deepseek, claude}, system_sha, system_chars, experience_version, error?}`；`deepseek {model, max_calls, timeout_ms, reasoning_effort, combat_reasoning_effort, effort_by_label}`；`jev {enabled, model, context, strict, prompt_log}`；`loop {mode, combat_planner, build_decider, build_oneshot, combat_deepseek, fight_plan, run_plan, escalation, confidence, run_start, character}`；`target_ascension, arm, config_sha`（除时间、局、进程以外全部配置的哈希：相同 = 同一套配置）。
+- **没有 key**：逐字段从解析后的配置挑（白名单），不写 key、key 文件路径、base URL；写之前再把整行和进程里所有秘密（配置里的 key、名字含 KEY / TOKEN / SECRET / PASSWORD 的环境变量值、`*_KEY_FILE` 的路径）以及 `sk-…`、`Bearer …` 形状比一遍，命中就不写，note 里只说变量名。
+- **一局一行**：同一进程里一个 run id 只处理一次；重启的进程（auto-relaunch）只有配置和文件里这局已有的行不同时才再写一行（`restart: true`）。
+- **知识前缀**：KNOWLEDGE_PREFIX=full 时用大脑自己的 KnowledgePrompt 按这局的进阶渲染（和这局第一问用的是同一份渲染、同一个缓存；`prefix_sha` 就是 brain.jsonl 的 `knowledge.prefix_sha`，`system_sha` 就是它的 `system_sha`），当前数据 A9 约 90 ms、170,145 字；off 时记 v3 系统提示的哈希和长度。token 是估计：按 M1 回放实测的字数比（DeepSeek 0.70、Claude 0.97 token/字，experiments/brain-replay/m1-0929/notes.md），不是分词器。
+- 失败不影响对局：写不了就一条 note。
+
+日志库：表 `run_config`（extract.py `run_config_row`，`VERSIONS["run-config"] = 1`，列见 docs/logdb.md）；`runs` 视图带上这局**第一行**的配置（开局时的配置）：`cfg_code, cfg_branch, cfg_worktree, brain_engine, brain_by_prefix, brain_fallback, brain_label, knowledge_prefix, prefix_sha, prefix_tokens_deepseek, jev_model, jev_context, target_ascension, config_sha, config_rows`（0 = 没记录）`, config_changed`（局中重启换过配置）。
+
+`brain_label`（抽取器算）：默认引擎和模型，再加上被别的引擎或模型回答的题型（label 第一段大写），同引擎同模型的题型合并：`deepseek:deepseek-flash`、`deepseek:deepseek-flash; EVENT,MAP=claude:claude-opus-5-5`、`claude:claude-sonnet-5; MAP=claude:claude-opus-5-5`；没有 DeepSeek（没有大脑）是 `none`。
+
+`--group-by config`（metrics.py 和 calibration.py）：组名 = 版本 · brain_label · 知识前缀，例如 `V4 · deepseek:deepseek-flash · 知识前缀 full`；没有配置行的局是 `<版本> · 未记录配置`；局中换过配置的单独成组（`· 局中改过配置`），不和同配置的局混；消融的 `[arm …]` 照旧。`--per-run` 多一列「配置」，`--json` 的每局带 `brain_label, knowledge_prefix, config_rows, config_changed`。按引擎的调用、token、耗时仍在每组的「按引擎」几行里。
+
+测试：tests/run-config.test.ts（字段、没有 key、秘密命中不写、一局一行、重启换配置、loop 里写一行、extract.py 读写入的行、Python 样本和写入的键一致）；tests/logdb_test.py（抽取、brain_label、runs 视图的配置列、旧库缺表时的提示）；tests/eval_metrics_test.py（待填的版本条目、config 分组、命令行）。

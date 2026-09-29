@@ -29,7 +29,7 @@ Errors are predicted minus actual, in HP: positive = the prediction said more HP
 arrival (route) than happened. Runs: finished runs (runs.jsonl) with frames, as tools/eval/metrics.py.
 
 Usage (the log database's Python: .cache/logdb-venv/bin/python):
-  tools/eval/calibration.py [--ascension 9] [--since ...] [--until ...] [--group-by version|family|commit|day]
+  tools/eval/calibration.py [--ascension 9] [--since ...] [--until ...] [--group-by version|family|config|commit|day]
                             [--md | --json] [--rows] [--top 10] [--min-n 10] [--no-sync] [--no-boss]
                             [--boss-clocks FILE] [--game-data FILE]
 """
@@ -927,7 +927,8 @@ def main(argv=None):
     parser.add_argument("--ascension", type=int, action="append", help="only this ascension (repeatable)")
     parser.add_argument("--since", help="runs started at or after this time (ISO; UTC unless it has an offset)")
     parser.add_argument("--until", help="runs started before this time")
-    parser.add_argument("--group-by", default="version", choices=["version", "family", "commit", "day"], help="the code-version grouping")
+    parser.add_argument("--group-by", default="version", choices=["version", "family", "config", "commit", "day"],
+                        help="the code-version grouping (config: version + brain engines/models + knowledge prefix, metrics.py)")
     parser.add_argument("--md", action="store_true", help="markdown report (the default)")
     parser.add_argument("--json", action="store_true", help="summaries, coverage and the worst cases as JSON")
     parser.add_argument("--rows", action="store_true", help="with --json: every aligned prediction row too")
@@ -956,7 +957,7 @@ def main(argv=None):
         con = logquery.connect(db, threads=2)
         runs = load_runs(con, set(args.ascension or []), metrics.as_utc(args.since), metrics.as_utc(args.until))
         data = collect(con, runs, logs, boss=not args.no_boss, clocks=clocks, game_data=args.game_data)
-    versions = metrics.VersionMap(metrics.load_versions(args.versions), metrics.Git()) if args.group_by in ("version", "family") else None
+    versions = metrics.VersionMap(metrics.load_versions(args.versions), metrics.Git()) if args.group_by in ("version", "family", "config") else None
     group_of, order = run_groups(runs, args.group_by, versions)
     summary = summarize_all(data, group_of, order, args.top)
     synced = dt.datetime.fromtimestamp(os.path.getmtime(os.path.join(db, "manifest.json")), metrics.LOCAL).strftime("%Y-%m-%d %H:%M (UTC+8)")

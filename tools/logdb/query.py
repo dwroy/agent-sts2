@@ -34,7 +34,7 @@ DEFAULT_MAX_ROWS = 200
 DEFAULT_TIMEOUT = 30.0
 CELL_CAP = 300
 # The views a query is expected to use, in the order --schema prints them (helpers follow).
-MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "run_plans", "state_index", "frames"]
+MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "run_plans", "run_config", "state_index", "frames"]
 ALLOWED = {"SELECT", "EXPLAIN"}
 
 
@@ -51,6 +51,10 @@ def connect(db, threads=4):
 
     if not os.path.exists(os.path.join(db, "manifest.json")):
         raise QueryError(f"no log database at {db}: run tools/logdb/sync.py first")
+    missing = [t for t in extract.TABLES if not os.path.exists(os.path.join(db, t, logsync.EMPTY))]
+    if missing:
+        # A table added after the database was last synced (its zero-row shard is written by the next sync).
+        raise QueryError(f"the log database at {db} has no {', '.join(missing)} yet: run tools/logdb/sync.py once")
     con = duckdb.connect(config={"threads": threads})
     with open(os.path.join(HERE, "views.sql"), encoding="utf8") as handle:
         views = handle.read().replace("${DB}", db.replace("'", "''"))

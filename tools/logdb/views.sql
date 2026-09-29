@@ -14,6 +14,9 @@ CREATE OR REPLACE VIEW runs_raw AS SELECT * FROM read_parquet('${DB}/runs_raw/*.
 CREATE OR REPLACE VIEW llm_calls_raw AS SELECT * FROM read_parquet('${DB}/llm_calls_raw/*.parquet', union_by_name = true);
 -- One row per logs/run-plans.jsonl line.
 CREATE OR REPLACE VIEW run_plans AS SELECT * FROM read_parquet('${DB}/run_plans/*.parquet', union_by_name = true);
+-- One row per logs/run-config.jsonl line: the configuration a run was played with (src/telemetry/run-config.ts; a
+-- second row for a run only when a restarted process ran it with another configuration).
+CREATE OR REPLACE VIEW run_config AS SELECT * FROM read_parquet('${DB}/run_config/*.parquet', union_by_name = true);
 
 -- Where each raw state is in logs/states.jsonl (query.py --raw states <off>).
 CREATE OR REPLACE VIEW state_index AS
@@ -261,8 +264,20 @@ LEFT JOIN floor_rooms r ON r.run_id = s.run_id AND r.floor = s.floor;
 -- Every run seen in the logs: runs.jsonl for finished runs (victory, final floor, code version, death
 -- fight names), the frames for the rest (start time, highest floor; runs still going or cut off have
 -- finished = false and victory NULL). death_encounter = the encounter of the fight the run died in.
+-- The configuration columns come from the run's first run-config.jsonl row (the setup it started with; NULL for
+-- runs from before that log): cfg_code / cfg_branch / cfg_worktree (the process's checkout), brain_engine,
+-- brain_by_prefix, brain_fallback, brain_label, knowledge_prefix, prefix_sha, prefix_tokens_deepseek, jev_model,
+-- jev_context, target_ascension, config_sha; config_rows = its rows (0: not recorded), config_changed = a restart
+-- ran it with another configuration.
 CREATE OR REPLACE VIEW runs AS
-WITH fr AS (
+WITH cfg AS (
+  SELECT * FROM run_config WHERE run_id IS NOT NULL QUALIFY row_number() OVER (PARTITION BY run_id ORDER BY off) = 1
+),
+cfg_n AS (
+  SELECT run_id, count(*) AS config_rows, count(DISTINCT config_sha) > 1 AS config_changed
+  FROM run_config WHERE run_id IS NOT NULL GROUP BY run_id
+),
+fr AS (
   SELECT run_id, min(ts) AS started, max(ts) AS last_seen, max(floor) AS max_floor, max(act) AS max_act,
     arg_max(character, off) AS character, arg_max(ascension, off) AS ascension, count(*) AS frames,
     arg_max(go_victory, off) AS go_victory
@@ -284,10 +299,15 @@ SELECT
   coalesce(r.victory, fr.go_victory) AS victory,
   r.death_fight, d.death_encounter, d.death_room,
   r.code, r.decisions, r.jev_calls, r.deepseek_calls, r.claude_calls, r.tokens,
-  r.ds_tokens_in, r.ds_tokens_out, r.ds_cache_hit, r.deciders, r.arm, fr.frames
+  r.ds_tokens_in, r.ds_tokens_out, r.ds_cache_hit, r.deciders, r.arm, fr.frames,
+  c.code AS cfg_code, c.branch AS cfg_branch, c.worktree AS cfg_worktree, c.brain_engine, c.brain_by_prefix, c.brain_fallback,
+  c.brain_label, c.knowledge_prefix, c.prefix_sha, c.prefix_tokens_deepseek, c.jev_model, c.jev_context, c.target_ascension,
+  c.config_sha, coalesce(n.config_rows, 0) AS config_rows, coalesce(n.config_changed, false) AS config_changed
 FROM runs_raw r
 FULL JOIN fr ON fr.run_id = r.run_id
-LEFT JOIN death d ON d.run_id = coalesce(r.run_id, fr.run_id);
+LEFT JOIN death d ON d.run_id = coalesce(r.run_id, fr.run_id)
+LEFT JOIN cfg c ON c.run_id = coalesce(r.run_id, fr.run_id)
+LEFT JOIN cfg_n n ON n.run_id = coalesce(r.run_id, fr.run_id);
 
 -- ---------------------------------------------------------------- model calls
 

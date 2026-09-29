@@ -201,6 +201,37 @@ class VersionTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             metrics.VersionMap([{"name": "V4", "commit": "zz"}], FakeGit())
 
+    def test_an_entry_without_a_commit_is_pending_and_skipped(self):
+        versions = metrics.VersionMap([{"name": "V2", "commit": "a1"}, {"name": "V3", "commit": "b1"}, {"name": "V4", "commit": None, "source": "上线时填"},
+                                       {"name": "V5", "commit": ""}], FakeGit())
+        self.assertEqual(versions.pending, ["V4", "V5"])
+        self.assertEqual([e["name"] for e in versions.entries], ["V2", "V3"])
+        self.assertEqual(versions.assign("c1", None)[0]["name"], "V3")
+        self.assertEqual(versions.assign(None, dt.datetime(2026, 9, 30))[0]["name"], "V3")
+
+    def test_the_versions_file_loads_with_its_pending_entries(self):
+        entries = metrics.load_versions()
+        self.assertTrue(all(e.get("name") and e.get("source") for e in entries))
+        pending = [e["name"] for e in entries if not e.get("commit")]
+        self.assertLessEqual(set(pending), {"V4"})
+
+    def test_groups_by_config(self):
+        cfg = {"config_rows": 1, "brain_label": "deepseek:deepseek-flash", "knowledge_prefix": "full"}
+        claude = dict(cfg, brain_label="deepseek:deepseek-flash; MAP=claude:claude-opus-5-5")
+        rows = [dict({"run_id": r, "code": code, "arm": None, "started": dt.datetime(2026, 9, 30, h), "ascension": 9}, **extra)
+                for r, code, h, extra in [("R1", "b1", 1, {}), ("R2", "c1", 2, cfg), ("R3", "c1", 3, claude), ("R4", "c1", 4, cfg),
+                                          ("R5", "c1", 5, dict(cfg, config_changed=True, config_rows=2)), ("R6", "c1", 6, dict(cfg, knowledge_prefix="off"))]]
+        groups = metrics.group_runs(rows, "config", self.versions)
+        self.assertEqual([(name, [r["run_id"] for r in rs]) for name, rs in groups], [
+            ("V3 · 未记录配置", ["R1"]),
+            ("V3 · deepseek:deepseek-flash · 知识前缀 full", ["R2", "R4"]),
+            ("V3 · deepseek:deepseek-flash; MAP=claude:claude-opus-5-5 · 知识前缀 full", ["R3"]),
+            ("V3 · deepseek:deepseek-flash · 知识前缀 full · 局中改过配置", ["R5"]),
+            ("V3 · deepseek:deepseek-flash · 知识前缀 off", ["R6"]),
+        ])
+        self.assertEqual({r["version"] for r in rows}, {"V3"})
+        self.assertEqual(metrics.config_label({"config_rows": 0}), "未记录配置")
+
     def test_groups_keep_the_table_order_and_split_arms(self):
         rows = [{"run_id": r, "code": code, "arm": arm, "started": dt.datetime(2026, 9, 29, h), "ascension": 8}
                 for r, code, arm, h in [("R1", "c1", None, 1), ("R2", "d1", None, 2), ("R3", "a1", "jev", 3), ("R4", "b1", None, 4)]]
@@ -246,6 +277,12 @@ class FixtureTest(unittest.TestCase):
         self.assertEqual((d["strength_act1"]["any"], d["strength_act1"]["max_strength"]), (False, 2))
         self.assertEqual([(r["entered_act2"], r["act2_first_rest"], r["died_before_act2_rest"]) for r in (c, d)], [(True, None, True), (True, 4, False)])
 
+    def test_the_configuration_comes_with_the_run(self):
+        c, d = self.rows["RUNC00000003"], self.rows["RUND00000004"]
+        self.assertEqual((c["config_rows"], c["brain_label"], c["knowledge_prefix"]), (0, None, None))
+        self.assertEqual((d["config_rows"], d["brain_label"], d["knowledge_prefix"], d["config_changed"]),
+                         (1, "deepseek:deepseek-flash; REST=claude:claude-opus-5-5", "full", False))
+
     def test_model_calls_without_the_duplicate(self):
         c, d = self.rows["RUNC00000003"], self.rows["RUND00000004"]
         self.assertEqual((c["llm"]["calls"], c["llm"]["input"], c["llm"]["cache_hit"], c["llm"]["output"], c["llm"]["latency_ms"]), (2, 42000, 31000, 1200, 8000))
@@ -281,6 +318,16 @@ class FixtureTest(unittest.TestCase):
         self.assertIn("| 二幕第一个休息点前死亡（占进二幕的局） | 50%（1/2；", text)
         self.assertIn("样本不足", text)
         self.assertIn("| RUND00000004 | V3.oneshot | 0c93138+dirty |", text)
+        self.assertIn("| deepseek:deepseek-flash; REST=claude:claude-opus-5-5 · 知识前缀 full |", text)  # the per-run 配置 column
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(metrics.main(args + ["--json", "--group-by", "config"]), 0)
+        data = json.loads(out.getvalue())
+        self.assertEqual([(g["name"], g["run_ids"]) for g in data["groups"]], [
+            ("V3 · 未记录配置", ["RUNC00000003"]),
+            ("V3.oneshot · deepseek:deepseek-flash; REST=claude:claude-opus-5-5 · 知识前缀 full", ["RUND00000004"]),
+        ])
+        self.assertEqual({r["run_id"]: r["config_rows"] for r in data["runs"]}, {"RUNC00000003": 0, "RUND00000004": 1})
         # The script runs on its own too (sync skipped, the fixture's sets).
         done = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "eval", "metrics.py"), *args, "--group-by", "day"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stderr)
