@@ -890,3 +890,42 @@ describe("later rollout turns get their own per-turn state, not the decision's (
     expect(on(run({ endTurnHpLoss: 5 }, { DISINTEGRATION_POWER: 5 }), 3).loss.mean).toBe(5);
   });
 });
+
+describe("once-a-fight and decaying enemy powers carry from turn to turn, not restored every simulated turn (Vantom Slippery: fight over 0/8 vs 29% real)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (extra: Partial<EnemySim>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Slippery 3: three hits of 1 on the first simulated turn, then every hit lands", () => {
+    // 5 free Strikes a turn: 1 + 1 + 1 + 6 + 6 = 15, then 30 a turn.
+    expect(dmg(run({ slippery: 3 }))).toEqual([15, 30, 30, 30]);
+  });
+
+  it("Curl Up (once a fight): its block once, not on every turn", () => {
+    // The first hit lands (6) and curls it up for 20 block: 24 more into 20 block, 4 through.
+    expect(dmg(run({ curlUp: 20 }))).toEqual([10, 30, 30, 30]);
+  });
+
+  it("Flutter 5: five halved hits, then full ones", () => {
+    expect(dmg(run({ flutter: 5 }))).toEqual([15, 30, 30, 30]);
+  });
+});

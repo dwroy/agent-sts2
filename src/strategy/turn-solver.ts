@@ -385,8 +385,23 @@ export interface Outcome {
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
   restocked: string[];
-  /** `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). */
-  enemyHpAfter: { index: number; name: string; hp: number; vulnerable: number; weak: number; block?: number }[];
+  /**
+   * `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). What the line
+   * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter): the rollout's
+   * later turns go on from them.
+   */
+  enemyHpAfter: {
+    index: number;
+    name: string;
+    hp: number;
+    vulnerable: number;
+    weak: number;
+    block?: number;
+    artifact?: number;
+    slippery?: number;
+    curlUp?: number;
+    flutter?: number;
+  }[];
   incomingAfterBlock: number;
   energyLeft: number;
   vulnerableApplied: number;
@@ -1905,7 +1920,18 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       restocked: restocked.map((enemy) => enemy.name),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
-        .map((enemy) => ({ index: enemy.index, name: enemy.name, hp: Math.max(0, enemy.hp), vulnerable: enemy.vulnerable, weak: enemy.weak, block: Math.max(0, enemy.block) })),
+        .map((enemy) => ({
+          index: enemy.index,
+          name: enemy.name,
+          hp: Math.max(0, enemy.hp),
+          vulnerable: enemy.vulnerable,
+          weak: enemy.weak,
+          block: Math.max(0, enemy.block),
+          artifact: enemy.artifact,
+          slippery: enemy.slippery ?? 0,
+          curlUp: enemy.curlUp ?? 0,
+          flutter: enemy.flutter ?? 0,
+        })),
       incomingAfterBlock,
       energyLeft: sim.energy,
       vulnerableApplied: sim.vulnerableApplied,

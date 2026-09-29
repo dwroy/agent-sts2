@@ -679,6 +679,15 @@ interface SimEnemy {
    * Stunned if all Block is removed."): its block carries over, and breaking it stuns it for its move.
    */
   burrowed: boolean;
+  /**
+   * Once-a-fight and decaying powers, carried turn to turn from each line's outcome instead of restored
+   * from the decision's board every simulated turn: Artifact (spent by debuffs), Slippery (a stack per HP
+   * loss, never back: Vantom 9, 8, … 0), Curl Up (「每场战斗一次」), Flutter (a stack per hit).
+   */
+  artifact: number;
+  slippery: number;
+  curlUp: number;
+  flutter: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -985,6 +994,10 @@ function applyPlan(
     e.hp = a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
+    if (a.artifact !== undefined) e.artifact = a.artifact;
+    if (a.slippery !== undefined) e.slippery = a.slippery;
+    if (a.curlUp !== undefined) e.curlUp = a.curlUp;
+    if (a.flutter !== undefined) e.flutter = a.flutter;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
     if (e.hp <= 0) enemyDown(e, turn, input);
@@ -1065,6 +1078,11 @@ function applyPlan(
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      // A new body: its own once-a-fight powers again.
+      e.artifact = e.base.artifact;
+      e.slippery = e.base.slippery ?? 0;
+      e.curlUp = e.base.curlUp ?? 0;
+      e.flutter = e.base.flutter ?? 0;
       e.move = usualMove(input.tables[e.id]) ?? e.move;
     }
     for (const e of enemies) {
@@ -1206,6 +1224,10 @@ function simulate(
       intangibleTurns: e.intangible ? Math.max(1, info?.powers?.["INTANGIBLE_POWER"] ?? 1) : 0,
       ...((info?.powers?.["NEMESIS_POWER"] ?? 0) > 0 ? { nemesisIn: e.intangible ? 2 : 1 } : {}),
       burrowed: e.burrowed === true,
+      artifact: e.artifact,
+      slippery: e.slippery ?? 0,
+      curlUp: e.curlUp ?? 0,
+      flutter: e.flutter ?? 0,
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -1256,6 +1278,10 @@ function simulate(
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
+        artifact: e.artifact,
+        slippery: e.slippery,
+        curlUp: e.curlUp,
+        flutter: e.flutter,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
