@@ -761,11 +761,18 @@ interface ChatMessage {
 /** The fields of an answer beyond {choice, reason}. */
 type Extras = { cards?: string[]; route?: string; routeReason?: string; discard?: number[] };
 
-/** The route keys a question offers: its route review's routes (keep and the others), else the act's routes. */
+/**
+ * The route keys a question offers: its route review's routes (keep and the others), else the act's routes. V4's
+ * route review (M2a: the whole map and the plan, answered "keep" or a node sequence) names no routes: only "keep"
+ * can be read back from the reasoning (a node sequence is not guessed).
+ */
 export function routeKeys(state: Record<string, unknown>): string[] {
   const record = (value: unknown): Record<string, unknown> => (value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
-  const review = Object.keys(record(record(state["route_review"])["routes"]));
-  return review.length > 0 ? review : Object.keys(record(state["act_routes"]));
+  const reviewState = record(state["route_review"]);
+  const review = Object.keys(record(reviewState["routes"]));
+  if (review.length > 0) return review;
+  if (Object.keys(reviewState).length > 0) return ["keep"];
+  return Object.keys(record(state["act_routes"]));
 }
 
 /**

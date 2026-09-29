@@ -17,6 +17,7 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
+import { recoverRoute, routeKeys } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
 import type { RoutePlan } from "../src/screens/map.js";
@@ -521,5 +522,20 @@ describe("rest heal: the game's HEAL text and the rest relics (Regal Pillow, Sto
     // 40 + 24 + 5 = 69/85; -10 = 59; + 25 + 5 = 89/90.
     expect(humid.arrival).toEqual([40, 69, 59, 89]);
     expect(humid.maxArrival).toEqual([80, 85, 85, 90]);
+  });
+});
+
+describe("a route review answered without \"route\" (v3 5afb91f / 5518d8b): V4's review has no named routes, only keep is read back", () => {
+  it("routeKeys: keep for V4's route_review, v3's named routes where a question has them", () => {
+    expect(routeKeys({ route_review: { plan: "r4c1 r5c2", map: [] } })).toEqual(["keep"]);
+    expect(routeKeys({ route_review: { routes: { keep: "x", p1: "y" } } })).toEqual(["keep", "p1"]);
+    expect(routeKeys({})).toEqual([]);
+  });
+
+  it("the reasoning's settled keep is taken; a negated or asked one is not", () => {
+    const keys = routeKeys({ route_review: { plan: "r4c1" } });
+    expect(recoverRoute(["Decision: HEAL (o0). Keep the route."], keys)).toMatchObject({ route: "keep" });
+    expect(recoverRoute(["Don't keep the route."], keys)).toBeNull();
+    expect(recoverRoute(["Keep the route? Maybe."], keys)).toBeNull();
   });
 });
