@@ -37,7 +37,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
-import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps } from "../strategy/boss-clock.js";
+import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
@@ -531,11 +531,8 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
 const ERUPTION_BLOCK = 12;
 /** Damage per turn assumed before any has been seen (1ZQJ averaged 16). */
 const ERUPTION_FALLBACK_DAMAGE = 16;
-/**
- * HP a Siphon heals (the monster DB has its turns, not its amount). Logged states.jsonl, the Giant's HP
- * across a Siphon turn: +15 at A8 (41 Siphons), +10 at A0-A7 (28); less only near full HP.
- */
-export const SIPHON_HEAL = { base: 10, a8: 15 };
+/** HP a Siphon heals (boss-clock SIPHON_HEAL: +10 at A0-A7, +15 at A8 and A9). */
+export { SIPHON_HEAL };
 /** Siphon turns when the DB has none: T4, then every 5 turns (Stomp, Ram, Siphon, Pressure Gun, Pressure Up). */
 const SIPHON_FALLBACK = { first: 4, period: 5 };
 

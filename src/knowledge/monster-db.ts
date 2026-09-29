@@ -377,6 +377,18 @@ export function powerScheduleAt(monsterId: string, powerId: string, asc: number,
   return { first, firstTurn, perTurn, asc: Number(found.key), exact: found.exact, n };
 }
 
+/**
+ * Every base damage per hit logged for a move at `asc` (the nearest logged ascension when not this one),
+ * ascending: a move that grows each use (the Waterfall Giant's Pressure Gun, A8 20/25/30, A9 23/28/33).
+ */
+export function moveBaseDamages(monsterId: string, moveId: string, asc: number): number[] {
+  const byAsc = load().monsters[monsterId]?.moves?.[moveId]?.damage_by_asc;
+  const withBase = Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, entry]) => Object.keys(entry.base_per_hit ?? {}).length > 0));
+  const found = nearestAscension(withBase, asc);
+  if (!found) return [];
+  return Object.keys(withBase[found.key]!.base_per_hit!).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+}
+
 /** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */
 export function moveTurns(id: string, moveId: string): number[] {
   const seen = load().monsters[id]?.moves?.[moveId]?.turns_seen ?? {};

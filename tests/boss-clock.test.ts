@@ -379,6 +379,11 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
   // The monster DB as logged (states.jsonl: first seen on T2 at 15 at A0-A8 and 20 at A9, +3 with every
   // later move), as a fixture: the real file is refreshed after every run.
   const steam = (counts: Record<string, Record<string, number>>) => Object.fromEntries(Object.entries(counts).map(([asc, c]) => [asc, { STEAM_ERUPTION_POWER: c }]));
+  const hpAt = (id: string, hp: number, phases?: string) => ({ fights: 5, parts: { [id]: { median: hp, n: 5 } }, ...(phases ? { phases: { [phases]: 1 } } : {}) });
+  const BOSS_HP = {
+    WATERFALL_GIANT: { "7": hpAt("WATERFALL_GIANT", 240), "8": hpAt("WATERFALL_GIANT", 250), "9": hpAt("WATERFALL_GIANT", 250) },
+    TEST_SUBJECT: { "7": hpAt("TEST_SUBJECT", 100, "100 > 200 > 300 (TEST_SUBJECT)"), "8": hpAt("TEST_SUBJECT", 111, "111 > 212 > 313 (TEST_SUBJECT)") },
+  };
   const GIANT_DB = {
     bosses: {},
     encounters: {},
@@ -389,6 +394,8 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
           PRESSURIZE_MOVE: { turns_seen: { "1": 31 }, self_powers_gained_by_asc: steam({ "8": { "15": 27 }, "9": { "20": 4 } }) },
           STOMP_MOVE: { turns_seen: { "2": 31, "7": 20 }, self_powers_gained_by_asc: steam({ "8": { "3": 50 }, "9": { "3": 8 } }) },
           RAM_MOVE: { turns_seen: { "3": 31, "8": 18 }, self_powers_gained_by_asc: steam({ "8": { "3": 46 }, "9": { "3": 8 } }) },
+          // Pressure Gun grows 5 a use: A8 20/25/30, A9 23/28/33 (monster DB base_per_hit).
+          PRESSURE_GUN_MOVE: { turns_seen: { "5": 31, "10": 20 }, damage_by_asc: { "8": { base_per_hit: { "20": 27, "25": 14, "30": 4 } }, "9": { base_per_hit: { "23": 3, "28": 3, "33": 1 } } } },
         },
       },
     },
@@ -436,5 +443,32 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     expect(a9.mechanic).toMatch(/^eruption 17\+3\(T-1\) when killed on turn T \(A9, n=\d+\)/);
     expect(journalBossNote("WATERFALL_GIANT_BOSS", 9)).toContain("A9：第 2 回合 20，每回合 +3");
     expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8：第 2 回合 15，每回合 +3");
+  });
+
+  it("the Giant's and the Test Subject's notes carry the ascension's numbers and the experience base's advice", () => {
+    setMonsterDbForTests({ ...GIANT_DB, bosses: BOSS_HP } as never);
+    // Run journal (DeepSeek): HP, Siphon's heal, Pressure Gun's shots at this ascension; early kill.
+    const a9 = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
+    expect(a9).toMatch(/^250 血，/);
+    expect(a9).toContain("虹吸回合回血 15");
+    expect(a9).toContain("依次 23→28→33");
+    expect(a9).toContain("A8 T10 前击杀 13/15 赢");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("依次 20→25→30");
+    const a7 = journalBossNote("WATERFALL_GIANT_BOSS", 7)!;
+    expect(a7).toMatch(/^240 血，/);
+    expect(a7).toContain("虹吸回合回血 10");
+    // ts-phase3: phase 3's Intangible comes every other turn; big hits on the open turns, not many small ones.
+    const ts = journalBossNote("TEST_SUBJECT_BOSS", 8)!;
+    expect(ts).toContain("三阶段 HP 111/212/313");
+    expect(ts).toContain("开放回合全力输出");
+    expect(ts).not.toMatch(/三阶段无实体，靠多段/);
+    expect(journalBossNote("TEST_SUBJECT_BOSS", 7)).toContain("三阶段 HP 100/200/300");
+    // Boss clock (DeepSeek's boss_note and harder_because).
+    const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
+    expect(bossNote(giant, 9)).toContain("Siphon heals 15 HP; Pressure Gun on T5/T10/T15 (23/28/33)");
+    expect(bossNote(giant, 7)).toContain("Siphon heals 10 HP; Pressure Gun on T5/T10/T15 (20/25/30)");
+    const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
+    expect(clock.mechanic).toContain("kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
+    setMonsterDbForTests(GIANT_DB as never);
   });
 });
