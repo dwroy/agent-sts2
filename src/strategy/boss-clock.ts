@@ -130,7 +130,7 @@ export function bossLossPerTurn(profile: BossProfile & { id: string }, ascension
   const value = Math.round(mean * share.unblocked_share * 10) / 10;
   return {
     value,
-    source: `its attack ~${Math.round(mean)}/turn at A${ascension}${damage.estimated ? " (moves unseen at this ascension scaled, estimated)" : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked (${share.fights} logged fights)`,
+    source: `its attack ~${Math.round(mean)}/turn at A${ascension}${damage.estimated ? " (moves unseen at this ascension: the nearest logged one's, scaled by the measured ratio up to the highest logged ascension; estimated)" : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked (${share.fights} logged fights)`,
     estimated: damage.estimated,
   };
 }

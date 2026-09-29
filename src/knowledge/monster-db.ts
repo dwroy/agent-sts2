@@ -163,6 +163,11 @@ export interface MoveDamage {
   ratioN?: number;
   ratioOwn?: boolean;
   /**
+   * Estimated only: the ascension the measured ratio reaches (chainedDamageRatio). Below the one asked for
+   * when no move is logged there yet (A10 before any A10 run: A8 x the A8 -> A9 ratio, A9 -> A10 taken as 1).
+   */
+  ratioTo?: number;
+  /**
    * Surrounded (the Kaiser Crab's claws): the move's base at this ascension and the share of the logged
    * turns it came from behind us (x1.5); perHit is then the hit as it lands on average.
    */
@@ -209,9 +214,64 @@ export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: strin
   return { ratio, n: used.length, own: own.length > 0 };
 }
 
+const loggedAscensionsCache = new WeakMap<MonsterMoveData, number[]>();
+
+/** The ascensions some monster's move has a logged base damage at, ascending. */
+function loggedDamageAscensions(monsters: MonsterMoveData): number[] {
+  const cached = loggedAscensionsCache.get(monsters);
+  if (cached) return cached;
+  const seen = new Set<number>();
+  for (const monster of Object.values(monsters)) {
+    for (const move of Object.values(monster.moves ?? {})) {
+      for (const [asc, entry] of Object.entries(move.damage_by_asc ?? {})) {
+        if (/^\d+$/.test(asc) && mode(entry.base_per_hit) !== null) seen.add(Number(asc));
+      }
+    }
+  }
+  const out = [...seen].sort((a, b) => a - b);
+  loggedAscensionsCache.set(monsters, out);
+  return out;
+}
+
+/**
+ * The damage ratio from `from` to `to`: measured directly on the moves logged at both
+ * (ascensionDamageRatio), else chained through the ascensions logged on the way, one measured step at a
+ * time (A8 -> A9 x A9 -> A10). An ascension no move is logged at yet (A10 before the first A10 run) adds
+ * nothing: the chain stops at the last logged one (`reached`), the rest taken as 1 until measured. A move
+ * logged only at A8 is then A8 x (A8 -> A9) at A10, as at A9, not its bare A8 damage. null when no step is
+ * measured.
+ */
+export function chainedDamageRatio(
+  monsters: MonsterMoveData,
+  monsterId: string,
+  from: number,
+  to: number,
+): { ratio: number; n: number; own: boolean; reached: number } | null {
+  const direct = ascensionDamageRatio(monsters, monsterId, from, to);
+  if (direct) return { ...direct, reached: to };
+  const up = to > from;
+  const onTheWay = loggedDamageAscensions(monsters)
+    .filter((asc) => (up ? asc > from && asc <= to : asc < from && asc >= to))
+    .sort((a, b) => (up ? a - b : b - a));
+  let at = from;
+  let ratio = 1;
+  let n = Infinity;
+  let own = true;
+  for (const next of onTheWay) {
+    const step = ascensionDamageRatio(monsters, monsterId, at, next);
+    if (!step) continue;
+    ratio *= step.ratio;
+    n = Math.min(n, step.n);
+    own = own && step.own;
+    at = next;
+  }
+  return at === from ? null : { ratio, n, own, reached: at };
+}
+
 /**
  * A move's damage at `asc`: as logged there, else the nearest logged ascension's scaled by the measured
- * ratio (ascensionDamageRatio), rounded and marked estimated. null when the move has no logged damage.
+ * ratio (chainedDamageRatio: through the logged ascensions in between; one never logged counts as the
+ * last logged one before it), rounded and marked estimated. null when the move has no logged damage.
  * A Surrounded back-attack move (Kaiser Crab) is its base times 1 + 0.5 x the share of the logged turns it
  * came from behind (backAttackShare): the rollout's later turns and the boss clock do not track which claw
  * we face (A8 Laser: base 31, 49 from behind on 83% of turns; the DB used to call 47 its base).
@@ -228,10 +288,19 @@ export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveI
   const behind = (base: number) => (share === null ? {} : { base, backAttackShare: share });
   const average = (base: number) => (share === null ? base : Math.round(base * (1 + 0.5 * share)));
   if (found.exact) return { perHit: average(logged), hits, estimated: false, from, ratio: 1, ...behind(logged) };
-  const measured = ascensionDamageRatio(monsters, monsterId, from, asc);
+  const measured = chainedDamageRatio(monsters, monsterId, from, asc);
   const ratio = measured?.ratio ?? 1;
   const base = Math.round(logged * ratio);
-  return { perHit: average(base), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}), ...behind(base) };
+  return {
+    perHit: average(base),
+    hits,
+    estimated: true,
+    from,
+    ratio,
+    ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}),
+    ratioTo: measured?.reached ?? from,
+    ...behind(base),
+  };
 }
 
 /**
@@ -247,8 +316,10 @@ function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: str
   const shown = /^(\d+)x(\d+)$/.exec(mode(move.damage_by_asc![found.key]!.shown) ?? "");
   if (!shown) return null;
   const from = Number(found.key);
-  const ratio = found.exact ? 1 : (ascensionDamageRatio(monsters, monsterId, from, asc)?.ratio ?? 1);
-  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: !found.exact, from, ratio };
+  if (found.exact) return { perHit: Number(shown[1]), hits: Number(shown[2]), estimated: false, from, ratio: 1 };
+  const measured = chainedDamageRatio(monsters, monsterId, from, asc);
+  const ratio = measured?.ratio ?? 1;
+  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: true, from, ratio, ratioTo: measured?.reached ?? from };
 }
 
 /**
@@ -356,8 +427,10 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
     const shown = damage.base ?? damage.perHit;
     const behind = damage.backAttackShare !== undefined ? ` (在背后 ×1.5 = ${Math.floor(shown * 1.5)}，记录中 ${pct(damage.backAttackShare)} 的回合在背后)` : "";
     const text = `${damage.hits > 1 ? `${shown}×${damage.hits}` : String(shown)}${behind}`;
-    // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so.
-    parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)})` : text);
+    // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so, and where
+    // the measured chain stops short of this ascension (A10 before any A10 run: A9 -> A10 taken as 1).
+    const unmeasured = damage.ratioTo !== undefined && damage.ratioTo !== asc ? `，A${damage.ratioTo}→A${asc} 未测按 ×1` : "";
+    parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)}${unmeasured})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
   const strength = mode(move.self_powers_gained?.["STRENGTH_POWER"]);
   if (strength) parts.push(`+${strength}力`);

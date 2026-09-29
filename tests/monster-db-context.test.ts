@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -103,6 +103,52 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
     // The rollout's move table takes the same number and marks it.
     expect(enemyTable("THE_INSATIABLE", 9, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
     expect(enemyTable("THE_INSATIABLE", 8, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
+  });
+});
+
+describe("an ascension no fight is logged at yet (A10): the A8 -> A9 ratio carries on, not the bare A8 damage (review 2026-09-29 #1)", () => {
+  const at = (bases: Record<string, number>, hits = 1) =>
+    ({ damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 3 }, hits: { [String(hits)]: 3 } }])) });
+  // Logged at A8 and A9 (measures A8 -> A9 = 22/19); nothing anywhere at A10.
+  const monsters: MonsterMoveData = {
+    CRUSHER: { moves: { GUARDED_STRIKE_MOVE: at({ "8": 19, "9": 22 }) } },
+    // An act-3 body only ever fought at A8: its damage at A9 and A10 is A8 x 22/19.
+    TORCH_HEAD_AMALGAM: {
+      moves: {
+        STRONG_TACKLE_MOVE: { ...at({ "8": 26 }), name: "强力冲撞", turns_seen: { "1": 3 }, next: { BEAM_MOVE: 3 } },
+        // Base never measured (a debuff always in the way): the shown hit, scaled the same way.
+        BEAM_MOVE: { damage_by_asc: { "8": { shown: { "12x3": 3 } } }, next: { STRONG_TACKLE_MOVE: 3 } },
+      },
+    },
+    // Logged at A9 only: A9's number at A10 (x1 until A10 is logged).
+    VANTOM: { moves: { DISMEMBER_MOVE: at({ "9": 30 }) } },
+  };
+
+  it("moveDamageAt at A10 equals A9's estimate, with where the measured chain stops", () => {
+    const a9 = moveDamageAt(monsters, "TORCH_HEAD_AMALGAM", "STRONG_TACKLE_MOVE", 9)!;
+    const a10 = moveDamageAt(monsters, "TORCH_HEAD_AMALGAM", "STRONG_TACKLE_MOVE", 10)!;
+    expect(a9).toMatchObject({ perHit: Math.round((26 * 22) / 19), estimated: true, from: 8, ratioTo: 9 });
+    expect(a10).toMatchObject({ perHit: a9.perHit, estimated: true, from: 8, ratioTo: 9, ratioN: 1, ratioOwn: false });
+    expect(a10.ratio).toBeCloseTo(22 / 19, 10);
+    expect(chainedDamageRatio(monsters, "TORCH_HEAD_AMALGAM", 8, 10)).toMatchObject({ reached: 9, n: 1 });
+    // Logged at A9 only: A9's number at A10, estimated, the chain at A9.
+    expect(moveDamageAt(monsters, "VANTOM", "DISMEMBER_MOVE", 10)).toMatchObject({ perHit: 30, estimated: true, from: 9, ratio: 1, ratioTo: 9 });
+  });
+
+  it("the per-turn damage (boss clock, rollout) and the dossier at A10 carry the A9 scaling", () => {
+    const a9 = monsterDamageByTurn("TORCH_HEAD_AMALGAM", 9, 3, monsters)!;
+    const a10 = monsterDamageByTurn("TORCH_HEAD_AMALGAM", 10, 3, monsters)!;
+    // T1 Strong Tackle 26 x 22/19 = 30; T2 Beam shown 12 x 22/19 = 14, x3.
+    expect(a9.perTurn).toEqual([30, 42, 30]);
+    expect(a10).toEqual(a9);
+    expect(enemyTable("TORCH_HEAD_AMALGAM", 10, monsters as never, {})!.moves["STRONG_TACKLE_MOVE"]).toMatchObject({ damage: 30, estimated: true });
+    setMonsterDbForTests({ bosses: { QUEEN: { "8": { fights: 3, parts: { TORCH_HEAD_AMALGAM: { median: 211, n: 3 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("QUEEN_BOSS", 10)).toMatch(/强力冲撞 30 \(A10估: A8×1\.16，A9→A10 未测按 ×1\)/);
+      expect(bossDossier("QUEEN_BOSS", 9)).toMatch(/强力冲撞 30 \(A9估: A8×1\.16\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
   });
 });
 
