@@ -8,7 +8,8 @@ import { describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
+import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
 import { dominates, type Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -141,5 +142,54 @@ describe("2. A finished Jev line is \"stop here\"; One-Two Punch read; a Giant k
     expect(dominates(line(34, 56, -25), idle)).toBe(false);
     expect(dominates(line(34, 20, 11), idle)).toBe(true);
     expect(dominates(line(34, 56, -25), line(34, 56, -30))).toBe(true);
+  });
+});
+
+describe("3. The Sandpit deadline: Frantic Escape kept from exhaust picks, least-loss plays it first, code's plays leave energy for it (KY3YZ0DMRY0G F33 T9)", () => {
+  const step = (cardId: string, name: string) => ({ cardIndex: -1, cardId, upgraded: false, name, target: null, targetName: null });
+
+  it("Burning Pact's exhaust keeps both Escapes over the planned Defend and Strike (logged: the 1-cost Escape at -50)", () => {
+    const fx = logged("ky3y-f33-t9-pact");
+    expect(fx.decision.rationale).toMatch(/狂乱逃离 scores -50/);
+    const env = loggedEnv(fx);
+    env.screenMemory.planBeforeSelection = [step("DEFEND_IRONCLAD", "防御"), step("STRIKE_IRONCLAD", "打击")];
+    const decision = planSelection(env);
+    if (decision?.kind !== "act") throw new Error(`expected an act, got ${decision?.kind}`);
+    const cards = (fx.state["selection"] as Record<string, unknown>)["cards"] as Record<string, unknown>[];
+    expect(cards.find((card) => card["index"] === decision.intent.option_index)?.["card_id"]).not.toBe("FRANTIC_ESCAPE");
+  });
+
+  it("of two Escapes, the dearer one goes; any other card goes before either, planned or not", () => {
+    const context = { attacks: 8, incoming: 30, hp: 14, sandpit: true };
+    const cheap = combatExhaustScore("FRANTIC_ESCAPE", "Status", context, false, { cost: 1 });
+    const dear = combatExhaustScore("FRANTIC_ESCAPE", "Status", context, false, { cost: 2 });
+    expect(dear).toBeGreaterThan(cheap);
+    expect(dear).toBeLessThan(combatExhaustScore("DEFEND_IRONCLAD", "Skill", context, true, { block: 5 }) - 8 - 150);
+  });
+
+  it("every line dies at Sandpit 1: least-loss plays an affordable Escape first (logged: Burning Pact first)", () => {
+    const fx = logged("ky3y-f33-t9");
+    expect(fx.decision.rationale).toMatch(/drawing first .*燃烧契约/);
+    const decision = planCombatTurn(loggedEnv(fx));
+    if (decision?.kind !== "act") throw new Error(`expected an act, got ${decision?.kind}`);
+    const hand = ((fx.state["combat"] as Record<string, unknown>)["hand"] as Record<string, unknown>[]);
+    expect(hand.find((card) => card["index"] === decision.intent.card_index)?.["card_id"]).toBe("FRANTIC_ESCAPE");
+  });
+
+  it("a code play that would leave too little energy for the Escape gives way to it (logged: Defend at 2 energy, 2-cost Escape)", () => {
+    const fx = logged("ky3y-f33-t9-drawn");
+    const env = loggedEnv(fx);
+    const defend = { kind: "act" as const, label: "combat/least-loss", intent: { action: "play_card" as const, card_index: 0 }, rationale: "every simulated line dies; playing the one that keeps the most HP (-8): 防御, 防御" };
+    env.screenMemory.plannedAfter = { turn: env.state.turn ?? null, steps: [step("DEFEND_IRONCLAD", "防御")] };
+    const guarded = guardSandpit(env, defend);
+    if (guarded?.kind !== "act") throw new Error("expected an act");
+    expect(guarded.label).toBe("combat/sandpit-guard");
+    expect(guarded.intent).toEqual({ action: "play_card", card_index: 1 });
+    // A line that plays the Escape next, or a lethal, is left alone.
+    env.screenMemory.plannedAfter = { turn: env.state.turn ?? null, steps: [step("FRANTIC_ESCAPE", "狂乱逃离")] };
+    expect(guardSandpit(env, defend)).toBe(defend);
+    env.screenMemory.plannedAfter = undefined;
+    const lethal = { ...defend, label: "combat/lethal" };
+    expect(guardSandpit(env, lethal)).toBe(lethal);
   });
 });

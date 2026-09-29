@@ -523,6 +523,8 @@ export interface ExhaustCard {
   block?: number;
   /** Colossus: this turn, damage from Vulnerable enemies is halved. */
   colossus?: boolean;
+  /** Energy cost as it reads now (Frantic Escape's grows each time it is played). */
+  cost?: number;
 }
 
 /** A basic Defend's printed block: a block card that gives more is kept below a Defend under fire. */
@@ -547,7 +549,7 @@ function isAttackCard(cardId: string, type: string, line: string): boolean {
 }
 
 function exhaustCardOf(model: CardModel): ExhaustCard {
-  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block, ...(model.special === "colossus" ? { colossus: true } : {}) };
+  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block, cost: model.cost, ...(model.special === "colossus" ? { colossus: true } : {}) };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -612,7 +614,16 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
 /** Exhaust-score malus for a card the committed plan still plays (below any junk, above nothing). */
 export const PLANNED_CARD_KEEP = 150;
 
+/**
+ * Exhaust score of Frantic Escape while the Sandpit is up: below every other card, a planned one included
+ * (KY3YZ0DMRY0G F33 T9: at Sandpit 1, Burning Pact took the 1-cost Escape at -50 over a planned Strike and
+ * Defend at -80/-130; the 2-cost one could not be paid and the pit took us). Its cost is added: of two
+ * Escapes the dearer one goes, the cheaper is kept.
+ */
+export const ESCAPE_EXHAUST_KEEP = -1000;
+
 export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_"), card: ExhaustCard = {}): number {
+  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return ESCAPE_EXHAUST_KEEP + Math.max(0, card.cost ?? 0);
   const base = baseExhaustScore(cardId, type, context, blocks);
   if (base >= 90 || base <= 0) return base;
   // Toasty Mittens exhausts a card every turn: the static card value took Exterminate at Strength 6
@@ -658,7 +669,7 @@ function baseExhaustScore(cardId: string, type: string, context: ExhaustContext,
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   // Frantic Escape is a Status, but against the Sandpit it is the only thing that pushes the countdown
   // back (THMG F33 T4: Burning Pact took it as 90-point junk; both lines then left the Sandpit at 1).
-  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return -50;
+  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return ESCAPE_EXHAUST_KEEP;
   if (type === "Curse") return 100;
   if (type === "Status") return 90;
   // HP at or below the hit coming (this turn or next): the block is what keeps us alive.

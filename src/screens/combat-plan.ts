@@ -1072,7 +1072,10 @@ export function livingEnemySignature(raw: Record<string, unknown>): string {
 /**
  * Sandpit hard guard (TTVY T6): never end the turn with the Sandpit about to reach 0 while an
  * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
- * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
+ * so it applies to every combat planner and to answers from Jev/DeepSeek alike. Code's own plays are
+ * held to it too: a card that would leave too little energy for the cheapest Escape, in a line that does
+ * not play one next, gives way to the Escape (KY3Y F33 T9: least-loss "Defend, Defend" at 2 energy with
+ * a 2-cost Escape in hand; the pit took us at 14 HP with 10 block up). A lethal is left alone.
  */
 export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
   if (!decision) return decision;
@@ -1084,13 +1087,23 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
     .filter((amount) => amount > 0);
   if (sandpits.length === 0 || Math.min(...sandpits) - 1 > 0) return decision;
   const energy = num(asRecord(combat["player"])["energy"]);
-  const escape = asArray(combat["hand"])
-    .map(asRecord)
-    .find((card) => str(card["card_id"]) === "FRANTIC_ESCAPE" && card["playable"] !== false && num(card["energy_cost"]) <= energy);
+  const hand = asArray(combat["hand"]).map(asRecord);
+  const escape = hand
+    .filter((card) => str(card["card_id"]) === "FRANTIC_ESCAPE" && card["playable"] !== false && num(card["energy_cost"]) <= energy)
+    .sort((a, b) => num(a["energy_cost"]) - num(b["energy_cost"]))[0];
   if (!escape) return decision;
   const intent: ActionRequest = { action: "play_card", card_index: num(escape["index"]) };
   const why = `Sandpit ${Math.min(...sandpits)} would reach 0 at the enemy turn (death regardless of HP/block)`;
   if (decision.kind === "act") {
+    if (decision.intent.action === "play_card" && decision.label !== "combat/lethal") {
+      const played = hand.find((card) => num(card["index"]) === decision.intent.card_index);
+      const after = env.screenMemory.plannedAfter;
+      const escapeNext = after !== undefined && after.turn === (env.state.turn ?? null) && after.steps.some((step) => step.cardId === "FRANTIC_ESCAPE");
+      const cost = played ? (bool(played["costs_x"]) ? energy : num(played["energy_cost"])) : 0;
+      if (!played || str(played["card_id"]) === "FRANTIC_ESCAPE" || escapeNext || energy - cost >= num(escape["energy_cost"])) return decision;
+      env.screenMemory.combatPlan = null;
+      return { kind: "act", label: "combat/sandpit-guard", intent, rationale: `${why}: playing Frantic Escape before ${str(played["name"], str(played["card_id"]))}, which would leave too little energy for it` };
+    }
     if (decision.intent.action !== "end_turn") return decision;
     env.screenMemory.combatPlan = null;
     return { kind: "act", label: "combat/sandpit-guard", intent, rationale: `${why}: playing Frantic Escape instead of ending the turn` };
@@ -2195,7 +2208,19 @@ export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(plans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+  // The Sandpit's deadline (it reaches 0 at the enemy turn): only a Frantic Escape played this turn keeps the
+  // pit from taking us whatever our HP, so when a line plays one, only such lines, the Escape first (KY3Y
+  // F33 T9: Sandpit 1, least-loss drew first with Burning Pact, which exhausted the 1-cost Escape).
+  const pitSafe = (plan: Plan) => plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter > 0;
+  const deadline = allPlans.some(pitSafe) && allPlans.some((plan) => !pitSafe(plan));
+  const plans = deadline ? allPlans.filter(pitSafe) : allPlans;
+  const picked = leastLossOf(plans, hand, hp);
+  const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
+  return escape > 0 ? { ...picked, steps: [picked.steps[escape]!, ...picked.steps.slice(0, escape), ...picked.steps.slice(escape + 1)] } : picked;
+}
+
+function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
   // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first).
   const drawAt = (plan: Plan): number =>
     plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp));
