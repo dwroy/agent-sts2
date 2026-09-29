@@ -21,6 +21,8 @@ import { deckCards, deckFollowUp, eligibleCards, eventPage, nextPlanRef, oneshot
 import { followUpTargetScore } from "./selection.js";
 import { actStartPlan } from "./act-start.js";
 import { continueAfterDiscard, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { isLastEventPage } from "../knowledge/event-pages.js";
+import { routeReviewBlock, withRouteReview } from "./route-review.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -278,6 +280,11 @@ export function planEvent(env: DecisionEnv): Decision | null {
     ...(lethal.length > 0 ? { left_out_as_lethal: lethal.join("; ") } : {}),
   });
   const note = `Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call.${discardNote}`;
+  // The act's route rides on the event's last question (M2; route-review.ts): not on a page whose every option is
+  // logged to open another choice page of this event (knowledge/event-pages.ts).
+  const routeBlock = (): ReturnType<typeof routeReviewBlock> => (isLastEventPage(event) ? routeReviewBlock(env, "event", EVENT_NODES) : null);
+  const withRoute = (state: Record<string, JsonValue>, text: string, block: ReturnType<typeof routeReviewBlock>) =>
+    block ? { state: { ...state, route_review: block.state }, note: `${text} ${block.note}` } : { state, note: text };
   // BUILD_ONESHOT: an option that makes you pick card(s) from the deck (remove/upgrade/transform/enchant/
   // duplicate, read from its text) is decided with its card(s); code plays the option and the pick. A pick
   // among cards the event reveals is asked on its own screen, as before.
@@ -296,26 +303,34 @@ export function planEvent(env: DecisionEnv): Decision | null {
         for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
         return withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task));
       });
-      return buildPickDecision({
-        ...params,
-        label: "event/plan",
-        instructions:
-          "Which option should I choose? An option that makes you pick card(s) from your deck is listed once per card (key option:card, e.g. o1:c5); " +
-          'one that takes several cards lists its eligible_cards: then also answer "cards": [card keys]. Code plays the option and the card pick(s).',
-        state: deepseekState,
-        options: expanded,
-        deepseek: {
-          facts,
-          note,
-          // Without DeepSeek: the event's own Jev/code question (the card on the next screen).
-          baseline: buildPickDecision({ ...params, state: deepseekState, options: deepseekOptions }),
-          oneshot: { fallback: () => (env.screenMemory.oneshotFailed = visitKey(env, "event")) },
-          offeredCards: [...offered],
-        },
-      });
+      const block = routeBlock();
+      const routed = withRoute(deepseekState, note, block);
+      return withRouteReview(
+        env,
+        buildPickDecision({
+          ...params,
+          label: "event/plan",
+          instructions:
+            "Which option should I choose? An option that makes you pick card(s) from your deck is listed once per card (key option:card, e.g. o1:c5); " +
+            'one that takes several cards lists its eligible_cards: then also answer "cards": [card keys]. Code plays the option and the card pick(s).',
+          state: routed.state,
+          options: expanded,
+          deepseek: {
+            facts,
+            note: routed.note,
+            // Without DeepSeek: the event's own Jev/code question (the card on the next screen).
+            baseline: buildPickDecision({ ...params, state: deepseekState, options: deepseekOptions }),
+            oneshot: { fallback: () => (env.screenMemory.oneshotFailed = visitKey(env, "event")) },
+            offeredCards: [...offered],
+          },
+        }),
+        block,
+      );
     }
   }
-  return buildPickDecision({ ...params, state: deepseekState, options: deepseekOptions, deepseek: { facts, note } });
+  const block = routeBlock();
+  const routed = withRoute(deepseekState, note, block);
+  return withRouteReview(env, buildPickDecision({ ...params, state: routed.state, options: deepseekOptions, deepseek: { facts, note: routed.note } }), block);
 }
 
 export { givesPotion, potionSlotsNeeded } from "./potion-discard.js";
