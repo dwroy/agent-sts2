@@ -28,15 +28,27 @@ export function baseRestHeal(maxHp: number): number {
  * texts 「皇家枕头提供+15点生命。」; TQCZFBK7T09Y F25 45 -> 86/87 = 26 + 15, the rests at F9/F16 capped at max);
  * Stone Humidifier raises max HP by 5, HP with it (29 HEAL texts 「提升5点你的最大生命值。」; WFR4AUP2CWDT F8
  * 50/80 -> 79/85 = 24 + 5, Y0KJC2MQ57Z4 F9 15/80 -> 44/85). Eternal Feather heals on entering a rest site,
- * whatever is chosen there, by deck size: not modelled here.
+ * whatever is chosen there, by deck size (ETERNAL_FEATHER_HEAL).
  */
 export const REST_RELICS: Record<string, { heal?: number; maxHp?: number; name: string }> = {
   REGAL_PILLOW: { heal: 15, name: "Regal Pillow" },
   STONE_HUMIDIFIER: { maxHp: 5, name: "Stone Humidifier" },
 };
 
+/**
+ * Eternal Feather (永恒羽毛, 「你的牌组中每有{Cards}张牌，当你进入休息处时就会回复{Heal}点生命」): 3 HP for every 5
+ * cards, on entering the rest site. Logged (MAP -> REST HP): deck 16 +9, 17 +9, 19 +9, 20 +12, 23 +12, 24 +12,
+ * 26 +15, 27 +15, 28 +15 (CMUX, WFR4, 1WSH, U6W7, 4JVP, CCPR).
+ */
+export const ETERNAL_FEATHER_HEAL = { cards: 5, heal: 3 };
+
 /** What a rest (HEAL) adds beyond the base heal. */
 export interface RestHeal {
+  /**
+   * HP healed on entering a rest site, whatever is done there (Eternal Feather: by deck size), capped at max HP.
+   * 0 for the rest site we are in: its HP already has it.
+   */
+  enterHeal?: number;
   /** HP healed on top of the base heal, capped at max HP like it (Regal Pillow). */
   bonus: number;
   /** Max HP gained by resting, HP with it (Stone Humidifier). */
@@ -47,8 +59,11 @@ export interface RestHeal {
 
 export const NO_REST_RELICS: RestHeal = { bonus: 0, maxGain: 0, sources: [] };
 
-/** The rest relics among these relic ids. */
-export function restHealOf(relicIds: readonly string[]): RestHeal {
+/**
+ * The rest relics among these relic ids; with the deck's size, Eternal Feather's heal on entering a rest site
+ * (leave it 0 for the rest site we are in).
+ */
+export function restHealOf(relicIds: readonly string[], deckSize = 0): RestHeal {
   const out: RestHeal = { bonus: 0, maxGain: 0, sources: [] };
   for (const id of relicIds) {
     const relic = REST_RELICS[id];
@@ -57,12 +72,22 @@ export function restHealOf(relicIds: readonly string[]): RestHeal {
     out.maxGain += relic.maxHp ?? 0;
     out.sources.push(`${relic.name} ${relic.heal ? `+${relic.heal} HP` : `+${relic.maxHp} max HP`}`);
   }
+  if (relicIds.includes("ETERNAL_FEATHER") && deckSize > 0) {
+    const enter = ETERNAL_FEATHER_HEAL.heal * Math.floor(deckSize / ETERNAL_FEATHER_HEAL.cards);
+    if (enter > 0) {
+      out.enterHeal = enter;
+      out.sources.push(`Eternal Feather +${enter} HP on entering (${deckSize} cards)`);
+    }
+  }
   return out;
 }
 
-/** HP and max HP after resting at `hp`/`max`: the base heal (the game's own number when known) and the relics. */
+/**
+ * HP and max HP after resting at `hp`/`max`: Eternal Feather's heal on entering (enterHeal), the base heal (the
+ * game's own number when known) and the relics.
+ */
 export function restedHp(hp: number, max: number, rest: RestHeal = NO_REST_RELICS, base = baseRestHeal(max)): { hp: number; max: number } {
-  return { hp: Math.min(max, hp + base + rest.bonus) + rest.maxGain, max: max + rest.maxGain };
+  return { hp: Math.min(max, hp + (rest.enterHeal ?? 0) + base + rest.bonus) + rest.maxGain, max: max + rest.maxGain };
 }
 
 /** "30% of max HP (rounded down)", with the rest relics. */

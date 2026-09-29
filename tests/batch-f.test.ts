@@ -14,7 +14,8 @@ import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { planEvent, potionSlotsNeeded } from "../src/screens/event.js";
-import { planRest } from "../src/screens/rest.js";
+import { planRest, restHealHere } from "../src/screens/rest.js";
+import { restedHp, restHealOf } from "../src/strategy/route-projection.js";
 import { board as oneshotBoard, env as oneshotEnv } from "./oneshot-support.js";
 import { createScreenMemory } from "../src/project/types.js";
 import type { AnswerSet } from "../src/jev/answers.js";
@@ -553,5 +554,20 @@ describe("9b. Unrelenting's free Attack left at the end of the turn stays up int
     }).lines[0]!;
     // Free: the 20 for nothing, then both Strikes (32); without the carry, the 20 alone takes the 3 energy.
     expect(line.perTurn[0]!.dmg.min).toBe(32);
+  });
+});
+
+describe("9c. Eternal Feather: 3 HP for every 5 cards on entering a rest site, in the rest-heal estimates (981ae07/562215f)", () => {
+  it("logged: deck 17 +9, 20 +12, 26 +15; a rest ahead heals it too, the rest site we are in already has it", () => {
+    expect(restHealOf(["ETERNAL_FEATHER"], 17).enterHeal).toBe(9);
+    expect(restHealOf(["ETERNAL_FEATHER"], 20).enterHeal).toBe(12);
+    expect(restHealOf(["ETERNAL_FEATHER"], 26).enterHeal).toBe(15);
+    expect(restHealOf(["ETERNAL_FEATHER"], 26).sources).toContain("Eternal Feather +15 HP on entering (26 cards)");
+    // A later rest at 30/80 with 20 cards: +12 on entering, then 24: 66.
+    expect(restedHp(30, 80, restHealOf(["ETERNAL_FEATHER"], 20)).hp).toBe(66);
+    expect(restedHp(60, 80, restHealOf(["ETERNAL_FEATHER", "REGAL_PILLOW"], 20)).hp).toBe(80);
+    // Without the relic, or on the rest site's own screen (no deck size): nothing more.
+    expect(restHealOf(["REGAL_PILLOW"], 20).enterHeal).toBeUndefined();
+    expect(restHealHere("", 80, ["ETERNAL_FEATHER"]).rest.enterHeal ?? 0).toBe(0);
   });
 });

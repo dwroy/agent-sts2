@@ -188,6 +188,7 @@ function relicIdsOf(state: GameState): string[] {
  * (route-projection REST_RELICS). hp_if_option and the rest facts assumed a flat 30% before.
  */
 export function restHealHere(healText: string, maxHp: number, relicIds: readonly string[]): { base: number; rest: RestHeal; total: number; text: string } {
+  // Eternal Feather's heal on entering is already in the HP here (no deck size: no enterHeal).
   const relics = restHealOf(relicIds);
   const own = /[（(](\d+)[）)]/.exec(healText);
   const sum = (pattern: RegExp): number => [...healText.matchAll(pattern)].reduce((total, match) => total + Number(match[1]), 0);

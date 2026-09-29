@@ -741,7 +741,9 @@ export function expectedEntryHp(state: GameState): number {
   // The game's heal: 30% of max rounded down, then the rest relics (Regal Pillow +15, Stone Humidifier +5 max HP
   // and HP), as route-projection restedHp (batch D 981ae07); it was rounded, and Stone Humidifier left out.
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  return restedHp(now, max, restHealOf(relicIds)).hp;
+  // Eternal Feather heals on entering the rest site: not again on its own screen (the HP has it).
+  const deckSize = state.screen === "REST" ? 0 : asArray(asRecord(state.run?.raw)["deck"]).length;
+  return restedHp(now, max, restHealOf(relicIds, deckSize)).hp;
 }
 
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */

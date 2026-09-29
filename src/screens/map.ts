@@ -314,7 +314,7 @@ function routeWeights(env: DecisionEnv, floor: number): { act: number; weightOf:
   const act = actOfFloor(floor);
   // Rest relics (Regal Pillow, Stone Humidifier) change what every later rest heals.
   const relics = asArray(asRecord(env.state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80, restHealOf(relics));
+  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80, restHealOf(relics, asArray(asRecord(env.state.run?.raw)["deck"]).length));
   return { act, weightOf: makeRouteWeights(act, costs, env.screenMemory.runPlan), costs };
 }
 
