@@ -14,6 +14,8 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { CARD_REWARD_ROOMS } from "./map.js";
+import { routeReviewBlock, withRouteReview } from "./route-review.js";
 
 export function planReward(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -107,11 +109,19 @@ export function planReward(env: DecisionEnv): Decision | null {
         : buildPickDecision({ ...params, options: shown });
     // BUILD_DECIDER=deepseek: every offer and the skip go to DeepSeek, with code's value and why.
     if (!deepseekDecides(env)) return baseline;
-    return buildPickDecision({
-      ...params,
-      options,
-      deepseek: { facts: buildFacts(env), baseline, note: `code_value below the skip line (${SKIP_BAR}) means code would skip it.` },
-    });
+    // The act's route rides on the same question while a fork is left (route-review.ts): keep or change.
+    const review = routeReviewBlock(env, "card", CARD_REWARD_ROOMS);
+    const note = `code_value below the skip line (${SKIP_BAR}) means code would skip it.`;
+    return withRouteReview(
+      env,
+      buildPickDecision({
+        ...params,
+        ...(review ? { state: { ...params.state, route_review: review.state } } : {}),
+        options,
+        deepseek: { facts: buildFacts(env), baseline, note: review ? `${note} ${review.note}` : note },
+      }),
+      review,
+    );
   }
 
   // With every potion slot full, claiming a potion hangs the mod's action call (live run, floor 11).

@@ -23,7 +23,7 @@ import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
 import { compact, describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type RouteReviewResult, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
@@ -684,7 +684,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}) } },
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}) } },
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
           if (!picked.intent || (spec.oneshot && picked.fallback)) {
@@ -714,6 +714,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             ...(recovered ? { recovered_from_reasoning: recovered.line } : {}),
             ...(answer.cards ? { cards: answer.cards } : {}),
             ...(answer.route ? { route: answer.route } : {}),
+            ...(answer.routeReason ? { route_reason: answer.routeReason } : {}),
             // A one-shot plan: its reference and steps; this row plays step 1, later steps are their own rows.
             ...(picked.plan ? { plan_id: picked.plan.id, plan: picked.plan.steps, plan_step: 1 } : {}),
           };
@@ -1138,6 +1139,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
       // Combat: the rollout facts' timing and whether Jev picked the rollout's best line (rollout-live.ts).
       ...(resolved.log ?? {}),
+      // A route review that rode on this question (card reward, rest site): its answer and outcome; a change is its own row.
+      ...(resolved.routeReview ? { route_review: routeReviewLog(resolved.routeReview) } : {}),
     } satisfies Omit<DecisionRecord, "result">;
     const journalEntry = {
       label: decision.label,
@@ -1153,7 +1156,49 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const applyResolved = (): { route_plan?: JsonValue } => {
       const before = screenMemory.routePlan;
       resolved.apply?.();
+      // A route review's change carries its plan on its own row (logRouteChange).
+      if (resolved.routeReview?.change) return {};
       return screenMemory.routePlan && screenMemory.routePlan !== before ? { route_plan: toJsonValue(screenMemory.routePlan) } : {};
+    };
+    /**
+     * A route review's change (the answer named another route): its own map/route-change row, a step of this
+     * decision's plan (deepseek.reused, plan_ref: no call of its own), on the same state and timestamp as the
+     * decision's row so the replay takes both in order; filed in the run journal as the live loop plays it.
+     */
+    const logRouteChange = (ts: string, result: string): void => {
+      const change = resolved.routeReview?.change;
+      if (!change || !screenMemory.routePlan) return;
+      const reason = resolved.routeReview?.reason ?? "";
+      const entry = { label: "map/route-change", by: "deepseek", choice: compact(`route (${change.why}): ${change.to}`), reason, asked: true, intent: null };
+      journal.record(state, entry);
+      const row: DecisionRecord = {
+        ts,
+        mode,
+        screen: state.screen,
+        session: `${state.session.mode}/${state.session.phase}`,
+        floor: state.run?.floor ?? null,
+        turn: state.turn,
+        label: "map/route-change",
+        decider: "deepseek",
+        fingerprint: stateFingerprint,
+        rationale: `DeepSeek changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}`,
+        confidence: null,
+        fallback: false,
+        reasked: false,
+        no_jev: false,
+        reused_answer: false,
+        request_ids: [],
+        latency_ms: { plan: 0, jev: 0, action: 0 },
+        usage: { input_tokens: 0, output_tokens: 0 },
+        deepseek: { by: "deepseek", direct: true, reused: true, plan_ref: change.ref, plan_step: change.step, choice: change.key, reason, from: change.from, to: change.to },
+        ...(runId ? { run_id: runId } : {}),
+        observed_ts: observedTs,
+        journal: { choice: entry.choice, reason },
+        route_plan: toJsonValue(screenMemory.routePlan),
+        result,
+      };
+      log.write(row);
+      onEvent({ type: "note", message: `route changed in ${decision.label}: ${change.to}${reason ? ` — ${reason}` : ""}` });
     };
 
     if (mode === "shadow") {
@@ -1171,6 +1216,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan, result: "shadow (not dispatched)" };
       log.write(record);
+      logRouteChange(record.ts, "shadow (not dispatched)");
       logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
       await sleep(pollIntervalMs);
@@ -1283,6 +1329,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       result: `${actionResult.status}${actionResult.stable ? "" : " (unstable)"}: ${actionResult.message}`,
     };
     log.write(record);
+    logRouteChange(record.ts, "route plan changed (no game action)");
     logState(state, stateFingerprint, record.ts);
     onEvent({ type: "decision", record, totals: totals() });
     await sleep(60);
@@ -1472,4 +1519,15 @@ export function withAdvisorNote(decision: AskDecision, note: Record<string, stri
 function deepseekUsage(record: Record<string, JsonValue>): { input_tokens: number; output_tokens: number; cache_hit_tokens: number; reasoning_tokens: number } {
   const n = (key: string): number => (typeof record[key] === "number" ? (record[key] as number) : 0);
   return { input_tokens: n("input_tokens"), output_tokens: n("output_tokens"), cache_hit_tokens: n("cache_hit_tokens"), reasoning_tokens: n("reasoning_tokens") };
+}
+
+/** A route review's log fields in the decision's row (a change's paths and plan are in its own row). */
+function routeReviewLog(review: RouteReviewResult): JsonValue {
+  return {
+    answer: review.answer,
+    outcome: review.outcome,
+    ...(review.reason ? { reason: review.reason } : {}),
+    ...(review.invalid ? { invalid: review.invalid } : {}),
+    ...(review.change ? { plan_ref: review.change.ref, plan_step: review.change.step } : {}),
+  };
 }

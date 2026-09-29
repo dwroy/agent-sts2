@@ -128,3 +128,12 @@ export function roomCostNote(model: RoomCostModel): string {
     "hp figures chain the median costs; hp_risk is the one room on the path whose p75 cost (the rooms before it at the median) leaves the least HP; HP that runs out is not healed by a later rest."
   );
 }
+
+/** The per-room costs in one line (the route review on card rewards and rest sites). */
+export function roomCostBrief(model: RoomCostModel): string {
+  const r = (cost: RoomCostEntry): string => `${Math.round(cost.median)}/${Math.round(cost.p75)}`;
+  return (
+    `HP a room costs in act ${model.act} (median/p75): hallway fight ${r(model.monster)}, elite ${r(model.elite)}, "?" room ${r(model.unknown)}; ` +
+    `hp figures chain the medians and assume every later rest site heals ${Math.round(REST_HEAL * 100)}% of max HP (smithing heals nothing).`
+  );
+}

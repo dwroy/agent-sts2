@@ -167,16 +167,19 @@ describe("replaying a run's rows rebuilds the journal the live process had", () 
 
 /* ---- the loop restarted mid-run ------------------------------------------------------------------ */
 
+type Pick = (criteria: Record<string, string | null>, label: string) => string | { choice: string; route?: string };
+
 class RecordingDeepSeek extends DeepSeekClient {
-  calls: { label: string; memory: JsonValue | undefined; criteria: Record<string, string | null> }[] = [];
-  constructor(private readonly pickFn: (criteria: Record<string, string | null>, label: string) => string) {
+  calls: { label: string; memory: JsonValue | undefined; criteria: Record<string, string | null>; state: Record<string, JsonValue> }[] = [];
+  constructor(private readonly pickFn: Pick) {
     super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
   }
-  override async choose(_state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
+  override async choose(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
     const label = String(context["label"] ?? "");
-    this.calls.push({ label, memory: context["memory"], criteria });
-    const choice = this.pickFn(criteria, label);
-    return { choice, reason: `reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1 };
+    this.calls.push({ label, memory: context["memory"], criteria, state });
+    const picked = this.pickFn(criteria, label);
+    const { choice, ...extras } = typeof picked === "string" ? { choice: picked } : picked;
+    return { choice, reason: `reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1, ...extras };
   }
 }
 
@@ -279,8 +282,8 @@ function loopConfig(dir: string): AppConfig {
 const pick = (criteria: Record<string, string | null>, label: string): string =>
   label === "map/route-plan" ? Object.keys(criteria).find((key) => String(criteria[key]).includes("Shop"))! : Object.keys(criteria)[0]!;
 
-async function play(config: AppConfig, sequence: { raw: Raw; transient?: boolean }[], options: { maxDecisions?: number; restoreRun?: boolean } = {}) {
-  const deepseek = new RecordingDeepSeek(pick);
+async function play(config: AppConfig, sequence: { raw: Raw; transient?: boolean }[], options: { maxDecisions?: number; restoreRun?: boolean; pick?: Pick } = {}) {
+  const deepseek = new RecordingDeepSeek(options.pick ?? pick);
   const notes: string[] = [];
   const { server, actions } = await scriptedMod(sequence);
   await runLoop({
@@ -339,6 +342,31 @@ describe("the loop restarted mid-run", () => {
     // A run with no rows at all (logs lost): a note, not silence.
     const empty = await play(loopConfig(tempDir()), [steps.secondFork, steps.event, steps.menu]);
     expect(empty.notes.some((note) => /run TESTRUN123 \(F6\): no logged rows to rebuild the run memory from.*history, run plan and route plan are lost/.test(note))).toBe(true);
+  });
+
+  it("restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review", async () => {
+    const config = loopConfig(tempDir());
+    await play(config, [steps.firstFork], { maxDecisions: 1 });
+    const after = await play(config, [steps.reward, steps.secondFork, steps.event, steps.menu]);
+    expect(after.deepseek.calls.map((call) => call.label)).toEqual(["reward/card", "event/choose"]);
+    expect(after.deepseek.calls[0]!.state["route_review"]).toMatchObject({ routes: { keep: { path: "Shop -> Boss" }, p1: { path: "Elite -> Boss" } } });
+  });
+
+  it("a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)", async () => {
+    const config = loopConfig(tempDir());
+    const change: Pick = (criteria, label) => (label === "reward/card" ? { choice: Object.keys(criteria)[0]!, route: "p1" } : pick(criteria, label));
+    await play(config, [steps.firstFork, steps.lastFrame, steps.reward], { maxDecisions: 2, pick: change });
+    const after = await play(config, [steps.secondFork, steps.event, steps.menu], { pick: change });
+    expect(after.notes.some((note) => note.includes("route plan (act 1, F6) Elite -> Boss"))).toBe(true);
+    // The Elite the review chose, followed in code: no re-plan.
+    expect(after.actions[0]).toEqual({ action: "choose_map_node", option_index: 0 });
+    expect(after.deepseek.calls.map((call) => call.label)).toEqual(["event/choose"]);
+    const memory = after.deepseek.calls[0]!.memory as Record<string, string>;
+    expect(memory["history"]).toContain("路线重规划（card-reward review）");
+    expect(memory["history"]).toContain("map/route-change [DS]: route (card-reward review): Elite -> Boss");
+    // The same memory as a loop that never stopped.
+    const straight = await play(loopConfig(tempDir()), [steps.firstFork, steps.lastFrame, steps.reward, steps.secondFork, steps.event, steps.menu], { pick: change });
+    expect(JSON.stringify(memory)).toBe(JSON.stringify(straight.deepseek.calls[2]!.memory));
   });
 
   it("the replay notes the node a logged map move chose, and the fight chain at the map's node", async () => {

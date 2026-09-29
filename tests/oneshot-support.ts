@@ -80,9 +80,9 @@ export function optionsOf(decision: Decision): Record<string, Record<string, Jso
   return Object.fromEntries(Object.entries(question.criteria).map(([key, value]) => [key, JSON.parse(value ?? "{}") as Record<string, JsonValue>]));
 }
 
-/** DeepSeek's choice of `choice` (with `cards`), resolved as the loop resolves it. */
-export function choose(decision: Decision, choice: string, cards?: string[], route?: string): ResolvedAction {
-  return ask(decision).resolve({ pick: { type: "choice", choice, probabilities: { [choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(cards ? { cards } : {}), ...(route ? { route } : {}) } } } as AnswerSet);
+/** DeepSeek's choice of `choice` (with `cards`, `route` and `route_reason`), resolved as the loop resolves it. */
+export function choose(decision: Decision, choice: string, cards?: string[], route?: string, routeReason?: string): ResolvedAction {
+  return ask(decision).resolve({ pick: { type: "choice", choice, probabilities: { [choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(cards ? { cards } : {}), ...(route ? { route } : {}), ...(routeReason ? { route_reason: routeReason } : {}) } } } as AnswerSet);
 }
 
 /** DeepSeek's plan answer for a shop question, resolved as the loop resolves it. */
@@ -135,7 +135,7 @@ export function setupOneshotTests(): void {
 export class FakeDeepSeek extends DeepSeekClient {
   calls: { label: string; state: Record<string, JsonValue>; criteria: Record<string, string | null>; plan: boolean }[] = [];
   constructor(
-    private readonly pick: (criteria: Record<string, string | null>, label: string) => string | { choice: string; cards?: string[]; route?: string },
+    private readonly pick: (criteria: Record<string, string | null>, label: string) => string | { choice: string; cards?: string[]; route?: string; routeReason?: string },
     private readonly plans: (label: string, n: number) => Record<string, unknown> = () => ({ plan: [], reason: "nothing" }),
   ) {
     super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
@@ -145,7 +145,7 @@ export class FakeDeepSeek extends DeepSeekClient {
     this.calls.push({ label, state, criteria, plan: false });
     const picked = this.pick(criteria, label);
     const choice = typeof picked === "string" ? picked : picked.choice;
-    const extras = typeof picked === "string" ? {} : { ...(picked.cards ? { cards: picked.cards } : {}), ...(picked.route ? { route: picked.route } : {}) };
+    const extras = typeof picked === "string" ? {} : { ...(picked.cards ? { cards: picked.cards } : {}), ...(picked.route ? { route: picked.route } : {}), ...(picked.routeReason ? { routeReason: picked.routeReason } : {}) };
     return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1, ...extras };
   }
   override async choosePlan(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}) {

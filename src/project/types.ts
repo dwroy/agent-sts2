@@ -244,11 +244,30 @@ export interface ResolvedAction {
   /** The run journal's text for this choice when no option text says it (a shop plan). */
   journal?: string;
   /**
+   * The route review that rode on this question (card reward, rest site; screens/route-review.ts): DeepSeek's
+   * `route` answer and what code did with it. Logged in the row (route_review); a change is also logged as
+   * its own map/route-change row, a step of this decision's plan (no call of its own).
+   */
+  routeReview?: RouteReviewResult;
+  /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
    * The loop runs this once, for the resolution it plays.
    */
   apply?: () => void;
+}
+
+/** DeepSeek's `route` answer on a question with a route review, and what code did with it. */
+export interface RouteReviewResult {
+  /** The answer's `route` as given (null: none). */
+  answer: string | null;
+  /** keep: the plan stays; change: the answer's route is the act's plan now; invalid: kept (why in `invalid`). */
+  outcome: "keep" | "change" | "invalid";
+  /** The answer's `route_reason`. */
+  reason: string;
+  invalid?: string;
+  /** A change: the plan reference and step it is, the route key, the paths from here before and after, and the plan's why. */
+  change?: { ref: string; step: number; key: string; from: string; to: string; why: string };
 }
 
 export interface AskDecision {

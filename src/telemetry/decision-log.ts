@@ -65,8 +65,10 @@ export interface DecisionRecord {
   observed_ts?: string;
   /** What the run journal filed for this decision (the choice text and the model's raw reason), for replay. */
   journal?: { choice: string; reason: string };
-  /** The route plan this decision made (map/route-plan), so a restart resumes it instead of re-planning. */
+  /** The route plan this decision made (map/route-plan, map/route-change), so a restart resumes it instead of re-planning. */
   route_plan?: JsonValue;
+  /** A route review that rode on this question (card reward, rest site): {answer, outcome, reason, invalid?, plan_ref?, plan_step?}. */
+  route_review?: JsonValue;
   result: string;
 }
 

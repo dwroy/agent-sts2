@@ -62,8 +62,13 @@ export interface DeepSeekAnswer {
    * them here; screens/oneshot.ts). Absent otherwise.
    */
   cards?: string[];
-  /** The answer's `route` key, when it gave one (the act-start Ancient's joint question names the act's route). */
+  /**
+   * The answer's `route` key, when it gave one (the act-start Ancient's joint question names the act's route;
+   * a card reward or rest site with a route review says "keep" or a route key).
+   */
   route?: string;
+  /** The answer's `route_reason` (a route review's why), when it gave one. */
+  routeReason?: string;
 }
 
 /** One answer as seen by the consistency guard (JSON-safe, for decisions.jsonl). */
@@ -328,7 +333,7 @@ export class DeepSeekClient implements Escalator {
     let secondCheck: ConsistencyCheck | null = null;
     let secondChoice = "";
     let secondReason = "";
-    let secondExtras: { cards?: string[]; route?: string } = {};
+    let secondExtras: { cards?: string[]; route?: string; routeReason?: string } = {};
     let meta = done.meta;
     let calls = 1;
     try {
@@ -369,10 +374,10 @@ export class DeepSeekClient implements Escalator {
     );
   }
 
-  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown; cards?: string[]; route?: string } {
-    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown };
+  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown; cards?: string[]; route?: string; routeReason?: string } {
+    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown };
     try {
-      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown };
+      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown };
     } catch {
       throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
     }
@@ -382,6 +387,7 @@ export class DeepSeekClient implements Escalator {
       rawReason: parsed.reason,
       ...(Array.isArray(parsed.cards) ? { cards: parsed.cards.filter((card): card is string => typeof card === "string").map((card) => card.trim()) } : {}),
       ...(typeof parsed.route === "string" && parsed.route.trim() ? { route: parsed.route.trim() } : {}),
+      ...(typeof parsed.route_reason === "string" && parsed.route_reason.trim() ? { routeReason: parsed.route_reason.trim() } : {}),
     };
   }
 
@@ -514,9 +520,13 @@ interface ChatMessage {
   content: string;
 }
 
-/** `{cards, route}` as far as the answer gave them, else nothing (the answer object stays as before). */
-function extrasOf(answer: { cards?: string[]; route?: string }): { cards?: string[]; route?: string } {
-  return { ...(answer.cards && answer.cards.length > 0 ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}) };
+/** `{cards, route, routeReason}` as far as the answer gave them, else nothing (the answer object stays as before). */
+function extrasOf(answer: { cards?: string[]; route?: string; routeReason?: string }): { cards?: string[]; route?: string; routeReason?: string } {
+  return {
+    ...(answer.cards && answer.cards.length > 0 ? { cards: answer.cards } : {}),
+    ...(answer.route ? { route: answer.route } : {}),
+    ...(answer.routeReason ? { routeReason: answer.routeReason } : {}),
+  };
 }
 
 /** Usage of two calls on one question, summed (latency too: both were waited for). */

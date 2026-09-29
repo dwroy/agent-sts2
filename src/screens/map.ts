@@ -11,8 +11,9 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { projectPath, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
+import { projectPath, roomCostBrief, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
 import type { GameState } from "../mod/schema.js";
+import type { RememberedMap } from "../project/types.js";
 import { oneshotOn } from "./oneshot.js";
 
 interface MapNode {
@@ -854,6 +855,134 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
       const projection = projectPath(entry.path.map((node) => node.type), hp, roomCostModel(act, asc, maxHp));
       const boss = entry.path.findIndex((node) => node.type === "Boss");
       return hpText(boss >= 0 ? projection.arrival[boss]! : projection.end, maxHp);
+    },
+  };
+}
+
+/* ---- the route from the room we are in (card rewards, rest sites: route-review.ts) --------------------- */
+
+/** The rooms a card reward comes from: a fight, or an event in a "?" room (a boss ends the act's route). */
+export const CARD_REWARD_ROOMS = ["Monster", "Elite", "Unknown"] as const;
+
+export interface PositionRoute {
+  /** "keep" (the plan from here) or "p1".. (the other candidate paths, by code's value). */
+  key: string;
+  value: number;
+  facts: Record<string, JsonValue>;
+  entry: ScoredPath;
+}
+
+export interface PositionRoutes {
+  act: number;
+  /** The node we are in. */
+  position: { row: number; col: number; type: string };
+  plan: RoutePlan;
+  /** The plan's steps after this node, the next one first. */
+  remaining: RoutePlanStep[];
+  /** keep first, then the other paths from here; facts and code's value at HP now. */
+  routes: PositionRoute[];
+  /** The floor of a map row (counted from this node's floor). */
+  floorOf: (row: number) => number;
+  /** The room costs the projection uses, in one line. */
+  note: string;
+  /** HP on arrival at a route's first elite and at its boss when the route starts at `hp` (absolute). */
+  hpAlong: (key: string, hp: number) => string;
+  /** The route plan a candidate becomes when it starts at `hp` (absolute), with the plan's why. */
+  planFor: (key: string, hp: number, why: string) => RoutePlan | null;
+}
+
+/**
+ * The node we are in on a REWARD or REST screen (their states carry no map position): the node chosen from
+ * the map remembered one floor earlier (RememberedMap.chosen), else the only available node of `rooms` on
+ * it; null when neither is known or it is not one of `rooms`.
+ */
+export function roomPosition(map: RememberedMap | undefined, runId: string, floor: number | null, rooms: readonly string[]): { row: number; col: number; type: string; fights: number } | null {
+  if (!map || map.runId !== runId || floor === null || map.floor !== floor - 1) return null;
+  const only = map.available.filter((node) => rooms.includes(node.type));
+  const here = map.chosen ?? (only.length === 1 ? only[0]! : null);
+  if (!here || !rooms.includes(here.type)) return null;
+  // The fight chain ending here: the map's chain at its current node, plus this room (as fightsSoFar walks it).
+  const chain = map.fights ?? 0;
+  const fights = here.type === "Monster" || here.type === "Elite" ? chain + 1 : here.type === "Treasure" ? chain : 0;
+  return { row: here.row, col: here.col, type: here.type, fights };
+}
+
+/**
+ * The act's route as seen from the room we are in (a card reward or rest site DeepSeek decides): the plan's
+ * remaining path ("keep") and the other candidate paths from this node's children to the boss, with the
+ * same candidates, facts and code value as map/route-plan, at HP now. Null when the position is unknown,
+ * the act has no route plan, the plan does not go on from here (the next map re-plans it), or there is no
+ * fork left (fewer than 2 candidate paths).
+ */
+export function positionRoutes(env: DecisionEnv, rooms: readonly string[]): PositionRoutes | null {
+  const { state, screenMemory } = env;
+  const runId = str(state.raw["run_id"]);
+  const floor = state.run?.floor ?? null;
+  const map = screenMemory.lastMap;
+  if (map?.act != null && state.run?.act_id != null && map.act !== state.run.act_id) return null;
+  const here = roomPosition(map, runId, floor, rooms);
+  if (!map || !here || floor === null) return null;
+  const { act, weightOf } = routeWeights(env, floor);
+  const plan = screenMemory.routePlan && screenMemory.routePlan.runId === runId && screenMemory.routePlan.act === act ? screenMemory.routePlan : null;
+  if (!plan) return null;
+  const nodes = new Map<string, MapNode>(map.nodes.map((node) => [key(node.row, node.col), { row: node.row, col: node.col, type: node.type, children: node.children }]));
+  const node = nodes.get(key(here.row, here.col));
+  if (!node || node.children.length === 0) return null;
+  const next = nextPlannedStep(plan, here);
+  if (!next || !node.children.some((child) => child.row === next.row && child.col === next.col)) return null;
+  const hpPct = hpPercent(env);
+  const maxHp = state.run?.max_hp ?? 80;
+  const urgencyOf = (hp: number): number => (hp < 0.4 ? 3 : hp < 0.55 ? 1.8 : 1);
+  const context: RouteContext = {
+    nodes,
+    available: node.children.map((child, index) => ({ index, row: child.row, col: child.col, type: nodes.get(key(child.row, child.col))?.type ?? "Unknown" })),
+    current: { row: here.row, col: here.col },
+    start: { hp: hpPct, gold: state.run?.gold ?? 0, fights: here.fights },
+    weights: weightOf,
+    act,
+    hpPct,
+    urgency: urgencyOf(hpPct),
+    ascension: state.run?.ascension ?? 0,
+    costs: roomCostModel(act, state.run?.ascension ?? 0, maxHp),
+  };
+  const candidates = candidatePaths(context);
+  if (candidates.length < 2) return null;
+  const remaining = plan.path.filter((step) => step.row > here.row);
+  const kept = scorePath(remaining.map((step) => nodes.get(key(step.row, step.col)) ?? { row: step.row, col: step.col, type: step.type, children: [] }), context);
+  const types = (entry: ScoredPath): string => entry.path.map((step) => step.type).join(">");
+  const others = candidates.filter((entry) => types(entry) !== types(kept)).slice(0, ROUTE_CANDIDATES - 1);
+  const routes: PositionRoute[] = [
+    { key: "keep", value: kept.value, entry: kept, facts: pathFacts(kept, maxHp) },
+    ...others.map((entry, at) => ({ key: `p${at + 1}`, value: entry.value, entry, facts: pathFacts(entry, maxHp) })),
+  ];
+  const floorOf = (row: number): number => floor + (row - here.row);
+  const entryOf = (routeKey: string): ScoredPath | undefined => routes.find((route) => route.key === routeKey)?.entry;
+  return {
+    act,
+    position: { row: here.row, col: here.col, type: here.type },
+    plan,
+    remaining,
+    routes,
+    floorOf,
+    note: roomCostBrief(context.costs),
+    hpAlong: (routeKey, hp) => {
+      const entry = entryOf(routeKey);
+      if (!entry) return "?";
+      const projection = projectPath(entry.path.map((step) => step.type), hp, context.costs);
+      const elite = entry.path.findIndex((step) => step.type === "Elite");
+      const boss = entry.path.findIndex((step) => step.type === "Boss");
+      const at = (left: number, what: string): string => (left > 0 ? `~${Math.round(left)}/${maxHp} at ${what}` : `HP runs out before ${what}`);
+      return [
+        ...(elite >= 0 ? [at(projection.arrival[elite]!, `the elite F${floorOf(entry.path[elite]!.row)}`)] : []),
+        at(boss >= 0 ? projection.arrival[boss]! : projection.end, "the boss"),
+      ].join(", ");
+    },
+    planFor: (routeKey, hp, why) => {
+      const entry = entryOf(routeKey);
+      if (!entry || routeKey === "keep") return null;
+      const frac = Math.max(0, Math.min(1, hp / maxHp));
+      const at: RouteContext = { ...context, hpPct: frac, start: { ...context.start, hp: frac }, urgency: urgencyOf(frac) };
+      return candidatePlan(env, at, scorePath(entry.path, at), why).plan;
     },
   };
 }
