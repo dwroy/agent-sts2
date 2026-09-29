@@ -1,15 +1,22 @@
 /**
- * The legality gate (PLAN.md §8.1): an intent is only dispatched if the *freshest* payload still
- * advertises it with the arguments we computed.
+ * The execution gate (PLAN.md §8.1; V4 M3): an intent is only dispatched if the *freshest* payload still
+ * advertises it with the arguments we computed, and its indices still point at what the decision meant (the
+ * card, enemy, potion, node or option in its `expect`; act/identity.ts).
  */
 
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, num, numOrNull, stableStringify } from "../util/json.js";
+import { checkIdentity, type ActionExpect } from "./identity.js";
 
 export interface GateResult {
   ok: boolean;
   reason: string;
+  /** A refusal's kind: the action is not legal now, or its indices hold something else than was decided. */
+  kind?: "legality" | "identity";
+  /** An identity refusal: what the decision meant and what the indices hold now. */
+  expected?: ActionExpect;
+  actual?: ActionExpect;
 }
 
 const INDEX_ACTIONS = new Set([
@@ -35,16 +42,28 @@ const INDEX_ACTIONS = new Set([
 ]);
 
 export function gate(state: GameState, intent: ActionRequest): GateResult {
+  const legal = legality(state, intent);
+  if (!legal.ok && legal.stage === "action") return { ok: false, kind: "legality", reason: legal.reason };
+  // Identity before the index checks: "card 3 is now a Defend" says more than "card 3 is not playable".
+  const mismatch = checkIdentity(state, intent);
+  if (mismatch) return { ok: false, kind: "identity", reason: `not what was decided: ${mismatch.reason}`, expected: mismatch.expected, actual: mismatch.actual };
+  if (!legal.ok) return { ok: false, kind: "legality", reason: legal.reason };
+  return { ok: true, reason: "legal" };
+}
+
+/** The legality checks; `stage` "action" when the action itself is not offered. */
+function legality(state: GameState, intent: ActionRequest): { ok: true } | { ok: false; reason: string; stage: "action" | "arguments" } {
   if (!state.available_actions.includes(intent.action)) {
     return {
       ok: false,
+      stage: "action",
       reason: `"${intent.action}" is not in available_actions (${state.available_actions.join(", ") || "none"})`,
     };
   }
   if (INDEX_ACTIONS.has(intent.action)) {
     const index = intent.action === "play_card" ? intent.card_index : intent.option_index;
     if (index === undefined || !Number.isInteger(index)) {
-      return { ok: false, reason: `"${intent.action}" needs an integer index and none was set` };
+      return { ok: false, stage: "arguments", reason: `"${intent.action}" needs an integer index and none was set` };
     }
   }
   if (intent.action === "play_card") {
@@ -52,31 +71,32 @@ export function gate(state: GameState, intent: ActionRequest): GateResult {
     const card = asArray(combat["hand"])
       .map(asRecord)
       .find((entry) => numOrNull(entry["index"]) === intent.card_index);
-    if (!card) return { ok: false, reason: `card_index ${intent.card_index} is not in the current hand` };
+    if (!card) return { ok: false, stage: "arguments", reason: `card_index ${intent.card_index} is not in the current hand` };
     if (!bool(card["playable"])) {
-      return { ok: false, reason: `card_index ${intent.card_index} is not playable right now` };
+      return { ok: false, stage: "arguments", reason: `card_index ${intent.card_index} is not playable right now` };
     }
     if (bool(card["requires_target"])) {
       const valid = asArray(card["valid_target_indices"]).map((value) => num(value));
       if (intent.target_index === undefined || !valid.includes(intent.target_index)) {
         return {
           ok: false,
+          stage: "arguments",
           reason: `target_index ${intent.target_index ?? "unset"} is not in valid_target_indices [${valid.join(", ")}]`,
         };
       }
     }
   }
   if (intent.action === "crystal_clear_cell") {
-    if (intent.x === undefined || intent.y === undefined) return { ok: false, reason: "crystal_clear_cell needs x and y" };
+    if (intent.x === undefined || intent.y === undefined) return { ok: false, stage: "arguments", reason: "crystal_clear_cell needs x and y" };
   }
   if (intent.action === "choose_map_node") {
     const map = asRecord(state.raw["map"]);
     const available = asArray(map["available_nodes"]).map((entry) => numOrNull(asRecord(entry)["index"]));
     if (!available.includes(intent.option_index ?? null)) {
-      return { ok: false, reason: `option_index ${intent.option_index} is not among the available map nodes [${available.join(", ")}]` };
+      return { ok: false, stage: "arguments", reason: `option_index ${intent.option_index} is not among the available map nodes [${available.join(", ")}]` };
     }
   }
-  return { ok: true, reason: "legal" };
+  return { ok: true };
 }
 
 /**

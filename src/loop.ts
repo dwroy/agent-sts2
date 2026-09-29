@@ -10,7 +10,8 @@ import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 import { classifyFailure, dispatch } from "./act/dispatch.js";
-import { fingerprint, gate } from "./act/gate.js";
+import { fingerprint, gate, type GateResult } from "./act/gate.js";
+import { wireIntent, withExpect } from "./act/identity.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import { withJevRetry, type JevClient } from "./jev/client.js";
@@ -22,7 +23,7 @@ import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
-import type { ModClient } from "./mod/client.js";
+import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
@@ -277,6 +278,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let answerMemo: AnswerMemo | null = null;
   // Consecutive gate rejections; after a few in combat the loop ends the turn instead of spinning.
   let gateRejections = 0;
+  // The last gate refusal logged ("fingerprint|reason"): a refusal repeated on the same board is logged once.
+  let lastRefusalLogged: string | null = null;
   const readMemo = (key: string): AnswerMemo | null =>
     answerMemo !== null && answerMemo.key === key ? answerMemo : null;
   let unsupportedScreen: string | null = null;
@@ -1094,31 +1097,23 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
 
+    // V4 M3, the execution gate: what the action's indices point at on the state it was decided on (a combat line's
+    // step keeps the card, enemy and potion its line chose), checked here and again on the state it is sent to
+    // (act/identity.ts). A memo's answer keeps the identity of the board it was given on.
+    resolved.intent = withExpect(state, resolved.intent);
     let gated = gate(state, resolved.intent);
     if (!gated.ok && state.screen === "COMBAT" && gateRejections >= 3 && state.available_actions.includes("end_turn")) {
       // The same illegal play kept coming back (a card whose cost rose above our energy, 2026-09-25:
       // 30 min spinning on "card_index 5 is not playable"): stop re-planning it and end the turn.
       onEvent({ type: "note", message: `gate rejected ${resolved.intent.action} ${gateRejections} times: ending the turn instead` });
-      const endTurn = { action: "end_turn" } as const;
+      const endTurn = withExpect(state, { action: "end_turn" });
       resolved.intent = endTurn;
       resolved.rationale = `fallback after repeated illegal plays: ${resolved.rationale}`;
       gated = gate(state, endTurn);
     }
-    if (!gated.ok) {
-      stats.waits += 1;
-      gateRejections += 1;
-      noteStall(state, gated.reason);
-      onEvent({ type: "note", message: `gate rejected ${resolved.intent.action}: ${gated.reason}` });
-      // Never serve the rejected answer or plan again: the next pass re-plans from the live state.
-      answerMemo = null;
-      screenMemory.combatPlan = null;
-      await sleep(pollIntervalMs);
-      continue;
-    }
-    gateRejections = 0;
-    clearStall();
+    const intent: ActionRequest = resolved.intent;
 
-    const baseRecord = {
+    const recordBase = () => ({
       ts: new Date().toISOString(),
       mode,
       screen: state.screen,
@@ -1137,7 +1132,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       fingerprint: stateFingerprint,
       questions: asked,
       answers: rawAnswers,
-      chosen: toJsonValue(resolved.intent),
+      // The action as sent; what the gate checked it against is `expect`.
+      chosen: toJsonValue(wireIntent(intent)),
+      ...(intent.expect ? { expect: toJsonValue(intent.expect) } : {}),
       rationale: resolved.rationale,
       confidence: resolved.confidence,
       fallback: resolved.fallback,
@@ -1157,7 +1154,53 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(resolved.log ?? {}),
       // A route review that rode on this question (card reward, rest site): its answer and outcome; a change is its own row.
       ...(resolved.routeReview ? { route_review: routeReviewLog(resolved.routeReview) } : {}),
-    } satisfies Omit<DecisionRecord, "result">;
+    } satisfies Omit<DecisionRecord, "result">);
+
+    /**
+     * A refused action: nothing is sent, and neither the answer nor the committed line is served again, so the next
+     * pass re-plans from the live state (the path a refusal always took). A refusal on identity (V4 M3: the indices
+     * now hold something else than was decided) also forgets DeepSeek's memo, as a failed action does. It is logged
+     * as a "not dispatched" row with gate_reject {at, kind, reason, expected, actual}, and so is any refusal on the
+     * dispatch read (before V4 that action was sent); the same refusal on the same board is logged once unless a
+     * model was paid for it again.
+     */
+    const refuse = async (result: GateResult, at: "decision" | "dispatch", checked: GameState): Promise<void> => {
+      stats.waits += 1;
+      gateRejections += 1;
+      noteStall(checked, result.reason);
+      onEvent({ type: "note", message: `gate rejected ${intent.action}${at === "dispatch" ? " at dispatch" : ""}: ${result.reason}` });
+      answerMemo = null;
+      screenMemory.combatPlan = null;
+      if (result.kind === "identity") deepseekMemo = null;
+      if (result.kind === "identity" || at === "dispatch") {
+        const base = recordBase();
+        const paid = !fromMemo && base.usage.input_tokens + base.usage.output_tokens > 0;
+        const key = `${stateFingerprint}|${result.reason}`;
+        if (paid || key !== lastRefusalLogged) {
+          lastRefusalLogged = key;
+          const record: DecisionRecord = {
+            ...base,
+            ...(runId ? { run_id: runId } : {}),
+            observed_ts: observedTs,
+            gate_reject: toJsonValue({ at, kind: result.kind ?? "legality", reason: result.reason, expected: result.expected ?? null, actual: result.actual ?? null }),
+            result: `not dispatched: gate refused (${at}): ${result.reason}`.slice(0, 300),
+          };
+          log.write(record);
+          logState(checked, fingerprint(checked), record.ts);
+          onEvent({ type: "decision", record, totals: totals() });
+        }
+      }
+      await sleep(pollIntervalMs);
+    };
+
+    if (!gated.ok) {
+      await refuse(gated, "decision", state);
+      continue;
+    }
+    gateRejections = 0;
+    clearStall();
+
+    const baseRecord = recordBase();
     const journalEntry = {
       label: decision.label,
       by: baseRecord.decider,
@@ -1269,6 +1312,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       logUndispatched("state changed while deciding");
       continue;
     }
+    // The gate once more on the state the action goes to: the fingerprint leaves out much of what the indices
+    // point at (enemy ids, map coordinates, rewards, shop stock, selection cards, upgrades).
+    const atDispatch = gate(fresh, intent);
+    if (!atDispatch.ok) {
+      await refuse(atDispatch, "dispatch", fresh);
+      continue;
+    }
 
     const actionStarted = Date.now();
     let actionResult: ActionResult;
@@ -1304,6 +1354,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     stats.acts += 1;
     stats.decisions += 1;
+    lastRefusalLogged = null;
     // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
     const routePlan = applyResolved();
     journal.record(state, journalEntry);
