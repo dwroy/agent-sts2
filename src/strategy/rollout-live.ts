@@ -29,7 +29,7 @@ import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, ty
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
-import { PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
+import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { modelHandCard, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
@@ -241,6 +241,21 @@ export function powersOf(holder: Record<string, unknown>): Record<string, number
     if (id) out[id] = typeof power["amount"] === "number" ? power["amount"] : 1;
   }
   return out;
+}
+
+/** The fight turn an energy relic starts giving on (「从你的第3回合开始」, Bread's first turn a loss). */
+const RELIC_ENERGY_FROM: Record<string, number> = { PAELS_FLESH: 3, BREAD: 2 };
+
+/**
+ * The energy relics held (boss-clock ENERGY_RELICS: 1 energy a turn that run.max_energy does not show), as
+ * the rollout's later turns get them (rollout.ts RolloutInput.relicEnergy). A Pumpkin Candle that has gone out
+ * (stack 0: logged 3 energy, 4 while lit) gives none.
+ */
+export function relicEnergyOf(runRaw: Record<string, unknown>): { amount: number; from: number }[] {
+  return asArray(runRaw["relics"])
+    .map(asRecord)
+    .filter((relic) => ENERGY_RELICS.has(str(relic["relic_id"])) && !(str(relic["relic_id"]) === "PUMPKIN_CANDLE" && relic["stack"] === 0))
+    .map((relic) => ({ amount: 1, from: RELIC_ENERGY_FROM[str(relic["relic_id"])] ?? 1 }));
 }
 
 /** deck_summary() of tools/build-fight-value.py. */
@@ -463,6 +478,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       model,
       gates,
       statusCards,
+      relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,

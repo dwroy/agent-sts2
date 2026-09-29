@@ -1382,3 +1382,44 @@ describe("moves with no measured base (Queen, Torch Head Amalgam): their shown h
     expect(line.perTurn[0]!.loss.mean).toBe(35);
   });
 });
+
+describe("energy relics in the rollout's later turns (consistency #9: Pumpkin Candle, Blessed Antler, Pael's Flesh, Spiked Gauntlets)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const run = (relicEnergy?: { amount: number; from: number }[]) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+      turn: 1,
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+      ...(relicEnergy ? { relicEnergy } : {}),
+    }).lines[0]!.perTurn.map((t) => t.dmg.mean);
+  };
+
+  it("a relic's energy every turn: four 1-cost Strikes, not three; Pael's Flesh from turn 3", () => {
+    expect(run()).toEqual([18, 18, 18, 18]);
+    expect(run([{ amount: 1, from: 1 }])).toEqual([24, 24, 24, 24]);
+    expect(run([{ amount: 1, from: 3 }])).toEqual([18, 24, 24, 24]);
+  });
+
+  it("relicEnergyOf: the energy relics held, Pael's Flesh from T3, a Pumpkin Candle only while lit", async () => {
+    const { relicEnergyOf } = await import("../src/strategy/rollout-live.js");
+    expect(relicEnergyOf({ relics: [{ relic_id: "BURNING_BLOOD" }, { relic_id: "BLESSED_ANTLER" }, { relic_id: "PAELS_FLESH" }, { relic_id: "PUMPKIN_CANDLE", stack: 3 }] })).toEqual([
+      { amount: 1, from: 1 },
+      { amount: 1, from: 3 },
+      { amount: 1, from: 1 },
+    ]);
+    expect(relicEnergyOf({ relics: [{ relic_id: "PUMPKIN_CANDLE", stack: 0 }] })).toEqual([]);
+  });
+});

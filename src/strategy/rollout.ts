@@ -482,6 +482,12 @@ export interface RolloutInput {
    * UNKNOWN_STATUS included (rollout-live builds them as the piles' own). Absent: no status is added.
    */
   statusCards?: Record<string, CardModel>;
+  /**
+   * Energy relics (run.max_energy leaves them out: 3 shown with Pumpkin Candle, 4 at every turn start): each
+   * one's energy a turn from fight turn `from` (Pael's Flesh from T3, Bread from T2). meta.max_en stays the
+   * fight-value feature it was trained as.
+   */
+  relicEnergy?: { amount: number; from: number }[];
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -1031,6 +1037,11 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   return dealt;
 }
 
+/** Energy the relics give at the start of fight turn `turn` (RolloutInput.relicEnergy). */
+function relicEnergyAt(input: RolloutInput, turn: number): number {
+  return (input.relicEnergy ?? []).reduce((sum, relic) => sum + (turn >= relic.from ? relic.amount : 0), 0);
+}
+
 /** A debuff's turns: -1 (and any amount below 0) is for the fight. */
 function turnsOf(amount: number): number {
   return amount < 0 ? Infinity : amount;
@@ -1551,7 +1562,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: Math.max(0, input.meta.max_en + player.pyre + (player.radiance > 0 ? 1 : 0) - player.wasteAway),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,

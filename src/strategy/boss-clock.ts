@@ -231,7 +231,7 @@ export function giantNumbers(ascension: number): { hp: number; siphon: number; g
  * Relics that give 1 energy on (almost) every turn. Seal of Gold is counted apart: it pays gold for it
  * (SEAL_OF_GOLD_COST).
  */
-const ENERGY_RELICS = new Set([
+export const ENERGY_RELICS = new Set([
   "BLESSED_ANTLER", "BLOOD_SOAKED_ROSE", "BREAD", "ECTOPLASM", "PAELS_FLESH", "PHILOSOPHERS_STONE", "PRISMATIC_GEM",
   "PUMPKIN_CANDLE", "SOZU", "SPIKED_GAUNTLETS", "VELVET_CHOKER", "WHISPERING_EARRING",
 ]);
