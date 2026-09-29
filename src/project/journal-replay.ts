@@ -133,10 +133,20 @@ export interface RunLogPaths {
 }
 
 /**
+ * The run id the mod gives states outside a run (main menu, character select, timeline, unlock screens):
+ * none, or "run_unknown". Such rows sit between runs, and also inside one when the game was relaunched
+ * mid-run (VG7HWJRX44RQ F13/F14: the relaunch's MAIN_MENU row was the last one of states.jsonl).
+ */
+export function isMenuRunId(id: string | null | undefined): boolean {
+  return !id || id === "run_unknown";
+}
+
+/**
  * The rows of one run, read from the end of each log: a run's rows are the last ones of their run id
- * before the logs of the run before it, so the scan stops at the first row of another run. Nothing of
- * another run is returned: states by the state's run_id, decisions by their run_id or (older rows) by the
- * ts + fingerprint of a state row of this run, run plans by their run id.
+ * before the logs of the run before it, so the scan stops at the first row of another run (menu rows,
+ * isMenuRunId, are skipped). Nothing of another run is returned: states by the state's run_id, decisions
+ * by their run_id or (older rows) by the ts + fingerprint of a state row of this run, run plans by their
+ * run id.
  */
 export function readRunLogs(paths: RunLogPaths, runId: string, options: { latestOnly?: boolean } = {}): RunLogs {
   // latestOnly (the loop's restart): the run is the last one logged, or it has no rows yet; either way the
@@ -147,7 +157,8 @@ export function readRunLogs(paths: RunLogPaths, runId: string, options: { latest
     if (!file) return rows;
     scanBackward(file, (line) => {
       const id = idOf(line);
-      if (!id) return true; // menu states between runs
+      // Menu states between runs, or after a game relaunch mid-run (the scan goes on to the run's rows).
+      if (isMenuRunId(id)) return true;
       if (id !== runId) return rows.length === 0 && !latestOnly;
       const row = parse(line);
       if (row && keep(row)) rows.push(row);

@@ -21,7 +21,7 @@ import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
-import { ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
+import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
 import { describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
@@ -516,7 +516,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // anything reads them (FA82FQHSJG2F F9: a fresh process re-planned the route without knowing F7 was
     // an elite).
     const runId = str(state.raw["run_id"]);
-    if (options.restoreRun !== false && runId && runId !== restoredRun && journal.runId !== runId) {
+    if (options.restoreRun !== false && !isMenuRunId(runId) && runId !== restoredRun && journal.runId !== runId) {
       restoredRun = runId;
       try {
         const logs = readRunLogs({ states: statesPath, decisions: config.log.decisionLog, runPlans: config.runPlanLog }, runId);
@@ -526,6 +526,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           const plan = replay.routePlan ? `; route plan (act ${replay.routePlan.act}, F${replay.routePlan.floor ?? "?"}) ${replay.routePlan.summary}` : "";
           onEvent({ type: "note", message: `run ${runId} in progress: rebuilt the run memory from its logs (${replay.counts.states} states, ${replay.counts.recorded} decisions, ${replay.counts.runPlans} run plans, ${journal.itemCount} items)${plan}` });
+        } else {
+          // Never silent (VG7HWJRX44RQ F14: a replay that found nothing left DeepSeek without its history,
+          // run plan and route plan, and nothing said so).
+          const floor = state.run?.floor ?? null;
+          onEvent({ type: "note", message: `run ${runId} (F${floor ?? "?"}): no logged rows to rebuild the run memory from, starting it empty${floor !== null && floor > 1 ? " (the run is past F1: its history, run plan and route plan are lost)" : " (a new run)"}` });
         }
       } catch (error) {
         onEvent({ type: "note", message: `could not rebuild run ${runId} from its logs: ${error instanceof Error ? error.message : String(error)}` });

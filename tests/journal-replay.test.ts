@@ -16,7 +16,7 @@ import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
 import { runLoop } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { ObservedStateLog, readRunLogs, replayRun, scanBackward } from "../src/project/journal-replay.js";
+import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun, scanBackward } from "../src/project/journal-replay.js";
 import { RunJournal, type JournalEntry } from "../src/project/run-journal.js";
 import { stateLogPath } from "../src/telemetry/decision-log.js";
 import type { JsonValue } from "../src/util/json.js";
@@ -131,6 +131,28 @@ describe("replaying a run's rows rebuilds the journal the live process had", () 
     // latestOnly (the loop): an older run is not searched for.
     expect(readRunLogs({ states, decisions }, "OLDRUN").states).toHaveLength(0);
     expect(readRunLogs({ states, decisions }, "OLDRUN", { latestOnly: false }).decisions.map((entry) => entry["label"])).toEqual(["event/old"]);
+  });
+
+  it("a game relaunched mid-run: the menu rows (run_unknown) after the run's rows do not end the scan", () => {
+    // VG7HWJRX44RQ F13/F14: the relaunch's MAIN_MENU row (run_id "run_unknown") was the last row of
+    // states.jsonl, the scan stopped there and the replay restored 0 states.
+    const dir = tempDir();
+    const states = join(dir, "states.jsonl");
+    const decisions = join(dir, "decisions.jsonl");
+    const row = (runId: string, ts: string, floor: number): string => JSON.stringify({ ts, fingerprint: `f${ts}`, state: { ...baseState("EVENT", { run: run(floor) }), run_id: runId } });
+    const menu = (ts: string, screen: string): string => JSON.stringify({ ts, fingerprint: `m${ts}`, screen, state: baseState(screen, { run_id: "run_unknown", run: null }) });
+    const decision = (ts: string, label: string): string => JSON.stringify({ ts, fingerprint: `f${ts}`, label, decider: "deepseek", run_id: "RUN", journal: { choice: label, reason: "" }, result: "completed: ok" });
+    writeFileSync(states, [row("OLDRUN", "2026-09-28T19:00:00.000Z", 9), menu("2026-09-28T19:40:00.000Z", "MAIN_MENU"), menu("2026-09-28T19:40:01.000Z", "CHARACTER_SELECT"), row("RUN", "2026-09-28T19:52:00.000Z", 1), row("RUN", "2026-09-28T20:03:00.000Z", 13), menu("2026-09-28T20:37:18.000Z", "MAIN_MENU")].join("\n") + "\n");
+    writeFileSync(decisions, [decision("2026-09-28T19:52:00.000Z", "event/neow"), decision("2026-09-28T20:03:00.000Z", "reward/card")].join("\n") + "\n");
+    const logs = readRunLogs({ states, decisions }, "RUN");
+    expect(logs.states.map((entry) => (entry["state"] as Raw)["run_id"])).toEqual(["RUN", "RUN"]);
+    expect(logs.decisions.map((entry) => entry["label"])).toEqual(["event/neow", "reward/card"]);
+    expect(replayRun(logs, testKnowledge).counts).toMatchObject({ states: 2, recorded: 2 });
+    // The run before is still not mixed in, and the menu is not a run.
+    expect(readRunLogs({ states, decisions }, "OLDRUN").states).toHaveLength(0);
+    expect(isMenuRunId("run_unknown")).toBe(true);
+    expect(isMenuRunId("")).toBe(true);
+    expect(isMenuRunId("RUN")).toBe(false);
   });
 
   it("reads a file backwards across chunk boundaries, multi-byte text included", () => {
@@ -298,6 +320,25 @@ describe("the loop restarted mid-run", () => {
     expect((plan["route_plan"] as Row)["summary"]).toBe("Monster -> Shop -> Boss");
     const stateRows = readFileSync(stateLogPath(config.log.decisionLog), "utf8").trim().split("\n").map((line) => JSON.parse(line) as Row);
     expect(stateRows.filter((row) => row["observed"] === true).map((row) => row["screen"])).toEqual(["REST"]);
+  });
+
+  it("after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so", async () => {
+    const all = [steps.firstFork, steps.lastFrame, steps.reward, steps.secondFork, steps.event, steps.menu];
+    const straight = await play(loopConfig(tempDir()), all);
+    const config = loopConfig(tempDir());
+    await play(config, [steps.firstFork, steps.lastFrame, steps.reward], { maxDecisions: 2 });
+    // The game relaunches: the process reads the main menu first (logged with its continue decision).
+    const relaunch = { raw: { ...mainMenuPayload(), run_id: "run_unknown" } };
+    const after = await play(config, [relaunch, steps.secondFork, steps.event, steps.menu]);
+    expect(after.notes.some((note) => note.includes("rebuilt the run memory from its logs"))).toBe(true);
+    expect(after.deepseek.calls.map((call) => call.label)).toEqual(["event/choose"]);
+    expect(JSON.stringify(after.deepseek.calls[0]!.memory)).toBe(JSON.stringify(straight.deepseek.calls[2]!.memory));
+    const stateRows = readFileSync(stateLogPath(config.log.decisionLog), "utf8").trim().split("\n").map((line) => JSON.parse(line) as Row);
+    expect(stateRows.some((row) => (row["state"] as Raw)["run_id"] === "run_unknown")).toBe(true);
+
+    // A run with no rows at all (logs lost): a note, not silence.
+    const empty = await play(loopConfig(tempDir()), [steps.secondFork, steps.event, steps.menu]);
+    expect(empty.notes.some((note) => /run TESTRUN123 \(F6\): no logged rows to rebuild the run memory from.*history, run plan and route plan are lost/.test(note))).toBe(true);
   });
 
   it("without the replay (the old behaviour) the restarted loop re-plans the route with an empty history", async () => {
