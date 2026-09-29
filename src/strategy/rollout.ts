@@ -720,6 +720,12 @@ interface SimEnemy {
   dazedPerHit: number;
   vitalSpark: number;
   moveBuffs: { thorns: boolean; soar: boolean };
+  /**
+   * Plating (PLATING_POWER: 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层」): its block at the end of
+   * each of its turns, one stack less at the start of each but its first (logged Sewer Clam 8, 8, 7, 6; Frog
+   * Knight 15, 15, 14, 13).
+   */
+  plating: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -788,6 +794,9 @@ interface SimPlayer {
   tempStrength: number;
   tempDexterity: number;
 }
+
+/** The enemy a Rampart gives its block to (RAMPART_POWER: 「高塔炮手获得25点格挡」). */
+const RAMPART_TARGET = "TURRET_OPERATOR";
 
 /** The enemy whose Constrict it is (CONSTRICT_POWER: 「蛇行扼杀者存活时…」). */
 const CONSTRICTOR = "SLITHERING_STRANGLER";
@@ -1132,6 +1141,9 @@ function applyPlan(
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
         e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
         if (m?.burrows) e.burrowed = true;
+        // Plating: a stack less at the start of its turn (not its first), its block at the end.
+        if (e.plating > 0 && input.meta.t + turn >= 2) e.plating -= 1;
+        e.block += e.plating;
       }
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
@@ -1148,6 +1160,12 @@ function applyPlan(
       // Still burrowed: it keeps using its burrowed move (Below) until the block breaks.
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
       else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
+    }
+    // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
+    // block at the start of each of our turns while the Shield lives (40 logged fights, 25 every turn).
+    for (const holder of enemies) {
+      const rampart = holder.alive ? holder.powers["RAMPART_POWER"] ?? 0 : 0;
+      if (rampart > 0) for (const e of enemies) if (e.alive && e.id === RAMPART_TARGET) e.block += rampart;
     }
     for (const e of enemies) {
       if (e.alive || e.reviveIn === undefined) continue;
@@ -1313,6 +1331,7 @@ function simulate(
       curlUp: e.curlUp ?? 0,
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
+      plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
       halved: e.halved === true,
       dazedPerHit: e.dazedPerHit ?? 0,

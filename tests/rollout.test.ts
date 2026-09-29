@@ -1076,3 +1076,39 @@ describe("what enemy moves give themselves besides Strength (Soul Fysh's Fade; f
     expect(enemyTable("SOUL_FYSH", 8, db, {})!.moves["FADE_MOVE"]!.selfPowers).toEqual({ INTANGIBLE_POWER: 1 });
   });
 });
+
+describe("enemy Plating and Rampart block in the later turns (Sewer Clam: fight over 1.00 forecast vs 0.80 real)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const run = (draw: CardModel[], foes: { id: string; powers: Record<string, number> }[], t = 1) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: foes.map((_, i) => ({ index: i, name: `E${i}`, hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] })),
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      meta: { ...META, t },
+      piles: { draw, discard: [], handBase: hand },
+      enemies: foes.map((foe, i) => ({ index: i, id: foe.id, move: "WAIT", strength: 0, powers: foe.powers })),
+      tables: Object.fromEntries(foes.map((foe) => [foe.id, WAIT])),
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const sweep = (i: number) => card(i, "SWEEP", { damage: 6, cost: 0, target: "all", validTargets: [] });
+
+  it("Plating 8 on T1: 8, 7, 6, 5 block at our next turns", () => {
+    expect(dmg(run(Array.from({ length: 30 }, (_, k) => free(10 + k)), [{ id: "SEWER_CLAM", powers: { PLATING_POWER: 8 } }]))).toEqual([22, 23, 24, 25]);
+  });
+
+  it("Rampart: 25 block on the Turret Operator every turn while the Living Shield lives", () => {
+    const line = run(Array.from({ length: 30 }, (_, k) => sweep(10 + k)), [{ id: "LIVING_SHIELD", powers: { RAMPART_POWER: 25 } }, { id: "TURRET_OPERATOR", powers: {} }]);
+    expect(dmg(line)).toEqual([35, 35, 35, 35]);
+  });
+});
