@@ -326,6 +326,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    */
   const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient) : null;
   brain?.onNote((message) => onEvent({ type: "note", message }));
+  // Before play: a configured engine that cannot run is said once, loudly, and rested for the process (Brain.preflight).
+  for (const problem of brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
   // One row per run with the configuration it is played with (logs/run-config.jsonl; tools/eval metrics --group-by config).
   const runConfigLog = createRunConfigLog({ config, brain, jevEnabled: jev !== null, mode, note: (message) => onEvent({ type: "note", message }) });
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);

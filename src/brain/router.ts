@@ -163,6 +163,14 @@ export class BrainRouter {
     return max === null || max === undefined || this.callsMade(engine) < max;
   }
 
+  /**
+   * An engine that cannot run in this process (Brain.preflight: `claude --version` failed): rested for good, so
+   * its questions go to the fallback, or fail at once without starting it when there is none.
+   */
+  markUnavailable(engine: EngineName, reason: string): void {
+    this.resting.set(engine, { until: Number.POSITIVE_INFINITY, reason: reason.slice(0, 200), kind: "unavailable" });
+  }
+
   /** The engine resting now (after a quota / rate-limit failure), if any. */
   restingUntil(engine: EngineName): number | null {
     const rest = this.resting.get(engine);
@@ -211,9 +219,10 @@ export class BrainRouter {
     const fallback = this.deps.config.fallback && this.deps.config.fallback !== primary ? this.deps.config.fallback : null;
     const rest = this.resting.get(primary);
     let result: Attempt;
+    const restNote = rest ? (Number.isFinite(rest.until) ? `resting until ${new Date(rest.until).toISOString()} after ${rest.kind}: ${rest.reason}` : `unavailable for this process: ${rest.reason}`).slice(0, 300) : "";
     if (rest && rest.until > this.now() && fallback && this.available(fallback)) {
       // Resting after a quota / rate-limit failure: straight to the fallback, no wait on the primary.
-      const fellBackFrom = { engine: primary, error: `resting until ${new Date(rest.until).toISOString()} after ${rest.kind}: ${rest.reason}`.slice(0, 300) };
+      const fellBackFrom = { engine: primary, error: restNote };
       try {
         result = { ...(await this.attempt(fallback, req)), fellBackFrom };
       } catch (error) {
@@ -222,6 +231,12 @@ export class BrainRouter {
       }
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind: rest.kind });
       return result;
+    }
+    if (rest && !Number.isFinite(rest.until)) {
+      // Unavailable for good and no fallback to ask: fail now instead of starting it again for every question.
+      const error = new EngineFailure(restNote, "unavailable");
+      this.write(primary, req, null, error);
+      throw error;
     }
     try {
       result = await this.attempt(primary, req);

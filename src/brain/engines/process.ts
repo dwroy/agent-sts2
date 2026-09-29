@@ -39,6 +39,18 @@ export interface AgentRun {
   ms: number;
 }
 
+/** The program could not be started at all (ENOENT: not found, EACCES: not executable, ...). */
+export class AgentStartError extends Error {
+  constructor(
+    readonly bin: string,
+    readonly code: string,
+    detail: string,
+  ) {
+    super(`${bin} could not start: ${detail}`);
+    this.name = "AgentStartError";
+  }
+}
+
 /** A fresh empty directory for one call (removed by the caller with removeDir). */
 export function makeWorkDir(prefix: string): string {
   return mkdtempSync(join(tmpdir(), prefix));
@@ -103,7 +115,7 @@ export function runAgent(bin: string, args: string[], opts: { cwd: string; env: 
     child.on("error", (error) => {
       opts.signal?.removeEventListener("abort", onAbort);
       clearTimeout(killTimer);
-      reject(new Error(`${bin} could not start: ${error.message}`));
+      reject(new AgentStartError(bin, String((error as NodeJS.ErrnoException).code ?? "error"), error.message));
     });
     child.on("close", (code, signal) => {
       opts.signal?.removeEventListener("abort", onAbort);

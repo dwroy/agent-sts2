@@ -207,9 +207,10 @@ export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Part
     });
   });
   servers.push(server);
-  const stats = await runLoop({ config: cfg, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), escalators: [deepseek], knowledge: loggedKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1, restoreRun: false });
+  const notes: string[] = [];
+  const stats = await runLoop({ config: cfg, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), escalators: [deepseek], knowledge: loggedKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1, restoreRun: false, onEvent: (event) => (event.type === "note" ? void notes.push(event.message) : undefined) });
   const records = readFileSync(path, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
-  return { stats, actions, records };
+  return { stats, actions, records, notes };
 }
 
 /** A real DeepSeekClient against a scripted chat-completions server (replies in order, the last repeated). */

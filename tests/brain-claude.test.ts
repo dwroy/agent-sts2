@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain } from "../src/brain/brain.js";
-import { claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
+import { checkClaudeBin, CLAUDE_REST_MS, claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
 import { agentEnv } from "../src/brain/engines/process.js";
 import { EngineFailure } from "../src/brain/router.js";
 import { pickSpec, runPlanSpec, stableSchema } from "../src/brain/specs.js";
@@ -230,3 +230,65 @@ describe("the loop's brain with BRAIN_ENGINE=claude", () => {
     expect(runPlanSpec().validate({ choice: "review", reason: "x" })).toHaveLength(1);
   });
 });
+
+describe("the claude program: found, checked before play, and rested when it cannot start", () => {
+  it("checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why", async () => {
+    const good = fakeClaude("version-ok", null);
+    writeFileSync(good.bin, `#!/bin/sh\necho "2.1.99 (Claude Code)"\n`);
+    expect(await checkClaudeBin(good.bin)).toEqual({ ok: true, version: "2.1.99 (Claude Code)" });
+    const bad = join(dir, "version-bad.sh");
+    writeFileSync(bad, `#!/bin/sh\necho "Invalid API key" >&2\nexit 3\n`);
+    chmodSync(bad, 0o755);
+    expect(await checkClaudeBin(bad)).toEqual({ ok: false, error: "exited 3: Invalid API key" });
+    const missing = await checkClaudeBin(join(dir, "no-such-claude"));
+    expect(missing.ok).toBe(false);
+    expect(!missing.ok && missing.error).toMatch(/could not start: spawn .*ENOENT/);
+    const slow = join(dir, "version-slow.sh");
+    writeFileSync(slow, `#!/bin/sh\nexec sleep 5\n`);
+    chmodSync(slow, 0o755);
+    expect(await checkClaudeBin(slow, 200)).toEqual({ ok: false, error: "no answer within 200 ms" });
+  });
+
+  it("a program that does not start is an unavailable failure with a rest (not a silent per-question error)", async () => {
+    const failure = await engine(join(dir, "no-such-claude")).decide(request()).catch((error: unknown) => error);
+    expect(failure).toBeInstanceOf(EngineFailure);
+    expect(failure).toMatchObject({ kind: "unavailable", cooldownMs: CLAUDE_REST_MS.unavailable });
+    expect(CLAUDE_REST_MS.unavailable).toBeGreaterThan(0);
+  });
+
+  it("preflight: a failed check marks Claude unavailable; with no fallback its questions fail at once without starting it", async () => {
+    const counter = join(dir, "preflight-runs.txt");
+    const bin = join(dir, "preflight-bad.sh");
+    writeFileSync(bin, `#!/bin/sh\necho run >> ${JSON.stringify(counter)}\nexit 1\n`);
+    chmodSync(bin, 0o755);
+    const log = join(dir, "preflight.jsonl");
+    const brain = createBrain(loadConfig({ BRAIN_ENGINE: "claude", BRAIN_CLAUDE_BIN: bin, BRAIN_LOG: log } as unknown as NodeJS.ProcessEnv), new StubDeepSeekForPreflight());
+    const problems = await brain.preflight();
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/^claude is unavailable for this run: `.*preflight-bad\.sh --version` failed \(exited 1 with no version\); its questions go to Jev\/code/);
+    expect(brain.warnings).toEqual(problems);
+    expect(brain.claudeCheck).toEqual({ bin, ok: false, error: "exited 1 with no version" });
+    await expect(brain.choose({ hp: 20 }, "Heal or smith?", options, { label: "rest/plan" })).rejects.toMatchObject({ kind: "unavailable" });
+    // Only the check ran the program.
+    expect(readFileSync(counter, "utf8").trim().split("\n")).toHaveLength(1);
+  });
+
+  it("preflight: nothing is checked when no configuration asks Claude", async () => {
+    let checked = 0;
+    const brain = createBrain(loadConfig({ BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv), new StubDeepSeekForPreflight());
+    expect(await brain.preflight(async () => ((checked += 1), { ok: true, version: "x" }))).toEqual([]);
+    expect(checked).toBe(0);
+    const fallbackOnly = createBrain(loadConfig({ BRAIN_FALLBACK: "claude", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv), new StubDeepSeekForPreflight());
+    await fallbackOnly.preflight(async () => ((checked += 1), { ok: true, version: "x" }));
+    expect(checked).toBe(1);
+  });
+});
+
+class StubDeepSeekForPreflight extends DeepSeekClient {
+  constructor() {
+    super({ apiKey: "k", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
+  }
+  override async choose(): Promise<DeepSeekAnswer> {
+    return { choice: "a", reason: "deepseek", latencyMs: 1, inputTokens: 1, outputTokens: 1 };
+  }
+}

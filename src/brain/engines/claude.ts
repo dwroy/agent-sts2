@@ -25,10 +25,13 @@
  *   the result (modelUsage).
  * - Failures (claudeFailure): a used-up subscription quota, a rate limit, an overload or a lost login come back
  *   as an EngineFailure with a rest period, so the router answers from BRAIN_FALLBACK at once and keeps doing
- *   so for a while; the router's timeout kills the process (by PID). Nothing here waits on a human.
+ *   so for a while; the router's timeout kills the process (by PID). A program that does not start (not found,
+ *   not executable) rests it too, and the loop checks `claude --version` once before play (Brain.preflight):
+ *   a failed check rests it for the whole process. Nothing here waits on a human.
  * - Environment: only the basics a process needs (engines/process.ts agentEnv): none of our keys.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { CLAUDE_MODEL_ALIASES, DEFAULT_CLAUDE_MODEL, type BrainConfig, type BrainEngineSettings } from "../../config.js";
@@ -37,7 +40,7 @@ import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask, TOOLS_NOTE } from "../message.js";
 import { stableSchema } from "../specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
-import { agentEnv, runAgent, stableWorkDir } from "./process.js";
+import { AgentStartError, agentEnv, runAgent, stableWorkDir } from "./process.js";
 
 type Json = Record<string, unknown>;
 
@@ -109,7 +112,35 @@ export const CLAUDE_REST_MS: Partial<Record<FailureKind, number>> = {
   auth: 30 * 60_000,
   rate_limit: 2 * 60_000,
   overloaded: 60_000,
+  // The program did not start (not found, not executable): it will not start on the next question either.
+  unavailable: 30 * 60_000,
 };
+
+/** How long `claude --version` may take at start-up. */
+export const CLAUDE_CHECK_TIMEOUT_MS = 20_000;
+
+export type ClaudeCheck = { ok: true; version: string } | { ok: false; error: string };
+
+/**
+ * The start-up check (Brain.preflight): `<bin> --version` exits 0 with a version line. Any other outcome (not
+ * found, not executable, a non-zero exit, no output, CLAUDE_CHECK_TIMEOUT_MS passed) says why.
+ */
+export async function checkClaudeBin(bin: string, timeoutMs = CLAUDE_CHECK_TIMEOUT_MS): Promise<ClaudeCheck> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const run = await runAgent(bin, ["--version"], { cwd: tmpdir(), env: agentEnv(), stdin: "", signal: controller.signal });
+    const version = run.stdout.trim().split("\n")[0]?.trim() ?? "";
+    if (run.code === 0 && version) return { ok: true, version: version.slice(0, 120) };
+    const detail = (run.stderr || run.stdout).trim().slice(0, 200);
+    return { ok: false, error: `exited ${run.code ?? run.signal}${detail ? `: ${detail}` : " with no version"}` };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return { ok: false, error: controller.signal.aborted ? `no answer within ${timeoutMs} ms` : message.slice(0, 200) };
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /**
  * The failure a finished CLI run reports, from its result (is_error, subtype, api_error_status, the result text)
@@ -168,7 +199,14 @@ export class ClaudeEngine implements BrainEngine {
       const effort = req.effort ?? this.opts.settings.effort;
       const model = this.modelFor(req.label);
       const args = claudeArgs(req, { model, effort, systemFile, mcpConfig, maxBudgetUsd: this.opts.claude.maxBudgetUsd, schema: this.opts.claude.schema });
-      const run = await runAgent(this.opts.claude.bin, args, { cwd: work, env: agentEnv(), stdin: promptWithReask(req), ...(signal ? { signal } : {}) });
+      let run: Awaited<ReturnType<typeof runAgent>>;
+      try {
+        run = await runAgent(this.opts.claude.bin, args, { cwd: work, env: agentEnv(), stdin: promptWithReask(req), ...(signal ? { signal } : {}) });
+      } catch (error) {
+        // Not found / not executable: rest it, so the next questions go to the fallback without trying again.
+        if (error instanceof AgentStartError) throw new EngineFailure(`${error.message} [unavailable]`, "unavailable", CLAUDE_REST_MS.unavailable);
+        throw error;
+      }
       const toolCalls = readRecords(recordFile);
       const result = claudeResult(run.stdout);
       const failure = claudeFailure(result, run);

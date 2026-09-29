@@ -149,6 +149,10 @@ export interface RunConfigRow {
   target_ascension: number | null;
   /** ARM: the ablation arm ops/run.sh set, when one is running. */
   arm: string | null;
+  /** When the configuration asks Claude: the program the brain runs and its start-up check (Brain.preflight). */
+  claude_check?: { bin: string; ok: boolean; version?: string; error?: string };
+  /** What the run was warned about at its start (a configured engine that cannot run, an oversized prefix). */
+  warnings?: string[];
   /** Hash of the configuration part (code, brain, knowledge, DeepSeek, Jev, loop, target, arm): equal = same setup. */
   config_sha: string;
 }
@@ -423,6 +427,9 @@ export function runConfigRow(
     process: { pid: process.pid, started: opts.processStarted },
     code: opts.code,
     ...setup,
+    // Outside the identity: a check's outcome or wording is not a different setup.
+    ...(brain?.claudeCheck ? { claude_check: { ...brain.claudeCheck } } : {}),
+    ...(brain && brain.warnings.length > 0 ? { warnings: [...brain.warnings] } : {}),
     config_sha: sha(JSON.stringify(identity)),
   };
 }

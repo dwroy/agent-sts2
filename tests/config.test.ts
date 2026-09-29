@@ -1,6 +1,9 @@
+import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { ConfigError, loadConfig, parsePortRange, requireJevApiKey } from "../src/config.js";
+import { ConfigError, loadConfig, parsePortRange, requireJevApiKey, resolveClaudeBin } from "../src/config.js";
 
 const env = (values: Record<string, string> = {}): NodeJS.ProcessEnv => values as NodeJS.ProcessEnv;
 
@@ -143,5 +146,31 @@ describe("requireJevApiKey", () => {
     const config = loadConfig(env());
     expect(() => requireJevApiKey(config)).toThrow(ConfigError);
     expect(() => requireJevApiKey(config)).toThrow(/TYPESAFE_API_KEY/);
+  });
+});
+
+describe("the claude program (BRAIN_CLAUDE_BIN)", () => {
+  const root = mkdtempSync(join(tmpdir(), "claude-bin-"));
+  const program = (path: string): string => {
+    mkdirSync(join(path, ".."), { recursive: true });
+    writeFileSync(path, "#!/bin/sh\necho 1.0\n");
+    chmodSync(path, 0o755);
+    return path;
+  };
+  const onPath = program(join(root, "bin", "claude"));
+  const home = join(root, "home");
+  const installed = program(join(home, ".local", "bin", "claude"));
+  // Not executable: skipped.
+  mkdirSync(join(root, "plain"), { recursive: true });
+  writeFileSync(join(root, "plain", "claude"), "");
+
+  it("is BRAIN_CLAUDE_BIN when set, else the first executable claude on PATH, else ~/.local/bin/claude, as absolute paths", () => {
+    expect(resolveClaudeBin({ BRAIN_CLAUDE_BIN: "/opt/claude", PATH: join(root, "bin"), HOME: home } as NodeJS.ProcessEnv)).toBe("/opt/claude");
+    expect(resolveClaudeBin({ PATH: [join(root, "plain"), join(root, "bin")].join(":"), HOME: home } as NodeJS.ProcessEnv)).toBe(onPath);
+    // ops/run.sh's PATH has only ~/.local/node/bin: the installed program is found anyway.
+    expect(resolveClaudeBin({ PATH: [join(root, "plain"), join(home, ".local", "node", "bin")].join(":"), HOME: home } as NodeJS.ProcessEnv)).toBe(installed);
+    expect(loadConfig({ PATH: join(root, "plain"), HOME: home } as unknown as NodeJS.ProcessEnv).brain.claude.bin).toBe(installed);
+    // Nothing found: the bare name, which the start-up check reports.
+    expect(resolveClaudeBin({ PATH: join(root, "plain"), HOME: join(root, "nobody") } as NodeJS.ProcessEnv)).toBe("claude");
   });
 });

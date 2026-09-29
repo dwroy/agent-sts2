@@ -3,12 +3,13 @@
  * through the loop against a scripted mod; BRAIN_ENGINE_REST=claude (a fake claude script, no model) decides
  * it instead of DeepSeek, and a used-up Claude quota falls back to DeepSeek.
  */
-import { chmodSync, mkdtempSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
+import { runConfigLogPath, type RunConfigRow } from "../src/telemetry/run-config.js";
 import { board, FakeDeepSeek, keyOf, play, setupOneshotTests } from "./oneshot-support.js";
 import { mainMenuPayload } from "./scenarios.js";
 
@@ -17,10 +18,11 @@ setupOneshotTests();
 const REST = "7b0d-f8-rest";
 const dir = mkdtempSync(join(tmpdir(), "brain-loop-"));
 
-/** A fake claude that prints one result object. */
-function fakeClaude(name: string, result: Record<string, unknown>, exitCode = 0): string {
+/** A fake claude that prints one result object (and a version line for `--version`, unless `version` is false). */
+function fakeClaude(name: string, result: Record<string, unknown>, exitCode = 0, version = true): string {
   const bin = join(dir, `${name}.mjs`);
-  writeFileSync(bin, `#!${process.execPath}\nfor await (const _ of process.stdin) {}\nprocess.stdout.write(${JSON.stringify(JSON.stringify(result))} + "\\n");\nprocess.exit(${exitCode});\n`);
+  const versionLine = version ? `if (process.argv.includes("--version")) { process.stdout.write("9.9.9 (Claude Code)\\n"); process.exit(0); }\n` : `if (process.argv.includes("--version")) { process.stderr.write("not logged in\\n"); process.exit(1); }\n`;
+  writeFileSync(bin, `#!${process.execPath}\n${versionLine}for await (const _ of process.stdin) {}\nprocess.stdout.write(${JSON.stringify(JSON.stringify(result))} + "\\n");\nprocess.exit(${exitCode});\n`);
   chmodSync(bin, 0o755);
   return bin;
 }
@@ -67,6 +69,24 @@ describe("the loop with BRAIN_* set", () => {
     const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: { brain: { engine: string; fell_back_from: { engine: string; error: string } } } };
     expect(row.deepseek.brain.engine).toBe("deepseek");
     expect(row.deepseek.brain.fell_back_from.error).toMatch(/claude call budget used up \(0\/0/);
+  });
+
+  it("a claude that fails `claude --version` before play: said once as an error, in run-config, and its questions go to DeepSeek without starting it", async () => {
+    const bin = fakeClaude("no-login", { type: "result", subtype: "success", is_error: false, result: "{}" }, 0, false);
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const { stats, records, notes } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) });
+    const errors = notes.filter((note) => note.startsWith("ERROR: claude is unavailable for this run"));
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain(`\`${bin} --version\` failed (exited 1: not logged in)`);
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan"]);
+    const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: { brain: { engine: string; fell_back_from: { engine: string; error: string } } } };
+    expect(row.deepseek.brain.engine).toBe("deepseek");
+    expect(row.deepseek.brain.fell_back_from.error).toMatch(/^unavailable for this process: `.* --version` failed/);
+    const configPath = runConfigLogPath(stats.logPath);
+    const configRows = existsSync(configPath) ? readFileSync(configPath, "utf8").trim().split("\n").map((line) => JSON.parse(line) as RunConfigRow) : [];
+    rmSync(configPath, { force: true });
+    expect(configRows[0]?.claude_check).toEqual({ bin, ok: false, error: "exited 1: not logged in" });
+    expect(configRows[0]?.warnings?.[0]).toMatch(/^claude is unavailable for this run/);
   });
 
   it("default configuration: DeepSeek decides and the row carries no brain note (v3's rows)", async () => {

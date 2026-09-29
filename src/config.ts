@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { accessSync, constants as fsConstants, readFileSync, statSync } from "node:fs";
+import { delimiter, isAbsolute, join } from "node:path";
 
 import type { Effort, EngineName } from "./brain/types.js";
 /**
@@ -159,7 +160,11 @@ export interface BrainConfig {
   knowledgePrefix: KnowledgePrefixMode;
   /** Claude runs under this machine's Claude login (the subscription); there is no API-key mode. */
   claude: {
-    /** BRAIN_CLAUDE_BIN (default "claude"). */
+    /**
+     * BRAIN_CLAUDE_BIN, else the first executable `claude` on PATH, else ~/.local/bin/claude (its install
+     * location, which ops/run.sh does not put on PATH), as an absolute path; "claude" when none is found (the
+     * loop's start-up check then reports it). resolveClaudeBin.
+     */
     bin: string;
     /** BRAIN_CLAUDE_MAX_BUDGET_USD: --max-budget-usd per call; null = none. */
     maxBudgetUsd: number | null;
@@ -202,6 +207,37 @@ function parseOnOff(raw: string | null, field: string, problems: ConfigProblem[]
   if (["off", "false", "0", "no"].includes(value)) return false;
   problems.push({ field, message: `expected on or off, got "${raw}"` });
   return null;
+}
+
+function isExecutableFile(path: string): boolean {
+  try {
+    if (!statSync(path).isFile()) return false;
+    accessSync(path, fsConstants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The claude program the brain runs: BRAIN_CLAUDE_BIN as given; else the first executable `claude` in PATH's
+ * absolute directories; else HOME/.local/bin/claude (where the CLI installs itself: ops/run.sh adds only
+ * ~/.local/node/bin to PATH); else "claude", which the start-up check (brain.ts preflight) reports as missing.
+ */
+export function resolveClaudeBin(env: NodeJS.ProcessEnv): string {
+  const set = readEnv(env, "BRAIN_CLAUDE_BIN");
+  if (set !== null) return set;
+  for (const dir of (env["PATH"] ?? "").split(delimiter)) {
+    if (!dir || !isAbsolute(dir)) continue;
+    const candidate = join(dir, "claude");
+    if (isExecutableFile(candidate)) return candidate;
+  }
+  const home = env["HOME"];
+  if (home && isAbsolute(home)) {
+    const installed = join(home, ".local", "bin", "claude");
+    if (isExecutableFile(installed)) return installed;
+  }
+  return "claude";
 }
 
 /** BRAIN_<ENGINE>_MAX_CALLS ("off" or "none": no limit); DeepSeek's budget stays DEEPSEEK_MAX_CALLS (the loop's). */
@@ -276,7 +312,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     engines,
     knowledgePrefix,
     claude: {
-      bin: readEnv(env, "BRAIN_CLAUDE_BIN") ?? "claude",
+      bin: resolveClaudeBin(env),
       schema: schemaMode,
       maxBudgetUsd: maxBudgetUsd !== null && Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0 ? maxBudgetUsd : null,
     },

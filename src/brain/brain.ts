@@ -23,7 +23,7 @@ import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from ".
 import { buildTools } from "../tools/registry.js";
 import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
-import { ClaudeEngine } from "./engines/claude.js";
+import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { KnowledgePrompt } from "./knowledge.js";
 import { BrainRouter, type BrainLogRow } from "./router.js";
@@ -87,6 +87,11 @@ export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null,
   });
 }
 
+/** Whether a brain configuration can ask this engine: by default, for a question kind, or as the fallback. */
+export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolean {
+  return brain.engine === engine || Object.values(brain.byPrefix).includes(engine) || brain.fallback === engine;
+}
+
 export function createBrain(config: AppConfig, deepseek: DeepSeekClient): Brain {
   return new Brain(createRouter(config, deepseek), deepseek);
 }
@@ -111,6 +116,10 @@ export class Brain {
   readonly knowledge = new KnowledgePrompt();
   private notify: ((message: string) => void) | null = null;
   private lastKnowledgeError = "";
+  /** The start-up check of the claude program (preflight), when the configuration uses Claude. */
+  claudeCheck: ({ bin: string } & ClaudeCheck) | null = null;
+  /** What the run should be warned about (the console and run-config.jsonl's `warnings`). */
+  readonly warnings: string[] = [];
 
   constructor(
     readonly router: BrainRouter,
@@ -130,6 +139,26 @@ export class Brain {
 
   engineFor(label: string): EngineName {
     return this.router.engineFor(label);
+  }
+
+  /**
+   * Before play: when the configuration asks Claude anywhere (BRAIN_ENGINE, BRAIN_ENGINE_<PREFIX>, BRAIN_FALLBACK),
+   * `claude --version` once. A failure is returned (and kept in `warnings`) for the console and run-config.jsonl,
+   * and Claude is marked unavailable for the process: its questions go to BRAIN_FALLBACK (or fail at once, then
+   * Jev/code), instead of each one failing on its own.
+   */
+  async preflight(check: (bin: string) => Promise<ClaudeCheck> = checkClaudeBin): Promise<string[]> {
+    const config = this.router.config;
+    if (!brainUses(config, "claude")) return [];
+    const bin = config.claude.bin;
+    const result = await check(bin);
+    this.claudeCheck = { bin, ...result };
+    if (result.ok) return [];
+    const then = config.fallback && config.fallback !== "claude" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
+    const message = `claude is unavailable for this run: \`${bin} --version\` failed (${result.error}); ${then} (set BRAIN_CLAUDE_BIN to the program's absolute path)`;
+    this.router.markUnavailable("claude", `\`${bin} --version\` failed: ${result.error}`);
+    this.warnings.push(message);
+    return [message];
   }
 
   /** The tools for a question, when its engine (or the fallback) gets tools and there is a context. */
