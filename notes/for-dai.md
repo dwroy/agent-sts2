@@ -100,3 +100,4 @@
   - 路线：5LRZ F42 因"58 血打精英会死"改线绕开，F44 满血又改回打精英，机甲骑士掉 66，女王 62% 进场（投影 92.4%）；RRMY 二幕 0 精英、29 张牌只有 1 张升级。
   - boss 时钟 实际/估值：帝王蟹 0.68、巨兽 0.88、沙虫 1.11、女王 1.05。
   - DeepSeek 用时占整局 45–58%；最长一问 132 s（RRMY F25 附魔，效果文字 unavailable）；UNRL F9 明显该回血的火堆想了 101 s、20,708 输出 token。
+- 2026-09-30 02:53 L 批留给你的：(1) 删牌排序里 run plan 要删的牌 +40（selection.ts ~:363/:201），打击 120、防御 110 排在诅咒 100 前面——诅咒该不该排在计划删的牌前面属卡牌估值；(2) DeepSeek system prompt 里的 "trust those numbers" 被它延伸到启发式排名上（UNRL F14 推理："The system prompt says trust code's numbers (these are heuristics though)"，最后按代码排序删了打击而不是受伤），措辞要不要改是提示设计。
