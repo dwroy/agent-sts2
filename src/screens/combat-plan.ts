@@ -38,7 +38,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
-import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
+import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 
@@ -1918,7 +1918,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   options.splice(0, options.length, ...planOptions);
   const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
   // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
-  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan));
+  // In the question's order (a drink line tied with its dry twin can come first in the rollout's list).
+  const shownOrder = (plan: Plan): number => (shown.includes(plan) ? shown.indexOf(plan) : shown.length + mcMedians.indexOf(plan));
+  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan)).sort((a, b) => shownOrder(a) - shownOrder(b));
   const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const keyOfShown = (plan: Plan): string => (mcMedians.includes(plan) ? mcKey(mcShown.find((mc) => mc.median === plan)!) : `plan${shown.indexOf(plan) + 1}`);
   const tiedKeys = rolloutTied.length >= 2 ? rolloutTied.map(keyOfShown) : [];
@@ -1936,7 +1938,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
+    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
   });
   const rolloutRecord = rollout
@@ -2047,7 +2049,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -2307,6 +2309,18 @@ export function potionLethalLines(lethal: Plan[]): Plan[] {
 }
 
 /** The flag on a line that wins the fight only by drinking: which potions it spends. */
+/**
+ * A drink that changes nothing in its line (rollout-live noEffectTwin: the same cards and the same turn without
+ * it; 3SBPKG9603WD F17 T3, Flex after the last attack): said so. The line stays an option; the rollout gives it
+ * the dry line's numbers.
+ */
+export function noEffectNote(plan: Plan, plans: Plan[]): Record<string, JsonValue> {
+  const twin = noEffectTwin(plan, plans);
+  if (!twin) return {};
+  const potions = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
+  return { potion_no_effect: `${potions.join(", ")}: no effect in this line (this turn is the same as ${twin.steps.map(stepText).join(", ") || "ending the turn"} without it)` };
+}
+
 export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
   if (!plan.outcome.winsFight || !drinksPotion(plan)) return {};
   const names = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));

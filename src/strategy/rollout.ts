@@ -596,6 +596,11 @@ export interface LineEstimate {
   perTurn: TurnSpread[];
   /** modelN: the model's support (logged turns in the matching cell) at the line's end-of-turn state. */
   basis: { rolloutSamples: number; horizon: number; modelN: number; w: number; segment: string; gateN: number };
+  /**
+   * A drink line whose drink changes nothing this turn: the line without it, whose rollout numbers these are
+   * (rollout-live noEffectTwin; the two read tied instead of one winning by sampling noise).
+   */
+  sameAsDry?: Plan;
 }
 
 export interface TurnSpread {

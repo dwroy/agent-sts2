@@ -23,7 +23,8 @@ import type { AskDecision } from "../src/project/types.js";
 import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { killOrders, rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge } from "./logged.js";
@@ -425,4 +426,30 @@ describe("11. Blessing of the Forge drunk as a line's step: the upgraded hand is
     expect(decision?.label).toBe("combat/plan-continue");
     expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/Jev-chosen plan: 心神不宁\+/);
   });
+});
+
+describe("12. A drink that changes nothing in its line reads the dry line's rollout numbers, not noise (3SBPKG9603WD F17 T3)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("\"Inferno, Defend, Defend, then Flex\" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("3sbp-f17-t3-flex");
+    expect(fx.decision.rationale).toMatch(/狱火, 防御, 防御, potion 肌肉药水/);
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    const question = (decision.jevView?.questions ?? decision.questions)["plan"]!;
+    const lines = Object.values(question.type === "choice" ? question.criteria ?? {} : {}).map((text) => JSON.parse(String(text)) as Raw);
+    const dry = lines.find((line) => line["plays"] === "狱火, then 防御, then 防御")!;
+    const drink = lines.find((line) => line["plays"] === "狱火, then 防御, then 防御, then potion 肌肉药水")!;
+    expect(drink).toBeDefined();
+    expect(drink["rollout"]).toBe(dry["rollout"]);
+    expect(drink["rollout_turns"]).toBe(dry["rollout_turns"]);
+    expect(String(drink["potion_no_effect"])).toMatch(/^肌肉药水: no effect in this line \(this turn is the same as 狱火, 防御, 防御 without it\)$/);
+    expect(dry).not.toHaveProperty("potion_no_effect");
+    // Never the drink alone as the rollout's best: with its dry twin it is best-and-tied or neither.
+    expect(drink["rollout_best"] === true && dry["rollout_best"] !== true && drink["rollout_tied"] === undefined).toBe(false);
+  }, 60_000);
 });
