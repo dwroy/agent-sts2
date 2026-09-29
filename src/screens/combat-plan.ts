@@ -23,7 +23,7 @@ import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
 import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
-import { selectHints } from "../knowledge/jev-hints.js";
+import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { damageForecast, expectedNextDamage, revivingForecast } from "../knowledge/move-model.js";
 import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
@@ -1839,7 +1839,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       noAttack: ctx.noAttack,
     });
     const jevState: Record<string, JsonValue> = { ...questionState, run_brief: combatBriefJson(env.brief, state, env.knowledge) };
-    if (hints.length > 0) jevState["fight_hints"] = hints.map((hint) => hint.text);
+    if (hints.length > 0) jevState["fight_hints"] = hints.map((hint) => hintText(hint, state.run?.ascension ?? 0));
     jevView = {
       state: jevState,
       questions: { plan: choiceQ("Which plan should I play this turn?", jevCriteria) },

@@ -14,7 +14,7 @@ import { createScreenMemory } from "../src/project/types.js";
 import { planDecision, type PlanOutcome } from "../src/screens/index.js";
 import { curseCosts } from "../src/screens/selection.js";
 import { str } from "../src/util/json.js";
-import { nodeWeight, shopWeight } from "../src/screens/map.js";
+import { fightGold, nodeWeight, shopWeight } from "../src/screens/map.js";
 import { rememberMap } from "../src/screens/rest.js";
 import { loadConfig } from "../src/config.js";
 import {
@@ -273,6 +273,33 @@ describe("map", () => {
     // Monster -> Elite: the elite is reached at ~75%, where it is worth 0, not +4.
     expect(value("n0")).toBeCloseTo(1.2);
     expect(value("n1")).toBeCloseTo(2.4);
+  });
+
+  it("a hallway fight's gold along a route is 11 from A3 (-25% gold), 15 below (review 2026-09-29 #14)", () => {
+    expect(fightGold("Monster", 2)).toBe(15);
+    expect(fightGold("Monster", 3)).toBe(11);
+    expect(fightGold("Monster", 9)).toBe(11);
+    expect(fightGold("Elite", 9)).toBe(30);
+    expect(fightGold("Shop", 9)).toBe(0);
+    // Monster -> Shop at 180 gold: the shop is valued at 195 gold at A2 and 191 at A9 (shop weight gold / 50).
+    const routeValue = (ascension: number): number => {
+      const raw = mapPayload();
+      const run = raw["run"] as Record<string, unknown>;
+      run["gold"] = 180;
+      run["ascension"] = ascension;
+      const map = raw["map"] as Record<string, unknown>;
+      const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+      map["available_nodes"] = [
+        { index: 0, row: 5, col: 1, node_type: "Monster" },
+        { index: 1, row: 5, col: 3, node_type: "RestSite" },
+      ];
+      map["nodes"] = [node(5, 1, "Monster", [{ row: 6, col: 1 }]), node(5, 3, "RestSite"), node(6, 1, "Shop")];
+      const decision = mustDecision(plan(raw));
+      if (decision.kind !== "ask") throw new Error("expected an ask");
+      const criteria = decision.questions["pick"]?.type === "choice" ? decision.questions["pick"].criteria : {};
+      return JSON.parse(String(criteria["n0"]))["route_value"];
+    };
+    expect(routeValue(2) - routeValue(9)).toBeCloseTo((195 - 191) / 50, 5);
   });
 
   it("shop weight grows with gold, keeps the low-gold steps as a floor, +3 late in Act 1 (8LQG 565, G6YV 630 gold)", () => {

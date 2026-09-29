@@ -8,6 +8,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { fillDbNumbers } from "./monster-db.js";
+
 export interface JevHint {
   id: string;
   when: {
@@ -76,4 +78,13 @@ export function selectHints(query: HintQuery, hints: JevHint[] = loadHints(), ma
     .sort((a, b) => specificity(b.hint) - specificity(a.hint) || a.order - b.order)
     .slice(0, max)
     .map(({ hint }) => hint);
+}
+
+/**
+ * A hint's text as Jev reads it: its damage/amount placeholders ({DMG:ROCKET:LASER_MOVE} and the like)
+ * filled from the monster DB at this ascension (monster-db fillDbNumbers), so no A0/A8 number reaches Jev
+ * as fact at A9 (the Rocket's Laser "about 49" is 35, 52 from behind).
+ */
+export function hintText(hint: JevHint, ascension: number): string {
+  return fillDbNumbers(hint.text, ascension);
 }

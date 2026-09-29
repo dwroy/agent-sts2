@@ -10,11 +10,12 @@ not the monster. The boss clock multiplies the boss's own damage at the current 
 by it (strategy/boss-clock.ts bossLossPerTurn).
 
 The fight rows (--fights FILE) carry: key, boss, ascension, outcome (won when the run got past the boss's
-floor), turns, entry_hp, final_hp, loss_per_turn ((entry - final) / turns), for tools/boss-loss-backtest.ts.
+floor, or the run was won on it: a win ends on the final boss's floor), turns, entry_hp, final_hp,
+loss_per_turn ((entry - final) / turns), for tools/boss-loss-backtest.ts.
 
 Only states that name a boss enemy are read (grep), not the whole file.
 
-Usage: tools/build-boss-damage.py [--logs DIR] [--fights FILE]
+Usage: tools/build-boss-damage.py [--logs DIR] [--fights FILE] [--out FILE]
 """
 import argparse
 import collections
@@ -43,10 +44,18 @@ BOSSES = {
 BOSS_OF = {enemy: boss for boss, enemies in BOSSES.items() for enemy in enemies}
 
 
+def fight_won(run, floor):
+    """The run got past the fight's floor, or ended on it with a victory (the final boss: every win ends on
+    its floor, F48 up to A9; runs.jsonl `victory` is game_over.is_victory)."""
+    last = (run or {}).get("floor") or 0
+    return last > (floor or 0) or (bool((run or {}).get("victory")) and last == (floor or 0))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
     parser.add_argument("--fights", default=None)
+    parser.add_argument("--out", default=OUT)
     args = parser.parse_args()
 
     runs = {}
@@ -104,7 +113,7 @@ def main() -> None:
         order = sorted(turns)
         if not order or order[0] != 1:
             continue  # the fight's first turn not logged: no entry HP
-        won = (runs.get(run_id, {}).get("floor") or 0) > (floor or 0)
+        won = fight_won(runs.get(run_id), floor)
         last = order[-1]
         final = turns[last][0] if won else 0
         entry = turns[1][0]
@@ -132,10 +141,10 @@ def main() -> None:
             continue
         out[boss] = {"unblocked_share": round(acc["lost"] / acc["shown"], 3), "fights": acc["fights"], "turns": acc["turns"],
                      "shown": acc["shown"], "hp_lost": acc["lost"]}
-    with open(OUT, "w", encoding="utf8") as handle:
+    with open(args.out, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")
-    print(f"{len(out)} bosses, {len(rows)} fights -> {OUT}")
+    print(f"{len(out)} bosses, {len(rows)} fights -> {args.out}")
     if args.fights:
         with open(args.fights, "w", encoding="utf8") as handle:
             for row in rows:

@@ -5,7 +5,7 @@ One line per fight: {key, outcome, turns, entry_hp, realised, escapes, state}, w
 first logged combat state of the fight (deck, relics, boss id, ascension), `realised` the boss HP
 removed / turns (the whole max HP for a won fight: its last hit is not logged), `escapes` the times the
 Sandpit counter went up (Frantic Escapes, Insatiable only). Outcome: won when the run got past the
-boss's floor, else died (HP or the Sandpit).
+boss's floor or was won on it (the final boss: a win ends on its floor), else died (HP or the Sandpit).
 
 A boss of several bodies takes its enemy ids comma-separated (Kaiser Crab: CRUSHER,ROCKET): HP and max
 HP are summed over them.
@@ -22,6 +22,12 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def fight_won(run, floor):
+    """The run got past the fight's floor, or ended on it with a victory (runs.jsonl `victory`)."""
+    last = (run or {}).get("floor") or 0
+    return last > (floor or 0) or (bool((run or {}).get("victory")) and last == (floor or 0))
 
 
 def main() -> None:
@@ -71,7 +77,7 @@ def main() -> None:
         state, floor = first[run_id]
         turns = max(row[0] for row in rows)
         max_hp = rows[0][2]
-        won = (runs.get(run_id, {}).get("floor") or 0) > (floor or 0)
+        won = fight_won(runs.get(run_id), floor)
         dealt = max_hp if won else max_hp - min(row[1] for row in rows)
         pits = [row[3] for row in rows if row[3] is not None]
         escapes = sum(1 for a, b in zip(pits, pits[1:]) if b > a)

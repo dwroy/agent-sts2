@@ -70,8 +70,13 @@ export function certainlyLethal(option: Record<string, unknown>, hp: number): bo
 export function forcedFightCost(forced: string, act: number, asc: number, bossId: string | null): { median: number; p75: number; source: string } | null {
   if (forced.startsWith("Boss")) {
     const boss = bossHpLoss(bossId, asc);
-    if (!boss) return null;
-    return { median: boss.median, p75: boss.p75, source: `act boss ${bossId}, HP lost in our A${boss.asc} wins, n=${boss.n}; win rate ${boss.winRate === null ? "?" : `${Math.round(boss.winRate * 100)}%`} over ${boss.fights} fights` };
+    if (!boss?.won) return null;
+    const wins = boss.won.asc === asc ? `A${asc}` : `A${boss.won.asc} (no A${asc} win logged)`;
+    return {
+      median: boss.won.median,
+      p75: boss.won.p75,
+      source: `act boss ${bossId}, HP lost in our ${wins} wins, n=${boss.won.n}; A${boss.recordAsc} win rate ${boss.winRate === null ? "?" : `${Math.round(boss.winRate * 100)}%`} over ${boss.fights} fights`,
+    };
   }
   const room = measuredRoom(act, asc, "Elite");
   if (room) return { median: room.median, p75: room.p75, source: `logged A${room.asc} act-${act} elite rooms, n=${room.n}${room.deaths ? ` incl. ${room.deaths} deaths (counted as all entry HP)` : ""}` };

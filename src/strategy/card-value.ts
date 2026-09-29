@@ -75,22 +75,26 @@ const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "W
  * multi-hit and scaling; The Kin is a priest plus followers, so AoE; Ceremonial Beast has 262 HP (A8);
  * Waterfall Giant explodes for its Steam Eruption stacks (15, +3 a turn), so block and a fast kill;
  * Knowledge Demon has 399 HP (A8) and heals, so Strength/scaling. `bossId` is the current act's boss.
- * Boss HP in the texts comes from the boss clock's A8 table (RWWG: the crab said 408, it is 428 at A8).
+ * Boss HP in the texts is the boss's own HP at the current ascension (bossHp: the monster DB, the
+ * priest alone for the Kin, the Test Subject's phases summed; no mechanic's added HP), never a fixed
+ * ascension's (RWWG: the crab said 408, it is 428 at A8; the Kin/Aeonglass/Test Subject/Matriarch texts
+ * said their A0 190/512/600/222).
  */
-function bossA8Hp(id: string): number {
-  return BOSSES[id] ? bossHp({ ...BOSSES[id]!, id }, 8) : 0;
+function bossHpAtAsc(id: string, ascension: number): number {
+  return BOSSES[id] ? bossHp({ ...BOSSES[id]!, id, addedHp: 0 }, ascension) : 0;
 }
 
-function bossBonus(cardId: string, bossId: string): { bonus: number; why: string | null } {
+function bossBonus(cardId: string, bossId: string, ascension: number): { bonus: number; why: string | null } {
   const boss = bossId.toUpperCase();
+  const hp = (id: string) => bossHpAtAsc(id, ascension);
   if (boss.includes("VANTOM")) {
     if (MULTI_HIT.has(cardId)) return { bonus: 10, why: "multi-hit strips Vantom's Slippery" };
-    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for Vantom's ${bossA8Hp("VANTOM")} HP` };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for Vantom's ${hp("VANTOM")} HP` };
   }
   if (boss.includes("KIN")) {
     if (AOE.has(cardId)) return { bonus: 10, why: "AoE for the Kin followers" };
     // The priest phase decides it (P78Z, PPKT: priest left at 38 and 26 of 190, ~18 a turn alone).
-    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for the Kin Priest's 190 HP" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for the Kin Priest's ${hp("THE_KIN")} HP` };
     if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Kin Priest" };
   }
   if (boss.includes("WATERFALL_GIANT")) {
@@ -100,17 +104,17 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // Both act-2 bosses are damage races entered at full HP and lost short of damage (24HM: 24.9 a turn
   // of 33.5 needed into the demon; WLY1: 21.6 a turn into the crab's HP, Thunderclap skipped at 33).
   if (boss.includes("KNOWLEDGE_DEMON")) {
-    if (SCALING.has(cardId)) return { bonus: 10, why: `Strength/scaling for the Knowledge Demon's ${bossA8Hp("KNOWLEDGE_DEMON")} HP` };
+    if (SCALING.has(cardId)) return { bonus: 10, why: `Strength/scaling for the Knowledge Demon's ${hp("KNOWLEDGE_DEMON")} HP` };
     if (FRONTLOAD.has(cardId)) return { bonus: 4, why: "damage for the Knowledge Demon's heals" };
   }
   // Kaiser Crab: two claws (Rocket, Crusher) with 428 HP between them at A8: AoE hits both.
   if (boss.includes("KAISER_CRAB")) {
     if (AOE.has(cardId)) return { bonus: 12, why: "AoE hits both of the Kaiser Crab's claws" };
-    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for the Kaiser Crab's ${bossA8Hp("KAISER_CRAB")} HP` };
-    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: `damage for the Kaiser Crab's ${bossA8Hp("KAISER_CRAB")} HP` };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for the Kaiser Crab's ${hp("KAISER_CRAB")} HP` };
+    if (FRONTLOAD.has(cardId)) return { bonus: 4, why: `damage for the Kaiser Crab's ${hp("KAISER_CRAB")} HP` };
   }
   if (boss.includes("CEREMONIAL") || boss.includes("BEAST")) {
-    if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: `damage for the Beast's ${bossA8Hp("CEREMONIAL_BEAST")} HP` };
+    if (SCALING.has(cardId) || FRONTLOAD.has(cardId)) return { bonus: 6, why: `damage for the Beast's ${hp("CEREMONIAL_BEAST")} HP` };
   }
   // Soul Fysh shuffles Beckons into the deck (XPA4: 8 in the deck at death): exhaust clears them, damage
   // ends it before they pile up, and Battle Trance draws them (twice in that fight).
@@ -128,7 +132,7 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // Aeonglass: 512 HP with two 33-block turns by T9 and Withers every 6 cards: about 70 damage a turn,
   // few big cards, and a way to exhaust Withers (YVWA/TQX5/Y0KJ: left at 312, 33, 32 of 512).
   if (boss.includes("AEONGLASS")) {
-    if (SCALING.has(cardId)) return { bonus: 8, why: "scaling for Aeonglass's 512 HP" };
+    if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for Aeonglass's ${hp("AEONGLASS")} HP` };
     if (cardId === "TRUE_GRIT" || cardId === "BURNING_PACT" || cardId === "FIEND_FIRE") return { bonus: 8, why: "exhausts Aeonglass's Withers" };
     // Only real big hits: Setup Strike and a third Pommel Strike got it too and the deck swelled to 31 (L34T).
     if (BIG_HITS.has(cardId)) return { bonus: 4, why: "big hits: few cards against Withering Presence" };
@@ -140,12 +144,12 @@ function bossBonus(cardId: string, bossId: string): { bonus: number; why: string
   // Test Subject: 600 HP over three phases; the two wins had 28 and 40 Strength, the losses 16 or none
   // (7DFB, ZANM, 2WUM). Multi Claw grows every turn in phase 2: block too.
   if (boss.includes("TEST_SUBJECT")) {
-    if (SCALING.has(cardId)) return { bonus: 10, why: "Strength scaling for Test Subject's 600 HP" };
+    if (SCALING.has(cardId)) return { bonus: 10, why: `Strength scaling for Test Subject's ${hp("TEST_SUBJECT")} HP` };
     if (BLOCK.has(cardId)) return { bonus: 4, why: "block for Test Subject's Multi Claw" };
   }
   if (boss.includes("LAGAVULIN_MATRIARCH")) {
     if (SCALING.has(cardId)) return { bonus: 10, why: "scaling for the Matriarch's sleeping turns" };
-    if (FRONTLOAD.has(cardId)) return { bonus: 6, why: "damage for the Matriarch's 222 HP" };
+    if (FRONTLOAD.has(cardId)) return { bonus: 6, why: `damage for the Matriarch's ${hp("LAGAVULIN_MATRIARCH")} HP` };
   }
   return { bonus: 0, why: null };
 }
@@ -220,6 +224,8 @@ export function cardValue(
   floor: number,
   bossId = "",
   relics: readonly string[] = [],
+  /** The run's ascension: the boss HP the reasons name (8 when not given). */
+  ascension = 8,
 ): CardValue {
   const reasons: string[] = [];
   let value = TIER[cardId] ?? (type === "Curse" || type === "Status" ? 0 : rarity === "Rare" ? 55 : 45);
@@ -264,7 +270,7 @@ export function cardValue(
     value -= 15;
     reasons.push("Fiddle: no mid-turn draw");
   }
-  const boss = bossBonus(cardId, bossId);
+  const boss = bossBonus(cardId, bossId, ascension);
   if (boss.bonus !== 0) {
     value += boss.bonus;
     reasons.push(boss.why ?? "boss");
