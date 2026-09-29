@@ -13,6 +13,7 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
+import { givesPotion, planEvent } from "../src/screens/event.js";
 import type { AskDecision } from "../src/project/types.js";
 
 import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/screens/combat-plan.js";
@@ -275,5 +276,40 @@ describe("4. Same-named enemies with different ids are told apart in options and
     expect(orders).toHaveLength(6);
     expect(new Set(orders).size).toBe(6);
     expect(orders).toContain("残杀千足虫 (BACK) > 残杀千足虫 (MIDDLE) > 残杀千足虫 (FRONT)");
+  });
+});
+
+describe("5. A full potion belt at an event that gives a potion: \"discard one, then take it\" is an option, the decider picks (YQL8D59999AX F28)", () => {
+  const pick = (key: string): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
+
+  it("givesPotion reads the option text", () => {
+    expect(givesPotion("获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。")).toBe(true);
+    expect(givesPotion("获得[blue]3[/blue]瓶[gold]污浊药水[/gold]。")).toBe(true);
+    expect(givesPotion("失去[red]13[/red]点最大生命。")).toBe(false);
+  });
+
+  it("the logged Potion Courier: each option also offered after discarding either potion; the plain one says the potion is lost", () => {
+    const fx = logged("yql8-f28-potion-courier");
+    const env = { ...loggedEnv(fx), buildDecider: "deepseek" as const };
+    const decision = planEvent(env) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const question = decision.questions["pick"]!;
+    const criteria = question.type === "choice" ? question.criteria ?? {} : {};
+    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:d0", "o0:d1", "o1", "o1:d0", "o1:d1"]);
+    expect(JSON.parse(String(criteria["o1"]))).toMatchObject({ potion_slots: expect.stringMatching(/lost/) });
+    expect(JSON.parse(String(criteria["o1:d1"]))).toMatchObject({ option: "洗劫", discard_first: expect.stringMatching(/攻击药水/) });
+    // DeepSeek takes "discard the Attack Potion, then 洗劫": the discard now, the option next.
+    const resolved = decision.resolve(pick("o1:d1"));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 1 });
+    resolved.apply?.();
+    const potions = ((fx.state["run"] as Raw)["potions"] as Raw[]);
+    potions[1] = { index: 1, occupied: false, can_discard: false };
+    const next = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory });
+    expect(next).toMatchObject({ kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: 1 } });
+    // Done once: the next frame asks as usual (no free-slot options: the belt has room).
+    const again = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory }) as AskDecision;
+    expect(again.kind).toBe("ask");
+    const againQ = again.questions["pick"]!;
+    expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o1"]);
   });
 });
