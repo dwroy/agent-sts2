@@ -35,6 +35,7 @@ import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
   ENEMY_SELF_POWERS,
+  LEADER_HP_TIE,
   killOrders,
   UNKNOWN_STATUS,
   loadFightValueGates,
@@ -407,12 +408,19 @@ export const ROLLOUT_TURNS_TIE = 0.1;
  * value says nothing: the enemy HP left and turns alive alone decide, and when they tie too there is no
  * best line (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9 by one
  * sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
+ * left comes first, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders): summed
+ * enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean } {
   if (lines.length === 0) return { best: null, saturated: false };
   const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   const top = Math.max(...lines.map((line) => line.value));
-  const contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  let contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  if (contenders.every((line) => line.leaderHpLeft !== null && line.leaderHpLeft !== undefined)) {
+    const leastLeader = Math.min(...contenders.map((line) => line.leaderHpLeft!));
+    contenders = contenders.filter((line) => line.leaderHpLeft! <= leastLeader + LEADER_HP_TIE);
+  }
   // The least enemy HP left and every line within ROLLOUT_ENEMY_HP_TIE of it; among those the most turns
   // alive (a stable sort: code's order among equals).
   const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
@@ -583,10 +591,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
-/** Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are shown. */
+/**
+ * Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are
+ * shown (the leader's HP left first when its death ends the fight).
+ */
 function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
   if (!r.saturated) return "";
-  return `; every line loses all our HP here, so the loss does not separate them: enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
+  const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
+  return `; every line loses all our HP here, so the loss does not separate them: ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
 }
 
 /** The facts of one shown line. */

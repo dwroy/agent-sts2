@@ -11,9 +11,9 @@ import { createScreenMemory, type AskDecision, type Decision } from "../src/proj
 import { describePlan, planCombatTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/strategy/rollout.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { reviveThrough, solveTap, solveTurn, type EnemySim, type PlayerSim, type Revive } from "../src/strategy/turn-solver.js";
+import { reviveThrough, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type Revive } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -797,5 +797,49 @@ describe("10d. Paper Phrog: Vulnerable enemies take 75% more (coverage #12; the 
       potionMcOptions.now = null;
       rolloutLiveOptions.enabled = true;
     }
+  });
+});
+
+describe("11. A saturated board ranks lines by the leader's HP left first, as the kill orders are (W2TBR2YUMQ5Y F17 T2)", () => {
+  const line = (name: string, over: Partial<LineEstimate>): LineEstimate =>
+    ({ plan: { steps: [], name } as unknown as Plan, value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, samples: 8, enemyHpLeft: 100, turnsSurvived: 4, leaderHpLeft: null, ...over }) as LineEstimate;
+
+  it("the Priest's HP left, not the summed HP with the Followers (Fiend Fire into a Follower read best)", async () => {
+    const { pickRolloutBest } = await import("../src/strategy/rollout-live.js");
+    const priest = line("into the Priest", { enemyHpLeft: 120, leaderHpLeft: 60 });
+    const follower = line("into a Follower", { enemyHpLeft: 110, leaderHpLeft: 110 });
+    expect(pickRolloutBest([follower, priest], 62)).toMatchObject({ best: priest, saturated: true });
+    // Within LEADER_HP_TIE of each other: the summed HP left decides, then turns alive.
+    const close = line("close", { enemyHpLeft: 110, leaderHpLeft: 63 });
+    expect(pickRolloutBest([priest, close], 62).best).toBe(close);
+    // No leader: as before.
+    expect(pickRolloutBest([line("a", { enemyHpLeft: 120 }), line("b", { enemyHpLeft: 110 })], 62).best?.plan).toMatchObject({ name: "b" });
+  });
+
+  it("every line carries the leader's HP left, the ones rolled out without a kill order too", async () => {
+    const { killOrders } = await import("../src/strategy/rollout.js");
+    const table: EnemyTable = { moves: { HIT: { damage: 4, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 9, kind: "boss", enc: "KIN_FOLLOWER+KIN_PRIEST", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] }), card(1, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] })];
+    const solver = { hand, player: player({ hp: 60 }), enemies: [enemy({ index: 0, name: "Follower", hp: 30, maxHp: 30, minion: true, attacks: [{ damage: 4, hits: 1 }] }), enemy({ index: 1, name: "Priest", hp: 150, maxHp: 150, attacks: [{ damage: 4, hits: 1 }] })], fightKind: "boss" as const, turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const groups = [{ id: "KIN_FOLLOWER", name: "Follower", indices: [0], hp: 30 }, { id: "KIN_PRIEST", name: "Priest", indices: [1], hp: 150, leader: true }];
+    const r = rolloutDecision({
+      solver,
+      plans,
+      enemies: [{ index: 0, id: "KIN_FOLLOWER", move: "HIT", strength: 0, powers: { MINION_POWER: 1 } }, { index: 1, id: "KIN_PRIEST", move: "HIT", strength: 0, powers: {} }],
+      tables: { KIN_FOLLOWER: table, KIN_PRIEST: table },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => card(10 + i, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] })), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, horizon: 3, include: plans.slice(0, 1), orders: killOrders(groups).orders },
+    });
+    expect(r.lines.length).toBeGreaterThan(1);
+    for (const estimate of r.lines) expect(estimate.leaderHpLeft).not.toBeNull();
+    expect(r.lines.some((estimate) => estimate.order === null)).toBe(true);
   });
 });

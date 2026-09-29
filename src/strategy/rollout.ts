@@ -562,6 +562,13 @@ export interface LineEstimate {
    */
   enemyHpLeft: number;
   turnsSurvived: number;
+  /**
+   * With a leader (KillGroup.leader: its death ends the fight, the others are minions; not the Queen): its
+   * expected HP left at the end of the horizon (0 in a sample that won; at our death, what it had then), for
+   * every line, whatever its kill order; null without one. A saturated board ranks by it first
+   * (rollout-live pickRolloutBest), as the kill orders are ranked (rankOrders).
+   */
+  leaderHpLeft: number | null;
   /** Mean turns to the fight's end over the samples that survive the horizon; null when every sample dies. */
   turnsToWin: number | null;
   /** Samples (of `samples`) in which we die within the horizon, and the mean turn of death among them. */
@@ -1771,6 +1778,15 @@ function enemyHpOf(record: TurnRecord): number {
   return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
 }
 
+/** The HP left of the enemies at `indices` (a leader) in a snapshot (a won fight: 0). */
+function groupHpOf(record: TurnRecord, indices: number[]): number {
+  if (record.won) return 0;
+  return indices.reduce((sum, index) => {
+    const e = record.snap.E.find((x) => x[0] === index);
+    return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
+  }, 0);
+}
+
 /**
  * A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after.
  * `lossCap`: the most a sample can lose, our HP plus the revives held (their HP counts as lost when spent).
@@ -1954,6 +1970,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const maxSamples = opts.samples ?? 8;
   const seed = opts.seed ?? 1;
   const candidates = selectCandidates(input.plans, opts.k ?? 6, opts.include ?? []);
+  // The board's leader (its death ends the fight; the same in every kill order of the board), if any.
+  const boardLeader = (opts.orders ?? []).find((order) => order.leader)?.leader?.indices ?? null;
   const gate = gateFor(input.gates, input.meta.enc, input.meta.act, input.meta.kind);
   const ctx: TerminalContext = { meta: input.meta, mm: input.mm, model: input.model, gates: input.gates, w: gate.w };
   const ctxModel: TerminalContext = { ...ctx, w: 1 };
@@ -1981,6 +1999,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       lossModel: vm.lossModel,
       winModel: vm.winModel,
       enemyHpLeft: enemyHpOf(records[0]!),
+      leaderHpLeft: boardLeader ? groupHpOf(records[0]!, boardLeader) : null,
       survived: v.died ? v.turns : 1,
     };
   });
@@ -2067,17 +2086,10 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const timeUps = kept.filter((records) => records.slice(0, horizon).some((r) => r.timeUp)).length;
     const revived = kept.filter((records) => records.slice(0, horizon).some((r) => (r.revived ?? 0) > 0)).length;
     const leaderIndices = order?.leader?.indices;
-    const leaderLeft = leaderIndices
-      ? kept.map((records) => {
-          const last = records[Math.min(horizon, records.length) - 1]!;
-          if (last.won) return 0;
-          return leaderIndices.reduce((sum, index) => {
-            const e = last.snap.E.find((x) => x[0] === index);
-            return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
-          }, 0);
-        })
-      : null;
+    const leaderLeft = leaderIndices ? kept.map((records) => groupHpOf(records[Math.min(horizon, records.length) - 1]!, leaderIndices)) : null;
     const leader = leaderLeft ? { hpLeft: mean(leaderLeft), dead: leaderLeft.filter((hp) => hp <= 0).length } : null;
+    // The board's leader, for every line (one rolled out with the solver's own later turns has no order).
+    const leaderHpLeft = boardLeader ? mean(kept.map((records) => groupHpOf(records[Math.min(horizon, records.length) - 1]!, boardLeader))) : null;
     const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, lossCap));
     const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, lossCap));
     const loss = mean(vals.map((v) => v.loss));
@@ -2105,6 +2117,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       enemyHpLeft,
       turnsSurvived,
       revived,
+      leaderHpLeft,
     };
   };
 
@@ -2131,6 +2144,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         orders: [],
         hpLoss: o.hpLoss,
         enemyHpLeft: o.enemyHpLeft,
+        leaderHpLeft: o.leaderHpLeft,
         turnsSurvived: o.survived,
         turnsToWin: o.turns,
         deaths: 0,
@@ -2158,6 +2172,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
       enemyHpLeft: best.enemyHpLeft,
+      leaderHpLeft: best.leaderHpLeft,
       turnsSurvived: best.turnsSurvived,
       turnsToWin: best.turnsToWin,
       deaths: best.deaths,
