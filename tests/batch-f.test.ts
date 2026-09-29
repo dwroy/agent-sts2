@@ -14,6 +14,9 @@ import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { planEvent, potionSlotsNeeded } from "../src/screens/event.js";
+import { planRest } from "../src/screens/rest.js";
+import { board as oneshotBoard, env as oneshotEnv } from "./oneshot-support.js";
+import { createScreenMemory } from "../src/project/types.js";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision } from "../src/project/types.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
@@ -482,5 +485,47 @@ describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode to
     potions[1] = { index: 1, occupied: false, can_discard: false };
     const take = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory });
     expect(take).toMatchObject({ kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: 0 } });
+  });
+});
+
+describe("8. Rest-site facts for DeepSeek: a forced Elite within 3 nodes (7KDMKN16GD6B), Pantograph's boss-start heal (5NFGDU7BQPD3 F16)", () => {
+  type Raw = Record<string, unknown>;
+  const factsOf = (raw: Raw, memory = createScreenMemory("REST")) => {
+    const decision = planRest(oneshotEnv(raw, memory, { oneshot: "off" })) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    return ((decision.state as Record<string, unknown>)["facts"] as Record<string, Record<string, unknown>>)["rest_site"]!;
+  };
+
+  it("the rest before the boss with Pantograph: +25 at the boss's start, the entry HP both ways", () => {
+    const raw = oneshotBoard("7b0d-f8-rest", "rest");
+    const run = raw["run"] as Raw;
+    run["floor"] = 16;
+    run["current_hp"] = 40;
+    run["max_hp"] = 80;
+    expect(factsOf(raw)["boss_start_heal"]).toBeUndefined();
+    run["relics"] = [...(run["relics"] as unknown[]), { index: 9, relic_id: "PANTOGRAPH", name: "缩放仪" }];
+    const facts = factsOf(raw);
+    expect(String(facts["boss_start_heal"])).toMatch(/^Pantograph \(缩放仪\) heals 25 HP when the boss fight starts: entering it at 80\/80 after healing here, 65\/80 without/);
+    // Not before the boss: nothing.
+    run["floor"] = 8;
+    expect(factsOf(raw)["boss_start_heal"]).toBeUndefined();
+  });
+
+  it("every path meets an Elite within 3 nodes, no rest or shop before it: said (the code's own heal rule unchanged)", () => {
+    const raw = oneshotBoard("7b0d-f8-rest", "rest");
+    const run = raw["run"] as Raw;
+    const floor = Number(run["floor"]);
+    const memory = createScreenMemory("REST");
+    const node = (row: number, col: number, type: string, children: [number, number][]) => ({ row, col, type, children: children.map(([r, c]) => ({ row: r, col: c })) });
+    memory.lastMap = {
+      runId: String(raw["run_id"]),
+      floor: floor - 1,
+      available: [{ row: 1, col: 0, type: "RestSite" }],
+      nodes: [node(1, 0, "RestSite", [[2, 0], [2, 1]]), node(2, 0, "Monster", [[3, 0]]), node(2, 1, "Unknown", [[3, 0]]), node(3, 0, "Elite", [[4, 0]]), node(4, 0, "Monster", [])],
+    };
+    expect(factsOf(raw, memory)["forced_elite_ahead"]).toBe("every path meets an Elite within 3 nodes, with no rest site or shop before it");
+    // A shop on one path: not forced.
+    memory.lastMap.nodes[2] = node(2, 1, "Shop", [[3, 0]]);
+    expect(factsOf(raw, memory)["forced_elite_ahead"]).toBeUndefined();
   });
 });
