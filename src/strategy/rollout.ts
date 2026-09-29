@@ -44,7 +44,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
-import type { CardModel } from "./card-model.js";
+import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
@@ -691,7 +691,7 @@ export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { 
 }
 
 /** A lasting power the rollout carries into its later turns (a SimPlayer field). */
-type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder";
+type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder" | "hellraiser";
 
 /**
  * Power cards whose lasting effect the rollout carries: the SimPlayer field, the power it shows as (for
@@ -711,7 +711,18 @@ const POWER_EFFECTS: Record<string, { effect: LastingPower; power: string; amoun
   PYRE: { effect: "pyre", power: "PYRE_POWER", amount: [1, 2] },
   UNMOVABLE: { effect: "unmovable", power: "UNMOVABLE_POWER", amount: [1, 1] },
   ROLLING_BOULDER: { effect: "boulder", power: "ROLLING_BOULDER_POWER", amount: [5, 5] },
+  HELLRAISER: { effect: "hellraiser", power: "HELLRAISER_POWER", amount: [1, 1] },
 };
+
+/**
+ * Hellraiser (「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」): a Strike drawn at the start of a later
+ * turn is played at once, free, at a random enemy (logged WFR4 F15 T2: 5 drawn, 3 Strikes auto-played, the hand
+ * held 2 and Byrdonis 71 -> 39). In the policy's hand it is a 0-energy card at a random enemy (the solver's worst
+ * victim), the way Distilled Chaos plays the pile's top cards.
+ */
+function hellraised(card: CardModel): CardModel {
+  return { ...card, cost: 0, xCost: false, playable: true, ...(card.target === "single" ? { target: "random" as const, validTargets: [] } : {}) };
+}
 
 /**
  * Rolling Boulder (「在你的回合开始时，对所有敌人造成5点伤害，然后将该伤害增加5点」): the power's amount is the
@@ -875,6 +886,8 @@ interface SimPlayer {
   relicAoe: number;
   /** Rolling Boulder: the next start of turn's damage to every enemy; BOULDER_STEP more after each. */
   boulder: number;
+  /** Hellraiser up: a Strike drawn is played at once, free, at a random enemy (hellraised). */
+  hellraiser: boolean;
   /** Start-of-turn HP loss from anything but Crimson Mantle and Inferno. */
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
@@ -1261,6 +1274,7 @@ function applyPlan(
       const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
       if (effect.effect === "keepsBlock") player.keepsBlock = true;
       else if (effect.effect === "unmovable") player.unmovable = true;
+      else if (effect.effect === "hellraiser") player.hellraiser = true;
       else player[effect.effect] += amount;
       playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
     }
@@ -1583,6 +1597,7 @@ function simulate(
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
     boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
+    hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
     otherStartLoss: 0,
     startDealt: 0,
     playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
@@ -1703,6 +1718,10 @@ function simulate(
       if (!card) break;
       handBase.push(card);
       const drawn = withStrength(card, player, i, targets);
+      if (player.hellraiser && isStrikeCard(card)) {
+        hand.push({ ...hellraised(drawn), ...(i < player.chains ? { soulbound: true } : {}) });
+        continue;
+      }
       hand.push({
         ...drawn,
         ...(player.tangledNext > 0 && drawn.type === "Attack" && !drawn.xCost && drawn.cost >= 0 ? { cost: drawn.cost + player.tangledNext } : {}),

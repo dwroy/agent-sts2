@@ -277,3 +277,39 @@ describe("4c. Primal Force turns every Attack in hand into a Giant Rock (N01X6BB
     expect(model).toMatchObject({ special: "primal_force", known: true, flatValue: 0 });
   });
 });
+
+describe("4d. Hellraiser: a Strike drawn on a later turn is played at once, free, at a random enemy (CJ88575SQS6H F17)", () => {
+  const run = (hand: CardModel[], powers: Record<string, number>, plan?: (plans: Plan[]) => Plan) => {
+    const solver: SolverInput = { hand, player: player({ energy: 0 }), enemies: [enemy({ hp: 30, maxHp: 30 })], fightKind: "monster", turn: 2 };
+    const plans = solveTurn(solver).plans;
+    const strikes = [10, 11, 12, 13, 14].map((i) => strike(i));
+    return rolloutDecision({
+      solver,
+      plans: plan ? [plan(plans)] : plans,
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: strikes, discard: [], handBase: hand },
+      meta: META,
+      playerPowers: powers,
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 7, now: fastClock() },
+    }).lines[0]!;
+  };
+
+  it("up on the board: five Strikes drawn, all five hit (30), not the three 3 energy pays for (18)", () => {
+    const up = run([defend(0)], { HELLRAISER_POWER: 1 });
+    expect(up.winProb).toBe(1);
+    expect(up.turnsToWin).toBe(2);
+    const off = run([defend(0)], {});
+    expect(off.turnsToWin).toBe(3);
+  });
+
+  it("played in the line: from the next turn's draw on", () => {
+    const hellraiser = card(0, "HELLRAISER", { type: "Power", target: "self", validTargets: [], cost: 0, flatValue: 10 });
+    const line = run([hellraiser], {}, (plans) => plans.find((plan) => plan.steps.some((step) => step.cardId === "HELLRAISER"))!);
+    expect(line.turnsToWin).toBe(2);
+  });
+});
