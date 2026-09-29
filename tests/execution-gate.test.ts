@@ -1,13 +1,14 @@
 /**
  * The execution gate's identity check (V4 M3, src/act/identity.ts): an action is refused when its indices still
- * exist but point at something else than what was decided, for every kind of action; intents without an identity
- * keep the old legality checks; the loop logs a refusal (gate_reject) and re-plans.
+ * exist but point at something else than what was decided, for every kind of action; a combat line's steps carry
+ * the line's own card, enemy, potion, turn and hand; intents without an identity keep the old legality checks;
+ * the loop logs a refusal (gate_reject) and re-plans.
  */
 
 import { readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { gate } from "../src/act/gate.js";
 import { checkIdentity, handSignatureOf, identityAt, wireIntent, withExpect } from "../src/act/identity.js";
@@ -17,6 +18,12 @@ import type { JevAskResult, JevClient } from "../src/jev/client.js";
 import { runLoop } from "../src/loop.js";
 import { ModClient, type ActionRequest } from "../src/mod/client.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { buildRunBrief } from "../src/project/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { continueAfterDiscard } from "../src/screens/potion-discard.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { logged } from "./logged.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {
   chestPayload,
@@ -241,6 +248,197 @@ describe("identity of each kind of action", () => {
     expect(wireIntent(stamped)).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
     expect(identityAt(parse(combatPayload()), { action: "end_turn" })).toEqual({ turn: 3 });
     expect(handSignatureOf(combatPayload())).toBe("BASH,DEFEND_R,STRIKE_R");
+  });
+});
+
+/* ---- a combat line's steps ------------------------------------------------------------------------------ */
+
+function env(raw: Raw, overrides: Partial<DecisionEnv> = {}): DecisionEnv {
+  const state = parse(raw);
+  return {
+    state,
+    knowledge: testKnowledge,
+    brief: buildRunBrief(state, testKnowledge),
+    thresholds: config.thresholds,
+    runStart: "auto",
+    characterPreference: null,
+    allowFtueModals: false,
+    strictJev: true,
+    combatPlanner: "turn",
+    screenMemory: createScreenMemory(state.screen),
+    shopDiscardPotions: [],
+    ...overrides,
+  };
+}
+
+/** Fire Potion (slot 0) and Strength Potion (slot 1); Strike, Defend, Bash in hand; two small attackers. */
+function strengthBoard(): Raw {
+  const raw = combatPayload();
+  combat(raw)["enemies"] = (combat(raw)["enemies"] as Raw[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "8", damage: 8, hits: 1, total_damage: 8 }] }));
+  belt(raw)[1] = { ...belt(raw)[0], index: 1, potion_id: "STRENGTH_POTION", name: "Strength Potion", description: "获得 2 点力量。", requires_target: false, target_type: "Self", valid_target_indices: [] };
+  return raw;
+}
+const drunk = (raw: Raw, slot: number): Raw => {
+  belt(raw)[slot] = { index: slot, potion_id: null, name: null, description: null, occupied: false, can_use: false, can_discard: false, requires_target: false, valid_target_indices: [] };
+  return raw;
+};
+const played = (raw: Raw, cardId: string): Raw => {
+  const at = hand(raw).findIndex((card) => card["card_id"] === cardId);
+  combat(raw)["hand"] = hand(raw).filter((_, i) => i !== at).map((card, index) => ({ ...card, index }));
+  return raw;
+};
+/** Jev picks the shown line that plays exactly this; the loop stamps and plays its first step. */
+const pickLine = (e: DecisionEnv, plays: string) => {
+  const decision = planCombatTurn(e) as AskDecision;
+  const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria as Record<string, string | null>;
+  const key = Object.keys(criteria).find((k) => k.startsWith("plan") && JSON.parse(String(criteria[k]))["plays"] === plays);
+  expect(key, Object.values(criteria).join("\n")).toBeDefined();
+  const resolved = decision.resolve({ plan: { type: "choice", choice: key!, probabilities: { [key!]: 0.9 }, confidence: 0.9, raw: {} } });
+  resolved.apply?.();
+  return withExpect(e.state, resolved.intent!);
+};
+/** The next step of the committed line on `raw` (the loop's next pass). */
+const step = (raw: Raw, e: DecisionEnv): ActionRequest => {
+  const decision = planCombatTurn(env(raw, { screenMemory: e.screenMemory }));
+  expect(decision?.label).toBe("combat/plan-continue");
+  return decision!.kind === "act" ? withExpect(parse(raw), decision!.intent) : { action: "none" };
+};
+
+describe("a combat line's steps are checked against the line (hand order, consumed cards, the belt)", () => {
+  const LINE = "DEFEND_R, then potion Strength Potion, then BASH -> JAW_WORM, then potion Fire Potion -> JAW_WORM";
+  beforeEach(() => {
+    rolloutLiveOptions.enabled = false;
+  });
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+
+  it("each step carries the line's card or potion, its target, turn and expected hand, and passes on the board it expects", () => {
+    const e = env(strengthBoard());
+    const first = pickLine(e, LINE);
+    expect(wireIntent(first)).toEqual({ action: "play_card", card_index: 1 });
+    expect(first.expect).toMatchObject({ card: { id: "DEFEND_R" }, turn: 3, from: "decision" });
+
+    const afterDefend = played(strengthBoard(), "DEFEND_R");
+    const drink = step(afterDefend, e);
+    expect(wireIntent(drink)).toEqual({ action: "use_potion", option_index: 1 });
+    expect(drink.expect).toEqual({ from: "line", potion: { id: "STRENGTH_POTION" }, turn: 3, hand: "BASH,STRIKE_R", enemies: "0:JAW_WORM|1:CULTIST" });
+    expect(gate(parse(afterDefend), drink).ok).toBe(true);
+
+    const afterDrink = drunk(played(strengthBoard(), "DEFEND_R"), 1);
+    const bash = step(afterDrink, e);
+    expect(wireIntent(bash)).toEqual({ action: "play_card", card_index: 1, target_index: 0 });
+    expect(bash.expect).toEqual({ from: "line", card: { id: "BASH", upgraded: false }, target: { id: "JAW_WORM" }, turn: 3, hand: "BASH,STRIKE_R", enemies: "0:JAW_WORM|1:CULTIST" });
+    expect(gate(parse(afterDrink), bash).ok).toBe(true);
+
+    const fire = step(drunk(played(played(strengthBoard(), "DEFEND_R"), "BASH"), 1), e);
+    expect(fire.expect).toEqual({ from: "line", potion: { id: "FIRE_POTION" }, target: { id: "JAW_WORM" }, turn: 3, hand: "STRIKE_R", enemies: "0:JAW_WORM|1:CULTIST" });
+  });
+
+  it("the belt changed under a potion step: another potion in the slot is refused", () => {
+    const e = env(strengthBoard());
+    pickLine(e, LINE);
+    const afterDefend = played(strengthBoard(), "DEFEND_R");
+    const drink = step(afterDefend, e);
+    const swapped = edited(afterDefend, (raw) => {
+      belt(raw)[1] = { ...belt(raw)[1], potion_id: "SPEED_POTION", name: "Speed Potion" };
+    });
+    const result = gate(parse(swapped), drink);
+    expect(result).toMatchObject({ ok: false, kind: "identity" });
+    expect(result.reason).toContain("potion slot 1 holds SPEED_POTION, expected STRENGTH_POTION");
+  });
+
+  it("a drink left over from a line cut short by a draw is refused (C batch: 220 such drinks in 112 runs)", () => {
+    const e = env(strengthBoard());
+    pickLine(e, LINE);
+    const afterDefend = played(strengthBoard(), "DEFEND_R");
+    const drink = step(afterDefend, e);
+    // The same belt, but the hand grew by a drawn card: not the board the line planned this drink on.
+    const drew = edited(afterDefend, (raw) => {
+      combat(raw)["hand"] = [...hand(raw), { ...hand(raw)[0], index: 2, card_id: "POMMEL_STRIKE", name: "POMMEL_STRIKE" }];
+    });
+    const result = gate(parse(drew), drink);
+    expect(result).toMatchObject({ ok: false, kind: "identity" });
+    expect(result.reason).toContain("the hand is [BASH,POMMEL_STRIKE,STRIKE_R], the line expected [BASH,STRIKE_R]");
+    expect(result.expected?.hand).toBe("BASH,STRIKE_R");
+    expect(result.actual?.hand).toBe("BASH,POMMEL_STRIKE,STRIKE_R");
+  });
+
+  it("XMK1 F33 T3 (logged): the Blood Potion drunk after Battle Trance cut Jev's line is refused, the line expected another hand", () => {
+    // Jev's line "战斗专注, 上勾拳 -> 无厌沙虫, 防御, potion 鲜血药水"; Battle Trance drew three cards and code drank the potion.
+    const ask = logged("xmk1-f33-t3-ask");
+    const cut = logged("xmk1-f33-t3-cut");
+    expect(cut.decision.chosen).toEqual({ action: "use_potion", option_index: 1 });
+    const beforeDrink = hand(ask.state).filter((card) => !["BATTLE_TRANCE", "UPPERCUT", "DEFEND_IRONCLAD"].includes(String(card["card_id"])));
+    const lineHand = beforeDrink.map((card) => `${String(card["card_id"])}${card["upgraded"] ? "+" : ""}`).sort().join(",");
+    const drink: ActionRequest = { action: "use_potion", option_index: 1, expect: { from: "line", potion: { id: "BLOOD_POTION" }, turn: 3, hand: lineHand } };
+    const refused = gate(parse(cut.state), drink);
+    expect(refused).toMatchObject({ ok: false, kind: "identity" });
+    expect(refused.reason).toContain("the hand is [BASH+,DEFEND_IRONCLAD,FIGHT_ME+,HEADBUTT,INFERNO,PYRE,STRIKE_IRONCLAD,UPPERCUT], the line expected [BASH+,HEADBUTT,STRIKE_IRONCLAD]");
+    // On the board the line meant (its three cards played, nothing drawn) the same drink goes through.
+    const meant = edited(cut.state, (raw) => {
+      combat(raw)["hand"] = beforeDrink.map((card, index) => ({ ...card, index }));
+    });
+    expect(gate(parse(meant), drink)).toEqual({ ok: true, reason: "legal" });
+  });
+
+  it("a card step: the hand reordered, the card consumed, the target shifted, a new turn are all refused", () => {
+    const e = env(strengthBoard());
+    pickLine(e, LINE);
+    step(played(strengthBoard(), "DEFEND_R"), e);
+    const board = drunk(played(strengthBoard(), "DEFEND_R"), 1);
+    const bash = step(board, e);
+    expect(gate(parse(board), bash).ok).toBe(true);
+
+    const reordered = edited(board, (raw) => {
+      const [strike, bashCard] = hand(raw);
+      combat(raw)["hand"] = [{ ...bashCard, index: 0 }, { ...strike, index: 1 }];
+    });
+    expect(gate(parse(reordered), bash).reason).toContain("card_index 1 is STRIKE_R, expected BASH");
+
+    const consumed = edited(board, (raw) => {
+      combat(raw)["hand"] = hand(raw).slice(0, 1);
+    });
+    expect(gate(parse(consumed), bash)).toMatchObject({ ok: false, kind: "identity" });
+    expect(gate(parse(consumed), bash).reason).toContain("card_index 1 is not in the hand, expected BASH");
+
+    const shifted = edited(board, (raw) => {
+      const enemies = combat(raw)["enemies"] as Raw[];
+      combat(raw)["enemies"] = [{ ...enemies[1], index: 0 }, { ...enemies[0], index: 1 }];
+    });
+    expect(gate(parse(shifted), bash).reason).toContain("target_index 0 is CULTIST, expected JAW_WORM");
+
+    // An enemy died since the line was chosen (not the target): not the board the line planned this step on.
+    const killed = edited(board, (raw) => {
+      combat(raw)["enemies"] = [(combat(raw)["enemies"] as Raw[])[0]];
+    });
+    expect(gate(parse(killed), bash).reason).toContain("the enemies are [0:JAW_WORM], the line expected [0:JAW_WORM|1:CULTIST]");
+
+    const later = edited(board, (raw) => {
+      raw["turn"] = 4;
+    });
+    expect(gate(parse(later), bash).reason).toContain("turn is 4, expected 3");
+  });
+});
+
+describe("a later discard of an option chosen with discards keeps the potion it was chosen for", () => {
+  it("another potion in that slot is refused", () => {
+    const raw = edited(restPayload(), (copy) => {
+      copy["available_actions"] = ["choose_rest_option", "discard_potion"];
+    });
+    const e = env(raw);
+    e.screenMemory.afterDiscard = { place: "rest", runId: "TESTRUN123", floor: 9, option: 0, title: "Rest", at: Date.now(), slot: 1, more: [0], moreIds: ["FIRE_POTION"] };
+    const decision = continueAfterDiscard(e, "rest", "rest", () => null);
+    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "discard_potion", option_index: 0, expect: { potion: { id: "FIRE_POTION" } } });
+    const intent = withExpect(parse(raw), (decision as { intent: ActionRequest }).intent);
+    expect(gate(parse(raw), intent).ok).toBe(true);
+    const swapped = edited(raw, (copy) => {
+      belt(copy)[0] = { ...belt(copy)[0], potion_id: "BLOCK_POTION" };
+    });
+    // The planner's own potion (the one the answer named) wins over what the slot holds when the step is made.
+    expect(withExpect(parse(swapped), (decision as { intent: ActionRequest }).intent).expect).toEqual({ potion: { id: "FIRE_POTION" }, from: "decision" });
+    expect(gate(parse(swapped), intent).reason).toContain("potion slot 0 holds BLOCK_POTION, expected FIRE_POTION");
+    expect(e.screenMemory.afterDiscard).toMatchObject({ slot: 0, more: [], moreIds: [] });
   });
 });
 

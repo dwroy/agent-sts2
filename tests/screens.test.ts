@@ -6,6 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import { fingerprint, gate } from "../src/act/gate.js";
+import { wireIntent } from "../src/act/identity.js";
 import type { AnswerSet } from "../src/jev/answers.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
@@ -1314,7 +1315,7 @@ describe("committed combat plan", () => {
     e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R"), step("STRIKE_R")], expectedHand: signature(["STRIKE_R", "DEFEND_R", "BASH"]), handLen: 3, via: "code" };
     const decision = planCombatTurn(e);
     expect(decision?.label).toBe("combat/plan-continue");
-    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+    expect(decision && decision.kind === "act" ? wireIntent(decision.intent) : null).toEqual({ action: "play_card", card_index: 1 });
   });
 
   it("drops the plan when the hand grew since it was made (the draw was still landing)", async () => {
@@ -1334,7 +1335,7 @@ describe("committed combat plan", () => {
     const expected = signature(["STRIKE_R", "DEFEND_R", "BASH", "DEFEND_R+"]);
     e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R", true)], expectedHand: expected, handLen: 4, via: "code" };
     const decision = planCombatTurn(e);
-    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 3 });
+    expect(decision && decision.kind === "act" ? wireIntent(decision.intent) : null).toEqual({ action: "play_card", card_index: 3 });
     // Falls back to the id alone when no copy has the planned upgrade level.
     e.screenMemory.combatPlan = { turn: 3, remaining: [step("STRIKE_R", true), step("BASH")], expectedHand: expected, handLen: 4, via: "code" };
     const again = planCombatTurn(e);
@@ -1386,7 +1387,7 @@ describe("Sandpit guard", () => {
     const { guardSandpit } = await import("../src/screens/combat-plan.js");
     const decision = guardSandpit(env(sandpitCombat(1, 1), { combatPlanner: "turn" }), endTurn);
     expect(decision?.label).toBe("combat/sandpit-guard");
-    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+    expect(decision && decision.kind === "act" ? wireIntent(decision.intent) : null).toEqual({ action: "play_card", card_index: 1 });
   });
 
   it("leaves end_turn alone when the count survives or the Escape is unaffordable", async () => {
@@ -1412,7 +1413,7 @@ describe("Sandpit guard", () => {
     const raw = sandpitCombat(1, 1);
     (raw["run"] as Record<string, unknown>)["potions"] = [];
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
-    expect(decision && decision.kind === "act" ? decision.intent : null).toEqual({ action: "play_card", card_index: 1 });
+    expect(decision && decision.kind === "act" ? wireIntent(decision.intent) : null).toEqual({ action: "play_card", card_index: 1 });
   });
 
   it("THMG F33 T5/T6: lines ending at Sandpit 1 are not offered while one keeps it at 2", async () => {
