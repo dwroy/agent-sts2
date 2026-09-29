@@ -1,0 +1,4811 @@
+{
+ "meta": {
+  "title": "A8, 开局 ≥ 2026-09-28T03:12",
+  "db": ".cache/logdb",
+  "synced": "2026-09-30 00:23 (UTC+8)",
+  "runs": 48,
+  "filters": "A8, 开局 ≥ 2026-09-28T03:12",
+  "group_by": "version",
+  "command": "tools/eval/calibration.py --ascension 8 --since 2026-09-28T03:12 --json --no-sync"
+ },
+ "coverage": {
+  "rollout": {
+   "turns": 2111,
+   "rows": 2028,
+   "dropped": {
+    "code-fallback": 66,
+    "no hp_lost on the played line": 17
+   }
+  },
+  "route": {
+   "plans": 43,
+   "nodes_projected": 552,
+   "nodes_reached": 520,
+   "died_before": 0,
+   "plans_by_label": {
+    "event/act-plan": 6,
+    "map/route-change": 5,
+    "map/route-plan": 32
+   }
+  },
+  "boss": {
+   "fights": 79,
+   "clocks": 79,
+   "clock_errors": []
+  }
+ },
+ "summary": {
+  "rollout": {
+   "sections": [
+    [
+     "A8 全部",
+     {
+      "turn": {
+       "n": 2028,
+       "median": 0.0,
+       "mean": 0.24358974358974358,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.38451676528599604,
+       "within": 0.9516765285996055,
+       "over": 0.03994082840236687,
+       "under": 0.008382642998027613
+      },
+      "turn_single": {
+       "n": 1278,
+       "median": 0.0,
+       "mean": 0.294131455399061,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.4725352112676056,
+       "within": 0.9405320813771518,
+       "over": 0.04929577464788732,
+       "under": 0.010172143974960876
+      },
+      "window": {
+       "n": 950,
+       "median": 2.3687500000000004,
+       "mean": 5.317118421052632,
+       "p10": -4.11,
+       "p90": 18.605000000000004,
+       "median_abs": 4.45625,
+       "mean_abs": 7.768828947368421,
+       "within": 0.3410526315789474,
+       "over": 0.5178947368421053,
+       "under": 0.14105263157894737
+      },
+      "end": {
+       "n": 1515,
+       "median": 0.6000000000000001,
+       "mean": 3.0584158415841585,
+       "p10": -6.3999999999999995,
+       "p90": 14.520000000000028,
+       "median_abs": 3.1000000000000014,
+       "mean_abs": 6.895643564356435,
+       "within": 0.4184818481848185,
+       "over": 0.4,
+       "under": 0.18151815181518152
+      },
+      "pred_turn": 2.0,
+      "actual_turn": 2.0,
+      "pred_window": 14.05,
+      "actual_window": 11.0,
+      "pred_end": 13.5,
+      "actual_end": 11.0,
+      "runs": 48,
+      "fights": 620,
+      "replanned": 750
+     }
+    ],
+    [
+     "A8 一幕",
+     {
+      "turn": {
+       "n": 1158,
+       "median": 0.0,
+       "mean": 0.2208117443868739,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.30526770293609673,
+       "within": 0.959412780656304,
+       "over": 0.03540587219343696,
+       "under": 0.0051813471502590676
+      },
+      "turn_single": {
+       "n": 804,
+       "median": 0.0,
+       "mean": 0.2638059701492537,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.36579601990049754,
+       "within": 0.9514925373134329,
+       "over": 0.04228855721393035,
+       "under": 0.006218905472636816
+      },
+      "window": {
+       "n": 510,
+       "median": 0.8000000000000007,
+       "mean": 3.328406862745098,
+       "p10": -4.709999999999999,
+       "p90": 16.03000000000001,
+       "median_abs": 2.8,
+       "mean_abs": 5.812475490196078,
+       "within": 0.44509803921568625,
+       "over": 0.4019607843137255,
+       "under": 0.15294117647058825
+      },
+      "end": {
+       "n": 809,
+       "median": 0.0,
+       "mean": 1.4233621755253398,
+       "p10": -7.539999999999998,
+       "p90": 8.640000000000008,
+       "median_abs": 2.4000000000000004,
+       "mean_abs": 5.61372064276885,
+       "within": 0.4721878862793572,
+       "over": 0.32138442521631644,
+       "under": 0.20642768850432633
+      },
+      "pred_turn": 2.0,
+      "actual_turn": 2.0,
+      "pred_window": 10.40625,
+      "actual_window": 9.0,
+      "pred_end": 10.0,
+      "actual_end": 10.0,
+      "runs": 48,
+      "fights": 364,
+      "replanned": 354
+     }
+    ],
+    [
+     "A8 二幕",
+     {
+      "turn": {
+       "n": 693,
+       "median": 0.0,
+       "mean": 0.28874458874458875,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.47056277056277057,
+       "within": 0.9408369408369408,
+       "over": 0.047619047619047616,
+       "under": 0.011544011544011544
+      },
+      "turn_single": {
+       "n": 403,
+       "median": 0.0,
+       "mean": 0.394044665012407,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.6421836228287842,
+       "within": 0.9205955334987593,
+       "over": 0.06451612903225806,
+       "under": 0.01488833746898263
+      },
+      "window": {
+       "n": 315,
+       "median": 5.4,
+       "mean": 7.25579365079365,
+       "p10": -3.7150000000000003,
+       "p90": 22.18500000000002,
+       "median_abs": 7.0624999999999964,
+       "mean_abs": 9.96404761904762,
+       "within": 0.22857142857142856,
+       "over": 0.6476190476190476,
+       "under": 0.12380952380952381
+      },
+      "end": {
+       "n": 555,
+       "median": 1.6000000000000014,
+       "mean": 4.725225225225225,
+       "p10": -5.56,
+       "p90": 20.480000000000018,
+       "median_abs": 4.300000000000001,
+       "mean_abs": 8.44018018018018,
+       "within": 0.36576576576576575,
+       "over": 0.4756756756756757,
+       "under": 0.15855855855855855
+      },
+      "pred_turn": 3.0,
+      "actual_turn": 2.0,
+      "pred_window": 18.2,
+      "actual_window": 12.0,
+      "pred_end": 16.4,
+      "actual_end": 13.0,
+      "runs": 30,
+      "fights": 204,
+      "replanned": 290
+     }
+    ],
+    [
+     "A8 三幕",
+     {
+      "turn": {
+       "n": 177,
+       "median": 0.0,
+       "mean": 0.21581920903954804,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.5661016949152543,
+       "within": 0.943502824858757,
+       "over": 0.03954802259887006,
+       "under": 0.01694915254237288
+      },
+      "turn_single": {
+       "n": 71,
+       "median": 0.0,
+       "mean": 0.07042253521126761,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.7183098591549296,
+       "within": 0.9295774647887324,
+       "over": 0.04225352112676056,
+       "under": 0.028169014084507043
+      },
+      "window": {
+       "n": 125,
+       "median": 6.1,
+       "mean": 8.5456,
+       "p10": -3.3900000000000032,
+       "p90": 22.640000000000015,
+       "median_abs": 6.475000000000001,
+       "mean_abs": 10.2188,
+       "within": 0.2,
+       "over": 0.664,
+       "under": 0.136
+      },
+      "end": {
+       "n": 151,
+       "median": 3.3999999999999986,
+       "mean": 5.69205298013245,
+       "p10": -3.700000000000003,
+       "p90": 20.0,
+       "median_abs": 5.100000000000001,
+       "mean_abs": 8.086754966887417,
+       "within": 0.32450331125827814,
+       "over": 0.543046357615894,
+       "under": 0.13245033112582782
+      },
+      "pred_turn": 2.0,
+      "actual_turn": 2.0,
+      "pred_window": 25.8125,
+      "actual_window": 17.0,
+      "pred_end": 30.0,
+      "actual_end": 18.0,
+      "runs": 9,
+      "fights": 52,
+      "replanned": 106
+     }
+    ],
+    [
+     "A8 baseline",
+     {
+      "turn": {
+       "n": 511,
+       "median": 0.0,
+       "mean": 0.3698630136986301,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.5107632093933464,
+       "within": 0.9315068493150684,
+       "over": 0.05870841487279843,
+       "under": 0.009784735812133072
+      },
+      "turn_single": {
+       "n": 345,
+       "median": 0.0,
+       "mean": 0.39420289855072466,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.6028985507246377,
+       "within": 0.9217391304347826,
+       "over": 0.06376811594202898,
+       "under": 0.014492753623188406
+      },
+      "window": {
+       "n": 0,
+       "median": null,
+       "mean": null,
+       "p10": null,
+       "p90": null,
+       "median_abs": null,
+       "mean_abs": null,
+       "within": null,
+       "over": null,
+       "under": null
+      },
+      "end": {
+       "n": 0,
+       "median": null,
+       "mean": null,
+       "p10": null,
+       "p90": null,
+       "median_abs": null,
+       "mean_abs": null,
+       "within": null,
+       "over": null,
+       "under": null
+      },
+      "pred_turn": 4.0,
+      "actual_turn": 3.0,
+      "pred_window": null,
+      "actual_window": null,
+      "pred_end": null,
+      "actual_end": null,
+      "runs": 17,
+      "fights": 185,
+      "replanned": 166
+     }
+    ],
+    [
+     "A8 V2",
+     {
+      "turn": {
+       "n": 564,
+       "median": 0.0,
+       "mean": 0.17198581560283688,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.29609929078014185,
+       "within": 0.9609929078014184,
+       "over": 0.031914893617021274,
+       "under": 0.0070921985815602835
+      },
+      "turn_single": {
+       "n": 363,
+       "median": 0.0,
+       "mean": 0.22038567493112948,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.3856749311294766,
+       "within": 0.9504132231404959,
+       "over": 0.04132231404958678,
+       "under": 0.008264462809917356
+      },
+      "window": {
+       "n": 0,
+       "median": null,
+       "mean": null,
+       "p10": null,
+       "p90": null,
+       "median_abs": null,
+       "mean_abs": null,
+       "within": null,
+       "over": null,
+       "under": null
+      },
+      "end": {
+       "n": 564,
+       "median": 0.5999999999999996,
+       "mean": 3.00531914893617,
+       "p10": -9.469999999999999,
+       "p90": 15.339999999999998,
+       "median_abs": 3.55,
+       "mean_abs": 7.853191489361702,
+       "within": 0.40070921985815605,
+       "over": 0.39361702127659576,
+       "under": 0.20567375886524822
+      },
+      "pred_turn": 2.0,
+      "actual_turn": 2.0,
+      "pred_window": null,
+      "actual_window": null,
+      "pred_end": 13.0,
+      "actual_end": 11.0,
+      "runs": 12,
+      "fights": 160,
+      "replanned": 201
+     }
+    ],
+    [
+     "A8 V3-pre",
+     {
+      "turn": {
+       "n": 111,
+       "median": 0.0,
+       "mean": 0.0,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.21621621621621623,
+       "within": 0.9819819819819819,
+       "over": 0.009009009009009009,
+       "under": 0.009009009009009009
+      },
+      "turn_single": {
+       "n": 66,
+       "median": 0.0,
+       "mean": 0.12121212121212122,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.24242424242424243,
+       "within": 0.9848484848484849,
+       "over": 0.015151515151515152,
+       "under": 0.0
+      },
+      "window": {
+       "n": 111,
+       "median": 5.4,
+       "mean": 9.858896396396398,
+       "p10": 0.0,
+       "p90": 29.1,
+       "median_abs": 5.550000000000001,
+       "mean_abs": 10.536373873873874,
+       "within": 0.32432432432432434,
+       "over": 0.6396396396396397,
+       "under": 0.036036036036036036
+      },
+      "end": {
+       "n": 111,
+       "median": 3.299999999999997,
+       "mean": 8.772072072072072,
+       "p10": 0.0,
+       "p90": 27.200000000000003,
+       "median_abs": 3.8999999999999986,
+       "mean_abs": 9.305405405405406,
+       "within": 0.38738738738738737,
+       "over": 0.5855855855855856,
+       "under": 0.02702702702702703
+      },
+      "pred_turn": 4.0,
+      "actual_turn": 4.0,
+      "pred_window": 18.700000000000003,
+      "actual_window": 11.0,
+      "pred_end": 19.1,
+      "actual_end": 11.0,
+      "runs": 2,
+      "fights": 36,
+      "replanned": 45
+     }
+    ],
+    [
+     "A8 V3",
+     {
+      "turn": {
+       "n": 524,
+       "median": 0.0,
+       "mean": 0.35896946564885496,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.45057251908396945,
+       "within": 0.9465648854961832,
+       "over": 0.04770992366412214,
+       "under": 0.0057251908396946565
+      },
+      "turn_single": {
+       "n": 307,
+       "median": 0.0,
+       "mean": 0.4009771986970684,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.5117263843648209,
+       "within": 0.9348534201954397,
+       "over": 0.05863192182410423,
+       "under": 0.006514657980456026
+      },
+      "window": {
+       "n": 522,
+       "median": 1.7875,
+       "mean": 4.755755108556833,
+       "p10": -5.209999999999999,
+       "p90": 18.245,
+       "median_abs": 4.35,
+       "mean_abs": 7.568494572158365,
+       "within": 0.36015325670498083,
+       "over": 0.4827586206896552,
+       "under": 0.15708812260536398
+      },
+      "end": {
+       "n": 523,
+       "median": 0.0,
+       "mean": 1.7753346080305927,
+       "p10": -5.7,
+       "p90": 11.98,
+       "median_abs": 2.8,
+       "mean_abs": 5.84263862332696,
+       "within": 0.4684512428298279,
+       "over": 0.3403441682600382,
+       "under": 0.19120458891013384
+      },
+      "pred_turn": 2.0,
+      "actual_turn": 2.0,
+      "pred_window": 14.05,
+      "actual_window": 10.0,
+      "pred_end": 13.3,
+      "actual_end": 11.0,
+      "runs": 12,
+      "fights": 150,
+      "replanned": 217
+     }
+    ],
+    [
+     "A8 V3.route-review",
+     {
+      "turn": {
+       "n": 318,
+       "median": 0.0,
+       "mean": 0.06257861635220126,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.28836477987421383,
+       "within": 0.9654088050314465,
+       "over": 0.0220125786163522,
+       "under": 0.012578616352201259
+      },
+      "turn_single": {
+       "n": 197,
+       "median": 0.0,
+       "mean": 0.14619289340101524,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.42030456852791875,
+       "within": 0.949238578680203,
+       "over": 0.03553299492385787,
+       "under": 0.015228426395939087
+      },
+      "window": {
+       "n": 317,
+       "median": 2.3625000000000007,
+       "mean": 4.651169821240799,
+       "p10": -4.739999999999998,
+       "p90": 17.540000000000003,
+       "median_abs": 4.4,
+       "mean_abs": 7.12963985278654,
+       "within": 0.31545741324921134,
+       "over": 0.5331230283911672,
+       "under": 0.15141955835962145
+      },
+      "end": {
+       "n": 317,
+       "median": 1.1,
+       "mean": 3.269085173501577,
+       "p10": -6.04,
+       "p90": 12.940000000000003,
+       "median_abs": 3.3999999999999986,
+       "mean_abs": 6.085488958990536,
+       "within": 0.3785488958990536,
+       "over": 0.444794952681388,
+       "under": 0.17665615141955837
+      },
+      "pred_turn": 1.5,
+      "actual_turn": 1.0,
+      "pred_window": 13.1,
+      "actual_window": 11.0,
+      "pred_end": 13.1,
+      "actual_end": 13.0,
+      "runs": 5,
+      "fights": 89,
+      "replanned": 121
+     }
+    ]
+   ],
+   "ahead": [
+    [
+     "A8",
+     [
+      [
+       1,
+       {
+        "n": 950,
+        "median": 0.0,
+        "mean": 0.20526315789473684,
+        "p10": 0.0,
+        "p90": 0.0,
+        "median_abs": 0.0,
+        "mean_abs": 0.3568421052631579,
+        "within": 0.9578947368421052,
+        "over": 0.03368421052631579,
+        "under": 0.008421052631578947
+       }
+      ],
+      [
+       2,
+       {
+        "n": 950,
+        "median": 0.8,
+        "mean": 2.298947368421053,
+        "p10": -2.6999999999999993,
+        "p90": 9.810000000000002,
+        "median_abs": 2.0,
+        "mean_abs": 3.890947368421053,
+        "within": 0.5126315789473684,
+        "over": 0.3705263157894737,
+        "under": 0.1168421052631579
+       }
+      ],
+      [
+       3,
+       {
+        "n": 950,
+        "median": 1.9000000000000001,
+        "mean": 4.017552631578948,
+        "p10": -3.5,
+        "p90": 14.920000000000003,
+        "median_abs": 3.5624999999999996,
+        "mean_abs": 6.058789473684211,
+        "within": 0.38526315789473686,
+        "over": 0.4842105263157895,
+        "under": 0.13052631578947368
+       }
+      ],
+      [
+       4,
+       {
+        "n": 922,
+        "median": 2.3,
+        "mean": 5.052408712942878,
+        "p10": -4.078750000000005,
+        "p90": 17.594999999999995,
+        "median_abs": 4.300000000000001,
+        "mean_abs": 7.279144070860449,
+        "within": 0.35032537960954446,
+        "over": 0.5086767895878525,
+        "under": 0.14099783080260303
+       }
+      ],
+      [
+       5,
+       {
+        "n": 922,
+        "median": 2.3312500000000007,
+        "mean": 5.302020065075921,
+        "p10": -4.189999999999999,
+        "p90": 18.595,
+        "median_abs": 4.4,
+        "mean_abs": 7.7644116052060745,
+        "within": 0.34164859002169196,
+        "over": 0.5162689804772235,
+        "under": 0.1420824295010846
+       }
+      ]
+     ]
+    ]
+   ],
+   "how": [
+    [
+     "A8",
+     [
+      [
+       "answer",
+       {
+        "n": 1952,
+        "median": 0.0,
+        "mean": 0.22387295081967212,
+        "p10": 0.0,
+        "p90": 0.0,
+        "median_abs": 0.0,
+        "mean_abs": 0.3579918032786885,
+        "within": 0.9549180327868853,
+        "over": 0.03790983606557377,
+        "under": 0.007172131147540984
+       }
+      ],
+      [
+       "dominator",
+       {
+        "n": 6,
+        "median": 0.0,
+        "mean": 3.3333333333333335,
+        "p10": 0.0,
+        "p90": 10.0,
+        "median_abs": 0.0,
+        "mean_abs": 3.3333333333333335,
+        "within": 0.8333333333333334,
+        "over": 0.16666666666666666,
+        "under": 0.0
+       }
+      ],
+      [
+       "hp-guard",
+       {
+        "n": 70,
+        "median": 0.0,
+        "mean": 0.5285714285714286,
+        "p10": 0.0,
+        "p90": 1.0,
+        "median_abs": 0.0,
+        "mean_abs": 0.8714285714285714,
+        "within": 0.8714285714285714,
+        "over": 0.08571428571428572,
+        "under": 0.04285714285714286
+       }
+      ]
+     ]
+    ]
+   ],
+   "encounters_turn": [
+    [
+     "A8",
+     [
+      {
+       "encounter": "GLOBE_HEAD",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 4,
+       "n": 8,
+       "median": 0.0,
+       "mean": 0.0,
+       "p10": -3.5999999999999996,
+       "p90": 6.0,
+       "median_abs": 0.0,
+       "mean_abs": 3.0,
+       "within": 0.625,
+       "over": 0.25,
+       "under": 0.125
+      },
+      {
+       "encounter": "INFESTED_PRISM",
+       "rooms": [
+        "elite"
+       ],
+       "fights": 6,
+       "n": 25,
+       "median": 0.0,
+       "mean": -0.16,
+       "p10": -4.0,
+       "p90": 4.20000000000001,
+       "median_abs": 0.0,
+       "mean_abs": 1.84,
+       "within": 0.72,
+       "over": 0.12,
+       "under": 0.16
+      },
+      {
+       "encounter": "PUNCH_CONSTRUCT+PUNCH_CONSTRUCT",
+       "rooms": [
+        "unknown_room"
+       ],
+       "fights": 1,
+       "n": 5,
+       "median": 0.0,
+       "mean": -1.6,
+       "p10": -4.8,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 1.6,
+       "within": 0.8,
+       "over": 0.0,
+       "under": 0.2
+      },
+      {
+       "encounter": "AEONGLASS",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 2,
+       "n": 14,
+       "median": 0.0,
+       "mean": 1.5714285714285714,
+       "p10": 0.0,
+       "p90": 1.4000000000000021,
+       "median_abs": 0.0,
+       "mean_abs": 1.5714285714285714,
+       "within": 0.9285714285714286,
+       "over": 0.07142857142857142,
+       "under": 0.0
+      },
+      {
+       "encounter": "VINE_SHAMBLER",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 6,
+       "n": 19,
+       "median": 0.0,
+       "mean": 1.263157894736842,
+       "p10": 0.0,
+       "p90": 3.0,
+       "median_abs": 0.0,
+       "mean_abs": 1.263157894736842,
+       "within": 0.8421052631578947,
+       "over": 0.15789473684210525,
+       "under": 0.0
+      },
+      {
+       "encounter": "CORPSE_SLUG+CORPSE_SLUG+CORPSE_SLUG",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 8,
+       "n": 22,
+       "median": 0.0,
+       "mean": 1.0454545454545454,
+       "p10": 0.0,
+       "p90": 5.0,
+       "median_abs": 0.0,
+       "mean_abs": 1.0454545454545454,
+       "within": 0.8181818181818182,
+       "over": 0.18181818181818182,
+       "under": 0.0
+      },
+      {
+       "encounter": "CORPSE_SLUG+CORPSE_SLUG",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 23,
+       "n": 67,
+       "median": 0.0,
+       "mean": 0.8522388059701492,
+       "p10": 0.0,
+       "p90": 5.0,
+       "median_abs": 0.0,
+       "mean_abs": 1.0313432835820895,
+       "within": 0.8507462686567164,
+       "over": 0.13432835820895522,
+       "under": 0.014925373134328358
+      },
+      {
+       "encounter": "GREMLIN_MERC",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 9,
+       "n": 31,
+       "median": 0.0,
+       "mean": 0.967741935483871,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.967741935483871,
+       "within": 0.9354838709677419,
+       "over": 0.06451612903225806,
+       "under": 0.0
+      },
+      {
+       "encounter": "CALCIFIED_CULTIST+SEAPUNK",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 4,
+       "n": 12,
+       "median": 0.0,
+       "mean": -0.9166666666666666,
+       "p10": 0.0,
+       "p90": 0.0,
+       "median_abs": 0.0,
+       "mean_abs": 0.9166666666666666,
+       "within": 0.9166666666666666,
+       "over": 0.0,
+       "under": 0.08333333333333333
+      },
+      {
+       "encounter": "LIVING_SHIELD+TURRET_OPERATOR",
+       "rooms": [
+        "hallway"
+       ],
+       "fights": 4,
+       "n": 8,
+       "median": 0.0,
+       "mean": 0.875,
+       "p10": 0.0,
+       "p90": 2.499999999999999,
+       "median_abs": 0.0,
+       "mean_abs": 0.875,
+       "within": 0.875,
+       "over": 0.125,
+       "under": 0.0
+      }
+     ]
+    ]
+   ],
+   "encounters_window": [
+    [
+     "A8",
+     [
+      {
+       "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 2,
+       "n": 9,
+       "median": 18.125,
+       "mean": 25.23888888888889,
+       "p10": -4.540000000000002,
+       "p90": 59.1,
+       "median_abs": 18.125,
+       "mean_abs": 27.566666666666666,
+       "within": 0.1111111111111111,
+       "over": 0.6666666666666666,
+       "under": 0.2222222222222222
+      },
+      {
+       "encounter": "CRUSHER+ROCKET",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 4,
+       "n": 26,
+       "median": 22.593749999999993,
+       "mean": 24.975801282051286,
+       "p10": 14.150000000000002,
+       "p90": 44.7125,
+       "median_abs": 22.593749999999993,
+       "mean_abs": 24.975801282051286,
+       "within": 0.038461538461538464,
+       "over": 0.9615384615384616,
+       "under": 0.0
+      },
+      {
+       "encounter": "CEREMONIAL_BEAST",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 2,
+       "n": 11,
+       "median": 18.0,
+       "mean": 18.90681818181818,
+       "p10": 1.2999999999999998,
+       "p90": 33.400000000000006,
+       "median_abs": 18.0,
+       "mean_abs": 18.90681818181818,
+       "within": 0.2727272727272727,
+       "over": 0.7272727272727273,
+       "under": 0.0
+      },
+      {
+       "encounter": "TEST_SUBJECT",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 1,
+       "n": 6,
+       "median": 16.425,
+       "mean": 16.847916666666666,
+       "p10": 8.2,
+       "p90": 25.91875,
+       "median_abs": 16.425,
+       "mean_abs": 16.847916666666666,
+       "within": 0.0,
+       "over": 1.0,
+       "under": 0.0
+      },
+      {
+       "encounter": "ENTOMANCER",
+       "rooms": [
+        "elite"
+       ],
+       "fights": 2,
+       "n": 5,
+       "median": 12.399999999999999,
+       "mean": 15.684999999999997,
+       "p10": 8.825,
+       "p90": 25.56,
+       "median_abs": 12.399999999999999,
+       "mean_abs": 15.684999999999997,
+       "within": 0.0,
+       "over": 1.0,
+       "under": 0.0
+      },
+      {
+       "encounter": "CUBEX_CONSTRUCT+CUBEX_CONSTRUCT+PUNCH_CONSTRUCT",
+       "rooms": [
+        "hallway"
+       ],
+       "fights": 3,
+       "n": 9,
+       "median": 16.1,
+       "mean": 15.620833333333334,
+       "p10": 0.4,
+       "p90": 37.51,
+       "median_abs": 16.1,
+       "mean_abs": 15.620833333333334,
+       "within": 0.3333333333333333,
+       "over": 0.6666666666666666,
+       "under": 0.0
+      },
+      {
+       "encounter": "WATERFALL_GIANT",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 6,
+       "n": 58,
+       "median": 13.043749999999998,
+       "mean": 13.698060344827585,
+       "p10": -1.5912499999999994,
+       "p90": 30.9825,
+       "median_abs": 13.399999999999999,
+       "mean_abs": 15.31573275862069,
+       "within": 0.06896551724137931,
+       "over": 0.8448275862068966,
+       "under": 0.08620689655172414
+      },
+      {
+       "encounter": "KNOWLEDGE_DEMON",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 5,
+       "n": 30,
+       "median": 7.581249999999999,
+       "mean": 9.684166666666666,
+       "p10": -7.84,
+       "p90": 26.550000000000015,
+       "median_abs": 10.05,
+       "mean_abs": 12.916666666666666,
+       "within": 0.2,
+       "over": 0.6333333333333333,
+       "under": 0.16666666666666666
+      },
+      {
+       "encounter": "THE_INSATIABLE",
+       "rooms": [
+        "boss"
+       ],
+       "fights": 3,
+       "n": 19,
+       "median": 10.75,
+       "mean": 5.119736842105263,
+       "p10": -8.379999999999999,
+       "p90": 15.7,
+       "median_abs": 11.899999999999999,
+       "mean_abs": 12.848684210526315,
+       "within": 0.0,
+       "over": 0.7368421052631579,
+       "under": 0.2631578947368421
+      },
+      {
+       "encounter": "SPINY_TOAD",
+       "rooms": [
+        "hallway",
+        "unknown_room"
+       ],
+       "fights": 7,
+       "n": 21,
+       "median": 12.100000000000001,
+       "mean": 11.570238095238096,
+       "p10": 0.0,
+       "p90": 25.900000000000006,
+       "median_abs": 12.100000000000001,
+       "mean_abs": 12.057142857142859,
+       "within": 0.14285714285714285,
+       "over": 0.8095238095238095,
+       "under": 0.047619047619047616
+      }
+     ]
+    ]
+   ],
+   "worst_turn": [
+    [
+     "A8",
+     [
+      {
+       "run_id": "WXMBVL6ZJ000",
+       "ascension": 8,
+       "act": 1,
+       "floor": 15,
+       "fight_no": 6,
+       "turn": 5,
+       "encounter": "TERROR_EEL",
+       "room": "elite",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 34,
+       "pred_turn": 28.0,
+       "actual_turn": 0,
+       "err_turn": 28.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": [
+        28.0,
+        28.0,
+        28.0,
+        28.0,
+        28.0
+       ],
+       "actual_cum": [
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "pred_window": 28.0,
+       "actual_window": 0,
+       "pred_end": 28.0,
+       "actual_end": 0,
+       "err_window": 28.0,
+       "err_end": 28.0,
+       "off": 162125547
+      },
+      {
+       "run_id": "QZQU8860HG2F",
+       "ascension": 8,
+       "act": 2,
+       "floor": 33,
+       "fight_no": 14,
+       "turn": 7,
+       "encounter": "KNOWLEDGE_DEMON",
+       "room": "boss",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "hp-guard",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 42,
+       "pred_turn": 25.0,
+       "actual_turn": 0,
+       "err_turn": 25.0,
+       "horizon": null,
+       "samples": null,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": null,
+       "actual_end": 0,
+       "err_window": null,
+       "err_end": null,
+       "off": 145461561
+      },
+      {
+       "run_id": "Y3XT9EBS7U8B",
+       "ascension": 8,
+       "act": 3,
+       "floor": 48,
+       "fight_no": 20,
+       "turn": 4,
+       "encounter": "AEONGLASS",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "dominator",
+       "key": "plan1",
+       "label": "combat/plan-choice+potion",
+       "replanned": true,
+       "hp": 77,
+       "pred_turn": 20.0,
+       "actual_turn": 0,
+       "err_turn": 20.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": [
+        20.0,
+        33.9,
+        34.199999999999996,
+        51.699999999999996,
+        69.1
+       ],
+       "actual_cum": [
+        0,
+        20,
+        20,
+        40,
+        60
+       ],
+       "pred_window": 69.1,
+       "actual_window": 60,
+       "pred_end": 73.9,
+       "actual_end": 77,
+       "err_window": 9.099999999999994,
+       "err_end": -3.0999999999999943,
+       "off": 168792149
+      },
+      {
+       "run_id": "JM7B0D40WCRQ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 6,
+       "fight_no": 4,
+       "turn": 6,
+       "encounter": "VINE_SHAMBLER",
+       "room": "unknown_room",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan4",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 50,
+       "pred_turn": 16.0,
+       "actual_turn": 0,
+       "err_turn": 16.0,
+       "horizon": null,
+       "samples": null,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": null,
+       "actual_end": 0,
+       "err_window": null,
+       "err_end": null,
+       "off": 145725372
+      },
+      {
+       "run_id": "V1MF91VL7A2G",
+       "ascension": 8,
+       "act": 2,
+       "floor": 33,
+       "fight_no": 14,
+       "turn": 4,
+       "encounter": "CRUSHER+ROCKET",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 49,
+       "pred_turn": 19.0,
+       "actual_turn": 35,
+       "err_turn": -16.0,
+       "horizon": null,
+       "samples": null,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": null,
+       "actual_end": 49,
+       "err_window": null,
+       "err_end": null,
+       "off": 146977960
+      },
+      {
+       "run_id": "GG0Y0TJ2JXAR",
+       "ascension": 8,
+       "act": 2,
+       "floor": 27,
+       "fight_no": 11,
+       "turn": 6,
+       "encounter": "CHOMPER+CHOMPER",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice+potion",
+       "replanned": true,
+       "hp": 41,
+       "pred_turn": 16.0,
+       "actual_turn": 0,
+       "err_turn": 16.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 16.1,
+       "actual_end": 0,
+       "err_window": null,
+       "err_end": 16.1,
+       "off": 152029976
+      },
+      {
+       "run_id": "6189FSNEN1MZ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 13,
+       "fight_no": 5,
+       "turn": 2,
+       "encounter": "GREMLIN_MERC",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice+potion",
+       "replanned": false,
+       "hp": 57,
+       "pred_turn": 16.0,
+       "actual_turn": 0,
+       "err_turn": 16.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": [
+        16.0,
+        16.0,
+        16.0,
+        16.0,
+        16.0
+       ],
+       "actual_cum": [
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "pred_window": 16.0,
+       "actual_window": 0,
+       "pred_end": 16.0,
+       "actual_end": 0,
+       "err_window": 16.0,
+       "err_end": 16.0,
+       "off": 169161324
+      },
+      {
+       "run_id": "ERPHN3SRCRC3",
+       "ascension": 8,
+       "act": 1,
+       "floor": 11,
+       "fight_no": 6,
+       "turn": 2,
+       "encounter": "GREMLIN_MERC",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 45,
+       "pred_turn": 14.0,
+       "actual_turn": 0,
+       "err_turn": 14.0,
+       "horizon": null,
+       "samples": null,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": null,
+       "actual_end": 0,
+       "err_window": null,
+       "err_end": null,
+       "off": 140067806
+      },
+      {
+       "run_id": "D3X1T7KBGK5T",
+       "ascension": 8,
+       "act": 3,
+       "floor": 37,
+       "fight_no": 17,
+       "turn": 3,
+       "encounter": "DEVOTED_SCULPTOR",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 60,
+       "pred_turn": 14.0,
+       "actual_turn": 0,
+       "err_turn": 14.0,
+       "horizon": null,
+       "samples": null,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": null,
+       "actual_end": 0,
+       "err_window": null,
+       "err_end": null,
+       "off": 141384047
+      },
+      {
+       "run_id": "VG7HWJRX44RQ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 4,
+       "fight_no": 2,
+       "turn": 3,
+       "encounter": "CORPSE_SLUG+CORPSE_SLUG",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": true,
+       "hp": 59,
+       "pred_turn": 14.0,
+       "actual_turn": 0,
+       "err_turn": 14.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": [
+        14.0,
+        14.0,
+        14.0,
+        14.0,
+        14.0
+       ],
+       "actual_cum": [
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "pred_window": 14.0,
+       "actual_window": 0,
+       "pred_end": 14.0,
+       "actual_end": 0,
+       "err_window": 14.0,
+       "err_end": 14.0,
+       "off": 169474906
+      }
+     ]
+    ]
+   ],
+   "worst_end": [
+    [
+     "A8",
+     [
+      {
+       "run_id": "GG0Y0TJ2JXAR",
+       "ascension": 8,
+       "act": 2,
+       "floor": 33,
+       "fight_no": 14,
+       "turn": 2,
+       "encounter": "KNOWLEDGE_DEMON",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice+potion",
+       "replanned": true,
+       "hp": 59,
+       "pred_turn": 1.0,
+       "actual_turn": 1,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 185.4,
+       "actual_end": 59,
+       "err_window": null,
+       "err_end": 126.4,
+       "off": 152276482
+      },
+      {
+       "run_id": "4LC3YKCZV218",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "turn": 1,
+       "encounter": "CEREMONIAL_BEAST",
+       "room": "boss",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan3",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 76,
+       "pred_turn": 1.0,
+       "actual_turn": 1,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 109.3,
+       "actual_end": 17,
+       "err_window": null,
+       "err_end": 92.3,
+       "off": 147377435
+      },
+      {
+       "run_id": "4LC3YKCZV218",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "turn": 2,
+       "encounter": "CEREMONIAL_BEAST",
+       "room": "boss",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": true,
+       "hp": 75,
+       "pred_turn": 1.0,
+       "actual_turn": 1,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 86.4,
+       "actual_end": 16,
+       "err_window": null,
+       "err_end": 70.4,
+       "off": 147397641
+      },
+      {
+       "run_id": "N7SAK31B9ZZZ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "turn": 2,
+       "encounter": "WATERFALL_GIANT",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 80,
+       "pred_turn": 0.0,
+       "actual_turn": 0,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 149.9,
+       "actual_end": 80,
+       "err_window": null,
+       "err_end": 69.9,
+       "off": 152713899
+      },
+      {
+       "run_id": "EZ2LP1P5VRPT",
+       "ascension": 8,
+       "act": 2,
+       "floor": 28,
+       "fight_no": 12,
+       "turn": 1,
+       "encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": true,
+       "hp": 74,
+       "pred_turn": 0.0,
+       "actual_turn": 0,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 59.8,
+       "actual_end": 2,
+       "err_window": null,
+       "err_end": 57.8,
+       "off": 154472588
+      },
+      {
+       "run_id": "VG7HWJRX44RQ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 6,
+       "turn": 1,
+       "encounter": "SOUL_FYSH",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 80,
+       "pred_turn": 0.0,
+       "actual_turn": 0,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": [
+        0.0,
+        9.8,
+        14.9,
+        14.9,
+        22.4
+       ],
+       "actual_cum": [
+        0,
+        11,
+        11,
+        11,
+        17
+       ],
+       "pred_window": 22.4,
+       "actual_window": 17,
+       "pred_end": 22.4,
+       "actual_end": 80,
+       "err_window": 5.399999999999999,
+       "err_end": -57.6,
+       "off": 169783527
+      },
+      {
+       "run_id": "4LC3YKCZV218",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "turn": 3,
+       "encounter": "CEREMONIAL_BEAST",
+       "room": "boss",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 74,
+       "pred_turn": 9.0,
+       "actual_turn": 9,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 71.6,
+       "actual_end": 15,
+       "err_window": null,
+       "err_end": 56.599999999999994,
+       "off": 147400747
+      },
+      {
+       "run_id": "N7SAK31B9ZZZ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "turn": 5,
+       "encounter": "WATERFALL_GIANT",
+       "room": "boss",
+       "outcome": "died",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan2",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 70,
+       "pred_turn": 6.0,
+       "actual_turn": 6,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 123.2,
+       "actual_end": 70,
+       "err_window": null,
+       "err_end": 53.2,
+       "off": 152735358
+      },
+      {
+       "run_id": "LXB3B2WT9E0W",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 10,
+       "turn": 1,
+       "encounter": "VANTOM",
+       "room": "boss",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice",
+       "replanned": true,
+       "hp": 33,
+       "pred_turn": 1.0,
+       "actual_turn": 1,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 8,
+       "fallback": false,
+       "pred_cum": null,
+       "actual_cum": null,
+       "pred_window": null,
+       "actual_window": null,
+       "pred_end": 74.5,
+       "actual_end": 23,
+       "err_window": null,
+       "err_end": 51.5,
+       "off": 150888857
+      },
+      {
+       "run_id": "VNWR16YEJASM",
+       "ascension": 8,
+       "act": 2,
+       "floor": 27,
+       "fight_no": 12,
+       "turn": 1,
+       "encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+       "room": "hallway",
+       "outcome": "won",
+       "decider": "jev",
+       "how": "answer",
+       "key": "plan1",
+       "label": "combat/plan-choice",
+       "replanned": false,
+       "hp": 79,
+       "pred_turn": 0.0,
+       "actual_turn": 0,
+       "err_turn": 0.0,
+       "horizon": 5,
+       "samples": 6,
+       "fallback": false,
+       "pred_cum": [
+        0.0,
+        27.0,
+        47.2,
+        69.5,
+        81.66666666666667
+       ],
+       "actual_cum": [
+        0,
+        3,
+        13,
+        24,
+        27
+       ],
+       "pred_window": 81.66666666666667,
+       "actual_window": 27,
+       "pred_end": 76.0,
+       "actual_end": 27,
+       "err_window": 54.66666666666667,
+       "err_end": 49.0,
+       "off": 159343634
+      }
+     ]
+    ]
+   ]
+  },
+  "route": {
+   "sections": [
+    [
+     "A8 全部",
+     {
+      "arrival": {
+       "n": 477,
+       "median": 0.0,
+       "mean": -0.8394129979035642,
+       "p10": -22.4,
+       "p90": 24.0,
+       "median_abs": 10.0,
+       "mean_abs": 13.644444444444444,
+       "within": 0.17819706498951782,
+       "over": 0.40670859538784065,
+       "under": 0.41509433962264153
+      },
+      "near": {
+       "n": 85,
+       "median": -1.0,
+       "mean": -0.5882352941176471,
+       "p10": -12.0,
+       "p90": 10.0,
+       "median_abs": 5.0,
+       "mean_abs": 7.087058823529412,
+       "within": 0.3176470588235294,
+       "over": 0.25882352941176473,
+       "under": 0.4235294117647059
+      },
+      "pred": 61.0,
+      "actual": 64.0,
+      "plans": 43,
+      "runs": 17,
+      "died_before": 0
+     }
+    ],
+    [
+     "A8 一幕",
+     {
+      "arrival": {
+       "n": 273,
+       "median": 2.0,
+       "mean": 4.086080586080586,
+       "p10": -10.0,
+       "p90": 24.0,
+       "median_abs": 8.0,
+       "mean_abs": 10.461172161172161,
+       "within": 0.23076923076923078,
+       "over": 0.4725274725274725,
+       "under": 0.2967032967032967
+      },
+      "near": {
+       "n": 48,
+       "median": 0.0,
+       "mean": 1.2125000000000001,
+       "p10": -6.3,
+       "p90": 10.300000000000004,
+       "median_abs": 4.0,
+       "mean_abs": 5.420833333333333,
+       "within": 0.375,
+       "over": 0.3125,
+       "under": 0.3125
+      },
+      "pred": 66.0,
+      "actual": 62.0,
+      "plans": 24,
+      "runs": 17,
+      "died_before": 0
+     }
+    ],
+    [
+     "A8 二幕",
+     {
+      "arrival": {
+       "n": 153,
+       "median": -7.0,
+       "mean": -10.406535947712419,
+       "p10": -35.0,
+       "p90": 13.600000000000023,
+       "median_abs": 12.79999999999999,
+       "mean_abs": 18.322875816993463,
+       "within": 0.10457516339869281,
+       "over": 0.27450980392156865,
+       "under": 0.6209150326797386
+      },
+      "near": {
+       "n": 26,
+       "median": -5.5,
+       "mean": -4.3730769230769235,
+       "p10": -14.5,
+       "p90": 4.5,
+       "median_abs": 7.0,
+       "mean_abs": 8.21923076923077,
+       "within": 0.23076923076923078,
+       "over": 0.11538461538461539,
+       "under": 0.6538461538461539
+      },
+      "pred": 56.2,
+      "actual": 66.0,
+      "plans": 13,
+      "runs": 10,
+      "died_before": 0
+     }
+    ],
+    [
+     "A8 三幕",
+     {
+      "arrival": {
+       "n": 51,
+       "median": 0.0,
+       "mean": 1.496078431372547,
+       "p10": -21.0,
+       "p90": 36.0,
+       "median_abs": 12.000000000000007,
+       "mean_abs": 16.649019607843137,
+       "within": 0.11764705882352941,
+       "over": 0.45098039215686275,
+       "under": 0.43137254901960786
+      },
+      "near": {
+       "n": 11,
+       "median": 0.0,
+       "mean": 0.49999999999999933,
+       "p10": -18.5,
+       "p90": 28.0,
+       "median_abs": 12.000000000000007,
+       "mean_abs": 11.681818181818182,
+       "within": 0.2727272727272727,
+       "over": 0.36363636363636365,
+       "under": 0.36363636363636365
+      },
+      "pred": 63.99999999999999,
+      "actual": 65.0,
+      "plans": 6,
+      "runs": 4,
+      "died_before": 0
+     }
+    ],
+    [
+     "A8 V3",
+     {
+      "arrival": {
+       "n": 319,
+       "median": 0.0,
+       "mean": -1.4683385579937307,
+       "p10": -23.0,
+       "p90": 20.0,
+       "median_abs": 9.799999999999997,
+       "mean_abs": 13.672100313479623,
+       "within": 0.16927899686520376,
+       "over": 0.4263322884012539,
+       "under": 0.4043887147335423
+      },
+      "near": {
+       "n": 54,
+       "median": -0.5,
+       "mean": -0.45370370370370355,
+       "p10": -12.35,
+       "p90": 9.400000000000006,
+       "median_abs": 4.5,
+       "mean_abs": 6.8500000000000005,
+       "within": 0.3333333333333333,
+       "over": 0.2962962962962963,
+       "under": 0.37037037037037035
+      },
+      "pred": 62.0,
+      "actual": 65.0,
+      "plans": 27,
+      "runs": 12,
+      "died_before": 0
+     }
+    ],
+    [
+     "A8 V3.route-review",
+     {
+      "arrival": {
+       "n": 158,
+       "median": -1.0,
+       "mean": 0.43037974683544283,
+       "p10": -21.0,
+       "p90": 27.0,
+       "median_abs": 10.249999999999996,
+       "mean_abs": 13.58860759493671,
+       "within": 0.1962025316455696,
+       "over": 0.3670886075949367,
+       "under": 0.43670886075949367
+      },
+      "near": {
+       "n": 31,
+       "median": -3.0,
+       "mean": -0.8225806451612906,
+       "p10": -10.0,
+       "p90": 10.0,
+       "median_abs": 5.0,
+       "mean_abs": 7.5,
+       "within": 0.2903225806451613,
+       "over": 0.1935483870967742,
+       "under": 0.5161290322580645
+      },
+      "pred": 61.0,
+      "actual": 62.0,
+      "plans": 16,
+      "runs": 5,
+      "died_before": 0
+     }
+    ]
+   ],
+   "distance": [
+    [
+     "A8",
+     [
+      [
+       "1",
+       {
+        "n": 43,
+        "median": 0.0,
+        "mean": 1.652424966883954e-16,
+        "p10": 0.0,
+        "p90": 0.0,
+        "median_abs": 0.0,
+        "mean_abs": 1.652424966883954e-16,
+        "within": 1.0,
+        "over": 0.0,
+        "under": 0.0
+       }
+      ],
+      [
+       "2",
+       {
+        "n": 43,
+        "median": -1.0,
+        "mean": -1.1046511627906974,
+        "p10": -7.8,
+        "p90": 5.800000000000017,
+        "median_abs": 4.0,
+        "mean_abs": 5.383720930232558,
+        "within": 0.37209302325581395,
+        "over": 0.18604651162790697,
+        "under": 0.4418604651162791
+       }
+      ],
+      [
+       "3",
+       {
+        "n": 42,
+        "median": -1.5,
+        "mean": -0.059523809523809694,
+        "p10": -12.000000000000007,
+        "p90": 15.499999999999993,
+        "median_abs": 7.350000000000001,
+        "mean_abs": 8.830952380952382,
+        "within": 0.2619047619047619,
+        "over": 0.3333333333333333,
+        "under": 0.40476190476190477
+       }
+      ],
+      [
+       "4–5",
+       {
+        "n": 78,
+        "median": -2.5,
+        "mean": -5.115384615384615,
+        "p10": -26.6,
+        "p90": 15.299999999999997,
+        "median_abs": 9.0,
+        "mean_abs": 12.115384615384615,
+        "within": 0.20512820512820512,
+        "over": 0.2948717948717949,
+        "under": 0.5
+       }
+      ],
+      [
+       "6–8",
+       {
+        "n": 101,
+        "median": 0.0,
+        "mean": -3.446534653465347,
+        "p10": -25.0,
+        "p90": 17.0,
+        "median_abs": 11.0,
+        "mean_abs": 14.016831683168316,
+        "within": 0.12871287128712872,
+        "over": 0.4158415841584158,
+        "under": 0.45544554455445546
+       }
+      ],
+      [
+       "9–12",
+       {
+        "n": 122,
+        "median": 3.549999999999997,
+        "mean": 3.347540983606557,
+        "p10": -20.339999999999993,
+        "p90": 28.0,
+        "median_abs": 12.0,
+        "mean_abs": 16.491803278688526,
+        "within": 0.11475409836065574,
+        "over": 0.5327868852459017,
+        "under": 0.3524590163934426
+       }
+      ],
+      [
+       "13+",
+       {
+        "n": 91,
+        "median": 0.0,
+        "mean": -0.12857142857142906,
+        "p10": -24.700000000000003,
+        "p90": 29.0,
+        "median_abs": 12.0,
+        "mean_abs": 16.84945054945055,
+        "within": 0.16483516483516483,
+        "over": 0.46153846153846156,
+        "under": 0.37362637362637363
+       }
+      ]
+     ]
+    ]
+   ],
+   "target": [
+    [
+     "A8",
+     [
+      [
+       "Monster",
+       {
+        "n": 132,
+        "median": -2.0,
+        "mean": -2.1318181818181823,
+        "p10": -20.0,
+        "p90": 17.0,
+        "median_abs": 9.0,
+        "mean_abs": 12.163636363636362,
+        "within": 0.17424242424242425,
+        "over": 0.3409090909090909,
+        "under": 0.48484848484848486
+       }
+      ],
+      [
+       "Elite",
+       {
+        "n": 25,
+        "median": 0.0,
+        "mean": 1.104,
+        "p10": -12.799999999999999,
+        "p90": 16.20000000000001,
+        "median_abs": 5.0,
+        "mean_abs": 8.576,
+        "within": 0.4,
+        "over": 0.36,
+        "under": 0.24
+       }
+      ],
+      [
+       "Unknown",
+       {
+        "n": 105,
+        "median": 0.0,
+        "mean": -0.6714285714285714,
+        "p10": -21.0,
+        "p90": 20.200000000000017,
+        "median_abs": 9.0,
+        "mean_abs": 13.536190476190475,
+        "within": 0.20952380952380953,
+        "over": 0.41904761904761906,
+        "under": 0.37142857142857144
+       }
+      ],
+      [
+       "RestSite",
+       {
+        "n": 108,
+        "median": 0.0,
+        "mean": -1.3425925925925926,
+        "p10": -28.860000000000007,
+        "p90": 27.0,
+        "median_abs": 14.0,
+        "mean_abs": 16.82037037037037,
+        "within": 0.10185185185185185,
+        "over": 0.4537037037037037,
+        "under": 0.4444444444444444
+       }
+      ],
+      [
+       "Shop",
+       {
+        "n": 37,
+        "median": -1.0,
+        "mean": 0.2756756756756752,
+        "p10": -16.340000000000003,
+        "p90": 25.199999999999996,
+        "median_abs": 9.0,
+        "mean_abs": 12.616216216216216,
+        "within": 0.24324324324324326,
+        "over": 0.3783783783783784,
+        "under": 0.3783783783783784
+       }
+      ],
+      [
+       "Treasure",
+       {
+        "n": 33,
+        "median": 6.0,
+        "mean": 3.2545454545454544,
+        "p10": -19.88,
+        "p90": 27.0,
+        "median_abs": 14.0,
+        "mean_abs": 16.381818181818183,
+        "within": 0.0,
+        "over": 0.6060606060606061,
+        "under": 0.3939393939393939
+       }
+      ],
+      [
+       "Boss",
+       {
+        "n": 37,
+        "median": 0.0,
+        "mean": -1.316216216216217,
+        "p10": -12.560000000000006,
+        "p90": 13.999999999999993,
+        "median_abs": 7.700000000000003,
+        "mean_abs": 11.975675675675676,
+        "within": 0.2702702702702703,
+        "over": 0.35135135135135137,
+        "under": 0.3783783783783784
+       }
+      ]
+     ]
+    ]
+   ],
+   "rooms": [
+    [
+     "A8",
+     [
+      [
+       "Monster",
+       {
+        "pred": 4.0,
+        "actual": 0.0,
+        "actual_p75": 8.25,
+        "actual_mean": 3.5609756097560976,
+        "deaths": 0,
+        "n": 164,
+        "median": 4.0,
+        "mean": 3.283536585365854,
+        "p10": -8.000000000000005,
+        "p90": 12.850000000000009,
+        "median_abs": 7.5,
+        "mean_abs": 7.8932926829268295,
+        "within": 0.17073170731707318,
+        "over": 0.6158536585365854,
+        "under": 0.21341463414634146
+       }
+      ],
+      [
+       "Elite",
+       {
+        "pred": 22.0,
+        "actual": 18.0,
+        "actual_p75": 33.0,
+        "actual_mean": 21.12,
+        "deaths": 0,
+        "n": 25,
+        "median": 8.0,
+        "mean": 3.36,
+        "p10": -19.0,
+        "p90": 21.4,
+        "median_abs": 13.0,
+        "mean_abs": 14.52,
+        "within": 0.08,
+        "over": 0.56,
+        "under": 0.36
+       }
+      ],
+      [
+       "Unknown",
+       {
+        "pred": 0.0,
+        "actual": 0.0,
+        "actual_p75": 8.0,
+        "actual_mean": 2.7962962962962963,
+        "deaths": 0,
+        "n": 108,
+        "median": 0.0,
+        "mean": -2.7962962962962963,
+        "p10": -12.899999999999997,
+        "p90": 6.0,
+        "median_abs": 5.0,
+        "mean_abs": 6.5,
+        "within": 0.4444444444444444,
+        "over": 0.17592592592592593,
+        "under": 0.37962962962962965
+       }
+      ],
+      [
+       "RestSite",
+       {
+        "pred": -24.0,
+        "actual": -23.0,
+        "actual_p75": 0.0,
+        "actual_mean": -16.073394495412845,
+        "deaths": 0,
+        "n": 109,
+        "median": 0.0,
+        "mean": -3.9064220183486236,
+        "p10": -25.38,
+        "p90": 15.400000000000006,
+        "median_abs": 9.0,
+        "mean_abs": 11.88256880733945,
+        "within": 0.3577981651376147,
+        "over": 0.22935779816513763,
+        "under": 0.41284403669724773
+       }
+      ],
+      [
+       "Shop",
+       {
+        "pred": 0.0,
+        "actual": 0.0,
+        "actual_p75": 0.0,
+        "actual_mean": -1.9736842105263157,
+        "deaths": 0,
+        "n": 38,
+        "median": 0.0,
+        "mean": 1.9736842105263157,
+        "p10": 0.0,
+        "p90": 15.0,
+        "median_abs": 0.0,
+        "mean_abs": 1.9736842105263157,
+        "within": 0.868421052631579,
+        "over": 0.13157894736842105,
+        "under": 0.0
+       }
+      ],
+      [
+       "Treasure",
+       {
+        "pred": 0.0,
+        "actual": 0.0,
+        "actual_p75": 0.0,
+        "actual_mean": -0.42424242424242425,
+        "deaths": 0,
+        "n": 33,
+        "median": 0.0,
+        "mean": 0.42424242424242425,
+        "p10": 0.0,
+        "p90": 0.0,
+        "median_abs": 0.0,
+        "mean_abs": 0.42424242424242425,
+        "within": 0.9393939393939394,
+        "over": 0.06060606060606061,
+        "under": 0.0
+       }
+      ]
+     ]
+    ]
+   ],
+   "worst": [
+    [
+     "A8",
+     [
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 12,
+       "floor": 33,
+       "distance": 13,
+       "type": "Boss",
+       "pred": 0,
+       "actual": 94,
+       "died_before": false,
+       "err": -94
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 8,
+       "floor": 29,
+       "distance": 9,
+       "type": "Unknown",
+       "pred": 0,
+       "actual": 73,
+       "died_before": false,
+       "err": -73
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 9,
+       "floor": 30,
+       "distance": 10,
+       "type": "Shop",
+       "pred": 0,
+       "actual": 73,
+       "died_before": false,
+       "err": -73
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 10,
+       "floor": 31,
+       "distance": 11,
+       "type": "Monster",
+       "pred": 0,
+       "actual": 73,
+       "died_before": false,
+       "err": -73
+      },
+      {
+       "run_id": "RBJ402TKQZ6F",
+       "act": 2,
+       "plan_floor": 18,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 13,
+       "floor": 32,
+       "distance": 14,
+       "type": "RestSite",
+       "pred": 9.0,
+       "actual": 82,
+       "died_before": false,
+       "err": -73.0
+      },
+      {
+       "run_id": "RBJ402TKQZ6F",
+       "act": 2,
+       "plan_floor": 18,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 12,
+       "floor": 31,
+       "distance": 13,
+       "type": "Unknown",
+       "pred": 9.0,
+       "actual": 76,
+       "died_before": false,
+       "err": -67.0
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 11,
+       "floor": 32,
+       "distance": 12,
+       "type": "RestSite",
+       "pred": 0,
+       "actual": 60,
+       "died_before": false,
+       "err": -60
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 5,
+       "floor": 26,
+       "distance": 6,
+       "type": "Treasure",
+       "pred": 0,
+       "actual": 58,
+       "died_before": false,
+       "err": -58
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 6,
+       "floor": 27,
+       "distance": 7,
+       "type": "Unknown",
+       "pred": 0,
+       "actual": 58,
+       "died_before": false,
+       "err": -58
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "act": 2,
+       "plan_floor": 20,
+       "label": "map/route-plan",
+       "ascension": 8,
+       "step": 4,
+       "floor": 25,
+       "distance": 5,
+       "type": "Monster",
+       "pred": 0,
+       "actual": 50,
+       "died_before": false,
+       "err": -50
+      }
+     ]
+    ]
+   ]
+  },
+  "boss": {
+   "sections": [
+    [
+     "A8 全部",
+     {
+      "all": {
+       "fights": 79,
+       "clocked": 79,
+       "won": 40,
+       "ratio": {
+        "n": 79,
+        "median": 0.8504273504273504,
+        "p10": 0.532802876636548,
+        "p90": 1.5126364099949006,
+        "geo_mean": 0.8631644983733288
+       },
+       "ratio_at_turns": {
+        "n": 79,
+        "median": 0.8380952380952381,
+        "p10": 0.5325575447570333,
+        "p90": 1.490909090909091,
+        "geo_mean": 0.8695048977976503
+       },
+       "loss_ratio": {
+        "n": 79,
+        "median": 0.9365079365079366,
+        "p10": 0.5860389610389611,
+        "p90": 1.4822341638169678,
+        "geo_mean": 0.8980410114024223
+       },
+       "est": 28.0,
+       "realised": 23.818181818181817,
+       "loss_est": 6.9,
+       "loss_actual": 6.153846153846154,
+       "survive": {
+        "n": 39,
+        "median": 0.0,
+        "mean": 0.2564102564102564,
+        "p10": -3.0,
+        "p90": 3.6000000000000085,
+        "median_abs": 1.0,
+        "mean_abs": 2.2564102564102564,
+        "within": 0.5128205128205128,
+        "over": 0.2564102564102564,
+        "under": 0.23076923076923078
+       },
+       "enough": {
+        "won": 18,
+        "lost": 8
+       }
+      },
+      "won": {
+       "fights": 40,
+       "clocked": 40,
+       "won": 40,
+       "ratio": {
+        "n": 40,
+        "median": 1.0344266738953647,
+        "p10": 0.6532855436081242,
+        "p90": 1.6379475308641975,
+        "geo_mean": 1.0598822498909097
+       },
+       "ratio_at_turns": {
+        "n": 40,
+        "median": 1.0880120164007634,
+        "p10": 0.6532855436081242,
+        "p90": 1.6294642857142858,
+        "geo_mean": 1.0676680000870398
+       },
+       "loss_ratio": {
+        "n": 40,
+        "median": 0.7801932367149759,
+        "p10": 0.36928838951310866,
+        "p90": 1.2466165413533838,
+        "geo_mean": 0.7632360096801838
+       },
+       "est": 25.0,
+       "realised": 26.2,
+       "loss_est": 6.6,
+       "loss_actual": 5.156565656565657,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 18,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 39,
+       "clocked": 39,
+       "won": 0,
+       "ratio": {
+        "n": 39,
+        "median": 0.7102272727272727,
+        "p10": 0.4861587301587302,
+        "p90": 1.0468815659513335,
+        "geo_mean": 0.6992673692311945
+       },
+       "ratio_at_turns": {
+        "n": 39,
+        "median": 0.7352941176470589,
+        "p10": 0.4959325396825397,
+        "p90": 0.9852959616448463,
+        "geo_mean": 0.7044036174553115
+       },
+       "loss_ratio": {
+        "n": 39,
+        "median": 1.0240963855421685,
+        "p10": 0.7713445669509742,
+        "p90": 1.568508383453558,
+        "geo_mean": 1.061071626834359
+       },
+       "est": 29.0,
+       "realised": 19.9,
+       "loss_est": 7.8,
+       "loss_actual": 7.8,
+       "survive": {
+        "n": 39,
+        "median": 0.0,
+        "mean": 0.2564102564102564,
+        "p10": -3.0,
+        "p90": 3.6000000000000085,
+        "median_abs": 1.0,
+        "mean_abs": 2.2564102564102564,
+        "within": 0.5128205128205128,
+        "over": 0.2564102564102564,
+        "under": 0.23076923076923078
+       },
+       "enough": {
+        "won": 0,
+        "lost": 8
+       }
+      }
+     }
+    ],
+    [
+     "A8 一幕",
+     {
+      "all": {
+       "fights": 45,
+       "clocked": 45,
+       "won": 30,
+       "ratio": {
+        "n": 45,
+        "median": 0.8035714285714285,
+        "p10": 0.5639759665621734,
+        "p90": 1.3977500000000003,
+        "geo_mean": 0.8545191696093999
+       },
+       "ratio_at_turns": {
+        "n": 45,
+        "median": 0.8169642857142857,
+        "p10": 0.5566707717569787,
+        "p90": 1.3999404761904763,
+        "geo_mean": 0.8573041862344298
+       },
+       "loss_ratio": {
+        "n": 45,
+        "median": 0.8717948717948718,
+        "p10": 0.5054112554112555,
+        "p90": 1.4411027568922308,
+        "geo_mean": 0.8535298366622666
+       },
+       "est": 24.0,
+       "realised": 20.09090909090909,
+       "loss_est": 6.3,
+       "loss_actual": 5.333333333333333,
+       "survive": {
+        "n": 15,
+        "median": 0.0,
+        "mean": 1.1333333333333333,
+        "p10": -3.5999999999999996,
+        "p90": 7.799999999999999,
+        "median_abs": 2.0,
+        "mean_abs": 3.1333333333333333,
+        "within": 0.4,
+        "over": 0.4,
+        "under": 0.2
+       },
+       "enough": {
+        "won": 17,
+        "lost": 8
+       }
+      },
+      "won": {
+       "fights": 30,
+       "clocked": 30,
+       "won": 30,
+       "ratio": {
+        "n": 30,
+        "median": 0.9773521505376344,
+        "p10": 0.6285714285714286,
+        "p90": 1.592840909090909,
+        "geo_mean": 0.9633750207927554
+       },
+       "ratio_at_turns": {
+        "n": 30,
+        "median": 0.9844933712121211,
+        "p10": 0.6285714285714286,
+        "p90": 1.4957251082251082,
+        "geo_mean": 0.9685877026844065
+       },
+       "loss_ratio": {
+        "n": 30,
+        "median": 0.7868480725623583,
+        "p10": 0.36619047619047623,
+        "p90": 1.2466165413533838,
+        "geo_mean": 0.7569424183050861
+       },
+       "est": 24.0,
+       "realised": 24.409090909090907,
+       "loss_est": 6.449999999999999,
+       "loss_actual": 4.95,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 17,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 15,
+       "clocked": 15,
+       "won": 0,
+       "ratio": {
+        "n": 15,
+        "median": 0.7102272727272727,
+        "p10": 0.5325779089065094,
+        "p90": 0.8242857142857143,
+        "geo_mean": 0.6723178882713212
+       },
+       "ratio_at_turns": {
+        "n": 15,
+        "median": 0.7102272727272727,
+        "p10": 0.532455242966752,
+        "p90": 0.8242857142857143,
+        "geo_mean": 0.6716251203989884
+       },
+       "loss_ratio": {
+        "n": 15,
+        "median": 1.0389610389610389,
+        "p10": 0.7463157894736843,
+        "p90": 1.7097288676236042,
+        "geo_mean": 1.0852516006679191
+       },
+       "est": 23.0,
+       "realised": 16.666666666666668,
+       "loss_est": 4.5,
+       "loss_actual": 6.181818181818182,
+       "survive": {
+        "n": 15,
+        "median": 0.0,
+        "mean": 1.1333333333333333,
+        "p10": -3.5999999999999996,
+        "p90": 7.799999999999999,
+        "median_abs": 2.0,
+        "mean_abs": 3.1333333333333333,
+        "within": 0.4,
+        "over": 0.4,
+        "under": 0.2
+       },
+       "enough": {
+        "won": 0,
+        "lost": 8
+       }
+      }
+     }
+    ],
+    [
+     "A8 二幕",
+     {
+      "all": {
+       "fights": 26,
+       "clocked": 26,
+       "won": 9,
+       "ratio": {
+        "n": 26,
+        "median": 0.9780014822134387,
+        "p10": 0.6014596718857215,
+        "p90": 1.555984555984556,
+        "geo_mean": 0.958314668392993
+       },
+       "ratio_at_turns": {
+        "n": 26,
+        "median": 0.9229166666666667,
+        "p10": 0.5959595959595959,
+        "p90": 1.6,
+        "geo_mean": 0.9617185633854799
+       },
+       "loss_ratio": {
+        "n": 26,
+        "median": 1.0120282339383464,
+        "p10": 0.6728778467908902,
+        "p90": 1.4881941051945937,
+        "geo_mean": 0.9525326906557695
+       },
+       "est": 34.0,
+       "realised": 36.03174603174603,
+       "loss_est": 7.8,
+       "loss_actual": 7.757142857142857,
+       "survive": {
+        "n": 17,
+        "median": 0.0,
+        "mean": -0.29411764705882354,
+        "p10": -3.0,
+        "p90": 2.4000000000000004,
+        "median_abs": 1.0,
+        "mean_abs": 1.8235294117647058,
+        "within": 0.5882352941176471,
+        "over": 0.17647058823529413,
+        "under": 0.23529411764705882
+       },
+       "enough": {
+        "won": 1,
+        "lost": 0
+       }
+      },
+      "won": {
+       "fights": 9,
+       "clocked": 9,
+       "won": 9,
+       "ratio": {
+        "n": 9,
+        "median": 1.5056603773584905,
+        "p10": 1.2292242114237,
+        "p90": 1.6488743645606392,
+        "geo_mean": 1.4207066969844897
+       },
+       "ratio_at_turns": {
+        "n": 9,
+        "median": 1.5,
+        "p10": 1.204646688864225,
+        "p90": 1.7028485395965072,
+        "geo_mean": 1.4415166834842572
+       },
+       "loss_ratio": {
+        "n": 9,
+        "median": 0.782608695652174,
+        "p10": 0.5853676692953684,
+        "p90": 1.1587761674718196,
+        "geo_mean": 0.7942397698189363
+       },
+       "est": 34.0,
+       "realised": 48.714285714285715,
+       "loss_est": 6.9,
+       "loss_actual": 5.4,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 1,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 17,
+       "clocked": 17,
+       "won": 0,
+       "ratio": {
+        "n": 17,
+        "median": 0.7658730158730159,
+        "p10": 0.5466863759546686,
+        "p90": 1.0884893492280632,
+        "geo_mean": 0.778001952698755
+       },
+       "ratio_at_turns": {
+        "n": 17,
+        "median": 0.7999999999999999,
+        "p10": 0.5242424242424242,
+        "p90": 1.0884893492280632,
+        "geo_mean": 0.7762335449473567
+       },
+       "loss_ratio": {
+        "n": 17,
+        "median": 1.0826210826210827,
+        "p10": 0.7852437417654807,
+        "p90": 1.5024077046548956,
+        "geo_mean": 1.0487342190788105
+       },
+       "est": 33.0,
+       "realised": 25.857142857142858,
+       "loss_est": 7.8,
+       "loss_actual": 8.444444444444445,
+       "survive": {
+        "n": 17,
+        "median": 0.0,
+        "mean": -0.29411764705882354,
+        "p10": -3.0,
+        "p90": 2.4000000000000004,
+        "median_abs": 1.0,
+        "mean_abs": 1.8235294117647058,
+        "within": 0.5882352941176471,
+        "over": 0.17647058823529413,
+        "under": 0.23529411764705882
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      }
+     }
+    ],
+    [
+     "A8 三幕",
+     {
+      "all": {
+       "fights": 8,
+       "clocked": 8,
+       "won": 1,
+       "ratio": {
+        "n": 8,
+        "median": 0.668939393939394,
+        "p10": 0.3802061403508772,
+        "p90": 1.1715476190476188,
+        "geo_mean": 0.6502605087151769
+       },
+       "ratio_at_turns": {
+        "n": 8,
+        "median": 0.7297578828828828,
+        "p10": 0.3890384615384615,
+        "p90": 1.1449096880131362,
+        "geo_mean": 0.6784553375815383
+       },
+       "loss_ratio": {
+        "n": 8,
+        "median": 0.9520131809288436,
+        "p10": 0.7593450725980846,
+        "p90": 1.3975903614457827,
+        "geo_mean": 0.9870401361529705
+       },
+       "est": 36.0,
+       "realised": 25.30357142857143,
+       "loss_est": 8.3,
+       "loss_actual": 9.0,
+       "survive": {
+        "n": 7,
+        "median": -1.0,
+        "mean": -0.2857142857142857,
+        "p10": -2.0,
+        "p90": 1.8000000000000007,
+        "median_abs": 1.0,
+        "mean_abs": 1.4285714285714286,
+        "within": 0.5714285714285714,
+        "over": 0.14285714285714285,
+        "under": 0.2857142857142857
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      },
+      "won": {
+       "fights": 1,
+       "clocked": 1,
+       "won": 1,
+       "ratio": {
+        "n": 1,
+        "median": 1.33015873015873,
+        "p10": 1.33015873015873,
+        "p90": 1.33015873015873,
+        "geo_mean": 1.33015873015873
+       },
+       "ratio_at_turns": {
+        "n": 1,
+        "median": 1.33015873015873,
+        "p10": 1.33015873015873,
+        "p90": 1.33015873015873,
+        "geo_mean": 1.33015873015873
+       },
+       "loss_ratio": {
+        "n": 1,
+        "median": 0.6837606837606838,
+        "p10": 0.6837606837606838,
+        "p90": 0.6837606837606838,
+        "geo_mean": 0.6837606837606838
+       },
+       "est": 45.0,
+       "realised": 59.857142857142854,
+       "loss_est": 11.7,
+       "loss_actual": 8.0,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 7,
+       "clocked": 7,
+       "won": 0,
+       "ratio": {
+        "n": 7,
+        "median": 0.5045454545454545,
+        "p10": 0.37805263157894736,
+        "p90": 0.9689010989010989,
+        "geo_mean": 0.5870635019932827
+       },
+       "ratio_at_turns": {
+        "n": 7,
+        "median": 0.69375,
+        "p10": 0.38657509157509157,
+        "p90": 0.9160028149190712,
+        "geo_mean": 0.6162435362273485
+       },
+       "loss_ratio": {
+        "n": 7,
+        "median": 0.9638554216867469,
+        "p10": 0.8038748400194183,
+        "p90": 1.4561101549053357,
+        "geo_mean": 1.0401850924039868
+       },
+       "est": 34.0,
+       "realised": 22.857142857142858,
+       "loss_est": 8.3,
+       "loss_actual": 9.5,
+       "survive": {
+        "n": 7,
+        "median": -1.0,
+        "mean": -0.2857142857142857,
+        "p10": -2.0,
+        "p90": 1.8000000000000007,
+        "median_abs": 1.0,
+        "mean_abs": 1.4285714285714286,
+        "within": 0.5714285714285714,
+        "over": 0.14285714285714285,
+        "under": 0.2857142857142857
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      }
+     }
+    ],
+    [
+     "A8 baseline",
+     {
+      "all": {
+       "fights": 24,
+       "clocked": 24,
+       "won": 11,
+       "ratio": {
+        "n": 24,
+        "median": 0.8489718614718615,
+        "p10": 0.5621865203761756,
+        "p90": 1.457272727272727,
+        "geo_mean": 0.8236367746141271
+       },
+       "ratio_at_turns": {
+        "n": 24,
+        "median": 0.8558065123282514,
+        "p10": 0.5454545454545455,
+        "p90": 1.3993181818181815,
+        "geo_mean": 0.8204139330558085
+       },
+       "loss_ratio": {
+        "n": 24,
+        "median": 0.9078992168879809,
+        "p10": 0.6118819776714514,
+        "p90": 1.2033816425120774,
+        "geo_mean": 0.8775758123748791
+       },
+       "est": 26.5,
+       "realised": 19.71212121212121,
+       "loss_est": 6.9,
+       "loss_actual": 5.522727272727273,
+       "survive": {
+        "n": 13,
+        "median": 0.0,
+        "mean": -0.9230769230769231,
+        "p10": -3.8,
+        "p90": 2.0,
+        "median_abs": 2.0,
+        "mean_abs": 2.1538461538461537,
+        "within": 0.46153846153846156,
+        "over": 0.23076923076923078,
+        "under": 0.3076923076923077
+       },
+       "enough": {
+        "won": 4,
+        "lost": 3
+       }
+      },
+      "won": {
+       "fights": 11,
+       "clocked": 11,
+       "won": 11,
+       "ratio": {
+        "n": 11,
+        "median": 0.9838709677419355,
+        "p10": 0.6559139784946236,
+        "p90": 1.5878787878787877,
+        "geo_mean": 1.0030354069626324
+       },
+       "ratio_at_turns": {
+        "n": 11,
+        "median": 0.9924242424242423,
+        "p10": 0.6559139784946236,
+        "p90": 1.5714285714285714,
+        "geo_mean": 0.9975124326263444
+       },
+       "loss_ratio": {
+        "n": 11,
+        "median": 0.7619047619047619,
+        "p10": 0.5952380952380952,
+        "p90": 1.1313131313131313,
+        "geo_mean": 0.7855269338028563
+       },
+       "est": 24.0,
+       "realised": 23.818181818181817,
+       "loss_est": 6.6,
+       "loss_actual": 5.090909090909091,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 4,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 13,
+       "clocked": 13,
+       "won": 0,
+       "ratio": {
+        "n": 13,
+        "median": 0.6904761904761905,
+        "p10": 0.5376959247648903,
+        "p90": 1.0004545454545455,
+        "geo_mean": 0.697142293291783
+       },
+       "ratio_at_turns": {
+        "n": 13,
+        "median": 0.6904761904761905,
+        "p10": 0.5326700286220526,
+        "p90": 0.9366666666666668,
+        "geo_mean": 0.6953556900728463
+       },
+       "loss_ratio": {
+        "n": 13,
+        "median": 1.023720349563046,
+        "p10": 0.6786769294778447,
+        "p90": 1.3379446640316206,
+        "geo_mean": 0.9638391963539027
+       },
+       "est": 29.0,
+       "realised": 17.6,
+       "loss_est": 6.9,
+       "loss_actual": 7.2727272727272725,
+       "survive": {
+        "n": 13,
+        "median": 0.0,
+        "mean": -0.9230769230769231,
+        "p10": -3.8,
+        "p90": 2.0,
+        "median_abs": 2.0,
+        "mean_abs": 2.1538461538461537,
+        "within": 0.46153846153846156,
+        "over": 0.23076923076923078,
+        "under": 0.3076923076923077
+       },
+       "enough": {
+        "won": 0,
+        "lost": 3
+       }
+      }
+     }
+    ],
+    [
+     "A8 V2",
+     {
+      "all": {
+       "fights": 19,
+       "clocked": 19,
+       "won": 11,
+       "ratio": {
+        "n": 19,
+        "median": 0.8426573426573427,
+        "p10": 0.5961471861471862,
+        "p90": 1.542209461307082,
+        "geo_mean": 0.8978032969264371
+       },
+       "ratio_at_turns": {
+        "n": 19,
+        "median": 0.8075471698113207,
+        "p10": 0.6788095238095238,
+        "p90": 1.6630303030303029,
+        "geo_mean": 0.9176198611971639
+       },
+       "loss_ratio": {
+        "n": 19,
+        "median": 0.9323308270676692,
+        "p10": 0.35335473515248794,
+        "p90": 1.729866835764109,
+        "geo_mean": 0.8591435685144355
+       },
+       "est": 26.0,
+       "realised": 25.88888888888889,
+       "loss_est": 6.9,
+       "loss_actual": 5.9,
+       "survive": {
+        "n": 8,
+        "median": -0.5,
+        "mean": 1.125,
+        "p10": -1.5999999999999999,
+        "p90": 6.0,
+        "median_abs": 2.0,
+        "mean_abs": 2.625,
+        "within": 0.5,
+        "over": 0.375,
+        "under": 0.125
+       },
+       "enough": {
+        "won": 8,
+        "lost": 0
+       }
+      },
+      "won": {
+       "fights": 11,
+       "clocked": 11,
+       "won": 11,
+       "ratio": {
+        "n": 11,
+        "median": 0.9708333333333333,
+        "p10": 0.7175324675324676,
+        "p90": 1.6884057971014494,
+        "geo_mean": 1.0526256451363356
+       },
+       "ratio_at_turns": {
+        "n": 11,
+        "median": 0.9765625,
+        "p10": 0.7038461538461539,
+        "p90": 1.7651515151515154,
+        "geo_mean": 1.0600219708243912
+       },
+       "loss_ratio": {
+        "n": 11,
+        "median": 0.7777777777777778,
+        "p10": 0.32857142857142857,
+        "p90": 1.4782608695652173,
+        "geo_mean": 0.6850250718509182
+       },
+       "est": 23.0,
+       "realised": 31.25,
+       "loss_est": 6.3,
+       "loss_actual": 3.764705882352941,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 8,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 8,
+       "clocked": 8,
+       "won": 0,
+       "ratio": {
+        "n": 8,
+        "median": 0.7805735930735931,
+        "p10": 0.48718181818181816,
+        "p90": 0.9147770833817346,
+        "geo_mean": 0.7214041955387629
+       },
+       "ratio_at_turns": {
+        "n": 8,
+        "median": 0.7828828828828829,
+        "p10": 0.6112500000000001,
+        "p90": 0.9383714889761402,
+        "geo_mean": 0.7525168343517916
+       },
+       "loss_ratio": {
+        "n": 8,
+        "median": 1.0195360195360197,
+        "p10": 0.8255092733353603,
+        "p90": 1.9342910101946245,
+        "geo_mean": 1.1730316994312557
+       },
+       "est": 31.5,
+       "realised": 22.554545454545455,
+       "loss_est": 7.8,
+       "loss_actual": 8.714285714285715,
+       "survive": {
+        "n": 8,
+        "median": -0.5,
+        "mean": 1.125,
+        "p10": -1.5999999999999999,
+        "p90": 6.0,
+        "median_abs": 2.0,
+        "mean_abs": 2.625,
+        "within": 0.5,
+        "over": 0.375,
+        "under": 0.125
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      }
+     }
+    ],
+    [
+     "A8 V3-pre",
+     {
+      "all": {
+       "fights": 5,
+       "clocked": 5,
+       "won": 3,
+       "ratio": {
+        "n": 5,
+        "median": 1.31,
+        "p10": 0.689031402034498,
+        "p90": 1.532844827586207,
+        "geo_mean": 1.061955892176031
+       },
+       "ratio_at_turns": {
+        "n": 5,
+        "median": 1.2476190476190476,
+        "p10": 0.7359768907563025,
+        "p90": 1.5268253968253969,
+        "geo_mean": 1.0933628908540969
+       },
+       "loss_ratio": {
+        "n": 5,
+        "median": 0.782608695652174,
+        "p10": 0.6265151515151516,
+        "p90": 1.1804235575843747,
+        "geo_mean": 0.8470283509306984
+       },
+       "est": 29.0,
+       "realised": 32.75,
+       "loss_est": 6.9,
+       "loss_actual": 5.4,
+       "survive": {
+        "n": 2,
+        "median": 0.5,
+        "mean": 0.5,
+        "p10": 0.1,
+        "p90": 0.9,
+        "median_abs": 0.5,
+        "mean_abs": 0.5,
+        "within": 1.0,
+        "over": 0.0,
+        "under": 0.0
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      },
+      "won": {
+       "fights": 3,
+       "clocked": 3,
+       "won": 3,
+       "ratio": {
+        "n": 3,
+        "median": 1.3758620689655172,
+        "p10": 1.3231724137931036,
+        "p90": 1.5851724137931034,
+        "geo_mean": 1.4344183555238184
+       },
+       "ratio_at_turns": {
+        "n": 3,
+        "median": 1.4777777777777776,
+        "p10": 1.2936507936507937,
+        "p90": 1.5431746031746032,
+        "geo_mean": 1.4219829176876133
+       },
+       "loss_ratio": {
+        "n": 3,
+        "median": 0.7424242424242425,
+        "p10": 0.587878787878788,
+        "p90": 0.7745718050065876,
+        "geo_mean": 0.6833664129063897
+       },
+       "est": 20.0,
+       "realised": 32.75,
+       "loss_est": 6.6,
+       "loss_actual": 4.9,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 2,
+       "clocked": 2,
+       "won": 0,
+       "ratio": {
+        "n": 2,
+        "median": 0.7569659442724457,
+        "p10": 0.4852277753206546,
+        "p90": 1.028704113224237,
+        "geo_mean": 0.6764760824015049
+       },
+       "ratio_at_turns": {
+        "n": 2,
+        "median": 0.7960871848739495,
+        "p10": 0.5556460084033613,
+        "p90": 1.0365283613445377,
+        "geo_mean": 0.7371727202276134
+       },
+       "loss_ratio": {
+        "n": 2,
+        "median": 1.170021701713687,
+        "p10": 1.128414278230936,
+        "p90": 1.2116291251964377,
+        "geo_mean": 1.1688651835614439
+       },
+       "est": 36.0,
+       "realised": 26.57142857142857,
+       "loss_est": 7.6000000000000005,
+       "loss_actual": 8.928571428571429,
+       "survive": {
+        "n": 2,
+        "median": 0.5,
+        "mean": 0.5,
+        "p10": 0.1,
+        "p90": 0.9,
+        "median_abs": 0.5,
+        "mean_abs": 0.5,
+        "within": 1.0,
+        "over": 0.0,
+        "under": 0.0
+       },
+       "enough": {
+        "won": 0,
+        "lost": 0
+       }
+      }
+     }
+    ],
+    [
+     "A8 V3",
+     {
+      "all": {
+       "fights": 20,
+       "clocked": 20,
+       "won": 9,
+       "ratio": {
+        "n": 20,
+        "median": 0.7798758259284575,
+        "p10": 0.5316428995840761,
+        "p90": 1.4646790540540542,
+        "geo_mean": 0.8269188346990604
+       },
+       "ratio_at_turns": {
+        "n": 20,
+        "median": 0.7918775510204081,
+        "p10": 0.5249999999999999,
+        "p90": 1.460625,
+        "geo_mean": 0.8238881793480375
+       },
+       "loss_ratio": {
+        "n": 20,
+        "median": 0.9831808436754537,
+        "p10": 0.6795668100015926,
+        "p90": 1.4704316972205798,
+        "geo_mean": 0.9190824865961674
+       },
+       "est": 27.5,
+       "realised": 23.166666666666664,
+       "loss_est": 7.0,
+       "loss_actual": 6.835714285714285,
+       "survive": {
+        "n": 11,
+        "median": 0.0,
+        "mean": 0.45454545454545453,
+        "p10": -3.0,
+        "p90": 3.0,
+        "median_abs": 1.0,
+        "mean_abs": 2.090909090909091,
+        "within": 0.5454545454545454,
+        "over": 0.2727272727272727,
+        "under": 0.18181818181818182
+       },
+       "enough": {
+        "won": 2,
+        "lost": 4
+       }
+      },
+      "won": {
+       "fights": 9,
+       "clocked": 9,
+       "won": 9,
+       "ratio": {
+        "n": 9,
+        "median": 1.050420168067227,
+        "p10": 0.7426948051948051,
+        "p90": 1.5608274941608276,
+        "geo_mean": 1.0463367793867233
+       },
+       "ratio_at_turns": {
+        "n": 9,
+        "median": 1.050420168067227,
+        "p10": 0.7457285714285714,
+        "p90": 1.5283950617283952,
+        "geo_mean": 1.0468139493200392
+       },
+       "loss_ratio": {
+        "n": 9,
+        "median": 0.7959183673469388,
+        "p10": 0.5576680832516073,
+        "p90": 1.156357076265543,
+        "geo_mean": 0.753025760421438
+       },
+       "est": 27.0,
+       "realised": 29.125,
+       "loss_est": 7.0,
+       "loss_actual": 5.571428571428571,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 2,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 11,
+       "clocked": 11,
+       "won": 0,
+       "ratio": {
+        "n": 11,
+        "median": 0.6944444444444444,
+        "p10": 0.5252525252525252,
+        "p90": 0.8652173913043477,
+        "geo_mean": 0.6820836820752143
+       },
+       "ratio_at_turns": {
+        "n": 11,
+        "median": 0.6944444444444444,
+        "p10": 0.5227272727272727,
+        "p90": 0.8652173913043477,
+        "geo_mean": 0.6772926412297842
+       },
+       "loss_ratio": {
+        "n": 11,
+        "median": 1.0457516339869282,
+        "p10": 0.7473684210526316,
+        "p90": 1.508828250401284,
+        "geo_mean": 1.0818417949150587
+       },
+       "est": 28.0,
+       "realised": 19.9,
+       "loss_est": 7.8,
+       "loss_actual": 7.3,
+       "survive": {
+        "n": 11,
+        "median": 0.0,
+        "mean": 0.45454545454545453,
+        "p10": -3.0,
+        "p90": 3.0,
+        "median_abs": 1.0,
+        "mean_abs": 2.090909090909091,
+        "within": 0.5454545454545454,
+        "over": 0.2727272727272727,
+        "under": 0.18181818181818182
+       },
+       "enough": {
+        "won": 0,
+        "lost": 4
+       }
+      }
+     }
+    ],
+    [
+     "A8 V3.route-review",
+     {
+      "all": {
+       "fights": 11,
+       "clocked": 11,
+       "won": 6,
+       "ratio": {
+        "n": 11,
+        "median": 1.0,
+        "p10": 0.6296296296296297,
+        "p90": 1.303921568627451,
+        "geo_mean": 0.8789308347057689
+       },
+       "ratio_at_turns": {
+        "n": 11,
+        "median": 1.0,
+        "p10": 0.6296296296296297,
+        "p90": 1.3154761904761905,
+        "geo_mean": 0.8938512074703948
+       },
+       "loss_ratio": {
+        "n": 11,
+        "median": 0.8717948717948718,
+        "p10": 0.7568438003220612,
+        "p90": 1.6842105263157896,
+        "geo_mean": 1.0037197802917976
+       },
+       "est": 30.0,
+       "realised": 25.857142857142858,
+       "loss_est": 6.9,
+       "loss_actual": 6.571428571428571,
+       "survive": {
+        "n": 5,
+        "median": 0.0,
+        "mean": 1.4,
+        "p10": -2.0,
+        "p90": 6.4,
+        "median_abs": 2.0,
+        "mean_abs": 3.0,
+        "within": 0.4,
+        "over": 0.2,
+        "under": 0.4
+       },
+       "enough": {
+        "won": 4,
+        "lost": 1
+       }
+      },
+      "won": {
+       "fights": 6,
+       "clocked": 6,
+       "won": 6,
+       "ratio": {
+        "n": 6,
+        "median": 1.048568441713603,
+        "p10": 0.8148148148148149,
+        "p90": 1.355908152734778,
+        "geo_mean": 1.040615411708729
+       },
+       "ratio_at_turns": {
+        "n": 6,
+        "median": 1.2147627166808754,
+        "p10": 0.8148148148148149,
+        "p90": 1.361685463659148,
+        "geo_mean": 1.0936941686669928
+       },
+       "loss_ratio": {
+        "n": 6,
+        "median": 0.8502232785940651,
+        "p10": 0.7223372440763745,
+        "p90": 1.4294068504594821,
+        "geo_mean": 0.9519050122325016
+       },
+       "est": 29.0,
+       "realised": 28.73015873015873,
+       "loss_est": 5.4,
+       "loss_actual": 5.253968253968254,
+       "survive": {
+        "n": 0,
+        "median": null,
+        "mean": null,
+        "p10": null,
+        "p90": null,
+        "median_abs": null,
+        "mean_abs": null,
+        "within": null,
+        "over": null,
+        "under": null
+       },
+       "enough": {
+        "won": 4,
+        "lost": 0
+       }
+      },
+      "lost": {
+       "fights": 5,
+       "clocked": 5,
+       "won": 0,
+       "ratio": {
+        "n": 5,
+        "median": 0.7102272727272727,
+        "p10": 0.5041804511278195,
+        "p90": 1.0472039072039072,
+        "geo_mean": 0.7177150235743766
+       },
+       "ratio_at_turns": {
+        "n": 5,
+        "median": 0.7102272727272727,
+        "p10": 0.4952573742047426,
+        "p90": 1.0220861678004536,
+        "geo_mean": 0.7016304564450544
+       },
+       "loss_ratio": {
+        "n": 5,
+        "median": 1.0112359550561798,
+        "p10": 0.7998293540462215,
+        "p90": 1.5984678089941249,
+        "geo_mean": 1.069633819699928
+       },
+       "est": 30.0,
+       "realised": 22.857142857142858,
+       "loss_est": 8.3,
+       "loss_actual": 8.777777777777779,
+       "survive": {
+        "n": 5,
+        "median": 0.0,
+        "mean": 1.4,
+        "p10": -2.0,
+        "p90": 6.4,
+        "median_abs": 2.0,
+        "mean_abs": 3.0,
+        "within": 0.4,
+        "over": 0.2,
+        "under": 0.4
+       },
+       "enough": {
+        "won": 0,
+        "lost": 1
+       }
+      }
+     }
+    ]
+   ],
+   "worst": [
+    [
+     "A8",
+     [
+      {
+       "run_id": "D3X1T7KBGK5T",
+       "ascension": 8,
+       "act": 3,
+       "floor": 48,
+       "fight_no": 21,
+       "encounter": "TEST_SUBJECT",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 68,
+       "last_hp": 6,
+       "turns": 8,
+       "dealt": 111,
+       "realised": 13.875,
+       "loss_actual": 8.5,
+       "boss": "TEST_SUBJECT",
+       "est": 38,
+       "est_at_turns": 35,
+       "need": 104,
+       "gap": 66,
+       "enough": false,
+       "clock_turns": 15,
+       "boss_hp": 636,
+       "ratio": 0.3651315789473684,
+       "ratio_at_turns": 0.3964285714285714,
+       "loss_est": 8.3,
+       "survive_est": 8,
+       "loss_ratio": 1.0240963855421685,
+       "survive_actual": 8,
+       "survive_err": 0
+      },
+      {
+       "run_id": "5LRZ7HJ7YGSY",
+       "ascension": 8,
+       "act": 3,
+       "floor": 48,
+       "fight_no": 25,
+       "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 57,
+       "last_hp": 1,
+       "turns": 6,
+       "dealt": 58,
+       "realised": 9.666666666666666,
+       "loss_actual": 9.5,
+       "boss": "QUEEN",
+       "est": 25,
+       "est_at_turns": 26,
+       "need": 120,
+       "gap": 95,
+       "enough": false,
+       "clock_turns": 4,
+       "boss_hp": 479,
+       "ratio": 0.38666666666666666,
+       "ratio_at_turns": 0.37179487179487175,
+       "loss_est": 11.7,
+       "survive_est": 4,
+       "loss_ratio": 0.811965811965812,
+       "survive_actual": 6,
+       "survive_err": -2
+      },
+      {
+       "run_id": "VQKX9AD1YHKS",
+       "ascension": 8,
+       "act": 3,
+       "floor": 48,
+       "fight_no": 22,
+       "encounter": "TEST_SUBJECT",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 71,
+       "last_hp": 2,
+       "turns": 7,
+       "dealt": 111,
+       "realised": 15.857142857142858,
+       "loss_actual": 10.142857142857142,
+       "boss": "TEST_SUBJECT",
+       "est": 38,
+       "est_at_turns": 32,
+       "need": 104,
+       "gap": 66,
+       "enough": false,
+       "clock_turns": 15,
+       "boss_hp": 636,
+       "ratio": 0.41729323308270677,
+       "ratio_at_turns": 0.4955357142857143,
+       "loss_est": 8.3,
+       "survive_est": 8,
+       "loss_ratio": 1.2220309810671255,
+       "survive_actual": 7,
+       "survive_err": 1
+      },
+      {
+       "run_id": "69HWH6MD1S34",
+       "ascension": 8,
+       "act": 2,
+       "floor": 33,
+       "fight_no": 15,
+       "encounter": "THE_INSATIABLE",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 33,
+       "last_hp": 17,
+       "turns": 5,
+       "dealt": 67,
+       "realised": 13.4,
+       "loss_actual": 6.6,
+       "boss": "THE_INSATIABLE",
+       "est": 30,
+       "est_at_turns": 32,
+       "need": 85,
+       "gap": 55,
+       "enough": false,
+       "clock_turns": 4,
+       "boss_hp": 341,
+       "ratio": 0.44666666666666666,
+       "ratio_at_turns": 0.41875,
+       "loss_est": 7.8,
+       "survive_est": 4,
+       "loss_ratio": 0.8461538461538461,
+       "survive_actual": 5,
+       "survive_err": -1
+      },
+      {
+       "run_id": "Y0CWCD0C03FL",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 7,
+       "encounter": "WATERFALL_GIANT",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 80,
+       "last_hp": 2,
+       "turns": 21,
+       "dealt": 250,
+       "realised": 11.904761904761905,
+       "loss_actual": 3.8095238095238093,
+       "boss": "WATERFALL_GIANT",
+       "est": 24,
+       "est_at_turns": 24,
+       "need": 23,
+       "gap": 0,
+       "enough": true,
+       "clock_turns": 12,
+       "boss_hp": 270,
+       "ratio": 0.49603174603174605,
+       "ratio_at_turns": 0.49603174603174605,
+       "loss_est": 3.8,
+       "survive_est": 21,
+       "loss_ratio": 1.0025062656641603,
+       "survive_actual": 21,
+       "survive_err": 0
+      },
+      {
+       "run_id": "FSPKJAYY3ET6",
+       "ascension": 8,
+       "act": 3,
+       "floor": 48,
+       "fight_no": 21,
+       "encounter": "TEST_SUBJECT",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 60,
+       "last_hp": 18,
+       "turns": 4,
+       "dealt": 111,
+       "realised": 27.75,
+       "loss_actual": 15.0,
+       "boss": "TEST_SUBJECT",
+       "est": 55,
+       "est_at_turns": 40,
+       "need": 104,
+       "gap": 49,
+       "enough": false,
+       "clock_turns": 13,
+       "boss_hp": 636,
+       "ratio": 0.5045454545454545,
+       "ratio_at_turns": 0.69375,
+       "loss_est": 8.3,
+       "survive_est": 7,
+       "loss_ratio": 1.8072289156626504,
+       "survive_actual": 4,
+       "survive_err": 3
+      },
+      {
+       "run_id": "VNWR16YEJASM",
+       "ascension": 8,
+       "act": 2,
+       "floor": 33,
+       "fight_no": 15,
+       "encounter": "THE_INSATIABLE",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 76,
+       "last_hp": 6,
+       "turns": 9,
+       "dealt": 156,
+       "realised": 17.333333333333332,
+       "loss_actual": 8.444444444444445,
+       "boss": "THE_INSATIABLE",
+       "est": 33,
+       "est_at_turns": 33,
+       "need": 43,
+       "gap": 10,
+       "enough": false,
+       "clock_turns": 8,
+       "boss_hp": 341,
+       "ratio": 0.5252525252525252,
+       "ratio_at_turns": 0.5252525252525252,
+       "loss_est": 7.8,
+       "survive_est": 9,
+       "loss_ratio": 1.0826210826210827,
+       "survive_actual": 9,
+       "survive_err": 0
+      },
+      {
+       "run_id": "VG7HWJRX44RQ",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 6,
+       "encounter": "SOUL_FYSH",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 80,
+       "last_hp": 5,
+       "turns": 17,
+       "dealt": 181,
+       "realised": 10.647058823529411,
+       "loss_actual": 4.705882352941177,
+       "boss": "SOUL_FYSH",
+       "est": 20,
+       "est_at_turns": 20,
+       "need": 18,
+       "gap": 0,
+       "enough": true,
+       "clock_turns": 12,
+       "boss_hp": 221,
+       "ratio": 0.5323529411764706,
+       "ratio_at_turns": 0.5323529411764706,
+       "loss_est": 4.5,
+       "survive_est": 17,
+       "loss_ratio": 1.0457516339869282,
+       "survive_actual": 17,
+       "survive_err": 0
+      },
+      {
+       "run_id": "64ZBJGP6MYZ3",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 8,
+       "encounter": "VANTOM",
+       "outcome": "died",
+       "won": false,
+       "inferred": false,
+       "entry_hp": 80,
+       "last_hp": 15,
+       "turns": 11,
+       "dealt": 170,
+       "realised": 15.454545454545455,
+       "loss_actual": 7.2727272727272725,
+       "boss": "VANTOM",
+       "est": 29,
+       "est_at_turns": 29,
+       "need": 27,
+       "gap": 0,
+       "enough": true,
+       "clock_turns": 11,
+       "boss_hp": 302,
+       "ratio": 0.5329153605015674,
+       "ratio_at_turns": 0.5329153605015674,
+       "loss_est": 7,
+       "survive_est": 11,
+       "loss_ratio": 1.0389610389610389,
+       "survive_actual": 11,
+       "survive_err": 0
+      },
+      {
+       "run_id": "RWWGRRYKD6LT",
+       "ascension": 8,
+       "act": 1,
+       "floor": 17,
+       "fight_no": 10,
+       "encounter": "VANTOM",
+       "outcome": "won",
+       "won": true,
+       "inferred": false,
+       "entry_hp": 86,
+       "last_hp": 8,
+       "turns": 14,
+       "dealt": 183,
+       "realised": 13.071428571428571,
+       "loss_actual": 5.571428571428571,
+       "boss": "VANTOM",
+       "est": 24,
+       "est_at_turns": 24,
+       "need": 27,
+       "gap": 3,
+       "enough": false,
+       "clock_turns": 11,
+       "boss_hp": 298,
+       "ratio": 0.5446428571428571,
+       "ratio_at_turns": 0.5446428571428571,
+       "loss_est": 7,
+       "survive_est": 12,
+       "loss_ratio": 0.7959183673469388,
+       "survive_actual": null,
+       "survive_err": null
+      }
+     ]
+    ]
+   ],
+   "bosses": [
+    [
+     "A8",
+     [
+      [
+       "KNOWLEDGE_DEMON",
+       {
+        "fights": 11,
+        "clocked": 11,
+        "won": 6,
+        "ratio": {
+         "n": 11,
+         "median": 1.303921568627451,
+         "p10": 0.8426573426573427,
+         "p90": 1.6419753086419755,
+         "geo_mean": 1.1816574700892228
+        },
+        "ratio_at_turns": {
+         "n": 11,
+         "median": 1.303921568627451,
+         "p10": 0.8763636363636365,
+         "p90": 1.6419753086419755,
+         "geo_mean": 1.2138391265268749
+        },
+        "loss_ratio": {
+         "n": 11,
+         "median": 0.782608695652174,
+         "p10": 0.6418219461697723,
+         "p90": 1.1594202898550725,
+         "geo_mean": 0.850348914245621
+        },
+        "est": 32.0,
+        "realised": 39.9,
+        "loss_est": 6.9,
+        "loss_actual": 5.4,
+        "survive": {
+         "n": 5,
+         "median": -3.0,
+         "mean": -2.8,
+         "p10": -6.6,
+         "p90": 0.6000000000000001,
+         "median_abs": 3.0,
+         "mean_abs": 3.2,
+         "within": 0.4,
+         "over": 0.0,
+         "under": 0.6
+        },
+        "enough": {
+         "won": 1,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "WATERFALL_GIANT",
+       {
+        "fights": 9,
+        "clocked": 9,
+        "won": 3,
+        "ratio": {
+         "n": 9,
+         "median": 0.7142857142857143,
+         "p10": 0.558976464148878,
+         "p90": 1.0100840336134453,
+         "geo_mean": 0.7506605326143816
+        },
+        "ratio_at_turns": {
+         "n": 9,
+         "median": 0.7352941176470589,
+         "p10": 0.558976464148878,
+         "p90": 1.0100840336134453,
+         "geo_mean": 0.7556614358553483
+        },
+        "loss_ratio": {
+         "n": 9,
+         "median": 1.4661654135338347,
+         "p10": 0.9511278195488722,
+         "p90": 1.915311004784689,
+         "geo_mean": 1.3859214180521613
+        },
+        "est": 29.0,
+        "realised": 22.727272727272727,
+        "loss_est": 3.8,
+        "loss_actual": 5.571428571428571,
+        "survive": {
+         "n": 6,
+         "median": 4.0,
+         "mean": 3.6666666666666665,
+         "p10": -2.5,
+         "p90": 9.5,
+         "median_abs": 5.5,
+         "mean_abs": 5.333333333333333,
+         "within": 0.16666666666666666,
+         "over": 0.6666666666666666,
+         "under": 0.16666666666666666
+        },
+        "enough": {
+         "won": 3,
+         "lost": 4
+        }
+       }
+      ],
+      [
+       "VANTOM",
+       {
+        "fights": 8,
+        "clocked": 8,
+        "won": 7,
+        "ratio": {
+         "n": 8,
+         "median": 0.7240608853512078,
+         "p10": 0.5411246081504701,
+         "p90": 1.0116508538899431,
+         "geo_mean": 0.7264089412278726
+        },
+        "ratio_at_turns": {
+         "n": 8,
+         "median": 0.6798800661703888,
+         "p10": 0.5411246081504701,
+         "p90": 1.0547916666666666,
+         "geo_mean": 0.7265527645682829
+        },
+        "loss_ratio": {
+         "n": 8,
+         "median": 0.7380952380952381,
+         "p10": 0.5152380952380953,
+         "p90": 0.9688311688311687,
+         "geo_mean": 0.7000907737138393
+        },
+        "est": 30.0,
+        "realised": 19.316666666666666,
+        "loss_est": 7.0,
+        "loss_actual": 5.166666666666666,
+        "survive": {
+         "n": 1,
+         "median": 0.0,
+         "mean": 0.0,
+         "p10": 0.0,
+         "p90": 0.0,
+         "median_abs": 0.0,
+         "mean_abs": 0.0,
+         "within": 1.0,
+         "over": 0.0,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 3,
+         "lost": 1
+        }
+       }
+      ],
+      [
+       "CEREMONIAL_BEAST",
+       {
+        "fights": 8,
+        "clocked": 8,
+        "won": 6,
+        "ratio": {
+         "n": 8,
+         "median": 1.2504545454545455,
+         "p10": 0.7537121212121212,
+         "p90": 1.6633552631578947,
+         "geo_mean": 1.1582139763755752
+        },
+        "ratio_at_turns": {
+         "n": 8,
+         "median": 1.2192640692640693,
+         "p10": 0.7464492753623189,
+         "p90": 1.5829166666666667,
+         "geo_mean": 1.1214765382176266
+        },
+        "loss_ratio": {
+         "n": 8,
+         "median": 0.784435261707989,
+         "p10": 0.48106060606060613,
+         "p90": 1.0723484848484848,
+         "geo_mean": 0.7321055619669562
+        },
+        "est": 20.5,
+        "realised": 25.009090909090908,
+        "loss_est": 6.6,
+        "loss_actual": 5.177272727272728,
+        "survive": {
+         "n": 2,
+         "median": 1.0,
+         "mean": 1.0,
+         "p10": -0.6,
+         "p90": 2.6,
+         "median_abs": 2.0,
+         "mean_abs": 2.0,
+         "within": 0.5,
+         "over": 0.5,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 1,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "KAISER_CRAB",
+       {
+        "fights": 8,
+        "clocked": 8,
+        "won": 2,
+        "ratio": {
+         "n": 8,
+         "median": 0.8128607503607503,
+         "p10": 0.6845274952086098,
+         "p90": 1.1488549075391181,
+         "geo_mean": 0.8561522048332857
+        },
+        "ratio_at_turns": {
+         "n": 8,
+         "median": 0.7976511359260685,
+         "p10": 0.6763157894736842,
+         "p90": 1.0844517543859649,
+         "geo_mean": 0.83528106223588
+        },
+        "loss_ratio": {
+         "n": 8,
+         "median": 1.017478152309613,
+         "p10": 0.6879213483146067,
+         "p90": 1.5013376136971643,
+         "geo_mean": 0.9500428904003744
+        },
+        "est": 37.5,
+        "realised": 32.702380952380956,
+        "loss_est": 8.9,
+        "loss_actual": 9.055555555555555,
+        "survive": {
+         "n": 6,
+         "median": 0.0,
+         "mean": 0.5,
+         "p10": -1.0,
+         "p90": 2.5,
+         "median_abs": 1.0,
+         "mean_abs": 1.1666666666666667,
+         "within": 0.5,
+         "over": 0.3333333333333333,
+         "under": 0.16666666666666666
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "SOUL_FYSH",
+       {
+        "fights": 8,
+        "clocked": 8,
+        "won": 6,
+        "ratio": {
+         "n": 8,
+         "median": 0.6876352813852814,
+         "p10": 0.5930392156862745,
+         "p90": 0.916992404509936,
+         "geo_mean": 0.7131015246864428
+        },
+        "ratio_at_turns": {
+         "n": 8,
+         "median": 0.6876352813852814,
+         "p10": 0.5930392156862745,
+         "p90": 1.0061053077357425,
+         "geo_mean": 0.7362836753310964
+        },
+        "loss_ratio": {
+         "n": 8,
+         "median": 1.0885323826500297,
+         "p10": 0.818954248366013,
+         "p90": 1.2222222222222223,
+         "geo_mean": 1.020643114663717
+        },
+        "est": 22.5,
+        "realised": 15.785714285714286,
+        "loss_est": 4.5,
+        "loss_actual": 4.898395721925134,
+        "survive": {
+         "n": 2,
+         "median": 1.0,
+         "mean": 1.0,
+         "p10": 0.2,
+         "p90": 1.8,
+         "median_abs": 1.0,
+         "mean_abs": 1.0,
+         "within": 0.5,
+         "over": 0.5,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 6,
+         "lost": 2
+        }
+       }
+      ],
+      [
+       "THE_INSATIABLE",
+       {
+        "fights": 7,
+        "clocked": 7,
+        "won": 1,
+        "ratio": {
+         "n": 7,
+         "median": 0.703030303030303,
+         "p10": 0.49381818181818177,
+         "p90": 1.3241269841269843,
+         "geo_mean": 0.7843052977873038
+        },
+        "ratio_at_turns": {
+         "n": 7,
+         "median": 0.7999999999999999,
+         "p10": 0.48113636363636364,
+         "p90": 1.3241269841269843,
+         "geo_mean": 0.7836395532737708
+        },
+        "loss_ratio": {
+         "n": 7,
+         "median": 1.0826210826210827,
+         "p10": 0.9318681318681319,
+         "p90": 1.567521367521368,
+         "geo_mean": 1.1418872818390975
+        },
+        "est": 33.0,
+        "realised": 23.2,
+        "loss_est": 7.8,
+        "loss_actual": 8.444444444444445,
+        "survive": {
+         "n": 6,
+         "median": 0.0,
+         "mean": 1.0,
+         "p10": -0.5,
+         "p90": 3.5,
+         "median_abs": 0.5,
+         "mean_abs": 1.3333333333333333,
+         "within": 0.8333333333333334,
+         "over": 0.16666666666666666,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "LAGAVULIN_MATRIARCH",
+       {
+        "fights": 7,
+        "clocked": 7,
+        "won": 6,
+        "ratio": {
+         "n": 7,
+         "median": 1.0787037037037037,
+         "p10": 0.8106323501060343,
+         "p90": 1.54911231884058,
+         "geo_mean": 1.0941612293155274
+        },
+        "ratio_at_turns": {
+         "n": 7,
+         "median": 1.1256038647342996,
+         "p10": 0.8106323501060343,
+         "p90": 1.5798106060606063,
+         "geo_mean": 1.1078467492722515
+        },
+        "loss_ratio": {
+         "n": 7,
+         "median": 0.753968253968254,
+         "p10": 0.4338624338624339,
+         "p90": 0.9881969881969883,
+         "geo_mean": 0.7021157237504777
+        },
+        "est": 21.0,
+        "realised": 25.88888888888889,
+        "loss_est": 6.3,
+        "loss_actual": 4.75,
+        "survive": {
+         "n": 1,
+         "median": -1.0,
+         "mean": -1.0,
+         "p10": -1.0,
+         "p90": -1.0,
+         "median_abs": 1.0,
+         "mean_abs": 1.0,
+         "within": 1.0,
+         "over": 0.0,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 4,
+         "lost": 1
+        }
+       }
+      ],
+      [
+       "THE_KIN",
+       {
+        "fights": 5,
+        "clocked": 5,
+        "won": 2,
+        "ratio": {
+         "n": 5,
+         "median": 0.8035714285714285,
+         "p10": 0.7706727272727273,
+         "p90": 0.8593013749535487,
+         "geo_mean": 0.8128114871288855
+        },
+        "ratio_at_turns": {
+         "n": 5,
+         "median": 0.8035714285714285,
+         "p10": 0.7706727272727273,
+         "p90": 0.8593013749535487,
+         "geo_mean": 0.8128114871288855
+        },
+        "loss_ratio": {
+         "n": 5,
+         "median": 0.7473684210526316,
+         "p10": 0.39291866028708133,
+         "p90": 0.9196324143692565,
+         "geo_mean": 0.6181637615661286
+        },
+        "est": 24.0,
+        "realised": 19.9,
+        "loss_est": 9.5,
+        "loss_actual": 7.1,
+        "survive": {
+         "n": 3,
+         "median": -3.0,
+         "mean": -2.6666666666666665,
+         "p10": -3.8,
+         "p90": -1.4,
+         "median_abs": 3.0,
+         "mean_abs": 2.6666666666666665,
+         "within": 0.3333333333333333,
+         "over": 0.0,
+         "under": 0.6666666666666666
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "TEST_SUBJECT",
+       {
+        "fights": 3,
+        "clocked": 3,
+        "won": 0,
+        "ratio": {
+         "n": 3,
+         "median": 0.41729323308270677,
+         "p10": 0.3755639097744361,
+         "p90": 0.48709501025290497,
+         "geo_mean": 0.4252036772786954
+        },
+        "ratio_at_turns": {
+         "n": 3,
+         "median": 0.4955357142857143,
+         "p10": 0.41625,
+         "p90": 0.6541071428571429,
+         "geo_mean": 0.514613254737029
+        },
+        "loss_ratio": {
+         "n": 3,
+         "median": 1.2220309810671255,
+         "p10": 1.0636833046471599,
+         "p90": 1.6901893287435454,
+         "geo_mean": 1.3126393081476098
+        },
+        "est": 38.0,
+        "realised": 15.857142857142858,
+        "loss_est": 8.3,
+        "loss_actual": 10.142857142857142,
+        "survive": {
+         "n": 3,
+         "median": 1.0,
+         "mean": 1.3333333333333333,
+         "p10": 0.2,
+         "p90": 2.6,
+         "median_abs": 1.0,
+         "mean_abs": 1.3333333333333333,
+         "within": 0.6666666666666666,
+         "over": 0.3333333333333333,
+         "under": 0.0
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "QUEEN",
+       {
+        "fights": 3,
+        "clocked": 3,
+        "won": 1,
+        "ratio": {
+         "n": 3,
+         "median": 0.8333333333333333,
+         "p10": 0.476,
+         "p90": 1.2307936507936508,
+         "geo_mean": 0.7539681249908176
+        },
+        "ratio_at_turns": {
+         "n": 3,
+         "median": 0.7657657657657657,
+         "p10": 0.4505890505890505,
+         "p90": 1.2172801372801372,
+         "geo_mean": 0.7234928948556681
+        },
+        "loss_ratio": {
+         "n": 3,
+         "median": 0.811965811965812,
+         "p10": 0.7094017094017094,
+         "p90": 0.9145299145299146,
+         "geo_mean": 0.8051613092775077
+        },
+        "est": 34.0,
+        "realised": 28.333333333333332,
+        "loss_est": 11.7,
+        "loss_actual": 9.5,
+        "survive": {
+         "n": 2,
+         "median": -1.5,
+         "mean": -1.5,
+         "p10": -1.9,
+         "p90": -1.1,
+         "median_abs": 1.5,
+         "mean_abs": 1.5,
+         "within": 0.5,
+         "over": 0.0,
+         "under": 0.5
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ],
+      [
+       "AEONGLASS",
+       {
+        "fights": 2,
+        "clocked": 2,
+        "won": 0,
+        "ratio": {
+         "n": 2,
+         "median": 0.9913461538461538,
+         "p10": 0.901565934065934,
+         "p90": 1.0811263736263734,
+         "geo_mean": 0.984973443529519
+        },
+        "ratio_at_turns": {
+         "n": 2,
+         "median": 0.9409218859957776,
+         "p10": 0.8412456016889515,
+         "p90": 1.0405981703026037,
+         "geo_mean": 0.9326360452838515
+        },
+        "loss_ratio": {
+         "n": 2,
+         "median": 0.8777969018932874,
+         "p10": 0.8089500860585197,
+         "p90": 0.946643717728055,
+         "geo_mean": 0.873568161132497
+        },
+        "est": 27.0,
+        "realised": 26.878571428571426,
+        "loss_est": 8.3,
+        "loss_actual": 7.285714285714286,
+        "survive": {
+         "n": 2,
+         "median": -1.5,
+         "mean": -1.5,
+         "p10": -1.9,
+         "p90": -1.1,
+         "median_abs": 1.5,
+         "mean_abs": 1.5,
+         "within": 0.5,
+         "over": 0.0,
+         "under": 0.5
+        },
+        "enough": {
+         "won": 0,
+         "lost": 0
+        }
+       }
+      ]
+     ]
+    ]
+   ]
+  }
+ },
+ "groups": {
+  "baseline": [
+   "64ZBJGP6MYZ3",
+   "NZWRZWY0URJJ",
+   "TEK4MLSEGC4P",
+   "ERPHN3SRCRC3",
+   "H3E7XSQ8JRY8",
+   "02L476J8QWGH",
+   "D3X1T7KBGK5T",
+   "7NMP7ZZ0ME28",
+   "J300CA69899X",
+   "YCWNUMAEW849",
+   "RA3QYBLN7RJF",
+   "UBLVBA0D1QXD",
+   "2WNTQHYY4GAD",
+   "SFCEH58GXVT9",
+   "QZQU8860HG2F",
+   "JM7B0D40WCRQ",
+   "V1MF91VL7A2G"
+  ],
+  "V2": [
+   "4LC3YKCZV218",
+   "LMTA6JC86RCC",
+   "63CP940HCKAL",
+   "JUXB9P5BGATV",
+   "69HWH6MD1S34",
+   "LXB3B2WT9E0W",
+   "GG0Y0TJ2JXAR",
+   "N7SAK31B9ZZZ",
+   "FSPKJAYY3ET6",
+   "EZ2LP1P5VRPT",
+   "FA82FQHSJG2F",
+   "YKFWDENYQ6H8"
+  ],
+  "V3-pre": [
+   "Z6AMPPWHQ5CV",
+   "VQKX9AD1YHKS"
+  ],
+  "V3": [
+   "VNWR16YEJASM",
+   "981WMX8MQ7DK",
+   "0B5YKJFM0E8B",
+   "WXMBVL6ZJ000",
+   "RWWGRRYKD6LT",
+   "WCC7RMRLWLZK",
+   "RBJ402TKQZ6F",
+   "2CCM6XK4PB37",
+   "Y0CWCD0C03FL",
+   "Y3XT9EBS7U8B",
+   "6189FSNEN1MZ",
+   "VG7HWJRX44RQ"
+  ],
+  "V3.route-review": [
+   "RRMYC7MCSYX8",
+   "5LRZ7HJ7YGSY",
+   "5PHF3ML3XMJN",
+   "UNRLW0W3XWLD",
+   "YVYZ6QHA85FN"
+  ]
+ }
+}

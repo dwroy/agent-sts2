@@ -21,6 +21,7 @@
 
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
+import type { ActionExpect } from "../act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
@@ -1238,6 +1239,32 @@ function lineDone(memo: CombatPlanMemo, combat: Record<string, unknown>, availab
   return memo.remaining.length === 0 && memo.via !== "code" && available.includes("end_turn") && !bool(combat["end_turn_will_kill_player"]);
 }
 
+/**
+ * A chosen line's next step as the execution gate checks it (act/identity.ts): the card (or the potion) the line
+ * chose, the enemy at its target index when the line was chosen (memo.enemies), the line's turn, and the board the
+ * line expected before this step: its hand and its living enemies. The hand is left out when the line accepts a
+ * changed one (resumed after a card choice, after Blessing of the Forge: the upgrade is not checked either); after
+ * Liquid Memories it holds the card taken. `now` is the hand the step was matched on.
+ */
+function lineStepExpect(memo: CombatPlanMemo, step: Step, now: string): ActionExpect {
+  const potion = step.cardId.startsWith("POTION:") ? step.cardId.split(":")[1] ?? "" : null;
+  const loose = memo.afterSelection === true || memo.upgradeAll === true;
+  const hand = memo.expectedHand === now ? memo.expectedHand : memo.take !== undefined && withCard(memo.expectedHand, memo.take) === now ? now : null;
+  // memo.enemies: "index:enemy_id" of the living enemies when the line was chosen.
+  const aimed = step.target === null ? undefined : (memo.enemies ?? "").split("|").find((entry) => entry !== "" && Number(entry.slice(0, entry.indexOf(":"))) === step.target);
+  const target = aimed === undefined ? undefined : aimed.slice(aimed.indexOf(":") + 1);
+  return {
+    from: "line",
+    ...(potion !== null
+      ? { potion: { id: potion } }
+      : { card: { id: step.pileCard?.cardId ?? step.cardId, ...(loose ? {} : { upgraded: step.pileCard?.upgraded ?? step.upgraded }) } }),
+    ...(target ? { target: { id: target } } : {}),
+    ...(memo.turn !== null ? { turn: memo.turn } : {}),
+    ...(hand !== null && !loose ? { hand } : {}),
+    ...(memo.enemies !== undefined ? { enemies: memo.enemies } : {}),
+  };
+}
+
 /** Living enemies as "index:enemy_id", in order. */
 export function livingEnemySignature(raw: Record<string, unknown>): string {
   return asArray(asRecord(raw["combat"])["enemies"])
@@ -1482,7 +1509,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
   if (memo && asExpected && memo.remaining.length > 0) {
     const next = memo.remaining[0]!;
-    const intent = intentFor(next, hand);
+    // What this step is to the execution gate (V4 M3): the card or potion the line chose, the enemy it aimed at
+    // then, the turn, and the hand the line expected here, checked again on the state the step is sent to.
+    const found = intentFor(next, hand);
+    const intent = found ? { ...found, expect: lineStepExpect(memo, next, handSignature(hand)) } : null;
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);

@@ -1,6 +1,6 @@
 # 评估指标（tools/eval/metrics.py）
 
-V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Dai 决定上线。脚本建在日志库上（docs/logdb.md），不读 JSONL、不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。
+V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Dai 决定上线。脚本建在日志库上（docs/logdb.md），不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。§7 是「眼」的预测对实际（tools/eval/calibration.py），第一份：experiments/eval/calibration-2026-09-30.md；它的三个摘要也是版本表的三行。
 
 ## 1. 用法
 
@@ -13,8 +13,8 @@ $P tools/eval/metrics.py --group-by commit --per-run           # 按提交号，
 $P tools/eval/metrics.py --json > out.json                     # 每局的数和每组的汇总
 ```
 
-- 选项：`--ascension N`（可重复）、`--since / --until`（按开局时间，ISO；不带时区按 UTC，例如 `2026-09-29T21:26+08:00` 是本地时间）、`--group-by version|family|commit|ascension|day`（默认 version；day 按本地日期 UTC+8）、`--md`、`--json`、`--per-run`（附每局一行）、`--total`（加一列「全部」）、`--min-n`（默认 10，局数少于它的组和指标标 `*`）、`--no-sync`、`--db / --logs`、`--versions`（版本表）、`--strength-sets`（力量来源清单的 JSON，默认现算，见 §3）。
-- 默认先做一次增量同步（tools/logdb/sync.py），自己 nice 19 + ionice idle，DuckDB 2 线程；A8 + A9 全部 ~1.5 秒。
+- 选项：`--ascension N`（可重复）、`--since / --until`（按开局时间，ISO；不带时区按 UTC，例如 `2026-09-29T21:26+08:00` 是本地时间）、`--group-by version|family|commit|ascension|day`（默认 version；day 按本地日期 UTC+8）、`--md`、`--json`、`--per-run`（附每局一行）、`--total`（加一列「全部」）、`--min-n`（默认 10，局数少于它的组和指标标 `*`）、`--no-sync`、`--db / --logs`、`--versions`（版本表）、`--strength-sets`（力量来源清单的 JSON，默认现算，见 §3）、`--no-calibration`（不算 §7 的三行校准）、`--boss-clocks`（校准用现成的 boss 时钟 JSONL，不跑 tsx）、`--game-data`。
+- 默认先做一次增量同步（tools/logdb/sync.py），自己 nice 19 + ionice idle，DuckDB 2 线程；A9 全部 ~3 秒（其中校准 ~2 秒：按偏移读 decisions.jsonl 的原始行、跑一次 tsx 重算 boss 时钟），`--no-calibration` ~1 秒。
 - **只算已结束的局**：runs.jsonl 里有、states.jsonl 里有帧的局。正在打的局不算（它的指标是半截的）；09-24 那几局没写 runs.jsonl 的也不算。
 
 ## 2. 「代码版本」怎么认
@@ -50,6 +50,7 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 | 一幕精英进场血量 < 78% | 一幕 room = elite 的战斗，第一帧血量 < 0.78 × 最大血量（严格小于：62/80 算，63/80 不算） | 每局次数取均值；另给合计占一幕精英战的比例 |
 | 二幕第一个休息点前死亡 | 分母：有二幕楼层的局。分子：死在二幕的层、且这层低于二幕第一个休息点（floors.room_node = RestSite）的层，或者二幕一个休息点都没到 | 比例；一幕就死的局不进分母，三幕死的不算 |
 | 各阶段通过率 | 过一幕 boss：胜局，或 frames 里出现过二幕（max_act ≥ 2），或一幕 boss 战 outcome = won；过二幕同理；胜局看 runs.victory | 比例，分母是组内全部局 |
+| 校准（三行，§7） | 这局的推演回合、路线投影节点、boss 战（tools/eval/calibration.py 的行） | 组内合并：推演本回合掉血 ±2 内的回合比例；路线投影离计划 2–3 层的中位误差（投影 − 实际）和中位 \|误差\|；boss 时钟实打/估值的中位。回合、节点彼此不独立，不给区间；n < `--min-n` 标 `*` |
 | 大脑调用 | llm_calls（deepseek-reasoning.jsonl + brain.jsonl，按局归属见 docs/logdb.md），**去掉 `duplicate`**（路由器的 DeepSeek 引擎不带工具时，同一次调用两个文件都记）。每局：行数、input（全部提示 token，含缓存命中）、cache_hit、output（含推理）、latency_ms 之和；按引擎分开 | 调用数、耗时对全部局取均值；token 只对**每次调用都有 usage** 的局（deepseek-reasoning 从 2026-09-28 11:03 UTC 起才有 usage，更早的是「—」）；缓存命中率 = 命中合计 ÷ 输入合计；每次调用耗时 = 耗时合计 ÷ 调用合计 |
 
 **力量来源的清单不另造**：tools/eval/strength-sources.ts 调 src/project/deck-profile.ts 的 `strengthSourceIds`，用的就是题面「力量来源」那一项的判断（`isStrengthCard` / `isStrengthRelic` → card-model.ts 的 `givesLastingStrength`，读游戏数据里的牌和遗物文本），在 .cache/game-data.json 上算出 id 清单；metrics.py 每次启动调它一次（~0.3 秒），算不出来就报错，不会拿空清单。当前游戏数据（mod 0.16.2）得到：
@@ -80,4 +81,54 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 ## 6. 测试
 
 - `.cache/logdb-venv/bin/python tests/eval_metrics_test.py`：每个指标的算法用手写的小样本测（boss 在第 9 层也认得出、推断 boss、推断出的 boss 战里喝药不算非 boss、力量来源三类和「只看第一帧」、78% 的边界 62/80 与 63/80、二幕第一个休息点的各种情况、t / Wilson 区间、只对 usage 齐全的局算 token、版本表的祖先关系 / `+dirty` / 按时间兜底 / 消融分组）；有 duckdb 时再把 tests/eval-data（`make-fixture.py` 生成：两局、幕很短、boss 在第 4 层和第 3 层，一局的 boss 节点被写成 Monster）同步进临时库，从视图一直算到分组输出和命令行。没有 duckdb 时只跑算法测试，其余跳过并写明原因。
-- vitest 的 tests/eval.test.ts 调上面的 Python 测试，并测 `strengthSourceIds` 和 strength-sources.ts 的输出（固定的 tests/logged-states/game-data.json）。
+- `.cache/logdb-venv/bin/python tests/eval_calibration_test.py`（§7）：对齐逻辑用手写的小样本测——选中的线（回答、升级、HP 护栏和支配换线、code-fallback 不算）、题面里 hp_lost / 推演文字 / rollout_turns 的解析（随机药水线取均值、超时兜底不算预测）、按「还在打的样本」加权的逐回合累计、预测对到同一回合（下回合第一帧；战斗在本回合结束用结束血量，巨兽爆炸取战后帧、燃烧之血不算；死了是 0；日志缺回合记为对不上）、路线节点对到同一节点（第 i 步必须在计划层 + 1 + i 层走到；离开计划就停；死在路上下一节点记 0）、每个房间的代价、层数分桶、boss 本体的血（同族只算神官、蟹两只钳子、巨兽死后的标记血量）、按进阶/幕/版本分组、metrics 的三个摘要；有 duckdb 时把 tests/calibration-data（`make-fixture.py` 生成：A9 一局走完一份一幕路线计划、重算过的回合、code-fallback 回合、boss 战、二幕死亡；A8 一局升级换线、死在计划路线的精英房）同步进临时库，从视图、原始行一直算到报告、JSON 和 metrics 的三行（boss 时钟用固定的 boss-clocks.jsonl，另用假的重算函数核对传给 tsx 的是 boss 战第一帧的状态）。
+- vitest 的 tests/eval.test.ts 调上面两个 Python 测试，并测 `strengthSourceIds` 和 strength-sources.ts 的输出（固定的 tests/logged-states/game-data.json），以及 boss-clock-recompute.ts 在一个记录下来的 boss 局面（yg3h-f33-t1）上的输出和进程内直接调 `bossClock` / `deckEstimate` 完全一样、认不出的 boss 给 `{key, error}`。
+
+## 7. 校准：预测对实际（tools/eval/calibration.py）
+
+V4 架构 §1「眼」的「预测对实际的偏差记录」（M3）。**只测量，不改任何预测算法**（路线投影、卡牌口径等 A/B/C 等 Dai 讨论后再定）。
+
+### 7.1 用法
+
+```bash
+P=.cache/logdb-venv/bin/python
+$P tools/eval/calibration.py --ascension 9 --md                       # markdown 报告（默认就是 markdown）
+$P tools/eval/calibration.py --ascension 8 --since 2026-09-28T03:12 --md
+$P tools/eval/calibration.py --ascension 9 --json [--rows]            # 汇总、覆盖率、最坏的例子；--rows 附每一行对齐结果
+```
+
+选项和 metrics.py 一样（`--ascension`、`--since/--until`、`--group-by version|family|commit|day`、`--min-n`、`--no-sync`、`--db/--logs/--versions`），另有 `--top`（最坏的例子列几个，默认 10）、`--no-boss`（不算 boss 时钟）、`--boss-clocks FILE`（用现成的 boss-clock-recompute.ts 输出）、`--game-data`。先增量同步，再查日志库；预测本身不在库的列里，按库里的偏移（decisions.off / frames.off）去读 decisions.jsonl、states.jsonl 的那几行，不整读文件。A9 全部约 3 秒。只算已结束的局（同 metrics.py）。
+
+分组：每个进阶一组「全部」，再按幕（一幕/二幕/三幕：推演和 boss 按战斗的幕，路线按计划的幕），再按代码版本（versions.json，和 metrics.py 同一套认法）。误差一律是**预测 − 实际**（HP）：推演为正是多报掉血，路线为正是投影的到达血量比实际高（偏乐观）。每张表给 n、中位误差、平均误差、p10/p90、中位 |误差|、±2 以内、多报 >2、少报 <−2 的比例；n < `--min-n` 标 `*`。
+
+### 7.2 推演（战斗里选中的那条线）
+
+- **预测从哪来**：plan-choice 决策（label `combat/plan-choice*`）题面里每条线的 criteria（decisions.jsonl 的 `questions.plan.criteria`，JSON 字符串）：`hp_lost`（turn solver 的本回合精确值，含敌人回合；随机药水线是分布「mean X [a-b]」，取均值）、`rollout`（「N-turn rollout (S samples): expected further HP loss X …」）、`rollout_turns`（「T1 exact: hp -24 …; T2: hp -6.4 [0-14] …, alive 8/8, won 0/8; …」）。decisions 表只有 rollout_best 等几列，所以按 off 读原始行。
+- **选中的线**：回答的 choice；有升级（`escalation`）用升级的 choice；理由里写了 HP 护栏「playing plan N」或支配换线「plan N … is as good or better on every axis, playing it」的，用换上的 plan N；`code-fallback`（代码用自己的最优线，不写是哪条）和喝药后重算的线（「drink … first, then re-plan」，没有 hp_lost）不算，报告开头列出没对上的回合数和原因。
+- **每回合一条**：这回合最后一次 plan-choice（它的线一直打到回合结束）。回合中重算过（抽到牌、喝了药）的回合照算，另给「只决策一次」的回合的 ±2 比例；A9 1822 个回合里 608 个重算过。
+- **对齐**：决策和状态帧 ts 相同（decisions.ts = frames.ts；2026-09-30 核对：日志里全部 18134 个 plan-choice 决策都对上唯一一个战斗帧，回合和血量都相同），由帧得到 (局, 第几场, 第几回合) 和决策时血量。
+  - 本回合：实际 = 决策时血量 − 下回合第一帧血量（turns 视图的 start_hp）；这回合打完战斗就结束的，减**战斗结束血量** = min(最后一个战斗帧, 战后第一帧)：瀑布巨兽死亡爆炸只出现在战后帧，燃烧之血的战后回血（战后帧更高）不算；死在这场是 0。下回合没有帧、后面却还有回合（日志缺）的，这个 k 记为对不上。
+  - 推演窗口（一般 5 回合，超时降级时更短）：预测 = T1 + Σ 第 k 回合的平均掉血 × 还在打的样本占比（rollout_turns 的均值只对还在打的样本：T2 是全部样本，除非 T1 就赢了或死了；之后是上一回合末「活着 − 已赢」）；实际 = 同样这几个回合的掉血（战斗提前结束按结束血量）。报告另给按 k = 1..5 的累计误差。
+  - 到战斗结束：预测 = expected further HP loss（窗口内加窗口后的模型终值，所以是「到这场结束」，不是 5 回合）；实际 = 决策时血量 − 战斗结束血量。超时兜底（「no rollout … a fallback, not a forecast」）不算预测。
+- **局限**：推演假设的后续打法和实际不同（后面每回合 Jev 重新选线），窗口和到结束的误差里混着策略差异；有复活遗物（蜥蜴尾巴）时 solver 按死亡算掉血，实际被救回（A9 最坏的一条就是这个）；帧只在决策点记，回合最后一个决策之后的自伤算在下回合开头的血量里（本回合的实际掉血仍然对）；09-28 前的决策没有 rollout_turns（窗口为空），更早的没有 rollout（只有本回合）；老数据的「expected further HP loss」可能超过当时血量（GG0Y F33 185.4，之后才截到血量）。
+
+### 7.3 路线投影
+
+- **预测从哪来**：decisions.jsonl 的 `route_plan`（2026-09-28 06:35 起：map/route-plan 开局和改线规划、event/act-plan 先古选项一起定的整幕路线、map/route-change 选牌/休息点复查后的改线），每一步 `hpOnArrival` 是**做计划时最大血量**的比例（截在 0–1）；预测 = hpOnArrival × 做计划时的最大血量（决策 fingerprint 的 maxHp）。同一局同一份路线重复记的只算一次。
+- **对到同一节点**：地图上的选择（choose_map_node 决策对到同 ts 的 MAP 帧，按 option_index 取 map_avail 的节点）给出 (幕, 行, 列) → 走进的层；计划的第 i 步必须在「计划层 + 1 + i」层走到，而且前面每一步都照计划走了——中途改线、走了别的节点就停在那里（之后再走回同一节点也不算）。实际 = 进这个节点时的血量（floors.entry_hp：上一层最后一个地图帧）。
+- **死在路上**：最后走到的节点所在层就是这局的终层、而且没赢（死在那个房间里），计划的下一个节点记 0 血（「死在路上」），这个房间的代价记全部进场血量。
+- **分桶和拆分**：离计划点几层（1、2、3、4–5、6–8、9–12、13+）；计划的第一个节点（离计划 1 层）投影的就是做计划时的血量，只作核对（A8、A9 都是 100% 在 ±2 以内），**汇总从 2 层起**；按到达的节点类型（走廊/精英/问号/休息/商店/宝箱/boss：到达血量的误差是前面所有房间的累积）；每个房间自己的代价（相邻两个节点：投影之差对实际进场血量之差，负数是回血）。
+- **局限**：选牌、休息点的复查**没改线**时，按当时血量重新投影的那份（state.route_review 的 keep）没有落盘（只在 DeepSeek 的题面里，deepseek-reasoning.jsonl 不存题面数据），这里只有改线的那次；按现在的 room-costs.json 离线重算也不是当时写下的数，所以没算。投影在最大血量处截断，最大血量变了（加上限）按做计划时的算；boss 节点的投影含缩放仪开场回血，实际是地图帧上的血量（不含）；休息点投影按回血算，实际锻造了就是误差（「每个房间的代价」里休息点的均值 −16 对投影 −24 就是它）；同一个节点会被多份计划（开局、改线）各投影一次，节点之间不独立。
+
+### 7.4 boss 时钟
+
+- **没有落盘，离线重算**：时钟（act_boss_clock）只作为 facts 在 DeepSeek 的题面里；deepseek-reasoning.jsonl 只存问题文本，decisions.jsonl、run-plans.jsonl 里也没有它的数（run-plans 的理由里偶尔提到）。所以每场 boss 战取**第一个战斗帧**的原始状态（states.jsonl 按 fights.first_off 的偏移读，去掉 agent_view），连同实际进场血量交给 tools/eval/boss-clock-recompute.ts，调 src/strategy/boss-clock.ts 的 `bossClock(state, knowledge, entryHp)`（和 tools/boss-clock-calibrate.ts 一样），**算法不改**。用的是当前工作树的代码和知识数据（monster-db.json、boss-damage.json）以及 .cache/game-data.json，不是那局跑的版本；当时 DeepSeek 看到的是按「预计进场血量」算的，这里用实际进场血量，所以数不一定和当时的题面相同。
+- **boss 战**：和 metrics.py 同一个认法（每幕第一场 Boss 房间的战斗，没有就推断）。
+- **估值** = 时钟的牌组每回合伤害（deck，按时钟自己估的战斗回合数）；另给按实际回合数的估值（deckEstimate(牌组, boss, 实际回合数)）。
+- **实打** = boss 本体掉的血 ÷ 回合数，口径同 tools/boss-fights-extract.py（时钟估值的「11 + 0.92 × 原始估计」就是按它标定的，见 boss-clock.ts ESTIMATE_BASE）：本体 = 第一帧的非 minion 敌人（同族只算神官、女王不算汞合体、帝王蟹两只钳子都算）；赢局按本体的最大血量（最后一击在最后一帧之后），输局按最大血量 − 本体合计的最低血量；回血、复活不加，格挡不算；巨兽死后的标记血量（999999999）当作已死。
+- **掉血/回合** = (进场血量 − 战斗结束血量，死了是 0) ÷ 回合数，对时钟的 hp_loss_per_turn；**可活回合**只在输局里看得到（死的那回合），对时钟的 survivable_turns（估 − 实）。另数时钟报「够」（gap 0）的赢局和输局各几场。
+- **局限**：赢局的回合数含最后不完整的一回合；测试体（三个阶段）的本体血量只按第一帧的第一阶段算（同 boss-fights-extract.py，时钟标定时也把它排除了），它的实打/估值偏低、不能读；一个进阶一幕只有几十场，按 boss 分更少；二幕、三幕的 boss 在 A9 只有 12 场和 1 场。
+
+### 7.5 进版本表的三行（metrics.py）
+
+metrics.py 默认对选中的局跑一遍 calibration（`--no-calibration` 关掉），每局留一个摘要（calibration.run_digest），组内合并成三行：推演本回合掉血 ±2 以内的回合比例；路线投影离计划 2–3 层的中位误差和中位 |误差|；boss 时钟实打/估值的中位。回合、节点、boss 战在组内合并，彼此不独立（同一场战斗的回合、同一局的节点），所以只给 n，不给区间。

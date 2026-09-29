@@ -18,6 +18,7 @@ import {
   type Health,
   type Sts2ErrorPayload,
 } from "./schema.js";
+import type { ActionExpect } from "../act/identity.js";
 
 /** Body of `POST /action`. Only the fields a given action needs should be set. */
 export interface ActionRequest {
@@ -30,6 +31,11 @@ export interface ActionRequest {
   tool?: string;
   command?: string;
   player_id?: string;
+  /**
+   * Not sent (act/dispatch.ts strips it): what the indices pointed at when the action was decided, checked by
+   * the execution gate on the freshest state (act/identity.ts).
+   */
+  expect?: ActionExpect;
 }
 
 /** The mod is not listening, or the connection broke mid-flight. Usually retryable. */

@@ -179,6 +179,8 @@ export interface ScreenMemory {
     /** The potion slot just discarded (its landing is waited for), and the slots still to discard before the option. */
     slot?: number;
     more?: number[];
+    /** The potion ids in `more`'s slots when the option was chosen (the execution gate checks each discard). */
+    moreIds?: string[];
   };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };

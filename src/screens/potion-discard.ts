@@ -17,11 +17,13 @@ import type { Decision, DecisionEnv } from "../project/types.js";
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../util/json.js";
 import type { PickOption, PlanAnswer, PlannedOption } from "./pick.js";
 
-/** A potion that can be discarded here: its belt slot and name. */
+/** A potion that can be discarded here: its belt slot, name and potion id. */
 export interface DiscardSlot {
   index: number;
   name: string;
   description: string;
+  /** The potion's id (the execution gate checks a later discard still drops this potion). */
+  id?: string;
 }
 
 /** An option given together with its "discard first" variant: key suffix of the variant. */
@@ -38,7 +40,7 @@ export function discardableSlots(env: DecisionEnv): DiscardSlot[] {
   return asArray(asRecord(state.run?.raw)["potions"])
     .map(asRecord)
     .filter((slot) => bool(slot["occupied"]) && bool(slot["can_discard"], true) && numOrNull(slot["index"]) !== null)
-    .map((slot) => ({ index: numOrNull(slot["index"])!, name: str(slot["name"], str(slot["potion_id"])), description: str(slot["description"]) }));
+    .map((slot) => ({ index: numOrNull(slot["index"])!, name: str(slot["name"], str(slot["potion_id"])), description: str(slot["description"]), id: str(slot["potion_id"]) }));
 }
 
 /** An option text that gives potion(s) (「获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。」). */
@@ -116,7 +118,9 @@ export function discardVariant(env: DecisionEnv, option: PickOption, then: Disca
       steps: [...chosen.map((index) => `discard potion slot ${index}`), option.key],
       intent: { action: "discard_potion", option_index: first! },
       apply: () => {
-        env.screenMemory.afterDiscard = { ...then, runId, floor, at: Date.now(), slot: first!, more };
+        // The potions the later discards drop, as the answer saw them (the gate checks each slot still holds it).
+        const moreIds = more.map((index) => bySlot.get(index)?.id ?? "");
+        env.screenMemory.afterDiscard = { ...then, runId, floor, at: Date.now(), slot: first!, more, ...(moreIds.some((id) => id !== "") ? { moreIds } : {}) };
       },
       journal: `discarded ${names}, then ${then.title}`,
     };
@@ -195,9 +199,13 @@ export function continueAfterDiscard(env: DecisionEnv, place: string, labelPrefi
   if (!landed && Date.now() - pending.at < AFTER_DISCARD_WAIT_MS) return null;
   // More slots chosen to free (an option giving several potions): the next discard.
   const [nextSlot, ...more] = pending.more ?? [];
+  const [nextId, ...moreIds] = pending.moreIds ?? [];
   if (landed && nextSlot !== undefined && state.available_actions.includes("discard_potion")) {
-    env.screenMemory.afterDiscard = { ...pending, slot: nextSlot, more, at: Date.now() };
-    return { kind: "act", label: `${labelPrefix}/discard-more`, intent: { action: "discard_potion", option_index: nextSlot }, rationale: `freeing potion slot ${nextSlot} too before ${pending.title}, as chosen with the discards` };
+    const { moreIds: _ids, ...kept } = pending;
+    env.screenMemory.afterDiscard = { ...kept, slot: nextSlot, more, at: Date.now(), ...(pending.moreIds ? { moreIds } : {}) };
+    // The potion chosen for this slot when the option was decided: another one there is refused by the gate.
+    const intent: ActionRequest = nextId ? { action: "discard_potion", option_index: nextSlot, expect: { potion: { id: nextId } } } : { action: "discard_potion", option_index: nextSlot };
+    return { kind: "act", label: `${labelPrefix}/discard-more`, intent, rationale: `freeing potion slot ${nextSlot} too before ${pending.title}, as chosen with the discards` };
   }
   env.screenMemory.afterDiscard = undefined;
   const intent = landed ? take(pending.option, pending.title) : null;

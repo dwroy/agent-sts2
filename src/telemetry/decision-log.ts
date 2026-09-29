@@ -25,6 +25,17 @@ export interface DecisionRecord {
   questions?: Record<string, JsonValue>;
   answers?: JsonValue;
   chosen?: JsonValue;
+  /**
+   * What the chosen action's indices pointed at when it was decided (V4 M3 execution gate, act/identity.ts):
+   * {card, target, potion, node, option, turn, hand, from}, the parts that apply.
+   */
+  expect?: JsonValue;
+  /**
+   * The execution gate refused the action (V4 M3): {at: "decision" | "dispatch", kind: "identity" (its indices hold
+   * something else now) | "legality" (only logged at dispatch), reason, expected, actual}. The row's result is
+   * "not dispatched: gate refused …".
+   */
+  gate_reject?: JsonValue;
   rationale: string;
   confidence: number | null;
   fallback: boolean;

@@ -16,7 +16,8 @@ import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/c
 import { boardDamageContext, expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
 import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
-import { sameCard, selectionTask, type DeckTask, type TargetScore } from "./oneshot.js";
+import { sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+import { cardOutcome } from "../knowledge/outcome-facts.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -170,8 +171,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
   }
 
   const entries = deckEntries(state, knowledge);
-  // An enchant screen has no code ranking (PHMV F21: the removal order's "upgraded -8" went to DeepSeek
-  // as "code's ranking for this pick", and it spent 233 s on it): every card scores 0, no rank is shown.
+  // An enchant screen has no code order (PHMV F21: the removal order's "upgraded -8" went to DeepSeek as "code's
+  // ranking for this pick", and it spent 233 s on it): every card scores 0 in the fallback.
   const unranked = kind === "deck_enchant_select";
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
@@ -288,11 +289,24 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // BUILD_DECIDER=deepseek: out-of-combat deck picks (upgrade, remove, transform, add, enchant, choose) are
   // DeepSeek's call; in-combat picks stay with code and Jev.
   if (!deepseekDecides(env) || forThisTurn || isExhaust || onTop) return buildPickDecision(params);
-  const why = SELECTION_WHY[isAdd ? "add" : verb] ?? "code's ranking for this pick";
+  // DeepSeek's view (V4 M2): each card's facts (what an upgrade changes, copies already in the deck for an add) and
+  // our runs' outcome statistics for it; code's order stays the fallback's.
+  const copies = new Map<string, number>();
+  for (const entry of entries) copies.set(entry.card_id, (copies.get(entry.card_id) ?? 0) + 1);
   return buildPickDecision({
     ...params,
-    ...(unranked ? { unranked: true } : {}),
-    options: options.map((option) => ({ ...option, why })),
+    options: options.map((option, at) => {
+      const card = candidates[at]!;
+      const cardId = str(card["card_id"]);
+      return {
+        ...option,
+        facts: {
+          ...(isUpgrade ? { upgrade: upgradePreview(card, knowledge) } : {}),
+          ...(isAdd ? { in_deck: copies.get(cardId) ?? 0 } : {}),
+          outcome_stats: cardOutcome(cardId),
+        },
+      };
+    }),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`, ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
 }
@@ -348,30 +362,21 @@ export function enchantmentNote(env: DecisionEnv): string {
 }
 
 /**
- * Code's ranking of a deck card as the target of a one-shot follow-up (the value the selection screen
- * would give it; screens/oneshot.ts withFollowUp): higher = picked first.
+ * Code's order of a deck card as the target of a one-shot follow-up (the value the selection screen's fallback
+ * would give it; screens/oneshot.ts withFollowUp): higher = picked first. The fallback's only: never shown to DeepSeek.
  */
 export function followUpTargetScore(env: DecisionEnv, task: DeckTask): TargetScore {
   const kind = task === "upgrade" ? "deck_upgrade_select" : task === "remove" ? "deck_card_select" : task === "transform" ? "deck_transform_select" : null;
   return (card) => {
-    if (!kind) return { score: 0, why: `code does not rank cards to ${task}` };
+    if (!kind) return { score: 0 };
     const id = card.identity.card_id;
     const score =
       selectionScore(kind, id, card.type) -
       (task !== "upgrade" && card.identity.upgraded ? 8 : 0) +
       (task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0);
-    return { score, why: SELECTION_WHY[task] ?? "code's ranking" };
+    return { score };
   };
 }
-
-/** What code's value means on each out-of-combat selection (DeepSeek's view). */
-const SELECTION_WHY: Record<string, string> = {
-  upgrade: "upgrade priority: Demon Form, Offering, Bash, Pyre, Corruption … first, then card value; Strikes/Defends 10",
-  remove: "removal order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value; Strength cards -50; run plan removals +40",
-  transform: "transform order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value",
-  add: "card value for the deck (run plan wanted +bonus)",
-  enchant: "no code ranking: code does not know which card an enchantment suits; judge by the enchantment's effect (situation.enchantment) and the card",
-};
 
 /**
  * Code-side preference for deck selection screens (phase 2). Upgrade: the cards whose upgrade matters

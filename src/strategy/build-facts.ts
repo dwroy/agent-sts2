@@ -1,8 +1,9 @@
 /**
  * The run facts DeepSeek gets on every deck-building, route and rest question it decides
  * (BUILD_DECIDER=deepseek; Dai 2026-09-28: "构筑需要ds亲自来…路线选择也应该让ds来决定…休息点也交给deepseek").
- * Code supplies facts, never a hidden choice: the deck, relics with their numbers where they are known,
- * potions, HP and gold, the act boss clock, and DeepSeek's own current run plan.
+ * Code supplies facts, never a hidden choice or a score (V4 M2, docs/v4-build-facts.md): the deck, relics with
+ * their numbers where they are known, potions, HP and gold, the act boss clock and DeepSeek's own current run plan.
+ * A question whose options carry outcome statistics gets their basis note too (screens/pick.ts deepseekPick).
  */
 
 import { fillRelicText } from "../knowledge/relic-values.js";

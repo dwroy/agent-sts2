@@ -23,6 +23,7 @@ import { actStartPlan } from "./act-start.js";
 import { continueAfterDiscard, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 import { isLastEventPage } from "../knowledge/event-pages.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
+import { eventOptionOutcome } from "../knowledge/outcome-facts.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -270,16 +271,22 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const deepseekOptions = options.flatMap((option) => {
     const raw = rawOf(option);
     const hpFacts = raw ? eventHpFacts(eventHpCost(str(raw["description"])), hp, maxHp, forced, fight) : {};
-    return withDiscards({ ...option, why: "code does not score event options", summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } });
+    return withDiscards({ ...option, summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } });
   });
+  // Our runs' outcome statistics per option (outcome-stats.json "events", keyed as the build script keys them: the
+  // option's text_key last segment, else its title), by option key.
+  const optionStats = Object.fromEntries(options.flatMap((option) => {
+    const raw = rawOf(option);
+    return raw ? [[option.key, eventOptionOutcome(eventId, eventStatsKey(raw))]] : [];
+  }));
   const deepseekState = { ...params.state, note: "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out." };
   const facts = buildFacts(env, {
-    event: { id: eventId, title: str(event["title"]) },
+    event: { id: eventId, title: str(event["title"]), option_outcome_stats: optionStats },
     ...eventEnemies(event, ascension),
     ...(forced ? { forced_fight_ahead: forced } : {}),
     ...(lethal.length > 0 ? { left_out_as_lethal: lethal.join("; ") } : {}),
   });
-  const note = `Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call.${discardNote}`;
+  const note = `Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call. facts.event.option_outcome_stats: how our logged runs did after each option, by option key.${discardNote}`;
   // The act's route rides on the event's last question (M2; route-review.ts): not on a page whose every option is
   // logged to open another choice page of this event (knowledge/event-pages.ts).
   const routeBlock = (): ReturnType<typeof routeReviewBlock> => (isLastEventPage(event) ? routeReviewBlock(env, "event", EVENT_NODES) : null);
@@ -334,6 +341,11 @@ export function planEvent(env: DecisionEnv): Decision | null {
 }
 
 export { givesPotion, potionSlotsNeeded } from "./potion-discard.js";
+
+/** An event option's key in outcome-stats.json (tools/build-outcome-stats.py): its text_key's last segment, else its title. */
+export function eventStatsKey(option: Record<string, unknown>): string {
+  return str(option["text_key"]).split(".").at(-1) || str(option["title"]) || "?";
+}
 
 /** The monster-DB entry of each enemy the event's text or options name (an event that starts a fight). */
 function eventEnemies(event: Record<string, unknown>, ascension: number): Record<string, JsonValue> {

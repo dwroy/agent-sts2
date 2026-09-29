@@ -72,7 +72,8 @@ export function deepseekState(state: Json): Json {
   }
   // The card-by-card deck text: facts.deck has every card with the same text (and its id).
   if (typeof out["deck"] === "string") delete out["deck"];
-  // deck_needs (act boss, deck size, AOE/draw/scaling/damage/block counts): facts.act_boss + deck_profile.
+  // deck_needs (act boss, deck size, code's AOE/draw/scaling/damage/block counts): facts.act_boss and deck_profile hold
+  // the facts; the role counts are code's heuristics and stay out (V4 M2: the reward screen no longer sends them).
   if (isObject(out["deck_needs"]) && typeof facts["deck_profile"] === "string" && typeof facts["act_boss"] === "string") delete out["deck_needs"];
   return out;
 }

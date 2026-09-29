@@ -142,6 +142,11 @@ export interface QuestionContext {
   factsCovered?: boolean;
   /** Deck card ids the question offers beyond the screen's own (a one-shot's smith/removal targets). */
   offeredCards?: string[];
+  /**
+   * The question carries its options' outcome statistics itself (V4 M2 build questions, facts.outcome_stats_basis):
+   * the knowledge section leaves its statistics rows out instead of repeating them.
+   */
+  statsCovered?: boolean;
 }
 
 /** What one observed state changed in the journal (see RunJournal.observe). */
@@ -720,7 +725,7 @@ function fightLine(fight: FightRecord, state: GameState): string {
 function renderKnowledge(state: GameState, question: QuestionContext): string {
   if (!state.run) return "";
   try {
-    return knowledgeSlice(state, question.label ?? "", question.criteria ?? {}, question.offeredCards ?? []).text;
+    return knowledgeSlice(state, question.label ?? "", question.criteria ?? {}, question.offeredCards ?? [], !question.statsCovered).text;
   } catch {
     // the knowledge base is advice; the run context stands without it
     return "";

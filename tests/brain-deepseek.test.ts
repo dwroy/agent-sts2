@@ -69,13 +69,14 @@ function brainOf(ds: DeepSeekClient, env: Record<string, string> = {}): { brain:
 
 const rows = (log: string): Record<string, unknown>[] => readFileSync(log, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Record<string, unknown>);
 
-// A card reward as the loop asks it: memory sections in cache order (one empty: dropped), facts in the state.
+// A card reward as the loop asks it: memory sections in cache order (one empty: dropped), facts in the state. The
+// options as V4 M2 renders them: facts only (copies in the deck, our runs' outcome statistics), no code value or rank.
 const memory: Record<string, JsonValue> = { act: "第2幕 boss: 骇鳗", history: "F1 拿了 挑衅", this_floor: "", knowledge: "经验: 格挡不足" };
-const state: Record<string, JsonValue> = { screen: "REWARD", facts: { deck: ["STRIKE", "DEFEND"], hp: "50/80 (62%)" }, run_brief: { act: 2, notes: [] } };
+const state: Record<string, JsonValue> = { screen: "REWARD", facts: { deck: ["STRIKE", "DEFEND"], hp: "50/80 (62%)", outcome_stats_basis: "outcome_stats = A8 数据" }, run_brief: { act: 2, notes: [] } };
 const criteria: Record<string, string | null> = {
-  card0: JSON.stringify({ card: "挑衅", code_value: 73, code_rank: 1, why: "thin on block" }),
-  card1: JSON.stringify({ card: "重刃", code_value: 41, code_rank: 2 }),
-  skip: JSON.stringify({ option: "skip", code_value: 0, code_rank: 3 }),
+  card0: JSON.stringify({ card: "挑衅", type: "Skill", cost: 1, in_deck: 0, outcome_stats: "A8 第2幕 拿了 n=6 过本幕boss 33% 均终层34.5 / 给了没拿 无数据" }),
+  card1: JSON.stringify({ card: "重刃", type: "Attack", cost: 2, in_deck: 0, outcome_stats: "无数据" }),
+  skip: JSON.stringify({ card: "skip", note: "take no card" }),
 };
 const context = { label: "reward/card", memory: { ...memory } };
 
