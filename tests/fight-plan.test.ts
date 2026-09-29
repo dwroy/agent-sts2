@@ -297,7 +297,7 @@ describe("turn planner with a fight plan", () => {
     const ask = planCombatTurn(e) as AskDecision;
     const picked = ask.resolve({ plan: { type: "choice", choice: lethal[0]![0], probabilities: {}, confidence: 0.9, raw: {} } });
     picked.apply?.();
-    expect(JSON.stringify([picked.intent, ...(e.screenMemory.combatPlan?.remaining ?? []), ...(e.screenMemory.pendingDrinks?.steps ?? [])])).toMatch(/use_potion|POTION:FIRE_POTION/);
+    expect(JSON.stringify([picked.intent, ...(e.screenMemory.combatPlan?.remaining ?? [])])).toMatch(/use_potion|POTION:FIRE_POTION/);
   });
 
   it("per-card fallback never offers a card whose HP cost kills us (C2WY F22 T6: Blood Wall at 1 HP)", () => {

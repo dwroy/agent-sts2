@@ -10,7 +10,6 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
-import { fightKey } from "../src/strategy/fight-plan.js";
 import { logged, loggedEnv } from "./logged.js";
 
 const answer = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
@@ -30,33 +29,19 @@ describe("V1MF Toasty Mittens exhaust", () => {
   }
 });
 
-describe("V1MF F33 T4: a chosen line's drink is drunk when the line is cut short", () => {
-  const drink = { cardIndex: -1, cardId: "POTION:POWDERED_DEMISE:0", upgraded: false, name: "potion 消亡粉末", target: 1, targetName: "火箭" };
-
-  it("the logged end-of-turn board with the Demise still pending: drink it, not end the turn", () => {
+describe("V1MF F33 T4: a chosen line's drink is not lost when the line is cut short", () => {
+  it("the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn", () => {
     const fx = logged("v1mf-f33-t4-end");
     expect(fx.decision.rationale).toMatch(/no playable cards/);
-    const env = loggedEnv(fx);
-    // Without a pending drink the Demise is Jev's call (potions are Jev's, Dai 2026-09-28): asked, not drunk.
+    // The drink is Jev's call (potions are Jev's, Dai 2026-09-28): asked again, with the Demise line shown.
     const fight = planCombatTurn(loggedEnv(fx));
-    expect(fight?.kind === "act" && fight.intent.action === "use_potion").toBe(false);
-    env.screenMemory.pendingDrinks = { fight: fightOf(env), turn: env.state.turn ?? null, via: "jev", steps: [drink] };
-    const decision = planCombatTurn(env);
-    if (decision?.kind !== "act") throw new Error("expected an act");
-    expect(decision.label).toBe("combat/plan-potion");
-    expect(decision.intent).toEqual({ action: "use_potion", option_index: 0, target_index: 1 });
-    expect(env.screenMemory.pendingDrinks).toBeUndefined();
+    if (fight?.kind !== "ask") throw new Error(`expected an ask, got ${fight?.kind}`);
+    const plan = fight.questions["plan"];
+    if (plan?.type !== "choice") throw new Error("expected a choice");
+    expect(Object.values(plan.criteria ?? {}).some((text) => /potion 消亡粉末 -> 火箭/.test(String(text)))).toBe(true);
   });
 
-  it("a pending drink from another turn is dropped", () => {
-    const env = loggedEnv(logged("v1mf-f33-t4-end"));
-    env.screenMemory.pendingDrinks = { fight: fightOf(env), turn: (env.state.turn ?? 0) - 1, via: "jev", steps: [drink] };
-    const decision = planCombatTurn(env);
-    expect(decision?.kind === "act" && decision.intent.action === "use_potion").toBe(false);
-    expect(env.screenMemory.pendingDrinks).toBeUndefined();
-  });
-
-  it("choosing a line with a later drink records it (commit), and the cut-short board drinks it", () => {
+  it("choosing a line with a later drink keeps it in the line; the cut-short board re-plans it (XMK1 F33 T3)", () => {
     const fx = logged("v1mf-f33-t4");
     const env = loggedEnv(fx);
     const decision = planCombatTurn(env) as AskDecision;
@@ -67,15 +52,10 @@ describe("V1MF F33 T4: a chosen line's drink is drunk when the line is cut short
     const chosen = Object.entries(plan.criteria).find(([key, text]) => key.startsWith("plan") && /then potion 消亡粉末 -> 火箭/.test(String(text)));
     if (!chosen) throw new Error("the logged line is not offered");
     decision.resolve(answer(chosen[0], 0.67)).apply?.();
-    expect(env.screenMemory.pendingDrinks?.steps.map((step) => step.cardId)).toEqual(["POTION:POWDERED_DEMISE:0"]);
+    expect(env.screenMemory.combatPlan?.remaining.map((step) => step.cardId)).toContain("POTION:POWDERED_DEMISE:0");
     const end = logged("v1mf-f33-t4-end");
     const later = planCombatTurn({ ...loggedEnv(end), screenMemory: env.screenMemory });
-    expect(later?.kind === "act" && later.label).toBe("combat/plan-potion");
-    expect(later?.kind === "act" && later.intent).toEqual({ action: "use_potion", option_index: 0, target_index: 1 });
+    expect(later?.kind === "act" && later.intent.action === "use_potion").toBe(false);
+    expect(later?.kind).toBe("ask");
   });
 });
-
-/** The fight key commit stores with the pending drinks. */
-function fightOf(env: ReturnType<typeof loggedEnv>): string {
-  return fightKey(env.state);
-}
