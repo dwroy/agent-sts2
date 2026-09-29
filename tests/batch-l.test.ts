@@ -7,7 +7,7 @@
 import { describe, expect, it } from "vitest";
 
 import { discardableSlots } from "../src/screens/potion-discard.js";
-import { statuePotionOptions } from "../src/screens/map.js";
+import { planMap, statuePotionOptions } from "../src/screens/map.js";
 import type { PickOption } from "../src/screens/pick.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -46,5 +46,46 @@ describe("3. The discard questions' potion texts have their numbers (5LRZ F37: �
     );
     const slots = discardableSlots(loggedEnv(fx));
     expect(slots.map((slot) => slot.description)).toEqual(["回复你最大生命值的20%。", "获得?(数值未知)点。"]);
+  });
+});
+
+describe("2. White Beast Statue with a full belt: a \"drink it now, then travel\" option for a potion usable on the map, and the Fruit Juice fact (5LRZ F37: Fruit Juice discarded, +5 max HP lost)", () => {
+  it("the options: keep all, discard first, and drink Fruit Juice first (the Vulnerable Potion is combat-only: no drink option)", () => {
+    const { env, nodes, go } = statueBoard();
+    const options = statuePotionOptions(env, nodes)(go);
+    expect(options.map((option) => option.key)).toEqual(["go", "go:discard", "go:drink0"]);
+    const drink = options[2]!;
+    expect(drink.intent).toEqual({ action: "use_potion", option_index: 0 });
+    expect(drink.score).toBe(go.score);
+    expect((drink.summary as Raw)["potion"]).toBe("果汁: 获得5点最大生命值。");
+  });
+
+  it("keep-all says Fruit Juice is drunk by code at the next fight's first decision (its slot is free before the drop), and names the drink option", () => {
+    const { env, nodes, go } = statueBoard();
+    const keep = statuePotionOptions(env, nodes)(go)[0]!;
+    const summary = keep.summary as Raw;
+    expect(summary["fruit_juice"]).toMatch(/code drinks 果汁 \(potion slot 0\) by itself at its first decision of the next fight/);
+    expect(summary["potion_slots"]).toMatch(/option go:discard\), 果汁 is drunk now on the map \(option go:drink0\) or one is drunk in that fight/);
+  });
+
+  it("chosen, it drinks; once the slot shows empty the map travels to the node (map/after-drink)", () => {
+    const { fx, env, nodes, go } = statueBoard();
+    const drink = statuePotionOptions(env, nodes)(go)[2]!;
+    drink.apply!();
+    expect(env.screenMemory.afterDiscard).toMatchObject({ place: "map", option: 0, slot: 0, via: "drink", title: "Monster (row 4, col 6)" });
+    // The next frame: slot 0 empty.
+    const run = fx.state["run"] as Raw;
+    run["potions"] = (run["potions"] as Raw[]).map((potion) => (potion["index"] === 0 ? { ...potion, potion_id: null, name: null, description: null, occupied: false, can_use: false } : potion));
+    const next = loggedEnv(fx, { screenMemory: env.screenMemory });
+    const decision = planMap(next);
+    expect(decision).toMatchObject({ kind: "act", label: "map/after-drink", intent: { action: "choose_map_node", option_index: 0 } });
+  });
+
+  it("no statue: no variant", () => {
+    const { fx, go } = statueBoard();
+    const run = fx.state["run"] as Raw;
+    run["relics"] = (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "WHITE_BEAST_STATUE");
+    const env = loggedEnv(fx);
+    expect(statuePotionOptions(env, [{ index: 0, row: 4, col: 6, type: "Monster" }])(go).map((option) => option.key)).toEqual(["go"]);
   });
 });

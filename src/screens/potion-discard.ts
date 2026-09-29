@@ -49,6 +49,55 @@ export function discardableSlots(env: DecisionEnv): DiscardSlot[] {
     });
 }
 
+/** A "drink this potion, then take the option" variant's key suffix (":drink<slot>"). */
+export const DRINK_SUFFIX = ":drink";
+
+/**
+ * The potions that can be drunk on this screen outside a fight (the game's can_use; no target: Fruit Juice, Blood
+ * Potion …), none when use_potion is not an available action. Drinking one empties its slot as a discard does.
+ */
+export function drinkableSlots(env: DecisionEnv): DiscardSlot[] {
+  const { state } = env;
+  if (state.in_combat || !state.available_actions.includes("use_potion")) return [];
+  return asArray(asRecord(state.run?.raw)["potions"])
+    .map(asRecord)
+    .filter((slot) => bool(slot["occupied"]) && bool(slot["can_use"]) && !bool(slot["requires_target"]) && numOrNull(slot["index"]) !== null)
+    .map((slot) => {
+      const id = str(slot["potion_id"]);
+      return { index: numOrNull(slot["index"])!, name: str(slot["name"], id), description: fillPotionText(id, str(slot["description"]) || env.knowledge.potion(id)?.description || "") };
+    });
+}
+
+/**
+ * The "drink <potion> now, then this option" variant (a White Beast Statue move with a full belt: a potion usable on
+ * the map frees its slot by being drunk, 5LRZ7HJ7YGSY F37 had only "keep all" / "discard first" and Fruit Juice was
+ * discarded). Its value is its option's: code does not rank it. Chosen, it drinks, then takes the option once the slot
+ * shows empty (memory afterDiscard, as a discard).
+ */
+export function drinkVariant(env: DecisionEnv, option: PickOption, then: DiscardThen, slot: DiscardSlot): PickOption {
+  const runId = str(env.state.raw["run_id"]);
+  const floor = env.state.run?.floor ?? null;
+  const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
+  // The option's own one-shot plan would replace the drink as the action played now: a map move has none.
+  const { plan: _plan, jev: _jev, ...plain } = option;
+  return {
+    ...plain,
+    key: `${option.key}${DRINK_SUFFIX}${slot.index}`,
+    label: `drink ${slot.name}, then ${option.label ?? then.title}`,
+    intent: { action: "use_potion", option_index: slot.index },
+    why: `${option.why ?? ""}${option.why ? "; " : ""}drinking frees the slot; code does not rank which potions to drink`,
+    summary: {
+      ...summary,
+      drink_first: `drink ${slot.name} (potion slot ${slot.index}) now, on this screen, then this option`,
+      potion: `${slot.name}${slot.description ? `: ${slot.description}` : ""}`,
+    },
+    apply: () => {
+      option.apply?.();
+      env.screenMemory.afterDiscard = { ...then, runId, floor, at: Date.now(), slot: slot.index, more: [], via: "drink" };
+    },
+  };
+}
+
 /** An option text that gives potion(s) (「获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。」). */
 export function givesPotion(description: string): boolean {
   return /获得[^。]*药水|(?:gain|obtain)[^.]*potion/i.test(description);
@@ -136,7 +185,7 @@ export function discardVariant(env: DecisionEnv, option: PickOption, then: Disca
     label: `discard potion(s), then ${option.label ?? then.title}`,
     // Stands in until the answer names the slots (plan gives the real first discard).
     intent: { action: "discard_potion", option_index: slots[0]!.index },
-    why: `${option.why ?? ""}${option.why ? "; " : ""}code does not rank which potions to discard`,
+    why: option.why?.includes("code does not rank which potions to discard") ? option.why : `${option.why ?? ""}${option.why ? "; " : ""}code does not rank which potions to discard`,
     summary: {
       ...summary,
       discard_first: `discard 1 to ${most} of discardable_potions (by potion slot number) now to free slot(s), then this option: answer "discard": [potion slot numbers]; Jev: the discard_p<slot> questions`,
@@ -210,5 +259,5 @@ export function continueAfterDiscard(env: DecisionEnv, place: string, labelPrefi
   env.screenMemory.afterDiscard = undefined;
   const intent = landed ? take(pending.option, pending.title) : null;
   if (!intent) return undefined;
-  return { kind: "act", label: `${labelPrefix}/after-discard`, intent, rationale: `the potion slot(s) are free: taking ${pending.title}, as chosen with the discards` };
+  return { kind: "act", label: `${labelPrefix}/after-${pending.via ?? "discard"}`, intent, rationale: `the potion slot(s) are free: taking ${pending.title}, as chosen with the ${pending.via === "drink" ? "drink" : "discards"}` };
 }

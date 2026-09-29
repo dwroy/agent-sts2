@@ -168,7 +168,8 @@ export interface ScreenMemory {
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
   /**
    * An option chosen with potion(s) discarded first (screens/potion-discard.ts: a rest site's Tiny Mailbox heal, an
-   * event option giving potions, with the belt full): the discards are played, then this option on `place`.
+   * event option giving potions, with the belt full) or drunk first (a White Beast Statue move on the map): the
+   * discards (or the drink) are played, then this option on `place`.
    */
   afterDiscard?: {
     /** "rest", or "event:<event id>". */
@@ -181,6 +182,8 @@ export interface ScreenMemory {
     /** The potion slot just discarded (its landing is waited for), and the slots still to discard before the option. */
     slot?: number;
     more?: number[];
+    /** "drink": the slot was emptied by drinking its potion (map, White Beast Statue), not by a discard. */
+    via?: "drink";
   };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };
