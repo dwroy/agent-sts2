@@ -732,3 +732,151 @@
 - 最终中位涨 0.1–0.5k，最大 6.1k：R2H1 A8 F19 二幕卡牌奖励（25 条经验 + 4 行统计，改前 5.7k）。
 - 条目数：active 199（测试上限 200，下次新增前要先退役或合并）；置信度 高 129、中 59、低 11。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：新增的是卡牌条目，没有新增 boss、精英、走廊条目。
+
+## 2026-09-29 第六次增量：5 局 A9（version 2026-09-29.5，分支 exp-update，3ddb1c9）
+
+### 来源
+- `notes/lessons.md` 末尾的 5 节 A9 复盘，全输：AD5P89DBLM22（F22 熟睡甲虫组）、CJ88575SQS6H（F23 猎人杀手）、KTRT1M2SVVL3（F23 熟睡甲虫组）、ZGZ0EQDDNJPT（F17 同族）、QBCV838592ZQ（F17 乐加维林族母）。AD5P、CJ88 上次只进数字，这次作为证据局。
+- 日志（只读）：
+  - 沿用上次的抽取脚本，从 states.jsonl 字节偏移 3.38e9 起流式读一遍，抽出 A9 全部战斗和每层第一帧/最后一帧。同样口径重算上次的 40 局，一幕走廊 194 场死 1、中位 8/p75 13，一幕精英 37 场死 4、33/38/51，二幕走廊 97 场死 9、12/22/35，二幕开局 23/8/15/45%，一幕精英数 8/27/5，都和上一节一致。
+  - `tools/boss-fights-extract.py --asc 9`（在 A9 那段的副本上跑）+ `tools/boss-clock-calibrate.ts --rows`：按现行时钟（v3 c605500）重算 A9 一幕 boss 41 场。
+  - runs.jsonl 定输赢；`monster-db.json`（v3 ba9ccc6，已含这 46 局）取 boss 每回合掉血，和抽取结果对数。
+- 口径同上次：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算。A9 汇总是截至 19:05 runs.jsonl 里 46 局已结束的 A9：含还没复盘的 Y36HXZ80A8LL（F25 残杀千足虫）、WQ67U1UY1D8V（F17 族母）、8KD7ENEY773Y（F30 残杀千足虫），这 3 局只进数字；之后结束的 RHNEWJVRW132 不算。
+- 先在 exp-update 上 `git merge --no-edit v3`（快进到 c605500），再改。
+- 结果：新增 0 条，更新 43 条，退役 1 条；active 199 → 198，总数 220 不变。
+  - 更新里 26 条加了证据局，15 条只改数字，2 条只改已被代码修掉的说法。
+- 药水的处理（照上次）：
+  - potion:* 和 general:potion 条目只改句内数字，不加证据局（n 不变）。potion-code-discard 虽然是 general:plan，也按药水类处理，没动。
+  - 其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分。
+  - 没有新增或加强任何「什么时候喝/别喝」的说法。
+
+### 对照数据检查的主题
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 二幕开局和走廊链（AD5P、CJ88、KTRT） | A9 26 局进二幕，9 局死在第一个二幕火堆之前（都在第 3–5 场），走到的 17 局中位 44%（p25 22%）。三局都走 0 精英路线：AD5P F19 52/87 改线进 F20–F24 五连怪，每场按 −6 投影，F22 投影 46%、实到 33%；CJ88 act-plan 选 code rank 4 的 p4（火堆前 5 怪 2 问号），F23 投影 64%、实到 14%；KTRT p4 两个问号按 0 算，F23 投影 82%、实到 62%。二幕走廊 105 场死 10，赢局中位 −12、p75 −22、p90 −36。二幕问号 70 个（不含死在里面的）有 12 个开出战斗，赢局中位 −21.5、p75 −27，比二幕走廊贵；其余中位 0 | 更新 act2-opening、route-no-chains |
+| 二幕选线：精英还是走廊（A9 26 局） | 二幕 0 精英的 17 局：9 局死在走廊、5 局死在 boss、3 局过二幕 boss。打了 ≥1 只二幕精英的 9 局：7 局死在精英（千足虫 4、蜂群术士 2、棱柱 1），1 局死在走廊，1 局死在 boss，0 局过二幕 boss。AD5P、CJ88 的 act run plan 都写 elites avoid；KTRT 选 p4 的理由是「p4 skips A9 act-2 elites」 | 写进 act2-opening（观察数据）。两边都在死，精英条目没改 |
+| 熟睡甲虫 + 两只盛碗虫（A9 6 场） | 赢的 3 场 65–90% 进场、各 −35~−36。死的 3 场：ETYC 16%、AD5P 33%、KTRT 62%。KTRT 7 回合打掉 84/179（12/回合），丝碗虫 0 伤害，甲虫剩 54。战斗里代码按精英打（`combat-plan.ts:690` HALLWAY_ELITES），路线投影按普通走廊中位算 | beetle：「≥60% 进场能赢」改成 A8 的数，A9 写明 62% 也死 |
+| 其他二幕走廊 | 猎人杀手 10 场死 2，赢局中位 −18、p75 −29.5（CJ88 11/80 进场）。偷窃草蜢 15 场（含问号）中位 −12、p75 −19（AD5P −29、KTRT −19）。虱虫之祖 7 场全胜，中位 −20（AD5P −26）。直飞产卵虫 7 场死 1，赢局中位 −22（CJ88 32/80 进场打到 5）。三只盛碗虫组 10 场有 4 场 −46~−49，都是 70–73% 进场；≥79% 进场的 5 场都 ≤21（Y36H 只进数字） | 更新 hunter-killer、hopper、louse、ovicopter、bowlbugs。ovicopter 的「≤32 血进场三局都死」改成 4 局死 3 |
+| A9 一幕精英（43 场） | 赢局中位 −32、p75 −38、p90 −50。≥78% 进场 33/33 活（中位 −30），60–78% 8 场死 2，<60% 2/2 死，分组结论和上次相同。新增 6 场都 ≥86% 进场：异蛙 KTRT −33、ZGZ0 −50（牌组 0 张 AOE，9 回合）；珊瑚群 QBCV −32；Y36H 园丁 −23、骇鳗 −11；8KD7 骇鳗 −28（后 3 场只进数字） | 更新 elite-threshold、act1-costs、phrog、skulking-colony、terror-eel、gardener |
+| 二、三幕精英 | 12 场死 9。千足虫 A9 4 场 4 死，新增的两场 Y36H 69%、8KD7 92% 进场（只进数字），3、4 回合死，三节合计还剩 104、90 | decimillipede、a9-damage 只改数字 |
+| 同族（ZGZ0；A9 6 场） | 赢 3。ZGZ0 72/80 进场，17 张 2 升级，0 张永久力量。6 回合打出 256：进神官 152（25.3/回合），进信徒 104（T1 34、T2 24、T4 24、T5 22），神官剩 47。时钟「需 43、估 27」，实打/估值 0.94。83FL 正相反：全压神官、信徒 0 伤害，22/回合。monster DB 的 A9 同族每回合掉血 10.7（A8 7.3） | kin-scaling、kin-priest-focus 加 ZGZ0；a9-damage 改数字 |
+| 族母（QBCV；A9 5 场） | 赢 2（VBHZ 74%、0NZB 90%），输 3（BXAZ 65%、QBCV 100%、WQ67 100%，WQ67 只进数字）。输的 3 场 T1–T2 都是 0 伤害，牌组没有力量牌：QBCV 唯一的能力牌是岩石铠甲，WQ67 15 张 2 升级。醒后 QBCV 18.9/回合，WQ67 约 12。0NZB T1 打掉 60（26%）把它打醒，8 回合 29/回合赢。QBCV 的时钟从 F6 起报「需 21、估 21–22」，现行时钟实打/估值 0.75；WQ67 0.56 | lag-race 加 QBCV；lag-sleep 加 QBCV，0NZB 记为反例；lag-entry 改数字 |
+| 一幕 boss 进场血量、永久力量、锻造（A9 41 场） | 过关 26/41，赢局平均进场 90%、输局也是 90%。全部 A9 boss 51 场：≥75% 进场 25/45，≥90% 进场 29 场赢 18。永久力量（燃烧/恶魔形态/撕裂/烙印/与我一战！）：0 张 7/19，1 张 15/18，≥2 张 4/4；新输的 ZGZ0、QBCV、WQ67 都是 0 张。一幕锻造 0 次 6/8、≥1 次 20/33；进 boss 时 0–1 张升级 11/18、2 张 5/10、≥3 张 10/13 | act1-strength、route-entry-hp、rest-smith-threshold 改数字；act1-strength、route-entry-hp 加 ZGZ0、QBCV |
+| 时钟（现行 c605500，A9 一幕 boss 41 场） | 实打/估值：赢局中位 1.02（26 场），输局 0.63（15 场，0.37–0.94）。进场时 15 场输局有 11 场被报缺口，26 场赢局有 12 场被报「够」。新批：ZGZ0 0.94（报缺口）、QBCV 0.75（报「够」）、WQ67 0.56（报缺口）；赢的 KTRT、CJ88 1.13，AD5P 0.92，8KD7 1.20，Y36H 0.78 | deck-clock 加 QBCV |
+| 删牌、格挡、商店 | AD5P：一幕只进 F4 一个商店（120 金，只买与我一战！，不删），死时 24 张里 5 打击 4 防御、2 张非基础格挡，身上 284 金；四份 run plan 的 block_target 都是 5，格挡牌 5 次出现拿 2 次。QBCV：F6 124 金买旋风斩、不删，20 张里 5 打击（1 张升级）4 防御，死时 132 金。CJ88：act-plan 放掉带 F21 商店的 p1，走的 p4 在火堆前没有商店（F21 问号是假商人，code 直接离开），死时 241 金 | 更新 deck-remove、deck-block-floor、route-shops |
+| 事件掉血换金币（AD5P、ZGZ0） | AD5P F6「这个」−6 血 +63 金；ZGZ0 F13「这个」−6 +50 金，推理写「6 HP recovers via Burning Blood/F16 rest」。两局一幕后面都没有商店，死时 284、177 金。ZGZ0 F13、F15 共付 11 血，F16 回血 48→72 没被上限截（不付是 59→80 封顶），boss 72/80 进场 | 更新 event-gold、event-hp-maxhp、relic-burning-blood |
+| 烘焙手套（KTRT；8KD7 只进数字） | 两局都是二幕先古拿的，都没到二幕 boss；A7–A9 拿它的 22 局过二幕 boss 8 局。KTRT 手牌每回合 4 张：F19、F22 两场 23.3、28/回合，F23 甲虫组 T1–T7 每回合 12/8/13/14/2/11/24 | relic-toasty-mittens 加 KTRT；neow-growth 改数字 |
+| 佩尔之牙（CJ88） | 放 3 打击 2 防御，到 F23 还回 3 张（打击+×2、防御+），死局 T2 手里 0 格挡 | relic-paels-tooth 加 CJ88（二幕 boss 0/4） |
+| 留给 boss 的药（只改数字） | 这 5 局里 3 局把买来或 run plan 点名给 boss 的药在 boss 前喝掉，约 5 瓶：AD5P 1（F17 点名给帝王蟹的能力药水，F21 走廊喝）；CJ88 3（F6 为 boss 买的异鱼之油、爆炸安瓿，F7 小啃兽 T1 喝；F9 点名给分尸的固化药水，F12 精英喝）；KTRT 1（F8「keep both boss potions」的异鱼之油，F12 满血走廊喝）。按 MC/rollout 最多省约 10（AD5P F21 T4）。四批合计 46 局 38 局、约 75 瓶。A9 46 局每局走廊/事件战喝 4.6 瓶、精英 0.7、boss 1.3（没变），二幕 boss 进场平均 1.2 瓶（n=9，没变）；A9 ≥75% 进场 boss 0 瓶 2/6、带药 23/39 | 只改 potion-save-for-boss、potion-empty-slots 的句内数字，n 不变。以下只记在这里：AD5P 的能力药水 boss 7 问都有、一次没喝；ZGZ0 小邮箱前丢掉异鱼之油；QBCV 以 0.00 置信喝稳定血清 |
+
+- 永久力量这一行的口径：本次脚本的牌组取 boss 战第一帧。用它重算上次的 35 场，是 0 张 7/16、1 张 13/16、≥2 张 3/3，和上一节（6/15、14/17、3/3）差一场赢局的归类。条目里用的是本次口径的 41 场数字。
+
+### 经验库自己带偏、或写了没被执行的地方
+- **route-no-chains 读到了仍放行，另一头是避精英：**
+  - CJ88 的推理原文引了这条，然后按「问号可能是事件」把连打算成 2、2、1。
+  - AD5P 的推理里有「avoid consecutive hallways at low HP」，仍选了五连怪。
+  - 同一时刻把它们推向 0 精英路线的有：act run plan 的 elites avoid、a9-damage 的「二、三幕精英 10 场死 7」、decimillipede/entomancer 的 A9 死局。
+  - 两边都有死局（上表第 2 行），这次没改精英条目，只在 route-no-chains、act2-opening 补了问号的数。
+- **lag-race「别对它买 AOE」：** QBCV F6 的推理里有这句，仍花 73 金买旋风斩（「the run-plan second AOE with Strength scaling」）。
+- **deck-clock「时钟说已达标时按仍缺 ~30% 处理」：** QBCV F6、F16 的推理都抄了这句，仍以「Deck has 1 block card and no damage gap」拿挑衅、锻造岩石铠甲。
+- **event-hp-maxhp / relic-burning-blood：** ZGZ0 F13 仍以燃烧之血为理由付血。
+- **lag-sleep：** 原文「除非能斩杀别在沉睡时打醒它」比 `ironclad-guide.md:53`（一次能打掉 25% 以上可以打醒）更严。A9 的数据站在指南这边（0NZB），已在 lag-sleep 记一个反例，结论没改。
+- **beetle「≥60% 进场能赢」、ovicopter「≤32 血进场三局都死」：** 分别被 KTRT（62% 进场死）、CJ88（32 进场活下来，剩 5）打破，已就地改写。
+
+### 新增（0）
+没有新增条目。考虑过：
+- 地狱狂徒：CJ88 拿到后 4 场 0 次打出。但 a4f3795 已让 rollout 模拟它，只记在代码问题里。
+- 小邮箱：只在火堆选「休息」时给药。和药水有关，没加。
+
+### 更新（43）
+- **加证据（26）：**
+  - boss：vantom-entry 18→20（CJ88、KTRT）、kin-scaling 21→22（ZGZ0）、kin-priest-focus 11→12（ZGZ0）、lag-race 14→15（QBCV）、lag-sleep 7→8（QBCV；反例 0→1：0NZB）。
+  - 精英：phrog 5→8（CJ88、KTRT、ZGZ0）、skulking-colony 17→19（AD5P、QBCV）。
+  - 走廊：beetle 30→32（AD5P、KTRT）、hunter-killer 32→33（CJ88）、hopper 18→20（AD5P、KTRT）、louse 14→15（AD5P）、ovicopter 9→10（CJ88）。
+  - 幕、计划：act1-strength 12→14（ZGZ0、QBCV）、act2-opening 30→33（AD5P、CJ88、KTRT）、a9-damage 38→43（5 局；46 局重算）。
+  - 路线：route-no-chains 19→21（AD5P、CJ88；KTRT 的链中间有 F21 商店，不算）、route-entry-hp 48→50（ZGZ0、QBCV）、route-shops 18→20（AD5P、CJ88）。
+  - 牌组：deck-clock 38→39（QBCV）、deck-block-floor 13→14（AD5P）、deck-remove 23→25（AD5P、QBCV）。
+  - 遗物、事件：relic-toasty-mittens 21→22（KTRT）、relic-paels-tooth 3→4（CJ88）、relic-burning-blood 11→12（ZGZ0）、event-hp-maxhp 13→14（ZGZ0）、event-gold 7→9（AD5P、ZGZ0）。
+- **只改数字（15）：**
+  - bowlbugs 26、terror-eel 23、gardener 18、decimillipede 24、lag-entry 16、fysh-damage 17、giant-explode 22。其中 Y36H T9 击杀赢，有击杀的 34 场、≤13 的 19 场赢 18，A9 9 场赢 3。
+  - act1-costs 17、elite-threshold 29、elite-need-one 11、elite-no-double 7、rest-smith-threshold 35、neow-growth 7。
+  - 药水：potion-save-for-boss 70、potion-empty-slots 21。
+- **只改已被代码修掉的说法（2）：**
+  - relic-nutritious-soup：删掉「code 的删牌说明仍把永恒打击算进去」。1250bef 起删牌说明只算能删的牌。
+  - card-rolling-boulder：「rollout 不模拟它」改成「当时 rollout 不模拟它」。rollout.ts 现在有滚石效果。
+
+### 退役（1）
+- **relic-paels-eye（佩尔之眼，n=1）**：「我们的代码不会触发，选了等于空」已过时。6eff601（09-26）起，所有线都判死时，本场第一次会空过一回合，拿佩尔之眼的额外回合（`src/screens/combat-plan.ts:1647`）。按「代码修好就退役」处理。
+- 没有合并条目。active 198，离测试上限 200 还有 2 条余量。
+
+### 和手写知识、代码冲突，待改（没有改动）
+巨兽早杀、感染棱柱、蜂群术士、同族信徒这几处修 bug 的 agent 在改，不列。
+- `src/knowledge/ds-handbook.md:38`「进 boss 血量：赢局平均 88%，输局 81%；灵魂异鱼赢局 93%、输局 78%」。A9 一幕 boss 41 场赢局、输局平均都是 90%：QBCV、WQ67 满血输，ZGZ0 90% 输。
+- `src/knowledge/ironclad-guide.md:35`「低血时绕开精英走问号/商店」。A9 二幕问号 70 个里 12 个开出战斗，赢局中位 −21.5、p75 −27，高于二幕走廊的 −12/−22；KTRT F22 问号是草蜢，−19。
+- 族母的沉睡回合：
+  - `src/knowledge/jev-hints.json:18-28`（matriarch-asleep、matriarch-sleep-turns）和 `src/project/run-journal.ts:179`（BOSS_NOTES LAGAVULIN）只讲「沉睡时打能力/留格挡，别打醒」，没覆盖手里没有能力牌的情况。
+  - A9 输的 3 场都这样空过两回合；0NZB T1 打掉 60 打醒它，赢了。
+  - `ironclad-guide.md:53` 的「一次能打掉 25% 以上可以打醒」和数据一致。
+- experience 的 potion-swift「代码按 0 价值算」已过时：`src/knowledge/potion-values.ts:47` 是 SWIFT_POTION { Cards: 3 }，`src/strategy/card-model.ts:730` 是 draw 3。药水条目这次只改数字，没动，待 Dai 定。
+- `src/strategy/boss-clock.ts:195` giantKillRecord（batch-f 测试钉住）的「A9 T10 前击杀只赢 1/3」：Y36H（只进数字）T9 击杀赢了，现在是 2/4。属于巨兽早杀那一处，只报数字。
+- 代码：
+  - `src/strategy/route-projection.ts:158` 问号按 room-costs 的 A9 二幕问号中位 0 计价（KTRT 投影 82%、实到 62%），和 act2-opening、route-no-chains 冲突。
+  - `src/screens/combat-plan.ts:690` HALLWAY_ELITES：战斗里把熟睡甲虫当精英，路线投影和 route review 仍按普通走廊中位算（KTRT），和 beetle 冲突。
+  - `src/screens/map.ts:340-343` potionComing 只看前方有没有火堆：小邮箱选锻造时不给药（ZGZ0），和 potion-code-discard、potion-fysh-oil 对应（药水条目没动）。
+
+### 代码问题（不给 DS）
+按复盘里写的状态，不重新核实（修复进度以 `notes/fix-queue.md` 为准）：
+- AD5P：
+  - 随机能力药水的 MC 只比当回合（`src/strategy/potion-mc.ts:2-3`、`:48-56`），boss 7 问都没喝点名的 T1 能力药水。
+  - 熔炉的祝福在 Jev 线中间喝下后整条线重规划（D 批「未修」那条）。
+- AD5P、CJ88、KTRT：route review 只凭 hp_at_boss 判「safe」；问号按 0 血投影。
+- CJ88：
+  - 假商人：code 按 `src/screens/shop.ts:33-34` 直接离开。
+  - 饱和盘按敌方剩血挑 best、不比死亡数（`src/strategy/rollout-live.ts:445` pickRolloutBest，fix-queue 已有）。
+  - 同文字、不同结果的选项（fix-queue KYC0 条，E 批 2de27ae）。
+  - 地狱狂徒当时 rollout 不模拟（a4f3795 已修）。
+- KTRT：
+  - F23 T3 当回合 0 掉血、打死石碗虫的线被 rollout/history 判得更差，原因未定位。
+  - 手套消耗规则把未打出的能力牌固定 5 分（`src/screens/selection.ts:688-689`），丢了双重打击、留下撕裂。
+  - F6 事件给 2 瓶、腰带只空 1 格，丢了一瓶（`src/screens/event.ts:338` 只在药栏全满时处理）。
+  - 力量药水喝在最后一次攻击之后，找不到「不喝的孪生线」（`rollout-live.ts:406` noEffectTwin）。
+- ZGZ0：
+  - 小邮箱：F10 地图上为「下一个是火堆」丢掉异鱼之油，F11 选锻造，这格空到 F12（`map.ts:340-343`）。
+  - boss 5 问里 3 问的 rollout 回退成 1-turn。
+  - 饱和盘首领规则把 8/8 死的线标 best（fix-queue）。
+- QBCV：
+  - Jev 对「喝药/不喝」给 0.50/0.50 时，以 0.00 置信执行了喝药。
+  - boss 9 问里 7 问饱和，rollout 数字分不出线。
+  - 沉睡回合手里没有能力牌时 code 直接结束回合（`src/strategy/turn-solver.ts:942` wake、`:2105` sleepCost）。
+
+### 测试
+- exp-update（3ddb1c9）：`tsc --noEmit -p tsconfig.json` 退出 0；vitest 60 个文件 1102/1102 通过，退出 0。
+- 合入 v3（在 `ops/v3-merge.lock` 锁里）：
+  - 合入前：v3 c605500 上 vitest 1102/1102。
+  - 等 v3 的知识构建脚本跑完，先提交 v3 里刷新的知识数据 9e3dacc「Refresh knowledge data」（boss-damage、card-upgrades、monster-db、move-model、outcome-stats、room-costs）。
+  - 再 `git merge --no-edit exp-update`，得到 4452401。
+  - 合入后：v3 上 `tsc --noEmit -p tsconfig.json` 退出 0；vitest 60 个文件 1102/1102 通过，退出 0（v3 现在是 4452401）。
+  - 对局在 v3 里照常跑，没有停。
+
+### 切片大小
+- 样本：新抽一批，A8、A9 各 20 个状态 × 6 种界面，共 240 个。从 states.jsonl 用固定种子 20260929 抽取，只取 19:05 前已结束的局。
+  - A8 没有新局，抽到的和上次是同一批。
+  - A9 加了新局，是新的一批。
+- 同一批状态分别用改前（c605500）和改后（3ddb1c9）的 experience.json 跑 `tools/knowledge-slice.ts`。数字是中位 / 最大（字）：
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 3.3k / 5.4k | 3.4k / 5.6k | 3.5k / 5.7k | 3.6k / 5.9k |
+| 奖励 | 3.9k / 6.1k | 4.2k / 6.4k | 4.1k / 5.8k | 4.2k / 6.1k |
+| 地图 | 5.4k / 6.0k | 5.6k / 6.3k | 5.2k / 6.0k | 5.4k / 6.3k |
+| 事件 | 4.2k / 5.8k | 4.3k / 6.2k | 4.2k / 5.5k | 4.3k / 5.8k |
+| 火堆 | 3.2k / 5.3k | 3.3k / 5.5k | 3.2k / 5.3k | 3.3k / 5.5k |
+| 商店 | 5.1k / 5.7k | 5.3k / 5.9k | 5.3k / 5.7k | 5.5k / 6.0k |
+
+- 初稿：中位涨 0.1–0.6k，最大 6.6k。
+  - 主要来自 deck-block-floor、deck-clock、deck-remove：几乎每个奖励、商店切片都有它们。
+  - 其次是 route-no-chains、act2-opening、phrog、skulking-colony。
+  - 之后把逐局细节压成一句，逐回合、逐局的数字留在本节。
+- 最终：每种界面的中位涨 0.03–0.24k，单个切片最多涨 0.37k，最大 6.4k（R2H1 A8 F19 二幕卡牌奖励，25 条经验 + 4 行统计，改前 6.1k）。
+- 条目数：active 198（测试上限 200）；置信度 高 129、中 58、低 11。
+- Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目，族母 3 条、同族 2 条。

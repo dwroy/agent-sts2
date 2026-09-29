@@ -113,3 +113,8 @@ From fix batch F (2026-09-29 19:12; line numbers at v3 c605500), not fixed:
 - To verify: rollout.ts:739 BOULDER_STEP=5 for upgraded / two Rolling Boulders (no log data yet).
 - turn-solver.ts:1066 unused free attacks carry over only in the rollout; the solver's scoring of this turn gives them no value.
 - Event discard options: one option per discard combination can explode (5 slots, 3 potions → 25 options) — consider grouping.
+
+From experience update 2026-09-29.5 (2026-09-29 19:40; line numbers at v3 4452401):
+- Hand-written facts contradicting data (fix the numbers per ascension): ds-handbook.md:38 "wins average 88% entry, losses 81%" (A9 act-1 boss 41 fights: both 90%); boss-clock.ts:195 "A9 killed before T10 1/3" is now 2/4 (Y36H won with a T9 kill) — better derived from the data than hard-coded.
+- Knowledge text vs code: experience potion-swift says code values Swift Potion at 0, but potion-values.ts:47 / card-model.ts:730 draw 3 (potion entry: left for Dai's potion-entry decision).
+- combat-plan.ts:690 treats Slumbering Beetle as an elite in combat while route pricing prices it as a hallway (inconsistent classification; pricing itself is route estimation → Dai).
