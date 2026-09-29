@@ -7,6 +7,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
+import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
 import type { AskDecision } from "../src/project/types.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
@@ -191,5 +192,18 @@ describe("3. The Sandpit deadline: Frantic Escape kept from exhaust picks, least
     env.screenMemory.plannedAfter = undefined;
     const lethal = { ...defend, label: "combat/lethal" };
     expect(guardSandpit(env, lethal)).toBe(lethal);
+  });
+});
+
+describe("4. An enchantment named after the card it goes on gets its effect (PHMVUY73R0D7 F21: 「附魔一张攻击牌：活力8」)", () => {
+  const logged = "失去[red]6[/red]点生命。[gold]附魔[/gold]一张攻击牌：[purple]活力[/purple][blue]8[/blue]。";
+
+  it("annotateEnchants and enchantsNamed read 附魔<card>：<name>N, markup or not", () => {
+    expect(annotateEnchants(logged)).toBe("失去[red]6[/red]点生命。[gold]附魔[/gold]一张攻击牌：[purple]活力[/purple][blue]8[/blue]（活力8: the card deals 8 more damage）。");
+    expect(enchantsNamed(logged)).toEqual(["活力8: the card deals 8 more damage"]);
+    expect(annotateEnchants("附魔一张攻击牌：活力8。")).toContain("（活力8: the card deals 8 more damage）");
+    // The colon right after 附魔 still reads as before; a sentence break is not crossed.
+    expect(enchantsNamed("选择一张能力牌附魔：迅速2。")).toEqual(["迅速2: the first time the card is played, draw 2 cards (「第一次打出时抽2张牌」)"]);
+    expect(enchantsNamed("附魔。获得：10点格挡")).toEqual([]);
   });
 });
