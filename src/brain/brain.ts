@@ -20,6 +20,7 @@ import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from ".
 import { buildTools } from "../tools/registry.js";
 import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
+import { ClaudeEngine } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { BrainRouter, type BrainLogRow } from "./router.js";
 import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
@@ -54,12 +55,11 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
       if (!deepseek) throw new Error("brain engine deepseek needs a DeepSeek key (DEEPSEEK_API_KEY / DEEPSEEK_API_KEY_FILE)");
       return new DeepSeekEngine(deepseek);
     case "claude":
+      return new ClaudeEngine({ settings, claude: config.brain.claude, ...(options.claudeToolsModule ? { toolsModule: options.claudeToolsModule } : {}) });
     case "codex":
     case "dsh":
       // Named in the contract, to come with the offline learner (Dai 2026-09-29).
-      void settings;
-      void options;
-      throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek)`);
+      throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude)`);
   }
 }
 
