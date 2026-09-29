@@ -330,16 +330,16 @@ export function planMap(env: DecisionEnv): Decision | null {
   const available = asArray(map["available_nodes"]).map(asRecord);
   if (available.length === 0) return null;
 
-  // Full potion slots with a guaranteed potion coming (White Beast Statue after every fight, Tiny
-  // Mailbox at a rest): the reward screen cannot discard, so the new potion was silently dropped
-  // (YVWA F35-F47: 10 potions lost, Strength, Fire, Regen, Ashwater among them). Free the weakest slot
-  // here, where discarding is allowed, unless the weakest is still worth keeping.
+  // Full potion slots with a guaranteed potion coming (White Beast Statue after every fight): the reward
+  // screen cannot discard, so the new potion was silently dropped (YVWA F35-F47: 10 potions lost, Strength,
+  // Fire, Regen, Ashwater among them). Free the weakest slot here, where discarding is allowed, unless the
+  // weakest is still worth keeping. Not for Tiny Mailbox: its potions come only with a rest's heal, never a
+  // smith (ZGZ0EQDDNJPT F10 Fysh Oil discarded here, F11 smithed, the boss with a slot empty), and the rest
+  // site offers "discard, then heal" to the decider itself (rest.ts, potion-discard.ts).
   const relics = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord);
   const beltFull = belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
-  const potionComing =
-    (relics.includes("WHITE_BEAST_STATUE") && available.some((node) => ["Monster", "Elite", "Unknown", "Boss"].includes(str(node["node_type"])))) ||
-    (relics.includes("TINY_MAILBOX") && available.some((node) => ["RestSite", "Rest"].includes(str(node["node_type"]))));
+  const potionComing = relics.includes("WHITE_BEAST_STATUE") && available.some((node) => ["Monster", "Elite", "Unknown", "Boss"].includes(str(node["node_type"])));
   if (beltFull && potionComing && state.available_actions.includes("discard_potion")) {
     const weakest = belt
       .filter((slot) => bool(slot["can_discard"], true))

@@ -675,7 +675,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}) } },
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
           if (!picked.intent || (spec.oneshot && picked.fallback)) {
@@ -978,7 +978,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               }
               const override = decision.resolve({
                 ...result.answers,
-                [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name } },
+                [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name, ...("discard" in answer && Array.isArray(answer.discard) ? { discard: answer.discard } : {}) } },
               } as AnswerSet);
               if (!override.intent) continue;
               const agreed = answer.choice === jevAnswer.choice;

@@ -7,9 +7,11 @@
  */
 
 import type { ActionRequest } from "../mod/client.js";
+import type { AnswerSet } from "../jev/answers.js";
 import { choiceQ, type QuestionSet } from "../jev/questions.js";
 import type { Decision, ResolvedAction } from "../project/types.js";
 import { asArray, asRecord, type JsonValue } from "../util/json.js";
+import { DISCARD_SUFFIX, discardSlotsOf, optionQuestions } from "./potion-discard.js";
 
 export interface PickOption {
   key: string;
@@ -33,12 +35,20 @@ export interface PickOption {
    * unusable and the loop falls back).
    */
   plan?: (answer: PlanAnswer) => PlannedOption | { invalid: string } | null;
+  /**
+   * Jev's side of an option whose answer takes more than its key (the potion slots a "discard, then …" option
+   * discards; screens/potion-discard.ts): the extra questions asked with the pick, and how their answers make the
+   * option's PlanAnswer (then `plan` runs on Jev's pick as on DeepSeek's).
+   */
+  jev?: { questions: QuestionSet; answer: (answers: AnswerSet) => PlanAnswer };
 }
 
 /** The parts of a one-shot answer beyond its option key. */
 export interface PlanAnswer {
   cards: string[];
   route?: string;
+  /** The potion slots a "discard, then …" option discards (the answer's "discard"). */
+  discard?: number[];
 }
 
 /** What a one-shot option plans: its reference, steps, memory effect and run-journal text. */
@@ -47,6 +57,8 @@ export interface PlannedOption {
   steps: JsonValue;
   apply?: () => void;
   journal?: string;
+  /** The action to play now when the answer decides it (the first potion slot to discard), else the option's own. */
+  intent?: ActionRequest;
 }
 
 export interface PickDecisionParams {
@@ -143,10 +155,19 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     kind: "ask",
     label: params.label,
     state: params.state,
-    questions: { pick: choiceQ(params.instructions, criteria), ...(params.extras ?? {}) },
+    questions: { pick: choiceQ(params.instructions, criteria), ...optionQuestions(options), ...(params.extras ?? {}) },
     ...(params.escalateBelow === undefined ? {} : { escalate: { question: "pick", below: params.escalateBelow, why: params.label } }),
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
+      /**
+       * An option whose answer takes more than its key (jev): its plan on Jev's extra answers, or on an escalated
+       * DeepSeek answer's own fields (its "discard" list); null for every other option.
+       */
+      const jevPlan = (option: PickOption): PlannedOption | { invalid: string } | null => {
+        if (!option.jev || !option.plan) return null;
+        const discard = discardSlotsOf(asRecord(answer?.raw)["discard"]);
+        return option.plan(discard && discard.length > 0 ? { cards: [], discard } : option.jev.answer(answers));
+      };
       const fallback = (why: string, confidence: number | null): ResolvedAction => {
         const choice = bestOption(options);
         return {
@@ -175,13 +196,18 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
             fallback: false,
           };
         }
+        const planned = jevPlan(trusted);
+        if (planned && "invalid" in planned) {
+          return { intent: null, rationale: `Jev chose ${trusted.label ?? trusted.key}, but ${planned.invalid} (trust-jev: waiting to ask again)`, confidence: answer.confidence, fallback: false };
+        }
+        const apply = trusted.apply || planned?.apply ? (): void => (trusted.apply?.(), planned?.apply?.()) : undefined;
         return {
-          intent: trusted.intent,
-          rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}`,
+          intent: planned?.intent ?? trusted.intent,
+          rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}${planned?.journal ? ` (${planned.journal})` : ""}`,
           confidence: answer.confidence,
           fallback: false,
           // An option with a follow-up to note (an event's "discard X, then this option"), as DeepSeek's pick.
-          ...(trusted.apply ? { apply: trusted.apply } : {}),
+          ...(apply ? { apply } : {}),
         };
       }
 
@@ -191,12 +217,15 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       if (answer.confidence < actThreshold) {
         return fallback(`confidence ${answer.confidence.toFixed(2)} is below the act threshold`, answer.confidence);
       }
+      const planned = jevPlan(chosen);
+      if (planned && "invalid" in planned) return fallback(`Jev chose ${chosen.label ?? chosen.key}, but ${planned.invalid}`, answer.confidence);
+      const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
-        intent: chosen.intent,
-        rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}`,
+        intent: planned?.intent ?? chosen.intent,
+        rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}${planned?.journal ? ` (${planned.journal})` : ""}`,
         confidence: answer.confidence,
         fallback: false,
-        ...(chosen.apply ? { apply: chosen.apply } : {}),
+        ...(apply ? { apply } : {}),
       };
     },
   };
@@ -253,24 +282,27 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
     },
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
-      const chosen = answer && answer.type === "choice" ? byKey.get(answer.choice) : undefined;
+      const raw = asRecord(answer?.raw);
+      const discard = discardSlotsOf(raw["discard"]);
+      const named = answer && answer.type === "choice" ? byKey.get(answer.choice) : undefined;
+      // The plain key with a "discard" list names its "discard, then …" variant (as "o1" with "cards": ["c5"] names o1:c5).
+      const chosen = named && discard && discard.length > 0 && !named.key.endsWith(DISCARD_SUFFIX) ? byKey.get(`${named.key}${DISCARD_SUFFIX}`) ?? named : named;
       if (!chosen) {
         // Not reached through the loop (it plays the baseline when DeepSeek has no usable answer).
         const best = bestOption(params.options);
         return { intent: best.intent, rationale: `no usable DeepSeek answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
       }
-      // A one-shot option names what its follow-up takes: the answer's `cards` and `route` ride in its raw.
-      const raw = asRecord(answer?.raw);
+      // A one-shot option names what its follow-up takes: the answer's `cards`, `route` and `discard` ride in its raw.
       const cards = asArray(raw["cards"]).filter((card): card is string => typeof card === "string");
       const route = typeof raw["route"] === "string" ? raw["route"] : undefined;
-      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}) }) ?? null;
+      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}), ...(discard ? { discard } : {}) }) ?? null;
       if (outcome && "invalid" in outcome) {
         return { intent: null, rationale: `DeepSeek chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
       }
       const planned = outcome;
       const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
-        intent: chosen.intent,
+        intent: planned?.intent ?? chosen.intent,
         rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code value ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length})`,
         confidence: answer && answer.type === "choice" ? answer.confidence : null,
         fallback: false,

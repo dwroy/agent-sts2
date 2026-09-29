@@ -13,6 +13,7 @@ import { dirname } from "node:path";
 import type { JsonValue } from "../util/json.js";
 import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
+import { discardSlotsOf } from "../screens/potion-discard.js";
 import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
@@ -69,6 +70,8 @@ export interface DeepSeekAnswer {
   route?: string;
   /** The answer's `route_reason` (a route review's why), when it gave one. */
   routeReason?: string;
+  /** The answer's `discard` list: the potion slots a "discard, then …" option discards (screens/potion-discard.ts). */
+  discard?: number[];
 }
 
 /** One answer as seen by the consistency guard (JSON-safe, for decisions.jsonl). */
@@ -385,7 +388,7 @@ export class DeepSeekClient implements Escalator {
     let secondCheck: ConsistencyCheck | null = null;
     let secondChoice = "";
     let secondReason = "";
-    let secondExtras: { cards?: string[]; route?: string; routeReason?: string } = {};
+    let secondExtras: Extras = {};
     let meta = done.meta;
     let calls = 1;
     try {
@@ -432,10 +435,10 @@ export class DeepSeekClient implements Escalator {
     );
   }
 
-  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown; cards?: string[]; route?: string; routeReason?: string } {
-    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown };
+  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown } & Extras {
+    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown; discard?: unknown };
     try {
-      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown };
+      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown; discard?: unknown };
     } catch {
       throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
     }
@@ -446,6 +449,7 @@ export class DeepSeekClient implements Escalator {
       ...(Array.isArray(parsed.cards) ? { cards: parsed.cards.filter((card): card is string => typeof card === "string").map((card) => card.trim()) } : {}),
       ...(typeof parsed.route === "string" && parsed.route.trim() ? { route: parsed.route.trim() } : {}),
       ...(typeof parsed.route_reason === "string" && parsed.route_reason.trim() ? { routeReason: parsed.route_reason.trim() } : {}),
+      ...(discardSlotsOf(parsed.discard) ? { discard: discardSlotsOf(parsed.discard)! } : {}),
     };
   }
 
@@ -608,12 +612,16 @@ interface ChatMessage {
   content: string;
 }
 
-/** `{cards, route, routeReason}` as far as the answer gave them, else nothing (the answer object stays as before). */
-function extrasOf(answer: { cards?: string[]; route?: string; routeReason?: string }): { cards?: string[]; route?: string; routeReason?: string } {
+/** The fields of an answer beyond {choice, reason}. */
+type Extras = { cards?: string[]; route?: string; routeReason?: string; discard?: number[] };
+
+/** `{cards, route, routeReason, discard}` as far as the answer gave them, else nothing (the answer object stays as before). */
+function extrasOf(answer: Extras): Extras {
   return {
     ...(answer.cards && answer.cards.length > 0 ? { cards: answer.cards } : {}),
     ...(answer.route ? { route: answer.route } : {}),
     ...(answer.routeReason ? { routeReason: answer.routeReason } : {}),
+    ...(answer.discard && answer.discard.length > 0 ? { discard: answer.discard } : {}),
   };
 }
 

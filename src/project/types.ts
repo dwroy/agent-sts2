@@ -173,6 +173,22 @@ export interface ScreenMemory {
     slot?: number;
     more?: number[];
   };
+  /**
+   * An option chosen with potion(s) discarded first (screens/potion-discard.ts: a rest site's Tiny Mailbox heal, an
+   * event option giving potions, with the belt full): the discards are played, then this option on `place`.
+   */
+  afterDiscard?: {
+    /** "rest", or "event:<event id>". */
+    place: string;
+    runId: string;
+    floor: number | null;
+    option: number;
+    title: string;
+    at: number;
+    /** The potion slot just discarded (its landing is waited for), and the slots still to discard before the option. */
+    slot?: number;
+    more?: number[];
+  };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };
   /** DeepSeek's one-shot plan for the current shop visit (BUILD_ONESHOT; screens/shop.ts). */
