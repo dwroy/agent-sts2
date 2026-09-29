@@ -11,7 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { NO_REST_RELICS, projectPath, restedHp, restHealOf, roomCost, roomCostBrief, roomCostModel, roomCostNote, type PathProjection, type RestHeal, type RoomCostModel } from "../strategy/route-projection.js";
+import { bossStartHealOf, NO_REST_RELICS, projectPath, restedHp, restHealOf, roomCost, roomCostBrief, roomCostModel, roomCostNote, type PathProjection, type RestHeal, type RoomCostModel } from "../strategy/route-projection.js";
 import type { GameState } from "../mod/schema.js";
 import type { RememberedMap } from "../project/types.js";
 import { oneshotOn } from "./oneshot.js";
@@ -314,7 +314,7 @@ function routeWeights(env: DecisionEnv, floor: number): { act: number; weightOf:
   const act = actOfFloor(floor);
   // Rest relics (Regal Pillow, Stone Humidifier) change what every later rest heals.
   const relics = asArray(asRecord(env.state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80, restHealOf(relics, asArray(asRecord(env.state.run?.raw)["deck"]).length));
+  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80, restHealOf(relics, asArray(asRecord(env.state.run?.raw)["deck"]).length), bossStartHealOf(relics));
   return { act, weightOf: makeRouteWeights(act, costs, env.screenMemory.runPlan), costs };
 }
 
@@ -889,7 +889,7 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
     hpAtBoss: (routeKey, hp, maxHp) => {
       const entry = routes.find((route) => route.key === routeKey)?.entry;
       if (!entry) return "?";
-      const projection = projectPath(entry.path.map((node) => node.type), hp, roomCostModel(act, asc, maxHp, context.costs.rest));
+      const projection = projectPath(entry.path.map((node) => node.type), hp, roomCostModel(act, asc, maxHp, context.costs.rest, context.costs.bossStartHeal));
       const boss = entry.path.findIndex((node) => node.type === "Boss");
       return boss >= 0 ? hpText(projection.arrival[boss]!, projection.maxArrival[boss] ?? maxHp) : hpText(projection.end, projection.maxEnd);
     },

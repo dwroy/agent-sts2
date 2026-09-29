@@ -13,7 +13,7 @@ import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere,
 import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
-import { baseRestHeal, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
+import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
 import { continueAfterDiscard, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
@@ -285,11 +285,8 @@ function mapPoint(value: unknown): { row: number; col: number } | null {
 /** Nodes ahead a rest site looks for a forced Elite in (as an event does: FORCED_ELITE_DEPTH). */
 export const FORCED_ELITE_REST_DEPTH = 3;
 
-/**
- * Relics that heal at the start of a boss fight: Pantograph (缩放仪, 「在Boss战开始时，回复{Heal}点生命值」; logged
- * JRN33CL7EB50 F32 -> F33: 31 -> 58 with Blood Vial's 2, i.e. 25; CAYK F32 -> F33 64 -> 85 = max).
- */
-export const BOSS_START_HEAL: Record<string, number> = { PANTOGRAPH: 25 };
+/** Relics that heal at the start of a boss fight (route-projection.ts; Pantograph 25). */
+export { BOSS_START_HEAL };
 
 /**
  * The boss-start heal facts at the rest site before an act boss (the boss within 2 floors): what the relic heals

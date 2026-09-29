@@ -17,7 +17,9 @@ import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
 import { checkConsistency } from "../src/llm/consistency.js";
-import { giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { expectedEntryHp, giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { projectPath, roomCostNote, type RoomCostModel } from "../src/strategy/route-projection.js";
+import { parseGameState } from "../src/mod/schema.js";
 import { discardSlotsOf } from "../src/screens/potion-discard.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -290,5 +292,39 @@ describe("4. After Primal Force the expected hand holds Giant Rocks: the chosen 
     const next = planCombatTurn({ ...loggedEnv(board("n01x-f2-t2-rocks")), screenMemory: ask.screenMemory });
     expect(next?.label).toBe("combat/plan-continue");
     expect(next?.kind === "act" ? next.rationale : "").toMatch(/plan: 巨石/);
+  });
+});
+
+describe("5. Pantograph's boss-start heal (+25) in the boss clock's entry HP and the route projection's HP at the boss (5NFGDU7BQPD3 F16)", () => {
+  const withRelics = (hp: number, floor: number, pantograph: boolean) => {
+    const fx = logged("batch-g/zgz0-f10-map-mailbox");
+    const run = fx.state["run"] as Raw;
+    run["current_hp"] = hp;
+    run["floor"] = floor;
+    if (pantograph) run["relics"] = [...(run["relics"] as unknown[]), { index: 9, relic_id: "PANTOGRAPH", name: "缩放仪" }];
+    return parseGameState(fx.state);
+  };
+
+  it("entry HP: the pre-boss rest's heal, then +25 at the boss's start, capped at max", () => {
+    // F10, 30/80, a rest ahead: 30 + 24 = 54; with Pantograph 79.
+    expect(expectedEntryHp(withRelics(30, 10, false))).toBe(54);
+    expect(expectedEntryHp(withRelics(30, 10, true))).toBe(79);
+    expect(expectedEntryHp(withRelics(60, 10, true))).toBe(80);
+    // No rest left before the boss (F16 map): the HP now, +25.
+    expect(expectedEntryHp(withRelics(40, 16, false))).toBe(40);
+    expect(expectedEntryHp(withRelics(40, 16, true))).toBe(65);
+  });
+
+  it("route projection: the HP a path reaches the boss with has the heal; the note says so", () => {
+    const cost = (median: number) => ({ median, p75: median + 5, source: "test" });
+    const model: RoomCostModel = { act: 1, maxHp: 80, monster: cost(10), elite: cost(25), unknown: cost(4) };
+    const path = ["Monster", "Elite", "Boss"];
+    expect(projectPath(path, 50, model).arrival[2]).toBe(15);
+    const healed = { ...model, bossStartHeal: 25 };
+    expect(projectPath(path, 50, healed).arrival[2]).toBe(40);
+    expect(projectPath(path, 80, healed).arrival).toEqual([80, 70, 70]);
+    // Dead before the boss stays dead.
+    expect(projectPath(path, 30, healed).arrival[2]).toBe(-5);
+    expect(roomCostNote(healed)).toContain("the boss fight starts with +25 HP (Pantograph)");
   });
 });

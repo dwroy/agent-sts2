@@ -60,6 +60,22 @@ export interface RestHeal {
 export const NO_REST_RELICS: RestHeal = { bonus: 0, maxGain: 0, sources: [] };
 
 /**
+ * Relics that heal at the start of a boss fight: Pantograph (缩放仪, 「在Boss战开始时，回复{Heal}点生命值」; logged
+ * JRN33CL7EB50 F32 -> F33: 31 -> 58 with Blood Vial's 2, i.e. 25; CAYK F32 -> F33 64 -> 85 = max).
+ */
+export const BOSS_START_HEAL: Record<string, number> = { PANTOGRAPH: 25 };
+
+/** The boss-start heal of these relics together (0 without one). */
+export function bossStartHealOf(relicIds: readonly string[]): number {
+  return relicIds.reduce((sum, id) => sum + (BOSS_START_HEAL[id] ?? 0), 0);
+}
+
+/** HP entering the boss fight from `hp` on arrival: the boss-start heal on top, capped at max (dead stays dead). */
+export function bossEntryHp(hp: number, max: number, bossStartHeal: number): number {
+  return hp > 0 && bossStartHeal > 0 ? Math.min(max, hp + bossStartHeal) : hp;
+}
+
+/**
  * The rest relics among these relic ids; with the deck's size, Eternal Feather's heal on entering a rest site
  * (leave it 0 for the rest site we are in).
  */
@@ -118,6 +134,8 @@ export interface RoomCostModel {
   unknown: RoomCostEntry;
   /** Rest relics (Regal Pillow, Stone Humidifier): what every rest on the path adds; none when unset. */
   rest?: RestHeal;
+  /** HP a relic heals when the boss fight starts (Pantograph 25): in the HP a path reaches the boss with. */
+  bossStartHeal?: number;
 }
 
 const where = (at: number, asc: number): string => (at === asc ? `A${asc}` : `A${at} (A${asc} has too few)`);
@@ -137,7 +155,7 @@ function entry(act: number, asc: number, room: "Monster" | "Elite" | "Unknown", 
   return fallback();
 }
 
-export function roomCostModel(act: number, asc: number, maxHp: number, rest: RestHeal = NO_REST_RELICS): RoomCostModel {
+export function roomCostModel(act: number, asc: number, maxHp: number, rest: RestHeal = NO_REST_RELICS, bossStartHeal = 0): RoomCostModel {
   const base = FALLBACK_HALLWAY_BY_ACT[Math.min(Math.max(act, 1), FALLBACK_HALLWAY_BY_ACT.length) - 1]! * maxHp;
   const old = (cost: number): RoomCostEntry => ({ median: cost, p75: cost, source: "nothing logged: old fixed model" });
   const monster = entry(act, asc, "Monster", () => old(base));
@@ -148,6 +166,7 @@ export function roomCostModel(act: number, asc: number, maxHp: number, rest: Res
     elite: entry(act, asc, "Elite", () => old(base * FALLBACK_ELITE_FACTOR)),
     unknown: entry(act, asc, "Unknown", () => ({ median: UNKNOWN_HP_SHARE * monster.median, p75: UNKNOWN_HP_SHARE * monster.p75, source: `nothing logged: ${Math.round(UNKNOWN_HP_SHARE * 100)}% of a hallway fight` })),
     ...(rest.sources.length > 0 ? { rest } : {}),
+    ...(bossStartHeal > 0 ? { bossStartHeal } : {}),
   };
 }
 
@@ -197,6 +216,8 @@ export function projectPath(types: string[], startHp: number, model: RoomCostMod
   let runsOut: number | null = null;
   let riskLow: { hp: number; step: number } | null = null;
   types.forEach((type, step) => {
+    // The boss fight starts with the boss-start heal (Pantograph): the HP the path reaches the boss with.
+    if (type === "Boss") hp = bossEntryHp(hp, max, model.bossStartHeal ?? 0);
     arrival.push(hp);
     maxArrival.push(max);
     const after = hpAfterRoom(type, hp, model, "median", max);
@@ -217,7 +238,7 @@ export function roomCostNote(model: RoomCostModel): string {
   return (
     `HP projection per room, act ${model.act}: ${one("hallway fight", model.monster)}, ${one("elite", model.elite)}, ${one('"?" room', model.unknown)}; ` +
     `logged costs are entry HP minus HP on the next floor (after Burning Blood, potions, events); a room the run died in counts as all its entry HP; ` +
-    `a rest site is assumed to heal ${restHealText(model.rest)} (smithing instead heals nothing). ` +
+    `a rest site is assumed to heal ${restHealText(model.rest)} (smithing instead heals nothing)${model.bossStartHeal ? `; the boss fight starts with +${model.bossStartHeal} HP (Pantograph), in the HP at the boss` : ""}. ` +
     "hp figures chain the median costs; hp_risk is the one room on the path whose p75 cost (the rooms before it at the median) leaves the least HP; HP that runs out is not healed by a later rest."
   );
 }
@@ -227,6 +248,6 @@ export function roomCostBrief(model: RoomCostModel): string {
   const r = (cost: RoomCostEntry): string => `${Math.round(cost.median)}/${Math.round(cost.p75)}`;
   return (
     `HP a room costs in act ${model.act} (median/p75): hallway fight ${r(model.monster)}, elite ${r(model.elite)}, "?" room ${r(model.unknown)}; ` +
-    `hp figures chain the medians and assume every later rest site heals ${restHealText(model.rest)} (smithing heals nothing).`
+    `hp figures chain the medians and assume every later rest site heals ${restHealText(model.rest)} (smithing heals nothing)${model.bossStartHeal ? `; the boss fight starts with +${model.bossStartHeal} HP (Pantograph)` : ""}.`
   );
 }

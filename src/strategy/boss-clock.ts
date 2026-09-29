@@ -30,7 +30,7 @@ import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
-import { restedHp, restHealOf } from "./route-projection.js";
+import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -780,13 +780,19 @@ export function expectedEntryHp(state: GameState): number {
   const max = state.run?.max_hp ?? null;
   if (max === null || max <= 0) return hp ?? 70;
   const now = hp ?? max;
-  if (!restAheadOfBoss(state)) return now;
+  const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  // Pantograph heals 25 when the boss fight starts (rest.ts boss_start_heal, 97b239a): on top of the HP it is
+  // entered with, capped at max (the clock read the HP before it; 5NFGDU7BQPD3 F16).
+  const bossHeal = bossStartHealOf(relicIds);
+  // The boss fight already on (a boss floor, in combat): its HP has the heal in it.
+  if (state.in_combat && BOSS_FLOORS.includes(state.run?.floor ?? -1)) return now;
+  if (!restAheadOfBoss(state)) return bossEntryHp(now, max, bossHeal);
   // The game's heal: 30% of max rounded down, then the rest relics (Regal Pillow +15, Stone Humidifier +5 max HP
   // and HP), as route-projection restedHp (batch D 981ae07); it was rounded, and Stone Humidifier left out.
-  const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   // Eternal Feather heals on entering the rest site: not again on its own screen (the HP has it).
   const deckSize = state.screen === "REST" ? 0 : asArray(asRecord(state.run?.raw)["deck"]).length;
-  return restedHp(now, max, restHealOf(relicIds, deckSize)).hp;
+  const rested = restedHp(now, max, restHealOf(relicIds, deckSize));
+  return bossEntryHp(rested.hp, rested.max, bossHeal);
 }
 
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */
