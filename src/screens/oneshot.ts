@@ -118,8 +118,11 @@ const VERBS: [RegExp, DeckTask][] = [
   [/变化|\btransform/i, "transform"],
   [/附魔|\benchant/i, "enchant"],
   [/升级|\bupgrade/i, "upgrade"],
-  [/复制|\bduplicate|\bcopy/i, "duplicate"],
+  [/复制(?!品)|\bduplicate|\bcopy(?! of)/i, "duplicate"],
 ];
+
+/** A relic's trigger in fights (each turn, whenever, into your hand): an effect later on, not a pick now. */
+const LATER_EFFECT = /每回合|每场|在你的回合|回合开始时|战斗开始时|战斗结束时|每当|手牌|whenever|each turn|every turn|each combat|start of (?:your |each )?turn|end of combat|into your hand/i;
 
 /** A sentence that changes cards without a choice: random, all, the whole deck, a named card, the next combat. */
 const NO_CHOICE = /随机|所有|全部|整个|每张|被移除|升级过|被升级|初始手牌|你的\s*(?:\d+|一)\s*张打击和|random|\ball\b|\bevery\b|entire|whole|is removed|upgraded cards?/i;
@@ -158,7 +161,9 @@ export function deckFollowUp(description: string): DeckFollowUp | null {
     const sentence = sentences[i]!;
     const verb = VERBS.find(([pattern]) => pattern.test(sentence));
     if (!verb) continue;
-    if (NO_CHOICE.test(sentence)) continue;
+    if (NO_CHOICE.test(sentence) || LATER_EFFECT.test(sentence)) continue;
+    // "将1张X加入你的牌组" adds a named card (a card name may hold a verb): no pick from the deck.
+    if (/(?:加入|添加)(?:到|至)?你的.{0,4}牌组|add .{0,40} to your deck/i.test(sentence) && !/选择|从你的.{0,4}牌组|from your deck|choose/i.test(sentence)) continue;
     // "为这些牌附魔" / "these cards": the cards were chosen in the sentence before.
     const these = /这些牌|these cards/i.test(sentence) ? sentences[i - 1] ?? "" : "";
     const count = countIn(sentence) ?? (these ? countIn(these) : null);

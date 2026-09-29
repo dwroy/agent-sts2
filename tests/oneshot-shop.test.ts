@@ -49,6 +49,11 @@ describe("which deck selection an option leads to (the game's text)", () => {
     ["失去速度药水。获得一张升级过的普通技能牌。", null],
     ["将所有带有[gold]克隆[/gold]附魔的牌复制一次。", null],
     ["回复最大生命值的30%（26）。", null],
+    // A relic's effect in fights (Music Box's copy into the hand), not a pick now.
+    ["将你每回合打出的第一张攻击牌的一张[gold]虚无[/gold]复制品加入你的[gold]手牌[/gold]。", null],
+    ["在战斗结束时，随机升级一张牌。", null],
+    // A named card added to the deck, even when its name holds a verb.
+    ["将1张[gold]变化之力[/gold]加入你的[gold]牌组[/gold]。", null],
   ];
   it.each(cases)("%s", (text, expected) => {
     expect(deckFollowUp(text)).toEqual(expected);
