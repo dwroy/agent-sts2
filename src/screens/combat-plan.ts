@@ -1098,6 +1098,27 @@ export function entropicBrewPotions(state: GameState): number {
   return 1 + asArray(asRecord(state.run?.raw)["potions"]).filter((slot) => asRecord(slot)["occupied"] === false).length;
 }
 
+/**
+ * The cards a draw could bring when the state has no piles: the deck less the cards in hand (by id and upgrade), as
+ * pile cards (Strength and Weak in, the living enemies as targets).
+ */
+export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }, hand: CardModel[]): CardModel[] {
+  const inHand = hand.filter((card) => card.type !== "Potion").map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`);
+  return asArray(asRecord(state.run?.raw)["deck"]).flatMap((raw, position) => {
+    const own = asRecord(raw);
+    const cardId = str(own["card_id"]);
+    if (!cardId) return [];
+    const key = `${cardId}${bool(own["upgraded"]) ? "+" : ""}`;
+    const at = inHand.indexOf(key);
+    if (at >= 0) {
+      inHand.splice(at, 1);
+      return [];
+    }
+    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge);
+    return [{ ...model, validTargets: model.target === "single" ? ctx.enemyTargets : [], damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)) }];
+  });
+}
+
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
@@ -1639,17 +1660,16 @@ function planTurn(env: DecisionEnv): Decision | null {
       : {}),
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
-    // Drawn from the draw pile, or the discard pile reshuffled when it is empty.
+    // Drawn from the draw pile, or the discard pile reshuffled when it is empty; the deck less the hand when the state
+    // has neither pile. Both known and empty: nothing to draw (pilesEmpty).
     ...(drawSlot !== undefined
-      ? {
-          expectedDraw: expectedDraw(
-            (() => {
-              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
-              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
-            })(),
-            drawSlot,
-          ),
-        }
+      ? (() => {
+          const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+          const discard = pileCardModels(state, env.knowledge, "discard", pileContext);
+          const unknown = drawablePileSize(state.raw) === undefined;
+          const pool = draw.length > 0 ? draw : discard.length > 0 ? discard : unknown ? deckDrawPool(state, env.knowledge, pileContext, hand) : [];
+          return { expectedDraw: expectedDraw(pool, drawSlot), ...(!unknown && pool.length === 0 ? { pilesEmpty: true } : {}) };
+        })()
       : {}),
   };
   // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card

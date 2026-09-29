@@ -861,6 +861,11 @@ export interface PotionContext {
   drawPick?: CardModel | null;
   /** Gambler's Brew, Glowwater and Distilled Chaos: the draw pile's average card (expectedDraw). */
   expectedDraw?: CardModel | null;
+  /**
+   * The draw and discard piles are both known and empty (Glowwater drew the whole deck): a draw potion draws
+   * nothing (Glowwater still exhausts the hand; Gambler's Brew draws back the cards it discarded).
+   */
+  pilesEmpty?: boolean;
   /** Blessing of the Forge: what upgrading each plain card id of the deck changes (upgradeDelta). */
   upgrades?: Record<string, UpgradeDelta>;
   /** Soldier's Stew: the damage per play of the Strike cards in the draw and discard piles, summed. */
@@ -1015,8 +1020,13 @@ export function potionRegen(potionId: string): number {
 export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
-  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew without a known draw pile: nothing to price their cards by.
-  if ((effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled") && !ctx?.expectedDraw) return null;
+  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
+  // (combat-plan gives the draw pile's, else the discard pile's, else the deck's when the piles are unknown). With
+  // both piles empty there is nothing to draw: Glowwater only exhausts the hand (the solver's drawable 0), Distilled
+  // Chaos plays nothing, Gambler's Brew draws back the cards it discarded (no change). Without any context: null.
+  const drawPotion = effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled";
+  if (drawPotion && !ctx?.expectedDraw && !ctx?.pilesEmpty) return null;
+  if (drawPotion && !ctx?.expectedDraw && effect.special === "gamble") return { ...potionShell(potionId, name, slot, validTargets, useCost), ...effect, special: null };
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;

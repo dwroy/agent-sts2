@@ -303,3 +303,72 @@ describe("4b. Entropic Brew (混沌药水): its option says what it does, random
   });
 });
 
+describe("4c. Draw potions (Distilled Chaos, Glowwater, Gambler's Brew) when the piles are unknown or both empty: modelled, not \"effect not simulated\"", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  const ctx = { enemyTargets: [0], strength: 0, weak: false };
+
+  it("modelPotion: both piles empty is a potion that draws nothing (Gambler's Brew: no change); no context at all is still null", () => {
+    for (const id of ["DISTILLED_CHAOS", "GLOWWATER_POTION"]) {
+      const potion = modelPotion(id, id, 0, [], 0, { ...ctx, pilesEmpty: true });
+      expect(potion, id).not.toBeNull();
+      expect(potion!.generates, id).toBeUndefined();
+    }
+    expect(modelPotion("GAMBLERS_BREW", "GAMBLERS_BREW", 0, [], 0, { ...ctx, pilesEmpty: true })).toMatchObject({ special: null });
+    expect(modelPotion("GLOWWATER_POTION", "GLOWWATER_POTION", 0, [], 0)).toBeNull();
+    // Glowwater with nothing to draw: the hand is exhausted and nothing comes back.
+    const glow = { ...modelPotion("GLOWWATER_POTION", "发光水", 0, [], 0, { ...ctx, pilesEmpty: true })!, cost: 0 };
+    const input: SolverInput = { hand: [strike(0), glow], player: player({ energy: 1, drawable: 0 }), enemies: [enemy()], fightKind: "monster", turn: 1 };
+    const drink = solveTurn(input).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:"))!;
+    expect(drink.outcome.damageDealt).toBe(0);
+  });
+
+  /** The ULQP F6 T2 board (both piles empty) with a draw potion in the first slot. */
+  const withPotion = (potionId: string, name: string, dropPiles = false) => {
+    const fx = logged("batch-j/ulqp-f6-t2-glowwater");
+    const run = fx.state["run"] as Raw;
+    const slots = run["potions"] as Raw[];
+    slots[0] = { ...slots[0], potion_id: potionId, name, description: "", occupied: true, usage: "CombatOnly", target_type: "AnyPlayer", can_use: true, can_discard: true };
+    if (dropPiles) {
+      const view = (fx.state["agent_view"] as Raw)["combat"] as Raw;
+      delete view["draw"];
+      delete view["discard"];
+    }
+    return fx;
+  };
+
+  it("the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no \"not simulated\")", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    for (const [id, name] of [["DISTILLED_CHAOS", "蒸馏混沌"], ["GLOWWATER_POTION", "发光水"]] as const) {
+      const inputs: SolverInput[] = [];
+      solveTap.onSolve = (input) => inputs.push(input);
+      try {
+        const lines = planLines(planCombatTurn(loggedEnv(withPotion(id, name))));
+        expect(lines.some((line) => String(line["plays"]).includes(name) && /not simulated/.test(String(line["plays"]))), id).toBe(false);
+      } finally {
+        solveTap.onSolve = null;
+      }
+      expect(inputs[0]!.hand.some((card) => card.cardId.startsWith(`POTION:${id}`)), id).toBe(true);
+    }
+  });
+
+  it("the logged board with no piles in the state: Glowwater is priced by the deck's expected card (a line of the solve)", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const inputs: SolverInput[] = [];
+    solveTap.onSolve = (input) => inputs.push(input);
+    try {
+      const lines = planLines(planCombatTurn(loggedEnv(withPotion("GLOWWATER_POTION", "发光水", true))));
+      expect(lines.some((line) => /not simulated/.test(String(line["plays"])))).toBe(false);
+    } finally {
+      solveTap.onSolve = null;
+    }
+    const glow = inputs[0]!.hand.find((card) => card.cardId.startsWith("POTION:GLOWWATER_POTION"))!;
+    expect(glow.generates).toBeDefined();
+    expect(glow.generates!.name).toBe("an average draw");
+  });
+});
