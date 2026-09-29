@@ -876,6 +876,8 @@ interface SimPlayer {
   rupture: number;
   /** Pyre: energy at the start of every turn. */
   pyre: number;
+  /** Thorns up (THORNS_POWER, Liquid Bronze's 3 a drink): damage back per enemy attack hit, for the fight. */
+  thorns: number;
   /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
   radiance: number;
   /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
@@ -1287,6 +1289,7 @@ function applyPlan(
       const potion = hand.find((card) => card.type === "Potion" && card.cardId === step.cardId);
       if (potion) {
         player.plating += potion.plating ?? 0;
+        player.thorns += potion.thorns ?? 0;
         if (potion.special === "dexterity") player.dexterity += DEX_POTION;
         if (potion.special === "regen") regenDrunk += potion.regen ?? 0;
         if (potion.special === "ritual") player.ritual += 1;
@@ -1392,11 +1395,13 @@ function applyPlan(
     // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
     if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
+  // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
+  const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
     const hit = a.hp < e.hp;
-    e.hp = a.hp;
+    e.hp = a.hp - (a.hp > 0 && !a.husk ? Math.min(a.hp, retaliated.get(e.index) ?? 0) : 0);
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (a.artifact !== undefined) e.artifact = a.artifact;
@@ -1669,6 +1674,7 @@ function simulate(
     mantle: input.playerPowers["CRIMSON_MANTLE_POWER"] ?? 0,
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
+    thorns: input.playerPowers["THORNS_POWER"] ?? 0,
     radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
     strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
@@ -1891,7 +1897,8 @@ function simulate(
       rage: 0,
       colossus: false,
       gambit: false,
-      retaliate: input.playerPowers["THORNS_POWER"] ?? 0,
+      // Thorns up by now (Liquid Bronze drunk in the line or before); Flame Barrier's was the decision turn's only.
+      retaliate: player.thorns,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.

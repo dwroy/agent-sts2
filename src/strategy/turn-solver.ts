@@ -578,6 +578,11 @@ export interface Outcome {
   lastingDrinks?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
+  /**
+   * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
+   * enemyHpAfter (our turn's end); the rollout takes it off their HP.
+   */
+  retaliated?: { index: number; amount: number }[];
 }
 
 export interface Plan {
@@ -1328,6 +1333,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
+  // Thorns (Liquid Bronze): back on every hit of this enemy turn like Flame Barrier's, and it stays up (the rollout's later turns).
+  if ((card.thorns ?? 0) > 0) next.retaliate += card.thorns ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.special === "intangible") next.intangible = true;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
@@ -2070,13 +2077,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP spent without a kill, the Pressure Gun and explosion followed).
   const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
+  // Retaliation (Flame Barrier, Thorns) dealt on the enemy turn, per attacker: the rollout takes it off their HP.
+  const retaliated: { index: number; amount: number }[] = [];
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
     // kills stops attacking), capped by the attacker's HP.
     let back = 0;
     for (const enemy of living) {
       const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
-      back += Math.min(enemy.hp, landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      const amount = Math.min(Math.max(0, enemy.hp), landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      back += amount;
+      if (amount > 0) retaliated.push({ index: enemy.index, amount });
     }
     score += weights.damage * back;
   }
@@ -2284,6 +2295,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
@@ -2304,7 +2316,7 @@ export function turnOnlyDrink(card: CardModel): boolean {
   if (card.type !== "Potion") return true;
   const lasting =
     (card.demise ?? 0) > 0 || (card.shrink ?? 0) > 0 || card.vulnerable > 0 || card.weak > 0 || card.strength !== 0 || card.enemyStrength !== 0 ||
-    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
+    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || (card.thorns ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
   return !lasting && TURN_ONLY_SPECIALS.has(card.special ?? "");
 }
 
