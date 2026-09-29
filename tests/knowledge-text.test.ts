@@ -56,7 +56,8 @@ describe("boss numbers per ascension, advice as the experience base has it (Wate
     const guide = read("ironclad-guide.md");
     // giant-deck: A8 winners 1.2 upgrades, losers 2.3; the old 0.3 / 2.2 came from three A0 runs.
     expect(handbook).not.toMatch(/输的 3 局平均升级 0\.3 张/);
-    expect(handbook).toMatch(/A8 赢局平均 1\.2 张升级、输局 2\.3 张/);
+    // 2026-09-30 (A8 30 fights with 5PHF, 2WRU): winners 1.2, losers 2.1.
+    expect(handbook).toMatch(/A8 30 场赢局平均 1\.2 张升级、输局 2\.1 张/);
     // giant-explode: the kill-turn record (A8 killed by T10 13/15 won when written) is filled from the fight data
     // (batch I: {GIANT_KILLS_A8}, {GIANT_KILLS_A9}); "block more and fight slowly" is the losing way.
     expect(guide).not.toContain("宁可多格挡慢慢打");
