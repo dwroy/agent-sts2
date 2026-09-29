@@ -1712,11 +1712,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // the turn's end costs besides (held Beckons' HP loss, a Mantle, Disintegration) is not a calculation mismatch
   // (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in all, "mod says safe"; one Beckon was held
   // and T13 began at 7 = 40 - 27 - 6, as the solver has it).
-  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && endNow.outcome.incomingAfterBlock < playerSim.hp;
+  // Damage from cards held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest
+  // (K7G9M8K4DWFW F45 T3: 4 HP, four Burns held, no attack coming, "calc mismatch: … mod says safe").
+  const heldDamage = endNow?.outcome.heldDamage ?? 0;
+  const enemyPart = endNow ? Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage) : 0;
+  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && enemyPart < playerSim.hp;
   const calcNote =
     endNow && endReachesZero !== modSaysLethal
       ? endOnlyByOwnLosses
-        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${endNow.outcome.incomingAfterBlock} of it the enemy hits after block]`
+        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}]`
         : ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 

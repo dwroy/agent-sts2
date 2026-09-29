@@ -366,3 +366,33 @@ describe("6. The Giant's kill-turn record in the guides is filled from the fight
     }
   });
 });
+
+describe("7. \"solver says dead, mod says safe\" from cards held (Burn) is not a \"calc mismatch\" either (after 14520e0, which counted the enemy hits only)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("solver: the held Burns' damage is apart in the outcome", () => {
+    const burn = (i: number) => card(i, "BURN", { type: "Status", cost: -1, playable: false, target: "none", validTargets: [], heldPenalty: 2 });
+    const input: SolverInput = { hand: [burn(0), burn(1)], player: player({ hp: 3, energy: 0 }), enemies: [enemy({ attacks: [{ damage: 1, hits: 1 }] })], fightKind: "monster", turn: 1 };
+    const end = solveTurn(input).plans.find((plan) => plan.steps.length === 0)!;
+    expect(end.outcome.heldDamage).toBe(4);
+    expect(end.outcome.incomingAfterBlock).toBe(5);
+    expect(end.outcome.dies).toBe(true);
+  });
+
+  it("the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("batch-i/k7g9-f45-t3-burns");
+    expect((fx.state["combat"] as Raw)["end_turn_will_kill_player"]).toBe(false);
+    const decision = planCombatTurn(loggedEnv(fx));
+    if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind}`);
+    const question = decision.questions["plan"]!;
+    const key = Object.keys(question.type === "choice" ? question.criteria : {}).find((k) => k.startsWith("plan"))!;
+    const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    expect(resolved.rationale).not.toContain("calc mismatch");
+    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: \d+ HP lost in all, 0 of it the enemy hits after block, 8 damage from cards held \(Burn\)\]/);
+  });
+});

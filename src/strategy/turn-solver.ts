@@ -598,6 +598,11 @@ export interface Outcome {
   retaliated?: { index: number; amount: number }[];
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
+  /**
+   * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
+   * the enemy hits and is part of incomingAfterBlock.
+   */
+  heldDamage?: number;
 }
 
 export interface Plan {
@@ -2341,6 +2346,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
