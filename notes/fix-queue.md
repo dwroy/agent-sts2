@@ -99,27 +99,33 @@ From fix batch E (2026-09-29 18:26; line numbers at v3 94648bf), not fixed:
 - ~~Test runtime: rollout-live.test.ts and potion-mc.test.ts run every fixture in tests/logged-states; potion-mc timed out once under load (1.8 s alone). Consider a per-test timeout or a fixture subset.~~ fixed b650fe4 (batch F, v3 c605500)
 
 From post-mortems KTRT ZGZ0 QBCV (2026-09-29 19:09; line numbers at v3 94648bf):
-- map.ts:340-342 with Little Mailbox (小邮箱) code discards a potion on the map whenever the next node can be a rest site, but the mailbox only gives potions on a Rest, not a Smith (ZGZ0 F10 dropped Fysh Oil, F11 DeepSeek smithed, entered the boss with an empty slot). Code must not discard potions on its own (Dai's potion rule); if room is needed, make it part of the rest/plan answer. Recorded in an old post-mortem (fcbe2a8 era) but never queued.
+- ~~map.ts:340-342 with Little Mailbox (小邮箱) code discards a potion on the map whenever the next node can be a rest site, but the mailbox only gives potions on a Rest, not a Smith (ZGZ0 F10 dropped Fysh Oil, F11 DeepSeek smithed, entered the boss with an empty slot). Code must not discard potions on its own (Dai's potion rule); if room is needed, make it part of the rest/plan answer. Recorded in an old post-mortem (fcbe2a8 era) but never queued.~~ fixed 0c71951 (no code discard; rest options get a discard variant, DeepSeek names slots / Jev yes-no per slot) (batch G, v3 d32b992)
 - ~~event.ts:338 the discard option only appears when the belt is completely full; when an event gives more potions than free slots, the extra potion is silently left behind and DeepSeek is not told (KTRT F6 低语空谷: 44 gold for 2 potions, Dexterity Potion left on the reward page, "no rewards left to claim").~~ fixed 5c10115 (slots needed = potions given − slots the option adds − free slots; verify live) (batch F, v3 c605500)
 - ~~Recurring: saturated pickRolloutBest doesn't compare deaths (rollout-live.ts:440-455) — QBCV boss T5 (Jev ignored), ZGZ0 boss T4 (Jev followed). In batch F.~~ fixed b2080fb (batch F, v3 c605500)
-- To investigate: KTRT F23 T3 "Twin Strike, Bash+" (0 loss, kills the 29-HP Bowlbug Rock exactly) ranked below "Defend, Bash+" (−11, Rock left at 16) by both rollout (6/8 vs 3/8 dead) and history (25% vs 49%); the Rock lived, T4 −20.
-- To investigate: selection.ts:689 Toasty Mittens exhaust pick scores power cards at a fixed 5 → at 9 HP it exhausted Twin Strike and kept Rend (KTRT).
-- Boss rollout coverage: ZGZ0 boss 3 of 5 questions fell back to the 1-turn estimate; QBCV boss 7 of 9 saturated.
+- ~~To investigate: KTRT F23 T3 "Twin Strike, Bash+" (0 loss, kills the 29-HP Bowlbug Rock exactly) ranked below "Defend, Bash+" (−11, Rock left at 16) by both rollout (6/8 vs 3/8 dead) and history (25% vs 49%); the Rock lived, T4 −20.~~ fixed ff5fa50 (Bowlbug Rock Imbalanced stun only on a fully blocked attack; was a random ~30% stun) (batch G, v3 d32b992)
+- ~~To investigate: selection.ts:689 Toasty Mittens exhaust pick scores power cards at a fixed 5 → at 9 HP it exhausted Twin Strike and kept Rend (KTRT).~~ not a bug: fixed 5 is an intended heuristic (4UWK Barricade) → valuation question for Dai (batch G, v3 d32b992)
+- ~~Boss rollout coverage: ZGZ0 boss 3 of 5 questions fell back to the 1-turn estimate; QBCV boss 7 of 9 saturated.~~ fixed 129a2a3 (fallback to 3-turn rollouts, keep 1 sample per line when just over budget; QBCV saturation is the board itself) (batch G, v3 d32b992)
 
 From fix batch F (2026-09-29 19:12; line numbers at v3 c605500), not fixed:
-- turn-solver.ts:1462 drawCards: mid-turn draws don't auto-play Hellraiser Strikes; Dark Embrace draw on mid-turn exhausts not modelled.
-- combat-plan.ts:~1421 after Primal Force the expected hand isn't updated to Giant Rocks → the line is re-planned (same shape as eca3384 Blessing of the Forge).
-- boss-clock.ts:735 expectedEntryHp and route projections don't add Pantograph's boss-start heal (+25).
+- ~~turn-solver.ts:1462 drawCards: mid-turn draws don't auto-play Hellraiser Strikes; Dark Embrace draw on mid-turn exhausts not modelled.~~ fixed ed9f105 (batch G, v3 d32b992)
+- ~~combat-plan.ts:~1421 after Primal Force the expected hand isn't updated to Giant Rocks → the line is re-planned (same shape as eca3384 Blessing of the Forge).~~ fixed ca11ab3 (batch G, v3 d32b992)
+- ~~boss-clock.ts:735 expectedEntryHp and route projections don't add Pantograph's boss-start heal (+25).~~ fixed 66f98b5 (batch G, v3 d32b992)
 - To verify: rollout.ts:739 BOULDER_STEP=5 for upgraded / two Rolling Boulders (no log data yet).
-- turn-solver.ts:1066 unused free attacks carry over only in the rollout; the solver's scoring of this turn gives them no value.
-- Event discard options: one option per discard combination can explode (5 slots, 3 potions → 25 options) — consider grouping.
+- ~~turn-solver.ts:1066 unused free attacks carry over only in the rollout; the solver's scoring of this turn gives them no value.~~ fixed fed438e (fact free_attacks_kept, score unchanged) (batch G, v3 d32b992)
+- ~~Event discard options: one option per discard combination can explode (5 slots, 3 potions → 25 options) — consider grouping.~~ fixed fa98169 (one discard variant per option) (batch G, v3 d32b992)
 
 From experience update 2026-09-29.5 (2026-09-29 19:40; line numbers at v3 4452401):
-- Hand-written facts contradicting data (fix the numbers per ascension): ds-handbook.md:38 "wins average 88% entry, losses 81%" (A9 act-1 boss 41 fights: both 90%); boss-clock.ts:195 "A9 killed before T10 1/3" is now 2/4 (Y36H won with a T9 kill) — better derived from the data than hard-coded.
+- ~~Hand-written facts contradicting data (fix the numbers per ascension): ds-handbook.md:38 "wins average 88% entry, losses 81%" (A9 act-1 boss 41 fights: both 90%); boss-clock.ts:195 "A9 killed before T10 1/3" is now 2/4 (Y36H won with a T9 kill) — better derived from the data than hard-coded.~~ fixed 22109ed (Giant record computed from data: A9 3/10, before T10 2/4) (batch G, v3 d32b992)
 - Knowledge text vs code: experience potion-swift says code values Swift Potion at 0, but potion-values.ts:47 / card-model.ts:730 draw 3 (potion entry: left for Dai's potion-entry decision).
 - combat-plan.ts:690 treats Slumbering Beetle as an elite in combat while route pricing prices it as a hallway (inconsistent classification; pricing itself is route estimation → Dai).
 
 From post-mortems Y36H WQ67 8KD7 RHNE ARKG (2026-09-29 20:17; line numbers at v3 4452401):
-- HIGH regression (0dafcda, batch E): Demise powder tagged potion_no_effect — solver outcome doesn't record Demise (turn-solver.ts:2174-2191; only scored at :2119-2122), so noEffectTwin (rollout-live.ts:406-419) treats the line as identical and copies the dry line's rollout (:615-619); rollout.ts has no Demise at all. ARKG F17 Soul Fysh: 30/34 questions tagged, Jev never drank until code did at T15 (up to 117 over T2–T14, Fysh left at 62). → sent to batch G as its first item.
+- ~~HIGH regression (0dafcda, batch E): Demise powder tagged potion_no_effect — solver outcome doesn't record Demise (turn-solver.ts:2174-2191; only scored at :2119-2122), so noEffectTwin (rollout-live.ts:406-419) treats the line as identical and copies the dry line's rollout (:615-619); rollout.ts has no Demise at all. ARKG F17 Soul Fysh: 30/34 questions tagged, Jev never drank until code did at T15 (up to 117 over T2–T14, Fysh left at 62). → sent to batch G as its first item.~~ fixed 2ca832e (turnOnlyDrink positive check, lastingDrinks, Demise in solver outcome and rollout) (batch G, v3 d32b992)
 - Pael's Tear unmodelled: run-brief.ts:113 lists it as text only; solver/rollout never make "end the turn with 1 energy left" lines (Y36H: DeepSeek took it at F18 for +2 energy/turn; 15 turns F19–F25 all started at 3 energy).
 - Liquid Memories drunk mid Jev line: the card the line names isn't carried to the selection screen — combat-plan.ts:1537 computes it, selection.ts:40-53 only remembers Gambler's Brew discards (8KD7 F11 T2: Jev re-asked, took Fire Barrier over Bash+, line broken, 0 damage).
+
+From fix batch G (2026-09-29 20:32; line numbers at step1-bugfix = v3 d32b992), not fixed:
+- map.ts:342 White Beast Statue: code still discards the weakest potion on the map — same pattern as the Little Mailbox (0c71951); reuse that discard-variant mechanism so the decider chooses.
+- turn-solver.ts:1168 Feel No Pain block ignores random exhausts (unupgraded True Grit); Dark Embrace already counted.
+- To verify: rollout.ts:1132 Test Subject phase revive doesn't clear Demise (game behaviour unknown).
+- deepseek.ts:374 recovering an unknown option from the reasoning keeps route but drops `discard` → a recovered discard option is judged invalid and falls back.
