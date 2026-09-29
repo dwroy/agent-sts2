@@ -1253,6 +1253,12 @@ function applyPlan(
     if (card.exhausts || card.type === "Power") continue;
     // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
     const back = handBase[at] ?? card;
+    // Thrash: the damage it absorbed this turn is added to it for its later plays (3SBPKG9603WD).
+    const grown = (o.thrashGrowth ?? []).filter((growth) => growth.index === card.index).reduce((sum, growth) => sum + growth.amount, 0);
+    if (grown > 0 && back.damage !== null) {
+      piles.discard.push({ ...back, damage: back.damage + grown, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + grown } : {}) });
+      continue;
+    }
     piles.discard.push(card.special === "frantic_escape" ? { ...back, cost: Math.max(back.cost, card.cost) + 1 } : back);
   }
   // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit

@@ -231,8 +231,8 @@ const POWER_AMOUNT_VARS: Record<string, string> = {
 
 const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
-  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: an Attack from the
-  // hand, its damage on both hits; D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8 dealt 2 x 24 = 48).
+  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: hits for its printed
+  // number, then an Attack from the hand is exhausted and its shown damage added to Thrash for later plays; 3SBPKG9603WD).
   THRASH: "thrash",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
