@@ -152,6 +152,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   }
 
   const entries = deckEntries(state, knowledge);
+  // An enchant screen has no code ranking (PHMV F21: the removal order's "upgraded -8" went to DeepSeek
+  // as "code's ranking for this pick", and it spent 233 s on it): every card scores 0, no rank is shown.
+  const unranked = kind === "deck_enchant_select";
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
@@ -165,7 +168,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
       label: name,
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
-      score: forThisTurn
+      score: unranked
+        ? 0
+        : forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
@@ -268,6 +273,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const why = SELECTION_WHY[isAdd ? "add" : verb] ?? "code's ranking for this pick";
   return buildPickDecision({
     ...params,
+    ...(unranked ? { unranked: true } : {}),
     options: options.map((option) => ({ ...option, why })),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`, ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
@@ -346,6 +352,7 @@ const SELECTION_WHY: Record<string, string> = {
   remove: "removal order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value; Strength cards -50; run plan removals +40",
   transform: "transform order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value",
   add: "card value for the deck (run plan wanted +bonus)",
+  enchant: "no code ranking: code does not know which card an enchantment suits; judge by the enchantment's effect (situation.enchantment) and the card",
 };
 
 /**

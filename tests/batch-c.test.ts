@@ -283,3 +283,19 @@ describe("Extra: hand-written knowledge agrees with the experience base (d986a74
     expect(read("ds-handbook.md")).toMatch(/每场战斗（精英、boss 也一样）的第 1 回合由瓦库代打.*7 个第 1 回合我方只打出 1 张牌、喝了 5 瓶药/);
   });
 });
+
+describe("5. The enchant screen carries no removal-style ranking (PHMVUY73R0D7 F20: code_rank 1-13, upgraded -8, \"code's ranking for this pick\")", () => {
+  it("DeepSeek's options have no code_value or code_rank, an honest why; the upgraded cards are not marked down", () => {
+    const fx = logged("phmv-f20-enchant");
+    const decision = planSelection({ ...loggedEnv(fx), buildDecider: "deepseek" }) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = decision.questions["pick"]!.type === "choice" ? decision.questions["pick"]!.criteria : {};
+    const options = Object.values(criteria).map((text) => JSON.parse(String(text)) as Record<string, unknown>);
+    expect(options.length).toBeGreaterThan(10);
+    for (const option of options) {
+      expect(option["code_value"]).toBeUndefined();
+      expect(option["code_rank"]).toBeUndefined();
+      expect(String(option["why"])).toMatch(/^no code ranking: code does not know which card an enchantment suits/);
+    }
+  });
+});
