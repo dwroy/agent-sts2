@@ -367,13 +367,16 @@ export interface EnemyMove {
    * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
    * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
    * Magistrate: damage halved) until its next move, Flutter (Thieving Hopper), Personal Hive (Entomancer: a
-   * Dazed per hit), Vital Spark (Infested Prism: Tainted per Skill).
+   * Dazed per hit), Vital Spark (Infested Prism: Tainted per Skill), Steam Eruption (Waterfall Giant: +3 a
+   * move, what it explodes for when killed).
    */
   selfPowers?: Partial<Record<EnemySelfPower, number>>;
+  /** HP it heals itself (Waterfall Giant's Siphon, Knowledge Demon's Ponder; rollout-live healOf). */
+  heal?: number;
 }
 
 /** The self-buffs of enemy moves the rollout applies (EnemyMove.selfPowers). */
-export const ENEMY_SELF_POWERS = ["RITUAL_POWER", "INTANGIBLE_POWER", "THORNS_POWER", "SOAR_POWER", "FLUTTER_POWER", "PERSONAL_HIVE_POWER", "VITAL_SPARK_POWER"] as const;
+export const ENEMY_SELF_POWERS = ["RITUAL_POWER", "INTANGIBLE_POWER", "THORNS_POWER", "SOAR_POWER", "FLUTTER_POWER", "PERSONAL_HIVE_POWER", "VITAL_SPARK_POWER", "STEAM_ERUPTION_POWER"] as const;
 export type EnemySelfPower = (typeof ENEMY_SELF_POWERS)[number];
 
 /**
@@ -1136,6 +1139,10 @@ function applyPlan(
         e.flutter += gained.FLUTTER_POWER ?? 0;
         e.dazedPerHit += gained.PERSONAL_HIVE_POWER ?? 0;
         e.vitalSpark += gained.VITAL_SPARK_POWER ?? 0;
+        // The Giant's eruption grows with every move (it was frozen at the decision's: a kill on a later
+        // simulated turn exploded up to 12 low), and Siphon / Ponder heal.
+        if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
+        if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
         if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").

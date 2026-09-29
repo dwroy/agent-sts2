@@ -1112,3 +1112,47 @@ describe("enemy Plating and Rampart block in the later turns (Sewer Clam: fight 
     expect(dmg(line)).toEqual([35, 35, 35, 35]);
   });
 });
+
+describe("Waterfall Giant and Knowledge Demon in the later turns: the eruption grows, Siphon / Ponder heal (consistency #10)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (table: EnemyTable, hp: number, maxHp: number, extra: Partial<EnemySim> = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Giant", hp, maxHp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "WATERFALL_GIANT", move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { WATERFALL_GIANT: table },
+    }).lines[0]!;
+  };
+
+  it("each Giant move adds its Steam Eruption: killed on T3 after two moves it blows for 10 + 3 + 3", () => {
+    const stomp: EnemyTable = { moves: { STOMP_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: { STEAM_ERUPTION_POWER: 3 } } }, next: { STOMP_MOVE: { STOMP_MOVE: 1 } } };
+    // 40 HP: 30 on T2, the kill on T3, the blast at the end of T4 through no block.
+    const line = run(stomp, 40, 250, { eruption: 10 });
+    expect(line.perTurn.find((t) => t.turn === 4)!.loss.mean).toBe(16);
+  });
+
+  it("Siphon heals 15 each enemy turn: 30 a turn into 500 HP leaves 440 at T5, not 380", () => {
+    const siphon: EnemyTable = { moves: { SIPHON_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, heal: 15 } }, next: { SIPHON_MOVE: { SIPHON_MOVE: 1 } } };
+    expect(run(siphon, 500, 999).enemyHpLeft).toBe(440);
+  });
+
+  it("the heal comes from the monster DB at this ascension, the boss clock's numbers without it", async () => {
+    const { healOf } = await import("../src/strategy/rollout-live.js");
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", { heal_by_asc: { "8": { "15": 6 }, "9": { "18": 2 } } }, 9)).toBe(18);
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 8)).toBe(15);
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 5)).toBe(10);
+    expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", undefined, 8)).toBe(30);
+    expect(healOf("KNOWLEDGE_DEMON", "SLAP_MOVE", undefined, 8)).toBe(0);
+  });
+});

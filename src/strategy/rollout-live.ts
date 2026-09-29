@@ -29,6 +29,7 @@ import { countsAt, moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } 
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
+import { PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { modelHandCard, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
@@ -144,6 +145,19 @@ export function selfPowersOf(entry: MoveEntry, asc: number): { selfPowers?: Part
   return Object.keys(out).length > 0 ? { selfPowers: out } : {};
 }
 
+/**
+ * HP a Heal move gives its user at this ascension: the monster DB's heal_by_asc (the nearest logged
+ * ascension), else the boss clock's logged numbers for the two bosses that heal (Siphon 10, 15 from A8;
+ * Ponder 30), else none.
+ */
+export function healOf(id: string, move: string, entry: MoveEntry | undefined, asc: number): number {
+  const logged = mode(countsAt(entry?.heal_by_asc, undefined, asc));
+  if (logged) return logged;
+  if (id === "WATERFALL_GIANT" && move === "SIPHON_MOVE") return asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
+  if (id === "KNOWLEDGE_DEMON" && move === "PONDER_MOVE") return PONDER_HEAL;
+  return 0;
+}
+
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
 export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveModelData): EnemyTable | undefined {
   const moves = db[id]?.moves;
@@ -165,6 +179,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...selfPowersOf(entry, asc),
+      ...(healOf(id, move, entry, asc) > 0 ? { heal: healOf(id, move, entry, asc) } : {}),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated ? { estimated: true } : {}),
     };

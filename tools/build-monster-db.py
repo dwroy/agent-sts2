@@ -306,6 +306,8 @@ def new_move():
         "back_frames": collections.defaultdict(list),
         "player_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
         "status_cards": collections.Counter(),
+        # asc -> Counter(HP healed): a Heal move's HP gain across its enemy turn (Siphon 15 at A8, Ponder).
+        "heal_by_asc": collections.defaultdict(collections.Counter),
         "turns": collections.Counter(),
     }
 
@@ -519,6 +521,8 @@ class Builder:
                 # nxt opens the next turn: the enemy turn has resolved, our turn has not started.
                 if after is None:
                     continue
+                if "Heal" in types and isinstance(after.get("hp"), int) and isinstance(before.get("hp"), int) and after["hp"] > before["hp"]:
+                    move["heal_by_asc"][akey][after["hp"] - before["hp"]] += 1
                 if "Defend" in types and after["block"]:
                     move["block"][after["block"]] += 1
                     move["block_by_asc"][akey][after["block"]] += 1
@@ -675,6 +679,8 @@ def build_output(builder, game):
                 entry["player_powers_applied_by_asc"] = by_asc_obj(move["player_by_asc"])
             if move["status_cards"]:
                 entry["status_cards"] = counter_obj(move["status_cards"])
+            if move["heal_by_asc"]:
+                entry["heal_by_asc"] = {str(asc): counter_obj(c) for asc, c in sorted(move["heal_by_asc"].items(), key=lambda kv: (isinstance(kv[0], str), kv[0]))}
             moves[move_id] = entry
         powers = {}
         for pid, power in sorted(mon["powers"].items()):
@@ -763,6 +769,7 @@ def build_output(builder, game):
                 "after Strength, Weak, Vulnerable); base_per_hit = shown - enemy Strength, only from turns without enemy Weak/Shrink or our "
                 "Vulnerable/Intangible. self_powers_gained/player_powers_applied/block_gained = power and block deltas across the enemy turn after a "
                 "move with a Buff/Debuff/Defend intent (other effects of that enemy turn can leak in); *_by_asc = the same split by ascension. "
+                "heal_by_asc = a Heal move's HP gain across its enemy turn (less near max HP). "
                 "powers.amount_at_first_sight_by_asc / turn_at_first_sight_by_asc = each instance's first logged amount and the turn it was on. "
                 "Surrounded (Kaiser Crab): a back-attack enemy's frame is a base sample only when its turn also showed the other facing's "
                 "number (behind = floor((base + Strength) x 1.5)); back_attack_by_asc counts the turns it came from behind or in front. threat: hp_loss_won = entry HP - HP on the last "
@@ -960,6 +967,9 @@ def _synthetic_lines():
     # Run R4, floor 2: a guard's Defend turn; our next turn opens with its 12 block.
     lines.append(state("COMBAT", "R4", 1, 2, 80, [enemy(0, "GUARD", 50, 50, "SHIELD_MOVE", types=("Defend",))], True))
     lines.append(state("COMBAT", "R4", 2, 2, 80, [enemy(0, "GUARD", 50, 50, "SWIPE_MOVE", 5, 1, block=12)], True))
+    # Run R7, floor 17: a Siphon (Buff + Heal) takes the Giant from 200 to 215.
+    lines.append(state("COMBAT", "R7", 1, 17, 80, [enemy(0, "GIANT", 200, 250, "SIPHON_MOVE", types=("Buff", "Heal"))], True))
+    lines.append(state("COMBAT", "R7", 2, 17, 80, [enemy(0, "GIANT", 215, 250, "STOMP_MOVE", 15, 1)], True))
     return lines
 
 
@@ -1033,6 +1043,10 @@ def self_test():
     shield = db["monsters"]["GUARD"]["moves"]["SHIELD_MOVE"]
     assert shield["block_gained"] == {"12": 1}, shield
     assert shield["block_gained_by_asc"] == {"8": {"12": 1}}, shield
+    # A Heal move's HP gain, by ascension.
+    siphon = db["monsters"]["GIANT"]["moves"]["SIPHON_MOVE"]
+    assert siphon["heal_by_asc"] == {"8": {"15": 1}}, siphon
+    assert "heal_by_asc" not in db["monsters"]["GIANT"]["moves"]["STOMP_MOVE"]
     print("self-test ok")
     return 0
 

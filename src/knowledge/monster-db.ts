@@ -44,6 +44,8 @@ export interface MoveEntry {
   /** Block a Defend move gave (pooled), and by ascension. */
   block_gained?: Record<string, number>;
   block_gained_by_asc?: Record<string, Record<string, number>>;
+  /** HP a Heal move gave its user across its enemy turn, by ascension (Siphon, Ponder). */
+  heal_by_asc?: Record<string, Record<string, number>>;
 }
 
 interface MonsterEntry {

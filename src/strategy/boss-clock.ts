@@ -204,6 +204,8 @@ export function kinBeamT11(ascension: number): number | null {
  * near full HP.
  */
 export const SIPHON_HEAL = { base: 10, a8: 15 };
+/** HP the Knowledge Demon's Ponder heals (T4 and T8), when the monster DB has no heal_by_asc for it. */
+export const PONDER_HEAL = 30;
 
 /** Pressure Gun's first shot and its gain a use when the DB has none (A8: 20, 25, 30). */
 const GUN_FALLBACK = { first: 20, step: 5 };
@@ -546,7 +548,7 @@ export function extraHp(id: string, deck: DeckProfile | null, turns: number, per
   switch (id) {
     case "KNOWLEDGE_DEMON":
       // Ponder heals 30 on T4 and T8.
-      return (turns > 4 ? 30 : 0) + (turns > 8 ? 30 : 0);
+      return (turns > 4 ? PONDER_HEAL : 0) + (turns > 8 ? PONDER_HEAL : 0);
     case "VANTOM":
       // The turns spent stripping Slippery deal 1 a hit instead of the deck's damage.
       return Math.max(0, Math.round(slipperyTurns(deck, turns) * perTurn - SLIPPERY_STACKS));
