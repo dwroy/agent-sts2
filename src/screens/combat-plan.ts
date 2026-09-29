@@ -840,13 +840,34 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
  * said Defend+, a plain Defend was played and the Defend+ stayed in hand — 3 HP lost).
  */
 function cardFor(step: Step, hand: CardModel[]): CardModel | undefined {
+  // The card a pile-card potion took (Liquid Memories) is in the hand by its own id once taken.
+  const cardId = step.pileCard?.cardId ?? step.cardId;
+  const upgraded = step.pileCard?.upgraded ?? step.upgraded;
   // Match the planned copy's cost first: after Snecko Oil the gate kept rejecting the 3-cost Strike
   // while the planned 0-cost one sat in hand (24DPW2ED71QM, 30 min stuck).
   return (
-    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && step.cost !== undefined && entry.cost === step.cost && entry.playable) ??
-    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && entry.playable) ??
-    hand.find((entry) => entry.cardId === step.cardId && entry.playable)
+    hand.find((entry) => entry.cardId === cardId && entry.upgraded === upgraded && step.cost !== undefined && entry.cost === step.cost && entry.playable) ??
+    hand.find((entry) => entry.cardId === cardId && entry.upgraded === upgraded && entry.playable) ??
+    hand.find((entry) => entry.cardId === cardId && entry.playable)
   );
+}
+
+/** A card as the hand signature writes it ("BASH+"). */
+function takeSignature(card: { cardId: string; upgraded: boolean }): string {
+  return `${card.cardId}${card.upgraded ? "+" : ""}`;
+}
+
+/** A hand signature with one more card in it. */
+function withCard(signature: string, card: string): string {
+  return [...(signature === "" ? [] : signature.split(",")), card].sort().join(",");
+}
+
+/**
+ * A pile-card potion step (Liquid Memories): the "put a card into your hand" screen that follows takes the card
+ * the line named (selection.ts), and the line's memo expects it in the hand afterwards.
+ */
+function notePotionTake(env: DecisionEnv, turn: number | null, step: Step): void {
+  if (step.takes) env.screenMemory.potionTake = { turn, cardId: step.takes.cardId, upgraded: step.takes.upgraded };
 }
 
 function intentFor(step: Step, hand: CardModel[]): ActionRequest | null {
@@ -1146,6 +1167,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
   // Potion step was drunk at 76/87 before the re-plan, 6 of its 17 wasted).
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
+  if (first) notePotionTake(env, turn, first);
   // A potion step leaves the hand as it is: the next step expects the same hand and the belt without it (a
   // Jev line opening with a drink was re-planned every time: the memo expected one card less, "hand grew").
   const potions = first ? beltAfter(first, env.state.raw) : undefined;
@@ -1157,6 +1179,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
           expectedHand: expectedHandAfterFirst(plan, hand),
           handLen: handLenAfter(first!, hand),
           ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
+          ...(first!.takes ? { take: takeSignature(first!.takes) } : {}),
           via,
           enemies: livingEnemySignature(env.state.raw),
           ...(potions !== undefined ? { potions } : {}),
@@ -1431,7 +1454,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    A hand that grew without a drawing card played means the plan was made before the turn's draw
   //    had landed (live runs: planned from 1–3 cards of 5): drop it and plan from the full hand.
   const memo = env.screenMemory.combatPlan;
-  const handGrew = memo !== null && hand.length > memo.handLen;
+  // After Liquid Memories the hand holds the card it took too.
+  const handGrew = memo !== null && hand.length > memo.handLen + (memo.take ? 1 : 0);
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
   // After a potion step the belt shows whether it was drunk (the hand does not change).
   const drunk = memo?.potions === undefined || memo.potions === beltSignature(state.raw);
@@ -1443,7 +1467,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     memo !== null &&
     (memo.expectedHand === handSignature(hand) ||
       (memo.afterSelection === true && leftByChoice(memo, hand)) ||
-      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))));
+      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))) ||
+      (memo.take !== undefined && withCard(memo.expectedHand, memo.take) === handSignature(hand)));
   const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && sameHand;
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
@@ -1455,10 +1480,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
+      notePotionTake(env, memo.turn, next);
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
-      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, ...kept } = memo;
+      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
@@ -1468,6 +1494,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               expectedHand: handSignature(handAfterPlay(nextCard, hand)),
               handLen: handLenAfter(next, hand),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
+              ...(next.takes ? { take: takeSignature(next.takes) } : {}),
               ...(potions !== undefined ? { potions } : {}),
             }
           : null;

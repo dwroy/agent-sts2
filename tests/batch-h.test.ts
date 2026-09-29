@@ -9,6 +9,9 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
 import { actOfFloor, planMap } from "../src/screens/map.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planSelection } from "../src/screens/selection.js";
+import { noteScreenChange } from "../src/loop.js";
+import { parseGameState } from "../src/mod/schema.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -192,5 +195,50 @@ describe("2. Pael's Tear: a line ending with energy unspent gives the next turn 
       expect(Number(line["energy_unused"])).toBeGreaterThan(0);
       expect(String(line["next_turn_energy"])).toMatch(/^\+2 energy next turn \(Pael's Tear/);
     }
+  });
+});
+
+describe("3. Liquid Memories drunk mid-line: the selection takes the card the line named, and the line goes on with it (8KD7ENEY773Y F11 T2)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("Jev's \"Stone Armor, Liquid Memories, Bash+ from it\": the drink notes Bash+, the screen takes Bash+ (not asked), and Bash+ is played next", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const env0 = loggedEnv(logged("batch-h/8kd7-f11-t2-ask"));
+    const memory = env0.screenMemory;
+    const ask = planCombatTurn(env0);
+    if (ask?.kind !== "ask") throw new Error(`expected an ask, got ${ask?.kind}`);
+    const question = ask.questions["plan"]!;
+    const criteria = question.type === "choice" ? question.criteria : {};
+    const key = Object.keys(criteria).find((k) => /液态记忆/.test(String(JSON.parse(String(criteria[k]))["plays"])) && /痛击\+ from 液态记忆/.test(String(JSON.parse(String(criteria[k]))["plays"])));
+    expect(key).toBeDefined();
+    const chosen = ask.resolve({ plan: { type: "choice", choice: key!, probabilities: { [key!]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    expect(chosen.intent).toMatchObject({ action: "play_card" });
+    chosen.apply?.();
+    // Stone Armor played: the drink, and the card it is for noted.
+    const drink = planCombatTurn({ ...loggedEnv(logged("batch-h/8kd7-f11-t2-drink")), screenMemory: memory });
+    expect(drink).toMatchObject({ kind: "act", label: "combat/plan-continue", intent: { action: "use_potion", option_index: 0 } });
+    expect(memory.potionTake).toMatchObject({ cardId: "BASH", upgraded: true });
+    // The "put a card into your hand" screen: Bash+ (index 0), code's, as the line named it.
+    const take = logged("batch-h/8kd7-f11-t2-take");
+    noteScreenChange(memory, parseGameState(take.state));
+    const picked = planSelection({ ...loggedEnv(take), screenMemory: memory });
+    expect(picked).toMatchObject({ kind: "act", label: "selection/take-planned", intent: { action: "select_deck_card", option_index: 0 } });
+    if (picked?.kind === "act") picked.apply?.();
+    expect(memory.potionTake).toBeUndefined();
+    // Back in combat with Bash+ (free this turn) in hand: the line goes on, Bash+ at the Cultist.
+    const after = logged("batch-h/8kd7-f11-t2-after");
+    const hand = (after.state["combat"] as Raw)["hand"] as Raw[];
+    const uppercut = logged("batch-h/8kd7-f11-t2-ask");
+    const target = ((uppercut.state["combat"] as Raw)["hand"] as Raw[]).find((card) => card["card_id"] === "UPPERCUT")!;
+    const at = hand.findIndex((card) => card["card_id"] === "FLAME_BARRIER");
+    const bash = ((take.state["selection"] as Raw)["cards"] as Raw[])[0]!;
+    hand[at] = { ...target, ...bash, index: at, energy_cost: 0, selected: undefined, playable: true, can_play_result: true };
+    noteScreenChange(memory, parseGameState(after.state));
+    const next = planCombatTurn({ ...loggedEnv(after), screenMemory: memory });
+    expect(next).toMatchObject({ kind: "act", label: "combat/plan-continue", intent: { action: "play_card", card_index: at, target_index: 0 } });
   });
 });

@@ -75,6 +75,12 @@ export interface ScreenMemory {
   planBeforeSelection?: import("../strategy/turn-solver.js").Step[];
   /** Gambler's Brew drunk by a plan this turn: the hand cards (ids) the plan discards with it. */
   gambleDiscards?: { turn: number | null; cardIds: string[] };
+  /**
+   * The pile card the combat line's Liquid Memories (or Droplet of Precognition) takes, for the "put a card into
+   * your hand" screen that follows the drink (8KD7 F11 T2: Jev was asked there and took Flame Barrier, not the
+   * line's Bash+).
+   */
+  potionTake?: { turn: number | null; cardId: string; upgraded: boolean };
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */
@@ -239,6 +245,11 @@ export interface CombatPlanMemo {
    * without the upgrade marks (combat-plan.ts; the line's cards are the same cards, only better).
    */
   upgradeAll?: boolean;
+  /**
+   * After a pile-card potion step (Liquid Memories): the card it takes ("BASH+"), in the hand once the selection
+   * screen closes (the hand is the expected one plus it; the line goes on with it).
+   */
+  take?: string;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {

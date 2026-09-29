@@ -447,6 +447,10 @@ export interface Step {
   targetName: string | null;
   /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
   discards?: string[];
+  /** A pile-card potion (Liquid Memories): the pile card it takes into the hand (the selection screen takes it). */
+  takes?: { cardId: string; upgraded: boolean };
+  /** The card a pile-card potion took, played: the pile card's own id (the step's cardId is GEN:…). */
+  pileCard?: { cardId: string; upgraded: boolean };
 }
 
 export interface Outcome {
@@ -1195,6 +1199,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
       ...(card.discards ? { discards: discarded } : {}),
+      ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
+      ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
   ];
   return next;

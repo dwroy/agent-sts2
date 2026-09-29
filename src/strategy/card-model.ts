@@ -117,6 +117,11 @@ export interface CardModel {
    * Distilled Chaos): the card the solver may then play.
    */
   generates?: CardModel;
+  /**
+   * The card a pile-card potion (Liquid Memories, Droplet of Precognition) takes into the hand, as the pile holds
+   * it: set on that potion's `generates` (whose own id is GEN:…), so a line names the pile card it plays.
+   */
+  pileCard?: { cardId: string; upgraded: boolean };
   /** Gambler's Brew, one way to drink it: the keys of the hand cards it discards (turn-solver "gamble"). */
   discards?: string[];
   /**
@@ -1007,7 +1012,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater" || effect.special === "bottled"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
-    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true }
+    ? { ...pileCard, index: 200 + slot, key: `g${slot}`, cardId: `GEN:${potionId}:${slot}`, name: `${pileCard.name} from ${name}`, playable: true, pileCard: { cardId: pileCard.cardId, upgraded: pileCard.upgraded } }
     : card
     ? {
         index: 200 + slot,

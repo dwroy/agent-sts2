@@ -151,6 +151,24 @@ export function planSelection(env: DecisionEnv): Decision | null {
     return null;
   }
 
+  // The card the combat line's Liquid Memories (Droplet of Precognition) was drunk for: taken as the line named it
+  // (8KD7ENEY773Y F11 T2: Jev was asked here and took Flame Barrier over the line's Bash+; the line broke).
+  const take = env.screenMemory.potionTake;
+  if (forThisTurn && take && take.turn === state.turn && selected === 0) {
+    const named = candidates.find((card) => str(card["card_id"]) === take.cardId && bool(card["upgraded"]) === take.upgraded);
+    if (named) {
+      return {
+        kind: "act",
+        label: "selection/take-planned",
+        intent: { action: "select_deck_card", option_index: numOrNull(named["index"]) ?? 0 },
+        rationale: `code: ${str(named["name"], take.cardId)}, the card the combat line drank the potion for`,
+        apply: () => {
+          env.screenMemory.potionTake = undefined;
+        },
+      };
+    }
+  }
+
   const entries = deckEntries(state, knowledge);
   // An enchant screen has no code ranking (PHMV F21: the removal order's "upgraded -8" went to DeepSeek
   // as "code's ranking for this pick", and it spent 233 s on it): every card scores 0, no rank is shown.
