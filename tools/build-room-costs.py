@@ -8,7 +8,7 @@ potions drunk in it), keyed by ascension, act (floors 1-17 / 18-33 / 34+) and th
 as losing all its entry HP (its type from the map node chosen into it, decisions.jsonl), so the numbers
 are not survivors-only; rooms that crossed an act are not counted.
 
-Output: {"meta": {...}, "by_asc": {"8": {"2": {"Monster": {"n", "deaths", "median", "p75", "mean"}, ...}}}}.
+Output: {"meta": {...}, "by_asc": {"8": {"2": {"Monster": {"n", "deaths", "median", "p75", "p90", "mean"}, ...}}}}.
 
 Usage:
   python3 tools/build-room-costs.py [--logs DIR] [--out PATH]
@@ -136,6 +136,7 @@ def build(runs, deaths, chosen):
             "deaths": died[(asc, act, room)],
             "median": round(quantile(values, 0.5), 1),
             "p75": round(quantile(values, 0.75), 1),
+            "p90": round(quantile(values, 0.9), 1),
             "mean": round(statistics.mean(values), 1),
         }
     return by_asc
