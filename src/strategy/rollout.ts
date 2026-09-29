@@ -353,6 +353,8 @@ export interface EnemyMove {
   block: number;
   /** Burrow (Tunneler): the move gains BURROWED_POWER. */
   burrows?: boolean;
+  /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
+  estimated?: boolean;
 }
 
 export interface EnemyTable {

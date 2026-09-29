@@ -25,7 +25,7 @@ interface Range {
   count_per_fight?: number;
 }
 
-interface MoveEntry {
+export interface MoveEntry {
   name?: string;
   n_seen?: number;
   intents?: Record<string, number>;
@@ -128,15 +128,75 @@ function pct(value: number | undefined): string {
   return value === undefined ? "?" : `${Math.round(value * 100)}%`;
 }
 
+/** The monsters part of the DB (moves by id), as the rollout reads it too. */
+export type MonsterMoveData = Record<string, { moves?: Record<string, MoveEntry> }>;
+
+/** A move's base damage per hit and hits at an ascension. */
+export interface MoveDamage {
+  perHit: number;
+  hits: number;
+  /** Not logged at this ascension: the nearest logged one's damage times `ratio`, rounded. */
+  estimated: boolean;
+  /** The logged ascension the numbers come from. */
+  from: number;
+  /** The damage ratio applied (to / from); 1 when logged at this ascension or when nothing measures it. */
+  ratio: number;
+  /** Moves the ratio was measured on, and whether they are this monster's own (else every monster's). */
+  ratioN?: number;
+  ratioOwn?: boolean;
+}
+
+function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
+  const base = mode(move?.damage_by_asc?.[asc]?.base_per_hit);
+  return base === null ? null : Number(base);
+}
+
+/**
+ * How much harder the moves hit at `to` than at `from`: summed base damage per hit at `to` over at
+ * `from`, over the moves logged at both: the monster's own when it has any, else every monster's (A8 -> A9:
+ * 110 of 122 moves hit harder, e.g. Crusher's Guarded Strike 19 -> 22). null when no move is logged at both.
+ */
+export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: string, from: number, to: number): { ratio: number; n: number; own: boolean } | null {
+  const pairs = (ids: string[]) =>
+    ids.flatMap((id) =>
+      Object.values(monsters[id]?.moves ?? {})
+        .map((move) => [basePerHit(move, String(from)), basePerHit(move, String(to))] as const)
+        .filter((pair): pair is readonly [number, number] => pair[0] !== null && pair[1] !== null && pair[0] > 0),
+    );
+  const own = pairs([monsterId]);
+  const used = own.length > 0 ? own : pairs(Object.keys(monsters));
+  if (used.length === 0) return null;
+  const ratio = used.reduce((sum, pair) => sum + pair[1], 0) / used.reduce((sum, pair) => sum + pair[0], 0);
+  return { ratio, n: used.length, own: own.length > 0 };
+}
+
+/**
+ * A move's damage at `asc`: as logged there, else the nearest logged ascension's scaled by the measured
+ * ratio (ascensionDamageRatio), rounded and marked estimated. null when the move has no logged damage.
+ */
+export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
+  const move = monsters[monsterId]?.moves?.[moveId];
+  const withBase = Object.fromEntries(Object.entries(move?.damage_by_asc ?? {}).filter(([, entry]) => mode(entry.base_per_hit) !== null));
+  const found = nearestAscension(withBase, asc);
+  if (!move || !found) return null;
+  const base = basePerHit(move, found.key)!;
+  const hits = Number(mode(move.damage_by_asc![found.key]!.hits) ?? 1);
+  const from = Number(found.key);
+  if (found.exact) return { perHit: base, hits, estimated: false, from, ratio: 1 };
+  const measured = ascensionDamageRatio(monsters, monsterId, from, asc);
+  const ratio = measured?.ratio ?? 1;
+  return { perHit: Math.round(base * ratio), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}) };
+}
+
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */
-function moveText(move: MoveEntry, id: string, asc: number): string {
+function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): string {
   const parts: string[] = [move.name || id];
-  const found = nearestAscension(move.damage_by_asc, asc);
-  const damage = found ? move.damage_by_asc![found.key] : undefined;
-  const base = mode(damage?.base_per_hit);
-  const hits = Number(mode(damage?.hits) ?? 1);
-  if (base !== null) parts.push(hits > 1 ? `${base}×${hits}` : base);
-  else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
+  const damage = moveDamageAt(load().monsters, monsterId, id, asc);
+  if (damage) {
+    const text = damage.hits > 1 ? `${damage.perHit}×${damage.hits}` : String(damage.perHit);
+    // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so.
+    parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)})` : text);
+  } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
   const strength = mode(move.self_powers_gained?.["STRENGTH_POWER"]);
   if (strength) parts.push(`+${strength}力`);
   const status = mode(move.status_cards);
@@ -169,8 +229,8 @@ export function moveCycle(id: string, asc: number, maxMoves = 6): string {
   const loops = current !== null && order.includes(current) ? ` →循环回 ${moves[current]?.name || current}` : "";
   const others = Object.entries(moves)
     .filter(([moveId, move]) => !order.includes(moveId) && (move.n_seen ?? 0) >= 3)
-    .map(([moveId, move]) => moveText(move, moveId, asc));
-  return `${order.map((moveId) => moveText(moves[moveId]!, moveId, asc)).join(" → ")}${loops}${others.length > 0 ? `；其他: ${others.join(", ")}` : ""}`;
+    .map(([moveId, move]) => moveText(move, moveId, asc, id));
+  return `${order.map((moveId) => moveText(moves[moveId]!, moveId, asc, id)).join(" → ")}${loops}${others.length > 0 ? `；其他: ${others.join(", ")}` : ""}`;
 }
 
 function powersText(id: string, fights: number): string {

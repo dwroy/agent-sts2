@@ -25,6 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
+import { moveDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -78,10 +79,7 @@ export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null;
 
 // ---------------------------------------------------------------- knowledge
 
-export interface MonsterDbMove {
-  next?: Record<string, number>;
-  damage_by_asc?: Record<string, { base_per_hit?: Record<string, number>; hits?: Record<string, number> }>;
-  self_powers_gained?: Record<string, Record<string, number>>;
+export interface MonsterDbMove extends MoveEntry {
   block_gained?: Record<string, number>;
   avg_total_shown?: number;
 }
@@ -121,18 +119,18 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
   if (!moves && !learned) return undefined;
   const table: EnemyTable = { moves: {}, next: {} };
   for (const [move, entry] of Object.entries(moves ?? {})) {
-    const byAsc = entry.damage_by_asc ?? {};
-    const key = byAsc[String(asc)] ? String(asc) : Object.keys(byAsc).sort((a, b) => Math.abs(Number(a) - asc) - Math.abs(Number(b) - asc))[0];
-    const d = key ? byAsc[key] : undefined;
-    const base = mode(d?.base_per_hit);
-    const hits = mode(d?.hits) ?? 1;
+    // At this ascension when logged there; else the nearest logged one's scaled by the measured ratio
+    // (A9 hits harder than A8: 110 of 122 moves), marked estimated.
+    const logged = moveDamageAt(db, id, move, asc);
+    const hits = logged?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
     table.moves[move] = {
-      damage: base ?? (avg > 0 ? avg / hits : 0),
+      damage: logged?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
       strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
       block: mode(entry.block_gained) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
+      ...(logged?.estimated ? { estimated: true } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
