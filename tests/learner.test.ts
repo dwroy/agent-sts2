@@ -448,8 +448,18 @@ describe("whole runs against fake binaries", () => {
 describe("secrets and summaries", () => {
   it("collects key values from key files, .env key lines and stripped variables, never short values", () => {
     const envFile = join(tmp, "x.env");
-    writeFileSync(envFile, "TARGET_ASCENSION=9\nTYPESAFE_API_KEY='ts-0123456789abcdefXYZ'\nJEV_BASE_URL=https://api.example.invalid/v1/long\n");
-    const secrets = collectSecrets([keyFile, envFile, join(tmp, "missing")], { DEEPSEEK_API_KEY: "sk-env-0123456789abcdef", JEV_MODEL: "jev-latest-but-long-enough" }, ["DEEPSEEK_API_KEY", "JEV_MODEL"]);
+    // Paths and URLs next to keys are not keys (the smoke run: DEEPSEEK_API_KEY_FILE=~/.deepseek_api_key).
+    writeFileSync(
+      envFile,
+      "TARGET_ASCENSION=9\nTYPESAFE_API_KEY='ts-0123456789abcdefXYZ'\nJEV_BASE_URL=https://api.example.invalid/v1/long\nDEEPSEEK_API_KEY_FILE=~/.deepseek_api_key\nTYPESAFE_KEY_HINT=https://keys.example.invalid/x\n",
+    );
+    const keys = join(tmp, "keys2");
+    writeFileSync(keys, `${SECRET}\n# see ~/.deepseek_api_key and more words\n/home/dw/.jev_api_keys.backup\n`);
+    const secrets = collectSecrets(
+      [keys, envFile, join(tmp, "missing")],
+      { DEEPSEEK_API_KEY: "sk-env-0123456789abcdef", JEV_MODEL: "jev-latest-but-long-enough", JEV_KEYS_FILE: "/home/dw/.jev_api_keys" },
+      ["DEEPSEEK_API_KEY", "JEV_MODEL", "JEV_KEYS_FILE"],
+    );
     expect(secrets.sort()).toEqual([SECRET, "sk-env-0123456789abcdef", "ts-0123456789abcdefXYZ"].sort());
     const log = join(tmp, "log.jsonl");
     writeFileSync(log, `a ${SECRET} b ${SECRET}\n`);

@@ -150,12 +150,20 @@ export function toolServerSpec(options: LauncherOptions, projectRoot: string, en
   return { ...spec, env: { ...spec.env, KNOWLEDGE_LESSONS_FILE: join(projectRoot, "notes", "lessons.md") } };
 }
 
-/** Key values from the key files and the stripped variables (never printed; only used to scan logs). */
+/** Variable names that hold where a key is or what it is for, not the key itself. */
+const NOT_SECRET_NAME = /(_FILE|_PATH|_DIR|_URL|_HOST|_MODEL)$/i;
+const SECRET_NAME = /KEY|TOKEN|SECRET|PASSWORD/i;
+
+/**
+ * Key values from the key files and the stripped variables (never printed; only used to scan logs). A value
+ * counts when it is at least 16 characters, has no whitespace, and is not a path or a URL (the smoke run
+ * found ".env: DEEPSEEK_API_KEY_FILE=~/.deepseek_api_key" otherwise redacting the task text).
+ */
 export function collectSecrets(files: string[], env: NodeJS.ProcessEnv, stripped: string[]): string[] {
   const secrets = new Set<string>();
   const add = (raw: string | undefined): void => {
     const value = (raw ?? "").trim().replace(/^(['"])(.*)\1$/, "$2");
-    if (value.length >= 16) secrets.add(value);
+    if (value.length >= 16 && !/\s/.test(value) && !/^[~./]/.test(value) && !value.includes("://")) secrets.add(value);
   };
   for (const file of files) {
     let text: string;
@@ -174,10 +182,11 @@ export function collectSecrets(files: string[], env: NodeJS.ProcessEnv, stripped
         continue;
       }
       const name = trimmed.slice(0, at).replace(/^export\s+/, "").trim();
-      if (!isEnvFile || /KEY|TOKEN|SECRET|PASSWORD/i.test(name)) add(trimmed.slice(at + 1));
+      if (NOT_SECRET_NAME.test(name)) continue;
+      if (!isEnvFile || SECRET_NAME.test(name)) add(trimmed.slice(at + 1));
     }
   }
-  for (const name of stripped) if (/KEY|TOKEN|SECRET|PASSWORD/i.test(name)) add(env[name]);
+  for (const name of stripped) if (SECRET_NAME.test(name) && !NOT_SECRET_NAME.test(name)) add(env[name]);
   return [...secrets];
 }
 
