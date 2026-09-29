@@ -238,7 +238,9 @@ export const DEFAULT_EFFORT_BY_LABEL = "reward/card=high,rest/choose=high,rest/p
 /** "prefix=effort,…" as [prefix, effort] pairs, longest prefix first; unknown efforts are dropped. */
 /**
  * The top-level JSON values in a reply, in order, when it is nothing but JSON values separated by
- * whitespace (DeepSeek sometimes sends two objects back to back); null when anything else is in it.
+ * whitespace or one comma (DeepSeek sometimes sends two objects back to back: 0B5Y F30; or as a list without
+ * its brackets, 79YR F6 one-shot shop `{"plan": [...], "reason": "..."}, {"choice": ..., "reason": ...}`,
+ * judged non-JSON and re-planned step by step, +145.8 s); null when anything else is in it.
  */
 export function jsonValues(content: string): unknown[] | null {
   const values: unknown[] = [];
@@ -247,6 +249,12 @@ export function jsonValues(content: string): unknown[] | null {
   while (i < n) {
     while (i < n && /\s/.test(content[i]!)) i += 1;
     if (i >= n) break;
+    // One comma between two values (not before the first, not after the last).
+    if (content[i] === "," && values.length > 0) {
+      i += 1;
+      while (i < n && /\s/.test(content[i]!)) i += 1;
+      if (i >= n) return null;
+    }
     // One value: a balanced {...} / [...] (strings skipped), parsed on its own.
     const open = content[i];
     if (open !== "{" && open !== "[") return null;
@@ -296,6 +304,54 @@ export function pickJsonObject(content: string): Record<string, unknown> {
   const echo = (o: Record<string, unknown>) => Object.keys(o).length > 0 && Object.keys(o).every((key) => key === "choice" || key === "reason");
   const answers = objects.filter((o) => !echo(o));
   return answers[answers.length - 1] ?? objects[objects.length - 1]!;
+}
+
+/**
+ * A reply cut off inside its one JSON object (the output ran out mid-answer): the object up to its last complete
+ * top-level member, closed. A member cut in the middle is dropped, so a half-written choice or plan list never
+ * reaches the caller (whose own check then finds it missing); only a cut "reason" string is kept, as far as it
+ * got. The reason is marked "[truncated]". null unless the reply starts with an object that never closes and has
+ * at least one complete member.
+ */
+export function truncatedJsonObject(content: string): Record<string, unknown> | null {
+  const text = content.trim();
+  if (!text.startsWith("{")) return null;
+  let depth = 0;
+  let inString = false;
+  let lastComma = -1;
+  for (let j = 0; j < text.length; j += 1) {
+    const c = text[j]!;
+    if (inString) {
+      if (c === "\\") j += 1;
+      else if (c === '"') inString = false;
+    } else if (c === '"') inString = true;
+    else if (c === "{" || c === "[") depth += 1;
+    else if (c === "}" || c === "]") {
+      depth -= 1;
+      if (depth === 0) return null; // closed: not a cut-off reply
+    } else if (c === "," && depth === 1) lastComma = j;
+  }
+  if (lastComma < 0) return null;
+  let head: unknown;
+  try {
+    head = JSON.parse(`${text.slice(0, lastComma)}}`);
+  } catch {
+    return null;
+  }
+  if (typeof head !== "object" || head === null || Array.isArray(head)) return null;
+  const record = head as Record<string, unknown>;
+  let partial = "";
+  const cut = /^\s*"reason"\s*:\s*"((?:[^"\\]|\\.)*)\\?$/s.exec(text.slice(lastComma + 1));
+  if (cut) {
+    try {
+      partial = JSON.parse(`"${cut[1]}"`) as string;
+    } catch {
+      partial = "";
+    }
+  }
+  const reason = (typeof record["reason"] === "string" ? (record["reason"] as string) : partial).trim();
+  record["reason"] = `${reason}${reason ? " " : ""}[truncated]`;
+  return record;
 }
 
 /**
@@ -496,7 +552,10 @@ export class DeepSeekClient implements Escalator {
     try {
       parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown; discard?: unknown };
     } catch {
-      throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+      // Cut off after its complete members (truncatedJsonObject): the choice stands when it was written whole.
+      const cut = truncatedJsonObject(content);
+      if (!cut) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+      parsed = cut;
     }
     return {
       // A list ({"choice": ["card2", "card1"]}) reads as the keys it names, in order (severalOptionKeys).
@@ -528,9 +587,14 @@ export class DeepSeekClient implements Escalator {
     try {
       json = pickJsonObject(done.content);
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
-      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      // Cut off after its complete members (truncatedJsonObject): the screen's check decides whether the plan is whole.
+      const cut = truncatedJsonObject(done.content);
+      if (!cut) {
+        const message = error instanceof Error ? error.message : String(error);
+        this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      }
+      json = cut;
     }
     this.logReasoning(label, done, instructions, criteria, JSON.stringify(json["plan"] ?? null), json["reason"] ?? "", memory, json);
     return { json, meta: done.meta };
