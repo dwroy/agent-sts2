@@ -311,6 +311,19 @@ describe("statistics tables", () => {
     expect(renderRoomCosts(ctx)).not.toContain("p90 暂缺");
   });
 
+  it("the ? rooms that were a fight get their own named column and a room's in-fight HP loss is shown (v3 337074d data)", () => {
+    const dir = copyData();
+    const rooms = JSON.parse(readFileSync(join(dir, "room-costs.json"), "utf8"));
+    Object.assign(rooms.by_asc["9"]["1"]["Monster"], { fight_median: 9, fight_p75: 12 });
+    rooms.by_asc["9"]["1"]["UnknownFight"] = { n: 6, deaths: 0, median: 4, p75: 9, p90: 12, mean: 5, fight_median: 8, fight_p75: 11 };
+    writeFileSync(join(dir, "room-costs.json"), JSON.stringify(rooms));
+    const text = renderRoomCosts({ ...ctx, knowledgeDir: dir });
+    expect(text).toContain("| 进阶 | 走廊 | 精英 | 问号里的战斗 | 休息 |");
+    expect(text).toContain("| A9（本局） | 2/7/— 战内9/12 死0% n=30 | — | 4/9/12 战内8/11 死0% n=6 | -20/0/— 死0% n=6 |");
+    expect(text).toContain("「战内 中位/p75」= 战斗里掉的血");
+    expect(renderRoomCosts(ctx)).not.toContain("战内");
+  });
+
   it("elite and boss records by act; rest-site choices by HP band, saying when the stats are another ascension's", () => {
     const fights = renderFightRecords(ctx);
     expect(fights).toContain("#### 第1幕\n- 史莱姆 SLIME〔精英｜第1幕〕 A9 5场 胜80% 死1，赢局战内掉血 25/31 (n=4)");

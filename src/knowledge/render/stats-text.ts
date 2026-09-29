@@ -18,6 +18,8 @@ const ROOM_ORDER: [string, string][] = [
   ["Monster", "走廊"],
   ["Elite", "精英"],
   ["Unknown", "问号"],
+  // v3 337074d (tools/build-room-costs.py): the ? rooms that turned out to be a fight, also counted in Unknown.
+  ["UnknownFight", "问号里的战斗"],
   ["RestSite", "休息"],
   ["Shop", "商店"],
   ["Treasure", "宝箱"],
@@ -52,11 +54,22 @@ function hasP90(data: KnowledgeData): boolean {
   return Object.values(data.roomCosts.by_asc).some((byAct) => Object.values(byAct).some((rooms) => Object.values(rooms).some((room) => typeof room.p90 === "number")));
 }
 
-function roomCell(room: { n: number; deaths?: number; median: number; p75: number; p90?: number } | undefined): string {
+function roomCell(room: { n: number; deaths?: number; median: number; p75: number; p90?: number; fight_median?: number; fight_p75?: number } | undefined): string {
   if (!room || !room.n) return "—";
   const p90 = typeof room.p90 === "number" ? round1(room.p90) : "—";
   const few = room.n < MEASURED_ROOM_MIN_N ? "(少)" : "";
-  return `${round1(room.median)}/${round1(room.p75)}/${p90} 死${rate((room.deaths ?? 0) / room.n)} n=${room.n}${few}`;
+  const inside = typeof room.fight_median === "number" && typeof room.fight_p75 === "number" ? ` 战内${round1(room.fight_median)}/${round1(room.fight_p75)}` : "";
+  return `${round1(room.median)}/${round1(room.p75)}/${p90}${inside} 死${rate((room.deaths ?? 0) / room.n)} n=${room.n}${few}`;
+}
+
+/** Said under the table when the data has the in-fight columns or the ? room fights. */
+function fightNote(data: KnowledgeData): string {
+  const rooms = Object.values(data.roomCosts.by_asc).flatMap((byAct) => Object.values(byAct).flatMap((byRoom) => Object.entries(byRoom)));
+  const parts = [
+    ...(rooms.some(([, room]) => typeof room.fight_median === "number") ? ["「战内 中位/p75」= 战斗里掉的血（第一个到最后一个出牌决策，不含战后燃烧之血等回血）"] : []),
+    ...(rooms.some(([name]) => name === "UnknownFight") ? ["「问号里的战斗」= 进门是战斗的问号房，也算在「问号」里"] : []),
+  ];
+  return parts.length > 0 ? `${parts.join("；")}。` : "";
 }
 
 /** The room-cost table of one act (every logged ascension, highest first), or of every act. */
@@ -67,7 +80,7 @@ export function renderRoomCosts(ctx: RenderContext, act?: number): string {
   const meta = data.roomCosts.meta;
   const p90Note = hasP90(data) ? "" : "p90 暂缺（room-costs.json 还没有 p90 字段，要用新版 tools/build-room-costs.py 重建），记为 —。";
   const lines = [
-    `每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数=回血；战斗房含燃烧之血等战后回血；死在房间里的按进房血量全掉计）。格子: 中位/p75/p90 死亡率 n=房间数；n<${MEASURED_ROOM_MIN_N} 标(少)。${p90Note}数据 ${meta?.runs ?? "?"} 局，最后 ${meta?.last_seen ?? "?"}。`,
+    `每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数=回血；战斗房含燃烧之血等战后回血；死在房间里的按进房血量全掉计）。格子: 中位/p75/p90 死亡率 n=房间数；n<${MEASURED_ROOM_MIN_N} 标(少)。${fightNote(data)}${p90Note}数据 ${meta?.runs ?? "?"} 局，最后 ${meta?.last_seen ?? "?"}。`,
   ];
   for (const at of act === undefined ? all : [act]) {
     const rooms = roomTypes(data, at);
