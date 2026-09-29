@@ -42,13 +42,15 @@ export function enchantEffect(name: string, amount: number | null): string {
 }
 
 /**
- * 附魔：<name>[N] in game text (markup or not), with every named enchantment's effect added after it:
- * 「选择一张能力牌附魔：迅速2。」 -> 「选择一张能力牌附魔：迅速2（迅速2: the first time …）。」. A template left
+ * 附魔：<name>[N], or 附魔<the card>：<name>[N] (「附魔一张攻击牌：活力8」, PHMV F21: no effect text, the
+ * colon was wanted right after 附魔), in game text (markup or not), with every named enchantment's effect
+ * added after it: 「选择一张能力牌附魔：迅速2。」 -> 「选择一张能力牌附魔：迅速2（迅速2: the first time …）。」. What
+ * stands between 附魔 and the colon is a few characters or markup, no sentence break. A template left
  * unfilled by the game ({EnchantmentName}) is said to be unnamed.
  */
 export function annotateEnchants(text: string): string {
   if (!text.includes("附魔")) return text;
-  const pattern = /附魔((?:\[\/?[a-z]+\])*)[：:]\s*((?:\[[a-z]+\])*)([^\[\]\s。，,：:0-9{}（）()]+)((?:\[\/[a-z]+\])*)((?:\[[a-z]+\])*)(\d+)?((?:\[\/[a-z]+\])*)/g;
+  const pattern = /附魔((?:\[\/?[a-z]+\])*)(?:[^\[\]\s。，,：:{}（）()]|\[\/?[a-z]+\]){0,16}?[：:]\s*((?:\[[a-z]+\])*)([^\[\]\s。，,：:0-9{}（）()]+)((?:\[\/[a-z]+\])*)((?:\[[a-z]+\])*)(\d+)?((?:\[\/[a-z]+\])*)/g;
   let out = text.replace(pattern, (match, _a, _b, name: string, _c, _d, digits: string | undefined, _e, offset: number, whole: string) => {
     const after = whole.slice(offset + match.length);
     if (after.startsWith("（")) return match;
@@ -63,7 +65,7 @@ export function annotateEnchants(text: string): string {
 export function enchantsNamed(text: string): string[] {
   const plain = stripMarkup(text);
   const out: string[] = [];
-  for (const match of plain.matchAll(/附魔[：:]\s*([^\s。，,：:0-9{}（）()]+)(\d+)?/g)) {
+  for (const match of plain.matchAll(/附魔[^\s。，,：:{}（）()]{0,16}?[：:]\s*([^\s。，,：:0-9{}（）()]+)(\d+)?/g)) {
     const name = match[1]!;
     const amount = match[2] === undefined ? null : Number(match[2]);
     out.push(`${name}${match[2] ?? ""}: ${enchantEffect(name, amount)}`);

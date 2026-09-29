@@ -203,9 +203,9 @@ describe("shop: one question for the whole visit", () => {
 
   it.each([
     ["a price changed (membership card)", (raw: Raw) => ((((raw["shop"] as Raw)["cards"] as Raw[])[4]!["price"] = 18), raw), /price changed \(36 -> 18g\)/],
-    ["the bought item was restocked (courier)", (raw: Raw) => (Object.assign(((raw["shop"] as Raw)["cards"] as Raw[])[3]!, { card_id: "INFLAME", name: "燃烧", price: 90, is_stocked: true, enough_gold: true }), raw), /buy_card3 was restocked with 燃烧/],
     ["an item became unaffordable", (raw: Raw) => ((((raw["shop"] as Raw)["cards"] as Raw[])[4]!["enough_gold"] = false), raw), /not affordable/],
-    ["an item is gone", (raw: Raw) => (Object.assign(((raw["shop"] as Raw)["cards"] as Raw[])[5]!, { card_id: null, is_stocked: false }), raw), /buy_card5 \(PRODUCTION\) is gone/],
+    ["an item the plan still buys is gone", (raw: Raw) => (Object.assign(((raw["shop"] as Raw)["cards"] as Raw[])[4]!, { card_id: null, is_stocked: false }), raw), /buy_card4 \(STONE_ARMOR\) is gone/],
+    ["new stock in a slot the plan did not buy", (raw: Raw) => ((((raw["shop"] as Raw)["cards"] as Raw[]).push({ ...((raw["shop"] as Raw)["cards"] as Raw[])[0]!, index: 7, card_id: "INFLAME", name: "燃烧", price: 90 })), raw), /buy_card7 appeared: 燃烧/],
   ])("re-asks with what was bought when the shop changes under the plan: %s", (_name, edit, why) => {
     const memory = afterFirst();
     const again = decide(env(edit(board(SHOP, "after_card3")), memory));
@@ -222,6 +222,27 @@ describe("shop: one question for the whole visit", () => {
   it("an unchanged shop is not re-asked: the next step is played", () => {
     const memory = afterFirst();
     expect(act(decide(env(board(SHOP, "after_card3"), memory))).intent).toEqual({ action: "buy_card", option_index: 4 });
+  });
+
+  it("not re-asked (7XK6 F31/F38/F46: 7 re-asks): The Courier's restock of the bought slot, an item or a price the plan does not buy", () => {
+    const edits: [string, (raw: Raw) => Raw][] = [
+      ["the bought slot restocked (The Courier)", (raw) => (Object.assign(((raw["shop"] as Raw)["cards"] as Raw[])[3]!, { card_id: "INFLAME", name: "燃烧", price: 90, is_stocked: true, enough_gold: true }), raw)],
+      ["an item the plan does not buy is gone", (raw) => (Object.assign(((raw["shop"] as Raw)["cards"] as Raw[])[5]!, { card_id: null, is_stocked: false }), raw)],
+      ["a price the plan does not pay changed", (raw) => ((((raw["shop"] as Raw)["cards"] as Raw[])[0]!["price"] = 20), raw)],
+    ];
+    for (const [name, edit] of edits) {
+      const memory = afterFirst();
+      const next = decide(env(edit(board(SHOP, "after_card3")), memory));
+      expect(next.kind === "act" && next.intent, name).toEqual({ action: "buy_card", option_index: 4 });
+    }
+  });
+
+  it("with The Courier held, the plan question says restocks are not asked about", () => {
+    const raw = board(SHOP, "open");
+    ((raw["run"] as Raw)["relics"] as Raw[]).push({ relic_id: "THE_COURIER", name: "送货员" });
+    const situation = ask(decide(env(raw))).state["situation"] as Record<string, JsonValue>;
+    expect(String(situation["the_courier"])).toMatch(/restocked at once .* not asked about/);
+    expect(ask(decide(env(board(SHOP, "open")))).state["situation"]).not.toHaveProperty("the_courier");
   });
 
   it("a stalled plan with nothing else affordable leaves without asking", () => {

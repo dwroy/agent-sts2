@@ -155,19 +155,24 @@ export interface ConsistencyCheck {
   conclusion: Conclusion | null;
 }
 
-/** Whether an answer agrees with itself: a reason is given and the reasoning's conclusion names the chosen option. */
+/**
+ * Whether an answer agrees with itself: a reason is given, and a conclusion naming one option names the chosen
+ * one. A conclusion naming several options settles nothing, so it contradicts nothing (XMK1JFZ0VD2Q F7: 'The
+ * choice key: options are "o0" and "o1".' read as "concluded o0" against the answer o1 and re-asked; the
+ * reasoning had settled on smith, o1).
+ */
 export function checkConsistency(choice: string, reason: string, reasoning: string, criteria: Record<string, string | null>): ConsistencyCheck {
   const issues: string[] = [];
   if (!reason.trim()) issues.push("empty reason");
   const conclusion = reasoningConclusion(reasoning, criteria);
-  if (conclusion && conclusion.option !== choice) issues.push(`reasoning concluded ${conclusion.option} but answered ${choice}`);
+  if (conclusion && conclusion.unambiguous && conclusion.option !== choice) issues.push(`reasoning concluded ${conclusion.option} but answered ${choice}`);
   return { ok: issues.length === 0, issues, conclusion };
 }
 
 /** The follow-up message for a suspect answer. */
 export function reaskMessage(choice: string, check: ConsistencyCheck): string {
   const parts: string[] = [];
-  if (check.conclusion && check.conclusion.option !== choice) {
+  if (check.conclusion && check.conclusion.unambiguous && check.conclusion.option !== choice) {
     parts.push(`Your reasoning concluded "${check.conclusion.line}" (option ${check.conclusion.option}) but you answered ${choice}.`);
   }
   if (check.issues.includes("empty reason")) parts.push(`Your answer ${choice} came with an empty reason.`);

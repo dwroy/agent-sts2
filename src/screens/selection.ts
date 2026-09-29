@@ -152,6 +152,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
   }
 
   const entries = deckEntries(state, knowledge);
+  // An enchant screen has no code ranking (PHMV F21: the removal order's "upgraded -8" went to DeepSeek
+  // as "code's ranking for this pick", and it spent 233 s on it): every card scores 0, no rank is shown.
+  const unranked = kind === "deck_enchant_select";
   // Cards the turn's plan still means to play stay out of an exhaust pick (F3SS F33 T5: Brand took the
   // Bash+ the plan played next).
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
@@ -165,7 +168,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
       label: name,
       intent: { action: "select_deck_card", option_index: index },
       // Removing/exhausting: an upgraded copy is worth keeping over a plain one (Strike+ vs Strike tied).
-      score: forThisTurn
+      score: unranked
+        ? 0
+        : forThisTurn
         ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
@@ -268,6 +273,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const why = SELECTION_WHY[isAdd ? "add" : verb] ?? "code's ranking for this pick";
   return buildPickDecision({
     ...params,
+    ...(unranked ? { unranked: true } : {}),
     options: options.map((option) => ({ ...option, why })),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: `${selected + 1} of ${max}${min !== max ? ` (at least ${min})` : ""}`, ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
@@ -346,6 +352,7 @@ const SELECTION_WHY: Record<string, string> = {
   remove: "removal order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value; Strength cards -50; run plan removals +40",
   transform: "transform order: Curse 100, Status 90, Strike 80, Defend 70, else 100 - card value",
   add: "card value for the deck (run plan wanted +bonus)",
+  enchant: "no code ranking: code does not know which card an enchantment suits; judge by the enchantment's effect (situation.enchantment) and the card",
 };
 
 /**
@@ -523,6 +530,8 @@ export interface ExhaustCard {
   block?: number;
   /** Colossus: this turn, damage from Vulnerable enemies is halved. */
   colossus?: boolean;
+  /** Energy cost as it reads now (Frantic Escape's grows each time it is played). */
+  cost?: number;
 }
 
 /** A basic Defend's printed block: a block card that gives more is kept below a Defend under fire. */
@@ -547,7 +556,7 @@ function isAttackCard(cardId: string, type: string, line: string): boolean {
 }
 
 function exhaustCardOf(model: CardModel): ExhaustCard {
-  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block, ...(model.special === "colossus" ? { colossus: true } : {}) };
+  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block, cost: model.cost, ...(model.special === "colossus" ? { colossus: true } : {}) };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -612,7 +621,16 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
 /** Exhaust-score malus for a card the committed plan still plays (below any junk, above nothing). */
 export const PLANNED_CARD_KEEP = 150;
 
+/**
+ * Exhaust score of Frantic Escape while the Sandpit is up: below every other card, a planned one included
+ * (KY3YZ0DMRY0G F33 T9: at Sandpit 1, Burning Pact took the 1-cost Escape at -50 over a planned Strike and
+ * Defend at -80/-130; the 2-cost one could not be paid and the pit took us). Its cost is added: of two
+ * Escapes the dearer one goes, the cheaper is kept.
+ */
+export const ESCAPE_EXHAUST_KEEP = -1000;
+
 export function combatExhaustScore(cardId: string, type: string, context: ExhaustContext, blocks = cardId.startsWith("DEFEND_"), card: ExhaustCard = {}): number {
+  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return ESCAPE_EXHAUST_KEEP + Math.max(0, card.cost ?? 0);
   const base = baseExhaustScore(cardId, type, context, blocks);
   if (base >= 90 || base <= 0) return base;
   // Toasty Mittens exhausts a card every turn: the static card value took Exterminate at Strength 6
@@ -658,7 +676,7 @@ function baseExhaustScore(cardId: string, type: string, context: ExhaustContext,
   if (cardId === "HOWL_FROM_BEYOND") return 200;
   // Frantic Escape is a Status, but against the Sandpit it is the only thing that pushes the countdown
   // back (THMG F33 T4: Burning Pact took it as 90-point junk; both lines then left the Sandpit at 1).
-  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return -50;
+  if (cardId === "FRANTIC_ESCAPE" && context.sandpit) return ESCAPE_EXHAUST_KEEP;
   if (type === "Curse") return 100;
   if (type === "Status") return 90;
   // HP at or below the hit coming (this turn or next): the block is what keeps us alive.

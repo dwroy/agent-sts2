@@ -390,10 +390,13 @@ describe("rollout (offline)", () => {
   });
 
   it("computes the builder's features for logged end-of-turn rows", () => {
-    const fv = JSON.parse(readFileSync(join(ROOT, "src/knowledge/fight-value.json"), "utf8")) as {
+    // The builder's examples with the move-model entries they were built with (a fixture: a refresh of
+    // src/knowledge/*.json moves the enemy tables, not the features' definition).
+    const fv = JSON.parse(readFileSync(join(ROOT, "tests/rollout-builder/features.json"), "utf8")) as {
       feature_examples: { row: FightMeta & { E: Snapshot }; features: Record<string, number> }[];
+      move_model: Parameters<typeof featuresOf>[2];
     };
-    const mm = JSON.parse(readFileSync(join(ROOT, "src/knowledge/move-model.json"), "utf8"));
+    const mm = fv.move_model;
     expect(fv.feature_examples.length).toBeGreaterThan(0);
     for (const example of fv.feature_examples) {
       const f = featuresOf(example.row, example.row.E, mm);

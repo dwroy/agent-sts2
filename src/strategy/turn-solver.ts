@@ -166,6 +166,11 @@ export interface PlayerSim {
    * is played twice (11LC F17 T2: re-planned after the drink as if it were not, Bash+ went single).
    */
   duplicate?: number;
+  /**
+   * One-Two Punch already up (ONE_TWO_PUNCH_POWER): the next N Attacks this turn are played an extra time
+   * (9Q7V F17 T14: not read, Sword Boomerang planned at 18 dealt 36 and killed the Giant into its blast).
+   */
+  duplicateAttacks?: number;
   /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
   regen?: number;
   /**
@@ -431,6 +436,11 @@ export interface Outcome {
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
   explodesNext?: number;
   /**
+   * With explodesNext: HP after this turn plus the block that stays, less the blast (below 0: next turn's
+   * hand must block the rest). The dominance axis of a Giant kill (vector).
+   */
+  eruptionMargin?: number;
+  /**
    * HP the player loses to the enemy turn (plus self-damage this turn). A line saved by a revive counts all
    * our HP as lost, then what the revive's HP loses after it (the revive's HP is not ours): it never reads
    * cheaper than a line that lives without spending the revive. `hpAfter` is HP now less that (0 or below
@@ -559,6 +569,8 @@ interface Sim {
   bufferSpent: number;
   /** Duplication: the next card played resolves twice. */
   duplicate: number;
+  /** One-Two Punch: the next N Attacks played resolve twice. */
+  duplicateAttacks: number;
   /** Flame Barrier: damage back per enemy hit taken this turn. */
   retaliate: number;
   /** Rupture stacks active this turn (from the start or played this turn). */
@@ -984,12 +996,15 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
   const twice = card.type !== "Potion" && next.duplicate > 0;
   if (twice) next.duplicate -= 1;
+  const twiceAttack = card.type === "Attack" && next.duplicateAttacks > 0;
+  if (twiceAttack) next.duplicateAttacks -= 1;
   // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
   const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
   const strengthBefore = next.permStrength;
   const flatBefore = next.flat;
   resolveEffects(next, card, target, player, cost);
   if (twice) resolveEffects(next, card, target, player, cost);
+  if (twiceAttack) resolveEffects(next, card, target, player, cost);
   for (let replay = 0; replay < replays; replay += 1) resolveEffects(next, card, target, player, cost);
   if (card.type === "Potion") {
     next.potionStrength += next.permStrength - strengthBefore;
@@ -2134,7 +2149,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost + platingValue,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
-      ...(explodesNext > 0 ? { explodesNext } : {}),
+      ...(explodesNext > 0 ? { explodesNext, eruptionMargin: hpAfter + (input.player.keepsBlock ? Math.max(0, blockLeft - incomingRaw) : 0) - explodesNext } : {}),
       ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
       ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
@@ -2145,7 +2160,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 
 export interface SolveResult {
@@ -2246,6 +2261,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     buffer: input.player.buffer ?? 0,
     bufferSpent: 0,
     duplicate: input.player.duplicate ?? 0,
+    duplicateAttacks: input.player.duplicateAttacks ?? 0,
     retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
@@ -2384,7 +2400,11 @@ function vector(plan: Plan): number[] {
   // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
   // drinking one must never dominate the same line without it.
   // A revive spent (Fairy in a Bottle, Lizard Tail) is its own axis: a line spending one never dominates a line that does not.
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0)];
+  // A Waterfall Giant kill is its own axis too: HP plus block kept less the blast (0 without a kill), so a kill
+  // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
+  // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
+  const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

@@ -1,0 +1,788 @@
+{
+ "source": "src/knowledge/fight-value.json feature_examples (the Python builder's features) and the move-model.json entries of their enemies, as built together (89c737b); frozen so a knowledge refresh does not move them",
+ "feature_examples": [
+  {
+   "row": {
+    "act": 2,
+    "t": 4,
+    "asc": 7,
+    "kind": "elite",
+    "enc": "DECIMILLIPEDE_SEGMENT_BACK+DECIMILLIPEDE_SEGMENT_FRONT+DECIMILLIPEDE_SEGMENT_MIDDLE",
+    "deck": {
+     "n": 26,
+     "atk": 11,
+     "skl": 11,
+     "pow": 3,
+     "junk": 1,
+     "dmg": 95.0,
+     "blk": 55.0,
+     "up": 1
+    },
+    "relics": 8,
+    "max_en": 3,
+    "E": {
+     "hp": 31,
+     "mhp": 80,
+     "blk": 5,
+     "en": 1,
+     "pw": {
+      "THORNS_POWER": 6,
+      "STRENGTH_POWER": 12,
+      "PYRE_POWER": 1,
+      "DEMON_FORM_POWER": 4
+     },
+     "hand": 0,
+     "pots": 2,
+     "E": [
+      [
+       0,
+       "DECIMILLIPEDE_SEGMENT_FRONT",
+       0,
+       46,
+       0,
+       false,
+       false,
+       0,
+       "REATTACH_MOVE",
+       {
+        "REATTACH_POWER": 25
+       }
+      ],
+      [
+       1,
+       "DECIMILLIPEDE_SEGMENT_MIDDLE",
+       1,
+       40,
+       0,
+       true,
+       false,
+       10,
+       "CONSTRICT_MOVE",
+       {
+        "REATTACH_POWER": 25,
+        "STRENGTH_POWER": 2
+       }
+      ],
+      [
+       2,
+       "DECIMILLIPEDE_SEGMENT_BACK",
+       0,
+       44,
+       0,
+       false,
+       false,
+       0,
+       "DEAD_MOVE",
+       {
+        "REATTACH_POWER": 25
+       }
+      ]
+     ]
+    }
+   },
+   "features": {
+    "hp": 31,
+    "max_hp": 80,
+    "hp_frac": 0.3875,
+    "block": 5,
+    "p_strength": 12,
+    "p_dexterity": 0,
+    "p_weak": 0,
+    "p_frail": 0,
+    "p_vulnerable": 0,
+    "p_demon_form": 4,
+    "p_metallicize": 0,
+    "p_plating": 0,
+    "p_barricade": 0,
+    "p_feel_no_pain": 0,
+    "p_regen": 0,
+    "p_intangible": 0,
+    "p_buffer": 0,
+    "p_thorns": 6,
+    "p_rage": 0,
+    "p_juggernaut": 0,
+    "n_powers": 4,
+    "energy_per_turn": 3,
+    "hand": 0,
+    "potions": 2,
+    "relics": 8,
+    "deck_n": 26,
+    "deck_atk_frac": 0.423077,
+    "deck_pow": 3,
+    "deck_junk": 1,
+    "deck_dmg_per_card": 3.653846,
+    "deck_blk_per_card": 2.115385,
+    "deck_up_frac": 0.038462,
+    "act": 2,
+    "turn": 4,
+    "asc": 7,
+    "kind_elite": 1,
+    "kind_boss": 0,
+    "n_living": 1,
+    "n_minions": 0,
+    "enemy_hp_sum": 1,
+    "enemy_hp_max": 1,
+    "enemy_maxhp_sum": 40,
+    "enemy_hp_frac": 0.025,
+    "enemy_block_sum": 0,
+    "enemy_str_sum": 2,
+    "enemy_str_max": 2,
+    "enemy_vuln_max": 0,
+    "enemy_weak_max": 0,
+    "enemy_artifact": 0,
+    "enemy_npowers": 2,
+    "intent_dmg": 10,
+    "intent_dmg_max": 10,
+    "incoming_after_block": 5,
+    "threat_next": 5.911628,
+    "threat_next_unknown": 0,
+    "deck_dmg_turn": 47.136,
+    "turns_to_kill": 0.021215,
+    "hp_minus_incoming": 26
+   }
+  },
+  {
+   "row": {
+    "act": 1,
+    "t": 4,
+    "asc": 7,
+    "kind": "hallway",
+    "enc": "CALCIFIED_CULTIST+DAMP_CULTIST",
+    "deck": {
+     "n": 17,
+     "atk": 10,
+     "skl": 6,
+     "pow": 0,
+     "junk": 1,
+     "dmg": 79.0,
+     "blk": 36.0,
+     "up": 0
+    },
+    "relics": 2,
+    "max_en": 3,
+    "E": {
+     "hp": 52,
+     "mhp": 80,
+     "blk": 0,
+     "en": 3,
+     "pw": {},
+     "hand": 5,
+     "pots": 1,
+     "E": [
+      [
+       1,
+       "DAMP_CULTIST",
+       19,
+       53,
+       0,
+       true,
+       false,
+       11,
+       "DARK_STRIKE_MOVE",
+       {
+        "RITUAL_POWER": 5,
+        "STRENGTH_POWER": 10,
+        "VULNERABLE_POWER": 3
+       }
+      ]
+     ]
+    }
+   },
+   "features": {
+    "hp": 52,
+    "max_hp": 80,
+    "hp_frac": 0.65,
+    "block": 0,
+    "p_strength": 0,
+    "p_dexterity": 0,
+    "p_weak": 0,
+    "p_frail": 0,
+    "p_vulnerable": 0,
+    "p_demon_form": 0,
+    "p_metallicize": 0,
+    "p_plating": 0,
+    "p_barricade": 0,
+    "p_feel_no_pain": 0,
+    "p_regen": 0,
+    "p_intangible": 0,
+    "p_buffer": 0,
+    "p_thorns": 0,
+    "p_rage": 0,
+    "p_juggernaut": 0,
+    "n_powers": 0,
+    "energy_per_turn": 3,
+    "hand": 5,
+    "potions": 1,
+    "relics": 2,
+    "deck_n": 17,
+    "deck_atk_frac": 0.588235,
+    "deck_pow": 0,
+    "deck_junk": 1,
+    "deck_dmg_per_card": 4.647059,
+    "deck_blk_per_card": 2.117647,
+    "deck_up_frac": 0.0,
+    "act": 1,
+    "turn": 4,
+    "asc": 7,
+    "kind_elite": 0,
+    "kind_boss": 0,
+    "n_living": 1,
+    "n_minions": 0,
+    "enemy_hp_sum": 19,
+    "enemy_hp_max": 19,
+    "enemy_maxhp_sum": 53,
+    "enemy_hp_frac": 0.358491,
+    "enemy_block_sum": 0,
+    "enemy_str_sum": 10,
+    "enemy_str_max": 10,
+    "enemy_vuln_max": 3,
+    "enemy_weak_max": 0,
+    "enemy_artifact": 0,
+    "enemy_npowers": 3,
+    "intent_dmg": 11,
+    "intent_dmg_max": 11,
+    "incoming_after_block": 11,
+    "threat_next": 8.8,
+    "threat_next_unknown": 0,
+    "deck_dmg_turn": 29.298353,
+    "turns_to_kill": 0.648501,
+    "hp_minus_incoming": 41
+   }
+  },
+  {
+   "row": {
+    "act": 2,
+    "t": 4,
+    "asc": 7,
+    "kind": "hallway",
+    "enc": "EXOSKELETON+EXOSKELETON+EXOSKELETON",
+    "deck": {
+     "n": 24,
+     "atk": 12,
+     "skl": 8,
+     "pow": 3,
+     "junk": 1,
+     "dmg": 92.0,
+     "blk": 76.0,
+     "up": 1
+    },
+    "relics": 6,
+    "max_en": 3,
+    "E": {
+     "hp": 59,
+     "mhp": 80,
+     "blk": 0,
+     "en": 2,
+     "pw": {
+      "PLATING_POWER": 1,
+      "RUPTURE_POWER": 1,
+      "STRENGTH_POWER": 3
+     },
+     "hand": 5,
+     "pots": 0,
+     "E": [
+      [
+       1,
+       "EXOSKELETON",
+       3,
+       28,
+       0,
+       true,
+       false,
+       10,
+       "MANDIBLES_MOVE",
+       {
+        "HARD_TO_KILL_POWER": 9,
+        "STRENGTH_POWER": 2
+       }
+      ]
+     ]
+    }
+   },
+   "features": {
+    "hp": 59,
+    "max_hp": 80,
+    "hp_frac": 0.7375,
+    "block": 0,
+    "p_strength": 3,
+    "p_dexterity": 0,
+    "p_weak": 0,
+    "p_frail": 0,
+    "p_vulnerable": 0,
+    "p_demon_form": 0,
+    "p_metallicize": 0,
+    "p_plating": 1,
+    "p_barricade": 0,
+    "p_feel_no_pain": 0,
+    "p_regen": 0,
+    "p_intangible": 0,
+    "p_buffer": 0,
+    "p_thorns": 0,
+    "p_rage": 0,
+    "p_juggernaut": 0,
+    "n_powers": 3,
+    "energy_per_turn": 3,
+    "hand": 5,
+    "potions": 0,
+    "relics": 6,
+    "deck_n": 24,
+    "deck_atk_frac": 0.5,
+    "deck_pow": 3,
+    "deck_junk": 1,
+    "deck_dmg_per_card": 3.833333,
+    "deck_blk_per_card": 3.166667,
+    "deck_up_frac": 0.041667,
+    "act": 2,
+    "turn": 4,
+    "asc": 7,
+    "kind_elite": 0,
+    "kind_boss": 0,
+    "n_living": 1,
+    "n_minions": 0,
+    "enemy_hp_sum": 3,
+    "enemy_hp_max": 3,
+    "enemy_maxhp_sum": 28,
+    "enemy_hp_frac": 0.107143,
+    "enemy_block_sum": 0,
+    "enemy_str_sum": 2,
+    "enemy_str_max": 2,
+    "enemy_vuln_max": 0,
+    "enemy_weak_max": 0,
+    "enemy_artifact": 0,
+    "enemy_npowers": 2,
+    "intent_dmg": 10,
+    "intent_dmg_max": 10,
+    "incoming_after_block": 10,
+    "threat_next": 0.0,
+    "threat_next_unknown": 0,
+    "deck_dmg_turn": 32.296,
+    "turns_to_kill": 0.092891,
+    "hp_minus_incoming": 49
+   }
+  },
+  {
+   "row": {
+    "act": 2,
+    "t": 1,
+    "asc": 7,
+    "kind": "hallway",
+    "enc": "EXOSKELETON+EXOSKELETON+EXOSKELETON+EXOSKELETON",
+    "deck": {
+     "n": 22,
+     "atk": 11,
+     "skl": 9,
+     "pow": 1,
+     "junk": 1,
+     "dmg": 112.0,
+     "blk": 40.0,
+     "up": 2
+    },
+    "relics": 6,
+    "max_en": 3,
+    "E": {
+     "hp": 45,
+     "mhp": 80,
+     "blk": 8,
+     "en": 2,
+     "pw": {
+      "STRENGTH_POWER": 3,
+      "SETUP_STRIKE_POWER": 3
+     },
+     "hand": 1,
+     "pots": 1,
+     "E": [
+      [
+       0,
+       "EXOSKELETON",
+       26,
+       26,
+       0,
+       true,
+       false,
+       3,
+       "SKITTER_MOVE",
+       {
+        "HARD_TO_KILL_POWER": 9
+       }
+      ],
+      [
+       2,
+       "EXOSKELETON",
+       17,
+       24,
+       0,
+       true,
+       false,
+       0,
+       "ENRAGE_MOVE",
+       {
+        "HARD_TO_KILL_POWER": 9
+       }
+      ],
+      [
+       3,
+       "EXOSKELETON",
+       28,
+       28,
+       0,
+       true,
+       false,
+       3,
+       "SKITTER_MOVE",
+       {
+        "HARD_TO_KILL_POWER": 9
+       }
+      ]
+     ]
+    }
+   },
+   "features": {
+    "hp": 45,
+    "max_hp": 80,
+    "hp_frac": 0.5625,
+    "block": 8,
+    "p_strength": 3,
+    "p_dexterity": 0,
+    "p_weak": 0,
+    "p_frail": 0,
+    "p_vulnerable": 0,
+    "p_demon_form": 0,
+    "p_metallicize": 0,
+    "p_plating": 0,
+    "p_barricade": 0,
+    "p_feel_no_pain": 0,
+    "p_regen": 0,
+    "p_intangible": 0,
+    "p_buffer": 0,
+    "p_thorns": 0,
+    "p_rage": 0,
+    "p_juggernaut": 0,
+    "n_powers": 2,
+    "energy_per_turn": 3,
+    "hand": 1,
+    "potions": 1,
+    "relics": 6,
+    "deck_n": 22,
+    "deck_atk_frac": 0.5,
+    "deck_pow": 1,
+    "deck_junk": 1,
+    "deck_dmg_per_card": 5.090909,
+    "deck_blk_per_card": 1.818182,
+    "deck_up_frac": 0.090909,
+    "act": 2,
+    "turn": 1,
+    "asc": 7,
+    "kind_elite": 0,
+    "kind_boss": 0,
+    "n_living": 3,
+    "n_minions": 0,
+    "enemy_hp_sum": 71,
+    "enemy_hp_max": 28,
+    "enemy_maxhp_sum": 78,
+    "enemy_hp_frac": 0.910256,
+    "enemy_block_sum": 0,
+    "enemy_str_sum": 0,
+    "enemy_str_max": 0,
+    "enemy_vuln_max": 0,
+    "enemy_weak_max": 0,
+    "enemy_artifact": 0,
+    "enemy_npowers": 3,
+    "intent_dmg": 6,
+    "intent_dmg_max": 3,
+    "incoming_after_block": 0,
+    "threat_next": 25.414423,
+    "threat_next_unknown": 0,
+    "deck_dmg_turn": 37.789091,
+    "turns_to_kill": 1.878849,
+    "hp_minus_incoming": 45
+   }
+  },
+  {
+   "row": {
+    "act": 1,
+    "t": 1,
+    "asc": 7,
+    "kind": "boss",
+    "enc": "WATERFALL_GIANT",
+    "deck": {
+     "n": 22,
+     "atk": 13,
+     "skl": 6,
+     "pow": 2,
+     "junk": 1,
+     "dmg": 111.0,
+     "blk": 33.0,
+     "up": 2
+    },
+    "relics": 6,
+    "max_en": 3,
+    "E": {
+     "hp": 82,
+     "mhp": 91,
+     "blk": 6,
+     "en": 3,
+     "pw": {
+      "STRENGTH_POWER": 2
+     },
+     "hand": 3,
+     "pots": 1,
+     "E": [
+      [
+       0,
+       "WATERFALL_GIANT",
+       228,
+       240,
+       0,
+       true,
+       false,
+       0,
+       "PRESSURIZE_MOVE",
+       {
+        "VULNERABLE_POWER": 1
+       }
+      ]
+     ]
+    }
+   },
+   "features": {
+    "hp": 82,
+    "max_hp": 91,
+    "hp_frac": 0.901099,
+    "block": 6,
+    "p_strength": 2,
+    "p_dexterity": 0,
+    "p_weak": 0,
+    "p_frail": 0,
+    "p_vulnerable": 0,
+    "p_demon_form": 0,
+    "p_metallicize": 0,
+    "p_plating": 0,
+    "p_barricade": 0,
+    "p_feel_no_pain": 0,
+    "p_regen": 0,
+    "p_intangible": 0,
+    "p_buffer": 0,
+    "p_thorns": 0,
+    "p_rage": 0,
+    "p_juggernaut": 0,
+    "n_powers": 1,
+    "energy_per_turn": 3,
+    "hand": 3,
+    "potions": 1,
+    "relics": 6,
+    "deck_n": 22,
+    "deck_atk_frac": 0.590909,
+    "deck_pow": 2,
+    "deck_junk": 1,
+    "deck_dmg_per_card": 5.045455,
+    "deck_blk_per_card": 1.5,
+    "deck_up_frac": 0.090909,
+    "act": 1,
+    "turn": 1,
+    "asc": 7,
+    "kind_elite": 0,
+    "kind_boss": 1,
+    "n_living": 1,
+    "n_minions": 0,
+    "enemy_hp_sum": 228,
+    "enemy_hp_max": 228,
+    "enemy_maxhp_sum": 240,
+    "enemy_hp_frac": 0.95,
+    "enemy_block_sum": 0,
+    "enemy_str_sum": 0,
+    "enemy_str_max": 0,
+    "enemy_vuln_max": 1,
+    "enemy_weak_max": 0,
+    "enemy_artifact": 0,
+    "enemy_npowers": 1,
+    "intent_dmg": 0,
+    "intent_dmg_max": 0,
+    "incoming_after_block": 0,
+    "threat_next": 15.1,
+    "threat_next_unknown": 0,
+    "deck_dmg_turn": 36.200727,
+    "turns_to_kill": 6.298216,
+    "hp_minus_incoming": 82
+   }
+  }
+ ],
+ "move_model": {
+  "DAMP_CULTIST": {
+   "buffs": [
+    "INCANTATION_MOVE"
+   ],
+   "damage": {
+    "DARK_STRIKE_MOVE": 8.8,
+    "INCANTATION_MOVE": 0.0
+   },
+   "next": {
+    "DARK_STRIKE_MOVE": {
+     "DARK_STRIKE_MOVE": 167
+    },
+    "INCANTATION_MOVE": {
+     "DARK_STRIKE_MOVE": 64
+    }
+   }
+  },
+  "DECIMILLIPEDE_SEGMENT_BACK": {
+   "buffs": [
+    "BULK_MOVE"
+   ],
+   "damage": {
+    "BULK_MOVE": 6.3,
+    "CONSTRICT_MOVE": 8.5,
+    "DEAD_MOVE": 0.0,
+    "REATTACH_MOVE": 0.0,
+    "WRITHE_MOVE": 13.3
+   },
+   "next": {
+    "BULK_MOVE": {
+     "REATTACH_MOVE": 2,
+     "WRITHE_MOVE": 52
+    },
+    "CONSTRICT_MOVE": {
+     "BULK_MOVE": 44,
+     "DEAD_MOVE": 1,
+     "REATTACH_MOVE": 5
+    },
+    "REATTACH_MOVE": {
+     "BULK_MOVE": 2,
+     "CONSTRICT_MOVE": 6,
+     "WRITHE_MOVE": 6
+    },
+    "WRITHE_MOVE": {
+     "CONSTRICT_MOVE": 33,
+     "REATTACH_MOVE": 20
+    }
+   }
+  },
+  "DECIMILLIPEDE_SEGMENT_FRONT": {
+   "buffs": [
+    "BULK_MOVE"
+   ],
+   "damage": {
+    "BULK_MOVE": 6.1,
+    "CONSTRICT_MOVE": 8.5,
+    "REATTACH_MOVE": 0.0,
+    "WRITHE_MOVE": 12.4
+   },
+   "next": {
+    "BULK_MOVE": {
+     "REATTACH_MOVE": 4,
+     "WRITHE_MOVE": 45
+    },
+    "CONSTRICT_MOVE": {
+     "BULK_MOVE": 39,
+     "REATTACH_MOVE": 13
+    },
+    "REATTACH_MOVE": {
+     "BULK_MOVE": 3,
+     "CONSTRICT_MOVE": 3,
+     "WRITHE_MOVE": 6
+    },
+    "WRITHE_MOVE": {
+     "CONSTRICT_MOVE": 41,
+     "REATTACH_MOVE": 17
+    }
+   }
+  },
+  "DECIMILLIPEDE_SEGMENT_MIDDLE": {
+   "buffs": [
+    "BULK_MOVE"
+   ],
+   "damage": {
+    "BULK_MOVE": 6.2,
+    "CONSTRICT_MOVE": 8.6,
+    "DEAD_MOVE": 0.0,
+    "REATTACH_MOVE": 0.0,
+    "WRITHE_MOVE": 12.7
+   },
+   "next": {
+    "BULK_MOVE": {
+     "DEAD_MOVE": 1,
+     "REATTACH_MOVE": 6,
+     "WRITHE_MOVE": 45
+    },
+    "CONSTRICT_MOVE": {
+     "BULK_MOVE": 41,
+     "REATTACH_MOVE": 2
+    },
+    "REATTACH_MOVE": {
+     "BULK_MOVE": 6,
+     "CONSTRICT_MOVE": 5,
+     "WRITHE_MOVE": 6
+    },
+    "WRITHE_MOVE": {
+     "CONSTRICT_MOVE": 36,
+     "REATTACH_MOVE": 23
+    }
+   }
+  },
+  "EXOSKELETON": {
+   "buffs": [
+    "ENRAGE_MOVE"
+   ],
+   "damage": {
+    "ENRAGE_MOVE": 0.0,
+    "MANDIBLES_MOVE": 8.9,
+    "SKITTER_MOVE": 6.1
+   },
+   "next": {
+    "ENRAGE_MOVE": {
+     "MANDIBLES_MOVE": 225,
+     "SKITTER_MOVE": 191
+    },
+    "MANDIBLES_MOVE": {
+     "ENRAGE_MOVE": 391
+    },
+    "SKITTER_MOVE": {
+     "MANDIBLES_MOVE": 253
+    }
+   }
+  },
+  "WATERFALL_GIANT": {
+   "buffs": [
+    "PRESSURE_GUN_MOVE",
+    "PRESSURE_UP_MOVE",
+    "PRESSURIZE_MOVE",
+    "RAM_MOVE",
+    "SIPHON_MOVE",
+    "STOMP_MOVE"
+   ],
+   "damage": {
+    "EXPLODE_MOVE": 39.1,
+    "PRESSURE_GUN_MOVE": 22.8,
+    "PRESSURE_UP_MOVE": 13.2,
+    "PRESSURIZE_MOVE": 0.0,
+    "RAM_MOVE": 10.1,
+    "SIPHON_MOVE": 0.0,
+    "STOMP_MOVE": 15.1
+   },
+   "next": {
+    "PRESSURE_GUN_MOVE": {
+     "EXPLODE_MOVE": 9,
+     "PRESSURE_UP_MOVE": 79
+    },
+    "PRESSURE_UP_MOVE": {
+     "EXPLODE_MOVE": 8,
+     "STOMP_MOVE": 71
+    },
+    "PRESSURIZE_MOVE": {
+     "STOMP_MOVE": 58
+    },
+    "RAM_MOVE": {
+     "EXPLODE_MOVE": 5,
+     "SIPHON_MOVE": 110
+    },
+    "SIPHON_MOVE": {
+     "EXPLODE_MOVE": 17,
+     "PRESSURE_GUN_MOVE": 93
+    },
+    "STOMP_MOVE": {
+     "EXPLODE_MOVE": 14,
+     "RAM_MOVE": 115
+    }
+   }
+  }
+ }
+}

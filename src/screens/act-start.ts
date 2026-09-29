@@ -58,11 +58,21 @@ export function routeEffect(description: string, hp: number, maxHp: number, gold
  * fight, is known now.
  */
 export function revealsLater(description: string): string | null {
-  const text = clean(description);
-  if (/获得[^。]{0,8}随机|随机获得|随机[^。]{0,6}(?:遗物|药水|无色牌|诅咒|牌)[^。]{0,8}(?:加入|添加)|(?:obtain|gain|add)[^.]{0,20}random (?:relic|potion|card|curse)/i.test(text)) return "its outcome is random";
-  if (/从\s*(?:\d+|[一两二三四五六])\s*(?:张|个)[^。]{0,10}中选择|choose [^.]{0,20}from \d+/i.test(text)) return "what it gives is picked from cards it reveals later";
+  // Sentence by sentence: a sentence about every fight or turn, or the hand, is an effect known now however
+  // random its draw (Choices Paradox 「在每场战斗开始时，从5张随机牌中选择1张放入你的手牌」, 7XK6DUJYMYY3 F34: read
+  // as "picked from cards it reveals later" and a route review was asked for nothing).
+  const sentences = clean(description)
+    .split(/(?<=[。.!！])/)
+    .filter((sentence) => !IN_FIGHT.test(sentence));
+  for (const text of sentences) {
+    if (/获得[^。]{0,8}随机|随机获得|随机[^。]{0,6}(?:遗物|药水|无色牌|诅咒|牌)[^。]{0,8}(?:加入|添加)|(?:obtain|gain|add)[^.]{0,20}random (?:relic|potion|card|curse)/i.test(text)) return "its outcome is random";
+    if (/从\s*(?:\d+|[一两二三四五六])\s*(?:张|个)[^。]{0,10}中选择|choose [^.]{0,20}from \d+/i.test(text)) return "what it gives is picked from cards it reveals later";
+  }
   return null;
 }
+
+/** A sentence about each fight or turn, or the hand: a recurring in-fight effect, not a one-time outcome. */
+const IN_FIGHT = /每场战斗|每回合|(?:战斗|回合)(?:开始|结束)时|手牌|(?:each|every) (?:combat|fight|turn)|into your hand/i;
 
 /** The instructions of the joint question. */
 export const ACT_START_NOTE =

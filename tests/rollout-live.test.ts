@@ -190,7 +190,9 @@ describe("rollout facts on Jev's combat question", () => {
       // saturated: one best, or two or more options tied for it (the same numbers as shown) and no best.
       const tagged = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length;
       const tied = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_tied"] !== undefined);
-      if (log["saturated"] === true) expect(tagged + tied.length, name).toBeLessThanOrEqual(1);
+      // The time budget's 1-turn fallback (a loaded machine) is no forecast: no best.
+      if ((log["degraded"] as string[]).includes("1-turn")) expect(tagged + tied.length, name).toBe(0);
+      else if (log["saturated"] === true) expect(tagged + tied.length, name).toBeLessThanOrEqual(1);
       else if (tied.length > 0) {
         expect(tagged, name).toBe(0);
         expect(tied.length, name).toBeGreaterThanOrEqual(2);
@@ -211,14 +213,17 @@ describe("rollout facts on Jev's combat question", () => {
     expect(Number(log["ms"])).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
     expect((log["degraded"] as string[]).length).toBeGreaterThan(0);
     const text = String(facts(criteriaOf(slow), "plan1")["rollout"]);
-    expect(text).toMatch(/cut to fit the time budget/);
-    expect(text).toContain(`${log["horizon"]}-turn`.replace(/^1-turn$/, "1-turn estimate"));
+    if (log["horizon"] === 1) expect(text).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
+    else {
+      expect(text).toMatch(/cut to fit the time budget/);
+      expect(text).toContain(`${log["horizon"]}-turn`);
+    }
     // A clock past the budget at once: the 1-turn estimate only, still within the budget.
     rolloutLiveOptions.now = fakeClock(400);
     const cut = plan("g8yy-f30-t3", true) as AskDecision;
     const cutLog = cut.resolve(pick("plan1")).log!.rollout as Record<string, unknown>;
     expect(cutLog["horizon"]).toBe(1);
-    expect(String(facts(criteriaOf(cut), "plan1")["rollout"])).toMatch(/^1-turn estimate \(no rollout\)/);
+    expect(String(facts(criteriaOf(cut), "plan1")["rollout"])).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
   });
 
   it("the real clock: every logged board's rollout stays inside the budget", () => {
@@ -256,10 +261,14 @@ describe("rollout facts on Jev's combat question", () => {
           const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered_because: _o, ...rest } = facts(after, key);
           const { offered_because: _o2, ...restBefore } = facts(before, key);
           expect(rest, `${name} ${key}`).toEqual(restBefore);
-          // And resolving it plays the same (the HP guard and potion rules see code's options only).
+          // And resolving it plays the same (the HP guard and potion rules see code's options only), but for
+          // the one designed dependence of the guard (guardKeepsPick): it does not swap into a line the rollout
+          // sees dying more often than the pick (XMK1 F33 T3 cut: plan 6 dies in more samples than plan 1).
+          const deaths = (option: string) => Number(/dead within \d+ turns in (\d+)\//.exec(String(facts(after, option)["rollout"]))?.[1] ?? 0);
           for (const confidence of [0.9, 0.3]) {
             const a = off.resolve(pick(key, confidence));
             const b = on.resolve(pick(key, confidence));
+            if (a.guard && a.guard.choice !== b.guard?.choice && deaths(a.guard.choice) > deaths(key)) continue;
             expect(b.intent, `${name} ${key}`).toEqual(a.intent);
             // The option count in "plan k/N" is what Jev saw (N + 1 with an added line); the rest is the same.
             const count = (text: string) => text.replace(/plan (\d+)\/\d+/, "plan $1/N");

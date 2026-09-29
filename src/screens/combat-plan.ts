@@ -1025,53 +1025,39 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   const first = plan.steps[0];
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
   const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
+  // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
+  // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
+  // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
-  // A chosen line's later drinks are kept apart: drunk even if the line is cut short (pendingDrinks).
-  const drinks = via !== "code" ? plan.steps.slice(1).filter((step) => step.cardId.startsWith("POTION:")) : [];
-  env.screenMemory.pendingDrinks = drinks.length > 0 ? { fight: fightKey(env.state), turn, via, steps: drinks } : undefined;
+  // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
+  // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
+  // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
+  // Potion step was drunk at 76/87 before the re-plan, 6 of its 17 wasted).
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
-    plan.steps.length > 1 && drawsOrRandom === 0
-      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
+    (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
+      ? {
+          turn,
+          remaining: plan.steps.slice(1),
+          expectedHand: expectedHandAfterFirst(plan, hand),
+          handLen: plan.steps.length === 1 ? handLenAfter(first!, hand) : hand.length - 1,
+          via,
+          enemies: livingEnemySignature(env.state.raw),
+        }
       : null;
 }
 
-/**
- * The next drink of a cut-short chosen line (pendingDrinks) that can still be drunk this turn: the same
- * potion in the same belt slot, usable, its target alive (else the living enemy with that name, else
- * none: dropped). null when there is none.
- */
-export function pendingDrink(env: DecisionEnv, enemies: EnemySim[]): { step: Step; intent: ActionRequest; via: CombatPlanMemo["via"] } | null {
-  const pending = env.screenMemory.pendingDrinks;
-  if (!pending || pending.fight !== fightKey(env.state) || pending.turn !== (env.state.turn ?? null)) {
-    env.screenMemory.pendingDrinks = undefined;
-    return null;
-  }
-  if (!env.state.available_actions.includes("use_potion")) return null;
-  const belt = potionViews({ raw: asRecord(env.state.run?.raw) }, env.knowledge);
-  for (const step of [...pending.steps]) {
-    const [, id, slotText] = step.cardId.split(":");
-    const potion = belt.find((entry) => entry.slot === Number(slotText) && entry.potion_id === id && entry.can_use);
-    let target = step.target;
-    if (target !== null && !enemies.some((enemy) => enemy.index === target && enemy.hp > 0)) {
-      target = enemies.find((enemy) => enemy.hp > 0 && enemy.name === step.targetName)?.index ?? null;
-    }
-    if (!potion || (step.target !== null && (target === null || !potion.valid_targets.includes(target)))) {
-      dropPendingDrink(env, step);
-      continue;
-    }
-    const intent: ActionRequest = target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target };
-    return { step, intent, via: pending.via };
-  }
-  return null;
+/** Hand size after a step: a card leaves the hand, a potion does not. */
+function handLenAfter(step: Step, hand: CardModel[]): number {
+  return cardFor(step, hand) ? hand.length - 1 : hand.length;
 }
 
-/** A drink of the chosen line done (or no longer possible): off the pending list. */
-function dropPendingDrink(env: DecisionEnv, step: Step): void {
-  const pending = env.screenMemory.pendingDrinks;
-  if (!pending) return;
-  const steps = pending.steps.filter((entry) => entry !== step && !(entry.cardId === step.cardId && entry.target === step.target));
-  env.screenMemory.pendingDrinks = steps.length > 0 ? { ...pending, steps } : undefined;
+/**
+ * A chosen line (Jev's, the escalator's) played to its end on the board it expected. Its end (energy unused
+ * included) is part of the choice: code does not extend it on its own (planTurn stopLine).
+ */
+function lineDone(memo: CombatPlanMemo, combat: Record<string, unknown>, available: string[]): boolean {
+  return memo.remaining.length === 0 && memo.via !== "code" && available.includes("end_turn") && !bool(combat["end_turn_will_kill_player"]);
 }
 
 /** Living enemies as "index:enemy_id", in order. */
@@ -1086,7 +1072,10 @@ export function livingEnemySignature(raw: Record<string, unknown>): string {
 /**
  * Sandpit hard guard (TTVY T6): never end the turn with the Sandpit about to reach 0 while an
  * affordable Frantic Escape is in hand. The mod's end_turn_will_kill_player does not see this death,
- * so it applies to every combat planner and to answers from Jev/DeepSeek alike.
+ * so it applies to every combat planner and to answers from Jev/DeepSeek alike. Code's own plays are
+ * held to it too: a card that would leave too little energy for the cheapest Escape, in a line that does
+ * not play one next, gives way to the Escape (KY3Y F33 T9: least-loss "Defend, Defend" at 2 energy with
+ * a 2-cost Escape in hand; the pit took us at 14 HP with 10 block up). A lethal is left alone.
  */
 export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decision | null {
   if (!decision) return decision;
@@ -1098,13 +1087,23 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
     .filter((amount) => amount > 0);
   if (sandpits.length === 0 || Math.min(...sandpits) - 1 > 0) return decision;
   const energy = num(asRecord(combat["player"])["energy"]);
-  const escape = asArray(combat["hand"])
-    .map(asRecord)
-    .find((card) => str(card["card_id"]) === "FRANTIC_ESCAPE" && card["playable"] !== false && num(card["energy_cost"]) <= energy);
+  const hand = asArray(combat["hand"]).map(asRecord);
+  const escape = hand
+    .filter((card) => str(card["card_id"]) === "FRANTIC_ESCAPE" && card["playable"] !== false && num(card["energy_cost"]) <= energy)
+    .sort((a, b) => num(a["energy_cost"]) - num(b["energy_cost"]))[0];
   if (!escape) return decision;
   const intent: ActionRequest = { action: "play_card", card_index: num(escape["index"]) };
   const why = `Sandpit ${Math.min(...sandpits)} would reach 0 at the enemy turn (death regardless of HP/block)`;
   if (decision.kind === "act") {
+    if (decision.intent.action === "play_card" && decision.label !== "combat/lethal") {
+      const played = hand.find((card) => num(card["index"]) === decision.intent.card_index);
+      const after = env.screenMemory.plannedAfter;
+      const escapeNext = after !== undefined && after.turn === (env.state.turn ?? null) && after.steps.some((step) => step.cardId === "FRANTIC_ESCAPE");
+      const cost = played ? (bool(played["costs_x"]) ? energy : num(played["energy_cost"])) : 0;
+      if (!played || str(played["card_id"]) === "FRANTIC_ESCAPE" || escapeNext || energy - cost >= num(escape["energy_cost"])) return decision;
+      env.screenMemory.combatPlan = null;
+      return { kind: "act", label: "combat/sandpit-guard", intent, rationale: `${why}: playing Frantic Escape before ${str(played["name"], str(played["card_id"]))}, which would leave too little energy for it` };
+    }
     if (decision.intent.action !== "end_turn") return decision;
     env.screenMemory.combatPlan = null;
     return { kind: "act", label: "combat/sandpit-guard", intent, rationale: `${why}: playing Frantic Escape instead of ending the turn` };
@@ -1215,6 +1214,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
     // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
     duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    // One-Two Punch played earlier this turn: its next Attack(s) are played an extra time (9Q7V F17 T14).
+    duplicateAttacks: powerAmount(player, "ONE_TWO_PUNCH_POWER"),
     regen: powerAmount(player, "REGEN_POWER"),
     // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
     buffer: powerAmount(player, "BUFFER_POWER"),
@@ -1277,18 +1278,27 @@ function planTurn(env: DecisionEnv): Decision | null {
   const memo = env.screenMemory.combatPlan;
   const handGrew = memo !== null && hand.length > memo.handLen;
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
-  if (memo && !handGrew && sameEnemies && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
+  const asExpected = memo !== null && !handGrew && sameEnemies && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
+  // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
+  // (stopLine below).
+  const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
+  if (memo && asExpected && memo.remaining.length > 0) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
     if (intent) {
-      dropPendingDrink(env, next);
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
+      // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       env.screenMemory.combatPlan =
-        memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
-          ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== nextCard)), handLen: hand.length - 1 }
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
+          ? {
+              ...memo,
+              remaining: memo.remaining.slice(1),
+              expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
+              handLen: memo.remaining.length === 1 ? handLenAfter(next, hand) : hand.length - 1,
+            }
           : null;
       return {
         kind: "act",
@@ -1299,19 +1309,6 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
   env.screenMemory.combatPlan = null;
-
-  // The chosen line was cut short with a drink still to come: drink it now, before any end-turn path
-  // ("no playable cards", "only line: end turn") or a re-plan (V1MF F33 T4).
-  const pending = pendingDrink(env, enemies);
-  if (pending) {
-    dropPendingDrink(env, pending.step);
-    return {
-      kind: "act",
-      label: "combat/plan-potion",
-      intent: pending.intent,
-      rationale: `drinking ${pending.step.name.replace(/^potion /, "")}${pending.step.targetName ? ` -> ${pending.step.targetName}` : ""} from the ${pending.via === "jev" ? "Jev" : pending.via === "deepseek" ? "DeepSeek" : "Claude"}-chosen line before re-planning (the line was cut short; its drink is still to come this turn)`,
-    };
-  }
 
   // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
@@ -1650,6 +1647,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       : undefined;
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
+  // A chosen line played to its end is "stop here" for code (9Q7V F17 T14: after Jev's "One-Two Punch" alone,
+  // code re-planned and played the Sword Boomerang Jev had turned down as the "only distinct line", killing the
+  // Giant into its blast). A lethal, every line dying and the mod's lethal flag are still code's (above); any
+  // other play the re-plan finds (a Free Attack from Unrelenting, a Stomp made free) is Jev's call, with
+  // ending the turn, the line's own end, among the options.
+  const stopLine = lineEnded !== null && top.steps.length > 0 && endNow !== undefined && surviving.includes(endNow) ? endNow : null;
+  if (stopLine && !options.includes(stopLine)) options.push(stopLine);
   const second = options.find((plan) => plan !== top);
   // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
   // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
@@ -1673,7 +1677,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
     !setupClose &&
     !(drySurvives && drinksPotion(top)) &&
-    potionLethal.length === 0;
+    potionLethal.length === 0 &&
+    stopLine === null;
   // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
   // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
   // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
@@ -1939,10 +1944,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
   // Code's own line when Jev gives no usable answer: never one that drinks while a potion-free option is shown.
-  const autoTop = drinksPotion(top) ? (dryFirst(options) ?? top) : top;
+  // After a finished chosen line (stopLine), no answer keeps its end: the turn ends.
+  const autoTop = stopLine ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
-    rationale: `${why}; using the code-best ${line === top ? "plan" : "potion-free plan"}`,
+    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
     confidence: null,
     fallback: true,
     apply: () => commit(env, state.turn, line, hand, "code"),
@@ -2202,7 +2208,19 @@ export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(plans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+  // The Sandpit's deadline (it reaches 0 at the enemy turn): only a Frantic Escape played this turn keeps the
+  // pit from taking us whatever our HP, so when a line plays one, only such lines, the Escape first (KY3Y
+  // F33 T9: Sandpit 1, least-loss drew first with Burning Pact, which exhausted the 1-cost Escape).
+  const pitSafe = (plan: Plan) => plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter > 0;
+  const deadline = allPlans.some(pitSafe) && allPlans.some((plan) => !pitSafe(plan));
+  const plans = deadline ? allPlans.filter(pitSafe) : allPlans;
+  const picked = leastLossOf(plans, hand, hp);
+  const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
+  return escape > 0 ? { ...picked, steps: [picked.steps[escape]!, ...picked.steps.slice(0, escape), ...picked.steps.slice(escape + 1)] } : picked;
+}
+
+function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
   // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first).
   const drawAt = (plan: Plan): number =>
     plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp));

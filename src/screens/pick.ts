@@ -66,6 +66,11 @@ export interface PickDecisionParams {
    */
   codeMargin?: number;
   maxModelOptions?: number;
+  /**
+   * Code has no ranking for these options (an enchant screen): DeepSeek's view carries no code_value or
+   * code_rank, only each option's `why`; the scores only order the fallback.
+   */
+  unranked?: boolean;
   /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
   escalateBelow?: number;
   /**
@@ -225,8 +230,7 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
     const why = option.why ?? (typeof summary["why"] === "string" ? summary["why"] : null);
     criteria[option.key] = JSON.stringify({
       ...summary,
-      code_value: Number(option.score.toFixed(2)),
-      code_rank: rankOf(option),
+      ...(params.unranked ? {} : { code_value: Number(option.score.toFixed(2)), code_rank: rankOf(option) }),
       ...(why ? { why } : {}),
       ...(option.facts ?? {}),
     });

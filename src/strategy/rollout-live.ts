@@ -388,12 +388,17 @@ export type LiveRollout =
       potionsHeld: boolean;
       /** The revives held (Fairy in a Bottle, Lizard Tail) by name: a sample reaching 0 HP goes on at theirs. */
       revives: string[];
+      /** The most a line can lose: our HP now plus the revives' HP (the estimates are capped at it). */
+      lossCap: number;
       /** Kill-order permutations left out (more than MAX_FULL_ORDER_GROUPS groups). */
       ordersDropped: number;
       elapsedMs: number;
     };
 
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+
+/** rollout.ts's `degraded` tag when the time budget left no rollout, only the 1-turn estimate. */
+const FALLBACK_TAG = "1-turn";
 
 /** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
 export const SATURATED_HP = 1;
@@ -564,7 +569,10 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
     // A revive's HP counts as lost when spent: a line that spends it can lose more than the HP we have now.
-    const picked = pickRolloutBest(eligible, args.solver.player.hp + (args.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0));
+    // The time budget's 1-turn fallback is a clock estimate, not a forecast: no best, never "saturated" (X7LU
+    // F7 T1: 13 lines "further loss 54 = our HP, every line loses all our HP", history 26-32 and 99% wins).
+    const lossCap = args.solver.player.hp + (args.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
+    const picked = result.degraded.includes(FALLBACK_TAG) ? { best: null, saturated: false } : pickRolloutBest(eligible, lossCap);
     const ties = rolloutTies(picked, eligible, args.shown);
     return {
       available: true,
@@ -579,6 +587,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       minRows: gates?.params.min_rows ?? Infinity,
       potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
       revives: (args.solver.player.revives ?? []).map((revive) => revive.name),
+      lossCap,
       ordersDropped: args.ordersDropped ?? 0,
       elapsedMs: elapsed(),
     };
@@ -608,14 +617,19 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const line = r.byPlan.get(plan);
   if (!line) return { rollout: "rollout unavailable (line not evaluated)" };
   const { horizon, samples } = line;
+  // The rollout ran past its time budget: this turn exactly and the clock's estimate of the rest. Not a
+  // forecast: the estimate is capped at our HP, so a cap reached says nothing of the line dying.
+  const fallback = r.result.degraded.includes(FALLBACK_TAG);
+  const capped = line.hpLoss >= r.lossCap - SATURATED_HP;
+  const fallbackText = `no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
-  if (line.order) {
+  if (line.order && !fallback) {
     // Orders with the same numbers and the same first target are one entry ("A > B > C | A > C > B": the
     // samples never got past A, or went the same way after it).
     const first = (entry: OrderEstimate) => entry.order.label.split(" > ")[0]!;
@@ -640,7 +654,10 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
       leaderName && best!.entry.leader
         ? `; ${leaderName}'s death ends the fight (the others are minions): HP left at T${horizon} ~${Math.round(best!.entry.leader.hpLeft)}, dead ${best!.entry.leader.dead}/${samples}${line.ordersByLeader ? `; no order ends the fight within ${horizon} turns, so the orders are ranked by least ${leaderName} HP left, then HP lost and deaths` : ""}`
         : "";
-    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); best of ${line.orders.length} kill orders compared${dropped}${tied}${leaderNote}`;
+    // A line aiming only at an illusion is rolled out aiming at it on the later turns too (illusionFocusOrders).
+    const kept = line.order.firstRevives === true && line.orders.length < r.result.orders.length;
+    const compared = kept ? `this line aims only at ${first(best!.entry)} now, so its later turns keep aiming at it first (what doing this again each turn costs)` : `best of ${line.orders.length} kill orders compared`;
+    facts["rollout_kill_order"] = `${best!.labels.join(" | ")}: the later turns aim at ${first(best!.entry)} first (${best!.entry.firstDown === null ? `${first(best!.entry)} is an illusion: it revives at full HP, so it is never dead for good` : `${first(best!.entry)} dead by T${horizon} in ${best!.entry.firstDown}/${samples}`}); ${compared}${dropped}${tied}${leaderNote}`;
     if (others.length > 0) facts["rollout_other_orders"] = others.map((m) => `${m.labels.join(" | ")}: ${m.text}`).join("; ");
   }
   const forecast = line.modelForecast.rollout;

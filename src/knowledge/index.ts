@@ -88,6 +88,8 @@ export interface Knowledge {
   cards(): CardInfo[];
   monster(id: string | null | undefined): MonsterInfo | null;
   relic(id: string | null | undefined): RelicInfo | null;
+  /** Every relic in the game data (an event option names one by its game name). */
+  relics(): RelicInfo[];
   potion(id: string | null | undefined): PotionInfo | null;
   power(id: string | null | undefined): PowerInfo | null;
   event(id: string | null | undefined): EventInfo | null;
@@ -221,6 +223,7 @@ export function makeKnowledge(collections: Partial<Record<CollectionName, unknow
     cards: () => [...cards.values()],
     monster: (id) => (id ? monsters.get(id) ?? null : null),
     relic: (id) => (id ? relics.get(id) ?? null : null),
+    relics: () => [...relics.values()],
     potion: (id) => (id ? potions.get(id) ?? null : null),
     power: (id) => (id ? powers.get(id) ?? null : null),
     event: (id) => (id ? events.get(id) ?? null : null),

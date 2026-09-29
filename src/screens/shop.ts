@@ -6,7 +6,7 @@
  * card, potion discards), played by code step by step; re-asked only when the shop changes under the plan.
  */
 
-import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, iconsToText, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
@@ -95,7 +95,13 @@ export function planShop(env: DecisionEnv): Decision | null {
   const emptyPotionSlots = belt.filter((slot) => !bool(asRecord(slot)["occupied"])).length;
   const byDeepseek = deepseekDecides(env);
   const profile = deckProfile(deckNow);
-  const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
+  // What a removal can take: Eternal cards (Ascender's Bane at A5+, Strikes made Eternal by Nutritious Soup) are
+  // never offered (U6RU F22: "11 basic Strikes/Defends and a curse" with 5 Eternal Strikes and the Bane).
+  const deckAll = deckCards(state, knowledge);
+  const removable = deckAll.filter((card) => !card.eternal);
+  const eternal = deckAll.filter((card) => card.eternal);
+  const removableBasics = removable.filter((card) => /^(STRIKE|DEFEND)_/.test(card.identity.card_id)).reduce((sum, card) => sum + card.count, 0);
+  const removableCurse = removable.some((card) => card.type === "Curse");
   const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
   const floor = state.run?.floor ?? 0;
 
@@ -113,8 +119,14 @@ export function planShop(env: DecisionEnv): Decision | null {
       const name = str(raw["name"], id);
       const info =
         action === "buy_card" ? knowledge.card(id) : action === "buy_relic" ? knowledge.relic(id) : knowledge.potion(id);
-      const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
-      stock.push({ kind: kindLabel, name, price, affordable: enough });
+      // A card as the shop renders it (its cost and text now, energy icons as text), like a card reward
+      // (U6RU F22: Production, 0 cost and "gain 2 energy, exhaust", reached DeepSeek as icon paths with no cost).
+      const text = iconsToText((action === "buy_card" ? str(raw["resolved_rules_text"]) : "") || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? ""));
+      const cardFields: Record<string, JsonValue> =
+        action === "buy_card"
+          ? { type: str(raw["card_type"], knowledge.card(id)?.type ?? "") || null, rarity: str(raw["rarity"], knowledge.card(id)?.rarity ?? "") || null, cost: bool(raw["costs_x"]) ? "X" : (numOrNull(raw["energy_cost"]) ?? knowledge.card(id)?.cost ?? null) }
+          : {};
+      stock.push({ kind: kindLabel, name, ...cardFields, price, affordable: enough });
       if (!bool(raw["is_stocked"], true) || !id) continue;
       const oldBase = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
       // DeepSeek: a potion's value is the HP it is expected to save in the act boss fight (its facts).
@@ -148,6 +160,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         summary: {
           buy: name,
           kind: kindLabel,
+          ...cardFields,
           price,
           text: truncate(text, 140),
         } satisfies JsonValue,
@@ -162,8 +175,9 @@ export function planShop(env: DecisionEnv): Decision | null {
   collect(shop["potions"], "buy_potion", "potion");
 
   const removal = asRecord(shop["card_removal"]);
-  const removalScore = profile.basics >= 4 || entriesHaveCurse ? 30 : 8;
-  const removalWhy = `${profile.basics} basic Strikes/Defends${entriesHaveCurse ? " and a curse" : ""} in the deck`;
+  const removalScore = removableBasics >= 4 || removableCurse ? 30 : 8;
+  const eternalCount = eternal.reduce((sum, card) => sum + card.count, 0);
+  const removalWhy = `${removableBasics} removable basic Strikes/Defends${removableCurse ? " and a removable curse" : ""} in the deck${eternalCount > 0 ? ` (Eternal, never removable: ${eternal.map((card) => `${card.name}${card.count > 1 ? ` x${card.count}` : ""}`).join(", ")})` : ""}`;
   if (bool(removal["available"]) && bool(removal["enough_gold"])) {
     const price = numOrNull(removal["price"]);
     options.push({
@@ -283,6 +297,11 @@ function liveStock(shop: Record<string, unknown>): Map<string, { id: string; pri
   return out;
 }
 
+/** The relic ids held. */
+function relicIdsOf(state: GameState): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+}
+
 /** Occupied belt slots: slot -> potion id, name, discardable. */
 function beltOf(state: GameState): { slots: number; empty: number; potions: Map<number, { id: string; name: string; canDiscard: boolean }> } {
   const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord);
@@ -303,7 +322,7 @@ export const SHOP_PLAN_NOTE =
   "state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after " +
   "the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so " +
   "the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan " +
-  "(a price change, a restocked item, an item that cannot be bought).";
+  "(an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).";
 
 /** A plan's steps from DeepSeek's answer, validated against this state; the reason it is invalid otherwise. */
 export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): { steps: ShopPlanStep[]; reason: string } | { invalid: string } {
@@ -392,25 +411,30 @@ function stepProblem(step: ShopPlanStep, env: DecisionEnv): string | null {
   return null;
 }
 
-/** What changed in the shop that the plan did not do (a price, a restock, an item gone), or null. */
+/**
+ * What changed in the shop that the rest of the plan depends on, or null: an item a later step buys is gone,
+ * another item or another price (its gold budget moved); the removal's price while a removal is still to
+ * come; new stock in a slot the plan did not buy (it could not be weighed). A slot the plan bought and The
+ * Courier refilled is expected, not a change (7XK6DUJYMYY3 F31/F38/F46: every purchase re-asked the whole
+ * plan, 7 re-asks and 436 s; F38's second plan was the first one's last two steps again); nor is a price or
+ * an item the plan does not buy.
+ */
 function stockDrift(memo: ShopPlan, env: DecisionEnv): string | null {
   const shop = asRecord(env.state.raw["shop"]);
   const live = liveStock(shop);
-  const bought = new Set(memo.steps.slice(0, memo.next).filter((step) => step.kind === "buy").map((step) => step.key));
-  for (const [key, was] of Object.entries(memo.stock)) {
-    const now = live.get(key);
-    if (bought.has(key)) {
-      if (now) return `${key} was restocked with ${now.name} (${now.price ?? "?"}g)`;
-      continue;
-    }
-    if (!now) return `${key} (${was.id}) is gone`;
-    if (now.id !== was.id) return `${key} changed from ${was.id} to ${now.name}`;
-    if (now.price !== was.price) return `${now.name}'s price changed (${was.price ?? "?"} -> ${now.price ?? "?"}g)`;
+  const rest = memo.steps.slice(memo.next);
+  for (const step of rest) {
+    if (step.kind !== "buy") continue;
+    const was = memo.stock[step.key];
+    const now = live.get(step.key);
+    if (!now) return `${step.key} (${was?.id ?? step.id ?? step.name}) is gone`;
+    if (was && now.id !== was.id) return `${step.key} changed from ${was.id} to ${now.name}`;
+    if (was && now.price !== was.price) return `${now.name}'s price changed (${was.price ?? "?"} -> ${now.price ?? "?"}g)`;
   }
-  for (const [key, now] of live) if (!(key in memo.stock)) return `${key} appeared: ${now.name} (${now.price ?? "?"}g)`;
+  const bought = new Set(memo.steps.slice(0, memo.next).filter((step) => step.kind === "buy").map((step) => step.key));
+  for (const [key, now] of live) if (!(key in memo.stock) && !bought.has(key)) return `${key} appeared: ${now.name} (${now.price ?? "?"}g)`;
   const removal = asRecord(shop["card_removal"]);
-  const removed = memo.steps.slice(0, memo.next).some((step) => step.kind === "remove");
-  if (!removed && memo.removal.available && numOrNull(removal["price"]) !== memo.removal.price) return `the removal's price changed (${memo.removal.price ?? "?"} -> ${numOrNull(removal["price"]) ?? "?"}g)`;
+  if (rest.some((step) => step.kind === "remove") && memo.removal.available && numOrNull(removal["price"]) !== memo.removal.price) return `the removal's price changed (${memo.removal.price ?? "?"} -> ${numOrNull(removal["price"]) ?? "?"}g)`;
   return null;
 }
 
@@ -515,7 +539,15 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
     state: {
       // The step-by-step question's note ("one purchase per decision") does not apply to a plan.
       ...Object.fromEntries(Object.entries(inputs.params.state).filter(([key]) => key !== "note")),
-      situation: { screen: "SHOP", gold, hp: env.brief.hp, potion_slots: `${belt.slots - belt.empty}/${belt.slots} used` },
+      situation: {
+        screen: "SHOP",
+        gold,
+        hp: env.brief.hp,
+        potion_slots: `${belt.slots - belt.empty}/${belt.slots} used`,
+        ...(relicIdsOf(state).includes("THE_COURIER")
+          ? { the_courier: "a slot you buy is restocked at once with a new item (unknown until then); your plan is carried out as written, the restocks are not asked about" }
+          : {}),
+      },
       your_cards: yourCards,
       ...(inputs.removal.available && cards.length > 0 ? { code_removal_order: { order: removalOrder, why: removalScore(cards[0]!).why } } : {}),
       ...(previous ? { already_done_this_visit: previous.done } : {}),
