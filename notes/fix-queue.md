@@ -1,5 +1,9 @@
 # Fix queue (pure bugs waiting for the next batch on step1-bugfix)
 
+## PRIORITY (regression, fix first)
+- Thrash (batch B f0c5d1a): turn-solver.ts thrashAbsorb (~:1373-1392, called ~:1265 at ea6ca1c; step1-bugfix ~:1388/:1280) adds the exhausted attack's damage to the Thrash play itself; in the game Thrash hits for its printed number and the absorbed damage applies to LATER Thrash plays that fight (all 12 Thrash plays in 3SBP). Caused a false lethal at 3SBP F12 T2 (Byrdonis survived at 17, hit 15, Defend left in hand) and inflated Vantom T7 (26 predicted, 12 actual). Also carry the absorbed damage across later turns in the rollout (batch B note: TTVY's Thrash had base 17).
+
+
 **Batch C (step1-bugfix a649307, merged into v3 54d6d9e at 16:45) fixed every item listed below up to and including the X7LU/XTB4/2XWM/7XK6 and KY3Y/9Q7V/XMK1/PHMV/YQL8 sections (commits ef5eb16…a649307; ops/report.py fight splitting too). Open items start at "From the route-review work".**
 
 From post-mortems W2TB U6RU VBHZ ZY39 0H1X (2026-09-29 14:50):
@@ -40,3 +44,10 @@ From batch C (2026-09-29 16:50), not fixed:
 - One-Two Punch and Unrelenting are not modelled in hand (only as powers after being played) — Jev's options understate them.
 - The solver still counts damage into the Waterfall Giant husk on the blast turn ("dmg 88") — mostly cosmetic.
 Evidence for Dai: Soul Fysh clock factor fitted — A8 (n=20) median realised/estimate 0.86, A9 (n=8) 1.09 (XTB4 0.37 an outlier) → left unchanged.
+
+From post-mortems 0NZB 2ZCK 7KDM 3SBP (2026-09-29 16:55):
+- combat-plan.ts reads player.cards_exhausted_this_turn (2e92460 :1118; step1-bugfix ~:1176), a field that never appears in states.jsonl → after an exhaust + re-ask, Evil Eye's bonus block is dropped (0NZB: "Evil Eye + Juggernaut" shown −12, really 0). Count exhausts this turn from the logged frames instead.
+- combat-plan.ts withPotionLines (~:176-199, called ~:1550) adds "drink" lines whose drink changes nothing (Flex after the last attack); with near-equal numbers the rollout noise tagged one best (3SBP boss T3: 62.5 vs 64.1) and Jev drank it. Drop drink lines whose effect is zero in that line (a pure no-op, not a potion cost).
+- Feel No Pain misses end-of-turn exhausts of ethereal cards (Dazed, Clumsy, Ascender's Bane): the solver/rollout never exhaust ethereal cards at end of turn (evaluate, turn-solver.ts ~:1643 / step1-bugfix ~:1758; Feel No Pain only at ~:1027-1031). 7KDM HP forecasts 9–12 too pessimistic at T5/T7/T8. Ascender's Bane is in every A9 deck.
+- run-journal.ts:894-895 dedupes next nodes by type ("下一个节点强制: Treasure" with two different Treasure nodes). Minor.
+- Not a bug but noted: near-ties are not tagged tied (a line differing only by a useless drink won best by 1.6 of noise) — fixed at the source by the zero-effect drink item above.
