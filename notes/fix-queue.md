@@ -83,3 +83,8 @@ Fix (robustness only, no change to what DeepSeek may choose):
 From experience update 2026-09-29.4 (2026-09-29 18:01; line numbers at v3 cf87de6):
 - Hand-written knowledge contradicting A9 data (update text per ascension, from the data): Giant "kill early" cites only A8 "killed before T10 13/15 won" — ironclad-guide.md:55, :120, ds-handbook.md:71, run-journal.ts:181 (A9 killed before T10 1/3 won, both losses short of HP at the kill; jev-hints.json:110 giant-eruption already has both halves); ds-handbook.md:75 Infested Prism "22~40 lost" (A9 wins lost 42, 52, 56); ds-handbook.md:40 Entomancer "3 deaths" (now 9 at A7–A9); ironclad-guide.md:52, :98 "kill the cultists first" vs experience kin-priest-focus (old contradiction); jev-hints.json:140 hp-trade-boss counter-example 3SBP Vantom T1 Slippery.
 - rest.ts:42 beforeBoss ignores a forced elite within 3 floors (7KDM).
+
+From post-mortems AD5P CJ88 (2026-09-29 18:02; line numbers at v3 3e41460):
+- rollout-live.ts:420-434 pickRolloutBest on saturated boards: every line is a candidate (:424) and is ordered by enemy HP left first (:431-432); deaths within the 5 turns are not compared. CJ88 F17 Vantom T2 (asked twice): plan2 "−14, 5/8 and 4/8 samples dead" tagged best over plan1 "−2/−0, 1 dead"; Jev ignored it and took 0 that turn. Deaths (then loss) must rank before enemy HP left.
+- Hellraiser unmodelled (card-model.ts:217 only a lasting value 10; solver/rollout don't auto-play drawn Strikes) — add to the unmodelled-cards list (CJ88 F17 onwards, not the cause of death).
+- To verify: shop.ts:31-35 leaves FAKE_MERCHANT immediately although open_shop_inventory is available; never tried (CJ88 F21, 32/80 HP, 228 gold). Check what the fake merchant sells before changing.
