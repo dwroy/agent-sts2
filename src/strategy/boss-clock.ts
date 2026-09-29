@@ -232,10 +232,19 @@ export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string 
 
 /**
  * The guides' facts that come from the data, filled when the DeepSeek system prompt is built (once a process, so
- * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord).
+ * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord), {GIANT_KILLS_A8} and
+ * {GIANT_KILLS_A9} (giantKillRecord at A8 / A9: the kill-turn record, hard-coded as "A8 27 场…A9 10 场赢 3" until batch I).
  */
+const GUIDE_FACTS: Record<string, () => string> = {
+  "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
+  "{GIANT_KILLS_A8}": () => giantKillRecord(8, "zh"),
+  "{GIANT_KILLS_A9}": () => giantKillRecord(9, "zh"),
+};
+
 export function fillGuideFacts(text: string): string {
-  return text.includes("{GIANT_BLOCK_RECORD}") ? text.split("{GIANT_BLOCK_RECORD}").join(giantBlockRecord("zh")) : text;
+  let out = text;
+  for (const [placeholder, fill] of Object.entries(GUIDE_FACTS)) if (out.includes(placeholder)) out = out.split(placeholder).join(fill());
+  return out;
 }
 
 /**

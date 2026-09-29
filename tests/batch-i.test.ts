@@ -3,6 +3,10 @@
  * (tests/logged-states/batch-i, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { afterEach, describe, expect, it } from "vitest";
 
 import { planCombatTurn } from "../src/screens/combat-plan.js";
@@ -18,6 +22,8 @@ import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
+import { DeepSeekClient } from "../src/llm/deepseek.js";
+import { fillGuideFacts, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { ask, decide, env as oneshotEnv } from "./oneshot-support.js";
 import { parseShopPlan } from "../src/screens/shop.js";
 
@@ -325,5 +331,38 @@ describe("5. Liquid Memories drunk mid-line: a combat frame before the \"put a c
     memory.takeWaitSince = Date.now() - 60_000;
     expect(planCombatTurn({ ...loggedEnv(between), screenMemory: memory })).not.toBeNull();
     expect(memory.takeWaitSince).toBeUndefined();
+  });
+});
+
+describe("6. The Giant's kill-turn record in the guides is filled from the fight data ({GIANT_KILLS_A8}, {GIANT_KILLS_A9}; was \"A8 27 场…A9 10 场赢 3\")", () => {
+  const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+  const row = (turn: number | null, won: boolean, extra: Partial<GiantKillRow> = {}): GiantKillRow => ({ turn, won, ...extra });
+  // A fixed set (not the refreshing boss-damage.json).
+  const a8 = [row(8, true), row(9, true), row(14, false), row(null, false)];
+  const a9 = [row(7, true), row(9, false, { hp: 14, stacks: 41, run: "5NFG" }), row(12, false)];
+
+  it("no hard-coded record left in the guides; the DeepSeek system prompt carries A8's and A9's as counted, three times each", () => {
+    for (const name of ["ironclad-guide.md", "ds-handbook.md"]) {
+      const text = readFileSync(join(KNOWLEDGE, name), "utf8");
+      expect(text, name).not.toMatch(/A8 27 场|A9 10 场/);
+      // Every line with A8's record has A9's too.
+      const lines = text.split("\n").filter((line) => line.includes("{GIANT_KILLS_A8}"));
+      expect(lines.length, name).toBeGreaterThan(0);
+      for (const line of lines) expect(line, name).toContain("{GIANT_KILLS_A9}");
+    }
+    setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 7, turns: 70, kills: { "8": a8, "9": a9 } } });
+    try {
+      const a8Text = giantKillRecord(8, "zh");
+      const a9Text = giantKillRecord(9, "zh");
+      expect(a8Text).toContain("A8 4 场赢 2 场");
+      expect(a9Text).toContain("A9 3 场赢 1 场");
+      expect(fillGuideFacts("{GIANT_KILLS_A8}；{GIANT_KILLS_A9}")).toBe(`${a8Text}；${a9Text}`);
+      const client = new DeepSeekClient({ apiKey: "k", baseUrl: "http://127.0.0.1:9", model: "m", timeoutMs: 1000, guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md") });
+      expect(client.systemPrompt).not.toMatch(/\{GIANT_KILLS_A[89]\}/);
+      expect(client.systemPrompt.split(a8Text).length - 1).toBe(3);
+      expect(client.systemPrompt.split(a9Text).length - 1).toBe(3);
+    } finally {
+      setUnblockedSharesForTests(null);
+    }
   });
 });
