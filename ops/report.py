@@ -104,17 +104,21 @@ def main():
     by_label_decider = collections.Counter((r["label"], decider(r)) for r in recs)
     # usage holds Jev's tokens; since 2026-09-28 19:00 it also adds DeepSeek's (the row's `deepseek` field
     # has DeepSeek's own), so split them: Jev = usage minus DeepSeek when usage carries cache_hit_tokens.
-    def _ds(r, k):
+    def _ds(r, k, calls_only=False):
         d = r.get("deepseek") if isinstance(r.get("deepseek"), dict) else {}
+        # A memo-reused answer made no call: skip it in DeepSeek totals (as stats.py does; BXAZ was
+        # overstated by 17k input tokens), but keep it for the Jev split below.
+        if calls_only and d.get("reused"):
+            return 0
         return d.get(k) or 0
     def _jev(r, k):
         u = r.get("usage") or {}
         return max(0, (u.get(k) or 0) - (_ds(r, k) if "cache_hit_tokens" in u else 0))
     tokens_in = sum(_jev(r, "input_tokens") for r in recs)
     tokens_out = sum(_jev(r, "output_tokens") for r in recs)
-    ds_in = sum(_ds(r, "input_tokens") for r in recs)
-    ds_out = sum(_ds(r, "output_tokens") for r in recs)
-    ds_hit = sum(_ds(r, "cache_hit_tokens") for r in recs)
+    ds_in = sum(_ds(r, "input_tokens", True) for r in recs)
+    ds_out = sum(_ds(r, "output_tokens", True) for r in recs)
+    ds_hit = sum(_ds(r, "cache_hit_tokens", True) for r in recs)
     jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and decider(r) != "deepseek")
     # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
     ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek") or r.get("deepseek") or r.get("decider") == "deepseek")
@@ -249,8 +253,9 @@ def ablation_arm():
 def refresh_knowledge() -> None:
     """After each run: monster DB, per-fight move model, outcome stats (background; never blocks the next run)."""
     import subprocess
-    tools = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/tools")
-    mm = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/src/knowledge/move-model.json")
+    # Into the run worktree (branch v3), whose logs/ links to jev-sts2/logs.
+    tools = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v3/tools")
+    mm = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v3/src/knowledge/move-model.json")
     cmd = (f'python3 {tools}/build-monster-db.py --quiet --move-model-out {mm}; '
            f'python3 {tools}/monster-db-check.py >/dev/null 2>&1; '
            f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1; '

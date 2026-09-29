@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# Play one run with the current jev-sts2 working tree; console log goes to logs/console/<ts>-<sha>.log.
+# Play one run from the run worktree jev-sts2-v3 (branch v3; Dai 2026-09-29: jev-sts2 itself is the v4 dev checkout).
+# Its logs/, node_modules/ and .cache/ are symlinks into jev-sts2, so logs stay at jev-sts2/logs; console log goes to
+# logs/console/<ts>-<sha>.log.
 set -u
-cd "$HOME/Projects/sts2-jev/jev-sts2"
+cd "$HOME/Projects/sts2-jev/jev-sts2-v3"
 export PATH="$HOME/.local/node/bin:$PATH"
 sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)
