@@ -121,7 +121,7 @@ describe("runLoop with a flaky Jev", () => {
 
   function config() {
     const path = join(tmpdir(), `jev-retry-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-    logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"));
+    logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
     const base = loadConfig({} as NodeJS.ProcessEnv);
     return { ...base, combatPlanner: "card" as const, log: { ...base.log, decisionLog: path } };
   }
