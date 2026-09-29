@@ -79,19 +79,28 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
     expect(moveDamageAt(db, "CLAW", "C", 8)).toMatchObject({ perHit: 15, estimated: false });
   });
 
-  it("the real DB: A9 moves hit harder than A8 on average; The Insatiable (no A9 fight) is scaled and says so", () => {
+  it("the real DB: A9 moves hit harder than A8 on average; a boss with no A9 fight is scaled and says so", () => {
     const ratio = ascensionDamageRatio({}, "NONE", 8, 9);
     expect(ratio).toBeNull();
-    const bite = moveDamageAt(realMonsters(), "THE_INSATIABLE", "LUNGING_BITE_MOVE", 9)!;
+    // A boss move logged at A8 but not at A9 (The Insatiable's Lunging Bite until its first A9 fight; the
+    // check is skipped once every boss has been fought at A9).
+    const monsters = realMonsters();
+    const logged = (id: string, move: string, asc: string) => Object.keys(monsters[id]?.moves?.[move]?.damage_by_asc?.[asc]?.base_per_hit ?? {}).length > 0;
+    const pick = (["THE_INSATIABLE", "CEREMONIAL_BEAST", "AEONGLASS", "QUEEN"] as const)
+      .flatMap((id) => Object.keys(monsters[id]?.moves ?? {}).map((move) => [id, move] as const))
+      .find(([id, move]) => logged(id, move, "8") && !Object.values(monsters[id]?.moves ?? {}).some((entry) => Object.keys(entry.damage_by_asc?.["9"]?.base_per_hit ?? {}).length > 0));
+    if (!pick) return;
+    const [boss, move] = pick;
+    const bite = moveDamageAt(monsters, boss, move, 9)!;
     expect(bite.estimated).toBe(true);
     expect(bite.from).toBe(8);
     expect(bite.ratio).toBeGreaterThan(1);
-    expect(bite.perHit).toBe(Math.round(28 * bite.ratio));
-    expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/A9估: A8×\d\.\d\d/);
+    expect(bite.perHit).toBe(Math.round(moveDamageAt(monsters, boss, move, 8)!.perHit * bite.ratio));
+    expect(bossDossier(`${boss}_BOSS`, 9)).toMatch(/A9估: A8×\d\.\d\d/);
     // The rollout's move table takes the same number and marks it.
-    const table = enemyTable("THE_INSATIABLE", 9, realMonsters() as never, {})!;
-    expect(table.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
-    expect(enemyTable("THE_INSATIABLE", 8, realMonsters() as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
+    const table = enemyTable(boss, 9, monsters as never, {})!;
+    expect(table.moves[move]).toMatchObject({ damage: bite.perHit, estimated: true });
+    expect(enemyTable(boss, 8, monsters as never, {})!.moves[move]!.estimated).toBeUndefined();
   });
 });
 

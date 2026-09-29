@@ -328,10 +328,16 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
     expect(bossHp(profile("THE_KIN"), 7)).toBe(190 + 60);
     expect(bossHp(profile("QUEEN"), 8)).toBe(419 + 60);
     expect(bossHp(profile("AEONGLASS"), 3)).toBe(512 + 66);
-    // Not logged at A9: A8's, and the note says so.
-    expect(bossHp(profile("THE_INSATIABLE"), 9)).toBe(341);
-    const clock = bossClock(mapState(starter(), "THE_INSATIABLE_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 80)!;
-    expect(clock.hpNote).toMatch(/^341 \(A9 not logged: A8's\)/);
+    // Not logged at A9: A8's, and the note says so (a boss the real DB has at A8 but not yet at A9: The
+    // Insatiable was one until its first A9 fight; the check is skipped once every boss has one).
+    const bosses = (JSON.parse(readFileSync(join(DIR, "../../src/knowledge/monster-db.json"), "utf8")) as { bosses: Record<string, Record<string, unknown>> }).bosses;
+    const unlogged = ["THE_INSATIABLE", "CEREMONIAL_BEAST", "AEONGLASS", "QUEEN"].find((id) => bosses[id]?.["8"] && !bosses[id]?.["9"]);
+    if (unlogged) {
+      expect(bossHp(profile(unlogged), 9)).toBe(bossHp(profile(unlogged), 8));
+      const clock = bossClock(mapState(starter(), `${unlogged}_BOSS`, { ascension: 9, floor: 25 }), testKnowledge, 80)!;
+      expect(clock.hpNote).toMatch(new RegExp(`^${bossHp(profile(unlogged), 8)} \\(A9 not logged: A8's\\)`));
+    }
+    expect(bossHp(profile("THE_INSATIABLE"), 8)).toBe(341);
     // The Test Subject's phases as logged (A8 111 > 212 > 313; A0 100 > 200 > 300).
     expect(testSubjectPhases(8)).toEqual([111, 212, 313]);
     expect(testSubjectPhases(0)).toEqual([100, 200, 300]);

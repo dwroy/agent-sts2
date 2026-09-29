@@ -209,7 +209,7 @@ def observe_combat(fight, state, ts):
         fight.initial_serials = set(snap["enemies"])
     for serial, raw in tracked:
         enemy = snap["enemies"][serial]
-        inst = fight.instances.setdefault((serial, enemy["id"]), {"hp": [], "minion": False, "powers": {},
+        inst = fight.instances.setdefault((serial, enemy["id"]), {"hp": [], "minion": False, "powers": {}, "power_turn": {},
                                                                    "spawned": serial not in fight.initial_serials})
         max_hp = raw.get("max_hp")
         if isinstance(max_hp, int) and 0 < max_hp < HUGE_HP and (not inst["hp"] or inst["hp"][-1] != max_hp):
@@ -217,6 +217,8 @@ def observe_combat(fight, state, ts):
         if "MINION_POWER" in enemy["powers"]:
             inst["minion"] = True
         for pid, amount in enemy["powers"].items():
+            if pid not in inst["powers"] and isinstance(turn, int):
+                inst["power_turn"][pid] = turn  # the turn it was first seen on
             inst["powers"].setdefault(pid, amount)  # first amount seen
             inst["powers"][pid + "#max"] = max(inst["powers"].get(pid + "#max", amount), amount)
     if not isinstance(turn, int):
@@ -243,7 +245,9 @@ def new_monster():
         "hp": collections.defaultdict(list),  # asc -> [first max_hp]
         "phases": collections.defaultdict(collections.Counter),  # asc -> Counter(tuple of max_hp)
         "moves": collections.defaultdict(new_move),
-        "powers": collections.defaultdict(lambda: {"fights": 0, "start": collections.Counter(), "max": collections.Counter()}),
+        "powers": collections.defaultdict(lambda: {"fights": 0, "start": collections.Counter(), "max": collections.Counter(),
+                                                   "start_by_asc": collections.defaultdict(collections.Counter),
+                                                   "turn_by_asc": collections.defaultdict(collections.Counter)}),
         "threat": collections.defaultdict(list),  # asc -> [fight result]
         "runs": set(),
         "first": None,
@@ -264,6 +268,9 @@ def new_move():
         "block": collections.Counter(),
         "self": collections.defaultdict(collections.Counter),
         "player": collections.defaultdict(collections.Counter),
+        # asc -> pid -> Counter(delta): the same deltas split by ascension.
+        "self_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
+        "player_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
         "status_cards": collections.Counter(),
         "turns": collections.Counter(),
     }
@@ -406,6 +413,10 @@ class Builder:
                     power["fights"] += 1
                     power["start"][inst["powers"][pid]] += 1
                     power["max"][inst["powers"][pid + "#max"]] += 1
+                    if asc is not None:
+                        power["start_by_asc"][asc][inst["powers"][pid]] += 1
+                        if pid in inst["power_turn"]:
+                            power["turn_by_asc"][asc][inst["power_turn"][pid]] += 1
         for eid in ids_in_fight:
             mon = self.monsters[eid]
             if fight.act:
@@ -479,6 +490,7 @@ class Builder:
                             continue
                         if delta > 0 and GAME_POWER_TYPES.get(pid) != "Debuff":
                             move["self"][pid][delta] += 1
+                            move["self_by_asc"][akey][pid][delta] += 1
                 if types and set(types) & {"Debuff", "DebuffStrong", "CardDebuff"}:
                     p_before = last["player"]["powers"]
                     p_after = nxt["player"]["powers"]
@@ -488,6 +500,7 @@ class Builder:
                         # Debuffs put on us, and Strength/Dexterity drained (our own buffs are left out).
                         if (delta > 0 and GAME_POWER_TYPES.get(pid) == "Debuff") or (delta < 0 and pid in DRAINED and not temporary):
                             move["player"][pid][delta] += 1
+                            move["player_by_asc"][akey][pid][delta] += 1
 
 
 # ---------------------------------------------------------------- output
@@ -517,6 +530,12 @@ def counter_obj(counter):
         k = item[0]
         return (0, k) if isinstance(k, (int, float)) else (1, str(k))
     return {str(k): v for k, v in sorted(counter.items(), key=sort_key)}
+
+
+def by_asc_obj(table):
+    """asc -> pid -> Counter -> {"asc": {pid: {value: n}}}, ascensions in numeric order ("?" last)."""
+    return {str(asc): {pid: counter_obj(c) for pid, c in sorted(pids.items())}
+            for asc, pids in sorted(table.items(), key=lambda kv: (isinstance(kv[0], str), kv[0]))}
 
 
 def fill_description(text, amount):
@@ -594,8 +613,10 @@ def build_output(builder, game):
                 entry["block_gained"] = counter_obj(move["block"])
             if move["self"]:
                 entry["self_powers_gained"] = {pid: counter_obj(c) for pid, c in sorted(move["self"].items())}
+                entry["self_powers_gained_by_asc"] = by_asc_obj(move["self_by_asc"])
             if move["player"]:
                 entry["player_powers_applied"] = {pid: counter_obj(c) for pid, c in sorted(move["player"].items())}
+                entry["player_powers_applied_by_asc"] = by_asc_obj(move["player_by_asc"])
             if move["status_cards"]:
                 entry["status_cards"] = counter_obj(move["status_cards"])
             moves[move_id] = entry
@@ -610,6 +631,8 @@ def build_output(builder, game):
                 "n_fights": power["fights"],
                 "amount_at_first_sight": counter_obj(power["start"]),
                 "amount_max_in_fight": counter_obj(power["max"]),
+                "amount_at_first_sight_by_asc": {str(asc): counter_obj(c) for asc, c in sorted(power["start_by_asc"].items())},
+                "turn_at_first_sight_by_asc": {str(asc): counter_obj(c) for asc, c in sorted(power["turn_by_asc"].items())},
             }
         hp = {}
         for asc in sorted(mon["hp"]):
@@ -683,7 +706,8 @@ def build_output(builder, game):
                 "multi-phase enemies; see phases_by_asc). damage_by_asc.shown = intent as displayed at the first logged state of the turn ('dmg x hits', "
                 "after Strength, Weak, Vulnerable); base_per_hit = shown - enemy Strength, only from turns without enemy Weak/Shrink or our "
                 "Vulnerable/Intangible. self_powers_gained/player_powers_applied/block_gained = power and block deltas across the enemy turn after a "
-                "move with a Buff/Debuff/Defend intent (other effects of that enemy turn can leak in). threat: hp_loss_won = entry HP - HP on the last "
+                "move with a Buff/Debuff/Defend intent (other effects of that enemy turn can leak in); *_by_asc = the same split by ascension. "
+                "powers.amount_at_first_sight_by_asc / turn_at_first_sight_by_asc = each instance's first logged amount and the turn it was on. threat: hp_loss_won = entry HP - HP on the last "
                 "combat state (includes self-damage cards), net_hp_loss_won = entry HP - HP after the fight (after Burning Blood and other end-of-combat "
                 "heals). kind from the map node of the fight (Monster=hallway, Elite, Boss, Unknown=event), minion when MINION_POWER is on most instances.",
         "generated_from": {"fights": builder.fights, "first_seen": builder.first_ts, "last_seen": builder.last_ts,
@@ -856,6 +880,9 @@ def self_test():
     assert hit["damage_by_asc"]["8"]["shown"] == {"11x1": 1, "8x1": 1}, hit["damage_by_asc"]
     grow = slime["moves"]["GROW_MOVE"]
     assert grow["self_powers_gained"] == {"STRENGTH_POWER": {"3": 1}}, grow
+    assert grow["self_powers_gained_by_asc"] == {"8": {"STRENGTH_POWER": {"3": 1}}}, grow
+    assert slime["powers"]["STRENGTH_POWER"]["amount_at_first_sight_by_asc"] == {"8": {"2": 1}}, slime["powers"]
+    assert slime["powers"]["STRENGTH_POWER"]["turn_at_first_sight_by_asc"] == {"8": {"1": 1}}, slime["powers"]
     assert slime["powers"]["STRENGTH_POWER"]["description"] == "+2", slime["powers"]
     threat = slime["threat_by_asc"]["8"]
     assert threat["win_rate"] == 1.0 and threat["hp_loss_won"]["median"] == 10 and threat["net_hp_loss_won"]["median"] == 4, threat
@@ -865,6 +892,7 @@ def self_test():
     assert smash["damage_by_asc"]["8"]["hits"] == {"3": 1} and smash["next"] == {"ROAR_MOVE": 1}, smash
     # Weak put on us is the move's; our own Strength gain is not.
     assert smash["player_powers_applied"] == {"WEAK_POWER": {"2": 1}}, smash
+    assert smash["player_powers_applied_by_asc"] == {"8": {"WEAK_POWER": {"2": 1}}}, smash
     pup = db["monsters"]["PUP"]
     assert pup["kind"] == "minion" and pup["hp_by_asc"]["8"]["n"] == 2, pup
     # The surviving pup (11 HP) is one instance across the index shift: BITE -> BITE once, not twice.
