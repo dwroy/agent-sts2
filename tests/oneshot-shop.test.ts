@@ -15,7 +15,7 @@ import { deckCards, deckFollowUp, selectionTask, upgradePreview } from "../src/s
 import { parseShopPlan } from "../src/screens/shop.js";
 import type { JsonValue } from "../src/util/json.js";
 import { loggedKnowledge } from "./logged.js";
-import { act, ask, board, decide, env, FakeDeepSeek, keyOf, optionsOf, planned, play, played, setupOneshotTests, type Raw } from "./oneshot-support.js";
+import { act, ask, board, decide, env, FakeDeepSeek, keyOf, optionsOf, planned, play, played, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -354,5 +354,25 @@ describe("shop plans in the loop", () => {
     const failed = records.find((row) => row["label"] === "shop/plan")!;
     expect(failed).toMatchObject({ result: "not dispatched: one-shot answer unusable, re-planned step by step", deepseek: { invalid: expect.stringMatching(/unknown step buy_everything/), input_tokens: 20 }, usage: { input_tokens: 20 } });
     expect(String(failed["deepseek_fallback"])).toMatch(/one-shot answer unusable/);
+  });
+
+  it("the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options)", async () => {
+    const { client, bodies } = await scriptedDeepSeek([{ content: '{"plan": ["buy_card3", "buy_card4"], "reason": "block"}' }]);
+    const { stats, actions, records } = await play([board(SHOP, "open"), board(SHOP, "after_card3"), mainMenuPayload()], client);
+    expect(stats.deepseekCalls).toBe(1);
+    expect(actions.slice(0, 2)).toEqual([{ action: "buy_card", option_index: 3 }, { action: "buy_card", option_index: 4 }]);
+    const user = JSON.parse(String(((bodies[0]!["messages"] as Raw[])[1] as Raw)["content"])) as Raw;
+    expect(Object.keys(user)).toEqual(["memory", "state", "question", "options"]);
+    expect(Object.keys(user["options"] as Raw)).toContain("remove");
+    expect(records.find((row) => row["label"] === "shop/plan")).toMatchObject({ deepseek: { plan: ["buy_card3", "buy_card4", "leave"], input_tokens: 100, output_tokens: 10 } });
+  });
+
+  it("the real client: an unparseable reply is logged and the visit goes step by step", async () => {
+    const { client } = await scriptedDeepSeek([{ content: "buy the block card" }, { content: '{"choice": "buy_card3", "reason": "block"}' }]);
+    const { stats, actions, records } = await play([board(SHOP, "open"), board(SHOP, "after_card3"), mainMenuPayload()], client);
+    expect(actions[0]).toEqual({ action: "buy_card", option_index: 3 });
+    expect(records[0]).toMatchObject({ label: "shop/plan", result: "not dispatched: one-shot answer unusable, re-planned step by step", deepseek: { input_tokens: 100 } });
+    expect(records.find((row) => row["label"] === "shop/buy")).toMatchObject({ decider: "deepseek", deepseek: { choice: "buy_card3" } });
+    expect(stats.deepseekCalls).toBeGreaterThanOrEqual(2);
   });
 });

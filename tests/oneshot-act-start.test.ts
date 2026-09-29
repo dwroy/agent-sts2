@@ -15,7 +15,7 @@ import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
 import { revealsLater, routeEffect } from "../src/screens/act-start.js";
 import { rememberMap } from "../src/screens/rest.js";
 import type { JsonValue } from "../src/util/json.js";
-import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
+import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -58,6 +58,12 @@ describe("what an option changes for the route, and whether its outcome is known
     expect(revealsLater("从3张稀有牌中选择1张加入你的牌组。")).toMatch(/picked from/);
     expect(revealsLater("在你的回合开始时，消耗你手牌中的1张牌并获得1点力量。")).toBeNull();
     expect(revealsLater("升级4张牌。")).toBeNull();
+    expect(revealsLater("随机获得一瓶药水。")).toMatch(/random/);
+    expect(revealsLater("将2张随机诅咒牌和3张灵体加入你的牌组。")).toMatch(/random/);
+    expect(revealsLater("从2个卡牌包中选择1包加入你的牌组。")).toMatch(/picked from/);
+    // A pick from your own deck, or a random effect later on: known now.
+    expect(revealsLater("从牌组中选择一张牌，为其附魔：克隆。")).toBeNull();
+    expect(revealsLater("从你的牌组中选择5张牌移除。在每场战斗结束时，将其中随机1牌升级然后返还。")).toBeNull();
   });
 });
 
@@ -222,5 +228,13 @@ describe("act start in the loop", () => {
     expect(deepseek.calls.map((call) => call.label)).toEqual(["event/act-plan", "map/route-review"]);
     expect(stats.deepseekCalls).toBe(2);
     expect(records.find((row) => row["label"] === "map/route-review")).toMatchObject({ decider: "deepseek", deepseek: { choice: "keep" } });
+  });
+
+  it("the real client reads the answer's route (and cards)", async () => {
+    const { client } = await scriptedDeepSeek([{ content: '{"choice": "o0", "route": "p2", "reason": "soup for the strikes; shop route"}', reasoning: "Decisive: o0 with p2." }]);
+    const { stats, records } = await play(sequence(), client);
+    expect(stats.deepseekCalls).toBe(1);
+    expect(records.find((row) => row["label"] === "event/act-plan")).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route: "p2", plan: ["o0", "p2"] } });
+    expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ deepseek: { plan_step: 2 } });
   });
 });

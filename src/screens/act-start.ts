@@ -51,11 +51,16 @@ export function routeEffect(description: string, hp: number, maxHp: number, gold
   return parts.length > 0 ? { hp: newHp, maxHp: newMax, text: parts.join(", ") } : null;
 }
 
-/** Why an option's outcome is not known in advance (random, or picked from what it reveals later), or null. */
+/**
+ * Why an option's outcome is not known in advance, or null: it gives random relics, potions or cards
+ * ("获得2件随机遗物", "随机获得一瓶药水", "将2张随机诅咒牌…加入"), or a pick among cards or packs it reveals
+ * ("从3张稀有牌中选择1张", "从2个卡牌包中选择1包"). A pick from your own deck, or a random effect later in a
+ * fight, is known now.
+ */
 export function revealsLater(description: string): string | null {
   const text = clean(description);
-  if (/随机|random/i.test(text)) return "its outcome is random";
-  if (/从.{0,12}中选择|选择.{0,8}加入|choose .{0,30} from/i.test(text)) return "what it gives is picked from cards it reveals later";
+  if (/获得[^。]{0,8}随机|随机获得|随机[^。]{0,6}(?:遗物|药水|无色牌|诅咒|牌)[^。]{0,8}(?:加入|添加)|(?:obtain|gain|add)[^.]{0,20}random (?:relic|potion|card|curse)/i.test(text)) return "its outcome is random";
+  if (/从\s*(?:\d+|[一两二三四五六])\s*(?:张|个)[^。]{0,10}中选择|choose [^.]{0,20}from \d+/i.test(text)) return "what it gives is picked from cards it reveals later";
   return null;
 }
 

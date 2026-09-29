@@ -172,7 +172,7 @@ export function stubJev(): JevClient {
 const servers: TestServer[] = [];
 const logs: string[] = [];
 
-export async function play(sequence: Raw[], deepseek: FakeDeepSeek, over: Partial<AppConfig> = {}) {
+export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}) {
   const path = join(tmpdir(), `jev-sts2-oneshot-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
   logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"));
   const base = loadConfig({} as NodeJS.ProcessEnv);
@@ -202,4 +202,22 @@ export async function play(sequence: Raw[], deepseek: FakeDeepSeek, over: Partia
   const stats = await runLoop({ config: cfg, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), escalators: [deepseek], knowledge: loggedKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1, restoreRun: false });
   const records = readFileSync(path, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
   return { stats, actions, records };
+}
+
+/** A real DeepSeekClient against a scripted chat-completions server (replies in order, the last repeated). */
+export async function scriptedDeepSeek(replies: { content: string; reasoning?: string }[]): Promise<{ client: DeepSeekClient; bodies: Raw[] }> {
+  let calls = 0;
+  const bodies: Raw[] = [];
+  const server = await startTestServer((req, res) => {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      bodies.push(JSON.parse(body || "{}") as Raw);
+      const reply = replies[Math.min(calls, replies.length - 1)]!;
+      calls += 1;
+      sendJson(res, 200, { choices: [{ message: { content: reply.content, reasoning_content: reply.reasoning ?? "" } }], usage: { prompt_tokens: 100, completion_tokens: 10 } });
+    });
+  });
+  servers.push(server);
+  return { client: new DeepSeekClient({ apiKey: "test", baseUrl: server.url, model: "fake", timeoutMs: 5000, reasoningEffort: "off" }), bodies };
 }
