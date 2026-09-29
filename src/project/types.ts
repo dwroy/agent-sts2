@@ -44,6 +44,12 @@ export interface DecisionEnv {
    * "jev": Jev with DeepSeek as the low-confidence escalation (the baseline).
    */
   buildDecider?: "deepseek" | "jev";
+  /**
+   * BUILD_ONESHOT (with BUILD_DECIDER=deepseek): a shop visit, rest site or event option is decided in one
+   * DeepSeek question together with the deck card(s) its follow-up takes (screens/oneshot.ts). Undefined
+   * means "on"; "off" keeps the step-by-step questions.
+   */
+  oneshot?: "on" | "off";
 }
 
 export interface ScreenMemory {
@@ -143,6 +149,14 @@ export interface ScreenMemory {
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };
+  /** DeepSeek's one-shot plan for the current shop visit (BUILD_ONESHOT; screens/shop.ts). */
+  shopPlan?: import("../screens/shop.js").ShopPlan;
+  /** The deck card(s) a one-shot plan named for the selection screen its action opens (screens/oneshot.ts). */
+  pendingPick?: import("../screens/oneshot.js").PendingPick;
+  /** visitKey of a one-shot question whose answer was unusable: that visit is asked step by step. */
+  oneshotFailed?: string;
+  /** One-shot plans played in this run (their references count up). */
+  planSeq?: { runId: string; n: number };
 }
 
 export interface RememberedMap {
@@ -216,6 +230,13 @@ export interface ResolvedAction {
    */
   log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string> };
   /**
+   * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
+   * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.
+   */
+  plan?: { id: string; steps: JsonValue };
+  /** The run journal's text for this choice when no option text says it (a shop plan). */
+  journal?: string;
+  /**
    * Memory effects of this resolution (the combat plan commitment, the HP-guard record). resolve()
    * itself must not touch memory: it may run more than once per decision (Jev, then an escalator).
    * The loop runs this once, for the resolution it plays.
@@ -246,7 +267,22 @@ export interface AskDecision {
    * of budget, the loop plays `baseline` instead: the decision the screen makes without DeepSeek (Jev,
    * then code).
    */
-  deepseek?: { question: string; baseline: Decision; onFail?: () => void };
+  deepseek?: {
+    question: string;
+    baseline: Decision;
+    onFail?: () => void;
+    /**
+     * A one-shot question (BUILD_ONESHOT): when DeepSeek's answer is unusable (unparseable, an unknown
+     * option, inconsistent, an invalid plan) the loop calls this and re-plans, so the screen asks its
+     * step-by-step questions, instead of playing `baseline` (which stays the fallback when DeepSeek is
+     * unavailable, fails in transport or is out of budget).
+     */
+    oneshot?: { fallback: () => void };
+    /** The answer is a JSON plan (a shop's shopping list), not an option key: resolved by this. */
+    plan?: { resolve(json: Record<string, unknown>): ResolvedAction | { invalid: string } };
+    /** Deck card ids the question offers beyond the screen's own (cards to smith or remove): the knowledge slice's offered cards. */
+    offeredCards?: string[];
+  };
 }
 
 export interface ActDecision {
@@ -254,6 +290,23 @@ export interface ActDecision {
   label: string;
   intent: ActionRequest;
   rationale: string;
+  /**
+   * A step of a DeepSeek one-shot plan that code executes (BUILD_ONESHOT): logged as decider deepseek with
+   * a reused `deepseek` record carrying the plan's reference and the step number (no call is made).
+   */
+  plan?: PlanStepMark;
+  /** Memory effect once this action is dispatched (a plan step advancing its plan). */
+  apply?: () => void;
+}
+
+/** Which plan a code-executed step belongs to (ActDecision.plan). */
+export interface PlanStepMark {
+  /** The plan's reference (its plan_id in the row that made it). */
+  ref: string;
+  /** 1-based step number within the plan. */
+  step: number;
+  /** The plan's own words for this step (an option key, "remove:c7", a card name). */
+  choice: string;
 }
 
 export type Decision = AskDecision | ActDecision;

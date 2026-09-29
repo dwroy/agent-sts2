@@ -16,6 +16,7 @@ import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/c
 import { expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
 import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
+import { sameCard, selectionTask, type DeckTask, type TargetScore } from "./oneshot.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -94,6 +95,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
       }
     }
   }
+  // BUILD_ONESHOT: the card(s) DeepSeek named with the shop/rest/event choice that opened this screen.
+  const planned = pendingPickStep(env, kind, prompt, selected, max);
+  if (planned) return planned;
   if (selected >= min && canConfirm && !pickFirst) {
     return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}/${min} required` };
   }
@@ -269,6 +273,45 @@ export function planSelection(env: DecisionEnv): Decision | null {
 }
 
 /**
+ * The next card a one-shot plan named for this screen (screenMemory.pendingPick), as a plan step; null when
+ * there is none. A screen of another task, a card the screen does not offer, or another run/floor drops the
+ * pick: this screen is then asked as before (the step-by-step question).
+ */
+export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, selected: number, max: number): Decision | null {
+  const pending = env.screenMemory.pendingPick;
+  if (!pending || env.state.in_combat) return null;
+  const drop = (): null => {
+    env.screenMemory.pendingPick = undefined;
+    return null;
+  };
+  if (pending.runId !== str(env.state.raw["run_id"]) || pending.floor !== (env.state.run?.floor ?? null)) return drop();
+  if (selectionTask(kind, prompt) !== pending.task || pending.cards.length === 0) return drop();
+  if (selected >= max) return null;
+  const target = pending.cards[0]!;
+  const card = asArray(asRecord(env.state.raw["selection"])["cards"])
+    .map(asRecord)
+    .find((candidate) => !bool(candidate["selected"]) && sameCard(candidate, target));
+  if (!card) return drop();
+  const index = numOrNull(card["index"]) ?? 0;
+  const name = pending.names[0] ?? str(card["name"], target.card_id);
+  return {
+    kind: "act",
+    label: `selection/${pending.task}`,
+    intent: { action: "select_deck_card", option_index: index },
+    rationale: `DeepSeek plan ${pending.ref} step ${pending.step}: ${pending.task} ${name} (named with the ${pending.source} choice)`,
+    plan: { ref: pending.ref, step: pending.step, choice: name },
+    apply: () => {
+      pending.cards.shift();
+      pending.names.shift();
+      pending.step += 1;
+      const shopPlan = env.screenMemory.shopPlan;
+      if (pending.source === "shop" && shopPlan && shopPlan.ref === pending.ref) shopPlan.actions += 1;
+      if (pending.cards.length === 0 && env.screenMemory.pendingPick === pending) env.screenMemory.pendingPick = undefined;
+    },
+  };
+}
+
+/**
  * The enchantment an enchant screen applies: the game's prompt does not name it (「选择1张牌来附魔。」), so
  * the enchantments the event just before named, with their measured effects (knowledge/enchant-text.ts).
  */
@@ -277,6 +320,23 @@ export function enchantmentNote(env: DecisionEnv): string {
   const fresh = memo !== undefined && memo.runId === str(env.state.raw["run_id"]) && memo.floor === (env.state.run?.floor ?? null);
   if (!fresh || memo.lines.length === 0) return "not named by the game: effect text unavailable";
   return memo.lines.length === 1 ? memo.lines[0]! : `one of the event's: ${memo.lines.join(" | ")}`;
+}
+
+/**
+ * Code's ranking of a deck card as the target of a one-shot follow-up (the value the selection screen
+ * would give it; screens/oneshot.ts withFollowUp): higher = picked first.
+ */
+export function followUpTargetScore(env: DecisionEnv, task: DeckTask): TargetScore {
+  const kind = task === "upgrade" ? "deck_upgrade_select" : task === "remove" ? "deck_card_select" : task === "transform" ? "deck_transform_select" : null;
+  return (card) => {
+    if (!kind) return { score: 0, why: `code does not rank cards to ${task}` };
+    const id = card.identity.card_id;
+    const score =
+      selectionScore(kind, id, card.type) -
+      (task !== "upgrade" && card.identity.upgraded ? 8 : 0) +
+      (task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0);
+    return { score, why: SELECTION_WHY[task] ?? "code's ranking" };
+  };
 }
 
 /** What code's value means on each out-of-combat selection (DeepSeek's view). */

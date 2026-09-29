@@ -120,6 +120,12 @@ const ID_KEYS: Record<string, keyof Pick<Offered, "cards" | "relics" | "potions"
   event_id: "events",
 };
 
+/** The offer with extra card ids (a one-shot question's deck targets: the cards the old selection screen showed). */
+function withCards(offered: Offered, cards: readonly string[]): Offered {
+  const extra = cards.filter((id) => id && !offered.cards.includes(id));
+  return extra.length > 0 ? { ...offered, cards: [...offered.cards, ...extra] } : offered;
+}
+
 export function offeredOn(state: GameState, criteria: Record<string, string | null> = {}): Offered {
   const offered: Offered = { cards: [], relics: [], potions: [], events: [], eventOptions: [], text: "" };
   const texts: string[] = [];
@@ -160,9 +166,14 @@ const TOPICS: [RegExp, string[]][] = [
   [/^(map\/)?route|^map\//, ["route", "elite", "rest"]],
   [/^reward\//, ["deck"]],
   [/^shop\//, ["shop", "deck", "potion"]],
+  // One-shot questions (BUILD_ONESHOT) also pick the deck card(s) their follow-up takes.
+  [/^rest\/plan/, ["rest", "deck"]],
   [/^rest\//, ["rest"]],
   [/^selection\/upgrade/, ["rest", "deck"]],
   [/^selection\//, ["deck"]],
+  [/^event\/plan/, ["event", "deck"]],
+  // The act-start Ancient with the act's route (BUILD_ONESHOT): the route's topics too.
+  [/^event\/act-plan/, ["event", "deck", "route", "elite", "rest"]],
   [/^event\//, ["event"]],
   [/^(chest|bundle|capstone)\//, ["deck"]],
   [/^combat\//, ["potion"]],
@@ -185,7 +196,7 @@ function monsterMatch(scopeId: string, ids: readonly string[] | undefined): bool
 }
 
 /** Labels whose decision is about the map ahead: the act's elites and hallways rank with the boss. */
-const ROUTE_LABELS = /^(run-plan|map\/|route|rest\/)/;
+const ROUTE_LABELS = /^(run-plan|map\/|route|rest\/|event\/act-plan)/;
 
 export interface SliceInput {
   label: string;
@@ -358,7 +369,7 @@ export interface KnowledgeSlice {
 }
 
 /** The whole `knowledge` section for one DeepSeek question ("" when nothing applies). */
-export function knowledgeSlice(state: GameState, label: string, criteria: Record<string, string | null> = {}): KnowledgeSlice {
+export function knowledgeSlice(state: GameState, label: string, criteria: Record<string, string | null> = {}, offeredCards: readonly string[] = []): KnowledgeSlice {
   const act = actNumber(state);
   const asc = state.run?.ascension ?? 0;
   const combat = asRecord(state.combat?.raw ?? state.raw["combat"]);
@@ -368,7 +379,7 @@ export function knowledgeSlice(state: GameState, label: string, criteria: Record
     act,
     asc,
     bossId: state.run?.boss_id ?? (str(asRecord(state.run?.raw)["boss_id"]) || null),
-    offered: offeredOn(state, criteria),
+    offered: withCards(offeredOn(state, criteria), offeredCards),
     threats: actThreatIds(act, asc),
     enemies,
   };

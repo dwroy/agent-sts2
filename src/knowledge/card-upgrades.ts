@@ -30,6 +30,11 @@ function load(): Record<string, CardUpgrade> {
   return cached;
 }
 
+/** For tests: use this table instead of card-upgrades.json (null reloads the file). */
+export function setCardUpgradesForTests(table: Record<string, CardUpgrade> | null): void {
+  cached = table;
+}
+
 /** What upgrading this card changes, or null when it was never logged both ways. */
 export function cardUpgrade(cardId: string): CardUpgrade | null {
   return load()[cardId] ?? null;

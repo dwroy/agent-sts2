@@ -92,6 +92,18 @@ describe("loadConfig", () => {
     }
   });
 
+  it("BUILD_ONESHOT: on by default, off on request, anything else a problem", () => {
+    expect(loadConfig(env({})).buildOneshot).toBe("on");
+    expect(loadConfig(env({ BUILD_ONESHOT: "OFF" })).buildOneshot).toBe("off");
+    try {
+      loadConfig(env({ BUILD_ONESHOT: "sometimes" }));
+      throw new Error("expected a ConfigError");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).problems.map((problem) => problem.field)).toContain("BUILD_ONESHOT");
+    }
+  });
+
   it("warns when the confidence tiers are inverted", () => {
     const config = loadConfig(env({ CONFIDENCE_ACT: "0.9", CONFIDENCE_STRONG: "0.4" }));
     expect(config.warnings).toHaveLength(1);
