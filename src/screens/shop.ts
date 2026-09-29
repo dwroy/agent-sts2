@@ -6,7 +6,7 @@
  * card, potion discards), played by code step by step; re-asked only when the shop changes under the plan.
  */
 
-import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { asArray, asRecord, bool, iconsToText, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { potionViews } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
@@ -95,7 +95,13 @@ export function planShop(env: DecisionEnv): Decision | null {
   const emptyPotionSlots = belt.filter((slot) => !bool(asRecord(slot)["occupied"])).length;
   const byDeepseek = deepseekDecides(env);
   const profile = deckProfile(deckNow);
-  const entriesHaveCurse = deckNow.some((entry) => entry.type === "Curse");
+  // What a removal can take: Eternal cards (Ascender's Bane at A5+, Strikes made Eternal by Nutritious Soup) are
+  // never offered (U6RU F22: "11 basic Strikes/Defends and a curse" with 5 Eternal Strikes and the Bane).
+  const deckAll = deckCards(state, knowledge);
+  const removable = deckAll.filter((card) => !card.eternal);
+  const eternal = deckAll.filter((card) => card.eternal);
+  const removableBasics = removable.filter((card) => /^(STRIKE|DEFEND)_/.test(card.identity.card_id)).reduce((sum, card) => sum + card.count, 0);
+  const removableCurse = removable.some((card) => card.type === "Curse");
   const act = (numOrNull(Number(str(asRecord(state.run?.raw)["act_id"], "0"))) ?? 0) + 1;
   const floor = state.run?.floor ?? 0;
 
@@ -113,8 +119,14 @@ export function planShop(env: DecisionEnv): Decision | null {
       const name = str(raw["name"], id);
       const info =
         action === "buy_card" ? knowledge.card(id) : action === "buy_relic" ? knowledge.relic(id) : knowledge.potion(id);
-      const text = knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? "";
-      stock.push({ kind: kindLabel, name, price, affordable: enough });
+      // A card as the shop renders it (its cost and text now, energy icons as text), like a card reward
+      // (U6RU F22: Production, 0 cost and "gain 2 energy, exhaust", reached DeepSeek as icon paths with no cost).
+      const text = iconsToText((action === "buy_card" ? str(raw["resolved_rules_text"]) : "") || (knowledge.card(id)?.description ?? knowledge.relic(id)?.description ?? knowledge.potion(id)?.description ?? ""));
+      const cardFields: Record<string, JsonValue> =
+        action === "buy_card"
+          ? { type: str(raw["card_type"], knowledge.card(id)?.type ?? "") || null, rarity: str(raw["rarity"], knowledge.card(id)?.rarity ?? "") || null, cost: bool(raw["costs_x"]) ? "X" : (numOrNull(raw["energy_cost"]) ?? knowledge.card(id)?.cost ?? null) }
+          : {};
+      stock.push({ kind: kindLabel, name, ...cardFields, price, affordable: enough });
       if (!bool(raw["is_stocked"], true) || !id) continue;
       const oldBase = shopScore(action, id, info, profile, act, floor, price, str(asRecord(state.run?.raw)["boss_id"]), emptyPotionSlots, (state.run?.current_hp ?? 1) / Math.max(1, state.run?.max_hp ?? 1));
       // DeepSeek: a potion's value is the HP it is expected to save in the act boss fight (its facts).
@@ -148,6 +160,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         summary: {
           buy: name,
           kind: kindLabel,
+          ...cardFields,
           price,
           text: truncate(text, 140),
         } satisfies JsonValue,
@@ -162,8 +175,9 @@ export function planShop(env: DecisionEnv): Decision | null {
   collect(shop["potions"], "buy_potion", "potion");
 
   const removal = asRecord(shop["card_removal"]);
-  const removalScore = profile.basics >= 4 || entriesHaveCurse ? 30 : 8;
-  const removalWhy = `${profile.basics} basic Strikes/Defends${entriesHaveCurse ? " and a curse" : ""} in the deck`;
+  const removalScore = removableBasics >= 4 || removableCurse ? 30 : 8;
+  const eternalCount = eternal.reduce((sum, card) => sum + card.count, 0);
+  const removalWhy = `${removableBasics} removable basic Strikes/Defends${removableCurse ? " and a removable curse" : ""} in the deck${eternalCount > 0 ? ` (Eternal, never removable: ${eternal.map((card) => `${card.name}${card.count > 1 ? ` x${card.count}` : ""}`).join(", ")})` : ""}`;
   if (bool(removal["available"]) && bool(removal["enough_gold"])) {
     const price = numOrNull(removal["price"]);
     options.push({

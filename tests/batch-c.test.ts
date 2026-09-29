@@ -22,6 +22,7 @@ import { illusionFocusOrders, type KillOrder } from "../src/strategy/rollout.js"
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { dominates, type Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
+import { board, decide, env as oneshotEnv, optionsOf } from "./oneshot-support.js";
 
 const choose = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
 
@@ -338,5 +339,29 @@ describe("7. A conclusion naming several options contradicts nothing (XMK1JFZ0VD
   it("the logged answer passes; a one-option conclusion that differs is still caught", () => {
     expect(checkConsistency("o1", "HP 94%: heal wastes 5; smith Inflame+", reasoning, REST)).toMatchObject({ ok: true, issues: [] });
     expect(checkConsistency("o0", "heal", "HP 94%.\nDecisive: smith.", REST).issues).toEqual(["reasoning concluded o1 but answered o0"]);
+  });
+});
+
+describe("8. Shop cards show their cost and type; the removal counts only removable cards (U6RUE7LBUFJF F22, VBHZ77A3N496 F23)", () => {
+  it("the one-shot shop question: Production is 0-cost with its energy as text; the removal's why leaves out the Eternal cards", () => {
+    const decision = decide(oneshotEnv(board("u6ru-f22-shop", "open")));
+    const options = optionsOf(decision);
+    expect(options["buy_card5"]).toMatchObject({ buy: "生产制造", type: "Skill", rarity: "Uncommon", cost: 0 });
+    expect(String(options["buy_card5"]!["text"])).toMatch(/^获得2点能量。/);
+    expect(options["buy_card3"]).toMatchObject({ buy: "火焰屏障", cost: 2 });
+    // 5 Eternal Strikes (Nutritious Soup) and Ascender's Bane are not removable; 5 Defends are.
+    expect(String(options["remove"]!["why"])).toMatch(/^5 removable basic Strikes\/Defends in the deck \(Eternal, never removable: 打击 x5, 进阶之灾\)$/);
+    const facts = (decision as AskDecision).state["facts"] as Record<string, unknown>;
+    const stock = facts["shop_stock"] as Record<string, unknown>[];
+    expect(stock.find((item) => item["name"] === "生产制造")).toMatchObject({ kind: "card", type: "Skill", cost: 0 });
+  });
+
+  it("a deck whose only basics and curse are Eternal: the removal scores as nothing to thin", () => {
+    const raw = board("u6ru-f22-shop", "open");
+    const deck = (raw["run"] as Record<string, unknown>)["deck"] as Record<string, unknown>[];
+    (raw["run"] as Record<string, unknown>)["deck"] = deck.filter((card) => !String(card["card_id"]).startsWith("DEFEND_"));
+    const options = optionsOf(decide(oneshotEnv(raw)));
+    expect(String(options["remove"]!["why"])).toMatch(/^0 removable basic Strikes\/Defends in the deck/);
+    expect(Number(options["remove"]!["code_value"])).toBe(8);
   });
 });
