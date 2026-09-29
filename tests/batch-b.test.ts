@@ -579,3 +579,54 @@ describe("7. Status cards with a cost are playable in the piles and the rollout,
     expect(r.lines[0]!.perTurn[0]!.loss.mean).toBe(12);
   });
 });
+
+describe("8. A move's rare logged effect is not applied on every use (consistency #11: the Giant's +1 Strength)", () => {
+  const GIANT_DB = {
+    bosses: {},
+    encounters: {},
+    monsters: {
+      WATERFALL_GIANT: {
+        moves: {
+          STOMP_MOVE: {
+            n_seen: 129,
+            turns_seen: { "1": 20 },
+            next: { STOMP_MOVE: 10 },
+            damage_by_asc: { "8": { base_per_hit: { "15": 50 }, hits: { "1": 50 } } },
+            self_powers_gained: { STEAM_ERUPTION_POWER: { "3": 115 }, STRENGTH_POWER: { "1": 1 } },
+            self_powers_gained_by_asc: { "0": { STEAM_ERUPTION_POWER: { "3": 17 }, STRENGTH_POWER: { "1": 1 } }, "8": { STEAM_ERUPTION_POWER: { "3": 58 } } },
+          },
+        },
+      },
+      JAXFRUIT: { moves: { ORB: { n_seen: 142, self_powers_gained: { STRENGTH_POWER: { "2": 77 } }, self_powers_gained_by_asc: { "8": { STRENGTH_POWER: { "2": 42 } } } } } },
+    },
+  };
+
+  it("regularEffect / selfGainAt: 1 of 129 against its own Steam Eruption's 115 is a leak; 77 of 142 with nothing else logged is the move's", async () => {
+    const { regularEffect, selfGainAt } = await import("../src/knowledge/monster-db.js");
+    const stomp = GIANT_DB.monsters.WATERFALL_GIANT.moves.STOMP_MOVE;
+    expect(regularEffect(stomp, stomp.self_powers_gained.STRENGTH_POWER)).toBe(false);
+    expect(regularEffect(stomp, stomp.self_powers_gained.STEAM_ERUPTION_POWER)).toBe(true);
+    // At A8 the only Strength was A0's one observation: none now (it was +1 on every move).
+    expect(selfGainAt(stomp, "STRENGTH_POWER", 8)).toBeNull();
+    expect(selfGainAt(stomp, "STEAM_ERUPTION_POWER", 8)).toBe(3);
+    expect(selfGainAt(GIANT_DB.monsters.JAXFRUIT.moves.ORB, "STRENGTH_POWER", 8)).toBe(2);
+  });
+
+  it("the boss clock's damage by turn does not ramp +1 a turn; the rollout's table gives no Strength", async () => {
+    const { monsterDamageByTurn } = await import("../src/knowledge/monster-db.js");
+    const byTurn = monsterDamageByTurn("WATERFALL_GIANT", 8, 5, GIANT_DB.monsters as never)!;
+    expect(byTurn.perTurn).toEqual([15, 15, 15, 15, 15]);
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    expect(enemyTable("WATERFALL_GIANT", 8, GIANT_DB.monsters as never, {})!.moves["STOMP_MOVE"]).toMatchObject({ damage: 15, strength: 0 });
+  });
+
+  it("our debuffs: a leak is dropped, a real choice kept (Magi Knight's 1 Weak in 16; the Knowledge Demon's curses)", async () => {
+    const { playerPowersOf } = await import("../src/strategy/rollout-live.js");
+    const dampen = { n_seen: 16, player_powers_applied: { DAMPEN_POWER: { "1": 14 }, WEAK_POWER: { "1": 1 } } };
+    expect(playerPowersOf(dampen as never, 8)).toEqual({});
+    const curse = { n_seen: 109, player_powers_applied: { SLOTH_POWER: { "3": 38 }, MIND_ROT_POWER: { "1": 39 }, WASTE_AWAY_POWER: { "1": 19 }, DISINTEGRATION_POWER: { "5": 9 } } };
+    expect(playerPowersOf(curse as never, 8)).toMatchObject({ playerPowerChoice: ["MIND_ROT_POWER", "SLOTH_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"] });
+    const stab = { n_seen: 20, player_powers_applied: { FRAIL_POWER: { "1": 3 } } };
+    expect(playerPowersOf(stab as never, 8)).toEqual({});
+  });
+});

@@ -182,11 +182,14 @@ describe("boss clock", () => {
     expect(f16.gap).toBeGreaterThan(0);
   });
 
-  it("ERPH Waterfall Giant: the eruption caps the fight at ~T8; F14 gap >= 8 (old: 3)", () => {
+  it("ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short", () => {
     const clock = bossClock(board("ERPHN3SRCRC3:14"), loggedKnowledge)!;
-    expect(clock.fightTurns).toBeLessThanOrEqual(9);
+    // T8, ~5.5 HP a turn, gap 10 while the Giant gained +1 Strength a move from one A0 observation (batch B,
+    // consistency #11); logged A8 Giant fights: 9.5 turns (median of 18 wins), 4.3 HP a turn (27 fights).
+    expect(clock.fightTurns).toBeGreaterThanOrEqual(9);
+    expect(clock.fightTurns).toBeLessThanOrEqual(10);
     expect(clock.turnsNote).toMatch(/eruption/);
-    expect(clock.gap).toBeGreaterThanOrEqual(8);
+    expect(clock.gap).toBeGreaterThan(0);
   });
 
   it("02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)", () => {

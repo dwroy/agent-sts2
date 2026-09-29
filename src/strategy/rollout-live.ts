@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -122,6 +122,9 @@ function mode(counts: Record<string, number> | undefined): number | null {
   return best ? Number(best[0]) : null;
 }
 
+/** Picks an alternative needs to be one (playerPowersOf). */
+const ALTERNATIVE_MIN_USES = 3;
+
 /**
  * The powers a move puts on us (rollout.ts PLAYER_DEBUFFS): the most common amount of each in the monster
  * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
@@ -130,18 +133,23 @@ function mode(counts: Record<string, number> | undefined): number | null {
 export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
   const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
   const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
-  const out: Partial<Record<PlayerDebuff, number>> = {};
+  const all: Partial<Record<PlayerDebuff, number>> = {};
   for (const id of PLAYER_DEBUFFS) {
     const amount = mode(counts[id]);
-    if (amount) out[id] = amount;
+    if (amount) all[id] = amount;
   }
-  if (Object.keys(out).length === 0) return {};
+  if (Object.keys(all).length === 0) return {};
   // Alternatives: several powers whose uses add up to the move's (each use put one of them on us: the
-  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here.
-  const ids = Object.keys(out) as PlayerDebuff[];
+  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here; each
+  // picked ALTERNATIVE_MIN_USES times at least (the Magi Knight's Dampen with 1 Weak in 16 is no choice).
   const uses = (id: string, table: Record<string, Record<string, number>> | undefined) => Object.values(table?.[id] ?? {}).reduce((sum, n) => sum + n, 0);
-  const pooled = ids.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
-  const alternatives = ids.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  const picks = (Object.keys(all) as PlayerDebuff[]).filter((id) => uses(id, entry.player_powers_applied) >= ALTERNATIVE_MIN_USES);
+  const pooled = picks.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
+  const alternatives = picks.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  // Not a choice: only what the move does itself, not a rare leak (regularEffect: Stabbot's Frail on 3 of 20).
+  const ids = alternatives ? picks : (Object.keys(all) as PlayerDebuff[]).filter((id) => regularEffect(entry, entry.player_powers_applied?.[id]));
+  const out: Partial<Record<PlayerDebuff, number>> = Object.fromEntries(ids.map((id) => [id, all[id]!]));
+  if (ids.length === 0) return {};
   if (!alternatives) return { playerPowers: out };
   const order = [...ids].sort((a, b) => uses(b, counts) - uses(a, counts) || uses(b, entry.player_powers_applied) - uses(a, entry.player_powers_applied));
   return { playerPowers: out, playerPowerChoice: order };
@@ -213,7 +221,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...(shown ? { shown: true } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
-      block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
+      block: regularEffect(entry, entry.block_gained) ? (mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0) : 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...selfPowersOf(entry, asc),
