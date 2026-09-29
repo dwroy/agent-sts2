@@ -253,7 +253,7 @@ describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-pla
 });
 
 describe("(c) unsimulated potions: offered with no invented numbers", () => {
-  it("Entropic Brew under T1: 'drink first: <text> (N random potions …), then re-plan', no hp/damage numbers", () => {
+  it("Entropic Brew (always an option): 'drink first: <text> (N random potions …), then re-plan', no hp/damage numbers", () => {
     rolloutLiveOptions.enabled = false;
     const fx = logged("k7g9-f45-t1");
     const run = fx.state["run"] as Record<string, unknown>;
@@ -264,7 +264,7 @@ describe("(c) unsimulated potions: offered with no invented numbers", () => {
     expect(option["plays"]).toBe("drink Entropic Brew first: 在所有空药水栏位中获得随机药水。 (3 random potions: its own slot and the 2 empty ones), then re-plan the turn with them");
     expect(option["hp_lost"]).toBeUndefined();
     expect(option["damage_dealt"]).toBeUndefined();
-    expect(option["offered_because"]).toMatch(/12%/);
+    expect(option["offered"]).toMatch(/^always/);
     expect(pickPotion(decision, "p1")).toEqual({ action: "use_potion", option_index: 1 });
   }, 30_000);
 });
