@@ -89,7 +89,9 @@ function blockState(env: DecisionEnv, kind: ReviewKind, routes: PositionRoutes, 
   if (boss && boss !== next) parts.push(`${gap(boss)} for the boss at F${floorOf(boss.row)} (${projected(boss)}/${max})`);
   const hpLine = `${parts.join(", ")}${kind === "rest" ? "; the plan's numbers after this rest site assume you heal here" : ""}.`;
   const runPlanHp = runPlanHpLines(env);
-  const ranked = [...routes.routes].sort((a, b) => b.value - a.value);
+  // Routes whose code_value reads the same share a rank (consistency R9), as in the DeepSeek pick and act start.
+  const shown = (value: number): number => Number(value.toFixed(2));
+  const rankOf = (value: number): number => 1 + routes.routes.filter((other) => shown(other.value) > shown(value)).length;
   const groups = restGroups(restOptions);
   return {
     hp: hpLine,
@@ -102,7 +104,7 @@ function blockState(env: DecisionEnv, kind: ReviewKind, routes: PositionRoutes, 
           ...(route.key === "keep" ? { keep: "the plan from here, re-projected at HP now" } : {}),
           ...route.facts,
           code_value: Number(route.value.toFixed(2)),
-          code_rank: ranked.indexOf(route) + 1,
+          code_rank: rankOf(route.value),
           ...(groups.length > 0 ? { hp_if_option: Object.fromEntries(groups.map((group) => [group.label, routes.hpAlong(route.key, group.hp)])) } : {}),
         },
       ]),

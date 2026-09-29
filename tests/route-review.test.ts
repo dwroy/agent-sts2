@@ -78,7 +78,9 @@ describe("card reward: the act's route rides on the same question", () => {
     for (const route of Object.values(block.routes)) {
       expect(route).toMatchObject({ path: expect.stringMatching(/Boss$/), first_node: expect.stringMatching(/^row 5, column [56] /), hp_at_boss: expect.any(String), hp_on_arrival_at_elites: expect.any(Array), code_value: expect.any(Number), code_rank: expect.any(Number) });
     }
-    expect(new Set(Object.values(block.routes).map((route) => route["code_rank"])).size).toBe(keys.length);
+    // Code's rank: 1 + the routes valued higher (equal values share a rank).
+    const values = Object.values(block.routes).map((route) => Number(route["code_value"]));
+    for (const route of Object.values(block.routes)) expect(route["code_rank"]).toBe(1 + values.filter((value) => value > Number(route["code_value"])).length);
     // The branch without the elite is there (code never drops options).
     expect(noEliteKey(block)).toMatch(/^p\d$/);
     expect(instructionsOf(decision)).toMatch(/"route": "keep" \(the default: follow the plan\)/);
