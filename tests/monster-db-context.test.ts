@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -79,37 +79,41 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
     expect(moveDamageAt(db, "CLAW", "C", 8)).toMatchObject({ perHit: 15, estimated: false });
   });
 
-  it("the real DB: A9 moves hit harder than A8 on average; a boss with no A9 fight is scaled and says so", () => {
-    const ratio = ascensionDamageRatio({}, "NONE", 8, 9);
-    expect(ratio).toBeNull();
-    // A boss move logged at A8 but not at A9 (The Insatiable's Lunging Bite until its first A9 fight; the
-    // check is skipped once every boss has been fought at A9).
-    const monsters = realMonsters();
-    const logged = (id: string, move: string, asc: string) => Object.keys(monsters[id]?.moves?.[move]?.damage_by_asc?.[asc]?.base_per_hit ?? {}).length > 0;
-    const pick = (["THE_INSATIABLE", "CEREMONIAL_BEAST", "AEONGLASS", "QUEEN"] as const)
-      .flatMap((id) => Object.keys(monsters[id]?.moves ?? {}).map((move) => [id, move] as const))
-      .find(([id, move]) => logged(id, move, "8") && !Object.values(monsters[id]?.moves ?? {}).some((entry) => Object.keys(entry.damage_by_asc?.["9"]?.base_per_hit ?? {}).length > 0));
-    if (!pick) return;
-    const [boss, move] = pick;
-    const bite = moveDamageAt(monsters, boss, move, 9)!;
-    expect(bite.estimated).toBe(true);
-    expect(bite.from).toBe(8);
-    expect(bite.ratio).toBeGreaterThan(1);
-    expect(bite.perHit).toBe(Math.round(moveDamageAt(monsters, boss, move, 8)!.perHit * bite.ratio));
-    expect(bossDossier(`${boss}_BOSS`, 9)).toMatch(/A9估: A8×\d\.\d\d/);
+  it("the real DB: A9 moves hit harder than A8 on average", () => {
+    expect(ascensionDamageRatio({}, "NONE", 8, 9)).toBeNull();
+    expect(ascensionDamageRatio(realMonsters(), "NONE", 8, 9)!.ratio).toBeGreaterThan(1);
+  });
+
+  it("a boss with no A9 fight is scaled and says so: DB text, dossier, rollout table (a fixture: the real DB gains A9 fights with every refresh)", () => {
+    const monsters: MonsterMoveData = {
+      // Lunging Bite 28 at A8 only; the Crusher's Guarded Strike 19 -> 22 measures the A8 -> A9 ratio.
+      THE_INSATIABLE: { moves: { LUNGING_BITE_MOVE: { ...at({ "8": 28 }), name: "猛扑啃咬", turns_seen: { "1": 3 }, next: { LUNGING_BITE_MOVE: 3 } } } },
+      CRUSHER: { moves: { GUARDED_STRIKE_MOVE: at({ "8": 19, "9": 22 }) } },
+    };
+    const bite = moveDamageAt(monsters, "THE_INSATIABLE", "LUNGING_BITE_MOVE", 9)!;
+    expect(bite).toMatchObject({ estimated: true, from: 8, perHit: Math.round((28 * 22) / 19), ratioOwn: false, ratioN: 1 });
+    expect(bite.ratio).toBeCloseTo(22 / 19, 10);
+    setMonsterDbForTests({ bosses: { THE_INSATIABLE: { "8": { fights: 3, parts: { THE_INSATIABLE: { median: 341, n: 3 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/A9 无记录 \(n=0\)，以下为最近的 A8/);
+      expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/猛扑啃咬 32 \(A9估: A8×1\.16\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
     // The rollout's move table takes the same number and marks it.
-    const table = enemyTable(boss, 9, monsters as never, {})!;
-    expect(table.moves[move]).toMatchObject({ damage: bite.perHit, estimated: true });
-    expect(enemyTable(boss, 8, monsters as never, {})!.moves[move]!.estimated).toBeUndefined();
+    expect(enemyTable("THE_INSATIABLE", 9, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
+    expect(enemyTable("THE_INSATIABLE", 8, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
   });
 });
 
-describe("the Terror Eel's Vigor in the real DB (XLJQ6FPQAU7N F7)", () => {
-  it("Crash's base damage leaves Vigor out; Thrash gives the Vigor the rollout adds to the next attack", () => {
-    const a9 = enemyTable("TERROR_EEL", 9, realMonsters() as never, {})!;
-    expect(a9.moves["CRASH_MOVE"]!.damage).toBe(18);
-    expect(a9.moves["THRASH_MOVE"]!.vigor).toBe(6);
-    expect(enemyTable("TERROR_EEL", 8, realMonsters() as never, {})!.moves["CRASH_MOVE"]!.damage).toBe(16);
+describe("the Terror Eel's Vigor reaches the rollout's move table (XLJQ6FPQAU7N F7)", () => {
+  it("Thrash's self-given Vigor is the move's vigor; Crash keeps its base (the builder leaves Vigor turns out of it)", () => {
+    const base = (asc: string, perHit: number, hits = 1) => ({ damage_by_asc: { [asc]: { base_per_hit: { [String(perHit)]: 4 }, hits: { [String(hits)]: 4 } } } });
+    const db = { TERROR_EEL: { moves: { CRASH_MOVE: base("9", 18), THRASH_MOVE: { ...base("9", 4, 3), self_powers_gained: { VIGOR_POWER: { "6": 75 } } } } } };
+    const a9 = enemyTable("TERROR_EEL", 9, db as never, {})!;
+    expect(a9.moves["CRASH_MOVE"]).toMatchObject({ damage: 18, hits: 1 });
+    expect(a9.moves["CRASH_MOVE"]!.vigor).toBeUndefined();
+    expect(a9.moves["THRASH_MOVE"]).toMatchObject({ damage: 4, hits: 3, vigor: 6 });
   });
 });
 

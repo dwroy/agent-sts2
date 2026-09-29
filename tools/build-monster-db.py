@@ -853,6 +853,11 @@ def _synthetic_lines():
                                                   enemy(1, "BRUTE", 100, 100, "ROAR_MOVE", types=("Buff",))], True,
                        player_powers=[{"power_id": "STRENGTH_POWER", "amount": 3}, {"power_id": "WEAK_POWER", "amount": 2}]))
     lines.append(state("GAME_OVER", "R1", None, 3, 0, game_over={"is_victory": False}))
+    # Run R2, floor 2: an eel whose Thrash gives it Vigor 6; the Crash after it shows 16 + 6 = 22, the next
+    # Crash (Vigor spent) 16. Only the second is a base-damage sample.
+    lines.append(state("COMBAT", "R2", 1, 2, 80, [enemy(0, "EEL", 150, 150, "THRASH_MOVE", 3, 3, types=("Attack", "Buff"))], True))
+    lines.append(state("COMBAT", "R2", 2, 2, 71, [enemy(0, "EEL", 140, 150, "CRASH_MOVE", 22, 1, {"VIGOR_POWER": 6})], True))
+    lines.append(state("COMBAT", "R2", 3, 2, 49, [enemy(0, "EEL", 130, 150, "CRASH_MOVE", 16, 1)], True))
     return lines
 
 
@@ -900,6 +905,11 @@ def self_test():
     assert pup["moves"]["BITE_MOVE"]["next"] == {"BITE_MOVE": 1}, pup["moves"]
     assert brute["encounters"] == {"BRUTE+PUP+PUP": 1}
     assert db["encounters"]["BRUTE+PUP+PUP"]["by_asc"]["8"]["start_hp_total"]["median"] == 121
+    eel = db["monsters"]["EEL"]["moves"]
+    assert eel["THRASH_MOVE"]["self_powers_gained"] == {"VIGOR_POWER": {"6": 1}}, eel["THRASH_MOVE"]
+    # The Crash under Vigor is shown, not a base sample.
+    assert eel["CRASH_MOVE"]["damage_by_asc"]["8"]["base_per_hit"] == {"16": 1}, eel["CRASH_MOVE"]["damage_by_asc"]
+    assert eel["CRASH_MOVE"]["damage_by_asc"]["8"]["shown"] == {"16x1": 1, "22x1": 1}, eel["CRASH_MOVE"]["damage_by_asc"]
     print("self-test ok")
     return 0
 

@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import {
@@ -40,7 +40,7 @@ import {
   REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
-import { powerScheduleAt } from "../src/knowledge/monster-db.js";
+import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
@@ -333,14 +333,15 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
     expect(bossHp(profile("THE_KIN"), 7)).toBe(190 + 60);
     expect(bossHp(profile("QUEEN"), 8)).toBe(419 + 60);
     expect(bossHp(profile("AEONGLASS"), 3)).toBe(512 + 66);
-    // Not logged at A9: A8's, and the note says so (a boss the real DB has at A8 but not yet at A9: The
-    // Insatiable was one until its first A9 fight; the check is skipped once every boss has one).
-    const bosses = (JSON.parse(readFileSync(join(DIR, "../../src/knowledge/monster-db.json"), "utf8")) as { bosses: Record<string, Record<string, unknown>> }).bosses;
-    const unlogged = ["THE_INSATIABLE", "CEREMONIAL_BEAST", "AEONGLASS", "QUEEN"].find((id) => bosses[id]?.["8"] && !bosses[id]?.["9"]);
-    if (unlogged) {
-      expect(bossHp(profile(unlogged), 9)).toBe(bossHp(profile(unlogged), 8));
-      const clock = bossClock(mapState(starter(), `${unlogged}_BOSS`, { ascension: 9, floor: 25 }), testKnowledge, 80)!;
-      expect(clock.hpNote).toMatch(new RegExp(`^${bossHp(profile(unlogged), 8)} \\(A9 not logged: A8's\\)`));
+    // Not logged at A9: A8's, and the note says so (a fixture DB: the real one gains A9 fights with every
+    // refresh; The Insatiable's first came with KY3Y).
+    setMonsterDbForTests({ bosses: { THE_INSATIABLE: { "8": { fights: 23, parts: { THE_INSATIABLE: { median: 341, n: 23 } } } } }, encounters: {}, monsters: {} } as never);
+    try {
+      expect(bossHp(profile("THE_INSATIABLE"), 9)).toBe(341);
+      const clock = bossClock(mapState(starter(), "THE_INSATIABLE_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 80)!;
+      expect(clock.hpNote).toMatch(/^341 \(A9 not logged: A8's\)/);
+    } finally {
+      setMonsterDbForTests(null);
     }
     expect(bossHp(profile("THE_INSATIABLE"), 8)).toBe(341);
     // The Test Subject's phases as logged (A8 111 > 212 > 313; A0 100 > 200 > 300).
@@ -375,6 +376,26 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
 
 
 describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 stacks on T2, 47 on T11)", () => {
+  // The monster DB as logged (states.jsonl: first seen on T2 at 15 at A0-A8 and 20 at A9, +3 with every
+  // later move), as a fixture: the real file is refreshed after every run.
+  const steam = (counts: Record<string, Record<string, number>>) => Object.fromEntries(Object.entries(counts).map(([asc, c]) => [asc, { STEAM_ERUPTION_POWER: c }]));
+  const GIANT_DB = {
+    bosses: {},
+    encounters: {},
+    monsters: {
+      WATERFALL_GIANT: {
+        powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight_by_asc: { "8": { "15": 27 }, "9": { "20": 4 } }, turn_at_first_sight_by_asc: { "8": { "2": 27 }, "9": { "2": 4 } } } },
+        moves: {
+          PRESSURIZE_MOVE: { turns_seen: { "1": 31 }, self_powers_gained_by_asc: steam({ "8": { "15": 27 }, "9": { "20": 4 } }) },
+          STOMP_MOVE: { turns_seen: { "2": 31, "7": 20 }, self_powers_gained_by_asc: steam({ "8": { "3": 50 }, "9": { "3": 8 } }) },
+          RAM_MOVE: { turns_seen: { "3": 31, "8": 18 }, self_powers_gained_by_asc: steam({ "8": { "3": 46 }, "9": { "3": 8 } }) },
+        },
+      },
+    },
+  };
+  beforeAll(() => setMonsterDbForTests(GIANT_DB as never));
+  afterAll(() => setMonsterDbForTests(null));
+
   it("reads the stacks and their gain a turn from the monster DB per ascension", () => {
     expect(eruptionSchedule(8)).toMatchObject({ first: 15, firstTurn: 2, perTurn: 3 });
     expect(eruptionSchedule(9)).toMatchObject({ first: 20, firstTurn: 2, perTurn: 3 });
