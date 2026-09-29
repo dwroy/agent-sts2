@@ -70,3 +70,12 @@ From fix batch D (2026-09-29 17:31; line numbers at v3 cf87de6), not fixed:
 - combat-plan.ts:~1059 Blessing of the Forge drunk mid Jev line upgrades the hand → hand signature changes → line re-planned; the expected hand isn't updated to the upgraded cards.
 - To verify first (game behaviour unconfirmed): turn-solver.ts:1044-1045 One-Two Punch / Unrelenting replayed by Duplicator/Replay apply once; rollout.ts:1724 resets freeAttacks each turn (does FREE_ATTACK_POWER carry to next turn if Unrelenting was the last attack?).
 - Not modelled: Eternal Feather rest heal by deck size (seen in one run, amount unconfirmed).
+
+## HIGH: DeepSeek answers that don't follow the format (Dai asked 2026-09-29 18:00)
+Data 09-26..29 (~5,900 DeepSeek decisions): ~10 visible failures in direct decisions (4 "chose unknown option" — option TEXT instead of key, e.g. "休息", "读下封底"; ~6 non-JSON — empty or truncated reply), 4 run-plan non-JSON; silent failures that do damage: run-plan {choice, reason} echo accepted and overwrote a valid plan with an empty one (9GRP F9/F25, YFG5), act plan empty reply after 48 s (VBHZ F17), a consistency re-ask answer drops the route field. JSON mode (response_format json_object) is already on; label→key mapping, recovery from reasoning, consistency re-ask and fallback to Jev/code exist, but each path validates differently.
+Fix (robustness only, no change to what DeepSeek may choose):
+1. One validator per question kind (pick / plan / run plan / act plan / shop plan / route review): required fields, allowed keys, plan-step validity; returns a precise error.
+2. Recovery order on an invalid answer: (a) map option text/labels to keys (fuzzy match against the options shown; e.g. "休息" → the heal option), (b) recover from the reasoning (exists), (c) ONE repair re-ask in the same conversation stating exactly what was wrong and the valid keys ("reply only with JSON {…}; valid choices: o0…o3") — cheap because the prefix is cached, (d) fall back as today.
+3. Never replace good state with a bad answer: an invalid run plan / route plan / act plan keeps the previous plan (log it); the re-ask prompt must carry every field the original asked for (route review!).
+4. Detect truncation (finish_reason=length / unbalanced JSON) and re-ask for the JSON only.
+5. Count failures per label (and which recovery step fixed them) in ops/report.py and ops/stats.py; the ops session flags a label whose failure rate goes above 2%.
