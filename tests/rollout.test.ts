@@ -1198,3 +1198,44 @@ describe("status cards enemy moves add go into the rollout's piles (coverage gap
     expect(statusCardsOf({ n_seen: 4 })).toEqual({});
   });
 });
+
+describe("status cards our own turn makes go into the rollout's piles; Withering Presence counts on (rollout.ts:1274 stripped it)", () => {
+  const dazed = card(702, "DAZED", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const wound = card(701, "WOUND", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const wither = card(703, "WITHER", { type: "Status", playable: false, target: "self", validTargets: [], heldPenalty: 3 });
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (o: { hand: CardModel[]; draw: CardModel[]; enemy?: Partial<EnemySim>; player?: Partial<PlayerSim>; wither?: SolverInput["wither"] }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      hand: o.hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, ...o.player },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...o.enemy }],
+      fightKind: "elite",
+      ...(o.wither ? { wither: o.wither } : {}),
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: o.draw, discard: [], handBase: o.hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+      statusCards: { DAZED: dazed, WOUND: wound, WITHER: wither },
+    }).lines[0]!;
+  };
+
+  it("Personal Hive: three hits put three Dazed on top of an empty draw pile, next turn draws them", () => {
+    const hand = [free(0), free(1), free(2)];
+    const line = run({ hand, draw: [], enemy: { dazedPerHit: 1 } });
+    expect(line.plan.outcome.dazedAdded).toBe(3);
+    // Next hand: the 3 Dazed, then 2 of the reshuffled Strikes.
+    expect(line.perTurn[0]!.dmg.mean).toBe(12);
+  });
+
+  it("Withering Presence goes on counting in the later turns: every 3rd card adds a Wither held for 3", () => {
+    const line = run({ hand: [strike(0)], draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), player: { maxPlays: 0 }, wither: { every: 3, played: 2, damage: 3 } });
+    expect(line.perTurn[0]!.loss.mean).toBeGreaterThan(0);
+  });
+});

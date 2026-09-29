@@ -427,7 +427,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       if (table) tables[e.id] = table;
     }
     // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
-    const statusIds = new Set<string>([UNKNOWN_STATUS]);
+    const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
     for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
     const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
     const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));

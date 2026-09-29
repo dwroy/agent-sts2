@@ -426,6 +426,12 @@ export interface Outcome {
   /** Withers this plan adds to the hand (Withering Presence). */
   withersAdded: number;
   /**
+   * Status cards this line's turn adds to our piles: Dazed into the draw pile from hits on a Personal Hive
+   * enemy, Wounds into the discard pile from unblocked Painful Stabs hits (the rollout adds them).
+   */
+  dazedAdded?: number;
+  woundsAdded?: number;
+  /**
    * Score lost to waking a sleeper with chip damage (its free turns, at HP weight); 0 when none. An
    * outcome axis too, so a waking line can never dominate one that lets it sleep (1K5G F17 T1).
    */
@@ -1770,6 +1776,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     }
     score += weights.damage * back;
   }
+  let woundsAdded = 0;
   if (incomingAfterBlock > 0) {
     const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
     score -= punish;
@@ -1781,6 +1788,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       if (through <= 0) continue;
       const wounds = sim.enemies.find((enemy) => enemy.index === hit.enemy)?.woundsPerHit ?? 0;
       score -= WOUND_COST * wounds;
+      woundsAdded += wounds;
     }
   }
   if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, blockLeft - incomingRaw);
@@ -1948,6 +1956,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      ...(sim.dazedAdded > 0 && !winsFight ? { dazedAdded: sim.dazedAdded } : {}),
+      ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost + platingValue,

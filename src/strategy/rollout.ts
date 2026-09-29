@@ -1052,6 +1052,17 @@ function applyPlan(
     const card = drawOne(piles, random);
     if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
   }
+  // Status cards the line's turn made (the solver priced them, the piles never got them): Dazed from hits
+  // on a Personal Hive into the draw pile, Wounds from unblocked Painful Stabs and the Withers held at the
+  // end of the turn into the discard pile.
+  const made = (id: string) => input.statusCards?.[id] ?? input.statusCards?.[UNKNOWN_STATUS];
+  const addMade = (id: string, count: number, pile: "draw" | "discard") => {
+    const card = count > 0 ? made(id) : undefined;
+    if (card) addToPile(piles, card, count, pile, random);
+  };
+  addMade("DAZED", o.dazedAdded ?? 0, "draw");
+  addMade("WOUND", o.woundsAdded ?? 0, "discard");
+  addMade("WITHER", o.withersAdded, "discard");
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
@@ -1398,6 +1409,9 @@ function simulate(
     const last = records[records.length - 1]!;
     if (limit !== null && h + 1 >= limit && !last.won && !last.died) last.timeUp = true;
   };
+  // Withering Presence counts every card played in the fight: the later turns go on from this line's count.
+  const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
+  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(plan);
   // Turn 0: the candidate line as the solver scored it.
   records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
   timeUp(0);
@@ -1493,13 +1507,15 @@ function simulate(
     if (aim) used.depth = Math.max(used.depth, aim.depth);
     const target = aim?.target;
     const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
-    const solved = solveTurn({ ...rest, ...focus, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
+    const wither = s.wither ? { wither: { ...s.wither, played: witherPlayed } } : {};
+    const solved = solveTurn({ ...rest, ...focus, ...wither, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    witherPlayed += cardPlays(best);
     timeUp(h);
     drink(best);
   }
