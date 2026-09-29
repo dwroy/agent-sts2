@@ -18,7 +18,7 @@ import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
 import { checkConsistency } from "../src/llm/consistency.js";
-import { expectedEntryHp, giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { expectedEntryHp, fillGuideFacts, giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { projectPath, roomCostNote, type RoomCostModel } from "../src/strategy/route-projection.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { discardSlotsOf } from "../src/screens/potion-discard.js";
@@ -225,7 +225,21 @@ describe("2. Hand-written facts from the data: the Giant's kill-turn record (A9 
   it("the handbook's act-1 boss entry HP per ascension (the pooled 88%/81% came from 41 early fights; at A9 wins and losses both enter near 90%)", () => {
     const handbook = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge", "ds-handbook.md"), "utf8");
     expect(handbook).not.toContain("赢局平均 88%，输局 81%");
-    expect(handbook).toContain("A8 90%/83%（141 场），A9 90%/88%（44 场）");
+    // Knowledge check 2026-09-29: the per-ascension figures ("A8 90%/83%（141 场）…" when written) are filled from
+    // the fight data (boss-damage.json by_asc) when the DeepSeek prompt is built.
+    expect(handbook).not.toContain("A8 90%/83%（141 场）");
+    expect(handbook).toContain("进一幕 boss 血量（赢局/输局平均）：{ACT1_ENTRY_HP}");
+    const cell = (fights: number, won: number, winPct: number, lossPct: number) => ({ fights, won, entry_pct_won: winPct, entry_pct_lost: lossPct });
+    setUnblockedSharesForTests({
+      VANTOM: { unblocked_share: 0.4, fights: 3, turns: 30, by_asc: { "8": cell(2, 1, 90, 80), "9": cell(1, 0, 90, 70) } },
+      SOUL_FYSH: { unblocked_share: 0.5, fights: 2, turns: 20, by_asc: { "8": cell(2, 2, 100, 0) } },
+    });
+    try {
+      // Weighted by the won / lost fights: A8 won (90 + 100 + 100) / 3, lost 80.
+      expect(fillGuideFacts("{ACT1_ENTRY_HP}")).toBe("A8 97%/80%（4 场），A9 —/70%（1 场）；灵魂异鱼 A8 100%/—（2 场），A9 还没有记录");
+    } finally {
+      setUnblockedSharesForTests(null);
+    }
   });
 
   it("giantKillRecord reads the fight data at A9 from A9 up, A8's below", () => {

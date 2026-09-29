@@ -498,7 +498,10 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     expect(bossNote(giant, 9)).toContain("Siphon heals 15 HP; Pressure Gun on T5/T10/T15 (23/28/33)");
     expect(bossNote(giant, 7)).toContain("Siphon heals 10 HP; Pressure Gun on T5/T10/T15 (20/25/30)");
     const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
-    expect(clock.mechanic).toContain("kill it early (A8 (27 fights): 18 won; killed by T10 13/15 won, T11-T15 5/7 won, T16 or later 0/3 won");
+    // Knowledge check 2026-09-29: the kill record is quoted as "an earlier kill has fewer stacks but is lost too without the
+    // HP", not "kill it early" (A9 killed by T10 lost 2 of 5, both short of HP at the kill; experience giant-explode).
+    expect(clock.mechanic).toContain("an earlier kill has fewer stacks but is lost too without the HP (A8 (27 fights): 18 won; killed by T10 13/15 won, T11-T15 5/7 won, T16 or later 0/3 won");
+    expect(clock.mechanic).not.toContain("kill it early");
     setMonsterDbForTests(GIANT_DB as never);
     setUnblockedSharesForTests(null);
   });

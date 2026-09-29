@@ -13,6 +13,11 @@ The fight rows (--fights FILE) carry: key, boss, ascension, outcome (won when th
 floor, or the run was won on it: a win ends on the final boss's floor), turns, entry_hp, final_hp,
 loss_per_turn ((entry - final) / turns), for tools/boss-loss-backtest.ts.
 
+Also per boss, by ascension (the counts the guides and boss notes quote, filled from here by strategy/boss-clock.ts
+instead of hand-written: 2026-09-29 knowledge check): by_asc {fights, won, entry_pct_won, entry_pct_lost};
+KAISER_CRAB.first_death (the claw that died first while the other lived, or null); LAGAVULIN_MATRIARCH.sleep
+(the turn it woke, the share of its HP lost by then, the deck's lasting-Strength cards); WATERFALL_GIANT.kills.
+
 Only states that name a boss enemy are read (grep), not the whole file.
 
 Usage: tools/build-boss-damage.py [--logs DIR] [--fights FILE] [--out FILE]
@@ -44,6 +49,9 @@ BOSSES = {
 BOSS_OF = {enemy: boss for boss, enemies in BOSSES.items() for enemy in enemies}
 # The Waterfall Giant's husk after the kill shows this HP (999999999) until it blows up.
 GIANT_HUSK_HP = 100000000
+# Lasting Strength cards: strategy/card-value.ts damageRole's "scaling" set (keep the two in step). The Matriarch's
+# sleep rows carry the deck's ones (experience lag-sleep: A9 decks with none sat through the sleep and lost).
+STRENGTH_CARDS = {"DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"}
 
 
 def fight_won(run, floor):
@@ -79,6 +87,13 @@ def main() -> None:
     # (run, floor) -> (turn, our HP, eruption stacks) at the Waterfall Giant's kill: the first frame showing its
     # husk (the kill leaves a body of 999999999 HP that blows up for the stacks; Y36HXZ80A8LL T9: 36 HP, 41).
     giant_kills = {}
+    # (run, floor) -> our max HP on the fight's first turn (the entry HP as a share of it, by_asc).
+    entry_max = {}
+    # (run, floor) -> (claw, turn) of the Kaiser Crab's first claw to die while the other lived (None: neither).
+    crab_first = {}
+    # (run, floor) -> the Matriarch's sleep: {"max", "woke_turn", "woke_hp", "strength"} (the first frame without
+    # Asleep: the turn and its HP then; strength: the deck's Strength cards on the fight's first frame).
+    lag_sleep = {}
     for line in grep.stdout:
         try:
             state = json.loads(line)["state"]
@@ -98,6 +113,24 @@ def main() -> None:
             if enemy.get("enemy_id") == "WATERFALL_GIANT" and (enemy.get("max_hp") or 0) >= GIANT_HUSK_HP and key not in giant_kills and turn is not None:
                 stacks = next((p.get("amount") for p in enemy.get("powers") or [] if p.get("power_id") == "STEAM_ERUPTION_POWER"), None)
                 giant_kills[key] = (turn, (combat.get("player") or {}).get("current_hp"), stacks)
+        if turn == 1 and key not in entry_max:
+            entry_max[key] = (combat.get("player") or {}).get("max_hp")
+        if boss == "KAISER_CRAB" and key not in crab_first and turn is not None:
+            claws = {e.get("enemy_id"): e for e in combat.get("enemies", []) if e.get("enemy_id") in ("ROCKET", "CRUSHER")}
+            dead = {claw: claws.get(claw) is None or claws[claw].get("is_alive") is False or (claws[claw].get("current_hp") or 0) <= 0
+                    for claw in ("ROCKET", "CRUSHER")}
+            if dead["ROCKET"] != dead["CRUSHER"]:
+                crab_first[key] = ("ROCKET" if dead["ROCKET"] else "CRUSHER", turn)
+        if boss == "LAGAVULIN_MATRIARCH" and turn is not None:
+            body = next((e for e in bodies if e.get("enemy_id") == "LAGAVULIN_MATRIARCH"), None)
+            sleep = lag_sleep.get(key)
+            if sleep is None and body is not None:
+                deck = [card.get("card_id") for card in run.get("deck") or []]
+                sleep = lag_sleep[key] = {"max": body.get("max_hp"), "woke_turn": None, "woke_hp": None,
+                                          "strength": sorted({card for card in deck if card in STRENGTH_CARDS})}
+            asleep = any(p.get("power_id") == "ASLEEP_POWER" and (p.get("amount") or 0) > 0 for p in (body or {}).get("powers") or [])
+            if sleep is not None and body is not None and sleep["woke_turn"] is None and not asleep:
+                sleep["woke_turn"], sleep["woke_hp"] = turn, body.get("current_hp")
         if turn is None or turn in fights[key]:
             continue
         hp = (combat.get("player") or {}).get("current_hp")
@@ -119,6 +152,12 @@ def main() -> None:
     # The Waterfall Giant's fights by ascension: kill turn (None: not killed), outcome, HP and stacks at the kill
     # (strategy/boss-clock.ts giantKillRecord: the kill-turn record the notes quote, from the data).
     kills = collections.defaultdict(list)
+    # Every boss by ascension: fights, won, and the mean entry HP (% of max) of the won and the lost ones
+    # (strategy/boss-clock.ts bossRecord, act1EntryHp: the counts the guides quote, from the data).
+    by_asc = collections.defaultdict(lambda: collections.defaultdict(lambda: {"fights": 0, "won": 0, "entry_won": [], "entry_lost": []}))
+    # The Kaiser Crab's claw that died first, and the Matriarch's sleep, by ascension (crabKillRecord, lagSleepRecord).
+    crab_rows = collections.defaultdict(list)
+    lag_rows = collections.defaultdict(list)
     for key, turns in fights.items():
         boss, asc = meta[key]
         run_id, floor = key
@@ -145,6 +184,18 @@ def main() -> None:
             acc["turns"] += 1
         rows.append({"key": run_id, "floor": floor, "boss": boss, "ascension": asc, "outcome": "won" if won else "died", "turns": last,
                      "entry_hp": entry, "final_hp": final, "loss_per_turn": round((entry - final) / max(1, last), 2)})
+        cell = by_asc[boss][str(asc)]
+        cell["fights"] += 1
+        cell["won"] += 1 if won else 0
+        if entry_max.get(key):
+            cell["entry_won" if won else "entry_lost"].append(100.0 * entry / entry_max[key])
+        if boss == "KAISER_CRAB":
+            first = crab_first.get(key)
+            crab_rows[str(asc)].append({"run": (run_id or "")[:4], "first": first[0] if first else None, "turn": first[1] if first else None, "won": won})
+        if boss == "LAGAVULIN_MATRIARCH" and key in lag_sleep:
+            sleep = lag_sleep[key]
+            woke_pct = round(100.0 * (sleep["max"] - sleep["woke_hp"]) / sleep["max"]) if sleep["woke_hp"] is not None and sleep["max"] else None
+            lag_rows[str(asc)].append({"run": (run_id or "")[:4], "won": won, "woke_turn": sleep["woke_turn"], "woke_pct": woke_pct, "strength": sleep["strength"]})
         if boss == "WATERFALL_GIANT":
             kill = giant_kills.get(key)
             kills[str(asc)].append({"run": (run_id or "")[:4], "turn": kill[0] if kill else None, "won": won,
@@ -157,6 +208,16 @@ def main() -> None:
             continue
         out[boss] = {"unblocked_share": round(acc["lost"] / acc["shown"], 3), "fights": acc["fights"], "turns": acc["turns"],
                      "shown": acc["shown"], "hp_lost": acc["lost"]}
+        out[boss]["by_asc"] = {
+            asc: {"fights": cell["fights"], "won": cell["won"],
+                  "entry_pct_won": round(sum(cell["entry_won"]) / len(cell["entry_won"]), 1) if cell["entry_won"] else None,
+                  "entry_pct_lost": round(sum(cell["entry_lost"]) / len(cell["entry_lost"]), 1) if cell["entry_lost"] else None}
+            for asc, cell in sorted(by_asc[boss].items(), key=lambda item: (item[0] == "None", int(item[0]) if item[0].isdigit() else 0))
+        }
+        if boss == "KAISER_CRAB":
+            out[boss]["first_death"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(crab_rows.items())}
+        if boss == "LAGAVULIN_MATRIARCH":
+            out[boss]["sleep"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(lag_rows.items())}
         if boss == "WATERFALL_GIANT":
             out[boss]["kills"] = {asc: sorted(rows_, key=lambda r: (r["turn"] is None, r["turn"] or 0, r["run"])) for asc, rows_ in sorted(kills.items())}
     with open(args.out, "w", encoding="utf8") as handle:

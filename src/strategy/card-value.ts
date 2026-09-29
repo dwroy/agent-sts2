@@ -23,12 +23,18 @@ const TIER: Record<string, number> = {
   CRIMSON_MANTLE: 72, DOMINATE: 66, BRAND: 66, STOKE: 64, COLOSSUS: 66,
   // B
   // Inflame 68 -> 74: permanent Strength in 50% of Act 1 wins, 27% of losses.
-  INFLAME: 74, UPPERCUT: 68, HEMOKINESIS: 64, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 58, HEADBUTT: 62,
+  // Twin Strike 58 -> 64 (2026-09-29 knowledge check, outcome-stats.json A8, 151 runs): taken, the act's boss was
+  // passed more often than when offered and not taken, in both acts with n >= 15 each way: Act 1 0.71 (n=55) vs
+  // 0.62 (n=26), Act 2 0.35 (n=31) vs 0.19 (n=16); mean final floor +1.8 / +1.8. Multi-hit (Vantom's Slippery).
+  INFLAME: 74, UPPERCUT: 68, HEMOKINESIS: 64, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 64, HEADBUTT: 62,
   SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 54, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
   DISMANTLE: 64, EXPECT_A_FIGHT: 56, MANGLE: 35, PYRE: 80, STONE_ARMOR: 60, UNRELENTING: 58, BLOOD_WALL: 54,
   ANGER: 50, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
   PILLAGE: 54, ONE_TWO_PUNCH: 54, INFERNAL_BLADE: 52, EVIL_EYE: 54, TRUE_GRIT: 54, ARMAMENTS: 48, // its upgrade effect is unmodelled: the solver never plays it for value (WX16, BG4W)
-  MOLTEN_FIST: 54, OUTRAGE: 52, RUPTURE: 50, INFERNO: 66, JUGGERNAUT: 56, WHIRLWIND: 66,
+  // Molten Fist 54 -> 44 (2026-09-29 knowledge check): taken, the act's boss was passed less often than when
+  // offered and not taken, every time n >= 14 each way: A8 Act 1 0.60 (n=47) vs 0.74 (n=42), Act 2 0.13 (n=23)
+  // vs 0.25 (n=24); A9 Act 1 0.41 (n=17) vs 0.64 (n=14). Below SKIP_BAR: taken only for a need (Act 1 damage).
+  MOLTEN_FIST: 44, OUTRAGE: 52, RUPTURE: 50, INFERNO: 66, JUGGERNAUT: 56, WHIRLWIND: 66,
   // Fight Me! 25 (F tier) -> 74, Inflame's: 5x2 and 3 permanent Strength (the enemy gains 1). Our A8 runs
   // (outcome-stats.json 2026-09-29, 147 runs): taken in Act 1, boss pass 0.91 (n=11) vs 0.59 offered and
   // not taken (n=27), the second-largest gap of the cards with n>=5 both ways (baseline 0.69); Act 2
@@ -38,7 +44,10 @@ const TIER: Record<string, number> = {
   // C
   BREAKTHROUGH: 62, // AoE 9 for 1 energy, 1 HP; 54 -> 62 (1K5G F14 passed it for Taunt, no AoE at the boss)
   IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 46,
-  TAUNT: 62, SECOND_WIND: 44, RAGE: 42, VICIOUS: 42, CRUELTY: 44, AGGRESSION: 46, STAMPEDE: 44, JUGGLING: 25,
+  // Taunt 62 -> 50 (2026-09-29 knowledge check; experience card-taunt): A8 outcome-stats, taken vs offered and not
+  // taken: Act 1 boss pass 0.65 (n=51) vs 0.77 (n=35), mean final floor 26.0 vs 30.0; Act 2 0.22 (n=27) vs 0.32
+  // (n=19). A9 (n=13/8, 9/5) too few to say. At SKIP_BAR: taken for thin block, not over damage/scaling.
+  TAUNT: 50, SECOND_WIND: 44, RAGE: 42, VICIOUS: 42, CRUELTY: 44, AGGRESSION: 46, STAMPEDE: 44, JUGGLING: 25,
   PACTS_END: 40, BARRICADE: 44, ASHEN_STRIKE: 44, PRIMAL_FORCE: 36, CASCADE: 40, NOT_YET: 44, MIDNIGHT: 36,
   THE_BOMB: 48, // colorless: 40 to every enemy after 3 turns, good in long boss fights (1ZQJ never played it)
   // F
@@ -133,7 +142,9 @@ function bossBonus(cardId: string, bossId: string, ascension: number): { bonus: 
   // few big cards, and a way to exhaust Withers (YVWA/TQX5/Y0KJ: left at 312, 33, 32 of 512).
   if (boss.includes("AEONGLASS")) {
     if (SCALING.has(cardId)) return { bonus: 8, why: `scaling for Aeonglass's ${hp("AEONGLASS")} HP` };
-    if (cardId === "TRUE_GRIT" || cardId === "BURNING_PACT" || cardId === "FIEND_FIRE") return { bonus: 8, why: "exhausts Aeonglass's Withers" };
+    // Cards that exhaust a CHOSEN card only, as for Soul Fysh's Beckons: plain True Grit exhausts at random and
+    // cannot pick the Wither (experience card-true-grit, aeon-wither: True Grit+); no bonus for it here.
+    if (cardId === "BURNING_PACT" || cardId === "FIEND_FIRE") return { bonus: 8, why: "exhausts Aeonglass's Withers" };
     // Only real big hits: Setup Strike and a third Pommel Strike got it too and the deck swelled to 31 (L34T).
     if (BIG_HITS.has(cardId)) return { bonus: 4, why: "big hits: few cards against Withering Presence" };
   }
