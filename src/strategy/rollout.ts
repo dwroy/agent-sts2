@@ -1256,6 +1256,8 @@ function applyPlan(
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
+  // Thrashes that took one of several Attacks at random: put back once the pick is made (below).
+  const thrashPending: { back: CardModel; grown: number; picks: { strength: number }[] }[] = [];
   for (const step of plan.steps) {
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
@@ -1292,6 +1294,11 @@ function applyPlan(
     const back = handBase[at] ?? card;
     // Thrash: the damage it absorbed this turn is added to it for its later plays (3SBPKG9603WD).
     const grown = (o.thrashGrowth ?? []).filter((growth) => growth.index === card.index).reduce((sum, growth) => sum + growth.amount, 0);
+    const picks = (o.thrashRandom ?? []).filter((entry) => entry.index === card.index);
+    if (picks.length > 0 && back.damage !== null) {
+      thrashPending.push({ back, grown, picks });
+      continue;
+    }
     if (grown > 0 && back.damage !== null) {
       piles.discard.push({ ...back, damage: back.damage + grown, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + grown } : {}) });
       continue;
@@ -1303,6 +1310,21 @@ function applyPlan(
   // through the discard pile, "fight over 8/8", actual -60 and death).
   const exhausted = new Set(o.exhausted ?? []);
   const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
+  // Thrash takes an Attack (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): one of the unplayed Attacks,
+  // and that Thrash grows by its shown damage (plus the Strength gained by then), as the solver counts one.
+  for (const pending of thrashPending) {
+    let added = 0;
+    for (const pick of pending.picks) {
+      const attacks = unplayed.filter((i) => hand[i]!.type === "Attack");
+      if (attacks.length === 0) break;
+      const taken = attacks[Math.floor(random() * attacks.length)]!;
+      unplayed.splice(unplayed.indexOf(taken), 1);
+      added += Math.max(0, Math.floor((hand[taken]!.damage ?? 0) + pick.strength));
+    }
+    const total = pending.grown + added;
+    const back = pending.back;
+    piles.discard.push(total > 0 ? { ...back, damage: back.damage! + total, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + total } : {}) } : back);
+  }
   for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
   // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
   // outcome): they leave the fight, not back through the discard pile.

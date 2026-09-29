@@ -541,6 +541,12 @@ export interface Outcome {
   randomExhausts?: number;
   /** Damage a Thrash of this line absorbed (by hand index): the rollout adds it to that Thrash for its later plays. */
   thrashGrowth?: { index: number; amount: number }[];
+  /**
+   * A Thrash (by hand index) that took one of several Attacks at random: the rollout picks it among the hand's
+   * Attacks left unplayed and grows that Thrash by its shown damage plus `strength` (this turn's Strength gained
+   * by then, Weak-scaled); `least` is the solver's own conservative growth (the least of them).
+   */
+  thrashRandom?: { index: number; strength: number; least: number }[];
 }
 
 export interface Plan {
@@ -651,6 +657,7 @@ interface Sim {
   randomExhausts: number;
   /** Damage each Thrash played this turn absorbed (by hand index): added to that Thrash for the fight. */
   thrashGrowth: { index: number; amount: number }[];
+  thrashRandom: { index: number; strength: number; least: number }[];
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
@@ -1407,7 +1414,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
  * lethal, Byrdonis lived at 17); 69 logged absorbs: the next Thrash's base grew by the absorbed card's shown
  * damage (HGDBHW8CJK8C F20: Strike 6 shown 14 at Strength 8, Thrash base 4 -> 18). The growth is in the outcome
  * (thrashGrowth); the rollout carries it to the Thrash it puts back in the discard pile.
- * One Attack: that one. Several: the pick is random, so the least damage counts (like randomVictim), the average
+ * One Attack: that one. Several: the pick is random (the rollout picks it among the Attacks: thrashRandom), the average
  * Attack's value is lost, and no other Attack is planned after it (which one went is unknown; the loop re-plans
  * on the new hand). Skills and Powers stay playable.
  */
@@ -1424,13 +1431,14 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
     next.exhausted = [...next.exhausted, least];
   } else {
     next.flat -= attacks.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / attacks.length;
-    next.randomExhausts += 1;
+    // Which Attack went is the rollout's random pick (thrashRandom): only Attacks, its own shown damage.
+    next.thrashRandom = [...next.thrashRandom, { index: card.index, strength: next.strength * weakFactor, least: added(least) }];
     next.held = [...next.held, ...attacks];
     next.hand = next.hand.filter((entry) => entry.type !== "Attack");
   }
   next.exhaustedCount += 1;
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
-  if (added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
+  if (attacks.length === 1 && added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
@@ -2190,6 +2198,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
+      ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
     },
   };
 }
@@ -2333,6 +2342,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnExhausted: 0,
     randomExhausts: 0,
     thrashGrowth: [],
+    thrashRandom: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,

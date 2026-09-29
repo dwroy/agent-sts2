@@ -362,3 +362,33 @@ describe("4e. Biiig Hug: a Soot into the draw pile at every shuffle (CMUXQKE4UDJ
     expect(withHug.onShuffle?.playable).toBe(false);
   });
 });
+
+describe("5. Thrash's random exhaust in the rollout takes an Attack, and grows by that Attack's shown damage (batch E note)", () => {
+  it("Thrash with a Strike (6) and a 3-cost 20 in hand and a Defend: the Defend is never taken; the growth is 6 or 20", () => {
+    const thrash = card(0, "THRASH", { damage: 4, damageBase: 4, hits: 2, special: "thrash" });
+    const heavy = card(2, "HEAVY", { cost: 3, damage: 20, damageBase: 20 });
+    const hand = [thrash, strike(1), heavy, defend(3)];
+    const solver: SolverInput = { hand, player: player({ energy: 1 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 2 };
+    const plan = solveTurn(solver).plans.find((entry) => entry.steps.map((step) => step.cardId).join(",") === "THRASH")!;
+    expect(plan.outcome.thrashRandom).toEqual([{ index: 0, strength: 0, least: 6 }]);
+    const line = rolloutDecision({
+      solver,
+      plans: [plan],
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: [], discard: [], handBase: hand },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, horizon: 2, now: fastClock() },
+    }).lines[0]!;
+    // Next turn (3 energy) draws the three cards left. The Strike taken: Thrash 2 x (4 + 6) = 20 (the 3-cost 20
+    // does not fit after it); the 20 taken: Thrash 2 x 24 = 48 and the Strike 6 = 54. The Defend is always drawn.
+    const next = line.perTurn[0]!;
+    expect(next.dmg.max).toBe(54);
+    expect(next.dmg.min).toBe(20);
+  });
+});
