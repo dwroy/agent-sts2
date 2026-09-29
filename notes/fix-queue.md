@@ -1,0 +1,29 @@
+# Fix queue (pure bugs waiting for the next batch on step1-bugfix)
+
+From post-mortems W2TB U6RU VBHZ ZY39 0H1X (2026-09-29 14:50):
+- Shop card options and shop_stock don't show energy cost (card rewards do, reward.ts:62) — U6RU F22 read PRODUCTION as 1-cost. shop.ts ~:117, :148-153 at HEAD.
+- Removal value counts Eternal cards (basics ≥4 / any curse; Ascender's Bane is an Eternal curse at A5+) and the explanation text says so — U6RU F22, VBHZ F23. shop.ts ~:98, :165-166.
+- DeepSeek replies that fail to parse are never logged: parse before logReasoning; askJson loses usage too (VBHZ F17 act plan empty reply 48 s; 0H1X F13 half JSON recovered but no reasoning row). deepseek.ts ~:420-423, :307-312, :404-408; loop.ts ~:1450.
+- Knowledge contradiction: experience hallway:THE_OBSCURA (experience.json:1667, kill the Parafright when it attacks) vs jev-hints obscura-summoner (jev-hints.json:114-118, attack the Obscura); ZY39 killed the reviving Parafright six times, Obscura took 0 on T3–T5, T8.
+(Sent to batch B instead: saturated rollout tie-break sums minion HP, not leader-aware — W2TB.)
+
+From post-mortems X7LU XTB4 2XWM 7XK6 (2026-09-29 15:05; first runs on one-shot code 0c93138):
+- One-shot shop: stockDrift (shop.ts ~:396-404, lines 402-403) treats a restock of a slot the plan already bought as the shop changing → with The Courier every purchase re-asks the whole plan (7XK6: 7 re-asks in 3 shops, shop plans 47% of its DeepSeek time; baskets changed between re-asks).
+- act-start.ts:63 revealsLater regex reads Choices Paradox's per-fight "choose 1 of 5" as an outcome revealed later → unneeded route review (7XK6 F34).
+- event.ts ~:194-210: event options that name a relic carry no effect text (7XK6 F44 Royal Poison taken as if a curse card; 4 HP each fight).
+- ops/report.py ~:150-154: the auto run notes end a fight at any non-combat row, so Toasty Mittens exhaust picks and potion card picks split fights into per-turn "−0" rows (2XWM from F19, 7XK6 F42/F48).
+- Not new: boss-clock Soul Fysh flat 0.82 discount (deck dealt 0.35 of the estimate in XTB4, repeats VG7H) — derive from logs; rollout time-budget fallback to a one-turn estimate shows every line losing all HP (X7LU elite T1) — label it as a fallback, not a forecast.
+- Boss notes omit that Soul Fysh's Scream puts Vulnerable on us (De-Gas hits 27) (XTB4).
+(Sent to batch B instead: enemyHpOf ignores unreached boss phases — 7XK6 Test Subject.)
+Observation for Dai: one-shot act-start plans take 139–166 s with 26–32k output tokens (DeepSeek effort max).
+
+From post-mortems KY3Y 9Q7V XMK1 PHMV YQL8 (2026-09-29 15:15):
+- combat-plan.ts pendingDrinks (f4dc1bc :933-935, :1200-1210; HEAD :970-972, :1249): potion steps of Jev's line are drunk after a draw card cut the line short and the rest was dropped — no re-evaluation (side effect of 1470fdd V1MF fix). XMK1 T3 Blood Potion at 76/87 (6 HP wasted = the margin it died by) + 4 hallway drinks.
+- combat-plan.ts commit() (f4dc1bc :928-940; HEAD :965-978): a finished Jev line is not "stop here" — memo only stored when >1 step remains, so code re-plans from scratch and auto-played the "only distinct line" Jev had rejected (9Q7V T14 Sword Boomerang + One-Two Punch killed the Giant → explosion 6 short). Also :1119 doesn't read ONE_TWO_PUNCH_POWER; turn-solver dominance vector (:2143-2157) has no Giant-explosion axis.
+- selection.ts (:153, :169-170, :566) Frantic Escape can be exhausted while the Sandpit is the deadline (PLANNED_CARD_KEEP 150 outweighs it); leastLossPlan (:2048-2059) ignores Sandpit ≤1; guardSandpit (:987-998) only intercepts end-turn (KY3Y T9).
+- enchant-text.ts:51/:66 regexes need a colon right after 附魔 → "附魔一张攻击牌：活力8" gets no effect text (PHMV).
+- selection.ts:172/:263 enchant screen shows a removal-style "upgraded −8" ranking labelled code's ranking (PHMV; DeepSeek spent 233 s on it).
+- rollout.ts (f4dc1bc :1099; HEAD :1491) Giant husk not detected on the blast turn (needs eruption > 0; the power is gone) → simulates a ~1e9-HP live enemy (YQL8, 9Q7V).
+- consistency.ts:163 flags an answer inconsistent when the reasoning's conclusion is ambiguous → needless re-ask (XMK1).
+- ops/report.py :147-168 splits a fight at every mid-fight CARD_SELECTION (same as the 2XWM note above).
+- Evidence for Dai (clock, strategy-adjacent): boss clock at A9 optimistic — damage delivered 0.66 (KY3Y) / 0.76 (9Q7V) of the estimate; XMK1 predicted 8.4 loss/turn, 10 turns vs ~17/turn, 6 turns — the pooled unblocked share (boss-clock.ts:125-135) ignores the deck's block density.
