@@ -1,6 +1,6 @@
 # Monster DB cross-check
 
-DB: `src/knowledge/monster-db.json` from 4294 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-29T00:04:30.582Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1909, '9': 121}.
+DB: `src/knowledge/monster-db.json` from 4340 logged fights (2026-09-24T04:08:00.849Z .. 2026-09-29T01:39:46.916Z), fights by ascension {'0': 737, '1': 22, '2': 206, '3': 227, '4': 201, '5': 256, '6': 65, '7': 550, '8': 1909, '9': 167}.
 Regenerate: `python3 tools/build-monster-db.py && python3 tools/monster-db-check.py`.
 
 Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at A7 (A0-A6 give the same max HP for every boss logged; A8 raises HP). Flagged (**bold**) when HP differs at all, or loss/turns/need differ by more than 20%.
@@ -9,18 +9,14 @@ Columns: DB value (n = fights), hand value, difference. `A<8` = the DB value at 
 
 | boss | DB HP A7 (n) | hand hp | DB HP A8 (n) | hand hpA8 | DB loss/turn p75 A8 (n) | hand lossPerTurn | DB won-fight turns p75 A8 (n) | hand scriptTurns | note |
 |---|---|---|---|---|---|---|---|---|---|
-| AEONGLASS | 512 (2) | **578** | 535 (3) | **601** | 8.6 (3) | 8.6 | - (0) | 9 | hand hp adds 2x33 Ebb block on purpose |
 | CEREMONIAL_BEAST | 252 (3) | 252 | 262 (22) | 262 | 6.2 (22) | 6.2 | 10.5 (19) | 12 |  |
 | KAISER_CRAB | 408 (8) | 408 | 428 (23) | 428 | 12.2 (23) | 10 | 10 (5) | 8 |  |
 | KNOWLEDGE_DEMON | 379 (5) | 379 | 399 (19) | 399 | 7.2 (19) | 6.3 | 9 (7) | **11** |  |
 | LAGAVULIN_MATRIARCH | 222 (4) | 222 | 233 (24) | 233 | 6 (24) | 5.8 | 12 (17) | 12 |  |
-| QUEEN | 599 (2) | **460** | 630 (6) | **480** | 12.4 (6) | 13.3 | 7 (1) | 8 | hand hp = Queen + ~60 block, Amalgam left out on purpose; DB = Queen + Amalgam |
 | SOUL_FYSH | 211 (6) | 211 | 221 (20) | 221 | 5.1 (20) | 5.1 | 12.5 (15) | 12 |  |
 | TEST_SUBJECT | 100 (3) | **600** | 111 (3) | **641** | 12.6 (3) | **7.5** | - (0) | 12 | hand hp = sum of 3 phases; DB = phase 1 (phases below) |
 | THE_INSATIABLE | 321 (6) | 321 | 341 (23) | 341 | 8.8 (23) | 8.9 | 8.2 (8) | 8 |  |
-| THE_KIN | 307 (7) | **250** | 324 (23) | **260** | 8.7 (23) | 10.1 | 10 (13) | 10 | hand hp = priest + ~60 into followers on purpose; DB = priest + 2 followers |
 | VANTOM | 173 (8) | 173 | 183 (25) | 183 | 6.5 (25) | 7.3 | 11 (21) | 11 |  |
-| WATERFALL_GIANT | 240 (9) | **260** | 250 (27) | **270** | 5.1 (27) | 5.1 | 13.2 (18) | 14 | hand hp adds ~20 Siphon heal on purpose |
 
 Test Subject phases: hand A8 [111, 212, 318], A<8 [100, 200, 300]; DB (max_hp sequence of the one enemy, n fights): A0: 100 > 200 > 300 (n=2); A1: 100 > 200 > 300 (n=1); A2: 100 > 200 (n=1); A3: 100 > 200 > 300 (n=1); A5: 100 > 200 > 300 (n=1); A7: 100 > 200 > 300 (n=2), 100 > 200 (n=1); A8: 111 > 212 (n=2), 111 > 212 > 313 (n=1). Phase 3 at A8 is still unlogged.
 
@@ -68,11 +64,11 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | GLOBE_HEAD | hallway | 148 (3) | 148 | 158 (3) | **155** | 158 | 39.5 (3) | - | 0 | 0 | GLOBE_HEAD |
 | HUNTER_KILLER | hallway | 121 (8) | 121 | 126 (32) | **127** | 126 | 25.2 (29) | 25 | 6 | 3 | HUNTER_KILLER |
 | INFESTED_PRISM | elite | 161 (3) | 161 | 171 (15) | 171 | 171 | 34.2 (11) | 35 | 7 | 4 | INFESTED_PRISM |
-| KAISER_CRAB | boss | 408 (8) | 408 | 428 (23) | 428 | - | 47.6 (5) | 54 | 34 | 17 | boss KAISER_CRAB |
+| KAISER_CRAB | boss | 408 (8) | 408 | 428 (23) | 428 | - | 47.6 (5) | 54 | 35 | 17 | boss KAISER_CRAB |
 | KNOWLEDGE_DEMON | boss | 379 (5) | 379 | 399 (19) | 399 | 399 | 57 (7) | 51 | 29 | 17 | boss KNOWLEDGE_DEMON |
 | LAGAVULIN_MATRIARCH | boss | 222 (4) | 222 | 233 (24) | 233 | 233 | 23.3 (17) | 19 | 17 | 9 | boss LAGAVULIN_MATRIARCH |
 | LOUSE_PROGENITOR | hallway | 134 [134-136] (7) | 134 | 139 [138-141] (28) | 141 | 139 [138-141] | 27.8 (26) | 25 | 4 | 2 | LOUSE_PROGENITOR |
-| MECHA_KNIGHT | elite | 300 (5) | 300 | 320 (4) | **315** | 320 | 40 (3) | 33 | 3 | 2 | MECHA_KNIGHT |
+| MECHA_KNIGHT | elite | 300 (5) | 300 | 320 (4) | **315** | 320 | 40 (3) | 33 | 4 | 2 | MECHA_KNIGHT |
 | MYTE | hallway | 128.5 [123-133] (8) | 130 | 133 [129-136] (33) | **137** | 66.5 [64-69] | 33.2 (31) | - | 4 | 2 | MYTE+MYTE |
 | OVICOPTER | hallway | 126 [124-129] (6) | **130** | 129 [126-132] (30) | **137** | 129 [126-132] | 32.2 (28) | - | 2 | 0 | OVICOPTER |
 | OWL_MAGISTRATE | hallway | 231 (3) | 231 | 247 (3) | **243** | 247 | 38 (2) | 40 | 1 | 0 | OWL_MAGISTRATE |
@@ -87,16 +83,16 @@ HP: the dossier `hp` is the sum of all bodies for multi-body fights. DB: the med
 | SOUL_FYSH | boss | 211 (6) | 211 | 221 (20) | 221 | 221 | 20.1 (15) | **25** | 12 | 8 | boss SOUL_FYSH |
 | SOUL_NEXUS | elite | 234 (1) | 234 | 254 (3) | **246** | 254 | 33.9 (2) | **45** | 2 | 1 | SOUL_NEXUS |
 | SPINY_TOAD | hallway | 117 [116-119] (10) | 118 | 123 [121-124] (30) | 122 | 123 [121-124] | 30.8 (26) | - | 6 | 3 | SPINY_TOAD |
-| TERROR_EEL | elite | 140 (8) | 140 | 150 (22) | 150 | 150 | 25 (21) | 30 | 1 | 1 | TERROR_EEL |
+| TERROR_EEL | elite | 140 (8) | 140 | 150 (22) | 150 | 150 | 25 (21) | 30 | 2 | 1 | TERROR_EEL |
 | TEST_SUBJECT | boss | 100 (3) | **600** | 111 (3) | **630** | 111 | - (0) | 43 | 10 | 7 | boss TEST_SUBJECT |
-| THE_INSATIABLE | boss | 321 (6) | 321 | 341 (23) | 341 | 341 | 42.6 (8) | 49 | 21 | 6 | boss THE_INSATIABLE |
+| THE_INSATIABLE | boss | 321 (6) | 321 | 341 (23) | 341 | 341 | 42.6 (8) | 49 | 22 | 6 | boss THE_INSATIABLE |
 | THE_KIN | boss | 307 (7) | 307 | 324 (23) | **322** | - | 40.5 (13) | **31** | 14 | 4 | boss THE_KIN |
 | THE_LOST | hallway | 199 (2) | 199 | 210 (6) | **209** | 99 | 46.7 (6) | - | 0 | 0 | THE_FORGOTTEN+THE_LOST |
 | THE_OBSCURA | hallway | 123 (5) | 123 | 129 (35) | 129 | 129 | 25.8 (30) | 30 | 7 | 3 | THE_OBSCURA |
 | THIEVING_HOPPER | hallway | 79 (14) | 79 | 84 (49) | 84 | 84 | 21 (49) | - | 0 | 0 | THIEVING_HOPPER |
 | TUNNELER | hallway | 87 (17) | 87 | 92 (52) | **91** | 92 | 18.4 (52) | - | 1 | 1 | TUNNELER |
 | VANTOM | boss | 173 (8) | 173 | 183 (25) | 183 | 183 | 22.9 (21) | 23 | 9 | 5 | boss VANTOM |
-| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (27) | 250 | 250 | 26.3 (18) | 25 | 17 | 8 | boss WATERFALL_GIANT |
+| WATERFALL_GIANT | boss | 240 (9) | 240 | 250 (27) | 250 | 250 | 26.3 (18) | 25 | 18 | 8 | boss WATERFALL_GIANT |
 
 Dossier A8 HP outside the logged range in 21 of 48 logged entries: AXEBOT (hand 262 vs DB 79), BYGONE_EFFIGY (hand 133 vs DB 132), BYRDONIS (hand 88 vs DB 90), EXOSKELETON (hand 109 vs DB 111), FABRICATOR (hand 158 vs DB 155), FLAIL_KNIGHT (hand 290 vs DB 294), GLOBE_HEAD (hand 155 vs DB 158), HUNTER_KILLER (hand 127 vs DB 126), MECHA_KNIGHT (hand 315 vs DB 320), MYTE (hand 137 vs DB 133), OVICOPTER (hand 137 vs DB 129), OWL_MAGISTRATE (hand 243 vs DB 247), PUNCH_CONSTRUCT (hand 194 vs DB 200), QUEEN (hand 629 vs DB 630), SKULKING_COLONY (hand 79 vs DB 80), SLUDGE_SPINNER (hand 40 vs DB 42), SOUL_NEXUS (hand 246 vs DB 254), TEST_SUBJECT (hand 630 vs DB 111), THE_KIN (hand 322 vs DB 324), THE_LOST (hand 209 vs DB 210), TUNNELER (hand 91 vs DB 92).
 
