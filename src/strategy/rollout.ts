@@ -428,6 +428,10 @@ export interface OrderEstimate {
    * ended the fight) and the samples in which it is dead by then; null without one.
    */
   leader: { hpLeft: number; dead: number } | null;
+  /** Expected HP of the living enemies at the end of the horizon (0 in a sample that won; at our death, what they had then). */
+  enemyHpLeft: number;
+  /** Expected turns we stay alive within the horizon (the horizon when we live through it or win). */
+  turnsSurvived: number;
   hpLoss: number;
   turnsToWin: number | null;
   deaths: number;
@@ -460,6 +464,13 @@ export interface LineEstimate {
   oneTurn: { hpLoss: number; winProb: number; turns: number; modelValue: number | null; value: number };
   /** (iii) the rollout: expected HP lost from now to the fight's end, turns to the fight's end, win prob. */
   hpLoss: number;
+  /**
+   * Expected HP of the living enemies at the end of the horizon (0 in a sample that won; at our death,
+   * what they had then), and the expected turns we stay alive within it: what still tells lines apart
+   * when every line loses all our HP (rollout-live.ts pickRolloutBest).
+   */
+  enemyHpLeft: number;
+  turnsSurvived: number;
   /** Mean turns to the fight's end over the samples that survive the horizon; null when every sample dies. */
   turnsToWin: number | null;
   /** Samples (of `samples`) in which we die within the horizon, and the mean turn of death among them. */
@@ -1184,6 +1195,12 @@ interface SampleValue {
   winModel: number | null;
 }
 
+/** The living enemies' HP in a snapshot (a won fight: 0). */
+function enemyHpOf(record: TurnRecord): number {
+  if (record.won) return 0;
+  return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
+}
+
 /** A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after. */
 function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, startHp: number): SampleValue & { n: number } {
   let loss = 0;
@@ -1383,6 +1400,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       n: v.n,
       lossModel: vm.lossModel,
       winModel: vm.winModel,
+      enemyHpLeft: enemyHpOf(records[0]!),
+      survived: v.died ? v.turns : 1,
     };
   });
 
@@ -1480,6 +1499,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
     const alive = vals.filter((v) => !v.died);
     const dead = vals.filter((v) => v.died);
+    const enemyHpLeft = mean(kept.map((records) => enemyHpOf(records[Math.min(horizon, records.length) - 1]!)));
+    const turnsSurvived = mean(vals.map((v) => (v.died ? v.turns : horizon)));
     const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
     return {
       hpLoss: loss,
@@ -1494,6 +1515,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       perTurn: turnSpreads(kept, horizon),
       firstDown,
       leader,
+      enemyHpLeft,
+      turnsSurvived,
     };
   };
 
@@ -1518,6 +1541,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         order: null,
         orders: [],
         hpLoss: o.hpLoss,
+        enemyHpLeft: o.enemyHpLeft,
+        turnsSurvived: o.survived,
         turnsToWin: o.turns,
         deaths: 0,
         turnsToDeath: null,
@@ -1543,6 +1568,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       orders: byOrder.filter((entry): entry is typeof entry & { order: KillOrder } => entry.order !== null),
       ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
+      enemyHpLeft: best.enemyHpLeft,
+      turnsSurvived: best.turnsSurvived,
       turnsToWin: best.turnsToWin,
       deaths: best.deaths,
       turnsToDeath: best.turnsToDeath,

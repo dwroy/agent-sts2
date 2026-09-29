@@ -254,8 +254,14 @@ export type LiveRollout =
       available: true;
       result: RolloutResult;
       byPlan: Map<Plan, LineEstimate>;
-      /** The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may add. */
+      /**
+       * The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may
+       * add; ties and saturated boards by enemy HP left, then turns survived; null when that ties too
+       * (pickRolloutBest).
+       */
       best: Plan | null;
+      /** Every line loses all our HP within the horizon (and wins in no sample): the HP numbers tell them nothing. */
+      saturated: boolean;
       meta: FightMeta;
       gate: Gate;
       /** This encounter's own decision points in the gates file (its `enc:` segment; 0 when absent). */
@@ -270,6 +276,33 @@ export type LiveRollout =
     };
 
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
+
+/** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
+export const SATURATED_HP = 1;
+/** Enemy HP left within this much, and turns survived within ROLLOUT_TURNS_TIE, is a tie. */
+export const ROLLOUT_ENEMY_HP_TIE = 1;
+export const ROLLOUT_TURNS_TIE = 0.1;
+
+/**
+ * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
+ * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
+ * then code's order. When every line is saturated (its loss capped at the HP we have, no sample won) the
+ * value says nothing: the enemy HP left and turns alive alone decide, and when they tie too there is no
+ * best line (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9 by one
+ * sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ */
+export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean } {
+  if (lines.length === 0) return { best: null, saturated: false };
+  const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
+  const top = Math.max(...lines.map((line) => line.value));
+  const contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  // The least enemy HP left and every line within ROLLOUT_ENEMY_HP_TIE of it; among those the most turns
+  // alive (a stable sort: code's order among equals).
+  const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
+  const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
+  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) return { best: null, saturated };
+  return { best: near[0]!, saturated };
+}
 
 export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   const now = rolloutLiveOptions.now ?? (() => performance.now());
@@ -329,12 +362,13 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
-    const best = eligible.reduce<LineEstimate | null>((a, b) => (a === null || b.value > a.value ? b : a), null)?.plan ?? null;
+    const picked = pickRolloutBest(eligible, args.solver.player.hp);
     return {
       available: true,
       result,
       byPlan,
-      best,
+      best: picked.best?.plan ?? null,
+      saturated: picked.saturated,
       meta,
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
@@ -352,6 +386,12 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
+/** Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are shown. */
+function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
+  if (!r.saturated) return "";
+  return `; every line loses all our HP here, so the loss does not separate them: enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+}
+
 /** The facts of one shown line. */
 export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonValue> {
   if (!r.available) return { rollout: `rollout unavailable (${r.reason})` };
@@ -362,7 +402,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order) {
@@ -446,6 +486,7 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     lines: r.result.lines.length,
     best: bestKey,
     best_added: added,
+    ...(r.saturated ? { saturated: true } : {}),
     ...(r.result.orders.length > 0
       ? {
           orders: r.result.orders.length,
