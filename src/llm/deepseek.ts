@@ -38,6 +38,11 @@ export interface DeepSeekConfig {
   effortByLabel?: string;
   /** JSONL file receiving each call's full chain of thought (for later review); "" disables. */
   reasoningLog?: string;
+  /**
+   * The system prompt verbatim, instead of the built one (SYSTEM + guide + handbook): for replaying logged
+   * questions against the prompt they were asked with (V4 brain, src/brain/engines/deepseek.ts).
+   */
+  systemPrompt?: string;
 }
 
 export interface DeepSeekAnswer {
@@ -99,6 +104,9 @@ export interface ConsistencyRecord {
 
 /** Thrown when DeepSeek's answer stays inconsistent and no conclusion maps to one option: the caller falls back. */
 export class DeepSeekInconsistentError extends Error {
+  /** DeepSeek answered (the V4 router passes answer failures on instead of falling back to another engine). */
+  readonly answerFailure = true;
+
   constructor(readonly record: ConsistencyRecord, readonly meta: { calls: number; tokens: number }) {
     super(`DeepSeek answer inconsistent after re-ask (${record.first.issues.join("; ")})`);
     this.name = "DeepSeekInconsistentError";
@@ -111,6 +119,9 @@ export class DeepSeekInconsistentError extends Error {
  * falling back, and hand its reason on.
  */
 export class DeepSeekAnswerError extends Error {
+  /** DeepSeek answered (the V4 router passes answer failures on instead of falling back to another engine). */
+  readonly answerFailure = true;
+
   constructor(
     message: string,
     readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string; discard?: number[] },
@@ -351,12 +362,84 @@ export class DeepSeekClient implements Escalator {
     if (guide) system += `\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
     // Static text only: the system prompt must stay byte-identical across calls so DeepSeek caches it.
     if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
-    this.system = system;
+    this.system = config.systemPrompt ?? system;
   }
 
   /** The system prompt as sent (for tools and tests). */
   get systemPrompt(): string {
     return this.system;
+  }
+
+  /** The model name sent in each request. */
+  get modelName(): string {
+    return this.config.model;
+  }
+
+  /** The same client with another system prompt, verbatim (replaying logged questions). */
+  withSystem(system: string): DeepSeekClient {
+    return new DeepSeekClient({ ...this.config, systemPrompt: system });
+  }
+
+  /**
+   * One chat completion outside the v3 decision methods (V4 brain: DeepSeek's native function-calling loop and
+   * the router's re-ask): the given messages after this client's system prompt, the label's thinking effort,
+   * JSON mode unless tools are offered. Returns the reply, its tool calls and its usage; HTTP errors throw.
+   */
+  async chat(
+    messages: Record<string, unknown>[],
+    label: string,
+    options: { tools?: Record<string, unknown>[]; toolChoice?: "auto" | "none"; signal?: AbortSignal } = {},
+  ): Promise<{ content: string; reasoning: string; toolCalls: { id: string; name: string; arguments: string }[]; message: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    const started = Date.now();
+    const effort = effortFor(label, this.config);
+    const thinking = effort !== "off";
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.config.timeoutMs);
+    const abort = (): void => controller.abort();
+    options.signal?.addEventListener("abort", abort, { once: true });
+    const tools = options.tools && options.tools.length > 0 ? options.tools : undefined;
+    try {
+      const response = await fetch(`${this.config.baseUrl.replace(/\/+$/, "")}/chat/completions`, {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${this.config.apiKey}` },
+        body: JSON.stringify({
+          model: this.config.model,
+          ...(thinking ? { thinking: { type: "enabled" }, reasoning_effort: effort } : { thinking: { type: "disabled" }, temperature: 0 }),
+          ...(tools ? { tools, ...(options.toolChoice ? { tool_choice: options.toolChoice } : {}) } : { response_format: { type: "json_object" } }),
+          messages: [{ role: "system", content: this.system }, ...messages],
+        }),
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        const body = (await response.text()).slice(0, 200);
+        throw new Error(`DeepSeek HTTP ${response.status}: ${body}`);
+      }
+      const payload = (await response.json()) as {
+        choices?: { message?: { content?: string | null; reasoning_content?: string; tool_calls?: { id?: string; function?: { name?: string; arguments?: string } }[] } }[];
+        usage?: { prompt_tokens?: number; completion_tokens?: number; prompt_cache_hit_tokens?: number; completion_tokens_details?: { reasoning_tokens?: number } };
+      };
+      const message = payload.choices?.[0]?.message ?? {};
+      const latencyMs = Date.now() - started;
+      return {
+        content: message.content ?? "",
+        reasoning: message.reasoning_content ?? "",
+        toolCalls: (message.tool_calls ?? []).map((call, index) => ({ id: call.id ?? `call_${index}`, name: call.function?.name ?? "", arguments: call.function?.arguments ?? "" })),
+        message: message as Record<string, unknown>,
+        meta: {
+          latencyMs,
+          inputTokens: payload.usage?.prompt_tokens ?? 0,
+          outputTokens: payload.usage?.completion_tokens ?? 0,
+          cacheHitTokens: payload.usage?.prompt_cache_hit_tokens ?? 0,
+          guideId: this.guideId,
+          handbookId: this.handbookId,
+          reasoningTokens: payload.usage?.completion_tokens_details?.reasoning_tokens ?? 0,
+          effort,
+        },
+      };
+    } finally {
+      clearTimeout(timer);
+      options.signal?.removeEventListener("abort", abort);
+    }
   }
 
   async choose(

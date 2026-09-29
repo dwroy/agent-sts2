@@ -6,7 +6,7 @@
  * choice: every engine takes the same BrainRequest and returns the same BrainAnswer, and the router
  * owns validation, the single re-ask, fallback and logging, so switching engines is one env var.
  */
-import type { JsonSchema, ToolDef } from "../tools/types.js";
+import type { JsonSchema, ToolContext, ToolDef } from "../tools/types.js";
 
 export type EngineName = "deepseek" | "claude" | "codex" | "dsh";
 
@@ -16,6 +16,11 @@ export type Effort = "low" | "medium" | "high" | "max";
 export interface AnswerSpec {
   /** Question label, e.g. "reward/card", "map/route-plan". */
   label: string;
+  /**
+   * "pick": the answer's `choice` names one of the request's option keys (an engine may map an option's
+   * name to its key); "plan": a free-form object in the question's format (shop list, run plan, fight plan).
+   */
+  kind: "pick" | "plan";
   /** JSON Schema of the answer object (JSON mode instruction, tool schema, --json-schema, --output-schema). */
   schema: JsonSchema;
   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
@@ -26,22 +31,41 @@ export interface BrainRequest {
   label: string;
   /** Stable prefix: rules + knowledge. Byte-identical across a run so prefix caches hit. */
   system: string;
-  /** Run memory (journal), most stable part first. */
-  memory?: string;
+  /**
+   * Run memory (journal), most stable part first: a string, or named sections in cache order (sent in that
+   * order, empty sections dropped; the v3 DeepSeek user message depends on the exact layout).
+   */
+  memory?: string | Record<string, unknown>;
   /** The instruction for this decision. */
   question: string;
-  /** State and options as JSON-serialisable data. */
+  /**
+   * A choice question's options: option key -> criteria text (JSON of the option's facts, or null). When set,
+   * the payload is the state and the answer names one key; when absent, the payload is the task's input.
+   */
+  options?: Record<string, string | null>;
+  /** State (choice question) or task input as JSON-serialisable data. */
   payload: unknown;
   spec: AnswerSpec;
   /** Tools the engine may call; engines without tool support ignore them (their system carries the knowledge). */
   tools?: ToolDef[];
+  /** What the tools read (ascension, act, knowledge and log dirs, live state); required when tools are given. */
+  toolContext?: ToolContext;
+  /**
+   * Set by the router on its one re-ask: the previous answer as the model gave it and the problems found in it.
+   * Engines render it as a follow-up turn (same conversation where the engine keeps one).
+   */
+  reask?: { answer: string; problems: string[] };
   effort?: Effort;
   timeoutMs?: number;
 }
 
 export interface BrainUsage {
+  /** Every prompt token, cached or not (DeepSeek prompt_tokens; Claude input + cache read + cache write). */
   inputTokens: number;
+  /** Prompt tokens read from the cache. */
   cacheHitTokens?: number;
+  /** Prompt tokens written to the cache (Claude cache_creation_input_tokens). */
+  cacheWriteTokens?: number;
   outputTokens: number;
   reasoningTokens?: number;
   /** Engine-reported or price-table estimate; undefined when unknown (e.g. subscription CLI). */
@@ -71,6 +95,11 @@ export interface BrainAnswer {
   toolCalls: ToolCallRecord[];
   reasoning?: string;
   raw?: string;
+  /**
+   * The engine's own result object, for callers that log engine-specific fields (DeepSeek: the v3 answer with
+   * its guide/handbook ids, effort and consistency record). Not logged by the router.
+   */
+  native?: unknown;
   /** Set when the router fell back to another engine; names the engine that failed and why. */
   fellBackFrom?: { engine: EngineName; error: string };
 }
