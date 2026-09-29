@@ -41,6 +41,9 @@ export interface MoveEntry {
   /** Surrounded (Kaiser Crab): the logged turns the move came from behind us (x1.5) and from in front. */
   back_attack_by_asc?: Record<string, { behind?: number; facing?: number }>;
   status_cards?: Record<string, number>;
+  /** Block a Defend move gave (pooled), and by ascension. */
+  block_gained?: Record<string, number>;
+  block_gained_by_asc?: Record<string, Record<string, number>>;
 }
 
 interface MonsterEntry {
@@ -440,6 +443,56 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
     .sort((a, b) => b.length - a.length)[0] ?? [];
   const n = Math.min(...parts.map(([, range]) => range.n ?? 0));
   return { hp: Math.round(hp), phases, asc: Number(found.key), exact: found.exact, n };
+}
+
+/**
+ * A hand-written note's numbers from the DB at `asc` (the notes keep the strategy, the DB the numbers):
+ *   {HP:ID}              the enemy's median max HP (hp_by_asc, nearest logged ascension);
+ *   {DMG:ID:MOVE}        the move's base damage per hit, "×hits" for a multi-hit (moveDamageAt; the shown
+ *                        hit when no base was measured), "≈" in front when estimated (not logged here);
+ *   {BEHIND:ID:MOVE}     a Surrounded move's hit from behind (base × 1.5);
+ *   {GAIN:ID:MOVE:POWER} what the move gives its user of a power (selfGainAt);
+ *   {POWER:ID:POWER}     the amount the enemy is first seen with (amount_at_first_sight_by_asc);
+ *   {BLOCK:ID:MOVE}      the block the move gives (block_gained_by_asc).
+ * One the DB cannot fill becomes "?", never a hand-set number from another ascension.
+ */
+export function fillDbNumbers(text: string, asc: number): string {
+  const db = load().monsters;
+  const fill = (kind: string, id: string, a?: string, b?: string): string | null => {
+    const monster = db[id];
+    const move = a ? monster?.moves?.[a] : undefined;
+    switch (kind) {
+      case "HP": {
+        const found = nearestAscension(monster?.hp_by_asc, asc);
+        const median = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+        return median === undefined ? null : String(Math.round(median));
+      }
+      case "DMG":
+      case "BEHIND": {
+        if (!a) return null;
+        const base = moveDamageAt(db, id, a, asc);
+        const hit = base ?? shownDamageAt(db, id, a, asc);
+        if (!hit) return null;
+        const perHit = base ? (base.base ?? base.perHit) : hit.perHit;
+        const mark = hit.estimated ? "≈" : "";
+        if (kind === "BEHIND") return base?.backAttackShare !== undefined ? `${mark}${Math.floor(perHit * 1.5)}` : null;
+        return `${mark}${perHit}${hit.hits > 1 ? `×${hit.hits}` : ""}`;
+      }
+      case "GAIN": {
+        const gain = a && b ? selfGainAt(move, b, asc) : null;
+        return gain === null ? null : String(gain);
+      }
+      case "POWER": {
+        const power = a ? monster?.powers?.[a] : undefined;
+        return power ? mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc)) : null;
+      }
+      case "BLOCK":
+        return move ? mode(countsAt(move.block_gained_by_asc, move.block_gained, asc)) : null;
+      default:
+        return null;
+    }
+  };
+  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
 }
 
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */

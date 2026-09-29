@@ -3,7 +3,8 @@
 import { describe, expect, it } from "vitest";
 
 import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { describeChoice, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, withoutHandHp, type JournalEntry } from "../src/project/run-journal.js";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { bossNote, describeChoice, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, type JournalEntry } from "../src/project/run-journal.js";
 import { runPlanLine } from "../src/strategy/run-plan.js";
 import type { RoutePlan } from "../src/screens/map.js";
 import type { AskDecision } from "../src/project/types.js";
@@ -306,10 +307,9 @@ describe("lookahead", () => {
     expect(text).toContain("精英 0–1");
     expect(text).toContain("宝箱 0");
     expect(text).toContain("下一个节点可选: Monster/Shop");
-    // The monster DB has Vantom: its measured HP replaces the note's hand-written one.
-    expect(text).toContain("boss 要点: 开场 9 层滑溜");
-    expect(text).not.toContain("173 血");
-    expect(withoutHandHp("神官 190 血 + 两个信徒")).toBe("神官 + 两个信徒");
+    // The note's numbers are the monster DB's at this ascension, not hand-written ones stripped afterwards.
+    expect(text).toMatch(/boss 要点: \d+ 血，开场 \d+ 层滑溜/);
+    expect(text).not.toMatch(/\{[A-Z]+:/);
   });
 
   it("follows the chosen node until the next map, and says when the next node is forced", () => {
@@ -359,5 +359,71 @@ describe("run journal keeps the option's own text, not the escalator's guess (VC
     expect(rendered).toContain("未核实理由 = DeepSeek 当时所写，不是事实");
     journal.record(state, entry({ label: "reward/card", choice: "took Inflame", reason: "" }));
     expect(journal.choices[1]!.reason).toBe("");
+  });
+});
+
+describe("boss notes carry the monster DB's numbers at this ascension, and every mechanic (review 2026-09-29 #9)", () => {
+  const dmg = (bases: Record<string, number>, hits = 1) => ({
+    damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 4 }, hits: { [String(hits)]: 4 } }])),
+  });
+  // A fixture DB (the real one refreshes after every run): A8 and A9 numbers as logged.
+  const monsters = {
+    CEREMONIAL_BEAST: {
+      hp_by_asc: { "8": { median: 262, n: 22 } },
+      moves: { PLOW_MOVE: { ...dmg({ "8": 18 }), self_powers_gained_by_asc: { "8": { STRENGTH_POWER: { "2": 54 } } } } },
+      powers: { PLOW_POWER: { type: "Debuff", amount_at_first_sight: { "150": 33 }, amount_at_first_sight_by_asc: { "8": { "150": 22 } } } },
+    },
+    LAGAVULIN_MATRIARCH: {
+      hp_by_asc: { "7": { median: 222, n: 4 }, "8": { median: 233, n: 24 }, "9": { median: 233, n: 1 } },
+      moves: { SLASH_MOVE: dmg({ "8": 19, "9": 21 }), DISEMBOWEL_MOVE: dmg({ "8": 9, "9": 10 }, 2) },
+      powers: { PLATING_POWER: { type: "Buff", amount_at_first_sight: { "12": 46 }, amount_at_first_sight_by_asc: { "8": { "12": 24 } } } },
+    },
+    ROCKET: {
+      moves: { LASER_MOVE: { ...dmg({ "8": 31, "9": 35 }), back_attack_by_asc: { "8": { behind: 24, facing: 5 } } } },
+    },
+    QUEEN: { hp_by_asc: { "7": { median: 400, n: 2 }, "8": { median: 419, n: 5 } }, moves: {} },
+    TORCH_HEAD_AMALGAM: { hp_by_asc: { "7": { median: 199, n: 2 }, "8": { median: 211, n: 5 } }, moves: {} },
+    TEST_SUBJECT: { hp_by_asc: { "8": { median: 111, n: 3 } }, moves: { BIG_POUNCE: dmg({ "8": 45 }), MULTI_CLAW_MOVE: dmg({ "8": 10 }, 3) } },
+  };
+  const withDb = <T>(run: () => T): T => {
+    setMonsterDbForTests({ bosses: {}, encounters: {}, monsters } as never);
+    try {
+      return run();
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  };
+
+  it("the Beast keeps its stun threshold and the Matriarch its wake-up rule: nothing is regex-stripped", () => {
+    withDb(() => {
+      const beast = bossNote("CEREMONIAL_BEAST_BOSS", 9)!;
+      expect(beast).toContain("262 血");
+      expect(beast).toContain("首次跌破 150 血被击晕一回合");
+      const matriarch = bossNote("LAGAVULIN_MATRIARCH_BOSS", 9)!;
+      expect(matriarch).toContain("掉 1 血就醒");
+      expect(matriarch).toContain("233 血，开场沉睡 + 12 覆甲");
+      // A9's hits, not the A0/A8 "19、9×2".
+      expect(matriarch).toContain("醒后 21、10×2");
+      expect(bossNote("LAGAVULIN_MATRIARCH_BOSS", 8)).toContain("醒后 19、9×2");
+      // The lookahead DeepSeek reads carries the same note.
+      const state = parseGameState(baseState("SHOP", { run: runPayload({ floor: 5, act_id: "0", ascension: 9, boss_id: "CEREMONIAL_BEAST_BOSS" }) }));
+      expect(renderLookahead(state, undefined, null)).toContain("首次跌破 150 血被击晕一回合");
+    });
+  });
+
+  it("the crab's Laser, the Queen's HP and the Test Subject's Pounce at this ascension, marked when estimated", () => {
+    withDb(() => {
+      expect(bossNote("KAISER_CRAB_BOSS", 9)).toContain("激光 35，在背后 52");
+      expect(bossNote("KAISER_CRAB_BOSS", 9)).not.toContain("47–49");
+      expect(bossNote("QUEEN_BOSS", 9)).toContain("女王 419 + 聚合体 211");
+      expect(bossNote("QUEEN_BOSS", 7)).toContain("女王 400 + 聚合体 199");
+      // Pounce never logged at A9: A8's 45 x the A8 -> A9 ratio (Laser 31 -> 35, Slash 19 -> 21, Disembowel 9 -> 10), marked.
+      const ratio = (35 + 21 + 10) / (31 + 19 + 9);
+      expect(bossNote("TEST_SUBJECT_BOSS", 9)).toContain(`猛扑 ≈${Math.round(45 * ratio)}`);
+      expect(bossNote("TEST_SUBJECT_BOSS", 8)).toContain("猛扑 45");
+      expect(bossNote("TEST_SUBJECT_BOSS", 8)).toContain("多段爪 10×3 起");
+      // Nothing the DB lacks is filled with an old number.
+      for (const id of ["VANTOM", "THE_KIN", "AEONGLASS"]) expect(bossNote(id, 9)).not.toMatch(/\{[A-Z]+:/);
+    });
   });
 });
