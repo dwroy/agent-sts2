@@ -326,6 +326,23 @@ describe("lookahead", () => {
     const nextAct = parseGameState(baseState("SHOP", { run: runPayload({ floor: 18, act_id: "1", boss_id: "KNOWLEDGE_DEMON_BOSS" }) }));
     expect(journal.render(nextAct, testKnowledge, { lastMap: map }).lookahead).toMatch(/^boss 要点: /);
   });
+
+  it("two next nodes of one type are a choice, not forced (batch E: \"下一个节点强制: Treasure\" with two Treasures)", () => {
+    const twin = parseGameState(baseState("MAP", {
+      run: runPayload({ floor: 1, act_id: "0", boss_id: "VANTOM_BOSS" }),
+      map: {
+        current_node: { row: 0, col: 0 },
+        boss_node: { row: 2, col: 0 },
+        nodes: [node(0, 0, "Ancient", [[1, 0], [1, 1]]), node(1, 0, "Treasure", [[2, 0]]), node(1, 1, "Treasure", [[2, 0]]), node(2, 0, "Boss", [])],
+        available_nodes: [{ index: 0, row: 1, col: 0, node_type: "Treasure" }, { index: 1, row: 1, col: 1, node_type: "Treasure" }],
+      },
+    }));
+    const memory = createScreenMemory("MAP");
+    rememberMap(memory, twin);
+    const text = renderLookahead(twin, memory.lastMap!, null);
+    expect(text).toContain("下一个节点可选: Treasure x2");
+    expect(text).not.toContain("强制");
+  });
 });
 
 describe("run journal keeps the option's own text, not the escalator's guess (VC4L F22)", () => {

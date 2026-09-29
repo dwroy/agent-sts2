@@ -397,6 +397,26 @@ export type LiveRollout =
 
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
 
+/**
+ * The line a drink line is without its potion(s) when the drink changes nothing this turn: the same card steps
+ * (card, hand index, target) and the same outcome but the potions' resource cost (3SBPKG9603WD boss T3: Flex
+ * after the last attack, 62.5 vs 64.1 by sampling noise, and Jev drank it). Null when there is none. The drink
+ * line stays an option (Dai: potions are never filtered); it is only told apart.
+ */
+export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
+  if (!drinks(plan)) return null;
+  const cards = (line: Plan): string =>
+    line.steps
+      .filter((step) => !step.cardId.startsWith("POTION:"))
+      .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
+      .join(">");
+  const turn = (line: Plan): string => {
+    const { potionCost: _cost, ...rest } = line.outcome;
+    return JSON.stringify(rest);
+  };
+  return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
+}
+
 /** rollout.ts's `degraded` tag when the time budget left no rollout, only the 1-turn estimate. */
 const FALLBACK_TAG = "1-turn";
 
@@ -563,6 +583,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
         ...(rolloutLiveOptions.orderFocusBonus !== undefined ? { orderFocusBonus: rolloutLiveOptions.orderFocusBonus } : {}),
       },
     });
+    // A drink that changes nothing this turn: its line reads the dry line's rollout numbers (they tie), not
+    // numbers of its own that differ only by sampling noise.
+    const plans = result.lines.map((line) => line.plan);
+    const reused = result.lines.map((line): LineEstimate => {
+      const twin = noEffectTwin(line.plan, plans);
+      const dry = twin ? result.lines.find((other) => other.plan === twin) : undefined;
+      return dry ? { ...dry, plan: line.plan, tags: line.tags, score: line.score, currentValue: line.currentValue, sameAsDry: twin! } : line;
+    });
+    if (reused.some((line, i) => line !== result.lines[i])) result.lines = reused;
     const byPlan = new Map(result.lines.map((line) => [line.plan, line]));
     // A line code did not show is only added when it drinks no potion (every modelled potion already
     // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its

@@ -38,7 +38,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
-import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
+import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 
@@ -217,9 +217,15 @@ export const targetOptions: { enabled: boolean } = { enabled: true };
  */
 export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[]): KillGroup[] {
   const idOf = new Map<number, string>();
+  const nameOf = new Map<number, string>();
   asArray(combat["enemies"])
     .map(asRecord)
-    .forEach((enemy, fallbackIndex) => idOf.set(numOrNull(enemy["index"]) ?? fallbackIndex, str(enemy["enemy_id"])));
+    .forEach((enemy, fallbackIndex) => {
+      const index = numOrNull(enemy["index"]) ?? fallbackIndex;
+      idOf.set(index, str(enemy["enemy_id"]));
+      // The game's own name (the sims' may carry a "#2" for one of several of this id).
+      if (str(enemy["name"])) nameOf.set(index, str(enemy["name"]));
+    });
   const groups: KillGroup[] = [];
   for (const enemy of enemies) {
     if (enemy.hp <= 0 || enemy.maxHp >= 1_000_000) continue;
@@ -229,8 +235,13 @@ export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[])
     if (group) {
       group.indices.push(enemy.index);
       group.hp += enemy.hp;
-    } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
+    } else groups.push({ id, name: nameOf.get(enemy.index) || enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
   }
+  // Groups (one id each) sharing a game name get the id part that tells them apart (KYC0RYEN0NVW F28: four of
+  // six Decimillipede kill orders read 「残杀千足虫 > 残杀千足虫 > 残杀千足虫」 and were merged into one entry).
+  distinctNames(groups).forEach((name, i) => {
+    groups[i]!.name = name;
+  });
   // A leader: the one group that is not minions when every other group is (MINION_POWER; they leave when the
   // last non-minion dies, the solver's and the rollout's won check): its death ends the fight (The Kin's
   // Priest). The rollout ranks kill orders by its HP left when no order ends the fight (rollout.ts rankOrders).
@@ -489,14 +500,38 @@ export { mantleHpCost };
  * The board's enemies for the solver. `asc`: the run's ascension, for the monster DB's damage in the
  * Imbalanced stun's saved hit (move-model DamageContext); without it the move model's pooled average.
  */
+/**
+ * Names that tell apart enemies sharing one (KYC0RYEN0NVW F28: the Decimillipede's three segments are all
+ * 「残杀千足虫」, so option text and kill orders could not say which): with different ids, the part of the id
+ * the others do not share ("残杀千足虫 (FRONT)"); with the same id, the board order ("Louse #2"). A name no other
+ * item shares is kept as it is.
+ */
+export function distinctNames(items: { name: string; id: string }[]): string[] {
+  return items.map((item) => {
+    const same = items.filter((other) => other.name === item.name);
+    if (same.length < 2) return item.name;
+    const ids = same.map((other) => other.id);
+    if (new Set(ids).size === ids.length && ids.every((id) => id !== "")) {
+      const parts = ids.map((id) => id.split("_"));
+      let common = 0;
+      while (parts.every((p) => p.length > common + 1 && p[common] === parts[0]![common])) common += 1;
+      const tail = item.id.split("_").slice(common).join("_");
+      return `${item.name} (${tail || item.id})`;
+    }
+    return `${item.name} #${same.indexOf(item) + 1}`;
+  });
+}
+
 export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
-  return asArray(combat["enemies"])
+  const living = asArray(combat["enemies"])
     .map(asRecord)
-    .filter((enemy) => enemy["is_alive"] !== false)
+    .filter((enemy) => enemy["is_alive"] !== false);
+  const names = distinctNames(living.map((enemy) => ({ name: str(enemy["name"], str(enemy["enemy_id"])), id: str(enemy["enemy_id"]) })));
+  return living
     .map((enemy, fallbackIndex) => ({
       index: numOrNull(enemy["index"]) ?? fallbackIndex,
-      name: str(enemy["name"], str(enemy["enemy_id"])),
+      name: names[fallbackIndex]!,
       hp: num(enemy["current_hp"]),
       maxHp: num(enemy["max_hp"]),
       block: num(enemy["block"]),
@@ -914,6 +949,23 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  * when the state has neither (older mod, tests). XPA4 T8/T10: nothing read the piles, so Battle
  * Trance at 1 energy was "+9" with 3 Beckons in a 6-card pile.
  */
+/**
+ * A card exhausted earlier this turn: the exhaust pile now is bigger than at the turn's first combat frame (kept
+ * in memory.turnStartExhaust). The state has no per-turn count (player.cards_exhausted_this_turn is never sent):
+ * 0NZBAVFAT3JG F25 T1, Brand exhausted a Strike, and on the re-ask Evil Eye's extra Block was left out.
+ */
+export function exhaustedSinceTurnStart(env: DecisionEnv): boolean {
+  const size = exhaustPileSize(env.state.raw);
+  if (size === undefined) return false;
+  const key = `${fightKey(env.state)}:${env.state.turn ?? "?"}`;
+  const start = env.screenMemory.turnStartExhaust;
+  if (start?.key !== key) {
+    env.screenMemory.turnStartExhaust = { key, size };
+    return false;
+  }
+  return size > start.size;
+}
+
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
   return pileSize(raw, "exhaust");
@@ -1064,11 +1116,43 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand),
           handLen: handLenAfter(first!, hand),
+          ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
           via,
           enemies: livingEnemySignature(env.state.raw),
           ...(potions !== undefined ? { potions } : {}),
         }
       : null;
+}
+
+/**
+ * After an in-combat card choice: the hand is the expected one less the cards the choice took, some perhaps
+ * upgraded by it (ids compared without the "+"), and still holds a distinct card for every card step left.
+ */
+function leftByChoice(memo: CombatPlanMemo, hand: CardModel[]): boolean {
+  const expected = memo.expectedHand === "" ? [] : memo.expectedHand.split(",").map((id) => id.replace(/\+$/, ""));
+  for (const card of hand) {
+    const at = expected.indexOf(card.cardId);
+    if (at < 0) return false;
+    expected.splice(at, 1);
+  }
+  let left = hand;
+  for (const step of memo.remaining) {
+    if (step.cardId.startsWith("POTION:")) continue;
+    const card = cardFor(step, left);
+    if (!card) return false;
+    left = left.filter((entry) => entry !== card);
+  }
+  return true;
+}
+
+/** A Blessing of the Forge step: it upgrades the hand, so the next step expects the same cards upgraded. */
+function upgradesHand(step: Step): boolean {
+  return step.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE:");
+}
+
+/** A hand signature with the upgrade marks dropped (sorted again: "+" moves a card's place). */
+function withoutUpgrades(signature: string): string {
+  return signature === "" ? "" : signature.split(",").map((id) => id.replace(/\+$/, "")).sort().join(",");
 }
 
 /** Hand size after a step: a card leaves the hand, a potion does not. */
@@ -1179,6 +1263,8 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 
 function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
+  // Before any early return: the turn's first frame sets the exhaust pile it started with.
+  const exhaustedEarlier = exhaustedSinceTurnStart(env);
   const combat = asRecord(state.raw["combat"]);
   const readiness = asRecord(combat["action_readiness"]);
   if (readiness["can_use_combat_actions"] === false) return null;
@@ -1197,7 +1283,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // earlier in the same line: the solver counts both (turn-solver exhaustedCount).
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
-  const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
+  const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0 || exhaustedEarlier;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   const noDraw = relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0;
   if (noDraw) {
@@ -1304,7 +1390,16 @@ function planTurn(env: DecisionEnv): Decision | null {
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
   // After a potion step the belt shows whether it was drunk (the hand does not change).
   const drunk = memo?.potions === undefined || memo.potions === beltSignature(state.raw);
-  const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
+  // Resumed after an in-combat card choice: the choice may have exhausted (True Grit+) or upgraded (Armaments)
+  // hand cards, so the hand only has to be the expected one less what the choice took, still holding the rest
+  // of the line (2MK4V7V3Q5BM F8 T2).
+  // After Blessing of the Forge the same hand, some or all of it upgraded (BXAZ-like lines re-planned at "+").
+  const sameHand =
+    memo !== null &&
+    (memo.expectedHand === handSignature(hand) ||
+      (memo.afterSelection === true && leftByChoice(memo, hand)) ||
+      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))));
+  const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && sameHand;
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
   const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
@@ -1318,7 +1413,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
-      const { potions: _checked, ...kept } = memo;
+      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
@@ -1327,6 +1422,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               remaining: memo.remaining.slice(1),
               expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
               handLen: handLenAfter(next, hand),
+              ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(potions !== undefined ? { potions } : {}),
             }
           : null;
@@ -1822,7 +1918,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   options.splice(0, options.length, ...planOptions);
   const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
   // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
-  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan));
+  // In the question's order (a drink line tied with its dry twin can come first in the rollout's list).
+  const shownOrder = (plan: Plan): number => (shown.includes(plan) ? shown.indexOf(plan) : shown.length + mcMedians.indexOf(plan));
+  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan)).sort((a, b) => shownOrder(a) - shownOrder(b));
   const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const keyOfShown = (plan: Plan): string => (mcMedians.includes(plan) ? mcKey(mcShown.find((mc) => mc.median === plan)!) : `plan${shown.indexOf(plan) + 1}`);
   const tiedKeys = rolloutTied.length >= 2 ? rolloutTied.map(keyOfShown) : [];
@@ -1840,7 +1938,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
+    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
   });
   const rolloutRecord = rollout
@@ -1898,8 +1996,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     enemies: asArray(combat["enemies"])
       .map(asRecord)
       .filter((enemy) => enemy["is_alive"] !== false)
-      .map((enemy) => ({
-        name: str(enemy["name"]),
+      .map((enemy, i, living) => ({
+        // The names the options use (distinctNames: same-named enemies told apart).
+        name: distinctNames(living.map((other) => ({ name: str(other["name"], str(other["enemy_id"])), id: str(other["enemy_id"]) })))[i]!,
         hp: `${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`,
         block: num(enemy["block"]),
         intents: asArray(enemy["intents"]).map((intent) => `${str(asRecord(intent)["intent_type"])} ${str(asRecord(intent)["label"])}`).join(", "),
@@ -1950,7 +2049,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -2210,6 +2309,18 @@ export function potionLethalLines(lethal: Plan[]): Plan[] {
 }
 
 /** The flag on a line that wins the fight only by drinking: which potions it spends. */
+/**
+ * A drink that changes nothing in its line (rollout-live noEffectTwin: the same cards and the same turn without
+ * it; 3SBPKG9603WD F17 T3, Flex after the last attack): said so. The line stays an option; the rollout gives it
+ * the dry line's numbers.
+ */
+export function noEffectNote(plan: Plan, plans: Plan[]): Record<string, JsonValue> {
+  const twin = noEffectTwin(plan, plans);
+  if (!twin) return {};
+  const potions = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));
+  return { potion_no_effect: `${potions.join(", ")}: no effect in this line (this turn is the same as ${twin.steps.map(stepText).join(", ") || "ending the turn"} without it)` };
+}
+
 export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
   if (!plan.outcome.winsFight || !drinksPotion(plan)) return {};
   const names = plan.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.name.replace(/^potion /, ""));

@@ -534,6 +534,8 @@ export interface Outcome {
   exhausted?: number[];
   drawnExhausted?: number;
   randomExhausts?: number;
+  /** Damage a Thrash of this line absorbed (by hand index): the rollout adds it to that Thrash for its later plays. */
+  thrashGrowth?: { index: number; amount: number }[];
 }
 
 export interface Plan {
@@ -642,6 +644,8 @@ interface Sim {
   drawnExhausted: number;
   /** Random exhausts from the hand (plain True Grit): which card went is unknown. */
   randomExhausts: number;
+  /** Damage each Thrash played this turn absorbed (by hand index): added to that Thrash for the fight. */
+  thrashGrowth: { index: number; amount: number }[];
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
@@ -1284,7 +1288,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
       if (Math.floor(exact) === shown) shown = exact;
     }
-    let perHit = shown + next.strength * weakFactor + thrashAbsorb(next, card, player);
+    // Thrash hits for its printed number (3SBP: all 12 plays); what it absorbs is for its later plays.
+    let perHit = shown + next.strength * weakFactor;
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
@@ -1340,6 +1345,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
 
+  thrashAbsorb(next, card, player);
+
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
@@ -1384,19 +1391,24 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 }
 
 /**
- * Thrash (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): an Attack in the hand is exhausted and its
- * damage (printed base, our Strength is already in Thrash's own number) added to both of this play's hits
- * (D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8, 2 x 24 = 48 dealt; the solver counted 32 and took any card).
- * One Attack: that one. Several: the pick is random, so the least damage is counted (never a kill the pick may
- * not give, like randomVictim), the average Attack's value is lost, and no other Attack is planned after it
- * (which one went is unknown; the loop re-plans on the new hand). Skills and Powers stay playable.
- * Returns the damage added per hit.
+ * Thrash (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): after its two hits (at its printed number) an
+ * Attack in the hand is exhausted and that Attack's shown damage (our Strength and Weak in it) is added to this
+ * Thrash's damage for its later plays this fight. 3SBPKG9603WD: all 12 Thrash plays hit for the printed number
+ * (F12 T2: Bash+, Thrash(4) with a Strike in hand dealt 2 x 6 into Vulnerable, not 2 x 15; the old model saw a
+ * lethal, Byrdonis lived at 17); 69 logged absorbs: the next Thrash's base grew by the absorbed card's shown
+ * damage (HGDBHW8CJK8C F20: Strike 6 shown 14 at Strength 8, Thrash base 4 -> 18). The growth is in the outcome
+ * (thrashGrowth); the rollout carries it to the Thrash it puts back in the discard pile.
+ * One Attack: that one. Several: the pick is random, so the least damage counts (like randomVictim), the average
+ * Attack's value is lost, and no other Attack is planned after it (which one went is unknown; the loop re-plans
+ * on the new hand). Skills and Powers stay playable.
  */
-function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): number {
-  if (card.special !== "thrash") return 0;
+function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
+  if (card.special !== "thrash") return;
   const attacks = next.hand.filter((entry) => entry.type === "Attack");
-  if (attacks.length === 0) return 0;
-  const added = (entry: CardModel) => Math.max(0, entry.damageBase ?? entry.damage ?? 0);
+  if (attacks.length === 0) return;
+  const weakFactor = player.weak ? 0.75 : 1;
+  // Its shown damage now: the hand number plus this turn's Strength (Weak-scaled, as the game shows it).
+  const added = (entry: CardModel) => Math.max(0, Math.floor((entry.damage ?? 0) + next.strength * weakFactor));
   const least = attacks.reduce((a, b) => (added(b) < added(a) ? b : a));
   if (attacks.length === 1) {
     next.hand = next.hand.filter((entry) => entry !== least);
@@ -1409,7 +1421,7 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): number {
   }
   next.exhaustedCount += 1;
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
-  return added(least) * (player.weak ? 0.75 : 1);
+  if (added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
@@ -1790,6 +1802,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
+  // Ethereal cards still in hand are exhausted at the end of the turn: Feel No Pain's Block for each, before the
+  // enemies act (7KDMKN16GD6B: Dazed, Clumsy and Ascender's Bane never counted; HP forecasts 9-12 too low).
+  const etherealBlock = winsFight || sim.feelNoPain <= 0 ? 0 : sim.feelNoPain * heldCards.filter((card) => card.ethereal && card.type !== "Potion").length;
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
   const wither = input.wither;
@@ -1808,7 +1823,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
-  const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0) + platingNow;
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2115,7 +2130,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpAfter,
       dies,
       ...(revived ? { revived } : {}),
-      blockGained: sim.blockGained,
+      blockGained: sim.blockGained + etherealBlock,
       // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
       // F17 T8: every line on the blast turn read "dmg 88", "瀑布巨兽 999999889 HP").
       damageDealt: sim.damageDealt - huskDamage,
@@ -2163,6 +2178,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
       ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
+      ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
     },
   };
 }
@@ -2305,6 +2321,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     exhausted: [],
     drawnExhausted: 0,
     randomExhausts: 0,
+    thrashGrowth: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,

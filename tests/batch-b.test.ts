@@ -197,7 +197,7 @@ describe("1. Fairy in a Bottle and Lizard Tail are revives (JR66CJ9T8H7W F48, YQ
   });
 });
 
-describe("2. Thrash takes an Attack from the hand and adds its damage (D4JGCNEL40VL F46 T3: 48 dealt, 32 counted)", () => {
+describe("2. Thrash takes an Attack from the hand; its damage is added to Thrash for later plays (batch E: 3SBPKG9603WD, the play itself hits for the printed number)", () => {
   const thrashRaw = (index: number) => ({
     index,
     card_id: "THRASH",
@@ -220,32 +220,34 @@ describe("2. Thrash takes an Attack from the hand and adds its damage (D4JGCNEL4
     expect(thrash.randomExhaust).toBeFalsy();
   });
 
-  it("one Attack in hand: it is exhausted and its damage lands on both hits; a Skill is still planned after", async () => {
+  it("one Attack in hand: it is exhausted, Thrash hits for its printed 16 and grows by the Attack's 8; a Skill is still planned after", async () => {
     const { modelHandCard } = await import("../src/strategy/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const thrash = modelHandCard(thrashRaw(0), 0, loggedKnowledge);
     const dismantle = card(1, "DISMANTLE", { damage: 8, damageBase: 8, special: "dismantle" });
     const plans = solveTurn({ hand: [thrash, dismantle, defend(2)], player: player({ hp: 60, energy: 2 }), enemies: [enemy({ hp: 100, maxHp: 100, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" }).plans;
     const alone = plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH")!;
-    expect(alone.outcome.damageDealt).toBe(48);
+    expect(alone.outcome.damageDealt).toBe(32);
     expect(alone.outcome.exhausted).toEqual([1]);
+    expect(alone.outcome.thrashGrowth).toEqual([{ index: 0, amount: 8 }]);
     // With the Defend, in either order (one outcome, one line): the Defend is not the one it takes.
     const withDefend = plans.find((plan) => plan.steps.map((step) => step.cardId).sort().join(",") === "DEFEND_IRONCLAD,THRASH");
-    expect(withDefend?.outcome).toMatchObject({ damageDealt: 48, blockGained: 5 });
+    expect(withDefend?.outcome).toMatchObject({ damageDealt: 32, blockGained: 5 });
     // Dismantle absorbed cannot be played after it.
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH,DISMANTLE")).toBe(false);
   });
 
-  it("several Attacks: the least damage counts (the pick is random) and no Attack is planned after it", async () => {
+  it("several Attacks: the least damage is the growth (the pick is random) and no Attack is planned after it", async () => {
     const { modelHandCard } = await import("../src/strategy/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const thrash = modelHandCard(thrashRaw(0), 0, loggedKnowledge);
     const plans = solveTurn({ hand: [thrash, card(1, "BLUDGEON", { cost: 3, damage: 32, damageBase: 32 }), strike(2), defend(3)], player: player({ hp: 60, energy: 2 }), enemies: [enemy({ hp: 100, maxHp: 100, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" }).plans;
     const alone = plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH")!;
-    expect(alone.outcome.damageDealt).toBe(2 * (16 + 6));
+    expect(alone.outcome.damageDealt).toBe(2 * 16);
     expect(alone.outcome.randomExhausts).toBe(1);
+    expect(alone.outcome.thrashGrowth).toEqual([{ index: 0, amount: 6 }]);
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH,STRIKE_IRONCLAD")).toBe(false);
-    expect(plans.some((plan) => plan.steps.map((step) => step.cardId).sort().join(",") === "DEFEND_IRONCLAD,THRASH" && plan.outcome.damageDealt === 44)).toBe(true);
+    expect(plans.some((plan) => plan.steps.map((step) => step.cardId).sort().join(",") === "DEFEND_IRONCLAD,THRASH" && plan.outcome.damageDealt === 32)).toBe(true);
   });
 });
 

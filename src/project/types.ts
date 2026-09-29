@@ -66,6 +66,8 @@ export interface ScreenMemory {
   cardRewardSkipped: boolean;
   /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
   combatPlan: CombatPlanMemo | null;
+  /** The combat plan paused while an in-combat card choice is open (loop.ts noteScreenChange); resumed after it. */
+  pausedCombatPlan?: CombatPlanMemo;
   /**
    * The combat plan's remaining steps when an in-combat card choice opened (the screen change clears
    * combatPlan): an exhaust pick keeps the cards the plan still means to play. Cleared out of combat.
@@ -114,6 +116,11 @@ export interface ScreenMemory {
    */
   turnStartHp?: { key: string; hp: Record<string, number> };
   /**
+   * The exhaust pile's size at the first combat frame of the turn (`key` = fight:turn): a bigger pile later means
+   * a card was exhausted this turn (Evil Eye; combat-plan exhaustedSinceTurnStart).
+   */
+  turnStartExhaust?: { key: string; size: number };
+  /**
    * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
    * no used mark (logged `stack` null, `is_melted` false before and after). `last` is the last combat state
    * read while it is held (combat-plan trackLizardTail). Kept across the run; rebuilt by the journal replay.
@@ -151,6 +158,11 @@ export interface ScreenMemory {
    * is a stale frame (YNMB F4/F7, X226 F6). staleSince: when that stale frame was first seen.
    */
   eventSeen?: { runId: string; eventId: string; floor: number | null; staleSince?: number };
+  /**
+   * An event option chosen with a potion discarded first (every slot full, the option gives a potion; event.ts):
+   * the discard is played, then this option on the same event page.
+   */
+  eventAfterDiscard?: { runId: string; eventId: string; floor: number | null; option: number; title: string; at: number };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };
   /** DeepSeek's one-shot plan for the current shop visit (BUILD_ONESHOT; screens/shop.ts). */
@@ -206,6 +218,16 @@ export interface CombatPlanMemo {
    * whether it was drunk; the belt does. Unset after a card step.
    */
   potions?: string;
+  /**
+   * Resumed after an in-combat card choice (loop.ts noteScreenChange): the choice may have exhausted or upgraded
+   * cards in the hand, so the hand only has to hold what the rest of the line plays (combat-plan.ts).
+   */
+  afterSelection?: boolean;
+  /**
+   * After a Blessing of the Forge step: every card in the hand may come back upgraded, so the hand is compared
+   * without the upgrade marks (combat-plan.ts; the line's cards are the same cards, only better).
+   */
+  upgradeAll?: boolean;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {

@@ -596,6 +596,11 @@ export interface LineEstimate {
   perTurn: TurnSpread[];
   /** modelN: the model's support (logged turns in the matching cell) at the line's end-of-turn state. */
   basis: { rolloutSamples: number; horizon: number; modelN: number; w: number; segment: string; gateN: number };
+  /**
+   * A drink line whose drink changes nothing this turn: the line without it, whose rollout numbers these are
+   * (rollout-live noEffectTwin; the two read tied instead of one winning by sampling noise).
+   */
+  sameAsDry?: Plan;
 }
 
 export interface TurnSpread {
@@ -1253,6 +1258,12 @@ function applyPlan(
     if (card.exhausts || card.type === "Power") continue;
     // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
     const back = handBase[at] ?? card;
+    // Thrash: the damage it absorbed this turn is added to it for its later plays (3SBPKG9603WD).
+    const grown = (o.thrashGrowth ?? []).filter((growth) => growth.index === card.index).reduce((sum, growth) => sum + growth.amount, 0);
+    if (grown > 0 && back.damage !== null) {
+      piles.discard.push({ ...back, damage: back.damage + grown, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + grown } : {}) });
+      continue;
+    }
     piles.discard.push(card.special === "frantic_escape" ? { ...back, cost: Math.max(back.cost, card.cost) + 1 } : back);
   }
   // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit
@@ -1261,7 +1272,9 @@ function applyPlan(
   const exhausted = new Set(o.exhausted ?? []);
   const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
   for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
-  for (const i of unplayed) piles.discard.push(handBase[i] ?? hand[i]!);
+  // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
+  // outcome): they leave the fight, not back through the discard pile.
+  for (const i of unplayed) if (!hand[i]!.ethereal) piles.discard.push(handBase[i] ?? hand[i]!);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn.
   for (let i = 0; i < o.cardsDrawn; i += 1) {

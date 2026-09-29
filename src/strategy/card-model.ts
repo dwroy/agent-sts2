@@ -68,6 +68,8 @@ export interface CardModel {
   playsTop?: number;
   draw: number;
   exhausts: boolean;
+  /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
+  ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
   special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | null;
   /**
@@ -231,8 +233,8 @@ const POWER_AMOUNT_VARS: Record<string, string> = {
 
 const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
-  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: an Attack from the
-  // hand, its damage on both hits; D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8 dealt 2 x 24 = 48).
+  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: hits for its printed
+  // number, then an Attack from the hand is exhausted and its shown damage added to Thrash for later plays; 3SBPKG9603WD).
   THRASH: "thrash",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
@@ -607,6 +609,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
     ...(replayOf(rendered) > 0 ? { replay: replayOf(rendered) } : {}),
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
+    ...((info?.keywords ?? []).some((keyword) => /ethereal/i.test(keyword)) || /(^|\s)虚无(\s|。|$)|\bEthereal\b/.test(rendered) ? { ethereal: true } : {}),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
     // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card

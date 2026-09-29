@@ -290,6 +290,25 @@ describe("rest site: the route rides on the one-shot rest question, with each op
   });
 });
 
+describe("Winged Boots: the nodes its charges reach are route candidates too (batch E, 9GRPS5DC8KHN F28)", () => {
+  it("at the F28 rest site (10,6) with 2 charges: the rest site at (11,2) is offered, marked as spending a charge; the node's own lines are not", () => {
+    const decision = decide(env(board("9grp-f28-rest", "rest"), memoryAt("9grp-f28-rest")));
+    const routes = Object.values(blockOf(decision)!.routes);
+    const detour = routes.find((route) => route["first_node"] === "row 11, column 2 (RestSite)");
+    expect(detour).toMatchObject({ winged_boots: "its first step is off this node's lines: uses 1 of the 2 Winged Boots charges left", path: expect.stringMatching(/^RestSite -> .*Boss$/) });
+    expect(routes.find((route) => route["first_node"] === "row 11, column 5 (Monster)")).not.toHaveProperty("winged_boots");
+  });
+
+  it("without charges left only the node's own lines are candidates", () => {
+    const rest = board("9grp-f28-rest", "rest");
+    const relics = ((rest["run"] as Raw)["relics"] as Raw[]).map((relic) => (relic["relic_id"] === "WINGED_BOOTS" ? { ...relic, stack: 0 } : relic));
+    (rest["run"] as Raw)["relics"] = relics;
+    const block = blockOf(decide(env(rest, memoryAt("9grp-f28-rest"))));
+    for (const route of Object.values(block?.routes ?? {})) expect(route).not.toHaveProperty("winged_boots");
+    expect(Object.values(block?.routes ?? {}).some((route) => route["first_node"] === "row 11, column 2 (RestSite)")).toBe(false);
+  });
+});
+
 describe("rest site route review in the loop", () => {
   it("one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it", async () => {
     const bash = keyOf(board(REST, "rest"), "BASH");
@@ -318,6 +337,17 @@ describe("rest site route review in the loop", () => {
       route_review: { answer: "keep", outcome: "keep", reason: "the plan still fits" },
     });
     expect(records.some((row) => row["label"] === "map/route-change")).toBe(false);
+  });
+
+  it("an unknown option key recovered from the reasoning keeps the answer's route and route_reason (batch E)", async () => {
+    const { client } = await scriptedDeepSeek([
+      { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." },
+      // "heal" is no option key; the reasoning concludes on o0. The route rides in the same answer.
+      { content: '{"choice": "heal", "route": "p1", "route_reason": "the other branch", "reason": "heal before the elite"}', reasoning: "HP 67/77.\nDecisive: o0." },
+    ]);
+    const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
+    const rest = records.find((row) => row["label"] === "rest/plan")!;
+    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", recovered_from_reasoning: expect.any(String), route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
   });
 
   it("a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route", async () => {
