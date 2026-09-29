@@ -92,6 +92,21 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
     expect(endTurn(plans).outcome.hpLoss - only(plans, "POTION:BLOOD_POTION")!.outcome.hpLoss).toBe(16);
   });
 
+  it("Blood Potion heals only the HP missing when drunk (ETYC F19 T1, 69/80: 11 of its 16)", () => {
+    const input = withPotions(logged("etyc-f19-t1-blood"));
+    expect(input.player).toMatchObject({ hp: 69, maxHp: 80 });
+    const plans = solveTurn(input).plans;
+    const blood = plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:BLOOD_POTION")))!;
+    const dry = plans.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
+    // The same cards with and without the drink: the drink is worth the 11 HP missing, not 16.
+    const same = dry.find((plan) => plan.steps.map((step) => step.cardId).join(",") === blood.steps.filter((step) => !step.cardId.startsWith("POTION:")).map((step) => step.cardId).join(","))!;
+    expect(same.outcome.hpLoss - blood.outcome.hpLoss).toBe(11);
+    // At full HP it heals nothing.
+    const full = solveTurn({ ...input, player: { ...input.player, hp: 80 } }).plans;
+    const fullBlood = full.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:BLOOD_POTION"));
+    if (fullBlood) expect(fullBlood.outcome.hpLoss).toBe(endTurn(full).outcome.hpLoss);
+  });
+
   it("Beetle Juice: Shrink on its target, that enemy's attack this turn 30% less (W8JD F31 T3)", () => {
     const input = withPotions(logged("w8jd-f31-t3"));
     const flier = input.enemies.reduce((a, b) => (b.attacks[0]!.damage > a.attacks[0]!.damage ? b : a));
