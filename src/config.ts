@@ -139,6 +139,12 @@ export interface BrainConfig {
     bin: string;
     /** BRAIN_CLAUDE_MAX_BUDGET_USD: --max-budget-usd per call; null = none. */
     maxBudgetUsd: number | null;
+    /**
+     * BRAIN_CLAUDE_SCHEMA: "kind" (default) sends one --json-schema per question kind, so the prompt cache holds
+     * across questions (specs.ts stableSchema); "question" sends the question's own schema (its keys as enums:
+     * format-tight, but every question writes the whole prompt to the cache again).
+     */
+    schema: "kind" | "question";
   };
 }
 
@@ -209,6 +215,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const maxBudgetUsd = budgetRaw === null ? null : Number(budgetRaw);
   if (maxBudgetUsd !== null && !(Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0)) problems.push({ field: "BRAIN_CLAUDE_MAX_BUDGET_USD", message: `expected a positive number, got "${budgetRaw}"` });
   const log = readEnv(env, "BRAIN_LOG");
+  const schemaRaw = (readEnv(env, "BRAIN_CLAUDE_SCHEMA") ?? "kind").toLowerCase();
+  if (schemaRaw !== "kind" && schemaRaw !== "question") problems.push({ field: "BRAIN_CLAUDE_SCHEMA", message: `expected kind or question, got "${schemaRaw}"` });
+  const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
   return {
     engine,
     byPrefix,
@@ -220,6 +229,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     engines,
     claude: {
       bin: readEnv(env, "BRAIN_CLAUDE_BIN") ?? "claude",
+      schema: schemaMode,
       maxBudgetUsd: maxBudgetUsd !== null && Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0 ? maxBudgetUsd : null,
     },
   };

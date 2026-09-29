@@ -3,7 +3,7 @@
  * the prompt on stdin, stdout/stderr collected, killed by PID when the call is aborted.
  */
 import { spawn } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -42,6 +42,33 @@ export interface AgentRun {
 /** A fresh empty directory for one call (removed by the caller with removeDir). */
 export function makeWorkDir(prefix: string): string {
   return mkdtempSync(join(tmpdir(), prefix));
+}
+
+/** The stable per-process working directory in use (one call at a time uses it; others get a random one). */
+const stableInUse = new Set<string>();
+
+/**
+ * An empty working directory for one call at a stable path per process and prefix (created empty, removed by
+ * release). Claude Code writes its working directory into the model's context, so a random path per call
+ * changes the prompt and defeats the prompt cache; a stable one keeps the prefix identical between calls. A call
+ * that overlaps another gets a random directory.
+ */
+export function stableWorkDir(prefix: string): { dir: string; release(): void } {
+  const dir = join(tmpdir(), `${prefix}${process.pid}`);
+  if (stableInUse.has(dir)) {
+    const random = makeWorkDir(prefix);
+    return { dir: random, release: () => removeDir(random) };
+  }
+  stableInUse.add(dir);
+  removeDir(dir);
+  mkdirSync(dir, { recursive: true });
+  return {
+    dir,
+    release: () => {
+      removeDir(dir);
+      stableInUse.delete(dir);
+    },
+  };
 }
 
 export function removeDir(dir: string): void {

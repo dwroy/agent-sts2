@@ -60,7 +60,8 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   const act = Object.keys(record(st["act_routes"]));
   let route: { mode: "review" | "act"; allowed: string[] } | null = null;
   if (review.length > 0) {
-    route = { mode: "review", allowed: ["keep", ...review] };
+    // The routes usually list the current plan as "keep" too: enum values must be unique.
+    route = { mode: "review", allowed: [...new Set(["keep", ...review])] };
     properties["route"] = { type: "string", description: '"keep" (follow the route plan) or another key of state.route_review.routes to switch to it', enum: route.allowed };
     properties["route_reason"] = { type: "string", description: "max 15 words" };
     required.push("route", "route_reason");
@@ -121,6 +122,37 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     },
   };
 }
+
+/**
+ * The same schema for every question of a kind, for engines whose structured-output schema sits in front of the
+ * prompt cache (Claude Code turns --json-schema into a tool definition, which comes before the system prompt):
+ * a per-question schema (its option keys as an enum) would make every question miss the cached prefix. Picks get
+ * one superset shape (choice and reason required; route, route_reason, cards and discard given when the question
+ * asks for them); a shop list loses its step enum; the run and fight plans are the same for every question
+ * already. spec.validate still checks the question's own keys and fields.
+ */
+export function stableSchema(spec: AnswerSpec): JsonSchema {
+  if (spec.kind === "pick") return STABLE_PICK_SCHEMA;
+  const plan = spec.schema.properties?.["plan"];
+  if (plan?.items?.enum) {
+    return { ...spec.schema, properties: { ...spec.schema.properties, plan: { ...plan, items: { type: "string" } } } };
+  }
+  return spec.schema;
+}
+
+const STABLE_PICK_SCHEMA: JsonSchema = {
+  type: "object",
+  properties: {
+    choice: { type: "string", description: "one option key exactly as given in options" },
+    reason: { type: "string", description: "max 25 words" },
+    route: { type: "string", description: 'only when the question asks for a route: "keep" or a key of state.route_review.routes, or a key of state.act_routes' },
+    route_reason: { type: "string", description: "only with a route review: max 15 words" },
+    cards: { type: "array", description: "only when the chosen option lists eligible_cards: the deck card keys it takes", items: { type: "string" } },
+    discard: { type: "array", description: 'only for a "discard, then …" option (key ending ":discard"): the potion slot numbers it discards first', items: { type: "integer" } },
+  },
+  required: ["choice", "reason"],
+  additionalProperties: false,
+};
 
 /** A shop visit as one ordered shopping list (screens/shop.ts parseShopPlan is the final judge). */
 export function shopPlanSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {

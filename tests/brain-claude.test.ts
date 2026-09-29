@@ -13,7 +13,7 @@ import { createBrain } from "../src/brain/brain.js";
 import { claudeFailure, ClaudeEngine } from "../src/brain/engines/claude.js";
 import { agentEnv } from "../src/brain/engines/process.js";
 import { EngineFailure } from "../src/brain/router.js";
-import { pickSpec, runPlanSpec } from "../src/brain/specs.js";
+import { pickSpec, runPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
@@ -107,7 +107,8 @@ describe("claude engine", () => {
     // No tools: no MCP server at all, no --bare (the login is used).
     expect(seen.argv).not.toContain("--mcp-config");
     expect(seen.argv).not.toContain("--bare");
-    expect(JSON.parse(flag("--json-schema")!)).toEqual(pickSpec("rest/plan", options, {}).schema);
+    // One schema per question kind by default (the prompt cache holds across questions); the router checks the keys.
+    expect(JSON.parse(flag("--json-schema")!)).toEqual(stableSchema(pickSpec("rest/plan", options, {})));
     expect(seen.system).toBe("SYSTEM PROMPT");
     // The v3 user message layout.
     expect(JSON.parse(seen.stdin)).toEqual({ memory: { act: "第1幕" }, state: { hp: 20 }, question: "Heal or smith?", options });
@@ -126,8 +127,10 @@ describe("claude engine", () => {
 
   it("picks the model per question kind and reports the model that answered", async () => {
     const fake = fakeClaude("opus", success({ choice: "a", reason: "heal" }, "claude-opus-5"));
-    const answer = await engine(fake.bin, { BRAIN_CLAUDE_MODEL: "sonnet", BRAIN_CLAUDE_MODEL_REST: "opus", BRAIN_CLAUDE_EFFORT: "high" }).decide(request());
+    const answer = await engine(fake.bin, { BRAIN_CLAUDE_MODEL: "sonnet", BRAIN_CLAUDE_MODEL_REST: "opus", BRAIN_CLAUDE_EFFORT: "high", BRAIN_CLAUDE_SCHEMA: "question" }).decide(request());
     const seen = fake.seen();
+    // BRAIN_CLAUDE_SCHEMA=question: the question's own schema, its keys as an enum.
+    expect(JSON.parse(seen.argv[seen.argv.indexOf("--json-schema") + 1]!)).toEqual(pickSpec("rest/plan", options, {}).schema);
     expect(seen.argv[seen.argv.indexOf("--model") + 1]).toBe("opus");
     expect(seen.argv[seen.argv.indexOf("--effort") + 1]).toBe("high");
     expect(answer.model).toBe("claude-opus-5");

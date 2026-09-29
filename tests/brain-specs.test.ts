@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 
 import { normalisePick, parseAnswerText, reaskMessage, userMessage } from "../src/brain/message.js";
-import { fightPlanFromSchema, fightPlanSpec, pickSpec, runPlanSpec, shopPlanSpec } from "../src/brain/specs.js";
+import { fightPlanFromSchema, fightPlanSpec, pickSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { choiceMessage, taskMessage } from "../src/llm/deepseek-message.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
@@ -27,6 +27,8 @@ describe("pick spec", () => {
     const review = pickSpec("reward/card", { a: null }, { route_review: { routes: { r2: "x" } } });
     expect(review.schema.properties!["route"]!.enum).toEqual(["keep", "r2"]);
     expect(review.schema.required).toEqual(["choice", "reason", "route", "route_reason"]);
+    // A review whose routes include "keep" itself: still one "keep" (a JSON Schema enum must be unique).
+    expect(pickSpec("reward/card", { a: null }, { route_review: { routes: { keep: "x", r2: "y" } } }).schema.properties!["route"]!.enum).toEqual(["keep", "r2"]);
   });
 
   it("names each problem specifically", () => {
@@ -39,6 +41,21 @@ describe("pick spec", () => {
     expect(spec.validate({ choice: "o0", reason: "x", route: "r7" })).toEqual(["route \"r7\" is not one of r0, r1"]);
     expect(spec.validate({ reason: "x", route: "r0" })).toEqual(['missing "choice"']);
     expect(spec.validate("o0")).toEqual(["the answer is not a JSON object"]);
+  });
+});
+
+describe("stable schemas (one per question kind)", () => {
+  it("picks share one superset schema; a shop list drops its step enum; plans stay as they are", () => {
+    const one = stableSchema(pickSpec("reward/card", { card0: null, skip: null }, {}));
+    const other = stableSchema(pickSpec("event/choose", { o0: null, "o1:discard": null }, { act_routes: { r0: "x" } }));
+    expect(other).toEqual(one);
+    expect(one.required).toEqual(["choice", "reason"]);
+    expect(Object.keys(one.properties!)).toEqual(["choice", "reason", "route", "route_reason", "cards", "discard"]);
+    expect(JSON.stringify(one)).not.toContain('"enum"');
+    const shop = stableSchema(shopPlanSpec("shop/plan", { buy_card0: null, leave: null }, {}));
+    expect(shop.properties!["plan"]!.items).toEqual({ type: "string" });
+    expect(stableSchema(runPlanSpec())).toEqual(runPlanSpec().schema);
+    expect(stableSchema(fightPlanSpec())).toEqual(fightPlanSpec().schema);
   });
 });
 

@@ -2,11 +2,16 @@
  * Claude as a brain engine: headless Claude Code (`claude -p`) under this machine's Claude login (the
  * subscription; Dai 2026-09-29), one process per call. Mainly for the offline learner later; also a game engine.
  *
- * - The answer: --json-schema with the question's schema; the CLI returns it as `structured_output` in its
- *   --output-format json result, with usage and total_cost_usd (under the login: the API-price equivalent).
+ * - The answer: --json-schema; the CLI returns it as `structured_output` in its --output-format json result,
+ *   with usage and total_cost_usd (under the login: the API-price equivalent). The CLI turns the schema into a
+ *   tool definition that precedes the system prompt in the cache prefix, so by default it is the same for every
+ *   question of a kind (specs.ts stableSchema; BRAIN_CLAUDE_SCHEMA=question sends the question's own) and the
+ *   router's validation checks the question's keys.
  * - The context is ours only: --system-prompt-file replaces Claude Code's prompt; --setting-sources "" loads no
  *   user/project/local settings, so no hooks (the global SessionStart memory hook), no user plugins, no
- *   CLAUDE.md; the working directory is a fresh empty temp dir (no project memory, nothing to read).
+ *   CLAUDE.md; the working directory is an empty temp dir, created for the call and removed after it, at the
+ *   same path for every call of the process (the path is in the model's context: a new one per call would
+ *   defeat the prompt cache).
  *   Measured 2026-09-29 (experiments/brain-replay/claude-isolation.md): what remains is Claude Code's own
  *   identity line, an environment note (temp cwd, OS), the model name, the date and the login's e-mail.
  *   --safe-mode is not used: it drops --mcp-config servers too. --bare is not used: it ignores the login.
@@ -28,8 +33,9 @@ import type { BrainConfig, BrainEngineSettings } from "../../config.js";
 import { claudeMcpConfig, MCP_SERVER_NAME } from "../../tools/mcp-launch.js";
 import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask, TOOLS_NOTE } from "../message.js";
+import { stableSchema } from "../specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
-import { agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
+import { agentEnv, runAgent, stableWorkDir } from "./process.js";
 
 type Json = Record<string, unknown>;
 
@@ -41,11 +47,11 @@ export interface ClaudeEngineOptions {
 }
 
 /** The CLI's arguments for one call (exported for tests). */
-export function claudeArgs(req: BrainRequest, opts: { model: string; effort: string | null; systemFile: string; mcpConfig: string | null; maxBudgetUsd: number | null }): string[] {
+export function claudeArgs(req: BrainRequest, opts: { model: string; effort: string | null; systemFile: string; mcpConfig: string | null; maxBudgetUsd: number | null; schema?: "kind" | "question" }): string[] {
   return [
     "-p",
     "--output-format", "json",
-    "--json-schema", JSON.stringify(req.spec.schema),
+    "--json-schema", JSON.stringify(opts.schema === "question" ? req.spec.schema : stableSchema(req.spec)),
     "--system-prompt-file", opts.systemFile,
     "--tools", "",
     "--strict-mcp-config",
@@ -135,7 +141,10 @@ export class ClaudeEngine implements BrainEngine {
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
     const tools = req.tools ?? [];
     if (tools.length > 0 && !req.toolContext) throw new Error("tools given without a toolContext");
-    const work = makeWorkDir("jev-brain-claude-");
+    // Empty, and at the same path for every call of this process: Claude Code puts the working directory in the
+    // model's context, and a changing path would defeat the prompt cache.
+    const workDir = stableWorkDir("jev-brain-claude-");
+    const work = workDir.dir;
     try {
       // The system prompt goes in a file: it holds knowledge text (no secrets) and can outgrow an argument.
       const systemFile = join(work, "system.md");
@@ -150,7 +159,7 @@ export class ClaudeEngine implements BrainEngine {
       }
       const effort = req.effort ?? this.opts.settings.effort;
       const model = this.modelFor(req.label);
-      const args = claudeArgs(req, { model, effort, systemFile, mcpConfig, maxBudgetUsd: this.opts.claude.maxBudgetUsd });
+      const args = claudeArgs(req, { model, effort, systemFile, mcpConfig, maxBudgetUsd: this.opts.claude.maxBudgetUsd, schema: this.opts.claude.schema });
       const run = await runAgent(this.opts.claude.bin, args, { cwd: work, env: agentEnv(), stdin: promptWithReask(req), ...(signal ? { signal } : {}) });
       const toolCalls = readRecords(recordFile);
       const result = claudeResult(run.stdout);
@@ -186,7 +195,7 @@ export class ClaudeEngine implements BrainEngine {
         native: { num_turns: result["num_turns"], duration_api_ms: result["duration_api_ms"], permission_denials: result["permission_denials"] },
       };
     } finally {
-      removeDir(work);
+      workDir.release();
     }
   }
 }
