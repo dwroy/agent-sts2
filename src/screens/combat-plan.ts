@@ -910,6 +910,17 @@ export const CLOAK_CLASP_BLOCK = 1;
  * a turn ended with 1, 2 or 3 energy unspent began the next at 5 (45, 12 and 3 turns; 0 unspent: 3, base 3).
  */
 export const PAELS_TEARS_ENERGY = 2;
+/**
+ * Red Skull: 「当你的生命值低于或等于{HpThreshold}%时，你额外获得{StrengthPower}点力量」 — 50% and 3 (logged over 16 runs:
+ * +3 at 43 of 48 crossings to half HP or below with no other Strength change, -3 back above; 40/80 counts).
+ */
+export const RED_SKULL_STRENGTH = 3;
+/**
+ * Self-Forming Clay: 「每当你在战斗中失去生命，就在下回合获得{BlockNextTurn}点格挡」 — 3 per HP loss (logged V6TW, 2VW5,
+ * JF8N, YG3H: SELF_FORMING_CLAY_POWER +3 at each of 50 HP losses on our turn; the next turn starts with that much
+ * block, e.g. V6TW F33 T2/T3 6 from two losses).
+ */
+export const CLAY_BLOCK = 3;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1422,6 +1433,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     turnStartAoe: turnStartAoe(relicIds, player),
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     ...(relicIds.includes("PAELS_TEARS") ? { paelsTears: PAELS_TEARS_ENERGY } : {}),
+    ...(relicIds.includes("RED_SKULL") ? { redSkull: RED_SKULL_STRENGTH } : {}),
+    ...(relicIds.includes("SELF_FORMING_CLAY") ? { clayBlock: CLAY_BLOCK, clayPending: powerAmount(player, "SELF_FORMING_CLAY_POWER") } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).

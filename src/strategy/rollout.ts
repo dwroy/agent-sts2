@@ -878,6 +878,14 @@ interface SimPlayer {
   pyre: number;
   /** Thorns up (THORNS_POWER, Liquid Bronze's 3 a drink): damage back per enemy attack hit, for the fight. */
   thorns: number;
+  /**
+   * Red Skull held: the Strength it gives at or below half HP (0 without it), and whether it is in `strength` now;
+   * re-read from HP at the start of every turn.
+   */
+  redSkull: number;
+  skullUp: boolean;
+  /** Self-Forming Clay: the block the last turn's HP losses give at the start of this one (Outcome.clayBlockNext). */
+  clayNext: number;
   /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
   radiance: number;
   /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
@@ -1176,6 +1184,14 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
   player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
+  // Self-Forming Clay's block for the last turn's HP losses.
+  player.block += player.clayNext;
+  player.clayNext = 0;
+  // Red Skull: on at or below half HP, off above it (the HP the enemy turn left).
+  if (player.redSkull > 0 && (player.hp * 2 <= player.maxHp) !== player.skullUp) {
+    player.skullUp = !player.skullUp;
+    player.strength += player.skullUp ? player.redSkull : -player.redSkull;
+  }
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
@@ -1381,6 +1397,8 @@ function applyPlan(
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
   player.paelsNext = o.nextTurnEnergy ?? 0;
+  // Self-Forming Clay: this turn's HP losses give the next turn's block.
+  player.clayNext = o.clayBlockNext ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
@@ -1675,6 +1693,9 @@ function simulate(
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
     thorns: input.playerPowers["THORNS_POWER"] ?? 0,
+    redSkull: base.redSkull ?? 0,
+    skullUp: (base.redSkull ?? 0) > 0 && base.hp * 2 <= base.maxHp,
+    clayNext: 0,
     radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
     strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
@@ -1862,6 +1883,8 @@ function simulate(
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
+      // Self-Forming Clay: what the decision turn owed is in this turn's block already.
+      clayPending: 0,
       duplicate: 0,
       buffer: 0,
       vigor: 0,

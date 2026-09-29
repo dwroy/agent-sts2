@@ -9,7 +9,7 @@ import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -116,5 +116,102 @@ describe("1. Liquid Bronze: Thorns 3 for the rest of the fight, in the solver an
     const lines = Object.values(question.type === "choice" ? question.criteria : {}).map((text) => JSON.parse(String(text)) as Raw);
     expect(lines.some((line) => /not simulated/.test(String(line["plays"])) && /流动铜液/.test(String(line["plays"])))).toBe(false);
     expect(lines.some((line) => /流动铜液/.test(String(line["plays"])) && line["simulated"] === undefined)).toBe(true);
+  });
+});
+
+describe("2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+    solveTap.onSolve = null;
+  });
+
+  const bleed = (i: number) => card(i, "BLEED", { type: "Skill", cost: 0, target: "self", validTargets: [], hpLoss: 3 });
+
+  it("solver, Red Skull: an HP loss on our turn that takes us to half adds 3 to the Attacks after it; a heal back above takes it off", () => {
+    const hand = [bleed(0), card(1, "STRIKE", { damage: 6, damageBase: 6 })];
+    const input = (redSkull?: number, hp = 42): SolverInput => ({ hand, player: player({ hp, energy: 1, ...(redSkull ? { redSkull } : {}) }), enemies: [enemy()], fightKind: "monster", turn: 1 });
+    const line = (plans: ReturnType<typeof solveTurn>["plans"]) => plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "BLEED,STRIKE")!;
+    expect(line(solveTurn(input(3)).plans).outcome.damageDealt).toBe(9);
+    expect(line(solveTurn(input()).plans).outcome.damageDealt).toBe(6);
+    // Already at half (the shown damage has it): no second +3.
+    expect(line(solveTurn(input(3, 38)).plans).outcome.damageDealt).toBe(6);
+    // A Blood Potion (20% of 80 = 16) from 38 to 54 takes it off.
+    const blood = { ...modelPotion("BLOOD_POTION", "血液药水", 0, [], 0)!, cost: 0 };
+    const healed: SolverInput = { hand: [blood, card(1, "STRIKE", { damage: 9, damageBase: 6 })], player: player({ hp: 38, energy: 1, redSkull: 3 }), enemies: [enemy()], fightKind: "monster", turn: 1 };
+    const drinkFirst = solveTurn(healed).plans.find((plan) => plan.steps.length === 2 && plan.steps[0]!.cardId.startsWith("POTION:"))!;
+    expect(drinkFirst.outcome.damageDealt).toBe(6);
+  });
+
+  it("solver, Self-Forming Clay: next turn's block is 3 per HP loss (ours, each enemy hit past block) plus what is owed", () => {
+    const hand = [bleed(0)];
+    const input = (over: Partial<PlayerSim>): SolverInput => ({ hand, player: player({ energy: 1, ...over }), enemies: [enemy({ attacks: [{ damage: 5, hits: 2 }] })], fightKind: "monster", turn: 1 });
+    const plans = solveTurn(input({ clayBlock: 3, clayPending: 3 })).plans;
+    const bleedLine = plans.find((plan) => plan.steps.length === 1)!;
+    const endTurn = plans.find((plan) => plan.steps.length === 0)!;
+    expect(endTurn.outcome.clayBlockNext).toBe(3 + 3 * 2);
+    expect(bleedLine.outcome.clayBlockNext).toBe(3 + 3 * 3);
+    // Block that stops a hit: no loss from it.
+    expect(solveTurn(input({ clayBlock: 3, block: 5 })).plans.find((plan) => plan.steps.length === 0)!.outcome.clayBlockNext).toBe(3);
+    expect(solveTurn(input({})).plans.find((plan) => plan.steps.length === 0)!.outcome.clayBlockNext).toBeUndefined();
+  });
+
+  const WAIT_META: FightMeta = { ...META, deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 } };
+  const rollout = (solver: SolverInput, table: EnemyTable, draw: CardModel[]) => {
+    const endTurn = solveTurn(solver).plans.find((plan) => plan.steps.length === 0)!;
+    let t = 0;
+    return rolloutDecision({
+      solver,
+      plans: [endTurn],
+      enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+      tables: { X: table },
+      piles: { draw, discard: [], handBase: solver.hand.map(() => null) },
+      meta: WAIT_META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 1, horizon: 2, samples: 2, now: () => (t += 0.01) },
+    }).lines[0]!;
+  };
+
+  it("rollout, Red Skull: the enemy turn takes us to half, the next turn's Strikes deal 3 more each", () => {
+    const HIT: EnemyTable = { moves: { HIT: { damage: 12, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const strikes = Array.from({ length: 10 }, (_, i) => card(10 + i, "STRIKE", { damage: 6, damageBase: 6 }));
+    const run = (redSkull?: number) => rollout({ hand: [], player: player({ hp: 50, energy: 3, ...(redSkull ? { redSkull } : {}) }), enemies: [enemy({ hp: 500, maxHp: 500, attacks: [{ damage: 12, hits: 1 }] })], fightKind: "monster", turn: 1 }, HIT, strikes);
+    // 3 energy, 3 Strikes on turn 2: 18, or 27 at 38/80 with Red Skull.
+    expect(run().perTurn[0]!.dmg.mean).toBe(18);
+    expect(run(3).perTurn[0]!.dmg.mean).toBe(27);
+  });
+
+  it("rollout, Self-Forming Clay: two hits taken give the next turn 6 block (10 lost becomes 4)", () => {
+    const HIT: EnemyTable = { moves: { HIT: { damage: 5, hits: 2, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const junk = Array.from({ length: 10 }, (_, i) => card(10 + i, "NOTHING", { type: "Skill", cost: 0, target: "self", validTargets: [] }));
+    const run = (clay: boolean) => rollout({ hand: [], player: player({ hp: 60, energy: 3, ...(clay ? { clayBlock: 3 } : {}) }), enemies: [enemy({ hp: 500, maxHp: 500, attacks: [{ damage: 5, hits: 2 }] })], fightKind: "monster", turn: 1 }, HIT, junk);
+    expect(run(false).perTurn[0]!.loss.mean).toBe(10);
+    expect(run(true).perTurn[0]!.loss.mean).toBe(4);
+  });
+
+  it("logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const inputs: SolverInput[] = [];
+    solveTap.onSolve = (input) => inputs.push(input);
+    planCombatTurn(loggedEnv(logged("batch-i/vtre-f33-t5-red-skull")));
+    const skull = inputs[0]!;
+    expect(skull.player.redSkull).toBe(3);
+    // Taunt, Frantic Escape, then Offering (6 HP: 46 -> 40, half of 80) before or after the Strike.
+    const damage = (input: SolverInput, first: string, second: string) =>
+      solveTurn(input).plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === `TAUNT,FRANTIC_ESCAPE,${first},${second}`)?.outcome.damageDealt;
+    const { redSkull: _r, ...without } = skull.player;
+    const plain = [damage({ ...skull, player: without }, "OFFERING", "STRIKE_IRONCLAD"), damage({ ...skull, player: without }, "STRIKE_IRONCLAD", "OFFERING")].filter((x) => x !== undefined);
+    expect(plain.length).toBeGreaterThan(0);
+    expect(new Set(plain).size).toBe(1);
+    expect(damage(skull, "OFFERING", "STRIKE_IRONCLAD")! - plain[0]!).toBeGreaterThan(0);
+    expect(damage(skull, "STRIKE_IRONCLAD", "OFFERING")).toBe(plain[0]);
+    inputs.length = 0;
+    planCombatTurn(loggedEnv(logged("batch-i/v6tw-f33-t2-clay")));
+    expect(inputs[0]!.player).toMatchObject({ clayBlock: 3, clayPending: 3 });
   });
 });
