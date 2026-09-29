@@ -64,6 +64,7 @@ A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「�
 接口在 `src/tools/types.ts`：`ToolDef { name, description, inputSchema, run(input, ctx) }`。
 
 - 工具分三类：知识库（kb_*，只读、确定性）、模拟器（sim_*，只读、确定性）、游戏（game_state 只读；game_act 经执行闸执行动作，只在行动模式开放）。
+- 日志库（09-29 Dai 定用 DuckDB）：logs/*.jsonl 增量派生成 Parquet 分析库 .cache/logdb（JSONL 仍是唯一原始记录），表 runs / floors / fights / turns / decisions / llm_calls / run_plans / state_index；查询入口 tools/logdb/query.py，工具 `logs_query`（只读 SQL）。见 docs/logdb.md。
 - 知识文本在程序启动时从数据文件渲染（monster-db.json、experience.json、room-costs.json、outcome-stats.json 每局结束后已自动刷新，所以不另挂 report.py）：
   - 怪物：只写当前进阶，没有当前进阶数据时按比例推算并标「估」，每个数带 n；
   - 经验：按主题分块，每条「结论 + 局数 + 一两个典型案例（run id + 一句话）」；
