@@ -231,7 +231,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // DG1CDGW8Y5JE and VKPXGMV8YV31 from full HP; Sloth (3 cards a turn) costs nothing to a deck that
   // plays 3 a turn, but Y3XT F33 T5 took it with Hellraiser up: the auto-played Strikes used the cap and
   // Impervious / Defend / a finisher were locked T6-T8 (64 -> 12 HP). Rupture turns Disintegration into
-  // Strength, so then it is the pick; Disintegration that would eat the HP left is the last one.
+  // Strength, so then it is the pick; Disintegration that would eat the HP left is the last one, Rupture or not.
   const curseIds = candidates.map((card) => str(card["card_id"]));
   if (curseIds.length > 1 && curseIds.every((id) => KNOWLEDGE_CURSES.has(id))) {
     const turn = state.turn ?? 1;
@@ -447,7 +447,9 @@ export interface CurseInputs {
  *   15 when unknown), and the lost cards' block (the deck's block-card share of the hand-played
  *   cards x their mean Block) is lost on each of the N' turns;
  * - Disintegration costs its amount x N (Rupture: -1, it is the pick), and when it with the one
- *   already on us and a 20 HP margin exceeds the HP it ranks last whatever the others cost (PU21 T9).
+ *   already on us and a 20 HP margin exceeds the HP it ranks last whatever the others cost (PU21 T9),
+ *   Rupture or not: Rupture's Strength does not stop the HP loss (79YR F33 T5, 17 HP, Rupture 2: 7 x 6.9
+ *   turns + 20 > 17 was ranked first as "Rupture: Strength"; T6 slap 19 + Disintegration 7, every line died).
  */
 export function curseCosts(combat: Record<string, unknown>, inputs: CurseInputs): { rank: (id: string) => number; text: (id: string) => string; basis: string } {
   const { turn, deck } = inputs;
@@ -488,17 +490,17 @@ export function curseCosts(combat: Record<string, unknown>, inputs: CurseInputs)
   };
   const disintegrationTotal = has("DISINTEGRATION_POWER") + inputs.disintegration;
   const outlastsHp = disintegrationTotal * turnsLeft + CURSE_HP_MARGIN > hp;
+  const rupture = has("RUPTURE_POWER") > 0;
   const cost = (id: string): number => {
-    if (id === "DISINTEGRATION") return has("RUPTURE_POWER") > 0 ? -1 : inputs.disintegration * turnsLeft;
+    if (id === "DISINTEGRATION") return rupture ? -1 : inputs.disintegration * turnsLeft;
     return cardCost(lostCards[id] ?? 0);
   };
+  // Rupture's gain and the "outlasts the HP" gate apart: the gate is the death the HP loss brings, not a trade.
   return {
-    rank: (id) => (id === "DISINTEGRATION" && has("RUPTURE_POWER") === 0 && outlastsHp ? 1e6 : 0) + cost(id),
+    rank: (id) => (id === "DISINTEGRATION" && outlastsHp ? 1e6 : 0) + cost(id),
     text: (id) =>
       id === "DISINTEGRATION"
-        ? has("RUPTURE_POWER") > 0
-          ? "Rupture: Strength"
-          : `${Math.round(cost(id))}${outlastsHp ? " (outlasts the HP)" : ""}`
+        ? `${rupture ? "Rupture: Strength" : Math.round(cost(id))}${outlastsHp ? ` (outlasts the HP: ${disintegrationTotal} a turn x ${turnsLeft.toFixed(1)} turns + ${CURSE_HP_MARGIN} > ${hp} HP)` : ""}`
         : `${Math.round(cost(id))} (${(lostCards[id] ?? 0).toFixed(1)} cards a turn)`,
     basis: `${Math.round(perTurn)} dmg/turn, ${turnsLeft.toFixed(1)} turns left, ${cards.toFixed(1)} cards/turn (${autoPlays.toFixed(1)} auto), ${Math.round(incoming)} incoming`,
   };
