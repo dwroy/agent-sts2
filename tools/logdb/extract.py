@@ -13,7 +13,7 @@ import json
 import re
 
 # Bumped per source when its extractor or columns change: sync.py rebuilds that source's shards.
-VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 1, "run-plans": 1}
+VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1}
 
 KEY_RE = re.compile(r"(sk-(?:ant-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._~+/-]{16,}|(?:api[_-]?key|x-api-key)[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{12,})", re.I)
 AGENT_VIEW = b',"agent_view":'
@@ -71,6 +71,9 @@ TABLES = {
         ("options", "VARCHAR[]"), ("choice", "VARCHAR"), ("reason", "VARCHAR"),
         ("question_chars", "INTEGER"), ("reasoning_chars", "INTEGER"), ("memory_chars", "INTEGER"), ("answer_chars", "INTEGER"),
         ("parse_error", "BOOLEAN"),
+        # brain.jsonl only (NULL on deepseek-reasoning rows):
+        ("cache_write_tokens", "INTEGER"), ("system_chars", "INTEGER"), ("reasks", "INTEGER"), ("fallback_kind", "VARCHAR"),
+        ("error_kind", "VARCHAR"), ("error", "VARCHAR"),
     ],
     "run_plans": [
         ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("run_id", "VARCHAR"), ("floor", "INTEGER"), ("trigger", "VARCHAR"),
@@ -442,13 +445,6 @@ def run_row(raw, off):
 # ---------------------------------------------------------------- deepseek-reasoning.jsonl, brain.jsonl -> llm_calls_raw
 
 
-def first(record, *keys):
-    for key in keys:
-        if isinstance(record, dict) and record.get(key) is not None:
-            return record[key]
-    return None
-
-
 def deepseek_call_row(raw, off):
     record = json.loads(raw)
     usage = record.get("usage") if isinstance(record.get("usage"), dict) else {}
@@ -486,45 +482,70 @@ def deepseek_call_row(raw, off):
     }
 
 
+def memory_size(memory):
+    """Characters of a run memory: a string, or named sections (the sum of their lengths, like v3's memoryChars)."""
+    if isinstance(memory, dict):
+        return sum(len(v) if isinstance(v, str) else text_len(v) for v in memory.values() if v is not None)
+    return text_len(memory)
+
+
 def brain_call_row(raw, off):
-    """logs/brain.jsonl (V4 router, one line per brain call). The format is new, so field names are read in both
-    camelCase (BrainAnswer) and snake_case; whatever is missing stays NULL."""
+    """logs/brain.jsonl: one row per brain question, as src/brain/router.ts writes it (BrainLogRow): ts, label,
+    engine, model, system_sha, system_chars, memory (string or sections), question, options {key: criteria},
+    payload, tools, tool_calls [...], answer (null when it failed), problems, reasks, attempts, latency_ms,
+    usage {inputTokens, cacheHitTokens?, cacheWriteTokens?, outputTokens, reasoningTokens?, costUsd?},
+    first?, fell_back_from? {engine, error, kind}, error?, error_kind?, raw?, reasoning_chars?.
+    The router writes no run id (llm_calls gives the row its run by time) and no effort. Usage covers every
+    model call of the question (re-asks summed); inputTokens counts cached tokens too."""
     record = json.loads(raw)
-    usage = first(record, "usage") if isinstance(first(record, "usage"), dict) else {}
-    answer = first(record, "answer")
-    fell = first(record, "fellBackFrom", "fell_back_from", "fallback")
-    tool_calls = first(record, "toolCalls", "tool_calls")
-    label = first(record, "label")
-    options = first(record, "options")
+    usage = record.get("usage") if isinstance(record.get("usage"), dict) else {}
+    answer = record.get("answer")
+    fell = record.get("fell_back_from") if isinstance(record.get("fell_back_from"), dict) else {}
+    tool_calls = record.get("tool_calls")
+    label = record.get("label")
+    options = record.get("options")
+    if isinstance(options, dict):
+        options = list(options.keys())
+    error = record.get("error")
+    reasoning_chars = to_int(record.get("reasoning_chars"))
+    if reasoning_chars is None and record.get("reasoning") is not None:
+        reasoning_chars = text_len(record.get("reasoning"))
     return {
         "src": "brain",
         "off": off,
         "len": len(raw),
-        "ts": to_ts(first(record, "ts")),
-        "run_id": run_id_of(first(record, "run_id", "runId")),
+        "ts": to_ts(record.get("ts")),
+        "run_id": run_id_of(record.get("run_id")),
         "label": to_str(label),
         "label_head": label_head(label),
-        "engine": to_str(first(record, "engine")),
-        "model": to_str(first(record, "model")),
-        "effort": to_str(first(record, "effort")),
-        "guide": to_str(first(record, "system_hash", "systemHash")),
-        "input_tokens": to_int(first(usage, "inputTokens", "input_tokens")),
-        "cache_hit_tokens": to_int(first(usage, "cacheHitTokens", "cache_hit_tokens")),
-        "output_tokens": to_int(first(usage, "outputTokens", "output_tokens")),
-        "reasoning_tokens": to_int(first(usage, "reasoningTokens", "reasoning_tokens")),
-        "cost_usd": to_float(first(usage, "costUsd", "cost_usd")),
-        "latency_ms": to_int(first(record, "latencyMs", "latency_ms")),
-        "attempts": to_int(first(record, "attempts")),
-        "tool_calls": len(tool_calls) if isinstance(tool_calls, list) else to_int(tool_calls),
-        "fallback_from": scrub(fell, 300) if fell else None,
+        "engine": to_str(record.get("engine")),
+        "model": to_str(record.get("model")),
+        "effort": to_str(record.get("effort")),
+        "guide": to_str(record.get("system_sha")),
+        "input_tokens": to_int(usage.get("inputTokens")),
+        "cache_hit_tokens": to_int(usage.get("cacheHitTokens")),
+        "output_tokens": to_int(usage.get("outputTokens")),
+        "reasoning_tokens": to_int(usage.get("reasoningTokens")),
+        "cost_usd": to_float(usage.get("costUsd")),
+        "latency_ms": to_int(record.get("latency_ms")),
+        "attempts": to_int(record.get("attempts")),
+        "tool_calls": len(tool_calls) if isinstance(tool_calls, list) else None,
+        "fallback_from": to_str(fell.get("engine")) if fell else None,
         "options": [to_str(o) for o in options] if isinstance(options, list) else None,
-        "choice": to_str(first(answer, "choice")) if isinstance(answer, dict) else None,
-        "reason": scrub(first(answer, "reason"), 1000) if isinstance(answer, dict) else None,
-        "question_chars": text_len(first(record, "question")),
-        "reasoning_chars": text_len(first(record, "reasoning")),
-        "memory_chars": text_len(first(record, "memory")),
+        "choice": to_str(answer.get("choice")) if isinstance(answer, dict) and answer.get("choice") is not None else None,
+        "reason": scrub(answer.get("reason"), 1000) if isinstance(answer, dict) and answer.get("reason") is not None else None,
+        "question_chars": text_len(record.get("question")),
+        "reasoning_chars": reasoning_chars,
+        "memory_chars": memory_size(record.get("memory")),
         "answer_chars": text_len(answer),
-        "parse_error": bool(first(record, "problems")) if answer is None else False,
+        # No usable answer and no engine error: the model answered, but the answer failed parsing or validation.
+        "parse_error": answer is None and not error,
+        "cache_write_tokens": to_int(usage.get("cacheWriteTokens")),
+        "system_chars": to_int(record.get("system_chars")),
+        "reasks": to_int(record.get("reasks")),
+        "fallback_kind": to_str(fell.get("kind")) if fell else None,
+        "error_kind": to_str(record.get("error_kind")),
+        "error": scrub(error, 500) if error else None,
     }
 
 
