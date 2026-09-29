@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
+import { hintText, loadHints } from "../src/knowledge/jev-hints.js";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
 const read = (name: string): string => readFileSync(join(DIR, name), "utf8");
 const lines = (text: string, topic: RegExp): string[] => text.split("\n").filter((line) => topic.test(line));
@@ -83,6 +86,57 @@ describe("boss numbers per ascension, advice as the experience base has it (Wate
       for (const [id] of read(name).matchAll(/\b(?:giant|ts|crab|queen)-[a-z0-9]+(?:-[a-z0-9]+)*/g)) {
         expect(entries.get(id), `${name}: ${id}`).toBe("active");
       }
+    }
+  });
+});
+
+describe("no A0/A8 boss HP or damage stated as fact in the guide, the handbook or Jev's hints (review 2026-09-29 #11)", () => {
+  // A0-A7 boss HP (A8+ in brackets): Insatiable 321 (341), Queen 400 + 199 (419 + 211), Aeonglass 512 (535),
+  // Vantom 173 (183), Beast 252 (262), Kin priest 190 (199), Knowledge Demon 379 (399), crab 408 (428), Entomancer 145 (165).
+  const A0_HP = /\b(321|400|199|512|173|252|190|379|408|145)\s*(血|HP)/;
+
+  it("the guide and handbook carry no unlabelled A0 boss HP; §9 defers its numbers to the DB", () => {
+    for (const name of ["ds-handbook.md", "ironclad-guide.md"]) {
+      const offending = read(name).split("\n").filter((line) => A0_HP.test(line) && !/A0–A7/.test(line));
+      expect(offending, name).toEqual([]);
+    }
+    const guide = read("ironclad-guide.md");
+    expect(guide).not.toContain("实验体（600 血）");
+    expect(guide).not.toMatch(/400 \+ 199/);
+    expect(guide).not.toContain("冲突时以此为准");
+    expect(guide).toMatch(/## 9\. .*当前进阶的数值以 boss_db \/ act_boss_clock 为准/);
+    // Damage figures that differ at A9: the crab's Laser, the Matriarch's hits, the Terror Eel's Shriek line.
+    expect(guide).not.toContain("激光 47–49");
+    expect(guide).not.toContain("19、9×2");
+    expect(guide).toContain("（A0–A7 70，A8+ 75）");
+    expect(read("ds-handbook.md")).not.toContain("408 血");
+    expect(read("ds-handbook.md")).not.toContain("肢解 26~28");
+  });
+
+  it("Jev's hints: no HP figures, damage filled from the DB at this ascension", () => {
+    const hints = loadHints();
+    for (const hint of hints) expect(hint.text, hint.id).not.toMatch(/about (321|408|49|30)\b|\(145 HP\)|26-28|30-40/);
+    const byId = (id: string) => hints.find((hint) => hint.id === id)!;
+    const dmg = (bases: Record<string, number>, hits = 1) => ({
+      damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 4 }, hits: { [String(hits)]: 4 } }])),
+    });
+    setMonsterDbForTests({
+      bosses: {},
+      encounters: {},
+      monsters: {
+        ROCKET: { moves: { LASER_MOVE: { ...dmg({ "8": 31, "9": 35 }), back_attack_by_asc: { "8": { behind: 24, facing: 5 } } } } },
+        MECHA_KNIGHT: { moves: { HEAVY_CLEAVE_MOVE: dmg({ "8": 35, "9": 40 }) } },
+        KNOWLEDGE_DEMON: { moves: { PONDER_MOVE: { self_powers_gained_by_asc: { "8": { STRENGTH_POWER: { "2": 30 } }, "9": { STRENGTH_POWER: { "3": 2 } } } } } },
+      },
+    } as never);
+    try {
+      expect(hintText(byId("crab-charge"), 9)).toContain("a laser of 35 (52 from behind)");
+      expect(hintText(byId("crab-charge"), 8)).toContain("a laser of 31 (46 from behind)");
+      expect(hintText(byId("mecha-knight-t4"), 9)).toContain("Mecha Knight hits 40 on its turn 4 attack");
+      expect(hintText(byId("kd-long-fight"), 9)).toContain("gains 3 Strength each cycle");
+      expect(hintText(byId("kd-long-fight"), 8)).toContain("gains 2 Strength each cycle");
+    } finally {
+      setMonsterDbForTests(null);
     }
   });
 });
