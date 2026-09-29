@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
+import { wireIntent } from "../src/act/identity.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
@@ -316,7 +317,7 @@ describe("a potion step of a chosen line is checked on the belt, not the hand (1
     expect(pickLine(e, "potion Strength Potion, then STRIKE_R -> JAW_WORM, then BASH -> JAW_WORM").intent).toEqual({ action: "use_potion", option_index: 1 });
     const after = next(drunk(strengthBoard(), 1), e);
     expect(after?.label).toBe("combat/plan-continue");
-    expect(after?.kind === "act" ? after.intent : null).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
+    expect(after?.kind === "act" ? wireIntent(after.intent) : null).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
     // Not drunk (the belt as before): the board is not the one the line expects.
     const e2 = env(strengthBoard());
     pickLine(e2, "potion Strength Potion, then STRIKE_R -> JAW_WORM, then BASH -> JAW_WORM");
@@ -329,10 +330,10 @@ describe("a potion step of a chosen line is checked on the belt, not the hand (1
     const e = env(strengthBoard());
     expect(pickLine(e, "DEFEND_R, then potion Strength Potion, then BASH -> JAW_WORM, then potion Fire Potion -> JAW_WORM").intent).toEqual({ action: "play_card", card_index: 1 });
     const second = next(played(strengthBoard(), "DEFEND_R"), e);
-    expect(second?.kind === "act" ? [second.label, second.intent] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 1 }]);
+    expect(second?.kind === "act" ? [second.label, wireIntent(second.intent)] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 1 }]);
     const third = next(drunk(played(strengthBoard(), "DEFEND_R"), 1), e);
-    expect(third?.kind === "act" ? [third.label, third.intent] : null).toEqual(["combat/plan-continue", { action: "play_card", card_index: 1, target_index: 0 }]);
+    expect(third?.kind === "act" ? [third.label, wireIntent(third.intent)] : null).toEqual(["combat/plan-continue", { action: "play_card", card_index: 1, target_index: 0 }]);
     const fourth = next(drunk(played(played(strengthBoard(), "DEFEND_R"), "BASH"), 1), e);
-    expect(fourth?.kind === "act" ? [fourth.label, fourth.intent] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 0, target_index: 0 }]);
+    expect(fourth?.kind === "act" ? [fourth.label, wireIntent(fourth.intent)] : null).toEqual(["combat/plan-continue", { action: "use_potion", option_index: 0, target_index: 0 }]);
   });
 });
