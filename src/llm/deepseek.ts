@@ -577,17 +577,26 @@ export class DeepSeekClient implements Escalator {
   /**
    * A one-shot plan (a shop's shopping list; BUILD_ONESHOT): the same message layout as `choose` (memory,
    * state, question, options), answered with one JSON object in the format the question describes. Returns
-   * the parsed object; the caller validates it. An unparseable reply throws DeepSeekAnswerError.
+   * the parsed object; the caller validates it. An unparseable reply throws DeepSeekAnswerError. An empty
+   * reply is handled as askJson's (emptyReplyRetry): the last plan its reasoning drafted that passes `accept`
+   * (the screen's own check), else asked once more (MZFV F24 shop: 10,661 tokens all reasoning, empty reply,
+   * the reasoning ended on {"plan": ["buy_card3"], ...}; the step-by-step fallback then left the shop).
    */
   async choosePlan(
     state: Record<string, JsonValue>,
     instructions: string,
     criteria: Record<string, string | null>,
     context: Record<string, JsonValue> = {},
-  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    accept?: (json: Record<string, unknown>) => boolean,
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
     const memory = context["memory"];
-    const done = await this.complete([{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }], label);
+    const messages: ChatMessage[] = [{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }];
+    const planRow = (json: Record<string, unknown>): [string, unknown] => [JSON.stringify(json["plan"] ?? null), json["reason"] ?? ""];
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question: instructions, criteria, memory, row: planRow });
+    if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
+    const { done, meta } = first;
+    const noted = first.note ? { note: first.note } : {};
     let json: Record<string, unknown>;
     try {
       json = pickJsonObject(done.content);
@@ -597,12 +606,13 @@ export class DeepSeekClient implements Escalator {
       if (!cut) {
         const message = error instanceof Error ? error.message : String(error);
         this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
-        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
       }
       json = cut;
     }
-    this.logReasoning(label, done, instructions, criteria, JSON.stringify(json["plan"] ?? null), json["reason"] ?? "", memory, json);
-    return { json, meta: done.meta };
+    const [choice, reason] = planRow(json);
+    this.logReasoning(label, done, instructions, criteria, choice, reason, memory, json);
+    return { json, meta, ...noted };
   }
 
   /**
@@ -617,37 +627,13 @@ export class DeepSeekClient implements Escalator {
     accept?: (json: Record<string, unknown>) => boolean,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
     const messages: ChatMessage[] = [{ role: "user", content: taskMessage(payload) }];
-    let done = await this.complete(messages, label);
     const memory = payload["memory"];
     const question = typeof payload["task"] === "string" ? payload["task"] : label;
-    // An empty reply, all its output spent in the reasoning (79YR F30 run plan: 6,791 tokens, all reasoning; no
-    // output cap is sent, the API default is far above that and the same question has answered in 26,368, so not
-    // a cut): the reasoning often ends on the answer it meant to send (it did there), taken as a drafted answer is
-    // below; with none drafted, asked once more. Each empty call has its log row with the reason.
-    let spent: Omit<DeepSeekAnswer, "choice" | "reason"> | null = null;
-    let note: string | undefined;
-    for (let attempt = 0; done.content.trim() === ""; attempt += 1) {
-      const why = emptyReplyText(done);
-      const total = spent ? sumMeta(spent, done.meta) : done.meta;
-      const drafted = accept ? embeddedJsonObjects(done.reasoning).filter(accept) : [];
-      const recovered = drafted[drafted.length - 1];
-      if (recovered) {
-        note = `${note ? `${note}; then ` : ""}${why}: the answer taken from the end of its reasoning`;
-        this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, empty_reply: why, ...recovered });
-        return { json: recovered, meta: total, recovered: true, note };
-      }
-      if (attempt >= 1) {
-        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and its reasoning drafted no answer`;
-        this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
-        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, total);
-      }
-      this.logReasoning(label, done, question, {}, "", "", memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
-      spent = done.meta;
-      done = await this.complete(messages, label);
-      note = `first ${why}: asked once more`;
-    }
-    const meta = spent ? sumMeta(spent, done.meta) : done.meta;
-    const noted = note ? { note } : {};
+    const summaryRow = (json: Record<string, unknown>): [string, unknown] => ["", json["summary"] ?? ""];
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question, criteria: {}, memory, row: summaryRow });
+    if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
+    const { done, meta } = first;
+    const noted = first.note ? { note: first.note } : {};
     let json: Record<string, unknown>;
     try {
       json = pickJsonObject(done.content);
@@ -671,6 +657,48 @@ export class DeepSeekClient implements Escalator {
     }
     this.logReasoning(label, done, question, {}, "", json["summary"] ?? "", memory, json);
     return { json, meta, ...noted };
+  }
+
+  /**
+   * An empty reply, all its output spent in the reasoning (79YR F30 run plan: 6,791 tokens, all reasoning; no
+   * output cap is sent, the API default is far above that and the same question has answered in 26,368, so not
+   * a cut): the reasoning often ends on the answer it meant to send (it did there), taken when it passes
+   * `accept` (none without one); with none drafted, asked once more. Each empty call has its log row with the
+   * reason (`row`: the log's choice and reason of a recovered answer). Returns the first call with a reply (its
+   * usage summed with the empty ones) or the recovered answer; empty twice with nothing drafted throws.
+   */
+  private async emptyReplyRetry(
+    messages: ChatMessage[],
+    label: string,
+    first: CompletedCall,
+    accept: ((json: Record<string, unknown>) => boolean) | undefined,
+    log: { question: string; criteria: Record<string, string | null>; memory: JsonValue | undefined; row: (json: Record<string, unknown>) => [string, unknown] },
+  ): Promise<{ done: CompletedCall; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note?: string } | { recovered: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note: string }> {
+    let done = first;
+    let spent: Omit<DeepSeekAnswer, "choice" | "reason"> | null = null;
+    let note: string | undefined;
+    for (let attempt = 0; done.content.trim() === ""; attempt += 1) {
+      const why = emptyReplyText(done);
+      const total = spent ? sumMeta(spent, done.meta) : done.meta;
+      const drafted = accept ? embeddedJsonObjects(done.reasoning).filter(accept) : [];
+      const recovered = drafted[drafted.length - 1];
+      if (recovered) {
+        note = `${note ? `${note}; then ` : ""}${why}: the answer taken from the end of its reasoning`;
+        const [choice, reason] = log.row(recovered);
+        this.logReasoning(label, done, log.question, log.criteria, choice, reason, log.memory, { recovered_from_reasoning: true, empty_reply: why, ...recovered });
+        return { recovered, meta: total, note };
+      }
+      if (attempt >= 1) {
+        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and its reasoning drafted no answer`;
+        this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, total);
+      }
+      this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
+      spent = done.meta;
+      done = await this.complete(messages, label);
+      note = `first ${why}: asked once more`;
+    }
+    return { done, meta: spent ? sumMeta(spent, done.meta) : done.meta, ...(note ? { note } : {}) };
   }
 
   private async complete(

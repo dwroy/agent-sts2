@@ -3,16 +3,20 @@
  * tests/logged-states/batch-n/.
  */
 
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
-import { baseState, runPayload } from "./scenarios.js";
+import { board, play, scriptedDeepSeek, setupOneshotTests } from "./oneshot-support.js";
+import { baseState, mainMenuPayload, runPayload } from "./scenarios.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 type Raw = Record<string, unknown>;
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states", "batch-n");
@@ -67,5 +71,84 @@ describe("boss clock: self-damage engines (S1MU, 5HHL)", () => {
     expect(at8("5HHLMV2DZ5AZ:32")).toBeLessThan(42);
     expect(at8("5HHLMV2DZ5AZ:47")).toBeGreaterThanOrEqual(39);
     expect(at8("5HHLMV2DZ5AZ:47")).toBeLessThan(57);
+  });
+});
+
+describe("choosePlan: an empty reply takes the plan its reasoning drafted, else asks once more (MZFV F24 shop: 10,661 tokens all reasoning)", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+  type Reply = { content: string; reasoning: string; tokens?: number };
+  const serve = async (replies: Reply[]) => {
+    const calls = { n: 0 };
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => {
+        const reply = replies[Math.min(calls.n, replies.length - 1)]!;
+        calls.n += 1;
+        const tokens = reply.tokens ?? 100;
+        sendJson(res, 200, {
+          choices: [{ message: { content: reply.content, reasoning_content: reply.reasoning }, finish_reason: "stop" }],
+          usage: { prompt_tokens: 1000, completion_tokens: tokens, completion_tokens_details: { reasoning_tokens: reply.content ? tokens - 10 : tokens } },
+        });
+      });
+    });
+    return calls;
+  };
+  const f24 = fixture<{ raw_reply: string; reasoning_tail: string; options: string[]; usage: { output_tokens: number } }>("mzfv-f24-shop-plan-empty.json");
+  const criteria = Object.fromEntries(f24.options.map((key) => [key, null]));
+  // The screen's check stands in: a plan list of offered keys.
+  const valid = (json: Record<string, unknown>) => Array.isArray(json["plan"]) && (json["plan"] as unknown[]).every((key) => typeof key === "string" && key in criteria);
+  const client = (log = "") => new DeepSeekClient({ apiKey: "k", baseUrl: server!.url, model: "m", timeoutMs: 5000, reasoningLog: log });
+
+  it("the logged empty reply: the plan at the end of its reasoning is taken, in one call, and the log row says why", async () => {
+    expect(f24.raw_reply).toBe("");
+    const calls = await serve([{ content: "", reasoning: f24.reasoning_tail, tokens: f24.usage.output_tokens }]);
+    const log = join(mkdtempSync(join(tmpdir(), "batch-n-")), "reasoning.jsonl");
+    const answer = await client(log).choosePlan({}, "Plan the shop.", criteria, { label: "shop/plan" }, valid);
+    expect(calls.n).toBe(1);
+    expect(answer.json["plan"]).toEqual(["buy_card3"]);
+    expect(answer.recovered).toBe(true);
+    expect(answer.note).toMatch(/empty reply \(finish_reason stop; all 10661 output tokens were reasoning\): the answer taken from the end of its reasoning/);
+    const rows = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ label: "shop/plan", choice: '["buy_card3"]', answer: { recovered_from_reasoning: true, empty_reply: expect.stringMatching(/^empty reply/), plan: ["buy_card3"] } });
+  });
+
+  it("a drafted plan that fails the check is not taken: asked once more, and the second reply is used", async () => {
+    const calls = await serve([
+      { content: "", reasoning: 'Final: {"plan": ["buy_everything"], "reason": "?"}' },
+      { content: '{"plan": ["buy_card3"], "reason": "block"}', reasoning: "again" },
+    ]);
+    const answer = await client().choosePlan({}, "Plan the shop.", criteria, { label: "shop/plan" }, valid);
+    expect(calls.n).toBe(2);
+    expect(answer.json["plan"]).toEqual(["buy_card3"]);
+    expect(answer.recovered).toBeUndefined();
+    expect(answer.note).toMatch(/^first empty reply .*: asked once more$/);
+    expect(answer.meta.inputTokens).toBe(2000);
+  });
+
+  it("empty twice with nothing drafted: an answer error (the screen goes step by step)", async () => {
+    const calls = await serve([{ content: "", reasoning: "thinking, no plan" }]);
+    await expect(client().choosePlan({}, "Plan the shop.", criteria, { label: "shop/plan" }, valid)).rejects.toThrow(DeepSeekAnswerError);
+    expect(calls.n).toBe(2);
+  });
+
+  describe("in the loop, the shop screen's own check decides what is recovered", () => {
+    setupOneshotTests();
+    const SHOP = "u6ru-f22-shop";
+
+    it("empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered", { timeout: 30_000 }, async () => {
+      const { client: scripted, bodies } = await scriptedDeepSeek([{ content: "", reasoning: 'Leave? No. Final: {"plan": ["buy_card3", "buy_card4"], "reason": "block"}' }]);
+      const { stats, actions, records } = await play([board(SHOP, "open"), board(SHOP, "after_card3"), mainMenuPayload()], scripted);
+      expect(bodies).toHaveLength(1);
+      expect(stats.deepseekCalls).toBe(1);
+      expect(actions.slice(0, 2)).toEqual([{ action: "buy_card", option_index: 3 }, { action: "buy_card", option_index: 4 }]);
+      expect(records.find((row) => row["label"] === "shop/plan")).toMatchObject({
+        deepseek: { plan: ["buy_card3", "buy_card4", "leave"], recovered_from_reasoning: expect.stringMatching(/empty reply/), note: expect.stringMatching(/the answer taken from the end of its reasoning/) },
+      });
+    });
   });
 });
