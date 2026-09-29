@@ -121,17 +121,24 @@ From experience update 2026-09-29.5 (2026-09-29 19:40; line numbers at v3 445240
 
 From post-mortems Y36H WQ67 8KD7 RHNE ARKG (2026-09-29 20:17; line numbers at v3 4452401):
 - ~~HIGH regression (0dafcda, batch E): Demise powder tagged potion_no_effect — solver outcome doesn't record Demise (turn-solver.ts:2174-2191; only scored at :2119-2122), so noEffectTwin (rollout-live.ts:406-419) treats the line as identical and copies the dry line's rollout (:615-619); rollout.ts has no Demise at all. ARKG F17 Soul Fysh: 30/34 questions tagged, Jev never drank until code did at T15 (up to 117 over T2–T14, Fysh left at 62). → sent to batch G as its first item.~~ fixed 2ca832e (turnOnlyDrink positive check, lastingDrinks, Demise in solver outcome and rollout) (batch G, v3 d32b992)
-- Pael's Tear unmodelled: run-brief.ts:113 lists it as text only; solver/rollout never make "end the turn with 1 energy left" lines (Y36H: DeepSeek took it at F18 for +2 energy/turn; 15 turns F19–F25 all started at 3 energy).
-- Liquid Memories drunk mid Jev line: the card the line names isn't carried to the selection screen — combat-plan.ts:1537 computes it, selection.ts:40-53 only remembers Gambler's Brew discards (8KD7 F11 T2: Jev re-asked, took Fire Barrier over Bash+, line broken, 0 damage).
+- ~~Pael's Tear unmodelled: run-brief.ts:113 lists it as text only; solver/rollout never make "end the turn with 1 energy left" lines (Y36H: DeepSeek took it at F18 for +2 energy/turn; 15 turns F19–F25 all started at 3 energy).~~ fixed 8c5a83c (+2 energy next turn, verified 60 turns; leftover-energy lines kept as their own axis) (batch H, v3 389bdb7)
+- ~~Liquid Memories drunk mid Jev line: the card the line names isn't carried to the selection screen — combat-plan.ts:1537 computes it, selection.ts:40-53 only remembers Gambler's Brew discards (8KD7 F11 T2: Jev re-asked, took Fire Barrier over Bash+, line broken, 0 damage).~~ fixed 9729bdb (batch H, v3 389bdb7)
 
 From fix batch G (2026-09-29 20:32; line numbers at step1-bugfix = v3 d32b992), not fixed:
-- map.ts:342 White Beast Statue: code still discards the weakest potion on the map — same pattern as the Little Mailbox (0c71951); reuse that discard-variant mechanism so the decider chooses.
-- turn-solver.ts:1168 Feel No Pain block ignores random exhausts (unupgraded True Grit); Dark Embrace already counted.
-- To verify: rollout.ts:1132 Test Subject phase revive doesn't clear Demise (game behaviour unknown).
-- deepseek.ts:374 recovering an unknown option from the reasoning keeps route but drops `discard` → a recovered discard option is judged invalid and falls back.
+- ~~map.ts:342 White Beast Statue: code still discards the weakest potion on the map — same pattern as the Little Mailbox (0c71951); reuse that discard-variant mechanism so the decider chooses.~~ fixed cc0d26d (discard variant before fight nodes; route-plan/review name slots; auto-walk asks map/statue-potion) (batch H, v3 389bdb7)
+- ~~turn-solver.ts:1168 Feel No Pain block ignores random exhausts (unupgraded True Grit); Dark Embrace already counted.~~ fixed de0e3e5 (batch H, v3 389bdb7)
+- ~~To verify: rollout.ts:1132 Test Subject phase revive doesn't clear Demise (game behaviour unknown).~~ skipped: no Test Subject fight with Demise in the logs (batch H, v3 389bdb7)
+- ~~deepseek.ts:374 recovering an unknown option from the reasoning keeps route but drops `discard` → a recovered discard option is judged invalid and falls back.~~ fixed e504cdf (batch H, v3 389bdb7)
 
 From experience update 2026-09-29.6 (2026-09-29 20:51; line numbers at v3 2f72f9a):
-- Giant "block needed after the kill ≤13: 18 of 33 won 17" is stale (with Y36H 19 of 34 won 18) in ironclad-guide.md:55, :120, ds-handbook.md:71, run-journal.ts:181, boss-clock.ts:85 — compute it from data like 22109ed did for the kill-turn record.
-- ironclad-guide.md:54, run-journal.ts:180 count unupgraded True Grit as clearing Soul Fysh's Beckon; unupgraded True Grit exhausts a random card (experience card-true-grit).
-- Investigate: ARKG "calc mismatch" in the logs — cause not located.
+- ~~Giant "block needed after the kill ≤13: 18 of 33 won 17" is stale (with Y36H 19 of 34 won 18) in ironclad-guide.md:55, :120, ds-handbook.md:71, run-journal.ts:181, boss-clock.ts:85 — compute it from data like 22109ed did for the kill-turn record.~~ fixed 7819a1a (computed from boss-damage.json: 33 fights, ≤13 18/19, ≥20 3/14) (batch H, v3 389bdb7)
+- ~~ironclad-guide.md:54, run-journal.ts:180 count unupgraded True Grit as clearing Soul Fysh's Beckon; unupgraded True Grit exhausts a random card (experience card-true-grit).~~ fixed a85c413 (batch H, v3 389bdb7)
+- ~~Investigate: ARKG "calc mismatch" in the logs — cause not located.~~ not a bug: mod's end_turn_will_kill_player ignores Beckon in hand; annotation now states the cause (14520e0) (batch H, v3 389bdb7)
 - Experience text vs code (potion entries, wait for Dai's potion-entry decision): potion-code-discard (Little Mailbox part outdated since 0c71951; White Beast Statue still true), potion-fysh-oil (full-belt discard, unverified after G), potion-swift ("valued 0", outdated).
+
+From fix batch H (2026-09-29 21:30; line numbers at v3 389bdb7), not fixed:
+- combat-plan.ts:~1478 if a combat frame is logged after Liquid Memories and before the selection screen, the next step's generated card isn't in hand → line re-planned (old; not seen in 8KD7).
+- Giant kill-turn record still hard-coded in ironclad-guide.md:55, :120, ds-handbook.md:71 ("A8 27 … A9 10 won 3") — use a placeholder like {GIANT_BLOCK_RECORD} (7819a1a); batch-f tests read the old text.
+- "solver says dead, mod says safe" with the gap from blockable hand damage (Burn) still labelled calc mismatch.
+- rest.ts:158, event.ts:261 duplicate the discard note text (use DISCARD_ANSWER_NOTE). Cosmetic.
+- Experience entry potion-code-discard ("White Beast Statue still discards by code") now outdated → next experience update (potion entry; numbers/facts only).
