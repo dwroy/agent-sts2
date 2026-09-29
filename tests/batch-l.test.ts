@@ -7,10 +7,15 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { DeepSeekClient, severalOptionKeys } from "../src/llm/deepseek.js";
-import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
+import { endTurnLethalNote, facingFightOf, noteFacing, planCombatTurn } from "../src/screens/combat-plan.js";
+import { replayRun } from "../src/project/journal-replay.js";
+import { createScreenMemory } from "../src/project/types.js";
+import { parseGameState } from "../src/mod/schema.js";
+import type { JsonValue } from "../src/util/json.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { modelPotion, potionShell, type CardModel } from "../src/strategy/card-model.js";
-import { solveTurn, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { solveTap, solveTurn, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { loggedKnowledge } from "./logged.js";
 import { selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
@@ -207,4 +212,62 @@ describe("7. No potion-cost plumbing left (potionCost / useCost / potionLimit we
     const capped = solveTurn({ ...input(), potionLimit: 0 } as SolverInput);
     expect(capped.plans.some((plan) => drinks(plan) === 2)).toBe(true);
   });
+});
+
+describe("5. Surrounded facing: every targeted action that went through turns us, and a restart mid-fight gets it back from the logs (was: only the plan's cards noted it; a restart fell back to startFacing)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+    solveTap.onSolve = null;
+  });
+
+  it("noteFacing: an in-combat action with a target sets it, tagged with the fight; no target, or out of combat, leaves it", () => {
+    const fx = logged("batch-j/dhgt-f33-t2-wheel");
+    const state = parseGameState(fx.state);
+    const memory = createScreenMemory(state.screen);
+    noteFacing(memory, state, { action: "end_turn" });
+    expect(memory.facing).toBeUndefined();
+    noteFacing(memory, state, { action: "play_card", card_index: 2, target_index: 1 });
+    expect(memory).toMatchObject({ facing: 1, facingFight: "DHGT6Z3Q7VAP:1:33" });
+    noteFacing(memory, state, { action: "use_potion", option_index: 0, target_index: 0 });
+    expect(memory.facing).toBe(0);
+    const map = parseGameState({ ...fx.state, in_combat: false, screen: "MAP" });
+    noteFacing(memory, map, { action: "choose_map_node", option_index: 0, target_index: 1 } as never);
+    expect(memory.facing).toBe(0);
+  });
+
+  /** DHGT F33: T1 (Dismantle -> the Crusher, index 0, logged and executed), then the T2 board a restart reads. */
+  function restartLogs(result = "completed: Action completed.") {
+    const t1 = logged("batch-j/dhgt-f33-t1-shuriken").state;
+    const ts = "2026-09-29T13:07:50.000Z";
+    const states = [{ ts, fingerprint: "t1", state: t1 as unknown as JsonValue }];
+    const decisions = [{ ts, fingerprint: "t1", run_id: "DHGT6Z3Q7VAP", label: "combat/plan-choice", decider: "jev", chosen: { action: "play_card", card_index: 3, target_index: 0 }, rationale: "Jev chose Dismantle -> 碾碎爪", result }];
+    return { runId: "DHGT6Z3Q7VAP", states, decisions: decisions as unknown as Record<string, JsonValue>[], runPlans: [] };
+  }
+
+  it("replayRun gives the fight's last facing; a failed action does not turn us; a later out-of-combat state clears it", () => {
+    expect(replayRun(restartLogs(), loggedKnowledge).facing).toEqual({ fight: "DHGT6Z3Q7VAP:1:33", index: 0 });
+    expect(replayRun(restartLogs("failed (timeout): x"), loggedKnowledge).facing).toBeNull();
+    const logs = restartLogs();
+    const t1 = logs.states[0]!.state as Record<string, JsonValue>;
+    logs.states.push({ ts: "2026-09-29T13:09:00.000Z", fingerprint: "reward", state: { ...t1, in_combat: false, screen: "REWARD" } });
+    expect(replayRun(logs, loggedKnowledge).facing).toBeNull();
+  });
+
+  it(
+    "the restarted T2 board plans with the replayed facing (the Crusher), not startFacing (the Rocket)",
+    () => {
+      rolloutLiveOptions.enabled = false;
+      const { screenMemory: _logged, ...fresh } = logged("batch-j/dhgt-f33-t2-wheel");
+      const env = loggedEnv(fresh);
+      const replayed = replayRun(restartLogs(), loggedKnowledge).facing!;
+      expect(replayed.fight).toBe(facingFightOf(env.state));
+      env.screenMemory.facing = replayed.index;
+      const inputs: SolverInput[] = [];
+      solveTap.onSolve = (input) => inputs.push(input);
+      planCombatTurn(env);
+      solveTap.onSolve = null;
+      expect(inputs[0]!.player.facing).toBe(0);
+    },
+    30_000,
+  );
 });

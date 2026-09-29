@@ -111,6 +111,8 @@ export interface ScreenMemory {
   };
   /** Enemy index we last targeted (Surrounded facing); cleared out of combat. */
   facing?: number | null;
+  /** The fight `facing` was noted in ("<run id>:<act>:<floor>"; combat-plan noteFacing), for a restart's replay. */
+  facingFight?: string;
   /**
    * Cards played by hand per turn in this fight, recorded every fight (Withering Presence counts them
    * across turns; the Knowledge Demon curse pick reads the per-turn mean), and the Wither damage last seen in hand. Cleared out of combat.

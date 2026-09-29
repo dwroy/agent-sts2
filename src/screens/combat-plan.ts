@@ -898,9 +898,28 @@ function firstIntent(plan: Plan, hand: CardModel[], env?: DecisionEnv): ActionRe
   return intent;
 }
 
+/**
+ * Surrounded: we face the enemy we last targeted. Noted after every targeted action that went through (loop.ts:
+ * the per-card fallback's plays and a potion's target too, not only a plan's cards via noteIntent) and on replaying
+ * a restarted fight's logged decisions (journal-replay.ts), tagged with the fight (facingFight). Before, a fallback
+ * play left the facing stale and a restart mid-fight fell back to startFacing.
+ */
+export function noteFacing(memory: DecisionEnv["screenMemory"], state: GameState, intent: ActionRequest | null | undefined): void {
+  if (!state.in_combat || !intent) return;
+  const target = intent.target_index;
+  if (typeof target !== "number") return;
+  memory.facing = target;
+  memory.facingFight = facingFightOf(state);
+}
+
+/** The fight a facing belongs to: "<run id>:<act>:<floor>". */
+export function facingFightOf(state: GameState): string {
+  return `${str(state.raw["run_id"])}:${fightKey(state)}`;
+}
+
 /** What an action we send changes for later plans: the facing (Surrounded), a spent Demon Tongue. */
 function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | undefined): void {
-  if (intent.target_index !== undefined && intent.target_index !== null) env.screenMemory.facing = intent.target_index;
+  noteFacing(env.screenMemory, env.state, intent);
   if (card && card.hpLoss > 0) env.screenMemory.demonTongueTurn = `${hpGuardFight(env)}:${env.state.turn}`;
 }
 
