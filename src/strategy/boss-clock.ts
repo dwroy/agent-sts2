@@ -82,7 +82,7 @@ export const BOSSES: Record<string, BossProfile> = {
   THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "{POWER:VANTOM:SLIPPERY_POWER} Slippery stacks: multi-hit", mechanic: "Slippery {POWER:VANTOM:SLIPPERY_POWER}: its next {POWER:VANTOM:SLIPPERY_POWER} HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP)" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early ({GIANT_KILLS}; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP; A8/A9 kills: block needed (stacks - HP) 13 or less 17/18 won, 20 or more 3/15)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to {POWER:CEREMONIAL_BEAST:PLOW_POWER}; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -184,7 +184,21 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
 export function bossMechanic(profile: BossProfile, ascension: number): string {
-  return fillDbNumbers(profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)), ascension);
+  return fillDbNumbers(profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")), ascension);
+}
+
+/**
+ * The logged Waterfall Giant fights by kill turn at this ascension (experience giant-explode, 2026-09-29):
+ * A8's record below A9 (the eruption is the same from A0 to A8), A9's from A9 (5 stacks more on the same
+ * turn: killed by T10 won 1 of 3, the two losses short of HP at the kill). A9's early kills were not A8's.
+ */
+export function giantKillRecord(ascension: number, lang: "zh" | "en"): string {
+  if (ascension >= 9) {
+    return lang === "zh"
+      ? "A9 8 场只赢 2 场（T7、T12 击杀），T10 前击杀只赢 1/3：输的 5NFG（T9）、2ZCK（T10）满血进场，击杀时只剩 14、20 血对 41、44 层，死于自爆"
+      : "A9 (8 fights): 2 won (kills on T7, T12); killed by T10 1/3 won, 5NFG (T9) and 2ZCK (T10) entered at full HP and died to the blast with 14 and 20 HP against 41 and 44 stacks";
+  }
+  return lang === "zh" ? "A8 27 场：T10 前击杀 13/15 赢、T13–T15 5/7、T16 后 0/3" : "A8 (27 fights): killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3";
 }
 
 /**

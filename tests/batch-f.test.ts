@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
+import { bossNote as journalBossNote } from "../src/project/run-journal.js";
+import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
@@ -92,4 +94,41 @@ describe("2. Tests that plan logged boards have a timeout that holds under load 
       }
     });
   }
+});
+
+describe("3. Hand-written knowledge per ascension, as the data has it (experience update 2026-09-29.4)", () => {
+  const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+  const read = (name: string): string => readFileSync(join(KNOWLEDGE, name), "utf8");
+
+  it("the Giant's early kill: A8's record at A8, A9's at A9 (killed by T10 1/3, both losses short of HP at the kill)", () => {
+    expect(giantKillRecord(9, "zh")).toContain("T10 前击杀只赢 1/3");
+    expect(giantKillRecord(9, "zh")).toContain("击杀时只剩 14、20 血对 41、44 层");
+    expect(giantKillRecord(8, "zh")).toContain("A8 27 场：T10 前击杀 13/15 赢");
+    const a9 = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
+    expect(a9).toContain("T10 前击杀只赢 1/3");
+    expect(a9).not.toContain("13/15");
+    expect(a9).toContain("所需格挡（层数 − HP）≤13 的 18 场赢 17，≥20 的 15 场赢 3");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("13/15");
+    const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
+    expect(bossMechanic(giant, 9)).toContain("killed by T10 1/3 won");
+    expect(bossMechanic(giant, 9)).not.toContain("13/15");
+    expect(bossMechanic(giant, 8)).toContain("killed by T10 13/15 won");
+  });
+
+  it("the guides: every A8 early-kill figure comes with A9's; Prism A9 losses; Entomancer deaths; the Kin as kin-priest-focus", () => {
+    const handbook = read("ds-handbook.md");
+    const guide = read("ironclad-guide.md");
+    for (const [name, text] of [["ds-handbook", handbook], ["ironclad-guide", guide]] as const) {
+      const lines = text.split("\n").filter((line) => line.includes("13/15"));
+      expect(lines.length, name).toBeGreaterThan(0);
+      for (const line of lines) expect(line, name).toContain("T10 前击杀只赢 1/3");
+    }
+    expect(handbook).not.toContain("多次掉 22~40 血");
+    expect(handbook).toMatch(/感染棱柱.*A9 4 场赢 3，赢的 3 场掉 42、52、56/);
+    expect(handbook).not.toContain("蜂群术士已经 3 次致死");
+    expect(handbook).toContain("蜂群术士 A7–A9 已 9 次致死");
+    expect(guide).not.toContain("长战先杀信徒（先杀左边）");
+    expect(guide).not.toContain("先杀信徒能减少受到的伤害");
+    expect(guide).toMatch(/Kin Priest.*单体伤害压神官/);
+  });
 });
