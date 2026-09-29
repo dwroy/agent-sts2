@@ -9,7 +9,10 @@ share their state's ts, fingerprints are JSON strings):
 Plus a main-menu frame between them, one broken states line, two DeepSeek calls (one logged a few ms before
 run A's first frame, like the Neow question), three brain.jsonl rows in src/brain/router.ts's format (a Claude
 answer with a tool call; the DeepSeek engine's row for the reward/card call that deepseek-reasoning.jsonl also
-logged, i.e. a duplicate; a Claude timeout with no answer), one run plan.
+logged, i.e. a duplicate; a Claude timeout with no answer), one run plan, and run-config.jsonl in
+src/telemetry/run-config.ts's format (tests/run-config.test.ts checks the keys): run A started with DeepSeek + Claude
+Opus for map questions and the full knowledge prefix, then a restarted process played it with another setup (a second
+row, restart = true); run B with plain DeepSeek and the prefix off.
 
 Run it again after changing it: python3 tests/logdb-data/make-fixture.py
 """
@@ -19,6 +22,40 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 states, decisions = [], []
+
+
+def engine(model, tools, max_calls, timeout_ms=None, model_by_prefix=None):
+    return {"model": model, "model_by_prefix": model_by_prefix or {}, "timeout_ms": timeout_ms, "effort": None, "reask": None,
+            "tools": tools, "max_calls": max_calls}
+
+
+def run_config(ts, run_id, asc, floor, code, by_prefix, prefix, config_sha, restart=False, claude=None, arm=None, target=9):
+    """One run-config.jsonl row as src/telemetry/run-config.ts writes it (RunConfigRow). `claude`: Claude's engine
+    settings when it is in use (then the brain carries its schema and budget)."""
+    engines = {"deepseek": engine("deepseek-flash", False, 300)}
+    if claude:
+        engines["claude"] = claude
+    full = prefix == "full"
+    return {
+        "ts": ts, "run_id": run_id, "ascension": asc, "character": "IRONCLAD", "floor": floor, "restart": restart,
+        "process": {"pid": 4242 + floor, "started": ts},
+        "code": {"commit": code.split("+")[0] + "0" * 33, "code": code, "dirty": code.endswith("+dirty"),
+                 "dirty_files": ["src/knowledge/monster-db.json"] if code.endswith("+dirty") else [], "branch": "v4", "worktree": "jev-sts2-v4run"},
+        "brain": {"active": True, "engine": "deepseek", "by_prefix": by_prefix, "fallback": "deepseek" if claude else None, "reask": None,
+                  "tools": None, "log": "./logs/brain.jsonl", "engines": engines,
+                  **({"claude": {"schema": "kind", "max_budget_usd": None}} if claude else {})},
+        "knowledge": {"prefix": prefix, "ascension": asc, "prefix_sha": "b468835446bb" if full else None, "prefix_chars": 170145 if full else None,
+                      "prefix_tokens_est": {"deepseek": 119102, "claude": 165041} if full else None,
+                      "system_sha": "5e5e5e5e5e5e" if full else "0f0f0f0f0f0f", "system_chars": 172025 if full else 31000,
+                      "experience_version": "2026-09-29.6"},
+        "deepseek": {"model": "deepseek-flash", "max_calls": 300, "timeout_ms": 300000, "reasoning_effort": "max", "combat_reasoning_effort": "",
+                     "effort_by_label": None},
+        "jev": {"enabled": True, "model": "jev-latest", "context": "v1", "strict": True, "prompt_log": "logs/jev-prompts.jsonl"},
+        "loop": {"mode": "play", "combat_planner": "turn", "build_decider": "deepseek", "build_oneshot": "on", "combat_deepseek": "off",
+                 "fight_plan": "off", "run_plan": "v1", "escalation": ["deepseek"], "confidence": {"act": 0.55, "strong": 0.75}, "run_start": "auto",
+                 "character": None},
+        "target_ascension": target, "arm": arm, "config_sha": config_sha,
+    }
 
 
 def fingerprint(run_id, screen, hp, max_hp, gold, hand="", potions="", actions=(), combat=False):
@@ -208,6 +245,16 @@ def main():
                               "plan": {"archetype": "strength", "summary": "take strength", "want": ["INFLAME"], "avoid": ["CLASH"]},
                               "latency_ms": 5000, "input_tokens": 10000, "output_tokens": 800, "cache_hit_tokens": 8000, "reasoning_tokens": 700, "effort": "max"},
                              ensure_ascii=False) + "\n")
+
+    opus = engine("claude-opus-5-5", True, 150, 300000)
+    configs = [
+        run_config("2026-09-20T10:00:00.001Z", a, 9, 1, "0c66af2+dirty", {"MAP": "claude"}, "full", "aaaa11112222", claude=opus),
+        run_config("2026-09-20T11:00:00.001Z", b, 8, 1, "0c66af2", {}, "off", "bbbb33334444", target=8),
+        # Run A again: a restarted process (auto-relaunch) with the map questions back on DeepSeek.
+        run_config("2026-09-20T10:00:06.500Z", a, 9, 3, "0c66af2+dirty", {}, "full", "cccc55556666", restart=True),
+    ]
+    with open(os.path.join(HERE, "run-config.jsonl"), "w", encoding="utf8") as out:
+        out.write("\n".join(json.dumps(row, ensure_ascii=False) for row in configs) + "\n")
 
 
 if __name__ == "__main__":

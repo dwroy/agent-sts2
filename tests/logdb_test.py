@@ -118,6 +118,55 @@ class ExtractTest(unittest.TestCase):
         self.assertEqual(extract.line_ts(lines("states.jsonl")[0]), "2026-09-20T10:00:00.000Z")
 
 
+class RunConfigExtractTest(unittest.TestCase):
+    def test_run_config_row(self):
+        first, other, restart = [extract.run_config_row(raw, 0) for raw in lines("run-config.jsonl")]
+        self.assertEqual((first["run_id"], first["ascension"], first["floor"], first["restart"], first["code"], first["dirty"], first["branch"], first["worktree"]),
+                         ("RUNA00000001", 9, 1, False, "0c66af2+dirty", True, "v4", "jev-sts2-v4run"))
+        self.assertEqual((first["dirty_files"], first["pid"], first["process_started"]), (["src/knowledge/monster-db.json"], 4243, "2026-09-20T10:00:00.001Z"))
+        self.assertEqual((first["brain_active"], first["brain_engine"], first["brain_by_prefix"], first["brain_fallback"], first["brain_label"], first["brain_engines"]),
+                         (True, "deepseek", '{"MAP":"claude"}', "deepseek", "deepseek:deepseek-flash; MAP=claude:claude-opus-5-5", ["claude", "deepseek"]))
+        self.assertEqual((first["claude_model"], first["claude_max_calls"], first["deepseek_model"], first["deepseek_max_calls"], first["deepseek_effort"]),
+                         ("claude-opus-5-5", 150, "deepseek-flash", 300, "max"))
+        self.assertEqual((first["knowledge_prefix"], first["prefix_sha"], first["prefix_chars"], first["prefix_tokens_deepseek"], first["prefix_tokens_claude"],
+                          first["system_sha"], first["system_chars"], first["experience_version"], first["knowledge_error"]),
+                         ("full", "b468835446bb", 170145, 119102, 165041, "5e5e5e5e5e5e", 172025, "2026-09-29.6", None))
+        self.assertEqual((first["jev_enabled"], first["jev_model"], first["jev_context"], first["target_ascension"], first["arm"], first["config_sha"]),
+                         (True, "jev-latest", "v1", 9, None, "aaaa11112222"))
+        self.assertEqual((first["loop_mode"], first["build_decider"], first["build_oneshot"], first["run_plan"], first["fight_plan"]), ("play", "deepseek", "on", "v1", "off"))
+        self.assertEqual(json.loads(first["config"])["brain"]["by_prefix"], {"MAP": "claude"})
+        self.assertEqual((other["brain_label"], other["knowledge_prefix"], other["prefix_sha"], other["claude_model"], other["target_ascension"]),
+                         ("deepseek:deepseek-flash", "off", None, None, 8))
+        self.assertEqual((restart["restart"], restart["floor"], restart["brain_label"], restart["config_sha"]), (True, 3, "deepseek:deepseek-flash", "cccc55556666"))
+        self.assertEqual(sorted(first), sorted(name for name, _ in extract.TABLES["run_config"]))
+
+    def test_brain_label(self):
+        def e(model, **per):
+            return {"model": model, "model_by_prefix": per}
+
+        def label(**brain):
+            return extract.brain_label({"active": True, "by_prefix": {}, **brain})
+
+        self.assertEqual(label(engine="claude", engines={"claude": e("claude-sonnet-5", MAP="claude-opus-5-5")}), "claude:claude-sonnet-5; MAP=claude:claude-opus-5-5")
+        self.assertEqual(label(engine="deepseek", by_prefix={"MAP": "claude", "EVENT": "claude", "SHOP": "deepseek"},
+                               engines={"deepseek": e("deepseek-flash"), "claude": e("claude-opus-5-5")}),
+                         "deepseek:deepseek-flash; EVENT,MAP=claude:claude-opus-5-5")
+        # A per-kind model of an engine that kind does not use (Claude only as the fallback) changes nothing.
+        self.assertEqual(label(engine="deepseek", fallback="claude", engines={"deepseek": e("deepseek-flash"), "claude": e("claude-opus-5-5", MAP="claude-sonnet-5")}),
+                         "deepseek:deepseek-flash")
+        self.assertEqual(label(engine="codex", engines={"codex": e(None)}), "codex")
+        self.assertEqual(extract.brain_label({"active": False, "engine": "deepseek"}), "none")
+        self.assertIsNone(extract.brain_label({}))
+
+    def test_run_config_text_is_scrubbed(self):
+        row = json.loads(lines("run-config.jsonl")[1])
+        row["knowledge"]["error"] = "failed: api_key=abcdefghijklmnopqrstuvwxyz"
+        got = extract.run_config_row(json.dumps(row).encode(), 7)
+        self.assertEqual(got["off"], 7)
+        self.assertIn("[REDACTED]", got["knowledge_error"])
+        self.assertNotIn("abcdefghijklmnop", got["config"])
+
+
 class Workspace(unittest.TestCase):
     """A copy of the fixture logs and an empty database directory per test."""
 
@@ -163,6 +212,7 @@ class SyncTest(Workspace):
         self.assertEqual(self.count("runs_raw"), (1, 1))
         self.assertEqual(self.count("llm_calls_raw"), (5, 5))
         self.assertEqual(self.count("run_plans"), (1, 1))
+        self.assertEqual(self.count("run_config"), (3, 3))
         manifest = self.manifest()
         for key, rec in manifest["sources"].items():
             self.assertEqual(rec["offset"], os.path.getsize(os.path.join(self.logs, rec["file"])), key)
@@ -353,6 +403,12 @@ class ViewsTest(unittest.TestCase):
         self.assertEqual((a["death_fight"], a["death_encounter"], a["death_room"]), (["恐怖鳗鱼"], "TERROR_EEL", "elite"))
         self.assertEqual(str(a["started"]), "2026-09-20 10:00:00")
         self.assertEqual((b["finished"], b["victory"], b["floor"], b["ascension"], b["code"]), (False, None, 3, 8, None))
+        # The configuration it started with (the first run-config row); A was restarted with another one.
+        self.assertEqual((a["brain_label"], a["knowledge_prefix"], a["prefix_sha"], a["cfg_code"], a["cfg_worktree"], a["config_rows"], a["config_changed"]),
+                         ("deepseek:deepseek-flash; MAP=claude:claude-opus-5-5", "full", "b468835446bb", "0c66af2+dirty", "jev-sts2-v4run", 2, True))
+        self.assertEqual((a["brain_engine"], a["brain_by_prefix"], a["brain_fallback"], a["jev_model"], a["jev_context"], a["target_ascension"], a["config_sha"]),
+                         ("deepseek", '{"MAP":"claude"}', "deepseek", "jev-latest", "v1", 9, "aaaa11112222"))
+        self.assertEqual((b["brain_label"], b["knowledge_prefix"], b["config_rows"], b["config_changed"], b["target_ascension"]), ("deepseek:deepseek-flash", "off", 1, False, 8))
 
     def test_llm_calls_get_their_run(self):
         calls = self.rows("SELECT src, run_id, label, engine, total_tokens, duplicate FROM llm_calls ORDER BY ts")
@@ -423,6 +479,23 @@ class QueryTest(unittest.TestCase):
         with self.assertRaises(logquery.QueryError) as caught:
             logquery.run_query(con, "SELECT sum(a.range * b.range) FROM range(100000000) a CROSS JOIN range(100000) b", timeout=0.3)
         self.assertIn("interrupted", str(caught.exception))
+
+    def test_a_table_an_older_sync_did_not_write_is_named(self):
+        old = os.path.join(self.tmp, "old")
+        shutil.copytree(self.db, old)
+        # A database synced before run_config existed: no table directory, no manifest entry.
+        shutil.rmtree(os.path.join(old, "run_config"))
+        with open(os.path.join(old, "manifest.json"), encoding="utf8") as handle:
+            manifest = json.load(handle)
+        manifest["sources"].pop("run-config")
+        with open(os.path.join(old, "manifest.json"), "w", encoding="utf8") as handle:
+            json.dump(manifest, handle)
+        with self.assertRaises(logquery.QueryError) as caught:
+            logquery.connect(old)
+        self.assertIn("run_config", str(caught.exception))
+        self.assertIn("sync.py", str(caught.exception))
+        logsync.sync(DATA, old, quiet=True)  # the next sync adds it, the other sources untouched
+        self.assertEqual(logquery.connect(old).execute("SELECT count(*), count(DISTINCT run_id) FROM run_config").fetchone(), (3, 2))
 
     def test_cli(self):
         script = os.path.join(ROOT, "tools", "logdb", "query.py")

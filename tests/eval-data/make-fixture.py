@@ -10,7 +10,8 @@
                 act 2; one potion drunk in it, Strength only from turn 2) -> F4 act-2 rest site -> F5 act-2
                 hallway, died.
 Model calls: two DeepSeek calls in run C (the router's brain.jsonl row repeats one: a duplicate), one Claude
-brain call in run D.
+brain call in run D. Configuration (run-config.jsonl): run D started with DeepSeek plus Claude Opus for rest
+questions and the full knowledge prefix; run C has none (a run from before that log).
 
 Run it again after changing it: python3 tests/eval-data/make-fixture.py
 """
@@ -138,6 +139,10 @@ def main():
     ]
     with open(os.path.join(HERE, "brain.jsonl"), "w", encoding="utf8") as out:
         out.write("\n".join(json.dumps(x) for x in brain) + "\n")
+    opus = fx.engine("claude-opus-5-5", True, 150, 300000)
+    config = fx.run_config("2026-09-21T11:00:00.001Z", d, 9, 1, "0c93138+dirty", {"REST": "claude"}, "full", "dddd77778888", claude=opus)
+    with open(os.path.join(HERE, "run-config.jsonl"), "w", encoding="utf8") as out:
+        out.write(json.dumps(config, ensure_ascii=False) + "\n")
     with open(os.path.join(HERE, "strength-sets.json"), "w", encoding="utf8") as out:
         out.write(json.dumps({"cards": ["FIGHT_ME", "INFLAME"], "relics": ["GIRYA", "VAJRA"]}) + "\n")
 

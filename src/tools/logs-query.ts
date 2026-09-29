@@ -46,13 +46,14 @@ interface QueryOutput {
 const DESCRIPTION = [
   "用一条只读 SQL（DuckDB 方言）查对局日志库：从 logs/*.jsonl 派生，覆盖全部对局，适合按条件统计、找具体局面、核对经验。",
   `结果最多 ${LOGS_QUERY_MAX_ROWS} 行（默认 ${LOGS_QUERY_DEFAULT_ROWS}），请用 WHERE / GROUP BY / LIMIT 缩小；超时 30 秒。主要的表：`,
-  "runs 每局（run_id, ascension, character, started, ended, floor 终层, finished, victory 胜负看它不看层数, death_fight 致死怪物中文名列表, death_encounter, death_room, code 代码版本）；",
+  "runs 每局（run_id, ascension, character, started, ended, floor 终层, finished, victory 胜负看它不看层数, death_fight 致死怪物中文名列表, death_encounter, death_room, code 代码版本, brain_label 大脑引擎和模型, knowledge_prefix 知识前缀 off/full，V4 对局起才有）；",
   "floors 每层（run_id, floor, act, room_node = Monster/Elite/Boss/Unknown/RestSite/Shop/Treasure/Ancient, entry_hp, entry_max_hp, exit_hp, hp_loss 进房减出房血量（负=回血）, entry_gold, exit_deck_size, exit_potions, died）；",
   "fights 每场战斗（run_id, fight_no, ascension, act, floor, encounter 如 CORPSE_SLUG+CORPSE_SLUG, monsters 列表, room = hallway/elite/boss/unknown_room, entry_hp, max_hp, turns, outcome = won/died, hp_loss 战内掉血, net_hp_loss 含战后回血, potions_in 带进场的药水, potions_used 喝掉的药水, cards_played, deck_size, relics）；",
   "turns 每回合（run_id, fight_no, floor, encounter, turn, start_hp, start_block, intent_damage 敌人意图总伤害, enemies_alive, enemy_hp, hp_lost 到下回合开始的掉血, cards_played 出牌 id 列表, potions_used）；",
   "decisions 每个决策（ts, run_id, floor, turn, label 如 reward/card、combat/plan-choice, decider = jev/deepseek/code/code-fallback, action, card_id, options, choice, confidence, rollout_best, rollout_tied, rollout_best_chosen, ds_choice, escalated, hp, gold, rationale）；",
   "llm_calls 每次模型调用（ts, run_id, label, engine, model, effort, input_tokens, cache_hit_tokens, output_tokens, reasoning_tokens, latency_ms, choice, reason, duplicate 为真是 brain.jsonl 重记的同一次 DeepSeek 调用、计数时去掉；问题和推理原文不在库里）；",
-  "run_plans 整局计划（ts, run_id, floor, trigger, archetype, summary, want, avoid）。",
+  "run_plans 整局计划（ts, run_id, floor, trigger, archetype, summary, want, avoid）；",
+  "run_config 每局开局时的配置（run_id, code, branch, brain_engine, brain_by_prefix, brain_label, knowledge_prefix, prefix_sha, jev_model, jev_context, target_ascension, config_sha）。",
   "列表列用 list_contains(monsters, 'X')、len(x)、unnest(x)；时间是 UTC。完整字段见 docs/logdb.md。",
 ].join("");
 

@@ -23,10 +23,16 @@ Per run:
 
 Code version: runs.jsonl `code` (ops/run.sh: the run worktree's HEAD, `+dirty` when it had uncommitted changes,
 which are the knowledge data refreshed after every run) with `+dirty` stripped, mapped to the named versions in
-tools/eval/versions.json by git ancestry (docs/eval.md §2).
+tools/eval/versions.json by git ancestry (docs/eval.md §2). A version whose commit is still empty (V4 until it goes
+live) is skipped.
+
+Configuration (--group-by config, docs/eval.md §8): the version plus the brain setup the run started with, from
+logs/run-config.jsonl (src/telemetry/run-config.ts; the runs view's brain_label and knowledge_prefix): e.g.
+"V4 · deepseek:deepseek-flash; MAP=claude:claude-opus-5-5 · 知识前缀 full". Runs from before that log are
+"<version> · 未记录配置"; a run a restarted process played with another configuration is marked "局中改过配置".
 
 Usage (the log database's Python: .cache/logdb-venv/bin/python):
-  tools/eval/metrics.py [--ascension 9] [--since 2026-09-29T00:00] [--until ...] [--group-by version|family|commit|ascension|day]
+  tools/eval/metrics.py [--ascension 9] [--since 2026-09-29T00:00] [--until ...] [--group-by version|family|config|commit|ascension|day]
                         [--md | --json] [--per-run] [--total] [--min-n 10] [--no-sync] [--no-calibration] [--boss-clocks FILE]
 Times without an offset are UTC (the database's clock); --group-by day uses the local date (UTC+8).
 """
@@ -157,6 +163,11 @@ def run_metrics(run, fights, floors, boss_entry, calls, sets):
         "started": run.get("started"),
         "code": run.get("code"),
         "arm": run.get("arm"),
+        # The configuration the run started with (logs/run-config.jsonl; config_rows 0: not recorded).
+        "brain_label": run.get("brain_label"),
+        "knowledge_prefix": run.get("knowledge_prefix"),
+        "config_rows": run.get("config_rows") or 0,
+        "config_changed": bool(run.get("config_changed")),
         "floor": run.get("floor"),
         "max_act": max_act,
         "victory": victory,
@@ -346,6 +357,9 @@ class VersionMap:
     def __init__(self, entries, git):
         self.git = git
         self.entries = []
+        # An entry without a commit is announced but not live yet (V4: "filled in when it goes live"): skipped.
+        self.pending = [e["name"] for e in entries if not e.get("commit")]
+        entries = [e for e in entries if e.get("commit")]
         full = git.resolve([e["commit"] for e in entries])
         for entry in entries:
             commit = full.get(entry["commit"])
@@ -422,7 +436,8 @@ def strength_sets(path=None, game_data=None):
 
 
 RUNS_SQL = """
-SELECT run_id, ascension, character, started, ended, floor, max_floor, max_act, victory, code, arm
+SELECT run_id, ascension, character, started, ended, floor, max_floor, max_act, victory, code, arm,
+       brain_label, knowledge_prefix, config_rows, config_changed
 FROM runs WHERE finished AND started IS NOT NULL ORDER BY started
 """
 FIGHTS_SQL = """
@@ -500,14 +515,25 @@ def local_day(started):
     return when.astimezone(LOCAL).date().isoformat()
 
 
+def config_label(row):
+    """The configuration part of a --group-by config key: the brain setup (engines and models) and the knowledge
+    prefix the run started with; "未记录配置" for runs without a run-config.jsonl row (before V4)."""
+    if not row.get("config_rows"):
+        return "未记录配置"
+    label = f"{row.get('brain_label') or '?'} · 知识前缀 {row.get('knowledge_prefix') or '?'}"
+    return label + (" · 局中改过配置" if row.get("config_changed") else "")
+
+
 def group_runs(rows, how, versions=None):
     """[(group name, rows)] in group order: versions in versions.json order, the rest by name / first run."""
     groups, order = {}, {}
     for row in rows:
-        if how in ("version", "family"):
+        if how in ("version", "family", "config"):
             entry, row["version_how"] = versions.assign(row["code"], row["started"])
             row["version"] = entry["name"]
-            key = entry[how if how == "family" else "name"]
+            key = entry["family" if how == "family" else "name"]
+            if how == "config":
+                key = f"{key} · {config_label(row)}"
             rank = -1 if entry is versions.before else next(i for i, e in enumerate(versions.entries) if e["name"] == entry["name"])
             if row.get("arm"):
                 key = f"{key} [arm {row['arm']}]"
@@ -616,7 +642,7 @@ def render(groups, min_n, markdown):
 
 def render_runs(rows, markdown):
     head = ["run", "版本", "code", "A", "开始（UTC+8）", "终层", "过幕", "非boss喝药/10层", "boss 带药", "boss 层", "一幕boss力量（牌/遗物/开场）",
-            "一幕精英<78%", "二幕首个休息点", "大脑调用", "token 入/中/出（千）", "耗时（分）"]
+            "一幕精英<78%", "二幕首个休息点", "大脑调用", "token 入/中/出（千）", "耗时（分）", "配置"]
     body = []
     for r in rows:
         s = r["strength_act1"]
@@ -628,7 +654,8 @@ def render_runs(rows, markdown):
         body.append([r["run_id"], r.get("version", ""), r["code"] or "", str(r["ascension"]), r["started"].replace(tzinfo=dt.timezone.utc).astimezone(LOCAL).strftime("%m-%d %H:%M"),
                      str(r["floor"]), passed, num(r["drinks_per10"], 1), "/".join(str(v) for v in r["boss_potions"].values()) or "—",
                      "/".join(f"F{v}" for v in r["boss_floor"].values()) + ("（推断 " + ",".join(map(str, r["boss_inferred"])) + "）" if r["boss_inferred"] else ""),
-                     strength, f"{r['act1_elites_low']}/{r['act1_elites']}", rest, str(llm["calls"]), tokens, f"{llm['latency_ms'] / 60000:.1f}"])
+                     strength, f"{r['act1_elites_low']}/{r['act1_elites']}", rest, str(llm["calls"]), tokens, f"{llm['latency_ms'] / 60000:.1f}",
+                     config_label(r)])
     if markdown:
         return "\n".join(["| " + " | ".join(head) + " |", "|" + "---|" * len(head)] + ["| " + " | ".join(row) + " |" for row in body]) + "\n"
     return "\n".join(["\t".join(head)] + ["\t".join(row) for row in body]) + "\n"
@@ -651,7 +678,8 @@ def main(argv=None):
     parser.add_argument("--ascension", type=int, action="append", help="only this ascension (repeatable)")
     parser.add_argument("--since", help="runs started at or after this time (ISO; UTC unless it has an offset)")
     parser.add_argument("--until", help="runs started before this time")
-    parser.add_argument("--group-by", default="version", choices=["version", "family", "commit", "ascension", "day"])
+    parser.add_argument("--group-by", default="version", choices=["version", "family", "config", "commit", "ascension", "day"],
+                        help="config = version + brain engines/models + knowledge prefix (logs/run-config.jsonl)")
     parser.add_argument("--md", action="store_true", help="markdown table (metrics x groups)")
     parser.add_argument("--json", action="store_true", help="per-run metrics and group summaries as JSON")
     parser.add_argument("--per-run", action="store_true", help="also list every run")
@@ -681,8 +709,8 @@ def main(argv=None):
         rows = load_runs(con, sets, set(args.ascension or []), as_utc(args.since), as_utc(args.until))
         if not args.no_calibration:
             attach_calibration(con, rows, logs, args.boss_clocks, args.game_data)
-    versions = VersionMap(load_versions(args.versions), Git()) if args.group_by in ("version", "family") or args.per_run or args.json else None
-    if versions is not None and args.group_by not in ("version", "family"):
+    versions = VersionMap(load_versions(args.versions), Git()) if args.group_by in ("version", "family", "config") or args.per_run or args.json else None
+    if versions is not None and args.group_by not in ("version", "family", "config"):
         for row in rows:
             entry, row["version_how"] = versions.assign(row["code"], row["started"])
             row["version"] = entry["name"]

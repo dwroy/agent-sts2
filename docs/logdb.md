@@ -11,7 +11,7 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
 - **不抢对局的资源**：sync 把自己设成 `nice 19` + `ionice -c3`，DuckDB 只用 2 个线程、内存上限 2 GB。
 - **并发**：同时只有一个 sync（`sync.lock`，query.py 顺带的同步拿不到锁就跳过）；查询持共享读锁，sync 只在删除/替换分片的那一刻持排他锁，所以查询不会看到一半替换的表。
 - **key 不进库**：进库的自由文本（rationale、模型的简短理由、计划摘要、chosen）都过 `scrub()`，像 key 的串（`sk-…`、`Bearer …`、`api_key: …`）换成 `[REDACTED]`；问题、推理、memory 原文不进库，只存长度和源文件字节偏移。
-- **表 = Parquet 上的视图**：`tools/logdb/views.sql`（`${DB}` 由 query.py 换成库目录）。存储的只有「一行 JSONL 一行记录」的五张表；fights / turns / floors / runs 每次查询时从 frames 现算，所以永远和原始数据一致，改口径只要改 SQL。
+- **表 = Parquet 上的视图**：`tools/logdb/views.sql`（`${DB}` 由 query.py 换成库目录）。存储的只有「一行 JSONL 一行记录」的六张表；fights / turns / floors / runs 每次查询时从 frames 现算，所以永远和原始数据一致，改口径只要改 SQL。
 - **每张表有一个零行分片** `part-0-empty.parquet`，带表的全部列，视图靠它绑定列（各分片按列名合并）。`extract.TABLES` 里表的列变了时，sync 重写这个零行分片（旧分片不动，新列在旧分片上是 NULL），所以给一个源加列不用重建另一个源。
 
 ## 2. 用法
@@ -52,9 +52,11 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 
 **run_plans** ← run-plans.jsonl：`off, len, ts, run_id, floor, trigger, version, archetype, summary, want, avoid, input_tokens, output_tokens, cache_hit_tokens, reasoning_tokens, latency_ms, effort, error`。
 
+**run_config** ← run-config.jsonl（每局开局时的配置，src/telemetry/run-config.ts，docs/eval.md §8；重启换了配置的局有第二行）：`off, len, ts, run_id, ascension, character, floor, restart, pid, process_started, code`（短号 + `+dirty`）`, commit, dirty, dirty_files, branch, worktree, brain_active, brain_engine, brain_by_prefix`（JSON 文本）`, brain_fallback, brain_label`（如 `deepseek:deepseek-flash; MAP=claude:claude-opus-5-5`）`, brain_engines, claude_model, claude_max_calls, claude_effort, deepseek_model, deepseek_max_calls, deepseek_effort, knowledge_prefix, prefix_sha, prefix_chars, prefix_tokens_deepseek, prefix_tokens_claude, system_sha, system_chars, experience_version, knowledge_error, jev_enabled, jev_model, jev_context, loop_mode, build_decider, build_oneshot, run_plan, fight_plan, target_ascension, arm, config_sha, config`（整行 JSON 文本，过 scrub，用 json_extract 查别的字段）。
+
 ### 视图（查询时现算）
 
-**runs**：每个在日志里出现过的局。`run_id, ascension, character, started`（第一帧）`, ended`（runs.jsonl，否则最后一帧）`, floor`（runs.jsonl 的终层，否则最高层）`, max_floor, max_act, finished`（在 runs.jsonl 里）`, victory`（**胜负看它**：runs.jsonl 的 victory；没结束的局取结算帧，没有就是 NULL）`, death_fight, death_encounter`（死在的那场战斗的遭遇）`, death_room, code`（代码版本）`, decisions, jev_calls, deepseek_calls, claude_calls, tokens, ds_tokens_in, ds_tokens_out, ds_cache_hit, deciders, arm, frames`。
+**runs**：每个在日志里出现过的局。`run_id, ascension, character, started`（第一帧）`, ended`（runs.jsonl，否则最后一帧）`, floor`（runs.jsonl 的终层，否则最高层）`, max_floor, max_act, finished`（在 runs.jsonl 里）`, victory`（**胜负看它**：runs.jsonl 的 victory；没结束的局取结算帧，没有就是 NULL）`, death_fight, death_encounter`（死在的那场战斗的遭遇）`, death_room, code`（代码版本）`, decisions, jev_calls, deepseek_calls, claude_calls, tokens, ds_tokens_in, ds_tokens_out, ds_cache_hit, deciders, arm, frames`；这局第一行 run_config 的配置：`cfg_code, cfg_branch, cfg_worktree, brain_engine, brain_by_prefix, brain_fallback, brain_label, knowledge_prefix, prefix_sha, prefix_tokens_deepseek, jev_model, jev_context, target_ascension, config_sha, config_rows`（0 = 没记录，V4 之前的局）`, config_changed`。
 
 **floors**：每局每层一行。`run_id, floor, act, ascension, room_node`（Monster / Elite / Boss / Unknown / RestSite / Shop / Treasure / Ancient）`, node_src`（map：本层地图帧上的当前节点；choice：上一层选的节点，死在的房间和 boss 用它）`, entry_hp, entry_max_hp, entry_gold, entry_deck_size, entry_potions, entry_src`（进房 = 上一层最后一个地图帧，没有就取上一层最后一帧）`, exit_hp, exit_max_hp, exit_gold, exit_deck_size, exit_potions, exit_src`（出房 = 本层第一个地图帧：战斗、燃烧之血、事件、休息、喝药都已算进去；死在本层记 0 HP；都没有取本层最后一帧）`, hp_loss`（进房减出房，负数是回血）`, died, crossed_act, had_combat, event_id, first_ts, last_ts, first_off, frames`。
 
@@ -76,7 +78,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 - deepseek-reasoning.jsonl 从 09-28 11:03 起才有 token（usage）；更早的调用 token 为 NULL（对应决策行的 ds_tokens 里有总数）。label 从 09-24 08:42 起才有。
 - decisions 的 card_id / potion_id 靠 fingerprint 解析，fingerprint 里没有就是 NULL（turns.cards_played 里去掉，cards_n 照算）。
 - brain.jsonl 按 src/brain/router.ts 实际写的 `BrainLogRow` 抽取（2026-09-29 核对，`VERSIONS["brain"]` = 2；样本 tests/logdb-data/brain.jsonl 按真实格式生成，对照过 v4-brain 冒烟实验的 20 行真实记录）。路由器不写 run_id 和 effort；usage 是这个问题所有模型调用（含补问）的合计。离线回放、学习者如果也写 logs/brain.jsonl，会按时间归到附近的局，看 label 和时间区分。
-- 改了抽取器（extract.py）要把对应源的 `VERSIONS` 加 1；改视图（views.sql）不用重建。
+- 改了抽取器（extract.py）要把对应源的 `VERSIONS` 加 1；改视图（views.sql）不用重建。新加的表要同步一次才有（sync 写它的零行分片）；没同步过的旧库 query.py 会报「no <表> yet: run tools/logdb/sync.py once」。
 
 ## 5. 正确性核对（2026-09-29，354 局）
 

@@ -33,6 +33,7 @@ import { planDecision } from "./screens/index.js";
 import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
+import { createRunConfigLog } from "./telemetry/run-config.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 
@@ -318,6 +319,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    */
   const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient) : null;
   brain?.onNote((message) => onEvent({ type: "note", message }));
+  // One row per run with the configuration it is played with (logs/run-config.jsonl; tools/eval metrics --group-by config).
+  const runConfigLog = createRunConfigLog({ config, brain, jevEnabled: jev !== null, mode, note: (message) => onEvent({ type: "note", message }) });
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
   /**
    * Whether the brain may take a question with this label. An engine other than DeepSeek (BRAIN_ENGINE_*) has its own
@@ -547,6 +550,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // anything reads them (FA82FQHSJG2F F9: a fresh process re-planned the route without knowing F7 was
     // an elite).
     const runId = str(state.raw["run_id"]);
+    runConfigLog?.observe(state);
     if (options.restoreRun !== false && !isMenuRunId(runId) && runId !== restoredRun && journal.runId !== runId) {
       restoredRun = runId;
       try {
