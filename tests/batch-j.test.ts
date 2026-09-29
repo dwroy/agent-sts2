@@ -240,7 +240,7 @@ describe("4a. Stable Serum: the hand is kept at this turn's end and the next (RE
   });
 
   it("modelled: a lasting drink with nothing this turn", () => {
-    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0);
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, []);
     expect(serum).not.toBeNull();
     expect(serum!.special).toBe("retain_hand");
     expect(turnOnlyDrink(serum!)).toBe(false);
@@ -248,7 +248,7 @@ describe("4a. Stable Serum: the hand is kept at this turn's end and the next (RE
 
   it("rollout: three Strikes held with no energy left come back on the next two turns (and are played), over a deck of idle cards", () => {
     const HIT: EnemyTable = { moves: { HIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
-    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0)!;
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [])!;
     const solver: SolverInput = { hand: [strike(0), strike(1), strike(2), serum], player: player({ energy: 0 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 1 };
     const plans = solveTurn(solver).plans;
     const drink = plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:STABLE_SERUM"))!;
@@ -316,14 +316,14 @@ describe("4c. Draw potions (Distilled Chaos, Glowwater, Gambler's Brew) when the
 
   it("modelPotion: both piles empty is a potion that draws nothing (Gambler's Brew: no change); no context at all is still null", () => {
     for (const id of ["DISTILLED_CHAOS", "GLOWWATER_POTION"]) {
-      const potion = modelPotion(id, id, 0, [], 0, { ...ctx, pilesEmpty: true });
+      const potion = modelPotion(id, id, 0, [], { ...ctx, pilesEmpty: true });
       expect(potion, id).not.toBeNull();
       expect(potion!.generates, id).toBeUndefined();
     }
-    expect(modelPotion("GAMBLERS_BREW", "GAMBLERS_BREW", 0, [], 0, { ...ctx, pilesEmpty: true })).toMatchObject({ special: null });
-    expect(modelPotion("GLOWWATER_POTION", "GLOWWATER_POTION", 0, [], 0)).toBeNull();
+    expect(modelPotion("GAMBLERS_BREW", "GAMBLERS_BREW", 0, [], { ...ctx, pilesEmpty: true })).toMatchObject({ special: null });
+    expect(modelPotion("GLOWWATER_POTION", "GLOWWATER_POTION", 0, [])).toBeNull();
     // Glowwater with nothing to draw: the hand is exhausted and nothing comes back.
-    const glow = { ...modelPotion("GLOWWATER_POTION", "发光水", 0, [], 0, { ...ctx, pilesEmpty: true })!, cost: 0 };
+    const glow = { ...modelPotion("GLOWWATER_POTION", "发光水", 0, [], { ...ctx, pilesEmpty: true })!, cost: 0 };
     const input: SolverInput = { hand: [strike(0), glow], player: player({ energy: 1, drawable: 0 }), enemies: [enemy()], fightKind: "monster", turn: 1 };
     const drink = solveTurn(input).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:"))!;
     expect(drink.outcome.damageDealt).toBe(0);

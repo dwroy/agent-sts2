@@ -75,14 +75,14 @@ describe("1. Liquid Bronze: Thorns 3 for the rest of the fight, in the solver an
   });
 
   it("modelled: Thorns 3, a lasting drink (never \"no effect\")", () => {
-    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, [], 0);
+    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, []);
     expect(bronze).not.toBeNull();
     expect(bronze!.thorns).toBe(3);
     expect(turnOnlyDrink(bronze!)).toBe(false);
   });
 
   it("solver: the drink deals 3 back per enemy hit this turn (the outcome says to whom)", () => {
-    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, [], 0)!;
+    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, [])!;
     const input: SolverInput = { hand: [bronze], player: player({ energy: 0 }), enemies: [enemy({ hp: 50, maxHp: 50, attacks: [{ damage: 4, hits: 3 }] })], fightKind: "monster", turn: 1 };
     const plans = solveTurn(input).plans;
     const drink = plans.find((plan) => plan.steps.length === 1)!;
@@ -95,7 +95,7 @@ describe("1. Liquid Bronze: Thorns 3 for the rest of the fight, in the solver an
   it("rollout: the Thorns stay up on the later turns and wear the attacker down (3 hits of 4 a turn into 30 HP)", () => {
     const HIT: EnemyTable = { moves: { HIT: { damage: 4, hits: 3, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
     const defend = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 12, damage: null });
-    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, [], 0)!;
+    const bronze = modelPotion("LIQUID_BRONZE", "流动铜液", 0, [])!;
     const solver: SolverInput = { hand: [bronze], player: player({ energy: 0, hp: 80 }), enemies: [enemy({ hp: 30, maxHp: 30, attacks: [{ damage: 4, hits: 3 }] })], fightKind: "monster", turn: 1 };
     const plans = solveTurn(solver).plans;
     const drink = plans.find((plan) => plan.steps.length === 1)!;
@@ -152,7 +152,7 @@ describe("2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (
     // Already at half (the shown damage has it): no second +3.
     expect(line(solveTurn(input(3, 38)).plans).outcome.damageDealt).toBe(6);
     // A Blood Potion (20% of 80 = 16) from 38 to 54 takes it off.
-    const blood = { ...modelPotion("BLOOD_POTION", "血液药水", 0, [], 0)!, cost: 0 };
+    const blood = { ...modelPotion("BLOOD_POTION", "血液药水", 0, [])!, cost: 0 };
     const healed: SolverInput = { hand: [blood, card(1, "STRIKE", { damage: 9, damageBase: 6 })], player: player({ hp: 38, energy: 1, redSkull: 3 }), enemies: [enemy()], fightKind: "monster", turn: 1 };
     const drinkFirst = solveTurn(healed).plans.find((plan) => plan.steps.length === 2 && plan.steps[0]!.cardId.startsWith("POTION:"))!;
     expect(drinkFirst.outcome.damageDealt).toBe(6);

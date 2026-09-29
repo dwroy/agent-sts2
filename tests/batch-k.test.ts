@@ -89,7 +89,7 @@ describe("1a. Dai: a potion is a 0-cost one-shot card. An unsimulated potion is 
 });
 
 describe("1b. Dai: no potion cost in the solver's score. A potion's lasting value (Strength, flat, Plating) counted 25% in hallway fights (POTION_LASTING, \"worth more saved for an elite or the boss\")", () => {
-  const strengthPotion = () => modelPotion("STRENGTH_POTION", "力量药水", 0, [], 0)!;
+  const strengthPotion = () => modelPotion("STRENGTH_POTION", "力量药水", 0, [])!;
   // The same effect as a 0-cost card that exhausts (a one-shot card).
   const strengthCard = () => card(5, "ONE_SHOT_STRENGTH", { type: "Skill", cost: 0, target: "self", validTargets: [], strength: 2, exhausts: true });
   const lastingOf = (extra: CardModel, fightKind: SolverInput["fightKind"]) => {
@@ -106,7 +106,7 @@ describe("1b. Dai: no potion cost in the solver's score. A potion's lasting valu
   });
 
   it("Heart of Iron's Plating in a hallway fight: valued like Plating from a card", () => {
-    const iron = modelPotion("HEART_OF_IRON", "铁心药水", 0, [], 0)!;
+    const iron = modelPotion("HEART_OF_IRON", "铁心药水", 0, [])!;
     const armor = card(6, "ONE_SHOT_PLATING", { type: "Skill", cost: 0, target: "self", validTargets: [], plating: 7, special: "plating", exhausts: true });
     const hit: EnemySim = enemy({ attacks: [{ damage: 10, hits: 1 }] });
     const lasting = (extra: CardModel) =>
@@ -154,7 +154,7 @@ describe("3. Stable Serum in the rollout: cards drawn mid-turn that the line can
   const big = (i: number) => card(i, "BIG", { cost: 0, damage: 20, damageBase: 20 });
 
   it("a 3-energy draw-2 card, then the Serum: the 2 cards drawn at 0 energy start turn 2 with the 5 drawn (7 x 20), not in the discard pile (5 x 20)", () => {
-    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0)!;
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [])!;
     const drawer = card(0, "DRAWER", { type: "Skill", cost: 3, target: "self", validTargets: [], draw: 2 });
     const solver: SolverInput = { hand: [drawer, serum], player: player({ energy: 3, drawable: 20 }), enemies: [enemy({ hp: 1000, maxHp: 1000 })], fightKind: "monster", turn: 1 };
     const plans = solveTurn(solver).plans;
@@ -198,7 +198,7 @@ describe("4. Attack-counting relics count every play of an Attack: a replay (Sol
   });
 
   it("Kusarigama: a duplicated Attack counts twice (Duplicator, then two Attacks: the 3rd play hits for 6)", () => {
-    const duplicator = modelPotion("DUPLICATOR", "复制药水", 0, [], 0)!;
+    const duplicator = modelPotion("DUPLICATOR", "复制药水", 0, [])!;
     const hand = [duplicator, card(0, "HIT_A", { damage: 5 }), card(1, "HIT_B", { damage: 5 })];
     const input: SolverInput = { hand, player: player({ energy: 2, kusarigama: { every: 3, damage: 6, count: 0 } }), enemies: [enemy()], fightKind: "monster", turn: 1 };
     const line = solveTurn(input).plans.find((plan) => plan.steps.map((step) => step.cardId).join(">") === "POTION:DUPLICATOR:0>HIT_A>HIT_B")!;

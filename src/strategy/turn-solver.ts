@@ -365,12 +365,6 @@ export interface SolverInput {
   /** Cards already played this turn (Slow). */
   cardsPlayedThisTurn?: number;
   /**
-   * Potions this turn may still drink (boss fights: 1 a turn), null for no cap. A plan over it is
-   * kept only when it wins the fight or ends the turn below 30% max HP (1R3C F17 T1: all three potions
-   * on a 7-damage turn, none left for the 28-damage Dismember).
-   */
-  potionLimit?: number | null;
-  /**
    * Waterfall Giant too slow to kill: at the current damage rate its eruption at death outgrows HP
    * plus a hand of block (1ZQJ: 15 turns, eruption 54), so damage weighs more and the "HP counts double
    * below the eruption" rule is off. Every turn earlier is 3 less eruption and one attack less.
@@ -539,8 +533,6 @@ export interface Outcome {
   strengthGained: number;
   cardsDrawn: number;
   unknownCards: string[];
-  /** Resource cost of the potions this plan drinks (0 when none). */
-  potionCost: number;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
   /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
@@ -637,8 +629,6 @@ interface Sim {
   vulnerableApplied: number;
   weakApplied: number;
   flat: number;
-  /** Resource cost of potions used this turn (not scaled like lasting value). */
-  potionCost: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
@@ -1492,7 +1482,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
-  if (card.type === "Potion") next.potionCost += -card.flatValue;
   if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
@@ -2301,7 +2290,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Personal Hive: each hit clogs a later hand with a Dazed (M812 F28: 2-4 Dazed per hand from T4).
   // A thin draw pile draws them next turn (CY8U F25 T6: 6 Dazed into a 1-card pile, T7 hand 5/5 Dazed).
   if (!winsFight) score -= DAZED_COST * sim.dazedAdded * (input.drawPile !== undefined && input.drawPile.length < 10 ? 2 : 1);
-  score -= sim.potionCost;
 
   return {
     steps: sim.steps,
@@ -2345,7 +2333,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
       unknownCards: sim.unknown,
-      potionCost: sim.potionCost,
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
@@ -2417,7 +2404,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
 }
 
 export interface SolveResult {
@@ -2512,7 +2499,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     vulnerableApplied: 0,
     weakApplied: 0,
     flat: 0,
-    potionCost: 0,
     tempDex: 0,
     intangible: false,
     buffer: input.player.buffer ?? 0,
@@ -2593,17 +2579,14 @@ export function solveTurn(input: SolverInput): SolveResult {
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
     const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
-    const overPotionCap =
-      input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
     // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
-    // board to surprise us). Over the potion cap it is not a plan to offer, but the search goes on (a
-    // later card may win).
+    // board to surprise us).
     const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
     const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
     const samePotions = tie && potionsDrunk === potionStepCount(existing.steps);
-    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length))) {
+    if (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length)) {
       byOutcome.set(signature, plan);
     }
     if (nodes >= maxNodes) {
@@ -2652,9 +2635,9 @@ function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
-  // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
-  // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run). Waking a
-  // sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
+  // Drinking a potion is its own axis (the potions a line drinks, no cost: Dai, a potion is a 0-cost one-shot
+  // card): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
+  // potion-free plan was never shown (Vantom, live run). Waking a sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
   // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
@@ -2666,7 +2649,7 @@ function vector(plan: Plan): number[] {
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

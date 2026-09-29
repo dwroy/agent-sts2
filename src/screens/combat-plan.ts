@@ -1710,7 +1710,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
   const modelledIds = new Set(
     potionsAll
-      .filter((potion) => !mcSources.has(potion.slot) && modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext) !== null)
+      .filter((potion) => !mcSources.has(potion.slot) && modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionContext) !== null)
       .map((potion) => potion.potion_id),
   );
   const isModelledPotion = (potionId: string) => modelledIds.has(potionId);
@@ -1723,14 +1723,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...potionsAll
           .filter((potion) => !mcSources.has(potion.slot))
           .map((potion) =>
-            modelPotion(
-              potion.potion_id,
-              potion.name,
-              potion.slot,
-              potion.valid_targets,
-              0,
-              potionContext,
-            ),
+            modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionContext),
           )
           .filter((card): card is CardModel => card !== null)
           // Draw potions draw nothing under Fiddle either (GMT2 F38 T2: Swift Potion "draws 3", drew 0).
@@ -1741,7 +1734,6 @@ function planTurn(env: DecisionEnv): Decision | null {
       fightKind: kind,
       turn: state.turn ?? 1,
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
-      potionLimit: null,
       raceEruption,
       wither,
       ...focusInput,
@@ -2047,7 +2039,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             ...(solvedInput as SolverInput).hand,
             ...potionsAll
               .filter((potion) => mcSources.has(potion.slot))
-              .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, potionContext))
+              .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionContext))
               .filter((card): card is CardModel => card !== null),
           ],
         };

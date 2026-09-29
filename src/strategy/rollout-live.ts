@@ -415,7 +415,7 @@ const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith(
 
 /**
  * The line a drink line is without its potion(s) when the drink changes nothing: every drink's effect is this
- * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome but the potions' resource cost (3SBPKG9603WD boss T3: Flex
+ * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome (3SBPKG9603WD boss T3: Flex
  * after the last attack, 62.5 vs 64.1 by sampling noise, and Jev drank it). Null when there is none. The drink
  * line stays an option (Dai: potions are never filtered); it is only told apart.
  */
@@ -430,10 +430,7 @@ export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
       .filter((step) => !step.cardId.startsWith("POTION:"))
       .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
       .join(">");
-  const turn = (line: Plan): string => {
-    const { potionCost: _cost, ...rest } = line.outcome;
-    return JSON.stringify(rest);
-  };
+  const turn = (line: Plan): string => JSON.stringify(line.outcome);
   return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
 }
 

@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { DeepSeekClient, severalOptionKeys } from "../src/llm/deepseek.js";
 import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { modelPotion, potionShell, type CardModel } from "../src/strategy/card-model.js";
+import { solveTurn, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
@@ -177,4 +178,33 @@ describe("6. The end-turn lethal note names the Sandpit (UNRL F33 T8: Sandpit 1,
     },
     30_000,
   );
+});
+
+describe("7. No potion-cost plumbing left (potionCost / useCost / potionLimit were always 0 / null: deleted so they cannot be re-enabled)", () => {
+  const strike = (index: number): CardModel => ({ ...potionShell("X", "x", 0, []), index, key: `c${index}`, cardId: "STRIKE_IRONCLAD", name: "Strike", type: "Attack", cost: 1, exhausts: false, target: "single", validTargets: [0], damage: 6 });
+  const input = (): SolverInput => ({
+    hand: [strike(0), strike(1), modelPotion("BLOCK_POTION", "block", 0, [])!, modelPotion("STRENGTH_POTION", "strength", 1, [])!],
+    player: { hp: 59, maxHp: 68, block: 0, energy: 2, weak: false, vulnerable: false, intangible: false, strengthNow: 0 },
+    enemies: [{ index: 0, name: "Boss", hp: 173, maxHp: 173, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 7, hits: 1 }] }],
+    fightKind: "boss",
+    turn: 1,
+  });
+  const drinks = (plan: Plan) => plan.steps.filter((step) => step.cardId.startsWith("POTION:")).length;
+
+  it("a potion card has no use cost: an extra cost argument does nothing", () => {
+    const withCost = (potionShell as (...args: unknown[]) => CardModel)("BLOCK_POTION", "block", 0, [], 15);
+    expect(withCost.flatValue).toBe(0);
+    expect((modelPotion as (...args: unknown[]) => CardModel | null)("BLOCK_POTION", "block", 0, [], 15)!.flatValue).toBe(0);
+  });
+
+  it("a plan's outcome carries no potionCost", () => {
+    const plans = solveTurn(input()).plans;
+    expect(plans.length).toBeGreaterThan(0);
+    for (const plan of plans) expect("potionCost" in plan.outcome).toBe(false);
+  });
+
+  it("no per-turn potion cap: a potionLimit passed in is not read (lines drinking both potions stay)", () => {
+    const capped = solveTurn({ ...input(), potionLimit: 0 } as SolverInput);
+    expect(capped.plans.some((plan) => drinks(plan) === 2)).toBe(true);
+  });
 });
