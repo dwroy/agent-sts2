@@ -829,6 +829,7 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
     act,
     hpPct,
     urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
+    ascension: state.run?.ascension ?? 0,
     costs: roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80),
   };
   const candidates = candidatePaths(context);
