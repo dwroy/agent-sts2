@@ -10,21 +10,31 @@ import type { ActionRequest } from "../mod/client.js";
 import type { AnswerSet } from "../jev/answers.js";
 import { choiceQ, type QuestionSet } from "../jev/questions.js";
 import type { Decision, ResolvedAction } from "../project/types.js";
+import { OUTCOME_BASIS_KEY, outcomeStatsBasis } from "../knowledge/outcome-facts.js";
 import { asArray, asRecord, type JsonValue } from "../util/json.js";
 import { DISCARD_SUFFIX, discardSlotsOf, optionQuestions } from "./potion-discard.js";
 
 export interface PickOption {
   key: string;
   intent: ActionRequest;
-  /** What Jev sees as the option's description. Objects are fine (PLAN.md §2.2). */
+  /**
+   * What Jev sees as the option's description. Objects are fine (PLAN.md §2.2). DeepSeek sees it too, without the
+   * keys only Jev's question carries (JEV_ONLY_KEYS: code's score and its reasons).
+   */
   summary: JsonValue;
-  /** Used only when we fall back, or when Jev's answer is unusable. Higher is better. */
+  /**
+   * Code's order for the fallback (Jev's question, code deciding when Jev's answer is unusable). Higher is better.
+   * Never shown to DeepSeek (V4 M2): its questions carry facts, not code's scores or ranks.
+   */
   score: number;
   /** Shown in the rationale when this option wins. */
   label?: string;
   /** Extra facts for DeepSeek's view of this option (BUILD_DECIDER=deepseek); Jev's question is unchanged. */
   facts?: Record<string, JsonValue>;
-  /** Why code scores the option as it does (DeepSeek's view); the summary's own `why` when absent. */
+  /**
+   * Why code scores the option as it does: shown on route questions only (ROUTE_SCORED), as before V4 M2; the
+   * build screens set none.
+   */
   why?: string;
   /** Memory effect when DeepSeek's choice of this option is played (the route plan). */
   apply?: () => void;
@@ -79,15 +89,15 @@ export interface PickDecisionParams {
   codeMargin?: number;
   maxModelOptions?: number;
   /**
-   * Code has no ranking for these options (an enchant screen): DeepSeek's view carries no code_value or
-   * code_rank, only each option's `why`; the scores only order the fallback.
+   * A route question (ROUTE_SCORED) whose options code does not rank: no code_value or code_rank, only each
+   * option's `why`. Build questions never show a value or rank (V4 M2), so they need not set it.
    */
   unranked?: boolean;
   /** Escalate to DeepSeek when Jev's confidence on the pick is below this. */
   escalateBelow?: number;
   /**
-   * BUILD_DECIDER=deepseek: DeepSeek decides among every option (no code margin, no trimming), shown with
-   * code's value and why, and these run facts. The decision without it is kept as the fallback.
+   * BUILD_DECIDER=deepseek: DeepSeek decides among every option (no code margin, no trimming), each shown with its
+   * facts only, and these run facts. The decision without it is kept as the fallback.
    */
   deepseek?: {
     facts: Record<string, JsonValue>;
@@ -238,40 +248,82 @@ function whyOf(option: PickOption): string {
   return typeof why === "string" && why ? ` (why: ${why})` : "";
 }
 
-/** DeepSeek's instructions on a screen it decides (it is the decider here, not a reviewer). */
+/**
+ * DeepSeek's instructions on a screen it decides (it is the decider here, not a reviewer). V4 M2: code does not score
+ * or rank the options (no code_value, code_rank or why); every number in them is a fact with its source.
+ */
 export const DEEPSEEK_DECIDES_NOTE =
+  "You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts " +
+  "(the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, " +
+  "outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, " +
+  "not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's " +
+  "estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run.";
+
+/**
+ * Keys an option's summary may carry for Jev's question only (the fallback's view: code's card value and its
+ * reasons on a card reward); DeepSeek's view of the option leaves them out.
+ */
+export const JEV_ONLY_KEYS: readonly string[] = ["code_value", "code_rank", "why"];
+
+/**
+ * Route questions (labels "map/…") keep code's route value, rank and why as before V4 M2 until the V4 route work
+ * (the whole map to the brain, no candidate routes; v4-brain) replaces them. Every other DeepSeek pick shows facts only.
+ */
+export const ROUTE_SCORED = /^map\//;
+
+/** The pre-M2 instructions, kept for the route questions (ROUTE_SCORED) with their code values. */
+export const DEEPSEEK_DECIDES_NOTE_ROUTE =
   "You decide this yourself; no other model is asked first. Each option carries code's value and why (a heuristic score: " +
   "advice, not an order; higher is better, 0 or the skip/leave line is the bar). facts are exact: the deck, relics, potions, " +
   "HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Weigh them for the whole run.";
 
+/** The option as DeepSeek sees it: its summary without the Jev-only keys, and its facts. */
+export function brainView(option: PickOption): Record<string, JsonValue> {
+  const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
+  const shown = Object.fromEntries(Object.entries(summary).filter(([key]) => !JEV_ONLY_KEYS.includes(key)));
+  return { ...shown, ...(option.facts ?? {}) };
+}
+
 /**
- * The DeepSeek-decided form of a pick (BUILD_DECIDER=deepseek): every option, with code's score and why
- * in its criteria and the run facts in the state; resolves the same way as the Jev question.
+ * A route option as DeepSeek saw every option before V4 M2 (ROUTE_SCORED): its summary, code's value and rank
+ * (options whose value reads the same share a rank: consistency R9, UBLVBA0D1QXD F1, two routes at 29.28 were ranks
+ * 1 and 2), its why, and its facts.
+ */
+function routeView(option: PickOption, params: PickDecisionParams): Record<string, JsonValue> {
+  const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
+  const shownValue = (entry: PickOption): number => Number(entry.score.toFixed(2));
+  const rank = 1 + params.options.filter((other) => shownValue(other) > shownValue(option)).length;
+  const why = option.why ?? (typeof summary["why"] === "string" ? summary["why"] : null);
+  return {
+    ...summary,
+    ...(params.unranked ? {} : { code_value: shownValue(option), code_rank: rank }),
+    ...(why ? { why } : {}),
+    ...(option.facts ?? {}),
+  };
+}
+
+/**
+ * The DeepSeek-decided form of a pick (BUILD_DECIDER=deepseek): every option with its facts in its criteria (no
+ * code score, rank or reasons) and the run facts in the state; resolves the same way as the Jev question.
  */
 function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDecisionParams["deepseek"]>): Decision {
   const baseline = deepseek.baseline ?? buildPickDecision({ ...params, deepseek: undefined });
   const byKey = new Map(params.options.map((option) => [option.key, option]));
+  // Code's fallback order, for the log only (the rationale says where DeepSeek's pick stood in it).
   const ranked = [...params.options].sort((a, b) => b.score - a.score);
-  // Options whose code_value reads the same share a rank (consistency R9: UBLVBA0D1QXD F1, two routes at 29.28
-  // were ranks 1 and 2, and DeepSeek takes rank 1 more often than not): 1 + the options valued higher.
-  const shownValue = (option: PickOption): number => Number(option.score.toFixed(2));
-  const rankOf = (option: PickOption): number => 1 + params.options.filter((other) => shownValue(other) > shownValue(option)).length;
+  const rankOf = (option: PickOption): number => 1 + params.options.filter((other) => other.score > option.score).length;
   const criteria: Record<string, string | null> = {};
-  for (const option of params.options) {
-    const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
-    const why = option.why ?? (typeof summary["why"] === "string" ? summary["why"] : null);
-    criteria[option.key] = JSON.stringify({
-      ...summary,
-      ...(params.unranked ? {} : { code_value: Number(option.score.toFixed(2)), code_rank: rankOf(option) }),
-      ...(why ? { why } : {}),
-      ...(option.facts ?? {}),
-    });
-  }
-  const instructions = `${params.instructions} ${DEEPSEEK_DECIDES_NOTE}${deepseek.note ? ` ${deepseek.note}` : ""}`;
+  const route = ROUTE_SCORED.test(params.label);
+  for (const option of params.options) criteria[option.key] = JSON.stringify(route ? routeView(option, params) : brainView(option));
+  // The options' outcome statistics come with what they mean and the baseline to read them against.
+  const carriesStats = JSON.stringify([criteria, params.state, deepseek.facts]).includes("outcome_stats");
+  const ascension = typeof deepseek.facts["ascension"] === "number" ? deepseek.facts["ascension"] : null;
+  const facts = carriesStats ? { ...deepseek.facts, [OUTCOME_BASIS_KEY]: outcomeStatsBasis(ascension) } : deepseek.facts;
+  const instructions = `${params.instructions} ${route ? DEEPSEEK_DECIDES_NOTE_ROUTE : DEEPSEEK_DECIDES_NOTE}${deepseek.note ? ` ${deepseek.note}` : ""}`;
   return {
     kind: "ask",
     label: params.label,
-    state: { ...params.state, facts: deepseek.facts },
+    state: { ...params.state, facts },
     questions: { pick: choiceQ(instructions, criteria) },
     deepseek: {
       question: "pick",
@@ -303,7 +355,7 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
       const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
         intent: planned?.intent ?? chosen.intent,
-        rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code value ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length})`,
+        rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code's fallback order: ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length}; not shown to DeepSeek)`,
         confidence: answer && answer.type === "choice" ? answer.confidence : null,
         fallback: false,
         decider: "deepseek",

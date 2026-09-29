@@ -6,6 +6,7 @@ import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
+import { relicOutcome } from "../knowledge/outcome-facts.js";
 
 export function planChest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -50,10 +51,11 @@ export function planChest(env: DecisionEnv): Decision | null {
       state: { run_brief: briefJson(env.brief), situation: { screen: "CHEST", hp: env.brief.hp } },
     };
     if (!deepseekDecides(env)) return buildPickDecision(params);
-    // BUILD_DECIDER=deepseek: the relic text with its numbers where known; code does not score relics.
+    // BUILD_DECIDER=deepseek: the relic text with its numbers where known and our runs' outcome statistics for it
+    // (V4 M2: facts; code does not score relics).
     const withText = options.map((option, at) => {
       const id = str(relics[at]?.["relic_id"]);
-      return { ...option, why: "code does not score relics", facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? "") } };
+      return { ...option, facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? ""), outcome_stats: relicOutcome(id) } };
     });
     return buildPickDecision({ ...params, options: withText, deepseek: { facts: buildFacts(env) } });
   }

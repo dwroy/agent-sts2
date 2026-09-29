@@ -15,6 +15,7 @@ import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
 import { continueAfterDiscard, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { hpBandOf, restOutcome } from "../knowledge/outcome-facts.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -53,17 +54,10 @@ export function planRest(env: DecisionEnv): Decision | null {
     const healScore = hpPct < 0.5 || (beforeBoss && hpPct < 0.85) || (nearBoss && hpPct < 0.65) ? 10 : hpPct < 0.65 ? 5 : 1;
     const planShift = runPlanRestShift(env.screenMemory.runPlan, id, hpPct, beforeBoss);
     const gapShift = gapRestShift(damageGap(state, env.knowledge), id, hpPct, beforeBoss);
+    // Code's fallback order (Jev's question, code deciding without it); never shown to DeepSeek (V4 M2).
     const score = (id === "HEAL" ? healScore : id === "SMITH" ? 6 : 4) + planShift + gapShift;
-    const why = [
-      id === "HEAL"
-        ? `HP ${Math.round(hpPct * 100)}%${beforeBoss ? ", boss or forced elite within 2 floors" : nearBoss ? ", boss within 4 floors" : ""}: heal ${healScore}`
-        : id === "SMITH" ? "smith 6" : `${id} 4`,
-      ...(planShift ? [`run plan rest ${env.screenMemory.runPlan?.rest ?? ""} ${planShift > 0 ? "+" : ""}${planShift}`] : []),
-      ...(gapShift ? [`boss clock gap +${gapShift}`] : []),
-    ].join("; ");
     rawByKey.set(`o${index}`, raw);
     options.push({
-      why,
       key: `o${index}`,
       label: `${title} (${id})`,
       intent: bool(raw["requires_target"]) && asArray(raw["valid_target_indices"]).length > 0
@@ -142,6 +136,8 @@ export function planRest(env: DecisionEnv): Decision | null {
       // FORCED_ELITE_DEPTH nodes with no rest site or shop before it (7KDMKN16GD6B), and a boss-start heal.
       ...(forcedEliteWithin(env.screenMemory, state, REST_NODES, FORCED_ELITE_REST_DEPTH) ? { forced_elite_ahead: `every path meets an Elite within ${FORCED_ELITE_REST_DEPTH} nodes, with no rest site or shop before it` } : {}),
       ...bossStartHealFacts(relicIdsOf(state), nextBoss - floor, healed, hpNow, maxNow),
+      // Our runs' outcome statistics per rest action, by the HP band on arrival (V4 M2: facts, not code's heal/smith score).
+      ...restOutcomeFacts(options.map((option) => str(rawByKey.get(option.key)?.["option_id"]).toUpperCase()), hpNow, maxNow),
     },
   });
   // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
@@ -200,6 +196,19 @@ export function planRest(env: DecisionEnv): Decision | null {
       },
     }),
   );
+}
+
+/**
+ * The rest actions' outcome statistics (outcome-stats.json "rest": runs that took that action at a rest site, by
+ * their HP band on arrival) and the band this rest site is in.
+ */
+export function restOutcomeFacts(actionIds: string[], hp: number, maxHp: number): Record<string, JsonValue> {
+  const kinds = [...new Set(actionIds.filter(Boolean))];
+  if (kinds.length === 0) return {};
+  return {
+    hp_band_now: hpBandOf(hp, maxHp),
+    option_outcome_stats: Object.fromEntries(kinds.map((kind) => [kind, restOutcome(kind)])),
+  };
 }
 
 function relicIdsOf(state: GameState): string[] {

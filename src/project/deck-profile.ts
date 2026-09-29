@@ -3,18 +3,18 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { givesLastingStrength } from "../strategy/card-model.js";
-import { deckProfile } from "../strategy/card-value.js";
 import { asArray, asRecord, num, str } from "../util/json.js";
 import { deckEntries, deckStats } from "./deck.js";
 
 /**
- * The deck in numbers, one line: size and type counts, upgrades, curses/statuses, average cost, lasting
- * Strength sources (cards and relics) and code's AOE / block / draw / scaling / damage card counts (card-value.ts).
+ * The deck in numbers, one line: size and type counts (the game's card types), upgrades, curses/statuses, average
+ * cost, and the lasting Strength sources by name (the cards and relics whose text says they give Strength that
+ * lasts: givesLastingStrength). No code-made card roles (V4 M2: card-value.ts's hand-made AOE / block / draw /
+ * scaling / damage sets are code's heuristics, not facts, and stay out of the brain's questions).
  */
 export function deckProfileLine(state: GameState, knowledge: Knowledge): string {
   const entries = deckEntries(state, knowledge);
   const stats = deckStats(entries);
-  const profile = deckProfile(entries);
   const cards = entries
     .filter((card) => isStrengthCard(card.card_id, knowledge, card.description))
     .map((card) => (card.upgraded && !card.name.endsWith("+") ? `${card.name}+` : card.name));
@@ -23,12 +23,7 @@ export function deckProfileLine(state: GameState, knowledge: Knowledge): string 
     `${stats.total} 张 (攻击 ${stats.attacks}/技能 ${stats.skills}/能力 ${stats.powers}${stats.curses > 0 ? `/诅咒或状态 ${stats.curses}` : ""})`,
     `升级 ${stats.upgraded}`,
     ...(stats.average_cost === null ? [] : [`平均费用 ${stats.average_cost}`]),
-    `力量来源 ${strength.length > 0 ? strength.join("、") : "无"}`,
-    `AOE ${profile.aoe}`,
-    `格挡牌 ${profile.block}`,
-    `过牌 ${profile.draw}`,
-    `成长 ${profile.scaling}`,
-    `伤害牌 ${profile.frontload}`,
+    `力量来源 ${strength.length > 0 ? strength.join("、") : "无"}（牌面或遗物文字写明获得持续的力量）`,
   ].join(" | ");
 }
 

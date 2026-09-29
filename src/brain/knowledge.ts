@@ -30,7 +30,7 @@ export const FULL_KNOWLEDGE_NOTE = [
   "# 全量知识库（背景知识；本题状态里的事实和代码算出的数字优先）",
   "下面是整份知识库：旧知识（铁甲战士攻略、DeepSeek 经验手册、Jev 战斗提示）、本进阶适用的全部经验、怪物数据库、走廊和问号房遭遇战绩、统计表。",
   "和数据冲突时以数据为准：统计表和怪物数据库（日志自动统计，带样本数 n）优先于经验库，经验库优先于旧知识；本题状态里的事实和代码算出的数字优先于这里的一切。",
-  "memory.knowledge 在这种问法下只带本题所给选项的结果统计行；经验条目都在下面的经验库里，不再逐题重复。",
+  "构筑类问题（选牌、商店、休息、事件、选牌屏、宝箱、礼包）的结果统计写在选项里（outcome_stats 等，口径见 facts.outcome_stats_basis），memory.knowledge 不再重复；其他问题的 memory.knowledge 只带本题所给选项的结果统计行。经验条目都在下面的经验库里，不再逐题重复。",
 ].join("\n");
 
 /** The full-knowledge system prompt: v3's rules, the note, the prefix. */

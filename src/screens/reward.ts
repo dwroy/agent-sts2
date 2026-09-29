@@ -14,6 +14,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
+import { cardOutcome } from "../knowledge/outcome-facts.js";
 import { CARD_REWARD_ROOMS } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 
@@ -55,6 +56,8 @@ export function planReward(env: DecisionEnv): Decision | null {
         label: `${name} (${info?.type ?? "?"}, ${info?.cost ?? "?"}E)`,
         intent: { action: "choose_reward_card", option_index: index },
         score: valued.value,
+        // DeepSeek's view: copies already in the deck and our runs' outcome statistics (code_value and why are Jev's only).
+        facts: { in_deck: profile.copies.get(cardId) ?? 0, outcome_stats: cardOutcome(cardId) },
         summary: {
           code_value: valued.value,
           why: valued.reasons.join("; ") || null,
@@ -71,7 +74,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       label: "skip the card reward",
       intent: { action: "skip_reward_cards" },
       score: SKIP_BAR,
-      summary: { card: "skip", code_value: SKIP_BAR, note: "take nothing; the deck stays lean" } satisfies JsonValue,
+      summary: { card: "skip", code_value: SKIP_BAR, note: "take no card" } satisfies JsonValue,
     });
 
     const deckNeeds = { act_boss: str(run["boss_id"]) || null, act, size: profile.size, aoe_cards: profile.aoe, draw_cards: profile.draw, scaling_cards: profile.scaling, damage_cards: profile.frontload, block_cards: profile.block };
@@ -107,16 +110,18 @@ export function planReward(env: DecisionEnv): Decision | null {
               .join(", ")})`,
           }
         : buildPickDecision({ ...params, options: shown });
-    // BUILD_DECIDER=deepseek: every offer and the skip go to DeepSeek, with code's value and why.
+    // BUILD_DECIDER=deepseek: every offer and the skip go to DeepSeek, with their facts (no code value, no skip bar).
     if (!deepseekDecides(env)) return baseline;
     // The act's route rides on the same question while a fork is left (route-review.ts): keep or change.
     const review = routeReviewBlock(env, "card", CARD_REWARD_ROOMS);
-    const note = `code_value below the skip line (${SKIP_BAR}) means code would skip it.`;
+    const note = "in_deck: copies of that card already in your deck.";
+    // DeepSeek's state: the deck as it is, without code's card-role counts (deck_needs) or its advice on skipping.
+    const { deck_needs: _needs, note: _advice, ...deepseekState } = params.state;
     return withRouteReview(
       env,
       buildPickDecision({
         ...params,
-        ...(review ? { state: { ...params.state, route_review: review.state } } : {}),
+        state: review ? { ...deepseekState, route_review: review.state } : deepseekState,
         options,
         deepseek: { facts: buildFacts(env), baseline, note: review ? `${note} ${review.note}` : note },
       }),

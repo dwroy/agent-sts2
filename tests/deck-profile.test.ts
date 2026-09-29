@@ -43,6 +43,13 @@ describe("deck profile Strength sources", () => {
       relic(2, "VAJRA", "金刚杵", "在每场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。"),
     ];
     const state = parseGameState(baseState("MAP", { run: runPayload({ deck, relics }) }));
-    expect(deckProfileLine(state, loggedKnowledge)).toContain("力量来源 与我一战！+、壶铃(锻炼 3 次)、金刚杵 |");
+    expect(deckProfileLine(state, loggedKnowledge)).toContain("力量来源 与我一战！+、壶铃(锻炼 3 次)、金刚杵（");
+  });
+
+  it("carries no code-made card roles (V4 M2): counts by the game's card types, upgrades, cost and the Strength sources only", () => {
+    const deck = [card(0, "STRIKE_IRONCLAD", "打击", "Attack", "造成6点伤害。"), card(1, "THUNDERCLAP", "雷霆一击", "Attack", "对所有敌人造成4点伤害。"), card(2, "SHRUG_IT_OFF", "耸肩无视", "Skill", "获得8点格挡。 抽1张牌。")];
+    const line = deckProfileLine(parseGameState(baseState("MAP", { run: runPayload({ deck, relics: [] }) })), loggedKnowledge);
+    expect(line).toBe("3 张 (攻击 2/技能 1/能力 0) | 升级 0 | 平均费用 1 | 力量来源 无（牌面或遗物文字写明获得持续的力量）");
+    for (const role of ["AOE", "格挡牌", "过牌", "成长", "伤害牌"]) expect(line).not.toContain(role);
   });
 });

@@ -301,7 +301,7 @@ describe("Extra: hand-written knowledge agrees with the experience base (d986a74
 });
 
 describe("5. The enchant screen carries no removal-style ranking (PHMVUY73R0D7 F20: code_rank 1-13, upgraded -8, \"code's ranking for this pick\")", () => {
-  it("DeepSeek's options have no code_value or code_rank, an honest why; the upgraded cards are not marked down", () => {
+  it("DeepSeek's options have no code_value, code_rank or why (V4 M2: facts only, each card's outcome statistics)", () => {
     const fx = logged("phmv-f20-enchant");
     const decision = planSelection({ ...loggedEnv(fx), buildDecider: "deepseek" }) as AskDecision;
     expect(decision.kind).toBe("ask");
@@ -311,7 +311,8 @@ describe("5. The enchant screen carries no removal-style ranking (PHMVUY73R0D7 F
     for (const option of options) {
       expect(option["code_value"]).toBeUndefined();
       expect(option["code_rank"]).toBeUndefined();
-      expect(String(option["why"])).toMatch(/^no code ranking: code does not know which card an enchantment suits/);
+      expect(option["why"]).toBeUndefined();
+      expect(typeof option["outcome_stats"]).toBe("string");
     }
   });
 });
@@ -357,26 +358,27 @@ describe("7. A conclusion naming several options contradicts nothing (XMK1JFZ0VD
 });
 
 describe("8. Shop cards show their cost and type; the removal counts only removable cards (U6RUE7LBUFJF F22, VBHZ77A3N496 F23)", () => {
-  it("the one-shot shop question: Production is 0-cost with its energy as text; the removal's why leaves out the Eternal cards", () => {
+  it("the one-shot shop question: Production is 0-cost with its energy as text; the removal names the Eternal cards it cannot take", () => {
     const decision = decide(oneshotEnv(board("u6ru-f22-shop", "open")));
     const options = optionsOf(decision);
     expect(options["buy_card5"]).toMatchObject({ buy: "生产制造", type: "Skill", rarity: "Uncommon", cost: 0 });
     expect(String(options["buy_card5"]!["text"])).toMatch(/^获得2点能量。/);
     expect(options["buy_card3"]).toMatchObject({ buy: "火焰屏障", cost: 2 });
-    // 5 Eternal Strikes (Nutritious Soup) and Ascender's Bane are not removable; 5 Defends are.
-    expect(String(options["remove"]!["why"])).toMatch(/^5 removable basic Strikes\/Defends in the deck \(Eternal, never removable: 打击 x5, 进阶之灾\)$/);
+    // 5 Eternal Strikes (Nutritious Soup) and Ascender's Bane are not removable (V4 M2: a fact of the option, no code why).
+    expect(options["remove"]).toMatchObject({ not_removable_eternal: "打击 x5, 进阶之灾" });
+    expect(options["remove"]!["why"]).toBeUndefined();
     const facts = (decision as AskDecision).state["facts"] as Record<string, unknown>;
     const stock = facts["shop_stock"] as Record<string, unknown>[];
     expect(stock.find((item) => item["name"] === "生产制造")).toMatchObject({ kind: "card", type: "Skill", cost: 0 });
   });
 
-  it("a deck whose only basics and curse are Eternal: the removal scores as nothing to thin", () => {
+  it("a deck whose only basics and curse are Eternal: the removal says so; DeepSeek sees no code score for it", () => {
     const raw = board("u6ru-f22-shop", "open");
     const deck = (raw["run"] as Record<string, unknown>)["deck"] as Record<string, unknown>[];
     (raw["run"] as Record<string, unknown>)["deck"] = deck.filter((card) => !String(card["card_id"]).startsWith("DEFEND_"));
     const options = optionsOf(decide(oneshotEnv(raw)));
-    expect(String(options["remove"]!["why"])).toMatch(/^0 removable basic Strikes\/Defends in the deck/);
-    expect(Number(options["remove"]!["code_value"])).toBe(8);
+    expect(options["remove"]).toMatchObject({ not_removable_eternal: "打击 x5, 进阶之灾" });
+    expect(options["remove"]!["code_value"]).toBeUndefined();
   });
 });
 

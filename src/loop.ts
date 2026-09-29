@@ -34,6 +34,7 @@ import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
+import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 
 export type LoopMode = "shadow" | "play";
 
@@ -705,7 +706,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           continue;
         }
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
-        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}) });
+        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
