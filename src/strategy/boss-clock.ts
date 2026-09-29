@@ -72,8 +72,8 @@ export const BOSSES: Record<string, BossProfile> = {
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
   QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
-  // Three phases, 100/200/300 (A8 111/212, phase 3 not logged yet: ~318 assumed at the same +6%).
-  TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} and gains a hit every turn (D3X1: dead on its 5th)" },
+  // Three phases, 100/200/300 (A8 111/212/313 as logged).
+  TEST_SUBJECT: { hp: 600, hpA8: 636, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
   SOUL_FYSH: { hp: 211, hpA8: 221, scriptTurns: 12, lossPerTurn: 5.1, note: "shuffles Beckons into the deck, Intangible turns", mechanic: "Intangible turns (each hit deals 1) and Beckons clogging the draw" },
   // Priest 190 (A8 199) plus two followers ~59 (A8 62/63); the fight ends with the priest, winners dealt
@@ -641,18 +641,18 @@ export function testSubjectIntangibleTurns(turns: number): number {
 
 /**
  * Test Subject phase HP at this ascension: the monster DB's logged phase sequence (nearest logged
- * ascension when none is; A8 "111 > 212 > 313"); the hand-set 100/200/300 (A8 111/212/318) when the DB
+ * ascension when none is; A8 "111 > 212 > 313"); the hand-set 100/200/300 (A8 111/212/313) when the DB
  * has no three-phase sequence for it.
  */
 export function testSubjectPhases(ascension: number): [number, number, number] {
   const phases = bossHpAt("TEST_SUBJECT", ascension)?.phases ?? [];
   if (phases.length >= 3) return [phases[0]!, phases[1]!, phases[2]!];
-  return ascension >= 8 ? [111, 212, 318] : [100, 200, 300];
+  return ascension >= 8 ? [111, 212, 313] : [100, 200, 300];
 }
 
 /**
  * The max HP of every phase still to come after the current one, for a boss that revives into a new
- * phase (ADAPTABLE_POWER; the Test Subject is the only one logged: 100/200/300, A8 111/212/~318, the
+ * phase (ADAPTABLE_POWER; the Test Subject is the only one logged: 100/200/300, A8 111/212/313, the
  * last phase without ADAPTABLE). The current phase is the one whose HP is nearest `maxHp`; an unknown
  * reviver gets one more phase at 1.5x its max HP.
  */

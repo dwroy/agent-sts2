@@ -563,3 +563,17 @@ describe("Test Subject phase 2: Multi Claw's damage at this ascension, not the A
     expect(a10.turnsNote).toMatch(/phase 2 must die within ~4 turns of Multi Claw at ~68 HP \(Multi Claw ≈12x3\+ at A10/);
   });
 });
+
+describe("the Test Subject's hand-set fallback is the logged A8 phases (review 2026-09-29 #20)", () => {
+  it("without DB phases: 111/212/313 (636) at A8+, 100/200/300 below", () => {
+    setMonsterDbForTests({ bosses: {}, encounters: {}, monsters: {} } as never);
+    try {
+      expect(testSubjectPhases(9)).toEqual([111, 212, 313]);
+      expect(bossHp({ ...bossProfile("TEST_SUBJECT_BOSS")! }, 9)).toBe(636);
+      expect(bossProfile("TEST_SUBJECT_BOSS")!.hpA8).toBe(636);
+      expect(testSubjectPhases(7)).toEqual([100, 200, 300]);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
