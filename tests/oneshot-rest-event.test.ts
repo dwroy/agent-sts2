@@ -13,6 +13,7 @@ import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory } from "../src/project/types.js";
 import { deckCards } from "../src/screens/oneshot.js";
 import { loggedKnowledge } from "./logged.js";
+import type { JsonValue } from "../src/util/json.js";
 import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { eventPayload, mainMenuPayload } from "./scenarios.js";
 
@@ -23,7 +24,7 @@ setupOneshotTests();
 const REST = "7b0d-f8-rest";
 
 describe("rest site: heal or smith a named card in one question", () => {
-  it("one option per upgradable card with what the upgrade changes; code's rest value leads, its upgrade order ranks the cards", () => {
+  it("one option per upgradable card with what the upgrade changes and the card's outcome statistics; no code value or rank (V4 M2)", () => {
     const decision = decide(env(board(REST, "rest")));
     expect(decision.label).toBe("rest/plan");
     const options = optionsOf(decision);
@@ -31,7 +32,12 @@ describe("rest site: heal or smith a named card in one question", () => {
     const smith = Object.keys(options).filter((key) => key.startsWith("o1:"));
     // 17 cards, 8 distinct upgradable ones (the curse is not).
     expect(smith).toHaveLength(8);
-    expect(options[`o1:${keyOf(board(REST, "rest"), "BASH")}`]).toMatchObject({ card: "痛击", upgrade: "造成8点伤害。 给予2层易伤。 -> 造成10点伤害。 给予3层易伤。", code_rank: 1 });
+    expect(options[`o1:${keyOf(board(REST, "rest"), "BASH")}`]).toMatchObject({ card: "痛击", upgrade: "造成8点伤害。 给予2层易伤。 -> 造成10点伤害。 给予3层易伤。", card_outcome_stats: expect.any(String) });
+    for (const option of Object.values(options)) for (const key of ["code_value", "code_rank", "why"]) expect(option[key]).toBeUndefined();
+    // The rest actions' outcome statistics by HP band, with the band this rest site is in.
+    const restSite = (ask(decision).state["facts"] as Record<string, Record<string, JsonValue>>)["rest_site"]!;
+    expect(Object.keys(restSite["option_outcome_stats"] as Record<string, JsonValue>)).toEqual(expect.arrayContaining(["HEAL", "SMITH"]));
+    expect(restSite["hp_band_now"]).toEqual(expect.any(String));
     expect(options[`o1:${keyOf(board(REST, "rest"), "STRIKE_IRONCLAD")}`]).toMatchObject({ copies: 5, upgrade: "造成6点伤害。 -> 造成9点伤害。" });
     expect(Object.values(options).some((option) => option["card"] === "进阶之灾")).toBe(false);
     const question = ask(decision);
@@ -133,12 +139,15 @@ describe("events: an option that picks from the deck is decided with its card(s)
     const options = optionsOf(decision);
     const strike = keyOf(raw, "STRIKE_IRONCLAD");
     const injury = keyOf(raw, "INJURY");
+    // V4 M2: each eligible card as it is and its outcome statistics; no code value as a target, no why.
     expect(options["o0"]).toMatchObject({
       then: "remove 2 card(s) from your deck",
-      eligible_cards: expect.objectContaining({ [strike]: expect.stringMatching(/×5 .*\[code remove value 80\]$/), [injury]: expect.stringMatching(/\[code remove value 100\]$/) }),
-      target_why: expect.stringMatching(/removal order/),
+      eligible_cards: expect.objectContaining({ [strike]: expect.stringMatching(/×5 \(Attack, 1E\): 造成6点伤害。$/), [injury]: expect.not.stringMatching(/code/) }),
+      card_outcome_stats: expect.objectContaining({ [strike]: expect.any(String), [injury]: expect.any(String) }),
     });
-    expect(options[`o1:${strike}`]?.["why"]).toMatch(/enchant target: 打击 0 \(code does not rank cards to enchant\)/);
+    expect(options["o0"]!["target_why"]).toBeUndefined();
+    expect(options[`o1:${strike}`]?.["why"]).toBeUndefined();
+    expect(options[`o1:${strike}`]).toMatchObject({ then: "enchant 打击", card_outcome_stats: expect.any(String) });
     expect(Object.keys(options).filter((key) => key.startsWith("o1:")).length).toBeGreaterThan(5);
     const resolved = choose(decision, "o0", [injury, strike]);
     expect(resolved.plan?.steps).toEqual(["o0", injury, strike]);

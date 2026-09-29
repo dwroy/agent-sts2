@@ -11,6 +11,7 @@
  */
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
+import { cardOutcome } from "../knowledge/outcome-facts.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { deckEntries, type DeckEntry } from "../project/deck.js";
 import type { DecisionEnv, ScreenMemory } from "../project/types.js";
@@ -300,15 +301,16 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
 
 /* ---- an option together with the card(s) its follow-up takes -------------------------------------- */
 
-/** How code ranks a card for this follow-up (a small tie-break inside the option's own value) and what the value means. */
-export type TargetScore = (card: DeckCard) => { score: number; why: string };
+/** How code orders a card for this follow-up in its fallback (a small tie-break inside the option's own score); never shown to DeepSeek. */
+export type TargetScore = (card: DeckCard) => { score: number };
 
 /**
  * One option whose action opens a deck selection, as DeepSeek sees it in a one-shot question:
  * - one card to pick: one option per eligible distinct card ("o1:c5"), each with the card (and, for an
- *   upgrade, what the upgrade changes); the option's value plus a tie-break by code's ranking of the card;
- * - N >= 2 cards (or "up to N"): the option itself, listing the eligible card keys; DeepSeek names them in
- *   its answer's "cards" list.
+ *   upgrade, what the upgrade changes) and our runs' outcome statistics for that card (card_outcome_stats); the
+ *   fallback's score is the option's plus a tie-break by code's order of the card (not shown to DeepSeek);
+ * - N >= 2 cards (or "up to N"): the option itself, listing the eligible card keys with their outcome statistics;
+ *   DeepSeek names them in its answer's "cards" list.
  * Choosing it plays the option's action and names the card(s) for the selection screen (PendingPick). No
  * eligible card: the option as it was (its selection is asked as before).
  */
@@ -346,9 +348,8 @@ export function withFollowUp(
         ...option,
         key: `${option.key}:${card.key}`,
         label: `${option.label ?? option.key}: ${follow.task} ${card.name}`,
-        // The option's own value leads; code's card ranking only orders the cards within it.
+        // The fallback's order: the option's own score leads; code's card order only orders the cards within it.
         score: option.score + ranked.score / 1000,
-        why: `${option.why ?? ""}${option.why ? "; " : ""}${follow.task} target: ${card.name} ${ranked.score} (${ranked.why})`,
         summary: {
           ...summary,
           then: `${follow.task} ${card.name}`,
@@ -356,6 +357,7 @@ export function withFollowUp(
           ...(card.count > 1 ? { copies: card.count } : {}),
           ...(preview ? { upgrade: preview } : { card_text: truncate(card.text, 140) }),
           ...(card.enchant ? { enchanted: card.enchant } : {}),
+          card_outcome_stats: cardOutcome(card.identity.card_id),
         },
         plan: () => ({ id: ref, steps: [option.key, card.key], apply: arm([card]), journal: `${option.label ?? option.key}: ${follow.task} ${card.name}` }),
       } satisfies PickOption;
@@ -369,9 +371,9 @@ export function withFollowUp(
         ...summary,
         then: `${follow.task} ${follow.upTo ? "up to " : ""}${follow.count} card(s) from your deck`,
         cards_to_name: `answer "cards": [${follow.upTo ? "up to " : ""}${follow.count} keys from eligible_cards, repeat a key for several copies]`,
-        // Each card with code's value as this follow-up's target (the ranking the selection screen used).
-        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, `${cardLine(card)} [code ${follow.task} value ${targetScore(card).score}]`])),
-        target_why: targetScore(eligible[0]!).why,
+        // Each card as it is, and our runs' outcome statistics for it (V4 M2: no code value as a target).
+        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, cardLine(card)])),
+        card_outcome_stats: Object.fromEntries(eligible.map((card) => [card.key, cardOutcome(card.identity.card_id)])),
       },
       plan: (answer: PlanAnswer) => {
         const picked: DeckCard[] = [];

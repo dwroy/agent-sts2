@@ -130,19 +130,21 @@ describe("DeepSeek prompt: one copy of each fact", () => {
     const decision = planReward(rewardEnv()) as AskDecision;
     expect(decision.kind).toBe("ask");
     const raw = decision.state;
-    // The Jev-era copies are there before…
-    expect(Object.keys(raw)).toEqual(expect.arrayContaining(["run_brief", "deck_stats", "deck_needs", "deck", "facts"]));
+    // The Jev-era copies are there before… (V4 M2: deck_needs, code's card-role counts, and the skip advice are not
+    // in DeepSeek's question at all.)
+    expect(Object.keys(raw)).toEqual(expect.arrayContaining(["run_brief", "deck_stats", "deck", "facts"]));
+    expect(raw["deck_needs"]).toBeUndefined();
+    expect(raw["note"]).toBeUndefined();
     const view = deepseekState(raw);
     // …and gone from DeepSeek's view; what facts does not hold stays.
     expect(view["deck"]).toBeUndefined();
     expect(view["deck_stats"]).toBeUndefined();
     expect(view["deck_needs"]).toBeUndefined();
     expect(view["run_brief"]).toEqual({ character: "Ironclad" });
-    expect(view["note"]).toBe(raw["note"]);
     const facts = view["facts"] as Record<string, JsonValue>;
     expect(facts["deck_needs"]).toBeUndefined();
     expect(facts["act_boss"]).toBe("SLIME_BOSS");
-    expect(String(facts["deck_profile"])).toMatch(/^5 张 \(攻击 3\/技能 1\/能力 1\) \| 升级 1 \| 平均费用 1\.2 \| 力量来源 .* \| AOE \d+ \| 格挡牌 \d+ \| 过牌 \d+ \| 成长 \d+ \| 伤害牌 \d+$/);
+    expect(String(facts["deck_profile"])).toMatch(/^5 张 \(攻击 3\/技能 1\/能力 1\) \| 升级 1 \| 平均费用 1\.2 \| 力量来源 [^|]*（牌面或遗物文字写明获得持续的力量）$/);
     expect(facts["hp"]).toBe("55/80 (69%)");
     // Every card, relic and potion appears once in the whole message.
     const message = choiceMessage(raw, "Which?", {}, undefined);

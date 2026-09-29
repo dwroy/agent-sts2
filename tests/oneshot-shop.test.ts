@@ -114,19 +114,21 @@ describe("shop: one question for the whole visit", () => {
     expect(Object.keys(options).sort()).toEqual(
       ["buy_card0", "buy_card1", "buy_card2", "buy_card3", "buy_card4", "buy_card5", "buy_card6", "buy_potion0", "buy_potion1", "buy_potion2", "buy_relic0", "buy_relic1", "buy_relic2", "discard_potion0", "leave", "remove"].sort(),
     );
-    expect(options["buy_relic1"]).toMatchObject({ price: 400, affordable_now: false, code_value: expect.any(Number), code_rank: expect.any(Number), why: expect.any(String) });
-    expect(options["buy_card3"]).toMatchObject({ buy: "火焰屏障", price: 74, affordable_now: true });
-    expect(options["remove"]).toMatchObject({ price: 100, affordable_now: true, why: expect.stringMatching(/basic Strikes/) });
+    // V4 M2: facts only (a relic's text and outcome statistics, a card's copies in the deck and statistics); no code value, rank or why.
+    expect(options["buy_relic1"]).toMatchObject({ price: 400, affordable_now: false, text: expect.any(String), outcome_stats: expect.any(String) });
+    expect(options["buy_card3"]).toMatchObject({ buy: "火焰屏障", price: 74, affordable_now: true, in_deck: expect.any(Number), outcome_stats: expect.any(String) });
+    expect(options["remove"]).toMatchObject({ price: 100, affordable_now: true, not_removable_eternal: expect.any(String) });
+    for (const option of Object.values(options)) for (const key of ["code_value", "code_rank", "why"]) expect(option[key]).toBeUndefined();
     const question = ask(decision);
     expect(question.deepseek.plan).toBeDefined();
     expect(question.deepseek.oneshot).toBeDefined();
     expect(String(question.questions["pick"]?.instructions)).toMatch(/\{"plan": \[/);
     expect(question.state["your_cards"]).toMatchObject({ c0: expect.stringMatching(/Eternal/), c4: expect.stringMatching(/×5/) });
-    // Code's removal order (the ranking the removal screen showed), Eternal cards left out.
-    const order = question.state["code_removal_order"] as { order: string[]; why: string };
-    expect(order.order[0]).toBe("c4 防御 70");
-    expect(order.order.some((line) => line.startsWith("c0 ") || line.startsWith("c9 "))).toBe(false);
-    expect(order.why).toMatch(/removal order/);
+    // The removal's candidates with their outcome statistics (V4 M2: no code removal order), Eternal cards left out.
+    expect(question.state["code_removal_order"]).toBeUndefined();
+    const candidates = question.state["your_cards_outcome_stats"] as Record<string, string>;
+    expect(candidates["c4"]).toEqual(expect.any(String));
+    expect(Object.keys(candidates).some((key) => key === "c0" || key === "c9")).toBe(false);
     expect(question.state["note"]).toBeUndefined();
     const facts = question.state["facts"] as Record<string, JsonValue>;
     expect(facts["shop_stock"]).toBeDefined();

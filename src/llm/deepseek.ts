@@ -215,7 +215,7 @@ export const SYSTEM = [
 const EFFORTS = new Set(["max", "high", "low", "off"]);
 
 /**
- * Thinking output is the largest DeepSeek cost (Dai 2026-09-28): picks with a code value and few
+ * Thinking output is the largest DeepSeek cost (Dai 2026-09-28): card, rest and deck picks with few
  * options think at "high"; the run plan, route plan, shop, events, transform and enchant keep the
  * default (max). Re-asks share their question's label, so they get the same tier.
  */

@@ -11,6 +11,15 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
+import { cardOutcome } from "../knowledge/outcome-facts.js";
+
+/** A bundle's cards: id and name. */
+function bundleCards(bundle: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): { id: string; name: string }[] {
+  return asArray(bundle["cards"]).map(asRecord).map((card) => {
+    const id = str(card["card_id"]);
+    return { id, name: str(card["name"], knowledge.card(id)?.name ?? id) };
+  });
+}
 
 export function planBundle(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -45,7 +54,10 @@ export function planBundle(env: DecisionEnv): Decision | null {
         instructions: "Which starting card bundle should I take?",
         actThreshold: env.thresholds.act,
         strictJev: env.strictJev,
-        options: deepseekDecides(env) ? options.map((option) => ({ ...option, why: "code does not score bundles" })) : options,
+        // DeepSeek's view: each bundle's cards with our runs' outcome statistics per card (V4 M2: facts, no score).
+        options: deepseekDecides(env)
+          ? options.map((option, at) => ({ ...option, facts: { card_outcome_stats: Object.fromEntries(bundleCards(bundles[at]!, knowledge).map((card) => [card.name, cardOutcome(card.id)])) } }))
+          : options,
         state: { run_brief: briefJson(env.brief), situation: { screen: "BUNDLE_SELECTION" } },
         ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env) } } : {}),
       });
@@ -87,7 +99,7 @@ export function planCapstone(env: DecisionEnv): Decision | null {
     instructions: "Which option should I take?",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
-    options: deepseekDecides(env) ? options.map((option) => ({ ...option, why: "code does not score these options" })) : options,
+    options,
     state: { run_brief: briefJson(env.brief), situation: { screen: "CAPSTONE_SELECTION" } },
     ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env) } } : {}),
   });

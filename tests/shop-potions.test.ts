@@ -1,4 +1,7 @@
-/** Shop potions for DeepSeek: expected HP saved in the act boss fight and the empty-slot fact (audit 2026-09-28). */
+/**
+ * Shop potions for DeepSeek: the empty-slot fact (audit 2026-09-28). V4 M2: the potion model's "expected HP saved in the
+ * act boss fight" (strategy/potion-value.ts, kept and tested here) is code's estimate and no longer in the question.
+ */
 
 import { describe, expect, it } from "vitest";
 
@@ -42,25 +45,21 @@ describe("potionHpSaved", () => {
   });
 });
 
-describe("shop potions when DeepSeek decides", () => {
-  it("SFCE F11 (1 of 2 slots empty): Blood Potion's code_value is its HP, above leave, not -6.7", () => {
+describe("shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth)", () => {
+  it("SFCE F11 (1 of 2 slots empty): Blood Potion carries the free-slot fact, no code value or expected HP saved", () => {
     const options = shopOptions("sfce-f11-shop");
     const blood = byName(options, "鲜血药水");
-    expect(blood["code_value"]).toBeGreaterThan(0);
     expect(blood["potion_slots"]).toBe("1 of 2 potion slots empty");
-    expect(String(blood["expected_hp_saved_in_boss"])).toMatch(/HP: heals 20% of max HP/);
-    // Not a purchase rule: the removal still ranks above it, and leave stays an option.
-    expect(Number(options["remove"]!["code_value"])).toBeGreaterThan(Number(blood["code_value"]));
+    for (const key of ["code_value", "code_rank", "why", "expected_hp_saved_in_boss"]) expect(blood[key]).toBeUndefined();
     expect(options["leave"]).toBeDefined();
   });
 
-  it("SFCE F15: Block Potion shows ~12 HP saved; an unmodelled potion says so and costs only its price", () => {
+  it("SFCE F15: every potion is listed the same way, modelled or not", () => {
     const options = shopOptions("sfce-f15-shop");
-    expect(byName(options, "格挡药水")["code_value"]).toBeCloseTo(12 - 52 / 25, 1);
-    const energy = byName(options, "能量药水");
-    expect(energy["expected_hp_saved_in_boss"]).toBe("not modelled");
-    expect(energy["code_value"]).toBeCloseTo(-50 / 25, 1);
-    expect(String(energy["why"])).toContain("not modelled");
+    for (const name of ["格挡药水", "能量药水"]) {
+      expect(byName(options, name)["potion_slots"]).toEqual(expect.any(String));
+      expect(byName(options, name)["expected_hp_saved_in_boss"]).toBeUndefined();
+    }
   });
 
   it("with every slot full the fact says a discard comes first", () => {
@@ -71,7 +70,7 @@ describe("shop potions when DeepSeek decides", () => {
     expect(String(byName(options, "格挡药水")["potion_slots"])).toContain("no empty potion slot");
   });
 
-  it("the Jev/code path keeps its old potion score", () => {
+  it("the Jev/code path keeps its old potion score and shows no DeepSeek facts", () => {
     const fx = logged("sfce-f15-shop");
     const memory = createScreenMemory("SHOP");
     memory.shopOpened = true;

@@ -57,6 +57,8 @@ interface OutcomeRow {
 
 export interface OutcomeStats {
   ascension?: number | string;
+  /** When tools/build-outcome-stats.py wrote the file. */
+  generated?: string;
   baseline?: { runs?: number; mean_floor?: number | null; boss_pass_by_act?: Record<string, { n?: number; boss_pass?: number }> };
   cards?: Record<string, { name?: string; by_act?: Record<string, { picked?: OutcomeRow; offered_not_picked?: OutcomeRow }> }>;
   relics?: Record<string, { name?: string; by_act?: Record<string, OutcomeRow> }>;
@@ -372,8 +374,12 @@ export interface KnowledgeSlice {
 export const SLICE_LESSONS_HEADING = `经验库（过往对局复盘提炼；置信 高/中/低，n=支持局数，反例=相反证据局数；是证据不是命令，与状态里的事实和代码算出的数字一起权衡）:`;
 export const SLICE_STATS_HEADING = `结果统计（日志自动统计，观察数据：混有「在什么局面下选它」的因素；n<5 标「少」）:`;
 
-/** The whole `knowledge` section for one DeepSeek question ("" when nothing applies). */
-export function knowledgeSlice(state: GameState, label: string, criteria: Record<string, string | null> = {}, offeredCards: readonly string[] = []): KnowledgeSlice {
+/**
+ * The whole `knowledge` section for one DeepSeek question ("" when nothing applies). `withStats: false` when the
+ * question carries its options' outcome statistics itself (V4 M2 build questions: knowledge/outcome-facts.ts), so
+ * they are not repeated here.
+ */
+export function knowledgeSlice(state: GameState, label: string, criteria: Record<string, string | null> = {}, offeredCards: readonly string[] = [], withStats = true): KnowledgeSlice {
   const act = actNumber(state);
   const asc = state.run?.ascension ?? 0;
   const combat = asRecord(state.combat?.raw ?? state.raw["combat"]);
@@ -388,7 +394,7 @@ export function knowledgeSlice(state: GameState, label: string, criteria: Record
     enemies,
   };
   const lessons = selectLessons(input);
-  const stats = statsLines(state, input);
+  const stats = withStats ? statsLines(state, input) : [];
   if (lessons.length === 0 && stats.length === 0) return { text: "", lessons: [], stats: 0 };
   const parts: string[] = [];
   if (lessons.length > 0) {

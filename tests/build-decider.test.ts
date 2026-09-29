@@ -84,7 +84,7 @@ const plan: RunPlan = {
 const crabRun = (over: Raw = {}): Raw => runPayload({ boss_id: "KAISER_CRAB_BOSS", floor: 20, act_id: "1", ascension: 8, ...over });
 
 describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
-  it("card reward: every offer and the skip, with code's value and why; run facts; the Jev/code decision kept as fallback", () => {
+  it("card reward: every offer and the skip, with their facts (no code value, rank or why: V4 M2); run facts; the Jev/code decision kept as fallback", () => {
     const raw = { ...rewardCardPayload(), run: crabRun() };
     const e = env(raw);
     e.screenMemory.runPlan = plan;
@@ -93,10 +93,13 @@ describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
     expect(decision.label).toBe("reward/card");
     expect(Object.keys(view.options).sort()).toEqual(["card0", "card1", "card2", "skip"]);
     for (const option of Object.values(view.options)) {
-      expect(option["code_value"]).toEqual(expect.any(Number));
-      expect(option["code_rank"]).toEqual(expect.any(Number));
+      expect(option["code_value"]).toBeUndefined();
+      expect(option["code_rank"]).toBeUndefined();
+      expect(option["why"]).toBeUndefined();
     }
-    expect(view.options["card2"]?.["why"]).toMatch(/run plan: wanted/);
+    for (const key of ["card0", "card1", "card2"]) expect(view.options[key]).toMatchObject({ in_deck: expect.any(Number), outcome_stats: expect.any(String) });
+    expect(view.options["skip"]).toEqual({ card: "skip", note: "take no card" });
+    expect(view.facts["outcome_stats_basis"]).toMatch(/^outcome_stats .*A\d+ 数据/);
     expect(view.facts["act_boss_clock"]).toMatchObject({ boss: "KAISER_CRAB", need_damage_per_turn: expect.any(Number), deck_damage_per_turn_estimate: expect.any(Number), survivable_turns: expect.any(Number), harder_because: expect.any(String) });
     expect(view.facts["your_run_plan"]).toMatchObject({ archetype: "Strength", want: ["INFLAME"], rest: "smith" });
     for (const key of ["hp", "gold", "deck", "relics", "potions", "potion_slots", "deck_size", "floors_to_act_boss"]) expect(view.facts[key]).toBeDefined();
@@ -110,11 +113,13 @@ describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
     expect(resolved?.intent).toEqual({ action: "skip_reward_cards" });
   });
 
-  it("shop (BUILD_ONESHOT=off): purchases, removal and leaving, with code's value and why", () => {
+  it("shop (BUILD_ONESHOT=off): purchases, removal and leaving, with their facts (no code value or why: V4 M2)", () => {
     const view = deepseekView(decide(env({ ...shopPayload(true), run: crabRun() }, { oneshot: "off" })));
     expect(Object.keys(view.options).sort()).toEqual(["buy_card0", "buy_relic0", "leave", "remove"]);
-    expect(view.options["buy_card0"]?.["why"]).toMatch(/card value/);
-    expect(view.options["remove"]?.["why"]).toMatch(/basic Strikes\/Defends/);
+    for (const option of Object.values(view.options)) for (const key of ["code_value", "code_rank", "why"]) expect(option[key]).toBeUndefined();
+    expect(view.options["buy_card0"]).toMatchObject({ in_deck: expect.any(Number), outcome_stats: expect.any(String) });
+    expect(view.options["buy_relic0"]).toMatchObject({ text: expect.any(String), outcome_stats: expect.any(String) });
+    expect(view.options["remove"]).toMatchObject({ buy: "card removal", text: "removes one card from the deck" });
     expect(view.facts["shop_stock"]).toBeDefined();
   });
 
@@ -124,11 +129,12 @@ describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
     expect(view.facts["rest_site"]).toMatchObject({ heal_amount: expect.stringMatching(/24 HP/), upgradable_cards: expect.any(Array) });
   });
 
-  it("event: the unlocked, non-lethal options, noting code does not score them", () => {
+  it("event: the unlocked, non-lethal options with our runs' outcome statistics per option (no code why: V4 M2)", () => {
     const decision = decide(env(eventPayload()));
     const view = deepseekView(decision);
     expect(Object.keys(view.options).sort()).toEqual(["o0", "o3"]);
-    expect(view.options["o0"]?.["why"]).toMatch(/does not score/);
+    expect(view.options["o0"]?.["why"]).toBeUndefined();
+    expect(Object.keys((view.facts["event"] as Record<string, Record<string, unknown>>)["option_outcome_stats"]!).sort()).toEqual(["o0", "o3"]);
     expect(view.facts["event"]).toMatchObject({ id: "BIG_FISH" });
   });
 
