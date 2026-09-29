@@ -475,7 +475,8 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     expect(a9).toMatch(/^250 血，/);
     expect(a9).toContain("虹吸回合回血 15");
     expect(a9).toContain("依次 23→28→33");
-    expect(a9).toContain("A8 T10 前击杀 13/15 赢");
+    expect(a9).toContain("A9 8 场只赢 2 场（T7、T12 击杀），T10 前击杀只赢 1/3");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8 27 场：T10 前击杀 13/15 赢");
     expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("依次 20→25→30");
     const a7 = journalBossNote("WATERFALL_GIANT_BOSS", 7)!;
     expect(a7).toMatch(/^240 血，/);
@@ -491,7 +492,7 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     expect(bossNote(giant, 9)).toContain("Siphon heals 15 HP; Pressure Gun on T5/T10/T15 (23/28/33)");
     expect(bossNote(giant, 7)).toContain("Siphon heals 10 HP; Pressure Gun on T5/T10/T15 (20/25/30)");
     const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
-    expect(clock.mechanic).toContain("kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
+    expect(clock.mechanic).toContain("kill it early (A8 (27 fights): killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
     setMonsterDbForTests(GIANT_DB as never);
   });
 });

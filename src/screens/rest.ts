@@ -116,6 +116,10 @@ export function planRest(env: DecisionEnv): Decision | null {
       floors_to_act_boss: nextBoss - floor,
       next_nodes: nextNodeTypes(env.screenMemory, state),
       forced_next: forcedNext(env.screenMemory, state),
+      // Facts only (the code's heal score keeps its own beforeBoss rule): an Elite every path meets within
+      // FORCED_ELITE_DEPTH nodes with no rest site or shop before it (7KDMKN16GD6B), and a boss-start heal.
+      ...(forcedEliteWithin(env.screenMemory, state, REST_NODES, FORCED_ELITE_REST_DEPTH) ? { forced_elite_ahead: `every path meets an Elite within ${FORCED_ELITE_REST_DEPTH} nodes, with no rest site or shop before it` } : {}),
+      ...bossStartHealFacts(relicIdsOf(state), nextBoss - floor, healed, hpNow, maxNow),
     },
   });
   // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
@@ -184,6 +188,7 @@ function relicIdsOf(state: GameState): string[] {
  * (route-projection REST_RELICS). hp_if_option and the rest facts assumed a flat 30% before.
  */
 export function restHealHere(healText: string, maxHp: number, relicIds: readonly string[]): { base: number; rest: RestHeal; total: number; text: string } {
+  // Eternal Feather's heal on entering is already in the HP here (no deck size: no enterHeal).
   const relics = restHealOf(relicIds);
   const own = /[（(](\d+)[）)]/.exec(healText);
   const sum = (pattern: RegExp): number => [...healText.matchAll(pattern)].reduce((total, match) => total + Number(match[1]), 0);
@@ -250,6 +255,29 @@ function samePoint(a: { row: number; col: number } | null, b: { row: number; col
 function mapPoint(value: unknown): { row: number; col: number } | null {
   const point = asRecord(value);
   return typeof point["row"] === "number" && typeof point["col"] === "number" ? { row: point["row"], col: point["col"] } : null;
+}
+
+/** Nodes ahead a rest site looks for a forced Elite in (as an event does: FORCED_ELITE_DEPTH). */
+export const FORCED_ELITE_REST_DEPTH = 3;
+
+/**
+ * Relics that heal at the start of a boss fight: Pantograph (缩放仪, 「在Boss战开始时，回复{Heal}点生命值」; logged
+ * JRN33CL7EB50 F32 -> F33: 31 -> 58 with Blood Vial's 2, i.e. 25; CAYK F32 -> F33 64 -> 85 = max).
+ */
+export const BOSS_START_HEAL: Record<string, number> = { PANTOGRAPH: 25 };
+
+/**
+ * The boss-start heal facts at the rest site before an act boss (the boss within 2 floors): what the relic heals
+ * and the HP each choice would enter the boss with (5NFGDU7BQPD3 F16: the rest heal was weighed without it).
+ */
+export function bossStartHealFacts(relicIds: string[], floorsToBoss: number, healed: { hp: number; max: number }, hpNow: number, maxNow: number): Record<string, JsonValue> {
+  const relics = relicIds.filter((id) => BOSS_START_HEAL[id] !== undefined);
+  if (relics.length === 0 || floorsToBoss > 2) return {};
+  const amount = relics.reduce((sum, id) => sum + BOSS_START_HEAL[id]!, 0);
+  const enter = (hp: number, max: number) => `${Math.min(max, hp + amount)}/${max}`;
+  return {
+    boss_start_heal: `${relics.map((id) => (id === "PANTOGRAPH" ? "Pantograph (缩放仪)" : id)).join(", ")} heals ${amount} HP when the boss fight starts: entering it at ${enter(healed.hp, healed.max)} after healing here, ${enter(hpNow, maxNow)} without (if no fight on the way)`,
+  };
 }
 
 /** Map node types a rest site shows as; events come from "Unknown" (and "Ancient") nodes. */

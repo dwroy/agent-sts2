@@ -24,7 +24,7 @@ import { closeSync, existsSync, openSync, readSync, statSync } from "node:fs";
 import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import type { RoutePlan } from "../screens/map.js";
-import { trackLizardTail } from "../screens/combat-plan.js";
+import { noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
 import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
@@ -211,6 +211,8 @@ export interface ReplayResult {
   lastMap: RememberedMap | null;
   /** Lizard Tail seen to trigger this run (combat-plan trackLizardTail): the relic carries no used mark. */
   lizardTail: ScreenMemory["lizardTail"] | null;
+  /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
+  turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
   /** How much was replayed. */
   counts: { states: number; decisions: number; recorded: number; runPlans: number; routePlans: number };
 }
@@ -260,6 +262,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     if (state.screen === "MAP") rememberMap(memory, state);
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
+    noteTurnStartExhaust(memory, state);
     // A run plan is made on the state just read, before its decision (legacy rows: the plan's ts falls
     // between the state's read and its decision's ts, so it goes with the first state logged after it).
     while (nextPlan < plans.length && plans[nextPlan]!.at <= at) {
@@ -292,7 +295,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       }
     }
   }
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */

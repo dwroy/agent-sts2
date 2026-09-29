@@ -165,10 +165,18 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const afterDiscard = env.screenMemory.eventAfterDiscard;
   if (afterDiscard) {
     const here = afterDiscard.runId === runId && afterDiscard.eventId === eventId && afterDiscard.floor === floor;
-    // The discard not landed yet (the belt still full): wait a moment for it, then ask afresh.
-    if (here && potionBeltFull(state.run?.raw) && Date.now() - afterDiscard.at < AFTER_DISCARD_WAIT_MS) return null;
+    // The slot just discarded is empty now (without a slot noted: the belt is no longer full).
+    const landed = afterDiscard.slot !== undefined ? slotEmpty(state.run?.raw, afterDiscard.slot) : !potionBeltFull(state.run?.raw);
+    // The discard not landed yet: wait a moment for it, then ask afresh.
+    if (here && !landed && Date.now() - afterDiscard.at < AFTER_DISCARD_WAIT_MS) return null;
+    // More slots chosen to free (an option giving several potions): the next discard.
+    const [nextSlot, ...rest] = afterDiscard.more ?? [];
+    if (here && landed && nextSlot !== undefined && state.available_actions.includes("discard_potion")) {
+      env.screenMemory.eventAfterDiscard = { ...afterDiscard, slot: nextSlot, more: rest, at: Date.now() };
+      return { kind: "act", label: "event/discard-more", intent: { action: "discard_potion", option_index: nextSlot }, rationale: `freeing potion slot ${nextSlot} too before ${afterDiscard.title}, as chosen with the discards` };
+    }
     env.screenMemory.eventAfterDiscard = undefined;
-    const option = here && !potionBeltFull(state.run?.raw) ? usable.find((candidate) => numOrNull(candidate["index"]) === afterDiscard.option && str(candidate["title"]) === afterDiscard.title) : undefined;
+    const option = here && landed ? usable.find((candidate) => numOrNull(candidate["index"]) === afterDiscard.option && str(candidate["title"]) === afterDiscard.title) : undefined;
     if (option) {
       return { kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: afterDiscard.option }, rationale: `the potion slot is free: taking ${afterDiscard.title}, as chosen with the discard` };
     }
@@ -248,23 +256,28 @@ export function planEvent(env: DecisionEnv): Decision | null {
       ...(excluded.size > 0 ? { excluded_by_hp_guard: guardNote } : {}),
     },
   };
+  // Every potion slot full and an option gives potion(s): the reward screen cannot discard, so they are lost
+  // unless slots are freed here first (KYC0RYEN0NVW F20, YQL8D59999AX F28: 洗劫 with a full belt). Each way of
+  // discarding is its own option, the plain one says what happens; which (if any) is the decider's call, Jev's
+  // or DeepSeek's.
+  const rawOf = (option: PickOption) => pool.find((candidate) => `o${numOrNull(candidate["index"])}` === option.key);
+  const discards = potionDiscardOptions(env, eventId);
+  const withDiscards = (option: PickOption): PickOption[] => {
+    const raw = rawOf(option);
+    const need = raw ? potionSlotsNeeded(str(raw["description"]), state.run?.raw) : 0;
+    if (!raw || need <= 0 || discards.slots.length === 0) return [option];
+    const lost = { ...option, summary: { ...(option.summary as Record<string, JsonValue>), potion_slots: `all full: the ${need === 1 ? "potion" : `${need} potions`} this option gives beyond the free slots ${need === 1 ? "is" : "are"} lost (the reward screen cannot discard); the discard options below free slots first` } };
+    return [lost, ...discards.make(option, numOrNull(raw["index"]) ?? 0, str(raw["title"]), need)];
+  };
   // BUILD_DECIDER=deepseek: events, Neow's offer and the act-start Ancient relic are DeepSeek's call.
-  if (!byDeepseek) return buildPickDecision(params);
+  if (!byDeepseek) return buildPickDecision({ ...params, options: options.flatMap(withDiscards) });
   const ascension = state.run?.ascension ?? 0;
   const fight = forced ? forcedFightCost(forced, actOf(state), ascension, state.run?.boss_id ?? null) : null;
   const lethal = usable.filter((option) => !unguarded.includes(option)).map((option) => str(option["title"]));
-  const rawOf = (option: PickOption) => pool.find((candidate) => `o${numOrNull(candidate["index"])}` === option.key);
-  const discards = potionDiscardOptions(env, eventId);
   const deepseekOptions = options.flatMap((option) => {
     const raw = rawOf(option);
     const hpFacts = raw ? eventHpFacts(eventHpCost(str(raw["description"])), hp, maxHp, forced, fight) : {};
-    const plain = { ...option, why: "code does not score event options", summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } };
-    // Every potion slot full and this option gives a potion: the reward screen cannot discard, so the potion is
-    // lost unless a slot is freed here first (KYC0RYEN0NVW F20, YQL8D59999AX F28: 洗劫 with a full belt). Each
-    // discard is its own option, the plain one says what happens; which (if any) is the decider's call.
-    if (!raw || discards.length === 0 || !givesPotion(str(raw["description"]))) return [plain];
-    const lost = { ...plain, summary: { ...(plain.summary as Record<string, JsonValue>), potion_slots: "all full: the potion this option gives is lost (the reward screen cannot discard); the discard options below free a slot first" } };
-    return [lost, ...discards.map((discard) => discard(plain, numOrNull(raw["index"]) ?? 0, str(raw["title"])))];
+    return withDiscards({ ...option, why: "code does not score event options", summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } });
   });
   const deepseekState = { ...params.state, note: "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out." };
   const facts = buildFacts(env, {
@@ -323,38 +336,72 @@ function potionBeltFull(run: Record<string, unknown> | undefined): boolean {
   return belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
 }
 
+/** The potion slot with this index is empty (slots keep their index: 3SBP F15 slot 0 discarded, slot 1 stayed 1). */
+function slotEmpty(run: Record<string, unknown> | undefined, index: number): boolean {
+  const slot = asArray(asRecord(run)["potions"]).map(asRecord).find((entry) => numOrNull(entry["index"]) === index);
+  return slot !== undefined && !bool(slot["occupied"]);
+}
+
+/**
+ * Potion slots an option's potions need beyond the empty ones: the potions it gives (「获得[blue]3[/blue]瓶…药水」;
+ * a potion without a number is one) less the slots it adds (「获得[blue]1[/blue]个药水栏位」, 药瓶皮套) and the empty
+ * slots, at most the belt's size (more cannot be kept). 0: nothing is lost.
+ */
+export function potionSlotsNeeded(description: string, run: Record<string, unknown> | undefined): number {
+  if (!givesPotion(description)) return 0;
+  const plain = description.replace(/\[\/?[a-z]+\]/g, "");
+  const counted = [...plain.matchAll(/获得(\d+)瓶[^。，,]*?药水/g)].reduce((sum, m) => sum + Number(m[1]), 0);
+  const english = [...plain.matchAll(/(?:gain|obtain)\s+(\d+)\s[^.]*?potions?/gi)].reduce((sum, m) => sum + Number(m[1]), 0);
+  const potions = counted + english > 0 ? counted + english : 1;
+  const slotsAdded = [...plain.matchAll(/获得(\d+)个药水栏位|(?:gain|obtain)\s+(\d+)\s+potion slots?/gi)].reduce((sum, m) => sum + Number(m[1] ?? m[2]), 0);
+  const belt = asArray(asRecord(run)["potions"]).map(asRecord);
+  const empty = belt.filter((slot) => !bool(slot["occupied"])).length;
+  return Math.max(0, Math.min(belt.length, potions - slotsAdded - empty));
+}
+
+/** Every set of `size` items of `items` (in order). */
+function combinations<T>(items: T[], size: number): T[][] {
+  if (size === 0) return [[]];
+  return items.flatMap((item, i) => combinations(items.slice(i + 1), size - 1).map((rest) => [item, ...rest]));
+}
+
 /** An option text that gives potion(s) (「获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。」). */
 export function givesPotion(description: string): boolean {
   return /获得[^。]*药水|(?:gain|obtain)[^.]*potion/i.test(description);
 }
 
 /**
- * With every potion slot full and discarding allowed here: for each potion that can be discarded, a maker of the
- * "discard it, then this option" variant of an option (the discard is played now, the option next: memory
- * eventAfterDiscard). None otherwise.
+ * With discarding allowed here: the potions that can be discarded, and a maker of the "discard them, then this
+ * option" variants of an option needing `need` slots: every set of 1 to `need` of them (the decider picks which,
+ * and how many; code never picks for it). The first discard is played now, the rest and then the option next
+ * (memory eventAfterDiscard).
  */
-function potionDiscardOptions(env: DecisionEnv, eventId: string): ((option: PickOption, index: number, title: string) => PickOption)[] {
+function potionDiscardOptions(env: DecisionEnv, eventId: string): { slots: { index: number; name: string }[]; make: (option: PickOption, optionIndex: number, title: string, need: number) => PickOption[] } {
   const { state } = env;
-  if (!state.available_actions.includes("discard_potion") || !potionBeltFull(state.run?.raw)) return [];
   const runId = str(state.raw["run_id"]);
   const floor = state.run?.floor ?? null;
-  return asArray(asRecord(state.run?.raw)["potions"])
-    .map(asRecord)
-    .filter((slot) => bool(slot["occupied"]) && bool(slot["can_discard"], true) && numOrNull(slot["index"]) !== null)
-    .map((slot) => {
-      const index = numOrNull(slot["index"])!;
-      const name = str(slot["name"], str(slot["potion_id"]));
-      return (option: PickOption, optionIndex: number, title: string): PickOption => ({
+  const slots = !state.available_actions.includes("discard_potion")
+    ? []
+    : asArray(asRecord(state.run?.raw)["potions"])
+        .map(asRecord)
+        .filter((slot) => bool(slot["occupied"]) && bool(slot["can_discard"], true) && numOrNull(slot["index"]) !== null)
+        .map((slot) => ({ index: numOrNull(slot["index"])!, name: str(slot["name"], str(slot["potion_id"])) }));
+  const make = (option: PickOption, optionIndex: number, title: string, need: number): PickOption[] =>
+    Array.from({ length: Math.min(need, slots.length) }, (_, k) => combinations(slots, k + 1)).flat().map((set) => {
+      const names = set.map((slot) => `${slot.name} (potion slot ${slot.index})`).join(" and ");
+      const [first, ...more] = set.map((slot) => slot.index);
+      return {
         ...option,
-        key: `${option.key}:d${index}`,
-        label: `discard ${name}, then ${title}`,
-        intent: { action: "discard_potion", option_index: index },
-        summary: { ...(option.summary as Record<string, JsonValue>), discard_first: `${name} (potion slot ${index}): discarded now to free the slot, then this option` },
+        key: `${option.key}:d${set.map((slot) => slot.index).join("+")}`,
+        label: `discard ${set.map((slot) => slot.name).join(" and ")}, then ${title}`,
+        intent: { action: "discard_potion", option_index: first! },
+        summary: { ...(option.summary as Record<string, JsonValue>), discard_first: `${names}: discarded now to free ${set.length === 1 ? "a slot" : `${set.length} slots`}, then this option` },
         apply: () => {
-          env.screenMemory.eventAfterDiscard = { runId, eventId, floor, option: optionIndex, title, at: Date.now() };
+          env.screenMemory.eventAfterDiscard = { runId, eventId, floor, option: optionIndex, title, at: Date.now(), slot: first!, more };
         },
-      });
+      };
     });
+  return { slots, make };
 }
 
 /** The monster-DB entry of each enemy the event's text or options name (an event that starts a fight). */

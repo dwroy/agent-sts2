@@ -875,19 +875,26 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
 export const INTIMIDATING_HELMET_BLOCK = 4;
 /** Paper Phrog: Vulnerable enemies take 75% more, not 50% (its game text). */
 export const PAPER_PHROG_VULNERABLE = 1.75;
+/**
+ * Cloak Clasp: block at the end of our turn per card in hand (its description's {Block} is a template; logged
+ * 7MDJ/JEGB/CWU9/88HN turns: HP lost = shown incoming - block - cards held, e.g. CWU9 F44 T1 11 -> 9 with 2).
+ */
+export const CLOAK_CLASP_BLOCK = 1;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
 /**
- * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), and Inferno
+ * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
  * (INFERNO_POWER amount, 6 / 9 upgraded) once for its own start-of-turn HP loss and once more for a
- * Crimson Mantle's (both are HP lost on our turn). 9XZX T5 -> T6: Crusher 55 -> 49, Rocket 140 -> 134.
+ * Crimson Mantle's (both are HP lost on our turn), and Rolling Boulder's amount. 9XZX T5 -> T6: Crusher
+ * 55 -> 49, Rocket 140 -> 134.
  */
 export function turnStartAoe(relicIds: string[], player: Record<string, unknown>): number {
   const hourglass = relicIds.includes("MERCURY_HOURGLASS") ? MERCURY_HOURGLASS_DAMAGE : 0;
   const inferno = powerAmount(player, "INFERNO_POWER");
   const lossEvents = inferno > 0 ? 1 + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0) : 0;
-  return hourglass + inferno * lossEvents;
+  // Rolling Boulder: its amount is what the next start of turn deals to every enemy (then +5; the rollout grows it).
+  return hourglass + inferno * lossEvents + powerAmount(player, "ROLLING_BOULDER_POWER");
 }
 const WITHER_EVERY = 6;
 const WITHER_BASE_DAMAGE = 3;
@@ -957,13 +964,25 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
 export function exhaustedSinceTurnStart(env: DecisionEnv): boolean {
   const size = exhaustPileSize(env.state.raw);
   if (size === undefined) return false;
-  const key = `${fightKey(env.state)}:${env.state.turn ?? "?"}`;
   const start = env.screenMemory.turnStartExhaust;
-  if (start?.key !== key) {
-    env.screenMemory.turnStartExhaust = { key, size };
-    return false;
-  }
-  return size > start.size;
+  if (noteTurnStartExhaust(env.screenMemory, env.state)) return false;
+  return size > start!.size;
+}
+
+/**
+ * Notes the exhaust pile's size at the turn's first combat frame (memory.turnStartExhaust); true when this frame
+ * is that first one. The journal replay after a restart feeds it the run's logged frames, so a turn restarted
+ * mid-way keeps its first frame's pile as the baseline (it was the first frame seen after the restart: a card
+ * exhausted before it was missed).
+ */
+export function noteTurnStartExhaust(memory: DecisionEnv["screenMemory"], state: DecisionEnv["state"]): boolean {
+  if (!state.in_combat) return false;
+  const size = exhaustPileSize(state.raw);
+  if (size === undefined) return false;
+  const key = `${fightKey(state)}:${state.turn ?? "?"}`;
+  if (memory.turnStartExhaust?.key === key) return false;
+  memory.turnStartExhaust = { key, size };
+  return true;
 }
 
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
@@ -1357,6 +1376,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
+    ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
@@ -1930,7 +1950,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const tieNote = (plan: Plan): Record<string, JsonValue> => {
     if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
     const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
-    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (the same expected further HP loss and deaths); the rollout picks none of them` };
+    const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, HP lost this turn, enemy HP left and turns alive" : "the same expected further HP loss and deaths";
+    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
     rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {};

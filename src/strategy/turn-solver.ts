@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { applyUpgrade, freeCardPick, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
+import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
@@ -241,6 +241,11 @@ export interface PlayerSim {
    * Inferno's amount for its own 1 HP loss). It kills a crab left at or below it (PLC F33 T9, 9XZX T7).
    */
   turnStartAoe?: number;
+  /**
+   * Block at the end of our turn for each card still in hand (Cloak Clasp: 「在你的回合结束时，每有一张手牌，
+   * 就获得1点格挡」; logged 7MDJ/JEGB/CWU9/88HN: HP lost = incoming - block - cards held).
+   */
+  blockPerHeldCard?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
   /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
@@ -536,6 +541,17 @@ export interface Outcome {
   randomExhausts?: number;
   /** Damage a Thrash of this line absorbed (by hand index): the rollout adds it to that Thrash for its later plays. */
   thrashGrowth?: { index: number; amount: number }[];
+  /**
+   * A Thrash (by hand index) that took one of several Attacks at random: the rollout picks it among the hand's
+   * Attacks left unplayed and grows that Thrash by its shown damage plus `strength` (this turn's Strength gained
+   * by then, Weak-scaled); `least` is the solver's own conservative growth (the least of them).
+   */
+  thrashRandom?: { index: number; strength: number; least: number }[];
+  /**
+   * Unrelenting's free Attack(s) not used this turn (FREE_ATTACK_POWER): they stay up into the next turn (logged
+   * 21TKTPL5D4A6 F3: Unrelenting the last Attack of T2, T3 began with FREE_ATTACK_POWER 1 and its Strike cost 0).
+   */
+  freeAttacksLeft?: number;
 }
 
 export interface Plan {
@@ -646,6 +662,7 @@ interface Sim {
   randomExhausts: number;
   /** Damage each Thrash played this turn absorbed (by hand index): added to that Thrash for the fight. */
   thrashGrowth: { index: number; amount: number }[];
+  thrashRandom: { index: number; strength: number; least: number }[];
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
@@ -1209,6 +1226,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.regen += amount;
     next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
   }
+  // Primal Force: every Attack left in hand becomes a Giant Rock (1 energy, 20 damage; upgraded 24).
+  if (card.special === "primal_force") {
+    next.hand = next.hand.map((entry) => (entry.type === "Attack" ? giantRockFrom(entry, card.upgraded, player.strengthNow ?? 0, player.weak) : entry));
+  }
   // Blessing of the Forge: every card left in hand upgraded (its logged upgrade numbers added).
   if (card.special === "forge" && card.upgrades) {
     const upgrades = card.upgrades;
@@ -1398,7 +1419,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
  * lethal, Byrdonis lived at 17); 69 logged absorbs: the next Thrash's base grew by the absorbed card's shown
  * damage (HGDBHW8CJK8C F20: Strike 6 shown 14 at Strength 8, Thrash base 4 -> 18). The growth is in the outcome
  * (thrashGrowth); the rollout carries it to the Thrash it puts back in the discard pile.
- * One Attack: that one. Several: the pick is random, so the least damage counts (like randomVictim), the average
+ * One Attack: that one. Several: the pick is random (the rollout picks it among the Attacks: thrashRandom), the average
  * Attack's value is lost, and no other Attack is planned after it (which one went is unknown; the loop re-plans
  * on the new hand). Skills and Powers stay playable.
  */
@@ -1415,13 +1436,14 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
     next.exhausted = [...next.exhausted, least];
   } else {
     next.flat -= attacks.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / attacks.length;
-    next.randomExhausts += 1;
+    // Which Attack went is the rollout's random pick (thrashRandom): only Attacks, its own shown damage.
+    next.thrashRandom = [...next.thrashRandom, { index: card.index, strength: next.strength * weakFactor, least: added(least) }];
     next.held = [...next.held, ...attacks];
     next.hand = next.hand.filter((entry) => entry.type !== "Attack");
   }
   next.exhaustedCount += 1;
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
-  if (added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
+  if (attacks.length === 1 && added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
@@ -1784,6 +1806,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player);
     }
   }
+  // Ethereal cards still in hand are exhausted at the end of the turn, before the enemies act: each one's Feel
+  // No Pain Block (etherealBlock, below) is a Block gain, and Juggernaut hits a random enemy for each.
+  const etherealHeld = [...sim.hand, ...sim.held].filter((card) => card.ethereal && card.type !== "Potion").length;
+  if (etherealHeld > 0 && sim.feelNoPain > 0 && (input.player.juggernaut ?? 0) > 0 && sim.enemies.some((enemy) => enemy.alive)) {
+    sim = clone(sim);
+    for (let k = 0; k < etherealHeld; k += 1) {
+      const victim = randomVictim(sim);
+      if (victim) hitEnemyRaw(sim, victim, input.player.juggernaut ?? 0);
+    }
+  }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
@@ -1823,7 +1855,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
-  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow;
+  // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
+  const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2179,6 +2213,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
+      ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
+      ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
     },
   };
 }
@@ -2322,6 +2358,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnExhausted: 0,
     randomExhausts: 0,
     thrashGrowth: [],
+    thrashRandom: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
     topPlaced: false,

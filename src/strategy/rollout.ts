@@ -44,7 +44,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
-import type { CardModel } from "./card-model.js";
+import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
@@ -494,6 +494,11 @@ export interface RolloutInput {
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
   spawns?: Record<string, SpawnTemplate[]>;
+  /**
+   * A card put into the draw pile each time it is shuffled (Biiig Hug: 「每当你的抽牌堆打乱洗牌时，将一张煤灰加入你的
+   * 抽牌堆」; logged CMUX F19/F20/F22: one Soot in the new draw pile after each shuffle), or absent.
+   */
+  onShuffle?: CardModel;
 }
 
 /** One enemy an on-death spawn brings (RolloutInput.spawns). */
@@ -691,7 +696,7 @@ export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { 
 }
 
 /** A lasting power the rollout carries into its later turns (a SimPlayer field). */
-type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable";
+type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder" | "hellraiser" | "darkEmbrace";
 
 /**
  * Power cards whose lasting effect the rollout carries: the SimPlayer field, the power it shows as (for
@@ -710,7 +715,28 @@ const POWER_EFFECTS: Record<string, { effect: LastingPower; power: string; amoun
   RUPTURE: { effect: "rupture", power: "RUPTURE_POWER", amount: [1, 2] },
   PYRE: { effect: "pyre", power: "PYRE_POWER", amount: [1, 2] },
   UNMOVABLE: { effect: "unmovable", power: "UNMOVABLE_POWER", amount: [1, 1] },
+  ROLLING_BOULDER: { effect: "boulder", power: "ROLLING_BOULDER_POWER", amount: [5, 5] },
+  HELLRAISER: { effect: "hellraiser", power: "HELLRAISER_POWER", amount: [1, 1] },
+  // 「每当有一张牌被消耗时，抽1张牌」 (DARK_EMBRACE_POWER 1 a copy).
+  DARK_EMBRACE: { effect: "darkEmbrace", power: "DARK_EMBRACE_POWER", amount: [1, 1] },
 };
+
+/**
+ * Hellraiser (「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」): a Strike drawn at the start of a later
+ * turn is played at once, free, at a random enemy (logged WFR4 F15 T2: 5 drawn, 3 Strikes auto-played, the hand
+ * held 2 and Byrdonis 71 -> 39). In the policy's hand it is a 0-energy card at a random enemy (the solver's worst
+ * victim), the way Distilled Chaos plays the pile's top cards.
+ */
+function hellraised(card: CardModel): CardModel {
+  return { ...card, cost: 0, xCost: false, playable: true, ...(card.target === "single" ? { target: "random" as const, validTargets: [] } : {}) };
+}
+
+/**
+ * Rolling Boulder (「在你的回合开始时，对所有敌人造成5点伤害，然后将该伤害增加5点」): the power's amount is the
+ * next start of turn's damage to every enemy, 5 more after each (logged ROLLING_BOULDER_POWER 5, 10, 15, … 35
+ * over M6P7 F48 T3-T9; KYC0 F28: played T1, the segments 52/48/38 -> 47/43/33 at T2's start, amount 10).
+ */
+export const BOULDER_STEP = 5;
 
 /** HP lost at the start of our next turn (Crimson Mantle's per copy, Inferno's 1, anything else already up). */
 function startTurnHpLossOf(player: SimPlayer): number {
@@ -722,9 +748,9 @@ function startLossEvents(player: SimPlayer): number {
   return (player.inferno > 0 ? 1 : 0) + (player.mantle > 0 ? 1 : 0);
 }
 
-/** Damage to every enemy at the start of our next turn (combat-plan turnStartAoe): relics plus Inferno per loss event. */
+/** Damage to every enemy at the start of our next turn (combat-plan turnStartAoe): relics, Inferno per loss event, Rolling Boulder. */
 function turnStartAoeOf(player: SimPlayer): number {
-  return player.relicAoe + player.inferno * startLossEvents(player);
+  return player.relicAoe + player.inferno * startLossEvents(player) + player.boulder;
 }
 
 /** Enemy turns a lone dead Decimillipede segment stays down, and the HP it returns with when REATTACH_POWER is unread. */
@@ -863,8 +889,19 @@ interface SimPlayer {
   clarityTurns: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
-  /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
+  /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno and Rolling Boulder. */
   relicAoe: number;
+  /** Rolling Boulder: the next start of turn's damage to every enemy; BOULDER_STEP more after each. */
+  boulder: number;
+  /** Hellraiser up: a Strike drawn is played at once, free, at a random enemy (hellraised). */
+  hellraiser: boolean;
+  /** Unrelenting's free Attacks left at the end of the last turn (FREE_ATTACK_POWER stays up into the next). */
+  freeAttacks: number;
+  /**
+   * Dark Embrace (cards drawn per card exhausted): the ethereal cards exhausted at the end of a turn draw that
+   * many each, discarded with the hand (the draw pile runs down, and may be reshuffled, before the next turn).
+   */
+  darkEmbrace: number;
   /** Start-of-turn HP loss from anything but Crimson Mantle and Inferno. */
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
@@ -926,6 +963,8 @@ const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[
 interface Piles {
   draw: CardModel[];
   discard: CardModel[];
+  /** RolloutInput.onShuffle: into the draw pile at a random place each time the discard pile is shuffled in. */
+  onShuffle?: CardModel;
 }
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
@@ -1126,6 +1165,7 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   player.block += player.mantle;
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
+  if (player.boulder > 0) player.boulder += BOULDER_STEP;
   if (aoe <= 0) return 0;
   let dealt = 0;
   for (const e of enemies) {
@@ -1225,6 +1265,8 @@ function applyPlan(
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
+  // Thrashes that took one of several Attacks at random: put back once the pick is made (below).
+  const thrashPending: { back: CardModel; grown: number; picks: { strength: number }[] }[] = [];
   for (const step of plan.steps) {
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
@@ -1250,6 +1292,7 @@ function applyPlan(
       const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
       if (effect.effect === "keepsBlock") player.keepsBlock = true;
       else if (effect.effect === "unmovable") player.unmovable = true;
+      else if (effect.effect === "hellraiser") player.hellraiser = true;
       else player[effect.effect] += amount;
       playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
     }
@@ -1260,6 +1303,11 @@ function applyPlan(
     const back = handBase[at] ?? card;
     // Thrash: the damage it absorbed this turn is added to it for its later plays (3SBPKG9603WD).
     const grown = (o.thrashGrowth ?? []).filter((growth) => growth.index === card.index).reduce((sum, growth) => sum + growth.amount, 0);
+    const picks = (o.thrashRandom ?? []).filter((entry) => entry.index === card.index);
+    if (picks.length > 0 && back.damage !== null) {
+      thrashPending.push({ back, grown, picks });
+      continue;
+    }
     if (grown > 0 && back.damage !== null) {
       piles.discard.push({ ...back, damage: back.damage + grown, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + grown } : {}) });
       continue;
@@ -1271,6 +1319,21 @@ function applyPlan(
   // through the discard pile, "fight over 8/8", actual -60 and death).
   const exhausted = new Set(o.exhausted ?? []);
   const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
+  // Thrash takes an Attack (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): one of the unplayed Attacks,
+  // and that Thrash grows by its shown damage (plus the Strength gained by then), as the solver counts one.
+  for (const pending of thrashPending) {
+    let added = 0;
+    for (const pick of pending.picks) {
+      const attacks = unplayed.filter((i) => hand[i]!.type === "Attack");
+      if (attacks.length === 0) break;
+      const taken = attacks[Math.floor(random() * attacks.length)]!;
+      unplayed.splice(unplayed.indexOf(taken), 1);
+      added += Math.max(0, Math.floor((hand[taken]!.damage ?? 0) + pick.strength));
+    }
+    const total = pending.grown + added;
+    const back = pending.back;
+    piles.discard.push(total > 0 ? { ...back, damage: back.damage! + total, ...(back.damageBase !== undefined ? { damageBase: back.damageBase + total } : {}) } : back);
+  }
   for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
   // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
   // outcome): they leave the fight, not back through the discard pile.
@@ -1280,6 +1343,13 @@ function applyPlan(
   for (let i = 0; i < o.cardsDrawn; i += 1) {
     const card = drawOne(piles, random);
     if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
+  }
+  // Dark Embrace: each ethereal card exhausted at the end of the turn draws a card, discarded with the hand
+  // (not in a won fight: there is no end of turn).
+  const etherealEnd = o.winsFight ? 0 : unplayed.filter((i) => hand[i]!.ethereal).length;
+  for (let k = 0; k < etherealEnd * player.darkEmbrace; k += 1) {
+    const card = drawOne(piles, random);
+    if (card) piles.discard.push(card);
   }
   // Status cards the line's turn made (the solver priced them, the piles never got them): Dazed from hits
   // on a Personal Hive into the draw pile, Wounds from unblocked Painful Stabs and the Withers held at the
@@ -1294,6 +1364,7 @@ function applyPlan(
   addMade("WITHER", o.withersAdded, "discard");
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
+  player.freeAttacks = o.freeAttacksLeft ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
@@ -1508,6 +1579,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
     if (piles.discard.length === 0) return undefined;
     piles.draw = shuffle(piles.discard, random);
     piles.discard = [];
+    if (piles.onShuffle) piles.draw.splice(Math.floor(random() * (piles.draw.length + 1)), 0, piles.onShuffle);
   }
   return piles.draw.pop();
 }
@@ -1571,6 +1643,10 @@ function simulate(
     strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
+    boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
+    hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
+    freeAttacks: 0,
+    darkEmbrace: input.playerPowers["DARK_EMBRACE_POWER"] ?? 0,
     otherStartLoss: 0,
     startDealt: 0,
     playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
@@ -1598,7 +1674,7 @@ function simulate(
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
   // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
-  player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player));
+  player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player) - player.boulder);
   player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
@@ -1654,7 +1730,7 @@ function simulate(
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
     };
   });
-  const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };
+  const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
   // Modelled potions still held in this sample: 0-cost cards that exist once (drunk: gone).
@@ -1691,6 +1767,10 @@ function simulate(
       if (!card) break;
       handBase.push(card);
       const drawn = withStrength(card, player, i, targets);
+      if (player.hellraiser && isStrikeCard(card)) {
+        hand.push({ ...hellraised(drawn), ...(i < player.chains ? { soulbound: true } : {}) });
+        continue;
+      }
       hand.push({
         ...drawn,
         ...(player.tangledNext > 0 && drawn.type === "Attack" && !drawn.xCost && drawn.cost >= 0 ? { cost: drawn.cost + player.tangledNext } : {}),
@@ -1734,7 +1814,8 @@ function simulate(
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
-      freeAttacks: 0,
+      // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
+      freeAttacks: player.freeAttacks,
       duplicate: 0,
       buffer: 0,
       vigor: 0,

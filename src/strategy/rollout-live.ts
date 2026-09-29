@@ -367,8 +367,8 @@ export type LiveRollout =
       byPlan: Map<Plan, LineEstimate>;
       /**
        * The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may
-       * add; ties and saturated boards by enemy HP left, then turns survived; null when that ties too
-       * (pickRolloutBest).
+       * add; ties by enemy HP left, then turns survived; saturated boards by deaths, HP lost this turn, then
+       * enemy HP left and turns survived; null when that ties too (pickRolloutBest).
        */
       best: Plan | null;
       /**
@@ -426,22 +426,34 @@ export const SATURATED_HP = 1;
 export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
 
+/** Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. */
+const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
+
 /**
  * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
  * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
  * then code's order. When every line is saturated (its loss capped at the HP we have, no sample won) the
- * value says nothing: the enemy HP left and turns alive alone decide, and when they tie too there is no
- * best line (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9 by one
- * sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ * value says nothing: the samples dead within the horizon decide first (fewest), then the HP this turn
+ * loses (least), then the enemy HP left and turns alive; when they all tie there is no best line and the
+ * lines tied are returned (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9
+ * by one sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best;
+ * CJ88575SQS6H F17 T2: "-14, dead 5/8" was tagged best over "-2, dead 1/8" by enemy HP left).
  * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
- * left comes first, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders): summed
- * enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
+ * left comes first among those, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders):
+ * summed enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
  */
-export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean } {
+export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
   const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   const top = Math.max(...lines.map((line) => line.value));
   let contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  if (saturated) {
+    // Deaths within the horizon, then this turn's loss: what still differs when the expected loss is capped.
+    const fewest = Math.min(...contenders.map((line) => line.deaths));
+    contenders = contenders.filter((line) => line.deaths === fewest);
+    const least = Math.min(...contenders.map(turnLoss));
+    contenders = contenders.filter((line) => turnLoss(line) === least);
+  }
   if (contenders.every((line) => line.leaderHpLeft !== null && line.leaderHpLeft !== undefined)) {
     const leastLeader = Math.min(...contenders.map((line) => line.leaderHpLeft!));
     contenders = contenders.filter((line) => line.leaderHpLeft! <= leastLeader + LEADER_HP_TIE);
@@ -450,7 +462,9 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   // alive (a stable sort: code's order among equals).
   const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
   const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
-  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) return { best: null, saturated };
+  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) {
+    return { best: null, saturated, tied: near.filter((line) => near[0]!.turnsSurvived - line.turnsSurvived < ROLLOUT_TURNS_TIE) };
+  }
   return { best: near[0]!, saturated };
 }
 
@@ -465,11 +479,19 @@ export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
  * first line by float noise). On a board that is not saturated, the eligible lines that read the same as the
  * best (sameShownResult; enemy HP left and damage do not break it): two or more of them shown, none is the
  * best and they are all tied; one shown, it is the best (an unshown line as good adds nothing); none shown,
- * the best as before (added alone). A saturated board keeps pickRolloutBest's tie-break.
+ * the best as before (added alone). A saturated board keeps pickRolloutBest's order; the shown lines it
+ * leaves tied on every key are tied the same way.
  */
-export function rolloutTies(picked: { best: LineEstimate | null; saturated: boolean }, eligible: LineEstimate[], shown: Plan[]): { best: LineEstimate | null; tied: LineEstimate[] } {
+export function rolloutTies(picked: { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] }, eligible: LineEstimate[], shown: Plan[]): { best: LineEstimate | null; tied: LineEstimate[] } {
   const best = picked.best;
-  if (picked.saturated || best === null) return { best, tied: [] };
+  if (picked.saturated) {
+    // Saturated lines tied on every key (pickRolloutBest): the shown ones are tied; one shown, it is the best.
+    const shownTies = (picked.tied ?? []).filter((line) => shown.includes(line.plan));
+    if (best === null && shownTies.length >= 2) return { best: null, tied: shownTies };
+    if (best === null && shownTies.length === 1) return { best: shownTies[0]!, tied: [] };
+    return { best, tied: [] };
+  }
+  if (best === null) return { best, tied: [] };
   const ties = eligible.filter((line) => sameShownResult(line, best));
   if (ties.length < 2) return { best, tied: [] };
   const shownTies = ties.filter((line) => shown.includes(line.plan));
@@ -491,7 +513,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions" | "onShuffle"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -535,6 +557,9 @@ export function boardRolloutInput(
   // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
   const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
   for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+  // Biiig Hug: a Soot into the draw pile at every shuffle.
+  const hug = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "BIIIG_HUG");
+  if (hug) statusIds.add("SOOT");
   const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
   const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
   return {
@@ -544,6 +569,7 @@ export function boardRolloutInput(
     statusCards,
     relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
     ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
+    ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
@@ -630,14 +656,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
 /**
- * Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are
- * shown (the leader's HP left first when its death ends the fight).
+ * Saturated boards: the expected loss is the same for every line, so what ranks them is shown: deaths
+ * within the horizon, HP lost this turn, then the enemy HP left and turns alive (the leader's HP left first
+ * when its death ends the fight).
  */
 function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
   if (!r.saturated) return "";
   const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
   const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
-  return `; every line loses all our HP here, so the loss does not separate them: ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}), then ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
 }
 
 /** The facts of one shown line. */

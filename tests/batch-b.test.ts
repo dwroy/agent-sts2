@@ -244,8 +244,10 @@ describe("2. Thrash takes an Attack from the hand; its damage is added to Thrash
     const plans = solveTurn({ hand: [thrash, card(1, "BLUDGEON", { cost: 3, damage: 32, damageBase: 32 }), strike(2), defend(3)], player: player({ hp: 60, energy: 2 }), enemies: [enemy({ hp: 100, maxHp: 100, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" }).plans;
     const alone = plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH")!;
     expect(alone.outcome.damageDealt).toBe(2 * 16);
-    expect(alone.outcome.randomExhausts).toBe(1);
-    expect(alone.outcome.thrashGrowth).toEqual([{ index: 0, amount: 6 }]);
+    // The pick is the rollout's (thrashRandom, batch F): among the Attacks only, grown by the one it took.
+    expect(alone.outcome.randomExhausts).toBeUndefined();
+    expect(alone.outcome.thrashGrowth).toBeUndefined();
+    expect(alone.outcome.thrashRandom).toEqual([{ index: 0, strength: 0, least: 6 }]);
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH,STRIKE_IRONCLAD")).toBe(false);
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).sort().join(",") === "DEFEND_IRONCLAD,THRASH" && plan.outcome.damageDealt === 32)).toBe(true);
   });

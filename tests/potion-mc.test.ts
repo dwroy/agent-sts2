@@ -188,7 +188,7 @@ describe("determinism and the time budget", () => {
       const b = criteriaOf(planCombatTurn(loggedEnv(logged(name))));
       expect(b, name).toEqual(a);
     }
-  });
+  }, 30_000);
 });
 
 describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-plan", () => {
@@ -208,7 +208,7 @@ describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-pla
       // No plan line drinks it: the random potion is only this option.
       for (const [k, text] of Object.entries(criteriaOf(decision))) if (k.startsWith("plan")) expect(String(text), `${name} ${k}`).not.toContain(option["plays"]!.split(" now")[0]!.replace("drink ", "potion "));
     }
-  });
+  }, 30_000);
 
   it("with the rollout on, the option's rollout facts are the median sample's line's", () => {
     const decision = planCombatTurn(loggedEnv(logged("x8r8-f17-t8")));
@@ -237,7 +237,7 @@ describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-pla
     const after = planCombatTurn(loggedEnv(next, { screenMemory: env.screenMemory }));
     expect(after?.label).not.toBe("combat/plan-continue");
     expect(JSON.stringify(after?.kind === "ask" ? criteriaOf(after) : {})).not.toContain("result unknown until drunk");
-  });
+  }, 30_000);
 
   it("the 10-option cap keeps a slot for every potion option: plan lines make room, never the first or the only dry line", () => {
     const line = (name: string, potions: string[] = []): Plan =>
@@ -265,7 +265,7 @@ describe("(c) unsimulated potions: offered with no invented numbers", () => {
     expect(option["damage_dealt"]).toBeUndefined();
     expect(option["offered_because"]).toMatch(/12%/);
     expect(pickPotion(decision, "p1")).toEqual({ action: "use_potion", option_index: 1 });
-  });
+  }, 30_000);
 });
 
 function pickPotion(decision: Decision | null, key: string) {

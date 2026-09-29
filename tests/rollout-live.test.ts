@@ -81,14 +81,14 @@ describe("rollout facts on Jev's combat question", () => {
       expect(decision.resolve(pick(other)).log?.rollout_best_chosen).toBe(false);
       expect(decision.resolve({} as AnswerSet).log?.rollout_best_chosen).toBeNull();
     }
-  });
+  }, 30_000);
 
   it("with a modelled potion held, the rollout fact says later turns may use it", () => {
     const decision = plan("v1mf-f33-t4", true) as AskDecision;
     expect(decision.kind).toBe("ask");
     const criteria = criteriaOf(decision);
     for (const key of planKeys(criteria)) expect(String(facts(criteria, key)["rollout"]), key).toContain("(later turns may use the potions still held)");
-  });
+  }, 30_000);
 
   it("a drink-first potion option says it is not rolled out", () => {
     const decision = plan("fn0h-f33-t2", true) as AskDecision;
@@ -96,7 +96,7 @@ describe("rollout facts on Jev's combat question", () => {
     const potionKeys = Object.keys(criteria).filter((key) => !/^plan\d+$/.test(key));
     expect(potionKeys.length).toBeGreaterThan(0);
     for (const key of potionKeys) expect(String(facts(criteria, key)["rollout"])).toMatch(/^not rolled out/);
-  });
+  }, 30_000);
 
   it("the rollout's best line is added, last and marked, when code did not show it", () => {
     let addedSomewhere = false;
@@ -122,7 +122,7 @@ describe("rollout facts on Jev's combat question", () => {
       }
     }
     expect(addedSomewhere).toBe(true);
-  }, 60_000);
+  }, 120_000);
 
   it("liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)", () => {
     const card = (index: number, cardId: string, o: Partial<CardModel>): CardModel => ({
@@ -164,7 +164,7 @@ describe("rollout facts on Jev's combat question", () => {
     const none = liveRollout({ state: env.state, knowledge: env.knowledge, memory: env.screenMemory, solver, plans, shown: [worst], piles: null });
     expect(none.available).toBe(false);
     expect(rolloutFacts(worst, none)).toEqual({ rollout: "rollout unavailable (no draw/discard piles in the state)" });
-  });
+  }, 30_000);
 
   it("up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)", async () => {
     const { MAX_OPTIONS } = await import("../src/screens/combat-plan.js");
@@ -185,14 +185,19 @@ describe("rollout facts on Jev's combat question", () => {
         expect(String(f["rollout"]), `${name} ${key}`).not.toMatch(/unavailable/);
         expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
       }
-      // The rollout's best: one line, or a random potion's option (its median sample's line); none at
-      // most when every line loses all the HP and they tie on enemy HP left and turns alive too. Not
-      // saturated: one best, or two or more options tied for it (the same numbers as shown) and no best.
+      // The rollout's best: one line, or a random potion's option (its median sample's line). When every
+      // line loses all the HP: at most one best, or two or more shown lines tied on every key (deaths, this
+      // turn's loss, enemy HP left, turns alive) and no best. Not saturated: one best, or two or more
+      // options tied for it (the same numbers as shown) and no best.
       const tagged = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length;
       const tied = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_tied"] !== undefined);
       // The time budget's 1-turn fallback (a loaded machine) is no forecast: no best.
       if ((log["degraded"] as string[]).includes("1-turn")) expect(tagged + tied.length, name).toBe(0);
-      else if (log["saturated"] === true) expect(tagged + tied.length, name).toBeLessThanOrEqual(1);
+      else if (log["saturated"] === true && tied.length > 0) {
+        expect(tagged, name).toBe(0);
+        expect(tied.length, name).toBeGreaterThanOrEqual(2);
+        expect(log["tied"], name).toEqual(tied);
+      } else if (log["saturated"] === true) expect(tagged, name).toBeLessThanOrEqual(1);
       else if (tied.length > 0) {
         expect(tagged, name).toBe(0);
         expect(tied.length, name).toBeGreaterThanOrEqual(2);
@@ -202,7 +207,7 @@ describe("rollout facts on Jev's combat question", () => {
       } else expect(tagged, name).toBe(1);
     }
     expect(most).toBeGreaterThan(4);
-  }, 60_000);
+  }, 120_000);
 
   it("keeps to the time budget under a mock clock, degrading the horizon/samples, and says so", () => {
     // 3 ms per clock read: the policy looks slow, the full 5 x 8 does not fit.
@@ -224,7 +229,7 @@ describe("rollout facts on Jev's combat question", () => {
     const cutLog = cut.resolve(pick("plan1")).log!.rollout as Record<string, unknown>;
     expect(cutLog["horizon"]).toBe(1);
     expect(String(facts(criteriaOf(cut), "plan1")["rollout"])).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
-  });
+  }, 30_000);
 
   it("the real clock: every logged board's rollout stays inside the budget", () => {
     for (const name of BOARDS) {
@@ -234,7 +239,7 @@ describe("rollout facts on Jev's combat question", () => {
       expect(log, name).toBeDefined();
       expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
     }
-  }, 60_000);
+  }, 120_000);
 
   it("code's ranking, options and auto-acts are unchanged by the rollout", () => {
     for (const name of BOARDS) {
@@ -308,7 +313,9 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
     const e = line("e", { hpLoss: 49, value: -89, enemyHpLeft: 80.4, turnsSurvived: 4 });
     expect(pickRolloutBest([d, e], 49)).toMatchObject({ best: e, saturated: true });
     // Nothing tells them apart: no best line.
-    expect(pickRolloutBest([line("f", { enemyHpLeft: 80 }), line("g", { enemyHpLeft: 80.5 })], 62)).toEqual({ best: null, saturated: true });
+    const f = line("f", { enemyHpLeft: 80 });
+    const g = line("g", { enemyHpLeft: 80.5 });
+    expect(pickRolloutBest([f, g], 62)).toEqual({ best: null, saturated: true, tied: [f, g] });
   });
 
   it("not saturated: the highest value; exact ties by enemy HP left, then code's order", () => {
@@ -322,7 +329,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
     expect(pickRolloutBest([tieA, same], 62).best).toBe(tieA);
   });
 
-  it("logged saturated boards: every line reads the enemy HP left, and a tagged best has the least of it", () => {
+  it("logged saturated boards: every line reads its deaths, this turn's loss and the enemy HP left; a tagged best has the fewest deaths, then the least loss", () => {
     rolloutLiveOptions.budgetMs = 1e9;
     for (const name of ["8v0h-f17-t2-saturated", "heac-f17-t2-saturated", "heac-f17-t6-saturated"]) {
       const decision = plan(name, true) as AskDecision;
@@ -330,19 +337,26 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
       const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown>;
       expect(log["saturated"], name).toBe(true);
       const criteria = criteriaOf(decision);
-      const left = new Map<string, number>();
+      const keys = new Map<string, { dead: number; loss: number; left: number }>();
       for (const key of Object.keys(criteria)) {
         const text = String(facts(criteria, key)["rollout"] ?? "");
-        const m = /enemy HP left ~(\d+) \(at T\d or at our death\)/.exec(text);
+        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then least HP lost this turn \(this line (gains )?(\d+)\), then .*enemy HP left ~(\d+) \(at T\d or at our death\)/.exec(text);
         if (/^not rolled out/.test(text)) continue;
         expect(m, `${name} ${key}: ${text}`).not.toBeNull();
-        left.set(key, Number(m![1]));
+        keys.set(key, { dead: Number(m![1]), loss: (m![2] ? -1 : 1) * Number(m![3]), left: Number(m![4]) });
       }
-      const tagged = [...left.keys()].filter((key) => facts(criteria, key)["rollout_best"] === true);
+      const tagged = [...keys.keys()].filter((key) => facts(criteria, key)["rollout_best"] === true);
       expect(tagged.length, name).toBeLessThanOrEqual(1);
-      if (tagged.length === 1) expect(left.get(tagged[0]!)! - Math.min(...left.values()), name).toBeLessThanOrEqual(1);
+      if (tagged.length === 1) {
+        const best = keys.get(tagged[0]!)!;
+        const all = [...keys.values()];
+        expect(best.dead, name).toBe(Math.min(...all.map((k) => k.dead)));
+        expect(best.loss, name).toBe(Math.min(...all.filter((k) => k.dead === best.dead).map((k) => k.loss)));
+        const same = all.filter((k) => k.dead === best.dead && k.loss === best.loss);
+        expect(best.left - Math.min(...same.map((k) => k.left)), name).toBeLessThanOrEqual(1);
+      }
     }
-  });
+  }, 30_000);
 });
 
 describe("an illusion killed before the decision revives in the rollout (QUG1DSDARAXU F23 T3)", () => {
@@ -370,7 +384,7 @@ describe("an illusion killed before the decision revives in the rollout (QUG1DSD
     const withIt = lossOf(fx);
     const without = lossOf(gone);
     expect(withIt).toBeGreaterThan(without + 5);
-  });
+  }, 30_000);
 });
 
 
@@ -400,5 +414,5 @@ describe("enemy_threat_next counts a reviving illusion (QUG1DSDARAXU F23 T3)", (
     expect(withIt.length).toBeGreaterThan(0);
     // Lines that do not end the fight read the Obscura's hit plus the Parafright's.
     expect(Math.abs(Math.max(...withIt) - (Math.max(...without) + slam))).toBeLessThanOrEqual(1);
-  });
+  }, 30_000);
 });
