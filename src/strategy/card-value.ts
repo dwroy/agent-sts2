@@ -12,7 +12,7 @@
  */
 
 import type { DeckEntry } from "../project/deck.js";
-import { BOSSES } from "./boss-clock.js";
+import { BOSSES, bossHp } from "./boss-clock.js";
 
 const TIER: Record<string, number> = {
   // S
@@ -78,7 +78,7 @@ const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "W
  * Boss HP in the texts comes from the boss clock's A8 table (RWWG: the crab said 408, it is 428 at A8).
  */
 function bossA8Hp(id: string): number {
-  return BOSSES[id]?.hpA8 ?? 0;
+  return BOSSES[id] ? bossHp({ ...BOSSES[id]!, id }, 8) : 0;
 }
 
 function bossBonus(cardId: string, bossId: string): { bonus: number; why: string | null } {

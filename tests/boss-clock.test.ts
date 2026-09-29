@@ -17,7 +17,12 @@ import {
   bossClock,
   bossClockJson,
   bossHp,
+  bossLossPerTurn,
+  bossNote,
   bossProfile,
+  survivableTurns,
+  testSubjectPhases,
+  unblockedShare,
   calibrated,
   damageGap,
   deckDamagePerTurn,
@@ -169,15 +174,16 @@ describe("boss clock", () => {
   it("02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)", () => {
     const clock = bossClock(board("02L476J8QWGH:6"), loggedKnowledge)!;
     expect(clock.hp).toBe(262);
-    // 26/80 plus one rest (24): a 50 HP entry survives ~8 turns (it was read as 68, 10 turns, 26 a turn).
+    // 26/80 plus one rest (24): a 50 HP entry survives ~7 turns at ~6.5 a turn (its A8 attack ~16 x 42%
+    // unblocked; the A8 constant 6.2 read 8) (it was read as 68, 10 turns, 26 a turn).
     expect(clock.entryHp).toBe(50);
-    expect(clock.fightTurns).toBe(8);
-    expect(clock.need).toBe(33);
+    expect(clock.fightTurns).toBe(7);
+    expect(clock.need).toBe(37);
     expect(clock.gap).toBeGreaterThan(0);
     expect(clock.mechanic).toMatch(/Ringing/);
   });
 
-  it("D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~106 under Nemesis), not a flat 600/14", () => {
+  it("D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~104 under Nemesis), not a flat 600/14", () => {
     const clock = bossClock(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     const phase2 = clock.phases!.find((phase) => phase.phase === 2)!;
     expect(phase2.hp).toBe(212);
@@ -187,11 +193,13 @@ describe("boss clock", () => {
     expect(clock.gap).toBeGreaterThanOrEqual(10);
     const json = bossClockJson(board("D3X1T7KBGK5T:41"), loggedKnowledge)!;
     expect(json["phases"]).toBeDefined();
-    // Phase 3 (318) under Nemesis: Intangible every other turn, so 3 of the 6 turns deal damage (VQKX F48:
-    // 3 / 88 / 5 over T5-T7), 106 a turn, not 53.
+    // Phase 3 (313 at A8 in the monster DB; it was assumed ~318) under Nemesis: Intangible every other turn,
+    // so 3 of the 6 turns deal damage (VQKX F48: 3 / 88 / 5 over T5-T7), 104 a turn, not 52.
     const phase3 = clock.phases!.find((phase) => phase.phase === 3)!;
-    expect(phase3.need).toBe(106);
-    expect(clock.need).toBe(106);
+    expect(phase3.hp).toBe(313);
+    expect(phase3.need).toBe(104);
+    expect(clock.need).toBe(104);
+    expect(clock.hpNote).toMatch(/111\/212\/313 \(A8\)/);
     expect(clock.turnsNote).toMatch(/3 of them without Nemesis' Intangible/);
     expect(String(json["harder_because"])).toMatch(/Multi Claw/);
   });
@@ -309,3 +317,48 @@ describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () 
     expect(expectedEntryHp(at(33, 54, 80))).toBe(54);
   });
 });
+
+describe("boss HP and HP loss a turn from the monster DB at the run's ascension", () => {
+  const profile = (id: string) => bossProfile(`${id}_BOSS`)!;
+
+  it("HP: the DB's parts at this ascension (else the nearest logged), plus what the mechanic adds", () => {
+    // Logged at A9: as logged; the Kin counts the priest plus ~60 of followers, the Queen her own HP plus ~60 block.
+    expect(bossHp(profile("KNOWLEDGE_DEMON"), 9)).toBe(399);
+    expect(bossHp(profile("THE_KIN"), 9)).toBe(199 + 60);
+    expect(bossHp(profile("THE_KIN"), 7)).toBe(190 + 60);
+    expect(bossHp(profile("QUEEN"), 8)).toBe(419 + 60);
+    expect(bossHp(profile("AEONGLASS"), 3)).toBe(512 + 66);
+    // Not logged at A9: A8's, and the note says so.
+    expect(bossHp(profile("THE_INSATIABLE"), 9)).toBe(341);
+    const clock = bossClock(mapState(starter(), "THE_INSATIABLE_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 80)!;
+    expect(clock.hpNote).toMatch(/^341 \(A9 not logged: A8's\)/);
+    // The Test Subject's phases as logged (A8 111 > 212 > 313; A0 100 > 200 > 300).
+    expect(testSubjectPhases(8)).toEqual([111, 212, 313]);
+    expect(testSubjectPhases(0)).toEqual([100, 200, 300]);
+    expect(bossHp(profile("TEST_SUBJECT"), 8)).toBe(636);
+    // The Kin's note carries the DB's numbers.
+    expect(bossNote(profile("THE_KIN"), 8)).toMatch(/^priest 199 plus two followers ~6[23]:/);
+    expect(bossNote(profile("TEST_SUBJECT"), 8)).toMatch(/three phases \(111\/212\/313 HP\)/);
+  });
+
+  it("HP loss a turn: its own attack at this ascension times the logged unblocked share; the A8 constant only without DB data", () => {
+    const demon = profile("KNOWLEDGE_DEMON");
+    const a8 = bossLossPerTurn(demon, 8);
+    const a9 = bossLossPerTurn(demon, 9);
+    // A9 moves hit harder (Slap 17 -> 18, Overwhelming 11 -> 13 a hit).
+    expect(a9.value).toBeGreaterThan(a8.value);
+    expect(a9.source).toMatch(/unblocked/);
+    const share = unblockedShare("KNOWLEDGE_DEMON")!;
+    expect(share.unblocked_share).toBeGreaterThan(0.2);
+    expect(share.unblocked_share).toBeLessThan(0.8);
+    // A boss with no DB moves keeps the constant.
+    expect(bossLossPerTurn({ ...demon, id: "NO_SUCH_BOSS" }, 9)).toMatchObject({ value: demon.lossPerTurn, estimated: false });
+    // LY0N909D4A0V F33: 77 HP at A9; the old clock (6.3 a turn) read 12 survivable turns, it died on T8 (9.6 a turn).
+    expect(survivableTurns(demon, 77)).toBe(12);
+    const clock = bossClock(mapState(starter(), "KNOWLEDGE_DEMON_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 77)!;
+    expect(clock.survivableTurns).toBeLessThan(12);
+    expect(clock.lossPerTurn).toBe(a9.value);
+    expect(bossClockJson(mapState(starter(), "KNOWLEDGE_DEMON_BOSS", { ascension: 9, floor: 25 }), testKnowledge)).toMatchObject({ hp_loss_per_turn: a9.value, hp_loss_per_turn_note: expect.stringMatching(/unblocked/) });
+  });
+});
+

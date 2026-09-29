@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, bossDossier, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -98,4 +98,25 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
 function realMonsters(): MonsterMoveData {
   return (JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../src/knowledge/monster-db.json"), "utf8")) as { monsters: MonsterMoveData }).monsters;
 }
+
+describe("a monster's expected attack by turn, along its logged moves", () => {
+  it("turn-1 move, then its successors; Strength its moves gain adds to later hits; a fight-ending move is no turn", () => {
+    const db: MonsterMoveData = {
+      BRUTE: {
+        moves: {
+          // T1 always Roar (+2 Strength, no attack), then Smash 10x2, then Roar again; Smash sometimes ends in Explode (death).
+          ROAR: { turns_seen: { "1": 5 }, next: { SMASH: 5 }, self_powers_gained: { STRENGTH_POWER: { "2": 5 } } },
+          SMASH: { next: { ROAR: 4, EXPLODE: 1 }, damage_by_asc: { "8": { base_per_hit: { "10": 5 }, hits: { "2": 5 } } } },
+          EXPLODE: { damage_by_asc: { "8": { base_per_hit: { "60": 1 }, hits: { "1": 1 } } } },
+        },
+      },
+    };
+    const out = monsterDamageByTurn("BRUTE", 8, 4, db)!;
+    // T1 Roar 0; T2 Smash (10 + 2) x 2; T3 Roar 0; T4 Smash (10 + 4) x 2. Explode (no successors) is never walked into.
+    expect(out.perTurn).toEqual([0, 24, 0, 28]);
+    expect(out.estimated).toBe(false);
+    // At A9 (not logged) the Smash is scaled by the pooled ratio; with no pairs anywhere it stays x1, marked.
+    expect(monsterDamageByTurn("BRUTE", 9, 2, db)).toEqual({ perTurn: [0, 24], estimated: true });
+  });
+});
 

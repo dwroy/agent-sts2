@@ -188,6 +188,120 @@ export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveI
   return { perHit: Math.round(base * ratio), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}) };
 }
 
+/**
+ * A move's shown damage per hit (Strength and our Vulnerable in) at `asc`, for a move whose base was never
+ * measured (every logged turn had a debuff in the way: the Queen's Off With Your Head, the Amalgam's
+ * Beam): the nearest logged ascension's most common shown hit, scaled like moveDamageAt when not this one.
+ */
+function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
+  const move = monsters[monsterId]?.moves?.[moveId];
+  const withShown = Object.fromEntries(Object.entries(move?.damage_by_asc ?? {}).filter(([, entry]) => mode(entry.shown) !== null));
+  const found = nearestAscension(withShown, asc);
+  if (!move || !found) return null;
+  const shown = /^(\d+)x(\d+)$/.exec(mode(move.damage_by_asc![found.key]!.shown) ?? "");
+  if (!shown) return null;
+  const from = Number(found.key);
+  const ratio = found.exact ? 1 : (ascensionDamageRatio(monsters, monsterId, from, asc)?.ratio ?? 1);
+  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: !found.exact, from, ratio };
+}
+
+/**
+ * A monster's expected attack damage on each of its first `turns` turns at `asc`: its turn-1 move as
+ * logged (turns_seen), then its logged successors (next; a move with none, the Waterfall Giant's death
+ * Explode, is not a turn of the fight), each move's damage per hit at this ascension (moveDamageAt:
+ * scaled from the nearest ascension when unseen here; the shown hit when no base was ever measured) plus
+ * the Strength its earlier moves gained (self_powers_gained), times its hits. `estimated`: some move's
+ * damage was scaled. null without logged moves.
+ */
+export function monsterDamageByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; estimated: boolean } | null {
+  const moves = monsters[monsterId]?.moves;
+  if (!moves || turns <= 0) return null;
+  const firsts = Object.entries(moves).map(([id, move]) => [id, move.turns_seen?.["1"] ?? 0] as const).filter(([, n]) => n > 0);
+  const total = firsts.reduce((sum, [, n]) => sum + n, 0);
+  if (total <= 0) return null;
+  let dist = new Map(firsts.map(([id, n]) => [id, n / total]));
+  const ongoing = (id: string) => Object.keys(moves[id]?.next ?? {}).length > 0;
+  const damage = new Map<string, (MoveDamage & { shown?: boolean }) | null>(
+    Object.keys(moves).map((id) => {
+      const base = moveDamageAt(monsters, monsterId, id, asc);
+      const shown = base ? null : shownDamageAt(monsters, monsterId, id, asc);
+      return [id, base ?? (shown ? { ...shown, shown: true } : null)];
+    }),
+  );
+  const strengthOf = (id: string) => Number(mode(moves[id]?.self_powers_gained?.["STRENGTH_POWER"]) ?? 0);
+  let strength = 0;
+  let estimated = false;
+  const perTurn: number[] = [];
+  for (let t = 1; t <= turns; t += 1) {
+    if (t > 1) {
+      const next = new Map<string, number>();
+      for (const [id, p] of dist) {
+        const successors = Object.entries(moves[id]?.next ?? {}).filter(([to]) => ongoing(to));
+        const sum = successors.reduce((acc, [, n]) => acc + n, 0);
+        if (sum <= 0) next.set(id, (next.get(id) ?? 0) + p);
+        else for (const [to, n] of successors) next.set(to, (next.get(to) ?? 0) + (p * n) / sum);
+      }
+      dist = next;
+    }
+    let expected = 0;
+    for (const [id, p] of dist) {
+      const hit = damage.get(id);
+      if (!hit) continue;
+      if (hit.estimated) estimated = true;
+      expected += p * (hit.perHit + (hit.shown ? 0 : strength)) * hit.hits;
+    }
+    perTurn.push(expected);
+    for (const [id, p] of dist) strength += p * strengthOf(id);
+  }
+  return { perTurn, estimated };
+}
+
+/**
+ * An act boss's expected attack damage on each of its first `turns` turns at `asc`: its bodies' (monster
+ * DB boss parts at this ascension, else the nearest logged one; each body times its count per fight)
+ * monsterDamageByTurn summed. null when the DB has no parts or moves for it.
+ */
+export function bossDamageByTurn(bossId: string, asc: number, turns: number): { perTurn: number[]; estimated: boolean; parts: string[] } | null {
+  const id = bossId.toUpperCase().replace(/_BOSS$/, "");
+  const byAsc = load().bosses[id];
+  const found = nearestAscension(byAsc, asc);
+  if (!byAsc || !found) return null;
+  const parts = Object.entries(byAsc[found.key]!.parts ?? {});
+  const perTurn = Array.from({ length: turns }, () => 0);
+  let estimated = false;
+  const used: string[] = [];
+  for (const [part, range] of parts) {
+    const own = monsterDamageByTurn(part, asc, turns);
+    if (!own) continue;
+    used.push(part);
+    if (own.estimated) estimated = true;
+    const count = range.count_per_fight ?? 1;
+    own.perTurn.forEach((value, t) => (perTurn[t]! += value * count));
+  }
+  return used.length > 0 ? { perTurn, estimated, parts: used } : null;
+}
+
+/**
+ * An act boss's HP at `asc` from the DB (its parts' median max HP at this ascension, else the nearest
+ * logged one; each part times its count per fight), only the parts named when `only` is given, and its
+ * phases' max HP when it has several (Test Subject "111 > 212 > 313"). null when the DB has no parts.
+ */
+export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: number; phases: number[]; asc: number; exact: boolean; n: number } | null {
+  const id = bossId.toUpperCase().replace(/_BOSS$/, "");
+  const byAsc = load().bosses[id];
+  const found = nearestAscension(byAsc, asc);
+  if (!byAsc || !found) return null;
+  const entry = byAsc[found.key]!;
+  const parts = Object.entries(entry.parts ?? {}).filter(([part]) => !only || only.includes(part));
+  if (parts.length === 0) return null;
+  const hp = parts.reduce((sum, [, range]) => sum + (range.median ?? 0) * (range.count_per_fight ?? 1), 0);
+  const phases = Object.keys(entry.phases ?? {})
+    .map((sequence) => sequence.replace(/\s*\(.*\)\s*$/, "").split(">").map((value) => Number(value.trim())).filter((value) => Number.isFinite(value) && value > 0))
+    .sort((a, b) => b.length - a.length)[0] ?? [];
+  const n = Math.min(...parts.map(([, range]) => range.n ?? 0));
+  return { hp: Math.round(hp), phases, asc: Number(found.key), exact: found.exact, n };
+}
+
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */
 function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): string {
   const parts: string[] = [move.name || id];
