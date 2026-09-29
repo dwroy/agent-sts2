@@ -1015,6 +1015,25 @@ export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | un
   return discard.length > 0 ? discard : undefined;
 }
 
+/** The potion belt as "slot:potion_id" of the occupied slots (slots keep their index when one is drunk). */
+function beltSignature(raw: Record<string, unknown>): string {
+  return asArray(asRecord(raw["run"])["potions"])
+    .map(asRecord)
+    .filter((slot) => bool(slot["occupied"]))
+    .map((slot) => `${num(slot["index"])}:${str(slot["potion_id"])}`)
+    .join("|");
+}
+
+/** The belt a potion step leaves (its slot empty); undefined for a card step (the hand tells those apart). */
+function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined {
+  if (!step.cardId.startsWith("POTION:")) return undefined;
+  const slot = step.cardId.split(":")[2];
+  return beltSignature(raw)
+    .split("|")
+    .filter((entry) => entry !== "" && entry.split(":")[0] !== slot)
+    .join("|");
+}
+
 function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
@@ -1034,15 +1053,19 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
   // Potion step was drunk at 76/87 before the re-plan, 6 of its 17 wasted).
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
+  // A potion step leaves the hand as it is: the next step expects the same hand and the belt without it (a
+  // Jev line opening with a drink was re-planned every time: the memo expected one card less, "hand grew").
+  const potions = first ? beltAfter(first, env.state.raw) : undefined;
   env.screenMemory.combatPlan =
     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
       ? {
           turn,
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand),
-          handLen: plan.steps.length === 1 ? handLenAfter(first!, hand) : hand.length - 1,
+          handLen: handLenAfter(first!, hand),
           via,
           enemies: livingEnemySignature(env.state.raw),
+          ...(potions !== undefined ? { potions } : {}),
         }
       : null;
 }
@@ -1278,7 +1301,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const memo = env.screenMemory.combatPlan;
   const handGrew = memo !== null && hand.length > memo.handLen;
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
-  const asExpected = memo !== null && !handGrew && sameEnemies && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
+  // After a potion step the belt shows whether it was drunk (the hand does not change).
+  const drunk = memo?.potions === undefined || memo.potions === beltSignature(state.raw);
+  const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
   const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
@@ -1291,13 +1316,17 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
+      // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
+      const { potions: _checked, ...kept } = memo;
+      const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
           ? {
-              ...memo,
+              ...kept,
               remaining: memo.remaining.slice(1),
               expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
-              handLen: memo.remaining.length === 1 ? handLenAfter(next, hand) : hand.length - 1,
+              handLen: handLenAfter(next, hand),
+              ...(potions !== undefined ? { potions } : {}),
             }
           : null;
       return {

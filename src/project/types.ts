@@ -200,6 +200,12 @@ export interface CombatPlanMemo {
    * into the sleeping beetle's Plating): replan.
    */
   enemies?: string;
+  /**
+   * After a potion step: the potion belt the next step expects ("slot:potion_id" of the occupied slots, the
+   * drunk slot gone). A potion does not leave the hand, so the hand (unchanged, handLen the same) cannot tell
+   * whether it was drunk; the belt does. Unset after a card step.
+   */
+  potions?: string;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {
