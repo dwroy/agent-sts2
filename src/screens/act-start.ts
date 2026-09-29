@@ -70,8 +70,8 @@ export const ACT_START_NOTE =
   "to the act boss with code's route facts at your HP now (an option that changes HP or max HP shows its effect in route_effect, " +
   'and each route its hp_at_boss_if_option). Reply with JSON only: {"choice": "<option key>", "route": "<route key from act_routes>", ' +
   '"reason": "<max 30 words>"} (and "cards" when the option lists eligible_cards). Code takes the option, then follows the route node ' +
-  "by node; you are asked again only if the route breaks or HP falls far below its projection, and once after an option whose outcome " +
-  "is random, to keep or change the route.";
+  "by node; you are asked again only if the route breaks, and once after an option whose outcome is random, to keep or change the route; " +
+  "card rewards and rest sites also show the route to keep or change.";
 
 interface Inputs {
   params: Parameters<typeof buildPickDecision>[0];

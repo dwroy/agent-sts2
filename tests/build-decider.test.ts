@@ -22,7 +22,6 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
 import { planDecision } from "../src/screens/index.js";
-import { ROUTE_REPLAN_HP_DROP } from "../src/screens/map.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import type { JsonValue } from "../src/util/json.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
@@ -217,7 +216,7 @@ describe("BUILD_DECIDER=deepseek: the act's route is planned once and followed",
     for (const key of ["fights", "elites", "rests", "shops", "unknown_rooms", "hp_at_boss", "hp_on_arrival_at_elites", "forks_on_path", "fights_before_first_rest", "code_value"]) expect(shop[key]).toBeDefined();
   });
 
-  it("follows the plan without asking, re-plans when the next planned node is missing or HP fell far below the projection", () => {
+  it("follows the plan without asking, whatever the HP; re-plans only when the next planned node is missing", () => {
     const e = env(firstFork());
     planThroughShop(e);
     const memory = e.screenMemory;
@@ -229,10 +228,10 @@ describe("BUILD_DECIDER=deepseek: the act's route is planned once and followed",
     const broken = decide(env(brokenFork(), { screenMemory: memory }));
     expect(broken.label).toBe("map/route-plan");
     expect(JSON.stringify(broken.kind === "ask" ? broken.state : {})).toMatch(/not available/);
-    // HP fell well below what the plan projected for the next node -> re-plan.
-    const low = decide(env(secondFork({ current_hp: Math.round(80 * (0.875 - ROUTE_REPLAN_HP_DROP - 0.1)) }), { screenMemory: memory }));
-    expect(low.label).toBe("map/route-plan");
-    expect(JSON.stringify(low.kind === "ask" ? low.state : {})).toMatch(/below the/);
+    // HP far below what the plan projected for the next node is no re-plan (Dai 2026-09-29): the card
+    // reward and rest site questions show DeepSeek the HP against the plan instead.
+    const low = decide(env(secondFork({ current_hp: 12 }), { screenMemory: memory }));
+    expect(low).toMatchObject({ kind: "act", label: "map/route-follow", intent: { action: "choose_map_node", option_index: 1 } });
   });
 
   it("after a failed route plan the act's map screens use the Jev/code route choice", () => {

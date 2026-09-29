@@ -228,6 +228,29 @@ function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNod
   return types.join(" -> ");
 }
 
+/** The graph of a MAP state's map object, keyed "row,col". */
+function mapGraph(map: Record<string, unknown>): Map<string, MapNode> {
+  const nodes = new Map<string, MapNode>();
+  for (const raw of asArray(map["nodes"]).map(asRecord)) {
+    const row = num(raw["row"]);
+    const col = num(raw["col"]);
+    nodes.set(key(row, col), {
+      row,
+      col,
+      type: str(raw["node_type"], "Unknown"),
+      children: asArray(raw["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
+      parents: asArray(raw["parents"]).map(asRecord).map((parent) => ({ row: num(parent["row"]), col: num(parent["col"]) })),
+      visited: raw["visited"] === true,
+    });
+  }
+  return nodes;
+}
+
+/** Fights in a row ending at a MAP state's current node (kept with the remembered map for the rooms after it). */
+export function fightChainAt(map: Record<string, unknown>): number {
+  return fightsSoFar(mapGraph(map), map["current_node"]);
+}
+
 /** Fights in a row that end at the current node, walking back through visited parents. */
 function fightsSoFar(nodes: Map<string, MapNode>, current: unknown): number {
   const at = asRecord(current);
@@ -296,19 +319,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     }
   }
 
-  const nodes = new Map<string, MapNode>();
-  for (const raw of asArray(map["nodes"]).map(asRecord)) {
-    const row = num(raw["row"]);
-    const col = num(raw["col"]);
-    nodes.set(key(row, col), {
-      row,
-      col,
-      type: str(raw["node_type"], "Unknown"),
-      children: asArray(raw["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
-      parents: asArray(raw["parents"]).map(asRecord).map((parent) => ({ row: num(parent["row"]), col: num(parent["col"]) })),
-      visited: raw["visited"] === true,
-    });
-  }
+  const nodes = mapGraph(map);
 
   const hpPct = hpPercent(env);
   const gold = state.run?.gold ?? 0;
@@ -392,12 +403,13 @@ export function planMap(env: DecisionEnv): Decision | null {
 
 /* ---- route plan (BUILD_DECIDER=deepseek) ---------------------------------------------------------- */
 
-/**
- * HP drop (fraction of max HP) below the HP the plan projected for the next node that makes DeepSeek
- * re-plan the route (Dai 2026-09-28: plan the act's route once, re-ask only when the plan is broken or HP
- * moved a lot).
+/*
+ * Dai 2026-09-28: plan the act's route once and follow it in code. A re-plan is asked only when the plan
+ * breaks (its next node is not available, or nothing is left ahead). HP is not a re-plan trigger any more
+ * (Dai 2026-09-29: the 30-point HP-drop re-plan is gone): every card reward and rest site DeepSeek decides
+ * shows it the route and the HP against the plan's projection, and it keeps or changes the route there
+ * (route-review.ts).
  */
-export const ROUTE_REPLAN_HP_DROP = 0.3;
 /** Candidate paths shown to DeepSeek. */
 export const ROUTE_CANDIDATES = 8;
 /** Cap on the paths enumerated from the available nodes to the boss. */
@@ -641,34 +653,29 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
     const next = nextPlannedStep(plan, context.current);
     const target = next ? context.available.find((node) => node.row === next.row && node.col === next.col) : undefined;
     if (next && target) {
-      const drop = next.hpOnArrival - context.hpPct;
-      if (drop < ROUTE_REPLAN_HP_DROP) {
-        const step = plan.path.indexOf(next) + 1;
-        const joint = plan.oneshot?.firstPending ? plan.oneshot : null;
-        const follow: Decision = {
-          kind: "act",
-          label: "map/route-follow",
-          intent: { action: "choose_map_node", option_index: target.index },
-          rationale: `following DeepSeek's route plan (floor ${plan.floor ?? "?"}): step ${step}/${plan.path.length} ${next.type} at row ${next.row}, col ${next.col}; plan ${planText(plan)}`,
-          // The first move of a route planned with the act's Ancient is a step of that plan.
-          ...(joint ? { plan: { ref: joint.ref, step: joint.firstStep, choice: `${next.type} at row ${next.row}, col ${next.col}` } } : {}),
-          ...(joint || plan.review
-            ? {
-                apply: () => {
-                  if (plan.oneshot) plan.oneshot.firstPending = false;
-                  plan.review = undefined;
-                },
-              }
-            : {}),
-        };
-        // The Ancient's outcome is known now: DeepSeek keeps or changes the route, once (default keep).
-        if (plan.review && deepseekDecides(env)) return routeReview(env, plan, follow, context);
-        return follow;
-      }
-      replanWhy = `HP ${Math.round(context.hpPct * 100)}% is ${Math.round(drop * 100)} points below the ${Math.round(next.hpOnArrival * 100)}% the plan projected for the next node (re-plan at ${Math.round(ROUTE_REPLAN_HP_DROP * 100)})`;
-    } else {
-      replanWhy = next ? `the planned next node (row ${next.row}, col ${next.col}, ${next.type}) is not available` : "the plan has no node ahead";
+      const step = plan.path.indexOf(next) + 1;
+      const joint = plan.oneshot?.firstPending ? plan.oneshot : null;
+      const follow: Decision = {
+        kind: "act",
+        label: "map/route-follow",
+        intent: { action: "choose_map_node", option_index: target.index },
+        rationale: `following DeepSeek's route plan (floor ${plan.floor ?? "?"}): step ${step}/${plan.path.length} ${next.type} at row ${next.row}, col ${next.col}; plan ${planText(plan)}`,
+        // The first move of a route planned with the act's Ancient is a step of that plan.
+        ...(joint ? { plan: { ref: joint.ref, step: joint.firstStep, choice: `${next.type} at row ${next.row}, col ${next.col}` } } : {}),
+        ...(joint || plan.review
+          ? {
+              apply: () => {
+                if (plan.oneshot) plan.oneshot.firstPending = false;
+                plan.review = undefined;
+              },
+            }
+          : {}),
+      };
+      // The Ancient's outcome is known now: DeepSeek keeps or changes the route, once (default keep).
+      if (plan.review && deepseekDecides(env)) return routeReview(env, plan, follow, context);
+      return follow;
     }
+    replanWhy = next ? `the planned next node (row ${next.row}, col ${next.col}, ${next.type}) is not available` : "the plan has no node ahead";
   }
   if (screenMemory.routePlanFailed === `${runId}:${act}`) return baseline;
   // BUILD_ONESHOT: the act-start Ancient is the only node; the act's route is planned with its option.
@@ -681,7 +688,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
   const decision = buildPickDecision({
     label: "map/route-plan",
     instructions:
-      "Plan this act's route: which path should I follow to the act boss? Code follows the path you pick node by node and asks you again only if the path breaks or HP falls well below the projection.",
+      "Plan this act's route: which path should I follow to the act boss? Code follows the path you pick node by node and asks you again only if the path breaks; every card reward and rest site shows you the route and your HP against its projection, to keep or change it.",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     options,

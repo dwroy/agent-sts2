@@ -319,7 +319,7 @@ export function routePlanOf(row: Row, state: GameState, previous: RoutePlan | un
 /**
  * A route plan from a map/route-plan row logged before `route_plan` was: the chosen option's room types
  * from its first node, walked on the logged map. The per-step HP projection is not in the row; each step
- * gets the HP at planning time (the re-plan check then fires on a 30-point drop from there).
+ * gets the HP at planning time.
  */
 function legacyRoutePlan(row: Row, state: GameState, previous: RoutePlan | undefined): RoutePlan | null {
   const choice = str(asRecord(row["deepseek"])["choice"]) || str(asRecord(row["escalation"])["choice"]);

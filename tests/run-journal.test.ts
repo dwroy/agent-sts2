@@ -157,12 +157,12 @@ describe("run journal: the complete run context", () => {
     let memory = journal.render(f2, testKnowledge, { routePlan: plan });
     expect(memory.history).toContain(" 路线规划（第1幕 F1 定，当时 HP 100%）: 怪→精→休→店→王");
     expect(memory.route).toBe("本幕进度（按 F1 的路线）: 已走 2/4 [怪精] | 下一步 休（预计 HP 60%） | 剩余 2: 休→店→王");
-    const replan: RoutePlan = { ...plan, floor: 3, hpPct: 0.3, why: "HP 30% is 30 points below", path: [{ row: 3, col: 2, type: "RestSite", hpOnArrival: 0.3 }, { row: 4, col: 2, type: "Treasure", hpOnArrival: 0.6 }] };
+    const replan: RoutePlan = { ...plan, floor: 3, hpPct: 0.3, why: "card-reward review", path: [{ row: 3, col: 2, type: "RestSite", hpOnArrival: 0.3 }, { row: 4, col: 2, type: "Treasure", hpOnArrival: 0.6 }] };
     const f3 = mapAt(3, [{ index: 0, row: 3, col: 2, node_type: "RestSite" }]);
     journal.observe(f3, { screenMemory: { routePlan: replan } });
     memory = journal.render(f3, testKnowledge, { routePlan: replan });
     expect(memory.history).toContain(" 路线规划（第1幕 F1 定");
-    expect(memory.this_floor).toContain(" 路线重规划（HP 30% is 30 points below）（第1幕 F3 定，当时 HP 30%）: 休→宝→王");
+    expect(memory.this_floor).toContain(" 路线重规划（card-reward review）（第1幕 F3 定，当时 HP 30%）: 休→宝→王");
     expect(`${memory.history}${memory.this_floor}`).not.toContain("王→王");
     expect(memory.route).toContain("本幕进度（按 F3 的路线）: 已走 0/2");
     // The route plan decision itself is in the history.
