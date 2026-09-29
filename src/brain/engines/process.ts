@@ -1,6 +1,6 @@
 /**
  * Running a CLI agent (claude, codex) for one brain call: a clean environment, an empty working directory,
- * the prompt on stdin, stdout/stderr collected, killed by PID when the call is aborted.
+ * the prompt on stdin, stdout/stderr collected, its process group killed (negative PID) when the call is aborted.
  */
 import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
@@ -91,7 +91,20 @@ export function removeDir(dir: string): void {
   }
 }
 
-/** Runs the agent to completion; an abort kills it (SIGTERM, then SIGKILL) and rejects. */
+/** After SIGTERM to an aborted agent's process group, how long before SIGKILL. */
+export const KILL_GRACE_MS = 3_000;
+/**
+ * After the agent itself exits, how long its output pipes may stay open before the call ends anyway: a process it
+ * started (an MCP server, a tool) that inherited them would otherwise hold the call, and its working directory,
+ * open until that process ends. The leftovers of its process group are killed then.
+ */
+export const EXIT_CLOSE_GRACE_MS = 2_000;
+
+/**
+ * Runs the agent to completion in its own process group (detached): an abort kills the whole group (SIGTERM, then
+ * SIGKILL after KILL_GRACE_MS, by negative PID) and rejects, so the processes the agent started die with it. The
+ * promise always settles: on 'close', or EXIT_CLOSE_GRACE_MS after 'exit' when something still holds the pipes.
+ */
 export function runAgent(bin: string, args: string[], opts: { cwd: string; env: Record<string, string>; stdin: string; signal?: AbortSignal }): Promise<AgentRun> {
   const started = Date.now();
   return new Promise((resolve, reject) => {
@@ -99,30 +112,61 @@ export function runAgent(bin: string, args: string[], opts: { cwd: string; env: 
       reject(new Error(`${bin} aborted before start`));
       return;
     }
-    const child = spawn(bin, args, { cwd: opts.cwd, env: opts.env, stdio: ["pipe", "pipe", "pipe"] });
+    const child = spawn(bin, args, { cwd: opts.cwd, env: opts.env, stdio: ["pipe", "pipe", "pipe"], detached: true });
     let stdout = "";
     let stderr = "";
     let killTimer: NodeJS.Timeout | undefined;
+    let exitTimer: NodeJS.Timeout | undefined;
     let aborted = false;
+    let settled = false;
+    /** The agent's process group (its PID, negated), else the agent alone; gone already is fine. */
+    const killGroup = (signal: NodeJS.Signals): void => {
+      if (child.pid === undefined) return;
+      try {
+        process.kill(-child.pid, signal);
+      } catch {
+        try {
+          child.kill(signal);
+        } catch {
+          // already gone
+        }
+      }
+    };
     const onAbort = (): void => {
       aborted = true;
-      child.kill("SIGTERM");
-      killTimer = setTimeout(() => child.kill("SIGKILL"), 3_000);
+      killGroup("SIGTERM");
+      killTimer = setTimeout(() => killGroup("SIGKILL"), KILL_GRACE_MS);
+    };
+    const settle = (): boolean => {
+      if (settled) return false;
+      settled = true;
+      opts.signal?.removeEventListener("abort", onAbort);
+      clearTimeout(killTimer);
+      clearTimeout(exitTimer);
+      return true;
+    };
+    const finish = (code: number | null, signal: NodeJS.Signals | null): void => {
+      if (!settle()) return;
+      if (aborted) reject(new Error(`${bin} aborted after ${Date.now() - started} ms`));
+      else resolve({ code, signal, stdout, stderr, ms: Date.now() - started });
     };
     opts.signal?.addEventListener("abort", onAbort, { once: true });
     child.stdout.on("data", (chunk: Buffer) => (stdout += chunk.toString("utf8")));
     child.stderr.on("data", (chunk: Buffer) => (stderr += chunk.toString("utf8")));
     child.on("error", (error) => {
-      opts.signal?.removeEventListener("abort", onAbort);
-      clearTimeout(killTimer);
+      if (!settle()) return;
       reject(new AgentStartError(bin, String((error as NodeJS.ErrnoException).code ?? "error"), error.message));
     });
-    child.on("close", (code, signal) => {
-      opts.signal?.removeEventListener("abort", onAbort);
-      clearTimeout(killTimer);
-      if (aborted) reject(new Error(`${bin} aborted after ${Date.now() - started} ms`));
-      else resolve({ code, signal, stdout, stderr, ms: Date.now() - started });
+    child.on("exit", (code, signal) => {
+      // 'close' normally follows at once; if a leftover process holds the pipes, end the call without it.
+      exitTimer = setTimeout(() => {
+        killGroup("SIGKILL");
+        child.stdout.destroy();
+        child.stderr.destroy();
+        finish(code, signal);
+      }, EXIT_CLOSE_GRACE_MS);
     });
+    child.on("close", (code, signal) => finish(code, signal));
     child.stdin.on("error", () => {
       // the agent exited before reading its prompt: reported through close
     });

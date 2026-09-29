@@ -25,8 +25,8 @@
  *   the result (modelUsage).
  * - Failures (claudeFailure): a used-up subscription quota, a rate limit, an overload or a lost login come back
  *   as an EngineFailure with a rest period, so the router answers from BRAIN_FALLBACK at once and keeps doing
- *   so for a while; the router's timeout kills the process (by PID). A program that does not start (not found,
- *   not executable) rests it too, and the loop checks `claude --version` once before play (Brain.preflight):
+ *   so for a while; the router's timeout kills the process and what it started (its process group). A program
+ *   that does not start (not found, not executable) rests it too, and the loop checks `claude --version` once before play (Brain.preflight):
  *   a failed check rests it for the whole process. Nothing here waits on a human.
  * - Environment: only the basics a process needs (engines/process.ts agentEnv): none of our keys.
  */

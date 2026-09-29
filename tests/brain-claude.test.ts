@@ -4,14 +4,14 @@
  * answer and usage read back, failure kinds (quota, rate limit, login) and the stdio MCP round trip with a fake
  * tool. No model is called.
  */
-import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain } from "../src/brain/brain.js";
 import { checkClaudeBin, CLAUDE_REST_MS, claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
-import { agentEnv } from "../src/brain/engines/process.js";
+import { agentEnv, EXIT_CLOSE_GRACE_MS, runAgent } from "../src/brain/engines/process.js";
 import { EngineFailure } from "../src/brain/router.js";
 import { pickSpec, runPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
@@ -292,3 +292,46 @@ class StubDeepSeekForPreflight extends DeepSeekClient {
     return { choice: "a", reason: "deepseek", latencyMs: 1, inputTokens: 1, outputTokens: 1 };
   }
 }
+
+describe("runAgent: the agent's whole process group, and a call that always ends", () => {
+  /** Whether a PID is gone (polled: the orphan is reaped by init after the kill). */
+  async function gone(pid: number): Promise<boolean> {
+    for (let i = 0; i < 50; i += 1) {
+      try {
+        process.kill(pid, 0);
+      } catch {
+        return true;
+      }
+      await new Promise((ok) => setTimeout(ok, 20));
+    }
+    return false;
+  }
+
+  it("an abort kills what the agent started too (a child holding its output), and the call ends at once", async () => {
+    const pidFile = join(dir, "group-abort.pid");
+    const bin = join(dir, "group-abort.sh");
+    // The agent starts a child that keeps its stdout open, then waits.
+    writeFileSync(bin, `#!/bin/sh\nsleep 30 &\necho $! > ${JSON.stringify(pidFile)}\nwait\n`);
+    chmodSync(bin, 0o755);
+    const controller = new AbortController();
+    const run = runAgent(bin, [], { cwd: dir, env: agentEnv(), stdin: "", signal: controller.signal });
+    for (let i = 0; i < 100 && !existsSync(pidFile); i += 1) await new Promise((ok) => setTimeout(ok, 20));
+    const started = Date.now();
+    controller.abort();
+    await expect(run).rejects.toThrow(/aborted after/);
+    expect(Date.now() - started).toBeLessThan(1_500);
+    expect(await gone(Number(readFileSync(pidFile, "utf8").trim()))).toBe(true);
+  });
+
+  it("an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed", async () => {
+    const pidFile = join(dir, "group-exit.pid");
+    const bin = join(dir, "group-exit.sh");
+    writeFileSync(bin, `#!/bin/sh\nsleep 30 &\necho $! > ${JSON.stringify(pidFile)}\necho answered\nexit 0\n`);
+    chmodSync(bin, 0o755);
+    const started = Date.now();
+    const result = await runAgent(bin, [], { cwd: dir, env: agentEnv(), stdin: "" });
+    expect(result).toMatchObject({ code: 0, stdout: "answered\n" });
+    expect(Date.now() - started).toBeLessThan(EXIT_CLOSE_GRACE_MS + 1_500);
+    expect(await gone(Number(readFileSync(pidFile, "utf8").trim()))).toBe(true);
+  });
+});
