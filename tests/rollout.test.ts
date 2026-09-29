@@ -744,3 +744,65 @@ describe("a turn limit ends the rollout unwon (Battleworn Dummy, SK1USHSB1U7U F4
     expect(line.timeUps).toBeUndefined();
   });
 });
+
+describe("debuffs enemy moves put on us carry into the rollout's later turns (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable)", () => {
+  const EEL: EnemyTable = {
+    moves: {
+      CRASH_MOVE: { damage: 18, hits: 1, strength: 0, block: 0 },
+      TERROR_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { VULNERABLE_POWER: 99 } },
+    },
+    next: { CRASH_MOVE: { TERROR_MOVE: 1 }, TERROR_MOVE: { CRASH_MOVE: 1 } },
+  };
+  const run = (table: EnemyTable, move: string, powers: Record<string, number>, draw: CardModel[], hp = 200) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp, maxHp: 200 },
+      enemies: [{ index: 0, name: "E", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw, discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move, strength: 0, powers }],
+      tables: { E: table },
+    }).lines[0]!;
+  };
+  const lossOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.loss.mean;
+  const strikes = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => strike(i));
+
+  it("Terror's Vulnerable: the Crash after it hits x1.5 (18 + 6 Vigor = 36, as it did)", () => {
+    expect(lossOn(run(EEL, "TERROR_MOVE", {}, strikes), 2)).toBe(27);
+    expect(lossOn(run(EEL, "TERROR_MOVE", { VIGOR_POWER: 6 }, strikes), 2)).toBe(36);
+    // And the 99 lasts: the next Crash (turn 4) too.
+    expect(lossOn(run(EEL, "TERROR_MOVE", {}, strikes), 4)).toBe(27);
+  });
+
+  it("Frail cuts our card block, Weak our attacks, a drain our Strength", () => {
+    const spores: EnemyTable = {
+      moves: { SPORES: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { FRAIL_POWER: 2 } }, HIT: { damage: 10, hits: 1, strength: 0, block: 0 } },
+      next: { SPORES: { HIT: 1 }, HIT: { SPORES: 1 } },
+    };
+    const defends = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => defend(i));
+    // Three Defends: 15 block unFrailed, 3 x floor(5 x 0.75) = 9 under Frail: 1 through.
+    expect(lossOn(run(spores, "SPORES", {}, defends), 2)).toBe(1);
+    expect(lossOn(run({ ...spores, moves: { ...spores.moves, SPORES: { ...spores.moves["SPORES"]!, playerPowers: {} } } }, "SPORES", {}, defends), 2)).toBe(0);
+    const weak: EnemyTable = { moves: { GOOP: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { WEAK_POWER: 2 } } }, next: { GOOP: { GOOP: 1 } } };
+    const drain: EnemyTable = { moves: { SIPHON: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { STRENGTH_POWER: -2 } } }, next: { SIPHON: { SIPHON: 1 } } };
+    const plain: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const dmgOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.dmg.mean;
+    expect(dmgOn(run(plain, "WAIT", {}, strikes), 2)).toBe(18);
+    expect(dmgOn(run(weak, "GOOP", {}, strikes), 2)).toBe(12);
+    expect(dmgOn(run(drain, "SIPHON", {}, strikes), 2)).toBe(12);
+  });
+
+  it("the real DB: Terror puts 99 Vulnerable on us", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = JSON.parse(readFileSync(join(ROOT, "src/knowledge/monster-db.json"), "utf8")) as { monsters: Record<string, never> };
+    expect(enemyTable("TERROR_EEL", 9, db.monsters, {})!.moves["TERROR_MOVE"]!.playerPowers).toEqual({ VULNERABLE_POWER: 99 });
+  });
+});

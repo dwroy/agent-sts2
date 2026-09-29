@@ -355,9 +355,18 @@ export interface EnemyMove {
   burrows?: boolean;
   /** Vigor the move gives itself (Terror Eel's Thrash: 6): added to its next attack's hits. */
   vigor?: number;
+  /**
+   * What the move puts on us (monster DB player_powers_applied at this ascension): Vulnerable, Weak and
+   * Frail turns, and Strength/Dexterity drained (negative). Terror Eel's Terror: VULNERABLE_POWER 99.
+   */
+  playerPowers?: Partial<Record<PlayerDebuff, number>>;
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
 }
+
+/** The powers an enemy move puts on us that the rollout applies to its later turns (EnemyMove.playerPowers). */
+export const PLAYER_DEBUFFS = ["VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER"] as const;
+export type PlayerDebuff = (typeof PLAYER_DEBUFFS)[number];
 
 export interface EnemyTable {
   moves: Record<string, EnemyMove>;
@@ -683,6 +692,8 @@ interface SimPlayer {
   dexterity: number;
   weakTurns: number;
   vulnTurns: number;
+  /** Frail: block from cards is 25% less while it lasts (enemy turns left, like Weak and Vulnerable). */
+  frailTurns: number;
   block: number;
   keepsBlock: boolean;
   demonForm: number;
@@ -769,15 +780,18 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
     index,
     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
-    block: card.block > 0 ? Math.max(0, card.block + player.dexterity) * (player.unmovable ? 2 : 1) : card.block,
+    // Frail: 25% less block from cards, after Dexterity.
+    block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
     validTargets: card.target === "single" ? targets : [],
   };
 }
 
 function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, blockEnd: number, energyLeft: number, handLeft: number, playerPowers: Record<string, number>): Snapshot {
   const pw: Record<string, number> = { ...playerPowers };
-  if (player.strength !== 0) pw["STRENGTH_POWER"] = player.strength;
-  else delete pw["STRENGTH_POWER"];
+  for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns]] as const) {
+    if (v !== 0) pw[id] = v;
+    else delete pw[id];
+  }
   return {
     hp: hpEnd,
     mhp: player.maxHp,
@@ -978,6 +992,9 @@ function applyPlan(
     won = allDown();
   }
   if (!won && !died) {
+    // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
+    // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
+    const applied: Partial<Record<PlayerDebuff, number>>[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -991,6 +1008,7 @@ function applyPlan(
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
         e.strength += m?.strength ?? 0;
+        if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
         e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
@@ -1035,6 +1053,15 @@ function applyPlan(
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
+    player.frailTurns = Math.max(0, player.frailTurns - 1);
+    // Put on us by this enemy turn's moves: they last through our next turn and its enemy turn.
+    for (const powers of applied) {
+      player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
+      player.weakTurns += powers.WEAK_POWER ?? 0;
+      player.frailTurns += powers.FRAIL_POWER ?? 0;
+      player.strength += powers.STRENGTH_POWER ?? 0;
+      player.dexterity += powers.DEXTERITY_POWER ?? 0;
+    }
     player.strength += player.demonForm;
   }
   const carried = player.startDealt;
@@ -1095,6 +1122,7 @@ function simulate(
     dexterity: input.playerPowers["DEXTERITY_POWER"] ?? 0,
     weakTurns: input.playerPowers["WEAK_POWER"] ?? (base.weak ? 1 : 0),
     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
+    frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,
     block: base.block,
     keepsBlock: base.keepsBlock === true,
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
