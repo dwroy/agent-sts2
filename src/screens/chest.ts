@@ -31,7 +31,7 @@ export function planChest(env: DecisionEnv): Decision | null {
           summary: {
             relic: name,
             rarity: str(relic["rarity"], knowledge.relic(id)?.rarity ?? ""),
-            text: knowledge.relic(id)?.description ?? "",
+            text: fillRelicText(id, knowledge.relic(id)?.description ?? ""),
           } satisfies JsonValue,
         } satisfies PickOption,
       ];

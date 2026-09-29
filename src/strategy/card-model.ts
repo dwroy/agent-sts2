@@ -1017,7 +1017,7 @@ export function potionRegen(potionId: string): number {
  * a card potion adds). `ctx` is the board a generated card is played on (targets, Strength, Weak), the
  * pile cards pile-card potions take and the draw pile's expected card.
  */
-export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
+export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
   // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
@@ -1026,7 +1026,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   // Chaos plays nothing, Gambler's Brew draws back the cards it discarded (no change). Without any context: null.
   const drawPotion = effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled";
   if (drawPotion && !ctx?.expectedDraw && !ctx?.pilesEmpty) return null;
-  if (drawPotion && !ctx?.expectedDraw && effect.special === "gamble") return { ...potionShell(potionId, name, slot, validTargets, useCost), ...effect, special: null };
+  if (drawPotion && !ctx?.expectedDraw && effect.special === "gamble") return { ...potionShell(potionId, name, slot, validTargets), ...effect, special: null };
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
@@ -1073,7 +1073,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
       }
     : undefined;
   return {
-    ...potionShell(potionId, name, slot, validTargets, useCost),
+    ...potionShell(potionId, name, slot, validTargets),
     ...effect,
     ...(generates ? { generates } : {}),
     ...(effect.special === "forge" ? { upgrades: ctx?.upgrades ?? {} } : {}),
@@ -1083,9 +1083,10 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
 
 /**
  * A potion as a 0-cost "card" with no effect yet: the solver plays it as step `POTION:<id>:<slot>`.
- * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's.
+ * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's. No use cost (Dai: a potion is a
+ * 0-cost one-shot card; the old useCost parameter, always 0 since batch K, is gone so it cannot come back).
  */
-export function potionShell(potionId: string, name: string, slot: number, validTargets: number[], useCost = 0): CardModel {
+export function potionShell(potionId: string, name: string, slot: number, validTargets: number[]): CardModel {
   return {
     index: 100 + slot,
     key: `p${slot}`,
@@ -1113,7 +1114,7 @@ export function potionShell(potionId: string, name: string, slot: number, validT
     exhausts: true,
     special: null,
     known: true,
-    flatValue: -useCost,
+    flatValue: 0,
     heldPenalty: 0,
     text: "",
   };

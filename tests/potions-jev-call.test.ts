@@ -74,7 +74,8 @@ describe("no potion score penalty", () => {
     const potions = inputs.flatMap((input) => input.hand.filter((card) => card.type === "Potion"));
     expect(potions.length).toBeGreaterThan(0);
     for (const card of potions) expect(card.flatValue, card.cardId).toBeGreaterThanOrEqual(0);
-    expect(inputs.every((input) => input.potionLimit === null)).toBe(true);
+    // No per-turn potion cap either (the potionLimit input is gone, batch L).
+    expect(inputs.every((input) => !("potionLimit" in input))).toBe(true);
   });
 
   it("a potion line reaching the same end state never replaces or dominates the potion-free line", () => {

@@ -303,7 +303,12 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
 /* ---- an option together with the card(s) its follow-up takes -------------------------------------- */
 
 /** How code ranks a card for this follow-up (a small tie-break inside the option's own value) and what the value means. */
-export type TargetScore = (card: DeckCard) => { score: number; why: string };
+export type TargetScore = (card: DeckCard) => { score: number; why: string; parts?: string };
+
+/** A ranked card's value as shown to the decider: "120 (80 + 40 your run plan's removal target)" when it has parts. */
+export function rankedValue(ranked: { score: number; parts?: string }): string {
+  return ranked.parts ? `${ranked.score} (${ranked.parts})` : String(ranked.score);
+}
 
 /**
  * One option whose action opens a deck selection, as DeepSeek sees it in a one-shot question:
@@ -350,7 +355,7 @@ export function withFollowUp(
         label: `${option.label ?? option.key}: ${follow.task} ${card.name}`,
         // The option's own value leads; code's card ranking only orders the cards within it.
         score: option.score + ranked.score / 1000,
-        why: `${option.why ?? ""}${option.why ? "; " : ""}${follow.task} target: ${card.name} ${ranked.score} (${ranked.why})`,
+        why: `${option.why ?? ""}${option.why ? "; " : ""}${follow.task} target: ${card.name} ${rankedValue(ranked)} (${ranked.why})`,
         summary: {
           ...summary,
           then: `${follow.task} ${card.name}`,
@@ -372,7 +377,7 @@ export function withFollowUp(
         then: `${follow.task} ${follow.upTo ? "up to " : ""}${follow.count} card(s) from your deck`,
         cards_to_name: `answer "cards": [${follow.upTo ? "up to " : ""}${follow.count} keys from eligible_cards, repeat a key for several copies]`,
         // Each card with code's value as this follow-up's target (the ranking the selection screen used).
-        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, `${cardLine(card)} [code ${follow.task} value ${targetScore(card).score}]`])),
+        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, `${cardLine(card)} [code ${follow.task} value ${rankedValue(targetScore(card))}]`])),
         target_why: targetScore(eligible[0]!).why,
       },
       plan: (answer: PlanAnswer) => {

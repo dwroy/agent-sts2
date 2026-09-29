@@ -58,7 +58,7 @@ function askCombat(): Record<string, unknown> {
 const outcome = (over: Partial<Outcome> = {}): Outcome => ({
   winsFight: false, hpLoss: 5, hpAfter: 45, dies: false, blockGained: 0, damageDealt: 10, kills: [], restocked: [],
   enemyHpAfter: [{ index: 0, name: "Boss", hp: 90, vulnerable: 0, weak: 0 }], incomingAfterBlock: 5, energyLeft: 0,
-  vulnerableApplied: 0, weakApplied: 0, strengthGained: 0, cardsDrawn: 0, unknownCards: [], potionCost: 0, sandpitAfter: null,
+  vulnerableApplied: 0, weakApplied: 0, strengthGained: 0, cardsDrawn: 0, unknownCards: [], sandpitAfter: null,
   startTurnKills: [], withersAdded: 0, sleepCost: 0, lasting: 0, ...over,
 });
 

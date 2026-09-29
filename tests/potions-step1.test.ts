@@ -37,7 +37,7 @@ function withPotions(fx: Logged): SolverInput {
     expectedDraw: expectedDraw(draw.length > 0 ? draw : discard, 0),
   };
   const potions = potionViews({ raw: fx.state["run"] as Raw }, loggedKnowledge)
-    .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, 0, ctx))
+    .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, ctx))
     .filter((card): card is CardModel => card !== null);
   const drawable = drawablePileSize(fx.state);
   return {
@@ -66,7 +66,7 @@ describe("potion text: the template numbers filled (7c00476)", () => {
 
 describe("potion effects the solver lacked are lines with their numbers", () => {
   it("Potion-Shaped Rock deals 15 (measured), not 10", () => {
-    expect(modelPotion("POTION_SHAPED_ROCK", "rock", 0, [0], 0)?.damage).toBe(15);
+    expect(modelPotion("POTION_SHAPED_ROCK", "rock", 0, [0])?.damage).toBe(15);
   });
 
   it("Heart of Iron: Plating 7 blocks at this turn's end (KGR6 F23 T4, 14/80, 8x2 coming)", () => {
@@ -139,7 +139,7 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
   });
 
   it("Shackling Potion: every enemy hits 7 less per hit this turn (VQKX: carried unmodelled F11-F28)", () => {
-    const shackle = modelPotion("SHACKLING_POTION", "Shackling Potion", 0, [], 0)!;
+    const shackle = modelPotion("SHACKLING_POTION", "Shackling Potion", 0, [])!;
     expect(shackle.target).toBe("all");
     expect(shackle.enemyTempStrengthLoss).toBe(7);
     const enemies: EnemySim[] = [
@@ -152,7 +152,7 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
   });
 
   it("Snecko Oil draws and makes the hand's costs their expected 1.5 (K8TC F17 T5: Bash at 2 is then playable after two 1-cost cards)", () => {
-    const snecko = modelPotion("SNECKO_OIL", "Snecko Oil", 1, [], 0)!;
+    const snecko = modelPotion("SNECKO_OIL", "Snecko Oil", 1, [])!;
     expect(snecko.draw).toBe(7);
     const bash = { ...modelHandCard((combatOf(logged("k8tc-f17-t5"))["hand"] as Raw[]).find((entry) => entry["card_id"] === "BASH")!, 4, loggedKnowledge) };
     const plans = solveTurn({ hand: [bash, snecko], player: { hp: 20, maxHp: 80, block: 0, energy: 1.5, weak: false, vulnerable: false, intangible: false }, enemies: withPotions(logged("k8tc-f17-t5")).enemies, fightKind: "elite" }).plans;
@@ -170,7 +170,7 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
   it("Distilled Chaos plays the draw pile's expected top cards for free (YG3H F33 T1: no attack in hand)", () => {
     const plans = solveTurn(withPotions(logged("yg3h-f33-t1"))).plans;
     expect(only(plans, "POTION:DISTILLED_CHAOS")!.outcome.damageDealt).toBeGreaterThan(0);
-    expect(modelPotion("DISTILLED_CHAOS", "Distilled Chaos", 0, [], 0)).toBeNull();
+    expect(modelPotion("DISTILLED_CHAOS", "Distilled Chaos", 0, [])).toBeNull();
   });
 
   it("Liquid Memories takes the discard pile's best card for this turn, free (PWSD F23 T3, 9/80)", () => {
@@ -181,12 +181,12 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
     expect(discard.length).toBeGreaterThan(5);
     const pick = pileCardPick(discard, 20, 3, true)!;
     expect(discard.map((card) => card.cardId)).toContain(pick.cardId);
-    const memories = modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], 0, { ...ctx, discardPick: pick })!;
+    const memories = modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], { ...ctx, discardPick: pick })!;
     expect(memories.generates?.cost).toBe(0);
     const plans = solveTurn(withPotions(fx)).plans;
     expect(plans.some((plan) => plan.steps.some((step) => step.cardId === "GEN:LIQUID_MEMORIES:2"))).toBe(true);
     // Nothing to take: not a line (and so still offered as before, unmodelled).
-    expect(modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], 0, { ...ctx, discardPick: null })).toBeNull();
+    expect(modelPotion("LIQUID_MEMORIES", "Liquid Memories", 2, [], { ...ctx, discardPick: null })).toBeNull();
   });
 
   it("Attack Potion: a free attack card of a best-of-three value (X8R8 F17 T8)", () => {
@@ -235,12 +235,12 @@ describe("Glowwater: the hand exhausted, a new hand drawn (logged: 5 -> 10, 3 ->
   const draw = card(90, "EXPECTED", { type: "Attack", target: "single", validTargets: [0], damage: 6 });
 
   it("is modelled only with a known pile to draw from", () => {
-    expect(modelPotion("GLOWWATER_POTION", "Glowwater", 0, [], 0)).toBeNull();
-    expect(modelPotion("GLOWWATER_POTION", "Glowwater", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, expectedDraw: draw })?.special).toBe("glowwater");
+    expect(modelPotion("GLOWWATER_POTION", "Glowwater", 0, [])).toBeNull();
+    expect(modelPotion("GLOWWATER_POTION", "Glowwater", 0, [], { enemyTargets: [0], strength: 0, weak: false, expectedDraw: draw })?.special).toBe("glowwater");
   });
 
   it("a line drinks it, exhausts the hand and plays the drawn cards", () => {
-    const potion = modelPotion("GLOWWATER_POTION", "Glowwater", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, expectedDraw: draw })!;
+    const potion = modelPotion("GLOWWATER_POTION", "Glowwater", 0, [], { enemyTargets: [0], strength: 0, weak: false, expectedDraw: draw })!;
     const plans = solveTurn({
       hand: [card(0, "DEFEND", { block: 5, cost: 2 }), potion],
       player: { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, drawable: 12 },
@@ -284,7 +284,7 @@ describe("Blessing of the Forge and Soldier's Stew are solver lines (BXAZ, QUG1,
     const input = withPotions(fx);
     expect(input.hand.some((card) => card.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE"))).toBe(false);
     const upgrades = forgeUpgrades(parseGameState(fx.state), loggedKnowledge);
-    const forge = modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades })!;
+    const forge = modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], { enemyTargets: [0], strength: 0, weak: false, upgrades })!;
     expect(forge.special).toBe("forge");
     const plans = solveTurn({ ...input, hand: [...input.hand, forge] }).plans;
     const cards = (plan: Plan) => plan.steps.filter((step) => !step.cardId.startsWith("POTION:")).map((step) => step.cardId).join(",");
@@ -293,7 +293,7 @@ describe("Blessing of the Forge and Soldier's Stew are solver lines (BXAZ, QUG1,
     // Headbutt +3, Twin Strike +2 x2, Sword Boomerang's upgrade (+1 x3 when it is played).
     expect(drunk.outcome.damageDealt - dry.outcome.damageDealt).toBeGreaterThanOrEqual(3 + 4);
     // With no upgrade known for any card it stays an unmodelled option.
-    expect(modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades: {} })).toBeNull();
+    expect(modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], { enemyTargets: [0], strength: 0, weak: false, upgrades: {} })).toBeNull();
   });
 
   it("Soldier's Stew replays the Strikes played after it, and one more play of the piles' Strikes is lasting value (QUG1 F23 T4)", () => {
