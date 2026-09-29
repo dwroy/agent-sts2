@@ -111,16 +111,16 @@ describe("BUILD_DECIDER=deepseek: screens ask DeepSeek with facts", () => {
     expect(resolved?.intent).toEqual({ action: "skip_reward_cards" });
   });
 
-  it("shop: purchases, removal and leaving, with code's value and why", () => {
-    const view = deepseekView(decide(env({ ...shopPayload(true), run: crabRun() })));
+  it("shop (BUILD_ONESHOT=off): purchases, removal and leaving, with code's value and why", () => {
+    const view = deepseekView(decide(env({ ...shopPayload(true), run: crabRun() }, { oneshot: "off" })));
     expect(Object.keys(view.options).sort()).toEqual(["buy_card0", "buy_relic0", "leave", "remove"]);
     expect(view.options["buy_card0"]?.["why"]).toMatch(/card value/);
     expect(view.options["remove"]?.["why"]).toMatch(/basic Strikes\/Defends/);
     expect(view.facts["shop_stock"]).toBeDefined();
   });
 
-  it("rest site: heal vs smith with the heal amount and the cards that can be upgraded", () => {
-    const view = deepseekView(decide(env({ ...restPayload(), run: crabRun({ current_hp: 60 }) })));
+  it("rest site (BUILD_ONESHOT=off): heal vs smith with the heal amount and the cards that can be upgraded", () => {
+    const view = deepseekView(decide(env({ ...restPayload(), run: crabRun({ current_hp: 60 }) }, { oneshot: "off" })));
     expect(Object.keys(view.options)).toHaveLength(2);
     expect(view.facts["rest_site"]).toMatchObject({ heal_amount: expect.stringMatching(/24 HP/), upgradable_cards: expect.any(Array) });
   });
@@ -435,7 +435,7 @@ describe("a paid DeepSeek decision the board moved past is still logged (Y3XT F3
       });
     });
     servers.push(server);
-    const config = loopConfig();
+    const config = loopConfig({ buildOneshot: "off" });
     const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev().client, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 5, pollIntervalMs: 1 });
     const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
     expect(actions).toHaveLength(0);
@@ -463,8 +463,9 @@ async function scriptedDeepSeek(replies: { content: string; reasoning?: string }
   return new DeepSeekClient({ apiKey: "test", baseUrl: server.url, model: "fake", timeoutMs: 5000, reasoningEffort: "max" });
 }
 
-async function playWith(sequence: Raw[], deepseek: DeepSeekClient, jev: JevClient = stubJev().client) {
-  const config = loopConfig();
+/** The consistency guard and recovery tests below use the step-by-step rest question (heal o0 / smith o1). */
+async function playWith(sequence: Raw[], deepseek: DeepSeekClient, jev: JevClient = stubJev().client, over: Partial<AppConfig> = { buildOneshot: "off" }) {
+  const config = loopConfig(over);
   const { server, actions } = await scriptedMod(sequence);
   const stats = await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev, escalators: [deepseek], knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
   const records = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);

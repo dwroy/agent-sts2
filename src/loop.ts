@@ -22,7 +22,7 @@ import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
-import { describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
+import { compact, describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberMap } from "./screens/rest.js";
@@ -512,6 +512,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
     }
+    // A one-shot plan lives for its room: the shop list, and a card named for a selection that never came.
+    if (state.screen === "MAP" || state.in_combat) {
+      screenMemory.shopPlan = undefined;
+      screenMemory.pendingPick = undefined;
+    }
     // A restart mid-run: rebuild the run memory and the act's route plan from this run's logs before
     // anything reads them (FA82FQHSJG2F F9: a fresh process re-planned the route without knowing F7 was
     // an elite).
@@ -559,6 +564,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       fightPlan: config.fightPlan,
       // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
       buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
+      oneshot: config.buildOneshot,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -641,6 +647,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekResolved: ResolvedAction | null = null;
     let deepseekRecord: Record<string, JsonValue> | undefined;
     let deepseekFailed = false;
+    /** DeepSeek answered but the answer was unusable (not a transport failure): a one-shot question then goes step by step. */
+    let deepseekAnswerUnusable: string | null = null;
     let deepseekAsked: Record<string, JsonValue> | undefined;
     let deepseekFallback: string | undefined;
     /** What DeepSeek said before its answer failed (reason, reasoning conclusion): passed on to Jev. */
@@ -670,16 +678,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           continue;
         }
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
-        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state });
+        const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}) });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek" } },
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}) } },
           } as AnswerSet);
-          if (!picked.intent) {
+          // A one-shot resolution that fell back in code means the choice named no option.
+          if (!picked.intent || (spec.oneshot && picked.fallback)) {
             onEvent({ type: "note", message: `DeepSeek's ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
+            deepseekAnswerUnusable = `${answer.choice} did not resolve`;
             return false;
           }
           const how = recovered ? ` (recovered from reasoning: ${recovered.line})` : "";
@@ -702,6 +712,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             memory_sections: memorySections(memory),
             ...(deepseekConsistency === undefined ? {} : { consistency: deepseekConsistency }),
             ...(recovered ? { recovered_from_reasoning: recovered.line } : {}),
+            ...(answer.cards ? { cards: answer.cards } : {}),
+            // A one-shot plan: its reference and steps; this row plays step 1, later steps are their own rows.
+            ...(picked.plan ? { plan_id: picked.plan.id, plan: picked.plan.steps, plan_step: 1 } : {}),
           };
           deepseekAsked = toJsonValue(ask.questions) as Record<string, JsonValue>;
           deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
@@ -710,18 +723,62 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         };
         try {
           stats.deepseekCalls += 1;
-          const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
-          stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
-          deepseekLatency = answer.latencyMs;
-          if (answer.consistency) {
-            stats.deepseekCalls += 1; // the re-ask
-            deepseekConsistency = toJsonValue(answer.consistency);
-            onEvent({ type: "note", message: `DeepSeek answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
+          if (spec.plan) {
+            // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen.
+            const { json, meta } = await deepseekClient.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
+            deepseekLatency = meta.latencyMs;
+            const reason = str(json["reason"]).trim();
+            const usage = {
+              latency_ms: meta.latencyMs,
+              tokens: meta.inputTokens + meta.outputTokens,
+              input_tokens: meta.inputTokens,
+              output_tokens: meta.outputTokens,
+              cache_hit_tokens: meta.cacheHitTokens ?? 0,
+              reasoning_tokens: meta.reasoningTokens ?? 0,
+              effort: meta.effort ?? "",
+              guide: meta.guideId ?? "",
+              handbook: meta.handbookId ?? "",
+              memory_chars: memoryChars(memory),
+              memory_sections: memorySections(memory),
+            };
+            const out = spec.plan.resolve(json);
+            if ("invalid" in out || !out.intent) {
+              const why = "invalid" in out ? out.invalid : out.rationale;
+              deepseekFailed = true;
+              deepseekAnswerUnusable = `plan invalid: ${why}`;
+              deepseekRecord = { by: "deepseek", direct: true, choice: "", reason, answer: toJsonValue(json), invalid: why, ...usage };
+              onEvent({ type: "note", message: `DeepSeek's plan on ${decision.label} is invalid (${why})` });
+            } else {
+              deepseekResolved = { ...out, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek planned: ${reason} | ${out.rationale}` };
+              deepseekRecord = {
+                by: "deepseek",
+                direct: true,
+                choice: out.plan ? JSON.stringify(out.plan.steps) : "",
+                reason,
+                ...usage,
+                ...(out.plan ? { plan_id: out.plan.id, plan: out.plan.steps, plan_step: 1 } : {}),
+              };
+              deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
+              deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
+              onEvent({ type: "note", message: `DeepSeek (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]} — ${reason}` });
+            }
+          } else {
+            const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
+            deepseekLatency = answer.latencyMs;
+            if (answer.consistency) {
+              stats.deepseekCalls += 1; // the re-ask
+              deepseekConsistency = toJsonValue(answer.consistency);
+              onEvent({ type: "note", message: `DeepSeek answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
+            }
+            if (!accept(answer, null)) deepseekFailed = true;
           }
-          if (!accept(answer, null)) deepseekFailed = true;
         } catch (error) {
           deepseekFailed = true;
           if (error instanceof DeepSeekInconsistentError) {
+            deepseekAnswerUnusable = "inconsistent after re-ask";
+            if (spec.oneshot) deepseekRecord = { by: "deepseek", direct: true, choice: error.record.first.choice, reason: error.record.first.reason, invalid: deepseekAnswerUnusable, tokens: error.meta.tokens };
             stats.deepseekCalls += error.meta.calls - 1;
             stats.deepseekTokens += error.meta.tokens;
             deepseekConsistency = toJsonValue(error.record);
@@ -734,7 +791,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             // "heal", answer unparsed, Jev smithed at 0.05): act on that before handing the question on.
             stats.deepseekTokens += error.meta.inputTokens + error.meta.outputTokens;
             deepseekLatency = error.meta.latencyMs;
-            const recovered = error.recoverFrom(question.criteria);
+            deepseekAnswerUnusable = error.message.slice(0, 160);
+            if (spec.oneshot) {
+              const meta = error.meta;
+              deepseekRecord = { by: "deepseek", direct: true, choice: error.detail.choice, reason: error.detail.reason, invalid: deepseekAnswerUnusable, latency_ms: meta.latencyMs, tokens: meta.inputTokens + meta.outputTokens, input_tokens: meta.inputTokens, output_tokens: meta.outputTokens, cache_hit_tokens: meta.cacheHitTokens ?? 0, reasoning_tokens: meta.reasoningTokens ?? 0, effort: meta.effort ?? "" };
+            }
+            // A plan's answer is not an option key: nothing to recover from its reasoning.
+            const recovered = spec.plan ? null : error.recoverFrom(question.criteria);
             if (recovered) {
               const reason = error.detail.reason || `reasoning concluded ${recovered.option}`;
               if (accept({ ...error.meta, choice: recovered.option, reason }, recovered)) deepseekFailed = false;
@@ -749,6 +812,43 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
       } else if (deepseekClient && !deepseekBudgetLeft()) {
         onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
+      }
+      if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
+        // A one-shot question whose answer was unusable: the screen asks its step-by-step questions (logged:
+        // the call was paid). Transport failures and an empty budget still play the baseline below.
+        spec.oneshot.fallback();
+        const usageOf = deepseekRecord ? deepseekUsage(deepseekRecord) : { input_tokens: 0, output_tokens: 0 };
+        const row: DecisionRecord = {
+          ts: new Date().toISOString(),
+          mode,
+          screen: state.screen,
+          session: `${state.session.mode}/${state.session.phase}`,
+          floor: state.run?.floor ?? null,
+          turn: state.turn,
+          label: decision.label,
+          decider: "deepseek",
+          fingerprint: stateFingerprint,
+          questions: toJsonValue(decision.questions) as Record<string, JsonValue>,
+          rationale: `one-shot answer unusable (${deepseekAnswerUnusable}); asking step by step`,
+          confidence: null,
+          fallback: true,
+          reasked: deepseekConsistency !== undefined,
+          no_jev: false,
+          reused_answer: false,
+          request_ids: [],
+          latency_ms: { plan: 0, jev: 0, action: 0, ...(deepseekLatency > 0 ? { deepseek: deepseekLatency } : {}) },
+          usage: usageOf,
+          ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
+          deepseek_fallback: `one-shot answer unusable: ${deepseekAnswerUnusable}; step-by-step questions`,
+          ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
+          ...(runId ? { run_id: runId } : {}),
+          observed_ts: observedTs,
+          result: "not dispatched: one-shot answer unusable, re-planned step by step",
+        };
+        log.write(row);
+        logState(state, stateFingerprint, row.ts);
+        onEvent({ type: "note", message: `one-shot ${decision.label} unusable (${deepseekAnswerUnusable}): asking step by step` });
+        continue;
       }
       if (!deepseekResolved) {
         if (deepseekFailed) spec.onFail?.();
@@ -780,7 +880,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // DeepSeek's own tokens (zero when the answer was reused from the memo: no call was made).
       if (deepseekRecord && deepseekRecord["reused"] !== true) usage = deepseekUsage(deepseekRecord);
     } else if (decision.kind === "act") {
-      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false };
+      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}) };
+      // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
+      if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
     } else if (!jev) {
       // No-Jev mode: the resolver sees an empty answer set and takes its deterministic path.
       resolved = decision.resolve({});
@@ -1007,7 +1109,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       floor: state.run?.floor ?? null,
       turn: state.turn,
       label: decision.label,
-      decider: deepseekResolved
+      decider: deepseekResolved || (decision.kind === "act" && decision.plan)
         ? ("deepseek" as const)
         : decision.kind === "act"
           ? ("code" as const)
@@ -1039,7 +1141,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const journalEntry = {
       label: decision.label,
       by: baseRecord.decider,
-      choice: describeChoice(decision, resolved, rawAnswers, deepseekRecord ?? escalation),
+      choice: resolved.journal ? compact(resolved.journal) : describeChoice(decision, resolved, rawAnswers, deepseekRecord ?? escalation),
       reason: str(asRecord(deepseekRecord ?? escalation)["reason"]),
       asked: decision.kind === "ask" && (usedJev || fromMemo || deepseekResolved !== null) && !resolved.fallback,
       intent: resolved.intent,

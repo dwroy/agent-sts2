@@ -78,6 +78,13 @@ export interface AppConfig {
    */
   buildDecider: "deepseek" | "jev";
   /**
+   * With BUILD_DECIDER=deepseek, whether a shop visit, a rest site, an event option and the act-start
+   * Ancient are decided in one DeepSeek question each, together with the deck card(s) the follow-up screen
+   * takes and the act's route (Dai 2026-09-29; screens/oneshot.ts). `on` (default); `off`: the step-by-step
+   * questions (one purchase, then the card, per question).
+   */
+  buildOneshot: "on" | "off";
+  /**
    * With BUILD_DECIDER=deepseek, whether in-combat card picks (the only in-combat questions that still
    * carry an escalation; turn plans no longer do) may escalate to DeepSeek on Jev's near-guesses. `off`
    * (default): combat, potions and in-combat card picks stay with code and Jev.
@@ -343,6 +350,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems.push({ field: "BUILD_DECIDER", message: `expected deepseek or jev, got "${buildDeciderRaw}"` });
   }
   const buildDecider: "deepseek" | "jev" = buildDeciderRaw === "jev" ? "jev" : "deepseek";
+  const buildOneshotRaw = (readEnv(env, "BUILD_ONESHOT") ?? "on").toLowerCase();
+  if (buildOneshotRaw !== "on" && buildOneshotRaw !== "off") {
+    problems.push({ field: "BUILD_ONESHOT", message: `expected on or off, got "${buildOneshotRaw}"` });
+  }
+  const buildOneshot: "on" | "off" = buildOneshotRaw === "off" ? "off" : "on";
   const combatDeepseekRaw = (readEnv(env, "COMBAT_DEEPSEEK") ?? "off").toLowerCase();
   if (combatDeepseekRaw !== "off" && combatDeepseekRaw !== "on") {
     problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
@@ -428,6 +440,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     runPlan,
     runPlanLog,
     buildDecider,
+    buildOneshot,
     combatDeepseek,
     deepseek,
     escalation,

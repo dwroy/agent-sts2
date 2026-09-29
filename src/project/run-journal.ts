@@ -140,6 +140,8 @@ export interface QuestionContext {
    * `now` is left empty instead of repeating them.
    */
   factsCovered?: boolean;
+  /** Deck card ids the question offers beyond the screen's own (a one-shot's smith/removal targets). */
+  offeredCards?: string[];
 }
 
 /** What one observed state changed in the journal (see RunJournal.observe). */
@@ -161,7 +163,7 @@ export interface JournalContext {
 }
 
 /** Non-DeepSeek decisions worth keeping (deck, relics, potions, rests, events, route plans). */
-const KEY_LABELS = /^(reward\/(card|skip)|shop\/(buy|discard)|rest\/choose|event\/(choose|only)|chest\/relic|selection\/(?!confirm)|bundle\/choose|capstone\/choose|map\/(discard-potion|route-plan))/;
+const KEY_LABELS = /^(reward\/(card|skip)|shop\/(buy|discard|plan)|rest\/(choose|plan)|event\/(choose|only|plan)|chest\/relic|selection\/(?!confirm)|bundle\/choose|capstone\/choose|map\/(discard-potion|route-plan))/;
 
 /** What each act boss does, in one line (ironclad-guide.md §7/§9). Keyed by boss id without "_BOSS". */
 export const BOSS_NOTES: Record<string, string> = {
@@ -708,7 +710,7 @@ function fightLine(fight: FightRecord, state: GameState): string {
 function renderKnowledge(state: GameState, question: QuestionContext): string {
   if (!state.run) return "";
   try {
-    return knowledgeSlice(state, question.label ?? "", question.criteria ?? {}).text;
+    return knowledgeSlice(state, question.label ?? "", question.criteria ?? {}, question.offeredCards ?? []).text;
   } catch {
     // the knowledge base is advice; the run context stands without it
     return "";
