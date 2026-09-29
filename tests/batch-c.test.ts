@@ -299,3 +299,24 @@ describe("5. The enchant screen carries no removal-style ranking (PHMVUY73R0D7 F
     }
   });
 });
+
+describe("6. The Giant husk on its blast turn (Steam Eruption gone, DeathBlow shown) is a husk, not a 999,999,977-HP enemy (YQL8D59999AX F17 T8)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("every line that lives through the 35 blast ends the fight; the least-loss line is the rollout's best", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("yql8-f17-t8-blast");
+    const giant = ((fx.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
+    expect(giant["powers"]).toEqual([]);
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string>;
+    const facts = Object.values(criteria).map((text) => JSON.parse(text) as Record<string, unknown>);
+    for (const f of facts) expect(String(f["rollout"]), String(f["plays"])).toMatch(/fight over within 5 turns in 8\/8/);
+    const best = facts.find((f) => f["rollout_best"] === true)!;
+    expect(Number(best["hp_lost"])).toBe(Math.min(...facts.map((f) => Number(f["hp_lost"]))));
+  });
+});

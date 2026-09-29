@@ -1591,8 +1591,11 @@ function simulate(
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
     // A Giant husk already on the board: it explodes this turn when its intent shows the blast, else next turn.
-    const husk = e.maxHp >= HUSK_HP && (e.eruption ?? 0) > 0;
+    // On the blast turn its Steam Eruption power is gone (only the DeathBlow intent shows the number): the
+    // husk is known by its HP alone (YQL8D59999AX F17 T8: simulated as a live 999,999,977-HP enemy, every line
+    // "dead within 5 turns 8/8"; it blew for 35 and we won at 21).
     const shownBlast = e.attacks.reduce((sum, a) => sum + a.damage * a.hits, 0);
+    const husk = e.maxHp >= HUSK_HP && ((e.eruption ?? 0) > 0 || shownBlast > 0);
     return {
       ...(husk ? { explodeAt: shownBlast > 0 ? 0 : 1, blast: shownBlast > 0 ? shownBlast : e.eruption ?? 0 } : {}),
       index: e.index,
