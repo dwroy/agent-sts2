@@ -935,7 +935,8 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  * Shuriken: 「你每在同一回合内打出{Cards}张攻击牌，获得{StrengthPower}点力量」 — 3 and 1 (logged over 8 runs holding it:
  * +1 Strength at 90 of 95 plays taking attacks_played_this_turn to a multiple of 3; the 5 others were mid-selection
  * frames; the count starts again each turn). DHGT6Z3Q7VAP F33 T1: Strength 0 -> 1 -> 2 after the 3rd and 6th Attack,
- * 132 dealt where 116 was shown.
+ * 132 dealt where 116 was shown. The count so far is the relic's stack, which also counts replays, duplicates and
+ * Hellraiser autoplays (relicStack; batch K).
  */
 export const SHURIKEN_ATTACKS = 3;
 export const SHURIKEN_STRENGTH = 1;
@@ -1461,7 +1462,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
-    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: num(player["attacks_played_this_turn"]) % SHURIKEN_ATTACKS } } : {}),
+    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1803,8 +1804,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
 
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
-  // Unsimulated potions (neither modelled nor random): offered under T1 (below), a fight plan's keep noted.
-  const potions = potionsAll.filter((potion) => !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot));
+  // Unsimulated potions (neither modelled nor random): every one that can be drunk is an option, like a random
+  // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight
+  // plan's keep is noted. (Until batch K only under T1: the cheapest potion-free option losing 12% of HP this turn,
+  // a dying rollout sample or the fight plan's moment; CJ88/VSRG Entropic Brew, DHGT Stable Serum sat unoffered.)
+  const potions = potionsAll.filter(
+    (potion) => !isModelledPotion(potion.potion_id) && !mcSources.has(potion.slot) && (!potion.requires_target || potion.valid_targets.length > 0),
+  );
   const planPotionNow = potions.some((potion) => planOffer(potion.potion_id) === true);
   const dangerous =
     best.outcome.hpLoss >= Math.max(12, playerSim.hp * 0.4) || (kind !== "monster" && kind !== "unknown" && best.outcome.hpLoss >= 10);
@@ -1820,7 +1826,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
   const potionLethal = potionLethalLines(lethalLines);
   // (The fight plan's auto-drink of an unmodelled potion at its planned moment is gone: the potion is
-  // offered to Jev on that turn instead, planPotionNow below.)
+  // offered to Jev on every turn, the fight plan's moment noted.)
   const surviving = allDie ? [allDie] : hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
   // Every modelled potion in the belt is on a shown line (the best line drinking it), next to the
   // potion-free ones: whether to spend it is Jev's call.
@@ -1960,16 +1966,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     potionLethal.length === 0 &&
     stopLine === null;
   // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
-  // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
-  // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
-  // fight plan says now.
+  // modelled potion's line). An unsimulated potion always is: nothing shows code's line beats it.
   const mcForces = mcSources.size > 0 && randomPotions().some((mc) => mc.beats > 0);
-  // T1 asks whether every potion-free option is bad (Dai: 所有结果扣血都很多), so it reads the cheapest
-  // potion-free option, not code's top-ranked one (fn0h: fired at -17 while a 0-HP line existed).
-  const dryOptions = options.filter((plan) => !drinksPotion(plan));
-  const cheapestDry = dryOptions.length === 0 ? null : dryOptions.reduce((a, b) => (b.outcome.hpLoss < a.outcome.hpLoss ? b : a));
-  const t1Hp = cheapestDry === null || cheapestDry.outcome.dies || cheapestDry.outcome.hpLoss >= UNSIMULATED_HP_SHARE * playerSim.hp;
-  if (clear && !mcForces && !(potions.length > 0 && (t1Hp || planPotionNow))) {
+  if (clear && !mcForces && potions.length === 0) {
     // Code's own pick in an elite/boss fight meets the same HP bound as Jev's (7DXA F33 T1-T2: code
     // traded -17 and -20 against the Kaiser Crab with Blood Wall lines at -3..-6 in hand, Jev was never
     // asked, and T4's laser killed us exactly). Not recorded against the fight's budget: that is for
@@ -2061,10 +2060,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const rolloutTiedAll = rollout?.available ? rollout.tied : [];
   const rolloutBest = rollout?.available ? rollout.best : null;
   const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
-  // T1 for the unsimulated potions: the cheapest potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
-  // or its rollout has a dying sample.
-  const t1Death = rollout !== null && rollout.available && cheapestDry !== null && (rollout.byPlan.get(cheapestDry)?.deaths ?? 0) > 0;
-  const offerPotions = potions.length > 0 && (t1Hp || t1Death || planPotionNow);
+  const offerPotions = potions.length > 0;
   const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
   const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys()]);
@@ -2109,8 +2105,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
-  // Unsimulated potions: offered under T1 (or the fight plan's moment), with no invented numbers.
-  const t1Why = [t1Hp ? `even the cheapest potion-free option loses ${cheapestDry ? cheapestDry.outcome.hpLoss : "all"} HP this turn (>= ${Math.round(UNSIMULATED_HP_SHARE * 100)}% of ${playerSim.hp})` : "", t1Death ? "the cheapest potion-free option dies in some rollout sample" : "", planPotionNow ? "the fight plan says now" : ""].filter(Boolean).join("; ");
+  // Unsimulated potions: always an option, with no invented numbers.
   if (offerPotions) {
     for (const potion of potions) {
       const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
@@ -2130,9 +2125,9 @@ function planTurn(env: DecisionEnv): Decision | null {
             brewGives !== null
               ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
-          offered_because: t1Why,
+          offered: UNSIMULATED_OFFERED,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
-          ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : {}),
+          ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
@@ -2334,7 +2329,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const resolved = resolvePlan(answers);
       const potionsRecord: JsonValue | null =
         mcShown.length > 0 || potions.length > 0
-          ? { random: mcShown.map(potionMcLog), unsimulated_offered: offerPotions ? potions.map((potion) => potion.potion_id) : [], t1: { hp: t1Hp, rollout_death: t1Death, fight_plan: planPotionNow } }
+          ? { random: mcShown.map(potionMcLog), unsimulated_offered: potions.map((potion) => potion.potion_id), fight_plan_now: planPotionNow }
           : null;
       if (!rolloutRecord && !potionsRecord && focusOf.size === 0) return resolved;
       const answer = answers["plan"];
@@ -2357,10 +2352,10 @@ function planTurn(env: DecisionEnv): Decision | null {
 }
 
 /**
- * T1, the gate of the unsimulated potions (Dai 2026-09-28: 12%): the best potion-free option loses at least
- * this share of current HP this turn (or dies in a rollout sample).
+ * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no
+ * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.
  */
-export const UNSIMULATED_HP_SHARE = 0.12;
+export const UNSIMULATED_OFFERED = "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers";
 
 /**
  * Plan lines trimmed so that `reserved` potion options fit the cap: the lowest-ranked removable line goes
@@ -2769,6 +2764,15 @@ export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: Game
     .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
   const lethal = bool(combat["end_turn_will_kill_player"]) || incoming - num(player["block"]) >= hp;
   tail.last = { fight, turn, hp, lethal, fairies };
+}
+
+/**
+ * A relic's own counter (its stack): Shuriken's and Kusarigama's attacks so far this turn. Not attacks_played_this_turn,
+ * which counts a replayed or duplicated card once and no Hellraiser autoplay, while the relics count each play (logged:
+ * Kunai 1 at a turn's start after an autoplay, 0NG2 F30 T3; Nunchaku 0 -> 3 over three autoplays, MGJ8 F17 T7).
+ */
+function relicStack(run: unknown, relicId: string): number {
+  return num(asArray(asRecord(run)["relics"]).map(asRecord).find((entry) => str(entry["relic_id"]) === relicId)?.["stack"]);
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */

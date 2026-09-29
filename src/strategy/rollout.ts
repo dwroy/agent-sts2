@@ -1387,10 +1387,15 @@ function applyPlan(
   for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
   player.retainTurns = Math.max(0, player.retainTurns - 1);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
-  // outcome), except those an exhaust effect took after they were drawn.
+  // outcome), except those an exhaust effect took after they were drawn. Under Stable Serum the ones the line
+  // cannot play stay in hand like the rest of it: the solver's use of a draw is one per energy left at the end,
+  // earlier draws first (drawScoreAt), so past that many they were held (batch K; they went to the discard pile).
+  const exhaustedDraws = o.drawnExhausted ?? 0;
+  const usedDraws = keep ? Math.max(0, Math.floor(o.energyLeft)) : Number.POSITIVE_INFINITY;
   for (let i = 0; i < o.cardsDrawn; i += 1) {
     const card = drawOne(piles, random);
-    if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
+    if (!card || i < exhaustedDraws) continue;
+    (i - exhaustedDraws < usedDraws || card.ethereal ? piles.discard : player.retained).push(card);
   }
   // Dark Embrace: each ethereal card exhausted at the end of the turn draws a card, discarded with the hand
   // (not in a won fight: there is no end of turn).
