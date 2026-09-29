@@ -7,6 +7,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { DeepSeekClient, severalOptionKeys } from "../src/llm/deepseek.js";
+import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import type { Plan } from "../src/strategy/turn-solver.js";
 import { selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
@@ -143,4 +146,35 @@ describe("4. A one-option question answered with several keys (RRMY F24 \"card2,
     expect(selectingText(0, 2, 2)).toBe("pick 1 of 2: one card per answer; the next pick is asked after this one");
     expect(selectingText(0, 0, 3)).toBe("pick 1 of 3 (at least 0): one card per answer; any further pick is asked after this one");
   });
+});
+
+describe("6. The end-turn lethal note names the Sandpit (UNRL F33 T8: Sandpit 1, \"0 HP lost in all, 0 of it the enemy hits after block\")", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  const endLine = (outcome: Partial<Plan["outcome"]>): Plan => ({ steps: [], score: 0, outcome: { dies: true, hpLoss: 0, incomingAfterBlock: 0, heldDamage: 0, sandpitAfter: null, ...outcome } }) as unknown as Plan;
+
+  it("Sandpit at 0 after the enemy turn: said so", () => {
+    expect(endTurnLethalNote(endLine({ sandpitAfter: 0 }), false, 80)).toBe(
+      " [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (0 HP lost in all, 0 of it the enemy hits after block)]",
+    );
+  });
+
+  it("other own losses read as before; agreement or a mismatch unchanged", () => {
+    expect(endTurnLethalNote(endLine({ hpLoss: 51, incomingAfterBlock: 27 }), false, 40)).toBe(" [ending now kills by what the mod's lethal flag does not count: 51 HP lost in all, 27 of it the enemy hits after block]");
+    expect(endTurnLethalNote(endLine({ sandpitAfter: 0 }), true, 80)).toBe("");
+    expect(endTurnLethalNote(endLine({ dies: false, sandpitAfter: 2 }), true, 80)).toBe(" [calc mismatch: solver says ending now does not kill, mod says lethal]");
+    expect(endTurnLethalNote(undefined, true, 80)).toBe("");
+  });
+
+  it(
+    "the logged UNRL F33 T8 board: code's line carries the Sandpit note",
+    () => {
+      rolloutLiveOptions.enabled = false;
+      const decision = planCombatTurn(loggedEnv(logged("batch-l/unrl-f33-t8-sandpit")));
+      if (decision?.kind !== "act") throw new Error(`expected an act, got ${decision?.kind}`);
+      expect(decision.rationale).toContain("the Sandpit reaches 0 on the enemy turn and eats you whatever the HP");
+    },
+    30_000,
+  );
 });

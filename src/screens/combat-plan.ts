@@ -1355,6 +1355,32 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
 }
 
 /**
+ * The rationale's note when the solver and the mod's end-turn lethal flag disagree ("" when they agree). The mod's
+ * flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held is lethal to it and
+ * to the solver alike (the solver then goes on at the revive's HP). It counts the enemy intents against block only
+ * (lethal_risks "incoming_damage"): a death from what the turn's end costs besides (held Beckons' HP loss, a Mantle,
+ * Disintegration) is not a calculation mismatch (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in
+ * all, "mod says safe"; one Beckon was held and T13 began at 7 = 40 - 27 - 6, as the solver has it). Damage from cards
+ * held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest (K7G9M8K4DWFW F45 T3).
+ * Nor is the Sandpit reaching 0, which eats the player whatever the HP (UNRLW0W3XWLD F33 T8: Sandpit 1, the
+ * end-turn line read "0 HP lost in all, 0 of it the enemy hits after block", the Sandpit unnamed).
+ */
+export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boolean, hp: number): string {
+  if (!endNow) return "";
+  const endReachesZero = endNow.outcome.dies || endNow.outcome.revived !== undefined;
+  if (endReachesZero === modSaysLethal) return "";
+  const heldDamage = endNow.outcome.heldDamage ?? 0;
+  const enemyPart = Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage);
+  const endOnlyByOwnLosses = endNow.outcome.dies && !modSaysLethal && enemyPart < hp;
+  if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
+  const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}`;
+  return sandpit
+    ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
+    : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
+}
+
+/**
  * Hard rules on the surviving lines, before code ranks them and before any are shown to Jev/DeepSeek.
  * A line that wins the fight is always kept; a rule only applies when some line obeys it.
  *
@@ -1751,24 +1777,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
-  // The mod's flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held
-  // is lethal to it and to the solver alike (the solver then goes on at the revive's HP).
-  const endReachesZero = endNow !== undefined && (endNow.outcome.dies || endNow.outcome.revived !== undefined);
-  // The mod's flag counts the enemy intents against block only (lethal_risks "incoming_damage"): a death from what
-  // the turn's end costs besides (held Beckons' HP loss, a Mantle, Disintegration) is not a calculation mismatch
-  // (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in all, "mod says safe"; one Beckon was held
-  // and T13 began at 7 = 40 - 27 - 6, as the solver has it).
-  // Damage from cards held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest
-  // (K7G9M8K4DWFW F45 T3: 4 HP, four Burns held, no attack coming, "calc mismatch: … mod says safe").
-  const heldDamage = endNow?.outcome.heldDamage ?? 0;
-  const enemyPart = endNow ? Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage) : 0;
-  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && enemyPart < playerSim.hp;
-  const calcNote =
-    endNow && endReachesZero !== modSaysLethal
-      ? endOnlyByOwnLosses
-        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}]`
-        : ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
-      : "";
+  const calcNote = endTurnLethalNote(endNow, modSaysLethal, playerSim.hp);
 
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
   //    boss: Jev defended card by card at 0.2 confidence). Play the plan that keeps the most HP — the
