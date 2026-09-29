@@ -1267,7 +1267,9 @@ function applyPlan(
   const exhausted = new Set(o.exhausted ?? []);
   const unplayed = hand.map((_card, i) => i).filter((i) => !played.has(i) && hand[i]!.type !== "Potion" && !exhausted.has(hand[i]!.index));
   for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
-  for (const i of unplayed) piles.discard.push(handBase[i] ?? hand[i]!);
+  // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
+  // outcome): they leave the fight, not back through the discard pile.
+  for (const i of unplayed) if (!hand[i]!.ethereal) piles.discard.push(handBase[i] ?? hand[i]!);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn.
   for (let i = 0; i < o.cardsDrawn; i += 1) {

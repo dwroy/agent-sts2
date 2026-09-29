@@ -1802,6 +1802,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
+  // Ethereal cards still in hand are exhausted at the end of the turn: Feel No Pain's Block for each, before the
+  // enemies act (7KDMKN16GD6B: Dazed, Clumsy and Ascender's Bane never counted; HP forecasts 9-12 too low).
+  const etherealBlock = winsFight || sim.feelNoPain <= 0 ? 0 : sim.feelNoPain * heldCards.filter((card) => card.ethereal && card.type !== "Potion").length;
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
   const wither = input.wither;
@@ -1820,7 +1823,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
-  const blockAtEnd = sim.block + (input.player.endTurnBlock ?? 0) + platingNow;
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow;
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2127,7 +2130,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpAfter,
       dies,
       ...(revived ? { revived } : {}),
-      blockGained: sim.blockGained,
+      blockGained: sim.blockGained + etherealBlock,
       // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
       // F17 T8: every line on the blast turn read "dmg 88", "瀑布巨兽 999999889 HP").
       damageDealt: sim.damageDealt - huskDamage,

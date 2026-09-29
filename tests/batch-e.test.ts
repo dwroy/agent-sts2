@@ -330,3 +330,49 @@ describe("6. A card exhausted earlier this turn is read from the exhaust pile, n
     expect(Object.values(alone).map((text) => JSON.parse(text) as Raw).find((entry) => entry["plays"] === "邪眼, then 势不可当")).toMatchObject({ block_gained: 16 });
   });
 });
+
+describe("7. Ethereal cards left in hand are exhausted at the end of the turn: Feel No Pain's Block (7KDMKN16GD6B F27 T5)", () => {
+  it("three Dazed held with Feel No Pain 3: Strike, Defend costs 7 (logged 40 -> 33), not 16", () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("7kdm-f27-t5-dazed");
+    // Logged: "code plan (only distinct line): 打击 -> 蜂群术士, 防御; hp -16, dmg 6"; the turn cost 7.
+    expect(fx.decision.rationale).toMatch(/hp -16/);
+    const criteria = planCriteria(planCombatTurn(loggedEnv(fx)));
+    const line = Object.values(criteria).map((text) => JSON.parse(text) as Raw).find((entry) => entry["plays"] === "打击 -> 蜂群术士, then 防御");
+    expect(line).toMatchObject({ hp_lost: 7, block_gained: 14 });
+  });
+
+  it("the card model reads Ethereal; the rollout does not put the held Dazed back into the discard pile", () => {
+    const fx = logged("7kdm-f27-t5-dazed");
+    const hand = (combatOf(fx)["hand"] as Raw[]).map((raw, i) => modelHandCard(raw, i, loggedKnowledge));
+    expect(hand.filter((c) => c.ethereal).map((c) => c.cardId)).toEqual(["DAZED", "DAZED", "DAZED"]);
+    // Two Dazed and nothing to play: the turn ends with both in hand; the dummy never attacks. Next turn the discard
+    // pile is shuffled in and 5 cards drawn: exhausted, the Dazed leave the five that hold both Strikes (a kill);
+    // put back, 5 of 7 cards are drawn and some samples miss a Strike.
+    const dazed = (i: number) => card(i, "DAZED", { type: "Status", playable: false, target: "none" as CardModel["target"], validTargets: [], ethereal: true });
+    const strike = (i: number) => card(i, "STRIKE_IRONCLAD", { damage: 6, damageBase: 6 });
+    const defend = (i: number) => card(i, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 0, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const dummy: EnemySim = { index: 0, name: "Dummy", hp: 12, maxHp: 12, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+    const solver: SolverInput = { hand: [dazed(0), dazed(1)], player, enemies: [dummy], fightKind: "monster", turn: 1 };
+    const table: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const result = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: table },
+      piles: { draw: [], discard: [strike(10), strike(11), defend(12), defend(13), defend(14)], handBase: [dazed(0), dazed(1)] },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: (() => { let t = 0; return () => (t += 0.01); })() },
+    });
+    // Turn 1 draws both Strikes (12 damage): the fight ends on the first later turn in every sample.
+    expect(result.lines[0]?.samples).toBeGreaterThan(1);
+    expect(result.lines[0]?.winProb).toBe(1);
+    expect(result.lines[0]?.turnsToWin).toBe(2);
+  });
+});
