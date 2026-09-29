@@ -494,6 +494,11 @@ export interface RolloutInput {
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
   spawns?: Record<string, SpawnTemplate[]>;
+  /**
+   * A card put into the draw pile each time it is shuffled (Biiig Hug: 「每当你的抽牌堆打乱洗牌时，将一张煤灰加入你的
+   * 抽牌堆」; logged CMUX F19/F20/F22: one Soot in the new draw pile after each shuffle), or absent.
+   */
+  onShuffle?: CardModel;
 }
 
 /** One enemy an on-death spawn brings (RolloutInput.spawns). */
@@ -949,6 +954,8 @@ const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[
 interface Piles {
   draw: CardModel[];
   discard: CardModel[];
+  /** RolloutInput.onShuffle: into the draw pile at a random place each time the discard pile is shuffled in. */
+  onShuffle?: CardModel;
 }
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
@@ -1533,6 +1540,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
     if (piles.discard.length === 0) return undefined;
     piles.draw = shuffle(piles.discard, random);
     piles.discard = [];
+    if (piles.onShuffle) piles.draw.splice(Math.floor(random() * (piles.draw.length + 1)), 0, piles.onShuffle);
   }
   return piles.draw.pop();
 }
@@ -1681,7 +1689,7 @@ function simulate(
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
     };
   });
-  const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };
+  const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
   // Modelled potions still held in this sample: 0-cost cards that exist once (drunk: gone).

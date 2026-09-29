@@ -12,9 +12,11 @@ import { describe, expect, it } from "vitest";
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
-import { loggedKnowledge } from "./logged.js";
+import { logged, loggedKnowledge } from "./logged.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
-import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
+import { boardRolloutInput, pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
+import { parseGameState } from "../src/mod/schema.js";
+import { makeKnowledge } from "../src/knowledge/index.js";
 import { turnStartAoe } from "../src/screens/combat-plan.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
@@ -311,5 +313,52 @@ describe("4d. Hellraiser: a Strike drawn on a later turn is played at once, free
     const hellraiser = card(0, "HELLRAISER", { type: "Power", target: "self", validTargets: [], cost: 0, flatValue: 10 });
     const line = run([hellraiser], {}, (plans) => plans.find((plan) => plan.steps.some((step) => step.cardId === "HELLRAISER"))!);
     expect(line.turnsToWin).toBe(2);
+  });
+});
+
+describe("4e. Biiig Hug: a Soot into the draw pile at every shuffle (CMUXQKE4UDJ4 F19-F22)", () => {
+  const soot = card(90, "SOOT", { name: "煤灰", type: "Status", playable: false, target: "none" as CardModel["target"], validTargets: [], cost: -1 });
+  const run = (onShuffle: CardModel | undefined) => {
+    const solver: SolverInput = { hand: [], player: player({ energy: 0 }), enemies: [enemy({ hp: 12, maxHp: 12 })], fightKind: "monster", turn: 2 };
+    return rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: [], discard: [strike(10), strike(11)], handBase: [] },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      ...(onShuffle ? { onShuffle } : {}),
+      options: { budgetMs: 1e9, seed: 11, handSize: 2, now: fastClock() },
+    }).lines[0]!;
+  };
+
+  it("two Strikes shuffled in with a Soot: a 2-card draw misses one in some samples", () => {
+    // Turn 2 (the first simulated one) draws 2 of the shuffled pile: both Strikes kill the 12-HP dummy.
+    const plain = run(undefined);
+    expect(plain.perTurn[0]!.won).toBe(plain.samples);
+    const hug = run(soot);
+    expect(hug.perTurn[0]!.won).toBeLessThan(hug.samples);
+    expect(hug.perTurn[0]!.won).toBeGreaterThan(0);
+  });
+
+  it("the board's relic: the rollout input carries the Soot (and none without Biiig Hug)", () => {
+    // The game data's Soot (the mod's cards collection; the fixture's subset has none).
+    const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "logged-states", "game-data.json"), "utf8")) as Record<string, unknown[]>;
+    const sootData = { id: "SOOT", name: "煤灰", description: "不能被打出。", description_raw: "", type: "Status", rarity: "Status", target: "None", cost: -1, is_x_cost: false, star_cost: null, is_x_star_cost: false, color: "status", damage: null, block: null, keywords: ["Unplayable"], tags: [], vars: [] };
+    const knowledge = makeKnowledge({ ...data, cards: [...(data["cards"] ?? []), sootData] }, "cache");
+    const fx = logged("kyc0-f28-t2-decimillipede");
+    const solver: SolverInput = { hand: [], player: player(), enemies: [], fightKind: "monster", turn: 2 };
+    const without = boardRolloutInput(parseGameState(fx.state), knowledge, solver, 9, {}, {});
+    expect(without.onShuffle).toBeUndefined();
+    const run = fx.state["run"] as Record<string, unknown>;
+    run["relics"] = [...(run["relics"] as unknown[]), { index: 99, relic_id: "BIIIG_HUG", name: "大～抱抱" }];
+    const withHug = boardRolloutInput(parseGameState(fx.state), knowledge, solver, 9, {}, {});
+    expect(withHug.onShuffle?.cardId).toBe("SOOT");
+    expect(withHug.onShuffle?.playable).toBe(false);
   });
 });

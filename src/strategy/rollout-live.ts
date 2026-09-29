@@ -513,7 +513,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions" | "onShuffle"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -557,6 +557,9 @@ export function boardRolloutInput(
   // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
   const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
   for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+  // Biiig Hug: a Soot into the draw pile at every shuffle.
+  const hug = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "BIIIG_HUG");
+  if (hug) statusIds.add("SOOT");
   const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
   const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
   return {
@@ -566,6 +569,7 @@ export function boardRolloutInput(
     statusCards,
     relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
     ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
+    ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
