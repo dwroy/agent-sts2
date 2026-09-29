@@ -27,3 +27,8 @@ From post-mortems KY3Y 9Q7V XMK1 PHMV YQL8 (2026-09-29 15:15):
 - consistency.ts:163 flags an answer inconsistent when the reasoning's conclusion is ambiguous → needless re-ask (XMK1).
 - ops/report.py :147-168 splits a fight at every mid-fight CARD_SELECTION (same as the 2XWM note above).
 - Evidence for Dai (clock, strategy-adjacent): boss clock at A9 optimistic — damage delivered 0.66 (KY3Y) / 0.76 (9Q7V) of the estimate; XMK1 predicted 8.4 loss/turn, 10 turns vs ~17/turn, 6 turns — the pooled unblocked share (boss-clock.ts:125-135) ignores the deck's block density.
+
+From the route-review work (2026-09-29 17:00):
+- When the consistency check re-asks DeepSeek, the second answer is only {choice, reason}, so the route review is lost ("the answer has no route") — include the route block and field in the re-ask.
+- rest/choose (step-by-step fallback when the one-shot rest plan is unusable) has no route block.
+- hp_if_option assumes a 30% heal; relics that change the rest heal are not modelled.
