@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -83,6 +83,8 @@ export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null;
 
 export interface MonsterDbMove extends MoveEntry {
   block_gained?: Record<string, number>;
+  /** The same by ascension (the Matriarch's Slash 2: 12 up to A7, 14 from A8; pooled a 30/30 tie). */
+  block_gained_by_asc?: Record<string, Record<string, number>>;
   avg_total_shown?: number;
 }
 
@@ -147,7 +149,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       hits,
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
-      block: mode(entry.block_gained) ?? 0,
+      block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...playerPowersOf(entry, asc),

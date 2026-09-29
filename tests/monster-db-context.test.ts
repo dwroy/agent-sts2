@@ -211,6 +211,29 @@ describe("buffs at the ascension asked for, not pooled over every ascension (rev
   });
 });
 
+describe("block a move gives at the ascension asked for (review 2026-09-29 #6: the Matriarch's Slash 2)", () => {
+  it("12 up to A7, 14 from A8: the rollout reads the split, not the pooled 30/30 tie", () => {
+    const db = {
+      LAGAVULIN_MATRIARCH: {
+        moves: {
+          SLASH2_MOVE: {
+            damage_by_asc: { "8": { base_per_hit: { "12": 5 }, hits: { "1": 5 } } },
+            block_gained: { "12": 30, "14": 30 },
+            block_gained_by_asc: { "0": { "12": 26 }, "7": { "12": 4 }, "8": { "12": 1, "14": 29 }, "9": { "14": 1 } },
+          },
+        },
+      },
+    };
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 8, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 9, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 10, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 7, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(12);
+    // A DB built before the split: the pooled counts.
+    const pooled = { X: { moves: { GUARD_MOVE: { block_gained: { "9": 3, "12": 8 } } } } };
+    expect(enemyTable("X", 9, pooled as never, {})!.moves["GUARD_MOVE"]!.block).toBe(12);
+  });
+});
+
 describe("the Terror Eel's Vigor reaches the rollout's move table (XLJQ6FPQAU7N F7)", () => {
   it("Thrash's self-given Vigor is the move's vigor; Crash keeps its base (the builder leaves Vigor turns out of it)", () => {
     const base = (asc: string, perHit: number, hits = 1) => ({ damage_by_asc: { [asc]: { base_per_hit: { [String(perHit)]: 4 }, hits: { [String(hits)]: 4 } } } });

@@ -296,6 +296,8 @@ def new_move():
         "totals": [],
         "next": collections.Counter(),
         "block": collections.Counter(),
+        # asc -> Counter(block): the same blocks split by ascension (the Matriarch's Slash 2: 12 up to A7, 14 from A8).
+        "block_by_asc": collections.defaultdict(collections.Counter),
         "self": collections.defaultdict(collections.Counter),
         "player": collections.defaultdict(collections.Counter),
         # asc -> pid -> Counter(delta): the same deltas split by ascension.
@@ -519,6 +521,7 @@ class Builder:
                     continue
                 if "Defend" in types and after["block"]:
                     move["block"][after["block"]] += 1
+                    move["block_by_asc"][akey][after["block"]] += 1
                 if "Buff" in types:
                     temporary = any(pid in TEMPORARY_POWERS for pid in before["powers"])
                     for pid, amount in after["powers"].items():
@@ -663,6 +666,7 @@ def build_output(builder, game):
                 entry["back_attack_by_asc"] = back
             if move["block"]:
                 entry["block_gained"] = counter_obj(move["block"])
+                entry["block_gained_by_asc"] = {str(asc): counter_obj(c) for asc, c in sorted(move["block_by_asc"].items(), key=lambda kv: (isinstance(kv[0], str), kv[0]))}
             if move["self"]:
                 entry["self_powers_gained"] = {pid: counter_obj(c) for pid, c in sorted(move["self"].items())}
                 entry["self_powers_gained_by_asc"] = by_asc_obj(move["self_by_asc"])
@@ -921,6 +925,9 @@ def _synthetic_lines():
     lines.append(state("COMBAT", "R3", 1, 2, 80, [crusher(15), rocket(33)], True, player_powers=sur))
     lines.append(state("COMBAT", "R3", 2, 2, 70, [crusher(10), rocket(49)], True, player_powers=sur))
     lines.append(state("COMBAT", "R3", 3, 2, 60, [crusher(10), rocket(33)], True, player_powers=sur))
+    # Run R4, floor 2: a guard's Defend turn; our next turn opens with its 12 block.
+    lines.append(state("COMBAT", "R4", 1, 2, 80, [enemy(0, "GUARD", 50, 50, "SHIELD_MOVE", types=("Defend",))], True))
+    lines.append(state("COMBAT", "R4", 2, 2, 80, [enemy(0, "GUARD", 50, 50, "SWIPE_MOVE", 5, 1, block=12)], True))
     return lines
 
 
@@ -980,6 +987,10 @@ def self_test():
     bite = db["monsters"]["CRUSHER"]["moves"]["BITE_MOVE"]
     assert bite["damage_by_asc"]["8"]["base_per_hit"] == {"10": 1}, bite["damage_by_asc"]
     assert bite["back_attack_by_asc"] == {"8": {"behind": 0, "facing": 3}}, bite
+    # Block a Defend move gives, pooled and by ascension.
+    shield = db["monsters"]["GUARD"]["moves"]["SHIELD_MOVE"]
+    assert shield["block_gained"] == {"12": 1}, shield
+    assert shield["block_gained_by_asc"] == {"8": {"12": 1}}, shield
     print("self-test ok")
     return 0
 
