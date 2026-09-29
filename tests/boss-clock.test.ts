@@ -27,6 +27,9 @@ import {
   damageGap,
   deckDamagePerTurn,
   deckProfileForBoss,
+  eruptionAt,
+  eruptionFormula,
+  eruptionSchedule,
   eruptionTurns,
   gapCardBonus,
   gapRestShift,
@@ -37,6 +40,8 @@ import {
   REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
+import { powerScheduleAt } from "../src/knowledge/monster-db.js";
+import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
@@ -368,3 +373,47 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
   });
 });
 
+
+describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 stacks on T2, 47 on T11)", () => {
+  it("reads the stacks and their gain a turn from the monster DB per ascension", () => {
+    expect(eruptionSchedule(8)).toMatchObject({ first: 15, firstTurn: 2, perTurn: 3 });
+    expect(eruptionSchedule(9)).toMatchObject({ first: 20, firstTurn: 2, perTurn: 3 });
+    // 6189FSNEN1MZ (A8): 15 on T2, 36 on T9; N7SAK (A8) killed on T14 at 51; 1VX1 (A9) killed on T11 at 47.
+    expect(eruptionAt(9, 8)).toBe(36);
+    expect(eruptionAt(14, 8)).toBe(51);
+    expect(eruptionAt(2, 9)).toBe(20);
+    expect(eruptionAt(11, 9)).toBe(47);
+    expect(eruptionFormula(8)).toMatch(/^12\+3\(T-1\)/);
+    expect(eruptionFormula(9)).toMatch(/^17\+3\(T-1\)/);
+  });
+
+  it("an ascension with no logged Giant takes the nearest logged one's numbers, and says so", () => {
+    const monsters = {
+      WATERFALL_GIANT: {
+        powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight_by_asc: { "7": { "15": 3 } }, turn_at_first_sight_by_asc: { "7": { "2": 3 } } } },
+        moves: {
+          PRESSURIZE_MOVE: { turns_seen: { "1": 3 }, self_powers_gained_by_asc: { "7": { STEAM_ERUPTION_POWER: { "15": 3 } } } },
+          STOMP_MOVE: { turns_seen: { "2": 3, "7": 2 }, self_powers_gained_by_asc: { "7": { STEAM_ERUPTION_POWER: { "3": 5 } } } },
+        },
+      },
+    };
+    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, monsters)).toEqual({ first: 15, firstTurn: 2, perTurn: 3, asc: 7, exact: false, n: 3 });
+    // Without per-ascension numbers there is nothing to read.
+    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, { WATERFALL_GIANT: { powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight: { "15": 3 } } } } })).toBeNull();
+  });
+
+  it("caps the clock's fight by the ascension's eruption: A9's kill turn comes a turn earlier", () => {
+    // 1VX1: 82 HP entry at 5.1 a turn: A8 (82 + 3) / 8.1 -> T10; A9 (82 - 2) / 8.1 -> T9.
+    expect(eruptionTurns(82, 5.1, 8)).toBe(10);
+    expect(eruptionTurns(82, 5.1, 9)).toBe(9);
+    const a8 = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 82)!;
+    const a9 = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 9, floor: 5, act_id: "0" }), testKnowledge, 82)!;
+    expect(a8.turnsNote).toContain(`eruption kill by T${eruptionTurns(82, a8.lossPerTurn, 8)}`);
+    expect(a9.turnsNote).toContain(`eruption kill by T${eruptionTurns(82, a9.lossPerTurn, 9)}`);
+    expect(a9.fightTurns).toBeLessThan(a8.fightTurns);
+    // What DeepSeek reads: the ascension's formula, not A8's "12+3".
+    expect(a9.mechanic).toMatch(/^eruption 17\+3\(T-1\) when killed on turn T \(A9, n=\d+\)/);
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 9)).toContain("A9：第 2 回合 20，每回合 +3");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8：第 2 回合 15，每回合 +3");
+  });
+});

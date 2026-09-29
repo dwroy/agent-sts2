@@ -119,7 +119,7 @@ export function fightPlanInput(
       };
       const moves = moveSummary(moveModel, id);
       if (moves) out["moves_seen"] = moves;
-      const note = info?.type === "Boss" ? bossNote(id) : null;
+      const note = info?.type === "Boss" ? bossNote(id, state.run?.ascension ?? 0) : null;
       if (note) out["boss_note"] = note;
       return out;
     });

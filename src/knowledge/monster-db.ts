@@ -33,6 +33,11 @@ export interface MoveEntry {
   next?: Record<string, number>;
   damage_by_asc?: Record<string, { base_per_hit?: Record<string, number>; hits?: Record<string, number>; shown?: Record<string, number> }>;
   self_powers_gained?: Record<string, Record<string, number>>;
+  /** The same deltas by ascension: asc -> power id -> {delta: n}. */
+  self_powers_gained_by_asc?: Record<string, Record<string, Record<string, number>>>;
+  /** Debuffs the move put on us (and Strength/Dexterity it drained): power id -> {delta: n}. */
+  player_powers_applied?: Record<string, Record<string, number>>;
+  player_powers_applied_by_asc?: Record<string, Record<string, Record<string, number>>>;
   status_cards?: Record<string, number>;
 }
 
@@ -40,7 +45,18 @@ interface MonsterEntry {
   name?: { zh?: string };
   kind?: string;
   moves?: Record<string, MoveEntry>;
-  powers?: Record<string, { name?: string; type?: string; n_fights?: number; amount_at_first_sight?: Record<string, number> }>;
+  powers?: Record<
+    string,
+    {
+      name?: string;
+      type?: string;
+      n_fights?: number;
+      amount_at_first_sight?: Record<string, number>;
+      /** asc -> {amount: n}: each instance's first logged amount, and the turn it was on. */
+      amount_at_first_sight_by_asc?: Record<string, Record<string, number>>;
+      turn_at_first_sight_by_asc?: Record<string, Record<string, number>>;
+    }
+  >;
   hp_by_asc?: Record<string, Range>;
 }
 
@@ -316,6 +332,49 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
   return parts.join(" ");
+}
+
+/** A power a monster stacks on itself turn after turn, at an ascension (powerScheduleAt). */
+export interface PowerSchedule {
+  /** The amount it is first seen with, on turn `firstTurn`. */
+  first: number;
+  firstTurn: number;
+  /** What each later move adds. */
+  perTurn: number;
+  /** The logged ascension the numbers come from, whether it is the one asked for, and the fights behind `first`. */
+  asc: number;
+  exact: boolean;
+  n: number;
+}
+
+/**
+ * A power a monster stacks on itself every turn (the Waterfall Giant's Steam Eruption: first seen on T2
+ * at 15 up to A8 and 20 at A9, +3 with every move after) at `asc`: the amount it is first seen with and
+ * the turn that is on (amount/turn_at_first_sight_by_asc), and the most common gain its later moves put
+ * on it (self_powers_gained_by_asc; the move that first gives it, seen only before that turn, left out).
+ * This ascension's logs, else the nearest logged one's. null when the DB has no per-ascension numbers.
+ */
+export function powerScheduleAt(monsterId: string, powerId: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): PowerSchedule | null {
+  const monster = monsters[monsterId];
+  const power = monster?.powers?.[powerId];
+  const found = nearestAscension(power?.amount_at_first_sight_by_asc, asc);
+  if (!power || !found) return null;
+  const firstCounts = power.amount_at_first_sight_by_asc![found.key]!;
+  const first = Number(mode(firstCounts));
+  const firstTurn = Number(mode(power.turn_at_first_sight_by_asc?.[found.key]) ?? NaN);
+  if (!Number.isFinite(first) || !Number.isFinite(firstTurn)) return null;
+  const gains: Record<string, number> = {};
+  for (const move of Object.values(monster.moves ?? {})) {
+    const seen = Object.keys(move.turns_seen ?? {}).filter((key) => /^\d+$/.test(key)).map(Number);
+    if (seen.length > 0 && seen.every((turn) => turn < firstTurn)) continue;
+    const byAsc = move.self_powers_gained_by_asc;
+    const at = nearestAscension(Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, powers]) => powers[powerId])), Number(found.key));
+    for (const [delta, n] of Object.entries(at ? byAsc![at.key]![powerId]! : {})) gains[delta] = (gains[delta] ?? 0) + n;
+  }
+  const perTurn = Number(mode(gains) ?? NaN);
+  if (!Number.isFinite(perTurn)) return null;
+  const n = Object.values(firstCounts).reduce((sum, count) => sum + count, 0);
+  return { first, firstTurn, perTurn, asc: Number(found.key), exact: found.exact, n };
 }
 
 /** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */
