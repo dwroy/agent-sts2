@@ -212,6 +212,17 @@ export interface PendingPick {
   names: string[];
   /** The plan step the next selection is. */
   step: number;
+  /**
+   * The event page it was named on (eventPage): another page of the event before the selection means the
+   * selection did not come (the game resolved it itself), so the card is dropped there.
+   */
+  page?: string;
+}
+
+/** An event page's signature: its id and option titles. */
+export function eventPage(state: GameState): string {
+  const event = asRecord(state.raw["event"]);
+  return `${str(event["event_id"])}|${asArray(event["options"]).map((option) => str(asRecord(option)["title"])).join("|")}`;
 }
 
 /** A plan reference: run, floor, screen and a per-run count ("U6RUE7LBUFJF:F22:shop#3"). */
@@ -284,7 +295,7 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
 
 /* ---- an option together with the card(s) its follow-up takes -------------------------------------- */
 
-/** How code ranks a card for this follow-up (a small tie-break inside the option's own value) and why. */
+/** How code ranks a card for this follow-up (a small tie-break inside the option's own value) and what the value means. */
 export type TargetScore = (card: DeckCard) => { score: number; why: string };
 
 /**
@@ -318,6 +329,7 @@ export function withFollowUp(
       cards: picked.map((card) => card.identity),
       names: picked.map((card) => card.name),
       step: 2,
+      ...(source === "event" ? { page: eventPage(env.state) } : {}),
     };
   };
   if (eligible.length === 0) return [planOnly(env, option, ref)];
@@ -331,7 +343,7 @@ export function withFollowUp(
         label: `${option.label ?? option.key}: ${follow.task} ${card.name}`,
         // The option's own value leads; code's card ranking only orders the cards within it.
         score: option.score + ranked.score / 1000,
-        why: `${option.why ?? ""}${option.why ? "; " : ""}${follow.task} target: ${ranked.why}`,
+        why: `${option.why ?? ""}${option.why ? "; " : ""}${follow.task} target: ${card.name} ${ranked.score} (${ranked.why})`,
         summary: {
           ...summary,
           then: `${follow.task} ${card.name}`,
@@ -352,7 +364,9 @@ export function withFollowUp(
         ...summary,
         then: `${follow.task} ${follow.upTo ? "up to " : ""}${follow.count} card(s) from your deck`,
         cards_to_name: `answer "cards": [${follow.upTo ? "up to " : ""}${follow.count} keys from eligible_cards, repeat a key for several copies]`,
-        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, cardLine(card)])),
+        // Each card with code's value as this follow-up's target (the ranking the selection screen used).
+        eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, `${cardLine(card)} [code ${follow.task} value ${targetScore(card).score}]`])),
+        target_why: targetScore(eligible[0]!).why,
       },
       plan: (answer: PlanAnswer) => {
         const picked: DeckCard[] = [];

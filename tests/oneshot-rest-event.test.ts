@@ -113,6 +113,19 @@ describe("events: an option that picks from the deck is decided with its card(s)
     expect(pick).toMatchObject({ label: "selection/remove", intent: { option_index: offered["index"] }, plan: { step: 2 } });
   });
 
+  it("the game resolves the pick itself (another page comes first): the named card is dropped; the same page again keeps it", () => {
+    const memory = createScreenMemory("EVENT");
+    const raw = board("u6ru-f7-doors", "event");
+    choose(decide(env(raw, memory)), `o1:${keyOf(raw, "STRIKE_IRONCLAD")}`).apply?.();
+    // A stale frame of the same page: still waiting for the removal screen.
+    decide(env(board("u6ru-f7-doors", "event"), memory));
+    expect(memory.pendingPick).toBeDefined();
+    const done = board("u6ru-f7-doors", "event");
+    Object.assign(done["event"] as Raw, { is_finished: true, options: [{ index: 0, title: "离开", description: "", is_locked: false, is_proceed: true, will_kill_player: false }] });
+    expect(decide(env(done, memory))).toMatchObject({ kind: "act", label: "event/leave" });
+    expect(memory.pendingPick).toBeUndefined();
+  });
+
   it("Field of Man-Sized Holes: remove 2 names its cards in the answer's list; enchant 1 is one option per card", () => {
     const memory = createScreenMemory("EVENT");
     const raw = board("yql8-f22-holes", "event");
@@ -120,7 +133,12 @@ describe("events: an option that picks from the deck is decided with its card(s)
     const options = optionsOf(decision);
     const strike = keyOf(raw, "STRIKE_IRONCLAD");
     const injury = keyOf(raw, "INJURY");
-    expect(options["o0"]).toMatchObject({ then: "remove 2 card(s) from your deck", eligible_cards: expect.objectContaining({ [strike]: expect.stringMatching(/×5/), [injury]: expect.any(String) }) });
+    expect(options["o0"]).toMatchObject({
+      then: "remove 2 card(s) from your deck",
+      eligible_cards: expect.objectContaining({ [strike]: expect.stringMatching(/×5 .*\[code remove value 80\]$/), [injury]: expect.stringMatching(/\[code remove value 100\]$/) }),
+      target_why: expect.stringMatching(/removal order/),
+    });
+    expect(options[`o1:${strike}`]?.["why"]).toMatch(/enchant target: 打击 0 \(code does not rank cards to enchant\)/);
     expect(Object.keys(options).filter((key) => key.startsWith("o1:")).length).toBeGreaterThan(5);
     const resolved = choose(decision, "o0", [injury, strike]);
     expect(resolved.plan?.steps).toEqual(["o0", injury, strike]);

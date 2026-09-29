@@ -15,7 +15,7 @@ import { measuredRoom } from "../knowledge/room-costs.js";
 import { actOf } from "../strategy/run-plan.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
-import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
+import { deckCards, deckFollowUp, eligibleCards, eventPage, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import { actStartPlan } from "./act-start.js";
 
@@ -139,6 +139,9 @@ export function planEvent(env: DecisionEnv): Decision | null {
     if (Date.now() - since < STALE_EVENT_WAIT_MS) return null;
   }
   env.screenMemory.eventSeen = { runId, eventId, floor };
+  // A card named with an option of another page never found its selection screen (the game resolved it).
+  const pending = env.screenMemory.pendingPick;
+  if (pending?.source === "event" && pending.page !== undefined && pending.page !== eventPage(state)) env.screenMemory.pendingPick = undefined;
   if (finished) {
     const proceed = all.find((option) => bool(option["is_proceed"])) ?? all[0];
     const index = proceed ? numOrNull(proceed["index"]) ?? 0 : 0;

@@ -335,7 +335,7 @@ export function followUpTargetScore(env: DecisionEnv, task: DeckTask): TargetSco
       selectionScore(kind, id, card.type) -
       (task !== "upgrade" && card.identity.upgraded ? 8 : 0) +
       (task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0);
-    return { score, why: `${card.name} ${score} (${SELECTION_WHY[task] ?? "code's ranking"})` };
+    return { score, why: SELECTION_WHY[task] ?? "code's ranking" };
   };
 }
 

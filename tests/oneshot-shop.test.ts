@@ -117,6 +117,11 @@ describe("shop: one question for the whole visit", () => {
     expect(question.deepseek.oneshot).toBeDefined();
     expect(String(question.questions["pick"]?.instructions)).toMatch(/\{"plan": \[/);
     expect(question.state["your_cards"]).toMatchObject({ c0: expect.stringMatching(/Eternal/), c4: expect.stringMatching(/×5/) });
+    // Code's removal order (the ranking the removal screen showed), Eternal cards left out.
+    const order = question.state["code_removal_order"] as { order: string[]; why: string };
+    expect(order.order[0]).toBe("c4 防御 70");
+    expect(order.order.some((line) => line.startsWith("c0 ") || line.startsWith("c9 "))).toBe(false);
+    expect(order.why).toMatch(/removal order/);
     expect(question.state["note"]).toBeUndefined();
     const facts = question.state["facts"] as Record<string, JsonValue>;
     expect(facts["shop_stock"]).toBeDefined();
