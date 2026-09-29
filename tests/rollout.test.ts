@@ -1027,3 +1027,52 @@ describe("enemy Strength that grows every turn (Ritual, Territorial, High Voltag
     expect(enemyTable("CULTIST", 8, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 5 });
   });
 });
+
+describe("what enemy moves give themselves besides Strength (Soul Fysh's Fade; fight over 0.39 forecast vs 0.27 real)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const cycle = (buff: string, gain: Partial<Record<string, number>>): EnemyTable => ({
+    moves: { [buff]: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: gain }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { [buff]: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  });
+  const run = (table: EnemyTable, move: string) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move, strength: 0, powers: {} }],
+      tables: { E: table },
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Fade: Intangible through our next turn, every hit 1", () => {
+    expect(dmg(run(cycle("FADE_MOVE", { INTANGIBLE_POWER: 1 }), "FADE_MOVE"))).toEqual([5, 30, 30, 30]);
+  });
+
+  it("Soar: halved until its next move; Flutter: that many halved hits", () => {
+    expect(dmg(run(cycle("JUDICIAL_FLIGHT", { SOAR_POWER: 1 }), "JUDICIAL_FLIGHT"))).toEqual([15, 30, 30, 30]);
+    expect(dmg(run(cycle("FLUTTER_MOVE", { FLUTTER_POWER: 5 }), "FLUTTER_MOVE"))).toEqual([15, 30, 30, 30]);
+  });
+
+  it("Thorns until its next move: the policy's Strikes cost 1 HP each on that turn only", () => {
+    const line = run(cycle("SPIKEN_MOVE", { THORNS_POWER: 1 }), "SPIKEN_MOVE");
+    expect(line.perTurn.map((t) => t.loss.mean)).toEqual([5, 0, 0, 0]);
+    expect(dmg(line)).toEqual([30, 30, 30, 30]);
+  });
+
+  it("the table reads them from the monster DB", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = { SOUL_FYSH: { moves: { FADE_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { INTANGIBLE_POWER: { "1": 9 } } } } } } };
+    expect(enemyTable("SOUL_FYSH", 8, db, {})!.moves["FADE_MOVE"]!.selfPowers).toEqual({ INTANGIBLE_POWER: 1 });
+  });
+});

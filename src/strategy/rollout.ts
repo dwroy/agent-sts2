@@ -364,13 +364,16 @@ export interface EnemyMove {
   estimated?: boolean;
   /**
    * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
-   * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns).
+   * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
+   * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
+   * Magistrate: damage halved) until its next move, Flutter (Thieving Hopper), Personal Hive (Entomancer: a
+   * Dazed per hit), Vital Spark (Infested Prism: Tainted per Skill).
    */
   selfPowers?: Partial<Record<EnemySelfPower, number>>;
 }
 
 /** The self-buffs of enemy moves the rollout applies (EnemyMove.selfPowers). */
-export const ENEMY_SELF_POWERS = ["RITUAL_POWER"] as const;
+export const ENEMY_SELF_POWERS = ["RITUAL_POWER", "INTANGIBLE_POWER", "THORNS_POWER", "SOAR_POWER", "FLUTTER_POWER", "PERSONAL_HIVE_POWER", "VITAL_SPARK_POWER"] as const;
 export type EnemySelfPower = (typeof ENEMY_SELF_POWERS)[number];
 
 /**
@@ -706,6 +709,17 @@ interface SimEnemy {
   flutter: number;
   /** Strength it gains at the end of each of its turns (STRENGTH_GROWTH_POWERS; a move's Ritual adds from its next turn). */
   growth: number;
+  /**
+   * Thorns and damage halving (Guarded, Soar), Dazed per hit (Personal Hive), Tainted per Skill (Vital Spark):
+   * the decision's, then what its moves give. A move's Thorns or Soar lasts until its next move resolves
+   * (logged: Spiny Toad Thorns 5 only while it shows Spike Explosion, Toadpole 2 only on Spike Spit, the
+   * Owl's Soar only on Verdict): `moveBuffs` marks them to drop then.
+   */
+  thorns: number;
+  halved: boolean;
+  dazedPerHit: number;
+  vitalSpark: number;
+  moveBuffs: { thorns: boolean; soar: boolean };
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -816,6 +830,11 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
+}
+
+/** Some move of the enemy gives it this power (EnemyMove.selfPowers). */
+function gainsSelf(table: EnemyTable | undefined, power: EnemySelfPower): boolean {
+  return Object.values(table?.moves ?? {}).some((move) => (move.selfPowers?.[power] ?? 0) > 0);
 }
 
 /** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
@@ -1092,6 +1111,22 @@ function applyPlan(
         // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
         e.strength += e.growth;
         e.growth += m?.selfPowers?.RITUAL_POWER ?? 0;
+        // A move's Thorns / Soar is spent by the next move; then this move's self-buffs.
+        if (e.moveBuffs.thorns) e.thorns = 0;
+        if (e.moveBuffs.soar) e.halved = (e.powers["GUARDED_POWER"] ?? 0) > 0;
+        e.moveBuffs = { thorns: false, soar: false };
+        const gained = m?.selfPowers ?? {};
+        if (gained.THORNS_POWER) {
+          e.thorns += gained.THORNS_POWER;
+          e.moveBuffs.thorns = true;
+        }
+        if (gained.SOAR_POWER) {
+          e.halved = true;
+          e.moveBuffs.soar = true;
+        }
+        e.flutter += gained.FLUTTER_POWER ?? 0;
+        e.dazedPerHit += gained.PERSONAL_HIVE_POWER ?? 0;
+        e.vitalSpark += gained.VITAL_SPARK_POWER ?? 0;
         if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
@@ -1101,6 +1136,8 @@ function applyPlan(
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
       e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
+      // Fade (Soul Fysh): Intangible through our next turn (93 of 577 logged Soul Fysh turns).
+      if (!stunned) e.intangibleTurns += m?.selfPowers?.INTANGIBLE_POWER ?? 0;
       if (e.nemesisIn !== undefined) {
         e.nemesisIn -= 1;
         if (e.nemesisIn <= 0) {
@@ -1276,6 +1313,15 @@ function simulate(
       curlUp: e.curlUp ?? 0,
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
+      thorns: e.thorns ?? 0,
+      halved: e.halved === true,
+      dazedPerHit: e.dazedPerHit ?? 0,
+      vitalSpark: e.vitalSpark ?? 0,
+      // Thorns / Soar up now from one of its moves (its table has a move giving them): gone after its next move.
+      moveBuffs: {
+        thorns: (e.thorns ?? 0) > 0 && gainsSelf(input.tables[info?.id ?? ""], "THORNS_POWER"),
+        soar: (info?.powers?.["SOAR_POWER"] ?? 0) > 0 && gainsSelf(input.tables[info?.id ?? ""], "SOAR_POWER"),
+      },
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -1330,6 +1376,10 @@ function simulate(
         slippery: e.slippery,
         curlUp: e.curlUp,
         flutter: e.flutter,
+        thorns: e.thorns,
+        halved: e.halved,
+        dazedPerHit: e.dazedPerHit,
+        vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
