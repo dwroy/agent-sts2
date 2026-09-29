@@ -220,6 +220,18 @@ describe("the row", () => {
     expect(none.arm).toBe("jev");
   });
 
+  it("a prefix over the warning size is in the row's warnings (outside the configuration hash)", () => {
+    const { log, path, brain } = logOf(V4_ENV);
+    (brain!.knowledge as unknown as { system: () => unknown }).system = () => ({ system: "BIG", note: { mode: "full", ascension: 9, prefix_sha: "big0", prefix_chars: 300_000 } });
+    log.observe(state("RUNBIG1"));
+    const [row] = rowsOf(path);
+    expect(row!.knowledge.prefix_tokens_est).toEqual({ deepseek: 210_000, claude: 291_000 });
+    expect(row!.warnings).toEqual([expect.stringMatching(/^the knowledge prefix is about 210000 DeepSeek tokens/)]);
+    const small = logOf(V4_ENV);
+    small.log.observe(state("RUNBIG1"));
+    expect(rowsOf(small.path)[0]!.warnings).toBeUndefined();
+  });
+
   it("an unknown ascension leaves the prefix unrendered and says so", () => {
     const row = logOf(V4_ENV).log.observe(state("RUNX00000006", null))!;
     expect(row.knowledge).toMatchObject({ prefix: "full", prefix_sha: null, ascension: null });

@@ -25,7 +25,7 @@ import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
-import { KnowledgePrompt } from "./knowledge.js";
+import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
 import { BrainRouter, type BrainLogRow } from "./router.js";
 import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
 import { routeAnswerText } from "../strategy/route-map.js";
@@ -116,6 +116,10 @@ export class Brain {
   readonly knowledge = new KnowledgePrompt();
   private notify: ((message: string) => void) | null = null;
   private lastKnowledgeError = "";
+  /** The prefix (its sha) whose size was last warned about: said once per prefix. */
+  private lastPrefixWarned = "";
+  /** KNOWLEDGE_PREFIX=full: each full request's v3 form (no prefix), asked when the full one does not fit the context. */
+  private readonly v3Requests = new WeakMap<BrainRequest, BrainRequest>();
   /** The start-up check of the claude program (preflight), when the configuration uses Claude. */
   claudeCheck: ({ bin: string } & ClaudeCheck) | null = null;
   /** What the run should be warned about (the console and run-config.jsonl's `warnings`). */
@@ -190,7 +194,31 @@ export class Brain {
     // Said once per distinct failure, not on every question.
     if (error && error !== this.lastKnowledgeError) this.notify?.(`KNOWLEDGE_PREFIX=full: ${error}`);
     this.lastKnowledgeError = error;
+    if (full.knowledge?.mode === "full") {
+      this.v3Requests.set(full, req);
+      const prefixSha = full.knowledge.prefix_sha ?? "";
+      const warning = full.knowledge.prefix_chars === undefined ? null : prefixSizeWarning(full.knowledge.prefix_chars);
+      if (warning && prefixSha !== this.lastPrefixWarned) this.notify?.(`WARNING: KNOWLEDGE_PREFIX=full: ${warning}`);
+      if (warning) this.lastPrefixWarned = prefixSha;
+    }
     return full;
+  }
+
+  /**
+   * The router's answer; a full-knowledge question the engine refused as longer than its context is asked once more
+   * with v3's prompt (no prefix), the reason in that row's knowledge note (brain.jsonl).
+   */
+  private async decide(req: BrainRequest): Promise<BrainAnswer> {
+    try {
+      return await this.router.decide(req);
+    } catch (error) {
+      const v3 = this.v3Requests.get(req);
+      if (!v3 || !isContextOverflow(error)) throw error;
+      const detail = (error instanceof Error ? error.message : String(error)).slice(0, 200);
+      const reason = `the full-knowledge prompt did not fit the context, v3 prompt sent: ${detail}`;
+      this.notify?.(`KNOWLEDGE_PREFIX=full: ${req.label}: ${reason}`);
+      return this.router.decide({ ...v3, knowledge: { mode: "off", ...(req.knowledge?.ascension === undefined ? {} : { ascension: req.knowledge.ascension }), error: reason } });
+    }
   }
 
   /** The v3 answer object, when plain v3 DeepSeek answered (no tools, no router re-ask). */
@@ -242,7 +270,7 @@ export class Brain {
   /** v3 DeepSeekClient.choose: one option key (with the question's extra fields). */
   async choose(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<BrainChoice> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
-    const result = await this.router.decide(this.request(label, instructions, context["memory"], state, pickSpec(label, criteria, state), criteria));
+    const result = await this.decide(this.request(label, instructions, context["memory"], state, pickSpec(label, criteria, state), criteria));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<DeepSeekAnswer>(result);
     if (v3) return brain ? { ...v3, brain } : v3;
@@ -268,7 +296,7 @@ export class Brain {
   async choosePlan(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
     const spec = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
-    const result = await this.router.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
+    const result = await this.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
@@ -280,7 +308,7 @@ export class Brain {
   async askJson(payload: Record<string, JsonValue>, label: string, accept?: (json: Record<string, unknown>) => boolean): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true }> {
     const { task, memory, ...input } = payload;
     const question = typeof task === "string" ? task : label;
-    const result = await this.router.decide(this.request(label, question, memory, input, taskSpec(label, accept)));
+    const result = await this.decide(this.request(label, question, memory, input, taskSpec(label, accept)));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;

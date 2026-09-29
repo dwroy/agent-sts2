@@ -15,6 +15,10 @@
  *   (DeepSeek's automatic prefix cache, Claude's prompt cache).
  * - A knowledge base that fails to load is not hidden and not replaced by an empty one: that question goes out with
  *   v3's prompt and memory, and the failure is in the request's `knowledge` note (brain.jsonl) and the caller's note.
+ * - Its size has no cap, so it is watched: a prefix estimated above PREFIX_WARN_TOKENS DeepSeek tokens is warned
+ *   about (the console once per prefix, run-config.jsonl `warnings`); a question the engine refuses as longer than
+ *   its context (isContextOverflow) is asked again with v3's prompt, the reason in its brain.jsonl knowledge note
+ *   (brain.ts).
  */
 import { createHash } from "node:crypto";
 
@@ -23,6 +27,37 @@ import { loadKnowledgeData, loadPostmortems, type Postmortems, type RenderContex
 import { renderKnowledgePrefix } from "../knowledge/render/knowledge-prefix.js";
 import { SYSTEM } from "../llm/deepseek.js";
 import type { BrainRequest, KnowledgeNote } from "./types.js";
+
+/**
+ * Tokens per character of the brain's system prompt, measured in the M1 replay (experiments/brain-replay/m1-0929/
+ * notes.md): the 172,025-character full-knowledge system prompt was read as about 120k cached DeepSeek tokens and
+ * about 167k Claude cache-read tokens per question. An estimate for this kind of text (Chinese with ids and
+ * numbers), not a tokenizer.
+ */
+export const TOKENS_PER_CHAR = { deepseek: 0.7, claude: 0.97 } as const;
+
+export function estimateTokens(chars: number): { deepseek: number; claude: number } {
+  return { deepseek: Math.round(chars * TOKENS_PER_CHAR.deepseek), claude: Math.round(chars * TOKENS_PER_CHAR.claude) };
+}
+
+/**
+ * The prefix size (estimated DeepSeek tokens) above which the run is warned: the M1 prefix was about 120k, and
+ * DeepSeek's context has to hold the prefix, the question with its memory, and the reasoning and answer after it.
+ */
+export const PREFIX_WARN_TOKENS = 150_000;
+
+/** The warning for a prefix of this many characters, or null when it is within PREFIX_WARN_TOKENS. */
+export function prefixSizeWarning(chars: number): string | null {
+  const tokens = estimateTokens(chars);
+  if (tokens.deepseek <= PREFIX_WARN_TOKENS) return null;
+  return `the knowledge prefix is about ${tokens.deepseek} DeepSeek tokens (${chars} chars, Claude about ${tokens.claude}), over ${PREFIX_WARN_TOKENS}: questions may not fit the context (they are then asked again with v3's prompt)`;
+}
+
+/** Whether an engine error says the request was longer than the model's context (DeepSeek HTTP 400, Claude). */
+export function isContextOverflow(error: unknown): boolean {
+  const text = error instanceof Error ? error.message : String(error);
+  return /maximum context length|context[ _-]length[ _-]exceeded|context window|prompt is too long|input is too long|reduce the length of the (?:messages|prompt)|exceeds? the (?:model'?s? )?(?:context|maximum (?:context|prompt))/i.test(text);
+}
 
 /** Between the rules and the prefix: what follows, what wins over it, and what memory.knowledge now holds. */
 export const FULL_KNOWLEDGE_NOTE = [

@@ -29,6 +29,7 @@ import { fileURLToPath } from "node:url";
 import type { Brain } from "../brain/brain.js";
 import { KNOWLEDGE_DIR } from "../brain/brain.js";
 import { claudeModelId } from "../brain/engines/claude.js";
+import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../config.js";
 import { DEFAULT_CLAUDE_MODEL } from "../config.js";
@@ -39,13 +40,8 @@ import { resolveJevPromptLog } from "./jev-prompt-log.js";
 /** The repository this module runs from (src/telemetry -> the checkout's root). */
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
-/**
- * Tokens per character of the brain's system prompt, measured in the M1 replay (experiments/brain-replay/m1-0929/
- * notes.md): the 172,025-character full-knowledge system prompt was read as about 120k cached DeepSeek tokens and
- * about 167k Claude cache-read tokens per question. An estimate for this kind of text (Chinese with ids and
- * numbers), not a tokenizer.
- */
-export const TOKENS_PER_CHAR = { deepseek: 0.7, claude: 0.97 } as const;
+// The prefix's token estimate lives with the prefix (brain/knowledge.ts); re-exported for the evaluator's tests.
+export { estimateTokens, TOKENS_PER_CHAR } from "../brain/knowledge.js";
 
 /** How far back the file is read to find an earlier row of the same run (a restart writes soon after it). */
 const TAIL_BYTES = 2 * 1024 * 1024;
@@ -190,10 +186,6 @@ export function runConfigLogPath(decisionLog: string): string {
 /** The path in force: RUN_CONFIG_LOG (config), else next to the decision log; null when switched off. */
 export function resolveRunConfigLog(log: { decisionLog: string; runConfigLog?: string | null }): string | null {
   return log.runConfigLog === undefined ? runConfigLogPath(log.decisionLog) : log.runConfigLog;
-}
-
-export function estimateTokens(chars: number): { deepseek: number; claude: number } {
-  return { deepseek: Math.round(chars * TOKENS_PER_CHAR.deepseek), claude: Math.round(chars * TOKENS_PER_CHAR.claude) };
 }
 
 /** Parses `git status --porcelain=v2 --branch --untracked-files=no`. */
@@ -411,6 +403,8 @@ export function runConfigRow(
     arm: str(env["ARM"]) || null,
   };
   const { knowledge } = setup;
+  const prefixWarning = knowledge.prefix_chars === null ? null : prefixSizeWarning(knowledge.prefix_chars);
+  const warnings = [...(brain?.warnings ?? []), ...(prefixWarning ? [prefixWarning] : [])];
   const identity = {
     code: opts.code.code,
     ...setup,
@@ -429,7 +423,7 @@ export function runConfigRow(
     ...setup,
     // Outside the identity: a check's outcome or wording is not a different setup.
     ...(brain?.claudeCheck ? { claude_check: { ...brain.claudeCheck } } : {}),
-    ...(brain && brain.warnings.length > 0 ? { warnings: [...brain.warnings] } : {}),
+    ...(warnings.length > 0 ? { warnings } : {}),
     config_sha: sha(JSON.stringify(identity)),
   };
 }

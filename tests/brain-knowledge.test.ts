@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { Brain, createBrain } from "../src/brain/brain.js";
-import { FULL_KNOWLEDGE_NOTE, KnowledgePrompt, fullSystemPrompt, memoryWithoutLessons, sliceWithoutLessons } from "../src/brain/knowledge.js";
+import { FULL_KNOWLEDGE_NOTE, isContextOverflow, KnowledgePrompt, fullSystemPrompt, memoryWithoutLessons, PREFIX_WARN_TOKENS, prefixSizeWarning, sliceWithoutLessons } from "../src/brain/knowledge.js";
 import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
@@ -221,6 +221,65 @@ process.stdout.write(JSON.stringify(${JSON.stringify(result)}) + "\\n");
     await brain.choose(state, "Pick a card.", criteria, { label: "reward/card", memory: { ...memory } });
     expect(sent(0).system).toBe(ds.systemPrompt);
     expect(rows(log)[0]!["knowledge"]).toMatchObject({ mode: "off", error: expect.stringContaining("ascension") });
+  });
+});
+
+describe("KNOWLEDGE_PREFIX=full: the prefix's size is watched", () => {
+  it("a question refused as longer than the context is asked again with v3's prompt, the reason in brain.jsonl", async () => {
+    const ds = client();
+    const full: string[] = [];
+    globalThis.fetch = (async (_url: unknown, init?: { body?: unknown }) => {
+      const body = String(init?.body);
+      bodies.push(body);
+      const system = (JSON.parse(body) as { messages: { content: string }[] }).messages[0]!.content;
+      if (system !== ds.systemPrompt) {
+        full.push(system);
+        return new Response(JSON.stringify({ error: { message: "This model's maximum context length is 131072 tokens. However, you requested 190000 tokens. Please reduce the length of the messages.", type: "invalid_request_error" } }), { status: 400 });
+      }
+      return new Response(JSON.stringify({ choices: [{ message: { content, reasoning_content: "Decision: card0." }, finish_reason: "stop" }], usage: { prompt_tokens: 1000, completion_tokens: 50 } }), { status: 200, headers: { "content-type": "application/json" } });
+    }) as typeof fetch;
+    const { brain, log } = brainOf({ KNOWLEDGE_PREFIX: "full" }, ds);
+    const notes: string[] = [];
+    brain.onNote((message) => notes.push(message));
+    brain.setToolContext(ctx);
+    const answer = await brain.choose(state, "Pick a card.", criteria, { label: "reward/card", memory: { ...memory } });
+    expect(answer.choice).toBe("card0");
+    expect(full).toHaveLength(1);
+    // Asked again with v3's system and v3's memory (the lessons back in it).
+    expect(sent(1).system).toBe(ds.systemPrompt);
+    expect((sent(1).user["memory"] as Record<string, string>)["knowledge"]).toBe(slice);
+    const [refused, retried] = rows(log);
+    expect(refused).toMatchObject({ knowledge: { mode: "full", ascension: 9 }, error: expect.stringContaining("maximum context length") });
+    expect(retried).toMatchObject({ knowledge: { mode: "off", ascension: 9, error: expect.stringMatching(/^the full-knowledge prompt did not fit the context, v3 prompt sent: DeepSeek HTTP 400/) }, answer: { choice: "card0" } });
+    expect(notes.some((note) => note.startsWith("KNOWLEDGE_PREFIX=full: reward/card: the full-knowledge prompt did not fit the context"))).toBe(true);
+  });
+
+  it("other errors are not retried without the prefix", async () => {
+    globalThis.fetch = (async (_url: unknown, init?: { body?: unknown }) => {
+      bodies.push(String(init?.body));
+      return new Response("bad key", { status: 401 });
+    }) as typeof fetch;
+    const { brain } = brainOf({ KNOWLEDGE_PREFIX: "full" });
+    brain.setToolContext(ctx);
+    await expect(brain.choose(state, "Pick a card.", criteria, { label: "reward/card", memory: { ...memory } })).rejects.toThrow(/HTTP 401/);
+    expect(bodies).toHaveLength(1);
+    expect(isContextOverflow(new Error("claude error: Prompt is too long"))).toBe(true);
+    expect(isContextOverflow(new Error("DeepSeek HTTP 401: bad key"))).toBe(false);
+  });
+
+  it("a prefix over PREFIX_WARN_TOKENS is warned about once per prefix", async () => {
+    expect(PREFIX_WARN_TOKENS).toBe(150_000);
+    expect(prefixSizeWarning(172_025)).toBeNull();
+    expect(prefixSizeWarning(300_000)).toMatch(/^the knowledge prefix is about 210000 DeepSeek tokens \(300000 chars, Claude about 291000\), over 150000/);
+    const { brain } = brainOf({ KNOWLEDGE_PREFIX: "full" });
+    // A renderer standing in for an oversized knowledge base.
+    (brain.knowledge as unknown as { system: KnowledgePrompt["system"] }).system = () => ({ system: "BIG", note: { mode: "full", ascension: 9, prefix_sha: "big0", prefix_chars: 300_000 } });
+    const notes: string[] = [];
+    brain.onNote((message) => notes.push(message));
+    brain.setToolContext(ctx);
+    await brain.choose(state, "Pick a card.", criteria, { label: "reward/card", memory: { ...memory } });
+    await brain.choose(state, "Pick a card.", criteria, { label: "reward/card", memory: { ...memory } });
+    expect(notes.filter((note) => note.startsWith("WARNING: KNOWLEDGE_PREFIX=full: the knowledge prefix is about 210000 DeepSeek tokens"))).toHaveLength(1);
   });
 });
 
