@@ -16,7 +16,10 @@ Per run:
   - died in act 2 before its first rest site (out of the runs that entered act 2);
   - act-1 boss passed, act-2 boss passed, won;
   - brain calls (deepseek-reasoning.jsonl and brain.jsonl, without the duplicate rows): calls, input /
-    cache-hit / output tokens and time, overall and per engine.
+    cache-hit / output tokens and time, overall and per engine;
+  - three calibration summaries (tools/eval/calibration.py, docs/eval.md section 7): the share of turns whose
+    played line's predicted HP loss was within 2 of the actual, the route projection's error 2-3 floors ahead,
+    and the boss clock's actual / estimated damage a turn (--no-calibration leaves them out).
 
 Code version: runs.jsonl `code` (ops/run.sh: the run worktree's HEAD, `+dirty` when it had uncommitted changes,
 which are the knowledge data refreshed after every run) with `+dirty` stripped, mapped to the named versions in
@@ -24,7 +27,7 @@ tools/eval/versions.json by git ancestry (docs/eval.md §2).
 
 Usage (the log database's Python: .cache/logdb-venv/bin/python):
   tools/eval/metrics.py [--ascension 9] [--since 2026-09-29T00:00] [--until ...] [--group-by version|family|commit|ascension|day]
-                        [--md | --json] [--per-run] [--total] [--min-n 10] [--no-sync]
+                        [--md | --json] [--per-run] [--total] [--min-n 10] [--no-sync] [--no-calibration] [--boss-clocks FILE]
 Times without an offset are UTC (the database's clock); --group-by day uses the local date (UTC+8).
 """
 import argparse
@@ -240,6 +243,7 @@ def summarize(rows):
     tin = sum(r["llm"]["input"] for r in full)
     out["cache_hit_rate"] = sum(r["llm"]["cache_hit"] for r in full) / tin if tin else None
     out["llm_minutes"] = mean_stats([r["llm"]["latency_ms"] / 60000 for r in rows])
+    out.update(calibration_summary(rows))
     calls = sum(r["llm"]["calls"] for r in rows)
     out["llm_seconds_per_call"] = sum(r["llm"]["latency_ms"] for r in rows) / 1000 / calls if calls else None
     engines = sorted({e for r in rows for e in r["llm_by_engine"]})
@@ -255,6 +259,37 @@ def summarize(rows):
             "minutes": mean_stats([p["latency_ms"] / 60000 for p in per]),
         }
     return out
+
+
+def calibration_summary(rows):
+    """The three calibration columns over runs that carry a calibration digest (calibration.run_digest), else {}.
+    Turns and nodes are pooled over the group's runs (they are not independent: no interval)."""
+    digests = [r["calibration"] for r in rows if r.get("calibration") is not None]
+    if not digests:
+        return {}
+    turns = sum(d["turns"] for d in digests)
+    within = sum(d["turns_within"] for d in digests)
+    near = [e for d in digests for e in d["route_near"]]
+    ratios = [x for d in digests for x in d["boss_ratio"]]
+    return {
+        "cal_turn_within": {"k": within, "n": turns, "p": within / turns if turns else None},
+        "cal_route_near": {"n": len(near), "median": statistics.median(near) if near else None,
+                           "median_abs": statistics.median(abs(e) for e in near) if near else None},
+        "cal_boss_ratio": {"n": len(ratios), "median": statistics.median(ratios) if ratios else None},
+    }
+
+
+def attach_calibration(con, rows, logs, boss_clocks=None, game_data=None):
+    """Adds each run's calibration digest (row["calibration"]) from tools/eval/calibration.py."""
+    import calibration  # noqa: E402  (imports this module: loaded here, not at the top)
+
+    ids = {row["run_id"] for row in rows}
+    runs = [r for r in calibration.load_runs(con) if r["run_id"] in ids]
+    clocks = calibration.load_clock_file(boss_clocks) if boss_clocks else None
+    data = calibration.collect(con, runs, logs, clocks=clocks, game_data=game_data)
+    for row in rows:
+        row["calibration"] = calibration.run_digest(data, row["run_id"])
+    return data
 
 
 # ---------------------------------------------------------------- code versions
@@ -544,6 +579,15 @@ def metric_lines(summary, min_n):
         lines.append((f"  {engine}：输入 / 命中 / 输出（千 token / 局）",
                       f"{num(e['input']['mean'], 0)} / {num(e['cache_hit']['mean'], 0)} / {num(e['output']['mean'], 1)}（n={e['input']['n']}）"))
         lines.append((f"  {engine}：耗时 / 局（分钟）", fmt_mean(e["minutes"], min_n, 1)))
+    # Calibration (tools/eval/calibration.py): pooled over the group's turns, route nodes and boss fights.
+    turn = summary.get("cal_turn_within")
+    lines.append(("校准：推演本回合掉血 ±2 内（回合）", "—" if not turn or not turn["n"] else f"{turn['p'] * 100:.0f}%（{turn['k']}/{turn['n']} 回合）"))
+    near = summary.get("cal_route_near")
+    lines.append(("校准：路线投影 2–3 层误差（投影 − 实际）", "—" if not near or not near["n"] else
+                  f"中位 {round(near['median'], 1) + 0.0:+.1f}，中位 |误差| {near['median_abs']:.1f}（n={near['n']}）" + (" *" if near["n"] < min_n else "")))
+    boss = summary.get("cal_boss_ratio")
+    lines.append(("校准：boss 时钟 实打/估值 中位", "—" if not boss or not boss["n"] else
+                  f"{boss['median']:.2f}（n={boss['n']} 场）" + (" *" if boss["n"] < min_n else "")))
     return lines
 
 
@@ -615,10 +659,12 @@ def main(argv=None):
     parser.add_argument("--min-n", type=int, default=MIN_N, help="groups below this many runs are marked * (too few to read)")
     parser.add_argument("--versions", default=VERSIONS_FILE)
     parser.add_argument("--strength-sets", help='JSON {"cards": [...], "relics": [...]} instead of tools/eval/strength-sources.ts')
-    parser.add_argument("--game-data", help="game data for strength-sources.ts (default .cache/game-data.json)")
+    parser.add_argument("--game-data", help="game data for strength-sources.ts and the boss clock (default .cache/game-data.json)")
     parser.add_argument("--db", default=None)
     parser.add_argument("--logs", default=None)
     parser.add_argument("--no-sync", action="store_true", help="do not bring the log database up to date first")
+    parser.add_argument("--no-calibration", action="store_true", help="leave out the calibration columns (tools/eval/calibration.py)")
+    parser.add_argument("--boss-clocks", help="calibration: JSONL of boss-clock-recompute.ts output instead of recomputing")
     args = parser.parse_args(argv)
 
     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
@@ -633,6 +679,8 @@ def main(argv=None):
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
         rows = load_runs(con, sets, set(args.ascension or []), as_utc(args.since), as_utc(args.until))
+        if not args.no_calibration:
+            attach_calibration(con, rows, logs, args.boss_clocks, args.game_data)
     versions = VersionMap(load_versions(args.versions), Git()) if args.group_by in ("version", "family") or args.per_run or args.json else None
     if versions is not None and args.group_by not in ("version", "family"):
         for row in rows:

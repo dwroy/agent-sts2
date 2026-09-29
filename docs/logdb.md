@@ -34,7 +34,7 @@ $P tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一行原�
 - 环境变量：`LOGDB_DIR`（库目录）、`LOGDB_LOGS`（日志目录）、`LOGDB_PYTHON`（TS 工具用的 Python）。
 - **`logs_query` 工具**（src/tools/logs-query.ts，在 `buildTools` 里）：输入 `{sql, max_rows?}`（默认 50 行，最多 200），子进程跑 `query.py --json --no-sync`，30 秒超时，子进程环境里不带任何 key，返回文本表；description 里列了表和主要字段。工具不同步，靠对局后的同步或 query.py 保持新鲜。
 - 测试：`.cache/logdb-venv/bin/python tests/logdb_test.py`（没有 duckdb 时只跑抽取器测试，其余跳过）；vitest 的 tests/logdb.test.ts 会调它，并测 `logs_query`（假脚本；有 venv 时再对样本库实跑）。样本在 tests/logdb-data/（`make-fixture.py` 生成）。
-- 评估指标脚本 tools/eval/metrics.py 建在这个库上，见 docs/eval.md。
+- 评估指标脚本 tools/eval/metrics.py 和校准脚本 tools/eval/calibration.py（预测对实际）建在这个库上，见 docs/eval.md。
 
 ## 3. 表
 
