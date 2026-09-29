@@ -1484,8 +1484,11 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
+  // The mod's flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held
+  // is lethal to it and to the solver alike (the solver then goes on at the revive's HP).
+  const endReachesZero = endNow !== undefined && (endNow.outcome.dies || endNow.outcome.revived !== undefined);
   const calcNote =
-    endNow && endNow.outcome.dies !== modSaysLethal
+    endNow && endReachesZero !== modSaysLethal
       ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
@@ -1558,7 +1561,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
   // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
   // end the turn on the solver's word then; play the line that keeps the most HP.
-  if (modSaysLethal && top.steps.length === 0 && allDie === null) {
+  if (modSaysLethal && top.steps.length === 0 && allDie === null && top.outcome.revived === undefined) {
     const anyPlayed = surviving.filter((plan) => plan.steps.length > 0);
     const dryPlayed = anyPlayed.filter((plan) => !drinksPotion(plan));
     const played = dryPlayed.length > 0 ? dryPlayed : anyPlayed;

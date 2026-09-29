@@ -187,6 +187,9 @@ describe("1. Fairy in a Bottle and Lizard Tail are revives (JR66CJ9T8H7W F48, YQ
       expect(decision.label).not.toBe("combat/least-loss");
       const texts = decision.kind === "ask" ? Object.values((decision as AskDecision).questions["plan"]!.criteria!).map(String) : [decision.rationale];
       expect(texts.some((text) => /瓶中精灵/.test(text))).toBe(true);
+      // The mod's lethal flag does not know the Fairy: reaching 0 with it held is no "calc mismatch".
+      const rationale = decision.kind === "ask" ? decision.resolve({ plan: { type: "choice", choice: "plan1", probabilities: { plan1: 1 }, confidence: 1, raw: {} } } as never).rationale : decision.rationale;
+      expect(rationale).not.toContain("calc mismatch");
     } finally {
       potionMcOptions.now = null;
       rolloutLiveOptions.enabled = true;
