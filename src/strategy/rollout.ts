@@ -1911,8 +1911,10 @@ function simulate(
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
-      // Self-Forming Clay: what the decision turn owed is in this turn's block already.
-      clayPending: 0,
+      // Self-Forming Clay: what the last turn owed is in this turn's block already; this turn's start losses (Crimson
+      // Mantle's, Inferno's) owe the next turn's (2VW5 F17: SELF_FORMING_CLAY_POWER 3 at every turn start with the
+      // Mantle up, 7 + 3 block at the next).
+      clayPending: (base.clayBlock ?? 0) * startLossEvents(player),
       duplicate: 0,
       buffer: 0,
       vigor: 0,

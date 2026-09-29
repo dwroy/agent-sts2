@@ -453,3 +453,28 @@ describe("6. A route review answered without \"route\": taken from the reasoning
     expect(plain.route).toBeUndefined();
   });
 });
+
+describe("8. Self-Forming Clay in the rollout's later turns: the HP lost at a turn's start (Crimson Mantle, Inferno) gives block at the next (2VW5U020FUTV F17: SELF_FORMING_CLAY_POWER 3 at every turn start with the Mantle up)", () => {
+  it("Mantle 7, Clay, 12 a turn: turn 3 starts with 7 + 3 (the turn-2 hit) + 3 (turn 2's Mantle loss) = 13 block and loses only the Mantle's 1", () => {
+    const HIT: EnemyTable = { moves: { HIT: { damage: 12, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const solver: SolverInput = { hand: [], player: player({ hp: 60, energy: 3, clayBlock: 3, startTurnHpLoss: 1 }), enemies: [enemy({ hp: 500, maxHp: 500, attacks: [{ damage: 12, hits: 1 }] })], fightKind: "monster", turn: 1 };
+    const plan = solveTurn(solver).plans.find((entry) => entry.steps.length === 0)!;
+    let t = 0;
+    const line = rolloutDecision({
+      solver,
+      plans: [plan],
+      enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+      tables: { X: HIT },
+      piles: { draw: Array.from({ length: 20 }, (_, i) => idle(10 + i)), discard: [], handBase: [] },
+      meta: META,
+      playerPowers: { CRIMSON_MANTLE_POWER: 7 },
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 1, horizon: 3, samples: 2, now: () => (t += 0.01) },
+    }).lines[0]!;
+    // Turn 2: 7 + 3 block against 12 (2 lost) and the Mantle's 1 at turn 3's start; turn 3: 13 block, only the Mantle's 1.
+    expect(line.perTurn.map((turn) => turn.loss.mean)).toEqual([3, 1]);
+  });
+});
