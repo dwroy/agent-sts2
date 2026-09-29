@@ -1930,7 +1930,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const tieNote = (plan: Plan): Record<string, JsonValue> => {
     if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
     const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
-    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (the same expected further HP loss and deaths); the rollout picks none of them` };
+    const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, HP lost this turn, enemy HP left and turns alive" : "the same expected further HP loss and deaths";
+    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
     rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {};
