@@ -66,6 +66,8 @@ export interface ScreenMemory {
   cardRewardSkipped: boolean;
   /** The rest of the combat plan chosen this turn (combat-plan.ts); null when there is none. */
   combatPlan: CombatPlanMemo | null;
+  /** The combat plan paused while an in-combat card choice is open (loop.ts noteScreenChange); resumed after it. */
+  pausedCombatPlan?: CombatPlanMemo;
   /**
    * The combat plan's remaining steps when an in-combat card choice opened (the screen change clears
    * combatPlan): an exhaust pick keeps the cards the plan still means to play. Cleared out of combat.
@@ -206,6 +208,11 @@ export interface CombatPlanMemo {
    * whether it was drunk; the belt does. Unset after a card step.
    */
   potions?: string;
+  /**
+   * Resumed after an in-combat card choice (loop.ts noteScreenChange): the choice may have exhausted or upgraded
+   * cards in the hand, so the hand only has to hold what the rest of the line plays (combat-plan.ts).
+   */
+  afterSelection?: boolean;
 }
 
 export function createScreenMemory(screen = ""): ScreenMemory {

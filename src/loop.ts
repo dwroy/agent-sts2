@@ -479,20 +479,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
 
     const brief = buildRunBrief(state, knowledge, notes);
-    if (screenMemory.screen !== state.screen) {
-      screenMemory.screen = state.screen;
-      screenMemory.shopOpened = false;
-      screenMemory.cardRewardSkipped = false;
-      const after = screenMemory.plannedAfter;
-      screenMemory.planBeforeSelection = !state.in_combat
-        ? undefined
-        : screenMemory.combatPlan
-          ? screenMemory.combatPlan.remaining
-          : after && after.turn === state.turn
-            ? after.steps
-            : undefined;
-      screenMemory.combatPlan = null;
-    }
+    noteScreenChange(screenMemory, state);
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
     if (!state.in_combat) {
       screenMemory.hpGuard = undefined;
@@ -1341,6 +1328,34 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   stats.elapsedMs = Date.now() - startedAt;
   log.close();
   return stats;
+}
+
+/**
+ * A new screen: the per-screen flags start over and the combat plan is dropped, except across a card choice in
+ * the middle of a turn (Headbutt, True Grit+, Armaments): the chosen line is paused on the choice screen and
+ * resumed back on the combat screen, same turn (combat-plan.ts checks it against the hand the choice left).
+ * 2MK4V7V3Q5BM F8 T2: Jev's "Headbutt, Defend, Defend" was lost at the Headbutt pick and re-asked with no
+ * "Defend, Defend" option (11 -> 6 HP); KYC0 re-asked four times after True Grit+ picks.
+ */
+export function noteScreenChange(screenMemory: ScreenMemory, state: GameState): void {
+  if (screenMemory.screen === state.screen) return;
+  screenMemory.screen = state.screen;
+  screenMemory.shopOpened = false;
+  screenMemory.cardRewardSkipped = false;
+  const after = screenMemory.plannedAfter;
+  screenMemory.planBeforeSelection = !state.in_combat
+    ? undefined
+    : screenMemory.combatPlan
+      ? screenMemory.combatPlan.remaining
+      : after && after.turn === state.turn
+        ? after.steps
+        : undefined;
+  const paused = state.in_combat ? (screenMemory.combatPlan ?? screenMemory.pausedCombatPlan) : undefined;
+  screenMemory.combatPlan = null;
+  screenMemory.pausedCombatPlan = undefined;
+  if (!paused || paused.turn !== (state.turn ?? null)) return;
+  if (state.screen === "COMBAT") screenMemory.combatPlan = { ...paused, afterSelection: true };
+  else screenMemory.pausedCombatPlan = paused;
 }
 
 export function describeIntent(intent: JsonValue | undefined): string {

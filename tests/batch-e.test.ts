@@ -9,7 +9,11 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import type { AnswerSet } from "../src/jev/answers.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
+import { noteScreenChange } from "../src/loop.js";
+import { parseGameState } from "../src/mod/schema.js";
+import type { AskDecision } from "../src/project/types.js";
 
 import { planCombatTurn, enemySims } from "../src/screens/combat-plan.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
@@ -169,5 +173,74 @@ describe("2. A run-plan reply that only echoes {choice, reason} never replaces t
     const error = await client.askJson({ task: "Write the run plan." }, "run-plan", isRunPlanReply).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(DeepSeekAnswerError);
     expect(rows()[0]).toMatchObject({ label: "run-plan", parse_error: expect.stringMatching(/not in the task's format/) });
+  });
+});
+
+const choose = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
+
+function planCriteria(decision: ReturnType<typeof planCombatTurn>): Record<string, string> {
+  if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind} ${decision?.kind === "act" ? decision.label : ""}`);
+  const question = decision.questions["plan"];
+  if (question?.type !== "choice") throw new Error("expected a plan choice");
+  return Object.fromEntries(Object.entries(question.criteria ?? {}).map(([key, text]) => [key, String(text)]));
+}
+
+describe("3. A card choice mid-turn pauses the chosen line; back in combat it goes on (2MK4V7V3Q5BM F8 T2)", () => {
+  /** Jev's logged line "Headbutt, Defend, Defend" chosen on the ask board; the memory after its first step. */
+  function afterHeadbutt() {
+    rolloutLiveOptions.enabled = false;
+    const ask = loggedEnv(logged("2mk4-f8-t2-ask"));
+    const criteria = planCriteria(planCombatTurn(ask));
+    const chosen = Object.entries(criteria).find(([key, text]) => key.startsWith("plan") && /"plays":"头槌 -> 方柱构装体, then 防御, then 防御"/.test(text));
+    if (!chosen) throw new Error("the logged line is not offered");
+    const first = (planCombatTurn(ask) as AskDecision).resolve(choose(chosen[0], 0.98));
+    first.apply?.();
+    expect(first.intent).toMatchObject({ action: "play_card" });
+    return ask.screenMemory;
+  }
+
+  it("Headbutt's pick (hand unchanged): back on the combat screen the next step is played, Jev is not re-asked", () => {
+    const memory = afterHeadbutt();
+    noteScreenChange(memory, parseGameState(logged("2mk4-f8-t2-pick").state));
+    expect(memory.combatPlan).toBeNull();
+    const back = logged("2mk4-f8-t2-back");
+    // Logged: re-asked here, Jev took "Strike, Defend" (11 -> 6 HP).
+    expect(back.decision.label).toBe("combat/plan-choice");
+    noteScreenChange(memory, parseGameState(back.state));
+    const decision = planCombatTurn({ ...loggedEnv(back), screenMemory: memory });
+    expect(decision?.kind).toBe("act");
+    expect(decision?.label).toBe("combat/plan-continue");
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/Jev-chosen plan: 防御/);
+  });
+
+  it("a pick that exhausted a card the line does not play (True Grit+): the line goes on; one it plays: re-planned", () => {
+    const memory = afterHeadbutt();
+    noteScreenChange(memory, parseGameState(logged("2mk4-f8-t2-pick").state));
+    const back = logged("2mk4-f8-t2-back");
+    const combat = back.state["combat"] as Raw;
+    const hand = combat["hand"] as Raw[];
+    // The Strike (not in the line) exhausted by the pick.
+    combat["hand"] = hand.filter((card) => card["card_id"] !== "STRIKE_IRONCLAD").map((card, index) => ({ ...card, index }));
+    noteScreenChange(memory, parseGameState(back.state));
+    expect(planCombatTurn({ ...loggedEnv(back), screenMemory: memory })?.label).toBe("combat/plan-continue");
+
+    const memory2 = afterHeadbutt();
+    noteScreenChange(memory2, parseGameState(logged("2mk4-f8-t2-pick").state));
+    const back2 = logged("2mk4-f8-t2-back");
+    const combat2 = back2.state["combat"] as Raw;
+    const hand2 = combat2["hand"] as Raw[];
+    // Both Defends gone: the line cannot go on.
+    combat2["hand"] = hand2.filter((card) => card["card_id"] !== "DEFEND_IRONCLAD").map((card, index) => ({ ...card, index }));
+    noteScreenChange(memory2, parseGameState(back2.state));
+    expect(planCombatTurn({ ...loggedEnv(back2), screenMemory: memory2 })?.label).not.toBe("combat/plan-continue");
+  });
+
+  it("a new turn does not resume the paused line", () => {
+    const memory = afterHeadbutt();
+    noteScreenChange(memory, parseGameState(logged("2mk4-f8-t2-pick").state));
+    const back = logged("2mk4-f8-t2-back");
+    back.state["turn"] = Number(back.state["turn"]) + 1;
+    noteScreenChange(memory, parseGameState(back.state));
+    expect(memory.combatPlan).toBeNull();
   });
 });

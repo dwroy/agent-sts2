@@ -1071,6 +1071,27 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
       : null;
 }
 
+/**
+ * After an in-combat card choice: the hand is the expected one less the cards the choice took, some perhaps
+ * upgraded by it (ids compared without the "+"), and still holds a distinct card for every card step left.
+ */
+function leftByChoice(memo: CombatPlanMemo, hand: CardModel[]): boolean {
+  const expected = memo.expectedHand === "" ? [] : memo.expectedHand.split(",").map((id) => id.replace(/\+$/, ""));
+  for (const card of hand) {
+    const at = expected.indexOf(card.cardId);
+    if (at < 0) return false;
+    expected.splice(at, 1);
+  }
+  let left = hand;
+  for (const step of memo.remaining) {
+    if (step.cardId.startsWith("POTION:")) continue;
+    const card = cardFor(step, left);
+    if (!card) return false;
+    left = left.filter((entry) => entry !== card);
+  }
+  return true;
+}
+
 /** Hand size after a step: a card leaves the hand, a potion does not. */
 function handLenAfter(step: Step, hand: CardModel[]): number {
   return cardFor(step, hand) ? hand.length - 1 : hand.length;
@@ -1304,7 +1325,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
   // After a potion step the belt shows whether it was drunk (the hand does not change).
   const drunk = memo?.potions === undefined || memo.potions === beltSignature(state.raw);
-  const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
+  // Resumed after an in-combat card choice: the choice may have exhausted (True Grit+) or upgraded (Armaments)
+  // hand cards, so the hand only has to be the expected one less what the choice took, still holding the rest
+  // of the line (2MK4V7V3Q5BM F8 T2).
+  const sameHand = memo !== null && (memo.expectedHand === handSignature(hand) || (memo.afterSelection === true && leftByChoice(memo, hand)));
+  const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && sameHand;
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
   const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
@@ -1318,7 +1343,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
-      const { potions: _checked, ...kept } = memo;
+      const { potions: _checked, afterSelection: _resumed, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
