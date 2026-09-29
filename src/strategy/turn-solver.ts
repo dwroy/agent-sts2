@@ -1266,6 +1266,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   return next;
 }
 
+/** A line's HP change as the notes write it: "hp -8" for a loss, "hp +8" for a heal (was "hp --8": Q8XR F11 T2, NH8A F21 T1). */
+export function hpText(loss: number): string {
+  return loss < 0 ? `hp +${-loss}` : `hp -${loss}`;
+}
+
 /** Names with their count, in first-seen order: ["毒素", "毒素", "灼伤"] -> ["毒素 ×2", "灼伤"]. */
 function countedNames(names: string[]): string[] {
   const counts = new Map<string, number>();

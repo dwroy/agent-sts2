@@ -17,7 +17,7 @@ import { planSelection } from "../src/screens/selection.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
-import { MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { hpText, MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
@@ -383,5 +383,24 @@ describe("8. The \"ending now kills\" note names the cards held that deal damage
     const added = solveTurn({ hand: [strike], player, enemies: [enemy], fightKind: "boss", wither: { every: 6, played: 5, damage: 4 }, cardsPlayedThisTurn: 0 });
     const played = added.plans.find((plan) => plan.steps.length === 1)!;
     expect(played.outcome.heldDamageFrom).toEqual(["Wither added by this turn's cards"]);
+  });
+});
+
+describe("9. A heal reads \"hp +5\", not \"hp --5\" (NH8A F21 T1: Regen 5, end turn; Q8XR F11 T2 the HP guard's \"hp --8\")", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+
+  it("hpText: a loss with its minus, a heal with a plus", () => {
+    expect(hpText(8)).toBe("hp -8");
+    expect(hpText(0)).toBe("hp -0");
+    expect(hpText(-8)).toBe("hp +8");
+  });
+
+  it("the logged NH8A F21 T1 board (no card playable, Regen 5 at 74/80): \"end turn; hp +5\"", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    const decision = planCombatTurn(loggedEnv(logged("batch-m/nh8a-f21-t1-regen"))) as unknown as { rationale: string };
+    expect(decision.rationale).toMatch(/end turn; hp \+5, dmg 0/);
+    expect(decision.rationale).not.toContain("hp --");
   });
 });
