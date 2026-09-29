@@ -23,7 +23,7 @@ import { actThreats, bossDossier, fillDbNumbers } from "../knowledge/monster-db.
 import type { GameState } from "../mod/schema.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { RoutePlan } from "../screens/map.js";
-import { bossClock, crabKillRecord, eruptionSchedule, giantBlockRecord, giantKillRecord, giantNumbers, lagSleepRecord, testSubjectPhases } from "../strategy/boss-clock.js";
+import { bossClock, crabKillRecord, eruptionSchedule, giantBlockRecord, giantKillRecord, giantNumbers, lagSleepRecord, queenAmalgamRecord, sandpitDeathRecord, testSubjectPhases } from "../strategy/boss-clock.js";
 import { actOf, runPlanLine } from "../strategy/run-plan.js";
 import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
 import { deckEntries } from "./deck.js";
@@ -205,6 +205,8 @@ export function bossNote(bossId: string | null | undefined, ascension = 8): stri
     .replace("{GIANT_BLOCK}", giantBlockRecord("zh"))
     .replace("{CRAB_KILLS}", () => crabKillRecord("zh"))
     .replace("{LAG_SLEEP}", () => lagSleepRecord("zh"))
+    .replace("{QUEEN_AMALGAM}", () => queenAmalgamRecord("zh"))
+    .replace("{SANDPIT_DEATHS}", () => sandpitDeathRecord("zh"))
     .replace("{SIPHON}", String(giant.siphon))
     .replace("{GUN}", giant.gun.join("→"))
     .replace("{TS_PHASES}", testSubjectPhases(ascension).join("/"));

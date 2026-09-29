@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -111,6 +111,36 @@ export interface UnblockedShare {
   first_death?: Record<string, CrabFightRow[]>;
   /** The Lagavulin Matriarch only: its sleep in each logged fight, by ascension. */
   sleep?: Record<string, LagSleepRow[]>;
+  /** The Queen only: when the Torch Head Amalgam died in each logged fight, by ascension. */
+  amalgam?: Record<string, QueenFightRow[]>;
+  /** The Insatiable only: each logged fight's death line (lost fights), by ascension. */
+  deaths?: Record<string, SandpitFightRow[]>;
+}
+
+/**
+ * One logged Queen fight (tools/build-boss-damage.py QUEEN.amalgam): the turn the Torch Head Amalgam was first seen
+ * dead while the Queen lived (null: it lived to the end), and the HP the Queen and the Amalgam lost by the first
+ * frame of turn 3 (turns 1-2: the only turns without "You are mine").
+ */
+export interface QueenFightRow {
+  won: boolean;
+  killed_turn: number | null;
+  t12_queen?: number | null;
+  t12_amalgam?: number | null;
+  run?: string;
+}
+
+/**
+ * One logged Insatiable fight (tools/build-boss-damage.py THE_INSATIABLE.deaths): a lost fight's death line from its
+ * last frame: "hp" (the Sandpit still at 2 or more), "sandpit" (at 1, our HP and block over the attack it showed), or
+ * "both" (at 1 and the attack enough to kill us too); null for a won fight.
+ */
+export interface SandpitFightRow {
+  won: boolean;
+  death: "hp" | "sandpit" | "both" | null;
+  sandpit?: number | null;
+  hp?: number | null;
+  run?: string;
 }
 
 /** A boss's logged fights at one ascension (tools/build-boss-damage.py by_asc). */
@@ -228,7 +258,7 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
       .replace("{GUN}", giant.gun.join("/"))
       .replace("{CRAB_KILLS}", () => crabKillRecord("en")),
     ascension,
-  );
+  ).replace(/\{(?:QUEEN_AMALGAM|SANDPIT_DEATHS)_EN\}/g, (placeholder) => fillGuideFacts(placeholder));
 }
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
@@ -281,6 +311,12 @@ export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string 
  * (cardOutcomeText: outcome-stats rows of a card whose grade the data moved); {@N:KIND:ID:…} a monster DB number
  * at ascension N (fillDbNumbers). The English ones for Jev's hints (hintText): {CRAB_KILLS_EN},
  * {LAG_NO_STRENGTH_EN}.
+ * 2026-09-30 (the A8 window's runs 1-11): {QUEEN_AMALGAM} / {QUEEN_AMALGAM_EN} (queenAmalgamRecord: when the Amalgam
+ * died, and where turns 1-2 went; was "4 场胜局都在 T4–T8…A8 5 场输局", stale since RBJ4's A8 win), {SANDPIT_DEATHS} /
+ * {SANDPIT_DEATHS_EN} (sandpitDeathRecord: the Insatiable losses by death line), {UNKNOWN_FIGHTS:ASC:ACT} (one cell of
+ * unknownFightsText), {BOSS_LOSS:ID:ASC} (bossLossText: the monster DB's median HP we lose a turn against the boss at
+ * that ascension). The experience base's lesson texts are filled with these too (experience lessonText), so a
+ * lesson and a guide no longer quote two different counts of the same fights.
  */
 const GUIDE_FACTS: Record<string, () => string> = {
   "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
@@ -294,11 +330,17 @@ const GUIDE_FACTS: Record<string, () => string> = {
   "{LASER_T4}": () => laserT4Text(),
   "{ACT1_ENTRY_HP}": () => act1EntryHp(),
   "{UNKNOWN_FIGHTS}": () => unknownFightsText(),
+  "{QUEEN_AMALGAM}": () => queenAmalgamRecord("zh"),
+  "{QUEEN_AMALGAM_EN}": () => queenAmalgamRecord("en"),
+  "{SANDPIT_DEATHS}": () => sandpitDeathRecord("zh"),
+  "{SANDPIT_DEATHS_EN}": () => sandpitDeathRecord("en"),
 };
 
 export function fillGuideFacts(text: string): string {
   let out = text;
   for (const [placeholder, fill] of Object.entries(GUIDE_FACTS)) if (out.includes(placeholder)) out = out.split(placeholder).join(fill());
+  out = out.replace(/\{UNKNOWN_FIGHTS:(\d+):(\d)\}/g, (_, asc: string, act: string) => unknownFightsText([Number(asc)], [Number(act)]));
+  out = out.replace(/\{BOSS_LOSS:([A-Z_]+):(\d+)\}/g, (_, boss: string, asc: string) => bossLossText(boss, Number(asc)));
   out = out.replace(/\{BOSS_RECORD:([A-Z_]+)\}/g, (_, boss: string) => bossRecord(boss));
   out = out.replace(/\{CARD_OUTCOME:([A-Z_]+)\}/g, (_, card: string) => cardOutcomeText(card));
   return out.replace(/\{@(\d+):([A-Z]+:[A-Z0-9_:]+)\}/g, (_, asc: string, inner: string) => fillDbNumbers(`{${inner}}`, Number(asc)));
@@ -448,10 +490,10 @@ export function act1EntryHp(): string {
  * entry HP). The guide said "低血时绕开精英走问号/商店" with no word of the fights (8KD7 F21: 91% into a ? of
  * four Exoskeletons, −39).
  */
-export function unknownFightsText(): string {
+export function unknownFightsText(ascensions: readonly number[] = RECORD_ASCENSIONS, acts: readonly number[] = [1, 2]): string {
   const parts: string[] = [];
-  for (const asc of RECORD_ASCENSIONS) {
-    for (const act of [1, 2]) {
+  for (const asc of ascensions) {
+    for (const act of acts) {
       const unknown = measuredRoomExact(asc, act, "Unknown");
       const fight = measuredRoomExact(asc, act, "UnknownFight");
       const hallway = measuredRoomExact(asc, act, "Monster");
@@ -462,6 +504,80 @@ export function unknownFightsText(): string {
     }
   }
   return parts.length > 0 ? parts.join("；") : "问号开战的数据还没有";
+}
+
+/**
+ * The median HP we lose a turn against a boss at exactly this ascension, every logged fight (monster DB
+ * bosses.*.hp_loss_per_turn): "13.0" for the crab at A9 when written; "?" when that ascension has no fight. Was
+ * hand-copied into the lessons ("帝王蟹 13.0（A8 9.7）") and drifted as fights were added.
+ */
+export function bossLossText(bossKey: string, ascension: number): string {
+  const loss = bossHpLoss(bossKey, ascension)?.perTurn;
+  return loss && loss.asc === ascension ? loss.median.toFixed(1) : "?";
+}
+
+/** The Queen's logged fights by when the Amalgam died (boss-damage.json QUEEN.amalgam), all ascensions and A8. */
+export function queenAmalgamRecord(lang: "zh" | "en"): string {
+  return queenAmalgamText(unblockedShare("QUEEN")?.amalgam ?? {}, lang);
+}
+
+/**
+ * The Amalgam record text of these fights (queenAmalgamRecord; exported for tests): the wins that killed it first and
+ * on which turns, the losses that never did or did late, and where turns 1-2's damage went (more into the Queen or
+ * into the Amalgam). Written 2026-09-30: 17 fights, the 5 wins killed it on T3-T8 (RBJ4 A8 T3); 7 of the 12 losses
+ * never did; turns 1-2 mostly into the Queen 1/6 won (5LRZ, Q8XR A8: 58 and 87 into her on T1, both lost).
+ */
+export function queenAmalgamText(byAsc: Record<string, QueenFightRow[]>, lang: "zh" | "en"): string {
+  const all = Object.values(byAsc).flat();
+  if (all.length === 0) return lang === "zh" ? "还没有女王战记录" : "no logged Queen fights";
+  const range = (rows: QueenFightRow[]) => {
+    const turns = rows.map((row) => row.killed_turn).filter((turn): turn is number => turn !== null).sort((a, b) => a - b);
+    const dash = lang === "zh" ? "–" : "-";
+    return turns.length === 0 ? "" : turns[0] === turns.at(-1) ? `T${turns[0]}` : `T${turns[0]}${dash}T${turns.at(-1)}`;
+  };
+  const wins = all.filter((row) => row.won);
+  const losses = all.filter((row) => !row.won);
+  const winsKilled = wins.filter((row) => row.killed_turn !== null);
+  const lossNever = losses.filter((row) => row.killed_turn === null);
+  const lossKilled = losses.filter((row) => row.killed_turn !== null);
+  const split = all.filter((row) => row.t12_queen != null && row.t12_amalgam != null && row.t12_queen + row.t12_amalgam > 0);
+  const intoQueen = split.filter((row) => row.t12_queen! > row.t12_amalgam!);
+  const intoAmalgam = split.filter((row) => row.t12_queen! <= row.t12_amalgam!);
+  const won = (rows: QueenFightRow[]) => rows.filter((row) => row.won).length;
+  if (lang === "en") {
+    return `${all.length} logged Queen fights: ${winsKilled.length}/${wins.length} wins killed the Amalgam first${winsKilled.length > 0 ? ` (${range(winsKilled)})` : ""}; ${lossNever.length}/${losses.length} losses never did; turns 1-2 mostly into the Queen won ${won(intoQueen)}/${intoQueen.length}, into the Amalgam ${won(intoAmalgam)}/${intoAmalgam.length}`;
+  }
+  const a8 = byAsc["8"] ?? [];
+  const a8Wins = a8.filter((row) => row.won && row.killed_turn !== null).map((row) => `${row.run ?? "?"} T${row.killed_turn}`);
+  const a8Text = a8.length > 0 ? `（A8 ${a8.length} 场赢 ${won(a8)}${a8Wins.length > 0 ? `：${a8Wins.join("、")} 打死聚合体` : ""}）` : "";
+  const winPart = wins.length === 0 ? "还没有赢过" : `赢的 ${wins.length} 场${winsKilled.length === wins.length ? "都" : `里 ${winsKilled.length} 场`}先打死聚合体${winsKilled.length > 0 ? `（${range(winsKilled)}）` : ""}`;
+  const lossPart = `输的 ${losses.length} 场 ${lossNever.length} 场没打死${lossKilled.length > 0 ? `、${lossKilled.length} 场 ${range(lossKilled)} 才打死` : ""}`;
+  return `有记录的 ${all.length} 场女王战：${winPart}；${lossPart}；T1–T2 伤害多进女王的 ${intoQueen.length} 场赢 ${won(intoQueen)}、多进聚合体的 ${intoAmalgam.length} 场赢 ${won(intoAmalgam)}${a8Text}`;
+}
+
+/** The Insatiable's logged losses by death line (boss-damage.json THE_INSATIABLE.deaths), all ascensions, A8 and A9. */
+export function sandpitDeathRecord(lang: "zh" | "en"): string {
+  return sandpitDeathText(unblockedShare("THE_INSATIABLE")?.deaths ?? {}, lang);
+}
+
+/**
+ * The death-line text of these fights (sandpitDeathRecord; exported for tests). Written 2026-09-30: of the 17 A8
+ * losses 10 died on HP with the Sandpit at 2 or more, 4 to the Sandpit, 3 both at once (NH8A: an Escape over a
+ * 41-damage line on T3 with HP the earlier line; died with the Sandpit at 2).
+ */
+export function sandpitDeathText(byAsc: Record<string, SandpitFightRow[]>, lang: "zh" | "en"): string {
+  const count = (rows: SandpitFightRow[], death: SandpitFightRow["death"]) => rows.filter((row) => !row.won && row.death === death).length;
+  const lost = (rows: SandpitFightRow[]) => rows.filter((row) => !row.won);
+  const all = Object.values(byAsc).flat();
+  if (lost(all).length === 0) return lang === "zh" ? "还没有沙虫输局的记录" : "no logged Insatiable losses";
+  if (lang === "en") {
+    return `${lost(all).length} logged losses: ${count(all, "hp")} died on HP with the Sandpit at 2+, ${count(all, "sandpit")} to the Sandpit, ${count(all, "both")} both at once`;
+  }
+  const perAsc = RECORD_ASCENSIONS.map((asc) => {
+    const rows = byAsc[String(asc)] ?? [];
+    return lost(rows).length > 0 ? `A${asc} ${lost(rows).length} 场 ${count(rows, "hp")}/${count(rows, "sandpit")}/${count(rows, "both")}` : null;
+  }).filter(Boolean);
+  return `有记录的沙虫输局 ${lost(all).length} 场：死在 HP 上（沙坑还剩 ≥2）${count(all, "hp")}、被沙坑吞掉 ${count(all, "sandpit")}、两条线同一回合 ${count(all, "both")}${perAsc.length > 0 ? `（${perAsc.join("，")}）` : ""}`;
 }
 
 /**

@@ -39,7 +39,7 @@ import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } fr
 import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
-import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
+import { lessonText, selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 
 /**
@@ -2200,7 +2200,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       ? {
           experience: {
             note: "lessons from past runs about these enemies (experience base): evidence, not orders",
-            lessons: lessons.map((entry) => `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${entry.lesson}`),
+            lessons: lessons.map((entry) => `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${lessonText(entry)}`),
           },
         }
       : {}),
