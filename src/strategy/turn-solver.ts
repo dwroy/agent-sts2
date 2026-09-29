@@ -272,6 +272,19 @@ export interface PlayerSim {
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
+   * Red Skull (「当你的生命值低于或等于50%时，你额外获得3点力量」): the Strength it gives while HP is at or below half
+   * of max (RED_SKULL_STRENGTH). Already in the Strength shown when it is on; an HP loss on our turn that takes us
+   * to half or below adds it for the rest of the turn, a heal back above half takes it off.
+   */
+  redSkull?: number;
+  /**
+   * Self-Forming Clay (「每当你在战斗中失去生命，就在下回合获得3点格挡」): block at the start of the next turn per HP
+   * loss (CLAY_BLOCK), ours or an enemy hit's; `clayPending` is what this turn's losses so far already owe
+   * (SELF_FORMING_CLAY_POWER). The next turn's total is Outcome.clayBlockNext (the rollout gives it).
+   */
+  clayBlock?: number;
+  clayPending?: number;
+  /**
    * Intimidating Helmet: block gained for every card played that costs 2+ energy as paid (PU21: 0 -> 4
    * after Perfected Strike and Howl from Beyond; a Howl made free did not trigger it).
    */
@@ -578,6 +591,18 @@ export interface Outcome {
   lastingDrinks?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
+  /**
+   * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
+   * enemyHpAfter (our turn's end); the rollout takes it off their HP.
+   */
+  retaliated?: { index: number; amount: number }[];
+  /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
+  clayBlockNext?: number;
+  /**
+   * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
+   * the enemy hits and is part of incomingAfterBlock.
+   */
+  heldDamage?: number;
 }
 
 export interface Plan {
@@ -594,6 +619,10 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
+  /** Red Skull's Strength is on (HP at or below half): part of `strength` when it came on this turn. */
+  skullUp: boolean;
+  /** HP losses on our turn so far (Self-Forming Clay's block per loss). */
+  hpLossEvents: number;
   enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
   steps: Step[];
   blockGained: number;
@@ -887,6 +916,8 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   }
   if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
   sim.hpLostThisTurn = true;
+  sim.hpLossEvents += 1;
+  redSkullCheck(sim, player);
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
   // 敌人造成6点伤害"). One sweep: two crabs dying to it die together.
   if (sim.inferno > 0) {
@@ -900,6 +931,20 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
     }
   }
   return true;
+}
+
+/**
+ * Red Skull: its Strength comes on when HP is at or below half of max and goes off above it (logged over 16 runs
+ * holding it: +3 at every crossing down, 43 of 48 without another Strength change; -3 on a heal back above half;
+ * exactly half, 40/80, counts as on). This turn's Strength only: the rollout re-reads it from HP each turn.
+ */
+function redSkullCheck(sim: Sim, player: PlayerSim): void {
+  const skull = player.redSkull ?? 0;
+  if (skull <= 0) return;
+  const low = sim.hp * 2 <= player.maxHp;
+  if (low === sim.skullUp) return;
+  sim.skullUp = low;
+  sim.strength += low ? skull : -skull;
 }
 
 /**
@@ -1265,7 +1310,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
   if (card.special === "radiance") next.flat += RADIANCE_ENERGY_VALUE * RADIANCE_LATER_ENERGY;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
-  if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+  if (card.special === "heal") {
+    next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+    redSkullCheck(next, player);
+  }
   // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
   if (card.special === "regen" && (card.regen ?? 0) > 0) {
     const amount = card.regen ?? 0;
@@ -1328,6 +1376,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
+  // Thorns (Liquid Bronze): back on every hit of this enemy turn like Flame Barrier's, and it stays up (the rollout's later turns).
+  if ((card.thorns ?? 0) > 0) next.retaliate += card.thorns ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.special === "intangible") next.intangible = true;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
@@ -1941,6 +1991,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const newInferno = (input.player.inferno ?? 0) === 0 && sim.inferno > 0 ? 1 : 0;
   const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
+  // Self-Forming Clay: next turn's block, CLAY_BLOCK for each HP loss of this turn (ours so far, a held card's
+  // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
+  const clayEvents = winsFight
+    ? 0
+    : sim.hpLossEvents + heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
+  const clayBlockNext = winsFight || (input.player.clayBlock ?? 0) <= 0 ? 0 : (input.player.clayPending ?? 0) + (input.player.clayBlock ?? 0) * clayEvents;
   const cap = input.player.hpLossCap;
   let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
   let hpAfter = input.player.hp - hpLoss;
@@ -2070,13 +2126,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP spent without a kill, the Pressure Gun and explosion followed).
   const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
+  // Retaliation (Flame Barrier, Thorns) dealt on the enemy turn, per attacker: the rollout takes it off their HP.
+  const retaliated: { index: number; amount: number }[] = [];
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
     // kills stops attacking), capped by the attacker's HP.
     let back = 0;
     for (const enemy of living) {
       const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
-      back += Math.min(enemy.hp, landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      const amount = Math.min(Math.max(0, enemy.hp), landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      back += amount;
+      if (amount > 0) retaliated.push({ index: enemy.index, amount });
     }
     score += weights.damage * back;
   }
@@ -2284,9 +2344,31 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(retaliated.length > 0 ? { retaliated } : {}),
+      ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
+}
+
+/** How many of these losses, taken in order, get past the block and then the Buffer stacks: each one an HP loss. */
+function lossesPast(amounts: number[], block: number, buffer: number): number {
+  let pool = block;
+  let stacks = buffer;
+  let count = 0;
+  for (const amount of amounts) {
+    if (amount <= 0) continue;
+    const absorbed = Math.min(pool, amount);
+    pool -= absorbed;
+    if (amount - absorbed <= 0) continue;
+    if (stacks > 0) {
+      stacks -= 1;
+      continue;
+    }
+    count += 1;
+  }
+  return count;
 }
 
 /** Pael's Tear's extra energy next turn for a line ending with `sim.energy` unspent (0 without the relic or energy). */
@@ -2304,7 +2386,7 @@ export function turnOnlyDrink(card: CardModel): boolean {
   if (card.type !== "Potion") return true;
   const lasting =
     (card.demise ?? 0) > 0 || (card.shrink ?? 0) > 0 || card.vulnerable > 0 || card.weak > 0 || card.strength !== 0 || card.enemyStrength !== 0 ||
-    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
+    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || (card.thorns ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
   return !lasting && TURN_ONLY_SPECIALS.has(card.special ?? "");
 }
 
@@ -2314,7 +2396,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}#${sim.hpLossEvents}`;
 }
 
 export interface SolveResult {
@@ -2400,6 +2482,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     strength: 0,
     permStrength: 0,
     hpLostThisTurn: false,
+    skullUp: (input.player.redSkull ?? 0) > 0 && input.player.hp * 2 <= input.player.maxHp,
+    hpLossEvents: 0,
     enemies: input.enemies.map((enemy) => ({ ...enemy, alive: enemy.hp > 0, newlyWeak: false, strengthDelta: 0, lostThisTurn: 0 })),
     steps: [],
     blockGained: 0,

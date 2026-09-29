@@ -6,6 +6,7 @@
  */
 
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
+import { annotatePlating } from "../knowledge/enchant-text.js";
 import { deckEntries, describeDeck } from "../project/deck.js";
 import { cardValue, deckProfile, isBlockCardId, SKIP_BAR } from "../strategy/card-value.js";
 import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
@@ -42,7 +43,8 @@ export function planReward(env: DecisionEnv): Decision | null {
       const cardId = str(card["card_id"]);
       const info = knowledge.card(cardId);
       const name = str(card["name"], info?.name ?? cardId);
-      const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
+      // Plating's decay said after the text (7YT0NJC2LEYQ F12: Stone Armor read as 4 block every turn).
+      const text = annotatePlating(truncate(str(card["resolved_rules_text"]) || info?.description || "", 160));
       const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
       const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds, state.run?.ascension ?? 0);
       // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.

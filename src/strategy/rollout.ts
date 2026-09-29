@@ -876,6 +876,16 @@ interface SimPlayer {
   rupture: number;
   /** Pyre: energy at the start of every turn. */
   pyre: number;
+  /** Thorns up (THORNS_POWER, Liquid Bronze's 3 a drink): damage back per enemy attack hit, for the fight. */
+  thorns: number;
+  /**
+   * Red Skull held: the Strength it gives at or below half HP (0 without it), and whether it is in `strength` now;
+   * re-read from HP at the start of every turn.
+   */
+  redSkull: number;
+  skullUp: boolean;
+  /** Self-Forming Clay: the block the last turn's HP losses give at the start of this one (Outcome.clayBlockNext). */
+  clayNext: number;
   /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
   radiance: number;
   /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
@@ -1174,6 +1184,14 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
   player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
+  // Self-Forming Clay's block for the last turn's HP losses.
+  player.block += player.clayNext;
+  player.clayNext = 0;
+  // Red Skull: on at or below half HP, off above it (the HP the enemy turn left).
+  if (player.redSkull > 0 && (player.hp * 2 <= player.maxHp) !== player.skullUp) {
+    player.skullUp = !player.skullUp;
+    player.strength += player.skullUp ? player.redSkull : -player.redSkull;
+  }
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
@@ -1287,6 +1305,7 @@ function applyPlan(
       const potion = hand.find((card) => card.type === "Potion" && card.cardId === step.cardId);
       if (potion) {
         player.plating += potion.plating ?? 0;
+        player.thorns += potion.thorns ?? 0;
         if (potion.special === "dexterity") player.dexterity += DEX_POTION;
         if (potion.special === "regen") regenDrunk += potion.regen ?? 0;
         if (potion.special === "ritual") player.ritual += 1;
@@ -1378,6 +1397,8 @@ function applyPlan(
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
   player.paelsNext = o.nextTurnEnergy ?? 0;
+  // Self-Forming Clay: this turn's HP losses give the next turn's block.
+  player.clayNext = o.clayBlockNext ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
@@ -1392,11 +1413,13 @@ function applyPlan(
     // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
     if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
+  // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
+  const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
     const hit = a.hp < e.hp;
-    e.hp = a.hp;
+    e.hp = a.hp - (a.hp > 0 && !a.husk ? Math.min(a.hp, retaliated.get(e.index) ?? 0) : 0);
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (a.artifact !== undefined) e.artifact = a.artifact;
@@ -1669,6 +1692,10 @@ function simulate(
     mantle: input.playerPowers["CRIMSON_MANTLE_POWER"] ?? 0,
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
+    thorns: input.playerPowers["THORNS_POWER"] ?? 0,
+    redSkull: base.redSkull ?? 0,
+    skullUp: (base.redSkull ?? 0) > 0 && base.hp * 2 <= base.maxHp,
+    clayNext: 0,
     radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
     strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
@@ -1856,6 +1883,8 @@ function simulate(
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
+      // Self-Forming Clay: what the decision turn owed is in this turn's block already.
+      clayPending: 0,
       duplicate: 0,
       buffer: 0,
       vigor: 0,
@@ -1891,7 +1920,8 @@ function simulate(
       rage: 0,
       colossus: false,
       gambit: false,
-      retaliate: input.playerPowers["THORNS_POWER"] ?? 0,
+      // Thorns up by now (Liquid Bronze drunk in the line or before); Flame Barrier's was the decision turn's only.
+      retaliate: player.thorns,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.

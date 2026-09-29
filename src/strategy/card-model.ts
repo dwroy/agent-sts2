@@ -96,6 +96,11 @@ export interface CardModel {
   selfDamage?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
+  /**
+   * Thorns gained (Liquid Bronze): damage dealt back to the attacker per enemy attack hit, this turn and every
+   * later turn of the fight (THORNS_POWER stays up).
+   */
+  thorns?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
   delayedDamage?: number;
   /**
@@ -731,6 +736,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // VQKX carried it from F11 through four -25 to -29 fights and gave it away at F28.
   SHACKLING_POTION: { target: "all", enemyTempStrengthLoss: 7 },
   SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
+  // Liquid Bronze: 「获得{ThornsPower}点荆棘」, THORNS_POWER +3 on each drink (states.jsonl, 24 drinks in 21 runs to
+  // 09-29: 0 -> 3, or 3 -> 6 on a second), up until the fight's end (e.g. Q4JV F17 T1-T13, CWU9 F33 T4-T12): 3
+  // back to the attacker per attack hit, this turn and the later ones (turn-solver retaliate, rollout thorns).
+  // Unmodelled, VTRE listed it "effect not simulated" in 37 questions and V6TW in 29.
+  LIQUID_BRONZE: { target: "self", thorns: 3 },
   ENERGY_POTION: { target: "self", energyGain: 2 },
   SWIFT_POTION: { target: "self", draw: 3 },
   // Clarity: 「抽{Cards}张牌。在你的下{ClarityPower}个回合开始时，额外抽1张牌」. K7G9 F30 T7 (states.jsonl): hand

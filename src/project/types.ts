@@ -81,6 +81,8 @@ export interface ScreenMemory {
    * line's Bash+).
    */
   potionTake?: { turn: number | null; cardId: string; upgraded: boolean };
+  /** When combat was first seen after that drink with the card still to be taken (combat-plan waits for the screen). */
+  takeWaitSince?: number;
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */

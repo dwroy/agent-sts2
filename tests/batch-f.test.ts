@@ -187,10 +187,11 @@ describe("3. Hand-written knowledge per ascension, as the data has it (experienc
     const handbook = read("ds-handbook.md");
     const guide = read("ironclad-guide.md");
     for (const [name, text] of [["ds-handbook", handbook], ["ironclad-guide", guide]] as const) {
-      const lines = text.split("\n").filter((line) => line.includes("13/15"));
+      // Batch I: the kill-turn record is filled from the fight data (fillGuideFacts), A8's always with A9's.
+      const lines = text.split("\n").filter((line) => line.includes("{GIANT_KILLS_A8}"));
       expect(lines.length, name).toBeGreaterThan(0);
-      // Batch G: A9's figure as the data has it after Y36HXZ80A8LL (a T9 kill won).
-      for (const line of lines) expect(line, name).toContain("T10 前击杀赢 2/4");
+      for (const line of lines) expect(line, name).toContain("{GIANT_KILLS_A9}");
+      expect(text, name).not.toContain("13/15");
     }
     expect(handbook).not.toContain("多次掉 22~40 血");
     expect(handbook).toMatch(/感染棱柱.*A9 4 场赢 3，赢的 3 场掉 42、52、56/);

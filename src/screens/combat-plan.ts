@@ -910,6 +910,17 @@ export const CLOAK_CLASP_BLOCK = 1;
  * a turn ended with 1, 2 or 3 energy unspent began the next at 5 (45, 12 and 3 turns; 0 unspent: 3, base 3).
  */
 export const PAELS_TEARS_ENERGY = 2;
+/**
+ * Red Skull: 「当你的生命值低于或等于{HpThreshold}%时，你额外获得{StrengthPower}点力量」 — 50% and 3 (logged over 16 runs:
+ * +3 at 43 of 48 crossings to half HP or below with no other Strength change, -3 back above; 40/80 counts).
+ */
+export const RED_SKULL_STRENGTH = 3;
+/**
+ * Self-Forming Clay: 「每当你在战斗中失去生命，就在下回合获得{BlockNextTurn}点格挡」 — 3 per HP loss (logged V6TW, 2VW5,
+ * JF8N, YG3H: SELF_FORMING_CLAY_POWER +3 at each of 50 HP losses on our turn; the next turn starts with that much
+ * block, e.g. V6TW F33 T2/T3 6 from two losses).
+ */
+export const CLAY_BLOCK = 3;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1324,6 +1335,9 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   return guardSandpit(env, planTurn(env));
 }
 
+/** How long a line waits, after its Liquid Memories, for the screen that puts the taken card into the hand. */
+const TAKE_WAIT_MS = 4_000;
+
 function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
   // Before any early return: the turn's first frame sets the exhaust pile it started with.
@@ -1422,6 +1436,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     turnStartAoe: turnStartAoe(relicIds, player),
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     ...(relicIds.includes("PAELS_TEARS") ? { paelsTears: PAELS_TEARS_ENERGY } : {}),
+    ...(relicIds.includes("RED_SKULL") ? { redSkull: RED_SKULL_STRENGTH } : {}),
+    ...(relicIds.includes("SELF_FORMING_CLAY") ? { clayBlock: CLAY_BLOCK, clayPending: powerAmount(player, "SELF_FORMING_CLAY_POWER") } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
@@ -1476,6 +1492,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (memo && asExpected && memo.remaining.length > 0) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
+    // Liquid Memories drunk, its card not taken yet (a combat frame before the "put a card into your hand" screen):
+    // the card the line plays next is the one still to come, so this frame's hand is the expected one without it.
+    // Wait for the screen (selection.ts takes it) instead of re-planning the line; not for long, in case none comes.
+    const takePending = !intent && memo.take !== undefined && next.pileCard !== undefined && takeSignature(next.pileCard) === memo.take && memo.expectedHand === handSignature(hand);
+    if (takePending) {
+      const since = (env.screenMemory.takeWaitSince ??= Date.now());
+      if (Date.now() - since <= TAKE_WAIT_MS) return null;
+    }
+    env.screenMemory.takeWaitSince = undefined;
     if (intent) {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
@@ -1507,6 +1532,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
   env.screenMemory.combatPlan = null;
+  env.screenMemory.takeWaitSince = undefined;
 
   // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
@@ -1686,11 +1712,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // the turn's end costs besides (held Beckons' HP loss, a Mantle, Disintegration) is not a calculation mismatch
   // (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in all, "mod says safe"; one Beckon was held
   // and T13 began at 7 = 40 - 27 - 6, as the solver has it).
-  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && endNow.outcome.incomingAfterBlock < playerSim.hp;
+  // Damage from cards held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest
+  // (K7G9M8K4DWFW F45 T3: 4 HP, four Burns held, no attack coming, "calc mismatch: … mod says safe").
+  const heldDamage = endNow?.outcome.heldDamage ?? 0;
+  const enemyPart = endNow ? Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage) : 0;
+  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && enemyPart < playerSim.hp;
   const calcNote =
     endNow && endReachesZero !== modSaysLethal
       ? endOnlyByOwnLosses
-        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${endNow.outcome.incomingAfterBlock} of it the enemy hits after block]`
+        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}]`
         : ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
