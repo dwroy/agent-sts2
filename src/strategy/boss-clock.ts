@@ -760,8 +760,17 @@ export interface DeckProfile {
   demonFormRate: number;
   /** Strength a turn from relics from T1 (Toasty Mittens). */
   relicStrengthRate: number;
-  /** Strength a turn from Rupture fed by self-damage cards. */
+  /** Strength a turn from Rupture fed by self-damage cards and the powers that lose HP each turn (Inferno). */
   ruptureRate: number;
+  /**
+   * Damage a turn from powers once they are in play (from the turn after `setupTurn`), with no Strength and
+   * no Vulnerable: Inferno's hit to every enemy per HP loss on our turn, Juggernaut's per block gained.
+   */
+  passiveDamage?: number;
+  /** AoE part of `passiveDamage` (Inferno). */
+  passiveAoe?: number;
+  /** The passive damage sources named for the note. */
+  passive?: string[];
   /** Turn a power drawn at random is played on average. */
   setupTurn: number;
   /** Strength-growth sources named for the note. */
@@ -800,8 +809,18 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   let hits = 0;
   let flatStrength = 0;
   let demonForm = 0;
-  let ruptures = 0;
+  // Rupture: Strength per HP loss on our turn, summed over its copies (Rupture 1, Rupture+ 2; the power
+  // stacks: S1MU F33 RUPTURE_POWER 2 from one Rupture+).
+  let ruptureStrength = 0;
   let selfDamage = 0;
+  // Powers that lose HP at the start of each of our turns: one HP loss a turn each, however many copies
+  // (S1MU F48: two Infernos + Crimson Mantle, INFERNO_POWER 18, Strength +4 a turn with Rupture+).
+  const turnStartLoss = new Set<string>();
+  // Inferno: damage to every enemy per HP loss on our turn (6, Inferno+ 9; copies stack: S1MU F48 18).
+  let inferno = 0;
+  // Juggernaut: damage to a random enemy per block gained (6, Juggernaut+ 8).
+  let juggernaut = 0;
+  let blockCards = 0;
   let vulnerable = 0;
   let lateEnergy = 0;
   const growth: string[] = [];
@@ -826,7 +845,8 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
       demonForm += rate;
       growth.push(`Demon Form +${rate}/turn`);
     } else if (card.cardId === "RUPTURE") {
-      ruptures += 1;
+      // The deck entry carries the (upgraded) value, like Demon Form's; 1 is the base card's.
+      ruptureStrength += dynValue(entry, "StrengthPower") ?? 1;
     } else {
       flatStrength += Math.max(0, card.strength);
     }
@@ -836,7 +856,16 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
       const template = str(asRecord(entry)["rules_text"]) || knowledge.card(card.cardId)?.descriptionRaw || "";
       if (income > 0 && turnStartOnly(template, "Energy")) lateEnergy += income;
     }
-    if (card.hpLoss > 0 || card.cardId === "CRIMSON_MANTLE") selfDamage += 1;
+    // A power's HP loss is not a play cost (card-model gives powers 0): Inferno and Crimson Mantle lose 1 at
+    // the start of every turn once played, so they feed Rupture and Inferno each turn, not once a play.
+    if (card.cardId === "INFERNO") {
+      turnStartLoss.add("Inferno");
+      inferno += dynValue(entry, "InfernoPower") ?? 6;
+    } else if (card.cardId === "CRIMSON_MANTLE") {
+      turnStartLoss.add("Crimson Mantle");
+    } else if (card.hpLoss > 0) selfDamage += 1;
+    if (card.cardId === "JUGGERNAUT") juggernaut += dynValue(entry, "JuggernautPower") ?? 6;
+    if (card.block > 0) blockCards += 1;
     if (card.vulnerable > 0) vulnerable += 1;
   }
   // Energy caps how many of the drawn cards get played.
@@ -851,9 +880,21 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   const relicStrengthRate = (relicIds.includes("TOASTY_MITTENS") ? 1 : 0) + (relicIds.includes("BRIMSTONE") ? BRIMSTONE_STRENGTH : 0);
   if (relicIds.includes("TOASTY_MITTENS")) growth.push("Toasty Mittens +1/turn");
   if (relicIds.includes("BRIMSTONE")) growth.push(`Brimstone +${BRIMSTONE_STRENGTH}/turn`);
-  // Rupture: +1 Strength each time a self-damage card is played on our turn.
-  const ruptureRate = ruptures > 0 ? ruptures * selfDamage * perCard : 0;
-  if (ruptureRate > 0) growth.push(`Rupture fed by ${selfDamage} self-damage cards (~+${ruptureRate.toFixed(1)}/turn)`);
+  // HP losses on our turn a turn once the powers are in play: the self-damage cards played (their share of
+  // the drawn cards) and one per turn-start power (S1MU F33: Rupture+ and Inferno+, Strength 6 -> 8 -> 10 ->
+  // 12 at T4-T6, +2 a turn from Inferno alone; the clock had read ~+0.2).
+  const selfPlays = selfDamage * perCard;
+  const lossEvents = selfPlays + turnStartLoss.size;
+  const feeders = [...(turnStartLoss.size > 0 ? [`${[...turnStartLoss].join(" + ")} each turn`] : []), ...(selfDamage > 0 ? [`${selfDamage} self-damage cards`] : [])].join(" + ");
+  const ruptureRate = ruptureStrength * lossEvents;
+  if (ruptureRate > 0) growth.push(`Rupture +${ruptureStrength} per HP loss, fed by ${feeders} (~+${ruptureRate.toFixed(1)}/turn)`);
+  const passive: string[] = [];
+  const infernoDamage = inferno * lossEvents;
+  if (infernoDamage > 0) passive.push(`Inferno ${inferno} to all per HP loss, fed by ${feeders} (~${infernoDamage.toFixed(0)}/turn)`);
+  // Block gained a turn: the block cards played, and Crimson Mantle's block at the start of each turn.
+  const blockGains = blockCards * perCard + (turnStartLoss.has("Crimson Mantle") ? 1 : 0);
+  const juggernautDamage = juggernaut * blockGains;
+  if (juggernautDamage > 0) passive.push(`Juggernaut ${juggernaut} per block gain, ~${blockGains.toFixed(1)} gains a turn (~${juggernautDamage.toFixed(0)}/turn)`);
   return {
     size: n,
     energy,
@@ -871,6 +912,9 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     demonFormRate: demonForm,
     relicStrengthRate,
     ruptureRate,
+    passiveDamage: infernoDamage + juggernautDamage,
+    passiveAoe: infernoDamage,
+    passive,
     // A power is drawn on average halfway through the first shuffle.
     setupTurn: 1 + Math.round(n / (2 * HAND)),
     growth,
@@ -911,6 +955,10 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   // Two Vulnerable sources keep the boss Vulnerable most turns. A boss that starts with Artifact eats
   // the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   if (deck.vulnerableSources >= 2 && id !== "AEONGLASS") perTurn *= VULNERABLE_UPTIME;
+  // Power damage (Inferno, Juggernaut) from the turn after the powers are played; no Strength, no Vulnerable,
+  // not scaled by the energy powers. Inferno's AoE counts once per body into the crab.
+  const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
+  if (passive > 0 && turns > 0) perTurn += (passive * Math.max(0, turns - deck.setupTurn)) / turns;
   return perTurn;
 }
 
@@ -1125,6 +1173,8 @@ export interface BossClock {
   mechanic: string;
   note: string;
   growth: string[];
+  /** Damage from powers (Inferno, Juggernaut) counted in `deck`, named for the note. */
+  passive?: string[];
   /** HP we lose a turn in this fight (bossLossPerTurn) and where it comes from. */
   lossPerTurn: number;
   lossNote: string;
@@ -1196,6 +1246,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     mechanic: bossMechanic(profile, ascension),
     note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
+    passive: deck?.passive ?? [],
     lossPerTurn: loss.value,
     lossNote: loss.source,
   };
@@ -1335,9 +1386,10 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     fight_turns_note: clock.turnsNote,
     need_damage_per_turn: clock.need,
     deck_damage_per_turn_estimate: clock.deck,
-    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, Vulnerable, and the boss mechanic below`,
+    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below`,
     gap_per_turn: clock.gap,
     ...(clock.growth.length > 0 ? { strength_growth: clock.growth.join("; ") } : {}),
+    ...(clock.passive && clock.passive.length > 0 ? { power_damage: clock.passive.join("; ") } : {}),
     harder_because: clock.mechanic,
     ...(clock.phases ? { phases: clock.phases.map((phase) => ({ ...phase })) } : {}),
     boss_note: clock.note,
