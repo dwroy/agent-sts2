@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
+import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
 import { checkConsistency } from "../src/llm/consistency.js";
@@ -101,5 +102,49 @@ describe("1b. The discard answer field and its consistency", () => {
     const criteria = { o0: JSON.stringify({ option: "休息" }), "o0:discard": JSON.stringify({ option: "休息" }), o1: JSON.stringify({ option: "锻造" }) };
     expect(checkConsistency("o0:discard", "heal, drop the block potion", "Decision: o0.", criteria).ok).toBe(true);
     expect(checkConsistency("o0:discard", "heal", "Decision: o1.", criteria).ok).toBe(false);
+  });
+});
+
+describe("6. An event's \"discard, then take it\": one option per event option, the answer names the slots (5 slots, 3 potions made 25 options)", () => {
+  /** The logged Potion Courier with a full 5-slot belt. */
+  const courier = (): Logged => {
+    const fx = logged("yql8-f28-potion-courier");
+    const run = fx.state["run"] as Raw;
+    const [fairy, attack] = run["potions"] as Raw[];
+    run["potions"] = [0, 1, 2, 3, 4].map((index) => ({ ...(index % 2 ? attack : fairy)!, index }));
+    return fx;
+  };
+
+  it("DeepSeek: 拿走这批药水 (3 potions) and 洗劫 (1) each get one variant; three slots named are discarded in turn, then the option", () => {
+    const fx = courier();
+    const env: DecisionEnv = { ...loggedEnv(fx), buildDecider: "deepseek", oneshot: "off" };
+    const decision = planEvent(env) as AskDecision;
+    expect(keysOf(decision)).toEqual(["o0", "o0:discard", "o1", "o1:discard"]);
+    expect(String(criteriaOf(decision, "o0:discard")["discard_first"])).toMatch(/discard 1 to 3 of discardable_potions/);
+    // Four slots for 3 potions is more than needed: no answer (code does not trim it for the decider).
+    expect(decision.resolve(deepseekPick("o0:discard", { discard: [0, 1, 2, 3] }))).toMatchObject({ intent: null, fallback: true });
+    const resolved = decision.resolve(deepseekPick("o0:discard", { discard: [4, 0, 2] }));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 4 });
+    resolved.apply?.();
+    const potions = (fx.state["run"] as Raw)["potions"] as Raw[];
+    const again = () => planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", oneshot: "off", screenMemory: env.screenMemory });
+    potions[4] = { index: 4, occupied: false, can_discard: false };
+    expect(again()).toMatchObject({ label: "event/discard-more", intent: { action: "discard_potion", option_index: 0 } });
+    potions[0] = { index: 0, occupied: false, can_discard: false };
+    expect(again()).toMatchObject({ label: "event/discard-more", intent: { action: "discard_potion", option_index: 2 } });
+    potions[2] = { index: 2, occupied: false, can_discard: false };
+    expect(again()).toMatchObject({ label: "event/after-discard", intent: { action: "choose_event_option", option_index: 0 } });
+  });
+
+  it("Jev: the same four options and one yes/no question per potion; its yeses (most sure first, at most the 3 needed) are the discards", () => {
+    const fx = courier();
+    const env = loggedEnv(fx);
+    const decision = planEvent(env) as AskDecision;
+    expect(keysOf(decision)).toEqual(["o0", "o0:discard", "o1", "o1:discard"]);
+    expect(Object.keys(decision.questions).sort()).toEqual(["discard_p0", "discard_p1", "discard_p2", "discard_p3", "discard_p4", "pick"]);
+    const resolved = decision.resolve(jevPick("o0:discard", { discard_p0: 0.1, discard_p1: 0.7, discard_p2: 0.2, discard_p3: 0.95, discard_p4: 0.6 }));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 3 });
+    resolved.apply?.();
+    expect(env.screenMemory.afterDiscard).toMatchObject({ place: "event:" + String((fx.state["event"] as Raw)["event_id"]), option: 0, slot: 3, more: [1, 4] });
   });
 });

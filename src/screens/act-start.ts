@@ -134,6 +134,8 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
         id: ref,
         steps: [...steps, route.key],
         journal: `${inner?.journal ?? base.label ?? base.key}; route ${route.plan.summary}`,
+        // A "discard potion(s), then …" option plays its first discard now.
+        ...(inner?.intent ? { intent: inner.intent } : {}),
         apply: () => {
           inner?.apply?.();
           env.screenMemory.routePlan = plan;

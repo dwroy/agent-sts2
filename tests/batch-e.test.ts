@@ -285,7 +285,7 @@ describe("4. Same-named enemies with different ids are told apart in options and
 });
 
 describe("5. A full potion belt at an event that gives a potion: \"discard one, then take it\" is an option, the decider picks (YQL8D59999AX F28)", () => {
-  const pick = (key: string): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
+  const pick = (key: string, discard?: number[]): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: discard ? { discard } : {} } }) as AnswerSet;
 
   it("givesPotion reads the option text", () => {
     expect(givesPotion("获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。")).toBe(true);
@@ -300,12 +300,13 @@ describe("5. A full potion belt at an event that gives a potion: \"discard one, 
     expect(decision.kind).toBe("ask");
     const question = decision.questions["pick"]!;
     const criteria = question.type === "choice" ? question.criteria ?? {} : {};
-    // 拿走这批药水 gives 3 into a full 2-slot belt: either potion or both (batch F); 洗劫 gives 1: either.
-    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:d0", "o0:d0+1", "o0:d1", "o1", "o1:d0", "o1:d1"]);
+    // 拿走这批药水 gives 3 into a full 2-slot belt, 洗劫 gives 1: each has one "discard, then" variant (batch G:
+    // the answer names the slots).
+    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:discard", "o1", "o1:discard"]);
     expect(JSON.parse(String(criteria["o1"]))).toMatchObject({ potion_slots: expect.stringMatching(/lost/) });
-    expect(JSON.parse(String(criteria["o1:d1"]))).toMatchObject({ option: "洗劫", discard_first: expect.stringMatching(/攻击药水/) });
+    expect(JSON.parse(String(criteria["o1:discard"]))).toMatchObject({ option: "洗劫", discardable_potions: { "1": expect.stringMatching(/攻击药水/) } });
     // DeepSeek takes "discard the Attack Potion, then 洗劫": the discard now, the option next.
-    const resolved = decision.resolve(pick("o1:d1"));
+    const resolved = decision.resolve(pick("o1:discard", [1]));
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 1 });
     resolved.apply?.();
     const potions = ((fx.state["run"] as Raw)["potions"] as Raw[]);
@@ -316,7 +317,7 @@ describe("5. A full potion belt at an event that gives a potion: \"discard one, 
     const again = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory }) as AskDecision;
     expect(again.kind).toBe("ask");
     const againQ = again.questions["pick"]!;
-    expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o0:d0", "o1"]);
+    expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o0:discard", "o1"]);
   });
 });
 

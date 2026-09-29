@@ -452,7 +452,7 @@ describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode to
     const question = (decision.jevView?.questions ?? decision.questions)["pick"]!;
     return Object.keys(question.type === "choice" ? question.criteria ?? {} : {}).sort();
   };
-  const pick = (key: string): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
+  const pick = (key: string, discard?: number[]): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: discard ? { discard } : {} } }) as AnswerSet;
 
   it("the slots an option needs: its potions less the slots it adds and the empty ones, at most the belt", () => {
     const belt = (occupied: boolean[]) => ({ potions: occupied.map((o, index) => ({ index, occupied: o })) });
@@ -469,8 +469,9 @@ describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode to
     const env = loggedEnv(fx);
     const decision = planEvent(env) as AskDecision;
     expect(decision.kind).toBe("ask");
-    expect(keysOf(decision)).toEqual(["o0", "o0:d0", "o0:d0+1", "o0:d1", "o1", "o1:d0", "o1:d1"]);
-    const resolved = decision.resolve(pick("o1:d1"));
+    // Batch G: one variant per option; Jev names the slots in its per-slot questions.
+    expect(keysOf(decision)).toEqual(["o0", "o0:discard", "o1", "o1:discard"]);
+    const resolved = decision.resolve({ ...pick("o1:discard"), discard_p0: { type: "noul", noul: 0.1, raw: {} }, discard_p1: { type: "noul", noul: 0.9, raw: {} } } as AnswerSet);
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 1 });
     resolved.apply?.();
     ((fx.state["run"] as Raw)["potions"] as Raw[])[1] = { index: 1, occupied: false, can_discard: false };
@@ -481,7 +482,7 @@ describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode to
     const fx = logged("yql8-f28-potion-courier");
     const env = { ...loggedEnv(fx), buildDecider: "deepseek" as const };
     const decision = planEvent(env) as AskDecision;
-    const resolved = decision.resolve(pick("o0:d0+1"));
+    const resolved = decision.resolve(pick("o0:discard", [0, 1]));
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 0 });
     resolved.apply?.();
     const potions = (fx.state["run"] as Raw)["potions"] as Raw[];
