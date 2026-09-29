@@ -618,6 +618,8 @@ export interface Outcome {
    * the enemy hits and is part of incomingAfterBlock.
    */
   heldDamage?: number;
+  /** With heldDamage: the cards it comes from, by name ("毒素 ×2", "Wither added by this turn's cards"). */
+  heldDamageFrom?: string[];
 }
 
 export interface Plan {
@@ -1262,6 +1264,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // like any other: playing it costs its energy and counts as a card played (Withering Presence, Sloth).
   if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)]);
   return next;
+}
+
+/** Names with their count, in first-seen order: ["毒素", "毒素", "灼伤"] -> ["毒素 ×2", "灼伤"]. */
+function countedNames(names: string[]): string[] {
+  const counts = new Map<string, number>();
+  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return [...counts].map(([name, count]) => (count > 1 ? `${name} ×${count}` : name));
 }
 
 /** Index offset of a Music Box copy (a card the hand did not hold at the decision: never a first step). */
@@ -1999,6 +2008,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       : 0;
   const heldPenalty =
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
+  // The cards that damage: named in the notes (a Wither, Toxic x2 were all "Burn": YVYZ F48 T6, 3RME F30, NH8A F31).
+  const heldDamageFrom = countedNames([
+    ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
+    ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
+  ]);
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -2400,7 +2414,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
-      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };

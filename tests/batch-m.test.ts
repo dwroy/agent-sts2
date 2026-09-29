@@ -353,3 +353,35 @@ describe("7. \"Mod says lethal, solver says alive\" names what the solver counts
     expect(endTurnLethalNote(endLine({ dies: true, incomingAfterBlock: 30, hpLoss: 30 }), false, 10)).toBe(" [calc mismatch: solver says ending now kills, mod says safe]");
   });
 });
+
+describe("8. The \"ending now kills\" note names the cards held that deal damage (was always \"Burn\": YVYZ F48 T6 a Wither, 3RME F30 and NH8A F31 Toxic x2)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  const card = (index: number, cardId: string, name: string, overrides: Partial<CardModel> = {}): CardModel => ({
+    index, key: `c${index}`, cardId, name, type: "Status", upgraded: false, cost: -1, xCost: false, playable: false, target: "none", validTargets: [],
+    damage: null, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0,
+    draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...overrides,
+  });
+  const enemy: EnemySim = { index: 0, name: "Aeonglass", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const player: PlayerSim = { hp: 40, maxHp: 80, block: 0, energy: 1, weak: false, vulnerable: false, intangible: false };
+
+  it("the logged 3RME F30 T5 board (Toxic x2 held, 16 HP): \"10 damage from cards held (毒素 ×2)\"", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    const decision = planCombatTurn(loggedEnv(logged("batch-m/3rme-f30-t5-toxic"))) as unknown as { rationale: string };
+    expect(decision.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: \d+ HP lost in all, \d+ of it the enemy hits after block, 10 damage from cards held \(毒素 ×2\)\]/);
+    expect(decision.rationale).not.toContain("Burn");
+  });
+
+  it("solver: held cards by name and count, and a Wither this turn's cards add", () => {
+    const toxic = (i: number) => card(i, "TOXIC", "毒素", { heldPenalty: 5 });
+    const held = solveTurn({ hand: [toxic(0), toxic(1), card(2, "WITHER", "凋萎", { heldPenalty: 3 })], player, enemies: [enemy], fightKind: "boss" });
+    const end = held.plans.find((plan) => plan.steps.length === 0)!;
+    expect(end.outcome.heldDamage).toBe(13);
+    expect(end.outcome.heldDamageFrom).toEqual(["毒素 ×2", "凋萎"]);
+    const strike = card(0, "STRIKE_IRONCLAD", "打击", { type: "Attack", cost: 1, playable: true, target: "single", validTargets: [0], damage: 6 });
+    const added = solveTurn({ hand: [strike], player, enemies: [enemy], fightKind: "boss", wither: { every: 6, played: 5, damage: 4 }, cardsPlayedThisTurn: 0 });
+    const played = added.plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.heldDamageFrom).toEqual(["Wither added by this turn's cards"]);
+  });
+});

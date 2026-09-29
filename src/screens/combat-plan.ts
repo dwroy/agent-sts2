@@ -1393,7 +1393,8 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
  * (lethal_risks "incoming_damage"): a death from what the turn's end costs besides (held Beckons' HP loss, a Mantle,
  * Disintegration) is not a calculation mismatch (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in
  * all, "mod says safe"; one Beckon was held and T13 began at 7 = 40 - 27 - 6, as the solver has it). Damage from cards
- * held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest (K7G9M8K4DWFW F45 T3).
+ * held (Burn, Wither, Toxic: named as they are) meets block like a hit but is no intent either: the enemy hits' part is
+ * the rest (K7G9M8K4DWFW F45 T3).
  * Nor is the Sandpit reaching 0, which eats the player whatever the HP (UNRLW0W3XWLD F33 T8: Sandpit 1, the
  * end-turn line read "0 HP lost in all, 0 of it the enemy hits after block", the Sandpit unnamed).
  */
@@ -1415,7 +1416,8 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   }
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
-  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}`;
+  const from = endNow.outcome.heldDamageFrom ?? [];
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}`;
   return sandpit
     ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
     : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
