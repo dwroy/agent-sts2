@@ -42,7 +42,7 @@ export function planReward(env: DecisionEnv): Decision | null {
       const name = str(card["name"], info?.name ?? cardId);
       const text = truncate(str(card["resolved_rules_text"]) || info?.description || "", 160);
       const relicIds = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-      const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds);
+      const base = cardValue(cardId, info?.rarity ?? "", info?.type ?? "", profile, act, floor, str(run["boss_id"]), relicIds, state.run?.ascension ?? 0);
       // RUN_PLAN=v1: DeepSeek's wanted/avoided cards and block target.
       const planned = runPlanCardBonus(env.screenMemory.runPlan, cardId, entries.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(cardId));
       // Boss clock: damage cards while the deck is short of the act boss's damage a turn.

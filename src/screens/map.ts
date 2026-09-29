@@ -143,8 +143,15 @@ export function fightHpCost(type: string, act: number): number {
 }
 /** A rest heals 30% of max HP (the model assumes resting, not smithing, when projecting). */
 const REST_HEAL = 0.3;
-/** Rough gold from a fight; what is left after a shop visit. */
-const FIGHT_GOLD: Record<string, number> = { Monster: 15, Elite: 30 };
+/**
+ * Rough gold from a fight at this ascension: A3's -25% gold shows in the logs (MAP-to-MAP gold after a
+ * hallway fight: median 15 at A0/A2, 11 at A3-A9, A8 n=1253, A9 n=154; elites 29-30 at A3+).
+ */
+export function fightGold(type: string, ascension: number): number {
+  if (type === "Monster") return ascension >= 3 ? 11 : 15;
+  return type === "Elite" ? 30 : 0;
+}
+/** What is left after a shop visit. */
 const GOLD_AFTER_SHOP = 50;
 
 /**
@@ -152,11 +159,11 @@ const GOLD_AFTER_SHOP = 50;
  * 0NG F27 took "Monster -> Elite" at 70% with the elite valued as if fought at 70%, and reached it at
  * 44/71. Rests heal and shops spend, so a fight behind a rest is valued at the healed HP.
  */
-function stateAfter(type: string, at: RouteState, act: number): RouteState {
+function stateAfter(type: string, at: RouteState, act: number, ascension: number): RouteState {
   switch (type) {
     case "Monster":
     case "Elite":
-      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + (FIGHT_GOLD[type] ?? 0), fights: at.fights + 1 };
+      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + fightGold(type, ascension), fights: at.fights + 1 };
     case "RestSite":
     case "Rest":
       return { hp: Math.min(1, at.hp + REST_HEAL), gold: at.gold, fights: 0 };
@@ -176,8 +183,8 @@ function stateAfter(type: string, at: RouteState, act: number): RouteState {
 type Weights = (type: string, at: RouteState) => number;
 
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
-function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>): number {
-  const left = stateAfter(node.type, at, act);
+function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>, ascension: number): number {
+  const left = stateAfter(node.type, at, act, ascension);
   const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}`;
   const cached = memo.get(nodeKey);
   if (cached !== undefined) return cached;
@@ -189,7 +196,7 @@ function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>
     // A likely death ends the route: nothing after it counts (4UWK F22: at 9/80 the Unknown room into a
     // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7).
     const here = weights(childNode.type, left);
-    best = Math.max(best, here <= LIKELY_DEATH ? here : here + continuation(childNode, left, nodes, weights, act, memo));
+    best = Math.max(best, here <= LIKELY_DEATH ? here : here + continuation(childNode, left, nodes, weights, act, memo, ascension));
   }
   if (best === -Infinity) best = 0;
   memo.set(nodeKey, best);
@@ -197,19 +204,19 @@ function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>
 }
 
 /** Follow the highest-value children to describe where this choice leads. */
-function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, steps: number): string {
+function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, steps: number, ascension: number): string {
   const types: string[] = [];
   let current = node;
   let at = start;
   for (let step = 0; step < steps; step += 1) {
     types.push(current.type);
-    at = stateAfter(current.type, at, act);
+    at = stateAfter(current.type, at, act, ascension);
     let bestChild: MapNode | null = null;
     let bestValue = -Infinity;
     for (const child of current.children) {
       const childNode = nodes.get(key(child.row, child.col));
       if (!childNode) continue;
-      const value = weights(childNode.type, at) + continuation(childNode, at, nodes, weights, act, new Map());
+      const value = weights(childNode.type, at) + continuation(childNode, at, nodes, weights, act, new Map(), ascension);
       if (value > bestValue) {
         bestValue = value;
         bestChild = childNode;
@@ -305,6 +312,7 @@ export function planMap(env: DecisionEnv): Decision | null {
 
   const hpPct = hpPercent(env);
   const gold = state.run?.gold ?? 0;
+  const ascension = state.run?.ascension ?? 0;
   const floor = state.run?.floor ?? 1;
   const { act, weightOf } = routeWeights(env, floor);
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
@@ -319,7 +327,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
     // Monster-first route scored level with a Rest-first one on a live run.
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
-    const value = weightOf(type, start) * urgency + continuation(self, start, nodes, weightOf, act, new Map());
+    const value = weightOf(type, start) * urgency + continuation(self, start, nodes, weightOf, act, new Map(), ascension);
     return [
       {
         key: `n${index}`,
@@ -330,7 +338,7 @@ export function planMap(env: DecisionEnv): Decision | null {
           node_type: type,
           position: `row ${row}, column ${col}`,
           route_value: Number(value.toFixed(2)),
-          likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3),
+          likely_continuation: pathPreview(self, start, nodes, weightOf, act, 3, ascension),
         } satisfies JsonValue,
       } satisfies PickOption,
     ];
@@ -375,6 +383,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     start,
     weights: weightOf,
     act,
+    ascension,
     hpPct,
     urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
     costs: roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80),
@@ -474,6 +483,8 @@ interface RouteContext {
   start: RouteState;
   weights: Weights;
   act: number;
+  /** Fight gold along a path depends on it (A3: -25% gold). */
+  ascension: number;
   hpPct: number;
   urgency: number;
   /** Measured room costs (monster DB) the route facts project HP with. */
@@ -529,7 +540,7 @@ function scorePath(path: MapNode[], context: RouteContext): ScoredPath {
     value += step === 0 ? weight * context.urgency : weight;
     // A likely death ends the route: nothing after it counts (as in continuation()).
     if (weight <= LIKELY_DEATH) dead = true;
-    at = stateAfter(node.type, at, context.act);
+    at = stateAfter(node.type, at, context.act, context.ascension);
   });
   return { path, value, hpOnArrival, projection };
 }

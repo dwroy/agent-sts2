@@ -123,7 +123,7 @@ export function planShop(env: DecisionEnv): Decision | null {
       const planned = action === "buy_card" ? runPlanCardBonus(env.screenMemory.runPlan, id, deckNow.filter((entry) => isBlockCardId(entry.card_id) && !entry.card_id.startsWith("DEFEND_")).length, isBlockCardId(id)) : { bonus: 0, why: null };
       const clock = action === "buy_card" ? gapCardBonus(gap, id) : { bonus: 0, why: null };
       const cardInfo = action === "buy_card" ? (info as { rarity?: string; type?: string } | null) : null;
-      const valued = action === "buy_card" ? cardValue(id, cardInfo?.rarity ?? "", cardInfo?.type ?? "", profile, act, floor, str(asRecord(state.run?.raw)["boss_id"])) : null;
+      const valued = action === "buy_card" ? cardValue(id, cardInfo?.rarity ?? "", cardInfo?.type ?? "", profile, act, floor, str(asRecord(state.run?.raw)["boss_id"]), [], state.run?.ascension ?? 0) : null;
       const option: PickOption = {
         key: `${action}${index}`,
         label: `buy ${name} (${price ?? "?"}g)`,

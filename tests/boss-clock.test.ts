@@ -18,8 +18,10 @@ import {
   bossClockJson,
   bossHp,
   bossLossPerTurn,
+  bossMechanic,
   bossNote,
   bossProfile,
+  kinBeamT11,
   survivableTurns,
   testSubjectPhases,
   unblockedShare,
@@ -39,6 +41,8 @@ import {
   rawDeckDamage,
   REGAL_PILLOW_HEAL,
   ringingTurns,
+  setUnblockedSharesForTests,
+  testSubjectPhase2Loss,
 } from "../src/strategy/boss-clock.js";
 import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
@@ -473,5 +477,103 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
     expect(clock.mechanic).toContain("kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
     setMonsterDbForTests(GIANT_DB as never);
+  });
+});
+
+describe("boss clock notes and mechanics: numbers at this ascension from the monster DB (review 2026-09-29 #10)", () => {
+  const dmg = (bases: Record<string, number>, hits = 1) => ({
+    damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 4 }, hits: { [String(hits)]: 4 } }])),
+  });
+  // A fixture DB, A8 and A9 as logged (the real one refreshes after every run).
+  const monsters = {
+    ROCKET: { moves: { LASER_MOVE: { ...dmg({ "8": 31, "9": 35 }), back_attack_by_asc: { "8": { behind: 24, facing: 5 } } } } },
+    KIN_PRIEST: {
+      moves: {
+        BEAM_MOVE: dmg({ "8": 3, "9": 3 }, 3),
+        RITUAL_MOVE: { self_powers_gained: { STRENGTH_POWER: { "2": 80, "3": 6 } }, self_powers_gained_by_asc: { "8": { STRENGTH_POWER: { "2": 39 } }, "9": { STRENGTH_POWER: { "3": 6 } } } },
+      },
+    },
+    TEST_SUBJECT: { moves: { MULTI_CLAW_MOVE: dmg({ "8": 10 }, 3) } },
+    TORCH_HEAD_AMALGAM: { hp_by_asc: { "7": { median: 199, n: 2 }, "8": { median: 211, n: 5 } }, moves: { BEAM_MOVE: { damage_by_asc: { "8": { shown: { "12x3": 4 } } } } } },
+    VANTOM: { powers: { SLIPPERY_POWER: { type: "Buff", amount_at_first_sight: { "8": 10, "9": 26 }, amount_at_first_sight_by_asc: { "0": { "8": 10 }, "9": { "9": 3 } } } } },
+  };
+  const profile = (id: string) => bossProfile(`${id}_BOSS`)!;
+  beforeAll(() => setMonsterDbForTests({ bosses: {}, encounters: {}, monsters } as never));
+  afterAll(() => setMonsterDbForTests(null));
+
+  it("the crab's Laser: A9's base and back attack, not A8's 47-49", () => {
+    expect(bossNote(profile("KAISER_CRAB"), 9)).toContain("Laser 35, 52 from behind, plus Strength, on T4/T9");
+    expect(bossNote(profile("KAISER_CRAB"), 8)).toContain("Laser 31, 46 from behind");
+    expect(bossNote(profile("KAISER_CRAB"), 9)).not.toContain("47-49");
+  });
+
+  it("the Kin's T11 Beam grows with this ascension's Ritual: ~21 at A8, ~27 at A9", () => {
+    expect(kinBeamT11(8)).toBe(21);
+    expect(kinBeamT11(9)).toBe(27);
+    expect(bossNote(profile("THE_KIN"), 9)).toContain("Ritual (+3 Strength): be above the T11 Beam (~27)");
+  });
+
+  it("the Amalgam's HP and hits, the Test Subject's Multi Claw and Vantom's Slippery at this ascension, estimated ones marked", () => {
+    expect(bossMechanic(profile("QUEEN"), 7)).toContain("the Amalgam (199) adds its HP");
+    expect(bossMechanic(profile("QUEEN"), 9)).toContain("the Amalgam (211) adds its HP");
+    expect(bossNote(profile("QUEEN"), 8)).toContain("the Amalgam hits 12×3/?");
+    expect(bossMechanic(profile("TEST_SUBJECT"), 8)).toContain("Multi Claw starts 10×3");
+    // Not logged at A9: A8's scaled by the measured A8 -> A9 ratio (Laser 31 -> 35, Beam 3 -> 3), marked.
+    expect(bossMechanic(profile("TEST_SUBJECT"), 9)).toContain(`Multi Claw starts ≈${Math.round((10 * 38) / 34)}×3`);
+    expect(bossMechanic(profile("VANTOM"), 9)).toContain("Slippery 9: its next 9 HP losses are 1 each");
+    expect(bossMechanic(profile("VANTOM"), 0)).toContain("Slippery 8: its next 8 HP losses");
+  });
+});
+
+describe("Test Subject phase 2: Multi Claw's damage at this ascension, not the A8 ~15 a turn (review 2026-09-29 #12)", () => {
+  const dmg = (bases: Record<string, number>, hits = 1) => ({
+    damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 4 }, hits: { [String(hits)]: 4 } }])),
+  });
+  // Multi Claw logged at A8 only (10x3); another monster measures A8 -> A9 as 12 -> 14.
+  const db = {
+    bosses: { TEST_SUBJECT: { "8": { fights: 3, parts: { TEST_SUBJECT: { median: 111, n: 3 } }, phases: { "111 > 212 > 313 (TEST_SUBJECT)": 3 } } } },
+    encounters: {},
+    monsters: { TEST_SUBJECT: { moves: { MULTI_CLAW_MOVE: dmg({ "8": 10 }, 3) } }, CRUSHER: { moves: { THRASH_MOVE: dmg({ "8": 12, "9": 14 }) } } },
+  };
+  beforeAll(() => {
+    setMonsterDbForTests(db as never);
+    setUnblockedSharesForTests({ TEST_SUBJECT: { unblocked_share: 0.3, fights: 12, turns: 97 } });
+  });
+  afterAll(() => {
+    setMonsterDbForTests(null);
+    setUnblockedSharesForTests(null);
+  });
+
+  it("the loss a turn: Multi Claw x its growing hits (3..6) x the unblocked share, scaled at an unlogged ascension", () => {
+    expect(testSubjectPhase2Loss(8).value).toBe(13.5);
+    // A10: 10 x 14/12 = 12 a hit (A8 -> A9 measured, A9 -> A10 x1).
+    expect(testSubjectPhase2Loss(10).value).toBe(Math.round(12 * 4.5 * 0.3 * 10) / 10);
+    expect(testSubjectPhase2Loss(10).source).toMatch(/Multi Claw ≈12x3\+ at A10 \(A8's scaled, estimated\) x 30% unblocked/);
+  });
+
+  it("the clock's phase-2 deadline shortens when the claws hit harder", () => {
+    const state = (asc: number) => mapState(starter(), "TEST_SUBJECT_BOSS", { ascension: asc, floor: 40, act_id: "2" });
+    const turns1 = bossClock(state(8), testKnowledge, 200)!.phases![0]!.turns;
+    // 68 HP at phase 2: 68 / 13.5 = 5.0 turns at A8, 68 / 16.2 = 4.2 at A10.
+    const entry = 68 + 3 * turns1;
+    const a8 = bossClock(state(8), testKnowledge, entry)!;
+    const a10 = bossClock(state(10), testKnowledge, entry)!;
+    expect(a8.phases![1]).toMatchObject({ phase: 2, turns: 5, need: Math.round(212 / 5) });
+    expect(a10.phases![1]).toMatchObject({ phase: 2, turns: 4, need: Math.round(212 / 4) });
+    expect(a10.turnsNote).toMatch(/phase 2 must die within ~4 turns of Multi Claw at ~68 HP \(Multi Claw ≈12x3\+ at A10/);
+  });
+});
+
+describe("the Test Subject's hand-set fallback is the logged A8 phases (review 2026-09-29 #20)", () => {
+  it("without DB phases: 111/212/313 (636) at A8+, 100/200/300 below", () => {
+    setMonsterDbForTests({ bosses: {}, encounters: {}, monsters: {} } as never);
+    try {
+      expect(testSubjectPhases(9)).toEqual([111, 212, 313]);
+      expect(bossHp({ ...bossProfile("TEST_SUBJECT_BOSS")! }, 9)).toBe(636);
+      expect(bossProfile("TEST_SUBJECT_BOSS")!.hpA8).toBe(636);
+      expect(testSubjectPhases(7)).toEqual([100, 200, 300]);
+    } finally {
+      setMonsterDbForTests(null);
+    }
   });
 });

@@ -41,6 +41,9 @@ export interface MoveEntry {
   /** Surrounded (Kaiser Crab): the logged turns the move came from behind us (x1.5) and from in front. */
   back_attack_by_asc?: Record<string, { behind?: number; facing?: number }>;
   status_cards?: Record<string, number>;
+  /** Block a Defend move gave (pooled), and by ascension. */
+  block_gained?: Record<string, number>;
+  block_gained_by_asc?: Record<string, Record<string, number>>;
 }
 
 interface MonsterEntry {
@@ -104,6 +107,11 @@ function load(): MonsterDb {
   return cached;
 }
 
+/** The monsters part of the loaded DB (moves by id), for moveDamageAt and the like. */
+export function monsterMoves(): Record<string, MonsterEntry> {
+  return load().monsters;
+}
+
 /** For tests: use this DB instead of the file (null reloads the file). */
 export function setMonsterDbForTests(db: MonsterDb | null): void {
   cached = db;
@@ -163,6 +171,11 @@ export interface MoveDamage {
   ratioN?: number;
   ratioOwn?: boolean;
   /**
+   * Estimated only: the ascension the measured ratio reaches (chainedDamageRatio). Below the one asked for
+   * when no move is logged there yet (A10 before any A10 run: A8 x the A8 -> A9 ratio, A9 -> A10 taken as 1).
+   */
+  ratioTo?: number;
+  /**
    * Surrounded (the Kaiser Crab's claws): the move's base at this ascension and the share of the logged
    * turns it came from behind us (x1.5); perHit is then the hit as it lands on average.
    */
@@ -183,6 +196,28 @@ export function backAttackShare(move: MoveEntry | undefined): number | null {
     facing += counts.facing ?? 0;
   }
   return behind + facing > 0 ? behind / (behind + facing) : null;
+}
+
+/**
+ * Counts at `asc` from a per-ascension split: this ascension's when logged, else the nearest logged one's
+ * (A9's Ritual +3 at A10, not the pooled +2 most fights were logged with); the pooled counts only when
+ * no ascension has any (a DB built before the split, or only unknown-ascension rows).
+ */
+export function countsAt(byAsc: Record<string, Record<string, number> | undefined> | undefined, pooled: Record<string, number> | undefined, asc: number): Record<string, number> | undefined {
+  const logged = Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, counts]) => counts && Object.keys(counts).length > 0));
+  const found = nearestAscension(logged, asc);
+  return found ? logged[found.key] : pooled;
+}
+
+/**
+ * The most common amount of a power a move gives its user at `asc` (self_powers_gained_by_asc, nearest
+ * logged ascension, pooled only without a split): Kin Priest's Ritual +2 up to A8, +3 at A9. null when
+ * the move never gave it.
+ */
+export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: number): number | null {
+  const byAsc = Object.fromEntries(Object.entries(move?.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[powerId]]));
+  const value = mode(countsAt(byAsc, move?.self_powers_gained?.[powerId], asc));
+  return value === null ? null : Number(value);
 }
 
 function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
@@ -209,9 +244,64 @@ export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: strin
   return { ratio, n: used.length, own: own.length > 0 };
 }
 
+const loggedAscensionsCache = new WeakMap<MonsterMoveData, number[]>();
+
+/** The ascensions some monster's move has a logged base damage at, ascending. */
+function loggedDamageAscensions(monsters: MonsterMoveData): number[] {
+  const cached = loggedAscensionsCache.get(monsters);
+  if (cached) return cached;
+  const seen = new Set<number>();
+  for (const monster of Object.values(monsters)) {
+    for (const move of Object.values(monster.moves ?? {})) {
+      for (const [asc, entry] of Object.entries(move.damage_by_asc ?? {})) {
+        if (/^\d+$/.test(asc) && mode(entry.base_per_hit) !== null) seen.add(Number(asc));
+      }
+    }
+  }
+  const out = [...seen].sort((a, b) => a - b);
+  loggedAscensionsCache.set(monsters, out);
+  return out;
+}
+
+/**
+ * The damage ratio from `from` to `to`: measured directly on the moves logged at both
+ * (ascensionDamageRatio), else chained through the ascensions logged on the way, one measured step at a
+ * time (A8 -> A9 x A9 -> A10). An ascension no move is logged at yet (A10 before the first A10 run) adds
+ * nothing: the chain stops at the last logged one (`reached`), the rest taken as 1 until measured. A move
+ * logged only at A8 is then A8 x (A8 -> A9) at A10, as at A9, not its bare A8 damage. null when no step is
+ * measured.
+ */
+export function chainedDamageRatio(
+  monsters: MonsterMoveData,
+  monsterId: string,
+  from: number,
+  to: number,
+): { ratio: number; n: number; own: boolean; reached: number } | null {
+  const direct = ascensionDamageRatio(monsters, monsterId, from, to);
+  if (direct) return { ...direct, reached: to };
+  const up = to > from;
+  const onTheWay = loggedDamageAscensions(monsters)
+    .filter((asc) => (up ? asc > from && asc <= to : asc < from && asc >= to))
+    .sort((a, b) => (up ? a - b : b - a));
+  let at = from;
+  let ratio = 1;
+  let n = Infinity;
+  let own = true;
+  for (const next of onTheWay) {
+    const step = ascensionDamageRatio(monsters, monsterId, at, next);
+    if (!step) continue;
+    ratio *= step.ratio;
+    n = Math.min(n, step.n);
+    own = own && step.own;
+    at = next;
+  }
+  return at === from ? null : { ratio, n, own, reached: at };
+}
+
 /**
  * A move's damage at `asc`: as logged there, else the nearest logged ascension's scaled by the measured
- * ratio (ascensionDamageRatio), rounded and marked estimated. null when the move has no logged damage.
+ * ratio (chainedDamageRatio: through the logged ascensions in between; one never logged counts as the
+ * last logged one before it), rounded and marked estimated. null when the move has no logged damage.
  * A Surrounded back-attack move (Kaiser Crab) is its base times 1 + 0.5 x the share of the logged turns it
  * came from behind (backAttackShare): the rollout's later turns and the boss clock do not track which claw
  * we face (A8 Laser: base 31, 49 from behind on 83% of turns; the DB used to call 47 its base).
@@ -228,10 +318,19 @@ export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveI
   const behind = (base: number) => (share === null ? {} : { base, backAttackShare: share });
   const average = (base: number) => (share === null ? base : Math.round(base * (1 + 0.5 * share)));
   if (found.exact) return { perHit: average(logged), hits, estimated: false, from, ratio: 1, ...behind(logged) };
-  const measured = ascensionDamageRatio(monsters, monsterId, from, asc);
+  const measured = chainedDamageRatio(monsters, monsterId, from, asc);
   const ratio = measured?.ratio ?? 1;
   const base = Math.round(logged * ratio);
-  return { perHit: average(base), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}), ...behind(base) };
+  return {
+    perHit: average(base),
+    hits,
+    estimated: true,
+    from,
+    ratio,
+    ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}),
+    ratioTo: measured?.reached ?? from,
+    ...behind(base),
+  };
 }
 
 /**
@@ -247,8 +346,10 @@ function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: str
   const shown = /^(\d+)x(\d+)$/.exec(mode(move.damage_by_asc![found.key]!.shown) ?? "");
   if (!shown) return null;
   const from = Number(found.key);
-  const ratio = found.exact ? 1 : (ascensionDamageRatio(monsters, monsterId, from, asc)?.ratio ?? 1);
-  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: !found.exact, from, ratio };
+  if (found.exact) return { perHit: Number(shown[1]), hits: Number(shown[2]), estimated: false, from, ratio: 1 };
+  const measured = chainedDamageRatio(monsters, monsterId, from, asc);
+  const ratio = measured?.ratio ?? 1;
+  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: true, from, ratio, ratioTo: measured?.reached ?? from };
 }
 
 /**
@@ -256,7 +357,8 @@ function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: str
  * logged (turns_seen), then its logged successors (next; a move with none, the Waterfall Giant's death
  * Explode, is not a turn of the fight), each move's damage per hit at this ascension (moveDamageAt:
  * scaled from the nearest ascension when unseen here; the shown hit when no base was ever measured) plus
- * the Strength its earlier moves gained (self_powers_gained), times its hits. `estimated`: some move's
+ * the Strength its earlier moves gained (selfGainAt: at this ascension, A9's Ritual +3 not the pooled +2),
+ * times its hits. `estimated`: some move's
  * damage was scaled. null without logged moves.
  */
 export function monsterDamageByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; estimated: boolean } | null {
@@ -274,7 +376,7 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
       return [id, base ?? (shown ? { ...shown, shown: true } : null)];
     }),
   );
-  const strengthOf = (id: string) => Number(mode(moves[id]?.self_powers_gained?.["STRENGTH_POWER"]) ?? 0);
+  const strengthOf = (id: string) => selfGainAt(moves[id], "STRENGTH_POWER", asc) ?? 0;
   let strength = 0;
   let estimated = false;
   const perTurn: number[] = [];
@@ -348,6 +450,56 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
   return { hp: Math.round(hp), phases, asc: Number(found.key), exact: found.exact, n };
 }
 
+/**
+ * A hand-written note's numbers from the DB at `asc` (the notes keep the strategy, the DB the numbers):
+ *   {HP:ID}              the enemy's median max HP (hp_by_asc, nearest logged ascension);
+ *   {DMG:ID:MOVE}        the move's base damage per hit, "×hits" for a multi-hit (moveDamageAt; the shown
+ *                        hit when no base was measured), "≈" in front when estimated (not logged here);
+ *   {BEHIND:ID:MOVE}     a Surrounded move's hit from behind (base × 1.5);
+ *   {GAIN:ID:MOVE:POWER} what the move gives its user of a power (selfGainAt);
+ *   {POWER:ID:POWER}     the amount the enemy is first seen with (amount_at_first_sight_by_asc);
+ *   {BLOCK:ID:MOVE}      the block the move gives (block_gained_by_asc).
+ * One the DB cannot fill becomes "?", never a hand-set number from another ascension.
+ */
+export function fillDbNumbers(text: string, asc: number): string {
+  const db = load().monsters;
+  const fill = (kind: string, id: string, a?: string, b?: string): string | null => {
+    const monster = db[id];
+    const move = a ? monster?.moves?.[a] : undefined;
+    switch (kind) {
+      case "HP": {
+        const found = nearestAscension(monster?.hp_by_asc, asc);
+        const median = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+        return median === undefined ? null : String(Math.round(median));
+      }
+      case "DMG":
+      case "BEHIND": {
+        if (!a) return null;
+        const base = moveDamageAt(db, id, a, asc);
+        const hit = base ?? shownDamageAt(db, id, a, asc);
+        if (!hit) return null;
+        const perHit = base ? (base.base ?? base.perHit) : hit.perHit;
+        const mark = hit.estimated ? "≈" : "";
+        if (kind === "BEHIND") return base?.backAttackShare !== undefined ? `${mark}${Math.floor(perHit * 1.5)}` : null;
+        return `${mark}${perHit}${hit.hits > 1 ? `×${hit.hits}` : ""}`;
+      }
+      case "GAIN": {
+        const gain = a && b ? selfGainAt(move, b, asc) : null;
+        return gain === null ? null : String(gain);
+      }
+      case "POWER": {
+        const power = a ? monster?.powers?.[a] : undefined;
+        return power ? mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc)) : null;
+      }
+      case "BLOCK":
+        return move ? mode(countsAt(move.block_gained_by_asc, move.block_gained, asc)) : null;
+      default:
+        return null;
+    }
+  };
+  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
+}
+
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */
 function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): string {
   const parts: string[] = [move.name || id];
@@ -356,10 +508,12 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
     const shown = damage.base ?? damage.perHit;
     const behind = damage.backAttackShare !== undefined ? ` (在背后 ×1.5 = ${Math.floor(shown * 1.5)}，记录中 ${pct(damage.backAttackShare)} 的回合在背后)` : "";
     const text = `${damage.hits > 1 ? `${shown}×${damage.hits}` : String(shown)}${behind}`;
-    // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so.
-    parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)})` : text);
+    // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so, and where
+    // the measured chain stops short of this ascension (A10 before any A10 run: A9 -> A10 taken as 1).
+    const unmeasured = damage.ratioTo !== undefined && damage.ratioTo !== asc ? `，A${damage.ratioTo}→A${asc} 未测按 ×1` : "";
+    parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)}${unmeasured})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
-  const strength = mode(move.self_powers_gained?.["STRENGTH_POWER"]);
+  const strength = selfGainAt(move, "STRENGTH_POWER", asc);
   if (strength) parts.push(`+${strength}力`);
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
@@ -450,13 +604,14 @@ export function moveCycle(id: string, asc: number, maxMoves = 6): string {
   return `${order.map((moveId) => moveText(moves[moveId]!, moveId, asc, id)).join(" → ")}${loops}${others.length > 0 ? `；其他: ${others.join(", ")}` : ""}`;
 }
 
-function powersText(id: string, fights: number): string {
+function powersText(id: string, fights: number, asc: number): string {
   const powers = load().monsters[id]?.powers ?? {};
   const common = Object.values(powers)
     // Its own buffs only: Vulnerable, Weak and the like on it are what we applied.
     .filter((power) => power.type !== "Debuff" && (power.n_fights ?? 0) >= Math.max(2, fights * 0.3))
     .map((power) => {
-      const amount = mode(power.amount_at_first_sight);
+      // At this ascension (the Waterfall Giant's Steam Eruption: 15 up to A8, 20 at A9), not pooled.
+      const amount = mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc));
       return `${power.name ?? "?"}${amount && amount !== "1" ? ` ${amount}` : ""}`;
     });
   return common.join(", ");
@@ -479,7 +634,7 @@ export function bossDossier(bossId: string | null | undefined, asc: number): str
   ];
   for (const [part] of parts) {
     const cycle = moveCycle(part, asc);
-    const powers = powersText(part, entry.fights ?? 0);
+    const powers = powersText(part, entry.fights ?? 0, asc);
     if (cycle || powers) lines.push(`${monsterName(part)} 招式: ${cycle || "?"}${powers ? ` | 能力: ${powers}` : ""}`);
   }
   return lines.join("\n");
@@ -617,27 +772,55 @@ export function roomHpCost(act: number, asc: number, room: "Monster" | "Elite"):
   return null;
 }
 
-/** The act boss's HP lost in our won fights (median/p75, n) and win rate, at `asc` (nearest logged). */
-export function bossHpLoss(
-  bossId: string | null | undefined,
-  asc: number,
-): { median: number; p75: number; n: number; fights: number; winRate: number | null; asc: number; perTurn: { median: number; n: number } | null } | null {
+/** The act boss's measured HP cost (bossHpLoss). */
+export interface BossHpLoss {
+  /**
+   * HP lost in our won fights (median/p75, n) at the nearest ascension with a win, `asc` (A9 Kaiser Crab: 0
+   * wins in 2 fights, so A8's); null when no ascension has a win.
+   */
+  won: { median: number; p75: number; n: number; asc: number } | null;
+  /** Our record at the nearest logged ascension (`recordAsc`): fights and win rate. */
+  fights: number;
+  winRate: number | null;
+  recordAsc: number;
+  /** HP lost a turn in every logged fight, wins and deaths, at the nearest ascension that has any (`asc`). */
+  perTurn: { median: number; n: number; asc: number } | null;
+}
+
+/** Numeric keys ordered by distance from `asc`, the higher first on a tie (as nearestAscension picks). */
+function byDistance(keys: string[], asc: number): string[] {
+  return keys.filter((key) => /^\d+$/.test(key)).sort((a, b) => Math.abs(Number(a) - asc) - Math.abs(Number(b) - asc) || Number(b) - Number(a));
+}
+
+/**
+ * The act boss's HP lost in our won fights and a turn, and our record, at `asc`: each from the nearest
+ * logged ascension that has it (the win sample walks on to the next ascension when the nearest has no
+ * win, as roomHpCost does; the per-turn loss counts deaths too, so it does not wait for a win). null when
+ * the DB has no fight against the boss.
+ */
+export function bossHpLoss(bossId: string | null | undefined, asc: number): BossHpLoss | null {
   if (!bossId) return null;
   const byAsc = load().bosses[bossId.toUpperCase().replace(/_BOSS$/, "")];
   const found = nearestAscension(byAsc, asc);
   if (!byAsc || !found) return null;
-  const entry = byAsc[found.key]!;
-  const loss = entry.hp_loss_won;
-  if (!loss || !loss.n || typeof loss.median !== "number") return null;
-  const turn = entry.hp_loss_per_turn;
+  const order = byDistance(Object.keys(byAsc), asc);
+  const wonAt = order.find((key) => {
+    const loss = byAsc[key]!.hp_loss_won;
+    return !!loss?.n && typeof loss.median === "number";
+  });
+  const turnAt = order.find((key) => {
+    const turn = byAsc[key]!.hp_loss_per_turn;
+    return !!turn?.n && typeof turn.median === "number";
+  });
+  const loss = wonAt ? byAsc[wonAt]!.hp_loss_won! : null;
+  const turn = turnAt ? byAsc[turnAt]!.hp_loss_per_turn! : null;
+  const record = byAsc[found.key]!;
   return {
-    median: loss.median,
-    p75: typeof loss.p75 === "number" ? loss.p75 : loss.median,
-    n: loss.n,
-    fights: entry.fights ?? 0,
-    winRate: entry.win_rate ?? null,
-    asc: Number(found.key),
-    perTurn: turn && turn.n && typeof turn.median === "number" ? { median: turn.median, n: turn.n } : null,
+    won: loss && wonAt ? { median: loss.median!, p75: typeof loss.p75 === "number" ? loss.p75 : loss.median!, n: loss.n!, asc: Number(wonAt) } : null,
+    fights: record.fights ?? 0,
+    winRate: record.win_rate ?? null,
+    recordAsc: Number(found.key),
+    perTurn: turn && turnAt ? { median: turn.median!, n: turn.n!, asc: Number(turnAt) } : null,
   };
 }
 

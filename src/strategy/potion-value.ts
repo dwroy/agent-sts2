@@ -58,7 +58,9 @@ export function potionHpSaved(potionId: string, state: GameState, knowledge: Kno
   const measured = bossHpLoss(bossId, state.run?.ascension ?? 0);
   const perTurn = measured?.perTurn?.median ?? bossProfile(bossId)?.lossPerTurn ?? null;
   if (perTurn === null) return null;
-  const lossNote = measured?.perTurn ? `~${r1(perTurn)} HP lost a turn there (monster DB A${measured.asc}, n=${measured.perTurn.n})` : `~${r1(perTurn)} HP lost a turn there (boss clock profile)`;
+  const lossNote = measured?.perTurn
+    ? `~${r1(perTurn)} HP lost a turn there (monster DB A${measured.perTurn.asc}, n=${measured.perTurn.n})`
+    : `~${r1(perTurn)} HP lost a turn there (hand-set A8 boss profile: no logged fight)`;
   const damage = clock.deck;
   const turns = clock.fightTurns;
   const hits = deck.hits;

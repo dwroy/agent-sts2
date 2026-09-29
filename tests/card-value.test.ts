@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { cardValue, deckProfile, type DeckProfile } from "../src/strategy/card-value.js";
 
 function deck(size: number): DeckProfile {
@@ -97,5 +98,34 @@ describe("cardValue", () => {
     expect(at("BATTLE_TRANCE", "Skill", "SOUL_FYSH_BOSS")).toBe(at("BATTLE_TRANCE", "Skill") - 10);
     expect(at("INFLAME", "Power", "LAGAVULIN_MATRIARCH_BOSS")).toBe(at("INFLAME", "Power") + 10);
     expect(at("HEADBUTT", "Attack", "LAGAVULIN_MATRIARCH_BOSS")).toBe(at("HEADBUTT", "Attack") + 6);
+  });
+});
+
+describe("boss HP in the card reasons DeepSeek reads is the current ascension's (review 2026-09-29 #18)", () => {
+  it("Kin priest, Aeonglass, Test Subject, Matriarch and crab at A7/A9 from the DB, not their A0 or A8 numbers", () => {
+    const part = (id: string, byAsc: Record<string, number>) =>
+      Object.fromEntries(Object.entries(byAsc).map(([asc, hp]) => [asc, { fights: 3, parts: { [id]: { median: hp, n: 3, count_per_fight: 1 } } }]));
+    setMonsterDbForTests({
+      bosses: {
+        THE_KIN: Object.fromEntries(Object.entries(part("KIN_PRIEST", { "7": 190, "9": 199 })).map(([asc, entry]) => [asc, { ...entry, parts: { ...entry.parts, KIN_FOLLOWER: { median: 62, n: 3, count_per_fight: 2 } } }])),
+        AEONGLASS: part("AEONGLASS", { "7": 512, "8": 535 }),
+        LAGAVULIN_MATRIARCH: part("LAGAVULIN_MATRIARCH", { "7": 222, "9": 233 }),
+        TEST_SUBJECT: { "8": { fights: 3, parts: { TEST_SUBJECT: { median: 111, n: 3 } }, phases: { "111 > 212 > 313 (TEST_SUBJECT)": 3 } } },
+        KAISER_CRAB: { "9": { fights: 2, parts: { CRUSHER: { median: 219, n: 2 }, ROCKET: { median: 209, n: 2 } } } },
+      },
+      encounters: {},
+      monsters: {},
+    } as never);
+    try {
+      const reasons = (cardId: string, type: string, bossId: string, asc: number) => cardValue(cardId, "Uncommon", type, deck(15), 2, 20, bossId, [], asc).reasons;
+      expect(reasons("INFLAME", "Power", "THE_KIN_BOSS", 9)).toContain("scaling for the Kin Priest's 199 HP");
+      expect(reasons("INFLAME", "Power", "THE_KIN_BOSS", 7)).toContain("scaling for the Kin Priest's 190 HP");
+      expect(reasons("INFLAME", "Power", "AEONGLASS_BOSS", 9)).toContain("scaling for Aeonglass's 535 HP");
+      expect(reasons("INFLAME", "Power", "TEST_SUBJECT_BOSS", 9)).toContain("Strength scaling for Test Subject's 636 HP");
+      expect(reasons("HEADBUTT", "Attack", "LAGAVULIN_MATRIARCH_BOSS", 9)).toContain("damage for the Matriarch's 233 HP");
+      expect(reasons("INFLAME", "Power", "KAISER_CRAB_BOSS", 9)).toContain("scaling for the Kaiser Crab's 428 HP");
+    } finally {
+      setMonsterDbForTests(null);
+    }
   });
 });

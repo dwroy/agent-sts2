@@ -5,7 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, bossHpLoss, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, selfGainAt, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { forcedFightCost } from "../src/screens/event.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -106,6 +107,134 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
   });
 });
 
+describe("an ascension no fight is logged at yet (A10): the A8 -> A9 ratio carries on, not the bare A8 damage (review 2026-09-29 #1)", () => {
+  const at = (bases: Record<string, number>, hits = 1) =>
+    ({ damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 3 }, hits: { [String(hits)]: 3 } }])) });
+  // Logged at A8 and A9 (measures A8 -> A9 = 22/19); nothing anywhere at A10.
+  const monsters: MonsterMoveData = {
+    CRUSHER: { moves: { GUARDED_STRIKE_MOVE: at({ "8": 19, "9": 22 }) } },
+    // An act-3 body only ever fought at A8: its damage at A9 and A10 is A8 x 22/19.
+    TORCH_HEAD_AMALGAM: {
+      moves: {
+        STRONG_TACKLE_MOVE: { ...at({ "8": 26 }), name: "强力冲撞", turns_seen: { "1": 3 }, next: { BEAM_MOVE: 3 } },
+        // Base never measured (a debuff always in the way): the shown hit, scaled the same way.
+        BEAM_MOVE: { damage_by_asc: { "8": { shown: { "12x3": 3 } } }, next: { STRONG_TACKLE_MOVE: 3 } },
+      },
+    },
+    // Logged at A9 only: A9's number at A10 (x1 until A10 is logged).
+    VANTOM: { moves: { DISMEMBER_MOVE: at({ "9": 30 }) } },
+  };
+
+  it("moveDamageAt at A10 equals A9's estimate, with where the measured chain stops", () => {
+    const a9 = moveDamageAt(monsters, "TORCH_HEAD_AMALGAM", "STRONG_TACKLE_MOVE", 9)!;
+    const a10 = moveDamageAt(monsters, "TORCH_HEAD_AMALGAM", "STRONG_TACKLE_MOVE", 10)!;
+    expect(a9).toMatchObject({ perHit: Math.round((26 * 22) / 19), estimated: true, from: 8, ratioTo: 9 });
+    expect(a10).toMatchObject({ perHit: a9.perHit, estimated: true, from: 8, ratioTo: 9, ratioN: 1, ratioOwn: false });
+    expect(a10.ratio).toBeCloseTo(22 / 19, 10);
+    expect(chainedDamageRatio(monsters, "TORCH_HEAD_AMALGAM", 8, 10)).toMatchObject({ reached: 9, n: 1 });
+    // Logged at A9 only: A9's number at A10, estimated, the chain at A9.
+    expect(moveDamageAt(monsters, "VANTOM", "DISMEMBER_MOVE", 10)).toMatchObject({ perHit: 30, estimated: true, from: 9, ratio: 1, ratioTo: 9 });
+  });
+
+  it("the per-turn damage (boss clock, rollout) and the dossier at A10 carry the A9 scaling", () => {
+    const a9 = monsterDamageByTurn("TORCH_HEAD_AMALGAM", 9, 3, monsters)!;
+    const a10 = monsterDamageByTurn("TORCH_HEAD_AMALGAM", 10, 3, monsters)!;
+    // T1 Strong Tackle 26 x 22/19 = 30; T2 Beam shown 12 x 22/19 = 14, x3.
+    expect(a9.perTurn).toEqual([30, 42, 30]);
+    expect(a10).toEqual(a9);
+    expect(enemyTable("TORCH_HEAD_AMALGAM", 10, monsters as never, {})!.moves["STRONG_TACKLE_MOVE"]).toMatchObject({ damage: 30, estimated: true });
+    setMonsterDbForTests({ bosses: { QUEEN: { "8": { fights: 3, parts: { TORCH_HEAD_AMALGAM: { median: 211, n: 3 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("QUEEN_BOSS", 10)).toMatch(/强力冲撞 30 \(A10估: A8×1\.16，A9→A10 未测按 ×1\)/);
+      expect(bossDossier("QUEEN_BOSS", 9)).toMatch(/强力冲撞 30 \(A9估: A8×1\.16\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
+
+describe("buffs at the ascension asked for, not pooled over every ascension (review 2026-09-29 #6)", () => {
+  // Kin Priest as logged: Ritual +2 at A8 (39 fights of 80 pooled), +3 at A9 (6); the pooled mode says +2.
+  const monsters = {
+    KIN_PRIEST: {
+      name: { zh: "同族神官" },
+      moves: {
+        BEAM_MOVE: { name: "灵魂光束", turns_seen: { "1": 5 }, next: { RITUAL_MOVE: 5 }, damage_by_asc: { "8": { base_per_hit: { "3": 5 }, hits: { "3": 5 } }, "9": { base_per_hit: { "3": 5 }, hits: { "3": 5 } } } },
+        RITUAL_MOVE: {
+          name: "黑暗仪式",
+          next: { BEAM_MOVE: 5 },
+          self_powers_gained: { STRENGTH_POWER: { "2": 80, "3": 6 } },
+          self_powers_gained_by_asc: { "0": { STRENGTH_POWER: { "2": 41 } }, "8": { STRENGTH_POWER: { "2": 39 } }, "9": { STRENGTH_POWER: { "3": 6 } } },
+        },
+      },
+    },
+    WATERFALL_GIANT: {
+      name: { zh: "瀑布巨兽" },
+      moves: { RAM_MOVE: { name: "撞击", turns_seen: { "1": 3 }, next: { RAM_MOVE: 3 }, damage_by_asc: { "9": { base_per_hit: { "11": 3 }, hits: { "1": 3 } } } } },
+      // Steam Eruption first seen at 15 up to A8, 20 at A9; pooled 15.
+      powers: { STEAM_ERUPTION_POWER: { name: "蒸汽喷发", type: "Buff", n_fights: 58, amount_at_first_sight: { "15": 53, "20": 5 }, amount_at_first_sight_by_asc: { "8": { "15": 27 }, "9": { "20": 5 } } } },
+    },
+    // No per-ascension split: the pooled counts.
+    TERROR_EEL: { moves: { THRASH_MOVE: { self_powers_gained: { VIGOR_POWER: { "6": 75 } } } } },
+  };
+  const ritual = monsters.KIN_PRIEST.moves.RITUAL_MOVE;
+
+  it("selfGainAt: this ascension, else the nearest logged one, else the pooled counts", () => {
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 8)).toBe(2);
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 9)).toBe(3);
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 10)).toBe(3);
+    expect(selfGainAt(monsters.TERROR_EEL.moves.THRASH_MOVE, "VIGOR_POWER", 9)).toBe(6);
+    expect(selfGainAt(ritual, "VIGOR_POWER", 9)).toBeNull();
+  });
+
+  it("the rollout's move table, the damage by turn and the dossier take A9's Ritual and Steam Eruption", () => {
+    expect(enemyTable("KIN_PRIEST", 9, monsters as never, {})!.moves["RITUAL_MOVE"]!.strength).toBe(3);
+    expect(enemyTable("KIN_PRIEST", 8, monsters as never, {})!.moves["RITUAL_MOVE"]!.strength).toBe(2);
+    // T1 Beam 3x3, T2 Ritual, T3 Beam (3+3)x3 at A9, (3+2)x3 at A8.
+    expect(monsterDamageByTurn("KIN_PRIEST", 9, 3, monsters as never)!.perTurn).toEqual([9, 0, 18]);
+    expect(monsterDamageByTurn("KIN_PRIEST", 8, 3, monsters as never)!.perTurn).toEqual([9, 0, 15]);
+    setMonsterDbForTests({
+      bosses: {
+        THE_KIN: { "9": { fights: 4, parts: { KIN_PRIEST: { median: 199, n: 4 } } } },
+        WATERFALL_GIANT: { "9": { fights: 5, parts: { WATERFALL_GIANT: { median: 250, n: 5 } } } },
+      },
+      encounters: {},
+      monsters,
+    } as never);
+    try {
+      expect(bossDossier("THE_KIN_BOSS", 9)).toContain("黑暗仪式 +3力");
+      expect(bossDossier("THE_KIN_BOSS", 8)).toContain("黑暗仪式 +2力");
+      expect(bossDossier("WATERFALL_GIANT_BOSS", 9)).toContain("能力: 蒸汽喷发 20");
+      expect(bossDossier("WATERFALL_GIANT_BOSS", 8)).toContain("能力: 蒸汽喷发 15");
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
+
+describe("block a move gives at the ascension asked for (review 2026-09-29 #6: the Matriarch's Slash 2)", () => {
+  it("12 up to A7, 14 from A8: the rollout reads the split, not the pooled 30/30 tie", () => {
+    const db = {
+      LAGAVULIN_MATRIARCH: {
+        moves: {
+          SLASH2_MOVE: {
+            damage_by_asc: { "8": { base_per_hit: { "12": 5 }, hits: { "1": 5 } } },
+            block_gained: { "12": 30, "14": 30 },
+            block_gained_by_asc: { "0": { "12": 26 }, "7": { "12": 4 }, "8": { "12": 1, "14": 29 }, "9": { "14": 1 } },
+          },
+        },
+      },
+    };
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 8, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 9, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 10, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(14);
+    expect(enemyTable("LAGAVULIN_MATRIARCH", 7, db as never, {})!.moves["SLASH2_MOVE"]!.block).toBe(12);
+    // A DB built before the split: the pooled counts.
+    const pooled = { X: { moves: { GUARD_MOVE: { block_gained: { "9": 3, "12": 8 } } } } };
+    expect(enemyTable("X", 9, pooled as never, {})!.moves["GUARD_MOVE"]!.block).toBe(12);
+  });
+});
+
 describe("the Terror Eel's Vigor reaches the rollout's move table (XLJQ6FPQAU7N F7)", () => {
   it("Thrash's self-given Vigor is the move's vigor; Crash keeps its base (the builder leaves Vigor turns out of it)", () => {
     const base = (asc: string, perHit: number, hits = 1) => ({ damage_by_asc: { [asc]: { base_per_hit: { [String(perHit)]: 4 }, hits: { [String(hits)]: 4 } } } });
@@ -179,3 +308,45 @@ describe("a monster's expected attack by turn, along its logged moves", () => {
   });
 });
 
+
+describe("the act boss's HP cost when the nearest ascension has no win (review 2026-09-29 #7)", () => {
+  // Kaiser Crab as logged: A8 wins; A9 0 wins in 2 fights, their per-turn loss 13.4. Test Subject: no win at A8 or A9.
+  const db = {
+    bosses: {
+      KAISER_CRAB: {
+        "8": { fights: 23, win_rate: 0.4, hp_loss_won: { median: 38, p75: 52, n: 9 }, hp_loss_per_turn: { median: 9.8, p75: 12, n: 23 } },
+        "9": { fights: 2, win_rate: 0, hp_loss_won: { median: null, p75: null, n: 0 }, hp_loss_per_turn: { median: 13.4, p75: 13.6, n: 2 } },
+      },
+      TEST_SUBJECT: { "8": { fights: 3, win_rate: 0, hp_loss_won: { median: null, p75: null, n: 0 }, hp_loss_per_turn: { median: 7.1, p75: 8, n: 3 } } },
+    },
+    encounters: {},
+    monsters: {},
+  };
+
+  it("the win sample walks to the nearest ascension with a win; the per-turn loss and the record stay at the nearest logged one", () => {
+    setMonsterDbForTests(db as never);
+    try {
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 9)).toEqual({
+        won: { median: 38, p75: 52, n: 9, asc: 8 },
+        fights: 2,
+        winRate: 0,
+        recordAsc: 9,
+        perTurn: { median: 13.4, n: 2, asc: 9 },
+      });
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 10)).toMatchObject({ won: { asc: 8 }, recordAsc: 9, perTurn: { median: 13.4, asc: 9 } });
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 8)).toMatchObject({ won: { median: 38, asc: 8 }, perTurn: { median: 9.8, asc: 8 } });
+      // No win anywhere: no win sample, but the per-turn loss is still measured.
+      expect(bossHpLoss("TEST_SUBJECT_BOSS", 10)).toMatchObject({ won: null, perTurn: { median: 7.1, n: 3, asc: 8 } });
+      expect(bossHpLoss("NOT_A_BOSS", 9)).toBeNull();
+      // The forced-boss cost says which ascension its wins come from.
+      expect(forcedFightCost("Boss", 2, 9, "KAISER_CRAB_BOSS")).toEqual({
+        median: 38,
+        p75: 52,
+        source: "act boss KAISER_CRAB_BOSS, HP lost in our A8 (no A9 win logged) wins, n=9; A9 win rate 0% over 2 fights",
+      });
+      expect(forcedFightCost("Boss", 3, 10, "TEST_SUBJECT_BOSS")).toBeNull();
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
