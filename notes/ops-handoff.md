@@ -6,7 +6,7 @@
 - 复盘 9 局：9GRP、N01X、83FL、7MDJ、5NFG、0NZB、2ZCK、7KDM、3SBP，由主会话派出的 agent 在写。
 
 ## 交给运维会话的
-- C 批已于 16:55 合入 v3（54d6d9e，1036 个测试全过）。step1-bugfix 已空出来，fix-queue.md 里还开着的条目（从“From the route-review work”那一段起）归运维会话的下一批修复。
+- C 批已于 16:45 合入 v3（54d6d9e，1036 个测试全过）。step1-bugfix 已空出来，fix-queue.md 里还开着的条目（从“From the route-review work”那一段起）归运维会话的下一批修复。
 - 上面“进行中”清空以后，学习闭环全部由运维会话负责。
 - fix-queue.md 里还没被派出去修的条目，归运维会话的下一批修复。
 

@@ -1,6 +1,6 @@
 # Fix queue (pure bugs waiting for the next batch on step1-bugfix)
 
-**Batch C (step1-bugfix a649307, merging into v3 2026-09-29 16:5x) fixed every item listed below up to and including the X7LU/XTB4/2XWM/7XK6 and KY3Y/9Q7V/XMK1/PHMV/YQL8 sections (commits ef5eb16…a649307; ops/report.py fight splitting too). Open items start at "From the route-review work".**
+**Batch C (step1-bugfix a649307, merged into v3 54d6d9e at 16:45) fixed every item listed below up to and including the X7LU/XTB4/2XWM/7XK6 and KY3Y/9Q7V/XMK1/PHMV/YQL8 sections (commits ef5eb16…a649307; ops/report.py fight splitting too). Open items start at "From the route-review work".**
 
 From post-mortems W2TB U6RU VBHZ ZY39 0H1X (2026-09-29 14:50):
 - Shop card options and shop_stock don't show energy cost (card rewards do, reward.ts:62) — U6RU F22 read PRODUCTION as 1-cost. shop.ts ~:117, :148-153 at HEAD.
