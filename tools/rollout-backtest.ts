@@ -25,15 +25,14 @@ import { join } from "node:path";
 import { createInterface } from "node:readline";
 
 import { loadConfig } from "../src/config.js";
-import { makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
+import { makeKnowledge } from "../src/knowledge/index.js";
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
 import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { deckModels, enemyTable, powersOf, type MonsterDbMove } from "../src/strategy/rollout-live.js";
+import { boardRolloutInput, deckModels, type MonsterMoves } from "../src/strategy/rollout-live.js";
 import { loadFightValueModel, type FightValueModel } from "../src/strategy/fight-value.js";
-import { loadFightValueGates, rolloutDecision, type FightValueGates, type EnemyTable, type FightMeta, type MoveModelData, type RolloutEnemy } from "../src/strategy/rollout.js";
+import { loadFightValueGates, rolloutDecision, type FightValueGates, type FightMeta, type MoveModelData } from "../src/strategy/rollout.js";
 import { solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
 
 function arg(name: string, fallback: string): string {
@@ -163,7 +162,6 @@ async function extract(): Promise<void> {
 // ---------------------------------------------------------------- run
 
 const asRecord = (v: unknown): Record<string, unknown> => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {});
-const asArray = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 
 function stepText(step: Step): string {
   return step.targetName ? `${step.name} -> ${step.targetName}` : step.name;
@@ -185,7 +183,7 @@ async function run(): Promise<void> {
   const config = loadConfig(process.env);
   const knowledge = makeKnowledge((JSON.parse(readFileSync(".cache/game-data.json", "utf8")) as { collections: never }).collections, "cache");
   const mm = JSON.parse(readFileSync("src/knowledge/move-model.json", "utf8")) as MoveModelData;
-  const db = (JSON.parse(readFileSync("src/knowledge/monster-db.json", "utf8")) as { monsters: Record<string, { moves?: Record<string, MonsterDbMove> }> }).monsters;
+  const db = (JSON.parse(readFileSync("src/knowledge/monster-db.json", "utf8")) as { monsters: MonsterMoves }).monsters;
   // --fold-dir (build-fight-value.py folds): each decision gets the model and gates that never saw its run.
   const foldDir = arg("fold-dir", "");
   const folds = foldDir ? (JSON.parse(readFileSync(join(foldDir, "folds.json"), "utf8")) as Record<string, number>) : null;
@@ -264,22 +262,10 @@ async function run(): Promise<void> {
     const playedName = guard ? `plan${guard[1]}` : /^plan\d+$/.test(choice) ? choice : /chose plan (\d+)\//.exec(item.decision.rationale ?? "")?.[1] ? `plan${/chose plan (\d+)\//.exec(item.decision.rationale)![1]}` : null;
     const played = offered.find((o) => o.name === playedName)?.plan ?? null;
 
-    // Rollout input.
-    const combat = asRecord(state.raw["combat"]);
-    const enemies: RolloutEnemy[] = asArray(combat["enemies"])
-      .map(asRecord)
-      .filter((e) => e["is_alive"] !== false)
-      .map((e, i) => {
-        const powers = powersOf(e);
-        return { index: typeof e["index"] === "number" ? (e["index"] as number) : i, id: String(e["enemy_id"] ?? ""), move: e["move_id"] ? String(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
-      });
-    const tables: Record<string, EnemyTable> = {};
-    for (const e of enemies) {
-      const t = enemyTable(e.id, item.row.asc, db, mm);
-      if (t) tables[e.id] = t;
-    }
+    // Rollout input: the board as the live facts build it (rollout-live boardRolloutInput: status cards, energy
+    // relics, on-death spawns and reviving illusions included; they were missing here).
+    const board = boardRolloutInput(state, knowledge, input, item.row.asc, db, mm);
     const deck = deckModels(state, knowledge);
-    const baseByKey = new Map(deck.map((c) => [cardKey(c), c]));
     const targets = input.enemies.filter((e) => e.hp > 0).map((e) => e.index);
     const pileCtx = { enemyTargets: targets, strength: 0, weak: false };
     const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
@@ -295,9 +281,7 @@ async function run(): Promise<void> {
       }
       draw = left;
     }
-    const handBase = input.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null));
-    const player = asRecord(combat["player"]);
-    const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
+    const { handBase, ...boardInput } = board;
     const meta: FightMeta = { act: item.row.act, t: item.row.t, asc: item.row.asc, kind: item.row.kind as FightMeta["kind"], enc: item.row.enc, deck: item.row.deck, relics: item.row.relics, max_en: item.row.max_en };
     const include = offered.map((o) => o.plan).filter((p): p is Plan => p !== null);
     const fold = folds?.[item.row.run];
@@ -307,14 +291,10 @@ async function run(): Promise<void> {
     let res;
     try {
       res = rolloutDecision({
-        solver: input,
+        ...boardInput,
         plans: result.plans,
-        enemies,
-        tables,
         piles: { draw, discard, handBase },
         meta,
-        playerPowers: powersOf(player),
-        potions,
         mm,
         model,
         gates,

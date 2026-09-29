@@ -69,7 +69,7 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -229,6 +229,9 @@ const POWER_AMOUNT_VARS: Record<string, string> = {
 
 const SPECIAL: Record<string, CardModel["special"]> = {
   DISMANTLE: "dismantle",
+  // Thrash: 「造成4点伤害两次。消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。」 (solver: an Attack from the
+  // hand, its damage on both hits; D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8 dealt 2 x 24 = 48).
+  THRASH: "thrash",
   BODY_SLAM: "body_slam",
   BULLY: "bully",
   // Entrench: doubles the block up when it is played (0 block: worth 0; RTF3 F17/F28).
@@ -521,7 +524,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   const hasModelledEffect =
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0;
+    // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
   if (type === "Power") {
@@ -595,11 +599,36 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
-    // Thrash: "消耗你的手牌中随机一张攻击牌" (MAHA F33 T7: played before Anger, which it ate; the boss
-    // was left at 1/321).
-    randomExhaust: /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
+    // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card
+    // (MAHA F33 T7: played before Anger, which it ate; the boss was left at 1/321).
+    randomExhaust: special !== "thrash" && /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
+}
+
+/**
+ * A card that is not in the hand (the draw and discard piles, a status an enemy move adds) as a hand card: the
+ * deck's own entry when there is one, else the game data's (its cost and vars: Slimed draws 1, Beckon costs 1;
+ * `cost`: the pile line's own, Frantic Escape's grows with each play), and playable by its text: only an
+ * Unplayable card (Dazed, Wound, Burn, Soot, Wither) or one with no cost is not. Beckon, Slimed, Toxic, Frantic
+ * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
+ * escaped the Insatiable's Sandpit nor cleared a Beckon).
+ */
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null): CardModel {
+  const info = knowledge.card(cardId);
+  const raw = own ?? {
+    card_id: cardId,
+    upgraded,
+    name: info?.name ?? cardId,
+    dynamic_values: info?.vars ?? [],
+    rules_text: info?.descriptionRaw ?? "",
+    resolved_rules_text: info?.description ?? "",
+    energy_cost: info?.cost ?? 0,
+    costs_x: info?.xCost ?? false,
+  };
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
+  return { ...model, playable: !unplayable && (model.xCost || model.cost >= 0) };
 }
 
 /**

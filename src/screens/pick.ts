@@ -215,6 +215,10 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
   const baseline = deepseek.baseline ?? buildPickDecision({ ...params, deepseek: undefined });
   const byKey = new Map(params.options.map((option) => [option.key, option]));
   const ranked = [...params.options].sort((a, b) => b.score - a.score);
+  // Options whose code_value reads the same share a rank (consistency R9: UBLVBA0D1QXD F1, two routes at 29.28
+  // were ranks 1 and 2, and DeepSeek takes rank 1 more often than not): 1 + the options valued higher.
+  const shownValue = (option: PickOption): number => Number(option.score.toFixed(2));
+  const rankOf = (option: PickOption): number => 1 + params.options.filter((other) => shownValue(other) > shownValue(option)).length;
   const criteria: Record<string, string | null> = {};
   for (const option of params.options) {
     const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
@@ -222,7 +226,7 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
     criteria[option.key] = JSON.stringify({
       ...summary,
       code_value: Number(option.score.toFixed(2)),
-      code_rank: ranked.indexOf(option) + 1,
+      code_rank: rankOf(option),
       ...(why ? { why } : {}),
       ...(option.facts ?? {}),
     });
@@ -260,7 +264,7 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
       const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
         intent: chosen.intent,
-        rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code value ${Number(chosen.score.toFixed(2))}, rank ${ranked.indexOf(chosen) + 1} of ${ranked.length})`,
+        rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code value ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length})`,
         confidence: answer && answer.type === "choice" ? answer.confidence : null,
         fallback: false,
         decider: "deepseek",

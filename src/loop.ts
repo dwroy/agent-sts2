@@ -14,7 +14,7 @@ import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
-import { fightKind } from "./screens/combat-plan.js";
+import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
@@ -529,6 +529,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           const replay = replayRun(logs, knowledge, { journal });
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
+          if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           const plan = replay.routePlan ? `; route plan (act ${replay.routePlan.act}, F${replay.routePlan.floor ?? "?"}) ${replay.routePlan.summary}` : "";
           onEvent({ type: "note", message: `run ${runId} in progress: rebuilt the run memory from its logs (${replay.counts.states} states, ${replay.counts.recorded} decisions, ${replay.counts.runPlans} run plans, ${journal.itemCount} items)${plan}` });
         } else {
@@ -546,6 +547,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     observedTs = new Date().toISOString();
     const observedFp = fingerprint(state);
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
+    // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
+    trackLizardTail(screenMemory, state);
     const env: DecisionEnv = {
       state,
       knowledge,

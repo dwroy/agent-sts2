@@ -66,6 +66,22 @@ function attackIntents(enemy: Record<string, unknown>): { damage: number; hits: 
  * Powers are shown as `Name 3 [debuff] (what it does)`. Names alone are not enough: Jev has no
  * reliable priors for a new game's buffs, and the effect is exactly the decision-relevant part.
  */
+/**
+ * One enemy power for the combat question (combat-plan.ts): its id and amount (the notes and rules key on the
+ * id), then its name, [debuff], and the game's description, as describePowers shows ours. The description's
+ * own numbers are the game data's defaults; the amount is the one on the board.
+ */
+export function enemyPowerText(power: Record<string, unknown>, knowledge: Knowledge): string {
+  const id = str(power["power_id"]);
+  const info = knowledge.power(id);
+  const amount = numOrNull(power["amount"]);
+  const name = str(power["name"], info?.name ?? "");
+  const debuff = bool(power["is_debuff"]) || info?.type === "Debuff";
+  const text = [name, debuff ? "[debuff]" : ""].filter(Boolean).join(" ");
+  const effect = info?.description ? truncate(info.description, 140) : "";
+  return `${id}${amount === null ? "" : ` ${amount}`}${text || effect ? ` = ${text}${text && effect ? ": " : ""}${effect}` : ""}`;
+}
+
 function describePowers(holder: Record<string, unknown>, knowledge: Knowledge): string[] {
   return asArray(holder["powers"])
     .map(asRecord)

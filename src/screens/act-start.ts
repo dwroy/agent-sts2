@@ -142,14 +142,16 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
     const parts = follow ? withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task)) : [planOnly(env, option, ref)];
     return parts.map((part) => withRoute(part, option, effect, later));
   });
-  const ranked = [...routes.routes].sort((a, b) => b.value - a.value);
+  // Routes whose code_value reads the same share a rank (consistency R9), as in the DeepSeek pick.
+  const shownValue = (value: number): number => Number(value.toFixed(2));
+  const rankOf = (route: (typeof routes.routes)[number]): number => 1 + routes.routes.filter((other) => shownValue(other.value) > shownValue(route.value)).length;
   const actRoutes: Record<string, JsonValue> = Object.fromEntries(
     routes.routes.map((route) => [
       route.key,
       {
         ...route.facts,
         code_value: Number(route.value.toFixed(2)),
-        code_rank: ranked.indexOf(route) + 1,
+        code_rank: rankOf(route),
         why: "sum of code's node weights along the path at the projected HP (elites valued by HP and act, rests by HP, shops by gold, fight chains penalised)",
         ...(effects.size > 0 ? { hp_at_boss_if_option: Object.fromEntries([...effects].map(([key, effect]) => [key, routes.hpAtBoss(route.key, effect.hp, effect.maxHp)])) } : {}),
       },

@@ -135,6 +135,17 @@ export interface EnemySim {
   stock?: number;
   /** Gets stronger every turn it lives (Buff intent, Ritual, Territorial, stacking Strength): kill it first. */
   scaling?: boolean;
+  /**
+   * Ravenous N (Corpse Slug, RAVENOUS_POWER: 「当有敌人死亡时，噬尸蛞蝓会立即吃下尸体，在本回合被击晕然后获得1点力量」,
+   * logged amount 4, 5 at A9): another enemy dying this turn stuns it (its attack this turn is cancelled) and
+   * gives it N Strength for the fight (182 logged fights; the line making the kill was under-valued).
+   */
+  ravenous?: number;
+  /**
+   * What it spawns when it dies (Phrog Parasite's INFESTED_POWER: 4 Wrigglers; Gremlin Merc's SURPRISE_POWER: a
+   * Fat and a Sneaky Gremlin), as shown to Jev: killing it is a kill, not the fight won.
+   */
+  spawnsOnDeath?: string;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -261,6 +272,44 @@ export interface PlayerSim {
    * Whirlwind fell 6 short; the 5th Hunter Killer loss, C2WY, MF7A, BDAK, WM2X).
    */
   tender?: number;
+  /**
+   * Revives held, in the order they trigger (reviveThrough): Fairy in a Bottle (「生命值将被减少至0或以下时 …
+   * 回复到你最大生命值的30%」, the potion is spent) and Lizard Tail (「回复到最大生命值的50%（仅能起效一次）」).
+   * A line whose losses reach 0 HP goes on at the revive's HP instead of dying (JR66CJ9T8H7W F48, YQL8D59999AX
+   * F31: "every line dies" played the most-HP line with a Fairy in the belt).
+   */
+  revives?: Revive[];
+  /**
+   * What Vulnerable multiplies our attacks by: 1.5, or 1.75 with Paper Phrog (「有易伤状态的敌人受到的伤害增加75%而非
+   * 50%」; held in 46 logged fights, coverage review #12).
+   */
+  vulnerableFactor?: number;
+}
+
+/** One revive held (PlayerSim.revives): what it is, its name as shown, the HP it brings us back to. */
+export interface Revive {
+  source: string;
+  name: string;
+  hp: number;
+}
+
+/**
+ * HP after a turn's losses taken in order (each already past block and Buffer), a revive catching each loss
+ * that would take us to 0 or below: HP set to the revive's (the overflow is lost), the later losses on it.
+ * Returns the HP left (<= 0: dead with every revive spent) and the revives used.
+ */
+export function reviveThrough(startHp: number, losses: number[], revives: Revive[]): { hp: number; used: Revive[] } {
+  let hp = startHp;
+  const used: Revive[] = [];
+  for (const loss of losses) {
+    if (loss === 0) continue;
+    hp -= loss;
+    if (hp <= 0 && used.length < revives.length) {
+      hp = revives[used.length]!.hp;
+      used.push(revives[used.length]!);
+    }
+  }
+  return { hp, used };
 }
 
 export interface SolverInput {
@@ -381,15 +430,27 @@ export interface Outcome {
   winsFight: boolean;
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
   explodesNext?: number;
-  /** HP the player loses to the enemy turn (plus self-damage this turn). */
+  /**
+   * HP the player loses to the enemy turn (plus self-damage this turn). A line saved by a revive counts all
+   * our HP as lost, then what the revive's HP loses after it (the revive's HP is not ours): it never reads
+   * cheaper than a line that lives without spending the revive. `hpAfter` is HP now less that (0 or below
+   * then); `revived.hp` is the HP we really end with.
+   */
   hpLoss: number;
   hpAfter: number;
   dies: boolean;
+  /**
+   * The revives this line spends (PlayerSim.revives): their names, their HP together, the HP we end the
+   * turn with, and our own-turn HP loss before the enemy turn (the rollout's end-of-turn snapshot).
+   */
+  revived?: { names: string[]; sources: string[]; reviveHp: number; hp: number; ownLoss: number };
   blockGained: number;
   damageDealt: number;
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
   restocked: string[];
+  /** Enemies killed that spawn others on death ("Phrog Parasite: 4 x Wriggler"): the fight goes on. */
+  spawns?: string[];
   /**
    * `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). What the line
    * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter), and the Strength
@@ -410,6 +471,8 @@ export interface Outcome {
     strengthGained?: number;
     /** Shrink turns left on it (Beetle Juice's 4: its attacks 30% less). */
     shrink?: number;
+    /** Stunned by the line (Ravenous eating a corpse): its move this enemy turn is lost. */
+    stunned?: boolean;
   }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -474,7 +537,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -794,7 +857,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     let amount = perHitBase;
     if (player.shrunk) amount = Math.floor(amount * 0.7);
     // Potion damage ignores Vulnerable (6X8F F25 T1: Fire Potion into a Vulnerable Entomancer did 20).
-    if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * 1.5);
+    if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * (player.vulnerableFactor ?? 1.5));
     // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
     if (enemy.slow) amount = Math.floor(amount * (1 + 0.1 * sim.played));
     if ((enemy.flutter ?? 0) > 0) {
@@ -860,6 +923,12 @@ export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   enemy.alive = false;
+  // Ravenous (Corpse Slug): a living one eats the corpse: stunned this turn, +N Strength for the fight.
+  for (const other of sim.enemies) {
+    if (other === enemy || !other.alive || (other.ravenous ?? 0) <= 0) continue;
+    other.ravenousStunned = true;
+    other.strengthDelta += other.ravenous ?? 0;
+  }
   // A hit that lands on every enemy at once kills both crabs together (no rage in between).
   if (sim.sweeping) sim.pendingRage = true;
   else crabRage(sim);
@@ -1193,7 +1262,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
       if (Math.floor(exact) === shown) shown = exact;
     }
-    let perHit = shown + next.strength * weakFactor;
+    let perHit = shown + next.strength * weakFactor + thrashAbsorb(next, card, player);
     let hits = card.hits;
     if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
@@ -1290,6 +1359,35 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.draws = [...next.draws];
     for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
   }
+}
+
+/**
+ * Thrash (「消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌」): an Attack in the hand is exhausted and its
+ * damage (printed base, our Strength is already in Thrash's own number) added to both of this play's hits
+ * (D4JGCNEL40VL F46 T3: Thrash 16 + Dismantle 8, 2 x 24 = 48 dealt; the solver counted 32 and took any card).
+ * One Attack: that one. Several: the pick is random, so the least damage is counted (never a kill the pick may
+ * not give, like randomVictim), the average Attack's value is lost, and no other Attack is planned after it
+ * (which one went is unknown; the loop re-plans on the new hand). Skills and Powers stay playable.
+ * Returns the damage added per hit.
+ */
+function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): number {
+  if (card.special !== "thrash") return 0;
+  const attacks = next.hand.filter((entry) => entry.type === "Attack");
+  if (attacks.length === 0) return 0;
+  const added = (entry: CardModel) => Math.max(0, entry.damageBase ?? entry.damage ?? 0);
+  const least = attacks.reduce((a, b) => (added(b) < added(a) ? b : a));
+  if (attacks.length === 1) {
+    next.hand = next.hand.filter((entry) => entry !== least);
+    next.exhausted = [...next.exhausted, least];
+  } else {
+    next.flat -= attacks.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / attacks.length;
+    next.randomExhausts += 1;
+    next.held = [...next.held, ...attacks];
+    next.hand = next.hand.filter((entry) => entry.type !== "Attack");
+  }
+  next.exhaustedCount += 1;
+  if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
+  return added(least) * (player.weak ? 0.75 : 1);
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
@@ -1405,6 +1503,8 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
     if (enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
+    // Ravenous: stunned by eating a corpse this turn, its move is lost.
+    if (enemy.ravenousStunned) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
@@ -1654,7 +1754,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
-  const nextPhase = restocked.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
+  // An enemy that spawns others on death (Phrog Parasite, Gremlin Merc): a kill, not a win.
+  const spawning = sim.enemies.filter((enemy) => !enemy.alive && enemy.spawnsOnDeath && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const nextPhase = restocked.length > 0 || spawning.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
   // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
   // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
   // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
@@ -1704,16 +1806,53 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   const cap = input.player.hpLossCap;
-  const hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
-  const hpAfter = input.player.hp - hpLoss;
+  let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
+  let hpAfter = input.player.hp - hpLoss;
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
   const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
   const gambitPlayed = sim.steps.some((step) => step.cardId === "THE_GAMBIT");
-  const dies =
-    hpAfter <= 0 ||
-    ((input.player.gambit === true || gambitPlayed) && incomingAfterBlock > 0) ||
-    (sandpitAfter !== null && sandpitAfter <= 0);
+  const otherDeath = ((input.player.gambit === true || gambitPlayed) && incomingAfterBlock > 0) || (sandpitAfter !== null && sandpitAfter <= 0);
+  // A revive held (Fairy in a Bottle, Lizard Tail): the turn's losses one by one, in the order they land (our
+  // own turn, held cards and Disintegration at its end, the enemy hits past block and Buffer, next turn's
+  // start), each one that would take us to 0 caught by the next revive. Its HP counts as lost (hpLoss).
+  let revived: Outcome["revived"];
+  const revives = input.player.revives ?? [];
+  if (hpAfter <= 0 && !otherDeath && revives.length > 0) {
+    const enemyTurn: number[] = [];
+    {
+      let pool = blockLeft;
+      let stacks = winsFight ? 0 : sim.buffer;
+      for (const amount of [heldPenalty, ...hits.map((hit) => hit.amount)]) {
+        if (amount <= 0) continue;
+        const absorbed = Math.min(pool, amount);
+        pool -= absorbed;
+        const rest = amount - absorbed;
+        if (rest <= 0) continue;
+        if (stacks > 0) {
+          stacks -= 1;
+          continue;
+        }
+        enemyTurn.push(rest);
+      }
+    }
+    const turnLosses = [selfLoss, heldHpLoss, Math.max(0, disintegration - blockAtEnd), ...enemyTurn];
+    // Beating Remnant: at most `cap` of this turn's losses land (next turn's start is apart, as above).
+    let room = cap !== null && cap !== undefined ? cap : Infinity;
+    const capped = turnLosses.map((loss) => {
+      const landed = Math.max(0, Math.min(loss, room));
+      room -= landed;
+      return landed;
+    });
+    const through = reviveThrough(input.player.hp, [...capped, startTurnLoss], revives);
+    if (through.hp > 0 && through.used.length > 0) {
+      const reviveHp = through.used.reduce((sum, revive) => sum + revive.hp, 0);
+      revived = { names: through.used.map((revive) => revive.name), sources: through.used.map((revive) => revive.source), reviveHp, hp: through.hp, ownLoss: Math.max(0, Math.min(input.player.hp - 1, selfLoss)) };
+      hpLoss = input.player.hp + reviveHp - through.hp;
+      hpAfter = input.player.hp - hpLoss;
+    }
+  }
+  const dies = (hpAfter <= 0 && revived === undefined) || otherDeath;
 
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
@@ -1953,10 +2092,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpLoss,
       hpAfter,
       dies,
+      ...(revived ? { revived } : {}),
       blockGained: sim.blockGained,
       damageDealt: sim.damageDealt,
       kills: kills.map((enemy) => enemy.name),
       restocked: restocked.map((enemy) => enemy.name),
+      ...(spawning.length > 0 ? { spawns: spawning.map((enemy) => `${enemy.name}: ${enemy.spawnsOnDeath}`) } : {}),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
         .map((enemy) => ({
@@ -1972,6 +2113,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           flutter: enemy.flutter ?? 0,
           strengthGained: enemy.strengthDelta,
           shrink: enemy.shrink ?? 0,
+          ...(enemy.ravenousStunned ? { stunned: true } : {}),
         })),
       incomingAfterBlock,
       energyLeft: sim.energy,
@@ -2002,7 +2144,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 
@@ -2241,7 +2383,8 @@ function vector(plan: Plan): number[] {
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
   // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
   // drinking one must never dominate the same line without it.
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  // A revive spent (Fairy in a Bottle, Lizard Tail) is its own axis: a line spending one never dominates a line that does not.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
