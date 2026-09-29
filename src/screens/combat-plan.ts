@@ -32,7 +32,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -638,12 +638,15 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
       ? "wins the fight this turn"
       : o.dies
         ? "I DIE at the end of the turn"
-        : (o.explodesNext ?? 0) > 0
-          ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
-          : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
+        : o.revived
+          ? `drops to 0 HP: ${o.revived.names.join(" then ")} brings me back, I end the turn at ${o.revived.hp}/${playerHp} HP and ${o.revived.names.length > 1 ? "they are" : "it is"} used up (hp_lost counts all my HP now as lost, then what the revived ${o.revived.reviveHp} HP lose)`
+          : (o.explodesNext ?? 0) > 0
+            ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
+            : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
     hp_lost: o.hpLoss,
     damage_dealt: o.damageDealt,
   };
+  if (o.revived) summary["revive_spent"] = o.revived.names.join(", ");
   if (o.kills.length > 0) summary["kills"] = o.kills.join(", ");
   if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
   if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.hp} HP${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}`).join("; ");
@@ -720,9 +723,11 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
   if (powers.length > 0) scaling.push(`plays power ${powers.join(", ")}`);
   if (o.lasting >= 1) scaling.push(`lasting value ${Math.round(o.lasting)}`);
+  // A line saved by a revive ends at the revive's HP (less what came after it).
+  const hpAfter = o.revived?.hp ?? o.hpAfter;
   return {
-    hp_after: o.hpAfter,
-    hp_after_pct: ctx.maxHp > 0 ? Math.round((o.hpAfter / ctx.maxHp) * 100) : null,
+    hp_after: hpAfter,
+    hp_after_pct: ctx.maxHp > 0 ? Math.round((hpAfter / ctx.maxHp) * 100) : null,
     dmg: o.damageDealt,
     lethal_now: o.winsFight
       ? "wins the fight"
@@ -1200,6 +1205,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
     exhaustedThisTurn,
+    // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
+    revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -2309,6 +2316,72 @@ export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: nu
     const shown = numOrNull(block["current_value"]) ?? own;
     return own > 0 && shown >= 2 * own - 1;
   });
+}
+
+/** Fairy in a Bottle: back at this share of max HP (「回复到你最大生命值的30%」), rounded down like the logged Lizard Tail. */
+export const FAIRY_REVIVE_SHARE = 0.3;
+/**
+ * Lizard Tail: back at this share of max HP (the text's {Heal}% is unfilled in the game data; logged triggers:
+ * 0NG27W8QBNYX F24 17 -> 35 of 71, PU21Z67J65NE F33 18 -> 44 of 89, V5S6QVVQYL37 F17 6 -> 39 of 80).
+ */
+export const LIZARD_TAIL_REVIVE_SHARE = 0.5;
+/** A Lizard Tail trigger read up to this much under its HP (a start-of-turn loss after it: V5S6 39 of 80). */
+const LIZARD_TAIL_SLACK = 5;
+
+function fairiesHeld(runRaw: Record<string, unknown>): Record<string, unknown>[] {
+  return asArray(runRaw["potions"]).map(asRecord).filter((slot) => bool(slot["occupied"]) && str(slot["potion_id"]) === "FAIRY_IN_A_BOTTLE");
+}
+
+/**
+ * The revives held, in the order they trigger (turn-solver PlayerSim.revives): every Fairy in a Bottle in the
+ * belt (the potion goes when it triggers; "Automatic", never drunk by us), then Lizard Tail unless it was seen
+ * to trigger this run (trackLizardTail). Fairy first, as in Slay the Spire (the potion before the relic).
+ */
+export function revivesOf(state: GameState, memory: DecisionEnv["screenMemory"], maxHp: number): Revive[] {
+  const runRaw = asRecord(state.run?.raw);
+  const fairies = fairiesHeld(runRaw).map((slot) => ({ source: "FAIRY_IN_A_BOTTLE", name: str(slot["name"], "Fairy in a Bottle"), hp: Math.max(1, Math.floor(maxHp * FAIRY_REVIVE_SHARE)) }));
+  const tail = asArray(runRaw["relics"]).map(asRecord).find((relic) => str(relic["relic_id"]) === "LIZARD_TAIL");
+  const spent = memory.lizardTail?.runId === str(state.raw["run_id"]) && memory.lizardTail.used;
+  return [...fairies, ...(tail && !spent ? [{ source: "LIZARD_TAIL", name: str(tail["name"], "Lizard Tail"), hp: Math.max(1, Math.floor(maxHp * LIZARD_TAIL_REVIVE_SHARE)) }] : [])];
+}
+
+/**
+ * Lizard Tail's one use this run, read from the states (called on every state the loop reads, and by the
+ * journal replay after a restart): a combat turn that began at its HP (50% of max, up to LIZARD_TAIL_SLACK
+ * under) right after a turn whose last state read lethal (the mod's end_turn_will_kill_player, or the
+ * intents past our block at least our HP), with no Fairy spent in between.
+ */
+export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: GameState): void {
+  const runId = str(state.raw["run_id"]);
+  if (!runId) return;
+  if (memory.lizardTail?.runId !== runId) memory.lizardTail = { runId, used: false };
+  const tail = memory.lizardTail;
+  if (tail.used) return;
+  const runRaw = asRecord(state.run?.raw);
+  const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
+  const held = asArray(runRaw["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "LIZARD_TAIL");
+  if (!held || !state.in_combat || numOrNull(player["current_hp"]) === null) {
+    tail.last = undefined;
+    return;
+  }
+  const hp = num(player["current_hp"]);
+  const revive = Math.floor(num(player["max_hp"]) * LIZARD_TAIL_REVIVE_SHARE);
+  const fight = fightKey(state);
+  const turn = state.turn ?? 0;
+  const fairies = fairiesHeld(runRaw).length;
+  const last = tail.last;
+  if (last && last.fight === fight && turn > last.turn && last.lethal && fairies >= last.fairies && hp > 0 && hp <= revive && hp >= revive - LIZARD_TAIL_SLACK) {
+    tail.used = true;
+    tail.last = undefined;
+    return;
+  }
+  const incoming = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
+  const lethal = bool(combat["end_turn_will_kill_player"]) || incoming - num(player["block"]) >= hp;
+  tail.last = { fight, turn, hp, lethal, fairies };
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */

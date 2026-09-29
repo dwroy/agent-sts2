@@ -379,6 +379,8 @@ export type LiveRollout =
       minRows: number;
       /** Modelled potions in the belt: the policy's later turns may drink them. */
       potionsHeld: boolean;
+      /** The revives held (Fairy in a Bottle, Lizard Tail) by name: a sample reaching 0 HP goes on at theirs. */
+      revives: string[];
       /** Kill-order permutations left out (more than MAX_FULL_ORDER_GROUPS groups). */
       ordersDropped: number;
       elapsedMs: number;
@@ -523,7 +525,8 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
-    const picked = pickRolloutBest(eligible, args.solver.player.hp);
+    // A revive's HP counts as lost when spent: a line that spends it can lose more than the HP we have now.
+    const picked = pickRolloutBest(eligible, args.solver.player.hp + (args.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0));
     const ties = rolloutTies(picked, eligible, args.shown);
     return {
       available: true,
@@ -537,6 +540,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
       potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
+      revives: (args.solver.player.revives ?? []).map((revive) => revive.name),
       ordersDropped: args.ordersDropped ?? 0,
       elapsedMs: elapsed(),
     };
@@ -565,7 +569,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order) {
@@ -615,7 +619,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
  */
 export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
   const o = plan.outcome;
-  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : ""}`;
+  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
   const later = line.perTurn.map((t) =>
     t.fighting === 0
       ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`

@@ -47,7 +47,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -557,6 +557,8 @@ export interface LineEstimate {
   wins: number;
   /** Samples in which a time limit ended the fight unwon (the Battleworn Dummy); absent when none. */
   timeUps?: number;
+  /** Samples that spent a revive (Fairy in a Bottle, Lizard Tail) within the horizon; absent when none. */
+  revived?: number;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -861,6 +863,8 @@ interface SimPlayer {
   /** Mind Rot: cards fewer drawn each turn; Waste Away: energy fewer each turn. */
   mindRot: number;
   wasteAway: number;
+  /** Revives still held (Fairy in a Bottle, Lizard Tail), in trigger order: a spent one is gone for the sample. */
+  revives: Revive[];
 }
 
 /** The enemy a Rampart gives its block to (RAMPART_POWER: 「高塔炮手获得25点格挡」). */
@@ -899,6 +903,8 @@ export interface TurnRecord {
   died: boolean;
   /** A time limit ended the fight at this turn's end without a win (the Battleworn Dummy's 3 turns). */
   timeUp?: boolean;
+  /** Revives this turn spent (its `loss` is all the HP we had, then what their HP lost: the solver's hpLoss). */
+  revived?: number;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1127,7 +1133,8 @@ function applyPlan(
 ): TurnRecord {
   const o = plan.outcome;
   const startHp = player.hp;
-  const ownLoss = Math.max(0, o.hpLoss - o.incomingAfterBlock);
+  // A line saved by a revive: its hpLoss counts the revive's HP; our own turn's loss is apart.
+  const ownLoss = o.revived ? o.revived.ownLoss : Math.max(0, o.hpLoss - o.incomingAfterBlock);
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
@@ -1247,7 +1254,14 @@ function applyPlan(
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
-  player.hp = o.hpAfter;
+  // A revive the line spent (Fairy in a Bottle, Lizard Tail): we go on at its HP, and it is gone for the sample
+  // (a Fairy leaves the belt).
+  player.hp = o.revived?.hp ?? o.hpAfter;
+  if (o.revived) {
+    const spent = o.revived.sources.length;
+    player.potions = Math.max(0, player.potions - player.revives.slice(0, spent).filter((revive) => revive.source === "FAIRY_IN_A_BOTTLE").length);
+    player.revives = player.revives.slice(spent);
+  }
   // Barricade keeps block every turn; Blur N only at the start of the next N turns.
   player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
@@ -1377,7 +1391,7 @@ function applyPlan(
     player.startDealt = startOfTurn(turn, player, enemies, input);
     won = allDown();
   }
-  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died };
+  return { loss: startHp - player.hp + (o.revived?.reviveHp ?? 0), enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died, ...(o.revived ? { revived: o.revived.sources.length } : {}) };
 }
 
 /** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
@@ -1478,6 +1492,7 @@ function simulate(
     regen: base.regen ?? input.playerPowers["REGEN_POWER"] ?? 0,
     ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
     clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
+    revives: base.revives ?? [],
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
@@ -1621,6 +1636,7 @@ function simulate(
       noBlock: false,
       tender: player.tender,
       maxSkills: player.smoggy ? 1 : null,
+      revives: player.revives,
       // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
       // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
       // while its Strangler lives.
@@ -1687,13 +1703,16 @@ function enemyHpOf(record: TurnRecord): number {
   return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
 }
 
-/** A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after. */
-function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, startHp: number): SampleValue & { n: number } {
+/**
+ * A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after.
+ * `lossCap`: the most a sample can lose, our HP plus the revives held (their HP counts as lost when spent).
+ */
+function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number): SampleValue & { n: number } {
   let loss = 0;
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    if (r.died) return { loss: startHp, win: 0, turns: i + 1, died: true, lossModel: startHp, winModel: 0, n: 0 };
+    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0 };
     if (r.won) {
       loss += r.loss;
       return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
@@ -1710,12 +1729,12 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   const term = terminal(ctx, last.snap, t0 + upto - 1);
   const base = loss + Math.max(0, own);
   return {
-    // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP).
-    loss: Math.min(startHp, base + term.gated.hpLoss),
+    // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP), revives included.
+    loss: Math.min(lossCap, base + term.gated.hpLoss),
     win: term.gated.winProb,
     turns: upto + term.gated.turns,
     died: false,
-    lossModel: term.model ? Math.min(startHp, base + term.model.hpLoss) : null,
+    lossModel: term.model ? Math.min(lossCap, base + term.model.hpLoss) : null,
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
   };
@@ -1872,14 +1891,16 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const ctxModel: TerminalContext = { ...ctx, w: 1 };
   const t0 = input.meta.t;
   const startHp = input.solver.player.hp;
+  // What a sample can lose at most: our HP, and the HP of the revives held (counted as lost when spent).
+  const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
   const hpWeight = solverHpWeight(startHp, input.solver.player.maxHp);
   const degraded: string[] = [];
 
   // (ii) one turn: the line's own outcome + terminal of its end-of-turn state (no simulation of later turns).
   const one = candidates.map(({ plan }) => {
     const records = simulate(input, plan, 1, seed, budget)!;
-    const v = valueAt(records, 1, ctx, t0, startHp);
-    const vm = valueAt(records, 1, ctxModel, t0, startHp);
+    const v = valueAt(records, 1, ctx, t0, lossCap);
+    const vm = valueAt(records, 1, ctxModel, t0, lossCap);
     const modelValue = vm.lossModel === null ? null : -vm.lossModel - DEATH_HP * (1 - (vm.winModel ?? 0));
     const current = plan.score / hpWeight;
     return {
@@ -1972,6 +1993,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
     const timeUps = kept.filter((records) => records.slice(0, horizon).some((r) => r.timeUp)).length;
+    const revived = kept.filter((records) => records.slice(0, horizon).some((r) => (r.revived ?? 0) > 0)).length;
     const leaderIndices = order?.leader?.indices;
     const leaderLeft = leaderIndices
       ? kept.map((records) => {
@@ -1984,8 +2006,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         })
       : null;
     const leader = leaderLeft ? { hpLeft: mean(leaderLeft), dead: leaderLeft.filter((hp) => hp <= 0).length } : null;
-    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
-    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
+    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, lossCap));
+    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, lossCap));
     const loss = mean(vals.map((v) => v.loss));
     const win = mean(vals.map((v) => v.win));
     // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
@@ -2010,6 +2032,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       leader,
       enemyHpLeft,
       turnsSurvived,
+      revived,
     };
   };
 
@@ -2031,6 +2054,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       const wins = plan.outcome.winsFight ? 1 : 0;
       return {
         ...common,
+        ...(plan.outcome.revived ? { revived: 1 } : {}),
         order: null,
         orders: [],
         hpLoss: o.hpLoss,
@@ -2069,6 +2093,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       winProb: best.winProb,
       wins: best.wins,
       ...(best.timeUps > 0 ? { timeUps: best.timeUps } : {}),
+      ...(best.revived > 0 ? { revived: best.revived } : {}),
       value: best.value,
       valueModelTerminal: best.valueModelTerminal,
       modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: best.modelForecast },

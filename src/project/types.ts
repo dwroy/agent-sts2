@@ -116,6 +116,12 @@ export interface ScreenMemory {
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
   demonTongueTurn?: string;
   /**
+   * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
+   * no used mark (logged `stack` null, `is_melted` false before and after). `last` is the last combat state
+   * read while it is held (combat-plan trackLizardTail). Kept across the run; rebuilt by the journal replay.
+   */
+  lizardTail?: { runId: string; used: boolean; last?: { fight: string; turn: number; hp: number; lethal: boolean; fairies: number } };
+  /**
    * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
    * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a
    * re-plan replaces it). Survives in-combat screen changes; cleared out of combat.

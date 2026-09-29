@@ -261,6 +261,39 @@ export interface PlayerSim {
    * Whirlwind fell 6 short; the 5th Hunter Killer loss, C2WY, MF7A, BDAK, WM2X).
    */
   tender?: number;
+  /**
+   * Revives held, in the order they trigger (reviveThrough): Fairy in a Bottle (「生命值将被减少至0或以下时 …
+   * 回复到你最大生命值的30%」, the potion is spent) and Lizard Tail (「回复到最大生命值的50%（仅能起效一次）」).
+   * A line whose losses reach 0 HP goes on at the revive's HP instead of dying (JR66CJ9T8H7W F48, YQL8D59999AX
+   * F31: "every line dies" played the most-HP line with a Fairy in the belt).
+   */
+  revives?: Revive[];
+}
+
+/** One revive held (PlayerSim.revives): what it is, its name as shown, the HP it brings us back to. */
+export interface Revive {
+  source: string;
+  name: string;
+  hp: number;
+}
+
+/**
+ * HP after a turn's losses taken in order (each already past block and Buffer), a revive catching each loss
+ * that would take us to 0 or below: HP set to the revive's (the overflow is lost), the later losses on it.
+ * Returns the HP left (<= 0: dead with every revive spent) and the revives used.
+ */
+export function reviveThrough(startHp: number, losses: number[], revives: Revive[]): { hp: number; used: Revive[] } {
+  let hp = startHp;
+  const used: Revive[] = [];
+  for (const loss of losses) {
+    if (loss === 0) continue;
+    hp -= loss;
+    if (hp <= 0 && used.length < revives.length) {
+      hp = revives[used.length]!.hp;
+      used.push(revives[used.length]!);
+    }
+  }
+  return { hp, used };
 }
 
 export interface SolverInput {
@@ -381,10 +414,20 @@ export interface Outcome {
   winsFight: boolean;
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
   explodesNext?: number;
-  /** HP the player loses to the enemy turn (plus self-damage this turn). */
+  /**
+   * HP the player loses to the enemy turn (plus self-damage this turn). A line saved by a revive counts all
+   * our HP as lost, then what the revive's HP loses after it (the revive's HP is not ours): it never reads
+   * cheaper than a line that lives without spending the revive. `hpAfter` is HP now less that (0 or below
+   * then); `revived.hp` is the HP we really end with.
+   */
   hpLoss: number;
   hpAfter: number;
   dies: boolean;
+  /**
+   * The revives this line spends (PlayerSim.revives): their names, their HP together, the HP we end the
+   * turn with, and our own-turn HP loss before the enemy turn (the rollout's end-of-turn snapshot).
+   */
+  revived?: { names: string[]; sources: string[]; reviveHp: number; hp: number; ownLoss: number };
   blockGained: number;
   damageDealt: number;
   kills: string[];
@@ -1704,16 +1747,53 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   const cap = input.player.hpLossCap;
-  const hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
-  const hpAfter = input.player.hp - hpLoss;
+  let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
+  let hpAfter = input.player.hp - hpLoss;
   // Sandpit (TTVY T6: 33 HP and 20 block, Frantic Escape left in hand, eaten at count 0).
   const sandpits = sim.enemies.filter((enemy) => enemy.alive && (enemy.sandpit ?? 0) > 0).map((enemy) => enemy.sandpit!);
   const sandpitAfter = winsFight || sandpits.length === 0 ? null : Math.min(...sandpits) + sim.escapes - 1;
   const gambitPlayed = sim.steps.some((step) => step.cardId === "THE_GAMBIT");
-  const dies =
-    hpAfter <= 0 ||
-    ((input.player.gambit === true || gambitPlayed) && incomingAfterBlock > 0) ||
-    (sandpitAfter !== null && sandpitAfter <= 0);
+  const otherDeath = ((input.player.gambit === true || gambitPlayed) && incomingAfterBlock > 0) || (sandpitAfter !== null && sandpitAfter <= 0);
+  // A revive held (Fairy in a Bottle, Lizard Tail): the turn's losses one by one, in the order they land (our
+  // own turn, held cards and Disintegration at its end, the enemy hits past block and Buffer, next turn's
+  // start), each one that would take us to 0 caught by the next revive. Its HP counts as lost (hpLoss).
+  let revived: Outcome["revived"];
+  const revives = input.player.revives ?? [];
+  if (hpAfter <= 0 && !otherDeath && revives.length > 0) {
+    const enemyTurn: number[] = [];
+    {
+      let pool = blockLeft;
+      let stacks = winsFight ? 0 : sim.buffer;
+      for (const amount of [heldPenalty, ...hits.map((hit) => hit.amount)]) {
+        if (amount <= 0) continue;
+        const absorbed = Math.min(pool, amount);
+        pool -= absorbed;
+        const rest = amount - absorbed;
+        if (rest <= 0) continue;
+        if (stacks > 0) {
+          stacks -= 1;
+          continue;
+        }
+        enemyTurn.push(rest);
+      }
+    }
+    const turnLosses = [selfLoss, heldHpLoss, Math.max(0, disintegration - blockAtEnd), ...enemyTurn];
+    // Beating Remnant: at most `cap` of this turn's losses land (next turn's start is apart, as above).
+    let room = cap !== null && cap !== undefined ? cap : Infinity;
+    const capped = turnLosses.map((loss) => {
+      const landed = Math.max(0, Math.min(loss, room));
+      room -= landed;
+      return landed;
+    });
+    const through = reviveThrough(input.player.hp, [...capped, startTurnLoss], revives);
+    if (through.hp > 0 && through.used.length > 0) {
+      const reviveHp = through.used.reduce((sum, revive) => sum + revive.hp, 0);
+      revived = { names: through.used.map((revive) => revive.name), sources: through.used.map((revive) => revive.source), reviveHp, hp: through.hp, ownLoss: Math.max(0, Math.min(input.player.hp - 1, selfLoss)) };
+      hpLoss = input.player.hp + reviveHp - through.hp;
+      hpAfter = input.player.hp - hpLoss;
+    }
+  }
+  const dies = (hpAfter <= 0 && revived === undefined) || otherDeath;
 
   // Reattaching segments (Decimillipede) come back unless every one of them dies (0NG F29: a 5 HP
   // tail "kill" won a +40 plan, and the tail reattached at 25 HP).
@@ -1953,6 +2033,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpLoss,
       hpAfter,
       dies,
+      ...(revived ? { revived } : {}),
       blockGained: sim.blockGained,
       damageDealt: sim.damageDealt,
       kills: kills.map((enemy) => enemy.name),
@@ -2241,7 +2322,8 @@ function vector(plan: Plan): number[] {
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
   // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
   // drinking one must never dominate the same line without it.
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0];
+  // A revive spent (Fairy in a Bottle, Lizard Tail) is its own axis: a line spending one never dominates a line that does not.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
