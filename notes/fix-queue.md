@@ -137,14 +137,20 @@ From experience update 2026-09-29.6 (2026-09-29 20:51; line numbers at v3 2f72f9
 - Experience text vs code (potion entries, wait for Dai's potion-entry decision): potion-code-discard (Little Mailbox part outdated since 0c71951; White Beast Statue still true), potion-fysh-oil (full-belt discard, unverified after G), potion-swift ("valued 0", outdated).
 
 From fix batch H (2026-09-29 21:30; line numbers at v3 389bdb7), not fixed:
-- combat-plan.ts:~1478 if a combat frame is logged after Liquid Memories and before the selection screen, the next step's generated card isn't in hand → line re-planned (old; not seen in 8KD7).
-- Giant kill-turn record still hard-coded in ironclad-guide.md:55, :120, ds-handbook.md:71 ("A8 27 … A9 10 won 3") — use a placeholder like {GIANT_BLOCK_RECORD} (7819a1a); batch-f tests read the old text.
-- "solver says dead, mod says safe" with the gap from blockable hand damage (Burn) still labelled calc mismatch.
-- rest.ts:158, event.ts:261 duplicate the discard note text (use DISCARD_ANSWER_NOTE). Cosmetic.
+- ~~combat-plan.ts:~1478 if a combat frame is logged after Liquid Memories and before the selection screen, the next step's generated card isn't in hand → line re-planned (old; not seen in 8KD7).~~ fixed 529cbc2 (wait up to 4 s) (batch I, v3 3899c2a)
+- ~~Giant kill-turn record still hard-coded in ironclad-guide.md:55, :120, ds-handbook.md:71 ("A8 27 … A9 10 won 3") — use a placeholder like {GIANT_BLOCK_RECORD} (7819a1a); batch-f tests read the old text.~~ fixed fe82439 ({GIANT_KILLS_A8}/{GIANT_KILLS_A9}) (batch I, v3 3899c2a)
+- ~~"solver says dead, mod says safe" with the gap from blockable hand damage (Burn) still labelled calc mismatch.~~ fixed 4cb8b8b (heldDamage) (batch I, v3 3899c2a)
+- ~~rest.ts:158, event.ts:261 duplicate the discard note text (use DISCARD_ANSWER_NOTE). Cosmetic.~~ fixed 3901494 (batch I, v3 3899c2a)
 - Experience entry potion-code-discard ("White Beast Statue still discards by code") now outdated → next experience update (potion entry; numbers/facts only).
 
 From post-mortems 7YT0 9CDE VTRE V6TW (2026-09-29 21:31; line numbers at v3 389bdb7):
-- Liquid Bronze potion unmodelled: not in card-model.ts:702-815 POTION_EFFECTS (only a value in potion-values.ts:33), so combat questions show it as "effect not simulated" (combat-plan.ts:2006). VTRE: listed in 37 Jev questions F19–F33, never picked, still held at death; V6TW: 29 questions, drunk only at F33 T4 when every line died.
-- Red Skull and Self-Forming Clay not in the solver/rollout (only text in run-brief.ts:106/:110). VTRE F33 T6 Strength 2→5 at 33/80; V6TW F33 T2/T3 6 Clay block each turn.
-- Plating card text shown to DeepSeek/Jev has no decay ("获得4层覆甲"): 7YT0 F12 took Stone Armor for "48 block over 12 turns" (real ~10, Plating −1/turn), QBCV F16 the same. Add the decay fact to the card text/facts.
-- shop.ts:330 one-shot shop plan judged invalid when DeepSeek puts the list into `choice` (VTRE F6) → step-by-step fallback cost 150.8 s. Accept/recover the list from `choice`.
+- ~~Liquid Bronze potion unmodelled: not in card-model.ts:702-815 POTION_EFFECTS (only a value in potion-values.ts:33), so combat questions show it as "effect not simulated" (combat-plan.ts:2006). VTRE: listed in 37 Jev questions F19–F33, never picked, still held at death; V6TW: 29 questions, drunk only at F33 T4 when every line died.~~ fixed 1966f0a (Thorns +3 per drink, whole fight; retaliation now reduces enemy HP in the rollout) (batch I, v3 3899c2a)
+- ~~Red Skull and Self-Forming Clay not in the solver/rollout (only text in run-brief.ts:106/:110). VTRE F33 T6 Strength 2→5 at 33/80; V6TW F33 T2/T3 6 Clay block each turn.~~ fixed 246d2be (Red Skull +3 Str at ≤50%; Clay +3 block next turn per HP loss) (batch I, v3 3899c2a)
+- ~~Plating card text shown to DeepSeek/Jev has no decay ("获得4层覆甲"): 7YT0 F12 took Stone Armor for "48 block over 12 turns" (real ~10, Plating −1/turn), QBCV F16 the same. Add the decay fact to the card text/facts.~~ fixed d7dab83, cff33ba (fact only) (batch I, v3 3899c2a)
+- ~~shop.ts:330 one-shot shop plan judged invalid when DeepSeek puts the list into `choice` (VTRE F6) → step-by-step fallback cost 150.8 s. Accept/recover the list from `choice`.~~ fixed 1fdbb97 (batch I, v3 3899c2a)
+
+From fix batch I (2026-09-29 22:07; line numbers at v3 3899c2a), not fixed:
+- Unmodelled potions seen in the logs: STABLE_SERUM (66 questions show "effect not simulated"), ENTROPIC_BREW. Also card-model.ts:1014 modelPotion returns null for Distilled Chaos / Glowwater / Gambler's Brew / Bottled Potential when the draw pile is unknown (Chaos potion "not simulated" 22×) — model with an expected draw.
+- rollout.ts:1417 / turn-solver.ts:2138 retaliation (Thorns, Flame Barrier) ignores Slippery (1 per hit) and Hardened Shell's cap → overcounted on those enemies.
+- turn-solver.ts:1996 Clay ignores start-of-turn HP loss (Crimson Mantle, Inferno 1) → block a turn late. Minor.
+- tests/logged.ts game-data.json is a subset, so code_value of logged boards differs from the logged value (7YT0 F12 Stone Armor 71 logged vs 65) — tests can't assert code_value.
