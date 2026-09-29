@@ -556,9 +556,9 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // raises: KFP1 T3 and 2WUM F33 T3 drank it with no block card left to play, 0 gained that turn.
   DEXTERITY_POTION: { target: "self", special: "dexterity" },
   // Heart of Iron: Plating 7 (states.jsonl, 20 drinks from 3MDJ to Z7D7: PLATING_POWER 7 each time,
-  // not Metallicize): block at the end of this turn (turn-solver platingNow) and one less each later turn
-  // (lasting value at Stone Armor's rate, PLATING_LASTING). Unmodelled, KGR6 carried it from F8 to the
-  // F27 event that took it, through two 1-3 HP turns.
+  // not Metallicize): block at the end of this turn (turn-solver platingNow) and one less each later turn,
+  // valued by what it can absorb of the later turns' forecast attacks (turn-solver platingAbsorbed).
+  // Unmodelled, KGR6 carried it from F8 to the F27 event that took it, through two 1-3 HP turns.
   HEART_OF_IRON: { target: "self", plating: 7, special: "plating" },
   // Snecko Oil: 「抽{Cards}张牌。在本回合随机化你手牌中所有牌的耗能」. Drawn 7 up to the 10-card hand (24DP
   // 2 -> 9, 24HM 3 -> 10; 5 -> 10 elsewhere), costs 0-3 at random (states.jsonl): the hand's costs at their

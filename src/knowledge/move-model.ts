@@ -57,6 +57,43 @@ export function expectedNextDamage(enemyId: string, currentMove: string): number
   return count > 0 ? total / count : null;
 }
 
+/**
+ * Expected attack damage of this enemy on each of the next `turns` enemy turns after the current one
+ * (index 0 = next turn), walking the learned move chain from its current move. A move with no learned
+ * successor is repeated. `sleepTurns`: the enemy is asleep (ASLEEP_POWER N skips N enemy turns, this
+ * one included), so the next N - 1 turns are 0 and it wakes into the current move's other successors.
+ * null when the enemy has no learned moves.
+ */
+export function damageForecast(enemyId: string, currentMove: string, turns: number, sleepTurns = 0): number[] | null {
+  const entry = load()[enemyId];
+  if (!entry || turns <= 0) return null;
+  const step = (dist: Map<string, number>, skipSelf = false): Map<string, number> => {
+    const out = new Map<string, number>();
+    for (const [move, p] of dist) {
+      const successors = Object.entries(entry.next[move] ?? {}).filter(([next]) => !skipSelf || next !== move);
+      const total = successors.reduce((sum, [, n]) => sum + n, 0);
+      if (total <= 0) {
+        out.set(move, (out.get(move) ?? 0) + p);
+        continue;
+      }
+      for (const [next, n] of successors) out.set(next, (out.get(next) ?? 0) + (p * n) / total);
+    }
+    return out;
+  };
+  const expected = (dist: Map<string, number>) => [...dist].reduce((sum, [move, p]) => sum + p * (entry.damage[move] ?? 0), 0);
+  const out: number[] = [];
+  let dist = new Map([[currentMove, 1]]);
+  for (let k = 1; k <= turns; k += 1) {
+    if (k < sleepTurns) {
+      out.push(0);
+      continue;
+    }
+    dist = step(dist, sleepTurns > 0 && k === sleepTurns);
+    out.push(expected(dist));
+  }
+  return out;
+}
+
 /** The enemy's move cycle has a Buff move: it ramps while it lives (6A36: Sludge Spinner, +3 Strength per Rage). */
 export function hasBuffMove(enemyId: string): boolean {
   return (load()[enemyId]?.buffs ?? []).length > 0;

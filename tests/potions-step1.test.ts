@@ -12,10 +12,10 @@ import { describe, expect, it } from "vitest";
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { potionViews } from "../src/project/narrow.js";
-import { drawablePileSize, enemySims, pileCardModels } from "../src/screens/combat-plan.js";
+import { drawablePileSize, enemySims, laterIncomingOf, pileCardModels } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import { expectedDraw, modelHandCard, modelPotion, pileCardPick, type CardModel } from "../src/strategy/card-model.js";
-import { solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { platingAbsorbed, solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -73,6 +73,28 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
     const plans = solveTurn(withPotions(logged("kgr6-f23-t4"))).plans;
     expect(endTurn(plans).outcome.hpLoss - only(plans, "POTION:HEART_OF_IRON")!.outcome.hpLoss).toBe(7);
     expect(only(plans, "POTION:HEART_OF_IRON")!.outcome.lasting).toBeGreaterThan(0);
+  });
+
+  it("Heart of Iron's later Plating is worth what it can absorb of the forecast attacks (BXAZ F17 T1: Matriarch asleep 3)", () => {
+    // Old: a flat 3.5 a stack (24.5, x1.8 in a boss fight) whatever was coming; 19 of its 28 block fell on
+    // turns with nothing coming. Plating 7 later gives 6, 5, 4, 3, 2, 1 block.
+    const input = withPotions(logged("bxaz-f17-t1-heart-of-iron"));
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [0, 0, 20, 20, 13, 0] })).toBe(4 + 3 + 2);
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [15] })).toBe(6 + 5 + 4 + 3 + 2 + 1);
+    // Small hits cap it: 2 a turn absorbs at most 2.
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [2] })).toBe(2 * 5 + 1);
+    // Over Plating already up, only the extra block counts (4 up: turns 1-3 already have 3, 2, 1).
+    expect(platingAbsorbed(7, { ...input, player: { ...input.player, endTurnBlock: 4 }, laterIncoming: [8] })).toBe((8 - 3) + (8 - 2) + (8 - 1) + 7 + 6 + 5 + 4 + 3 + 2 + 1 - 0);
+    // The logged board: the sleeper's forecast is 0 for its two more sleep turns, then its attacks.
+    const later = laterIncomingOf(combatOf(logged("bxaz-f17-t1-heart-of-iron")))!;
+    expect(later.slice(0, 2)).toEqual([0, 0]);
+    expect(later[2]).toBeGreaterThan(10);
+    const iron = solveTurn({ ...input, laterIncoming: later }).plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:HEART_OF_IRON")))!;
+    expect(iron.outcome.lasting).toBeGreaterThan(0);
+    expect(iron.outcome.lasting).toBeLessThanOrEqual(4 + 3 + 2 + 1);
+    // Awake and hitting 20 every turn, the same drink is worth the whole later Plating.
+    const awake = solveTurn({ ...input, laterIncoming: [20] }).plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:HEART_OF_IRON")))!;
+    expect(awake.outcome.lasting).toBeGreaterThan(iron.outcome.lasting * 2);
   });
 
   it("Mazaleth's Gift (Ritual 1) is lasting value only (KGR6 F23 T4)", () => {

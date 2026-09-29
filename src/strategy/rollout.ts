@@ -1166,7 +1166,7 @@ function simulate(
     // Radiance: this turn's extra energy is in pSim; one turn of it used.
     player.radiance = Math.max(0, player.radiance - 1);
     const started = budget.now();
-    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, ...rest } = s;
+    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
     // A kill order: this turn's target is the first of its groups with a member alive (the lowest-HP
     // member of it); none left, or none given, and the solver's own score picks.
