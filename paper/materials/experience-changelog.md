@@ -1215,3 +1215,195 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
 - 最终：每种界面的中位涨 0.02–0.15k，单个切片最多涨 0.38k（地图），最大 6.7k（R2H1 A8 F19 二幕卡牌奖励，25 条经验 + 4 行统计，改前 6.6k）。
 - 条目数：active 198（测试上限 200）；置信度 高 129、中 58、低 11。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目。
+
+
+## 知识库核对（2026-09-29 夜；exp-update 3ad8b75，合入 v3 1895a6c）
+
+Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-handbook.md、Jev 提示 jev-hints.json、card-value.ts 的 TIER 表和角色分类、boss 笔记（run-journal.ts BOSS_NOTES、boss-clock.ts 的 note/mechanic）和经验库一样都是知识库，只分新旧：和复盘/日志数据冲突的改成数据版本（写明进阶和 n），数据说明无效的删掉，没有数据覆盖的先保留。
+
+### 做法：计数从数据算，不再手写
+照 22109ed、7819a1a、fe82439 的做法，写占位符，由代码从数据填。攻略和手册在 DeepSeek 建系统提示时填一次（fillGuideFacts），Jev 提示在 hintText 里填，boss 笔记在 bossNote 里填。
+- tools/build-boss-damage.py 新增三项：
+  - 每个 boss 按进阶的 by_asc：场数、赢、赢局/输局平均进场 HP%；
+  - KAISER_CRAB.first_death：哪只钳子先死（另一只还活着时），或者都没有先死；
+  - LAGAVULIN_MATRIARCH.sleep：醒的回合、醒时已掉的血量比例、牌组里的持续力量牌（与 card-value damageRole 的 scaling 集合一致）。
+- tools/build-room-costs.py 新增 UnknownFight：开出战斗的问号，从 decisions.jsonl 的 COMBAT 决策判断。Monster、Elite、UnknownFight 另外带 fight_median/fight_p75：战内掉血，从第一条到最后一条战斗决策的 HP 差；死在这一层的按进场 HP 全掉算。原有字段不变。
+- 新占位符：
+  - 中文（攻略、手册、boss 笔记）：{CRAB_KILL_ORDER}、{LAG_SLEEP}、{BEAST_STUN}（monster DB 的 PLOW_POWER）、{LASER_T4}（激光基础伤害加蓄力给的力量）、{ACT1_ENTRY_HP}、{UNKNOWN_FIGHTS}、{BOSS_RECORD:ID}、{CARD_OUTCOME:ID}（outcome-stats）、{@N:KIND:ID:…}（进阶 N 的 DB 数字）；
+  - 英文（Jev 提示）：{CRAB_KILLS_EN}、{LAG_NO_STRENGTH_EN}。
+- 合入时 v3 的「Refresh knowledge data」(9f69cac) 和 exp-update 都改了 boss-damage.json、room-costs.json。冲突的只有这两个生成文件，在锁里用合入后的新 builder 从日志重建后提交。
+
+### 攻略 ironclad-guide.md（行号按 exp-update 3ad8b75）
+- :51、:91、:93 仪式兽击晕线
+  - 旧：写死「约 150」「150 以下」。
+  - 新：{BEAST_STUN}，填出来是「A0–A8 150、A9 160」。数据：monster DB PLOW_POWER，A8 22 场、A9 5 场。
+  - :93「前期全力把它打到 150 以下」改成：为提前一回合击晕多掉的血别超过约 10（经验 beast-ringing-block）。
+- :57 帝皇蟹击杀顺序
+  - 旧：「51 场…先打死火箭的 12 场赢 9，两只一直都活着的 39 场只赢 8」。
+  - 新：{CRAB_KILL_ORDER}。现在填出来是：57 场里火箭先死 12 场赢 9，碾碎爪先死 7 场赢 3，都没有先死（同回合一起死或我方先死）38 场赢 5。A8：火箭先死 3/4，其余 2/20；A9：其余 0/5。
+  - 旧文把碾碎爪先死的 7 场也算成「两只一直都活着」，这个说法不对。
+- :35 路线
+  - 旧：「低血时绕开精英走问号/商店」。
+  - 新：问号平均比确定的走廊便宜，但不是安全格；低血时每个问号都按「可能是一场走廊」算，不开战斗的只有商店和休息点。商店部分保留。
+  - 数据 {UNKNOWN_FIGHTS}（room-costs，战内掉血 中位/p75）：
+
+    | 进阶·幕 | 问号数 | 开出战斗 | 这些战斗 | 走廊 |
+    | --- | --- | --- | --- | --- |
+    | A8 一幕 | 562 | 122（22%） | 12/17 | 9/14 |
+    | A8 二幕 | 298 | 71（24%） | 18/24.5 | 17/26 |
+    | A9 一幕 | 190 | 41（22%） | 8/14 | 8/13 |
+    | A9 二幕 | 81 | 13（16%） | 19/27 | 13/23.2 |
+
+  - 例子：8KD7 A9 F21 91% 进问号，开出 4 只外骨骼虫，−39。
+- :53 族母：补上牌组没有持续力量牌的情况，{LAG_SLEEP}。
+  - 有持续力量牌：A8 11/12 赢，A9 1/1。
+  - 没有：A8 7/13，A9 1/4。输的 BXAZ、QBCV、WQ67 都是等它自然醒，前两回合没有伤害进它。
+  - T1–T2 一次打掉 ≥25% 打醒的 2 场都赢：EZ2L A8 52%，0NZB A9 26%。
+  - 小伤害打醒的 10 场赢 5，都在 A0–A2。
+  - 原来「25% 以上才打醒」的规则保留，补一句「被打醒的那回合它眩晕」。
+- :55、:120 瀑布巨兽
+  - 旧：「要赢靠早杀…慢打是输法」「要在 T10 前后打死」。
+  - 新：输赢看击杀那回合的 HP 扛不扛得住自爆（{GIANT_BLOCK_RECORD}）。击杀越早层数越低，但早杀本身不保证赢。按预计击杀回合算层数，留住「层数 − 下回合格挡」的 HP，不为提前一回合击杀把 HP 换到这条线以下；也别拖，每晚一回合多 3 层，虹吸还会回血。
+  - 数据：
+    - 所需格挡（层数 − HP）：A8/A9 有击杀的 35 场，≤13 的 20 场赢 19，14–19 的 1 场赢 0，≥20 的 14 场赢 3；
+    - A9 11 场赢 4，T10 前击杀赢 3/5，输的 5NFG、2ZCK 击杀时只剩 14、20 血，对 41、44 层。
+  - 三处的 {GIANT_KILLS_A8}/{GIANT_KILLS_A9}/{GIANT_BLOCK_RECORD} 保留，每个都还是出现 3 次。
+- :21、:23 挑衅从「好牌(A)」移到「看体系(B/C)」，写明 {CARD_OUTCOME:TAUNT}：
+  - A8 一幕：拿了 51 局过本幕 boss 65%，给了没拿 35 局 77%；
+  - 二幕：27 局 22%，19 局 32%。
+  - 经验 card-taunt 同向。
+- :69 凋萎：「坚毅/燃烧契约可以消耗凋萎」→「坚毅+/燃烧契约」，注明未升级的坚毅是随机消耗（经验 card-true-grit、aeon-wither）。
+- :46、:54 的坚毅说法（a85c413 改过）和 card-true-grit 一致，没动。
+
+### 手册 ds-handbook.md
+- :3 版本号改成 2026-09-29，注明做过知识库核对。
+- :5「孤注一掷与污浊药水永不使用」→「孤注一掷永不打出」。
+  - 代码事实：污浊药水 09-28 起不再禁用（combat-plan.ts 注释，Dai 2026-09-28），自伤 12 算进 hp_lost，喝不喝由 Jev 选。
+- :33「污浊药水…代码不会喝，只能卖钱」改成上面的代码事实，另加「默认配置下进商店前代码会把它丢掉」（config shopDiscardPotions）。建议的方向（3 瓶不如 1 瓶随机药）没变。
+- :38 一幕 boss 进场血量：旧的「A8 90%/83%（141 场），A9 90%/88%（44 场）；灵魂异鱼…」→ {ACT1_ENTRY_HP}。
+  - 现在是：A8 91%/83%（144 场），A9 90%/87%（49 场）；异鱼 A8 90%/82%（21 场），A9 92%/92%（12 场）。
+- :54「为了伤害多掉血是最常见的错误」后面加例外：墨影幻灵滑溜还在时，多打几段的线值得多掉几血。
+  - 依据 3SBP A9 T1：Jev 选了不掉血、只打 2 段的线，rollout 最优线是打 4 段、−8；T1–T5 只打进 9，墨影幻灵剩 56 时我方死。
+  - 另见经验 vantom-multihit（n=9）。
+- :56 下回合大招
+  - 激光：「49」→ {LASER_T4}，即 A8 33、背后 49，A9 38、背后 57。激光基础 A8 31、A9 35，蓄力给火箭 +2/+3 力量（DB，A8 30 场、A9 5 场）。
+  - 知识淹没：「30」→ DB 的 A8 8×3、A9 9×3，每段再加力量。
+  - 机甲骑士：「T4 打 30~40」→ 重劈基础 A8 35、A9 40，再加力量（经验 mecha-knight：A8 40/45/50，A9 45/50/55）。
+- :66–:68 boss 战绩改成 {BOSS_RECORD:…}：
+  - 知识恶魔：旧「6 局死在它手上」，现在 A8 20 场赢 8、A9 2 场赢 1；
+  - 帝皇蟹：旧「5 局死在它手上」，现在 A8 24 场赢 5、A9 5 场赢 0；
+  - 实验体：旧「2 胜 2 负」，现在 A8 3 场赢 0、A9 1 场赢 0。
+  - 低进阶的赢局 run id 保留；帝皇蟹条加一句「单体伤害先打火箭」。
+- :71 巨兽：与攻略同样的改写。
+
+### Jev 提示 jev-hints.json
+- matriarch-asleep
+  - 旧：While the Matriarch sleeps, HP damage wakes it and costs its free turns. Play powers and set-up cards instead of chipping it.
+  - 新：HP damage wakes the sleeping Matriarch, costing free turns: play powers and set-up cards, not chip damage; a 25%+ HP burst is fine.
+  - 证据加 0NZB、EZ2L（2 场 ≥25% 爆发都赢）。
+- matriarch-sleep-turns
+  - 旧：Sleep turns are free turns: spend all energy on powers or lasting block…
+  - 新：Sleep turns pay off only with powers or lasting block to play ({LAG_NO_STRENGTH_EN}). On Asleep 1, attacking costs nothing extra.
+  - {LAG_NO_STRENGTH_EN} 填出来是「decks without a lasting-Strength card won A8 7/13, A9 1/4」。证据加 BXAZ、QBCV、WQ67。
+- crab-rocket-first：「runs won 9/12 vs 8/39 keeping both alive」→ {CRAB_KILLS_EN}，填出来是「Rocket died first 9/12 won, otherwise 8/45」。
+- crab-charge：激光后面加「plus Strength」。依据 DB：CHARGE_UP 给 +2（A8）/+3（A9）力量。
+- hp-trade-boss
+  - 旧：Extra HP traded for damage decided many lost boss fights. Burning Blood heals only after combat. Prefer lower hp_lost unless the line kills soon.
+  - 新：Burning Blood heals only after combat: prefer lower hp_lost unless the line kills soon. Exception: against Vantom's Slippery, prefer the line with more hits.
+  - 依据：3SBP T1，证据加 3SBPKG9603WD。
+  - 第一句（原因论断）是为了 25 词上限删的，不是数据否定了它；同样的内容手册 :54 还在。
+- 保留：giant-eruption「Kill it by turn 10, with HP plus block above the stacks」两半都有，测试要求保留。
+
+### boss 笔记（run-journal.ts BOSS_NOTES；boss-clock.ts BOSSES）
+- run-journal.ts:179 族母：补上「被打醒的那回合眩晕」「别用小伤害打醒」「没有持续力量牌时沉睡回合几乎白过，一次能打掉 25% 以上就打醒」，数字用 {LAG_SLEEP}。
+- run-journal.ts:181 巨兽
+  - 旧：「要早杀…拖得越久越难，要抢伤害」。
+  - 新：输赢看击杀那回合的 HP 加下回合格挡够不够层数；击杀越早层数越低，但击杀时 HP 不够照样输；按预计击杀回合的层数留 HP。
+- run-journal.ts:183 帝皇蟹：「51 场…8/39」→ {CRAB_KILLS}（中文全文）。
+- boss-clock.ts
+  - KAISER_CRAB 的 note：「51 logged crab fights … 8/39」→ {CRAB_KILLS}（英文）。
+  - WATERFALL_GIANT 的 mechanic：「kill it early (…)」→「HP at the kill plus that turn's block must cover the stacks (…); an earlier kill has fewer stacks but is lost too without the HP (…)」。
+
+### 卡牌估值 card-value.ts
+- 口径：outcome-stats.json（A8 151 局）。比较的是拿了的局和「给了没拿」的局过本幕 boss 的比例。只改每组比较两边 n≥15 且各幕方向一致的牌。
+
+| 牌 | 旧 | 新 | 依据（拿了 vs 给了没拿，过本幕 boss） |
+| --- | --- | --- | --- |
+| TAUNT 挑衅 | 62 | 50 | A8 一幕 0.65（n=51）vs 0.77（n=35），平均终层 26.0 vs 30.0；二幕 0.22（27）vs 0.32（19）；经验 card-taunt |
+| MOLTEN_FIST 熔融之拳 | 54 | 44 | A8 一幕 0.60（47）vs 0.74（42）；二幕 0.13（23）vs 0.25（24）；A9 一幕 0.41（17）vs 0.64（14） |
+| TWIN_STRIKE 双重打击 | 58 | 64 | A8 一幕 0.71（55）vs 0.62（26）；二幕 0.35（31）vs 0.19（16）；终层两幕都 +1.8 |
+
+- 角色分类：Aeonglass 的「exhausts Withers」+8 不再给 TRUE_GRIT。未升级的坚毅随机消耗，选不中凋萎（card-true-grit、aeon-wither）。灵魂异鱼那边的 BECKON_CLEARERS 早就是这样。
+- 拿不准，没改（A9 口径用 `build-outcome-stats.py --ascension 9` 另算，55 局）：
+  - SWORD_BOOMERANG 46：一幕 A8 0.80（40）vs 0.63（41），A9 0.57（23）vs 0.50（10）；二幕 A8 0.12（8）vs 0.29（34）。各幕方向不一致。
+  - EXPECT_A_FIGHT 56：A8 一幕 0.71（17）vs 0.82（22）。其余比较 n 都小，只有一组。
+  - BLUDGEON 60：A8 一幕 0.58（19）vs 0.73（22），终层 22.7 vs 30.7。其余比较 n 都小。
+  - HEADBUTT 62：A8 一幕 0.68（62）vs 0.74（27）；A9 一幕 0.33（18）vs 0.78（9），没拿的一边 n 小。
+  - 方向不一致：SETUP_STRIKE、TRUE_GRIT、BLOOD_WALL、INFERNO。
+  - THUNDERCLAP 40：数据也偏负，和现有低分一致，不用改。
+  - SWORD_BOOMERANG 在 AOE 集合里，打螃蟹加 +12「群伤」；经验 card-sword-boomerang 说它对螃蟹不算真群伤（随机目标）。这是角色分类问题，没改。
+
+### 经验库 experience.json → 2026-09-29.8（只改文字，n 和证据不动；active 条目数不变）
+- 和数据冲突，改成数据版本：
+  - crab-kill-order：
+    - 旧「56 场…两只一直都活着的 44 场只赢 8 场（A8 2/19）」→ 57 场：其余 45 场赢 8，其中碾碎爪先死 7 场赢 3、都没有先死 38 场赢 5；A8 其余 2/20。
+    - 激光旧「A8 47–49、A9 54」→ A8 33、背后 49，A9 38、背后 57。
+  - crab-entry：激光同上（旧「A8 41–49、A9 54」）。
+  - a9-damage：旧「激光 48→54」→ T4 激光正面 33→38、背后 49→57。
+  - giant-explode：旧「≥20 的 15 场赢 3」→ 14–19 的 1 场赢 0，≥20 的 14 场赢 3。
+  - lag-sleep：
+    - 旧「开场沉睡是免费回合：除非能斩杀别在沉睡时打醒它」
+    - 新：只对有能力/力量牌可打的牌组是免费回合；别用小伤害打醒（10 场赢 5）；一次 ≥25% 可以打醒（2/2）；没有持续力量牌 A8 7/13、A9 1/4。
+  - route-no-chains：旧「二幕问号约 1/6 开出战斗（赢局中位 −21.5）」→ A9 二幕 81 个里 13 个（16%），战内 19/27，走廊 13/23。
+  - card-sword-boomerang：「对帝王蟹不算 AOE（会单杀残血钳子触发蟹之怒）」的理由来自已退役的 crab-rage-aoe，改成「随机目标，不能把伤害集中到火箭上，也可能先打死碾碎爪」。
+- 代码事实：
+  - deck-clock：旧「时钟默认火堆能回到 85% 进场」→ 现在按当前 HP 加一次休息的回血算，仍是上限（expectedEntryHp）。
+  - ts-phase3：旧「rollout 让无实体一直持续或一直不来」→ 951e815 起 rollout 和时钟按天罚隔回合建模，88% 那个数来自旧 rollout。
+  - card-fight-me：旧「code 给它的卡值偏低」→ 已按数据从 25 提到 74。
+- 其余带「代码会/不会」的条目核对过，和现在的代码一致，没动：
+  - card-armaments（升级效果仍未建模）
+  - potion-swift
+  - potion-fysh-oil
+  - potion-code-discard
+  - relic-whispering-earring（时钟仍把耳环当普通 +1 能量）
+  - relic-toasty-mittens
+  - card-purity（仍没有分级数据）
+  - card-rolling-boulder（写的是「当时」）
+  - beetle（代码按精英打）
+- 改过的 10 条经验合计多 456 字，最多的是 lag-sleep +124。
+
+### 删掉的
+- 「慢打是输法」「要赢靠早杀」「要早杀」：A9 T10 前击杀只赢 3/5，输局都是击杀时 HP 不够。改成看击杀时 HP 的说法。
+- 「低血走问号」作为安全选项：问号开战率 16–24%，开出来的战斗和走廊一样重。
+- 手册「污浊药水永不使用」「代码不会喝」：代码 09-28 起已不禁用。
+- card-sword-boomerang 里基于已退役 crab-rage-aoe 的「蟹之怒」理由。
+- hp-trade-boss 的原因句：为词数删，不是数据否定。
+
+### 没有数据覆盖，保留
+- 攻略 §2 流派、§3 其余评级（包括头槌的 A）、§4 选牌原则、§8 进阶说明、§9 低进阶招式记录（已注明以 boss_db 为准）。
+- 巨斧机器人、女王、永世沙漏、造门者的打法。
+- 手册：「进二阶段 HP 最好 ≥60」（实验体 A8/A9 只有 4 场）、进阶 2 一节（历史统计）、一幕构筑统计（41 局，和 act1-strength 同向）。
+- 胧光怪、骇鳗、蜂群术士（A7–A9 9 次致死，核对 runs.jsonl 一致）等条目：和经验库一致。
+
+### 需要 Dai 定
+1. 代码硬规则「不打醒熟睡敌人」（combat-plan.ts hardRuleLines）：只要有不打醒的线，就删掉所有打醒的线（赢下战斗的线除外）。
+   - 数据：一次打掉 ≥25% 打醒的 2 场都赢（EZ2L、0NZB）。A9 没有力量牌、等它自然醒的 3 场全输。
+   - 知识文字现在允许 ≥25% 的爆发打醒，但硬规则会挡住这类线。要不要给硬规则加 25% 例外？n=2。
+2. 墨影幻灵滑溜回合：hp-trade-boss 的例外只有 3SBP 一场作依据（方向和 vantom-multihit n=9 一致）。3SBP 复盘提议在选项里加「本回合命中段数」一列，没做。
+3. 路线投影里问号仍按 room-costs 的 Unknown 算（中位 0），开战风险没有单列。要不要按「x% 概率一场走廊」给 p75？这是策略改动。
+4. 上面「拿不准」的 4 张牌，以及飞剑回旋镖算不算螃蟹的群伤。
+5. 药水类条目方向没动。
+
+### 测试
+- exp-update：
+  - 改前 a02ad58：63 个文件 1156 个用例（上次记录）。
+  - 改后 3ad8b75：tsc 退出 0；vitest 66 个文件 1169 个用例。第一次 batch-i 的 Red Skull/Clay 实盘局面超时（5000 ms，负载高），重跑全过，退出 0。
+  - 新测试：tests/knowledge-check-facts、-guides、-cards。
+  - 改了读旧文字的断言：batch-g 进场血量、boss-clock 巨兽 mechanic、card-value 双重打击分。
+- 合入 v3（在 `ops/v3-merge.lock` 锁里，脚本 scratchpad/kb/merge-v3-kb.sh）：
+  - 合入前：v3 a02ad58 加上未提交的刷新数据，vitest 63 个文件 1156 个用例。全量跑有 2 个是负载问题：batch-i 超时、rollout-live 的喝药选项用例，单独重跑都通过。
+  - 知识构建没在跑。未提交的刷新数据先提交为 9f69cac「Refresh knowledge data」。
+  - `git merge --no-edit exp-update` 只在 boss-damage.json、room-costs.json 两个生成文件上冲突，在锁里用合入后的 builder 从日志重建：532 场 boss 战，358 局。
+  - 合并提交 1895a6c。
+  - 合入后：tsc 退出 0；vitest 66 个文件 1169 个用例全过，退出 0。
+  - 没有停对局，没碰 ops/STOP。
