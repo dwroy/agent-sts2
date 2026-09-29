@@ -9,8 +9,9 @@ function deck(size: number): DeckProfile {
 
 describe("cardValue", () => {
   it("starts the bloat penalty past 22 cards, not 18 (0NG took no card in Act 2)", () => {
-    expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(22), 2, 20).value).toBe(58);
-    expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(24), 2, 20).value).toBe(55);
+    // Twin Strike's tier: 64 since the 2026-09-29 knowledge check (58 before); 1.5 a card past 22.
+    expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(22), 2, 20).value).toBe(64);
+    expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(24), 2, 20).value).toBe(61);
   });
 
   it("Waterfall Giant favours block and front-loaded damage", () => {
