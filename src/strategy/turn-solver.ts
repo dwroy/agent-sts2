@@ -202,6 +202,13 @@ export interface PlayerSim {
    * relic's counter (attacks already played this turn) comes from its stack.
    */
   kusarigama?: { every: number; damage: number; count: number };
+  /**
+   * Shuriken (「你每在同一回合内打出3张攻击牌，获得1点力量」): every 3rd Attack played in a turn gives 1 Strength for
+   * the fight, on the Attacks after it. `count`: the Attacks already played this turn (attacks_played_this_turn),
+   * mod `every`. Logged over 8 runs holding it: +1 at 90 of 95 crossings of a multiple of 3 (DHGT F33 T1: 0 -> 1 ->
+   * 2 after the 3rd and 6th Attack), the count starting again each turn.
+   */
+  shuriken?: { every: number; strength: number; count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -595,7 +602,7 @@ export interface Outcome {
    * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
    * enemyHpAfter (our turn's end); the rollout takes it off their HP.
    */
-  retaliated?: { index: number; amount: number }[];
+  retaliated?: { index: number; amount: number; slipperyUsed?: number }[];
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
   /**
@@ -818,6 +825,8 @@ export const HOWL_EXHAUST_VALUE = 50;
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 /** Cards a hand can hold: draws past it are discarded. */
 export const HAND_LIMIT = 10;
+/** Stable Serum: the turn ends whose hand is kept, the drink's own included (RETAIN_HAND_POWER 2). */
+export const STABLE_SERUM_TURNS = 2;
 /** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
 export const GLOWWATER_DRAW = 10;
 /** Bottled Potential: cards drawn after the hand is shuffled back (potion-values.ts Cards 5). */
@@ -1133,6 +1142,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (kusa && kusa.every > 0 && (kusa.count + next.attacksPlayed) % kusa.every === 0) {
       const living = next.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
       if (living[0]) hitEnemyRaw(next, living[0], kusa.damage);
+    }
+    // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
+    const shuriken = player.shuriken;
+    if (shuriken && shuriken.every > 0 && (shuriken.count + next.attacksPlayed) % shuriken.every === 0) {
+      next.strength += shuriken.strength;
+      next.permStrength += shuriken.strength;
     }
   }
   for (const enemy of next.enemies) {
@@ -2127,16 +2142,22 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
   // Retaliation (Flame Barrier, Thorns) dealt on the enemy turn, per attacker: the rollout takes it off their HP.
-  const retaliated: { index: number; amount: number }[] = [];
+  const retaliated: { index: number; amount: number; slipperyUsed?: number }[] = [];
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
-    // kills stops attacking), capped by the attacker's HP.
+    // kills stops attacking), capped by the attacker's HP. Slippery: each hit's loss is 1 and takes a stack
+    // (W6F4YXF3MT7A F17 Vantom: Thorns 3 into Slippery 3 took 1 HP and one stack). Hardened Shell: at most its
+    // cap on the enemy turn, a turn of its own (TQCZFBK7T09Y F11 T1: 20 lost on our turn, then 3 of Thorns).
     let back = 0;
     for (const enemy of living) {
       const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
-      const amount = Math.min(Math.max(0, enemy.hp), landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      const each = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
+      const slipperyUsed = Math.min(landed, Math.max(0, enemy.slippery ?? 0));
+      let amount = slipperyUsed + (landed - slipperyUsed) * each;
+      if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) amount = Math.min(amount, enemy.hpLossCap);
+      amount = Math.min(Math.max(0, enemy.hp), amount);
       back += amount;
-      if (amount > 0) retaliated.push({ index: enemy.index, amount });
+      if (amount > 0) retaliated.push({ index: enemy.index, amount, ...(slipperyUsed > 0 ? { slipperyUsed } : {}) });
     }
     score += weights.damage * back;
   }

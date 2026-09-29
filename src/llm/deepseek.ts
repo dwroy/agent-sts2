@@ -181,6 +181,13 @@ export function resolveOptionKey(answer: string, criteria: Record<string, string
   return matches.length === 1 ? (matches[0] ?? null) : null;
 }
 
+/**
+ * Dai 2026-09-29: where the hand-written strategy guide or handbook disagrees with the experience base or the
+ * measured data, the data wins. Part of the fixed system prompt (byte-identical across calls, cache-friendly).
+ */
+export const DATA_OVER_GUIDES =
+  "When the strategy guide or the handbook conflicts with the experience base (memory.knowledge) or measured data (outcome statistics, code's numbers), go with the data.";
+
 const SYSTEM = [
   "You are an expert Slay the Spire 2 player advising a bot (Ironclad, climbing ascension levels).",
   "You get the game state and one question with a fixed set of option keys. Code has already computed",
@@ -194,9 +201,11 @@ const SYSTEM = [
   "(observational: n runs, mean final floor, act-boss pass rate; low-n rows are hints only). Use it as evidence-based guidance, not",
   "orders: weigh it with the exact facts in the state and code's numbers. High-confidence, well-supported lessons deserve real weight;",
   "when the current situation differs from what a lesson assumes, the facts win.",
+  DATA_OVER_GUIDES,
   "memory.act is this act's threats and boss; memory.history is the run so far, floor by floor (floors already left);",
   "memory.this_floor is the current floor so far; state.facts, when present, is the exact current deck, relics, potions, HP and gold.",
-  'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',
+  'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"},',
+  'plus every other field the question asks for (such as "route" and "route_reason" when it has a route review, "cards", "discard").',
 ].join(" ");
 
 /** Thinking efforts the code sends (see DeepSeekConfig.reasoningEffort); anything else in a tier is ignored. */
@@ -382,6 +391,12 @@ export class DeepSeekClient implements Escalator {
       throw new DeepSeekAnswerError(message, detail, done.meta);
     }
     this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
+    // The question asked for a route (a route review, the act's routes) and the reply left it out, though the
+    // reasoning settled it (DHGT6Z3Q7VAP F9 "Route: keep.", F23 "Final: card0, keep route."): taken from there.
+    if (!first.route) {
+      const recovered = recoverRoute([done.reasoning, first.reason], routeKeys(state));
+      if (recovered) Object.assign(first, { route: recovered.route, routeReason: first.routeReason ?? `recovered from the reasoning: "${recovered.line}"` });
+    }
     // A one-shot option key is "option:card" (o1:c5); an answer that gives them apart ({"choice": "o1",
     // "cards": ["c5"]}) names the same option.
     const joined = first.cards?.length === 1 ? `${first.choice}:${first.cards[0]}` : "";
@@ -632,6 +647,46 @@ interface ChatMessage {
 
 /** The fields of an answer beyond {choice, reason}. */
 type Extras = { cards?: string[]; route?: string; routeReason?: string; discard?: number[] };
+
+/** The route keys a question offers: its route review's routes (keep and the others), else the act's routes. */
+export function routeKeys(state: Record<string, unknown>): string[] {
+  const record = (value: unknown): Record<string, unknown> => (value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
+  const review = Object.keys(record(record(state["route_review"])["routes"]));
+  return review.length > 0 ? review : Object.keys(record(state["act_routes"]));
+}
+
+/**
+ * The route an answer's reasoning (then its reason) settled on when the JSON left "route" out: the last place a text
+ * names one of `keys` as the route ("route: keep", "\"route\": \"p1\"", "switch the route to p2") or keeps the
+ * route ("keep route", "keep the safe route", when "keep" is a key). Null when no text does.
+ */
+export function recoverRoute(texts: string[], keys: string[]): { route: string; line: string } | null {
+  if (keys.length === 0) return null;
+  const escape = (key: string) => key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const alternatives = [...keys].sort((a, b) => b.length - a.length).map(escape).join("|");
+  const named = new RegExp(`\\broute\\b["']?\\s*(?:[:=]|is|->|to)\\s*["']?(${alternatives})\\b`, "gi");
+  const change = new RegExp(`\\b(?:switch|change)\\s+(?:the\\s+)?route\\s+to\\s+["']?(${alternatives})\\b`, "gi");
+  const keep = /\bkeep(?:ing)?\s+(?:the\s+)?(?:\w+\s+)?route\b/gi;
+  for (const text of texts) {
+    if (!text) continue;
+    let best: { at: number; route: string; line: string } | null = null;
+    const consider = (at: number, route: string) => {
+      const exact = keys.find((key) => key.toLowerCase() === route.toLowerCase());
+      if (!exact || (best && best.at > at)) return;
+      const start = text.lastIndexOf("\n", at) + 1;
+      const end = text.indexOf("\n", at);
+      best = { at, route: exact, line: text.slice(start, end < 0 ? undefined : end).trim().slice(0, 120) };
+    };
+    for (const match of text.matchAll(named)) consider(match.index ?? 0, match[1]!);
+    for (const match of text.matchAll(change)) consider(match.index ?? 0, match[1]!);
+    if (keys.includes("keep")) for (const match of text.matchAll(keep)) consider(match.index ?? 0, "keep");
+    if (best) {
+      const found: { at: number; route: string; line: string } = best;
+      return { route: found.route, line: found.line };
+    }
+  }
+  return null;
+}
 
 /** `{cards, route, routeReason, discard}` as far as the answer gave them, else nothing (the answer object stays as before). */
 function extrasOf(answer: Extras): Extras {

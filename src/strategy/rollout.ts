@@ -47,7 +47,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -490,6 +490,11 @@ export interface RolloutInput {
    */
   relicEnergy?: { amount: number; from: number }[];
   /**
+   * Block relics that trigger at the start of one fight turn (Captain's Wheel: 18 at the start of turn 3, logged 19
+   * of 20 third turns started with exactly 18, every other turn with none): the amount and that turn.
+   */
+  relicBlock?: { amount: number; turn: number }[];
+  /**
    * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
@@ -899,6 +904,12 @@ interface SimPlayer {
   regen: number;
   ritual: number;
   clarityTurns: number;
+  /**
+   * Stable Serum (RETAIN_HAND_POWER): turn ends left whose unplayed hand stays in hand, and the cards kept at the
+   * last one (base cards; the next turn draws on top of them, up to the hand limit).
+   */
+  retainTurns: number;
+  retained: CardModel[];
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno and Rolling Boulder. */
@@ -1184,6 +1195,9 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
   player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
+  // A relic's block on this fight turn (Captain's Wheel on turn 3): `turn` is the one that just ended.
+  const fightTurn = (input.solver.turn ?? input.meta.t) + turn + 1;
+  for (const relic of input.relicBlock ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
   // Self-Forming Clay's block for the last turn's HP losses.
   player.block += player.clayNext;
   player.clayNext = 0;
@@ -1310,6 +1324,7 @@ function applyPlan(
         if (potion.special === "regen") regenDrunk += potion.regen ?? 0;
         if (potion.special === "ritual") player.ritual += 1;
         if (potion.special === "clarity") player.clarityTurns += CLARITY_LATER_DRAWS;
+        if (potion.special === "retain_hand") player.retainTurns += STABLE_SERUM_TURNS;
       }
       continue;
     }
@@ -1367,7 +1382,10 @@ function applyPlan(
   for (let k = 0; k < (o.randomExhausts ?? 0) && unplayed.length > 0; k += 1) unplayed.splice(Math.floor(random() * unplayed.length), 1);
   // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
   // outcome): they leave the fight, not back through the discard pile.
-  for (const i of unplayed) if (!hand[i]!.ethereal) piles.discard.push(handBase[i] ?? hand[i]!);
+  // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
+  const keep = player.retainTurns > 0 && !o.winsFight;
+  for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  player.retainTurns = Math.max(0, player.retainTurns - 1);
   // Cards drawn during the line: taken from the pile, counted as discarded (their use is in the solver's
   // outcome), except those an exhaust effect took after they were drawn.
   for (let i = 0; i < o.cardsDrawn; i += 1) {
@@ -1415,6 +1433,8 @@ function applyPlan(
   }
   // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
   const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
+  // Slippery stacks the retaliation took (a stack per hit it hurt).
+  const slipperyUsed = new Map((o.retaliated ?? []).map((r) => [r.index, r.slipperyUsed ?? 0]));
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
@@ -1423,7 +1443,7 @@ function applyPlan(
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (a.artifact !== undefined) e.artifact = a.artifact;
-    if (a.slippery !== undefined) e.slippery = a.slippery;
+    if (a.slippery !== undefined) e.slippery = Math.max(0, a.slippery - (slipperyUsed.get(e.index) ?? 0));
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
     if (a.shrink !== undefined) e.shrink = a.shrink;
@@ -1727,6 +1747,8 @@ function simulate(
     regen: base.regen ?? input.playerPowers["REGEN_POWER"] ?? 0,
     ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
     clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
+    retainTurns: input.playerPowers["RETAIN_HAND_POWER"] ?? 0,
+    retained: [],
     revives: base.revives ?? [],
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
@@ -1821,11 +1843,17 @@ function simulate(
     // Mind Rot draws fewer; Tangled makes this turn's Attacks dearer; Chains of Binding binds the first cards drawn.
     const clarity = player.clarityTurns > 0 ? 1 : 0;
     player.clarityTurns = Math.max(0, player.clarityTurns - 1);
-    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot); i += 1) {
+    // Stable Serum: the hand kept at the last turn's end first; the draw goes on top of it, up to the hand limit.
+    for (const card of player.retained) {
+      handBase.push(card);
+      hand.push(withStrength(card, player, hand.length, targets));
+    }
+    player.retained = [];
+    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot) && hand.length < HAND_LIMIT; i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
-      const drawn = withStrength(card, player, i, targets);
+      const drawn = withStrength(card, player, hand.length, targets);
       if (player.hellraiser && isStrikeCard(card)) {
         hand.push({ ...hellraised(drawn), ...(i < player.chains ? { soulbound: true } : {}) });
         continue;
@@ -1883,8 +1911,10 @@ function simulate(
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
-      // Self-Forming Clay: what the decision turn owed is in this turn's block already.
-      clayPending: 0,
+      // Self-Forming Clay: what the last turn owed is in this turn's block already; this turn's start losses (Crimson
+      // Mantle's, Inferno's) owe the next turn's (2VW5 F17: SELF_FORMING_CLAY_POWER 3 at every turn start with the
+      // Mantle up, 7 + 3 block at the next).
+      clayPending: (base.clayBlock ?? 0) * startLossEvents(player),
       duplicate: 0,
       buffer: 0,
       vigor: 0,
@@ -1923,6 +1953,8 @@ function simulate(
       // Thorns up by now (Liquid Bronze drunk in the line or before); Flame Barrier's was the decision turn's only.
       retaliate: player.thorns,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
+      // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
+      ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);

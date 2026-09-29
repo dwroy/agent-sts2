@@ -300,6 +300,14 @@ export function groupName(group: KillGroup): string {
 }
 
 /**
+ * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the
+ * experience base or measured data, the data wins. Jev has no system prompt: this rides at the head of the
+ * advice in every combat plan question.
+ */
+export const JEV_DATA_OVER_GUIDES =
+  "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.";
+
+/**
  * Past-run lessons about the enemies of this fight shown to Jev (the experience base's top ones). 4 covers
  * every boss's active entries: at 3 the Kaiser Crab's kill order (n=11) was cut behind its entry-HP, DPS
  * and potion lessons.
@@ -923,6 +931,14 @@ export const RED_SKULL_STRENGTH = 3;
 export const CLAY_BLOCK = 3;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
+/**
+ * Shuriken: 「你每在同一回合内打出{Cards}张攻击牌，获得{StrengthPower}点力量」 — 3 and 1 (logged over 8 runs holding it:
+ * +1 Strength at 90 of 95 plays taking attacks_played_this_turn to a multiple of 3; the 5 others were mid-selection
+ * frames; the count starts again each turn). DHGT6Z3Q7VAP F33 T1: Strength 0 -> 1 -> 2 after the 3rd and 6th Attack,
+ * 132 dealt where 116 was shown.
+ */
+export const SHURIKEN_ATTACKS = 3;
+export const SHURIKEN_STRENGTH = 1;
 
 /**
  * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
@@ -1072,6 +1088,35 @@ export function forgeUpgrades(state: GameState, knowledge: Knowledge): Record<st
     if (delta) out[cardId] = delta;
   }
   return out;
+}
+
+/**
+ * Entropic Brew (「在所有空药水栏位中获得随机药水」): the potions a drink gives, its own slot included (logged 8 of 8
+ * drinks in a fight: 1WSH, 2WUM, 4JVP, CJ88, EZ2L, SVN2, TTVY, VKPX, VSRG filled every empty slot and the Brew's own).
+ */
+export function entropicBrewPotions(state: GameState): number {
+  return 1 + asArray(asRecord(state.run?.raw)["potions"]).filter((slot) => asRecord(slot)["occupied"] === false).length;
+}
+
+/**
+ * The cards a draw could bring when the state has no piles: the deck less the cards in hand (by id and upgrade), as
+ * pile cards (Strength and Weak in, the living enemies as targets).
+ */
+export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }, hand: CardModel[]): CardModel[] {
+  const inHand = hand.filter((card) => card.type !== "Potion").map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`);
+  return asArray(asRecord(state.run?.raw)["deck"]).flatMap((raw, position) => {
+    const own = asRecord(raw);
+    const cardId = str(own["card_id"]);
+    if (!cardId) return [];
+    const key = `${cardId}${bool(own["upgraded"]) ? "+" : ""}`;
+    const at = inHand.indexOf(key);
+    if (at >= 0) {
+      inHand.splice(at, 1);
+      return [];
+    }
+    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge);
+    return [{ ...model, validTargets: model.target === "single" ? ctx.enemyTargets : [], damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)) }];
+  });
 }
 
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
@@ -1416,6 +1461,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
+    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: num(player["attacks_played_this_turn"]) % SHURIKEN_ATTACKS } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1614,17 +1660,16 @@ function planTurn(env: DecisionEnv): Decision | null {
       : {}),
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
-    // Drawn from the draw pile, or the discard pile reshuffled when it is empty.
+    // Drawn from the draw pile, or the discard pile reshuffled when it is empty; the deck less the hand when the state
+    // has neither pile. Both known and empty: nothing to draw (pilesEmpty).
     ...(drawSlot !== undefined
-      ? {
-          expectedDraw: expectedDraw(
-            (() => {
-              const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
-              return draw.length > 0 ? draw : pileCardModels(state, env.knowledge, "discard", pileContext);
-            })(),
-            drawSlot,
-          ),
-        }
+      ? (() => {
+          const draw = pileCardModels(state, env.knowledge, "draw", pileContext);
+          const discard = pileCardModels(state, env.knowledge, "discard", pileContext);
+          const unknown = drawablePileSize(state.raw) === undefined;
+          const pool = draw.length > 0 ? draw : discard.length > 0 ? discard : unknown ? deckDrawPool(state, env.knowledge, pileContext, hand) : [];
+          return { expectedDraw: expectedDraw(pool, drawSlot), ...(!unknown && pool.length === 0 ? { pilesEmpty: true } : {}) };
+        })()
       : {}),
   };
   // A potion is a solver line only when it can be priced on this board (a pile-card potion needs a card
@@ -2073,13 +2118,22 @@ function planTurn(env: DecisionEnv): Decision | null {
         const key = target === null ? potion.key : `${potion.key}->e${target}`;
         const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;
         const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;
+        // Entropic Brew: its effect is known (random potions into its own slot and every empty one), only which potions
+        // is not; the turn is re-planned with them.
+        const brewGives = potion.potion_id === "ENTROPIC_BREW" ? entropicBrewPotions(state) : null;
         criteria[key] = JSON.stringify({
-          plays: `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
-          simulated: "no: this potion's effect is not simulated, so no HP or damage numbers for it",
+          plays:
+            brewGives !== null
+              ? `drink ${potion.name} first: ${potion.text} (${brewGives} random potion${brewGives === 1 ? "" : "s"}: its own slot and the ${brewGives - 1} empty one${brewGives === 2 ? "" : "s"}), then re-plan the turn with them`
+              : `drink ${potion.name}${enemyName ? ` on ${enemyName}` : ""} first: ${potion.text}; effect not simulated, then re-plan the turn`,
+          simulated:
+            brewGives !== null
+              ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
+              : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered_because: t1Why,
           note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : {}),
-          ...(rollout ? { rollout: DRINK_FIRST_ROLLOUT } : {}),
+          ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
@@ -2124,6 +2178,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: potionContextJson(env, kind),
+    // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
+    knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
     ...(lessons.length > 0
       ? {

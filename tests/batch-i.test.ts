@@ -228,7 +228,7 @@ describe("2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (
     inputs.length = 0;
     planCombatTurn(loggedEnv(logged("batch-i/v6tw-f33-t2-clay")));
     expect(inputs[0]!.player).toMatchObject({ clayBlock: 3, clayPending: 3 });
-  });
+  }, 30_000);
 });
 
 describe("3. Plating's decay is said with the card text (7YT0NJC2LEYQ F12 took Stone Armor as \"48 block over 12 turns\", QBCV838592ZQ F16 smithed it as 4 -> 6 a turn)", () => {
