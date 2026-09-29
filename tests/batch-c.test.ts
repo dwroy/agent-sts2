@@ -15,6 +15,7 @@ import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.j
 import { checkConsistency } from "../src/llm/consistency.js";
 import type { AskDecision } from "../src/project/types.js";
 import { bossNote } from "../src/project/run-journal.js";
+import { revealsLater } from "../src/screens/act-start.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
@@ -363,5 +364,14 @@ describe("8. Shop cards show their cost and type; the removal counts only remova
     const options = optionsOf(decide(oneshotEnv(raw)));
     expect(String(options["remove"]!["why"])).toMatch(/^0 removable basic Strikes\/Defends in the deck/);
     expect(Number(options["remove"]!["code_value"])).toBe(8);
+  });
+});
+
+describe("10. A per-fight pick (Choices Paradox) is known now, not an outcome revealed later (7XK6DUJYMYY3 F34)", () => {
+  it("revealsLater: the paradox's text is null; a one-time random or revealed pick still is not", () => {
+    expect(revealsLater("在每场战斗开始时，从[blue]5[/blue]张随机牌中选择[blue]1[/blue]张放入你的[gold]手牌[/gold]。被选中的牌获得[gold]保留[/gold]。")).toBeNull();
+    expect(revealsLater("At the start of each combat, choose 1 of 5 random cards to put into your hand.")).toBeNull();
+    expect(revealsLater("从3张稀有牌中选择1张加入你的牌组。")).toMatch(/picked from/);
+    expect(revealsLater("获得[blue]2[/blue]件随机[gold]遗物[/gold]。在每场战斗开始时，获得1点力量。")).toMatch(/random/);
   });
 });
