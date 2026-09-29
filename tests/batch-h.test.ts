@@ -356,3 +356,24 @@ describe("7. Feel No Pain: plain True Grit's random exhaust gives its Block too 
     expect(line(3).outcome.randomExhausts).toBe(1);
   });
 });
+
+describe("8. \"calc mismatch\" (ARKG3JFT26HC F17 T12): held Beckons kill on ending now, which the mod's intent-only lethal flag does not count", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("40 HP, four Beckons held, a 27 hit, mod says safe: the note names the cause, not a calculation mismatch", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("batch-h/arkg-f17-t12-beckons");
+    expect(((fx.state["combat"] as Raw)["end_turn_will_kill_player"])).toBe(false);
+    const decision = planCombatTurn(loggedEnv(fx));
+    if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind}`);
+    const question = decision.questions["plan"]!;
+    const key = Object.keys(question.type === "choice" ? question.criteria : {}).find((k) => k.startsWith("plan"))!;
+    const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
+    expect(resolved.rationale).not.toContain("calc mismatch");
+    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: 51 HP lost in all, 27 of it the enemy hits after block\]/);
+  });
+});

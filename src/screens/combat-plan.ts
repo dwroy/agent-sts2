@@ -1682,9 +1682,16 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod's flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held
   // is lethal to it and to the solver alike (the solver then goes on at the revive's HP).
   const endReachesZero = endNow !== undefined && (endNow.outcome.dies || endNow.outcome.revived !== undefined);
+  // The mod's flag counts the enemy intents against block only (lethal_risks "incoming_damage"): a death from what
+  // the turn's end costs besides (held Beckons' HP loss, a Mantle, Disintegration) is not a calculation mismatch
+  // (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in all, "mod says safe"; one Beckon was held
+  // and T13 began at 7 = 40 - 27 - 6, as the solver has it).
+  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && endNow.outcome.incomingAfterBlock < playerSim.hp;
   const calcNote =
     endNow && endReachesZero !== modSaysLethal
-      ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
+      ? endOnlyByOwnLosses
+        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${endNow.outcome.incomingAfterBlock} of it the enemy hits after block]`
+        : ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3
