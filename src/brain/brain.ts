@@ -5,6 +5,9 @@
  * - Each call becomes a BrainRequest: the v3 system prompt (guide + handbook), the run memory, the question,
  *   the options or the task input, the question's AnswerSpec (specs.ts) and, when the engine gets them, the tools
  *   (tools/registry.ts buildTools on the current ToolContext).
+ * - KNOWLEDGE_PREFIX=full: the system is the rules + the whole knowledge base at the run's ascension (read from the
+ *   current ToolContext), for every engine, and the memory drops the experience lessons the prefix already holds
+ *   (knowledge.ts). A knowledge base that does not load sends v3's prompt for that question and says so (note).
  * - Default configuration (BRAIN_ENGINE unset = deepseek, no tools): the DeepSeek engine sends v3's exact request
  *   and its v3 result is returned unchanged (same object, same errors), so the loop behaves as v3 did.
  * - Another engine's answer is returned in the v3 shapes (DeepSeekAnswer, {json, meta}), with `brain` naming the
@@ -22,6 +25,7 @@ import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
 import { ClaudeEngine } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
+import { KnowledgePrompt } from "./knowledge.js";
 import { BrainRouter, type BrainLogRow } from "./router.js";
 import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
@@ -100,6 +104,10 @@ function taskSpec(label: string, accept?: (json: Json) => boolean): AnswerSpec {
 
 export class Brain {
   private context: ToolContext | null = null;
+  /** KNOWLEDGE_PREFIX=full: the rendered prompt, kept while the ascension and the data hold. */
+  readonly knowledge = new KnowledgePrompt();
+  private notify: ((message: string) => void) | null = null;
+  private lastKnowledgeError = "";
 
   constructor(
     readonly router: BrainRouter,
@@ -107,9 +115,14 @@ export class Brain {
     private readonly tools: (ctx: ToolContext) => ToolDef[] = buildTools,
   ) {}
 
-  /** What the tools read for the coming questions (the loop sets it from each new state). */
+  /** What the tools read for the coming questions (the loop sets it from each new state); also the run's ascension. */
   setToolContext(context: ToolContext | null): void {
     this.context = context;
+  }
+
+  /** Where the brain reports what the caller should see (a knowledge base that failed to load). */
+  onNote(notify: (message: string) => void): void {
+    this.notify = notify;
   }
 
   engineFor(label: string): EngineName {
@@ -126,7 +139,7 @@ export class Brain {
   }
 
   private request(label: string, question: string, memory: JsonValue | undefined, payload: unknown, spec: AnswerSpec, options?: Record<string, string | null>): BrainRequest {
-    return {
+    const req: BrainRequest = {
       label,
       system: this.deepseek.systemPrompt,
       ...(memory === undefined ? {} : { memory: memory as string | Record<string, unknown> }),
@@ -136,6 +149,13 @@ export class Brain {
       spec,
       ...this.toolsFor(label),
     };
+    if (this.router.config.knowledgePrefix !== "full") return req;
+    const full = this.knowledge.apply(req, this.context ? { ascension: this.context.ascension, knowledgeDir: this.context.knowledgeDir } : null);
+    const error = full.knowledge?.error ?? "";
+    // Said once per distinct failure, not on every question.
+    if (error && error !== this.lastKnowledgeError) this.notify?.(`KNOWLEDGE_PREFIX=full: ${error}`);
+    this.lastKnowledgeError = error;
+    return full;
   }
 
   /** The v3 answer object, when plain v3 DeepSeek answered (no tools, no router re-ask). */

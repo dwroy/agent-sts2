@@ -67,6 +67,9 @@ export function pickAnswerOf(answer: DeepSeekAnswer): Record<string, unknown> {
 export class DeepSeekEngine implements BrainEngine {
   readonly name = "deepseek" as const;
 
+  /** The client for the last other system prompt (KNOWLEDGE_PREFIX=full: the same on every question of a run). */
+  private derived: DeepSeekClient | null = null;
+
   constructor(private readonly client: DeepSeekClient) {}
 
   get model(): string {
@@ -75,7 +78,9 @@ export class DeepSeekEngine implements BrainEngine {
 
   /** The client that sends this request's system prompt (the wrapped one unless the request carries another). */
   private clientFor(req: BrainRequest): DeepSeekClient {
-    return req.system === this.client.systemPrompt ? this.client : this.client.withSystem(req.system);
+    if (req.system === this.client.systemPrompt) return this.client;
+    if (!this.derived || this.derived.systemPrompt !== req.system) this.derived = this.client.withSystem(req.system);
+    return this.derived;
   }
 
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {

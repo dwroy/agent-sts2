@@ -16,7 +16,7 @@ import type { AnswerSet } from "./jev/answers.js";
 import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
-import { createBrain, toolContextOf, type Brain, type BrainChoice } from "./brain/brain.js";
+import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
@@ -313,7 +313,28 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    * prompt source and the budget's owner.
    */
   const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient) : null;
+  brain?.onNote((message) => onEvent({ type: "note", message }));
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
+  /**
+   * Whether the brain may take a question with this label. An engine other than DeepSeek (BRAIN_ENGINE_*) has its own
+   * budget (BRAIN_<ENGINE>_MAX_CALLS, counted by the router), so its questions do not spend DEEPSEEK_MAX_CALLS; once
+   * it is used up the router asks BRAIN_FALLBACK, and DeepSeek's budget applies again.
+   */
+  const brainBudgetLeft = (label: string): boolean => {
+    if (!brain) return deepseekBudgetLeft();
+    const engine = brain.engineFor(label);
+    return (engine !== "deepseek" && brain.router.budgetLeft(engine)) || deepseekBudgetLeft();
+  };
+  /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
+  const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
+  /** DeepSeek calls spent on a question another engine was asked first: only its fallback's. */
+  const fallbackCalls = (label: string, via: BrainMeta | undefined): number => (!deepseekFirst(label) && via?.engine === "deepseek" ? via.attempts : 0);
+  /** A plan's calls (run plan, fight plan): DeepSeek's (v3: one per plan) unless another engine answered. */
+  const countPlan = (tokens: number, via: BrainMeta | undefined): void => {
+    if (!via) stats.deepseekCalls += 1;
+    else if (via.engine === "deepseek") stats.deepseekCalls += via.attempts;
+    stats.deepseekTokens += tokens;
+  };
   /**
    * The last direct DeepSeek decision (BUILD_DECIDER=deepseek), keyed by the question's content: a board
    * that moved without changing the question (an animation, a re-read before dispatch) is not asked
@@ -578,12 +599,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
       const deepseek = brain;
-      if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
+      if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;
-        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, (tokens) => {
-          stats.deepseekCalls += 1;
-          stats.deepseekTokens += tokens;
-        });
+        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, countPlan);
         if (journal.itemCount !== items) observedStates.touched(state, observedFp, observedTs);
       }
     }
@@ -594,11 +612,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
       const deepseek = brain;
-      if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
-        await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, (tokens) => {
-          stats.deepseekCalls += 1;
-          stats.deepseekTokens += tokens;
-        });
+      if (deepseek && brainBudgetLeft("fight-plan")) {
+        await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, countPlan);
       }
     }
     if (!planned) {
@@ -672,7 +687,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         stats.debounced += 1;
         deepseekResolved = deepseekMemo.resolved;
         deepseekRecord = { ...deepseekMemo.record, reused: true };
-      } else if (brain && deepseekBudgetLeft() && question?.type === "choice") {
+      } else if (brain && brainBudgetLeft(decision.label) && question?.type === "choice") {
         // The board may have moved while planning: never pay ~10 s for a position that no longer exists.
         let stale = false;
         try {
@@ -735,10 +750,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           return true;
         };
         try {
-          stats.deepseekCalls += 1;
+          // Counted up front when DeepSeek is asked first (v3); another engine's calls count in the router.
+          if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
           if (spec.plan) {
             // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen.
             const { json, meta } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            stats.deepseekCalls += fallbackCalls(decision.label, meta.brain);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
             const reason = str(json["reason"]).trim();
@@ -779,6 +796,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             }
           } else {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            stats.deepseekCalls += fallbackCalls(decision.label, answer.brain);
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
             deepseekLatency = answer.latencyMs;
             if (answer.consistency) {
@@ -803,6 +821,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (error instanceof DeepSeekAnswerError) {
             // Its answer was unusable, but its reasoning may still name one option (WXMB F11: reasoned
             // "heal", answer unparsed, Jev smithed at 0.05): act on that before handing the question on.
+            stats.deepseekCalls += fallbackCalls(decision.label, (error.meta as BrainMetaUsage).brain);
             stats.deepseekTokens += error.meta.inputTokens + error.meta.outputTokens;
             deepseekLatency = error.meta.latencyMs;
             deepseekAnswerUnusable = error.message.slice(0, 160);
@@ -822,7 +841,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             onEvent({ type: "note", message: `falling back to Jev/code on ${decision.label}` });
           }
         }
-      } else if (brain && !deepseekBudgetLeft()) {
+      } else if (brain && !brainBudgetLeft(decision.label)) {
         onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
       }
       if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
@@ -979,11 +998,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             const capped =
               escalator.name === "claude"
                 ? stats.claudeCalls >= config.escalation.claudeMaxCalls
-                : stats.deepseekCalls >= (config.deepseek?.maxCalls ?? 0) || deepseekBarred;
+                : !brainBudgetLeft(decision.label) || deepseekBarred;
             if (capped) continue;
             try {
               if (escalator.name === "claude") stats.claudeCalls += 1;
-              else stats.deepseekCalls += 1;
+              else if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
               if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
               // The DeepSeek escalator is asked through the brain (the engine BRAIN_* names for this label).
               const answer = await (escalator === deepseekClient && brain ? brain : escalator).choose(
@@ -992,6 +1011,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 criteria,
                 escalator.name === "deepseek" ? { ...context, memory: { ...memory } } : context,
               );
+              if (escalator.name === "deepseek") stats.deepseekCalls += fallbackCalls(decision.label, "brain" in answer ? (answer.brain as BrainMeta | undefined) : undefined);
               if (escalator.name === "deepseek") stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
               const consistency = escalator.name === "deepseek" && "consistency" in answer ? (answer as { consistency?: unknown }).consistency : undefined;
               if (consistency !== undefined) {
@@ -1411,7 +1431,7 @@ async function ensureFightPlan(
   journal: RunJournal,
   logFile: string,
   onEvent: (event: LoopEvent) => void,
-  count: (tokens: number) => void,
+  count: (tokens: number, via: BrainMeta | undefined) => void,
 ): Promise<void> {
   const { state, knowledge, screenMemory } = env;
   const combat = asRecord(state.raw["combat"]);
@@ -1451,7 +1471,7 @@ async function ensureFightPlan(
     // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
     // per-turn combat effort.
     const { json, meta } = await deepseek.askJson(payload, "fight-plan");
-    count(meta.inputTokens + meta.outputTokens);
+    count(meta.inputTokens + meta.outputTokens, meta.brain);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
     logFightPlan(logFile, {
@@ -1478,7 +1498,7 @@ async function ensureFightPlan(
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
     // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
-    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens);
+    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);
     logFightPlan(logFile, { run: runId, fight, floor: state.run?.floor ?? null, kind, error: message.slice(0, 200), ...unparsedFields(error) });
     onEvent({ type: "note", message: `fight plan failed: ${message.slice(0, 160)}` });
   }
@@ -1496,7 +1516,7 @@ async function ensureRunPlan(
   logFile: string,
   observedTs: string,
   onEvent: (event: LoopEvent) => void,
-  count: (tokens: number) => void,
+  count: (tokens: number, via: BrainMeta | undefined) => void,
 ): Promise<void> {
   const { state, knowledge, screenMemory } = env;
   const runId = str(state.raw["run_id"]);
@@ -1519,7 +1539,7 @@ async function ensureRunPlan(
   try {
     // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
     const { json, meta, recovered } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
-    count(meta.inputTokens + meta.outputTokens);
+    count(meta.inputTokens + meta.outputTokens, meta.brain);
     const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;
     journal.noteRunPlan(state, trigger, runPlanLine(plan));
@@ -1544,7 +1564,7 @@ async function ensureRunPlan(
   } catch (error) {
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
-    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens);
+    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);
     logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200), ...unparsedFields(error) });
     onEvent({ type: "note", message: `run plan failed: ${message.slice(0, 160)}` });
   }

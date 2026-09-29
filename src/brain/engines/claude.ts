@@ -20,7 +20,9 @@
  *   state file), whose tools are pre-approved with --allowedTools mcp__gkb under --permission-mode dontAsk
  *   (anything else is denied, never prompted). The server writes each call to a record file read back here.
  * - Model: BRAIN_CLAUDE_MODEL (an alias such as opus / sonnet, or a full id), BRAIN_CLAUDE_MODEL_<PREFIX> for one
- *   question kind; the model that answered is read back from the result (modelUsage).
+ *   question kind; "opus" is pinned to the full id CLAUDE_OPUS_MODEL (config.ts CLAUDE_MODEL_ALIASES) so a move of
+ *   the CLI's alias cannot change the model under a running experiment; the model that answered is read back from
+ *   the result (modelUsage).
  * - Failures (claudeFailure): a used-up subscription quota, a rate limit, an overload or a lost login come back
  *   as an EngineFailure with a rest period, so the router answers from BRAIN_FALLBACK at once and keeps doing
  *   so for a while; the router's timeout kills the process (by PID). Nothing here waits on a human.
@@ -29,7 +31,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import type { BrainConfig, BrainEngineSettings } from "../../config.js";
+import { CLAUDE_MODEL_ALIASES, DEFAULT_CLAUDE_MODEL, type BrainConfig, type BrainEngineSettings } from "../../config.js";
 import { claudeMcpConfig, MCP_SERVER_NAME } from "../../tools/mcp-launch.js";
 import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask, TOOLS_NOTE } from "../message.js";
@@ -44,6 +46,11 @@ export interface ClaudeEngineOptions {
   claude: BrainConfig["claude"];
   /** A module whose buildTools(ctx) the tool server uses instead of the registry's (tests, smoke runs). */
   toolsModule?: string;
+}
+
+/** The model id sent to the CLI: a pinned alias (opus) as its full id, anything else as given. */
+export function claudeModelId(name: string): string {
+  return CLAUDE_MODEL_ALIASES[name.trim().toLowerCase()] ?? name;
 }
 
 /** The CLI's arguments for one call (exported for tests). */
@@ -130,12 +137,13 @@ export class ClaudeEngine implements BrainEngine {
   constructor(private readonly opts: ClaudeEngineOptions) {}
 
   get model(): string {
-    return this.opts.settings.model ?? "claude-sonnet-5";
+    return claudeModelId(this.opts.settings.model ?? DEFAULT_CLAUDE_MODEL);
   }
 
-  /** The model for a question: BRAIN_CLAUDE_MODEL_<PREFIX>, else BRAIN_CLAUDE_MODEL. */
+  /** The model for a question: BRAIN_CLAUDE_MODEL_<PREFIX>, else BRAIN_CLAUDE_MODEL (a pinned alias as its full id). */
   modelFor(label: string): string {
-    return this.opts.settings.modelByPrefix[labelPrefix(label)] ?? this.model;
+    const named = this.opts.settings.modelByPrefix[labelPrefix(label)];
+    return named ? claudeModelId(named) : this.model;
   }
 
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {

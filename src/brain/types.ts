@@ -57,6 +57,20 @@ export interface BrainRequest {
   reask?: { answer: string; problems: string[] };
   effort?: Effort;
   timeoutMs?: number;
+  /** What the system prompt carries when KNOWLEDGE_PREFIX is set (brain/knowledge.ts); logged in brain.jsonl. */
+  knowledge?: KnowledgeNote;
+}
+
+/** The knowledge a request carries (KNOWLEDGE_PREFIX=full), or why it fell back to v3's prompt. */
+export interface KnowledgeNote {
+  mode: "off" | "full";
+  /** The ascension the prefix was rendered for. */
+  ascension?: number;
+  /** Hash and size of the rendered prefix (the same on every question while the data holds). */
+  prefix_sha?: string;
+  prefix_chars?: number;
+  /** Why v3's prompt went out instead of the full knowledge. */
+  error?: string;
 }
 
 export interface BrainUsage {
