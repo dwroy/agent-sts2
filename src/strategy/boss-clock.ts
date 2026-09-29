@@ -769,6 +769,12 @@ export interface DeckProfile {
   passiveDamage?: number;
   /** AoE part of `passiveDamage` (Inferno). */
   passiveAoe?: number;
+  /**
+   * Part of `passiveDamage` no card play triggers: Inferno's hit on its own (and Crimson Mantle's) HP loss at the
+   * start of our turn, Juggernaut's on Crimson Mantle's block. A cap on card plays (the Knowledge Demon's Sloth)
+   * leaves it whole; the rest (Inferno on a self-damage card, Juggernaut on a block card) comes with the plays.
+   */
+  passiveTurnStart?: number;
   /** The passive damage sources named for the note. */
   passive?: string[];
   /** Turn a power drawn at random is played on average. */
@@ -892,7 +898,8 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   const infernoDamage = inferno * lossEvents;
   if (infernoDamage > 0) passive.push(`Inferno ${inferno} to all per HP loss, fed by ${feeders} (~${infernoDamage.toFixed(0)}/turn)`);
   // Block gained a turn: the block cards played, and Crimson Mantle's block at the start of each turn.
-  const blockGains = blockCards * perCard + (turnStartLoss.has("Crimson Mantle") ? 1 : 0);
+  const mantleBlock = turnStartLoss.has("Crimson Mantle") ? 1 : 0;
+  const blockGains = blockCards * perCard + mantleBlock;
   const juggernautDamage = juggernaut * blockGains;
   if (juggernautDamage > 0) passive.push(`Juggernaut ${juggernaut} per block gain, ~${blockGains.toFixed(1)} gains a turn (~${juggernautDamage.toFixed(0)}/turn)`);
   return {
@@ -914,6 +921,7 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     ruptureRate,
     passiveDamage: infernoDamage + juggernautDamage,
     passiveAoe: infernoDamage,
+    passiveTurnStart: inferno * turnStartLoss.size + juggernaut * mantleBlock,
     passive,
     // A power is drawn on average halfway through the first shuffle.
     setupTurn: 1 + Math.round(n / (2 * HAND)),
@@ -958,8 +966,13 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   // Power damage (Inferno, Juggernaut) from the turn after the powers are played; no Strength, no Vulnerable,
   // not scaled by the energy powers. Inferno's AoE counts once per body into the crab.
   const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
-  if (passive > 0 && turns > 0) perTurn += (passive * Math.max(0, turns - deck.setupTurn)) / turns;
+  if (passive > 0) perTurn += passive * powersInPlay(deck, turns);
   return perTurn;
+}
+
+/** Share of a T-turn fight the powers are in play: from the turn after `setupTurn`. */
+function powersInPlay(deck: DeckProfile, turns: number): number {
+  return turns > 0 ? Math.max(0, turns - deck.setupTurn) / turns : 0;
 }
 
 /** Deck damage a turn in a T-turn fight against this boss: calibrated, and cut by the boss's mechanic. */
@@ -988,7 +1001,13 @@ export function mechanicFactor(id: string, deck: DeckProfile, turns: number): nu
       const sloth = Math.min(1, 3 / Math.max(1, deck.plays));
       const mindRot = (HAND - 1) / HAND;
       const late = Math.max(0, turns - 5);
-      return (sloth * (turns - late) + sloth * mindRot * late) / turns;
+      const plays = (sloth * (turns - late) + sloth * mindRot * late) / turns;
+      // Both cut card plays, not the powers' own triggers: the hits no card play sets off (Inferno on its turn-start
+      // HP loss, Juggernaut on Crimson Mantle's block) go through whole. Their part of the calibrated estimate is
+      // the slope times their raw damage (the calibration is linear); the cap applies to the rest.
+      const total = calibrated(rawDeckDamage(deck, id, turns));
+      const free = total > 0 ? Math.min(1, (ESTIMATE_SLOPE * (deck.passiveTurnStart ?? 0) * powersInPlay(deck, turns)) / total) : 0;
+      return plays + (1 - plays) * free;
     }
     case "QUEEN":
       // Weak (-25%) from her third turn to the end.
