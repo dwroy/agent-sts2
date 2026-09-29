@@ -21,7 +21,7 @@
 
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
-import { playerJson, potionViews } from "../project/narrow.js";
+import { enemyPowerText, playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
@@ -1849,10 +1849,11 @@ function planTurn(env: DecisionEnv): Decision | null {
         hp: `${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`,
         block: num(enemy["block"]),
         intents: asArray(enemy["intents"]).map((intent) => `${str(asRecord(intent)["intent_type"])} ${str(asRecord(intent)["label"])}`).join(", "),
+        // Id and amount, the game's name and description (46 of 62 logged enemy powers reached Jev as a bare
+        // id), then code's note where the id alone misleads (POWER_NOTES).
         powers: asArray(enemy["powers"]).map((entry) => {
           const power = asRecord(entry);
-          const amount = numOrNull(power["amount"]);
-          return `${str(power["power_id"])}${amount === null ? "" : ` ${amount}`}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
+          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
         }),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
         ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),

@@ -396,3 +396,24 @@ describe("4. The 0.8 cut only for powers still unmodelled; Corpse Slug's Ravenou
     expect(r.lines[0]!.perTurn[0]!.loss).toEqual({ mean: 12, min: 12, max: 12 });
   });
 });
+
+describe("5. Enemy powers reach Jev with their name and game description, not a bare id (46 of 62)", () => {
+  it("id and amount, name, [debuff], the game's text, then code's note", () => {
+    potionMcOptions.now = () => 0;
+    rolloutLiveOptions.enabled = false;
+    try {
+      const fx = logged("g8yy-f30-t3");
+      const enemies = (fx.state["combat"] as Raw)["enemies"] as Raw[];
+      (enemies[1]!["powers"] as Raw[]).push({ index: 1, power_id: "SANDPIT_POWER", name: "沙坑", amount: 3, is_debuff: false });
+      const decision = planCombatTurn(loggedEnv(fx, { jevContext: "v1" })) as AskDecision;
+      for (const state of [decision.state, decision.jevView!.state]) {
+        const shown = state["enemies"] as Raw[];
+        expect(shown[0]!["powers"]).toEqual(["IMBALANCED_POWER 1 = 失衡 [debuff]: 如果这个生物的攻击被任意玩家完全格挡，则它将被击晕。", "VULNERABLE_POWER 1 = 易伤 [debuff]: 易伤的生物从攻击中受到的伤害增加50%。"]);
+        expect(shown[1]!["powers"]).toEqual(["STRENGTH_POWER 15 = 力量: 力量会增加攻击牌造成的伤害。", expect.stringMatching(/^SANDPIT_POWER 3 = 沙坑: .* \(countdown: -1 every enemy turn; at 0 I die/)]);
+      }
+    } finally {
+      potionMcOptions.now = null;
+      rolloutLiveOptions.enabled = true;
+    }
+  });
+});

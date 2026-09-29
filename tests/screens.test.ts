@@ -1453,7 +1453,8 @@ describe("Sandpit guard", () => {
     const decision = planCombatTurn(env(raw, { combatPlanner: "turn" }));
     expect(decision?.label).toMatch(/^combat\/plan-choice/);
     const enemies = decision && decision.kind === "ask" ? (decision.state["enemies"] as { powers: string[] }[]) : [];
-    expect(enemies[0]!.powers[0]).toMatch(/^SANDPIT_POWER 2 \(countdown/);
+    // Id and amount, the game text, then the note (batch B #5).
+    expect(enemies[0]!.powers[0]).toMatch(/^SANDPIT_POWER 2 = .* \(countdown/);
   });
 });
 
