@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
+import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -145,4 +146,41 @@ describe("2. DHGT6Z3Q7VAP F33 T2 (Kaiser Crab, Surrounded): Jev's line lost 20 a
     expect(freshInputs[0]!.player.facing).toBe(1);
     expect(solveTurn(freshInputs[0]!).plans.find((plan) => plan.steps.map((step) => `${step.cardId}>${step.target}`).join(",") === JEV)!.outcome.hpLoss).toBe(29);
   }, 30_000);
+});
+
+describe("3. Stable Serum in the rollout: cards drawn mid-turn that the line cannot play stay in hand too (they went to the discard pile)", () => {
+  const META: FightMeta = { act: 1, t: 1, asc: 9, kind: "hallway", enc: "X", deck: { n: 10, atk: 0, skl: 10, pow: 0, junk: 0, dmg: 0, blk: 50, up: 0 }, relics: 1, max_en: 3 };
+  const HIT: EnemyTable = { moves: { HIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  // 0-cost attacks of 20: a turn's damage is 20 per one in hand.
+  const big = (i: number) => card(i, "BIG", { cost: 0, damage: 20, damageBase: 20 });
+
+  it("a 3-energy draw-2 card, then the Serum: the 2 cards drawn at 0 energy start turn 2 with the 5 drawn (7 x 20), not in the discard pile (5 x 20)", () => {
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0)!;
+    const drawer = card(0, "DRAWER", { type: "Skill", cost: 3, target: "self", validTargets: [], draw: 2 });
+    const solver: SolverInput = { hand: [drawer, serum], player: player({ energy: 3, drawable: 20 }), enemies: [enemy({ hp: 1000, maxHp: 1000 })], fightKind: "monster", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const line = plans.find((plan) => plan.steps.length === 2 && plan.steps.some((step) => step.cardId === "DRAWER") && plan.steps.some((step) => step.cardId.startsWith("POTION:STABLE_SERUM")))!;
+    expect(line.outcome.cardsDrawn).toBe(2);
+    expect(line.outcome.energyLeft).toBe(0);
+    const dry = plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "DRAWER")!;
+    const run = (plan: Plan) => {
+      let t = 0;
+      return rolloutDecision({
+        solver,
+        plans: [plan],
+        enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+        tables: { X: HIT },
+        piles: { draw: Array.from({ length: 20 }, (_, i) => big(10 + i)), discard: [], handBase: solver.hand.map(() => null) },
+        meta: META,
+        playerPowers: {},
+        potions: 1,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 1, horizon: 2, samples: 2, now: () => (t += 0.01) },
+      }).lines[0]!;
+    };
+    expect(run(dry).perTurn[0]!.dmg.mean).toBe(100);
+    expect(run(line).perTurn[0]!.dmg.mean).toBe(140);
+  });
 });
