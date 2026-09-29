@@ -11,13 +11,13 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-interface Stat {
+export interface Stat {
   median?: number;
   p75?: number;
   n?: number;
 }
 
-interface Range {
+export interface Range {
   min?: number;
   median?: number;
   max?: number;
@@ -51,15 +51,20 @@ export interface MoveEntry {
   heal_by_asc?: Record<string, Record<string, number>>;
 }
 
-interface MonsterEntry {
+export interface MonsterEntry {
   name?: { zh?: string };
   kind?: string;
+  /** Map rooms and acts the monster was fought in (fights), and the encounters it was in. */
+  rooms?: Record<string, number>;
+  acts?: Record<string, number>;
+  encounters?: Record<string, number>;
   moves?: Record<string, MoveEntry>;
   powers?: Record<
     string,
     {
       name?: string;
       type?: string;
+      description?: string;
       n_fights?: number;
       amount_at_first_sight?: Record<string, number>;
       /** asc -> {amount: n}: each instance's first logged amount, and the turn it was on. */
@@ -68,9 +73,11 @@ interface MonsterEntry {
     }
   >;
   hp_by_asc?: Record<string, Range>;
+  /** asc -> {"phase1 > phase2 > ...": fights}: max HP of each phase of a multi-phase enemy. */
+  phases_by_asc?: Record<string, Record<string, number>>;
 }
 
-interface Threat {
+export interface Threat {
   fights?: number;
   n_outcome_known?: number;
   win_rate?: number;
@@ -86,13 +93,13 @@ interface Threat {
   phases?: Record<string, number>;
 }
 
-interface EncounterEntry {
+export interface EncounterEntry {
   rooms?: Record<string, number>;
   acts?: Record<string, number>;
   by_asc?: Record<string, Threat>;
 }
 
-interface MonsterDb {
+export interface MonsterDb {
   bosses: Record<string, Record<string, Threat>>;
   encounters: Record<string, EncounterEntry>;
   monsters: Record<string, MonsterEntry>;
@@ -172,6 +179,8 @@ export interface MoveDamage {
   from: number;
   /** The damage ratio applied (to / from); 1 when logged at this ascension or when nothing measures it. */
   ratio: number;
+  /** Estimated only: the logged ascension's number before the ratio (base per hit, or the shown hit). */
+  logged?: number;
   /** Moves the ratio was measured on, and whether they are this monster's own (else every monster's). */
   ratioN?: number;
   ratioOwn?: boolean;
@@ -209,9 +218,21 @@ export function backAttackShare(move: MoveEntry | undefined): number | null {
  * no ascension has any (a DB built before the split, or only unknown-ascension rows).
  */
 export function countsAt(byAsc: Record<string, Record<string, number> | undefined> | undefined, pooled: Record<string, number> | undefined, asc: number): Record<string, number> | undefined {
+  return countsAtAscension(byAsc, pooled, asc).counts;
+}
+
+/**
+ * countsAt, and where the counts came from: the logged ascension (`exact` when it is `asc`), or null when
+ * they are the pooled counts (the knowledge text labels a number from another ascension).
+ */
+export function countsAtAscension(
+  byAsc: Record<string, Record<string, number> | undefined> | undefined,
+  pooled: Record<string, number> | undefined,
+  asc: number,
+): { counts: Record<string, number> | undefined; asc: number | null; exact: boolean } {
   const logged = Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, counts]) => counts && Object.keys(counts).length > 0));
   const found = nearestAscension(logged, asc);
-  return found ? logged[found.key] : pooled;
+  return found ? { counts: logged[found.key], asc: Number(found.key), exact: found.exact } : { counts: pooled, asc: null, exact: false };
 }
 
 /** An effect is the move's own when logged on at least this share of the enemy turns its most-logged effect was. */
@@ -252,6 +273,24 @@ export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: nu
   const byAsc = Object.fromEntries(Object.entries(move?.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[powerId]]));
   const value = mode(countsAt(byAsc, move?.self_powers_gained?.[powerId], asc));
   return value === null ? null : Number(value);
+}
+
+/** Picks an alternative needs to be one (appliedPowerIds). */
+export const ALTERNATIVE_MIN_USES = 3;
+
+/**
+ * Which of `candidates` (powers a move puts on us, player_powers_applied) are the move's own, and whether each
+ * use put one of them on us (a choice: the Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses). A
+ * choice is two or more powers each picked ALTERNATIVE_MIN_USES times at least (the Magi Knight's Dampen with
+ * 1 Weak in 16 is no choice) whose uses add up to the move's; otherwise only the regular effects are the move's
+ * own, not a rare leak (regularEffect: Stabbot's Frail on 3 of 20). Candidates keep their order.
+ */
+export function appliedPowerIds(move: MoveEntry, candidates: readonly string[]): { ids: string[]; choice: boolean } {
+  const uses = (id: string) => countTotal(move.player_powers_applied?.[id]);
+  const picks = candidates.filter((id) => uses(id) >= ALTERNATIVE_MIN_USES);
+  const pooled = picks.reduce((sum, id) => sum + uses(id), 0);
+  const choice = picks.length >= 2 && (move.n_seen ?? 0) > 0 && pooled <= 1.1 * move.n_seen!;
+  return { ids: choice ? picks : candidates.filter((id) => regularEffect(move, move.player_powers_applied?.[id])), choice };
 }
 
 function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
@@ -361,6 +400,7 @@ export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveI
     estimated: true,
     from,
     ratio,
+    logged,
     ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}),
     ratioTo: measured?.reached ?? from,
     ...behind(base),
@@ -383,7 +423,117 @@ export function shownDamageAt(monsters: MonsterMoveData, monsterId: string, move
   if (found.exact) return { perHit: Number(shown[1]), hits: Number(shown[2]), estimated: false, from, ratio: 1 };
   const measured = chainedDamageRatio(monsters, monsterId, from, asc);
   const ratio = measured?.ratio ?? 1;
-  return { perHit: Math.round(Number(shown[1]) * ratio), hits: Number(shown[2]), estimated: true, from, ratio, ratioTo: measured?.reached ?? from };
+  return {
+    perHit: Math.round(Number(shown[1]) * ratio),
+    hits: Number(shown[2]),
+    estimated: true,
+    from,
+    ratio,
+    logged: Number(shown[1]),
+    ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}),
+    ratioTo: measured?.reached ?? from,
+  };
+}
+
+/** A monster's median max HP at an ascension (monsterHpAt). */
+export interface MonsterHp {
+  hp: number;
+  /** Instances behind the logged median (at `from`), and its range there. */
+  n: number;
+  min?: number;
+  max?: number;
+  /** Not logged at this ascension: the nearest logged one's median times `ratio`, rounded. */
+  estimated: boolean;
+  /** The logged ascension the median comes from. */
+  from: number;
+  /** The HP ratio applied (1 when logged here or when nothing measures it). */
+  ratio: number;
+  /** The logged median at `from`, before the ratio. */
+  logged: number;
+  /** Estimated only: monsters the ratio was measured on (the fewest over its steps), and the ascension the chain reaches. */
+  ratioN?: number;
+  ratioTo?: number;
+}
+
+function medianHp(monster: MonsterEntry | undefined, asc: number): number | null {
+  const median = monster?.hp_by_asc?.[String(asc)]?.median;
+  return typeof median === "number" && median > 0 ? median : null;
+}
+
+/**
+ * How much more HP enemies have at `to` than at `from`: summed median max HP at `to` over at `from`, over every
+ * monster logged at both (A7 -> A8: 1.06 on 103 monsters; A8 -> A9: 1.00 on 93). null when none is logged at both.
+ */
+export function ascensionHpRatio(monsters: Record<string, MonsterEntry>, from: number, to: number): { ratio: number; n: number } | null {
+  let atFrom = 0;
+  let atTo = 0;
+  let n = 0;
+  for (const monster of Object.values(monsters)) {
+    const a = medianHp(monster, from);
+    const b = medianHp(monster, to);
+    if (a === null || b === null) continue;
+    atFrom += a;
+    atTo += b;
+    n += 1;
+  }
+  return n > 0 ? { ratio: atTo / atFrom, n } : null;
+}
+
+/**
+ * The HP ratio from `from` to `to` (ascension review #1/#20, as chainedDamageRatio): measured directly on the
+ * monsters logged at both, else chained through the ascensions logged on the way, one measured step at a time;
+ * an ascension nobody is logged at adds nothing (`reached` stops short of `to`). null when no step is measured.
+ */
+export function chainedHpRatio(monsters: Record<string, MonsterEntry>, from: number, to: number): { ratio: number; n: number; reached: number } | null {
+  const direct = ascensionHpRatio(monsters, from, to);
+  if (direct) return { ...direct, reached: to };
+  const up = to > from;
+  const logged = new Set<number>();
+  for (const monster of Object.values(monsters)) {
+    for (const key of Object.keys(monster.hp_by_asc ?? {})) if (/^\d+$/.test(key) && medianHp(monster, Number(key)) !== null) logged.add(Number(key));
+  }
+  const onTheWay = [...logged].filter((asc) => (up ? asc > from && asc <= to : asc < from && asc >= to)).sort((a, b) => (up ? a - b : b - a));
+  let at = from;
+  let ratio = 1;
+  let n = Infinity;
+  for (const next of onTheWay) {
+    const step = ascensionHpRatio(monsters, at, next);
+    if (!step) continue;
+    ratio *= step.ratio;
+    n = Math.min(n, step.n);
+    at = next;
+  }
+  return at === from ? null : { ratio, n, reached: at };
+}
+
+/**
+ * A monster's median max HP at `asc` (phase 1 for a multi-phase enemy): as logged there, else the nearest logged
+ * ascension's scaled by the measured HP ratio (chainedHpRatio), rounded and marked estimated. null when its HP
+ * was never logged.
+ */
+export function monsterHpAt(monsters: Record<string, MonsterEntry>, monsterId: string, asc: number): MonsterHp | null {
+  const monster = monsters[monsterId];
+  const withHp = Object.fromEntries(Object.entries(monster?.hp_by_asc ?? {}).filter(([key]) => medianHp(monster, Number(key)) !== null));
+  const found = nearestAscension(withHp, asc);
+  if (!monster || !found) return null;
+  const range = withHp[found.key]!;
+  const logged = range.median!;
+  const from = Number(found.key);
+  const spread = { ...(typeof range.min === "number" ? { min: range.min } : {}), ...(typeof range.max === "number" ? { max: range.max } : {}) };
+  if (found.exact) return { hp: Math.round(logged), n: range.n ?? 0, ...spread, estimated: false, from, ratio: 1, logged };
+  const measured = chainedHpRatio(monsters, from, asc);
+  const ratio = measured?.ratio ?? 1;
+  return {
+    hp: Math.round(logged * ratio),
+    n: range.n ?? 0,
+    ...spread,
+    estimated: true,
+    from,
+    ratio,
+    logged,
+    ...(measured ? { ratioN: measured.n } : {}),
+    ratioTo: measured?.reached ?? from,
+  };
 }
 
 /**
@@ -493,10 +643,10 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
  *   {GAIN:ID:MOVE:POWER} what the move gives its user of a power (selfGainAt);
  *   {POWER:ID:POWER}     the amount the enemy is first seen with (amount_at_first_sight_by_asc);
  *   {BLOCK:ID:MOVE}      the block the move gives (block_gained_by_asc).
- * One the DB cannot fill becomes "?", never a hand-set number from another ascension.
+ * One the DB cannot fill becomes "?", never a hand-set number from another ascension. `db`: the monsters to read
+ * (the loaded DB by default; the knowledge renderer passes the one it loaded from its knowledge directory).
  */
-export function fillDbNumbers(text: string, asc: number): string {
-  const db = load().monsters;
+export function fillDbNumbers(text: string, asc: number, db: Record<string, MonsterEntry> = load().monsters): string {
   const fill = (kind: string, id: string, a?: string, b?: string): string | null => {
     const monster = db[id];
     const move = a ? monster?.moves?.[a] : undefined;

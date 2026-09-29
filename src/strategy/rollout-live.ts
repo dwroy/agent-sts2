@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -124,9 +124,6 @@ function mode(counts: Record<string, number> | undefined): number | null {
   return best ? Number(best[0]) : null;
 }
 
-/** Picks an alternative needs to be one (playerPowersOf). */
-const ALTERNATIVE_MIN_USES = 3;
-
 /**
  * The powers a move puts on us (rollout.ts PLAYER_DEBUFFS): the most common amount of each in the monster
  * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
@@ -141,15 +138,12 @@ export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "
     if (amount) all[id] = amount;
   }
   if (Object.keys(all).length === 0) return {};
-  // Alternatives: several powers whose uses add up to the move's (each use put one of them on us: the
-  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here; each
-  // picked ALTERNATIVE_MIN_USES times at least (the Magi Knight's Dampen with 1 Weak in 16 is no choice).
+  // Alternatives (each use put one of them on us: the Knowledge Demon's Curse of Knowledge), in the order they
+  // were picked here; not a choice: only what the move does itself, not a rare leak (monster-db appliedPowerIds).
   const uses = (id: string, table: Record<string, Record<string, number>> | undefined) => Object.values(table?.[id] ?? {}).reduce((sum, n) => sum + n, 0);
-  const picks = (Object.keys(all) as PlayerDebuff[]).filter((id) => uses(id, entry.player_powers_applied) >= ALTERNATIVE_MIN_USES);
-  const pooled = picks.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
-  const alternatives = picks.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
-  // Not a choice: only what the move does itself, not a rare leak (regularEffect: Stabbot's Frail on 3 of 20).
-  const ids = alternatives ? picks : (Object.keys(all) as PlayerDebuff[]).filter((id) => regularEffect(entry, entry.player_powers_applied?.[id]));
+  const applied = appliedPowerIds(entry, Object.keys(all));
+  const alternatives = applied.choice;
+  const ids = applied.ids as PlayerDebuff[];
   const out: Partial<Record<PlayerDebuff, number>> = Object.fromEntries(ids.map((id) => [id, all[id]!]));
   if (ids.length === 0) return {};
   if (!alternatives) return { playerPowers: out };
