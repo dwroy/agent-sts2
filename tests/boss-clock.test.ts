@@ -42,6 +42,7 @@ import {
   REGAL_PILLOW_HEAL,
   ringingTurns,
   setUnblockedSharesForTests,
+  type GiantKillRow,
   testSubjectPhase2Loss,
 } from "../src/strategy/boss-clock.js";
 import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
@@ -470,13 +471,18 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
 
   it("the Giant's and the Test Subject's notes carry the ascension's numbers and the experience base's advice", () => {
     setMonsterDbForTests({ ...GIANT_DB, bosses: BOSS_HP } as never);
+    // The kill-turn record comes from the fight rows (boss-damage.json kills; batch G): A8's 27 and A9's first 8.
+    const row = (turn: number | null, won: boolean, extra: Partial<GiantKillRow> = {}): GiantKillRow => ({ turn, won, ...extra });
+    const a8Rows = [...Array.from({ length: 15 }, (_, i) => row(8 + (i % 3), i < 13)), ...Array.from({ length: 7 }, (_, i) => row(13 + (i % 3), i < 5)), row(16, false), row(17, false), row(18, false), row(null, false), row(null, false)];
+    const a9Rows = [row(7, true), row(9, false, { hp: 14, stacks: 41, run: "5NFG" }), row(10, false, { hp: 20, stacks: 44, run: "2ZCK" }), row(11, false), row(12, true), row(14, false), row(19, false), row(null, false)];
+    setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 35, turns: 400, kills: { "8": a8Rows, "9": a9Rows } } });
     // Run journal (DeepSeek): HP, Siphon's heal, Pressure Gun's shots at this ascension; early kill.
     const a9 = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
     expect(a9).toMatch(/^250 血，/);
     expect(a9).toContain("虹吸回合回血 15");
     expect(a9).toContain("依次 23→28→33");
-    expect(a9).toContain("A9 8 场只赢 2 场（T7、T12 击杀），T10 前击杀只赢 1/3");
-    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8 27 场：T10 前击杀 13/15 赢");
+    expect(a9).toContain("A9 8 场赢 2 场（T7、T12 击杀）：T10 前击杀赢 1/3");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8 27 场赢 18 场：T10 前击杀赢 13/15");
     expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("依次 20→25→30");
     const a7 = journalBossNote("WATERFALL_GIANT_BOSS", 7)!;
     expect(a7).toMatch(/^240 血，/);
@@ -492,8 +498,9 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
     expect(bossNote(giant, 9)).toContain("Siphon heals 15 HP; Pressure Gun on T5/T10/T15 (23/28/33)");
     expect(bossNote(giant, 7)).toContain("Siphon heals 10 HP; Pressure Gun on T5/T10/T15 (20/25/30)");
     const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
-    expect(clock.mechanic).toContain("kill it early (A8 (27 fights): killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
+    expect(clock.mechanic).toContain("kill it early (A8 (27 fights): 18 won; killed by T10 13/15 won, T11-T15 5/7 won, T16 or later 0/3 won");
     setMonsterDbForTests(GIANT_DB as never);
+    setUnblockedSharesForTests(null);
   });
 });
 

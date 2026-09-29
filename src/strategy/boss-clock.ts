@@ -101,6 +101,17 @@ export interface UnblockedShare {
   unblocked_share: number;
   fights: number;
   turns: number;
+  /** The Waterfall Giant only: its logged fights by ascension, with the turn it was killed on (null: not killed). */
+  kills?: Record<string, GiantKillRow[]>;
+}
+
+/** One logged Waterfall Giant fight (tools/build-boss-damage.py): the kill turn, the outcome, HP and stacks at the kill. */
+export interface GiantKillRow {
+  turn: number | null;
+  won: boolean;
+  hp?: number | null;
+  stacks?: number | null;
+  run?: string;
 }
 
 let unblockedCache: Record<string, UnblockedShare> | null = null;
@@ -188,17 +199,49 @@ export function bossMechanic(profile: BossProfile, ascension: number): string {
 }
 
 /**
- * The logged Waterfall Giant fights by kill turn at this ascension (experience giant-explode, 2026-09-29):
- * A8's record below A9 (the eruption is the same from A0 to A8), A9's from A9 (5 stacks more on the same
- * turn: killed by T10 won 1 of 3, the two losses short of HP at the kill). A9's early kills were not A8's.
+ * The logged Waterfall Giant fights by kill turn at this ascension, from the fight data (boss-damage.json
+ * WATERFALL_GIANT.kills, tools/build-boss-damage.py; experience giant-explode): A8's record below A9 (the
+ * eruption is the same from A0 to A8), A9's from A9 (5 stacks more on the same turn). The text was hard-coded
+ * ("A9 killed by T10 1/3") and went stale when Y36HXZ80A8LL won with a T9 kill (2/4).
  */
 export function giantKillRecord(ascension: number, lang: "zh" | "en"): string {
-  if (ascension >= 9) {
-    return lang === "zh"
-      ? "A9 8 场只赢 2 场（T7、T12 击杀），T10 前击杀只赢 1/3：输的 5NFG（T9）、2ZCK（T10）满血进场，击杀时只剩 14、20 血对 41、44 层，死于自爆"
-      : "A9 (8 fights): 2 won (kills on T7, T12); killed by T10 1/3 won, 5NFG (T9) and 2ZCK (T10) entered at full HP and died to the blast with 14 and 20 HP against 41 and 44 stacks";
+  const level = ascension >= 9 ? 9 : 8;
+  return giantKillText(unblockedShare("WATERFALL_GIANT")?.kills?.[String(level)] ?? [], level, lang);
+}
+
+/** The kill-turn record text of these fights at ascension `level` (giantKillRecord; exported for tests). */
+export function giantKillText(rows: GiantKillRow[], level: number, lang: "zh" | "en"): string {
+  const zh = lang === "zh";
+  if (rows.length === 0) return zh ? `A${level} 没有巨兽的对局数据` : `A${level}: no logged Giant fights`;
+  const bucket = (test: (row: GiantKillRow) => boolean) => {
+    const list = rows.filter(test);
+    return { won: list.filter((row) => row.won).length, n: list.length };
+  };
+  const early = bucket((row) => row.turn !== null && row.turn <= 10);
+  const mid = bucket((row) => row.turn !== null && row.turn >= 11 && row.turn <= 15);
+  const late = bucket((row) => row.turn !== null && row.turn >= 16);
+  const none = bucket((row) => row.turn === null);
+  const wins = rows.filter((row) => row.won);
+  const winTurns = wins.map((row) => row.turn).filter((turn): turn is number => turn !== null).sort((a, b) => a - b);
+  const earlyLosses = rows.filter((row) => !row.won && row.turn !== null && row.turn <= 10 && row.hp != null && row.stacks != null).sort((a, b) => (a.turn ?? 0) - (b.turn ?? 0));
+  const part = (label: string, b: { won: number; n: number }) => (b.n > 0 ? `${label} ${b.won}/${b.n}` : null);
+  if (zh) {
+    const buckets = [part("T10 前击杀赢", early), part("T11–T15", mid), part("T16 后", late), part("没打死", none)].filter(Boolean).join("、");
+    const winList = wins.length > 0 && wins.length <= 4 && winTurns.length > 0 ? `（${winTurns.map((turn) => `T${turn}`).join("、")} 击杀）` : "";
+    const lossList =
+      earlyLosses.length > 0 && earlyLosses.length <= 3
+        ? `；T10 前击杀输的 ${earlyLosses.map((row) => `${row.run ?? "?"}（T${row.turn}）`).join("、")}击杀时只剩 ${earlyLosses.map((row) => row.hp).join("、")} 血对 ${earlyLosses.map((row) => row.stacks).join("、")} 层，死于自爆`
+        : "";
+    return `A${level} ${rows.length} 场赢 ${wins.length} 场${winList}：${buckets}${lossList}`;
   }
-  return lang === "zh" ? "A8 27 场：T10 前击杀 13/15 赢、T13–T15 5/7、T16 后 0/3" : "A8 (27 fights): killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3";
+  const partEn = (label: string, b: { won: number; n: number }) => (b.n > 0 ? `${label} ${b.won}/${b.n} won` : null);
+  const buckets = [partEn("killed by T10", early), partEn("T11-T15", mid), partEn("T16 or later", late), partEn("not killed", none)].filter(Boolean).join(", ");
+  const winList = wins.length > 0 && wins.length <= 4 && winTurns.length > 0 ? ` (kills on ${winTurns.map((turn) => `T${turn}`).join(", ")})` : "";
+  const lossList =
+    earlyLosses.length > 0 && earlyLosses.length <= 3
+      ? `; lost after a kill by T10: ${earlyLosses.map((row) => `${row.run ?? "?"} (T${row.turn}) ${row.hp} HP against ${row.stacks} stacks`).join(", ")}, died to the blast`
+      : "";
+  return `A${level} (${rows.length} fights): ${wins.length} won${winList}; ${buckets}${lossList}`;
 }
 
 /**

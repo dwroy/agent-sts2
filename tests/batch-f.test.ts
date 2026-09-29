@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
-import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
+import { bossMechanic, bossProfile, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { planEvent, potionSlotsNeeded } from "../src/screens/event.js";
@@ -159,18 +159,27 @@ describe("3. Hand-written knowledge per ascension, as the data has it (experienc
   const read = (name: string): string => readFileSync(join(KNOWLEDGE, name), "utf8");
 
   it("the Giant's early kill: A8's record at A8, A9's at A9 (killed by T10 1/3, both losses short of HP at the kill)", () => {
-    expect(giantKillRecord(9, "zh")).toContain("T10 前击杀只赢 1/3");
-    expect(giantKillRecord(9, "zh")).toContain("击杀时只剩 14、20 血对 41、44 层");
-    expect(giantKillRecord(8, "zh")).toContain("A8 27 场：T10 前击杀 13/15 赢");
-    const a9 = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
-    expect(a9).toContain("T10 前击杀只赢 1/3");
-    expect(a9).not.toContain("13/15");
-    expect(a9).toContain("所需格挡（层数 − HP）≤13 的 18 场赢 17，≥20 的 15 场赢 3");
-    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("13/15");
-    const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
-    expect(bossMechanic(giant, 9)).toContain("killed by T10 1/3 won");
-    expect(bossMechanic(giant, 9)).not.toContain("13/15");
-    expect(bossMechanic(giant, 8)).toContain("killed by T10 13/15 won");
+    // Batch G: the record comes from the fight data (boss-damage.json kills); here the 8 A9 fights of batch F's time.
+    const row = (turn: number | null, won: boolean, extra: Partial<GiantKillRow> = {}): GiantKillRow => ({ turn, won, ...extra });
+    const a8 = [...Array.from({ length: 15 }, (_, i) => row(8 + (i % 3), i < 13)), ...Array.from({ length: 7 }, (_, i) => row(13 + (i % 3), i < 5)), row(16, false), row(17, false), row(18, false), row(null, false), row(null, false)];
+    const a9 = [row(7, true), row(9, false, { hp: 14, stacks: 41, run: "5NFG" }), row(10, false, { hp: 20, stacks: 44, run: "2ZCK" }), row(11, false), row(12, true), row(14, false), row(19, false), row(null, false)];
+    setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 35, turns: 400, kills: { "8": a8, "9": a9 } } });
+    try {
+      expect(giantKillRecord(9, "zh")).toContain("T10 前击杀赢 1/3");
+      expect(giantKillRecord(9, "zh")).toContain("击杀时只剩 14、20 血对 41、44 层");
+      expect(giantKillRecord(8, "zh")).toContain("A8 27 场赢 18 场：T10 前击杀赢 13/15");
+      const a9Note = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
+      expect(a9Note).toContain("T10 前击杀赢 1/3");
+      expect(a9Note).not.toContain("13/15");
+      expect(a9Note).toContain("所需格挡（层数 − HP）≤13 的 18 场赢 17，≥20 的 15 场赢 3");
+      expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("13/15");
+      const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
+      expect(bossMechanic(giant, 9)).toContain("killed by T10 1/3 won");
+      expect(bossMechanic(giant, 9)).not.toContain("13/15");
+      expect(bossMechanic(giant, 8)).toContain("killed by T10 13/15 won");
+    } finally {
+      setUnblockedSharesForTests(null);
+    }
   });
 
   it("the guides: every A8 early-kill figure comes with A9's; Prism A9 losses; Entomancer deaths; the Kin as kin-priest-focus", () => {
@@ -179,7 +188,8 @@ describe("3. Hand-written knowledge per ascension, as the data has it (experienc
     for (const [name, text] of [["ds-handbook", handbook], ["ironclad-guide", guide]] as const) {
       const lines = text.split("\n").filter((line) => line.includes("13/15"));
       expect(lines.length, name).toBeGreaterThan(0);
-      for (const line of lines) expect(line, name).toContain("T10 前击杀只赢 1/3");
+      // Batch G: A9's figure as the data has it after Y36HXZ80A8LL (a T9 kill won).
+      for (const line of lines) expect(line, name).toContain("T10 前击杀赢 2/4");
     }
     expect(handbook).not.toContain("多次掉 22~40 血");
     expect(handbook).toMatch(/感染棱柱.*A9 4 场赢 3，赢的 3 场掉 42、52、56/);

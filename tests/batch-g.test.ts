@@ -3,6 +3,10 @@
  * (tests/logged-states/batch-g, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
@@ -11,6 +15,7 @@ import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
 import { checkConsistency } from "../src/llm/consistency.js";
+import { giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { discardSlotsOf } from "../src/screens/potion-discard.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
@@ -146,5 +151,44 @@ describe("6. An event's \"discard, then take it\": one option per event option, 
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 3 });
     resolved.apply?.();
     expect(env.screenMemory.afterDiscard).toMatchObject({ place: "event:" + String((fx.state["event"] as Raw)["event_id"]), option: 0, slot: 3, more: [1, 4] });
+  });
+});
+
+describe("2. Hand-written facts from the data: the Giant's kill-turn record (A9 killed by T10 1/3 -> 2/4 after Y36HXZ80A8LL) and act-1 boss entry HP per ascension", () => {
+  const row = (turn: number | null, won: boolean, extra: Partial<GiantKillRow> = {}): GiantKillRow => ({ turn, won, ...extra });
+  /** The 10 logged A9 Giant fights as of 2026-09-29 19:30 (YQL8 T7 won, 5NFG T9, Y36H T9 won, 2ZCK T10, 1VX1 T11, 8V0H T12 won, 9Q7V T14, 7MDJ T19, HEAC and RHNE not killed). */
+  const a9 = [
+    row(7, true, { run: "YQL8", hp: 60, stacks: 35 }),
+    row(9, false, { run: "5NFG", hp: 14, stacks: 41 }),
+    row(9, true, { run: "Y36H", hp: 36, stacks: 41 }),
+    row(10, false, { run: "2ZCK", hp: 20, stacks: 44 }),
+    row(11, false),
+    row(12, true),
+    row(14, false),
+    row(19, false),
+    row(null, false),
+    row(null, false),
+  ];
+
+  it("the record is counted from the fight rows: 3 of 10 won, by T10 2/4, the early-kill losses with HP and stacks", () => {
+    expect(giantKillText(a9, 9, "zh")).toBe("A9 10 场赢 3 场（T7、T9、T12 击杀）：T10 前击杀赢 2/4、T11–T15 1/3、T16 后 0/1、没打死 0/2；T10 前击杀输的 5NFG（T9）、2ZCK（T10）击杀时只剩 14、20 血对 41、44 层，死于自爆");
+    expect(giantKillText(a9, 9, "en")).toBe("A9 (10 fights): 3 won (kills on T7, T9, T12); killed by T10 2/4 won, T11-T15 1/3 won, T16 or later 0/1 won, not killed 0/2 won; lost after a kill by T10: 5NFG (T9) 14 HP against 41 stacks, 2ZCK (T10) 20 HP against 44 stacks, died to the blast");
+  });
+
+  it("the handbook's act-1 boss entry HP per ascension (the pooled 88%/81% came from 41 early fights; at A9 wins and losses both enter near 90%)", () => {
+    const handbook = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge", "ds-handbook.md"), "utf8");
+    expect(handbook).not.toContain("赢局平均 88%，输局 81%");
+    expect(handbook).toContain("A8 90%/83%（141 场），A9 90%/88%（44 场）");
+  });
+
+  it("giantKillRecord reads the fight data at A9 from A9 up, A8's below", () => {
+    setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 12, turns: 120, kills: { "8": [row(8, true), row(16, false)], "9": a9 } } });
+    try {
+      expect(giantKillRecord(9, "zh")).toContain("T10 前击杀赢 2/4");
+      expect(giantKillRecord(10, "en")).toContain("killed by T10 2/4 won");
+      expect(giantKillRecord(8, "zh")).toBe("A8 2 场赢 1 场（T8 击杀）：T10 前击杀赢 1/1、T16 后 0/1");
+    } finally {
+      setUnblockedSharesForTests(null);
+    }
   });
 });
