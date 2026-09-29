@@ -6,6 +6,8 @@
  * and the run boundary.
  */
 
+import { randomUUID } from "node:crypto";
+
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
@@ -27,6 +29,7 @@ import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAc
 import { planDecision } from "./screens/index.js";
 import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
+import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 
 export type LoopMode = "shadow" | "play";
@@ -219,6 +222,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const log = createDecisionLog(config.log.decisionLog);
   const statesPath = stateLogPath(config.log.decisionLog);
   const stateLog = createStateLog(statesPath);
+  // Every request to Jev, verbatim (V4 M3): joins the decision rows by decision_id.
+  const promptLogPath = resolveJevPromptLog(config.log);
+  const promptLog = promptLogPath ? createJevPromptLog(promptLogPath) : null;
   /** When the loop read the current iteration's state (orders a replay of the logs after a restart). */
   let observedTs = "";
   // States that changed the run journal without a decision on them are logged too (`observed`), so a
@@ -632,6 +638,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let decision = planned.decision;
     const planStarted = Date.now();
     const stateFingerprint = observedFp;
+    const decisionId = randomUUID();
     let resolved: ResolvedAction;
     let jevLatency = 0;
     let deepseekLatency = 0;
@@ -918,9 +925,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const jevState = decision.jevView?.state ?? decision.state;
       const jevQuestions = decision.jevView?.questions ?? decision.questions;
       asked = toJsonValue(jevQuestions) as Record<string, JsonValue>;
+      const promptMeta = (call: JevPromptMeta["call"]): JevPromptMeta => ({
+        decisionId, runId: str(state.raw["run_id"]) || null, floor: state.run?.floor ?? null, turn: state.turn,
+        fingerprint: stateFingerprint, observedTs, label: decision.label, jevContext: decision.jevView?.context ?? null, call,
+      });
       let firstAnswers: AnswerSet = {};
       try {
-        const result = await withJevRetry(() => jev.ask(jevState, jevQuestions), jevRetry);
+        const result = await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
         stats.jevCalls += 1;
@@ -1008,7 +1019,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           reasked = true;
           const spec = resolved.reask;
           const followUp = await withJevRetry(
-            () => jev.ask(jevState, { pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria } }),
+            () => askJevLogged(jev, promptLog, promptMeta("reask"), jevState, { pick: { type: "choice", instructions: spec.instructions, criteria: spec.criteria } }),
             jevRetry,
           );
           stats.jevCalls += 1;
@@ -1101,6 +1112,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       floor: state.run?.floor ?? null,
       turn: state.turn,
       label: decision.label,
+      decision_id: decisionId,
       decider: deepseekResolved || (decision.kind === "act" && decision.plan)
         ? ("deepseek" as const)
         : decision.kind === "act"

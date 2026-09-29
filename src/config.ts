@@ -91,7 +91,11 @@ export interface AppConfig {
    */
   combatDeepseek: "off" | "on";
   mode: Mode;
-  log: { level: LogLevel; decisionLog: string };
+  /**
+   * jevPromptLog (JEV_PROMPT_LOG): where every request to Jev is logged verbatim (telemetry/jev-prompt-log.ts);
+   * unset: next to the decision log (logs/jev-prompts.jsonl); null (JEV_PROMPT_LOG=off): not logged.
+   */
+  log: { level: LogLevel; decisionLog: string; jevPromptLog?: string | null };
   warnings: string[];
 }
 
@@ -445,9 +449,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     deepseek,
     escalation,
     mode,
-    log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog },
+    log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog, ...jevPromptLogConfig(readEnv(env, "JEV_PROMPT_LOG")) },
     warnings,
   };
+}
+
+/** JEV_PROMPT_LOG: a path, or off/none/false to log no prompts; unset leaves the default (next to the decision log). */
+function jevPromptLogConfig(raw: string | null): { jevPromptLog?: string | null } {
+  if (raw === null) return {};
+  return /^(off|none|false|0)$/i.test(raw) ? { jevPromptLog: null } : { jevPromptLog: raw };
 }
 
 /** Throws a ConfigError with an actionable message when the Jev key is missing. */
