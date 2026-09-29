@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -56,6 +56,7 @@ import {
   type PlayerDebuff,
   type RolloutEnemy,
   type RolloutResult,
+  type SpawnTemplate,
 } from "./rollout.js";
 import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
 
@@ -93,7 +94,7 @@ export interface MonsterDbMove extends MoveEntry {
   avg_total_shown?: number;
 }
 
-type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove> }>;
+type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
 
 const KNOWLEDGE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge");
 let dbCache: MonsterMoves | undefined;
@@ -481,9 +482,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const mm = moveModelData();
     const db = monsterMoves();
     const tables: Record<string, EnemyTable> = {};
+    // On-death spawns (Phrog Parasite, Gremlin Merc): what comes, at this ascension, and their move tables.
+    const spawns: Record<string, SpawnTemplate[]> = {};
     for (const e of enemies) {
-      const table = enemyTable(e.id, meta.asc, db, mm);
-      if (table) tables[e.id] = table;
+      const found = spawnsAt(e.id, meta.asc, db);
+      if (found) spawns[e.id] = found;
+    }
+    for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id))])) {
+      const table = enemyTable(id, meta.asc, db, mm);
+      if (table) tables[id] = table;
     }
     // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
     const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
@@ -509,6 +516,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       gates,
       statusCards,
       relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
+      ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,

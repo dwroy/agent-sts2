@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type AskDecision, type Decision } from "../src/project/types.js";
-import { planCombatTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
+import { describePlan, planCombatTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
@@ -415,5 +415,102 @@ describe("5. Enemy powers reach Jev with their name and game description, not a 
       potionMcOptions.now = null;
       rolloutLiveOptions.enabled = true;
     }
+  });
+});
+
+describe("6. On-death spawns are a kill, not a win (Phrog Parasite, Gremlin Merc; coverage #7)", () => {
+  const FIXTURE_DB = {
+    bosses: {},
+    encounters: {},
+    monsters: {
+      WRIGGLER: { name: { zh: "蠕虫" }, hp_by_asc: { "8": { median: 20, n: 84 }, "0": { median: 19, n: 40 } }, moves: { SPAWNED_MOVE: {}, NASTY_BITE_MOVE: {}, WRIGGLE_MOVE: {} } },
+      FAT_GREMLIN: { name: { zh: "胖地精" }, hp_by_asc: { "8": { median: 15, n: 30 } }, moves: { SPAWNED_MOVE: {}, FLEE_MOVE: {} } },
+    },
+  };
+
+  it("spawnsAt: the logged spawns with their HP at the ascension and SPAWNED_MOVE first", async () => {
+    const { spawnsAt, setMonsterDbForTests } = await import("../src/knowledge/monster-db.js");
+    setMonsterDbForTests(FIXTURE_DB as never);
+    try {
+      expect(spawnsAt("PHROG_PARASITE", 8)).toEqual([{ id: "WRIGGLER", name: "蠕虫", hp: 20, count: 4, move: "SPAWNED_MOVE" }]);
+      expect(spawnsAt("GREMLIN_MERC", 9)).toEqual([
+        { id: "FAT_GREMLIN", name: "胖地精", hp: 15, count: 1, move: "SPAWNED_MOVE" },
+        { id: "SNEAKY_GREMLIN", name: "SNEAKY_GREMLIN", hp: 15, count: 1, move: null },
+      ]);
+      expect(spawnsAt("JAW_WORM", 8)).toBeNull();
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+
+  it("the solver: killing it is a kill, not the fight won", () => {
+    const phrog = enemy({ name: "Phrog Parasite", hp: 5, maxHp: 66, spawnsOnDeath: "4 x 蠕虫 (~20 HP each)", attacks: [{ damage: 10, hits: 1 }] });
+    const plans = solveTurn({ hand: [strike(0)], player: player({ hp: 50, energy: 1 }), enemies: [phrog], fightKind: "elite" }).plans;
+    const kill = plans.find((plan) => plan.steps.length === 1)!;
+    expect(kill.outcome).toMatchObject({ winsFight: false, kills: ["Phrog Parasite"], spawns: ["Phrog Parasite: 4 x 蠕虫 (~20 HP each)"], hpLoss: 0 });
+    expect(describePlan(kill, 80)).toMatchObject({ result: "survives with 50/80 HP before healing", spawns_on_death: "Phrog Parasite: 4 x 蠕虫 (~20 HP each): they arrive as it dies, the fight is NOT over" });
+  });
+
+  it("the planner: no 'lethal' auto-play; the option says the fight goes on", async () => {
+    const { setMonsterDbForTests } = await import("../src/knowledge/monster-db.js");
+    setMonsterDbForTests(FIXTURE_DB as never);
+    potionMcOptions.now = () => 0;
+    rolloutLiveOptions.enabled = false;
+    try {
+      const board = (infested: boolean) => {
+        const fx = logged("en55-f8-t9");
+        const combat = fx.state["combat"] as Raw;
+        (combat["player"] as Raw)["current_hp"] = 60;
+        combat["end_turn_will_kill_player"] = false;
+        (fx.state["run"] as Raw)["potions"] = [];
+        const eel = (combat["enemies"] as Raw[])[0]!;
+        eel["enemy_id"] = "PHROG_PARASITE";
+        eel["current_hp"] = 5;
+        eel["powers"] = infested ? [{ index: 0, power_id: "INFESTED_POWER", name: "寄生", amount: 1, is_debuff: false }] : [];
+        return planCombatTurn(loggedEnv(fx, { jevContext: "v1" }))!;
+      };
+      expect(board(false).label).toBe("combat/lethal");
+      const decision = board(true);
+      expect(decision.label).not.toBe("combat/lethal");
+      const texts = decision.kind === "ask" ? Object.values((decision as AskDecision).questions["plan"]!.criteria!).join(" ") : decision.rationale;
+      expect(texts).not.toMatch(/^lethal/);
+    } finally {
+      setMonsterDbForTests(null);
+      potionMcOptions.now = null;
+      rolloutLiveOptions.enabled = true;
+    }
+  });
+
+  it("the rollout: the spawns join the fight when it dies (the logged forecast called the Phrog's death a win)", () => {
+    const table: EnemyTable = { moves: { LASH: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { LASH: { LASH: 1 } } };
+    const wriggler: EnemyTable = { moves: { SPAWNED_MOVE: { damage: 0, hits: 1, strength: 0, block: 0 }, NASTY_BITE_MOVE: { damage: 6, hits: 1, strength: 0, block: 0 } }, next: { SPAWNED_MOVE: { NASTY_BITE_MOVE: 1 }, NASTY_BITE_MOVE: { NASTY_BITE_MOVE: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "elite", enc: "PHROG_PARASITE", deck: { n: 10, atk: 5, skl: 5, pow: 0, junk: 0, dmg: 30, blk: 25, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [strike(0)];
+    const scenario = (spawns: boolean): RolloutInput => {
+      const solver = { hand, player: player({ hp: 50, energy: 1 }), enemies: [enemy({ name: "Phrog", hp: 5, maxHp: 66, ...(spawns ? { spawnsOnDeath: "4 x Wriggler" } : {}), attacks: [{ damage: 10, hits: 1 }] })], fightKind: "elite" as const, turn: 1 };
+      return {
+        solver,
+        plans: solveTurn(solver).plans.filter((plan) => plan.steps.length === 1),
+        enemies: [{ index: 0, id: "PHROG_PARASITE", move: "LASH", strength: 0, powers: spawns ? { INFESTED_POWER: 1 } : {} }],
+        tables: { PHROG_PARASITE: table, WRIGGLER: wriggler },
+        piles: { draw: Array.from({ length: 10 }, (_, i) => card(10 + i, "STRIKE_IRONCLAD", { damage: 6, validTargets: [1, 2, 3, 4] })), discard: [], handBase: hand },
+        meta,
+        playerPowers: {},
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        ...(spawns ? { spawns: { PHROG_PARASITE: [{ id: "WRIGGLER", name: "蠕虫", hp: 20, count: 4, move: "SPAWNED_MOVE" }] } } : {}),
+        options: { budgetMs: 1e9, seed: 5, now: () => 0 },
+      };
+    };
+    const before = rolloutDecision(scenario(false)).lines[0]!;
+    expect(before.wins).toBe(8);
+    expect(before.hpLoss).toBe(0);
+    const after = rolloutDecision(scenario(true)).lines[0]!;
+    expect(after.plan.outcome.winsFight).toBe(false);
+    // T2: the Wrigglers arrived (no attack on SPAWNED_MOVE), T3 they bite.
+    expect(after.perTurn[0]!.fighting).toBe(8);
+    expect(after.hpLoss).toBeGreaterThan(0);
   });
 });

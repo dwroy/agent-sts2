@@ -580,6 +580,39 @@ export function moveBaseDamages(monsterId: string, moveId: string, asc: number):
   return Object.keys(withBase[found.key]!.base_per_hit!).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
 }
 
+/**
+ * What an enemy spawns when it dies, as logged (coverage review 2026-09-29 #7): the Phrog Parasite
+ * (INFESTED_POWER: 「死亡时，召唤……某种东西」) 4 Wrigglers (208 spawned in its 52 fights), the Gremlin Merc
+ * (SURPRISE_POWER) a Fat and a Sneaky Gremlin (61 each in 61). Killing it is no win: the solver said
+ * "lethal" and code auto-played it (48 Phrog and 47 Gremlin turns).
+ */
+export const ON_DEATH_SPAWNS: Record<string, { id: string; count: number }[]> = {
+  PHROG_PARASITE: [{ id: "WRIGGLER", count: 4 }],
+  GREMLIN_MERC: [
+    { id: "FAT_GREMLIN", count: 1 },
+    { id: "SNEAKY_GREMLIN", count: 1 },
+  ],
+};
+
+/** A spawn's HP when the monster DB has none logged (the Wriggler's and the gremlins' are 11-21). */
+const SPAWN_FALLBACK_HP = 15;
+
+/**
+ * An enemy's on-death spawns at `asc`: each one's name, HP (its median max HP at the nearest logged ascension)
+ * and first move (SPAWNED_MOVE when logged: no attack on the turn it arrives). null when it spawns nothing known.
+ */
+export function spawnsAt(enemyId: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): { id: string; name: string; hp: number; count: number; move: string | null }[] | null {
+  const spawns = ON_DEATH_SPAWNS[enemyId];
+  if (!spawns) return null;
+  return spawns.map(({ id, count }) => {
+    const monster = monsters[id];
+    const found = nearestAscension(monster?.hp_by_asc, asc);
+    const median = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+    const moves = Object.keys(monster?.moves ?? {});
+    return { id, name: monster?.name?.zh || id, hp: Math.round(median ?? SPAWN_FALLBACK_HP), count, move: moves.includes("SPAWNED_MOVE") ? "SPAWNED_MOVE" : null };
+  });
+}
+
 /** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */
 export function moveTurns(id: string, moveId: string): number[] {
   const seen = load().monsters[id]?.moves?.[moveId]?.turns_seen ?? {};

@@ -141,6 +141,11 @@ export interface EnemySim {
    * gives it N Strength for the fight (182 logged fights; the line making the kill was under-valued).
    */
   ravenous?: number;
+  /**
+   * What it spawns when it dies (Phrog Parasite's INFESTED_POWER: 4 Wrigglers; Gremlin Merc's SURPRISE_POWER: a
+   * Fat and a Sneaky Gremlin), as shown to Jev: killing it is a kill, not the fight won.
+   */
+  spawnsOnDeath?: string;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -439,6 +444,8 @@ export interface Outcome {
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
   restocked: string[];
+  /** Enemies killed that spawn others on death ("Phrog Parasite: 4 x Wriggler"): the fight goes on. */
+  spawns?: string[];
   /**
    * `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). What the line
    * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter), and the Strength
@@ -1742,7 +1749,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
-  const nextPhase = restocked.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
+  // An enemy that spawns others on death (Phrog Parasite, Gremlin Merc): a kill, not a win.
+  const spawning = sim.enemies.filter((enemy) => !enemy.alive && enemy.spawnsOnDeath && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
+  const nextPhase = restocked.length > 0 || spawning.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
   // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
   // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
   // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
@@ -2083,6 +2092,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       damageDealt: sim.damageDealt,
       kills: kills.map((enemy) => enemy.name),
       restocked: restocked.map((enemy) => enemy.name),
+      ...(spawning.length > 0 ? { spawns: spawning.map((enemy) => `${enemy.name}: ${enemy.spawnsOnDeath}`) } : {}),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
         .map((enemy) => ({

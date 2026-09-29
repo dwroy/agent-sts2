@@ -40,7 +40,7 @@ import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
-import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
+import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -92,7 +92,17 @@ const MODELLED_ENEMY_POWERS = new Set([
   "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER",
   // Zapbot: +2 Strength at the end of its turn, like Territorial (scaling; the rollout grows it).
   "HIGH_VOLTAGE_POWER",
+  // Gremlin Merc: on death a Fat and a Sneaky Gremlin (`spawnsOnDeath`, like the Phrog's Infested).
+  "SURPRISE_POWER",
 ]);
+
+/** What an enemy with an on-death spawn power brings when it dies, as shown ("4 x 蠕虫 (~20 HP each)"). */
+function spawnText(enemy: Record<string, unknown>, asc: number): string | undefined {
+  if (powerAmount(enemy, "INFESTED_POWER") <= 0 && powerAmount(enemy, "SURPRISE_POWER") <= 0) return undefined;
+  const spawns = spawnsAt(str(enemy["enemy_id"]), asc);
+  if (!spawns) return "more enemies (what spawns is not logged)";
+  return spawns.map((spawn) => `${spawn.count} x ${spawn.name} (~${spawn.hp} HP${spawn.count > 1 ? " each" : ""})`).join(" + ");
+}
 
 /** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
 export function unmodelledEnemyPowers(enemy: Record<string, unknown>): string[] {
@@ -121,6 +131,8 @@ const POWER_NOTES: Record<string, string> = {
   BATTLEWORN_DUMMY_TIME_LIMIT_POWER: " (turns left to kill it, this one included: when they run out the fight ends without the reward; it never attacks, so only damage counts, and setup that pays after the last turn is worth nothing)",
   VIGOR_POWER: " (its next attack deals this much more per hit: already in the intent when that attack is this turn's, else it waits for the next one)",
   RAVENOUS_POWER: " (when another enemy dies it eats the corpse: stunned for the rest of this turn, so its attack now is cancelled, and it gains this much Strength for the fight)",
+  INFESTED_POWER: " (when it dies it spawns more enemies (Phrog Parasite: 4 Wrigglers); they do not attack the turn they arrive; killing it does NOT end the fight)",
+  SURPRISE_POWER: " (when it dies a Fat Gremlin and a Sneaky Gremlin appear; killing it does NOT end the fight)",
 };
 
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
@@ -536,6 +548,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
       burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
       ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
+      ...(spawnText(enemy, asc ?? 0) ? { spawnsOnDeath: spawnText(enemy, asc ?? 0)! } : {}),
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
@@ -688,6 +701,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.revived) summary["revive_spent"] = o.revived.names.join(", ");
   if (o.kills.length > 0) summary["kills"] = o.kills.join(", ");
   if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
+  if ((o.spawns ?? []).length > 0) summary["spawns_on_death"] = `${o.spawns!.join("; ")}: they arrive as it dies, the fight is NOT over`;
   if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.hp} HP${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;

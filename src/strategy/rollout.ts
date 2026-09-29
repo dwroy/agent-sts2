@@ -489,6 +489,21 @@ export interface RolloutInput {
    * fight-value feature it was trained as.
    */
   relicEnergy?: { amount: number; from: number }[];
+  /**
+   * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
+   * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
+   */
+  spawns?: Record<string, SpawnTemplate[]>;
+}
+
+/** One enemy an on-death spawn brings (RolloutInput.spawns). */
+export interface SpawnTemplate {
+  id: string;
+  name: string;
+  hp: number;
+  count: number;
+  /** Its first move (SPAWNED_MOVE: no attack the turn it arrives), null when unknown (the table's own chain). */
+  move: string | null;
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -984,8 +999,43 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
   };
 }
 
-/** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead. */
-function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
+/** A fresh enemy spawned mid-fight (RolloutInput.spawns), at its first move, with a board index of its own. */
+function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
+  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  return {
+    index,
+    id: template.id,
+    move: template.move,
+    hp: template.hp,
+    maxHp: template.hp,
+    block: 0,
+    strength: 0,
+    vigor: 0,
+    vulnerable: 0,
+    weak: 0,
+    alive: true,
+    intangibleTurns: 0,
+    burrowed: false,
+    artifact: 0,
+    slippery: 0,
+    curlUp: 0,
+    flutter: 0,
+    growth: 0,
+    shrink: 0,
+    thorns: 0,
+    halved: false,
+    dazedPerHit: 0,
+    vitalSpark: 0,
+    moveBuffs: { thorns: false, soar: false },
+    plating: 0,
+    powers: {},
+    base,
+    shown: [],
+  };
+}
+
+/** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
+function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[]): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
     // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
     e.hp = HUSK_HP;
@@ -1027,6 +1077,12 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
     e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
   } else {
     e.alive = false;
+    // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
+    // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
+    // actual 23).
+    const spawns = e.base.spawnsOnDeath ? input.spawns?.[e.id] ?? [] : [];
+    let next = Math.max(...enemies.map((x) => x.index)) + 1;
+    for (const template of spawns) for (let k = 0; k < template.count; k += 1) enemies.push(spawnedEnemy(template, next++));
   }
 }
 
@@ -1059,7 +1115,7 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
-    if (e.hp <= 0) enemyDown(e, turn, input);
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
   }
   return dealt;
 }
@@ -1226,7 +1282,7 @@ function applyPlan(
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
-    if (e.hp <= 0) enemyDown(e, turn, input);
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
