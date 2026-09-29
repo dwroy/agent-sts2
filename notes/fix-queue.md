@@ -97,3 +97,11 @@ From fix batch E (2026-09-29 18:26; line numbers at v3 94648bf), not fixed:
 - To verify: Thrash growth under Duplication / One-Two Punch replays.
 - combat-plan exhaustedSinceTurnStart: after a mid-turn restart the first seen frame is the baseline (undercounts, conservative).
 - Test runtime: rollout-live.test.ts and potion-mc.test.ts run every fixture in tests/logged-states; potion-mc timed out once under load (1.8 s alone). Consider a per-test timeout or a fixture subset.
+
+From post-mortems KTRT ZGZ0 QBCV (2026-09-29 19:09; line numbers at v3 94648bf):
+- map.ts:340-342 with Little Mailbox (小邮箱) code discards a potion on the map whenever the next node can be a rest site, but the mailbox only gives potions on a Rest, not a Smith (ZGZ0 F10 dropped Fysh Oil, F11 DeepSeek smithed, entered the boss with an empty slot). Code must not discard potions on its own (Dai's potion rule); if room is needed, make it part of the rest/plan answer. Recorded in an old post-mortem (fcbe2a8 era) but never queued.
+- event.ts:338 the discard option only appears when the belt is completely full; when an event gives more potions than free slots, the extra potion is silently left behind and DeepSeek is not told (KTRT F6 低语空谷: 44 gold for 2 potions, Dexterity Potion left on the reward page, "no rewards left to claim").
+- Recurring: saturated pickRolloutBest doesn't compare deaths (rollout-live.ts:440-455) — QBCV boss T5 (Jev ignored), ZGZ0 boss T4 (Jev followed). In batch F.
+- To investigate: KTRT F23 T3 "Twin Strike, Bash+" (0 loss, kills the 29-HP Bowlbug Rock exactly) ranked below "Defend, Bash+" (−11, Rock left at 16) by both rollout (6/8 vs 3/8 dead) and history (25% vs 49%); the Rock lived, T4 −20.
+- To investigate: selection.ts:689 Toasty Mittens exhaust pick scores power cards at a fixed 5 → at 9 HP it exhausted Twin Strike and kept Rend (KTRT).
+- Boss rollout coverage: ZGZ0 boss 3 of 5 questions fell back to the 1-turn estimate; QBCV boss 7 of 9 saturated.
