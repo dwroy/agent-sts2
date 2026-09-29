@@ -1612,6 +1612,8 @@ function simulate(
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
+        ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));

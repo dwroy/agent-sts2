@@ -13,7 +13,7 @@ import type { CardModel } from "../src/strategy/card-model.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { reviveThrough, solveTurn, type EnemySim, type PlayerSim, type Revive } from "../src/strategy/turn-solver.js";
+import { reviveThrough, solveTap, solveTurn, type EnemySim, type PlayerSim, type Revive } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -243,5 +243,74 @@ describe("2. Thrash takes an Attack from the hand and adds its damage (D4JGCNEL4
     expect(alone.outcome.randomExhausts).toBe(1);
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).join(",") === "THRASH,STRIKE_IRONCLAD")).toBe(false);
     expect(plans.some((plan) => plan.steps.map((step) => step.cardId).sort().join(",") === "DEFEND_IRONCLAD,THRASH" && plan.outcome.damageDealt === 44)).toBe(true);
+  });
+});
+
+describe("3. Hardened Shell's 20 a turn is carried across re-plans in the turn (3RWJX25LB2CD F14 T3)", () => {
+  const colony = (hp: number, turn: number): Record<string, unknown> => {
+    const fx = logged("en55-f8-t9");
+    fx.state["turn"] = turn;
+    const combat = fx.state["combat"] as Raw;
+    const player = combat["player"] as Raw;
+    player["current_hp"] = 60;
+    const eel = (combat["enemies"] as Raw[])[0]!;
+    eel["current_hp"] = hp;
+    eel["powers"] = [{ power_id: "HARDENED_SHELL_POWER", name: "硬壳", amount: 20 }];
+    return fx.state;
+  };
+  const capsOn = (memory: ReturnType<typeof createScreenMemory>, raw: Record<string, unknown>) => {
+    let caps: (number | null | undefined)[] = [];
+    const tap = solveTap;
+    tap.onSolve = (input) => {
+      if (caps.length === 0) caps = input.enemies.map((e) => e.hpLossCap);
+    };
+    try {
+      planCombatTurn({ ...loggedEnv({ source: "", decision: { label: "", decider: "", chosen: null, rationale: "" }, state: raw }), screenMemory: memory });
+    } finally {
+      tap.onSolve = null;
+    }
+    return caps;
+  };
+
+  it("the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again", () => {
+    rolloutLiveOptions.enabled = false;
+    potionMcOptions.now = () => 0;
+    try {
+      const memory = createScreenMemory("COMBAT");
+      expect(capsOn(memory, colony(45, 3))).toEqual([20]);
+      // Re-planned after a Twin Strike took 20 (the logged "Twin Strike -> colony, dmg 14" was really 0).
+      expect(capsOn(memory, colony(25, 3))).toEqual([0]);
+      expect(capsOn(memory, colony(38, 3))).toEqual([13]);
+      expect(capsOn(memory, colony(25, 4))).toEqual([20]);
+    } finally {
+      rolloutLiveOptions.enabled = true;
+      potionMcOptions.now = null;
+    }
+  });
+
+  it("the rollout's later turns get the whole cap again", () => {
+    const table: EnemyTable = { moves: { HIT: { damage: 5, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const meta: FightMeta = { act: 2, t: 3, asc: 8, kind: "hallway", enc: "SKULKING_COLONY", deck: { n: 10, atk: 8, skl: 2, pow: 0, junk: 0, dmg: 60, blk: 10, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [strike(0), strike(1), strike(2)];
+    const solver = { hand, player: player({ hp: 60 }), enemies: [enemy({ hp: 25, maxHp: 79, hpLossCap: 0, attacks: [{ damage: 5, hits: 1 }] })], fightKind: "monster" as const, turn: 3 };
+    const r = rolloutDecision({
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "SKULKING_COLONY", move: "HIT", strength: 0, powers: { HARDENED_SHELL_POWER: 20 } }],
+      tables: { SKULKING_COLONY: table },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => strike(10 + i)), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0 },
+    });
+    const line = r.lines[0]!;
+    expect(line.plan.outcome.damageDealt).toBe(0);
+    // Turn 2: 3 Strikes = 18 of a fresh 20; turn 3 the last 7.
+    expect(line.perTurn[0]!.dmg.mean).toBe(18);
+    expect(line.wins).toBe(8);
   });
 });

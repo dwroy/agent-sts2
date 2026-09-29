@@ -116,6 +116,11 @@ export interface ScreenMemory {
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */
   demonTongueTurn?: string;
   /**
+   * Each capped enemy's HP at the first combat decision of the turn (`key` = fight:turn): Hardened Shell's
+   * 20 a turn is what is left of it, not 20 again at every re-plan (combat-plan carryHpLossCaps).
+   */
+  turnStartHp?: { key: string; hp: Record<string, number> };
+  /**
    * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
    * no used mark (logged `stack` null, `is_melted` false before and after). `last` is the last combat state
    * read while it is held (combat-plan trackLizardTail). Kept across the run; rebuilt by the journal replay.

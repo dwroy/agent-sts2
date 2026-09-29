@@ -532,6 +532,24 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
     }));
 }
 
+/**
+ * Hardened Shell (「每回合失去的生命值不会超过20点」): the cap is per turn, and a re-plan mid-turn (a draw, a card
+ * screen, Jev's question) read the full 20 again (3RWJX25LB2CD F14 T3: the colony 45 -> 25, "Twin Strike ->
+ * colony, dmg 14", really 0). Each capped enemy's HP at the turn's first decision is kept (memory.turnStartHp,
+ * `key` = fight:turn), and the cap given to the solver is what is left of it.
+ */
+export function carryHpLossCaps(memory: DecisionEnv["screenMemory"], key: string, enemies: EnemySim[]): void {
+  if (!enemies.some((enemy) => enemy.hpLossCap !== null && enemy.hpLossCap !== undefined)) return;
+  if (memory.turnStartHp?.key !== key) memory.turnStartHp = { key, hp: {} };
+  const start = memory.turnStartHp.hp;
+  for (const enemy of enemies) {
+    if (enemy.hpLossCap === null || enemy.hpLossCap === undefined) continue;
+    const first = start[String(enemy.index)];
+    if (first === undefined) start[String(enemy.index)] = enemy.hp;
+    else enemy.hpLossCap = Math.max(0, enemy.hpLossCap - Math.max(0, first - enemy.hp));
+  }
+}
+
 /** Block a hand typically puts up against the explosion turn. */
 const ERUPTION_BLOCK = 12;
 /** Damage per turn assumed before any has been seen (1ZQJ averaged 16). */
@@ -1134,6 +1152,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
   const ascension = state.run?.ascension ?? 0;
   const enemies = enemySims(combat, ascension);
+  carryHpLossCaps(env.screenMemory, `${fightKey(state)}:${state.turn ?? "?"}`, enemies);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
     // revives on the enemy turn. Waiting forever stalled a floor-50 run; after a short settle, end
