@@ -41,6 +41,8 @@ import {
   rawDeckDamage,
   REGAL_PILLOW_HEAL,
   ringingTurns,
+  setUnblockedSharesForTests,
+  testSubjectPhase2Loss,
 } from "../src/strategy/boss-clock.js";
 import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
@@ -520,5 +522,44 @@ describe("boss clock notes and mechanics: numbers at this ascension from the mon
     expect(bossMechanic(profile("TEST_SUBJECT"), 9)).toContain(`Multi Claw starts ≈${Math.round((10 * 38) / 34)}×3`);
     expect(bossMechanic(profile("VANTOM"), 9)).toContain("Slippery 9: its next 9 HP losses are 1 each");
     expect(bossMechanic(profile("VANTOM"), 0)).toContain("Slippery 8: its next 8 HP losses");
+  });
+});
+
+describe("Test Subject phase 2: Multi Claw's damage at this ascension, not the A8 ~15 a turn (review 2026-09-29 #12)", () => {
+  const dmg = (bases: Record<string, number>, hits = 1) => ({
+    damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 4 }, hits: { [String(hits)]: 4 } }])),
+  });
+  // Multi Claw logged at A8 only (10x3); another monster measures A8 -> A9 as 12 -> 14.
+  const db = {
+    bosses: { TEST_SUBJECT: { "8": { fights: 3, parts: { TEST_SUBJECT: { median: 111, n: 3 } }, phases: { "111 > 212 > 313 (TEST_SUBJECT)": 3 } } } },
+    encounters: {},
+    monsters: { TEST_SUBJECT: { moves: { MULTI_CLAW_MOVE: dmg({ "8": 10 }, 3) } }, CRUSHER: { moves: { THRASH_MOVE: dmg({ "8": 12, "9": 14 }) } } },
+  };
+  beforeAll(() => {
+    setMonsterDbForTests(db as never);
+    setUnblockedSharesForTests({ TEST_SUBJECT: { unblocked_share: 0.3, fights: 12, turns: 97 } });
+  });
+  afterAll(() => {
+    setMonsterDbForTests(null);
+    setUnblockedSharesForTests(null);
+  });
+
+  it("the loss a turn: Multi Claw x its growing hits (3..6) x the unblocked share, scaled at an unlogged ascension", () => {
+    expect(testSubjectPhase2Loss(8).value).toBe(13.5);
+    // A10: 10 x 14/12 = 12 a hit (A8 -> A9 measured, A9 -> A10 x1).
+    expect(testSubjectPhase2Loss(10).value).toBe(Math.round(12 * 4.5 * 0.3 * 10) / 10);
+    expect(testSubjectPhase2Loss(10).source).toMatch(/Multi Claw ≈12x3\+ at A10 \(A8's scaled, estimated\) x 30% unblocked/);
+  });
+
+  it("the clock's phase-2 deadline shortens when the claws hit harder", () => {
+    const state = (asc: number) => mapState(starter(), "TEST_SUBJECT_BOSS", { ascension: asc, floor: 40, act_id: "2" });
+    const turns1 = bossClock(state(8), testKnowledge, 200)!.phases![0]!.turns;
+    // 68 HP at phase 2: 68 / 13.5 = 5.0 turns at A8, 68 / 16.2 = 4.2 at A10.
+    const entry = 68 + 3 * turns1;
+    const a8 = bossClock(state(8), testKnowledge, entry)!;
+    const a10 = bossClock(state(10), testKnowledge, entry)!;
+    expect(a8.phases![1]).toMatchObject({ phase: 2, turns: 5, need: Math.round(212 / 5) });
+    expect(a10.phases![1]).toMatchObject({ phase: 2, turns: 4, need: Math.round(212 / 4) });
+    expect(a10.turnsNote).toMatch(/phase 2 must die within ~4 turns of Multi Claw at ~68 HP \(Multi Claw ≈12x3\+ at A10/);
   });
 });

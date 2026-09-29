@@ -104,6 +104,11 @@ export interface UnblockedShare {
 
 let unblockedCache: Record<string, UnblockedShare> | null = null;
 
+/** For tests: use these shares instead of boss-damage.json (null reloads the file). */
+export function setUnblockedSharesForTests(shares: Record<string, UnblockedShare> | null): void {
+  unblockedCache = shares;
+}
+
 export function unblockedShare(bossKey: string): UnblockedShare | null {
   if (!unblockedCache) {
     try {
@@ -604,6 +609,30 @@ export function eruptionTurns(entryHp: number, lossPerTurn: number, ascension = 
 
 /** HP lost a turn in the Test Subject's first phase. */
 const TEST_SUBJECT_PHASE1_LOSS = 3;
+/** Phase 2's net loss a turn when the monster DB or boss-damage.json has nothing (D3X1, A8: ~15). */
+const TEST_SUBJECT_PHASE2_LOSS_FALLBACK = 15;
+/** Multi Claws phase 2's loss a turn is averaged over (its length is capped at 3-5 turns). */
+const TEST_SUBJECT_PHASE2_CLAWS = 4;
+
+/**
+ * HP lost a turn in the Test Subject's phase 2 at this ascension: Multi Claw's hit (monster DB
+ * moveDamageAt: A8 10, scaled when not logged here) times its hits, one more each use from its logged
+ * count (10x3, 10x4, ...), averaged over the first TEST_SUBJECT_PHASE2_CLAWS claws, times the logged
+ * share of the Test Subject's shown attack that got through our block (A8: 10 x 4.5 x 0.32 = ~14.5, the
+ * ~15 D3X1 showed). The hand-set 15 when the DB or the share is missing.
+ */
+export function testSubjectPhase2Loss(ascension: number): { value: number; source: string } {
+  const claw = moveDamageAt(monsterMoves(), "TEST_SUBJECT", "MULTI_CLAW_MOVE", ascension);
+  const share = unblockedShare("TEST_SUBJECT");
+  if (!claw || !share) return { value: TEST_SUBJECT_PHASE2_LOSS_FALLBACK, source: "~15 a turn (D3X1, A8; no DB numbers)" };
+  const hits = Array.from({ length: TEST_SUBJECT_PHASE2_CLAWS }, (_, use) => claw.hits + use);
+  const mean = (claw.perHit * hits.reduce((sum, n) => sum + n, 0)) / hits.length;
+  const value = Math.round(mean * share.unblocked_share * 10) / 10;
+  return {
+    value,
+    source: `Multi Claw ${claw.estimated ? "≈" : ""}${claw.perHit}x${claw.hits}+ at A${ascension}${claw.estimated ? ` (A${claw.from}'s scaled, estimated)` : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked = ~${value} a turn`,
+  };
+}
 
 /** Test Subject phase 3 turns (of `turns`) under Nemesis' Intangible: its first turn and every other one. */
 export function testSubjectIntangibleTurns(turns: number): number {
@@ -722,9 +751,10 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     const est1 = Math.max(1, estimateAt(4));
     const turns1 = Math.max(2, Math.min(5, Math.ceil(p1 / est1)));
     const hpAt2 = Math.max(1, entryHp - TEST_SUBJECT_PHASE1_LOSS * turns1);
-    // Multi Claw 10x3 on phase 2's first turn, a hit more each turn: ~15 net a turn after block (D3X1:
-    // 60 HP at phase 2, dead on the 5th claw).
-    const turns2 = Math.max(3, Math.min(5, Math.round(hpAt2 / 15)));
+    // Multi Claw (A8 10x3) on phase 2's first turn, a hit more each turn: its DB damage at this ascension
+    // times the logged unblocked share (A8 ~15 net a turn; D3X1: 60 HP at phase 2, dead on the 5th claw).
+    const loss2 = testSubjectPhase2Loss(ascension);
+    const turns2 = Math.max(3, Math.min(5, Math.round(hpAt2 / Math.max(1, loss2.value))));
     const turns3 = 6;
     // Phase 3 has Nemesis: Intangible on its first turn and every other turn after (logged: VQKX T5/T7,
     // ZANM T5/T7/T9, W6F4, CRRP, YFG5), every hit 1 while it lasts. Only the other turns deal damage
@@ -740,7 +770,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
       hp: p1 + p2 + p3,
       hpNote: `three phases ${p1}/${p2}/${p3} ${bossHpSource(profile, ascension)}`,
       fightTurns,
-      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}, ${damageTurns3} of them without Nemesis' Intangible`,
+      turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP (${loss2.source}); phase 3 assumed ${turns3}, ${damageTurns3} of them without Nemesis' Intangible`,
       need,
       deck: deckNow,
       gap: Math.max(0, need - deckNow),
