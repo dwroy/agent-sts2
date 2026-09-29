@@ -688,7 +688,11 @@ interface Sim {
   lastingDrinks: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
-  /** Attacks played in this plan, a card once (Stomp costs 1 less for each; the game's attacks_played_this_turn). */
+  /**
+   * Attacks played in this plan, a card once (Stomp costs 1 less for each). A Strike Hellraiser plays when drawn counts:
+   * the game's attacks_played_this_turn leaves those out, Stomp's cost does not (logged turn starts with Hellraiser up
+   * and nothing played yet, 5 runs: Stomp 3 -> 2 on each of the 8 turns one Strike was drawn, 3 on the 4 with none).
+   */
   attacksPlayed: number;
   /** Plays of Attacks for the attack-counting relics (Kusarigama, Shuriken): every duplicate and replay too. */
   relicAttacks: number;
