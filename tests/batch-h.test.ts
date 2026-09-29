@@ -326,3 +326,21 @@ describe("5. The Giant's block-needed record is counted from the fight data, not
     }
   });
 });
+
+describe("6. Plain True Grit exhausts a random card: only True Grit+ is named as clearing Soul Fysh's Beckons (experience card-true-grit)", () => {
+  const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+
+  it("the Soul Fysh boss note and the guide name True Grit+ and say the plain one is random", () => {
+    const note = bossNote("SOUL_FYSH_BOSS", 9)!;
+    const guide = readFileSync(join(KNOWLEDGE, "ironclad-guide.md"), "utf8");
+    const fysh = guide.split("\n").find((line) => line.includes("灵魂异鱼 Soul Fysh"))!;
+    for (const text of [note, fysh]) {
+      expect(text).toContain("燃烧契约、坚毅+、重振精神");
+      expect(text).toContain("未升级的坚毅是随机消耗 1 张牌");
+      expect(text).not.toContain("燃烧契约、坚毅、重振精神");
+    }
+    const statuses = guide.split("\n").find((line) => line.startsWith("- 状态牌（伤口/晕眩）"))!;
+    expect(statuses).toContain("坚毅+");
+    expect(statuses).toContain("未升级的坚毅随机消耗");
+  });
+});

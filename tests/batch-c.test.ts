@@ -289,7 +289,8 @@ describe("Extra: hand-written knowledge agrees with the experience base (d986a74
   });
 
   it("Soul Fysh's Beckons go only to a card that exhausts another card from the hand (boss note and guide)", () => {
-    expect(bossNote("SOUL_FYSH_BOSS", 9)).toMatch(/能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅、重振精神、恶魔之焰/);
+    // Batch H: True Grit+ only (the plain one exhausts at random).
+    expect(bossNote("SOUL_FYSH_BOSS", 9)).toMatch(/能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅\+、重振精神、恶魔之焰/);
     expect(read("ironclad-guide.md")).not.toContain("→ 用消耗牌清掉");
   });
 
