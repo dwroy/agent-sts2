@@ -20,11 +20,13 @@ import { nextPlanRef, usePlanRef } from "./oneshot.js";
 
 export type ReviewKind = "card" | "rest";
 
-/** A rest option's HP for the route facts: the option keys it covers, its kind, and the HP it leaves. */
+/** A rest option's HP for the route facts: the option keys it covers, its kind, and the HP (and max HP) it leaves. */
 export interface RestOptionHp {
   keys: string[];
   kind: string;
   hp: number;
+  /** Max HP after it, when the option changes it (resting with Stone Humidifier); max HP now otherwise. */
+  max?: number;
 }
 
 export interface RouteBlock {
@@ -93,7 +95,7 @@ function blockState(env: DecisionEnv, kind: ReviewKind, routes: PositionRoutes, 
   // Routes whose code_value reads the same share a rank (consistency R9), as in the DeepSeek pick and act start.
   const shown = (value: number): number => Number(value.toFixed(2));
   const rankOf = (value: number): number => 1 + routes.routes.filter((other) => shown(other.value) > shown(value)).length;
-  const groups = restGroups(restOptions);
+  const groups = restGroups(restOptions, max);
   return {
     hp: hpLine,
     ...(runPlanHp.length > 0 ? { run_plan_hp: runPlanHp.join(" ") } : {}),
@@ -106,7 +108,7 @@ function blockState(env: DecisionEnv, kind: ReviewKind, routes: PositionRoutes, 
           ...route.facts,
           code_value: Number(route.value.toFixed(2)),
           code_rank: rankOf(route.value),
-          ...(groups.length > 0 ? { hp_if_option: Object.fromEntries(groups.map((group) => [group.label, routes.hpAlong(route.key, group.hp)])) } : {}),
+          ...(groups.length > 0 ? { hp_if_option: Object.fromEntries(groups.map((group) => [group.label, routes.hpAlong(route.key, group.hp, group.max)])) } : {}),
         },
       ]),
     ),
@@ -115,11 +117,18 @@ function blockState(env: DecisionEnv, kind: ReviewKind, routes: PositionRoutes, 
   };
 }
 
-/** Rest options grouped by the HP they leave: "o0 HEAL (77/77)", "o1 SMITH, o2 LIFT (67/77)". */
-function restGroups(options: RestOptionHp[]): { label: string; hp: number }[] {
-  const byHp = new Map<number, RestOptionHp[]>();
-  for (const option of options) byHp.set(option.hp, [...(byHp.get(option.hp) ?? []), option]);
-  return [...byHp].map(([hp, list]) => ({ label: `${list.map((option) => `${option.keys[0]} ${option.kind}`).join(", ")} (HP ${hp})`, hp }));
+/** Rest options grouped by the HP they leave: "o0 HEAL (HP 77)", "o1 SMITH, o2 LIFT (HP 67)", "o0 HEAL (HP 79, max HP 85)". */
+function restGroups(options: RestOptionHp[], maxNow: number): { label: string; hp: number; max: number }[] {
+  const byHp = new Map<string, RestOptionHp[]>();
+  for (const option of options) {
+    const key = `${option.hp}/${option.max ?? maxNow}`;
+    byHp.set(key, [...(byHp.get(key) ?? []), option]);
+  }
+  return [...byHp.values()].map((list) => {
+    const { hp } = list[0]!;
+    const max = list[0]!.max ?? maxNow;
+    return { label: `${list.map((option) => `${option.keys[0]} ${option.kind}`).join(", ")} (HP ${hp}${max !== maxNow ? `, max HP ${max}` : ""})`, hp, max };
+  });
 }
 
 /**

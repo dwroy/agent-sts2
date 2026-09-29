@@ -17,7 +17,8 @@ import { describe, expect, it } from "vitest";
 import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
 import type { RoutePlan } from "../src/screens/map.js";
-import { rememberChosenNode, rememberMap } from "../src/screens/rest.js";
+import { rememberChosenNode, rememberMap, restHealHere } from "../src/screens/rest.js";
+import { baseRestHeal, projectPath, restHealOf, type RoomCostModel } from "../src/strategy/route-projection.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import type { JsonValue } from "../src/util/json.js";
 import { act, ask, board, choose, decide, DIR, env, FakeDeepSeek, keyOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
@@ -341,5 +342,65 @@ describe("rest site route review in the loop", () => {
     const rest = second.records.find((row) => row["label"] === "rest/plan")!;
     expect(rest).toMatchObject({ deepseek: { choice: "o0", route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
     expect(second.records.find((row) => row["label"] === "map/route-change")).toMatchObject({ route_plan: { why: "rest-site review", floor: 7 } });
+  });
+});
+
+describe("rest heal: the game's HEAL text and the rest relics (Regal Pillow, Stone Humidifier), not a flat 30%", () => {
+  /** The W2TB F7 rest site at 40/77 with a rest relic and the HEAL text the game writes with it. */
+  const restWith = (relicId: string, name: string, line: string): Raw => {
+    const raw = board(REST, "rest");
+    const run = raw["run"] as Raw;
+    run["current_hp"] = 40;
+    (run["players"] as Raw[])[0]!["current_hp"] = 40;
+    run["relics"] = [...(run["relics"] as Raw[]), { index: 2, relic_id: relicId, name, description: "", stack: null, is_melted: false }];
+    const heal = ((raw["rest"] as Raw)["options"] as Raw[]).find((option) => option["option_id"] === "HEAL")!;
+    heal["description"] = `回复最大生命值的30%（23）。\n${line}`;
+    return raw;
+  };
+  const restFacts = (decision: ReturnType<typeof decide>): Record<string, JsonValue> => (ask(decision).state["facts"] as Record<string, Record<string, JsonValue>>)["rest_site"]!;
+
+  it("Regal Pillow: heal 23 + 15 (TQCZFBK7T09Y F25: 45 -> 86/87 = 26 + 15); hp_if_option and the facts start the routes there", () => {
+    const decision = decide(env(restWith("REGAL_PILLOW", "皇家枕头", "皇家枕头提供+15点生命。"), memoryAt(REST)));
+    expect(decision.label).toBe("rest/plan");
+    for (const route of Object.values(blockOf(decision)!.routes)) expect(Object.keys(route["hp_if_option"] as Record<string, string>)).toEqual(["o0 HEAL (HP 77)", "o1 SMITH (HP 40)"]);
+    expect(restFacts(decision)).toMatchObject({ heal_amount: "38 HP: 23 (30% of max HP, rounded down) + 15 (Regal Pillow +15 HP)", hp_after_heal: "77/77" });
+    // A change after the heal is projected from the healed HP.
+    const key = Object.keys(blockOf(decision)!.routes).find((route) => route !== "keep")!;
+    const memory = memoryAt(REST);
+    const resolved = choose(decide(env(restWith("REGAL_PILLOW", "皇家枕头", "皇家枕头提供+15点生命。"), memory)), "o0", undefined, key);
+    resolved.apply?.();
+    expect(memory.routePlan?.hpPct).toBe(1);
+  });
+
+  it("Stone Humidifier: heal 23, then max HP and HP +5 (WFR4AUP2CWDT F8: 50/80 -> 79/85); hp_if_option at the new max", () => {
+    const decision = decide(env(restWith("STONE_HUMIDIFIER", "石炉加湿器", "提升5点你的最大生命值。"), memoryAt(REST)));
+    const block = blockOf(decision)!;
+    for (const route of Object.values(block.routes)) {
+      const hp = route["hp_if_option"] as Record<string, string>;
+      expect(Object.keys(hp)).toEqual(["o0 HEAL (HP 68, max HP 82)", "o1 SMITH (HP 40)"]);
+      // Shown against max HP after the rest (82, and 5 more at each later rest), not the 77 of now.
+      const maxes = [...hp["o0 HEAL (HP 68, max HP 82)"]!.matchAll(/~\d+\/(\d+)/g)].map((match) => Number(match[1]));
+      expect(maxes.length).toBeGreaterThan(0);
+      for (const max of maxes) expect(max).toBeGreaterThanOrEqual(82);
+    }
+    expect(restFacts(decision)).toMatchObject({ heal_amount: "23 HP: 23 (30% of max HP, rounded down), and max HP +5 with HP +5 (Stone Humidifier +5 max HP)", hp_after_heal: "68/82" });
+  });
+
+  it("without the game's number: 30% of max HP rounded down (92 -> 27, as the game writes it) and the relics held", () => {
+    expect(baseRestHeal(92)).toBe(27);
+    expect(baseRestHeal(85)).toBe(25);
+    expect(baseRestHeal(77)).toBe(23);
+    expect(restHealHere("", 87, ["BURNING_BLOOD", "REGAL_PILLOW"])).toMatchObject({ base: 26, total: 41, rest: { bonus: 15, maxGain: 0 } });
+    expect(restHealHere("回复最大生命值的30%（24）。\n提升5点你的最大生命值。", 80, ["STONE_HUMIDIFIER"])).toMatchObject({ base: 24, total: 24, rest: { bonus: 0, maxGain: 5 } });
+  });
+
+  it("later rests on a route heal with the relics too (the projection behind hp_if_option and the route facts)", () => {
+    const model: RoomCostModel = { act: 1, maxHp: 80, monster: { median: 10, p75: 15, source: "test" }, elite: { median: 30, p75: 40, source: "test" }, unknown: { median: 0, p75: 3, source: "test" } };
+    expect(projectPath(["RestSite", "Boss"], 40, model).arrival).toEqual([40, 64]);
+    expect(projectPath(["RestSite", "Boss"], 40, { ...model, rest: restHealOf(["REGAL_PILLOW"]) }).arrival).toEqual([40, 79]);
+    const humid = projectPath(["RestSite", "Monster", "RestSite", "Boss"], 40, { ...model, rest: restHealOf(["STONE_HUMIDIFIER"]) });
+    // 40 + 24 + 5 = 69/85; -10 = 59; + 25 + 5 = 89/90.
+    expect(humid.arrival).toEqual([40, 69, 59, 89]);
+    expect(humid.maxArrival).toEqual([80, 85, 85, 90]);
   });
 });

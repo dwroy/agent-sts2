@@ -13,6 +13,7 @@ import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere,
 import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
+import { baseRestHeal, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -102,11 +103,15 @@ export function planRest(env: DecisionEnv): Decision | null {
   };
   // BUILD_DECIDER=deepseek: heal or smith (and the card to smith, on the next screen) is DeepSeek's call.
   if (!deepseekDecides(env)) return buildPickDecision(params);
-  const heal = Math.round((state.run?.max_hp ?? 0) * 0.3);
+  const maxNow = state.run?.max_hp ?? 0;
+  const hpNow = state.run?.current_hp ?? 0;
+  const healOption = asArray(rest["options"]).map(asRecord).find((raw) => str(raw["option_id"]).toUpperCase() === "HEAL");
+  const heal = restHealHere(healOption ? str(healOption["description"]) : "", maxNow, relicIdsOf(state));
+  const healed = restedHp(hpNow, maxNow, heal.rest, heal.base);
   const facts = buildFacts(env, {
     rest_site: {
-      heal_amount: `~${heal} HP (30% of max)`,
-      hp_after_heal: `${Math.min(state.run?.max_hp ?? 0, (state.run?.current_hp ?? 0) + heal)}/${state.run?.max_hp ?? "?"}`,
+      heal_amount: heal.text,
+      hp_after_heal: `${healed.hp}/${healed.max}`,
       upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
       floors_to_act_boss: nextBoss - floor,
       next_nodes: nextNodeTypes(env.screenMemory, state),
@@ -116,10 +121,10 @@ export function planRest(env: DecisionEnv): Decision | null {
   // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
   // and the step-by-step question alike, with the HP each rest option leaves: heal adds its amount, the other
   // actions leave HP as it is.
-  const hpNow = state.run?.current_hp ?? 0;
   const kindOf = (key: string): string => str(rawByKey.get(key)?.["option_id"]).toUpperCase();
-  const hpAfter = new Map(options.map((option) => [option.key, kindOf(option.key) === "HEAL" ? Math.min(state.run?.max_hp ?? hpNow, hpNow + heal) : hpNow]));
-  const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: hpAfter.get(option.key) ?? hpNow })));
+  const after = (key: string): { hp: number; max: number } => (kindOf(key) === "HEAL" ? healed : { hp: hpNow, max: maxNow });
+  const hpAfter = new Map(options.map((option) => [option.key, after(option.key).hp]));
+  const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: after(option.key).hp, max: after(option.key).max })));
   const reviewNote = review ? ` ${review.note} hp_if_option: each route's HP at its first elite and boss after each rest option.` : "";
   const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
   const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
@@ -166,6 +171,30 @@ export function planRest(env: DecisionEnv): Decision | null {
       },
     }),
   );
+}
+
+function relicIdsOf(state: GameState): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+}
+
+/**
+ * What resting (HEAL) does at this rest site: the HEAL option's own text when it reads as the game writes it
+ * (「回复最大生命值的30%（23）。」, then a line per relic: 「皇家枕头提供+15点生命。」 Regal Pillow,
+ * 「提升5点你的最大生命值。」 Stone Humidifier), else 30% of max HP rounded down and the rest relics held
+ * (route-projection REST_RELICS). hp_if_option and the rest facts assumed a flat 30% before.
+ */
+export function restHealHere(healText: string, maxHp: number, relicIds: readonly string[]): { base: number; rest: RestHeal; total: number; text: string } {
+  const relics = restHealOf(relicIds);
+  const own = /[（(](\d+)[）)]/.exec(healText);
+  const sum = (pattern: RegExp): number => [...healText.matchAll(pattern)].reduce((total, match) => total + Number(match[1]), 0);
+  const base = own ? Number(own[1]) : baseRestHeal(maxHp);
+  const rest: RestHeal = own ? { bonus: sum(/提供\+(\d+)点生命/g), maxGain: sum(/提升(\d+)点你的最大生命值/g), sources: relics.sources } : relics;
+  const total = base + rest.bonus;
+  const text =
+    `${total} HP: ${base} (30% of max HP, rounded down)${rest.bonus > 0 ? ` + ${rest.bonus}` : ""}` +
+    `${rest.maxGain > 0 ? `, and max HP +${rest.maxGain} with HP +${rest.maxGain}` : ""}` +
+    `${rest.sources.length > 0 ? ` (${rest.sources.join(", ")})` : ""}`;
+  return { base, rest, total, text };
 }
 
 function hpPercent(env: DecisionEnv): number {
