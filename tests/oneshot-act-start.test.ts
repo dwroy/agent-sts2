@@ -1,9 +1,9 @@
 /**
- * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29): the act-start Ancient's
- * option and the act's route together, the map from the MAP screen before the Ancient (the EVENT state has
- * none); the route stored as the act's route plan and followed from the first map, whose first move is a
- * step of the plan; one review (keep or change) after an option whose outcome was random; the two questions
- * of before when the answer names no valid route.
+ * Act start in one question (BUILD_DECIDER=deepseek, BUILD_ONESHOT; Dai 2026-09-29; M2: the whole map): the
+ * act-start Ancient's option and the act's route (a node sequence) together, the map from the MAP screen before the
+ * Ancient (the EVENT state has none); the route stored as the act's route plan and followed from the first map,
+ * whose first move is a step of the plan; one review (keep or change) after an option whose outcome was random; an
+ * answer without a legal route (after one re-ask) takes the option and leaves the route to the first map.
  *
  * Boards: U6RUE7LBUFJF F17-F18 (Tezcatara) and YQL8D59999AX F17-F18 (Delicious Cookies, upgrade 4), A9.
  */
@@ -16,6 +16,7 @@ import { revealsLater, routeEffect } from "../src/screens/act-start.js";
 import { rememberMap } from "../src/screens/rest.js";
 import type { JsonValue } from "../src/util/json.js";
 import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
+import { legalRoutes } from "./route-fixture.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -30,9 +31,9 @@ function afterMap(file: string): ScreenMemory {
   return memory;
 }
 
-/** The first node of a route from the question's act_routes, and its index on the map after the event. */
-function firstIndex(route: Record<string, JsonValue>, mapAfter: Raw): number {
-  const [, row, col] = /row (\d+), column (\d+)/.exec(String(route["first_node"]))!;
+/** The index of a route's first node on the map after the event. */
+function firstIndex(route: string, mapAfter: Raw): number {
+  const [, row, col] = /^r(\d+)c(\d+)/.exec(route)!;
   const nodes = ((mapAfter["map"] as Raw)["available_nodes"] as Raw[]).filter((node) => node["row"] === Number(row) && node["col"] === Number(col));
   return nodes[0]!["index"] as number;
 }
@@ -68,30 +69,33 @@ describe("what an option changes for the route, and whether its outcome is known
 });
 
 describe("act-start Ancient: its option and the act's route in one question", () => {
-  it("asks once with the Ancient's options and the act's whole routes (the map from the MAP screen before)", () => {
+  it("asks once with the Ancient's options and the act's whole map (from the MAP screen before), standing on the Ancient", () => {
     const decision = decide(env(board(ANCIENT, "event"), afterMap(ANCIENT)));
     expect(decision.label).toBe("event/act-plan");
     expect(Object.keys(optionsOf(decision))).toEqual(["o0", "o1", "o2"]);
     const question = ask(decision);
-    const routes = question.state["act_routes"] as Record<string, Record<string, JsonValue>>;
-    expect(Object.keys(routes).length).toBeGreaterThanOrEqual(2);
-    for (const route of Object.values(routes)) {
-      expect(route).toMatchObject({ path: expect.stringMatching(/Boss$/), first_node: expect.stringMatching(/^row 1,/), hp_at_boss: expect.any(String), code_value: expect.any(Number), code_rank: expect.any(Number) });
-    }
-    expect(String(question.state["route_note"])).toMatch(/HP projection per room, act 2/);
-    expect(String(question.questions["pick"]?.instructions)).toMatch(/"route": "<route key from act_routes>"/);
+    const view = question.state["act_route"] as Record<string, JsonValue>;
+    const raw = board(ANCIENT, "map_before")["map"] as { nodes: Raw[] };
+    expect((view["map"] as string[]).length).toBe(raw.nodes.length);
+    expect(String(view["position"])).toMatch(/^你在 r0c\d（F18 远古）；下一步可走：/);
+    const ancient = raw.nodes.find((node) => node["row"] === 0)!;
+    expect(view["next_nodes"]).toEqual((ancient["children"] as Raw[]).map((child) => `r${String(child["row"])}c${String(child["col"])}`));
+    expect(String(view["boss"])).toMatch(/（F33 Boss）$/);
+    expect(String(view["room_costs"])).toMatch(/^第 2 幕每个房间掉血/);
+    expect(legalRoutes(view).length).toBeGreaterThanOrEqual(2);
+    // No candidate routes, code values or ranks for the route.
+    expect(JSON.stringify(view)).not.toMatch(/code_value|code_rank|hp_at_boss|act_routes/);
+    expect(String(question.questions["pick"]?.instructions)).toContain('"route": "<节点 id，用空格分隔：从 next_nodes 之一出发');
     expect(question.deepseek.baseline.label).toBe("event/choose");
     expect(question.deepseek.oneshot).toBeDefined();
   });
 
-  it("an option that changes HP shows it, and every route its boss HP with that option", () => {
+  it("an option that changes HP shows it in its route_effect", () => {
     const raw = board(ANCIENT, "event");
     const option = ((raw["event"] as Raw)["options"] as Raw[])[2]!;
     option["description"] = "获得[blue]31[/blue]点最大生命值。";
     const decision = decide(env(raw, afterMap(ANCIENT)));
     expect(optionsOf(decision)["o2"]).toMatchObject({ route_effect: expect.stringMatching(/^HP \d+\/80 -> \d+\/111$/) });
-    const routes = ask(decision).state["act_routes"] as Record<string, Record<string, JsonValue>>;
-    expect(Object.values(routes)[0]?.["hp_at_boss_if_option"]).toEqual({ o2: expect.stringMatching(/\/111$/) });
   });
 
   it("not this question: no map yet (act 1's Neow), another floor's map, or the act already planned", () => {
@@ -108,31 +112,36 @@ describe("act-start Ancient: its option and the act's route in one question", ()
   it("option + route: the option now, the route stored as the act's plan; its first map move is the plan's step 2", () => {
     const memory = afterMap(ANCIENT);
     const decision = decide(env(board(ANCIENT, "event"), memory));
-    const routes = ask(decision).state["act_routes"] as Record<string, Record<string, JsonValue>>;
-    const resolved = choose(decision, "o0", undefined, "p2");
+    const route = legalRoutes(ask(decision).state["act_route"])[1]!.join(" ");
+    const resolved = choose(decision, "o0", undefined, route);
     expect(resolved.intent).toEqual({ action: "choose_event_option", option_index: 0 });
-    expect(resolved.plan).toEqual({ id: "U6RUE7LBUFJF:F18:act#1", steps: ["o0", "p2"] });
-    // The route DeepSeek picked by key (p2), whatever path the refreshed room costs rank second.
-    expect(resolved.journal).toBe(`营养汤; route ${String(routes["p2"]?.["path"])}`);
-    expect(String(routes["p2"]?.["path"])).toMatch(/^Monster -> .* -> Boss$/);
+    expect(resolved.plan).toEqual({ id: "U6RUE7LBUFJF:F18:act#1", steps: ["o0", route] });
     resolved.apply?.();
-    expect(memory.routePlan).toMatchObject({ act: 2, summary: routes["p2"]?.["path"], oneshot: { ref: "U6RUE7LBUFJF:F18:act#1", firstStep: 2, firstPending: true } });
+    expect(resolved.journal).toBe(`营养汤; route ${memory.routePlan!.summary}`);
+    expect(memory.routePlan!.path.map((step) => `r${step.row}c${step.col}`).join(" ")).toBe(route);
+    expect(memory.routePlan).toMatchObject({ act: 2, oneshot: { ref: "U6RUE7LBUFJF:F18:act#1", firstStep: 2, firstPending: true } });
     expect(memory.routePlan?.review).toBeUndefined();
     const mapAfter = board(ANCIENT, "map_after");
     const first = act(decide(env(mapAfter, memory)));
-    expect(first).toMatchObject({ label: "map/route-follow", intent: { action: "choose_map_node", option_index: firstIndex(routes["p2"]!, mapAfter) }, plan: { ref: "U6RUE7LBUFJF:F18:act#1", step: 2 } });
+    expect(first).toMatchObject({ label: "map/route-follow", intent: { action: "choose_map_node", option_index: firstIndex(route, mapAfter) }, plan: { ref: "U6RUE7LBUFJF:F18:act#1", step: 2 } });
     // Later moves are code's follows, as with any route plan.
     const again = decide(env(mapAfter, memory));
     expect(again.kind === "act" && again.plan).toBeFalsy();
   });
 
-  it("no valid route in the answer: unusable (the loop falls back to the two questions of before)", () => {
-    const decision = decide(env(board(ANCIENT, "event"), afterMap(ANCIENT)));
-    for (const route of [undefined, "p99"]) {
+  it("no legal route in the answer: the option is still taken, no plan is stored (the first map asks for the route)", () => {
+    const memory = afterMap(ANCIENT);
+    const decision = decide(env(board(ANCIENT, "event"), memory));
+    for (const route of [undefined, "p1", "r1c0 r3c0"]) {
       const resolved = choose(decision, "o1", undefined, route);
-      expect(resolved).toMatchObject({ intent: null, fallback: true });
-      expect(resolved.rationale).toMatch(/names no route/);
+      expect(resolved).toMatchObject({ intent: { action: "choose_event_option", option_index: 1 }, fallback: false });
+      expect(resolved.plan?.steps).toEqual(["o1"]);
+      expect(resolved.journal).toMatch(/no legal route \((illegal|none given)\): the first map asks for it$/);
+      resolved.apply?.();
+      expect(memory.routePlan).toBeUndefined();
     }
+    const next = decide(env(board(ANCIENT, "map_after"), memory));
+    expect(next.label).toBe("map/route-plan");
   });
 
   it("Delicious Cookies (upgrade 4) with a route: four named upgrades, then the first map move as step 6", () => {
@@ -140,10 +149,11 @@ describe("act-start Ancient: its option and the act's route in one question", ()
     const event = board(COOKIES, "event");
     const decision = decide(env(event, memory));
     expect(decision.label).toBe("event/act-plan");
+    const route = legalRoutes(ask(decision).state["act_route"])[0]!.join(" ");
     // The logged picks: Shrug It Off, Fight Me, Pommel Strike, the other Fight Me.
     const cards = [keyOf(event, "SHRUG_IT_OFF"), keyOf(event, "FIGHT_ME"), keyOf(event, "POMMEL_STRIKE"), keyOf(event, "FIGHT_ME")];
-    const resolved = choose(decision, "o0", cards, "p1");
-    expect(resolved.plan?.steps).toEqual(["o0", ...cards, "p1"]);
+    const resolved = choose(decision, "o0", cards, route);
+    expect(resolved.plan?.steps).toEqual(["o0", ...cards, route]);
     resolved.apply?.();
     expect(memory.pendingPick).toMatchObject({ task: "upgrade", step: 2, names: ["耸肩无视", "与我一战！", "剑柄打击", "与我一战！"] });
     expect(memory.routePlan?.oneshot).toMatchObject({ firstStep: 6, firstPending: true });
@@ -151,92 +161,109 @@ describe("act-start Ancient: its option and the act's route in one question", ()
     expect(steps.map((step) => step.plan?.step)).toEqual([2, 3, 4, 5]);
     expect(steps.map((step) => step.intent.option_index)).toEqual([9, 11, 16, 13]);
     // A card already upgraded is not offered (Bash+ is).
-    expect(() => choose(decision, "o0", [keyOf(event, "BASH"), ...cards.slice(1)], "p1").plan).not.toThrow();
-    expect(choose(decision, "o0", [keyOf(event, "BASH"), ...cards.slice(1)], "p1").plan?.steps).toEqual(["o0", "p1"]);
+    expect(() => choose(decision, "o0", [keyOf(event, "BASH"), ...cards.slice(1)], route).plan).not.toThrow();
+    expect(choose(decision, "o0", [keyOf(event, "BASH"), ...cards.slice(1)], route).plan?.steps).toEqual(["o0", route]);
     expect(steps.every((step) => step.label === "selection/upgrade")).toBe(true);
     expect(memory.pendingPick).toBeUndefined();
     const first = act(decide(env(board(COOKIES, "map_after"), memory)));
     expect(first).toMatchObject({ label: "map/route-follow", plan: { step: 6 } });
   });
 
-  it("a random outcome: the route is reviewed once at the first map (keep or change; default keep)", () => {
-    const memory = afterMap(ANCIENT);
+  /** An option with a random outcome and a legal route: the plan, reviewed at the first map. */
+  function randomOutcome(memory: ScreenMemory): string {
     const raw = board(ANCIENT, "event");
     ((raw["event"] as Raw)["options"] as Raw[])[1]!["description"] = "获得[blue]2[/blue]件随机[gold]遗物[/gold]。";
     const decision = decide(env(raw, memory));
     expect(optionsOf(decision)["o1"]).toMatchObject({ outcome: expect.stringMatching(/review the route once/) });
-    choose(decision, "o1", undefined, "p1").apply?.();
+    const route = legalRoutes(ask(decision).state["act_route"])[0]!.join(" ");
+    choose(decision, "o1", undefined, route).apply?.();
+    return route;
+  }
+
+  it("a random outcome: the route is reviewed once at the first map, on the whole map with the plan's facts (keep or change; default keep)", () => {
+    const memory = afterMap(ANCIENT);
+    randomOutcome(memory);
     expect(memory.routePlan?.review).toMatchObject({ why: expect.stringMatching(/random/), before: { relics: expect.any(Array) } });
     const mapAfter = board(ANCIENT, "map_after");
     const review = decide(env(mapAfter, memory));
     expect(review.label).toBe("map/route-review");
-    const options = optionsOf(review);
-    expect(options["keep"]).toMatchObject({ keep: expect.any(String), path: memory.routePlan?.summary });
-    expect(Object.keys(options).length).toBeGreaterThan(1);
-    expect((ask(review).state["facts"] as Record<string, JsonValue>)["route_review"]).toMatchObject({ revealed_outcome: expect.any(String) });
+    const view = ask(review).state["route_map"] as Record<string, JsonValue>;
+    // Standing on the Ancient: the whole plan is ahead.
+    expect(view).toMatchObject({ plan: memory.routePlan!.summary, revealed_outcome: expect.stringMatching(/random/), plan_facts: { arrival: expect.any(Array) } });
+    expect(Object.keys((ask(review).questions["pick"] as { criteria: Record<string, string> }).criteria)[0]).toBe("keep");
     // Default keep: without DeepSeek the plan is followed.
     expect(ask(review).deepseek.baseline).toMatchObject({ kind: "act", label: "map/route-follow" });
-    const kept = choose(review, "keep");
+    const kept = ask(review).deepseek.plan!.resolve({ route: "keep", reason: "the relics fit" });
+    if ("invalid" in kept) throw new Error(kept.invalid);
     expect(kept.intent).toEqual((ask(review).deepseek.baseline as { intent: unknown }).intent);
     kept.apply?.();
     expect(memory.routePlan?.review).toBeUndefined();
     expect(decide(env(mapAfter, memory)).label).toBe("map/route-follow");
   });
 
-  it("the review changes the route: the new path becomes the act's plan", () => {
+  it("the review changes the route: the new route becomes the act's plan", () => {
     const memory = afterMap(ANCIENT);
-    const raw = board(ANCIENT, "event");
-    ((raw["event"] as Raw)["options"] as Raw[])[1]!["description"] = "获得[blue]2[/blue]件随机[gold]遗物[/gold]。";
-    choose(decide(env(raw, memory)), "o1", undefined, "p1").apply?.();
+    randomOutcome(memory);
     const kept = memory.routePlan?.summary;
     const review = decide(env(board(ANCIENT, "map_after"), memory));
-    const other = Object.keys(optionsOf(review)).find((key) => key !== "keep")!;
-    const changed = choose(review, other);
+    const view = ask(review).state["route_map"];
+    const planned = String((view as Record<string, JsonValue>)["plan"]).split(" → ").map((step) => step.split(" ")[0]).join(" ");
+    const other = legalRoutes(view).map((ids) => ids.join(" ")).find((ids) => ids !== planned)!;
+    const changed = ask(review).deepseek.plan!.resolve({ route: other, reason: "shops for the gold" });
+    if ("invalid" in changed) throw new Error(changed.invalid);
     changed.apply?.();
     expect(memory.routePlan?.summary).not.toBe(kept);
     expect(memory.routePlan?.review).toBeUndefined();
     expect(memory.routePlan?.why).toMatch(/review after the act-start Ancient/);
+    // An illegal one is not a plan (the spec re-asks it first).
+    expect(ask(review).deepseek.plan!.resolve({ route: "r9c9", reason: "x" })).toEqual({ invalid: "第 1 步 r9c9：地图上没有这个节点" });
   });
 });
 
 describe("act start in the loop", () => {
   const sequence = (event: Raw = board(ANCIENT, "event")): Raw[] => [board(ANCIENT, "map_before"), event, board(ANCIENT, "event_done"), board(ANCIENT, "map_after"), mainMenuPayload()];
+  const joint = (event: Raw = board(ANCIENT, "event")): string => legalRoutes(ask(decide(env(event, afterMap(ANCIENT)))).state["act_route"])[1]!.join(" ");
 
   it("one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step", async () => {
-    const deepseek = new FakeDeepSeek(() => ({ choice: "o0", route: "p2" }));
+    const route = joint();
+    const deepseek = new FakeDeepSeek(() => ({ choice: "o0", route }));
     const { stats, actions, records } = await play(sequence(), deepseek);
     expect(deepseek.calls.map((call) => call.label)).toEqual(["event/act-plan"]);
     expect(stats.deepseekCalls).toBe(1);
     expect(actions.map((action) => action["action"])).toEqual(["choose_map_node", "choose_event_option", "choose_event_option", "choose_map_node"]);
     const plan = records.find((row) => row["label"] === "event/act-plan")!;
-    expect(plan).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route: "p2", plan_id: "U6RUE7LBUFJF:F18:act#1", plan: ["o0", "p2"], plan_step: 1 }, route_plan: { act: 2 } });
+    expect(plan).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route, plan_id: "U6RUE7LBUFJF:F18:act#1", plan: ["o0", route], plan_step: 1 }, route_plan: { act: 2 } });
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ decider: "deepseek", deepseek: { reused: true, plan_ref: "U6RUE7LBUFJF:F18:act#1", plan_step: 2 } });
     expect(records.some((row) => row["label"] === "map/route-plan")).toBe(false);
   });
 
-  it("an answer without a route: logged, then the two questions of before (the event, then the route plan)", async () => {
-    const deepseek = new FakeDeepSeek((criteria, label) => (label === "map/route-plan" ? Object.keys(criteria)[0]! : "o0"));
+  it("an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route", async () => {
+    const route = legalRoutes(ask(decide(env(board(ANCIENT, "map_after"), createScreenMemory("MAP")))).state["route_map"])[0]!.join(" ");
+    const deepseek = new FakeDeepSeek(() => "o0", (label) => (label === "map/route-plan" ? { route, reason: "planned at the map" } : { plan: [], reason: "nothing" }));
     const { stats, records } = await play(sequence(), deepseek);
-    expect(deepseek.calls.map((call) => call.label)).toEqual(["event/act-plan", "event/choose", "map/route-plan"]);
+    expect(deepseek.calls.map((call) => `${call.label}${call.reask ? " (re-ask)" : ""}`)).toEqual(["event/act-plan", "event/act-plan (re-ask)", "map/route-plan"]);
     expect(stats.deepseekCalls).toBe(3);
-    expect(records.find((row) => row["label"] === "event/act-plan")?.["result"]).toBe("not dispatched: one-shot answer unusable, re-planned step by step");
+    expect(records.find((row) => row["label"] === "event/act-plan")).toMatchObject({ decider: "deepseek", chosen: { action: "choose_event_option", option_index: 0 } });
+    expect(records.find((row) => row["label"] === "map/route-plan")).toMatchObject({ decider: "deepseek", route_plan: { act: 2 } });
   });
 
   it("a random outcome: two calls (the joint question, then the review), the review keeping the route", async () => {
     const event = board(ANCIENT, "event");
     ((event["event"] as Raw)["options"] as Raw[])[0]!["description"] = "获得[blue]2[/blue]件随机[gold]遗物[/gold]。";
-    const deepseek = new FakeDeepSeek((_criteria, label) => (label === "map/route-review" ? "keep" : { choice: "o0", route: "p1" }));
+    const route = joint(event);
+    const deepseek = new FakeDeepSeek(() => ({ choice: "o0", route }), (label) => (label === "map/route-review" ? { route: "keep", reason: "fine" } : { plan: [], reason: "nothing" }));
     const { stats, records } = await play(sequence(event), deepseek);
     expect(deepseek.calls.map((call) => call.label)).toEqual(["event/act-plan", "map/route-review"]);
     expect(stats.deepseekCalls).toBe(2);
-    expect(records.find((row) => row["label"] === "map/route-review")).toMatchObject({ decider: "deepseek", deepseek: { choice: "keep" } });
+    expect(records.find((row) => row["label"] === "map/route-review")).toMatchObject({ decider: "deepseek", rationale: expect.stringMatching(/keep/) });
   });
 
   it("the real client reads the answer's route (and cards)", async () => {
-    const { client } = await scriptedDeepSeek([{ content: '{"choice": "o0", "route": "p2", "reason": "soup for the strikes; shop route"}', reasoning: "Decisive: o0 with p2." }]);
+    const route = joint();
+    const { client } = await scriptedDeepSeek([{ content: JSON.stringify({ choice: "o0", route, reason: "soup for the strikes; shop route" }), reasoning: "Decisive: o0." }]);
     const { stats, records } = await play(sequence(), client);
     expect(stats.deepseekCalls).toBe(1);
-    expect(records.find((row) => row["label"] === "event/act-plan")).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route: "p2", plan: ["o0", "p2"] } });
+    expect(records.find((row) => row["label"] === "event/act-plan")).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route, plan: ["o0", route] } });
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ deepseek: { plan_step: 2 } });
   });
 });

@@ -7,7 +7,9 @@ import { BrainRouter, EngineFailure, labelPrefix, type BrainLogRow } from "../sr
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
 import { brainLogPath, ConfigError, loadConfig } from "../src/config.js";
+import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
 import type { ToolDef } from "../src/tools/types.js";
+import { input } from "./route-fixture.js";
 
 const options = { a: JSON.stringify({ option: "heal" }), b: JSON.stringify({ option: "smith" }) };
 
@@ -151,6 +153,46 @@ describe("validation and the one re-ask", () => {
   });
 });
 
+describe("route answers (M2): a forced re-ask, soft problems, the run id", () => {
+  /** The act-start joint question's map: the route is checked on it (tests/route-fixture.ts). */
+  const act = { act_route: JSON.parse(JSON.stringify(routeView(buildRouteMap(input())))) as Record<string, unknown> };
+  const joint = (): BrainRequest => ({ ...request("event/act-plan"), payload: act, spec: pickSpec("event/act-plan", options, act) });
+
+  it("DeepSeek without tools is re-asked on an illegal route (the spec asks for it); the corrected answer is taken", async () => {
+    const deepseek = new FakeEngine("deepseek", [{ choice: "a", reason: "x", route: "r1c2 r2c0 r3c1 r4c1" }, { choice: "a", reason: "x", route: "r1c0 r2c0 r3c1 r4c1" }]);
+    const { router: r, rows } = router({}, { deepseek });
+    const answer = await r.decide({ ...joint(), runId: "RUN1" });
+    expect(deepseek.requests).toHaveLength(2);
+    expect(deepseek.requests[1]!.reask!.problems).toEqual(["route: 第 2 步 r1c2 → r2c0：没有连线（r1c2 只连到 r2c1、r2c2；没有飞行靴次数）"]);
+    expect(answer.answer).toEqual({ choice: "a", reason: "x", route: "r1c0 r2c0 r3c1 r4c1" });
+    expect(answer.problems).toEqual([]);
+    // brain.jsonl carries the run id (the same value as decisions.jsonl's run_id).
+    expect(rows[0]).toMatchObject({ run_id: "RUN1", reasks: 1, attempts: 2 });
+    expect(Object.keys(rows[0]!)[1]).toBe("run_id");
+  });
+
+  it("a route still illegal after the re-ask leaves the answer usable (its choice stands), the problems reported", async () => {
+    const deepseek = new FakeEngine("deepseek", [{ choice: "b", reason: "x", route: "r2c0" }, { choice: "b", reason: "y", route: "r9c9" }]);
+    const answer = await router({}, { deepseek }).router.decide(joint());
+    expect(answer.answer).toEqual({ choice: "b", reason: "y", route: "r9c9" });
+    expect(answer.problems).toEqual(["route: 第 1 步 r9c9：地图上没有这个节点"]);
+    // A re-ask that breaks the choice keeps the first answer (its route problem reported).
+    const worse = new FakeEngine("deepseek", [{ choice: "b", reason: "x", route: "r2c0" }, { choice: "zz", reason: "y" }]);
+    const kept = await router({}, { deepseek: worse }).router.decide(joint());
+    expect(kept.answer).toEqual({ choice: "b", reason: "x", route: "r2c0" });
+    expect(kept.problems).toEqual(["route: 第 1 步 r2c0：不是下一步能走的节点（能走：r1c0、r1c2）", "route: 终点 r2c0（问号）不是 boss：路线要一直走到 boss（r4c1、r5c1）", 're-ask: choice "zz" is not one of a, b']);
+    // An explicit BRAIN_DEEPSEEK_REASK=off wins: one call, the answer with its soft problem.
+    const off = new FakeEngine("deepseek", [{ choice: "b", reason: "x", route: "r2c0" }]);
+    const once = await router({ BRAIN_DEEPSEEK_REASK: "off" }, { deepseek: off }).router.decide(joint());
+    expect(off.requests).toHaveLength(1);
+    expect(once.answer).toEqual({ choice: "b", reason: "x", route: "r2c0" });
+    // Without a run id the row has none.
+    const { router: r, rows } = router({}, { deepseek: new FakeEngine("deepseek", [{ choice: "a", reason: "x", route: "r1c0 r2c0 r3c1 r4c1" }]) });
+    await r.decide(joint());
+    expect(rows[0]!.run_id).toBeUndefined();
+  });
+});
+
 describe("tools per engine", () => {
   const tool: ToolDef = { name: "kb_x", description: "x", inputSchema: { type: "object" }, run: () => ({ text: "x" }) };
   const withTools = request("rest/plan", { tools: [tool], toolContext: { ascension: 8, knowledgeDir: "/k", logsDir: "/l" } });
@@ -167,6 +209,20 @@ describe("tools per engine", () => {
     const off = new FakeEngine("claude", [{ choice: "a", reason: "x" }]);
     await router({ BRAIN_ENGINE: "claude", BRAIN_TOOLS: "off" }, { claude: off }).router.decide(withTools);
     expect(off.requests[0]!.tools).toEqual([]);
+  });
+
+  it("KNOWLEDGE_PREFIX=full: Claude gets no tools by default (the knowledge is in the prompt); BRAIN_CLAUDE_TOOLS=on adds them", async () => {
+    const claude = new FakeEngine("claude", [{ choice: "a", reason: "x" }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "claude", KNOWLEDGE_PREFIX: "full" }, { claude });
+    expect(r.toolsFor("claude")).toBe(false);
+    await r.decide(withTools);
+    expect(claude.requests[0]!.tools).toEqual([]);
+    expect(rows[0]!.tools).toEqual([]);
+    const on = new FakeEngine("claude", [{ choice: "a", reason: "x" }]);
+    const { router: withOn } = router({ BRAIN_ENGINE: "claude", KNOWLEDGE_PREFIX: "full", BRAIN_CLAUDE_TOOLS: "on" }, { claude: on });
+    await withOn.decide(withTools);
+    expect(on.requests[0]!.tools!.map((t) => t.name)).toEqual(["kb_x"]);
+    expect(router({ KNOWLEDGE_PREFIX: "full", BRAIN_TOOLS: "on" }, {}).router.toolsFor("claude")).toBe(true);
   });
 });
 

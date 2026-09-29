@@ -155,9 +155,9 @@ export interface ScreenMemory {
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
-  /** DeepSeek's route for the current act (BUILD_DECIDER=deepseek); code follows it node by node. */
-  routePlan?: import("../screens/map.js").RoutePlan;
-  /** "runId:act" whose route-plan request failed: the rest of the act uses the Jev/code route choice. */
+  /** The brain's route for the current act (BUILD_DECIDER=deepseek); code follows it node by node. */
+  routePlan?: import("../screens/route-plan.js").RoutePlan;
+  /** "runId:act:floor" whose route-plan question failed: that floor's map moves use code's greedy baseline. */
   routePlanFailed?: string;
   /**
    * The event last seen and its floor, kept across screens: an end page of that event on a later floor
@@ -196,11 +196,14 @@ export interface RememberedMap {
   runId: string;
   /** Floor shown on the MAP screen (the node we stood on; the next room is floor + 1). */
   floor: number | null;
-  nodes: { row: number; col: number; type: string; children: { row: number; col: number }[] }[];
+  /** Every node with its lines; `visited`: walked this act (the route map's walked nodes). */
+  nodes: { row: number; col: number; type: string; children: { row: number; col: number }[]; visited?: boolean }[];
   available: { row: number; col: number; type: string }[];
   /** The node we stood on when the map was shown, and the act boss's node (run memory lookahead). */
   current?: { row: number; col: number } | null;
   boss?: { row: number; col: number } | null;
+  /** Every boss node (A10's act 3: boss_node and second_boss_node), for the route map. */
+  bosses?: { row: number; col: number }[];
   /** act_id the map belongs to: a map from the previous act says nothing about this one. */
   act?: string | null;
   /**

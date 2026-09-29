@@ -25,6 +25,17 @@ export interface AnswerSpec {
   schema: JsonSchema;
   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
   validate(answer: unknown): string[];
+  /**
+   * Problems worth the one re-ask that still leave the answer usable (a route riding on a card pick: M2). When they
+   * remain after the re-ask, the answer is kept and they are reported as its minor problems (the caller drops the
+   * part they concern: an illegal route keeps the plan).
+   */
+  softValidate?(answer: unknown): string[];
+  /**
+   * Re-ask on problems even where the engine's default is not to (DeepSeek without tools keeps v3's own repair):
+   * the route questions (M2). An explicit BRAIN_REASK / BRAIN_<ENGINE>_REASK still wins.
+   */
+  reask?: boolean;
 }
 
 export interface BrainRequest {
@@ -59,6 +70,8 @@ export interface BrainRequest {
   timeoutMs?: number;
   /** What the system prompt carries when KNOWLEDGE_PREFIX is set (brain/knowledge.ts); logged in brain.jsonl. */
   knowledge?: KnowledgeNote;
+  /** The run the question belongs to (the state's run_id, as decisions.jsonl logs it); logged in brain.jsonl. */
+  runId?: string;
 }
 
 /** The knowledge a request carries (KNOWLEDGE_PREFIX=full), or why it fell back to v3's prompt. */
@@ -116,6 +129,8 @@ export interface BrainAnswer {
   native?: unknown;
   /** Set when the router fell back to another engine; names the engine that failed and why. */
   fellBackFrom?: { engine: EngineName; error: string };
+  /** Model calls the router's re-ask made (set by the router when it re-asked; the loop counts them against its budget). */
+  reaskCalls?: number;
 }
 
 export interface BrainEngine {

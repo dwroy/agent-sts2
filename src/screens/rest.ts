@@ -151,7 +151,7 @@ export function planRest(env: DecisionEnv): Decision | null {
   const after = (key: string): { hp: number; max: number } => (kindOf(key) === "HEAL" ? healed : { hp: hpNow, max: maxNow });
   const hpAfter = new Map(options.map((option) => [option.key, after(option.key).hp]));
   const review = routeReviewBlock(env, "rest", REST_NODES, options.map((option) => ({ keys: [option.key], kind: kindOf(option.key), hp: after(option.key).hp, max: after(option.key).max })));
-  const reviewNote = review ? ` ${review.note} hp_if_option: each route's HP at its first elite and boss after each rest option.` : "";
+  const reviewNote = review ? ` ${review.note}` : "";
   const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
   const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
   const discardNote = params.options.some((option) => option.key.endsWith(DISCARD_SUFFIX))
@@ -210,7 +210,7 @@ function relicIdsOf(state: GameState): string[] {
  * What resting (HEAL) does at this rest site: the HEAL option's own text when it reads as the game writes it
  * (「回复最大生命值的30%（23）。」, then a line per relic: 「皇家枕头提供+15点生命。」 Regal Pillow,
  * 「提升5点你的最大生命值。」 Stone Humidifier), else 30% of max HP rounded down and the rest relics held
- * (route-projection REST_RELICS). hp_if_option and the rest facts assumed a flat 30% before.
+ * (route-projection REST_RELICS). The route facts and the rest facts assumed a flat 30% before.
  */
 export function restHealHere(healText: string, maxHp: number, relicIds: readonly string[]): { base: number; rest: RestHeal; total: number; text: string } {
   // Eternal Feather's heal on entering is already in the HP here (no deck size: no enterHeal).
@@ -246,10 +246,15 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
       col: num(node["col"]),
       type: str(node["node_type"], "Unknown"),
       children: asArray(node["children"]).map(asRecord).map((child) => ({ row: num(child["row"]), col: num(child["col"]) })),
+      ...(node["visited"] === true ? { visited: true } : {}),
     })),
     available: asArray(map["available_nodes"]).map(asRecord).map((node) => ({ row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") })),
     current: mapPoint(map["current_node"]),
     boss: mapPoint(map["boss_node"]),
+    // Every boss node (A10: a second one): the route map marks both.
+    bosses: [mapPoint(map["boss_node"]), mapPoint(map["second_boss_node"]), ...rawNodes.filter((node) => node["is_boss"] === true || node["is_second_boss"] === true).map((node) => mapPoint(node))]
+      .filter((point): point is { row: number; col: number } => point !== null)
+      .filter((point, at, all) => all.findIndex((other) => other.row === point.row && other.col === point.col) === at),
     act: state.run?.act_id ?? null,
     fights: fightChainAt(map),
   };

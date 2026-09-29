@@ -12,6 +12,7 @@
  *   the loop's parsers drop unknown ids as before.
  */
 import { isRunPlanReply } from "../strategy/run-plan.js";
+import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../strategy/route-map.js";
 import type { JsonSchema } from "../tools/types.js";
 import type { AnswerSpec } from "./types.js";
 
@@ -44,9 +45,32 @@ export interface CardsNeed {
 }
 
 /**
- * A choice among option keys: {choice, reason} plus the fields the question asks for — the route (a route review:
- * "keep" or a route key, with route_reason; the act-start route: a key of act_routes), the deck cards an option
- * takes (cards) and the potion slots a "discard, then …" option discards (discard).
+ * The route in an answer, checked on the map the question showed (M2: strategy/route-map.ts checkRoute): the node
+ * ids from one of the next nodes to the boss, along the lines (Winged Boots: jumps up to the charges left); "keep"
+ * where the question has a plan to keep. [] when it is legal.
+ */
+export function routeProblems(map: RouteMap, value: unknown, keepAllowed: boolean): string[] {
+  if (keepAllowed && isKeep(value)) return [];
+  const ids = routeIds(value);
+  if (!ids) {
+    const shown = typeof value === "string" ? value.slice(0, 40) : JSON.stringify(value ?? null).slice(0, 40);
+    return [`route "${shown}" names no node ids (${keepAllowed ? '"keep" or ' : ""}the node ids from one of next_nodes to the boss, e.g. "r4c1 r5c2 … r16c3")`];
+  }
+  return checkRoute(map, ids).map((problem) => `route: ${problem}`);
+}
+
+/** The route field's schema entry. */
+const ROUTE_FIELD = (keep: boolean): JsonSchema => ({
+  type: "string",
+  description: `${keep ? '"keep" (follow the route plan) or ' : ""}the node ids in order from one of next_nodes to the boss, space-separated ("r4c1 r5c2 … r16c3")`,
+});
+
+/**
+ * A choice among option keys: {choice, reason} plus the fields the question asks for — the route (a route review
+ * riding on the question, state.route_review: "keep" or a new node sequence, with route_reason; the act-start joint
+ * question, state.act_route: the act's node sequence), the deck cards an option takes (cards) and the potion slots a
+ * "discard, then …" option discards (discard). An illegal or (act start) missing route is a soft problem: re-asked
+ * once, then the answer's choice stands without it (the screen keeps the plan, or asks for the route at the map).
  */
 export function pickSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {
   const keys = Object.keys(options);
@@ -56,18 +80,17 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   };
   const required = ["choice", "reason"];
   const st = record(state);
-  const review = Object.keys(record(record(st["route_review"])["routes"]));
-  const act = Object.keys(record(st["act_routes"]));
-  let route: { mode: "review" | "act"; allowed: string[] } | null = null;
-  if (review.length > 0) {
-    // The routes usually list the current plan as "keep" too: enum values must be unique.
-    route = { mode: "review", allowed: [...new Set(["keep", ...review])] };
-    properties["route"] = { type: "string", description: '"keep" (follow the route plan) or another key of state.route_review.routes to switch to it', enum: route.allowed };
+  const reviewMap = routeMapFromView(st["route_review"]);
+  const actMap = reviewMap ? null : routeMapFromView(st["act_route"]);
+  let route: { mode: "review" | "act"; map: RouteMap } | null = null;
+  if (reviewMap) {
+    route = { mode: "review", map: reviewMap };
+    properties["route"] = ROUTE_FIELD(true);
     properties["route_reason"] = { type: "string", description: "max 15 words" };
     required.push("route", "route_reason");
-  } else if (act.length > 0) {
-    route = { mode: "act", allowed: act };
-    properties["route"] = { type: "string", description: "this act's route: a key of state.act_routes", enum: act };
+  } else if (actMap) {
+    route = { mode: "act", map: actMap };
+    properties["route"] = ROUTE_FIELD(false);
     required.push("route");
   }
   const cards: Record<string, CardsNeed> = {};
@@ -92,17 +115,13 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     label,
     kind: "pick",
     schema: { type: "object", properties, required, additionalProperties: false },
+    ...(route ? { reask: true } : {}),
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
       const problems: string[] = [];
       const choice = answer["choice"];
       if (typeof choice !== "string" || !choice.trim()) problems.push('missing "choice"');
       else if (!keys.includes(choice)) problems.push(`choice "${choice.slice(0, 40)}" is not one of ${list(keys)}`);
-      if (route) {
-        const given = answer["route"];
-        if (typeof given !== "string" || !given.trim()) problems.push(`missing "route" (one of ${list(route.allowed)})`);
-        else if (!route.allowed.includes(given)) problems.push(`route "${given.slice(0, 40)}" is not one of ${list(route.allowed)}`);
-      }
       if (typeof choice === "string") {
         const need = cards[choice];
         const given = answer["cards"];
@@ -119,6 +138,49 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
         else if (choice.endsWith(DISCARD_SUFFIX) && (!Array.isArray(discard) || discard.length === 0)) problems.push(`${choice} discards potions first: "discard" must name 1 or more potion slot numbers`);
       }
       return problems;
+    },
+    softValidate(answer: unknown): string[] {
+      if (!route || !isObject(answer)) return [];
+      const given = answer["route"];
+      const missing = given === undefined || given === null || (typeof given === "string" && !given.trim());
+      // A review without a route keeps the plan (logged, not re-asked: the route rides on this question for free).
+      if (missing) return route.mode === "act" ? ['missing "route": the node ids from one of state.act_route.next_nodes to the boss'] : [];
+      return routeProblems(route.map, given, route.mode === "review");
+    },
+  };
+}
+
+/**
+ * The route questions of the MAP screen (map/route-plan: the act's route on the whole map in state.route_map;
+ * map/route-review: keep the plan or a new route): {route, reason} (and "discard" with White Beast Statue). The route
+ * must be legal (checkRoute); an illegal one is re-asked once with its errors, and stays unusable after that (the
+ * screen then keeps the plan it had, or moves by code's baseline).
+ */
+export function routePlanSpec(label: string, state: unknown): AnswerSpec {
+  const st = record(state);
+  const view = record(st["route_map"]);
+  const map = routeMapFromView(view);
+  const keep = label === "map/route-review" || typeof view["plan"] === "string";
+  return {
+    label,
+    kind: "plan",
+    reask: true,
+    schema: {
+      type: "object",
+      properties: {
+        route: ROUTE_FIELD(keep),
+        reason: { type: "string", description: "max 30 words" },
+        discard: { type: "array", description: "White Beast Statue only: potion slot numbers to discard before the first step; [] otherwise", items: { type: "integer" } },
+      },
+      required: ["route", "reason"],
+      additionalProperties: false,
+    },
+    validate(answer: unknown): string[] {
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      const given = answer["route"];
+      if (given === undefined || given === null || (typeof given === "string" && !given.trim())) return [`missing "route" (${keep ? '"keep" or ' : ""}the node ids from one of next_nodes to the boss)`];
+      if (!map) return [];
+      return routeProblems(map, given, keep);
     },
   };
 }
@@ -145,7 +207,7 @@ const STABLE_PICK_SCHEMA: JsonSchema = {
   properties: {
     choice: { type: "string", description: "one option key exactly as given in options" },
     reason: { type: "string", description: "max 25 words" },
-    route: { type: "string", description: 'only when the question asks for a route: "keep" or a key of state.route_review.routes, or a key of state.act_routes' },
+    route: { type: "string", description: 'only when the question asks for a route (state.route_review, state.act_route): "keep" or the node ids from one of next_nodes to the boss, space-separated' },
     route_reason: { type: "string", description: "only with a route review: max 15 words" },
     cards: { type: "array", description: "only when the chosen option lists eligible_cards: the deck card keys it takes", items: { type: "string" } },
     discard: { type: "array", description: 'only for a "discard, then …" option (key ending ":discard"): the potion slot numbers it discards first', items: { type: "integer" } },

@@ -27,7 +27,8 @@ import { ClaudeEngine } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { KnowledgePrompt } from "./knowledge.js";
 import { BrainRouter, type BrainLogRow } from "./router.js";
-import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
+import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
+import { routeAnswerText } from "../strategy/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 
 /** src/knowledge: the data files the knowledge tools read. */
@@ -42,6 +43,8 @@ export interface BrainMeta {
   cost_usd?: number;
   problems?: string[];
   fell_back_from?: { engine: EngineName; error: string };
+  /** Model calls the router's re-ask added (a route checked by its AnswerSpec: M2). */
+  reask_calls?: number;
 }
 
 export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta };
@@ -139,7 +142,10 @@ export class Brain {
   }
 
   private request(label: string, question: string, memory: JsonValue | undefined, payload: unknown, spec: AnswerSpec, options?: Record<string, string | null>): BrainRequest {
+    const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
+    const runId = typeof liveRun === "string" ? liveRun : "";
     const req: BrainRequest = {
+      ...(runId ? { runId } : {}),
       label,
       system: this.deepseek.systemPrompt,
       ...(memory === undefined ? {} : { memory: memory as string | Record<string, unknown> }),
@@ -169,7 +175,7 @@ export class Brain {
    * they were (the router's findings on it are in brain.jsonl).
    */
   private static meta(result: BrainAnswer): BrainMeta | undefined {
-    if (result.engine === "deepseek" && !result.fellBackFrom && Brain.v3(result) !== null) return undefined;
+    if (result.engine === "deepseek" && !result.fellBackFrom && !result.reaskCalls && Brain.v3(result) !== null) return undefined;
     return {
       engine: result.engine,
       model: result.model,
@@ -178,6 +184,7 @@ export class Brain {
       ...(result.usage.costUsd === undefined ? {} : { cost_usd: Number(result.usage.costUsd.toFixed(6)) }),
       ...(result.problems.length > 0 ? { problems: result.problems } : {}),
       ...(result.fellBackFrom ? { fell_back_from: result.fellBackFrom } : {}),
+      ...(result.reaskCalls ? { reask_calls: result.reaskCalls } : {}),
     };
   }
 
@@ -215,7 +222,8 @@ export class Brain {
     const strings = (value: unknown): string[] => (Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
     const cards = strings(answer["cards"]);
     const discard = Array.isArray(answer["discard"]) ? answer["discard"].filter((slot): slot is number => typeof slot === "number" && Number.isInteger(slot)) : [];
-    const route = typeof answer["route"] === "string" && answer["route"].trim() ? answer["route"].trim() : "";
+    // A route is "keep" or node ids; a list of ids is read as the same ids in one string.
+    const route = routeAnswerText(answer["route"]);
     const routeReason = typeof answer["route_reason"] === "string" && answer["route_reason"].trim() ? answer["route_reason"].trim() : "";
     return {
       ...Brain.usage(result, brain),
@@ -230,7 +238,7 @@ export class Brain {
   /** v3 DeepSeekClient.choosePlan: a shop's shopping list (the screen validates it). */
   async choosePlan(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
-    const spec = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : freeSpec(label, { type: "object" });
+    const spec = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
     const result = await this.router.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage }>(result);

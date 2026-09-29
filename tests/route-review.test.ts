@@ -1,30 +1,46 @@
 /**
- * The act's route rides on the card-reward and rest-site questions (BUILD_DECIDER=deepseek; Dai 2026-09-29):
- * HP against the plan's projection first, the plan's steps, the plan from here ("keep") and the other paths
- * from here; the answer's `route` keeps the plan (the default) or names a path, which becomes the act's plan
- * and is followed from the next map. A missing or unknown route keeps the plan and is logged; the card or rest
- * choice is never blocked by the review.
+ * The act's route rides on the card-reward and rest-site questions (M2): the act's whole map, where we stand, the
+ * plan from here and the plan's facts projected from HP now (HP on arrival, rest sites healed or smithed, fights
+ * before the next rest, the next elite and the boss; at a rest site what each option leaves). The answer's `route`
+ * keeps the plan (the default) or gives a new node sequence, which becomes the act's plan and is followed from the
+ * next map. A missing, unreadable or illegal route keeps the plan and is logged; the card or rest choice is never
+ * blocked by the route. No candidate routes, code values or ranks.
  *
  * Boards: XLJQ6FPQAU7N F4 map -> F5 card reward -> F5 map (the F7 Terror Eel elite ahead at 54/91 against a
  * 69/91 projection) and W2TBR2YUMQ5Y F6 map -> F7 rest site -> F7 map (smithed at 67/77 where the plan
- * projected a heal), A9, with the route plan and run plan those runs had.
+ * projected a heal), A9, with the route plan and run plan those runs had. Room costs are fixed (not the refreshed
+ * room-costs.json).
  */
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
 import type { RoutePlan } from "../src/screens/map.js";
 import { rememberChosenNode, rememberMap, restHealHere } from "../src/screens/rest.js";
+import { checkRoute, routeMapFromView } from "../src/strategy/route-map.js";
 import { baseRestHeal, projectPath, restHealOf, type RoomCostModel } from "../src/strategy/route-projection.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import type { JsonValue } from "../src/util/json.js";
 import { act, ask, board, choose, decide, DIR, env, FakeDeepSeek, keyOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
+import { legalRoutes } from "./route-fixture.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
+
+/** A9 room costs, fixed: act 1 hallway 2/7, elite 26/36, "?" 0/6; act 2 hallway 9/16, elite 30/42, "?" 1/8. */
+beforeAll(() =>
+  setRoomCostsForTests({
+    "9": {
+      "1": { Monster: { n: 262, median: 2, p75: 7, mean: 4 }, Elite: { n: 50, median: 26, p75: 36, mean: 27 }, Unknown: { n: 189, median: 0, p75: 6, mean: 2 } },
+      "2": { Monster: { n: 120, median: 9, p75: 16, mean: 11 }, Elite: { n: 30, median: 30, p75: 42, mean: 31 }, Unknown: { n: 90, median: 1, p75: 8, mean: 3 } },
+    },
+  }),
+);
+afterAll(() => setRoomCostsForTests(null));
 
 const REWARD = "xljq-f5-reward";
 const REST = "w2tb-f7-rest";
@@ -48,44 +64,43 @@ function memoryAt(file: string, over: { map?: Raw; chosen?: boolean } = {}): Scr
   return memory;
 }
 
-type Block = { hp: string; run_plan_hp?: string; planned: string; routes: Record<string, Record<string, JsonValue>>; projection: string };
+type Facts = { arrival: string[]; rest_sites: string[]; fights_before_rest: string; next_elite: string; boss: string; if_option?: string[]; about: string };
+type Block = { map: string[]; position: string; next_nodes: string[]; winged_boots_left: number; boss: string; plan: string; plan_facts: Facts; room_costs: string; vs_plan: string; run_plan_hp?: string };
 const blockOf = (decision: ReturnType<typeof decide>): Block | undefined => (ask(decision).state["route_review"] as Block | undefined);
 const instructionsOf = (decision: ReturnType<typeof decide>): string => String(ask(decision).questions["pick"]?.instructions);
 
-/** The key of a route in the block with no elite (the branch that skips the F7 Terror Eel). */
-const noEliteKey = (block: Block): string => Object.keys(block.routes).find((key) => block.routes[key]!["elites"] === 0)!;
+/** The plan from here as ids (the block's plan text). */
+const planIds = (block: Block): string[] => block.plan.split(" → ").map((step) => step.split(" ")[0]!);
+/** A legal route from here that avoids the plan's next elite (the F7 Terror Eel at r6c6). */
+const noEliteRoute = (block: Block): string => legalRoutes(block).find((ids) => !ids.includes("r6c6"))!.join(" ");
 
 describe("card reward: the act's route rides on the same question", () => {
-  it("HP against the plan's projection comes first (next node, the plan's elite and boss), then the run plan's HP lines and the plan's steps", () => {
+  it("the whole map, where we stand, the plan from here and its facts from HP now; HP against the plan; the run plan's HP lines", () => {
     const decision = decide(env(board(REWARD, "reward"), memoryAt(REWARD)));
     expect(decision.label).toBe("reward/card");
     const block = blockOf(decision)!;
-    expect(Object.keys(block)[0]).toBe("hp");
-    expect(block.hp).toBe("HP 54/91, 15 points below the plan's projection for the next node (Unknown, F6: 69/91), 15 points below for the elite at F7 (69/91), 37 points below for the boss at F17 (91/91).");
+    const raw = board(REWARD, "map_before")["map"] as { nodes: unknown[] };
+    expect(block.map).toHaveLength(raw.nodes.length);
+    expect(block.map).toContain("F5 r4c6 普通战（当前） → r5c5 r5c6");
+    expect(block.map.at(-1)).toBe("F17 r16c3 Boss（本幕 boss）");
+    expect(block.position).toBe("你在 r4c6（F5 普通战）；下一步可走：r5c5、r5c6");
+    expect(block.next_nodes).toEqual(["r5c5", "r5c6"]);
+    expect(block.plan).toBe("r5c6 问号 → r6c6 精英 → r7c6 普通战 → r8c5 休息 → r9c4 宝箱 → r10c5 休息 → r11c6 问号 → r12c5 休息 → r13c5 商店 → r14c6 普通战 → r15c5 休息 → r16c3 Boss");
+    // Facts at HP now (54/91) with the fixed costs: "?" 0/6, the elite 26/36, a hallway 2/7; rests heal 27.
+    expect(block.plan_facts.arrival.slice(0, 4)).toEqual(["F6 r5c6 问号：54/91（p75 54）", "F7 r6c6 精英：54/91（p75 48）", "F8 r7c6 普通战：28/91（p75 12）", "F9 r8c5 休息：26/91（p75 5）"]);
+    expect(block.plan_facts.rest_sites[0]).toBe("F9 r8c5 休息：到达 26/91（p75 5）；回血 → 53/91（p75 32）；锻造（不回血）→ 26/91（p75 5）");
+    expect(block.plan_facts.fights_before_rest).toBe("到下一个休息点 F9 r8c5 前：战斗 2 场（普通战 1、精英 1），问号 1 个，商店 0 个；到当前节点为止已连续战斗 1 场");
+    expect(block.plan_facts.next_elite).toBe("F7 r6c6：到达 54/91（p75 48）");
+    expect(block.plan_facts.boss).toMatch(/^F17 r16c3：到达 \d+\/91（p75 \d+）$/);
+    expect(block.vs_plan).toBe("计划在 F1 定（当时 HP 82%），当时预计到达：下一节点 F6 问号 69/91，精英 F7 精英 69/91，boss F17 Boss 91/91；现在 HP 54/91");
     // The run plan's own HP sentences, not its other numbers ("~25% error").
     expect(block.run_plan_hp).toContain("Elites only with high HP and a fire after;");
     expect(block.run_plan_hp).not.toContain("25% error");
-    expect(block.planned).toMatch(/^F6 Unknown 69 -> F7 Elite 69 -> F8 Monster 34 -> .* -> F17 Boss 91 \(HP on arrival projected at F1\)$/);
-    expect(block.projection).toMatch(/^HP a room costs in act 1 \(median\/p75\)/);
-  });
-
-  it("keep (the plan from here) and the other paths from here, with the route plan's facts and code's value and rank", () => {
-    const decision = decide(env(board(REWARD, "reward"), memoryAt(REWARD)));
-    const block = blockOf(decision)!;
-    const keys = Object.keys(block.routes);
-    expect(keys[0]).toBe("keep");
-    expect(keys.slice(1)).toEqual(keys.slice(1).map((_, at) => `p${at + 1}`));
-    expect(block.routes["keep"]).toMatchObject({ keep: expect.any(String), path: "Unknown -> Elite -> Monster -> RestSite -> Treasure -> RestSite -> Unknown -> RestSite -> Shop -> Monster -> RestSite -> Boss" });
-    for (const route of Object.values(block.routes)) {
-      expect(route).toMatchObject({ path: expect.stringMatching(/Boss$/), first_node: expect.stringMatching(/^row 5, column [56] /), hp_at_boss: expect.any(String), hp_on_arrival_at_elites: expect.any(Array), code_value: expect.any(Number), code_rank: expect.any(Number) });
-    }
-    // Code's rank: 1 + the routes valued higher (equal values share a rank).
-    const values = Object.values(block.routes).map((route) => Number(route["code_value"]));
-    for (const route of Object.values(block.routes)) expect(route["code_rank"]).toBe(1 + values.filter((value) => value > Number(route["code_value"])).length);
-    // The branch without the elite is there (code never drops options).
-    expect(noEliteKey(block)).toMatch(/^p\d$/);
-    expect(instructionsOf(decision)).toMatch(/"route": "keep" \(the default: follow the plan\)/);
-    expect(instructionsOf(decision)).toMatch(/"route_reason"/);
+    expect(block.room_costs).toMatch(/^第 1 幕每个房间掉血（中位数\/p75，最大生命 91）：普通战 2\/7（logged A9 act-1 Monster rooms, n=262）/);
+    // Facts only: no candidate paths, code values or ranks.
+    for (const word of ["code_value", "code_rank", "routes", "p1", "hp_if_option"]) expect(JSON.stringify(block)).not.toContain(word);
+    expect(instructionsOf(decision)).toContain('"route"："keep"（默认，照计划走）或新的节点序列');
+    expect(instructionsOf(decision)).toContain('"route_reason"');
     // Without DeepSeek the card reward is the Jev/code decision it always was.
     expect(ask(decision).deepseek.baseline.label).toBe("reward/card");
   });
@@ -102,36 +117,43 @@ describe("card reward: the act's route rides on the same question", () => {
     expect(memory.planSeq).toBeUndefined();
   });
 
-  it("a change: the card is taken; the path becomes the act's plan (step 2 of the card's plan), projected from HP now; the next map move follows it", () => {
+  it("a change: the card is taken; the new route becomes the act's plan (step 2 of the card's plan), projected from HP now; the next map move follows it", () => {
     const memory = memoryAt(REWARD);
     const decision = decide(env(board(REWARD, "reward"), memory));
     const block = blockOf(decision)!;
-    const key = noEliteKey(block);
-    const resolved = choose(decision, "card1", undefined, key, "skip the eel at 54/91");
+    const route = noEliteRoute(block);
+    const resolved = choose(decision, "card1", undefined, route, "skip the eel at 54/91");
     expect(resolved.intent).toEqual({ action: "choose_reward_card", option_index: 1 });
-    expect(resolved.plan).toEqual({ id: "XLJQ6FPQAU7N:F5:reward#1", steps: ["card1", key] });
+    expect(resolved.plan).toEqual({ id: "XLJQ6FPQAU7N:F5:reward#1", steps: ["card1", route] });
     expect(resolved.routeReview).toMatchObject({
-      answer: key,
+      answer: route,
       outcome: "change",
       reason: "skip the eel at 54/91",
-      change: { ref: "XLJQ6FPQAU7N:F5:reward#1", step: 2, key, from: String(block.routes["keep"]!["path"]), to: String(block.routes[key]!["path"]), why: "card-reward review" },
+      change: { ref: "XLJQ6FPQAU7N:F5:reward#1", step: 2, key: route, from: block.plan, to: expect.stringMatching(/Boss$/), why: "card-reward review" },
     });
     resolved.apply?.();
-    expect(memory.routePlan).toMatchObject({ runId: "XLJQ6FPQAU7N", act: 1, floor: 5, summary: block.routes[key]!["path"], why: "card-reward review" });
+    expect(memory.routePlan).toMatchObject({ runId: "XLJQ6FPQAU7N", act: 1, floor: 5, why: "card-reward review" });
+    expect(memory.routePlan!.path.map((step) => `r${step.row}c${step.col}`).join(" ")).toBe(route);
     expect(memory.routePlan?.hpPct).toBeCloseTo(54 / 91, 5);
     expect(memory.routePlan?.path[0]?.hpOnArrival).toBeCloseTo(54 / 91, 5);
     expect(memory.planSeq).toEqual({ runId: "XLJQ6FPQAU7N", n: 1 });
-    const [, row, col] = /row (\d+), column (\d+)/.exec(String(block.routes[key]!["first_node"]))!;
+    const [, row, col] = /^r(\d+)c(\d+)/.exec(route)!;
     const mapAfter = board(REWARD, "map_after");
     const index = (((mapAfter["map"] as Raw)["available_nodes"] as Raw[]).find((node) => node["row"] === Number(row) && node["col"] === Number(col))!)["index"];
     expect(act(decide(env(mapAfter, memory)))).toMatchObject({ label: "map/route-follow", intent: { action: "choose_map_node", option_index: index } });
   });
 
-  it("no route, or one not in route_review.routes: the card is still taken and the plan kept; the answer is logged", () => {
+  it("no route, one naming no nodes, or an illegal one: the card is still taken and the plan kept; the answer and the check's errors are logged", () => {
     const memory = memoryAt(REWARD);
     const before = memory.routePlan;
     const decision = decide(env(board(REWARD, "reward"), memory));
-    const cases: [string | undefined, string][] = [[undefined, "the answer has no route"], ["p99", 'unknown route "p99"'], ["route 3", 'unknown route "route 3"']];
+    const cases: [string | undefined, string][] = [
+      [undefined, "the answer has no route"],
+      ["p1", 'route "p1" names no node ids'],
+      ["r5c6 r7c6 r8c5", "第 2 步 r5c6 → r7c6：不是下一层（r5c6 在第 5 行，下一步要在第 6 行）; 终点 r8c5（休息）不是 boss：路线要一直走到 boss（r16c3）"],
+      ["r5c0 r6c0", "第 1 步 r5c0：不是下一步能走的节点（能走：r5c5、r5c6）; 终点 r6c0（休息）不是 boss：路线要一直走到 boss（r16c3）"],
+      ["r5c4 r6c4", "第 1 步 r5c4：地图上没有这个节点"],
+    ];
     for (const [route, invalid] of cases) {
       const resolved = choose(decision, "card2", undefined, route);
       expect(resolved.intent).toEqual({ action: "choose_reward_card", option_index: 2 });
@@ -141,6 +163,8 @@ describe("card reward: the act's route rides on the same question", () => {
       expect(memory.routePlan).toBe(before);
     }
     expect(choose(decision, "card2", undefined, " KEEP ").routeReview?.outcome).toBe("keep");
+    // The plan's own route again is a keep.
+    expect(choose(decision, "card2", undefined, planIds(blockOf(decision)!).join(" ")).routeReview?.outcome).toBe("keep");
   });
 
   it("a failure inside the review never blocks the card: the card is taken, the plan kept, the failure logged", () => {
@@ -148,9 +172,9 @@ describe("card reward: the act's route rides on the same question", () => {
     const before = memory.routePlan;
     const e = env(board(REWARD, "reward"), memory);
     const decision = decide(e);
-    const key = noEliteKey(blockOf(decision)!);
+    const route = noEliteRoute(blockOf(decision)!);
     Object.defineProperty(e.state.raw, "run_id", { get: () => { throw new Error("boom"); } });
-    const resolved = choose(decision, "card0", undefined, key);
+    const resolved = choose(decision, "card0", undefined, route);
     expect(resolved.intent).toEqual({ action: "choose_reward_card", option_index: 0 });
     expect(resolved.routeReview).toMatchObject({ outcome: "invalid", invalid: "route review failed: boom" });
     resolved.apply?.();
@@ -210,19 +234,16 @@ describe("card reward: the act's route rides on the same question", () => {
 });
 
 describe("rest site: the route rides on the one-shot rest question, with each option's HP", () => {
-  it("HP against the plan (whose numbers assume a heal here), the run plan's HP lines, and each route's HP after heal and after smith", () => {
+  it("the plan's facts from HP now, what each rest option leaves at the next elite and the boss, the run plan's HP lines", () => {
     const decision = decide(env(board(REST, "rest"), memoryAt(REST)));
     expect(decision.label).toBe("rest/plan");
     const block = blockOf(decision)!;
-    expect(block.hp).toBe(
-      "HP 67/77, 10 points below the plan's projection for the next node (Monster, F8: 77/77), 7 points below for the elite at F9 (74/77), 10 points below for the boss at F17 (77/77); the plan's numbers after this rest site assume you heal here.",
-    );
+    expect(block.vs_plan).toMatch(/^计划在 F\d+ 定（当时 HP \d+%），当时预计到达：下一节点 F8 普通战 77\/77，精英 F9 精英 74\/77，boss F17 Boss 77\/77；现在 HP 67\/77（本休息点的选项还没算进去）$/);
     expect(block.run_plan_hp).toContain("Elites only at ≥78% HP after a campfire.");
-    for (const route of Object.values(block.routes)) {
-      expect(Object.keys(route["hp_if_option"] as Record<string, string>)).toEqual(["o0 HEAL (HP 77)", "o1 SMITH (HP 67)"]);
-    }
-    expect((block.routes["keep"]!["hp_if_option"] as Record<string, string>)["o0 HEAL (HP 77)"]).toMatch(/^(~\d+\/77|HP runs out before) (at )?the elite F9, .*the boss$/);
-    expect(instructionsOf(decision)).toMatch(/hp_if_option/);
+    expect(block.plan_facts.if_option).toHaveLength(2);
+    expect(block.plan_facts.if_option![0]).toMatch(/^o0 HEAL（HP 77\/77）：下一只精英前 \d+\/77（p75 \d+），boss 前 \d+\/77（p75 \d+）$/);
+    expect(block.plan_facts.if_option![1]).toMatch(/^o1 SMITH（HP 67\/77）：下一只精英前 /);
+    expect(instructionsOf(decision)).toContain("plan_facts.if_option");
   });
 
   it("smith a card and keep: the rest plan as before (smith, then the card), the route unchanged", () => {
@@ -238,28 +259,34 @@ describe("rest site: the route rides on the one-shot rest question, with each op
     expect(memory.pendingPick).toMatchObject({ step: 2 });
   });
 
+  /** A legal route from the rest site other than the plan's. */
+  const otherRoute = (block: Block): string => legalRoutes(block).map((ids) => ids.join(" ")).find((ids) => ids !== planIds(block).join(" "))!;
+
   it("heal and change: the new route is projected from the healed HP, a step after the heal", () => {
     const memory = memoryAt(REST);
     const decision = decide(env(board(REST, "rest"), memory));
-    const key = Object.keys(blockOf(decision)!.routes).find((route) => route !== "keep")!;
-    const resolved = choose(decision, "o0", undefined, key, "heal, then the other branch");
+    const route = otherRoute(blockOf(decision)!);
+    const resolved = choose(decision, "o0", undefined, route, "heal, then the other branch");
     expect(resolved.intent).toEqual({ action: "choose_rest_option", option_index: 0 });
-    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o0", key] });
-    expect(resolved.routeReview?.change).toMatchObject({ step: 2, key, why: "rest-site review" });
+    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o0", route] });
+    expect(resolved.routeReview?.change).toMatchObject({ step: 2, key: route, why: "rest-site review" });
     resolved.apply?.();
     expect(memory.routePlan).toMatchObject({ floor: 7, hpPct: 1, why: "rest-site review" });
     expect(memory.routePlan?.path[0]?.hpOnArrival).toBe(1);
     expect(memory.planSeq).toEqual({ runId: "W2TBR2YUMQ5Y", n: 1 });
-    expect(act(decide(env(board(REST, "map_after"), memory)))).toMatchObject({ label: "map/route-follow", intent: { option_index: 0 } });
+    const [, row, col] = /^r(\d+)c(\d+)/.exec(route)!;
+    const mapAfter = board(REST, "map_after");
+    const index = (((mapAfter["map"] as Raw)["available_nodes"] as Raw[]).find((node) => node["row"] === Number(row) && node["col"] === Number(col))!)["index"];
+    expect(act(decide(env(mapAfter, memory)))).toMatchObject({ label: "map/route-follow", intent: { option_index: index } });
   });
 
   it("smith and change: the route from HP now, the route step after the named card", () => {
     const memory = memoryAt(REST);
     const decision = decide(env(board(REST, "rest"), memory));
-    const key = Object.keys(blockOf(decision)!.routes).find((route) => route !== "keep")!;
+    const route = otherRoute(blockOf(decision)!);
     const card = keyOf(board(REST, "rest"), "BASH");
-    const resolved = choose(decision, `o1:${card}`, undefined, key);
-    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o1", card, key] });
+    const resolved = choose(decision, `o1:${card}`, undefined, route);
+    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o1", card, route] });
     expect(resolved.routeReview?.change).toMatchObject({ step: 3 });
     resolved.apply?.();
     expect(memory.routePlan?.hpPct).toBeCloseTo(67 / 77, 5);
@@ -274,15 +301,14 @@ describe("rest site: the route rides on the one-shot rest question, with each op
     expect(next.label).toBe("rest/choose");
     const block = blockOf(next)!;
     expect(block).toEqual(blockOf(oneshot));
-    for (const route of Object.values(block.routes)) expect(Object.keys(route["hp_if_option"] as Record<string, string>)).toEqual(["o0 HEAL (HP 77)", "o1 SMITH (HP 67)"]);
-    expect(instructionsOf(next)).toMatch(/"route": "keep" \(the default: follow the plan\)/);
-    expect(instructionsOf(next)).toMatch(/hp_if_option/);
+    expect(instructionsOf(next)).toContain('"route"："keep"（默认，照计划走）');
+    expect(instructionsOf(next)).toContain("plan_facts.if_option");
     expect(choose(next, "o1", undefined, "keep").routeReview).toEqual({ answer: "keep", outcome: "keep", reason: "" });
-    const key = Object.keys(block.routes).find((route) => route !== "keep")!;
-    const resolved = choose(next, "o0", undefined, key, "heal, then the other branch");
+    const route = otherRoute(block);
+    const resolved = choose(next, "o0", undefined, route, "heal, then the other branch");
     expect(resolved.intent).toEqual({ action: "choose_rest_option", option_index: 0 });
-    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o0", key] });
-    expect(resolved.routeReview?.change).toMatchObject({ step: 2, key, why: "rest-site review" });
+    expect(resolved.plan).toEqual({ id: "W2TBR2YUMQ5Y:F7:rest#1", steps: ["o0", route] });
+    expect(resolved.routeReview?.change).toMatchObject({ step: 2, key: route, why: "rest-site review" });
     resolved.apply?.();
     // Projected from the healed HP.
     expect(memory.routePlan).toMatchObject({ floor: 7, hpPct: 1, why: "rest-site review" });
@@ -290,44 +316,85 @@ describe("rest site: the route rides on the one-shot rest question, with each op
   });
 });
 
-describe("Winged Boots: the nodes its charges reach are route candidates too (batch E, 9GRPS5DC8KHN F28)", () => {
-  it("at the F28 rest site (10,6) with 2 charges: the rest site at (11,2) is offered, marked as spending a charge; the node's own lines are not", () => {
+describe("Winged Boots: its charges reach any node of the next row (batch E, 9GRPS5DC8KHN F28)", () => {
+  it("at the F28 rest site (10,6) with 2 charges: the rest site at (11,2) is a next node (a jump); a route through it is legal, one on without boots is not", () => {
     const decision = decide(env(board("9grp-f28-rest", "rest"), memoryAt("9grp-f28-rest")));
-    const routes = Object.values(blockOf(decision)!.routes);
-    const detour = routes.find((route) => route["first_node"] === "row 11, column 2 (RestSite)");
-    expect(detour).toMatchObject({ winged_boots: "its first step is off this node's lines: uses 1 of the 2 Winged Boots charges left", path: expect.stringMatching(/^RestSite -> .*Boss$/) });
-    expect(routes.find((route) => route["first_node"] === "row 11, column 5 (Monster)")).not.toHaveProperty("winged_boots");
+    const block = blockOf(decision)!;
+    expect(block.winged_boots_left).toBe(2);
+    expect(block.next_nodes).toContain("r11c2");
+    expect(block.position).toContain("r11c2（飞行靴跳跃）");
+    expect(block.position).not.toContain("r11c5（飞行靴跳跃）");
+    const map = routeMapFromView(block)!;
+    const detour = legalRoutes({ ...block, next_nodes: ["r11c2"] })[0]!;
+    expect(detour[0]).toBe("r11c2");
+    expect(checkRoute(map, detour)).toEqual([]);
+    // Without charges the game offers only this node's lines, and a jump is not legal.
+    const lines = map.nodes.get(map.current!)!.children;
+    expect(checkRoute({ ...map, boots: 0, next: lines }, detour)[0]).toMatch(/^第 1 步 r11c2：不是下一步能走的节点/);
+    expect(checkRoute({ ...map, boots: 0 }, detour)).toEqual(["飞行靴只剩 0 次，这条路线不沿连线跳了 1 次（第 1 步）"]);
   });
 
-  it("without charges left only the node's own lines are candidates", () => {
+  it("without charges left only the node's own lines are next nodes", () => {
     const rest = board("9grp-f28-rest", "rest");
     const relics = ((rest["run"] as Raw)["relics"] as Raw[]).map((relic) => (relic["relic_id"] === "WINGED_BOOTS" ? { ...relic, stack: 0 } : relic));
     (rest["run"] as Raw)["relics"] = relics;
     const block = blockOf(decide(env(rest, memoryAt("9grp-f28-rest"))));
-    for (const route of Object.values(block?.routes ?? {})) expect(route).not.toHaveProperty("winged_boots");
-    expect(Object.values(block?.routes ?? {}).some((route) => route["first_node"] === "row 11, column 2 (RestSite)")).toBe(false);
+    if (!block) return;
+    expect(block.winged_boots_left).toBe(0);
+    expect(block.next_nodes).not.toContain("r11c2");
+    expect(block.position).not.toContain("飞行靴跳跃");
   });
 });
+
+/** The route-plan answer for the MAP screen before the room: the first legal route through the fixture's chosen node. */
+function routePlanAnswer(file: string): (label: string) => Record<string, unknown> {
+  return (label) => {
+    if (label !== "map/route-plan") return { plan: [], reason: "nothing" };
+    const fx = fixture(file);
+    const map = parseGameState(fx.states["map_before"]!);
+    const available = (map.raw["map"] as Raw)["available_nodes"] as Raw[];
+    const chosen = available.find((node) => node["index"] === fx.memory.chosen_index)!;
+    const decision = decide(env(fx.states["map_before"]!, createScreenMemory("MAP")));
+    const route = legalRoutes(ask(decision).state["route_map"]).find((ids) => ids[0] === `r${String(chosen["row"])}c${String(chosen["col"])}`)!;
+    return { route: route.join(" "), reason: "fixture route" };
+  };
+}
 
 describe("rest site route review in the loop", () => {
   it("one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it", async () => {
     const bash = keyOf(board(REST, "rest"), "BASH");
-    const deepseek = new FakeDeepSeek((criteria, label) => (label === "map/route-plan" ? Object.keys(criteria)[0]! : { choice: `o1:${bash}`, route: "p1", routeReason: "the other branch" }));
+    let alternative = "";
+    const deepseek = new FakeDeepSeek(
+      (_criteria, label) => {
+        if (label !== "rest/plan") return Object.keys(_criteria)[0]!;
+        return { choice: `o1:${bash}`, route: alternative, routeReason: "the other branch" };
+      },
+      routePlanAnswer(REST),
+    );
+    // The alternative from the rest site: any legal route other than the one planned at the map.
+    const planned = String(routePlanAnswer(REST)("map/route-plan")["route"]).split(" ").slice(1).join(" ");
+    const restBlock = blockOf(decide(env(board(REST, "rest"), memoryAt(REST))))!;
+    alternative = legalRoutes(restBlock).map((ids) => ids.join(" ")).find((ids) => ids !== planned)!;
     const { stats, actions, records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], deepseek);
     expect(deepseek.calls.map((call) => call.label)).toEqual(["map/route-plan", "rest/plan"]);
     expect(stats.deepseekCalls).toBe(2);
-    expect(deepseek.calls[1]!.state["route_review"]).toMatchObject({ hp: expect.stringMatching(/^HP 67\/77, .*assume you heal here\.$/) });
-    expect(actions).toEqual([{ action: "choose_map_node", option_index: 0 }, { action: "choose_rest_option", option_index: 1 }, { action: "choose_map_node", option_index: 0 }]);
+    expect(deepseek.calls[1]!.state["route_review"]).toMatchObject({ plan: expect.stringMatching(/Boss$/), plan_facts: { if_option: expect.any(Array) } });
+    const [, row, col] = /^r(\d+)c(\d+)/.exec(alternative)!;
+    const next = (((board(REST, "map_after")["map"] as Raw)["available_nodes"] as Raw[]).find((node) => node["row"] === Number(row) && node["col"] === Number(col))!)["index"];
+    expect(actions).toEqual([{ action: "choose_map_node", option_index: fixture(REST).memory.chosen_index }, { action: "choose_rest_option", option_index: 1 }, { action: "choose_map_node", option_index: next }]);
     const rest = records.find((row) => row["label"] === "rest/plan")!;
-    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { plan_id: "W2TBR2YUMQ5Y:F7:rest#1", plan: ["o1", bash, "p1"], plan_step: 1, route: "p1", route_reason: "the other branch" }, route_review: { outcome: "change", plan_step: 3 } });
+    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { plan_id: "W2TBR2YUMQ5Y:F7:rest#1", plan: ["o1", bash, alternative], plan_step: 1, route: alternative, route_reason: "the other branch" }, route_review: { outcome: "change", plan_step: 3 } });
     const change = records.find((row) => row["label"] === "map/route-change")!;
-    expect(change).toMatchObject({ ts: rest["ts"], deepseek: { reused: true, plan_ref: "W2TBR2YUMQ5Y:F7:rest#1", plan_step: 3, choice: "p1" }, route_plan: { why: "rest-site review", floor: 7 } });
+    expect(change).toMatchObject({ ts: rest["ts"], deepseek: { reused: true, plan_ref: "W2TBR2YUMQ5Y:F7:rest#1", plan_step: 3, choice: alternative }, route_plan: { why: "rest-site review", floor: 7 } });
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ decider: "code" });
+    // The route plan's own row carries the plan it made.
+    expect(records.find((row) => row["label"] === "map/route-plan")).toMatchObject({ decider: "deepseek", route_plan: { floor: 6 } });
   });
 
-  it("the real client reads the answer's route and route_reason", async () => {
+  it("the real client reads the route-plan answer and the rest answer's route and route_reason", async () => {
+    const route = String(routePlanAnswer(REST)("map/route-plan")["route"]);
     const { client } = await scriptedDeepSeek([
-      { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." },
+      { content: JSON.stringify({ route, reason: "route" }), reasoning: "Plan." },
       { content: '{"choice": "o0", "route": "keep", "route_reason": "the plan still fits", "reason": "heal before the elite"}', reasoning: "Decisive: o0." },
     ]);
     const { stats, records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
@@ -339,28 +406,50 @@ describe("rest site route review in the loop", () => {
     expect(records.some((row) => row["label"] === "map/route-change")).toBe(false);
   });
 
+  it("an illegal route-plan answer is re-asked once with its errors; the corrected route is followed", async () => {
+    const route = String(routePlanAnswer(REST)("map/route-plan")["route"]);
+    const scripted = await scriptedDeepSeek([
+      { content: JSON.stringify({ route: route.split(" ").slice(0, 3).join(" "), reason: "short" }), reasoning: "Plan." },
+      { content: JSON.stringify({ route, reason: "to the boss" }), reasoning: "Plan." },
+      { content: '{"choice": "o0", "route": "keep", "route_reason": "fine", "reason": "heal"}', reasoning: "Decisive: o0." },
+    ]);
+    const { stats, records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], scripted.client);
+    const reask = scripted.bodies[1]!["messages"] as { role: string; content: string }[];
+    expect(reask.map((message) => message.role)).toEqual(["system", "user", "assistant", "user"]);
+    expect(reask[3]!.content).toMatch(/route: 终点 r\d+c\d+（[^）]+）不是 boss/);
+    expect(stats.deepseekCalls).toBe(3);
+    expect(records.find((row) => row["label"] === "map/route-plan")).toMatchObject({ decider: "deepseek", route_plan: { path: expect.any(Array) } });
+    expect((records.find((row) => row["label"] === "map/route-plan")!["route_plan"] as { path: unknown[] }).path).toHaveLength(route.split(" ").length);
+  });
+
   it("an unknown option key recovered from the reasoning keeps the answer's route and route_reason (batch E)", async () => {
+    const route = String(routePlanAnswer(REST)("map/route-plan")["route"]);
+    const restBlock = blockOf(decide(env(board(REST, "rest"), memoryAt(REST))))!;
+    const alternative = legalRoutes(restBlock).map((ids) => ids.join(" ")).find((ids) => ids !== route.split(" ").slice(1).join(" "))!;
     const { client } = await scriptedDeepSeek([
-      { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." },
+      { content: JSON.stringify({ route, reason: "route" }), reasoning: "Plan." },
       // "heal" is no option key; the reasoning concludes on o0. The route rides in the same answer.
-      { content: '{"choice": "heal", "route": "p1", "route_reason": "the other branch", "reason": "heal before the elite"}', reasoning: "HP 67/77.\nDecisive: o0." },
+      { content: JSON.stringify({ choice: "heal", route: alternative, route_reason: "the other branch", reason: "heal before the elite" }), reasoning: "HP 67/77.\nDecisive: o0." },
     ]);
     const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
     const rest = records.find((row) => row["label"] === "rest/plan")!;
-    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", recovered_from_reasoning: expect.any(String), route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
+    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", recovered_from_reasoning: expect.any(String), route: alternative, route_reason: "the other branch" }, route_review: { answer: alternative, outcome: "change" } });
   });
 
   it("a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route", async () => {
     const bash = keyOf(board(REST, "rest"), "BASH");
-    const routePlan = { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." };
+    const route = String(routePlanAnswer(REST)("map/route-plan")["route"]);
+    const routePlan = { content: JSON.stringify({ route, reason: "route" }), reasoning: "Plan." };
+    const restBlock = blockOf(decide(env(board(REST, "rest"), memoryAt(REST))))!;
+    const alternative = legalRoutes(restBlock).map((ids) => ids.join(" ")).find((ids) => ids !== route.split(" ").slice(1).join(" "))!;
     // The first rest answer smiths while its reasoning concluded on the heal: re-asked.
-    const suspect = { content: `{"choice": "o1:${bash}", "reason": "smith Bash", "route": "p1", "route_reason": "the other branch"}`, reasoning: "HP 67/77.\nDecisive: o0." };
+    const suspect = { content: JSON.stringify({ choice: `o1:${bash}`, reason: "smith Bash", route: alternative, route_reason: "the other branch" }), reasoning: "HP 67/77.\nDecisive: o0." };
     const withRoute = await scriptedDeepSeek([routePlan, suspect, { content: '{"choice": "o0", "reason": "heal before the elite", "route": "keep", "route_reason": "the plan fits after a heal"}', reasoning: "Decisive: o0." }]);
     const first = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], withRoute.client);
     const reask = withRoute.bodies[2]!["messages"] as { role: string; content: string }[];
     expect(reask.map((message) => message.role)).toEqual(["system", "user", "assistant", "user"]);
     expect(reask[1]!.content).toContain("route_review");
-    expect(reask[3]!.content).toMatch(/"route": "<keep \| p1[^>]*>", "route_reason": "<max 15 words>"/);
+    expect(reask[3]!.content).toContain('"route": "<keep | node ids from next_nodes to the boss>", "route_reason": "<max 15 words>"');
     expect(reask[3]!.content).toContain("state.route_review");
     expect(first.records.find((row) => row["label"] === "rest/plan")).toMatchObject({
       deepseek: { choice: "o0", route: "keep", route_reason: "the plan fits after a heal", consistency: { resolution: "reasked" } },
@@ -370,7 +459,7 @@ describe("rest site route review in the loop", () => {
     const noRoute = await scriptedDeepSeek([routePlan, suspect, { content: '{"choice": "o0", "reason": "heal before the elite"}', reasoning: "Decisive: o0." }]);
     const second = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], noRoute.client);
     const rest = second.records.find((row) => row["label"] === "rest/plan")!;
-    expect(rest).toMatchObject({ deepseek: { choice: "o0", route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
+    expect(rest).toMatchObject({ deepseek: { choice: "o0", route: alternative, route_reason: "the other branch" }, route_review: { answer: alternative, outcome: "change" } });
     expect(second.records.find((row) => row["label"] === "map/route-change")).toMatchObject({ route_plan: { why: "rest-site review", floor: 7 } });
   });
 });
@@ -389,30 +478,30 @@ describe("rest heal: the game's HEAL text and the rest relics (Regal Pillow, Sto
   };
   const restFacts = (decision: ReturnType<typeof decide>): Record<string, JsonValue> => (ask(decision).state["facts"] as Record<string, Record<string, JsonValue>>)["rest_site"]!;
 
-  it("Regal Pillow: heal 23 + 15 (TQCZFBK7T09Y F25: 45 -> 86/87 = 26 + 15); hp_if_option and the facts start the routes there", () => {
+  it("Regal Pillow: heal 23 + 15 (TQCZFBK7T09Y F25: 45 -> 86/87 = 26 + 15); the options' HP and the facts start the route there", () => {
     const decision = decide(env(restWith("REGAL_PILLOW", "皇家枕头", "皇家枕头提供+15点生命。"), memoryAt(REST)));
     expect(decision.label).toBe("rest/plan");
-    for (const route of Object.values(blockOf(decision)!.routes)) expect(Object.keys(route["hp_if_option"] as Record<string, string>)).toEqual(["o0 HEAL (HP 77)", "o1 SMITH (HP 40)"]);
+    const options = blockOf(decision)!.plan_facts.if_option!;
+    expect(options.map((line) => line.split("：")[0])).toEqual(["o0 HEAL（HP 77/77）", "o1 SMITH（HP 40/77）"]);
     expect(restFacts(decision)).toMatchObject({ heal_amount: "38 HP: 23 (30% of max HP, rounded down) + 15 (Regal Pillow +15 HP)", hp_after_heal: "77/77" });
     // A change after the heal is projected from the healed HP.
-    const key = Object.keys(blockOf(decision)!.routes).find((route) => route !== "keep")!;
     const memory = memoryAt(REST);
-    const resolved = choose(decide(env(restWith("REGAL_PILLOW", "皇家枕头", "皇家枕头提供+15点生命。"), memory)), "o0", undefined, key);
+    const pillow = decide(env(restWith("REGAL_PILLOW", "皇家枕头", "皇家枕头提供+15点生命。"), memory));
+    const block = blockOf(pillow)!;
+    const route = legalRoutes(block).map((ids) => ids.join(" ")).find((ids) => ids !== planIds(block).join(" "))!;
+    const resolved = choose(pillow, "o0", undefined, route);
     resolved.apply?.();
     expect(memory.routePlan?.hpPct).toBe(1);
   });
 
-  it("Stone Humidifier: heal 23, then max HP and HP +5 (WFR4AUP2CWDT F8: 50/80 -> 79/85); hp_if_option at the new max", () => {
+  it("Stone Humidifier: heal 23, then max HP and HP +5 (WFR4AUP2CWDT F8: 50/80 -> 79/85); the heal option's HP at the new max", () => {
     const decision = decide(env(restWith("STONE_HUMIDIFIER", "石炉加湿器", "提升5点你的最大生命值。"), memoryAt(REST)));
-    const block = blockOf(decision)!;
-    for (const route of Object.values(block.routes)) {
-      const hp = route["hp_if_option"] as Record<string, string>;
-      expect(Object.keys(hp)).toEqual(["o0 HEAL (HP 68, max HP 82)", "o1 SMITH (HP 40)"]);
-      // Shown against max HP after the rest (82, and 5 more at each later rest), not the 77 of now.
-      const maxes = [...hp["o0 HEAL (HP 68, max HP 82)"]!.matchAll(/~\d+\/(\d+)/g)].map((match) => Number(match[1]));
-      expect(maxes.length).toBeGreaterThan(0);
-      for (const max of maxes) expect(max).toBeGreaterThanOrEqual(82);
-    }
+    const options = blockOf(decision)!.plan_facts.if_option!;
+    expect(options.map((line) => line.split("：")[0])).toEqual(["o0 HEAL（HP 68/82）", "o1 SMITH（HP 40/77）"]);
+    // Shown against max HP after the rest (82, and 5 more at each later rest), not the 77 of now.
+    const maxes = [...options[0]!.matchAll(/\d+\/(\d+)（p75/g)].map((match) => Number(match[1]));
+    expect(maxes.length).toBeGreaterThan(0);
+    for (const max of maxes) expect(max).toBeGreaterThanOrEqual(82);
     expect(restFacts(decision)).toMatchObject({ heal_amount: "23 HP: 23 (30% of max HP, rounded down), and max HP +5 with HP +5 (Stone Humidifier +5 max HP)", hp_after_heal: "68/82" });
   });
 
@@ -424,7 +513,7 @@ describe("rest heal: the game's HEAL text and the rest relics (Regal Pillow, Sto
     expect(restHealHere("回复最大生命值的30%（24）。\n提升5点你的最大生命值。", 80, ["STONE_HUMIDIFIER"])).toMatchObject({ base: 24, total: 24, rest: { bonus: 0, maxGain: 5 } });
   });
 
-  it("later rests on a route heal with the relics too (the projection behind hp_if_option and the route facts)", () => {
+  it("later rests on a route heal with the relics too (the projection behind the route facts)", () => {
     const model: RoomCostModel = { act: 1, maxHp: 80, monster: { median: 10, p75: 15, source: "test" }, elite: { median: 30, p75: 40, source: "test" }, unknown: { median: 0, p75: 3, source: "test" } };
     expect(projectPath(["RestSite", "Boss"], 40, model).arrival).toEqual([40, 64]);
     expect(projectPath(["RestSite", "Boss"], 40, { ...model, rest: restHealOf(["REGAL_PILLOW"]) }).arrival).toEqual([40, 79]);

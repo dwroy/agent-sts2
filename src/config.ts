@@ -118,7 +118,10 @@ export interface BrainEngineSettings {
   effort: Effort | null;
   /** BRAIN_<ENGINE>_REASK=on|off: the router's one re-ask (default on; DeepSeek without tools: off, v3 repairs itself). */
   reask: boolean | null;
-  /** BRAIN_<ENGINE>_TOOLS=on|off: whether the engine gets the tool list (default on; DeepSeek off: v3 parity). */
+  /**
+   * BRAIN_<ENGINE>_TOOLS=on|off: whether the engine gets the tool list (default on; DeepSeek off: v3 parity; with
+   * KNOWLEDGE_PREFIX=full off for every engine: the knowledge is in the system prompt, set on to add the tools).
+   */
   tools: boolean | null;
   /**
    * BRAIN_<ENGINE>_MAX_CALLS: the engine's model calls per process (re-asks included), counted by the router apart
