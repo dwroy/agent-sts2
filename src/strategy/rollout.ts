@@ -810,6 +810,8 @@ interface SimEnemy {
   growth: number;
   /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
   shrink: number;
+  /** Demise (Powdered Demise): HP it loses at the end of each of its turns, until it dies. */
+  demise: number;
   /**
    * Shriek / Plow (Terror Eel, Ceremonial Beast: stunned the first time its HP drops to the threshold, that
    * turn's move lost) not yet triggered: the later turns' solver calls model it too (they dropped it, so a Beast
@@ -1096,6 +1098,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     flutter: 0,
     growth: 0,
     shrink: 0,
+    demise: 0,
     shriekArmed: false,
     thorns: 0,
     halved: false,
@@ -1397,6 +1400,8 @@ function applyPlan(
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
     if (a.shrink !== undefined) e.shrink = a.shrink;
+    // Demise the line put on it (the outcome carries it only when up).
+    e.demise = a.demise ?? e.demise;
     // Strength it gained for good this turn (Fight Me!, Enrage per Skill, Crab Rage on the survivor).
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
@@ -1528,6 +1533,14 @@ function applyPlan(
       else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
       else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
     }
+    // Demise: HP lost at the end of each of its turns, stunned or not, until it dies (the solver only priced about
+    // three turns of it; ARKG3JFT26HC F17: 9 a turn on the Soul Fysh never counted in any later turn).
+    for (const e of enemies) {
+      if (!e.alive || e.explodeAt !== undefined || e.demise <= 0) continue;
+      e.hp -= e.demise;
+      if (e.hp <= 0) enemyDown(e, turn, input, enemies);
+    }
+    won = allDown();
     // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
     // block at the start of each of our turns while the Shield lives (40 logged fights, 25 every turn).
     for (const holder of enemies) {
@@ -1723,6 +1736,7 @@ function simulate(
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
       shrink: e.shrink ?? 0,
+      demise: e.demise ?? 0,
       shriekArmed: (e.shriek ?? 0) > 0 && e.hp > (e.shriek ?? 0),
       plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
@@ -1807,6 +1821,7 @@ function simulate(
         thorns: e.thorns,
         halved: e.halved,
         shrink: e.shrink,
+        demise: e.demise,
         dazedPerHit: e.dazedPerHit,
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).

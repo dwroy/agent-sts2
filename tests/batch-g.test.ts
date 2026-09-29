@@ -12,7 +12,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
 import { describePlan, planCombatTurn } from "../src/screens/combat-plan.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
@@ -417,5 +418,57 @@ describe("8. An unused free Attack (Unrelenting) kept into next turn is said in 
     expect(String(describePlan(alone, 60)["free_attacks_kept"])).toMatch(/^1 free Attack \(Unrelenting\) left unused: it stays up into next turn/);
     const spent = plans.find((plan) => plan.steps.length === 2 && plan.steps[0]!.cardId === "UNRELENTING")!;
     expect(describePlan(spent, 60)["free_attacks_kept"]).toBeUndefined();
+  });
+});
+
+describe("0. Powdered Demise is not \"no effect\": the drink's lasting effect counts, and the rollout ticks Demise every enemy turn (ARKG3JFT26HC F17 Soul Fysh, regression of 0dafcda)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("the logged T2 board: the Demise line carries no potion_no_effect and reads its own rollout (the Fysh loses 9 a turn)", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const decision = planCombatTurn(loggedEnv(logged("batch-g/arkg-f17-t2-demise")));
+    if (decision?.kind !== "ask") throw new Error(`expected an ask, got ${decision?.kind}`);
+    const question = decision.questions["plan"]!;
+    const criteria = Object.values(question.type === "choice" ? question.criteria : {}).map((text) => JSON.parse(String(text)) as Raw);
+    const demise = criteria.filter((line) => /消亡粉末/.test(String(line["plays"])));
+    expect(demise.length).toBeGreaterThan(0);
+    for (const line of demise) expect(line["potion_no_effect"]).toBeUndefined();
+    const alone = demise.find((line) => String(line["plays"]) === "potion 消亡粉末 -> 灵魂异鱼")!;
+    expect(String(alone["enemies_after"])).toContain("Demise 9");
+    // The same cards without the drink (ending the turn): the Demise line's later turns deal 9 more each turn.
+    const dry = criteria.find((line) => String(line["plays"]) === "end turn");
+    if (dry) expect(alone["rollout_turns"]).not.toBe(dry["rollout_turns"]);
+  });
+
+  it("rollout: Demise 9 on a 30-HP enemy that no card touches ends the fight at the end of its fourth turn", () => {
+    const demise = card(0, "POTION:POWDERED_DEMISE:0", { name: "potion 消亡粉末", type: "Potion", cost: 0, demise: 9 });
+    const solver: SolverInput = { hand: [demise], player: player({ energy: 0 }), enemies: [enemy({ hp: 30, maxHp: 30 })], fightKind: "monster", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const drink = plans.find((plan) => plan.steps.length === 1)!;
+    expect(drink.outcome.enemyHpAfter[0]!.demise).toBe(9);
+    expect(drink.outcome.lastingDrinks).toBe(1);
+    const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const META: FightMeta = { act: 1, t: 1, asc: 9, kind: "hallway", enc: "X", deck: { n: 5, atk: 0, skl: 5, pow: 0, junk: 0, dmg: 0, blk: 5, up: 0 }, relics: 0, max_en: 3 };
+    let t = 0;
+    const line = rolloutDecision({
+      solver,
+      plans: [drink],
+      enemies: [{ index: 0, id: "X", move: "WAIT", strength: 0, powers: {} }],
+      tables: { X: WAIT },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => card(10 + i, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 5 })), discard: [], handBase: [demise] },
+      meta: META,
+      playerPowers: {},
+      potions: 1,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 1, horizon: 5, samples: 4, now: () => (t += 0.01) },
+    }).lines[0]!;
+    expect(line.wins).toBe(4);
+    expect(line.turnsToWin).toBe(4);
   });
 });

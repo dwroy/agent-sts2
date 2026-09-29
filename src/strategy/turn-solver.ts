@@ -496,6 +496,8 @@ export interface Outcome {
     strengthGained?: number;
     /** Shrink turns left on it (Beetle Juice's 4: its attacks 30% less). */
     shrink?: number;
+    /** Demise on it (Powdered Demise's 9): HP it loses at the end of each of its turns until it dies. */
+    demise?: number;
     /** Stunned by the line (Ravenous eating a corpse): its move this enemy turn is lost. */
     stunned?: boolean;
     /** A Waterfall Giant husk (999,999,999 max HP): its HP is not there to take off, it explodes. */
@@ -563,6 +565,8 @@ export interface Outcome {
    * 21TKTPL5D4A6 F3: Unrelenting the last Attack of T2, T3 began with FREE_ATTACK_POWER 1 and its Strike cost 0).
    */
   freeAttacksLeft?: number;
+  /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
+  lastingDrinks?: number;
 }
 
 export interface Plan {
@@ -647,6 +651,8 @@ interface Sim {
   hellraiser: boolean;
   /** Dark Embrace amount up (already, or played this turn): cards drawn per card exhausted. */
   darkEmbrace: number;
+  /** Drinks in this line whose effect may outlast the turn (turnOnlyDrink false). */
+  lastingDrinks: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /** Attacks played in this plan (Stomp costs 1 less for each). */
@@ -1425,6 +1431,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion") next.potionCost += -card.flatValue;
+  if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
 }
@@ -2230,6 +2237,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           flutter: enemy.flutter ?? 0,
           strengthGained: enemy.strengthDelta,
           shrink: enemy.shrink ?? 0,
+          ...((enemy.demise ?? 0) > 0 ? { demise: enemy.demise } : {}),
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
@@ -2259,9 +2267,27 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
+      ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
     },
   };
 }
+
+/**
+ * A drink whose whole effect shows in this turn's outcome (damage, block, this turn's Strength or Dexterity, energy,
+ * draws, a heal, an enemy's Strength this turn): nothing of it lasts past the turn. Any other effect (a debuff
+ * or power on an enemy or us that lasts, Demise, Plating, Regen, Ritual, a card changed, …) may: such a drink is
+ * never "no effect" (ARKG3JFT26HC F17: Powdered Demise read as no effect on 30 of 34 questions, never drunk).
+ */
+export function turnOnlyDrink(card: CardModel): boolean {
+  if (card.type !== "Potion") return true;
+  const lasting =
+    (card.demise ?? 0) > 0 || (card.shrink ?? 0) > 0 || card.vulnerable > 0 || card.weak > 0 || card.strength !== 0 || card.enemyStrength !== 0 ||
+    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
+  return !lasting && TURN_ONLY_SPECIALS.has(card.special ?? "");
+}
+
+/** Potion specials whose effect is this turn's alone (none, this turn's Dexterity, tripled Block, a heal). */
+const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
@@ -2392,6 +2418,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     feelNoPain: input.player.feelNoPain ?? 0,
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
+    lastingDrinks: 0,
     attacksPlayed: 0,
     skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
