@@ -38,7 +38,7 @@ export interface AppConfig {
   jev: JevConfig;
   enricher: EnricherConfig;
   /** Escalation model for Jev's near-guesses on high-stakes calls (phase 2). null when no key. */
-  deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number; guideFile: string; handbookFile: string; reasoningEffort: string; combatReasoningEffort: string; effortByLabel?: string; reasoningLog: string } | null;
+  deepseek: { apiKey: string; baseUrl: string; model: string; maxCalls: number; timeoutMs: number; guideFile: string; handbookFile: string; reasoningEffort: string; combatReasoningEffort: string; effortByLabel?: string; reasoningLog: string; factsSnapshotDir?: string } | null;
   /** Escalation order, e.g. ["claude", "deepseek"]: the first one that answers wins. */
   escalation: { chain: ("claude" | "deepseek")[]; claudeDir: string; claudeTimeoutMs: number; claudeMaxCalls: number };
   thresholds: { act: number; strong: number };
@@ -307,6 +307,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
         // Per-label tiers, "label-prefix=effort,…"; unset = DEFAULT_EFFORT_BY_LABEL (llm/deepseek.ts); "-" = none.
         ...(readEnv(env, "DEEPSEEK_EFFORT_BY_LABEL") === null ? {} : { effortByLabel: readEnv(env, "DEEPSEEK_EFFORT_BY_LABEL")! }),
         reasoningLog: readEnv(env, "DEEPSEEK_REASONING_LOG") ?? "logs/deepseek-reasoning.jsonl",
+        // The day's guide/handbook with their data facts filled (llm/deepseek.ts frozenGuideFacts); "" = fill at every start.
+        factsSnapshotDir: readEnv(env, "DEEPSEEK_FACTS_SNAPSHOT_DIR") ?? "logs/guide-facts",
       }
     : null;
 

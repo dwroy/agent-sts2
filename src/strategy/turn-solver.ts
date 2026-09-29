@@ -209,6 +209,15 @@ export interface PlayerSim {
    * 2 after the 3rd and 6th Attack), the count starting again each turn.
    */
   shuriken?: { every: number; strength: number; count: number };
+  /**
+   * Music Box (「将你每回合打出的第一张攻击牌的一张虚无复制品加入你的手牌」): the first Attack card played in a turn
+   * adds an Ethereal copy of itself to the hand (after its own effects, draws included). `count`: the Attacks already
+   * played this turn (attacks_played_this_turn); only at 0 does this line's first Attack make one. Logged YVYZ F48:
+   * T1 Salvo, T2 Unrelenting, T3 Strike, T5/T7 Pommel Strike (after its draw), T6 Strike each came back as
+   * "虚无。 …" at the end of the hand; the copies played counted in cards_played_this_turn (the Withers came on
+   * the game's every-6th card with them counted).
+   */
+  musicBox?: { count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -598,10 +607,19 @@ export interface Outcome {
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
   /**
+   * What the turn's end brings against the enemy turn beyond the block up when the line ends, when any (the mod's
+   * end-turn lethal flag counts the intents against the block up now only): block gained at the end (Plating and
+   * Metallicize up, Plating played this turn, Feel No Pain on the Ethereal cards held, Cloak Clasp), Regen's heal
+   * first, Buffer stacks. 86C3 F25 T5: 28 intents vs 28 HP, "mod says lethal"; Plating 2 made it 26.
+   */
+  endTurnGuards?: { what: string; amount: number }[];
+  /**
    * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
    * the enemy hits and is part of incomingAfterBlock.
    */
   heldDamage?: number;
+  /** With heldDamage: the cards it comes from, by name ("毒素 ×2", "Wither added by this turn's cards"). */
+  heldDamageFrom?: string[];
 }
 
 export interface Plan {
@@ -1242,7 +1260,33 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
   ];
+  // Music Box: this turn's first Attack card comes back as an Ethereal copy (PlayerSim.musicBox), a card of the hand
+  // like any other: playing it costs its energy and counts as a card played (Withering Presence, Sloth).
+  if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)]);
   return next;
+}
+
+/** A line's HP change as the notes write it: "hp -8" for a loss, "hp +8" for a heal (was "hp --8": Q8XR F11 T2, NH8A F21 T1). */
+export function hpText(loss: number): string {
+  return loss < 0 ? `hp +${-loss}` : `hp -${loss}`;
+}
+
+/** Names with their count, in first-seen order: ["毒素", "毒素", "灼伤"] -> ["毒素 ×2", "灼伤"]. */
+function countedNames(names: string[]): string[] {
+  const counts = new Map<string, number>();
+  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return [...counts].map(([name, count]) => (count > 1 ? `${name} ×${count}` : name));
+}
+
+/** Index offset of a Music Box copy (a card the hand did not hold at the decision: never a first step). */
+export const MUSIC_BOX_INDEX = 300;
+
+/**
+ * The Ethereal copy Music Box adds of the turn's first Attack (its own key and index, so it is a card apart; named as
+ * the copy in the lines' text, the game's card id kept for finding it in the hand).
+ */
+export function musicBoxCopy(card: CardModel): CardModel {
+  return { ...card, key: `${card.key}~mb`, index: MUSIC_BOX_INDEX + card.index, name: `${card.name}（音乐盒复制）`, ethereal: true };
 }
 
 /** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
@@ -1969,6 +2013,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       : 0;
   const heldPenalty =
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
+  // The cards that damage: named in the notes (a Wither, Toxic x2 were all "Burn": YVYZ F48 T6, 3RME F30, NH8A F31).
+  const heldDamageFrom = countedNames([
+    ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
+    ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
+  ]);
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -1981,6 +2030,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
   const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
+  // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
+  const endTurnGuards = winsFight
+    ? []
+    : [
+        { what: "Plating/Metallicize block at the turn's end", amount: input.player.endTurnBlock ?? 0 },
+        { what: "Plating played this turn, blocking at its end", amount: platingNow },
+        { what: "Feel No Pain block for the Ethereal cards exhausted at the end", amount: etherealBlock },
+        { what: "Cloak Clasp block for the cards held", amount: claspBlock },
+        { what: "Regen healing before the enemy acts", amount: Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp)) },
+        { what: "Buffer stacks, each preventing a whole HP loss", amount: sim.buffer },
+      ].filter((guard) => guard.amount > 0);
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2342,6 +2402,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      ...(endTurnGuards.length > 0 ? { endTurnGuards } : {}),
       ...(sim.dazedAdded > 0 && !winsFight ? { dazedAdded: sim.dazedAdded } : {}),
       ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
@@ -2358,7 +2419,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
-      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };

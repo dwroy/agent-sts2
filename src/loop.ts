@@ -1501,7 +1501,7 @@ async function ensureRunPlan(
   onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
     // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
-    const { json, meta, recovered } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
+    const { json, meta, recovered, note } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;
@@ -1515,6 +1515,7 @@ async function ensureRunPlan(
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
       ...(recovered ? { recovered_from_reasoning: true } : {}),
+      ...(note ? { note } : {}),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,

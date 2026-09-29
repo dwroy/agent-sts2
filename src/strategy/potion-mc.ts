@@ -16,7 +16,7 @@
 
 import type { JsonValue } from "../util/json.js";
 import { CHOICE_POTIONS, DRAW_POTIONS, potionEffect, potionShell, type CardModel } from "./card-model.js";
-import { solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
+import { hpText, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Samples per random potion (fewer when the time budget runs out). */
 export const MC_SAMPLES = 12;
@@ -315,7 +315,7 @@ export function potionMcCriteria(mc: PotionMc, dryBest: Plan | null, stepText: (
   if (mc.dies > 0) out["dies_this_turn"] = `${mc.dies}/${n} samples`;
   const signed = (x: number) => `${x >= 0 ? "+" : ""}${round1(x)}`;
   out["beats_best_potion_free_line"] = dryBest
-    ? `${mc.beats}/${n} samples (best potion-free line: hp -${dryBest.outcome.hpLoss}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much), winning the fight, or living where it dies)`
+    ? `${mc.beats}/${n} samples (best potion-free line: ${hpText(dryBest.outcome.hpLoss)}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much), winning the fight, or living where it dies)`
     : `${mc.beats}/${n} samples (no potion-free line)`;
   if (dryBest && mc.vsDry) out["vs_best_potion_free_line"] = `mean HP saved ${signed(mc.vsDry.hpSaved)}, mean damage ${signed(mc.vsDry.damageGained)}`;
   if (othersHeld) out["note"] = "the other potions held are not combined in these samples";
