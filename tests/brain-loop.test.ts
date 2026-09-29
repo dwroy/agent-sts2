@@ -9,8 +9,11 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { loadConfig } from "../src/config.js";
+import { DeepSeekAnswerError, type DeepSeekAnswer } from "../src/llm/deepseek.js";
+import type { JsonValue } from "../src/util/json.js";
 import { runConfigLogPath, type RunConfigRow } from "../src/telemetry/run-config.js";
 import { board, FakeDeepSeek, keyOf, play, setupOneshotTests } from "./oneshot-support.js";
+import type { AppConfig } from "../src/config.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -87,6 +90,33 @@ describe("the loop with BRAIN_* set", () => {
     rmSync(configPath, { force: true });
     expect(configRows[0]?.claude_check).toEqual({ bin, ok: false, error: "exited 1: not logged in" });
     expect(configRows[0]?.warnings?.[0]).toMatch(/^claude is unavailable for this run/);
+  });
+
+  it("DeepSeek as the fallback answers to DEEPSEEK_MAX_CALLS: none left, it is not asked (Jev/code decides)", async () => {
+    const bin = fakeClaude("quota-budget", { type: "result", subtype: "success", is_error: true, result: "You've hit your limit · resets 3pm" }, 1);
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const base = loadConfig({} as NodeJS.ProcessEnv);
+    const spent: AppConfig["deepseek"] = { apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", maxCalls: 0, timeoutMs: 100, guideFile: "", handbookFile: "", reasoningEffort: "off", combatReasoningEffort: "", reasoningLog: "" };
+    const { stats, records } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { deepseek: spent, brain: { ...base.brain, ...brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) } });
+    expect(deepseek.calls).toHaveLength(0);
+    expect(stats.deepseekCalls).toBe(0);
+    const row = records.find((r) => r["label"] === "rest/plan");
+    expect(row?.["decider"]).not.toBe("deepseek");
+  });
+
+  it("DeepSeek as the fallback that answers unusably (DeepSeekAnswerError) is counted", async () => {
+    class UnusableDeepSeek extends FakeDeepSeek {
+      override async choose(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
+        await super.choose(state, instructions, criteria, context);
+        throw new DeepSeekAnswerError('DeepSeek chose unknown option "zz"', { choice: "zz", reason: "", reasoning: "", content: "" }, { latencyMs: 5, inputTokens: 10, outputTokens: 2 });
+      }
+    }
+    const bin = fakeClaude("quota-unusable", { type: "result", subtype: "success", is_error: true, result: "You've hit your limit · resets 3pm" }, 1);
+    const deepseek = new UnusableDeepSeek(() => "o0");
+    const { stats } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) });
+    // The one-shot rest/plan, then the step-by-step rest/choose: both answered unusably, both counted.
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan", "rest/choose"]);
+    expect(stats.deepseekCalls).toBe(2);
   });
 
   it("default configuration: DeepSeek decides and the row carries no brain note (v3's rows)", async () => {

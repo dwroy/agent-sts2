@@ -26,7 +26,7 @@ import type { JsonValue } from "../util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
-import { BrainRouter, type BrainLogRow } from "./router.js";
+import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
 import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
 import { routeAnswerText } from "../strategy/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
@@ -71,7 +71,7 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
 }
 
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
-export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string } = {}): BrainRouter {
+export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget } = {}): BrainRouter {
   const engines = new Map<EngineName, BrainEngine>();
   return new BrainRouter({
     config: { ...config.brain, log: brainLogPath(config) },
@@ -84,6 +84,7 @@ export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null,
       return engine;
     },
     ...(options.log ? { log: options.log } : {}),
+    ...(options.fallbackBudget ? { fallbackBudget: options.fallbackBudget } : {}),
   });
 }
 
@@ -92,8 +93,9 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
   return brain.engine === engine || Object.values(brain.byPrefix).includes(engine) || brain.fallback === engine;
 }
 
-export function createBrain(config: AppConfig, deepseek: DeepSeekClient): Brain {
-  return new Brain(createRouter(config, deepseek), deepseek);
+/** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
+export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options: { fallbackBudget?: FallbackBudget } = {}): Brain {
+  return new Brain(createRouter(config, deepseek, options), deepseek);
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */

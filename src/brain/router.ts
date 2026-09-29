@@ -25,7 +25,9 @@
  *   BRAIN_FALLBACK (fell_back_from kind "invalid"); only when that fails too does the caller fall back to Jev/code.
  * - Call budgets: BRAIN_<ENGINE>_MAX_CALLS (Claude: DEFAULT_CLAUDE_MAX_CALLS) counts every call the router makes to
  *   that engine in this process, re-asks included, apart from DeepSeek's DEEPSEEK_MAX_CALLS (the loop's). A used-up
- *   budget is an engine failure ("budget"): the question goes to BRAIN_FALLBACK, or fails when there is none.
+ *   budget is an engine failure ("budget"): the question goes to BRAIN_FALLBACK, or fails when there is none. A
+ *   call to the fallback also answers to the caller's budget for it (RouterDeps.fallbackBudget: the loop's
+ *   DEEPSEEK_MAX_CALLS), checked and spent before each call, so one that throws is counted too.
  * - Keys never reach the log: rows hold the request, the answer, the usage and error texts only.
  */
 import { createHash } from "node:crypto";
@@ -122,6 +124,16 @@ export interface RouterDeps {
   log?: (row: BrainLogRow) => void;
   /** The clock (tests). */
   now?: () => number;
+  /**
+   * A budget the caller keeps for an engine asked as the fallback (the loop's DEEPSEEK_MAX_CALLS): checked before
+   * each fallback call (none left: no fallback) and spent when the call is made.
+   */
+  fallbackBudget?: FallbackBudget;
+}
+
+export interface FallbackBudget {
+  left(engine: EngineName): boolean;
+  spend(engine: EngineName): void;
 }
 
 function sha(text: string): string {
@@ -214,6 +226,11 @@ export class BrainRouter {
     }
   }
 
+  /** Whether the fallback may be asked: it can run here and the caller's budget for it has room. */
+  private canFallBackTo(name: EngineName): boolean {
+    return this.available(name) && (!this.deps.fallbackBudget || this.deps.fallbackBudget.left(name));
+  }
+
   private available(name: EngineName): boolean {
     try {
       this.deps.engine(name);
@@ -234,11 +251,11 @@ export class BrainRouter {
     const rest = this.resting.get(primary);
     let result: Attempt;
     const restNote = rest ? (Number.isFinite(rest.until) ? `resting until ${new Date(rest.until).toISOString()} after ${rest.kind}: ${rest.reason}` : `unavailable for this process: ${rest.reason}`).slice(0, 300) : "";
-    if (rest && rest.until > this.now() && fallback && this.available(fallback)) {
+    if (rest && rest.until > this.now() && fallback && this.canFallBackTo(fallback)) {
       // Resting after a quota / rate-limit failure: straight to the fallback, no wait on the primary.
       const fellBackFrom = { engine: primary, error: restNote };
       try {
-        result = { ...(await this.attempt(fallback, req)), fellBackFrom };
+        result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
       } catch (error) {
         this.write(fallback, req, null, error, { ...fellBackFrom, kind: rest.kind });
         throw error;
@@ -261,13 +278,13 @@ export class BrainRouter {
       }
       const kind = failureKind(error);
       if (error instanceof EngineFailure && error.cooldownMs > 0) this.resting.set(primary, { until: this.now() + error.cooldownMs, reason: message(error).slice(0, 200), kind });
-      if (!fallback || !this.available(fallback)) {
+      if (!fallback || !this.canFallBackTo(fallback)) {
         this.write(primary, req, null, error);
         throw error;
       }
       const fellBackFrom = { engine: primary, error: message(error).slice(0, 300) };
       try {
-        result = { ...(await this.attempt(fallback, req)), fellBackFrom };
+        result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
       } catch (second) {
         this.write(fallback, req, null, second, { ...fellBackFrom, kind });
         throw second;
@@ -275,7 +292,7 @@ export class BrainRouter {
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind });
       return result;
     }
-    if (fallback && BrainRouter.unusable(req, result) && this.available(fallback)) return this.fallBackOnAnswer(primary, fallback, req, result);
+    if (fallback && BrainRouter.unusable(req, result) && this.canFallBackTo(fallback)) return this.fallBackOnAnswer(primary, fallback, req, result);
     this.write(result.engine, req, result);
     return result;
   }
@@ -295,7 +312,7 @@ export class BrainRouter {
     const fellBackFrom = { engine: primary, error: `answer unusable after the re-ask: ${first.problems.join("; ") || "no answer"}`.slice(0, 300) };
     let result: Attempt;
     try {
-      result = { ...(await this.attempt(fallback, req)), fellBackFrom };
+      result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
     } catch (error) {
       this.write(fallback, req, null, error, { ...fellBackFrom, kind: "invalid" });
       if (isAnswerFailure(error)) throw error;
@@ -310,10 +327,10 @@ export class BrainRouter {
    * (AnswerSpec.softValidate) are re-asked the same way, but an answer with only soft problems stays usable: the
    * re-asked answer when it has no hard problems, else the first one.
    */
-  private async attempt(name: EngineName, request: BrainRequest): Promise<Attempt> {
+  private async attempt(name: EngineName, request: BrainRequest, asFallback = false): Promise<Attempt> {
     const engine = this.engine(name);
     const req: BrainRequest = this.toolsFor(name) ? request : { ...request, tools: [] };
-    const first = await this.call(engine, req);
+    const first = await this.call(engine, req, asFallback);
     const firstCheck = BrainRouter.check(req, first);
     const firstProblems = [...firstCheck.hard, ...firstCheck.soft];
     if (firstProblems.length === 0) return { ...first, problems: [] };
@@ -322,7 +339,7 @@ export class BrainRouter {
     const previous = first.raw ?? (first.answer === null ? "" : JSON.stringify(first.answer));
     let second: BrainAnswer;
     try {
-      second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } });
+      second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
     } catch (error) {
       if (isAnswerFailure(error)) throw error;
       const problems = [...firstProblems, `re-ask failed: ${message(error).slice(0, 200)}`];
@@ -353,11 +370,15 @@ export class BrainRouter {
     };
   }
 
-  /** engine.decide within the engine's call budget and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
-  private async call(engine: BrainEngine, req: BrainRequest): Promise<BrainAnswer> {
+  /** engine.decide within the engine's call budget (and, as the fallback, the caller's) and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
+  private async call(engine: BrainEngine, req: BrainRequest, asFallback = false): Promise<BrainAnswer> {
     if (!this.budgetLeft(engine.name)) {
       const field = `BRAIN_${engine.name.toUpperCase()}_MAX_CALLS`;
       throw new EngineFailure(`${engine.name} call budget used up (${this.callsMade(engine.name)}/${this.deps.config.engines[engine.name].maxCalls}, ${field})`, "budget");
+    }
+    if (asFallback && this.deps.fallbackBudget) {
+      if (!this.deps.fallbackBudget.left(engine.name)) throw new EngineFailure(`${engine.name} call budget used up (the caller's, as the fallback)`, "budget");
+      this.deps.fallbackBudget.spend(engine.name);
     }
     this.calls.set(engine.name, this.callsMade(engine.name) + 1);
     const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;

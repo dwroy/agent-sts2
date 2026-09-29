@@ -345,3 +345,43 @@ describe("timeouts rest the engine; an answer unusable after the re-ask goes to 
     expect(answer.fellBackFrom).toBeUndefined();
   });
 });
+
+describe("the caller's budget for the fallback (the loop's DEEPSEEK_MAX_CALLS)", () => {
+  function budgeted(env: Record<string, string>, engines: Partial<Record<EngineName, FakeEngine>>, max: number) {
+    let spent = 0;
+    const config = loadConfig(env as unknown as NodeJS.ProcessEnv).brain;
+    const r = new BrainRouter({
+      config,
+      engine: (name) => {
+        const engine = engines[name];
+        if (!engine) throw new Error(`no ${name}`);
+        return engine;
+      },
+      log: () => {},
+      fallbackBudget: { left: (engine) => engine !== "deepseek" || spent < max, spend: (engine) => void (engine === "deepseek" && (spent += 1)) },
+    });
+    return { router: r, spent: () => spent };
+  }
+
+  it("none left: the fallback is not asked and the primary's error stands", async () => {
+    const claude = new FakeEngine("claude", [new EngineFailure("claude success [quota]: limit", "quota", 60_000)]);
+    const deepseek = new FakeEngine("deepseek", [{ choice: "a", reason: "heal" }]);
+    const { router: r, spent } = budgeted({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek" }, { claude, deepseek }, 0);
+    await expect(r.decide(request())).rejects.toThrow(/\[quota\]: limit/);
+    expect(deepseek.requests).toHaveLength(0);
+    expect(spent()).toBe(0);
+  });
+
+  it("each fallback call is spent before it is made, one that throws an answer failure too; the last call left is the last one made", async () => {
+    const failure = Object.assign(new Error("DeepSeek returned non-JSON"), { answerFailure: true });
+    const claude = new FakeEngine("claude", [new Error("claude exited 1 without a result")]);
+    const deepseek = new FakeEngine("deepseek", [failure, { choice: "a", reason: "heal" }]);
+    const { router: r, spent } = budgeted({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek" }, { claude, deepseek }, 2);
+    await expect(r.decide(request())).rejects.toBe(failure);
+    expect(spent()).toBe(1);
+    expect((await r.decide(request())).engine).toBe("deepseek");
+    expect(spent()).toBe(2);
+    await expect(r.decide(request())).rejects.toThrow("claude exited 1 without a result");
+    expect(deepseek.requests).toHaveLength(2);
+  });
+});
