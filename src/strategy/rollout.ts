@@ -362,7 +362,23 @@ export interface EnemyMove {
   playerPowers?: Partial<Record<PlayerDebuff, number>>;
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
+  /**
+   * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
+   * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns).
+   */
+  selfPowers?: Partial<Record<EnemySelfPower, number>>;
 }
+
+/** The self-buffs of enemy moves the rollout applies (EnemyMove.selfPowers). */
+export const ENEMY_SELF_POWERS = ["RITUAL_POWER"] as const;
+export type EnemySelfPower = (typeof ENEMY_SELF_POWERS)[number];
+
+/**
+ * Strength an enemy gains at the end of each of its turns (「在你的回合结束时获得力量」): Ritual (Cultists,
+ * Devoted Sculptor), Territorial (Byrdonis, 「会获得1点力量」), High Voltage (Zapbot, 「会获得2点力量」); the amount
+ * is the gain (logged Territorial 1, High Voltage 2).
+ */
+export const STRENGTH_GROWTH_POWERS = ["RITUAL_POWER", "TERRITORIAL_POWER", "HIGH_VOLTAGE_POWER"] as const;
 
 /** The powers an enemy move puts on us that the rollout applies to its later turns (EnemyMove.playerPowers). */
 export const PLAYER_DEBUFFS = ["VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER"] as const;
@@ -688,6 +704,8 @@ interface SimEnemy {
   slippery: number;
   curlUp: number;
   flutter: number;
+  /** Strength it gains at the end of each of its turns (STRENGTH_GROWTH_POWERS; a move's Ritual adds from its next turn). */
+  growth: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -1070,6 +1088,10 @@ function applyPlan(
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
         e.strength += m?.strength ?? 0;
+        // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
+        // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
+        e.strength += e.growth;
+        e.growth += m?.selfPowers?.RITUAL_POWER ?? 0;
         if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
@@ -1253,6 +1275,7 @@ function simulate(
       slippery: e.slippery ?? 0,
       curlUp: e.curlUp ?? 0,
       flutter: e.flutter ?? 0,
+      growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,

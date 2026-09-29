@@ -33,11 +33,13 @@ import { modelHandCard, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
+  ENEMY_SELF_POWERS,
   killOrders,
   loadFightValueGates,
   PLAYER_DEBUFFS,
   rolloutDecision,
   type DeckSummary,
+  type EnemySelfPower,
   type EnemyTable,
   type FightKindName,
   type FightMeta,
@@ -132,6 +134,16 @@ export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: 
   return Object.keys(out).length > 0 ? { playerPowers: out } : {};
 }
 
+/** The rollout's other self-buffs of a move (rollout.ts ENEMY_SELF_POWERS) at this ascension (selfGainAt). */
+export function selfPowersOf(entry: MoveEntry, asc: number): { selfPowers?: Partial<Record<EnemySelfPower, number>> } {
+  const out: Partial<Record<EnemySelfPower, number>> = {};
+  for (const id of ENEMY_SELF_POWERS) {
+    const amount = selfGainAt(entry, id, asc);
+    if (amount) out[id] = amount;
+  }
+  return Object.keys(out).length > 0 ? { selfPowers: out } : {};
+}
+
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
 export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveModelData): EnemyTable | undefined {
   const moves = db[id]?.moves;
@@ -152,6 +164,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
+      ...selfPowersOf(entry, asc),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated ? { estimated: true } : {}),
     };

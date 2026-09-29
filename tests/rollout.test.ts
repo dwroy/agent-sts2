@@ -980,3 +980,50 @@ describe("temporary Strength ends with the decision's turn, Strength an enemy ga
     expect(on(withIt, 2).loss.mean).toBe(25);
   });
 });
+
+describe("enemy Strength that grows every turn (Ritual, Territorial, High Voltage; Cultists further loss 5.9 forecast vs 13.6 real)", () => {
+  const CULTIST: EnemyTable = {
+    moves: { INCANTATION_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: { RITUAL_POWER: 2 } }, DARK_STRIKE_MOVE: { damage: 9, hits: 1, strength: 0, block: 0 } },
+    next: { INCANTATION_MOVE: { DARK_STRIKE_MOVE: 1 }, DARK_STRIKE_MOVE: { DARK_STRIKE_MOVE: 1 } },
+  };
+  const run = (move: string, powers: Record<string, number>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Cultist", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: move === "DARK_STRIKE_MOVE" ? [{ damage: 9, hits: 1 }] : [] }],
+      fightKind: "monster",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "CULTIST", move, strength: 0, powers }],
+      tables: { CULTIST },
+    }).lines[0]!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+
+  it("Ritual 2 up: every later Dark Strike 2 harder than the one before", () => {
+    expect(losses(run("DARK_STRIKE_MOVE", { RITUAL_POWER: 2 }))).toEqual([11, 13, 15, 17]);
+  });
+
+  it("Incantation gives Ritual 2 from its next turn on (none on its own turn)", () => {
+    expect(losses(run("INCANTATION_MOVE", {}))).toEqual([9, 11, 13, 15]);
+  });
+
+  it("Territorial 1 (Byrdonis) and High Voltage 2 (Zapbot): the amount each turn", () => {
+    expect(losses(run("DARK_STRIKE_MOVE", { TERRITORIAL_POWER: 1 }))).toEqual([10, 11, 12, 13]);
+    expect(losses(run("DARK_STRIKE_MOVE", { HIGH_VOLTAGE_POWER: 2 }))).toEqual([11, 13, 15, 17]);
+  });
+
+  it("the table reads a move's Ritual from the monster DB at this ascension", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = { CULTIST: { moves: { INCANTATION_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { RITUAL_POWER: { "5": 9 } }, "9": { RITUAL_POWER: { "6": 3 } } } } } } };
+    expect(enemyTable("CULTIST", 9, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 6 });
+    expect(enemyTable("CULTIST", 8, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 5 });
+  });
+});
