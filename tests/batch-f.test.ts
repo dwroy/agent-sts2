@@ -464,11 +464,17 @@ describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode to
     expect(potionSlotsNeeded("失去[red]13[/red]点最大生命。", belt([true, true]))).toBe(0);
   });
 
-  it("Jev's question (no DeepSeek decider) has the discard options too", () => {
+  it("Jev's question (no DeepSeek decider) has the discard options too, and Jev's pick of one takes the option after the discard", () => {
     const fx = logged("yql8-f28-potion-courier");
-    const decision = planEvent(loggedEnv(fx)) as AskDecision;
+    const env = loggedEnv(fx);
+    const decision = planEvent(env) as AskDecision;
     expect(decision.kind).toBe("ask");
     expect(keysOf(decision)).toEqual(["o0", "o0:d0", "o0:d0+1", "o0:d1", "o1", "o1:d0", "o1:d1"]);
+    const resolved = decision.resolve(pick("o1:d1"));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 1 });
+    resolved.apply?.();
+    ((fx.state["run"] as Raw)["potions"] as Raw[])[1] = { index: 1, occupied: false, can_discard: false };
+    expect(planEvent({ ...loggedEnv(fx), screenMemory: env.screenMemory })).toMatchObject({ kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: 1 } });
   });
 
   it("three potions into a full two-slot belt: \"discard both\" discards one, then the other, then takes the option", () => {

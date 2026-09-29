@@ -180,6 +180,8 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
           rationale: `Jev chose ${trusted.label ?? trusted.key} with confidence ${answer.confidence.toFixed(2)}`,
           confidence: answer.confidence,
           fallback: false,
+          // An option with a follow-up to note (an event's "discard X, then this option"), as DeepSeek's pick.
+          ...(trusted.apply ? { apply: trusted.apply } : {}),
         };
       }
 
@@ -194,6 +196,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         rationale: `Jev chose ${chosen.label ?? chosen.key} with confidence ${answer.confidence.toFixed(2)}`,
         confidence: answer.confidence,
         fallback: false,
+        ...(chosen.apply ? { apply: chosen.apply } : {}),
       };
     },
   };
