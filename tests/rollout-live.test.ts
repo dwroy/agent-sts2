@@ -91,7 +91,13 @@ describe("rollout facts on Jev's combat question", () => {
   }, 30_000);
 
   it("a drink-first potion option says it is not rolled out", () => {
-    const decision = plan("fn0h-f33-t2", true) as AskDecision;
+    // Its Stable Serum is simulated since batch J (a line of its own): an unsimulated potion in that slot instead.
+    const fx = logged("fn0h-f33-t2");
+    const run = fx.state["run"] as Record<string, unknown>;
+    run["potions"] = (run["potions"] as Record<string, unknown>[]).map((slot) => (slot["potion_id"] === "STABLE_SERUM" ? { ...slot, potion_id: "ENTROPIC_BREW", name: "混沌药水", description: "在所有空药水栏位中获得随机药水。" } : slot));
+    rolloutLiveOptions.enabled = true;
+    potionMcOptions.now = () => 0;
+    const decision = planCombatTurn(loggedEnv(fx, { jevContext: "v1" })) as AskDecision;
     const criteria = criteriaOf(decision);
     const potionKeys = Object.keys(criteria).filter((key) => !/^plan\d+$/.test(key));
     expect(potionKeys.length).toBeGreaterThan(0);

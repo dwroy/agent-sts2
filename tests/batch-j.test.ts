@@ -11,11 +11,11 @@ import { afterEach, describe, expect, it } from "vitest";
 import { JEV_DATA_OVER_GUIDES, planCombatTurn } from "../src/screens/combat-plan.js";
 import { DATA_OVER_GUIDES, DeepSeekClient } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
-import type { CardModel } from "../src/strategy/card-model.js";
+import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { ROLLOUT_BUDGET_MS, boardRolloutInput, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -228,4 +228,59 @@ describe("3. Shuriken (+1 Strength per 3 Attacks in a turn) and Captain's Wheel 
     expect(withWheel.length).toBe(without.length);
     withWheel.forEach((loss, i) => expect(loss).toBeLessThan(without[i]!));
   }, 60_000);
+});
+
+describe("4a. Stable Serum: the hand is kept at this turn's end and the next (RETAIN_HAND_POWER 2), in the rollout (66 questions: \"effect not simulated\"; DHGT6Z3Q7VAP F22, F33)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("modelled: a lasting drink with nothing this turn", () => {
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0);
+    expect(serum).not.toBeNull();
+    expect(serum!.special).toBe("retain_hand");
+    expect(turnOnlyDrink(serum!)).toBe(false);
+  });
+
+  it("rollout: three Strikes held with no energy left come back on the next two turns (and are played), over a deck of idle cards", () => {
+    const HIT: EnemyTable = { moves: { HIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const serum = modelPotion("STABLE_SERUM", "稳定血清", 0, [], 0)!;
+    const solver: SolverInput = { hand: [strike(0), strike(1), strike(2), serum], player: player({ energy: 0 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const drink = plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:STABLE_SERUM"))!;
+    const dry = plans.find((plan) => plan.steps.length === 0)!;
+    expect(drink.outcome.lastingDrinks).toBe(1);
+    const run = (plan: typeof drink) => {
+      let t = 0;
+      return rolloutDecision({
+        solver,
+        plans: [plan],
+        enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+        tables: { X: HIT },
+        piles: { draw: Array.from({ length: 20 }, (_, i) => idle(10 + i)), discard: [], handBase: solver.hand.map(() => null) },
+        meta: META,
+        playerPowers: {},
+        potions: 1,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 1, horizon: 3, samples: 2, now: () => (t += 0.01) },
+      }).lines[0]!;
+    };
+    // Without it the Strikes go to the discard pile under 20 idle cards: turns 2 and 3 deal nothing.
+    expect(run(dry).perTurn.map((turn) => turn.dmg.mean)).toEqual([0, 0]);
+    // With it: turn 2 starts with the three Strikes (3 energy: 18).
+    expect(run(drink).perTurn[0]!.dmg.mean).toBe(18);
+  });
+
+  it("the logged F22 T2 board: the Serum is a simulated line with rollout numbers, not \"effect not simulated\"", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const lines = planLines(planCombatTurn(loggedEnv(logged("batch-j/dhgt-f22-t2-serum"))));
+    expect(lines.some((line) => /稳定血清/.test(String(line["plays"])) && /not simulated/.test(String(line["plays"])))).toBe(false);
+    const serum = lines.filter((line) => /稳定血清/.test(String(line["plays"])));
+    expect(serum.length).toBeGreaterThan(0);
+    for (const line of serum) expect(String(line["rollout"])).toMatch(/-turn rollout .*expected further HP loss/);
+  });
 });

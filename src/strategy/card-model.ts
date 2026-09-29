@@ -71,7 +71,7 @@ export interface CardModel {
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -741,6 +741,11 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // back to the attacker per attack hit, this turn and the later ones (turn-solver retaliate, rollout thorns).
   // Unmodelled, VTRE listed it "effect not simulated" in 37 questions and V6TW in 29.
   LIQUID_BRONZE: { target: "self", thorns: 3 },
+  // Stable Serum: 「保留你的手牌{Repeat}回合」 — RETAIN_HAND_POWER 2 on each drink (states.jsonl, 02L4 T9, 0YG4 T1,
+  // 7UJ1 T7, 92MW T1: 2, then 1 on the next turn, gone after): the hand left at the end of this turn and of the next
+  // stays in hand and the next turn draws on top of it (up to 10: 02L4 5 kept + 5 drawn). Nothing this turn; the
+  // rollout keeps the hands (STABLE_SERUM_TURNS). Unmodelled, 66 questions listed it "effect not simulated".
+  STABLE_SERUM: { target: "self", special: "retain_hand" },
   ENERGY_POTION: { target: "self", energyGain: 2 },
   SWIFT_POTION: { target: "self", draw: 3 },
   // Clarity: 「抽{Cards}张牌。在你的下{ClarityPower}个回合开始时，额外抽1张牌」. K7G9 F30 T7 (states.jsonl): hand

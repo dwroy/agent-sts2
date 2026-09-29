@@ -825,6 +825,8 @@ export const HOWL_EXHAUST_VALUE = 50;
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 /** Cards a hand can hold: draws past it are discarded. */
 export const HAND_LIMIT = 10;
+/** Stable Serum: the turn ends whose hand is kept, the drink's own included (RETAIN_HAND_POWER 2). */
+export const STABLE_SERUM_TURNS = 2;
 /** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
 export const GLOWWATER_DRAW = 10;
 /** Bottled Potential: cards drawn after the hand is shuffled back (potion-values.ts Cards 5). */
