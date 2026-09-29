@@ -15,7 +15,7 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
-import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
+import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
@@ -725,8 +725,15 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         try {
           stats.deepseekCalls += 1;
           if (spec.plan) {
-            // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen.
-            const { json, meta } = await deepseekClient.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen. An empty reply
+            // takes the last plan its reasoning drafted that the screen's check accepts, else is asked once more
+            // (MZFV F24: the drafted plan was lost and the step-by-step fallback left the shop).
+            const plan = spec.plan;
+            const valid = (answer: Record<string, unknown>): boolean => {
+              const out = plan.resolve(answer);
+              return !("invalid" in out) && Boolean(out.intent);
+            };
+            const { json, meta, recovered, note } = await deepseekClient.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
             const reason = str(json["reason"]).trim();
@@ -742,8 +749,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               handbook: meta.handbookId ?? "",
               memory_chars: memoryChars(memory),
               memory_sections: memorySections(memory),
+              ...(recovered ? { recovered_from_reasoning: "empty reply: the plan its reasoning drafted" } : {}),
+              ...(note ? { note } : {}),
             };
-            const out = spec.plan.resolve(json);
+            const out = plan.resolve(json);
             if ("invalid" in out || !out.intent) {
               const why = "invalid" in out ? out.invalid : out.rationale;
               deepseekFailed = true;
@@ -762,7 +771,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               };
               deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
               deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
-              onEvent({ type: "note", message: `DeepSeek (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]} — ${reason}` });
+              onEvent({ type: "note", message: `DeepSeek (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]}${note ? ` (${note})` : ""} — ${reason}` });
             }
           } else {
             const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
@@ -1432,8 +1441,9 @@ async function ensureFightPlan(
   onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
   try {
     // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
-    // per-turn combat effort.
-    const { json, meta } = await deepseek.askJson(payload, "fight-plan");
+    // per-turn combat effort. A reply that is no fight plan (an empty one, a {choice, reason} echo) takes the
+    // plan its reasoning drafted, else an empty one is asked once more and anything else fails.
+    const { json, meta, recovered, note } = await deepseek.askJson(payload, "fight-plan", isFightPlanReply);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
@@ -1446,6 +1456,8 @@ async function ensureFightPlan(
       enemies: plan.enemyIds,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
+      ...(recovered ? { recovered_from_reasoning: true } : {}),
+      ...(note ? { note } : {}),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,

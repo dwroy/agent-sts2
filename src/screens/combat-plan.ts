@@ -1417,7 +1417,11 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
   const from = endNow.outcome.heldDamageFrom ?? [];
-  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}`;
+  // HP the held cards take straight off (Beckon), by name (5HHL F17 T7: "37 in all, 25 the enemy hits", the
+  // 12 from two Beckons unnamed).
+  const heldHpLoss = endNow.outcome.heldHpLoss ?? 0;
+  const lossFrom = endNow.outcome.heldHpLossFrom ?? [];
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}${heldHpLoss > 0 ? `, ${heldHpLoss} HP lost to cards held${lossFrom.length > 0 ? ` (${lossFrom.join(", ")})` : ""}` : ""}`;
   return sandpit
     ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
     : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
@@ -2037,7 +2041,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-guarded",
         intent: firstIntent(guarded, hand, env),
-        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (${hpText(guarded.outcome.hpLoss)}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+        rationale: `${guardedText(top, guarded)}${calcNote}`,
       };
     }
     commit(env, state.turn, top, hand, "code");
@@ -2172,7 +2176,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered: UNSIMULATED_OFFERED,
-          note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
         });
@@ -2348,7 +2352,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...guardOptions.map((option) => option.outcome.hpLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; ${hpText(plan.outcome.hpLoss)}) instead`
+        ? hpGuardNote(shown.indexOf(picked) + 1, picked, slack, rank, plan)
         : "";
       return {
         intent: firstIntent(plan, hand, env),
@@ -2536,6 +2540,19 @@ export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
 
 function lineLabel(plan: Plan): string {
   return plan.steps.map(stepText).join(", ") || "end turn";
+}
+
+/**
+ * Code's own line over the HP guard bound, and the line played instead. A line's HP change as hpText ("hp -12",
+ * "hp +8" on a heal): "loses ${hpLoss} HP" read "loses -8 HP" on a heal (fix batch M's leftover, as 5e19d7a).
+ */
+export function guardedText(top: Plan, guarded: Plan): string {
+  return `code plan ${lineLabel(top)} (${hpText(top.outcome.hpLoss)}) is over the HP guard bound; playing ${lineLabel(guarded)} instead (${hpText(guarded.outcome.hpLoss)}, dmg ${guarded.outcome.damageDealt})`;
+}
+
+/** The HP guard's note on replacing the picked line (plan `pickedNo`) with plan `rank`; HP changes as hpText. */
+export function hpGuardNote(pickedNo: number, picked: Plan, slack: number, rank: number, plan: Plan): string {
+  return `; HP guard: plan ${pickedNo} (${lineLabel(picked)}; ${hpText(picked.outcome.hpLoss)}) is more than ${slack.toFixed(0)} HP over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${lineLabel(plan)}; ${hpText(plan.outcome.hpLoss)}) instead`;
 }
 
 /**

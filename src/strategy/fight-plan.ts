@@ -160,6 +160,19 @@ export const FIGHT_PLAN_TASK = [
   '"summary": "<max 40 words: the plan in plain words>"}',
 ].join(" ");
 
+/**
+ * A reply that is a fight plan: at least one of the plan's fields given, as FIGHT_PLAN_TASK asks. An echo of the
+ * decision format ({"choice": ..., "reason": ...}, the run plan's 9GRPA F9/F25) is none: parsed, it would be a
+ * blank "race" plan with nothing in it. askJson's check: such a reply, or an empty one, takes the fight plan its
+ * reasoning drafted, else fails (the fight is played without a plan) or is asked once more.
+ */
+export function isFightPlanReply(json: Record<string, unknown>): boolean {
+  const text = (key: string) => typeof json[key] === "string" && (json[key] as string).trim() !== "";
+  const approach = typeof json["approach"] === "string" && APPROACHES.includes(json["approach"].trim().toLowerCase() as FightApproach);
+  const potions = typeof json["potions"] === "object" && json["potions"] !== null && !Array.isArray(json["potions"]);
+  return approach || Array.isArray(json["setup_cards"]) || text("focus_enemy") || potions || text("key_turns") || text("summary");
+}
+
 /** Validates DeepSeek's answer against the board: unknown cards, enemies and potions are dropped. */
 export function parseFightPlan(
   json: Record<string, unknown>,
