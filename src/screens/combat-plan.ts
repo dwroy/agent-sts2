@@ -37,7 +37,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
-import { damageGap, eruptionAt, eruptionSchedule, laterPhaseHps } from "../strategy/boss-clock.js";
+import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
@@ -557,11 +557,14 @@ export function giantTurnsToKill(hp: number, perTurn: number, turn: number, heal
  * Waterfall Giant too slow to kill (1ZQJ: 16 damage a turn into 240 HP, dead on T15 with the eruption
  * at 54; 21 HP + 17 block did not survive it). Damage per turn comes from the damage dealt so far: the HP
  * taken off plus what its Siphons healed before this turn (or 16 a turn on T1); turns to kill add the
- * Siphons still to come (Y0CWCD0C03FL: 4 Siphons healed 60, the old maxHp - hp rate saw none of it). The
- * eruption grows by its gain a turn at this ascension (eruptionSchedule: +3). When the projected explosion is at least HP plus a hand of block, waiting
- * loses: race it.
+ * Siphons still to come (Y0CWCD0C03FL: 4 Siphons healed 60, the old maxHp - hp rate saw none of it).
+ * Killed on turn K it explodes for its stacks on K: this turn's plus its gain a turn at this ascension
+ * (eruptionSchedule: +3) for each enemy turn until then. Our HP then is this turn's less the boss clock's
+ * HP loss a turn (bossLossPerTurn) for those same enemy turns (1VX145UJM8RZ T5: 69 HP read as 69 + 12 = 81
+ * against a projected 50, "no race"; at the T11 kill it had 18 HP, the eruption 47). When the explosion at
+ * the kill is at least that HP plus a hand of block, waiting loses: race it.
  */
-export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number, asc = 0): boolean {
+export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number, asc = 0, lossPerTurn?: number): boolean {
   if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || enemy["is_alive"] === false) return false;
   const hp = num(enemy["current_hp"]);
   const maxHp = num(enemy["max_hp"]);
@@ -576,8 +579,11 @@ export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, t
   let healed = 0;
   for (let t = schedule.first; t < turn; t += schedule.period) healed += heal;
   const perTurn = turn > 1 ? Math.max(5, (maxHp - hp + healed) / (turn - 1)) : ERUPTION_FALLBACK_DAMAGE;
-  const projected = eruptionNow + eruption.perTurn * giantTurnsToKill(hp, perTurn, turn, heal, schedule);
-  return projected >= playerHp + ERUPTION_BLOCK;
+  const enemyTurns = giantTurnsToKill(hp, perTurn, turn, heal, schedule) - 1;
+  const eruptionAtKill = eruptionNow + eruption.perTurn * enemyTurns;
+  const loss = lossPerTurn ?? bossLossPerTurn(bossProfile("WATERFALL_GIANT")!, asc).value;
+  const hpAtKill = playerHp - loss * enemyTurns;
+  return eruptionAtKill >= hpAtKill + ERUPTION_BLOCK;
 }
 
 /** Hallway enemies fought like elites. */

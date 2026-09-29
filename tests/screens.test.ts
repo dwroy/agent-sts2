@@ -2019,12 +2019,14 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
 
   it("races when the projected eruption at death reaches HP plus a hand of block", async () => {
     const { eruptionRace } = await import("../src/screens/combat-plan.js");
-    // T9, 160 HP left after 80 dealt in 8 turns: 16 more turns, eruption 36 + 48 = 84 vs 40 HP + 12.
-    expect(eruptionRace(giant(160, 36), 40, 9)).toBe(true);
-    // A fast deck: 150 dealt in 4 turns, 90 left = 3 turns, eruption 24 + 9 = 33 vs 50 + 12.
-    expect(eruptionRace(giant(90, 24), 50, 5)).toBe(false);
-    // T1 (16 a turn assumed): 15 turns, 12 + 45 = 57 vs 80 + 12.
-    expect(eruptionRace(giant(240, 0), 80, 1)).toBe(false);
+    // T9, 160 HP left after 90 dealt in 8 turns (one Siphon): 18 more turns, eruption 36 + 51 = 87 vs 40 HP + 12.
+    expect(eruptionRace(giant(160, 36), 40, 9, 0, 0)).toBe(true);
+    // A fast deck: 160 dealt in 4 turns, 90 left = 3 turns, eruption 24 + 6 = 30 vs 50 - 2 x 5.5 + 12.
+    expect(eruptionRace(giant(90, 24), 50, 5, 0, 5.5)).toBe(false);
+    // T1 (16 a turn assumed): 17 turns with the Siphons, 12 + 48 = 60; at no HP loss 80 + 12 = 92 is above it,
+    // at the clock's 5.5 a turn we would be dead before the kill.
+    expect(eruptionRace(giant(240, 0), 80, 1, 0, 0)).toBe(false);
+    expect(eruptionRace(giant(240, 0), 80, 1, 0, 5.5)).toBe(true);
     // The husk after "death" is not raced.
     expect(eruptionRace({ ...giant(999_999_999, 40), max_hp: 999_999_999 }, 10, 12)).toBe(false);
   });
@@ -2038,17 +2040,36 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
     expect(giantTurnsToKill(200, 25, 3, 15)).toBe(10);
     // Killed on the Siphon turn itself: no heal.
     expect(giantTurnsToKill(50, 25, 3, 15)).toBe(2);
-    // A8 T3, 250 -> 200 in 2 turns, eruption 18, 32 HP: the old rate (8 turns) projected 18 + 24 = 42 < 44;
-    // with the two Siphons 18 + 30 = 48: race.
+    // (No HP loss before the kill here: the Siphon count alone.) A8 T3, 250 -> 200 in 2 turns, eruption 18,
+    // 33 HP: the old rate (8 turns, killed on T10) projected 18 + 21 = 39 < 45; with the two Siphons killed
+    // on T12, 18 + 27 = 45: race.
     const a8 = { ...giant(200, 18), max_hp: 250 };
-    expect(eruptionRace(a8, 32, 3, 8)).toBe(true);
-    // Below A8 a Siphon heals 10: 220 to deal, 9 turns, 18 + 27 = 45 >= 44 still; at 34 HP it is 45 < 46.
-    expect(eruptionRace(a8, 34, 3, 0)).toBe(false);
-    expect(eruptionRace(a8, 34, 3, 8)).toBe(true);
+    expect(eruptionRace(a8, 33, 3, 8, 0)).toBe(true);
+    // Below A8 a Siphon heals 10: 220 to deal, 9 turns, 18 + 24 = 42 < 45.
+    expect(eruptionRace(a8, 33, 3, 0, 0)).toBe(false);
+    expect(eruptionRace(a8, 34, 3, 8, 0)).toBe(false);
     // Healed HP counts as damage dealt: A8 T11 at 100/250 after 2 Siphons is 180 in 10 turns (18 a turn, not 15).
-    // 7 turns either way here (+15 on T14): 42 + 21 = 63 vs 50 + 12.
-    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 50, 11, 8)).toBe(true);
-    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 52, 11, 8)).toBe(false);
+    // 7 turns either way here (+15 on T14), killed on T17: 42 + 18 = 60 vs 48 + 12.
+    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 48, 11, 8, 0)).toBe(true);
+    expect(eruptionRace({ ...giant(100, 42), max_hp: 250 }, 49, 11, 8, 0)).toBe(false);
+  });
+
+  it("compares the eruption at the kill with our HP at the kill, not now (1VX145UJM8RZ T5)", async () => {
+    const { eruptionRace } = await import("../src/screens/combat-plan.js");
+    const { bossLossPerTurn, bossProfile } = await import("../src/strategy/boss-clock.js");
+    // A9 T5: Giant 159/250 after one Siphon (106 dealt in 4 turns), eruption 29, we have 69. Killed on T11
+    // (7 turns with the T9 Siphon) it explodes for 29 + 6 x 3 = 47 (it did: 47). At the clock's A9 loss a turn
+    // (5.9 at the time) we hold ~34 then, 34 + 12 < 47: race. It used to read 69 + 12 = 81 against 50: no
+    // race, and the HP guard swapped Bash+ lines for Defends twice that turn (at the kill it had 18 HP).
+    const t5 = { ...giant(159, 29), max_hp: 250 };
+    expect(eruptionRace(t5, 69, 5, 9, 5.9)).toBe(true);
+    // At A8's old 5.1 a turn: 69 - 30.6 + 12 = 50.4, just above 47.
+    expect(eruptionRace(t5, 69, 5, 9, 5.1)).toBe(false);
+    // No HP lost before the kill: 69 + 12 = 81 > 47.
+    expect(eruptionRace(t5, 69, 5, 9, 0)).toBe(false);
+    // By default the loss a turn is the boss clock's at this ascension.
+    const loss = bossLossPerTurn(bossProfile("WATERFALL_GIANT")!, 9).value;
+    expect(eruptionRace(t5, 69, 5, 9)).toBe(69 - 6 * loss + 12 <= 47);
   });
 });
 
