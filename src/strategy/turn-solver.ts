@@ -200,6 +200,11 @@ export interface PlayerSim {
   rupture?: number;
   /** Sloth: at most this many more cards can be played this turn. */
   maxPlays?: number | null;
+  /**
+   * Smoggy (SMOGGY_POWER: 「每回合你只能打出1张技能牌」): at most this many more Skills this turn; null for no
+   * cap. The solver planned two and the game refused the second (Living Fog, 51 logged fights).
+   */
+  maxSkills?: number | null;
   /** Damage at the end of the turn (Disintegration debuff); it hits block first. */
   endTurnHpLoss?: number;
   /** Surrounded: attacks from enemies we are not facing deal +50%; targeting an enemy turns us to it. */
@@ -385,8 +390,27 @@ export interface Outcome {
   kills: string[];
   /** Enemies taken to 0 HP that revive at once from Stock (Axebot): not kills. */
   restocked: string[];
-  /** `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). */
-  enemyHpAfter: { index: number; name: string; hp: number; vulnerable: number; weak: number; block?: number }[];
+  /**
+   * `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). What the line
+   * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter), and the Strength
+   * it gained for good this turn (Fight Me!, Enrage, Crab Rage; a temporary loss is not in it): the rollout's
+   * later turns go on from them.
+   */
+  enemyHpAfter: {
+    index: number;
+    name: string;
+    hp: number;
+    vulnerable: number;
+    weak: number;
+    block?: number;
+    artifact?: number;
+    slippery?: number;
+    curlUp?: number;
+    flutter?: number;
+    strengthGained?: number;
+    /** Shrink turns left on it (Beetle Juice's 4: its attacks 30% less). */
+    shrink?: number;
+  }[];
   incomingAfterBlock: number;
   energyLeft: number;
   vulnerableApplied: number;
@@ -408,6 +432,12 @@ export interface Outcome {
   startTurnKills: string[];
   /** Withers this plan adds to the hand (Withering Presence). */
   withersAdded: number;
+  /**
+   * Status cards this line's turn adds to our piles: Dazed into the draw pile from hits on a Personal Hive
+   * enemy, Wounds into the discard pile from unblocked Painful Stabs hits (the rollout adds them).
+   */
+  dazedAdded?: number;
+  woundsAdded?: number;
   /**
    * Score lost to waking a sleeper with chip damage (its free turns, at HP weight); 0 when none. An
    * outcome axis too, so a waking line can never dominate one that lets it sleep (1K5G F17 T1).
@@ -510,6 +540,8 @@ interface Sim {
   unmovableSpent: boolean;
   /** Attacks played in this plan (Stomp costs 1 less for each). */
   attacksPlayed: number;
+  /** Skills played in this plan (Smoggy's cap). */
+  skillsPlayed: number;
   /** Free attacks left this turn (Unrelenting). */
   freeAttacks: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
@@ -902,6 +934,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.strength -= player.tender ?? 0;
     next.tempDex -= player.tender ?? 0;
   }
+  if (card.type === "Skill") next.skillsPlayed += 1;
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
@@ -1305,15 +1338,34 @@ function randomVictim(sim: Pick<Sim, "enemies">): Sim["enemies"][number] | undef
   return best;
 }
 
-/** Non-attack damage (Juggernaut): ignores Vulnerable/Weak, still hits block. */
-function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): void {
+/**
+ * Non-attack damage (Inferno, Juggernaut, Kusarigama): no Vulnerable, Weak, Flutter or Slow (attack-only),
+ * but the enemy's own caps as for an attack (INTANGIBLE_POWER: 「将本回合受到的所有伤害和生命减少效果降低为1」;
+ * SLIPPERY_POWER: 「下一次要失去生命值时，只会失去1点」; Guarded/Soar halving, Hard to Kill, Hardened Shell),
+ * then block, and Curl Up (any damage). An Inferno line into an Intangible Nemesis counted 6 a hit, not 1.
+ */
+function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], raw: number): void {
+  let amount = enemy.halved ? Math.floor(raw * 0.5) : raw;
+  if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
+  if (enemy.intangible) amount = Math.min(amount, 1);
+  amount = Math.max(0, amount);
   const absorbed = Math.min(enemy.block, amount);
   enemy.block -= absorbed;
-  const loss = Math.min(enemy.hp, amount - absorbed);
+  let loss = amount - absorbed;
+  if (loss > 0 && (enemy.slippery ?? 0) > 0) {
+    loss = 1;
+    enemy.slippery = (enemy.slippery ?? 0) - 1;
+  }
+  if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) loss = Math.min(loss, Math.max(0, enemy.hpLossCap - enemy.lostThisTurn));
+  loss = Math.min(enemy.hp, loss);
   enemy.hp -= loss;
   enemy.lostThisTurn += loss;
   sim.damageDealt += loss;
   if (loss > 0) wake(enemy);
+  if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
+    enemy.block += enemy.curlUp ?? 0;
+    enemy.curlUp = 0;
+  }
   if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 
@@ -1753,6 +1805,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     }
     score += weights.damage * back;
   }
+  let woundsAdded = 0;
   if (incomingAfterBlock > 0) {
     const punish = living.reduce((sum, enemy) => sum + (enemy.punishesUnblocked ?? 0), 0);
     score -= punish;
@@ -1764,6 +1817,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       if (through <= 0) continue;
       const wounds = sim.enemies.find((enemy) => enemy.index === hit.enemy)?.woundsPerHit ?? 0;
       score -= WOUND_COST * wounds;
+      woundsAdded += wounds;
     }
   }
   if (input.player.keepsBlock && !winsFight) score += 0.4 * Math.max(0, blockLeft - incomingRaw);
@@ -1905,7 +1959,20 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       restocked: restocked.map((enemy) => enemy.name),
       enemyHpAfter: sim.enemies
         .filter((enemy) => input.enemies.find((start) => start.index === enemy.index)!.hp > 0)
-        .map((enemy) => ({ index: enemy.index, name: enemy.name, hp: Math.max(0, enemy.hp), vulnerable: enemy.vulnerable, weak: enemy.weak, block: Math.max(0, enemy.block) })),
+        .map((enemy) => ({
+          index: enemy.index,
+          name: enemy.name,
+          hp: Math.max(0, enemy.hp),
+          vulnerable: enemy.vulnerable,
+          weak: enemy.weak,
+          block: Math.max(0, enemy.block),
+          artifact: enemy.artifact,
+          slippery: enemy.slippery ?? 0,
+          curlUp: enemy.curlUp ?? 0,
+          flutter: enemy.flutter ?? 0,
+          strengthGained: enemy.strengthDelta,
+          shrink: enemy.shrink ?? 0,
+        })),
       incomingAfterBlock,
       energyLeft: sim.energy,
       vulnerableApplied: sim.vulnerableApplied,
@@ -1919,6 +1986,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      ...(sim.dazedAdded > 0 && !winsFight ? { dazedAdded: sim.dazedAdded } : {}),
+      ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
       lasting: lastingValue(sim, input, weights) - enrageCost + platingValue,
@@ -1934,7 +2003,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 
 export interface SolveResult {
@@ -2058,6 +2127,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
     attacksPlayed: 0,
+    skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,
     bombs: 0,
@@ -2125,8 +2195,10 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
+    const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
     for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
+      if (card.type === "Skill" && skillsLeft <= 0) continue;
       if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];

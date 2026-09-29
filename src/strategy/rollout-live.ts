@@ -25,19 +25,24 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
+import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { modelHandCard, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
+  ENEMY_SELF_POWERS,
   killOrders,
+  UNKNOWN_STATUS,
   loadFightValueGates,
   PLAYER_DEBUFFS,
   rolloutDecision,
   type DeckSummary,
+  type EnemyMove,
+  type EnemySelfPower,
   type EnemyTable,
   type FightKindName,
   type FightMeta,
@@ -121,7 +126,7 @@ function mode(counts: Record<string, number> | undefined): number | null {
  * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
  * DB has no per-ascension split (Terror Eel's Terror: Vulnerable 99 at every ascension).
  */
-export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: Partial<Record<PlayerDebuff, number>> } {
+export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
   const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
   const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
   const out: Partial<Record<PlayerDebuff, number>> = {};
@@ -129,7 +134,62 @@ export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: 
     const amount = mode(counts[id]);
     if (amount) out[id] = amount;
   }
-  return Object.keys(out).length > 0 ? { playerPowers: out } : {};
+  if (Object.keys(out).length === 0) return {};
+  // Alternatives: several powers whose uses add up to the move's (each use put one of them on us: the
+  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here.
+  const ids = Object.keys(out) as PlayerDebuff[];
+  const uses = (id: string, table: Record<string, Record<string, number>> | undefined) => Object.values(table?.[id] ?? {}).reduce((sum, n) => sum + n, 0);
+  const pooled = ids.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
+  const alternatives = ids.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  if (!alternatives) return { playerPowers: out };
+  const order = [...ids].sort((a, b) => uses(b, counts) - uses(a, counts) || uses(b, entry.player_powers_applied) - uses(a, entry.player_powers_applied));
+  return { playerPowers: out, playerPowerChoice: order };
+}
+
+/** The rollout's other self-buffs of a move (rollout.ts ENEMY_SELF_POWERS) at this ascension (selfGainAt). */
+export function selfPowersOf(entry: MoveEntry, asc: number): { selfPowers?: Partial<Record<EnemySelfPower, number>> } {
+  const out: Partial<Record<EnemySelfPower, number>> = {};
+  for (const id of ENEMY_SELF_POWERS) {
+    const amount = selfGainAt(entry, id, asc);
+    if (amount) out[id] = amount;
+  }
+  return Object.keys(out).length > 0 ? { selfPowers: out } : {};
+}
+
+/**
+ * HP a Heal move gives its user at this ascension: the monster DB's heal_by_asc (the nearest logged
+ * ascension), else the boss clock's logged numbers for the two bosses that heal (Siphon 10, 15 from A8;
+ * Ponder 30), else none.
+ */
+export function healOf(id: string, move: string, entry: MoveEntry | undefined, asc: number): number {
+  const logged = mode(countsAt(entry?.heal_by_asc, undefined, asc));
+  if (logged) return logged;
+  if (id === "WATERFALL_GIANT" && move === "SIPHON_MOVE") return asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
+  if (id === "KNOWLEDGE_DEMON" && move === "PONDER_MOVE") return PONDER_HEAL;
+  return 0;
+}
+
+/**
+ * The status cards a move puts in our piles (rollout.ts EnemyMove.statusCards): the intent's most common
+ * count (status_cards), the most common card it added (status_card_ids; null when the DB has none) and pile
+ * (status_card_pile, the discard pile when unknown).
+ */
+export function statusCardsOf(entry: MoveEntry): Pick<EnemyMove, "statusCards"> {
+  const count = mode(entry.status_cards);
+  if (!count) return {};
+  const cardId = Object.entries(entry.status_card_ids ?? {}).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const pile = (entry.status_card_pile?.["draw"] ?? 0) > (entry.status_card_pile?.["discard"] ?? 0) ? "draw" : "discard";
+  return { statusCards: [{ cardId, count, pile }] };
+}
+
+/**
+ * A status card as a pile card (combat-plan pileCardModels' model of the ones already in the piles): its
+ * game text's held penalty (Beckon 6, Burn 2), never played.
+ */
+export function statusCardModel(cardId: string, knowledge: Knowledge, index: number): CardModel {
+  const info = knowledge.card(cardId);
+  const model = modelHandCard({ card_id: cardId, upgraded: false, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0), validTargets: [] };
 }
 
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
@@ -140,20 +200,28 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
   const table: EnemyTable = { moves: {}, next: {} };
   for (const [move, entry] of Object.entries(moves ?? {})) {
     // At this ascension when logged there; else the nearest logged one's scaled by the measured ratio
-    // (A9 hits harder than A8: 110 of 122 moves), marked estimated.
+    // (A9 hits harder than A8: 110 of 122 moves), marked estimated. A move whose base was never measured
+    // (every logged turn had a debuff in the way: the Queen's Off With Your Head and Execution, the Amalgam's
+    // Beam and Tackles) is its most common shown hit, Strength and our Vulnerable already in it, with its
+    // own hits (7x5, not one 43 re-scaled to 67; consistency #4).
     const logged = moveDamageAt(db, id, move, asc);
-    const hits = logged?.hits ?? 1;
+    const shown = logged ? null : shownDamageAt(db, id, move, asc);
+    const hits = logged?.hits ?? shown?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
     table.moves[move] = {
-      damage: logged?.perHit ?? (avg > 0 ? avg / hits : 0),
+      damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
+      ...(shown ? { shown: true } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
       block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
+      ...selfPowersOf(entry, asc),
+      ...(healOf(id, move, entry, asc) > 0 ? { heal: healOf(id, move, entry, asc) } : {}),
+      ...statusCardsOf(entry),
       ...playerPowersOf(entry, asc),
-      ...(logged?.estimated ? { estimated: true } : {}),
+      ...(logged?.estimated || shown?.estimated ? { estimated: true } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
@@ -173,6 +241,21 @@ export function powersOf(holder: Record<string, unknown>): Record<string, number
     if (id) out[id] = typeof power["amount"] === "number" ? power["amount"] : 1;
   }
   return out;
+}
+
+/** The fight turn an energy relic starts giving on (「从你的第3回合开始」, Bread's first turn a loss). */
+const RELIC_ENERGY_FROM: Record<string, number> = { PAELS_FLESH: 3, BREAD: 2 };
+
+/**
+ * The energy relics held (boss-clock ENERGY_RELICS: 1 energy a turn that run.max_energy does not show), as
+ * the rollout's later turns get them (rollout.ts RolloutInput.relicEnergy). A Pumpkin Candle that has gone out
+ * (stack 0: logged 3 energy, 4 while lit) gives none.
+ */
+export function relicEnergyOf(runRaw: Record<string, unknown>): { amount: number; from: number }[] {
+  return asArray(runRaw["relics"])
+    .map(asRecord)
+    .filter((relic) => ENERGY_RELICS.has(str(relic["relic_id"])) && !(str(relic["relic_id"]) === "PUMPKIN_CANDLE" && relic["stack"] === 0))
+    .map((relic) => ({ amount: 1, from: RELIC_ENERGY_FROM[str(relic["relic_id"])] ?? 1 }));
 }
 
 /** deck_summary() of tools/build-fight-value.py. */
@@ -372,6 +455,10 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       const table = enemyTable(e.id, meta.asc, db, mm);
       if (table) tables[e.id] = table;
     }
+    // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
+    const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
+    for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+    const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
     const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
     const handBase = args.solver.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null));
     const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
@@ -390,6 +477,8 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       mm,
       model,
       gates,
+      statusCards,
+      relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,

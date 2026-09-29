@@ -842,3 +842,683 @@ describe("Plating wears off one stack a turn in the rollout (「覆甲会在你�
     expect(losses(line)).toEqual([7, 8, 9, 10]);
   });
 });
+
+describe("later rollout turns get their own per-turn state, not the decision's (VQKX9AD1YHKS F17 T5: Ringing's 1 card on every turn)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (player: Partial<PlayerSim>, playerPowers: Record<string, number>, table = WAIT, id = "E") => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, ...player },
+      enemies: [{ index: 0, name: id, hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id, move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { [id]: table },
+      playerPowers,
+    }).lines[0]!;
+  };
+  const on = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!;
+
+  it("Ringing: one card on the decision's turn only; a later turn plays its whole hand (5 free Strikes, 30)", () => {
+    expect(on(run({ maxPlays: 0 }, { RINGING_POWER: 1 }), 2).dmg.mean).toBe(30);
+  });
+
+  it("Sloth 3 with two cards already played: 1 left now, 3 on every later turn", () => {
+    expect(on(run({ maxPlays: 1 }, { SLOTH_POWER: 3 }), 2).dmg.mean).toBe(18);
+    expect(on(run({ maxPlays: 1 }, { SLOTH_POWER: 3 }), 4).dmg.mean).toBe(18);
+  });
+
+  it("Intangible 1 on us covers this turn only; Intangible 2 the next one too", () => {
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 1 }, HIT), 2).loss.mean).toBe(10);
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 2 }, HIT), 2).loss.mean).toBe(1);
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 2 }, HIT), 3).loss.mean).toBe(10);
+  });
+
+  it("Constrict hurts only while its Slithering Strangler lives; Disintegration every turn", () => {
+    expect(on(run({ endTurnHpLoss: 3 }, { CONSTRICT_POWER: 3 }), 2).loss.mean).toBe(0);
+    expect(on(run({ endTurnHpLoss: 3 }, { CONSTRICT_POWER: 3 }, WAIT, "SLITHERING_STRANGLER"), 2).loss.mean).toBe(3);
+    expect(on(run({ endTurnHpLoss: 5 }, { DISINTEGRATION_POWER: 5 }), 3).loss.mean).toBe(5);
+  });
+});
+
+describe("once-a-fight and decaying enemy powers carry from turn to turn, not restored every simulated turn (Vantom Slippery: fight over 0/8 vs 29% real)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (extra: Partial<EnemySim>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Slippery 3: three hits of 1 on the first simulated turn, then every hit lands", () => {
+    // 5 free Strikes a turn: 1 + 1 + 1 + 6 + 6 = 15, then 30 a turn.
+    expect(dmg(run({ slippery: 3 }))).toEqual([15, 30, 30, 30]);
+  });
+
+  it("Curl Up (once a fight): its block once, not on every turn", () => {
+    // The first hit lands (6) and curls it up for 20 block: 24 more into 20 block, 4 through.
+    expect(dmg(run({ curlUp: 20 }))).toEqual([10, 30, 30, 30]);
+  });
+
+  it("Flutter 5: five halved hits, then full ones", () => {
+    expect(dmg(run({ flutter: 5 }))).toEqual([15, 30, 30, 30]);
+  });
+});
+
+describe("temporary Strength ends with the decision's turn, Strength an enemy gains for good carries (review 09-29 consistency #7, #8)", () => {
+  const HIT: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (o: { hand?: CardModel[]; strengthNow?: number; playerPowers?: Record<string, number>; enemyStrength?: number; enemyPowers?: Record<string, number>; plays?: string[] }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = o.hand ?? [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, strengthNow: o.strengthNow ?? 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 20 + (o.enemyStrength ?? 0), hits: 1 }] }],
+      fightKind: "elite",
+    };
+    const plans = solveTurn(solver).plans;
+    const plan = o.plays ? plans.find((p) => p.steps.map((step) => step.cardId).join(",") === o.plays!.join(","))! : plans[0]!;
+    expect(plan).toBeDefined();
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "HIT", strength: o.enemyStrength ?? 0, powers: o.enemyPowers ?? {} }],
+      tables: { E: HIT },
+      playerPowers: o.playerPowers ?? {},
+      options: { budgetMs: 1e9, seed: 3, include: [plan], now: fakeClock(0.01) },
+    }).lines.find((line) => line.plan === plan)!;
+  };
+  const on = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!;
+
+  it("Setup Strike's +3 this turn: later turns' Strikes hit for 6, not 9", () => {
+    const line = run({ strengthNow: 3, playerPowers: { STRENGTH_POWER: 3, SETUP_STRIKE_POWER: 3 } });
+    expect(on(line, 2).dmg.mean).toBe(30);
+    // Strength for good (Inflame's) stays.
+    expect(on(run({ strengthNow: 3, playerPowers: { STRENGTH_POWER: 3 } }), 2).dmg.mean).toBe(45);
+  });
+
+  it("Mangle's -10 is this turn's only: the enemy's later hits are back at full Strength", () => {
+    const line = run({ enemyStrength: -10, enemyPowers: { STRENGTH_POWER: -10, MANGLE_POWER: 10 } });
+    expect(on(line, 2).loss.mean).toBe(20);
+  });
+
+  it("Fight Me!'s +5 enemy Strength is paid on every later hit too", () => {
+    const fightMe = card(1, "FIGHT_ME", { damage: 6, cost: 0, enemyStrength: 5 });
+    const hand = [strike(0), fightMe];
+    const withIt = run({ hand, plays: ["FIGHT_ME"] });
+    const without = run({ hand, plays: ["STRIKE"] });
+    expect(on(without, 2).loss.mean).toBe(20);
+    expect(on(withIt, 2).loss.mean).toBe(25);
+  });
+});
+
+describe("enemy Strength that grows every turn (Ritual, Territorial, High Voltage; Cultists further loss 5.9 forecast vs 13.6 real)", () => {
+  const CULTIST: EnemyTable = {
+    moves: { INCANTATION_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: { RITUAL_POWER: 2 } }, DARK_STRIKE_MOVE: { damage: 9, hits: 1, strength: 0, block: 0 } },
+    next: { INCANTATION_MOVE: { DARK_STRIKE_MOVE: 1 }, DARK_STRIKE_MOVE: { DARK_STRIKE_MOVE: 1 } },
+  };
+  const run = (move: string, powers: Record<string, number>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Cultist", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: move === "DARK_STRIKE_MOVE" ? [{ damage: 9, hits: 1 }] : [] }],
+      fightKind: "monster",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "CULTIST", move, strength: 0, powers }],
+      tables: { CULTIST },
+    }).lines[0]!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+
+  it("Ritual 2 up: every later Dark Strike 2 harder than the one before", () => {
+    expect(losses(run("DARK_STRIKE_MOVE", { RITUAL_POWER: 2 }))).toEqual([11, 13, 15, 17]);
+  });
+
+  it("Incantation gives Ritual 2 from its next turn on (none on its own turn)", () => {
+    expect(losses(run("INCANTATION_MOVE", {}))).toEqual([9, 11, 13, 15]);
+  });
+
+  it("Territorial 1 (Byrdonis) and High Voltage 2 (Zapbot): the amount each turn", () => {
+    expect(losses(run("DARK_STRIKE_MOVE", { TERRITORIAL_POWER: 1 }))).toEqual([10, 11, 12, 13]);
+    expect(losses(run("DARK_STRIKE_MOVE", { HIGH_VOLTAGE_POWER: 2 }))).toEqual([11, 13, 15, 17]);
+  });
+
+  it("the table reads a move's Ritual from the monster DB at this ascension", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = { CULTIST: { moves: { INCANTATION_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { RITUAL_POWER: { "5": 9 } }, "9": { RITUAL_POWER: { "6": 3 } } } } } } };
+    expect(enemyTable("CULTIST", 9, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 6 });
+    expect(enemyTable("CULTIST", 8, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 5 });
+  });
+});
+
+describe("what enemy moves give themselves besides Strength (Soul Fysh's Fade; fight over 0.39 forecast vs 0.27 real)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const cycle = (buff: string, gain: Partial<Record<string, number>>): EnemyTable => ({
+    moves: { [buff]: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: gain }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { [buff]: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  });
+  const run = (table: EnemyTable, move: string) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move, strength: 0, powers: {} }],
+      tables: { E: table },
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Fade: Intangible through our next turn, every hit 1", () => {
+    expect(dmg(run(cycle("FADE_MOVE", { INTANGIBLE_POWER: 1 }), "FADE_MOVE"))).toEqual([5, 30, 30, 30]);
+  });
+
+  it("Soar: halved until its next move; Flutter: that many halved hits", () => {
+    expect(dmg(run(cycle("JUDICIAL_FLIGHT", { SOAR_POWER: 1 }), "JUDICIAL_FLIGHT"))).toEqual([15, 30, 30, 30]);
+    expect(dmg(run(cycle("FLUTTER_MOVE", { FLUTTER_POWER: 5 }), "FLUTTER_MOVE"))).toEqual([15, 30, 30, 30]);
+  });
+
+  it("Thorns until its next move: the policy's Strikes cost 1 HP each on that turn only", () => {
+    const line = run(cycle("SPIKEN_MOVE", { THORNS_POWER: 1 }), "SPIKEN_MOVE");
+    expect(line.perTurn.map((t) => t.loss.mean)).toEqual([5, 0, 0, 0]);
+    expect(dmg(line)).toEqual([30, 30, 30, 30]);
+  });
+
+  it("the table reads them from the monster DB", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = { SOUL_FYSH: { moves: { FADE_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { INTANGIBLE_POWER: { "1": 9 } } } } } } };
+    expect(enemyTable("SOUL_FYSH", 8, db, {})!.moves["FADE_MOVE"]!.selfPowers).toEqual({ INTANGIBLE_POWER: 1 });
+  });
+});
+
+describe("enemy Plating and Rampart block in the later turns (Sewer Clam: fight over 1.00 forecast vs 0.80 real)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const run = (draw: CardModel[], foes: { id: string; powers: Record<string, number> }[], t = 1) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: foes.map((_, i) => ({ index: i, name: `E${i}`, hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] })),
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      meta: { ...META, t },
+      piles: { draw, discard: [], handBase: hand },
+      enemies: foes.map((foe, i) => ({ index: i, id: foe.id, move: "WAIT", strength: 0, powers: foe.powers })),
+      tables: Object.fromEntries(foes.map((foe) => [foe.id, WAIT])),
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const sweep = (i: number) => card(i, "SWEEP", { damage: 6, cost: 0, target: "all", validTargets: [] });
+
+  it("Plating 8 on T1: 8, 7, 6, 5 block at our next turns", () => {
+    expect(dmg(run(Array.from({ length: 30 }, (_, k) => free(10 + k)), [{ id: "SEWER_CLAM", powers: { PLATING_POWER: 8 } }]))).toEqual([22, 23, 24, 25]);
+  });
+
+  it("Rampart: 25 block on the Turret Operator every turn while the Living Shield lives", () => {
+    const line = run(Array.from({ length: 30 }, (_, k) => sweep(10 + k)), [{ id: "LIVING_SHIELD", powers: { RAMPART_POWER: 25 } }, { id: "TURRET_OPERATOR", powers: {} }]);
+    expect(dmg(line)).toEqual([35, 35, 35, 35]);
+  });
+});
+
+describe("Waterfall Giant and Knowledge Demon in the later turns: the eruption grows, Siphon / Ponder heal (consistency #10)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (table: EnemyTable, hp: number, maxHp: number, extra: Partial<EnemySim> = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Giant", hp, maxHp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "WATERFALL_GIANT", move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { WATERFALL_GIANT: table },
+    }).lines[0]!;
+  };
+
+  it("each Giant move adds its Steam Eruption: killed on T3 after two moves it blows for 10 + 3 + 3", () => {
+    const stomp: EnemyTable = { moves: { STOMP_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, selfPowers: { STEAM_ERUPTION_POWER: 3 } } }, next: { STOMP_MOVE: { STOMP_MOVE: 1 } } };
+    // 40 HP: 30 on T2, the kill on T3, the blast at the end of T4 through no block.
+    const line = run(stomp, 40, 250, { eruption: 10 });
+    expect(line.perTurn.find((t) => t.turn === 4)!.loss.mean).toBe(16);
+  });
+
+  it("Siphon heals 15 each enemy turn: 30 a turn into 500 HP leaves 440 at T5, not 380", () => {
+    const siphon: EnemyTable = { moves: { SIPHON_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, heal: 15 } }, next: { SIPHON_MOVE: { SIPHON_MOVE: 1 } } };
+    expect(run(siphon, 500, 999).enemyHpLeft).toBe(440);
+  });
+
+  it("the heal comes from the monster DB at this ascension, the boss clock's numbers without it", async () => {
+    const { healOf } = await import("../src/strategy/rollout-live.js");
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", { heal_by_asc: { "8": { "15": 6 }, "9": { "18": 2 } } }, 9)).toBe(18);
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 8)).toBe(15);
+    expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 5)).toBe(10);
+    expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", undefined, 8)).toBe(30);
+    expect(healOf("KNOWLEDGE_DEMON", "SLAP_MOVE", undefined, 8)).toBe(0);
+  });
+});
+
+describe("status cards enemy moves add go into the rollout's piles (coverage gap 2: ~800 fights, none added)", () => {
+  const beckon = card(700, "BECKON", { type: "Status", playable: false, target: "self", validTargets: [], heldPenalty: 6, heldHpLoss: 6 });
+  const wound = card(701, "WOUND", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const FYSH: EnemyTable = {
+    moves: { BECKON_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, statusCards: [{ cardId: "BECKON", count: 2, pile: "discard" }] }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { BECKON_MOVE: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  };
+  const run = (statusCards?: Record<string, CardModel>) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "Soul Fysh", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      // Nothing left to draw: next turn's hand is the discard pile reshuffled, the Strike and whatever Beckon added.
+      piles: { draw: [], discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "SOUL_FYSH", move: "BECKON_MOVE", strength: 0, powers: {} }],
+      tables: { SOUL_FYSH: FYSH },
+      ...(statusCards ? { statusCards } : {}),
+    }).lines[0]!;
+  };
+
+  it("Beckon's two Beckons are drawn next turn and held: 12 HP", () => {
+    expect(run({ BECKON: beckon, WOUND: wound }).perTurn[0]!.loss.mean).toBe(12);
+  });
+
+  it("statusCardsOf: the intent's count, the DB's card and pile; an unnamed card is left to the stand-in", async () => {
+    const { statusCardsOf } = await import("../src/strategy/rollout-live.js");
+    expect(statusCardsOf({ status_cards: { "2": 30 }, status_card_ids: { BECKON: 58, DAZED: 1 }, status_card_pile: { discard: 59 } })).toEqual({ statusCards: [{ cardId: "BECKON", count: 2, pile: "discard" }] });
+    expect(statusCardsOf({ status_cards: { "3": 9 }, status_card_ids: { DAZED: 27 }, status_card_pile: { draw: 20, discard: 7 } })).toEqual({ statusCards: [{ cardId: "DAZED", count: 3, pile: "draw" }] });
+    expect(statusCardsOf({ status_cards: { "3": 9 } })).toEqual({ statusCards: [{ cardId: null, count: 3, pile: "discard" }] });
+    expect(statusCardsOf({ n_seen: 4 })).toEqual({});
+  });
+});
+
+describe("status cards our own turn makes go into the rollout's piles; Withering Presence counts on (rollout.ts:1274 stripped it)", () => {
+  const dazed = card(702, "DAZED", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const wound = card(701, "WOUND", { type: "Status", playable: false, target: "self", validTargets: [] });
+  const wither = card(703, "WITHER", { type: "Status", playable: false, target: "self", validTargets: [], heldPenalty: 3 });
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (o: { hand: CardModel[]; draw: CardModel[]; enemy?: Partial<EnemySim>; player?: Partial<PlayerSim>; wither?: SolverInput["wither"] }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      hand: o.hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, ...o.player },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...o.enemy }],
+      fightKind: "elite",
+      ...(o.wither ? { wither: o.wither } : {}),
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: o.draw, discard: [], handBase: o.hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+      statusCards: { DAZED: dazed, WOUND: wound, WITHER: wither },
+    }).lines[0]!;
+  };
+
+  it("Personal Hive: three hits put three Dazed on top of an empty draw pile, next turn draws them", () => {
+    const hand = [free(0), free(1), free(2)];
+    const line = run({ hand, draw: [], enemy: { dazedPerHit: 1 } });
+    expect(line.plan.outcome.dazedAdded).toBe(3);
+    // Next hand: the 3 Dazed, then 2 of the reshuffled Strikes.
+    expect(line.perTurn[0]!.dmg.mean).toBe(12);
+  });
+
+  it("Withering Presence goes on counting in the later turns: every 3rd card adds a Wither held for 3", () => {
+    const line = run({ hand: [strike(0)], draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), player: { maxPlays: 0 }, wither: { every: 3, played: 2, damage: 3 } });
+    expect(line.perTurn[0]!.loss.mean).toBeGreaterThan(0);
+  });
+});
+
+describe("our debuffs in the rollout: Tender, Smoggy, Tangled, Chains of Binding, Shrink and the curses a later move puts on us (coverage gap 10)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const freeDefend = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5, cost: 0 });
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const HIT: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const debuffs = (powers: Partial<Record<string, number>>, choice?: string[]): EnemyTable => ({
+    moves: { CURSE: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: powers, ...(choice ? { playerPowerChoice: choice as never } : {}) }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { CURSE: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  });
+  const run = (o: { table?: EnemyTable; move?: string; draw?: CardModel[]; player?: Partial<PlayerSim>; playerPowers?: Record<string, number>; cardsPlayed?: number }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const table = o.table ?? WAIT;
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, ...o.player },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+      ...(o.cardsPlayed ? { cardsPlayedThisTurn: o.cardsPlayed } : {}),
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: o.draw ?? Array.from({ length: 40 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: o.move ?? Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { E: table },
+      playerPowers: o.playerPowers ?? {},
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Tender lasts the fight: each later turn's Strikes hit 6, 5, 4, 3, 2; the -1 of this turn's card comes back", () => {
+    expect(dmg(run({ player: { tender: 1, strengthNow: -1 }, playerPowers: { TENDER_POWER: 1, STRENGTH_POWER: -1 }, cardsPlayed: 1 }))).toEqual([20, 20, 20, 20]);
+  });
+
+  it("Smoggy: one Skill a later turn (5 free Defends block 5 of a 20 hit)", () => {
+    const line = run({ table: HIT, draw: Array.from({ length: 40 }, (_, k) => freeDefend(10 + k)), playerPowers: { SMOGGY_POWER: 1 } });
+    expect(line.perTurn[0]!.loss.mean).toBe(15);
+  });
+
+  it("Ringing and Tangled a move puts on us cap / price the next turn only", () => {
+    expect(dmg(run({ table: debuffs({ RINGING_POWER: 1 }) }))).toEqual([6, 30, 30, 30]);
+    const strikes = Array.from({ length: 40 }, (_, k) => strike(10 + k));
+    expect(dmg(run({ table: debuffs({ TANGLED_POWER: 1 }), draw: strikes }))).toEqual([6, 18, 18, 18]);
+  });
+
+  it("Chains of Binding: the first 3 cards drawn are Soulbound, one of them playable a turn", () => {
+    expect(dmg(run({ table: debuffs({ CHAINS_OF_BINDING_POWER: 3 }) }))).toEqual([18, 18, 18, 18]);
+  });
+
+  it("the Shrinker's Shrink -1 is for the fight; Sloth, Mind Rot, Waste Away from a move from then on", () => {
+    expect(dmg(run({ table: debuffs({ SHRINK_POWER: -1 }) }))).toEqual([20, 20, 20, 20]);
+    expect(dmg(run({ playerPowers: { SHRINK_POWER: -1 }, player: { shrunk: true } }))).toEqual([20, 20, 20, 20]);
+    expect(dmg(run({ table: debuffs({ SLOTH_POWER: 3 }) }))).toEqual([18, 18, 18, 18]);
+    expect(dmg(run({ table: debuffs({ MIND_ROT_POWER: 1 }) }))).toEqual([24, 24, 24, 24]);
+    const strikes = Array.from({ length: 40 }, (_, k) => strike(10 + k));
+    expect(dmg(run({ table: debuffs({ WASTE_AWAY_POWER: 1 }), draw: strikes }))).toEqual([12, 12, 12, 12]);
+  });
+
+  it("the Knowledge Demon's curse is one pick (the first of the logged order we do not hold), not all four", () => {
+    const curse = debuffs({ SLOTH_POWER: 3, MIND_ROT_POWER: 1, WASTE_AWAY_POWER: 1, DISINTEGRATION_POWER: 6 }, ["MIND_ROT_POWER", "SLOTH_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"]);
+    const line = run({ table: curse });
+    expect(dmg(line)).toEqual([24, 24, 24, 24]);
+    expect(line.perTurn[0]!.loss.mean).toBe(0);
+    // Mind Rot already held: Sloth is the pick.
+    expect(dmg(run({ table: curse, playerPowers: { MIND_ROT_POWER: 1 } }))).toEqual([18, 18, 18, 18]);
+  });
+
+  it("playerPowersOf: alternatives when the powers' uses add up to the move's, ordered by this ascension's picks", async () => {
+    const { playerPowersOf } = await import("../src/strategy/rollout-live.js");
+    const entry = {
+      n_seen: 109,
+      player_powers_applied: { SLOTH_POWER: { "3": 38 }, MIND_ROT_POWER: { "1": 39 }, WASTE_AWAY_POWER: { "1": 19 }, DISINTEGRATION_POWER: { "6": 5, "7": 2, "8": 2 } },
+      player_powers_applied_by_asc: { "8": { SLOTH_POWER: { "3": 16 }, MIND_ROT_POWER: { "1": 19 }, WASTE_AWAY_POWER: { "1": 8 }, DISINTEGRATION_POWER: { "7": 1, "8": 1 } } },
+    };
+    expect(playerPowersOf(entry, 8)).toEqual({
+      playerPowers: { SLOTH_POWER: 3, DISINTEGRATION_POWER: 7, MIND_ROT_POWER: 1, WASTE_AWAY_POWER: 1 },
+      playerPowerChoice: ["MIND_ROT_POWER", "SLOTH_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"],
+    });
+    // Weak and Vulnerable together on every use: both, no choice.
+    expect(playerPowersOf({ n_seen: 10, player_powers_applied: { WEAK_POWER: { "2": 10 }, VULNERABLE_POWER: { "2": 10 } } }, 8)).toEqual({ playerPowers: { VULNERABLE_POWER: 2, WEAK_POWER: 2 } });
+  });
+});
+
+describe("Smoggy caps Skills in the turn solver too (「每回合你只能打出1张技能牌」)", () => {
+  it("one Skill left: the second Defend is not planned; none left: no Skill at all", () => {
+    const defend2 = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    const base: SolverInput = {
+      hand: [defend2(0), defend2(1), strike(2)],
+      player: { hp: 50, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false },
+      enemies: [{ index: 0, name: "Fog", hp: 60, maxHp: 60, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 20, hits: 1 }] }],
+      fightKind: "monster",
+    };
+    const skills = (input: SolverInput) => Math.max(...solveTurn(input).plans.map((plan) => plan.steps.filter((step) => step.cardId === "DEFEND").length));
+    expect(skills(base)).toBe(2);
+    expect(skills({ ...base, player: { ...base.player, maxSkills: 1 } })).toBe(1);
+    expect(skills({ ...base, player: { ...base.player, maxSkills: 0 } })).toBe(0);
+  });
+});
+
+describe("moves with no measured base (Queen, Torch Head Amalgam): their shown hits, not re-scaled (consistency #4: Off With Your Head 67x1 vs 7x5)", () => {
+  const QUEEN_DB = {
+    QUEEN: {
+      moves: {
+        OFF_WITH_YOUR_HEAD_MOVE: { n_seen: 15, avg_total_shown: 43, damage_by_asc: { "8": { shown: { "7x5": 3, "12x5": 1 }, base_per_hit: {}, hits: { "5": 4 } } } },
+        EXECUTION_MOVE: { n_seen: 8, avg_total_shown: 25, damage_by_asc: { "8": { shown: { "25x1": 2 }, base_per_hit: {}, hits: { "1": 2 } } } },
+      },
+    },
+  };
+
+  it("enemyTable: the shown hit and its hits, marked shown", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const table = enemyTable("QUEEN", 8, QUEEN_DB, { QUEEN: { next: {}, damage: { OFF_WITH_YOUR_HEAD_MOVE: 43, EXECUTION_MOVE: 25 } } })!;
+    expect(table.moves["OFF_WITH_YOUR_HEAD_MOVE"]).toMatchObject({ damage: 7, hits: 5, shown: true });
+    expect(table.moves["EXECUTION_MOVE"]).toMatchObject({ damage: 25, hits: 1, shown: true });
+  });
+
+  it("the rollout hits for the shown 7x5 under our Vulnerable and her Strength, not (43 + 2) x 1.5", () => {
+    const HEAD: EnemyTable = { moves: { OFF_WITH_YOUR_HEAD_MOVE: { damage: 7, hits: 5, strength: 0, block: 0, shown: true } }, next: { OFF_WITH_YOUR_HEAD_MOVE: { OFF_WITH_YOUR_HEAD_MOVE: 1 } } };
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, vulnerable: true },
+      enemies: [{ index: 0, name: "Queen", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    const line = rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "QUEEN", move: "OFF_WITH_YOUR_HEAD_MOVE", strength: 2, powers: { STRENGTH_POWER: 2 } }],
+      tables: { QUEEN: HEAD },
+      playerPowers: { VULNERABLE_POWER: 99 },
+    }).lines[0]!;
+    expect(line.perTurn[0]!.loss.mean).toBe(35);
+  });
+});
+
+describe("energy relics in the rollout's later turns (consistency #9: Pumpkin Candle, Blessed Antler, Pael's Flesh, Spiked Gauntlets)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const run = (relicEnergy?: { amount: number; from: number }[]) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+      turn: 1,
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: {} }],
+      tables: { E: WAIT },
+      ...(relicEnergy ? { relicEnergy } : {}),
+    }).lines[0]!.perTurn.map((t) => t.dmg.mean);
+  };
+
+  it("a relic's energy every turn: four 1-cost Strikes, not three; Pael's Flesh from turn 3", () => {
+    expect(run()).toEqual([18, 18, 18, 18]);
+    expect(run([{ amount: 1, from: 1 }])).toEqual([24, 24, 24, 24]);
+    expect(run([{ amount: 1, from: 3 }])).toEqual([18, 24, 24, 24]);
+  });
+
+  it("relicEnergyOf: the energy relics held, Pael's Flesh from T3, a Pumpkin Candle only while lit", async () => {
+    const { relicEnergyOf } = await import("../src/strategy/rollout-live.js");
+    expect(relicEnergyOf({ relics: [{ relic_id: "BURNING_BLOOD" }, { relic_id: "BLESSED_ANTLER" }, { relic_id: "PAELS_FLESH" }, { relic_id: "PUMPKIN_CANDLE", stack: 3 }] })).toEqual([
+      { amount: 1, from: 1 },
+      { amount: 1, from: 3 },
+      { amount: 1, from: 1 },
+    ]);
+    expect(relicEnergyOf({ relics: [{ relic_id: "PUMPKIN_CANDLE", stack: 0 }] })).toEqual([]);
+  });
+});
+
+describe("non-attack damage meets the enemy's Intangible, Slippery and caps (consistency #12: Inferno 6 into Intangible counted 6)", () => {
+  const bloodletting = (i: number) => card(i, "BLOODLETTING", { type: "Skill", target: "self", validTargets: [], cost: 0, hpLoss: 3, energyGain: 2 });
+  const foe = (extra: Partial<EnemySim>): EnemySim => ({ index: 0, name: "Nemesis", hp: 200, maxHp: 200, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra });
+  const solve = (hand: CardModel[], player: Partial<PlayerSim>, enemy: EnemySim) =>
+    solveTurn({ hand, player: { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, ...player }, enemies: [enemy], fightKind: "boss" }).plans;
+  const playing = (plans: ReturnType<typeof solve>, id: string) => plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === id)!;
+
+  it("Inferno's 6 per HP loss: 1 into an Intangible enemy, 1 and a Slippery stack into a Slippery one", () => {
+    expect(playing(solve([bloodletting(0)], { inferno: 6 }, foe({})), "BLOODLETTING").outcome.damageDealt).toBe(6);
+    expect(playing(solve([bloodletting(0)], { inferno: 6 }, foe({ intangible: true })), "BLOODLETTING").outcome.damageDealt).toBe(1);
+    const slippery = playing(solve([bloodletting(0)], { inferno: 6 }, foe({ slippery: 2 })), "BLOODLETTING").outcome;
+    expect(slippery.damageDealt).toBe(1);
+    expect(slippery.enemyHpAfter[0]!.slippery).toBe(1);
+  });
+
+  it("Juggernaut's 6 per block gained: 1 into Intangible, capped by Hard to Kill", () => {
+    const defend0 = card(0, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    expect(playing(solve([defend0], { juggernaut: 6 }, foe({ intangible: true })), "DEFEND").outcome.damageDealt).toBe(1);
+    expect(playing(solve([defend0], { juggernaut: 6 }, foe({ perHitCap: 4 })), "DEFEND").outcome.damageDealt).toBe(4);
+  });
+
+  it("the rollout's start-of-turn Inferno meets a Slippery enemy's stacks", () => {
+    const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [defend(0)];
+    const solver: SolverInput = { ...input.solver, hand, player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, inferno: 6, startTurnHpLoss: 1, turnStartAoe: 6 }, enemies: [foe({ slippery: 9 })], fightKind: "boss" };
+    const line = rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => defend(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: { SLIPPERY_POWER: 9, INFERNO_POWER: 6 } }],
+      tables: { E: WAIT },
+      playerPowers: { INFERNO_POWER: 6 },
+    }).lines[0]!;
+    expect(line.perTurn.map((t) => t.dmg.mean)).toEqual([1, 1, 1, 1]);
+  });
+});
+
+describe("the lasting part of a potion drunk in the line reaches the later turns (consistency #13: Heart of Iron's Plating)", () => {
+  const potion = (id: string, overrides: Partial<CardModel>) => card(100, `POTION:${id}:0`, { type: "Potion", target: "self", validTargets: [], cost: 0, ...overrides });
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const run = (drink: CardModel | null, o: { draw?: CardModel[]; table?: EnemyTable; hp?: number; foe?: Partial<EnemySim> } = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = drink ? [drink] : [strike(0)];
+    const table = o.table ?? HIT;
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: o.hp ?? 200, maxHp: 200, maxPlays: 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 1 }], ...o.foe }],
+      fightKind: "boss",
+    };
+    const plans = solveTurn(solver).plans;
+    const plan = drink ? plans.find((p) => p.steps.some((step) => step.cardId === drink.cardId))! : plans[0]!;
+    expect(plan).toBeDefined();
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans,
+      piles: { draw: o.draw ?? Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand.map(() => null) },
+      enemies: [{ index: 0, id: "E", move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { E: table },
+      potions: drink ? 1 : 0,
+      options: { budgetMs: 1e9, seed: 3, include: [plan], now: fakeClock(0.01) },
+    }).lines.find((line) => line.plan === plan)!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+
+  it("Heart of Iron: Plating 7 blocks 6, 5, 4, 3 of the later 10-damage hits", () => {
+    expect(losses(run(potion("HEART_OF_IRON", { plating: 7, special: "plating" })))).toEqual([4, 5, 6, 7]);
+  });
+
+  it("Dexterity Potion: +2 block on every later Defend", () => {
+    const defends = Array.from({ length: 40 }, (_, k) => defend(10 + k));
+    // Three Defends a turn: 15 block, 21 with the +2.
+    expect(losses(run(null, { draw: defends }))).toEqual([0, 0, 0, 0]);
+    const heavy: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    expect(losses(run(null, { draw: defends, table: heavy }))).toEqual([5, 5, 5, 5]);
+    expect(losses(run(potion("DEXTERITY_POTION", { special: "dexterity" }), { draw: defends, table: heavy }))).toEqual([0, 0, 0, 0]);
+  });
+
+  it("Regen 5: heals 4, 3, 2, 1 at the end of the later turns", () => {
+    expect(losses(run(potion("REGEN_POTION", { special: "regen", regen: 5 }), { hp: 150 }))).toEqual([6, 7, 8, 9]);
+  });
+
+  it("Mazaleth's Gift: +1 Strength at the end of every turn; Beetle Juice: the enemy's hits 30% less for 4 turns", () => {
+    const gift = run(potion("MAZALETHS_GIFT", { special: "ritual" }));
+    expect(gift.perTurn.map((t) => t.dmg.mean)).toEqual([21, 24, 27, 30]);
+    const juice = potion("BEETLE_JUICE", { target: "single", validTargets: [0], shrink: 4 });
+    expect(losses(run(juice))).toEqual([7, 7, 7, 10]);
+  });
+
+  it("Clarity: one more card drawn at the start of each of the next 3 turns", () => {
+    const free = Array.from({ length: 40 }, (_, k) => card(10 + k, "STRIKE", { damage: 6, cost: 0 }));
+    expect(run(potion("CLARITY", { special: "clarity", draw: 1 }), { draw: free }).perTurn.map((t) => t.dmg.mean)).toEqual([36, 36, 36, 30]);
+  });
+});

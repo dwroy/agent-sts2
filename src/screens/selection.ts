@@ -13,7 +13,7 @@ import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/card-value.js";
-import { expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
+import { boardDamageContext, expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
 import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
 import { sameCard, selectionTask, type DeckTask, type TargetScore } from "./oneshot.js";
@@ -221,6 +221,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       handPlays: fightPlaysPerTurn(env, turn),
       deck: asArray(asRecord(state.run?.raw)["deck"]).map(asRecord),
       maxEnergy: numOrNull(asRecord(state.run?.raw)["max_energy"]) ?? CURSE_FALLBACK_ENERGY,
+      asc: state.run?.ascension ?? 0,
     });
     const ranked = curseIds.map((id, i) => [costs.rank(id), i] as const).sort((a, b) => a[0] - b[0]);
     const best = options[ranked[0]![1]]!;
@@ -396,6 +397,8 @@ export interface CurseInputs {
   /** The run's deck (state.run.deck). */
   deck: Record<string, unknown>[];
   maxEnergy: number;
+  /** The run's ascension: the enemies' damage from the monster DB there (move-model DamageContext); unset, the pooled averages. */
+  asc?: number;
 }
 
 /**
@@ -423,7 +426,7 @@ export function curseCosts(combat: Record<string, unknown>, inputs: CurseInputs)
   const perTurn = turn > 1 ? Math.max(10, dealt / (turn - 1)) : CURSE_FALLBACK_DAMAGE;
   const turnsLeft = left / perTurn;
   const hp = numOrNull(player["current_hp"]) ?? 0;
-  const incoming = enemies.reduce((sum, enemy) => sum + (meanMoveDamage(str(enemy["enemy_id"])) ?? 0), 0) || CURSE_FALLBACK_INCOMING;
+  const incoming = enemies.reduce((sum, enemy) => sum + (meanMoveDamage(str(enemy["enemy_id"]), inputs.asc === undefined ? undefined : boardDamageContext(enemy, player, inputs.asc)) ?? 0), 0) || CURSE_FALLBACK_INCOMING;
 
   const energy = Math.max(1, inputs.maxEnergy);
   const handPlays = inputs.handPlays ?? energy;
@@ -568,7 +571,7 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
   const nextTurn = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
-    .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"], str(enemy["intent"]))) ?? 0), 0);
+    .reduce((sum, enemy) => sum + (expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"], str(enemy["intent"])), boardDamageContext(enemy, asRecord(combat["player"]), numOrNull(asRecord(raw["run"])["ascension"]) ?? 0)) ?? 0), 0);
   const hp = numOrNull(asRecord(combat["player"])["current_hp"]) ?? numOrNull(asRecord(raw["run"])["current_hp"]) ?? undefined;
   const sandpit = asArray(combat["enemies"])
     .map(asRecord)

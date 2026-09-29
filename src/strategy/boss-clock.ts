@@ -204,6 +204,8 @@ export function kinBeamT11(ascension: number): number | null {
  * near full HP.
  */
 export const SIPHON_HEAL = { base: 10, a8: 15 };
+/** HP the Knowledge Demon's Ponder heals (T4 and T8), when the monster DB has no heal_by_asc for it. */
+export const PONDER_HEAL = 30;
 
 /** Pressure Gun's first shot and its gain a use when the DB has none (A8: 20, 25, 30). */
 const GUN_FALLBACK = { first: 20, step: 5 };
@@ -229,7 +231,7 @@ export function giantNumbers(ascension: number): { hp: number; siphon: number; g
  * Relics that give 1 energy on (almost) every turn. Seal of Gold is counted apart: it pays gold for it
  * (SEAL_OF_GOLD_COST).
  */
-const ENERGY_RELICS = new Set([
+export const ENERGY_RELICS = new Set([
   "BLESSED_ANTLER", "BLOOD_SOAKED_ROSE", "BREAD", "ECTOPLASM", "PAELS_FLESH", "PHILOSOPHERS_STONE", "PRISMATIC_GEM",
   "PUMPKIN_CANDLE", "SOZU", "SPIKED_GAUNTLETS", "VELVET_CHOKER", "WHISPERING_EARRING",
 ]);
@@ -269,13 +271,16 @@ const LATE_ENERGY_SHARE = 0.25;
 const HAND = 5;
 /**
  * The raw count misses draw, relics, potions and powers played mid-fight, and a weak deck's fights are
- * helped by them as much as a strong one's. Fitted (least absolute deviation) on the 160 logged A8 boss
- * fights with a known outcome (tools/boss-clock-calibrate.ts): realised / mechanic = 9 + 1.04 x raw. A flat x1.4
- * (the old scale) read weak decks too low and strong decks too high (median realised/raw 2.05 for the
- * weakest fifth, 1.46 for the strongest).
+ * helped by them as much as a strong one's. Fitted (least absolute deviation) on the 215 logged A8 boss
+ * fights with a known outcome (tools/boss-fights-extract.py over every boss, a run won on the final
+ * boss's floor counted as a win: RBJ402TKQZ6F's Queen; tools/boss-clock-calibrate.ts, 2026-09-29):
+ * realised / mechanic = 11 + 0.92 x raw; median realised/estimate 1.00, median |log error| 0.25, at boss
+ * entry deaths flagged short 83/91 (the 9 + 1.04 fitted on 160 fights with that win as a death: 0.99, 0.26,
+ * 82/91). A flat x1.4 (the old scale) read weak decks too low and strong decks too high (median
+ * realised/raw 2.05 for the weakest fifth, 1.46 for the strongest).
  */
-export const ESTIMATE_BASE = 9;
-export const ESTIMATE_SLOPE = 1.04;
+export const ESTIMATE_BASE = 11;
+export const ESTIMATE_SLOPE = 0.92;
 export function calibrated(raw: number): number {
   return raw > 0 ? ESTIMATE_BASE + ESTIMATE_SLOPE * raw : 0;
 }
@@ -546,7 +551,7 @@ export function extraHp(id: string, deck: DeckProfile | null, turns: number, per
   switch (id) {
     case "KNOWLEDGE_DEMON":
       // Ponder heals 30 on T4 and T8.
-      return (turns > 4 ? 30 : 0) + (turns > 8 ? 30 : 0);
+      return (turns > 4 ? PONDER_HEAL : 0) + (turns > 8 ? PONDER_HEAL : 0);
     case "VANTOM":
       // The turns spent stripping Slippery deal 1 a hit instead of the deck's damage.
       return Math.max(0, Math.round(slipperyTurns(deck, turns) * perTurn - SLIPPERY_STACKS));
@@ -880,7 +885,7 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     fight_turns_note: clock.turnsNote,
     need_damage_per_turn: clock.need,
     deck_damage_per_turn_estimate: clock.deck,
-    estimate_note: "calibrated on 160 logged A8 boss fights (9 + 1.04 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, Vulnerable, and the boss mechanic below",
+    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, Vulnerable, and the boss mechanic below`,
     gap_per_turn: clock.gap,
     ...(clock.growth.length > 0 ? { strength_growth: clock.growth.join("; ") } : {}),
     harder_because: clock.mechanic,

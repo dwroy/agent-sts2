@@ -43,10 +43,11 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -360,12 +361,63 @@ export interface EnemyMove {
    * Frail turns, and Strength/Dexterity drained (negative). Terror Eel's Terror: VULNERABLE_POWER 99.
    */
   playerPowers?: Partial<Record<PlayerDebuff, number>>;
+  /**
+   * The powers in playerPowers are alternatives, one a use (the Knowledge Demon's Curse of Knowledge: we
+   * pick one of Sloth, Mind Rot, Waste Away, Disintegration): in the order of the logged picks, the first we
+   * do not hold yet is the one applied.
+   */
+  playerPowerChoice?: PlayerDebuff[];
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
+  /**
+   * `damage` is the move's shown hit (monster-db shownDamageAt: no base was ever measured), Strength and our
+   * Vulnerable already in it: not scaled by them again (the Queen's Off With Your Head, 7x5 shown, was one
+   * 67 hit in the rollout).
+   */
+  shown?: boolean;
+  /**
+   * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
+   * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
+   * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
+   * Magistrate: damage halved) until its next move, Flutter (Thieving Hopper), Personal Hive (Entomancer: a
+   * Dazed per hit), Vital Spark (Infested Prism: Tainted per Skill), Steam Eruption (Waterfall Giant: +3 a
+   * move, what it explodes for when killed).
+   */
+  selfPowers?: Partial<Record<EnemySelfPower, number>>;
+  /** HP it heals itself (Waterfall Giant's Siphon, Knowledge Demon's Ponder; rollout-live healOf). */
+  heal?: number;
+  /**
+   * Status cards it puts in our piles (monster DB status_cards, status_card_ids, status_card_pile): Soul
+   * Fysh's Beckon 2, Vantom's Dismember, Chomper's Screech 3 … `cardId` null when the DB does not know
+   * which card (built before it recorded them): UNKNOWN_STATUS stands in, a dead draw.
+   */
+  statusCards?: { cardId: string | null; count: number; pile: "draw" | "discard" }[];
 }
 
+/** The status a move adds when the monster DB does not say which: a Wound (「不能被打出」, nothing else), a dead draw. */
+export const UNKNOWN_STATUS = "WOUND";
+
+/** The self-buffs of enemy moves the rollout applies (EnemyMove.selfPowers). */
+export const ENEMY_SELF_POWERS = ["RITUAL_POWER", "INTANGIBLE_POWER", "THORNS_POWER", "SOAR_POWER", "FLUTTER_POWER", "PERSONAL_HIVE_POWER", "VITAL_SPARK_POWER", "STEAM_ERUPTION_POWER"] as const;
+export type EnemySelfPower = (typeof ENEMY_SELF_POWERS)[number];
+
+/**
+ * Strength an enemy gains at the end of each of its turns (「在你的回合结束时获得力量」): Ritual (Cultists,
+ * Devoted Sculptor), Territorial (Byrdonis, 「会获得1点力量」), High Voltage (Zapbot, 「会获得2点力量」); the amount
+ * is the gain (logged Territorial 1, High Voltage 2).
+ */
+export const STRENGTH_GROWTH_POWERS = ["RITUAL_POWER", "TERRITORIAL_POWER", "HIGH_VOLTAGE_POWER"] as const;
+
 /** The powers an enemy move puts on us that the rollout applies to its later turns (EnemyMove.playerPowers). */
-export const PLAYER_DEBUFFS = ["VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER"] as const;
+export const PLAYER_DEBUFFS = [
+  "VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER",
+  // Hunter Killer's Tender (for the fight: Strength and Dexterity -1 a card played), Living Fog's Smoggy (one
+  // Skill a turn), Vine Shambler's Tangled (Attacks +1 next turn), the Queen's Chains of Binding (the first 3
+  // cards drawn each turn Soulbound), the Shrinker's Shrink (-1: for the fight), the Beast's Ringing (one card
+  // next turn), the Knowledge Demon's curses (Sloth, Disintegration, Mind Rot, Waste Away), Constrict.
+  "TENDER_POWER", "SMOGGY_POWER", "TANGLED_POWER", "CHAINS_OF_BINDING_POWER", "SHRINK_POWER", "RINGING_POWER",
+  "SLOTH_POWER", "DISINTEGRATION_POWER", "CONSTRICT_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POWER",
+] as const;
 export type PlayerDebuff = (typeof PLAYER_DEBUFFS)[number];
 
 export interface EnemyTable {
@@ -426,6 +478,17 @@ export interface RolloutInput {
   model: FightValueModel | null;
   gates: FightValueGates | null;
   options?: RolloutOptions;
+  /**
+   * Base card models of the status cards enemy moves put in our piles (EnemyMove.statusCards), by card id,
+   * UNKNOWN_STATUS included (rollout-live builds them as the piles' own). Absent: no status is added.
+   */
+  statusCards?: Record<string, CardModel>;
+  /**
+   * Energy relics (run.max_energy leaves them out: 3 shown with Pumpkin Candle, 4 at every turn start): each
+   * one's energy a turn from fight turn `from` (Pael's Flesh from T3, Bread from T2). meta.max_en stays the
+   * fight-value feature it was trained as.
+   */
+  relicEnergy?: { amount: number; from: number }[];
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -679,6 +742,36 @@ interface SimEnemy {
    * Stunned if all Block is removed."): its block carries over, and breaking it stuns it for its move.
    */
   burrowed: boolean;
+  /**
+   * Once-a-fight and decaying powers, carried turn to turn from each line's outcome instead of restored
+   * from the decision's board every simulated turn: Artifact (spent by debuffs), Slippery (a stack per HP
+   * loss, never back: Vantom 9, 8, … 0), Curl Up (「每场战斗一次」), Flutter (a stack per hit).
+   */
+  artifact: number;
+  slippery: number;
+  curlUp: number;
+  flutter: number;
+  /** Strength it gains at the end of each of its turns (STRENGTH_GROWTH_POWERS; a move's Ritual adds from its next turn). */
+  growth: number;
+  /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
+  shrink: number;
+  /**
+   * Thorns and damage halving (Guarded, Soar), Dazed per hit (Personal Hive), Tainted per Skill (Vital Spark):
+   * the decision's, then what its moves give. A move's Thorns or Soar lasts until its next move resolves
+   * (logged: Spiny Toad Thorns 5 only while it shows Spike Explosion, Toadpole 2 only on Spike Spit, the
+   * Owl's Soar only on Verdict): `moveBuffs` marks them to drop then.
+   */
+  thorns: number;
+  halved: boolean;
+  dazedPerHit: number;
+  vitalSpark: number;
+  moveBuffs: { thorns: boolean; soar: boolean };
+  /**
+   * Plating (PLATING_POWER: 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层」): its block at the end of
+   * each of its turns, one stack less at the start of each but its first (logged Sewer Clam 8, 8, 7, 6; Frog
+   * Knight 15, 15, 14, 13).
+   */
+  plating: number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -719,6 +812,15 @@ interface SimPlayer {
   radiance: number;
   /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
   strikeReplay: number;
+  /**
+   * The lasting parts of potions (the solver prices them, the later turns dropped them): Regen up at the
+   * start of the turn (healed at its end, one less each turn), Ritual (Mazaleth's Gift: +1 Strength at the end
+   * of each turn), Clarity's extra card on the next turns (CLARITY_POWER, turns left). Heart of Iron's
+   * Plating and Dexterity Potion's +2 go to plating / dexterity.
+   */
+  regen: number;
+  ritual: number;
+  clarityTurns: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
@@ -727,7 +829,57 @@ interface SimPlayer {
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
   startDealt: number;
+  /**
+   * Cards a turn (SLOTH_POWER: 「你在每个回合不能打出超过3张牌」), null for no cap. The decision's own cap is
+   * the plays left this turn (combat-plan playCap: Ringing's 1 this turn only, Sloth minus the cards played),
+   * so a later turn gets the per-turn amount (VQKX9AD1YHKS F17 T5: a Ringing turn's cap of 1 on every
+   * simulated turn read "dead 8/8, dmg 0").
+   */
+  playCap: number | null;
+  /** Intangible on us (INTANGIBLE_POWER, turns): every hit 1 through the enemy turn of each turn it covers. */
+  intangibleTurns: number;
+  /** Blur (BLUR_POWER, turns): block kept at the start of the next turn, for that many turns; Barricade is keepsBlock. */
+  blurTurns: number;
+  /** Shrink on us (SHRINK_POWER: 「攻击伤害在3回合内减少30%」): turns left. */
+  shrinkTurns: number;
+  /** End-of-turn damage: Disintegration (for the fight) and Constrict (while its Slithering Strangler lives). */
+  disintegration: number;
+  constrict: number;
+  /** Of `strength` / `dexterity`, the decision turn's temporary part (TEMP_STRENGTH_POWERS): gone after it. */
+  tempStrength: number;
+  tempDexterity: number;
+  /** Tender (for the fight): each card played lowers Strength and Dexterity by this for the rest of the turn. */
+  tender: number;
+  /** Smoggy: one Skill a turn. */
+  smoggy: boolean;
+  /** Tangled put on us this enemy turn: Attacks cost this much more on our next turn only. */
+  tangledNext: number;
+  /** Chains of Binding: the first this many cards drawn each turn are Soulbound. */
+  chains: number;
+  /** Ringing put on us this enemy turn: one card on our next turn only. */
+  ringingNext: boolean;
+  /** Mind Rot: cards fewer drawn each turn; Waste Away: energy fewer each turn. */
+  mindRot: number;
+  wasteAway: number;
 }
+
+/** The enemy a Rampart gives its block to (RAMPART_POWER: 「高塔炮手获得25点格挡」). */
+const RAMPART_TARGET = "TURRET_OPERATOR";
+
+/** The enemy whose Constrict it is (CONSTRICT_POWER: 「蛇行扼杀者存活时…」). */
+const CONSTRICTOR = "SLITHERING_STRANGLER";
+
+/**
+ * Strength (and Dexterity) up or down for this turn only (「在本回合结束前获得/失去力量」): part of STRENGTH_POWER
+ * on the decision's board, gone for the later turns. Ours: Setup Strike, Flex, Reptile Trinket, Feeding
+ * Frenzy, Coordinate (Strength), Speed Potion (Dexterity). On enemies: Mangle, Shackling Potion, Dark
+ * Shackles, Piercing Wail (logged Byrdonis STRENGTH_POWER -10 with MANGLE_POWER 10).
+ */
+export const TEMP_STRENGTH_POWERS = ["SETUP_STRIKE_POWER", "FLEX_POTION_POWER", "REPTILE_TRINKET_POWER", "FEEDING_FRENZY_POWER", "COORDINATE_POWER"] as const;
+export const TEMP_DEXTERITY_POWERS = ["SPEED_POTION_POWER"] as const;
+export const ENEMY_TEMP_STRENGTH_LOSS_POWERS = TEMP_STRENGTH_LOSS_POWERS;
+
+const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[]): number => ids.reduce((sum, id) => sum + Math.max(0, powers?.[id] ?? 0), 0);
 
 interface Piles {
   draw: CardModel[];
@@ -751,10 +903,16 @@ export interface TurnRecord {
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
-  const scale = (enemy.weak > 0 ? 0.75 : 1) * (playerVulnerable ? 1.5 : 1);
+  const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
+  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits: Math.max(1, m.hits) }];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
+}
+
+/** Some move of the enemy gives it this power (EnemyMove.selfPowers). */
+function gainsSelf(table: EnemyTable | undefined, power: EnemySelfPower): boolean {
+  return Object.values(table?.moves ?? {}).some((move) => (move.selfPowers?.[power] ?? 0) > 0);
 }
 
 /** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
@@ -880,15 +1038,78 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   let dealt = 0;
   for (const e of enemies) {
     if (!e.alive || e.explodeAt !== undefined) continue;
-    const hit = e.intangibleTurns > 0 ? Math.min(1, aoe) : aoe;
+    // The enemy's caps as for the solver's non-attack damage (turn-solver hitEnemyRaw): Intangible, Hard to
+    // Kill, Guarded/Soar, then block, then a Slippery stack.
+    let hit = e.halved ? Math.floor(aoe * 0.5) : aoe;
+    if (e.base.perHitCap !== null && e.base.perHitCap !== undefined) hit = Math.min(hit, e.base.perHitCap);
+    if (e.intangibleTurns > 0) hit = Math.min(1, hit);
     const blocked = Math.min(e.block, hit);
     e.block -= blocked;
-    const lost = Math.min(e.hp, hit - blocked);
+    let through = hit - blocked;
+    if (through > 0 && e.slippery > 0) {
+      through = 1;
+      e.slippery -= 1;
+    }
+    const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
     if (e.hp <= 0) enemyDown(e, turn, input);
   }
   return dealt;
+}
+
+/** Energy the relics give at the start of fight turn `turn` (RolloutInput.relicEnergy). */
+function relicEnergyAt(input: RolloutInput, turn: number): number {
+  return (input.relicEnergy ?? []).reduce((sum, relic) => sum + (turn >= relic.from ? relic.amount : 0), 0);
+}
+
+/** A debuff's turns: -1 (and any amount below 0) is for the fight. */
+function turnsOf(amount: number): number {
+  return amount < 0 ? Infinity : amount;
+}
+
+/** We already hold this curse (a Curse of Knowledge pick is not offered twice). */
+function holds(player: SimPlayer, id: PlayerDebuff): boolean {
+  switch (id) {
+    case "SLOTH_POWER":
+      return player.playCap !== null;
+    case "MIND_ROT_POWER":
+      return player.mindRot > 0;
+    case "WASTE_AWAY_POWER":
+      return player.wasteAway > 0;
+    case "DISINTEGRATION_POWER":
+      return player.disintegration > 0;
+    default:
+      return false;
+  }
+}
+
+/** What a move puts on us: all its powers, or of alternatives the first in pick order we do not hold. */
+function chosenDebuffs(move: EnemyMove, player: SimPlayer): Partial<Record<PlayerDebuff, number>> {
+  const powers = move.playerPowers ?? {};
+  if (!move.playerPowerChoice) return powers;
+  const pick = move.playerPowerChoice.find((id) => !holds(player, id) && (powers[id] ?? 0) !== 0);
+  return pick ? { [pick]: powers[pick] } : {};
+}
+
+/** Debuffs an enemy turn put on us, onto the simulated player. */
+function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebuff, number>>): void {
+  player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
+  player.weakTurns += powers.WEAK_POWER ?? 0;
+  player.frailTurns += powers.FRAIL_POWER ?? 0;
+  player.strength += powers.STRENGTH_POWER ?? 0;
+  player.dexterity += powers.DEXTERITY_POWER ?? 0;
+  player.tender += powers.TENDER_POWER ?? 0;
+  if ((powers.SMOGGY_POWER ?? 0) !== 0) player.smoggy = true;
+  player.tangledNext += powers.TANGLED_POWER ?? 0;
+  player.chains = Math.max(player.chains, powers.CHAINS_OF_BINDING_POWER ?? 0);
+  if (powers.SHRINK_POWER) player.shrinkTurns = Math.max(player.shrinkTurns, turnsOf(powers.SHRINK_POWER));
+  if ((powers.RINGING_POWER ?? 0) !== 0) player.ringingNext = true;
+  if ((powers.SLOTH_POWER ?? 0) > 0) player.playCap = Math.min(player.playCap ?? Infinity, powers.SLOTH_POWER!);
+  player.disintegration += powers.DISINTEGRATION_POWER ?? 0;
+  player.constrict += powers.CONSTRICT_POWER ?? 0;
+  player.mindRot += powers.MIND_ROT_POWER ?? 0;
+  player.wasteAway += powers.WASTE_AWAY_POWER ?? 0;
 }
 
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
@@ -907,6 +1128,7 @@ function applyPlan(
   const o = plan.outcome;
   const startHp = player.hp;
   const ownLoss = Math.max(0, o.hpLoss - o.incomingAfterBlock);
+  let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
   for (const step of plan.steps) {
@@ -914,6 +1136,15 @@ function applyPlan(
       player.potions = Math.max(0, player.potions - 1);
       if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
       if (step.cardId.startsWith("POTION:SOLDIERS_STEW:")) player.strikeReplay += 1;
+      // What the potion leaves for the later turns (its turn is the solver's outcome already).
+      const potion = hand.find((card) => card.type === "Potion" && card.cardId === step.cardId);
+      if (potion) {
+        player.plating += potion.plating ?? 0;
+        if (potion.special === "dexterity") player.dexterity += DEX_POTION;
+        if (potion.special === "regen") regenDrunk += potion.regen ?? 0;
+        if (potion.special === "ritual") player.ritual += 1;
+        if (potion.special === "clarity") player.clarityTurns += CLARITY_LATER_DRAWS;
+      }
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
@@ -946,6 +1177,17 @@ function applyPlan(
     const card = drawOne(piles, random);
     if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
   }
+  // Status cards the line's turn made (the solver priced them, the piles never got them): Dazed from hits
+  // on a Personal Hive into the draw pile, Wounds from unblocked Painful Stabs and the Withers held at the
+  // end of the turn into the discard pile.
+  const made = (id: string) => input.statusCards?.[id] ?? input.statusCards?.[UNKNOWN_STATUS];
+  const addMade = (id: string, count: number, pile: "draw" | "discard") => {
+    const card = count > 0 ? made(id) : undefined;
+    if (card) addToPile(piles, card, count, pile, random);
+  };
+  addMade("DAZED", o.dazedAdded ?? 0, "draw");
+  addMade("WOUND", o.woundsAdded ?? 0, "discard");
+  addMade("WITHER", o.withersAdded, "discard");
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
@@ -966,6 +1208,13 @@ function applyPlan(
     e.hp = a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
+    if (a.artifact !== undefined) e.artifact = a.artifact;
+    if (a.slippery !== undefined) e.slippery = a.slippery;
+    if (a.curlUp !== undefined) e.curlUp = a.curlUp;
+    if (a.flutter !== undefined) e.flutter = a.flutter;
+    if (a.shrink !== undefined) e.shrink = a.shrink;
+    // Strength it gained for good this turn (Fight Me!, Enrage per Skill, Crab Rage on the survivor).
+    e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
     if (e.hp <= 0) enemyDown(e, turn, input);
@@ -987,11 +1236,20 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
+  // Regen healed at this turn's end (in the outcome): one less next turn. Ritual: Strength at the end of it.
+  player.regen = Math.max(0, player.regen + regenDrunk - 1);
+  player.strength += player.ritual;
+  // This turn's temporary Strength/Dexterity ends with it (Setup Strike's +3 was every later turn's).
+  player.strength -= player.tempStrength;
+  player.dexterity -= player.tempDexterity;
+  player.tempStrength = 0;
+  player.tempDexterity = 0;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   player.hp = o.hpAfter;
-  player.block = player.keepsBlock ? o.blockWasted ?? 0 : 0;
+  // Barricade keeps block every turn; Blur N only at the start of the next N turns.
+  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
   // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
   if (!won && !died) {
@@ -1001,7 +1259,7 @@ function applyPlan(
   if (!won && !died) {
     // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
     // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
-    const applied: Partial<Record<PlayerDebuff, number>>[] = [];
+    const applied: EnemyMove[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -1015,15 +1273,51 @@ function applyPlan(
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
         e.strength += m?.strength ?? 0;
-        if (m?.playerPowers) applied.push(m.playerPowers);
+        // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
+        // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
+        e.strength += e.growth;
+        e.growth += m?.selfPowers?.RITUAL_POWER ?? 0;
+        // A move's Thorns / Soar is spent by the next move; then this move's self-buffs.
+        if (e.moveBuffs.thorns) e.thorns = 0;
+        if (e.moveBuffs.soar) e.halved = (e.powers["GUARDED_POWER"] ?? 0) > 0;
+        e.moveBuffs = { thorns: false, soar: false };
+        const gained = m?.selfPowers ?? {};
+        if (gained.THORNS_POWER) {
+          e.thorns += gained.THORNS_POWER;
+          e.moveBuffs.thorns = true;
+        }
+        if (gained.SOAR_POWER) {
+          e.halved = true;
+          e.moveBuffs.soar = true;
+        }
+        e.flutter += gained.FLUTTER_POWER ?? 0;
+        e.dazedPerHit += gained.PERSONAL_HIVE_POWER ?? 0;
+        e.vitalSpark += gained.VITAL_SPARK_POWER ?? 0;
+        // The Giant's eruption grows with every move (it was frozen at the decision's: a kill on a later
+        // simulated turn exploded up to 12 low), and Siphon / Ponder heal.
+        if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
+        if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
+        // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
+        // already there; ~800 logged fights had them added).
+        for (const status of m?.statusCards ?? []) {
+          const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
+          if (card) addToPile(piles, card, status.count, status.pile, random);
+        }
+        if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
         e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
         if (m?.burrows) e.burrowed = true;
+        // Plating: a stack less at the start of its turn (not its first), its block at the end.
+        if (e.plating > 0 && input.meta.t + turn >= 2) e.plating -= 1;
+        e.block += e.plating;
       }
       e.vulnerable = Math.max(0, e.vulnerable - 1);
       e.weak = Math.max(0, e.weak - 1);
+      e.shrink = Math.max(0, e.shrink - 1);
       e.intangibleTurns = Math.max(0, e.intangibleTurns - 1);
+      // Fade (Soul Fysh): Intangible through our next turn (93 of 577 logged Soul Fysh turns).
+      if (!stunned) e.intangibleTurns += m?.selfPowers?.INTANGIBLE_POWER ?? 0;
       if (e.nemesisIn !== undefined) {
         e.nemesisIn -= 1;
         if (e.nemesisIn <= 0) {
@@ -1035,6 +1329,12 @@ function applyPlan(
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
       else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
     }
+    // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
+    // block at the start of each of our turns while the Shield lives (40 logged fights, 25 every turn).
+    for (const holder of enemies) {
+      const rampart = holder.alive ? holder.powers["RAMPART_POWER"] ?? 0 : 0;
+      if (rampart > 0) for (const e of enemies) if (e.alive && e.id === RAMPART_TARGET) e.block += rampart;
+    }
     for (const e of enemies) {
       if (e.alive || e.reviveIn === undefined) continue;
       e.reviveIn -= 1;
@@ -1045,6 +1345,11 @@ function applyPlan(
       e.block = 0;
       e.vulnerable = 0;
       e.weak = 0;
+      // A new body: its own once-a-fight powers again.
+      e.artifact = e.base.artifact;
+      e.slippery = e.base.slippery ?? 0;
+      e.curlUp = e.base.curlUp ?? 0;
+      e.flutter = e.base.flutter ?? 0;
       e.move = usualMove(input.tables[e.id]) ?? e.move;
     }
     for (const e of enemies) {
@@ -1061,14 +1366,9 @@ function applyPlan(
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
     player.frailTurns = Math.max(0, player.frailTurns - 1);
+    player.shrinkTurns = Math.max(0, player.shrinkTurns - 1);
     // Put on us by this enemy turn's moves: they last through our next turn and its enemy turn.
-    for (const powers of applied) {
-      player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
-      player.weakTurns += powers.WEAK_POWER ?? 0;
-      player.frailTurns += powers.FRAIL_POWER ?? 0;
-      player.strength += powers.STRENGTH_POWER ?? 0;
-      player.dexterity += powers.DEXTERITY_POWER ?? 0;
-    }
+    for (const move of applied) applyPlayerDebuffs(player, chosenDebuffs(move, player));
     player.strength += player.demonForm;
   }
   const carried = player.startDealt;
@@ -1078,6 +1378,14 @@ function applyPlan(
     won = allDown();
   }
   return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died };
+}
+
+/** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
+function addToPile(piles: Piles, card: CardModel, count: number, pile: "draw" | "discard", random: () => number): void {
+  for (let k = 0; k < count; k += 1) {
+    if (pile === "discard") piles.discard.push(card);
+    else piles.draw.splice(Math.floor(random() * (piles.draw.length + 1)), 0, card);
+  }
 }
 
 function drawOne(piles: Piles, random: () => number): CardModel | undefined {
@@ -1131,7 +1439,8 @@ function simulate(
     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
     frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,
     block: base.block,
-    keepsBlock: base.keepsBlock === true,
+    // Barricade for the fight; a Blur behind the decision's keepsBlock lasts its turns (blurTurns).
+    keepsBlock: (input.playerPowers["BARRICADE_POWER"] ?? 0) > 0 || (base.keepsBlock === true && (input.playerPowers["BLUR_POWER"] ?? 0) <= 0),
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
     // The decision's end-of-turn block is Plating + Metallicize (combat-plan): Plating wears off, split it out.
     endTurnBlock: Math.max(0, (base.endTurnBlock ?? 0) - (input.playerPowers["PLATING_POWER"] ?? 0)),
@@ -1149,7 +1458,29 @@ function simulate(
     relicAoe: 0,
     otherStartLoss: 0,
     startDealt: 0,
+    playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
+    intangibleTurns: input.playerPowers["INTANGIBLE_POWER"] ?? (base.intangible ? 1 : 0),
+    blurTurns: input.playerPowers["BLUR_POWER"] ?? 0,
+    // Shrink -1 (the Shrinker Beetle's, logged -1 every turn) is for the fight.
+    shrinkTurns: turnsOf(input.playerPowers["SHRINK_POWER"] ?? (base.shrunk ? 1 : 0)),
+    disintegration: input.playerPowers["DISINTEGRATION_POWER"] ?? 0,
+    constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
+    // Tender's -1 a card played so far this turn is temporary too (logged Strength 6, 5, 4, 3 over a turn, 6 again next).
+    tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tender: input.playerPowers["TENDER_POWER"] ?? base.tender ?? 0,
+    smoggy: (input.playerPowers["SMOGGY_POWER"] ?? 0) > 0,
+    tangledNext: 0,
+    chains: input.playerPowers["CHAINS_OF_BINDING_POWER"] ?? 0,
+    ringingNext: false,
+    mindRot: input.playerPowers["MIND_ROT_POWER"] ?? 0,
+    wasteAway: input.playerPowers["WASTE_AWAY_POWER"] ?? 0,
+    regen: base.regen ?? input.playerPowers["REGEN_POWER"] ?? 0,
+    ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
+    clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
   };
+  // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
+  if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
   // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
   player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player));
   player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
@@ -1167,7 +1498,8 @@ function simulate(
       hp: e.hp,
       maxHp: e.maxHp,
       block: e.block,
-      strength: info?.strength ?? 0,
+      // A temporary loss (Mangle, Shackling Potion) is gone by its next move: the later turns hit at full Strength.
+      strength: (info?.strength ?? 0) + sumOf(info?.powers, ENEMY_TEMP_STRENGTH_LOSS_POWERS),
       vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,
@@ -1177,6 +1509,22 @@ function simulate(
       intangibleTurns: e.intangible ? Math.max(1, info?.powers?.["INTANGIBLE_POWER"] ?? 1) : 0,
       ...((info?.powers?.["NEMESIS_POWER"] ?? 0) > 0 ? { nemesisIn: e.intangible ? 2 : 1 } : {}),
       burrowed: e.burrowed === true,
+      artifact: e.artifact,
+      slippery: e.slippery ?? 0,
+      curlUp: e.curlUp ?? 0,
+      flutter: e.flutter ?? 0,
+      growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
+      shrink: e.shrink ?? 0,
+      plating: info?.powers?.["PLATING_POWER"] ?? 0,
+      thorns: e.thorns ?? 0,
+      halved: e.halved === true,
+      dazedPerHit: e.dazedPerHit ?? 0,
+      vitalSpark: e.vitalSpark ?? 0,
+      // Thorns / Soar up now from one of its moves (its table has a move giving them): gone after its next move.
+      moveBuffs: {
+        thorns: (e.thorns ?? 0) > 0 && gainsSelf(input.tables[info?.id ?? ""], "THORNS_POWER"),
+        soar: (info?.powers?.["SOAR_POWER"] ?? 0) > 0 && gainsSelf(input.tables[info?.id ?? ""], "SOAR_POWER"),
+      },
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
@@ -1199,6 +1547,9 @@ function simulate(
     const last = records[records.length - 1]!;
     if (limit !== null && h + 1 >= limit && !last.won && !last.died) last.timeUp = true;
   };
+  // Withering Presence counts every card played in the fight: the later turns go on from this line's count.
+  const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
+  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(plan);
   // Turn 0: the candidate line as the solver scored it.
   records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
   timeUp(0);
@@ -1211,11 +1562,19 @@ function simulate(
     const hand: CardModel[] = [];
     const handBase: CardModel[] = [];
     const targets = enemies.filter((e) => e.alive).map((e) => e.index);
-    for (let i = 0; i < handSize; i += 1) {
+    // Mind Rot draws fewer; Tangled makes this turn's Attacks dearer; Chains of Binding binds the first cards drawn.
+    const clarity = player.clarityTurns > 0 ? 1 : 0;
+    player.clarityTurns = Math.max(0, player.clarityTurns - 1);
+    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot); i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
-      hand.push(withStrength(card, player, i, targets));
+      const drawn = withStrength(card, player, i, targets);
+      hand.push({
+        ...drawn,
+        ...(player.tangledNext > 0 && drawn.type === "Attack" && !drawn.xCost && drawn.cost >= 0 ? { cost: drawn.cost + player.tangledNext } : {}),
+        ...(i < player.chains ? { soulbound: true } : {}),
+      });
     }
     const sims: EnemySim[] = enemies
       .filter((e) => e.alive)
@@ -1227,6 +1586,15 @@ function simulate(
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
+        artifact: e.artifact,
+        slippery: e.slippery,
+        curlUp: e.curlUp,
+        flutter: e.flutter,
+        thorns: e.thorns,
+        halved: e.halved,
+        shrink: e.shrink,
+        dazedPerHit: e.dazedPerHit,
+        vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
@@ -1237,7 +1605,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: input.meta.max_en + player.pyre + (player.radiance > 0 ? 1 : 0),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -1245,14 +1613,22 @@ function simulate(
       duplicate: 0,
       buffer: 0,
       vigor: 0,
-      regen: 0,
+      regen: player.regen,
       facing: null,
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
       noBlock: false,
-      tender: 0,
-      keepsBlock: player.keepsBlock,
+      tender: player.tender,
+      maxSkills: player.smoggy ? 1 : null,
+      // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
+      // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
+      // while its Strangler lives.
+      maxPlays: player.ringingNext ? Math.min(player.playCap ?? Infinity, 1) : player.playCap,
+      intangible: player.intangibleTurns > h,
+      shrunk: player.shrinkTurns > 0,
+      endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
+      keepsBlock: player.keepsBlock || player.blurTurns > h,
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
@@ -1268,8 +1644,10 @@ function simulate(
       retaliate: input.playerPowers["THORNS_POWER"] ?? 0,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
-    // Radiance: this turn's extra energy is in pSim; one turn of it used.
+    // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
+    player.ringingNext = false;
+    player.tangledNext = 0;
     const started = budget.now();
     const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
@@ -1279,13 +1657,15 @@ function simulate(
     if (aim) used.depth = Math.max(used.depth, aim.depth);
     const target = aim?.target;
     const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
-    const solved = solveTurn({ ...rest, ...focus, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
+    const wither = s.wither ? { wither: { ...s.wither, played: witherPlayed } } : {};
+    const solved = solveTurn({ ...rest, ...focus, ...wither, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, potionLimit: null, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    witherPlayed += cardPlays(best);
     timeUp(h);
     drink(best);
   }
