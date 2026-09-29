@@ -152,6 +152,12 @@ describe("boss clock", () => {
     expect(calibrated(0)).toBe(0);
   });
 
+  it("the estimate's calibration is the refit on the corrected A8 labels (a final-boss win counted as a win): 11 + 0.92 x raw", () => {
+    // 215 logged A8 boss fights, LAD: median realised/estimate 1.00, median |log error| 0.25 (9 + 1.04: 0.99, 0.26).
+    expect(calibrated(20)).toBeCloseTo(11 + 0.92 * 20, 6);
+    expect(calibrated(40)).toBeCloseTo(47.8, 6);
+  });
+
   it("caps the fight by the turns we survive at the entry HP", () => {
     const full = bossClock(mapState(starter(), "KAISER_CRAB_BOSS", { ascension: 8 }), testKnowledge, 80)!;
     const low = bossClock(mapState(starter(), "KAISER_CRAB_BOSS", { ascension: 8 }), testKnowledge, 40)!;
