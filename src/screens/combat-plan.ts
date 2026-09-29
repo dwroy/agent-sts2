@@ -1078,7 +1078,8 @@ export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | un
       const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line);
       const text = line.replace(/\[[^\]]*\]/g, "");
       const block = /获得\d+点格挡|gain \d+ block/i.test(text) && !/造成\d+点伤害|deal \d+ damage/i.test(text);
-      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty, ...(block ? { block } : {}) };
+      const strike = asArray(asRecord(entry)["card_ids"]).some((id) => typeof id === "string" && isStrikeCard({ cardId: id }));
+      const card: DrawPileCard = { playable, heldPenalty: heldPenaltyOf(line).heldPenalty, ...(block ? { block } : {}), ...(strike ? { strike } : {}) };
       return Array.from({ length: count }, () => card);
     });
   const draw = parse(view["draw"]);
@@ -1379,6 +1380,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
+    // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
+    hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
+    darkEmbrace: powerAmount(player, "DARK_EMBRACE_POWER"),
     strengthNow: powerAmount(player, "STRENGTH_POWER"),
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
     // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled

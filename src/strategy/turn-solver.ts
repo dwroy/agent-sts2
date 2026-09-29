@@ -257,6 +257,13 @@ export interface PlayerSim {
    * Fire through 4 cards with Feel No Pain 3 was scored as 9 damage and no block).
    */
   feelNoPain?: number;
+  /**
+   * Hellraiser up (HELLRAISER_POWER): 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」 — a Strike drawn this
+   * turn plays itself, free, at a random enemy (the rollout does it for later turns' draws, a4f3795).
+   */
+  hellraiser?: boolean;
+  /** Dark Embrace up (DARK_EMBRACE_POWER amount): cards drawn for each card exhausted this turn. */
+  darkEmbrace?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -398,6 +405,8 @@ export interface DrawPileCard {
   heldPenalty: number;
   /** A block card (no damage): drawn on a turn with nothing incoming it is discarded unused. */
   block?: boolean;
+  /** A Strike (its id has STRIKE): with Hellraiser up it plays itself when drawn, no energy needed. */
+  strike?: boolean;
 }
 
 /** Expected later end-of-turn holds of a Wither added this turn (its future cost, score only). */
@@ -632,6 +641,10 @@ interface Sim {
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
   feelNoPain: number;
+  /** Hellraiser up (already, or played this turn): drawn Strikes play themselves. */
+  hellraiser: boolean;
+  /** Dark Embrace amount up (already, or played this turn): cards drawn per card exhausted. */
+  darkEmbrace: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /** Attacks played in this plan (Stomp costs 1 less for each). */
@@ -680,6 +693,8 @@ interface PileValue {
   size: number;
   withEnergy: number;
   withoutEnergy: number;
+  /** Share of the pile that is Strikes (Hellraiser plays them when drawn, energy or not). */
+  strikeShare: number;
 }
 
 /** Value of one card drawn with energy left to play it (without a known pile). */
@@ -713,7 +728,8 @@ export function pileValue(pile: DrawPileCard[] | undefined, hpWeight: number, bl
       withEnergy += DRAW_VALUE;
     }
   }
-  return { size: pile.length, withEnergy: withEnergy / pile.length, withoutEnergy: withoutEnergy / pile.length };
+  const strikes = pile.filter((card) => card.strike && card.playable && !(card.heldPenalty > 0)).length;
+  return { size: pile.length, withEnergy: withEnergy / pile.length, withoutEnergy: withoutEnergy / pile.length, strikeShare: strikes / pile.length };
 }
 
 /** One card drawn now: the known pile's expected value (flat values past it or without one). */
@@ -721,7 +737,9 @@ function drawOne(sim: Sim): DrawValue {
   const pile = sim.pile;
   if (!pile || sim.pileDrawn >= pile.size) return { withEnergy: DRAW_VALUE, withoutEnergy: DRAW_IDLE_VALUE };
   sim.pileDrawn += 1;
-  return { withEnergy: pile.withEnergy, withoutEnergy: Math.min(DRAW_IDLE_VALUE, pile.withoutEnergy) };
+  // Hellraiser: a Strike drawn plays itself (no energy), so it is worth a played card without spare energy too.
+  const hellraised = sim.hellraiser ? pile.strikeShare * DRAW_VALUE : 0;
+  return { withEnergy: pile.withEnergy, withoutEnergy: Math.min(DRAW_IDLE_VALUE, pile.withoutEnergy) + hellraised };
 }
 
 /**
@@ -1068,6 +1086,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // A random exhaust may take any card still in hand: nothing is planned after it (PU21 F30 T2 and F33
   // T8: the Anger planned after True Grit was exhausted, 8 and 16 damage short).
   const exhaustedBefore = next.exhausted.length;
+  let randomBurned = 0;
   let drawnBurned = 0;
   // Second Wind (LQLZ F21 T4: unmodelled, it exhausted Inferno and Forgotten Ritual; a replay ranked an
   // impossible line first): every non-Attack card in hand goes, Block for each.
@@ -1092,6 +1111,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       next.flat -= pool.reduce((sum, entry) => sum + Math.max(0, exhaustValue(entry, EXHAUST_WEIGHTS)), 0) / pool.length;
       next.exhaustedCount += 1;
       next.randomExhausts += 1;
+      randomBurned = 1;
     }
     // The rest stays in hand unplayed (which card went is unknown): held Beckons and Burns still hurt at
     // the end of the turn (VL2D F17 T16: shown as "hp_lost 0", the held Beckon cost 6).
@@ -1140,7 +1160,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
     if (count > 0) gainBlock(next, next.feelNoPain * count, player);
   }
+  // Dark Embrace: a card drawn for each card exhausted (the random one too; the played card when it exhausts).
+  exhaustDraws(next, burned + randomBurned + (card.exhausts && card.type !== "Potion" ? 1 : 0), player);
   if (card.feelNoPain) next.feelNoPain += card.feelNoPain;
+  if (card.cardId === "HELLRAISER") next.hellraiser = true;
+  if (card.cardId === "DARK_EMBRACE") next.darkEmbrace += 1;
   if (!card.known) next.unknown = [...next.unknown, card.name];
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
@@ -1400,15 +1424,23 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion") next.potionCost += -card.flatValue;
   else next.flat += card.flatValue;
-  if (card.draw > 0) {
-    // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
-    const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
-    const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
-    next.drawnInHand += Math.min(card.draw, room, handSpace);
-    next.cardsDrawn += card.draw;
-    next.draws = [...next.draws];
-    for (let drawn = 0; drawn < card.draw; drawn += 1) next.draws.push(drawOne(next));
-  }
+  if (card.draw > 0) drawExpected(next, card.draw, player);
+}
+
+/** `count` cards drawn from the pile as expected values (what they are is not known). */
+function drawExpected(next: Sim, count: number, player: PlayerSim): void {
+  // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
+  const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
+  const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
+  next.drawnInHand += Math.min(count, room, handSpace);
+  next.cardsDrawn += count;
+  next.draws = [...next.draws];
+  for (let drawn = 0; drawn < count; drawn += 1) next.draws.push(drawOne(next));
+}
+
+/** Dark Embrace's draws for `exhausted` cards exhausted now (none without it). */
+function exhaustDraws(next: Sim, exhausted: number, player: PlayerSim): void {
+  if (next.darkEmbrace > 0 && exhausted > 0) drawExpected(next, exhausted * next.darkEmbrace, player);
 }
 
 /**
@@ -1443,7 +1475,16 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
   }
   next.exhaustedCount += 1;
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
+  exhaustDraws(next, 1, player);
   if (attacks.length === 1 && added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
+}
+
+/**
+ * A Strike Hellraiser plays when it is drawn: 0 energy, at a random enemy (the solver's worst victim), the way the
+ * rollout's hellraised card and Distilled Chaos's top cards are played.
+ */
+export function hellraised(card: CardModel): CardModel {
+  return { ...card, cost: 0, xCost: false, playable: true, ...(card.target === "single" ? { target: "random" as const, validTargets: [] } : {}) };
 }
 
 /** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
@@ -1461,7 +1502,8 @@ function addToHand(sim: Sim, cards: CardModel[]): void {
  */
 function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled = false): void {
   const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
-  const taken = cards.slice(0, Math.min(cards.length, room));
+  // Hellraiser: a Strike drawn plays itself, free, at a random enemy (the rollout's hellraised card, a4f3795).
+  const taken = cards.slice(0, Math.min(cards.length, room)).map((card) => (sim.hellraiser && isStrikeCard(card) ? hellraised(card) : card));
   addToHand(sim, taken);
   sim.cardsDrawn += taken.length;
   sim.pileDrawn += taken.length;
@@ -2346,6 +2388,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     tainted: 0,
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
+    hellraiser: input.player.hellraiser === true,
+    darkEmbrace: input.player.darkEmbrace ?? 0,
     attacksPlayed: 0,
     skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,

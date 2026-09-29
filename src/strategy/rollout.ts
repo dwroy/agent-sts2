@@ -1839,6 +1839,9 @@ function simulate(
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
+      // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
+      hellraiser: player.hellraiser,
+      darkEmbrace: player.darkEmbrace,
       // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
       inferno: player.inferno,
       rupture: player.rupture,

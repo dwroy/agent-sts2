@@ -18,8 +18,49 @@ import { checkConsistency } from "../src/llm/consistency.js";
 import { giantKillRecord, giantKillText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { discardSlotsOf } from "../src/screens/potion-discard.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { pileValue, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 type Raw = Record<string, unknown>;
+
+
+function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
+  return {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: cardId,
+    type: "Attack",
+    upgraded: false,
+    cost: 1,
+    xCost: false,
+    playable: true,
+    target: "single",
+    validTargets: [0],
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+    ...overrides,
+  };
+}
+const strike = (i: number, damage = 6) => card(i, "STRIKE_IRONCLAD", { name: "打击", damage, damageBase: damage });
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
 
 const keysOf = (decision: AskDecision): string[] => {
   const question = decision.questions["pick"]!;
@@ -190,5 +231,35 @@ describe("2. Hand-written facts from the data: the Giant's kill-turn record (A9 
     } finally {
       setUnblockedSharesForTests(null);
     }
+  });
+});
+
+describe("3. Mid-turn draws in the solver: Hellraiser plays a drawn Strike itself; Dark Embrace draws for each exhaust", () => {
+  it("Hellraiser up: a potion's three drawn Strikes are played free at 0 energy (18), not left in hand", () => {
+    const swift = card(0, "SWIFT_POTION", { name: "迅捷药水", type: "Potion", target: "self", validTargets: [], cost: 0, drawn: [strike(10), strike(11), strike(12)] });
+    const input = (hellraiser: boolean): SolverInput => ({ hand: [swift], player: player({ energy: 0, ...(hellraiser ? { hellraiser } : {}) }), enemies: [enemy({ hp: 18, maxHp: 18 })], fightKind: "monster", turn: 2 });
+    const up = solveTurn(input(true)).plans[0]!;
+    expect(up.outcome.kills).toHaveLength(1);
+    expect(up.steps.filter((step) => step.cardId === "STRIKE_IRONCLAD")).toHaveLength(3);
+    const off = solveTurn(input(false)).plans[0]!;
+    expect(off.outcome.kills).toHaveLength(0);
+  });
+
+  it("the expected draw of a pile of Strikes is worth a played card with no energy left under Hellraiser", () => {
+    const pile = pileValue([{ playable: true, heldPenalty: 0, strike: true }, { playable: true, heldPenalty: 0 }], 1)!;
+    expect(pile.strikeShare).toBe(0.5);
+    // Burning Pact-like: exhaust a card, draw 2, at the last energy (nothing left to play the draws with).
+    const draw2 = card(0, "DRAW_TWO", { type: "Skill", target: "self", validTargets: [], cost: 1, draw: 2 });
+    const input = (hellraiser: boolean): SolverInput => ({ hand: [draw2], player: player({ energy: 1, ...(hellraiser ? { hellraiser } : {}) }), enemies: [enemy()], fightKind: "monster", turn: 2, drawPile: Array.from({ length: 10 }, () => ({ playable: true, heldPenalty: 0, strike: true })) });
+    const scoreOf = (hellraiser: boolean) => solveTurn(input(hellraiser)).plans.find((plan) => plan.steps.length === 1)!.score;
+    expect(scoreOf(true)).toBeGreaterThan(scoreOf(false));
+  });
+
+  it("Dark Embrace up: a card that exhausts draws one (the outcome's cards drawn), none without it", () => {
+    const burn = card(0, "EXHAUSTING_SKILL", { type: "Skill", target: "self", validTargets: [], cost: 0, block: 3, exhausts: true });
+    const drawn = (darkEmbrace: number) =>
+      solveTurn({ hand: [burn], player: player({ energy: 1, darkEmbrace }), enemies: [enemy({ attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster", turn: 2 }).plans.find((plan) => plan.steps.some((step) => step.cardId === "EXHAUSTING_SKILL"))!.outcome.cardsDrawn;
+    expect(drawn(1)).toBe(1);
+    expect(drawn(0)).toBe(0);
   });
 });
