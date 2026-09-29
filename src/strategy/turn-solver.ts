@@ -279,6 +279,11 @@ export interface PlayerSim {
    * F31: "every line dies" played the most-HP line with a Fairy in the belt).
    */
   revives?: Revive[];
+  /**
+   * What Vulnerable multiplies our attacks by: 1.5, or 1.75 with Paper Phrog (「有易伤状态的敌人受到的伤害增加75%而非
+   * 50%」; held in 46 logged fights, coverage review #12).
+   */
+  vulnerableFactor?: number;
 }
 
 /** One revive held (PlayerSim.revives): what it is, its name as shown, the HP it brings us back to. */
@@ -852,7 +857,7 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     let amount = perHitBase;
     if (player.shrunk) amount = Math.floor(amount * 0.7);
     // Potion damage ignores Vulnerable (6X8F F25 T1: Fire Potion into a Vulnerable Entomancer did 20).
-    if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * 1.5);
+    if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * (player.vulnerableFactor ?? 1.5));
     // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
     if (enemy.slow) amount = Math.floor(amount * (1 + 0.1 * sim.played));
     if ((enemy.flutter ?? 0) > 0) {

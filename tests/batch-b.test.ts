@@ -770,3 +770,32 @@ describe("10c. The rollout's shown-intent fallback does not re-apply our Vulnera
     expect(r.lines[0]!.perTurn[0]!.loss.mean).toBe(15);
   });
 });
+
+describe("10d. Paper Phrog: Vulnerable enemies take 75% more (coverage #12; the solver used 1.5)", () => {
+  it("a Strike into Vulnerable: 10 with 1.75, 9 without", () => {
+    const hit = (vulnerableFactor?: number) =>
+      solveTurn({ hand: [card(0, "STRIKE_IRONCLAD", { damage: 6 })], player: player({ hp: 50, ...(vulnerableFactor ? { vulnerableFactor } : {}) }), enemies: [enemy({ vulnerable: 2 })], fightKind: "monster" }).plans.find((plan) => plan.steps.length === 1)!.outcome.damageDealt;
+    expect(hit()).toBe(9);
+    expect(hit(1.75)).toBe(10);
+  });
+
+  it("the planner reads the relic", () => {
+    potionMcOptions.now = () => 0;
+    rolloutLiveOptions.enabled = false;
+    let factor: number | undefined;
+    solveTap.onSolve = (input) => {
+      factor ??= input.player.vulnerableFactor;
+    };
+    try {
+      const fx = logged("g8yy-f30-t3");
+      const run = fx.state["run"] as Raw;
+      run["relics"] = [...((run["relics"] as Raw[]) ?? []), { index: 9, relic_id: "PAPER_PHROG", name: "纸蛙", stack: null }];
+      planCombatTurn(loggedEnv(fx));
+      expect(factor).toBe(1.75);
+    } finally {
+      solveTap.onSolve = null;
+      potionMcOptions.now = null;
+      rolloutLiveOptions.enabled = true;
+    }
+  });
+});

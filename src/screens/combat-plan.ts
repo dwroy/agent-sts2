@@ -837,6 +837,8 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
 
 /** Intimidating Helmet's block per 2+ cost card (PU21 F12-F14: block 0 -> 4; its description is a template). */
 export const INTIMIDATING_HELMET_BLOCK = 4;
+/** Paper Phrog: Vulnerable enemies take 75% more, not 50% (its game text). */
+export const PAPER_PHROG_VULNERABLE = 1.75;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1260,6 +1262,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     exhaustedThisTurn,
     // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
+    ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
