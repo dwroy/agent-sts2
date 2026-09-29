@@ -7,8 +7,8 @@
  */
 
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
 import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
@@ -38,6 +38,11 @@ export interface DeepSeekConfig {
   effortByLabel?: string;
   /** JSONL file receiving each call's full chain of thought (for later review); "" disables. */
   reasoningLog?: string;
+  /**
+   * Directory of the day's snapshots of the guide and handbook as filled with the data facts (frozenGuideFacts);
+   * unset or "": filled from the data at every start.
+   */
+  factsSnapshotDir?: string;
 }
 
 export interface DeepSeekAnswer {
@@ -424,9 +429,9 @@ export class DeepSeekClient implements Escalator {
   readonly handbookId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
-    // The guides' data facts (the Giant's kill record) are filled from the fight data once, here.
-    const guide = fillGuideFacts(readOptional(config.guideFile));
-    const handbook = fillGuideFacts(readOptional(config.handbookFile));
+    // The guides' data facts (the Giant's kill record) are filled from the fight data, frozen for the day.
+    const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
+    const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
     this.handbookId = shortHash(handbook);
     this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
     let system = SYSTEM;
@@ -853,6 +858,37 @@ function sumMeta(a: Omit<DeepSeekAnswer, "choice" | "reason">, b: Omit<DeepSeekA
     cacheHitTokens: (a.cacheHitTokens ?? 0) + (b.cacheHitTokens ?? 0),
     reasoningTokens: (a.reasoningTokens ?? 0) + (b.reasoningTokens ?? 0),
   };
+}
+
+/**
+ * A guide (or the handbook) with its data placeholders filled (fillGuideFacts), frozen for the day: the first start
+ * of a local day fills it from the data and writes `<dir>/<YYYY-MM-DD>-<template hash>.md`; every later start that
+ * day with the same template reads that file. The data behind the placeholders (boss records, outcome stats) is
+ * rebuilt after every run, so filled fresh the system prompt, DeepSeek's cached prefix, changed every run and each
+ * run's first question hit the cache for 6.7-9.1% (2WRU 79YR 86C3). Frozen, the numbers are at most a day old
+ * (the same records, a few runs fewer) and the prefix changes once a day, or when the template's own text changes
+ * (a new hash). Snapshots of other days are removed when a new one is written. No dir: filled fresh, as before.
+ */
+export function frozenGuideFacts(template: string, dir: string | undefined, now: Date = new Date(), fill: (text: string) => string = fillGuideFacts): string {
+  if (!template || !dir) return template ? fill(template) : "";
+  const day = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const file = join(dir, `${day}-${shortHash(template)}.md`);
+  try {
+    if (existsSync(file)) return readFileSync(file, "utf8");
+  } catch {
+    // unreadable: filled again below
+  }
+  const filled = fill(template);
+  try {
+    mkdirSync(dir, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    writeFileSync(tmp, filled, "utf8");
+    renameSync(tmp, file);
+    for (const name of readdirSync(dir)) if (/^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}\.md$/.test(name) && !name.startsWith(`${day}-`)) rmSync(join(dir, name), { force: true });
+  } catch {
+    // a snapshot that cannot be written costs the cache, never the answer
+  }
+  return filled;
 }
 
 function readOptional(file: string | undefined): string {

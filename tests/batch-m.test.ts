@@ -4,14 +4,14 @@
  * refreshing knowledge files.
  */
 
-import { mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { DeepSeekAnswerError, DeepSeekClient, pickJsonObject, truncatedJsonObject } from "../src/llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, frozenGuideFacts, pickJsonObject, truncatedJsonObject } from "../src/llm/deepseek.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
 import type { CardModel } from "../src/strategy/card-model.js";
@@ -31,7 +31,7 @@ describe("1. Knowledge Demon: with Rupture up, Disintegration that outlasts the 
     const fx = logged("batch-m/79yr-f33-t5-curse");
     const decision = planSelection(loggedEnv(fx));
     expect(decision?.kind).toBe("act");
-    const act = decision as { intent: Raw; rationale: string };
+    const act = decision as unknown as { intent: Raw; rationale: string };
     expect(act.intent).toEqual({ action: "select_deck_card", option_index: 1 });
     expect(act.rationale).toContain("懒惰");
     expect(act.rationale).toMatch(/DISINTEGRATION Rupture: Strength \(outlasts the HP: 7 a turn x 6\.9 turns \+ 20 > 17 HP\)/);
@@ -41,7 +41,7 @@ describe("1. Knowledge Demon: with Rupture up, Disintegration that outlasts the 
     const fx = logged("batch-m/79yr-f33-t5-curse");
     const player = ((fx.state["combat"] as Raw)["player"] as Raw);
     player["current_hp"] = 80;
-    const act = planSelection(loggedEnv(fx)) as { intent: Raw; rationale: string };
+    const act = planSelection(loggedEnv(fx)) as unknown as { intent: Raw; rationale: string };
     expect(act.intent).toEqual({ action: "select_deck_card", option_index: 0 });
     expect(act.rationale).toMatch(/DISINTEGRATION Rupture: Strength;/);
   });
@@ -243,8 +243,62 @@ describe("4. Music Box: the turn's first Attack card comes back as an Ethereal c
     (combat2["player"] as Raw)["energy"] = 1;
     const run2 = second.state["run"] as Raw;
     run2["relics"] = (run2["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "PAELS_TEARS");
-    const next = planCombatTurn(loggedEnv(second, { screenMemory: env.screenMemory })) as { label: string; intent: Raw };
+    const next = planCombatTurn(loggedEnv(second, { screenMemory: env.screenMemory })) as unknown as { label: string; intent: Raw };
     expect(next.label).toBe("combat/plan-continue");
     expect(next.intent).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
+  });
+});
+
+describe("5. The DeepSeek system prompt's data facts frozen per day (2WRU 79YR 86C3: refilled every run, the first question of a run hit the cache 6.7-9.1%)", () => {
+  const template = "# Guide\n\nGiant: {GIANT_KILLS_A8}. Static text.";
+  /** Stand-in for the data behind the placeholders: `record` is what the data says now. */
+  const data = { record: "A8 27 场赢 13" };
+  const fill = (text: string) => text.split("{GIANT_KILLS_A8}").join(data.record);
+  const at = (day: number, hour: number) => new Date(2026, 8, day, hour, 0, 0);
+
+  it("same day: the second start reads the first one's fill byte for byte though the data moved; the next day takes the new data", () => {
+    const dir = mkdtempSync(join(tmpdir(), "batch-m-facts-"));
+    data.record = "A8 27 场赢 13";
+    const first = frozenGuideFacts(template, dir, at(30, 3), fill);
+    expect(first).toBe("# Guide\n\nGiant: A8 27 场赢 13. Static text.");
+    data.record = "A8 29 场赢 14"; // a run later, the data rebuilt
+    expect(frozenGuideFacts(template, dir, at(30, 23), fill)).toBe(first);
+    const nextDay = frozenGuideFacts(template, dir, at(31, 0), fill);
+    expect(nextDay).toBe("# Guide\n\nGiant: A8 29 场赢 14. Static text.");
+    // Only the current day's snapshot is kept.
+    expect(readdirSync(dir).filter((name) => name.endsWith(".md")).map((name) => name.slice(0, 10))).toEqual(["2026-10-01"]);
+  });
+
+  it("the template's own text edited the same day: filled again from the data now", () => {
+    const dir = mkdtempSync(join(tmpdir(), "batch-m-facts-"));
+    data.record = "A8 27 场赢 13";
+    frozenGuideFacts(template, dir, at(30, 3), fill);
+    data.record = "A8 29 场赢 14";
+    expect(frozenGuideFacts(`${template} Edited.`, dir, at(30, 4), fill)).toBe("# Guide\n\nGiant: A8 29 场赢 14. Static text. Edited.");
+  });
+
+  it("no snapshot dir: filled at every call, as before", () => {
+    data.record = "A8 27 场赢 13";
+    expect(frozenGuideFacts(template, undefined, at(30, 3), fill)).toContain("A8 27 场赢 13");
+    data.record = "A8 29 场赢 14";
+    expect(frozenGuideFacts(template, undefined, at(30, 4), fill)).toContain("A8 29 场赢 14");
+    expect(frozenGuideFacts("", "/nonexistent", at(30, 4), fill)).toBe("");
+  });
+
+  it("DeepSeekClient: two starts on one day build the same system prompt, from the day's snapshot", () => {
+    const dir = mkdtempSync(join(tmpdir(), "batch-m-facts-"));
+    const guideFile = join(dir, "guide.md");
+    writeFileSync(guideFile, template, "utf8");
+    const config = { apiKey: "k", baseUrl: "http://127.0.0.1:9", model: "m", timeoutMs: 100, guideFile, factsSnapshotDir: join(dir, "facts") };
+    const a = new DeepSeekClient(config).systemPrompt;
+    const [snapshot] = readdirSync(join(dir, "facts"));
+    expect(snapshot).toMatch(/^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}\.md$/);
+    // What the next start reads is the snapshot, not a new fill: a stand-in text written there shows up.
+    writeFileSync(join(dir, "facts", snapshot!), "# Guide\n\nfrozen stand-in", "utf8");
+    const b = new DeepSeekClient(config).systemPrompt;
+    expect(b).toContain("frozen stand-in");
+    expect(new DeepSeekClient(config).systemPrompt).toBe(b);
+    expect(a).not.toContain("{GIANT_KILLS_A8}");
+    expect(existsSync(join(dir, "facts", snapshot!))).toBe(true);
   });
 });
