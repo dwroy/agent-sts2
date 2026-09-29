@@ -26,7 +26,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { damageForecast, expectedNextDamage } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -848,6 +848,22 @@ function thisTurnIncoming(combat: Record<string, unknown>): number {
  * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
  * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
  */
+/**
+ * Blessing of the Forge: what upgrading each plain card of the hand and the deck changes, by card id
+ * (card-model upgradeDelta; the hand's own entries first, they carry this fight's numbers).
+ */
+export function forgeUpgrades(state: GameState, knowledge: Knowledge): Record<string, UpgradeDelta> {
+  const out: Record<string, UpgradeDelta> = {};
+  const entries = [...asArray(asRecord(state.raw["combat"])["hand"]), ...asArray(asRecord(state.run?.raw)["deck"])].map(asRecord);
+  for (const entry of entries) {
+    const cardId = str(entry["card_id"]);
+    if (!cardId || out[cardId] || bool(entry["upgraded"])) continue;
+    const delta = upgradeDelta(entry, knowledge);
+    if (delta) out[cardId] = delta;
+  }
+  return out;
+}
+
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
@@ -1266,6 +1282,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+    ...(beltIds.has("SOLDIERS_STEW")
+      ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
+      : {}),
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
     // Drawn from the draw pile, or the discard pile reshuffled when it is empty.

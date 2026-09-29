@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { freeCardPick, thisTurnScore, type CardModel } from "./card-model.js";
+import { applyUpgrade, freeCardPick, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
@@ -152,6 +152,11 @@ export interface PlayerSim {
   duplicate?: number;
   /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
   regen?: number;
+  /**
+   * Soldier's Stew drunk before this turn and not shown in the hand's text (the rollout's later turns):
+   * every Strike card is played this many extra times.
+   */
+  strikeReplay?: number;
   /**
    * Buffer already up (BUFFER_POWER, from a Lucky Tonic drunk earlier): each stack prevents the next HP
    * loss, our own included (99X7 F9 T3: Breakthrough's 1 HP ate the Buffer drunk for the enemy turn, -17).
@@ -467,6 +472,8 @@ interface Sim {
   drawnInHand: number;
   /** Regen up at the end of this turn (already up plus drunk now): healed before the enemy attacks. */
   regen: number;
+  /** Soldier's Stew: extra plays of every Strike card from now on this turn. */
+  strikeReplay: number;
   /** Plating gained this turn from a Plating potion (Heart of Iron), and the part of it potions gave. */
   plating: number;
   platingPotion: number;
@@ -862,10 +869,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
   const twice = card.type !== "Potion" && next.duplicate > 0;
   if (twice) next.duplicate -= 1;
+  // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
+  const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
   const strengthBefore = next.permStrength;
   const flatBefore = next.flat;
   resolveEffects(next, card, target, player, cost);
   if (twice) resolveEffects(next, card, target, player, cost);
+  for (let replay = 0; replay < replays; replay += 1) resolveEffects(next, card, target, player, cost);
   if (card.type === "Potion") {
     next.potionStrength += next.permStrength - strengthBefore;
     next.potionFlat += next.flat - flatBefore;
@@ -1056,6 +1066,16 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const amount = card.regen ?? 0;
     next.regen += amount;
     next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
+  }
+  // Blessing of the Forge: every card left in hand upgraded (its logged upgrade numbers added).
+  if (card.special === "forge" && card.upgrades) {
+    const upgrades = card.upgrades;
+    next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.upgraded || !upgrades[entry.cardId] ? entry : applyUpgrade(entry, upgrades[entry.cardId]!)));
+  }
+  // Soldier's Stew: the Strikes played from now on replay; the piles' Strikes later are lasting value.
+  if (card.special === "stew") {
+    next.strikeReplay += 1;
+    next.flat += STEW_LATER_SHARE * (card.laterDamage ?? 0);
   }
   // Plating: this turn's block is platingNow (evaluate); the later turns' block is valued by what it can
   // absorb of the attacks forecast for them (platingAbsorbed), not a flat rate.
@@ -1480,6 +1500,12 @@ export function platingAbsorbed(plating: number, input: SolverInput): number {
   }
   return absorbed;
 }
+/**
+ * Soldier's Stew: lasting value per point of the damage one more play of each Strike in the draw and
+ * discard piles adds (card-model laterDamage), before fight length: about the damage weight of a boss
+ * fight (0.8) once the boss fight-length factor (1.8) is applied, a little under it in shorter fights.
+ */
+export const STEW_LATER_SHARE = 0.45;
 /** Snecko Oil: a hand card's expected cost this turn (0-3 at random). */
 export const SNECKO_COST = 1.5;
 
@@ -1892,7 +1918,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 
 export interface SolveResult {
@@ -2005,6 +2031,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     regen: input.player.regen ?? 0,
     plating: 0,
     platingPotion: 0,
+    strikeReplay: input.player.strikeReplay ?? 0,
     unknown: [],
     feedKills: 0,
     dazedAdded: 0,

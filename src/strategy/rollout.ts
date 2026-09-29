@@ -684,6 +684,8 @@ interface SimPlayer {
   pyre: number;
   /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
   radiance: number;
+  /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
+  strikeReplay: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
@@ -864,6 +866,7 @@ function applyPlan(
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
       if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
+      if (step.cardId.startsWith("POTION:SOLDIERS_STEW:")) player.strikeReplay += 1;
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
@@ -1053,6 +1056,7 @@ function simulate(
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
     radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
+    strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
     otherStartLoss: 0,
@@ -1144,6 +1148,7 @@ function simulate(
       regen: 0,
       facing: null,
       unmovableArmed: player.unmovable,
+      strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
       noBlock: false,
       tender: 0,

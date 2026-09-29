@@ -11,6 +11,7 @@
  * damage.ts); Strength gained *during* the turn is added by the solver.
  */
 
+import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../util/json.js";
 
@@ -68,7 +69,19 @@ export interface CardModel {
   draw: number;
   exhausts: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | null;
+  special: "dismantle" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | null;
+  /**
+   * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
+   * played N extra times.
+   */
+  replay?: number;
+  /** Blessing of the Forge: what upgrading each card id changes (upgradeDelta), for the cards it may upgrade. */
+  upgrades?: Record<string, UpgradeDelta>;
+  /**
+   * Soldier's Stew: the damage one replay of each Strike card in the draw and discard piles adds over the
+   * rest of the fight (its lasting value; this turn's Strikes replay in the solver).
+   */
+  laterDamage?: number;
   /** False when the effect could not be modelled; the solver then uses `flatValue` only. */
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
@@ -342,6 +355,99 @@ export function givesLastingStrength(text: string): boolean {
   );
 }
 
+/**
+ * Replay N from a card's rendered text, a sentence of its own (「重放1。」 after Soldier's Stew, QUG1DSDARAXU
+ * F23 T5; "Replay 1."), not one that gives Replay to another card (Sword Sage 「君王之剑获得重放1。」).
+ */
+export function replayOf(rendered: string): number {
+  const match = /(?:^|[。\s])重放\s*(\d+)\s*(?:。|$)/.exec(rendered) ?? /(?:^|\.\s+)replay\s+(\d+)\s*(?:\.|$)/i.exec(rendered);
+  return match ? Number(match[1]) : 0;
+}
+
+/** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
+export interface UpgradeDelta {
+  damage?: number;
+  hits?: number;
+  block?: number;
+  vulnerable?: number;
+  weak?: number;
+  strength?: number;
+  tempStrength?: number;
+  draw?: number;
+  energyGain?: number;
+  hpLoss?: number;
+  cost?: number;
+  plating?: number;
+  retaliate?: number;
+  powerAmount?: number;
+}
+
+const UPGRADE_FIELDS = ["damage", "hits", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
+
+/**
+ * What upgrading this plain card changes, as model fields: the card entry with its dynamic values and
+ * energy cost moved by the logged upgrade differences (knowledge/card-upgrades), modelled both ways.
+ * null for an upgraded card, a card never logged both ways, or one whose upgrade changes no number
+ * (only its text: True Grit's pick, Armaments' whole hand).
+ */
+export function upgradeDelta(entry: unknown, knowledge: Knowledge): UpgradeDelta | null {
+  const card = asRecord(entry);
+  if (bool(card["upgraded"])) return null;
+  const upgrade = cardUpgrade(str(card["card_id"]));
+  if (!upgrade) return null;
+  const moved = (value: unknown, delta: number): unknown => (typeof value === "number" ? value + delta : value);
+  const upgraded: Record<string, unknown> = {
+    ...card,
+    upgraded: true,
+    energy_cost: upgrade.cost && !bool(card["costs_x"]) ? moved(card["energy_cost"], upgrade.cost[1] - upgrade.cost[0]) : card["energy_cost"],
+    dynamic_values: asArray(card["dynamic_values"]).map((raw) => {
+      const value = asRecord(raw);
+      const change = upgrade.vars[str(value["name"])];
+      if (!change) return value;
+      const delta = change[1] - change[0];
+      return { ...value, base_value: moved(value["base_value"], delta), current_value: moved(value["current_value"], delta), enchanted_value: moved(value["enchanted_value"], delta) };
+    }),
+  };
+  const before = modelHandCard(card, 0, knowledge);
+  const after = modelHandCard(upgraded, 0, knowledge);
+  const delta: UpgradeDelta = {};
+  for (const field of UPGRADE_FIELDS) {
+    const change = ((after[field] as number | null | undefined) ?? 0) - ((before[field] as number | null | undefined) ?? 0);
+    if (change !== 0) delta[field] = change;
+  }
+  return Object.keys(delta).length > 0 ? delta : null;
+}
+
+/** The card with an upgrade's numbers added (Blessing of the Forge in the solver). */
+export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
+  const add = (value: number | undefined, change: number | undefined) => (value ?? 0) + (change ?? 0);
+  return {
+    ...card,
+    upgraded: true,
+    name: card.name.endsWith("+") ? card.name : `${card.name}+`,
+    damage: card.damage === null && !delta.damage ? null : add(card.damage ?? 0, delta.damage),
+    ...(card.damageBase !== undefined && delta.damage ? { damageBase: card.damageBase + delta.damage } : {}),
+    hits: Math.max(0, add(card.hits, delta.hits)),
+    block: Math.max(0, add(card.block, delta.block)),
+    vulnerable: add(card.vulnerable, delta.vulnerable),
+    weak: add(card.weak, delta.weak),
+    strength: add(card.strength, delta.strength),
+    tempStrength: add(card.tempStrength, delta.tempStrength),
+    draw: add(card.draw, delta.draw),
+    energyGain: add(card.energyGain, delta.energyGain),
+    hpLoss: Math.max(0, add(card.hpLoss, delta.hpLoss)),
+    cost: card.xCost ? card.cost : Math.max(0, add(card.cost, delta.cost)),
+    ...(card.plating !== undefined || delta.plating ? { plating: add(card.plating, delta.plating) } : {}),
+    ...(card.retaliate !== undefined || delta.retaliate ? { retaliate: add(card.retaliate, delta.retaliate) } : {}),
+    ...(card.powerAmount !== undefined || delta.powerAmount ? { powerAmount: add(card.powerAmount, delta.powerAmount) } : {}),
+  };
+}
+
+/** A Strike card (「名字中有打击」: the game data's Strike tag, the same cards as STRIKE in the id). */
+export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
+  return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
+}
+
 export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
@@ -485,6 +591,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     delayedDamage,
     inferno: cardId === "INFERNO" ? dyn(card, "InfernoPower") ?? 6 : 0,
     ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
+    ...(replayOf(rendered) > 0 ? { replay: replayOf(rendered) } : {}),
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
@@ -600,6 +707,16 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // Bottled Potential: 「将你的所有牌洗入你的抽牌堆。抽{Cards}张牌。」 the hand goes back into the pile (not
   // exhausted), then 5 cards (turn-solver "bottled"; priced like Glowwater's draw: expectedDraw).
   BOTTLED_POTENTIAL: { target: "self", special: "bottled" },
+  // Blessing of the Forge: 「在本场战斗中升级你手牌中的所有牌。」 Every card in hand upgraded for the rest of the
+  // fight: each hand card's logged upgrade numbers (upgradeDelta, knowledge/card-upgrades; modelPotion
+  // takes them from PotionContext.upgrades), this turn's plays only (the upgraded cards' later draws are
+  // not counted). Unmodelled, BXAZ offered it 7 times at 0.18-0.49 and QUG1/8V0H drank it at 0.39/0.13.
+  BLESSING_OF_THE_FORGE: { target: "self", special: "forge" },
+  // Soldier's Stew: 「在本场战斗中，所有名字中有“打击”的牌获得重放：1。」 Every Strike card is played once more
+  // for the rest of the fight (turn-solver: this turn's Strikes; laterDamage: one more play of each Strike
+  // in the draw and discard piles, lasting value). The hand then shows 「重放1。」 on each Strike (replayOf).
+  // Unmodelled, QUG1 F23 T4 drank it at 0.08 on a turn with no Strike played.
+  SOLDIERS_STEW: { target: "self", special: "stew" },
   // Card potions: drinking puts the card in hand (modelPotion builds it from GENERATED_CARD_POTIONS).
   ATTACK_POTION: { target: "self" },
   SKILL_POTION: { target: "self" },
@@ -634,6 +751,10 @@ export interface PotionContext {
   drawPick?: CardModel | null;
   /** Gambler's Brew, Glowwater and Distilled Chaos: the draw pile's average card (expectedDraw). */
   expectedDraw?: CardModel | null;
+  /** Blessing of the Forge: what upgrading each plain card id of the deck changes (upgradeDelta). */
+  upgrades?: Record<string, UpgradeDelta>;
+  /** Soldier's Stew: the damage per play of the Strike cards in the draw and discard piles, summed. */
+  strikePileDamage?: number;
 }
 
 /**
@@ -791,6 +912,8 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
   // A pile-card potion with nothing to take is not a line.
   if (pile && !pileCard) return null;
+  // Blessing of the Forge with no card whose upgrade is known: nothing to price it by.
+  if (effect.special === "forge" && Object.keys(ctx?.upgrades ?? {}).length === 0) return null;
   const generates: CardModel | undefined = effect.special === "gamble" || effect.special === "chaos" || effect.special === "glowwater" || effect.special === "bottled"
     ? ctx?.expectedDraw ?? undefined
     : pileCard
@@ -833,6 +956,8 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
     ...potionShell(potionId, name, slot, validTargets, useCost),
     ...effect,
     ...(generates ? { generates } : {}),
+    ...(effect.special === "forge" ? { upgrades: ctx?.upgrades ?? {} } : {}),
+    ...(effect.special === "stew" ? { laterDamage: ctx?.strikePileDamage ?? 0 } : {}),
   };
 }
 

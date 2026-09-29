@@ -12,9 +12,9 @@ import { describe, expect, it } from "vitest";
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { potionViews } from "../src/project/narrow.js";
-import { drawablePileSize, enemySims, laterIncomingOf, pileCardModels } from "../src/screens/combat-plan.js";
+import { drawablePileSize, enemySims, forgeUpgrades, laterIncomingOf, pileCardModels } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
-import { expectedDraw, modelHandCard, modelPotion, pileCardPick, type CardModel } from "../src/strategy/card-model.js";
+import { expectedDraw, modelHandCard, modelPotion, pileCardPick, replayOf, upgradeDelta, type CardModel } from "../src/strategy/card-model.js";
 import { platingAbsorbed, solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge, type Logged } from "./logged.js";
 
@@ -260,6 +260,59 @@ describe("X-cost multi-hit cards", () => {
     const volley = modelHandCard({ ...base, card_id: "VOLLEY", name: "连射", cost: 0, dynamic_vars: { Damage: 10 } }, 0, loggedKnowledge);
     expect(volley.special).toBe("whirlwind");
     expect(volley.hits).toBe(0);
+  });
+});
+
+describe("Blessing of the Forge and Soldier's Stew are solver lines (BXAZ, QUG1, 8V0H: drunk unmodelled at 0.08-0.39)", () => {
+  const hand = (fx: Logged) => (combatOf(fx)["hand"] as Raw[]);
+  const entry = (fx: Logged, cardId: string) => hand(fx).find((card) => card["card_id"] === cardId)!;
+
+  it("an upgrade's numbers come from the logged upgraded cards (the game data repeats the base text)", () => {
+    const fx = logged("bxaz-f17-t5-forge");
+    expect(upgradeDelta(entry(fx, "TWIN_STRIKE"), loggedKnowledge)).toEqual({ damage: 2 });
+    expect(upgradeDelta(entry(fx, "HEADBUTT"), loggedKnowledge)).toEqual({ damage: 3 });
+    expect(upgradeDelta(entry(fx, "DEFEND_IRONCLAD"), loggedKnowledge)).toEqual({ block: 3 });
+    const bash = { card_id: "BASH", upgraded: false, energy_cost: 2, rules_text: "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。", dynamic_values: [{ name: "Damage", base_value: 8, current_value: 8 }, { name: "VulnerablePower", base_value: 2, current_value: 2 }] };
+    expect(upgradeDelta(bash, loggedKnowledge)).toEqual({ damage: 2, vulnerable: 1 });
+    expect(upgradeDelta({ ...bash, upgraded: true }, loggedKnowledge)).toBeNull();
+    // Body Slam+ costs 0.
+    expect(upgradeDelta({ card_id: "BODY_SLAM", upgraded: false, energy_cost: 1, dynamic_values: [] }, loggedKnowledge)).toEqual({ cost: -1 });
+  });
+
+  it("Blessing of the Forge upgrades the hand before the plays (BXAZ F17 T5: 39 -> 54 damage, 5 -> 8 block)", () => {
+    const fx = logged("bxaz-f17-t5-forge");
+    const input = withPotions(fx);
+    expect(input.hand.some((card) => card.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE"))).toBe(false);
+    const upgrades = forgeUpgrades(parseGameState(fx.state), loggedKnowledge);
+    const forge = modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades })!;
+    expect(forge.special).toBe("forge");
+    const plans = solveTurn({ ...input, hand: [...input.hand, forge] }).plans;
+    const cards = (plan: Plan) => plan.steps.filter((step) => !step.cardId.startsWith("POTION:")).map((step) => step.cardId).join(",");
+    const drunk = plans.find((plan) => plan.steps[0]?.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE") && cards(plan).includes("TWIN_STRIKE") && cards(plan).includes("HEADBUTT"))!;
+    const dry = plans.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && cards(plan) === cards(drunk))!;
+    // Headbutt +3, Twin Strike +2 x2, Sword Boomerang's upgrade (+1 x3 when it is played).
+    expect(drunk.outcome.damageDealt - dry.outcome.damageDealt).toBeGreaterThanOrEqual(3 + 4);
+    // With no upgrade known for any card it stays an unmodelled option.
+    expect(modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades: {} })).toBeNull();
+  });
+
+  it("Soldier's Stew replays the Strikes played after it, and one more play of the piles' Strikes is lasting value (QUG1 F23 T4)", () => {
+    const fx = logged("qug1-f23-t4-stew");
+    const input = withPotions(fx);
+    const stew = input.hand.find((card) => card.cardId.startsWith("POTION:SOLDIERS_STEW"))!;
+    expect(stew.special).toBe("stew");
+    const strike = input.hand.find((card) => card.cardId === "STRIKE_IRONCLAD")!;
+    const enemies = input.enemies.map((enemy) => ({ ...enemy, hp: 200, maxHp: 200 }));
+    const target = enemies.find((enemy) => enemy.hp > 0)!.index;
+    const strikes = (hand: CardModel[], drinks: boolean) =>
+      solveTurn({ ...input, enemies, hand }).plans.find((plan) => plan.steps.some((step) => step.cardId === "STRIKE_IRONCLAD" && step.target === target) && drinks === plan.steps.some((step) => step.cardId.startsWith("POTION:SOLDIERS_STEW")))!;
+    const once = strikes([strike], false).outcome.damageDealt;
+    expect(strikes([{ ...stew, laterDamage: 0 }, strike], true).outcome.damageDealt).toBe(2 * once);
+    // After drinking, the hand shows 「重放1。」 on each Strike (QUG1 F23 T5): read as Replay 1.
+    const t5 = logged("qug1-f23-t5-replay");
+    const replay = Object.fromEntries(hand(t5).map((card, index) => [String(card["card_id"]), modelHandCard(card, index, loggedKnowledge).replay ?? 0]));
+    expect(replay).toMatchObject({ STRIKE_IRONCLAD: 1, TWIN_STRIKE: 1, ANGER: 0, DEFEND_IRONCLAD: 0 });
+    expect(replayOf("君王之剑获得重放1。")).toBe(0);
   });
 });
 
