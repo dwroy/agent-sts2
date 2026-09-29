@@ -16,7 +16,7 @@ import { RunJournal, type JournalEntry } from "../src/project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
 import { planReward } from "../src/screens/reward.js";
 import { fightPlanInput } from "../src/strategy/fight-plan.js";
-import { iconsToText, type JsonValue } from "../src/util/json.js";
+import { iconsToText, stripMarkup, type JsonValue } from "../src/util/json.js";
 import { baseState, combatPayload, rewardCardPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;
@@ -186,6 +186,21 @@ describe("display fixes seen in the F24 prompt", () => {
     const [card] = deckEntries(state, testKnowledge);
     expect(card!.description).toBe("失去3点生命。 获得2点能量。");
     expect(describeDeck(deckEntries(state, testKnowledge))).not.toContain("res://");
+  });
+
+  it("a number before a single icon is the amount (VSRG F18: Very Hot Cocoa read as 41点能量)", () => {
+    const star = "res://images/packed/sprite_fonts/star_icon.png";
+    expect(iconsToText(`在每场战斗的第一回合额外获得[blue]4[img]${icon}[/img][/blue]。`)).toBe("在每场战斗的第一回合额外获得[blue]4点能量[/blue]。");
+    expect(stripMarkup(`在每场战斗的第一回合额外获得[blue]4[img]${icon}[/img][/blue]。`)).toBe("在每场战斗的第一回合额外获得4点能量。");
+    expect(iconsToText(`获得[blue]4[/blue][img]${icon}[/img]。`)).toBe("获得[blue]4[/blue]点能量。");
+    expect(iconsToText(`获得4${icon}。 消耗。`)).toBe("获得4点能量。 消耗。");
+    expect(iconsToText(`你的下一张攻击牌耗能变为0${icon}。`)).toBe("你的下一张攻击牌耗能变为0点能量。");
+    expect(iconsToText(`随机一张攻击牌，其耗能减少1${icon}。`)).toBe("随机一张攻击牌，其耗能减少1点能量。");
+    expect(iconsToText(`每回合失去1点${icon}。`)).toBe("每回合失去1点能量。");
+    expect(iconsToText(`获得3${star}。`)).toBe("获得3颗星。");
+    expect(iconsToText(`每当你花费一点${star}，`)).toBe("每当你花费一颗星，");
+    // A number that is not next to the icon is left alone; runs still count.
+    expect(iconsToText(`抽[blue]2[/blue]张牌并获得[img]${icon}[/img][img]${icon}[/img]。`)).toBe("抽[blue]2[/blue]张牌并获得2点能量。");
   });
 
   it("relic placeholders are filled where the value is known, marked unknown otherwise", () => {

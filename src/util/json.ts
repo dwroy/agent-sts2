@@ -85,12 +85,22 @@ export function truncate(text: string, max: number): string {
  * The game renders energy (and the Regent's stars) as inline images; their res:// paths reached the
  * models verbatim ("获得res://…energy_icon.pngres://…energy_icon.png" = gain 2 energy). A run of N
  * adjacent icons reads "N点能量" / "N颗星"; any other inline image is dropped.
+ *
+ * Larger amounts are written as the number followed by a single icon: Very Hot Cocoa's
+ * "[blue]4[img]…energy_icon.png[/img][/blue]" is 4 energy, not "4" + "1点能量" = "41点能量" (VSRG F18),
+ * and so are "耗能变为0[icon]" (0 energy), "耗能减少1[icon]", "失去1点[icon]" and "花费一点[star]".
  */
 export function iconsToText(text: string): string {
   const icon = (kind: string): string => `(?:\\[img\\])?res:\\/\\/[^\\s\\[\\]]*?${kind}\\.png(?:\\[\\/img\\])?`;
   const run = (kind: string): RegExp => new RegExp(`(?:${icon(kind)}\\s*)*${icon(kind)}`, "g");
   const count = (match: string): number => match.match(/\.png/g)?.length ?? 1;
+  // A number (optionally "N点", optionally with colour markup between) right before one icon — not a run.
+  const numbered = (kind: string): RegExp =>
+    new RegExp(`(?:(\\d+)点?|(一)点)((?:\\[\\/?(?!img\\])[a-zA-Z_]+\\])*)${icon(kind)}(?!\\s*${icon(kind)})`, "g");
+  const amountOf = (digits: string | undefined, one: string | undefined): string => digits ?? one ?? "";
   return text
+    .replace(numbered("energy_icon"), (_m, digits?: string, one?: string, markup = "") => `${amountOf(digits, one)}${markup}点能量`)
+    .replace(numbered("star_icon"), (_m, digits?: string, one?: string, markup = "") => `${amountOf(digits, one)}${markup}颗星`)
     .replace(run("energy_icon"), (match) => `${count(match)}点能量`)
     .replace(run("star_icon"), (match) => `${count(match)}颗星`)
     .replace(new RegExp(icon("[^\\s\\[\\]]*?"), "g"), "");
