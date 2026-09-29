@@ -1058,3 +1058,160 @@ ds-handbook:38 进场均值、boss-clock 的巨兽击杀回合战绩由修 bug �
 - 最终：每种界面的中位涨 0.04–0.27k，单个切片最多涨 0.30k，最大 6.6k（R2H1 A8 F19 二幕卡牌奖励，25 条经验 + 4 行统计，改前 6.4k）。
 - 条目数：active 199（测试上限 200，下次新增前要先退役或合并）；置信度 高 129、中 59、低 11。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：新增的是遗物条目，没有新增敌人条目。
+
+## 2026-09-29 第八次增量：7 局 A9（version 2026-09-29.7，分支 exp-update，a02ad58）
+
+### 来源
+- `notes/lessons.md` 末尾的 7 节 A9 复盘，全输：7YT0NJC2LEYQ（F17 仪式兽）、9CDEMGKTJ77N（F17 仪式兽）、VTREB5A9XWS7（F33 无厌沙虫）、V6TW9MJ385P2（F33 帝王蟹）、DHGT6Z3Q7VAP（F33 帝王蟹）、JJ65CGH92D9A（F17 灵魂异鱼）、ULQPBK1211FG（F8 骇鳗）。
+  - 7YT0、9CDE 上次只进数字，这次作为证据局。
+  - 两段勘误（21:31 针对 7YT0/9CDE，22:08 针对 DHGT/JJ65/ULQP）按勘误用。进了本节或条目的是：7YT0 T13 手里有两张防御（上勾拳是按虚弱算的）、预备打击共出现 4 次；9CDE 护栏没保住燃烧+ 是因为 T3 是 big-hit 回合；JJ65 的 [card:TRUE_GRIT] 条目只在 F8 的输入里；ULQP 走廊投影是 −8 血，拿到 5 瓶药（走廊喝 4、精英 1）；DHGT 巨兽战 T1–T5 没掉血。
+- 日志（只读）：
+  - 沿用上次的抽取脚本：从 states.jsonl 字节偏移 3.38e9 起流式读一遍，抽出 A9 全部战斗和每层第一帧/最后一帧。
+    - 用同样口径重算截至 19:57 的 50 局，和上一节一致：一幕走廊 244 场死 1、8/13；一幕精英 47 场 32/39；二幕走廊 105 场死 10、12/22/36；二幕 0 精英 17 局 9/5/3；一幕精英数 10/33/7 局；永久力量 7/21、15/20、4/4；锻造 6/8、20/37；走廊虱虫之祖 7 场、产卵虫 7 场、啃咬机 3 场、草蜢 15 场。
+  - `tools/boss-fights-extract.py --asc 9`（在 A9 那段的副本上跑）+ `tools/boss-clock-calibrate.ts --rows`：按现行时钟（v3 3899c2a）重算 A9 一幕 boss 49 场、二幕 boss 10 场（帝王蟹 5、沙虫 5）。
+    - 用同样口径重算上次的 45 场，和上一节一致：赢局中位 1.02、输局 0.62（0.37–0.94）。G 批 66f98b5（缩放仪进时钟）没改变这 45 场的数。
+  - A7–A9 灵魂异鱼 38 场：A7、A8 沿用上次的抽取，A9 用本次的 boss 抽取，牌组取 boss 战第一帧。
+  - runs.jsonl 定输赢。`monster-db.json`（v3 3899c2a，e437fac 刷新，含这 55 局）取 A9 boss 每回合掉血中位，和抽取结果对数。
+  - DeepSeek 推理按每局第一条到最后一条决策的时间窗从 deepseek-reasoning.jsonl 抽出（这个文件没有 run id）；run plan、决策按 run id 从 run-plans / decisions 抽出。条目和本节引的原话都找到了出处。
+- 口径同上次：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算。
+  - A9 汇总是截至 21:28 runs.jsonl 里 55 局已结束的 A9。
+  - 21:55 结束的 RRMYC7MCSYX8 是 A8、还没复盘，不算；A8 的数都没动。
+- 先在 exp-update 上 `git merge --no-edit v3`（快进到 3899c2a），再改。
+- 结果：新增 0 条，更新 38 条，退役 1 条；active 199 → 198，总数 221 不变。
+  - 更新里 26 条加了证据局，9 条只改数字，3 条（药水）只改描述代码行为的句子。
+- 药水的处理（照上次）：
+  - potion:* 和 general:potion 条目只改句内数字，不加证据局（n 不变）。
+  - potion-code-discard、potion-swift、potion-fysh-oil 里描述代码行为的句子改成现在的事实，建议分句和 n 都没动。
+  - 其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分。crab-potions 没动（V6TW 为帝王蟹留的药也在二幕走廊喝了，只记在本节）。
+  - 没有新增或加强任何「什么时候喝/别喝」的说法。
+
+### 对照数据检查的主题
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 仪式兽（A9 5 场赢 3） | 7YT0 79/91（87%）进场，16 张 3 升级、0 张永久力量，14 回合打掉 211（15.1/回合，实打/估值 0.69）；T5 打到 160 眩晕，之后 3 个昏眩回合（T7/T10/T13）共打 13、掉 34。9CDE 53/80（66%），18 张 3 升级、有燃烧+（T3 被 HP 护栏换掉，T5 才打出），6 回合 66（11/回合，0.44）。VTRE 80/80、带燃烧，8 回合打完（32.8/回合，1.49），剩 28；V6TW 68/80、撕裂配狱火/放血/御血术/突破/血墙，7 回合（37.4/回合，1.70），剩 27。A9 眩晕线是 160（monster DB 的 PLOW_POWER：A0–A8 150，A9 160） | beast-clock 加 7YT0、9CDE、VTRE、V6TW；beast-ringing-block 加 7YT0 |
+| 岩石铠甲（7YT0） | F12 以「4 plated armor means 4 block/turn … boss fight 12 turns = 48 block」拿它，同一段推理写着「gap 0, but knowledge says calibrate up ~30%」。boss 里覆甲 4/3/2/1，共 10 | d7dab83 起卡面在「获得N层覆甲」后写明衰减和总量，代码已修，不加条目 |
+| 灵魂异鱼（JJ65；A7–A9 38 场） | JJ65 80/80、18 张 2 升级（都是磨刀石随机升的打击），整幕 0 次锻造（F12 58/80「no power card worth smithing」回血，F16 回血）。12 回合，现行时钟算 14.7/回合（含节日拉炮开场的 9；复盘按 212 算 13.9），实打/估值 0.73。T7、T8 各 4 张呼唤在手，两回合 0 伤，61→12。未升级坚毅只在 T5 打出一次，手里没有呼唤，随机消耗了打击。进场时钟「需 18、估 20，缺 0」。A7–A9 38 场：输的 8 场都 ≤14.7/回合、≤2 张升级，赢的 30 场都 ≥13/回合；有燃烧契约/坚毅+/净化/恶魔之焰的 15 场赢 11，没有的 23 场赢 19。A9 12 场赢 9 | fysh-damage、fysh-beckon、card-true-grit 加 JJ65；card-true-grit 前半句改写 |
+| 瀑布巨兽（DHGT） | 86/86 进场，9 回合打完 250（27.8/回合，0.96），T9 击杀时 61 血对 41 层，自爆后剩 33。A8/A9 有击杀的 35 场，所需格挡 ≤13 的 20 场赢 19；A9 11 场赢 4 | giant-explode 加 DHGT |
+| 无厌沙虫（VTRE；A9 5 场赢 2） | 80/80 进场，27 张 1 张升级，7 回合打掉 181（25.9/回合，需 48.7，实打/估值 0.92），狂乱逃离 3 次，T7 在 23 血时吃 34 死，沙虫剩 160。二幕三个火堆（F25、F28、F32）都回血，推理写「Sandworm entry HP is the top win predictor」；整局只在 F11 锻造过一次。时钟 F24「57/27，缺 30」、F28「43/27」。monster DB A9 沙虫每回合掉血中位 11.0（上一版 9.5） | insatiable-entry、insatiable-clock 加 VTRE |
+| 帝王蟹（V6TW、DHGT；A9 5 场 0 胜） | V6TW 44/80（55%），31 张 2 升级，4 回合打掉 58/428（14.5/回合，需 107，0.50），碾碎爪 −40、火箭 −18，三份二幕 run plan 都写先打火箭。DHGT 90/95（95%），25 张 7 升级，T1 靠可可 +4 能量、准备背包、手里剑和爆炸安瓿打出 132，T2–T7 21/回合；7 回合 258（36.9/回合，需 61.1，1.08），碾碎爪 −118、火箭 −140，rollout 的 best_order 是「碾碎爪 > 火箭」。A9 5 场：78–95% 进场的 4 场 T5–T7 死，V6TW T4 死；monster DB A9 每回合掉血中位 13.0（上一版 13.8）。螃蟹战计数 56 场，两只一直都活着的 44 场赢 8（A9 0/5） | crab-entry、crab-dps、crab-kill-order 加 V6TW、DHGT；relic-very-hot-cocoa 加 DHGT |
+| 二幕选线（A9 29 局进二幕） | 新增 3 局都走二幕 0 精英。VTRE act-plan：「Route p5 skips deadly A9 act-2 elites, reaching boss ~88% HP」；DHGT：「p5 avoids A9 act-2 elites (7/10 deaths; we have 0 AOE) yet reaches boss 86/86」；V6TW：「route p2 has no elites, 3 rests, ~80/80 boss entry — Kaiser Crab needs ≥75%, p1 elite leaves none at p75」。三局进 boss 100%/95%/55%，都死在 boss，每回合输出是需要的 53%/60%/14%。二幕 0 精英 20 局：9 局死在走廊、8 局死在 boss、3 局过二幕 boss；打了精英的 9 局：7 局死在精英、1 局死在走廊、1 局死在 boss、0 局过 | act2-opening 写进观察数据，精英条目没改 |
+| 二幕开局（V6TW、VTRE、DHGT） | V6TW 投影 F23 57%、实到 32%，F24 火堆投影 48%、实到 15%（F22 啃咬机 −30、F23 胧光怪 −18），二幕 6 场走廊共掉 134（燃烧之血前）。VTRE F20 地道虫 55→14（−41，钻地后手里没有格挡），F21 投影 68%、实到 25%，F23 20/80 进熟睡甲虫组，瓶中精灵、蜥蜴尾巴各复活一次才打完。DHGT 二幕 5 场走廊只掉 23。A9 29 局有 9 局死在第一个二幕火堆前，走到的 20 局中位 42%（p25 22%），新 3 局到达时 88%/15%/40%。二幕走廊 120 场死 10，赢局中位 −12、p75 −22、p90 −35。走廊新数：虱虫之祖 9 场全胜、中位 −20、p75 −26；产卵虫 9 场死 1、赢局中位 −19；啃咬机 4 场、16–30；草蜢 16 场（含问号）中位 −13.5、p75 −19.5 | act2-opening 加 V6TW、VTRE；beetle 加 VTRE；louse、ovicopter、chomper、hopper 改数字 |
+| A9 一幕精英（51 场） | 赢局中位 −31.5、p75 −39.5、p90 −51。≥78% 进场 39/40 活（新：ULQP 82% 死），60–78% 9 场死 2，<60% 2/2 死。骇鳗 13 场死 2（XLJQ 59%、ULQP 82%），赢局中位 −31、p75 −36：ULQP 15 张 0 升级，9 回合打掉 137（15.2/回合），骇鳗剩 13 时死；DHGT 98% 进场、14 张 0 升级，8 回合（18.8/回合）掉 53；JJ65 100% 进场 −22。旧日雕像 A9 7 场全胜、都 ≥85% 进场、中位 −23（V6TW 90% −26） | terror-eel 加 DHGT、JJ65、ULQP；elite-threshold 加 ULQP；effigy-cost 加 V6TW |
+| 一幕路线投影（ULQP、7YT0） | ULQP F1 route-plan 选 3 精英路线（code rank 1），F5 起 F8 精英躲不开；走廊按每场 −2 投影，F7 火堆投影 70%、实到 52.5%。7YT0 F9 火堆投影 73.6%、实到 49.5% | act1-costs 加 7YT0、ULQP |
+| 一幕精英数（A9 55 局） | 过一幕 boss / 过二幕 boss：0 只 11 局 5/0（新：VTRE 过一幕、死在二幕 boss），1 只 37 局 20/2（新：V6TW、DHGT 过一幕，JJ65、ULQP 没过），2 只 7 局 4/1。9CDE F7、F9 两次改线避开精英（「Avoid elite at 58/80; boss arrives ~80/80」），F12 事件自付 9 血、F14/F15 两场走廊 −31，实到 53/80 | elite-need-one 加 9CDE、VTRE |
+| boss 进场血量、永久力量、锻造（A9 一幕 boss 49 场） | 过关 29/49，赢局平均进场 90%、输局 87%。全部 A9 boss 62 场：≥75% 进场 28/53（二幕 3/10），<75% 4/9（新输：9CDE 66%、V6TW 55%）；≥90% 进场 35 场赢 20（新输：JJ65、VTRE 满血，DHGT 95%）。永久力量：0 张 8/23（DHGT 赢，7YT0、JJ65 输），1 张 17/22（VTRE、V6TW 赢），≥2 张 4/4。一幕锻造 0 次 7/10、≥1 次 22/39；进 boss 时 0–1 张升级 12/20、2 张 7/14、≥3 张 10/15。A9 二幕 boss：进场 ≥75% 且 ≥3 张升级 3/9（新输 DHGT），其余 0/3（新输 VTRE、V6TW） | route-entry-hp 加 9CDE、V6TW、VTRE、DHGT、JJ65；act1-strength 加 7YT0、JJ65、VTRE、V6TW；rest-smith-threshold 改数字 |
+| 时钟（现行，A9 一幕 boss 49 场） | 实打/估值：赢局中位 1.06（29 场），输局 0.63（20 场，0.37–0.94）。进场时 20 场输局有 15 场被报缺口，29 场赢局有 13 场被报「够」。新批：7YT0 0.69（F11「需 22、估 23，缺 0」）、9CDE 0.44（报缺 12）、JJ65 0.73（「需 18、估 20，缺 0」）；赢的 VTRE 1.49、V6TW 1.70、DHGT 0.96。二幕：VTRE 0.92、V6TW 0.50、DHGT 1.08 | deck-clock 加 7YT0、JJ65 |
+| 删牌（V6TW） | 五份 run plan 的 remove 都是打击/防御。F3（110 金）「strike removal can wait for the next shop」；F11（101 金）买力量药水和血墙；F21（123 金）「no later shops exist」买燃烧和血墙。删牌都是 100 金、都付得起，0 次删；31 张里 5 打击 4 防御进帝王蟹 | deck-remove 加 V6TW |
+| 事件（9CDE、7YT0） | 9CDE F12 低语空谷 60→51，变牌打击→放血，推理「9 HP recovers at the pre-boss rest」；F16 火堆 29→53 回了 24，没被上限截（不付是 38→62）。7YT0 F13 滑脚木桥 75/91 点名岩石铠甲时重抽（−3，推理「lesson says pay 3 HP to reroll when the named card is key」），第二次点名打击时跨越 | event-hp-maxhp 加 9CDE；event-slippery-bridge 加 7YT0 |
+| 二幕先古遗物 | VTRE 营养汤、DHGT 烫嘴可可、V6TW 佩尔之血，三局都没过二幕 boss。A7–A9：营养汤 4/10、可可 2/12（A9 1/2）。DHGT 用可可 T1 打出 132，之后 21/回合 | relic-nutritious-soup、neow-growth 改数字；relic-very-hot-cocoa 加 DHGT |
+| 留给 boss 的药（只改数字） | 这 7 局 6 局、约 12 瓶：7YT0 2（F1、F8 run plan 给昏眩回合留的格挡药：固化 F3 问号战喝，敏捷 F15 精英喝）；9CDE 2（F6 为 boss T1 买的能力药水、F9「keep both potions for the boss」的敏捷，都在 F14 走廊喝）；VTRE 4（F6 为昏眩回合买的格挡药 F9 走廊喝；F24 易伤、F27 痊愈、F29 虚弱，在 F27、F31 走廊喝）；V6TW 2（F11「saves it for the Beast」的力量药水 F13 走廊喝，F22「keep both potions for the crab」时的力量药水 F23 走廊喝）；JJ65 1（两份 run plan 都写留 1 瓶，5 瓶全在 boss 前喝）；ULQP 1（F5「for the Soul Fysh boss」的发光水 F6 走廊喝）。DHGT 带 2 瓶进 boss、T1 都喝了。六批合计 58 局 47 局、约 91 瓶。A9 55 局每局走廊/事件战喝 4.3 瓶、精英 0.7、boss 1.3；二幕 boss 进场平均 1.3 瓶（n=12）。A9 ≥75% 进场的 boss：0 瓶 2/8（新增 JJ65），带药 26/45 | 只改 potion-save-for-boss、potion-empty-slots 的句内数字，n 不变 |
+
+- 异鱼这一行的口径同上一节：牌组取 boss 战第一帧，「这类牌」= 燃烧契约、坚毅+、净化、恶魔之焰；每回合伤害取 boss 抽取的 realised（boss 掉的血 ÷ 回合，含节日拉炮这类遗物伤害）。
+
+### 经验库自己带偏、或写了没被执行的地方
+- **elite-threshold 的「≥78% 进场 36/36 活」被读成安全线：** ULQP F1 route-plan 的推理引了「A9 arrival ≥78% HP safe」、elite-need-one 的 A9 表（「don't go 0 elites」），也引了 elite-no-double（「max 1 optional elite … 3 elites seems too many」），最后仍选了 3 精英的路线。
+  - F8 骇鳗 82% 进场、0 升级、15/回合，死。
+  - 条目里「0 升级、伤害 < 精英血÷5 时不打」这句 ULQP 正好命中，推理没引用。
+  - 数字改成 39/40，并写明 ULQP。
+- **二幕精英的死亡统计把三局都推向 0 精英路线：** VTRE、DHGT、V6TW 的 act-plan 都以 A9 二幕精英的死亡数选 0 精英路线（a9-damage「二、三幕精英 12 场死 9」，DHGT 引的是「7/10 deaths」）。
+  - 三局进 boss 100%/95%/55%，输出只有需要的 53%/60%/14%。
+  - 同时 route-entry-hp、insatiable-entry、crab-entry 的「进场血量」让 VTRE 二幕三个火堆都回血，1 张升级进沙虫。
+  - 两边都在死（上表），精英条目的结论没改，只在 act2-opening 补了 0 精英局死在 boss 的数。
+- **card-true-grit 前半句「坚毅（尤其坚毅+）能消耗呼唤」：** JJ65 F8 推理写「坚毅补第2张格挡并消耗异鱼的呼唤（高置信经验）」，放掉预备打击拿了未升级坚毅；按勘误，F8 的输入里有这条，F14 用的是旧 boss 要点。
+  - 条目后半句本来写了未升级是随机消耗，但前半句的括号让人读成未升级也能清。
+  - 改成「坚毅+ 能选一张手牌消耗…未升级版随机消耗一张、不能指定呼唤」，加 JJ65。boss 要点和指南 a85c413 已只点名坚毅+。
+- **deck-clock「时钟说已达标时按仍缺 ~30% 处理」照抄了、没执行（第 3 批）：** 7YT0 F12 推理「gap 0, but knowledge says calibrate up ~30%」之后拿了岩石铠甲；JJ65 F9 run plan 原文「时钟报缺口0仍按缺~30%处理」，F12 火堆仍以「no power card worth smithing」回血，整幕 0 次锻造。实打/估值 0.69、0.73。
+- **beast-clock「一幕至少要一张永久力量牌」：** 7YT0 F12 推理引了这句，但整幕 8 次卡牌奖励和 F5 商店都没有永久力量牌；预备打击出现 4 次都放掉（「temp Strength doesn't persist」）。9CDE F6 以这句买了燃烧。
+- **event-hp-maxhp：** 9CDE 事件付血的理由是「boss 前火堆会回」，条目只写了燃烧之血，已补一句（event-gold 里原本有「下一个火堆会回满只在回血会被上限截掉时成立」）。
+- **event-slippery-bridge：** 7YT0 照条目付 3 血重抽一次。
+
+### 新增（0）
+没有新增条目。考虑过：
+- 岩石铠甲/覆甲按总量算（7YT0）：d7dab83 起卡面在「获得N层覆甲」后写明衰减和总量，代码已修。
+- 手里剑、舵盘、稳定血清不在求解器/rollout（DHGT）：代码问题。
+- 流动铜液、红头骨、自成型黏土（VTRE、V6TW）：1966f0a、246d2be 已建模，没有对应条目。
+- 发光水把牌抽空后 rollout 不可用（ULQP）：代码问题。
+- 二幕 0 精英路线：两边都在死，写进 act2-opening 的观察数据，不单列。
+
+### 更新（38）
+- **加证据（26）：**
+  - boss：beast-clock 9→13（7YT0、9CDE、VTRE、V6TW）、beast-ringing-block 2→3（7YT0）、fysh-beckon 11→12（JJ65）、fysh-damage 18→19（JJ65）、giant-explode 24→25（DHGT）、insatiable-entry 27→28（VTRE）、insatiable-clock 24→25（VTRE）、crab-entry 30→32、crab-dps 33→35、crab-kill-order 13→15（都是 V6TW、DHGT）。
+  - 精英：terror-eel 25→28（DHGT、JJ65、ULQP）、effigy-cost 14→15（V6TW）、elite-threshold 30→31（ULQP）、elite-need-one 12→14（9CDE、VTRE）。
+  - 走廊：beetle 32→33（VTRE）。
+  - 幕、计划：act1-costs 17→19（7YT0、ULQP）、act1-strength 16→20（7YT0、JJ65、VTRE、V6TW）、act2-opening 35→37（V6TW、VTRE）、a9-damage 48→55（7 局；55 局重算）。
+  - 路线、牌组：route-entry-hp 52→57（9CDE、V6TW、VTRE、DHGT、JJ65）、deck-clock 41→43（7YT0、JJ65）、deck-remove 27→28（V6TW）。
+  - 事件、卡牌、遗物：event-hp-maxhp 14→15（9CDE）、event-slippery-bridge 7→8（7YT0）、card-true-grit 5→6（JJ65，前半句改写）、relic-very-hot-cocoa 13→14（DHGT）。
+  - beast-ringing-block、fysh-damage、insatiable-entry、insatiable-clock、beetle 原有的药水分句没动，新证据只写昏眩回合、锻造、输出、复活这些部分。
+  - beast-ringing-block n=3 仍是中；其余置信度没变。
+- **只改数字（9）：**
+  - 走廊：louse 15、ovicopter 10、chomper 10、hopper 20。
+  - rest-smith-threshold 35（一幕 0 次锻造 7/10、≥1 次 22/39）、relic-nutritious-soup 4、neow-growth 7。
+  - 药水：potion-save-for-boss 70、potion-empty-slots 21。
+- **只改描述代码行为的句子（3，药水，n 和建议不变）：**
+  - potion-code-discard 3：小信箱 0c71951、白兽雕像 cc0d26d 起代码不再在选路前丢药，改为给「先丢药再…」的选项由决策方选；删掉「腰带全是 reserve 时也丢 reserve」。
+  - potion-swift 6：「代码按 0 价值算」改成「以前按 0 价值，现在按抽 3 算，求解器会排先喝它的线」（`src/knowledge/potion-values.ts:48` SWIFT_POTION { Cards: 3 }，`src/strategy/card-model.ts:745` draw 3）。
+  - potion-fysh-oil 3：核实过，现在代码自己丢药的只有进商店时丢污浊药水（`src/screens/shop.ts:43-58`，`src/config.ts:142` shopDiscardPotions = FOUL_POTION）；小信箱、白兽雕像、事件给药都由决策方选丢哪瓶。改成「代码现在不会自己丢它」，保留「要在 run plan 点名保留」。
+
+### 退役（1）
+- **relic-paels-tears（佩尔之泪，n=1）**：8c5a83c 起出牌求解器和 rollout 都按「带着没花完的能量结束回合，下回合 +2 能量」出线和推演（`src/screens/combat-plan.ts:1438`、`src/strategy/turn-solver.ts:2376`）。
+  - 条目核心「代码不会为它留能量」已过时，按新增时写明的「代码修好就退役」处理。
+  - A8 二幕 12 局过二幕 boss 8% 的观察数据 n 太小，不单独留。
+- 没有合并条目。active 198，离测试上限 200 还有 2 条余量。
+- 对照 v3 3899c2a 已合入的 H、I 批核对了代码修好的地方：
+  - 1966f0a（流动铜液）、246d2be（红头骨、自成型黏土）、d7dab83/cff33ba（覆甲卡面）：没有对应条目。
+  - a85c413（异鱼 boss 要点只点名坚毅+）：card-true-grit 前半句同步改写。
+  - de0e3e5、9729bdb/529cbc2、1fdbb97、14520e0/4cb8b8b、7819a1a/fe82439、e504cdf、3901494：条目没写这些代码行为。
+
+### 和手写知识、代码冲突，待改（没有改动）
+- 仪式兽的眩晕线：`src/knowledge/ironclad-guide.md:51`「约 150 HP 进入二阶段」、`:91`「血量第一次降到 150 以下时被击晕」、`:93`「前期全力把它打到 150 以下」。
+  - monster DB 的 PLOW_POWER：A0–A8 是 150（38 场），A9 是 160（5 场）；7YT0 复盘也是 ≤160。
+  - `src/project/run-journal.ts:177` 的 BOSS_NOTES 用 {POWER:…} 从 DB 填，没有这个问题。
+- 帝王蟹击杀顺序的战绩还是旧数：`src/knowledge/ironclad-guide.md:57`「51 场螃蟹战里先打死火箭的 12 场赢 9 场，两只一直都活着的 39 场只赢 8 场」，`src/project/run-journal.ts:183`（BOSS_NOTES KAISER_CRAB）「51 场螃蟹战：火箭先死 9/12 赢，两只一直活着 8/39」。
+  - 经验 crab-kill-order 上一版已是 54/42，本批加 V6TW、DHGT 后是 56 场、两只都活着的 44 场赢 8。
+- `src/knowledge/ds-handbook.md:56`「火箭蓄力之后是 49 激光」：A9 是 54。`:67`「帝皇蟹（5 局死在它手上…）」：monster DB 里 A8 24 场赢 5，A9 5 场 0 胜。
+- `src/knowledge/ironclad-guide.md:35`「低血时绕开精英走问号/商店」仍没改（上几节已列）。
+
+### 代码问题（不给 DS）
+按复盘写的状态，修复进度以 `notes/fix-queue.md` 为准（行号按复盘时的版本）：
+- 7YT0、9CDE、VTRE、V6TW、JJ65：推演的 value 只算本场（`src/strategy/rollout-live.ts:369-371`），留给 boss 的药不计价；fight plan 默认关（`src/config.ts:336-340`），run plan 的「留药」传不到出牌问题。属于 Dai 待定的药水设计，没进 fix-queue。
+- 7YT0：覆甲卡面没有衰减说明（d7dab83、cff33ba 已修）。
+- 9CDE：boss T3 HP 护栏在 big-hit 回合把 rollout best 的燃烧+ 线换成纯格挡（`src/screens/combat-plan.ts:418-423`、`:1518`、`:1791-1797`），燃烧+ 晚 2 回合。for-dai 类问题。
+- VTRE：流动铜液不建模（1966f0a 已修）；红头骨不进求解器（246d2be 已修）；商店 one-shot 把清单写进 choice 被判无效（1fdbb97 已修）。
+- V6TW：流动铜液、自成型黏土（1966f0a、246d2be 已修）。
+- DHGT：
+  - 手里剑、舵盘不进求解器/rollout，稳定血清不建模（fix-queue 未修）。
+  - 饱和盘先比死亡数、再比本回合掉血（b2080fb 的设计），T5 带燃烧+ 的 4 条线都因多掉 4–17 血排后面。Dai 的设计问题。
+  - F9、F23 回答没有 route 字段（「the answer has no route」，fix-queue 未修）。
+- JJ65：boss 要点把未升级坚毅算成清呼唤牌（a85c413 已修）；T8、T11 的「calc mismatch」（14520e0 已修）。
+- ULQP：发光水把牌抽空后 rollout 判「no draw/discard piles」不可用（`src/strategy/rollout-live.ts:587`，fix-queue 未修）。
+
+### 测试
+- exp-update（a02ad58）：`tsc --noEmit -p tsconfig.json` 退出 0；vitest 第一次 1 个用例超时（tests/batch-i.test.ts 的 Red Skull/Clay 实盘局面，5000 ms，机器负载高），重跑 63 个文件 1156/1156 通过，退出 0。
+- 合入 v3（在 `ops/v3-merge.lock` 锁里）：
+  - 合入前：v3 3899c2a（I 批合入时）vitest 63 个文件 1156/1156。
+  - 知识构建没在跑，工作区也没有未提交的知识数据，跳过「Refresh knowledge data」。
+  - `git merge --no-edit exp-update` 是快进（3899c2a 就是 exp-update 这次的起点），v3 现在是 a02ad58。
+  - 合入后：tsc 退出 0；vitest 63 个文件 1156/1156 通过，退出 0。
+  - 没有停对局。
+
+### 切片大小
+- 样本：新抽一批，A8、A9 各 20 个状态 × 6 种界面，共 240 个。从 states.jsonl 用固定种子 20260929 抽取，只取 21:28 前已结束的局。
+  - A8 没有新局（RRMY 21:55 结束，不在内），抽到的和上次是同一批。
+  - A9 加了新局，是新的一批。
+- 同一批状态分别用改前（3899c2a）和改后（a02ad58）的 experience.json 跑 `tools/knowledge-slice.ts`。数字是中位 / 最大（字）：
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 3.5k / 5.7k | 3.6k / 5.9k | 3.7k / 6.0k | 3.8k / 6.2k |
+| 奖励 | 4.3k / 6.6k | 4.4k / 6.7k | 4.4k / 6.3k | 4.5k / 6.4k |
+| 地图 | 5.8k / 6.4k | 5.9k / 6.6k | 5.9k / 6.4k | 6.0k / 6.6k |
+| 事件 | 4.4k / 6.3k | 4.5k / 6.5k | 4.8k / 6.1k | 4.9k / 6.3k |
+| 火堆 | 3.3k / 5.7k | 3.4k / 5.8k | 3.4k / 5.7k | 3.5k / 5.8k |
+| 商店 | 5.3k / 6.0k | 5.3k / 6.1k | 5.6k / 6.0k | 5.6k / 6.1k |
+
+- 初稿：中位涨 0.15–0.34k，单个切片最多涨 0.50k，最大 6.9k。
+  - 主要来自 terror-eel、effigy-cost（一幕切片几乎都带）、act2-opening、act1-costs、deck-clock、deck-remove。
+  - 之后把逐局细节压成一句，逐局、逐回合的数字留在本节。
+- 最终：每种界面的中位涨 0.02–0.15k，单个切片最多涨 0.38k（地图），最大 6.7k（R2H1 A8 F19 二幕卡牌奖励，25 条经验 + 4 行统计，改前 6.6k）。
+- 条目数：active 198（测试上限 200）；置信度 高 129、中 58、低 11。
+- Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目。
