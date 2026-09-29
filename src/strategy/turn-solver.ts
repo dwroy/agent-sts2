@@ -135,6 +135,12 @@ export interface EnemySim {
   stock?: number;
   /** Gets stronger every turn it lives (Buff intent, Ritual, Territorial, stacking Strength): kill it first. */
   scaling?: boolean;
+  /**
+   * Ravenous N (Corpse Slug, RAVENOUS_POWER: 「当有敌人死亡时，噬尸蛞蝓会立即吃下尸体，在本回合被击晕然后获得1点力量」,
+   * logged amount 4, 5 at A9): another enemy dying this turn stuns it (its attack this turn is cancelled) and
+   * gives it N Strength for the fight (182 logged fights; the line making the kill was under-valued).
+   */
+  ravenous?: number;
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -453,6 +459,8 @@ export interface Outcome {
     strengthGained?: number;
     /** Shrink turns left on it (Beetle Juice's 4: its attacks 30% less). */
     shrink?: number;
+    /** Stunned by the line (Ravenous eating a corpse): its move this enemy turn is lost. */
+    stunned?: boolean;
   }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -517,7 +525,7 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -903,6 +911,12 @@ export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   enemy.alive = false;
+  // Ravenous (Corpse Slug): a living one eats the corpse: stunned this turn, +N Strength for the fight.
+  for (const other of sim.enemies) {
+    if (other === enemy || !other.alive || (other.ravenous ?? 0) <= 0) continue;
+    other.ravenousStunned = true;
+    other.strengthDelta += other.ravenous ?? 0;
+  }
   // A hit that lands on every enemy at once kills both crabs together (no rage in between).
   if (sim.sweeping) sim.pendingRage = true;
   else crabRage(sim);
@@ -1477,6 +1491,8 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
     if (enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
+    // Ravenous: stunned by eating a corpse this turn, its move is lost.
+    if (enemy.ravenousStunned) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
@@ -2082,6 +2098,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           flutter: enemy.flutter ?? 0,
           strengthGained: enemy.strengthDelta,
           shrink: enemy.shrink ?? 0,
+          ...(enemy.ravenousStunned ? { stunned: true } : {}),
         })),
       incomingAfterBlock,
       energyLeft: sim.energy,
@@ -2112,7 +2129,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 

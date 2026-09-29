@@ -1207,6 +1207,8 @@ function applyPlan(
     const a = after.get(e.index);
     const threshold = e.base.shriek ?? 0;
     if (turn === 0 && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+    // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
+    if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
   for (const e of enemies) {
     const a = after.get(e.index);

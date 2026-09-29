@@ -524,7 +524,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   const hasModelledEffect =
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0;
+    // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
   if (type === "Power") {

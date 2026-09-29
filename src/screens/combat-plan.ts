@@ -79,7 +79,25 @@ const MODELLED_ENEMY_POWERS = new Set([
   // Battleworn Dummy event: turns left to kill it (`timeLimit`); left unmodelled it cut our damage by 20%
   // (SK1USHSB1U7U F43: 144 of 150 in the 3 turns).
   "BATTLEWORN_DUMMY_TIME_LIMIT_POWER",
+  // Coverage review 2026-09-29 #3: the 0.8 cut fired on 6% of logged turns, damage then 1.16-1.2x the plan.
+  // Corpse Slug: stunned and stronger when another enemy dies (`ravenous`).
+  "RAVENOUS_POWER",
+  // No number of this turn's fight in them: gold stolen and given back (Gremlin Merc, Fat Gremlin), the Tough
+  // Egg's hatch countdown (its moves after it are the move model's), our Strength/Dexterity given back on
+  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage), our Power cards
+  // turned to Galvanic (Globe Head).
+  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER", "GALVANIC_POWER",
+  // Our temporary Strength loss on it (Mangle, Dark Shackles, Shackling Potion, Piercing Wail): already in its
+  // STRENGTH_POWER and intents, and the rollout gives it back after the turn.
+  "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER",
+  // Zapbot: +2 Strength at the end of its turn, like Territorial (scaling; the rollout grows it).
+  "HIGH_VOLTAGE_POWER",
 ]);
+
+/** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
+export function unmodelledEnemyPowers(enemy: Record<string, unknown>): string[] {
+  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) => id !== "" && !MODELLED_ENEMY_POWERS.has(id));
+}
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
 const POWER_NOTES: Record<string, string> = {
@@ -102,6 +120,7 @@ const POWER_NOTES: Record<string, string> = {
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
   BATTLEWORN_DUMMY_TIME_LIMIT_POWER: " (turns left to kill it, this one included: when they run out the fight ends without the reward; it never attacks, so only damage counts, and setup that pays after the last turn is worth nothing)",
   VIGOR_POWER: " (its next attack deals this much more per hit: already in the intent when that attack is this turn's, else it waits for the next one)",
+  RAVENOUS_POWER: " (when another enemy dies it eats the corpse: stunned for the rest of this turn, so its attack now is cancelled, and it gains this much Strength for the fight)",
 };
 
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
@@ -499,6 +518,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
         (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
+        powerAmount(enemy, "HIGH_VOLTAGE_POWER") > 0 ||
         powerAmount(enemy, "STRENGTH_POWER") > 0),
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
@@ -515,12 +535,13 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       // F17 T6: a Strike crossed 150 and cancelled a 26 Plow the solver had counted).
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
       burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
+      ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
         ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), ctxOf(enemy)) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
-      unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
+      unmodelled: unmodelledEnemyPowers(enemy).length > 0,
       ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -1833,6 +1854,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           const amount = numOrNull(power["amount"]);
           return `${str(power["power_id"])}${amount === null ? "" : ` ${amount}`}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
         }),
+        // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
+        ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.

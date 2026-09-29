@@ -314,3 +314,85 @@ describe("3. Hardened Shell's 20 a turn is carried across re-plans in the turn (
     expect(line.wins).toBe(8);
   });
 });
+
+describe("4. The 0.8 cut only for powers still unmodelled; Corpse Slug's Ravenous modelled (coverage #3, #8)", () => {
+  it("a kill next to a Ravenous slug stuns it (its hit this turn is gone) and gives it the Strength", () => {
+    const slug = (index: number, hp: number): EnemySim => enemy({ index, name: `Slug ${index}`, hp, maxHp: 27, ravenous: 4, attacks: [{ damage: 8, hits: 1 }] });
+    const plans = solveTurn({ hand: [card(0, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] })], player: player({ hp: 50, energy: 1 }), enemies: [slug(0, 6), slug(1, 25)], fightKind: "monster" }).plans;
+    const kill = plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(kill.outcome.kills).toEqual(["Slug 0"]);
+    // Only the dead one's hit would have gone: the other is stunned too.
+    expect(kill.outcome.hpLoss).toBe(0);
+    expect(kill.outcome.enemyHpAfter.find((e) => e.index === 1)).toMatchObject({ strengthGained: 4, stunned: true });
+    const chip = plans.find((plan) => plan.steps[0]?.target === 1)!;
+    expect(chip.outcome.hpLoss).toBe(16);
+  });
+
+  it("the enemy sims: Ravenous, the gold and stolen-stat powers and our temporary Strength loss take no cut; the rest does, named for Jev", async () => {
+    const { enemySims, unmodelledEnemyPowers } = await import("../src/screens/combat-plan.js");
+    const withPowers = (...ids: string[]) => ({ enemies: [{ index: 0, enemy_id: "X", name: "X", current_hp: 30, max_hp: 30, block: 0, intents: [], powers: ids.map((id) => ({ power_id: id, amount: 1 })) }] });
+    for (const id of ["RAVENOUS_POWER", "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_SPEED_POWER", "POSSESS_STRENGTH_POWER", "DEXTERITY_POWER", "GALVANIC_POWER", "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER", "HIGH_VOLTAGE_POWER"]) {
+      expect(enemySims(withPowers(id))[0]!.unmodelled, id).toBe(false);
+    }
+    expect(enemySims(withPowers("RAVENOUS_POWER"))[0]!.ravenous).toBe(1);
+    expect(enemySims(withPowers("HIGH_VOLTAGE_POWER"))[0]!.scaling).toBe(true);
+    expect(enemySims(withPowers("SOME_NEW_POWER"))[0]!.unmodelled).toBe(true);
+    expect(unmodelledEnemyPowers(withPowers("RAVENOUS_POWER", "SOME_NEW_POWER").enemies[0]!)).toEqual(["SOME_NEW_POWER"]);
+  });
+
+  it("the question names an unmodelled power on the enemy it cuts", () => {
+    potionMcOptions.now = () => 0;
+    rolloutLiveOptions.enabled = false;
+    try {
+      const fx = logged("g8yy-f30-t3");
+      const enemies = (fx.state["combat"] as Raw)["enemies"] as Raw[];
+      (enemies[2]!["powers"] as Raw[]).push({ index: 0, power_id: "SOME_NEW_POWER", name: "新能力", amount: 2, is_debuff: false });
+      const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+      expect(decision.kind).toBe("ask");
+      const shown = decision.state["enemies"] as Raw[];
+      expect(shown[2]!["not_modelled"]).toBe("SOME_NEW_POWER: not simulated, so the options count damage into this enemy at 80%");
+      expect(shown[0]!["not_modelled"]).toBeUndefined();
+    } finally {
+      potionMcOptions.now = null;
+      rolloutLiveOptions.enabled = true;
+    }
+  });
+
+  it("Dark Shackles is a modelled card (its temporary Strength loss is applied), not 'unmodelled'", async () => {
+    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { loggedKnowledge } = await import("./logged.js");
+    const shackles = modelHandCard({ index: 0, card_id: "DARK_SHACKLES", name: "黑暗镣铐", energy_cost: 0, playable: true, target_type: "AnyEnemy", requires_target: true, valid_target_indices: [0], dynamic_values: [{ name: "StrengthLoss", base_value: 9, current_value: 9 }], resolved_rules_text: "使一名敌人在本回合失去9点力量。 消耗。" }, 0, loggedKnowledge);
+    expect(shackles).toMatchObject({ enemyTempStrengthLoss: 9, known: true });
+    const plans = solveTurn({ hand: [shackles], player: player({ hp: 50 }), enemies: [enemy({ attacks: [{ damage: 12, hits: 1 }] })], fightKind: "monster" }).plans;
+    const played = plans.find((plan) => plan.steps.length === 1)!;
+    expect(played.outcome.unknownCards).toEqual([]);
+    expect(played.outcome.hpLoss).toBe(3);
+  });
+
+  it("the rollout: a slug stunned by the line loses its move on that enemy turn (no Strength from it), keeps the Strength it ate", () => {
+    // Slug 1 shows Grow (+3 Strength, no attack); stunned by the kill it does not grow, and bites next turn
+    // with the 4 it ate: 12, not 15.
+    const table: EnemyTable = { moves: { BITE: { damage: 8, hits: 1, strength: 0, block: 0 }, GROW: { damage: 0, hits: 1, strength: 3, block: 0 } }, next: { GROW: { BITE: 1 }, BITE: { BITE: 1 }, STUNNED: { BITE: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "CORPSE_SLUG+CORPSE_SLUG", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [strike(0)];
+    const slug = (index: number, hp: number, attacks: EnemySim["attacks"]): EnemySim => enemy({ index, name: `Slug ${index}`, hp, maxHp: 40, ravenous: 4, attacks });
+    const solver = { hand, player: player({ hp: 50, energy: 1 }), enemies: [slug(0, 6, [{ damage: 8, hits: 1 }]), slug(1, 40, [])], fightKind: "monster" as const, turn: 1 };
+    const kill = solveTurn(solver).plans.find((plan) => plan.steps[0]?.target === 0)!;
+    expect(kill.outcome.enemyHpAfter.find((e) => e.index === 1)).toMatchObject({ stunned: true, strengthGained: 4 });
+    const r = rolloutDecision({
+      solver,
+      plans: [kill],
+      enemies: [{ index: 0, id: "CORPSE_SLUG", move: "BITE", strength: 0, powers: { RAVENOUS_POWER: 4 } }, { index: 1, id: "CORPSE_SLUG", move: "GROW", strength: 0, powers: { RAVENOUS_POWER: 4 } }],
+      tables: { CORPSE_SLUG: table },
+      piles: { draw: Array.from({ length: 10 }, (_, i) => card(10 + i, "STRIKE_IRONCLAD", { damage: 6, validTargets: [1] })), discard: [], handBase: hand },
+      meta,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 5, now: () => 0, samples: 8, horizon: 3 },
+    });
+    expect(r.lines[0]!.perTurn[0]!.loss).toEqual({ mean: 12, min: 12, max: 12 });
+  });
+});
