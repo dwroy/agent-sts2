@@ -273,7 +273,7 @@ describe("5. Surrounded facing: every targeted action that went through turns us
   );
 });
 
-describe("1. Shop removal: the card DeepSeek names is the one removed; code's order is a reference, its run-plan part said apart (UNRL F14: \"打击 120, 防御 110, 受伤 100\" read as code's verdict over the curse)", () => {
+describe("1. Shop removal: the card DeepSeek names is the one removed (UNRL F14: \"打击 120, 防御 110, 受伤 100\" read as code's verdict over the curse; V4 shows no code order)", () => {
   /** The U6RU F22 shop (5 Eternal Strikes) with an Injury curse added and a run plan that removes Defends. */
   function shop() {
     const raw = board("u6ru-f22-shop", "open");
@@ -287,13 +287,17 @@ describe("1. Shop removal: the card DeepSeek names is the one removed; code's or
     return { raw, e };
   }
 
-  it("the order shows the run plan's part and says it is a reference", () => {
+  // V4 M2b (docs/v4-build-facts.md): code's removal order is not in the question at all, so there is no ranking to
+  // read as a verdict (v3 f8aef72 said its run-plan part apart instead). Each removable card carries its facts.
+  it("V4: no code removal order in the question; each removable card carries its outcome stats", () => {
     const { e } = shop();
     const question = ask(decide(e));
-    const order = question.state["code_removal_order"] as { order: string[]; note: string };
-    expect(order.order[0]).toMatch(/^c\d+ 防御 110 \(70 \+ 40 as your run plan's removal target\)$/);
-    expect(order.order[1]).toMatch(/^c\d+ 受伤 100$/);
-    expect(order.note).toMatch(/reference ranking \(advice, not an order\): "remove:<card key>" removes the card you name/);
+    expect(question.state["code_removal_order"]).toBeUndefined();
+    expect(JSON.stringify(question.state)).not.toMatch(/removal target|code remove value|reference ranking/);
+    const cards = question.state["your_cards"] as Record<string, string>;
+    const stats = question.state["your_cards_outcome_stats"] as Record<string, string>;
+    const injury = Object.keys(cards).find((key) => cards[key]!.includes("受伤"))!;
+    expect(Object.keys(stats)).toContain(injury);
   });
 
   it("remove:<the curse> names the curse for the removal screen, and that screen removes it over the higher-ranked Defend", () => {
