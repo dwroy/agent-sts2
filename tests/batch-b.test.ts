@@ -685,3 +685,45 @@ describe("9. Route scoring: each elite at its own floor (R1); likely death from 
     }
   });
 });
+
+describe("10. Small ones", () => {
+  it("the rollout at fewer than 8 samples or 3 turns keeps the asked horizon (it silently ran 3 turns, or 1)", () => {
+    const table: EnemyTable = { moves: { HIT: { damage: 5, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "X", deck: { n: 10, atk: 5, skl: 5, pow: 0, junk: 0, dmg: 30, blk: 25, up: 0 }, relics: 1, max_en: 3 };
+    const hand = [strike(0), defend(1)];
+    const solver = { hand, player: player({ hp: 60 }), enemies: [enemy({ hp: 200, maxHp: 200, attacks: [{ damage: 5, hits: 1 }] })], fightKind: "monster" as const, turn: 1 };
+    const run = (samples: number, horizon: number) =>
+      rolloutDecision({
+        solver,
+        plans: solveTurn(solver).plans.slice(0, 2),
+        enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
+        tables: { X: table },
+        piles: { draw: Array.from({ length: 10 }, (_, i) => (i % 2 ? strike(10 + i) : defend(10 + i))), discard: [], handBase: hand },
+        meta,
+        playerPowers: {},
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 5, now: () => 0, samples, horizon },
+      });
+    expect(run(4, 5)).toMatchObject({ horizon: 5, samples: 4, degraded: [] });
+    expect(run(6, 5)).toMatchObject({ horizon: 5, samples: 6, degraded: [] });
+    expect(run(8, 2)).toMatchObject({ horizon: 2, samples: 8, degraded: [] });
+  });
+
+  it("the backtest builds its rollout input with the live builder (status cards, energy relics, spawns)", async () => {
+    const { boardRolloutInput } = await import("../src/strategy/rollout-live.js");
+    const fx = logged("en55-f8-t9");
+    const run = fx.state["run"] as Raw;
+    run["relics"] = [...((run["relics"] as Raw[]) ?? []), { index: 9, relic_id: "PUMPKIN_CANDLE", name: "南瓜蜡烛", stack: 1 }];
+    const env = loggedEnv(fx);
+    const solverInput = { hand: [strike(0)], player: player(), enemies: [enemy()], fightKind: "monster" as const };
+    const board = boardRolloutInput(env.state, env.knowledge, solverInput, 8, {}, {});
+    expect(board.relicEnergy).toEqual([{ amount: 1, from: 1 }]);
+    expect(Object.keys(board.statusCards ?? {})).toEqual(expect.arrayContaining(["DAZED", "WOUND", "WITHER"]));
+    expect(board.enemies.map((e) => e.id)).toEqual(["TERROR_EEL"]);
+    const source = (await import("node:fs")).readFileSync(new URL("../tools/rollout-backtest.ts", import.meta.url), "utf8");
+    expect(source).toContain("boardRolloutInput(state, knowledge, input, item.row.asc, db, mm)");
+  });
+});

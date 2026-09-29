@@ -2014,8 +2014,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
     // wave's own time is the measure of a wave.
     const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, maxHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
-    const schedule = orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE;
-    const fit = schedule.filter((s) => s.horizon <= maxHorizon && s.samples <= maxSamples).find((s) => cost(s.horizon, s.samples) <= left);
+    // The schedule at the asked sizes: each step clamped to maxHorizon x maxSamples (asking for fewer than 8
+    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1).
+    const schedule = (orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE)
+      .map((s) => ({ horizon: Math.min(s.horizon, maxHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
+    const fit = schedule.find((s) => cost(s.horizon, s.samples) <= left);
     if (first.some((r) => r === null) || elapsed() > budget.budgetMs || !fit) {
       horizon = 1;
       samples = 1;

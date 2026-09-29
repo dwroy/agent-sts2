@@ -55,6 +55,7 @@ import {
   type MoveModelData,
   type PlayerDebuff,
   type RolloutEnemy,
+  type RolloutInput,
   type RolloutResult,
   type SpawnTemplate,
 } from "./rollout.js";
@@ -94,7 +95,7 @@ export interface MonsterDbMove extends MoveEntry {
   avg_total_shown?: number;
 }
 
-type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
+export type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
 
 const KNOWLEDGE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge");
 let dbCache: MonsterMoves | undefined;
@@ -443,6 +444,79 @@ export function rolloutTies(picked: { best: LineEstimate | null; saturated: bool
   return { best: shownTies[0] ?? best, tied: [] };
 }
 
+/**
+ * The board's part of a rollout's input, one builder for the live facts and tools/rollout-backtest.ts (which
+ * had no status cards, energy relics, spawns nor reviving illusions): the enemies (an illusion killed before
+ * this decision, is_alive false with ILLUSION_POWER, stays at 0 HP and revives while its summoner lives), their
+ * move tables at `asc` and their on-death spawns' (with those spawns), the status cards their moves add, the
+ * energy relics, our powers and potions, and the hand's base cards (null: keep the hand card).
+ */
+export function boardRolloutInput(
+  state: GameState,
+  knowledge: Knowledge,
+  solverInput: SolverInput,
+  asc: number,
+  db: MonsterMoves = monsterMoves(),
+  mm: MoveModelData = moveModelData(),
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions"> & { handBase: (CardModel | null)[] } {
+  const combat = asRecord(state.raw["combat"]);
+  const raw = asArray(combat["enemies"]).map(asRecord);
+  const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+  const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
+  const enemies: RolloutEnemy[] = raw
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => e["is_alive"] !== false || reviving(e))
+    .map(({ e, i }) => {
+      const powers = powersOf(e);
+      return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
+    });
+  const revivers: EnemySim[] = raw
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => reviving(e) && !solverInput.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
+    .map(({ e, i }) => ({
+      index: typeof e["index"] === "number" ? e["index"] : i,
+      name: str(e["name"], str(e["enemy_id"])),
+      hp: 0,
+      maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
+      artifact: 0,
+      intangible: false,
+      illusion: true,
+      minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
+      attacks: [],
+    }));
+  const solver = revivers.length > 0 ? { ...solverInput, enemies: [...solverInput.enemies, ...revivers] } : solverInput;
+  const tables: Record<string, EnemyTable> = {};
+  // On-death spawns (Phrog Parasite, Gremlin Merc): what comes, at this ascension, and their move tables.
+  const spawns: Record<string, SpawnTemplate[]> = {};
+  for (const e of enemies) {
+    const found = spawnsAt(e.id, asc, db);
+    if (found) spawns[e.id] = found;
+  }
+  for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id))])) {
+    const table = enemyTable(id, asc, db, mm);
+    if (table) tables[id] = table;
+  }
+  // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
+  const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
+  for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+  const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
+  const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
+  return {
+    solver,
+    enemies,
+    tables,
+    statusCards,
+    relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
+    ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
+    playerPowers: powersOf(asRecord(combat["player"])),
+    potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
+    handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
+  };
+}
+
 export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   const now = rolloutLiveOptions.now ?? (() => performance.now());
   const start = now();
@@ -452,75 +526,19 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   try {
     const { state, knowledge } = args;
     const meta = fightMetaOf(state, knowledge, args.memory);
-    const combat = asRecord(state.raw["combat"]);
-    const raw = asArray(combat["enemies"]).map(asRecord);
-    // An illusion killed before this decision (is_alive false, ILLUSION_POWER) is back at full HP next
-    // turn while its summoner lives: it stays in the rollout at 0 HP and revives (rollout.ts reviveIn).
-    const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
-    const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
-    const enemies: RolloutEnemy[] = raw
-      .map((e, i) => ({ e, i }))
-      .filter(({ e }) => e["is_alive"] !== false || reviving(e))
-      .map(({ e, i }) => {
-        const powers = powersOf(e);
-        return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
-      });
-    const revivers: EnemySim[] = raw
-      .map((e, i) => ({ e, i }))
-      .filter(({ e }) => reviving(e) && !args.solver.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
-      .map(({ e, i }) => ({
-        index: typeof e["index"] === "number" ? e["index"] : i,
-        name: str(e["name"], str(e["enemy_id"])),
-        hp: 0,
-        maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
-        block: 0,
-        vulnerable: 0,
-        weak: 0,
-        artifact: 0,
-        intangible: false,
-        illusion: true,
-        minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
-        attacks: [],
-      }));
-    const solver = revivers.length > 0 ? { ...args.solver, enemies: [...args.solver.enemies, ...revivers] } : args.solver;
-    const mm = moveModelData();
-    const db = monsterMoves();
-    const tables: Record<string, EnemyTable> = {};
-    // On-death spawns (Phrog Parasite, Gremlin Merc): what comes, at this ascension, and their move tables.
-    const spawns: Record<string, SpawnTemplate[]> = {};
-    for (const e of enemies) {
-      const found = spawnsAt(e.id, meta.asc, db);
-      if (found) spawns[e.id] = found;
-    }
-    for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id))])) {
-      const table = enemyTable(id, meta.asc, db, mm);
-      if (table) tables[id] = table;
-    }
-    // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
-    const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
-    for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
-    const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
-    const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
-    const handBase = args.solver.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null));
-    const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
+    const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
     const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+    const { handBase, ...boardInput } = board;
     const result = rolloutDecision({
-      solver,
+      ...boardInput,
       plans: args.plans,
-      enemies,
-      tables,
       piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
       meta,
-      playerPowers: powersOf(asRecord(combat["player"])),
-      potions,
-      mm,
+      mm: moveModelData(),
       model,
       gates,
-      statusCards,
-      relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
-      ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,
