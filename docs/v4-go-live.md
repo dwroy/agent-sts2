@@ -147,3 +147,30 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
   - brain.jsonl 有行，`knowledge.prefix_sha` 和 run-config 里的一样；
   - 决策日志里执行闸拒绝的次数正常。
 - [ ] crontab 里的 ops/auto-relaunch.sh 还在：切换期间它会在没有 STOP 文件时拉起 autoplay。改 run.sh 要趁 STOP 在的时候改。
+
+## 5. v3 同步记录
+
+### 2026-09-30：v3 c52587c 合进 v4-sync（基于 v4 2617d02，含 M2a）
+
+- 合并提交 96a2be7，带进 v3 在 389bdb7 之后的 48 个提交（5 次合并、4 次知识数据刷新、2 次经验和攻略更新，其余是修复批次 I–L）。
+- 冲突 11 个文件，处理方式：
+  - src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求仍和（合并后的）v3 逐字节相同。
+  - src/project/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
+  - src/screens/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
+  - src/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
+  - src/screens/event.ts、rest.ts、map.ts：只有 import 冲突，两边合并。
+  - src/screens/selection.ts：保留 V4 的 facts 题面（不带 why 和 unranked）；「第几张」改用 v3 的 selectingText（每次回答一张牌）；followUpTargetScore 只返回分数。
+  - src/screens/shop.ts、oneshot.ts：保留 V4，不给代码删牌顺序和目标牌分值；加上 v3 的 annotatePlating import。
+  - tools/build-room-costs.py：用 v3 的说明，加上 V4 的 p90。
+- 知识数据（src/knowledge/*.json、攻略、经验库）都取 v3 的版本。ds-handbook.md 的路线一段保留 V4（M2a）的写法。room-costs.json 由 v3 的脚本生成，没有 p90：上线前按 2a 的命令用合并后的脚本重建一次，重建后同时有 p90、UnknownFight 和战内掉血。
+- 放弃的 v3 修复：
+  - f8aef72（删牌顺序里把整局计划的 +40 单独写出，并注明「只是参考」）。起因是 UNRL F14，大脑把代码的删牌顺序当成结论。V4 M2b 已经不给大脑看这个顺序（code_removal_order、eligible_cards 里的 code remove value 都删了），问题的来源已不存在。batch-l 第 1 组的第一个测试改成断言题面里没有这个顺序；第二个测试（remove:<诅咒> 删的就是诅咒）不变。
+- v3 修复在 V4 里补做的部分（合并后的单独提交）：
+  - 0349d90：对应 2f6ae4c（白兽雕像「先喝再走」）。V4 的 map/route-plan 原来只认 "discard"。现在题面列出 drinkable_potions 和 fruit_juice，回答可以写 "drink": [槽位]；校验方式和 discard 相同。routePlanSpec 的 schema 也加了 drink。
+  - b4f68ac：对应 7eb1de7（一选一的题回答了多个 key）。v3 只修在 DeepSeek 的 choose() 里；V4 路由器的其他路径（Claude；DeepSeek 带工具或补问时）经过 normalisePick，现在也取第一个 key，并在 reason 里注明。
+  - 1564cc4：对应 1fdbb97（购物清单写在 "choice" 里）。shopPlanList 移到 brain/specs.ts，shopPlanSpec 和商店屏按同一种方式读取，非 v3 路径不再判定为缺少 plan。
+  - d6f4a9b：对应 5afb91f / 5518d8b（从推理里找回 route）。V4 的 route_review 没有带名字的路线，所以只找回 keep；不从文字里猜节点序列。
+  - 67a5519、a0c997e：对应 337074d。知识前缀里 Jev 提示的 {CRAB_KILLS_EN}、{LAG_NO_STRENGTH_EN} 用 fillGuideFacts 填上（合并后 A9 前缀里这两个是原样的占位符）。房间代价表把 UnknownFight 显示为「问号里的战斗」，并加上战内掉血。
+- 其余 v3 修复原样保留：推演、求解器、药水、Jev 线、执行、卡牌文字、事件、商店执行、日志回放。
+- 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 88 个文件、1,465 个测试全过。
+- 注意：v3 的 d79f14f、4f57bbd 改了 Jev 线上药水的算法（不再扣药水成本；没模拟的药水总是可选）。第 1 节里 M3a、M2b 的回放数字是在这次合并前测的；上线对照要用合并后的 v3 局。
