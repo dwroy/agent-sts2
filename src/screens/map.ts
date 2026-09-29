@@ -20,7 +20,7 @@ import { bossStartHealOf, NO_REST_RELICS, restedHp, restHealOf, roomCost, roomCo
 import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nodeId, roomName, routeIds, type RouteMap } from "../strategy/route-map.js";
 import { actOfFloor, actPlan, makeRoutePlan, mapActOf, mapFromState, nextPlannedStep, remainingIds, routeBlockState, routeCosts, runSnapshot, snapshotChange, type RoutePlan } from "./route-plan.js";
 import { oneshotOn } from "./oneshot.js";
-import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardSlotsOf, discardVariant } from "./potion-discard.js";
+import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardSlotsOf, discardVariant, DRINK_SUFFIX, drinkableSlots, drinkVariant } from "./potion-discard.js";
 
 interface MapNode {
   row: number;
@@ -727,31 +727,50 @@ const STATUE_FIGHT_NODES = new Set(["Monster", "Elite", "Boss", "Unknown"]);
  * it has one) and the reward screen cannot discard, so with a full belt that potion is lost. Code used to discard
  * its weakest-ranked potion on the map (YVWA F35-F47); Dai: code does not handle potions for the decider. An
  * option that travels to a fight node gets a "discard potion(s), then travel" variant (potion-discard.ts, as the
- * Tiny Mailbox's rest): the decider says whether to discard and which slot. Identity when nothing applies.
+ * Tiny Mailbox's rest) and a "drink <potion>, then travel" variant per potion usable on the map (5LRZ7HJ7YGSY F37:
+ * with only keep / discard, Fruit Juice was discarded): the decider says whether and which. Facts only: Fruit Juice
+ * is drunk by code at its first decision of the next fight (combat-plan.ts, permanent max HP), which frees its slot
+ * before that fight's potion drops. Identity when nothing applies.
  */
 export function statuePotionOptions(env: DecisionEnv, available: { index: number; row: number; col: number; type: string }[]): (option: PickOption) => PickOption[] {
   const run = asRecord(env.state.run?.raw);
   const relics = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const belt = asArray(run["potions"]).map(asRecord);
   const full = belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
-  const slots = relics.includes("WHITE_BEAST_STATUE") && full ? discardableSlots(env) : [];
+  const statueFull = relics.includes("WHITE_BEAST_STATUE") && full;
+  const slots = statueFull ? discardableSlots(env) : [];
+  const drinkable = statueFull ? drinkableSlots(env) : [];
+  const juice = belt.find((slot) => str(slot["potion_id"]) === "FRUIT_JUICE");
+  const juiceFact: Record<string, JsonValue> = juice
+    ? {
+        fruit_juice: `code drinks ${str(juice["name"], "Fruit Juice")} (potion slot ${num(juice["index"])}) by itself at its first decision of the next fight (permanent max HP, nothing gained by waiting), so that slot is empty again before the fight's potion drops`,
+      }
+    : {};
   return (option) => {
     const index = option.intent.action === "choose_map_node" ? option.intent.option_index : undefined;
-    const node = slots.length > 0 && typeof index === "number" ? available.find((entry) => entry.index === index) : undefined;
-    if (!node || !STATUE_FIGHT_NODES.has(node.type) || option.key.endsWith(DISCARD_SUFFIX)) return [option];
+    const node = slots.length + drinkable.length > 0 && typeof index === "number" ? available.find((entry) => entry.index === index) : undefined;
+    if (!node || !STATUE_FIGHT_NODES.has(node.type) || option.key.endsWith(DISCARD_SUFFIX) || option.key.includes(DRINK_SUFFIX)) return [option];
     const title = nodeTitle(node.type, node.row, node.col);
-    const variant = discardVariant(env, option, { place: "map", option: node.index, title }, 1, slots);
-    if (!variant) return [option];
+    const then = { place: "map", option: node.index, title };
+    const variant = discardVariant(env, option, then, 1, slots);
+    const drinks = drinkable.map((slot) => drinkVariant(env, option, then, slot));
+    if (!variant && drinks.length === 0) return [option];
     const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary ?? null };
     const maybe = node.type === "Unknown" ? " if this Unknown node is a fight" : "";
+    const ways = [
+      ...(variant ? [`a potion is discarded first (option ${variant.key})`] : []),
+      ...drinks.map((drink, at) => `${drinkable[at]!.name} is drunk now on the map (option ${drink.key})`),
+      "one is drunk in that fight",
+    ];
     const lost = {
       ...option,
       summary: {
         ...summary,
-        potion_slots: `White Beast Statue drops a potion after every fight; the belt is full and the reward screen cannot discard, so the potion after the fight at ${title}${maybe} is lost unless a potion is discarded first (option ${variant.key}) or one is drunk in that fight`,
+        potion_slots: `White Beast Statue drops a potion after every fight; the belt is full and the reward screen cannot discard, so the potion after the fight at ${title}${maybe} is lost unless ${ways.slice(0, -1).join(", ")} or ${ways[ways.length - 1]}`,
+        ...juiceFact,
       },
     };
-    return [lost, variant];
+    return [lost, ...(variant ? [variant] : []), ...drinks];
   };
 }
 
@@ -779,7 +798,8 @@ function statueFollow(env: DecisionEnv, follow: Decision, available: { index: nu
   if (options.length < 2) return null;
   return buildPickDecision({
     label: "map/statue-potion",
-    instructions: "White Beast Statue drops a potion after every fight and the potion belt is full: travel to the route's next node keeping every potion, or discard potion(s) first so the fight's potion has a slot?",
+    instructions:
+      "White Beast Statue drops a potion after every fight and the potion belt is full: travel to the route's next node keeping every potion, or first discard potion(s) or drink a potion usable on the map, so the fight's potion has a slot?",
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     options,

@@ -11,6 +11,7 @@
  */
 
 import { stripMarkup } from "../util/json.js";
+import { annotatePlating } from "./enchant-text.js";
 
 export const POTION_VALUES: Record<string, Record<string, number>> = {
   BEETLE_JUICE: { Repeat: 4, DamageDecrease: 30 },
@@ -65,5 +66,6 @@ export function fillPotionText(potionId: string, text: string): string {
     if (format === "starIcons") return `${value}颗星`;
     return String(value);
   });
-  return stripMarkup(filled);
+  // Heart of Iron's 「获得7层覆甲」: Plating's decay said after it.
+  return annotatePlating(stripMarkup(filled));
 }

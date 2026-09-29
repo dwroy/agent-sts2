@@ -91,7 +91,13 @@ describe("rollout facts on Jev's combat question", () => {
   }, 30_000);
 
   it("a drink-first potion option says it is not rolled out", () => {
-    const decision = plan("fn0h-f33-t2", true) as AskDecision;
+    // Its Stable Serum is simulated since batch J (a line of its own): an unsimulated potion in that slot instead.
+    const fx = logged("fn0h-f33-t2");
+    const run = fx.state["run"] as Record<string, unknown>;
+    run["potions"] = (run["potions"] as Record<string, unknown>[]).map((slot) => (slot["potion_id"] === "STABLE_SERUM" ? { ...slot, potion_id: "ENTROPIC_BREW", name: "混沌药水", description: "在所有空药水栏位中获得随机药水。" } : slot));
+    rolloutLiveOptions.enabled = true;
+    potionMcOptions.now = () => 0;
+    const decision = planCombatTurn(loggedEnv(fx, { jevContext: "v1" })) as AskDecision;
     const criteria = criteriaOf(decision);
     const potionKeys = Object.keys(criteria).filter((key) => !/^plan\d+$/.test(key));
     expect(potionKeys.length).toBeGreaterThan(0);
@@ -246,10 +252,8 @@ describe("rollout facts on Jev's combat question", () => {
       for (const context of ["v1", "off"] as const) {
         const off = plan(name, false, context);
         const on = plan(name, true, context);
-        // The one designed dependence (Dai 2026-09-28): an unsimulated potion is offered when the best
-        // potion-free option dies in a rollout sample (T1), which only the rollout knows.
-        const t1 = on?.kind === "ask" ? ((on.resolve(pick("plan1")).log?.potions as { t1?: { hp: boolean; rollout_death: boolean } } | undefined)?.t1 ?? null) : null;
-        if (t1 && t1.rollout_death && !t1.hp) continue;
+        // (An unsimulated potion was offered when the best potion-free option died in a rollout sample (T1), a
+        // dependence on the rollout; since batch K it is always offered.)
         expect(on?.kind, name).toBe(off?.kind);
         expect(on?.label, name).toBe(off?.label);
         if (off?.kind === "act" && on?.kind === "act") {
@@ -262,9 +266,9 @@ describe("rollout facts on Jev's combat question", () => {
         const after = criteriaOf(on);
         for (const key of Object.keys(before)) {
           // Same option under the same key, the rollout facts aside.
-          // (An unsimulated potion's offered_because may add the rollout's dying sample as a reason.)
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered_because: _o, ...rest } = facts(after, key);
-          const { offered_because: _o2, ...restBefore } = facts(before, key);
+          // (An unsimulated potion's option carries no rollout-dependent reason since batch K; `offered` is fixed text.)
+          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered: _o, ...rest } = facts(after, key);
+          const { offered: _o2, ...restBefore } = facts(before, key);
           expect(rest, `${name} ${key}`).toEqual(restBefore);
           // And resolving it plays the same (the HP guard and potion rules see code's options only), but for
           // the one designed dependence of the guard (guardKeepsPick): it does not swap into a line the rollout

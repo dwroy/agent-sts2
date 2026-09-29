@@ -12,6 +12,7 @@
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import { cardOutcome } from "../knowledge/outcome-facts.js";
+import { annotatePlating } from "../knowledge/enchant-text.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { deckEntries, type DeckEntry } from "../project/deck.js";
 import type { DecisionEnv, ScreenMemory } from "../project/types.js";
@@ -98,7 +99,7 @@ export function deckCards(state: GameState, knowledge: Knowledge): DeckCard[] {
 /** One line per distinct card, as DeepSeek sees it: `Name+ ×2 (Type, 1E): text [enchanted …]`. */
 export function cardLine(card: DeckCard): string {
   const cost = card.identity.cost === null ? "?" : String(card.identity.cost);
-  return `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} (${card.type || "?"}, ${cost}E): ${truncate(card.text, 110)}${card.enchant ? ` [enchanted ${card.enchant}]` : ""}${card.eternal ? " [Eternal: cannot be removed or transformed]" : ""}`;
+  return `${card.name}${card.count > 1 ? ` ×${card.count}` : ""} (${card.type || "?"}, ${cost}E): ${annotatePlating(truncate(card.text, 110))}${card.enchant ? ` [enchanted ${card.enchant}]` : ""}${card.eternal ? " [Eternal: cannot be removed or transformed]" : ""}`;
 }
 
 /* ---- which deck selection an option leads to ----------------------------------------------------- */
@@ -296,7 +297,8 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
   if (upgrade.cost && cost !== null) changes.push(`cost ${cost}->${cost + upgrade.cost[1] - upgrade.cost[0]}`);
   const after = str(raw["rules_text"]) ? renderUpgraded(str(raw["rules_text"]), values) : null;
   const numbers = changes.length > 0 ? changes.join(", ") : "text only";
-  return after && after !== before ? `${before} -> ${after}${upgrade.cost ? ` (${numbers})` : ""}` : `${before} -> ${numbers}`;
+  // Plating's decay said for both stack counts (QBCV838592ZQ F16: Stone Armor smithed as "4 -> 6 block every turn").
+  return annotatePlating(after && after !== before ? `${before} -> ${after}${upgrade.cost ? ` (${numbers})` : ""}` : `${before} -> ${numbers}`);
 }
 
 /* ---- an option together with the card(s) its follow-up takes -------------------------------------- */

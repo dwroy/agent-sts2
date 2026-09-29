@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { fillGuideFacts } from "../strategy/boss-clock.js";
 import { fillDbNumbers } from "./monster-db.js";
 
 export interface JevHint {
@@ -83,8 +84,10 @@ export function selectHints(query: HintQuery, hints: JevHint[] = loadHints(), ma
 /**
  * A hint's text as Jev reads it: its damage/amount placeholders ({DMG:ROCKET:LASER_MOVE} and the like)
  * filled from the monster DB at this ascension (monster-db fillDbNumbers), so no A0/A8 number reaches Jev
- * as fact at A9 (the Rocket's Laser "about 49" is 35, 52 from behind).
+ * as fact at A9 (the Rocket's Laser "about 49" is 35, 52 from behind); and its counted records
+ * ({CRAB_KILLS_EN}, {LAG_NO_STRENGTH_EN}: boss-clock fillGuideFacts) from the fight data, not hand-written
+ * ("9/12 vs 8/39" went stale).
  */
 export function hintText(hint: JevHint, ascension: number): string {
-  return fillDbNumbers(hint.text, ascension);
+  return fillGuideFacts(fillDbNumbers(hint.text, ascension));
 }

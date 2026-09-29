@@ -14,7 +14,7 @@ import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
-import { continueAfterDiscard, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 import { hpBandOf, restOutcome } from "../knowledge/outcome-facts.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
@@ -151,7 +151,7 @@ export function planRest(env: DecisionEnv): Decision | null {
   const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
   const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
   const discardNote = params.options.some((option) => option.key.endsWith(DISCARD_SUFFIX))
-    ? ' A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.'
+    ? ` ${DISCARD_ANSWER_NOTE}`
     : "";
   // BUILD_ONESHOT: the rest action and the card it takes (smith X) in one question; code plays both.
   if (oneshotOn(env) && !oneshotFailedHere(env, "rest")) {

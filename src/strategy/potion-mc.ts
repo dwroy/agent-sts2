@@ -216,7 +216,7 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
       }
       const potion = samplePotion(source, hand, random);
       const began = now();
-      const solved = solveTurn({ ...input, hand: [...hand, potion], firstKey: potion.key, potionLimit: null, maxNodes: nodes });
+      const solved = solveTurn({ ...input, hand: [...hand, potion], firstKey: potion.key, maxNodes: nodes });
       const took = now() - began;
       if (took > share && nodes > MC_MIN_NODES) {
         nodes = Math.max(MC_MIN_NODES, Math.floor((nodes * share) / took));

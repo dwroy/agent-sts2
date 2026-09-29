@@ -261,6 +261,22 @@ export function relicEnergyOf(runRaw: Record<string, unknown>): { amount: number
     .map((relic) => ({ amount: 1, from: RELIC_ENERGY_FROM[str(relic["relic_id"])] ?? 1 }));
 }
 
+/**
+ * Captain's Wheel: 「在你的第三回合开始时，获得{Block}点格挡」 — 18 (logged over 4 runs holding it: 19 of 20 third turns
+ * began with 18 block before any card, 23 once with 5 from elsewhere; turns 1, 2, 4-12 with none). DHGT6Z3Q7VAP F33:
+ * T3 began with the Wheel's 18; the rollouts from T1 and T2 had that turn at -9.6.
+ */
+export const CAPTAINS_WHEEL_BLOCK = 18;
+export const CAPTAINS_WHEEL_TURN = 3;
+
+/** The relics that give block at the start of one fight turn, as the rollout's later turns get it (RolloutInput.relicBlock). */
+export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number; turn: number }[] {
+  return asArray(runRaw["relics"])
+    .map(asRecord)
+    .filter((relic) => str(relic["relic_id"]) === "CAPTAINS_WHEEL")
+    .map(() => ({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN }));
+}
+
 /** deck_summary() of tools/build-fight-value.py. */
 export function deckSummary(runRaw: Record<string, unknown>): DeckSummary {
   const out: DeckSummary = { n: 0, atk: 0, skl: 0, pow: 0, junk: 0, dmg: 0, blk: 0, up: 0 };
@@ -393,7 +409,7 @@ const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith(
 
 /**
  * The line a drink line is without its potion(s) when the drink changes nothing: every drink's effect is this
- * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome but the potions' resource cost (3SBPKG9603WD boss T3: Flex
+ * turn's alone (turnOnlyDrink), the same card steps (card, hand index, target) and the same outcome (3SBPKG9603WD boss T3: Flex
  * after the last attack, 62.5 vs 64.1 by sampling noise, and Jev drank it). Null when there is none. The drink
  * line stays an option (Dai: potions are never filtered); it is only told apart.
  */
@@ -408,10 +424,7 @@ export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
       .filter((step) => !step.cardId.startsWith("POTION:"))
       .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
       .join(">");
-  const turn = (line: Plan): string => {
-    const { potionCost: _cost, ...rest } = line.outcome;
-    return JSON.stringify(rest);
-  };
+  const turn = (line: Plan): string => JSON.stringify(line.outcome);
   return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
 }
 
@@ -511,7 +524,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions" | "onShuffle"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "playerPowers" | "potions" | "onShuffle"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -566,6 +579,7 @@ export function boardRolloutInput(
     tables,
     statusCards,
     relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
+    ...(relicBlockOf(asRecord(state.run?.raw)).length > 0 ? { relicBlock: relicBlockOf(asRecord(state.run?.raw)) } : {}),
     ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
     ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
@@ -578,7 +592,9 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   const now = rolloutLiveOptions.now ?? (() => performance.now());
   const start = now();
   const elapsed = () => now() - start;
-  if (!args.piles || args.piles.draw.length + args.piles.discard.length === 0) return { available: false, reason: "no draw/discard piles in the state", elapsedMs: elapsed() };
+  // Both piles empty is a real board (Glowwater drew the whole deck, ULQP F6 T2): the later turns draw what this
+  // turn discards (nothing to reshuffle: no draw). Only a state without the piles has nothing to roll out from.
+  if (!args.piles) return { available: false, reason: "no draw/discard piles in the state", elapsedMs: elapsed() };
   if (args.plans.length === 0) return { available: false, reason: "no line to roll out", elapsedMs: elapsed() };
   try {
     const { state, knowledge } = args;

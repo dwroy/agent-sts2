@@ -689,6 +689,29 @@ export function fillDbNumbers(text: string, asc: number, db: Record<string, Mons
   return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK|APPLIES):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
 }
 
+/**
+ * A power's first-seen amount at every logged ascension, runs of equal amounts joined ("A0–A8 150、A9 160": the
+ * Ceremonial Beast's Plow, the HP it is stunned at). For the guides, which are read at any ascension: the stun
+ * line was written as a flat 150 and is 160 at A9. null when the DB has no per-ascension amounts.
+ */
+export function powerAmountByAscText(monsterId: string, powerId: string, monsters: Record<string, MonsterEntry> = load().monsters): string | null {
+  const byAsc = monsters[monsterId]?.powers?.[powerId]?.amount_at_first_sight_by_asc;
+  const logged = Object.keys(byAsc ?? {})
+    .filter((key) => /^\d+$/.test(key))
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((asc) => ({ asc, amount: mode(byAsc![String(asc)]) }))
+    .filter((row): row is { asc: number; amount: string } => row.amount !== null);
+  if (logged.length === 0) return null;
+  const runs: { from: number; to: number; amount: string }[] = [];
+  for (const row of logged) {
+    const last = runs[runs.length - 1];
+    if (last && last.amount === row.amount) last.to = row.asc;
+    else runs.push({ from: row.asc, to: row.asc, amount: row.amount });
+  }
+  return runs.map((run) => `${run.from === run.to ? `A${run.from}` : `A${run.from}–A${run.to}`} ${run.amount}`).join("、");
+}
+
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */
 function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): string {
   const parts: string[] = [move.name || id];

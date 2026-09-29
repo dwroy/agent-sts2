@@ -202,6 +202,13 @@ export interface PlayerSim {
    * relic's counter (attacks already played this turn) comes from its stack.
    */
   kusarigama?: { every: number; damage: number; count: number };
+  /**
+   * Shuriken (「你每在同一回合内打出3张攻击牌，获得1点力量」): every 3rd Attack played in a turn gives 1 Strength for
+   * the fight, on the Attacks after it. `count`: the Attacks already played this turn (attacks_played_this_turn),
+   * mod `every`. Logged over 8 runs holding it: +1 at 90 of 95 crossings of a multiple of 3 (DHGT F33 T1: 0 -> 1 ->
+   * 2 after the 3rd and 6th Attack), the count starting again each turn.
+   */
+  shuriken?: { every: number; strength: number; count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -271,6 +278,19 @@ export interface PlayerSim {
   paelsTears?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
+  /**
+   * Red Skull (「当你的生命值低于或等于50%时，你额外获得3点力量」): the Strength it gives while HP is at or below half
+   * of max (RED_SKULL_STRENGTH). Already in the Strength shown when it is on; an HP loss on our turn that takes us
+   * to half or below adds it for the rest of the turn, a heal back above half takes it off.
+   */
+  redSkull?: number;
+  /**
+   * Self-Forming Clay (「每当你在战斗中失去生命，就在下回合获得3点格挡」): block at the start of the next turn per HP
+   * loss (CLAY_BLOCK), ours or an enemy hit's; `clayPending` is what this turn's losses so far already owe
+   * (SELF_FORMING_CLAY_POWER). The next turn's total is Outcome.clayBlockNext (the rollout gives it).
+   */
+  clayBlock?: number;
+  clayPending?: number;
   /**
    * Intimidating Helmet: block gained for every card played that costs 2+ energy as paid (PU21: 0 -> 4
    * after Perfected Strike and Howl from Beyond; a Howl made free did not trigger it).
@@ -344,12 +364,6 @@ export interface SolverInput {
   turn?: number;
   /** Cards already played this turn (Slow). */
   cardsPlayedThisTurn?: number;
-  /**
-   * Potions this turn may still drink (boss fights: 1 a turn), null for no cap. A plan over it is
-   * kept only when it wins the fight or ends the turn below 30% max HP (1R3C F17 T1: all three potions
-   * on a 7-damage turn, none left for the 28-damage Dismember).
-   */
-  potionLimit?: number | null;
   /**
    * Waterfall Giant too slow to kill: at the current damage rate its eruption at death outgrows HP
    * plus a hand of block (1ZQJ: 15 turns, eruption 54), so damage weighs more and the "HP counts double
@@ -519,8 +533,6 @@ export interface Outcome {
   strengthGained: number;
   cardsDrawn: number;
   unknownCards: string[];
-  /** Resource cost of the potions this plan drinks (0 when none). */
-  potionCost: number;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
   /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
@@ -578,6 +590,18 @@ export interface Outcome {
   lastingDrinks?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
+  /**
+   * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
+   * enemyHpAfter (our turn's end); the rollout takes it off their HP.
+   */
+  retaliated?: { index: number; amount: number; slipperyUsed?: number }[];
+  /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
+  clayBlockNext?: number;
+  /**
+   * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
+   * the enemy hits and is part of incomingAfterBlock.
+   */
+  heldDamage?: number;
 }
 
 export interface Plan {
@@ -594,6 +618,10 @@ interface Sim {
   strength: number; // gained this turn (permanent + temporary)
   permStrength: number;
   hpLostThisTurn: boolean;
+  /** Red Skull's Strength is on (HP at or below half): part of `strength` when it came on this turn. */
+  skullUp: boolean;
+  /** HP losses on our turn so far (Self-Forming Clay's block per loss). */
+  hpLossEvents: number;
   enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
   steps: Step[];
   blockGained: number;
@@ -601,11 +629,6 @@ interface Sim {
   vulnerableApplied: number;
   weakApplied: number;
   flat: number;
-  /** Resource cost of potions used this turn (not scaled like lasting value). */
-  potionCost: number;
-  /** Of permStrength and flat, the part potions gave (scaled by POTION_LASTING for the fight kind). */
-  potionStrength: number;
-  potionFlat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
@@ -640,9 +663,8 @@ interface Sim {
   regen: number;
   /** Soldier's Stew: extra plays of every Strike card from now on this turn. */
   strikeReplay: number;
-  /** Plating gained this turn from a Plating potion (Heart of Iron), and the part of it potions gave. */
+  /** Plating gained this turn (Stone Armor, a Plating potion: Heart of Iron). */
   plating: number;
-  platingPotion: number;
   unknown: string[];
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
@@ -666,8 +688,14 @@ interface Sim {
   lastingDrinks: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
-  /** Attacks played in this plan (Stomp costs 1 less for each). */
+  /**
+   * Attacks played in this plan, a card once (Stomp costs 1 less for each). A Strike Hellraiser plays when drawn counts:
+   * the game's attacks_played_this_turn leaves those out, Stomp's cost does not (logged turn starts with Hellraiser up
+   * and nothing played yet, 5 runs: Stomp 3 -> 2 on each of the 8 turns one Strike was drawn, 3 on the 4 with none).
+   */
   attacksPlayed: number;
+  /** Plays of Attacks for the attack-counting relics (Kusarigama, Shuriken): every duplicate and replay too. */
+  relicAttacks: number;
   /** Skills played in this plan (Smoggy's cap). */
   skillsPlayed: number;
   /** Free attacks left this turn (Unrelenting). */
@@ -789,6 +817,8 @@ export const HOWL_EXHAUST_VALUE = 50;
 export const EXHAUST_HAND = new Set(["STOKE", "FIEND_FIRE"]);
 /** Cards a hand can hold: draws past it are discarded. */
 export const HAND_LIMIT = 10;
+/** Stable Serum: the turn ends whose hand is kept, the drink's own included (RETAIN_HAND_POWER 2). */
+export const STABLE_SERUM_TURNS = 2;
 /** Cards Glowwater draws after exhausting the hand (up to the hand limit and the piles). */
 export const GLOWWATER_DRAW = 10;
 /** Bottled Potential: cards drawn after the hand is shuffled back (potion-values.ts Cards 5). */
@@ -887,6 +917,8 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   }
   if (!(player.demonTongue && !sim.hpLostThisTurn)) sim.hp -= amount;
   sim.hpLostThisTurn = true;
+  sim.hpLossEvents += 1;
+  redSkullCheck(sim, player);
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
   // 敌人造成6点伤害"). One sweep: two crabs dying to it die together.
   if (sim.inferno > 0) {
@@ -900,6 +932,20 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
     }
   }
   return true;
+}
+
+/**
+ * Red Skull: its Strength comes on when HP is at or below half of max and goes off above it (logged over 16 runs
+ * holding it: +3 at every crossing down, 43 of 48 without another Strength change; -3 on a heal back above half;
+ * exactly half, 40/80, counts as on). This turn's Strength only: the rollout re-reads it from HP each turn.
+ */
+function redSkullCheck(sim: Sim, player: PlayerSim): void {
+  const skull = player.redSkull ?? 0;
+  if (skull <= 0) return;
+  const low = sim.hp * 2 <= player.maxHp;
+  if (low === sim.skullUp) return;
+  sim.skullUp = low;
+  sim.strength += low ? skull : -skull;
 }
 
 /**
@@ -1061,15 +1107,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twiceAttack) next.duplicateAttacks -= 1;
   // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
   const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
-  const strengthBefore = next.permStrength;
-  const flatBefore = next.flat;
-  resolveEffects(next, card, target, player, cost);
-  if (twice) resolveEffects(next, card, target, player, cost);
-  if (twiceAttack) resolveEffects(next, card, target, player, cost);
-  for (let replay = 0; replay < replays; replay += 1) resolveEffects(next, card, target, player, cost);
-  if (card.type === "Potion") {
-    next.potionStrength += next.permStrength - strengthBefore;
-    next.potionFlat += next.flat - flatBefore;
+  // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play
+  // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
+  // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
+  const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + replays;
+  for (let play = 0; play < plays; play += 1) {
+    resolveEffects(next, card, target, player, cost);
+    if (card.type === "Attack") attackRelics(next, player);
   }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
@@ -1083,12 +1127,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
-    // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
-    const kusa = player.kusarigama;
-    if (kusa && kusa.every > 0 && (kusa.count + next.attacksPlayed) % kusa.every === 0) {
-      const living = next.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
-      if (living[0]) hitEnemyRaw(next, living[0], kusa.damage);
-    }
   }
   for (const enemy of next.enemies) {
     if (!enemy.skittishHit) continue;
@@ -1265,7 +1303,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "ritual") next.flat += RITUAL_VALUE;
   if (card.special === "radiance") next.flat += RADIANCE_ENERGY_VALUE * RADIANCE_LATER_ENERGY;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
-  if (card.special === "heal") next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+  if (card.special === "heal") {
+    next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+    redSkullCheck(next, player);
+  }
   // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
   if (card.special === "regen" && (card.regen ?? 0) > 0) {
     const amount = card.regen ?? 0;
@@ -1290,7 +1331,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // absorb of the attacks forecast for them (platingAbsorbed), not a flat rate.
   if (card.special === "plating") {
     next.plating += card.plating ?? 0;
-    if (card.type === "Potion") next.platingPotion += card.plating ?? 0;
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds) addToHand(next, card.adds);
@@ -1328,6 +1368,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
   if ((card.retaliate ?? 0) > 0) next.retaliate += card.retaliate ?? 0;
+  // Thorns (Liquid Bronze): back on every hit of this enemy turn like Flame Barrier's, and it stays up (the rollout's later turns).
+  if ((card.thorns ?? 0) > 0) next.retaliate += card.thorns ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.special === "intangible") next.intangible = true;
   if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
@@ -1444,7 +1486,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
-  if (card.type === "Potion") next.potionCost += -card.flatValue;
   if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
@@ -1500,6 +1541,28 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
   exhaustDraws(next, 1, player);
   if (attacks.length === 1 && added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
+}
+
+/**
+ * One play of an Attack for the relics that count them in a turn (Kusarigama, Shuriken), after the play: a duplicate
+ * or a replay is a play of its own, and so is a Strike Hellraiser plays when drawn (the solver plays it like a hand
+ * card; logged: Kunai, Nunchaku and Pen Nib counted those autoplays, attacks_played_this_turn did not). Their counter
+ * at the decision is the relic's own (combat-plan: the relic's stack).
+ */
+function attackRelics(sim: Sim, player: PlayerSim): void {
+  sim.relicAttacks += 1;
+  // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
+  const kusa = player.kusarigama;
+  if (kusa && kusa.every > 0 && (kusa.count + sim.relicAttacks) % kusa.every === 0) {
+    const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
+    if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
+  }
+  // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
+  const shuriken = player.shuriken;
+  if (shuriken && shuriken.every > 0 && (shuriken.count + sim.relicAttacks) % shuriken.every === 0) {
+    sim.strength += shuriken.strength;
+    sim.permStrength += shuriken.strength;
+  }
 }
 
 /**
@@ -1827,17 +1890,12 @@ export function weightsFor(input: SolverInput): Weights {
 }
 
 /**
- * Share of a potion's lasting value (Strength Potion, Dexterity Potion, Touch of Insanity) counted by
- * fight kind. A potion is spent once; in a hallway fight that ends in a few turns its buff pays little
- * and the potion is worth more saved for an elite or the boss (5FMU F15: Strength Potion drunk T1 of a
- * hallway fight two floors before the boss, every offered line carried it as "worth about 10 score").
+ * Lasting value of the turn (Strength, powers), a potion's part like a card's (Dai: a potion is a 0-cost one-shot
+ * card, no cost). Until batch K a potion's part counted 25% in hallway and unknown fights (POTION_LASTING: "the
+ * potion is worth more saved for an elite or the boss"), a keep-the-potion cost in the score.
  */
-export const POTION_LASTING: Record<SolverInput["fightKind"], number> = { monster: 0.25, unknown: 0.25, elite: 1, boss: 1 };
-
-/** Lasting value of the turn (Strength, powers), a potion's part scaled by POTION_LASTING. */
-function lastingValue(sim: Sim, input: SolverInput, weights: Weights): number {
-  const potion = weights.strength * sim.potionStrength + sim.potionFlat;
-  return weights.strength * sim.permStrength + sim.flat - potion * (1 - POTION_LASTING[input.fightKind]);
+function lastingValue(sim: Sim, weights: Weights): number {
+  return weights.strength * sim.permStrength + sim.flat;
 }
 
 /** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
@@ -1916,9 +1974,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
   // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
-  // Plating's later turns: the HP it can absorb (a potion's part at its fight-kind share, POTION_LASTING).
+  // Plating's later turns: the HP it can absorb (a potion's part like a card's).
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
-  const platingValue = sim.plating > 0 ? weights.hp * platingHp * (1 - (sim.platingPotion / sim.plating) * (1 - POTION_LASTING[input.fightKind])) : 0;
+  const platingValue = sim.plating > 0 ? weights.hp * platingHp : 0;
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
@@ -1941,6 +1999,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const newInferno = (input.player.inferno ?? 0) === 0 && sim.inferno > 0 ? 1 : 0;
   const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
+  // Self-Forming Clay: next turn's block, CLAY_BLOCK for each HP loss of this turn (ours so far, a held card's
+  // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
+  const clayEvents = winsFight
+    ? 0
+    : sim.hpLossEvents + heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
+  const clayBlockNext = winsFight || (input.player.clayBlock ?? 0) <= 0 ? 0 : (input.player.clayPending ?? 0) + (input.player.clayBlock ?? 0) * clayEvents;
   const cap = input.player.hpLossCap;
   let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
   let hpAfter = input.player.hp - hpLoss;
@@ -2070,13 +2134,23 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP spent without a kill, the Pressure Gun and explosion followed).
   const raceSafe = input.raceEruption === true && hpAfter >= (input.nextIncoming ?? 0) + 5;
   if (!winsFight && eruption > 0 && hpAfter < eruption - 12 && !raceSafe) score -= weights.hp * hpLoss;
+  // Retaliation (Flame Barrier, Thorns) dealt on the enemy turn, per attacker: the rollout takes it off their HP.
+  const retaliated: { index: number; amount: number; slipperyUsed?: number }[] = [];
   if (sim.retaliate > 0 && !winsFight) {
     // Retaliation lands during the enemy turn: count it as damage, per hit that lands (an attacker it
-    // kills stops attacking), capped by the attacker's HP.
+    // kills stops attacking), capped by the attacker's HP. Slippery: each hit's loss is 1 and takes a stack
+    // (W6F4YXF3MT7A F17 Vantom: Thorns 3 into Slippery 3 took 1 HP and one stack). Hardened Shell: at most its
+    // cap on the enemy turn, a turn of its own (TQCZFBK7T09Y F11 T1: 20 lost on our turn, then 3 of Thorns).
     let back = 0;
     for (const enemy of living) {
       const landed = hits.filter((hit) => hit.enemy === enemy.index).length;
-      back += Math.min(enemy.hp, landed * (enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate));
+      const each = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
+      const slipperyUsed = Math.min(landed, Math.max(0, enemy.slippery ?? 0));
+      let amount = slipperyUsed + (landed - slipperyUsed) * each;
+      if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) amount = Math.min(amount, enemy.hpLossCap);
+      amount = Math.min(Math.max(0, enemy.hp), amount);
+      back += amount;
+      if (amount > 0) retaliated.push({ index: enemy.index, amount, ...(slipperyUsed > 0 ? { slipperyUsed } : {}) });
     }
     score += weights.damage * back;
   }
@@ -2201,7 +2275,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // less the later it comes.
     const fightLength = (input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8) * later;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, input, weights) * fightLength * earliness;
+    score += lastingValue(sim, weights) * fightLength * earliness;
     score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
     // Pael's Tear: energy left unspent gives the next turn its extra energy, valued as Radiant Tincture's later energy.
@@ -2220,7 +2294,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Personal Hive: each hit clogs a later hand with a Dazed (M812 F28: 2-4 Dazed per hand from T4).
   // A thin draw pile draws them next turn (CY8U F25 T6: 6 Dazed into a 1-card pile, T7 hand 5/5 Dazed).
   if (!winsFight) score -= DAZED_COST * sim.dazedAdded * (input.drawPile !== undefined && input.drawPile.length < 10 ? 2 : 1);
-  score -= sim.potionCost;
 
   return {
     steps: sim.steps,
@@ -2264,7 +2337,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
       unknownCards: sim.unknown,
-      potionCost: sim.potionCost,
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
@@ -2274,7 +2346,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
       // Enrage's Strength is lasting too, the other way: a line feeding it cannot dominate on this axis.
-      lasting: lastingValue(sim, input, weights) - enrageCost + platingValue,
+      lasting: lastingValue(sim, weights) - enrageCost + platingValue,
       blockWasted: winsFight ? 0 : Math.max(0, blockLeft - incomingRaw),
       ...(explodesNext > 0 ? { explodesNext, eruptionMargin: hpAfter + (input.player.keepsBlock ? Math.max(0, blockLeft - incomingRaw) : 0) - explodesNext } : {}),
       ...(sim.exhausted.length > 0 ? { exhausted: sim.exhausted.map((card) => card.index) } : {}),
@@ -2284,9 +2356,31 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(retaliated.length > 0 ? { retaliated } : {}),
+      ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
+}
+
+/** How many of these losses, taken in order, get past the block and then the Buffer stacks: each one an HP loss. */
+function lossesPast(amounts: number[], block: number, buffer: number): number {
+  let pool = block;
+  let stacks = buffer;
+  let count = 0;
+  for (const amount of amounts) {
+    if (amount <= 0) continue;
+    const absorbed = Math.min(pool, amount);
+    pool -= absorbed;
+    if (amount - absorbed <= 0) continue;
+    if (stacks > 0) {
+      stacks -= 1;
+      continue;
+    }
+    count += 1;
+  }
+  return count;
 }
 
 /** Pael's Tear's extra energy next turn for a line ending with `sim.energy` unspent (0 without the relic or energy). */
@@ -2304,7 +2398,7 @@ export function turnOnlyDrink(card: CardModel): boolean {
   if (card.type !== "Potion") return true;
   const lasting =
     (card.demise ?? 0) > 0 || (card.shrink ?? 0) > 0 || card.vulnerable > 0 || card.weak > 0 || card.strength !== 0 || card.enemyStrength !== 0 ||
-    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
+    (card.plating ?? 0) > 0 || (card.regen ?? 0) > 0 || (card.thorns ?? 0) > 0 || card.hpLoss > 0 || (card.adds ?? []).length > 0 || (card.drawn ?? []).length > 0 || card.generates !== undefined;
   return !lasting && TURN_ONLY_SPECIALS.has(card.special ?? "");
 }
 
@@ -2314,7 +2408,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
 }
 
 export interface SolveResult {
@@ -2400,6 +2494,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     strength: 0,
     permStrength: 0,
     hpLostThisTurn: false,
+    skullUp: (input.player.redSkull ?? 0) > 0 && input.player.hp * 2 <= input.player.maxHp,
+    hpLossEvents: 0,
     enemies: input.enemies.map((enemy) => ({ ...enemy, alive: enemy.hp > 0, newlyWeak: false, strengthDelta: 0, lostThisTurn: 0 })),
     steps: [],
     blockGained: 0,
@@ -2407,9 +2503,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     vulnerableApplied: 0,
     weakApplied: 0,
     flat: 0,
-    potionCost: 0,
-    potionStrength: 0,
-    potionFlat: 0,
     tempDex: 0,
     intangible: false,
     buffer: input.player.buffer ?? 0,
@@ -2427,7 +2520,6 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnInHand: 0,
     regen: input.player.regen ?? 0,
     plating: 0,
-    platingPotion: 0,
     strikeReplay: input.player.strikeReplay ?? 0,
     unknown: [],
     feedKills: 0,
@@ -2442,6 +2534,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
     attacksPlayed: 0,
+    relicAttacks: 0,
     skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,
@@ -2490,17 +2583,14 @@ export function solveTurn(input: SolverInput): SolveResult {
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
     const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
-    const overPotionCap =
-      input.potionLimit !== null && input.potionLimit !== undefined && potionsDrunk > input.potionLimit && !o.winsFight && o.hpAfter >= input.player.maxHp * 0.3;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
     // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
-    // board to surprise us). Over the potion cap it is not a plan to offer, but the search goes on (a
-    // later card may win).
+    // board to surprise us).
     const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
     const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
     const samePotions = tie && potionsDrunk === potionStepCount(existing.steps);
-    if (!overPotionCap && (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length))) {
+    if (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length)) {
       byOutcome.set(signature, plan);
     }
     if (nodes >= maxNodes) {
@@ -2549,9 +2639,9 @@ function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
-  // Drinking a potion is a cost too: without this axis "same result, but spends Fortifier" dominated
-  // "take 4 damage, keep Fortifier" and the cheaper plan was never shown (Vantom, live run). Waking a
-  // sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
+  // Drinking a potion is its own axis (the potions a line drinks, no cost: Dai, a potion is a 0-cost one-shot
+  // card): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
+  // potion-free plan was never shown (Vantom, live run). Waking a sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
   // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
@@ -2563,7 +2653,7 @@ function vector(plan: Plan): number[] {
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */

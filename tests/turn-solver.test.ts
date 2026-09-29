@@ -172,9 +172,9 @@ describe("enemy powers", () => {
 });
 
 describe("potions", () => {
-  it("uses a damage potion when it completes a lethal, and not otherwise in a hallway fight", async () => {
+  it("uses a damage potion when it completes a lethal; otherwise a potion-free line stays among the plans", async () => {
     const { modelPotion } = await import("../src/strategy/card-model.js");
-    const rock = modelPotion("POTION_SHAPED_ROCK", "rock", 1, [0], 15)!;
+    const rock = modelPotion("POTION_SHAPED_ROCK", "rock", 1, [0])!;
     const lethal = solveTurn({
       hand: [strike(0), rock],
       player: player({ hp: 10, energy: 1 }),
@@ -190,11 +190,13 @@ describe("potions", () => {
       enemies: [enemy({ hp: 60, attacks: [{ damage: 5, hits: 1 }] })],
       fightKind: "monster",
     });
-    expect(idle.plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"))).toBe(false);
+    // No use cost (Dai: a potion is a 0-cost one-shot card; batch L removed the unused useCost): the drink may
+    // score best, and the line without it is kept apart (a potion line never merges with a dry one).
+    expect(idle.plans.some((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")))).toBe(true);
   });
 
   it("Dexterity Potion is worth the block cards in hand, nothing without one (KFP1 F17 T3: drunk with only Attacks)", () => {
-    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [], 4)!;
+    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [])!;
     const boss = enemy({ name: "Lagavulin Matriarch", hp: 200, maxHp: 222, attacks: [{ damage: 20, hits: 1 }] });
     const drinks = (hand: CardModel[]) => solveTurn({ hand: [...hand, dex], player: player({ hp: 60, energy: 2 }), enemies: [boss], fightKind: "boss", turn: 3 }).plans[0]!.steps.some((step) => step.cardId.startsWith("POTION:"));
     expect(drinks([strike(0), strike(1)])).toBe(false);
@@ -214,7 +216,7 @@ describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank t
     defend(4),
     card(5, "WHIRLWIND", { cost: 0, xCost: true, target: "all", validTargets: [], damage: 5, hits: 0, special: "whirlwind" }),
     card(6, "BREAKTHROUGH", { target: "all", validTargets: [], damage: 9, hpLoss: 1 }),
-    modelPotion("STRENGTH_POTION", "Strength Potion", 1, [], 15)!,
+    modelPotion("STRENGTH_POTION", "Strength Potion", 1, [])!,
   ];
   const enemies = (): EnemySim[] => [
     enemy({ index: 0, name: "Calcified Cultist", hp: 39, maxHp: 39 }),
@@ -224,17 +226,18 @@ describe("buff potions in a hallway fight (5FMU F15 T1: all four options drank t
   const solve = (fightKind: "monster" | "boss") =>
     solveTurn({ hand: hand(), player: player({ hp: 61, maxHp: 83, energy: 4 }), enemies: enemies(), fightKind, turn: 1 });
 
-  it("a potion's lasting value is small in a hallway fight, full in a boss fight", () => {
+  it("a potion's lasting value is full in a hallway fight as in a boss fight (batch K: no keep-the-potion discount, Dai)", () => {
     const hallway = solve("monster").plans.find(drinks)!;
     const boss = solve("boss").plans.find(drinks)!;
     expect(boss.outcome.lasting).toBeCloseTo(10);
-    expect(hallway.outcome.lasting).toBeLessThan(5);
+    expect(hallway.outcome.lasting).toBeCloseTo(10);
   });
 
-  it("the hallway's best line keeps the potion, and the options always include a line without it", () => {
+  it("the options always include a line without the potion", () => {
     const result = solve("monster");
     const surviving = result.plans.filter((plan) => !plan.outcome.dies);
-    expect(drinks(surviving[0]!)).toBe(false);
+    // (The hallway's best line kept the potion only through a use cost of 15, never passed by the planner and
+    // removed in batch L: a potion is a 0-cost one-shot card, Dai.)
     expect(distinctPlans(surviving, 4).some((plan) => !drinks(plan))).toBe(true);
     // Even when every higher-scored pick drinks (a boss fight), a potion-free line is offered.
     const boss = solve("boss").plans.filter((plan) => !plan.outcome.dies);
@@ -338,7 +341,7 @@ describe("more enemy powers", () => {
 
   it("Ashwater exhausts Howl, which hits every enemy at the end of the turn (H14T F39 T4)", async () => {
     const { modelPotion } = await import("../src/strategy/card-model.js");
-    const ashwater = modelPotion("ASHWATER", "Ashwater", 0, [], 0)!;
+    const ashwater = modelPotion("ASHWATER", "Ashwater", 0, [])!;
     const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 30, target: "all", validTargets: [] });
     const result = solveTurn({
       hand: [howl, ashwater, { ...strike(1), validTargets: [0, 1] }, { ...strike(2), validTargets: [0, 1] }],
@@ -455,7 +458,7 @@ describe("more enemy powers", () => {
 describe("Fortifier", () => {
   it("plays Defend before tripling the block (boss floor 17, live run)", async () => {
     const { modelPotion } = await import("../src/strategy/card-model.js");
-    const fortifier = modelPotion("FORTIFIER", "fortifier", 0, [], 0)!;
+    const fortifier = modelPotion("FORTIFIER", "fortifier", 0, [])!;
     const result = solveTurn({
       hand: [defend(0), fortifier],
       player: player({ hp: 19, energy: 1 }),
@@ -500,7 +503,7 @@ describe("status cards in hand", () => {
 describe("Duplication potion", () => {
   it("plays the next card twice (floor 12 elite, live run)", async () => {
     const { modelPotion } = await import("../src/strategy/card-model.js");
-    const dup = modelPotion("DUPLICATOR", "dup", 2, [], 5)!;
+    const dup = modelPotion("DUPLICATOR", "dup", 2, [])!;
     const setup = card(0, "SETUP_STRIKE", { damage: 7, tempStrength: 3 });
     const result = solveTurn({
       hand: [dup, setup, strike(1), card(2, "TWIN_STRIKE", { damage: 5, hits: 2 })],
@@ -769,34 +772,6 @@ describe("Crimson Mantle's start-of-turn HP cost", () => {
   });
 });
 
-describe("boss potion cap (1R3C F17 T1: three potions on a 7-damage turn)", () => {
-  it("drinks at most one potion a turn unless it wins the fight or the turn ends below 30% HP", async () => {
-    const { modelPotion } = await import("../src/strategy/card-model.js");
-    const potions = () => [
-      modelPotion("BLOCK_POTION", "block", 0, [], 4)!,
-      modelPotion("STRENGTH_POTION", "strength", 1, [], 4)!,
-      modelPotion("WEAK_POTION", "weak", 2, [0], 4)!,
-    ];
-    const potionSteps = (steps: { cardId: string }[]) => steps.filter((step) => step.cardId.startsWith("POTION:")).length;
-    const input = {
-      hand: [strike(0), defend(1), inflame(2), ...potions()],
-      player: player({ hp: 59, maxHp: 68 }),
-      enemies: [enemy({ hp: 173, maxHp: 173, attacks: [{ damage: 7, hits: 1 }] })],
-      fightKind: "boss" as const,
-      turn: 1,
-    };
-    const capped = solveTurn({ ...input, potionLimit: 1 });
-    expect(capped.plans.every((plan) => potionSteps(plan.steps) <= 1)).toBe(true);
-    expect(solveTurn({ ...input, potionLimit: 0 }).plans.every((plan) => potionSteps(plan.steps) === 0)).toBe(true);
-    // Uncapped (the old free boss potions) the solver happily stacks them.
-    const free = solveTurn({ ...input, hand: [strike(0), defend(1), inflame(2), ...potions().map((p) => ({ ...p, flatValue: 0 }))] });
-    expect(potionSteps(free.plans[0]!.steps)).toBeGreaterThan(1);
-    // Low HP: the cap does not apply to a turn that ends below 30% max HP.
-    const low = solveTurn({ ...input, player: player({ hp: 20, maxHp: 68 }), enemies: [enemy({ hp: 173, maxHp: 173, attacks: [{ damage: 30, hits: 1 }] })], potionLimit: 0 });
-    expect(low.plans.some((plan) => potionSteps(plan.steps) > 0)).toBe(true);
-  });
-});
-
 describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and woke it)", () => {
   const bash = (index: number): CardModel => card(index, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
   const matriarch = (overrides: Partial<EnemySim> = {}): EnemySim =>
@@ -993,7 +968,7 @@ describe("Test Subject (2WUM F48)", () => {
     // Defend adds nothing, so it is the same outcome as ending the turn.
     expect(locked.every((plan) => plan.outcome.hpLoss === 15 && plan.outcome.blockGained === 0)).toBe(true);
     // A block potion is not a card.
-    const potion = modelPotion("BLOCK_POTION", "Block Potion", 0, [], 0)!;
+    const potion = modelPotion("BLOCK_POTION", "Block Potion", 0, [])!;
     const drunk = solveTurn({ hand: [potion], player: player({ hp: 80, energy: 0, noBlock: true }), enemies: [biting], fightKind: "boss" }).plans;
     expect(drunk.find((plan) => plan.steps.length === 1)!.outcome.hpLoss).toBe(3);
     const panic = card(1, "PANIC_BUTTON", { type: "Skill", target: "self", validTargets: [], cost: 0, block: 10 });
@@ -1293,7 +1268,7 @@ describe("Surrounded back attack (PLC F33: the intents already include the x1.5)
 });
 
 describe("debuffs into Artifact (TQX5 T1: Powdered Demise into Artifact 3 did nothing)", () => {
-  const demise = () => modelPotion("POWDERED_DEMISE", "Demise", 0, [0], 4)!;
+  const demise = () => modelPotion("POWDERED_DEMISE", "Demise", 0, [0])!;
 
   it("a debuff potion blocked by Artifact is worth nothing, so it is not drunk", () => {
     const boss = (artifact: number) => enemy({ name: "Aeonglass", hp: 512, maxHp: 512, artifact, attacks: [{ damage: 22, hits: 1 }] });
@@ -1378,7 +1353,7 @@ describe("debuffs into Artifact (TQX5 T1: Powdered Demise into Artifact 3 did no
 
 describe("Gigantification potion (PLC F33: kept from T1 to death)", () => {
   it("triples the next Attack only", () => {
-    const giant = modelPotion("GIGANTIFICATION_POTION", "Gigantification", 1, [], 4)!;
+    const giant = modelPotion("GIGANTIFICATION_POTION", "Gigantification", 1, [])!;
     const bludgeon = card(0, "BLUDGEON", { cost: 3, damage: 32 });
     const result = solveTurn({ hand: [giant, bludgeon], player: player({ hp: 80, energy: 3 }), enemies: [enemy({ hp: 400, maxHp: 408 })], fightKind: "boss" });
     const tripled = result.plans.find((plan) => plan.steps.map((step) => step.cardId).join() === "POTION:GIGANTIFICATION_POTION:1,BLUDGEON")!;
@@ -1590,7 +1565,7 @@ describe("Touch of Insanity (G8AQ T3: free Bludgeon+ was lethal, the potion went
     card(3, "PYRE", { type: "Power", target: "self", validTargets: [], cost: 2, flatValue: 16 }),
     card(4, "BLUDGEON", { upgraded: true, cost: 3, damage: 44 }),
   ];
-  const touch = (): CardModel => modelPotion("TOUCH_OF_INSANITY", "Touch of Insanity", 0, [], 5)!;
+  const touch = (): CardModel => modelPotion("TOUCH_OF_INSANITY", "Touch of Insanity", 0, [])!;
 
   it("drinks it on the most expensive card and finds the lethal", () => {
     const result = solveTurn({
@@ -1897,7 +1872,7 @@ describe("next turn's hit on a quiet turn (JGJS F24 T1: Offering on the Spiny To
 });
 
 describe("Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact numbers)", () => {
-  const foul = modelPotion("FOUL_POTION", "Foul Potion", 0, [], 0)!;
+  const foul = modelPotion("FOUL_POTION", "Foul Potion", 0, [])!;
   const lineOf = (plans: ReturnType<typeof solveTurn>["plans"], ids: string[]) =>
     plans.find((plan) => plan.steps.map((step) => step.cardId.split(":")[0] === "POTION" ? step.cardId.split(":")[1] : step.cardId).join(",") === ids.join(","));
 
@@ -1925,7 +1900,7 @@ describe("Foul Potion hits us too (Dai 2026-09-28: no ban, Jev decides on exact 
 
 describe("a potion line never merges with a potion-free line (2CCM6XK4PB37 F15 T2: code drank the Dexterity Potion as the only line)", () => {
   it("0 energy, nothing playable: end turn stays a line next to the Dexterity Potion line", () => {
-    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [], 0)!;
+    const dex = modelPotion("DEXTERITY_POTION", "Dexterity Potion", 0, [])!;
     const colossus = card(0, "COLOSSUS", { type: "Skill", target: "self", validTargets: [], block: 5, cost: 1 });
     const result = solveTurn({
       hand: [colossus, dex],
@@ -1939,10 +1914,9 @@ describe("a potion line never merges with a potion-free line (2CCM6XK4PB37 F15 T
     const dry = result.plans.find((plan) => !drinks(plan))!;
     expect(dry).toBeDefined();
     expect(dry.steps).toEqual([]);
-    // Same end state, and the potion line scores a hair higher (lasting Dexterity): before the fix they shared
-    // a bucket (Math.round(score)) and the potion line replaced "end turn".
+    // Same end state, and the potion line scores higher (lasting Dexterity): before the fix they shared a bucket
+    // (Math.round(score), when a hallway potion's lasting value counted 25%) and the potion line replaced "end turn".
     expect(potionLine.outcome.hpLoss).toBe(dry.outcome.hpLoss);
     expect(potionLine.score).toBeGreaterThan(dry.score);
-    expect(Math.round(potionLine.score)).toBe(Math.round(dry.score));
   });
 });

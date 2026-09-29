@@ -19,7 +19,7 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
 import { moveModel } from "./knowledge/move-model.js";
-import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
+import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
@@ -529,10 +529,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.hpGuard = undefined;
       screenMemory.potionTurn = undefined;
       screenMemory.facing = undefined;
+      screenMemory.facingFight = undefined;
       screenMemory.fightCards = undefined;
       screenMemory.planBeforeSelection = undefined;
       screenMemory.gambleDiscards = undefined;
       screenMemory.potionTake = undefined;
+      screenMemory.takeWaitSince = undefined;
       screenMemory.plannedAfter = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
@@ -564,6 +566,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
+          // A restart mid-fight: the Surrounded facing of this fight's last targeted action (else startFacing, stale).
+          if (replay.facing && screenMemory.facing === undefined && replay.facing.fight === facingFightOf(state)) {
+            screenMemory.facing = replay.facing.index;
+            screenMemory.facingFight = replay.facing.fight;
+          }
           const plan = replay.routePlan ? `; route plan (act ${replay.routePlan.act}, F${replay.routePlan.floor ?? "?"}) ${replay.routePlan.summary}` : "";
           onEvent({ type: "note", message: `run ${runId} in progress: rebuilt the run memory from its logs (${replay.counts.states} states, ${replay.counts.recorded} decisions, ${replay.counts.runPlans} run plans, ${journal.itemCount} items)${plan}` });
         } else {
@@ -1387,6 +1394,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     journal.record(state, journalEntry);
     // The node a map move chose: the REWARD and REST screens after it carry no map position.
     rememberChosenNode(screenMemory, state, resolved.intent);
+    // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).
+    noteFacing(screenMemory, state, resolved.intent);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     deepseekMemo = null;

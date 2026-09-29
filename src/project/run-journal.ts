@@ -23,7 +23,7 @@ import { actThreats, bossDossier, fillDbNumbers } from "../knowledge/monster-db.
 import type { GameState } from "../mod/schema.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { RoutePlan } from "../screens/map.js";
-import { bossClock, eruptionSchedule, giantBlockRecord, giantKillRecord, giantNumbers, testSubjectPhases } from "../strategy/boss-clock.js";
+import { bossClock, crabKillRecord, eruptionSchedule, giantBlockRecord, giantKillRecord, giantNumbers, lagSleepRecord, testSubjectPhases } from "../strategy/boss-clock.js";
 import { actOf, runPlanLine } from "../strategy/run-plan.js";
 import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
 import { deckEntries } from "./deck.js";
@@ -181,11 +181,11 @@ export const BOSS_NOTES: Record<string, string> = {
   VANTOM: "{HP:VANTOM} 血，开场 {POWER:VANTOM:SLIPPERY_POWER} 层滑溜（前 {POWER:VANTOM:SLIPPERY_POWER} 次伤害只算 1）：多段攻击破层；4 回合循环，肢解重击 {DMG:VANTOM:DISMEMBER_MOVE}（加力量）并塞伤口时全力格挡，蓄力回合（+{GAIN:VANTOM:PREPARE_MOVE:STRENGTH_POWER} 力）输出/打能力。",
   CEREMONIAL_BEAST: "{HP:CEREMONIAL_BEAST} 血，前两回合蓄力（打能力），之后犁地 {DMG:CEREMONIAL_BEAST:PLOW_MOVE} 加力量、每次 +{GAIN:CEREMONIAL_BEAST:PLOW_MOVE:STRENGTH_POWER} 力；首次跌破 {POWER:CEREMONIAL_BEAST:PLOW_POWER} 血被击晕一回合，之后昏眩（一回合只能打 1 张）。",
   THE_KIN: "神官 {HP:KIN_PRIEST} 血 + 两个信徒各 {HP:KIN_FOLLOWER}(爪牙)：神官一死战斗即结束，单体伤害压神官，AOE 顺带信徒；T3/T7/T11 光束 {DMG:KIN_PRIEST:BEAM_MOVE}（每段加力量），仪式 +{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} 力。",
-  LAGAVULIN_MATRIARCH: "{HP:LAGAVULIN_MATRIARCH} 血，开场沉睡 + {POWER:LAGAVULIN_MATRIARCH:PLATING_POWER} 覆甲：掉 1 血就醒，沉睡时打能力/留格挡；醒后 {DMG:LAGAVULIN_MATRIARCH:SLASH_MOVE}、{DMG:LAGAVULIN_MATRIARCH:DISEMBOWEL_MOVE}，尽早爆发。",
+  LAGAVULIN_MATRIARCH: "{HP:LAGAVULIN_MATRIARCH} 血，开场沉睡 + {POWER:LAGAVULIN_MATRIARCH:PLATING_POWER} 覆甲：掉 1 血就醒（被打醒的那回合眩晕），沉睡时打能力/留格挡，别用小伤害打醒；牌组没有持续力量牌时沉睡回合几乎白过，一次能打掉它 25% 以上的血就打醒它（{LAG_SLEEP}）；醒后 {DMG:LAGAVULIN_MATRIARCH:SLASH_MOVE}、{DMG:LAGAVULIN_MATRIARCH:DISEMBOWEL_MOVE}，尽早爆发。",
   SOUL_FYSH: "往牌组塞 Beckon（6 点无法格挡）：用能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅+、重振精神、恶魔之焰；未升级的坚毅是随机消耗 1 张牌，不一定消耗到 Beckon；只消耗自己的「消耗」牌清不掉），少抽牌；周期性无实体时别输出；尖叫 {DMG:SOUL_FYSH:SCREAM_MOVE} 给我方 {APPLIES:SOUL_FYSH:SCREAM_MOVE:VULNERABLE_POWER} 层易伤，易伤还在时排气 {DMG:SOUL_FYSH:DE_GAS_MOVE} 按 ×1.5 打，那回合多挡。",
-  WATERFALL_GIANT: "{GIANT_HP} 血，被打「死」后下一回合自爆 = 击杀那回合的蒸汽喷发层数（{ERUPTION}）：要早杀，{GIANT_KILLS}（经验 giant-explode）；击杀那回合的 HP 加下回合格挡要 ≥ 层数（{GIANT_BLOCK}），自爆回合全力格挡。虹吸回合回血 {SIPHON}，压力炮 T5/T10/T15 依次 {GUN} 要挡住：拖得越久越难，要抢伤害。",
+  WATERFALL_GIANT: "{GIANT_HP} 血，被打「死」后下一回合自爆 = 击杀那回合的蒸汽喷发层数（{ERUPTION}）：输赢看击杀那回合的 HP 加下回合格挡够不够层数（{GIANT_BLOCK}）；击杀越早层数越低，但击杀时 HP 不够照样输（{GIANT_KILLS}；经验 giant-explode）：按预计击杀回合的层数留 HP，别为提前一回合击杀把 HP 换到「层数 − 格挡」以下，自爆回合全力格挡。虹吸回合回血 {SIPHON}，压力炮 T5/T10/T15 依次 {GUN} 要挡住；拖得越久层数越高、虹吸回血越多。",
   THE_INSATIABLE: "{HP:THE_INSATIABLE} 血，沙坑每敌方回合 −1，归零即死：打不死它就尽早打狂乱逃离（每张多一回合），不要等沙坑 ≤2。",
-  KAISER_CRAB: "两只钳子：单体伤害集中打火箭（T4/T9 激光 {DMG:ROCKET:LASER_MOVE}，在背后 {BEHIND:ROCKET:LASER_MOVE}，再加力量）；群伤照打两只；先死一只时另一只 +99 格挡 +6 力，但格挡只挡一回合，那回合出格挡/能力牌（51 场螃蟹战：火箭先死 9/12 赢，两只一直活着 8/39；经验 crab-kill-order）。",
+  KAISER_CRAB: "两只钳子：单体伤害集中打火箭（T4/T9 激光 {DMG:ROCKET:LASER_MOVE}，在背后 {BEHIND:ROCKET:LASER_MOVE}，再加力量）；群伤照打两只；先死一只时另一只 +99 格挡 +6 力，但格挡只挡一回合，那回合出格挡/能力牌（{CRAB_KILLS}；经验 crab-kill-order）。",
   KNOWLEDGE_DEMON: "{HP:KNOWLEDGE_DEMON} 血，第 1/5/9 回合选负面：懒惰 > 心灵腐化 > 瓦解 > 衰朽；每 4 回合回血加 {GAIN:KNOWLEDGE_DEMON:PONDER_MOVE:STRENGTH_POWER} 力，要力量成长速攻。",
   QUEEN: "女王 {HP:QUEEN} + 聚合体 {HP:TORCH_HEAD_AMALGAM}：先杀聚合体，女王只吃群伤（4 场胜局都在 T4–T8 先打死聚合体，A8 5 场输局聚合体都活过 T5；经验 queen-plan）；第 2 回合起 99 层易伤/虚弱/脆弱，前两回合全力输出，魂缚牌每回合只打一张。",
   TEST_SUBJECT: "三阶段 HP {TS_PHASES}：一阶段少打技能；二阶段多段爪 {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} 起每回合多一段，要 3–4 回合打完，挡不满就全力输出；三阶段天罚每两回合给一次无实体：无实体回合打能力/格挡，开放回合全力输出（大伤害照样有效，「靠多段」是错的；经验 ts-phase3），进三阶段 HP 最好 ≥75（猛扑 {DMG:TEST_SUBJECT:BIG_POUNCE}）；复生回合做准备。",
@@ -208,6 +208,8 @@ export function bossNote(bossId: string | null | undefined, ascension = 8): stri
     .replace("{GIANT_HP}", String(giant.hp))
     .replace("{GIANT_KILLS}", giantKillRecord(ascension, "zh"))
     .replace("{GIANT_BLOCK}", giantBlockRecord("zh"))
+    .replace("{CRAB_KILLS}", () => crabKillRecord("zh"))
+    .replace("{LAG_SLEEP}", () => lagSleepRecord("zh"))
     .replace("{SIPHON}", String(giant.siphon))
     .replace("{GUN}", giant.gun.join("→"))
     .replace("{TS_PHASES}", testSubjectPhases(ascension).join("/"));

@@ -24,8 +24,10 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHpAt, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
@@ -63,7 +65,7 @@ export interface BossProfile {
  */
 export const BOSSES: Record<string, BossProfile> = {
   // Crusher 209 + Rocket 199 (A8: 219 + 209). The two wins took 7-8 turns; Bug Sting -> Laser opener.
-  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser {DMG:ROCKET:LASER_MOVE}, {BEHIND:ROCKET:LASER_MOVE} from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (51 logged crab fights: Rocket died first 9/12 won, both alive to the end 8/39; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
+  KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser {DMG:ROCKET:LASER_MOVE}, {BEHIND:ROCKET:LASER_MOVE} from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn ({CRAB_KILLS}; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
   // 379 (A8 399) plus two 30-HP Ponder heals; the T11 Overwhelming (12x3 and more) ends long fights (NZWR).
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
   THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at {POWER:THE_INSATIABLE:SANDPIT_POWER}, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
@@ -82,7 +84,7 @@ export const BOSSES: Record<string, BossProfile> = {
   THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "{POWER:VANTOM:SLIPPERY_POWER} Slippery stacks: multi-hit", mechanic: "Slippery {POWER:VANTOM:SLIPPERY_POWER}: its next {POWER:VANTOM:SLIPPERY_POWER} HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early ({GIANT_KILLS}; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP; {GIANT_BLOCK})" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: HP at the kill plus that turn's block must cover the stacks ({GIANT_BLOCK}; ERPH: T14 kill, 51 into 25 HP); an earlier kill has fewer stacks but is lost too without the HP ({GIANT_KILLS}; experience giant-explode)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to {POWER:CEREMONIAL_BEAST:PLOW_POWER}; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -103,6 +105,41 @@ export interface UnblockedShare {
   turns: number;
   /** The Waterfall Giant only: its logged fights by ascension, with the turn it was killed on (null: not killed). */
   kills?: Record<string, GiantKillRow[]>;
+  /** Every boss: its logged fights by ascension (fights, won, mean entry HP % of the won and the lost ones). */
+  by_asc?: Record<string, BossAscRecord>;
+  /** The Kaiser Crab only: the claw that died first in each logged fight, by ascension. */
+  first_death?: Record<string, CrabFightRow[]>;
+  /** The Lagavulin Matriarch only: its sleep in each logged fight, by ascension. */
+  sleep?: Record<string, LagSleepRow[]>;
+}
+
+/** A boss's logged fights at one ascension (tools/build-boss-damage.py by_asc). */
+export interface BossAscRecord {
+  fights: number;
+  won: number;
+  /** Mean entry HP as a % of max HP, of the won / the lost fights (null: none). */
+  entry_pct_won?: number | null;
+  entry_pct_lost?: number | null;
+}
+
+/** One logged Kaiser Crab fight: the claw that died while the other still lived (null: neither did), and the outcome. */
+export interface CrabFightRow {
+  first: "ROCKET" | "CRUSHER" | null;
+  won: boolean;
+  turn?: number | null;
+  run?: string;
+}
+
+/**
+ * One logged Lagavulin Matriarch fight: the turn it woke (3 = slept through T1-T2), the share of its HP lost by
+ * the first frame it was awake, and the deck's lasting-Strength cards (card-value damageRole "scaling").
+ */
+export interface LagSleepRow {
+  won: boolean;
+  woke_turn: number | null;
+  woke_pct: number | null;
+  strength: string[];
+  run?: string;
 }
 
 /** One logged Waterfall Giant fight (tools/build-boss-damage.py): the kill turn, the outcome, HP and stacks at the kill. */
@@ -188,7 +225,8 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
       .replace("{KIN_BEAM_T11}", beam === null ? "?" : String(beam))
       .replace("{PHASES}", testSubjectPhases(ascension).join("/"))
       .replace("{SIPHON}", `${giant.siphon} HP`)
-      .replace("{GUN}", giant.gun.join("/")),
+      .replace("{GUN}", giant.gun.join("/"))
+      .replace("{CRAB_KILLS}", () => crabKillRecord("en")),
     ascension,
   );
 }
@@ -232,10 +270,198 @@ export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string 
 
 /**
  * The guides' facts that come from the data, filled when the DeepSeek system prompt is built (once a process, so
- * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord).
+ * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord), {GIANT_KILLS_A8} and
+ * {GIANT_KILLS_A9} (giantKillRecord at A8 / A9: the kill-turn record, hard-coded as "A8 27 场…A9 10 场赢 3" until batch I).
+ * 2026-09-29 knowledge check (Dai: the guides are knowledge like the experience base; where the data says
+ * otherwise, the data's version): {CRAB_KILL_ORDER} (crabKillRecord; was "51 场…39 场赢 8"), {LAG_SLEEP}
+ * (lagSleepRecord: the Matriarch's sleep without Strength cards), {BEAST_STUN} (the Beast's stun HP by ascension,
+ * monster DB; was a flat 150, 160 at A9), {LASER_T4} (the Rocket's T4 Laser after Charge Up; was "49"),
+ * {ACT1_ENTRY_HP} (act1EntryHp), {UNKNOWN_FIGHTS} (unknownFightsText: how often a ? room is a fight and what it
+ * costs); {BOSS_RECORD:ID} (bossRecord: fights won by ascension; was "5 局死在它手上"); {CARD_OUTCOME:ID}
+ * (cardOutcomeText: outcome-stats rows of a card whose grade the data moved); {@N:KIND:ID:…} a monster DB number
+ * at ascension N (fillDbNumbers). The English ones for Jev's hints (hintText): {CRAB_KILLS_EN},
+ * {LAG_NO_STRENGTH_EN}.
  */
+const GUIDE_FACTS: Record<string, () => string> = {
+  "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
+  "{GIANT_KILLS_A8}": () => giantKillRecord(8, "zh"),
+  "{GIANT_KILLS_A9}": () => giantKillRecord(9, "zh"),
+  "{CRAB_KILL_ORDER}": () => crabKillRecord("zh"),
+  "{CRAB_KILLS_EN}": () => crabKillShort(),
+  "{LAG_SLEEP}": () => lagSleepRecord("zh"),
+  "{LAG_NO_STRENGTH_EN}": () => lagSleepRecord("en"),
+  "{BEAST_STUN}": () => powerAmountByAscText("CEREMONIAL_BEAST", "PLOW_POWER") ?? "?",
+  "{LASER_T4}": () => laserT4Text(),
+  "{ACT1_ENTRY_HP}": () => act1EntryHp(),
+  "{UNKNOWN_FIGHTS}": () => unknownFightsText(),
+};
+
 export function fillGuideFacts(text: string): string {
-  return text.includes("{GIANT_BLOCK_RECORD}") ? text.split("{GIANT_BLOCK_RECORD}").join(giantBlockRecord("zh")) : text;
+  let out = text;
+  for (const [placeholder, fill] of Object.entries(GUIDE_FACTS)) if (out.includes(placeholder)) out = out.split(placeholder).join(fill());
+  out = out.replace(/\{BOSS_RECORD:([A-Z_]+)\}/g, (_, boss: string) => bossRecord(boss));
+  out = out.replace(/\{CARD_OUTCOME:([A-Z_]+)\}/g, (_, card: string) => cardOutcomeText(card));
+  return out.replace(/\{@(\d+):([A-Z]+:[A-Z0-9_:]+)\}/g, (_, asc: string, inner: string) => fillDbNumbers(`{${inner}}`, Number(asc)));
+}
+
+/**
+ * A card's outcome rows (outcome-stats.json, tools/build-outcome-stats.py; observational): the act's boss pass rate
+ * of the runs that took it in acts 1 and 2 against those offered it that did not ("A8 一幕拿了 51 局过 boss 65%、
+ * 给了没拿 35 局 77%；…"). The guide's card grades quote it where the data moved a grade (Taunt, 2026-09-29).
+ */
+export function cardOutcomeText(cardId: string, stats: OutcomeStats = loadOutcomeStats()): string {
+  const byAct = stats.cards?.[cardId]?.by_act ?? {};
+  const pct = (value: number | null | undefined) => (value == null ? "?" : `${Math.round(value * 100)}%`);
+  const acts = ["1", "2"]
+    .map((act) => {
+      const picked = byAct[act]?.picked;
+      const skipped = byAct[act]?.offered_not_picked;
+      if (!picked?.n || !skipped?.n) return null;
+      return `${act === "1" ? "一" : "二"}幕拿了 ${picked.n} 局过 boss ${pct(picked.boss_pass)}、给了没拿 ${skipped.n} 局 ${pct(skipped.boss_pass)}`;
+    })
+    .filter(Boolean);
+  return acts.length > 0 ? `A${stats.ascension ?? "?"} ${acts.join("；")}` : "还没有足够的记录";
+}
+
+/** The ascensions the guides quote records for (the ones played now). */
+const RECORD_ASCENSIONS = [8, 9];
+
+/** A boss's logged fights won by ascension (boss-damage.json by_asc): "A8 24 场赢 5、A9 5 场赢 0". */
+export function bossRecord(bossKey: string, byAsc: Record<string, BossAscRecord> = unblockedShare(bossKey)?.by_asc ?? {}): string {
+  return RECORD_ASCENSIONS.map((asc) => {
+    const cell = byAsc[String(asc)];
+    return cell && cell.fights > 0 ? `A${asc} ${cell.fights} 场赢 ${cell.won}` : `A${asc} 还没有记录`;
+  }).join("、");
+}
+
+/** The Kaiser Crab's logged fights by the claw that died first (boss-damage.json first_death), all ascensions and A8/A9. */
+export function crabKillRecord(lang: "zh" | "en"): string {
+  return crabKillText(unblockedShare("KAISER_CRAB")?.first_death ?? {}, lang);
+}
+
+/** The kill-order text of these fights (crabKillRecord; exported for tests). */
+export function crabKillText(byAsc: Record<string, CrabFightRow[]>, lang: "zh" | "en"): string {
+  const all = Object.values(byAsc).flat();
+  if (all.length === 0) return lang === "zh" ? "没有螃蟹战记录" : "no logged crab fights";
+  const count = (rows: CrabFightRow[], first: CrabFightRow["first"]) => {
+    const list = rows.filter((row) => row.first === first);
+    return { n: list.length, won: list.filter((row) => row.won).length };
+  };
+  const rocket = count(all, "ROCKET");
+  const crusher = count(all, "CRUSHER");
+  const neither = count(all, null);
+  if (lang === "en") {
+    return `${all.length} logged crab fights: Rocket died first ${rocket.won}/${rocket.n} won, Crusher first ${crusher.won}/${crusher.n}, neither died first ${neither.won}/${neither.n}`;
+  }
+  const perAsc = RECORD_ASCENSIONS.map((asc) => {
+    const rows = byAsc[String(asc)] ?? [];
+    const first = count(rows, "ROCKET");
+    const rest = { n: rows.length - first.n, won: rows.filter((row) => row.won).length - first.won };
+    return rows.length > 0 ? `A${asc} 火箭先死 ${first.won}/${first.n}、其余 ${rest.won}/${rest.n}` : null;
+  }).filter(Boolean);
+  return `有记录的 ${all.length} 场螃蟹战：火箭先死 ${rocket.n} 场赢 ${rocket.won}，碾碎爪先死 ${crusher.n} 场赢 ${crusher.won}，没有哪只先死（同回合一起死或我方先死）${neither.n} 场赢 ${neither.won}${perAsc.length > 0 ? `（${perAsc.join("；")}）` : ""}`;
+}
+
+/** Jev's short form (the crab-rocket-first hint): "Rocket died first 9/12 won, otherwise 8/45". */
+export function crabKillShort(byAsc: Record<string, CrabFightRow[]> = unblockedShare("KAISER_CRAB")?.first_death ?? {}): string {
+  const all = Object.values(byAsc).flat();
+  const rocket = all.filter((row) => row.first === "ROCKET");
+  const rest = all.filter((row) => row.first !== "ROCKET");
+  return `Rocket died first ${rocket.filter((row) => row.won).length}/${rocket.length} won, otherwise ${rest.filter((row) => row.won).length}/${rest.length}`;
+}
+
+/** The Matriarch's sleep in the logged fights (boss-damage.json sleep): the no-Strength decks, and waking it on T1-T2. */
+export function lagSleepRecord(lang: "zh" | "en"): string {
+  return lagSleepText(unblockedShare("LAGAVULIN_MATRIARCH")?.sleep ?? {}, lang);
+}
+
+/** Share of its HP a T1-T2 hit must take to count as a burst, not chip damage (the guide's "25% of its HP"). */
+export const LAG_BURST_PCT = 25;
+
+/** The sleep text of these fights (lagSleepRecord; exported for tests). */
+export function lagSleepText(byAsc: Record<string, LagSleepRow[]>, lang: "zh" | "en"): string {
+  const won = (rows: LagSleepRow[]) => `${rows.filter((row) => row.won).length}/${rows.length}`;
+  const at = (asc: number) => byAsc[String(asc)] ?? [];
+  const noStrength = (rows: LagSleepRow[]) => rows.filter((row) => row.strength.length === 0);
+  if (lang === "en") {
+    return `decks without a lasting-Strength card won ${RECORD_ASCENSIONS.map((asc) => `A${asc} ${won(noStrength(at(asc)))}`).join(", ")}`;
+  }
+  const parts = RECORD_ASCENSIONS.filter((asc) => at(asc).length > 0).map((asc) => {
+    const rows = at(asc);
+    const without = noStrength(rows);
+    const waited = without.filter((row) => !row.won && (row.woke_turn ?? 0) >= 3).map((row) => row.run ?? "?");
+    const note = waited.length > 0 && waited.length <= 3 ? `（输的 ${waited.join("、")} 都等它自然醒，前两回合没有伤害进它）` : "";
+    return `A${asc} 有持续力量牌 ${won(rows.filter((row) => row.strength.length > 0))} 赢、没有 ${won(without)} 赢${note}`;
+  });
+  const early = Object.values(byAsc).flat().filter((row) => row.woke_turn !== null && row.woke_turn <= 2 && row.woke_pct !== null);
+  const burst = early.filter((row) => row.woke_pct! >= LAG_BURST_PCT);
+  const chip = early.filter((row) => row.woke_pct! < LAG_BURST_PCT);
+  const burstRuns = burst.length > 0 && burst.length <= 3 ? `（${burst.map((row) => `${row.run ?? "?"} ${row.woke_pct}%`).join("、")}）` : "";
+  const wake = `T1–T2 一次打掉 ≥${LAG_BURST_PCT}% 打醒的 ${burst.length} 场赢 ${burst.filter((row) => row.won).length}${burstRuns}，小伤害打醒的 ${chip.length} 场赢 ${chip.filter((row) => row.won).length}`;
+  return `${parts.join("；")}；${wake}`;
+}
+
+/**
+ * The Rocket's T4 Laser after Charge Up (+Strength), in front and from behind, at A8 and A9 (monster DB: base damage
+ * plus Charge Up's Strength; A8 33/49, A9 38/57 when written). The handbook said "49" (A8's hit from behind).
+ */
+export function laserT4Text(): string {
+  const monsters = monsterMoves();
+  return RECORD_ASCENSIONS.map((asc) => {
+    const laser = moveDamageAt(monsters, "ROCKET", "LASER_MOVE", asc);
+    const gain = selfGainAt(monsters["ROCKET"]?.moves?.["CHARGE_UP_MOVE"], "STRENGTH_POWER", asc) ?? 0;
+    if (!laser) return `A${asc} ?`;
+    const front = (laser.base ?? laser.perHit) + gain;
+    return `A${asc} ${front}（背后 ${Math.floor(front * 1.5)}）`;
+  }).join("、");
+}
+
+/** Act 1's bosses (boss-damage.json keys). */
+const ACT1_BOSSES = ["VANTOM", "CEREMONIAL_BEAST", "THE_KIN", "LAGAVULIN_MATRIARCH", "SOUL_FYSH", "WATERFALL_GIANT"];
+
+/**
+ * Entry HP of the act-1 boss fights by ascension, won / lost (mean % of max, boss-damage.json by_asc), and Soul
+ * Fysh's alone: "A8 90%/83%（144 场）…". Was hand-counted into ds-handbook (22109ed).
+ */
+export function act1EntryHp(): string {
+  const cells = (bosses: string[], asc: number) => bosses.map((boss) => unblockedShare(boss)?.by_asc?.[String(asc)]).filter((cell): cell is BossAscRecord => !!cell);
+  const pooled = (list: BossAscRecord[]) => {
+    const mean = (key: "entry_pct_won" | "entry_pct_lost", weight: (cell: BossAscRecord) => number) => {
+      const used = list.filter((cell) => cell[key] != null && weight(cell) > 0);
+      const total = used.reduce((sum, cell) => sum + weight(cell), 0);
+      return total > 0 ? Math.round(used.reduce((sum, cell) => sum + cell[key]! * weight(cell), 0) / total) : null;
+    };
+    const fights = list.reduce((sum, cell) => sum + cell.fights, 0);
+    const winPct = mean("entry_pct_won", (cell) => cell.won);
+    const lossPct = mean("entry_pct_lost", (cell) => cell.fights - cell.won);
+    const fmt = (value: number | null) => (value === null ? "—" : `${value}%`);
+    return fights > 0 ? `${fmt(winPct)}/${fmt(lossPct)}（${fights} 场）` : "还没有记录";
+  };
+  const all = RECORD_ASCENSIONS.map((asc) => `A${asc} ${pooled(cells(ACT1_BOSSES, asc))}`).join("，");
+  const fysh = RECORD_ASCENSIONS.map((asc) => `A${asc} ${pooled(cells(["SOUL_FYSH"], asc))}`).join("，");
+  return `${all}；灵魂异鱼 ${fysh}`;
+}
+
+/**
+ * How often a ? room turned out to be a fight, and what those fights cost against a hallway's, A8/A9 acts 1-2
+ * (room-costs.json UnknownFight: in-fight HP lost, first to last combat decision, a death counted as all the
+ * entry HP). The guide said "低血时绕开精英走问号/商店" with no word of the fights (8KD7 F21: 91% into a ? of
+ * four Exoskeletons, −39).
+ */
+export function unknownFightsText(): string {
+  const parts: string[] = [];
+  for (const asc of RECORD_ASCENSIONS) {
+    for (const act of [1, 2]) {
+      const unknown = measuredRoomExact(asc, act, "Unknown");
+      const fight = measuredRoomExact(asc, act, "UnknownFight");
+      const hallway = measuredRoomExact(asc, act, "Monster");
+      if (!unknown || !fight || fight.fight_median === undefined || fight.fight_p75 === undefined) continue;
+      const vs = hallway?.fight_median !== undefined && hallway.fight_p75 !== undefined ? `（走廊 ${hallway.fight_median}/${hallway.fight_p75}）` : "";
+      const actName = act === 1 ? "一" : "二";
+      parts.push(`A${asc} ${actName}幕 ${unknown.n} 个问号开出 ${fight.n} 场（${Math.round((100 * fight.n) / unknown.n)}%），战内掉血中位/p75 ${fight.fight_median}/${fight.fight_p75}${vs}`);
+    }
+  }
+  return parts.length > 0 ? parts.join("；") : "问号开战的数据还没有";
 }
 
 /**

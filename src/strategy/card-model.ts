@@ -71,7 +71,7 @@ export interface CardModel {
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -96,6 +96,11 @@ export interface CardModel {
   selfDamage?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
+  /**
+   * Thorns gained (Liquid Bronze): damage dealt back to the attacker per enemy attack hit, this turn and every
+   * later turn of the fight (THORNS_POWER stays up).
+   */
+  thorns?: number;
   /** Damage to every enemy some turns later (The Bomb: 40 after 3 turns); scored, not simulated. */
   delayedDamage?: number;
   /**
@@ -731,6 +736,16 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
   // VQKX carried it from F11 through four -25 to -29 fights and gave it away at F28.
   SHACKLING_POTION: { target: "all", enemyTempStrengthLoss: 7 },
   SHIP_IN_A_BOTTLE: { target: "self", block: 10 },
+  // Liquid Bronze: 「获得{ThornsPower}点荆棘」, THORNS_POWER +3 on each drink (states.jsonl, 24 drinks in 21 runs to
+  // 09-29: 0 -> 3, or 3 -> 6 on a second), up until the fight's end (e.g. Q4JV F17 T1-T13, CWU9 F33 T4-T12): 3
+  // back to the attacker per attack hit, this turn and the later ones (turn-solver retaliate, rollout thorns).
+  // Unmodelled, VTRE listed it "effect not simulated" in 37 questions and V6TW in 29.
+  LIQUID_BRONZE: { target: "self", thorns: 3 },
+  // Stable Serum: 「保留你的手牌{Repeat}回合」 — RETAIN_HAND_POWER 2 on each drink (states.jsonl, 02L4 T9, 0YG4 T1,
+  // 7UJ1 T7, 92MW T1: 2, then 1 on the next turn, gone after): the hand left at the end of this turn and of the next
+  // stays in hand and the next turn draws on top of it (up to 10: 02L4 5 kept + 5 drawn). Nothing this turn; the
+  // rollout keeps the hands (STABLE_SERUM_TURNS). Unmodelled, 66 questions listed it "effect not simulated".
+  STABLE_SERUM: { target: "self", special: "retain_hand" },
   ENERGY_POTION: { target: "self", energyGain: 2 },
   SWIFT_POTION: { target: "self", draw: 3 },
   // Clarity: 「抽{Cards}张牌。在你的下{ClarityPower}个回合开始时，额外抽1张牌」. K7G9 F30 T7 (states.jsonl): hand
@@ -846,6 +861,11 @@ export interface PotionContext {
   drawPick?: CardModel | null;
   /** Gambler's Brew, Glowwater and Distilled Chaos: the draw pile's average card (expectedDraw). */
   expectedDraw?: CardModel | null;
+  /**
+   * The draw and discard piles are both known and empty (Glowwater drew the whole deck): a draw potion draws
+   * nothing (Glowwater still exhausts the hand; Gambler's Brew draws back the cards it discarded).
+   */
+  pilesEmpty?: boolean;
   /** Blessing of the Forge: what upgrading each plain card id of the deck changes (upgradeDelta). */
   upgrades?: Record<string, UpgradeDelta>;
   /** Soldier's Stew: the damage per play of the Strike cards in the draw and discard piles, summed. */
@@ -997,11 +1017,16 @@ export function potionRegen(potionId: string): number {
  * a card potion adds). `ctx` is the board a generated card is played on (targets, Strength, Weak), the
  * pile cards pile-card potions take and the draw pile's expected card.
  */
-export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], useCost: number, ctx?: PotionContext): CardModel | null {
+export function modelPotion(potionId: string, name: string, slot: number, validTargets: number[], ctx?: PotionContext): CardModel | null {
   const effect = POTION_EFFECTS[potionId];
   if (!effect) return null;
-  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew without a known draw pile: nothing to price their cards by.
-  if ((effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled") && !ctx?.expectedDraw) return null;
+  // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
+  // (combat-plan gives the draw pile's, else the discard pile's, else the deck's when the piles are unknown). With
+  // both piles empty there is nothing to draw: Glowwater only exhausts the hand (the solver's drawable 0), Distilled
+  // Chaos plays nothing, Gambler's Brew draws back the cards it discarded (no change). Without any context: null.
+  const drawPotion = effect.special === "chaos" || effect.special === "glowwater" || effect.special === "gamble" || effect.special === "bottled";
+  if (drawPotion && !ctx?.expectedDraw && !ctx?.pilesEmpty) return null;
+  if (drawPotion && !ctx?.expectedDraw && effect.special === "gamble") return { ...potionShell(potionId, name, slot, validTargets), ...effect, special: null };
   const card = GENERATED_CARD_POTIONS[potionId];
   const pile = PILE_CARD_POTIONS[potionId];
   const pileCard = pile ? (pile.pile === "discard" ? ctx?.discardPick : ctx?.drawPick) ?? null : null;
@@ -1048,7 +1073,7 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
       }
     : undefined;
   return {
-    ...potionShell(potionId, name, slot, validTargets, useCost),
+    ...potionShell(potionId, name, slot, validTargets),
     ...effect,
     ...(generates ? { generates } : {}),
     ...(effect.special === "forge" ? { upgrades: ctx?.upgrades ?? {} } : {}),
@@ -1058,9 +1083,10 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
 
 /**
  * A potion as a 0-cost "card" with no effect yet: the solver plays it as step `POTION:<id>:<slot>`.
- * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's.
+ * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's. No use cost (Dai: a potion is a
+ * 0-cost one-shot card; the old useCost parameter, always 0 since batch K, is gone so it cannot come back).
  */
-export function potionShell(potionId: string, name: string, slot: number, validTargets: number[], useCost = 0): CardModel {
+export function potionShell(potionId: string, name: string, slot: number, validTargets: number[]): CardModel {
   return {
     index: 100 + slot,
     key: `p${slot}`,
@@ -1088,7 +1114,7 @@ export function potionShell(potionId: string, name: string, slot: number, validT
     exhausts: true,
     special: null,
     known: true,
-    flatValue: -useCost,
+    flatValue: 0,
     heldPenalty: 0,
     text: "",
   };

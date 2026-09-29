@@ -24,7 +24,7 @@ import { closeSync, existsSync, openSync, readSync, statSync } from "node:fs";
 import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import type { RoutePlan } from "../screens/map.js";
-import { noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
+import { noteFacing, noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
 import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
@@ -213,6 +213,11 @@ export interface ReplayResult {
   lizardTail: ScreenMemory["lizardTail"] | null;
   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
   turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
+  /**
+   * The enemy the last fight's last executed targeted action faced (Surrounded; combat-plan noteFacing) and that
+   * fight ("<run id>:<act>:<floor>"); null when the logs end out of combat or no targeted action was logged in it.
+   */
+  facing: { fight: string; index: number } | null;
   /** How much was replayed. */
   counts: { states: number; decisions: number; recorded: number; runPlans: number; routePlans: number };
 }
@@ -263,6 +268,11 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
     noteTurnStartExhaust(memory, state);
+    // As the live loop: the facing is a fight's, cleared out of combat.
+    if (!state.in_combat) {
+      memory.facing = undefined;
+      memory.facingFight = undefined;
+    }
     // A run plan is made on the state just read, before its decision (legacy rows: the plan's ts falls
     // between the state's read and its decision's ts, so it goes with the first state logged after it).
     while (nextPlan < plans.length && plans[nextPlan]!.at <= at) {
@@ -287,6 +297,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       journal.record(state, entry);
       // The node a logged map move chose (the rooms after it have no map position), as the live loop notes it.
       rememberChosenNode(memory, state, entry.intent);
+      noteFacing(memory, state, entry.intent);
       counts.recorded += 1;
       const plan = routePlanOf(decision, state, memory.routePlan);
       if (plan) {
@@ -295,7 +306,8 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       }
     }
   }
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, counts };
+  const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */

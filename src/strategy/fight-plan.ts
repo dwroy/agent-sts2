@@ -9,9 +9,10 @@
  * DeepSeek 3.12; analysis/layer_attribution.py). What neither the solver nor Jev can see is the
  * multi-turn shape of the fight, which is what DeepSeek is asked for here.
  *
- * The plan reaches play three ways: fact tags on Jev's options ("plays the planned setup card"),
- * potion costs in the solver (a potion the plan saves costs more, one it plans early is free), and a
- * setup line within the HP-guard slack of code's pick turns a code-decided turn into a Jev question.
+ * The plan reaches play through fact tags on Jev's options ("plays the planned setup card"), a setup line within
+ * the HP-guard slack of code's pick turning a code-decided turn into a Jev question, and the potions it keeps
+ * (combat-plan drinksKeptPotion: the HP guard's automatic lines). Potion costs in the solver by the plan's potion
+ * use (a saved potion cost more) are gone: a potion is a 0-cost one-shot card (Dai).
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";

@@ -12,6 +12,10 @@
  * random enemy for 6 when the turn ends with ≥10 block (6 dealt at every block 10–30, never below 10).
  * Measured 09-29: Royal Poison takes 4 HP at the start of each fight (58 of 85 logged fight starts with it
  * lost exactly 4 from the last state before the fight; the rest had other start-of-fight losses or heals).
+ * Measured 09-29: Red Skull +3 Strength at or below 50% HP (43 of 48 crossings, 40/80 included); Self-Forming
+ * Clay 3 block next turn per HP loss (50 losses on our turn, SELF_FORMING_CLAY_POWER +3 each).
+ * Measured 09-29: Shuriken +1 Strength per 3 Attacks in a turn (90 of 95 plays reaching a multiple of 3 in
+ * attacks_played_this_turn); Captain's Wheel 18 block at the start of turn 3 (19 of 20 third turns, no other turn).
  */
 
 import { stripMarkup } from "../util/json.js";
@@ -25,6 +29,10 @@ export const RELIC_VALUES: Record<string, Record<string, number>> = {
   PAELS_FLESH: { Energy: 1 },
   PARRYING_SHIELD: { Block: 10, Damage: 6 },
   ROYAL_POISON: { Damage: 4 },
+  RED_SKULL: { HpThreshold: 50, StrengthPower: 3 },
+  SELF_FORMING_CLAY: { BlockNextTurn: 3 },
+  SHURIKEN: { Cards: 3, StrengthPower: 1 },
+  CAPTAINS_WHEEL: { Block: 18 },
 };
 
 /** A relic description with its `{Name}` placeholders filled from RELIC_VALUES, the rest marked unknown. */

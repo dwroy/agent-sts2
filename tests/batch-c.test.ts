@@ -152,7 +152,6 @@ describe("2. A finished Jev line is \"stop here\"; One-Two Punch read; a Giant k
           strengthGained: 0,
           cardsDrawn: 0,
           unknownCards: [],
-          potionCost: 0,
           sandpitAfter: null,
           startTurnKills: [],
           withersAdded: 0,

@@ -30,7 +30,7 @@ const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false,
 const dummy: EnemySim = { index: 0, name: "Dummy", hp: 900, maxHp: 900, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
 
 describe("Radiant Tincture is a potion line", () => {
-  const tincture = modelPotion("RADIANT_TINCTURE", "Radiant Tincture", 0, [], 0)!;
+  const tincture = modelPotion("RADIANT_TINCTURE", "Radiant Tincture", 0, [])!;
 
   it("models 1 energy now and the 3 later energies", () => {
     expect(tincture).not.toBeNull();
