@@ -1025,6 +1025,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   const first = plan.steps[0];
   // Gambler's Brew draws what it draws: re-planned after it, like a draw.
   const drawsOrRandom = (first ? cardFor(first, hand)?.draw ?? 0 : 0) + (first?.discards ? 1 : 0);
+  // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
+  // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
+  // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
   env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
   // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
   // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
@@ -1032,9 +1035,29 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // Potion step was drunk at 76/87 before the re-plan, 6 of its 17 wasted).
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
   env.screenMemory.combatPlan =
-    plan.steps.length > 1 && drawsOrRandom === 0
-      ? { turn, remaining: plan.steps.slice(1), expectedHand: expectedHandAfterFirst(plan, hand), handLen: hand.length - 1, via, enemies: livingEnemySignature(env.state.raw) }
+    (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
+      ? {
+          turn,
+          remaining: plan.steps.slice(1),
+          expectedHand: expectedHandAfterFirst(plan, hand),
+          handLen: plan.steps.length === 1 ? handLenAfter(first!, hand) : hand.length - 1,
+          via,
+          enemies: livingEnemySignature(env.state.raw),
+        }
       : null;
+}
+
+/** Hand size after a step: a card leaves the hand, a potion does not. */
+function handLenAfter(step: Step, hand: CardModel[]): number {
+  return cardFor(step, hand) ? hand.length - 1 : hand.length;
+}
+
+/**
+ * A chosen line (Jev's, the escalator's) played to its end on the board it expected. Its end (energy unused
+ * included) is part of the choice: code does not extend it on its own (planTurn stopLine).
+ */
+function lineDone(memo: CombatPlanMemo, combat: Record<string, unknown>, available: string[]): boolean {
+  return memo.remaining.length === 0 && memo.via !== "code" && available.includes("end_turn") && !bool(combat["end_turn_will_kill_player"]);
 }
 
 /** Living enemies as "index:enemy_id", in order. */
@@ -1178,6 +1201,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),
     // A Duplicator drunk earlier this turn: its next card is played twice (11LC F17 T2).
     duplicate: powerAmount(player, "DUPLICATION_POWER"),
+    // One-Two Punch played earlier this turn: its next Attack(s) are played an extra time (9Q7V F17 T14).
+    duplicateAttacks: powerAmount(player, "ONE_TWO_PUNCH_POWER"),
     regen: powerAmount(player, "REGEN_POWER"),
     // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
     buffer: powerAmount(player, "BUFFER_POWER"),
@@ -1240,7 +1265,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const memo = env.screenMemory.combatPlan;
   const handGrew = memo !== null && hand.length > memo.handLen;
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
-  if (memo && !handGrew && sameEnemies && memo.turn === state.turn && memo.remaining.length > 0 && memo.expectedHand === handSignature(hand)) {
+  const asExpected = memo !== null && !handGrew && sameEnemies && memo.turn === state.turn && memo.expectedHand === handSignature(hand);
+  // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
+  // (stopLine below).
+  const lineEnded = memo !== null && asExpected && lineDone(memo, combat, state.available_actions) ? memo.via : null;
+  if (memo && asExpected && memo.remaining.length > 0) {
     const next = memo.remaining[0]!;
     const intent = intentFor(next, hand);
     if (intent) {
@@ -1248,9 +1277,15 @@ function planTurn(env: DecisionEnv): Decision | null {
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
+      // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       env.screenMemory.combatPlan =
-        memo.remaining.length > 1 && (nextCard?.draw ?? 0) === 0
-          ? { ...memo, remaining: memo.remaining.slice(1), expectedHand: handSignature(hand.filter((card) => card !== nextCard)), handLen: hand.length - 1 }
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
+          ? {
+              ...memo,
+              remaining: memo.remaining.slice(1),
+              expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
+              handLen: memo.remaining.length === 1 ? handLenAfter(next, hand) : hand.length - 1,
+            }
           : null;
       return {
         kind: "act",
@@ -1599,6 +1634,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       : undefined;
   const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
+  // A chosen line played to its end is "stop here" for code (9Q7V F17 T14: after Jev's "One-Two Punch" alone,
+  // code re-planned and played the Sword Boomerang Jev had turned down as the "only distinct line", killing the
+  // Giant into its blast). A lethal, every line dying and the mod's lethal flag are still code's (above); any
+  // other play the re-plan finds (a Free Attack from Unrelenting, a Stomp made free) is Jev's call, with
+  // ending the turn, the line's own end, among the options.
+  const stopLine = lineEnded !== null && top.steps.length > 0 && endNow !== undefined && surviving.includes(endNow) ? endNow : null;
+  if (stopLine && !options.includes(stopLine)) options.push(stopLine);
   const second = options.find((plan) => plan !== top);
   // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
   // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
@@ -1622,7 +1664,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
     !setupClose &&
     !(drySurvives && drinksPotion(top)) &&
-    potionLethal.length === 0;
+    potionLethal.length === 0 &&
+    stopLine === null;
   // A random potion that beats the best potion-free line in some sample is a real choice: Jev's (like a
   // modelled potion's line). An unsimulated potion is offered only under T1 (UNSIMULATED_HP_SHARE of HP
   // lost by the best potion-free option, or a dying rollout sample: known only once asked), or when the
@@ -1888,10 +1931,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   // resolve() is pure: it may run twice for one decision (Jev's answer, then the escalator's). The
   // loop runs `apply` once, for the resolution it actually plays.
   // Code's own line when Jev gives no usable answer: never one that drinks while a potion-free option is shown.
-  const autoTop = drinksPotion(top) ? (dryFirst(options) ?? top) : top;
+  // After a finished chosen line (stopLine), no answer keeps its end: the turn ends.
+  const autoTop = stopLine ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
-    rationale: `${why}; using the code-best ${line === top ? "plan" : "potion-free plan"}`,
+    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
     confidence: null,
     fallback: true,
     apply: () => commit(env, state.turn, line, hand, "code"),

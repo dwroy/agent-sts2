@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision } from "../src/project/types.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { dominates, type Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 const choose = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
@@ -37,5 +38,108 @@ describe("1. A cut-short line's drink is re-planned with the new hand, not drunk
     // The drink is a choice again: lines with and without it, over the new hand.
     expect(Object.values(again).some((text) => text.includes("potion 鲜血药水"))).toBe(true);
     expect(Object.values(again).some((text) => !text.includes("potion ") && text.includes("与我一战！+"))).toBe(true);
+  });
+});
+
+describe("2. A finished Jev line is \"stop here\"; One-Two Punch read; a Giant kill into its blast is not dominant (9Q7VBZ7TP29K F17 T14)", () => {
+  /** Jev's "One-Two Punch" alone chosen on the logged ask board; the memory after it is applied. */
+  function afterJevLine() {
+    const ask = loggedEnv(logged("9q7v-f17-t14-ask"));
+    const criteria = planCriteria(planCombatTurn(ask));
+    const chosen = Object.entries(criteria).find(([, text]) => /"plays":"连环拳"/.test(text));
+    if (!chosen) throw new Error("the logged line is not offered");
+    (planCombatTurn(ask) as AskDecision).resolve(choose(chosen[0], 0.75)).apply?.();
+    return { memory: ask.screenMemory, after: logged("9q7v-f17-t14-after") };
+  }
+
+  it("after Jev's one-step line, code does not play the Sword Boomerang it turned down: Jev's call, ending the turn offered", () => {
+    const { memory, after } = afterJevLine();
+    expect(after.decision.rationale).toMatch(/only distinct line\): 飞剑回旋镖/);
+    // A plain enemy (no blast): Sword Boomerang doubled beats ending the turn on every axis, so without the
+    // "stop here" code would play it on its own.
+    const enemy = ((after.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
+    enemy["powers"] = [];
+    enemy["current_hp"] = 120;
+    const decision = planCombatTurn({ ...loggedEnv(after), screenMemory: memory });
+    expect(decision?.kind === "act" && decision.intent.action === "play_card").toBe(false);
+    const criteria = planCriteria(decision);
+    expect(Object.values(criteria).some((text) => /"plays":"nothing \(end the turn now\)"/.test(text))).toBe(true);
+    expect(Object.values(criteria).some((text) => /"plays":"飞剑回旋镖"/.test(text))).toBe(true);
+    // No usable answer keeps the line's end.
+    expect((decision as AskDecision).resolve({}).intent).toEqual({ action: "end_turn" });
+    // A code-chosen line has no such stop: the same board re-planned without Jev's memo is code's to play.
+    const fresh = planCombatTurn(loggedEnv(after));
+    expect(fresh?.kind === "act" && fresh.intent.action).toBe("play_card");
+  });
+
+  it("a finished line still takes a potion-free lethal the solver now sees (the enemy took more than planned)", () => {
+    const { memory, after } = afterJevLine();
+    // A plain enemy at 10 HP (no blast): Sword Boomerang doubled is a win.
+    const enemy = ((after.state["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
+    enemy["current_hp"] = 10;
+    enemy["powers"] = [];
+    const decision = planCombatTurn({ ...loggedEnv(after), screenMemory: memory });
+    if (decision?.kind !== "act") throw new Error(`expected an act, got ${decision?.kind}`);
+    expect(decision.label).toBe("combat/lethal");
+  });
+
+  it("a finished line whose board changed (a card drawn) is re-planned as before: code may play", () => {
+    const { memory, after } = afterJevLine();
+    const combat = after.state["combat"] as Record<string, unknown>;
+    const enemy = (combat["enemies"] as Record<string, unknown>[])[0]!;
+    enemy["powers"] = [];
+    enemy["current_hp"] = 120;
+    const hand = combat["hand"] as Record<string, unknown>[];
+    combat["hand"] = [...hand, { ...hand[1], index: hand.length }];
+    const decision = planCombatTurn({ ...loggedEnv(after), screenMemory: memory });
+    expect(decision?.kind === "act" && decision.intent.action).toBe("play_card");
+  });
+
+  it("ONE_TWO_PUNCH_POWER doubles the next Attack: Sword Boomerang kills the 34-HP Giant; that kill into a 56 blast at 31 HP is Jev's call", () => {
+    const decision = planCombatTurn(loggedEnv(logged("9q7v-f17-t14-after")));
+    // Logged: "code plan (only distinct line): 飞剑回旋镖; hp -0, dmg 18"; it dealt 36.
+    const criteria = planCriteria(decision);
+    const kill = Object.values(criteria).find((text) => /"plays":"飞剑回旋镖"/.test(text));
+    expect(kill).toMatch(/"damage_dealt":34/);
+    expect(kill).toMatch(/explodes for 56/);
+    expect(Object.values(criteria).some((text) => !/"kills"/.test(text))).toBe(true);
+  });
+
+  it("dominance: a Giant kill with a negative blast margin never dominates a non-kill line; a survivable one can", () => {
+    const line = (damage: number, explodesNext?: number, eruptionMargin?: number): Plan =>
+      ({
+        steps: [],
+        score: 0,
+        outcome: {
+          winsFight: false,
+          hpLoss: 0,
+          hpAfter: 31,
+          dies: false,
+          blockGained: 0,
+          damageDealt: damage,
+          kills: explodesNext ? ["Giant"] : [],
+          restocked: [],
+          enemyHpAfter: [{ index: 0, name: "Giant", hp: explodesNext ? 0 : 34 - damage, vulnerable: 0, weak: 0 }],
+          incomingAfterBlock: 0,
+          energyLeft: 0,
+          vulnerableApplied: 0,
+          weakApplied: 0,
+          strengthGained: 0,
+          cardsDrawn: 0,
+          unknownCards: [],
+          potionCost: 0,
+          sandpitAfter: null,
+          startTurnKills: [],
+          withersAdded: 0,
+          sleepCost: 0,
+          lasting: 0,
+          blockWasted: 0,
+          ...(explodesNext ? { explodesNext, eruptionMargin } : {}),
+        },
+      }) as unknown as Plan;
+    const idle = line(0);
+    expect(dominates(line(34, 56, -25), idle)).toBe(false);
+    expect(dominates(line(34, 20, 11), idle)).toBe(true);
+    expect(dominates(line(34, 56, -25), line(34, 56, -30))).toBe(true);
   });
 });
