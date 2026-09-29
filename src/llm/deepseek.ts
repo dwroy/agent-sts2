@@ -109,7 +109,7 @@ export class DeepSeekInconsistentError extends Error {
 export class DeepSeekAnswerError extends Error {
   constructor(
     message: string,
-    readonly detail: { choice: string; reason: string; reasoning: string; content: string },
+    readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string },
     readonly meta: Omit<DeepSeekAnswer, "choice" | "reason">,
   ) {
     super(message);
@@ -366,7 +366,9 @@ export class DeepSeekClient implements Escalator {
     const joined = first.cards?.length === 1 ? `${first.choice}:${first.cards[0]}` : "";
     const firstKey = resolveOptionKey(first.choice, criteria) ?? (joined in criteria ? joined : null);
     if (firstKey === null) {
-      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content };
+      // The route (a route review's keep/change, the act route) does not depend on the option key: it rides along,
+      // so a choice recovered from the reasoning keeps it.
+      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content, ...routeOf(first) };
       throw new DeepSeekAnswerError(`DeepSeek chose unknown option "${first.choice}"`, detail, done.meta);
     }
     first.choice = firstKey;

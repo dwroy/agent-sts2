@@ -791,7 +791,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             const recovered = spec.plan ? null : error.recoverFrom(question.criteria);
             if (recovered) {
               const reason = error.detail.reason || `reasoning concluded ${recovered.option}`;
-              if (accept({ ...error.meta, choice: recovered.option, reason }, recovered)) deepseekFailed = false;
+              // The answer's route and route_reason go with the recovered choice (a route review, the act route).
+              const route = error.detail.route ? { route: error.detail.route, ...(error.detail.routeReason ? { routeReason: error.detail.routeReason } : {}) } : {};
+              if (accept({ ...error.meta, choice: recovered.option, reason, ...route }, recovered)) deepseekFailed = false;
             }
             if (deepseekFailed) {
               deepseekNote = { ...(error.detail.reason ? { reason: error.detail.reason } : {}), ...(recovered ? { conclusion: recovered.line } : {}) };

@@ -320,6 +320,17 @@ describe("rest site route review in the loop", () => {
     expect(records.some((row) => row["label"] === "map/route-change")).toBe(false);
   });
 
+  it("an unknown option key recovered from the reasoning keeps the answer's route and route_reason (batch E)", async () => {
+    const { client } = await scriptedDeepSeek([
+      { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." },
+      // "heal" is no option key; the reasoning concludes on o0. The route rides in the same answer.
+      { content: '{"choice": "heal", "route": "p1", "route_reason": "the other branch", "reason": "heal before the elite"}', reasoning: "HP 67/77.\nDecisive: o0." },
+    ]);
+    const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
+    const rest = records.find((row) => row["label"] === "rest/plan")!;
+    expect(rest).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", recovered_from_reasoning: expect.any(String), route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
+  });
+
   it("a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route", async () => {
     const bash = keyOf(board(REST, "rest"), "BASH");
     const routePlan = { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." };
