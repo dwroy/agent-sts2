@@ -1,0 +1,68 @@
+/**
+ * V4 brain in the game loop: switching the engine is configuration only. A logged A9 rest site is played
+ * through the loop against a scripted mod; BRAIN_ENGINE_REST=claude (a fake claude script, no model) decides
+ * it instead of DeepSeek, and a used-up Claude quota falls back to DeepSeek.
+ */
+import { chmodSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+
+import { loadConfig } from "../src/config.js";
+import { board, FakeDeepSeek, keyOf, play, setupOneshotTests } from "./oneshot-support.js";
+import { mainMenuPayload } from "./scenarios.js";
+
+setupOneshotTests();
+
+const REST = "7b0d-f8-rest";
+const dir = mkdtempSync(join(tmpdir(), "brain-loop-"));
+
+/** A fake claude that prints one result object. */
+function fakeClaude(name: string, result: Record<string, unknown>, exitCode = 0): string {
+  const bin = join(dir, `${name}.mjs`);
+  writeFileSync(bin, `#!${process.execPath}\nfor await (const _ of process.stdin) {}\nprocess.stdout.write(${JSON.stringify(JSON.stringify(result))} + "\\n");\nprocess.exit(${exitCode});\n`);
+  chmodSync(bin, 0o755);
+  return bin;
+}
+
+function brainConfig(env: Record<string, string>) {
+  return loadConfig(env as unknown as NodeJS.ProcessEnv).brain;
+}
+
+describe("the loop with BRAIN_* set", () => {
+  it("BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine", async () => {
+    const bash = keyOf(board(REST, "rest"), "BASH");
+    const answer = { choice: `o1:${bash}`, reason: "smith Bash for the boss" };
+    const bin = fakeClaude("rest", { type: "result", subtype: "success", is_error: false, result: JSON.stringify(answer), structured_output: answer, total_cost_usd: 0.02, usage: { input_tokens: 10, cache_creation_input_tokens: 500, cache_read_input_tokens: 300, output_tokens: 90 }, modelUsage: { "claude-opus-5": {} } });
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const { stats, actions, records } = await play([board(REST, "rest"), board(REST, "upgrade_select"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_CLAUDE_BIN: bin, BRAIN_CLAUDE_MODEL: "opus" }) });
+    expect(deepseek.calls).toEqual([]);
+    expect(stats.deepseekCalls).toBe(1);
+    expect(actions).toEqual([{ action: "choose_rest_option", option_index: 1 }, { action: "select_deck_card", option_index: 9 }]);
+    expect(records.find((row) => row["label"] === "rest/plan")).toMatchObject({
+      decider: "deepseek",
+      deepseek: { choice: `o1:${bash}`, reason: "smith Bash for the boss", input_tokens: 810, cache_hit_tokens: 300, output_tokens: 90, brain: { engine: "claude", model: "claude-opus-5", attempts: 1, cost_usd: 0.02 } },
+    });
+  });
+
+  it("a used-up Claude quota falls back to DeepSeek on the same question", async () => {
+    const bin = fakeClaude("quota", { type: "result", subtype: "success", is_error: true, result: "You've hit your limit · resets 3pm" }, 1);
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const { actions, records } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) });
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan"]);
+    expect(actions[0]).toEqual({ action: "choose_rest_option", option_index: 0 });
+    const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: { brain: { engine: string; fell_back_from: { engine: string; error: string } } } };
+    expect(row.deepseek.brain.engine).toBe("deepseek");
+    expect(row.deepseek.brain.fell_back_from.engine).toBe("claude");
+    expect(row.deepseek.brain.fell_back_from.error).toMatch(/\[quota\]/);
+  });
+
+  it("default configuration: DeepSeek decides and the row carries no brain note (v3's rows)", async () => {
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const { records } = await play([board(REST, "rest"), mainMenuPayload()], deepseek);
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan"]);
+    const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: Record<string, unknown> };
+    expect(row.deepseek["choice"]).toBe("o0");
+    expect("brain" in row.deepseek).toBe(false);
+  });
+});

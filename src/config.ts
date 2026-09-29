@@ -1,4 +1,6 @@
 import { readFileSync } from "node:fs";
+
+import type { Effort, EngineName } from "./brain/types.js";
 /**
  * Configuration: environment variables overridden by CLI flags (PLAN.md §9).
  *
@@ -90,9 +92,154 @@ export interface AppConfig {
    * (default): combat, potions and in-combat card picks stay with code and Jev.
    */
   combatDeepseek: "off" | "on";
+  /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
+  brain: BrainConfig;
   mode: Mode;
   log: { level: LogLevel; decisionLog: string };
   warnings: string[];
+}
+
+/** Per-engine brain settings (BRAIN_<ENGINE>_*); null = the engine's or the router's default. */
+export interface BrainEngineSettings {
+  /**
+   * BRAIN_<ENGINE>_MODEL (claude: an alias such as opus / sonnet, or a full id such as claude-opus-5). DeepSeek:
+   * DEEPSEEK_MODEL governs (the v3 client); this is ignored for it.
+   */
+  model: string | null;
+  /** BRAIN_<ENGINE>_MODEL_<PREFIX>: the model for one question kind (router.ts labelPrefix), e.g. { MAP: "opus" }. */
+  modelByPrefix: Record<string, string>;
+  /** BRAIN_<ENGINE>_TIMEOUT_MS: the router's limit on one engine call (null: none beyond the engine's own). */
+  timeoutMs: number | null;
+  /** BRAIN_<ENGINE>_EFFORT (claude --effort, codex model_reasoning_effort, dsh reasoning effort). */
+  effort: Effort | null;
+  /** BRAIN_<ENGINE>_REASK=on|off: the router's one re-ask (default on; DeepSeek without tools: off, v3 repairs itself). */
+  reask: boolean | null;
+  /** BRAIN_<ENGINE>_TOOLS=on|off: whether the engine gets the tool list (default on; DeepSeek off: v3 parity). */
+  tools: boolean | null;
+}
+
+/** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
+export interface BrainConfig {
+  /** BRAIN_ENGINE (default deepseek: v3 behaviour). */
+  engine: EngineName;
+  /** BRAIN_ENGINE_<PREFIX>: per label prefix (router.ts labelPrefix), e.g. { MAP: "claude" }. */
+  byPrefix: Record<string, EngineName>;
+  /** BRAIN_FALLBACK: the engine asked when the chosen one errors or times out; null = none. */
+  fallback: EngineName | null;
+  /** BRAIN_REASK=on|off for every engine (BRAIN_<ENGINE>_REASK wins); null = per-engine default. */
+  reask: boolean | null;
+  /** BRAIN_TOOLS=on|off for every engine (BRAIN_<ENGINE>_TOOLS wins); null = per-engine default. */
+  tools: boolean | null;
+  /** BRAIN_LOG: one JSONL row per question; null = brain.jsonl next to the decision log. "" disables. */
+  log: string | null;
+  engines: Record<EngineName, BrainEngineSettings>;
+  /** Claude runs under this machine's Claude login (the subscription); there is no API-key mode. */
+  claude: {
+    /** BRAIN_CLAUDE_BIN (default "claude"). */
+    bin: string;
+    /** BRAIN_CLAUDE_MAX_BUDGET_USD: --max-budget-usd per call; null = none. */
+    maxBudgetUsd: number | null;
+    /**
+     * BRAIN_CLAUDE_SCHEMA: "kind" (default) sends one --json-schema per question kind, so the prompt cache holds
+     * across questions (specs.ts stableSchema); "question" sends the question's own schema (its keys as enums:
+     * format-tight, but every question writes the whole prompt to the cache again).
+     */
+    schema: "kind" | "question";
+  };
+}
+
+/** The brain's default Claude model (claude-api skill, 2026-09: the current Sonnet; BRAIN_CLAUDE_MODEL=opus for Opus). */
+export const DEFAULT_CLAUDE_MODEL = "claude-sonnet-5";
+
+/** Engine names BRAIN_* may use; codex and dsh are named but not implemented yet (the router says so). */
+const ENGINES: readonly EngineName[] = ["deepseek", "claude", "codex", "dsh"];
+const EFFORTS: readonly Effort[] = ["low", "medium", "high", "max"];
+
+function parseEngine(raw: string, field: string, problems: ConfigProblem[]): EngineName | null {
+  const value = raw.toLowerCase();
+  if ((ENGINES as readonly string[]).includes(value)) return value as EngineName;
+  problems.push({ field, message: `expected one of ${ENGINES.join(", ")}, got "${raw}"` });
+  return null;
+}
+
+function parseOnOff(raw: string | null, field: string, problems: ConfigProblem[]): boolean | null {
+  if (raw === null) return null;
+  const value = raw.toLowerCase();
+  if (["on", "true", "1", "yes"].includes(value)) return true;
+  if (["off", "false", "0", "no"].includes(value)) return false;
+  problems.push({ field, message: `expected on or off, got "${raw}"` });
+  return null;
+}
+
+/** The BRAIN_* variables (docs/v4-architecture.md §2): switching engines is configuration only. */
+export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[]): BrainConfig {
+  const engine = parseEngine(readEnv(env, "BRAIN_ENGINE") ?? "deepseek", "BRAIN_ENGINE", problems) ?? "deepseek";
+  const byPrefix: Record<string, EngineName> = {};
+  for (const key of Object.keys(env).sort()) {
+    const m = /^BRAIN_ENGINE_([A-Z0-9_]+)$/.exec(key);
+    const raw = readEnv(env, key);
+    if (!m || raw === null) continue;
+    const name = parseEngine(raw, key, problems);
+    if (name) byPrefix[m[1]!] = name;
+  }
+  const fallbackRaw = readEnv(env, "BRAIN_FALLBACK");
+  const fallback = fallbackRaw === null || fallbackRaw.toLowerCase() === "none" ? null : parseEngine(fallbackRaw, "BRAIN_FALLBACK", problems);
+  const engines = {} as Record<EngineName, BrainEngineSettings>;
+  for (const name of ENGINES) {
+    const upper = name.toUpperCase();
+    const timeoutRaw = readEnv(env, `BRAIN_${upper}_TIMEOUT_MS`);
+    const effortRaw = readEnv(env, `BRAIN_${upper}_EFFORT`);
+    let effort: Effort | null = null;
+    if (effortRaw !== null) {
+      if ((EFFORTS as readonly string[]).includes(effortRaw.toLowerCase())) effort = effortRaw.toLowerCase() as Effort;
+      else problems.push({ field: `BRAIN_${upper}_EFFORT`, message: `expected one of ${EFFORTS.join(", ")}, got "${effortRaw}"` });
+    }
+    // CLI agents are slow (tool calls, long thinking): 5 minutes, as DEEPSEEK_TIMEOUT_MS in the live .env.
+    const defaultTimeout = name === "deepseek" ? null : 300_000;
+    const modelByPrefix: Record<string, string> = {};
+    for (const key of Object.keys(env).sort()) {
+      const m = new RegExp(`^BRAIN_${upper}_MODEL_([A-Z0-9_]+)$`).exec(key);
+      const raw = readEnv(env, key);
+      if (m && raw !== null) modelByPrefix[m[1]!] = raw;
+    }
+    engines[name] = {
+      model: readEnv(env, `BRAIN_${upper}_MODEL`) ?? (name === "claude" ? DEFAULT_CLAUDE_MODEL : null),
+      modelByPrefix,
+      timeoutMs: timeoutRaw === null ? defaultTimeout : parseInteger(timeoutRaw, `BRAIN_${upper}_TIMEOUT_MS`, problems, { min: 1_000, max: 3_600_000 }),
+      effort,
+      reask: parseOnOff(readEnv(env, `BRAIN_${upper}_REASK`), `BRAIN_${upper}_REASK`, problems),
+      tools: parseOnOff(readEnv(env, `BRAIN_${upper}_TOOLS`), `BRAIN_${upper}_TOOLS`, problems),
+    };
+  }
+  const budgetRaw = readEnv(env, "BRAIN_CLAUDE_MAX_BUDGET_USD");
+  const maxBudgetUsd = budgetRaw === null ? null : Number(budgetRaw);
+  if (maxBudgetUsd !== null && !(Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0)) problems.push({ field: "BRAIN_CLAUDE_MAX_BUDGET_USD", message: `expected a positive number, got "${budgetRaw}"` });
+  const log = readEnv(env, "BRAIN_LOG");
+  const schemaRaw = (readEnv(env, "BRAIN_CLAUDE_SCHEMA") ?? "kind").toLowerCase();
+  if (schemaRaw !== "kind" && schemaRaw !== "question") problems.push({ field: "BRAIN_CLAUDE_SCHEMA", message: `expected kind or question, got "${schemaRaw}"` });
+  const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
+  return {
+    engine,
+    byPrefix,
+    fallback,
+    reask: parseOnOff(readEnv(env, "BRAIN_REASK"), "BRAIN_REASK", problems),
+    tools: parseOnOff(readEnv(env, "BRAIN_TOOLS"), "BRAIN_TOOLS", problems),
+    // BRAIN_LOG=off (or "-") disables the log.
+    log: log === null ? null : log === "off" || log === "-" ? "" : log,
+    engines,
+    claude: {
+      bin: readEnv(env, "BRAIN_CLAUDE_BIN") ?? "claude",
+      schema: schemaMode,
+      maxBudgetUsd: maxBudgetUsd !== null && Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0 ? maxBudgetUsd : null,
+    },
+  };
+}
+
+/** Where brain.jsonl goes when BRAIN_LOG is unset: next to the decision log ("decisions.jsonl" -> "brain.jsonl"). */
+export function brainLogPath(config: Pick<AppConfig, "brain" | "log">): string {
+  if (config.brain.log !== null) return config.brain.log;
+  const decisions = config.log.decisionLog;
+  return /(^|\/)decisions\.jsonl$/.test(decisions) ? decisions.replace(/decisions\.jsonl$/, "brain.jsonl") : decisions.replace(/(\.jsonl)?$/, ".brain.jsonl");
 }
 
 export interface ConfigProblem {
@@ -360,6 +507,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
   }
   const combatDeepseek: "off" | "on" = combatDeepseekRaw === "on" ? "on" : "off";
+  const brain = readBrainConfig(env, problems);
 
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
   if (!LOG_LEVELS.includes(logLevelRaw as LogLevel)) {
@@ -442,6 +590,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     buildDecider,
     buildOneshot,
     combatDeepseek,
+    brain,
     deepseek,
     escalation,
     mode,

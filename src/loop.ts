@@ -6,17 +6,20 @@
  * and the run boundary.
  */
 
+import { dirname } from "node:path";
+
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate } from "./act/gate.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
 import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
-import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
+import { createBrain, toolContextOf, type Brain, type BrainChoice } from "./brain/brain.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { fightKind, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
+import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -299,6 +302,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   let restoredRun = "";
   /** The DeepSeek client among the escalators (run plan, fight plan, BUILD_DECIDER=deepseek), if any. */
   const deepseekClient = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient) ?? null;
+  /**
+   * V4: the DeepSeek decision calls go through the brain router (src/brain), which picks the engine from BRAIN_*;
+   * unset, it is DeepSeek with v3's exact requests and results. The DeepSeek client stays the brain's system
+   * prompt source and the budget's owner.
+   */
+  const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient) : null;
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
   /**
    * The last direct DeepSeek decision (BUILD_DECIDER=deepseek), keyed by the question's content: a board
@@ -538,6 +547,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
     trackLizardTail(screenMemory, state);
+    // What the brain's tools read for this state (only used when an engine gets tools).
+    brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -561,7 +572,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
-      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
+      const deepseek = brain;
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
         const items = journal.itemCount;
         await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, (tokens) => {
@@ -577,7 +588,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       if (line) env.brief.plan = line;
     }
     if (!planned && config.fightPlan === "v1" && state.in_combat && state.screen === "COMBAT") {
-      const deepseek = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient);
+      const deepseek = brain;
       if (deepseek && stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0)) {
         await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, (tokens) => {
           stats.deepseekCalls += 1;
@@ -655,7 +666,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         stats.debounced += 1;
         deepseekResolved = deepseekMemo.resolved;
         deepseekRecord = { ...deepseekMemo.record, reused: true };
-      } else if (deepseekClient && deepseekBudgetLeft() && question?.type === "choice") {
+      } else if (brain && deepseekBudgetLeft() && question?.type === "choice") {
         // The board may have moved while planning: never pay ~10 s for a position that no longer exists.
         let stale = false;
         try {
@@ -674,7 +685,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
-        const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
+        const accept = (answer: BrainChoice, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
             [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
           } as AnswerSet);
@@ -707,6 +718,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             ...(answer.cards ? { cards: answer.cards } : {}),
             ...(answer.route ? { route: answer.route } : {}),
             ...(answer.routeReason ? { route_reason: answer.routeReason } : {}),
+            // V4: the engine that answered, when it was not plain v3 DeepSeek.
+            ...(answer.brain ? { brain: toJsonValue(answer.brain) } : {}),
             // A one-shot plan: its reference and steps; this row plays step 1, later steps are their own rows.
             ...(picked.plan ? { plan_id: picked.plan.id, plan: picked.plan.steps, plan_step: 1 } : {}),
           };
@@ -719,7 +732,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           stats.deepseekCalls += 1;
           if (spec.plan) {
             // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen.
-            const { json, meta } = await deepseekClient.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            const { json, meta } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
             const reason = str(json["reason"]).trim();
@@ -735,6 +748,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               handbook: meta.handbookId ?? "",
               memory_chars: memoryChars(memory),
               memory_sections: memorySections(memory),
+              ...(meta.brain ? { brain: toJsonValue(meta.brain) } : {}),
             };
             const out = spec.plan.resolve(json);
             if ("invalid" in out || !out.intent) {
@@ -758,7 +772,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               onEvent({ type: "note", message: `DeepSeek (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]} — ${reason}` });
             }
           } else {
-            const answer = await deepseekClient.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
             deepseekLatency = answer.latencyMs;
             if (answer.consistency) {
@@ -802,7 +816,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             onEvent({ type: "note", message: `falling back to Jev/code on ${decision.label}` });
           }
         }
-      } else if (deepseekClient && !deepseekBudgetLeft()) {
+      } else if (brain && !deepseekBudgetLeft()) {
         onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
       }
       if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
@@ -961,7 +975,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               if (escalator.name === "claude") stats.claudeCalls += 1;
               else stats.deepseekCalls += 1;
               if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
-              const answer = await escalator.choose(
+              // The DeepSeek escalator is asked through the brain (the engine BRAIN_* names for this label).
+              const answer = await (escalator === deepseekClient && brain ? brain : escalator).choose(
                 decision.state,
                 question?.instructions ?? "",
                 criteria,
@@ -994,7 +1009,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                   reasoning_tokens: (usage.reasoning_tokens ?? 0) + (answer.reasoningTokens ?? 0),
                 };
               }
-              escalation = { by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}), ...(consistency === undefined ? {} : { consistency: toJsonValue(consistency) }) };
+              escalation = { ...("brain" in answer && answer.brain ? { brain: toJsonValue(answer.brain) } : {}), by: escalator.name, jev_choice: jevAnswer.choice, jev_confidence: jevAnswer.confidence, deepseek_choice: answer.choice, choice: answer.choice, reason: answer.reason, latency_ms: answer.latencyMs, tokens: answer.inputTokens + answer.outputTokens, input_tokens: answer.inputTokens, output_tokens: answer.outputTokens, cache_hit_tokens: answer.cacheHitTokens ?? 0, guide: answer.guideId ?? "", handbook: answer.handbookId ?? "", reasoning_tokens: answer.reasoningTokens ?? 0, effort: answer.effort ?? "", ...(escalator.name === "deepseek" ? { memory_chars: memoryChars(memory) } : {}), ...(consistency === undefined ? {} : { consistency: toJsonValue(consistency) }) };
               // The escalator's raw pick stays in `choice`; code's HP guard may have played another option.
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
@@ -1381,7 +1396,7 @@ const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
 
 async function ensureFightPlan(
   env: DecisionEnv,
-  deepseek: DeepSeekClient,
+  deepseek: Pick<Brain, "askJson">,
   journal: RunJournal,
   logFile: string,
   onEvent: (event: LoopEvent) => void,
@@ -1465,7 +1480,7 @@ async function ensureFightPlan(
  */
 async function ensureRunPlan(
   env: DecisionEnv,
-  deepseek: DeepSeekClient,
+  deepseek: Pick<Brain, "askJson">,
   journal: RunJournal,
   logFile: string,
   observedTs: string,

@@ -1,7 +1,7 @@
 /**
- * How a CLI code agent (claude, codex, dsh) starts our stdio MCP tool server
- * (src/tools/mcp-server.ts). The server serves buildTools(ctx) under the server name "gkb",
- * so a tool `kb_monster` appears to Claude as `mcp__gkb__kb_monster`.
+ * How a CLI code agent (claude; later the offline learner's agents) starts our stdio MCP tool server
+ * (src/tools/mcp-server.ts). The server serves buildTools(ctx) under the server name "gkb", so a tool
+ * `kb_monster` appears to Claude as `mcp__gkb__kb_monster`.
  */
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
@@ -18,11 +18,18 @@ export interface McpLaunchSpec {
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
-/**
- * Live game state is handed over as a file (stateFile) written by the caller before each call,
- * because the server runs in its own process.
- */
-export function mcpLaunchSpec(ctx: ToolContext, stateFile?: string): McpLaunchSpec {
+export interface McpLaunchOptions {
+  /** The live game state, written by the caller before each question (the server runs in its own process). */
+  stateFile?: string;
+  /** JSONL file the server appends each tool call to (name, input, full output, ms): read back by the engine. */
+  recordFile?: string;
+  /** A module whose buildTools(ctx) replaces the registry's (tests, smoke runs). */
+  toolsModule?: string;
+}
+
+export function mcpLaunchSpec(ctx: ToolContext, options: McpLaunchOptions | string = {}): McpLaunchSpec {
+  // A plain string is the state file (the first form of this contract).
+  const opts: McpLaunchOptions = typeof options === "string" ? { stateFile: options } : options;
   const args = [
     join(REPO, "node_modules/.bin/tsx"),
     join(REPO, "src/tools/mcp-server.ts"),
@@ -31,6 +38,14 @@ export function mcpLaunchSpec(ctx: ToolContext, stateFile?: string): McpLaunchSp
     "--logs-dir", ctx.logsDir,
   ];
   if (ctx.act !== undefined) args.push("--act", String(ctx.act));
-  if (stateFile) args.push("--state-file", stateFile);
+  if (opts.stateFile) args.push("--state-file", opts.stateFile);
+  if (opts.recordFile) args.push("--record-file", opts.recordFile);
+  if (opts.toolsModule) args.push("--tools-module", opts.toolsModule);
   return { command: process.execPath, args, env: {} };
+}
+
+/** Claude's --mcp-config naming our stdio server alone (use with --strict-mcp-config). */
+export function claudeMcpConfig(ctx: ToolContext, options: McpLaunchOptions = {}): string {
+  const spec = mcpLaunchSpec(ctx, options);
+  return JSON.stringify({ mcpServers: { [MCP_SERVER_NAME]: { type: "stdio", command: spec.command, args: spec.args, env: spec.env } } });
 }

@@ -174,7 +174,7 @@ const logs: string[] = [];
 
 export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}) {
   const path = join(tmpdir(), `jev-sts2-oneshot-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-  logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"));
+  logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
   const base = loadConfig({} as NodeJS.ProcessEnv);
   const cfg: AppConfig = {
     ...base,
