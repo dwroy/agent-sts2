@@ -929,3 +929,54 @@ describe("once-a-fight and decaying enemy powers carry from turn to turn, not re
     expect(dmg(run({ flutter: 5 }))).toEqual([15, 30, 30, 30]);
   });
 });
+
+describe("temporary Strength ends with the decision's turn, Strength an enemy gains for good carries (review 09-29 consistency #7, #8)", () => {
+  const HIT: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (o: { hand?: CardModel[]; strengthNow?: number; playerPowers?: Record<string, number>; enemyStrength?: number; enemyPowers?: Record<string, number>; plays?: string[] }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = o.hand ?? [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, strengthNow: o.strengthNow ?? 0 },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 20 + (o.enemyStrength ?? 0), hits: 1 }] }],
+      fightKind: "elite",
+    };
+    const plans = solveTurn(solver).plans;
+    const plan = o.plays ? plans.find((p) => p.steps.map((step) => step.cardId).join(",") === o.plays!.join(","))! : plans[0]!;
+    expect(plan).toBeDefined();
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "HIT", strength: o.enemyStrength ?? 0, powers: o.enemyPowers ?? {} }],
+      tables: { E: HIT },
+      playerPowers: o.playerPowers ?? {},
+      options: { budgetMs: 1e9, seed: 3, include: [plan], now: fakeClock(0.01) },
+    }).lines.find((line) => line.plan === plan)!;
+  };
+  const on = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!;
+
+  it("Setup Strike's +3 this turn: later turns' Strikes hit for 6, not 9", () => {
+    const line = run({ strengthNow: 3, playerPowers: { STRENGTH_POWER: 3, SETUP_STRIKE_POWER: 3 } });
+    expect(on(line, 2).dmg.mean).toBe(30);
+    // Strength for good (Inflame's) stays.
+    expect(on(run({ strengthNow: 3, playerPowers: { STRENGTH_POWER: 3 } }), 2).dmg.mean).toBe(45);
+  });
+
+  it("Mangle's -10 is this turn's only: the enemy's later hits are back at full Strength", () => {
+    const line = run({ enemyStrength: -10, enemyPowers: { STRENGTH_POWER: -10, MANGLE_POWER: 10 } });
+    expect(on(line, 2).loss.mean).toBe(20);
+  });
+
+  it("Fight Me!'s +5 enemy Strength is paid on every later hit too", () => {
+    const fightMe = card(1, "FIGHT_ME", { damage: 6, cost: 0, enemyStrength: 5 });
+    const hand = [strike(0), fightMe];
+    const withIt = run({ hand, plays: ["FIGHT_ME"] });
+    const without = run({ hand, plays: ["STRIKE"] });
+    expect(on(without, 2).loss.mean).toBe(20);
+    expect(on(withIt, 2).loss.mean).toBe(25);
+  });
+});

@@ -752,10 +752,25 @@ interface SimPlayer {
   /** End-of-turn damage: Disintegration (for the fight) and Constrict (while its Slithering Strangler lives). */
   disintegration: number;
   constrict: number;
+  /** Of `strength` / `dexterity`, the decision turn's temporary part (TEMP_STRENGTH_POWERS): gone after it. */
+  tempStrength: number;
+  tempDexterity: number;
 }
 
 /** The enemy whose Constrict it is (CONSTRICT_POWER: 「蛇行扼杀者存活时…」). */
 const CONSTRICTOR = "SLITHERING_STRANGLER";
+
+/**
+ * Strength (and Dexterity) up or down for this turn only (「在本回合结束前获得/失去力量」): part of STRENGTH_POWER
+ * on the decision's board, gone for the later turns. Ours: Setup Strike, Flex, Reptile Trinket, Feeding
+ * Frenzy, Coordinate (Strength), Speed Potion (Dexterity). On enemies: Mangle, Shackling Potion, Dark
+ * Shackles, Piercing Wail (logged Byrdonis STRENGTH_POWER -10 with MANGLE_POWER 10).
+ */
+export const TEMP_STRENGTH_POWERS = ["SETUP_STRIKE_POWER", "FLEX_POTION_POWER", "REPTILE_TRINKET_POWER", "FEEDING_FRENZY_POWER", "COORDINATE_POWER"] as const;
+export const TEMP_DEXTERITY_POWERS = ["SPEED_POTION_POWER"] as const;
+export const ENEMY_TEMP_STRENGTH_LOSS_POWERS = ["MANGLE_POWER", "SHACKLING_POTION_POWER", "DARK_SHACKLES_POWER", "PIERCING_WAIL_POWER"] as const;
+
+const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[]): number => ids.reduce((sum, id) => sum + Math.max(0, powers?.[id] ?? 0), 0);
 
 interface Piles {
   draw: CardModel[];
@@ -998,6 +1013,8 @@ function applyPlan(
     if (a.slippery !== undefined) e.slippery = a.slippery;
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
     if (a.flutter !== undefined) e.flutter = a.flutter;
+    // Strength it gained for good this turn (Fight Me!, Enrage per Skill, Crab Rage on the survivor).
+    e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
     if (e.hp <= 0) enemyDown(e, turn, input);
@@ -1019,6 +1036,11 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
+  // This turn's temporary Strength/Dexterity ends with it (Setup Strike's +3 was every later turn's).
+  player.strength -= player.tempStrength;
+  player.dexterity -= player.tempDexterity;
+  player.tempStrength = 0;
+  player.tempDexterity = 0;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
@@ -1194,6 +1216,8 @@ function simulate(
     shrinkTurns: input.playerPowers["SHRINK_POWER"] ?? (base.shrunk ? 1 : 0),
     disintegration: input.playerPowers["DISINTEGRATION_POWER"] ?? 0,
     constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
+    tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS),
+    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS),
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
@@ -1214,7 +1238,8 @@ function simulate(
       hp: e.hp,
       maxHp: e.maxHp,
       block: e.block,
-      strength: info?.strength ?? 0,
+      // A temporary loss (Mangle, Shackling Potion) is gone by its next move: the later turns hit at full Strength.
+      strength: (info?.strength ?? 0) + sumOf(info?.powers, ENEMY_TEMP_STRENGTH_LOSS_POWERS),
       vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,

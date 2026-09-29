@@ -387,7 +387,8 @@ export interface Outcome {
   restocked: string[];
   /**
    * `block`: what the line leaves of the enemy's block (the rollout keeps a Burrowed enemy's). What the line
-   * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter): the rollout's
+   * leaves of its once-a-fight and decaying powers (Artifact, Slippery, Curl Up, Flutter), and the Strength
+   * it gained for good this turn (Fight Me!, Enrage, Crab Rage; a temporary loss is not in it): the rollout's
    * later turns go on from them.
    */
   enemyHpAfter: {
@@ -401,6 +402,7 @@ export interface Outcome {
     slippery?: number;
     curlUp?: number;
     flutter?: number;
+    strengthGained?: number;
   }[];
   incomingAfterBlock: number;
   energyLeft: number;
@@ -1931,6 +1933,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           slippery: enemy.slippery ?? 0,
           curlUp: enemy.curlUp ?? 0,
           flutter: enemy.flutter ?? 0,
+          strengthGained: enemy.strengthDelta,
         })),
       incomingAfterBlock,
       energyLeft: sim.energy,
