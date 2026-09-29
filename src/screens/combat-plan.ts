@@ -949,6 +949,23 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
  * when the state has neither (older mod, tests). XPA4 T8/T10: nothing read the piles, so Battle
  * Trance at 1 energy was "+9" with 3 Beckons in a 6-card pile.
  */
+/**
+ * A card exhausted earlier this turn: the exhaust pile now is bigger than at the turn's first combat frame (kept
+ * in memory.turnStartExhaust). The state has no per-turn count (player.cards_exhausted_this_turn is never sent):
+ * 0NZBAVFAT3JG F25 T1, Brand exhausted a Strike, and on the re-ask Evil Eye's extra Block was left out.
+ */
+export function exhaustedSinceTurnStart(env: DecisionEnv): boolean {
+  const size = exhaustPileSize(env.state.raw);
+  if (size === undefined) return false;
+  const key = `${fightKey(env.state)}:${env.state.turn ?? "?"}`;
+  const start = env.screenMemory.turnStartExhaust;
+  if (start?.key !== key) {
+    env.screenMemory.turnStartExhaust = { key, size };
+    return false;
+  }
+  return size > start.size;
+}
+
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
   return pileSize(raw, "exhaust");
@@ -1235,6 +1252,8 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 
 function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
+  // Before any early return: the turn's first frame sets the exhaust pile it started with.
+  const exhaustedEarlier = exhaustedSinceTurnStart(env);
   const combat = asRecord(state.raw["combat"]);
   const readiness = asRecord(combat["action_readiness"]);
   if (readiness["can_use_combat_actions"] === false) return null;
@@ -1253,7 +1272,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // earlier in the same line: the solver counts both (turn-solver exhaustedCount).
   const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
   const exhaustsEveryTurn = relicIds.includes("TOASTY_MITTENS");
-  const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0;
+  const exhaustedThisTurn = exhaustsEveryTurn || num(player["cards_exhausted_this_turn"]) > 0 || exhaustedEarlier;
   // Fiddle (and No Draw): nothing can be drawn mid-turn, so draw effects are worth nothing.
   const noDraw = relicIds.includes("FIDDLE") || powerAmount(player, "NO_DRAW_POWER") > 0;
   if (noDraw) {

@@ -116,6 +116,11 @@ export interface ScreenMemory {
    */
   turnStartHp?: { key: string; hp: Record<string, number> };
   /**
+   * The exhaust pile's size at the first combat frame of the turn (`key` = fight:turn): a bigger pile later means
+   * a card was exhausted this turn (Evil Eye; combat-plan exhaustedSinceTurnStart).
+   */
+  turnStartExhaust?: { key: string; size: number };
+  /**
    * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
    * no used mark (logged `stack` null, `is_melted` false before and after). `last` is the last combat state
    * read while it is held (combat-plan trackLizardTail). Kept across the run; rebuilt by the journal replay.

@@ -313,3 +313,20 @@ describe("5. A full potion belt at an event that gives a potion: \"discard one, 
     expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o1"]);
   });
 });
+
+describe("6. A card exhausted earlier this turn is read from the exhaust pile, not a field the state never sends (0NZBAVFAT3JG F25 T1)", () => {
+  it("after Brand's exhaust, the re-asked options count Evil Eye's extra Block (\"Evil Eye, Juggernaut\" was shown -12)", () => {
+    rolloutLiveOptions.enabled = false;
+    // The turn's first frame (Jev chose Brand, Evil Eye, Juggernaut), then the frame after Brand's pick.
+    const first = loggedEnv(logged("0nzb-f25-t1-brand"));
+    planCombatTurn(first);
+    const after = logged("0nzb-f25-t1-after-exhaust");
+    expect((after.state["combat"] as Raw)["player"]).not.toHaveProperty("cards_exhausted_this_turn");
+    const criteria = planCriteria(planCombatTurn({ ...loggedEnv(after), screenMemory: first.screenMemory }));
+    const line = Object.values(criteria).map((text) => JSON.parse(text) as Raw).find((entry) => entry["plays"] === "邪眼, then 势不可当");
+    expect(line).toMatchObject({ block_gained: 32, hp_lost: 0 });
+    // Seen alone (no earlier frame of this turn), the pile it starts with is the baseline: no bonus assumed.
+    const alone = planCriteria(planCombatTurn(loggedEnv(logged("0nzb-f25-t1-after-exhaust"))));
+    expect(Object.values(alone).map((text) => JSON.parse(text) as Raw).find((entry) => entry["plays"] === "邪眼, then 势不可当")).toMatchObject({ block_gained: 16 });
+  });
+});
