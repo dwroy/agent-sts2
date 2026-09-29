@@ -1407,3 +1407,216 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
   - 合并提交 1895a6c。
   - 合入后：tsc 退出 0；vitest 66 个文件 1169 个用例全过，退出 0。
   - 没有停对局，没碰 ops/STOP。
+
+
+## 2026-09-30 第九次增量：A8 窗口第 1–11 局，同步知识库核对（version 2026-09-30.1，分支 exp-update，cf73b66；合入 v3 见文末）
+
+### 来源
+- `notes/lessons.md` 末尾 11 节 A8 复盘（Dai 09-29 21:26 起的 A8 对比窗口第 1–11 局），全输：
+  - RRMYC7MCSYX8（F33 帝王蟹）、5LRZ7HJ7YGSY（F48 女王）、5PHF3ML3XMJN（F17 瀑布巨兽）、UNRLW0W3XWLD（F33 无厌沙虫）、YVYZ6QHA85FN（F48 永世沙漏）、Q8XR6EXAF6QV（F48 女王）、3RMEW7ZXS8TF（F33 帝王蟹）、NH8A3VBDRDZW（F33 无厌沙虫）、2WRUNPS2ZSM4（F17 瀑布巨兽）、79YRPJ8TCCZ5（F33 知识恶魔）、86C3PHPYHX7L（F33 知识恶魔）。
+  - 03:33 的勘误按勘误用（Q8XR 女王战 focus 5/8 问、YVYZ 饱和从 T2 开始、86C3 T7 第一问没跟 best、2WRU 的 guide 填数时间）；这几处都没进条目。
+  - 第 12 局 MZFVC3RB3JD8（19:17Z 结束）还没复盘，不算；手写数字的截止点是 86C3（18:47:45Z），A8 161 局。
+- 日志（只读）：
+  - 从 states.jsonl 字节偏移 1.79e9 起流式读一遍，抽出 161 局 A8 的每场战斗（2091 场：走廊 1425、问号战 215、精英 210、boss 241）和每层第一帧/最后一帧（4460 层）。脚本沿用第八次增量的 A9 抽取，只换进阶和截止。
+  - 用同样口径在「去掉这 11 局」的 150 局上重算，和条目里原有的 A8 数一致：boss 218 场 ≥75% 进场 0 瓶 8/21、带药 103/149；二幕 boss 65 局 19/43、1/22；沙虫 7/15、1/8；知识恶魔 7/10、0/9；螃蟹 0 瓶 0/4、带药 5/14；异鱼 0 瓶 1/4；族母 ≥85% 12/16；甲虫 27 场死 3、−28.5/−38.2；多尼斯异鸟 15 场 32/40.5；一幕精英 116 场死 7、25/36；一幕 0/1 只精英 50/84 局过二幕 boss 2/15；二幕开头 103 局 18 死、中位 38.8%；打击+防御 ≥8 张 7/27、≤6 张 7/21。
+  - 两处原数和重算不同，改成重算值并写明 n：rest-smith-threshold 的 A8 二幕 boss 分组（原 n=23/9，重算 33/10，比例一样；原数是第二次增量时的局数）、route-shops 的 A8 金币/商店分组（原 63 场，重算 65 场）。
+  - `tools/boss-fights-extract.py --asc 8`（在只含 A8 boss 帧的副本上跑，按 86C3 截止过滤）+ `tools/boss-clock-calibrate.ts --rows`：按现行时钟（c52587c）重算 A8 241 场 boss 战的实打/估值。原数（螃蟹输局 18 场 0.83、沙虫 15 场 0.95、异鱼 0.53–0.77、墨影幻灵 0.56）在去掉新局后原样复现；巨兽原写 0.70/0.98，现行时钟下旧 27 场是 0.68/0.97。
+  - 女王、沙虫另 grep 全部进阶的战斗帧（`"enemy_id":"QUEEN"`、`"THE_INSATIABLE"`），算聚合体什么时候死、T1–T2 伤害打给谁、沙虫输局死在哪条线；结果和新 builder 的输出一致（见「知识库其他部分」）。
+  - `tools/build-outcome-stats.py` 用截到 86C3 的 runs.jsonl 重建（A8 161 局、A9 55 局），给卡牌 TIER 用。
+  - monster DB 的 boss 每回合掉血用 v3 工作区刷新后的版本（含 MZFV）；这些数现在由占位符 {BOSS_LOSS:ID:ASC} 从数据填。
+  - DeepSeek 推理、run plan、决策原文按复盘节里引用的位置核对；条目和本节引的原话都有出处。
+- 口径同前：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算。
+- 先在 exp-update 上 `git merge --no-edit v3`（快进到 c52587c）再改；合入前又合了一次 v3（950cbf5，M 批），见文末。
+- 结果：新增 0 条，更新 76 条（58 条加证据，18 条只改数字/文字/代码事实），退役 0；active 198，总数 221 不变；置信度 高 131、中 56、低 11（soul-nexus、punch-construct 到 n=5 升为高）。
+
+### 做法变化：经验库的数字也从数据填
+- 经验库条目的文字现在和攻略一样过 fillGuideFacts（`src/knowledge/experience.ts` lessonText，DeepSeek 的知识切片和 Jev 的战斗经验都用它）。
+  - 起因：`experience.json:389` giant-explode 写着「A8 27 场：T10 前击杀 13/15」，同一个 DeepSeek 输入里攻略填出来是「29 场…14/17」（2WRU 复盘、fix-queue 已列）。
+  - 改成占位符的：giant-explode（{GIANT_BLOCK_RECORD}、{GIANT_KILLS_A8}、{GIANT_KILLS_A9}）、crab-kill-order（{CRAB_KILL_ORDER}）、crab-entry/crab-kill-order/a9-damage 的激光（{LASER_T4}）、lag-sleep（{LAG_SLEEP}）、queen-plan（{QUEEN_AMALGAM}）、insatiable-escape（{SANDPIT_DEATHS}）、route-no-chains（{UNKNOWN_FIGHTS:9:2}）、各 boss 的战绩（{BOSS_RECORD:VANTOM/CEREMONIAL_BEAST/THE_KIN/LAGAVULIN_MATRIARCH/SOUL_FYSH/THE_INSATIABLE/KAISER_CRAB/AEONGLASS}）、boss 每回合掉血（{BOSS_LOSS:KAISER_CRAB:9} 等，a9-damage、crab-entry、insatiable-clock、kd-dps）。
+  - 进阶分组的胜率（≥75% 进场几胜几负）、精英/走廊的中位 p75 等口径和生成数据不同（生成数据把死亡算作全掉），仍手写，按本次重算更新。
+- 新占位符（`src/strategy/boss-clock.ts` GUIDE_FACTS / fillGuideFacts）：
+  - {QUEEN_AMALGAM}（中文）/{QUEEN_AMALGAM_EN}：queenAmalgamRecord，数据来自 boss-damage.json QUEEN.amalgam。
+  - {SANDPIT_DEATHS}/{SANDPIT_DEATHS_EN}：sandpitDeathRecord，数据来自 THE_INSATIABLE.deaths。
+  - {UNKNOWN_FIGHTS:ASC:ACT}：unknownFightsText 的一格。
+  - {BOSS_LOSS:ID:ASC}：monster DB bosses.*.hp_loss_per_turn 在该进阶的中位（没有该进阶的记录填「?」）。
+- `tools/build-boss-damage.py` 新增两项：
+  - QUEEN.amalgam：每场女王战聚合体在女王还活着时死于第几回合（没死为 null），以及第 3 回合第一帧时两者各掉了多少血（T1–T2 的伤害打给了谁）。
+  - THE_INSATIABLE.deaths：每场输掉的沙虫战最后一帧的死线：沙坑还剩 ≥2 → hp；沙坑 1 且 HP + 格挡 ≥ 显示的攻击 → sandpit；沙坑 1 且攻击也够杀 → both。
+  - boss-damage.json 用新 builder 从日志重建。
+- 填出来的数（截至本节写作，含 MZFV）：
+  - 女王 17 场：赢的 5 场都先打死聚合体（T3–T8；A8 RBJ4 T3）；输的 12 场 7 场没打死、5 场 T5–T9 才打死；T1–T2 伤害多进女王的 6 场赢 1、多进聚合体的 11 场赢 4。A8 8 场赢 1。
+  - 沙虫输局 27 场：死在 HP 上（沙坑 ≥2）14、被沙坑吞掉 9、同一回合 4；A8 17 场 10/4/3，A9 3 场 2/0/1。
+
+### 对照数据检查的主题
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 帝王蟹（RRMY、3RME 输，YVYZ 赢） | RRMY 63/83（76%）、29 张 1 升级，7 回合 25.9/回合（需 61.1），碾碎爪 −80、火箭 −101；3RME 73/80（91%）、25 张 4 升级，7 回合 22.1/回合，碾碎爪 −69、火箭 −86，T1 岿然不动用在 8–16 的来袭上，T4 激光 −27。两局 Jev 提示都挂着「先打火箭」，rollout best_order 多数是「碾碎爪 > 火箭」，两只平摊、一只都没死。YVYZ 91/91、29 张 5 升级，燃烧+、狱火+（每回合 9 群伤）、彼岸咆哮，8 回合 53.3/回合，T8 两爪同回合死。现行时钟：RRMY 0.68、3RME 0.76、YVYZ 1.41；A8 输局 20 场中位 0.80（0.43–1.32）。A8 螃蟹 26 场赢 6：≥75% 进场 0 瓶 0/5、带药 6/16 | crab-entry、crab-dps 加 RRMY、3RME、YVYZ；crab-kill-order 加 RRMY、3RME，YVYZ 进反例（没有哪只先死的赢局）；crab-potions 只改数字 |
+| 女王（5LRZ、Q8XR） | 5LRZ 57/92（62%），T1 58 伤全进女王，聚合体到死 111；26.3/回合（只打女王也要 69.8）。Q8XR 80/80、2 瓶药，T1 100 伤里 87 进女王，聚合体 T6 才死，之后 T7 −24、T8 −16；46.5/回合（需 63）。DeepSeek 三份 run plan 都写「T1–T2 爆发聚合体」，Jev 提示里没有女王条目，T1 rollout 饱和按本回合掉血排出打女王的线。全部进阶 17 场见上（赢的都先打死聚合体；T1–T2 多进女王 1/6） | queen-plan 改用 {QUEEN_AMALGAM}，删掉「A8 5 场全输」（RBJ4 A8 赢过）；queen-hp、queen-prep 加两局；新 Jev 提示 queen-amalgam-first |
+| 女王时钟 | 两局 DeepSeek 抄的时钟：5LRZ「need 120, est 25」、Q8XR「need 80, est 30」；实打 26.3、46.5（全场两只合计）。queen-hp 原写「实际输出只有估算的 0.7–0.75」来自旧时钟 | queen-hp 改成现行时钟下估值不再偏高、输在需要的量 |
+| 无厌沙虫（UNRL、NH8A） | UNRL 79/80（99%）、29 张 2 升级，9 回合 33.4/回合（需 36.6），逃离 5 张，沙虫剩 28，死于 HP（最后一帧沙坑 2）；NH8A 58/86（67%），T3 42 血、HP 是先到的线，Jev 照 sandpit-no-race 选 22 伤的逃离线（rollout best 41 伤），死时沙坑 2。A8 25 场 ≥75% 7/16、<75% 1/9；现行时钟 UNRL 1.16、NH8A 0.46，A8 输局 17 场中位 0.95。输局死线见上：A8 17 场里 10 场死在 HP 上 | insatiable-entry、insatiable-clock 加两局；insatiable-escape 加 NH8A、{SANDPIT_DEATHS}；Jev 提示两条改写 |
+| 知识恶魔（79YR、86C3 输，5LRZ、Q8XR 赢） | 79YR 55/80（69%）、撕裂+ 在场，6 回合 34.5/回合（需 66.5），T3 心灵腐化下 4 张手牌 0 格挡吃 24，T5 17 血时代码选瓦解（撕裂时成本 −1 绕过了 HP 闸，M 批 556a99c 已修），T6 死。86C3 80/88（91%）、24 张 0 张力量牌、10 张格挡 + 壁垒，17 回合实打 13.6/回合（现行时钟 0.44）。5LRZ 95%、Q8XR 89% 都 T9 赢（44.3/回合）。A8 ≥75% 进场 9/13、<75% 0/10；带永久力量牌 ≥75% 进场 9/12，0 张 0/1 | kd-dps 改数字、加两局；kd-block、kd-single-target 加证据 |
+| 瀑布巨兽（5PHF、2WRU 输，UNRL 赢） | 5PHF 满血、23 张 0 升级，T10 以 25 血对 39 层击杀，下回合手里 0 张格挡（所需格挡 14，落在 14–19 那格）；T5 压力炮 −21 手里没格挡。2WRU 满血、23 张 2 升级、0 锻造（F16 带皇家枕头回血溢出 25），19.7/回合，T15 以 12 血对 54 层击杀；T10 −17、T11 −13。UNRL T9 41 血对 36 层击杀，活。A8 30 场赢局升级 1.2、输局 2.1；现行时钟输局 11 场 0.68、赢局 19 场 0.99 | giant-explode 换占位符、加两局；giant-gun 加两局（只写格挡那半句）；giant-deck 改数字、加 2WRU |
+| 永世沙漏（YVYZ） | 46/85（54%）、38 张 7 升级，7 回合 22.7/回合（需 76.3），复制药水复制了耸肩无视，T4 手握重锤 0 伤；三幕开头 5 连战，F35 起 7 场走廊 −161；三幕加 9 张牌 29→38。A8 4 场 0 胜 | aeon-clock 下限改 22.7、加 YVYZ；aeon-wither、deck-bloat、act3-hallways 加 YVYZ |
+| 仪式兽（3RME、79YR、NH8A、86C3 都赢） | 3RME 燃烧+ 32.8/回合、79YR 撕裂+ 37.4、NH8A 势不可当 29.1，7–9 回合打完；86C3 0 张永久力量/成长牌，15 回合 17.5/回合，5 血险胜（现行时钟 0.92）。A8 26 场：有永久力量/成长牌 15/15，没有 8/11；A9 有 3/4，没有 0/1 | beast-clock「一幕至少要一张永久力量牌」改成数据（分水岭，A8 没有的也赢 8/11），加四局 |
+| 异鱼（RRMY、YVYZ 赢，都 0 瓶） | RRMY 71/80、燃烧契约，7 回合 31.6/回合；YVYZ 79/91、没有能消耗呼唤的牌，13 回合 17.0/回合。A8 ≥75% 进场带药 13/13、0 瓶 3/6（原 1/4）；A7–A9 有这类牌 16 场赢 12、没有 24 场赢 20 | fysh-damage、fysh-beckon、potion-empty-slots 只改数字 |
+| 族母（5LRZ 98/98 赢）、同族（Q8XR 满血 T5 赢） | 族母 A8 ≥85% 进场 13/17；Q8XR 同族击杀顺序「神官 > 信徒」，燃烧 + 与我一战！+，5 回合 | lag-entry、kin-priest-focus、kin-scaling 加证据 |
+| 一幕精英（A8） | 骇鳗 27 场死 1、赢局 30/39.5（5PHF 必经时 61% 进场剩 2 血）；珊瑚群 20 场死 1、23/35.5；幽灵鳗 22 场死 1、13/25；异蛙 20 场全胜、16.5/26；异鸟 19 场全胜、33/38.5；雕像 27 场死 4、30/36.5（赢局中位约 37% 最大生命，最多 61%） | 条目里写的「异蛙掉约 45–50%」「雕像掉 40–70%」「幽灵鳗实测掉 30–55」和 A8 数据冲突，改成数据；各条加本批证据 |
+| 二、三幕精英（A8） | 蜂群术士 26 场死 4、37/49（UNRL −49、86C3 −51 拖 12 回合、3RME −33）；千足虫 21 场赢 15、43/53（Q8XR −51、86C3 满血 −60）；感染棱柱 17 场死 4、29/38（5LRZ −38、YVYZ −14）；机甲骑士 5LRZ 98% −66（T7 重劈力量 11 −44）；灵魂枢纽 Q8XR 满血 −60 | entomancer、entomancer-cost、decimillipede、prism、mecha-knight、soul-nexus 改数字加证据 |
+| 走廊（A8） | 甲虫组 29 场死 3、28/37（RRMY 58% −29）；三只盛碗虫 NH8A 84% −41；猎人杀手 35 场死 3、p75 29（79YR −32）；棘刺蟾蜍 36 场死 4、19/25.5（RRMY 问号里 −32）；地道虫 56 场全胜（≤6 回合 48 场中位 13，≥7 回合 8 场 37.5）；异螨 39 场死 2、14/24（3RME −28）；啃咬机 36 场死 1、18/27；产卵虫 32 场死 2、21/29（5LRZ −33）；草蜢 54 场全胜、18/26（79YR −34）；虱虫之祖 30 场死 2、14.5/23；青蛙骑士 YVYZ −46；拳击构装体 YVYZ −28、Q8XR 问号 −32 | 各条改数字，逐局细节只留在本表 |
+| 一幕精英数（A8 161 局） | 过一幕/二幕 boss：0 只 50 局 34/2，1 只 89 局 63/15，2 只 20 局 13/5，3 只 2 局 2/1（Q8XR、3RME 一幕打 3 只都过一幕 boss，精英之间都有火堆）。A9：0 只 11 局 5/0，1 只 37 局 20/2，2 只 7 局 4/1 | elite-need-one 改数字；elite-no-double 的「一幕最多主动打 1 只精英」和数据冲突，改成数据（多打一只没有变差，出事的是三层内连打两只） |
+| 二幕开局与 0 精英路线（A8） | 112 局进二幕，18 局死在第一个火堆前，走到的 94 局中位 41%（p25 27%）。二幕 0 精英 56 局过二幕 boss 11（21 局死在走廊），1 只 49 局过 10（12 局死在精英），2 只 7 局过 2。本批 RRMY、NH8A、79YR 走 0 精英：路线投影进 boss 81–100%，实到 76%、67%、69%，都输在 boss；NH8A F24 为绕开精英改走 5 场走廊（最后 3 场连打）共 −88，投影约 −50 | act2-opening 改数字、加三局；route-no-chains 加 NH8A、YVYZ |
+| 二幕 boss 进场（A8 74 场） | ≥75% 22/50（44%），<75% 1/24（4%）；一幕 ≥75% 100/129（78%）、<75% 12/23（52%）。本批 ≥75% 进二幕 boss 7 场赢 3（5LRZ、Q8XR、YVYZ），RRMY 76%、3RME 91%、UNRL 99%、86C3 91% 输在输出 | route-entry-hp 改数字、加 79YR、NH8A |
+| 锻造（A8） | 二幕 boss 按「≥75% 进场」×「≥3 张升级」：51%（19/37）、23%（3/13）、7%（1/15）、0%（0/9）；一幕 0 次锻造 37/57 过一幕 boss，≥1 次 75/95。2WRU 三个火堆全回血、0 锻造 | rest-smith-threshold 改数字、加 2WRU |
+| 删牌 | UNRL F14 代码删牌顺序「打击 120、防御 110、受伤 100」，DeepSeek 推理认定删受伤更好、最后照顺序删了打击，受伤到死都在（11 次进开局手牌）；3RME F5 同样「孢子心灵 100」排在基础牌后；86C3 带打击木偶（打击 9 伤）仍删两张打击、留下 4 防御。A8 二幕 boss 74 场：打击+防御 ≥8 张 8/29、≤6 张 8/25 | deck-remove 加 UNRL、86C3，改数字；攻略删牌句补诅咒、打击木偶 |
+| 一幕 boss 构筑统计 | A8 一幕 boss 152 场：牌组张数 20.3/20.5、非基础格挡 2.6/3.0、AOE 张数 1.8/1.9（≥2 张 AOE 的比例赢局 55%、输局 68%）都不分胜负；永久力量/成长牌赢局 62%、输局 32%（0 张 43/70 过、≥1 张 69/82），恶魔形态 6:0，升级 1.7/1.4，进场 91%/84%。deck-strength-aoe 和手册写的「赢局 81% 有 AOE、输局 47%」来自 41 局低进阶 | deck-strength-aoe 改成 A8 数据；手册同改 |
+| 时钟（现行，A8 241 场） | 输局实打/估值中位：墨影幻灵 0.56、异鱼 0.59、巨兽 0.68、帝王蟹 0.80、知识恶魔 0.94、沙虫 0.95、族母 0.83；赢局仪式兽 1.46、知识恶魔 1.51、帝王蟹 1.35。本批偏低的 86C3 知识恶魔 0.44（0 力量牌）、NH8A 沙虫 0.46；偏高的 3RME/79YR/NH8A 仪式兽 1.53–1.70 | deck-clock 改数字、加 86C3、NH8A |
+| 先古遗物 | 营养汤：5LRZ 过二幕 boss、UNRL 没过（A8 4/8，A7–A9 5/12）；烘焙手套：NH8A 没过（A7–A9 8/23） | relic-nutritious-soup、relic-toasty-mittens、neow-growth 只改数字 |
+| 事件、遗物 | Q8XR F38 滑脚木桥满血连续重抽三次（−3、−4、−5），点名打击后跨越；86C3 真理石板读一次（−3 上限换防御+）后停；3RME F32 22/80 回血到 46，缩放仪开场 +25 后 73/80 | event-slippery-bridge、event-tablet-of-truth、relic-pantograph 加证据 |
+| 留给 boss 的药（只改数字） | 11 局都有：RRMY 2（F22 为螃蟹买的虚弱 + 爆炸安瓿，F23 走廊 T1 喝）、5LRZ 3（F20 为恶魔买的能力药水 F22 喝；F43/F44「boss-grade」的鲜血 + 异鱼之油 F45 精英喝）、5PHF 1、UNRL 3、YVYZ 2、Q8XR 3、3RME 2、NH8A 2、2WRU 2、79YR 1、86C3 1，约 22 瓶。七批合计 69 局 58 局、约 113 瓶。A8 窗口 11 局每局走廊/问号战喝 6.6 瓶、精英 1.8、boss 1.6，二幕 boss 进场平均 0.7 瓶（n=9；A8 全部 74 场 1.36）；A8 ≥75% 进场的 boss 0 瓶 12/29、带药 111/160 | 只改 potion-save-for-boss、potion-empty-slots、crab-potions、fysh-damage 的数字，n 不变 |
+| 药水的代码事实 | 2f6ae4c（L 批）起白兽雕像题另有「先在地图上喝掉某瓶能随时喝的药再走」，题面写明果汁由代码在下一战第一帧喝（5LRZ 当时只有两项，丢了果汁） | potion-code-discard 只改描述代码行为的句子，n、建议分句不变 |
+
+### 经验库自己带偏、或写了没被执行的地方
+- **沙虫：NH8A 照 Jev 提示 sandpit-no-race 打逃离，HP 才是先到的线。** 提示原文「The Insatiable has too much HP to race… Play Frantic Escape before extra damage」在沙虫 10 问都挂着；run plan F25/F27 写的是「沙坑是先到的死线时」再打，Jev 没有这层条件。A8 输局 17 场里 10 场死在 HP 上，只有 4 场被沙坑吞掉。提示改成两条都按死线比较（见下）。
+- **女王：Jev 没有女王提示，T1 爆发打进女王。** 经验 queen-plan、boss 要点都说先杀聚合体，DeepSeek run plan 也写「T1–T2 burst the Amalgam」，但这些只到 DeepSeek；Jev 的女王战每问只有 hp-trade-boss、vulnerable-trade、potion-big-turn。
+- **螃蟹：知识和 rollout 两套击杀顺序。** RRMY、3RME 的 Jev 提示和 run plan 都写先打火箭，rollout 的击杀顺序比较多数选「碾碎爪 > 火箭」，结果两只平摊。只核对了知识文字的数（现在是占位符）；推演排序不在本次范围。
+- **知识恶魔：攻略写「只有已打出撕裂时才选瓦解」，代码照这句给撕裂时的瓦解成本 −1，绕过了 HP 闸。** 79YR T5 17 血选了瓦解，T6 死。M 批 556a99c 已修代码；攻略两处补了「剩余 HP 扛得住」。
+- **kd-dps「A8 ≥75% 进场 7/10，<75% 0/9」让 86C3 把血拉满、79YR 两个火堆都回血。** 86C3 91% 进场仍只有 13.6/回合（0 张力量牌），79YR 69% 进场。条目下半句「二幕构筑必须有永久力量」86C3 没做到（整局选项里没有燃烧/恶魔形态/撕裂，F17 拿壁垒不拿地狱狂徒）。
+- **删牌：代码顺序（run plan 目标 +40）让基础牌排在可删的诅咒前。** UNRL、3RME 都照顺序删了打击；86C3 推理里写了「打击木偶让打击 9 伤，也许先删防御」，仍删打击。条目和攻略补了诅咒、打击木偶；排序本身是估值问题（fix-queue 标给 Dai）。
+- **deck-clock「时钟说已达标时按仍缺 ~30% 处理」：** 本批反例是时钟偏低的一侧（3RME/79YR/NH8A 仪式兽实打是估值的 1.5–1.7 倍，Q8XR 同族/恶魔 1.08/1.30），条目已有「低估」一段，没改。
+- **5LRZ F42 以「58 血打精英会死」改线，F44 满血又改回精英**（boss 前 3 层 98% 进机甲骑士，−66）：elite-threshold 已写「boss 前 ≤5 层的精英即使满血也可能掉 70+」，加 5LRZ。
+
+### 新增（0）
+没有新增条目。考虑过：
+- 音乐盒不在求解器里（YVYZ）：M 批 617e504 已建模。
+- 知识恶魔撕裂时的瓦解（79YR）：M 批 556a99c 已修，攻略文字同步。
+- 二幕 0 精英路线：两边都在死，A8 数写进 act2-opening。
+- 女王 T1 目标：并进 queen-plan（改用 {QUEEN_AMALGAM}），另给 Jev 加提示。
+
+### 更新（76）
+- **加证据（58）：**
+  - boss：beast-clock 13→17（3RME、79YR、86C3、NH8A）、kin-priest-focus 12→13（Q8XR）、kin-scaling 22→23（Q8XR）、lag-entry 16→17（5LRZ）、giant-explode 25→27（2WRU、5PHF）、giant-gun 12→14（2WRU、5PHF；只写压力炮回合没格挡那半句）、giant-deck 22→23（2WRU）、insatiable-escape 15→16（NH8A）、insatiable-entry 28→30（NH8A、UNRL）、insatiable-clock 25→27（NH8A、UNRL）、crab-entry 32→35、crab-dps 35→38（都是 3RME、RRMY、YVYZ）、crab-kill-order 15→17（3RME、RRMY；YVYZ 进反例，反例 3→4）、kd-dps 27→29（79YR、86C3）、kd-single-target 7→8（86C3）、kd-block 6→8（79YR、86C3）、queen-hp 8→10、queen-prep 8→10（都是 5LRZ、Q8XR）、queen-plan 12→15（5LRZ、Q8XR、RBJ4）、aeon-clock 12→13、aeon-wither 8→9（都是 YVYZ）。
+  - 精英：effigy-cost 15→17（3RME、Q8XR）、entomancer 18→19（86C3）、entomancer-cost 14→17（3RME、86C3、UNRL）、decimillipede 26→28（86C3、Q8XR）、prism 21→23（5LRZ、YVYZ）、terror-eel 28→29（5PHF）、gardener 20→22（UNRL、YVYZ）、skulking-colony 20→23（2WRU、5LRZ、UNRL）、phrog 8→11（3RME、NH8A、Q8XR）、byrdonis 11→15（3RME、79YR、86C3、Q8XR）、mecha-knight 13→14（5LRZ）、soul-nexus 4→5（Q8XR）。
+  - 走廊：beetle 33→34（RRMY）、bowlbugs 27→28（NH8A）、hunter-killer 33→34（79YR）、spiny-toad 18→19（RRMY）、myte 7→8（3RME）、ovicopter 10→11（5LRZ）、hopper 20→21（79YR）、frog-knight 7→8（YVYZ）、punch-construct 3→5（Q8XR、YVYZ）。
+  - 幕、路线、牌组、火堆：act1-costs 19→20（5PHF）、act2-opening 37→40（79YR、NH8A、RRMY）、act3-hallways 15→16（YVYZ）、deck-clock 43→45（86C3、NH8A）、deck-block-floor 14→15（5PHF）、deck-bloat 5→6（YVYZ）、deck-remove 28→30（86C3、UNRL）、route-no-chains 21→23（NH8A、YVYZ）、route-entry-hp 57→59（79YR、NH8A）、route-forced-elite-prep 16→17（5PHF）、elite-threshold 31→32（5LRZ）、elite-no-double 8→12（3RME、5LRZ、Q8XR、YVYZ；条目改写后的证据）、rest-smith-threshold 35→36（2WRU）。
+  - 遗物、事件：relic-pantograph 3→4（3RME）、event-slippery-bridge 8→9（Q8XR）、event-tablet-of-truth 2→3（86C3）。
+  - 原有的喝药/留药分句一字未改；新证据只写非药水的部分。
+- **只改数字/文字（18）：** vantom-entry、lag-sleep、fysh-beckon、fysh-damage、louse、tunneler、chomper、deck-strength-aoe、relic-toasty-mittens、relic-nutritious-soup、neow-growth、route-shops、elite-need-one、a9-damage；药水 crab-potions、potion-save-for-boss、potion-empty-slots（句内数字），potion-code-discard（代码事实）。
+- **和数据冲突、改成数据版本的说法：**
+  - phrog「A8 实测掉约 45–50%」→ A8 20 场全胜、中位 −16.5、p75 −26。
+  - effigy-cost「A8 实测掉 40–70% 最大生命（路线事实写的 37% 严重低估）」→ A8 27 场死 4、赢局中位 −30（约 37%）、p75 −36.5；「严重低估」一并删掉。
+  - gardener「实测掉 30–55」→ A8 22 场死 1、赢局中位 −13、p75 −25。
+  - deck-strength-aoe「差在 AOE（81% vs 47%）」→ A8 152 场 AOE 张数 1.8/1.9，不分胜负。
+  - elite-no-double「一幕最多主动打 1 只精英」→ 打 2–3 只的 A8 22 局 15/6、A9 7 局 4/1，不比 1 只差；保留「三层内连打两只」和三幕那句。
+  - beast-clock「一幕至少要一张永久力量牌」→ 分水岭的数据（有 15/15，没有 8/11）。
+  - queen-hp「实际输出只有估算的 0.7–0.75，选牌时把缺口放大」→ 现行时钟估值不再偏高。
+  - queen-plan「A8 5 场全输」→ {QUEEN_AMALGAM}（A8 RBJ4 赢过）。
+  - act1-costs「一幕最多主动打 1 只精英」→ 指向 elite-need-one、elite-no-double。
+- 切片压缩：逐局细节（进场百分比、个别回合）只留在上表；条目里只写 A8 的计数和最关键的一两局。
+
+### 退役（0）
+没有退役、合并。active 198，离测试上限 200 还有 2 条。
+
+### 知识库其他部分（Dai 2026-09-29 的规则；行号按 exp-update cf73b66）
+- 攻略 `src/knowledge/ironclad-guide.md`：
+  - :9 删牌：「删牌优先打击，其次防御」后补「能删的诅咒（受伤、孢子心灵）排在打击前（UNRL）；带打击木偶时打击不一定是最差的牌（86C3）」。n=2（加 3RME 孢子心灵同类）。
+  - :56 沙虫：旧「沙坑 ≤2 时先打逃离再输出」（和经验 insatiable-escape n=15「沙坑 ≤2 再逃是错的」冲突）→ 先比沙坑和 HP 两条死线；沙坑先到时每张逃离立刻打、不等 ≤2；HP 先到时逃离不加回合，打格挡/伤害（{SANDPIT_DEATHS}；NH8A）。
+  - :58、:114 知识恶魔：「只有已打出撕裂时才选瓦解」→ 加「而且剩余 HP 扛得住瓦解叠加」（79YR，n=1；代码 M 批已按这个修）。
+  - :60、:131、:132 女王：旧「前两回合…之后攻击全给聚合体」「证据：4 场女王胜局都在 T4–T8 先打死聚合体；A8 5 场输局聚合体都活过 T5」→ 单体伤害从第 1 回合起就给聚合体、{QUEEN_AMALGAM}，并写明 5LRZ、Q8XR T1 打进女王都输。n=17 场。
+  - :73 花园幽灵鳗：旧「每回合首次受伤得格挡，先小打再重击」和手册（21TK）相反 → 最高伤害的牌先打、集中一只。n=1（沿用手册）。
+  - :72 胧光怪：「其余 30 场赢 27」→「31 场赢 28」（Q8XR 每回合都有伤害进胧光怪，−3）。
+- 手册 `src/knowledge/ds-handbook.md`：
+  - :3 版本 2026-09-30。
+  - :16 「一幕 boss 统计：有永久力量的赢局 50%、输局 27%」→ A8 152 场 62%/32%（0 张 43/70、≥1 张 69/82）。
+  - :17 「AOE 至少 2 张…一幕赢局 81% 有 AOE，输局只有 47%」→ AOE 用于多体战；A8 一幕 boss 赢局/输局 AOE 张数 1.8/1.9，旧统计不成立。n=152 场。
+  - :71 巨兽升级「A8 赢局 1.2、输局 2.3」→ 30 场 1.2/2.1。
+  - :75 感染棱柱补 A8 17 场死 4、29/38。
+  - :81 沙虫补「HP 也是一条死线…（{SANDPIT_DEATHS}）」。
+- Jev 提示 `src/knowledge/jev-hints.json`：
+  - sandpit-zero：旧「…play a 1-cost Escape unless the boss dies first」→「Play Escape when the Sandpit would end me before my HP does.」
+  - sandpit-no-race 删掉（「Play Frantic Escape before extra damage」和数据冲突），换成 sandpit-hp-first：「When my HP runs out before the Sandpit, Escapes only waste energy: block or deal damage instead ({SANDPIT_DEATHS_EN}).」证据 NH8A、VNWR、XMK1、UNRL；数据 27 场输局 14 场死在 HP 上。
+  - 新增 queen-amalgam-first（聚合体活着时）：「Queen fight: single-target damage goes into the Torch Head Amalgam, turns 1-2 included; the Queen only takes AoE ({QUEEN_AMALGAM_EN}).」证据 BDAK、H5MZ、YN4E、RBJ4（赢，先杀聚合体）、5LRZ、Q8XR（T1 打女王，输）；n=17 场（赢的 5 场都先打死聚合体；T1–T2 多进女王 1/6、多进聚合体 4/11）。
+  - 提示共 27 条（上限 30）。
+- boss 笔记：
+  - `src/project/run-journal.ts:182` THE_INSATIABLE：旧「打不死它就尽早打狂乱逃离」→ 先比两条死线（{SANDPIT_DEATHS}）。
+  - `src/project/run-journal.ts:185` QUEEN：旧「4 场胜局都在 T4–T8…A8 5 场输局…」→ 单体伤害从第 1 回合起给聚合体（{QUEEN_AMALGAM}）。
+  - `src/strategy/boss-clock.ts:71` THE_INSATIABLE note 补「逃离只在沙坑先到时有用（{SANDPIT_DEATHS_EN}）」；`:77` QUEEN note 同上（{QUEEN_AMALGAM_EN}）。
+  - 帝王蟹、族母、巨兽的笔记已是占位符，数字随数据走，没动。
+- 卡牌估值 `src/strategy/card-value.ts`（outcome-stats A8 161 局；拿了 vs 给了没拿，过本幕 boss）：
+  - 规则：两边 n≥15、差距 ≥1.5 个标准误、平均终层同向、没有 n≥15 的反向比较。
+  - | 牌 | 旧 | 新 | 依据 |
+    | --- | --- | --- | --- |
+    | ANGER 愤怒 | 50 | 58 | 一幕 0.88（16）vs 0.67（57），z=2.05，终层 34.5 vs 26.4 |
+    | FEEL_NO_PAIN 无惧疼痛 | 54 | 46 | 一幕 0.65（17）vs 0.87（15），z=−1.52，终层 28.0 vs 31.0；二幕 0.08（12）vs 0.43（7）同向；≥3 张消耗牌时 +10 不变 |
+    | SWORD_BOOMERANG 飞剑回旋镖 | 46 | 54 | 一幕 0.80（45）vs 0.63（43），z=1.79，终层 30.9 vs 25.5；二幕 0.12（8）vs 0.31（39）拿了的一边 n<15 |
+  - 没改：THUNDERCLAP 40（一幕 z=−1.64 但已在跳过线下；二幕 0.31（13）vs 0.14（36）反向）；已在上次按同一批数据改过的 TAUNT、MOLTEN_FIST、TWIN_STRIKE、FIGHT_ME；方向不一致的 SETUP_STRIKE、TRUE_GRIT、BLOOD_WALL；差距不到 1.5 个标准误的 RUPTURE（z=0.99，终层反向）、EVIL_EYE（0.79）、EXPECT_A_FIGHT（−0.89）、BLUDGEON（−0.90）、HOWL_FROM_BEYOND（−0.77）、HEADBUTT（A8 −0.59；A9 18 vs 9 z=−2.54，一边 n<15）。
+  - SWORD_BOOMERANG 算不算螃蟹的群伤（AOE 集合 +12）仍是分类问题，没动。
+- 删掉的：
+  - 攻略「沙坑 ≤2 时先打逃离再输出」、Jev 提示「Play Frantic Escape before extra damage」、boss 笔记「打不死它就尽早打狂乱逃离」（A8 输局 17 场 10 场死在 HP 上）。
+  - 攻略、boss 笔记、经验里的「4 场女王胜局…A8 5 场输局」（RBJ4 A8 赢；现为数据填）。
+  - 攻略「先小打再重击」（和手册、21TK 相反）。
+  - 手册「一幕赢局 81% 有 AOE」「永久力量 50%/27%」（41 局低进阶的统计，A8 152 场不成立/已变）。
+  - 经验里「异蛙 45–50%」「雕像 40–70%、路线事实 37% 严重低估」「幽灵鳗 30–55」「一幕最多主动打 1 只精英」「女王实际输出只有估算的 0.7–0.75」。
+- 没有数据覆盖，保留：
+  - 攻略 §2–§4、§8、§9 低进阶招式记录；巨斧机器人、造门者；实验体（A8 3 场）。
+  - 仪式兽、墨影幻灵、同族、族母、异鱼的打法段落（本批数据和它们一致）。
+  - 手册其余构筑、商店、事件、药水、战斗取舍条目；知识恶魔诅咒顺序（代码处理）。
+  - 帝王蟹击杀顺序：知识文字现在全是占位符，数字对；rollout 的排序和提示不一致（RRMY、3RME）不在本次范围。
+
+### 需要 Dai 定
+1. elite-no-double 改成了数据版本（A8 打 2–3 只的 22 局过二幕 boss 6/22，1 只 15/89）。这是观察数据：牌组强才敢多打。要不要在路线评分里反映（现在 route 事实按精英成本扣分）？
+2. 删牌估值：run plan 目标 +40 让打击/防御排在能删的诅咒前（UNRL、3RME），带打击木偶时打击仍排第一（86C3）。fix-queue 标的是估值问题。
+3. 螃蟹击杀顺序：数据（火箭先死 12 场赢 9，其余 47 场赢 9）支持先打火箭，rollout 的击杀顺序比较在饱和/降级时多给「碾碎爪 > 火箭」，两局都平摊输。推演排序是否改。
+4. rollout 饱和时「先比死亡数、再比本回合少掉血」挑 0 伤的格挡线：UNRL 沙虫 T2/T7、2WRU 巨兽 T2/T5（满血时就饱和）、86C3 恶魔 T7/T11/T13/T15、3RME 螃蟹 T1 岿然不动。b2080fb 的设计。
+5. HP 护栏和低信心「占优」换线换成 rollout 总账更差的线：5LRZ（+3.6、+4.5、+0.3）、86C3（+12.3、+3.0）、NH8A（+4.5）。
+6. 卡牌：飞剑回旋镖是否算螃蟹群伤；HEADBUTT（A9 一幕 0.33 vs 0.78，没拿的一边 n=9）等拿不准的牌。
+7. 药水：本批 11 局都把点名给 boss 的药在前面喝掉，K 批后进 boss 的药更少（二幕 boss 进场 0.7 瓶，n=9）。条目只改了数，方向没动。
+
+### 给 Dai 的策略证据（只列证据，不是规则）
+- 二幕 boss：A8 本批 9 场，≥75% 进场 7 场赢 3，输的 4 场都是输出不够（RRMY 25.9、3RME 22.1、UNRL 33.4 差 28 血、86C3 13.6）；三局走二幕 0 精英路线（RRMY、NH8A、79YR），进 boss 67–76%，全输。A8 二幕 0 精英/1 只精英过二幕 boss 11/56、10/49。
+- 永久力量：A8 一幕 boss 152 场，0 张 43/70 过、≥1 张 69/82；仪式兽有 15/15、没有 8/11；知识恶魔 ≥75% 进场有 9/12、没有 0/1。AOE 张数不分胜负（1.8/1.9）。
+- 女王：赢的 5 场都先打死聚合体；A8 两场 T1 把爆发打进女王（58、87）都输。
+- 沙虫：输局死在 HP 上的比被沙坑吞掉的多（A8 10 对 4，另 3 场同时）。
+- 巨兽：A8 30 场，T10 前击杀 14/17；输的三场 T10 前击杀都是击杀时 HP 不够（6189 26/36、5PHF 25/39、7048 9/39）；2WRU 19.7/回合拖到 T15。
+- 一幕精英成本（A8）：异蛙 16.5/26、幽灵鳗 13/25、珊瑚群 23/35.5、骇鳗 30/39.5、雕像 30/36.5、异鸟 33/38.5（中位/p75，赢局）。
+- 一幕多打精英：A8 打 2–3 只的 22 局过一幕 boss 15、二幕 6；Q8XR、3RME 打 3 只（之间都有火堆）。
+
+### 代码问题（不给 DS）
+按复盘写的状态，修复进度以 `notes/fix-queue.md` 为准：
+- M 批（v3 950cbf5）已修：知识恶魔撕裂时瓦解绕过 HP 闸（556a99c，79YR）、音乐盒建模（617e504，YVYZ）、「ending now kills」写成 Burn（91bce31，3RME/NH8A/YVYZ）、治疗写成「hp --5」（5e19d7a）、「mod 判死 solver 判活」说明（8f31fa8，86C3）、商店回答两段 JSON（f26ae1a，79YR）、run plan 空回答（fa46f6c，79YR）、删牌界面 +40 拆开（16559ba）、guide 填数按天冻结（8546fde，缓存）。
+- L 批已修：白兽雕像「先喝再走」（2f6ae4c，5LRZ）、丢药题占位符（2adcb92）、单选多键（7eb1de7，RRMY）、沙坑致死说明（353e31b，UNRL）。
+- 没修（设计问题，给 Dai）：删牌 +40 的排序（UNRL、3RME、86C3）；rollout 饱和排序（UNRL、2WRU、86C3、3RME）；HP 护栏/低信心占优换线（5LRZ、86C3、NH8A）；螃蟹击杀顺序比较在饱和时的取舍（RRMY、3RME）。
+- fix-queue 里「experience.json:389 巨兽旧数字」本次已处理（giant-explode 改成占位符）。
+
+### 测试
+- exp-update 改前（c52587c）：69 个文件 1221 个用例全过。
+- exp-update 改后（cf73b66）：tsc 退出 0；vitest 74 个文件 1234 个用例全过，退出 0。
+  - 新测试：tests/knowledge-check-a8w-builder、-facts、-guides、-cards、-experience。
+  - 改了读旧文字的断言：knowledge-text 的巨兽升级数（「A8 赢局平均 1.2 张升级、输局 2.3 张」→「A8 30 场…输局 2.1 张」）。
+- 合入前又 `git merge --no-edit v3`（950cbf5，M 批）：只在 boss-damage.json 上冲突，用新 builder 从日志重建（554 场 boss 战）后提交 8b24187；tsc 退出 0，vitest 75 个文件 1261 个用例全过。
+
+### 切片大小
+- 样本：新抽一批，A8、A9 各 20 个状态 × 6 种界面，共 240 个。固定种子 20260930，只取 86C3（18:47:45Z）前已结束的局，A8 含本批 11 局。
+- 同一批状态分别用改前（c52587c）和改后（cf73b66）跑 `tools/knowledge-slice.ts`。数字是中位 / 最大（字）：
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 4.00k / 5.97k | 4.28k / 6.42k | 3.97k / 6.30k | 4.20k / 6.76k |
+| 奖励 | 4.58k / 6.45k | 4.83k / 6.91k | 4.51k / 6.49k | 4.75k / 6.95k |
+| 地图 | 6.02k / 6.72k | 6.43k / 7.17k | 5.90k / 6.72k | 6.27k / 7.17k |
+| 事件 | 5.81k / 6.79k | 6.24k / 7.16k | 4.71k / 6.51k | 4.87k / 6.92k |
+| 火堆 | 3.96k / 5.89k | 4.19k / 6.29k | 3.57k / 5.93k | 3.77k / 6.34k |
+| 商店 | 5.50k / 6.22k | 5.78k / 6.62k | 5.66k / 6.07k | 5.97k / 6.48k |
+
+- 初稿：中位涨 0.6–1.1k，单个切片最多涨 1.3k。主要来自一幕精英、二幕走廊条目加的 A8 计数（每个一幕切片带 6 只精英）、general:deck/route/elite 的改写，和占位符展开（巨兽的击杀记录约 +130）。
+- 压缩后：每种界面中位涨 0.20–0.42k，单个切片最多涨 0.54k，最大 7.2k（63CP A8 F22 地图，25 条经验，改前 6.7k）。比前几次（中位 +0.02–0.15k）多：这次改的是 A8 的数（11 局 + 重算）和数据填的记录，逐局细节已压到上表。
+- Jev 每场战斗看到的敌人条目仍 ≤4 条：没有新增敌人条目；条目文字现在也会填数。
+
+### 合入 v3（在 `ops/v3-merge.lock` 锁里，脚本 scratchpad/exp9/merge-v3-exp9.sh）
+- 开工时 exp-update 快进到 c52587c；做完时 v3 已到 950cbf5（M 批 + abb7389「Refresh knowledge data」）。先在 exp-update 上 `git merge --no-edit v3`：只在 boss-damage.json 上冲突，取 v3 一侧后用新 builder 从日志重建（12 个 boss、554 场）并提交 8b24187；exp-update 上 tsc 退出 0，vitest 75 个文件 1261 个用例全过。
+- 锁里：知识构建没在跑；v3 工作区没有未提交的知识数据，跳过「Refresh knowledge data」。
+- 合入前：v3 950cbf5 vitest 70 个文件 1248 个用例全过。
+- `git merge --no-edit exp-update` 是快进，v3 现在是 8b24187。
+- 合入后：tsc 退出 0；vitest 75 个文件 1261 个用例全过，退出 0。
+- 在 v3 上核对了填好的文字：女王 boss 笔记和 queen-amalgam-first 填出「17 场…赢的 5 场都先打死聚合体（T3–T8）…T1–T2 多进女王 1/6」，沙虫笔记和 sandpit-hp-first 填出「27 场输局：HP 14、沙坑 9、同时 4」。
+- 攻略/手册的模板变了（新 hash），M 批 8546fde 的按天冻结会在下一次启动时重新填一次。
+- 没有停对局，没碰 ops/STOP。
