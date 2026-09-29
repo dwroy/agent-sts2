@@ -162,7 +162,17 @@ export interface ScreenMemory {
    * An event option chosen with a potion discarded first (every slot full, the option gives a potion; event.ts):
    * the discard is played, then this option on the same event page.
    */
-  eventAfterDiscard?: { runId: string; eventId: string; floor: number | null; option: number; title: string; at: number };
+  eventAfterDiscard?: {
+    runId: string;
+    eventId: string;
+    floor: number | null;
+    option: number;
+    title: string;
+    at: number;
+    /** The potion slot just discarded (its landing is waited for), and the slots still to discard before the option. */
+    slot?: number;
+    more?: number[];
+  };
   /** The enchantments the last event's options named ("迅速2: …"), for the enchant screen that follows. */
   eventEnchants?: { runId: string; floor: number | null; lines: string[] };
   /** DeepSeek's one-shot plan for the current shop visit (BUILD_ONESHOT; screens/shop.ts). */

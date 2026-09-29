@@ -12,7 +12,10 @@ import { describe, expect, it } from "vitest";
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
-import { logged, loggedKnowledge } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
+import { planEvent, potionSlotsNeeded } from "../src/screens/event.js";
+import type { AnswerSet } from "../src/jev/answers.js";
+import type { AskDecision } from "../src/project/types.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
 import { boardRolloutInput, pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
 import { parseGameState } from "../src/mod/schema.js";
@@ -435,5 +438,49 @@ describe("6. End-of-turn ethereal exhausts: Feel No Pain's Block triggers Jugger
     const embrace = run({ DARK_EMBRACE_POWER: 1 }).perTurn[0]!;
     expect(embrace.dmg.mean).toBeLessThan(30);
     expect(embrace.dmg.min).toBe(24);
+  });
+});
+
+describe("7. A full belt at an event: \"discard, then take it\" in Jev's mode too; enough slots for several potions (YQL8D59999AX F28)", () => {
+  type Raw = Record<string, unknown>;
+  const keysOf = (decision: AskDecision) => {
+    const question = (decision.jevView?.questions ?? decision.questions)["pick"]!;
+    return Object.keys(question.type === "choice" ? question.criteria ?? {} : {}).sort();
+  };
+  const pick = (key: string): AnswerSet => ({ pick: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
+
+  it("the slots an option needs: its potions less the slots it adds and the empty ones, at most the belt", () => {
+    const belt = (occupied: boolean[]) => ({ potions: occupied.map((o, index) => ({ index, occupied: o })) });
+    expect(potionSlotsNeeded("获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。", belt([true, true]))).toBe(1);
+    expect(potionSlotsNeeded("获得[blue]3[/blue]瓶[gold]污浊药水[/gold]。", belt([true, true]))).toBe(2);
+    expect(potionSlotsNeeded("获得[blue]3[/blue]瓶[gold]污浊药水[/gold]。", belt([true, false, true]))).toBe(2);
+    expect(potionSlotsNeeded("获得[blue]1[/blue]个药水栏位并获得[blue]2[/blue]瓶随机[gold]药水[/gold]。", belt([true, true]))).toBe(1);
+    expect(potionSlotsNeeded("获得[blue]1[/blue]瓶随机[gold]罕见药水[/gold]。", belt([true, false]))).toBe(0);
+    expect(potionSlotsNeeded("失去[red]13[/red]点最大生命。", belt([true, true]))).toBe(0);
+  });
+
+  it("Jev's question (no DeepSeek decider) has the discard options too", () => {
+    const fx = logged("yql8-f28-potion-courier");
+    const decision = planEvent(loggedEnv(fx)) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    expect(keysOf(decision)).toEqual(["o0", "o0:d0", "o0:d0+1", "o0:d1", "o1", "o1:d0", "o1:d1"]);
+  });
+
+  it("three potions into a full two-slot belt: \"discard both\" discards one, then the other, then takes the option", () => {
+    const fx = logged("yql8-f28-potion-courier");
+    const env = { ...loggedEnv(fx), buildDecider: "deepseek" as const };
+    const decision = planEvent(env) as AskDecision;
+    const resolved = decision.resolve(pick("o0:d0+1"));
+    expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 0 });
+    resolved.apply?.();
+    const potions = (fx.state["run"] as Raw)["potions"] as Raw[];
+    potions[0] = { index: 0, occupied: false, can_discard: false };
+    const second = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory });
+    expect(second).toMatchObject({ kind: "act", label: "event/discard-more", intent: { action: "discard_potion", option_index: 1 } });
+    // Not landed yet: wait.
+    expect(planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory })).toBeNull();
+    potions[1] = { index: 1, occupied: false, can_discard: false };
+    const take = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory });
+    expect(take).toMatchObject({ kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: 0 } });
   });
 });

@@ -300,7 +300,8 @@ describe("5. A full potion belt at an event that gives a potion: \"discard one, 
     expect(decision.kind).toBe("ask");
     const question = decision.questions["pick"]!;
     const criteria = question.type === "choice" ? question.criteria ?? {} : {};
-    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:d0", "o0:d1", "o1", "o1:d0", "o1:d1"]);
+    // 拿走这批药水 gives 3 into a full 2-slot belt: either potion or both (batch F); 洗劫 gives 1: either.
+    expect(Object.keys(criteria).sort()).toEqual(["o0", "o0:d0", "o0:d0+1", "o0:d1", "o1", "o1:d0", "o1:d1"]);
     expect(JSON.parse(String(criteria["o1"]))).toMatchObject({ potion_slots: expect.stringMatching(/lost/) });
     expect(JSON.parse(String(criteria["o1:d1"]))).toMatchObject({ option: "洗劫", discard_first: expect.stringMatching(/攻击药水/) });
     // DeepSeek takes "discard the Attack Potion, then 洗劫": the discard now, the option next.
@@ -311,11 +312,11 @@ describe("5. A full potion belt at an event that gives a potion: \"discard one, 
     potions[1] = { index: 1, occupied: false, can_discard: false };
     const next = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory });
     expect(next).toMatchObject({ kind: "act", label: "event/after-discard", intent: { action: "choose_event_option", option_index: 1 } });
-    // Done once: the next frame asks as usual (no free-slot options: the belt has room).
+    // Done once: the next frame asks as usual (洗劫's one potion fits; 拿走这批药水's 3 still need a second slot).
     const again = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek", screenMemory: env.screenMemory }) as AskDecision;
     expect(again.kind).toBe("ask");
     const againQ = again.questions["pick"]!;
-    expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o1"]);
+    expect(Object.keys(againQ.type === "choice" ? againQ.criteria ?? {} : {}).sort()).toEqual(["o0", "o0:d0", "o1"]);
   });
 });
 
