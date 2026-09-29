@@ -704,3 +704,43 @@ describe("enemy Vigor (XLJQ6FPQAU7N F7: Thrash's Vigor 6 made Crash 18 + 6)", ()
     expect(lossOn(line, 3)).toBe(24);
   });
 });
+
+describe("a turn limit ends the rollout unwon (Battleworn Dummy, SK1USHSB1U7U F43)", () => {
+  const NOTHING: EnemyTable = { moves: { NOTHING_MOVE: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { NOTHING_MOVE: { NOTHING_MOVE: 1 } } };
+  const run = (hp: number, limit: number | undefined) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      enemies: [{ index: 0, name: "Dummy", hp, maxHp: 150, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...(limit ? { timeLimit: limit } : {}) }],
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "BATTLE_FRIEND_V2", move: "NOTHING_MOVE", strength: 0, powers: limit ? { BATTLEWORN_DUMMY_TIME_LIMIT_POWER: limit } : {} }],
+      tables: { BATTLE_FRIEND_V2: NOTHING },
+    }).lines[0]!;
+  };
+
+  it("18 a turn into 150 HP with 3 turns left: out of time on turn 3, never won", () => {
+    const line = run(150, 3);
+    expect(line.wins).toBe(0);
+    expect(line.winProb).toBe(0);
+    expect(line.timeUps).toBe(line.samples);
+    expect(line.turnsToWin).toBe(3);
+    // Nothing is simulated past the limit.
+    expect(line.perTurn.find((t) => t.turn === 4)!.fighting).toBe(0);
+    // With 2 turns left it ends a turn sooner; without a limit the harmless dummy reads as a win.
+    expect(run(150, 2).turnsToWin).toBe(2);
+    expect(run(150, undefined).winProb).toBeGreaterThan(0.5);
+  });
+
+  it("a dummy the deck can finish in time is a win", () => {
+    const line = run(50, 3);
+    expect(line.wins).toBe(line.samples);
+    expect(line.timeUps).toBeUndefined();
+  });
+});

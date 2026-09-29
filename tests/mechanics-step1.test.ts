@@ -341,3 +341,26 @@ describe("Terror Eel's Vigor is modelled: our hits are not cut to 80% (XLJQ6FPQA
     expect(Math.max(...plans.map((plan) => plan.outcome.damageDealt))).toBe(18);
   });
 });
+
+describe("Battleworn Dummy's turn limit (SK1USHSB1U7U F43: 144 of 150 in its 3 turns)", () => {
+  const dummy = (limit: number) => ({ index: 0, enemy_id: "BATTLE_FRIEND_V2", name: "战斗好伙伴V2.0", current_hp: 150, max_hp: 150, block: 0, is_alive: true, move_id: "NOTHING_MOVE",
+    powers: [{ power_id: "BATTLEWORN_DUMMY_TIME_LIMIT_POWER", amount: limit }], intents: [] });
+
+  it("the power is modelled (no 80% cut) and gives the solver the turns left", () => {
+    const [sim] = enemySims({ enemies: [dummy(3)] });
+    expect(sim!.unmodelled).toBe(false);
+    expect(sim!.timeLimit).toBe(3);
+    const plans = solveTurn({ hand: [strike(0), strike(1), strike(2)], player: player(), enemies: [sim!], fightKind: "monster", turn: 1 }).plans;
+    expect(Math.max(...plans.map((plan) => plan.outcome.damageDealt))).toBe(18);
+  });
+
+  it("on its last turn setup is worth nothing: two Strikes over Inflame + Strike", () => {
+    const inflame = card(0, "INFLAME", { type: "Power", target: "self", validTargets: [], strength: 2, flatValue: 10 });
+    const best = (limit: number) => {
+      const [sim] = enemySims({ enemies: [dummy(limit)] });
+      return solveTurn({ hand: [inflame, strike(1), strike(2)], player: player({ energy: 2 }), enemies: [sim!], fightKind: "monster", turn: 4 - limit }).plans[0]!.steps.map((step) => step.cardId);
+    };
+    expect(best(3)).toContain("INFLAME");
+    expect(best(1)).toEqual(["STRIKE_IRONCLAD", "STRIKE_IRONCLAD"]);
+  });
+});

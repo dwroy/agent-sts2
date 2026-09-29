@@ -46,7 +46,7 @@ import { fileURLToPath } from "node:url";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -483,6 +483,8 @@ export interface LineEstimate {
   winProb: number;
   /** Samples (of `samples`) in which the fight was won within the horizon. */
   wins: number;
+  /** Samples in which a time limit ended the fight unwon (the Battleworn Dummy); absent when none. */
+  timeUps?: number;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -516,7 +518,7 @@ export function turnSpreads(trajectories: TurnRecord[][], horizon: number): Turn
   const out: TurnSpread[] = [];
   const stats = (xs: number[]) => ({ mean: xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length), min: xs.length ? Math.min(...xs) : 0, max: xs.length ? Math.max(...xs) : 0 });
   for (let t = 1; t < horizon; t += 1) {
-    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died));
+    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died || r.timeUp));
     out.push({
       turn: t + 1,
       fighting: fighting.length,
@@ -726,6 +728,8 @@ export interface TurnRecord {
   snap: Snapshot;
   won: boolean;
   died: boolean;
+  /** A time limit ended the fight at this turn's end without a win (the Battleworn Dummy's 3 turns). */
+  timeUp?: boolean;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1152,14 +1156,21 @@ function simulate(
   const drink = (line: Plan) => {
     for (const step of line.steps) if (isPotion(step)) held = held.filter((card) => card.cardId !== step.cardId);
   };
+  // A time limit (Battleworn Dummy: turns left, this one included) ends the fight after its last turn.
+  const limit = turnsLeftOf(s);
+  const timeUp = (h: number) => {
+    const last = records[records.length - 1]!;
+    if (limit !== null && h + 1 >= limit && !last.won && !last.died) last.timeUp = true;
+  };
   // Turn 0: the candidate line as the solver scored it.
   records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  timeUp(0);
   drink(plan);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
     const last = records[records.length - 1]!;
-    if (last.won || last.died) break;
+    if (last.won || last.died || last.timeUp) break;
     const hand: CardModel[] = [];
     const handBase: CardModel[] = [];
     const targets = enemies.filter((e) => e.alive).map((e) => e.index);
@@ -1181,6 +1192,7 @@ function simulate(
         weak: e.weak,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
@@ -1237,6 +1249,7 @@ function simulate(
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    timeUp(h);
     drink(best);
   }
   return records;
@@ -1267,6 +1280,11 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
     if (r.won) {
       loss += r.loss;
       return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
+    }
+    // Out of time (Battleworn Dummy): the fight is over, not won, and costs nothing more.
+    if (r.timeUp) {
+      loss += r.loss;
+      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0 };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -1536,6 +1554,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
           return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
+    const timeUps = kept.filter((records) => records.slice(0, horizon).some((r) => r.timeUp)).length;
     const leaderIndices = order?.leader?.indices;
     const leaderLeft = leaderIndices
       ? kept.map((records) => {
@@ -1565,6 +1584,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       turnsToDeath: dead.length > 0 ? mean(dead.map((v) => v.turns)) : null,
       winProb: win,
       wins,
+      timeUps,
       value: -loss - DEATH_HP * (1 - win),
       valueModelTerminal: model === null ? null : -model.hpLoss - DEATH_HP * (1 - model.winProb),
       modelForecast: model,
@@ -1631,6 +1651,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       turnsToDeath: best.turnsToDeath,
       winProb: best.winProb,
       wins: best.wins,
+      ...(best.timeUps > 0 ? { timeUps: best.timeUps } : {}),
       value: best.value,
       valueModelTerminal: best.valueModelTerminal,
       modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: best.modelForecast },
