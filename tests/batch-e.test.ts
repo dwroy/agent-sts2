@@ -15,9 +15,9 @@ import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
 import type { AskDecision } from "../src/project/types.js";
 
-import { planCombatTurn, enemySims } from "../src/screens/combat-plan.js";
+import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
+import { killOrders, rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -242,5 +242,38 @@ describe("3. A card choice mid-turn pauses the chosen line; back in combat it go
     back.state["turn"] = Number(back.state["turn"]) + 1;
     noteScreenChange(memory, parseGameState(back.state));
     expect(memory.combatPlan).toBeNull();
+  });
+});
+
+describe("4. Same-named enemies with different ids are told apart in options and kill orders (KYC0RYEN0NVW F28)", () => {
+  it("distinctNames: the id part they do not share; the board order for the same id; a unique name as it is", () => {
+    expect(distinctNames([
+      { name: "残杀千足虫", id: "DECIMILLIPEDE_SEGMENT_FRONT" },
+      { name: "残杀千足虫", id: "DECIMILLIPEDE_SEGMENT_MIDDLE" },
+      { name: "残杀千足虫", id: "DECIMILLIPEDE_SEGMENT_BACK" },
+    ])).toEqual(["残杀千足虫 (FRONT)", "残杀千足虫 (MIDDLE)", "残杀千足虫 (BACK)"]);
+    expect(distinctNames([{ name: "Louse", id: "LOUSE" }, { name: "Louse", id: "LOUSE" }, { name: "Jaw Worm", id: "JAW_WORM" }])).toEqual(["Louse #1", "Louse #2", "Jaw Worm"]);
+  });
+
+  it("the logged T2 board: every option reads differently, the enemy list uses the same names, six distinct kill orders", () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("kyc0-f28-t2-decimillipede");
+    const combat = combatOf(fx);
+    const sims = enemySims(combat);
+    expect(sims.map((enemy) => enemy.name)).toEqual(["残杀千足虫 (FRONT)", "残杀千足虫 (MIDDLE)", "残杀千足虫 (BACK)"]);
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const question = decision.questions["plan"]!;
+    const lines = Object.entries(question.type === "choice" ? question.criteria ?? {} : {})
+      .filter(([key]) => key.startsWith("plan"))
+      .map(([, text]) => String((JSON.parse(String(text)) as Raw)["plays"]));
+    expect(lines.length).toBeGreaterThan(1);
+    expect(new Set(lines).size).toBe(lines.length);
+    const shown = (decision.state["enemies"] as Raw[]).map((enemy) => enemy["name"]);
+    expect(shown).toEqual(["残杀千足虫 (FRONT)", "残杀千足虫 (MIDDLE)", "残杀千足虫 (BACK)"]);
+    const orders = killOrders(killGroups(combat, sims)).orders.map((order) => order.label);
+    expect(orders).toHaveLength(6);
+    expect(new Set(orders).size).toBe(6);
+    expect(orders).toContain("残杀千足虫 (BACK) > 残杀千足虫 (MIDDLE) > 残杀千足虫 (FRONT)");
   });
 });

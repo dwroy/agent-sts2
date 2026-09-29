@@ -217,9 +217,15 @@ export const targetOptions: { enabled: boolean } = { enabled: true };
  */
 export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[]): KillGroup[] {
   const idOf = new Map<number, string>();
+  const nameOf = new Map<number, string>();
   asArray(combat["enemies"])
     .map(asRecord)
-    .forEach((enemy, fallbackIndex) => idOf.set(numOrNull(enemy["index"]) ?? fallbackIndex, str(enemy["enemy_id"])));
+    .forEach((enemy, fallbackIndex) => {
+      const index = numOrNull(enemy["index"]) ?? fallbackIndex;
+      idOf.set(index, str(enemy["enemy_id"]));
+      // The game's own name (the sims' may carry a "#2" for one of several of this id).
+      if (str(enemy["name"])) nameOf.set(index, str(enemy["name"]));
+    });
   const groups: KillGroup[] = [];
   for (const enemy of enemies) {
     if (enemy.hp <= 0 || enemy.maxHp >= 1_000_000) continue;
@@ -229,8 +235,13 @@ export function killGroups(combat: Record<string, unknown>, enemies: EnemySim[])
     if (group) {
       group.indices.push(enemy.index);
       group.hp += enemy.hp;
-    } else groups.push({ id, name: enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
+    } else groups.push({ id, name: nameOf.get(enemy.index) || enemy.name, indices: [enemy.index], hp: enemy.hp, ...(enemy.illusion ? { illusion: true } : {}) });
   }
+  // Groups (one id each) sharing a game name get the id part that tells them apart (KYC0RYEN0NVW F28: four of
+  // six Decimillipede kill orders read 「残杀千足虫 > 残杀千足虫 > 残杀千足虫」 and were merged into one entry).
+  distinctNames(groups).forEach((name, i) => {
+    groups[i]!.name = name;
+  });
   // A leader: the one group that is not minions when every other group is (MINION_POWER; they leave when the
   // last non-minion dies, the solver's and the rollout's won check): its death ends the fight (The Kin's
   // Priest). The rollout ranks kill orders by its HP left when no order ends the fight (rollout.ts rankOrders).
@@ -489,14 +500,38 @@ export { mantleHpCost };
  * The board's enemies for the solver. `asc`: the run's ascension, for the monster DB's damage in the
  * Imbalanced stun's saved hit (move-model DamageContext); without it the move model's pooled average.
  */
+/**
+ * Names that tell apart enemies sharing one (KYC0RYEN0NVW F28: the Decimillipede's three segments are all
+ * 「残杀千足虫」, so option text and kill orders could not say which): with different ids, the part of the id
+ * the others do not share ("残杀千足虫 (FRONT)"); with the same id, the board order ("Louse #2"). A name no other
+ * item shares is kept as it is.
+ */
+export function distinctNames(items: { name: string; id: string }[]): string[] {
+  return items.map((item) => {
+    const same = items.filter((other) => other.name === item.name);
+    if (same.length < 2) return item.name;
+    const ids = same.map((other) => other.id);
+    if (new Set(ids).size === ids.length && ids.every((id) => id !== "")) {
+      const parts = ids.map((id) => id.split("_"));
+      let common = 0;
+      while (parts.every((p) => p.length > common + 1 && p[common] === parts[0]![common])) common += 1;
+      const tail = item.id.split("_").slice(common).join("_");
+      return `${item.name} (${tail || item.id})`;
+    }
+    return `${item.name} #${same.indexOf(item) + 1}`;
+  });
+}
+
 export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
-  return asArray(combat["enemies"])
+  const living = asArray(combat["enemies"])
     .map(asRecord)
-    .filter((enemy) => enemy["is_alive"] !== false)
+    .filter((enemy) => enemy["is_alive"] !== false);
+  const names = distinctNames(living.map((enemy) => ({ name: str(enemy["name"], str(enemy["enemy_id"])), id: str(enemy["enemy_id"]) })));
+  return living
     .map((enemy, fallbackIndex) => ({
       index: numOrNull(enemy["index"]) ?? fallbackIndex,
-      name: str(enemy["name"], str(enemy["enemy_id"])),
+      name: names[fallbackIndex]!,
       hp: num(enemy["current_hp"]),
       maxHp: num(enemy["max_hp"]),
       block: num(enemy["block"]),
@@ -1923,8 +1958,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     enemies: asArray(combat["enemies"])
       .map(asRecord)
       .filter((enemy) => enemy["is_alive"] !== false)
-      .map((enemy) => ({
-        name: str(enemy["name"]),
+      .map((enemy, i, living) => ({
+        // The names the options use (distinctNames: same-named enemies told apart).
+        name: distinctNames(living.map((other) => ({ name: str(other["name"], str(other["enemy_id"])), id: str(other["enemy_id"]) })))[i]!,
         hp: `${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`,
         block: num(enemy["block"]),
         intents: asArray(enemy["intents"]).map((intent) => `${str(asRecord(intent)["intent_type"])} ${str(asRecord(intent)["label"])}`).join(", "),
