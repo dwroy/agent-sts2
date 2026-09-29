@@ -25,16 +25,17 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
 import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
-import { modelHandCard, type CardModel } from "./card-model.js";
+import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   gateFor,
   ENEMY_SELF_POWERS,
+  LEADER_HP_TIE,
   killOrders,
   UNKNOWN_STATUS,
   loadFightValueGates,
@@ -55,7 +56,9 @@ import {
   type MoveModelData,
   type PlayerDebuff,
   type RolloutEnemy,
+  type RolloutInput,
   type RolloutResult,
+  type SpawnTemplate,
 } from "./rollout.js";
 import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
 
@@ -93,7 +96,7 @@ export interface MonsterDbMove extends MoveEntry {
   avg_total_shown?: number;
 }
 
-type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove> }>;
+export type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
 
 const KNOWLEDGE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge");
 let dbCache: MonsterMoves | undefined;
@@ -121,6 +124,9 @@ function mode(counts: Record<string, number> | undefined): number | null {
   return best ? Number(best[0]) : null;
 }
 
+/** Picks an alternative needs to be one (playerPowersOf). */
+const ALTERNATIVE_MIN_USES = 3;
+
 /**
  * The powers a move puts on us (rollout.ts PLAYER_DEBUFFS): the most common amount of each in the monster
  * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
@@ -129,18 +135,23 @@ function mode(counts: Record<string, number> | undefined): number | null {
 export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
   const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
   const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
-  const out: Partial<Record<PlayerDebuff, number>> = {};
+  const all: Partial<Record<PlayerDebuff, number>> = {};
   for (const id of PLAYER_DEBUFFS) {
     const amount = mode(counts[id]);
-    if (amount) out[id] = amount;
+    if (amount) all[id] = amount;
   }
-  if (Object.keys(out).length === 0) return {};
+  if (Object.keys(all).length === 0) return {};
   // Alternatives: several powers whose uses add up to the move's (each use put one of them on us: the
-  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here.
-  const ids = Object.keys(out) as PlayerDebuff[];
+  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here; each
+  // picked ALTERNATIVE_MIN_USES times at least (the Magi Knight's Dampen with 1 Weak in 16 is no choice).
   const uses = (id: string, table: Record<string, Record<string, number>> | undefined) => Object.values(table?.[id] ?? {}).reduce((sum, n) => sum + n, 0);
-  const pooled = ids.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
-  const alternatives = ids.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  const picks = (Object.keys(all) as PlayerDebuff[]).filter((id) => uses(id, entry.player_powers_applied) >= ALTERNATIVE_MIN_USES);
+  const pooled = picks.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
+  const alternatives = picks.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  // Not a choice: only what the move does itself, not a rare leak (regularEffect: Stabbot's Frail on 3 of 20).
+  const ids = alternatives ? picks : (Object.keys(all) as PlayerDebuff[]).filter((id) => regularEffect(entry, entry.player_powers_applied?.[id]));
+  const out: Partial<Record<PlayerDebuff, number>> = Object.fromEntries(ids.map((id) => [id, all[id]!]));
+  if (ids.length === 0) return {};
   if (!alternatives) return { playerPowers: out };
   const order = [...ids].sort((a, b) => uses(b, counts) - uses(a, counts) || uses(b, entry.player_powers_applied) - uses(a, entry.player_powers_applied));
   return { playerPowers: out, playerPowerChoice: order };
@@ -187,9 +198,7 @@ export function statusCardsOf(entry: MoveEntry): Pick<EnemyMove, "statusCards"> 
  * game text's held penalty (Beckon 6, Burn 2), never played.
  */
 export function statusCardModel(cardId: string, knowledge: Knowledge, index: number): CardModel {
-  const info = knowledge.card(cardId);
-  const model = modelHandCard({ card_id: cardId, upgraded: false, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
-  return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0), validTargets: [] };
+  return { ...offHandCardModel(null, cardId, false, index, knowledge), validTargets: [] };
 }
 
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
@@ -214,7 +223,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...(shown ? { shown: true } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
-      block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
+      block: regularEffect(entry, entry.block_gained) ? (mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0) : 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
       ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...selfPowersOf(entry, asc),
@@ -286,9 +295,7 @@ export function deckSummary(runRaw: Record<string, unknown>): DeckSummary {
 export function deckModels(state: GameState, knowledge: Knowledge): CardModel[] {
   return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
     const own = asRecord(raw);
-    const info = knowledge.card(str(own["card_id"]));
-    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + i }, 900 + i, knowledge);
-    return { ...model, playable: model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0) };
+    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge);
   });
 }
 
@@ -364,6 +371,11 @@ export type LiveRollout =
        * (pickRolloutBest).
        */
       best: Plan | null;
+      /**
+       * Shown lines that tie for the best as Jev reads them (rolloutTies: the same expected further HP loss as
+       * shown and the same deaths), two or more, `best` then null; empty when one line is the best.
+       */
+      tied: Plan[];
       /** Every line loses all our HP within the horizon (and wins in no sample): the HP numbers tell them nothing. */
       saturated: boolean;
       meta: FightMeta;
@@ -374,6 +386,8 @@ export type LiveRollout =
       minRows: number;
       /** Modelled potions in the belt: the policy's later turns may drink them. */
       potionsHeld: boolean;
+      /** The revives held (Fairy in a Bottle, Lizard Tail) by name: a sample reaching 0 HP goes on at theirs. */
+      revives: string[];
       /** Kill-order permutations left out (more than MAX_FULL_ORDER_GROUPS groups). */
       ordersDropped: number;
       elapsedMs: number;
@@ -394,18 +408,121 @@ export const ROLLOUT_TURNS_TIE = 0.1;
  * value says nothing: the enemy HP left and turns alive alone decide, and when they tie too there is no
  * best line (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9 by one
  * sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
+ * left comes first, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders): summed
+ * enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean } {
   if (lines.length === 0) return { best: null, saturated: false };
   const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   const top = Math.max(...lines.map((line) => line.value));
-  const contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  let contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  if (contenders.every((line) => line.leaderHpLeft !== null && line.leaderHpLeft !== undefined)) {
+    const leastLeader = Math.min(...contenders.map((line) => line.leaderHpLeft!));
+    contenders = contenders.filter((line) => line.leaderHpLeft! <= leastLeader + LEADER_HP_TIE);
+  }
   // The least enemy HP left and every line within ROLLOUT_ENEMY_HP_TIE of it; among those the most turns
   // alive (a stable sort: code's order among equals).
   const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
   const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
   if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) return { best: null, saturated };
   return { best: near[0]!, saturated };
+}
+
+/** Two lines read the same to Jev: the expected further HP loss as shown (one decimal) and the share of samples dead. */
+export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
+  return round1(a.hpLoss) === round1(b.hpLoss) && a.deaths * b.samples === b.deaths * a.samples;
+}
+
+/**
+ * The rollout's best among the shown options, or the shown options tied for it (Dai 2026-09-29; consistency
+ * #6: in 380 of 2775 flagged questions another option showed the same numbers, and the flag fell on code's
+ * first line by float noise). On a board that is not saturated, the eligible lines that read the same as the
+ * best (sameShownResult; enemy HP left and damage do not break it): two or more of them shown, none is the
+ * best and they are all tied; one shown, it is the best (an unshown line as good adds nothing); none shown,
+ * the best as before (added alone). A saturated board keeps pickRolloutBest's tie-break.
+ */
+export function rolloutTies(picked: { best: LineEstimate | null; saturated: boolean }, eligible: LineEstimate[], shown: Plan[]): { best: LineEstimate | null; tied: LineEstimate[] } {
+  const best = picked.best;
+  if (picked.saturated || best === null) return { best, tied: [] };
+  const ties = eligible.filter((line) => sameShownResult(line, best));
+  if (ties.length < 2) return { best, tied: [] };
+  const shownTies = ties.filter((line) => shown.includes(line.plan));
+  if (shownTies.length >= 2) return { best: null, tied: shownTies };
+  return { best: shownTies[0] ?? best, tied: [] };
+}
+
+/**
+ * The board's part of a rollout's input, one builder for the live facts and tools/rollout-backtest.ts (which
+ * had no status cards, energy relics, spawns nor reviving illusions): the enemies (an illusion killed before
+ * this decision, is_alive false with ILLUSION_POWER, stays at 0 HP and revives while its summoner lives), their
+ * move tables at `asc` and their on-death spawns' (with those spawns), the status cards their moves add, the
+ * energy relics, our powers and potions, and the hand's base cards (null: keep the hand card).
+ */
+export function boardRolloutInput(
+  state: GameState,
+  knowledge: Knowledge,
+  solverInput: SolverInput,
+  asc: number,
+  db: MonsterMoves = monsterMoves(),
+  mm: MoveModelData = moveModelData(),
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "spawns" | "playerPowers" | "potions"> & { handBase: (CardModel | null)[] } {
+  const combat = asRecord(state.raw["combat"]);
+  const raw = asArray(combat["enemies"]).map(asRecord);
+  const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+  const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
+  const enemies: RolloutEnemy[] = raw
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => e["is_alive"] !== false || reviving(e))
+    .map(({ e, i }) => {
+      const powers = powersOf(e);
+      return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
+    });
+  const revivers: EnemySim[] = raw
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => reviving(e) && !solverInput.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
+    .map(({ e, i }) => ({
+      index: typeof e["index"] === "number" ? e["index"] : i,
+      name: str(e["name"], str(e["enemy_id"])),
+      hp: 0,
+      maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
+      block: 0,
+      vulnerable: 0,
+      weak: 0,
+      artifact: 0,
+      intangible: false,
+      illusion: true,
+      minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
+      attacks: [],
+    }));
+  const solver = revivers.length > 0 ? { ...solverInput, enemies: [...solverInput.enemies, ...revivers] } : solverInput;
+  const tables: Record<string, EnemyTable> = {};
+  // On-death spawns (Phrog Parasite, Gremlin Merc): what comes, at this ascension, and their move tables.
+  const spawns: Record<string, SpawnTemplate[]> = {};
+  for (const e of enemies) {
+    const found = spawnsAt(e.id, asc, db);
+    if (found) spawns[e.id] = found;
+  }
+  for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id))])) {
+    const table = enemyTable(id, asc, db, mm);
+    if (table) tables[id] = table;
+  }
+  // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
+  const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
+  for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
+  const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
+  const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
+  return {
+    solver,
+    enemies,
+    tables,
+    statusCards,
+    relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
+    ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
+    playerPowers: powersOf(asRecord(combat["player"])),
+    potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
+    handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
+  };
 }
 
 export function liveRollout(args: LiveRolloutArgs): LiveRollout {
@@ -417,68 +534,19 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   try {
     const { state, knowledge } = args;
     const meta = fightMetaOf(state, knowledge, args.memory);
-    const combat = asRecord(state.raw["combat"]);
-    const raw = asArray(combat["enemies"]).map(asRecord);
-    // An illusion killed before this decision (is_alive false, ILLUSION_POWER) is back at full HP next
-    // turn while its summoner lives: it stays in the rollout at 0 HP and revives (rollout.ts reviveIn).
-    const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
-    const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
-    const enemies: RolloutEnemy[] = raw
-      .map((e, i) => ({ e, i }))
-      .filter(({ e }) => e["is_alive"] !== false || reviving(e))
-      .map(({ e, i }) => {
-        const powers = powersOf(e);
-        return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
-      });
-    const revivers: EnemySim[] = raw
-      .map((e, i) => ({ e, i }))
-      .filter(({ e }) => reviving(e) && !args.solver.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
-      .map(({ e, i }) => ({
-        index: typeof e["index"] === "number" ? e["index"] : i,
-        name: str(e["name"], str(e["enemy_id"])),
-        hp: 0,
-        maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
-        block: 0,
-        vulnerable: 0,
-        weak: 0,
-        artifact: 0,
-        intangible: false,
-        illusion: true,
-        minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
-        attacks: [],
-      }));
-    const solver = revivers.length > 0 ? { ...args.solver, enemies: [...args.solver.enemies, ...revivers] } : args.solver;
-    const mm = moveModelData();
-    const db = monsterMoves();
-    const tables: Record<string, EnemyTable> = {};
-    for (const e of enemies) {
-      const table = enemyTable(e.id, meta.asc, db, mm);
-      if (table) tables[e.id] = table;
-    }
-    // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
-    const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
-    for (const table of Object.values(tables)) for (const move of Object.values(table.moves)) for (const status of move.statusCards ?? []) if (status.cardId) statusIds.add(status.cardId);
-    const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
-    const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
-    const handBase = args.solver.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null));
-    const potions = asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length;
+    const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
     const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+    const { handBase, ...boardInput } = board;
     const result = rolloutDecision({
-      solver,
+      ...boardInput,
       plans: args.plans,
-      enemies,
-      tables,
       piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
       meta,
-      playerPowers: powersOf(asRecord(combat["player"])),
-      potions,
-      mm,
+      mm: moveModelData(),
       model,
       gates,
-      statusCards,
-      relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
       options: {
         horizon: ROLLOUT_HORIZON,
         samples: ROLLOUT_SAMPLES,
@@ -495,18 +563,22 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
-    const picked = pickRolloutBest(eligible, args.solver.player.hp);
+    // A revive's HP counts as lost when spent: a line that spends it can lose more than the HP we have now.
+    const picked = pickRolloutBest(eligible, args.solver.player.hp + (args.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0));
+    const ties = rolloutTies(picked, eligible, args.shown);
     return {
       available: true,
       result,
       byPlan,
-      best: picked.best?.plan ?? null,
+      best: ties.best?.plan ?? null,
+      tied: ties.tied.map((line) => line.plan),
       saturated: picked.saturated,
       meta,
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
       potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
+      revives: (args.solver.player.revives ?? []).map((revive) => revive.name),
       ordersDropped: args.ordersDropped ?? 0,
       elapsedMs: elapsed(),
     };
@@ -519,10 +591,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
-/** Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are shown. */
+/**
+ * Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are
+ * shown (the leader's HP left first when its death ends the fight).
+ */
 function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
   if (!r.saturated) return "";
-  return `; every line loses all our HP here, so the loss does not separate them: enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
+  const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
+  return `; every line loses all our HP here, so the loss does not separate them: ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
 }
 
 /** The facts of one shown line. */
@@ -535,7 +612,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order) {
@@ -585,7 +662,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
  */
 export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
   const o = plan.outcome;
-  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : ""}`;
+  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
   const later = line.perTurn.map((t) =>
     t.fighting === 0
       ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`
@@ -608,7 +685,7 @@ export function segmentName(segment: string): string {
 export const DRINK_FIRST_ROLLOUT = "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking";
 
 /** The decision's log entry (decision log field `rollout`). */
-export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean): Record<string, JsonValue> {
+export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean, tiedKeys: string[] = []): Record<string, JsonValue> {
   if (!r.available) return { available: false, reason: r.reason, ms: Math.round(r.elapsedMs) };
   return {
     available: true,
@@ -619,6 +696,8 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     lines: r.result.lines.length,
     best: bestKey,
     best_added: added,
+    // The options tied for the best (no single best): their keys.
+    ...(tiedKeys.length > 0 ? { tied: tiedKeys } : {}),
     ...(r.saturated ? { saturated: true } : {}),
     ...(r.result.orders.length > 0
       ? {

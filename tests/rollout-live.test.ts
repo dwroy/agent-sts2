@@ -41,7 +41,8 @@ function plan(name: string, enabled: boolean, jevContext: "v1" | "off" = "v1"): 
   return planCombatTurn(loggedEnv(logged(name), { jevContext }));
 }
 
-const criteriaOf = (decision: AskDecision) => (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria!;
+// A choice question's criteria (option key -> facts JSON).
+const criteriaOf = (decision: AskDecision) => (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string | null>;
 const planKeys = (criteria: Record<string, string | null>) => Object.keys(criteria).filter((key) => /^plan\d+$/.test(key));
 const facts = (criteria: Record<string, string | null>, key: string) => JSON.parse(criteria[key]!) as Record<string, unknown>;
 const pick = (key: string, confidence = 0.9): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
@@ -185,10 +186,18 @@ describe("rollout facts on Jev's combat question", () => {
         expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
       }
       // The rollout's best: one line, or a random potion's option (its median sample's line); none at
-      // most when every line loses all the HP and they tie on enemy HP left and turns alive too.
+      // most when every line loses all the HP and they tie on enemy HP left and turns alive too. Not
+      // saturated: one best, or two or more options tied for it (the same numbers as shown) and no best.
       const tagged = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length;
-      if (log["saturated"] === true) expect(tagged, name).toBeLessThanOrEqual(1);
-      else expect(tagged, name).toBe(1);
+      const tied = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_tied"] !== undefined);
+      if (log["saturated"] === true) expect(tagged + tied.length, name).toBeLessThanOrEqual(1);
+      else if (tied.length > 0) {
+        expect(tagged, name).toBe(0);
+        expect(tied.length, name).toBeGreaterThanOrEqual(2);
+        expect(log["tied"], name).toEqual(tied);
+        const shownLoss = (key: string) => /expected further HP loss ([\d.]+)/.exec(String(facts(criteria, key)["rollout"]))![1];
+        expect(new Set(tied.map(shownLoss)).size, name).toBe(1);
+      } else expect(tagged, name).toBe(1);
     }
     expect(most).toBeGreaterThan(4);
   }, 60_000);
@@ -244,7 +253,7 @@ describe("rollout facts on Jev's combat question", () => {
         for (const key of Object.keys(before)) {
           // Same option under the same key, the rollout facts aside.
           // (An unsimulated potion's offered_because may add the rollout's dying sample as a reason.)
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered_because: _o, ...rest } = facts(after, key);
+          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered_because: _o, ...rest } = facts(after, key);
           const { offered_because: _o2, ...restBefore } = facts(before, key);
           expect(rest, `${name} ${key}`).toEqual(restBefore);
           // And resolving it plays the same (the HP guard and potion rules see code's options only).

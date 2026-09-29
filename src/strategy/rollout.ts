@@ -47,7 +47,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -489,6 +489,21 @@ export interface RolloutInput {
    * fight-value feature it was trained as.
    */
   relicEnergy?: { amount: number; from: number }[];
+  /**
+   * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
+   * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
+   */
+  spawns?: Record<string, SpawnTemplate[]>;
+}
+
+/** One enemy an on-death spawn brings (RolloutInput.spawns). */
+export interface SpawnTemplate {
+  id: string;
+  name: string;
+  hp: number;
+  count: number;
+  /** Its first move (SPAWNED_MOVE: no attack the turn it arrives), null when unknown (the table's own chain). */
+  move: string | null;
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -547,6 +562,13 @@ export interface LineEstimate {
    */
   enemyHpLeft: number;
   turnsSurvived: number;
+  /**
+   * With a leader (KillGroup.leader: its death ends the fight, the others are minions; not the Queen): its
+   * expected HP left at the end of the horizon (0 in a sample that won; at our death, what it had then), for
+   * every line, whatever its kill order; null without one. A saturated board ranks by it first
+   * (rollout-live pickRolloutBest), as the kill orders are ranked (rankOrders).
+   */
+  leaderHpLeft: number | null;
   /** Mean turns to the fight's end over the samples that survive the horizon; null when every sample dies. */
   turnsToWin: number | null;
   /** Samples (of `samples`) in which we die within the horizon, and the mean turn of death among them. */
@@ -557,6 +579,8 @@ export interface LineEstimate {
   wins: number;
   /** Samples in which a time limit ended the fight unwon (the Battleworn Dummy); absent when none. */
   timeUps?: number;
+  /** Samples that spent a revive (Fairy in a Bottle, Lizard Tail) within the horizon; absent when none. */
+  revived?: number;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -756,6 +780,12 @@ interface SimEnemy {
   /** Shrink turns left (Beetle Juice: its attacks 30% less), one less after each of its turns. */
   shrink: number;
   /**
+   * Shriek / Plow (Terror Eel, Ceremonial Beast: stunned the first time its HP drops to the threshold, that
+   * turn's move lost) not yet triggered: the later turns' solver calls model it too (they dropped it, so a Beast
+   * taken under 150 on a later turn still Plowed: coverage review #15, forecast 47.0 vs actual 17.7 HP).
+   */
+  shriekArmed: boolean;
+  /**
    * Thorns and damage halving (Guarded, Soar), Dazed per hit (Personal Hive), Tainted per Skill (Vital Spark):
    * the decision's, then what its moves give. A move's Thorns or Soar lasts until its next move resolves
    * (logged: Spiny Toad Thorns 5 only while it shows Spike Explosion, Toadpole 2 only on Spike Spit, the
@@ -776,6 +806,11 @@ interface SimEnemy {
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
   shown: { damage: number; hits: number }[];
+  /**
+   * What the shown intents already carry (its Weak and Shrink, our Vulnerable at the decision): the fallback
+   * takes it out before this turn's (consistency #20: it re-applied them, 15 shown under our Vulnerable read 22).
+   */
+  shownScale?: number;
 }
 
 interface SimPlayer {
@@ -861,6 +896,8 @@ interface SimPlayer {
   /** Mind Rot: cards fewer drawn each turn; Waste Away: energy fewer each turn. */
   mindRot: number;
   wasteAway: number;
+  /** Revives still held (Fairy in a Bottle, Lizard Tail), in trigger order: a spent one is gone for the sample. */
+  revives: Revive[];
 }
 
 /** The enemy a Rampart gives its block to (RAMPART_POWER: 「高塔炮手获得25点格挡」). */
@@ -899,12 +936,20 @@ export interface TurnRecord {
   died: boolean;
   /** A time limit ended the fight at this turn's end without a win (the Battleworn Dummy's 3 turns). */
   timeUp?: boolean;
+  /** Revives this turn spent (its `loss` is all the HP we had, then what their HP lost: the solver's hpLoss). */
+  revived?: number;
+  /**
+   * Each enemy's HP still to take off by board index at the end of our turn (remainingHp: a phase boss's later
+   * phases, an Axebot's stock, an illusion at full, a segment that will reattach, a spawner's spawns included);
+   * absent in a hand-made record (the snapshot's HP then).
+   */
+  hpLeft?: Record<number, number>;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
-  if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
+  if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits: Math.max(1, m.hits) }];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
@@ -978,8 +1023,44 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
   };
 }
 
-/** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead. */
-function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
+/** A fresh enemy spawned mid-fight (RolloutInput.spawns), at its first move, with a board index of its own. */
+function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
+  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  return {
+    index,
+    id: template.id,
+    move: template.move,
+    hp: template.hp,
+    maxHp: template.hp,
+    block: 0,
+    strength: 0,
+    vigor: 0,
+    vulnerable: 0,
+    weak: 0,
+    alive: true,
+    intangibleTurns: 0,
+    burrowed: false,
+    artifact: 0,
+    slippery: 0,
+    curlUp: 0,
+    flutter: 0,
+    growth: 0,
+    shrink: 0,
+    shriekArmed: false,
+    thorns: 0,
+    halved: false,
+    dazedPerHit: 0,
+    vitalSpark: 0,
+    moveBuffs: { thorns: false, soar: false },
+    plating: 0,
+    powers: {},
+    base,
+    shown: [],
+  };
+}
+
+/** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
+function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[]): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
     // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
     e.hp = HUSK_HP;
@@ -1021,6 +1102,12 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
     e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
   } else {
     e.alive = false;
+    // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
+    // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
+    // actual 23).
+    const spawns = e.base.spawnsOnDeath ? input.spawns?.[e.id] ?? [] : [];
+    let next = Math.max(...enemies.map((x) => x.index)) + 1;
+    for (const template of spawns) for (let k = 0; k < template.count; k += 1) enemies.push(spawnedEnemy(template, next++));
   }
 }
 
@@ -1053,7 +1140,8 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
-    if (e.hp <= 0) enemyDown(e, turn, input);
+    if (e.hp <= (e.base.shriek ?? 0)) e.shriekArmed = false;
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
   }
   return dealt;
 }
@@ -1127,7 +1215,8 @@ function applyPlan(
 ): TurnRecord {
   const o = plan.outcome;
   const startHp = player.hp;
-  const ownLoss = Math.max(0, o.hpLoss - o.incomingAfterBlock);
+  // A line saved by a revive: its hpLoss counts the revive's HP; our own turn's loss is apart.
+  const ownLoss = o.revived ? o.revived.ownLoss : Math.max(0, o.hpLoss - o.incomingAfterBlock);
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
@@ -1162,7 +1251,9 @@ function applyPlan(
     if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
     if (card.plating) player.plating += card.plating;
     if (card.exhausts || card.type === "Power") continue;
-    piles.discard.push(handBase[at] ?? card);
+    // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
+    const back = handBase[at] ?? card;
+    piles.discard.push(card.special === "frantic_escape" ? { ...back, cost: Math.max(back.cost, card.cost) + 1 } : back);
   }
   // Cards the line's effects exhausted (Fiend Fire's whole hand, Burning Pact's pick, a random True Grit
   // exhaust) leave the fight; the rest of the hand is discarded (FSPK F48 T1: Fiend Fire's hand came back
@@ -1191,15 +1282,18 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
-  // Shriek/Plow: taken to its threshold on the decision's turn, it is stunned and this turn's move is lost
+  // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
   // did not make neither spends its Vigor nor gains Strength or Block (XLJQ F7 T5: stunned at 65 with
-  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Later turns' solver calls do not model Shriek (laterTurnSim).
+  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Once crossed it is spent.
   const shrieked = new Set<number>();
   for (const e of enemies) {
     const a = after.get(e.index);
     const threshold = e.base.shriek ?? 0;
-    if (turn === 0 && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+    if (e.shriekArmed && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+    if (a && a.hp <= threshold) e.shriekArmed = false;
+    // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
+    if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
   for (const e of enemies) {
     const a = after.get(e.index);
@@ -1217,7 +1311,7 @@ function applyPlan(
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
-    if (e.hp <= 0) enemyDown(e, turn, input);
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
@@ -1236,6 +1330,7 @@ function applyPlan(
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
+  const hpLeft = Object.fromEntries(enemies.map((e) => [e.index, remainingHp(e, input)]));
   // Regen healed at this turn's end (in the outcome): one less next turn. Ritual: Strength at the end of it.
   player.regen = Math.max(0, player.regen + regenDrunk - 1);
   player.strength += player.ritual;
@@ -1247,7 +1342,14 @@ function applyPlan(
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
-  player.hp = o.hpAfter;
+  // A revive the line spent (Fairy in a Bottle, Lizard Tail): we go on at its HP, and it is gone for the sample
+  // (a Fairy leaves the belt).
+  player.hp = o.revived?.hp ?? o.hpAfter;
+  if (o.revived) {
+    const spent = o.revived.sources.length;
+    player.potions = Math.max(0, player.potions - player.revives.slice(0, spent).filter((revive) => revive.source === "FAIRY_IN_A_BOTTLE").length);
+    player.revives = player.revives.slice(spent);
+  }
   // Barricade keeps block every turn; Blur N only at the start of the next N turns.
   player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
@@ -1377,7 +1479,7 @@ function applyPlan(
     player.startDealt = startOfTurn(turn, player, enemies, input);
     won = allDown();
   }
-  return { loss: startHp - player.hp, enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died };
+  return { loss: startHp - player.hp + (o.revived?.reviveHp ?? 0), enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died, ...(o.revived ? { revived: o.revived.sources.length } : {}), hpLeft };
 }
 
 /** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
@@ -1478,6 +1580,7 @@ function simulate(
     regen: base.regen ?? input.playerPowers["REGEN_POWER"] ?? 0,
     ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
     clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
+    revives: base.revives ?? [],
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
@@ -1515,6 +1618,7 @@ function simulate(
       flutter: e.flutter ?? 0,
       growth: sumOf(info?.powers, STRENGTH_GROWTH_POWERS),
       shrink: e.shrink ?? 0,
+      shriekArmed: (e.shriek ?? 0) > 0 && e.hp > (e.shriek ?? 0),
       plating: info?.powers?.["PLATING_POWER"] ?? 0,
       thorns: e.thorns ?? 0,
       halved: e.halved === true,
@@ -1528,6 +1632,7 @@ function simulate(
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
+      shownScale: (e.weak > 0 ? 0.75 : 1) * ((e.shrink ?? 0) > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (base.vulnerable ? 1.5 : 1),
       // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
       // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
@@ -1597,6 +1702,10 @@ function simulate(
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        // Shriek / Plow still to come (laterTurnSim drops the decision's).
+        ...(e.shriekArmed && (e.base.shriek ?? 0) > 0 ? { shriek: e.base.shriek! } : {}),
+        // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
+        ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
@@ -1621,6 +1730,7 @@ function simulate(
       noBlock: false,
       tender: player.tender,
       maxSkills: player.smoggy ? 1 : null,
+      revives: player.revives,
       // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
       // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
       // while its Strangler lives.
@@ -1684,16 +1794,48 @@ interface SampleValue {
 /** The living enemies' HP in a snapshot (a won fight: 0). */
 function enemyHpOf(record: TurnRecord): number {
   if (record.won) return 0;
+  if (record.hpLeft) return Object.values(record.hpLeft).reduce((sum, hp) => sum + hp, 0);
   return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
 }
 
-/** A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after. */
-function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, startHp: number): SampleValue & { n: number } {
+/** The HP left of the enemies at `indices` (a leader) in a snapshot (a won fight: 0), counted as enemyHpOf does. */
+function groupHpOf(record: TurnRecord, indices: number[]): number {
+  if (record.won) return 0;
+  return indices.reduce((sum, index) => {
+    if (record.hpLeft) return sum + (record.hpLeft[index] ?? 0);
+    const e = record.snap.E.find((x) => x[0] === index);
+    return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
+  }, 0);
+}
+
+/**
+ * An enemy's HP still to take off before it is gone for good (the "enemy HP left" that tells saturated lines
+ * apart): a phase boss's later phases too (a line finishing Test Subject's phase 1 read worse than one leaving
+ * it at 50, the next phase's 212 counted only once there: 7XK6DUJYMYY3 F48 T1-T3, 0-18 damage lines best), an
+ * Axebot's stock at its max HP, an illusion always at its max HP (it revives at full: damage into it is
+ * wasted, 115b517), a dead segment that will reattach at its Reattach HP, a spawner's spawns (Phrog Parasite).
+ * A Giant husk is no HP to take off (its blast is survived, not dealt with).
+ */
+function remainingHp(e: SimEnemy, input: RolloutInput): number {
+  if (e.explodeAt !== undefined) return 0;
+  if (e.base.illusion) return e.maxHp;
+  if (!e.alive) return e.reattachIn !== undefined ? Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP) : 0;
+  const phases = e.base.revives ? (e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc)).reduce((sum, hp) => sum + hp, 0) : 0;
+  const stock = Math.max(0, e.base.stock ?? 0) * e.maxHp;
+  const spawns = e.base.spawnsOnDeath ? (input.spawns?.[e.id] ?? []).reduce((sum, spawn) => sum + spawn.hp * spawn.count, 0) : 0;
+  return Math.max(0, e.hp) + phases + stock + spawns;
+}
+
+/**
+ * A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after.
+ * `lossCap`: the most a sample can lose, our HP plus the revives held (their HP counts as lost when spent).
+ */
+function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number): SampleValue & { n: number } {
   let loss = 0;
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    if (r.died) return { loss: startHp, win: 0, turns: i + 1, died: true, lossModel: startHp, winModel: 0, n: 0 };
+    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0 };
     if (r.won) {
       loss += r.loss;
       return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
@@ -1710,12 +1852,12 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   const term = terminal(ctx, last.snap, t0 + upto - 1);
   const base = loss + Math.max(0, own);
   return {
-    // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP).
-    loss: Math.min(startHp, base + term.gated.hpLoss),
+    // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP), revives included.
+    loss: Math.min(lossCap, base + term.gated.hpLoss),
     win: term.gated.winProb,
     turns: upto + term.gated.turns,
     died: false,
-    lossModel: term.model ? Math.min(startHp, base + term.model.hpLoss) : null,
+    lossModel: term.model ? Math.min(lossCap, base + term.model.hpLoss) : null,
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
   };
@@ -1867,19 +2009,23 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const maxSamples = opts.samples ?? 8;
   const seed = opts.seed ?? 1;
   const candidates = selectCandidates(input.plans, opts.k ?? 6, opts.include ?? []);
+  // The board's leader (its death ends the fight; the same in every kill order of the board), if any.
+  const boardLeader = (opts.orders ?? []).find((order) => order.leader)?.leader?.indices ?? null;
   const gate = gateFor(input.gates, input.meta.enc, input.meta.act, input.meta.kind);
   const ctx: TerminalContext = { meta: input.meta, mm: input.mm, model: input.model, gates: input.gates, w: gate.w };
   const ctxModel: TerminalContext = { ...ctx, w: 1 };
   const t0 = input.meta.t;
   const startHp = input.solver.player.hp;
+  // What a sample can lose at most: our HP, and the HP of the revives held (counted as lost when spent).
+  const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
   const hpWeight = solverHpWeight(startHp, input.solver.player.maxHp);
   const degraded: string[] = [];
 
   // (ii) one turn: the line's own outcome + terminal of its end-of-turn state (no simulation of later turns).
   const one = candidates.map(({ plan }) => {
     const records = simulate(input, plan, 1, seed, budget)!;
-    const v = valueAt(records, 1, ctx, t0, startHp);
-    const vm = valueAt(records, 1, ctxModel, t0, startHp);
+    const v = valueAt(records, 1, ctx, t0, lossCap);
+    const vm = valueAt(records, 1, ctxModel, t0, lossCap);
     const modelValue = vm.lossModel === null ? null : -vm.lossModel - DEATH_HP * (1 - (vm.winModel ?? 0));
     const current = plan.score / hpWeight;
     return {
@@ -1892,6 +2038,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       lossModel: vm.lossModel,
       winModel: vm.winModel,
       enemyHpLeft: enemyHpOf(records[0]!),
+      leaderHpLeft: boardLeader ? groupHpOf(records[0]!, boardLeader) : null,
       survived: v.died ? v.turns : 1,
     };
   });
@@ -1931,8 +2078,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
     // wave's own time is the measure of a wave.
     const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, maxHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
-    const schedule = orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE;
-    const fit = schedule.filter((s) => s.horizon <= maxHorizon && s.samples <= maxSamples).find((s) => cost(s.horizon, s.samples) <= left);
+    // The schedule at the asked sizes: each step clamped to maxHorizon x maxSamples (asking for fewer than 8
+    // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1).
+    const schedule = (orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE)
+      .map((s) => ({ horizon: Math.min(s.horizon, maxHorizon), samples: Math.min(s.samples, maxSamples) }))
+      .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
+    const fit = schedule.find((s) => cost(s.horizon, s.samples) <= left);
     if (first.some((r) => r === null) || elapsed() > budget.budgetMs || !fit) {
       horizon = 1;
       samples = 1;
@@ -1972,20 +2123,14 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
     const timeUps = kept.filter((records) => records.slice(0, horizon).some((r) => r.timeUp)).length;
+    const revived = kept.filter((records) => records.slice(0, horizon).some((r) => (r.revived ?? 0) > 0)).length;
     const leaderIndices = order?.leader?.indices;
-    const leaderLeft = leaderIndices
-      ? kept.map((records) => {
-          const last = records[Math.min(horizon, records.length) - 1]!;
-          if (last.won) return 0;
-          return leaderIndices.reduce((sum, index) => {
-            const e = last.snap.E.find((x) => x[0] === index);
-            return sum + (e && e[5] ? Math.max(0, e[2]) : 0);
-          }, 0);
-        })
-      : null;
+    const leaderLeft = leaderIndices ? kept.map((records) => groupHpOf(records[Math.min(horizon, records.length) - 1]!, leaderIndices)) : null;
     const leader = leaderLeft ? { hpLeft: mean(leaderLeft), dead: leaderLeft.filter((hp) => hp <= 0).length } : null;
-    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, startHp));
-    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, startHp));
+    // The board's leader, for every line (one rolled out with the solver's own later turns has no order).
+    const leaderHpLeft = boardLeader ? mean(kept.map((records) => groupHpOf(records[Math.min(horizon, records.length) - 1]!, boardLeader))) : null;
+    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, lossCap));
+    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, lossCap));
     const loss = mean(vals.map((v) => v.loss));
     const win = mean(vals.map((v) => v.win));
     // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
@@ -2010,6 +2155,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       leader,
       enemyHpLeft,
       turnsSurvived,
+      revived,
+      leaderHpLeft,
     };
   };
 
@@ -2031,10 +2178,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       const wins = plan.outcome.winsFight ? 1 : 0;
       return {
         ...common,
+        ...(plan.outcome.revived ? { revived: 1 } : {}),
         order: null,
         orders: [],
         hpLoss: o.hpLoss,
         enemyHpLeft: o.enemyHpLeft,
+        leaderHpLeft: o.leaderHpLeft,
         turnsSurvived: o.survived,
         turnsToWin: o.turns,
         deaths: 0,
@@ -2062,6 +2211,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
       enemyHpLeft: best.enemyHpLeft,
+      leaderHpLeft: best.leaderHpLeft,
       turnsSurvived: best.turnsSurvived,
       turnsToWin: best.turnsToWin,
       deaths: best.deaths,
@@ -2069,6 +2219,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       winProb: best.winProb,
       wins: best.wins,
       ...(best.timeUps > 0 ? { timeUps: best.timeUps } : {}),
+      ...(best.revived > 0 ? { revived: best.revived } : {}),
       value: best.value,
       valueModelTerminal: best.valueModelTerminal,
       modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: best.modelForecast },

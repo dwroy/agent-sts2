@@ -214,12 +214,41 @@ export function countsAt(byAsc: Record<string, Record<string, number> | undefine
   return found ? logged[found.key] : pooled;
 }
 
+/** An effect is the move's own when logged on at least this share of the enemy turns its most-logged effect was. */
+export const REGULAR_EFFECT_SHARE = 0.5;
+/** … and on at least this share of the move's uses (n_seen). */
+export const REGULAR_EFFECT_MIN_USES = 0.2;
+
+const countTotal = (counts: Record<string, number> | undefined): number => Object.values(counts ?? {}).reduce((sum, n) => sum + n, 0);
+
+/**
+ * Whether a move's logged effect (its counts, pooled over ascensions) is the move's own or a rare leak of
+ * something else in that enemy turn (consistency review #11: the Waterfall Giant's +1 Strength on 1 of its
+ * 58-129 uses of every move, a Brimstone run, was applied on every move by the rollout and the boss clock). The
+ * deltas are logged only when the enemy turn was seen whole (about half to three quarters of real effects are),
+ * so the share is taken against the move's most-logged effect (its own Steam Eruption: 115 of 129), and against
+ * its uses. Counts unknown: taken as its own.
+ */
+export function regularEffect(move: MoveEntry | undefined, counts: Record<string, number> | undefined): boolean {
+  if (!move || !counts) return true;
+  const seen = countTotal(counts);
+  const effects = [
+    ...Object.values(move.self_powers_gained ?? {}).map(countTotal),
+    ...Object.values(move.player_powers_applied ?? {}).map(countTotal),
+    countTotal(move.block_gained),
+  ];
+  const most = Math.max(seen, ...effects);
+  const uses = move.n_seen ?? 0;
+  return seen >= REGULAR_EFFECT_SHARE * most && (uses <= 0 || seen >= REGULAR_EFFECT_MIN_USES * uses);
+}
+
 /**
  * The most common amount of a power a move gives its user at `asc` (self_powers_gained_by_asc, nearest
  * logged ascension, pooled only without a split): Kin Priest's Ritual +2 up to A8, +3 at A9. null when
- * the move never gave it.
+ * the move never gave it, or only as a rare leak (regularEffect).
  */
 export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: number): number | null {
+  if (!regularEffect(move, move?.self_powers_gained?.[powerId])) return null;
   const byAsc = Object.fromEntries(Object.entries(move?.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[powerId]]));
   const value = mode(countsAt(byAsc, move?.self_powers_gained?.[powerId], asc));
   return value === null ? null : Number(value);
@@ -578,6 +607,39 @@ export function moveBaseDamages(monsterId: string, moveId: string, asc: number):
   const found = nearestAscension(withBase, asc);
   if (!found) return [];
   return Object.keys(withBase[found.key]!.base_per_hit!).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+}
+
+/**
+ * What an enemy spawns when it dies, as logged (coverage review 2026-09-29 #7): the Phrog Parasite
+ * (INFESTED_POWER: 「死亡时，召唤……某种东西」) 4 Wrigglers (208 spawned in its 52 fights), the Gremlin Merc
+ * (SURPRISE_POWER) a Fat and a Sneaky Gremlin (61 each in 61). Killing it is no win: the solver said
+ * "lethal" and code auto-played it (48 Phrog and 47 Gremlin turns).
+ */
+export const ON_DEATH_SPAWNS: Record<string, { id: string; count: number }[]> = {
+  PHROG_PARASITE: [{ id: "WRIGGLER", count: 4 }],
+  GREMLIN_MERC: [
+    { id: "FAT_GREMLIN", count: 1 },
+    { id: "SNEAKY_GREMLIN", count: 1 },
+  ],
+};
+
+/** A spawn's HP when the monster DB has none logged (the Wriggler's and the gremlins' are 11-21). */
+const SPAWN_FALLBACK_HP = 15;
+
+/**
+ * An enemy's on-death spawns at `asc`: each one's name, HP (its median max HP at the nearest logged ascension)
+ * and first move (SPAWNED_MOVE when logged: no attack on the turn it arrives). null when it spawns nothing known.
+ */
+export function spawnsAt(enemyId: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): { id: string; name: string; hp: number; count: number; move: string | null }[] | null {
+  const spawns = ON_DEATH_SPAWNS[enemyId];
+  if (!spawns) return null;
+  return spawns.map(({ id, count }) => {
+    const monster = monsters[id];
+    const found = nearestAscension(monster?.hp_by_asc, asc);
+    const median = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+    const moves = Object.keys(monster?.moves ?? {});
+    return { id, name: monster?.name?.zh || id, hp: Math.round(median ?? SPAWN_FALLBACK_HP), count, move: moves.includes("SPAWNED_MOVE") ? "SPAWNED_MOVE" : null };
+  });
 }
 
 /** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */

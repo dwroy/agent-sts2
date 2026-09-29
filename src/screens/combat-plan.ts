@@ -21,18 +21,18 @@
 
 import { choiceQ } from "../jev/questions.js";
 import type { ActionRequest } from "../mod/client.js";
-import { playerJson, potionViews } from "../project/narrow.js";
+import { enemyPowerText, playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -40,7 +40,7 @@ import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
-import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
+import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -79,7 +79,35 @@ const MODELLED_ENEMY_POWERS = new Set([
   // Battleworn Dummy event: turns left to kill it (`timeLimit`); left unmodelled it cut our damage by 20%
   // (SK1USHSB1U7U F43: 144 of 150 in the 3 turns).
   "BATTLEWORN_DUMMY_TIME_LIMIT_POWER",
+  // Coverage review 2026-09-29 #3: the 0.8 cut fired on 6% of logged turns, damage then 1.16-1.2x the plan.
+  // Corpse Slug: stunned and stronger when another enemy dies (`ravenous`).
+  "RAVENOUS_POWER",
+  // No number of this turn's fight in them: gold stolen and given back (Gremlin Merc, Fat Gremlin), the Tough
+  // Egg's hatch countdown (its moves after it are the move model's), our Strength/Dexterity given back on
+  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage), our Power cards
+  // turned to Galvanic (Globe Head).
+  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER", "GALVANIC_POWER",
+  // Our temporary Strength loss on it (Mangle, Dark Shackles, Shackling Potion, Piercing Wail): already in its
+  // STRENGTH_POWER and intents, and the rollout gives it back after the turn.
+  "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER",
+  // Zapbot: +2 Strength at the end of its turn, like Territorial (scaling; the rollout grows it).
+  "HIGH_VOLTAGE_POWER",
+  // Gremlin Merc: on death a Fat and a Sneaky Gremlin (`spawnsOnDeath`, like the Phrog's Infested).
+  "SURPRISE_POWER",
 ]);
+
+/** What an enemy with an on-death spawn power brings when it dies, as shown ("4 x 蠕虫 (~20 HP each)"). */
+function spawnText(enemy: Record<string, unknown>, asc: number): string | undefined {
+  if (powerAmount(enemy, "INFESTED_POWER") <= 0 && powerAmount(enemy, "SURPRISE_POWER") <= 0) return undefined;
+  const spawns = spawnsAt(str(enemy["enemy_id"]), asc);
+  if (!spawns) return "more enemies (what spawns is not logged)";
+  return spawns.map((spawn) => `${spawn.count} x ${spawn.name} (~${spawn.hp} HP${spawn.count > 1 ? " each" : ""})`).join(" + ");
+}
+
+/** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
+export function unmodelledEnemyPowers(enemy: Record<string, unknown>): string[] {
+  return asArray(enemy["powers"]).map((power) => str(asRecord(power)["power_id"])).filter((id) => id !== "" && !MODELLED_ENEMY_POWERS.has(id));
+}
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
 const POWER_NOTES: Record<string, string> = {
@@ -102,6 +130,9 @@ const POWER_NOTES: Record<string, string> = {
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
   BATTLEWORN_DUMMY_TIME_LIMIT_POWER: " (turns left to kill it, this one included: when they run out the fight ends without the reward; it never attacks, so only damage counts, and setup that pays after the last turn is worth nothing)",
   VIGOR_POWER: " (its next attack deals this much more per hit: already in the intent when that attack is this turn's, else it waits for the next one)",
+  RAVENOUS_POWER: " (when another enemy dies it eats the corpse: stunned for the rest of this turn, so its attack now is cancelled, and it gains this much Strength for the fight)",
+  INFESTED_POWER: " (when it dies it spawns more enemies (Phrog Parasite: 4 Wrigglers); they do not attack the turn they arrive; killing it does NOT end the fight)",
+  SURPRISE_POWER: " (when it dies a Fat Gremlin and a Sneaky Gremlin appear; killing it does NOT end the fight)",
 };
 
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
@@ -499,6 +530,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
         (asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Buff") ||
         powerAmount(enemy, "RITUAL_POWER") > 0 ||
         powerAmount(enemy, "TERRITORIAL_POWER") > 0 ||
+        powerAmount(enemy, "HIGH_VOLTAGE_POWER") > 0 ||
         powerAmount(enemy, "STRENGTH_POWER") > 0),
       halved: powerAmount(enemy, "GUARDED_POWER") > 0 || powerAmount(enemy, "SOAR_POWER") > 0,
       skittish: powerAmount(enemy, "SKITTISH_POWER"),
@@ -515,12 +547,14 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       // F17 T6: a Strike crossed 150 and cancelled a 26 Plow the solver had counted).
       shriek: Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER")),
       burrowed: powerAmount(enemy, "BURROWED_POWER") > 0,
+      ravenous: powerAmount(enemy, "RAVENOUS_POWER"),
+      ...(spawnText(enemy, asc ?? 0) ? { spawnsOnDeath: spawnText(enemy, asc ?? 0)! } : {}),
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
         ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), ctxOf(enemy)) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
-      unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
+      unmodelled: unmodelledEnemyPowers(enemy).length > 0,
       ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
@@ -530,6 +564,24 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
           return [{ damage, hits: Math.max(1, Math.round(numOrNull(intent["hits"]) ?? 1)) }];
         }),
     }));
+}
+
+/**
+ * Hardened Shell (「每回合失去的生命值不会超过20点」): the cap is per turn, and a re-plan mid-turn (a draw, a card
+ * screen, Jev's question) read the full 20 again (3RWJX25LB2CD F14 T3: the colony 45 -> 25, "Twin Strike ->
+ * colony, dmg 14", really 0). Each capped enemy's HP at the turn's first decision is kept (memory.turnStartHp,
+ * `key` = fight:turn), and the cap given to the solver is what is left of it.
+ */
+export function carryHpLossCaps(memory: DecisionEnv["screenMemory"], key: string, enemies: EnemySim[]): void {
+  if (!enemies.some((enemy) => enemy.hpLossCap !== null && enemy.hpLossCap !== undefined)) return;
+  if (memory.turnStartHp?.key !== key) memory.turnStartHp = { key, hp: {} };
+  const start = memory.turnStartHp.hp;
+  for (const enemy of enemies) {
+    if (enemy.hpLossCap === null || enemy.hpLossCap === undefined) continue;
+    const first = start[String(enemy.index)];
+    if (first === undefined) start[String(enemy.index)] = enemy.hp;
+    else enemy.hpLossCap = Math.max(0, enemy.hpLossCap - Math.max(0, first - enemy.hp));
+  }
 }
 
 /** Block a hand typically puts up against the explosion turn. */
@@ -638,14 +690,18 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
       ? "wins the fight this turn"
       : o.dies
         ? "I DIE at the end of the turn"
-        : (o.explodesNext ?? 0) > 0
-          ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
-          : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
+        : o.revived
+          ? `drops to 0 HP: ${o.revived.names.join(" then ")} brings me back, I end the turn at ${o.revived.hp}/${playerHp} HP and ${o.revived.names.length > 1 ? "they are" : "it is"} used up (hp_lost counts all my HP now as lost, then what the revived ${o.revived.reviveHp} HP lose)`
+          : (o.explodesNext ?? 0) > 0
+            ? `kills it but the fight is NOT over: it explodes for ${o.explodesNext} at the end of my next turn, against that turn's block; I have ${o.hpAfter}/${playerHp} HP after this turn, so next turn needs ${Math.max(0, (o.explodesNext ?? 0) - o.hpAfter + 1)}+ block to live`
+            : `survives with ${o.hpAfter}/${playerHp} HP before healing`,
     hp_lost: o.hpLoss,
     damage_dealt: o.damageDealt,
   };
+  if (o.revived) summary["revive_spent"] = o.revived.names.join(", ");
   if (o.kills.length > 0) summary["kills"] = o.kills.join(", ");
   if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
+  if ((o.spawns ?? []).length > 0) summary["spawns_on_death"] = `${o.spawns!.join("; ")}: they arrive as it dies, the fight is NOT over`;
   if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.hp} HP${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
@@ -720,9 +776,11 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
   if (powers.length > 0) scaling.push(`plays power ${powers.join(", ")}`);
   if (o.lasting >= 1) scaling.push(`lasting value ${Math.round(o.lasting)}`);
+  // A line saved by a revive ends at the revive's HP (less what came after it).
+  const hpAfter = o.revived?.hp ?? o.hpAfter;
   return {
-    hp_after: o.hpAfter,
-    hp_after_pct: ctx.maxHp > 0 ? Math.round((o.hpAfter / ctx.maxHp) * 100) : null,
+    hp_after: hpAfter,
+    hp_after_pct: ctx.maxHp > 0 ? Math.round((hpAfter / ctx.maxHp) * 100) : null,
     dmg: o.damageDealt,
     lethal_now: o.winsFight
       ? "wins the fight"
@@ -779,6 +837,8 @@ function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | u
 
 /** Intimidating Helmet's block per 2+ cost card (PU21 F12-F14: block 0 -> 4; its description is a template). */
 export const INTIMIDATING_HELMET_BLOCK = 4;
+/** Paper Phrog: Vulnerable enemies take 75% more, not 50% (its game text). */
+export const PAPER_PHROG_VULNERABLE = 1.75;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -910,13 +970,12 @@ export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "di
     if (!cardId) return [];
     const line = str(entry["line"]);
     const upgraded = /^[^[*：:]*?\+\s*(?:\*\d+\s*)?\[/.test(line);
-    const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? { card_id: cardId, upgraded };
-    const info = knowledge.card(cardId);
-    const model = modelHandCard({ ...own, target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index: 900 + position }, 900 + position, knowledge);
-    const playable = model.type !== "Curse" && model.type !== "Status" && (model.xCost || model.cost >= 0);
+    const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? null;
+    // Not in the deck (a status an enemy added): the game data's card at the line's cost (Frantic Escape's grows).
+    const lineCost = /\[(-?\d+)费\]/.exec(line)?.[1];
+    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null);
     const card: CardModel = {
       ...model,
-      playable,
       validTargets: model.target === "single" ? ctx.enemyTargets : [],
       damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
     };
@@ -1129,6 +1188,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
   const ascension = state.run?.ascension ?? 0;
   const enemies = enemySims(combat, ascension);
+  carryHpLossCaps(env.screenMemory, `${fightKey(state)}:${state.turn ?? "?"}`, enemies);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
     // revives on the enemy turn. Waiting forever stalled a floor-50 run; after a short settle, end
@@ -1200,6 +1260,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
     exhaustedThisTurn,
+    // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
+    revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
+    ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -1421,8 +1484,11 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
+  // The mod's flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held
+  // is lethal to it and to the solver alike (the solver then goes on at the revive's HP).
+  const endReachesZero = endNow !== undefined && (endNow.outcome.dies || endNow.outcome.revived !== undefined);
   const calcNote =
-    endNow && endNow.outcome.dies !== modSaysLethal
+    endNow && endReachesZero !== modSaysLethal
       ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
@@ -1495,7 +1561,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod says ending now is lethal but the solver thinks it is safe: the solver is missing
   // something (2WUM T7: Colossus halved twice, turn ended with 1 energy and 3 Defends in hand). Never
   // end the turn on the solver's word then; play the line that keeps the most HP.
-  if (modSaysLethal && top.steps.length === 0 && allDie === null) {
+  if (modSaysLethal && top.steps.length === 0 && allDie === null && top.outcome.revived === undefined) {
     const anyPlayed = surviving.filter((plan) => plan.steps.length > 0);
     const dryPlayed = anyPlayed.filter((plan) => !drinksPotion(plan));
     const played = dryPlayed.length > 0 ? dryPlayed : anyPlayed;
@@ -1706,6 +1772,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         ordersDropped: kill.dropped,
       })
     : null;
+  // Options tied for the rollout's best (the same numbers as Jev reads them): none of them is flagged best.
+  const rolloutTiedAll = rollout?.available ? rollout.tied : [];
   const rolloutBest = rollout?.available ? rollout.best : null;
   const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
   // T1 for the unsimulated potions: the cheapest potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
@@ -1718,8 +1786,21 @@ function planTurn(env: DecisionEnv): Decision | null {
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
   options.splice(0, options.length, ...planOptions);
   const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
+  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan));
+  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
+  const keyOfShown = (plan: Plan): string => (mcMedians.includes(plan) ? mcKey(mcShown.find((mc) => mc.median === plan)!) : `plan${shown.indexOf(plan) + 1}`);
+  const tiedKeys = rolloutTied.length >= 2 ? rolloutTied.map(keyOfShown) : [];
+  // One tied line left after the trim reads as the best among what is shown.
+  const bestShown = rolloutTied.length === 1 ? rolloutTied[0]! : rolloutBest;
+  const bestShownIsPotion = bestShown !== null && mcMedians.includes(bestShown);
+  const tieNote = (plan: Plan): Record<string, JsonValue> => {
+    if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
+    const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
+    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (the same expected further HP loss and deaths); the rollout picks none of them` };
+  };
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
-    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === rolloutBest ? { rollout_best: true } : {}) } : {};
+    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {};
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
@@ -1727,13 +1808,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
   });
-  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const rolloutRecord = rollout
-    ? rolloutLog(
-        rollout,
-        rolloutBest ? (rolloutBestIsPotion ? mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : `plan${shown.indexOf(rolloutBest) + 1}`) : null,
-        rolloutBest !== null && !rolloutBestIsPotion && !options.includes(rolloutBest),
-      )
+    ? rolloutLog(rollout, bestShown ? keyOfShown(bestShown) : null, bestShown !== null && !bestShownIsPotion && !options.includes(bestShown), tiedKeys)
     : null;
   // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
   // distribution; the rollout facts are the median sample's line's.
@@ -1741,7 +1817,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   for (const mc of mcShown) {
     const key = mcKey(mc);
     const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
-    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === rolloutBest ? { rollout_best: true } : {}) } : {};
+    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {};
     criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
@@ -1792,11 +1868,14 @@ function planTurn(env: DecisionEnv): Decision | null {
         hp: `${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`,
         block: num(enemy["block"]),
         intents: asArray(enemy["intents"]).map((intent) => `${str(asRecord(intent)["intent_type"])} ${str(asRecord(intent)["label"])}`).join(", "),
+        // Id and amount, the game's name and description (46 of 62 logged enemy powers reached Jev as a bare
+        // id), then code's note where the id alone misleads (POWER_NOTES).
         powers: asArray(enemy["powers"]).map((entry) => {
           const power = asRecord(entry);
-          const amount = numOrNull(power["amount"]);
-          return `${str(power["power_id"])}${amount === null ? "" : ` ${amount}`}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
+          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
         }),
+        // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
+        ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
@@ -1959,7 +2038,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (!rolloutRecord && !potionsRecord && focusOf.size === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
-      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : rolloutBestIsPotion ? pick.potion !== undefined && answer?.type === "choice" && answer.choice === mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : pick.plan === rolloutBest;
+      // The rollout's best chosen: its one best, or any of the options tied for it.
+      const bestKeys = tiedKeys.length > 0 ? tiedKeys : bestShown !== null ? [keyOfShown(bestShown)] : [];
+      const rolloutBestChosen = bestKeys.length === 0 || pick === undefined || answer?.type !== "choice" ? null : bestKeys.includes(answer.choice);
       // The kill order behind the chosen line's rollout numbers (its best order), when orders were compared.
       const chosenOrder = rollout?.available && pick?.plan ? (rollout.byPlan.get(pick.plan)?.order?.label ?? null) : null;
       return {
@@ -2297,6 +2378,72 @@ export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: nu
     const shown = numOrNull(block["current_value"]) ?? own;
     return own > 0 && shown >= 2 * own - 1;
   });
+}
+
+/** Fairy in a Bottle: back at this share of max HP (「回复到你最大生命值的30%」), rounded down like the logged Lizard Tail. */
+export const FAIRY_REVIVE_SHARE = 0.3;
+/**
+ * Lizard Tail: back at this share of max HP (the text's {Heal}% is unfilled in the game data; logged triggers:
+ * 0NG27W8QBNYX F24 17 -> 35 of 71, PU21Z67J65NE F33 18 -> 44 of 89, V5S6QVVQYL37 F17 6 -> 39 of 80).
+ */
+export const LIZARD_TAIL_REVIVE_SHARE = 0.5;
+/** A Lizard Tail trigger read up to this much under its HP (a start-of-turn loss after it: V5S6 39 of 80). */
+const LIZARD_TAIL_SLACK = 5;
+
+function fairiesHeld(runRaw: Record<string, unknown>): Record<string, unknown>[] {
+  return asArray(runRaw["potions"]).map(asRecord).filter((slot) => bool(slot["occupied"]) && str(slot["potion_id"]) === "FAIRY_IN_A_BOTTLE");
+}
+
+/**
+ * The revives held, in the order they trigger (turn-solver PlayerSim.revives): every Fairy in a Bottle in the
+ * belt (the potion goes when it triggers; "Automatic", never drunk by us), then Lizard Tail unless it was seen
+ * to trigger this run (trackLizardTail). Fairy first, as in Slay the Spire (the potion before the relic).
+ */
+export function revivesOf(state: GameState, memory: DecisionEnv["screenMemory"], maxHp: number): Revive[] {
+  const runRaw = asRecord(state.run?.raw);
+  const fairies = fairiesHeld(runRaw).map((slot) => ({ source: "FAIRY_IN_A_BOTTLE", name: str(slot["name"], "Fairy in a Bottle"), hp: Math.max(1, Math.floor(maxHp * FAIRY_REVIVE_SHARE)) }));
+  const tail = asArray(runRaw["relics"]).map(asRecord).find((relic) => str(relic["relic_id"]) === "LIZARD_TAIL");
+  const spent = memory.lizardTail?.runId === str(state.raw["run_id"]) && memory.lizardTail.used;
+  return [...fairies, ...(tail && !spent ? [{ source: "LIZARD_TAIL", name: str(tail["name"], "Lizard Tail"), hp: Math.max(1, Math.floor(maxHp * LIZARD_TAIL_REVIVE_SHARE)) }] : [])];
+}
+
+/**
+ * Lizard Tail's one use this run, read from the states (called on every state the loop reads, and by the
+ * journal replay after a restart): a combat turn that began at its HP (50% of max, up to LIZARD_TAIL_SLACK
+ * under) right after a turn whose last state read lethal (the mod's end_turn_will_kill_player, or the
+ * intents past our block at least our HP), with no Fairy spent in between.
+ */
+export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: GameState): void {
+  const runId = str(state.raw["run_id"]);
+  if (!runId) return;
+  if (memory.lizardTail?.runId !== runId) memory.lizardTail = { runId, used: false };
+  const tail = memory.lizardTail;
+  if (tail.used) return;
+  const runRaw = asRecord(state.run?.raw);
+  const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
+  const held = asArray(runRaw["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "LIZARD_TAIL");
+  if (!held || !state.in_combat || numOrNull(player["current_hp"]) === null) {
+    tail.last = undefined;
+    return;
+  }
+  const hp = num(player["current_hp"]);
+  const revive = Math.floor(num(player["max_hp"]) * LIZARD_TAIL_REVIVE_SHARE);
+  const fight = fightKey(state);
+  const turn = state.turn ?? 0;
+  const fairies = fairiesHeld(runRaw).length;
+  const last = tail.last;
+  if (last && last.fight === fight && turn > last.turn && last.lethal && fairies >= last.fairies && hp > 0 && hp <= revive && hp >= revive - LIZARD_TAIL_SLACK) {
+    tail.used = true;
+    tail.last = undefined;
+    return;
+  }
+  const incoming = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
+  const lethal = bool(combat["end_turn_will_kill_player"]) || incoming - num(player["block"]) >= hp;
+  tail.last = { fight, turn, hp, lethal, fairies };
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
