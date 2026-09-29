@@ -434,3 +434,30 @@ describe("12. A DeepSeek reply that does not parse is logged, raw reply and usag
     ]);
   });
 });
+
+describe("13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.now = null;
+    potionMcOptions.now = null;
+  });
+
+  it("the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained", () => {
+    const fx = logged("x7lu-f7-t1");
+    // A clock that jumps 400 ms a read: past the budget at once, as the logged question was ("degraded: 1-turn").
+    let t = 0;
+    rolloutLiveOptions.now = () => (t += 400);
+    potionMcOptions.now = () => 0;
+    const decision = planCombatTurn(loggedEnv(fx)) as AskDecision;
+    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria! as Record<string, string>;
+    const facts = Object.entries(criteria).filter(([key]) => /^plan\d+$/.test(key)).map(([, text]) => JSON.parse(text) as Record<string, unknown>);
+    expect(facts.length).toBeGreaterThan(2);
+    for (const f of facts) {
+      const text = String(f["rollout"]);
+      expect(text).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
+      expect(text).not.toMatch(/every line loses all our HP|fight over within 1 turn/);
+      expect(f["rollout_best"]).toBeUndefined();
+    }
+    expect(facts.some((f) => /the estimate's cap, our HP now: it does not mean this line dies/.test(String(f["rollout"])))).toBe(true);
+    expect((decision.resolve(choose("plan1", 0.5)).log?.rollout as Record<string, unknown>)["degraded"]).toEqual(["1-turn"]);
+  });
+});
