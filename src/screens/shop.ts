@@ -297,6 +297,11 @@ function liveStock(shop: Record<string, unknown>): Map<string, { id: string; pri
   return out;
 }
 
+/** The relic ids held. */
+function relicIdsOf(state: GameState): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+}
+
 /** Occupied belt slots: slot -> potion id, name, discardable. */
 function beltOf(state: GameState): { slots: number; empty: number; potions: Map<number, { id: string; name: string; canDiscard: boolean }> } {
   const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord);
@@ -317,7 +322,7 @@ export const SHOP_PLAN_NOTE =
   "state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after " +
   "the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so " +
   "the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan " +
-  "(a price change, a restocked item, an item that cannot be bought).";
+  "(an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).";
 
 /** A plan's steps from DeepSeek's answer, validated against this state; the reason it is invalid otherwise. */
 export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): { steps: ShopPlanStep[]; reason: string } | { invalid: string } {
@@ -406,25 +411,30 @@ function stepProblem(step: ShopPlanStep, env: DecisionEnv): string | null {
   return null;
 }
 
-/** What changed in the shop that the plan did not do (a price, a restock, an item gone), or null. */
+/**
+ * What changed in the shop that the rest of the plan depends on, or null: an item a later step buys is gone,
+ * another item or another price (its gold budget moved); the removal's price while a removal is still to
+ * come; new stock in a slot the plan did not buy (it could not be weighed). A slot the plan bought and The
+ * Courier refilled is expected, not a change (7XK6DUJYMYY3 F31/F38/F46: every purchase re-asked the whole
+ * plan, 7 re-asks and 436 s; F38's second plan was the first one's last two steps again); nor is a price or
+ * an item the plan does not buy.
+ */
 function stockDrift(memo: ShopPlan, env: DecisionEnv): string | null {
   const shop = asRecord(env.state.raw["shop"]);
   const live = liveStock(shop);
-  const bought = new Set(memo.steps.slice(0, memo.next).filter((step) => step.kind === "buy").map((step) => step.key));
-  for (const [key, was] of Object.entries(memo.stock)) {
-    const now = live.get(key);
-    if (bought.has(key)) {
-      if (now) return `${key} was restocked with ${now.name} (${now.price ?? "?"}g)`;
-      continue;
-    }
-    if (!now) return `${key} (${was.id}) is gone`;
-    if (now.id !== was.id) return `${key} changed from ${was.id} to ${now.name}`;
-    if (now.price !== was.price) return `${now.name}'s price changed (${was.price ?? "?"} -> ${now.price ?? "?"}g)`;
+  const rest = memo.steps.slice(memo.next);
+  for (const step of rest) {
+    if (step.kind !== "buy") continue;
+    const was = memo.stock[step.key];
+    const now = live.get(step.key);
+    if (!now) return `${step.key} (${was?.id ?? step.id ?? step.name}) is gone`;
+    if (was && now.id !== was.id) return `${step.key} changed from ${was.id} to ${now.name}`;
+    if (was && now.price !== was.price) return `${now.name}'s price changed (${was.price ?? "?"} -> ${now.price ?? "?"}g)`;
   }
-  for (const [key, now] of live) if (!(key in memo.stock)) return `${key} appeared: ${now.name} (${now.price ?? "?"}g)`;
+  const bought = new Set(memo.steps.slice(0, memo.next).filter((step) => step.kind === "buy").map((step) => step.key));
+  for (const [key, now] of live) if (!(key in memo.stock) && !bought.has(key)) return `${key} appeared: ${now.name} (${now.price ?? "?"}g)`;
   const removal = asRecord(shop["card_removal"]);
-  const removed = memo.steps.slice(0, memo.next).some((step) => step.kind === "remove");
-  if (!removed && memo.removal.available && numOrNull(removal["price"]) !== memo.removal.price) return `the removal's price changed (${memo.removal.price ?? "?"} -> ${numOrNull(removal["price"]) ?? "?"}g)`;
+  if (rest.some((step) => step.kind === "remove") && memo.removal.available && numOrNull(removal["price"]) !== memo.removal.price) return `the removal's price changed (${memo.removal.price ?? "?"} -> ${numOrNull(removal["price"]) ?? "?"}g)`;
   return null;
 }
 
@@ -529,7 +539,15 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
     state: {
       // The step-by-step question's note ("one purchase per decision") does not apply to a plan.
       ...Object.fromEntries(Object.entries(inputs.params.state).filter(([key]) => key !== "note")),
-      situation: { screen: "SHOP", gold, hp: env.brief.hp, potion_slots: `${belt.slots - belt.empty}/${belt.slots} used` },
+      situation: {
+        screen: "SHOP",
+        gold,
+        hp: env.brief.hp,
+        potion_slots: `${belt.slots - belt.empty}/${belt.slots} used`,
+        ...(relicIdsOf(state).includes("THE_COURIER")
+          ? { the_courier: "a slot you buy is restocked at once with a new item (unknown until then); your plan is carried out as written, the restocks are not asked about" }
+          : {}),
+      },
       your_cards: yourCards,
       ...(inputs.removal.available && cards.length > 0 ? { code_removal_order: { order: removalOrder, why: removalScore(cards[0]!).why } } : {}),
       ...(previous ? { already_done_this_visit: previous.done } : {}),
