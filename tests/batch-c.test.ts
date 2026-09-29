@@ -4,7 +4,8 @@
  * synthetic or logged fixtures (tests/logged-states), never the refreshing knowledge files.
  */
 
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +14,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { AnswerSet } from "../src/jev/answers.js";
 import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
 import { checkConsistency } from "../src/llm/consistency.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import type { AskDecision } from "../src/project/types.js";
 import { bossNote } from "../src/project/run-journal.js";
 import { revealsLater } from "../src/screens/act-start.js";
@@ -25,6 +27,7 @@ import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-l
 import { dominates, type Plan } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { board, decide, env as oneshotEnv, optionsOf } from "./oneshot-support.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 const choose = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
 
@@ -391,5 +394,43 @@ describe("11. An event option that names a relic carries the relic's game text (
     expect(relicFacts("获得[red]王室猛毒[/red]。", loggedKnowledge).relics).toHaveLength(1);
     expect(relicFacts("获得王室猛毒。", loggedKnowledge).relics).toHaveLength(1);
     expect(relicFacts("获得一件随机[gold]遗物[/gold]。", loggedKnowledge)).toEqual({});
+  });
+});
+
+describe("12. A DeepSeek reply that does not parse is logged, raw reply and usage (VBHZ77A3N496 F17 act plan, 0H1X9QMAAQ8V F13)", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+
+  /** A DeepSeek stand-in answering every call with `content`, and a client logging its reasoning to a temp file. */
+  async function replying(content: string): Promise<{ client: DeepSeekClient; rows: () => Record<string, unknown>[] }> {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content, reasoning_content: "Decision: o1." } }], usage: { prompt_tokens: 1200, completion_tokens: 300 } }));
+    });
+    const log = join(mkdtempSync(join(tmpdir(), "ds-unparsed-")), "reasoning.jsonl");
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000, reasoningEffort: "max", reasoningLog: log });
+    return { client, rows: () => readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>) };
+  }
+
+  it("askJson (run plan, fight plan): an empty reply throws DeepSeekAnswerError with its usage, and leaves a row", async () => {
+    const { client, rows } = await replying("");
+    const error = await client.askJson({ task: "Write the act plan." }, "run-plan").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(DeepSeekAnswerError);
+    expect((error as DeepSeekAnswerError).meta).toMatchObject({ inputTokens: 1200, outputTokens: 300 });
+    expect(rows()).toEqual([expect.objectContaining({ label: "run-plan", parse_error: expect.stringMatching(/non-JSON/), raw_reply: "", reasoning: "Decision: o1.", usage: expect.objectContaining({ input_tokens: 1200 }) })]);
+  });
+
+  it("choose and choosePlan: half a JSON object leaves a row with the raw reply before the error", async () => {
+    const { client, rows } = await replying('{"choice": "o1", "reason": "smith');
+    const criteria = { o0: JSON.stringify({ option: "休息" }), o1: JSON.stringify({ option: "锻造" }) };
+    await expect(client.choose({}, "Rest?", criteria, { label: "rest/choose" })).rejects.toBeInstanceOf(DeepSeekAnswerError);
+    await expect(client.choosePlan({}, "Shop?", criteria, { label: "shop/plan" })).rejects.toBeInstanceOf(DeepSeekAnswerError);
+    expect(rows().map((row) => [row["label"], row["raw_reply"]])).toEqual([
+      ["rest/choose", '{"choice": "o1", "reason": "smith'],
+      ["shop/plan", '{"choice": "o1", "reason": "smith'],
+    ]);
   });
 });

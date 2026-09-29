@@ -1386,7 +1386,9 @@ async function ensureFightPlan(
   } catch (error) {
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
-    logFightPlan(logFile, { run: runId, fight, floor: state.run?.floor ?? null, kind, error: message.slice(0, 200) });
+    // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
+    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens);
+    logFightPlan(logFile, { run: runId, fight, floor: state.run?.floor ?? null, kind, error: message.slice(0, 200), ...unparsedFields(error) });
     onEvent({ type: "note", message: `fight plan failed: ${message.slice(0, 160)}` });
   }
 }
@@ -1449,9 +1451,25 @@ async function ensureRunPlan(
   } catch (error) {
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
-    logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200) });
+    if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens);
+    logRunPlan(logFile, { run: runId, floor: state.run?.floor ?? null, trigger, error: message.slice(0, 200), ...unparsedFields(error) });
     onEvent({ type: "note", message: `run plan failed: ${message.slice(0, 160)}` });
   }
+}
+
+/** A plan call whose reply did not parse: its usage and the raw reply (cut), for the plan logs. */
+function unparsedFields(error: unknown): Record<string, JsonValue> {
+  if (!(error instanceof DeepSeekAnswerError)) return {};
+  const meta = error.meta;
+  return {
+    latency_ms: meta.latencyMs,
+    input_tokens: meta.inputTokens,
+    output_tokens: meta.outputTokens,
+    cache_hit_tokens: meta.cacheHitTokens ?? 0,
+    reasoning_tokens: meta.reasoningTokens ?? 0,
+    effort: meta.effort ?? "",
+    raw_reply: error.detail.content.slice(0, 2000),
+  };
 }
 
 /**

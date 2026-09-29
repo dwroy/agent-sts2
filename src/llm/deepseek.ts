@@ -306,8 +306,10 @@ export class DeepSeekClient implements Escalator {
     try {
       first = this.parseChoice(done.content);
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
       const detail = { choice: "", reason: "", reasoning: done.reasoning, content: done.content };
-      throw new DeepSeekAnswerError(error instanceof Error ? error.message : String(error), detail, done.meta);
+      throw new DeepSeekAnswerError(message, detail, done.meta);
     }
     this.logReasoning(label, done, instructions, criteria, first.choice, first.rawReason, memory);
     // A one-shot option key is "option:card" (o1:c5); an answer that gives them apart ({"choice": "o1",
@@ -338,7 +340,13 @@ export class DeepSeekClient implements Escalator {
         label,
       );
       meta = sumMeta(done.meta, again.meta);
-      const parsed = this.parseChoice(again.content);
+      let parsed: ReturnType<DeepSeekClient["parseChoice"]>;
+      try {
+        parsed = this.parseChoice(again.content);
+      } catch (error) {
+        this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, "", "", undefined, undefined, error instanceof Error ? error.message : String(error));
+        throw error;
+      }
       this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, undefined);
       parsed.choice = resolveOptionKey(parsed.choice, criteria) ?? parsed.choice;
       secondChoice = parsed.choice;
@@ -403,7 +411,9 @@ export class DeepSeekClient implements Escalator {
     try {
       json = pickJsonObject(done.content);
     } catch (error) {
-      throw new DeepSeekAnswerError(error instanceof Error ? error.message : String(error), { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      const message = error instanceof Error ? error.message : String(error);
+      this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
+      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
     }
     this.logReasoning(label, done, instructions, criteria, JSON.stringify(json["plan"] ?? null), json["reason"] ?? "", memory, json);
     return { json, meta: done.meta };
@@ -411,16 +421,26 @@ export class DeepSeekClient implements Escalator {
 
   /**
    * One free-form JSON answer (the fight plan, FIGHT_PLAN=v1): same cached system prompt, the task and
-   * its reply format in the user message. Returns the parsed object; the caller validates it.
+   * its reply format in the user message. Returns the parsed object; the caller validates it. A reply that
+   * does not parse is logged (reasoning, raw reply, usage) and thrown as DeepSeekAnswerError with its usage
+   * (VBHZ77A3N496 F17: an empty act-plan reply after 48 s left no trace but "non-JSON").
    */
   async askJson(
     payload: Record<string, JsonValue>,
     label: string,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
     const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
-    const json = pickJsonObject(done.content);
     const memory = payload["memory"];
-    this.logReasoning(label, done, typeof payload["task"] === "string" ? payload["task"] : label, {}, "", json["summary"] ?? "", memory, json);
+    const question = typeof payload["task"] === "string" ? payload["task"] : label;
+    let json: Record<string, unknown>;
+    try {
+      json = pickJsonObject(done.content);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
+      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+    }
+    this.logReasoning(label, done, question, {}, "", json["summary"] ?? "", memory, json);
     return { json, meta: done.meta };
   }
 
@@ -485,14 +505,18 @@ export class DeepSeekClient implements Escalator {
     }
   }
 
-  private logReasoning(label: string, call: CompletedCall, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, memory: JsonValue | undefined, answer?: unknown): void {
+  /**
+   * One row per call in the reasoning log. `parseError`: the reply did not parse; the row keeps it with the
+   * raw reply (0H1X9QMAAQ8V F13: half a JSON object, its choice recovered from the reasoning, no row at all).
+   */
+  private logReasoning(label: string, call: CompletedCall, question: string, criteria: Record<string, string | null>, choice: string, reason: unknown, memory: JsonValue | undefined, answer?: unknown, parseError?: string): void {
     if (!this.config.reasoningLog) return;
     try {
       mkdirSync(dirname(this.config.reasoningLog), { recursive: true });
       const { effort, reasoning, latencyMs, meta } = call;
       // Token usage of this one call (cache hit = the prefix DeepSeek had cached; billed much cheaper).
       const usage = { input_tokens: meta.inputTokens, cache_hit_tokens: meta.cacheHitTokens ?? 0, output_tokens: meta.outputTokens, reasoning_tokens: meta.reasoningTokens ?? 0 };
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }) };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }), ...(parseError === undefined ? {} : { parse_error: parseError.slice(0, 300), raw_reply: call.content }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
