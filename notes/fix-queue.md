@@ -142,3 +142,9 @@ From fix batch H (2026-09-29 21:30; line numbers at v3 389bdb7), not fixed:
 - "solver says dead, mod says safe" with the gap from blockable hand damage (Burn) still labelled calc mismatch.
 - rest.ts:158, event.ts:261 duplicate the discard note text (use DISCARD_ANSWER_NOTE). Cosmetic.
 - Experience entry potion-code-discard ("White Beast Statue still discards by code") now outdated → next experience update (potion entry; numbers/facts only).
+
+From post-mortems 7YT0 9CDE VTRE V6TW (2026-09-29 21:31; line numbers at v3 389bdb7):
+- Liquid Bronze potion unmodelled: not in card-model.ts:702-815 POTION_EFFECTS (only a value in potion-values.ts:33), so combat questions show it as "effect not simulated" (combat-plan.ts:2006). VTRE: listed in 37 Jev questions F19–F33, never picked, still held at death; V6TW: 29 questions, drunk only at F33 T4 when every line died.
+- Red Skull and Self-Forming Clay not in the solver/rollout (only text in run-brief.ts:106/:110). VTRE F33 T6 Strength 2→5 at 33/80; V6TW F33 T2/T3 6 Clay block each turn.
+- Plating card text shown to DeepSeek/Jev has no decay ("获得4层覆甲"): 7YT0 F12 took Stone Armor for "48 block over 12 turns" (real ~10, Plating −1/turn), QBCV F16 the same. Add the decay fact to the card text/facts.
+- shop.ts:330 one-shot shop plan judged invalid when DeepSeek puts the list into `choice` (VTRE F6) → step-by-step fallback cost 150.8 s. Accept/recover the list from `choice`.
