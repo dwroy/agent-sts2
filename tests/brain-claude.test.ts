@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain } from "../src/brain/brain.js";
-import { claudeFailure, ClaudeEngine } from "../src/brain/engines/claude.js";
+import { claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
 import { agentEnv } from "../src/brain/engines/process.js";
 import { EngineFailure } from "../src/brain/router.js";
 import { pickSpec, runPlanSpec, stableSchema } from "../src/brain/specs.js";
@@ -125,15 +125,21 @@ describe("claude engine", () => {
     });
   });
 
-  it("picks the model per question kind and reports the model that answered", async () => {
-    const fake = fakeClaude("opus", success({ choice: "a", reason: "heal" }, "claude-opus-5"));
+  it("picks the model per question kind, pins the opus alias to its full id and reports the model that answered", async () => {
+    const fake = fakeClaude("opus", success({ choice: "a", reason: "heal" }, "claude-opus-5-5"));
     const answer = await engine(fake.bin, { BRAIN_CLAUDE_MODEL: "sonnet", BRAIN_CLAUDE_MODEL_REST: "opus", BRAIN_CLAUDE_EFFORT: "high", BRAIN_CLAUDE_SCHEMA: "question" }).decide(request());
     const seen = fake.seen();
     // BRAIN_CLAUDE_SCHEMA=question: the question's own schema, its keys as an enum.
     expect(JSON.parse(seen.argv[seen.argv.indexOf("--json-schema") + 1]!)).toEqual(pickSpec("rest/plan", options, {}).schema);
-    expect(seen.argv[seen.argv.indexOf("--model") + 1]).toBe("opus");
+    // "opus" goes out as the pinned full id (config.ts CLAUDE_OPUS_MODEL); other names as given.
+    expect(seen.argv[seen.argv.indexOf("--model") + 1]).toBe("claude-opus-5-5");
     expect(seen.argv[seen.argv.indexOf("--effort") + 1]).toBe("high");
-    expect(answer.model).toBe("claude-opus-5");
+    expect(answer.model).toBe("claude-opus-5-5");
+    const sonnet = fakeClaude("sonnet-alias", success({ choice: "a", reason: "heal" }));
+    await engine(sonnet.bin, { BRAIN_CLAUDE_MODEL: "sonnet" }).decide(request());
+    expect(sonnet.seen().argv[sonnet.seen().argv.indexOf("--model") + 1]).toBe("sonnet");
+    expect(claudeModelId("Opus")).toBe("claude-opus-5-5");
+    expect(claudeModelId("claude-opus-5")).toBe("claude-opus-5");
   });
 
   it("puts the re-ask after the question and maps an option name to its key", async () => {

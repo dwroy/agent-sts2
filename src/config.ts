@@ -116,7 +116,16 @@ export interface BrainEngineSettings {
   reask: boolean | null;
   /** BRAIN_<ENGINE>_TOOLS=on|off: whether the engine gets the tool list (default on; DeepSeek off: v3 parity). */
   tools: boolean | null;
+  /**
+   * BRAIN_<ENGINE>_MAX_CALLS: the engine's model calls per process (re-asks included), counted by the router apart
+   * from DEEPSEEK_MAX_CALLS; past it the engine's questions go to BRAIN_FALLBACK. null: no limit. DeepSeek: always
+   * null (the loop's DEEPSEEK_MAX_CALLS governs it, as in v3). Claude default DEFAULT_CLAUDE_MAX_CALLS.
+   */
+  maxCalls: number | null;
 }
+
+/** KNOWLEDGE_PREFIX: what the brain's system prompt carries (docs/v4-architecture.md §2-§3). */
+export type KnowledgePrefixMode = "off" | "full";
 
 /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
 export interface BrainConfig {
@@ -133,6 +142,12 @@ export interface BrainConfig {
   /** BRAIN_LOG: one JSONL row per question; null = brain.jsonl next to the decision log. "" disables. */
   log: string | null;
   engines: Record<EngineName, BrainEngineSettings>;
+  /**
+   * KNOWLEDGE_PREFIX: "off" (default) sends v3's system prompt (rules + guide + handbook) and v3's memory, byte for
+   * byte; "full" sends the rules + the whole knowledge base at the run's ascension (src/brain/knowledge.ts), to every
+   * engine, and drops what the prefix already holds from the memory (the experience lessons).
+   */
+  knowledgePrefix: KnowledgePrefixMode;
   /** Claude runs under this machine's Claude login (the subscription); there is no API-key mode. */
   claude: {
     /** BRAIN_CLAUDE_BIN (default "claude"). */
@@ -150,6 +165,15 @@ export interface BrainConfig {
 
 /** The brain's default Claude model (claude-api skill, 2026-09: the current Sonnet; BRAIN_CLAUDE_MODEL=opus for Opus). */
 export const DEFAULT_CLAUDE_MODEL = "claude-sonnet-5";
+
+/** The current Opus, pinned (Dai 2026-09-29): BRAIN_CLAUDE_MODEL=opus sends this id, so an alias move changes nothing. */
+export const CLAUDE_OPUS_MODEL = "claude-opus-5-5";
+
+/** Model aliases the brain pins to a full id before calling the CLI; other names are sent as given. */
+export const CLAUDE_MODEL_ALIASES: Readonly<Record<string, string>> = { opus: CLAUDE_OPUS_MODEL };
+
+/** The Claude engine's calls per process when BRAIN_CLAUDE_MAX_CALLS is unset (DEEPSEEK_MAX_CALLS is 300). */
+export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
 /** Engine names BRAIN_* may use; codex and dsh are named but not implemented yet (the router says so). */
 const ENGINES: readonly EngineName[] = ["deepseek", "claude", "codex", "dsh"];
@@ -169,6 +193,16 @@ function parseOnOff(raw: string | null, field: string, problems: ConfigProblem[]
   if (["off", "false", "0", "no"].includes(value)) return false;
   problems.push({ field, message: `expected on or off, got "${raw}"` });
   return null;
+}
+
+/** BRAIN_<ENGINE>_MAX_CALLS ("off" or "none": no limit); DeepSeek's budget stays DEEPSEEK_MAX_CALLS (the loop's). */
+function maxCallsOf(env: NodeJS.ProcessEnv, name: EngineName, problems: ConfigProblem[]): number | null {
+  if (name === "deepseek") return null;
+  const field = `BRAIN_${name.toUpperCase()}_MAX_CALLS`;
+  const raw = readEnv(env, field);
+  if (raw === null) return name === "claude" ? DEFAULT_CLAUDE_MAX_CALLS : null;
+  if (["off", "none"].includes(raw.toLowerCase())) return null;
+  return parseInteger(raw, field, problems, { min: 0, max: 1_000_000 });
 }
 
 /** The BRAIN_* variables (docs/v4-architecture.md §2): switching engines is configuration only. */
@@ -209,6 +243,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       effort,
       reask: parseOnOff(readEnv(env, `BRAIN_${upper}_REASK`), `BRAIN_${upper}_REASK`, problems),
       tools: parseOnOff(readEnv(env, `BRAIN_${upper}_TOOLS`), `BRAIN_${upper}_TOOLS`, problems),
+      maxCalls: maxCallsOf(env, name, problems),
     };
   }
   const budgetRaw = readEnv(env, "BRAIN_CLAUDE_MAX_BUDGET_USD");
@@ -218,6 +253,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const schemaRaw = (readEnv(env, "BRAIN_CLAUDE_SCHEMA") ?? "kind").toLowerCase();
   if (schemaRaw !== "kind" && schemaRaw !== "question") problems.push({ field: "BRAIN_CLAUDE_SCHEMA", message: `expected kind or question, got "${schemaRaw}"` });
   const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
+  const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
+  if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
+  const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
   return {
     engine,
     byPrefix,
@@ -227,6 +265,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     // BRAIN_LOG=off (or "-") disables the log.
     log: log === null ? null : log === "off" || log === "-" ? "" : log,
     engines,
+    knowledgePrefix,
     claude: {
       bin: readEnv(env, "BRAIN_CLAUDE_BIN") ?? "claude",
       schema: schemaMode,

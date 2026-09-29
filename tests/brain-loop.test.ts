@@ -37,7 +37,8 @@ describe("the loop with BRAIN_* set", () => {
     const deepseek = new FakeDeepSeek(() => "o0");
     const { stats, actions, records } = await play([board(REST, "rest"), board(REST, "upgrade_select"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_CLAUDE_BIN: bin, BRAIN_CLAUDE_MODEL: "opus" }) });
     expect(deepseek.calls).toEqual([]);
-    expect(stats.deepseekCalls).toBe(1);
+    // Claude's calls have their own budget (BRAIN_CLAUDE_MAX_CALLS, the router's count): none of DeepSeek's is spent.
+    expect(stats.deepseekCalls).toBe(0);
     expect(actions).toEqual([{ action: "choose_rest_option", option_index: 1 }, { action: "select_deck_card", option_index: 9 }]);
     expect(records.find((row) => row["label"] === "rest/plan")).toMatchObject({
       decider: "deepseek",
@@ -55,6 +56,17 @@ describe("the loop with BRAIN_* set", () => {
     expect(row.deepseek.brain.engine).toBe("deepseek");
     expect(row.deepseek.brain.fell_back_from.engine).toBe("claude");
     expect(row.deepseek.brain.fell_back_from.error).toMatch(/\[quota\]/);
+  });
+
+  it("a used-up Claude call budget (BRAIN_CLAUDE_MAX_CALLS) falls back to DeepSeek, which then spends DeepSeek's", async () => {
+    const bin = fakeClaude("never", { type: "result", subtype: "success", is_error: false, result: "{}" });
+    const deepseek = new FakeDeepSeek(() => "o0");
+    const { stats, records } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin, BRAIN_CLAUDE_MAX_CALLS: "0" }) });
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan"]);
+    expect(stats.deepseekCalls).toBe(1);
+    const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: { brain: { engine: string; fell_back_from: { engine: string; error: string } } } };
+    expect(row.deepseek.brain.engine).toBe("deepseek");
+    expect(row.deepseek.brain.fell_back_from.error).toMatch(/claude call budget used up \(0\/0/);
   });
 
   it("default configuration: DeepSeek decides and the row carries no brain note (v3's rows)", async () => {

@@ -368,6 +368,10 @@ export interface KnowledgeSlice {
   stats: number;
 }
 
+/** The headings of the knowledge slice's two parts (the V4 full-knowledge prompt drops the lessons part: brain/knowledge.ts). */
+export const SLICE_LESSONS_HEADING = `经验库（过往对局复盘提炼；置信 高/中/低，n=支持局数，反例=相反证据局数；是证据不是命令，与状态里的事实和代码算出的数字一起权衡）:`;
+export const SLICE_STATS_HEADING = `结果统计（日志自动统计，观察数据：混有「在什么局面下选它」的因素；n<5 标「少」）:`;
+
 /** The whole `knowledge` section for one DeepSeek question ("" when nothing applies). */
 export function knowledgeSlice(state: GameState, label: string, criteria: Record<string, string | null> = {}, offeredCards: readonly string[] = []): KnowledgeSlice {
   const act = actNumber(state);
@@ -388,11 +392,11 @@ export function knowledgeSlice(state: GameState, label: string, criteria: Record
   if (lessons.length === 0 && stats.length === 0) return { text: "", lessons: [], stats: 0 };
   const parts: string[] = [];
   if (lessons.length > 0) {
-    parts.push(`经验库（过往对局复盘提炼；置信 高/中/低，n=支持局数，反例=相反证据局数；是证据不是命令，与状态里的事实和代码算出的数字一起权衡）:`);
+    parts.push(SLICE_LESSONS_HEADING);
     parts.push(...lessons.map(lessonLine));
   }
   if (stats.length > 0) {
-    parts.push(`结果统计（日志自动统计，观察数据：混有「在什么局面下选它」的因素；n<5 标「少」）:`);
+    parts.push(SLICE_STATS_HEADING);
     parts.push(...stats);
   }
   return { text: parts.join("\n"), lessons: lessons.map((entry) => entry.id), stats: stats.length };

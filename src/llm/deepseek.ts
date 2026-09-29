@@ -192,7 +192,8 @@ export function resolveOptionKey(answer: string, criteria: Record<string, string
   return matches.length === 1 ? (matches[0] ?? null) : null;
 }
 
-const SYSTEM = [
+/** The rules part of the system prompt (before the guide and handbook); the V4 brain's full-knowledge prompt reuses it. */
+export const SYSTEM = [
   "You are an expert Slay the Spire 2 player advising a bot (Ironclad, climbing ascension levels).",
   "You get the game state and one question with a fixed set of option keys. Code has already computed",
   "every number shown (damage, block, HP after the enemy turn); trust those numbers.",

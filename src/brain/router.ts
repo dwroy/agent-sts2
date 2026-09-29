@@ -20,6 +20,9 @@
  *   failure also rests that engine for a while (EngineFailure.cooldownMs): its questions go straight to the
  *   fallback, so an unattended run never waits on an engine that cannot answer. An answer failure the engine
  *   reports as such (`answerFailure`: DeepSeek answered, unusably) is passed on for the caller's own recovery.
+ * - Call budgets: BRAIN_<ENGINE>_MAX_CALLS (Claude: DEFAULT_CLAUDE_MAX_CALLS) counts every call the router makes to
+ *   that engine in this process, re-asks included, apart from DeepSeek's DEEPSEEK_MAX_CALLS (the loop's). A used-up
+ *   budget is an engine failure ("budget"): the question goes to BRAIN_FALLBACK, or fails when there is none.
  * - Keys never reach the log: rows hold the request, the answer, the usage and error texts only.
  */
 import { createHash } from "node:crypto";
@@ -27,7 +30,7 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { BrainConfig } from "../config.js";
-import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
+import type { BrainAnswer, BrainEngine, BrainRequest, EngineName, KnowledgeNote } from "./types.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
 export function labelPrefix(label: string): string {
@@ -39,7 +42,7 @@ export function isAnswerFailure(error: unknown): boolean {
   return typeof error === "object" && error !== null && (error as { answerFailure?: unknown }).answerFailure === true;
 }
 
-export type FailureKind = "quota" | "rate_limit" | "overloaded" | "auth" | "timeout" | "unavailable" | "error";
+export type FailureKind = "quota" | "rate_limit" | "overloaded" | "auth" | "timeout" | "unavailable" | "budget" | "error";
 
 /** An engine that could not answer, with why (for the log) and how long to rest it. */
 export class EngineFailure extends Error {
@@ -75,6 +78,8 @@ export interface BrainLogRow {
   model: string;
   system_sha: string;
   system_chars: number;
+  /** KNOWLEDGE_PREFIX=full: the prefix the system carried (or why v3's went out instead). */
+  knowledge?: KnowledgeNote;
   memory?: unknown;
   question: string;
   options?: Record<string, string | null>;
@@ -116,6 +121,8 @@ function message(error: unknown): string {
 export class BrainRouter {
   /** Engines resting after a quota / rate-limit / login failure: until when, and why. */
   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
+  /** Calls made to each engine in this process (re-asks included), for BRAIN_<ENGINE>_MAX_CALLS. */
+  private readonly calls = new Map<EngineName, number>();
 
   constructor(private readonly deps: RouterDeps) {}
 
@@ -135,6 +142,17 @@ export class BrainRouter {
   /** Whether an engine gets tools (BRAIN_TOOLS / BRAIN_<ENGINE>_TOOLS; DeepSeek off by default: v3 parity). */
   toolsFor(engine: EngineName): boolean {
     return this.deps.config.engines[engine].tools ?? this.deps.config.tools ?? engine !== "deepseek";
+  }
+
+  /** Calls made to an engine so far in this process (re-asks included). */
+  callsMade(engine: EngineName): number {
+    return this.calls.get(engine) ?? 0;
+  }
+
+  /** Whether an engine's call budget (BRAIN_<ENGINE>_MAX_CALLS) has room; DeepSeek always (the loop keeps its budget). */
+  budgetLeft(engine: EngineName): boolean {
+    const max = this.deps.config.engines[engine].maxCalls;
+    return max === null || max === undefined || this.callsMade(engine) < max;
   }
 
   /** The engine resting now (after a quota / rate-limit failure), if any. */
@@ -252,8 +270,13 @@ export class BrainRouter {
     };
   }
 
-  /** engine.decide under the engine's timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
+  /** engine.decide within the engine's call budget and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
   private async call(engine: BrainEngine, req: BrainRequest): Promise<BrainAnswer> {
+    if (!this.budgetLeft(engine.name)) {
+      const field = `BRAIN_${engine.name.toUpperCase()}_MAX_CALLS`;
+      throw new EngineFailure(`${engine.name} call budget used up (${this.callsMade(engine.name)}/${this.deps.config.engines[engine.name].maxCalls}, ${field})`, "budget");
+    }
+    this.calls.set(engine.name, this.callsMade(engine.name) + 1);
     const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
     if (!ms) return engine.decide(req);
     const controller = new AbortController();
@@ -287,6 +310,7 @@ export class BrainRouter {
       model,
       system_sha: sha(req.system),
       system_chars: req.system.length,
+      ...(req.knowledge ? { knowledge: req.knowledge } : {}),
       ...(req.memory === undefined ? {} : { memory: req.memory }),
       question: req.question,
       ...(req.options ? { options: req.options } : {}),
