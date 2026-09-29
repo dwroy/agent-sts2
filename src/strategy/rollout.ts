@@ -696,7 +696,7 @@ export function selectCandidates(plans: Plan[], k = 6, include: Plan[] = []): { 
 }
 
 /** A lasting power the rollout carries into its later turns (a SimPlayer field). */
-type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder" | "hellraiser";
+type LastingPower = "demonForm" | "endTurnBlock" | "juggernaut" | "keepsBlock" | "inferno" | "mantle" | "rupture" | "pyre" | "unmovable" | "boulder" | "hellraiser" | "darkEmbrace";
 
 /**
  * Power cards whose lasting effect the rollout carries: the SimPlayer field, the power it shows as (for
@@ -717,6 +717,8 @@ const POWER_EFFECTS: Record<string, { effect: LastingPower; power: string; amoun
   UNMOVABLE: { effect: "unmovable", power: "UNMOVABLE_POWER", amount: [1, 1] },
   ROLLING_BOULDER: { effect: "boulder", power: "ROLLING_BOULDER_POWER", amount: [5, 5] },
   HELLRAISER: { effect: "hellraiser", power: "HELLRAISER_POWER", amount: [1, 1] },
+  // 「每当有一张牌被消耗时，抽1张牌」 (DARK_EMBRACE_POWER 1 a copy).
+  DARK_EMBRACE: { effect: "darkEmbrace", power: "DARK_EMBRACE_POWER", amount: [1, 1] },
 };
 
 /**
@@ -893,6 +895,11 @@ interface SimPlayer {
   boulder: number;
   /** Hellraiser up: a Strike drawn is played at once, free, at a random enemy (hellraised). */
   hellraiser: boolean;
+  /**
+   * Dark Embrace (cards drawn per card exhausted): the ethereal cards exhausted at the end of a turn draw that
+   * many each, discarded with the hand (the draw pile runs down, and may be reshuffled, before the next turn).
+   */
+  darkEmbrace: number;
   /** Start-of-turn HP loss from anything but Crimson Mantle and Inferno. */
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
@@ -1335,6 +1342,13 @@ function applyPlan(
     const card = drawOne(piles, random);
     if (card && i >= (o.drawnExhausted ?? 0)) piles.discard.push(card);
   }
+  // Dark Embrace: each ethereal card exhausted at the end of the turn draws a card, discarded with the hand
+  // (not in a won fight: there is no end of turn).
+  const etherealEnd = o.winsFight ? 0 : unplayed.filter((i) => hand[i]!.ethereal).length;
+  for (let k = 0; k < etherealEnd * player.darkEmbrace; k += 1) {
+    const card = drawOne(piles, random);
+    if (card) piles.discard.push(card);
+  }
   // Status cards the line's turn made (the solver priced them, the piles never got them): Dazed from hits
   // on a Personal Hive into the draw pile, Wounds from unblocked Painful Stabs and the Withers held at the
   // end of the turn into the discard pile.
@@ -1628,6 +1642,7 @@ function simulate(
     relicAoe: 0,
     boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
     hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
+    darkEmbrace: input.playerPowers["DARK_EMBRACE_POWER"] ?? 0,
     otherStartLoss: 0,
     startDealt: 0,
     playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,

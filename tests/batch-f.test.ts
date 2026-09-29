@@ -392,3 +392,48 @@ describe("5. Thrash's random exhaust in the rollout takes an Attack, and grows b
     expect(next.dmg.min).toBe(20);
   });
 });
+
+describe("6. End-of-turn ethereal exhausts: Feel No Pain's Block triggers Juggernaut; Dark Embrace draws (batch E note)", () => {
+  const dazed = (i: number) => card(i, "DAZED", { type: "Status", playable: false, target: "none" as CardModel["target"], validTargets: [], cost: -1, ethereal: true });
+
+  it("two Dazed held with Feel No Pain 3 and Juggernaut 5: 10 to the enemy at the end of the turn (a kill at 10 HP)", () => {
+    const input = (juggernaut: number): SolverInput => ({
+      hand: [dazed(0), dazed(1)],
+      player: player({ energy: 0, feelNoPain: 3, juggernaut }),
+      enemies: [enemy({ hp: 10, maxHp: 10, attacks: [{ damage: 20, hits: 1 }] })],
+      fightKind: "monster",
+      turn: 2,
+    });
+    const end = solveTurn(input(5)).plans[0]!;
+    expect(end.outcome.winsFight).toBe(true);
+    expect(end.outcome.hpLoss).toBe(0);
+    // Without Juggernaut: the 6 Block of the two exhausts meets the 20.
+    expect(solveTurn(input(0)).plans[0]!.outcome).toMatchObject({ winsFight: false, hpLoss: 14 });
+  });
+
+  it("Dark Embrace: the Dazed exhausted at the end of the turn draws a card the next turn no longer gets", () => {
+    const run = (powers: Record<string, number>) => {
+      const free = (i: number) => card(i, "STRIKE_IRONCLAD", { name: "打击", damage: 6, damageBase: 6, cost: 0 });
+      const solver: SolverInput = { hand: [dazed(0)], player: player({ energy: 0 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 2 };
+      return rolloutDecision({
+        solver,
+        plans: solveTurn(solver).plans,
+        enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+        tables: { TEST_DUMMY: WAIT },
+        piles: { draw: [10, 11, 12, 13, 14].map(free), discard: [20, 21, 22, 23, 24].map(defend), handBase: [dazed(0)] },
+        meta: META,
+        playerPowers: powers,
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 9, horizon: 2, now: fastClock() },
+      }).lines[0]!;
+    };
+    // Without it the next turn draws the five free Strikes (30); with it one went to the discard pile first.
+    expect(run({}).perTurn[0]!.dmg.min).toBe(30);
+    const embrace = run({ DARK_EMBRACE_POWER: 1 }).perTurn[0]!;
+    expect(embrace.dmg.mean).toBeLessThan(30);
+    expect(embrace.dmg.min).toBe(24);
+  });
+});

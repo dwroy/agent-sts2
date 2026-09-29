@@ -1801,6 +1801,16 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player);
     }
   }
+  // Ethereal cards still in hand are exhausted at the end of the turn, before the enemies act: each one's Feel
+  // No Pain Block (etherealBlock, below) is a Block gain, and Juggernaut hits a random enemy for each.
+  const etherealHeld = [...sim.hand, ...sim.held].filter((card) => card.ethereal && card.type !== "Potion").length;
+  if (etherealHeld > 0 && sim.feelNoPain > 0 && (input.player.juggernaut ?? 0) > 0 && sim.enemies.some((enemy) => enemy.alive)) {
+    sim = clone(sim);
+    for (let k = 0; k < etherealHeld; k += 1) {
+      const victim = randomVictim(sim);
+      if (victim) hitEnemyRaw(sim, victim, input.player.juggernaut ?? 0);
+    }
+  }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
