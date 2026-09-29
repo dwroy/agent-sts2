@@ -14,6 +14,7 @@ import type { JsonValue } from "../util/json.js";
 import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import { discardSlotsOf } from "../screens/potion-discard.js";
+import { fillGuideFacts } from "../strategy/boss-clock.js";
 import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
@@ -341,8 +342,9 @@ export class DeepSeekClient implements Escalator {
   readonly handbookId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
-    const guide = readOptional(config.guideFile);
-    const handbook = readOptional(config.handbookFile);
+    // The guides' data facts (the Giant's kill record) are filled from the fight data once, here.
+    const guide = fillGuideFacts(readOptional(config.guideFile));
+    const handbook = fillGuideFacts(readOptional(config.handbookFile));
     this.handbookId = shortHash(handbook);
     this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
     let system = SYSTEM;

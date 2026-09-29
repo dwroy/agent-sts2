@@ -82,7 +82,7 @@ export const BOSSES: Record<string, BossProfile> = {
   THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "{POWER:VANTOM:SLIPPERY_POWER} Slippery stacks: multi-hit", mechanic: "Slippery {POWER:VANTOM:SLIPPERY_POWER}: its next {POWER:VANTOM:SLIPPERY_POWER} HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early ({GIANT_KILLS}; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP; A8/A9 kills: block needed (stacks - HP) 13 or less 17/18 won, 20 or more 3/15)" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early ({GIANT_KILLS}; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP; {GIANT_BLOCK})" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to {POWER:CEREMONIAL_BEAST:PLOW_POWER}; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -195,7 +195,47 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
 export function bossMechanic(profile: BossProfile, ascension: number): string {
-  return fillDbNumbers(profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")), ascension);
+  return fillDbNumbers(
+    profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")).replace("{GIANT_BLOCK}", giantBlockRecord("en")),
+    ascension,
+  );
+}
+
+/**
+ * The block the Giant's kill left to find (its stacks less our HP at the kill) against the outcome, over the logged
+ * A8 and A9 kills (boss-damage.json WATERFALL_GIANT.kills, tools/build-boss-damage.py). Was hard-coded ("33 kills:
+ * 13 or less 17/18 won, 20 or more 3/15") and went stale with Y36HXZ80A8LL (a T9 kill at 36 HP into 41, won).
+ */
+export function giantBlockRecord(lang: "zh" | "en"): string {
+  const kills = unblockedShare("WATERFALL_GIANT")?.kills ?? {};
+  return giantBlockText([...(kills["8"] ?? []), ...(kills["9"] ?? [])], lang);
+}
+
+/** The block-needed record text of these fights (giantBlockRecord; exported for tests). */
+export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string {
+  const killed = rows.filter((row) => row.turn !== null && row.hp != null && row.stacks != null);
+  if (killed.length === 0) return lang === "zh" ? "A8/A9 没有记下击杀时 HP 的巨兽对局" : "no logged A8/A9 Giant kill with the HP at the kill";
+  const bucket = (test: (need: number) => boolean) => {
+    const list = killed.filter((row) => test(row.stacks! - row.hp!));
+    return { won: list.filter((row) => row.won).length, n: list.length };
+  };
+  const low = bucket((need) => need <= 13);
+  const mid = bucket((need) => need > 13 && need < 20);
+  const high = bucket((need) => need >= 20);
+  if (lang === "zh") {
+    const parts = [`≤13 的 ${low.n} 场赢 ${low.won}`, ...(mid.n > 0 ? [`14–19 的 ${mid.n} 场赢 ${mid.won}`] : []), `≥20 的 ${high.n} 场赢 ${high.won}`];
+    return `A8/A9 有击杀的 ${killed.length} 场：所需格挡（层数 − HP）${parts.join("，")}`;
+  }
+  const parts = [`13 or less ${low.won}/${low.n} won`, ...(mid.n > 0 ? [`14-19 ${mid.won}/${mid.n}`] : []), `20 or more ${high.won}/${high.n}`];
+  return `A8/A9 kills (${killed.length}): block needed (stacks - HP) ${parts.join(", ")}`;
+}
+
+/**
+ * The guides' facts that come from the data, filled when the DeepSeek system prompt is built (once a process, so
+ * the prompt stays byte-identical across calls): {GIANT_BLOCK_RECORD} (giantBlockRecord).
+ */
+export function fillGuideFacts(text: string): string {
+  return text.includes("{GIANT_BLOCK_RECORD}") ? text.split("{GIANT_BLOCK_RECORD}").join(giantBlockRecord("zh")) : text;
 }
 
 /**

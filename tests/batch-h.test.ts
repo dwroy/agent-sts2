@@ -3,9 +3,10 @@
  * (tests/logged-states/batch-h, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
  */
 
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -18,6 +19,8 @@ import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { planRest } from "../src/screens/rest.js";
+import { bossMechanic, bossProfile, giantBlockRecord, giantBlockText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { bossNote } from "../src/project/run-journal.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
@@ -284,5 +287,42 @@ describe("4. DeepSeek: an unknown option recovered from the reasoning keeps the 
     // As the loop's accept hands it to resolve: the discard variant, slot 2 first.
     const resolved = decision.resolve(deepseekPick(answer.choice, answer.discard ? { discard: answer.discard } : {}));
     expect(resolved.intent).toEqual({ action: "discard_potion", option_index: 2 });
+  });
+});
+
+describe("5. The Giant's block-needed record is counted from the fight data, not written in (was \"33 kills, 13 or less 18 won 17\")", () => {
+  const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "knowledge");
+  const row = (turn: number | null, won: boolean, hp?: number, stacks?: number): GiantKillRow => ({ turn, won, ...(hp === undefined ? {} : { hp, stacks }) });
+  // A fixed set (not the refreshing boss-damage.json): need (stacks - HP) 5, 13, 13 won; 17 lost; 20 won, 30 lost; not killed.
+  const a8 = [row(7, true, 25, 30), row(9, true, 23, 36), row(9, false, 19, 36), row(null, false)];
+  const a9 = [row(9, true, 28, 41), row(7, true, 15, 35), row(12, false, 20, 50)];
+
+  it("the text: kills with HP and stacks, by the block they left to find", () => {
+    expect(giantBlockText([...a8, ...a9], "zh")).toBe("A8/A9 有击杀的 6 场：所需格挡（层数 − HP）≤13 的 3 场赢 3，14–19 的 1 场赢 0，≥20 的 2 场赢 1");
+    expect(giantBlockText([...a8, ...a9], "en")).toBe("A8/A9 kills (6): block needed (stacks - HP) 13 or less 3/3 won, 14-19 0/1, 20 or more 1/2");
+    expect(giantBlockText([row(null, false)], "zh")).toBe("A8/A9 没有记下击杀时 HP 的巨兽对局");
+  });
+
+  it("the boss note, the boss mechanic and the guides carry the counted record", () => {
+    setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 7, turns: 70, kills: { "8": a8, "9": a9 } } });
+    try {
+      const zh = giantBlockRecord("zh");
+      const note = bossNote("WATERFALL_GIANT_BOSS", 9)!;
+      expect(note).toContain(`（${zh}）`);
+      expect(note).not.toContain("18 场赢 17");
+      const mechanic = bossMechanic(bossProfile("WATERFALL_GIANT_BOSS")!, 9);
+      expect(mechanic).toContain(giantBlockRecord("en"));
+      expect(mechanic).not.toContain("17/18");
+      for (const name of ["ironclad-guide.md", "ds-handbook.md"]) {
+        const text = readFileSync(join(KNOWLEDGE, name), "utf8");
+        expect(text, name).toContain("{GIANT_BLOCK_RECORD}");
+        expect(text, name).not.toContain("18 场赢 17");
+      }
+      const client = new DeepSeekClient({ apiKey: "k", baseUrl: "http://127.0.0.1:9", model: "m", timeoutMs: 1000, guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md") });
+      expect(client.systemPrompt).not.toContain("{GIANT_BLOCK_RECORD}");
+      expect(client.systemPrompt.split(zh).length - 1).toBe(3);
+    } finally {
+      setUnblockedSharesForTests(null);
+    }
   });
 });
