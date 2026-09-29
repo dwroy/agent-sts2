@@ -12,8 +12,12 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { DeepSeekAnswerError, DeepSeekClient, pickJsonObject, truncatedJsonObject } from "../src/llm/deepseek.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
+import { MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
@@ -168,5 +172,79 @@ describe("3. An empty run-plan reply, all its output spent in the reasoning (79Y
     expect(failed).toBeInstanceOf(DeepSeekAnswerError);
     expect((failed as Error).message).toBe("DeepSeek's run-plan reply was empty twice (last: empty reply (finish_reason length; all 100 output tokens were reasoning)) and its reasoning drafted no answer");
     expect((failed as DeepSeekAnswerError).meta.outputTokens).toBe(200);
+  });
+});
+
+describe("4. Music Box: the turn's first Attack card comes back as an Ethereal copy (YVYZ F48: an extra Strike after Strike at T3, re-planned 3x; Pommel Strike at T7)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  const card = (index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel => ({
+    index, key: `c${index}`, cardId, name: cardId, type: "Attack", upgraded: false, cost: 1, xCost: false, playable: true, target: "single", validTargets: [0],
+    damage: null, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0,
+    draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...overrides,
+  });
+  const strike = card(0, "STRIKE_IRONCLAD", { damage: 6 });
+  const enemy: EnemySim = { index: 0, name: "Aeonglass", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 40, maxHp: 80, block: 0, energy: 2, weak: false, vulnerable: false, intangible: false, ...over });
+  const lines = (plans: Plan[]) => plans.map((plan) => plan.steps.map((step) => step.cardIndex).join(","));
+
+  it("solver: with no Attack played yet, the first one adds a copy to play; after one, or without the relic, none", () => {
+    const armed = solveTurn({ hand: [strike], player: player({ musicBox: { count: 0 } }), enemies: [enemy], fightKind: "boss" });
+    expect(armed.plans[0]!.steps.map((step) => step.cardIndex)).toEqual([0, MUSIC_BOX_INDEX]);
+    expect(armed.plans[0]!.outcome.damageDealt).toBe(12);
+    const spent = solveTurn({ hand: [strike], player: player({ musicBox: { count: 1 } }), enemies: [enemy], fightKind: "boss" });
+    expect(lines(spent.plans)).not.toContain(`0,${MUSIC_BOX_INDEX}`);
+    expect(spent.plans[0]!.outcome.damageDealt).toBe(6);
+    const none = solveTurn({ hand: [strike], player: player(), enemies: [enemy], fightKind: "boss" });
+    expect(none.plans[0]!.outcome.damageDealt).toBe(6);
+  });
+
+  it("solver: the copy's play counts for Withering Presence like any card's", () => {
+    const result = solveTurn({ hand: [strike], player: player({ musicBox: { count: 0 } }), enemies: [enemy], fightKind: "boss", wither: { every: 2, played: 0, damage: 5 }, cardsPlayedThisTurn: 0 });
+    const both = result.plans.find((plan) => plan.steps.length === 2)!;
+    expect(both.steps.map((step) => step.cardIndex)).toEqual([0, MUSIC_BOX_INDEX]);
+    expect(both.outcome.withersAdded).toBe(1);
+    const one = result.plans.find((plan) => plan.steps.length === 1)!;
+    expect(one.outcome.withersAdded).toBe(0);
+  });
+
+  it("the logged T3 board plays the copy; the frame after the first Strike (Music Box spent) makes none", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    const start = loggedEnv(logged("batch-m/yvyz-f48-t3-music-box"));
+    planCombatTurn(start);
+    const planned = [...(start.screenMemory.plannedAfter?.steps ?? [])];
+    expect(planned.some((step) => step.cardIndex >= MUSIC_BOX_INDEX)).toBe(true);
+    const after = loggedEnv(logged("batch-m/yvyz-f48-t3-after-strike"));
+    planCombatTurn(after);
+    expect((after.screenMemory.plannedAfter?.steps ?? []).some((step) => step.cardIndex >= MUSIC_BOX_INDEX)).toBe(false);
+  });
+
+  it("the committed line expects the copy: the next frame, holding it, continues the line instead of re-planning", { timeout: 30_000 }, () => {
+    rolloutLiveOptions.enabled = false;
+    // The T3 board cut to one Strike and 2 energy (Pael's Tears off: no unspent-energy line apart).
+    const first = logged("batch-m/yvyz-f48-t3-music-box");
+    const combat = first.state["combat"] as Raw;
+    combat["hand"] = [{ ...(combat["hand"] as Raw[])[1]!, index: 0 }];
+    (combat["player"] as Raw)["energy"] = 2;
+    const run = first.state["run"] as Raw;
+    run["relics"] = (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "PAELS_TEARS");
+    const env = loggedEnv(first);
+    const decision = planCombatTurn(env) as { label: string; rationale: string };
+    expect(decision.label).toBe("combat/plan");
+    expect(decision.rationale).toMatch(/^code plan \(only distinct line\): 打击 -> 永世沙漏, 打击（音乐盒复制） -> 永世沙漏;/);
+    expect(env.screenMemory.combatPlan).toMatchObject({ expectedHand: "STRIKE_IRONCLAD", handLen: 1 });
+    // The logged frame after that Strike: the Ethereal copy in hand (index 4 there), 1 Attack played.
+    const second = logged("batch-m/yvyz-f48-t3-after-strike");
+    const combat2 = second.state["combat"] as Raw;
+    const copy = (combat2["hand"] as Raw[])[4]!;
+    expect(copy["resolved_rules_text"]).toBe("虚无。 造成10点伤害。");
+    combat2["hand"] = [{ ...copy, index: 0 }];
+    (combat2["player"] as Raw)["energy"] = 1;
+    const run2 = second.state["run"] as Raw;
+    run2["relics"] = (run2["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "PAELS_TEARS");
+    const next = planCombatTurn(loggedEnv(second, { screenMemory: env.screenMemory })) as { label: string; intent: Raw };
+    expect(next.label).toBe("combat/plan-continue");
+    expect(next.intent).toEqual({ action: "play_card", card_index: 0, target_index: 0 });
   });
 });

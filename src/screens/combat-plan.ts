@@ -32,7 +32,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, mantleHpCost, musicBoxCopy, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -1213,10 +1213,20 @@ function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined
     .join("|");
 }
 
-function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
+function expectedHandAfterFirst(plan: Plan, hand: CardModel[], musicBox: boolean): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  return handSignature(handAfterPlay(cardFor(first, hand), hand));
+  return handSignature(handAfterPlay(cardFor(first, hand), hand, musicBox));
+}
+
+/**
+ * Music Box armed on this frame: held, and no Attack played yet this turn, so the next Attack card played comes back
+ * as an Ethereal copy (turn-solver PlayerSim.musicBox). YVYZ F48 T3: the copy read as "hand grew" and the line was
+ * re-planned three times that turn.
+ */
+function musicBoxArmed(state: DecisionEnv["state"]): boolean {
+  const held = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "MUSIC_BOX");
+  return held && num(asRecord(asRecord(state.raw["combat"])["player"])["attacks_played_this_turn"]) === 0;
 }
 
 /**
@@ -1224,8 +1234,10 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
  * (巨石, 巨石+ from Primal Force+; the solver's giantRockFrom), so the line goes on instead of reading the rocks as a
  * surprise and re-planning (as eca3384 for Blessing of the Forge's upgrades).
  */
-function handAfterPlay(played: CardModel | undefined, hand: CardModel[]): CardModel[] {
+function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBox: boolean): CardModel[] {
   const left = hand.filter((card) => card !== played);
+  // Music Box armed: the Attack comes back as an Ethereal copy.
+  if (played?.type === "Attack" && musicBox) return [...left, musicBoxCopy(played)];
   if (played?.special !== "primal_force") return left;
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
@@ -1252,8 +1264,8 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
       ? {
           turn,
           remaining: plan.steps.slice(1),
-          expectedHand: expectedHandAfterFirst(plan, hand),
-          handLen: handLenAfter(first!, hand),
+          expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
+          handLen: handLenAfter(first!, hand, musicBoxArmed(env.state)),
           ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
           ...(first!.takes ? { take: takeSignature(first!.takes) } : {}),
           via,
@@ -1294,9 +1306,10 @@ function withoutUpgrades(signature: string): string {
   return signature === "" ? "" : signature.split(",").map((id) => id.replace(/\+$/, "")).sort().join(",");
 }
 
-/** Hand size after a step: a card leaves the hand, a potion does not. */
-function handLenAfter(step: Step, hand: CardModel[]): number {
-  return cardFor(step, hand) ? hand.length - 1 : hand.length;
+/** Hand size after a step: a card leaves the hand, a potion does not; an armed Music Box gives an Attack back as a copy. */
+function handLenAfter(step: Step, hand: CardModel[], musicBox: boolean): number {
+  const card = cardFor(step, hand);
+  return card ? hand.length - 1 + (card.type === "Attack" && musicBox ? 1 : 0) : hand.length;
 }
 
 /**
@@ -1508,6 +1521,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
+    // Music Box: the turn's first Attack card comes back as an Ethereal copy (armed while none is played yet).
+    ...(relicIds.includes("MUSIC_BOX") ? { musicBox: { count: num(player["attacks_played_this_turn"]) } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1608,8 +1623,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
-              expectedHand: handSignature(handAfterPlay(nextCard, hand)),
-              handLen: handLenAfter(next, hand),
+              expectedHand: handSignature(handAfterPlay(nextCard, hand, musicBoxArmed(state))),
+              handLen: handLenAfter(next, hand, musicBoxArmed(state)),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(next.takes ? { take: takeSignature(next.takes) } : {}),
               ...(potions !== undefined ? { potions } : {}),

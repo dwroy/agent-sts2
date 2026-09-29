@@ -209,6 +209,15 @@ export interface PlayerSim {
    * 2 after the 3rd and 6th Attack), the count starting again each turn.
    */
   shuriken?: { every: number; strength: number; count: number };
+  /**
+   * Music Box (「将你每回合打出的第一张攻击牌的一张虚无复制品加入你的手牌」): the first Attack card played in a turn
+   * adds an Ethereal copy of itself to the hand (after its own effects, draws included). `count`: the Attacks already
+   * played this turn (attacks_played_this_turn); only at 0 does this line's first Attack make one. Logged YVYZ F48:
+   * T1 Salvo, T2 Unrelenting, T3 Strike, T5/T7 Pommel Strike (after its draw), T6 Strike each came back as
+   * "虚无。 …" at the end of the hand; the copies played counted in cards_played_this_turn (the Withers came on
+   * the game's every-6th card with them counted).
+   */
+  musicBox?: { count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -1242,7 +1251,21 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
   ];
+  // Music Box: this turn's first Attack card comes back as an Ethereal copy (PlayerSim.musicBox), a card of the hand
+  // like any other: playing it costs its energy and counts as a card played (Withering Presence, Sloth).
+  if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)]);
   return next;
+}
+
+/** Index offset of a Music Box copy (a card the hand did not hold at the decision: never a first step). */
+export const MUSIC_BOX_INDEX = 300;
+
+/**
+ * The Ethereal copy Music Box adds of the turn's first Attack (its own key and index, so it is a card apart; named as
+ * the copy in the lines' text, the game's card id kept for finding it in the hand).
+ */
+export function musicBoxCopy(card: CardModel): CardModel {
+  return { ...card, key: `${card.key}~mb`, index: MUSIC_BOX_INDEX + card.index, name: `${card.name}（音乐盒复制）`, ethereal: true };
 }
 
 /** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
