@@ -17,12 +17,13 @@ import type { AskDecision } from "../src/project/types.js";
 import { bossNote } from "../src/project/run-journal.js";
 import { revealsLater } from "../src/screens/act-start.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
+import { planEvent, relicFacts } from "../src/screens/event.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { illusionFocusOrders, type KillOrder } from "../src/strategy/rollout.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { dominates, type Plan } from "../src/strategy/turn-solver.js";
-import { logged, loggedEnv } from "./logged.js";
+import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { board, decide, env as oneshotEnv, optionsOf } from "./oneshot-support.js";
 
 const choose = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
@@ -373,5 +374,22 @@ describe("10. A per-fight pick (Choices Paradox) is known now, not an outcome re
     expect(revealsLater("At the start of each combat, choose 1 of 5 random cards to put into your hand.")).toBeNull();
     expect(revealsLater("从3张稀有牌中选择1张加入你的牌组。")).toMatch(/picked from/);
     expect(revealsLater("获得[blue]2[/blue]件随机[gold]遗物[/gold]。在每场战斗开始时，获得1点力量。")).toMatch(/random/);
+  });
+});
+
+describe("11. An event option that names a relic carries the relic's game text (7XK6DUJYMYY3 F44 Royal Poison)", () => {
+  it("the logged Round Tea Party: 「获得王室猛毒」 comes with 4 HP at the start of every fight", () => {
+    const fx = logged("7xk6-f44-tea-party");
+    const decision = planEvent({ ...loggedEnv(fx), buildDecider: "deepseek" }) as AskDecision;
+    const criteria = decision.questions["pick"]!.type === "choice" ? decision.questions["pick"]!.criteria : {};
+    const tea = JSON.parse(String(criteria["o0"])) as Record<string, unknown>;
+    expect(tea["relics"]).toEqual(["王室猛毒 (relic): 在每场战斗开始时，失去4点生命。"]);
+    expect(JSON.parse(String(criteria["o1"]))).not.toHaveProperty("relics");
+  });
+
+  it("relicFacts: a marked name or a long one; a one-character name in plain text is a word", () => {
+    expect(relicFacts("获得[red]王室猛毒[/red]。", loggedKnowledge).relics).toHaveLength(1);
+    expect(relicFacts("获得王室猛毒。", loggedKnowledge).relics).toHaveLength(1);
+    expect(relicFacts("获得一件随机[gold]遗物[/gold]。", loggedKnowledge)).toEqual({});
   });
 });

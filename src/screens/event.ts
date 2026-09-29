@@ -6,6 +6,8 @@
  */
 
 import { annotateEnchants, enchantsNamed } from "../knowledge/enchant-text.js";
+import type { Knowledge } from "../knowledge/index.js";
+import { fillRelicText } from "../knowledge/relic-values.js";
 import { asArray, asRecord, bool, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
 import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
@@ -208,6 +210,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
         summary: {
           option: title,
           description: truncate(annotateEnchants(str(option["description"])), 360),
+          ...relicFacts(str(option["description"]), env.knowledge),
           lethal: bool(option["will_kill_player"]),
         } satisfies JsonValue,
       } satisfies PickOption,
@@ -299,4 +302,20 @@ function eventEnemies(event: Record<string, unknown>, ascension: number): Record
     .map((id) => monsterLine(id, ascension))
     .filter((line): line is string => line !== null);
   return lines.length > 0 ? { named_enemies_from_monster_db: lines } : {};
+}
+
+/**
+ * The relics an option's text names, with their game text (numbers filled where measured, the rest marked
+ * unknown, as for shop relics): 7XK6DUJYMYY3 F44 「获得王室猛毒。回复全部生命。」 reached DeepSeek with no word of
+ * what Royal Poison does (4 HP at the start of every fight) and it was taken as a dead card. A name counts
+ * when the text sets it apart (markup around it, as the game writes item names) or, three characters or
+ * longer, anywhere: short names (锚, 面包) are words too.
+ */
+export function relicFacts(description: string, knowledge: Knowledge): { relics?: string[] } {
+  const marked = new Set([...description.matchAll(/\[([a-z]+)\]([^[\]]+)\[\/\1\]/g)].map((match) => match[2]!.trim()));
+  const plain = description.replace(/\[[^\]]*\]/g, "");
+  const named = knowledge.relics().filter((relic) => relic.name.length >= 2 && (marked.has(relic.name) || (relic.name.length >= 3 && plain.includes(relic.name))));
+  // A name inside a longer relic name named too (a longer match wins).
+  const kept = named.filter((relic) => !named.some((other) => other !== relic && other.name.includes(relic.name)));
+  return kept.length > 0 ? { relics: kept.map((relic) => `${relic.name} (relic): ${fillRelicText(relic.id, relic.description)}`) } : {};
 }
