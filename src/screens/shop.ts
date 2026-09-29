@@ -16,6 +16,7 @@ import { damageGap, gapCardBonus } from "../strategy/boss-clock.js";
 import { runPlanCardBonus } from "../strategy/run-plan.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
+import { shopPlanList } from "../brain/specs.js";
 import { fillRelicText } from "../knowledge/relic-values.js";
 import { cardOutcome, relicOutcome } from "../knowledge/outcome-facts.js";
 import { annotatePlating } from "../knowledge/enchant-text.js";
@@ -311,31 +312,6 @@ export const SHOP_PLAN_NOTE =
   "the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so " +
   "the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan " +
   "(an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).";
-
-/**
- * The shopping list of an answer: its "plan", else the list written into "choice" (VTREB5A9XWS7 F6:
- * {"choice": "buy_potion2, remove:c0, buy_card1", "reason": …}, judged "no plan list" and asked again step by
- * step, 150.8 s more): a JSON list, or the steps separated by commas, semicolons or arrows. Every step is then
- * checked like a plan's, so only a list of real steps is taken. null when there is neither.
- */
-function shopPlanList(json: Record<string, unknown>): { list: unknown[]; fromChoice: boolean } | null {
-  if (Array.isArray(json["plan"])) return { list: json["plan"], fromChoice: false };
-  const choice = json["choice"];
-  if (Array.isArray(choice)) return choice.length > 0 ? { list: choice, fromChoice: true } : null;
-  if (typeof choice !== "string") return null;
-  const text = choice.trim();
-  if (text.startsWith("[")) {
-    try {
-      const parsed: unknown = JSON.parse(text);
-      return Array.isArray(parsed) ? { list: parsed, fromChoice: true } : null;
-    } catch {
-      return null;
-    }
-  }
-  const list = text.split(/\s*(?:[,，、;；]|->|→|=>)\s*/).map((step) => step.replace(/^["'“”]+|["'“”]+$/g, "").trim()).filter((step) => step !== "");
-  if (list.length === 0 || list.some((step) => /^(null|none|undefined)$/i.test(step))) return null;
-  return { list, fromChoice: true };
-}
 
 /** A plan's steps from DeepSeek's answer, validated against this state; the reason it is invalid otherwise. */
 export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): { steps: ShopPlanStep[]; reason: string; fromChoice?: true } | { invalid: string } {

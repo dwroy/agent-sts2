@@ -116,6 +116,9 @@ describe("plan specs", () => {
     expect(spec.validate({ plan: ["buy_relic0"], reason: "x" })).toEqual(["first step buy_relic0 is not affordable now"]);
     expect(spec.validate({ plan: ["remove:c0", "remove:c1"], reason: "x" })).toEqual(["more than one card removal"]);
     expect(spec.validate({ reason: "x" })).toEqual(['missing "plan" list']);
+    // v3 1fdbb97 (VTRE F6): a list written into "choice" reads as the plan, its steps checked the same way.
+    expect(spec.validate({ choice: "buy_card0, remove:c0", reason: "x" })).toEqual([]);
+    expect(spec.validate({ choice: ["buy_card0", "remove:c9"], reason: "x" })).toEqual([expect.stringMatching(/^step "remove:c9" is not a valid step/)]);
   });
 
   it("run plan: accepted exactly when v3's isRunPlanReply accepts it", () => {

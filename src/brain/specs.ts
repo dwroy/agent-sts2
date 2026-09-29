@@ -187,6 +187,32 @@ export function routePlanSpec(label: string, state: unknown): AnswerSpec {
 }
 
 /**
+ * The shopping list of an answer: its "plan", else the list written into "choice" (VTREB5A9XWS7 F6:
+ * {"choice": "buy_potion2, remove:c0, buy_card1", "reason": …}, judged "no plan list" and asked again step by
+ * step, 150.8 s more): a JSON list, or the steps separated by commas, semicolons or arrows. Every step is then
+ * checked like a plan's, so only a list of real steps is taken. null when there is neither. The shop screen
+ * (screens/shop.ts parseShopPlan) and the shop plan's spec read it the same way.
+ */
+export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; fromChoice: boolean } | null {
+  if (Array.isArray(json["plan"])) return { list: json["plan"], fromChoice: false };
+  const choice = json["choice"];
+  if (Array.isArray(choice)) return choice.length > 0 ? { list: choice, fromChoice: true } : null;
+  if (typeof choice !== "string") return null;
+  const text = choice.trim();
+  if (text.startsWith("[")) {
+    try {
+      const parsed: unknown = JSON.parse(text);
+      return Array.isArray(parsed) ? { list: parsed, fromChoice: true } : null;
+    } catch {
+      return null;
+    }
+  }
+  const list = text.split(/\s*(?:[,，、;；]|->|→|=>)\s*/).map((step) => step.replace(/^["'“”]+|["'“”]+$/g, "").trim()).filter((step) => step !== "");
+  if (list.length === 0 || list.some((step) => /^(null|none|undefined)$/i.test(step))) return null;
+  return { list, fromChoice: true };
+}
+
+/**
  * The same schema for every question of a kind, for engines whose structured-output schema sits in front of the
  * prompt cache (Claude Code turns --json-schema into a tool definition, which comes before the system prompt):
  * a per-question schema (its option keys as an enum) would make every question miss the cached prefix. Picks get
@@ -251,8 +277,8 @@ export function shopPlanSpec(label: string, options: Record<string, string | nul
     },
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
-      const plan = answer["plan"];
-      if (!Array.isArray(plan)) return ['missing "plan" list'];
+      const plan = shopPlanList(answer)?.list;
+      if (!plan) return ['missing "plan" list'];
       const problems: string[] = [];
       const seen = new Set<string>();
       let removals = 0;
