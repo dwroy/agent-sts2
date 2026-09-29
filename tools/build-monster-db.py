@@ -469,7 +469,7 @@ class Builder:
         if asc is not None:
             self.encounters[encounter][asc].append({**result, "start_hp": start_hp, "all_hp": all_hp, "kind": kind, "act": fight.act})
         if kind == "boss" and asc is not None:
-            boss_key = (fight.boss_id or "").upper().replace("_BOSS", "") or "+".join(sorted(ids_in_fight))
+            boss_key = boss_key_of(fight.boss_id, ids_in_fight)
             parts = collections.defaultdict(list)
             for (index, eid), inst in sorted(fight.instances.items(), key=lambda kv: (kv[0][0] if isinstance(kv[0][0], int) else 99)):
                 parts[eid].append({"hp": inst["hp"], "spawned": inst["spawned"], "minion": inst["minion"]})
@@ -801,6 +801,33 @@ DRAINED = {"STRENGTH_POWER", "DEXTERITY_POWER", "FOCUS_POWER"}
 TEMPORARY_POWERS = set()
 
 
+# Boss key -> the enemy ids of its bodies (as tools/build-boss-damage.py; a boss whose only body has the
+# boss's own id needs no entry).
+BOSS_BODIES = {
+    "KAISER_CRAB": ["CRUSHER", "ROCKET"],
+    "QUEEN": ["QUEEN", "TORCH_HEAD_AMALGAM"],
+    "THE_KIN": ["KIN_PRIEST", "KIN_FOLLOWER"],
+}
+BOSS_OF_BODY = {body: boss for boss, bodies in BOSS_BODIES.items() for body in bodies}
+
+
+def boss_key_of(boss_id, ids):
+    """The boss a boss fight is filed under: run.boss_id when one of its bodies is on the board; else the
+    boss the bodies on the board belong to; else the enemy ids joined. run.boss_id alone is not trusted:
+    at A10 it may still name the first act-3 boss during the second, whose fights would then land in the
+    first's entry and break its HP, damage and win rate."""
+    ids = set(ids)
+    named = (boss_id or "").upper().replace("_BOSS", "")
+    if named:
+        bodies = BOSS_BODIES.get(named, [named])
+        if any(i == body or i.startswith(body + "_") for i in ids for body in bodies):
+            return named
+    owners = {BOSS_OF_BODY.get(i, i) for i in ids if i in BOSS_OF_BODY or GAME_TYPES.get(i) == "Boss"}
+    if len(owners) == 1:
+        return owners.pop()
+    return "+".join(sorted(ids))
+
+
 def load_runs(path):
     runs = {}
     if path and os.path.exists(path):
@@ -925,6 +952,11 @@ def _synthetic_lines():
     lines.append(state("COMBAT", "R3", 1, 2, 80, [crusher(15), rocket(33)], True, player_powers=sur))
     lines.append(state("COMBAT", "R3", 2, 2, 70, [crusher(10), rocket(49)], True, player_powers=sur))
     lines.append(state("COMBAT", "R3", 3, 2, 60, [crusher(10), rocket(33)], True, player_powers=sur))
+    # Run R5, floor 17: a boss fight while run.boss_id names another boss (VANTOM_BOSS): filed under the
+    # boss on the board, the Queen with her Amalgam; then R6 fights Vantom itself, filed under VANTOM.
+    lines.append(state("COMBAT", "R5", 1, 17, 80, [enemy(0, "QUEEN", 419, 419, "PUPPET_STRINGS_MOVE", types=("Debuff",)),
+                                                   enemy(1, "TORCH_HEAD_AMALGAM", 211, 211, "STRONG_TACKLE_MOVE", 26, 1)], True))
+    lines.append(state("COMBAT", "R6", 1, 17, 80, [enemy(0, "VANTOM", 183, 183, "INK_BLOT_MOVE", 7, 1)], True))
     # Run R4, floor 2: a guard's Defend turn; our next turn opens with its 12 block.
     lines.append(state("COMBAT", "R4", 1, 2, 80, [enemy(0, "GUARD", 50, 50, "SHIELD_MOVE", types=("Defend",))], True))
     lines.append(state("COMBAT", "R4", 2, 2, 80, [enemy(0, "GUARD", 50, 50, "SWIPE_MOVE", 5, 1, block=12)], True))
@@ -941,6 +973,8 @@ def self_test():
         with open(game, "w", encoding="utf8") as handle:
             json.dump({"collections": {
                 "monsters": [{"id": "SLIME", "name": "史莱姆", "type": "Normal", "min_hp": 40, "max_hp": 40, "moves": [{"id": "HIT", "name": "撞"}]},
+                             {"id": "QUEEN", "name": "女王", "type": "Boss", "min_hp": 419, "max_hp": 419, "moves": []},
+                             {"id": "VANTOM", "name": "墨影幻灵", "type": "Boss", "min_hp": 183, "max_hp": 183, "moves": []},
                              {"id": "BRUTE", "name": "蛮", "type": "Elite", "min_hp": 100, "max_hp": 100, "moves": []}],
                 "powers": [{"id": "STRENGTH_POWER", "name": "力量", "description": "+{Amount}", "type": "Buff"},
                            {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"}]}}, handle)
@@ -987,6 +1021,14 @@ def self_test():
     bite = db["monsters"]["CRUSHER"]["moves"]["BITE_MOVE"]
     assert bite["damage_by_asc"]["8"]["base_per_hit"] == {"10": 1}, bite["damage_by_asc"]
     assert bite["back_attack_by_asc"] == {"8": {"behind": 0, "facing": 3}}, bite
+    # A boss fight is filed under the boss on the board, not a run.boss_id naming another one.
+    assert sorted(db["bosses"]) == ["QUEEN", "VANTOM"], sorted(db["bosses"])
+    assert sorted(db["bosses"]["QUEEN"]["8"]["parts"]) == ["QUEEN", "TORCH_HEAD_AMALGAM"], db["bosses"]["QUEEN"]
+    assert db["bosses"]["VANTOM"]["8"]["fights"] == 1, db["bosses"]["VANTOM"]
+    assert boss_key_of("KAISER_CRAB_BOSS", ["CRUSHER", "ROCKET"]) == "KAISER_CRAB"
+    assert boss_key_of("VANTOM_BOSS", ["CRUSHER", "ROCKET"]) == "KAISER_CRAB"
+    assert boss_key_of("QUEEN_BOSS", ["TEST_SUBJECT"]) == "TEST_SUBJECT"
+    assert boss_key_of(None, ["MYSTERY", "OTHER"]) == "MYSTERY+OTHER"
     # Block a Defend move gives, pooled and by ascension.
     shield = db["monsters"]["GUARD"]["moves"]["SHIELD_MOVE"]
     assert shield["block_gained"] == {"12": 1}, shield
