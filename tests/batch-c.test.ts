@@ -9,10 +9,11 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import { annotateEnchants, enchantsNamed } from "../src/knowledge/enchant-text.js";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { checkConsistency } from "../src/llm/consistency.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import type { AskDecision } from "../src/project/types.js";
@@ -21,6 +22,7 @@ import { revealsLater } from "../src/screens/act-start.js";
 import { guardSandpit, planCombatTurn } from "../src/screens/combat-plan.js";
 import { planEvent, relicFacts } from "../src/screens/event.js";
 import { combatExhaustScore, planSelection } from "../src/screens/selection.js";
+import { bossNote as clockBossNote, bossProfile } from "../src/strategy/boss-clock.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { illusionFocusOrders, type KillOrder } from "../src/strategy/rollout.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -459,5 +461,37 @@ describe("13. The rollout's time-budget fallback is labelled a fallback, not a f
     }
     expect(facts.some((f) => /the estimate's cap, our HP now: it does not mean this line dies/.test(String(f["rollout"])))).toBe(true);
     expect((decision.resolve(choose("plan1", 0.5)).log?.rollout as Record<string, unknown>)["degraded"]).toEqual(["1-turn"]);
+  });
+});
+
+describe("14. Soul Fysh's Scream puts Vulnerable on us, from the monster DB (XTB46ZGMYR6E: De-Gas then hit 27)", () => {
+  // The logged SOUL_FYSH moves as the DB has them (A8, A9), a fixture: the refreshing DB moves the counts.
+  const FYSH_DB = {
+    bosses: {},
+    encounters: {},
+    monsters: {
+      SOUL_FYSH: {
+        moves: {
+          SCREAM_MOVE: {
+            n_seen: 98,
+            damage_by_asc: { "8": { shown: { "13x1": 36 }, base_per_hit: { "13": 38 }, hits: { "1": 39 }, n_base: 38 }, "9": { shown: { "15x1": 9 }, base_per_hit: { "15": 11 }, hits: { "1": 11 }, n_base: 11 } },
+            player_powers_applied: { VULNERABLE_POWER: { "3": 96 } },
+            player_powers_applied_by_asc: { "8": { VULNERABLE_POWER: { "3": 39 } }, "9": { VULNERABLE_POWER: { "3": 11 } } },
+          },
+          DE_GAS_MOVE: {
+            n_seen: 134,
+            damage_by_asc: { "8": { shown: { "16x1": 20, "24x1": 28 }, base_per_hit: { "16": 20 }, hits: { "1": 50 }, n_base: 20 }, "9": { shown: { "18x1": 5, "27x1": 6 }, base_per_hit: { "18": 6 }, hits: { "1": 14 }, n_base: 6 } },
+          },
+        },
+      },
+    },
+  };
+  beforeAll(() => setMonsterDbForTests(FYSH_DB as never));
+  afterAll(() => setMonsterDbForTests(null));
+
+  it("the DeepSeek boss note and the clock's note name the Vulnerable and De-Gas at this ascension", () => {
+    expect(bossNote("SOUL_FYSH_BOSS", 9)).toContain("尖叫 15 给我方 3 层易伤，易伤还在时排气 18 按 ×1.5 打");
+    expect(bossNote("SOUL_FYSH_BOSS", 8)).toContain("尖叫 13 给我方 3 层易伤，易伤还在时排气 16 按 ×1.5 打");
+    expect(clockBossNote(bossProfile("SOUL_FYSH_BOSS")!, 9)).toContain("Scream (15) puts 3 Vulnerable on us, and De-Gas (18) then hits x1.5");
   });
 });

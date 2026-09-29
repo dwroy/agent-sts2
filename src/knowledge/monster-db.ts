@@ -527,11 +527,16 @@ export function fillDbNumbers(text: string, asc: number): string {
       }
       case "BLOCK":
         return move ? mode(countsAt(move.block_gained_by_asc, move.block_gained, asc)) : null;
+      case "APPLIES": {
+        // The power a move puts on us, its usual amount at this ascension (player_powers_applied).
+        const byAsc = Object.fromEntries(Object.entries(move?.player_powers_applied_by_asc ?? {}).map(([key, powers]) => [key, b ? powers?.[b] : undefined]));
+        return b ? mode(countsAt(byAsc, move?.player_powers_applied?.[b], asc)) : null;
+      }
       default:
         return null;
     }
   };
-  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
+  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK|APPLIES):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
 }
 
 /** One move as shown: name, damage at this ascension (per hit × hits), Strength it gains, status cards. */

@@ -177,7 +177,7 @@ export const BOSS_NOTES: Record<string, string> = {
   CEREMONIAL_BEAST: "{HP:CEREMONIAL_BEAST} 血，前两回合蓄力（打能力），之后犁地 {DMG:CEREMONIAL_BEAST:PLOW_MOVE} 加力量、每次 +{GAIN:CEREMONIAL_BEAST:PLOW_MOVE:STRENGTH_POWER} 力；首次跌破 {POWER:CEREMONIAL_BEAST:PLOW_POWER} 血被击晕一回合，之后昏眩（一回合只能打 1 张）。",
   THE_KIN: "神官 {HP:KIN_PRIEST} 血 + 两个信徒各 {HP:KIN_FOLLOWER}(爪牙)：神官一死战斗即结束，单体伤害压神官，AOE 顺带信徒；T3/T7/T11 光束 {DMG:KIN_PRIEST:BEAM_MOVE}（每段加力量），仪式 +{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} 力。",
   LAGAVULIN_MATRIARCH: "{HP:LAGAVULIN_MATRIARCH} 血，开场沉睡 + {POWER:LAGAVULIN_MATRIARCH:PLATING_POWER} 覆甲：掉 1 血就醒，沉睡时打能力/留格挡；醒后 {DMG:LAGAVULIN_MATRIARCH:SLASH_MOVE}、{DMG:LAGAVULIN_MATRIARCH:DISEMBOWEL_MOVE}，尽早爆发。",
-  SOUL_FYSH: "往牌组塞 Beckon（6 点无法格挡）：用能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅、重振精神、恶魔之焰；只消耗自己的「消耗」牌清不掉），少抽牌；周期性无实体时别输出。",
+  SOUL_FYSH: "往牌组塞 Beckon（6 点无法格挡）：用能从手牌消耗别的牌的牌清掉（燃烧契约、坚毅、重振精神、恶魔之焰；只消耗自己的「消耗」牌清不掉），少抽牌；周期性无实体时别输出；尖叫 {DMG:SOUL_FYSH:SCREAM_MOVE} 给我方 {APPLIES:SOUL_FYSH:SCREAM_MOVE:VULNERABLE_POWER} 层易伤，易伤还在时排气 {DMG:SOUL_FYSH:DE_GAS_MOVE} 按 ×1.5 打，那回合多挡。",
   WATERFALL_GIANT: "{GIANT_HP} 血，被打「死」后下一回合自爆 = 击杀那回合的蒸汽喷发层数（{ERUPTION}）：要早杀，A8 T10 前击杀 13/15 赢、T13–T15 5/7、T16 后 0/3（经验 giant-explode）；击杀那回合的 HP 加下回合格挡要 ≥ 层数，自爆回合全力格挡。虹吸回合回血 {SIPHON}，压力炮 T5/T10/T15 依次 {GUN} 要挡住：拖得越久越难，要抢伤害。",
   THE_INSATIABLE: "{HP:THE_INSATIABLE} 血，沙坑每敌方回合 −1，归零即死：打不死它就尽早打狂乱逃离（每张多一回合），不要等沙坑 ≤2。",
   KAISER_CRAB: "两只钳子：单体伤害集中打火箭（T4/T9 激光 {DMG:ROCKET:LASER_MOVE}，在背后 {BEHIND:ROCKET:LASER_MOVE}，再加力量）；群伤照打两只；先死一只时另一只 +99 格挡 +6 力，但格挡只挡一回合，那回合出格挡/能力牌（51 场螃蟹战：火箭先死 9/12 赢，两只一直活着 8/39；经验 crab-kill-order）。",
