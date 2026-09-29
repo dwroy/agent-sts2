@@ -301,7 +301,7 @@ describe("a potion step of a chosen line is checked on the belt, not the hand (1
   const pickLine = (e: DecisionEnv, plays: string) => {
     const decision = planCombatTurn(e) as AskDecision;
     expect(decision.kind).toBe("ask");
-    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria!;
+    const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria as Record<string, string | null>;
     const key = Object.keys(criteria).find((k) => k.startsWith("plan") && JSON.parse(String(criteria[k]))["plays"] === plays);
     expect(key, Object.values(criteria).join("\n")).toBeDefined();
     const resolved = decision.resolve({ plan: { type: "choice", choice: key!, probabilities: { [key!]: 0.9 }, confidence: 0.9, raw: {} } });
