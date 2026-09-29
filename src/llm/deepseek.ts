@@ -181,6 +181,13 @@ export function resolveOptionKey(answer: string, criteria: Record<string, string
   return matches.length === 1 ? (matches[0] ?? null) : null;
 }
 
+/**
+ * Dai 2026-09-29: where the hand-written strategy guide or handbook disagrees with the experience base or the
+ * measured data, the data wins. Part of the fixed system prompt (byte-identical across calls, cache-friendly).
+ */
+export const DATA_OVER_GUIDES =
+  "When the strategy guide or the handbook conflicts with the experience base (memory.knowledge) or measured data (outcome statistics, code's numbers), go with the data.";
+
 const SYSTEM = [
   "You are an expert Slay the Spire 2 player advising a bot (Ironclad, climbing ascension levels).",
   "You get the game state and one question with a fixed set of option keys. Code has already computed",
@@ -194,6 +201,7 @@ const SYSTEM = [
   "(observational: n runs, mean final floor, act-boss pass rate; low-n rows are hints only). Use it as evidence-based guidance, not",
   "orders: weigh it with the exact facts in the state and code's numbers. High-confidence, well-supported lessons deserve real weight;",
   "when the current situation differs from what a lesson assumes, the facts win.",
+  DATA_OVER_GUIDES,
   "memory.act is this act's threats and boss; memory.history is the run so far, floor by floor (floors already left);",
   "memory.this_floor is the current floor so far; state.facts, when present, is the exact current deck, relics, potions, HP and gold.",
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"}',

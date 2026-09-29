@@ -300,6 +300,14 @@ export function groupName(group: KillGroup): string {
 }
 
 /**
+ * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the
+ * experience base or measured data, the data wins. Jev has no system prompt: this rides at the head of the
+ * advice in every combat plan question.
+ */
+export const JEV_DATA_OVER_GUIDES =
+  "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.";
+
+/**
  * Past-run lessons about the enemies of this fight shown to Jev (the experience base's top ones). 4 covers
  * every boss's active entries: at 3 the Kaiser Crab's kill order (n=11) was cut behind its entry-HP, DPS
  * and potion lessons.
@@ -2124,6 +2132,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: potionContextJson(env, kind),
+    // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
+    knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
     ...(lessons.length > 0
       ? {
