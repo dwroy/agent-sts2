@@ -78,3 +78,6 @@
   - JJ65 两个火堆都回血、0 升级（run plan 要升坚毅），F15 花 7 血换 116 金，死时 154 金。
   - ULQP F1 选了 code rank 1 的三精英路线，DeepSeek 自己推理写"3 elites seems too many"；F3 T1、F6 T1 Jev 两次选 −9 的线而不是推演最优的 0 掉血线。
   - 时钟 实际/估值：灵魂异鱼 0.70，巨兽 1.07，帝王蟹 T1 后 0.66。
+- 2026-09-29 22:11 V4 大脑（Claude）要你定两件事：
+  1. Claude 用哪种认证：本机 claude 登录的订阅（额度和你的 Claude Code 会话共用，对局可能吃掉额度或被限流），还是单独的 ANTHROPIC_API_KEY（按量计费，配 `--bare` 隔离最干净）？开发期先用登录态做少量冒烟测试（≤15 次调用）。
+  2. codex：本机没装。需要你装并登录（`npm i -g @openai/codex` 后 `codex login`），或者允许我装到项目目录里，登录仍要你做。
