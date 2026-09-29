@@ -48,6 +48,117 @@ def in_combat(record, states):
         return False
 
 
+# Heals that land between a fight's last turn and the next screen (the reward): taken back off that screen's HP
+# to get the HP the fight ended at. Burning Blood 6 (relic-values.ts: 841 of 914 fights ending below max HP).
+POST_COMBAT_HEAL = {"BURNING_BLOOD": 6}
+
+
+def hp_of(record, states):
+    """The player's HP at a decision: its state's run.current_hp, else its fingerprint's hp."""
+    st = states.get(record["ts"]) or {}
+    hp = (st.get("run") or {}).get("current_hp")
+    if hp is None:
+        try:
+            hp = json.loads(record["fingerprint"]).get("hp")
+        except Exception:
+            hp = None
+    return hp
+
+
+def fights_of(recs, states, died=False):
+    """Fights: consecutive COMBAT records on one floor. A fight's end HP is the next non-combat frame's (the reward
+    screen) less the post-combat heals (POST_COMBAT_HEAL), so the damage after the last combat decision counts: the
+    enemy turn that ended it, an explosion (DHGT6Z3Q7VAP F17: the Waterfall Giant's -28 after its death; the last
+    decision read 61, the fight ended at 33, the reward showed 39 after Burning Blood). A reward frame at max HP may
+    hide a partial heal: then the last combat frame's HP is kept when it is within the heal of max. A fight with no
+    frame after it that the run died in ends at 0 (the killing blow)."""
+    fights = []
+    current = None
+
+    def close(after):
+        if after is not None:
+            hp = hp_of(after, states)
+            if hp is not None:
+                st = states.get(after["ts"]) or {}
+                run = st.get("run") or {}
+                relics = [r.get("relic_id") for r in run.get("relics") or []]
+                heal = sum(v for k, v in POST_COMBAT_HEAL.items() if k in relics) if hp > 0 else 0
+                end = max(0, hp - heal)
+                # The heal is capped at max HP: a reward frame at max says only that the fight ended at max - heal or
+                # above, so the last combat frame's HP (an upper bound) stands when it is in that range.
+                last = current["hp_end"]
+                max_hp = run.get("max_hp")
+                if heal and max_hp is not None and hp >= max_hp and last is not None and end <= last <= hp:
+                    end = last
+                current["healed_after"] = hp - end if heal else 0
+                current["hp_end"] = end
+        fights.append(current)
+
+    for r in recs:
+        if r["screen"] != "COMBAT":
+            # A card pick inside the fight (Toasty Mittens' exhaust each turn, a potion's or Choices Paradox's
+            # card, Headbutt) is part of it: a CARD_SELECTION row on the fight's floor, in combat, does not end
+            # it (2XWM from F19, 7XK6 F42/F48: every turn became its own "-0" fight).
+            if current and r["screen"] == "CARD_SELECTION" and r.get("floor") == current["floor"] and in_combat(r, states):
+                current["records"].append(r)
+                continue
+            if current:
+                close(r)
+                current = None
+            continue
+        st = states.get(r["ts"]) or {}
+        combat = st.get("combat") or {}
+        enemies = [e.get("name") or e.get("enemy_id") for e in combat.get("enemies", []) if e.get("is_alive", True)]
+        hp = (combat.get("player") or {}).get("current_hp")
+        if current is None or current["floor"] != r["floor"]:
+            # Straight into another fight (no frame between): the last combat frame's HP stands.
+            if current:
+                close(None)
+            current = {"floor": r["floor"], "enemies": set(), "hp_start": hp, "hp_end": hp, "records": []}
+        current["enemies"].update(enemies)
+        if hp is not None:
+            current["hp_end"] = hp
+        current["records"].append(r)
+    if current:
+        # The run's last fight with nothing after it: the run died in it (0 HP), or it is still going.
+        if died:
+            current["hp_end"] = 0
+        fights.append(current)
+    return fights
+
+
+def selftest():
+    """report.py --selftest: the DHGT6Z3Q7VAP F17 Waterfall Giant fight from its log lines (decisions.jsonl and
+    states.jsonl, trimmed to the fields read): 86 -> 33, not 86 -> 61; and a death fight ends at 0."""
+    relics = [{"relic_id": r} for r in ["BURNING_BLOOD", "GOLDEN_PEARL", "EMBER_TEA", "BAG_OF_PREPARATION", "WAR_PAINT"]]
+    def rec(ts, screen, turn, label, hp, in_fight):
+        fp = {"combat": in_fight, "hp": hp, "maxHp": 86, "run": "DHGT6Z3Q7VAP", "screen": screen}
+        return {"ts": ts, "mode": "play", "screen": screen, "floor": 17, "turn": turn, "label": label, "fingerprint": json.dumps(fp)}
+    def state(hp, in_fight):
+        return {"in_combat": in_fight, "run": {"current_hp": hp, "max_hp": 86, "relics": relics},
+                "combat": {"player": {"current_hp": hp}, "enemies": [{"name": "瀑布巨兽", "is_alive": True}]} if in_fight else None}
+    recs = [
+        rec("2026-09-29T12:57:14.651Z", "COMBAT", 1, "combat/plan-choice+potion", 86, True),
+        rec("2026-09-29T12:58:33.092Z", "COMBAT", 10, "combat/plan", 61, True),
+        rec("2026-09-29T12:58:36.136Z", "REWARD", 10, "reward/claim", 39, False),
+    ]
+    states = {"2026-09-29T12:57:14.651Z": state(86, True), "2026-09-29T12:58:33.092Z": state(61, True), "2026-09-29T12:58:36.136Z": state(39, False)}
+    fights = fights_of(recs, states)
+    assert len(fights) == 1, fights
+    assert (fights[0]["hp_start"], fights[0]["hp_end"]) == (86, 33), (fights[0]["hp_start"], fights[0]["hp_end"])
+    # Without Burning Blood the reward frame's HP is the end HP.
+    relics[:] = [{"relic_id": "GOLDEN_PEARL"}]
+    assert fights_of(recs, states)[0]["hp_end"] == 39
+    # A fight that ends at max HP with Burning Blood: no loss made up (86 -> 86), not "-6".
+    relics[:] = [{"relic_id": "BURNING_BLOOD"}]
+    full = {ts: state(86, st["in_combat"]) for ts, st in states.items()}
+    assert fights_of(recs, full)[0]["hp_end"] == 86
+    # The run died in its last fight (no frame after it): 0, not the last decision's 61.
+    assert fights_of(recs[:2], states, died=True)[0]["hp_end"] == 0
+    assert fights_of(recs[:2], states)[0]["hp_end"] == 61
+    print("report.py selftest ok: DHGT F17 86->33 (reward 39 less Burning Blood 6); death fight ends at 0")
+
+
 def decider(record):
     rationale = record.get("rationale", "")
     if record.get("label") == "combat/plan-continue":
@@ -155,34 +266,7 @@ def main():
             hp_by_floor.setdefault(r["floor"], [hp, hp])
             hp_by_floor[r["floor"]][1] = hp
 
-    fights = []
-    current = None
-    for r in recs:
-        if r["screen"] != "COMBAT":
-            # A card pick inside the fight (Toasty Mittens' exhaust each turn, a potion's or Choices Paradox's
-            # card, Headbutt) is part of it: a CARD_SELECTION row on the fight's floor, in combat, does not end
-            # it (2XWM from F19, 7XK6 F42/F48: every turn became its own "-0" fight).
-            if current and r["screen"] == "CARD_SELECTION" and r.get("floor") == current["floor"] and in_combat(r, states):
-                current["records"].append(r)
-                continue
-            if current:
-                fights.append(current)
-                current = None
-            continue
-        st = states.get(r["ts"]) or {}
-        combat = st.get("combat") or {}
-        enemies = [e.get("name") or e.get("enemy_id") for e in combat.get("enemies", []) if e.get("is_alive", True)]
-        hp = (combat.get("player") or {}).get("current_hp")
-        if current is None or current["floor"] != r["floor"]:
-            if current:
-                fights.append(current)
-            current = {"floor": r["floor"], "enemies": set(), "hp_start": hp, "hp_end": hp, "records": []}
-        current["enemies"].update(enemies)
-        if hp is not None:
-            current["hp_end"] = hp
-        current["records"].append(r)
-    if current:
-        fights.append(current)
+    fights = fights_of(recs, states, died=ended and not victory)
 
     out = []
     title = "胜利" if victory else ("阵亡" if ended else "未结束")
@@ -195,7 +279,8 @@ def main():
     for f in fights:
         loss = (f["hp_start"] or 0) - (f["hp_end"] or 0)
         who = collections.Counter(decider(r) for r in f["records"])
-        out.append(f"- 第 {f['floor']} 层 {'/'.join(sorted(x for x in f['enemies'] if x))}: HP {f['hp_start']}→{f['hp_end']}（{'-' if loss >= 0 else '+'}{abs(loss)}），决策 " + "，".join(f"{k} {v}" for k, v in who.most_common()))
+        healed = f"，战后回复 +{f['healed_after']}" if f.get("healed_after") else ""
+        out.append(f"- 第 {f['floor']} 层 {'/'.join(sorted(x for x in f['enemies'] if x))}: HP {f['hp_start']}→{f['hp_end']}（{'-' if loss >= 0 else '+'}{abs(loss)}{healed}），决策 " + "，".join(f"{k} {v}" for k, v in who.most_common()))
     out.append("")
     if fights and not victory and ended:
         last = fights[-1]
@@ -288,6 +373,9 @@ def refresh_knowledge() -> None:
 
 
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--selftest"]:
+        selftest()
+        sys.exit(0)
     main()
     try:
         refresh_knowledge()

@@ -150,14 +150,23 @@ From post-mortems 7YT0 9CDE VTRE V6TW (2026-09-29 21:31; line numbers at v3 389b
 - ~~shop.ts:330 one-shot shop plan judged invalid when DeepSeek puts the list into `choice` (VTRE F6) → step-by-step fallback cost 150.8 s. Accept/recover the list from `choice`.~~ fixed 1fdbb97 (batch I, v3 3899c2a)
 
 From fix batch I (2026-09-29 22:07; line numbers at v3 3899c2a), not fixed:
-- Unmodelled potions seen in the logs: STABLE_SERUM (66 questions show "effect not simulated"), ENTROPIC_BREW. Also card-model.ts:1014 modelPotion returns null for Distilled Chaos / Glowwater / Gambler's Brew / Bottled Potential when the draw pile is unknown (Chaos potion "not simulated" 22×) — model with an expected draw.
-- rollout.ts:1417 / turn-solver.ts:2138 retaliation (Thorns, Flame Barrier) ignores Slippery (1 per hit) and Hardened Shell's cap → overcounted on those enemies.
-- turn-solver.ts:1996 Clay ignores start-of-turn HP loss (Crimson Mantle, Inferno 1) → block a turn late. Minor.
+- ~~Unmodelled potions seen in the logs: STABLE_SERUM (66 questions show "effect not simulated"), ENTROPIC_BREW. Also card-model.ts:1014 modelPotion returns null for Distilled Chaos / Glowwater / Gambler's Brew / Bottled Potential when the draw pile is unknown (Chaos potion "not simulated" 22×) — model with an expected draw.~~ fixed eff3b52 (Stable Serum = retain hand 2 turns), 5032430 (Entropic Brew fills all slots, re-plan after), 7c48194 (draw potions expected pool) (batch J, v3 59b83c2)
+- ~~rollout.ts:1417 / turn-solver.ts:2138 retaliation (Thorns, Flame Barrier) ignores Slippery (1 per hit) and Hardened Shell's cap → overcounted on those enemies.~~ fixed 1229629 (batch J, v3 59b83c2)
+- ~~turn-solver.ts:1996 Clay ignores start-of-turn HP loss (Crimson Mantle, Inferno 1) → block a turn late. Minor.~~ fixed 6620d2c (batch J, v3 59b83c2)
 - tests/logged.ts game-data.json is a subset, so code_value of logged boards differs from the logged value (7YT0 F12 Stone Armor 71 logged vs 65) — tests can't assert code_value.
 
 From post-mortems DHGT JJ65 ULQP (2026-09-29 22:08; line numbers at v3 3899c2a):
-- rollout-live.ts:587 skips the rollout when both draw and discard piles are empty ("no draw/discard piles in the state") — ULQP F6 T2 after Glowwater drew the whole deck; Jev answered at 0.18 with no rollout numbers. Simulate with the exhaust/hand only (reshuffle of nothing).
-- Shuriken and Captain's Wheel not simulated (only text in run-brief.ts:104-111). DHGT F33: T1 predicted 116, did 132 (Strength 0→1→2 after the 3rd and 6th attacks); T3 started with the Wheel's 18 block, rollouts had −9.7 for that turn.
+- ~~rollout-live.ts:587 skips the rollout when both draw and discard piles are empty ("no draw/discard piles in the state") — ULQP F6 T2 after Glowwater drew the whole deck; Jev answered at 0.18 with no rollout numbers. Simulate with the exhaust/hand only (reshuffle of nothing).~~ fixed a1877f5 (batch J, v3 59b83c2)
+- ~~Shuriken and Captain's Wheel not simulated (only text in run-brief.ts:104-111). DHGT F33: T1 predicted 116, did 132 (Strength 0→1→2 after the 3rd and 6th attacks); T3 started with the Wheel's 18 block, rollouts had −9.7 for that turn.~~ fixed 86621f8 (Shuriken 90/95, Wheel 19/20 verified) (batch J, v3 59b83c2)
 - Stable Serum: also seen DHGT F33 T1 (Jev drank at 0.08) — already queued under batch I leftovers.
-- ops/report.py:181-182 (:196) a fight's end HP comes from the last combat decision, so damage after it is missed: DHGT F17 auto note 86→61 (−25), real 86→33 (−53 incl. the Giant's −28 explosion); death fights miss the final hit.
-- Recurring: DHGT F9 and F23 answers without a route field ("the answer has no route") on 2f72f9a (after adb9ec9/0809eb7) — find which path still drops it.
+- ~~ops/report.py:181-182 (:196) a fight's end HP comes from the last combat decision, so damage after it is missed: DHGT F17 auto note 86→61 (−25), real 86→33 (−53 incl. the Giant's −28 explosion); death fights miss the final hit.~~ fixed in the workspace ops/report.py (batch J; --selftest) (batch J, v3 59b83c2)
+- ~~Recurring: DHGT F9 and F23 answers without a route field ("the answer has no route") on 2f72f9a (after adb9ec9/0809eb7) — find which path still drops it.~~ fixed 5afb91f (reply format lists extra fields; route recovered from the reasoning) (batch J, v3 59b83c2)
+
+From fix batch J (2026-09-29 23:36; line numbers at v3 59b83c2), not fixed:
+- RULE CHECK (Dai: potions = 0-cost cards, no cost, no filter, no veto): (a) unmodelled potions (now incl. Entropic Brew) are offered only under conditions (e.g. heavy T1 loss) while random potions are always options (Dai 09-28) — make every potion an option; (b) the batch J agent says "the existing potion cost still counts" for Stable Serum in the solver score — find any potion cost in solver scoring and remove it if it exists (ETYC 09-29 said potions have no cost; verify).
+- tests/logged-states/batch-j/dhgt-f33-t2-wheel.json: the solver gives Jev's line −29 this turn, logged and actual −20 (also before J). Suspect missing screenMemory.facing in the test (startFacing fallback → different back-attack math); check.
+- Stable Serum rollout approximation: cards drawn mid-turn still go to discard, not kept; DHGT F22 "Uppercut + Serum" rollout identical to the no-drink line (unexplained).
+- Shuriken count misses Hellraiser auto-played Strikes and duplicated/replayed attacks (turn-solver.ts play() attack branch, same as Kusarigama).
+- To verify: retaliation vs enemy block gained on its own turn.
+- deepseek.ts recoverRoute ignores negation ("don't keep the route" read as keep); takes the last route mention.
+- ops/report.py: a full-HP reward screen after an in-fight heal (Feast) topped by Burning Blood gives only a lower bound (DHGT F20 shows 86, real 88).
