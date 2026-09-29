@@ -1706,6 +1706,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         ordersDropped: kill.dropped,
       })
     : null;
+  // Options tied for the rollout's best (the same numbers as Jev reads them): none of them is flagged best.
+  const rolloutTiedAll = rollout?.available ? rollout.tied : [];
   const rolloutBest = rollout?.available ? rollout.best : null;
   const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
   // T1 for the unsimulated potions: the cheapest potion-free option loses UNSIMULATED_HP_SHARE of HP on turn 1,
@@ -1718,8 +1720,21 @@ function planTurn(env: DecisionEnv): Decision | null {
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
   options.splice(0, options.length, ...planOptions);
   const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
+  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan));
+  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
+  const keyOfShown = (plan: Plan): string => (mcMedians.includes(plan) ? mcKey(mcShown.find((mc) => mc.median === plan)!) : `plan${shown.indexOf(plan) + 1}`);
+  const tiedKeys = rolloutTied.length >= 2 ? rolloutTied.map(keyOfShown) : [];
+  // One tied line left after the trim reads as the best among what is shown.
+  const bestShown = rolloutTied.length === 1 ? rolloutTied[0]! : rolloutBest;
+  const bestShownIsPotion = bestShown !== null && mcMedians.includes(bestShown);
+  const tieNote = (plan: Plan): Record<string, JsonValue> => {
+    if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
+    const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
+    return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (the same expected further HP loss and deaths); the rollout picks none of them` };
+  };
   const factsOf = (plan: Plan): Record<string, JsonValue> =>
-    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === rolloutBest ? { rollout_best: true } : {}) } : {};
+    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {};
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
@@ -1727,13 +1742,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...fitOf(plan), ...factsOf(plan) });
     byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
   });
-  const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const rolloutRecord = rollout
-    ? rolloutLog(
-        rollout,
-        rolloutBest ? (rolloutBestIsPotion ? mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : `plan${shown.indexOf(rolloutBest) + 1}`) : null,
-        rolloutBest !== null && !rolloutBestIsPotion && !options.includes(rolloutBest),
-      )
+    ? rolloutLog(rollout, bestShown ? keyOfShown(bestShown) : null, bestShown !== null && !bestShownIsPotion && !options.includes(bestShown), tiedKeys)
     : null;
   // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
   // distribution; the rollout facts are the median sample's line's.
@@ -1741,7 +1751,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   for (const mc of mcShown) {
     const key = mcKey(mc);
     const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
-    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === rolloutBest ? { rollout_best: true } : {}) } : {};
+    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {};
     criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
@@ -1959,7 +1969,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       if (!rolloutRecord && !potionsRecord && focusOf.size === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
-      const rolloutBestChosen = rolloutBest === null || pick === undefined ? null : rolloutBestIsPotion ? pick.potion !== undefined && answer?.type === "choice" && answer.choice === mcKey(mcShown.find((mc) => mc.median === rolloutBest)!) : pick.plan === rolloutBest;
+      // The rollout's best chosen: its one best, or any of the options tied for it.
+      const bestKeys = tiedKeys.length > 0 ? tiedKeys : bestShown !== null ? [keyOfShown(bestShown)] : [];
+      const rolloutBestChosen = bestKeys.length === 0 || pick === undefined || answer?.type !== "choice" ? null : bestKeys.includes(answer.choice);
       // The kill order behind the chosen line's rollout numbers (its best order), when orders were compared.
       const chosenOrder = rollout?.available && pick?.plan ? (rollout.byPlan.get(pick.plan)?.order?.label ?? null) : null;
       return {

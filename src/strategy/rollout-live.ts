@@ -364,6 +364,11 @@ export type LiveRollout =
        * (pickRolloutBest).
        */
       best: Plan | null;
+      /**
+       * Shown lines that tie for the best as Jev reads them (rolloutTies: the same expected further HP loss as
+       * shown and the same deaths), two or more, `best` then null; empty when one line is the best.
+       */
+      tied: Plan[];
       /** Every line loses all our HP within the horizon (and wins in no sample): the HP numbers tell them nothing. */
       saturated: boolean;
       meta: FightMeta;
@@ -406,6 +411,29 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
   if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) return { best: null, saturated };
   return { best: near[0]!, saturated };
+}
+
+/** Two lines read the same to Jev: the expected further HP loss as shown (one decimal) and the share of samples dead. */
+export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
+  return round1(a.hpLoss) === round1(b.hpLoss) && a.deaths * b.samples === b.deaths * a.samples;
+}
+
+/**
+ * The rollout's best among the shown options, or the shown options tied for it (Dai 2026-09-29; consistency
+ * #6: in 380 of 2775 flagged questions another option showed the same numbers, and the flag fell on code's
+ * first line by float noise). On a board that is not saturated, the eligible lines that read the same as the
+ * best (sameShownResult; enemy HP left and damage do not break it): two or more of them shown, none is the
+ * best and they are all tied; one shown, it is the best (an unshown line as good adds nothing); none shown,
+ * the best as before (added alone). A saturated board keeps pickRolloutBest's tie-break.
+ */
+export function rolloutTies(picked: { best: LineEstimate | null; saturated: boolean }, eligible: LineEstimate[], shown: Plan[]): { best: LineEstimate | null; tied: LineEstimate[] } {
+  const best = picked.best;
+  if (picked.saturated || best === null) return { best, tied: [] };
+  const ties = eligible.filter((line) => sameShownResult(line, best));
+  if (ties.length < 2) return { best, tied: [] };
+  const shownTies = ties.filter((line) => shown.includes(line.plan));
+  if (shownTies.length >= 2) return { best: null, tied: shownTies };
+  return { best: shownTies[0] ?? best, tied: [] };
 }
 
 export function liveRollout(args: LiveRolloutArgs): LiveRollout {
@@ -496,11 +524,13 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
     const picked = pickRolloutBest(eligible, args.solver.player.hp);
+    const ties = rolloutTies(picked, eligible, args.shown);
     return {
       available: true,
       result,
       byPlan,
-      best: picked.best?.plan ?? null,
+      best: ties.best?.plan ?? null,
+      tied: ties.tied.map((line) => line.plan),
       saturated: picked.saturated,
       meta,
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
@@ -608,7 +638,7 @@ export function segmentName(segment: string): string {
 export const DRINK_FIRST_ROLLOUT = "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking";
 
 /** The decision's log entry (decision log field `rollout`). */
-export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean): Record<string, JsonValue> {
+export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean, tiedKeys: string[] = []): Record<string, JsonValue> {
   if (!r.available) return { available: false, reason: r.reason, ms: Math.round(r.elapsedMs) };
   return {
     available: true,
@@ -619,6 +649,8 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     lines: r.result.lines.length,
     best: bestKey,
     best_added: added,
+    // The options tied for the best (no single best): their keys.
+    ...(tiedKeys.length > 0 ? { tied: tiedKeys } : {}),
     ...(r.saturated ? { saturated: true } : {}),
     ...(r.result.orders.length > 0
       ? {
