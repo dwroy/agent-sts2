@@ -589,3 +589,122 @@ describe("the loop refuses an action whose indices moved, logs it and re-plans",
     expect(node).toEqual({ row: live["row"], col: live["col"], type: live["node_type"] });
   });
 });
+
+/* ---- repeated refusals on one board: the count survives a decision-time pass, and has a way out -------- */
+
+/** A mod that serves `serve(n)` on the n-th state read and records the actions posted. */
+async function readFnMod(serve: (n: number) => Raw): Promise<{ server: TestServer; actions: Raw[] }> {
+  let n = 0;
+  const actions: Raw[] = [];
+  const server = await startTestServer((req, res) => {
+    if (req.method === "GET" && req.url === "/state") {
+      const state = serve(n);
+      n += 1;
+      return sendJson(res, 200, envelope(state));
+    }
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
+    });
+    req.on("end", () => {
+      const intent = JSON.parse(body || "{}") as Raw;
+      actions.push(intent);
+      sendJson(res, 200, envelope({ action: intent["action"], status: "completed", stable: true, message: "scripted", state: serve(n) }));
+    });
+  });
+  servers.push(server);
+  return { server, actions };
+}
+
+describe("refusals on the re-read before sending add up per board", () => {
+  it("combat: a play refused at dispatch every time (the gate passes at decision) ends the turn after the limit", async () => {
+    const decided = combatPayload();
+    // Every card upgraded on the re-read: the fingerprint (index:id:playable) is the same, any play_card is refused.
+    const upgraded = edited(decided, (raw) => {
+      for (const card of hand(raw)) card["upgraded"] = true;
+    });
+    // Two reads per pass (the state, the re-read before sending): decided, then upgraded; after 40 reads it settles.
+    const { server, actions } = await readFnMod((n) => (n < 40 && n % 2 === 1 ? upgraded : decided));
+    const cfg = testConfig();
+    const notes: string[] = [];
+    await runLoop({
+      config: cfg,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: null,
+      knowledge: testKnowledge,
+      maxDecisions: 1,
+      pollIntervalMs: 1,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    // Three refusals on the same board, then the turn ended instead of re-planning the same play again.
+    expect(actions[0]).toEqual({ action: "end_turn" });
+    // (The same refusal on the same board is logged once; the notes say each one.)
+    expect(notes.filter((note) => note.startsWith("gate rejected play_card at dispatch"))).toHaveLength(3);
+    expect(notes.some((note) => note.startsWith("gate rejected 3 actions on this board: ending the turn instead of play_card"))).toBe(true);
+  });
+
+  it("a non-combat screen refused at dispatch every time: code's baseline decides after the limit (Jev is not asked again)", async () => {
+    const decided = mapPayload();
+    const swapped = edited(decided, (raw) => {
+      const nodes = (raw["map"] as Raw)["available_nodes"] as Raw[];
+      (raw["map"] as Raw)["available_nodes"] = [{ ...nodes[1], index: 0 }, { ...nodes[0], index: 1 }, { ...nodes[2], index: 2 }];
+      for (const node of (raw["map"] as Raw)["available_nodes"] as Raw[]) node["row"] = 9;
+    });
+    // With Jev, three reads per pass (the state, the check before asking, the re-read before sending): the third
+    // is refused; code's baseline asks nobody, so its two reads both see the decided map and it is sent.
+    const { server, actions } = await readFnMod((n) => (n < 60 && n % 3 === 2 ? swapped : decided));
+    const cfg = testConfig();
+    const jev = stubJev();
+    const notes: string[] = [];
+    await runLoop({
+      config: cfg,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: jev.client,
+      knowledge: testKnowledge,
+      maxDecisions: 1,
+      pollIntervalMs: 1,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    expect(jev.calls()).toBe(3);
+    expect(actions).toHaveLength(1);
+    expect(notes).toContain("gate refused 3 times on this board: playing code's baseline decision next");
+    const sent = rows(cfg.log.decisionLog).at(-1)!;
+    expect(sent["gate_reject"]).toBeUndefined();
+    expect(sent["decider"]).toBe("code-fallback");
+    expect(String(sent["rationale"])).toMatch(/^code baseline after 3 gate refusals on this board: /);
+  });
+
+  it("refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it", async () => {
+    const decided = rewardClaimPayload();
+    const changed = edited(decided, (raw) => {
+      ((raw["reward"] as Raw)["rewards"] as Raw[])[0] = { index: 0, reward_type: "Potion", description: "Fire Potion", claimable: true };
+    });
+    const { server, actions } = await readFnMod((n) => (n < 70 && n % 2 === 1 ? changed : decided));
+    const cfg = testConfig();
+    const notes: string[] = [];
+    await runLoop({
+      config: cfg,
+      mode: "play",
+      client: new ModClient({ baseUrl: server.url }),
+      jev: null,
+      knowledge: testKnowledge,
+      maxDecisions: 1,
+      pollIntervalMs: 1,
+      onEvent: (event) => {
+        if (event.type === "note") notes.push(event.message);
+      },
+    });
+
+    expect(notes.some((note) => note.startsWith("stuck for 25 polls on REWARD"))).toBe(true);
+    // Once the reads settle, the claim goes out.
+    expect(actions).toEqual([{ action: "claim_reward", option_index: 0 }]);
+  });
+});

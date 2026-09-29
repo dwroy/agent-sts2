@@ -145,6 +145,11 @@ const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout
  */
 const FINALIZE_ACTIONS = ["continue_game_over", "confirm_unlock"] as const;
 const MAX_FINALIZE_ACTIONS = 5;
+/**
+ * Gate refusals on one board (the same fingerprint, at decision or at dispatch) before the loop stops re-planning
+ * the same thing: in combat it ends the turn, elsewhere it plays code's baseline decision (no model, no Jev).
+ */
+export const GATE_REJECTION_LIMIT = 3;
 
 /** Wait until the board actually moves, or give up after a bounded delay. */
 async function waitForStateChange(options: {
@@ -278,8 +283,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   // animations: this memo means one question per (board, decision) and one answer per board change.
   // It is cleared on every dispatch, so an answer can never be reused across an action.
   let answerMemo: AnswerMemo | null = null;
-  // Consecutive gate rejections; after a few in combat the loop ends the turn instead of spinning.
+  // Consecutive gate refusals on the board `gateRejectedFp` (at decision or at dispatch); only an action that is sent
+  // starts them over. At GATE_REJECTION_LIMIT the loop ends the turn (combat) or plays code's baseline instead of spinning.
   let gateRejections = 0;
+  let gateRejectedFp: string | null = null;
   // The last gate refusal logged ("fingerprint|reason"): a refusal repeated on the same board is logged once.
   let lastRefusalLogged: string | null = null;
   const readMemo = (key: string): AnswerMemo | null =>
@@ -587,6 +594,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (state.screen === "MAP") rememberMap(screenMemory, state);
     observedTs = new Date().toISOString();
     const observedFp = fingerprint(state);
+    // This board was refused GATE_REJECTION_LIMIT times (at decision or at dispatch): combat ends the turn (at the
+    // gate below); elsewhere the screen's code baseline decides (planned without trust-Jev, no model or Jev asked),
+    // so nothing is paid again for the same refusal.
+    const gateStuck = gateRejectedFp === observedFp && gateRejections >= GATE_REJECTION_LIMIT;
+    const endTurnInstead = gateStuck && state.screen === "COMBAT" && state.available_actions.includes("end_turn");
+    const gateCodeBaseline = gateStuck && !endTurnInstead;
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
     trackLizardTail(screenMemory, state);
@@ -635,7 +648,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
     if (!planned) {
       try {
-        planned = planDecision(env);
+        planned = planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env);
       } catch (error) {
         // A planner bug (or a screen whose option set exceeds what a question may carry) must not take
         // the process down: report it, then let the circuit breaker stop the run if it keeps happening.
@@ -680,6 +693,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let decision = planned.decision;
     const planStarted = Date.now();
     const stateFingerprint = observedFp;
+    const codeBaseline = gateCodeBaseline && decision.kind === "ask";
+    if (codeBaseline && decision.kind === "ask" && decision.deepseek) decision = decision.deepseek.baseline;
     const decisionId = randomUUID();
     let resolved: ResolvedAction;
     let jevLatency = 0;
@@ -696,7 +711,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekNote: Record<string, string> | undefined;
     /** DeepSeek's answer failed the consistency guard: both answers and how it was resolved. */
     let deepseekConsistency: JsonValue | undefined;
-    if (decision.kind === "ask" && decision.deepseek) {
+    if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
       const spec = decision.deepseek;
       const question = decision.questions[spec.question];
       const memoKey = `${str(state.raw["run_id"])}|${state.run?.floor ?? ""}|${decision.label}|${JSON.stringify(question ?? null)}`;
@@ -931,9 +946,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
-    } else if (!jev) {
-      // No-Jev mode: the resolver sees an empty answer set and takes its deterministic path.
+    } else if (!jev || codeBaseline) {
+      // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
+      // deterministic path.
       resolved = decision.resolve({});
+      if (codeBaseline) resolved = { ...resolved, fallback: true, rationale: `code baseline after ${gateRejections} gate refusals on this board: ${resolved.rationale}` };
     } else {
       if (stats.jevCalls >= config.budgets.maxRequests) {
         stop(`request cap reached (${config.budgets.maxRequests})`);
@@ -1136,10 +1153,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // (act/identity.ts). A memo's answer keeps the identity of the board it was given on.
     resolved.intent = withExpect(state, resolved.intent);
     let gated = gate(state, resolved.intent);
-    if (!gated.ok && state.screen === "COMBAT" && gateRejections >= 3 && state.available_actions.includes("end_turn")) {
+    if (endTurnInstead && resolved.intent.action !== "end_turn") {
       // The same illegal play kept coming back (a card whose cost rose above our energy, 2026-09-25:
-      // 30 min spinning on "card_index 5 is not playable"): stop re-planning it and end the turn.
-      onEvent({ type: "note", message: `gate rejected ${resolved.intent.action} ${gateRejections} times: ending the turn instead` });
+      // 30 min spinning on "card_index 5 is not playable"), or kept being refused on the re-read before sending:
+      // stop re-planning it and end the turn.
+      onEvent({ type: "note", message: `gate rejected ${gateRejections} actions on this board: ending the turn instead of ${resolved.intent.action}` });
       const endTurn = withExpect(state, { action: "end_turn" });
       resolved.intent = endTurn;
       resolved.rationale = `fallback after repeated illegal plays: ${resolved.rationale}`;
@@ -1200,7 +1218,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
      */
     const refuse = async (result: GateResult, at: "decision" | "dispatch", checked: GameState): Promise<void> => {
       stats.waits += 1;
-      gateRejections += 1;
+      // Counted per board: a refusal on the same fingerprint (at decision or on the re-read before sending) adds up.
+      gateRejections = gateRejectedFp === stateFingerprint ? gateRejections + 1 : 1;
+      gateRejectedFp = stateFingerprint;
+      if (gateRejections === GATE_REJECTION_LIMIT) {
+        const next = state.screen === "COMBAT" && state.available_actions.includes("end_turn") ? "ending the turn" : "playing code's baseline decision";
+        onEvent({ type: "note", message: `gate refused ${gateRejections} times on this board: ${next} next` });
+      }
       noteStall(checked, result.reason);
       onEvent({ type: "note", message: `gate rejected ${intent.action}${at === "dispatch" ? " at dispatch" : ""}: ${result.reason}` });
       answerMemo = null;
@@ -1231,8 +1255,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       await refuse(gated, "decision", state);
       continue;
     }
-    gateRejections = 0;
-    clearStall();
+    // Passing the gate here is not progress: the refusal count and the stall clock start over only when an action
+    // is sent (the re-read before sending may still refuse it).
 
     const baseRecord = recordBase();
     const journalEntry = {
@@ -1304,6 +1328,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
       lastShadowFingerprint = stateFingerprint;
+      // Shadow mode sends nothing: the recorded decision stands for the action.
+      gateRejections = 0;
+      gateRejectedFp = null;
+      clearStall();
       const routePlan = applyResolved();
       journal.record(state, journalEntry);
       stats.decisions += 1;
@@ -1355,6 +1383,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
 
     const actionStarted = Date.now();
+    // The action goes out: the gate's refusal count and the stall clock start over.
+    gateRejections = 0;
+    gateRejectedFp = null;
+    clearStall();
     let actionResult: ActionResult;
     try {
       actionResult = await dispatch(client, resolved.intent);
