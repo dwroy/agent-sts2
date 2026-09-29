@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -114,4 +114,35 @@ describe("1b. Dai: no potion cost in the solver's score. A potion's lasting valu
     expect(lasting(armor)).toBeGreaterThan(0);
     expect(lasting(iron)).toBeCloseTo(lasting(armor));
   });
+});
+
+describe("2. DHGT6Z3Q7VAP F33 T2 (Kaiser Crab, Surrounded): Jev's line lost 20 as logged; the replay read -29 because the fixture had no facing (a fresh screen memory: the start-of-fight facing, the Rocket)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+    solveTap.onSolve = null;
+  });
+
+  it("the fixture carries the facing the run had (T1's last target, Dismantle -> the Crusher): Twin Strike -> Crusher, Molten Fist -> Rocket, Stone Armor loses 20 (30 / 1.5 + floor(3 x 1.5) - 4 Plating)", () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("batch-j/dhgt-f33-t2-wheel");
+    expect(fx.screenMemory?.facing).toBe(0);
+    const inputs: SolverInput[] = [];
+    solveTap.onSolve = (input) => inputs.push(input);
+    planCombatTurn(loggedEnv(fx));
+    solveTap.onSolve = null;
+    const input = inputs[0]!;
+    expect(input.player.facing).toBe(0);
+    const JEV = "TWIN_STRIKE>0,MOLTEN_FIST>1,STONE_ARMOR>null";
+    const line = solveTurn(input).plans.find((plan) => plan.steps.map((step) => `${step.cardId}>${step.target}`).join(",") === JEV)!;
+    expect(line).toBeDefined();
+    expect(line.outcome.hpLoss).toBe(20);
+    // Replayed without it (the start-of-fight facing, the Rocket): the Rocket's 30 read as a front hit, -29.
+    const { screenMemory: _facing, ...fresh } = fx;
+    const freshInputs: SolverInput[] = [];
+    solveTap.onSolve = (entry) => freshInputs.push(entry);
+    planCombatTurn(loggedEnv(fresh));
+    solveTap.onSolve = null;
+    expect(freshInputs[0]!.player.facing).toBe(1);
+    expect(solveTurn(freshInputs[0]!).plans.find((plan) => plan.steps.map((step) => `${step.cardId}>${step.target}`).join(",") === JEV)!.outcome.hpLoss).toBe(29);
+  }, 30_000);
 });

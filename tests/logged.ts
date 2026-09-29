@@ -13,7 +13,7 @@ import { loadConfig } from "../src/config.js";
 import { makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
+import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
 
 type Raw = Record<string, unknown>;
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states");
@@ -26,12 +26,17 @@ export interface Logged {
   source: string;
   decision: { label: string; decider: string; chosen: unknown; rationale: string };
   state: Raw;
+  /**
+   * What the run's screen memory held at the decision that the state does not show (the Surrounded facing: the
+   * last enemy targeted before it). Without it a board is replayed as a fresh process would see it.
+   */
+  screenMemory?: Partial<ScreenMemory>;
 }
 
 /** A logged board (a fresh copy: tests may edit it). */
 export function logged(name: string): Logged {
   const raw = JSON.parse(readFileSync(join(DIR, `${name}.json`), "utf8")) as Logged;
-  return { source: raw.source, decision: raw.decision, state: raw.state };
+  return { source: raw.source, decision: raw.decision, state: raw.state, ...(raw.screenMemory ? { screenMemory: raw.screenMemory } : {}) };
 }
 
 /** The decision environment of a logged board (no run or fight plan). */
@@ -47,7 +52,7 @@ export function loggedEnv(fx: Logged, over: Partial<DecisionEnv> = {}): Decision
     allowFtueModals: false,
     strictJev: true,
     combatPlanner: "turn",
-    screenMemory: createScreenMemory(state.screen),
+    screenMemory: { ...createScreenMemory(state.screen), ...(fx.screenMemory ?? {}) },
     shopDiscardPotions: [],
     ...over,
   };

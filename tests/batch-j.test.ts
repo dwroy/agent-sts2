@@ -220,14 +220,16 @@ describe("3. Shuriken (+1 Strength per 3 Attacks in a turn) and Captain's Wheel 
     planCombatTurn(loggedEnv(fx));
     solveTap.onSolve = null;
     expect(boardRolloutInput(parseGameState(fx.state), loggedKnowledge, inputs[0]!, 9).relicBlock).toEqual([{ amount: 18, turn: 3 }]);
-    const nextTurnLoss = (state: Raw) => planLines(planCombatTurn(loggedEnv({ ...fx, state }))).filter((line) => typeof line["rollout_turns"] === "string").map((line) => Number(/; T2: hp -([\d.]+)/.exec(String(line["rollout_turns"]))![1]));
+    // By the line's plays (the rollout's best line, added when code did not show it, can differ with and without).
+    const nextTurnLoss = (state: Raw) =>
+      new Map(planLines(planCombatTurn(loggedEnv({ ...fx, state }))).filter((line) => typeof line["rollout_turns"] === "string").map((line) => [String(line["plays"]), Number(/; T2: hp -([\d.]+)/.exec(String(line["rollout_turns"]))![1])]));
     const run = fx.state["run"] as Raw;
     const noWheel = { ...fx.state, run: { ...run, relics: (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "CAPTAINS_WHEEL") } };
     const withWheel = nextTurnLoss(fx.state);
     const without = nextTurnLoss(noWheel);
-    expect(withWheel.length).toBeGreaterThan(0);
-    expect(withWheel.length).toBe(without.length);
-    withWheel.forEach((loss, i) => expect(loss).toBeLessThan(without[i]!));
+    const both = [...withWheel.keys()].filter((plays) => without.has(plays));
+    expect(both.length).toBeGreaterThan(2);
+    for (const plays of both) expect(withWheel.get(plays), plays).toBeLessThan(without.get(plays)!);
   }, 60_000);
 });
 
