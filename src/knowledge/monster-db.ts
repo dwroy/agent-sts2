@@ -714,27 +714,55 @@ export function roomHpCost(act: number, asc: number, room: "Monster" | "Elite"):
   return null;
 }
 
-/** The act boss's HP lost in our won fights (median/p75, n) and win rate, at `asc` (nearest logged). */
-export function bossHpLoss(
-  bossId: string | null | undefined,
-  asc: number,
-): { median: number; p75: number; n: number; fights: number; winRate: number | null; asc: number; perTurn: { median: number; n: number } | null } | null {
+/** The act boss's measured HP cost (bossHpLoss). */
+export interface BossHpLoss {
+  /**
+   * HP lost in our won fights (median/p75, n) at the nearest ascension with a win, `asc` (A9 Kaiser Crab: 0
+   * wins in 2 fights, so A8's); null when no ascension has a win.
+   */
+  won: { median: number; p75: number; n: number; asc: number } | null;
+  /** Our record at the nearest logged ascension (`recordAsc`): fights and win rate. */
+  fights: number;
+  winRate: number | null;
+  recordAsc: number;
+  /** HP lost a turn in every logged fight, wins and deaths, at the nearest ascension that has any (`asc`). */
+  perTurn: { median: number; n: number; asc: number } | null;
+}
+
+/** Numeric keys ordered by distance from `asc`, the higher first on a tie (as nearestAscension picks). */
+function byDistance(keys: string[], asc: number): string[] {
+  return keys.filter((key) => /^\d+$/.test(key)).sort((a, b) => Math.abs(Number(a) - asc) - Math.abs(Number(b) - asc) || Number(b) - Number(a));
+}
+
+/**
+ * The act boss's HP lost in our won fights and a turn, and our record, at `asc`: each from the nearest
+ * logged ascension that has it (the win sample walks on to the next ascension when the nearest has no
+ * win, as roomHpCost does; the per-turn loss counts deaths too, so it does not wait for a win). null when
+ * the DB has no fight against the boss.
+ */
+export function bossHpLoss(bossId: string | null | undefined, asc: number): BossHpLoss | null {
   if (!bossId) return null;
   const byAsc = load().bosses[bossId.toUpperCase().replace(/_BOSS$/, "")];
   const found = nearestAscension(byAsc, asc);
   if (!byAsc || !found) return null;
-  const entry = byAsc[found.key]!;
-  const loss = entry.hp_loss_won;
-  if (!loss || !loss.n || typeof loss.median !== "number") return null;
-  const turn = entry.hp_loss_per_turn;
+  const order = byDistance(Object.keys(byAsc), asc);
+  const wonAt = order.find((key) => {
+    const loss = byAsc[key]!.hp_loss_won;
+    return !!loss?.n && typeof loss.median === "number";
+  });
+  const turnAt = order.find((key) => {
+    const turn = byAsc[key]!.hp_loss_per_turn;
+    return !!turn?.n && typeof turn.median === "number";
+  });
+  const loss = wonAt ? byAsc[wonAt]!.hp_loss_won! : null;
+  const turn = turnAt ? byAsc[turnAt]!.hp_loss_per_turn! : null;
+  const record = byAsc[found.key]!;
   return {
-    median: loss.median,
-    p75: typeof loss.p75 === "number" ? loss.p75 : loss.median,
-    n: loss.n,
-    fights: entry.fights ?? 0,
-    winRate: entry.win_rate ?? null,
-    asc: Number(found.key),
-    perTurn: turn && turn.n && typeof turn.median === "number" ? { median: turn.median, n: turn.n } : null,
+    won: loss && wonAt ? { median: loss.median!, p75: typeof loss.p75 === "number" ? loss.p75 : loss.median!, n: loss.n!, asc: Number(wonAt) } : null,
+    fights: record.fights ?? 0,
+    winRate: record.win_rate ?? null,
+    recordAsc: Number(found.key),
+    perTurn: turn && turnAt ? { median: turn.median!, n: turn.n!, asc: Number(turnAt) } : null,
   };
 }
 

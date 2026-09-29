@@ -5,7 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, selfGainAt, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, bossHpLoss, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, selfGainAt, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { forcedFightCost } from "../src/screens/event.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -307,3 +308,45 @@ describe("a monster's expected attack by turn, along its logged moves", () => {
   });
 });
 
+
+describe("the act boss's HP cost when the nearest ascension has no win (review 2026-09-29 #7)", () => {
+  // Kaiser Crab as logged: A8 wins; A9 0 wins in 2 fights, their per-turn loss 13.4. Test Subject: no win at A8 or A9.
+  const db = {
+    bosses: {
+      KAISER_CRAB: {
+        "8": { fights: 23, win_rate: 0.4, hp_loss_won: { median: 38, p75: 52, n: 9 }, hp_loss_per_turn: { median: 9.8, p75: 12, n: 23 } },
+        "9": { fights: 2, win_rate: 0, hp_loss_won: { median: null, p75: null, n: 0 }, hp_loss_per_turn: { median: 13.4, p75: 13.6, n: 2 } },
+      },
+      TEST_SUBJECT: { "8": { fights: 3, win_rate: 0, hp_loss_won: { median: null, p75: null, n: 0 }, hp_loss_per_turn: { median: 7.1, p75: 8, n: 3 } } },
+    },
+    encounters: {},
+    monsters: {},
+  };
+
+  it("the win sample walks to the nearest ascension with a win; the per-turn loss and the record stay at the nearest logged one", () => {
+    setMonsterDbForTests(db as never);
+    try {
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 9)).toEqual({
+        won: { median: 38, p75: 52, n: 9, asc: 8 },
+        fights: 2,
+        winRate: 0,
+        recordAsc: 9,
+        perTurn: { median: 13.4, n: 2, asc: 9 },
+      });
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 10)).toMatchObject({ won: { asc: 8 }, recordAsc: 9, perTurn: { median: 13.4, asc: 9 } });
+      expect(bossHpLoss("KAISER_CRAB_BOSS", 8)).toMatchObject({ won: { median: 38, asc: 8 }, perTurn: { median: 9.8, asc: 8 } });
+      // No win anywhere: no win sample, but the per-turn loss is still measured.
+      expect(bossHpLoss("TEST_SUBJECT_BOSS", 10)).toMatchObject({ won: null, perTurn: { median: 7.1, n: 3, asc: 8 } });
+      expect(bossHpLoss("NOT_A_BOSS", 9)).toBeNull();
+      // The forced-boss cost says which ascension its wins come from.
+      expect(forcedFightCost("Boss", 2, 9, "KAISER_CRAB_BOSS")).toEqual({
+        median: 38,
+        p75: 52,
+        source: "act boss KAISER_CRAB_BOSS, HP lost in our A8 (no A9 win logged) wins, n=9; A9 win rate 0% over 2 fights",
+      });
+      expect(forcedFightCost("Boss", 3, 10, "TEST_SUBJECT_BOSS")).toBeNull();
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
