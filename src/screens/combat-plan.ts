@@ -931,6 +931,14 @@ export const RED_SKULL_STRENGTH = 3;
 export const CLAY_BLOCK = 3;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
+/**
+ * Shuriken: 「你每在同一回合内打出{Cards}张攻击牌，获得{StrengthPower}点力量」 — 3 and 1 (logged over 8 runs holding it:
+ * +1 Strength at 90 of 95 plays taking attacks_played_this_turn to a multiple of 3; the 5 others were mid-selection
+ * frames; the count starts again each turn). DHGT6Z3Q7VAP F33 T1: Strength 0 -> 1 -> 2 after the 3rd and 6th Attack,
+ * 132 dealt where 116 was shown.
+ */
+export const SHURIKEN_ATTACKS = 3;
+export const SHURIKEN_STRENGTH = 1;
 
 /**
  * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
@@ -1424,6 +1432,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
+    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: num(player["attacks_played_this_turn"]) % SHURIKEN_ATTACKS } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,

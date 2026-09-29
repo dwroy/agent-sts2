@@ -490,6 +490,11 @@ export interface RolloutInput {
    */
   relicEnergy?: { amount: number; from: number }[];
   /**
+   * Block relics that trigger at the start of one fight turn (Captain's Wheel: 18 at the start of turn 3, logged 19
+   * of 20 third turns started with exactly 18, every other turn with none): the amount and that turn.
+   */
+  relicBlock?: { amount: number; turn: number }[];
+  /**
    * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
@@ -1184,6 +1189,9 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
   player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
+  // A relic's block on this fight turn (Captain's Wheel on turn 3): `turn` is the one that just ended.
+  const fightTurn = (input.solver.turn ?? input.meta.t) + turn + 1;
+  for (const relic of input.relicBlock ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
   // Self-Forming Clay's block for the last turn's HP losses.
   player.block += player.clayNext;
   player.clayNext = 0;
@@ -1923,6 +1931,8 @@ function simulate(
       // Thorns up by now (Liquid Bronze drunk in the line or before); Flame Barrier's was the decision turn's only.
       retaliate: player.thorns,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
+      // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
+      ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);

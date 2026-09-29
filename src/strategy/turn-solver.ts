@@ -202,6 +202,13 @@ export interface PlayerSim {
    * relic's counter (attacks already played this turn) comes from its stack.
    */
   kusarigama?: { every: number; damage: number; count: number };
+  /**
+   * Shuriken (「你每在同一回合内打出3张攻击牌，获得1点力量」): every 3rd Attack played in a turn gives 1 Strength for
+   * the fight, on the Attacks after it. `count`: the Attacks already played this turn (attacks_played_this_turn),
+   * mod `every`. Logged over 8 runs holding it: +1 at 90 of 95 crossings of a multiple of 3 (DHGT F33 T1: 0 -> 1 ->
+   * 2 after the 3rd and 6th Attack), the count starting again each turn.
+   */
+  shuriken?: { every: number; strength: number; count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -1133,6 +1140,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (kusa && kusa.every > 0 && (kusa.count + next.attacksPlayed) % kusa.every === 0) {
       const living = next.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
       if (living[0]) hitEnemyRaw(next, living[0], kusa.damage);
+    }
+    // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
+    const shuriken = player.shuriken;
+    if (shuriken && shuriken.every > 0 && (shuriken.count + next.attacksPlayed) % shuriken.every === 0) {
+      next.strength += shuriken.strength;
+      next.permStrength += shuriken.strength;
     }
   }
   for (const enemy of next.enemies) {
