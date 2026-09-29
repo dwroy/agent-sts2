@@ -14,12 +14,12 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
-import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
+import { endTurnLethalNote, guardedText, hpGuardNote, planCombatTurn } from "../src/screens/combat-plan.js";
 import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { isFightPlanReply } from "../src/strategy/fight-plan.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { board, play, scriptedDeepSeek, setupOneshotTests } from "./oneshot-support.js";
 import { baseState, combatPayload, mainMenuPayload, runPayload } from "./scenarios.js";
@@ -238,5 +238,20 @@ describe("\"ending now kills\" note names the HP the held cards take straight of
     expect(endTurnLethalNote({ ...end, outcome: { ...end.outcome, dies: true } }, false, 40)).toBe(
       ` [ending now kills by what the mod's lethal flag does not count: ${end.outcome.hpLoss} HP lost in all, 0 of it the enemy hits after block, 2 damage from cards held (灼伤), 12 HP lost to cards held (呼唤 ×2)]`,
     );
+  });
+});
+
+describe("HP guard texts: a heal reads \"hp +8\", not \"loses -8 HP\" (batch M's leftover, as 5e19d7a)", () => {
+  const line = (hpLoss: number, name: string): Plan =>
+    ({ steps: [{ cardIndex: 0, cardId: name, name, target: null }], outcome: { hpLoss, damageDealt: 7 }, score: 0 }) as unknown as Plan;
+
+  it("code's own line over the bound, and the guard's replacement of a pick", () => {
+    const healing = line(-8, "Reaper");
+    const block = line(-20, "Feed");
+    expect(guardedText(healing, block)).toMatch(/^code plan .* \(hp \+8\) is over the HP guard bound; playing .* instead \(hp \+20, dmg 7\)$/);
+    expect(guardedText(line(12, "Strike"), line(3, "Defend"))).toMatch(/\(hp -12\) is over the HP guard bound; .* \(hp -3, dmg 7\)$/);
+    const note = hpGuardNote(2, healing, 8, 1, block);
+    expect(note).toMatch(/^; HP guard: plan 2 \(.*; hp \+8\) is more than 8 HP over the cheapest line, playing plan 1 \(.*; hp \+20\) instead$/);
+    for (const text of [guardedText(healing, block), note]) expect(text).not.toMatch(/loses -|hp --/);
   });
 });
