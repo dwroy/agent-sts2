@@ -842,3 +842,51 @@ describe("Plating wears off one stack a turn in the rollout (「覆甲会在你�
     expect(losses(line)).toEqual([7, 8, 9, 10]);
   });
 });
+
+describe("later rollout turns get their own per-turn state, not the decision's (VQKX9AD1YHKS F17 T5: Ringing's 1 card on every turn)", () => {
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const run = (player: Partial<PlayerSim>, playerPowers: Record<string, number>, table = WAIT, id = "E") => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, ...player },
+      enemies: [{ index: 0, name: id, hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 30 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id, move: Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { [id]: table },
+      playerPowers,
+    }).lines[0]!;
+  };
+  const on = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!;
+
+  it("Ringing: one card on the decision's turn only; a later turn plays its whole hand (5 free Strikes, 30)", () => {
+    expect(on(run({ maxPlays: 0 }, { RINGING_POWER: 1 }), 2).dmg.mean).toBe(30);
+  });
+
+  it("Sloth 3 with two cards already played: 1 left now, 3 on every later turn", () => {
+    expect(on(run({ maxPlays: 1 }, { SLOTH_POWER: 3 }), 2).dmg.mean).toBe(18);
+    expect(on(run({ maxPlays: 1 }, { SLOTH_POWER: 3 }), 4).dmg.mean).toBe(18);
+  });
+
+  it("Intangible 1 on us covers this turn only; Intangible 2 the next one too", () => {
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 1 }, HIT), 2).loss.mean).toBe(10);
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 2 }, HIT), 2).loss.mean).toBe(1);
+    expect(on(run({ intangible: true }, { INTANGIBLE_POWER: 2 }, HIT), 3).loss.mean).toBe(10);
+  });
+
+  it("Constrict hurts only while its Slithering Strangler lives; Disintegration every turn", () => {
+    expect(on(run({ endTurnHpLoss: 3 }, { CONSTRICT_POWER: 3 }), 2).loss.mean).toBe(0);
+    expect(on(run({ endTurnHpLoss: 3 }, { CONSTRICT_POWER: 3 }, WAIT, "SLITHERING_STRANGLER"), 2).loss.mean).toBe(3);
+    expect(on(run({ endTurnHpLoss: 5 }, { DISINTEGRATION_POWER: 5 }), 3).loss.mean).toBe(5);
+  });
+});

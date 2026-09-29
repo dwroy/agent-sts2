@@ -727,7 +727,26 @@ interface SimPlayer {
   otherStartLoss: number;
   /** Damage the last start-of-turn AoE dealt: counted in the next turn's record. */
   startDealt: number;
+  /**
+   * Cards a turn (SLOTH_POWER: 「你在每个回合不能打出超过3张牌」), null for no cap. The decision's own cap is
+   * the plays left this turn (combat-plan playCap: Ringing's 1 this turn only, Sloth minus the cards played),
+   * so a later turn gets the per-turn amount (VQKX9AD1YHKS F17 T5: a Ringing turn's cap of 1 on every
+   * simulated turn read "dead 8/8, dmg 0").
+   */
+  playCap: number | null;
+  /** Intangible on us (INTANGIBLE_POWER, turns): every hit 1 through the enemy turn of each turn it covers. */
+  intangibleTurns: number;
+  /** Blur (BLUR_POWER, turns): block kept at the start of the next turn, for that many turns; Barricade is keepsBlock. */
+  blurTurns: number;
+  /** Shrink on us (SHRINK_POWER: 「攻击伤害在3回合内减少30%」): turns left. */
+  shrinkTurns: number;
+  /** End-of-turn damage: Disintegration (for the fight) and Constrict (while its Slithering Strangler lives). */
+  disintegration: number;
+  constrict: number;
 }
+
+/** The enemy whose Constrict it is (CONSTRICT_POWER: 「蛇行扼杀者存活时…」). */
+const CONSTRICTOR = "SLITHERING_STRANGLER";
 
 interface Piles {
   draw: CardModel[];
@@ -991,7 +1010,8 @@ function applyPlan(
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   player.hp = o.hpAfter;
-  player.block = player.keepsBlock ? o.blockWasted ?? 0 : 0;
+  // Barricade keeps block every turn; Blur N only at the start of the next N turns.
+  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
   const died = !won && (o.dies || player.hp <= 0);
   // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
   if (!won && !died) {
@@ -1131,7 +1151,8 @@ function simulate(
     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
     frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,
     block: base.block,
-    keepsBlock: base.keepsBlock === true,
+    // Barricade for the fight; a Blur behind the decision's keepsBlock lasts its turns (blurTurns).
+    keepsBlock: (input.playerPowers["BARRICADE_POWER"] ?? 0) > 0 || (base.keepsBlock === true && (input.playerPowers["BLUR_POWER"] ?? 0) <= 0),
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
     // The decision's end-of-turn block is Plating + Metallicize (combat-plan): Plating wears off, split it out.
     endTurnBlock: Math.max(0, (base.endTurnBlock ?? 0) - (input.playerPowers["PLATING_POWER"] ?? 0)),
@@ -1149,7 +1170,15 @@ function simulate(
     relicAoe: 0,
     otherStartLoss: 0,
     startDealt: 0,
+    playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
+    intangibleTurns: input.playerPowers["INTANGIBLE_POWER"] ?? (base.intangible ? 1 : 0),
+    blurTurns: input.playerPowers["BLUR_POWER"] ?? 0,
+    shrinkTurns: input.playerPowers["SHRINK_POWER"] ?? (base.shrunk ? 1 : 0),
+    disintegration: input.playerPowers["DISINTEGRATION_POWER"] ?? 0,
+    constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
   };
+  // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
+  if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
   // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
   player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player));
   player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
@@ -1252,7 +1281,14 @@ function simulate(
       exhaustedThisTurn: false,
       noBlock: false,
       tender: 0,
-      keepsBlock: player.keepsBlock,
+      // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
+      // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
+      // while its Strangler lives.
+      maxPlays: player.playCap,
+      intangible: player.intangibleTurns > h,
+      shrunk: player.shrinkTurns > h,
+      endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
+      keepsBlock: player.keepsBlock || player.blurTurns > h,
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
