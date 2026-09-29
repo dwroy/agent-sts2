@@ -488,6 +488,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       screenMemory.fightCards = undefined;
       screenMemory.planBeforeSelection = undefined;
       screenMemory.gambleDiscards = undefined;
+      screenMemory.potionTake = undefined;
       screenMemory.plannedAfter = undefined;
       screenMemory.paelsEyeFight = undefined;
       screenMemory.fightStart = undefined;
@@ -791,12 +792,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             }
             // A plan's answer is not an option key: nothing to recover from its reasoning.
             const recovered = spec.plan ? null : error.recoverFrom(question.criteria);
-            if (recovered) {
-              const reason = error.detail.reason || `reasoning concluded ${recovered.option}`;
-              // The answer's route and route_reason go with the recovered choice (a route review, the act route).
-              const route = error.detail.route ? { route: error.detail.route, ...(error.detail.routeReason ? { routeReason: error.detail.routeReason } : {}) } : {};
-              if (accept({ ...error.meta, choice: recovered.option, reason, ...route }, recovered)) deepseekFailed = false;
-            }
+            // The answer's route, route_reason and discard slots go with the recovered choice (answerFrom).
+            if (recovered && accept(error.answerFrom(recovered), recovered)) deepseekFailed = false;
             if (deepseekFailed) {
               deepseekNote = { ...(error.detail.reason ? { reason: error.detail.reason } : {}), ...(recovered ? { conclusion: recovered.line } : {}) };
               onEvent({ type: "note", message: `DeepSeek's choice on ${decision.label} could not be recovered from its reasoning; falling back to Jev/code` });

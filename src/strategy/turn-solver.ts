@@ -264,6 +264,11 @@ export interface PlayerSim {
   hellraiser?: boolean;
   /** Dark Embrace up (DARK_EMBRACE_POWER amount): cards drawn for each card exhausted this turn. */
   darkEmbrace?: number;
+  /**
+   * Pael's Tear (「如果你在拥有未花费的能量情况下结束回合，则下个回合额外获得能量」): the extra energy next turn when this
+   * turn ends with energy unspent (PAELS_TEARS_ENERGY; logged: 1, 2 or 3 left, next turn 5 on a base of 3).
+   */
+  paelsTears?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -442,6 +447,10 @@ export interface Step {
   targetName: string | null;
   /** Gambler's Brew: the ids of the hand cards this play discards (the selection screen follows them). */
   discards?: string[];
+  /** A pile-card potion (Liquid Memories): the pile card it takes into the hand (the selection screen takes it). */
+  takes?: { cardId: string; upgraded: boolean };
+  /** The card a pile-card potion took, played: the pile card's own id (the step's cardId is GEN:…). */
+  pileCard?: { cardId: string; upgraded: boolean };
 }
 
 export interface Outcome {
@@ -567,6 +576,8 @@ export interface Outcome {
   freeAttacksLeft?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
+  /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
+  nextTurnEnergy?: number;
 }
 
 export interface Plan {
@@ -1163,9 +1174,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
   next.drawnExhausted += drawnBurned;
   next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
-  // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
+  // Feel No Pain: Block for each card exhausted, the random one too (plain True Grit: which card is unknown, that
+  // one is exhausted), the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
-    const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
+    const count = burned + randomBurned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
     if (count > 0) gainBlock(next, next.feelNoPain * count, player);
   }
   // Dark Embrace: a card drawn for each card exhausted (the random one too; the played card when it exhausts).
@@ -1188,6 +1200,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
       ...(card.discards ? { discards: discarded } : {}),
+      ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
+      ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
   ];
   return next;
@@ -2190,6 +2204,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score += lastingValue(sim, input, weights) * fightLength * earliness;
     score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
+    // Pael's Tear: energy left unspent gives the next turn its extra energy, valued as Radiant Tincture's later energy.
+    score += later * nextTurnEnergyOf(sim, input) * RADIANCE_ENERGY_VALUE;
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
     score -= later * sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
     // An exhausted Howl fires once (counted above) and goes to the discard pile, not every turn after
@@ -2268,8 +2284,14 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
+}
+
+/** Pael's Tear's extra energy next turn for a line ending with `sim.energy` unspent (0 without the relic or energy). */
+function nextTurnEnergyOf(sim: Pick<Sim, "energy">, input: SolverInput): number {
+  return (input.player.paelsTears ?? 0) > 0 && sim.energy > 0 ? input.player.paelsTears! : 0;
 }
 
 /**
@@ -2541,7 +2563,7 @@ function vector(plan: Plan): number[] {
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -o.potionCost, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -2574,7 +2596,8 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
-        other.outcome.sandpitAfter === plan.outcome.sandpitAfter,
+        other.outcome.sandpitAfter === plan.outcome.sandpitAfter &&
+        (other.outcome.nextTurnEnergy ?? 0) === (plan.outcome.nextTurnEnergy ?? 0),
     );
     if (!similar) picked.push(plan);
   }

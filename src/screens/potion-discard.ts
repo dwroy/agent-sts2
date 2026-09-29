@@ -27,6 +27,10 @@ export interface DiscardSlot {
 /** An option given together with its "discard first" variant: key suffix of the variant. */
 export const DISCARD_SUFFIX = ":discard";
 
+/** DeepSeek's note on a question with such variants. */
+export const DISCARD_ANSWER_NOTE =
+  'A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.';
+
 /** The potions the game lets be discarded on this screen (none when discarding is not an available action). */
 export function discardableSlots(env: DecisionEnv): DiscardSlot[] {
   const { state } = env;

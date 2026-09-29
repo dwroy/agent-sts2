@@ -743,6 +743,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
+  if ((o.nextTurnEnergy ?? 0) > 0) summary["next_turn_energy"] = `+${o.nextTurnEnergy} energy next turn (Pael's Tear: this line ends the turn with energy unspent)`;
   if (o.startTurnKills.length > 0) summary["mercury_hourglass_kills_next_turn"] = o.startTurnKills.join(", ");
   if (o.withersAdded > 0) summary["withers_added"] = o.withersAdded;
   if (o.sleepCost > 0) summary["wakes_sleeping_enemy"] = "yes: its free turns are lost";
@@ -839,13 +840,34 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
  * said Defend+, a plain Defend was played and the Defend+ stayed in hand — 3 HP lost).
  */
 function cardFor(step: Step, hand: CardModel[]): CardModel | undefined {
+  // The card a pile-card potion took (Liquid Memories) is in the hand by its own id once taken.
+  const cardId = step.pileCard?.cardId ?? step.cardId;
+  const upgraded = step.pileCard?.upgraded ?? step.upgraded;
   // Match the planned copy's cost first: after Snecko Oil the gate kept rejecting the 3-cost Strike
   // while the planned 0-cost one sat in hand (24DPW2ED71QM, 30 min stuck).
   return (
-    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && step.cost !== undefined && entry.cost === step.cost && entry.playable) ??
-    hand.find((entry) => entry.cardId === step.cardId && entry.upgraded === step.upgraded && entry.playable) ??
-    hand.find((entry) => entry.cardId === step.cardId && entry.playable)
+    hand.find((entry) => entry.cardId === cardId && entry.upgraded === upgraded && step.cost !== undefined && entry.cost === step.cost && entry.playable) ??
+    hand.find((entry) => entry.cardId === cardId && entry.upgraded === upgraded && entry.playable) ??
+    hand.find((entry) => entry.cardId === cardId && entry.playable)
   );
+}
+
+/** A card as the hand signature writes it ("BASH+"). */
+function takeSignature(card: { cardId: string; upgraded: boolean }): string {
+  return `${card.cardId}${card.upgraded ? "+" : ""}`;
+}
+
+/** A hand signature with one more card in it. */
+function withCard(signature: string, card: string): string {
+  return [...(signature === "" ? [] : signature.split(",")), card].sort().join(",");
+}
+
+/**
+ * A pile-card potion step (Liquid Memories): the "put a card into your hand" screen that follows takes the card
+ * the line named (selection.ts), and the line's memo expects it in the hand afterwards.
+ */
+function notePotionTake(env: DecisionEnv, turn: number | null, step: Step): void {
+  if (step.takes) env.screenMemory.potionTake = { turn, cardId: step.takes.cardId, upgraded: step.takes.upgraded };
 }
 
 function intentFor(step: Step, hand: CardModel[]): ActionRequest | null {
@@ -883,6 +905,11 @@ export const PAPER_PHROG_VULNERABLE = 1.75;
  * 7MDJ/JEGB/CWU9/88HN turns: HP lost = shown incoming - block - cards held, e.g. CWU9 F44 T1 11 -> 9 with 2).
  */
 export const CLOAK_CLASP_BLOCK = 1;
+/**
+ * Pael's Tear: 「如果你在拥有未花费的能量情况下结束回合，则下个回合额外获得{Energy}」 — logged over 24 runs holding it:
+ * a turn ended with 1, 2 or 3 energy unspent began the next at 5 (45, 12 and 3 turns; 0 unspent: 3, base 3).
+ */
+export const PAELS_TEARS_ENERGY = 2;
 /** Mercury Hourglass: damage to every enemy at the start of our turn (PLC F33: Rocket 108 -> 105). */
 export const MERCURY_HOURGLASS_DAMAGE = 3;
 
@@ -1140,6 +1167,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
   // Potion step was drunk at 76/87 before the re-plan, 6 of its 17 wasted).
   if (first?.discards) env.screenMemory.gambleDiscards = { turn, cardIds: first.discards };
+  if (first) notePotionTake(env, turn, first);
   // A potion step leaves the hand as it is: the next step expects the same hand and the belt without it (a
   // Jev line opening with a drink was re-planned every time: the memo expected one card less, "hand grew").
   const potions = first ? beltAfter(first, env.state.raw) : undefined;
@@ -1151,6 +1179,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
           expectedHand: expectedHandAfterFirst(plan, hand),
           handLen: handLenAfter(first!, hand),
           ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
+          ...(first!.takes ? { take: takeSignature(first!.takes) } : {}),
           via,
           enemies: livingEnemySignature(env.state.raw),
           ...(potions !== undefined ? { potions } : {}),
@@ -1392,6 +1421,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
+    ...(relicIds.includes("PAELS_TEARS") ? { paelsTears: PAELS_TEARS_ENERGY } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
@@ -1424,7 +1454,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    A hand that grew without a drawing card played means the plan was made before the turn's draw
   //    had landed (live runs: planned from 1–3 cards of 5): drop it and plan from the full hand.
   const memo = env.screenMemory.combatPlan;
-  const handGrew = memo !== null && hand.length > memo.handLen;
+  // After Liquid Memories the hand holds the card it took too.
+  const handGrew = memo !== null && hand.length > memo.handLen + (memo.take ? 1 : 0);
   const sameEnemies = memo?.enemies === undefined || memo.enemies === livingEnemySignature(state.raw);
   // After a potion step the belt shows whether it was drunk (the hand does not change).
   const drunk = memo?.potions === undefined || memo.potions === beltSignature(state.raw);
@@ -1436,7 +1467,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     memo !== null &&
     (memo.expectedHand === handSignature(hand) ||
       (memo.afterSelection === true && leftByChoice(memo, hand)) ||
-      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))));
+      (memo.upgradeAll === true && withoutUpgrades(memo.expectedHand) === withoutUpgrades(handSignature(hand))) ||
+      (memo.take !== undefined && withCard(memo.expectedHand, memo.take) === handSignature(hand)));
   const asExpected = memo !== null && !handGrew && sameEnemies && drunk && memo.turn === state.turn && sameHand;
   // A chosen line played to its end on the board it expected (lineDone): code does not extend it on its own
   // (stopLine below).
@@ -1448,10 +1480,11 @@ function planTurn(env: DecisionEnv): Decision | null {
       const nextCard = cardFor(next, hand);
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
+      notePotionTake(env, memo.turn, next);
       env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
-      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, ...kept } = memo;
+      const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
         (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0
@@ -1461,6 +1494,7 @@ function planTurn(env: DecisionEnv): Decision | null {
               expectedHand: handSignature(handAfterPlay(nextCard, hand)),
               handLen: handLenAfter(next, hand),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
+              ...(next.takes ? { take: takeSignature(next.takes) } : {}),
               ...(potions !== undefined ? { potions } : {}),
             }
           : null;
@@ -1648,9 +1682,16 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The mod's flag does not know Fairy in a Bottle or Lizard Tail: ending the turn at 0 HP with a revive held
   // is lethal to it and to the solver alike (the solver then goes on at the revive's HP).
   const endReachesZero = endNow !== undefined && (endNow.outcome.dies || endNow.outcome.revived !== undefined);
+  // The mod's flag counts the enemy intents against block only (lethal_risks "incoming_damage"): a death from what
+  // the turn's end costs besides (held Beckons' HP loss, a Mantle, Disintegration) is not a calculation mismatch
+  // (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in all, "mod says safe"; one Beckon was held
+  // and T13 began at 7 = 40 - 27 - 6, as the solver has it).
+  const endOnlyByOwnLosses = endNow !== undefined && endNow.outcome.dies && !modSaysLethal && endNow.outcome.incomingAfterBlock < playerSim.hp;
   const calcNote =
     endNow && endReachesZero !== modSaysLethal
-      ? ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
+      ? endOnlyByOwnLosses
+        ? ` [ending now kills by what the mod's lethal flag does not count: ${endNow.outcome.hpLoss} HP lost in all, ${endNow.outcome.incomingAfterBlock} of it the enemy hits after block]`
+        : ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`
       : "";
 
   // 2. Nothing survives this turn as simulated. The per-card fallback did worse on a live run (Act 3

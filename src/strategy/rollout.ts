@@ -899,6 +899,8 @@ interface SimPlayer {
   hellraiser: boolean;
   /** Unrelenting's free Attacks left at the end of the last turn (FREE_ATTACK_POWER stays up into the next). */
   freeAttacks: number;
+  /** Pael's Tear's extra energy for this turn: the last turn ended with energy unspent (Outcome.nextTurnEnergy). */
+  paelsNext: number;
   /**
    * Dark Embrace (cards drawn per card exhausted): the ethereal cards exhausted at the end of a turn draw that
    * many each, discarded with the hand (the draw pile runs down, and may be reshuffled, before the next turn).
@@ -1374,6 +1376,8 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   player.freeAttacks = o.freeAttacksLeft ?? 0;
+  // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
+  player.paelsNext = o.nextTurnEnergy ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
@@ -1672,6 +1676,7 @@ function simulate(
     boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
     hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
     freeAttacks: 0,
+    paelsNext: 0,
     darkEmbrace: input.playerPowers["DARK_EMBRACE_POWER"] ?? 0,
     otherStartLoss: 0,
     startDealt: 0,
@@ -1845,7 +1850,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) - player.wasteAway),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,

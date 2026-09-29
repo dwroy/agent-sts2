@@ -15,6 +15,7 @@ import { bossStartHealOf, NO_REST_RELICS, projectPath, restedHp, restHealOf, roo
 import type { GameState } from "../mod/schema.js";
 import type { RememberedMap } from "../project/types.js";
 import { oneshotOn } from "./oneshot.js";
+import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardVariant } from "./potion-discard.js";
 
 interface MapNode {
   row: number;
@@ -330,30 +331,18 @@ export function planMap(env: DecisionEnv): Decision | null {
   const available = asArray(map["available_nodes"]).map(asRecord);
   if (available.length === 0) return null;
 
-  // Full potion slots with a guaranteed potion coming (White Beast Statue after every fight): the reward
-  // screen cannot discard, so the new potion was silently dropped (YVWA F35-F47: 10 potions lost, Strength,
-  // Fire, Regen, Ashwater among them). Free the weakest slot here, where discarding is allowed, unless the
-  // weakest is still worth keeping. Not for Tiny Mailbox: its potions come only with a rest's heal, never a
-  // smith (ZGZ0EQDDNJPT F10 Fysh Oil discarded here, F11 smithed, the boss with a slot empty), and the rest
-  // site offers "discard, then heal" to the decider itself (rest.ts, potion-discard.ts).
-  const relics = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
-  const belt = asArray(asRecord(state.run?.raw)["potions"]).map(asRecord);
-  const beltFull = belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
-  const potionComing = relics.includes("WHITE_BEAST_STATUE") && available.some((node) => ["Monster", "Elite", "Unknown", "Boss"].includes(str(node["node_type"])));
-  if (beltFull && potionComing && state.available_actions.includes("discard_potion")) {
-    const weakest = belt
-      .filter((slot) => bool(slot["can_discard"], true))
-      .map((slot) => ({ slot, rank: potionRank(str(slot["potion_id"])) }))
-      .sort((a, b) => a.rank - b.rank)[0];
-    if (weakest && weakest.rank <= POTION_RANK_DISCARDABLE) {
-      return {
-        kind: "act",
-        label: "map/discard-potion",
-        intent: { action: "discard_potion", option_index: num(weakest.slot["index"]) },
-        rationale: `potion slots full with a guaranteed potion coming: discarding ${str(weakest.slot["name"], str(weakest.slot["potion_id"]))} (rank ${weakest.rank})`,
-      };
-    }
-  }
+  // The node chosen with a potion discarded first (White Beast Statue with a full belt, below): once the
+  // discard lands, travel on to it.
+  const pending = continueAfterDiscard(env, "map", "map", (option, title) => {
+    const node = available.find((entry) => numOrNull(entry["index"]) === option);
+    return node && nodeTitle(str(node["node_type"], "Unknown"), num(node["row"]), num(node["col"])) === title ? { action: "choose_map_node", option_index: option } : null;
+  });
+  if (pending !== undefined) return pending;
+  const nodeRefs = available.flatMap((node) => {
+    const index = numOrNull(node["index"]);
+    return index === null ? [] : [{ index, row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") }];
+  });
+  const statue = statuePotionOptions(env, nodeRefs);
 
   const nodes = mapGraph(map);
 
@@ -380,7 +369,7 @@ export function planMap(env: DecisionEnv): Decision | null {
       {
         key: `n${index}`,
         intent: { action: "choose_map_node", option_index: index },
-        label: `${type} (row ${row}, col ${col})`,
+        label: nodeTitle(type, row, col),
         score: value,
         summary: {
           node_type: type,
@@ -402,7 +391,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     actThreshold: env.thresholds.act,
     strictJev: env.strictJev,
     escalateBelow: 0.35,
-    options,
+    options: options.flatMap(statue),
     codeMargin: env.combatPlanner === "card" ? undefined : 2.5,
     state: {
       run_brief: briefJson(env.brief),
@@ -423,10 +412,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   if (!deepseekDecides(env)) return baseline;
   return routePlanDecision(env, baseline, {
     nodes,
-    available: available.flatMap((node) => {
-      const index = numOrNull(node["index"]);
-      return index === null ? [] : [{ index, row: num(node["row"]), col: num(node["col"]), type: str(node["node_type"], "Unknown") }];
-    }),
+    available: nodeRefs,
     current: typeof current["row"] === "number" ? { row: num(current["row"]), col: num(current["col"]) } : null,
     start,
     weights: weightOf,
@@ -711,7 +697,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
       };
       // The Ancient's outcome is known now: DeepSeek keeps or changes the route, once (default keep).
       if (plan.review && deepseekDecides(env)) return routeReview(env, plan, follow, context);
-      return follow;
+      return statueFollow(env, follow, context.available) ?? follow;
     }
     replanWhy = next ? `the planned next node (row ${next.row}, col ${next.col}, ${next.type}) is not available` : "the plan has no node ahead";
   }
@@ -722,7 +708,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
   if (plan && context.available.length < 2) return baseline;
   const candidates = candidatePaths(context);
   if (candidates.length < 2) return baseline;
-  const options: PickOption[] = routeOptions(env, context, candidates, replanWhy);
+  const options: PickOption[] = routeOptions(env, context, candidates, replanWhy).flatMap(statuePotionOptions(env, context.available));
   const decision = buildPickDecision({
     label: "map/route-plan",
     instructions:
@@ -738,6 +724,7 @@ function routePlanDecision(env: DecisionEnv, baseline: Decision, context: RouteC
     },
     deepseek: {
       facts: buildFacts(env, replanWhy ? { replan_because: replanWhy } : {}),
+      ...discardNoteOf(options),
       baseline,
       onFail: () => {
         screenMemory.routePlanFailed = `${runId}:${act}`;
@@ -820,7 +807,7 @@ function routeReview(env: DecisionEnv, plan: RoutePlan, follow: Decision, contex
       },
     },
     ...routeOptions(env, context, others.slice(0, ROUTE_CANDIDATES - 1), why),
-  ];
+  ].flatMap(statuePotionOptions(env, context.available));
   return buildPickDecision({
     label: "map/route-review",
     instructions:
@@ -835,6 +822,7 @@ function routeReview(env: DecisionEnv, plan: RoutePlan, follow: Decision, contex
     },
     deepseek: {
       facts: buildFacts(env, { route_review: { planned: plan.summary, why: review.why, revealed_outcome: snapshotChange(review.before, runSnapshot(state)) } }),
+      ...discardNoteOf(options),
       // Default keep: without DeepSeek, or when its answer fails, the plan is followed.
       baseline: follow,
       onFail: () => {
@@ -1041,19 +1029,82 @@ export function positionRoutes(env: DecisionEnv, rooms: readonly string[]): Posi
   };
 }
 
+/* ---- White Beast Statue: a potion after every fight ------------------------------------------------ */
+
+/** A map node as its option names it (the discard variant checks it is still offered before travelling). */
+function nodeTitle(type: string, row: number, col: number): string {
+  return `${type} (row ${row}, col ${col})`;
+}
+
+/** Node types a White Beast Statue potion may follow: a fight (an Unknown node is one only sometimes). */
+const STATUE_FIGHT_NODES = new Set(["Monster", "Elite", "Boss", "Unknown"]);
+
 /**
- * Rough keep-value of a potion (0 worst .. 10 best) for freeing a slot. Card-generating and random
- * potions are the least reliable; defensive, damage and Strength potions the most.
+ * White Beast Statue drops a potion after every fight (「战斗结束后必定掉落药水」; every logged combat reward with
+ * it has one) and the reward screen cannot discard, so with a full belt that potion is lost. Code used to discard
+ * its weakest-ranked potion on the map (YVWA F35-F47); Dai: code does not handle potions for the decider. An
+ * option that travels to a fight node gets a "discard potion(s), then travel" variant (potion-discard.ts, as the
+ * Tiny Mailbox's rest): the decider says whether to discard and which slot. Identity when nothing applies.
  */
-const POTION_RANKS: Record<string, number> = {
-  FOUL_POTION: 0, GAMBLERS_BREW: 2, CLARITY: 2, SWIFT_POTION: 3, LIQUID_MEMORIES: 3, COLORLESS_POTION: 3,
-  SKILL_POTION: 4, ATTACK_POTION: 4, POWER_POTION: 5, ENERGY_POTION: 4, BLESSING_OF_THE_FORGE: 3, ASHWATER: 5,
-  BLOCK_POTION: 7, FIRE_POTION: 7, EXPLOSIVE_AMPOULE: 7, WEAK_POTION: 6, VULNERABLE_POTION: 6, FEAR_POTION: 6,
-  DEXTERITY_POTION: 7, STRENGTH_POTION: 8, FLEX_POTION: 6, REGEN_POTION: 7, HEART_OF_IRON: 8, FORTIFIER: 9,
-  DUPLICATOR: 6, BLOOD_POTION: 6, FAIRY_IN_A_BOTTLE: 10, POTION_OF_BINDING: 7, GIGANTIFICATION_POTION: 7,
-};
-/** Potions at or below this rank are dropped to make room for a guaranteed one. */
-export const POTION_RANK_DISCARDABLE = 5;
-export function potionRank(potionId: string): number {
-  return POTION_RANKS[potionId] ?? 5;
+export function statuePotionOptions(env: DecisionEnv, available: { index: number; row: number; col: number; type: string }[]): (option: PickOption) => PickOption[] {
+  const run = asRecord(env.state.run?.raw);
+  const relics = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const belt = asArray(run["potions"]).map(asRecord);
+  const full = belt.length > 0 && belt.every((slot) => bool(slot["occupied"]));
+  const slots = relics.includes("WHITE_BEAST_STATUE") && full ? discardableSlots(env) : [];
+  return (option) => {
+    const index = option.intent.action === "choose_map_node" ? option.intent.option_index : undefined;
+    const node = slots.length > 0 && typeof index === "number" ? available.find((entry) => entry.index === index) : undefined;
+    if (!node || !STATUE_FIGHT_NODES.has(node.type) || option.key.endsWith(DISCARD_SUFFIX)) return [option];
+    const title = nodeTitle(node.type, node.row, node.col);
+    const variant = discardVariant(env, option, { place: "map", option: node.index, title }, 1, slots);
+    if (!variant) return [option];
+    const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary ?? null };
+    const maybe = node.type === "Unknown" ? " if this Unknown node is a fight" : "";
+    const lost = {
+      ...option,
+      summary: {
+        ...summary,
+        potion_slots: `White Beast Statue drops a potion after every fight; the belt is full and the reward screen cannot discard, so the potion after the fight at ${title}${maybe} is lost unless a potion is discarded first (option ${variant.key}) or one is drunk in that fight`,
+      },
+    };
+    return [lost, variant];
+  };
+}
+
+/** The DeepSeek note for a question with "discard, then …" options (their answer's "discard" field), else nothing. */
+function discardNoteOf(options: PickOption[]): { note?: string } {
+  return options.some((option) => option.key.endsWith(DISCARD_SUFFIX)) ? { note: DISCARD_ANSWER_NOTE } : {};
+}
+
+/**
+ * The route plan's next move into a fight with White Beast Statue and a full belt: travel keeping every potion, or
+ * discard first (the decider's call; its failure or absence keeps the plain move). Null when nothing applies.
+ */
+function statueFollow(env: DecisionEnv, follow: Decision, available: { index: number; row: number; col: number; type: string }[]): Decision | null {
+  if (follow.kind !== "act") return null;
+  const go: PickOption = {
+    key: "go",
+    label: `travel on (${follow.rationale.replace(/^following /, "")})`,
+    intent: follow.intent,
+    score: 0,
+    why: "the route plan's next node; code does not rank which potions to discard",
+    summary: { travel: "the route plan's next node, keeping every potion" },
+    ...(follow.apply ? { apply: follow.apply } : {}),
+  };
+  const options = statuePotionOptions(env, available)(go);
+  if (options.length < 2) return null;
+  return buildPickDecision({
+    label: "map/statue-potion",
+    instructions: "White Beast Statue drops a potion after every fight and the potion belt is full: travel to the route's next node keeping every potion, or discard potion(s) first so the fight's potion has a slot?",
+    actThreshold: env.thresholds.act,
+    strictJev: env.strictJev,
+    options,
+    unranked: true,
+    state: {
+      run_brief: briefJson(env.brief),
+      situation: { screen: "MAP", floor: env.state.run?.floor ?? null, hp_percent: Math.round(hpPercent(env) * 100) },
+    },
+    ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env), baseline: follow, ...discardNoteOf(options) } } : {}),
+  });
 }
