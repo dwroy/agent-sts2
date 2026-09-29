@@ -1,5 +1,7 @@
 # Fix queue (pure bugs waiting for the next batch on step1-bugfix)
 
+**Batch C (step1-bugfix a649307, merging into v3 2026-09-29 16:5x) fixed every item listed below up to and including the X7LU/XTB4/2XWM/7XK6 and KY3Y/9Q7V/XMK1/PHMV/YQL8 sections (commits ef5eb16…a649307; ops/report.py fight splitting too). Open items start at "From the route-review work".**
+
 From post-mortems W2TB U6RU VBHZ ZY39 0H1X (2026-09-29 14:50):
 - Shop card options and shop_stock don't show energy cost (card rewards do, reward.ts:62) — U6RU F22 read PRODUCTION as 1-cost. shop.ts ~:117, :148-153 at HEAD.
 - Removal value counts Eternal cards (basics ≥4 / any curse; Ascender's Bane is an Eternal curse at A5+) and the explanation text says so — U6RU F22, VBHZ F23. shop.ts ~:98, :165-166.
@@ -32,3 +34,9 @@ From the route-review work (2026-09-29 17:00):
 - When the consistency check re-asks DeepSeek, the second answer is only {choice, reason}, so the route review is lost ("the answer has no route") — include the route block and field in the re-ask.
 - rest/choose (step-by-step fallback when the one-shot rest plan is unusable) has no route block.
 - hp_if_option assumes a 30% heal; relics that change the rest heal are not modelled.
+
+From batch C (2026-09-29 16:50), not fixed:
+- A potion step in the middle of a Jev line always forces a re-plan: the line memo expects the hand to shrink after each step, a potion doesn't leave the hand → "grown" hand. Of 178 logged Jev lines starting with a potion, 7 continued, 93 were re-asked to Jev.
+- One-Two Punch and Unrelenting are not modelled in hand (only as powers after being played) — Jev's options understate them.
+- The solver still counts damage into the Waterfall Giant husk on the blast turn ("dmg 88") — mostly cosmetic.
+Evidence for Dai: Soul Fysh clock factor fitted — A8 (n=20) median realised/estimate 0.86, A9 (n=8) 1.09 (XTB4 0.37 an outlier) → left unchanged.

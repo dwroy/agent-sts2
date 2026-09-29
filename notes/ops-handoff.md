@@ -3,7 +3,7 @@
 运维会话开工前和每轮学习闭环开始前先读这里。**主会话**（和 Dai 讨论的那个）还在做的事列在“进行中”，这些运维会话不要重复做。主会话做完一项就从这里删掉。
 
 ## 进行中（主会话负责）
-- C 批修复：jev-sts2-step 的 step1-bugfix 分支，修 notes/fix-queue.md 里排队的 bug。主会话合入 v3。
+- C 批修复：已修完（a649307），主会话正在合入 v3。合入后 step1-bugfix 就空出来了，fix-queue.md 里还开着的条目（从“From the route-review work”那一段起）归运维会话。
 - 复盘 9 局：9GRP、N01X、83FL、7MDJ、5NFG、0NZB、2ZCK、7KDM、3SBP，由主会话派出的 agent 在写。
 
 ## 交给运维会话的

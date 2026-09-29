@@ -37,6 +37,17 @@ def run_of(record):
         return None
 
 
+def in_combat(record, states):
+    """Whether a decision was taken inside a fight: its state's in_combat, else its fingerprint's combat flag."""
+    state = states.get(record["ts"])
+    if state is not None and "in_combat" in state:
+        return bool(state["in_combat"])
+    try:
+        return bool(json.loads(record["fingerprint"]).get("combat"))
+    except Exception:
+        return False
+
+
 def decider(record):
     rationale = record.get("rationale", "")
     if record.get("label") == "combat/plan-continue":
@@ -148,6 +159,12 @@ def main():
     current = None
     for r in recs:
         if r["screen"] != "COMBAT":
+            # A card pick inside the fight (Toasty Mittens' exhaust each turn, a potion's or Choices Paradox's
+            # card, Headbutt) is part of it: a CARD_SELECTION row on the fight's floor, in combat, does not end
+            # it (2XWM from F19, 7XK6 F42/F48: every turn became its own "-0" fight).
+            if current and r["screen"] == "CARD_SELECTION" and r.get("floor") == current["floor"] and in_combat(r, states):
+                current["records"].append(r)
+                continue
             if current:
                 fights.append(current)
                 current = None
