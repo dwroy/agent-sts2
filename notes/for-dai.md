@@ -1,0 +1,2 @@
+- 2026-09-29 16:39 要不要把 ops/auto-relaunch.sh 装进你的用户 crontab（每 1–2 分钟跑一次，游戏进程没了且 mod 连续 3 次连不上时自动经 Steam 重开）？WSL 的 cron 服务已经在跑（pid 127），装的话不需要 sudo。
+  - 已定（Dai）：装；实验结束时提醒 Dai 删掉。
