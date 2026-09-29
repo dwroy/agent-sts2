@@ -610,17 +610,46 @@ export class DeepSeekClient implements Escalator {
     payload: Record<string, JsonValue>,
     label: string,
     accept?: (json: Record<string, unknown>) => boolean,
-  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true }> {
-    const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
+    const messages: ChatMessage[] = [{ role: "user", content: taskMessage(payload) }];
+    let done = await this.complete(messages, label);
     const memory = payload["memory"];
     const question = typeof payload["task"] === "string" ? payload["task"] : label;
+    // An empty reply, all its output spent in the reasoning (79YR F30 run plan: 6,791 tokens, all reasoning; no
+    // output cap is sent, the API default is far above that and the same question has answered in 26,368, so not
+    // a cut): the reasoning often ends on the answer it meant to send (it did there), taken as a drafted answer is
+    // below; with none drafted, asked once more. Each empty call has its log row with the reason.
+    let spent: Omit<DeepSeekAnswer, "choice" | "reason"> | null = null;
+    let note: string | undefined;
+    for (let attempt = 0; done.content.trim() === ""; attempt += 1) {
+      const why = emptyReplyText(done);
+      const total = spent ? sumMeta(spent, done.meta) : done.meta;
+      const drafted = accept ? embeddedJsonObjects(done.reasoning).filter(accept) : [];
+      const recovered = drafted[drafted.length - 1];
+      if (recovered) {
+        note = `${note ? `${note}; then ` : ""}${why}: the answer taken from the end of its reasoning`;
+        this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, empty_reply: why, ...recovered });
+        return { json: recovered, meta: total, recovered: true, note };
+      }
+      if (attempt >= 1) {
+        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and its reasoning drafted no answer`;
+        this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, total);
+      }
+      this.logReasoning(label, done, question, {}, "", "", memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
+      spent = done.meta;
+      done = await this.complete(messages, label);
+      note = `first ${why}: asked once more`;
+    }
+    const meta = spent ? sumMeta(spent, done.meta) : done.meta;
+    const noted = note ? { note } : {};
     let json: Record<string, unknown>;
     try {
       json = pickJsonObject(done.content);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
-      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
     }
     // Not the task's format (9GRPA F9, F25: a lone {choice, reason} echo became an all-empty run plan that
     // replaced the valid one): the last object in that format its reasoning drafted, else an error.
@@ -630,13 +659,13 @@ export class DeepSeekClient implements Escalator {
       if (!recovered) {
         const message = `DeepSeek's ${label} reply is not in the task's format and its reasoning drafted none: ${done.content.slice(0, 120)}`;
         this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
-        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
       }
       this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, ...recovered });
-      return { json: recovered, meta: done.meta, recovered: true };
+      return { json: recovered, meta, recovered: true, ...noted };
     }
     this.logReasoning(label, done, question, {}, "", json["summary"] ?? "", memory, json);
-    return { json, meta: done.meta };
+    return { json, meta, ...noted };
   }
 
   private async complete(
@@ -670,7 +699,7 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek HTTP ${response.status}: ${body}`);
       }
       const payload = (await response.json()) as {
-        choices?: { message?: { content?: string; reasoning_content?: string } }[];
+        choices?: { message?: { content?: string; reasoning_content?: string }; finish_reason?: string | null }[];
         usage?: {
           prompt_tokens?: number;
           completion_tokens?: number;
@@ -682,6 +711,7 @@ export class DeepSeekClient implements Escalator {
       return {
         content: payload.choices?.[0]?.message?.content ?? "",
         reasoning: payload.choices?.[0]?.message?.reasoning_content ?? "",
+        finishReason: payload.choices?.[0]?.finish_reason ?? "",
         effort,
         latencyMs,
         meta: {
@@ -711,7 +741,7 @@ export class DeepSeekClient implements Escalator {
       const { effort, reasoning, latencyMs, meta } = call;
       // Token usage of this one call (cache hit = the prefix DeepSeek had cached; billed much cheaper).
       const usage = { input_tokens: meta.inputTokens, cache_hit_tokens: meta.cacheHitTokens ?? 0, output_tokens: meta.outputTokens, reasoning_tokens: meta.reasoningTokens ?? 0 };
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }), ...(parseError === undefined ? {} : { parse_error: parseError.slice(0, 300), raw_reply: call.content }) };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }), ...(parseError === undefined ? {} : { parse_error: parseError.slice(0, 300), raw_reply: call.content, finish_reason: call.finishReason }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
@@ -723,6 +753,8 @@ export class DeepSeekClient implements Escalator {
 interface CompletedCall {
   content: string;
   reasoning: string;
+  /** The API's finish_reason ("stop"; "length" = cut at the output cap); "" when not sent. */
+  finishReason: string;
   effort: string;
   latencyMs: number;
   meta: Omit<DeepSeekAnswer, "choice" | "reason">;
@@ -731,6 +763,13 @@ interface CompletedCall {
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+}
+
+/** Why a reply came back empty, for the logs: the finish reason and where the output tokens went. */
+function emptyReplyText(call: CompletedCall): string {
+  const { outputTokens, reasoningTokens } = call.meta;
+  const spent = reasoningTokens !== undefined && reasoningTokens >= outputTokens && outputTokens > 0 ? `all ${outputTokens} output tokens were reasoning` : `${outputTokens} output tokens, ${reasoningTokens ?? 0} of them reasoning`;
+  return `empty reply (finish_reason ${call.finishReason || "not given"}; ${spent})`;
 }
 
 /** The fields of an answer beyond {choice, reason}. */
