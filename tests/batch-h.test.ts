@@ -344,3 +344,15 @@ describe("6. Plain True Grit exhausts a random card: only True Grit+ is named as
     expect(statuses).toContain("未升级的坚毅随机消耗");
   });
 });
+
+describe("7. Feel No Pain: plain True Grit's random exhaust gives its Block too (turn-solver)", () => {
+  it("Feel No Pain 3, True Grit (7 Block, a random card exhausted) with a Strike in hand: 10 Block, not 7", () => {
+    const grit = card(0, "TRUE_GRIT", { name: "坚毅", type: "Skill", target: "self", validTargets: [], block: 7, randomExhaust: true });
+    const input = (feelNoPain: number): SolverInput => ({ hand: [grit, strike(1)], player: player({ energy: 1, feelNoPain }), enemies: [enemy({ attacks: [{ damage: 20, hits: 1 }] })], fightKind: "monster", turn: 2 });
+    const line = (feelNoPain: number) => solveTurn(input(feelNoPain)).plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === "TRUE_GRIT")!;
+    expect(line(0).outcome.blockGained).toBe(7);
+    expect(line(3).outcome.blockGained).toBe(10);
+    expect(line(3).outcome.hpLoss).toBe(10);
+    expect(line(3).outcome.randomExhausts).toBe(1);
+  });
+});

@@ -1174,9 +1174,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const burned = next.exhausted.length - exhaustedBefore + drawnBurned;
   next.drawnExhausted += drawnBurned;
   next.exhaustedCount += burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
-  // Feel No Pain: Block for each card exhausted, the played card itself included when it exhausts.
+  // Feel No Pain: Block for each card exhausted, the random one too (plain True Grit: which card is unknown, that
+  // one is exhausted), the played card itself included when it exhausts.
   if (next.feelNoPain > 0) {
-    const count = burned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
+    const count = burned + randomBurned + (card.exhausts && card.type !== "Potion" ? 1 : 0);
     if (count > 0) gainBlock(next, next.feelNoPain * count, player);
   }
   // Dark Embrace: a card drawn for each card exhausted (the random one too; the played card when it exhausts).
