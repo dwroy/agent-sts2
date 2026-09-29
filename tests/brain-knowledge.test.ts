@@ -17,7 +17,8 @@ import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
 import { DEFAULT_CLAUDE_MAX_CALLS, loadConfig } from "../src/config.js";
 import { SLICE_LESSONS_HEADING, SLICE_STATS_HEADING } from "../src/knowledge/experience.js";
-import { loadPostmortems } from "../src/knowledge/render/data.js";
+import { loadKnowledgeData, loadPostmortems } from "../src/knowledge/render/data.js";
+import { queryOldKnowledge } from "../src/knowledge/render/old-knowledge.js";
 import { renderKnowledgePrefix } from "../src/knowledge/render/knowledge-prefix.js";
 import { DeepSeekClient, SYSTEM } from "../src/llm/deepseek.js";
 import type { JsonValue } from "../src/util/json.js";
@@ -153,10 +154,18 @@ describe("KNOWLEDGE_PREFIX=full", () => {
     expect(sent(4).system).toContain("# 知识库（本局进阶 A8）");
   });
 
-  it("fills the guides' data placeholders as v3 does", () => {
-    const prompt = new KnowledgePrompt({ render: () => "巨兽：{GIANT_BLOCK_RECORD}", postmortems: () => loadPostmortems(LESSONS) });
-    const { system } = prompt.system({ ascension: 9, knowledgeDir: KNOWLEDGE });
+  it("the renderer fills the guides' data placeholders once: the prefix, the kb_* tools and gkb-dump read the filled text", () => {
+    const dir = temp("brain-kn-fill-");
+    cpSync(KNOWLEDGE, dir, { recursive: true });
+    writeFileSync(join(dir, "ds-handbook.md"), `${readFileSync(join(dir, "ds-handbook.md"), "utf8")}\n- 巨兽：{GIANT_BLOCK_RECORD}\n`);
+    const ctx = { ascension: 9, knowledgeDir: dir };
+    expect(loadKnowledgeData(dir).handbook).not.toContain("{GIANT_BLOCK_RECORD}");
+    expect(loadKnowledgeData(dir).handbook).toContain("- 巨兽：");
+    expect(queryOldKnowledge(ctx, "handbook")).not.toContain("{GIANT_BLOCK_RECORD}");
+    expect(queryOldKnowledge(ctx, "handbook", "巨兽")).not.toContain("{GIANT_BLOCK_RECORD}");
+    const { system } = new KnowledgePrompt({ postmortems: () => loadPostmortems(LESSONS) }).system(ctx);
     expect(system.startsWith(SYSTEM)).toBe(true);
+    expect(system).toContain("- 巨兽：");
     expect(system).not.toContain("{GIANT_BLOCK_RECORD}");
   });
 

@@ -15,6 +15,7 @@ import type { JevHint } from "../jev-hints.js";
 import type { MonsterDb } from "../monster-db.js";
 import type { MeasuredRoom } from "../room-costs.js";
 import type { ToolContext } from "../../tools/types.js";
+import { fillGuideFacts } from "../../strategy/boss-clock.js";
 
 /** What a renderer reads from the context. */
 export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">>;
@@ -142,8 +143,10 @@ function parseAll(dir: string): KnowledgeData {
     experience: { version: String(experience["version"] ?? "?"), entries: experience["entries"] as ExperienceEntry[] },
     roomCosts: rooms as unknown as RoomCostsFile,
     outcomeStats: outcome as unknown as KnowledgeData["outcomeStats"],
-    guide: readText(dir, KNOWLEDGE_FILES.guide),
-    handbook: readText(dir, KNOWLEDGE_FILES.handbook),
+    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt: the full
+    // prefix, the kb_* tools and gkb-dump all read the filled text.
+    guide: fillGuideFacts(readText(dir, KNOWLEDGE_FILES.guide)),
+    handbook: fillGuideFacts(readText(dir, KNOWLEDGE_FILES.handbook)),
     jevHints: hints as unknown as JevHintsFile,
   };
 }
