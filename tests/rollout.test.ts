@@ -1239,3 +1239,105 @@ describe("status cards our own turn makes go into the rollout's piles; Withering
     expect(line.perTurn[0]!.loss.mean).toBeGreaterThan(0);
   });
 });
+
+describe("our debuffs in the rollout: Tender, Smoggy, Tangled, Chains of Binding, Shrink and the curses a later move puts on us (coverage gap 10)", () => {
+  const free = (i: number) => card(i, "STRIKE", { damage: 6, cost: 0 });
+  const freeDefend = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5, cost: 0 });
+  const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+  const HIT: EnemyTable = { moves: { HIT: { damage: 20, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const debuffs = (powers: Partial<Record<string, number>>, choice?: string[]): EnemyTable => ({
+    moves: { CURSE: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: powers, ...(choice ? { playerPowerChoice: choice as never } : {}) }, WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } },
+    next: { CURSE: { WAIT: 1 }, WAIT: { WAIT: 1 } },
+  });
+  const run = (o: { table?: EnemyTable; move?: string; draw?: CardModel[]; player?: Partial<PlayerSim>; playerPowers?: Record<string, number>; cardsPlayed?: number }) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const table = o.table ?? WAIT;
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, ...o.player },
+      enemies: [{ index: 0, name: "E", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+      ...(o.cardsPlayed ? { cardsPlayedThisTurn: o.cardsPlayed } : {}),
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: o.draw ?? Array.from({ length: 40 }, (_, k) => free(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: o.move ?? Object.keys(table.moves)[0]!, strength: 0, powers: {} }],
+      tables: { E: table },
+      playerPowers: o.playerPowers ?? {},
+    }).lines[0]!;
+  };
+  const dmg = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.dmg.mean);
+
+  it("Tender lasts the fight: each later turn's Strikes hit 6, 5, 4, 3, 2; the -1 of this turn's card comes back", () => {
+    expect(dmg(run({ player: { tender: 1, strengthNow: -1 }, playerPowers: { TENDER_POWER: 1, STRENGTH_POWER: -1 }, cardsPlayed: 1 }))).toEqual([20, 20, 20, 20]);
+  });
+
+  it("Smoggy: one Skill a later turn (5 free Defends block 5 of a 20 hit)", () => {
+    const line = run({ table: HIT, draw: Array.from({ length: 40 }, (_, k) => freeDefend(10 + k)), playerPowers: { SMOGGY_POWER: 1 } });
+    expect(line.perTurn[0]!.loss.mean).toBe(15);
+  });
+
+  it("Ringing and Tangled a move puts on us cap / price the next turn only", () => {
+    expect(dmg(run({ table: debuffs({ RINGING_POWER: 1 }) }))).toEqual([6, 30, 30, 30]);
+    const strikes = Array.from({ length: 40 }, (_, k) => strike(10 + k));
+    expect(dmg(run({ table: debuffs({ TANGLED_POWER: 1 }), draw: strikes }))).toEqual([6, 18, 18, 18]);
+  });
+
+  it("Chains of Binding: the first 3 cards drawn are Soulbound, one of them playable a turn", () => {
+    expect(dmg(run({ table: debuffs({ CHAINS_OF_BINDING_POWER: 3 }) }))).toEqual([18, 18, 18, 18]);
+  });
+
+  it("the Shrinker's Shrink -1 is for the fight; Sloth, Mind Rot, Waste Away from a move from then on", () => {
+    expect(dmg(run({ table: debuffs({ SHRINK_POWER: -1 }) }))).toEqual([20, 20, 20, 20]);
+    expect(dmg(run({ playerPowers: { SHRINK_POWER: -1 }, player: { shrunk: true } }))).toEqual([20, 20, 20, 20]);
+    expect(dmg(run({ table: debuffs({ SLOTH_POWER: 3 }) }))).toEqual([18, 18, 18, 18]);
+    expect(dmg(run({ table: debuffs({ MIND_ROT_POWER: 1 }) }))).toEqual([24, 24, 24, 24]);
+    const strikes = Array.from({ length: 40 }, (_, k) => strike(10 + k));
+    expect(dmg(run({ table: debuffs({ WASTE_AWAY_POWER: 1 }), draw: strikes }))).toEqual([12, 12, 12, 12]);
+  });
+
+  it("the Knowledge Demon's curse is one pick (the first of the logged order we do not hold), not all four", () => {
+    const curse = debuffs({ SLOTH_POWER: 3, MIND_ROT_POWER: 1, WASTE_AWAY_POWER: 1, DISINTEGRATION_POWER: 6 }, ["MIND_ROT_POWER", "SLOTH_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"]);
+    const line = run({ table: curse });
+    expect(dmg(line)).toEqual([24, 24, 24, 24]);
+    expect(line.perTurn[0]!.loss.mean).toBe(0);
+    // Mind Rot already held: Sloth is the pick.
+    expect(dmg(run({ table: curse, playerPowers: { MIND_ROT_POWER: 1 } }))).toEqual([18, 18, 18, 18]);
+  });
+
+  it("playerPowersOf: alternatives when the powers' uses add up to the move's, ordered by this ascension's picks", async () => {
+    const { playerPowersOf } = await import("../src/strategy/rollout-live.js");
+    const entry = {
+      n_seen: 109,
+      player_powers_applied: { SLOTH_POWER: { "3": 38 }, MIND_ROT_POWER: { "1": 39 }, WASTE_AWAY_POWER: { "1": 19 }, DISINTEGRATION_POWER: { "6": 5, "7": 2, "8": 2 } },
+      player_powers_applied_by_asc: { "8": { SLOTH_POWER: { "3": 16 }, MIND_ROT_POWER: { "1": 19 }, WASTE_AWAY_POWER: { "1": 8 }, DISINTEGRATION_POWER: { "7": 1, "8": 1 } } },
+    };
+    expect(playerPowersOf(entry, 8)).toEqual({
+      playerPowers: { SLOTH_POWER: 3, DISINTEGRATION_POWER: 7, MIND_ROT_POWER: 1, WASTE_AWAY_POWER: 1 },
+      playerPowerChoice: ["MIND_ROT_POWER", "SLOTH_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"],
+    });
+    // Weak and Vulnerable together on every use: both, no choice.
+    expect(playerPowersOf({ n_seen: 10, player_powers_applied: { WEAK_POWER: { "2": 10 }, VULNERABLE_POWER: { "2": 10 } } }, 8)).toEqual({ playerPowers: { VULNERABLE_POWER: 2, WEAK_POWER: 2 } });
+  });
+});
+
+describe("Smoggy caps Skills in the turn solver too (「每回合你只能打出1张技能牌」)", () => {
+  it("one Skill left: the second Defend is not planned; none left: no Skill at all", () => {
+    const defend2 = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    const base: SolverInput = {
+      hand: [defend2(0), defend2(1), strike(2)],
+      player: { hp: 50, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false },
+      enemies: [{ index: 0, name: "Fog", hp: 60, maxHp: 60, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 20, hits: 1 }] }],
+      fightKind: "monster",
+    };
+    const skills = (input: SolverInput) => Math.max(...solveTurn(input).plans.map((plan) => plan.steps.filter((step) => step.cardId === "DEFEND").length));
+    expect(skills(base)).toBe(2);
+    expect(skills({ ...base, player: { ...base.player, maxSkills: 1 } })).toBe(1);
+    expect(skills({ ...base, player: { ...base.player, maxSkills: 0 } })).toBe(0);
+  });
+});

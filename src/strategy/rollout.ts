@@ -360,6 +360,12 @@ export interface EnemyMove {
    * Frail turns, and Strength/Dexterity drained (negative). Terror Eel's Terror: VULNERABLE_POWER 99.
    */
   playerPowers?: Partial<Record<PlayerDebuff, number>>;
+  /**
+   * The powers in playerPowers are alternatives, one a use (the Knowledge Demon's Curse of Knowledge: we
+   * pick one of Sloth, Mind Rot, Waste Away, Disintegration): in the order of the logged picks, the first we
+   * do not hold yet is the one applied.
+   */
+  playerPowerChoice?: PlayerDebuff[];
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
   /**
@@ -396,7 +402,15 @@ export type EnemySelfPower = (typeof ENEMY_SELF_POWERS)[number];
 export const STRENGTH_GROWTH_POWERS = ["RITUAL_POWER", "TERRITORIAL_POWER", "HIGH_VOLTAGE_POWER"] as const;
 
 /** The powers an enemy move puts on us that the rollout applies to its later turns (EnemyMove.playerPowers). */
-export const PLAYER_DEBUFFS = ["VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER"] as const;
+export const PLAYER_DEBUFFS = [
+  "VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER",
+  // Hunter Killer's Tender (for the fight: Strength and Dexterity -1 a card played), Living Fog's Smoggy (one
+  // Skill a turn), Vine Shambler's Tangled (Attacks +1 next turn), the Queen's Chains of Binding (the first 3
+  // cards drawn each turn Soulbound), the Shrinker's Shrink (-1: for the fight), the Beast's Ringing (one card
+  // next turn), the Knowledge Demon's curses (Sloth, Disintegration, Mind Rot, Waste Away), Constrict.
+  "TENDER_POWER", "SMOGGY_POWER", "TANGLED_POWER", "CHAINS_OF_BINDING_POWER", "SHRINK_POWER", "RINGING_POWER",
+  "SLOTH_POWER", "DISINTEGRATION_POWER", "CONSTRICT_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POWER",
+] as const;
 export type PlayerDebuff = (typeof PLAYER_DEBUFFS)[number];
 
 export interface EnemyTable {
@@ -810,6 +824,19 @@ interface SimPlayer {
   /** Of `strength` / `dexterity`, the decision turn's temporary part (TEMP_STRENGTH_POWERS): gone after it. */
   tempStrength: number;
   tempDexterity: number;
+  /** Tender (for the fight): each card played lowers Strength and Dexterity by this for the rest of the turn. */
+  tender: number;
+  /** Smoggy: one Skill a turn. */
+  smoggy: boolean;
+  /** Tangled put on us this enemy turn: Attacks cost this much more on our next turn only. */
+  tangledNext: number;
+  /** Chains of Binding: the first this many cards drawn each turn are Soulbound. */
+  chains: number;
+  /** Ringing put on us this enemy turn: one card on our next turn only. */
+  ringingNext: boolean;
+  /** Mind Rot: cards fewer drawn each turn; Waste Away: energy fewer each turn. */
+  mindRot: number;
+  wasteAway: number;
 }
 
 /** The enemy a Rampart gives its block to (RAMPART_POWER: 「高塔炮手获得25点格挡」). */
@@ -997,6 +1024,55 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   return dealt;
 }
 
+/** A debuff's turns: -1 (and any amount below 0) is for the fight. */
+function turnsOf(amount: number): number {
+  return amount < 0 ? Infinity : amount;
+}
+
+/** We already hold this curse (a Curse of Knowledge pick is not offered twice). */
+function holds(player: SimPlayer, id: PlayerDebuff): boolean {
+  switch (id) {
+    case "SLOTH_POWER":
+      return player.playCap !== null;
+    case "MIND_ROT_POWER":
+      return player.mindRot > 0;
+    case "WASTE_AWAY_POWER":
+      return player.wasteAway > 0;
+    case "DISINTEGRATION_POWER":
+      return player.disintegration > 0;
+    default:
+      return false;
+  }
+}
+
+/** What a move puts on us: all its powers, or of alternatives the first in pick order we do not hold. */
+function chosenDebuffs(move: EnemyMove, player: SimPlayer): Partial<Record<PlayerDebuff, number>> {
+  const powers = move.playerPowers ?? {};
+  if (!move.playerPowerChoice) return powers;
+  const pick = move.playerPowerChoice.find((id) => !holds(player, id) && (powers[id] ?? 0) !== 0);
+  return pick ? { [pick]: powers[pick] } : {};
+}
+
+/** Debuffs an enemy turn put on us, onto the simulated player. */
+function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebuff, number>>): void {
+  player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
+  player.weakTurns += powers.WEAK_POWER ?? 0;
+  player.frailTurns += powers.FRAIL_POWER ?? 0;
+  player.strength += powers.STRENGTH_POWER ?? 0;
+  player.dexterity += powers.DEXTERITY_POWER ?? 0;
+  player.tender += powers.TENDER_POWER ?? 0;
+  if ((powers.SMOGGY_POWER ?? 0) !== 0) player.smoggy = true;
+  player.tangledNext += powers.TANGLED_POWER ?? 0;
+  player.chains = Math.max(player.chains, powers.CHAINS_OF_BINDING_POWER ?? 0);
+  if (powers.SHRINK_POWER) player.shrinkTurns = Math.max(player.shrinkTurns, turnsOf(powers.SHRINK_POWER));
+  if ((powers.RINGING_POWER ?? 0) !== 0) player.ringingNext = true;
+  if ((powers.SLOTH_POWER ?? 0) > 0) player.playCap = Math.min(player.playCap ?? Infinity, powers.SLOTH_POWER!);
+  player.disintegration += powers.DISINTEGRATION_POWER ?? 0;
+  player.constrict += powers.CONSTRICT_POWER ?? 0;
+  player.mindRot += powers.MIND_ROT_POWER ?? 0;
+  player.wasteAway += powers.WASTE_AWAY_POWER ?? 0;
+}
+
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
 function applyPlan(
   turn: number,
@@ -1130,7 +1206,7 @@ function applyPlan(
   if (!won && !died) {
     // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
     // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
-    const applied: Partial<Record<PlayerDebuff, number>>[] = [];
+    const applied: EnemyMove[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -1174,7 +1250,7 @@ function applyPlan(
           const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
           if (card) addToPile(piles, card, status.count, status.pile, random);
         }
-        if (m?.playerPowers) applied.push(m.playerPowers);
+        if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
         e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
@@ -1236,14 +1312,9 @@ function applyPlan(
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
     player.frailTurns = Math.max(0, player.frailTurns - 1);
+    player.shrinkTurns = Math.max(0, player.shrinkTurns - 1);
     // Put on us by this enemy turn's moves: they last through our next turn and its enemy turn.
-    for (const powers of applied) {
-      player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
-      player.weakTurns += powers.WEAK_POWER ?? 0;
-      player.frailTurns += powers.FRAIL_POWER ?? 0;
-      player.strength += powers.STRENGTH_POWER ?? 0;
-      player.dexterity += powers.DEXTERITY_POWER ?? 0;
-    }
+    for (const move of applied) applyPlayerDebuffs(player, chosenDebuffs(move, player));
     player.strength += player.demonForm;
   }
   const carried = player.startDealt;
@@ -1336,11 +1407,20 @@ function simulate(
     playCap: (input.playerPowers["SLOTH_POWER"] ?? 0) > 0 ? input.playerPowers["SLOTH_POWER"]! : null,
     intangibleTurns: input.playerPowers["INTANGIBLE_POWER"] ?? (base.intangible ? 1 : 0),
     blurTurns: input.playerPowers["BLUR_POWER"] ?? 0,
-    shrinkTurns: input.playerPowers["SHRINK_POWER"] ?? (base.shrunk ? 1 : 0),
+    // Shrink -1 (the Shrinker Beetle's, logged -1 every turn) is for the fight.
+    shrinkTurns: turnsOf(input.playerPowers["SHRINK_POWER"] ?? (base.shrunk ? 1 : 0)),
     disintegration: input.playerPowers["DISINTEGRATION_POWER"] ?? 0,
     constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
-    tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS),
-    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS),
+    // Tender's -1 a card played so far this turn is temporary too (logged Strength 6, 5, 4, 3 over a turn, 6 again next).
+    tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tender: input.playerPowers["TENDER_POWER"] ?? base.tender ?? 0,
+    smoggy: (input.playerPowers["SMOGGY_POWER"] ?? 0) > 0,
+    tangledNext: 0,
+    chains: input.playerPowers["CHAINS_OF_BINDING_POWER"] ?? 0,
+    ringingNext: false,
+    mindRot: input.playerPowers["MIND_ROT_POWER"] ?? 0,
+    wasteAway: input.playerPowers["WASTE_AWAY_POWER"] ?? 0,
   };
   // An end-of-turn loss the decision reads that is neither (a solver input without the powers): kept as is.
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
@@ -1424,11 +1504,17 @@ function simulate(
     const hand: CardModel[] = [];
     const handBase: CardModel[] = [];
     const targets = enemies.filter((e) => e.alive).map((e) => e.index);
-    for (let i = 0; i < handSize; i += 1) {
+    // Mind Rot draws fewer; Tangled makes this turn's Attacks dearer; Chains of Binding binds the first cards drawn.
+    for (let i = 0; i < Math.max(0, handSize - player.mindRot); i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
-      hand.push(withStrength(card, player, i, targets));
+      const drawn = withStrength(card, player, i, targets);
+      hand.push({
+        ...drawn,
+        ...(player.tangledNext > 0 && drawn.type === "Attack" && !drawn.xCost && drawn.cost >= 0 ? { cost: drawn.cost + player.tangledNext } : {}),
+        ...(i < player.chains ? { soulbound: true } : {}),
+      });
     }
     const sims: EnemySim[] = enemies
       .filter((e) => e.alive)
@@ -1458,7 +1544,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: input.meta.max_en + player.pyre + (player.radiance > 0 ? 1 : 0),
+      energy: Math.max(0, input.meta.max_en + player.pyre + (player.radiance > 0 ? 1 : 0) - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -1472,13 +1558,14 @@ function simulate(
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
       noBlock: false,
-      tender: 0,
+      tender: player.tender,
+      maxSkills: player.smoggy ? 1 : null,
       // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
       // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
       // while its Strangler lives.
-      maxPlays: player.playCap,
+      maxPlays: player.ringingNext ? Math.min(player.playCap ?? Infinity, 1) : player.playCap,
       intangible: player.intangibleTurns > h,
-      shrunk: player.shrinkTurns > h,
+      shrunk: player.shrinkTurns > 0,
       endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
       keepsBlock: player.keepsBlock || player.blurTurns > h,
       endTurnBlock: player.endTurnBlock + player.plating,
@@ -1496,8 +1583,10 @@ function simulate(
       retaliate: input.playerPowers["THORNS_POWER"] ?? 0,
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
     };
-    // Radiance: this turn's extra energy is in pSim; one turn of it used.
+    // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
+    player.ringingNext = false;
+    player.tangledNext = 0;
     const started = budget.now();
     const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));

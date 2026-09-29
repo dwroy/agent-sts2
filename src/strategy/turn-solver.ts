@@ -200,6 +200,11 @@ export interface PlayerSim {
   rupture?: number;
   /** Sloth: at most this many more cards can be played this turn. */
   maxPlays?: number | null;
+  /**
+   * Smoggy (SMOGGY_POWER: 「每回合你只能打出1张技能牌」): at most this many more Skills this turn; null for no
+   * cap. The solver planned two and the game refused the second (Living Fog, 51 logged fights).
+   */
+  maxSkills?: number | null;
   /** Damage at the end of the turn (Disintegration debuff); it hits block first. */
   endTurnHpLoss?: number;
   /** Surrounded: attacks from enemies we are not facing deal +50%; targeting an enemy turns us to it. */
@@ -533,6 +538,8 @@ interface Sim {
   unmovableSpent: boolean;
   /** Attacks played in this plan (Stomp costs 1 less for each). */
   attacksPlayed: number;
+  /** Skills played in this plan (Smoggy's cap). */
+  skillsPlayed: number;
   /** Free attacks left this turn (Unrelenting). */
   freeAttacks: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
@@ -925,6 +932,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.strength -= player.tender ?? 0;
     next.tempDex -= player.tender ?? 0;
   }
+  if (card.type === "Skill") next.skillsPlayed += 1;
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
@@ -1973,7 +1981,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}/${sim.platingPotion}#${sim.strikeReplay}`;
 }
 
 export interface SolveResult {
@@ -2097,6 +2105,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
     attacksPlayed: 0,
+    skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,
     bombs: 0,
@@ -2164,8 +2173,10 @@ export function solveTurn(input: SolverInput): SolveResult {
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
+    const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
     for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
+      if (card.type === "Skill" && skillsLeft <= 0) continue;
       if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;
       const targets: (number | null)[] =
         card.target === "single" ? card.validTargets.filter((index) => sim.enemies.some((enemy) => enemy.index === index && enemy.alive)) : [null];

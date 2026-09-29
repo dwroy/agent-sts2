@@ -1168,6 +1168,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     rupture: powerAmount(player, "RUPTURE_POWER"),
     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
     maxPlays: playCap(player),
+    // Smoggy: one Skill a turn, less the Skills already played.
+    maxSkills: powerAmount(player, "SMOGGY_POWER") > 0 ? Math.max(0, 1 - num(player["skills_played_this_turn"])) : null,
     // Constrict (Slithering Strangler) is the same end-of-turn damage (BHMP F6: 12 HP unpredicted).
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER") + powerAmount(player, "CONSTRICT_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,

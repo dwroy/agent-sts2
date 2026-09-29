@@ -126,7 +126,7 @@ function mode(counts: Record<string, number> | undefined): number | null {
  * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
  * DB has no per-ascension split (Terror Eel's Terror: Vulnerable 99 at every ascension).
  */
-export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: Partial<Record<PlayerDebuff, number>> } {
+export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
   const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
   const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
   const out: Partial<Record<PlayerDebuff, number>> = {};
@@ -134,7 +134,16 @@ export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: 
     const amount = mode(counts[id]);
     if (amount) out[id] = amount;
   }
-  return Object.keys(out).length > 0 ? { playerPowers: out } : {};
+  if (Object.keys(out).length === 0) return {};
+  // Alternatives: several powers whose uses add up to the move's (each use put one of them on us: the
+  // Knowledge Demon's Curse of Knowledge, 105 picks in 109 uses), in the order they were picked here.
+  const ids = Object.keys(out) as PlayerDebuff[];
+  const uses = (id: string, table: Record<string, Record<string, number>> | undefined) => Object.values(table?.[id] ?? {}).reduce((sum, n) => sum + n, 0);
+  const pooled = ids.reduce((sum, id) => sum + uses(id, entry.player_powers_applied), 0);
+  const alternatives = ids.length >= 2 && (entry.n_seen ?? 0) > 0 && pooled <= 1.1 * entry.n_seen!;
+  if (!alternatives) return { playerPowers: out };
+  const order = [...ids].sort((a, b) => uses(b, counts) - uses(a, counts) || uses(b, entry.player_powers_applied) - uses(a, entry.player_powers_applied));
+  return { playerPowers: out, playerPowerChoice: order };
 }
 
 /** The rollout's other self-buffs of a move (rollout.ts ENEMY_SELF_POWERS) at this ascension (selfGainAt). */

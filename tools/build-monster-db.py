@@ -590,8 +590,12 @@ class Builder:
                     temporary = any(pid in TEMPORARY_POWERS for pid in p_before)
                     for pid in set(p_after) | set(p_before):
                         delta = p_after.get(pid, 0) - p_before.get(pid, 0)
+                        # A debuff that appears with no positive amount lasts the fight (the Shrinker Beetle's
+                        # SHRINK_POWER -1): recorded as that amount.
+                        if pid not in p_before and GAME_POWER_TYPES.get(pid) == "Debuff" and p_after[pid] <= 0 and pid not in DRAINED:
+                            delta = p_after[pid]
                         # Debuffs put on us, and Strength/Dexterity drained (our own buffs are left out).
-                        if (delta > 0 and GAME_POWER_TYPES.get(pid) == "Debuff") or (delta < 0 and pid in DRAINED and not temporary):
+                        if (GAME_POWER_TYPES.get(pid) == "Debuff" and pid not in DRAINED and (delta > 0 or (pid not in p_before and delta < 0))) or (delta < 0 and pid in DRAINED and not temporary):
                             move["player"][pid][delta] += 1
                             move["player_by_asc"][akey][pid][delta] += 1
 
@@ -1060,6 +1064,10 @@ def _synthetic_lines():
     lines.append(state("COMBAT", "R8", 1, 3, 80, goop(), True, piles={"draw": {"STRIKE": 3}}, hand=["DAZED"]))
     lines.append(state("COMBAT", "R8", 2, 3, 80, goop(), True, piles={"draw": {"STRIKE": 3}, "discard": {"SLIMED": 2}, "exhaust": {"DAZED": 1}}))
     lines.append(state("COMBAT", "R8", 3, 3, 80, goop(), True))
+    # Run R9, floor 4: the Shrinker's move leaves SHRINK_POWER -1 on us (for the fight).
+    lines.append(state("COMBAT", "R9", 1, 4, 80, [enemy(0, "SHRINKER", 40, 40, "SHRINK_MOVE", types=("DebuffStrong",))], True))
+    lines.append(state("COMBAT", "R9", 2, 4, 80, [enemy(0, "SHRINKER", 40, 40, "CHOMP_MOVE", 7, 1)], True,
+                       player_powers=[{"power_id": "SHRINK_POWER", "amount": -1}]))
     return lines
 
 
@@ -1077,7 +1085,8 @@ def self_test():
                              {"id": "VANTOM", "name": "墨影幻灵", "type": "Boss", "min_hp": 183, "max_hp": 183, "moves": []},
                              {"id": "BRUTE", "name": "蛮", "type": "Elite", "min_hp": 100, "max_hp": 100, "moves": []}],
                 "powers": [{"id": "STRENGTH_POWER", "name": "力量", "description": "+{Amount}", "type": "Buff"},
-                           {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"}],
+                           {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"},
+                           {"id": "SHRINK_POWER", "name": "缩小", "description": "-30%", "type": "Debuff"}],
                 "cards": [{"id": "SLIMED", "type": "Status"}, {"id": "DAZED", "type": "Status"}, {"id": "STRIKE", "type": "Attack"}]}}, handle)
         db = build(states, None, game)
     slime = db["monsters"]["SLIME"]
@@ -1142,6 +1151,9 @@ def self_test():
     goop = db["monsters"]["SLIMER"]["moves"]["GOOP_MOVE"]
     assert goop["status_cards"] == {"2": 3}, goop
     assert goop["status_card_ids"] == {"SLIMED": 2} and goop["status_card_pile"] == {"discard": 2}, goop
+    # A debuff that appears at -1 (lasts the fight) is the move's, at -1.
+    shrink = db["monsters"]["SHRINKER"]["moves"]["SHRINK_MOVE"]
+    assert shrink["player_powers_applied"] == {"SHRINK_POWER": {"-1": 1}}, shrink
     print("self-test ok")
     return 0
 
