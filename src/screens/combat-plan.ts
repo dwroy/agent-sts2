@@ -1110,7 +1110,18 @@ function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined
 function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  return handSignature(hand.filter((card) => card !== cardFor(first, hand)));
+  return handSignature(handAfterPlay(cardFor(first, hand), hand));
+}
+
+/**
+ * The hand after a card is played from it: the card gone, and after Primal Force every Attack left a Giant Rock
+ * (巨石, 巨石+ from Primal Force+; the solver's giantRockFrom), so the line goes on instead of reading the rocks as a
+ * surprise and re-planning (as eca3384 for Blessing of the Forge's upgrades).
+ */
+function handAfterPlay(played: CardModel | undefined, hand: CardModel[]): CardModel[] {
+  const left = hand.filter((card) => card !== played);
+  if (played?.special !== "primal_force") return left;
+  return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
 
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
@@ -1444,7 +1455,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
-              expectedHand: handSignature(hand.filter((card) => card !== nextCard)),
+              expectedHand: handSignature(handAfterPlay(nextCard, hand)),
               handLen: handLenAfter(next, hand),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(potions !== undefined ? { potions } : {}),

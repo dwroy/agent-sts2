@@ -7,10 +7,12 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import type { AskDecision, DecisionEnv } from "../src/project/types.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { planEvent } from "../src/screens/event.js";
 import { planMap } from "../src/screens/map.js";
 import { planRest } from "../src/screens/rest.js";
@@ -261,5 +263,32 @@ describe("3. Mid-turn draws in the solver: Hellraiser plays a drawn Strike itsel
       solveTurn({ hand: [burn], player: player({ energy: 1, darkEmbrace }), enemies: [enemy({ attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster", turn: 2 }).plans.find((plan) => plan.steps.some((step) => step.cardId === "EXHAUSTING_SKILL"))!.outcome.cardsDrawn;
     expect(drawn(1)).toBe(1);
     expect(drawn(0)).toBe(0);
+  });
+});
+
+describe("4. After Primal Force the expected hand holds Giant Rocks: the chosen line goes on (N01X6BBAYMHT F2 T2)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+  });
+  /** The logged board, the Sludge Spinner at 100 HP (no lethal to short-cut the line). */
+  const board = (name: string): Logged => {
+    const fx = logged(`batch-g/${name}`);
+    for (const enemy of (fx.state["combat"] as Raw)["enemies"] as Raw[]) {
+      enemy["current_hp"] = 100;
+      enemy["max_hp"] = 100;
+    }
+    return fx;
+  };
+
+  it("code's only distinct line \"原始力量, 巨石, 巨石\": on the next frame the hand shows two 巨石 for the two Strikes: continued, not re-planned", () => {
+    rolloutLiveOptions.enabled = false;
+    const ask = loggedEnv(board("n01x-f2-t2-primal-force"));
+    const decision = planCombatTurn(ask);
+    expect(decision).toMatchObject({ kind: "act", label: "combat/plan", intent: { action: "play_card" } });
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/原始力量, 巨石 -> 淤泥旋螺, 巨石 -> 淤泥旋螺/);
+    if (decision?.kind === "act") decision.apply?.();
+    const next = planCombatTurn({ ...loggedEnv(board("n01x-f2-t2-rocks")), screenMemory: ask.screenMemory });
+    expect(next?.label).toBe("combat/plan-continue");
+    expect(next?.kind === "act" ? next.rationale : "").toMatch(/plan: 巨石/);
   });
 });
