@@ -184,3 +184,39 @@ describe("3. Stable Serum in the rollout: cards drawn mid-turn that the line can
     expect(run(line).perTurn[0]!.dmg.mean).toBe(140);
   });
 });
+
+describe("4. Attack-counting relics count every play of an Attack: a replay (Soldier's Stew), a duplicate (Duplicator) and a Hellraiser autoplay, as the relics' own counters did in the logs (attacks_played_this_turn counts the card once and no autoplay)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.enabled = true;
+    solveTap.onSolve = null;
+  });
+
+  it("Shuriken: two Strikes with Replay 1 are 4 Attacks (6 + 6 + 6, then 7 with the Strength), not 2", () => {
+    const replayed = (i: number) => card(i, "STRIKE_IRONCLAD", { damage: 6, damageBase: 6, replay: 1 });
+    const input: SolverInput = { hand: [replayed(0), replayed(1)], player: player({ energy: 2, shuriken: { every: 3, strength: 1, count: 0 } }), enemies: [enemy()], fightKind: "monster", turn: 1 };
+    const both = solveTurn(input).plans.find((plan) => plan.steps.length === 2)!.outcome;
+    expect(both).toMatchObject({ damageDealt: 25, strengthGained: 1 });
+  });
+
+  it("Kusarigama: a duplicated Attack counts twice (Duplicator, then two Attacks: the 3rd play hits for 6)", () => {
+    const duplicator = modelPotion("DUPLICATOR", "复制药水", 0, [], 0)!;
+    const hand = [duplicator, card(0, "HIT_A", { damage: 5 }), card(1, "HIT_B", { damage: 5 })];
+    const input: SolverInput = { hand, player: player({ energy: 2, kusarigama: { every: 3, damage: 6, count: 0 } }), enemies: [enemy()], fightKind: "monster", turn: 1 };
+    const line = solveTurn(input).plans.find((plan) => plan.steps.map((step) => step.cardId).join(">") === "POTION:DUPLICATOR:0>HIT_A>HIT_B")!;
+    // 5 + 5 (duplicated) + 5, and Kusarigama's 6 on the 3rd play.
+    expect(line.outcome.damageDealt).toBe(21);
+  });
+
+  it("the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's", () => {
+    rolloutLiveOptions.enabled = false;
+    const fx = logged("batch-j/dhgt-f33-t1-shuriken");
+    const run = fx.state["run"] as Raw;
+    run["relics"] = (run["relics"] as Raw[]).map((relic) => (relic["relic_id"] === "SHURIKEN" ? { ...relic, stack: 2 } : relic));
+    expect(((fx.state["combat"] as Raw)["player"] as Raw)["attacks_played_this_turn"]).toBe(0);
+    const inputs: SolverInput[] = [];
+    solveTap.onSolve = (input) => inputs.push(input);
+    planCombatTurn(loggedEnv(fx));
+    solveTap.onSolve = null;
+    expect(inputs[0]!.player.shuriken).toEqual({ every: 3, strength: 1, count: 2 });
+  }, 30_000);
+});

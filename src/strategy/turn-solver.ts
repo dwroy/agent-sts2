@@ -698,8 +698,10 @@ interface Sim {
   lastingDrinks: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
-  /** Attacks played in this plan (Stomp costs 1 less for each). */
+  /** Attacks played in this plan, a card once (Stomp costs 1 less for each; the game's attacks_played_this_turn). */
   attacksPlayed: number;
+  /** Plays of Attacks for the attack-counting relics (Kusarigama, Shuriken): every duplicate and replay too. */
+  relicAttacks: number;
   /** Skills played in this plan (Smoggy's cap). */
   skillsPlayed: number;
   /** Free attacks left this turn (Unrelenting). */
@@ -1111,10 +1113,14 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twiceAttack) next.duplicateAttacks -= 1;
   // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
   const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
-  resolveEffects(next, card, target, player, cost);
-  if (twice) resolveEffects(next, card, target, player, cost);
-  if (twiceAttack) resolveEffects(next, card, target, player, cost);
-  for (let replay = 0; replay < replays; replay += 1) resolveEffects(next, card, target, player, cost);
+  // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play
+  // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
+  // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
+  const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + replays;
+  for (let play = 0; play < plays; play += 1) {
+    resolveEffects(next, card, target, player, cost);
+    if (card.type === "Attack") attackRelics(next, player);
+  }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
@@ -1127,18 +1133,6 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.type === "Attack") {
     next.attacksPlayed += 1;
     if (next.freeAttacks > 0) next.freeAttacks -= 1;
-    // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
-    const kusa = player.kusarigama;
-    if (kusa && kusa.every > 0 && (kusa.count + next.attacksPlayed) % kusa.every === 0) {
-      const living = next.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
-      if (living[0]) hitEnemyRaw(next, living[0], kusa.damage);
-    }
-    // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
-    const shuriken = player.shuriken;
-    if (shuriken && shuriken.every > 0 && (shuriken.count + next.attacksPlayed) % shuriken.every === 0) {
-      next.strength += shuriken.strength;
-      next.permStrength += shuriken.strength;
-    }
   }
   for (const enemy of next.enemies) {
     if (!enemy.skittishHit) continue;
@@ -1554,6 +1548,28 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
   if (next.feelNoPain > 0) gainBlock(next, next.feelNoPain, player);
   exhaustDraws(next, 1, player);
   if (attacks.length === 1 && added(least) > 0) next.thrashGrowth = [...next.thrashGrowth, { index: card.index, amount: added(least) }];
+}
+
+/**
+ * One play of an Attack for the relics that count them in a turn (Kusarigama, Shuriken), after the play: a duplicate
+ * or a replay is a play of its own, and so is a Strike Hellraiser plays when drawn (the solver plays it like a hand
+ * card; logged: Kunai, Nunchaku and Pen Nib counted those autoplays, attacks_played_this_turn did not). Their counter
+ * at the decision is the relic's own (combat-plan: the relic's stack).
+ */
+function attackRelics(sim: Sim, player: PlayerSim): void {
+  sim.relicAttacks += 1;
+  // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
+  const kusa = player.kusarigama;
+  if (kusa && kusa.every > 0 && (kusa.count + sim.relicAttacks) % kusa.every === 0) {
+    const living = sim.enemies.filter((enemy) => enemy.alive).sort((a, b) => a.hp - b.hp);
+    if (living[0]) hitEnemyRaw(sim, living[0], kusa.damage);
+  }
+  // Shuriken: the Strength lands once the 3rd Attack is done, for every Attack after it (and the fight).
+  const shuriken = player.shuriken;
+  if (shuriken && shuriken.every > 0 && (shuriken.count + sim.relicAttacks) % shuriken.every === 0) {
+    sim.strength += shuriken.strength;
+    sim.permStrength += shuriken.strength;
+  }
 }
 
 /**
@@ -2401,7 +2417,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.potionCost}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
 }
 
 export interface SolveResult {
@@ -2528,6 +2544,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
     attacksPlayed: 0,
+    relicAttacks: 0,
     skillsPlayed: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,

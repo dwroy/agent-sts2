@@ -935,7 +935,8 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  * Shuriken: 「你每在同一回合内打出{Cards}张攻击牌，获得{StrengthPower}点力量」 — 3 and 1 (logged over 8 runs holding it:
  * +1 Strength at 90 of 95 plays taking attacks_played_this_turn to a multiple of 3; the 5 others were mid-selection
  * frames; the count starts again each turn). DHGT6Z3Q7VAP F33 T1: Strength 0 -> 1 -> 2 after the 3rd and 6th Attack,
- * 132 dealt where 116 was shown.
+ * 132 dealt where 116 was shown. The count so far is the relic's stack, which also counts replays, duplicates and
+ * Hellraiser autoplays (relicStack; batch K).
  */
 export const SHURIKEN_ATTACKS = 3;
 export const SHURIKEN_STRENGTH = 1;
@@ -1461,7 +1462,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     shrunk: powerAmount(player, "SHRINK_POWER") > 0,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
-    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: num(player["attacks_played_this_turn"]) % SHURIKEN_ATTACKS } } : {}),
+    ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -2763,6 +2764,15 @@ export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: Game
     .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
   const lethal = bool(combat["end_turn_will_kill_player"]) || incoming - num(player["block"]) >= hp;
   tail.last = { fight, turn, hp, lethal, fairies };
+}
+
+/**
+ * A relic's own counter (its stack): Shuriken's and Kusarigama's attacks so far this turn. Not attacks_played_this_turn,
+ * which counts a replayed or duplicated card once and no Hellraiser autoplay, while the relics count each play (logged:
+ * Kunai 1 at a turn's start after an autoplay, 0NG2 F30 T3; Nunchaku 0 -> 3 over three autoplays, MGJ8 F17 T7).
+ */
+function relicStack(run: unknown, relicId: string): number {
+  return num(asArray(asRecord(run)["relics"]).map(asRecord).find((entry) => str(entry["relic_id"]) === relicId)?.["stack"]);
 }
 
 /** Kusarigama (every 3rd attack in a turn: 6 to a random enemy), with the attacks counted so far. */
