@@ -149,12 +149,17 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
       expect(order, key).not.toMatch(/death ends the fight/);
       expect(String(f["rollout"]), key).toMatch(/^5-turn rollout \(8 samples\)/);
     }
-    const bestKey = planKeys(criteria).find((key) => facts(criteria, key)["rollout_best"] === true)!;
+    // The rollout's best line, or the first line when the best is a random potion's option (with "You are
+    // mine"'s 99 Weak/Vulnerable/Frail carried into the later turns every line dies here).
+    const bestKey = planKeys(criteria).find((key) => facts(criteria, key)["rollout_best"] === true) ?? "plan1";
     const resolved = decision.resolve(pick(bestKey));
     const rollout = resolved.log!["rollout"] as Record<string, unknown>;
     expect(rollout).toMatchObject({ available: true, orders: 2, orders_dropped: 0 });
     expect(String(rollout["best_order"])).toMatch(new RegExp(`^(${AMALGAM} > ${QUEEN}|${QUEEN} > ${AMALGAM})$`));
-    expect(resolved.log!["chosen_order"]).toBe(rollout["best_order"]);
+    // The chosen line's own best order is logged.
+    const chosen = String(resolved.log!["chosen_order"]);
+    expect(chosen).toMatch(new RegExp(`^(${AMALGAM} > ${QUEEN}|${QUEEN} > ${AMALGAM})$`));
+    expect(String(facts(criteria, bestKey)["rollout_kill_order"]).startsWith(chosen)).toBe(true);
   });
 
   it("is deterministic: the same board gives the same options and the same kill-order numbers", () => {

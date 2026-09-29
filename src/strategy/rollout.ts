@@ -46,7 +46,7 @@ import { fileURLToPath } from "node:url";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
+import { mantleHpCost, RADIANCE_LATER_ENERGY, solveTurn, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -353,9 +353,20 @@ export interface EnemyMove {
   block: number;
   /** Burrow (Tunneler): the move gains BURROWED_POWER. */
   burrows?: boolean;
+  /** Vigor the move gives itself (Terror Eel's Thrash: 6): added to its next attack's hits. */
+  vigor?: number;
+  /**
+   * What the move puts on us (monster DB player_powers_applied at this ascension): Vulnerable, Weak and
+   * Frail turns, and Strength/Dexterity drained (negative). Terror Eel's Terror: VULNERABLE_POWER 99.
+   */
+  playerPowers?: Partial<Record<PlayerDebuff, number>>;
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
 }
+
+/** The powers an enemy move puts on us that the rollout applies to its later turns (EnemyMove.playerPowers). */
+export const PLAYER_DEBUFFS = ["VULNERABLE_POWER", "WEAK_POWER", "FRAIL_POWER", "STRENGTH_POWER", "DEXTERITY_POWER"] as const;
+export type PlayerDebuff = (typeof PLAYER_DEBUFFS)[number];
 
 export interface EnemyTable {
   moves: Record<string, EnemyMove>;
@@ -481,6 +492,8 @@ export interface LineEstimate {
   winProb: number;
   /** Samples (of `samples`) in which the fight was won within the horizon. */
   wins: number;
+  /** Samples in which a time limit ended the fight unwon (the Battleworn Dummy); absent when none. */
+  timeUps?: number;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -514,7 +527,7 @@ export function turnSpreads(trajectories: TurnRecord[][], horizon: number): Turn
   const out: TurnSpread[] = [];
   const stats = (xs: number[]) => ({ mean: xs.reduce((s, x) => s + x, 0) / Math.max(1, xs.length), min: xs.length ? Math.min(...xs) : 0, max: xs.length ? Math.max(...xs) : 0 });
   for (let t = 1; t < horizon; t += 1) {
-    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died));
+    const fighting = trajectories.filter((records) => records.length > t && !records.slice(0, t).some((r) => r.won || r.died || r.timeUp));
     out.push({
       turn: t + 1,
       fighting: fighting.length,
@@ -634,6 +647,11 @@ interface SimEnemy {
   maxHp: number;
   block: number;
   strength: number;
+  /**
+   * Vigor (VIGOR_POWER, 「你的下一张攻击牌伤害增加」): added to each hit of its next attack, then gone
+   * (XLJQ6FPQAU7N F7: Thrash's 6 made the Crash after Terror 18 + 6 = 24, x1.5 under Vulnerable = 36).
+   */
+  vigor: number;
   vulnerable: number;
   weak: number;
   alive: boolean;
@@ -674,10 +692,18 @@ interface SimPlayer {
   dexterity: number;
   weakTurns: number;
   vulnTurns: number;
+  /** Frail: block from cards is 25% less while it lasts (enemy turns left, like Weak and Vulnerable). */
+  frailTurns: number;
   block: number;
   keepsBlock: boolean;
   demonForm: number;
+  /** Block at the end of every turn that does not wear off (Metallicize). */
   endTurnBlock: number;
+  /**
+   * Plating (PLATING_POWER, 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层。」): block at the
+   * end of our turn, one stack less at the start of each of our turns.
+   */
+  plating: number;
   juggernaut: number;
   feelNoPain: number;
   potions: number;
@@ -719,6 +745,8 @@ export interface TurnRecord {
   snap: Snapshot;
   won: boolean;
   died: boolean;
+  /** A time limit ended the fight at this turn's end without a win (the Battleworn Dummy's 3 turns). */
+  timeUp?: boolean;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -726,7 +754,7 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
-  return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength) * scale)), hits: Math.max(1, m.hits) }];
+  return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
 }
 
 /** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
@@ -758,15 +786,18 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
     index,
     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
-    block: card.block > 0 ? Math.max(0, card.block + player.dexterity) * (player.unmovable ? 2 : 1) : card.block,
+    // Frail: 25% less block from cards, after Dexterity.
+    block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
     validTargets: card.target === "single" ? targets : [],
   };
 }
 
 function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, blockEnd: number, energyLeft: number, handLeft: number, playerPowers: Record<string, number>): Snapshot {
   const pw: Record<string, number> = { ...playerPowers };
-  if (player.strength !== 0) pw["STRENGTH_POWER"] = player.strength;
-  else delete pw["STRENGTH_POWER"];
+  for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns], ["PLATING_POWER", player.plating]] as const) {
+    if (v !== 0) pw[id] = v;
+    else delete pw[id];
+  }
   return {
     hp: hpEnd,
     mhp: player.maxHp,
@@ -777,7 +808,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -841,6 +872,7 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput): void {
  * losses cost is already in the line's outcome (the solver's startTurnHpLoss). Returns the damage dealt.
  */
 function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
+  player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
   player.strength += player.rupture * startLossEvents(player);
   const aoe = turnStartAoeOf(player);
@@ -897,7 +929,7 @@ function applyPlan(
       playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
     }
     if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
-    if (card.plating) player.endTurnBlock += card.plating;
+    if (card.plating) player.plating += card.plating;
     if (card.exhausts || card.type === "Power") continue;
     piles.discard.push(handBase[at] ?? card);
   }
@@ -917,6 +949,16 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
+  // Shriek/Plow: taken to its threshold on the decision's turn, it is stunned and this turn's move is lost
+  // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
+  // did not make neither spends its Vigor nor gains Strength or Block (XLJQ F7 T5: stunned at 65 with
+  // Vigor 6 up, Terror T6, Crash 18 + 6 T7). Later turns' solver calls do not model Shriek (laterTurnSim).
+  const shrieked = new Set<number>();
+  for (const e of enemies) {
+    const a = after.get(e.index);
+    const threshold = e.base.shriek ?? 0;
+    if (turn === 0 && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
+  }
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
@@ -957,16 +999,23 @@ function applyPlan(
     won = allDown();
   }
   if (!won && !died) {
+    // Debuffs the enemies' moves put on us this enemy turn (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable;
+    // the rollout said "next turn -4.5, 8/8 alive", the Crash after it hit 36 and every line died).
+    const applied: Partial<Record<PlayerDebuff, number>>[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
       const m = e.move && table ? table.moves[e.move] : undefined;
       // Burrowed with all its block gone this turn: stunned, the move is lost (the solver already left its
       // hit out) and it surfaces; after the stun it goes on as the move model saw it (Tunneler: Bite).
-      const stunned = e.burrowed && e.block <= 0;
+      const stunned = (e.burrowed && e.block <= 0) || shrieked.has(e.index);
       if (stunned) e.burrowed = false;
       else {
+        // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
+        if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
+        e.vigor += m?.vigor ?? 0;
         e.strength += m?.strength ?? 0;
+        if (m?.playerPowers) applied.push(m.playerPowers);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
         e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
@@ -1011,6 +1060,15 @@ function applyPlan(
     }
     player.weakTurns = Math.max(0, player.weakTurns - 1);
     player.vulnTurns = Math.max(0, player.vulnTurns - 1);
+    player.frailTurns = Math.max(0, player.frailTurns - 1);
+    // Put on us by this enemy turn's moves: they last through our next turn and its enemy turn.
+    for (const powers of applied) {
+      player.vulnTurns += powers.VULNERABLE_POWER ?? 0;
+      player.weakTurns += powers.WEAK_POWER ?? 0;
+      player.frailTurns += powers.FRAIL_POWER ?? 0;
+      player.strength += powers.STRENGTH_POWER ?? 0;
+      player.dexterity += powers.DEXTERITY_POWER ?? 0;
+    }
     player.strength += player.demonForm;
   }
   const carried = player.startDealt;
@@ -1071,10 +1129,13 @@ function simulate(
     dexterity: input.playerPowers["DEXTERITY_POWER"] ?? 0,
     weakTurns: input.playerPowers["WEAK_POWER"] ?? (base.weak ? 1 : 0),
     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
+    frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,
     block: base.block,
     keepsBlock: base.keepsBlock === true,
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
-    endTurnBlock: base.endTurnBlock ?? 0,
+    // The decision's end-of-turn block is Plating + Metallicize (combat-plan): Plating wears off, split it out.
+    endTurnBlock: Math.max(0, (base.endTurnBlock ?? 0) - (input.playerPowers["PLATING_POWER"] ?? 0)),
+    plating: Math.min(base.endTurnBlock ?? 0, input.playerPowers["PLATING_POWER"] ?? 0),
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     potions: input.potions,
@@ -1107,6 +1168,7 @@ function simulate(
       maxHp: e.maxHp,
       block: e.block,
       strength: info?.strength ?? 0,
+      vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,
       alive: e.hp > 0,
@@ -1131,14 +1193,21 @@ function simulate(
   const drink = (line: Plan) => {
     for (const step of line.steps) if (isPotion(step)) held = held.filter((card) => card.cardId !== step.cardId);
   };
+  // A time limit (Battleworn Dummy: turns left, this one included) ends the fight after its last turn.
+  const limit = turnsLeftOf(s);
+  const timeUp = (h: number) => {
+    const last = records[records.length - 1]!;
+    if (limit !== null && h + 1 >= limit && !last.won && !last.died) last.timeUp = true;
+  };
   // Turn 0: the candidate line as the solver scored it.
   records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  timeUp(0);
   drink(plan);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
     const last = records[records.length - 1]!;
-    if (last.won || last.died) break;
+    if (last.won || last.died || last.timeUp) break;
     const hand: CardModel[] = [];
     const handBase: CardModel[] = [];
     const targets = enemies.filter((e) => e.alive).map((e) => e.index);
@@ -1160,6 +1229,7 @@ function simulate(
         weak: e.weak,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
       }));
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
@@ -1183,7 +1253,7 @@ function simulate(
       noBlock: false,
       tender: 0,
       keepsBlock: player.keepsBlock,
-      endTurnBlock: player.endTurnBlock,
+      endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
       // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
@@ -1216,6 +1286,7 @@ function simulate(
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    timeUp(h);
     drink(best);
   }
   return records;
@@ -1246,6 +1317,11 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
     if (r.won) {
       loss += r.loss;
       return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
+    }
+    // Out of time (Battleworn Dummy): the fight is over, not won, and costs nothing more.
+    if (r.timeUp) {
+      loss += r.loss;
+      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0 };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -1515,6 +1591,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
           return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
+    const timeUps = kept.filter((records) => records.slice(0, horizon).some((r) => r.timeUp)).length;
     const leaderIndices = order?.leader?.indices;
     const leaderLeft = leaderIndices
       ? kept.map((records) => {
@@ -1544,6 +1621,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       turnsToDeath: dead.length > 0 ? mean(dead.map((v) => v.turns)) : null,
       winProb: win,
       wins,
+      timeUps,
       value: -loss - DEATH_HP * (1 - win),
       valueModelTerminal: model === null ? null : -model.hpLoss - DEATH_HP * (1 - model.winProb),
       modelForecast: model,
@@ -1610,6 +1688,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       turnsToDeath: best.turnsToDeath,
       winProb: best.winProb,
       wins: best.wins,
+      ...(best.timeUps > 0 ? { timeUps: best.timeUps } : {}),
       value: best.value,
       valueModelTerminal: best.valueModelTerminal,
       modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: best.modelForecast },

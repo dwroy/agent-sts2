@@ -23,7 +23,7 @@ import { actThreats, bossDossier } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { RoutePlan } from "../screens/map.js";
-import { bossClock } from "../strategy/boss-clock.js";
+import { bossClock, eruptionSchedule, giantNumbers, testSubjectPhases } from "../strategy/boss-clock.js";
 import { actOf, runPlanLine } from "../strategy/run-plan.js";
 import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
 import { deckEntries } from "./deck.js";
@@ -170,20 +170,31 @@ export const BOSS_NOTES: Record<string, string> = {
   THE_KIN: "神官 199 血(A8) + 两个信徒 62/63(爪牙)：神官一死战斗即结束，单体伤害压神官，AOE 顺带信徒；T3/T7/T11 光束 3×(3+力量)。",
   LAGAVULIN_MATRIARCH: "222 血，开场沉睡 + 12 覆甲：掉 1 血就醒，沉睡时打能力/留格挡；醒后 19、9×2，尽早爆发。",
   SOUL_FYSH: "往牌组塞 Beckon（6 点无法格挡）：用消耗牌清掉，少抽牌；周期性无实体时别输出。",
-  WATERFALL_GIANT: "240 血，被打「死」后下一回合自爆 = 蒸汽喷发层数（第 2 回合 15，每回合 +3）：HP 始终留在层数之上，自爆回合全力格挡。虹吸回合回 10 血，压力枪每次递增（20→25→30）：拖得越久越难，要抢伤害。",
+  WATERFALL_GIANT: "{GIANT_HP} 血，被打「死」后下一回合自爆 = 击杀那回合的蒸汽喷发层数（{ERUPTION}）：要早杀，A8 T10 前击杀 13/15 赢、T13–T15 5/7、T16 后 0/3（经验 giant-explode）；击杀那回合的 HP 加下回合格挡要 ≥ 层数，自爆回合全力格挡。虹吸回合回血 {SIPHON}，压力炮 T5/T10/T15 依次 {GUN} 要挡住：拖得越久越难，要抢伤害。",
   THE_INSATIABLE: "341 血(A8)，沙坑每敌方回合 −1，归零即死：打不死它就尽早打狂乱逃离（每张多一回合），不要等沙坑 ≤2。",
   KAISER_CRAB: "两只钳子：单体伤害集中打火箭（T4/T9 激光 47–49），群伤照打两只；先死一只时另一只 +99 格挡 +6 力，但格挡只挡一回合，那回合出格挡/能力牌（51 场螃蟹战：火箭先死 9/12 赢，两只一直活着 8/39；经验 crab-kill-order）。",
   KNOWLEDGE_DEMON: "379 血，第 1/5/9 回合选负面：懒惰 > 心灵腐化 > 瓦解 > 衰朽；每 4 回合回血加力，要力量成长速攻。",
   QUEEN: "女王 400 + 聚合体 199：先杀聚合体，女王只吃群伤（4 场胜局都在 T4–T8 先打死聚合体，A8 5 场输局聚合体都活过 T5；经验 queen-plan）；第 2 回合起 99 层易伤/虚弱/脆弱，前两回合全力输出，魂缚牌每回合只打一张。",
-  TEST_SUBJECT: "三阶段共 600 血：一阶段少打技能；二阶段多段爪逐回合加段：挡得住就挡，挡不住就抢伤害尽快打完（每拖一回合多一段）；三阶段无实体，靠多段；复生回合做准备。",
+  TEST_SUBJECT: "三阶段 HP {TS_PHASES}：一阶段少打技能；二阶段多段爪每回合多一段，要 3–4 回合打完，挡不满就全力输出；三阶段天罚每两回合给一次无实体：无实体回合打能力/格挡，开放回合全力输出（大伤害照样有效，「靠多段」是错的；经验 ts-phase3），进三阶段 HP 最好 ≥75（猛扑 45）；复生回合做准备。",
   AEONGLASS: "512 血，人工制品 3 + 凋萎存在（每打 6 张牌塞一张凋萎）：先用便宜减益剥人工制品，少打小牌，退潮 33 格挡在我方第 2/5/8 回合，那几回合打能力，约第 8 回合前打完。",
   DOORMAKER: "多阶段，需要 AOE + 可持续成长。",
 };
 
-export function bossNote(bossId: string | null | undefined): string | null {
+export function bossNote(bossId: string | null | undefined, ascension = 8): string | null {
   if (!bossId) return null;
   const key = bossId.toUpperCase().replace(/_BOSS$/, "");
-  return BOSS_NOTES[key] ?? null;
+  const note = BOSS_NOTES[key];
+  if (!note) return null;
+  // The Giant's and the Test Subject's numbers at this ascension (monster DB): A8 第 2 回合 15，A9 20，
+  // 每回合 +3; 250 HP from A8; Pressure Gun A8 20/25/30, A9 23/28/33; phases A8 111/212/313.
+  const eruption = eruptionSchedule(ascension);
+  const giant = giantNumbers(ascension);
+  return note
+    .replace("{ERUPTION}", `A${ascension}：第 ${eruption.firstTurn} 回合 ${eruption.first}，每回合 +${eruption.perTurn}`)
+    .replace("{GIANT_HP}", String(giant.hp))
+    .replace("{SIPHON}", String(giant.siphon))
+    .replace("{GUN}", giant.gun.join("→"))
+    .replace("{TS_PHASES}", testSubjectPhases(ascension).join("/"));
 }
 
 
@@ -874,7 +885,7 @@ export function renderLookahead(
       if (next.length > 0) parts.push(next.length === 1 ? `下一个节点强制: ${next[0]}` : `下一个节点可选: ${next.join("/")}`);
     }
   }
-  const note = bossNote(state.run?.boss_id);
+  const note = bossNote(state.run?.boss_id, state.run?.ascension ?? 0);
   // The monster DB's measured numbers (boss_db) replace the note's hand-written HP; its strategy stays.
   if (note) parts.push(`boss 要点: ${bossDossier(state.run?.boss_id, state.run?.ascension ?? 0) ? withoutHandHp(note) : note}`);
   return parts.join(" | ");

@@ -355,3 +355,28 @@ describe("an illusion killed before the decision revives in the rollout (QUG1DSD
   });
 });
 
+
+describe("enemy_threat_next counts a reviving illusion (QUG1DSDARAXU F23 T3)", () => {
+  it("the dead Parafright's hit next turn is in every line's enemy_threat_next", async () => {
+    const { revivingForecast } = await import("../src/knowledge/move-model.js");
+    potionMcOptions.now = () => 0;
+    rolloutLiveOptions.budgetMs = 1e9;
+    const threats = (board: ReturnType<typeof logged>) => {
+      const env = loggedEnv(board, { jevContext: "v1" });
+      const decision = planCombatTurn(env) as AskDecision;
+      const criteria = (decision.jevView?.questions ?? decision.questions)["plan"]!.criteria as Record<string, string | null>;
+      return planKeys(criteria).map((key) => Number(facts(criteria, key)["enemy_threat_next"]));
+    };
+    const fx = logged("qug1-f23-t3-illusion-dead");
+    const gone = logged("qug1-f23-t3-illusion-dead");
+    const goneCombat = gone.state["combat"] as Record<string, unknown>;
+    goneCombat["enemies"] = (goneCombat["enemies"] as Record<string, unknown>[]).filter((enemy) => enemy["enemy_id"] !== "PARAFRIGHT");
+    const slam = revivingForecast("PARAFRIGHT", 1)![0]!;
+    expect(slam).toBeGreaterThan(10);
+    const withIt = threats(fx);
+    const without = threats(gone);
+    expect(withIt.length).toBeGreaterThan(0);
+    // Lines that do not end the fight read the Obscura's hit plus the Parafright's.
+    expect(Math.abs(Math.max(...withIt) - (Math.max(...without) + slam))).toBeLessThanOrEqual(1);
+  });
+});

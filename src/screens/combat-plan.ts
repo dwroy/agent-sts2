@@ -37,7 +37,7 @@ import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "..
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
-import { damageGap, laterPhaseHps } from "../strategy/boss-clock.js";
+import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { actThreatIds, bossOnBoard, moveTurns } from "../knowledge/monster-db.js";
@@ -72,6 +72,13 @@ const MODELLED_ENEMY_POWERS = new Set([
   "STOCK_POWER",
   // Entomancer: a Dazed per hit (`dazedPerHit`); left unmodelled it cut our damage by 20% (M812 F28).
   "PERSONAL_HIVE_POWER",
+  // Terror Eel: Vigor adds to its own next attack (in the intent when that is this turn's; the rollout
+  // carries it to later turns). Left unmodelled it cut our damage by 20% (XLJQ6FPQAU7N F7: T3/T5/T6
+  // predicted 26/16/19, dealt 33/21/26).
+  "VIGOR_POWER",
+  // Battleworn Dummy event: turns left to kill it (`timeLimit`); left unmodelled it cut our damage by 20%
+  // (SK1USHSB1U7U F43: 144 of 150 in the 3 turns).
+  "BATTLEWORN_DUMMY_TIME_LIMIT_POWER",
 ]);
 
 /** Powers whose meaning the models cannot guess from the id (TTVY T6: DeepSeek never saw the Sandpit). */
@@ -93,6 +100,8 @@ const POWER_NOTES: Record<string, string> = {
   ILLUSION_POWER: " (illusion: back at full HP next turn even if killed; damage into it is wasted, killing it only cancels this turn's attack; it leaves when its summoner dies: hit the summoner)",
   STOCK_POWER: " (revives left: at 0 HP it comes straight back at full, higher max HP with Stock -1, and that turn does Boot Up (10 Block, +3 Strength, no attack), then attacks harder every turn; a kill with Stock left does NOT end the fight: its real HP is current HP + Stock x max HP, so block rather than race it)",
   SHRIEK_POWER: " (the first time its HP drops to this or below it is stunned: this turn's attack is cancelled)",
+  BATTLEWORN_DUMMY_TIME_LIMIT_POWER: " (turns left to kill it, this one included: when they run out the fight ends without the reward; it never attacks, so only damage counts, and setup that pays after the last turn is worth nothing)",
+  VIGOR_POWER: " (its next attack deals this much more per hit: already in the intent when that attack is this turn's, else it waits for the next one)",
 };
 
 /** Deck cards that pay off on enemy Vulnerable (the solver weighs Vulnerable more with them). */
@@ -507,6 +516,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
         ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
+      ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
       attacks: asArray(enemy["intents"])
         .map(asRecord)
         .flatMap((intent) => {
@@ -521,11 +531,8 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
 const ERUPTION_BLOCK = 12;
 /** Damage per turn assumed before any has been seen (1ZQJ averaged 16). */
 const ERUPTION_FALLBACK_DAMAGE = 16;
-/**
- * HP a Siphon heals (the monster DB has its turns, not its amount). Logged states.jsonl, the Giant's HP
- * across a Siphon turn: +15 at A8 (41 Siphons), +10 at A0-A7 (28); less only near full HP.
- */
-export const SIPHON_HEAL = { base: 10, a8: 15 };
+/** HP a Siphon heals (boss-clock SIPHON_HEAL: +10 at A0-A7, +15 at A8 and A9). */
+export { SIPHON_HEAL };
 /** Siphon turns when the DB has none: T4, then every 5 turns (Stomp, Ram, Siphon, Pressure Gun, Pressure Up). */
 const SIPHON_FALLBACK = { first: 4, period: 5 };
 
@@ -557,25 +564,33 @@ export function giantTurnsToKill(hp: number, perTurn: number, turn: number, heal
  * Waterfall Giant too slow to kill (1ZQJ: 16 damage a turn into 240 HP, dead on T15 with the eruption
  * at 54; 21 HP + 17 block did not survive it). Damage per turn comes from the damage dealt so far: the HP
  * taken off plus what its Siphons healed before this turn (or 16 a turn on T1); turns to kill add the
- * Siphons still to come (Y0CWCD0C03FL: 4 Siphons healed 60, the old maxHp - hp rate saw none of it). The
- * eruption grows 3 a turn. When the projected explosion is at least HP plus a hand of block, waiting
- * loses: race it.
+ * Siphons still to come (Y0CWCD0C03FL: 4 Siphons healed 60, the old maxHp - hp rate saw none of it).
+ * Killed on turn K it explodes for its stacks on K: this turn's plus its gain a turn at this ascension
+ * (eruptionSchedule: +3) for each enemy turn until then. Our HP then is this turn's less the boss clock's
+ * HP loss a turn (bossLossPerTurn) for those same enemy turns (1VX145UJM8RZ T5: 69 HP read as 69 + 12 = 81
+ * against a projected 50, "no race"; at the T11 kill it had 18 HP, the eruption 47). When the explosion at
+ * the kill is at least that HP plus a hand of block, waiting loses: race it.
  */
-export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number, asc = 0): boolean {
+export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, turn: number, asc = 0, lossPerTurn?: number): boolean {
   if (str(enemy["enemy_id"]) !== "WATERFALL_GIANT" || enemy["is_alive"] === false) return false;
   const hp = num(enemy["current_hp"]);
   const maxHp = num(enemy["max_hp"]);
   if (hp <= 0 || maxHp >= 1_000_000) return false;
   const stacks = powerAmount(enemy, "STEAM_ERUPTION_POWER");
-  const eruptionNow = stacks > 0 ? stacks : Math.max(12, 15 + 3 * (turn - 2));
+  // Stacks and their gain a turn at this ascension (monster DB; A8 15 on T2, A9 20, +3 a turn).
+  const eruption = eruptionSchedule(asc);
+  const eruptionNow = stacks > 0 ? stacks : Math.max(eruptionAt(1, asc, eruption), eruptionAt(turn, asc, eruption));
   const heal = asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
   const schedule = siphonSchedule();
   // Healed so far: every Siphon before this turn (one at full HP heals less; rare past T4).
   let healed = 0;
   for (let t = schedule.first; t < turn; t += schedule.period) healed += heal;
   const perTurn = turn > 1 ? Math.max(5, (maxHp - hp + healed) / (turn - 1)) : ERUPTION_FALLBACK_DAMAGE;
-  const projected = eruptionNow + 3 * giantTurnsToKill(hp, perTurn, turn, heal, schedule);
-  return projected >= playerHp + ERUPTION_BLOCK;
+  const enemyTurns = giantTurnsToKill(hp, perTurn, turn, heal, schedule) - 1;
+  const eruptionAtKill = eruptionNow + eruption.perTurn * enemyTurns;
+  const loss = lossPerTurn ?? bossLossPerTurn(bossProfile("WATERFALL_GIANT")!, asc).value;
+  const hpAtKill = playerHp - loss * enemyTurns;
+  return eruptionAtKill >= hpAtKill + ERUPTION_BLOCK;
 }
 
 /** Hallway enemies fought like elites. */
@@ -651,6 +666,14 @@ export interface FactContext {
   enemies: EnemySim[];
   /** Expected attack damage next turn per enemy index (move model), null when unknown. */
   nextThreat: Map<number, number | null>;
+  /**
+   * Illusions (ILLUSION_POWER, the Parafright) come back at full HP the turn after they die and hit with
+   * their usual move (move-model revivingForecast; the rollout revives them the same way, 115b517): that
+   * hit per living illusion's index, for a line that kills it, and summed over the illusions already dead
+   * on the board (revivingIllusions). Absent: no illusion.
+   */
+  revivingThreat?: Map<number, number | null>;
+  revivedThreat?: number | null;
   /** No living enemy shows an attack intent this turn. */
   noAttack: boolean;
 }
@@ -669,15 +692,23 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   const keyKills = o.kills.filter((name) => key.has(name));
   // Next turn's expected hit, from the move model, for the enemies this line leaves alive; Weak the
   // line leaves on an enemy cuts its hit by a quarter.
+  // An illusion the line kills is back next turn at full HP, its debuffs gone (FA82FQHSJG2F F27: killed
+  // turn after turn, it hit again every time); one already dead now is back too.
   let threat = 0;
   let known = false;
   for (const enemy of ctx.enemies) {
     const after = o.enemyHpAfter.find((entry) => entry.index === enemy.index);
-    if (o.winsFight || (after && after.hp <= 0)) continue;
-    const next = ctx.nextThreat.get(enemy.index);
+    if (o.winsFight) continue;
+    const killed = after !== undefined && after.hp <= 0;
+    if (killed && !enemy.illusion) continue;
+    const next = killed ? ctx.revivingThreat?.get(enemy.index) : ctx.nextThreat.get(enemy.index);
     if (next === null || next === undefined) continue;
     known = true;
-    threat += next * ((after?.weak ?? 0) > 0 ? 0.75 : 1);
+    threat += next * (!killed && (after?.weak ?? 0) > 0 ? 0.75 : 1);
+  }
+  if (!o.winsFight && ctx.revivedThreat !== undefined && ctx.revivedThreat !== null) {
+    known = true;
+    threat += ctx.revivedThreat;
   }
   const scaling: string[] = [];
   if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
@@ -1781,7 +1812,19 @@ function planTurn(env: DecisionEnv): Decision | null {
     const nextThreat = new Map<number, number | null>(
       liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
     );
-    const ctx: FactContext = { maxHp: playerSim.maxHp, hand, enemies, nextThreat, noAttack: enemies.every((enemy) => enemy.attacks.length === 0) };
+    const illusions = liveEnemies.filter((enemy) => powerAmount(enemy, "ILLUSION_POWER") > 0);
+    const dead = revivingIllusions(combat).map((enemy) => revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null).filter((hit): hit is number => hit !== null);
+    const ctx: FactContext = {
+      maxHp: playerSim.maxHp,
+      hand,
+      enemies,
+      nextThreat,
+      noAttack: enemies.every((enemy) => enemy.attacks.length === 0),
+      ...(illusions.length > 0
+        ? { revivingThreat: new Map(illusions.map((enemy) => [numOrNull(enemy["index"]) ?? liveEnemies.indexOf(enemy), revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null])) }
+        : {}),
+      ...(dead.length > 0 ? { revivedThreat: dead.reduce((sum, hit) => sum + hit, 0) } : {}),
+    };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
       jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });

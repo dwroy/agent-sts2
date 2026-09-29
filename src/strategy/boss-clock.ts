@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHpAt, moveBaseDamages, powerScheduleAt } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
@@ -81,7 +81,7 @@ export const BOSSES: Record<string, BossProfile> = {
   THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "9 Slippery stacks: multi-hit", mechanic: "Slippery 9: its next 9 HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption 12+3 a turn explodes on the kill: a late kill is lethal (ERPH: T14 kill, 51 into 25 HP)" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3; experience giant-explode), with HP plus that turn's block above the stacks (ERPH: T14 kill, 51 into 25 HP)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -154,14 +154,44 @@ export function bossHpSource(profile: BossProfile & { id?: string }, ascension: 
   return db.exact ? `(A${db.asc})` : `(A${ascension} not logged: A${db.asc}'s)`;
 }
 
-/** The profile's note with the DB numbers at this ascension (the Kin's priest and followers, the Test Subject's phases). */
+/** The profile's note with the DB numbers at this ascension (the Kin's priest and followers, the Test Subject's phases, the Giant's Siphon and Pressure Gun). */
 export function bossNote(profile: BossProfile & { id?: string }, ascension: number): string {
   const part = (id: string) => (profile.id ? bossHpAt(profile.id, ascension, [id])?.hp : undefined);
   const follower = part("KIN_FOLLOWER");
+  const giant = giantNumbers(ascension);
   return profile.note
     .replace("{KIN_PRIEST}", String(part("KIN_PRIEST") ?? (ascension >= 8 ? 199 : 190)))
     .replace("{KIN_FOLLOWER}", String(follower !== undefined ? Math.round(follower / 2) : ascension >= 8 ? 62 : 59))
-    .replace("{PHASES}", testSubjectPhases(ascension).join("/"));
+    .replace("{PHASES}", testSubjectPhases(ascension).join("/"))
+    .replace("{SIPHON}", `${giant.siphon} HP`)
+    .replace("{GUN}", giant.gun.join("/"));
+}
+
+/**
+ * HP a Siphon heals (the monster DB has its turns, not its amount). Logged states.jsonl, the Giant's HP
+ * across a Siphon turn: +10 at A0-A7 (28), +15 at A8 (41) and at A9 (8V0H, HEAC, 9Q7V, YQL8); less only
+ * near full HP.
+ */
+export const SIPHON_HEAL = { base: 10, a8: 15 };
+
+/** Pressure Gun's first shot and its gain a use when the DB has none (A8: 20, 25, 30). */
+const GUN_FALLBACK = { first: 20, step: 5 };
+
+/**
+ * The Waterfall Giant's numbers at this ascension, for the texts the models read: its HP (monster DB),
+ * Siphon's heal, and the three Pressure Gun shots (T5/T10/T15: the DB's base damages at this ascension,
+ * A8 20/25/30, A9 23/28/33; the lowest is the first, the gap between logged ones the gain a use).
+ */
+export function giantNumbers(ascension: number): { hp: number; siphon: number; gun: number[] } {
+  const bases = moveBaseDamages("WATERFALL_GIANT", "PRESSURE_GUN_MOVE", ascension);
+  const gaps = bases.slice(1).map((value, i) => value - bases[i]!).filter((gap) => gap > 0);
+  const first = bases[0] ?? GUN_FALLBACK.first;
+  const step = gaps.length > 0 ? Math.min(...gaps) : GUN_FALLBACK.step;
+  return {
+    hp: bossHpAt("WATERFALL_GIANT", ascension)?.hp ?? (ascension >= 8 ? 250 : 240),
+    siphon: ascension >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base,
+    gun: [first, first + step, first + 2 * step],
+  };
 }
 
 /**
@@ -499,13 +529,52 @@ export function survivableTurns(profile: BossProfile, entryHp: number, lossPerTu
   return Math.max(1, Math.floor(entryHp / Math.max(1, lossPerTurn)));
 }
 
-/**
- * Waterfall Giant: killed on turn T it explodes for 12 + 3(T-1). Surviving it with ~12 block needs
- * entry - loss*T + 12 >= 12 + 3(T-1), so T <= (entry + 3) / (3 + loss) (ERPH: 66 HP -> T9, not 11).
- */
-export function eruptionTurns(entryHp: number, lossPerTurn: number): number {
-  return Math.max(3, Math.floor((entryHp + 3) / (3 + lossPerTurn)));
+/** Steam Eruption as logged at A8 (6189FSNEN1MZ: 15 on T2, 36 on T9): only when the monster DB has no per-ascension numbers. */
+const ERUPTION_FALLBACK = { first: 15, firstTurn: 2, perTurn: 3 };
+/** Block we assume against the explosion turn. */
+const ERUPTION_SURVIVAL_BLOCK = 12;
+
+export interface EruptionSchedule {
+  /** Stacks first seen on `firstTurn` (after its T1 Pressurize), and the gain with each move after. */
+  first: number;
+  firstTurn: number;
+  perTurn: number;
+  source: string;
 }
+
+/**
+ * The Waterfall Giant's Steam Eruption at this ascension from the monster DB (powerScheduleAt: first seen
+ * on T2 at 15 up to A8, 20 at A9, +3 a turn at both; 1VX145UJM8RZ A9: 20 on T2, 47 on T11), the nearest
+ * logged ascension when this one is not; the logged A8 numbers only when the DB has none.
+ */
+export function eruptionSchedule(ascension: number): EruptionSchedule {
+  const db = powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", ascension);
+  if (!db) return { ...ERUPTION_FALLBACK, source: "logged A8 (no DB numbers)" };
+  return { first: db.first, firstTurn: db.firstTurn, perTurn: db.perTurn, source: db.exact ? `A${db.asc}, n=${db.n}` : `A${ascension} not logged: A${db.asc}'s, n=${db.n}` };
+}
+
+/** Steam Eruption stacks on our turn T at this ascension: what it explodes for when killed on turn T. */
+export function eruptionAt(turn: number, ascension: number, schedule = eruptionSchedule(ascension)): number {
+  return schedule.first + schedule.perTurn * (turn - schedule.firstTurn);
+}
+
+/** The eruption as a formula in the kill turn T ("17+3(T-1)" at A9), for the texts DeepSeek reads. */
+export function eruptionFormula(ascension: number): string {
+  const schedule = eruptionSchedule(ascension);
+  return `${eruptionAt(1, ascension, schedule)}+${schedule.perTurn}(T-1) when killed on turn T (${schedule.source})`;
+}
+
+/**
+ * Waterfall Giant: killed on turn T it explodes for eruptionAt(T) = first + perTurn(T - firstTurn) (A8:
+ * 12 + 3(T-1); A9: 17 + 3(T-1)). Surviving it with ~12 block needs entry - loss*T + 12 >= eruptionAt(T),
+ * so T <= (entry + 12 - first + perTurn*firstTurn) / (perTurn + loss) (A8: (entry + 3) / (3 + loss); ERPH:
+ * 66 HP -> T9, not 11; A9: (entry - 2) / (3 + loss), 1VX1's 82 HP at 5.1 a turn -> T9, not T10).
+ */
+export function eruptionTurns(entryHp: number, lossPerTurn: number, ascension = 8): number {
+  const { first, firstTurn, perTurn } = eruptionSchedule(ascension);
+  return Math.max(3, Math.floor((entryHp + ERUPTION_SURVIVAL_BLOCK - first + perTurn * firstTurn) / (perTurn + lossPerTurn)));
+}
+
 
 /** HP lost a turn in the Test Subject's first phase. */
 const TEST_SUBJECT_PHASE1_LOSS = 3;
@@ -614,7 +683,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     ascension,
     entryHp,
     survivableTurns: survive,
-    mechanic: profile.mechanic,
+    mechanic: profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)),
     note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
     lossPerTurn: loss.value,
@@ -660,7 +729,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   let cap = profile.scriptTurns;
   let capWhy = `script ${profile.scriptTurns}`;
   if (profile.id === "WATERFALL_GIANT") {
-    const eruption = eruptionTurns(entryHp, loss.value);
+    const eruption = eruptionTurns(entryHp, loss.value, ascension);
     if (eruption < cap) {
       cap = eruption;
       capWhy = `eruption kill by T${eruption}`;

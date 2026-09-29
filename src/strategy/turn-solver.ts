@@ -88,6 +88,11 @@ export interface EnemySim {
   burrowed?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
   unmodelled?: boolean;
+  /**
+   * Turns left to kill it, this one included, before the fight ends without a win (the Battleworn
+   * Dummy event's BATTLEWORN_DUMMY_TIME_LIMIT_POWER: 3, 2, 1; SK1USHSB1U7U F43: 144 of 150 dealt).
+   */
+  timeLimit?: number;
   /** Guarded / Soar: damage taken is halved. */
   halved?: boolean;
   /**
@@ -337,6 +342,15 @@ export const WITHER_FUTURE_REDRAWS = 1;
 /** Self-damage weight multiplier on a quiet turn that ends near next turn's hit (JGJS F24 T1). */
 export const QUIET_SELF_DAMAGE_WEIGHT = 3;
 export const NEXT_HIT_MARGIN = 5;
+
+/**
+ * Turns left before a time limit ends the fight, this one included (the lowest timeLimit of a living
+ * enemy: the Battleworn Dummy's 3, 2, 1), or null when there is none.
+ */
+export function turnsLeftOf(input: Pick<SolverInput, "enemies">): number | null {
+  const limits = input.enemies.filter((enemy) => enemy.hp > 0 && (enemy.timeLimit ?? 0) > 0).map((enemy) => enemy.timeLimit!);
+  return limits.length > 0 ? Math.min(...limits) : null;
+}
 
 /** No enemy attacks this turn. */
 export function quietTurn(input: Pick<SolverInput, "enemies">): boolean {
@@ -1851,16 +1865,18 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     score -= strengthCost;
     if ((enemy.enrage ?? 0) > 0) enrageCost += strengthCost;
   }
+  // The last turn before a time limit ends the fight: nothing that pays on a later turn counts.
+  const later = turnsLeftOf(input) === 1 ? 0 : 1;
   if (!winsFight) {
     // Lasting value (Strength, powers) pays off over the rest of the fight: more in long fights,
     // less the later it comes.
-    const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
+    const fightLength = (input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8) * later;
     const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
     score += lastingValue(sim, input, weights) * fightLength * earliness;
-    score += platingValue;
+    score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
     // Exhausted cards are gone for the fight; junk leaves its held penalty behind (counted above).
-    score -= sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
+    score -= later * sim.exhausted.reduce((sum, card) => sum + Math.max(0, exhaustValue(card, weights)), 0);
     // An exhausted Howl fires once (counted above) and goes to the discard pile, not every turn after
     // (N1V2 F48: exhausted T4, fired once, back in hand T7).
     // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over

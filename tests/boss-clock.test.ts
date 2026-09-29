@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { parseGameState } from "../src/mod/schema.js";
 import {
@@ -27,6 +27,9 @@ import {
   damageGap,
   deckDamagePerTurn,
   deckProfileForBoss,
+  eruptionAt,
+  eruptionFormula,
+  eruptionSchedule,
   eruptionTurns,
   gapCardBonus,
   gapRestShift,
@@ -37,6 +40,8 @@ import {
   REGAL_PILLOW_HEAL,
   ringingTurns,
 } from "../src/strategy/boss-clock.js";
+import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
@@ -148,7 +153,10 @@ describe("boss clock", () => {
     const low = bossClock(mapState(starter(), "KAISER_CRAB_BOSS", { ascension: 8 }), testKnowledge, 40)!;
     expect(low.fightTurns).toBeLessThan(full.fightTurns);
     expect(low.need).toBeGreaterThan(full.need);
-    expect(full.survivableTurns).toBe(8);
+    // Survivable turns: the entry HP over the loss a turn (the crab's from the monster DB, refreshed after runs).
+    expect(full.survivableTurns).toBe(Math.floor(80 / full.lossPerTurn));
+    expect(full.survivableTurns).toBeGreaterThanOrEqual(7);
+    expect(full.survivableTurns).toBeLessThanOrEqual(10);
   });
 
   it("64ZB Vantom: A8 HP plus Slippery's 1-damage turns; F7 reads short (old: gap 1)", () => {
@@ -328,10 +336,17 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
     expect(bossHp(profile("THE_KIN"), 7)).toBe(190 + 60);
     expect(bossHp(profile("QUEEN"), 8)).toBe(419 + 60);
     expect(bossHp(profile("AEONGLASS"), 3)).toBe(512 + 66);
-    // Not logged at A9: A8's, and the note says so.
-    expect(bossHp(profile("THE_INSATIABLE"), 9)).toBe(341);
-    const clock = bossClock(mapState(starter(), "THE_INSATIABLE_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 80)!;
-    expect(clock.hpNote).toMatch(/^341 \(A9 not logged: A8's\)/);
+    // Not logged at A9: A8's, and the note says so (a fixture DB: the real one gains A9 fights with every
+    // refresh; The Insatiable's first came with KY3Y).
+    setMonsterDbForTests({ bosses: { THE_INSATIABLE: { "8": { fights: 23, parts: { THE_INSATIABLE: { median: 341, n: 23 } } } } }, encounters: {}, monsters: {} } as never);
+    try {
+      expect(bossHp(profile("THE_INSATIABLE"), 9)).toBe(341);
+      const clock = bossClock(mapState(starter(), "THE_INSATIABLE_BOSS", { ascension: 9, floor: 25 }), testKnowledge, 80)!;
+      expect(clock.hpNote).toMatch(/^341 \(A9 not logged: A8's\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+    expect(bossHp(profile("THE_INSATIABLE"), 8)).toBe(341);
     // The Test Subject's phases as logged (A8 111 > 212 > 313; A0 100 > 200 > 300).
     expect(testSubjectPhases(8)).toEqual([111, 212, 313]);
     expect(testSubjectPhases(0)).toEqual([100, 200, 300]);
@@ -362,3 +377,101 @@ describe("boss HP and HP loss a turn from the monster DB at the run's ascension"
   });
 });
 
+
+describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 stacks on T2, 47 on T11)", () => {
+  // The monster DB as logged (states.jsonl: first seen on T2 at 15 at A0-A8 and 20 at A9, +3 with every
+  // later move), as a fixture: the real file is refreshed after every run.
+  const steam = (counts: Record<string, Record<string, number>>) => Object.fromEntries(Object.entries(counts).map(([asc, c]) => [asc, { STEAM_ERUPTION_POWER: c }]));
+  const hpAt = (id: string, hp: number, phases?: string) => ({ fights: 5, parts: { [id]: { median: hp, n: 5 } }, ...(phases ? { phases: { [phases]: 1 } } : {}) });
+  const BOSS_HP = {
+    WATERFALL_GIANT: { "7": hpAt("WATERFALL_GIANT", 240), "8": hpAt("WATERFALL_GIANT", 250), "9": hpAt("WATERFALL_GIANT", 250) },
+    TEST_SUBJECT: { "7": hpAt("TEST_SUBJECT", 100, "100 > 200 > 300 (TEST_SUBJECT)"), "8": hpAt("TEST_SUBJECT", 111, "111 > 212 > 313 (TEST_SUBJECT)") },
+  };
+  const GIANT_DB = {
+    bosses: {},
+    encounters: {},
+    monsters: {
+      WATERFALL_GIANT: {
+        powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight_by_asc: { "8": { "15": 27 }, "9": { "20": 4 } }, turn_at_first_sight_by_asc: { "8": { "2": 27 }, "9": { "2": 4 } } } },
+        moves: {
+          PRESSURIZE_MOVE: { turns_seen: { "1": 31 }, self_powers_gained_by_asc: steam({ "8": { "15": 27 }, "9": { "20": 4 } }) },
+          STOMP_MOVE: { turns_seen: { "2": 31, "7": 20 }, self_powers_gained_by_asc: steam({ "8": { "3": 50 }, "9": { "3": 8 } }) },
+          RAM_MOVE: { turns_seen: { "3": 31, "8": 18 }, self_powers_gained_by_asc: steam({ "8": { "3": 46 }, "9": { "3": 8 } }) },
+          // Pressure Gun grows 5 a use: A8 20/25/30, A9 23/28/33 (monster DB base_per_hit).
+          PRESSURE_GUN_MOVE: { turns_seen: { "5": 31, "10": 20 }, damage_by_asc: { "8": { base_per_hit: { "20": 27, "25": 14, "30": 4 } }, "9": { base_per_hit: { "23": 3, "28": 3, "33": 1 } } } },
+        },
+      },
+    },
+  };
+  beforeAll(() => setMonsterDbForTests(GIANT_DB as never));
+  afterAll(() => setMonsterDbForTests(null));
+
+  it("reads the stacks and their gain a turn from the monster DB per ascension", () => {
+    expect(eruptionSchedule(8)).toMatchObject({ first: 15, firstTurn: 2, perTurn: 3 });
+    expect(eruptionSchedule(9)).toMatchObject({ first: 20, firstTurn: 2, perTurn: 3 });
+    // 6189FSNEN1MZ (A8): 15 on T2, 36 on T9; N7SAK (A8) killed on T14 at 51; 1VX1 (A9) killed on T11 at 47.
+    expect(eruptionAt(9, 8)).toBe(36);
+    expect(eruptionAt(14, 8)).toBe(51);
+    expect(eruptionAt(2, 9)).toBe(20);
+    expect(eruptionAt(11, 9)).toBe(47);
+    expect(eruptionFormula(8)).toMatch(/^12\+3\(T-1\)/);
+    expect(eruptionFormula(9)).toMatch(/^17\+3\(T-1\)/);
+  });
+
+  it("an ascension with no logged Giant takes the nearest logged one's numbers, and says so", () => {
+    const monsters = {
+      WATERFALL_GIANT: {
+        powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight_by_asc: { "7": { "15": 3 } }, turn_at_first_sight_by_asc: { "7": { "2": 3 } } } },
+        moves: {
+          PRESSURIZE_MOVE: { turns_seen: { "1": 3 }, self_powers_gained_by_asc: { "7": { STEAM_ERUPTION_POWER: { "15": 3 } } } },
+          STOMP_MOVE: { turns_seen: { "2": 3, "7": 2 }, self_powers_gained_by_asc: { "7": { STEAM_ERUPTION_POWER: { "3": 5 } } } },
+        },
+      },
+    };
+    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, monsters)).toEqual({ first: 15, firstTurn: 2, perTurn: 3, asc: 7, exact: false, n: 3 });
+    // Without per-ascension numbers there is nothing to read.
+    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, { WATERFALL_GIANT: { powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight: { "15": 3 } } } } })).toBeNull();
+  });
+
+  it("caps the clock's fight by the ascension's eruption: A9's kill turn comes a turn earlier", () => {
+    // 1VX1: 82 HP entry at 5.1 a turn: A8 (82 + 3) / 8.1 -> T10; A9 (82 - 2) / 8.1 -> T9.
+    expect(eruptionTurns(82, 5.1, 8)).toBe(10);
+    expect(eruptionTurns(82, 5.1, 9)).toBe(9);
+    const a8 = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 82)!;
+    const a9 = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 9, floor: 5, act_id: "0" }), testKnowledge, 82)!;
+    expect(a8.turnsNote).toContain(`eruption kill by T${eruptionTurns(82, a8.lossPerTurn, 8)}`);
+    expect(a9.turnsNote).toContain(`eruption kill by T${eruptionTurns(82, a9.lossPerTurn, 9)}`);
+    expect(a9.fightTurns).toBeLessThan(a8.fightTurns);
+    // What DeepSeek reads: the ascension's formula, not A8's "12+3".
+    expect(a9.mechanic).toMatch(/^eruption 17\+3\(T-1\) when killed on turn T \(A9, n=\d+\)/);
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 9)).toContain("A9：第 2 回合 20，每回合 +3");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("A8：第 2 回合 15，每回合 +3");
+  });
+
+  it("the Giant's and the Test Subject's notes carry the ascension's numbers and the experience base's advice", () => {
+    setMonsterDbForTests({ ...GIANT_DB, bosses: BOSS_HP } as never);
+    // Run journal (DeepSeek): HP, Siphon's heal, Pressure Gun's shots at this ascension; early kill.
+    const a9 = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
+    expect(a9).toMatch(/^250 血，/);
+    expect(a9).toContain("虹吸回合回血 15");
+    expect(a9).toContain("依次 23→28→33");
+    expect(a9).toContain("A8 T10 前击杀 13/15 赢");
+    expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("依次 20→25→30");
+    const a7 = journalBossNote("WATERFALL_GIANT_BOSS", 7)!;
+    expect(a7).toMatch(/^240 血，/);
+    expect(a7).toContain("虹吸回合回血 10");
+    // ts-phase3: phase 3's Intangible comes every other turn; big hits on the open turns, not many small ones.
+    const ts = journalBossNote("TEST_SUBJECT_BOSS", 8)!;
+    expect(ts).toContain("三阶段 HP 111/212/313");
+    expect(ts).toContain("开放回合全力输出");
+    expect(ts).not.toMatch(/三阶段无实体，靠多段/);
+    expect(journalBossNote("TEST_SUBJECT_BOSS", 7)).toContain("三阶段 HP 100/200/300");
+    // Boss clock (DeepSeek's boss_note and harder_because).
+    const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
+    expect(bossNote(giant, 9)).toContain("Siphon heals 15 HP; Pressure Gun on T5/T10/T15 (23/28/33)");
+    expect(bossNote(giant, 7)).toContain("Siphon heals 10 HP; Pressure Gun on T5/T10/T15 (20/25/30)");
+    const clock = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 5, act_id: "0" }), testKnowledge, 80)!;
+    expect(clock.mechanic).toContain("kill it early (A8: killed by T10 13/15 won, T13-T15 5/7, T16 or later 0/3");
+    setMonsterDbForTests(GIANT_DB as never);
+  });
+});

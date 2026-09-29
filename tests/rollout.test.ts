@@ -652,3 +652,193 @@ describe("powers played in the line stay up in later rollout turns (0B5Y F33 T1:
     expect(line.perTurn[0]!.loss.mean).toBe(2);
   });
 });
+
+describe("enemy Vigor (XLJQ6FPQAU7N F7: Thrash's Vigor 6 made Crash 18 + 6)", () => {
+  const EEL: EnemyTable = {
+    moves: {
+      THRASH_MOVE: { damage: 4, hits: 3, strength: 0, block: 0, vigor: 6 },
+      CRASH_MOVE: { damage: 18, hits: 1, strength: 0, block: 0 },
+      TERROR_MOVE: { damage: 0, hits: 1, strength: 0, block: 0 },
+    },
+    next: { THRASH_MOVE: { CRASH_MOVE: 1 }, CRASH_MOVE: { TERROR_MOVE: 1 }, TERROR_MOVE: { CRASH_MOVE: 1 }, STUNNED: { TERROR_MOVE: 1 } },
+  };
+  const run = (move: string, powers: Record<string, number>, attacks: { damage: number; hits: number }[], extra: Partial<EnemySim> = {}) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200 },
+      enemies: [{ index: 0, name: "Terror Eel", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks, ...extra }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "TERROR_EEL", move, strength: 0, powers }],
+      tables: { TERROR_EEL: EEL },
+    }).lines[0]!;
+  };
+  const lossOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.loss.mean;
+
+  it("Vigor up now lands on its next attack, then is spent", () => {
+    // Terror now (no attack), Crash on turn 2 with the Vigor, Terror, Crash on turn 4 without it.
+    const vigor = run("TERROR_MOVE", { VIGOR_POWER: 6 }, []);
+    expect(lossOn(vigor, 2)).toBe(24);
+    expect(lossOn(vigor, 3)).toBe(0);
+    expect(lossOn(vigor, 4)).toBe(18);
+    expect(lossOn(run("TERROR_MOVE", {}, []), 2)).toBe(18);
+  });
+
+  it("Thrash gives itself Vigor: the Crash after it hits for 18 + 6", () => {
+    expect(lossOn(run("THRASH_MOVE", {}, [{ damage: 4, hits: 3 }]), 2)).toBe(24);
+  });
+
+  it("stunned by Shriek on this turn, it keeps its Vigor and goes on from STUNNED", () => {
+    // 80 HP, Shriek at 75: any Strike line crosses it, the shown Crash 24 is cancelled; Terror next, then Crash 24.
+    const line = run("CRASH_MOVE", { VIGOR_POWER: 6, SHRIEK_POWER: 75 }, [{ damage: 24, hits: 1 }], { hp: 80, maxHp: 150, shriek: 75 });
+    expect(line.plan.outcome.incomingAfterBlock).toBe(0);
+    expect(lossOn(line, 2)).toBe(0);
+    expect(lossOn(line, 3)).toBe(24);
+  });
+});
+
+describe("a turn limit ends the rollout unwon (Battleworn Dummy, SK1USHSB1U7U F43)", () => {
+  const NOTHING: EnemyTable = { moves: { NOTHING_MOVE: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { NOTHING_MOVE: { NOTHING_MOVE: 1 } } };
+  const run = (hp: number, limit: number | undefined) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      enemies: [{ index: 0, name: "Dummy", hp, maxHp: 150, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...(limit ? { timeLimit: limit } : {}) }],
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "BATTLE_FRIEND_V2", move: "NOTHING_MOVE", strength: 0, powers: limit ? { BATTLEWORN_DUMMY_TIME_LIMIT_POWER: limit } : {} }],
+      tables: { BATTLE_FRIEND_V2: NOTHING },
+    }).lines[0]!;
+  };
+
+  it("18 a turn into 150 HP with 3 turns left: out of time on turn 3, never won", () => {
+    const line = run(150, 3);
+    expect(line.wins).toBe(0);
+    expect(line.winProb).toBe(0);
+    expect(line.timeUps).toBe(line.samples);
+    expect(line.turnsToWin).toBe(3);
+    // Nothing is simulated past the limit.
+    expect(line.perTurn.find((t) => t.turn === 4)!.fighting).toBe(0);
+    // With 2 turns left it ends a turn sooner; without a limit the harmless dummy reads as a win.
+    expect(run(150, 2).turnsToWin).toBe(2);
+    expect(run(150, undefined).winProb).toBeGreaterThan(0.5);
+  });
+
+  it("a dummy the deck can finish in time is a win", () => {
+    const line = run(50, 3);
+    expect(line.wins).toBe(line.samples);
+    expect(line.timeUps).toBeUndefined();
+  });
+});
+
+describe("debuffs enemy moves put on us carry into the rollout's later turns (XLJQ6FPQAU7N F7 T6: Terror's 99 Vulnerable)", () => {
+  const EEL: EnemyTable = {
+    moves: {
+      CRASH_MOVE: { damage: 18, hits: 1, strength: 0, block: 0 },
+      TERROR_MOVE: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { VULNERABLE_POWER: 99 } },
+    },
+    next: { CRASH_MOVE: { TERROR_MOVE: 1 }, TERROR_MOVE: { CRASH_MOVE: 1 } },
+  };
+  const run = (table: EnemyTable, move: string, powers: Record<string, number>, draw: CardModel[], hp = 200) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp, maxHp: 200 },
+      enemies: [{ index: 0, name: "E", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "elite",
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw, discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move, strength: 0, powers }],
+      tables: { E: table },
+    }).lines[0]!;
+  };
+  const lossOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.loss.mean;
+  const strikes = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => strike(i));
+
+  it("Terror's Vulnerable: the Crash after it hits x1.5 (18 + 6 Vigor = 36, as it did)", () => {
+    expect(lossOn(run(EEL, "TERROR_MOVE", {}, strikes), 2)).toBe(27);
+    expect(lossOn(run(EEL, "TERROR_MOVE", { VIGOR_POWER: 6 }, strikes), 2)).toBe(36);
+    // And the 99 lasts: the next Crash (turn 4) too.
+    expect(lossOn(run(EEL, "TERROR_MOVE", {}, strikes), 4)).toBe(27);
+  });
+
+  it("Frail cuts our card block, Weak our attacks, a drain our Strength", () => {
+    const spores: EnemyTable = {
+      moves: { SPORES: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { FRAIL_POWER: 2 } }, HIT: { damage: 10, hits: 1, strength: 0, block: 0 } },
+      next: { SPORES: { HIT: 1 }, HIT: { SPORES: 1 } },
+    };
+    const defends = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => defend(i));
+    // Three Defends: 15 block unFrailed, 3 x floor(5 x 0.75) = 9 under Frail: 1 through.
+    expect(lossOn(run(spores, "SPORES", {}, defends), 2)).toBe(1);
+    expect(lossOn(run({ ...spores, moves: { ...spores.moves, SPORES: { ...spores.moves["SPORES"]!, playerPowers: {} } } }, "SPORES", {}, defends), 2)).toBe(0);
+    const weak: EnemyTable = { moves: { GOOP: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { WEAK_POWER: 2 } } }, next: { GOOP: { GOOP: 1 } } };
+    const drain: EnemyTable = { moves: { SIPHON: { damage: 0, hits: 1, strength: 0, block: 0, playerPowers: { STRENGTH_POWER: -2 } } }, next: { SIPHON: { SIPHON: 1 } } };
+    const plain: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const dmgOn = (line: ReturnType<typeof run>, turn: number) => line.perTurn.find((t) => t.turn === turn)!.dmg.mean;
+    expect(dmgOn(run(plain, "WAIT", {}, strikes), 2)).toBe(18);
+    expect(dmgOn(run(weak, "GOOP", {}, strikes), 2)).toBe(12);
+    expect(dmgOn(run(drain, "SIPHON", {}, strikes), 2)).toBe(12);
+  });
+
+  it("the real DB: Terror puts 99 Vulnerable on us", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const db = JSON.parse(readFileSync(join(ROOT, "src/knowledge/monster-db.json"), "utf8")) as { monsters: Record<string, never> };
+    expect(enemyTable("TERROR_EEL", 9, db.monsters, {})!.moves["TERROR_MOVE"]!.playerPowers).toEqual({ VULNERABLE_POWER: 99 });
+  });
+});
+
+describe("Plating wears off one stack a turn in the rollout (「覆甲会在你的回合开始时减少1层」)", () => {
+  const HIT: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+  const run = (playerPowers: Record<string, number>, endTurnBlock: number, hand: CardModel[]) => {
+    const input = scenario(1e9, fakeClock(0.01));
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 200, maxHp: 200, endTurnBlock },
+      enemies: [{ index: 0, name: "E", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 1 }] }],
+    };
+    return rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24].map((i) => strike(i)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "HIT", strength: 0, powers: {} }],
+      tables: { E: HIT },
+      playerPowers,
+    }).lines[0]!;
+  };
+  const losses = (line: ReturnType<typeof run>) => line.perTurn.map((t) => t.loss.mean);
+  const strikes = [strike(0), strike(1), strike(2), strike(3), strike(4)];
+
+  it("Plating 3 now: 2, 1, 0 block at the end of the next turns; Metallicize 3 stays", () => {
+    expect(losses(run({ PLATING_POWER: 3 }, 3, strikes))).toEqual([8, 9, 10, 10]);
+    expect(losses(run({ METALLICIZE_POWER: 3 }, 3, strikes))).toEqual([7, 7, 7, 7]);
+  });
+
+  it("Plating played in the line (Stone Armor 4) decays the same way", () => {
+    const armor = card(0, "STONE_ARMOR", { type: "Power", target: "self", validTargets: [], plating: 4, special: "plating" });
+    const line = run({}, 0, [armor, strike(1), strike(2), strike(3), strike(4)]);
+    expect(line.plan.steps.map((step) => step.cardId)).toContain("STONE_ARMOR");
+    expect(losses(line)).toEqual([7, 8, 9, 10]);
+  });
+});

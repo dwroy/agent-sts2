@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { moveDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { moveDamageAt, nearestAscension, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -35,6 +35,7 @@ import {
   gateFor,
   killOrders,
   loadFightValueGates,
+  PLAYER_DEBUFFS,
   rolloutDecision,
   type DeckSummary,
   type EnemyTable,
@@ -47,6 +48,7 @@ import {
   type LineEstimate,
   type OrderEstimate,
   type MoveModelData,
+  type PlayerDebuff,
   type RolloutEnemy,
   type RolloutResult,
 } from "./rollout.js";
@@ -112,6 +114,22 @@ function mode(counts: Record<string, number> | undefined): number | null {
   return best ? Number(best[0]) : null;
 }
 
+/**
+ * The powers a move puts on us (rollout.ts PLAYER_DEBUFFS): the most common amount of each in the monster
+ * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
+ * DB has no per-ascension split (Terror Eel's Terror: Vulnerable 99 at every ascension).
+ */
+export function playerPowersOf(entry: MoveEntry, asc: number): { playerPowers?: Partial<Record<PlayerDebuff, number>> } {
+  const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
+  const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
+  const out: Partial<Record<PlayerDebuff, number>> = {};
+  for (const id of PLAYER_DEBUFFS) {
+    const amount = mode(counts[id]);
+    if (amount) out[id] = amount;
+  }
+  return Object.keys(out).length > 0 ? { playerPowers: out } : {};
+}
+
 /** An enemy's move table for the rollout: monster DB damage/hits/Strength/Block per move, move-model successors. */
 export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveModelData): EnemyTable | undefined {
   const moves = db[id]?.moves;
@@ -130,6 +148,8 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
       block: mode(entry.block_gained) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
+      ...(mode(entry.self_powers_gained?.["VIGOR_POWER"]) ? { vigor: mode(entry.self_powers_gained?.["VIGOR_POWER"])! } : {}),
+      ...playerPowersOf(entry, asc),
       ...(logged?.estimated ? { estimated: true } : {}),
     };
   }
@@ -423,7 +443,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order) {

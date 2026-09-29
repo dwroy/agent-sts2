@@ -33,6 +33,13 @@ export interface MoveEntry {
   next?: Record<string, number>;
   damage_by_asc?: Record<string, { base_per_hit?: Record<string, number>; hits?: Record<string, number>; shown?: Record<string, number> }>;
   self_powers_gained?: Record<string, Record<string, number>>;
+  /** The same deltas by ascension: asc -> power id -> {delta: n}. */
+  self_powers_gained_by_asc?: Record<string, Record<string, Record<string, number>>>;
+  /** Debuffs the move put on us (and Strength/Dexterity it drained): power id -> {delta: n}. */
+  player_powers_applied?: Record<string, Record<string, number>>;
+  player_powers_applied_by_asc?: Record<string, Record<string, Record<string, number>>>;
+  /** Surrounded (Kaiser Crab): the logged turns the move came from behind us (x1.5) and from in front. */
+  back_attack_by_asc?: Record<string, { behind?: number; facing?: number }>;
   status_cards?: Record<string, number>;
 }
 
@@ -40,7 +47,18 @@ interface MonsterEntry {
   name?: { zh?: string };
   kind?: string;
   moves?: Record<string, MoveEntry>;
-  powers?: Record<string, { name?: string; type?: string; n_fights?: number; amount_at_first_sight?: Record<string, number> }>;
+  powers?: Record<
+    string,
+    {
+      name?: string;
+      type?: string;
+      n_fights?: number;
+      amount_at_first_sight?: Record<string, number>;
+      /** asc -> {amount: n}: each instance's first logged amount, and the turn it was on. */
+      amount_at_first_sight_by_asc?: Record<string, Record<string, number>>;
+      turn_at_first_sight_by_asc?: Record<string, Record<string, number>>;
+    }
+  >;
   hp_by_asc?: Record<string, Range>;
 }
 
@@ -144,6 +162,27 @@ export interface MoveDamage {
   /** Moves the ratio was measured on, and whether they are this monster's own (else every monster's). */
   ratioN?: number;
   ratioOwn?: boolean;
+  /**
+   * Surrounded (the Kaiser Crab's claws): the move's base at this ascension and the share of the logged
+   * turns it came from behind us (x1.5); perHit is then the hit as it lands on average.
+   */
+  base?: number;
+  backAttackShare?: number;
+}
+
+/**
+ * Surrounded (the Kaiser Crab's claws, BACK_ATTACK_LEFT/RIGHT_POWER): the share of the logged turns this
+ * move came from behind us, for x1.5 (monster DB back_attack_by_asc, pooled over ascensions: which claw we
+ * face is our play, not the monster's). null for a move never logged under Surrounded.
+ */
+export function backAttackShare(move: MoveEntry | undefined): number | null {
+  let behind = 0;
+  let facing = 0;
+  for (const counts of Object.values(move?.back_attack_by_asc ?? {})) {
+    behind += counts.behind ?? 0;
+    facing += counts.facing ?? 0;
+  }
+  return behind + facing > 0 ? behind / (behind + facing) : null;
 }
 
 function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
@@ -154,7 +193,7 @@ function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
 /**
  * How much harder the moves hit at `to` than at `from`: summed base damage per hit at `to` over at
  * `from`, over the moves logged at both: the monster's own when it has any, else every monster's (A8 -> A9:
- * 110 of 122 moves hit harder, e.g. Crusher's Guarded Strike 19 -> 22). null when no move is logged at both.
+ * 110 of 122 moves hit harder, e.g. Crusher's Guarded Strike 12 -> 14 before the back attack). null when no move is logged at both.
  */
 export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: string, from: number, to: number): { ratio: number; n: number; own: boolean } | null {
   const pairs = (ids: string[]) =>
@@ -173,19 +212,26 @@ export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: strin
 /**
  * A move's damage at `asc`: as logged there, else the nearest logged ascension's scaled by the measured
  * ratio (ascensionDamageRatio), rounded and marked estimated. null when the move has no logged damage.
+ * A Surrounded back-attack move (Kaiser Crab) is its base times 1 + 0.5 x the share of the logged turns it
+ * came from behind (backAttackShare): the rollout's later turns and the boss clock do not track which claw
+ * we face (A8 Laser: base 31, 49 from behind on 83% of turns; the DB used to call 47 its base).
  */
 export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
   const move = monsters[monsterId]?.moves?.[moveId];
   const withBase = Object.fromEntries(Object.entries(move?.damage_by_asc ?? {}).filter(([, entry]) => mode(entry.base_per_hit) !== null));
   const found = nearestAscension(withBase, asc);
   if (!move || !found) return null;
-  const base = basePerHit(move, found.key)!;
+  const logged = basePerHit(move, found.key)!;
   const hits = Number(mode(move.damage_by_asc![found.key]!.hits) ?? 1);
   const from = Number(found.key);
-  if (found.exact) return { perHit: base, hits, estimated: false, from, ratio: 1 };
+  const share = backAttackShare(move);
+  const behind = (base: number) => (share === null ? {} : { base, backAttackShare: share });
+  const average = (base: number) => (share === null ? base : Math.round(base * (1 + 0.5 * share)));
+  if (found.exact) return { perHit: average(logged), hits, estimated: false, from, ratio: 1, ...behind(logged) };
   const measured = ascensionDamageRatio(monsters, monsterId, from, asc);
   const ratio = measured?.ratio ?? 1;
-  return { perHit: Math.round(base * ratio), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}) };
+  const base = Math.round(logged * ratio);
+  return { perHit: average(base), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}), ...behind(base) };
 }
 
 /**
@@ -307,7 +353,9 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
   const parts: string[] = [move.name || id];
   const damage = moveDamageAt(load().monsters, monsterId, id, asc);
   if (damage) {
-    const text = damage.hits > 1 ? `${damage.perHit}×${damage.hits}` : String(damage.perHit);
+    const shown = damage.base ?? damage.perHit;
+    const behind = damage.backAttackShare !== undefined ? ` (在背后 ×1.5 = ${Math.floor(shown * 1.5)}，记录中 ${pct(damage.backAttackShare)} 的回合在背后)` : "";
+    const text = `${damage.hits > 1 ? `${shown}×${damage.hits}` : String(shown)}${behind}`;
     // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so.
     parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
@@ -316,6 +364,61 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
   return parts.join(" ");
+}
+
+/** A power a monster stacks on itself turn after turn, at an ascension (powerScheduleAt). */
+export interface PowerSchedule {
+  /** The amount it is first seen with, on turn `firstTurn`. */
+  first: number;
+  firstTurn: number;
+  /** What each later move adds. */
+  perTurn: number;
+  /** The logged ascension the numbers come from, whether it is the one asked for, and the fights behind `first`. */
+  asc: number;
+  exact: boolean;
+  n: number;
+}
+
+/**
+ * A power a monster stacks on itself every turn (the Waterfall Giant's Steam Eruption: first seen on T2
+ * at 15 up to A8 and 20 at A9, +3 with every move after) at `asc`: the amount it is first seen with and
+ * the turn that is on (amount/turn_at_first_sight_by_asc), and the most common gain its later moves put
+ * on it (self_powers_gained_by_asc; the move that first gives it, seen only before that turn, left out).
+ * This ascension's logs, else the nearest logged one's. null when the DB has no per-ascension numbers.
+ */
+export function powerScheduleAt(monsterId: string, powerId: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): PowerSchedule | null {
+  const monster = monsters[monsterId];
+  const power = monster?.powers?.[powerId];
+  const found = nearestAscension(power?.amount_at_first_sight_by_asc, asc);
+  if (!power || !found) return null;
+  const firstCounts = power.amount_at_first_sight_by_asc![found.key]!;
+  const first = Number(mode(firstCounts));
+  const firstTurn = Number(mode(power.turn_at_first_sight_by_asc?.[found.key]) ?? NaN);
+  if (!Number.isFinite(first) || !Number.isFinite(firstTurn)) return null;
+  const gains: Record<string, number> = {};
+  for (const move of Object.values(monster.moves ?? {})) {
+    const seen = Object.keys(move.turns_seen ?? {}).filter((key) => /^\d+$/.test(key)).map(Number);
+    if (seen.length > 0 && seen.every((turn) => turn < firstTurn)) continue;
+    const byAsc = move.self_powers_gained_by_asc;
+    const at = nearestAscension(Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, powers]) => powers[powerId])), Number(found.key));
+    for (const [delta, n] of Object.entries(at ? byAsc![at.key]![powerId]! : {})) gains[delta] = (gains[delta] ?? 0) + n;
+  }
+  const perTurn = Number(mode(gains) ?? NaN);
+  if (!Number.isFinite(perTurn)) return null;
+  const n = Object.values(firstCounts).reduce((sum, count) => sum + count, 0);
+  return { first, firstTurn, perTurn, asc: Number(found.key), exact: found.exact, n };
+}
+
+/**
+ * Every base damage per hit logged for a move at `asc` (the nearest logged ascension when not this one),
+ * ascending: a move that grows each use (the Waterfall Giant's Pressure Gun, A8 20/25/30, A9 23/28/33).
+ */
+export function moveBaseDamages(monsterId: string, moveId: string, asc: number): number[] {
+  const byAsc = load().monsters[monsterId]?.moves?.[moveId]?.damage_by_asc;
+  const withBase = Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, entry]) => Object.keys(entry.base_per_hit ?? {}).length > 0));
+  const found = nearestAscension(withBase, asc);
+  if (!found) return [];
+  return Object.keys(withBase[found.key]!.base_per_hit!).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
 }
 
 /** The fight turns a move was seen on (monster DB `turns_seen`), ascending; empty when unknown. */

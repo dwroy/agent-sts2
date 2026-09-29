@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -79,19 +79,78 @@ describe("a move never logged at this ascension: the nearest one's damage scaled
     expect(moveDamageAt(db, "CLAW", "C", 8)).toMatchObject({ perHit: 15, estimated: false });
   });
 
-  it("the real DB: A9 moves hit harder than A8 on average; The Insatiable (no A9 fight) is scaled and says so", () => {
-    const ratio = ascensionDamageRatio({}, "NONE", 8, 9);
-    expect(ratio).toBeNull();
-    const bite = moveDamageAt(realMonsters(), "THE_INSATIABLE", "LUNGING_BITE_MOVE", 9)!;
-    expect(bite.estimated).toBe(true);
-    expect(bite.from).toBe(8);
-    expect(bite.ratio).toBeGreaterThan(1);
-    expect(bite.perHit).toBe(Math.round(28 * bite.ratio));
-    expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/A9估: A8×\d\.\d\d/);
+  it("the real DB: A9 moves hit harder than A8 on average", () => {
+    expect(ascensionDamageRatio({}, "NONE", 8, 9)).toBeNull();
+    expect(ascensionDamageRatio(realMonsters(), "NONE", 8, 9)!.ratio).toBeGreaterThan(1);
+  });
+
+  it("a boss with no A9 fight is scaled and says so: DB text, dossier, rollout table (a fixture: the real DB gains A9 fights with every refresh)", () => {
+    const monsters: MonsterMoveData = {
+      // Lunging Bite 28 at A8 only; the Crusher's Guarded Strike 19 -> 22 measures the A8 -> A9 ratio.
+      THE_INSATIABLE: { moves: { LUNGING_BITE_MOVE: { ...at({ "8": 28 }), name: "猛扑啃咬", turns_seen: { "1": 3 }, next: { LUNGING_BITE_MOVE: 3 } } } },
+      CRUSHER: { moves: { GUARDED_STRIKE_MOVE: at({ "8": 19, "9": 22 }) } },
+    };
+    const bite = moveDamageAt(monsters, "THE_INSATIABLE", "LUNGING_BITE_MOVE", 9)!;
+    expect(bite).toMatchObject({ estimated: true, from: 8, perHit: Math.round((28 * 22) / 19), ratioOwn: false, ratioN: 1 });
+    expect(bite.ratio).toBeCloseTo(22 / 19, 10);
+    setMonsterDbForTests({ bosses: { THE_INSATIABLE: { "8": { fights: 3, parts: { THE_INSATIABLE: { median: 341, n: 3 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/A9 无记录 \(n=0\)，以下为最近的 A8/);
+      expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/猛扑啃咬 32 \(A9估: A8×1\.16\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
     // The rollout's move table takes the same number and marks it.
-    const table = enemyTable("THE_INSATIABLE", 9, realMonsters() as never, {})!;
-    expect(table.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
-    expect(enemyTable("THE_INSATIABLE", 8, realMonsters() as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
+    expect(enemyTable("THE_INSATIABLE", 9, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
+    expect(enemyTable("THE_INSATIABLE", 8, monsters as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
+  });
+});
+
+describe("the Terror Eel's Vigor reaches the rollout's move table (XLJQ6FPQAU7N F7)", () => {
+  it("Thrash's self-given Vigor is the move's vigor; Crash keeps its base (the builder leaves Vigor turns out of it)", () => {
+    const base = (asc: string, perHit: number, hits = 1) => ({ damage_by_asc: { [asc]: { base_per_hit: { [String(perHit)]: 4 }, hits: { [String(hits)]: 4 } } } });
+    const db = { TERROR_EEL: { moves: { CRASH_MOVE: base("9", 18), THRASH_MOVE: { ...base("9", 4, 3), self_powers_gained: { VIGOR_POWER: { "6": 75 } } } } } };
+    const a9 = enemyTable("TERROR_EEL", 9, db as never, {})!;
+    expect(a9.moves["CRASH_MOVE"]).toMatchObject({ damage: 18, hits: 1 });
+    expect(a9.moves["CRASH_MOVE"]!.vigor).toBeUndefined();
+    expect(a9.moves["THRASH_MOVE"]).toMatchObject({ damage: 4, hits: 3, vigor: 6 });
+  });
+});
+
+describe("Surrounded: a Kaiser Crab claw's base and how often it hit from behind (A9 Laser 35 < A8 47 was A8's back attack)", () => {
+  // Monster DB as the builder now writes it: bases from turns that showed both facings (A8 Laser 31, 49 from
+  // behind; A9 35), and how many logged turns each move came from behind or from in front.
+  const monsters: MonsterMoveData = {
+    ROCKET: {
+      moves: {
+        LASER_MOVE: {
+          name: "激光",
+          turns_seen: { "1": 3 },
+          next: { LASER_MOVE: 3 },
+          damage_by_asc: { "8": { base_per_hit: { "31": 16 }, hits: { "1": 29 } }, "9": { base_per_hit: { "35": 1 }, hits: { "1": 2 } } },
+          back_attack_by_asc: { "8": { behind: 24, facing: 5 }, "9": { behind: 1, facing: 1 } },
+        },
+      },
+    },
+  };
+
+  it("the hit as it lands on average: the base x (1 + 0.5 x the share of turns behind), pooled over ascensions", () => {
+    const share = 25 / 31;
+    expect(backAttackShare(monsters["ROCKET"]!.moves!["LASER_MOVE"])).toBeCloseTo(share, 10);
+    expect(moveDamageAt(monsters, "ROCKET", "LASER_MOVE", 9)).toMatchObject({ base: 35, perHit: Math.round(35 * (1 + 0.5 * share)), estimated: false });
+    expect(moveDamageAt(monsters, "ROCKET", "LASER_MOVE", 8)).toMatchObject({ base: 31, perHit: Math.round(31 * (1 + 0.5 * share)) });
+    // A9 hits harder than A8 on the bases.
+    expect(ascensionDamageRatio(monsters, "ROCKET", 8, 9)!.ratio).toBeCloseTo(35 / 31, 10);
+    // The rollout's table takes the average; the dossier shows the base and the back attack.
+    expect(enemyTable("ROCKET", 9, monsters as never, {})!.moves["LASER_MOVE"]!.damage).toBe(Math.round(35 * (1 + 0.5 * share)));
+    setMonsterDbForTests({ bosses: { KAISER_CRAB: { "9": { fights: 2, parts: { ROCKET: { median: 209, n: 2 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("KAISER_CRAB_BOSS", 9)).toContain("激光 35 (在背后 ×1.5 = 52，记录中 81% 的回合在背后)");
+    } finally {
+      setMonsterDbForTests(null);
+    }
+    // A move never logged under Surrounded is its base.
+    expect(backAttackShare({ damage_by_asc: {} })).toBeNull();
   });
 });
 
