@@ -684,7 +684,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: DeepSeekAnswer, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}) } },
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}) } },
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
           if (!picked.intent || (spec.oneshot && picked.fallback)) {
@@ -713,6 +713,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             ...(deepseekConsistency === undefined ? {} : { consistency: deepseekConsistency }),
             ...(recovered ? { recovered_from_reasoning: recovered.line } : {}),
             ...(answer.cards ? { cards: answer.cards } : {}),
+            ...(answer.route ? { route: answer.route } : {}),
             // A one-shot plan: its reference and steps; this row plays step 1, later steps are their own rows.
             ...(picked.plan ? { plan_id: picked.plan.id, plan: picked.plan.steps, plan_step: 1 } : {}),
           };

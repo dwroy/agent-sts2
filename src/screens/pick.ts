@@ -28,9 +28,25 @@ export interface PickOption {
   apply?: () => void;
   /**
    * One-shot (BUILD_ONESHOT): what DeepSeek's choice of this option plans beyond its own action (the deck
-   * card(s) the next screen takes), given the answer's `cards` list; null when it plans nothing more.
+   * card(s) the next screen takes, the act's route), given the answer's `cards` list and `route` key; null
+   * when it plans nothing more; `invalid` when the answer lacks what the option needs (the answer is then
+   * unusable and the loop falls back).
    */
-  plan?: (cards: string[]) => { id: string; steps: JsonValue; apply?: () => void; journal?: string } | null;
+  plan?: (answer: PlanAnswer) => PlannedOption | { invalid: string } | null;
+}
+
+/** The parts of a one-shot answer beyond its option key. */
+export interface PlanAnswer {
+  cards: string[];
+  route?: string;
+}
+
+/** What a one-shot option plans: its reference, steps, memory effect and run-journal text. */
+export interface PlannedOption {
+  id: string;
+  steps: JsonValue;
+  apply?: () => void;
+  journal?: string;
 }
 
 export interface PickDecisionParams {
@@ -232,9 +248,15 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
         const best = bestOption(params.options);
         return { intent: best.intent, rationale: `no usable DeepSeek answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
       }
-      // A one-shot option names what its follow-up takes: the answer's `cards` ride in the answer's raw.
-      const cards = asArray(asRecord(answer?.raw)["cards"]).filter((card): card is string => typeof card === "string");
-      const planned = chosen.plan?.(cards) ?? null;
+      // A one-shot option names what its follow-up takes: the answer's `cards` and `route` ride in its raw.
+      const raw = asRecord(answer?.raw);
+      const cards = asArray(raw["cards"]).filter((card): card is string => typeof card === "string");
+      const route = typeof raw["route"] === "string" ? raw["route"] : undefined;
+      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}) }) ?? null;
+      if (outcome && "invalid" in outcome) {
+        return { intent: null, rationale: `DeepSeek chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
+      }
+      const planned = outcome;
       const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
         intent: chosen.intent,

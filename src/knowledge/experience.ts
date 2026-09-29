@@ -172,6 +172,8 @@ const TOPICS: [RegExp, string[]][] = [
   [/^selection\/upgrade/, ["rest", "deck"]],
   [/^selection\//, ["deck"]],
   [/^event\/plan/, ["event", "deck"]],
+  // The act-start Ancient with the act's route (BUILD_ONESHOT): the route's topics too.
+  [/^event\/act-plan/, ["event", "deck", "route", "elite", "rest"]],
   [/^event\//, ["event"]],
   [/^(chest|bundle|capstone)\//, ["deck"]],
   [/^combat\//, ["potion"]],
@@ -194,7 +196,7 @@ function monsterMatch(scopeId: string, ids: readonly string[] | undefined): bool
 }
 
 /** Labels whose decision is about the map ahead: the act's elites and hallways rank with the boss. */
-const ROUTE_LABELS = /^(run-plan|map\/|route|rest\/)/;
+const ROUTE_LABELS = /^(run-plan|map\/|route|rest\/|event\/act-plan)/;
 
 export interface SliceInput {
   label: string;

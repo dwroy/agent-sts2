@@ -62,6 +62,8 @@ export interface DeepSeekAnswer {
    * them here; screens/oneshot.ts). Absent otherwise.
    */
   cards?: string[];
+  /** The answer's `route` key, when it gave one (the act-start Ancient's joint question names the act's route). */
+  route?: string;
 }
 
 /** One answer as seen by the consistency guard (JSON-safe, for decisions.jsonl). */
@@ -318,7 +320,7 @@ export class DeepSeekClient implements Escalator {
     }
     first.choice = firstKey;
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
-    if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason, ...cardsOf(first.cards) };
+    if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason, ...extrasOf(first) };
 
     // Suspect answer: ask once more, quoting the contradiction, in the same conversation.
     const firstRecord = consistencyAnswer(first.choice, first.reason, firstCheck);
@@ -326,7 +328,7 @@ export class DeepSeekClient implements Escalator {
     let secondCheck: ConsistencyCheck | null = null;
     let secondChoice = "";
     let secondReason = "";
-    let secondCards: string[] | undefined;
+    let secondExtras: { cards?: string[]; route?: string } = {};
     let meta = done.meta;
     let calls = 1;
     try {
@@ -341,7 +343,7 @@ export class DeepSeekClient implements Escalator {
       parsed.choice = resolveOptionKey(parsed.choice, criteria) ?? parsed.choice;
       secondChoice = parsed.choice;
       secondReason = parsed.reason;
-      secondCards = parsed.cards;
+      secondExtras = parsed;
       secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);
       if (!(parsed.choice in criteria)) secondCheck = { ...secondCheck, ok: false, issues: [...secondCheck.issues, `unknown option "${parsed.choice}"`] };
       second = consistencyAnswer(secondChoice, secondReason, secondCheck);
@@ -350,7 +352,7 @@ export class DeepSeekClient implements Escalator {
     }
 
     if (secondCheck?.ok) {
-      return { ...meta, choice: secondChoice, reason: secondReason, ...cardsOf(secondCards), consistency: { first: firstRecord, second, resolution: "reasked", choice: secondChoice } };
+      return { ...meta, choice: secondChoice, reason: secondReason, ...extrasOf(secondExtras), consistency: { first: firstRecord, second, resolution: "reasked", choice: secondChoice } };
     }
     // Still inconsistent: act on a reasoning conclusion that names exactly one option (the re-ask's first).
     const conclusions = [secondCheck?.conclusion ?? null, firstCheck.conclusion].filter((c): c is NonNullable<typeof c> => c !== null);
@@ -358,8 +360,8 @@ export class DeepSeekClient implements Escalator {
     const conflicting = conclusions.some((c) => c.unambiguous && target !== null && c.option !== target.option);
     if (target && !conflicting) {
       const reason = `reasoning concluded ${target.option}: ${target.line}`.slice(0, 200);
-      const cards = target.option === secondChoice ? secondCards : target.option === first.choice ? first.cards : undefined;
-      return { ...meta, choice: target.option, reason, ...cardsOf(cards), consistency: { first: firstRecord, second, resolution: "conclusion", choice: target.option } };
+      const extras = target.option === secondChoice ? secondExtras : target.option === first.choice ? first : {};
+      return { ...meta, choice: target.option, reason, ...extrasOf(extras), consistency: { first: firstRecord, second, resolution: "conclusion", choice: target.option } };
     }
     throw new DeepSeekInconsistentError(
       { first: firstRecord, second, resolution: "fallback", choice: "" },
@@ -367,10 +369,10 @@ export class DeepSeekClient implements Escalator {
     );
   }
 
-  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown; cards?: string[] } {
-    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown };
+  private parseChoice(content: string): { choice: string; reason: string; rawReason: unknown; cards?: string[]; route?: string } {
+    let parsed: { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown };
     try {
-      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown };
+      parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown };
     } catch {
       throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
     }
@@ -379,6 +381,7 @@ export class DeepSeekClient implements Escalator {
       reason: typeof parsed.reason === "string" ? parsed.reason.trim() : "",
       rawReason: parsed.reason,
       ...(Array.isArray(parsed.cards) ? { cards: parsed.cards.filter((card): card is string => typeof card === "string").map((card) => card.trim()) } : {}),
+      ...(typeof parsed.route === "string" && parsed.route.trim() ? { route: parsed.route.trim() } : {}),
     };
   }
 
@@ -511,9 +514,9 @@ interface ChatMessage {
   content: string;
 }
 
-/** `{cards}` when the answer named cards, else nothing (the answer object stays as before). */
-function cardsOf(cards: string[] | undefined): { cards?: string[] } {
-  return cards && cards.length > 0 ? { cards } : {};
+/** `{cards, route}` as far as the answer gave them, else nothing (the answer object stays as before). */
+function extrasOf(answer: { cards?: string[]; route?: string }): { cards?: string[]; route?: string } {
+  return { ...(answer.cards && answer.cards.length > 0 ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}) };
 }
 
 /** Usage of two calls on one question, summed (latency too: both were waited for). */

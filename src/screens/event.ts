@@ -17,6 +17,7 @@ import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
+import { actStartPlan } from "./act-start.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -247,6 +248,9 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // duplicate, read from its text) is decided with its card(s); code plays the option and the pick. A pick
   // among cards the event reveals is asked on its own screen, as before.
   if (oneshotOn(env) && !oneshotFailedHere(env, "event")) {
+    // The act-start Ancient (acts 2 and 3, the act's map known): its option and the act's route together.
+    const joint = actStartPlan(env, { params, options: deepseekOptions, state: deepseekState, facts, note, rawOf });
+    if (joint) return joint;
     const follows = new Map(deepseekOptions.map((option) => [option.key, deckFollowUp(str(rawOf(option)?.["description"]))] as const));
     if ([...follows.values()].some((follow) => follow !== null)) {
       const cards = deckCards(state, env.knowledge);

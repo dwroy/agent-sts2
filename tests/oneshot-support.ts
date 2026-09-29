@@ -81,8 +81,8 @@ export function optionsOf(decision: Decision): Record<string, Record<string, Jso
 }
 
 /** DeepSeek's choice of `choice` (with `cards`), resolved as the loop resolves it. */
-export function choose(decision: Decision, choice: string, cards?: string[]): ResolvedAction {
-  return ask(decision).resolve({ pick: { type: "choice", choice, probabilities: { [choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(cards ? { cards } : {}) } } } as AnswerSet);
+export function choose(decision: Decision, choice: string, cards?: string[], route?: string): ResolvedAction {
+  return ask(decision).resolve({ pick: { type: "choice", choice, probabilities: { [choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(cards ? { cards } : {}), ...(route ? { route } : {}) } } } as AnswerSet);
 }
 
 /** DeepSeek's plan answer for a shop question, resolved as the loop resolves it. */
@@ -135,7 +135,7 @@ export function setupOneshotTests(): void {
 export class FakeDeepSeek extends DeepSeekClient {
   calls: { label: string; state: Record<string, JsonValue>; criteria: Record<string, string | null>; plan: boolean }[] = [];
   constructor(
-    private readonly pick: (criteria: Record<string, string | null>, label: string) => string | { choice: string; cards: string[] },
+    private readonly pick: (criteria: Record<string, string | null>, label: string) => string | { choice: string; cards?: string[]; route?: string },
     private readonly plans: (label: string, n: number) => Record<string, unknown> = () => ({ plan: [], reason: "nothing" }),
   ) {
     super({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
@@ -145,7 +145,8 @@ export class FakeDeepSeek extends DeepSeekClient {
     this.calls.push({ label, state, criteria, plan: false });
     const picked = this.pick(criteria, label);
     const choice = typeof picked === "string" ? picked : picked.choice;
-    return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1, ...(typeof picked === "string" ? {} : { cards: picked.cards }) };
+    const extras = typeof picked === "string" ? {} : { ...(picked.cards ? { cards: picked.cards } : {}), ...(picked.route ? { route: picked.route } : {}) };
+    return { choice, reason: `fake reason for ${choice}`, latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1, ...extras };
   }
   override async choosePlan(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}) {
     const label = String(context["label"] ?? "");

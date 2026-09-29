@@ -16,7 +16,7 @@ import { deckEntries, type DeckEntry } from "../project/deck.js";
 import type { DecisionEnv, ScreenMemory } from "../project/types.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, iconsToText, numOrNull, str, truncate, type JsonValue } from "../util/json.js";
-import type { PickOption } from "./pick.js";
+import type { PickOption, PlanAnswer } from "./pick.js";
 
 /** The deck selections an option can lead to. */
 export type DeckTask = "remove" | "upgrade" | "transform" | "enchant" | "duplicate";
@@ -354,15 +354,16 @@ export function withFollowUp(
         cards_to_name: `answer "cards": [${follow.upTo ? "up to " : ""}${follow.count} keys from eligible_cards, repeat a key for several copies]`,
         eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, cardLine(card)])),
       },
-      plan: (named: string[]) => {
+      plan: (answer: PlanAnswer) => {
         const picked: DeckCard[] = [];
-        for (const key of named) {
+        const unnamed = () => planOnly(env, option, ref).plan!({ cards: [] });
+        for (const key of answer.cards) {
           const card = byKey.get(key);
-          if (!card || picked.filter((entry) => entry === card).length >= card.count) return planOnly(env, option, ref).plan!([]);
+          if (!card || picked.filter((entry) => entry === card).length >= card.count) return unnamed();
           picked.push(card);
         }
         const valid = picked.length > 0 && (follow.upTo ? picked.length <= follow.count : picked.length === follow.count);
-        if (!valid) return planOnly(env, option, ref).plan!([]);
+        if (!valid) return unnamed();
         return { id: ref, steps: [option.key, ...picked.map((card) => card.key)], apply: arm(picked), journal: `${option.label ?? option.key}: ${follow.task} ${picked.map((card) => card.name).join(", ")}` };
       },
     },
