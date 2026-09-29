@@ -302,3 +302,27 @@ describe("5. The DeepSeek system prompt's data facts frozen per day (2WRU 79YR 8
     expect(existsSync(join(dir, "facts", snapshot!))).toBe(true);
   });
 });
+
+describe("6. The standalone removal screen shows the run plan's +40 apart, as a reference (79YR F6: \"打击 (code value 120, rank 1 of 13)\")", () => {
+  const ask = () => {
+    const fx = logged("batch-m/79yr-f6-remove");
+    const decision = planSelection(loggedEnv(fx, { buildDecider: "deepseek" })) as unknown as { kind: string; questions: { pick: { criteria: Record<string, string> } } };
+    expect(decision.kind).toBe("ask");
+    return Object.fromEntries(Object.entries(decision.questions.pick.criteria).map(([key, text]) => [key, JSON.parse(text) as Raw]));
+  };
+
+  it("a run-plan removal target: the value split into code's own part and the plan's 40, marked a reference", { timeout: 30_000 }, () => {
+    const criteria = ask();
+    const strike = Object.values(criteria).find((option) => option["card"] === "打击")!;
+    const value = strike["code_value"] as number;
+    expect(value).toBe(120);
+    expect(strike["why"]).toMatch(/^removal order: .*; this card: code value 120 = 80 \+ 40 as your run plan's removal target \(code's reference ranking, advice, not an order: the card you name is the one removed\)$/);
+  });
+
+  it("a card the plan does not name: its value alone, no split", { timeout: 30_000 }, () => {
+    const criteria = ask();
+    const other = Object.values(criteria).find((option) => option["card"] !== "打击" && option["card"] !== "防御")!;
+    expect(other["why"]).toMatch(/^removal order: /);
+    expect(other["why"]).not.toContain("this card:");
+  });
+});

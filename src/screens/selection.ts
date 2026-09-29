@@ -181,7 +181,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const cardId = str(card["card_id"]);
     const info = knowledge.card(cardId);
     const name = str(card["name"], info?.name ?? cardId);
-    return {
+    // RUN_PLAN=v1: the plan's removal targets go first; the part said apart (as the shop's order, f8aef72).
+    const planRemoval = !unranked && !forThisTurn && !topDanger && !exhaustContext && kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? RUN_PLAN_REMOVE_BONUS : 0;
+    const option: PickOption = {
       key: `card${index}`,
       label: name,
       intent: { action: "select_deck_card", option_index: index },
@@ -197,8 +199,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
             (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
-            // RUN_PLAN=v1: the plan's removal targets go first; its wanted cards are what an add takes.
-            (kind === "deck_card_select" && !isAdd && env.screenMemory.runPlan?.remove.includes(cardId) ? 40 : 0) +
+            planRemoval +
+            // RUN_PLAN=v1: its wanted cards are what an add takes.
             (isAdd && env.screenMemory.runPlan?.want.includes(cardId) ? RUN_PLAN_WANT_BONUS : 0),
       summary: {
         card: name,
@@ -208,6 +210,13 @@ export function planSelection(env: DecisionEnv): Decision | null {
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
       } satisfies JsonValue,
     };
+    // DeepSeek's view: the value's parts, and that the ranking is a reference ("120 = 80 + 40 ..."; UNRL F14 read
+    // the unsplit +40 as code's verdict over a curse). Score and order unchanged.
+    if (planRemoval > 0) {
+      const shown = (value: number) => Number(value.toFixed(2));
+      option.why = `code value ${shown(option.score)} = ${shown(option.score - planRemoval)} + ${planRemoval} as your run plan's removal target (code's reference ranking, advice, not an order: the card you name is the one removed)`;
+    }
+    return option;
   });
 
   const verb = forThisTurn
@@ -292,7 +301,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
   return buildPickDecision({
     ...params,
     ...(unranked ? { unranked: true } : {}),
-    options: options.map((option) => ({ ...option, why })),
+    // A removal the run plan names keeps its own split value after the rule (planRemoval above).
+    options: options.map((option) => ({ ...option, why: option.why ? `${why}; this card: ${option.why}` : why })),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
   });
 }
@@ -368,7 +378,7 @@ export function followUpTargetScore(env: DecisionEnv, task: DeckTask): TargetSco
     const base = selectionScore(kind, id, card.type) - (task !== "upgrade" && card.identity.upgraded ? 8 : 0);
     // The run plan's part said apart: UNRLW0W3XWLD F14 read "打击 120, 防御 110, 受伤 100" as code's own verdict
     // over the curse (DeepSeek: "the delta is only due to the +40 run-plan bonus"), and removed a Strike.
-    const planned = task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? 40 : 0;
+    const planned = task === "remove" && env.screenMemory.runPlan?.remove.includes(id) ? RUN_PLAN_REMOVE_BONUS : 0;
     return { score: base + planned, why: SELECTION_WHY[task] ?? "code's ranking", ...(planned > 0 ? { parts: `${base} + ${planned} as your run plan's removal target` } : {}) };
   };
 }
@@ -511,6 +521,9 @@ const UPGRADE_PRIORITY: Record<string, number> = {
   DEMON_FORM: 100, OFFERING: 98, BASH: 95, PYRE: 94, CORRUPTION: 92, BATTLE_TRANCE: 90, STONE_ARMOR: 88,
   UNMOVABLE: 88, INFLAME: 85, FEED: 85, UPPERCUT: 80,
 };
+
+/** RUN_PLAN=v1: added to a removal's code value when the run plan names the card as a removal target. */
+export const RUN_PLAN_REMOVE_BONUS = 40;
 
 /** Attack cards the fight's deck keeps at least (6A36: Burning Pact took 3 of the 4, 32/38 dealt in 12 turns). */
 export const MIN_COMBAT_ATTACKS = 4;
