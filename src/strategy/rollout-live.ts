@@ -584,7 +584,9 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   const now = rolloutLiveOptions.now ?? (() => performance.now());
   const start = now();
   const elapsed = () => now() - start;
-  if (!args.piles || args.piles.draw.length + args.piles.discard.length === 0) return { available: false, reason: "no draw/discard piles in the state", elapsedMs: elapsed() };
+  // Both piles empty is a real board (Glowwater drew the whole deck, ULQP F6 T2): the later turns draw what this
+  // turn discards (nothing to reshuffle: no draw). Only a state without the piles has nothing to roll out from.
+  if (!args.piles) return { available: false, reason: "no draw/discard piles in the state", elapsedMs: elapsed() };
   if (args.plans.length === 0) return { available: false, reason: "no line to roll out", elapsedMs: elapsed() };
   try {
     const { state, knowledge } = args;

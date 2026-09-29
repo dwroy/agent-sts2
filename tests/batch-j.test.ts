@@ -54,3 +54,24 @@ describe("1. Dai 2026-09-29: \"攻略或手册和经验库、实测数据冲突�
     expect(keys.indexOf("knowledge_rule")).toBeLessThan(keys.indexOf("deepseek_plan") < 0 ? Infinity : keys.indexOf("deepseek_plan"));
   });
 });
+describe("2. Draw and discard piles both empty (Glowwater drew the whole deck): the rollout still runs (ULQPBK1211FG F6 T2: \"no draw/discard piles in the state\", Jev 0.18)", () => {
+  afterEach(() => {
+    rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+    potionMcOptions.now = null;
+  });
+
+  it("the logged board (9 cards in hand, both piles empty): every line has rollout numbers", () => {
+    rolloutLiveOptions.budgetMs = 1e9;
+    potionMcOptions.now = () => 0;
+    const fx = logged("batch-j/ulqp-f6-t2-glowwater");
+    const view = (fx.state["agent_view"] as Raw)["combat"] as Raw;
+    expect(view["draw"]).toEqual([]);
+    expect(view["discard"]).toEqual([]);
+    const lines = planLines(planCombatTurn(loggedEnv(fx)));
+    expect(lines.length).toBeGreaterThan(1);
+    for (const line of lines) {
+      expect(String(line["rollout"])).not.toMatch(/unavailable/);
+      expect(String(line["rollout"])).toMatch(/-turn rollout .*expected further HP loss/);
+    }
+  });
+});
