@@ -7,20 +7,28 @@
  * system prompt they were asked with), sampled stratified by question group (every group before any repeats).
  *
  * Usage (worktree root):
- *   npx tsx tools/brain-replay.ts --engine deepseek|claude [--model M] [--effort E] [--n 5 | --ids q001,q002]
+ *   npx tsx tools/brain-replay.ts --engine deepseek|claude [--model M] [--effort E] [--n 5 | --ids q001,q002 | --ids-file F]
  *     [--tag smoke-0929] [--env-file PATH] [--fake-tools] [--reask on|off] [--dry] [--summary-only]
- * Output: experiments/brain-replay/<tag>/results.jsonl and brain.jsonl (raw, not committed) and summary.md
- * (recomputed from every results row of the tag, all engines).
+ *     [--knowledge off|full] [--system logged|current|PATH] [--lessons PATH] [--max-claude-calls N] [--claude-tools on|off]
+ * --knowledge full: the system prompt and memory as KNOWLEDGE_PREFIX=full makes them (src/brain/knowledge.ts), the prefix
+ * rendered from this checkout's src/knowledge at the question's ascension; --lessons pins the post-mortems file (a
+ * snapshot, so every arm reads the same). --system: the prompt of an off arm: "logged" (default, the dsh data's
+ * system-prompt.txt, as asked in play), "current" (v3's prompt from today's guide and handbook), or a file.
+ * Output: experiments/brain-replay/<tag>/results.jsonl, brain-<engine>-<knowledge>.jsonl and
+ * deepseek-reasoning-<engine>-<knowledge>.jsonl (raw, not committed) and summary.md (recomputed from every results row
+ * of the tag, all arms).
  *
  * Keys: the DeepSeek key comes from the env file's DEEPSEEK_API_KEY_FILE (or the environment); nothing prints
  * or stores it. Claude runs under this machine's login.
  */
+import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
 import { createRouter } from "../src/brain/brain.js";
+import { KnowledgePrompt } from "../src/brain/knowledge.js";
 import { pickSpec, runPlanSpec, shopPlanSpec } from "../src/brain/specs.js";
 import { userMessage } from "../src/brain/message.js";
 import type { BrainRequest } from "../src/brain/types.js";
@@ -44,9 +52,14 @@ const { values } = parseArgs({
     "fake-tools": { type: "boolean", default: false },
     reask: { type: "string" },
     dataset: { type: "string", default: join(DSH_DATA, "dataset.jsonl") },
-    system: { type: "string", default: join(DSH_DATA, "system-prompt.txt") },
+    system: { type: "string", default: "logged" },
     dry: { type: "boolean", default: false },
     "summary-only": { type: "boolean", default: false },
+    knowledge: { type: "string", default: "off" },
+    "ids-file": { type: "string" },
+    lessons: { type: "string" },
+    "max-claude-calls": { type: "string" },
+    "claude-tools": { type: "string" },
   },
 });
 
@@ -116,14 +129,30 @@ function readEnvFile(path: string): Record<string, string> {
   return env;
 }
 
+/** The decision logged in play, as an answer object (a run plan's is its raw plan); null when none was logged. */
+function loggedAnswer(row: Row): Record<string, unknown> | null {
+  const logged = row.logged ?? {};
+  if (row.kind === "run-plan") {
+    const raw = logged["raw"];
+    const plan = raw && typeof raw === "object" && !Array.isArray(raw) ? (raw as Record<string, unknown>) : logged;
+    return typeof plan["elites"] === "string" ? plan : null;
+  }
+  if (row.kind === "shop-plan") return Array.isArray(logged["plan"]) ? { plan: logged["plan"], reason: logged["reason"] } : null;
+  return typeof logged["choice"] === "string" ? { choice: logged["choice"], reason: logged["reason"], ...(typeof logged["route"] === "string" ? { route: logged["route"] } : {}) } : null;
+}
+
 /** Does the answer make the same decision as the one logged in play? null when there is nothing to compare. */
 function agreesWithLogged(row: Row, answer: Record<string, unknown> | null): boolean | null {
-  const logged = row.logged ?? {};
-  if (!answer) return null;
-  if (row.kind === "pick") return typeof logged["choice"] === "string" ? answer["choice"] === logged["choice"] : null;
-  if (row.kind === "shop-plan") return Array.isArray(logged["plan"]) ? JSON.stringify(stripLeave(answer["plan"])) === JSON.stringify(stripLeave(logged["plan"])) : null;
-  if (row.kind === "run-plan") return typeof logged["elites"] === "string" ? answer["elites"] === logged["elites"] && answer["rest"] === logged["rest"] : null;
-  return null;
+  const logged = loggedAnswer(row);
+  if (!answer || !logged) return null;
+  if (row.kind === "pick") return answer["choice"] === logged["choice"];
+  return decisionKey(row.kind, answer) === decisionKey(row.kind, logged);
+}
+
+/** The ascension a question was asked at (the first "ascension" number in its message); null when none. */
+function ascensionOf(row: Row): number | null {
+  const m = /"ascension":\s*(\d+)/.exec(row.user_message);
+  return m ? Number(m[1]) : null;
 }
 
 function stripLeave(plan: unknown): unknown[] {
@@ -148,6 +177,11 @@ interface Result {
   kind: Row["kind"];
   engine: string;
   model: string;
+  /** The system prompt: "off" (the --system one) or "full" (KNOWLEDGE_PREFIX=full); absent in older rows (off). */
+  knowledge?: string;
+  system_sha?: string;
+  system_chars?: number;
+  prefix_sha?: string;
   tools: string[];
   ok: boolean;
   first_ok: boolean;
@@ -170,27 +204,35 @@ const quantile = (xs: number[], q: number): number => {
   return sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(q * sorted.length) - 1))]!;
 };
 
+/** A result's arm: engine, model, knowledge mode, tools. */
+function armOf(r: Result): string {
+  return `${r.engine} ${r.model} ${r.knowledge ?? "off"}${r.tools.length ? " +tools" : ""}`;
+}
+
 function summary(results: Result[], tag: string): string {
   const arms = new Map<string, Result[]>();
   for (const r of results) {
-    const arm = `${r.engine} ${r.model}${r.tools.length ? " +tools" : ""}`;
+    const arm = armOf(r);
     if (!arms.has(arm)) arms.set(arm, []);
     arms.get(arm)!.push(r);
   }
   const lines = [`# Brain replay: ${tag}`, "", `Generated by tools/brain-replay.ts from ${results.length} results (raw rows: results.jsonl, brain.jsonl; not committed).`, ""];
-  lines.push("| engine / model | n | first answer valid | valid after re-ask | errors | p50 s | p95 s | input tok | cache read | cache write | output tok | cost $ | tool calls | agrees with logged |");
-  lines.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+  lines.push("First answer valid: valid with no re-ask of any kind (the router's, or v3 DeepSeek's own consistency re-ask). Cache read: DeepSeek prompt_cache_hit_tokens, Claude cache_read_input_tokens. Cost: DeepSeek at deepseek-flash prices (miss $0.3/M, hit $0.006/M, output $1.2/M); Claude the CLI's total_cost_usd (API-price equivalent under the subscription, not charged).", "");
+  lines.push("| arm (engine model knowledge) | n | first answer valid | valid after re-ask | errors | p50 s | p95 s | input tok | mean input/q | cache read (%) | cache write | output tok | reasoning tok | cost $ | $/q | tool calls | agrees with logged |");
+  lines.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
   for (const [arm, rs] of arms) {
     const sum = (key: string): number => rs.reduce((s, r) => s + (r.usage[key] ?? 0), 0);
     const lat = rs.filter((r) => !r.error).map((r) => r.latency_ms / 1000);
     const calls = rs.flatMap((r) => r.tool_calls);
     const names = [...new Set(calls)].join(", ");
     const compared = rs.filter((r) => r.agrees_logged !== null);
-    lines.push(`| ${arm} | ${rs.length} | ${pct(rs.filter((r) => r.first_ok).length, rs.length)} | ${pct(rs.filter((r) => r.ok).length, rs.length)} | ${rs.filter((r) => r.error).length} | ${quantile(lat, 0.5).toFixed(1)} | ${quantile(lat, 0.95).toFixed(1)} | ${sum("inputTokens")} | ${sum("cacheHitTokens")} | ${sum("cacheWriteTokens")} | ${sum("outputTokens")} | ${sum("costUsd").toFixed(4)} | ${calls.length}${names ? ` (${names})` : ""} | ${pct(compared.filter((r) => r.agrees_logged).length, compared.length)} |`);
+    const input = sum("inputTokens");
+    const hitShare = input > 0 ? ` (${Math.round((100 * sum("cacheHitTokens")) / input)}%)` : "";
+    lines.push(`| ${arm} | ${rs.length} | ${pct(rs.filter((r) => r.first_ok).length, rs.length)} | ${pct(rs.filter((r) => r.ok).length, rs.length)} | ${rs.filter((r) => r.error).length} | ${quantile(lat, 0.5).toFixed(1)} | ${quantile(lat, 0.95).toFixed(1)} | ${input} | ${Math.round(input / Math.max(1, rs.length))} | ${sum("cacheHitTokens")}${hitShare} | ${sum("cacheWriteTokens")} | ${sum("outputTokens")} | ${sum("reasoningTokens")} | ${sum("costUsd").toFixed(4)} | ${(sum("costUsd") / Math.max(1, rs.length)).toFixed(4)} | ${calls.length}${names ? ` (${names})` : ""} | ${pct(compared.filter((r) => r.agrees_logged).length, compared.length)} |`);
   }
-  lines.push("", "Per question:", "", "| id | label | engine / model | valid | re-asks | s | input | cache read | cache write | output | cost $ | tools called | decision | logged |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+  lines.push("", "Per question:", "", "| id | label | arm | valid | attempts | re-asks | s | input | cache read | cache write | output | reasoning | cost $ | tools called | decision | logged |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
   for (const r of results) {
-    lines.push(`| ${r.id} | ${r.label} | ${r.engine} ${r.model} | ${r.ok ? "yes" : r.error ? `error: ${r.error.slice(0, 60)}` : `no: ${r.problems.join("; ").slice(0, 60)}`} | ${r.reasks} | ${(r.latency_ms / 1000).toFixed(1)} | ${r.usage["inputTokens"] ?? 0} | ${r.usage["cacheHitTokens"] ?? 0} | ${r.usage["cacheWriteTokens"] ?? 0} | ${r.usage["outputTokens"] ?? 0} | ${(r.usage["costUsd"] ?? 0).toFixed(4)} | ${r.tool_calls.join(", ") || "-"} | ${String(decisionKey(r.kind, r.answer) ?? "-").slice(0, 40)} | ${r.agrees_logged === null ? "-" : r.agrees_logged ? "same" : "differs"} |`);
+    lines.push(`| ${r.id} | ${r.label} | ${armOf(r)} | ${r.ok ? (r.first_ok ? "yes" : "yes (re-asked)") : r.error ? `error: ${r.error.slice(0, 60)}` : `no: ${r.problems.join("; ").slice(0, 60)}`} | ${r.attempts} | ${r.reasks} | ${(r.latency_ms / 1000).toFixed(1)} | ${r.usage["inputTokens"] ?? 0} | ${r.usage["cacheHitTokens"] ?? 0} | ${r.usage["cacheWriteTokens"] ?? 0} | ${r.usage["outputTokens"] ?? 0} | ${r.usage["reasoningTokens"] ?? 0} | ${(r.usage["costUsd"] ?? 0).toFixed(4)} | ${r.tool_calls.join(", ") || "-"} | ${String(decisionKey(r.kind, r.answer) ?? "-").slice(0, 40)} | ${r.agrees_logged === null ? "-" : r.agrees_logged ? "same" : "differs"} |`);
   }
   // Engine pairs on the questions both answered.
   const armNames = [...arms.keys()];
@@ -224,26 +266,58 @@ async function main(): Promise<void> {
     return;
   }
   const rows = readFileSync(values.dataset!, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as Row).filter((row) => !row.skipped && row.kind);
-  const system = readFileSync(values.system!, "utf8");
-  const picked = values.ids ? values.ids.split(",").map((id) => rows.find((row) => row.id === id)).filter((row): row is Row => Boolean(row)) : stratified(rows, Number(values.n));
-  // The rebuilt messages must be the logged ones, byte for byte.
-  const requests = picked.map((row) => ({ row, req: requestOf(row, system) }));
-  const drift = requests.filter(({ row, req }) => userMessage(req) !== row.user_message).map(({ row }) => row.id);
-  console.log(`${picked.length} questions: ${picked.map((row) => `${row.id} ${row.label}`).join(", ")}; messages not reproduced: ${drift.length ? drift.join(",") : "none"}`);
-  if (values.dry || drift.length > 0) return;
+  const idList = values["ids-file"] ? readFileSync(values["ids-file"], "utf8").replace(/#.*$/gm, "").split(/[\s,]+/).filter((id) => /^q\d+$/.test(id)) : values.ids ? values.ids.split(",") : null;
+  const picked = idList ? idList.map((id) => rows.find((row) => row.id === id)).filter((row): row is Row => Boolean(row)) : stratified(rows, Number(values.n));
 
   const engine = values.engine!;
-  const env: Record<string, string> = { ...(values["env-file"] ? readEnvFile(values["env-file"]) : {}), BRAIN_ENGINE: engine, BRAIN_LOG: join(out, "brain.jsonl") };
+  const knowledgeMode = values.knowledge === "full" ? "full" : "off";
+  if (values.lessons) process.env["KNOWLEDGE_LESSONS_FILE"] = resolve(values.lessons);
+  // One brain log and reasoning log per arm: arms may run at the same time.
+  const armFile = (name: string): string => join(out, `${name}-${engine}-${knowledgeMode}.jsonl`);
+  const env: Record<string, string> = { ...(values["env-file"] ? readEnvFile(values["env-file"]) : {}), BRAIN_ENGINE: engine, BRAIN_LOG: armFile("brain"), KNOWLEDGE_PREFIX: knowledgeMode };
   if (values.model) env[`BRAIN_${engine.toUpperCase()}_MODEL`] = values.model;
   if (values.effort) env[`BRAIN_${engine.toUpperCase()}_EFFORT`] = values.effort;
   if (values.reask) env["BRAIN_REASK"] = values.reask;
   if (values["fake-tools"]) env[`BRAIN_${engine.toUpperCase()}_TOOLS`] = "on";
+  if (values["claude-tools"]) env["BRAIN_CLAUDE_TOOLS"] = values["claude-tools"];
+  if (values["max-claude-calls"]) env["BRAIN_CLAUDE_MAX_CALLS"] = values["max-claude-calls"];
   // Only the settings this tool needs: DeepSeek's key file, model, efforts and timeout from the env file.
   const config = loadConfig({ ...(process.env["DEEPSEEK_API_KEY"] ? { DEEPSEEK_API_KEY: process.env["DEEPSEEK_API_KEY"] } : {}), ...env } as unknown as NodeJS.ProcessEnv);
   // Never the live reasoning log: this run's own file.
-  const deepseek = config.deepseek ? new DeepSeekClient({ ...config.deepseek, reasoningLog: join(out, "deepseek-reasoning.jsonl") }) : null;
+  const deepseek = config.deepseek ? new DeepSeekClient({ ...config.deepseek, reasoningLog: armFile("deepseek-reasoning") }) : null;
+  // The off arm's prompt: as asked in play (logged), v3's prompt today (current), or a file.
+  const systemSource = values.system === "logged" ? join(DSH_DATA, "system-prompt.txt") : values.system!;
+  let system: string;
+  if (systemSource === "current") {
+    if (!config.deepseek) throw new Error("--system current builds v3's prompt from the DeepSeek settings: give --env-file");
+    system = new DeepSeekClient(config.deepseek).systemPrompt;
+  } else {
+    system = readFileSync(systemSource, "utf8");
+  }
+  // The rebuilt messages must be the logged ones, byte for byte (checked before the knowledge mode changes the memory).
+  const base = picked.map((row) => ({ row, req: requestOf(row, system) }));
+  const drift = base.filter(({ row, req }) => userMessage(req) !== row.user_message).map(({ row }) => row.id);
+  console.log(`${picked.length} questions: ${picked.map((row) => `${row.id} ${row.label}`).join(", ")}; messages not reproduced: ${drift.length ? drift.join(",") : "none"}`);
+  const knowledgeDir = join(REPO, "src/knowledge");
+  const prompt = new KnowledgePrompt();
+  const requests = base.map(({ row, req }) => {
+    if (knowledgeMode === "off") return { row, req };
+    const ascension = ascensionOf(row);
+    return { row, req: prompt.apply(req, ascension === null ? null : { ascension, knowledgeDir }) };
+  });
+  for (const { row, req } of requests) {
+    if (req.knowledge?.error) throw new Error(`${row.id}: ${req.knowledge.error}`);
+  }
+  if (knowledgeMode === "full") console.log(`knowledge full: ${[...new Set(requests.map(({ req }) => `A${req.knowledge?.ascension} prefix ${req.knowledge?.prefix_sha} (${req.knowledge?.prefix_chars} chars), system ${req.system.length} chars`))].join("; ")}`);
+  if (values.dry || drift.length > 0) return;
   const router = createRouter(config, deepseek, values["fake-tools"] ? { claudeToolsModule: FAKE_TOOLS } : {});
   const tools: ToolDef[] = values["fake-tools"] ? ((await import(FAKE_TOOLS)) as { buildTools: (ctx: ToolContext) => ToolDef[] }).buildTools({ ascension: 8, knowledgeDir: join(REPO, "src/knowledge"), logsDir: "/nonexistent" }) : [];
+  const systemFields = (req: BrainRequest): Pick<Result, "knowledge" | "system_sha" | "system_chars" | "prefix_sha"> => ({
+    knowledge: knowledgeMode,
+    system_sha: createHash("sha256").update(req.system).digest("hex").slice(0, 12),
+    system_chars: req.system.length,
+    ...(req.knowledge?.prefix_sha ? { prefix_sha: req.knowledge.prefix_sha } : {}),
+  });
   for (const { row, req } of requests) {
     const started = Date.now();
     const request: BrainRequest = tools.length > 0 ? { ...req, tools, toolContext: { ascension: 8, knowledgeDir: join(REPO, "src/knowledge"), logsDir: "/nonexistent", state: req.payload } } : req;
@@ -254,14 +328,14 @@ async function main(): Promise<void> {
       // First answer valid: no router re-ask and no problems (v3's own consistency re-ask shows in attempts).
       const firstOk = answer.problems.length === 0 && !("first" in answer);
       result = {
-        ts: new Date().toISOString(), id: row.id, label: row.label, group: groupOf(row.label), kind: row.kind, engine: answer.engine, model: answer.model, tools: tools.map((t) => t.name),
-        ok: parsed !== null && answer.problems.length === 0, first_ok: firstOk && parsed !== null, reasks: "first" in answer ? 1 : 0, attempts: answer.attempts, problems: answer.problems,
+        ts: new Date().toISOString(), id: row.id, label: row.label, group: groupOf(row.label), kind: row.kind, engine: answer.engine, model: answer.model, ...systemFields(request), tools: tools.map((t) => t.name),
+        ok: parsed !== null && answer.problems.length === 0, first_ok: firstOk && parsed !== null && answer.attempts === 1, reasks: "first" in answer ? 1 : 0, attempts: answer.attempts, problems: answer.problems,
         latency_ms: answer.latencyMs, usage: { ...answer.usage }, tool_calls: answer.toolCalls.map((call) => call.name), answer: parsed, agrees_logged: agreesWithLogged(row, parsed),
         ...(answer.fellBackFrom ? { fell_back_from: answer.fellBackFrom } : {}),
       };
     } catch (error) {
       result = {
-        ts: new Date().toISOString(), id: row.id, label: row.label, group: groupOf(row.label), kind: row.kind, engine, model: values.model ?? "", tools: tools.map((t) => t.name),
+        ts: new Date().toISOString(), id: row.id, label: row.label, group: groupOf(row.label), kind: row.kind, engine, model: values.model ?? "", ...systemFields(request), tools: tools.map((t) => t.name),
         ok: false, first_ok: false, reasks: 0, attempts: 0, problems: [], latency_ms: Date.now() - started, usage: {}, tool_calls: [], answer: null, agrees_logged: null,
         error: error instanceof Error ? error.message.slice(0, 300) : String(error),
       };
