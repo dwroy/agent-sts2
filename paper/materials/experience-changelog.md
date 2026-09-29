@@ -505,3 +505,122 @@
 - 最终中位涨 0.1–0.5k，最大 5.4k（A9 事件），高于上次的 5.0k。
 - Jev 每场战斗看到的敌人条目仍是 ≤4 条：这次没有新增 boss、精英、走廊条目，帝王蟹的 4 条都在。
 - 条目数：active 196（测试上限 200）；置信度 高 127、中 58、低 11。
+
+## 2026-09-29 第四次增量：14 局 A9（version 2026-09-29.3，分支 exp-update，d986a74）
+
+### 来源
+- `notes/lessons.md` 末尾的 14 节 A9 复盘，全输：KY3YZ0DMRY0G（F33 无厌沙虫）、9Q7VBZ7TP29K（F17 瀑布巨兽）、XMK1JFZ0VD2Q（F33 无厌沙虫）、PHMVUY73R0D7（F24 棘刺蟾蜍走廊）、YQL8D59999AX（F31 蜂群术士）、W2TBR2YUMQ5Y（F17 同族）、U6RUE7LBUFJF（F33 帝王蟹）、VBHZ77A3N496（F30 直飞产卵虫走廊）、ZY3992X5VEVS（F23 胧光怪走廊）、0H1X9QMAAQ8V（F17 墨影幻灵）、X7LUMGJK9NRM（F7 花园幽灵鳗）、XTB46ZGMYR6E（F17 灵魂异鱼）、2XWM27TZ7T12（F45 三骑士）、7XK6DUJYMYY3（F48 实验体）。KY3Y、9Q7V 上次只进数字，这次作为证据局。
+- 日志（只读，流式读取）：
+  - states.jsonl 一遍抽出 A7–A9 的全部战斗（2818 场，其中 A9 359 场），每场带房间类型、进场/结束 HP、逐回合我方和每个敌人的 HP、药栏、牌组、遗物；再一遍抽出每层第一帧（HP、金币、药栏、遗物），用来算二、三幕第一个火堆的到达血量和死时金币。
+  - decisions.jsonl 查了 2XWM 三幕每场第 1 回合的出手、茶会事件的选项原文；runs.jsonl 定输赢和进阶。
+  - `tools/boss-fights-extract.py` + `tools/boss-clock-calibrate.ts --rows`：按现行时钟（09-29 重拟合）重算沙虫、巨兽、异鱼、帝王蟹、墨影幻灵、知识恶魔 A8/A9 的实打/估值。
+  - `monster-db.json`（招式伤害、各遭遇死亡局）、`room-costs.json`（路线投影用的房间成本）、`outcome-stats.json`（A8 遗物行）。
+- 口径同上次：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计。A9 汇总是 31 局已结束的 A9（含还没复盘的 9GRPS5DC8KHN、N01X6BBAYMHT、83FLGYXZG9QH、7MDJ256RY2UU，它们只进数字）；进行中的 5NFGDU7BQPD3 不算。
+- 先在 exp-update 上 `git merge --no-edit v3`（快进到 2e92460），再改。
+- 结果：新增 2 条，更新 56 条，退役 0 条；active 196 → 198，总数 217 → 219。
+
+### 对照数据检查的主题
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 胧光怪：经验 obscura「寄生惧魔这回合要攻击、一两张牌能打死时先打死它」对 jev-hints obscura-summoner「打胧光怪」（ZY39 打死寄生惧魔 6 次，胧光怪 4 回合 0 伤害） | A7–A9 46 场逐回合。寄生惧魔在场的 165 个回合：打死它的 108 回合，敌方回合平均掉 3.8；没打死的 57 回合掉 9.0，差约 5 血。打死它同时也打胧光怪的回合，胧光怪平均吃 20.5，和没打死它的回合（18.3）差不多；只打它的 33 回合胧光怪 0 伤害。按场：A8–A9 41 场里，胧光怪有 ≥2 回合 0 伤害的 11 场赢 7，赢局中位 9 回合、掉 40（p75 53）；其余 30 场赢 27，4 回合、掉 14（p75 25）；两组进场中位 68%/70%。只看 ≥50% 进场：7 场赢 6、中位掉 53，对 24 场全胜、掉 13。进场 <50% 赢 4/10，≥50% 赢 30/31（旧的「≤38% 必死」不成立：JUXB 25%、RWWG 23% 都赢了）。寄生惧魔每回合都攻击，所以旧句等于「每回合打它」 | 旧经验反了，改写：每回合都要有伤害进胧光怪，寄生惧魔只用多余伤害打，或不打死它这回合要多掉 ≥15 时才打（SK1U T8 −9 对 −32 仍成立）。jev-hints 应改的文字见下 |
+| 时钟倍数（insatiable-clock「高估 85%，缺口 ×1.8 读」，deck-clock、giant-deck、crab-dps 的 0.5–0.9） | 现行时钟下，A8 输局实打/估值中位：沙虫 0.95（15 场，0.45–1.68）、帝王蟹 0.83（18 场）、巨兽 0.70（9 场）、异鱼 0.59（5 场）、墨影幻灵 0.56（4 场）、知识恶魔 0.94（12 场）；赢局多 ≥0.8。沙虫 8 场赢局都 ≥0.97；进场时 15 场输局全被报缺口，8 场赢局也有 7 场报缺口。A9：KY3Y 0.66、XMK1 1.30、XTB4 0.37、U6RU 1.45 | 旧倍数是改版前时钟的数，改成现行时钟的数。沙虫不再「×1.8」（这和 `boss-clock.ts` 的拟合一致） |
+| A9 二幕走廊代价和投影（PHMV 投影 F24 71% 实到 11%，YQL8、VBHZ） | A9 二幕走廊战内：83 场死 7，赢局中位 −11、p75 −23、p90 −36（A8 440 场死 24，17/25/33）。18 局进二幕，5 局没走到第一个二幕火堆就死（都在第 3–5 场），走到的 13 局到达中位 45%（p25 28%），之前中位打 4 场；A8 103 局 18 局死在前面，到达中位 39%。room-costs A9 二幕走廊净掉血 n=78 中位 6、p75 17。盛碗虫：A9 两只组 9 场都 ≤19，三只组 9 场有 3 场 −46~−49 | 单场不贵，贵在连打：投影按中位逐格连加，连打要按 p75 算。更新 act2-opening、a9-damage、bowlbugs 等 |
+| A9 三幕走廊和精英 | 三幕走廊 A9 11 场 0 死，中位 −21、p75 −30（A8 55 场 16/30）；3 局到三幕第一个火堆前打 4–6 场，到达中位 49%（2XWM 投影每场 15%，开局三场 −18/−26/−12）。三幕精英 2 场 2 死（SK1U 机甲骑士 80%、2XWM 三骑士 56%），二幕精英 4 场死 2 | 更新 act3-hallways、owl、a9-damage。三骑士只有 3 场（A8 2 胜），没单立条目 |
+| A9 boss 按 boss（37 场） | 一幕 18/27：墨影幻灵 6/7（0H1X 82% 输）、灵魂异鱼 5/6（XTB4 83% 输）、同族 3/5（W2TB 75%、83FL 96% 输）、瀑布巨兽 2/6、族母 1/2、仪式兽 1/1。二幕 3/9：无厌沙虫 2/4（2XWM、7XK6 满血赢；KY3Y 70%、XMK1 100% 输）、帝王蟹 0/3（78–94% 进场都 T5–T6 死）、知识恶魔 1/2。三幕实验体 0/1。≥75% 进场 18/32（二幕 3/8），<75% 3/5。每回合掉血中位 A9 对 A8：帝王蟹 13.8/9.7、同族 9.7/7.3、沙虫 9.5/7.7、墨影幻灵 7.6/5.3、实验体 17/10.1 | 写进各 boss 条目、route-entry-hp、a9-damage。A9 进场血量只是必要条件 |
+| 瀑布巨兽 A9 | 6 场赢 2：YQL8 T7 击杀（喷发 35 对 52 血）、8V0H T12；1VX1 T11、9Q7V T14（56 对 29 血 + 21 格挡，差 6）、7MDJ T19 击杀后都被自爆打死，HEAC 没打死。有击杀的 A8/A9 31 场：所需格挡 ≤13 的 18 场赢 17，≥20 的 13 场赢 3 | 更新 giant-explode、giant-deck |
+| A9 一幕精英（30 场） | ≥78% 进场 21/21 活（中位 −34），60–78% 7 场死 2（X7LU 68%、N01X 71%），活下来的中位 −46；<60% 2/2 死；战内 p75 −44.5。异鸟 6 场赢 5（中位 −46），骇鳗 5/6（中位 −35），园丁 4/5，异蛙 4/4（−12~−61），雕像 6/6 | 更新 elite-threshold、各精英条目。W2TB、0H1X、XTB4 都在路线投影当作回血的火堆上锻造，更新 rest-before-forced |
+| 低语耳环（2XWM；U6W7 A2） | 2XWM 三幕 7 场的第 1 回合一共只打出 1 张牌，第一次出手时 0–1 能量，5 场第 1 回合只剩喝药/结束回合（喝 5 瓶），拿到后 11 层死；U6W7 拿到后 8 层死。MD3F 拿的是赐福鹿角，不是耳环 | 新增 relic-whispering-earring（n=2，中）。`boss-clock.ts` 把它当普通 +1 能量 |
+| 王室猛毒（7XK6） | 是遗物，每场开局 −4（7XK6 A9 实测）。A7–A9 有它的 3 局都来自圆桌茶会「喝杯好茶」（回满 + 它）：P2E4 +58、RTF3 +16、7XK6 +18，之后各打 2 场，共 −8；3 局都没通关。DeepSeek 把它当成「回合末在手 −2」的诅咒牌 | 新增 relic-royal-poison（n=3，中） |
+| 营养汤（U6RU、VBHZ） | 只附魔基础打击（U6RU 5 张，不是 DeepSeek 以为的 11 张）。A7–A9 拿它的 9 局过二幕 boss 4 局（A8 3/6，A9 0/2），高于 A8 基线 19% | 更新 relic-nutritious-soup：只附魔基础打击；code 的删牌说明仍算永恒打击 |
+| 净化对呼唤（XTB4 放掉 89 金的净化） | A7–A9 异鱼战 32 场：牌组有能挑牌消耗的牌（燃烧契约、净化、恶魔之焰、添柴、坚毅+）的 13 场赢 10，没有的 19 场赢 16；VG7H、VL2D 带燃烧契约仍输。净化只在 FA82 一场带进异鱼（赢，17 回合）。输局 6 场都 ≤14.6/回合、≤2 张升级 | 有牌不等于赢，要真用在呼唤上。card-purity 改成「一幕 boss 是异鱼时见到就买」，不写「优先于药水」（没有数据支持） |
+| 烫嘴可可（7XK6；PHMV、XMK1 因「41点能量」没选） | 7XK6 沙虫 T1 打 98、实验体 T1 打穿一阶段 102。二幕先古 A7–A9 过二幕 boss：手套 8/20、营养汤 4/9、黄金印 2/6、可可 2/11 | 更新 relic-very-hot-cocoa、neow-growth（观察数据，方向和「成长件优先」一致） |
+| 留给 boss 的药（只改数字） | 这 14 局里 13 局有，约 24 瓶；两批合计 30 局 25 局、约 52 瓶。A9 31 局每局走廊/事件战喝 4.9 瓶、精英 0.8、boss 1.3，二幕 boss 进场平均 1.2 瓶（n=9）；A9 ≥75% 进场 boss 0 瓶 2/5、带药 16/27 | 按 Dai 的要求，只更新计数和已有句子里的数字，没有新增喝药规则 |
+
+### 经验库自己带偏的地方
+- **obscura**：上次由 SK1U 一回合得出的「寄生惧魔这回合要攻击就先打死它」，和 Jev 的提示正相反。复盘说这条只进 DeepSeek，实际 `fightLessons`（`src/screens/combat-plan.ts:271-293`，挂在题面 `:1805-1809`）在胧光怪战里会把它给 Jev（本地用 HEAD 代码验证过）。ZY39 连续三回合只打寄生惧魔。已改。
+- **fysh-damage 的药水统计**：「A8 带药 13/13」是观察数据。XTB4 以它为理由选药瓶皮套、商店买能力药水不买净化；X7LU 也以「异鱼败因就是 0 瓶药」选药瓶皮套。句子没删（Dai 在定喝药的事），在 card-purity 里写明异鱼前见到净化就买。
+- **insatiable-clock 的「×1.8」**：这是改版前时钟的数。现行时钟下 A8 沙虫输局中位 0.95，照这个倍数读会把缺口放大近一倍。已改。
+
+### 新增（2）
+- **relic-whispering-earring**（relic:WHISPERING_EARRING 低语耳环，n=2，中）：瓦库接管每场第 1 回合，2XWM 三幕 7 个第 1 回合只打出 1 张牌、喝掉 5 瓶；有它的 2 局都在 8–11 层内死。后面还有强制精英/boss 时不选；时钟把它当普通 +1 能量。
+- **relic-royal-poison**（relic:ROYAL_POISON 王室猛毒，n=3，中）：遗物，每场 −4，不是诅咒牌；茶会回满换它，剩余战斗 ×4 小于回血量时划算。
+
+### 更新（56）
+- **boss：**
+  - 胧光怪以外的 boss 条目都加了 A9 数字：giant-explode 18→20、giant-deck 17→19、kin-scaling 19→20、vantom-entry 16→17、vantom-dismember 10→11（A9 肢解 30/32；0H1X 19 张只有 1 张非基础格挡）、fysh-damage 15→17、fysh-beckon 8→9、insatiable-entry 23→27、insatiable-clock 22→24、insatiable-escape 13→15（KY3Y 沙坑先到、XMK1 HP 先到）、crab-entry 29→30、crab-dps 32→33（A9 只活 4–5 回合，要约 90/回合）、crab-potions 16→17（U6RU 3 瓶，只改数字）、crab-kill-order 12→13（54 场，两只一直活着 42 场赢 8，A9 0/3）、ts-phases 10→11（A9 多次爪击每段 11）、lag-entry 14→15。
+  - 时钟倍数统一改成现行时钟：insatiable-clock、deck-clock（31→36）、giant-deck、crab-dps、fysh-damage。
+- **精英：** terror-eel 20→21、byrdonis 7→9（A9 按 −45~−50 定价）、gardener 16→17、phrog 4→5（中→高）、prism 18→20。
+- **走廊：** obscura 15→18（改写）、beetle 29→30、bowlbugs 24→25（A9 三只组按 −45 预留）、hunter-killer 30→31、spiny-toad 17→18（A8/A9 五次死局都 ≤38% 进场）、louse 13→14、ovicopter 7→9（≤32 血进场三局都死）、hopper 17→18、owl 4→6（A9 啄击 24、判决 38）。
+- **幕：** act1-costs 14→15、act2-opening 25→28、act3-hallways 13→15、a9-damage 13→27（31 局重算）。
+- **药水（只改计数/数字）：** potion-save-for-boss 57→70、potion-empty-slots（A9 数字）、potion-blood 7→9（9Q7V、XMK1 在 boss 里回血溢出，补进已有例句）、potion-fairy 3→4（只加证据）。
+- **路线、精英、休息、事件、牌组：** route-entry-hp 42→44、route-no-chains 16→18、route-forced-elite-prep 9→11（VBHZ 精英后紧跟的走廊；YQL8 精灵不算血）、route-shops 15→18（A9 31 局有 7 局带 ≥150 金死）、rest-before-forced 15→18、elite-threshold 26→28、elite-need-one 9→10（A9 0/1/2 只精英：5/22/4 局，过二幕 boss 0/2/1）、elite-no-double 6→7、event-hp-maxhp 12→13、event-stone 2→3（活力 8 是每段 +8）、deck-remove 17→20。
+- **卡牌、遗物、先古：** card-purity 2→3、relic-nutritious-soup 2→4、relic-very-hot-cocoa 10→13、relic-seal-of-gold 4→5（中→高，XMK1 二幕约 87 金）、relic-toasty-mittens 20→21（PHMV 二幕 22 回合烧 22 张）、neow-growth（加二幕先古的过关数，n 不变）。
+
+### 退役（0）
+没有被推翻到要退役的条目。obscura 的旧结论是就地改写，旧说法记在上表。
+
+### 和手写知识、代码冲突，待改
+- `src/knowledge/jev-hints.json:114-118` obscura-summoner：「Damage into it is wasted: attack The Obscura.」方向和改后的 obscura 一致，但说得太绝对（SK1U T8 那种回合打它是对的）。建议改成：「Parafright (21 HP) comes back at full HP the turn after it dies; only The Obscura's death ends the fight. Put damage into The Obscura every turn; hit Parafright only with damage left over, or when leaving it alive costs 15+ more HP this turn. A turn spent only on Parafright saves about 5 HP and adds a turn (A8–A9: fights with 2+ such turns won 7/11 and cost 40 HP, the rest won 27/30 and cost 14).」
+- `src/knowledge/ironclad-guide.md:72`：「能在约 3 回合内打死胧光怪就集中打它」。「3 回合」这个条件数据里没有：≤1 回合 0 伤害的 30 场中位打了 4 回合，赢 27。
+- rollout 在胧光怪战里把「打死寄生惧魔」的线标成 best（ZY39 T4、T5）：后续回合按 best_order「胧光怪 > 寄生惧魔」模拟，可每回合实际又选打寄生惧魔（`src/strategy/rollout-live.ts:398` pickRolloutBest、`:566` kill order 说明）。
+- 低语耳环：
+  - `src/strategy/boss-clock.ts:234-237` ENERGY_RELICS 把它当每回合 +1 能量，没扣瓦库的第 1 回合。
+  - `src/knowledge/ds-handbook.md:33` 只说不要和自伤牌同带；2XWM 没带祭品/放血也一样丢了第 1 回合。
+- `src/strategy/boss-clock.ts:511-512` SOUL_FYSH mechanicFactor 固定 0.82，不看战斗长度和能清呼唤的牌：A8 输局只打出折后估值的 0.53–0.77，XTB4 21 回合 0.37。
+- `src/strategy/boss-clock.ts:130-141` bossLossPerTurn 用池化的未格挡比例：XMK1（26 张 7 张格挡）被算成 8.4/回合、能撑 10 回合，实际约 16/回合、第 6 回合死；U6RU 螃蟹算 7 回合，实际 4。和 deck-clock、insatiable-entry 冲突。
+- 路线投影：`src/strategy/route-projection.ts:15-16`、`:79-82`、`:127-128` 每个火堆按回血 30% 算，房间中位数逐格连加；`src/screens/map.ts:400`、`:645` 落差不到 30 个点不重问。和 act2-opening、rest-before-forced、elite-threshold 冲突（PHMV、YQL8、VBHZ、W2TB、0H1X、XTB4、X7LU）。
+- `src/screens/shop.ts:165-166` 删牌分数和说明把永恒打击算进基础牌（U6RU、VBHZ 营养汤），和 relic-nutritious-soup 冲突。
+- `src/screens/event.ts:195-197` 事件选项只给附魔名补说明，遗物名（王室猛毒）不补（7XK6）。
+- `src/project/run-journal.ts:180` SOUL_FYSH 的 BOSS_NOTE「用消耗牌清掉」：按 fysh-beckon，只有「从手牌消耗别的牌」的牌能清，自消耗牌不行。
+- 手册里引用的 n 已过时（测试只查 id 存在）：
+  - `ironclad-guide.md:36`：rest-before-forced n=14→18，rest-smith-threshold n=28→34。
+  - `ironclad-guide.md:39`：potion-save-for-boss n=33→70。
+  - `ds-handbook.md:38`：elite-threshold n=20→28。
+  - `ds-handbook.md:40`：rest-smith-threshold n=28→34，rest-before-forced n=14→18。
+- 上次列的几条（巨兽喷发式、ds-handbook 的巨兽升级数、run-journal 的巨兽/实验体笔记）这次没有复查。
+
+### 代码问题（不给 DS）
+按复盘里写的状态，不重新核实：
+- **已修：**
+  - iconsToText「41点能量」（a84702a）。
+  - eruptionRace 用当前 HP、A8 喷发式（a84702a，9Q7V）。
+  - 呼唤、无实体、沙虫当回合力量进 rollout（1ff3aa8）。
+  - enemy_threat_next 按面板力量（1ff3aa8）。
+- **已批、待合并：** 同分喝药线标「tied」（14:00 Dai，batch B）。KY3Y、YQL8、XTB4、XMK1 都出现同分喝药线被标 best。
+- **新发现：**
+  - 饱和时按敌人总血量挑 best：算进随从（W2TB 同族），也不算分段 boss 后面的阶段（7XK6 实验体）。
+  - pendingDrinks：Jev 线被抽牌打断后照样代喝回血药（XMK1）。
+  - Jev 的线打完后，code 重新规划，补打 Jev 否掉的那条更长的线；求解器不读连环拳（9Q7V）。
+  - 巨兽自爆回合 rollout 认不出残骸（YQL8）。
+  - 燃烧契约的 least-loss 消耗掉 1 费的狂乱逃离（KY3Y）。
+  - 商店题不给卡牌费用和类型（U6RU）。
+  - askJson/choose 解析失败丢推理和 usage（VBHZ、0H1X）。
+  - 附魔正则认不出「附魔一张攻击牌：活力8」（PHMV）。
+  - 送货员补货让一次性商店计划整单重问（7XK6）。
+  - 选择悖论被当成「以后才揭晓」多问一次（7XK6）。
+  - rollout 超预算整体退成 1 回合，并写「所有线掉光」（X7LU）。
+  - report.py 在 CARD_SELECTION 行处把一场战斗切成几段（2XWM、PHMV）。
+- **已知、未修：**
+  - 瓶中精灵、蜥蜴尾巴的复活被当成死亡（YQL8，一致性复查第 2 条）。
+  - guardKeepsPick 的 focus 保护（YQL8，同 SK1U）。
+  - run plan 点名的药在 FIGHT_PLAN=off 时没有保护（Dai 待定）。
+- **测试：** `tests/oneshot-act-start.test.ts:115` 在 v3 2e92460 上就失败（用 v3 原样的 experience.json 同样失败；把 room-costs.json 换回 2e92460^ 就通过），和这次改动无关，没有动。这次 vitest 940/941 通过，tsc 通过。
+
+### 切片大小
+用新抽的一批样本：A8、A9 各 20 个状态 × 6 种界面，共 240 个，从 states.jsonl 用固定种子 20260929 抽取，不含进行中的局。同一批状态分别用改前（v3 2e92460）和改后（d986a74）的 experience.json 跑 `tools/knowledge-slice.ts`，数字是中位 / 最大（字）：
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 3.1k / 4.8k | 3.3k / 5.0k | 3.3k / 5.0k | 3.6k / 5.3k |
+| 奖励 | 4.0k / 5.3k | 4.2k / 5.5k | 3.9k / 5.5k | 4.1k / 5.8k |
+| 地图 | 4.3k / 4.7k | 4.7k / 5.3k | 4.3k / 5.0k | 4.8k / 5.4k |
+| 事件 | 3.9k / 5.1k | 4.0k / 5.5k | 4.5k / 5.5k | 4.6k / 5.9k |
+| 火堆 | 3.0k / 4.7k | 3.2k / 4.9k | 3.2k / 4.7k | 3.3k / 5.0k |
+| 商店 | 4.9k / 5.3k | 5.1k / 5.5k | 4.8k / 5.4k | 5.0k / 5.5k |
+
+- 初稿中位涨了 0.2–1.0k，最大到 6.5k（A9 事件）。
+  - 主要来自一幕精英、二幕走廊条目和 rest-before-forced：它们几乎出现在每个一、二幕切片里。
+  - 之后把这些条目新增的 A9 细节压成一句，逐回合、逐局的数字留在本节。
+- 最终中位涨 0.1–0.5k，最大 5.9k。最大的是 XMK1 F18 二幕先古事件：25 条经验加 13 行统计，改前在这批样本里是 5.5k。
+- 条目数：active 198（测试上限 200）；置信度 高 129、中 58、低 11。
+- Jev 每场战斗看到的敌人条目仍 ≤4 条：这次没有新增 boss、精英、走廊条目，帝王蟹的 4 条都在（测试钉住）。胧光怪战里 Jev 看到的就是改写后的 obscura。
