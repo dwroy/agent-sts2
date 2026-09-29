@@ -15,7 +15,7 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
-import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
+import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
@@ -1441,8 +1441,9 @@ async function ensureFightPlan(
   onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
   try {
     // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
-    // per-turn combat effort.
-    const { json, meta } = await deepseek.askJson(payload, "fight-plan");
+    // per-turn combat effort. A reply that is no fight plan (an empty one, a {choice, reason} echo) takes the
+    // plan its reasoning drafted, else an empty one is asked once more and anything else fails.
+    const { json, meta, recovered, note } = await deepseek.askJson(payload, "fight-plan", isFightPlanReply);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
@@ -1455,6 +1456,8 @@ async function ensureFightPlan(
       enemies: plan.enemyIds,
       plan: toJsonValue(plan),
       raw: toJsonValue(json),
+      ...(recovered ? { recovered_from_reasoning: true } : {}),
+      ...(note ? { note } : {}),
       latency_ms: meta.latencyMs,
       input_tokens: meta.inputTokens,
       output_tokens: meta.outputTokens,

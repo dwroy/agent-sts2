@@ -14,8 +14,9 @@ import { makeKnowledge } from "../src/knowledge/index.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
+import { isFightPlanReply } from "../src/strategy/fight-plan.js";
 import { board, play, scriptedDeepSeek, setupOneshotTests } from "./oneshot-support.js";
-import { baseState, mainMenuPayload, runPayload } from "./scenarios.js";
+import { baseState, combatPayload, mainMenuPayload, runPayload } from "./scenarios.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 type Raw = Record<string, unknown>;
@@ -149,6 +150,49 @@ describe("choosePlan: an empty reply takes the plan its reasoning drafted, else 
       expect(records.find((row) => row["label"] === "shop/plan")).toMatchObject({
         deepseek: { plan: ["buy_card3", "buy_card4", "leave"], recovered_from_reasoning: expect.stringMatching(/empty reply/), note: expect.stringMatching(/the answer taken from the end of its reasoning/) },
       });
+    });
+  });
+});
+
+describe("fight plan: askJson checks the reply is a fight plan (batch M left its empty-reply retry without a format check)", () => {
+  it("a {choice, reason} echo or an empty object is no fight plan; any of the plan's fields is", () => {
+    expect(isFightPlanReply({ choice: "card1", reason: "x" })).toBe(false);
+    expect(isFightPlanReply({})).toBe(false);
+    expect(isFightPlanReply({ approach: "sprint" })).toBe(false);
+    expect(isFightPlanReply({ approach: "Setup" })).toBe(true);
+    expect(isFightPlanReply({ setup_cards: [] })).toBe(true);
+    expect(isFightPlanReply({ summary: "Inflame first" })).toBe(true);
+    expect(isFightPlanReply({ potions: { FIRE_POTION: "save" } })).toBe(true);
+  });
+
+  describe("in the loop (FIGHT_PLAN=v1)", () => {
+    setupOneshotTests();
+    const bossBoard = (): Raw => {
+      const raw = combatPayload();
+      raw["turn"] = 1;
+      const combat = raw["combat"] as Raw;
+      const enemies = combat["enemies"] as Raw[];
+      combat["enemies"] = [{ ...enemies[0], enemy_id: "LAGAVULIN_MATRIARCH", name: "Lagavulin Matriarch", current_hp: 222, max_hp: 222 }];
+      return raw;
+    };
+    const DRAFT = '{"approach": "setup", "setup_cards": [], "focus_enemy": "", "potions": {}, "key_turns": "T3 big hit", "summary": "set up, then race"}';
+
+    it("an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan)", { timeout: 30_000 }, async () => {
+      const log = join(mkdtempSync(join(tmpdir(), "batch-n-fp-")), "fight-plans.jsonl");
+      const { client: scripted } = await scriptedDeepSeek([{ content: '{"choice": "end_turn", "reason": "fight plan"}', reasoning: `Plan: ${DRAFT}` }]);
+      await play([bossBoard(), mainMenuPayload()], scripted, { fightPlan: "v1", fightPlanLog: log });
+      const rows = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Raw);
+      expect(rows[0]).toMatchObject({ kind: "boss", recovered_from_reasoning: true, plan: { approach: "setup", keyTurns: "T3 big hit", summary: "set up, then race" } });
+    });
+
+    it("an empty reply takes the plan its reasoning drafted in one call", { timeout: 30_000 }, async () => {
+      const log = join(mkdtempSync(join(tmpdir(), "batch-n-fp-")), "fight-plans.jsonl");
+      const { client: scripted, bodies } = await scriptedDeepSeek([{ content: "", reasoning: `Plan: ${DRAFT}` }]);
+      await play([bossBoard(), mainMenuPayload()], scripted, { fightPlan: "v1", fightPlanLog: log });
+      const rows = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Raw);
+      expect(rows[0]).toMatchObject({ recovered_from_reasoning: true, note: expect.stringMatching(/empty reply/), plan: { approach: "setup" } });
+      const fightPlanCalls = bodies.filter((body) => String(((body["messages"] as Raw[])[1] as Raw)["content"]).includes("TASK: fight plan"));
+      expect(fightPlanCalls).toHaveLength(1);
     });
   });
 });
