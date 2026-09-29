@@ -15,6 +15,8 @@ import { measuredRoom } from "../knowledge/room-costs.js";
 import { actOf } from "../strategy/run-plan.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
+import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
+import { followUpTargetScore } from "./selection.js";
 
 /** HP and max HP an option's text says it costs ("失去[red]13[/red]点最大生命", "受到3点伤害", "Lose 8 HP"). */
 export function eventHpCost(description: string): { hp: number; maxHp: number } {
@@ -227,24 +229,55 @@ export function planEvent(env: DecisionEnv): Decision | null {
   const ascension = state.run?.ascension ?? 0;
   const fight = forced ? forcedFightCost(forced, actOf(state), ascension, state.run?.boss_id ?? null) : null;
   const lethal = usable.filter((option) => !unguarded.includes(option)).map((option) => str(option["title"]));
-  return buildPickDecision({
-    ...params,
-    state: { ...params.state, note: "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out." },
-    options: options.map((option) => {
-      const raw = pool.find((candidate) => `o${numOrNull(candidate["index"])}` === option.key);
-      const hpFacts = raw ? eventHpFacts(eventHpCost(str(raw["description"])), hp, maxHp, forced, fight) : {};
-      return { ...option, why: "code does not score event options", summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } };
-    }),
-    deepseek: {
-      facts: buildFacts(env, {
-        event: { id: eventId, title: str(event["title"]) },
-        ...eventEnemies(event, ascension),
-        ...(forced ? { forced_fight_ahead: forced } : {}),
-        ...(lethal.length > 0 ? { left_out_as_lethal: lethal.join("; ") } : {}),
-      }),
-      note: "Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call.",
-    },
+  const rawOf = (option: PickOption) => pool.find((candidate) => `o${numOrNull(candidate["index"])}` === option.key);
+  const deepseekOptions = options.map((option) => {
+    const raw = rawOf(option);
+    const hpFacts = raw ? eventHpFacts(eventHpCost(str(raw["description"])), hp, maxHp, forced, fight) : {};
+    return { ...option, why: "code does not score event options", summary: { ...(option.summary as Record<string, JsonValue>), ...hpFacts } };
   });
+  const deepseekState = { ...params.state, note: "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out." };
+  const facts = buildFacts(env, {
+    event: { id: eventId, title: str(event["title"]) },
+    ...eventEnemies(event, ascension),
+    ...(forced ? { forced_fight_ahead: forced } : {}),
+    ...(lethal.length > 0 ? { left_out_as_lethal: lethal.join("; ") } : {}),
+  });
+  const note = "Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call.";
+  // BUILD_ONESHOT: an option that makes you pick card(s) from the deck (remove/upgrade/transform/enchant/
+  // duplicate, read from its text) is decided with its card(s); code plays the option and the pick. A pick
+  // among cards the event reveals is asked on its own screen, as before.
+  if (oneshotOn(env) && !oneshotFailedHere(env, "event")) {
+    const follows = new Map(deepseekOptions.map((option) => [option.key, deckFollowUp(str(rawOf(option)?.["description"]))] as const));
+    if ([...follows.values()].some((follow) => follow !== null)) {
+      const cards = deckCards(state, env.knowledge);
+      const ref = nextPlanRef(env, "event");
+      const offered = new Set<string>();
+      const expanded = deepseekOptions.flatMap((option) => {
+        const follow = follows.get(option.key) ?? null;
+        if (!follow) return [planOnly(env, option, ref)];
+        for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
+        return withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task));
+      });
+      return buildPickDecision({
+        ...params,
+        label: "event/plan",
+        instructions:
+          "Which option should I choose? An option that makes you pick card(s) from your deck is listed once per card (key option:card, e.g. o1:c5); " +
+          'one that takes several cards lists its eligible_cards: then also answer "cards": [card keys]. Code plays the option and the card pick(s).',
+        state: deepseekState,
+        options: expanded,
+        deepseek: {
+          facts,
+          note,
+          // Without DeepSeek: the event's own Jev/code question (the card on the next screen).
+          baseline: buildPickDecision({ ...params, state: deepseekState, options: deepseekOptions }),
+          oneshot: { fallback: () => (env.screenMemory.oneshotFailed = visitKey(env, "event")) },
+          offeredCards: [...offered],
+        },
+      });
+    }
+  }
+  return buildPickDecision({ ...params, state: deepseekState, options: deepseekOptions, deepseek: { facts, note } });
 }
 
 /** The monster-DB entry of each enemy the event's text or options name (an event that starts a fight). */
