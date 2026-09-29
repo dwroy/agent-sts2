@@ -1336,15 +1336,34 @@ function randomVictim(sim: Pick<Sim, "enemies">): Sim["enemies"][number] | undef
   return best;
 }
 
-/** Non-attack damage (Juggernaut): ignores Vulnerable/Weak, still hits block. */
-function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], amount: number): void {
+/**
+ * Non-attack damage (Inferno, Juggernaut, Kusarigama): no Vulnerable, Weak, Flutter or Slow (attack-only),
+ * but the enemy's own caps as for an attack (INTANGIBLE_POWER: 「将本回合受到的所有伤害和生命减少效果降低为1」;
+ * SLIPPERY_POWER: 「下一次要失去生命值时，只会失去1点」; Guarded/Soar halving, Hard to Kill, Hardened Shell),
+ * then block, and Curl Up (any damage). An Inferno line into an Intangible Nemesis counted 6 a hit, not 1.
+ */
+function hitEnemyRaw(sim: Sim, enemy: Sim["enemies"][number], raw: number): void {
+  let amount = enemy.halved ? Math.floor(raw * 0.5) : raw;
+  if (enemy.perHitCap !== null && enemy.perHitCap !== undefined) amount = Math.min(amount, enemy.perHitCap);
+  if (enemy.intangible) amount = Math.min(amount, 1);
+  amount = Math.max(0, amount);
   const absorbed = Math.min(enemy.block, amount);
   enemy.block -= absorbed;
-  const loss = Math.min(enemy.hp, amount - absorbed);
+  let loss = amount - absorbed;
+  if (loss > 0 && (enemy.slippery ?? 0) > 0) {
+    loss = 1;
+    enemy.slippery = (enemy.slippery ?? 0) - 1;
+  }
+  if (enemy.hpLossCap !== null && enemy.hpLossCap !== undefined) loss = Math.min(loss, Math.max(0, enemy.hpLossCap - enemy.lostThisTurn));
+  loss = Math.min(enemy.hp, loss);
   enemy.hp -= loss;
   enemy.lostThisTurn += loss;
   sim.damageDealt += loss;
   if (loss > 0) wake(enemy);
+  if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
+    enemy.block += enemy.curlUp ?? 0;
+    enemy.curlUp = 0;
+  }
   if (enemy.hp <= 0) killEnemy(sim, enemy);
 }
 

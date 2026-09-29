@@ -1026,10 +1026,19 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   let dealt = 0;
   for (const e of enemies) {
     if (!e.alive || e.explodeAt !== undefined) continue;
-    const hit = e.intangibleTurns > 0 ? Math.min(1, aoe) : aoe;
+    // The enemy's caps as for the solver's non-attack damage (turn-solver hitEnemyRaw): Intangible, Hard to
+    // Kill, Guarded/Soar, then block, then a Slippery stack.
+    let hit = e.halved ? Math.floor(aoe * 0.5) : aoe;
+    if (e.base.perHitCap !== null && e.base.perHitCap !== undefined) hit = Math.min(hit, e.base.perHitCap);
+    if (e.intangibleTurns > 0) hit = Math.min(1, hit);
     const blocked = Math.min(e.block, hit);
     e.block -= blocked;
-    const lost = Math.min(e.hp, hit - blocked);
+    let through = hit - blocked;
+    if (through > 0 && e.slippery > 0) {
+      through = 1;
+      e.slippery -= 1;
+    }
+    const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
     if (e.hp <= 0) enemyDown(e, turn, input);

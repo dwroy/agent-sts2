@@ -1423,3 +1423,42 @@ describe("energy relics in the rollout's later turns (consistency #9: Pumpkin Ca
     expect(relicEnergyOf({ relics: [{ relic_id: "PUMPKIN_CANDLE", stack: 0 }] })).toEqual([]);
   });
 });
+
+describe("non-attack damage meets the enemy's Intangible, Slippery and caps (consistency #12: Inferno 6 into Intangible counted 6)", () => {
+  const bloodletting = (i: number) => card(i, "BLOODLETTING", { type: "Skill", target: "self", validTargets: [], cost: 0, hpLoss: 3, energyGain: 2 });
+  const foe = (extra: Partial<EnemySim>): EnemySim => ({ index: 0, name: "Nemesis", hp: 200, maxHp: 200, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...extra });
+  const solve = (hand: CardModel[], player: Partial<PlayerSim>, enemy: EnemySim) =>
+    solveTurn({ hand, player: { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, ...player }, enemies: [enemy], fightKind: "boss" }).plans;
+  const playing = (plans: ReturnType<typeof solve>, id: string) => plans.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId === id)!;
+
+  it("Inferno's 6 per HP loss: 1 into an Intangible enemy, 1 and a Slippery stack into a Slippery one", () => {
+    expect(playing(solve([bloodletting(0)], { inferno: 6 }, foe({})), "BLOODLETTING").outcome.damageDealt).toBe(6);
+    expect(playing(solve([bloodletting(0)], { inferno: 6 }, foe({ intangible: true })), "BLOODLETTING").outcome.damageDealt).toBe(1);
+    const slippery = playing(solve([bloodletting(0)], { inferno: 6 }, foe({ slippery: 2 })), "BLOODLETTING").outcome;
+    expect(slippery.damageDealt).toBe(1);
+    expect(slippery.enemyHpAfter[0]!.slippery).toBe(1);
+  });
+
+  it("Juggernaut's 6 per block gained: 1 into Intangible, capped by Hard to Kill", () => {
+    const defend0 = card(0, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 });
+    expect(playing(solve([defend0], { juggernaut: 6 }, foe({ intangible: true })), "DEFEND").outcome.damageDealt).toBe(1);
+    expect(playing(solve([defend0], { juggernaut: 6 }, foe({ perHitCap: 4 })), "DEFEND").outcome.damageDealt).toBe(4);
+  });
+
+  it("the rollout's start-of-turn Inferno meets a Slippery enemy's stacks", () => {
+    const WAIT: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [defend(0)];
+    const solver: SolverInput = { ...input.solver, hand, player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, inferno: 6, startTurnHpLoss: 1, turnStartAoe: 6 }, enemies: [foe({ slippery: 9 })], fightKind: "boss" };
+    const line = rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => defend(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "E", move: "WAIT", strength: 0, powers: { SLIPPERY_POWER: 9, INFERNO_POWER: 6 } }],
+      tables: { E: WAIT },
+      playerPowers: { INFERNO_POWER: 6 },
+    }).lines[0]!;
+    expect(line.perTurn.map((t) => t.dmg.mean)).toEqual([1, 1, 1, 1]);
+  });
+});
