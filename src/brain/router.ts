@@ -18,8 +18,11 @@
  * - An engine error (process failure, quota or rate limit, HTTP error, timeout) falls back to BRAIN_FALLBACK when
  *   it names another engine; fellBackFrom says which one failed and why. A quota, rate-limit, overload or login
  *   failure also rests that engine for a while (EngineFailure.cooldownMs): its questions go straight to the
- *   fallback, so an unattended run never waits on an engine that cannot answer. An answer failure the engine
- *   reports as such (`answerFailure`: DeepSeek answered, unusably) is passed on for the caller's own recovery.
+ *   fallback, so an unattended run never waits on an engine that cannot answer. TIMEOUT_REST_AFTER timeouts in a
+ *   row (a re-ask's included) rest it for TIMEOUT_REST_MS. An answer failure the engine reports as such
+ *   (`answerFailure`: DeepSeek answered, unusably) is passed on for the caller's own recovery.
+ * - An answer still unusable after the re-ask (both invalid, or the re-ask failed or timed out) is asked once of
+ *   BRAIN_FALLBACK (fell_back_from kind "invalid"); only when that fails too does the caller fall back to Jev/code.
  * - Call budgets: BRAIN_<ENGINE>_MAX_CALLS (Claude: DEFAULT_CLAUDE_MAX_CALLS) counts every call the router makes to
  *   that engine in this process, re-asks included, apart from DeepSeek's DEEPSEEK_MAX_CALLS (the loop's). A used-up
  *   budget is an engine failure ("budget"): the question goes to BRAIN_FALLBACK, or fails when there is none.
@@ -42,7 +45,16 @@ export function isAnswerFailure(error: unknown): boolean {
   return typeof error === "object" && error !== null && (error as { answerFailure?: unknown }).answerFailure === true;
 }
 
-export type FailureKind = "quota" | "rate_limit" | "overloaded" | "auth" | "timeout" | "unavailable" | "budget" | "error";
+export type FailureKind = "quota" | "rate_limit" | "overloaded" | "auth" | "timeout" | "unavailable" | "budget" | "invalid" | "error";
+
+/**
+ * Timeouts in a row after which an engine rests (its questions go to the fallback): one slow answer can be the
+ * question; two in a row mean the engine is slow now (a loaded subscription, a stuck login prompt), and every
+ * further question would wait the whole timeout (BRAIN_CLAUDE_TIMEOUT_MS: 2 minutes) before falling back.
+ */
+export const TIMEOUT_REST_AFTER = 2;
+/** How long an engine rests after TIMEOUT_REST_AFTER timeouts in a row: a few questions' worth, then it is tried again. */
+export const TIMEOUT_REST_MS = 10 * 60_000;
 
 /** An engine that could not answer, with why (for the log) and how long to rest it. */
 export class EngineFailure extends Error {
@@ -125,6 +137,8 @@ export class BrainRouter {
   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
   /** Calls made to each engine in this process (re-asks included), for BRAIN_<ENGINE>_MAX_CALLS. */
   private readonly calls = new Map<EngineName, number>();
+  /** Timeouts in a row per engine (a call that returns or fails otherwise starts it over). */
+  private readonly timeouts = new Map<EngineName, number>();
 
   constructor(private readonly deps: RouterDeps) {}
 
@@ -261,7 +275,33 @@ export class BrainRouter {
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind });
       return result;
     }
+    if (fallback && BrainRouter.unusable(req, result) && this.available(fallback)) return this.fallBackOnAnswer(primary, fallback, req, result);
     this.write(result.engine, req, result);
+    return result;
+  }
+
+  /** Whether an engine's answer is unusable after its re-ask: none, or one with hard problems. */
+  private static unusable(req: BrainRequest, result: BrainAnswer): boolean {
+    return result.answer === null || req.spec.validate(result.answer).length > 0;
+  }
+
+  /**
+   * The primary answered, but not usably after its re-ask: BRAIN_FALLBACK is asked once. Its answer (usable or
+   * not) is returned with fellBackFrom; when it fails as an engine, the primary's unusable answer is returned (the
+   * caller then falls back to Jev/code); its answer failure is thrown as it is.
+   */
+  private async fallBackOnAnswer(primary: EngineName, fallback: EngineName, req: BrainRequest, first: Attempt): Promise<BrainAnswer> {
+    this.write(primary, req, first);
+    const fellBackFrom = { engine: primary, error: `answer unusable after the re-ask: ${first.problems.join("; ") || "no answer"}`.slice(0, 300) };
+    let result: Attempt;
+    try {
+      result = { ...(await this.attempt(fallback, req)), fellBackFrom };
+    } catch (error) {
+      this.write(fallback, req, null, error, { ...fellBackFrom, kind: "invalid" });
+      if (isAnswerFailure(error)) throw error;
+      return first;
+    }
+    this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind: "invalid" });
     return result;
   }
 
@@ -331,10 +371,27 @@ export class BrainRouter {
       }, ms);
     });
     try {
-      return await Promise.race([engine.decide({ ...req, timeoutMs: ms }, controller.signal), timeout]);
+      const answer = await Promise.race([engine.decide({ ...req, timeoutMs: ms }, controller.signal), timeout]);
+      this.timeouts.delete(engine.name);
+      return answer;
+    } catch (error) {
+      if (error instanceof BrainTimeoutError) this.noteTimeout(engine.name, ms);
+      else this.timeouts.delete(engine.name);
+      throw error;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  /** A timeout: TIMEOUT_REST_AFTER in a row rest the engine for TIMEOUT_REST_MS. */
+  private noteTimeout(engine: EngineName, ms: number): void {
+    const count = (this.timeouts.get(engine) ?? 0) + 1;
+    if (count < TIMEOUT_REST_AFTER) {
+      this.timeouts.set(engine, count);
+      return;
+    }
+    this.timeouts.delete(engine);
+    this.resting.set(engine, { until: this.now() + TIMEOUT_REST_MS, reason: `${count} timeouts in a row (${ms} ms each)`, kind: "timeout" });
   }
 
   private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"]): void {

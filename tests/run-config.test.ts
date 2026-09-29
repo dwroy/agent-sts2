@@ -162,7 +162,7 @@ describe("the row", () => {
         fallback: "deepseek",
         engines: {
           deepseek: { model: "deepseek-flash", tools: false, max_calls: 300 },
-          claude: { model: "claude-opus-5-5", model_by_prefix: {}, timeout_ms: 300_000, tools: false, max_calls: 150 },
+          claude: { model: "claude-opus-5-5", model_by_prefix: {}, timeout_ms: 120_000, tools: false, max_calls: 150 },
         },
         claude: { schema: "kind", max_budget_usd: null },
       },

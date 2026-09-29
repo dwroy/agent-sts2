@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createRouter } from "../src/brain/brain.js";
-import { BrainRouter, EngineFailure, labelPrefix, type BrainLogRow } from "../src/brain/router.js";
+import { BrainRouter, EngineFailure, labelPrefix, TIMEOUT_REST_AFTER, TIMEOUT_REST_MS, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
 import { brainLogPath, ConfigError, loadConfig } from "../src/config.js";
@@ -77,10 +77,10 @@ describe("engine choice", () => {
     expect(config.brain).toMatchObject({ engine: "claude", fallback: "deepseek", tools: false, log: null });
     expect(config.brain.engines.claude).toMatchObject({ model: "opus", modelByPrefix: { MAP: "claude-opus-5" }, effort: "high", timeoutMs: 90000 });
     expect(config.brain.engines.deepseek).toMatchObject({ reask: true, timeoutMs: null, modelByPrefix: {} });
-    // Defaults: deepseek, the current Sonnet for claude, 5 minutes for CLI agents.
+    // Defaults: deepseek, the current Sonnet for claude, 2 minutes for claude (5 for other CLI agents).
     const defaults = loadConfig({} as NodeJS.ProcessEnv);
     expect(defaults.brain).toMatchObject({ engine: "deepseek", fallback: null, reask: null, tools: null, byPrefix: {} });
-    expect(defaults.brain.engines.claude).toMatchObject({ model: "claude-sonnet-5", timeoutMs: 300_000 });
+    expect(defaults.brain.engines.claude).toMatchObject({ model: "claude-sonnet-5", timeoutMs: 120_000 });
     expect(brainLogPath(defaults)).toBe("./logs/brain.jsonl");
     expect(brainLogPath({ ...defaults, log: { ...defaults.log, decisionLog: "/tmp/x.jsonl" } })).toBe("/tmp/x.brain.jsonl");
     expect(brainLogPath(loadConfig({ BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv))).toBe("");
@@ -280,5 +280,68 @@ describe("fallback", () => {
     const back = await r.decide(request());
     expect(back.engine).toBe("claude");
     expect(claude.requests).toHaveLength(2);
+  });
+});
+
+describe("timeouts rest the engine; an answer unusable after the re-ask goes to the fallback once", () => {
+  it("BRAIN_CLAUDE_TIMEOUT_MS defaults to 2 minutes", () => {
+    expect(loadConfig({} as NodeJS.ProcessEnv).brain.engines.claude.timeoutMs).toBe(120_000);
+  });
+
+  it("two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it", async () => {
+    expect(TIMEOUT_REST_AFTER).toBe(2);
+    const clock = { now: 5_000_000 };
+    // The first question: an invalid answer, then its re-ask hangs (timeout 1); the second question hangs (timeout 2).
+    const claude = new FakeEngine("claude", [{ choice: "c" }, "hang", "hang", { choice: "a", reason: "back" }]);
+    const deepseek = new FakeEngine("deepseek", [{ choice: "b", reason: "fallback" }]);
+    const { router: r } = router({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_TIMEOUT_MS: "1000" }, { claude, deepseek }, clock);
+    await r.decide(request());
+    expect(r.restingUntil("claude")).toBeNull();
+    await r.decide(request());
+    expect(r.restingUntil("claude")).toBe(5_000_000 + TIMEOUT_REST_MS);
+    const rested = await r.decide(request());
+    expect(claude.requests).toHaveLength(3);
+    expect(rested.fellBackFrom!.error).toMatch(/^resting until .* after timeout: 2 timeouts in a row \(1000 ms each\)/);
+    clock.now += TIMEOUT_REST_MS + 1;
+    expect((await r.decide(request())).engine).toBe("claude");
+  });
+
+  it("a timeout between answers starts the count over", async () => {
+    const claude = new FakeEngine("claude", ["hang", { choice: "a", reason: "ok" }, "hang"]);
+    const deepseek = new FakeEngine("deepseek", [{ choice: "b", reason: "fallback" }]);
+    const { router: r } = router({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_TIMEOUT_MS: "1000" }, { claude, deepseek });
+    await r.decide(request());
+    await r.decide(request());
+    await r.decide(request());
+    expect(r.restingUntil("claude")).toBeNull();
+  });
+
+  it("two invalid answers: BRAIN_FALLBACK is asked once and its answer taken, both rows logged", async () => {
+    const claude = new FakeEngine("claude", [{ choice: "c" }, { choice: "d" }]);
+    const deepseek = new FakeEngine("deepseek", [{ choice: "b", reason: "smith" }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek" }, { claude, deepseek });
+    const answer = await r.decide(request());
+    expect(answer).toMatchObject({ engine: "deepseek", answer: { choice: "b" }, fellBackFrom: { engine: "claude", error: 'answer unusable after the re-ask: choice "d" is not one of a, b' } });
+    expect(deepseek.requests).toHaveLength(1);
+    expect(rows.map((row) => [row.engine, row.fell_back_from?.kind ?? null])).toEqual([["claude", null], ["deepseek", "invalid"]]);
+  });
+
+  it("an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)", async () => {
+    const claude = new FakeEngine("claude", [{ choice: "c" }, "hang"]);
+    const deepseek = new FakeEngine("deepseek", [new Error("HTTP 503")]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_TIMEOUT_MS: "1000" }, { claude, deepseek });
+    const answer = await r.decide(request());
+    expect(deepseek.requests).toHaveLength(1);
+    expect(answer.engine).toBe("claude");
+    expect(answer.answer).toBeNull();
+    expect(answer.problems).toEqual(['choice "c" is not one of a, b', "re-ask failed: claude timed out after 1000 ms"]);
+    expect(rows.at(-1)).toMatchObject({ engine: "deepseek", error: "HTTP 503", fell_back_from: { engine: "claude", kind: "invalid" } });
+  });
+
+  it("without a fallback an unusable answer is returned as before", async () => {
+    const claude = new FakeEngine("claude", [{ choice: "c" }, { choice: "d" }]);
+    const answer = await router({ BRAIN_ENGINE: "claude" }, { claude }).router.decide(request());
+    expect(answer.answer).toBeNull();
+    expect(answer.fellBackFrom).toBeUndefined();
   });
 });

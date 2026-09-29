@@ -186,6 +186,9 @@ export const CLAUDE_OPUS_MODEL = "claude-opus-5-5";
 /** Model aliases the brain pins to a full id before calling the CLI; other names are sent as given. */
 export const CLAUDE_MODEL_ALIASES: Readonly<Record<string, string>> = { opus: CLAUDE_OPUS_MODEL };
 
+/** BRAIN_CLAUDE_TIMEOUT_MS when unset: 2 minutes per call. */
+export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
+
 /** The Claude engine's calls per process when BRAIN_CLAUDE_MAX_CALLS is unset (DEEPSEEK_MAX_CALLS is 300). */
 export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
@@ -273,8 +276,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       if ((EFFORTS as readonly string[]).includes(effortRaw.toLowerCase())) effort = effortRaw.toLowerCase() as Effort;
       else problems.push({ field: `BRAIN_${upper}_EFFORT`, message: `expected one of ${EFFORTS.join(", ")}, got "${effortRaw}"` });
     }
-    // CLI agents are slow (tool calls, long thinking): 5 minutes, as DEEPSEEK_TIMEOUT_MS in the live .env.
-    const defaultTimeout = name === "deepseek" ? null : 300_000;
+    // Claude: 2 minutes (a question the loop waits on; two timeouts in a row rest it, router.ts TIMEOUT_REST_AFTER).
+    // The other CLI agents (tool calls, long thinking): 5 minutes, as DEEPSEEK_TIMEOUT_MS in the live .env.
+    const defaultTimeout = name === "deepseek" ? null : name === "claude" ? DEFAULT_CLAUDE_TIMEOUT_MS : 300_000;
     const modelByPrefix: Record<string, string> = {};
     for (const key of Object.keys(env).sort()) {
       const m = new RegExp(`^BRAIN_${upper}_MODEL_([A-Z0-9_]+)$`).exec(key);
