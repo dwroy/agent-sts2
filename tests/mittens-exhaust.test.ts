@@ -36,3 +36,34 @@ describe("Toasty Mittens keeps the big attacks in a boss race", () => {
     expect(id).toBe("DEFEND_IRONCLAD");
   });
 });
+
+describe("Toasty Mittens reads Colossus and keeps the only Artifact answer (LY0N909D4A0V F33, 8V0HD9Y207WY F24)", () => {
+  it("LY0N F33 T3: with Bash+ in hand and 9x3 coming, Colossus is kept and the Defend goes (logged: Colossus 29 vs Defend 20)", () => {
+    expect(logged("ly0n-f33-t3-mittens").decision.rationale).toMatch(/巨像 scores 29/);
+    expect(pickOf("ly0n-f33-t3-mittens").id).toBe("DEFEND_IRONCLAD");
+  });
+
+  it("Colossus with nothing to make the attacker Vulnerable is only its 4 block", async () => {
+    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const context = { attacks: 10, incoming: 27, hp: 70 };
+    const defend = combatExhaustScore("DEFEND_IRONCLAD", "Skill", context, true, { block: 5 });
+    // No Vulnerable source and none on the enemy: 4 block is less than a Defend's 5.
+    expect(combatExhaustScore("COLOSSUS", "Skill", { ...context, vulnerableIncoming: 0 }, true, { block: 4, colossus: true })).toBeGreaterThan(defend);
+    // 27 from a Vulnerable (or Bash-able) enemy: 4 + 13.5 effective block, kept well below the Defend.
+    expect(combatExhaustScore("COLOSSUS", "Skill", { ...context, vulnerableIncoming: 27 }, true, { block: 4, colossus: true })).toBeLessThan(defend);
+  });
+
+  it("8V0H F24 T3: Artifact 2 on the Chompers, Bash is kept and Pommel Strike goes (logged: Bash 10 vs Pommel Strike 3)", () => {
+    // Pommel Strike reads 15 (9 + Strength 3 + Strike Dummy 3): the damage cap already has both; taking
+    // them off again as flat discounts put it at 3, under the Artifact-capped Bash.
+    expect(logged("8v0h-f24-t3-mittens").decision.rationale).toMatch(/痛击 scores 10 vs 剑柄打击 3/);
+    const { id, rationale } = pickOf("8v0h-f24-t3-mittens");
+    expect(id).toBe("POMMEL_STRIKE");
+    expect(rationale).toMatch(/剑柄打击 scores 12 vs 痛击 10/);
+  });
+
+  it("LY0N F33 T5: Ultimate Strike (18) no longer ties Pommel Strike (13) and is kept (logged: 11 vs 11, Ultimate Strike went)", () => {
+    expect(logged("ly0n-f33-t5-mittens").decision.rationale).toMatch(/究极打击 scores 11 vs 剑柄打击 11/);
+    expect(pickOf("ly0n-f33-t5-mittens").id).not.toBe("ULTIMATE_STRIKE");
+  });
+});

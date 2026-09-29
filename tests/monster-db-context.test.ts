@@ -1,8 +1,12 @@
 /** The monster DB as DeepSeek sees it, and the per-fight move model the solver reads. */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, bossDossier, monsterLine, monstersNamedIn, nearestAscension } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
 describe("monster DB facts for DeepSeek", () => {
@@ -11,7 +15,8 @@ describe("monster DB facts for DeepSeek", () => {
     expect(nearestAscension({ "0": 1, "7": 1, "8": 1 }, 9)).toEqual({ key: "8", exact: false });
     expect(nearestAscension({ "6": 1, "8": 1 }, 7)).toEqual({ key: "8", exact: false });
     expect(bossDossier("VANTOM_BOSS", 8)).toMatch(/A8: HP .*\(n=\d+\)/);
-    expect(bossDossier("VANTOM_BOSS", 9)).toContain("A9 无记录 (n=0)，以下为最近的 A8");
+    // An ascension no run has reached (the logged ones grow with every refresh: VANTOM has A9 rows now).
+    expect(bossDossier("VANTOM_BOSS", 20)).toMatch(/A20 无记录 \(n=0\)，以下为最近的 A\d+/);
     expect(bossDossier("NOT_A_BOSS", 8)).toBeNull();
   });
 
@@ -54,3 +59,64 @@ describe("per-fight move model", () => {
     expect(next!).toBeLessThan(30);
   });
 });
+
+describe("a move never logged at this ascension: the nearest one's damage scaled by the measured ratio", () => {
+  const at = (bases: Record<string, number>, hits = 1) =>
+    ({ damage_by_asc: Object.fromEntries(Object.entries(bases).map(([asc, base]) => [asc, { base_per_hit: { [String(base)]: 3 }, hits: { [String(hits)]: 3 } }])) });
+  const db: MonsterMoveData = {
+    // Its own moves seen at both A8 and A9: 10 -> 12 and 20 -> 22 (x 34/30).
+    CLAW: { moves: { A: at({ "8": 10, "9": 12 }), B: at({ "8": 20, "9": 22 }), C: at({ "8": 15 }, 2) } },
+    // No move of its own at both: every monster's pairs (here CLAW's).
+    SLIME: { moves: { D: at({ "8": 30 }) } },
+  };
+
+  it("scales by the monster's own moves at both ascensions, else every monster's, rounded and marked", () => {
+    expect(ascensionDamageRatio(db, "CLAW", 8, 9)).toEqual({ ratio: 34 / 30, n: 2, own: true });
+    expect(moveDamageAt(db, "CLAW", "A", 9)).toMatchObject({ perHit: 12, hits: 1, estimated: false, from: 9 });
+    expect(moveDamageAt(db, "CLAW", "C", 9)).toMatchObject({ perHit: 17, hits: 2, estimated: true, from: 8, ratioOwn: true });
+    expect(moveDamageAt(db, "SLIME", "D", 9)).toMatchObject({ perHit: 34, estimated: true, from: 8, ratioOwn: false, ratioN: 2 });
+    // Logged at the ascension asked for: as logged.
+    expect(moveDamageAt(db, "CLAW", "C", 8)).toMatchObject({ perHit: 15, estimated: false });
+  });
+
+  it("the real DB: A9 moves hit harder than A8 on average; The Insatiable (no A9 fight) is scaled and says so", () => {
+    const ratio = ascensionDamageRatio({}, "NONE", 8, 9);
+    expect(ratio).toBeNull();
+    const bite = moveDamageAt(realMonsters(), "THE_INSATIABLE", "LUNGING_BITE_MOVE", 9)!;
+    expect(bite.estimated).toBe(true);
+    expect(bite.from).toBe(8);
+    expect(bite.ratio).toBeGreaterThan(1);
+    expect(bite.perHit).toBe(Math.round(28 * bite.ratio));
+    expect(bossDossier("THE_INSATIABLE_BOSS", 9)).toMatch(/A9估: A8×\d\.\d\d/);
+    // The rollout's move table takes the same number and marks it.
+    const table = enemyTable("THE_INSATIABLE", 9, realMonsters() as never, {})!;
+    expect(table.moves["LUNGING_BITE_MOVE"]).toMatchObject({ damage: bite.perHit, estimated: true });
+    expect(enemyTable("THE_INSATIABLE", 8, realMonsters() as never, {})!.moves["LUNGING_BITE_MOVE"]!.estimated).toBeUndefined();
+  });
+});
+
+function realMonsters(): MonsterMoveData {
+  return (JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../src/knowledge/monster-db.json"), "utf8")) as { monsters: MonsterMoveData }).monsters;
+}
+
+describe("a monster's expected attack by turn, along its logged moves", () => {
+  it("turn-1 move, then its successors; Strength its moves gain adds to later hits; a fight-ending move is no turn", () => {
+    const db: MonsterMoveData = {
+      BRUTE: {
+        moves: {
+          // T1 always Roar (+2 Strength, no attack), then Smash 10x2, then Roar again; Smash sometimes ends in Explode (death).
+          ROAR: { turns_seen: { "1": 5 }, next: { SMASH: 5 }, self_powers_gained: { STRENGTH_POWER: { "2": 5 } } },
+          SMASH: { next: { ROAR: 4, EXPLODE: 1 }, damage_by_asc: { "8": { base_per_hit: { "10": 5 }, hits: { "2": 5 } } } },
+          EXPLODE: { damage_by_asc: { "8": { base_per_hit: { "60": 1 }, hits: { "1": 1 } } } },
+        },
+      },
+    };
+    const out = monsterDamageByTurn("BRUTE", 8, 4, db)!;
+    // T1 Roar 0; T2 Smash (10 + 2) x 2; T3 Roar 0; T4 Smash (10 + 4) x 2. Explode (no successors) is never walked into.
+    expect(out.perTurn).toEqual([0, 24, 0, 28]);
+    expect(out.estimated).toBe(false);
+    // At A9 (not logged) the Smash is scaled by the pooled ratio; with no pairs anywhere it stays x1, marked.
+    expect(monsterDamageByTurn("BRUTE", 9, 2, db)).toEqual({ perTurn: [0, 24], estimated: true });
+  });
+});
+

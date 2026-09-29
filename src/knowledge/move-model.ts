@@ -57,6 +57,63 @@ export function expectedNextDamage(enemyId: string, currentMove: string): number
   return count > 0 ? total / count : null;
 }
 
+/**
+ * Expected attack damage of this enemy on each of the next `turns` enemy turns after the current one
+ * (index 0 = next turn), walking the learned move chain from its current move. A move with no learned
+ * successor is repeated. `sleepTurns`: the enemy is asleep (ASLEEP_POWER N skips N enemy turns, this
+ * one included), so the next N - 1 turns are 0 and it wakes into the current move's other successors.
+ * null when the enemy has no learned moves.
+ */
+export function damageForecast(enemyId: string, currentMove: string, turns: number, sleepTurns = 0): number[] | null {
+  const entry = load()[enemyId];
+  if (!entry || turns <= 0) return null;
+  const step = (dist: Map<string, number>, skipSelf = false): Map<string, number> => {
+    const out = new Map<string, number>();
+    for (const [move, p] of dist) {
+      const successors = Object.entries(entry.next[move] ?? {}).filter(([next]) => !skipSelf || next !== move);
+      const total = successors.reduce((sum, [, n]) => sum + n, 0);
+      if (total <= 0) {
+        out.set(move, (out.get(move) ?? 0) + p);
+        continue;
+      }
+      for (const [next, n] of successors) out.set(next, (out.get(next) ?? 0) + (p * n) / total);
+    }
+    return out;
+  };
+  const expected = (dist: Map<string, number>) => [...dist].reduce((sum, [move, p]) => sum + p * (entry.damage[move] ?? 0), 0);
+  const out: number[] = [];
+  let dist = new Map([[currentMove, 1]]);
+  for (let k = 1; k <= turns; k += 1) {
+    if (k < sleepTurns) {
+      out.push(0);
+      continue;
+    }
+    dist = step(dist, sleepTurns > 0 && k === sleepTurns);
+    out.push(expected(dist));
+  }
+  return out;
+}
+
+/** The move this enemy uses most (successor counts summed), or null: what a revived illusion does next. */
+export function usualMove(enemyId: string): string | null {
+  const entry = load()[enemyId];
+  if (!entry) return null;
+  const counts = new Map<string, number>();
+  for (const successors of Object.values(entry.next)) for (const [move, n] of Object.entries(successors)) counts.set(move, (counts.get(move) ?? 0) + n);
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}
+
+/**
+ * An illusion dead now (Parafright on REVIVE_MOVE) is back at full HP next turn with its usual move: its
+ * expected attack on each of the next `turns` enemy turns, or null when it has no learned moves.
+ */
+export function revivingForecast(enemyId: string, turns: number): number[] | null {
+  const entry = load()[enemyId];
+  const move = usualMove(enemyId);
+  if (!entry || !move || turns <= 0) return null;
+  return [entry.damage[move] ?? 0, ...(damageForecast(enemyId, move, turns - 1) ?? [])];
+}
+
 /** The enemy's move cycle has a Buff move: it ramps while it lives (6A36: Sludge Spinner, +3 Strength per Rage). */
 export function hasBuffMove(enemyId: string): boolean {
   return (load()[enemyId]?.buffs ?? []).length > 0;

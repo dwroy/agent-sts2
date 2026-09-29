@@ -12,10 +12,10 @@ import { describe, expect, it } from "vitest";
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { potionViews } from "../src/project/narrow.js";
-import { drawablePileSize, enemySims, pileCardModels } from "../src/screens/combat-plan.js";
+import { drawablePileSize, enemySims, forgeUpgrades, laterIncomingOf, pileCardModels } from "../src/screens/combat-plan.js";
 import { planSelection } from "../src/screens/selection.js";
-import { expectedDraw, modelHandCard, modelPotion, pileCardPick, type CardModel } from "../src/strategy/card-model.js";
-import { solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { expectedDraw, modelHandCard, modelPotion, pileCardPick, replayOf, upgradeDelta, type CardModel } from "../src/strategy/card-model.js";
+import { platingAbsorbed, solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;
@@ -75,6 +75,28 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
     expect(only(plans, "POTION:HEART_OF_IRON")!.outcome.lasting).toBeGreaterThan(0);
   });
 
+  it("Heart of Iron's later Plating is worth what it can absorb of the forecast attacks (BXAZ F17 T1: Matriarch asleep 3)", () => {
+    // Old: a flat 3.5 a stack (24.5, x1.8 in a boss fight) whatever was coming; 19 of its 28 block fell on
+    // turns with nothing coming. Plating 7 later gives 6, 5, 4, 3, 2, 1 block.
+    const input = withPotions(logged("bxaz-f17-t1-heart-of-iron"));
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [0, 0, 20, 20, 13, 0] })).toBe(4 + 3 + 2);
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [15] })).toBe(6 + 5 + 4 + 3 + 2 + 1);
+    // Small hits cap it: 2 a turn absorbs at most 2.
+    expect(platingAbsorbed(7, { ...input, laterIncoming: [2] })).toBe(2 * 5 + 1);
+    // Over Plating already up, only the extra block counts (4 up: turns 1-3 already have 3, 2, 1).
+    expect(platingAbsorbed(7, { ...input, player: { ...input.player, endTurnBlock: 4 }, laterIncoming: [8] })).toBe((8 - 3) + (8 - 2) + (8 - 1) + 7 + 6 + 5 + 4 + 3 + 2 + 1 - 0);
+    // The logged board: the sleeper's forecast is 0 for its two more sleep turns, then its attacks.
+    const later = laterIncomingOf(combatOf(logged("bxaz-f17-t1-heart-of-iron")))!;
+    expect(later.slice(0, 2)).toEqual([0, 0]);
+    expect(later[2]).toBeGreaterThan(10);
+    const iron = solveTurn({ ...input, laterIncoming: later }).plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:HEART_OF_IRON")))!;
+    expect(iron.outcome.lasting).toBeGreaterThan(0);
+    expect(iron.outcome.lasting).toBeLessThanOrEqual(4 + 3 + 2 + 1);
+    // Awake and hitting 20 every turn, the same drink is worth the whole later Plating.
+    const awake = solveTurn({ ...input, laterIncoming: [20] }).plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:HEART_OF_IRON")))!;
+    expect(awake.outcome.lasting).toBeGreaterThan(iron.outcome.lasting * 2);
+  });
+
   it("Mazaleth's Gift (Ritual 1) is lasting value only (KGR6 F23 T4)", () => {
     const plans = solveTurn(withPotions(logged("kgr6-f23-t4"))).plans;
     const gift = only(plans, "POTION:MAZALETHS_GIFT")!;
@@ -90,6 +112,21 @@ describe("potion effects the solver lacked are lines with their numbers", () => 
   it("Blood Potion heals 20% of max HP at once (EN55 F8 T9, 7/80: +16)", () => {
     const plans = solveTurn(withPotions(logged("en55-f8-t9"))).plans;
     expect(endTurn(plans).outcome.hpLoss - only(plans, "POTION:BLOOD_POTION")!.outcome.hpLoss).toBe(16);
+  });
+
+  it("Blood Potion heals only the HP missing when drunk (ETYC F19 T1, 69/80: 11 of its 16)", () => {
+    const input = withPotions(logged("etyc-f19-t1-blood"));
+    expect(input.player).toMatchObject({ hp: 69, maxHp: 80 });
+    const plans = solveTurn(input).plans;
+    const blood = plans.find((plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:BLOOD_POTION")))!;
+    const dry = plans.filter((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")));
+    // The same cards with and without the drink: the drink is worth the 11 HP missing, not 16.
+    const same = dry.find((plan) => plan.steps.map((step) => step.cardId).join(",") === blood.steps.filter((step) => !step.cardId.startsWith("POTION:")).map((step) => step.cardId).join(","))!;
+    expect(same.outcome.hpLoss - blood.outcome.hpLoss).toBe(11);
+    // At full HP it heals nothing.
+    const full = solveTurn({ ...input, player: { ...input.player, hp: 80 } }).plans;
+    const fullBlood = full.find((plan) => plan.steps.length === 1 && plan.steps[0]!.cardId.startsWith("POTION:BLOOD_POTION"));
+    if (fullBlood) expect(fullBlood.outcome.hpLoss).toBe(endTurn(full).outcome.hpLoss);
   });
 
   it("Beetle Juice: Shrink on its target, that enemy's attack this turn 30% less (W8JD F31 T3)", () => {
@@ -223,6 +260,59 @@ describe("X-cost multi-hit cards", () => {
     const volley = modelHandCard({ ...base, card_id: "VOLLEY", name: "连射", cost: 0, dynamic_vars: { Damage: 10 } }, 0, loggedKnowledge);
     expect(volley.special).toBe("whirlwind");
     expect(volley.hits).toBe(0);
+  });
+});
+
+describe("Blessing of the Forge and Soldier's Stew are solver lines (BXAZ, QUG1, 8V0H: drunk unmodelled at 0.08-0.39)", () => {
+  const hand = (fx: Logged) => (combatOf(fx)["hand"] as Raw[]);
+  const entry = (fx: Logged, cardId: string) => hand(fx).find((card) => card["card_id"] === cardId)!;
+
+  it("an upgrade's numbers come from the logged upgraded cards (the game data repeats the base text)", () => {
+    const fx = logged("bxaz-f17-t5-forge");
+    expect(upgradeDelta(entry(fx, "TWIN_STRIKE"), loggedKnowledge)).toEqual({ damage: 2 });
+    expect(upgradeDelta(entry(fx, "HEADBUTT"), loggedKnowledge)).toEqual({ damage: 3 });
+    expect(upgradeDelta(entry(fx, "DEFEND_IRONCLAD"), loggedKnowledge)).toEqual({ block: 3 });
+    const bash = { card_id: "BASH", upgraded: false, energy_cost: 2, rules_text: "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。", dynamic_values: [{ name: "Damage", base_value: 8, current_value: 8 }, { name: "VulnerablePower", base_value: 2, current_value: 2 }] };
+    expect(upgradeDelta(bash, loggedKnowledge)).toEqual({ damage: 2, vulnerable: 1 });
+    expect(upgradeDelta({ ...bash, upgraded: true }, loggedKnowledge)).toBeNull();
+    // Body Slam+ costs 0.
+    expect(upgradeDelta({ card_id: "BODY_SLAM", upgraded: false, energy_cost: 1, dynamic_values: [] }, loggedKnowledge)).toEqual({ cost: -1 });
+  });
+
+  it("Blessing of the Forge upgrades the hand before the plays (BXAZ F17 T5: 39 -> 54 damage, 5 -> 8 block)", () => {
+    const fx = logged("bxaz-f17-t5-forge");
+    const input = withPotions(fx);
+    expect(input.hand.some((card) => card.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE"))).toBe(false);
+    const upgrades = forgeUpgrades(parseGameState(fx.state), loggedKnowledge);
+    const forge = modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades })!;
+    expect(forge.special).toBe("forge");
+    const plans = solveTurn({ ...input, hand: [...input.hand, forge] }).plans;
+    const cards = (plan: Plan) => plan.steps.filter((step) => !step.cardId.startsWith("POTION:")).map((step) => step.cardId).join(",");
+    const drunk = plans.find((plan) => plan.steps[0]?.cardId.startsWith("POTION:BLESSING_OF_THE_FORGE") && cards(plan).includes("TWIN_STRIKE") && cards(plan).includes("HEADBUTT"))!;
+    const dry = plans.find((plan) => !plan.steps.some((step) => step.cardId.startsWith("POTION:")) && cards(plan) === cards(drunk))!;
+    // Headbutt +3, Twin Strike +2 x2, Sword Boomerang's upgrade (+1 x3 when it is played).
+    expect(drunk.outcome.damageDealt - dry.outcome.damageDealt).toBeGreaterThanOrEqual(3 + 4);
+    // With no upgrade known for any card it stays an unmodelled option.
+    expect(modelPotion("BLESSING_OF_THE_FORGE", "Blessing of the Forge", 0, [], 0, { enemyTargets: [0], strength: 0, weak: false, upgrades: {} })).toBeNull();
+  });
+
+  it("Soldier's Stew replays the Strikes played after it, and one more play of the piles' Strikes is lasting value (QUG1 F23 T4)", () => {
+    const fx = logged("qug1-f23-t4-stew");
+    const input = withPotions(fx);
+    const stew = input.hand.find((card) => card.cardId.startsWith("POTION:SOLDIERS_STEW"))!;
+    expect(stew.special).toBe("stew");
+    const strike = input.hand.find((card) => card.cardId === "STRIKE_IRONCLAD")!;
+    const enemies = input.enemies.map((enemy) => ({ ...enemy, hp: 200, maxHp: 200 }));
+    const target = enemies.find((enemy) => enemy.hp > 0)!.index;
+    const strikes = (hand: CardModel[], drinks: boolean) =>
+      solveTurn({ ...input, enemies, hand }).plans.find((plan) => plan.steps.some((step) => step.cardId === "STRIKE_IRONCLAD" && step.target === target) && drinks === plan.steps.some((step) => step.cardId.startsWith("POTION:SOLDIERS_STEW")))!;
+    const once = strikes([strike], false).outcome.damageDealt;
+    expect(strikes([{ ...stew, laterDamage: 0 }, strike], true).outcome.damageDealt).toBe(2 * once);
+    // After drinking, the hand shows 「重放1。」 on each Strike (QUG1 F23 T5): read as Replay 1.
+    const t5 = logged("qug1-f23-t5-replay");
+    const replay = Object.fromEntries(hand(t5).map((card, index) => [String(card["card_id"]), modelHandCard(card, index, loggedKnowledge).replay ?? 0]));
+    expect(replay).toMatchObject({ STRIKE_IRONCLAD: 1, TWIN_STRIKE: 1, ANGER: 0, DEFEND_IRONCLAD: 0 });
+    expect(replayOf("君王之剑获得重放1。")).toBe(0);
   });
 });
 

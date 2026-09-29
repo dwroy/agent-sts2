@@ -496,18 +496,19 @@ describe("the rollout policy's later turns hold the potions like 0-cost cards (D
   });
 });
 
-describe("a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/~318)", () => {
+describe("a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/313, the monster DB)", () => {
   it("laterPhaseHps: the phases after the current one, by the nearest phase HP; an unknown reviver gets one at 1.5x", async () => {
     const { laterPhaseHps } = await import("../src/strategy/boss-clock.js");
-    expect(laterPhaseHps(111, 8)).toEqual([212, 318]);
-    expect(laterPhaseHps(212, 8)).toEqual([318]);
+    // Phase 3 at A8 is logged now (313; it was assumed ~318).
+    expect(laterPhaseHps(111, 8)).toEqual([212, 313]);
+    expect(laterPhaseHps(212, 8)).toEqual([313]);
     expect(laterPhaseHps(100, 0)).toEqual([200, 300]);
     expect(laterPhaseHps(200, 0)).toEqual([300]);
     expect(laterPhaseHps(300, 0)).toEqual([]);
     expect(laterPhaseHps(60, 0)).toEqual([90]);
   });
 
-  it("the rollout plays phase 2 at 212 and phase 3 at 318, not one more phase at the current 111", () => {
+  it("the rollout plays phase 2 at 212 and phase 3 at 313, not one more phase at the current 111", () => {
     const big = (i: number) => card(i, "BIG", { damage: 120, cost: 1 });
     const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
     const boss: EnemySim = { index: 0, name: "Test Subject", hp: 10, maxHp: 111, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, revives: true, attacks: [] };
@@ -522,12 +523,12 @@ describe("a phase boss revives into its real later phases (FSPK F48: Test Subjec
       playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 10_000, seed: 2, include: [kill], horizon: 5, samples: 8 },
     }).lines.find((entry) => entry.plan === kill)!;
     // T1 kills phase 1; T2 (360 damage) kills phase 2 (212, not 111: that alone would end the fight on T2);
-    // phase 3 (318) starts Intangible (Nemesis): T3's three hits deal 1 each; T4 kills it.
+    // phase 3 (313) starts Intangible (Nemesis): T3's three hits deal 1 each; T4 kills it.
     expect(line.wins).toBe(line.samples);
     expect(line.turnsToWin).toBe(4);
     expect(line.perTurn[0]!.dmg.mean).toBe(212);
     expect(line.perTurn[1]!.dmg.mean).toBe(3);
-    expect(line.perTurn[2]!.dmg.mean).toBe(315);
+    expect(line.perTurn[2]!.dmg.mean).toBe(310);
   });
 
   it("Nemesis: Intangible every other turn in phase 3 (VQKX F48 T6: \"win 88%\" with Intangible never coming back)", () => {

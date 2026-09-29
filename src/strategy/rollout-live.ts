@@ -25,6 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
+import { moveDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -49,7 +50,7 @@ import {
   type RolloutEnemy,
   type RolloutResult,
 } from "./rollout.js";
-import type { Plan, SolverInput } from "./turn-solver.js";
+import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
 export { killOrders, type KillGroup, type KillOrder };
@@ -78,10 +79,7 @@ export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null;
 
 // ---------------------------------------------------------------- knowledge
 
-export interface MonsterDbMove {
-  next?: Record<string, number>;
-  damage_by_asc?: Record<string, { base_per_hit?: Record<string, number>; hits?: Record<string, number> }>;
-  self_powers_gained?: Record<string, Record<string, number>>;
+export interface MonsterDbMove extends MoveEntry {
   block_gained?: Record<string, number>;
   avg_total_shown?: number;
 }
@@ -121,18 +119,18 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
   if (!moves && !learned) return undefined;
   const table: EnemyTable = { moves: {}, next: {} };
   for (const [move, entry] of Object.entries(moves ?? {})) {
-    const byAsc = entry.damage_by_asc ?? {};
-    const key = byAsc[String(asc)] ? String(asc) : Object.keys(byAsc).sort((a, b) => Math.abs(Number(a) - asc) - Math.abs(Number(b) - asc))[0];
-    const d = key ? byAsc[key] : undefined;
-    const base = mode(d?.base_per_hit);
-    const hits = mode(d?.hits) ?? 1;
+    // At this ascension when logged there; else the nearest logged one's scaled by the measured ratio
+    // (A9 hits harder than A8: 110 of 122 moves), marked estimated.
+    const logged = moveDamageAt(db, id, move, asc);
+    const hits = logged?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
     table.moves[move] = {
-      damage: base ?? (avg > 0 ? avg / hits : 0),
+      damage: logged?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
       strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
       block: mode(entry.block_gained) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
+      ...(logged?.estimated ? { estimated: true } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
@@ -254,8 +252,14 @@ export type LiveRollout =
       available: true;
       result: RolloutResult;
       byPlan: Map<Plan, LineEstimate>;
-      /** The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may add. */
+      /**
+       * The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may
+       * add; ties and saturated boards by enemy HP left, then turns survived; null when that ties too
+       * (pickRolloutBest).
+       */
       best: Plan | null;
+      /** Every line loses all our HP within the horizon (and wins in no sample): the HP numbers tell them nothing. */
+      saturated: boolean;
       meta: FightMeta;
       gate: Gate;
       /** This encounter's own decision points in the gates file (its `enc:` segment; 0 when absent). */
@@ -271,6 +275,33 @@ export type LiveRollout =
 
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
 
+/** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
+export const SATURATED_HP = 1;
+/** Enemy HP left within this much, and turns survived within ROLLOUT_TURNS_TIE, is a tie. */
+export const ROLLOUT_ENEMY_HP_TIE = 1;
+export const ROLLOUT_TURNS_TIE = 0.1;
+
+/**
+ * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
+ * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
+ * then code's order. When every line is saturated (its loss capped at the HP we have, no sample won) the
+ * value says nothing: the enemy HP left and turns alive alone decide, and when they tie too there is no
+ * best line (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9 by one
+ * sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ */
+export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean } {
+  if (lines.length === 0) return { best: null, saturated: false };
+  const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
+  const top = Math.max(...lines.map((line) => line.value));
+  const contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  // The least enemy HP left and every line within ROLLOUT_ENEMY_HP_TIE of it; among those the most turns
+  // alive (a stable sort: code's order among equals).
+  const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
+  const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
+  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) return { best: null, saturated };
+  return { best: near[0]!, saturated };
+}
+
 export function liveRollout(args: LiveRolloutArgs): LiveRollout {
   const now = rolloutLiveOptions.now ?? (() => performance.now());
   const start = now();
@@ -281,13 +312,36 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const { state, knowledge } = args;
     const meta = fightMetaOf(state, knowledge, args.memory);
     const combat = asRecord(state.raw["combat"]);
-    const enemies: RolloutEnemy[] = asArray(combat["enemies"])
-      .map(asRecord)
-      .filter((e) => e["is_alive"] !== false)
-      .map((e, i) => {
+    const raw = asArray(combat["enemies"]).map(asRecord);
+    // An illusion killed before this decision (is_alive false, ILLUSION_POWER) is back at full HP next
+    // turn while its summoner lives: it stays in the rollout at 0 HP and revives (rollout.ts reviveIn).
+    const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+    const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
+    const enemies: RolloutEnemy[] = raw
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => e["is_alive"] !== false || reviving(e))
+      .map(({ e, i }) => {
         const powers = powersOf(e);
         return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
       });
+    const revivers: EnemySim[] = raw
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => reviving(e) && !args.solver.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
+      .map(({ e, i }) => ({
+        index: typeof e["index"] === "number" ? e["index"] : i,
+        name: str(e["name"], str(e["enemy_id"])),
+        hp: 0,
+        maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
+        block: 0,
+        vulnerable: 0,
+        weak: 0,
+        artifact: 0,
+        intangible: false,
+        illusion: true,
+        minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
+        attacks: [],
+      }));
+    const solver = revivers.length > 0 ? { ...args.solver, enemies: [...args.solver.enemies, ...revivers] } : args.solver;
     const mm = moveModelData();
     const db = monsterMoves();
     const tables: Record<string, EnemyTable> = {};
@@ -302,7 +356,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
     const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const result = rolloutDecision({
-      solver: args.solver,
+      solver,
       plans: args.plans,
       enemies,
       tables,
@@ -329,12 +383,13 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     // has its shown line; the rollout does not add a second drink). With kill orders a line's value is its
     // best order's: the best line is the best (line, order) pair.
     const eligible = result.lines.filter((line) => args.shown.includes(line.plan) || !drinks(line.plan));
-    const best = eligible.reduce<LineEstimate | null>((a, b) => (a === null || b.value > a.value ? b : a), null)?.plan ?? null;
+    const picked = pickRolloutBest(eligible, args.solver.player.hp);
     return {
       available: true,
       result,
       byPlan,
-      best,
+      best: picked.best?.plan ?? null,
+      saturated: picked.saturated,
       meta,
       gate: gateFor(gates, meta.enc, meta.act, meta.kind),
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
@@ -352,6 +407,12 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
+/** Saturated boards: the HP numbers are the same for every line, so the enemy HP left and turns alive are shown. */
+function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
+  if (!r.saturated) return "";
+  return `; every line loses all our HP here, so the loss does not separate them: enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+}
+
 /** The facts of one shown line. */
 export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonValue> {
   if (!r.available) return { rollout: `rollout unavailable (${r.reason})` };
@@ -362,7 +423,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
   const facts: Record<string, JsonValue> = {
-    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${cut}`,
+    rollout: `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order) {
@@ -446,6 +507,7 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     lines: r.result.lines.length,
     best: bestKey,
     best_added: added,
+    ...(r.saturated ? { saturated: true } : {}),
     ...(r.result.orders.length > 0
       ? {
           orders: r.result.orders.length,

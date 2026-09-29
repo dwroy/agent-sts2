@@ -486,6 +486,17 @@ describe("DeepSeek consistency guard in the loop", () => {
     expect(record["decider"]).toBe("deepseek");
     expect(record["deepseek_consistency"]).toMatchObject({ resolution: "reasked", choice: "o0", first: { choice: "o1", reason: "" }, second: { choice: "o0", reason: "24 HP; heal" } });
     expect(record["deepseek"]).toMatchObject({ choice: "o0", consistency: { resolution: "reasked" } });
+    // BXAZV0R9ZHWK F11: the row's own flag said false after DeepSeek was re-asked.
+    expect(record["reasked"]).toBe(true);
+  });
+
+  it("a consistent answer is not a re-ask", async () => {
+    const deepseek = await scriptedDeepSeek([{ content: '{"choice":"o0","reason":"24 HP; heal"}', reasoning: "HP 24/80.\nDecisive: heal." }]);
+    const { records, stats } = await playWith([rest(), mainMenuPayload()], deepseek);
+    expect(stats.deepseekCalls).toBe(1);
+    const record = records.find((entry) => entry["label"] === "rest/choose")!;
+    expect(record["decider"]).toBe("deepseek");
+    expect(record["reasked"]).toBe(false);
   });
 
   it("still inconsistent with no usable conclusion: the existing fallback decides, and the answers are logged", async () => {
@@ -497,6 +508,7 @@ describe("DeepSeek consistency guard in the loop", () => {
     expect(record["decider"]).not.toBe("deepseek");
     expect(record["deepseek_fallback"]).toBe("deepseek answer inconsistent after re-ask");
     expect(record["deepseek_consistency"]).toMatchObject({ resolution: "fallback", first: { choice: "o1" }, second: { choice: "o1" } });
+    expect(record["reasked"]).toBe(true);
   });
 });
 

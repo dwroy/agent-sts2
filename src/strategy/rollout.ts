@@ -353,6 +353,8 @@ export interface EnemyMove {
   block: number;
   /** Burrow (Tunneler): the move gains BURROWED_POWER. */
   burrows?: boolean;
+  /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
+  estimated?: boolean;
 }
 
 export interface EnemyTable {
@@ -428,6 +430,10 @@ export interface OrderEstimate {
    * ended the fight) and the samples in which it is dead by then; null without one.
    */
   leader: { hpLeft: number; dead: number } | null;
+  /** Expected HP of the living enemies at the end of the horizon (0 in a sample that won; at our death, what they had then). */
+  enemyHpLeft: number;
+  /** Expected turns we stay alive within the horizon (the horizon when we live through it or win). */
+  turnsSurvived: number;
   hpLoss: number;
   turnsToWin: number | null;
   deaths: number;
@@ -460,6 +466,13 @@ export interface LineEstimate {
   oneTurn: { hpLoss: number; winProb: number; turns: number; modelValue: number | null; value: number };
   /** (iii) the rollout: expected HP lost from now to the fight's end, turns to the fight's end, win prob. */
   hpLoss: number;
+  /**
+   * Expected HP of the living enemies at the end of the horizon (0 in a sample that won; at our death,
+   * what they had then), and the expected turns we stay alive within it: what still tells lines apart
+   * when every line loses all our HP (rollout-live.ts pickRolloutBest).
+   */
+  enemyHpLeft: number;
+  turnsSurvived: number;
   /** Mean turns to the fight's end over the samples that survive the horizon; null when every sample dies. */
   turnsToWin: number | null;
   /** Samples (of `samples`) in which we die within the horizon, and the mean turn of death among them. */
@@ -627,6 +640,11 @@ interface SimEnemy {
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
   /**
+   * An illusion already dead on the decision's board (Parafright on REVIVE_MOVE): enemy turns left until
+   * it is back at full HP, its usual move next.
+   */
+  reviveIn?: number;
+  /**
    * Waterfall Giant husk (killed with Steam Eruption stacks): the simulated turn at whose end it explodes
    * for `blast` (through that turn's block), after which the fight is over if we live.
    */
@@ -673,6 +691,8 @@ interface SimPlayer {
   pyre: number;
   /** Radiance (Radiant Tincture): turns left with 1 extra energy at their start. */
   radiance: number;
+  /** Soldier's Stew drunk: every Strike card is played this many extra times for the rest of the fight. */
+  strikeReplay: number;
   /** Unmovable: the first card Block each turn is doubled. */
   unmovable: boolean;
   /** Start-of-turn damage to every enemy from relics (Mercury Hourglass): turnStartAoe without Inferno. */
@@ -707,6 +727,14 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength) * scale)), hits: Math.max(1, m.hits) }];
+}
+
+/** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
+export function usualMove(table: EnemyTable | undefined): string | null {
+  if (!table) return null;
+  const counts = new Map<string, number>();
+  for (const successors of Object.values(table.next)) for (const [move, n] of Object.entries(successors)) counts.set(move, (counts.get(move) ?? 0) + n);
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 }
 
 function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number): string | null {
@@ -853,6 +881,7 @@ function applyPlan(
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
       if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
+      if (step.cardId.startsWith("POTION:SOLDIERS_STEW:")) player.strikeReplay += 1;
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
@@ -958,6 +987,18 @@ function applyPlan(
       else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
     }
     for (const e of enemies) {
+      if (e.alive || e.reviveIn === undefined) continue;
+      e.reviveIn -= 1;
+      if (e.reviveIn > 0) continue;
+      e.alive = true;
+      e.reviveIn = undefined;
+      e.hp = e.maxHp;
+      e.block = 0;
+      e.vulnerable = 0;
+      e.weak = 0;
+      e.move = usualMove(input.tables[e.id]) ?? e.move;
+    }
+    for (const e of enemies) {
       if (e.alive || e.reattachIn === undefined) continue;
       e.reattachIn -= 1;
       if (e.reattachIn > 0) continue;
@@ -1042,6 +1083,7 @@ function simulate(
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
     radiance: input.playerPowers["RADIANCE_POWER"] ?? 0,
+    strikeReplay: base.strikeReplay ?? 0,
     unmovable: (input.playerPowers["UNMOVABLE_POWER"] ?? 0) > 0,
     relicAoe: 0,
     otherStartLoss: 0,
@@ -1076,6 +1118,9 @@ function simulate(
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
+      // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
+      // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
+      ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
     };
   });
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };
@@ -1133,6 +1178,7 @@ function simulate(
       regen: 0,
       facing: null,
       unmovableArmed: player.unmovable,
+      strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
       noBlock: false,
       tender: 0,
@@ -1155,7 +1201,7 @@ function simulate(
     // Radiance: this turn's extra energy is in pSim; one turn of it used.
     player.radiance = Math.max(0, player.radiance - 1);
     const started = budget.now();
-    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, ...rest } = s;
+    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
     // A kill order: this turn's target is the first of its groups with a member alive (the lowest-HP
     // member of it); none left, or none given, and the solver's own score picks.
@@ -1182,6 +1228,12 @@ interface SampleValue {
   died: boolean;
   lossModel: number | null;
   winModel: number | null;
+}
+
+/** The living enemies' HP in a snapshot (a won fight: 0). */
+function enemyHpOf(record: TurnRecord): number {
+  if (record.won) return 0;
+  return record.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
 }
 
 /** A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after. */
@@ -1383,6 +1435,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       n: v.n,
       lossModel: vm.lossModel,
       winModel: vm.winModel,
+      enemyHpLeft: enemyHpOf(records[0]!),
+      survived: v.died ? v.turns : 1,
     };
   });
 
@@ -1480,6 +1534,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
     const alive = vals.filter((v) => !v.died);
     const dead = vals.filter((v) => v.died);
+    const enemyHpLeft = mean(kept.map((records) => enemyHpOf(records[Math.min(horizon, records.length) - 1]!)));
+    const turnsSurvived = mean(vals.map((v) => (v.died ? v.turns : horizon)));
     const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
     return {
       hpLoss: loss,
@@ -1494,6 +1550,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       perTurn: turnSpreads(kept, horizon),
       firstDown,
       leader,
+      enemyHpLeft,
+      turnsSurvived,
     };
   };
 
@@ -1518,6 +1576,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         order: null,
         orders: [],
         hpLoss: o.hpLoss,
+        enemyHpLeft: o.enemyHpLeft,
+        turnsSurvived: o.survived,
         turnsToWin: o.turns,
         deaths: 0,
         turnsToDeath: null,
@@ -1543,6 +1603,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       orders: byOrder.filter((entry): entry is typeof entry & { order: KillOrder } => entry.order !== null),
       ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
+      enemyHpLeft: best.enemyHpLeft,
+      turnsSurvived: best.turnsSurvived,
       turnsToWin: best.turnsToWin,
       deaths: best.deaths,
       turnsToDeath: best.turnsToDeath,

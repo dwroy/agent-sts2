@@ -20,7 +20,12 @@
  * The deck estimate's overall scale is fitted on the logged A8 boss fights (tools/boss-clock-calibrate.ts).
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type { Knowledge } from "../knowledge/index.js";
+import { bossDamageByTurn, bossHpAt } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
@@ -30,10 +35,14 @@ import { damageRole, isBigHit } from "./card-value.js";
 export const BRIMSTONE_STRENGTH = 2;
 
 export interface BossProfile {
-  /** HP below ascension 8 (all parts / phases). */
+  /** HP below ascension 8 (all parts / phases): the fallback when the monster DB has no parts for it. */
   hp: number;
-  /** HP at ascension 8 and above (logged max_hp). */
+  /** HP at ascension 8 and above (logged max_hp): the fallback when the monster DB has no parts for it. */
   hpA8: number;
+  /** The monster DB boss parts whose HP counts (default: all of them; the Queen's Amalgam and the Kin's followers leave with her / the priest). */
+  hpParts?: string[];
+  /** HP the mechanic adds over the parts' max HP (block, heals, the followers the fight goes through). */
+  addedHp?: number;
   /** Turns the boss's script allows before it ends the fight (a kill turn, a sandpit, the typical length). */
   scriptTurns: number;
   /**
@@ -58,21 +67,21 @@ export const BOSSES: Record<string, BossProfile> = {
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
   THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at 4, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
   // 512 (A8 535) plus two 33-block Ebb turns (L34T: 48 a turn, left at 173; M6P7: 33 a turn, left at 234).
-  AEONGLASS: { hp: 578, hpA8: 601, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards", mechanic: "Artifact eats Vulnerable; +66 block from Ebb; small cards feed Withers" },
+  AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact 3 at start; Ebb gains 33 block every 3rd turn; a Wither every 6 cards played: few big cards", mechanic: "Artifact eats Vulnerable; +66 block from Ebb; small cards feed Withers" },
   // Queen 400 (A8 419) plus ~20 block a turn while the Amalgam lives (~60). The Amalgam (199, A8 211) leaves
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
-  QUEEN: { hp: 460, hpA8: 480, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam (211) adds its HP only if killed first" },
+  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits 12x3/22 under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam (211) adds its HP only if killed first" },
   // Three phases, 100/200/300 (A8 111/212, phase 3 not logged yet: ~318 assumed at the same +6%).
-  TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases (~100/200/300 HP, A8 111/212/~318); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts 10x3 and gains a hit every turn (D3X1: dead on its 5th)" },
+  TEST_SUBJECT: { hp: 600, hpA8: 641, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts 10x3 and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
   SOUL_FYSH: { hp: 211, hpA8: 221, scriptTurns: 12, lossPerTurn: 5.1, note: "shuffles Beckons into the deck, Intangible turns", mechanic: "Intangible turns (each hit deals 1) and Beckons clogging the draw" },
   // Priest 190 (A8 199) plus two followers ~59 (A8 62/63); the fight ends with the priest, winners dealt
   // ~60 into the followers on the way.
-  THE_KIN: { hp: 250, hpA8: 260, scriptTurns: 10, lossPerTurn: 10.1, note: "priest 190 (A8 199) plus two followers ~60: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
+  THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam 3x(3+Strength) on T3/T7/T11, Ritual (+Strength): be above the T11 Beam (~21)", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "9 Slippery stacks: multi-hit", mechanic: "Slippery 9: its next 9 HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption 12+3 a turn explodes on the kill: a late kill is lethal (ERPH: T14 kill, 51 into 25 HP)" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals; Pressure Gun on T5/T10/T15: block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption 12+3 a turn explodes on the kill: a late kill is lethal (ERPH: T14 kill, 51 into 25 HP)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to 150; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -86,9 +95,73 @@ export function bossProfile(bossId: string): (BossProfile & { id: string }) | nu
   return key ? { ...BOSSES[key]!, id: key } : null;
 }
 
-/** HP at this ascension (A8 raises boss HP ~5%). */
-export function bossHp(profile: BossProfile, ascension: number): number {
+/** The logged share of a boss's shown attack that got through our block (tools/build-boss-damage.py). */
+export interface UnblockedShare {
+  unblocked_share: number;
+  fights: number;
+  turns: number;
+}
+
+let unblockedCache: Record<string, UnblockedShare> | null = null;
+
+export function unblockedShare(bossKey: string): UnblockedShare | null {
+  if (!unblockedCache) {
+    try {
+      unblockedCache = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge", "boss-damage.json"), "utf8")) as Record<string, UnblockedShare>;
+    } catch {
+      unblockedCache = {};
+    }
+  }
+  return unblockedCache[bossKey] ?? null;
+}
+
+/**
+ * HP we lose a turn against this boss at this ascension: its own attack a turn from the monster DB at
+ * this ascension (bossDamageByTurn over its script's turns: its logged move order, the Strength its moves
+ * gain, moves unseen at this ascension scaled from the nearest one and marked estimated) times the share
+ * of a boss's shown attack that got through our block in every logged fight against it (all ascensions:
+ * that share is our play, not the monster). The hand-set A8 constant only when the DB has neither.
+ */
+export function bossLossPerTurn(profile: BossProfile & { id: string }, ascension: number): { value: number; source: string; estimated: boolean } {
+  const damage = bossDamageByTurn(profile.id, ascension, profile.scriptTurns);
+  const share = unblockedShare(profile.id);
+  if (!damage || !share || damage.perTurn.length === 0) return { value: profile.lossPerTurn, source: "logged A8 HP loss a turn (no DB damage)", estimated: false };
+  const mean = damage.perTurn.reduce((sum, value) => sum + value, 0) / damage.perTurn.length;
+  const value = Math.round(mean * share.unblocked_share * 10) / 10;
+  return {
+    value,
+    source: `its attack ~${Math.round(mean)}/turn at A${ascension}${damage.estimated ? " (moves unseen at this ascension scaled, estimated)" : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked (${share.fights} logged fights)`,
+    estimated: damage.estimated,
+  };
+}
+
+/**
+ * HP at this ascension: the monster DB's parts at this ascension (the nearest logged one when none is),
+ * plus what the mechanic adds; the Test Subject's phases summed. The hand-set hp / hpA8 only when the DB
+ * has no parts for the boss.
+ */
+export function bossHp(profile: BossProfile & { id?: string }, ascension: number): number {
+  if (profile.id === "TEST_SUBJECT") return testSubjectPhases(ascension).reduce((sum, hp) => sum + hp, 0);
+  const db = profile.id ? bossHpAt(profile.id, ascension, profile.hpParts) : null;
+  if (db) return db.hp + (profile.addedHp ?? 0);
   return ascension >= 8 ? profile.hpA8 : profile.hp;
+}
+
+/** Where bossHp's number comes from, for the notes DeepSeek reads: "(A9)", or the nearest logged ascension. */
+export function bossHpSource(profile: BossProfile & { id?: string }, ascension: number): string {
+  const db = profile.id ? bossHpAt(profile.id, ascension, profile.hpParts) : null;
+  if (!db) return ascension >= 8 ? "(A8, hand-set)" : "(hand-set)";
+  return db.exact ? `(A${db.asc})` : `(A${ascension} not logged: A${db.asc}'s)`;
+}
+
+/** The profile's note with the DB numbers at this ascension (the Kin's priest and followers, the Test Subject's phases). */
+export function bossNote(profile: BossProfile & { id?: string }, ascension: number): string {
+  const part = (id: string) => (profile.id ? bossHpAt(profile.id, ascension, [id])?.hp : undefined);
+  const follower = part("KIN_FOLLOWER");
+  return profile.note
+    .replace("{KIN_PRIEST}", String(part("KIN_PRIEST") ?? (ascension >= 8 ? 199 : 190)))
+    .replace("{KIN_FOLLOWER}", String(follower !== undefined ? Math.round(follower / 2) : ascension >= 8 ? 62 : 59))
+    .replace("{PHASES}", testSubjectPhases(ascension).join("/"));
 }
 
 /**
@@ -421,9 +494,9 @@ export function extraHp(id: string, deck: DeckProfile | null, turns: number, per
   }
 }
 
-/** Turns we survive at the boss's logged A8 HP loss a turn from `entryHp`. */
-export function survivableTurns(profile: BossProfile, entryHp: number): number {
-  return Math.max(1, Math.floor(entryHp / Math.max(1, profile.lossPerTurn)));
+/** Turns we survive from `entryHp` at `lossPerTurn` (bossLossPerTurn; the profile's A8 constant by default). */
+export function survivableTurns(profile: BossProfile, entryHp: number, lossPerTurn = profile.lossPerTurn): number {
+  return Math.max(1, Math.floor(entryHp / Math.max(1, lossPerTurn)));
 }
 
 /**
@@ -442,8 +515,14 @@ export function testSubjectIntangibleTurns(turns: number): number {
   return Math.ceil(turns / 2);
 }
 
-/** Test Subject phase HP by ascension (phase 3 at A8 is not logged yet: +6% like phase 2). */
+/**
+ * Test Subject phase HP at this ascension: the monster DB's logged phase sequence (nearest logged
+ * ascension when none is; A8 "111 > 212 > 313"); the hand-set 100/200/300 (A8 111/212/318) when the DB
+ * has no three-phase sequence for it.
+ */
 export function testSubjectPhases(ascension: number): [number, number, number] {
+  const phases = bossHpAt("TEST_SUBJECT", ascension)?.phases ?? [];
+  if (phases.length >= 3) return [phases[0]!, phases[1]!, phases[2]!];
   return ascension >= 8 ? [111, 212, 318] : [100, 200, 300];
 }
 
@@ -477,6 +556,9 @@ export interface BossClock {
   mechanic: string;
   note: string;
   growth: string[];
+  /** HP we lose a turn in this fight (bossLossPerTurn) and where it comes from. */
+  lossPerTurn: number;
+  lossNote: string;
   /** Test Subject only: the per-phase needs. */
   phases?: { phase: number; hp: number; turns: number; need: number }[];
 }
@@ -524,7 +606,8 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   const ascension = state.run?.ascension ?? 0;
   const deck = deckProfileForBoss(state, knowledge);
   const entryHp = entryHpOverride ?? expectedEntryHp(state);
-  const survive = survivableTurns(profile, entryHp);
+  const loss = bossLossPerTurn(profile, ascension);
+  const survive = survivableTurns(profile, entryHp, loss.value);
   const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) : 0);
   const base = {
     boss: profile.id,
@@ -532,8 +615,10 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     entryHp,
     survivableTurns: survive,
     mechanic: profile.mechanic,
-    note: profile.note,
+    note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
+    lossPerTurn: loss.value,
+    lossNote: loss.source,
   };
 
   if (profile.id === "TEST_SUBJECT") {
@@ -558,7 +643,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     return {
       ...base,
       hp: p1 + p2 + p3,
-      hpNote: `three phases ${p1}/${p2}/${p3}${ascension >= 8 ? " (A8; phase 3 not yet logged)" : ""}`,
+      hpNote: `three phases ${p1}/${p2}/${p3} ${bossHpSource(profile, ascension)}`,
       fightTurns,
       turnsNote: `phase 1 ~${turns1} turns at the deck's pace; phase 2 must die within ~${turns2} turns of Multi Claw at ~${hpAt2} HP; phase 3 assumed ${turns3}, ${damageTurns3} of them without Nemesis' Intangible`,
       need,
@@ -575,7 +660,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   let cap = profile.scriptTurns;
   let capWhy = `script ${profile.scriptTurns}`;
   if (profile.id === "WATERFALL_GIANT") {
-    const eruption = eruptionTurns(entryHp, profile.lossPerTurn);
+    const eruption = eruptionTurns(entryHp, loss.value);
     if (eruption < cap) {
       cap = eruption;
       capWhy = `eruption kill by T${eruption}`;
@@ -589,9 +674,9 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   return {
     ...base,
     hp,
-    hpNote: `${bossHp(profile, ascension)}${ascension >= 8 ? " (A8)" : ""}${extra > 0 ? ` + ${extra} (${profile.id === "VANTOM" ? `Slippery: ~${slipperyTurns(deck, fightTurns).toFixed(1)} turns of hits dealing 1` : "heals"})` : ""}`,
+    hpNote: `${bossHp(profile, ascension)} ${bossHpSource(profile, ascension)}${extra > 0 ? ` + ${extra} (${profile.id === "VANTOM" ? `Slippery: ~${slipperyTurns(deck, fightTurns).toFixed(1)} turns of hits dealing 1` : "heals"})` : ""}`,
     fightTurns,
-    turnsNote: `min(${capWhy}, survive ~${survive} at ${entryHp} HP losing ~${profile.lossPerTurn}/turn)`,
+    turnsNote: `min(${capWhy}, survive ~${survive} at ${entryHp} HP losing ~${loss.value}/turn: ${loss.source})`,
     need,
     deck: deckNow,
     gap: Math.max(0, need - deckNow),
@@ -664,6 +749,8 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     boss_hp_note: clock.hpNote,
     expected_entry_hp: clock.entryHp,
     survivable_turns: clock.survivableTurns,
+    hp_loss_per_turn: clock.lossPerTurn,
+    hp_loss_per_turn_note: clock.lossNote,
     fight_turns: clock.fightTurns,
     fight_turns_note: clock.turnsNote,
     need_damage_per_turn: clock.need,

@@ -442,6 +442,11 @@ interface ExhaustContext {
   multiEnemy?: boolean;
   /** Strike Dummy: cards named Strike deal 3 more. */
   strikeDummy?: boolean;
+  /**
+   * This turn's attack from enemies that are Vulnerable, or that a card in hand can make Vulnerable
+   * (no Artifact): what Colossus halves (LY0N909D4A0V F33 T3: Bash+ in hand, 9x3 coming).
+   */
+  vulnerableIncoming?: number;
 }
 
 /** What an exhaust candidate does, for the in-combat score (hits per play, applies a debuff, hits all). */
@@ -453,6 +458,8 @@ export interface ExhaustCard {
   damage?: number | null;
   /** Block the card gives as it reads now, from the card model. */
   block?: number;
+  /** Colossus: this turn, damage from Vulnerable enemies is halved. */
+  colossus?: boolean;
 }
 
 /** A basic Defend's printed block: a block card that gives more is kept below a Defend under fire. */
@@ -477,7 +484,7 @@ function isAttackCard(cardId: string, type: string, line: string): boolean {
 }
 
 function exhaustCardOf(model: CardModel): ExhaustCard {
-  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block };
+  return { hits: model.hits, debuff: model.vulnerable > 0 || model.weak > 0, aoe: model.target === "all", damage: model.damage, block: model.block, ...(model.special === "colossus" ? { colossus: true } : {}) };
 }
 
 /** What the in-combat exhaust pick needs to know: attacks left in the fight's deck and the attack coming. */
@@ -514,7 +521,22 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
   const artifact = living.some((enemy) => powerOf(enemy, "ARTIFACT_POWER") > 0);
   const multiEnemy = living.filter((enemy) => powerOf(enemy, "MINION_POWER") <= 0).length >= 2;
   const strikeDummy = asArray(asRecord(raw["run"])["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "STRIKE_DUMMY");
-  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks, strength, artifact, multiEnemy, strikeDummy };
+  // What Colossus halves this turn: the attack of the enemies Vulnerable now, plus what a Vulnerable card
+  // in hand reaches (all enemies for an AoE one, the biggest attacker for a single-target one); Artifact
+  // eats the card's Vulnerable.
+  const sources = hand.map((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge)).filter((model) => model.vulnerable > 0 && model.special !== "colossus");
+  const aoeVulnerable = sources.some((model) => model.target === "all");
+  // (The selection's card entries carry no target: anything not all-enemies counts as one target.)
+  const singleVulnerable = sources.some((model) => model.target !== "all" && model.target !== "self");
+  let vulnerableIncoming = 0;
+  let reachable = 0;
+  for (const enemy of living) {
+    const attack = asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0);
+    if (powerOf(enemy, "VULNERABLE_POWER") > 0 || (aoeVulnerable && powerOf(enemy, "ARTIFACT_POWER") <= 0)) vulnerableIncoming += attack;
+    else if (singleVulnerable && powerOf(enemy, "ARTIFACT_POWER") <= 0) reachable = Math.max(reachable, attack);
+  }
+  vulnerableIncoming += reachable;
+  return { attacks, incoming: Math.max(incomingDamage(combat), Math.round(nextTurn)), hp, sandpit, handAttacks, strength, artifact, multiEnemy, strikeDummy, vulnerableIncoming };
 }
 
 /**
@@ -538,8 +560,6 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
   let score = base;
   if (type === "Attack") {
     const hits = Math.max(1, card.hits ?? 1);
-    score -= hits * Math.max(0, context.strength ?? 0) * 2;
-    if (context.strikeDummy && /STRIKE/.test(cardId)) score -= 10;
     if (context.multiEnemy && (card.aoe || damageRole(cardId) === "aoe")) score -= 15;
     // An attack that hits harder than a Strike is kept below a Defend under fire, the more so the
     // harder it hits: the static card value let Toasty Mittens take Bludgeon (35 damage, 34 points)
@@ -547,12 +567,24 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
     // a Defend (981WMX8MQ7DK F33 T2), in a boss race short of damage. Basic Strikes still go first.
     const perPlay = (card.damage ?? 0) * hits;
     const strike = STRIKE_BASE_DAMAGE + Math.max(0, context.strength ?? 0);
-    if (!cardId.startsWith("STRIKE_") && perPlay > strike) score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * strike) / perPlay));
+    if (!cardId.startsWith("STRIKE_") && perPlay > strike) {
+      // Its damage as it reads now already has our Strength and Strike Dummy in it: the damage cap is
+      // the whole measure. Taking them off again as flat discounts sank Pommel Strike (15 damage) to 3,
+      // under the Artifact-capped Bash's 10, and the only Artifact answer went (8V0HD9Y207WY F24 T3);
+      // it also tied Ultimate Strike (18) with Pommel Strike (13) at 11 (LY0N909D4A0V F33 T5).
+      score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * strike) / perPlay));
+    } else {
+      score -= hits * Math.max(0, context.strength ?? 0) * 2;
+      if (context.strikeDummy && /STRIKE/.test(cardId)) score -= 10;
+    }
   }
   // Likewise a block card that out-blocks a Defend (Blood Wall's 16 went at 41 over a Defend's 20,
-  // 981WMX8MQ7DK F33 T2 once the attacks were kept).
-  if (!cardId.startsWith("DEFEND_") && type !== "Attack" && (card.block ?? 0) > DEFEND_BASE_BLOCK) {
-    score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * DEFEND_BASE_BLOCK) / (card.block ?? 1)));
+  // 981WMX8MQ7DK F33 T2 once the attacks were kept). Colossus blocks what it halves as well: half the
+  // attack of the enemies that are, or a card in hand makes, Vulnerable (LY0N909D4A0V F33 T3: 4 block
+  // read as 29 over a Defend's 20 with Bash+ in hand and 9x3 coming; it went, 16 HP lost instead of ~8).
+  const block = (card.block ?? 0) + (card.colossus ? (context.vulnerableIncoming ?? 0) / 2 : 0);
+  if (!cardId.startsWith("DEFEND_") && type !== "Attack" && block > DEFEND_BASE_BLOCK) {
+    score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * DEFEND_BASE_BLOCK) / block));
   }
   if (context.artifact && (card.debuff || DEBUFF_EXHAUST_KEEP.has(cardId))) score = Math.min(score, 10);
   return Math.max(1, score);

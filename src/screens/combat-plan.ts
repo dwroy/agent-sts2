@@ -25,8 +25,8 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { expectedNextDamage } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, type CardModel, type PotionContext } from "../strategy/card-model.js";
+import { damageForecast, expectedNextDamage, revivingForecast } from "../knowledge/move-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -848,6 +848,22 @@ function thisTurnIncoming(combat: Record<string, unknown>): number {
  * The cards of the discard or draw pile (agent_view lines, "*N" copies each) as hand cards: the deck's entry of that card
  * (upgraded when the line's name ends in "+"), with the game data's target, the board's Strength and Weak.
  */
+/**
+ * Blessing of the Forge: what upgrading each plain card of the hand and the deck changes, by card id
+ * (card-model upgradeDelta; the hand's own entries first, they carry this fight's numbers).
+ */
+export function forgeUpgrades(state: GameState, knowledge: Knowledge): Record<string, UpgradeDelta> {
+  const out: Record<string, UpgradeDelta> = {};
+  const entries = [...asArray(asRecord(state.raw["combat"])["hand"]), ...asArray(asRecord(state.run?.raw)["deck"])].map(asRecord);
+  for (const entry of entries) {
+    const cardId = str(entry["card_id"]);
+    if (!cardId || out[cardId] || bool(entry["upgraded"])) continue;
+    const delta = upgradeDelta(entry, knowledge);
+    if (delta) out[cardId] = delta;
+  }
+  return out;
+}
+
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
@@ -1224,10 +1240,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   // No potion use cost (Dai 2026-09-28): a potion line is scored on its simulated outcome like any
   // line; whether it is worth spending is Jev's call, with potion_context as its facts.
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
-  const nextIncoming = asArray(combat["enemies"])
-    .map(asRecord)
-    .filter((enemy) => enemy["is_alive"] !== false)
-    .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0);
+  const nextIncoming =
+    asArray(combat["enemies"])
+      .map(asRecord)
+      .filter((enemy) => enemy["is_alive"] !== false)
+      .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0) +
+    revivingIllusions(combat).reduce((sum, enemy) => sum + (revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? 0), 0);
+  const laterIncoming = laterIncomingOf(combat);
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
   // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
@@ -1265,6 +1284,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+    ...(beltIds.has("SOLDIERS_STEW")
+      ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
+      : {}),
     ...(beltIds.has("LIQUID_MEMORIES") ? { discardPick: pickFrom("discard", true) } : {}),
     ...(beltIds.has("DROPLET_OF_PRECOGNITION") ? { drawPick: pickFrom("draw", false) } : {}),
     // Drawn from the draw pile, or the discard pile reshuffled when it is empty.
@@ -1330,6 +1353,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       vulnerablePayoffs: new Set(asArray(asRecord(state.run?.raw)["deck"]).map((card) => str(asRecord(card)["card_id"])).filter((id) => VULNERABLE_PAYOFFS.has(id))).size,
       drawPile,
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
+      ...(laterIncoming ? { laterIncoming } : {}),
     }));
   const solved = solve();
   // The random potions' Monte Carlo, run once when a decision needs it (every question does).
@@ -2155,6 +2179,44 @@ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player
  * Test Subject's Multi Claw gains a hit every use (10x3, x4, x5 …): the next one is this one plus a hit,
  * not the move model's average (YFG5, ZANM, 7DFB: a flat 41 read for 50-70 hits).
  */
+/** Enemy turns after this one forecast for what lasts past it (Plating: Heart of Iron's 7 lasts 6 more). */
+export const LATER_TURNS = 8;
+
+/**
+ * The living enemies' expected attack on each of the next LATER_TURNS enemy turns (turn-solver
+ * laterIncoming): each enemy's learned move chain from its current move (move-model damageForecast), a
+ * sleeper (ASLEEP_POWER) at 0 while it sleeps, next turn's special cycles as multiClawNext reads them, and
+ * an enemy with no learned moves at its shown attack every turn. null when no enemy has learned moves.
+ */
+/**
+ * Illusions killed before now (is_alive false, ILLUSION_POWER) whose summoner lives: back at full HP next
+ * turn (QUG1DSDARAXU F23 T3-T4: the Parafright killed on T3 hit for 12 on T4).
+ */
+export function revivingIllusions(combat: Record<string, unknown>): Record<string, unknown>[] {
+  const enemies = asArray(combat["enemies"]).map(asRecord);
+  if (!enemies.some((enemy) => enemy["is_alive"] !== false && powerAmount(enemy, "MINION_POWER") <= 0)) return [];
+  return enemies.filter((enemy) => enemy["is_alive"] === false && powerAmount(enemy, "ILLUSION_POWER") > 0);
+}
+
+export function laterIncomingOf(combat: Record<string, unknown>): number[] | null {
+  const out: number[] = Array.from({ length: LATER_TURNS }, () => 0);
+  let known = false;
+  for (const enemy of revivingIllusions(combat)) {
+    const forecast = revivingForecast(str(enemy["enemy_id"]), LATER_TURNS);
+    if (!forecast) continue;
+    known = true;
+    for (let k = 0; k < LATER_TURNS; k += 1) out[k]! += forecast[k] ?? 0;
+  }
+  for (const enemy of asArray(combat["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false)) {
+    const forecast = damageForecast(str(enemy["enemy_id"]), str(enemy["move_id"]), LATER_TURNS, powerAmount(enemy, "ASLEEP_POWER"));
+    const shown = asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0);
+    if (forecast) known = true;
+    const special = multiClawNext(enemy);
+    for (let k = 0; k < LATER_TURNS; k += 1) out[k]! += k === 0 && special !== null ? special : forecast ? forecast[k]! : shown;
+  }
+  return known ? out.map((value) => Math.round(value * 10) / 10) : null;
+}
+
 export function multiClawNext(enemy: Record<string, unknown>): number | null {
   // Kin Priest: a fixed cycle Orb of Frailty -> Orb of Weakness -> Beam (3 hits of 3 + Strength) ->
   // Ritual; the move model's average Beam (13) missed the 21 that killed P78Z and PPKT on T11.
