@@ -100,10 +100,14 @@ describe("route facts on logged boards (audit 2026-09-28)", () => {
   });
 
   it("SFCE F18 (72/87): DeepSeek's path is projected near what happened (82/97 at the boss), not 46/87", () => {
-    const options = Object.values(routeOptions("sfce-f18-route-plan"));
-    const taken = options.find((option) => option["path"] === "Monster -> Monster -> Shop -> Unknown -> Monster -> RestSite -> Monster -> Treasure -> RestSite -> Unknown -> RestSite -> Monster -> Monster -> RestSite -> Boss");
-    expect(taken).toBeDefined();
-    expect(bossHp(taken!)).toBeGreaterThanOrEqual(70);
+    // The logged path, projected as the route facts project it (it need not be among today's 8 candidates:
+    // batch B re-weighted the elites at their own floors, and elite paths now rank higher).
+    const env = loggedEnv(logged("sfce-f18-route-plan"), { buildDecider: "deepseek" } as Partial<DecisionEnv>);
+    const taken = "Monster -> Monster -> Shop -> Unknown -> Monster -> RestSite -> Monster -> Treasure -> RestSite -> Unknown -> RestSite -> Monster -> Monster -> RestSite -> Boss".split(" -> ");
+    const costs = roomCostModel(2, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80);
+    const projection = projectPath(taken, env.state.run!.current_hp!, costs);
+    expect(projection.arrival[taken.length - 1]!).toBeGreaterThanOrEqual(70);
+    expect(Object.values(routeOptions("sfce-f18-route-plan")).length).toBeGreaterThanOrEqual(2);
   });
 
   it("act 1 stays sensible: SFCE F1 (64/80) routes reach the boss between 30 and 80 HP", () => {

@@ -630,3 +630,58 @@ describe("8. A move's rare logged effect is not applied on every use (consistenc
     expect(playerPowersOf(stab as never, 8)).toEqual({});
   });
 });
+
+describe("9. Route scoring: each elite at its own floor (R1); likely death from the measured room costs (R2)", () => {
+  const costs = { act: 2, maxHp: 80, monster: { median: 11, p75: 19, source: "test" }, elite: { median: 33, p75: 45, source: "test" }, unknown: { median: 0, p75: 3, source: "test" } };
+
+  it("the weights take the node's row: floor in act = row + 1", async () => {
+    const { makeRouteWeights } = await import("../src/screens/map.js");
+    const weights = makeRouteWeights(2, costs);
+    const at = { hp: 0.9, gold: 100, fights: 0 };
+    expect(weights("Elite", at, 2)).toBe(-3); // first floors of the act
+    expect(weights("Elite", at, 7)).toBe(4); // mid-act, above 80%
+    expect(weights("Elite", at, 13)).toBe(-5); // the act-2 pre-boss elite below 95%
+  });
+
+  it("a fight is a likely death only at or below its median measured cost (33/80 = 41%), not the old 55%", async () => {
+    const { LIKELY_DEATH, makeRouteWeights } = await import("../src/screens/map.js");
+    const weights = makeRouteWeights(2, costs);
+    expect(weights("Elite", { hp: 0.45, gold: 100, fights: 0 }, 7)).not.toBe(LIKELY_DEATH);
+    expect(weights("Elite", { hp: 0.4, gold: 100, fights: 0 }, 7)).toBe(LIKELY_DEATH);
+    expect(weights("Monster", { hp: 0.13, gold: 100, fights: 0 }, 7)).toBe(LIKELY_DEATH);
+    expect(weights("Monster", { hp: 0.2, gold: 100, fights: 0 }, 7)).not.toBe(LIKELY_DEATH);
+  });
+
+  it("the map question at act start values a mid-act elite as mid-act (it read every elite as a first-floors -3)", async () => {
+    const { mapPayload } = await import("./scenarios.js");
+    const { planMap } = await import("../src/screens/map.js");
+    const { setRoomCostsForTests } = await import("../src/knowledge/room-costs.js");
+    setRoomCostsForTests({ "0": { "1": { Monster: { n: 100, median: 8, p75: 12, mean: 9 }, Elite: { n: 50, median: 20, p75: 30, mean: 22 }, Unknown: { n: 50, median: 0, p75: 2, mean: 1 } } } });
+    try {
+      const raw = mapPayload();
+      const run = raw["run"] as Raw;
+      run["floor"] = 1;
+      run["act_id"] = "0";
+      run["ascension"] = 0;
+      run["current_hp"] = 72;
+      run["max_hp"] = 80;
+      const map = raw["map"] as Raw;
+      map["current_node"] = { row: 0, col: 3 };
+      const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+      map["available_nodes"] = [
+        { index: 0, row: 1, col: 1, node_type: "Treasure" },
+        { index: 1, row: 1, col: 3, node_type: "Treasure" },
+      ];
+      map["nodes"] = [node(1, 1, "Treasure", [{ row: 8, col: 1 }]), node(1, 3, "Treasure", [{ row: 8, col: 3 }]), node(8, 1, "Elite"), node(8, 3, "Monster")];
+      const env = loggedEnv({ source: "", decision: { label: "", decider: "", chosen: null, rationale: "" }, state: raw }, { combatPlanner: "card" });
+      const decision = planMap(env)!;
+      const criteria = decision.kind === "ask" ? (decision.questions["pick"] as { criteria: Record<string, string> }).criteria : {};
+      const value = (key: string): number => JSON.parse(String(criteria[key]))["route_value"];
+      // Treasure 3, then the elite at floor 9 at 90%: +4 (it was -3 at "floor 1"); the hallway 1.2.
+      expect(value("n0")).toBeCloseTo(7);
+      expect(value("n1")).toBeCloseTo(4.2);
+    } finally {
+      setRoomCostsForTests(null);
+    }
+  });
+});

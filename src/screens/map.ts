@@ -11,7 +11,7 @@ import { briefJson } from "../project/run-brief.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { projectPath, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
+import { projectPath, roomCost, roomCostModel, roomCostNote, type PathProjection, type RoomCostModel } from "../strategy/route-projection.js";
 import type { GameState } from "../mod/schema.js";
 import { oneshotOn } from "./oneshot.js";
 
@@ -66,10 +66,14 @@ export function monsterWeight(hpOnArrival: number): number {
 /** Weight of a fight reached with no more HP than it is expected to cost. */
 export const LIKELY_DEATH = -20;
 
-/** How much this node type is worth to *this* run, at the projected HP/gold on arrival. */
-export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number, act?: number): number {
+/**
+ * How much this node type is worth to *this* run, at the projected HP/gold on arrival. `floorInAct`: the
+ * node's own floor in its act (its row + 1). `deathShare`: the fight's expected cost as a share of max HP
+ * (the route's measured room costs, routeCostShare); without it the old fixed shares (fightHpCost).
+ */
+export function nodeWeight(type: string, hpPct: number, gold: number, floorInAct: number, act?: number, deathShare?: number): number {
   // A fight reached with no more HP than it is expected to cost is a likely death, not a -3.
-  if ((type === "Elite" || type === "Monster") && act !== undefined && hpPct <= fightHpCost(type, act)) return LIKELY_DEATH;
+  if ((type === "Elite" || type === "Monster") && act !== undefined && hpPct <= (deathShare ?? fightHpCost(type, act))) return LIKELY_DEATH;
   switch (type) {
     case "Elite":
       // Below half HP an elite gets worse the lower HP is (K39J F28: Infested Prism at 21/80 scored -3,
@@ -180,7 +184,8 @@ function stateAfter(type: string, at: RouteState, act: number, ascension: number
   }
 }
 
-type Weights = (type: string, at: RouteState) => number;
+/** A node's weight on arrival in state `at`; `row`: the node's map row (its floor in the act is row + 1). */
+type Weights = (type: string, at: RouteState, row: number) => number;
 
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
 function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>, ascension: number): number {
@@ -195,7 +200,7 @@ function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>
     if (!childNode) continue;
     // A likely death ends the route: nothing after it counts (4UWK F22: at 9/80 the Unknown room into a
     // forced elite scored 15.4 on the rooms after the elite; the Monster -> Rest route -49.7).
-    const here = weights(childNode.type, left);
+    const here = weights(childNode.type, left, childNode.row);
     best = Math.max(best, here <= LIKELY_DEATH ? here : here + continuation(childNode, left, nodes, weights, act, memo, ascension));
   }
   if (best === -Infinity) best = 0;
@@ -216,7 +221,7 @@ function pathPreview(node: MapNode, start: RouteState, nodes: Map<string, MapNod
     for (const child of current.children) {
       const childNode = nodes.get(key(child.row, child.col));
       if (!childNode) continue;
-      const value = weights(childNode.type, at) + continuation(childNode, at, nodes, weights, act, new Map(), ascension);
+      const value = weights(childNode.type, at, childNode.row) + continuation(childNode, at, nodes, weights, act, new Map(), ascension);
       if (value > bestValue) {
         bestValue = value;
         bestChild = childNode;
@@ -247,16 +252,30 @@ export function actOfFloor(floor: number): number {
   return floor <= 17 ? 1 : floor <= 33 ? 2 : 3;
 }
 
-/** Code's node weights on this floor's map (RUN_PLAN=v1: the plan's elite appetite shifts elite nodes). */
-function routeWeights(env: DecisionEnv, floor: number): { act: number; weightOf: Weights } {
-  const act = actOfFloor(floor);
-  const actStart = [1, 18, 34][Math.min(act, 3) - 1]!;
-  const floorInAct = Math.max(1, floor - actStart + 1);
-  const weightOf: Weights = (type, at) =>
-    nodeWeight(type, at.hp, at.gold, floorInAct, act) -
+/** A fight's median measured cost as a share of max HP (the route projection's RoomCostModel): its likely-death line. */
+export function routeCostShare(type: string, costs: RoomCostModel): number | undefined {
+  if (type !== "Monster" && type !== "Elite") return undefined;
+  return costs.maxHp > 0 ? roomCost(type, costs, "median") / costs.maxHp : undefined;
+}
+
+/**
+ * Code's node weights for an act's map: each node at its own floor in the act (row + 1; consistency R1: every
+ * node took the current floor, so an act-start plan read every elite as a first-floors -3 and never gave the
+ * mid-act +4 nor the pre-boss rule), a fight a likely death when the HP on arrival is at most its median
+ * measured cost (R2: the old 25%/55%/70%-of-max elite shares called 50 logged elite nodes a death that the
+ * projection shown beside them survives). RUN_PLAN=v1: the plan's elite appetite shifts elite nodes.
+ */
+export function makeRouteWeights(act: number, costs: RoomCostModel, runPlan?: DecisionEnv["screenMemory"]["runPlan"]): Weights {
+  return (type, at, row) =>
+    nodeWeight(type, at.hp, at.gold, Math.max(1, row + 1), act, routeCostShare(type, costs)) -
     (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0) +
-    (type === "Elite" ? runPlanEliteShift(env.screenMemory.runPlan, at.hp) : 0);
-  return { act, weightOf };
+    (type === "Elite" ? runPlanEliteShift(runPlan, at.hp) : 0);
+}
+
+function routeWeights(env: DecisionEnv, floor: number): { act: number; weightOf: Weights; costs: RoomCostModel } {
+  const act = actOfFloor(floor);
+  const costs = roomCostModel(act, env.state.run?.ascension ?? 0, env.state.run?.max_hp ?? 80);
+  return { act, weightOf: makeRouteWeights(act, costs, env.screenMemory.runPlan), costs };
 }
 
 export function planMap(env: DecisionEnv): Decision | null {
@@ -314,7 +333,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const gold = state.run?.gold ?? 0;
   const ascension = state.run?.ascension ?? 0;
   const floor = state.run?.floor ?? 1;
-  const { act, weightOf } = routeWeights(env, floor);
+  const { act, weightOf, costs } = routeWeights(env, floor);
   const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
 
   const options: PickOption[] = available.flatMap((node) => {
@@ -327,7 +346,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     // At low HP the next node matters most (a rest now beats a better path later): at 29% HP a
     // Monster-first route scored level with a Rest-first one on a live run.
     const urgency = hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1;
-    const value = weightOf(type, start) * urgency + continuation(self, start, nodes, weightOf, act, new Map(), ascension);
+    const value = weightOf(type, start, row) * urgency + continuation(self, start, nodes, weightOf, act, new Map(), ascension);
     return [
       {
         key: `n${index}`,
@@ -386,7 +405,7 @@ export function planMap(env: DecisionEnv): Decision | null {
     ascension,
     hpPct,
     urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
-    costs: roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80),
+    costs,
   });
 }
 
@@ -536,7 +555,7 @@ function scorePath(path: MapNode[], context: RouteContext): ScoredPath {
     at = { ...at, hp: Math.max(0, Math.min(1, projection.arrival[step]! / max)) };
     hpOnArrival.push(at.hp);
     if (dead) return;
-    const weight = context.weights(node.type, at);
+    const weight = context.weights(node.type, at, node.row);
     value += step === 0 ? weight * context.urgency : weight;
     // A likely death ends the route: nothing after it counts (as in continuation()).
     if (weight <= LIKELY_DEATH) dead = true;
@@ -813,7 +832,7 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
   const floor = state.run?.floor ?? null;
   if (!map || map.runId !== runId || floor === null || map.floor !== floor - 1) return null;
   if (map.available.length === 0 || !map.available.every((node) => node.type === "Ancient")) return null;
-  const { act, weightOf } = routeWeights(env, floor);
+  const { act, weightOf, costs } = routeWeights(env, floor);
   if (screenMemory.routePlan && screenMemory.routePlan.runId === runId && screenMemory.routePlan.act === act) return null;
   if (screenMemory.routePlanFailed === `${runId}:${act}`) return null;
   const nodes = new Map<string, MapNode>(map.nodes.map((node) => [key(node.row, node.col), { row: node.row, col: node.col, type: node.type, children: node.children }]));
@@ -830,7 +849,7 @@ export function actStartRoutes(env: DecisionEnv): { act: number; note: string; r
     hpPct,
     urgency: hpPct < 0.4 ? 3 : hpPct < 0.55 ? 1.8 : 1,
     ascension: state.run?.ascension ?? 0,
-    costs: roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80),
+    costs,
   };
   const candidates = candidatePaths(context);
   if (candidates.length < 2) return null;

@@ -256,15 +256,16 @@ describe("map", () => {
     (raw["run"] as Record<string, unknown>)["current_hp"] = 68; // 85%: an elite now would be +4
     const map = raw["map"] as Record<string, unknown>;
     const node = (row: number, col: number, type: string, children: { row: number; col: number }[] = []) => ({ row, col, node_type: type, children });
+    // Mid-act rows (the elite's own floor, row + 1 = 10: batch B R1), as at the payload's floor 9.
     map["available_nodes"] = [
-      { index: 0, row: 5, col: 1, node_type: "Monster" },
-      { index: 1, row: 5, col: 3, node_type: "Monster" },
+      { index: 0, row: 8, col: 1, node_type: "Monster" },
+      { index: 1, row: 8, col: 3, node_type: "Monster" },
     ];
     map["nodes"] = [
-      node(5, 1, "Monster", [{ row: 6, col: 1 }]),
-      node(5, 3, "Monster", [{ row: 6, col: 3 }]),
-      node(6, 1, "Elite"),
-      node(6, 3, "Monster"),
+      node(8, 1, "Monster", [{ row: 9, col: 1 }]),
+      node(8, 3, "Monster", [{ row: 9, col: 3 }]),
+      node(9, 1, "Elite"),
+      node(9, 3, "Monster"),
     ];
     const decision = mustDecision(plan(raw));
     if (decision.kind !== "ask") throw new Error("expected an ask");
