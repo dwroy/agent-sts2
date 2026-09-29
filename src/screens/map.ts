@@ -456,9 +456,14 @@ export const ROUTE_REVIEW_TASK =
   '只回答 JSON：{"route": "keep" 或 "<节点 id，用空格分隔>", "reason": "<30 字以内>"}';
 
 /** The route-plan answer's White Beast Statue part (a full belt, a fight node first). */
-const STATUE_ROUTE_NOTE =
-  '白兽雕像：每场战斗后必掉一瓶药水，药水栏已满且奖励界面不能扔药水，所以路线第一步若是战斗（或问号房里的战斗），那瓶药水会丢失，除非先扔：' +
-  '可以在回答里加 "discard": [药水槽编号]（见 discardable_potions），代码先扔再走；不扔就不写。';
+const STATUE_ROUTE_LOST = '白兽雕像：每场战斗后必掉一瓶药水，药水栏已满且奖励界面不能扔药水，所以路线第一步若是战斗（或问号房里的战斗），那瓶药水会丢失，';
+const STATUE_ROUTE_NOTE = `${STATUE_ROUTE_LOST}除非先扔：可以在回答里加 "discard": [药水槽编号]（见 discardable_potions），代码先扔再走；不扔就不写。`;
+/**
+ * The drink part (v3 2f6ae4c, 5LRZ7HJ7YGSY F37: with only keep / discard, Fruit Juice was discarded): a potion
+ * usable on the map can be drunk before the first step instead. Facts only; code does not say which.
+ */
+const STATUE_DRINK_NOTE = '也可以先喝掉一瓶地图上能喝的药水：在回答里加 "drink": [药水槽编号]（一个，见 drinkable_potions），代码先喝再走；不喝就不写。"discard" 和 "drink" 只写一种。';
+const STATUE_DRINK_ONLY_NOTE = `${STATUE_ROUTE_LOST}除非先喝掉一瓶地图上能喝的药水：在回答里加 "drink": [药水槽编号]（一个，见 drinkable_potions），代码先喝再走；不喝就不写。`;
 
 function routePlanDecision(env: DecisionEnv, fallback: Decision, available: NodeRef[], current: { row: number; col: number } | null): Decision {
   const { state, screenMemory } = env;
@@ -527,15 +532,31 @@ function nextOptions(map: RouteMap): Record<string, string | null> {
   );
 }
 
-/** White Beast Statue with a full belt: the discardable potions for the route question, or null. */
-function statueSlots(env: DecisionEnv, available: NodeRef[]): { note: string; potions: Record<string, JsonValue> } | null {
+/**
+ * White Beast Statue with a full belt: the route question's fields (the note, the discardable potions, the potions
+ * that can be drunk on the map, and the Fruit Juice fact), or null.
+ */
+function statueSlots(env: DecisionEnv, available: NodeRef[]): Record<string, JsonValue> | null {
   const probe = available.find((node) => STATUE_FIGHT_NODES.has(node.type));
   if (!probe) return null;
   const variants = statuePotionOptions(env, available)(goOption(probe));
   const variant = variants.find((option) => option.key.endsWith(DISCARD_SUFFIX));
-  if (!variant) return null;
-  const listed = asRecord(asRecord(variant.summary)["discardable_potions"]) as Record<string, JsonValue>;
-  return { note: STATUE_ROUTE_NOTE, potions: listed };
+  const drinks = variants.filter((option) => option.key.includes(DRINK_SUFFIX));
+  if (!variant && drinks.length === 0) return null;
+  const drinkable = Object.fromEntries(drinks.map((drink) => [drinkSlotOf(drink.key), asRecord(drink.summary)["potion"] as JsonValue]));
+  const juice = asRecord(variants[0]?.summary)["fruit_juice"];
+  const note = variant ? `${STATUE_ROUTE_NOTE}${drinks.length > 0 ? STATUE_DRINK_NOTE : ""}` : STATUE_DRINK_ONLY_NOTE;
+  return {
+    white_beast_statue: note,
+    ...(variant ? { discardable_potions: asRecord(asRecord(variant.summary)["discardable_potions"]) as Record<string, JsonValue> } : {}),
+    ...(drinks.length > 0 ? { drinkable_potions: drinkable } : {}),
+    ...(typeof juice === "string" ? { fruit_juice: juice } : {}),
+  };
+}
+
+/** The potion slot a "drink, then travel" variant's key names ("n0:drink2" -> "2"). */
+function drinkSlotOf(key: string): string {
+  return key.slice(key.indexOf(DRINK_SUFFIX) + DRINK_SUFFIX.length);
 }
 
 /** A plain "travel to this node" option (the statue's discard variant is built on it). */
@@ -545,11 +566,23 @@ function goOption(node: NodeRef): PickOption {
 
 /**
  * The move a route's first node makes: travel there, or (White Beast Statue, the answer's "discard") discard the
- * named potion slots first and then travel (potion-discard.ts, as the Jev map question's discard variants).
+ * named potion slots first and then travel (potion-discard.ts, as the Jev map question's discard variants), or
+ * (the answer's "drink") drink the named potion on the map first and then travel (its drink variant).
  */
-function firstMove(env: DecisionEnv, available: NodeRef[], first: NodeRef, discard: number[] | undefined): { intent: ActionRequest; apply?: () => void; journal?: string } | { invalid: string } {
+function firstMove(env: DecisionEnv, available: NodeRef[], first: NodeRef, discard: number[] | undefined, drink?: number[]): { intent: ActionRequest; apply?: () => void; journal?: string } | { invalid: string } {
   const move: ActionRequest = { action: "choose_map_node", option_index: first.index };
-  if (!discard || discard.length === 0 || !STATUE_FIGHT_NODES.has(first.type)) return { intent: move };
+  const drinking = drink !== undefined && drink.length > 0;
+  if ((!discard || discard.length === 0) && !drinking) return { intent: move };
+  if (!STATUE_FIGHT_NODES.has(first.type)) return { intent: move };
+  if (drinking) {
+    if (discard && discard.length > 0) return { invalid: 'the answer both discards and drinks potions before the first step: name one ("discard" or "drink")' };
+    const drinks = statuePotionOptions(env, available)(goOption(first)).filter((option) => option.key.includes(DRINK_SUFFIX));
+    const valid = drinks.map((option) => drinkSlotOf(option.key)).join(", ") || "none";
+    if (drink.length > 1) return { invalid: `the answer drinks ${drink.length} potions first; name one ("drink": [one of ${valid}])` };
+    const chosen = drinks.find((option) => drinkSlotOf(option.key) === String(drink[0]));
+    if (!chosen) return { invalid: `potion slot ${drink[0]} cannot be drunk here (drinkable: ${valid})` };
+    return { intent: chosen.intent, ...(chosen.apply ? { apply: chosen.apply } : {}), journal: chosen.label ?? `drank potion slot ${drink[0]}, then travelled` };
+  }
   const variant = statuePotionOptions(env, available)(goOption(first)).find((option) => option.key.endsWith(DISCARD_SUFFIX));
   if (!variant?.plan) return { intent: move };
   const planned = variant.plan({ cards: [], discard });
@@ -572,7 +605,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
   const routeMap: Record<string, JsonValue> = {
     ...routeBlockState({ map, start, costs }),
     ...(replanWhy ? { replan_because: replanWhy, previous_plan: previous?.summary ?? null } : {}),
-    ...(statue ? { white_beast_statue: statue.note, discardable_potions: statue.potions } : {}),
+    ...(statue ?? {}),
   };
   const question: AskDecision = {
     kind: "ask",
@@ -599,7 +632,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
           const first = available.find((node) => nodeId(node.row, node.col) === ids[0]);
           if (!first) return { invalid: `the route's first node ${ids[0]} is not an available map node` };
           const plan = makeRoutePlan(env, map, ids, start, costs, replanWhy ? `re-plan: ${replanWhy}` : undefined);
-          const move = firstMove(env, available, first, discardSlotsOf(json["discard"]));
+          const move = firstMove(env, available, first, discardSlotsOf(json["discard"]), typeof json["drink"] === "number" ? [json["drink"]] : discardSlotsOf(json["drink"]));
           if ("invalid" in move) return move;
           return {
             intent: move.intent,

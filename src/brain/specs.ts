@@ -171,6 +171,7 @@ export function routePlanSpec(label: string, state: unknown): AnswerSpec {
         route: ROUTE_FIELD(keep),
         reason: { type: "string", description: "max 30 words" },
         discard: { type: "array", description: "White Beast Statue only: potion slot numbers to discard before the first step; [] otherwise", items: { type: "integer" } },
+        drink: { type: "array", description: "White Beast Statue only: the one potion slot number (drinkable_potions) to drink on the map before the first step; [] otherwise", items: { type: "integer" } },
       },
       required: ["route", "reason"],
       additionalProperties: false,

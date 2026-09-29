@@ -20,6 +20,7 @@ import { ask, board, decide, env as oneshotEnv } from "./oneshot-support.js";
 import { pendingPickStep, selectingText } from "../src/screens/selection.js";
 import { discardableSlots } from "../src/screens/potion-discard.js";
 import { planMap, statuePotionOptions } from "../src/screens/map.js";
+import { reachableNext, routeMapFromView } from "../src/strategy/route-map.js";
 import type { PickOption } from "../src/screens/pick.js";
 import { logged, loggedEnv } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
@@ -100,6 +101,52 @@ describe("2. White Beast Statue with a full belt: a \"drink it now, then travel\
     run["relics"] = (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "WHITE_BEAST_STATUE");
     const env = loggedEnv(fx);
     expect(statuePotionOptions(env, [{ index: 0, row: 4, col: 6, type: "Monster" }])(go).map((option) => option.key)).toEqual(["go"]);
+  });
+});
+
+describe("2b. V4 route plan (map/route-plan) with White Beast Statue and a full belt: the drink option rides on the route answer (\"drink\"), as the discard does", () => {
+  /** The statue board asked as the V4 route plan, and a legal route from its next node to the boss. */
+  function routePlan() {
+    const { fx } = statueBoard();
+    const env = loggedEnv(fx, { buildDecider: "deepseek" });
+    const question = planMap(env) as Extract<ReturnType<typeof planMap>, { kind: "ask" }>;
+    const routeMap = question.state["route_map"] as Raw;
+    const map = routeMapFromView(routeMap)!;
+    const route: string[] = [];
+    let at: string | undefined = map.next[0];
+    while (at) {
+      route.push(at);
+      if (map.bosses.includes(at)) break;
+      at = reachableNext(map, at).find((id) => map.nodes.has(id));
+    }
+    return { env, question, routeMap, route: route.join(" ") };
+  }
+
+  it("the question lists the drinkable potions (Fruit Juice only: the Vulnerable Potion is combat-only) and the Fruit Juice fact", () => {
+    const { question, routeMap } = routePlan();
+    expect(question.label).toBe("map/route-plan");
+    expect(routeMap["drinkable_potions"]).toEqual({ "0": "果汁: 获得5点最大生命值。" });
+    expect(Object.keys(routeMap["discardable_potions"] as Raw)).toEqual(["0", "1"]);
+    expect(routeMap["white_beast_statue"]).toMatch(/"drink": \[药水槽编号\]/);
+    expect(routeMap["fruit_juice"]).toMatch(/code drinks 果汁 \(potion slot 0\)/);
+  });
+
+  it("\"drink\": [0] drinks it first, then the map travels to the route's first node once the slot is empty", () => {
+    const { env, question, route } = routePlan();
+    const resolved = question.deepseek!.plan!.resolve({ route, reason: "juice first", drink: [0] });
+    if ("invalid" in resolved) throw new Error(resolved.invalid);
+    expect(resolved.intent).toEqual({ action: "use_potion", option_index: 0 });
+    resolved.apply!();
+    expect(env.screenMemory.afterDiscard).toMatchObject({ place: "map", slot: 0, via: "drink" });
+    expect(env.screenMemory.routePlan).toBeDefined();
+  });
+
+  it("a potion that cannot be drunk here, two drinks, or a drink with a discard is invalid", () => {
+    const { question, route } = routePlan();
+    const resolve = question.deepseek!.plan!.resolve;
+    expect(resolve({ route, reason: "", drink: [1] })).toMatchObject({ invalid: expect.stringMatching(/potion slot 1 cannot be drunk here \(drinkable: 0\)/) });
+    expect(resolve({ route, reason: "", drink: [0, 1] })).toMatchObject({ invalid: expect.stringMatching(/drinks 2 potions/) });
+    expect(resolve({ route, reason: "", drink: [0], discard: [1] })).toMatchObject({ invalid: expect.stringMatching(/both discards and drinks/) });
   });
 });
 
