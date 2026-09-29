@@ -11,7 +11,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
-import { checkConsistency, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
+import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import type { Escalator } from "./file-escalation.js";
 
@@ -329,8 +329,12 @@ export class DeepSeekClient implements Escalator {
     const firstCheck = checkConsistency(first.choice, first.reason, done.reasoning, criteria);
     if (firstCheck.ok) return { ...done.meta, choice: first.choice, reason: first.reason, ...extrasOf(first) };
 
-    // Suspect answer: ask once more, quoting the contradiction, in the same conversation.
+    // Suspect answer: ask once more, quoting the contradiction, in the same conversation (the question, its
+    // state with any route block, and the first answer go with it). The re-ask asks for the question's other
+    // fields too (route review, act route, cards: reaskFields); a second answer that still leaves the route
+    // out keeps the first answer's route.
     const firstRecord = consistencyAnswer(first.choice, first.reason, firstCheck);
+    const reask = reaskMessage(first.choice, firstCheck, reaskFields(state, first));
     let second: ConsistencyRecord["second"];
     let secondCheck: ConsistencyCheck | null = null;
     let secondChoice = "";
@@ -341,7 +345,7 @@ export class DeepSeekClient implements Escalator {
     try {
       calls += 1;
       const again = await this.complete(
-        [...messages, { role: "assistant", content: done.content }, { role: "user", content: reaskMessage(first.choice, firstCheck) }],
+        [...messages, { role: "assistant", content: done.content }, { role: "user", content: reask }],
         label,
       );
       meta = sumMeta(done.meta, again.meta);
@@ -349,14 +353,14 @@ export class DeepSeekClient implements Escalator {
       try {
         parsed = this.parseChoice(again.content);
       } catch (error) {
-        this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, "", "", undefined, undefined, error instanceof Error ? error.message : String(error));
+        this.logReasoning(`${label} (re-ask)`, again, reask, criteria, "", "", undefined, undefined, error instanceof Error ? error.message : String(error));
         throw error;
       }
-      this.logReasoning(`${label} (re-ask)`, again, reaskMessage(first.choice, firstCheck), criteria, parsed.choice, parsed.rawReason, undefined);
+      this.logReasoning(`${label} (re-ask)`, again, reask, criteria, parsed.choice, parsed.rawReason, undefined);
       parsed.choice = resolveOptionKey(parsed.choice, criteria) ?? parsed.choice;
       secondChoice = parsed.choice;
       secondReason = parsed.reason;
-      secondExtras = parsed;
+      secondExtras = parsed.route ? parsed : { ...parsed, ...routeOf(first) };
       secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);
       if (!(parsed.choice in criteria)) secondCheck = { ...secondCheck, ok: false, issues: [...secondCheck.issues, `unknown option "${parsed.choice}"`] };
       second = consistencyAnswer(secondChoice, secondReason, secondCheck);
@@ -373,7 +377,7 @@ export class DeepSeekClient implements Escalator {
     const conflicting = conclusions.some((c) => c.unambiguous && target !== null && c.option !== target.option);
     if (target && !conflicting) {
       const reason = `reasoning concluded ${target.option}: ${target.line}`.slice(0, 200);
-      const extras = target.option === secondChoice ? secondExtras : target.option === first.choice ? first : {};
+      const extras = target.option === secondChoice ? secondExtras : target.option === first.choice ? first : routeOf(first);
       return { ...meta, choice: target.option, reason, ...extrasOf(extras), consistency: { first: firstRecord, second, resolution: "conclusion", choice: target.option } };
     }
     throw new DeepSeekInconsistentError(
@@ -551,6 +555,11 @@ function extrasOf(answer: { cards?: string[]; route?: string; routeReason?: stri
     ...(answer.route ? { route: answer.route } : {}),
     ...(answer.routeReason ? { routeReason: answer.routeReason } : {}),
   };
+}
+
+/** An answer's route and route_reason only (the route does not depend on which option key was answered). */
+function routeOf(answer: { route?: string; routeReason?: string }): { route?: string; routeReason?: string } {
+  return answer.route ? { route: answer.route, ...(answer.routeReason ? { routeReason: answer.routeReason } : {}) } : {};
 }
 
 /** Usage of two calls on one question, summed (latency too: both were waited for). */

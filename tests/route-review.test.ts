@@ -303,4 +303,28 @@ describe("rest site route review in the loop", () => {
     });
     expect(records.some((row) => row["label"] === "map/route-change")).toBe(false);
   });
+
+  it("a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route", async () => {
+    const bash = keyOf(board(REST, "rest"), "BASH");
+    const routePlan = { content: '{"choice": "p1", "reason": "route"}', reasoning: "Decisive: p1." };
+    // The first rest answer smiths while its reasoning concluded on the heal: re-asked.
+    const suspect = { content: `{"choice": "o1:${bash}", "reason": "smith Bash", "route": "p1", "route_reason": "the other branch"}`, reasoning: "HP 67/77.\nDecisive: o0." };
+    const withRoute = await scriptedDeepSeek([routePlan, suspect, { content: '{"choice": "o0", "reason": "heal before the elite", "route": "keep", "route_reason": "the plan fits after a heal"}', reasoning: "Decisive: o0." }]);
+    const first = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], withRoute.client);
+    const reask = withRoute.bodies[2]!["messages"] as { role: string; content: string }[];
+    expect(reask.map((message) => message.role)).toEqual(["system", "user", "assistant", "user"]);
+    expect(reask[1]!.content).toContain("route_review");
+    expect(reask[3]!.content).toMatch(/"route": "<keep \| p1[^>]*>", "route_reason": "<max 15 words>"/);
+    expect(reask[3]!.content).toContain("state.route_review");
+    expect(first.records.find((row) => row["label"] === "rest/plan")).toMatchObject({
+      deepseek: { choice: "o0", route: "keep", route_reason: "the plan fits after a heal", consistency: { resolution: "reasked" } },
+      route_review: { answer: "keep", outcome: "keep", reason: "the plan fits after a heal" },
+    });
+    // The re-asked answer leaves the route out: the first answer's route stands (not "the answer has no route").
+    const noRoute = await scriptedDeepSeek([routePlan, suspect, { content: '{"choice": "o0", "reason": "heal before the elite"}', reasoning: "Decisive: o0." }]);
+    const second = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], noRoute.client);
+    const rest = second.records.find((row) => row["label"] === "rest/plan")!;
+    expect(rest).toMatchObject({ deepseek: { choice: "o0", route: "p1", route_reason: "the other branch" }, route_review: { answer: "p1", outcome: "change" } });
+    expect(second.records.find((row) => row["label"] === "map/route-change")).toMatchObject({ route_plan: { why: "rest-site review", floor: 7 } });
+  });
 });
