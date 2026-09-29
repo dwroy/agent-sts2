@@ -56,6 +56,15 @@ describe("boss clock: the Knowledge Demon's Sloth caps card plays, not the power
     expect(cards - base).toBeLessThan(ESTIMATE_SLOPE * 10 * inPlay * 0.8);
   });
 
+  it("power damage is not raised by Vulnerable (logged: Inferno and Juggernaut hits on Vulnerable enemies took their plain amount)", () => {
+    const deck = deckOf("5HHLMV2DZ5AZ:32");
+    const plain = { ...deck, vulnerableSources: 0 };
+    const vulnerable = { ...deck, vulnerableSources: 2 };
+    const powers = (d: DeckProfile) => rawDeckDamage(d, "QUEEN_BOSS", 8) - rawDeckDamage({ ...d, passiveDamage: 0, passiveAoe: 0 }, "QUEEN_BOSS", 8);
+    expect(powers(vulnerable)).toBeCloseTo(powers(plain), 9);
+    expect(powers(plain)).toBeGreaterThan(0);
+  });
+
   it("a deck with no turn-start power damage reads as before (the cap on the whole estimate)", () => {
     const deck = { ...deckOf("5HHLMV2DZ5AZ:32"), passiveDamage: 0, passiveAoe: 0, passiveTurnStart: 0 };
     const sloth = 3 / deck.plays;

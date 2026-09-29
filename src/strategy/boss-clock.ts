@@ -964,7 +964,10 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   // the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   if (deck.vulnerableSources >= 2 && id !== "AEONGLASS") perTurn *= VULNERABLE_UPTIME;
   // Power damage (Inferno, Juggernaut) from the turn after the powers are played; no Strength, no Vulnerable,
-  // not scaled by the energy powers. Inferno's AoE counts once per body into the crab.
+  // not scaled by the energy powers. Inferno's AoE counts once per body into the crab. Vulnerable does not raise
+  // it (logs/states.jsonl to 2026-09-30: a Bloodletting/Offering/Blood Wall's Inferno hit on a Vulnerable enemy
+  // took exactly the Inferno amount 55 times in 25 runs, a Defend/Shrug It Off's Juggernaut hit 36 times in 14;
+  // never the amount x 1.5).
   const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
   if (passive > 0) perTurn += passive * powersInPlay(deck, turns);
   return perTurn;
