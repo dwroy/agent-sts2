@@ -94,6 +94,26 @@ export function damageForecast(enemyId: string, currentMove: string, turns: numb
   return out;
 }
 
+/** The move this enemy uses most (successor counts summed), or null: what a revived illusion does next. */
+export function usualMove(enemyId: string): string | null {
+  const entry = load()[enemyId];
+  if (!entry) return null;
+  const counts = new Map<string, number>();
+  for (const successors of Object.values(entry.next)) for (const [move, n] of Object.entries(successors)) counts.set(move, (counts.get(move) ?? 0) + n);
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}
+
+/**
+ * An illusion dead now (Parafright on REVIVE_MOVE) is back at full HP next turn with its usual move: its
+ * expected attack on each of the next `turns` enemy turns, or null when it has no learned moves.
+ */
+export function revivingForecast(enemyId: string, turns: number): number[] | null {
+  const entry = load()[enemyId];
+  const move = usualMove(enemyId);
+  if (!entry || !move || turns <= 0) return null;
+  return [entry.damage[move] ?? 0, ...(damageForecast(enemyId, move, turns - 1) ?? [])];
+}
+
 /** The enemy's move cycle has a Buff move: it ramps while it lives (6A36: Sludge Spinner, +3 Strength per Rage). */
 export function hasBuffMove(enemyId: string): boolean {
   return (load()[enemyId]?.buffs ?? []).length > 0;

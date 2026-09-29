@@ -326,3 +326,32 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
     }
   });
 });
+
+describe("an illusion killed before the decision revives in the rollout (QUG1DSDARAXU F23 T3)", () => {
+  it("the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it", async () => {
+    const { laterIncomingOf, revivingIllusions } = await import("../src/screens/combat-plan.js");
+    rolloutLiveOptions.budgetMs = 1e9;
+    const fx = logged("qug1-f23-t3-illusion-dead");
+    const combat = fx.state["combat"] as Record<string, unknown>;
+    const enemies = combat["enemies"] as Record<string, unknown>[];
+    expect(enemies.find((enemy) => enemy["enemy_id"] === "PARAFRIGHT")).toMatchObject({ is_alive: false, move_id: "REVIVE_MOVE" });
+    expect(revivingIllusions(combat).map((enemy) => enemy["enemy_id"])).toEqual(["PARAFRIGHT"]);
+    // Without it (the old board as the rollout saw it): only the Obscura.
+    const gone = logged("qug1-f23-t3-illusion-dead");
+    const goneCombat = gone.state["combat"] as Record<string, unknown>;
+    goneCombat["enemies"] = (goneCombat["enemies"] as Record<string, unknown>[]).filter((enemy) => enemy["enemy_id"] !== "PARAFRIGHT");
+    expect(laterIncomingOf(combat)![0]! - laterIncomingOf(goneCombat)![0]!).toBeGreaterThan(10);
+    // The logged question read "expected further HP loss 4.9, ... win 97%" for Defend; the Parafright hit for 12 on T4.
+    const lossOf = (board: typeof fx) => {
+      const decision = planCombatTurn(loggedEnv(board)) as AskDecision;
+      const criteria = criteriaOf(decision);
+      const defend = planKeys(criteria).find((key) => String(facts(criteria, key)["plays"]) === "防御")!;
+      return Number(/expected further HP loss ([\d.]+)/.exec(String(facts(criteria, defend)["rollout"]))![1]);
+    };
+    potionMcOptions.now = () => 0;
+    const withIt = lossOf(fx);
+    const without = lossOf(gone);
+    expect(withIt).toBeGreaterThan(without + 5);
+  });
+});
+

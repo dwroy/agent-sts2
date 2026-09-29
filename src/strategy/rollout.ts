@@ -638,6 +638,11 @@ interface SimEnemy {
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
   /**
+   * An illusion already dead on the decision's board (Parafright on REVIVE_MOVE): enemy turns left until
+   * it is back at full HP, its usual move next.
+   */
+  reviveIn?: number;
+  /**
    * Waterfall Giant husk (killed with Steam Eruption stacks): the simulated turn at whose end it explodes
    * for `blast` (through that turn's block), after which the fight is over if we live.
    */
@@ -720,6 +725,14 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength) * scale)), hits: Math.max(1, m.hits) }];
+}
+
+/** The move an enemy uses most (successor counts summed): what a revived illusion does next (Parafright: Slam). */
+export function usualMove(table: EnemyTable | undefined): string | null {
+  if (!table) return null;
+  const counts = new Map<string, number>();
+  for (const successors of Object.values(table.next)) for (const [move, n] of Object.entries(successors)) counts.set(move, (counts.get(move) ?? 0) + n);
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 }
 
 function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number): string | null {
@@ -972,6 +985,18 @@ function applyPlan(
       else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random);
     }
     for (const e of enemies) {
+      if (e.alive || e.reviveIn === undefined) continue;
+      e.reviveIn -= 1;
+      if (e.reviveIn > 0) continue;
+      e.alive = true;
+      e.reviveIn = undefined;
+      e.hp = e.maxHp;
+      e.block = 0;
+      e.vulnerable = 0;
+      e.weak = 0;
+      e.move = usualMove(input.tables[e.id]) ?? e.move;
+    }
+    for (const e of enemies) {
       if (e.alive || e.reattachIn === undefined) continue;
       e.reattachIn -= 1;
       if (e.reattachIn > 0) continue;
@@ -1091,6 +1116,9 @@ function simulate(
       powers: info?.powers ?? {},
       base: e,
       shown: e.attacks,
+      // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
+      // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
+      ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
     };
   });
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice() };

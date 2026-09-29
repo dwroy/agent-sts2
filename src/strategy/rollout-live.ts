@@ -49,7 +49,7 @@ import {
   type RolloutEnemy,
   type RolloutResult,
 } from "./rollout.js";
-import type { Plan, SolverInput } from "./turn-solver.js";
+import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
 export { killOrders, type KillGroup, type KillOrder };
@@ -314,13 +314,36 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const { state, knowledge } = args;
     const meta = fightMetaOf(state, knowledge, args.memory);
     const combat = asRecord(state.raw["combat"]);
-    const enemies: RolloutEnemy[] = asArray(combat["enemies"])
-      .map(asRecord)
-      .filter((e) => e["is_alive"] !== false)
-      .map((e, i) => {
+    const raw = asArray(combat["enemies"]).map(asRecord);
+    // An illusion killed before this decision (is_alive false, ILLUSION_POWER) is back at full HP next
+    // turn while its summoner lives: it stays in the rollout at 0 HP and revives (rollout.ts reviveIn).
+    const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+    const reviving = (e: Record<string, unknown>) => e["is_alive"] === false && (powersOf(e)["ILLUSION_POWER"] ?? 0) > 0 && leaderAlive;
+    const enemies: RolloutEnemy[] = raw
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => e["is_alive"] !== false || reviving(e))
+      .map(({ e, i }) => {
         const powers = powersOf(e);
         return { index: typeof e["index"] === "number" ? e["index"] : i, id: str(e["enemy_id"]), move: e["move_id"] ? str(e["move_id"]) : null, strength: powers["STRENGTH_POWER"] ?? 0, powers };
       });
+    const revivers: EnemySim[] = raw
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => reviving(e) && !args.solver.enemies.some((sim) => sim.index === (typeof e["index"] === "number" ? e["index"] : -1)))
+      .map(({ e, i }) => ({
+        index: typeof e["index"] === "number" ? e["index"] : i,
+        name: str(e["name"], str(e["enemy_id"])),
+        hp: 0,
+        maxHp: typeof e["max_hp"] === "number" ? e["max_hp"] : 0,
+        block: 0,
+        vulnerable: 0,
+        weak: 0,
+        artifact: 0,
+        intangible: false,
+        illusion: true,
+        minion: (powersOf(e)["MINION_POWER"] ?? 0) > 0,
+        attacks: [],
+      }));
+    const solver = revivers.length > 0 ? { ...args.solver, enemies: [...args.solver.enemies, ...revivers] } : args.solver;
     const mm = moveModelData();
     const db = monsterMoves();
     const tables: Record<string, EnemyTable> = {};
@@ -335,7 +358,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
     const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const result = rolloutDecision({
-      solver: args.solver,
+      solver,
       plans: args.plans,
       enemies,
       tables,
