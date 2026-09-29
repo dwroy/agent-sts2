@@ -43,6 +43,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import type { CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
@@ -876,7 +877,7 @@ const CONSTRICTOR = "SLITHERING_STRANGLER";
  */
 export const TEMP_STRENGTH_POWERS = ["SETUP_STRIKE_POWER", "FLEX_POTION_POWER", "REPTILE_TRINKET_POWER", "FEEDING_FRENZY_POWER", "COORDINATE_POWER"] as const;
 export const TEMP_DEXTERITY_POWERS = ["SPEED_POTION_POWER"] as const;
-export const ENEMY_TEMP_STRENGTH_LOSS_POWERS = ["MANGLE_POWER", "SHACKLING_POTION_POWER", "DARK_SHACKLES_POWER", "PIERCING_WAIL_POWER"] as const;
+export const ENEMY_TEMP_STRENGTH_LOSS_POWERS = TEMP_STRENGTH_LOSS_POWERS;
 
 const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[]): number => ids.reduce((sum, id) => sum + Math.max(0, powers?.[id] ?? 0), 0);
 

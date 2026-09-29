@@ -25,7 +25,7 @@ import { playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
-import { damageForecast, expectedNextDamage, revivingForecast } from "../knowledge/move-model.js";
+import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
 import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
@@ -454,7 +454,12 @@ function powerAmount(holder: Record<string, unknown>, id: string): number {
 
 export { mantleHpCost };
 
-export function enemySims(combat: Record<string, unknown>): EnemySim[] {
+/**
+ * The board's enemies for the solver. `asc`: the run's ascension, for the monster DB's damage in the
+ * Imbalanced stun's saved hit (move-model DamageContext); without it the move model's pooled average.
+ */
+export function enemySims(combat: Record<string, unknown>, asc?: number): EnemySim[] {
+  const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   return asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
@@ -513,7 +518,7 @@ export function enemySims(combat: Record<string, unknown>): EnemySim[] {
       dazedPerHit: powerAmount(enemy, "PERSONAL_HIVE_POWER"),
       // Imbalanced: a fully blocked attack stuns it; what that saves is its next move's hit.
       ...(asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "IMBALANCED_POWER")
-        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
+        ? { imbalanced: Math.round(expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), ctxOf(enemy)) ?? asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0)) }
         : {}),
       unmodelled: asArray(enemy["powers"]).some((power) => !MODELLED_ENEMY_POWERS.has(str(asRecord(power)["power_id"]))),
       ...(powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") > 0 ? { timeLimit: powerAmount(enemy, "BATTLEWORN_DUMMY_TIME_LIMIT_POWER") } : {}),
@@ -1122,7 +1127,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
-  const enemies = enemySims(combat);
+  const ascension = state.run?.ascension ?? 0;
+  const enemies = enemySims(combat, ascension);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
     // revives on the enemy turn. Waiting forever stalled a floor-50 run; after a short settle, end
@@ -1278,9 +1284,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     asArray(combat["enemies"])
       .map(asRecord)
       .filter((enemy) => enemy["is_alive"] !== false)
-      .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"])) ?? 0), 0) +
-    revivingIllusions(combat).reduce((sum, enemy) => sum + (revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? 0), 0);
-  const laterIncoming = laterIncomingOf(combat);
+      .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension)) ?? 0), 0) +
+    revivingIllusions(combat).reduce((sum, enemy) => sum + (revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? 0), 0);
+  const laterIncoming = laterIncomingOf(combat, ascension);
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
   // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
@@ -1813,10 +1819,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (env.jevContext === "v1") {
     const liveEnemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
     const nextThreat = new Map<number, number | null>(
-      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]))]),
+      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension))]),
     );
     const illusions = liveEnemies.filter((enemy) => powerAmount(enemy, "ILLUSION_POWER") > 0);
-    const dead = revivingIllusions(combat).map((enemy) => revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null).filter((hit): hit is number => hit !== null);
+    const dead = revivingIllusions(combat).map((enemy) => revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? null).filter((hit): hit is number => hit !== null);
     const ctx: FactContext = {
       maxHp: playerSim.maxHp,
       hand,
@@ -1824,7 +1830,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       nextThreat,
       noAttack: enemies.every((enemy) => enemy.attacks.length === 0),
       ...(illusions.length > 0
-        ? { revivingThreat: new Map(illusions.map((enemy) => [numOrNull(enemy["index"]) ?? liveEnemies.indexOf(enemy), revivingForecast(str(enemy["enemy_id"]), 1)?.[0] ?? null])) }
+        ? { revivingThreat: new Map(illusions.map((enemy) => [numOrNull(enemy["index"]) ?? liveEnemies.indexOf(enemy), revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? null])) }
         : {}),
       ...(dead.length > 0 ? { revivedThreat: dead.reduce((sum, hit) => sum + hit, 0) } : {}),
     };
@@ -2244,17 +2250,19 @@ export function revivingIllusions(combat: Record<string, unknown>): Record<strin
   return enemies.filter((enemy) => enemy["is_alive"] === false && powerAmount(enemy, "ILLUSION_POWER") > 0);
 }
 
-export function laterIncomingOf(combat: Record<string, unknown>): number[] | null {
+export function laterIncomingOf(combat: Record<string, unknown>, asc?: number): number[] | null {
   const out: number[] = Array.from({ length: LATER_TURNS }, () => 0);
   let known = false;
+  // At the run's ascension from the monster DB (move-model DamageContext), when it is given.
+  const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
   for (const enemy of revivingIllusions(combat)) {
-    const forecast = revivingForecast(str(enemy["enemy_id"]), LATER_TURNS);
+    const forecast = revivingForecast(str(enemy["enemy_id"]), LATER_TURNS, ctxOf(enemy));
     if (!forecast) continue;
     known = true;
     for (let k = 0; k < LATER_TURNS; k += 1) out[k]! += forecast[k] ?? 0;
   }
   for (const enemy of asArray(combat["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false)) {
-    const forecast = damageForecast(str(enemy["enemy_id"]), str(enemy["move_id"]), LATER_TURNS, powerAmount(enemy, "ASLEEP_POWER"));
+    const forecast = damageForecast(str(enemy["enemy_id"]), str(enemy["move_id"]), LATER_TURNS, powerAmount(enemy, "ASLEEP_POWER"), ctxOf(enemy));
     const shown = asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0);
     if (forecast) known = true;
     const special = multiClawNext(enemy);
