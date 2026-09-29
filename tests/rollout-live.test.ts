@@ -81,14 +81,14 @@ describe("rollout facts on Jev's combat question", () => {
       expect(decision.resolve(pick(other)).log?.rollout_best_chosen).toBe(false);
       expect(decision.resolve({} as AnswerSet).log?.rollout_best_chosen).toBeNull();
     }
-  });
+  }, 30_000);
 
   it("with a modelled potion held, the rollout fact says later turns may use it", () => {
     const decision = plan("v1mf-f33-t4", true) as AskDecision;
     expect(decision.kind).toBe("ask");
     const criteria = criteriaOf(decision);
     for (const key of planKeys(criteria)) expect(String(facts(criteria, key)["rollout"]), key).toContain("(later turns may use the potions still held)");
-  });
+  }, 30_000);
 
   it("a drink-first potion option says it is not rolled out", () => {
     const decision = plan("fn0h-f33-t2", true) as AskDecision;
@@ -96,7 +96,7 @@ describe("rollout facts on Jev's combat question", () => {
     const potionKeys = Object.keys(criteria).filter((key) => !/^plan\d+$/.test(key));
     expect(potionKeys.length).toBeGreaterThan(0);
     for (const key of potionKeys) expect(String(facts(criteria, key)["rollout"])).toMatch(/^not rolled out/);
-  });
+  }, 30_000);
 
   it("the rollout's best line is added, last and marked, when code did not show it", () => {
     let addedSomewhere = false;
@@ -122,7 +122,7 @@ describe("rollout facts on Jev's combat question", () => {
       }
     }
     expect(addedSomewhere).toBe(true);
-  }, 60_000);
+  }, 120_000);
 
   it("liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line)", () => {
     const card = (index: number, cardId: string, o: Partial<CardModel>): CardModel => ({
@@ -164,7 +164,7 @@ describe("rollout facts on Jev's combat question", () => {
     const none = liveRollout({ state: env.state, knowledge: env.knowledge, memory: env.screenMemory, solver, plans, shown: [worst], piles: null });
     expect(none.available).toBe(false);
     expect(rolloutFacts(worst, none)).toEqual({ rollout: "rollout unavailable (no draw/discard piles in the state)" });
-  });
+  }, 30_000);
 
   it("up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)", async () => {
     const { MAX_OPTIONS } = await import("../src/screens/combat-plan.js");
@@ -207,7 +207,7 @@ describe("rollout facts on Jev's combat question", () => {
       } else expect(tagged, name).toBe(1);
     }
     expect(most).toBeGreaterThan(4);
-  }, 60_000);
+  }, 120_000);
 
   it("keeps to the time budget under a mock clock, degrading the horizon/samples, and says so", () => {
     // 3 ms per clock read: the policy looks slow, the full 5 x 8 does not fit.
@@ -229,7 +229,7 @@ describe("rollout facts on Jev's combat question", () => {
     const cutLog = cut.resolve(pick("plan1")).log!.rollout as Record<string, unknown>;
     expect(cutLog["horizon"]).toBe(1);
     expect(String(facts(criteriaOf(cut), "plan1")["rollout"])).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
-  });
+  }, 30_000);
 
   it("the real clock: every logged board's rollout stays inside the budget", () => {
     for (const name of BOARDS) {
@@ -239,7 +239,7 @@ describe("rollout facts on Jev's combat question", () => {
       expect(log, name).toBeDefined();
       expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
     }
-  }, 60_000);
+  }, 120_000);
 
   it("code's ranking, options and auto-acts are unchanged by the rollout", () => {
     for (const name of BOARDS) {
@@ -356,7 +356,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
         expect(best.left - Math.min(...same.map((k) => k.left)), name).toBeLessThanOrEqual(1);
       }
     }
-  });
+  }, 30_000);
 });
 
 describe("an illusion killed before the decision revives in the rollout (QUG1DSDARAXU F23 T3)", () => {
@@ -384,7 +384,7 @@ describe("an illusion killed before the decision revives in the rollout (QUG1DSD
     const withIt = lossOf(fx);
     const without = lossOf(gone);
     expect(withIt).toBeGreaterThan(without + 5);
-  });
+  }, 30_000);
 });
 
 
@@ -414,5 +414,5 @@ describe("enemy_threat_next counts a reviving illusion (QUG1DSDARAXU F23 T3)", (
     expect(withIt.length).toBeGreaterThan(0);
     // Lines that do not end the fight read the Obscura's hit plus the Parafright's.
     expect(Math.abs(Math.max(...withIt) - (Math.max(...without) + slam))).toBeLessThanOrEqual(1);
-  });
+  }, 30_000);
 });

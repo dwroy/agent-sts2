@@ -3,6 +3,10 @@
  * (tests/logged-states), never the refreshing knowledge files.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import type { LineEstimate } from "../src/strategy/rollout.js";
@@ -56,4 +60,36 @@ describe("1. A saturated board ranks deaths first, then this turn's loss, before
     // One of the tied lines shown: it is the best among what is shown.
     expect(rolloutTies(picked, [a, b, worse], [a.plan, worse.plan])).toEqual({ best: a, tied: [] });
   });
+});
+
+describe("2. Tests that plan logged boards have a timeout that holds under load (potion-mc, rollout-live)", () => {
+  // Each such test runs code's full planner (and the rollout) over one or every board of tests/logged-states;
+  // at vitest's default 5 s they timed out under load (potion-mc "the same twice" once; it takes 1.6 s alone).
+  const TESTS = dirname(fileURLToPath(import.meta.url));
+  const blocks = (file: string): { title: string; body: string; timeout: number | null }[] => {
+    const lines = readFileSync(join(TESTS, file), "utf8").split("\n");
+    const found: { title: string; body: string; timeout: number | null }[] = [];
+    for (let i = 0; i < lines.length; i += 1) {
+      const head = /^(\s*)it\("([^"]*)"/.exec(lines[i]!);
+      if (!head) continue;
+      const end = new RegExp(`^${head[1]}\\}(?:, ([\\d_]+))?\\);\\s*$`);
+      let j = i + 1;
+      while (j < lines.length && !end.test(lines[j]!)) j += 1;
+      const timeout = end.exec(lines[j] ?? "")?.[1];
+      found.push({ title: head[2]!, body: lines.slice(i, j + 1).join("\n"), timeout: timeout ? Number(timeout.replace(/_/g, "")) : null });
+      i = j;
+    }
+    return found;
+  };
+
+  for (const file of ["potion-mc.test.ts", "rollout-live.test.ts"]) {
+    it(`${file}: every test on logged boards has at least 30 s, a scan of every board at least 120 s`, () => {
+      const onBoards = blocks(file).filter((block) => /\blogged\(|\bplan\(|BOARDS/.test(block.body));
+      expect(onBoards.length).toBeGreaterThan(2);
+      for (const block of onBoards) {
+        expect(block.timeout, block.title).not.toBeNull();
+        expect(block.timeout!, block.title).toBeGreaterThanOrEqual(/BOARDS/.test(block.body) ? 120_000 : 30_000);
+      }
+    });
+  }
 });
