@@ -38,6 +38,8 @@ export interface MoveEntry {
   /** Debuffs the move put on us (and Strength/Dexterity it drained): power id -> {delta: n}. */
   player_powers_applied?: Record<string, Record<string, number>>;
   player_powers_applied_by_asc?: Record<string, Record<string, Record<string, number>>>;
+  /** Surrounded (Kaiser Crab): the logged turns the move came from behind us (x1.5) and from in front. */
+  back_attack_by_asc?: Record<string, { behind?: number; facing?: number }>;
   status_cards?: Record<string, number>;
 }
 
@@ -160,6 +162,27 @@ export interface MoveDamage {
   /** Moves the ratio was measured on, and whether they are this monster's own (else every monster's). */
   ratioN?: number;
   ratioOwn?: boolean;
+  /**
+   * Surrounded (the Kaiser Crab's claws): the move's base at this ascension and the share of the logged
+   * turns it came from behind us (x1.5); perHit is then the hit as it lands on average.
+   */
+  base?: number;
+  backAttackShare?: number;
+}
+
+/**
+ * Surrounded (the Kaiser Crab's claws, BACK_ATTACK_LEFT/RIGHT_POWER): the share of the logged turns this
+ * move came from behind us, for x1.5 (monster DB back_attack_by_asc, pooled over ascensions: which claw we
+ * face is our play, not the monster's). null for a move never logged under Surrounded.
+ */
+export function backAttackShare(move: MoveEntry | undefined): number | null {
+  let behind = 0;
+  let facing = 0;
+  for (const counts of Object.values(move?.back_attack_by_asc ?? {})) {
+    behind += counts.behind ?? 0;
+    facing += counts.facing ?? 0;
+  }
+  return behind + facing > 0 ? behind / (behind + facing) : null;
 }
 
 function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
@@ -170,7 +193,7 @@ function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
 /**
  * How much harder the moves hit at `to` than at `from`: summed base damage per hit at `to` over at
  * `from`, over the moves logged at both: the monster's own when it has any, else every monster's (A8 -> A9:
- * 110 of 122 moves hit harder, e.g. Crusher's Guarded Strike 19 -> 22). null when no move is logged at both.
+ * 110 of 122 moves hit harder, e.g. Crusher's Guarded Strike 12 -> 14 before the back attack). null when no move is logged at both.
  */
 export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: string, from: number, to: number): { ratio: number; n: number; own: boolean } | null {
   const pairs = (ids: string[]) =>
@@ -189,19 +212,26 @@ export function ascensionDamageRatio(monsters: MonsterMoveData, monsterId: strin
 /**
  * A move's damage at `asc`: as logged there, else the nearest logged ascension's scaled by the measured
  * ratio (ascensionDamageRatio), rounded and marked estimated. null when the move has no logged damage.
+ * A Surrounded back-attack move (Kaiser Crab) is its base times 1 + 0.5 x the share of the logged turns it
+ * came from behind (backAttackShare): the rollout's later turns and the boss clock do not track which claw
+ * we face (A8 Laser: base 31, 49 from behind on 83% of turns; the DB used to call 47 its base).
  */
 export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
   const move = monsters[monsterId]?.moves?.[moveId];
   const withBase = Object.fromEntries(Object.entries(move?.damage_by_asc ?? {}).filter(([, entry]) => mode(entry.base_per_hit) !== null));
   const found = nearestAscension(withBase, asc);
   if (!move || !found) return null;
-  const base = basePerHit(move, found.key)!;
+  const logged = basePerHit(move, found.key)!;
   const hits = Number(mode(move.damage_by_asc![found.key]!.hits) ?? 1);
   const from = Number(found.key);
-  if (found.exact) return { perHit: base, hits, estimated: false, from, ratio: 1 };
+  const share = backAttackShare(move);
+  const behind = (base: number) => (share === null ? {} : { base, backAttackShare: share });
+  const average = (base: number) => (share === null ? base : Math.round(base * (1 + 0.5 * share)));
+  if (found.exact) return { perHit: average(logged), hits, estimated: false, from, ratio: 1, ...behind(logged) };
   const measured = ascensionDamageRatio(monsters, monsterId, from, asc);
   const ratio = measured?.ratio ?? 1;
-  return { perHit: Math.round(base * ratio), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}) };
+  const base = Math.round(logged * ratio);
+  return { perHit: average(base), hits, estimated: true, from, ratio, ...(measured ? { ratioN: measured.n, ratioOwn: measured.own } : {}), ...behind(base) };
 }
 
 /**
@@ -323,7 +353,9 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
   const parts: string[] = [move.name || id];
   const damage = moveDamageAt(load().monsters, monsterId, id, asc);
   if (damage) {
-    const text = damage.hits > 1 ? `${damage.perHit}×${damage.hits}` : String(damage.perHit);
+    const shown = damage.base ?? damage.perHit;
+    const behind = damage.backAttackShare !== undefined ? ` (在背后 ×1.5 = ${Math.floor(shown * 1.5)}，记录中 ${pct(damage.backAttackShare)} 的回合在背后)` : "";
+    const text = `${damage.hits > 1 ? `${shown}×${damage.hits}` : String(shown)}${behind}`;
     // Unseen at this ascension: the nearest one's number scaled by the measured ratio, said so.
     parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);

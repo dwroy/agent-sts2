@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -114,6 +114,43 @@ describe("the Terror Eel's Vigor reaches the rollout's move table (XLJQ6FPQAU7N 
     expect(a9.moves["CRASH_MOVE"]).toMatchObject({ damage: 18, hits: 1 });
     expect(a9.moves["CRASH_MOVE"]!.vigor).toBeUndefined();
     expect(a9.moves["THRASH_MOVE"]).toMatchObject({ damage: 4, hits: 3, vigor: 6 });
+  });
+});
+
+describe("Surrounded: a Kaiser Crab claw's base and how often it hit from behind (A9 Laser 35 < A8 47 was A8's back attack)", () => {
+  // Monster DB as the builder now writes it: bases from turns that showed both facings (A8 Laser 31, 49 from
+  // behind; A9 35), and how many logged turns each move came from behind or from in front.
+  const monsters: MonsterMoveData = {
+    ROCKET: {
+      moves: {
+        LASER_MOVE: {
+          name: "激光",
+          turns_seen: { "1": 3 },
+          next: { LASER_MOVE: 3 },
+          damage_by_asc: { "8": { base_per_hit: { "31": 16 }, hits: { "1": 29 } }, "9": { base_per_hit: { "35": 1 }, hits: { "1": 2 } } },
+          back_attack_by_asc: { "8": { behind: 24, facing: 5 }, "9": { behind: 1, facing: 1 } },
+        },
+      },
+    },
+  };
+
+  it("the hit as it lands on average: the base x (1 + 0.5 x the share of turns behind), pooled over ascensions", () => {
+    const share = 25 / 31;
+    expect(backAttackShare(monsters["ROCKET"]!.moves!["LASER_MOVE"])).toBeCloseTo(share, 10);
+    expect(moveDamageAt(monsters, "ROCKET", "LASER_MOVE", 9)).toMatchObject({ base: 35, perHit: Math.round(35 * (1 + 0.5 * share)), estimated: false });
+    expect(moveDamageAt(monsters, "ROCKET", "LASER_MOVE", 8)).toMatchObject({ base: 31, perHit: Math.round(31 * (1 + 0.5 * share)) });
+    // A9 hits harder than A8 on the bases.
+    expect(ascensionDamageRatio(monsters, "ROCKET", 8, 9)!.ratio).toBeCloseTo(35 / 31, 10);
+    // The rollout's table takes the average; the dossier shows the base and the back attack.
+    expect(enemyTable("ROCKET", 9, monsters as never, {})!.moves["LASER_MOVE"]!.damage).toBe(Math.round(35 * (1 + 0.5 * share)));
+    setMonsterDbForTests({ bosses: { KAISER_CRAB: { "9": { fights: 2, parts: { ROCKET: { median: 209, n: 2 } } } } }, encounters: {}, monsters } as never);
+    try {
+      expect(bossDossier("KAISER_CRAB_BOSS", 9)).toContain("激光 35 (在背后 ×1.5 = 52，记录中 81% 的回合在背后)");
+    } finally {
+      setMonsterDbForTests(null);
+    }
+    // A move never logged under Surrounded is its base.
+    expect(backAttackShare({ damage_by_asc: {} })).toBeNull();
   });
 });
 

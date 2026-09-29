@@ -48,6 +48,11 @@ AGENT_VIEW = b',"agent_view":'
 # enemy's next attack (Terror Eel's Thrash -> Crash 16 + 6 at A8: base 22 was the most common "base").
 ENEMY_DAMAGE_MODS = {"WEAK_POWER", "SHRINK_POWER", "VIGOR_POWER"}
 PLAYER_DAMAGE_MODS = {"VULNERABLE_POWER", "INTANGIBLE_POWER", "TANK_POWER"}
+# Surrounded (the Kaiser Crab: SURROUNDED_POWER on us, BACK_ATTACK_LEFT/RIGHT_POWER on the claws): an enemy
+# behind us shows and hits for floor((base + Strength) x 1.5), and which one is behind is not in the state
+# (a targeted card turns us). A turn's frame is a base sample only when the same turn also shows the other
+# facing's number (a < b = floor(a x 1.5)): then a - Strength is the base.
+BACK_ATTACK_POWERS = {"BACK_ATTACK_LEFT_POWER", "BACK_ATTACK_RIGHT_POWER"}
 END_OF_COMBAT_HEAL = {"BURNING_BLOOD", "BLACK_BLOOD", "MEAT_ON_THE_BONE"}
 
 
@@ -127,6 +132,8 @@ class Fight:
         self.room = None
         self.tracked = []
         self.tracked_turn = None
+        # (turn, serial) -> {(per-hit damage, Strength, damage modifiers)} of a back-attack enemy while we are Surrounded
+        self.turn_shown = collections.defaultdict(set)
         self.next_serial = 0
         self.initial_serials = set()
 
@@ -225,12 +232,34 @@ def observe_combat(fight, state, ts):
     if not isinstance(turn, int):
         return
     fight.max_turn = max(fight.max_turn, turn)
+    if "SURROUNDED_POWER" in snap["player"]["powers"]:
+        for serial, enemy in snap["enemies"].items():
+            if BACK_ATTACK_POWERS & set(enemy["powers"]):
+                mods = damage_mods(enemy, snap["player"])
+                for intent in enemy["intents"]:
+                    if intent.get("damage") is not None:
+                        fight.turn_shown[(turn, serial)].add((int(intent["damage"]), enemy["powers"].get("STRENGTH_POWER", 0), mods))
     first = fight.turn_first.setdefault(turn, {"player": snap["player"], "enemies": {}})
     for serial, enemy in snap["enemies"].items():
         # The move of a turn: the first logged state that shows one (the move-model's rule).
         if serial not in first["enemies"] and enemy["move"]:
             first["enemies"][serial] = enemy
     fight.turn_last[turn] = snap
+
+
+def damage_mods(enemy, player):
+    """The damage modifiers up on a frame (enemy Weak/Shrink/Vigor, our Vulnerable/Intangible/Tank)."""
+    return tuple(sorted(set(enemy["powers"]) & ENEMY_DAMAGE_MODS)) + tuple(sorted(set(player["powers"]) & PLAYER_DAMAGE_MODS))
+
+
+def back_pair_base(shown, damage, strength, mods):
+    """A back-attack enemy's base on a turn that showed both facings' numbers (see BACK_ATTACK_POWERS), else None."""
+    same = {d for d, s, m in shown if s == strength and m == mods}
+    for a in same:
+        b = int(a * 1.5)
+        if b != a and b in same and damage in (a, b):
+            return a - strength
+    return None
 
 
 # ---------------------------------------------------------------- aggregation
@@ -271,6 +300,8 @@ def new_move():
         "player": collections.defaultdict(collections.Counter),
         # asc -> pid -> Counter(delta): the same deltas split by ascension.
         "self_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
+        # asc -> [(per-hit damage shown, Strength)] of the turns a back-attack enemy used it while we were Surrounded
+        "back_frames": collections.defaultdict(list),
         "player_by_asc": collections.defaultdict(lambda: collections.defaultdict(collections.Counter)),
         "status_cards": collections.Counter(),
         "turns": collections.Counter(),
@@ -458,6 +489,7 @@ class Builder:
                 move["totals"].append(intent_total(enemy["intents"]))
                 strength = enemy["powers"].get("STRENGTH_POWER", 0)
                 clean = not (set(enemy["powers"]) & ENEMY_DAMAGE_MODS) and not (set(first["player"]["powers"]) & PLAYER_DAMAGE_MODS)
+                back = bool(BACK_ATTACK_POWERS & set(enemy["powers"])) and "SURROUNDED_POWER" in first["player"]["powers"]
                 akey = asc if asc is not None else "?"
                 for intent in enemy["intents"]:
                     if intent.get("damage") is not None:
@@ -465,7 +497,12 @@ class Builder:
                         dmg = int(intent["damage"])
                         move["shown"][akey][f"{dmg}x{hits}"] += 1
                         move["hits"][akey][hits] += 1
-                        if clean:
+                        if back:
+                            move["back_frames"][akey].append((dmg, strength))
+                            base = back_pair_base(fight.turn_shown.get((turn, index), ()), dmg, strength, damage_mods(enemy, first["player"])) if clean else None
+                            if base is not None:
+                                move["base"][akey][base] += 1
+                        elif clean:
                             move["base"][akey][dmg - strength] += 1
                     if intent.get("status_card_count"):
                         move["status_cards"][int(intent["status_card_count"])] += 1
@@ -610,6 +647,20 @@ def build_output(builder, game):
             }
             if by_asc:
                 entry["damage_by_asc"] = by_asc
+            # Back-attack enemies: how many of the logged turns it came from behind (x1.5) or from in front,
+            # judged against the base at that ascension.
+            back = {}
+            for akey, frames in sorted(move["back_frames"].items(), key=lambda kv: (isinstance(kv[0], str), kv[0])):
+                base_counter = move["base"].get(akey)
+                if not base_counter:
+                    continue
+                base = base_counter.most_common(1)[0][0]
+                behind = sum(1 for dmg, st in frames if dmg == int((base + st) * 1.5) and dmg != base + st)
+                facing = sum(1 for dmg, st in frames if dmg == base + st)
+                if behind + facing > 0:
+                    back[str(akey)] = {"behind": behind, "facing": facing}
+            if back:
+                entry["back_attack_by_asc"] = back
             if move["block"]:
                 entry["block_gained"] = counter_obj(move["block"])
             if move["self"]:
@@ -708,7 +759,9 @@ def build_output(builder, game):
                 "after Strength, Weak, Vulnerable); base_per_hit = shown - enemy Strength, only from turns without enemy Weak/Shrink or our "
                 "Vulnerable/Intangible. self_powers_gained/player_powers_applied/block_gained = power and block deltas across the enemy turn after a "
                 "move with a Buff/Debuff/Defend intent (other effects of that enemy turn can leak in); *_by_asc = the same split by ascension. "
-                "powers.amount_at_first_sight_by_asc / turn_at_first_sight_by_asc = each instance's first logged amount and the turn it was on. threat: hp_loss_won = entry HP - HP on the last "
+                "powers.amount_at_first_sight_by_asc / turn_at_first_sight_by_asc = each instance's first logged amount and the turn it was on. "
+                "Surrounded (Kaiser Crab): a back-attack enemy's frame is a base sample only when its turn also showed the other facing's "
+                "number (behind = floor((base + Strength) x 1.5)); back_attack_by_asc counts the turns it came from behind or in front. threat: hp_loss_won = entry HP - HP on the last "
                 "combat state (includes self-damage cards), net_hp_loss_won = entry HP - HP after the fight (after Burning Blood and other end-of-combat "
                 "heals). kind from the map node of the fight (Monster=hallway, Elite, Boss, Unknown=event), minion when MINION_POWER is on most instances.",
         "generated_from": {"fights": builder.fights, "first_seen": builder.first_ts, "last_seen": builder.last_ts,
@@ -858,6 +911,16 @@ def _synthetic_lines():
     lines.append(state("COMBAT", "R2", 1, 2, 80, [enemy(0, "EEL", 150, 150, "THRASH_MOVE", 3, 3, types=("Attack", "Buff"))], True))
     lines.append(state("COMBAT", "R2", 2, 2, 71, [enemy(0, "EEL", 140, 150, "CRASH_MOVE", 22, 1, {"VIGOR_POWER": 6})], True))
     lines.append(state("COMBAT", "R2", 3, 2, 49, [enemy(0, "EEL", 130, 150, "CRASH_MOVE", 16, 1)], True))
+    # Run R3, floor 2: Surrounded by a crab. T1 opens with the Rocket behind (Laser 49 = (31 + 2) x 1.5) and
+    # the Crusher in front (10); a Strike into the Rocket turns us: 33 and 15. T2 the Rocket is behind all
+    # turn (49, no pair: no base sample), T3 in front all turn (33).
+    sur = [{"power_id": "SURROUNDED_POWER", "amount": 1}]
+    rocket = lambda dmg, move="LASER_MOVE": enemy(1, "ROCKET", 200, 200, move, dmg, 1, {"BACK_ATTACK_RIGHT_POWER": 1, "STRENGTH_POWER": 2})
+    crusher = lambda dmg: enemy(0, "CRUSHER", 210, 210, "BITE_MOVE", dmg, 1, {"BACK_ATTACK_LEFT_POWER": 1})
+    lines.append(state("COMBAT", "R3", 1, 2, 80, [crusher(10), rocket(49)], True, player_powers=sur))
+    lines.append(state("COMBAT", "R3", 1, 2, 80, [crusher(15), rocket(33)], True, player_powers=sur))
+    lines.append(state("COMBAT", "R3", 2, 2, 70, [crusher(10), rocket(49)], True, player_powers=sur))
+    lines.append(state("COMBAT", "R3", 3, 2, 60, [crusher(10), rocket(33)], True, player_powers=sur))
     return lines
 
 
@@ -910,6 +973,13 @@ def self_test():
     # The Crash under Vigor is shown, not a base sample.
     assert eel["CRASH_MOVE"]["damage_by_asc"]["8"]["base_per_hit"] == {"16": 1}, eel["CRASH_MOVE"]["damage_by_asc"]
     assert eel["CRASH_MOVE"]["damage_by_asc"]["8"]["shown"] == {"16x1": 1, "22x1": 1}, eel["CRASH_MOVE"]["damage_by_asc"]
+    # Surrounded: only the turn that showed both facings is a base sample (31, not the 49 behind us).
+    laser = db["monsters"]["ROCKET"]["moves"]["LASER_MOVE"]
+    assert laser["damage_by_asc"]["8"]["base_per_hit"] == {"31": 1}, laser["damage_by_asc"]
+    assert laser["back_attack_by_asc"] == {"8": {"behind": 2, "facing": 1}}, laser
+    bite = db["monsters"]["CRUSHER"]["moves"]["BITE_MOVE"]
+    assert bite["damage_by_asc"]["8"]["base_per_hit"] == {"10": 1}, bite["damage_by_asc"]
+    assert bite["back_attack_by_asc"] == {"8": {"behind": 0, "facing": 3}}, bite
     print("self-test ok")
     return 0
 

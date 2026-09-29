@@ -153,7 +153,10 @@ describe("boss clock", () => {
     const low = bossClock(mapState(starter(), "KAISER_CRAB_BOSS", { ascension: 8 }), testKnowledge, 40)!;
     expect(low.fightTurns).toBeLessThan(full.fightTurns);
     expect(low.need).toBeGreaterThan(full.need);
-    expect(full.survivableTurns).toBe(8);
+    // Survivable turns: the entry HP over the loss a turn (the crab's from the monster DB, refreshed after runs).
+    expect(full.survivableTurns).toBe(Math.floor(80 / full.lossPerTurn));
+    expect(full.survivableTurns).toBeGreaterThanOrEqual(7);
+    expect(full.survivableTurns).toBeLessThanOrEqual(10);
   });
 
   it("64ZB Vantom: A8 HP plus Slippery's 1-damage turns; F7 reads short (old: gap 1)", () => {
