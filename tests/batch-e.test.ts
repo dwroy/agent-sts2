@@ -14,6 +14,10 @@ import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { givesPotion, planEvent } from "../src/screens/event.js";
+import { planMap, restedFraction } from "../src/screens/map.js";
+import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
+import { NO_REST_RELICS, restHealOf } from "../src/strategy/route-projection.js";
+import { board as oneshotBoard, env as oneshotEnv } from "./oneshot-support.js";
 import type { AskDecision } from "../src/project/types.js";
 
 import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/screens/combat-plan.js";
@@ -374,5 +378,29 @@ describe("7. Ethereal cards left in hand are exhausted at the end of the turn: F
     expect(result.lines[0]?.samples).toBeGreaterThan(1);
     expect(result.lines[0]?.winProb).toBe(1);
     expect(result.lines[0]?.turnsToWin).toBe(2);
+  });
+});
+
+describe("10. The map's route values rest with the game's heal and the rest relics, like the projection (batch D 981ae07)", () => {
+  afterEach(() => setRoomCostsForTests(null));
+
+  it("restedFraction: 30% rounded down, Regal Pillow's +15, Stone Humidifier's +5 max HP; no context: the old flat 30%", () => {
+    expect(restedFraction(0.5, { maxHp: 85, heal: NO_REST_RELICS })).toBeCloseTo((42.5 + 25) / 85, 6);
+    expect(restedFraction(0.5, { maxHp: 80, heal: restHealOf(["REGAL_PILLOW"]) })).toBeCloseTo((40 + 24 + 15) / 80, 6);
+    expect(restedFraction(0.5, { maxHp: 80, heal: restHealOf(["STONE_HUMIDIFIER"]) })).toBeCloseTo((40 + 24 + 5) / 85, 6);
+    expect(restedFraction(0.5, null)).toBeCloseTo(0.8, 6);
+  });
+
+  it("the logged 9GRP F27 map: holding Regal Pillow changes the value of the paths through rest sites", () => {
+    // The old fixed room-cost model (no measured rooms): the test does not read the refreshing room costs.
+    setRoomCostsForTests({});
+    const rationale = (relic: string | null): string => {
+      const raw = oneshotBoard("9grp-f28-rest", "map_before");
+      const run = raw["run"] as Raw;
+      if (relic) run["relics"] = [...(run["relics"] as Raw[]), { index: 9, relic_id: relic, name: relic, stack: null, is_melted: false }];
+      const decision = planMap(oneshotEnv(raw, undefined, { buildDecider: "jev" }));
+      return decision?.kind === "act" ? decision.rationale : JSON.stringify(decision?.kind === "ask" ? decision.questions : null);
+    };
+    expect(rationale("REGAL_PILLOW")).not.toBe(rationale(null));
   });
 });

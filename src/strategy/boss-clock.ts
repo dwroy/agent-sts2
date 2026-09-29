@@ -30,6 +30,7 @@ import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
+import { restedHp, restHealOf } from "./route-projection.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -723,8 +724,10 @@ export function expectedEntryHp(state: GameState): number {
   if (max === null || max <= 0) return hp ?? 70;
   const now = hp ?? max;
   if (!restAheadOfBoss(state)) return now;
-  const pillow = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "REGAL_PILLOW") ? REGAL_PILLOW_HEAL : 0;
-  return Math.round(Math.min(max, now + REST_HEAL_SHARE * max + pillow));
+  // The game's heal: 30% of max rounded down, then the rest relics (Regal Pillow +15, Stone Humidifier +5 max HP
+  // and HP), as route-projection restedHp (batch D 981ae07); it was rounded, and Stone Humidifier left out.
+  const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  return restedHp(now, max, restHealOf(relicIds)).hp;
 }
 
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */

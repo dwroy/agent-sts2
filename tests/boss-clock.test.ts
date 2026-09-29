@@ -331,6 +331,13 @@ describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () 
     expect(expectedEntryHp(at(31, 37, 91, { relics: [{ index: 0, relic_id: "REGAL_PILLOW" }] }))).toBe(37 + 27 + REGAL_PILLOW_HEAL);
   });
 
+  it("the game's heal: 30% rounded down (85 max: 25, not 26); Stone Humidifier's +5 max HP and HP (batch E)", () => {
+    expect(expectedEntryHp(at(31, 40, 85))).toBe(40 + 25);
+    expect(expectedEntryHp(at(31, 40, 85, { relics: [{ index: 0, relic_id: "STONE_HUMIDIFIER" }] }))).toBe(40 + 25 + 5);
+    // Capped at the old max, then the Humidifier's 5 on top (WFR4AUP2CWDT: 79/85 after a rest at 50/80).
+    expect(expectedEntryHp(at(31, 70, 80, { relics: [{ index: 0, relic_id: "STONE_HUMIDIFIER" }] }))).toBe(85);
+  });
+
   it("on the pre-boss rest floor: counted while its heal is still offered, not after", () => {
     const rest = { rest: { options: [{ index: 0, option_id: "HEAL", title: "休息", is_enabled: true }, { index: 1, option_id: "SMITH", title: "锻造", is_enabled: true }] } };
     expect(expectedEntryHp(at(32, 30, 80, {}, "REST", rest))).toBe(54);
