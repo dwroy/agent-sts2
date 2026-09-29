@@ -369,6 +369,12 @@ export interface EnemyMove {
   /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
   estimated?: boolean;
   /**
+   * `damage` is the move's shown hit (monster-db shownDamageAt: no base was ever measured), Strength and our
+   * Vulnerable already in it: not scaled by them again (the Queen's Off With Your Head, 7x5 shown, was one
+   * 67 hit in the rollout).
+   */
+  shown?: boolean;
+  /**
    * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
    * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
    * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
@@ -882,6 +888,7 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor(a.damage * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
+  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1))), hits: Math.max(1, m.hits) }];
   return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
 }
 

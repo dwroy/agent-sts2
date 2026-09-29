@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { countsAt, moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { countsAt, moveDamageAt, nearestAscension, selfGainAt, shownDamageAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -200,13 +200,18 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
   const table: EnemyTable = { moves: {}, next: {} };
   for (const [move, entry] of Object.entries(moves ?? {})) {
     // At this ascension when logged there; else the nearest logged one's scaled by the measured ratio
-    // (A9 hits harder than A8: 110 of 122 moves), marked estimated.
+    // (A9 hits harder than A8: 110 of 122 moves), marked estimated. A move whose base was never measured
+    // (every logged turn had a debuff in the way: the Queen's Off With Your Head and Execution, the Amalgam's
+    // Beam and Tackles) is its most common shown hit, Strength and our Vulnerable already in it, with its
+    // own hits (7x5, not one 43 re-scaled to 67; consistency #4).
     const logged = moveDamageAt(db, id, move, asc);
-    const hits = logged?.hits ?? 1;
+    const shown = logged ? null : shownDamageAt(db, id, move, asc);
+    const hits = logged?.hits ?? shown?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
     table.moves[move] = {
-      damage: logged?.perHit ?? (avg > 0 ? avg / hits : 0),
+      damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
+      ...(shown ? { shown: true } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
       block: mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0,
@@ -216,7 +221,7 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...(healOf(id, move, entry, asc) > 0 ? { heal: healOf(id, move, entry, asc) } : {}),
       ...statusCardsOf(entry),
       ...playerPowersOf(entry, asc),
-      ...(logged?.estimated ? { estimated: true } : {}),
+      ...(logged?.estimated || shown?.estimated ? { estimated: true } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {

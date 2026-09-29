@@ -343,7 +343,7 @@ export function moveDamageAt(monsters: MonsterMoveData, monsterId: string, moveI
  * measured (every logged turn had a debuff in the way: the Queen's Off With Your Head, the Amalgam's
  * Beam): the nearest logged ascension's most common shown hit, scaled like moveDamageAt when not this one.
  */
-function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
+export function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: string, asc: number): MoveDamage | null {
   const move = monsters[monsterId]?.moves?.[moveId];
   const withShown = Object.fromEntries(Object.entries(move?.damage_by_asc ?? {}).filter(([, entry]) => mode(entry.shown) !== null));
   const found = nearestAscension(withShown, asc);

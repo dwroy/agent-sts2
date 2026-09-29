@@ -1341,3 +1341,44 @@ describe("Smoggy caps Skills in the turn solver too (「每回合你只能打出
     expect(skills({ ...base, player: { ...base.player, maxSkills: 0 } })).toBe(0);
   });
 });
+
+describe("moves with no measured base (Queen, Torch Head Amalgam): their shown hits, not re-scaled (consistency #4: Off With Your Head 67x1 vs 7x5)", () => {
+  const QUEEN_DB = {
+    QUEEN: {
+      moves: {
+        OFF_WITH_YOUR_HEAD_MOVE: { n_seen: 15, avg_total_shown: 43, damage_by_asc: { "8": { shown: { "7x5": 3, "12x5": 1 }, base_per_hit: {}, hits: { "5": 4 } } } },
+        EXECUTION_MOVE: { n_seen: 8, avg_total_shown: 25, damage_by_asc: { "8": { shown: { "25x1": 2 }, base_per_hit: {}, hits: { "1": 2 } } } },
+      },
+    },
+  };
+
+  it("enemyTable: the shown hit and its hits, marked shown", async () => {
+    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const table = enemyTable("QUEEN", 8, QUEEN_DB, { QUEEN: { next: {}, damage: { OFF_WITH_YOUR_HEAD_MOVE: 43, EXECUTION_MOVE: 25 } } })!;
+    expect(table.moves["OFF_WITH_YOUR_HEAD_MOVE"]).toMatchObject({ damage: 7, hits: 5, shown: true });
+    expect(table.moves["EXECUTION_MOVE"]).toMatchObject({ damage: 25, hits: 1, shown: true });
+  });
+
+  it("the rollout hits for the shown 7x5 under our Vulnerable and her Strength, not (43 + 2) x 1.5", () => {
+    const HEAD: EnemyTable = { moves: { OFF_WITH_YOUR_HEAD_MOVE: { damage: 7, hits: 5, strength: 0, block: 0, shown: true } }, next: { OFF_WITH_YOUR_HEAD_MOVE: { OFF_WITH_YOUR_HEAD_MOVE: 1 } } };
+    const input = scenario(1e9, fakeClock(0.01));
+    const hand = [strike(0)];
+    const solver: SolverInput = {
+      ...input.solver,
+      hand,
+      player: { ...input.solver.player, hp: 300, maxHp: 300, maxPlays: 0, vulnerable: true },
+      enemies: [{ index: 0, name: "Queen", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] }],
+      fightKind: "boss",
+    };
+    const line = rolloutDecision({
+      ...input,
+      solver,
+      plans: solveTurn(solver).plans,
+      piles: { draw: Array.from({ length: 40 }, (_, k) => strike(10 + k)), discard: [], handBase: hand },
+      enemies: [{ index: 0, id: "QUEEN", move: "OFF_WITH_YOUR_HEAD_MOVE", strength: 2, powers: { STRENGTH_POWER: 2 } }],
+      tables: { QUEEN: HEAD },
+      playerPowers: { VULNERABLE_POWER: 99 },
+    }).lines[0]!;
+    expect(line.perTurn[0]!.loss.mean).toBe(35);
+  });
+});
