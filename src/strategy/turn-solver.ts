@@ -547,6 +547,11 @@ export interface Outcome {
    * by then, Weak-scaled); `least` is the solver's own conservative growth (the least of them).
    */
   thrashRandom?: { index: number; strength: number; least: number }[];
+  /**
+   * Unrelenting's free Attack(s) not used this turn (FREE_ATTACK_POWER): they stay up into the next turn (logged
+   * 21TKTPL5D4A6 F3: Unrelenting the last Attack of T2, T3 began with FREE_ATTACK_POWER 1 and its Strike cost 0).
+   */
+  freeAttacksLeft?: number;
 }
 
 export interface Plan {
@@ -2209,6 +2214,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
+      ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
     },
   };
 }

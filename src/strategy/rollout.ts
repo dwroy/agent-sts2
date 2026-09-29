@@ -895,6 +895,8 @@ interface SimPlayer {
   boulder: number;
   /** Hellraiser up: a Strike drawn is played at once, free, at a random enemy (hellraised). */
   hellraiser: boolean;
+  /** Unrelenting's free Attacks left at the end of the last turn (FREE_ATTACK_POWER stays up into the next). */
+  freeAttacks: number;
   /**
    * Dark Embrace (cards drawn per card exhausted): the ethereal cards exhausted at the end of a turn draw that
    * many each, discarded with the hand (the draw pile runs down, and may be reshuffled, before the next turn).
@@ -1362,6 +1364,7 @@ function applyPlan(
   addMade("WITHER", o.withersAdded, "discard");
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
+  player.freeAttacks = o.freeAttacksLeft ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
@@ -1642,6 +1645,7 @@ function simulate(
     relicAoe: 0,
     boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
     hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
+    freeAttacks: 0,
     darkEmbrace: input.playerPowers["DARK_EMBRACE_POWER"] ?? 0,
     otherStartLoss: 0,
     startDealt: 0,
@@ -1810,7 +1814,8 @@ function simulate(
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
-      freeAttacks: 0,
+      // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
+      freeAttacks: player.freeAttacks,
       duplicate: 0,
       buffer: 0,
       vigor: 0,

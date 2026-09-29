@@ -529,3 +529,29 @@ describe("8. Rest-site facts for DeepSeek: a forced Elite within 3 nodes (7KDMKN
     expect(factsOf(raw, memory)["forced_elite_ahead"]).toBeUndefined();
   });
 });
+
+describe("9b. Unrelenting's free Attack left at the end of the turn stays up into the next (FREE_ATTACK_POWER; 21TKTPL5D4A6 F3)", () => {
+  it("the solver reports it; the rollout's next turn plays its 3-cost Attack free", () => {
+    const unrelenting = card(0, "UNRELENTING", { cost: 2, damage: 12, damageBase: 12, special: "free_next_attack" });
+    const solver: SolverInput = { hand: [unrelenting], player: player({ energy: 2 }), enemies: [enemy({ hp: 500, maxHp: 500 })], fightKind: "monster", turn: 2 };
+    const plan = solveTurn(solver).plans.find((entry) => entry.steps.length === 1 && entry.steps[0]!.cardId === "UNRELENTING")!;
+    expect(plan.outcome.freeAttacksLeft).toBe(1);
+    const heavy = card(10, "HEAVY", { cost: 3, damage: 20, damageBase: 20 });
+    const line = rolloutDecision({
+      solver,
+      plans: [plan],
+      enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { TEST_DUMMY: WAIT },
+      piles: { draw: [heavy, strike(11), strike(12)], discard: [], handBase: [unrelenting] },
+      meta: META,
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 2, horizon: 2, handSize: 3, now: fastClock() },
+    }).lines[0]!;
+    // Free: the 20 for nothing, then both Strikes (32); without the carry, the 20 alone takes the 3 energy.
+    expect(line.perTurn[0]!.dmg.min).toBe(32);
+  });
+});
