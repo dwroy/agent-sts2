@@ -19,7 +19,8 @@ import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js"
 import type { CardModel } from "../src/strategy/card-model.js";
 import { isFightPlanReply } from "../src/strategy/fight-plan.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { rolloutDecision, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
+import { MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { board, play, scriptedDeepSeek, setupOneshotTests } from "./oneshot-support.js";
 import { baseState, combatPayload, mainMenuPayload, runPayload } from "./scenarios.js";
@@ -253,5 +254,44 @@ describe("HP guard texts: a heal reads \"hp +8\", not \"loses -8 HP\" (batch M's
     const note = hpGuardNote(2, healing, 8, 1, block);
     expect(note).toMatch(/^; HP guard: plan 2 \(.*; hp \+8\) is more than 8 HP over the cheapest line, playing plan 1 \(.*; hp \+20\) instead$/);
     for (const text of [guardedText(healing, block), note]) expect(text).not.toMatch(/loses -|hp --/);
+  });
+});
+
+describe("rollout: a played Music Box copy goes to the discard pile and is drawn again (batch M's leftover; YVYZ F48 T7 drew back the T5 copy)", () => {
+  const card = (index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel => ({
+    index, key: `c${index}`, cardId, name: cardId, type: "Attack", upgraded: false, cost: 1, xCost: false, playable: true, target: "single", validTargets: [0],
+    damage: null, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0,
+    draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...overrides,
+  });
+  // One Strike, nothing else: every turn draws what the discard pile holds. A dummy that never attacks.
+  const scenario = (): RolloutInput => {
+    const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6 })];
+    const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, musicBox: { count: 0 } };
+    const enemy: EnemySim = { index: 0, name: "Dummy", hp: 999, maxHp: 999, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+    const solver: SolverInput = { hand, player, enemies: [enemy], fightKind: "monster", turn: 1 };
+    const table: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    return {
+      solver,
+      plans: solveTurn(solver).plans,
+      enemies: [{ index: 0, id: "DUMMY", move: "WAIT", strength: 0, powers: {} }],
+      tables: { DUMMY: table },
+      piles: { draw: [], discard: [], handBase: hand },
+      meta: { act: 1, t: 1, asc: 8, kind: "hallway", enc: "DUMMY", deck: { n: 1, atk: 1, skl: 0, pow: 0, junk: 0, dmg: 6, blk: 0, up: 0 }, relics: 1, max_en: 3 },
+      playerPowers: {},
+      potions: 0,
+      mm: {},
+      model: null,
+      gates: null,
+      options: { budgetMs: 1e9, seed: 7, horizon: 3, now: (() => { let t = 0; return () => (t += 0.01); })() },
+    };
+  };
+
+  it("Strike + its copy on T1; T2 draws both back (Strike, copy, and a new copy: 18), T3 likewise: 12 + 18 + 18", () => {
+    const result = rolloutDecision(scenario());
+    const both = result.lines.find((line) => line.plan.steps.map((step) => step.cardIndex).join(",") === `0,${MUSIC_BOX_INDEX}`)!;
+    expect(both).toBeDefined();
+    expect(both.plan.outcome.damageDealt).toBe(12);
+    // Without the copy back in the pile the later turns hold one Strike: 12 + 12 + 12 (enemy at 963).
+    expect(both.enemyHpLeft).toBe(999 - 12 - 18 - 18);
   });
 });
