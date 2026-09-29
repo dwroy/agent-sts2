@@ -964,13 +964,25 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
 export function exhaustedSinceTurnStart(env: DecisionEnv): boolean {
   const size = exhaustPileSize(env.state.raw);
   if (size === undefined) return false;
-  const key = `${fightKey(env.state)}:${env.state.turn ?? "?"}`;
   const start = env.screenMemory.turnStartExhaust;
-  if (start?.key !== key) {
-    env.screenMemory.turnStartExhaust = { key, size };
-    return false;
-  }
-  return size > start.size;
+  if (noteTurnStartExhaust(env.screenMemory, env.state)) return false;
+  return size > start!.size;
+}
+
+/**
+ * Notes the exhaust pile's size at the turn's first combat frame (memory.turnStartExhaust); true when this frame
+ * is that first one. The journal replay after a restart feeds it the run's logged frames, so a turn restarted
+ * mid-way keeps its first frame's pile as the baseline (it was the first frame seen after the restart: a card
+ * exhausted before it was missed).
+ */
+export function noteTurnStartExhaust(memory: DecisionEnv["screenMemory"], state: DecisionEnv["state"]): boolean {
+  if (!state.in_combat) return false;
+  const size = exhaustPileSize(state.raw);
+  if (size === undefined) return false;
+  const key = `${fightKey(state)}:${state.turn ?? "?"}`;
+  if (memory.turnStartExhaust?.key === key) return false;
+  memory.turnStartExhaust = { key, size };
+  return true;
 }
 
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */

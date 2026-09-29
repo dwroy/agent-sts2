@@ -516,6 +516,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
+          // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
+          if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
           const plan = replay.routePlan ? `; route plan (act ${replay.routePlan.act}, F${replay.routePlan.floor ?? "?"}) ${replay.routePlan.summary}` : "";
           onEvent({ type: "note", message: `run ${runId} in progress: rebuilt the run memory from its logs (${replay.counts.states} states, ${replay.counts.recorded} decisions, ${replay.counts.runPlans} run plans, ${journal.itemCount} items)${plan}` });
         } else {

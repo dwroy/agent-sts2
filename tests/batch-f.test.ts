@@ -24,7 +24,8 @@ import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } f
 import { boardRolloutInput, pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { turnStartAoe } from "../src/screens/combat-plan.js";
+import { exhaustedSinceTurnStart, turnStartAoe } from "../src/screens/combat-plan.js";
+import { replayRun } from "../src/project/journal-replay.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -569,5 +570,20 @@ describe("9c. Eternal Feather: 3 HP for every 5 cards on entering a rest site, i
     // Without the relic, or on the rest site's own screen (no deck size): nothing more.
     expect(restHealOf(["REGAL_PILLOW"], 20).enterHeal).toBeUndefined();
     expect(restHealHere("", 80, ["ETERNAL_FEATHER"]).rest.enterHeal ?? 0).toBe(0);
+  });
+});
+
+describe("9d. After a restart mid-turn, the exhaust baseline is the turn's first logged frame, not the first frame seen (0NZBAVFAT3JG F25 T1)", () => {
+  it("the journal replay notes the turn's first frame; a card exhausted before the restart still counts (Evil Eye)", () => {
+    const first = logged("0nzb-f25-t1-brand");
+    const after = logged("0nzb-f25-t1-after-exhaust");
+    // A fresh process sees only the frame after the exhaust: its pile is the baseline, nothing counted.
+    expect(exhaustedSinceTurnStart(loggedEnv(after))).toBe(false);
+    // With the run's logs replayed first (the turn's first frame was logged with its decision):
+    const replay = replayRun({ runId: "0NZBAVFAT3JG", states: [{ ts: "2026-09-29T00:00:00.000Z", state: first.state as never }], decisions: [], runPlans: [] }, loggedKnowledge);
+    expect(replay.turnStartExhaust).not.toBeNull();
+    const env = loggedEnv(after);
+    env.screenMemory.turnStartExhaust = replay.turnStartExhaust!;
+    expect(exhaustedSinceTurnStart(env)).toBe(true);
   });
 });
