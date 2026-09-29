@@ -71,7 +71,7 @@ export interface CardModel {
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | null;
+  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -257,6 +257,8 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   SECOND_WIND: "second_wind", // exhausts every non-Attack in hand, its Block per card (solver) // costs 1 less per Attack played this turn (the shown cost counts the ones before planning) // exhausts the hand, one hit per card exhausted (solver)
   DOMINATE: "dominate", // Strength per Vulnerable on the target, after its own Vulnerable (solver)
   FRANTIC_ESCAPE: "frantic_escape", // The Insatiable: +1 Sandpit (the solver scores the countdown)
+  // Primal Force: 「将手牌中的所有攻击牌变化为巨石」 (upgraded: 巨石+): every Attack in hand becomes a Giant Rock (solver).
+  PRIMAL_FORCE: "primal_force",
   CRIMSON_MANTLE: "crimson_mantle", // 1 HP at the start of every turn (the solver checks it can afford it)
   // One-Two Punch: 「在这个回合，你打出的下{Attacks}张攻击牌会被额外打出一次。」 (Attacks 1, upgraded 2): the next
   // Attacks are played twice (solver duplicateAttacks, as ONE_TWO_PUNCH_POWER once it is up). Unmodelled in hand,
@@ -543,7 +545,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks") {
+  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force") {
     known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
@@ -617,6 +619,51 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // (MAHA F33 T7: played before Anger, which it ate; the boss was left at 1/321).
     randomExhaust: special !== "thrash" && /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
     text: str(card["resolved_rules_text"]) || info?.description || "",
+  };
+}
+
+/**
+ * Giant Rock (巨石, what Primal Force turns the hand's Attacks into): 1 energy, 「造成{Damage}点伤害」, Damage 20,
+ * upgraded (巨石+, from Primal Force+) 24 (logged GIANT_ROCK dynamic_values base 20 / 24).
+ */
+export const GIANT_ROCK = { cost: 1, damage: 20, damageUpgraded: 24 };
+
+/**
+ * The Giant Rock an Attack in hand becomes (Primal Force): its hand slot and key, 1 energy, the rock's damage
+ * shown the way the hand shows it (this turn's Strength, our Weak).
+ */
+export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow: number, weak: boolean): CardModel {
+  const base = upgraded ? GIANT_ROCK.damageUpgraded : GIANT_ROCK.damage;
+  return {
+    ...attack,
+    key: `${attack.key}>rock`,
+    cardId: "GIANT_ROCK",
+    name: upgraded ? "巨石+" : "巨石",
+    type: "Attack",
+    upgraded,
+    cost: GIANT_ROCK.cost,
+    xCost: false,
+    playable: true,
+    target: "single",
+    damage: Math.floor((base + strengthNow) * (weak ? 0.75 : 1)),
+    damageBase: base,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: `造成${base}点伤害。`,
   };
 }
 

@@ -11,7 +11,8 @@ import { describe, expect, it } from "vitest";
 
 import { bossNote as journalBossNote } from "../src/project/run-journal.js";
 import { bossMechanic, bossProfile, giantKillRecord } from "../src/strategy/boss-clock.js";
-import type { CardModel } from "../src/strategy/card-model.js";
+import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
+import { loggedKnowledge } from "./logged.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
 import { turnStartAoe } from "../src/screens/combat-plan.js";
@@ -249,5 +250,30 @@ describe("4b. Rolling Boulder: every start of turn hits every enemy for its amou
     });
     expect(result.lines[0]!.winProb).toBe(1);
     expect(result.lines[0]!.turnsToWin).toBe(2);
+  });
+});
+
+describe("4c. Primal Force turns every Attack in hand into a Giant Rock (N01X6BBAYMHT)", () => {
+  const primal = (i: number, upgraded = false) => card(i, "PRIMAL_FORCE", { type: "Skill", target: "self", validTargets: [], cost: 0, special: "primal_force", upgraded, known: true });
+
+  it("Primal Force, then two Rocks (20 each) kill a 40-HP enemy the two Strikes (6 each) could not", () => {
+    const input: SolverInput = { hand: [primal(0), strike(1), strike(2)], player: player({ energy: 2 }), enemies: [enemy({ hp: 40, maxHp: 40 })], fightKind: "monster", turn: 2 };
+    const best = solveTurn(input).plans[0]!;
+    expect(best.outcome.winsFight).toBe(true);
+    expect(best.steps.map((step) => step.cardId)).toEqual(["PRIMAL_FORCE", "GIANT_ROCK", "GIANT_ROCK"]);
+  });
+
+  it("upgraded: Giant Rock+ 24, with this turn's Strength shown like the hand shows it; Skills stay", () => {
+    const input: SolverInput = { hand: [primal(0, true), strike(1, 9), defend(2)], player: player({ energy: 1, strengthNow: 3 }), enemies: [enemy({ hp: 27, maxHp: 27 })], fightKind: "monster", turn: 2 };
+    const best = solveTurn(input).plans[0]!;
+    // 24 + 3 Strength = 27: a kill with one energy.
+    expect(best.outcome.winsFight).toBe(true);
+    expect(best.steps.map((step) => step.cardId)).toEqual(["PRIMAL_FORCE", "GIANT_ROCK"]);
+  });
+
+  it("the card model reads it (a known 0-cost Skill, not a flat nudge)", () => {
+    const raw = { index: 0, card_id: "PRIMAL_FORCE", name: "原始力量", upgraded: false, energy_cost: 0, rules_text: "将手牌中的所有攻击牌变化为{IfUpgraded:show:巨石+|巨石}。", resolved_rules_text: "将手牌中的所有攻击牌变化为巨石。", dynamic_values: [], playable: true, target_type: "None", requires_target: false, valid_target_indices: [] };
+    const model = modelHandCard(raw, 0, loggedKnowledge);
+    expect(model).toMatchObject({ special: "primal_force", known: true, flatValue: 0 });
   });
 });

@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { applyUpgrade, freeCardPick, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
+import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
@@ -1213,6 +1213,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const amount = card.regen ?? 0;
     next.regen += amount;
     next.flat += REGEN_LATER_SHARE * ((amount - 1) * amount) / 2;
+  }
+  // Primal Force: every Attack left in hand becomes a Giant Rock (1 energy, 20 damage; upgraded 24).
+  if (card.special === "primal_force") {
+    next.hand = next.hand.map((entry) => (entry.type === "Attack" ? giantRockFrom(entry, card.upgraded, player.strengthNow ?? 0, player.weak) : entry));
   }
   // Blessing of the Forge: every card left in hand upgraded (its logged upgrade numbers added).
   if (card.special === "forge" && card.upgrades) {
