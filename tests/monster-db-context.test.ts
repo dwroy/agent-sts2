@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
+import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, selfGainAt, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
 import { enemyTable } from "../src/strategy/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 
@@ -146,6 +146,65 @@ describe("an ascension no fight is logged at yet (A10): the A8 -> A9 ratio carri
     try {
       expect(bossDossier("QUEEN_BOSS", 10)).toMatch(/强力冲撞 30 \(A10估: A8×1\.16，A9→A10 未测按 ×1\)/);
       expect(bossDossier("QUEEN_BOSS", 9)).toMatch(/强力冲撞 30 \(A9估: A8×1\.16\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+});
+
+describe("buffs at the ascension asked for, not pooled over every ascension (review 2026-09-29 #6)", () => {
+  // Kin Priest as logged: Ritual +2 at A8 (39 fights of 80 pooled), +3 at A9 (6); the pooled mode says +2.
+  const monsters = {
+    KIN_PRIEST: {
+      name: { zh: "同族神官" },
+      moves: {
+        BEAM_MOVE: { name: "灵魂光束", turns_seen: { "1": 5 }, next: { RITUAL_MOVE: 5 }, damage_by_asc: { "8": { base_per_hit: { "3": 5 }, hits: { "3": 5 } }, "9": { base_per_hit: { "3": 5 }, hits: { "3": 5 } } } },
+        RITUAL_MOVE: {
+          name: "黑暗仪式",
+          next: { BEAM_MOVE: 5 },
+          self_powers_gained: { STRENGTH_POWER: { "2": 80, "3": 6 } },
+          self_powers_gained_by_asc: { "0": { STRENGTH_POWER: { "2": 41 } }, "8": { STRENGTH_POWER: { "2": 39 } }, "9": { STRENGTH_POWER: { "3": 6 } } },
+        },
+      },
+    },
+    WATERFALL_GIANT: {
+      name: { zh: "瀑布巨兽" },
+      moves: { RAM_MOVE: { name: "撞击", turns_seen: { "1": 3 }, next: { RAM_MOVE: 3 }, damage_by_asc: { "9": { base_per_hit: { "11": 3 }, hits: { "1": 3 } } } } },
+      // Steam Eruption first seen at 15 up to A8, 20 at A9; pooled 15.
+      powers: { STEAM_ERUPTION_POWER: { name: "蒸汽喷发", type: "Buff", n_fights: 58, amount_at_first_sight: { "15": 53, "20": 5 }, amount_at_first_sight_by_asc: { "8": { "15": 27 }, "9": { "20": 5 } } } },
+    },
+    // No per-ascension split: the pooled counts.
+    TERROR_EEL: { moves: { THRASH_MOVE: { self_powers_gained: { VIGOR_POWER: { "6": 75 } } } } },
+  };
+  const ritual = monsters.KIN_PRIEST.moves.RITUAL_MOVE;
+
+  it("selfGainAt: this ascension, else the nearest logged one, else the pooled counts", () => {
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 8)).toBe(2);
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 9)).toBe(3);
+    expect(selfGainAt(ritual, "STRENGTH_POWER", 10)).toBe(3);
+    expect(selfGainAt(monsters.TERROR_EEL.moves.THRASH_MOVE, "VIGOR_POWER", 9)).toBe(6);
+    expect(selfGainAt(ritual, "VIGOR_POWER", 9)).toBeNull();
+  });
+
+  it("the rollout's move table, the damage by turn and the dossier take A9's Ritual and Steam Eruption", () => {
+    expect(enemyTable("KIN_PRIEST", 9, monsters as never, {})!.moves["RITUAL_MOVE"]!.strength).toBe(3);
+    expect(enemyTable("KIN_PRIEST", 8, monsters as never, {})!.moves["RITUAL_MOVE"]!.strength).toBe(2);
+    // T1 Beam 3x3, T2 Ritual, T3 Beam (3+3)x3 at A9, (3+2)x3 at A8.
+    expect(monsterDamageByTurn("KIN_PRIEST", 9, 3, monsters as never)!.perTurn).toEqual([9, 0, 18]);
+    expect(monsterDamageByTurn("KIN_PRIEST", 8, 3, monsters as never)!.perTurn).toEqual([9, 0, 15]);
+    setMonsterDbForTests({
+      bosses: {
+        THE_KIN: { "9": { fights: 4, parts: { KIN_PRIEST: { median: 199, n: 4 } } } },
+        WATERFALL_GIANT: { "9": { fights: 5, parts: { WATERFALL_GIANT: { median: 250, n: 5 } } } },
+      },
+      encounters: {},
+      monsters,
+    } as never);
+    try {
+      expect(bossDossier("THE_KIN_BOSS", 9)).toContain("黑暗仪式 +3力");
+      expect(bossDossier("THE_KIN_BOSS", 8)).toContain("黑暗仪式 +2力");
+      expect(bossDossier("WATERFALL_GIANT_BOSS", 9)).toContain("能力: 蒸汽喷发 20");
+      expect(bossDossier("WATERFALL_GIANT_BOSS", 8)).toContain("能力: 蒸汽喷发 15");
     } finally {
       setMonsterDbForTests(null);
     }

@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { moveDamageAt, nearestAscension, type MoveEntry } from "../knowledge/monster-db.js";
+import { moveDamageAt, nearestAscension, selfGainAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -145,10 +145,11 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
     table.moves[move] = {
       damage: logged?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
-      strength: mode(entry.self_powers_gained?.["STRENGTH_POWER"]) ?? 0,
+      // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
+      strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
       block: mode(entry.block_gained) ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
-      ...(mode(entry.self_powers_gained?.["VIGOR_POWER"]) ? { vigor: mode(entry.self_powers_gained?.["VIGOR_POWER"])! } : {}),
+      ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated ? { estimated: true } : {}),
     };

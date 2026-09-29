@@ -190,6 +190,28 @@ export function backAttackShare(move: MoveEntry | undefined): number | null {
   return behind + facing > 0 ? behind / (behind + facing) : null;
 }
 
+/**
+ * Counts at `asc` from a per-ascension split: this ascension's when logged, else the nearest logged one's
+ * (A9's Ritual +3 at A10, not the pooled +2 most fights were logged with); the pooled counts only when
+ * no ascension has any (a DB built before the split, or only unknown-ascension rows).
+ */
+export function countsAt(byAsc: Record<string, Record<string, number> | undefined> | undefined, pooled: Record<string, number> | undefined, asc: number): Record<string, number> | undefined {
+  const logged = Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, counts]) => counts && Object.keys(counts).length > 0));
+  const found = nearestAscension(logged, asc);
+  return found ? logged[found.key] : pooled;
+}
+
+/**
+ * The most common amount of a power a move gives its user at `asc` (self_powers_gained_by_asc, nearest
+ * logged ascension, pooled only without a split): Kin Priest's Ritual +2 up to A8, +3 at A9. null when
+ * the move never gave it.
+ */
+export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: number): number | null {
+  const byAsc = Object.fromEntries(Object.entries(move?.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[powerId]]));
+  const value = mode(countsAt(byAsc, move?.self_powers_gained?.[powerId], asc));
+  return value === null ? null : Number(value);
+}
+
 function basePerHit(move: MoveEntry | undefined, asc: string): number | null {
   const base = mode(move?.damage_by_asc?.[asc]?.base_per_hit);
   return base === null ? null : Number(base);
@@ -327,7 +349,8 @@ function shownDamageAt(monsters: MonsterMoveData, monsterId: string, moveId: str
  * logged (turns_seen), then its logged successors (next; a move with none, the Waterfall Giant's death
  * Explode, is not a turn of the fight), each move's damage per hit at this ascension (moveDamageAt:
  * scaled from the nearest ascension when unseen here; the shown hit when no base was ever measured) plus
- * the Strength its earlier moves gained (self_powers_gained), times its hits. `estimated`: some move's
+ * the Strength its earlier moves gained (selfGainAt: at this ascension, A9's Ritual +3 not the pooled +2),
+ * times its hits. `estimated`: some move's
  * damage was scaled. null without logged moves.
  */
 export function monsterDamageByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; estimated: boolean } | null {
@@ -345,7 +368,7 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
       return [id, base ?? (shown ? { ...shown, shown: true } : null)];
     }),
   );
-  const strengthOf = (id: string) => Number(mode(moves[id]?.self_powers_gained?.["STRENGTH_POWER"]) ?? 0);
+  const strengthOf = (id: string) => selfGainAt(moves[id], "STRENGTH_POWER", asc) ?? 0;
   let strength = 0;
   let estimated = false;
   const perTurn: number[] = [];
@@ -432,7 +455,7 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
     const unmeasured = damage.ratioTo !== undefined && damage.ratioTo !== asc ? `，A${damage.ratioTo}→A${asc} 未测按 ×1` : "";
     parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)}${unmeasured})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
-  const strength = mode(move.self_powers_gained?.["STRENGTH_POWER"]);
+  const strength = selfGainAt(move, "STRENGTH_POWER", asc);
   if (strength) parts.push(`+${strength}力`);
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
@@ -523,13 +546,14 @@ export function moveCycle(id: string, asc: number, maxMoves = 6): string {
   return `${order.map((moveId) => moveText(moves[moveId]!, moveId, asc, id)).join(" → ")}${loops}${others.length > 0 ? `；其他: ${others.join(", ")}` : ""}`;
 }
 
-function powersText(id: string, fights: number): string {
+function powersText(id: string, fights: number, asc: number): string {
   const powers = load().monsters[id]?.powers ?? {};
   const common = Object.values(powers)
     // Its own buffs only: Vulnerable, Weak and the like on it are what we applied.
     .filter((power) => power.type !== "Debuff" && (power.n_fights ?? 0) >= Math.max(2, fights * 0.3))
     .map((power) => {
-      const amount = mode(power.amount_at_first_sight);
+      // At this ascension (the Waterfall Giant's Steam Eruption: 15 up to A8, 20 at A9), not pooled.
+      const amount = mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc));
       return `${power.name ?? "?"}${amount && amount !== "1" ? ` ${amount}` : ""}`;
     });
   return common.join(", ");
@@ -552,7 +576,7 @@ export function bossDossier(bossId: string | null | undefined, asc: number): str
   ];
   for (const [part] of parts) {
     const cycle = moveCycle(part, asc);
-    const powers = powersText(part, entry.fights ?? 0);
+    const powers = powersText(part, entry.fights ?? 0, asc);
     if (cycle || powers) lines.push(`${monsterName(part)} 招式: ${cycle || "?"}${powers ? ` | 能力: ${powers}` : ""}`);
   }
   return lines.join("\n");
