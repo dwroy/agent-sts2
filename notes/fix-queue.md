@@ -79,3 +79,7 @@ Fix (robustness only, no change to what DeepSeek may choose):
 3. Never replace good state with a bad answer: an invalid run plan / route plan / act plan keeps the previous plan (log it); the re-ask prompt must carry every field the original asked for (route review!).
 4. Detect truncation (finish_reason=length / unbalanced JSON) and re-ask for the JSON only.
 5. Count failures per label (and which recovery step fixed them) in ops/report.py and ops/stats.py; the ops session flags a label whose failure rate goes above 2%.
+
+From experience update 2026-09-29.4 (2026-09-29 18:01; line numbers at v3 cf87de6):
+- Hand-written knowledge contradicting A9 data (update text per ascension, from the data): Giant "kill early" cites only A8 "killed before T10 13/15 won" — ironclad-guide.md:55, :120, ds-handbook.md:71, run-journal.ts:181 (A9 killed before T10 1/3 won, both losses short of HP at the kill; jev-hints.json:110 giant-eruption already has both halves); ds-handbook.md:75 Infested Prism "22~40 lost" (A9 wins lost 42, 52, 56); ds-handbook.md:40 Entomancer "3 deaths" (now 9 at A7–A9); ironclad-guide.md:52, :98 "kill the cultists first" vs experience kin-priest-focus (old contradiction); jev-hints.json:140 hp-trade-boss counter-example 3SBP Vantom T1 Slippery.
+- rest.ts:42 beforeBoss ignores a forced elite within 3 floors (7KDM).

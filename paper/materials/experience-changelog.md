@@ -624,3 +624,111 @@
 - 最终中位涨 0.1–0.5k，最大 5.9k。最大的是 XMK1 F18 二幕先古事件：25 条经验加 13 行统计，改前在这批样本里是 5.5k。
 - 条目数：active 198（测试上限 200）；置信度 高 129、中 58、低 11。
 - Jev 每场战斗看到的敌人条目仍 ≤4 条：这次没有新增 boss、精英、走廊条目，帝王蟹的 4 条都在（测试钉住）。胧光怪战里 Jev 看到的就是改写后的 obscura。
+
+## 2026-09-29 第五次增量：11 局 A9（version 2026-09-29.4，分支 exp-update，a2edb85）
+
+### 来源
+- `notes/lessons.md` 末尾的 11 节 A9 复盘，全输：9GRPS5DC8KHN（F29 猎人杀手走廊）、N01X6BBAYMHT（F9 鬼祟珊瑚群）、83FLGYXZG9QH（F17 同族）、7MDJ256RY2UU（F17 瀑布巨兽自爆）、5NFGDU7BQPD3（F17 瀑布巨兽自爆）、0NZBAVFAT3JG（F25 残杀千足虫）、2ZCKFSKXTL4E（F17 瀑布巨兽自爆）、7KDMKN16GD6B（F27 蜂群术士）、3SBPKG9603WD（F17 墨影幻灵）、KYC0RYEN0NVW（F28 残杀千足虫）、2MK4V7V3Q5BM（F8 方柱构装体走廊）。9GRP、N01X、83FL、7MDJ 上次只进数字，这次作为证据局。复盘末尾的两条勘误（2ZCK「还差 7」、3SBP 异鸟中位 46、招式名；7MDJ 逐回合数、5NFG「唯一达到估值」作废）按勘误后的数用。
+- 日志（只读，流式读取）：
+  - states.jsonl 从 A9 第一局（7B0D，字节偏移约 3.388e9）起 seek，一遍抽出 A9 全部战斗和每层第一帧/最后一帧（HP、金币、药栏、牌组升级数、遗物、屏幕序列）。战斗切分和房间类型照 `tools/build-monster-db.py`（战后第一个 MAP 帧的当前节点；死亡战按 game-data 的怪物类型）。用同样口径重算上次的 31 局，二幕走廊 83 场死 7、中位 11/p75 23/p90 36，一幕精英 30 场、赢局 34.5/44.5，二幕开局 18/5/13/45%，都和上一节一致。
+  - `tools/boss-fights-extract.py --asc 9`（在 A9 那段的副本上跑）+ `tools/boss-clock-calibrate.ts --rows`：按现行时钟（v3 cf87de6）重算 A9 一幕 boss 35 场的实打/估值。
+  - runs.jsonl 定输赢和进阶；`monster-db.json`（v3 038a66e 刷新，已含这 40 局）只用来对数，和抽取结果一致（珊瑚群 A9 5 场死 1、赢局中位 43.5；缩小甲虫 + 毛绒伏地虫 A9 7 场中位 30/p75 38 等）。
+- 口径同上次：「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房（问号房的战斗不算）。A9 汇总是截至 17:39 runs.jsonl 里 40 局已结束的 A9（含还没复盘的 AD5P89DBLM22 F22 甲虫组、CJ88575SQS6H F23 猎人杀手，只进数字）；之后开跑的 KTRT1M2SVVL3 不算。
+- 先在 exp-update 上 `git merge --no-edit v3`（快进到 cf87de6），再改。
+- 结果：新增 1 条，更新 43 条，退役 0 条；active 198 → 199，总数 219 → 220。
+- 药水的处理（按 Dai 的要求）：potion:* 和 general:potion 条目只改句内数字，不加证据局（n 不变）；其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分。没有新增或加强任何「什么时候喝/别喝」的说法。
+
+### 对照数据检查的主题
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 瀑布巨兽 A9（8 场） | 赢 2（YQL8 T7、8V0H T12 击杀）。5NFG、2ZCK 满血进场，击杀前每回合 29.4、28，T9、T10 击杀，击杀时 14、20 血对喷发 41、44：5NFG 击杀前 8 回合掉 66（整副牌只有 4 张防御，T10 手里 0 格挡），2ZCK T5 水枪 23、T6 加压 14 两回合 0 格挡掉 37。7MDJ 101/101 进场、19 张 0 升级 0 删牌，T1–T10 每回合 18.2，T19 才击杀（26 血 + 12 格挡对 71）。A8/A9 有击杀的 33 场：所需格挡 ≤13 的 18 场赢 17，≥20 的 15 场赢 3（新增两场都 ≥20：27、24）。现行时钟下 A9 输局实打/估值 0.43–0.91（中位 0.73），赢局 0.87、0.55 | A9 光打得快不够，击杀回合的 HP 同样决定输赢。更新 giant-explode、giant-deck |
+| A9 一幕 boss（35 场） | 过关 23/35：异鱼 8/9、墨影幻灵 7/9、族母 2/3、同族 3/5、仪式兽 1/1、巨兽 2/8。现行时钟实打/估值：赢局中位 0.98（23 场），输局 0.61（12 场）；进场时 12 场输局有 9 场被报缺口，23 场赢局有 10 场被报「够」。墨影幻灵输的 0H1X、3SBP 都 ≥82% 进场（3SBP 0.53：19 张只有 2 张多段，T1–T5 只打进 9，滑溜清掉后 23.6/回合），<75% 的 QUG1、CJ88 都赢。同族 83FL 96% 进场、0 张永久力量，打进神官 18.9/回合（前 6 回合 22），估值 0.75。族母 0NZB 90% 进场 1.46。异鱼新增 3 场都 ≥93% 进场、20–28/回合赢 | 更新各 boss 条目。墨影幻灵在 A9 不看进场血量，看多段和格挡 |
+| 进场血量（A9 45 场 boss） | ≥75% 进场 22/39（二幕 3/8），<75% 4/6（赢的 4 场都在一幕：QUG1、CJ88 墨影幻灵，VSRG 异鱼，VBHZ 族母）。一幕 boss 赢局平均进场 90%、输局 88%；二幕 97% 对 87%（n=3/6）。≥94% 进场输的：XMK1、U6RU、83FL，另有 7MDJ、5NFG、2ZCK 三局满血输给巨兽 | route-entry-hp 的「A9 血量只是必要条件」改成「不是充分条件」：<75% 4/6 撑不起「必要」 |
+| 永久力量（A9 一幕 boss 35 场） | 牌组里 0 张燃烧/恶魔形态/撕裂/烙印/与我一战！ 6/15 赢，1 张 14/17，≥2 张 3/3。新批的输局 83FL、7MDJ、3SBP、5NFG 都是 0 张，2ZCK 1 张（撕裂） | 写进 act1-strength（观察数据） |
+| A9 二幕精英（8 场死 5）和三幕精英（2 场死 2） | 千足虫 0/2：0NZB 69/80 进场、24 张 2 升级，4 回合 10/24/21/9（需 36.5）；KYC0 56/80（F24 强制棱柱 54→2 后两次回血）、有闪电霹雳、飞剑回旋镖、突破，T1 喝无色药水拿到滚石，3 回合 27/回合（需 48.7）。蜂群术士 0/2：7KDM 63/80，6 张多段/AOE，7 回合塞 19 张晕眩，打到它剩 15。棱柱 4 场赢 3，KYC0 68% 必经进场 −52 剩 2 | 更新 decimillipede、entomancer、prism；entomancer-cost 只加数字 |
+| A9 一幕精英（37 场） | 赢局中位 −33、p75 −38、p90 −51（上次 30 场 34.5/44.5，新增 7 场掉 12–35）。≥78% 进场 27/27 活（中位 −30），60–78% 8 场死 2（X7LU 68%、N01X 71%），<60% 2/2 死。骇鳗 8 场赢 7（中位 −34），异鸟 7 场赢 6（赢局中位 −42，83FL 92% −46），园丁 6 场赢 5，珊瑚群 5 场死 1（N01X 71%、0 升级；赢局 33/35/52/61），异蛙 5/5 | 更新 elite-threshold、act1-costs、各精英条目。p75 下降使「≥2× p75」的读数从超过满血变成约 95% |
+| 一幕精英数（A9 40 局） | 按一幕精英数，过一幕 boss/过二幕 boss：0 只 8 局 4/0，1 只 27 局 16/2，2 只 5 局 3/1。2ZCK 0 精英、3 件遗物进巨兽，时钟整幕差 11–24/回合 | 更新 elite-need-one、elite-no-double 的数字 |
+| 二幕开局和走廊（A9） | 23 局进二幕，8 局死在第一个二幕火堆之前（都在第 3–5 场），走到的 15 局中位 45%（p25 25%），之前中位打 3 场。二幕走廊 97 场死 9，赢局中位 −12、p75 −22、p90 −35。KYC0 的二幕图从起点出发 120 条路，每条都有 ≥2 只精英（2 只 56、3 只 52、4 只 12）；0NZB 选的路第一只精英前 0 个火堆，act plan 却写「skip act-2 elites」。猎人杀手 9 场死 2（9GRP 49/93、CJ88 11/80）；甲虫组 5 场死 2（ETYC 13/80、AD5P 29/87）；啃咬机 3 场都活、掉 16–30 | 更新 act2-opening、a9-damage、route-forced-elite-prep、hunter-killer、beetle、chomper、bowlbugs |
+| 一幕走廊（A9 194 场） | 中位 −8、p75 −13，死 1（2MK4 11/80 进构装体）。贵的两组：缩小甲虫 + 毛绒伏地虫 7 场中位 −30、p75 −38（A8 12 场 15/20），藤蔓蹒跚者 6 场中位 −16.5、p75 −21。N01X 路线按每场约 −2 投影，F8 火堆到场 41%（投影 68%）；2MK4 第一个火堆（F9）前 6 场走廊，F6 −25、F7 −24，F7 到场 44%（投影 70%）、F8 14% 进场死 | 更新 act1-costs、route-no-chains。两组贵的走廊已在 monster DB 的「危险走廊」行里，没有单立条目 |
+| 一幕锻造（A9 35 局到一幕 boss） | 一幕 0 次锻造 6/8 过一幕 boss，≥1 次 17/27；进一幕 boss 时 0–1 张升级 9/16、2 张 5/8、≥3 张 9/11。0NZB 整局 0 锻造（F11 73% 时 code rank 1 是锻造，DeepSeek 回血），进二幕时时钟差 16/回合 | A8 的「0 次 67%、≥1 次 77%」在 A9 方向相反，写进 rest-smith-threshold（观察数据，n 小） |
+| 火堆与投影（7KDM、5NFG） | 7KDM F24 63/80 锻造踩踏，3 层后必经精英；act plan 投影按 F24 回血算精英到场 80，实到 63，蜂群术士剩 15 时死。5NFG F16 60/80 回血到 80，缩放仪（boss 开场回血）满血进场时白给，F15 商店时 DeepSeek 自己算过「60→80 封顶」 | 更新 rest-before-forced、relic-pantograph |
+| 羽翼之靴（9GRP） | 涅奥选它（「3 次越线躲 A9 强制精英」），整局只用 1 次；F28 22/93 回血到 49 后按原路进猎人杀手死，下一行有越线可到的 (11,2) 火堆，死时还剩 2 次 | relic-winged-boots 加反方向的证据（花不出去）|
+| 蜂群术士与多段、无惧疼痛（7KDM） | 飞剑回旋镖 ×2、双重打击、匕首雨、踩踏+、突破，每段一张晕眩：T1 回旋镖 3 张、T2 6 张、T3 5 张，到 T8 共 19 张。无惧疼痛在场时回合末消耗的虚无牌（晕眩、笨拙、进阶之灾）给了 9、12、12 格挡，求解器和 rollout 都没算 | 更新 entomancer、card-sword-boomerang、card-feel-no-pain |
+| 滚石（83FL、KYC0） | KYC0 千足虫 T1 打出，第 2、3 回合开头对三节合计打 15、30（81 伤害里 45）。83FL 同族 T1 手里有滚石、灯笼给的第 4 点能量正好打得出，没打：rollout 不模拟它，四条线饱和，按「T5 神官剩血」排，滚石线垫底；按牌面信徒 T6 开头累计 75 就死，神官到 T7 多吃约 105，实际神官剩 67 时我方死 | 新增 card-rolling-boulder（n=2，中） |
+| 删牌与格挡（7MDJ、5NFG、KYC0） | 7MDJ F8 188 金、code 删牌排第 1 没删，5 张打击进巨兽；5NFG 两次商店删牌排第 2 没买，run plan 三次写补格挡（F11「add ~4 block cards」），F11 放掉邪眼，进巨兽只有 4 张防御；KYC0 三次商店 0 删牌 | 更新 deck-remove、deck-block-floor、giant-deck |
+| 留给 boss 的药（只改数字） | 这 11 局里 10 局有，约 18 瓶（0NZB 2、2ZCK 1、7KDM 2、3SBP 1、9GRP 2、83FL 2、7MDJ 2、5NFG 3、KYC0 2、2MK4 1）；三批合计 41 局 35 局、约 70 瓶。按 rollout 多数省 0–5 血，这批最多一瓶约 13（7KDM F21 能量药水）。A9 40 局每局走廊/事件战喝 4.6 瓶、精英 0.7、boss 1.3，二幕 boss 进场平均 1.2 瓶（n=9，没变）；A9 ≥75% 进场 boss 0 瓶 2/5、带药 20/34 | 只改 potion-save-for-boss、potion-empty-slots 句内数字；n 不变。7KDM 带着为帝王蟹买的能力药水死在蜂群术士（5 次作为选项、Jev 没选），2ZCK 走廊喝掉的鲜血药水回 16、自爆差 11，这些只记在这里 |
+
+### 经验库自己带偏的地方
+- **elite-need-one / elite-threshold 两头拉**：N01X F1 DeepSeek 选 rank 7/8 的两精英路线，理由「0-elite act-1 is the known loss pattern」，F9 71% 进精英死；2ZCK 以「A9 elite at 70% arrival unsafe」选 0 精英，3 件遗物进巨兽；2MK4 为避开「A9 death zone」的精英到场血量，选了第一个火堆前 6 场走廊的路。两条条目各自成立，合起来只比了精英到场血量，没比精英前的走廊链。这次在 act1-costs、route-no-chains 补了 2MK4、N01X 的投影偏差，没改两条精英条目的结论。
+- **route-entry-hp**：「A9 血量只是必要条件」来自上次 <75% 3/5；这次 4/6，都在一幕。改成「不是充分条件」。
+- **vantom-entry**：3SBP DeepSeek F16 引用「墨影幻灵 ≥75% 进场 17/19 胜」（A8 数），87% 进场输。A9 两场输局都 ≥82% 进场，已写进条目。
+- **giant-explode**：「A9 约 29/回合」是上次按击杀回合反推的输出目标；5NFG 打出 29.4 仍死。已补上击杀回合 HP 的两个反例。
+- **7KDM F8**：DeepSeek 在「这个还是那个？」想了 240.7 s，推理里两条经验互相拉（event-curses「不拿诅咒换随机遗物」对「没有商店时不拿血换金币」）。两条都没改，只记在这里。
+
+### 新增（1）
+- **card-rolling-boulder**（card:ROLLING_BOULDER 滚石，n=2，中）：多体战里的持续群伤，KYC0 3 回合打 45；83FL T1 有能量没打（rollout 不模拟），按牌面信徒 T6 开头就死。
+
+### 更新（43）
+- **boss：**
+  - giant-explode 20→22（5NFG、2ZCK；有击杀的 33 场、≥20 格挡 15 场赢 3；A9 8 场赢 2）、giant-deck 19→22（7MDJ、5NFG、2ZCK；A9 输局 6 场 0.43–0.91）。
+  - vantom-multihit 8→9、vantom-entry 17→18（3SBP；A9 9 场赢 7）。
+  - fysh-beckon 9→10（7KDM；A7–A9 有能清呼唤的牌 15 场赢 12、没有 20 场赢 17）、fysh-damage 17（只改数字：A9 9 场赢 8）。
+  - lag-entry 15→16（0NZB）、kin-scaling 20→21（83FL）、beast-clock 8→9（9GRP）。
+- **精英：** decimillipede 22→24、entomancer 17→18、entomancer-cost 14（只改数字）、prism 20→21、terror-eel 21→23、gardener 17→18、skulking-colony 14→17、byrdonis 9→11、phrog 5（只改数字）。
+- **走廊：** hunter-killer 31→32、chomper 9→10、bowlbugs 25→26、beetle 30（只改数字：AD5P）。
+- **幕：** act1-costs 15→17、act1-strength 8→12、act2-opening 28→30、a9-damage 27→38（40 局重算）。
+- **路线、精英、休息：** route-entry-hp 44→48、route-no-chains 18→19、route-forced-elite-prep 11→14、elite-threshold 28→29、elite-need-one 10→11、elite-no-double 7（只改数字）、rest-before-forced 18→19、rest-smith-threshold 34→35。
+- **牌组、卡牌、遗物：** deck-clock 36→38、deck-remove 20→23、deck-block-floor 12→13、card-feel-no-pain 5→6、card-sword-boomerang 6→7、relic-winged-boots 3→4、relic-pantograph 2→3。
+- **药水（只改数字，n 不变）：** potion-save-for-boss 70、potion-empty-slots 21。
+
+### 退役（0）
+没有被推翻到要退役的条目。route-entry-hp 的 A9 句子是就地改写。
+
+### 和手写知识、代码冲突，待改（没有改动）
+- 瀑布巨兽「要早杀」：`src/knowledge/ironclad-guide.md:55`（「要赢靠早杀……慢打是输法」）、`:120`、`src/knowledge/ds-handbook.md:71`、`src/project/run-journal.ts:181`（BOSS_NOTES「要早杀……要抢伤害」）都只引 A8 的「T10 前击杀 13/15 赢」。A9 T10 前击杀 1/3（YQL8 赢，5NFG T9、2ZCK T10 输），输的两局都是击杀回合 HP 不够。`src/knowledge/jev-hints.json:110` giant-eruption「Kill it by turn 10, with HP plus block above the stacks」两半都写了，和数据一致。
+- `src/knowledge/ds-handbook.md:75` 感染棱柱「多次掉 22~40 血」：A9 赢的 3 场掉 42、56、52（KYC0 必经进场剩 2 血），另一场死。
+- `src/knowledge/jev-hints.json:140` hp-trade-boss「Prefer lower hp_lost unless the line kills soon」：3SBP 墨影幻灵 T1 按它选了 0 掉血、只打 2 段的线（rollout best 是 −8、4 段的线，滑溜多留 2 层）；同批 2ZCK 巨兽 T5 没按它（选了 −23 的伤害线）也输了。滑溜回合是它的反例，其余回合没有反例。
+- `src/knowledge/ds-handbook.md:40`「蜂群术士已经 3 次致死」：monster DB A7–A9 已 9 次（A7 3、A8 4、A9 2）。
+- `src/knowledge/ironclad-guide.md:52`「同族神官：……长战先杀信徒（先杀左边）」和 `:98`「先杀信徒能减少受到的伤害」：和 kin-priest-focus（已退役的 old-kin-followers-first）相反，是旧矛盾，不是这批数据带出来的；83FL 全压神官、信徒没掉血，输在输出（22/回合，需 33）。
+- `src/knowledge/ds-handbook.md:37`「进 boss 血量：赢局平均 88%，输局 81%」：A9 一幕 boss 赢局 90%、输局 88%，差距几乎没有（不算矛盾，数字过时）。
+- 代码（cf87de6 上核对过存在）：
+  - `src/screens/rest.ts:42` beforeBoss 只看「boss 在 2 层内」或下一格强制，3 层外的必经精英不算（7KDM F24），和 rest-before-forced 冲突。
+  - `src` 里没有 PANTOGRAPH（只在 knowledge JSON），火堆分不看 boss 开场回血（5NFG），和 relic-pantograph、rest-by-boss-loss 冲突。
+  - `src` 里没有 WINGED_BOOTS，路线候选不含越线节点（9GRP），和 relic-winged-boots 冲突。
+  - ROLLING_BOULDER 只在 `src/strategy/card-model.ts`（lasting value），rollout 不模拟（83FL），和 card-rolling-boulder 冲突。
+  - `src/strategy` 里没有虚无（ethereal）牌回合末消耗这一步，无惧疼痛少算格挡（7KDM），和 card-feel-no-pain 的新句子对应。
+
+### 代码问题（不给 DS）
+按复盘里写的状态，不重新核实（修复进度以 `notes/fix-queue.md` 为准）：
+- 0NZB：mod 从不给 `cards_exhausted_this_turn`，消耗后重问的回合 exhaustedThisTurn 恒为 false；佩尔的士兵的格挡翻倍没建模，线的掉血两头算错。
+- 2ZCK：巨兽竞速的 rollout best 由地平线外胜率决定，题面只给 5 回合内的数；选项没有「击杀回合 HP − 喷发」一列。
+- 7KDM：rollout 的 dazedPerHit 没把两条线分开；lookahead「下一个节点强制」按类型去重（`src/project/run-journal.ts` 同类型出口被写成强制）。
+- 3SBP：thrashAbsorb 把吸收的伤害加到当回合，造成假斩杀；withPotionLines 补进 0 效果的喝药线（肌肉药水在所有攻击之后）。
+- 9GRP：run plan 回声 `{"choice","reason"}` 被当成空计划覆盖有效计划（deepseek.ts pickJsonObject、loop.ts ensureRunPlan）；大～抱抱的煤灰、抱抱先生、招架盾不进 rollout。
+- N01X：原始力量不建模，least-loss 把它排最后，漏掉斩杀；rollout 8 样本里 1 个死亡就改变 best。
+- 83FL：run plan 的 boss_prep 到不了 Jev。
+- 7MDJ：斗篷扣不建模（每回合多报 2–4 掉血）。
+- 5NFG：巨兽战 rollout 饱和后只按剩血挑 best。
+- KYC0：千足虫三节同名，选线文字、focus、kill order 分不清；boss 满血回合 HP 护栏两次换掉 rollout best；药栏满时事件给的药被直接丢掉（`src/screens/reward.ts`）。
+- 2MK4：选牌界面（头槌）清掉 combatPlan memo，回来后重规划、多掉 5。
+
+### 测试
+- exp-update（a2edb85）：`tsc --noEmit -p tsconfig.json` 退出 0；vitest 58 个文件 1050/1050 通过，退出 0。`tsc -p tsconfig.test.json` 在 cf87de6 上本来就报测试文件的类型错误（journal-replay、potion-mc、route-projection、screens、turn-solver），和这次只改 JSON 无关，没有动。
+- 合入 v3（在 `ops/v3-merge.lock` 锁里）：等 v3 的知识构建脚本跑完，先提交 v3 里刷新的知识数据 2092e43「Refresh knowledge data」（boss-damage、card-upgrades、monster-db、move-model、outcome-stats、room-costs），再 `git merge --no-edit exp-update` 得到 3e41460；v3 上 `tsc --noEmit -p tsconfig.json` 退出 0，vitest 1050/1050 通过，退出 0。对局在 v3 里照常跑，没有停。
+
+### 切片大小
+新抽一批样本：A8、A9 各 20 个状态 × 6 种界面，共 240 个，从 states.jsonl 用固定种子 20260929 抽取（只取已结束的局）。和上次不是同一批，所以「改前」重新测。同一批状态分别用改前（cf87de6）和改后（a2edb85）的 experience.json 跑 `tools/knowledge-slice.ts`，数字是中位 / 最大（字）：
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 3.1k / 5.0k | 3.3k / 5.4k | 3.4k / 5.3k | 3.6k / 5.7k |
+| 奖励 | 3.7k / 5.7k | 3.9k / 6.1k | 3.7k / 5.4k | 4.1k / 5.8k |
+| 地图 | 4.9k / 5.4k | 5.4k / 6.0k | 5.0k / 5.4k | 5.4k / 6.0k |
+| 事件 | 4.1k / 5.5k | 4.2k / 5.8k | 4.0k / 5.2k | 4.3k / 5.5k |
+| 火堆 | 2.9k / 4.9k | 3.2k / 5.3k | 2.9k / 4.9k | 3.2k / 5.3k |
+| 商店 | 5.0k / 5.6k | 5.1k / 5.7k | 5.2k / 5.5k | 5.3k / 5.7k |
+
+- 初稿中位涨 0.2–0.9k，最大 6.4k（A8 地图）。主要来自 act1-costs、rest-smith-threshold、route-forced-elite-prep、act1-strength、rest-before-forced：它们几乎出现在每个一幕切片里。之后把逐局细节压成一句，逐回合、逐局的数字留在本节。
+- 最终中位涨 0.1–0.5k，最大 6.1k：R2H1 A8 F19 二幕卡牌奖励（25 条经验 + 4 行统计，改前 5.7k）。
+- 条目数：active 199（测试上限 200，下次新增前要先退役或合并）；置信度 高 129、中 59、低 11。
+- Jev 每场战斗看到的敌人条目仍 ≤4 条：新增的是卡牌条目，没有新增 boss、精英、走廊条目。
