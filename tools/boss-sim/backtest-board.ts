@@ -12,6 +12,7 @@ import { potionViews } from "../../src/project/narrow.js";
 import { buildRunBrief } from "../../src/project/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../../src/project/types.js";
 import { pileCardModels, planCombatTurn, randomPotionSource } from "../../src/screens/combat-plan.js";
+import { bossLinesOptions } from "../../src/sim/boss-lines.js";
 import { modelPotion, type CardModel } from "../../src/strategy/card-model.js";
 import type { PotionMcSource } from "../../src/strategy/potion-mc.js";
 import type { KillOrder, MoveModelData, RolloutInput } from "../../src/strategy/rollout.js";
@@ -57,6 +58,8 @@ export function boardOf(state: GameState, knowledge: Knowledge, encounter: strin
     jevContext: "off",
     fightPlan: "off",
   };
+  // The board only: no whole-fight lines inside the planner (B2).
+  bossLinesOptions.enabled = false;
   let captured: { input: SolverInput; result: SolveResult } | null = null;
   solveTap.onSolve = (input, result) => {
     captured ??= { input, result };

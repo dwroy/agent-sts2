@@ -162,6 +162,6 @@ describe("B2 random potions", () => {
     const s = fightSample(slimInput({ ...input, solver, piles: { ...input.piles, handBase: solver.hand } }, 1500, 0.5, 1, 0, 0), plan, 11);
     expect(s.powers?.[0]).toEqual([1, "INFLAME"]);
     expect(s.blockByTurn).toHaveLength(s.turns);
-    if (s.won) expect(s.kills).toEqual([[s.turns, "TEST_BOSS"]]);
+    if (s.won) expect(s.kills).toEqual([[s.turns, "TEST_BOSS", 0]]);
   });
 });

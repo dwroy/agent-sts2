@@ -46,6 +46,7 @@ import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPot
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
+import { bossLineSim, bossLinesOptions, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -2204,6 +2205,22 @@ function planTurn(env: DecisionEnv): Decision | null {
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
   options.splice(0, options.length, ...planOptions);
   const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
+  // B2 (BOSS_SIM_LINES, boss fights only; docs/boss-sim.md §11): every shown line and random potion line played to the
+  // fight's end on the same samples. A boss the simulator is trusted on ranks the lines by it (simRanks: rollout_best,
+  // ties, the HP guard, code's fallback); a low-trust boss only shows the numbers. Out of a boss fight, no pool is kept.
+  if (kind !== "boss") releaseBossLinesPool();
+  const bossPiles = kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
+  const bossSim: BossLineSim | null =
+    kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null
+      ? bossPiles
+        ? bossLineSim({ state, knowledge: env.knowledge, memory: env.screenMemory, solver: rolloutSolver, piles: bossPiles, randomPotions: [...mcSources.values()], lines: [...shown, ...mcMedians], turn: state.turn ?? null, drinks: drinksPotion })
+        : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
+      : null;
+  const simRanks = bossSim?.available && !bossSim.lowTrust ? bossSim : null;
+  const simFact = (plan: Plan): Record<string, JsonValue> => {
+    const line = bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
+    return line ? { whole_fight_sim: line.text } : {};
+  };
   // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.
   const costNote = (plan: Plan): Record<string, JsonValue> =>
     costsOn ? { potion_cost: potionCostFact(plan, rollout?.available ? (rollout.byPlan.get(plan) ?? null) : null, costs) } : {};
@@ -2221,21 +2238,24 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
   // In the question's order (a drink line tied with its dry twin can come first in the rollout's list).
   const shownOrder = (plan: Plan): number => (shown.includes(plan) ? shown.indexOf(plan) : shown.length + mcMedians.indexOf(plan));
-  const rolloutTied = rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan)).sort((a, b) => shownOrder(a) - shownOrder(b));
+  const rolloutTied = (simRanks ? simRanks.tied : rolloutTiedAll).filter((plan) => shown.includes(plan) || mcMedians.includes(plan)).sort((a, b) => shownOrder(a) - shownOrder(b));
   const mcKey = (mc: PotionMc) => potionsAll.find((potion) => potion.slot === mc.source.slot)?.key ?? `p${mc.source.slot}`;
   const keyOfShown = (plan: Plan): string => (mcMedians.includes(plan) ? mcKey(mcShown.find((mc) => mc.median === plan)!) : `plan${shown.indexOf(plan) + 1}`);
   const tiedKeys = rolloutTied.length >= 2 ? rolloutTied.map(keyOfShown) : [];
   // One tied line left after the trim reads as the best among what is shown.
-  const bestShown = rolloutTied.length === 1 ? rolloutTied[0]! : rolloutBest;
+  const bestShown = rolloutTied.length === 1 ? rolloutTied[0]! : simRanks ? simRanks.best : rolloutBest;
   const bestShownIsPotion = bestShown !== null && mcMedians.includes(bestShown);
   const tieNote = (plan: Plan): Record<string, JsonValue> => {
     if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
     const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
+    if (simRanks) return { rollout_tied: `tied for the best whole-fight simulation numbers with ${others.join(", ")} (the same simulated win rate and HP lost); the ranking picks none of them` };
     const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, HP lost this turn, enemy HP left and turns alive" : "the same expected further HP loss and deaths";
     return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
-  const factsOf = (plan: Plan): Record<string, JsonValue> =>
-    rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {};
+  const factsOf = (plan: Plan): Record<string, JsonValue> => ({
+    ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
+    ...simFact(plan),
+  });
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
@@ -2252,7 +2272,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   for (const mc of mcShown) {
     const key = mcKey(mc);
     const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
-    const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {};
+    const facts = {
+      ...(rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {}),
+      ...(mc.median ? simFact(mc.median) : {}),
+    };
     const mcCost = !costsOn
       ? {}
       : mc.median
@@ -2330,6 +2353,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
+    // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
+    ...(bossSim ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `${bossSim.lowTrust ? "(low confidence) " : ""}the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
@@ -2397,10 +2422,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // loop runs `apply` once, for the resolution it actually plays.
   // Code's own line when Jev gives no usable answer: never one that drinks while a potion-free option is shown.
   // After a finished chosen line (stopLine), no answer keeps its end: the turn ends.
-  const autoTop = stopLine ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
+  // B2: in a boss fight the simulator is trusted on, its best potion-free line (the same ranking as rollout_best).
+  const simFallback = simRanks?.bestDry ?? null;
+  const autoTop = stopLine ?? simFallback ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
-    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
+    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : simFallback !== null && line === simFallback ? "using the whole-fight simulation's best potion-free plan" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
     confidence: null,
     fallback: true,
     apply: () => commit(env, state.turn, line, hand, "code"),
@@ -2452,7 +2479,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       const guardOptions = [...options.filter((plan) => plan === picked || (!drinksKeptPotion(plan) && noNewDrink(plan))), ...(options.includes(picked) ? [] : [picked])];
       // Nor off Jev's focus target, nor into a line the rollout sees dying more often (guardKeepsPick).
       const rolloutDeaths = (plan: Plan): number | null => (rollout?.available ? (rollout.byPlan.get(plan)?.deaths ?? null) : null);
-      const keepsPick = (plan: Plan) => guardKeepsPick(picked, plan, enemies, rolloutDeaths);
+      // B2: nor into a line the whole-fight simulation (a boss it is trusted on) sees winning less, beyond 2 standard errors.
+      const keepsPick = (plan: Plan) => guardKeepsPick(picked, plan, enemies, rolloutDeaths) && !simWinsLess(simRanks, plan, picked);
       const proposed = hallway
         ? hallwayGuard && !picked.outcome.winsFight
           ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack, keepsPick)
@@ -2493,7 +2521,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         mcShown.length > 0 || potions.length > 0
           ? { random: mcShown.map(potionMcLog), unsimulated_offered: potions.map((potion) => potion.potion_id), fight_plan_now: planPotionNow }
           : null;
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0) return resolved;
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       // The rollout's best chosen: its one best, or any of the options tied for it.
@@ -2507,6 +2535,15 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen, ...(chosenOrder ? { chosen_order: chosenOrder } : {}) } : {}),
           ...(potionsRecord ? { potions: potionsRecord } : {}),
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
+          // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
+          ...(bossSim
+            ? {
+                boss_sim: simLog(bossSim, (plan) => (shown.includes(plan) || mcMedians.includes(plan) ? keyOfShown(plan) : null), {
+                  rollout_own_best: rolloutBest && (shown.includes(rolloutBest) || mcMedians.includes(rolloutBest)) ? keyOfShown(rolloutBest) : null,
+                  rollout_own_tied: rolloutTiedAll.filter((plan) => shown.includes(plan) || mcMedians.includes(plan)).map(keyOfShown),
+                }),
+              }
+            : {}),
         },
       };
     },
