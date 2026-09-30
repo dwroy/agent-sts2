@@ -7,7 +7,11 @@
 
 import { afterAll, describe, expect, it } from "vitest";
 
-import { BossLinesPool, bossKeyOf, fightPlanText, LOW_TRUST_BOSSES, rankLines, runLines, runPairsSerial, linesInput, lineSimText, simWinsLess, type BossLineSim } from "../src/sim/boss-lines.js";
+import { availableParallelism } from "node:os";
+
+import { BOSS_LINES_WORKERS, BossLinesPool, bossKeyOf, bossLinesOptions, fightPlanText, LOW_TRUST_BOSSES, rankLines, runLines, runPairsSerial, linesInput, lineSimText, simWinsLess, type BossLineSim } from "../src/sim/boss-lines.js";
+import { BuildSimPool } from "../src/sim/build-sim-pool.js";
+import { simPoolsHolding } from "../src/sim/sim-pools.js";
 import { summarizeLine, type BossSimLineResult, type FightSampleResult } from "../src/sim/boss-sim.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
 import { board } from "./boss-sim-fixture.js";
@@ -174,4 +178,40 @@ describe("B2 fight plan", () => {
     const losing = fightPlanText(input, line(0, Array.from({ length: 20 }, (_, k) => (k < 3 ? sample(true, 10, 6) : sample(false, 70, 4)))), 1)!;
     expect(losing).toContain("no plan wins in most samples: 3/20 won");
   });
+});
+
+describe("V4.2 worker pools", () => {
+  it("a boss fight's pool has 20 workers by default (BOSS_SIM_WORKERS unset), fewer on a machine with few cores", () => {
+    expect(process.env["BOSS_SIM_WORKERS"]).toBeUndefined();
+    expect(BOSS_LINES_WORKERS).toBe(20);
+    expect(bossLinesOptions.workers).toBe(20);
+    expect(new BossLinesPool().size).toBe(Math.max(1, Math.min(24, availableParallelism() - 2, 20)));
+  });
+
+  it("B2's and B3's pools never hold workers at once: each one starting its workers releases the other's; the released one starts again on its next run", async () => {
+    const build = new BuildSimPool(2);
+    const lines = new BossLinesPool(2);
+    const input = board();
+    const req = { base: input, decks: [{}], orders: [null], samples: 2, seed: 1 };
+    const pairs = [{ plan: input.plans[0]!, order: null }];
+    try {
+      expect((await build.run(req)).complete).toHaveLength(2);
+      expect(build.live).toBe(2);
+      expect(simPoolsHolding()).toContain("build");
+      // A boss fight's first question: the build pool's workers go.
+      expect(lines.run(linesInput(input, noHold), pairs, 2, 1, 60_000).complete).toHaveLength(2);
+      expect(build.live).toBe(0);
+      expect(lines.live).toBe(2);
+      expect(simPoolsHolding()).not.toContain("build");
+      // The next deck-building question: its workers start again, and the boss pool's go.
+      expect((await build.run(req)).complete).toHaveLength(2);
+      expect(build.live).toBe(2);
+      expect(lines.live).toBe(0);
+      expect(simPoolsHolding()).not.toContain("boss-lines");
+    } finally {
+      await build.close();
+      await lines.close();
+    }
+    expect(simPoolsHolding()).not.toContain("build");
+  }, 120_000);
 });

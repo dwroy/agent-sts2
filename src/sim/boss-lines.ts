@@ -51,6 +51,7 @@ import {
   type FightSampleResult,
   type LineComparison,
 } from "./boss-sim.js";
+import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 
 /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
 export const BOSS_LINES_SAMPLES = 600;
@@ -60,8 +61,11 @@ export const BOSS_LINES_DEADLINE_MS = 25_000;
 export const BOSS_LINES_TURN_BUDGET_MS = 30_000;
 /** Less than this left of the turn's budget: no simulation for this question. */
 export const BOSS_LINES_MIN_MS = 3_000;
-/** Worker threads (BOSS_SIM_WORKERS; the live runs keep the other cores). */
-export const BOSS_LINES_WORKERS = 12;
+/**
+ * Worker threads (BOSS_SIM_WORKERS; V4.2: 20, was 12; the live runs keep the other cores). A boss fight's questions
+ * never run with B3's build questions, and the two pools never hold workers at once (sim-pools.ts).
+ */
+export const BOSS_LINES_WORKERS = 20;
 export const BOSS_LINES_SEED = 7;
 /** Win rates within this many paired standard errors of the top one are tied (then the least HP lost when won decides). */
 export const BOSS_LINES_TIE_SE = 2;
@@ -200,7 +204,8 @@ interface PoolWorker {
 
 /**
  * Worker threads the planner's (synchronous) thread waits on. Built once for a fight (a worker loads the solver in
- * ~0.4 s) and reused; close() when the fight is over. One run at a time.
+ * ~0.4 s) and reused; close() when the fight is over. One run at a time. Starting its workers releases B3's build pool
+ * (sim-pools.ts); a build pool starting releases this one.
  */
 export class BossLinesPool {
   readonly size: number;
@@ -218,6 +223,10 @@ export class BossLinesPool {
     // TypeScript when this module is (tsx, vitest): the worker loads through tsx too.
     const ts = import.meta.url.endsWith(".ts");
     const url = new URL(ts ? "./boss-lines-worker.ts" : "./boss-lines-worker.js", import.meta.url);
+    claimSimCores(this, "boss-lines", () => {
+      if (shared === this) shared = null;
+      void this.close();
+    });
     for (let k = 0; k < this.size; k += 1) {
       const { port1, port2 } = new MessageChannel();
       const worker = new Worker(url, { workerData: { port: port2, signal: this.signal }, transferList: [port2], ...(ts ? { execArgv: ["--import", "tsx"] } : {}) });
@@ -286,9 +295,15 @@ export class BossLinesPool {
     return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: workers.length };
   }
 
+  /** Workers running now (0 before the first run and after close()). */
+  get live(): number {
+    return this.workers.length;
+  }
+
   async close(): Promise<void> {
     const workers = this.workers;
     this.workers = [];
+    leaveSimCores(this);
     await Promise.all(workers.map((w) => w.worker.terminate()));
   }
 }

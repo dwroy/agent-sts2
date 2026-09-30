@@ -17,6 +17,7 @@ import { Worker } from "node:worker_threads";
 
 import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
 import { BOSS_SIM_MAX_TURNS, BOSS_SIM_MAX_WORKERS, defaultWorkers, fightSample, sampleSeed, slimInput, type FightSampleResult } from "./boss-sim.js";
+import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 
 /** Samples per task (one deck, one order): small enough that a deadline is kept to ~0.1 s. */
 export const BUILD_SIM_BLOCK = 8;
@@ -137,14 +138,17 @@ export type BuildWorkerRequest =
 export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][] } | { batch: number; error: string };
 
 /**
- * Worker threads for deck runs. Keep one for the whole game run (created on the first deck-building question) and
- * close() it at the end; runs are queued one at a time.
+ * Worker threads for deck runs. Keep one for the whole game run (its workers start on the first deck-building question)
+ * and close() it at the end; runs are queued one at a time. B2's boss-line pool starting its workers (a boss fight)
+ * releases these (sim-pools.ts): the next run starts them again, and starting them releases B2's.
  */
 export class BuildSimPool implements DeckSimRunner {
   readonly size: number;
   private workers: Worker[] = [];
   private batch = 0;
   private queue: Promise<unknown> = Promise.resolve();
+  /** Ends the run in flight (its samples so far are not returned: it rejects) when the workers go mid-run. */
+  private abort: ((error: Error) => void) | null = null;
 
   constructor(size = defaultWorkers()) {
     this.size = Math.max(1, Math.min(BOSS_SIM_MAX_WORKERS, Math.floor(size)));
@@ -155,6 +159,7 @@ export class BuildSimPool implements DeckSimRunner {
     // The worker is TypeScript when this module is (tsx, vitest): it loads through tsx too.
     const ts = import.meta.url.endsWith(".ts");
     const url = new URL(ts ? "./build-sim-worker.ts" : "./build-sim-worker.js", import.meta.url);
+    claimSimCores(this, "build", () => void this.close());
     for (let k = 0; k < this.size; k += 1) {
       const worker = new Worker(url, ts ? { execArgv: ["--import", "tsx"] } : {});
       worker.unref();
@@ -187,6 +192,7 @@ export class BuildSimPool implements DeckSimRunner {
       const finish = (error?: Error) => {
         if (finished) return;
         finished = true;
+        this.abort = null;
         if (timer) clearTimeout(timer);
         for (const worker of used) {
           const h = handlers.get(worker)!;
@@ -211,6 +217,7 @@ export class BuildSimPool implements DeckSimRunner {
         resolve();
         return;
       }
+      this.abort = finish;
       for (const worker of used) {
         const message = (reply: BuildWorkerReply) => {
           if (reply.batch !== batch || finished) return;
@@ -240,9 +247,16 @@ export class BuildSimPool implements DeckSimRunner {
     return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length };
   }
 
+  /** Workers running now (0 before the first run and after close()). */
+  get live(): number {
+    return this.workers.length;
+  }
+
   async close(): Promise<void> {
+    this.abort?.(new Error("build-sim pool released mid-run"));
     const workers = this.workers;
     this.workers = [];
+    leaveSimCores(this);
     await Promise.all(workers.map((worker) => worker.terminate()));
   }
 }
