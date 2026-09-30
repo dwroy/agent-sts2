@@ -88,6 +88,11 @@ export interface CardModel {
   known: boolean;
   /** Heuristic value for effects that pay off later (powers, draw is valued separately). */
   flatValue: number;
+  /**
+   * A potion's cost when drunk, in HP (potion-cost.ts: its held value in the potion table; absent or 0 in a boss
+   * fight, without a value, or with the cost switched off). The solver takes weights.hp x this off a line drinking it.
+   */
+  potionCost?: number;
   /** HP lost at end of turn if this card is still in hand (Toxic, Burn, Decay, …). */
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
@@ -1083,8 +1088,9 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
 
 /**
  * A potion as a 0-cost "card" with no effect yet: the solver plays it as step `POTION:<id>:<slot>`.
- * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's. No use cost (Dai: a potion is a
- * 0-cost one-shot card; the old useCost parameter, always 0 since batch K, is gone so it cannot come back).
+ * modelPotion adds its modelled effect; potion-mc.ts one Monte Carlo sample's. No use cost here (the old useCost
+ * parameter, always 0 since batch K, is gone): since 2026-09-30 a drink's cost is the potion table's held value,
+ * put on the card as potionCost by potion-cost.ts withPotionCost (0 in a boss fight).
  */
 export function potionShell(potionId: string, name: string, slot: number, validTargets: number[]): CardModel {
   return {

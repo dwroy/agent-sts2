@@ -236,7 +236,7 @@ describe("6. The end-turn lethal note names the Sandpit (UNRL F33 T8: Sandpit 1,
   );
 });
 
-describe("7. No potion-cost plumbing left (potionCost / useCost / potionLimit were always 0 / null: deleted so they cannot be re-enabled)", () => {
+describe("7. No old potion-cost plumbing (useCost / potionLimit were always 0 / null: deleted); since 2026-09-30 a cost comes only from the potion table (potion-cost.ts, tests/potion-cost.test.ts), never in a boss fight", () => {
   const strike = (index: number): CardModel => ({ ...potionShell("X", "x", 0, []), index, key: `c${index}`, cardId: "STRIKE_IRONCLAD", name: "Strike", type: "Attack", cost: 1, exhausts: false, target: "single", validTargets: [0], damage: 6 });
   const input = (): SolverInput => ({
     hand: [strike(0), strike(1), modelPotion("BLOCK_POTION", "block", 0, [])!, modelPotion("STRENGTH_POTION", "strength", 1, [])!],
@@ -253,7 +253,7 @@ describe("7. No potion-cost plumbing left (potionCost / useCost / potionLimit we
     expect((modelPotion as (...args: unknown[]) => CardModel | null)("BLOCK_POTION", "block", 0, [], 15)!.flatValue).toBe(0);
   });
 
-  it("a plan's outcome carries no potionCost", () => {
+  it("a boss fight's plan outcome carries no potionCost", () => {
     const plans = solveTurn(input()).plans;
     expect(plans.length).toBeGreaterThan(0);
     for (const plan of plans) expect("potionCost" in plan.outcome).toBe(false);

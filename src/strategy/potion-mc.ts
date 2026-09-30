@@ -16,7 +16,7 @@
 
 import type { JsonValue } from "../util/json.js";
 import { CHOICE_POTIONS, DRAW_POTIONS, potionEffect, potionShell, type CardModel } from "./card-model.js";
-import { hpText, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
+import { effectiveLoss, hpText, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Samples per random potion (fewer when the time budget runs out). */
 export const MC_SAMPLES = 12;
@@ -38,7 +38,8 @@ export const POOL_RARITIES = new Set(["Common", "Uncommon", "Rare"]);
  * expected damage at equal HP read "beats 12/12" when any score above the dry line's counted): it saves
  * MC_BEATS_HP HP, or deals MC_BEATS_DAMAGE more, or a mix worth as much (HP saved + damage gained x
  * MC_BEATS_HP / MC_BEATS_DAMAGE >= MC_BEATS_HP), or wins the fight this turn when the dry line does not,
- * or lives where the dry line dies. A sample that dies where the dry line lives never beats it.
+ * or lives where the dry line dies. A sample that dies where the dry line lives never beats it. The HP saved is after
+ * the drink's cost (potion-cost.ts: the sample's outcome.potionCost, its held value; 0 in a boss fight).
  */
 export const MC_BEATS_HP = 2;
 /** Damage worth MC_BEATS_HP HP in the beats margin. */
@@ -50,7 +51,7 @@ export function beatsDryLine(plan: Plan, dry: Plan | null): boolean {
   if (plan.outcome.dies) return false;
   if (dry.outcome.dies) return true;
   if (plan.outcome.winsFight && !dry.outcome.winsFight) return true;
-  const hpSaved = dry.outcome.hpLoss - plan.outcome.hpLoss;
+  const hpSaved = effectiveLoss(dry) - effectiveLoss(plan);
   const damageGained = plan.outcome.damageDealt - dry.outcome.damageDealt;
   return hpSaved + (damageGained * MC_BEATS_HP) / MC_BEATS_DAMAGE >= MC_BEATS_HP - 1e-9;
 }
@@ -88,6 +89,11 @@ export interface PotionMcSource {
   piles?: { draw: CardModel[]; discard: CardModel[] };
   /** Fiddle / No Draw: nothing is drawn (Distilled Chaos still plays its top cards). */
   noDraw?: boolean;
+  /**
+   * The drink's cost in HP (potion-cost.ts: the potion's held value; absent or 0 in a boss fight or without a value):
+   * each sample's card carries it, so its line's score and outcome count it, and "beats" is after it.
+   */
+  cost?: number;
 }
 
 export interface Spread {
@@ -153,7 +159,7 @@ export function seedOf(text: string): number {
 export function samplePotion(source: PotionMcSource, hand: CardModel[], random: () => number): CardModel {
   // The modelled effect minus its expected-value draw and card: the sample's real cards replace them.
   const { draw: _evDraw, generates: _evCard, ...effect } = potionEffect(source.potionId) ?? { target: "self" as const };
-  const shell: CardModel = { ...potionShell(source.potionId, source.name, source.slot, []), ...effect, draw: 0 };
+  const shell: CardModel = { ...potionShell(source.potionId, source.name, source.slot, []), ...effect, draw: 0, ...((source.cost ?? 0) > 0 ? { potionCost: source.cost } : {}) };
   const own = (card: CardModel, i: number, prefix: string, base: number): CardModel => ({ ...card, index: base + i, key: `${prefix}${source.slot}.${i}` });
   if (source.kind === "choice") {
     const spec = CHOICE_POTIONS[source.potionId]!;
@@ -315,7 +321,7 @@ export function potionMcCriteria(mc: PotionMc, dryBest: Plan | null, stepText: (
   if (mc.dies > 0) out["dies_this_turn"] = `${mc.dies}/${n} samples`;
   const signed = (x: number) => `${x >= 0 ? "+" : ""}${round1(x)}`;
   out["beats_best_potion_free_line"] = dryBest
-    ? `${mc.beats}/${n} samples (best potion-free line: ${hpText(dryBest.outcome.hpLoss)}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much), winning the fight, or living where it dies)`
+    ? `${mc.beats}/${n} samples (best potion-free line: ${hpText(dryBest.outcome.hpLoss)}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP${(mc.source.cost ?? 0) > 0 ? ` after the potion's cost (${round1(mc.source.cost!)} HP)` : ""} or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much), winning the fight, or living where it dies)`
     : `${mc.beats}/${n} samples (no potion-free line)`;
   if (dryBest && mc.vsDry) out["vs_best_potion_free_line"] = `mean HP saved ${signed(mc.vsDry.hpSaved)}, mean damage ${signed(mc.vsDry.damageGained)}`;
   if (othersHeld) out["note"] = "the other potions held are not combined in these samples";

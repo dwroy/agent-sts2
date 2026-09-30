@@ -597,6 +597,11 @@ export interface Outcome {
   freeAttacksLeft?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
+  /**
+   * The potions this line drinks, their cost in HP (potion-cost.ts: each one's held value in the potion table; absent
+   * when 0: none drunk, a boss fight, no value). The score takes weights.hp x it off; effectiveLoss adds it to hpLoss.
+   */
+  potionCost?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
   /**
@@ -711,6 +716,8 @@ interface Sim {
   darkEmbrace: number;
   /** Drinks in this line whose effect may outlast the turn (turnOnlyDrink false). */
   lastingDrinks: number;
+  /** The drunk potions' cost in HP (card.potionCost). */
+  potionCost: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /**
@@ -1538,6 +1545,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
+  if (card.type === "Potion") next.potionCost += card.potionCost ?? 0;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
 }
@@ -1941,9 +1949,10 @@ export function weightsFor(input: SolverInput): Weights {
 }
 
 /**
- * Lasting value of the turn (Strength, powers), a potion's part like a card's (Dai: a potion is a 0-cost one-shot
- * card, no cost). Until batch K a potion's part counted 25% in hallway and unknown fights (POTION_LASTING: "the
- * potion is worth more saved for an elite or the boss"), a keep-the-potion cost in the score.
+ * Lasting value of the turn (Strength, powers), a potion's part like a card's. Until batch K a potion's part counted
+ * 25% in hallway and unknown fights (POTION_LASTING: "the potion is worth more saved for an elite or the boss"), a
+ * guessed keep-the-potion cost in the score; since 2026-09-30 the cost is the potion table's held value, taken off
+ * the score on its own (evaluate: weights.hp x potionCost), the effect itself counted in full.
  */
 function lastingValue(sim: Sim, weights: Weights): number {
   return weights.strength * sim.permStrength + sim.flat;
@@ -2154,6 +2163,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
   }
   score -= weights.hp * hpLoss;
+  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+  // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
+  score -= weights.hp * sim.potionCost;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
   // died at 32/512 HP with us).
@@ -2425,6 +2437,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
       ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
@@ -2603,6 +2616,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
+    potionCost: 0,
     attacksPlayed: 0,
     relicAttacks: 0,
     skillsPlayed: 0,
@@ -2654,8 +2668,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
     const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
     const existing = byOutcome.get(signature);
-    // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
-    // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
+    // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
+    // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
     // board to surprise us).
     const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
     const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
@@ -2705,19 +2719,27 @@ function potionStepCount(steps: Step[]): number {
   return steps.filter((step) => step.cardId.startsWith("POTION:")).length;
 }
 
+/**
+ * A line's effective HP loss this turn: the HP it loses plus the potions it drinks at their cost (potion-cost.ts).
+ * What the HP guard and code's own picks compare (the rollout adds the later turns' drinks to its own loss).
+ */
+export function effectiveLoss(plan: Pick<Plan, "outcome">): number {
+  return plan.outcome.hpLoss + (plan.outcome.potionCost ?? 0);
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
-  // Drinking a potion is its own axis (the potions a line drinks, no cost: Dai, a potion is a 0-cost one-shot
-  // card): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
+  // Drinking a potion is its own axis (the potions a line drinks; its cost is in the score, and 0 in a boss
+  // fight): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
   // potion-free plan was never shown (Vantom, live run). Waking a sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
   // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
-  // drinking one must never dominate the same line without it.
+  // Potions drunk count on their own axis (their cost, potion-cost.ts, is in the score, not here: 0 in a boss
+  // fight), and a line drinking one must never dominate the same line without it.
   // A revive spent (Fairy in a Bottle, Lizard Tail) is its own axis: a line spending one never dominates a line that does not.
   // A Waterfall Giant kill is its own axis too: HP plus block kept less the blast (0 without a kill), so a kill
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
