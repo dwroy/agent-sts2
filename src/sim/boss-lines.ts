@@ -4,7 +4,8 @@
  * same seeds, each under its best kill order. The question then carries each line's calibrated win rate, its paired
  * difference to the best line (± standard error), the HP lost in the samples won, the turns to the end and the turn the
  * losing samples die on; the best line (rollout_best) is the one with the highest simulated win rate (lines within
- * BOSS_LINES_TIE_SE standard errors tied), then the least HP lost. Jev still picks the line each turn: the simulation only
+ * BOSS_LINES_TIE_SE standard errors tied), then the least HP lost in the samples won (median; V4.2). Jev still picks the
+ * line each turn: the simulation only
  * adds numbers and, every few turns, a fight plan summarised from the best line's winning samples; code never plays the
  * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking, and their
  * numbers and plan go to the decision log only, not to Jev's question (V4.2, Dai 2026-10-01).
@@ -62,8 +63,16 @@ export const BOSS_LINES_MIN_MS = 3_000;
 /** Worker threads (BOSS_SIM_WORKERS; the live runs keep the other cores). */
 export const BOSS_LINES_WORKERS = 12;
 export const BOSS_LINES_SEED = 7;
-/** Win rates within this many paired standard errors of the top one are tied (then the least HP lost decides). */
+/** Win rates within this many paired standard errors of the top one are tied (then the least HP lost when won decides). */
 export const BOSS_LINES_TIE_SE = 2;
+
+/**
+ * The ranking's second criterion (V4.2, Dai 2026-10-01): the median HP lost in the samples won, the number the question
+ * shows (it was the mean over every sample, a death counting all our HP). A line with no winning sample comes last.
+ */
+export function wonLoss(line: BossSimLineResult): number {
+  return line.hpLossWon?.median ?? Infinity;
+}
 /** The fight plan is shown on turn 1 and every this many turns after. */
 export const BOSS_LINES_PLAN_EVERY = 3;
 /** An action goes into the fight plan when at least this share of the best line's winning samples take it. */
@@ -344,7 +353,7 @@ export function linesInput(input: RolloutInput, holdHp = bossLinesOptions.holdHp
 
 /**
  * Every line under the solver's own targets and each kill order (fightOrders), on the same seeds, in one run; per line
- * the numbers of its best order (win rate, then least mean HP lost), as boss-sim runBestOrder keeps them. Only the samples
+ * the numbers of its best order (win rate, then the least HP lost when won, as the ranking). Only the samples
  * every (line, order) finished count, so all lines are compared on the same samples.
  */
 export function runLines(
@@ -363,7 +372,7 @@ export function runLines(
     for (let k = 0; k < per; k += 1) {
       const pair = li * per + k;
       const res = { ...summarizeLine(li, run.complete.map((i) => run.outcomes[pair]![i]!)), order: k === 0 ? null : orders[k - 1]!.label };
-      if (!pick || res.winProb > pick.winProb || (res.winProb === pick.winProb && res.hpLoss.mean < pick.hpLoss.mean)) pick = res;
+      if (!pick || res.winProb > pick.winProb || (res.winProb === pick.winProb && wonLoss(res) < wonLoss(pick))) pick = res;
     }
     return pick!;
   });
@@ -371,9 +380,9 @@ export function runLines(
 }
 
 export interface LinesRank {
-  /** Index of the best line: the top win rate's tie group (within tieSe paired standard errors), then the least HP lost. */
+  /** Index of the best line: the top win rate's tie group (within tieSe paired standard errors), then the least HP lost when won. */
   best: number;
-  /** Lines whose shown numbers are the best's (win % and mean HP lost to one decimal): two or more, no single best. */
+  /** Lines whose numbers are the best's (win % and median HP lost when won, to one decimal): two or more, no single best. */
   tied: number[];
   /** Each line against the best (paired), null for the best itself. */
   vsBest: (LineComparison | null)[];
@@ -381,7 +390,7 @@ export interface LinesRank {
   winTied: boolean[];
 }
 
-/** B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least HP lost. */
+/** B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least HP lost when won (wonLoss). */
 export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true): LinesRank {
   const idx = lines.map((_, i) => i).filter(eligible);
   if (idx.length === 0) return { best: -1, tied: [], vsBest: lines.map(() => null), winTied: lines.map(() => false) };
@@ -389,7 +398,7 @@ export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE,
   for (const i of idx) {
     const a = lines[i]!;
     const b = lines[top]!;
-    if (a.winProb > b.winProb || (a.winProb === b.winProb && a.hpLoss.mean < b.hpLoss.mean)) top = i;
+    if (a.winProb > b.winProb || (a.winProb === b.winProb && wonLoss(a) < wonLoss(b))) top = i;
   }
   const winTied = lines.map((line, i) => {
     if (!idx.includes(i)) return false;
@@ -402,9 +411,9 @@ export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE,
     if (!winTied[i]) continue;
     const a = lines[i]!;
     const b = lines[best]!;
-    if (a.hpLoss.mean < b.hpLoss.mean || (a.hpLoss.mean === b.hpLoss.mean && a.winProb > b.winProb)) best = i;
+    if (wonLoss(a) < wonLoss(b) || (wonLoss(a) === wonLoss(b) && a.winProb > b.winProb)) best = i;
   }
-  const shown = (line: BossSimLineResult) => `${Math.round(line.winProb * 1000)}|${Math.round(line.hpLoss.mean * 10)}`;
+  const shown = (line: BossSimLineResult) => `${Math.round(line.winProb * 1000)}|${line.hpLossWon ? Math.round(line.hpLossWon.median * 10) : "-"}`;
   const tied = idx.filter((i) => winTied[i] && shown(lines[i]!) === shown(lines[best]!));
   return { best, tied: tied.length >= 2 ? tied : [], vsBest: lines.map((line, i) => (i === best ? null : compareLines(line, lines[best]!))), winTied };
 }
@@ -596,9 +605,10 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       const winTied = rank.winTied[i] ?? false;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied, text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
     });
-    // The ranking as a full order: the lines tied with the top win rate by HP lost (the best first), then the rest by win rate.
-    const key = (i: number): [number, number] => (rank.winTied[i] ? [0, run.lines[i]!.hpLoss.mean] : [1, -run.lines[i]!.winProb]);
-    const order = run.lines.map((_, i) => i).sort((a, b) => key(a)[0] - key(b)[0] || key(a)[1] - key(b)[1] || a - b).map((i) => args.lines[i]!);
+    // The ranking as a full order: the lines tied with the top win rate by HP lost when won (the best first), then the rest by win rate.
+    const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
+    const cmp = (x: number, y: number) => (x === y ? 0 : x < y ? -1 : 1);
+    const order = run.lines.map((_, i) => i).sort((a, b) => cmp(key(a)[0], key(b)[0]) || cmp(key(a)[1], key(b)[1]) || cmp(key(a)[2], key(b)[2]) || a - b).map((i) => args.lines[i]!);
     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
     return {
@@ -631,7 +641,7 @@ export function simWinsLess(sim: BossLineSim | null, plan: Plan, pick: Plan): bo
 export function simNote(sim: BossLineSim): string {
   if (!sim.available) return `whole-fight simulation unavailable (${sim.reason})`;
   const how = `each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, ${sim.run.samples} samples per line on the same random numbers (${sim.run.timedOut ? `cut from ${sim.run.requested} by the time limit, ` : ""}${(sim.run.elapsedMs / 1000).toFixed(1)} s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error)`;
-  return `${how}. rollout_best is the line with the highest simulated win rate (lines within ${BOSS_LINES_TIE_SE} standard errors of it count as tied), then the least HP lost; the 5-turn rollout's numbers stay for reference`;
+  return `${how}. rollout_best is the line with the highest simulated win rate (lines within ${BOSS_LINES_TIE_SE} standard errors of it count as tied), then the least HP lost when won (median); the 5-turn rollout's numbers stay for reference`;
 }
 
 /** The decision log's record (log.boss_sim). */

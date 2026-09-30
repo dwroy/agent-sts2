@@ -100,6 +100,25 @@ describe("B2 ranking", () => {
     expect(r.vsBest[2]!.winDiff).toBeCloseTo(-0.28, 5);
   });
 
+  it("V4.2: within the tie group, the least HP lost in the samples won (median), not the mean over every sample; code's fallback ranks the same", () => {
+    // A wins 59 (losing 20 each), B 62 (losing 22 each): B's 3 more wins make its mean over every sample lower (44.0
+    // against 44.6, a death counting 80), but A loses less when it wins.
+    const a = line(0, outcomes(59, 20));
+    const b = line(1, outcomes(62, 22));
+    expect(b.hpLoss.mean).toBeLessThan(a.hpLoss.mean);
+    const r = rankLines([a, b]);
+    expect(r.winTied).toEqual([true, true]);
+    expect(r.best).toBe(0);
+    // Code's fallback (the potion-free lines): the same criterion.
+    const dry = line(2, outcomes(62, 22));
+    expect(rankLines([dry, a, b], 2, (i) => i !== 2).best).toBe(1);
+    expect(rankLines([a, b, dry], 2, (i) => i !== 0).tied).toEqual([1, 2]);
+    // A line with no winning sample comes last in its tie group.
+    const none = line(0, Array.from({ length: 100 }, () => sample(false, 80, 7)));
+    const one = line(1, Array.from({ length: 100 }, (_, i) => (i === 0 ? sample(true, 60, 6) : sample(false, 80, 7))));
+    expect(rankLines([none, one]).best).toBe(1);
+  });
+
   it("lines whose shown numbers are the same are tied: no single best", () => {
     const a = line(0, outcomes(60, 20));
     const b = line(1, outcomes(60, 20));
