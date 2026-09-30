@@ -126,3 +126,11 @@
   - 其他：为 boss 买的 10 瓶药只有 1 瓶进 boss；5HHL F45 DeepSeek 识破删牌 +40 是 run plan 自我循环、没删；女王战推演偏悲观（T1 预计 T2–T5 掉 83，实际 19）；K 批后走廊喝药这批 29/37（每场走廊 0.71，高于之前 0.53–0.57）。
 - 2026-09-30 05:51 N 批留给你的：boss 时钟现在算上了撕裂/狱火/势不可当（估值 S1MU 恶魔 21→29–33、沙漏 21→39–44，实际 51/76），但仍明显偏低——校准 11 + 0.92×raw 是在没有能力牌伤害的原始值上拟合的，要不要用 tools/boss-clock-calibrate.ts 重新拟合，你定。
 - 2026-09-30 08:11 V4 已开打（A8×20，DeepSeek + 全量知识，工作树 jev-sts2-v4run）。请开一个新会话做 V4 运维：在 ~/Projects/sts2-jev 里说「读 ops/ops-session-v4-prompt.md 并照做」。
+- 2026-09-30 08:45（V4 运维）autoplay 需要重启才能正确记局：ops/autoplay.sh 已修（146dd2c，按控制台「stopped: run N ended」判局结束），但 08:10 起的 autoplay 进程（PID 2406037）还在跑旧逻辑，每局结束都会记成 restarts.log 的「restart」、不出复盘、不进 runs.jsonl。运维会话的重启命令被权限拦了。请 Dai 在第 2 局中途执行：kill 2406037，然后 cd ~/Projects/sts2-jev && WAIT_PID=<当前 play 的 npm exec PID> setsid nohup bash ops/autoplay.sh >/dev/null 2>&1 </dev/null &（或放行这条权限）。没重启之前，运维会话每局结束后手动用 report.py 补记。
+- 2026-09-30 10:09（V4 运维）08:45 那条已解决：09:13 本会话按新逻辑（146dd2c）重启了 autoplay 和 stop-after-a8；漏记的 0QSB9YV3UFCL 已补进 runs.jsonl。
+- 2026-09-30 10:09（V4 运维）策略证据，V4 A8 第 1–3 局（HFNEL F17 瀑布巨兽、0QSB F33 帝王蟹、Y648 F27 蜂群术士；复盘见 notes/lessons.md）：
+  - boss 时钟估值偏差大：HFNEL 估 23，实际毛伤 15.5/回合；0QSB 估 35，实际 22.75；Y648 同族估 26，实际 36。HFNEL 的 DeepSeek 看到时钟显示「缺口 0」，F15 拿了邪眼（放弃重锤、完美打击），F16 72/80 选了锻造。
+  - 留药：0QSB 花 274 金买的 4 瓶「螃蟹药」全在走廊喝掉（F22 64/80 时 T2 两瓶，F27 13/80 时两瓶）；Y648 F6 为「boss T1」买的能力药水 F8 精英就喝了；HFNEL 进 boss 只剩 1 瓶鲜血药水。
+  - 路线投影：0QSB F22–F27 投影 5 次报「按中位数血量 F29/F30 耗尽」，DeepSeek 全部 keep；F19 那次改线把下一个火堆从 F28 推到 F32。V4 路线整局 route review 46 次，keep 45 次。
+  - 回血还是锻造：三局都死在伤害时钟，不是进场血量（HFNEL 4/4 锻造、72/80 进 boss 仍输；Y648 93/94 进 boss 战仍死，T1 Jev 以 0.45 信心选了与我一战！+，没选推演最优的势不可当+）。
+  - 战斗里没有集火目标：fight_plan 关着（combat-plan.ts:1710 附近），经验库和 DeepSeek 商店计划都写「先打火箭」，进不了战斗选线；0QSB 伤害分给两只钳子（火箭 −75、碾碎爪 −107），两只都没死。
