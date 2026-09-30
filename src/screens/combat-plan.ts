@@ -46,7 +46,7 @@ import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPot
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
-import { bossLineSim, bossLinesOptions, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
+import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -2207,7 +2207,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
   // B2 (BOSS_SIM_LINES, boss fights only; docs/boss-sim.md §11): every shown line and random potion line played to the
   // fight's end on the same samples. A boss the simulator is trusted on ranks the lines by it (simRanks: rollout_best,
-  // ties, the HP guard, code's fallback); a low-trust boss only shows the numbers. Out of a boss fight, no pool is kept.
+  // ties, the HP guard, code's fallback) and shows its numbers; a low-trust boss's numbers and plan only go to the
+  // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.
   if (kind !== "boss") releaseBossLinesPool();
   const bossPiles = kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
   const bossSim: BossLineSim | null =
@@ -2217,8 +2218,9 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   const simRanks = bossSim?.available && !bossSim.lowTrust ? bossSim : null;
+  const simShown = bossSim !== null && (bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null;
   const simFact = (plan: Plan): Record<string, JsonValue> => {
-    const line = bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
+    const line = simShown && bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
     return line ? { whole_fight_sim: line.text } : {};
   };
   // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.
@@ -2354,7 +2356,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
-    ...(bossSim ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `${bossSim.lowTrust ? "(low confidence) " : ""}the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
+    ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),

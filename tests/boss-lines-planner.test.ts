@@ -160,13 +160,24 @@ describe("B2 on: the boss question", () => {
     expect(decision.resolve({} as AnswerSet).rationale).toContain("using the whole-fight simulation's best potion-free plan");
   }, 120_000);
 
-  it("a low-trust boss (the Queen): the numbers as information, rollout_best still the 5-turn rollout's", () => {
+  it("a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers", () => {
     const off = ask("ez2l-f48-t2", false);
     const on = ask("ez2l-f48-t2", true);
+    const asked = (d: AskDecision) => JSON.stringify({ label: d.label, state: d.state, questions: d.questions, jevView: d.jevView ?? null });
+    expect(asked(on.decision)).toBe(asked(off.decision));
+    expect(asked(on.decision)).not.toContain("whole_fight");
     expect(flagged(on.criteria)).toEqual(flagged(off.criteria));
-    for (const key of Object.keys(on.criteria).filter((k) => k.startsWith("plan"))) expect(String(on.criteria[key]!["whole_fight_sim"]).startsWith("low confidence: ")).toBe(true);
-    expect(String(on.decision.state["whole_fight_sim"])).toContain("Low confidence for this boss");
-    expect(on.decision.resolve({} as AnswerSet).rationale).toBe(off.decision.resolve({} as AnswerSet).rationale);
+    // Every answer resolves as with B2 off; the log adds boss_sim (every shown line's numbers, marked low trust).
+    for (const answers of [...Object.keys(on.criteria).map(pick), {} as AnswerSet]) {
+      const a = on.decision.resolve(answers);
+      const b = off.decision.resolve(answers);
+      const { boss_sim: sim, ...log } = (a.log ?? {}) as Record<string, unknown>;
+      expect({ ...a, apply: null, log }).toEqual({ ...b, apply: null, log: b.log ?? {} });
+      const logged = sim as { low_trust: boolean; boss: string; samples: number; lines: Record<string, { win: number; won_loss: number | null }> };
+      expect(logged).toMatchObject({ low_trust: true, boss: "QUEEN" });
+      expect(logged.samples).toBeGreaterThan(0);
+      for (const key of Object.keys(on.criteria).filter((k) => k.startsWith("plan"))) expect(typeof logged.lines[key]!.win).toBe("number");
+    }
   }, 120_000);
 
   it("turn 1: the fight plan from the best line's samples", () => {

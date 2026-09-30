@@ -6,8 +6,8 @@
  * losing samples die on; the best line (rollout_best) is the one with the highest simulated win rate (lines within
  * BOSS_LINES_TIE_SE standard errors tied), then the least HP lost. Jev still picks the line each turn: the simulation only
  * adds numbers and, every few turns, a fight plan summarised from the best line's winning samples; code never plays the
- * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking and show the
- * numbers as information, with the reason.
+ * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking, and their
+ * numbers and plan go to the decision log only, not to Jev's question (V4.2, Dai 2026-10-01).
  *
  * Time: the planner is synchronous, so the samples run on a pool of worker threads (BossLinesPool) that the planner's
  * thread waits on (Atomics.wait on a shared counter; replies read with receiveMessageOnPort). The pool is built at the
@@ -101,8 +101,9 @@ export const bossLinesOptions: {
 };
 
 /**
- * Bosses whose simulated numbers are information only (the 5-turn rollout keeps ranking the lines), and why: the
- * validation fights of B1.5 (docs/boss-sim.md §6.5) and what the simulator does not model.
+ * Bosses whose simulated numbers stay out of Jev's question (the 5-turn rollout keeps ranking the lines; the decision
+ * log keeps the numbers), and why: the validation fights of B1.5 (docs/boss-sim.md §6.5) and what the simulator does
+ * not model.
  */
 export const LOW_TRUST_BOSSES: Record<string, string> = {
   KAISER_CRAB: "the simulated play takes ~1.6x the logged HP through block in this fight (it blocks less than our play did)",
@@ -121,6 +122,14 @@ export function bossKeyOf(enemyIds: string[]): string | null {
   if (ids.has("QUEEN")) return "QUEEN";
   const known = ["AEONGLASS", "CEREMONIAL_BEAST", "KNOWLEDGE_DEMON", "LAGAVULIN_MATRIARCH", "SOUL_FYSH", "TEST_SUBJECT", "THE_INSATIABLE", "VANTOM", "WATERFALL_GIANT"];
   return known.find((id) => ids.has(id)) ?? null;
+}
+
+/** A live fight's low-trust reason by the state's enemies (null: a boss the simulator is trusted on, or no known boss). */
+export function lowTrustOfState(state: GameState): string | null {
+  const enemies = (state.raw["combat"] as { enemies?: unknown } | null | undefined)?.enemies;
+  const ids = Array.isArray(enemies) ? enemies.map((e) => String((e as Record<string, unknown> | null)?.["enemy_id"] ?? "")) : [];
+  const boss = bossKeyOf(ids);
+  return boss ? (LOW_TRUST_BOSSES[boss] ?? null) : null;
 }
 
 // ---------------------------------------------------------------- input
@@ -618,11 +627,10 @@ export function simWinsLess(sim: BossLineSim | null, plan: Plan, pick: Plan): bo
   return c.winDiff < -BOSS_LINES_TIE_SE * c.winSe;
 }
 
-/** The question's note on the numbers (state.whole_fight_sim). */
+/** The question's note on the numbers (state.whole_fight_sim; a low-trust boss's question has none). */
 export function simNote(sim: BossLineSim): string {
   if (!sim.available) return `whole-fight simulation unavailable (${sim.reason})`;
   const how = `each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, ${sim.run.samples} samples per line on the same random numbers (${sim.run.timedOut ? `cut from ${sim.run.requested} by the time limit, ` : ""}${(sim.run.elapsedMs / 1000).toFixed(1)} s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error)`;
-  if (sim.lowTrust) return `${how}. Low confidence for this boss (${sim.lowTrust}): information only, rollout_best is still the 5-turn rollout's`;
   return `${how}. rollout_best is the line with the highest simulated win rate (lines within ${BOSS_LINES_TIE_SE} standard errors of it count as tied), then the least HP lost; the 5-turn rollout's numbers stay for reference`;
 }
 
