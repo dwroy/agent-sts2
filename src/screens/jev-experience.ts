@@ -16,7 +16,7 @@
  * the experience base's order (confidence, support, contradictions, id) decides, as for DeepSeek's slice.
  */
 
-import { loadExperience, type Confidence, type ExperienceEntry } from "../knowledge/experience.js";
+import { lessonText, loadExperience, type Confidence, type ExperienceEntry } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { monsterMoves, type MonsterEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
@@ -145,9 +145,9 @@ function withinBudget(ranked: readonly ExperienceEntry[], maxCount: number, maxC
   return out;
 }
 
-/** A lesson as Jev reads it (the `experience` block's format). */
+/** A lesson as Jev reads it (the `experience` block's format), its data placeholders filled (v3 b5e1f44 lessonText). */
 export function jevLessonLine(entry: ExperienceEntry): string {
-  return `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${entry.lesson}`;
+  return `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${lessonText(entry)}`;
 }
 
 /* ---- the board ------------------------------------------------------------------------------------------ */

@@ -209,6 +209,15 @@ export interface PlayerSim {
    * 2 after the 3rd and 6th Attack), the count starting again each turn.
    */
   shuriken?: { every: number; strength: number; count: number };
+  /**
+   * Music Box (「将你每回合打出的第一张攻击牌的一张虚无复制品加入你的手牌」): the first Attack card played in a turn
+   * adds an Ethereal copy of itself to the hand (after its own effects, draws included). `count`: the Attacks already
+   * played this turn (attacks_played_this_turn); only at 0 does this line's first Attack make one. Logged YVYZ F48:
+   * T1 Salvo, T2 Unrelenting, T3 Strike, T5/T7 Pommel Strike (after its draw), T6 Strike each came back as
+   * "虚无。 …" at the end of the hand; the copies played counted in cards_played_this_turn (the Withers came on
+   * the game's every-6th card with them counted).
+   */
+  musicBox?: { count: number };
   /** Juggernaut N: deal N to a random enemy whenever block is gained. */
   juggernaut?: number;
   /** Rage N: gain N block whenever an attack is played this turn. */
@@ -588,6 +597,11 @@ export interface Outcome {
   freeAttacksLeft?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
+  /**
+   * The potions this line drinks, their cost in HP (potion-cost.ts: each one's held value in the potion table; absent
+   * when 0: none drunk, a boss fight, no value). The score takes weights.hp x it off; effectiveLoss adds it to hpLoss.
+   */
+  potionCost?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
   /**
@@ -598,10 +612,26 @@ export interface Outcome {
   /** Self-Forming Clay's block at the start of the next turn (PlayerSim.clayBlock), when there is any. */
   clayBlockNext?: number;
   /**
+   * What the turn's end brings against the enemy turn beyond the block up when the line ends, when any (the mod's
+   * end-turn lethal flag counts the intents against the block up now only): block gained at the end (Plating and
+   * Metallicize up, Plating played this turn, Feel No Pain on the Ethereal cards held, Cloak Clasp), Regen's heal
+   * first, Buffer stacks. 86C3 F25 T5: 28 intents vs 28 HP, "mod says lethal"; Plating 2 made it 26.
+   */
+  endTurnGuards?: { what: string; amount: number }[];
+  /**
    * Damage the cards held at the turn's end deal us (Burn, Withers), when any: blockable, it meets the block before
    * the enemy hits and is part of incomingAfterBlock.
    */
   heldDamage?: number;
+  /** With heldDamage: the cards it comes from, by name ("毒素 ×2", "Wither added by this turn's cards"). */
+  heldDamageFrom?: string[];
+  /**
+   * HP the cards held at the turn's end take straight off (Beckon), when any: no block meets it, so it is not in
+   * incomingAfterBlock but is in hpLoss (5HHL F17 T7: "37 in all, 25 the enemy hits", the 12 two Beckons unnamed).
+   */
+  heldHpLoss?: number;
+  /** With heldHpLoss: the cards it comes from, by name ("呼唤 ×2"). */
+  heldHpLossFrom?: string[];
 }
 
 export interface Plan {
@@ -686,6 +716,8 @@ interface Sim {
   darkEmbrace: number;
   /** Drinks in this line whose effect may outlast the turn (turnOnlyDrink false). */
   lastingDrinks: number;
+  /** The drunk potions' cost in HP (card.potionCost). */
+  potionCost: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /**
@@ -1242,7 +1274,33 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
   ];
+  // Music Box: this turn's first Attack card comes back as an Ethereal copy (PlayerSim.musicBox), a card of the hand
+  // like any other: playing it costs its energy and counts as a card played (Withering Presence, Sloth).
+  if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)]);
   return next;
+}
+
+/** A line's HP change as the notes write it: "hp -8" for a loss, "hp +8" for a heal (was "hp --8": Q8XR F11 T2, NH8A F21 T1). */
+export function hpText(loss: number): string {
+  return loss < 0 ? `hp +${-loss}` : `hp -${loss}`;
+}
+
+/** Names with their count, in first-seen order: ["毒素", "毒素", "灼伤"] -> ["毒素 ×2", "灼伤"]. */
+function countedNames(names: string[]): string[] {
+  const counts = new Map<string, number>();
+  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return [...counts].map(([name, count]) => (count > 1 ? `${name} ×${count}` : name));
+}
+
+/** Index offset of a Music Box copy (a card the hand did not hold at the decision: never a first step). */
+export const MUSIC_BOX_INDEX = 300;
+
+/**
+ * The Ethereal copy Music Box adds of the turn's first Attack (its own key and index, so it is a card apart; named as
+ * the copy in the lines' text, the game's card id kept for finding it in the hand).
+ */
+export function musicBoxCopy(card: CardModel): CardModel {
+  return { ...card, key: `${card.key}~mb`, index: MUSIC_BOX_INDEX + card.index, name: `${card.name}（音乐盒复制）`, ethereal: true };
 }
 
 /** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
@@ -1487,6 +1545,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.tempStrength > 0) next.strength += card.tempStrength;
   if ((card.delayedDamage ?? 0) > 0) next.bombs += card.delayedDamage ?? 0;
   if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
+  if (card.type === "Potion") next.potionCost += card.potionCost ?? 0;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
 }
@@ -1890,9 +1949,10 @@ export function weightsFor(input: SolverInput): Weights {
 }
 
 /**
- * Lasting value of the turn (Strength, powers), a potion's part like a card's (Dai: a potion is a 0-cost one-shot
- * card, no cost). Until batch K a potion's part counted 25% in hallway and unknown fights (POTION_LASTING: "the
- * potion is worth more saved for an elite or the boss"), a keep-the-potion cost in the score.
+ * Lasting value of the turn (Strength, powers), a potion's part like a card's. Until batch K a potion's part counted
+ * 25% in hallway and unknown fights (POTION_LASTING: "the potion is worth more saved for an elite or the boss"), a
+ * guessed keep-the-potion cost in the score; since 2026-09-30 the cost is the potion table's held value, taken off
+ * the score on its own (evaluate: weights.hp x potionCost), the effect itself counted in full.
  */
 function lastingValue(sim: Sim, weights: Weights): number {
   return weights.strength * sim.permStrength + sim.flat;
@@ -1969,6 +2029,12 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       : 0;
   const heldPenalty =
     heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
+  // The cards that damage: named in the notes (a Wither, Toxic x2 were all "Burn": YVYZ F48 T6, 3RME F30, NH8A F31).
+  const heldDamageFrom = countedNames([
+    ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
+    ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
+  ]);
+  const heldHpLossFrom = countedNames(heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).map((card) => card.name));
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -1981,6 +2047,17 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
   const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
+  // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
+  const endTurnGuards = winsFight
+    ? []
+    : [
+        { what: "Plating/Metallicize block at the turn's end", amount: input.player.endTurnBlock ?? 0 },
+        { what: "Plating played this turn, blocking at its end", amount: platingNow },
+        { what: "Feel No Pain block for the Ethereal cards exhausted at the end", amount: etherealBlock },
+        { what: "Cloak Clasp block for the cards held", amount: claspBlock },
+        { what: "Regen healing before the enemy acts", amount: Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp)) },
+        { what: "Buffer stacks, each preventing a whole HP loss", amount: sim.buffer },
+      ].filter((guard) => guard.amount > 0);
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
@@ -2086,6 +2163,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
   }
   score -= weights.hp * hpLoss;
+  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+  // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
+  score -= weights.hp * sim.potionCost;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
   // held turn at its grown damage (Y0KJ F48: 2 Withers from T2 were held again on T7 for 18; the boss
   // died at 32/512 HP with us).
@@ -2342,6 +2422,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
       startTurnKills: startTurnKills.map((enemy) => enemy.name),
       withersAdded,
+      ...(endTurnGuards.length > 0 ? { endTurnGuards } : {}),
       ...(sim.dazedAdded > 0 && !winsFight ? { dazedAdded: sim.dazedAdded } : {}),
       ...(woundsAdded > 0 ? { woundsAdded } : {}),
       sleepCost,
@@ -2356,9 +2437,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
+      ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
-      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty } : {}),
+      ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
+      ...(heldHpLoss > 0 ? { heldHpLoss, heldHpLossFrom } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
     },
   };
@@ -2533,6 +2616,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
+    potionCost: 0,
     attacksPlayed: 0,
     relicAttacks: 0,
     skillsPlayed: 0,
@@ -2584,8 +2668,8 @@ export function solveTurn(input: SolverInput): SolveResult {
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
     const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
     const existing = byOutcome.get(signature);
-    // Same outcome: prefer the line drinking fewer potions (with no potion cost a potion reaching the
-    // same end state is a potion wasted), then the shorter plan (fewer steps = fewer chances for the
+    // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
+    // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
     // board to surprise us).
     const tie = existing !== undefined && Math.abs(plan.score - existing.score) < 1e-9;
     const fewerPotions = tie && potionsDrunk < potionStepCount(existing.steps);
@@ -2635,19 +2719,27 @@ function potionStepCount(steps: Step[]): number {
   return steps.filter((step) => step.cardId.startsWith("POTION:")).length;
 }
 
+/**
+ * A line's effective HP loss this turn: the HP it loses plus the potions it drinks at their cost (potion-cost.ts).
+ * What the HP guard and code's own picks compare (the rollout adds the later turns' drinks to its own loss).
+ */
+export function effectiveLoss(plan: Pick<Plan, "outcome">): number {
+  return plan.outcome.hpLoss + (plan.outcome.potionCost ?? 0);
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
-  // Drinking a potion is its own axis (the potions a line drinks, no cost: Dai, a potion is a 0-cost one-shot
-  // card): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
+  // Drinking a potion is its own axis (the potions a line drinks; its cost is in the score, and 0 in a boss
+  // fight): without it "same result, but spends Fortifier" dominated "take 4 damage, keep Fortifier" and the
   // potion-free plan was never shown (Vantom, live run). Waking a sleeper likewise: without this axis "Taunt, Setup Strike, Pillage" (11 damage, wakes the Matriarch)
   // dominated the line that let it sleep, and that line was filtered out and never played (1K5G F17 T1).
   // Cards drawn with no energy left to play them are discarded unplayed: not a gain on this axis (Q4JV
   // F17 T3: an 8-damage Battle Trance line at 0 energy was kept beside the 23-damage rank 1).
   const drawn = o.energyLeft > 0 ? o.cardsDrawn : 0;
-  // Potions drunk count on their own axis: combat-plan.ts prices them at 0 (Jev decides), and a line
-  // drinking one must never dominate the same line without it.
+  // Potions drunk count on their own axis (their cost, potion-cost.ts, is in the score, not here: 0 in a boss
+  // fight), and a line drinking one must never dominate the same line without it.
   // A revive spent (Fairy in a Bottle, Lizard Tail) is its own axis: a line spending one never dominates a line that does not.
   // A Waterfall Giant kill is its own axis too: HP plus block kept less the blast (0 without a kill), so a kill
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:

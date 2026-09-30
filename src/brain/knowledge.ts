@@ -12,7 +12,9 @@
  *     are not in the prefix, so they stay. Every other memory section (act, history, route, lookahead, ...) stays.
  * - The prefix is rendered once per process and ascension and kept until a knowledge file or the post-mortems file
  *   changes (their loaders re-read on a new mtime/size): the same bytes on every question, so the prefix caches hit
- *   (DeepSeek's automatic prefix cache, Claude's prompt cache).
+ *   (DeepSeek's automatic prefix cache, Claude's prompt cache). Across runs: the data facts in the old knowledge and
+ *   the experience are frozen for the day (render/facts.ts, as v3 8546fde froze its guide and handbook) and the data
+ *   versions sit after the experience, so a run's data refresh changes the prefix from the monster block on.
  * - A knowledge base that fails to load is not hidden and not replaced by an empty one: that question goes out with
  *   v3's prompt and memory, and the failure is in the request's `knowledge` note (brain.jsonl) and the caller's note.
  * - Its size has no cap, so it is watched: a prefix estimated above PREFIX_WARN_TOKENS DeepSeek tokens is warned
@@ -24,6 +26,8 @@ import { createHash } from "node:crypto";
 
 import { SLICE_LESSONS_HEADING, SLICE_STATS_HEADING } from "../knowledge/experience.js";
 import { loadKnowledgeData, loadPostmortems, type Postmortems, type RenderContext } from "../knowledge/render/data.js";
+import { loadPotionEquivalents } from "../knowledge/potion-equivalents.js";
+import type { FactFiller } from "../knowledge/render/facts.js";
 import { renderKnowledgePrefix } from "../knowledge/render/knowledge-prefix.js";
 import { SYSTEM } from "../llm/deepseek.js";
 import type { BrainRequest, KnowledgeNote } from "./types.js";
@@ -103,11 +107,16 @@ export interface KnowledgePromptOptions {
   postmortems?: () => Postmortems;
   /** The prefix renderer (tests). */
   render?: (ctx: RenderContext, postmortems: Postmortems) => string;
+  /**
+   * How the hand-written texts' data placeholders are filled: the brain freezes them for the day
+   * (render/facts.ts frozenFacts, DEEPSEEK_FACTS_SNAPSHOT_DIR); fresh when absent (replays, tests).
+   */
+  facts?: FactFiller;
 }
 
 /** The full-knowledge system prompt per ascension and knowledge directory, rendered once and kept while the data holds. */
 export class KnowledgePrompt {
-  private cached: { key: string; data: unknown; postmortems: Postmortems; system: string; note: KnowledgeNote } | null = null;
+  private cached: { key: string; data: unknown; potions: unknown; postmortems: Postmortems; system: string; note: KnowledgeNote } | null = null;
   /** Renders so far (tests: the cache holds). */
   renders = 0;
 
@@ -116,18 +125,20 @@ export class KnowledgePrompt {
   /** The system prompt and its note; throws KnowledgeLoadError when a knowledge file does not load. */
   system(ctx: RenderContext): { system: string; note: KnowledgeNote } {
     const key = `${ctx.ascension}|${ctx.knowledgeDir}`;
-    // Both loaders return the same object while their files are unchanged (keyed by mtime and size).
+    // The loaders return the same object while their files are unchanged (keyed by mtime and size); the potion
+    // table is its own file (knowledge/potion-equivalents.ts).
     const data = loadKnowledgeData(ctx.knowledgeDir);
+    const potions = loadPotionEquivalents(ctx.knowledgeDir);
     const postmortems = (this.opts.postmortems ?? loadPostmortems)();
     const hit = this.cached;
-    if (hit && hit.key === key && hit.data === data && hit.postmortems === postmortems) return hit;
+    if (hit && hit.key === key && hit.data === data && hit.potions === potions && hit.postmortems === postmortems) return hit;
     const render = this.opts.render ?? ((c: RenderContext, p: Postmortems) => renderKnowledgePrefix(c, p));
-    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled by the renderer (knowledge/render/data.ts).
-    const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir }, postmortems);
+    // The guides' and lessons' data facts ({GIANT_BLOCK_RECORD}) are filled by the renderer, through `facts`.
+    const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir, ...(this.opts.facts ? { facts: this.opts.facts } : {}) }, postmortems);
     const system = fullSystemPrompt(prefix);
     this.renders += 1;
     const note: KnowledgeNote = { mode: "full", ascension: ctx.ascension, prefix_sha: sha(prefix), prefix_chars: prefix.length };
-    this.cached = { key, data, postmortems, system, note };
+    this.cached = { key, data, potions, postmortems, system, note };
     return { system, note };
   }
 

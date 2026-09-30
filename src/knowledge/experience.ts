@@ -16,6 +16,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { GameState } from "../mod/schema.js";
+import { fillGuideFacts } from "../strategy/boss-clock.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { actThreatIds, bossOnBoard } from "./monster-db.js";
 
@@ -288,9 +289,20 @@ export function selectLessons(input: SliceInput, entries: ExperienceEntry[] = lo
 
 const CONFIDENCE_ZH: Record<Confidence, string> = { high: "高", med: "中", low: "低" };
 
+/**
+ * A lesson as the models read it: counts that the fight data also holds are written as the guides' placeholders
+ * ({GIANT_KILLS_A8}, {CRAB_KILL_ORDER}, {BOSS_RECORD:ID}, {QUEEN_AMALGAM}…) and filled here from the data
+ * (boss-clock fillGuideFacts), as the guides are, so a lesson and the guide never quote two different counts of the
+ * same fights (2026-09-30: giant-explode said "A8 27 场…T10 前击杀 13/15" while the guide's filled record said 29
+ * fights, 14/17, in the same DeepSeek question).
+ */
+export function lessonText(entry: Pick<ExperienceEntry, "lesson">): string {
+  return entry.lesson.includes("{") ? fillGuideFacts(entry.lesson) : entry.lesson;
+}
+
 function lessonLine(entry: ExperienceEntry): string {
   const contra = entry.n_contradict > 0 ? ` 反例${entry.n_contradict}` : "";
-  return `- [${entry.scope}${entry.name ? ` ${entry.name}` : ""} | 置信${CONFIDENCE_ZH[entry.confidence]} n=${entry.n_support}${contra}] ${entry.lesson}`;
+  return `- [${entry.scope}${entry.name ? ` ${entry.name}` : ""} | 置信${CONFIDENCE_ZH[entry.confidence]} n=${entry.n_support}${contra}] ${lessonText(entry)}`;
 }
 
 function pct(value: number | null | undefined): string {

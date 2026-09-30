@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, mantleHpCost, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, musicBoxCopy, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -41,14 +41,18 @@ import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
+import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
+import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "../strategy/potion-cost.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
- * only (no use cost), every modelled potion in the belt is on at least one shown line, and Jev gets the
- * facts to judge keeping it (potion_context). Code drinks on its own only when no potion-free line
+ * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss
+ * fight; the rollout ranks lines by deaths, then HP lost plus that cost), every modelled potion in the belt is
+ * on at least one shown line beside a "no potion this fight" line, and Jev gets the facts to judge keeping it
+ * (potion_context, each option's potion_cost). Code drinks on its own only when no potion-free line
  * survives the turn; a lethal that needs a potion is asked (potionLethalLines). The per-rule
  * potion filters and vetoes (hallway save/damage/confidence thresholds, the elite/boss dry-line veto,
  * the attack-potion confidence veto, the boss one-potion-a-turn cap) are gone.
@@ -368,7 +372,8 @@ export function deepseekPlanLine(env: DecisionEnv): string | null {
 /**
  * Facts for Jev's potion judgement (on every combat question, kept short): belt slots and a full belt
  * wasting the next potion reward, floors to the act boss, an Elite ahead (DeepSeek's route plan, else a
- * forced one on the map) and the act boss damage gap. DeepSeek's run plan is its own key (deepseek_plan).
+ * forced one on the map), the act boss damage gap and each held potion's worth in the act boss fight
+ * (potion-equivalents.ts). DeepSeek's run plan is its own key (deepseek_plan).
  */
 export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind"]): Record<string, JsonValue> {
   const { state } = env;
@@ -388,7 +393,32 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
     const gap = damageGap(state, env.knowledge);
     if (gap) out["act_boss_clock"] = `needs ~${gap.need} damage a turn, deck ~${gap.deck}${gap.gap > 0 ? ` (short ${gap.gap})` : " (enough)"}`;
   }
+  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule.
+  const actId = str(run["act_id"]);
+  const held = belt.filter((slot) => bool(slot["occupied"])).map((slot) => str(slot["potion_id"])).filter(Boolean);
+  Object.assign(out, heldPotionWorth(held, /^\d+$/.test(actId) ? Number(actId) + 1 : null, state.run?.ascension ?? 0));
   // DeepSeek's run plan is on the question whole (deepseek_plan), not here.
+  return out;
+}
+
+/**
+ * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'
+ * potion_cost numbers come from, each usable potion's cost, and, when every potion-free line dies this turn, that
+ * there is no no-potion option. Empty without a potion to drink.
+ */
+export function potionCostContext(costs: Map<string, PotionCost>, kind: SolverInput["fightKind"], noDryLine: boolean): Record<string, JsonValue> {
+  // Switched off (POTION_COST=off): the question as before the costs.
+  if (costs.size === 0 || !potionCostOptions.enabled) return {};
+  const out: Record<string, JsonValue> = {
+    potion_cost:
+      kind === "boss"
+        ? "boss fight: potions cost 0 here (the fight they are kept for)"
+        : "a potion drunk now is HP paid later: each option's potion_cost counts its potions (this turn and the rollout's later turns) at their held value (the 血 of the worth lines: HP worth in this act's boss); total = fight HP loss + that. Ranked by deaths, then total. Boss fights: 0.",
+  };
+  // Held potions the table has no value for (another character's): cost 0, said so.
+  const none = [...costs.values()].filter((cost) => cost.zero === "no_value" || cost.zero === "no_table").map((cost) => `${cost.name}: ${potionCostText(cost)}`);
+  if (none.length > 0) out["potion_cost_zero"] = none;
+  if (noDryLine) out["no_potion_line"] = "none: every potion-free line dies this turn";
   return out;
 }
 
@@ -444,11 +474,12 @@ export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unkno
  */
 export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp), eligible: (plan: Plan) => boolean = () => true): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
-  const minLoss = Math.min(...options.map((plan) => plan.outcome.hpLoss));
+  // Effective loss: HP lost plus the potions drunk at their cost (potion-cost.ts), as every line is ranked.
+  const minLoss = Math.min(...options.map(effectiveLoss));
   const bound = minLoss + slack;
-  if (chosen.outcome.hpLoss <= bound) return null;
+  if (effectiveLoss(chosen) <= bound) return null;
   const pool = options.filter((plan) => plan === chosen || eligible(plan));
-  const found = pool.find((plan) => plan.outcome.hpLoss <= bound) ?? pool.find((plan) => plan.outcome.hpLoss === minLoss) ?? null;
+  const found = pool.find((plan) => effectiveLoss(plan) <= bound) ?? pool.find((plan) => effectiveLoss(plan) === minLoss) ?? null;
   return found === chosen ? null : found;
 }
 
@@ -1221,10 +1252,20 @@ function beltAfter(step: Step, raw: Record<string, unknown>): string | undefined
     .join("|");
 }
 
-function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
+function expectedHandAfterFirst(plan: Plan, hand: CardModel[], musicBox: boolean): string {
   const first = plan.steps[0];
   if (!first) return handSignature(hand);
-  return handSignature(handAfterPlay(cardFor(first, hand), hand));
+  return handSignature(handAfterPlay(cardFor(first, hand), hand, musicBox));
+}
+
+/**
+ * Music Box armed on this frame: held, and no Attack played yet this turn, so the next Attack card played comes back
+ * as an Ethereal copy (turn-solver PlayerSim.musicBox). YVYZ F48 T3: the copy read as "hand grew" and the line was
+ * re-planned three times that turn.
+ */
+function musicBoxArmed(state: DecisionEnv["state"]): boolean {
+  const held = asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "MUSIC_BOX");
+  return held && num(asRecord(asRecord(state.raw["combat"])["player"])["attacks_played_this_turn"]) === 0;
 }
 
 /**
@@ -1232,8 +1273,10 @@ function expectedHandAfterFirst(plan: Plan, hand: CardModel[]): string {
  * (巨石, 巨石+ from Primal Force+; the solver's giantRockFrom), so the line goes on instead of reading the rocks as a
  * surprise and re-planning (as eca3384 for Blessing of the Forge's upgrades).
  */
-function handAfterPlay(played: CardModel | undefined, hand: CardModel[]): CardModel[] {
+function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBox: boolean): CardModel[] {
   const left = hand.filter((card) => card !== played);
+  // Music Box armed: the Attack comes back as an Ethereal copy.
+  if (played?.type === "Attack" && musicBox) return [...left, musicBoxCopy(played)];
   if (played?.special !== "primal_force") return left;
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
@@ -1260,8 +1303,8 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
       ? {
           turn,
           remaining: plan.steps.slice(1),
-          expectedHand: expectedHandAfterFirst(plan, hand),
-          handLen: handLenAfter(first!, hand),
+          expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
+          handLen: handLenAfter(first!, hand, musicBoxArmed(env.state)),
           ...(upgradesHand(first!) ? { upgradeAll: true } : {}),
           ...(first!.takes ? { take: takeSignature(first!.takes) } : {}),
           via,
@@ -1302,9 +1345,10 @@ function withoutUpgrades(signature: string): string {
   return signature === "" ? "" : signature.split(",").map((id) => id.replace(/\+$/, "")).sort().join(",");
 }
 
-/** Hand size after a step: a card leaves the hand, a potion does not. */
-function handLenAfter(step: Step, hand: CardModel[]): number {
-  return cardFor(step, hand) ? hand.length - 1 : hand.length;
+/** Hand size after a step: a card leaves the hand, a potion does not; an armed Music Box gives an Attack back as a copy. */
+function handLenAfter(step: Step, hand: CardModel[], musicBox: boolean): number {
+  const card = cardFor(step, hand);
+  return card ? hand.length - 1 + (card.type === "Attack" && musicBox ? 1 : 0) : hand.length;
 }
 
 /**
@@ -1414,7 +1458,8 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
  * (lethal_risks "incoming_damage"): a death from what the turn's end costs besides (held Beckons' HP loss, a Mantle,
  * Disintegration) is not a calculation mismatch (ARKG3JFT26HC F17 T12: 40 HP, four Beckons held and a 27 hit, 51 in
  * all, "mod says safe"; one Beckon was held and T13 began at 7 = 40 - 27 - 6, as the solver has it). Damage from cards
- * held (Burn) meets block like a hit but is no intent either: the enemy hits' part is the rest (K7G9M8K4DWFW F45 T3).
+ * held (Burn, Wither, Toxic: named as they are) meets block like a hit but is no intent either: the enemy hits' part is
+ * the rest (K7G9M8K4DWFW F45 T3).
  * Nor is the Sandpit reaching 0, which eats the player whatever the HP (UNRLW0W3XWLD F33 T8: Sandpit 1, the
  * end-turn line read "0 HP lost in all, 0 of it the enemy hits after block", the Sandpit unnamed).
  */
@@ -1425,9 +1470,23 @@ export function endTurnLethalNote(endNow: Plan | undefined, modSaysLethal: boole
   const heldDamage = endNow.outcome.heldDamage ?? 0;
   const enemyPart = Math.max(0, endNow.outcome.incomingAfterBlock - heldDamage);
   const endOnlyByOwnLosses = endNow.outcome.dies && !modSaysLethal && enemyPart < hp;
+  // Mod says lethal, the solver lives: what the solver counts at the turn's end that the flag does not (86C3 F25 T5:
+  // 28 intents vs 28 HP, Plating 2 took it to 26; the note said only "calc mismatch").
+  if (modSaysLethal && !endReachesZero) {
+    const guards = endNow.outcome.endTurnGuards ?? [];
+    const left = `the enemy turn takes ${endNow.outcome.incomingAfterBlock} of ${hp} HP`;
+    return guards.length > 0
+      ? ` [calc mismatch: solver says ending now does not kill, mod says lethal: the mod's flag counts the intents against the block up now; the solver also counts ${guards.map((guard) => `${guard.what} ${guard.amount}`).join(", ")} (${left})]`
+      : ` [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (${left})]`;
+  }
   if (!endOnlyByOwnLosses) return ` [calc mismatch: solver says ending now ${endNow.outcome.dies ? "kills" : "does not kill"}, mod says ${modSaysLethal ? "lethal" : "safe"}]`;
   const sandpit = endNow.outcome.sandpitAfter !== null && endNow.outcome.sandpitAfter <= 0;
-  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held (Burn)` : ""}`;
+  const from = endNow.outcome.heldDamageFrom ?? [];
+  // HP the held cards take straight off (Beckon), by name (5HHL F17 T7: "37 in all, 25 the enemy hits", the
+  // 12 from two Beckons unnamed).
+  const heldHpLoss = endNow.outcome.heldHpLoss ?? 0;
+  const lossFrom = endNow.outcome.heldHpLossFrom ?? [];
+  const losses = `${endNow.outcome.hpLoss} HP lost in all, ${enemyPart} of it the enemy hits after block${heldDamage > 0 ? `, ${heldDamage} damage from cards held${from.length > 0 ? ` (${from.join(", ")})` : ""}` : ""}${heldHpLoss > 0 ? `, ${heldHpLoss} HP lost to cards held${lossFrom.length > 0 ? ` (${lossFrom.join(", ")})` : ""}` : ""}`;
   return sandpit
     ? ` [ending now kills by what the mod's lethal flag does not count: the Sandpit reaches 0 on the enemy turn and eats you whatever the HP (${losses})]`
     : ` [ending now kills by what the mod's lethal flag does not count: ${losses}]`;
@@ -1542,6 +1601,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
+    // Music Box: the turn's first Attack card comes back as an Ethereal copy (armed while none is played yet).
+    ...(relicIds.includes("MUSIC_BOX") ? { musicBox: { count: num(player["attacks_played_this_turn"]) } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),
     keepsBlock: powerAmount(player, "BARRICADE_POWER") > 0 || powerAmount(player, "BLUR_POWER") > 0,
     gambit: powerAmount(player, "THE_GAMBIT_POWER") > 0,
@@ -1645,8 +1706,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
-              expectedHand: handSignature(handAfterPlay(nextCard, hand)),
-              handLen: handLenAfter(next, hand),
+              expectedHand: handSignature(handAfterPlay(nextCard, hand, musicBoxArmed(state))),
+              handLen: handLenAfter(next, hand, musicBoxArmed(state)),
               ...(upgradesHand(next) ? { upgradeAll: true } : {}),
               ...(next.takes ? { take: takeSignature(next.takes) } : {}),
               ...(potions !== undefined ? { potions } : {}),
@@ -1666,6 +1727,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
   const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+  // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for
+  // this act and ascension; 0 in a boss fight. Carried by the potion cards (the solver's score, the rollout's later
+  // turns, the random potions' samples) and shown on every option.
+  const costs = potionCosts(potionsAll.map((potion) => potion.potion_id), state.run?.ascension ?? 0, Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1, kind);
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {
     // A hand of Dazed is not the end of the options: a potion can still block, draw or kill (CY8U F25
@@ -1690,8 +1755,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   const attackers = enemies.filter((enemy) => enemy.attacks.length > 0).length;
   const pressed =
     playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
-  // No potion use cost (Dai 2026-09-28): a potion line is scored on its simulated outcome like any
-  // line; whether it is worth spending is Jev's call, with potion_context as its facts.
+  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:
+  // the table's held value, 0 in a boss fight); whether it is worth spending is Jev's call, with potion_context
+  // and each option's potion_cost as its facts.
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
   const nextIncoming =
     asArray(combat["enemies"])
@@ -1762,7 +1828,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const mcSources = new Map<number, PotionMcSource>();
   for (const potion of potionsAll) {
     const source = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
-    if (source) mcSources.set(potion.slot, source);
+    const cost = costs.get(potion.potion_id)?.hp ?? 0;
+    if (source) mcSources.set(potion.slot, cost > 0 ? { ...source, cost } : source);
   }
   const modelledIds = new Set(
     potionsAll
@@ -1783,7 +1850,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           )
           .filter((card): card is CardModel => card !== null)
           // Draw potions draw nothing under Fiddle either (GMT2 F38 T2: Swift Potion "draws 3", drew 0).
-          .map((card) => (noDraw ? { ...card, draw: 0, drawsUntil: false } : card)),
+          .map((card) => withPotionCost(noDraw ? { ...card, draw: 0, drawsUntil: false } : card, costs)),
       ],
       player: playerSim,
       enemies,
@@ -1961,7 +2028,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // progress (H8LC F23: the hallway guard swapped Uppercut -> Obscura for a line hitting the Parafright).
     const illusionFight = enemies.some((enemy) => enemy.illusion);
     if ((kind !== "boss" && kind !== "elite" && !illusionFight) || replacement === null) return false;
-    const extraLoss = picked.outcome.hpLoss - replacement.outcome.hpLoss;
+    const extraLoss = effectiveLoss(picked) - effectiveLoss(replacement);
     const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
@@ -1988,7 +2055,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     (kind === "elite" || kind === "boss" || fightPlan.approach === "setup")
       ? surviving.filter((plan) => setupCount(plan) > setupCount(top)).sort((a, b) => setupCount(b) - setupCount(a) || b.score - a.score)[0]
       : undefined;
-  const setupClose = setupLine !== undefined && setupLine.outcome.hpLoss <= top.outcome.hpLoss + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
+  const setupClose = setupLine !== undefined && effectiveLoss(setupLine) <= effectiveLoss(top) + hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env));
   if (setupClose && !options.includes(setupLine)) options.push(setupLine);
   // A chosen line played to its end is "stop here" for code (9Q7V F17 T14: after Jev's "One-Two Punch" alone,
   // code re-planned and played the Sword Boomerang Jev had turned down as the "only distinct line", killing the
@@ -2048,7 +2115,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         kind: "act",
         label: "combat/plan-guarded",
         intent: firstIntent(guarded, hand, env),
-        rationale: `code plan ${top.steps.map(stepText).join(", ") || "end turn"} loses ${top.outcome.hpLoss} HP, over the HP guard bound; playing ${guarded.steps.map(stepText).join(", ") || "end turn"} instead (hp -${guarded.outcome.hpLoss}, dmg ${guarded.outcome.damageDealt})${calcNote}`,
+        rationale: `${guardedText(top, guarded)}${calcNote}`,
       };
     }
     commit(env, state.turn, top, hand, "code");
@@ -2063,7 +2130,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       kind: "act",
       label: "combat/plan",
       intent: firstIntent(top, hand, env),
-      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; hp -${top.outcome.hpLoss}, dmg ${top.outcome.damageDealt}${calcNote}`,
+      rationale: `code plan (${margin}): ${top.steps.length ? top.steps.map(stepText).join(", ") : "end turn"}; ${hpText(top.outcome.hpLoss)}, dmg ${top.outcome.damageDealt}${calcNote}`,
     };
   }
 
@@ -2096,9 +2163,18 @@ function planTurn(env: DecisionEnv): Decision | null {
             ...potionsAll
               .filter((potion) => mcSources.has(potion.slot))
               .map((potion) => modelPotion(potion.potion_id, potion.name, potion.slot, potion.valid_targets, potionContext))
-              .filter((card): card is CardModel => card !== null),
+              .filter((card): card is CardModel => card !== null)
+              .map((card) => withPotionCost(card, costs)),
           ],
         };
+  // The "no potion this fight" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight
+  // (there potions cost 0: nothing to keep them for): code's best potion-free option this turn, rolled out with no
+  // potion in its later turns either, as an option beside the others. Its own copy of the Plan; when the option's
+  // own rollout drinks nothing later either, the two are one line (rollout-live merges them) and the option is tagged.
+  // Part of the potion costs: POTION_COST=off leaves it out with them.
+  const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
+  const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
+  const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
   const rollout: LiveRollout | null = rolloutLiveOptions.enabled && rolloutSolver !== null
     ? liveRollout({
         state,
@@ -2106,13 +2182,17 @@ function planTurn(env: DecisionEnv): Decision | null {
         memory: env.screenMemory,
         solver: rolloutSolver,
         plans: surviving,
-        shown: [...options, ...mcMedians],
+        shown: [...options, ...mcMedians, ...(noPotionCopy ? [noPotionCopy] : [])],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
         spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
         orders: kill.orders,
         ordersDropped: kill.dropped,
+        ...(noPotionBase && noPotionCopy ? { noPotion: { line: noPotionCopy, base: noPotionBase } } : {}),
       })
     : null;
+  // The no-potion line as its own option (not merged), or the option it is (merged, or no rollout: the base line).
+  const noPotionRolled = rollout?.available ? rollout.noPotion : null;
+  const noPotionOwn = noPotionRolled && !noPotionRolled.merged ? noPotionRolled.line : null;
   // Options tied for the rollout's best (the same numbers as Jev reads them): none of them is flagged best.
   const rolloutTiedAll = rollout?.available ? rollout.tied : [];
   const rolloutBest = rollout?.available ? rollout.best : null;
@@ -2120,10 +2200,24 @@ function planTurn(env: DecisionEnv): Decision | null {
   const offerPotions = potions.length > 0;
   const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
-  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys()]);
-  const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys, keep);
+  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys(), ...(noPotionBase ? [noPotionBase] : [])]);
+  const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
   options.splice(0, options.length, ...planOptions);
-  const shown = rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) ? [...options, rolloutBest] : options;
+  const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
+  // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.
+  const costNote = (plan: Plan): Record<string, JsonValue> =>
+    costsOn ? { potion_cost: potionCostFact(plan, rollout?.available ? (rollout.byPlan.get(plan) ?? null) : null, costs) } : {};
+  const noPotionNote = (plan: Plan): Record<string, JsonValue> => {
+    if (noPotionOwn && plan === noPotionOwn) {
+      const base = noPotionRolled!.base;
+      const at = shown.indexOf(base);
+      return { no_potion_fight: `the no-potion line: the same turn as ${at >= 0 ? `plan${at + 1}` : lineLabel(base)}, and no potion for the rest of this fight (its rollout's later turns drink none${at >= 0 ? `; plan${at + 1}'s may` : ""})` };
+    }
+    if (noPotionBase && plan === noPotionBase && !noPotionOwn) {
+      return { no_potion_fight: noPotionRolled ? "the no-potion line: no potion this turn, and the rollout's later turns drink none either" : "the no-potion line: no potion this turn (no rollout of the later turns)" };
+    }
+    return {};
+  };
   // Tied lines still on the question (a plan line may have been trimmed for a potion's slot).
   // In the question's order (a drink line tied with its dry twin can come first in the rollout's list).
   const shownOrder = (plan: Plan): number => (shown.includes(plan) ? shown.indexOf(plan) : shown.length + mcMedians.indexOf(plan));
@@ -2146,11 +2240,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...fitOf(plan), ...factsOf(plan) });
-    byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}` });
+    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...fitOf(plan), ...factsOf(plan), ...costNote(plan) });
+    byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}${plan === noPotionOwn ? " — no potion this fight" : ""}` });
   });
   const rolloutRecord = rollout
-    ? rolloutLog(rollout, bestShown ? keyOfShown(bestShown) : null, bestShown !== null && !bestShownIsPotion && !options.includes(bestShown), tiedKeys)
+    ? rolloutLog(rollout, bestShown ? keyOfShown(bestShown) : null, bestShown !== null && !bestShownIsPotion && !options.includes(bestShown) && bestShown !== noPotionOwn, tiedKeys, noPotionRolled ? (shown.includes(noPotionOwn ?? noPotionRolled.base) ? keyOfShown(noPotionOwn ?? noPotionRolled.base) : null) : null)
     : null;
   // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
   // distribution; the rollout facts are the median sample's line's.
@@ -2159,7 +2253,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     const key = mcKey(mc);
     const rolled = rollout && mc.median ? rolloutFacts(mc.median, rollout) : null;
     const facts = rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {};
-    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts });
+    const mcCost = !costsOn
+      ? {}
+      : mc.median
+      ? { potion_cost: potionCostFact(mc.median, rollout?.available ? (rollout.byPlan.get(mc.median) ?? null) : null, costs) }
+      : { potion_cost: `drinking it costs ${costs.get(mc.source.potionId) ? potionCostText(costs.get(mc.source.potionId)!) : "0 (no conversion value in the potion table)"}` };
+    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts, ...mcCost });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
   // Unsimulated potions: always an option, with no invented numbers.
@@ -2183,8 +2282,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               ? "not this turn: which potions it gives is random, so no HP or damage numbers until they are in hand (the re-planned turn simulates them)"
               : "no: this potion's effect is not simulated, so no HP or damage numbers for it",
           offered: UNSIMULATED_OFFERED,
-          note: `the cheapest card plan alone loses ${Math.min(...options.map((plan) => plan.outcome.hpLoss))} HP this turn`,
+          note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
+          ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
           ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
         });
         byKey.set(key, {
@@ -2229,7 +2329,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
-    potion_context: potionContextJson(env, kind),
+    potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
@@ -2267,7 +2367,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan), ...costNote(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -2361,10 +2461,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
-      const extra = plan.outcome.winsFight ? 0 : Math.max(0, plan.outcome.hpLoss - Math.min(...guardOptions.map((option) => option.outcome.hpLoss)));
+      const extra = plan.outcome.winsFight ? 0 : Math.max(0, effectiveLoss(plan) - Math.min(...guardOptions.map(effectiveLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
-        ? `; HP guard: plan ${shown.indexOf(picked) + 1} (${lineLabel(picked)}) loses ${picked.outcome.hpLoss} HP, more than ${slack.toFixed(0)} over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${plan.steps.map(stepText).join(", ") || "end turn"}; hp -${plan.outcome.hpLoss}) instead`
+        ? hpGuardNote(shown.indexOf(picked) + 1, picked, slack, rank, plan)
         : "";
       return {
         intent: firstIntent(plan, hand, env),
@@ -2552,6 +2652,25 @@ export function potionLethalNote(plan: Plan): Record<string, JsonValue> {
 
 function lineLabel(plan: Plan): string {
   return plan.steps.map(stepText).join(", ") || "end turn";
+}
+
+/**
+ * Code's own line over the HP guard bound, and the line played instead. A line's HP change as hpText ("hp -12",
+ * "hp +8" on a heal): "loses ${hpLoss} HP" read "loses -8 HP" on a heal (fix batch M's leftover, as 5e19d7a).
+ */
+export function guardedText(top: Plan, guarded: Plan): string {
+  return `code plan ${lineLabel(top)} (${lossText(top)}) is over the HP guard bound; playing ${lineLabel(guarded)} instead (${lossText(guarded)}, dmg ${guarded.outcome.damageDealt})`;
+}
+
+/** A line's HP change (hpText), and its potions' cost when it drinks any that cost (the guard compares the sum). */
+function lossText(plan: Plan): string {
+  const cost = plan.outcome.potionCost ?? 0;
+  return cost > 0 ? `${hpText(plan.outcome.hpLoss)} + potions ${Math.round(cost * 10) / 10} HP` : hpText(plan.outcome.hpLoss);
+}
+
+/** The HP guard's note on replacing the picked line (plan `pickedNo`) with plan `rank`; HP changes as hpText. */
+export function hpGuardNote(pickedNo: number, picked: Plan, slack: number, rank: number, plan: Plan): string {
+  return `; HP guard: plan ${pickedNo} (${lineLabel(picked)}; ${lossText(picked)}) is more than ${slack.toFixed(0)} HP over the cheapest line${slack === 0 ? ` (this fight already took ${HP_GUARD_FIGHT_BUDGET}+ extra HP)` : ""}, playing plan ${rank} (${lineLabel(plan)}; ${lossText(plan)}) instead`;
 }
 
 /**

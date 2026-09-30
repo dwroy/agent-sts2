@@ -8,7 +8,7 @@ import type { ToolContext, ToolDef } from "./types.js";
 
 /**
  * Every tool available for this context, in a fixed order: the knowledge-base tools (src/tools/kb-tools.ts:
- * kb_monster, kb_encounter, kb_experience, kb_stats, kb_old_knowledge, kb_postmortem, kb_runs), then the log
+ * kb_monster, kb_encounter, kb_experience, kb_stats, kb_old_knowledge, kb_postmortem, kb_runs, kb_potion), then the log
  * database query (src/tools/logs-query.ts: logs_query). The tools read the context each call gives them, so the
  * list itself does not depend on it yet (simulator tools will need ctx.state).
  */

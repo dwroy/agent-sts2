@@ -146,7 +146,7 @@ export class FakeDeepSeek extends DeepSeekClient {
     this.calls.push({ label, state: {}, criteria: {}, plan: false, reask: true });
     const previous = String(messages[messages.length - 2]?.["content"] ?? "");
     const meta = { latencyMs: 5, inputTokens: 10, outputTokens: 2, cacheHitTokens: 7, reasoningTokens: 1 };
-    return { content: this.reasks(label, previous), reasoning: "", toolCalls: [], message: {}, meta };
+    return { content: this.reasks(label, previous), reasoning: "", finishReason: "stop", toolCalls: [], message: {}, meta };
   }
   override async choose(state: Record<string, JsonValue>, _instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<DeepSeekAnswer> {
     const label = String(context["label"] ?? "");

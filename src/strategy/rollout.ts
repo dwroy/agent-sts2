@@ -16,8 +16,10 @@
  *          the enemies' Weak apply; Vulnerable/Weak on enemies wear off one per enemy turn;
  *        - our draws come from the shuffled draw pile (the discard pile reshuffled in when it runs out);
  *        - our turns are played by the solver itself with a small node cap (the fast policy); the modelled
- *          potions still held are in its hand like 0-cost cards that exist once (Dai 2026-09-28: no special
- *          potion logic): drunk when its best line drinks one, gone for the rest of that sample.
+ *          potions still held are in its hand like 0-energy cards that exist once, each with its cost
+ *          (potion-cost.ts, Dai 2026-09-30: its held value in the potion table, taken off the solver's score):
+ *          drunk when its best line drinks one, gone for the rest of that sample.
+ *        - the "no potion this fight" line (options.noPotionLine) holds none in its later turns.
  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
  *      w x model (calibrated win probability) + (1 - w) x a deck-damage clock, w from the gate of the
  *      encounter's segment (0 when the model's ranking advantage is not established).
@@ -35,8 +37,9 @@
  *      policy; the rest is scheduled to fit (5 turns x 8 samples, else 3 turns, else fewer samples, else
  *      1 turn: the line itself + terminal). Horizon and samples used are recorded per line.
  *
- * Values are on one HP-equivalent scale: -(expected HP lost from now to the fight's end) - DEATH_HP x
- * (1 - win probability). The current solver score is put on it as score / its HP weight.
+ * Values are on one HP-equivalent scale: -(expected HP lost from now to the fight's end) - (expected cost of the
+ * potions drunk, this turn and later: potion-cost.ts) - DEATH_HP x (1 - win probability). The current solver score
+ * (which takes the drinks' cost off already) is put on it as score / its HP weight.
  */
 
 import { readFileSync } from "node:fs";
@@ -47,7 +50,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -457,6 +460,11 @@ export interface RolloutOptions {
   orders?: KillOrder[];
   /** The kill-order policy's extra damage weight on its target (default ORDER_FOCUS_BONUS). */
   orderFocusBonus?: number;
+  /**
+   * The "no potion this fight" line (Dai 2026-09-30): a potion-free line (its own Plan object, a copy of a shown
+   * one) rolled out with no potion in its later turns either. Tagged "offered" and "no-potion".
+   */
+  noPotionLine?: Plan;
 }
 
 export interface RolloutInput {
@@ -543,6 +551,10 @@ export interface OrderEstimate {
   valueModelTerminal: number | null;
   modelForecast: { hpLoss: number; winProb: number } | null;
   perTurn: TurnSpread[];
+  /** Expected cost of the potions drunk (this turn and the later turns), in HP: in `value` already. */
+  potionCost: number;
+  /** Samples (of `samples`) whose later turns drink each potion (by id). */
+  laterDrinks: Record<string, number>;
 }
 
 export interface LineEstimate {
@@ -589,6 +601,15 @@ export interface LineEstimate {
   wins: number;
   /** Samples in which a time limit ended the fight unwon (the Battleworn Dummy); absent when none. */
   timeUps?: number;
+  /**
+   * Expected cost of the potions the line drinks, this turn and in its later turns, in HP (potion-cost.ts: each one's
+   * held value; 0 in a boss fight). `value` has it taken off; the effective loss is hpLoss + potionCost.
+   */
+  potionCost?: number;
+  /** Samples (of `samples`) whose later turns drink each potion (by id); empty when none does. */
+  laterDrinks?: Record<string, number>;
+  /** The "no potion this fight" line (RolloutOptions.noPotionLine). */
+  noPotionFight?: boolean;
   /** Samples that spent a revive (Fairy in a Bottle, Lizard Tail) within the horizon; absent when none. */
   revived?: number;
   value: number;
@@ -1013,6 +1034,9 @@ export interface TurnRecord {
    * absent in a hand-made record (the snapshot's HP then).
    */
   hpLeft?: Record<number, number>;
+  /** The potions this turn drank (ids), and their cost in HP (the plan's outcome.potionCost; potion-cost.ts). */
+  drunk?: string[];
+  potionCost?: number;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1329,7 +1353,14 @@ function applyPlan(
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
-    if (at < 0) continue;
+    if (at < 0) {
+      // Music Box's copy of the turn's first Attack (turn-solver musicBoxCopy, index MUSIC_BOX_INDEX + the original's):
+      // not a card of the hand, but played it goes to the discard pile as an Ethereal copy and can be drawn again
+      // (YVYZ F48: T7 drew back the T5 Pommel Strike copy). Unplayed, it is exhausted at the turn's end: gone.
+      const original = step.cardIndex >= MUSIC_BOX_INDEX ? hand.findIndex((card) => card.index === step.cardIndex - MUSIC_BOX_INDEX && card.cardId === step.cardId) : -1;
+      if (original >= 0 && !hand[original]!.exhausts) piles.discard.push(musicBoxCopy(handBase[original] ?? hand[original]!));
+      continue;
+    }
     played.add(at);
     const card = hand[at]!;
     const effect = POWER_EFFECTS[card.cardId];
@@ -1641,7 +1672,19 @@ function applyPlan(
     player.startDealt = startOfTurn(turn, player, enemies, input);
     won = allDown();
   }
-  return { loss: startHp - player.hp + (o.revived?.reviveHp ?? 0), enemyPart: o.incomingAfterBlock, dmg: o.damageDealt + carried, snap, won, died, ...(o.revived ? { revived: o.revived.sources.length } : {}), hpLeft };
+  // The potions this turn drinks and their cost (the solver's outcome: potion-cost.ts), for the line's effective loss.
+  const drunk = plan.steps.filter(isPotion).map((step) => step.cardId.split(":")[1] ?? "");
+  return {
+    loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
+    enemyPart: o.incomingAfterBlock,
+    dmg: o.damageDealt + carried,
+    snap,
+    won,
+    died,
+    ...(o.revived ? { revived: o.revived.sources.length } : {}),
+    hpLeft,
+    ...(drunk.length > 0 ? { drunk, potionCost: o.potionCost ?? 0 } : {}),
+  };
 }
 
 /** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
@@ -1688,6 +1731,8 @@ function simulate(
   order: KillOrder | null = null,
   /** Set to how many of the order's groups the policy looked at (the trajectory depends on no others). */
   used: { depth: number } = { depth: 0 },
+  /** The "no potion this fight" line (RolloutOptions.noPotionLine): the later turns hold no potion either. */
+  noPotions = false,
 ): TurnRecord[] | null {
   const random = rng(seed);
   const s = input.solver;
@@ -1819,8 +1864,9 @@ function simulate(
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
-  // Modelled potions still held in this sample: 0-cost cards that exist once (drunk: gone).
-  let held = s.hand.filter((card) => card.type === "Potion");
+  // Modelled potions still held in this sample: 0-energy cards that exist once (drunk: gone), each carrying its cost
+  // (card.potionCost: the solver drinks one only when its turn gains more than that). None for the no-potion line.
+  let held = noPotions ? [] : s.hand.filter((card) => card.type === "Potion");
   const drink = (line: Plan) => {
     for (const step of line.steps) if (isPotion(step)) held = held.filter((card) => card.cardId !== step.cardId);
   };
@@ -1960,6 +2006,8 @@ function simulate(
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
+      // Music Box: a new turn, its first Attack card makes a copy again.
+      ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
@@ -1996,6 +2044,15 @@ interface SampleValue {
   died: boolean;
   lossModel: number | null;
   winModel: number | null;
+  /** The potions the sample drank up to the fight's end or the horizon, their cost in HP (potion-cost.ts). */
+  cost: number;
+}
+
+/** The potion cost of the first `n` records of a sample (potion-cost.ts; 0 without drinks). */
+function costOf(records: TurnRecord[], n: number): number {
+  let cost = 0;
+  for (let i = 0; i < Math.min(n, records.length); i += 1) cost += records[i]!.potionCost ?? 0;
+  return cost;
 }
 
 /** The living enemies' HP in a snapshot (a won fight: 0). */
@@ -2036,21 +2093,24 @@ function remainingHp(e: SimEnemy, input: RolloutInput): number {
 /**
  * A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after.
  * `lossCap`: the most a sample can lose, our HP plus the revives held (their HP counts as lost when spent).
+ * `cost`: the potions drunk on the way, apart (the loss stays HP: capped at lossCap, shown as HP); 0 in a sample that
+ * dies (a potion is HP paid later, and there is no later).
  */
 function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number): SampleValue & { n: number } {
   let loss = 0;
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0 };
+    // A sample that dies pays nothing for its potions: there is no later for them (the run is over).
+    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0 };
     if (r.won) {
       loss += r.loss;
-      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0 };
+      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1) };
     }
     // Out of time (Battleworn Dummy): the fight is over, not won, and costs nothing more.
     if (r.timeUp) {
       loss += r.loss;
-      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0 };
+      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0, cost: costOf(records, i + 1) };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -2067,6 +2127,7 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
     lossModel: term.model ? Math.min(lossCap, base + term.model.hpLoss) : null,
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
+    cost: costOf(records, upto),
   };
 }
 
@@ -2237,6 +2298,13 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const maxSamples = opts.samples ?? 8;
   const seed = opts.seed ?? 1;
   const candidates = selectCandidates(input.plans, opts.k ?? 6, opts.include ?? []);
+  // The "no potion this fight" line: its own candidate (a copy of a shown line), with no potion in its later turns.
+  const noPotionLine = opts.noPotionLine && !opts.noPotionLine.steps.some(isPotion) ? opts.noPotionLine : undefined;
+  if (noPotionLine) {
+    const at = candidates.findIndex((entry) => entry.plan === noPotionLine);
+    if (at >= 0) candidates[at] = { plan: noPotionLine, tags: [...new Set([...candidates[at]!.tags, "offered", "no-potion"])] };
+    else candidates.push({ plan: noPotionLine, tags: ["offered", "no-potion"] });
+  }
   // The board's leader (its death ends the fight; the same in every kill order of the board), if any.
   const boardLeader = (opts.orders ?? []).find((order) => order.leader)?.leader?.indices ?? null;
   const gate = gateFor(input.gates, input.meta.enc, input.meta.act, input.meta.kind);
@@ -2254,9 +2322,11 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const records = simulate(input, plan, 1, seed, budget)!;
     const v = valueAt(records, 1, ctx, t0, lossCap);
     const vm = valueAt(records, 1, ctxModel, t0, lossCap);
-    const modelValue = vm.lossModel === null ? null : -vm.lossModel - DEATH_HP * (1 - (vm.winModel ?? 0));
+    // The drink's cost: in the solver's score already (current), taken off the model's value here.
+    const modelValue = vm.lossModel === null ? null : -vm.lossModel - v.cost - DEATH_HP * (1 - (vm.winModel ?? 0));
     const current = plan.score / hpWeight;
     return {
+      cost: v.cost,
       hpLoss: v.loss,
       winProb: v.win,
       turns: v.turns,
@@ -2277,19 +2347,21 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   // Orders are compared for the lines shown (tagged "offered"); the other candidates, there only to find a
   // better line to add, keep the solver's own later turns. A line that aims only at an illusion this turn
   // keeps aiming at it (illusionFocusOrders).
-  const units = candidates.flatMap(({ plan, tags }, line) => (orders.length > 1 && !tags.includes("offered") ? [null] : illusionFocusOrders(plan, orders, input.solver.enemies)).map((order) => ({ line, plan, order })));
+  const units = candidates.flatMap(({ plan, tags }, line) =>
+    (orders.length > 1 && !tags.includes("offered") ? [null] : illusionFocusOrders(plan, orders, input.solver.enemies)).map((order) => ({ line, plan, order, noPotions: plan === noPotionLine })),
+  );
   const trajectories: TurnRecord[][][] = units.map(() => []);
   // One sample of one (line, order): an order agreeing with an order already run on every group that run
   // looked at gets the same trajectory (same line, seed and horizon; the policy is deterministic), e.g.
   // A > B > C and A > C > B while A lives through the horizon.
   const shared = new Map<string, { order: KillOrder; depth: number; records: TurnRecord[] }[]>();
-  const run = (unit: { line: number; plan: Plan; order: KillOrder | null }, h: number, j: number): TurnRecord[] | null => {
+  const run = (unit: { line: number; plan: Plan; order: KillOrder | null; noPotions: boolean }, h: number, j: number): TurnRecord[] | null => {
     const key = `${unit.line}:${h}:${j}`;
     const done = unit.order ? (shared.get(key) ?? []) : [];
     const hit = unit.order ? done.find((entry) => samePrefix(entry.order, unit.order!, entry.depth)) : undefined;
     if (hit) return hit.records;
     const used = { depth: 0 };
-    const records = simulate(input, unit.plan, h, seed * 7919 + 1 + j, budget, budget.budgetMs, unit.order, used);
+    const records = simulate(input, unit.plan, h, seed * 7919 + 1 + j, budget, budget.budgetMs, unit.order, used, unit.noPotions);
     if (unit.order && records) shared.set(key, [...done, { order: unit.order, depth: used.depth, records }]);
     return records;
   };
@@ -2394,7 +2466,16 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const enemyHpLeft = mean(kept.map((records) => enemyHpOf(records[Math.min(horizon, records.length) - 1]!)));
     const turnsSurvived = mean(vals.map((v) => (v.died ? v.turns : horizon)));
     const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
+    // The potions drunk (this turn and later, up to the fight's end or the horizon), at their cost: off the value.
+    const cost = mean(vals.map((v) => v.cost));
+    const laterDrinks: Record<string, number> = {};
+    for (const records of kept) {
+      const ids = new Set(records.slice(1, horizon).flatMap((record) => record.drunk ?? []));
+      for (const id of ids) laterDrinks[id] = (laterDrinks[id] ?? 0) + 1;
+    }
     return {
+      potionCost: cost,
+      laterDrinks,
       hpLoss: loss,
       turnsToWin: alive.length > 0 ? mean(alive.map((v) => v.turns)) : null,
       deaths: dead.length,
@@ -2402,8 +2483,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       winProb: win,
       wins,
       timeUps,
-      value: -loss - DEATH_HP * (1 - win),
-      valueModelTerminal: model === null ? null : -model.hpLoss - DEATH_HP * (1 - model.winProb),
+      value: -loss - cost - DEATH_HP * (1 - win),
+      valueModelTerminal: model === null ? null : -model.hpLoss - cost - DEATH_HP * (1 - model.winProb),
       modelForecast: model,
       perTurn: turnSpreads(kept, horizon),
       firstDown,
@@ -2422,6 +2503,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const common = {
       plan,
       tags,
+      ...(plan === noPotionLine ? { noPotionFight: true } : {}),
       score: plan.score,
       currentValue: current,
       oneTurn: { hpLoss: o.hpLoss, winProb: o.winProb, turns: o.turns, modelValue: o.modelValue, value: o.value },
@@ -2437,6 +2519,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         order: null,
         orders: [],
         hpLoss: o.hpLoss,
+        potionCost: o.cost,
+        laterDrinks: {},
         enemyHpLeft: o.enemyHpLeft,
         leaderHpLeft: o.leaderHpLeft,
         turnsSurvived: o.survived,
@@ -2445,8 +2529,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         turnsToDeath: null,
         winProb: o.winProb,
         wins,
-        value: -o.hpLoss - DEATH_HP * (1 - o.winProb),
-        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - DEATH_HP * (1 - (o.winModel ?? 0)),
+        value: -o.hpLoss - o.cost - DEATH_HP * (1 - o.winProb),
+        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - o.cost - DEATH_HP * (1 - (o.winModel ?? 0)),
         modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 } },
         perTurn: [],
       };
@@ -2465,6 +2549,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       orders: byOrder.filter((entry): entry is typeof entry & { order: KillOrder } => entry.order !== null),
       ...(byLeader ? { ordersByLeader: true } : {}),
       hpLoss: best.hpLoss,
+      potionCost: best.potionCost,
+      laterDrinks: best.laterDrinks,
       enemyHpLeft: best.enemyHpLeft,
       leaderHpLeft: best.leaderHpLeft,
       turnsSurvived: best.turnsSurvived,

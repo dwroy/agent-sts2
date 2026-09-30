@@ -11,7 +11,7 @@
  *   recorded, and the loop ends on a reply without tool calls.
  * - The router's re-ask: the same conversation with the previous answer and the problems as a new user turn.
  */
-import { DeepSeekClient, type DeepSeekAnswer } from "../../llm/deepseek.js";
+import { DeepSeekClient, embeddedJsonObjects, type DeepSeekAnswer } from "../../llm/deepseek.js";
 import type { JsonValue } from "../../util/json.js";
 import { ToolHost } from "../../tools/mcp-server.js";
 import { normalisePick, parseAnswerText, reaskMessage, TOOLS_NOTE, userMessage } from "../message.js";
@@ -109,9 +109,10 @@ export class DeepSeekEngine implements BrainEngine {
         native: { v3: answer },
       };
     }
-    let result: { json: Record<string, unknown>; meta: Meta; recovered?: true };
+    let result: { json: Record<string, unknown>; meta: Meta; recovered?: true; note?: string };
     if (req.options) {
-      result = await client.choosePlan((req.payload ?? {}) as Record<string, JsonValue>, req.question, req.options, context);
+      // The spec's check (with the screen's own, brain.ts choosePlan): what an empty reply's reasoning may be taken for.
+      result = await client.choosePlan((req.payload ?? {}) as Record<string, JsonValue>, req.question, req.options, context, (json) => req.spec.validate(json).length === 0);
     } else {
       const input = (req.payload && typeof req.payload === "object" && !Array.isArray(req.payload) ? req.payload : { input: req.payload ?? null }) as Record<string, JsonValue>;
       const payload: Record<string, JsonValue> = memory === undefined ? { task: req.question, ...input } : { task: req.question, ...input, memory };
@@ -140,7 +141,7 @@ export class DeepSeekEngine implements BrainEngine {
       { role: "user", content: reaskMessage(req, req.reask!.problems) },
     ];
     const done = await client.chat(messages, req.label, signal ? { signal } : {});
-    return this.finish(req, done.content, done.reasoning, usageOf(done.meta), 1, Date.now() - started, []);
+    return this.finish(req, done.content, done.reasoning, usageOf(done.meta), 1, Date.now() - started, [], done.finishReason);
   }
 
   /** DeepSeek's native function calling, the tools run here. */
@@ -159,7 +160,7 @@ export class DeepSeekEngine implements BrainEngine {
       const done = await client.chat(messages, req.label, { tools, ...(last ? { toolChoice: "none" as const } : {}), ...(signal ? { signal } : {}) });
       calls += 1;
       usage = addUsage(usage, usageOf(done.meta));
-      if (done.toolCalls.length === 0 || last) return this.finish(req, done.content, done.reasoning, usage, calls, Date.now() - started, host.take());
+      if (done.toolCalls.length === 0 || last) return this.finish(req, done.content, done.reasoning, usage, calls, Date.now() - started, host.take(), done.finishReason);
       // The assistant turn goes back as given (thinking mode wants its reasoning_content with tool calls).
       messages.push({
         role: "assistant",
@@ -181,13 +182,25 @@ export class DeepSeekEngine implements BrainEngine {
     }
   }
 
-  private finish(req: BrainRequest, content: string, reasoning: string, usage: BrainUsage, attempts: number, latencyMs: number, toolCalls: BrainAnswer["toolCalls"]): BrainAnswer {
-    const parsed = parseAnswerText(content);
+  /**
+   * The reply as an answer. An empty reply takes the last answer its reasoning drafted that passes the spec (v3
+   * fa46f6c / 7b54237: the reasoning often ends on the answer it meant to send); with none, the problem names the
+   * finish_reason, and the router's re-ask is the "asked once more".
+   */
+  private finish(req: BrainRequest, content: string, reasoning: string, usage: BrainUsage, attempts: number, latencyMs: number, toolCalls: BrainAnswer["toolCalls"], finishReason = ""): BrainAnswer {
+    let parsed = parseAnswerText(content);
+    if (!parsed && content.trim() === "" && reasoning) {
+      const drafted = embeddedJsonObjects(reasoning)
+        .map((json) => normalisePick(req, json))
+        .filter((json) => req.spec.validate(json).length === 0);
+      parsed = drafted[drafted.length - 1] ?? null;
+    }
+    const why = finishReason ? ` (finish_reason ${finishReason})` : "";
     return {
       engine: this.name,
       model: this.model,
       answer: parsed ? normalisePick(req, parsed) : null,
-      problems: parsed ? [] : [`the reply is not a JSON object: ${content.slice(0, 120)}`],
+      problems: parsed ? [] : [content.trim() === "" ? `the reply was empty${why} and its reasoning drafted no valid answer` : `the reply is not a JSON object${why}: ${content.slice(0, 120)}`],
       attempts,
       latencyMs,
       usage,

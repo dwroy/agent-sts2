@@ -159,6 +159,7 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
   - brain.jsonl 有行，`knowledge.prefix_sha` 和 run-config 里的一样；
   - 决策日志里执行闸拒绝的次数正常。
 - [ ] crontab 里的 ops/auto-relaunch.sh 还在：切换期间它会在没有 STOP 文件时拉起 autoplay。改 run.sh 要趁 STOP 在的时候改。
+- [ ] 药水代价（§6，v4-potion 合进 v4 / v4-live 之后）：ops/report.py 的 `refresh_knowledge` 加上药水换算表的刷新（见 §6「上线要改的地方」）；运行工作树里 `tools/refresh-potion-equivalents.sh --dry-run` 能跑，说「up to date」或「would rebuild (…)」。
 
 ## 5. v3 同步记录
 
@@ -186,3 +187,51 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 - 其余 v3 修复原样保留：推演、求解器、药水、Jev 线、执行、卡牌文字、事件、商店执行、日志回放。
 - 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 88 个文件、1,465 个测试全过。
 - 注意：v3 的 d79f14f、4f57bbd 改了 Jev 线上药水的算法（不再扣药水成本；没模拟的药水总是可选）。第 1 节里 M3a、M2b 的回放数字是在这次合并前测的；上线对照要用合并后的 v3 局。
+
+### 2026-09-30：V3-final（6e7611f）合进 v4-sync（基于 v4 7a0fd88）
+
+- 合并提交 a19c49e，带进 v3 在 c52587c 之后的 27 个提交（修复批次 M、N；A8 窗口 1–11 局的经验、攻略、卡牌评级、boss 数据；两次知识刷新）。后续修正 3ecd8b5、ba44291。
+- 冲突 4 个文件：
+  - src/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
+  - src/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
+  - src/screens/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
+  - src/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
+- 为合并而改的 V4 代码（在合并提交里）：brain.choosePlan 加 accept 参数，和 askJson 一样并进 spec 的校验（withAccept，accept 通过即合法）；DeepSeek 引擎把这个校验交给 v3 的 choosePlan，空回答就从推理里取屏幕接受的计划。choosePlan、askJson 的返回类型加 note。
+- 知识数据都取 V3-final 的版本；ds-handbook.md 的路线一段仍是 V4（M2a）的写法；event-pages.json 保留 V4 新增的页。room-costs.json 仍然没有 p90：上线前照旧用合并后的脚本重建。tools/build-boss-damage.py 只有 v3 的改动，直接合入。
+- 放弃的 v3 修复：16559ba（单独的删牌屏把整局计划的 +40 拆开写，并注明「只是参考」）。理由和上次放弃 f8aef72 相同：V4 M2b 不给 DeepSeek 看代码分值、排名和 why，没有可拆的数。batch-m 第 6 组改成断言题面里没有 code value、removal order 和 +40 的说法。
+- 补做（合并后单独提交）：
+  - 3ecd8b5，对应 8546fde（系统提示里攻略、手册的数据按天冻结）。KNOWLEDGE_PREFIX=off 完全沿用 v3：DeepSeekClient 的攻略和手册按天快照，存在 logs/guide-facts/<日期>-<hash>.md。full 的前缀是自己渲染的，v3 的快照管不到；而且前缀开头的「数据版本」行每局都会变，缓存从第一块就断了。现在做了三件事：① render/facts.ts 把每个占位符的值按天冻结在同一目录的 <日期>-prefix-facts.json 里，覆盖攻略、手册、Jev 提示里的怪物库数字（按进阶分开）和经验条目；同一个占位符在攻略和经验里取同一个数。② 数据版本行从头部移到经验之后、怪物之前，单独成块「## 数据版本」。③ 头部加一句：旧知识和经验里的战绩数字可能是当天早些时候的，和统计表不同时以统计表为准。效果：同一天内，每局结束刷新数据后，前缀从「数据版本」块起才变；前面的头部、旧知识和经验（A8 约 9.7 万字，全长约 17.6 万字）保持逐字节不变，可以继续命中缓存。没有配置目录时（工具、回放、测试）照旧现填。
+  - 同一提交还处理了 b5e1f44 带来的问题：经验条目里的占位符在 V4 前缀和 kb_experience 里也要填。合并后 experience.monster、experience.route 里原样出现了 {BOSS_RECORD:…}、{LASER_T4}、{UNKNOWN_FIGHTS:9:2}，现在都填上了。
+  - ba44291，对应 fa46f6c 和 7b54237 在 V4 路由器路径（重问、带工具）上的部分：chat() 带回 finish_reason；空回答取推理里最后一个符合题目 spec 的答案；取不到时，问题里写明 finish_reason，由路由器的重问充当「再问一次」。
+  - f26ae1a（逗号连接的两个对象）：这一半由 pickJsonObject 处理，V4 的 parseAnswerText 也调用它，所以自动生效。截断回答保留完整成员这一半只在 v3 路径（choose、choosePlan）里做。路由器路径不做，截断的回答按不合法重问；v3 对自由格式的计划同样不做。
+- 其余 v3 修复原样保留：八音盒建模（求解器、推演、线承诺；执行闸照常带 expect，batch-m 第 4 组改用 toMatchObject 并检查 expect）、boss 时钟（撕裂+、狱火/深红披风、主宰伤害）、「现在结束会死」按牌名写（含 Beckon）、知识恶魔排序、回血写成 hp +N、战斗计划的格式检查。
+- tests/run-config.test.ts 的 DeepSeek 客户端原来会用默认目录 logs/guide-facts（软链到线上的 logs），现在改用测试自己的目录。改之前的第一次全量测试已经往那里写了两个小文件：2026-09-30-3493cfe2.md 和 2026-09-30-f28937d5.md，内容是测试夹具的攻略和手册。它们和线上快照不同名，不会被读到；第二天第一次写快照时，v3 的清理会把它们删掉。这个 agent 没有删除权限。
+- 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 96 个文件、1,556 个测试全过。
+- 上线注意：v4-live 升级到这个版本后，logs/guide-facts 里会多一个 <日期>-prefix-facts.json，每天第一次渲染前缀时写入。
+
+## 6. 药水代价（2026-09-30 Dai 定，分支 v4-potion）
+
+一句话：用掉的药水按「以后要扣的血」计价。代价 = 这瓶药在当前进阶、当前幕的持有价值（药水换算表 src/knowledge/potion-equivalents.json 的公式值）；boss 战为 0；精英和走廊一样；死亡数永远排第一。细节在 docs/potion-equivalents.md §8。
+
+**行为变化**（默认开；`POTION_COST=off` 写进 .env 就全部关掉，下一局生效，题面和排序回到接入前）：
+- 求解器：喝药的线分数减「HP 权重 × 代价」。代码自己的排序、选项里谁排前面、HP 护栏（含每场预算）、随机药水的「胜过最佳不用药线」都按「掉血 + 药水代价」比。代码自己仍然不在有不用药的线时喝药。
+- 推演：后续回合的自动出牌按同样的代价决定喝不喝；每条线的 value 扣掉本回合和后续回合喝掉的药的期望代价。rollout_best 先比死亡样本数，再比「本场掉血 + 药水代价」；「并列」也按这个合计判定。
+- 题面：每个选项多一项 `potion_cost`（「fight HP loss X; potions used N (…); potion cost Y HP (…); total Z」）；`potion_context.potion_cost` 一句话说代价从哪来。每道有药可喝的非 boss 战斗题多一条「本场不用药」的线（和某个选项一样就并进去、标 `no_potion_fight`），所以选项可能多一个。
+- 走廊里「喝不喝都一样」的题，rollout_best 从喝药的线（以前并列时常落在喝药线上）移到不喝的线；随机药水不再「胜过」不用药的线时，代码直接打自己的线，Jev 少被问一次。
+- boss 战：代价 0，选项、分数、rollout_best 和现在完全一样（测试锁住；离线回放 boss 20 次见下），题面上的 `potion_cost` 都写 0。boss 战不加「本场不用药」的线（要 Dai 确认）。
+
+**离线回放**（`npx tsx tools/potion-cost-replay.ts` → experiments/potion-cost/summary.md，不调用任何模型）：notes/potion-drinks-2026-09-29.md 附表 A 的 154 次非 boss 战喝药，重算 150 次（3 次是代码开场直接喝果汁、1 次是已修的去重 bug，不涉及排序）。同一个重建局面，推演最优本回合喝药：代价关 104 次 → 代价开 45 次；本回合不喝 24 → 100（其中 20 次推演后续回合会喝，80 次整场不喝）；并列 22 → 5。按附表分类：值得喝 15 次 9 → 9（只有 1 次从「本回合喝」变成「后续回合喝」），小收益 74 次 66 → 23，持平 60 次 28 → 12。「不喝会死」的 10 个局面推演最优全部用药（100%，8 次本回合就喝）。boss 战抽查 20 次：选项、每个选项的推演数字、推演最优和并列 20/20 完全相同。
+
+**上线要改的地方（本次没有改 ops/）**：
+- **ops/report.py `refresh_knowledge`（现在第 360–376 行）**：`cmd` 最后一段（第 374 行的 `…/logdb/sync.py >/dev/null 2>&1'`）后面接上 `f'; {wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1'`（在日志库同步之后；输出也可以留在 refresh.log 里）。它只在「表的生成日期不是今天」或「表里没有 .env 的 TARGET_ASCENSION」时重建（读 `{wt}/.env`，用 `{wt}/.cache/logdb-venv/bin/python`），其余时候什么都不做，一天最多重建一次（约 3 秒）。重建会改 src/knowledge/potion-equivalents.json（和其他知识数据一样，run-config 的 `code` 会带 `+dirty`）。
+- 升进阶：改 .env 的 TARGET_ASCENSION 后，下一局赛后的刷新会因为「表里没有这个进阶」重建一次（场数不够的进阶借最近进阶的输入）。上线当天也可以手动跑一次：`tools/refresh-potion-equivalents.sh`（`--dry-run` 只看会不会重建）。
+- 表加载不了时代价按 0 算（题面写明），对局不会停。
+
+**怎么看效果**（`P=.cache/logdb-venv/bin/python`；`$P tools/eval/metrics.py --ascension <进阶> --since <上线时间> --group-by config --md --total`，对照同进阶上线前的组）：
+- 「非 boss 战喝药 / 10 层」应该下降（V3 A9 55 局：2.24）；
+- 「进一幕 / 二幕 boss 带药（瓶）」应该上升（V3 A9：1.37 / 1.33）；
+- 「死时手里的药（瓶，输的局）」（新指标：死的那场战斗进场带的药 − 这场里喝的）不该上升（V3 A9：0.16）——上升说明药留过头、死时还攥着；
+- 过一幕 / 二幕 boss、终层照常看。
+- 决策日志：`rollout.potion_costs` 为 true 的题是代价在场的题；`rollout.no_potion.key` 是「本场不用药」选项的 key（`merged` 表示并进了原选项），和 `choice` 比就知道 Jev 选了它几次。
+
+**回退条件**：10 局里走廊死亡明显变多（「死时手里的药」上升、或一幕通过率明显低于对照），先 `POTION_COST=off`，再和 Dai 商量。

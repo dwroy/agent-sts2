@@ -60,7 +60,7 @@ import {
   type RolloutResult,
   type SpawnTemplate,
 } from "./rollout.js";
-import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
+import { hpText, type EnemySim, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
 export { killOrders, type KillGroup, type KillOrder };
@@ -364,6 +364,12 @@ export interface LiveRolloutArgs {
   /** Kill orders for the later turns (rollout.ts killOrders; two or more distinct enemies), and how many were left out. */
   orders?: KillOrder[];
   ordersDropped?: number;
+  /**
+   * The "no potion this fight" line (Dai 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled
+   * out with no potion in its later turns. When the base line's own rollout drinks nothing later in any sample the
+   * two are the same line: the copy is dropped (merged) and the base line is the no-potion line.
+   */
+  noPotion?: { line: Plan; base: Plan };
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
@@ -396,12 +402,19 @@ export type LiveRollout =
       minRows: number;
       /** Modelled potions in the belt: the policy's later turns may drink them. */
       potionsHeld: boolean;
+      /** Some of them cost HP to drink (card.potionCost: potion-cost.ts): the policy weighs it. */
+      potionCostsHeld: boolean;
       /** The revives held (Fairy in a Bottle, Lizard Tail) by name: a sample reaching 0 HP goes on at theirs. */
       revives: string[];
       /** The most a line can lose: our HP now plus the revives' HP (the estimates are capped at it). */
       lossCap: number;
       /** Kill-order permutations left out (more than MAX_FULL_ORDER_GROUPS groups). */
       ordersDropped: number;
+      /**
+       * The "no potion this fight" line: its own `line` (merged false: shown as an option of its own) or, merged, the
+       * base line it is the same as (its own rollout drinks no potion later either). Null when none was asked for.
+       */
+      noPotion: { line: Plan; base: Plan; merged: boolean } | null;
       elapsedMs: number;
     };
 
@@ -424,7 +437,8 @@ export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
       .filter((step) => !step.cardId.startsWith("POTION:"))
       .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
       .join(">");
-  const turn = (line: Plan): string => JSON.stringify(line.outcome);
+  // The drink's cost is not an effect: the outcome without it (potionCost) is what must be the same.
+  const turn = (line: Plan): string => JSON.stringify({ ...line.outcome, potionCost: undefined });
   return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
 }
 
@@ -437,7 +451,10 @@ export const SATURATED_HP = 1;
 export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
 
-/** Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. */
+/**
+ * Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. No potion cost
+ * here: when every line loses all our HP a potion kept has no later to be worth anything in (potion-cost.ts).
+ */
 const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
 
 /**
@@ -452,12 +469,22 @@ const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
  * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
  * left comes first among those, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders):
  * summed enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
+ * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some
+ * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
+ * more often). A saturated board (every line loses all our HP) ranks as before, without costs: a potion kept there has no
+ * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
   const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
-  const top = Math.max(...lines.map((line) => line.value));
-  let contenders = saturated ? lines : lines.filter((line) => line.value === top);
+  // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
+  // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
+  // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
+  const costs = lines.some((line) => (line.potionCost ?? 0) > 0);
+  const fewestDead = Math.min(...lines.map((line) => line.deaths));
+  const pool = costs && !saturated ? lines.filter((line) => line.deaths === fewestDead) : lines;
+  const top = Math.max(...pool.map((line) => line.value));
+  let contenders = saturated ? lines : pool.filter((line) => line.value === top);
   if (saturated) {
     // Deaths within the horizon, then this turn's loss: what still differs when the expected loss is capped.
     const fewest = Math.min(...contenders.map((line) => line.deaths));
@@ -479,9 +506,17 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   return { best: near[0]!, saturated };
 }
 
-/** Two lines read the same to Jev: the expected further HP loss as shown (one decimal) and the share of samples dead. */
+/**
+ * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal)
+ * and the share of samples dead.
+ */
 export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
-  return round1(a.hpLoss) === round1(b.hpLoss) && a.deaths * b.samples === b.deaths * a.samples;
+  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples;
+}
+
+/** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts). */
+export function effectiveFightLoss(line: Pick<LineEstimate, "hpLoss" | "potionCost">): number {
+  return line.hpLoss + (line.potionCost ?? 0);
 }
 
 /**
@@ -621,15 +656,30 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
         include: args.shown,
         ...(args.orders && args.orders.length >= 2 ? { orders: args.orders } : {}),
         ...(rolloutLiveOptions.orderFocusBonus !== undefined ? { orderFocusBonus: rolloutLiveOptions.orderFocusBonus } : {}),
+        ...(args.noPotion ? { noPotionLine: args.noPotion.line } : {}),
       },
     });
+    // The no-potion line is the base line itself when the base's rollout drinks nothing in its later turns (and this
+    // turn: it is potion-free): merged, the copy is dropped. Otherwise the copy stays, an option of its own.
+    let noPotion: { line: Plan; base: Plan; merged: boolean } | null = null;
+    if (args.noPotion) {
+      const base = result.lines.find((line) => line.plan === args.noPotion!.base);
+      const merged = base !== undefined && Object.keys(base.laterDrinks ?? {}).length === 0;
+      if (merged) result.lines = result.lines.filter((line) => line.plan !== args.noPotion!.line);
+      if (merged || result.lines.some((line) => line.plan === args.noPotion!.line)) noPotion = { ...args.noPotion, merged };
+    }
     // A drink that changes nothing this turn: its line reads the dry line's rollout numbers (they tie), not
     // numbers of its own that differ only by sampling noise.
-    const plans = result.lines.map((line) => line.plan);
+    // (The no-potion copy is no drink line's twin: its later turns hold no potion, the twin's may.)
+    const plans = result.lines.map((line) => line.plan).filter((plan) => plan !== args.noPotion?.line);
     const reused = result.lines.map((line): LineEstimate => {
       const twin = noEffectTwin(line.plan, plans);
       const dry = twin ? result.lines.find((other) => other.plan === twin) : undefined;
-      return dry ? { ...dry, plan: line.plan, tags: line.tags, score: line.score, currentValue: line.currentValue, sameAsDry: twin! } : line;
+      // Its own drinks' cost stays its own (this turn's potion, and whatever its later turns drink): the HP numbers
+      // are the dry line's, the value is theirs less this line's cost.
+      if (!dry) return line;
+      const cost = line.potionCost ?? 0;
+      return { ...dry, plan: line.plan, tags: line.tags, score: line.score, currentValue: line.currentValue, sameAsDry: twin!, potionCost: cost, laterDrinks: line.laterDrinks ?? {}, value: dry.value + (dry.potionCost ?? 0) - cost };
     });
     if (reused.some((line, i) => line !== result.lines[i])) result.lines = reused;
     const byPlan = new Map(result.lines.map((line) => [line.plan, line]));
@@ -655,9 +705,11 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       encounterN: gates?.segments[`enc:${meta.enc}`]?.n_rows ?? 0,
       minRows: gates?.params.min_rows ?? Infinity,
       potionsHeld: args.solver.hand.some((card) => card.type === "Potion"),
+      potionCostsHeld: args.solver.hand.some((card) => card.type === "Potion" && (card.potionCost ?? 0) > 0),
       revives: (args.solver.player.revives ?? []).map((revive) => revive.name),
       lossCap,
       ordersDropped: args.ordersDropped ?? 0,
+      noPotion,
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -694,7 +746,15 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   const fallbackText = `no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
-  const potions = r.potionsHeld ? " (later turns may use the potions still held)" : "";
+  // The later turns drink a potion still held only when the turn gains more than its cost (potion-cost.ts); the
+  // no-potion line's later turns hold none.
+  const potions = line.noPotionFight
+    ? " (the no-potion line: its later turns drink no potion)"
+    : r.potionsHeld
+      ? r.potionCostsHeld
+        ? " (later turns may drink the potions still held, each when its turn gains more than the potion's cost)"
+        : " (later turns may use the potions still held)"
+      : "";
   const facts: Record<string, JsonValue> = {
     rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
@@ -749,11 +809,11 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
  */
 export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
   const o = plan.outcome;
-  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
+  const first = `T1 exact: ${hpText(o.hpLoss)}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
   const later = line.perTurn.map((t) =>
     t.fighting === 0
       ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`
-      : `T${t.turn}: hp -${round1(t.loss.mean)} [${Math.round(t.loss.min)}-${Math.round(t.loss.max)}], dmg ${round1(t.dmg.mean)} [${Math.round(t.dmg.min)}-${Math.round(t.dmg.max)}], alive ${t.alive}/${samples}, won ${t.won}/${samples}`,
+      : `T${t.turn}: ${hpText(round1(t.loss.mean))} [${Math.round(t.loss.min)}-${Math.round(t.loss.max)}], dmg ${round1(t.dmg.mean)} [${Math.round(t.dmg.min)}-${Math.round(t.dmg.max)}], alive ${t.alive}/${samples}, won ${t.won}/${samples}`,
   );
   return [first, ...later].join("; ");
 }
@@ -772,7 +832,7 @@ export function segmentName(segment: string): string {
 export const DRINK_FIRST_ROLLOUT = "not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking";
 
 /** The decision's log entry (decision log field `rollout`). */
-export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean, tiedKeys: string[] = []): Record<string, JsonValue> {
+export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolean, tiedKeys: string[] = [], noPotionKey: string | null = null): Record<string, JsonValue> {
   if (!r.available) return { available: false, reason: r.reason, ms: Math.round(r.elapsedMs) };
   return {
     available: true,
@@ -786,6 +846,10 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
     // The options tied for the best (no single best): their keys.
     ...(tiedKeys.length > 0 ? { tied: tiedKeys } : {}),
     ...(r.saturated ? { saturated: true } : {}),
+    // Potion costs in play (potion-cost.ts): some line pays for a drink; the no-potion line's option and whether it
+    // was merged into a shown line.
+    ...(r.result.lines.some((line) => (line.potionCost ?? 0) > 0) ? { potion_costs: true } : {}),
+    ...(r.noPotion ? { no_potion: { key: noPotionKey, merged: r.noPotion.merged } } : {}),
     ...(r.result.orders.length > 0
       ? {
           orders: r.result.orders.length,
