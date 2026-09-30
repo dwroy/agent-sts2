@@ -809,18 +809,53 @@ def attach(item, asc, act, value, rr, checks):
 
 # ---------------------------------------------------------------- output
 
-def markdown_table(entry, asc, act):
-    """The enumeration table for docs/potion-equivalents.md."""
+PLACEHOLDER_RE = re.compile(r"\{([A-Za-z]+)(?::([A-Za-z]+)\((\d*)\))?\}")
+
+
+def filled_text(pid, template, values):
+    """The effect text with its numbers, for the doc table only (the program fills it with potion-values.ts
+    fillPotionText, the one place that does)."""
+    def one(match):
+        name, fmt, arg = match.group(1), match.group(2), match.group(3)
+        value = int(arg) if arg else values.get(name)
+        if value is None:
+            return "?"
+        return f"{value}点能量" if fmt == "energyIcons" else f"{value}颗星" if fmt == "starIcons" else str(value)
+    return re.sub(r"\[/?[a-z]+\]", "", PLACEHOLDER_RE.sub(one, template or "")).replace("\n", " ").replace("|", "/")
+
+
+def markdown_table(entry):
+    """The enumeration table of docs/potion-equivalents.md: every potion, its held value (HP) per act at A8 and A9."""
     solver_zh = {"exact": "精确", "mc": "蒙特卡洛", "none": "未建模"}
-    rows = ["| id | 中文名 | 类别 | 稀有度 | 战斗外 | 目标 | 求解器 | 出现局数/喝 | boss 喝 A8/A9 | 血/伤害/格挡（A%d %d幕）| 来源 n | 校验 Δ中位(n) |" % (asc, act), "|---|---|---|---|---|---|---|---|---|---|---|---|"]
-    for pid in sorted(entry, key=lambda p: (-(entry[p]["by_asc"].get(str(asc), {}).get(str(act), {}).get("hold_hp", -1)), p)):
+    usage_zh = {"AnyTime": "能", "CombatOnly": "否", "Automatic": "自动"}
+    rows = [
+        "| id | 中文名 | 效果（数值已填） | 稀有度 | 战斗外 | 目标 | 类别 | 求解器 | 出现局/喝/boss 喝 A8+A9 | A8 持有价值（血）一/二/三幕 | A9 一/二/三幕 | 来源 | 校验 Δ 中位(n) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+    ]
+
+    def acts(e, asc):
+        cells = [e["by_asc"].get(str(asc), {}).get(str(act)) for act in ACTS]
+        return "/".join("—" if c is None else f"{c['hold_hp']:g}" for c in cells)
+
+    def first(e):
+        cell = e["by_asc"].get("8", {}).get("1")
+        return cell["hold_hp"] if cell else -1
+
+    for pid in sorted(entry, key=lambda p: (-first(entry[p]), p)):
         e = entry[pid]
-        v = e["by_asc"].get(str(asc), {}).get(str(act))
-        worth = f"{v['hp']}/{v['damage']}/{v['block']}" if v else "—"
-        src = f"{v['source']}{'·借A%d' % v['inputs_asc'] if v and v.get('inputs_asc') else ''} {v['n']}" if v else (e.get("note") or "—")
-        chk = f"{v['check']['median']}({v['check']['n']})" if v and v.get("check") else ""
-        bd = e["log"]["boss_drinks"]
-        rows.append(f"| {pid} | {e['name']} | {CATEGORY_ZH[e['category']]} | {e['rarity']} | {'能' if e['usage'] == 'AnyTime' else ('自动' if e['usage'] == 'Automatic' else '否')} | {e['target']} | {solver_zh[e['solver']]} | {e['log']['runs_seen']}/{e['log']['drinks']} | {bd.get('8', 0)}/{bd.get('9', 0)} | {worth} | {src} | {chk} |")
+        cell = e["by_asc"].get("8", {}).get("1")
+        source = cell["source"] if cell else (e.get("note") or "—")
+        bd = sum(e["log"]["boss_drinks"].values())
+        chk = f"{e['check_all']['median']:g}({e['check_all']['n']})" if e.get("check_all") else ""
+        rows.append(f"| {pid} | {e['name']} | {filled_text(pid, e['description'], e['values'])} | {e['rarity']} | {usage_zh.get(e['usage'], e['usage'])} | {e['target']} | {CATEGORY_ZH[e['category']]} | {solver_zh[e['solver']]} | {e['log']['runs_seen']}/{e['log']['drinks']}/{bd} | {acts(e, 8)} | {acts(e, 9)} | {source} | {chk} |")
+    return "\n".join(rows)
+
+
+def rates_table(rates):
+    """The conversion rates of docs/potion-equivalents.md §3."""
+    rows = ["| 进阶·幕 | boss 战 n | 回合 T | 我方每回合伤害 D | boss 每回合打进来 L | r = L/D | 挨打回合占比 / 平均 | 每回合攻击段数 h | 格挡牌数 b | 出牌数 C | 能量 E | 每张牌 / 每点能量（血） | 输入来自 |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for (asc, act), r in sorted(rates.items()):
+        rows.append(f"| A{asc} {act} 幕 | {r['fights']}（{r['turns_n']} 回合） | {r['T']:g} | {r['D']:.1f} | {r['L']:.1f} | {r['r']:.3f} | {r['hit_share']:.0%} / {r['L_hit']:.1f} | {r['h']:.2f} | {r['b']:.2f} | {r['C']:.2f} | {r['E']:.2f} | {r['v_card']:.2f} / {r['v_energy']:.2f} | A{r['from_asc']} |")
     return "\n".join(rows)
 
 
@@ -830,7 +865,7 @@ def main(argv=None):
     parser.add_argument("--db", default=None)
     parser.add_argument("--logs", default=None)
     parser.add_argument("--no-sync", action="store_true")
-    parser.add_argument("--markdown", action="store_true", help="also print the enumeration table (A8 act 1) for the doc")
+    parser.add_argument("--markdown", action="store_true", help="also print the rates and the enumeration tables for docs/potion-equivalents.md")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     if args.self_test:
@@ -885,7 +920,9 @@ def main(argv=None):
     n_checks = sum(len(deltas) for deltas in checks.values())
     print(f"wrote {args.out}: {len(entry)} potions, rates for {len(out['rates'])} ascensions, {len(logs['fights'])} boss fights, {n_checks} boss drinks with rollout numbers ({len(logs['boss_drink_rows'])} boss drinks)")
     if args.markdown:
-        print(markdown_table(entry, 8, 1))
+        print(rates_table(rates))
+        print()
+        print(markdown_table(entry))
     return 0
 
 
