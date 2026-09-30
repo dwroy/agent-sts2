@@ -22,7 +22,13 @@ export const BUILD_SIM_DEADLINE_MS = 11_000;
  * solver's own targets and every kill order first, and every deck then runs under the order that won most (running
  * every deck under every order took 3x the time: 16 samples a deck in 11 s on a 25-option shop against the Crab).
  */
-export const BUILD_SIM_ORDER_SAMPLES = 200;
+export const BUILD_SIM_ORDER_SAMPLES = 100;
+/**
+ * The sample count the "pre" Platt map was fitted at (B1.5: 200 samples a fight): a rate of 0 or 1 is clipped half a
+ * sample in at this count whatever the question ran, so the calibrated floor does not move with a deadline's cut (0 of 72
+ * read 13%, 0 of 1000 4%; the map's own fit put 0 of 200 at ~8%).
+ */
+export const BUILD_SIM_CALIBRATION_SAMPLES = 200;
 
 /** One option's deck (and HP) as the base input's fields it changes; null: the current deck as it is. */
 export interface DeckOption {
@@ -42,7 +48,9 @@ export interface OptionSim {
    * Against the current deck on the same samples: the raw paired difference and standard error, and the difference of
    * the calibrated rates with the standard error scaled by the map's slope between them. null for the current deck.
    */
-  diff: { raw: number; se: number; cal: number; calSe: number; hpLoss: number; hpLossSe: number } | null;
+  diff: { raw: number; se: number; cal: number; calSe: number; hpLoss: number; hpLossSe: number; bossLeft: number; bossLeftSe: number } | null;
+  /** The boss's mean HP left at the fight's end (0 in a won sample). */
+  bossLeft: number;
   hpLossWon: number | null;
   /** Median turns of the won samples (of all samples when none was won). */
   turns: number | null;
@@ -82,6 +90,17 @@ function bestOrder(lines: BossSimLineResult[]): number {
 }
 
 const r4 = (x: number) => Math.round(x * 10000) / 10000;
+
+const mean = (xs: number[]) => xs.reduce((sum, x) => sum + x, 0) / Math.max(1, xs.length);
+
+/** The boss's HP left at the end (0 when won), paired over the same samples: what an option changes when both lose. */
+function bossLeftDiff(a: BossSimLineResult, b: BossSimLineResult): { bossLeft: number; bossLeftSe: number } {
+  const n = Math.min(a.outcomes.length, b.outcomes.length);
+  const d = Array.from({ length: n }, (_, i) => a.outcomes[i]!.enemyHpLeft - b.outcomes[i]!.enemyHpLeft);
+  const m = mean(d);
+  const variance = n > 1 ? d.reduce((sum, x) => sum + (x - m) ** 2, 0) / (n - 1) : 0;
+  return { bossLeft: r4(m), bossLeftSe: r4(Math.sqrt(variance / Math.max(1, n))) };
+}
 
 /** The calibrated difference and its standard error: the raw paired SE times the Platt map's slope between the two rates. */
 export function calibratedDiff(pOption: number, pBase: number, rawSe: number, samples: number): { cal: number; calSe: number } {
@@ -147,8 +166,9 @@ export async function compareOptions(
       key,
       samples: n,
       win: r4(line.winProb),
-      winCal: r4(calibratedWinProb(line.winProb, Math.max(1, n), "pre")),
-      diff: d ? { raw: d.winDiff, se: d.winSe, ...calibratedDiff(line.winProb, baseLine.winProb, d.winSe, Math.max(1, n)), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe } : null,
+      winCal: r4(calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre")),
+      diff: d ? { raw: d.winDiff, se: d.winSe, ...calibratedDiff(line.winProb, baseLine.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, baseLine) } : null,
+      bossLeft: r4(mean(line.outcomes.map((o) => o.enemyHpLeft))),
       hpLossWon: line.hpLossWon ? line.hpLossWon.median : null,
       turns: line.turnsWon ? line.turnsWon.median : n > 0 ? line.turns.median : null,
       deathTurn: line.deathTurn ? line.deathTurn.median : null,

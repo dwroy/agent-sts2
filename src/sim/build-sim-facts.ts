@@ -273,6 +273,10 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
         const card = entryAt(reward["card_options"], index);
         return card ? { change: withDraw([...draw, newCard(card, str(card["card_id"]), bool(card["upgraded"]))]) } : { none: "找不到这张牌" };
       }
+      // A shop item the gold now cannot pay for (the plan lists every stocked item): nothing to buy this visit.
+      const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : {};
+      if (action.startsWith("buy_") && summary["affordable_now"] === false) return { none: "现在的金币买不起：不模拟" };
+      if (action === "remove_card_at_shop" && summary["affordable_now"] === false) return { none: "现在的金币付不起删牌：不模拟" };
       if (action === "buy_card" && index !== null) {
         const card = entryAt(shop["cards"], index);
         return card ? { change: withDraw([...draw, newCard(card, str(card["card_id"]), bool(card["upgraded"]))]) } : { none: "找不到这张牌" };
@@ -307,7 +311,7 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
           if (cardKey) return byTask("upgrade", positionOfKey(cardKey));
           return { group: removalGroup("升级", "upgrade") };
         }
-        if (kind === "LIFT") return { change: rebuild((r) => void (r["relics"] = asArray(r["relics"]).map(asRecord).map((relic) => (str(relic["relic_id"]) === "GIRYA" ? { ...relic, stack: (numOrNull(relic["stack"]) ?? 0) + 1 } : relic)))), note: "举重：杠铃多一层（开场力量 +1）" };
+        if (kind === "LIFT") return { change: rebuild((r) => void (r["relics"] = asArray(r["relics"]).map(asRecord).map((relic) => (str(relic["relic_id"]) === "GIRYA" ? { ...relic, stack: (numOrNull(relic["stack"]) ?? 0) + 1 } : relic)))), note: "举重：壶铃多一层（开场力量 +1）" };
         const follow = raw ? deckFollowUp(str(raw["description"])) : null;
         if (follow && cardKey) return byTask(follow.task, positionOfKey(cardKey));
         return { none: "这个休息点动作不改变牌组和血量：不模拟" };
@@ -335,15 +339,18 @@ function knownRelic(id: string): boolean {
 
 /** The line of one option. */
 function simLine(head: string, base: OptionSim, sim: OptionSim, samples: number, lowWin: boolean): string {
-  const tail = `赢局掉血中位 ${sim.hpLossWon ?? "—"}，约 ${sim.turns ?? "—"} 回合（${samples} 次模拟，校准后${lowWin ? "；当前牌组胜率很低，差值信息少" : ""}）`;
+  // The current deck mostly loses: the boss's HP left (0 in a won sample) still tells the options apart.
+  const left = lowWin ? `；boss 平均剩血 ${Math.round(sim.bossLeft)}${sim.diff ? `（当前牌组 ${Math.round(base.bossLeft)}，${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : ""}` : "";
+  const tail = `赢局掉血中位 ${sim.hpLossWon ?? "—"}，约 ${sim.turns ?? "—"} 回合${left}（${samples} 次模拟，校准后${lowWin ? "；当前牌组胜率很低，胜率的差信息少" : ""}）`;
   if (!sim.diff) return `${head}不改变牌组：胜率 ${pct(base.winCal)}，${tail}`;
   const hp = sim.hp !== base.hp ? `（进场 ${sim.hp} 血）` : "";
   return `${head}当前牌组胜率 ${pct(base.winCal)}；选这个${hp} ${pct(sim.winCal)}（${signed(sim.diff.cal)} ± ${one(sim.diff.calSe * 100)}），${tail}`;
 }
 
 /** A per-card line (a removal, a smith): shorter, the head is on the option. */
-function cardLine(verb: string, name: string, sim: OptionSim): string {
-  return `${verb} ${name}：${pct(sim.winCal)}（${sim.diff ? `${signed(sim.diff.cal)} ± ${one(sim.diff.calSe * 100)}` : "±0"}），赢局掉血中位 ${sim.hpLossWon ?? "—"}`;
+function cardLine(verb: string, name: string, sim: OptionSim, lowWin: boolean): string {
+  const left = lowWin && sim.diff ? `，boss 平均剩血 ${Math.round(sim.bossLeft)}（${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : "";
+  return `${verb} ${name}：${pct(sim.winCal)}（${sim.diff ? `${signed(sim.diff.cal)} ± ${one(sim.diff.calSe * 100)}` : "±0"}），赢局掉血中位 ${sim.hpLossWon ?? "—"}${left}`;
 }
 
 /** facts with act_boss_clock replaced by `value` under act_boss_sim (at the clock's place), or added. */
@@ -414,7 +421,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const low = LOW_CONFIDENCE[key];
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
     const head = `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
-    const lowWin = result.base.winCal < 0.1;
+    // Mostly lost: the raw rate under 10% (the calibrated one never reads under ~8%: the map's floor at 0 wins).
+    const lowWin = result.base.win < 0.1;
     const criteria: Record<string, string | null> = {};
     for (const [k, v] of Object.entries(question.criteria)) {
       const plan = plans.find((p) => p.key === k);
@@ -425,10 +433,10 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       const shown = JSON.parse(v) as Record<string, JsonValue>;
       if (plan.none) shown["boss_sim"] = `${head}${plan.none}`;
       else if (plan.group) {
-        shown["boss_sim"] = `${head}按 boss_sim_by_card 每张牌分别算；当前牌组胜率 ${pct(result.base.winCal)}（${result.samples} 次模拟，校准后）`;
+        shown["boss_sim"] = `${head}按 boss_sim_by_card 每张牌分别算；当前牌组胜率 ${pct(result.base.winCal)}${lowWin ? `，boss 平均剩血 ${Math.round(result.base.bossLeft)}` : ""}（${result.samples} 次模拟，校准后）`;
         shown["boss_sim_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
           const sim = sims.get(`${plan.key}|${g.key}`);
-          return sim ? [[g.key, cardLine(g.verb, g.name, sim)]] : [];
+          return sim ? [[g.key, cardLine(g.verb, g.name, sim, lowWin)]] : [];
         }));
       } else {
         const sim = sims.get(k);
@@ -452,7 +460,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(start.relics.applied.length > 0 ? { relics_at_start: `开场生效：${start.relics.applied.join("、")}` } : {}),
       ...(start.relics.unmodelled.length > 0 ? { relics_not_modelled: start.relics.unmodelled.join("、") } : {}),
       ...(low ? { low_confidence: low } : {}),
-      ...(lowWin ? { low_win_rate: "当前牌组校准后胜率低于 10%：模拟判为多半打不过时，各选项之间的差多半是噪声" } : {}),
+      ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于约 8%）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
       boss: key,
@@ -466,8 +474,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       orders: result.orders,
       sim_ms: result.elapsedMs,
       ms,
-      base: { win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns },
-      options: Object.fromEntries(result.options.map((sim) => [sim.key, { win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp }])),
+      base: { win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns, boss_left: b.bossLeft },
+      options: Object.fromEntries(result.options.map((sim) => [sim.key, { win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: sim.diff?.bossLeftSe ?? 0 }])),
       not_simulated: Object.fromEntries(plans.filter((p) => p.none).map((p) => [p.key, p.none!])),
     };
     return {
