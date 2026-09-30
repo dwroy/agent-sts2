@@ -17,7 +17,7 @@
 2. **由你启动对局，对局进程归你管**（Dai 09-30：统一由运维会话管理）。V4 开发会话启动的 autoplay、stop-after-a8.sh 和当时那局的 play 进程都已经停了，游戏开着，停在 Y648C8QL2MRX 第 12 层，ops/STOP 在。开工时按这个顺序启动（在 ~/Projects/sts2-jev 里执行）：
    - 先确认没有残留：`pgrep -af 'ops/autoplay.sh|stop-after-a8.sh'`，并且没有 cmdline 含 `index.ts play` 的 node 进程；
    - `rm ops/STOP`；
-   - `setsid nohup bash ops/stop-after-a8.sh <V4.1 窗口的 START> 21 >/dev/null 2>&1 </dev/null &`：START 和局数用 decision-log 里「V4.1 上线」那一条记的（切换时正在打的那一局新旧代码混合，不算干净局，所以数 21 局得到 20 局干净的）；
+   - `setsid nohup bash ops/stop-after-a8.sh <V4.1 窗口的 START> 20 >/dev/null 2>&1 </dev/null &`：START 用 decision-log 里「V4.1 上线」那一条记的（09-30 从主菜单干净开局，没有混合局，数 20 局）；
    - `setsid nohup bash ops/autoplay.sh >/dev/null 2>&1 </dev/null &`：run.sh 会接着这一局（Y648）继续打；
    - 在 decision-log 记下这两个进程的 PID。
 
