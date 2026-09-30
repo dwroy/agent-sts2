@@ -459,6 +459,21 @@ export interface RolloutOptions {
   policyNodes?: number;
   /** The fast policy's damage weight times this (SolverInput.damageScale; the whole-fight simulator's knob). Unset: 1. */
   policyDamageScale?: number;
+  /**
+   * The whole-fight simulator's policy only (src/sim/boss-sim.ts, docs/boss-sim.md B1.5; never set by the live planner or
+   * the rollout): the policy's HP weight times this (SolverInput.hpScale). Unset: 1.
+   */
+  policyHpScale?: number;
+  /**
+   * The whole-fight policy only: the HP weight also times (1 + policyThreat x the enemies' attack this turn / our HP), so
+   * a turn whose hit is large against the HP left blocks more, as the logged boss fights did. Unset: 0.
+   */
+  policyThreat?: number;
+  /**
+   * The whole-fight simulator's pre-fight start only (simulateFight with no line; boss-sim syntheticStart): cards drawn
+   * from the shuffled draw pile into the hand before the policy plays the first turn. Unset: 0 (the hand as given).
+   */
+  drawFirst?: number;
   handSize?: number;
   /** Clock in ms (injectable for tests). */
   now?: () => number;
@@ -514,6 +529,12 @@ export interface RolloutInput {
    * of 20 third turns started with exactly 18, every other turn with none): the amount and that turn.
    */
   relicBlock?: { amount: number; turn: number }[];
+  /**
+   * Whole fights only (simulateFight; the rollout and the live planner never read it): relics whose energy or block
+   * comes on given fight turns and that relicEnergy / relicBlock leave out (rollout-live fightRelicsOf: Candelabra's 2
+   * energy on turn 2, Chandelier's 3 on turn 3, Happy Flower's 1 every 3rd turn, Horn Cleat's 14 block on turn 2).
+   */
+  fightRelics?: { energy: { amount: number; turn: number }[]; block: { amount: number; turn: number }[] };
   /**
    * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
@@ -1310,6 +1331,7 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   // A relic's block on this fight turn (Captain's Wheel on turn 3): `turn` is the one that just ended.
   const fightTurn = (input.solver.turn ?? input.meta.t) + turn + 1;
   for (const relic of input.relicBlock ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
+  if (fullFight) for (const relic of input.fightRelics?.block ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
   // Self-Forming Clay's block for the last turn's HP losses.
   player.block += player.clayNext;
   player.clayNext = 0;
@@ -1350,6 +1372,11 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
 /** Energy the relics give at the start of fight turn `turn` (RolloutInput.relicEnergy). */
 function relicEnergyAt(input: RolloutInput, turn: number): number {
   return (input.relicEnergy ?? []).reduce((sum, relic) => sum + (turn >= relic.from ? relic.amount : 0), 0);
+}
+
+/** Whole fights: the one-turn energy relics' energy on fight turn `turn` (RolloutInput.fightRelics). */
+function fightRelicEnergyAt(input: RolloutInput, turn: number): number {
+  return (input.fightRelics?.energy ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
 }
 
 /** A debuff's turns: -1 (and any amount below 0) is for the fight. */
@@ -1877,7 +1904,8 @@ interface Budget {
 /** One sample of one line: the line itself, then up to horizon-1 policy turns. Returns the per-turn records. */
 function simulate(
   input: RolloutInput,
-  plan: Plan,
+  /** The start turn's line; null (whole fights only, simulateFight): the policy plays the start turn too. */
+  plan: Plan | null,
   horizon: number,
   seed: number,
   budget: Budget,
@@ -2036,11 +2064,38 @@ function simulate(
   };
   // Withering Presence counts every card played in the fight: the later turns go on from this line's count.
   const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
-  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(plan);
-  // Turn 0: the candidate line as the solver scored it.
-  records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers, fullFight));
+  // Turn 0: the candidate line as the solver scored it. None (a whole fight from the policy's own start turn): the policy
+  // plays it from the hand given, after drawing `drawFirst` cards into it (a pre-fight start's hand is empty).
+  let first = plan;
+  let firstHand = s.hand;
+  let firstBase = input.piles.handBase;
+  let firstKnown: Map<number, { card: CardModel; base: CardModel }> | undefined;
+  if (!first) {
+    const targets = enemies.filter((e) => e.alive).map((e) => e.index);
+    const cards = s.hand.filter((card) => card.type !== "Potion");
+    const bases = s.hand.map((card, i) => [card, input.piles.handBase[i] ?? null] as const).filter(([card]) => card.type !== "Potion").map(([, b]) => b);
+    for (let i = 0; i < (opts.drawFirst ?? 0) && cards.length < HAND_LIMIT; i += 1) {
+      const card = drawOne(piles, random);
+      if (!card) break;
+      bases.push(card);
+      cards.push(withStrength(card, player, cards.length, targets));
+    }
+    const potions = noPotions ? [] : held;
+    const drawing = fullFight ? knownDraws(cards, piles, player, targets) : null;
+    firstHand = [...(drawing?.hand ?? cards), ...potions];
+    firstBase = [...bases, ...potions.map(() => null)];
+    firstKnown = drawing?.known;
+    const { drawPile: _d, ...rest } = s;
+    const solved = solveTurn({ ...rest, ...policyWeights(opts, s.player, s.enemies), hand: firstHand, maxNodes: policyNodes });
+    budget.policyTurns += 1;
+    budget.policyNodes += solved.nodes;
+    first = solved.plans[0] ?? null;
+    if (!first) return records;
+  }
+  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(first);
+  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
   timeUp(0);
-  drink(plan);
+  drink(first);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
@@ -2116,7 +2171,7 @@ function simulate(
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -2183,7 +2238,7 @@ function simulate(
     const target = aim?.target;
     const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
     const wither = s.wither ? { wither: { ...s.wither, played: witherPlayed } } : {};
-    const scale = opts.policyDamageScale !== undefined ? { damageScale: opts.policyDamageScale } : {};
+    const scale = policyWeights(opts, pSim, sims);
     // A whole fight: the draw cards draw known cards (knownDraws), which the line can play.
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
@@ -2199,6 +2254,20 @@ function simulate(
     drink(best);
   }
   return records;
+}
+
+/**
+ * The policy's weight knobs (turn-solver damageScale / hpScale) from the options: the whole-fight simulator's
+ * (policyDamageScale, policyHpScale, policyThreat); none of them set (the rollout, the live planner): nothing.
+ */
+export function policyWeights(opts: RolloutOptions, player: Pick<PlayerSim, "hp">, enemies: Pick<EnemySim, "attacks" | "hp">[]): { damageScale?: number; hpScale?: number } {
+  const out: { damageScale?: number; hpScale?: number } = {};
+  if (opts.policyDamageScale !== undefined) out.damageScale = opts.policyDamageScale;
+  const threat = opts.policyThreat ?? 0;
+  if (opts.policyHpScale === undefined && threat === 0) return out;
+  const incoming = enemies.reduce((sum, e) => sum + (e.hp > 0 ? e.attacks.reduce((s, a) => s + a.damage * a.hits, 0) : 0), 0);
+  out.hpScale = (opts.policyHpScale ?? 1) * (1 + (threat * incoming) / Math.max(1, player.hp));
+  return out;
 }
 
 /** A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits. */
@@ -2232,7 +2301,7 @@ export interface FightTrajectory {
  * GROWING_HITS, Asleep turns, each enemy's own move stream; `scripts` false leaves them out). No time budget: a pure
  * function of the input, the line and the seed.
  */
-export function simulateFight(input: RolloutInput, plan: Plan, maxTurns: number, seed: number, scripts = true, order: KillOrder | null = null): FightTrajectory {
+export function simulateFight(input: RolloutInput, plan: Plan | null, maxTurns: number, seed: number, scripts = true, order: KillOrder | null = null): FightTrajectory {
   const budget: Budget = { now: () => 0, start: 0, budgetMs: Infinity, policyTurns: 0, policyMs: 0, policyNodes: 0 };
   // scripts = false: the rollout's simulation exactly, only without its horizon (the backtest's ablation). `order`: the
   // later turns aim at its first group alive (the rollout's kill orders), null: the solver's own targets.

@@ -319,6 +319,30 @@ export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number;
     .map(() => ({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN }));
 }
 
+/**
+ * Relics whose energy or block comes on given fight turns and that relicEnergyOf / relicBlockOf leave out, for the whole
+ * boss fight simulator only (RolloutInput.fightRelics; src/sim/boss-sim.ts, docs/boss-sim.md B1.5): the live planner and
+ * the 5-turn rollout do not read them. Amounts as logged over the A7-A9 boss fights holding them (turn start energy /
+ * block against the fights without): Candelabra 2 energy on turn 2 (22 fights: 5.2 against 3.1), Chandelier 3 on turn
+ * 3 (15: 6.3), Horn Cleat 14 block on turn 2 (13: 14.5). Happy Flower: 1 energy every 3rd turn, its counter (stack) the
+ * turns counted so far at `turn`, the decision's fight turn. Turns listed up to `upto`.
+ */
+export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upto = 40): NonNullable<RolloutInput["fightRelics"]> {
+  const energy: { amount: number; turn: number }[] = [];
+  const block: { amount: number; turn: number }[] = [];
+  for (const relic of asArray(runRaw["relics"]).map(asRecord)) {
+    const id = str(relic["relic_id"]);
+    if (id === "CANDELABRA") energy.push({ amount: 2, turn: 2 });
+    else if (id === "CHANDELIER") energy.push({ amount: 3, turn: 3 });
+    else if (id === "HORN_CLEAT") block.push({ amount: 14, turn: 2 });
+    else if (id === "HAPPY_FLOWER") {
+      const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
+      for (let t = turn + 3 - counted; t <= upto; t += 3) energy.push({ amount: 1, turn: t });
+    }
+  }
+  return { energy, block };
+}
+
 /** deck_summary() of tools/build-fight-value.py. */
 export function deckSummary(runRaw: Record<string, unknown>): DeckSummary {
   const out: DeckSummary = { n: 0, atk: 0, skl: 0, pow: 0, junk: 0, dmg: 0, blk: 0, up: 0 };

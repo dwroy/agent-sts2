@@ -9,7 +9,7 @@ import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
 import type { Plan } from "../strategy/turn-solver.js";
 import { fightSample, type WorkerReply, type WorkerRequest } from "./boss-sim.js";
 
-const jobs = new Map<number, { input: RolloutInput; lines: Plan[]; maxTurns: number; scripts: boolean; order: KillOrder | null }>();
+const jobs = new Map<number, { input: RolloutInput; lines: (Plan | null)[]; maxTurns: number; scripts: boolean; order: KillOrder | null }>();
 
 parentPort!.on("message", (msg: WorkerRequest) => {
   if (msg.type === "input") {
@@ -24,7 +24,7 @@ parentPort!.on("message", (msg: WorkerRequest) => {
   let reply: WorkerReply;
   try {
     if (!job) throw new Error(`no input for job ${msg.job}`);
-    reply = { job: msg.job, results: msg.tasks.map(([line, i, seed]) => [line, i, fightSample(job.input, job.lines[line]!, seed, job.maxTurns, job.scripts, job.order)]) };
+    reply = { job: msg.job, results: msg.tasks.map(([line, i, seed]) => [line, i, fightSample(job.input, job.lines[line] ?? null, seed, job.maxTurns, job.scripts, job.order)]) };
   } catch (error) {
     reply = { job: msg.job, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000) };
   }

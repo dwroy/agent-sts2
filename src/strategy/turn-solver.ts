@@ -425,6 +425,11 @@ export interface SolverInput {
    */
   damageScale?: number;
   /**
+   * The HP weight times this (unset: 1): the whole boss fight simulator's policy knob (rollout policyWeights, B1.5),
+   * never set by the live planner.
+   */
+  hpScale?: number;
+  /**
    * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
    * the rest of the turn" (potion-mc.ts). Unset: any first play.
    */
@@ -1947,6 +1952,7 @@ export function weightsFor(input: SolverInput): Weights {
   if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
   if (input.damageScale !== undefined) damage *= input.damageScale;
+  if (input.hpScale !== undefined) hp *= input.hpScale;
   // Cards that pay off on Vulnerable in the deck (Dismantle hits twice, Bully, Molten Fist doubles it,
   // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
   // the same HP; Dismantle x2 on T7 would have killed the beetle).

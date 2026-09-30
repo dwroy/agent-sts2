@@ -7,79 +7,11 @@
 
 import { describe, expect, it } from "vitest";
 
-import { BossSimPool, compareLines, runBossSim, sampleSeed, slimInput } from "../src/sim/boss-sim.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { simulateFight, type EnemyTable, type FightMeta, type RolloutEnemy, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
-
-function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
-  return {
-    index,
-    key: `c${index}`,
-    cardId,
-    name: cardId,
-    type: "Attack",
-    upgraded: false,
-    cost: 1,
-    xCost: false,
-    playable: true,
-    target: "single",
-    validTargets: [0],
-    damage: null,
-    hits: 1,
-    block: 0,
-    vulnerable: 0,
-    weak: 0,
-    strength: 0,
-    tempStrength: 0,
-    enemyStrength: 0,
-    enemyTempStrengthLoss: 0,
-    hpLoss: 0,
-    energyGain: 0,
-    draw: 0,
-    exhausts: false,
-    special: null,
-    known: true,
-    flatValue: 0,
-    heldPenalty: 0,
-    text: "",
-    ...overrides,
-  };
-}
-
-const strike = (i: number) => card(i, "STRIKE", { damage: 6 });
-const defend = (i: number) => card(i, "DEFEND", { type: "Skill", target: "self", validTargets: [], block: 5 });
-const bash = (i: number) => card(i, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
-
-const META: FightMeta = { act: 1, t: 1, asc: 8, kind: "boss", enc: "TEST_BOSS", deck: { n: 12, atk: 7, skl: 5, pow: 0, junk: 0, dmg: 50, blk: 25, up: 0 }, relics: 1, max_en: 3 };
-
-/** A boss with a random two-move chain: a hit, or Strength and block. */
-const BOSS: EnemyTable = {
-  moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 }, BUFF: { damage: 0, hits: 1, strength: 2, block: 8 }, FLURRY: { damage: 4, hits: 3, strength: 0, block: 0 } },
-  next: { HIT: { BUFF: 1, FLURRY: 1 }, BUFF: { HIT: 2, FLURRY: 1 }, FLURRY: { HIT: 1, BUFF: 1 } },
-};
-
-function board(opts: { bossHp?: number; playerHp?: number; enemies?: { sim: EnemySim; info: RolloutEnemy }[]; tables?: Record<string, EnemyTable> } = {}): RolloutInput {
-  const hand = [strike(0), strike(1), defend(2), bash(3), defend(4)];
-  const player: PlayerSim = { hp: opts.playerHp ?? 70, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
-  const boss: EnemySim = { index: 0, name: "Boss", hp: opts.bossHp ?? 120, maxHp: opts.bossHp ?? 120, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 1 }] };
-  const enemies = opts.enemies ?? [{ sim: boss, info: { index: 0, id: "TEST_BOSS", move: "HIT", strength: 0, powers: {} } }];
-  const solver: SolverInput = { hand, player, enemies: enemies.map((e) => e.sim), fightKind: "boss", turn: 1 };
-  const draw = [5, 6, 7, 8, 9, 10, 11].map((i) => (i % 2 ? defend(i) : strike(i)));
-  return {
-    solver,
-    plans: solveTurn(solver).plans,
-    enemies: enemies.map((e) => e.info),
-    tables: opts.tables ?? { TEST_BOSS: BOSS },
-    piles: { draw, discard: [], handBase: hand },
-    meta: META,
-    playerPowers: {},
-    potions: 0,
-    mm: {},
-    model: null,
-    gates: null,
-  };
-}
+import { BOSS_SIM_PLATT, BossSimPool, calibratedWinProb, compareLines, fightOrders, redealInput, runBestOrder, runBossSim, sampleSeed, slimInput } from "../src/sim/boss-sim.js";
+import { fightRelicsOf } from "../src/strategy/rollout-live.js";
+import { policyWeights, rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
+import { solveTap, solveTurn, type EnemySim } from "../src/strategy/turn-solver.js";
+import { board, card, defend, liveDigest, strike } from "./boss-sim-fixture.js";
 
 const pick = (r: ReturnType<typeof runBossSim>) => r.lines.map((l) => ({ win: l.winProb, loss: l.hpLoss, turns: l.turns, outcomes: l.outcomes.map((o) => [o.won, o.died, o.turns, o.hpLoss]) }));
 
@@ -231,5 +163,122 @@ describe("boss sim (whole fight)", () => {
     // Hurt through its block on turn 1: stunned that enemy turn, Slash on turn 2 (logged 0NZB: 233 -> 173, Slash T2).
     const hurt = run([strike(0), strike(1), card(2, "HEAVY", { damage: 20 })]);
     expect(hurt.slice(0, 2)).toEqual(["SLEEP_MOVE", "SLASH_MOVE"]);
+  });
+});
+
+/** liveDigest() as computed at 89b8cd0, before the B1.5 policy knobs, turn relics and the policy's own start turn. */
+const LIVE_DIGEST_89B8CD0 = '[[["BASH>0,STRIKE>0",8.6,10,17],["DEFEND>-,BASH>0",6.4,5,8],["STRIKE>0,BASH>0",6.2,10,14],["STRIKE>0,DEFEND>-,DEFEND>-",4.8,0,6],["STRIKE>0,STRIKE>0,DEFEND>-",4.6,5,12],["BASH>0",1.4,10,8]],[["BASH,STRIKE",45.677,0.927,6.25,0,0],["DEFEND,BASH",38.699,0.94,6.625,0,0],["STRIKE,BASH",41.302,0.943,6.5,0,0],["STRIKE,DEFEND,DEFEND",36.766,0.938,7,0,0]],[["STRIKE>0,DEFEND>-,DEFEND>-",4.8,0,6],["DEFEND>-,BASH>0",1.713,5,8],["DEFEND>-,DEFEND>-",0,0,0],["STRIKE>0,STRIKE>0,DEFEND>-",-0.087,5,12],["BASH>0,STRIKE>0",-0.775,10,17],["STRIKE>0,BASH>0",-3.175,10,14]],[["STRIKE,DEFEND,DEFEND",15,0.248,8,0,0],["DEFEND,BASH",16,0.258,7.375,0,0],["DEFEND,DEFEND",14.375,0.261,8,0,0],["BASH,STRIKE",17.25,0.12,7.2,3,0]],[["BASH>0,STRIKE>0",8.6,10,17],["DEFEND>-,BASH>0",6.4,5,8],["STRIKE>0,BASH>0",6.2,10,14],["STRIKE>0,DEFEND>-,DEFEND>-",4.8,0,6],["STRIKE>0,STRIKE>0,DEFEND>-",4.6,5,12],["BASH>0",1.4,10,8]],[["BASH,STRIKE",11.125,1,2.625,0,8],["DEFEND,BASH",14.625,1,3.75,0,8],["STRIKE,BASH",11.125,1,2.625,0,8],["STRIKE,DEFEND,DEFEND",9.75,1,5,0,8]],[["BASH>0,STRIKE>0",-3.36,24,17],["STRIKE>0,BASH>0",-6.12,24,14],["DEFEND>-,BASH>0",-6.64,19,8],["STRIKE>0,STRIKE>0,DEFEND>-",-7.96,19,12],["STRIKE>0,DEFEND>-,DEFEND>-",-8.48,14,6],["BASH>0",-11.64,24,8]],[["BASH,STRIKE",69.5,0.087,7.6,3,0],["STRIKE,BASH",69.5,0.079,7.8,3,0],["DEFEND,BASH",68.875,0.099,8.167,2,0],["STRIKE,DEFEND,DEFEND",69.5,0.086,8.167,2,0]]]';
+
+describe("boss sim B1.5: the policy knobs change the whole-fight sim only", () => {
+  it("the live solver and 5-turn rollout give the numbers they gave before B1.5", () => {
+    expect(JSON.stringify(liveDigest())).toBe(LIVE_DIGEST_89B8CD0);
+  });
+
+  it("the rollout ignores the whole-fight-only turn relics; unset knobs give the solver no knob", () => {
+    const input = board();
+    const opts = { budgetMs: 1e9, seed: 3, samples: 8, horizon: 5, k: 3 };
+    const digest = (i: RolloutInput) => rolloutDecision({ ...i, options: opts }).lines.map((l) => [l.hpLoss, l.winProb, l.turnsToWin, l.deaths]);
+    const relics = { energy: [{ amount: 3, turn: 2 }], block: [{ amount: 30, turn: 2 }] };
+    expect(digest({ ...input, fightRelics: relics })).toEqual(digest(input));
+    expect(policyWeights({}, input.solver.player, input.solver.enemies)).toEqual({});
+    expect(policyWeights({ policyDamageScale: 0.5 }, input.solver.player, input.solver.enemies)).toEqual({ damageScale: 0.5 });
+  });
+
+  it("the HP weight knob: x hpScale x (1 + threat x this turn's attack / our HP), and a heavier HP weight blocks more", () => {
+    const hit = (damage: number): EnemySim => ({ index: 0, name: "Boss", hp: 120, maxHp: 120, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage, hits: 1 }] });
+    expect(policyWeights({ policyThreat: 2 }, { hp: 50 }, [hit(25)])).toEqual({ hpScale: 2 });
+    expect(policyWeights({ policyHpScale: 1.5, policyThreat: 2, policyDamageScale: 1 }, { hp: 50 }, [hit(25)])).toEqual({ damageScale: 1, hpScale: 3 });
+    expect(policyWeights({ policyThreat: 2 }, { hp: 50 }, [{ ...hit(25), hp: 0 }])).toEqual({ hpScale: 1 });
+    // Two Strikes or two Defends into an 8 hit: the live weights take the damage, a heavy HP weight the block.
+    const solver = { ...board().solver, hand: [strike(0), strike(1), defend(2), defend(3)], enemies: [hit(8)], player: { ...board().solver.player, energy: 2 } };
+    const live = solveTurn(solver).plans[0]!;
+    const heavy = solveTurn({ ...solver, hpScale: 4 }).plans[0]!;
+    expect(live.outcome.hpLoss).toBeGreaterThan(heavy.outcome.hpLoss);
+    expect(heavy.outcome.blockGained).toBeGreaterThan(live.outcome.blockGained);
+  });
+
+  it("no line: the policy plays the start turn too, the line it would pick", () => {
+    const input = board();
+    const slim = slimInput(input);
+    const weights = policyWeights(slim.options!, input.solver.player, input.solver.enemies);
+    const own = solveTurn({ ...input.solver, ...weights, maxNodes: slim.options!.policyNodes }).plans[0]!;
+    for (const seed of [1, 2, 3]) {
+      const a = simulateFight(slim, null, 30, seed).records;
+      const b = simulateFight(slim, own, 30, seed).records;
+      expect(a.map((r) => [r.loss, r.dmg, r.won, r.died])).toEqual(b.map((r) => [r.loss, r.dmg, r.won, r.died]));
+    }
+  });
+
+  it("redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP", () => {
+    const input = board();
+    const pre = redealInput(input, { fresh: true, hp: 55 });
+    expect(pre.solver.hand).toEqual([]);
+    expect(pre.piles.draw.length).toBe(input.piles.draw.length + input.piles.discard.length + 5);
+    expect(pre.options?.drawFirst).toBe(5);
+    expect(pre.solver.player.hp).toBe(55);
+    const hands: string[] = [];
+    solveTap.onSolve = (i) => {
+      hands.push(i.hand.map((c) => c.cardId).sort().join(","));
+    };
+    try {
+      simulateFight(slimInput(pre), null, 1, 7);
+      simulateFight(slimInput(pre), null, 1, 8);
+    } finally {
+      solveTap.onSolve = null;
+    }
+    // Five cards drawn from the shuffle, differently under another seed (12 cards: 6 Strikes, 5 Defends, a Bash).
+    expect(hands.every((h) => h.split(",").length === 5)).toBe(true);
+    const res = runBossSim(pre, [null], { samples: 40, seed: 2 });
+    expect(res.lines[0]!.outcomes.every((o) => o.hpLoss <= 55)).toBe(true);
+    // The same deck twice on the same seeds: no difference; a deck less its Bash is compared sample by sample.
+    const again = runBossSim(pre, [null], { samples: 40, seed: 2 });
+    expect(compareLines(again.lines[0]!, res.lines[0]!)).toMatchObject({ winDiff: 0, hpLossDiff: 0 });
+  });
+
+  it("turn relics: Candelabra 2 energy on turn 2, Chandelier 3 on turn 3, Horn Cleat 14 block on turn 2, Happy Flower every 3rd turn", () => {
+    const relic = (id: string, stack: number | null = null) => ({ relic_id: id, stack });
+    expect(fightRelicsOf({ relics: [relic("CANDELABRA"), relic("CHANDELIER"), relic("HORN_CLEAT"), relic("HAPPY_FLOWER", 1), relic("ANCHOR")] }, 1, 10)).toEqual({
+      energy: [{ amount: 2, turn: 2 }, { amount: 3, turn: 3 }, { amount: 1, turn: 3 }, { amount: 1, turn: 6 }, { amount: 1, turn: 9 }],
+      block: [{ amount: 14, turn: 2 }],
+    });
+    expect(fightRelicsOf({ relics: [relic("HAPPY_FLOWER", 0)] }, 4, 10).energy.map((e) => e.turn)).toEqual([7, 10]);
+    // The whole fight's turn 2 gets them; the rollout's turn 2 (the live planner's) does not.
+    const input = { ...board(), fightRelics: { energy: [{ amount: 2, turn: 2 }], block: [{ amount: 14, turn: 2 }] } };
+    const seen: [number, number][] = [];
+    solveTap.onSolve = (i) => {
+      seen.push([i.player.energy, i.player.block]);
+    };
+    try {
+      simulateFight(slimInput(input), input.plans[0]!, 2, 1);
+      simulateFight(slimInput(input), input.plans[0]!, 2, 1, false);
+    } finally {
+      solveTap.onSolve = null;
+    }
+    expect(seen[0]![0]).toBe(5);
+    expect(seen[0]![1]).toBeGreaterThanOrEqual(14);
+    expect(seen[1]![0]).toBe(3);
+  });
+
+  it("kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers", async () => {
+    const base = board();
+    const gunk: EnemySim = { index: 1, name: "Gunk", hp: 30, maxHp: 30, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 7, hits: 2 }] };
+    const input = board({ enemies: [{ sim: base.solver.enemies[0]!, info: base.enemies[0]! }, { sim: gunk, info: { index: 1, id: "GUNK", move: "HIT", strength: 0, powers: {} } }], tables: { TEST_BOSS: base.tables["TEST_BOSS"]!, GUNK: base.tables["TEST_BOSS"]! } });
+    expect(fightOrders(base)).toEqual([]);
+    expect(fightOrders(input).map((o) => o.key).sort()).toEqual(["GUNK>TEST_BOSS", "TEST_BOSS>GUNK"]);
+    const res = await runBestOrder(runBossSim, input, [null, input.plans[0]!], { samples: 20, seed: 4 });
+    expect(res.byOrder.map((o) => o.order)).toEqual([null, ...fightOrders(input).map((o) => o.label)]);
+    for (let i = 0; i < 2; i += 1) {
+      expect(res.lines[i]!.winProb).toBe(Math.max(...res.byOrder.map((o) => o.result.lines[i]!.winProb)));
+    }
+  });
+
+  it("the Platt map: monotone, 0 and 1 pulled in by half a sample", () => {
+    const at = (p: number) => calibratedWinProb(p, 200, "start");
+    expect(at(0)).toBeGreaterThan(0);
+    expect(at(1)).toBeLessThan(1);
+    for (const [lo, hi] of [[0, 0.1], [0.1, 0.5], [0.5, 0.9], [0.9, 1]] as const) expect(at(hi)).toBeGreaterThan(at(lo));
+    const { a, b } = BOSS_SIM_PLATT.pre;
+    expect(calibratedWinProb(0.5, 200, "pre")).toBeCloseTo(1 / (1 + Math.exp(-a)), 10);
+    expect(b).toBeGreaterThan(0);
   });
 });
