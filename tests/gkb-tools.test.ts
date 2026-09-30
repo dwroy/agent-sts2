@@ -30,7 +30,7 @@ afterAll(() => {
 
 describe("the tool list", () => {
   it("seven read-only knowledge tools and the log query, with stable snake_case names, a description and an object schema", () => {
-    expect(tools.map((item) => item.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_postmortem", "kb_runs", "logs_query"]);
+    expect(tools.map((item) => item.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_postmortem", "kb_runs", "kb_potion", "logs_query"]);
     for (const item of tools) {
       expect(item.name).toMatch(/^[a-z][a-z0-9_]*$/);
       expect(item.description.length).toBeGreaterThan(40);

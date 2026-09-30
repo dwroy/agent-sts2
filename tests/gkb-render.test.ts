@@ -83,11 +83,12 @@ describe("knowledge prefix: deterministic and complete", () => {
       "stats.rooms",
       "stats.fights",
       "stats.rest",
+      "potions",
     ]);
     const text = renderKnowledgePrefix(ctx, withLessons());
     expect(text.startsWith("# 知识库（本局进阶 A9）")).toBe(true);
     expect(text.indexOf("和数据冲突时以数据为准")).toBeLessThan(text.indexOf("### 旧知识：铁甲战士攻略"));
-    for (const heading of ["## 旧知识（待数据验证）", "## 经验库", "## 怪物（A9）", "## 走廊和问号房遭遇的战绩", "## 统计表", "### 精英和 boss 战绩", "### 休息点"]) expect(text).toContain(heading);
+    for (const heading of ["## 旧知识（待数据验证）", "## 经验库", "## 怪物（A9）", "## 走廊和问号房遭遇的战绩", "## 统计表", "### 精英和 boss 战绩", "### 休息点", "## 药水换算表（A9"]) expect(text).toContain(heading);
   });
 
   it("throws, never renders empty knowledge, when a file is missing, malformed or empty", () => {

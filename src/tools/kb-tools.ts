@@ -12,6 +12,7 @@ import { KnowledgeLoadError, KnowledgeLookupError, lessonsPath, loadKnowledgeDat
 import { EXPERIENCE_THEMES, THEME_KEYS, queryExperience, type ThemeKey } from "../knowledge/render/experience-text.js";
 import { monsterNameOf, renderEncounter, renderMonster } from "../knowledge/render/monster-text.js";
 import { OLD_SOURCE_KEYS, queryOldKnowledge } from "../knowledge/render/old-knowledge.js";
+import { renderPotion, renderPotionTable } from "../knowledge/render/potion-text.js";
 import { STATS_TABLES, renderStatsTable } from "../knowledge/render/stats-text.js";
 import { cmp } from "../knowledge/render/format.js";
 import type { ToolContext, ToolDef, ToolResult } from "./types.js";
@@ -135,6 +136,25 @@ const kbOldKnowledge = tool({
   },
   run: (input, ctx) =>
     queryOldKnowledge(renderCtx(ctx), typeof input["source"] === "string" ? input["source"] : undefined, typeof input["keyword"] === "string" ? input["keyword"] : undefined),
+});
+
+const kbPotion = tool({
+  name: "kb_potion",
+  description:
+    "查药水换算表（本局进阶）：每瓶药留到本幕 boss 战值多少血，以及等价的伤害和格挡（boss 战实测的换算率，带来源和 n）。boss 之前喝掉一瓶药 = 付出它的持有价值。给 id（FIRE_POTION）或中文名（火焰药水）返回这瓶药的效果、日志里出现和喝的次数、各幕的数值、公式和校验；不给返回整张表。",
+  inputSchema: {
+    type: "object",
+    properties: {
+      id: { type: "string", description: "药水 id 或中文名；不给则返回整张表" },
+      act: { type: "integer", minimum: 1, maximum: 3, description: "只看这一幕（给了 id 时）" },
+    },
+    additionalProperties: false,
+  },
+  run: (input, ctx) => {
+    const id = typeof input["id"] === "string" ? input["id"].trim() : "";
+    if (!id) return renderPotionTable(renderCtx(ctx));
+    return renderPotion(id, renderCtx(ctx), typeof input["act"] === "number" ? input["act"] : undefined);
+  },
 });
 
 /** A run id prefix shorter than this is ambiguous by design (the lessons cite 4-character prefixes: "ZGZ0"). */
@@ -270,5 +290,5 @@ const kbRuns = tool({
 
 /** The knowledge-base tools, in a fixed order. */
 export function knowledgeTools(): ToolDef[] {
-  return [kbMonster, kbEncounter, kbExperience, kbStats, kbOldKnowledge, kbPostmortem, kbRuns];
+  return [kbMonster, kbEncounter, kbExperience, kbStats, kbOldKnowledge, kbPostmortem, kbRuns, kbPotion];
 }
