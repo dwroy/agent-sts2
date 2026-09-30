@@ -15,8 +15,8 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError, type DeepSeekAnswer } from "./llm/deepseek.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
-import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
+import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanDraft, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
+import { isRunPlanDraft, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -1443,7 +1443,7 @@ async function ensureFightPlan(
     // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
     // per-turn combat effort. A reply that is no fight plan (an empty one, a {choice, reason} echo) takes the
     // plan its reasoning drafted, else an empty one is asked once more and anything else fails.
-    const { json, meta, recovered, note } = await deepseek.askJson(payload, "fight-plan", isFightPlanReply);
+    const { json, meta, recovered, note } = await deepseek.askJson(payload, "fight-plan", isFightPlanReply, isFightPlanDraft);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseFightPlan(json, state, knowledge, { runId, fight, kind, replans });
     screenMemory.fightPlan = plan;
@@ -1513,7 +1513,7 @@ async function ensureRunPlan(
   onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
     // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
-    const { json, meta, recovered, note } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
+    const { json, meta, recovered, note } = await deepseek.askJson(payload, "run-plan", isRunPlanReply, isRunPlanDraft);
     count(meta.inputTokens + meta.outputTokens);
     const plan = parseRunPlan(json, state, knowledge, trigger);
     screenMemory.runPlan = plan;

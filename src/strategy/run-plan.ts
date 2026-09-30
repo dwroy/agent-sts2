@@ -135,6 +135,11 @@ export function isRunPlanReply(json: Record<string, unknown>): boolean {
   return text("archetype") || text("summary") || text("boss_prep") || text("elites") || text("rest") || list("want") || list("avoid") || list("remove") || typeof json["block_target"] === "number";
 }
 
+/** A run-plan draft in a reasoning: an object with one of the plan's fields, however filled (lastDraftedAnswer). */
+export function isRunPlanDraft(json: Record<string, unknown>): boolean {
+  return ["archetype", "summary", "boss_prep", "elites", "rest", "want", "avoid", "remove", "block_target"].some((key) => key in json);
+}
+
 export function parseRunPlan(json: Record<string, unknown>, state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger): RunPlan {
   const deck = deckEntries(state, knowledge);
   const byName = new Map<string, string>();

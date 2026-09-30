@@ -173,6 +173,14 @@ export function isFightPlanReply(json: Record<string, unknown>): boolean {
   return approach || Array.isArray(json["setup_cards"]) || text("focus_enemy") || potions || text("key_turns") || text("summary");
 }
 
+/**
+ * A fight-plan draft in a reasoning: an object with one of the plan's fields, however filled (lastDraftedAnswer: the
+ * last one is the plan the reasoning settled on; {}, {"type": "json_object"} or a potions fragment is no draft).
+ */
+export function isFightPlanDraft(json: Record<string, unknown>): boolean {
+  return ["approach", "setup_cards", "focus_enemy", "potions", "key_turns", "summary"].some((key) => key in json);
+}
+
 /** Validates DeepSeek's answer against the board: unknown cards, enemies and potions are dropped. */
 export function parseFightPlan(
   json: Record<string, unknown>,

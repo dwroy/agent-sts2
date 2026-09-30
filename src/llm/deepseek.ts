@@ -403,6 +403,29 @@ export function embeddedJsonObjects(text: string): Record<string, unknown>[] {
   return found;
 }
 
+/**
+ * The answer a reasoning settled on: the LAST object in the answer's format it wrote (`isDraft`: an object with
+ * one of the format's fields; every object when none is given), taken when it passes `accept`. When that last
+ * draft fails, no earlier one is taken: the last is the decision, an earlier one a draft it moved on from
+ * (batch N: the last object that passed was taken, even with a later, final one that failed). Objects that are no
+ * answer at all ({}, {"type": "json_object"}, a {"BLOCK_POTION": "emergency"} fragment: 67 logged fight/run-plan
+ * reasonings end on one after their plan) are not drafts, so they do not hide the plan before them.
+ */
+export function lastDraftedAnswer(
+  reasoning: string,
+  accept: (json: Record<string, unknown>) => boolean,
+  isDraft: (json: Record<string, unknown>) => boolean = () => true,
+): { answer: Record<string, unknown> } | { failed: Record<string, unknown> } | null {
+  const last = embeddedJsonObjects(reasoning).filter(isDraft).at(-1);
+  if (!last) return null;
+  return accept(last) ? { answer: last } : { failed: last };
+}
+
+/** A one-shot plan's answer drafts: objects with its "plan", or a "choice" (the shop also reads a list written there). */
+export function isPlanDraft(json: Record<string, unknown>): boolean {
+  return "plan" in json || "choice" in json;
+}
+
 export function parseEffortTiers(spec: string): [string, string][] {
   return spec
     .split(",")
@@ -578,9 +601,9 @@ export class DeepSeekClient implements Escalator {
    * A one-shot plan (a shop's shopping list; BUILD_ONESHOT): the same message layout as `choose` (memory,
    * state, question, options), answered with one JSON object in the format the question describes. Returns
    * the parsed object; the caller validates it. An unparseable reply throws DeepSeekAnswerError. An empty
-   * reply is handled as askJson's (emptyReplyRetry): the last plan its reasoning drafted that passes `accept`
-   * (the screen's own check), else asked once more (MZFV F24 shop: 10,661 tokens all reasoning, empty reply,
-   * the reasoning ended on {"plan": ["buy_card3"], ...}; the step-by-step fallback then left the shop).
+   * reply is handled as askJson's (emptyReplyRetry): the last plan its reasoning drafted (isPlanDraft) when it
+   * passes `accept` (the screen's own check), else asked once more (MZFV F24 shop: 10,661 tokens all reasoning,
+   * empty reply, the reasoning ended on {"plan": ["buy_card3"], ...}; the step-by-step fallback then left the shop).
    */
   async choosePlan(
     state: Record<string, JsonValue>,
@@ -593,7 +616,7 @@ export class DeepSeekClient implements Escalator {
     const memory = context["memory"];
     const messages: ChatMessage[] = [{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }];
     const planRow = (json: Record<string, unknown>): [string, unknown] => [JSON.stringify(json["plan"] ?? null), json["reason"] ?? ""];
-    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question: instructions, criteria, memory, row: planRow });
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, isPlanDraft, { question: instructions, criteria, memory, row: planRow });
     if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
     const { done, meta } = first;
     const noted = first.note ? { note: first.note } : {};
@@ -619,18 +642,20 @@ export class DeepSeekClient implements Escalator {
    * One free-form JSON answer (the fight plan, FIGHT_PLAN=v1): same cached system prompt, the task and
    * its reply format in the user message. Returns the parsed object; the caller validates it. A reply that
    * does not parse is logged (reasoning, raw reply, usage) and thrown as DeepSeekAnswerError with its usage
-   * (VBHZ77A3N496 F17: an empty act-plan reply after 48 s left no trace but "non-JSON").
+   * (VBHZ77A3N496 F17: an empty act-plan reply after 48 s left no trace but "non-JSON"). `isDraft`: an object
+   * in the task's format, for the answer its reasoning drafted (lastDraftedAnswer; every object when not given).
    */
   async askJson(
     payload: Record<string, JsonValue>,
     label: string,
     accept?: (json: Record<string, unknown>) => boolean,
+    isDraft?: (json: Record<string, unknown>) => boolean,
   ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
     const messages: ChatMessage[] = [{ role: "user", content: taskMessage(payload) }];
     const memory = payload["memory"];
     const question = typeof payload["task"] === "string" ? payload["task"] : label;
     const summaryRow = (json: Record<string, unknown>): [string, unknown] => ["", json["summary"] ?? ""];
-    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question, criteria: {}, memory, row: summaryRow });
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, isDraft, { question, criteria: {}, memory, row: summaryRow });
     if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
     const { done, meta } = first;
     const noted = first.note ? { note: first.note } : {};
@@ -643,15 +668,16 @@ export class DeepSeekClient implements Escalator {
       throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
     }
     // Not the task's format (9GRPA F9, F25: a lone {choice, reason} echo became an all-empty run plan that
-    // replaced the valid one): the last object in that format its reasoning drafted, else an error.
+    // replaced the valid one): the last answer its reasoning drafted when that one is in the format, else an error.
     if (accept && !accept(json)) {
-      const drafted = embeddedJsonObjects(done.reasoning).filter(accept);
-      const recovered = drafted[drafted.length - 1];
-      if (!recovered) {
-        const message = `DeepSeek's ${label} reply is not in the task's format and its reasoning drafted none: ${done.content.slice(0, 120)}`;
+      const drafted = lastDraftedAnswer(done.reasoning, accept, isDraft);
+      if (!drafted || !("answer" in drafted)) {
+        const why = drafted ? `the last answer its reasoning drafted fails the check (${JSON.stringify(drafted.failed).slice(0, 80)}; an earlier draft is not taken)` : "its reasoning drafted none";
+        const message = `DeepSeek's ${label} reply is not in the task's format and ${why}: ${done.content.slice(0, 120)}`;
         this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
         throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
       }
+      const recovered = drafted.answer;
       this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, ...recovered });
       return { json: recovered, meta, recovered: true, ...noted };
     }
@@ -662,16 +688,18 @@ export class DeepSeekClient implements Escalator {
   /**
    * An empty reply, all its output spent in the reasoning (79YR F30 run plan: 6,791 tokens, all reasoning; no
    * output cap is sent, the API default is far above that and the same question has answered in 26,368, so not
-   * a cut): the reasoning often ends on the answer it meant to send (it did there), taken when it passes
-   * `accept` (none without one); with none drafted, asked once more. Each empty call has its log row with the
-   * reason (`row`: the log's choice and reason of a recovered answer). Returns the first call with a reply (its
-   * usage summed with the empty ones) or the recovered answer; empty twice with nothing drafted throws.
+   * a cut): the reasoning often ends on the answer it meant to send (it did there), taken when its last drafted
+   * answer (lastDraftedAnswer, `isDraft`) passes `accept` (none without one); else asked once more. Each empty
+   * call has its log row with the reason (`row`: the log's choice and reason of a recovered answer). Returns the
+   * first call with a reply (its usage summed with the empty ones) or the recovered answer; empty twice with
+   * nothing taken throws.
    */
   private async emptyReplyRetry(
     messages: ChatMessage[],
     label: string,
     first: CompletedCall,
     accept: ((json: Record<string, unknown>) => boolean) | undefined,
+    isDraft: ((json: Record<string, unknown>) => boolean) | undefined,
     log: { question: string; criteria: Record<string, string | null>; memory: JsonValue | undefined; row: (json: Record<string, unknown>) => [string, unknown] },
   ): Promise<{ done: CompletedCall; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note?: string } | { recovered: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note: string }> {
     let done = first;
@@ -680,20 +708,22 @@ export class DeepSeekClient implements Escalator {
     for (let attempt = 0; done.content.trim() === ""; attempt += 1) {
       const why = emptyReplyText(done);
       const total = spent ? sumMeta(spent, done.meta) : done.meta;
-      const drafted = accept ? embeddedJsonObjects(done.reasoning).filter(accept) : [];
-      const recovered = drafted[drafted.length - 1];
+      const drafted = accept ? lastDraftedAnswer(done.reasoning, accept, isDraft) : null;
+      const recovered = drafted && "answer" in drafted ? drafted.answer : null;
       if (recovered) {
         note = `${note ? `${note}; then ` : ""}${why}: the answer taken from the end of its reasoning`;
         const [choice, reason] = log.row(recovered);
         this.logReasoning(label, done, log.question, log.criteria, choice, reason, log.memory, { recovered_from_reasoning: true, empty_reply: why, ...recovered });
         return { recovered, meta: total, note };
       }
+      const failed = drafted && "failed" in drafted ? JSON.stringify(drafted.failed).slice(0, 80) : "";
       if (attempt >= 1) {
-        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and its reasoning drafted no answer`;
+        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and ${failed ? `the last answer its reasoning drafted fails the check (${failed})` : "its reasoning drafted no answer"}`;
         this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, message);
         throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, total);
       }
-      this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
+      const untaken = failed ? `the last answer drafted in its reasoning fails the check (${failed}; an earlier draft is not taken)` : "no answer drafted in its reasoning";
+      this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, `${why}, ${untaken}: asked once more`);
       spent = done.meta;
       done = await this.complete(messages, label);
       note = `first ${why}: asked once more`;
