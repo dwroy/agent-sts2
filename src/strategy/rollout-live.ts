@@ -452,10 +452,10 @@ export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
 
 /**
- * Our own HP lost this turn (the line's exact first turn), with this turn's drinks at their cost (potion-cost.ts): a
- * saturated board's second key, after deaths.
+ * Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. No potion cost
+ * here: when every line loses all our HP a potion kept has no later to be worth anything in (potion-cost.ts).
  */
-const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0) + (line.plan.outcome?.potionCost ?? 0);
+const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
 
 /**
  * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
@@ -471,7 +471,8 @@ const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0
  * summed enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
  * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some
  * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
- * more often); this turn's loss on a saturated board counts this turn's drinks. No cost (a boss fight, no potion): as before.
+ * more often). A saturated board (every line loses all our HP) ranks as before, without costs: a potion kept there has no
+ * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
@@ -669,7 +670,8 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     }
     // A drink that changes nothing this turn: its line reads the dry line's rollout numbers (they tie), not
     // numbers of its own that differ only by sampling noise.
-    const plans = result.lines.map((line) => line.plan);
+    // (The no-potion copy is no drink line's twin: its later turns hold no potion, the twin's may.)
+    const plans = result.lines.map((line) => line.plan).filter((plan) => plan !== args.noPotion?.line);
     const reused = result.lines.map((line): LineEstimate => {
       const twin = noEffectTwin(line.plan, plans);
       const dry = twin ? result.lines.find((other) => other.plan === twin) : undefined;
@@ -728,7 +730,7 @@ function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true })
   if (!r.saturated) return "";
   const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
   const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
-  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then least HP lost this turn${(line.plan.outcome?.potionCost ?? 0) > 0 ? " with its potions at their cost" : ""} (this line ${turnLoss(line) < 0 ? `gains ${round1(-turnLoss(line))}` : round1(turnLoss(line))}), then ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}), then ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
 }
 
 /** The facts of one shown line. */

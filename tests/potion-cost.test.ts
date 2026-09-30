@@ -187,6 +187,15 @@ describe("the rollout's pick: fewest deaths first, then the effective loss (HP +
     expect(rolloutTies(picked, [dry, drink], [dry.plan, drink.plan])).toEqual({ best: null, tied: [dry, drink] });
   });
 
+  it("a saturated board (every line loses all our HP) ranks without costs: a potion kept there has no later (8V0H F25 T1)", () => {
+    const plan = (cost: number) => ({ steps: [], outcome: { hpLoss: 8, ...(cost > 0 ? { potionCost: cost } : {}) } }) as unknown as Plan;
+    const dry = line("dry", { plan: plan(0), hpLoss: 50, wins: 0, deaths: 8, value: -90, enemyHpLeft: 40 });
+    const drink = line("drink", { plan: plan(12), hpLoss: 50, potionCost: 0, wins: 0, deaths: 8, value: -90, enemyHpLeft: 20 });
+    const picked = pickRolloutBest([dry, drink], 50);
+    expect(picked.saturated).toBe(true);
+    expect(picked.best).toBe(drink);
+  });
+
   it("boss: with no cost the ranking is the old one (value, then enemy HP left), deaths not moved first", () => {
     const a = line("a", { hpLoss: 10, deaths: 1, value: -15, enemyHpLeft: 30 });
     const b = line("b", { hpLoss: 20, deaths: 0, value: -20, enemyHpLeft: 10 });

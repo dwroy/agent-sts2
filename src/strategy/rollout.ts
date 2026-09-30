@@ -2093,14 +2093,16 @@ function remainingHp(e: SimEnemy, input: RolloutInput): number {
 /**
  * A sample's value at horizon h (h <= records simulated): losses before it, own loss on turn h-1, terminal after.
  * `lossCap`: the most a sample can lose, our HP plus the revives held (their HP counts as lost when spent).
- * `cost`: the potions drunk on the way, apart (the loss stays HP: capped at lossCap, shown as HP).
+ * `cost`: the potions drunk on the way, apart (the loss stays HP: capped at lossCap, shown as HP); 0 in a sample that
+ * dies (a potion is HP paid later, and there is no later).
  */
 function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number): SampleValue & { n: number } {
   let loss = 0;
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: costOf(records, i + 1) };
+    // A sample that dies pays nothing for its potions: there is no later for them (the run is over).
+    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0 };
     if (r.won) {
       loss += r.loss;
       return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1) };
