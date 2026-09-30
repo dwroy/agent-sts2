@@ -16,9 +16,13 @@ import type { MonsterDb } from "../monster-db.js";
 import type { MeasuredRoom } from "../room-costs.js";
 import type { ToolContext } from "../../tools/types.js";
 import { fillGuideFacts } from "../../strategy/boss-clock.js";
+import type { FactFiller } from "./facts.js";
 
-/** What a renderer reads from the context. */
-export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">>;
+/**
+ * What a renderer reads from the context. `facts`: how the hand-written texts' data placeholders are filled (fresh
+ * when absent; the brain's KNOWLEDGE_PREFIX=full prompt freezes them for the day, render/facts.ts).
+ */
+export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">> & { facts?: FactFiller };
 
 export class KnowledgeLoadError extends Error {
   constructor(message: string) {
@@ -62,9 +66,12 @@ export interface KnowledgeData {
   experience: ExperienceFile;
   roomCosts: RoomCostsFile;
   outcomeStats: OutcomeStats & { generated?: string; _about?: string };
-  /** The old hand-written knowledge (docs/v4-architecture.md §3: whole, marked unverified). */
+  /** The old hand-written knowledge (docs/v4-architecture.md §3: whole, marked unverified), its data facts filled now. */
   guide: string;
   handbook: string;
+  /** The same as written, placeholders and all (the prefix fills them through its RenderContext `facts`). */
+  guideTemplate: string;
+  handbookTemplate: string;
   jevHints: JevHintsFile;
 }
 
@@ -137,6 +144,8 @@ function parseAll(dir: string): KnowledgeData {
   const hints = readJson(dir, KNOWLEDGE_FILES.jevHints);
   if (!Array.isArray(hints["hints"]) || hints["hints"].length === 0) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.jevHints} 缺少 hints 或为空`);
 
+  const guideTemplate = readText(dir, KNOWLEDGE_FILES.guide);
+  const handbookTemplate = readText(dir, KNOWLEDGE_FILES.handbook);
   return {
     dir,
     monsterDb: db as unknown as MonsterDbFile,
@@ -145,8 +154,10 @@ function parseAll(dir: string): KnowledgeData {
     outcomeStats: outcome as unknown as KnowledgeData["outcomeStats"],
     // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt: the full
     // prefix, the kb_* tools and gkb-dump all read the filled text.
-    guide: fillGuideFacts(readText(dir, KNOWLEDGE_FILES.guide)),
-    handbook: fillGuideFacts(readText(dir, KNOWLEDGE_FILES.handbook)),
+    guide: fillGuideFacts(guideTemplate),
+    handbook: fillGuideFacts(handbookTemplate),
+    guideTemplate,
+    handbookTemplate,
     jevHints: hints as unknown as JevHintsFile,
   };
 }

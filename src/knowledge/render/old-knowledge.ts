@@ -9,6 +9,7 @@
 import { fillGuideFacts } from "../../strategy/boss-clock.js";
 import { fillDbNumbers } from "../monster-db.js";
 import { KNOWLEDGE_FILES, KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
+import { freshFacts, type FactFiller } from "./facts.js";
 
 export const OLD_SOURCES = {
   guide: { file: KNOWLEDGE_FILES.guide, title: "铁甲战士攻略" },
@@ -22,10 +23,12 @@ export const OLD_SOURCE_KEYS = Object.keys(OLD_SOURCES) as OldSource[];
 export const OLD_KNOWLEDGE_NOTE =
   "以下是早期手写的旧知识（攻略、DeepSeek 手册、Jev 战斗提示），整份放入，未按数据逐条验证，标「旧知识、待数据验证」。和数据冲突时以数据为准：其中的数字、阈值和评级若与统计表、怪物数据库或经验库不同，以后者为准。";
 
-function hintsText(data: KnowledgeData, asc: number, keyword?: string): string[] {
+function hintsText(data: KnowledgeData, asc: number, keyword?: string, facts: FactFiller = freshFacts): string[] {
   const needle = keyword?.toLowerCase();
+  // The monster-DB numbers depend on the ascension: their frozen values are kept per ascension.
+  const fill = (text: string) => fillGuideFacts(fillDbNumbers(text, asc, data.monsterDb.monsters));
   return data.jevHints.hints
-    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: fillGuideFacts(fillDbNumbers(hint.text, asc, data.monsterDb.monsters)) }))
+    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: facts(hint.text, fill, `A${asc}`) }))
     .filter(({ hint, when, text }) => !needle || [hint.id, when, text].some((part) => part.toLowerCase().includes(needle)))
     .map(({ hint, when, text }) => `- [${hint.id}] 条件 ${when}：${text}（证据 ${hint.evidence?.length ?? 0} 局${hint.evidence?.length ? `: ${hint.evidence.join(", ")}` : ""}）`);
 }
@@ -40,8 +43,9 @@ function sourceTitle(source: OldSource, data: KnowledgeData, asc: number): strin
 export function renderOldSource(source: OldSource, ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const title = sourceTitle(source, data, ctx.ascension);
-  if (source === "jev_hints") return [title, data.jevHints.note ?? "", ...hintsText(data, ctx.ascension)].filter(Boolean).join("\n");
-  return `${title}\n${demoteHeadings((source === "guide" ? data.guide : data.handbook).trimEnd())}`;
+  if (source === "jev_hints") return [title, data.jevHints.note ?? "", ...hintsText(data, ctx.ascension, undefined, ctx.facts)].filter(Boolean).join("\n");
+  const text = ctx.facts ? ctx.facts(source === "guide" ? data.guideTemplate : data.handbookTemplate, fillGuideFacts) : source === "guide" ? data.guide : data.handbook;
+  return `${title}\n${demoteHeadings(text.trimEnd())}`;
 }
 
 /** The file's headings two levels down (# -> ###, capped at ######), so they sit under the source's heading. */

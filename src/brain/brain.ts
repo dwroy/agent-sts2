@@ -26,6 +26,7 @@ import type { JsonValue } from "../util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
+import { frozenFacts } from "../knowledge/render/facts.js";
 import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
 import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
 import { routeAnswerText } from "../strategy/route-map.js";
@@ -95,7 +96,8 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
 
 /** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
 export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options: { fallbackBudget?: FallbackBudget } = {}): Brain {
-  return new Brain(createRouter(config, deepseek, options), deepseek);
+  // KNOWLEDGE_PREFIX=full: the prefix's data facts frozen for the day in the directory v3 keeps its guide snapshots in.
+  return new Brain(createRouter(config, deepseek, options), deepseek, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir) }));
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
@@ -124,8 +126,6 @@ function withAccept(base: AnswerSpec, accept: ((json: Json) => boolean) | undefi
 
 export class Brain {
   private context: ToolContext | null = null;
-  /** KNOWLEDGE_PREFIX=full: the rendered prompt, kept while the ascension and the data hold. */
-  readonly knowledge = new KnowledgePrompt();
   private notify: ((message: string) => void) | null = null;
   private lastKnowledgeError = "";
   /** The prefix (its sha) whose size was last warned about: said once per prefix. */
@@ -141,6 +141,8 @@ export class Brain {
     readonly router: BrainRouter,
     readonly deepseek: DeepSeekClient,
     private readonly tools: (ctx: ToolContext) => ToolDef[] = buildTools,
+    /** KNOWLEDGE_PREFIX=full: the rendered prompt, kept while the ascension and the data hold. */
+    readonly knowledge: KnowledgePrompt = new KnowledgePrompt(),
   ) {}
 
   /** What the tools read for the coming questions (the loop sets it from each new state); also the run's ascension. */
