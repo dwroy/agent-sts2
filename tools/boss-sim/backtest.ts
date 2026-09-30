@@ -13,6 +13,9 @@
  *
  *   - pre (B1.5, --starts pre): the pre-fight start B3 needs, from the turn-1 state: the hand back in the deck, every
  *     card in the draw pile, the start turn's hand drawn in the sample and played by the policy, at the entry HP.
+ *   - syn (B3, --starts syn): the same pre-fight start built without the fight's frame (src/sim/boss-start.ts
+ *     syntheticBossStart from the run before the fight, tools/boss-sim/pre-fight.ts): the boss from the monster DB, our
+ *     fight-start relics from the relic table, at the entry HP.
  *
  * Usage: npx tsx tools/boss-sim/backtest.ts [--in experiments/boss-sim/raw/fights.jsonl] [--out-dir experiments/boss-sim/raw]
  *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5,pre] [--limit N] [--no-rollout] [--no-scripts] [--no-orders]
@@ -30,7 +33,9 @@ import { bossClock } from "../../src/strategy/boss-clock.js";
 import { loadFightValueModel } from "../../src/strategy/fight-value.js";
 import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/strategy/rollout.js";
 import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import { loadMonsterDb, syntheticBossStart } from "../../src/sim/boss-start.js";
 import { boardOf, queenOrder } from "./backtest-board.js";
+import { preFightState } from "./pre-fight.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -115,6 +120,7 @@ async function main(): Promise<void> {
   const knowledge = makeKnowledge((JSON.parse(readFileSync(".cache/game-data.json", "utf8")) as { collections: never }).collections, "cache");
   const mm = JSON.parse(readFileSync("src/knowledge/move-model.json", "utf8")) as MoveModelData;
   const db = (JSON.parse(readFileSync("src/knowledge/monster-db.json", "utf8")) as { monsters: MonsterMoves }).monsters;
+  const monsterDb = loadMonsterDb();
   const model = withRollout ? loadFightValueModel() : null;
   const gates = withRollout ? loadFightValueGates() : null;
   const rows = readFileSync(inPath, "utf8").split("\n").filter((line) => line.trim() !== "");
@@ -128,7 +134,7 @@ async function main(): Promise<void> {
       const point = start === "t5" ? row.t5 : row.t1;
       if (!point) continue;
       const base = { key: row.key, start, run: row.run_id, asc: row.asc, act: row.act, floor: row.floor, enc: row.encounter, fightTurns: row.turns };
-      const pre = start === "pre";
+      const pre = start === "pre" || start === "syn";
       const startHp = pre ? row.entry_hp : point.hp;
       const actual = { won: row.outcome === "won", hp: startHp, turnsLeft: row.turns - (point.turn - 1), hpLoss: startHp - row.end_hp, endHp: row.end_hp };
       let board: ReturnType<typeof boardOf>;
@@ -141,7 +147,15 @@ async function main(): Promise<void> {
         continue;
       }
       const line = board.plans[0]!;
-      const simInput = pre ? redealInput(board.input, { fresh: true, hp: row.entry_hp }) : board.input;
+      let simInput = pre ? redealInput(board.input, { fresh: true, hp: row.entry_hp }) : board.input;
+      if (start === "syn") {
+        try {
+          simInput = syntheticBossStart(preFightState(point.state), knowledge, String(state.run?.boss_id ?? ""), row.entry_hp, { db: monsterDb, mm }).input;
+        } catch (error) {
+          appendFileSync(out, JSON.stringify({ ...base, actual, error: `synthetic: ${String(error).slice(0, 300)}` }) + "\n");
+          continue;
+        }
+      }
       const simLine = pre || startLine === "policy" ? null : line;
       const record: Record<string, unknown> = { ...base, actual, piles: board.piles, hp: simInput.solver.player.hp, drawN: simInput.piles.draw.length, nPlans: board.plans.length };
       try {
