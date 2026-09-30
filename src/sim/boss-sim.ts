@@ -388,9 +388,11 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
  * differences (compareLines) come from the raw samples.
  */
 export const BOSS_SIM_PLATT: Record<"start" | "mid" | "pre", { a: number; b: number }> = {
-  start: { a: 0.7295, b: 0.498 },
-  mid: { a: 0.7482, b: 0.8635 },
-  pre: { a: 0.7084, b: 0.5189 },
+  // Refitted after B2's simulator gaps (random potions, turn relics, the Crab's facing; docs/boss-sim.md §11.1), on the
+  // same tune fights. B1.5's: start (0.7295, 0.498), mid (0.7482, 0.8635), pre (0.7084, 0.5189).
+  start: { a: 0.5534, b: 0.5036 },
+  mid: { a: 0.5624, b: 0.8224 },
+  pre: { a: 0.5236, b: 0.5219 },
 };
 
 /** A line's calibrated win rate (BOSS_SIM_PLATT), its raw rate clipped to half a sample from 0 and 1 first. */
