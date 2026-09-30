@@ -11,8 +11,13 @@
  *     fight-value model and gates (in-sample: they were fit on these fights), the estimate of that same line;
  *   - clock (turn 1 only): boss-clock.ts bossClock at the HP the fight was entered with (as tools/eval/boss-clock-recompute.ts).
  *
+ *   - pre (B1.5, --starts pre): the pre-fight start B3 needs, from the turn-1 state: the hand back in the deck, every
+ *     card in the draw pile, the start turn's hand drawn in the sample and played by the policy, at the entry HP.
+ *
  * Usage: npx tsx tools/boss-sim/backtest.ts [--in experiments/boss-sim/raw/fights.jsonl] [--out-dir experiments/boss-sim/raw]
- *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5] [--limit N] [--no-rollout] [--no-scripts] [--damage-scale 0.5] [--no-orders]
+ *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5,pre] [--limit N] [--no-rollout] [--no-scripts] [--no-orders]
+ *          [--damage-scale D] [--hp-scale H] [--threat T] [--potion-hold K] [--start-line policy|plan1] [--no-best-order] [--set tune|val (experiments/boss-sim/split.json)]
+ * --start-line: the start turn played by the sim's policy (default, B1.5) or the live solver's best line (B1).
  * Output: <out-dir>/results-<I>.jsonl, one line per (fight, start).
  */
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -20,12 +25,12 @@ import { join } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
 import { parseGameState, type GameState } from "../../src/mod/schema.js";
-import { BOSS_SIM_DAMAGE_SCALE, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
+import { BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
 import { bossClock } from "../../src/strategy/boss-clock.js";
 import { loadFightValueModel } from "../../src/strategy/fight-value.js";
 import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/strategy/rollout.js";
 import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
-import { boardOf } from "./backtest-board.js";
+import { boardOf, queenOrder } from "./backtest-board.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -45,7 +50,15 @@ const withRollout = !flag("no-rollout");
 // --no-scripts: the ablation, the rollout's simulation without its horizon and without the whole-fight scripts.
 const scripts = !flag("no-scripts");
 const damageScale = Number(arg("damage-scale", String(BOSS_SIM_DAMAGE_SCALE)));
+const hpScale = Number(arg("hp-scale", String(BOSS_SIM_HP_SCALE)));
+const threat = Number(arg("threat", String(BOSS_SIM_THREAT)));
+const potionHold = Number(arg("potion-hold", String(BOSS_SIM_POTION_HOLD)));
+const startLine = arg("start-line", "policy");
 const orders = !flag("no-orders");
+// Every line's best kill order (runBestOrder), as the rollout and B2 do; --no-best-order: the Queen's order only (B1).
+const bestOrder = !flag("no-best-order");
+const set = arg("set", "");
+const keep: Set<string> | null = set ? new Set((JSON.parse(readFileSync("experiments/boss-sim/split.json", "utf8")) as Record<string, string[]>)[set]) : null;
 
 interface FightRow {
   key: string;
@@ -56,6 +69,7 @@ interface FightRow {
   floor: number;
   encounter: string;
   entry_hp: number;
+  first_ts?: string;
   max_hp: number;
   end_hp: number;
   outcome: "won" | "died";
@@ -66,18 +80,9 @@ interface FightRow {
 
 const r2 = (x: number | null | undefined) => (x === null || x === undefined || !Number.isFinite(x) ? null : Math.round(x * 100) / 100);
 
-/**
- * The kill order the sim's later turns follow, where the fight's plan is known (experience queen-plan, the boss clock's
- * note: the Torch Head Amalgam first, the Queen only takes AoE until it is dead; the live fight plan focuses it): the
- * solver alone chips a minion at MINION_CHIP and left the Amalgam up (simulated damage 29 a turn against the logged 43).
- * --no-orders: none. Other bosses: the solver's own targets.
- */
+/** The Queen's kill order (backtest-board queenOrder); --no-orders: none. */
 function killOrderOf(input: RolloutInput): KillOrder | null {
-  if (!orders) return null;
-  const amalgam = input.enemies.filter((e) => e.id === "TORCH_HEAD_AMALGAM").map((e) => e.index);
-  const queen = input.enemies.filter((e) => e.id === "QUEEN").map((e) => e.index);
-  if (amalgam.length === 0 || queen.length === 0) return null;
-  return { key: "TORCH_HEAD_AMALGAM>QUEEN", label: "Torch Head Amalgam > Queen", groups: [amalgam, queen] };
+  return orders ? queenOrder(input) : null;
 }
 
 function simFacts(line: BossSimLineResult) {
@@ -118,11 +123,14 @@ async function main(): Promise<void> {
     if (index % shards !== shard) continue;
     if (limit && done >= limit) break;
     const row = JSON.parse(rows[index]!) as FightRow;
+    if (keep && !keep.has(row.key)) continue;
     for (const start of starts) {
       const point = start === "t5" ? row.t5 : row.t1;
       if (!point) continue;
       const base = { key: row.key, start, run: row.run_id, asc: row.asc, act: row.act, floor: row.floor, enc: row.encounter, fightTurns: row.turns };
-      const actual = { won: row.outcome === "won", hp: point.hp, turnsLeft: row.turns - (point.turn - 1), hpLoss: point.hp - row.end_hp, endHp: row.end_hp };
+      const pre = start === "pre";
+      const startHp = pre ? row.entry_hp : point.hp;
+      const actual = { won: row.outcome === "won", hp: startHp, turnsLeft: row.turns - (point.turn - 1), hpLoss: startHp - row.end_hp, endHp: row.end_hp };
       let board: ReturnType<typeof boardOf>;
       let state: GameState;
       try {
@@ -133,17 +141,28 @@ async function main(): Promise<void> {
         continue;
       }
       const line = board.plans[0]!;
-      const record: Record<string, unknown> = { ...base, actual, piles: board.piles, hp: board.solver.player.hp, drawN: board.input.piles.draw.length, nPlans: board.plans.length };
+      const simInput = pre ? redealInput(board.input, { fresh: true, hp: row.entry_hp }) : board.input;
+      const simLine = pre || startLine === "policy" ? null : line;
+      const record: Record<string, unknown> = { ...base, actual, piles: board.piles, hp: simInput.solver.player.hp, drawN: simInput.piles.draw.length, nPlans: board.plans.length };
       try {
         const t = performance.now();
-        const order = killOrderOf(board.input);
-        const res = runBossSim(board.input, [line], { samples, seed: seed + index * 101, scripts, damageScale, order });
-        if (order) record["order"] = order.label;
-        record["sim"] = { ...simFacts(res.lines[0]!), ms: Math.round(performance.now() - t) };
+        const simOpts = { samples, seed: seed + index * 101, scripts, damageScale, hpScale, threat, potionHold };
+        // --orders best: the best of the solver's own targets and every kill order (runBestOrder); else the Queen's.
+        if (bestOrder) {
+          const res = await runBestOrder(runBossSim, simInput, [simLine], simOpts);
+          record["order"] = res.lines[0]!.order;
+          record["orders"] = res.byOrder.map((o) => [o.order, r2(o.result.lines[0]!.winProb)]);
+          record["sim"] = { ...simFacts(res.lines[0]!), ms: Math.round(performance.now() - t) };
+        } else {
+          const order = killOrderOf(board.input);
+          const res = runBossSim(simInput, [simLine], { ...simOpts, order });
+          if (order) record["order"] = order.label;
+          record["sim"] = { ...simFacts(res.lines[0]!), ms: Math.round(performance.now() - t) };
+        }
       } catch (error) {
         record["simError"] = String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 600);
       }
-      if (withRollout) {
+      if (withRollout && !pre) {
         try {
           const t = performance.now();
           const res = rolloutDecision({ ...board.input, model, gates, options: { budgetMs: 1e9, seed: seed + index * 101, k: 1, include: [line] } });
@@ -165,9 +184,9 @@ async function main(): Promise<void> {
           record["rolloutError"] = String(error).slice(0, 300);
         }
       }
-      if (start === "t1") {
+      if (start === "t1" || pre) {
         try {
-          const clock = bossClock(state, knowledge, point.hp);
+          const clock = bossClock(state, knowledge, startHp);
           if (clock) {
             record["clock"] = {
               boss: clock.boss,
