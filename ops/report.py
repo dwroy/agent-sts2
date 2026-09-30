@@ -185,8 +185,10 @@ def main():
         return
     recs = [r for r in decisions if run_of(r) == run_id]
     # The GAME_OVER record has no run in its fingerprint: attach the one right after the last record.
+    # V4 (2026-09-30) logs it with the run id; then the next GAME_OVER is a later run's, not this one's.
     last_ts = recs[-1]["ts"] if recs else ""
-    tail = [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
+    own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
+    tail = [] if own_end else [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
     # Stream: states.jsonl is hundreds of MB. Every line starts with {"ts":"<24-char ISO ts>", so only
     # the lines this report looks up are parsed.
     wanted = {r["ts"] for r in tail + recs}
