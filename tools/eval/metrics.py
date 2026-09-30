@@ -9,6 +9,7 @@ Per run:
   - potions drunk in non-boss fights per 10 floors reached;
   - potions held entering each act's boss fight (the boss fight is found in the data: a fight in a Boss map
     node; never a fixed floor number);
+  - potions still held when a lost run died (its death fight's potions in, less those drunk in it);
   - a Strength source at the act-1 boss: a deck card or relic that gives lasting Strength (the deck profile's
     own test, src/project/deck-profile.ts, via tools/eval/strength-sources.ts), or Strength on the player
     during that fight;
@@ -97,6 +98,19 @@ def nonboss_drinks(fights, bosses):
     return sum(f.get("potions_n") or 0 for f in fights if f.get("room") != "boss" and f["fight_no"] not in boss_nos)
 
 
+def potions_at_death(fights, victory):
+    """Potions still held when the run died: those its death fight (the last fight marked died) was entered with, less
+    those drunk in it (a potion gained inside the fight, Entropic Brew's, is not seen). None for a won run, or when no
+    fight is marked died."""
+    if victory:
+        return None
+    died = [f for f in fights if f.get("outcome") == "died"]
+    if not died:
+        return None
+    last = max(died, key=lambda f: f["fight_no"])
+    return max(0, (last.get("potions_in") or 0) - (last.get("potions_n") or 0))
+
+
 def per_ten_floors(count, floors):
     return 10.0 * count / floors if floors else None
 
@@ -178,6 +192,7 @@ def run_metrics(run, fights, floors, boss_entry, calls, sets):
         "boss_potions": {act: b.get("potions_in") for act, b in sorted(bosses.items())},
         "drinks_nonboss": drinks,
         "drinks_per10": per_ten_floors(drinks, run.get("floor")),
+        "potions_at_death": potions_at_death(fights, victory),
         "strength_act1": strength,
         "act1_elites": elites,
         "act1_elites_low": low,
@@ -235,6 +250,7 @@ def summarize(rows):
     out["passed_act2"] = wilson(sum(r["passed_act2"] for r in rows), n)
     out["win"] = wilson(sum(r["victory"] for r in rows), n)
     out["drinks_per10"] = mean_stats([r["drinks_per10"] for r in rows])
+    out["potions_at_death"] = mean_stats([r.get("potions_at_death") for r in rows])
     acts = sorted({1, 2, 3} | {act for r in rows for act in r["boss_potions"]})
     for act in acts:
         out[f"boss_potions_{act}"] = mean_stats([r["boss_potions"].get(act) for r in rows])
@@ -582,6 +598,8 @@ def metric_lines(summary, min_n):
     lines.append(("非 boss 战喝药 / 10 层", fmt_mean(summary["drinks_per10"], min_n)))
     for key in sorted(k for k in summary if k.startswith("boss_potions_")):
         lines.append((f"进{'一二三四'[int(key.rsplit('_', 1)[1]) - 1]}幕 boss 带药（瓶）", fmt_mean(summary[key], min_n)))
+    if "potions_at_death" in summary:
+        lines.append(("死时手里的药（瓶，输的局）", fmt_mean(summary["potions_at_death"], min_n)))
     parts = summary["strength_parts"]
     strength = fmt_rate(summary["strength_act1"], min_n)
     if summary["strength_act1"]["n"]:

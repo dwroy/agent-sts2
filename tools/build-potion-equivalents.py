@@ -867,9 +867,11 @@ def main(argv=None):
     parser.add_argument("--no-sync", action="store_true")
     parser.add_argument("--markdown", action="store_true", help="also print the rates and the enumeration tables for docs/potion-equivalents.md")
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--ascensions", default="", help="more ascensions to give numbers for, comma-separated (the run's TARGET_ASCENSION: tools/refresh-potion-equivalents.sh); always 8 and 9. One with too few boss fights borrows the nearest one's inputs")
     args = parser.parse_args(argv)
     if args.self_test:
         return self_test()
+    ascensions = tuple(sorted(set(ASCENSIONS) | {int(a) for a in args.ascensions.split(",") if a.strip()}))
 
     sys.path.insert(0, os.path.join(ROOT, "tools", "logdb"))
     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
@@ -887,11 +889,11 @@ def main(argv=None):
     names.update({p["id"]: p["id"] for p in potions})
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
-        logs = load_logs(con, ASCENSIONS)
+        logs = load_logs(con, ascensions)
     with open(os.path.join(logs_dir, "decisions.jsonl"), "rb") as handle:
         mc = mc_summaries(logs["questions"], handle)
         checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
-    rates, entry = build(logs, potions, cards, values, solver, ASCENSIONS, mc, checks)
+    rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks)
     # Potion ids the logs hold or drink that the game data does not list (none on 2026-09-30).
     unknown = sorted((set(logs["seen"]) | set(logs["drinks"])) - set(entry))
     if unknown:
@@ -904,12 +906,12 @@ def main(argv=None):
             "generated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "doc": "docs/potion-equivalents.md",
             "logs": {"boss_fights": len(logs["fights"]), "all_fights": logs["all_fights"], "last_fight": logs["last_fight"], "potion_ids_seen": len(set(logs["seen"]) | set(logs["drinks"])), "unknown_potion_ids": unknown},
-            "ascensions": list(ASCENSIONS),
+            "ascensions": list(ascensions),
             "min_n": MIN_N,
             "constants": {"DRAW_PLAY_SHARE": DRAW_PLAY_SHARE, "HAND_SIZE": HAND_SIZE, "HAND_LIMIT": HAND_LIMIT, "ENEMY_HITS": ENEMY_HITS, "POWER_LASTING_STRENGTH": POWER_LASTING_STRENGTH, "FORGE_UPGRADE_GAIN": FORGE_UPGRADE_GAIN, "EXPENSIVE_CARD_COST": EXPENSIVE_CARD_COST, "WEAK_FACTOR": WEAK_FACTOR, "VULN_FACTOR": VULN_FACTOR},
             "note": "每瓶药在本幕 boss 战里值多少：hp = 省下（或回复）的血，damage = hp ÷ r，block = hp（1:1）；hold_hp = max(0, hp) 是持有价值。source 公式 = 日志输入代公式，估 = 公式里有估计常数（meta.constants）；n = 输入用到的 boss 战场数；inputs_asc = 输入借自另一进阶。check = boss 战喝这瓶时「喝」和「不喝」两条推演线整场掉血之差（不喝的线后面几回合仍可能喝它，所以量的是时机，不是持有价值），mc = 随机药水的蒙特卡洛本回合平均增益（拿着它的每一问都算），两者只作校验，不采用。",
         },
-        "rates": {str(asc): {str(act): public_rates(rates[(asc, act)]) for act in ACTS if (asc, act) in rates} for asc in ASCENSIONS},
+        "rates": {str(asc): {str(act): public_rates(rates[(asc, act)]) for act in ACTS if (asc, act) in rates} for asc in ascensions},
         "potions": entry,
     }
     text = json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True) + "\n"

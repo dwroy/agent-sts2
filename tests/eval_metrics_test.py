@@ -73,6 +73,13 @@ class BossTest(unittest.TestCase):
         self.assertAlmostEqual(metrics.per_ten_floors(4, 33), 40 / 33)
         self.assertIsNone(metrics.per_ten_floors(4, 0))
 
+    def test_potions_held_at_death(self):
+        fights = [fight(1, 1, 2, "hallway", potions_in=2, potions_n=1), fight(2, 1, 9, "elite", potions_in=3, potions_n=1)]
+        fights[1]["outcome"] = "died"
+        self.assertEqual(metrics.potions_at_death(fights, victory=False), 2)
+        self.assertIsNone(metrics.potions_at_death(fights, victory=True))
+        self.assertIsNone(metrics.potions_at_death(fights[:1], victory=False))
+
 
 class StrengthTest(unittest.TestCase):
     def test_cards_relics_and_strength_on_the_first_frame(self):
