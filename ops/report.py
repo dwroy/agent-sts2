@@ -358,16 +358,18 @@ def ablation_arm():
 def refresh_knowledge() -> None:
     """After each run: monster DB, per-fight move model, outcome stats (background; never blocks the next run)."""
     import subprocess
-    # Into the run worktree (branch v3), whose logs/ links to jev-sts2/logs.
-    tools = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v3/tools")
-    mm = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v3/src/knowledge/move-model.json")
+    # Into the run worktree (branch v4-live since 2026-09-30; was jev-sts2-v3 / v3), whose logs/ links to jev-sts2/logs.
+    wt = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v4run")
+    tools = f"{wt}/tools"
+    mm = f"{wt}/src/knowledge/move-model.json"
     cmd = (f'python3 {tools}/build-monster-db.py --quiet --move-model-out {mm}; '
            f'python3 {tools}/monster-db-check.py >/dev/null 2>&1; '
            f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1; '
            f'python3 {tools}/build-room-costs.py >/dev/null 2>&1; '
            f'python3 {tools}/build-boss-damage.py >/dev/null 2>&1; '
            f'python3 {tools}/build-card-upgrades.py >/dev/null 2>&1; '
-           f'nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1')
+           f'nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1; '
+           f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1')
     log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
     subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
 

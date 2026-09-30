@@ -125,3 +125,4 @@
   - DeepSeek 关键决定：S1MU F9 拿狱火、F22 买撕裂+、F38 逆着 code（33 < 跳过线 50）拿第二张狱火+；5HHL F17 绯红披风、F33 恶魔形态（F40 升级）、F34 钗；两局二三幕都 0 精英、boss 前火堆都回血。
   - 其他：为 boss 买的 10 瓶药只有 1 瓶进 boss；5HHL F45 DeepSeek 识破删牌 +40 是 run plan 自我循环、没删；女王战推演偏悲观（T1 预计 T2–T5 掉 83，实际 19）；K 批后走廊喝药这批 29/37（每场走廊 0.71，高于之前 0.53–0.57）。
 - 2026-09-30 05:51 N 批留给你的：boss 时钟现在算上了撕裂/狱火/势不可当（估值 S1MU 恶魔 21→29–33、沙漏 21→39–44，实际 51/76），但仍明显偏低——校准 11 + 0.92×raw 是在没有能力牌伤害的原始值上拟合的，要不要用 tools/boss-clock-calibrate.ts 重新拟合，你定。
+- 2026-09-30 08:11 V4 已开打（A8×20，DeepSeek + 全量知识，工作树 jev-sts2-v4run）。请开一个新会话做 V4 运维：在 ~/Projects/sts2-jev 里说「读 ops/ops-session-v4-prompt.md 并照做」。另：ops/auto-relaunch.sh 仍在 crontab 里（有 ops/STOP 时不动作），删不删你定。
