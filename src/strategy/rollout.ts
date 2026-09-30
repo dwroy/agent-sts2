@@ -50,6 +50,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
+import { samplePotion, type PotionMcSource } from "./potion-mc.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
@@ -534,7 +535,26 @@ export interface RolloutInput {
    * comes on given fight turns and that relicEnergy / relicBlock leave out (rollout-live fightRelicsOf: Candelabra's 2
    * energy on turn 2, Chandelier's 3 on turn 3, Happy Flower's 1 every 3rd turn, Horn Cleat's 14 block on turn 2).
    */
-  fightRelics?: { energy: { amount: number; turn: number }[]; block: { amount: number; turn: number }[] };
+  fightRelics?: {
+    energy: { amount: number; turn: number }[];
+    block: { amount: number; turn: number }[];
+    /**
+     * B2 (whole fights only): Pendulum's extra draws on given turns (logged: every 3rd turn, 1 card), Orichalcum's end-of-turn
+     * block when the turn left none (6), Ripple Basin's when no Attack was played (4), Sturdy Clamp's block kept into the
+     * next turn (up to 10), Ice Cream's unspent energy carried over.
+     */
+    draws?: { amount: number; turn: number }[];
+    orichalcum?: number;
+    rippleBasin?: number;
+    blockKeep?: number;
+    iceCream?: boolean;
+  };
+  /**
+   * Whole fights only (B2): the random potions held (potion-mc sources: card-choice potions' pools, draw potions). Each
+   * later turn a held one is a new sample of it, as potion-mc draws them: a random offer of 3 cards from the pool, or
+   * the top cards of this sample's own draw pile; the hand's card for it (card-model's expected value) otherwise.
+   */
+  randomPotions?: PotionMcSource[];
   /**
    * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
@@ -1086,6 +1106,9 @@ export interface TurnRecord {
   /** The potions this turn drank (ids), and their cost in HP (the plan's outcome.potionCost; potion-cost.ts). */
   drunk?: string[];
   potionCost?: number;
+  /** Whole fights only (simulateFight): the Power cards played this turn (ids) and the block the line gained. */
+  powers?: string[];
+  blockGained?: number;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1377,6 +1400,54 @@ function relicEnergyAt(input: RolloutInput, turn: number): number {
 /** Whole fights: the one-turn energy relics' energy on fight turn `turn` (RolloutInput.fightRelics). */
 function fightRelicEnergyAt(input: RolloutInput, turn: number): number {
   return (input.fightRelics?.energy ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
+}
+
+/** Whole fights (B2): the end-of-turn block relics for the policy's solver (turn-solver PlayerSim.orichalcum / rippleBasin). */
+function endBlockRelics(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "rippleBasin"> {
+  const relics = input.fightRelics;
+  return { ...(relics?.orichalcum ? { orichalcum: relics.orichalcum } : {}), ...(relics?.rippleBasin ? { rippleBasin: relics.rippleBasin } : {}) };
+}
+
+/** Whole fights (B2): Pendulum's extra draws on a fight turn. */
+function fightRelicDrawsAt(input: RolloutInput, turn: number): number {
+  return (input.fightRelics?.draws ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
+}
+
+/** Draw potions whose only random part is which cards they draw (card-model DRAW_POTIONS without a special). */
+const PLAIN_DRAW_POTIONS = new Set(["SWIFT_POTION", "CLARITY", "CURE_ALL"]);
+
+/**
+ * Whole fights (B2): each random potion held (RolloutInput.randomPotions) as a new sample of it for this turn, as
+ * potion-mc draws them: a card-choice potion's offer of 3 from its pool (samplePotion), from a stream of its own (the
+ * sample's seed, the slot, the turn: the same offer for every line of a sample); a plain draw potion's cards the next
+ * ones on this sample's draw pile after the draw cards' (knownDraws), known and playable like theirs (added to `known`).
+ * The policy's cost of drinking it (potionCost) stays. Others keep the hand's expected-value card.
+ */
+function sampledPotions(potions: CardModel[], input: RolloutInput, seed: number, turn: number, hand: CardModel[], piles: Piles, player: SimPlayer, targets: number[], known: Map<number, { card: CardModel; base: CardModel }> | undefined): CardModel[] {
+  const sources = input.randomPotions ?? [];
+  if (sources.length === 0) return potions;
+  return potions.map((card) => {
+    const [, id, slotText] = card.cardId.split(":");
+    const source = sources.find((entry) => entry.potionId === id && String(entry.slot) === slotText);
+    if (!source) return card;
+    if (source.kind === "choice") {
+      const random = rng((Math.imul(seed, 0x27d4eb2f) ^ Math.imul(source.slot + 1, 0x165667b1) ^ Math.imul(turn + 1, 0x9e3779b1)) >>> 0 || 1);
+      const sample = samplePotion({ ...source, cost: 0 }, hand, random);
+      return { ...sample, validTargets: card.validTargets, ...(card.potionCost !== undefined ? { potionCost: card.potionCost } : {}) };
+    }
+    if (!PLAIN_DRAW_POTIONS.has(source.potionId) || !known || source.noDraw) return card;
+    const count = Math.max(0, Math.round(card.draw));
+    const drawn: CardModel[] = [];
+    for (let k = 0; k < count && known.size < piles.draw.length; k += 1) {
+      const depth = known.size;
+      const base = piles.draw[piles.draw.length - 1 - depth]!;
+      const index = KNOWN_DRAW_INDEX + depth;
+      const model = { ...withStrength(base, player, index, targets), key: `drawn${index}` };
+      known.set(index, { card: model, base });
+      drawn.push(model);
+    }
+    return drawn.length > 0 ? { ...card, drawn, draw: card.draw - drawn.length } : card;
+  });
 }
 
 /** A debuff's turns: -1 (and any amount below 0) is for the fight. */
@@ -1696,7 +1767,8 @@ function applyPlan(
     player.revives = player.revives.slice(spent);
   }
   // Barricade keeps block every turn; Blur N only at the start of the next N turns.
-  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
+  // Sturdy Clamp (whole fights, B2): up to its amount of the block left is kept.
+  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : fullFight ? Math.min(input.fightRelics?.blockKeep ?? 0, o.blockWasted ?? 0) : 0;
   const died = !won && (o.dies || player.hp <= 0);
   // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
   if (!won && !died) {
@@ -1865,6 +1937,13 @@ function applyPlan(
     ...(o.revived ? { revived: o.revived.sources.length } : {}),
     hpLeft,
     ...(drunk.length > 0 ? { drunk, potionCost: o.potionCost ?? 0 } : {}),
+    // Whole fights (B2's fight plan): the Powers played and the block gained this turn.
+    ...(fullFight
+      ? {
+          powers: plan.steps.map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId) ?? known?.get(step.cardIndex)?.card).filter((card): card is CardModel => card?.type === "Power").map((card) => card.cardId),
+          blockGained: o.blockGained,
+        }
+      : {}),
   };
 }
 
@@ -2080,20 +2159,26 @@ function simulate(
       bases.push(card);
       cards.push(withStrength(card, player, cards.length, targets));
     }
-    const potions = noPotions ? [] : held;
     const drawing = fullFight ? knownDraws(cards, piles, player, targets) : null;
+    const potions = noPotions ? [] : fullFight ? sampledPotions(held, input, seed, 0, cards, piles, player, targets, drawing?.known) : held;
     firstHand = [...(drawing?.hand ?? cards), ...potions];
     firstBase = [...bases, ...potions.map(() => null)];
     firstKnown = drawing?.known;
     const { drawPile: _d, ...rest } = s;
-    const solved = solveTurn({ ...rest, ...policyWeights(opts, s.player, s.enemies), hand: firstHand, maxNodes: policyNodes });
+    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...policyWeights(opts, s.player, s.enemies), hand: firstHand, maxNodes: policyNodes });
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;
     if (!first) return records;
   }
   let witherPlayed = (s.wither?.played ?? 0) + cardPlays(first);
+  // Whole fights (B2): Surrounded's facing carried turn to turn (the last enemy a line targeted; the solver's own rule).
+  let facing: number | null = s.player.facing ?? null;
+  const turnTo = (line: Plan) => {
+    for (const step of line.steps) if (typeof step.target === "number") facing = step.target;
+  };
   records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
+  turnTo(first);
   timeUp(0);
   drink(first);
   for (let h = 1; h < horizon; h += 1) {
@@ -2113,7 +2198,8 @@ function simulate(
       hand.push(withStrength(card, player, hand.length, targets));
     }
     player.retained = [];
-    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot) && hand.length < HAND_LIMIT; i += 1) {
+    const relicDraws = fullFight ? fightRelicDrawsAt(input, (s.turn ?? input.meta.t) + h) : 0;
+    for (let i = 0; i < Math.max(0, handSize + clarity + relicDraws - player.mindRot) && hand.length < HAND_LIMIT; i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
@@ -2128,6 +2214,10 @@ function simulate(
         ...(i < player.chains ? { soulbound: true } : {}),
       });
     }
+    // Surrounded (whole fights, B2): an enemy we do not face hits for +50%, as the game shows it (turn-solver backAttack
+    // takes it off when the line turns to it); the rollout keeps every later hit as the move model's.
+    const behind = (index: number, attacks: { damage: number; hits: number }[]) =>
+      fullFight && base.surrounded && facing !== null && index !== facing ? attacks.map((a) => ({ ...a, damage: Math.floor(a.damage * 1.5) })) : attacks;
     const sims: EnemySim[] = enemies
       .filter((e) => e.alive)
       .map((e) => ({
@@ -2157,7 +2247,7 @@ function simulate(
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
-        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0)),
       }))
       // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
       // its next hit (about this one) saved.
@@ -2167,11 +2257,13 @@ function simulate(
         return imbalanced > 0 ? { ...sim, imbalanced } : sim;
       });
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
+    // Ice Cream (whole fights, B2): the last turn's unspent energy carries over.
+    const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) + carried : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -2185,7 +2277,8 @@ function simulate(
       buffer: 0,
       vigor: 0,
       regen: player.regen,
-      facing: null,
+      facing: fullFight ? facing : null,
+      ...(fullFight ? endBlockRelics(input) : {}),
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
@@ -2242,13 +2335,15 @@ function simulate(
     // A whole fight: the draw cards draw known cards (knownDraws), which the line can play.
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
-    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes });
+    const potionsNow = fullFight ? sampledPotions(potions, input, seed, h, played, piles, player, targets, drawing?.known) : potions;
+    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     const best = solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(h, best, [...played, ...potions], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    turnTo(best);
     witherPlayed += cardPlays(best);
     timeUp(h);
     drink(best);

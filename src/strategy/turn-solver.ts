@@ -285,6 +285,13 @@ export interface PlayerSim {
    * turn ends with energy unspent (PAELS_TEARS_ENERGY; logged: 1, 2 or 3 left, next turn 5 on a base of 3).
    */
   paelsTears?: number;
+  /**
+   * Whole-fight simulator only (src/sim, B2; the live planner never sets them): end-of-turn block relics. Orichalcum
+   * (「如果你在回合结束时没有任何格挡，获得格挡」, logged 6): this much when the turn's cards left no block; Ripple Basin
+   * (「如果你在本回合中没有打出过攻击牌，则获得格挡」, logged 4): this much when no Attack was played this turn.
+   */
+  orichalcum?: number;
+  rippleBasin?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -2058,7 +2065,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
-  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
+  // Whole-fight simulator only (unset live): Orichalcum when the cards left no block, Ripple Basin when no Attack was played.
+  const relicEndBlock =
+    (sim.block + etherealBlock + platingNow + claspBlock <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
   // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
   const endTurnGuards = winsFight
     ? []

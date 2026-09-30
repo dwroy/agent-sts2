@@ -320,6 +320,16 @@ export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number;
 }
 
 /**
+ * B2's turn relics for whole fights (fightRelicsOf), measured in the logs (logdb turns): Orichalcum's block when a turn
+ * ends with none (13 of 18 enemy turns after a 0-block end took the intent less 6), Ripple Basin's when no Attack was
+ * played (5 of 7: 4), Sturdy Clamp's block kept (turn-start block peaks at 10 without Barricade), Pendulum's card.
+ */
+export const ORICHALCUM_BLOCK = 6;
+export const RIPPLE_BASIN_BLOCK = 4;
+export const STURDY_CLAMP_BLOCK = 10;
+export const PENDULUM_DRAW = 1;
+
+/**
  * Relics whose energy or block comes on given fight turns and that relicEnergyOf / relicBlockOf leave out, for the whole
  * boss fight simulator only (RolloutInput.fightRelics; src/sim/boss-sim.ts, docs/boss-sim.md B1.5): the live planner and
  * the 5-turn rollout do not read them. Amounts as logged over the A7-A9 boss fights holding them (turn start energy /
@@ -330,6 +340,11 @@ export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number;
 export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upto = 40): NonNullable<RolloutInput["fightRelics"]> {
   const energy: { amount: number; turn: number }[] = [];
   const block: { amount: number; turn: number }[] = [];
+  const draws: { amount: number; turn: number }[] = [];
+  let orichalcum = 0;
+  let rippleBasin = 0;
+  let blockKeep = 0;
+  let iceCream = false;
   for (const relic of asArray(runRaw["relics"]).map(asRecord)) {
     const id = str(relic["relic_id"]);
     if (id === "CANDELABRA") energy.push({ amount: 2, turn: 2 });
@@ -338,9 +353,24 @@ export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upt
     else if (id === "HAPPY_FLOWER") {
       const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
       for (let t = turn + 3 - counted; t <= upto; t += 3) energy.push({ amount: 1, turn: t });
-    }
+    } else if (id === "PENDULUM") {
+      // B2: every 3rd turn 1 card more (logged: the counter 0 on the turn it drew, a 6-card hand; 1 or 2 otherwise, 5).
+      const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
+      for (let t = turn + 3 - counted; t <= upto; t += 3) draws.push({ amount: PENDULUM_DRAW, turn: t });
+    } else if (id === "ORICHALCUM") orichalcum = ORICHALCUM_BLOCK;
+    else if (id === "RIPPLE_BASIN") rippleBasin = RIPPLE_BASIN_BLOCK;
+    else if (id === "STURDY_CLAMP") blockKeep = STURDY_CLAMP_BLOCK;
+    else if (id === "ICE_CREAM") iceCream = true;
   }
-  return { energy, block };
+  return {
+    energy,
+    block,
+    ...(draws.length > 0 ? { draws } : {}),
+    ...(orichalcum > 0 ? { orichalcum } : {}),
+    ...(rippleBasin > 0 ? { rippleBasin } : {}),
+    ...(blockKeep > 0 ? { blockKeep } : {}),
+    ...(iceCream ? { iceCream } : {}),
+  };
 }
 
 /** deck_summary() of tools/build-fight-value.py. */

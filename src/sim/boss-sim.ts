@@ -117,6 +117,11 @@ export interface FightSampleResult {
   dmgByTurn: number[];
   incomingByTurn: number[];
   enemyLossByTurn: number[];
+  /** B2's fight plan: block gained per turn; [turn, id] of each Power played, potion drunk and enemy killed (1 = the start turn). */
+  blockByTurn?: number[];
+  powers?: [number, string][];
+  drinks?: [number, string][];
+  kills?: [number, string][];
   policyTurns: number;
   policyNodes: number;
 }
@@ -251,9 +256,28 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
     dmgByTurn: records.map((r) => Math.round(r.dmg * 10) / 10),
     incomingByTurn: records.map((r) => r.snap.E.reduce((sum, e) => sum + (e[5] ? e[7] : 0), 0)),
     enemyLossByTurn: records.map((r) => Math.round(r.enemyPart * 10) / 10),
+    blockByTurn: records.map((r) => Math.round(r.blockGained ?? 0)),
+    powers: records.flatMap((r, t) => (r.powers ?? []).map((id): [number, string] => [t + 1, id])),
+    drinks: records.flatMap((r, t) => (r.drunk ?? []).map((id): [number, string] => [t + 1, id])),
+    kills: killsOf(input, records),
     policyTurns,
     policyNodes,
   };
+}
+
+/** The turn (1 = the start turn) each enemy alive at the start was first down at the end of our turn, by id. */
+function killsOf(input: RolloutInput, records: { snap: { E: [number, string, number, number, number, boolean, ...unknown[]][] } }[]): [number, string][] {
+  const out: [number, string][] = [];
+  const alive = new Set(input.solver.enemies.filter((e) => e.hp > 0).map((e) => e.index));
+  records.forEach((r, t) => {
+    for (const e of r.snap.E) {
+      if (alive.has(e[0]) && !e[5]) {
+        alive.delete(e[0]);
+        out.push([t + 1, e[1]]);
+      }
+    }
+  });
+  return out;
 }
 
 /**

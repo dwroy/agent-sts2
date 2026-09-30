@@ -18,6 +18,8 @@
  *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5,pre] [--limit N] [--no-rollout] [--no-scripts] [--no-orders]
  *          [--damage-scale D] [--hp-scale H] [--threat T] [--potion-hold K] [--start-line policy|plan1] [--no-best-order] [--set tune|val (experiments/boss-sim/split.json)]
  * --start-line: the start turn played by the sim's policy (default, B1.5) or the live solver's best line (B1).
+ * B2: the random potions held are in the sim (sampled each turn as potion-mc does; --no-random-potions leaves them out),
+ * and the turn relics B2 added (Orichalcum, Ripple Basin, Sturdy Clamp, Pendulum, Ice Cream) and the Kaiser Crab's facing.
  * Output: <out-dir>/results-<I>.jsonl, one line per (fight, start).
  */
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -135,7 +137,7 @@ async function main(): Promise<void> {
       let state: GameState;
       try {
         state = parseGameState(point.state);
-        board = boardOf(state, knowledge, row.encounter, db, mm);
+        board = boardOf(state, knowledge, row.encounter, db, mm, { randomPotions: !flag("no-random-potions") });
       } catch (error) {
         appendFileSync(out, JSON.stringify({ ...base, actual, error: `board: ${String(error).slice(0, 300)}` }) + "\n");
         continue;
