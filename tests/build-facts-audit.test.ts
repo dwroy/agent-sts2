@@ -15,13 +15,17 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { setExperienceForTests, type OutcomeStats } from "../src/knowledge/experience.js";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { NO_DATA, OUTCOME_BASIS_KEY } from "../src/knowledge/outcome-facts.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
 import { DEEPSEEK_DECIDES_NOTE } from "../src/screens/pick.js";
+import { withBossSim } from "../src/sim/build-sim-facts.js";
+import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
 import { rememberMap } from "../src/screens/rest.js";
 import type { JsonValue } from "../src/util/json.js";
 import { ask, board, decide, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
+import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { baseState, chestPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -245,6 +249,32 @@ describe("V4 M2 audit: build questions carry facts, not code's scores", () => {
     expect(Object.keys(capstones.options)).toEqual(["c0", "c1"]);
     expectNoScores(capstones);
   });
+
+  // B3 (BOSS_SIM_BUILD=on): the act boss simulated for each option is a fact too: the same audit on the questions with
+  // it (a fixed monster DB and move model, a few samples; tests/boss-sim-build.test.ts has the rest).
+  it.each([
+    ["reward/card", "xljq-f5-reward", "reward"],
+    ["shop/plan", "u6ru-f22-shop", "open"],
+    ["rest/plan", "7b0d-f8-rest", "rest"],
+    ["selection/remove", "qug1-f22-shop-remove", "remove_select"],
+  ] as const)("%s with the boss simulation: facts, not scores; every option still listed", async (label, file, key) => {
+    setMonsterDbForTests(FIXTURE_DB);
+    try {
+      const e = env(board(file, key));
+      const before = decide(e);
+      const { decision } = await withBossSim(before, e, { runner: new SerialDeckRunner(), samples: 4, deadlineMs: 60_000, db: FIXTURE_DB, mm: FIXTURE_MM });
+      const view = audit(decision);
+      expect(view.label).toBe(label);
+      expect(Object.keys(view.options)).toEqual(Object.keys(audit(before).options));
+      for (const option of Object.values(view.options)) expect(String(option["boss_sim"])).toMatch(/^打本幕 boss（/);
+      expect(view.facts["act_boss_sim"]).toEqual(expect.objectContaining({ current_deck: expect.stringMatching(/^胜率 \d+%/) }));
+      expect(view.facts["act_boss_clock"]).toBeUndefined();
+      expectNoScores(view);
+      expectBasis(view);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  }, 60_000);
 
   it("the card reward as the brain sees it, locked (V4 M2 changes the question: no code_value / code_rank / why, no skip bar)", () => {
     const question = ask(decide(env(board("xljq-f5-reward", "reward"))));

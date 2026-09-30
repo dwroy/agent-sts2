@@ -88,6 +88,12 @@ export interface AppConfig {
    */
   buildOneshot: "on" | "off";
   /**
+   * B3 (docs/boss-sim.md §11): whether each option of a deck-building question DeepSeek decides (card reward, shop,
+   * rest site, deck selection, event) carries the act boss fought in simulation with that option's deck, and
+   * facts.act_boss_sim replaces the act boss clock. `on` (default); `off`: the questions exactly as before.
+   */
+  bossSimBuild: "on" | "off";
+  /**
    * With BUILD_DECIDER=deepseek, whether in-combat card picks (the only in-combat questions that still
    * carry an escalation; turn plans no longer do) may escalate to DeepSeek on Jev's near-guesses. `off`
    * (default): combat, potions and in-combat card picks stay with code and Jev.
@@ -592,6 +598,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems.push({ field: "BUILD_ONESHOT", message: `expected on or off, got "${buildOneshotRaw}"` });
   }
   const buildOneshot: "on" | "off" = buildOneshotRaw === "off" ? "off" : "on";
+  const bossSimBuildRaw = (readEnv(env, "BOSS_SIM_BUILD") ?? "on").toLowerCase();
+  if (bossSimBuildRaw !== "on" && bossSimBuildRaw !== "off") {
+    problems.push({ field: "BOSS_SIM_BUILD", message: `expected on or off, got "${bossSimBuildRaw}"` });
+  }
+  const bossSimBuild: "on" | "off" = bossSimBuildRaw === "off" ? "off" : "on";
   const combatDeepseekRaw = (readEnv(env, "COMBAT_DEEPSEEK") ?? "off").toLowerCase();
   if (combatDeepseekRaw !== "off" && combatDeepseekRaw !== "on") {
     problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
@@ -679,6 +690,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     runPlanLog,
     buildDecider,
     buildOneshot,
+    bossSimBuild,
     combatDeepseek,
     brain,
     deepseek,

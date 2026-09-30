@@ -428,12 +428,14 @@ describe("rollout (offline)", () => {
       return found.sort();
     };
     // The whole boss fight simulator (src/sim/, milestone B1) runs the rollout's simulation offline: not decision code.
-    // B3 builds its synthetic boss start with the live planner's board (rollout-live).
+    // B3 builds its synthetic boss start with the live planner's board (rollout-live), and reaches the loop only through
+    // build-sim-facts (the deck-building questions' facts) and its worker pool (index.ts).
     expect(importers("rollout").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/strategy/rollout-live.ts"]);
     expect(importers("rollout-live").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/screens/combat-plan.ts"]);
     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
     expect(importers("(sim/)?(boss-start|build-sim)").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
-
+    expect(importers("(sim/)?build-sim-facts").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/loop.ts"]);
+    expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/index.ts"]);
   });
 });
 

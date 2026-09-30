@@ -374,6 +374,12 @@ export interface AskDecision {
     plan?: { resolve(json: Record<string, unknown>): ResolvedAction | { invalid: string } };
     /** Deck card ids the question offers beyond the screen's own (cards to smith or remove): the knowledge slice's offered cards. */
     offeredCards?: string[];
+    /**
+     * The options as the screen built them (key, action, summary): what each one does to the deck or HP, for facts added
+     * after the question is built (B3: the act boss simulated with each option's deck, src/sim/build-sim-facts.ts). A
+     * function, so it never reaches the logs or the question.
+     */
+    options?: () => { key: string; intent: ActionRequest; summary: JsonValue }[];
   };
 }
 

@@ -19,6 +19,7 @@ import { planDecision } from "./screens/index.js";
 import { toJsonValue } from "./util/json.js";
 import { style } from "./util/format.js";
 import { acquireLock } from "./util/lock.js";
+import { BuildSimPool } from "./sim/build-sim-pool.js";
 
 const USAGE = `jev-sts2 — play Slay the Spire 2 with Jev (TypeSafe System One)
 
@@ -315,6 +316,7 @@ async function main(argv: string[]): Promise<number> {
             `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
             `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
         );
+        const buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
         const stats = await runLoop({
           config,
           mode,
@@ -335,7 +337,10 @@ async function main(argv: string[]): Promise<number> {
           maxMinutes: number(values["max-minutes"], 60),
           pollIntervalMs: number(values.poll, 400),
           onEvent: (event) => reporter.handle(event),
+          // B3: one worker pool for the whole session (its threads start on the first deck-building question).
+          buildSim: buildSim ? { runner: buildSim } : null,
         });
+        await buildSim?.close();
         reporter.summary(stats);
         return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
       } finally {

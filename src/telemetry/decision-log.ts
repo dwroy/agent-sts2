@@ -64,6 +64,8 @@ export interface DecisionRecord {
   deepseek_fallback?: string;
   /** DeepSeek's answer failed the consistency guard: {first, second, resolution, choice} (see src/llm/consistency.ts). */
   deepseek_consistency?: JsonValue;
+  /** B3: the act boss simulation a deck-building question carried (src/sim/build-sim-facts.ts): numbers and timing. */
+  boss_sim?: JsonValue;
   /** Jev context version of this question (JEV_CONTEXT), present when not "off". */
   jev_context?: string;
   /** Fight-hint ids sent to Jev (src/knowledge/jev-hints.json). */
