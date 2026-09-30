@@ -41,6 +41,7 @@ import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
+import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
@@ -368,7 +369,8 @@ export function deepseekPlanLine(env: DecisionEnv): string | null {
 /**
  * Facts for Jev's potion judgement (on every combat question, kept short): belt slots and a full belt
  * wasting the next potion reward, floors to the act boss, an Elite ahead (DeepSeek's route plan, else a
- * forced one on the map) and the act boss damage gap. DeepSeek's run plan is its own key (deepseek_plan).
+ * forced one on the map), the act boss damage gap and each held potion's worth in the act boss fight
+ * (potion-equivalents.ts). DeepSeek's run plan is its own key (deepseek_plan).
  */
 export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind"]): Record<string, JsonValue> {
   const { state } = env;
@@ -388,6 +390,10 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
     const gap = damageGap(state, env.knowledge);
     if (gap) out["act_boss_clock"] = `needs ~${gap.need} damage a turn, deck ~${gap.deck}${gap.gap > 0 ? ` (short ${gap.gap})` : " (enough)"}`;
   }
+  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule.
+  const actId = str(run["act_id"]);
+  const held = belt.filter((slot) => bool(slot["occupied"])).map((slot) => str(slot["potion_id"])).filter(Boolean);
+  Object.assign(out, heldPotionWorth(held, /^\d+$/.test(actId) ? Number(actId) + 1 : null, state.run?.ascension ?? 0));
   // DeepSeek's run plan is on the question whole (deepseek_plan), not here.
   return out;
 }

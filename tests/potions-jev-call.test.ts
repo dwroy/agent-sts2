@@ -16,6 +16,7 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
 import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalNote, withPotionLines } from "../src/screens/combat-plan.js";
+import { POTION_WORTH_KEY, potionWorthSource } from "../src/knowledge/potion-equivalents.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { dominates, solveTap, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -218,6 +219,22 @@ describe("potion_context on the combat question", () => {
     expect(String(context["act_boss"])).toMatch(/^in \d+ floors \(floor 17\)$/);
     // Short: it goes on every combat question.
     expect(JSON.stringify(context).length).toBeLessThan(600);
+  });
+
+  it("each held potion's worth in this act's boss fight (potion-equivalents.json), facts only: the options are the same", () => {
+    const before = planCombatTurn(env(twoPotions(55, 8))) as AskDecision;
+    potionWorthSource.dir = join(dirname(fileURLToPath(import.meta.url)), "gkb-data", "knowledge");
+    try {
+      const decision = planCombatTurn(env(twoPotions(55, 8))) as AskDecision;
+      const context = decision.state["potion_context"] as Record<string, unknown>;
+      // The payload's act_id "1" is act 2; ascension 0 reads the table's nearest, A8.
+      expect(context[POTION_WORTH_KEY]).toEqual(["火焰药水：约等于 4 血 / 20 伤害 / 4 格挡（本幕 boss，A8 公式 n=20）", "格挡药水：约等于 8 血 / 40 伤害 / 8 格挡（本幕 boss，A8 公式 n=20）"]);
+      expect((decision.jevView?.state ?? decision.state)["potion_context"]).toEqual(context);
+      expect(decision.questions).toEqual(before.questions);
+      expect(JSON.stringify(context).length).toBeLessThan(600);
+    } finally {
+      potionWorthSource.dir = undefined;
+    }
   });
 });
 
