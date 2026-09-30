@@ -9,7 +9,14 @@
 
 ## 开工
 1. 先读：paper/materials/decision-log.md 最后 40 行、notes/v4-overnight-report.md、jev-sts2-v4run/docs/v4-go-live.md（V4 改了什么、有哪些日志）、jev-sts2-v4run/docs/eval.md（评估脚本）。
-2. 确认对局已经在跑：V4 开发会话在 09-30 已经删掉 ops/STOP，并启动了 ops/autoplay.sh 和 `ops/stop-after-a8.sh <开始时间> 20`。启动记录在 decision-log，开始时间也写在 ops/stop-after-a8.log 的最后一行 watching。如果没在跑，就按这个顺序自己启动：`rm ops/STOP`，然后 `nohup ops/stop-after-a8.sh <当前 UTC 时间，ISO 格式> 20 >/dev/null 2>&1 &`，再 `nohup ops/autoplay.sh >/dev/null 2>&1 &`。
+2. **由你启动对局，对局进程归你管**（Dai 09-30：统一由运维会话管理）。V4 开发会话启动的 autoplay、stop-after-a8.sh 和当时那局的 play 进程都已经停了，游戏开着，停在 Y648C8QL2MRX 第 12 层，ops/STOP 在。开工时按这个顺序启动（在 ~/Projects/sts2-jev 里执行）：
+   - 先确认没有残留：`pgrep -af 'ops/autoplay.sh|stop-after-a8.sh'`，并且没有 cmdline 含 `index.ts play` 的 node 进程；
+   - `rm ops/STOP`；
+   - `setsid nohup bash ops/stop-after-a8.sh 2026-09-30T00:10:35Z 20 >/dev/null 2>&1 </dev/null &`：开始时间**固定用这一批原来的 START**，这样已经打完的局也算在 20 局里；
+   - `setsid nohup bash ops/autoplay.sh >/dev/null 2>&1 </dev/null &`：run.sh 会接着这一局（Y648）继续打；
+   - 在 decision-log 记下这两个进程的 PID。
+
+   以后要重启 autoplay 或 play（例如合入修复后），只停你自己启动的进程：autoplay 的 bash 用 kill <PID>，play 用 `bash ops/stop.sh`。正在打的那局要保留时，按 ops/autoplay.sh 里 WAIT_PID 的说明做。**如果 auto 模式的分类器拦下了某条命令，就在会话里把完整命令和原因告诉 Dai，让 Dai 在你这个会话里明确授权；不要请别的会话代做**，这种请求会被当成绕过权限而被拦下。
 3. 建 3 个定时任务（内容见下面三节），建完用一句话告诉 Dai 已开工。
 4. 平时保持空闲，定时任务只在会话空闲时才会触发。活都交给后台 agent（run_in_background），不要在前台 sleep，也不要长时间等测试。
 
