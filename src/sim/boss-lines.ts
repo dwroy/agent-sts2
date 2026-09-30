@@ -469,8 +469,9 @@ function namesOf(input: RolloutInput): { card: (id: string) => string } {
 /**
  * The fight plan from the best line's winning samples (all samples when fewer than 10 won): what at least
  * BOSS_LINES_PLAN_SHARE of them do, in fight turns. Powers played by then (the median turn), the turns the enemies hit
- * hardest and the block the samples put up on them, the enemies' kill turns (several enemies), the potions drunk
- * (median turn), and the turn the fight ends. One sentence; information only.
+ * hardest and their incoming damage (V4.2: not the block the samples put up, which Jev read as advice), the enemies'
+ * kill turns (several enemies), the potions drunk (median turn), and the turn the fight ends. One sentence; information
+ * only.
  */
 export function fightPlanText(input: RolloutInput, line: BossSimLineResult, turnNow: number): string | null {
   const won = line.outcomes.filter((o) => o.won);
@@ -494,21 +495,14 @@ export function fightPlanText(input: RolloutInput, line: BossSimLineResult, turn
     parts.push(`${powers[0]!.t === last ? T(last) : `${T(powers[0]!.t)}–${T(last)}`} play ${powers.map((p) => names.card(p.id)).join(", ")}`);
   }
   // The hardest hits: a turn whose mean attack (samples still fighting it) is at least 1.5x the fight's median turn
-  // and a quarter of our HP now; what the samples block on it.
-  const byTurn = new Map<number, { inc: number[]; blk: number[] }>();
-  for (const o of base) {
-    o.incomingByTurn.forEach((inc, k) => {
-      const entry = byTurn.get(k + 1) ?? { inc: [], blk: [] };
-      entry.inc.push(inc);
-      entry.blk.push(o.blockByTurn?.[k] ?? 0);
-      byTurn.set(k + 1, entry);
-    });
-  }
-  const turns = [...byTurn.entries()].filter(([, e]) => share(e.inc.length)).map(([t, e]) => ({ t, inc: e.inc.reduce((s, x) => s + x, 0) / e.inc.length, blk: median(e.blk) }));
+  // and a quarter of our HP now; only the incoming damage (the simulated play blocks less than ours on them, §6.2).
+  const byTurn = new Map<number, number[]>();
+  for (const o of base) o.incomingByTurn.forEach((inc, k) => byTurn.set(k + 1, [...(byTurn.get(k + 1) ?? []), inc]));
+  const turns = [...byTurn.entries()].filter(([, inc]) => share(inc.length)).map(([t, inc]) => ({ t, inc: inc.reduce((s, x) => s + x, 0) / inc.length }));
   const typical = quantile(turns.map((x) => x.inc).sort((a, b) => a - b), 0.5);
   const hp = input.solver.player.hp;
   const big = turns.filter((x) => x.t > 1 && x.inc >= Math.max(1.5 * typical, 0.25 * hp) && x.inc >= 10).slice(0, 3);
-  if (big.length > 0) parts.push(`${big.map((x) => T(x.t)).join(", ")} the enemies hit hardest (~${big.map((x) => Math.round(x.inc)).join(", ~")}): the samples block ~${big.map((x) => x.blk).join(", ~")} on ${big.length === 1 ? "it" : "them"}`);
+  if (big.length > 0) parts.push(`${big.map((x) => T(x.t)).join(", ")} the enemies hit hardest (incoming ~${big.map((x) => Math.round(x.inc)).join(", ~")})`);
   // Kill turns, when there are several enemies (by board index: The Kin's two Followers apart).
   if (input.solver.enemies.filter((e) => e.hp > 0).length >= 2) {
     const killT = new Map<number, number[]>();

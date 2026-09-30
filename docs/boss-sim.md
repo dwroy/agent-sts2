@@ -669,12 +669,12 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
 提炼方法（`fightPlanText`）：只看最优线**赢了的样本**（少于 10 个时用全部样本，并直说「多数样本赢不了」）；一个动作要至少一半样本都做才写进去（「多数样本共有」）。回合都写成本场的绝对回合。
 
 - **能力牌**：每张能力牌在多少样本里打出、第一次打出的回合中位数；过半样本打出的按回合排，写「T1–T2 play Demon Form, Inflame」。
-- **大招回合**：每个回合在还在打的样本里的平均来袭，高于全场各回合中位的 1.5 倍、且不少于当前血量的 1/4 和 10 点，算「打得最重」的回合（最多 3 个）；同时写样本在这些回合的格挡中位，例如「T4, T7 the enemies hit hardest (~34, ~36): the samples block ~30, ~28 on them」。
+- **大招回合**：每个回合在还在打的样本里的平均来袭，高于全场各回合中位的 1.5 倍、且不少于当前血量的 1/4 和 10 点，算「打得最重」的回合（最多 3 个）；只写来袭，例如「T4, T7 the enemies hit hardest (incoming ~34, ~36)」。V4.2 起不写样本在这些回合的格挡中位（模拟的策略在大招回合挡得比实际少，B1.5 §6.2，「block ~0」会被 Jev 当成建议）。
 - **击杀顺序**（多个敌人）：每个敌人被打死的回合中位（过半样本打死才写）。
 - **药水**：过半样本喝的药水和喝的回合中位。
 - **结束**：赢的样本结束回合的中位，「the boss dies ~T9 (median of 40 winning samples)」。
 
-测试里的样例（第 3 回合开始的盘面）：`T3 play Inflame; T6, T9 the enemies hit hardest (~34, ~36): the samples block ~30, ~28 on them; drink block potion ~T6; the boss dies ~T9 (median of 40 winning samples)`。
+测试里的样例（第 3 回合开始的盘面）：`T3 play Inflame; T6, T9 the enemies hit hardest (incoming ~34, ~36); drink block potion ~T6; the boss dies ~T9 (median of 40 winning samples)`。
 
 ### 11.5 开关
 

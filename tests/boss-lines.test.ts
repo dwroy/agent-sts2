@@ -160,7 +160,7 @@ describe("B2 ranking", () => {
 });
 
 describe("B2 fight plan", () => {
-  it("what most winning samples do, in fight turns: Powers, the hardest hits and the block on them, kills, potions, the end", () => {
+  it("what most winning samples do, in fight turns: Powers, the hardest hits (incoming only, V4.2: no simulated block), kills, potions, the end", () => {
     const input = board();
     input.solver.hand.push({ ...input.solver.hand[0]!, cardId: "INFLAME", name: "Inflame", type: "Power" });
     const won = (k: number) =>
@@ -173,7 +173,8 @@ describe("B2 fight plan", () => {
     const outcomes = [...Array.from({ length: 40 }, (_, k) => won(k)), ...Array.from({ length: 10 }, () => sample(false, 70, 5))];
     // From fight turn 3: the plan's turns are fight turns (the start turn is T3).
     const text = fightPlanText(input, line(0, outcomes), 3)!;
-    expect(text).toBe("T3 play Inflame; T6, T9 the enemies hit hardest (~34, ~36): the samples block ~30, ~28 on them; drink block potion ~T6; the boss dies ~T9 (median of 40 winning samples)");
+    expect(text).toBe("T3 play Inflame; T6, T9 the enemies hit hardest (incoming ~34, ~36); drink block potion ~T6; the boss dies ~T9 (median of 40 winning samples)");
+    expect(text).not.toMatch(/block ~/);
     // Few winning samples: the plan says so.
     const losing = fightPlanText(input, line(0, Array.from({ length: 20 }, (_, k) => (k < 3 ? sample(true, 10, 6) : sample(false, 70, 4)))), 1)!;
     expect(losing).toContain("no plan wins in most samples: 3/20 won");
