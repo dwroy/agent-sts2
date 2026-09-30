@@ -269,3 +269,32 @@ describe("DeepSeek engine beyond v3", () => {
     expect(second.messages[3]!.content).toContain("Valid choices: card0, card1, skip.");
   });
 });
+
+describe("V3-final's empty-reply fixes on V4's paths (v3 fa46f6c, 7b54237)", () => {
+  it("a shop plan through the brain: an empty reply takes the plan its reasoning drafted that the screen's own check accepts", async () => {
+    const ds = client();
+    const shop: Record<string, string | null> = { buy_card1: JSON.stringify({ price: 50 }), buy_card3: JSON.stringify({ price: 75 }), leave: null };
+    // The reasoning drafts two plans; the screen accepts only buy_card3 (say buy_card1 is sold out now).
+    reply({ content: "", reasoning: 'First {"plan": ["buy_card1"], "reason": "a"} then {"plan": ["buy_card3"], "reason": "b"} ... wait {"plan": ["buy_card1"], "reason": "c"}' });
+    const { brain } = brainOf(ds);
+    const screen = (json: Record<string, unknown>) => Array.isArray(json["plan"]) && !(json["plan"] as unknown[]).includes("buy_card1");
+    const { json, recovered, note } = await brain.choosePlan({ screen: "SHOP" }, "Plan the shop.", shop, { label: "shop/plan", memory: { ...memory } }, screen);
+    expect(json).toEqual({ plan: ["buy_card3"], reason: "b" });
+    expect(recovered).toBe(true);
+    expect(note).toMatch(/empty reply \(finish_reason stop; .*\): the answer taken from the end of its reasoning/);
+    expect(bodies).toHaveLength(1);
+  });
+
+  it("the router's re-ask path: an empty reply takes the answer its reasoning drafted; none drafted names the finish_reason", async () => {
+    const ds = client();
+    const engine = new DeepSeekEngine(ds);
+    const spec = pickSpec("reward/card", criteria, state);
+    const req = { label: "reward/card", system: ds.systemPrompt, memory, question: "Pick a card.", options: criteria, payload: state, spec, reask: { answer: "(no answer)", problems: ["no answer"] } };
+    reply({ content: "", reasoning: 'I will send {"choice": "card1", "reason": "damage"}' });
+    expect((await engine.decide(req)).answer).toEqual({ choice: "card1", reason: "damage" });
+    reply({ content: "", reasoning: "thinking, no answer drafted" });
+    const none = await engine.decide(req);
+    expect(none.answer).toBeNull();
+    expect(none.problems).toEqual(["the reply was empty (finish_reason stop) and its reasoning drafted no valid answer"]);
+  });
+});

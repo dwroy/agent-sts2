@@ -477,7 +477,7 @@ export class DeepSeekClient implements Escalator {
     messages: Record<string, unknown>[],
     label: string,
     options: { tools?: Record<string, unknown>[]; toolChoice?: "auto" | "none"; signal?: AbortSignal } = {},
-  ): Promise<{ content: string; reasoning: string; toolCalls: { id: string; name: string; arguments: string }[]; message: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+  ): Promise<{ content: string; reasoning: string; finishReason: string; toolCalls: { id: string; name: string; arguments: string }[]; message: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
     const started = Date.now();
     const effort = effortFor(label, this.config);
     const thinking = effort !== "off";
@@ -503,7 +503,7 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek HTTP ${response.status}: ${body}`);
       }
       const payload = (await response.json()) as {
-        choices?: { message?: { content?: string | null; reasoning_content?: string; tool_calls?: { id?: string; function?: { name?: string; arguments?: string } }[] } }[];
+        choices?: { message?: { content?: string | null; reasoning_content?: string; tool_calls?: { id?: string; function?: { name?: string; arguments?: string } }[] }; finish_reason?: string | null }[];
         usage?: { prompt_tokens?: number; completion_tokens?: number; prompt_cache_hit_tokens?: number; completion_tokens_details?: { reasoning_tokens?: number } };
       };
       const message = payload.choices?.[0]?.message ?? {};
@@ -511,6 +511,8 @@ export class DeepSeekClient implements Escalator {
       return {
         content: message.content ?? "",
         reasoning: message.reasoning_content ?? "",
+        // v3 fa46f6c: why a reply came back empty or cut ("length"); "" when not sent.
+        finishReason: payload.choices?.[0]?.finish_reason ?? "",
         toolCalls: (message.tool_calls ?? []).map((call, index) => ({ id: call.id ?? `call_${index}`, name: call.function?.name ?? "", arguments: call.function?.arguments ?? "" })),
         message: message as Record<string, unknown>,
         meta: {
