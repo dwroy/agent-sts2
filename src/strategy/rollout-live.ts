@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { appliedPowerIds, countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -96,7 +96,46 @@ export interface MonsterDbMove extends MoveEntry {
   avg_total_shown?: number;
 }
 
-export type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
+export type MonsterMoves = Record<
+  string,
+  {
+    moves?: Record<string, MonsterDbMove>;
+    name?: { zh?: string };
+    hp_by_asc?: Record<string, { median?: number }>;
+    powers?: Record<string, { amount_at_first_sight_by_asc?: Record<string, Record<string, number>>; turn_at_first_sight_by_asc?: Record<string, Record<string, number>> }>;
+  }
+>;
+
+/** Moves whose hit grows with each use (EnemyMove.growth; the step from monster-db moveBaseDamages). */
+export const GROWING_DAMAGE_MOVES: Record<string, string[]> = { WATERFALL_GIANT: ["PRESSURE_GUN_MOVE"] };
+
+/** Stun-threshold powers (Shriek, Plow) an enemy gets after its first turn (EnemyTable.shriekFrom). */
+const LATER_SHRIEK_POWERS = ["PLOW_POWER", "SHRIEK_POWER"];
+
+/**
+ * A Shriek / Plow threshold first seen after turn 1 (the Ceremonial Beast's Plow: 150 at A8, 160 at A9, on turn 2): the
+ * amount and turn most often first seen at this ascension (the nearest logged one else), or undefined.
+ */
+export function shriekFromOf(id: string, asc: number, db: MonsterMoves): { amount: number; turn: number } | undefined {
+  for (const power of LATER_SHRIEK_POWERS) {
+    const entry = db[id]?.powers?.[power];
+    const found = nearestAscension(entry?.amount_at_first_sight_by_asc, asc);
+    if (!entry || !found) continue;
+    const amount = mode(entry.amount_at_first_sight_by_asc?.[found.key]);
+    const turn = mode(entry.turn_at_first_sight_by_asc?.[found.key]);
+    if (amount !== null && amount > 0 && turn !== null && turn > 1) return { amount, turn };
+  }
+  return undefined;
+}
+
+/** The damage a growing move's hit gains a use (GROWING_DAMAGE_MOVES): the most common step of its logged bases, or 0. */
+export function growthOf(id: string, move: string, asc: number): number {
+  if (!GROWING_DAMAGE_MOVES[id]?.includes(move)) return 0;
+  const bases = moveBaseDamages(id, move, asc);
+  const steps: Record<string, number> = {};
+  for (let i = 1; i < bases.length; i += 1) steps[String(bases[i]! - bases[i - 1]!)] = (steps[String(bases[i]! - bases[i - 1]!)] ?? 0) + 1;
+  return Math.max(0, mode(steps) ?? 0);
+}
 
 const KNOWLEDGE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge");
 let dbCache: MonsterMoves | undefined;
@@ -225,12 +264,15 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...statusCardsOf(entry),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated || shown?.estimated ? { estimated: true } : {}),
+      ...(growthOf(id, move, asc) > 0 ? { growth: growthOf(id, move, asc) } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
     if (!table.moves[move]) table.moves[move] = { damage, hits: 1, strength: 0, block: 0 };
   }
   table.next = learned?.next ?? Object.fromEntries(Object.entries(moves ?? {}).map(([m, e]) => [m, e.next ?? {}]));
+  const shriekFrom = shriekFromOf(id, asc, db);
+  if (shriekFrom) table.shriekFrom = shriekFrom;
   return table;
 }
 

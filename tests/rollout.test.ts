@@ -427,8 +427,11 @@ describe("rollout (offline)", () => {
       walk(join(ROOT, "src"));
       return found.sort();
     };
-    expect(importers("rollout")).toEqual(["src/strategy/rollout-live.ts"]);
+    // The whole boss fight simulator (src/sim/, milestone B1) runs the rollout's simulation offline: not decision code,
+    // and nothing in src imports it (below) until B2/B3 wire it in.
+    expect(importers("rollout").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/strategy/rollout-live.ts"]);
     expect(importers("rollout-live")).toEqual(["src/screens/combat-plan.ts"]);
+    expect(importers("(sim/)?boss-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
   });
 });
 

@@ -420,6 +420,11 @@ export interface SolverInput {
   laterIncoming?: number[];
   maxNodes?: number;
   /**
+   * The damage weight times this (unset: 1): the whole boss fight simulator's policy knob (src/sim/boss-sim.ts,
+   * docs/boss-sim.md), never set by the live planner.
+   */
+  damageScale?: number;
+  /**
    * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
    * the rest of the turn" (potion-mc.ts). Unset: any first play.
    */
@@ -1941,6 +1946,7 @@ export function weightsFor(input: SolverInput): Weights {
   let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
+  if (input.damageScale !== undefined) damage *= input.damageScale;
   // Cards that pay off on Vulnerable in the deck (Dismantle hits twice, Bully, Molten Fist doubles it,
   // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
   // the same HP; Dismantle x2 on T7 would have killed the beetle).
