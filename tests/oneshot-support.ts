@@ -17,7 +17,7 @@ import type { AnswerSet } from "../src/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/jev/client.js";
 import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import { runLoop } from "../src/loop.js";
+import { runLoop, type LoopOptions } from "../src/loop.js";
 import { ModClient } from "../src/mod/client.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
@@ -180,7 +180,7 @@ export function stubJev(): JevClient {
 const servers: TestServer[] = [];
 const logs: string[] = [];
 
-export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}) {
+export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}, loop: Partial<LoopOptions> = {}) {
   const path = join(tmpdir(), `jev-sts2-oneshot-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
   logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
   const base = loadConfig({} as NodeJS.ProcessEnv);
@@ -208,7 +208,7 @@ export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Part
   });
   servers.push(server);
   const notes: string[] = [];
-  const stats = await runLoop({ config: cfg, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), escalators: [deepseek], knowledge: loggedKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1, restoreRun: false, onEvent: (event) => (event.type === "note" ? void notes.push(event.message) : undefined) });
+  const stats = await runLoop({ config: cfg, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), escalators: [deepseek], knowledge: loggedKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1, restoreRun: false, onEvent: (event) => (event.type === "note" ? void notes.push(event.message) : undefined), ...loop });
   const records = readFileSync(path, "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line) as Raw);
   return { stats, actions, records, notes };
 }

@@ -133,6 +133,8 @@ export interface RunConfigRow {
     combat_planner: string;
     build_decider: string;
     build_oneshot: string;
+    /** B3: the act boss simulated for each option of a deck-building question (BOSS_SIM_BUILD). */
+    boss_sim_build: string;
     combat_deepseek: string;
     fight_plan: string;
     run_plan: string;
@@ -391,6 +393,7 @@ export function runConfigRow(
       combat_planner: config.combatPlanner,
       build_decider: config.buildDecider,
       build_oneshot: config.buildOneshot,
+      boss_sim_build: config.bossSimBuild,
       combat_deepseek: config.combatDeepseek,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,

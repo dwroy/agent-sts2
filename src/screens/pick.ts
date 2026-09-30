@@ -295,6 +295,7 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
       ...(deepseek.onFail ? { onFail: deepseek.onFail } : {}),
       ...(deepseek.oneshot ? { oneshot: deepseek.oneshot } : {}),
       ...(deepseek.offeredCards && deepseek.offeredCards.length > 0 ? { offeredCards: deepseek.offeredCards } : {}),
+      options: () => params.options.map((option) => ({ key: option.key, intent: option.intent, summary: option.summary })),
     },
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
