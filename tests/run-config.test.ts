@@ -81,7 +81,7 @@ function setup(env: Record<string, string>, dir: string): { config: AppConfig; b
   const full = { BRAIN_LOG: join(dir, "brain.jsonl"), DECISION_LOG: join(dir, "decisions.jsonl"), ...env } as unknown as NodeJS.ProcessEnv;
   const config = loadConfig(full);
   const ds = config.deepseek
-    ? new DeepSeekClient({ ...config.deepseek, baseUrl: "http://deepseek.invalid", guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md") })
+    ? new DeepSeekClient({ ...config.deepseek, baseUrl: "http://deepseek.invalid", guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md"), factsSnapshotDir: "" })
     : null;
   return { config, brain: ds ? createBrain(config, ds) : null, env: full };
 }

@@ -16,7 +16,10 @@ loss_per_turn ((entry - final) / turns), for tools/boss-loss-backtest.ts.
 Also per boss, by ascension (the counts the guides and boss notes quote, filled from here by strategy/boss-clock.ts
 instead of hand-written: 2026-09-29 knowledge check): by_asc {fights, won, entry_pct_won, entry_pct_lost};
 KAISER_CRAB.first_death (the claw that died first while the other lived, or null); LAGAVULIN_MATRIARCH.sleep
-(the turn it woke, the share of its HP lost by then, the deck's lasting-Strength cards); WATERFALL_GIANT.kills.
+(the turn it woke, the share of its HP lost by then, the deck's lasting-Strength cards); WATERFALL_GIANT.kills;
+QUEEN.amalgam (the turn the Torch Head Amalgam died while the Queen lived, or null; the HP each lost by the first frame
+of turn 3); THE_INSATIABLE.deaths (a lost fight's death line: HP with the Sandpit at 2+, the Sandpit with HP and block
+over the shown attack, or both at once; from the fight's last frame).
 
 Only states that name a boss enemy are read (grep), not the whole file.
 
@@ -94,6 +97,13 @@ def main() -> None:
     # (run, floor) -> the Matriarch's sleep: {"max", "woke_turn", "woke_hp", "strength"} (the first frame without
     # Asleep: the turn and its HP then; strength: the deck's Strength cards on the fight's first frame).
     lag_sleep = {}
+    # (run, floor) -> the Queen fight: the bodies' HP on the first frame, on the first frame of turn 3 (or the last
+    # frame before it), and the turn the Amalgam was first seen dead while the Queen lived (queen-plan: 5LRZ, Q8XR A8
+    # put their T1 burst into the Queen and lost; queenAmalgamRecord).
+    queen_track = {}
+    # (run, floor) -> the Insatiable fight's last frame: (Sandpit, our HP, our block, the attack it shows) (a loss's
+    # death line: NH8A A8 died on HP with the Sandpit at 2 after an Escape over damage; sandpitDeathRecord).
+    sand_last = {}
     for line in grep.stdout:
         try:
             state = json.loads(line)["state"]
@@ -131,6 +141,26 @@ def main() -> None:
             asleep = any(p.get("power_id") == "ASLEEP_POWER" and (p.get("amount") or 0) > 0 for p in (body or {}).get("powers") or [])
             if sleep is not None and body is not None and sleep["woke_turn"] is None and not asleep:
                 sleep["woke_turn"], sleep["woke_hp"] = turn, body.get("current_hp")
+        if boss == "QUEEN" and turn is not None:
+            def body_hp(enemy_id):
+                body = next((e for e in bodies if e.get("enemy_id") == enemy_id), None)
+                return 0 if body is None or body.get("is_alive") is False else max(0, body.get("current_hp") or 0)
+            queen_hp, amalgam_hp = body_hp("QUEEN"), body_hp("TORCH_HEAD_AMALGAM")
+            track = queen_track.get(key)
+            if track is None:
+                track = queen_track[key] = {"q0": queen_hp, "a0": amalgam_hp, "q3": None, "a3": None, "q_last": queen_hp, "a_last": amalgam_hp, "dead": None}
+            if turn >= 3 and track["q3"] is None:
+                track["q3"], track["a3"] = queen_hp, amalgam_hp
+            if turn < 3:
+                track["q_last"], track["a_last"] = queen_hp, amalgam_hp
+            if track["dead"] is None and queen_hp > 0 and amalgam_hp <= 0:
+                track["dead"] = turn
+        if boss == "THE_INSATIABLE" and turn is not None:
+            body = bodies[0]
+            sandpit = next((p.get("amount") for p in body.get("powers") or [] if p.get("power_id") == "SANDPIT_POWER"), None)
+            player = combat.get("player") or {}
+            shown_attack = sum((i.get("damage") or 0) * max(1, i.get("hits") or 1) for i in body.get("intents") or [] if i.get("damage") is not None)
+            sand_last[key] = (sandpit, player.get("current_hp"), player.get("block") or 0, shown_attack)
         if turn is None or turn in fights[key]:
             continue
         hp = (combat.get("player") or {}).get("current_hp")
@@ -158,6 +188,9 @@ def main() -> None:
     # The Kaiser Crab's claw that died first, and the Matriarch's sleep, by ascension (crabKillRecord, lagSleepRecord).
     crab_rows = collections.defaultdict(list)
     lag_rows = collections.defaultdict(list)
+    # The Queen's Amalgam and the Insatiable's death line, by ascension (queenAmalgamRecord, sandpitDeathRecord).
+    queen_rows = collections.defaultdict(list)
+    sand_rows = collections.defaultdict(list)
     for key, turns in fights.items():
         boss, asc = meta[key]
         run_id, floor = key
@@ -196,6 +229,24 @@ def main() -> None:
             sleep = lag_sleep[key]
             woke_pct = round(100.0 * (sleep["max"] - sleep["woke_hp"]) / sleep["max"]) if sleep["woke_hp"] is not None and sleep["max"] else None
             lag_rows[str(asc)].append({"run": (run_id or "")[:4], "won": won, "woke_turn": sleep["woke_turn"], "woke_pct": woke_pct, "strength": sleep["strength"]})
+        if boss == "QUEEN" and key in queen_track:
+            track = queen_track[key]
+            q3 = track["q3"] if track["q3"] is not None else track["q_last"]
+            a3 = track["a3"] if track["a3"] is not None else track["a_last"]
+            queen_rows[str(asc)].append({"run": (run_id or "")[:4], "won": won, "killed_turn": track["dead"],
+                                         "t12_queen": track["q0"] - q3, "t12_amalgam": track["a0"] - a3})
+        if boss == "THE_INSATIABLE" and key in sand_last:
+            sandpit, hp, block, attack = sand_last[key]
+            death = None
+            if not won:
+                # The Sandpit drops by 1 each enemy turn and eats us at 0: at 2+ on the last frame the HP line ended it.
+                if sandpit is None or sandpit >= 2:
+                    death = "hp"
+                elif (hp or 0) + block >= attack:
+                    death = "sandpit"
+                else:
+                    death = "both"
+            sand_rows[str(asc)].append({"run": (run_id or "")[:4], "won": won, "death": death, "sandpit": sandpit, "hp": hp})
         if boss == "WATERFALL_GIANT":
             kill = giant_kills.get(key)
             kills[str(asc)].append({"run": (run_id or "")[:4], "turn": kill[0] if kill else None, "won": won,
@@ -220,6 +271,10 @@ def main() -> None:
             out[boss]["sleep"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(lag_rows.items())}
         if boss == "WATERFALL_GIANT":
             out[boss]["kills"] = {asc: sorted(rows_, key=lambda r: (r["turn"] is None, r["turn"] or 0, r["run"])) for asc, rows_ in sorted(kills.items())}
+        if boss == "QUEEN":
+            out[boss]["amalgam"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(queen_rows.items())}
+        if boss == "THE_INSATIABLE":
+            out[boss]["deaths"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(sand_rows.items())}
     with open(args.out, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")

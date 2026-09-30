@@ -101,13 +101,23 @@ export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
 function taskSpec(label: string, accept?: (json: Json) => boolean): AnswerSpec {
   const base = label === "run-plan" ? runPlanSpec(label) : label === "fight-plan" ? fightPlanSpec(label) : freeSpec(label, { type: "object" });
+  return withAccept(base, accept, "the answer is not in the task's format");
+}
+
+/**
+ * A spec whose check is the caller's own (a task's format, the shop screen's resolve): an answer it accepts is valid;
+ * one it rejects gets the base spec's problems, or `rejected` when the base finds none. v3's DeepSeek path hands this
+ * check to the client, which also uses it to take an empty reply's answer from the end of its reasoning
+ * (llm/deepseek.ts emptyReplyRetry).
+ */
+function withAccept(base: AnswerSpec, accept: ((json: Json) => boolean) | undefined, rejected: string): AnswerSpec {
   if (!accept) return base;
   return {
     ...base,
     validate(answer: unknown): string[] {
       if (isObject(answer) && accept(answer)) return [];
       const problems = base.validate(answer);
-      return problems.length > 0 ? problems : ["the answer is not in the task's format"];
+      return problems.length > 0 ? problems : [rejected];
     },
   };
 }
@@ -294,25 +304,36 @@ export class Brain {
     };
   }
 
-  /** v3 DeepSeekClient.choosePlan: a shop's shopping list (the screen validates it). */
-  async choosePlan(state: Record<string, JsonValue>, instructions: string, criteria: Record<string, string | null>, context: Record<string, JsonValue> = {}): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage }> {
+  /**
+   * v3 DeepSeekClient.choosePlan: a shop's shopping list (the screen validates it). `accept` is the screen's own
+   * check (v3 7b54237): it joins the spec's, so an empty DeepSeek reply takes the plan its reasoning drafted that
+   * the screen accepts, and another engine's plan the screen rejects is a problem the router can re-ask on.
+   */
+  async choosePlan(
+    state: Record<string, JsonValue>,
+    instructions: string,
+    criteria: Record<string, string | null>,
+    context: Record<string, JsonValue> = {},
+    accept?: (json: Record<string, unknown>) => boolean,
+  ): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
-    const spec = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
+    const base = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
+    const spec = withAccept(base, accept, "the screen does not accept this plan (a step it cannot take now)");
     const result = await this.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
     const brain = Brain.meta(result);
-    const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage }>(result);
+    const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
     if (!isObject(result.answer)) throw Brain.unusable(result, brain);
     return { json: result.answer, meta: Brain.usage(result, brain) };
   }
 
   /** v3 DeepSeekClient.askJson: a free-form task (run plan, fight plan); `accept` is the caller's format check. */
-  async askJson(payload: Record<string, JsonValue>, label: string, accept?: (json: Record<string, unknown>) => boolean): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true }> {
+  async askJson(payload: Record<string, JsonValue>, label: string, accept?: (json: Record<string, unknown>) => boolean): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }> {
     const { task, memory, ...input } = payload;
     const question = typeof task === "string" ? task : label;
     const result = await this.decide(this.request(label, question, memory, input, taskSpec(label, accept)));
     const brain = Brain.meta(result);
-    const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true }>(result);
+    const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
     if (!isObject(result.answer)) throw Brain.unusable(result, brain);
     const json = label === "fight-plan" ? fightPlanFromSchema(result.answer) : result.answer;

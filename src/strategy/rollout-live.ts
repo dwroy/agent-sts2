@@ -60,7 +60,7 @@ import {
   type RolloutResult,
   type SpawnTemplate,
 } from "./rollout.js";
-import type { EnemySim, Plan, SolverInput } from "./turn-solver.js";
+import { hpText, type EnemySim, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
 export { killOrders, type KillGroup, type KillOrder };
@@ -749,11 +749,11 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
  */
 export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
   const o = plan.outcome;
-  const first = `T1 exact: hp -${o.hpLoss}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
+  const first = `T1 exact: ${hpText(o.hpLoss)}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
   const later = line.perTurn.map((t) =>
     t.fighting === 0
       ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`
-      : `T${t.turn}: hp -${round1(t.loss.mean)} [${Math.round(t.loss.min)}-${Math.round(t.loss.max)}], dmg ${round1(t.dmg.mean)} [${Math.round(t.dmg.min)}-${Math.round(t.dmg.max)}], alive ${t.alive}/${samples}, won ${t.won}/${samples}`,
+      : `T${t.turn}: ${hpText(round1(t.loss.mean))} [${Math.round(t.loss.min)}-${Math.round(t.loss.max)}], dmg ${round1(t.dmg.mean)} [${Math.round(t.dmg.min)}-${Math.round(t.dmg.max)}], alive ${t.alive}/${samples}, won ${t.won}/${samples}`,
   );
   return [first, ...later].join("; ");
 }

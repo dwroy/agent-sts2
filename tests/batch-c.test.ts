@@ -426,21 +426,27 @@ describe("12. A DeepSeek reply that does not parse is logged, raw reply and usag
   }
 
   it("askJson (run plan, fight plan): an empty reply throws DeepSeekAnswerError with its usage, and leaves a row", async () => {
+    // Batch M (79YR F30): an empty reply with no answer drafted in its reasoning is asked once more; empty twice, it
+    // fails with both calls' usage, a row for each.
     const { client, rows } = await replying("");
     const error = await client.askJson({ task: "Write the act plan." }, "run-plan").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(DeepSeekAnswerError);
-    expect((error as DeepSeekAnswerError).meta).toMatchObject({ inputTokens: 1200, outputTokens: 300 });
-    expect(rows()).toEqual([expect.objectContaining({ label: "run-plan", parse_error: expect.stringMatching(/non-JSON/), raw_reply: "", reasoning: "Decision: o1.", usage: expect.objectContaining({ input_tokens: 1200 }) })]);
+    expect((error as DeepSeekAnswerError).meta).toMatchObject({ inputTokens: 2400, outputTokens: 600 });
+    expect(rows()).toEqual([
+      expect.objectContaining({ label: "run-plan", parse_error: expect.stringMatching(/^empty reply .*: asked once more$/), raw_reply: "", reasoning: "Decision: o1.", usage: expect.objectContaining({ input_tokens: 1200 }) }),
+      expect.objectContaining({ label: "run-plan", parse_error: expect.stringMatching(/reply was empty twice/), raw_reply: "", reasoning: "Decision: o1.", usage: expect.objectContaining({ input_tokens: 1200 }) }),
+    ]);
   });
 
   it("choose and choosePlan: half a JSON object leaves a row with the raw reply before the error", async () => {
-    const { client, rows } = await replying('{"choice": "o1", "reason": "smith');
+    // Cut inside its first member (batch M: a reply cut after a whole choice is taken, its reason marked [truncated]).
+    const { client, rows } = await replying('{"choice": "o');
     const criteria = { o0: JSON.stringify({ option: "休息" }), o1: JSON.stringify({ option: "锻造" }) };
     await expect(client.choose({}, "Rest?", criteria, { label: "rest/choose" })).rejects.toBeInstanceOf(DeepSeekAnswerError);
     await expect(client.choosePlan({}, "Shop?", criteria, { label: "shop/plan" })).rejects.toBeInstanceOf(DeepSeekAnswerError);
     expect(rows().map((row) => [row["label"], row["raw_reply"]])).toEqual([
-      ["rest/choose", '{"choice": "o1", "reason": "smith'],
-      ["shop/plan", '{"choice": "o1", "reason": "smith'],
+      ["rest/choose", '{"choice": "o'],
+      ["shop/plan", '{"choice": "o'],
     ]);
   });
 });

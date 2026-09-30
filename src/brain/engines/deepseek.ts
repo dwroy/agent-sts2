@@ -109,9 +109,10 @@ export class DeepSeekEngine implements BrainEngine {
         native: { v3: answer },
       };
     }
-    let result: { json: Record<string, unknown>; meta: Meta; recovered?: true };
+    let result: { json: Record<string, unknown>; meta: Meta; recovered?: true; note?: string };
     if (req.options) {
-      result = await client.choosePlan((req.payload ?? {}) as Record<string, JsonValue>, req.question, req.options, context);
+      // The spec's check (with the screen's own, brain.ts choosePlan): what an empty reply's reasoning may be taken for.
+      result = await client.choosePlan((req.payload ?? {}) as Record<string, JsonValue>, req.question, req.options, context, (json) => req.spec.validate(json).length === 0);
     } else {
       const input = (req.payload && typeof req.payload === "object" && !Array.isArray(req.payload) ? req.payload : { input: req.payload ?? null }) as Record<string, JsonValue>;
       const payload: Record<string, JsonValue> = memory === undefined ? { task: req.question, ...input } : { task: req.question, ...input, memory };

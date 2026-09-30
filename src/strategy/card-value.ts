@@ -23,13 +23,18 @@ const TIER: Record<string, number> = {
   CRIMSON_MANTLE: 72, DOMINATE: 66, BRAND: 66, STOKE: 64, COLOSSUS: 66,
   // B
   // Inflame 68 -> 74: permanent Strength in 50% of Act 1 wins, 27% of losses.
+  // 2026-09-30 knowledge check (outcome-stats.json A8, 161 runs to 86C3; taken vs offered and not taken, the act's
+  // boss pass; changed only where both sides have n >= 15, the gap is >= 1.5 standard errors, the mean final floor
+  // agrees and no n >= 15 comparison points the other way): Anger 50 -> 58 (Act 1 0.88, n=16, vs 0.67, n=57; floor
+  // 34.5 vs 26.4), Feel No Pain 54 -> 46 (Act 1 0.65, n=17, vs 0.87, n=15; floor 28.0 vs 31.0; its exhaust-payoff
+  // +10 still applies with 3+ exhausting cards), Sword Boomerang 46 -> 54 below.
   // Twin Strike 58 -> 64 (2026-09-29 knowledge check, outcome-stats.json A8, 151 runs): taken, the act's boss was
   // passed more often than when offered and not taken, in both acts with n >= 15 each way: Act 1 0.71 (n=55) vs
   // 0.62 (n=26), Act 2 0.35 (n=31) vs 0.19 (n=16); mean final floor +1.8 / +1.8. Multi-hit (Vantom's Slippery).
   INFLAME: 74, UPPERCUT: 68, HEMOKINESIS: 64, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 64, HEADBUTT: 62,
-  SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 54, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
+  SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 46, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
   DISMANTLE: 64, EXPECT_A_FIGHT: 56, MANGLE: 35, PYRE: 80, STONE_ARMOR: 60, UNRELENTING: 58, BLOOD_WALL: 54,
-  ANGER: 50, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
+  ANGER: 58, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
   PILLAGE: 54, ONE_TWO_PUNCH: 54, INFERNAL_BLADE: 52, EVIL_EYE: 54, TRUE_GRIT: 54, ARMAMENTS: 48, // its upgrade effect is unmodelled: the solver never plays it for value (WX16, BG4W)
   // Molten Fist 54 -> 44 (2026-09-29 knowledge check): taken, the act's boss was passed less often than when
   // offered and not taken, every time n >= 14 each way: A8 Act 1 0.60 (n=47) vs 0.74 (n=42), Act 2 0.13 (n=23)
@@ -43,7 +48,10 @@ const TIER: Record<string, number> = {
   FIGHT_ME: 74,
   // C
   BREAKTHROUGH: 62, // AoE 9 for 1 energy, 1 HP; 54 -> 62 (1K5G F14 passed it for Taunt, no AoE at the boss)
-  IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 46,
+  // Sword Boomerang 46 -> 54 (2026-09-30, same rule): A8 Act 1 0.80 (n=45) vs 0.63 (n=43), mean final floor 30.9 vs
+  // 25.5; Act 2 (n=8 taken) and A9 (n=10 not taken) too few. Multi-hit for Vantom's Slippery (experience
+  // card-sword-boomerang); whether it counts as the crab's AoE (the AOE set below) is left to Dai.
+  IRON_WAVE: 30, BODY_SLAM: 38, THUNDERCLAP: 40, CINDER: 30, DARK_EMBRACE: 42, TREMBLE: 30, SWORD_BOOMERANG: 54,
   // Taunt 62 -> 50 (2026-09-29 knowledge check; experience card-taunt): A8 outcome-stats, taken vs offered and not
   // taken: Act 1 boss pass 0.65 (n=51) vs 0.77 (n=35), mean final floor 26.0 vs 30.0; Act 2 0.22 (n=27) vs 0.32
   // (n=19). A9 (n=13/8, 9/5) too few to say. At SKIP_BAR: taken for thin block, not over damage/scaling.

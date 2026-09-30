@@ -7,8 +7,8 @@
  */
 
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 import type { JsonValue } from "../util/json.js";
 import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclusion, type ConsistencyCheck } from "./consistency.js";
@@ -43,6 +43,11 @@ export interface DeepSeekConfig {
    * questions against the prompt they were asked with (V4 brain, src/brain/engines/deepseek.ts).
    */
   systemPrompt?: string;
+  /**
+   * Directory of the day's snapshots of the guide and handbook as filled with the data facts (frozenGuideFacts);
+   * unset or "": filled from the data at every start.
+   */
+  factsSnapshotDir?: string;
 }
 
 export interface DeepSeekAnswer {
@@ -250,7 +255,9 @@ export const DEFAULT_EFFORT_BY_LABEL = "reward/card=high,rest/choose=high,rest/p
 /** "prefix=effort,…" as [prefix, effort] pairs, longest prefix first; unknown efforts are dropped. */
 /**
  * The top-level JSON values in a reply, in order, when it is nothing but JSON values separated by
- * whitespace (DeepSeek sometimes sends two objects back to back); null when anything else is in it.
+ * whitespace or one comma (DeepSeek sometimes sends two objects back to back: 0B5Y F30; or as a list without
+ * its brackets, 79YR F6 one-shot shop `{"plan": [...], "reason": "..."}, {"choice": ..., "reason": ...}`,
+ * judged non-JSON and re-planned step by step, +145.8 s); null when anything else is in it.
  */
 export function jsonValues(content: string): unknown[] | null {
   const values: unknown[] = [];
@@ -259,6 +266,12 @@ export function jsonValues(content: string): unknown[] | null {
   while (i < n) {
     while (i < n && /\s/.test(content[i]!)) i += 1;
     if (i >= n) break;
+    // One comma between two values (not before the first, not after the last).
+    if (content[i] === "," && values.length > 0) {
+      i += 1;
+      while (i < n && /\s/.test(content[i]!)) i += 1;
+      if (i >= n) return null;
+    }
     // One value: a balanced {...} / [...] (strings skipped), parsed on its own.
     const open = content[i];
     if (open !== "{" && open !== "[") return null;
@@ -308,6 +321,54 @@ export function pickJsonObject(content: string): Record<string, unknown> {
   const echo = (o: Record<string, unknown>) => Object.keys(o).length > 0 && Object.keys(o).every((key) => key === "choice" || key === "reason");
   const answers = objects.filter((o) => !echo(o));
   return answers[answers.length - 1] ?? objects[objects.length - 1]!;
+}
+
+/**
+ * A reply cut off inside its one JSON object (the output ran out mid-answer): the object up to its last complete
+ * top-level member, closed. A member cut in the middle is dropped, so a half-written choice or plan list never
+ * reaches the caller (whose own check then finds it missing); only a cut "reason" string is kept, as far as it
+ * got. The reason is marked "[truncated]". null unless the reply starts with an object that never closes and has
+ * at least one complete member.
+ */
+export function truncatedJsonObject(content: string): Record<string, unknown> | null {
+  const text = content.trim();
+  if (!text.startsWith("{")) return null;
+  let depth = 0;
+  let inString = false;
+  let lastComma = -1;
+  for (let j = 0; j < text.length; j += 1) {
+    const c = text[j]!;
+    if (inString) {
+      if (c === "\\") j += 1;
+      else if (c === '"') inString = false;
+    } else if (c === '"') inString = true;
+    else if (c === "{" || c === "[") depth += 1;
+    else if (c === "}" || c === "]") {
+      depth -= 1;
+      if (depth === 0) return null; // closed: not a cut-off reply
+    } else if (c === "," && depth === 1) lastComma = j;
+  }
+  if (lastComma < 0) return null;
+  let head: unknown;
+  try {
+    head = JSON.parse(`${text.slice(0, lastComma)}}`);
+  } catch {
+    return null;
+  }
+  if (typeof head !== "object" || head === null || Array.isArray(head)) return null;
+  const record = head as Record<string, unknown>;
+  let partial = "";
+  const cut = /^\s*"reason"\s*:\s*"((?:[^"\\]|\\.)*)\\?$/s.exec(text.slice(lastComma + 1));
+  if (cut) {
+    try {
+      partial = JSON.parse(`"${cut[1]}"`) as string;
+    } catch {
+      partial = "";
+    }
+  }
+  const reason = (typeof record["reason"] === "string" ? (record["reason"] as string) : partial).trim();
+  record["reason"] = `${reason}${reason ? " " : ""}[truncated]`;
+  return record;
 }
 
 /**
@@ -380,9 +441,9 @@ export class DeepSeekClient implements Escalator {
   readonly handbookId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
-    // The guides' data facts (the Giant's kill record) are filled from the fight data once, here.
-    const guide = fillGuideFacts(readOptional(config.guideFile));
-    const handbook = fillGuideFacts(readOptional(config.handbookFile));
+    // The guides' data facts (the Giant's kill record) are filled from the fight data, frozen for the day.
+    const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
+    const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
     this.handbookId = shortHash(handbook);
     this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
     let system = SYSTEM;
@@ -580,7 +641,10 @@ export class DeepSeekClient implements Escalator {
     try {
       parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown; discard?: unknown };
     } catch {
-      throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+      // Cut off after its complete members (truncatedJsonObject): the choice stands when it was written whole.
+      const cut = truncatedJsonObject(content);
+      if (!cut) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+      parsed = cut;
     }
     return {
       // A list ({"choice": ["card2", "card1"]}) reads as the keys it names, in order (severalOptionKeys).
@@ -602,27 +666,42 @@ export class DeepSeekClient implements Escalator {
   /**
    * A one-shot plan (a shop's shopping list; BUILD_ONESHOT): the same message layout as `choose` (memory,
    * state, question, options), answered with one JSON object in the format the question describes. Returns
-   * the parsed object; the caller validates it. An unparseable reply throws DeepSeekAnswerError.
+   * the parsed object; the caller validates it. An unparseable reply throws DeepSeekAnswerError. An empty
+   * reply is handled as askJson's (emptyReplyRetry): the last plan its reasoning drafted that passes `accept`
+   * (the screen's own check), else asked once more (MZFV F24 shop: 10,661 tokens all reasoning, empty reply,
+   * the reasoning ended on {"plan": ["buy_card3"], ...}; the step-by-step fallback then left the shop).
    */
   async choosePlan(
     state: Record<string, JsonValue>,
     instructions: string,
     criteria: Record<string, string | null>,
     context: Record<string, JsonValue> = {},
-  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason"> }> {
+    accept?: (json: Record<string, unknown>) => boolean,
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
     const memory = context["memory"];
-    const done = await this.complete([{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }], label);
+    const messages: ChatMessage[] = [{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }];
+    const planRow = (json: Record<string, unknown>): [string, unknown] => [JSON.stringify(json["plan"] ?? null), json["reason"] ?? ""];
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question: instructions, criteria, memory, row: planRow });
+    if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
+    const { done, meta } = first;
+    const noted = first.note ? { note: first.note } : {};
     let json: Record<string, unknown>;
     try {
       json = pickJsonObject(done.content);
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
-      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      // Cut off after its complete members (truncatedJsonObject): the screen's check decides whether the plan is whole.
+      const cut = truncatedJsonObject(done.content);
+      if (!cut) {
+        const message = error instanceof Error ? error.message : String(error);
+        this.logReasoning(label, done, instructions, criteria, "", "", memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
+      }
+      json = cut;
     }
-    this.logReasoning(label, done, instructions, criteria, JSON.stringify(json["plan"] ?? null), json["reason"] ?? "", memory, json);
-    return { json, meta: done.meta };
+    const [choice, reason] = planRow(json);
+    this.logReasoning(label, done, instructions, criteria, choice, reason, memory, json);
+    return { json, meta, ...noted };
   }
 
   /**
@@ -635,17 +714,22 @@ export class DeepSeekClient implements Escalator {
     payload: Record<string, JsonValue>,
     label: string,
     accept?: (json: Record<string, unknown>) => boolean,
-  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true }> {
-    const done = await this.complete([{ role: "user", content: taskMessage(payload) }], label);
+  ): Promise<{ json: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; recovered?: true; note?: string }> {
+    const messages: ChatMessage[] = [{ role: "user", content: taskMessage(payload) }];
     const memory = payload["memory"];
     const question = typeof payload["task"] === "string" ? payload["task"] : label;
+    const summaryRow = (json: Record<string, unknown>): [string, unknown] => ["", json["summary"] ?? ""];
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question, criteria: {}, memory, row: summaryRow });
+    if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
+    const { done, meta } = first;
+    const noted = first.note ? { note: first.note } : {};
     let json: Record<string, unknown>;
     try {
       json = pickJsonObject(done.content);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
-      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+      throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
     }
     // Not the task's format (9GRPA F9, F25: a lone {choice, reason} echo became an all-empty run plan that
     // replaced the valid one): the last object in that format its reasoning drafted, else an error.
@@ -655,13 +739,55 @@ export class DeepSeekClient implements Escalator {
       if (!recovered) {
         const message = `DeepSeek's ${label} reply is not in the task's format and its reasoning drafted none: ${done.content.slice(0, 120)}`;
         this.logReasoning(label, done, question, {}, "", "", memory, undefined, message);
-        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, done.meta);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, meta);
       }
       this.logReasoning(label, done, question, {}, "", recovered["summary"] ?? "", memory, { recovered_from_reasoning: true, ...recovered });
-      return { json: recovered, meta: done.meta, recovered: true };
+      return { json: recovered, meta, recovered: true, ...noted };
     }
     this.logReasoning(label, done, question, {}, "", json["summary"] ?? "", memory, json);
-    return { json, meta: done.meta };
+    return { json, meta, ...noted };
+  }
+
+  /**
+   * An empty reply, all its output spent in the reasoning (79YR F30 run plan: 6,791 tokens, all reasoning; no
+   * output cap is sent, the API default is far above that and the same question has answered in 26,368, so not
+   * a cut): the reasoning often ends on the answer it meant to send (it did there), taken when it passes
+   * `accept` (none without one); with none drafted, asked once more. Each empty call has its log row with the
+   * reason (`row`: the log's choice and reason of a recovered answer). Returns the first call with a reply (its
+   * usage summed with the empty ones) or the recovered answer; empty twice with nothing drafted throws.
+   */
+  private async emptyReplyRetry(
+    messages: ChatMessage[],
+    label: string,
+    first: CompletedCall,
+    accept: ((json: Record<string, unknown>) => boolean) | undefined,
+    log: { question: string; criteria: Record<string, string | null>; memory: JsonValue | undefined; row: (json: Record<string, unknown>) => [string, unknown] },
+  ): Promise<{ done: CompletedCall; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note?: string } | { recovered: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note: string }> {
+    let done = first;
+    let spent: Omit<DeepSeekAnswer, "choice" | "reason"> | null = null;
+    let note: string | undefined;
+    for (let attempt = 0; done.content.trim() === ""; attempt += 1) {
+      const why = emptyReplyText(done);
+      const total = spent ? sumMeta(spent, done.meta) : done.meta;
+      const drafted = accept ? embeddedJsonObjects(done.reasoning).filter(accept) : [];
+      const recovered = drafted[drafted.length - 1];
+      if (recovered) {
+        note = `${note ? `${note}; then ` : ""}${why}: the answer taken from the end of its reasoning`;
+        const [choice, reason] = log.row(recovered);
+        this.logReasoning(label, done, log.question, log.criteria, choice, reason, log.memory, { recovered_from_reasoning: true, empty_reply: why, ...recovered });
+        return { recovered, meta: total, note };
+      }
+      if (attempt >= 1) {
+        const message = `DeepSeek's ${label} reply was empty twice (last: ${why}) and its reasoning drafted no answer`;
+        this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, message);
+        throw new DeepSeekAnswerError(message, { choice: "", reason: "", reasoning: done.reasoning, content: done.content }, total);
+      }
+      this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
+      spent = done.meta;
+      done = await this.complete(messages, label);
+      note = `first ${why}: asked once more`;
+    }
+    return { done, meta: spent ? sumMeta(spent, done.meta) : done.meta, ...(note ? { note } : {}) };
   }
 
   private async complete(
@@ -695,7 +821,7 @@ export class DeepSeekClient implements Escalator {
         throw new Error(`DeepSeek HTTP ${response.status}: ${body}`);
       }
       const payload = (await response.json()) as {
-        choices?: { message?: { content?: string; reasoning_content?: string } }[];
+        choices?: { message?: { content?: string; reasoning_content?: string }; finish_reason?: string | null }[];
         usage?: {
           prompt_tokens?: number;
           completion_tokens?: number;
@@ -707,6 +833,7 @@ export class DeepSeekClient implements Escalator {
       return {
         content: payload.choices?.[0]?.message?.content ?? "",
         reasoning: payload.choices?.[0]?.message?.reasoning_content ?? "",
+        finishReason: payload.choices?.[0]?.finish_reason ?? "",
         effort,
         latencyMs,
         meta: {
@@ -736,7 +863,7 @@ export class DeepSeekClient implements Escalator {
       const { effort, reasoning, latencyMs, meta } = call;
       // Token usage of this one call (cache hit = the prefix DeepSeek had cached; billed much cheaper).
       const usage = { input_tokens: meta.inputTokens, cache_hit_tokens: meta.cacheHitTokens ?? 0, output_tokens: meta.outputTokens, reasoning_tokens: meta.reasoningTokens ?? 0 };
-      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }), ...(parseError === undefined ? {} : { parse_error: parseError.slice(0, 300), raw_reply: call.content }) };
+      const entry = { ts: new Date().toISOString(), model: this.config.model, label, effort, guide: this.guideId, latency_ms: latencyMs, usage, question, options: Object.keys(criteria), choice, reason, reasoning, ...(memory === undefined ? {} : { memory, memory_chars: contextChars(memory) }), ...(answer === undefined ? {} : { answer }), ...(parseError === undefined ? {} : { parse_error: parseError.slice(0, 300), raw_reply: call.content, finish_reason: call.finishReason }) };
       appendFileSync(this.config.reasoningLog, `${JSON.stringify(entry)}\n`, "utf8");
     } catch {
       // logging must never break play
@@ -748,6 +875,8 @@ export class DeepSeekClient implements Escalator {
 interface CompletedCall {
   content: string;
   reasoning: string;
+  /** The API's finish_reason ("stop"; "length" = cut at the output cap); "" when not sent. */
+  finishReason: string;
   effort: string;
   latencyMs: number;
   meta: Omit<DeepSeekAnswer, "choice" | "reason">;
@@ -756,6 +885,13 @@ interface CompletedCall {
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+}
+
+/** Why a reply came back empty, for the logs: the finish reason and where the output tokens went. */
+function emptyReplyText(call: CompletedCall): string {
+  const { outputTokens, reasoningTokens } = call.meta;
+  const spent = reasoningTokens !== undefined && reasoningTokens >= outputTokens && outputTokens > 0 ? `all ${outputTokens} output tokens were reasoning` : `${outputTokens} output tokens, ${reasoningTokens ?? 0} of them reasoning`;
+  return `empty reply (finish_reason ${call.finishReason || "not given"}; ${spent})`;
 }
 
 /** The fields of an answer beyond {choice, reason}. */
@@ -846,6 +982,37 @@ function sumMeta(a: Omit<DeepSeekAnswer, "choice" | "reason">, b: Omit<DeepSeekA
     cacheHitTokens: (a.cacheHitTokens ?? 0) + (b.cacheHitTokens ?? 0),
     reasoningTokens: (a.reasoningTokens ?? 0) + (b.reasoningTokens ?? 0),
   };
+}
+
+/**
+ * A guide (or the handbook) with its data placeholders filled (fillGuideFacts), frozen for the day: the first start
+ * of a local day fills it from the data and writes `<dir>/<YYYY-MM-DD>-<template hash>.md`; every later start that
+ * day with the same template reads that file. The data behind the placeholders (boss records, outcome stats) is
+ * rebuilt after every run, so filled fresh the system prompt, DeepSeek's cached prefix, changed every run and each
+ * run's first question hit the cache for 6.7-9.1% (2WRU 79YR 86C3). Frozen, the numbers are at most a day old
+ * (the same records, a few runs fewer) and the prefix changes once a day, or when the template's own text changes
+ * (a new hash). Snapshots of other days are removed when a new one is written. No dir: filled fresh, as before.
+ */
+export function frozenGuideFacts(template: string, dir: string | undefined, now: Date = new Date(), fill: (text: string) => string = fillGuideFacts): string {
+  if (!template || !dir) return template ? fill(template) : "";
+  const day = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const file = join(dir, `${day}-${shortHash(template)}.md`);
+  try {
+    if (existsSync(file)) return readFileSync(file, "utf8");
+  } catch {
+    // unreadable: filled again below
+  }
+  const filled = fill(template);
+  try {
+    mkdirSync(dir, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    writeFileSync(tmp, filled, "utf8");
+    renameSync(tmp, file);
+    for (const name of readdirSync(dir)) if (/^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}\.md$/.test(name) && !name.startsWith(`${day}-`)) rmSync(join(dir, name), { force: true });
+  } catch {
+    // a snapshot that cannot be written costs the cache, never the answer
+  }
+  return filled;
 }
 
 function readOptional(file: string | undefined): string {

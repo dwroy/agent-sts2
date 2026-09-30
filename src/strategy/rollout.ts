@@ -47,7 +47,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -1329,7 +1329,14 @@ function applyPlan(
       continue;
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
-    if (at < 0) continue;
+    if (at < 0) {
+      // Music Box's copy of the turn's first Attack (turn-solver musicBoxCopy, index MUSIC_BOX_INDEX + the original's):
+      // not a card of the hand, but played it goes to the discard pile as an Ethereal copy and can be drawn again
+      // (YVYZ F48: T7 drew back the T5 Pommel Strike copy). Unplayed, it is exhausted at the turn's end: gone.
+      const original = step.cardIndex >= MUSIC_BOX_INDEX ? hand.findIndex((card) => card.index === step.cardIndex - MUSIC_BOX_INDEX && card.cardId === step.cardId) : -1;
+      if (original >= 0 && !hand[original]!.exhausts) piles.discard.push(musicBoxCopy(handBase[original] ?? hand[original]!));
+      continue;
+    }
     played.add(at);
     const card = hand[at]!;
     const effect = POWER_EFFECTS[card.cardId];
@@ -1960,6 +1967,8 @@ function simulate(
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
+      // Music Box: a new turn, its first Attack card makes a copy again.
+      ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
