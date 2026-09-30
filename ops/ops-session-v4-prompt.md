@@ -47,7 +47,7 @@
   - 子 agent 不许读游戏二进制（sts2.dll）或 .pck 文件；
   - 杀进程用 PID，不用 `pkill -f`；
   - Steam 账号操作由 Dai 做。
-- ops/auto-relaunch.sh 还装在 dw 的 crontab 里：每分钟跑一次，游戏进程没了且 mod 连续 3 次连不上时经 Steam 重开，有 ops/STOP 时不动作。删不删等 Dai 定。
+- ops/auto-relaunch.sh 已从 dw 的 crontab 删掉（09-30），不要再装；游戏进程没了由「定时任务 1」经 Steam 重开。
 
 ## 定时任务 1：卡死检查，每 5 分钟（cron `*/5 * * * *`）
 运行 `bash ~/Projects/sts2-jev/ops/stall-check.sh`。输出以 OK 开头就直接结束，什么都不输出。输出 STALL 时：
