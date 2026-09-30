@@ -78,10 +78,11 @@ const V4_ENV: Record<string, string> = {
 };
 
 function setup(env: Record<string, string>, dir: string): { config: AppConfig; brain: Brain | null; env: NodeJS.ProcessEnv } {
-  const full = { BRAIN_LOG: join(dir, "brain.jsonl"), DECISION_LOG: join(dir, "decisions.jsonl"), ...env } as unknown as NodeJS.ProcessEnv;
+  // The prefix's day table of data facts (render/facts.ts) in the test's own directory, never the shared logs/.
+  const full = { BRAIN_LOG: join(dir, "brain.jsonl"), DECISION_LOG: join(dir, "decisions.jsonl"), DEEPSEEK_FACTS_SNAPSHOT_DIR: join(dir, "guide-facts"), ...env } as unknown as NodeJS.ProcessEnv;
   const config = loadConfig(full);
   const ds = config.deepseek
-    ? new DeepSeekClient({ ...config.deepseek, baseUrl: "http://deepseek.invalid", guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md") })
+    ? new DeepSeekClient({ ...config.deepseek, baseUrl: "http://deepseek.invalid", guideFile: join(KNOWLEDGE, "ironclad-guide.md"), handbookFile: join(KNOWLEDGE, "ds-handbook.md"), factsSnapshotDir: "" })
     : null;
   return { config, brain: ds ? createBrain(config, ds) : null, env: full };
 }

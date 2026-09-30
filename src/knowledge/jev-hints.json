@@ -5,14 +5,14 @@
     {
       "id": "sandpit-zero",
       "when": { "enemies": ["THE_INSATIABLE"] },
-      "text": "Sandpit 0 kills me whatever my HP. Each Frantic Escape adds a turn: play a 1-cost Escape unless the boss dies first.",
+      "text": "Sandpit 0 kills me whatever my HP; each Frantic Escape adds a turn. Play Escape when the Sandpit would end me before my HP does.",
       "evidence": ["TTVYCS2ADZRM", "YP9CGPJE19GP", "THMGB35RGDSD", "Y08TU00D9VLH"]
     },
     {
-      "id": "sandpit-no-race",
+      "id": "sandpit-hp-first",
       "when": { "enemies": ["THE_INSATIABLE"] },
-      "text": "The Insatiable has too much HP to race: racing damage loses to the Sandpit countdown. Play Frantic Escape before extra damage.",
-      "evidence": ["TTVYCS2ADZRM", "THMGB35RGDSD"]
+      "text": "When my HP runs out before the Sandpit, Escapes only waste energy: block or deal damage instead ({SANDPIT_DEATHS_EN}).",
+      "evidence": ["NH8A3VBDRDZW", "VNWR16YEJASM", "XMK1JFZ0VD2Q", "UNRLW0W3XWLD"]
     },
     {
       "id": "matriarch-asleep",
@@ -49,6 +49,12 @@
       "when": { "enemies": ["CRUSHER", "ROCKET"] },
       "text": "The two crabs share a big HP pool: permanent Strength and AoE lines are worth a few HP here.",
       "evidence": ["W6F4YXF3MT7A", "1WSHZ8ML4EVF", "TXLHYU13L102"]
+    },
+    {
+      "id": "queen-amalgam-first",
+      "when": { "enemies": ["TORCH_HEAD_AMALGAM"] },
+      "text": "Queen fight: single-target damage goes into the Torch Head Amalgam, turns 1-2 included; the Queen only takes AoE ({QUEEN_AMALGAM_EN}).",
+      "evidence": ["BDAKNTSWKU5F", "H5MZ6BKA1HVS", "YN4ETG9Z8ERN", "RBJ402TKQZ6F", "5LRZ7HJ7YGSY", "Q8XR6EXAF6QV"]
     },
     {
       "id": "kd-curse-turn",

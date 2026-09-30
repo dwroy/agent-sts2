@@ -217,7 +217,10 @@ describe("6. The end-turn lethal note names the Sandpit (UNRL F33 T8: Sandpit 1,
   it("other own losses read as before; agreement or a mismatch unchanged", () => {
     expect(endTurnLethalNote(endLine({ hpLoss: 51, incomingAfterBlock: 27 }), false, 40)).toBe(" [ending now kills by what the mod's lethal flag does not count: 51 HP lost in all, 27 of it the enemy hits after block]");
     expect(endTurnLethalNote(endLine({ sandpitAfter: 0 }), true, 80)).toBe("");
-    expect(endTurnLethalNote(endLine({ dies: false, sandpitAfter: 2 }), true, 80)).toBe(" [calc mismatch: solver says ending now does not kill, mod says lethal]");
+    // Batch M: this direction now says what it found (no end-of-turn guard here).
+    expect(endTurnLethalNote(endLine({ dies: false, sandpitAfter: 2 }), true, 80)).toBe(
+      " [calc mismatch: solver says ending now does not kill, mod says lethal: no end-of-turn block, Regen or Buffer the flag leaves out; the solver's enemy hits differ from the intents (the enemy turn takes 0 of 80 HP)]",
+    );
     expect(endTurnLethalNote(undefined, true, 80)).toBe("");
   });
 

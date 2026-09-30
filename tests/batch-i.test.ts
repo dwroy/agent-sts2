@@ -394,7 +394,7 @@ describe("7. \"solver says dead, mod says safe\" from cards held (Burn) is not a
     const key = Object.keys(question.type === "choice" ? question.criteria : {}).find((k) => k.startsWith("plan"))!;
     const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
     expect(resolved.rationale).not.toContain("calc mismatch");
-    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: \d+ HP lost in all, 0 of it the enemy hits after block, 8 damage from cards held \(Burn\)\]/);
+    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: \d+ HP lost in all, 0 of it the enemy hits after block, 8 damage from cards held \(灼伤 ×4\)\]/);
   });
 });
 

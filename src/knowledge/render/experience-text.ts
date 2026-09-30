@@ -8,6 +8,8 @@
 
 import type { Confidence, ExperienceEntry } from "../experience.js";
 import { KnowledgeLookupError, loadKnowledgeData, loadPostmortems, lessonsPath, type KnowledgeData, type Postmortems, type RenderContext } from "./data.js";
+import { fillGuideFacts } from "../../strategy/boss-clock.js";
+import { freshFacts, type FactFiller } from "./facts.js";
 import { cmp } from "./format.js";
 
 export const EXPERIENCE_THEMES = [
@@ -115,10 +117,11 @@ function caseText(item: Case, postmortems: Postmortems): string {
   return postmortems.sections ? `${item.runId}（复盘里没有这一局）` : item.runId;
 }
 
-export function lessonText(entry: ExperienceEntry, postmortems: Postmortems, asc: number): string {
+export function lessonText(entry: ExperienceEntry, postmortems: Postmortems, asc: number, facts: FactFiller = freshFacts): string {
   const [lo, hi] = entry.asc ?? [0, 20];
   const cases = pickCases(entry, postmortems, asc).map((item) => caseText(item, postmortems));
-  const head = `- [${entry.id}｜${entry.scope}${entry.name ? ` ${entry.name}` : ""}｜适用 A${lo}–${hi}] ${entry.lesson}`;
+  // The lesson's data placeholders filled as the guides' are (v3 b5e1f44: one count of the same fights in both).
+  const head = `- [${entry.id}｜${entry.scope}${entry.name ? ` ${entry.name}` : ""}｜适用 A${lo}–${hi}] ${facts(entry.lesson, fillGuideFacts)}`;
   const tail = `  支持 ${entry.n_support} 局，反对 ${entry.n_contradict} 局，置信 ${CONFIDENCE_ZH[entry.confidence] ?? entry.confidence}${cases.length > 0 ? `；案例: ${cases.join("；")}` : ""}`;
   return `${head}\n${tail}`;
 }
@@ -137,10 +140,10 @@ export interface ExperienceFilter {
 }
 
 /** One theme block: heading and its lessons ("" when the theme has none). */
-export function renderTheme(theme: ThemeKey, lessons: ExperienceEntry[], postmortems: Postmortems, asc: number): string {
+export function renderTheme(theme: ThemeKey, lessons: ExperienceEntry[], postmortems: Postmortems, asc: number, facts: FactFiller = freshFacts): string {
   const own = lessons.filter((entry) => themeOf(entry.scope) === theme);
   if (own.length === 0) return "";
-  return [`### 经验：${themeTitle(theme)}（${own.length} 条）`, ...own.map((entry) => lessonText(entry, postmortems, asc))].join("\n");
+  return [`### 经验：${themeTitle(theme)}（${own.length} 条）`, ...own.map((entry) => lessonText(entry, postmortems, asc, facts))].join("\n");
 }
 
 /** The whole experience block for the prefix: legend, then every theme with lessons. */
@@ -149,7 +152,7 @@ export function renderExperience(ctx: RenderContext, postmortems: Postmortems = 
   const lessons = activeLessons(data, ctx.ascension);
   const note = missingNote(postmortems);
   const head = `经验库 ${data.experience.version}：A${ctx.ascension} 适用的有效条目 ${lessons.length} 条（共 ${data.experience.entries.length} 条）。${EXPERIENCE_LEGEND}${note ? `\n${note}` : ""}`;
-  return [head, ...THEME_KEYS.map((theme) => renderTheme(theme, lessons, postmortems, ctx.ascension)).filter(Boolean)].join("\n\n");
+  return [head, ...THEME_KEYS.map((theme) => renderTheme(theme, lessons, postmortems, ctx.ascension, ctx.facts)).filter(Boolean)].join("\n\n");
 }
 
 /**
@@ -182,6 +185,6 @@ export function queryExperience(ctx: RenderContext, filter: ExperienceFilter, po
     throw new KnowledgeLookupError(`A${asc} 适用的经验里没有符合 ${what || "条件"} 的条目。可用的主题: ${THEME_KEYS.join(", ")}`);
   }
   const note = missingNote(postmortems);
-  const blocks = THEME_KEYS.map((theme) => renderTheme(theme, matched, postmortems, asc)).filter(Boolean);
+  const blocks = THEME_KEYS.map((theme) => renderTheme(theme, matched, postmortems, asc, ctx.facts)).filter(Boolean);
   return [`${matched.length} 条（A${asc}，经验库 ${data.experience.version}）。${EXPERIENCE_LEGEND}${note ? `\n${note}` : ""}`, ...blocks].join("\n\n");
 }

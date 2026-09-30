@@ -6,7 +6,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 
 - 生成：`.cache/logdb-venv/bin/python tools/build-potion-equivalents.py [--no-sync] [--markdown]` → `src/knowledge/potion-equivalents.json`（约 3 秒；`--markdown` 另外打印 §3 和 §5 的两张表）。公式自检：`python3 tools/build-potion-equivalents.py --self-test`（不需要 DuckDB，vitest 也会跑）。
 - 读取：`src/knowledge/potion-equivalents.ts`（`loadPotionEquivalents`、`potionEquivalent(id, act, ascension)`；文件缺失或格式不对抛 `KnowledgeLoadError`）。
-- 展示：知识前缀最后一块「药水换算表」（`src/knowledge/render/potion-text.ts`）、工具 `kb_potion`、Jev 战斗题 `potion_context.potion_worth_in_act_boss`。
+- 展示：知识前缀的「药水换算表」块（`src/knowledge/render/potion-text.ts`；在经验之后、`## 数据版本` 之前）、工具 `kb_potion`、Jev 战斗题 `potion_context.potion_worth_in_act_boss`。
 
 ## 1. 口径
 
@@ -267,7 +267,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 ## 9. 使用和刷新
 
 - `potionEquivalent(id, act, ascension)` 返回 `{hp, damage, block, holdHp, source, n, inputsAscension, tableAscension, formula, timingFree, check, mc}`；未知药水或没有数值的返回 null；表加载不了抛 `KnowledgeLoadError`。
-- 知识前缀：最后一块「药水换算表」（本局进阶，每瓶铁甲能拿到的药一行：一/二/三幕的血/伤害/格挡、来源和 n），头部「数据版本」写了生成日期和 boss 战场数；大脑缓存的前缀在表变化时重渲染。
+- 知识前缀：「药水换算表」块（本局进阶，每瓶铁甲能拿到的药一行：一/二/三幕的血/伤害/格挡、来源和 n；块里写了生成日期和 boss 战场数）。块的顺序按「越不常变越靠前」：旧知识 → 经验 → **药水换算表** → 数据版本 → 怪物 → 遭遇 → 统计表。这张表只在手动重建时变，放在每局数据刷新不动的那一段里，同一天内前缀的稳定部分（到「## 数据版本」为止）不被它打断；**如果以后把它加进每局结束后的自动刷新，要把这块挪到「## 数据版本」之后。** 大脑缓存的前缀在表变化时重渲染。
 - `kb_potion`：不给 id 返回整张表；给 id（或中文名）返回效果、日志次数、各幕数值、公式、两个校验列。
 - Jev 战斗题：`potion_context.potion_worth_in_act_boss`，手里每瓶有数值的药一行，如「火焰药水：约等于 4 血 / 20 伤害 / 4 格挡（本幕 boss，A8 公式 n=88）」；表加载不了时写 `potion_worth_error`。只加事实，选项和排序不变。
 - **刷新**：现在要手动跑构建脚本；每局结束后的自动刷新（`ops/wait-run.sh`）还没加，要主会话决定。

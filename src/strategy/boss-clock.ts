@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -68,13 +68,13 @@ export const BOSSES: Record<string, BossProfile> = {
   KAISER_CRAB: { hp: 408, hpA8: 428, scriptTurns: 8, lossPerTurn: 10, note: "two claws: single-target damage into the Rocket first (Laser {DMG:ROCKET:LASER_MOVE}, {BEHIND:ROCKET:LASER_MOVE} from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn ({CRAB_KILLS}; experience crab-kill-order); Bug Sting then Laser from T3-T4", mechanic: "two bodies: single-target damage is split; AoE hits both" },
   // 379 (A8 399) plus two 30-HP Ponder heals; the T11 Overwhelming (12x3 and more) ends long fights (NZWR).
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
-  THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at {POWER:THE_INSATIABLE:SANDPIT_POWER}, eaten at 0; each Frantic Escape adds a turn", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
+  THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at {POWER:THE_INSATIABLE:SANDPIT_POWER}, eaten at 0; each Frantic Escape adds a turn, which only helps while the Sandpit would end the fight before our HP does ({SANDPIT_DEATHS_EN}; experience insatiable-escape)", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
   // 512 (A8 535) plus two 33-block Ebb turns (L34T: 48 a turn, left at 173; M6P7: 33 a turn, left at 234).
   AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact {POWER:AEONGLASS:ARTIFACT_POWER} at start; Ebb gains {BLOCK:AEONGLASS:EBB_MOVE} block every 3rd turn; a Wither every {POWER:AEONGLASS:WITHERING_PRESENCE_POWER} cards played: few big cards", mechanic: "Artifact eats Vulnerable; two Ebbs of {BLOCK:AEONGLASS:EBB_MOVE} block; small cards feed Withers" },
   // Queen 400 (A8 419) plus ~20 block a turn while the Amalgam lives (~60). The Amalgam (199, A8 211) leaves
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
-  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, the Queen takes only AoE (all 4 logged Queen wins killed it on T4-T8; the 5 A8 losses left it alive past T5; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
+  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, single-target damage from turn 1 too, the Queen takes only AoE ({QUEEN_AMALGAM_EN}; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
   // Three phases, 100/200/300 (A8 111/212/313 as logged).
   TEST_SUBJECT: { hp: 600, hpA8: 636, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
@@ -111,6 +111,36 @@ export interface UnblockedShare {
   first_death?: Record<string, CrabFightRow[]>;
   /** The Lagavulin Matriarch only: its sleep in each logged fight, by ascension. */
   sleep?: Record<string, LagSleepRow[]>;
+  /** The Queen only: when the Torch Head Amalgam died in each logged fight, by ascension. */
+  amalgam?: Record<string, QueenFightRow[]>;
+  /** The Insatiable only: each logged fight's death line (lost fights), by ascension. */
+  deaths?: Record<string, SandpitFightRow[]>;
+}
+
+/**
+ * One logged Queen fight (tools/build-boss-damage.py QUEEN.amalgam): the turn the Torch Head Amalgam was first seen
+ * dead while the Queen lived (null: it lived to the end), and the HP the Queen and the Amalgam lost by the first
+ * frame of turn 3 (turns 1-2: the only turns without "You are mine").
+ */
+export interface QueenFightRow {
+  won: boolean;
+  killed_turn: number | null;
+  t12_queen?: number | null;
+  t12_amalgam?: number | null;
+  run?: string;
+}
+
+/**
+ * One logged Insatiable fight (tools/build-boss-damage.py THE_INSATIABLE.deaths): a lost fight's death line from its
+ * last frame: "hp" (the Sandpit still at 2 or more), "sandpit" (at 1, our HP and block over the attack it showed), or
+ * "both" (at 1 and the attack enough to kill us too); null for a won fight.
+ */
+export interface SandpitFightRow {
+  won: boolean;
+  death: "hp" | "sandpit" | "both" | null;
+  sandpit?: number | null;
+  hp?: number | null;
+  run?: string;
 }
 
 /** A boss's logged fights at one ascension (tools/build-boss-damage.py by_asc). */
@@ -228,7 +258,7 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
       .replace("{GUN}", giant.gun.join("/"))
       .replace("{CRAB_KILLS}", () => crabKillRecord("en")),
     ascension,
-  );
+  ).replace(/\{(?:QUEEN_AMALGAM|SANDPIT_DEATHS)_EN\}/g, (placeholder) => fillGuideFacts(placeholder));
 }
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
@@ -281,6 +311,12 @@ export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string 
  * (cardOutcomeText: outcome-stats rows of a card whose grade the data moved); {@N:KIND:ID:…} a monster DB number
  * at ascension N (fillDbNumbers). The English ones for Jev's hints (hintText): {CRAB_KILLS_EN},
  * {LAG_NO_STRENGTH_EN}.
+ * 2026-09-30 (the A8 window's runs 1-11): {QUEEN_AMALGAM} / {QUEEN_AMALGAM_EN} (queenAmalgamRecord: when the Amalgam
+ * died, and where turns 1-2 went; was "4 场胜局都在 T4–T8…A8 5 场输局", stale since RBJ4's A8 win), {SANDPIT_DEATHS} /
+ * {SANDPIT_DEATHS_EN} (sandpitDeathRecord: the Insatiable losses by death line), {UNKNOWN_FIGHTS:ASC:ACT} (one cell of
+ * unknownFightsText), {BOSS_LOSS:ID:ASC} (bossLossText: the monster DB's median HP we lose a turn against the boss at
+ * that ascension). The experience base's lesson texts are filled with these too (experience lessonText), so a
+ * lesson and a guide no longer quote two different counts of the same fights.
  */
 const GUIDE_FACTS: Record<string, () => string> = {
   "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
@@ -294,11 +330,17 @@ const GUIDE_FACTS: Record<string, () => string> = {
   "{LASER_T4}": () => laserT4Text(),
   "{ACT1_ENTRY_HP}": () => act1EntryHp(),
   "{UNKNOWN_FIGHTS}": () => unknownFightsText(),
+  "{QUEEN_AMALGAM}": () => queenAmalgamRecord("zh"),
+  "{QUEEN_AMALGAM_EN}": () => queenAmalgamRecord("en"),
+  "{SANDPIT_DEATHS}": () => sandpitDeathRecord("zh"),
+  "{SANDPIT_DEATHS_EN}": () => sandpitDeathRecord("en"),
 };
 
 export function fillGuideFacts(text: string): string {
   let out = text;
   for (const [placeholder, fill] of Object.entries(GUIDE_FACTS)) if (out.includes(placeholder)) out = out.split(placeholder).join(fill());
+  out = out.replace(/\{UNKNOWN_FIGHTS:(\d+):(\d)\}/g, (_, asc: string, act: string) => unknownFightsText([Number(asc)], [Number(act)]));
+  out = out.replace(/\{BOSS_LOSS:([A-Z_]+):(\d+)\}/g, (_, boss: string, asc: string) => bossLossText(boss, Number(asc)));
   out = out.replace(/\{BOSS_RECORD:([A-Z_]+)\}/g, (_, boss: string) => bossRecord(boss));
   out = out.replace(/\{CARD_OUTCOME:([A-Z_]+)\}/g, (_, card: string) => cardOutcomeText(card));
   return out.replace(/\{@(\d+):([A-Z]+:[A-Z0-9_:]+)\}/g, (_, asc: string, inner: string) => fillDbNumbers(`{${inner}}`, Number(asc)));
@@ -448,10 +490,10 @@ export function act1EntryHp(): string {
  * entry HP). The guide said "低血时绕开精英走问号/商店" with no word of the fights (8KD7 F21: 91% into a ? of
  * four Exoskeletons, −39).
  */
-export function unknownFightsText(): string {
+export function unknownFightsText(ascensions: readonly number[] = RECORD_ASCENSIONS, acts: readonly number[] = [1, 2]): string {
   const parts: string[] = [];
-  for (const asc of RECORD_ASCENSIONS) {
-    for (const act of [1, 2]) {
+  for (const asc of ascensions) {
+    for (const act of acts) {
       const unknown = measuredRoomExact(asc, act, "Unknown");
       const fight = measuredRoomExact(asc, act, "UnknownFight");
       const hallway = measuredRoomExact(asc, act, "Monster");
@@ -462,6 +504,80 @@ export function unknownFightsText(): string {
     }
   }
   return parts.length > 0 ? parts.join("；") : "问号开战的数据还没有";
+}
+
+/**
+ * The median HP we lose a turn against a boss at exactly this ascension, every logged fight (monster DB
+ * bosses.*.hp_loss_per_turn): "13.0" for the crab at A9 when written; "?" when that ascension has no fight. Was
+ * hand-copied into the lessons ("帝王蟹 13.0（A8 9.7）") and drifted as fights were added.
+ */
+export function bossLossText(bossKey: string, ascension: number): string {
+  const loss = bossHpLoss(bossKey, ascension)?.perTurn;
+  return loss && loss.asc === ascension ? loss.median.toFixed(1) : "?";
+}
+
+/** The Queen's logged fights by when the Amalgam died (boss-damage.json QUEEN.amalgam), all ascensions and A8. */
+export function queenAmalgamRecord(lang: "zh" | "en"): string {
+  return queenAmalgamText(unblockedShare("QUEEN")?.amalgam ?? {}, lang);
+}
+
+/**
+ * The Amalgam record text of these fights (queenAmalgamRecord; exported for tests): the wins that killed it first and
+ * on which turns, the losses that never did or did late, and where turns 1-2's damage went (more into the Queen or
+ * into the Amalgam). Written 2026-09-30: 17 fights, the 5 wins killed it on T3-T8 (RBJ4 A8 T3); 7 of the 12 losses
+ * never did; turns 1-2 mostly into the Queen 1/6 won (5LRZ, Q8XR A8: 58 and 87 into her on T1, both lost).
+ */
+export function queenAmalgamText(byAsc: Record<string, QueenFightRow[]>, lang: "zh" | "en"): string {
+  const all = Object.values(byAsc).flat();
+  if (all.length === 0) return lang === "zh" ? "还没有女王战记录" : "no logged Queen fights";
+  const range = (rows: QueenFightRow[]) => {
+    const turns = rows.map((row) => row.killed_turn).filter((turn): turn is number => turn !== null).sort((a, b) => a - b);
+    const dash = lang === "zh" ? "–" : "-";
+    return turns.length === 0 ? "" : turns[0] === turns.at(-1) ? `T${turns[0]}` : `T${turns[0]}${dash}T${turns.at(-1)}`;
+  };
+  const wins = all.filter((row) => row.won);
+  const losses = all.filter((row) => !row.won);
+  const winsKilled = wins.filter((row) => row.killed_turn !== null);
+  const lossNever = losses.filter((row) => row.killed_turn === null);
+  const lossKilled = losses.filter((row) => row.killed_turn !== null);
+  const split = all.filter((row) => row.t12_queen != null && row.t12_amalgam != null && row.t12_queen + row.t12_amalgam > 0);
+  const intoQueen = split.filter((row) => row.t12_queen! > row.t12_amalgam!);
+  const intoAmalgam = split.filter((row) => row.t12_queen! <= row.t12_amalgam!);
+  const won = (rows: QueenFightRow[]) => rows.filter((row) => row.won).length;
+  if (lang === "en") {
+    return `${all.length} logged Queen fights: ${winsKilled.length}/${wins.length} wins killed the Amalgam first${winsKilled.length > 0 ? ` (${range(winsKilled)})` : ""}; ${lossNever.length}/${losses.length} losses never did; turns 1-2 mostly into the Queen won ${won(intoQueen)}/${intoQueen.length}, into the Amalgam ${won(intoAmalgam)}/${intoAmalgam.length}`;
+  }
+  const a8 = byAsc["8"] ?? [];
+  const a8Wins = a8.filter((row) => row.won && row.killed_turn !== null).map((row) => `${row.run ?? "?"} T${row.killed_turn}`);
+  const a8Text = a8.length > 0 ? `（A8 ${a8.length} 场赢 ${won(a8)}${a8Wins.length > 0 ? `：${a8Wins.join("、")} 打死聚合体` : ""}）` : "";
+  const winPart = wins.length === 0 ? "还没有赢过" : `赢的 ${wins.length} 场${winsKilled.length === wins.length ? "都" : `里 ${winsKilled.length} 场`}先打死聚合体${winsKilled.length > 0 ? `（${range(winsKilled)}）` : ""}`;
+  const lossPart = `输的 ${losses.length} 场 ${lossNever.length} 场没打死${lossKilled.length > 0 ? `、${lossKilled.length} 场 ${range(lossKilled)} 才打死` : ""}`;
+  return `有记录的 ${all.length} 场女王战：${winPart}；${lossPart}；T1–T2 伤害多进女王的 ${intoQueen.length} 场赢 ${won(intoQueen)}、多进聚合体的 ${intoAmalgam.length} 场赢 ${won(intoAmalgam)}${a8Text}`;
+}
+
+/** The Insatiable's logged losses by death line (boss-damage.json THE_INSATIABLE.deaths), all ascensions, A8 and A9. */
+export function sandpitDeathRecord(lang: "zh" | "en"): string {
+  return sandpitDeathText(unblockedShare("THE_INSATIABLE")?.deaths ?? {}, lang);
+}
+
+/**
+ * The death-line text of these fights (sandpitDeathRecord; exported for tests). Written 2026-09-30: of the 17 A8
+ * losses 10 died on HP with the Sandpit at 2 or more, 4 to the Sandpit, 3 both at once (NH8A: an Escape over a
+ * 41-damage line on T3 with HP the earlier line; died with the Sandpit at 2).
+ */
+export function sandpitDeathText(byAsc: Record<string, SandpitFightRow[]>, lang: "zh" | "en"): string {
+  const count = (rows: SandpitFightRow[], death: SandpitFightRow["death"]) => rows.filter((row) => !row.won && row.death === death).length;
+  const lost = (rows: SandpitFightRow[]) => rows.filter((row) => !row.won);
+  const all = Object.values(byAsc).flat();
+  if (lost(all).length === 0) return lang === "zh" ? "还没有沙虫输局的记录" : "no logged Insatiable losses";
+  if (lang === "en") {
+    return `${lost(all).length} logged losses: ${count(all, "hp")} died on HP with the Sandpit at 2+, ${count(all, "sandpit")} to the Sandpit, ${count(all, "both")} both at once`;
+  }
+  const perAsc = RECORD_ASCENSIONS.map((asc) => {
+    const rows = byAsc[String(asc)] ?? [];
+    return lost(rows).length > 0 ? `A${asc} ${lost(rows).length} 场 ${count(rows, "hp")}/${count(rows, "sandpit")}/${count(rows, "both")}` : null;
+  }).filter(Boolean);
+  return `有记录的沙虫输局 ${lost(all).length} 场：死在 HP 上（沙坑还剩 ≥2）${count(all, "hp")}、被沙坑吞掉 ${count(all, "sandpit")}、两条线同一回合 ${count(all, "both")}${perAsc.length > 0 ? `（${perAsc.join("，")}）` : ""}`;
 }
 
 /**
@@ -644,8 +760,17 @@ export interface DeckProfile {
   demonFormRate: number;
   /** Strength a turn from relics from T1 (Toasty Mittens). */
   relicStrengthRate: number;
-  /** Strength a turn from Rupture fed by self-damage cards. */
+  /** Strength a turn from Rupture fed by self-damage cards and the powers that lose HP each turn (Inferno). */
   ruptureRate: number;
+  /**
+   * Damage a turn from powers once they are in play (from the turn after `setupTurn`), with no Strength and
+   * no Vulnerable: Inferno's hit to every enemy per HP loss on our turn, Juggernaut's per block gained.
+   */
+  passiveDamage?: number;
+  /** AoE part of `passiveDamage` (Inferno). */
+  passiveAoe?: number;
+  /** The passive damage sources named for the note. */
+  passive?: string[];
   /** Turn a power drawn at random is played on average. */
   setupTurn: number;
   /** Strength-growth sources named for the note. */
@@ -684,8 +809,18 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   let hits = 0;
   let flatStrength = 0;
   let demonForm = 0;
-  let ruptures = 0;
+  // Rupture: Strength per HP loss on our turn, summed over its copies (Rupture 1, Rupture+ 2; the power
+  // stacks: S1MU F33 RUPTURE_POWER 2 from one Rupture+).
+  let ruptureStrength = 0;
   let selfDamage = 0;
+  // Powers that lose HP at the start of each of our turns: one HP loss a turn each, however many copies
+  // (S1MU F48: two Infernos + Crimson Mantle, INFERNO_POWER 18, Strength +4 a turn with Rupture+).
+  const turnStartLoss = new Set<string>();
+  // Inferno: damage to every enemy per HP loss on our turn (6, Inferno+ 9; copies stack: S1MU F48 18).
+  let inferno = 0;
+  // Juggernaut: damage to a random enemy per block gained (6, Juggernaut+ 8).
+  let juggernaut = 0;
+  let blockCards = 0;
   let vulnerable = 0;
   let lateEnergy = 0;
   const growth: string[] = [];
@@ -710,7 +845,8 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
       demonForm += rate;
       growth.push(`Demon Form +${rate}/turn`);
     } else if (card.cardId === "RUPTURE") {
-      ruptures += 1;
+      // The deck entry carries the (upgraded) value, like Demon Form's; 1 is the base card's.
+      ruptureStrength += dynValue(entry, "StrengthPower") ?? 1;
     } else {
       flatStrength += Math.max(0, card.strength);
     }
@@ -720,7 +856,16 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
       const template = str(asRecord(entry)["rules_text"]) || knowledge.card(card.cardId)?.descriptionRaw || "";
       if (income > 0 && turnStartOnly(template, "Energy")) lateEnergy += income;
     }
-    if (card.hpLoss > 0 || card.cardId === "CRIMSON_MANTLE") selfDamage += 1;
+    // A power's HP loss is not a play cost (card-model gives powers 0): Inferno and Crimson Mantle lose 1 at
+    // the start of every turn once played, so they feed Rupture and Inferno each turn, not once a play.
+    if (card.cardId === "INFERNO") {
+      turnStartLoss.add("Inferno");
+      inferno += dynValue(entry, "InfernoPower") ?? 6;
+    } else if (card.cardId === "CRIMSON_MANTLE") {
+      turnStartLoss.add("Crimson Mantle");
+    } else if (card.hpLoss > 0) selfDamage += 1;
+    if (card.cardId === "JUGGERNAUT") juggernaut += dynValue(entry, "JuggernautPower") ?? 6;
+    if (card.block > 0) blockCards += 1;
     if (card.vulnerable > 0) vulnerable += 1;
   }
   // Energy caps how many of the drawn cards get played.
@@ -735,9 +880,21 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   const relicStrengthRate = (relicIds.includes("TOASTY_MITTENS") ? 1 : 0) + (relicIds.includes("BRIMSTONE") ? BRIMSTONE_STRENGTH : 0);
   if (relicIds.includes("TOASTY_MITTENS")) growth.push("Toasty Mittens +1/turn");
   if (relicIds.includes("BRIMSTONE")) growth.push(`Brimstone +${BRIMSTONE_STRENGTH}/turn`);
-  // Rupture: +1 Strength each time a self-damage card is played on our turn.
-  const ruptureRate = ruptures > 0 ? ruptures * selfDamage * perCard : 0;
-  if (ruptureRate > 0) growth.push(`Rupture fed by ${selfDamage} self-damage cards (~+${ruptureRate.toFixed(1)}/turn)`);
+  // HP losses on our turn a turn once the powers are in play: the self-damage cards played (their share of
+  // the drawn cards) and one per turn-start power (S1MU F33: Rupture+ and Inferno+, Strength 6 -> 8 -> 10 ->
+  // 12 at T4-T6, +2 a turn from Inferno alone; the clock had read ~+0.2).
+  const selfPlays = selfDamage * perCard;
+  const lossEvents = selfPlays + turnStartLoss.size;
+  const feeders = [...(turnStartLoss.size > 0 ? [`${[...turnStartLoss].join(" + ")} each turn`] : []), ...(selfDamage > 0 ? [`${selfDamage} self-damage cards`] : [])].join(" + ");
+  const ruptureRate = ruptureStrength * lossEvents;
+  if (ruptureRate > 0) growth.push(`Rupture +${ruptureStrength} per HP loss, fed by ${feeders} (~+${ruptureRate.toFixed(1)}/turn)`);
+  const passive: string[] = [];
+  const infernoDamage = inferno * lossEvents;
+  if (infernoDamage > 0) passive.push(`Inferno ${inferno} to all per HP loss, fed by ${feeders} (~${infernoDamage.toFixed(0)}/turn)`);
+  // Block gained a turn: the block cards played, and Crimson Mantle's block at the start of each turn.
+  const blockGains = blockCards * perCard + (turnStartLoss.has("Crimson Mantle") ? 1 : 0);
+  const juggernautDamage = juggernaut * blockGains;
+  if (juggernautDamage > 0) passive.push(`Juggernaut ${juggernaut} per block gain, ~${blockGains.toFixed(1)} gains a turn (~${juggernautDamage.toFixed(0)}/turn)`);
   return {
     size: n,
     energy,
@@ -755,6 +912,9 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     demonFormRate: demonForm,
     relicStrengthRate,
     ruptureRate,
+    passiveDamage: infernoDamage + juggernautDamage,
+    passiveAoe: infernoDamage,
+    passive,
     // A power is drawn on average halfway through the first shuffle.
     setupTurn: 1 + Math.round(n / (2 * HAND)),
     growth,
@@ -795,6 +955,10 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   // Two Vulnerable sources keep the boss Vulnerable most turns. A boss that starts with Artifact eats
   // the Vulnerable (G1Z0: Aeonglass, estimate 58, dealt 34).
   if (deck.vulnerableSources >= 2 && id !== "AEONGLASS") perTurn *= VULNERABLE_UPTIME;
+  // Power damage (Inferno, Juggernaut) from the turn after the powers are played; no Strength, no Vulnerable,
+  // not scaled by the energy powers. Inferno's AoE counts once per body into the crab.
+  const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
+  if (passive > 0 && turns > 0) perTurn += (passive * Math.max(0, turns - deck.setupTurn)) / turns;
   return perTurn;
 }
 
@@ -1009,6 +1173,8 @@ export interface BossClock {
   mechanic: string;
   note: string;
   growth: string[];
+  /** Damage from powers (Inferno, Juggernaut) counted in `deck`, named for the note. */
+  passive?: string[];
   /** HP we lose a turn in this fight (bossLossPerTurn) and where it comes from. */
   lossPerTurn: number;
   lossNote: string;
@@ -1080,6 +1246,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     mechanic: bossMechanic(profile, ascension),
     note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
+    passive: deck?.passive ?? [],
     lossPerTurn: loss.value,
     lossNote: loss.source,
   };
@@ -1219,9 +1386,10 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     fight_turns_note: clock.turnsNote,
     need_damage_per_turn: clock.need,
     deck_damage_per_turn_estimate: clock.deck,
-    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, Vulnerable, and the boss mechanic below`,
+    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below`,
     gap_per_turn: clock.gap,
     ...(clock.growth.length > 0 ? { strength_growth: clock.growth.join("; ") } : {}),
+    ...(clock.passive && clock.passive.length > 0 ? { power_damage: clock.passive.join("; ") } : {}),
     harder_because: clock.mechanic,
     ...(clock.phases ? { phases: clock.phases.map((phase) => ({ ...phase })) } : {}),
     boss_note: clock.note,

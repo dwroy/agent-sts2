@@ -374,6 +374,6 @@ describe("8. \"calc mismatch\" (ARKG3JFT26HC F17 T12): held Beckons kill on endi
     const key = Object.keys(question.type === "choice" ? question.criteria : {}).find((k) => k.startsWith("plan"))!;
     const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } } as AnswerSet);
     expect(resolved.rationale).not.toContain("calc mismatch");
-    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: 51 HP lost in all, 27 of it the enemy hits after block\]/);
+    expect(resolved.rationale).toMatch(/\[ending now kills by what the mod's lethal flag does not count: 51 HP lost in all, 27 of it the enemy hits after block, 24 HP lost to cards held \(呼唤 ×4\)\]/);
   });
 });
