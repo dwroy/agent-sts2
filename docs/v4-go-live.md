@@ -186,3 +186,24 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 - 其余 v3 修复原样保留：推演、求解器、药水、Jev 线、执行、卡牌文字、事件、商店执行、日志回放。
 - 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 88 个文件、1,465 个测试全过。
 - 注意：v3 的 d79f14f、4f57bbd 改了 Jev 线上药水的算法（不再扣药水成本；没模拟的药水总是可选）。第 1 节里 M3a、M2b 的回放数字是在这次合并前测的；上线对照要用合并后的 v3 局。
+
+### 2026-09-30：V3-final（6e7611f）合进 v4-sync（基于 v4 7a0fd88）
+
+- 合并提交 a19c49e，带进 v3 在 c52587c 之后的 27 个提交（修复批次 M、N；A8 窗口 1–11 局的经验、攻略、卡牌评级、boss 数据；两次知识刷新）。后续修正 3ecd8b5、ba44291。
+- 冲突 4 个文件：
+  - src/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
+  - src/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
+  - src/screens/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
+  - src/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
+- 为合并而改的 V4 代码（在合并提交里）：brain.choosePlan 加 accept 参数，和 askJson 一样并进 spec 的校验（withAccept，accept 通过即合法）；DeepSeek 引擎把这个校验交给 v3 的 choosePlan，空回答就从推理里取屏幕接受的计划。choosePlan、askJson 的返回类型加 note。
+- 知识数据都取 V3-final 的版本；ds-handbook.md 的路线一段仍是 V4（M2a）的写法；event-pages.json 保留 V4 新增的页。room-costs.json 仍然没有 p90：上线前照旧用合并后的脚本重建。tools/build-boss-damage.py 只有 v3 的改动，直接合入。
+- 放弃的 v3 修复：16559ba（单独的删牌屏把整局计划的 +40 拆开写，并注明「只是参考」）。理由和上次放弃 f8aef72 相同：V4 M2b 不给 DeepSeek 看代码分值、排名和 why，没有可拆的数。batch-m 第 6 组改成断言题面里没有 code value、removal order 和 +40 的说法。
+- 补做（合并后单独提交）：
+  - 3ecd8b5，对应 8546fde（系统提示里攻略、手册的数据按天冻结）。KNOWLEDGE_PREFIX=off 完全沿用 v3：DeepSeekClient 的攻略和手册按天快照，存在 logs/guide-facts/<日期>-<hash>.md。full 的前缀是自己渲染的，v3 的快照管不到；而且前缀开头的「数据版本」行每局都会变，缓存从第一块就断了。现在做了三件事：① render/facts.ts 把每个占位符的值按天冻结在同一目录的 <日期>-prefix-facts.json 里，覆盖攻略、手册、Jev 提示里的怪物库数字（按进阶分开）和经验条目；同一个占位符在攻略和经验里取同一个数。② 数据版本行从头部移到经验之后、怪物之前，单独成块「## 数据版本」。③ 头部加一句：旧知识和经验里的战绩数字可能是当天早些时候的，和统计表不同时以统计表为准。效果：同一天内，每局结束刷新数据后，前缀从「数据版本」块起才变；前面的头部、旧知识和经验（A8 约 9.7 万字，全长约 17.6 万字）保持逐字节不变，可以继续命中缓存。没有配置目录时（工具、回放、测试）照旧现填。
+  - 同一提交还处理了 b5e1f44 带来的问题：经验条目里的占位符在 V4 前缀和 kb_experience 里也要填。合并后 experience.monster、experience.route 里原样出现了 {BOSS_RECORD:…}、{LASER_T4}、{UNKNOWN_FIGHTS:9:2}，现在都填上了。
+  - ba44291，对应 fa46f6c 和 7b54237 在 V4 路由器路径（重问、带工具）上的部分：chat() 带回 finish_reason；空回答取推理里最后一个符合题目 spec 的答案；取不到时，问题里写明 finish_reason，由路由器的重问充当「再问一次」。
+  - f26ae1a（逗号连接的两个对象）：这一半由 pickJsonObject 处理，V4 的 parseAnswerText 也调用它，所以自动生效。截断回答保留完整成员这一半只在 v3 路径（choose、choosePlan）里做。路由器路径不做，截断的回答按不合法重问；v3 对自由格式的计划同样不做。
+- 其余 v3 修复原样保留：八音盒建模（求解器、推演、线承诺；执行闸照常带 expect，batch-m 第 4 组改用 toMatchObject 并检查 expect）、boss 时钟（撕裂+、狱火/深红披风、主宰伤害）、「现在结束会死」按牌名写（含 Beckon）、知识恶魔排序、回血写成 hp +N、战斗计划的格式检查。
+- tests/run-config.test.ts 的 DeepSeek 客户端原来会用默认目录 logs/guide-facts（软链到线上的 logs），现在改用测试自己的目录。改之前的第一次全量测试已经往那里写了两个小文件：2026-09-30-3493cfe2.md 和 2026-09-30-f28937d5.md，内容是测试夹具的攻略和手册。它们和线上快照不同名，不会被读到；第二天第一次写快照时，v3 的清理会把它们删掉。这个 agent 没有删除权限。
+- 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 96 个文件、1,556 个测试全过。
+- 上线注意：v4-live 升级到这个版本后，logs/guide-facts 里会多一个 <日期>-prefix-facts.json，每天第一次渲染前缀时写入。
