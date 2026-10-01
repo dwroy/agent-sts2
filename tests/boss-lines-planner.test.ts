@@ -3,12 +3,17 @@
  * resolution (the ranking behind rollout_best, the HP guard, code's fallback, the decision log) are byte for byte what
  * they were before B2, and a fight that is not a boss fight is the same with the switch on. Pinned as digests of the
  * whole decision (question, Jev's view, every answer's resolution) computed on the pre-B2 planner, on logged boards,
- * with fake clocks and the knowledge data the planner reads pinned (tests/boss-lines-data/pinned-knowledge.json: the
- * monster DB and move model trimmed to these boards' enemies; any other knowledge file reads as absent), so the
- * digests do not move when the data is refreshed. No model call, nothing written. CAPTURE=1 prints new digests (only
- * meaningful on a planner known to be the pre-B2 one). With B2 on (the same pinned data, few samples, in this thread):
- * the facts on every option, rollout_best from the simulation's ranking for a trusted boss and from the rollout for a
- * low-trust one, code's fallback, the decision log, and the fight plan on the turns it is shown.
+ * with fake clocks and the knowledge data the planner reads pinned (tests/boss-lines-data/pinned-knowledge.json, made
+ * by make-pinned.py from a fixed commit's data: the monster DB and move model trimmed to these boards' enemies and the
+ * monsters of the lessons shown, the experience base whole, the boss records and the potion table trimmed to these
+ * boards' bosses and potions; any other knowledge file reads as absent), so the digests do not move when the data is
+ * refreshed. The setup files (vitest.config.ts) import planner modules before this file's mock is in place, and those
+ * modules (the potion table, boss-clock's boss records, the experience base, the monster DB) bound the real node:fs
+ * then: the module registry is reset below so every module loads again under the mock. Nothing under logs/ or .cache
+ * is read and nothing is written (checked). No model call. CAPTURE=1 prints new digests (only meaningful on a planner
+ * known to be the pre-B2 one). With B2 on (the same pinned data, few samples, in this thread): the facts on every
+ * option, rollout_best from the simulation's ranking for a trusted boss and from the rollout for a low-trust one,
+ * code's fallback, the decision log, and the fight plan on the turns it is shown.
  */
 
 import { createHash } from "node:crypto";
@@ -18,24 +23,49 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const KNOWLEDGE = resolve(HERE, "..", "src", "knowledge");
+const ROOT = resolve(HERE, "..");
+const KNOWLEDGE = join(ROOT, "src", "knowledge");
 const unpinned = new Set<string>();
+const pinnedRead = new Set<string>();
+/** Paths under logs/ or .cache touched in any way, and every path written: both must stay empty. */
+const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
   const fs = await importOriginal<typeof import("node:fs")>();
   const pinned = JSON.parse(fs.readFileSync(join(HERE, "boss-lines-data", "pinned-knowledge.json"), "utf8")) as Record<string, unknown>;
-  const readFileSync = ((path: unknown, ...rest: unknown[]) => {
+  const shared = [join(ROOT, "logs"), join(ROOT, ".cache")];
+  const watch = (name: string, write: boolean) => {
+    const original = (fs as unknown as Record<string, (...args: unknown[]) => unknown>)[name]!;
+    return (path: unknown, ...rest: unknown[]) => {
+      const at = typeof path === "string" ? resolve(path) : String(path);
+      if (write || shared.some((dir) => at === dir || at.startsWith(dir + "/"))) touched.add(`${name} ${at}`);
+      return original(path, ...rest);
+    };
+  };
+  const wrapped: Record<string, unknown> = {};
+  for (const name of ["existsSync", "statSync", "lstatSync", "readdirSync", "openSync"]) wrapped[name] = watch(name, false);
+  for (const name of ["writeFileSync", "appendFileSync", "mkdirSync", "renameSync", "rmSync", "unlinkSync", "copyFileSync", "createWriteStream"]) wrapped[name] = watch(name, true);
+  const read = watch("readFileSync", false);
+  wrapped["readFileSync"] = (path: unknown, ...rest: unknown[]) => {
     if (typeof path === "string" && resolve(path).startsWith(KNOWLEDGE + "/") && path.endsWith(".json")) {
       const name = resolve(path).slice(KNOWLEDGE.length + 1);
-      if (name in pinned) return JSON.stringify(pinned[name]);
+      if (name in pinned) {
+        pinnedRead.add(name);
+        return JSON.stringify(pinned[name]);
+      }
       unpinned.add(name);
       throw Object.assign(new Error(`ENOENT: pinned test, ${name}`), { code: "ENOENT" });
     }
-    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...rest);
-  }) as typeof fs.readFileSync;
-  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
+    return read(path, ...rest);
+  };
+  return { ...fs, ...wrapped, default: { ...fs, ...wrapped } };
 });
 
+// Load every module again, now under the mock (the setup files had loaded some with the real node:fs), and redo the
+// potion-cost setup on the fresh module (setup-potion-cost.ts: costs off).
+vi.resetModules();
+const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+potionCostOptions.enabled = false;
 const { logged, loggedEnv } = await import("./logged.js");
 const { planCombatTurn } = await import("../src/screens/combat-plan.js");
 const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
@@ -77,6 +107,12 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
  * 8v0h again at #2 (its Blood Potion line: this turn's loss before the heal); ez2l, k8tc, xmy2 at #4 (their random
  * potions' Monte Carlo counts the lasting value a sample sets up: its facts and log). Every board at #12: a line's
  * rollout fact shows the win chance and the value it is ranked on.
+ * 2026-10-01 (the knowledge data refreshed after every run broke these on the live branch): the setup files had loaded
+ * the potion table and boss-clock's records (the numbers filled into the lessons) with the real node:fs, so
+ * potion_worth_in_act_boss and the lessons' counts, and the monster DB and experience base too, followed the live
+ * files; the registry is now reset under the mock and those files pinned from 69a33f9's data, the data these digests
+ * were captured on. CAPTURE=1 on the current planner (whose off path is the pre-B2 one with the fix-queue changes
+ * above) gave every digest unchanged.
  */
 const GOLDEN: Record<string, string> = {
   "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
@@ -109,8 +145,11 @@ describe("B2 off: the boss question as before", () => {
     got["2mk4-f8-t2-ask:v1"] = digestOf("2mk4-f8-t2-ask", "v1");
     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got, null, 2));
     expect(got).toEqual(GOLDEN);
-    // The rest of the knowledge the planner asked for read as absent (so the digests never follow the refreshed data).
+    // Every pinned file was read through the mock, the rest of the knowledge the planner asked for read as absent (so
+    // the digests never follow the refreshed data), and no log or cache was touched, nothing written.
+    expect([...pinnedRead].sort()).toEqual(["boss-damage.json", "experience.json", "monster-db.json", "move-model.json", "potion-equivalents.json"]);
     expect([...unpinned].sort()).toEqual(["fight-value-gates.json", "fight-value.json", "jev-hints.json"]);
+    expect([...touched]).toEqual([]);
   }, 120_000);
 
   it("a fight that is not a boss fight: the same decision with B2 on", () => {
@@ -121,6 +160,7 @@ describe("B2 off: the boss question as before", () => {
     bossLinesOptions.enabled = false;
     expect(on).toBe(digestOf("2mk4-f8-t2-ask", "v1"));
     expect(on).toBe(GOLDEN["2mk4-f8-t2-ask:v1"]);
+    expect([...touched]).toEqual([]);
   }, 60_000);
 });
 
