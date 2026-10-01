@@ -422,13 +422,14 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
  * differences (compareLines) come from the raw samples.
  */
 export const BOSS_SIM_PLATT: Record<"start" | "mid" | "pre", { a: number; b: number }> = {
-  // Refitted after B4's fixes that went in (the Insatiable's Sandpit, the Knowledge Demon's three curses; docs/boss-sim.md
-  // §13), on the same tune fights. With the Crab's and the Queen's too (branch v4-sim-crabqueen): start (0.6695, 0.602),
+  // Refitted after B5 (the Kaiser Crab's faced hit, the policy's one-turn lookahead; docs/boss-sim.md §14) on the same tune
+  // fights. B4's (the Insatiable's Sandpit, the Knowledge Demon's three curses): start (0.7875, 0.5587), mid (0.5682,
+  // 0.8221), pre (0.7573, 0.5783); with the Crab's and the Queen's fixes (branch v4-sim-crabqueen): start (0.6695, 0.602),
   // mid (0.4478, 0.8537), pre (0.6425, 0.6369). B2's: start (0.5534, 0.5036), mid (0.5624, 0.8224), pre (0.5236, 0.5219);
   // B1.5's: start (0.7295, 0.498), mid (0.7482, 0.8635), pre (0.7084, 0.5189).
-  start: { a: 0.7875, b: 0.5587 },
-  mid: { a: 0.5682, b: 0.8221 },
-  pre: { a: 0.7573, b: 0.5783 },
+  start: { a: 0.7496, b: 0.5992 },
+  mid: { a: 0.6491, b: 0.8506 },
+  pre: { a: 0.7007, b: 0.6174 },
 };
 
 /** A line's calibrated win rate (BOSS_SIM_PLATT), its raw rate clipped to half a sample from 0 and 1 first. */
