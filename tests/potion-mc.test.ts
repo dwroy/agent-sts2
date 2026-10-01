@@ -201,7 +201,8 @@ describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-pla
       const option = JSON.parse(String(criteriaOf(decision)[key])) as Record<string, string>;
       expect(option["plays"], name).toMatch(/^drink .+ now \(.+\), then re-plan the turn with the real cards; example, the median of \d+ samples: potion /);
       expect(option["result"], name).toBe("result unknown until drunk; after drinking you will see the actual cards and choose the rest of the turn again");
-      expect(option["simulated"], name).toMatch(/^Monte Carlo, \d+ samples/);
+      // One sample when the real clock is slow (the budget is kept from the first sample on: fix-queue-v4 #5).
+      expect(option["simulated"], name).toMatch(/^Monte Carlo, \d+ samples?/);
       expect(option["hp_lost"], name).toMatch(/^mean [\d.]+ \[\d+-\d+\]$/);
       expect(option["damage_dealt"], name).toMatch(/^mean [\d.]+ \[\d+-\d+\]$/);
       expect(option["wins_fight_this_turn"], name).toMatch(/^\d+\/\d+ samples$/);
