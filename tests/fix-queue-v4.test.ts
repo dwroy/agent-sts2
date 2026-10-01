@@ -6,6 +6,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
+import { createScreenMemory } from "../src/project/types.js";
+import { ask, board, decide, env as oneshotEnv, optionsOf, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
 import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
@@ -249,5 +251,39 @@ describe("6. A line that gives the enemy Strength never dominates one that does 
     const shown = distinctPlans(solved.plans, 10);
     expect(shown.some((plan) => (plan.outcome.enemyHpAfter[0]!.strengthGained ?? 0) === 0)).toBe(true);
     expect(shown.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe("7. Smith and removal name only the cards the selection screen lists, the first 25 (fix-queue-v4 oneshot:328, selection:351)", () => {
+  setupOneshotTests();
+  const REST = "7b0d-f8-rest";
+  const EXTRA = ["TWIN_STRIKE", "INFLAME", "CLOTHESLINE", "HEADBUTT", "IRON_WAVE", "CLEAVE", "THUNDERCLAP", "BODY_SLAM", "HAVOC", "WARCRY", "SWORD_BOOMERANG", "WILD_STRIKE"];
+  /** The logged rest site's deck (16 upgradable copies) and 12 more upgradable cards: 28, as 0U96U4D9Z3PP F47's 33. */
+  const bigDeck = (raw: Raw): Raw => {
+    const run = raw["run"] as Raw;
+    const deck = run["deck"] as Raw[];
+    const model = deck.find((card) => card["card_id"] === "POMMEL_STRIKE")!;
+    run["deck"] = [...deck, ...EXTRA.map((id, i) => ({ ...model, index: deck.length + i, card_id: id, name: id, rules_text: id, resolved_rules_text: id }))];
+    return raw;
+  };
+
+  it("0U96U4D9Z3PP F47: no smith option for a card past the 25th upgradable copy; the question says which and why", () => {
+    const options = optionsOf(decide(oneshotEnv(bigDeck(board(REST, "rest")))));
+    const smithCards = Object.values(options).map((option) => option["card"]).filter((name): name is string => typeof name === "string");
+    expect(smithCards).toContain("HAVOC");
+    for (const late of ["WARCRY", "SWORD_BOOMERANG", "WILD_STRIKE"]) expect(smithCards).not.toContain(late);
+    const notes = Object.values(options).map((option) => option["not_on_selection_screen"]).filter((note) => note !== undefined);
+    expect(notes).toHaveLength(1);
+    expect(String(notes[0])).toMatch(/first 25 eligible cards in deck order; these cannot be picked there: WARCRY, SWORD_BOOMERANG, WILD_STRIKE$/);
+  });
+
+  it("a named card the screen does not list: the question asked instead names it and says why (not a silent drop)", () => {
+    const memory = createScreenMemory("CARD_SELECTION");
+    memory.pendingPick = { ref: "7B0D6XKP0BAZ:F8:rest#1", runId: "7B0D6XKP0BAZ", floor: 8, source: "rest", task: "upgrade", cards: [{ card_id: "INFERNO", upgraded: false, text: "", cost: 1 } as never], names: ["Inferno"], step: 2 };
+    const decision = decide(oneshotEnv(board(REST, "upgrade_select"), memory));
+    expect(decision.kind).toBe("ask");
+    expect(memory.pendingPick).toBeUndefined();
+    const situation = ask(decision).state["situation"] as Record<string, unknown>;
+    expect(String(situation["named_card_not_offered"])).toMatch(/^Inferno, named for this upgrade with the choice before, is not on this screen/);
   });
 });

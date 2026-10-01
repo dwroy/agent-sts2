@@ -16,7 +16,7 @@ import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/c
 import { boardDamageContext, expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
 import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
 import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
-import { sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+import { SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../knowledge/outcome-facts.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -282,6 +282,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         prompt,
         selecting: selectingText(selected, min, max),
         ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}),
+        ...pickNotOfferedNote(env, selectionTask(kind, prompt)),
         ...(forThisTurn
           ? {
               note: "this card is only for this turn — judge its immediate effect",
@@ -316,7 +317,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         },
       };
     }),
-    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}) } }) },
+    deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}), ...pickNotOfferedNote(env, selectionTask(kind, prompt)) } }) },
   });
 }
 
@@ -348,7 +349,12 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
   const card = asArray(asRecord(env.state.raw["selection"])["cards"])
     .map(asRecord)
     .find((candidate) => !bool(candidate["selected"]) && sameCard(candidate, target));
-  if (!card) return drop();
+  if (!card) {
+    // Not on the screen (it lists the first 25 eligible cards: oneshot SELECTION_SCREEN_CARDS): the question asked next
+    // says which card was named and why it is not there, instead of dropping it silently (fix-queue-v4 #7).
+    env.screenMemory.pickNotOffered = { runId: pending.runId, floor: pending.floor, task: pending.task, name: pending.names[0] ?? target.card_id };
+    return drop();
+  }
   const index = numOrNull(card["index"]) ?? 0;
   const name = pending.names[0] ?? str(card["name"], target.card_id);
   return {
@@ -365,6 +371,18 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
       if (pending.source === "shop" && shopPlan && shopPlan.ref === pending.ref) shopPlan.actions += 1;
       if (pending.cards.length === 0 && env.screenMemory.pendingPick === pending) env.screenMemory.pendingPick = undefined;
     },
+  };
+}
+
+/**
+ * The card a one-shot plan named for this screen when the screen does not offer it (pendingPickStep): a note for the
+ * question asked instead (this run, floor and task only); empty otherwise.
+ */
+export function pickNotOfferedNote(env: DecisionEnv, task: string | null): Record<string, JsonValue> {
+  const memo = env.screenMemory.pickNotOffered;
+  if (!memo || memo.runId !== str(env.state.raw["run_id"]) || memo.floor !== (env.state.run?.floor ?? null) || memo.task !== task) return {};
+  return {
+    named_card_not_offered: `${memo.name}, named for this ${memo.task} with the choice before, is not on this screen (it lists only the first ${SELECTION_SCREEN_CARDS} eligible cards in deck order): pick among the cards listed here`,
   };
 }
 

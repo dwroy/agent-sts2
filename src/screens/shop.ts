@@ -23,7 +23,10 @@ import { annotatePlating } from "../knowledge/enchant-text.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { ResolvedAction } from "../project/types.js";
-import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, sameCard, usePlanRef, visitKey, type CardIdentity } from "./oneshot.js";
+import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, sameCard, selectableCards, unlistedNote, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
+
+/** The shop removal's selection screen, as a one-shot follow-up (which cards it lists: selectableCards). */
+const REMOVAL_FOLLOW: DeckFollowUp = { task: "remove", count: 1, upTo: false, text: "" };
 
 export function planShop(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
@@ -350,6 +353,8 @@ export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): 
       const byName = cards.filter((candidate) => candidate.name === target);
       const card = cards.find((candidate) => candidate.key === target) ?? (byName.length === 1 ? byName[0] : undefined);
       if (!card) return { invalid: `${key}: no such card key in your_cards` };
+      // The removal screen lists the first 25 removable cards in deck order only (fix-queue-v4 #7).
+      if (selectableCards(env.state, cards, REMOVAL_FOLLOW).unlisted.includes(card)) return { invalid: `${key}: ${card.name} is not on the removal screen (it lists only the first removable cards in deck order)` };
       steps.push({ kind: "remove", key, name: card.name, price: numOrNull(removal["price"]), card: card.identity });
       continue;
     }
@@ -501,7 +506,15 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
       label: `pay ${inputs.removal.price ?? "?"}g to remove a card`,
       intent: { action: "remove_card_at_shop" },
       score: inputs.removal.score,
-      summary: { buy: "card removal", kind: "service", price: inputs.removal.price, affordable_now: inputs.removal.affordable, text: 'removes one card from the deck: write "remove:<card key>" with the card from state.your_cards', ...inputs.removal.facts },
+      summary: {
+        buy: "card removal",
+        kind: "service",
+        price: inputs.removal.price,
+        affordable_now: inputs.removal.affordable,
+        text: 'removes one card from the deck: write "remove:<card key>" with the card from state.your_cards',
+        ...inputs.removal.facts,
+        ...unlistedNote(selectableCards(state, cards, REMOVAL_FOLLOW).unlisted, "remove"),
+      },
     });
   }
   for (const [slot, potion] of belt.potions) {

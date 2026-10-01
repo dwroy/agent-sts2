@@ -20,7 +20,7 @@ import { eventHpCost } from "./event.js";
 import { checkRoute, routeIds } from "../strategy/route-map.js";
 import { actPlan, actStartMap, makeRoutePlan, routeBlockState, routeCosts, runSnapshot, type RoutePlan } from "./route-plan.js";
 import { buildPickDecision, type PickOption, type PlanAnswer, type PlannedOption } from "./pick.js";
-import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, planOnly, visitKey, withFollowUp } from "./oneshot.js";
+import { deckCards, deckFollowUp, selectableCards, nextPlanRef, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import type { Decision, DecisionEnv } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -157,7 +157,7 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
     if (effect) effects.set(option.key, effect);
     const later = revealsLater(description);
     const follow = deckFollowUp(description);
-    if (follow) for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
+    if (follow) for (const card of selectableCards(env.state, cards, follow).listed) offered.add(card.identity.card_id);
     const parts = follow ? withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task)) : [planOnly(env, option, ref)];
     return parts.map((part) => withRoute(part, option, effect, later));
   });
