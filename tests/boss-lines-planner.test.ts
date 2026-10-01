@@ -75,20 +75,21 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
  * Digests of the pre-B2 planner (bd606d9 with the B2 simulator fixes, which leave the planner as it was). The two
  * saturated boards (8v0h, ez2l) re-pinned at fix-queue-v4 #1: the saturated ranking's order and its text changed;
  * 8v0h again at #2 (its Blood Potion line: this turn's loss before the heal); ez2l, k8tc, xmy2 at #4 (their random
- * potions' Monte Carlo counts the lasting value a sample sets up: its facts and log).
+ * potions' Monte Carlo counts the lasting value a sample sets up: its facts and log). Every board at #12: a line's
+ * rollout fact shows the win chance and the value it is ranked on.
  */
 const GOLDEN: Record<string, string> = {
-  "3sbp-f17-t3-flex:off": "54195aef830cffc934ee84d6f8ae5e75",
-  "3sbp-f17-t3-flex:v1": "3c062fccc02d0de61026fe8f1b229fec",
-  "k8tc-f17-t5:off": "3fd2decff7845986caad4a9582b83a84",
-  "k8tc-f17-t5:v1": "550e0e8cfd0369669d3ab0237a1553c1",
-  "xmy2-f17-t1:off": "8ec38709dad71fa3ccb16778c800a391",
-  "xmy2-f17-t1:v1": "60e413a56d621cb8b1fd6683030c3000",
+  "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
+  "3sbp-f17-t3-flex:v1": "ab67ba3e9749da3925216e5fd2386a20",
+  "k8tc-f17-t5:off": "5596bcc903bff54b339142bbb803f04f",
+  "k8tc-f17-t5:v1": "f384927f7a7eb8ea80042a0997231940",
+  "xmy2-f17-t1:off": "ccf70183bb58499c1e90534f573e3ec3",
+  "xmy2-f17-t1:v1": "d8ef465061a61dd7ae4326cf65e80e33",
   "8v0h-f17-t2-saturated:off": "8b438468c96718c5ceccd0e6721c790a",
   "8v0h-f17-t2-saturated:v1": "3e8bd1db016185cc173b00efb6a66b97",
   "ez2l-f48-t2:off": "c6de5775368dfdf499e362edb02feb22",
   "ez2l-f48-t2:v1": "5ce33d7f7a81fa513856c48a7120381d",
-  "2mk4-f8-t2-ask:v1": "07448a5e8359434d51b955b91d956810",
+  "2mk4-f8-t2-ask:v1": "a8c6b59e8bca465e9e48beac868692c2",
 };
 
 describe("B2 off: the boss question as before", () => {

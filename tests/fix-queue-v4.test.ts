@@ -18,7 +18,7 @@ import { ask, board, decide, env as oneshotEnv, optionsOf, setupOneshotTests, ty
 import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
 import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
-import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
+import { pickRolloutBest, rankingNote, rolloutTies, sameShownResult } from "../src/strategy/rollout-live.js";
 import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
@@ -380,5 +380,25 @@ describe("9. A valid JSON answer with text after it is that answer, not non-JSON
     const answer = await client.choose({ floor: 11 }, "Heal or smith?", { o0: JSON.stringify({ option: "heal" }), o1: JSON.stringify({ option: "smith Inflame" }) }, { label: "rest/plan" });
     expect(answer.choice).toBe("o1");
     expect(answer.route).toBe("keep");
+  });
+});
+
+describe("12. The rollout's ranking value is on the question: its win chance is shown (fix-queue-v4 rollout.ts:2124 note)", () => {
+  // Z3DFG85QDRCD F46: the drink line's shown total (loss + potion cost) was worse, yet it was the rollout's best:
+  // its value counts the win chance (40 HP per lost fight), which the question did not show.
+  const line = (name: string, hpLoss: number, potionCost: number, winProb: number): LineEstimate =>
+    ({ plan: { steps: [], name, outcome: { hpLoss: 0 } } as unknown as Plan, hpLoss, potionCost, winProb, value: -hpLoss - potionCost - 40 * (1 - winProb), wins: 2, deaths: 1, samples: 8, enemyHpLeft: 40, turnsSurvived: 5, leaderHpLeft: null }) as LineEstimate;
+
+  it("the best line's facts carry the number it won on; lines that differ there are not read as tied", () => {
+    const dry = line("dry", 20, 0, 0.5);
+    const drink = line("drink", 18, 4, 0.8);
+    const picked = pickRolloutBest([dry, drink], 60);
+    expect(picked.best).toBe(drink);
+    expect(rankingNote(drink, true)).toBe("; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~80% (fights won in the samples, the others by the end-of-horizon estimate), value -30");
+    expect(rankingNote(dry)).toMatch(/win chance ~50% .*value -40$/);
+    // The same total and deaths, another win chance: the question shows them apart, so one can be the best.
+    const sameTotal = line("same total", 22, 0, 0.5);
+    expect(sameShownResult(drink, sameTotal)).toBe(false);
+    expect(sameShownResult(drink, line("twin", 18, 4, 0.8))).toBe(true);
   });
 });

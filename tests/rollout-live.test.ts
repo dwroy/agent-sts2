@@ -68,7 +68,7 @@ describe("rollout facts on Jev's combat question", () => {
         // Turn by turn: turn 1 exact, then T2..T5 with the spread over the samples.
         expect(String(f["rollout_turns"])).toMatch(/^T1 exact: hp -\d+, dmg \d+(, won|, dead)?(; T[2-5]: (hp -[\d.]+ \[\d+-\d+\], dmg [\d.]+ \[\d+-\d+\], alive \d\/8, won \d\/8|over \(alive \d\/8, won \d\/8\)))*$/);
         expect(String(f["rollout_turns"]).split("; ")).toHaveLength(5);
-        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
+        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?; ranked on -\(further loss\) - 40 x \(1 - win chance\): win chance ~\d+% \(fights won in the samples, the others by the end-of-horizon estimate\), value -?[\d.]+$/);
         expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }

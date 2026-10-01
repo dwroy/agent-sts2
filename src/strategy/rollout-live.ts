@@ -33,6 +33,7 @@ import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
+  DEATH_HP,
   gateFor,
   ENEMY_SELF_POWERS,
   LEADER_HP_TIE,
@@ -623,11 +624,26 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
 }
 
 /**
- * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal)
- * and the share of samples dead.
+ * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal),
+ * the share of samples dead, and the win chance the ranking counts (shown in whole percent: rankingNote).
  */
 export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
-  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples;
+  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples && winPercent(a) === winPercent(b);
+}
+
+/** The win chance a line's ranking value counts, as shown: whole percent. */
+const winPercent = (line: Pick<LineEstimate, "winProb">): number => Math.round((line.winProb ?? 0) * 100);
+
+/**
+ * How the rollout ranks a line that is not saturated, with the one number of it Jev did not see (fix-queue-v4 #12:
+ * Z3DFG85QDRCD F46, the shown total said drinking was worse and the drink line was still the rollout's best): the
+ * value is -(further loss + potion cost) - DEATH_HP x (1 - win chance), the win chance counting the samples that won
+ * within the horizon and, for the rest, the end-of-horizon estimate (history model or clock). Shown, the ranking's
+ * numbers are the question's.
+ */
+export function rankingNote(line: LineEstimate, deathsFirst = false): string {
+  const cost = line.potionCost ?? 0;
+  return `; ranked on ${deathsFirst ? "fewest dead first (some line pays a potion cost), then " : ""}-(further loss${cost > 0 ? " + potion cost" : ""}) - ${DEATH_HP} x (1 - win chance): win chance ~${winPercent(line)}% (fights won in the samples, the others by the end-of-horizon estimate), value ${round1(line.value)}`;
 }
 
 /** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts). */
@@ -875,7 +891,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
         : " (later turns may use the potions still held)"
       : "";
   const facts: Record<string, JsonValue> = {
-    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${r.saturated ? saturatedNote(line, r) : rankingNote(line, r.result.lines.some((other) => (other.potionCost ?? 0) > 0))}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order && !fallback) {

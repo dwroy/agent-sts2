@@ -95,7 +95,7 @@ describe("tied options on Jev's question (a logged board, the rollout's tie forc
         const keys = Object.keys(criteria).filter((key) => /^plan\d+$/.test(key));
         expect(keys.length).toBeGreaterThanOrEqual(3);
         expect(keys.filter((key) => facts(key)["rollout_best"] === true)).toEqual([]);
-        expect(facts("plan1")["rollout_tied"]).toBe("tied for the best rollout numbers with plan2 (the same expected further HP loss and deaths); the rollout picks none of them");
+        expect(facts("plan1")["rollout_tied"]).toBe("tied for the best rollout numbers with plan2 (the same expected further HP loss, deaths and win chance); the rollout picks none of them");
         expect(facts("plan2")["rollout_tied"]).toMatch(/with plan1 \(/);
         expect(keys.filter((key) => facts(key)["rollout_tied"] !== undefined)).toEqual(["plan1", "plan2"]);
       }
