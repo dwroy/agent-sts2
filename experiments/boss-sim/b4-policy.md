@@ -1,5 +1,7 @@
 # B4: a policy threat term for the Kaiser Crab and the Queen (tried, not adopted)
 
+Run on top of the two bosses' mechanism fixes (branch v4-sim-crabqueen; raw/b4-final is that code); v4-sim has neither.
+
 The whole-fight policy's HP weight times (1 + T x the enemies' attack this turn / our HP) in these two fights only
 (src/sim/boss-sim.ts BOSS_POLICY_THREAT; tools/boss-sim/backtest.ts --boss-threat). B1.5's one-turn replay on the tune fights:
 the policy (x0.5) lost 13.7 HP a turn on the Crab against the log's 10.0, 12.7 on the Queen against 10.6; with T = 2,
