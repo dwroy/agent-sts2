@@ -5,6 +5,7 @@
 
 import { describe, expect, it } from "vitest";
 
+import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
 import { potionEffect, potionShell } from "../src/strategy/card-model.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
@@ -100,5 +101,32 @@ describe("2. One sample never saturates; a healing drink is not taken off this t
     (drinks.plan.outcome as { potionHeal?: number }).potionHeal = 4;
     const dry = rolled("dry", 5, { hpLoss: 84, enemyHpLeft: 300 });
     expect(pickRolloutBest([drinks, dry], 84)).toMatchObject({ best: dry, saturated: true });
+  });
+});
+
+describe("3. The elite/boss HP guard compares HP lost, not the potions' held value (fix-queue-v4 combat-plan:478-480)", () => {
+  const line = (name: string, hpLoss: number, potionCost = 0): Plan =>
+    ({
+      steps: potionCost > 0 ? [{ cardId: "POTION:FYSH_OIL:0", name: "potion Fysh Oil", cardIndex: 100, target: null, upgraded: false, targetName: null }] : [{ cardId: "STRIKE_IRONCLAD", name, cardIndex: 0, target: 0, upgraded: false, targetName: "Eel" }],
+      score: 0,
+      outcome: { hpLoss, winsFight: false, dies: false, damageDealt: 12, ...(potionCost > 0 ? { potionCost } : {}) },
+    }) as unknown as Plan;
+
+  it("G3MU2NADPEDU F9 (Terror Eel, 50 HP): Fysh Oil (held value 9.1) at the same HP loss as the dry line is not vetoed", () => {
+    const slack = hpGuardSlack(50, "elite");
+    expect(slack).toBe(8);
+    const oil = line("oil", 6, 9.1);
+    const dry = line("dry", 6);
+    expect(hpGuardReplacement(oil, [dry, oil], 50, slack)).toBeNull();
+    // More HP lost than the slack allows still trips it, whatever the cost.
+    const dearOil = line("oil, no block", 16, 9.1);
+    expect(hpGuardReplacement(dearOil, [dry, dearOil], 50, slack)).toBe(dry);
+    expect(hpGuardNote(2, dearOil, slack, 1, dry)).not.toMatch(/potions/);
+  });
+
+  it("a boss fight: potions cost 0 there, the guard reads the same either way", () => {
+    const drink = line("drink", 10, 0);
+    const dry = line("dry", 4);
+    expect(hpGuardReplacement(drink, [dry, drink], 80, hpGuardSlack(80, "boss"))).toBeNull();
   });
 });
