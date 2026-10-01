@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { appliedPowerIds, countsAt, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -33,6 +33,7 @@ import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
+  DEATH_HP,
   gateFor,
   ENEMY_SELF_POWERS,
   LEADER_HP_TIE,
@@ -96,7 +97,46 @@ export interface MonsterDbMove extends MoveEntry {
   avg_total_shown?: number;
 }
 
-export type MonsterMoves = Record<string, { moves?: Record<string, MonsterDbMove>; name?: { zh?: string }; hp_by_asc?: Record<string, { median?: number }> }>;
+export type MonsterMoves = Record<
+  string,
+  {
+    moves?: Record<string, MonsterDbMove>;
+    name?: { zh?: string };
+    hp_by_asc?: Record<string, { median?: number }>;
+    powers?: Record<string, { amount_at_first_sight_by_asc?: Record<string, Record<string, number>>; turn_at_first_sight_by_asc?: Record<string, Record<string, number>> }>;
+  }
+>;
+
+/** Moves whose hit grows with each use (EnemyMove.growth; the step from monster-db moveBaseDamages). */
+export const GROWING_DAMAGE_MOVES: Record<string, string[]> = { WATERFALL_GIANT: ["PRESSURE_GUN_MOVE"] };
+
+/** Stun-threshold powers (Shriek, Plow) an enemy gets after its first turn (EnemyTable.shriekFrom). */
+const LATER_SHRIEK_POWERS = ["PLOW_POWER", "SHRIEK_POWER"];
+
+/**
+ * A Shriek / Plow threshold first seen after turn 1 (the Ceremonial Beast's Plow: 150 at A8, 160 at A9, on turn 2): the
+ * amount and turn most often first seen at this ascension (the nearest logged one else), or undefined.
+ */
+export function shriekFromOf(id: string, asc: number, db: MonsterMoves): { amount: number; turn: number } | undefined {
+  for (const power of LATER_SHRIEK_POWERS) {
+    const entry = db[id]?.powers?.[power];
+    const found = nearestAscension(entry?.amount_at_first_sight_by_asc, asc);
+    if (!entry || !found) continue;
+    const amount = mode(entry.amount_at_first_sight_by_asc?.[found.key]);
+    const turn = mode(entry.turn_at_first_sight_by_asc?.[found.key]);
+    if (amount !== null && amount > 0 && turn !== null && turn > 1) return { amount, turn };
+  }
+  return undefined;
+}
+
+/** The damage a growing move's hit gains a use (GROWING_DAMAGE_MOVES): the most common step of its logged bases, or 0. */
+export function growthOf(id: string, move: string, asc: number): number {
+  if (!GROWING_DAMAGE_MOVES[id]?.includes(move)) return 0;
+  const bases = moveBaseDamages(id, move, asc);
+  const steps: Record<string, number> = {};
+  for (let i = 1; i < bases.length; i += 1) steps[String(bases[i]! - bases[i - 1]!)] = (steps[String(bases[i]! - bases[i - 1]!)] ?? 0) + 1;
+  return Math.max(0, mode(steps) ?? 0);
+}
 
 const KNOWLEDGE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "knowledge");
 let dbCache: MonsterMoves | undefined;
@@ -211,10 +251,13 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
     const shown = logged ? null : shownDamageAt(db, id, move, asc);
     const hits = logged?.hits ?? shown?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
+    const sandpit = selfGainAt(entry, "SANDPIT_POWER", asc);
     table.moves[move] = {
       damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
       ...(shown ? { shown: true } : {}),
+      // B4, read by whole fights only: the Sandpit the move starts (the Insatiable's Liquify Ground).
+      ...(sandpit ? { sandpit } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
       block: regularEffect(entry, entry.block_gained) ? (mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0) : 0,
@@ -225,12 +268,15 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       ...statusCardsOf(entry),
       ...playerPowersOf(entry, asc),
       ...(logged?.estimated || shown?.estimated ? { estimated: true } : {}),
+      ...(growthOf(id, move, asc) > 0 ? { growth: growthOf(id, move, asc) } : {}),
     };
   }
   for (const [move, damage] of Object.entries(learned?.damage ?? {})) {
     if (!table.moves[move]) table.moves[move] = { damage, hits: 1, strength: 0, block: 0 };
   }
   table.next = learned?.next ?? Object.fromEntries(Object.entries(moves ?? {}).map(([m, e]) => [m, e.next ?? {}]));
+  const shriekFrom = shriekFromOf(id, asc, db);
+  if (shriekFrom) table.shriekFrom = shriekFrom;
   return table;
 }
 
@@ -275,6 +321,60 @@ export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number;
     .map(asRecord)
     .filter((relic) => str(relic["relic_id"]) === "CAPTAINS_WHEEL")
     .map(() => ({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN }));
+}
+
+/**
+ * B2's turn relics for whole fights (fightRelicsOf), measured in the logs (logdb turns): Orichalcum's block when a turn
+ * ends with none (13 of 18 enemy turns after a 0-block end took the intent less 6), Ripple Basin's when no Attack was
+ * played (5 of 7: 4), Sturdy Clamp's block kept (turn-start block peaks at 10 without Barricade), Pendulum's card.
+ */
+export const ORICHALCUM_BLOCK = 6;
+export const RIPPLE_BASIN_BLOCK = 4;
+export const STURDY_CLAMP_BLOCK = 10;
+export const PENDULUM_DRAW = 1;
+
+/**
+ * Relics whose energy or block comes on given fight turns and that relicEnergyOf / relicBlockOf leave out, for the whole
+ * boss fight simulator only (RolloutInput.fightRelics; src/sim/boss-sim.ts, docs/boss-sim.md B1.5): the live planner and
+ * the 5-turn rollout do not read them. Amounts as logged over the A7-A9 boss fights holding them (turn start energy /
+ * block against the fights without): Candelabra 2 energy on turn 2 (22 fights: 5.2 against 3.1), Chandelier 3 on turn
+ * 3 (15: 6.3), Horn Cleat 14 block on turn 2 (13: 14.5). Happy Flower: 1 energy every 3rd turn, its counter (stack) the
+ * turns counted so far at `turn`, the decision's fight turn. Turns listed up to `upto`.
+ */
+export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upto = 40): NonNullable<RolloutInput["fightRelics"]> {
+  const energy: { amount: number; turn: number }[] = [];
+  const block: { amount: number; turn: number }[] = [];
+  const draws: { amount: number; turn: number }[] = [];
+  let orichalcum = 0;
+  let rippleBasin = 0;
+  let blockKeep = 0;
+  let iceCream = false;
+  for (const relic of asArray(runRaw["relics"]).map(asRecord)) {
+    const id = str(relic["relic_id"]);
+    if (id === "CANDELABRA") energy.push({ amount: 2, turn: 2 });
+    else if (id === "CHANDELIER") energy.push({ amount: 3, turn: 3 });
+    else if (id === "HORN_CLEAT") block.push({ amount: 14, turn: 2 });
+    else if (id === "HAPPY_FLOWER") {
+      const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
+      for (let t = turn + 3 - counted; t <= upto; t += 3) energy.push({ amount: 1, turn: t });
+    } else if (id === "PENDULUM") {
+      // B2: every 3rd turn 1 card more (logged: the counter 0 on the turn it drew, a 6-card hand; 1 or 2 otherwise, 5).
+      const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
+      for (let t = turn + 3 - counted; t <= upto; t += 3) draws.push({ amount: PENDULUM_DRAW, turn: t });
+    } else if (id === "ORICHALCUM") orichalcum = ORICHALCUM_BLOCK;
+    else if (id === "RIPPLE_BASIN") rippleBasin = RIPPLE_BASIN_BLOCK;
+    else if (id === "STURDY_CLAMP") blockKeep = STURDY_CLAMP_BLOCK;
+    else if (id === "ICE_CREAM") iceCream = true;
+  }
+  return {
+    energy,
+    block,
+    ...(draws.length > 0 ? { draws } : {}),
+    ...(orichalcum > 0 ? { orichalcum } : {}),
+    ...(rippleBasin > 0 ? { rippleBasin } : {}),
+    ...(blockKeep > 0 ? { blockKeep } : {}),
+    ...(iceCream ? { iceCream } : {}),
+  };
 }
 
 /** deck_summary() of tools/build-fight-value.py. */
@@ -383,8 +483,8 @@ export type LiveRollout =
       byPlan: Map<Plan, LineEstimate>;
       /**
        * The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may
-       * add; ties by enemy HP left, then turns survived; saturated boards by deaths, HP lost this turn, then
-       * enemy HP left and turns survived; null when that ties too (pickRolloutBest).
+       * add; ties by enemy HP left, then turns survived; saturated boards by deaths, then the fight's progress
+       * (enemy HP left), turns survived and HP lost this turn; null when that ties too (pickRolloutBest).
        */
       best: Plan | null;
       /**
@@ -415,6 +515,8 @@ export type LiveRollout =
        * base line it is the same as (its own rollout drinks no potion later either). Null when none was asked for.
        */
       noPotion: { line: Plan; base: Plan; merged: boolean } | null;
+      /** Wall clock the random potions' Monte Carlo took out of this decision's budget before the rollout (spentMs). */
+      spentMs: number;
       elapsedMs: number;
     };
 
@@ -447,36 +549,59 @@ const FALLBACK_TAG = "1-turn";
 
 /** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
 export const SATURATED_HP = 1;
+/**
+ * Fewer samples than this never make a board saturated: one sample (the time budget's cut, F4K88F267RCX F48 T1 "3-turn
+ * rollout (1 sample)"; W80JV2YVC8UZ F48 T1) is one draw order, not "every line loses all our HP".
+ */
+export const SATURATED_MIN_SAMPLES = 2;
 /** Enemy HP left within this much, and turns survived within ROLLOUT_TURNS_TIE, is a tie. */
 export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
 
 /**
- * Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. No potion cost
- * here: when every line loses all our HP a potion kept has no later to be worth anything in (potion-cost.ts).
+ * Our own HP lost this turn (the line's exact first turn): a saturated board's last key, after deaths and the fight's
+ * progress. No potion cost here: when every line loses all our HP a potion kept has no later to be worth anything in
+ * (potion-cost.ts). A healing drink's HP is not taken off (W80JV2YVC8UZ F48 T1: Blood Potion at 84/88 for +4 read as
+ * the line losing the least): what the line loses to the turn, not the potion spent to refill it.
  */
-const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
+const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0) + (line.plan.outcome?.potionHeal ?? 0);
 
 /**
  * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
  * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
- * then code's order. When every line is saturated (its loss capped at the HP we have, no sample won) the
- * value says nothing: the samples dead within the horizon decide first (fewest), then the HP this turn
- * loses (least), then the enemy HP left and turns alive; when they all tie there is no best line and the
- * lines tied are returned (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9
- * by one sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best;
- * CJ88575SQS6H F17 T2: "-14, dead 5/8" was tagged best over "-2, dead 1/8" by enemy HP left).
- * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
- * left comes first among those, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders):
- * summed enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
+ * then code's order.
+ *
+ * Saturated boards (every line's loss capped at the HP we have, no sample won, SATURATED_MIN_SAMPLES samples or more):
+ * the value says nothing, and what ranks
+ * the lines is the fight's progress (fix-queue-v4, CDR0Q6929CKR F33, F4K88F267RCX F48, HME0FA7VA0J6 F33: in the clock
+ * boss fights, the Insatiable's Sandpit, the Queen's Off With Your Head, the Knowledge Demon, every line is judged dead
+ * from T1, and ranking by this turn's HP loss picked the turtle line turn after turn; CDR0 T5: -9 HP leaving the worm
+ * ~116 over -16 leaving ~66). The keys, in order:
+ *   1. the samples dead within the horizon (fewest): the only survival signal left (CJ88575SQS6H F17 T2: "-14, dead
+ *      5/8" over "-2, dead 1/8" was wrong);
+ *   2. with a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP left,
+ *      within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders): summed enemy HP counted the
+ *      minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best);
+ *   3. the enemy HP left at the horizon or at our death (least, within ROLLOUT_ENEMY_HP_TIE): the damage the line and
+ *      its later turns deal before the death the rollout forecasts. Every line loses the fight unless the enemy dies
+ *      first, so this is the one number that measures a way out; it already counts what a power set up now deals
+ *      later (Demon Form, Inferno) and what staying alive longer lets us deal;
+ *   4. the turns we stay alive (most, within ROLLOUT_TURNS_TIE): more turns to draw an answer;
+ *   5. the HP this turn loses (least): only when the fight's progress is the same.
+ * When they all tie there is no best line and the lines tied are returned (HEACJRY5LEVD F17 T2: all three lines
+ * "further loss 69" = our HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ * A boss the whole-fight simulation is trusted on (B2, docs/boss-sim.md) is ranked by that simulation instead
+ * (combat-plan simRanks); this order is the rollout's own, for the low-trust bosses and every other fight.
+ *
+ * Not saturated, with a leader, its HP left comes first among the lines tied on the value, as above.
  * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some
  * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
- * more often). A saturated board (every line loses all our HP) ranks as before, without costs: a potion kept there has no
+ * more often). A saturated board (every line loses all our HP) ranks without costs: a potion kept there has no
  * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
-  const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
+  const saturated = lines.every((line) => line.samples >= SATURATED_MIN_SAMPLES && line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
   // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
@@ -484,14 +609,7 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   const fewestDead = Math.min(...lines.map((line) => line.deaths));
   const pool = costs && !saturated ? lines.filter((line) => line.deaths === fewestDead) : lines;
   const top = Math.max(...pool.map((line) => line.value));
-  let contenders = saturated ? lines : pool.filter((line) => line.value === top);
-  if (saturated) {
-    // Deaths within the horizon, then this turn's loss: what still differs when the expected loss is capped.
-    const fewest = Math.min(...contenders.map((line) => line.deaths));
-    contenders = contenders.filter((line) => line.deaths === fewest);
-    const least = Math.min(...contenders.map(turnLoss));
-    contenders = contenders.filter((line) => turnLoss(line) === least);
-  }
+  let contenders = saturated ? lines.filter((line) => line.deaths === fewestDead) : pool.filter((line) => line.value === top);
   if (contenders.every((line) => line.leaderHpLeft !== null && line.leaderHpLeft !== undefined)) {
     const leastLeader = Math.min(...contenders.map((line) => line.leaderHpLeft!));
     contenders = contenders.filter((line) => line.leaderHpLeft! <= leastLeader + LEADER_HP_TIE);
@@ -500,18 +618,35 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   // alive (a stable sort: code's order among equals).
   const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
   const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
-  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) {
-    return { best: null, saturated, tied: near.filter((line) => near[0]!.turnsSurvived - line.turnsSurvived < ROLLOUT_TURNS_TIE) };
-  }
-  return { best: near[0]!, saturated };
+  if (!saturated) return { best: near[0]!, saturated };
+  // Saturated: the lines as alive as the longest-lived, then the least HP lost this turn; still two or more, a tie.
+  const alive = near.filter((line) => near[0]!.turnsSurvived - line.turnsSurvived < ROLLOUT_TURNS_TIE);
+  const leastLoss = Math.min(...alive.map(turnLoss));
+  const last = alive.filter((line) => turnLoss(line) === leastLoss);
+  return last.length >= 2 ? { best: null, saturated, tied: last } : { best: last[0]!, saturated };
 }
 
 /**
- * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal)
- * and the share of samples dead.
+ * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal),
+ * the share of samples dead, and the win chance the ranking counts (shown in whole percent: rankingNote).
  */
 export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
-  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples;
+  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples && winPercent(a) === winPercent(b);
+}
+
+/** The win chance a line's ranking value counts, as shown: whole percent. */
+const winPercent = (line: Pick<LineEstimate, "winProb">): number => Math.round((line.winProb ?? 0) * 100);
+
+/**
+ * How the rollout ranks a line that is not saturated, with the one number of it Jev did not see (fix-queue-v4 #12:
+ * Z3DFG85QDRCD F46, the shown total said drinking was worse and the drink line was still the rollout's best): the
+ * value is -(further loss + potion cost) - DEATH_HP x (1 - win chance), the win chance counting the samples that won
+ * within the horizon and, for the rest, the end-of-horizon estimate (history model or clock). Shown, the ranking's
+ * numbers are the question's.
+ */
+export function rankingNote(line: LineEstimate, deathsFirst = false): string {
+  const cost = line.potionCost ?? 0;
+  return `; ranked on ${deathsFirst ? "fewest dead first (some line pays a potion cost), then " : ""}-(further loss${cost > 0 ? " + potion cost" : ""}) - ${DEATH_HP} x (1 - win chance): win chance ~${winPercent(line)}% (fights won in the samples, the others by the end-of-horizon estimate), value ${round1(line.value)}`;
 }
 
 /** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts). */
@@ -710,6 +845,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       lossCap,
       ordersDropped: args.ordersDropped ?? 0,
       noPotion,
+      spentMs: args.spentMs ?? 0,
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -722,15 +858,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
 /**
- * Saturated boards: the expected loss is the same for every line, so what ranks them is shown: deaths
- * within the horizon, HP lost this turn, then the enemy HP left and turns alive (the leader's HP left first
- * when its death ends the fight).
+ * Saturated boards: the expected loss is the same for every line, so what ranks them is shown (pickRolloutBest):
+ * deaths within the horizon, then the fight's progress (the leader's HP left first when its death ends the fight, the
+ * enemy HP left), the turns alive, and only then the HP lost this turn.
  */
 function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
   if (!r.saturated) return "";
   const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
   const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
-  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}), then ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then the fight's progress: ${leaderText}least enemy HP left (this line ~${Math.round(line.enemyHpLeft)}, at T${line.horizon} or at our death), then most turns alive (this line ~${round1(line.turnsSurvived)}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}${line.plan.outcome?.potionHeal ? `, before the ${line.plan.outcome.potionHeal} HP its potion heals` : ""})`;
 }
 
 /** The facts of one shown line. */
@@ -743,7 +879,9 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   // forecast: the estimate is capped at our HP, so a cap reached says nothing of the line dying.
   const fallback = r.result.degraded.includes(FALLBACK_TAG);
   const capped = line.hpLoss >= r.lossCap - SATURATED_HP;
-  const fallbackText = `no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
+  // The budget is shared with the random potions' Monte Carlo, run first: say when it took a share (DT1H1URTUAD8 F42).
+  const mcShare = r.spentMs >= 1 ? `, ${Math.round(r.spentMs)} ms of it taken by the random potions' Monte Carlo` : "";
+  const fallbackText = `no rollout (it ran past its time budget${mcShare}; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   // The later turns drink a potion still held only when the turn gains more than its cost (potion-cost.ts); the
@@ -756,7 +894,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
         : " (later turns may use the potions still held)"
       : "";
   const facts: Record<string, JsonValue> = {
-    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${r.saturated ? saturatedNote(line, r) : rankingNote(line, r.result.lines.some((other) => (other.potionCost ?? 0) > 0))}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order && !fallback) {

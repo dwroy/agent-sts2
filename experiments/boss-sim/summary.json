@@ -1,0 +1,2560 @@
+{
+ "meta": {
+  "fights": 424,
+  "ascensions": [
+   7,
+   8,
+   9
+  ],
+  "samples": 200,
+  "max_turns": 30,
+  "first": "2026-09-26 06:02",
+  "last": "2026-09-30 13:24",
+  "errors": [
+   {
+    "key": "WLM6YKJ0ASNE:8",
+    "start": "t1",
+    "error": "board: Error: no solve"
+   },
+   {
+    "key": "YFG53EZ372D7:9",
+    "start": "t1",
+    "error": "board: Error: no solve"
+   }
+  ],
+  "longest_sample": 27
+ },
+ "starts": {
+  "t1": {
+   "n": 422,
+   "won": 248,
+   "base_rate": 0.588,
+   "win": {
+    "sim": {
+     "n": 422,
+     "brier": 0.1821,
+     "auc": 0.866,
+     "mean_pred": 0.452,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 181,
+       "pred": 0.028,
+       "actual": 0.254
+      },
+      {
+       "bucket": "20–40%",
+       "n": 39,
+       "pred": 0.302,
+       "actual": 0.667
+      },
+      {
+       "bucket": "40–60%",
+       "n": 21,
+       "pred": 0.497,
+       "actual": 0.571
+      },
+      {
+       "bucket": "60–80%",
+       "n": 37,
+       "pred": 0.71,
+       "actual": 0.865
+      },
+      {
+       "bucket": "80–100%",
+       "n": 144,
+       "pred": 0.952,
+       "actual": 0.917
+      }
+     ],
+     "accuracy": 0.751
+    },
+    "rollout": {
+     "n": 422,
+     "brier": 0.258,
+     "auc": 0.793,
+     "mean_pred": 0.368,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 177,
+       "pred": 0.049,
+       "actual": 0.311
+      },
+      {
+       "bucket": "20–40%",
+       "n": 82,
+       "pred": 0.29,
+       "actual": 0.695
+      },
+      {
+       "bucket": "40–60%",
+       "n": 47,
+       "pred": 0.487,
+       "actual": 0.809
+      },
+      {
+       "bucket": "60–80%",
+       "n": 39,
+       "pred": 0.694,
+       "actual": 0.821
+      },
+      {
+       "bucket": "80–100%",
+       "n": 77,
+       "pred": 0.949,
+       "actual": 0.857
+      }
+     ],
+     "accuracy": 0.63
+    },
+    "rollout-model": {
+     "n": 422,
+     "brier": 0.1597,
+     "auc": 0.886,
+     "mean_pred": 0.441,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 126,
+       "pred": 0.041,
+       "actual": 0.183
+      },
+      {
+       "bucket": "20–40%",
+       "n": 54,
+       "pred": 0.311,
+       "actual": 0.389
+      },
+      {
+       "bucket": "40–60%",
+       "n": 70,
+       "pred": 0.508,
+       "actual": 0.614
+      },
+      {
+       "bucket": "60–80%",
+       "n": 120,
+       "pred": 0.689,
+       "actual": 0.908
+      },
+      {
+       "bucket": "80–100%",
+       "n": 52,
+       "pred": 0.878,
+       "actual": 1.0
+      }
+     ],
+     "accuracy": 0.799
+    },
+    "clock": {
+     "n": 422,
+     "brier": 0.3649,
+     "auc": 0.784,
+     "mean_pred": 0.322,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 286,
+       "pred": 0.0,
+       "actual": 0.465
+      },
+      {
+       "bucket": "20–40%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "40–60%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "60–80%",
+       "n": 0,
+       "pred": null,
+       "actual": null
+      },
+      {
+       "bucket": "80–100%",
+       "n": 136,
+       "pred": 1.0,
+       "actual": 0.846
+      }
+     ],
+     "accuracy": 0.635
+    }
+   },
+   "loss_won": {
+    "sim": {
+     "n": 233,
+     "median": 7,
+     "mean": 7.4,
+     "mae": 13.6,
+     "p10": -13,
+     "p90": 28,
+     "within5": 0.245
+    },
+    "rollout": {
+     "n": 248,
+     "median": 14.5,
+     "mean": 11.6,
+     "mae": 21.5,
+     "p10": -22.2,
+     "p90": 39.5,
+     "within5": 0.153
+    },
+    "rollout-model": {
+     "n": 248,
+     "median": 9.4,
+     "mean": 11.1,
+     "mae": 14.6,
+     "p10": -6.3,
+     "p90": 31.8,
+     "within5": 0.266
+    },
+    "clock": {
+     "n": 248,
+     "median": 12.6,
+     "mean": 14.7,
+     "mae": 18.9,
+     "p10": -9.0,
+     "p90": 41.8,
+     "within5": 0.185
+    }
+   },
+   "turns_won": {
+    "sim": {
+     "n": 233,
+     "median": 0,
+     "mean": -0.1,
+     "mae": 1.5,
+     "p10": -3,
+     "p90": 2,
+     "within5": 0.97
+    },
+    "rollout": {
+     "n": 245,
+     "median": -0.6,
+     "mean": -0.7,
+     "mae": 2.0,
+     "p10": -4.5,
+     "p90": 2.2,
+     "within5": 0.914
+    },
+    "clock": {
+     "n": 248,
+     "median": 1.0,
+     "mean": 1.0,
+     "mae": 2.4,
+     "p10": -3,
+     "p90": 4,
+     "within5": 0.923
+    }
+   },
+   "death_turn": {
+    "sim": {
+     "n": 171,
+     "median": -1,
+     "mean": -1.2,
+     "mae": 1.8,
+     "p10": -4,
+     "p90": 1,
+     "within5": 0.977
+    },
+    "clock": {
+     "n": 174,
+     "median": 0.0,
+     "mean": 0.1,
+     "mae": 2.2,
+     "p10": -4,
+     "p90": 3,
+     "within5": 0.908
+    }
+   },
+   "base_brier": 0.2423,
+   "common_n": 422,
+   "loss_all_sim": {
+    "n": 422,
+    "median": 0.0,
+    "mean": 5.4,
+    "mae": 10.0,
+    "p10": -9.3,
+    "p90": 26.3,
+    "within5": 0.453
+   },
+   "capped": 0,
+   "samples": 84400,
+   "sim_ms": {
+    "n": 422,
+    "median": 17.5,
+    "mean": 26.5,
+    "mae": 26.5,
+    "p10": 8.3,
+    "p90": 61.4,
+    "within5": 0.014
+   }
+  },
+  "t5": {
+   "n": 412,
+   "won": 248,
+   "base_rate": 0.602,
+   "win": {
+    "sim": {
+     "n": 412,
+     "brier": 0.0921,
+     "auc": 0.957,
+     "mean_pred": 0.531,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 156,
+       "pred": 0.028,
+       "actual": 0.122
+      },
+      {
+       "bucket": "20–40%",
+       "n": 21,
+       "pred": 0.271,
+       "actual": 0.429
+      },
+      {
+       "bucket": "40–60%",
+       "n": 33,
+       "pred": 0.487,
+       "actual": 0.788
+      },
+      {
+       "bucket": "60–80%",
+       "n": 17,
+       "pred": 0.693,
+       "actual": 0.706
+      },
+      {
+       "bucket": "80–100%",
+       "n": 185,
+       "pred": 0.977,
+       "actual": 0.984
+      }
+     ],
+     "accuracy": 0.871
+    },
+    "rollout": {
+     "n": 412,
+     "brier": 0.1148,
+     "auc": 0.932,
+     "mean_pred": 0.516,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 151,
+       "pred": 0.027,
+       "actual": 0.166
+      },
+      {
+       "bucket": "20–40%",
+       "n": 28,
+       "pred": 0.285,
+       "actual": 0.357
+      },
+      {
+       "bucket": "40–60%",
+       "n": 30,
+       "pred": 0.489,
+       "actual": 0.8
+      },
+      {
+       "bucket": "60–80%",
+       "n": 44,
+       "pred": 0.715,
+       "actual": 0.773
+      },
+      {
+       "bucket": "80–100%",
+       "n": 159,
+       "pred": 0.972,
+       "actual": 0.975
+      }
+     ],
+     "accuracy": 0.842
+    },
+    "rollout-model": {
+     "n": 412,
+     "brier": 0.0955,
+     "auc": 0.947,
+     "mean_pred": 0.525,
+     "buckets": [
+      {
+       "bucket": "0–20%",
+       "n": 142,
+       "pred": 0.026,
+       "actual": 0.127
+      },
+      {
+       "bucket": "20–40%",
+       "n": 30,
+       "pred": 0.306,
+       "actual": 0.333
+      },
+      {
+       "bucket": "40–60%",
+       "n": 36,
+       "pred": 0.502,
+       "actual": 0.611
+      },
+      {
+       "bucket": "60–80%",
+       "n": 50,
+       "pred": 0.716,
+       "actual": 0.88
+      },
+      {
+       "bucket": "80–100%",
+       "n": 154,
+       "pred": 0.971,
+       "actual": 1.0
+      }
+     ],
+     "accuracy": 0.881
+    }
+   },
+   "loss_won": {
+    "sim": {
+     "n": 244,
+     "median": 3.0,
+     "mean": 3.1,
+     "mae": 8.4,
+     "p10": -10,
+     "p90": 17,
+     "within5": 0.439
+    },
+    "rollout": {
+     "n": 248,
+     "median": 6.2,
+     "mean": 6.8,
+     "mae": 10.4,
+     "p10": -6.5,
+     "p90": 22.4,
+     "within5": 0.339
+    },
+    "rollout-model": {
+     "n": 248,
+     "median": 5.0,
+     "mean": 5.6,
+     "mae": 9.3,
+     "p10": -6.4,
+     "p90": 19.5,
+     "within5": 0.375
+    }
+   },
+   "turns_won": {
+    "sim": {
+     "n": 244,
+     "median": 0.0,
+     "mean": -0.2,
+     "mae": 0.9,
+     "p10": -2,
+     "p90": 1,
+     "within5": 0.996
+    },
+    "rollout": {
+     "n": 243,
+     "median": 0,
+     "mean": -0.6,
+     "mae": 1.1,
+     "p10": -2.8,
+     "p90": 1,
+     "within5": 0.979
+    }
+   },
+   "death_turn": {
+    "sim": {
+     "n": 164,
+     "median": 0.0,
+     "mean": -0.5,
+     "mae": 0.9,
+     "p10": -2,
+     "p90": 1,
+     "within5": 0.988
+    }
+   },
+   "base_brier": 0.2396,
+   "common_n": 412,
+   "loss_all_sim": {
+    "n": 412,
+    "median": 0.0,
+    "mean": 2.7,
+    "mae": 5.9,
+    "p10": -6.1,
+    "p90": 14.2,
+    "within5": 0.59
+   },
+   "capped": 0,
+   "samples": 82400,
+   "sim_ms": {
+    "n": 412,
+    "median": 6.5,
+    "mean": 10.2,
+    "mae": 10.2,
+    "p10": 1.8,
+    "p90": 20.2,
+    "within5": 0.34
+   }
+  }
+ },
+ "bosses": {
+  "t1": [
+   {
+    "enc": "CEREMONIAL_BEAST",
+    "name": "仪式兽",
+    "act": 1,
+    "n": 36,
+    "won": 30,
+    "sim_win": 0.576,
+    "brier_sim": 0.212,
+    "brier_rollout": 0.382,
+    "rollout_win": 0.337,
+    "brier_clock": 0.417,
+    "loss_err_sim": {
+     "n": 29,
+     "median": 9,
+     "mean": 9.6,
+     "mae": 12.3,
+     "p10": -2.5,
+     "p90": 23,
+     "within5": 0.276
+    },
+    "loss_err_rollout": {
+     "n": 30,
+     "median": 18.6,
+     "mean": 19.0,
+     "mae": 21.0,
+     "p10": -3.1,
+     "p90": 39.0,
+     "within5": 0.133
+    },
+    "turn_err_sim": {
+     "n": 29,
+     "median": -1,
+     "mean": -0.6,
+     "mae": 1.2,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 6,
+     "median": -2.0,
+     "mean": -2.0,
+     "mae": 2.3,
+     "p10": -5,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 9.0,
+    "sim_turns_won": 9
+   },
+   {
+    "enc": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+    "name": "同族",
+    "act": 1,
+    "n": 43,
+    "won": 27,
+    "sim_win": 0.497,
+    "brier_sim": 0.17,
+    "brier_rollout": 0.223,
+    "rollout_win": 0.412,
+    "brier_clock": 0.558,
+    "loss_err_sim": {
+     "n": 26,
+     "median": 4.0,
+     "mean": 4.8,
+     "mae": 13.1,
+     "p10": -13,
+     "p90": 27,
+     "within5": 0.231
+    },
+    "loss_err_rollout": {
+     "n": 27,
+     "median": 6,
+     "mean": 11.9,
+     "mae": 14.0,
+     "p10": 0.6,
+     "p90": 31.5,
+     "within5": 0.37
+    },
+    "turn_err_sim": {
+     "n": 26,
+     "median": 0.0,
+     "mean": -0.7,
+     "mae": 1.6,
+     "p10": -5,
+     "p90": 1,
+     "within5": 0.962
+    },
+    "death_err_sim": {
+     "n": 15,
+     "median": -1,
+     "mean": -1.8,
+     "mae": 2.6,
+     "p10": -5,
+     "p90": 1,
+     "within5": 0.933
+    },
+    "actual_turns_won": 9,
+    "sim_turns_won": 8
+   },
+   {
+    "enc": "LAGAVULIN_MATRIARCH",
+    "name": "乐加维林族母",
+    "act": 1,
+    "n": 37,
+    "won": 26,
+    "sim_win": 0.502,
+    "brier_sim": 0.196,
+    "brier_rollout": 0.256,
+    "rollout_win": 0.517,
+    "brier_clock": 0.297,
+    "loss_err_sim": {
+     "n": 24,
+     "median": 8.5,
+     "mean": 7.0,
+     "mae": 14.7,
+     "p10": -18,
+     "p90": 28,
+     "within5": 0.125
+    },
+    "loss_err_rollout": {
+     "n": 26,
+     "median": 3.4,
+     "mean": 6.8,
+     "mae": 14.6,
+     "p10": -16.1,
+     "p90": 25.4,
+     "within5": 0.308
+    },
+    "turn_err_sim": {
+     "n": 24,
+     "median": 0.0,
+     "mean": 0.1,
+     "mae": 1.5,
+     "p10": -3,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 11,
+     "median": 0,
+     "mean": -0.2,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 9.0,
+    "sim_turns_won": 10
+   },
+   {
+    "enc": "SOUL_FYSH",
+    "name": "灵魂鱼",
+    "act": 1,
+    "n": 45,
+    "won": 37,
+    "sim_win": 0.811,
+    "brier_sim": 0.146,
+    "brier_rollout": 0.176,
+    "rollout_win": 0.996,
+    "brier_clock": 0.133,
+    "loss_err_sim": {
+     "n": 37,
+     "median": -10,
+     "mean": -6.7,
+     "mae": 11.4,
+     "p10": -18,
+     "p90": 6,
+     "within5": 0.27
+    },
+    "loss_err_rollout": {
+     "n": 37,
+     "median": -30.1,
+     "mean": -28.2,
+     "mae": 28.2,
+     "p10": -42.8,
+     "p90": -8.2,
+     "within5": 0.108
+    },
+    "turn_err_sim": {
+     "n": 37,
+     "median": 0,
+     "mean": -0.5,
+     "mae": 2.2,
+     "p10": -4,
+     "p90": 3,
+     "within5": 0.892
+    },
+    "death_err_sim": {
+     "n": 8,
+     "median": -0.5,
+     "mean": -0.5,
+     "mae": 2.0,
+     "p10": -3,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 10,
+    "sim_turns_won": 9.5
+   },
+   {
+    "enc": "VANTOM",
+    "name": "幻影墨",
+    "act": 1,
+    "n": 47,
+    "won": 41,
+    "sim_win": 0.586,
+    "brier_sim": 0.22,
+    "brier_rollout": 0.375,
+    "rollout_win": 0.375,
+    "brier_clock": 0.638,
+    "loss_err_sim": {
+     "n": 39,
+     "median": 12,
+     "mean": 9.9,
+     "mae": 13.8,
+     "p10": -7,
+     "p90": 25,
+     "within5": 0.256
+    },
+    "loss_err_rollout": {
+     "n": 41,
+     "median": 20.4,
+     "mean": 22.3,
+     "mae": 22.6,
+     "p10": 7,
+     "p90": 42.9,
+     "within5": 0.049
+    },
+    "turn_err_sim": {
+     "n": 39,
+     "median": 1,
+     "mean": 0.8,
+     "mae": 1.7,
+     "p10": -1,
+     "p90": 3,
+     "within5": 0.974
+    },
+    "death_err_sim": {
+     "n": 6,
+     "median": 0.0,
+     "mean": 0.2,
+     "mae": 0.5,
+     "p10": -1,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 8,
+    "sim_turns_won": 9.0
+   },
+   {
+    "enc": "WATERFALL_GIANT",
+    "name": "瀑布巨兽",
+    "act": 1,
+    "n": 55,
+    "won": 32,
+    "sim_win": 0.527,
+    "brier_sim": 0.137,
+    "brier_rollout": 0.279,
+    "rollout_win": 0.295,
+    "brier_clock": 0.345,
+    "loss_err_sim": {
+     "n": 31,
+     "median": 9,
+     "mean": 13.2,
+     "mae": 13.2,
+     "p10": 3,
+     "p90": 26,
+     "within5": 0.194
+    },
+    "loss_err_rollout": {
+     "n": 32,
+     "median": 18.9,
+     "mean": 22.4,
+     "mae": 22.4,
+     "p10": 6.7,
+     "p90": 43.3,
+     "within5": 0.062
+    },
+    "turn_err_sim": {
+     "n": 31,
+     "median": 0,
+     "mean": -0.2,
+     "mae": 1.2,
+     "p10": -2,
+     "p90": 2,
+     "within5": 0.968
+    },
+    "death_err_sim": {
+     "n": 23,
+     "median": -1,
+     "mean": -1.0,
+     "mae": 2.2,
+     "p10": -4,
+     "p90": 2,
+     "within5": 0.957
+    },
+    "actual_turns_won": 9.5,
+    "sim_turns_won": 10.0
+   },
+   {
+    "enc": "CRUSHER+ROCKET",
+    "name": "帝王蟹",
+    "act": 2,
+    "n": 43,
+    "won": 10,
+    "sim_win": 0.021,
+    "brier_sim": 0.197,
+    "brier_rollout": 0.202,
+    "rollout_win": 0.019,
+    "brier_clock": 0.233,
+    "loss_err_sim": {
+     "n": 8,
+     "median": 12.5,
+     "mean": 15.4,
+     "mae": 16.7,
+     "p10": -2,
+     "p90": 30.5,
+     "within5": 0.5
+    },
+    "loss_err_rollout": {
+     "n": 10,
+     "median": 21.0,
+     "mean": 19.0,
+     "mae": 19.0,
+     "p10": 2,
+     "p90": 32,
+     "within5": 0.3
+    },
+    "turn_err_sim": {
+     "n": 8,
+     "median": -0.5,
+     "mean": -0.6,
+     "mae": 0.9,
+     "p10": -1,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 33,
+     "median": -2,
+     "mean": -2.4,
+     "mae": 2.4,
+     "p10": -5,
+     "p90": 0,
+     "within5": 0.97
+    },
+    "actual_turns_won": 8.0,
+    "sim_turns_won": 8.0
+   },
+   {
+    "enc": "KNOWLEDGE_DEMON",
+    "name": "知识恶魔",
+    "act": 2,
+    "n": 41,
+    "won": 20,
+    "sim_win": 0.282,
+    "brier_sim": 0.173,
+    "brier_rollout": 0.25,
+    "rollout_win": 0.195,
+    "brier_clock": 0.415,
+    "loss_err_sim": {
+     "n": 18,
+     "median": 18.0,
+     "mean": 19.1,
+     "mae": 19.6,
+     "p10": 6,
+     "p90": 31,
+     "within5": 0.111
+    },
+    "loss_err_rollout": {
+     "n": 20,
+     "median": 33.8,
+     "mean": 29.7,
+     "mae": 30.0,
+     "p10": 12,
+     "p90": 46.6,
+     "within5": 0.05
+    },
+    "turn_err_sim": {
+     "n": 18,
+     "median": 1.0,
+     "mean": 1.2,
+     "mae": 1.6,
+     "p10": -1,
+     "p90": 3,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 21,
+     "median": 0,
+     "mean": -0.5,
+     "mae": 1.1,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 9.0,
+    "sim_turns_won": 10
+   },
+   {
+    "enc": "THE_INSATIABLE",
+    "name": "贪得无厌者",
+    "act": 2,
+    "n": 42,
+    "won": 18,
+    "sim_win": 0.554,
+    "brier_sim": 0.211,
+    "brier_rollout": 0.2,
+    "rollout_win": 0.303,
+    "brier_clock": 0.357,
+    "loss_err_sim": {
+     "n": 18,
+     "median": 3.5,
+     "mean": 3.7,
+     "mae": 9.5,
+     "p10": -7,
+     "p90": 14,
+     "within5": 0.389
+    },
+    "loss_err_rollout": {
+     "n": 18,
+     "median": 20.1,
+     "mean": 18.0,
+     "mae": 18.4,
+     "p10": 2.2,
+     "p90": 31.1,
+     "within5": 0.167
+    },
+    "turn_err_sim": {
+     "n": 18,
+     "median": 0.0,
+     "mean": -0.4,
+     "mae": 0.8,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 22,
+     "median": 0.0,
+     "mean": -0.4,
+     "mae": 1.2,
+     "p10": -2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "actual_turns_won": 7.5,
+    "sim_turns_won": 7.0
+   },
+   {
+    "enc": "AEONGLASS",
+    "name": "永恒镜",
+    "act": 3,
+    "n": 9,
+    "won": 2,
+    "sim_win": 0.136,
+    "brier_sim": 0.09,
+    "brier_rollout": 0.342,
+    "rollout_win": 0.652,
+    "brier_clock": 0.222,
+    "loss_err_sim": {
+     "n": 2,
+     "median": 24.0,
+     "mean": 24.0,
+     "mae": 27.0,
+     "p10": -3,
+     "p90": 51,
+     "within5": 0.5
+    },
+    "loss_err_rollout": {
+     "n": 2,
+     "median": -3.1,
+     "mean": -3.1,
+     "mae": 9.9,
+     "p10": -13,
+     "p90": 6.8,
+     "within5": 0.0
+    },
+    "turn_err_sim": {
+     "n": 2,
+     "median": 1.0,
+     "mean": 1.0,
+     "mae": 1.0,
+     "p10": 0,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 7,
+     "median": -1,
+     "mean": -1.1,
+     "mae": 1.4,
+     "p10": -2,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 7.0,
+    "sim_turns_won": 9.0
+   },
+   {
+    "enc": "QUEEN+TORCH_HEAD_AMALGAM",
+    "name": "女王",
+    "act": 3,
+    "n": 15,
+    "won": 3,
+    "sim_win": 0.001,
+    "brier_sim": 0.199,
+    "brier_rollout": 0.2,
+    "rollout_win": 0.0,
+    "brier_clock": 0.2,
+    "loss_err_sim": {
+     "n": 1,
+     "median": 30,
+     "mean": 30.0,
+     "mae": 30.0,
+     "p10": 30,
+     "p90": 30,
+     "within5": 0.0
+    },
+    "loss_err_rollout": {
+     "n": 3,
+     "median": 31,
+     "mean": 25.3,
+     "mae": 25.3,
+     "p10": 14,
+     "p90": 31,
+     "within5": 0.0
+    },
+    "turn_err_sim": {
+     "n": 1,
+     "median": 2,
+     "mean": 2.0,
+     "mae": 2.0,
+     "p10": 2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 12,
+     "median": -2.0,
+     "mean": -2.1,
+     "mae": 2.1,
+     "p10": -4,
+     "p90": 0,
+     "within5": 0.917
+    },
+    "actual_turns_won": 10,
+    "sim_turns_won": 9
+   },
+   {
+    "enc": "TEST_SUBJECT",
+    "name": "实验体",
+    "act": 3,
+    "n": 9,
+    "won": 2,
+    "sim_win": 0.0,
+    "brier_sim": 0.222,
+    "brier_rollout": 0.198,
+    "rollout_win": 0.044,
+    "brier_clock": 0.222,
+    "loss_err_sim": {
+     "n": 0
+    },
+    "loss_err_rollout": {
+     "n": 2,
+     "median": 17.6,
+     "mean": 17.6,
+     "mae": 17.6,
+     "p10": 0.1,
+     "p90": 35,
+     "within5": 0.5
+    },
+    "turn_err_sim": {
+     "n": 0
+    },
+    "death_err_sim": {
+     "n": 7,
+     "median": -2.5,
+     "mean": -2.5,
+     "mae": 2.5,
+     "p10": -4,
+     "p90": -1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 8.0,
+    "sim_turns_won": null
+   }
+  ],
+  "t5": [
+   {
+    "enc": "CEREMONIAL_BEAST",
+    "name": "仪式兽",
+    "act": 1,
+    "n": 36,
+    "won": 30,
+    "sim_win": 0.726,
+    "brier_sim": 0.08,
+    "brier_rollout": 0.066,
+    "rollout_win": 0.724,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 30,
+     "median": 1.5,
+     "mean": 1.1,
+     "mae": 6.2,
+     "p10": -10,
+     "p90": 8,
+     "within5": 0.6
+    },
+    "loss_err_rollout": {
+     "n": 30,
+     "median": 4.2,
+     "mean": 4.5,
+     "mae": 6.9,
+     "p10": -4.9,
+     "p90": 12,
+     "within5": 0.467
+    },
+    "turn_err_sim": {
+     "n": 30,
+     "median": 0.0,
+     "mean": -0.3,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 6,
+     "median": -1.0,
+     "mean": -1.2,
+     "mae": 2.2,
+     "p10": -5,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 5.0,
+    "sim_turns_won": 5.0
+   },
+   {
+    "enc": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+    "name": "同族",
+    "act": 1,
+    "n": 44,
+    "won": 28,
+    "sim_win": 0.531,
+    "brier_sim": 0.091,
+    "brier_rollout": 0.12,
+    "rollout_win": 0.497,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 27,
+     "median": 1,
+     "mean": 2.7,
+     "mae": 5.6,
+     "p10": -4,
+     "p90": 12,
+     "within5": 0.556
+    },
+    "loss_err_rollout": {
+     "n": 28,
+     "median": 5.3,
+     "mean": 5.8,
+     "mae": 6.8,
+     "p10": -1.6,
+     "p90": 16.5,
+     "within5": 0.464
+    },
+    "turn_err_sim": {
+     "n": 27,
+     "median": 0,
+     "mean": -0.4,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 16,
+     "median": 0.0,
+     "mean": -0.6,
+     "mae": 0.8,
+     "p10": -1,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 5.0,
+    "sim_turns_won": 5.0
+   },
+   {
+    "enc": "LAGAVULIN_MATRIARCH",
+    "name": "乐加维林族母",
+    "act": 1,
+    "n": 38,
+    "won": 27,
+    "sim_win": 0.645,
+    "brier_sim": 0.105,
+    "brier_rollout": 0.148,
+    "rollout_win": 0.633,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 27,
+     "median": 3,
+     "mean": 2.2,
+     "mae": 9.8,
+     "p10": -16,
+     "p90": 16,
+     "within5": 0.37
+    },
+    "loss_err_rollout": {
+     "n": 27,
+     "median": 6.2,
+     "mean": 7.4,
+     "mae": 11.1,
+     "p10": -4.2,
+     "p90": 19.8,
+     "within5": 0.333
+    },
+    "turn_err_sim": {
+     "n": 27,
+     "median": 0,
+     "mean": 0.0,
+     "mae": 1.1,
+     "p10": -2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 11,
+     "median": 0,
+     "mean": -0.1,
+     "mae": 0.3,
+     "p10": 0,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 5,
+    "sim_turns_won": 5
+   },
+   {
+    "enc": "SOUL_FYSH",
+    "name": "灵魂鱼",
+    "act": 1,
+    "n": 45,
+    "won": 37,
+    "sim_win": 0.804,
+    "brier_sim": 0.086,
+    "brier_rollout": 0.092,
+    "rollout_win": 0.885,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 37,
+     "median": -2,
+     "mean": -4.0,
+     "mae": 7.8,
+     "p10": -13,
+     "p90": 6,
+     "within5": 0.405
+    },
+    "loss_err_rollout": {
+     "n": 37,
+     "median": -2.1,
+     "mean": -2.4,
+     "mae": 8.0,
+     "p10": -12.9,
+     "p90": 8.9,
+     "within5": 0.351
+    },
+    "turn_err_sim": {
+     "n": 37,
+     "median": 0,
+     "mean": -0.4,
+     "mae": 1.6,
+     "p10": -3,
+     "p90": 2,
+     "within5": 0.973
+    },
+    "death_err_sim": {
+     "n": 8,
+     "median": 0.0,
+     "mean": -0.5,
+     "mae": 1.1,
+     "p10": -2.5,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 6,
+    "sim_turns_won": 5.0
+   },
+   {
+    "enc": "VANTOM",
+    "name": "幻影墨",
+    "act": 1,
+    "n": 46,
+    "won": 40,
+    "sim_win": 0.723,
+    "brier_sim": 0.121,
+    "brier_rollout": 0.14,
+    "rollout_win": 0.702,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 40,
+     "median": 2.0,
+     "mean": 3.4,
+     "mae": 6.4,
+     "p10": -5,
+     "p90": 14,
+     "within5": 0.6
+    },
+    "loss_err_rollout": {
+     "n": 40,
+     "median": 6.4,
+     "mean": 6.4,
+     "mae": 9.2,
+     "p10": -5.5,
+     "p90": 21.5,
+     "within5": 0.325
+    },
+    "turn_err_sim": {
+     "n": 40,
+     "median": 0.0,
+     "mean": 0.0,
+     "mae": 0.7,
+     "p10": -1,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 6,
+     "median": 0.0,
+     "mean": 0.0,
+     "mae": 0.3,
+     "p10": -1,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 4.5,
+    "sim_turns_won": 5.0
+   },
+   {
+    "enc": "WATERFALL_GIANT",
+    "name": "瀑布巨兽",
+    "act": 1,
+    "n": 55,
+    "won": 32,
+    "sim_win": 0.545,
+    "brier_sim": 0.101,
+    "brier_rollout": 0.175,
+    "rollout_win": 0.511,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 30,
+     "median": 7.0,
+     "mean": 7.7,
+     "mae": 8.4,
+     "p10": 4,
+     "p90": 12,
+     "within5": 0.3
+    },
+    "loss_err_rollout": {
+     "n": 32,
+     "median": 12.5,
+     "mean": 13.3,
+     "mae": 13.7,
+     "p10": 4.1,
+     "p90": 26.1,
+     "within5": 0.125
+    },
+    "turn_err_sim": {
+     "n": 30,
+     "median": 0.0,
+     "mean": -0.4,
+     "mae": 0.9,
+     "p10": -2,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 23,
+     "median": 0,
+     "mean": -0.7,
+     "mae": 1.7,
+     "p10": -4,
+     "p90": 1,
+     "within5": 0.957
+    },
+    "actual_turns_won": 5.5,
+    "sim_turns_won": 6.0
+   },
+   {
+    "enc": "CRUSHER+ROCKET",
+    "name": "帝王蟹",
+    "act": 2,
+    "n": 37,
+    "won": 10,
+    "sim_win": 0.234,
+    "brier_sim": 0.063,
+    "brier_rollout": 0.088,
+    "rollout_win": 0.185,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 10,
+     "median": 3.0,
+     "mean": 6.0,
+     "mae": 12.9,
+     "p10": -8,
+     "p90": 20,
+     "within5": 0.3
+    },
+    "loss_err_rollout": {
+     "n": 10,
+     "median": 5.0,
+     "mean": 8.4,
+     "mae": 12.7,
+     "p10": -4.4,
+     "p90": 18.3,
+     "within5": 0.4
+    },
+    "turn_err_sim": {
+     "n": 10,
+     "median": 0.0,
+     "mean": 0.0,
+     "mae": 1.2,
+     "p10": -2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 27,
+     "median": 0,
+     "mean": -0.9,
+     "mae": 1.1,
+     "p10": -2,
+     "p90": 0,
+     "within5": 0.963
+    },
+    "actual_turns_won": 4.0,
+    "sim_turns_won": 4.0
+   },
+   {
+    "enc": "KNOWLEDGE_DEMON",
+    "name": "知识恶魔",
+    "act": 2,
+    "n": 39,
+    "won": 19,
+    "sim_win": 0.402,
+    "brier_sim": 0.084,
+    "brier_rollout": 0.067,
+    "rollout_win": 0.369,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 19,
+     "median": 12.5,
+     "mean": 11.2,
+     "mae": 11.8,
+     "p10": 0,
+     "p90": 23,
+     "within5": 0.263
+    },
+    "loss_err_rollout": {
+     "n": 19,
+     "median": 17.5,
+     "mean": 15.5,
+     "mae": 15.9,
+     "p10": 0,
+     "p90": 27.9,
+     "within5": 0.211
+    },
+    "turn_err_sim": {
+     "n": 19,
+     "median": 0,
+     "mean": 0.4,
+     "mae": 0.6,
+     "p10": 0,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 20,
+     "median": 0.0,
+     "mean": -0.5,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 5,
+    "sim_turns_won": 6.0
+   },
+   {
+    "enc": "THE_INSATIABLE",
+    "name": "贪得无厌者",
+    "act": 2,
+    "n": 42,
+    "won": 18,
+    "sim_win": 0.424,
+    "brier_sim": 0.059,
+    "brier_rollout": 0.066,
+    "rollout_win": 0.398,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 18,
+     "median": 0.0,
+     "mean": 0.0,
+     "mae": 9.6,
+     "p10": -13,
+     "p90": 11,
+     "within5": 0.444
+    },
+    "loss_err_rollout": {
+     "n": 18,
+     "median": 2.2,
+     "mean": 4.5,
+     "mae": 10.6,
+     "p10": -8.1,
+     "p90": 22.6,
+     "within5": 0.444
+    },
+    "turn_err_sim": {
+     "n": 18,
+     "median": 0.0,
+     "mean": -0.4,
+     "mae": 0.6,
+     "p10": -1,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 24,
+     "median": 0.0,
+     "mean": 0.0,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "actual_turns_won": 3.5,
+    "sim_turns_won": 3
+   },
+   {
+    "enc": "AEONGLASS",
+    "name": "永恒镜",
+    "act": 3,
+    "n": 9,
+    "won": 2,
+    "sim_win": 0.261,
+    "brier_sim": 0.009,
+    "brier_rollout": 0.007,
+    "rollout_win": 0.194,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 2,
+     "median": 6.5,
+     "mean": 6.5,
+     "mae": 14.5,
+     "p10": -8,
+     "p90": 21,
+     "within5": 0.0
+    },
+    "loss_err_rollout": {
+     "n": 2,
+     "median": 14.8,
+     "mean": 14.8,
+     "mae": 19.1,
+     "p10": -4.4,
+     "p90": 33.9,
+     "within5": 0.5
+    },
+    "turn_err_sim": {
+     "n": 2,
+     "median": 0.5,
+     "mean": 0.5,
+     "mae": 0.5,
+     "p10": 0,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 7,
+     "median": 0,
+     "mean": 0.0,
+     "mae": 0.6,
+     "p10": 0,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "actual_turns_won": 3.0,
+    "sim_turns_won": 5.0
+   },
+   {
+    "enc": "QUEEN+TORCH_HEAD_AMALGAM",
+    "name": "女王",
+    "act": 3,
+    "n": 14,
+    "won": 3,
+    "sim_win": 0.047,
+    "brier_sim": 0.135,
+    "brier_rollout": 0.221,
+    "rollout_win": 0.051,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 3,
+     "median": 27,
+     "mean": 19.8,
+     "mae": 19.8,
+     "p10": 5.5,
+     "p90": 27,
+     "within5": 0.0
+    },
+    "loss_err_rollout": {
+     "n": 3,
+     "median": 31,
+     "mean": 25.3,
+     "mae": 25.3,
+     "p10": 14,
+     "p90": 31,
+     "within5": 0.0
+    },
+    "turn_err_sim": {
+     "n": 3,
+     "median": 1,
+     "mean": 0.7,
+     "mae": 0.7,
+     "p10": 0,
+     "p90": 1,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 11,
+     "median": 0,
+     "mean": -0.7,
+     "mae": 0.7,
+     "p10": -2,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 6,
+    "sim_turns_won": 6
+   },
+   {
+    "enc": "TEST_SUBJECT",
+    "name": "实验体",
+    "act": 3,
+    "n": 7,
+    "won": 2,
+    "sim_win": 0.011,
+    "brier_sim": 0.28,
+    "brier_rollout": 0.287,
+    "rollout_win": 0.013,
+    "brier_clock": null,
+    "loss_err_sim": {
+     "n": 1,
+     "median": 33,
+     "mean": 33.0,
+     "mae": 33.0,
+     "p10": 33,
+     "p90": 33,
+     "within5": 0.0
+    },
+    "loss_err_rollout": {
+     "n": 2,
+     "median": 18.0,
+     "mean": 18.0,
+     "mae": 18.0,
+     "p10": 1,
+     "p90": 35,
+     "within5": 0.5
+    },
+    "turn_err_sim": {
+     "n": 1,
+     "median": 2,
+     "mean": 2.0,
+     "mae": 2.0,
+     "p10": 2,
+     "p90": 2,
+     "within5": 1.0
+    },
+    "death_err_sim": {
+     "n": 5,
+     "median": -1,
+     "mean": -1.0,
+     "mae": 1.0,
+     "p10": -2,
+     "p90": 0,
+     "within5": 1.0
+    },
+    "actual_turns_won": 4.0,
+    "sim_turns_won": 4
+   }
+  ]
+ },
+ "per_turn": {
+  "t1": [
+   {
+    "turn": 1,
+    "n": 422,
+    "sim_loss": 2.7,
+    "actual_loss": 2.0,
+    "n_dmg": 413,
+    "sim_dmg": 27.4,
+    "actual_dmg": 28.2,
+    "n_in": 422,
+    "sim_in": 6.0,
+    "actual_in": 6.0,
+    "sim_enemy": 2.8,
+    "actual_enemy": 1.8
+   },
+   {
+    "turn": 2,
+    "n": 422,
+    "sim_loss": 9.9,
+    "actual_loss": 7.9,
+    "n_dmg": 413,
+    "sim_dmg": 22.3,
+    "actual_dmg": 25.0,
+    "n_in": 422,
+    "sim_in": 16.4,
+    "actual_in": 16.6,
+    "sim_enemy": 9.5,
+    "actual_enemy": 7.5
+   },
+   {
+    "turn": 3,
+    "n": 422,
+    "sim_loss": 10.8,
+    "actual_loss": 8.5,
+    "n_dmg": 412,
+    "sim_dmg": 26.3,
+    "actual_dmg": 28.8,
+    "n_in": 421,
+    "sim_in": 17.6,
+    "actual_in": 17.7,
+    "sim_enemy": 10.3,
+    "actual_enemy": 8.3
+   },
+   {
+    "turn": 4,
+    "n": 420,
+    "sim_loss": 7.7,
+    "actual_loss": 5.2,
+    "n_dmg": 384,
+    "sim_dmg": 33.2,
+    "actual_dmg": 30.7,
+    "n_in": 410,
+    "sim_in": 11.1,
+    "actual_in": 11.1,
+    "sim_enemy": 6.6,
+    "actual_enemy": 4.8
+   },
+   {
+    "turn": 5,
+    "n": 405,
+    "sim_loss": 9.7,
+    "actual_loss": 7.9,
+    "n_dmg": 380,
+    "sim_dmg": 30.1,
+    "actual_dmg": 30.2,
+    "n_in": 388,
+    "sim_in": 16.6,
+    "actual_in": 16.6,
+    "sim_enemy": 9.0,
+    "actual_enemy": 7.6
+   },
+   {
+    "turn": 6,
+    "n": 381,
+    "sim_loss": 8.7,
+    "actual_loss": 6.3,
+    "n_dmg": 334,
+    "sim_dmg": 33.9,
+    "actual_dmg": 34.5,
+    "n_in": 344,
+    "sim_in": 14.8,
+    "actual_in": 14.7,
+    "sim_enemy": 7.6,
+    "actual_enemy": 6.3
+   },
+   {
+    "turn": 7,
+    "n": 342,
+    "sim_loss": 12.1,
+    "actual_loss": 9.8,
+    "n_dmg": 268,
+    "sim_dmg": 28.1,
+    "actual_dmg": 27.5,
+    "n_in": 280,
+    "sim_in": 20.0,
+    "actual_in": 20.9,
+    "sim_enemy": 11.1,
+    "actual_enemy": 10.6
+   },
+   {
+    "turn": 8,
+    "n": 274,
+    "sim_loss": 5.9,
+    "actual_loss": 4.4,
+    "n_dmg": 206,
+    "sim_dmg": 26.4,
+    "actual_dmg": 27.1,
+    "n_in": 220,
+    "sim_in": 12.0,
+    "actual_in": 11.4,
+    "sim_enemy": 5.3,
+    "actual_enemy": 5.1
+   }
+  ],
+  "t5": [
+   {
+    "turn": 5,
+    "n": 412,
+    "sim_loss": 9.1,
+    "actual_loss": 7.9,
+    "n_dmg": 386,
+    "sim_dmg": 31.3,
+    "actual_dmg": 30.2,
+    "n_in": 394,
+    "sim_in": 16.1,
+    "actual_in": 16.7,
+    "sim_enemy": 9.5,
+    "actual_enemy": 7.6
+   },
+   {
+    "turn": 6,
+    "n": 392,
+    "sim_loss": 8.4,
+    "actual_loss": 6.4,
+    "n_dmg": 342,
+    "sim_dmg": 35.6,
+    "actual_dmg": 34.3,
+    "n_in": 353,
+    "sim_in": 14.5,
+    "actual_in": 14.9,
+    "sim_enemy": 7.4,
+    "actual_enemy": 6.4
+   },
+   {
+    "turn": 7,
+    "n": 348,
+    "sim_loss": 12.0,
+    "actual_loss": 9.7,
+    "n_dmg": 272,
+    "sim_dmg": 29.0,
+    "actual_dmg": 27.7,
+    "n_in": 284,
+    "sim_in": 19.8,
+    "actual_in": 20.7,
+    "sim_enemy": 11.2,
+    "actual_enemy": 10.5
+   },
+   {
+    "turn": 8,
+    "n": 282,
+    "sim_loss": 5.6,
+    "actual_loss": 4.4,
+    "n_dmg": 213,
+    "sim_dmg": 27.0,
+    "actual_dmg": 27.4,
+    "n_in": 228,
+    "sim_in": 11.4,
+    "actual_in": 11.8,
+    "sim_enemy": 5.2,
+    "actual_enemy": 5.1
+   },
+   {
+    "turn": 9,
+    "n": 227,
+    "sim_loss": 5.6,
+    "actual_loss": 3.6,
+    "n_dmg": 160,
+    "sim_dmg": 27.4,
+    "actual_dmg": 25.7,
+    "n_in": 174,
+    "sim_in": 8.9,
+    "actual_in": 8.4,
+    "sim_enemy": 4.0,
+    "actual_enemy": 3.7
+   },
+   {
+    "turn": 10,
+    "n": 173,
+    "sim_loss": 8.3,
+    "actual_loss": 5.3,
+    "n_dmg": 114,
+    "sim_dmg": 17.3,
+    "actual_dmg": 15.3,
+    "n_in": 120,
+    "sim_in": 17.9,
+    "actual_in": 18.5,
+    "sim_enemy": 7.5,
+    "actual_enemy": 6.4
+   },
+   {
+    "turn": 11,
+    "n": 119,
+    "sim_loss": 9.0,
+    "actual_loss": 4.7,
+    "n_dmg": 70,
+    "sim_dmg": 15.2,
+    "actual_dmg": 15.7,
+    "n_in": 72,
+    "sim_in": 15.0,
+    "actual_in": 12.1,
+    "sim_enemy": 6.8,
+    "actual_enemy": 4.1
+   },
+   {
+    "turn": 12,
+    "n": 69,
+    "sim_loss": 7.9,
+    "actual_loss": 6.3,
+    "n_dmg": 47,
+    "sim_dmg": 15.5,
+    "actual_dmg": 15.2,
+    "n_in": 51,
+    "sim_in": 17.2,
+    "actual_in": 15.4,
+    "sim_enemy": 7.0,
+    "actual_enemy": 6.9
+   }
+  ]
+ },
+ "heldout": {
+  "runs_trained": 324,
+  "starts": {
+   "t1": {
+    "n": 111,
+    "won": 66,
+    "base_rate": 0.595,
+    "win": {
+     "sim": {
+      "n": 111,
+      "brier": 0.1859,
+      "auc": 0.834,
+      "mean_pred": 0.509,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 44,
+        "pred": 0.034,
+        "actual": 0.227
+       },
+       {
+        "bucket": "20–40%",
+        "n": 9,
+        "pred": 0.292,
+        "actual": 0.778
+       },
+       {
+        "bucket": "40–60%",
+        "n": 3,
+        "pred": 0.513,
+        "actual": 0.333
+       },
+       {
+        "bucket": "60–80%",
+        "n": 8,
+        "pred": 0.718,
+        "actual": 1.0
+       },
+       {
+        "bucket": "80–100%",
+        "n": 47,
+        "pred": 0.959,
+        "actual": 0.851
+       }
+      ],
+      "accuracy": 0.757
+     },
+     "rollout": {
+      "n": 111,
+      "brier": 0.2455,
+      "auc": 0.787,
+      "mean_pred": 0.398,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 44,
+        "pred": 0.051,
+        "actual": 0.318
+       },
+       {
+        "bucket": "20–40%",
+        "n": 20,
+        "pred": 0.301,
+        "actual": 0.65
+       },
+       {
+        "bucket": "40–60%",
+        "n": 11,
+        "pred": 0.475,
+        "actual": 0.727
+       },
+       {
+        "bucket": "60–80%",
+        "n": 15,
+        "pred": 0.696,
+        "actual": 0.8
+       },
+       {
+        "bucket": "80–100%",
+        "n": 21,
+        "pred": 0.963,
+        "actual": 0.905
+       }
+      ],
+      "accuracy": 0.631
+     },
+     "rollout-model": {
+      "n": 111,
+      "brier": 0.2131,
+      "auc": 0.791,
+      "mean_pred": 0.444,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 30,
+        "pred": 0.039,
+        "actual": 0.3
+       },
+       {
+        "bucket": "20–40%",
+        "n": 17,
+        "pred": 0.294,
+        "actual": 0.529
+       },
+       {
+        "bucket": "40–60%",
+        "n": 20,
+        "pred": 0.512,
+        "actual": 0.55
+       },
+       {
+        "bucket": "60–80%",
+        "n": 31,
+        "pred": 0.685,
+        "actual": 0.774
+       },
+       {
+        "bucket": "80–100%",
+        "n": 13,
+        "pred": 0.897,
+        "actual": 1.0
+       }
+      ],
+      "accuracy": 0.685
+     },
+     "clock": {
+      "n": 111,
+      "brier": 0.3333,
+      "auc": 0.753,
+      "mean_pred": 0.369,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 70,
+        "pred": 0.0,
+        "actual": 0.443
+       },
+       {
+        "bucket": "20–40%",
+        "n": 0,
+        "pred": null,
+        "actual": null
+       },
+       {
+        "bucket": "40–60%",
+        "n": 0,
+        "pred": null,
+        "actual": null
+       },
+       {
+        "bucket": "60–80%",
+        "n": 0,
+        "pred": null,
+        "actual": null
+       },
+       {
+        "bucket": "80–100%",
+        "n": 41,
+        "pred": 1.0,
+        "actual": 0.854
+       }
+      ],
+      "accuracy": 0.667
+     }
+    },
+    "loss_won": {
+     "sim": {
+      "n": 62,
+      "median": 8.5,
+      "mean": 8.6,
+      "mae": 13.6,
+      "p10": -11,
+      "p90": 29,
+      "within5": 0.274
+     },
+     "rollout": {
+      "n": 66,
+      "median": 18.5,
+      "mean": 13.0,
+      "mae": 22.1,
+      "p10": -22.2,
+      "p90": 39.5,
+      "within5": 0.121
+     },
+     "rollout-model": {
+      "n": 66,
+      "median": 15.8,
+      "mean": 15.2,
+      "mae": 17.2,
+      "p10": -5.1,
+      "p90": 33.4,
+      "within5": 0.212
+     },
+     "clock": {
+      "n": 66,
+      "median": 17.0,
+      "mean": 18.5,
+      "mae": 21.7,
+      "p10": -4.0,
+      "p90": 40.8,
+      "within5": 0.212
+     }
+    },
+    "turns_won": {
+     "sim": {
+      "n": 62,
+      "median": 0.0,
+      "mean": 0.2,
+      "mae": 1.3,
+      "p10": -2,
+      "p90": 3,
+      "within5": 0.984
+     },
+     "rollout": {
+      "n": 65,
+      "median": 0,
+      "mean": 0.1,
+      "mae": 1.8,
+      "p10": -2.9,
+      "p90": 2.9,
+      "within5": 0.938
+     },
+     "clock": {
+      "n": 66,
+      "median": 2.0,
+      "mean": 2.0,
+      "mae": 2.5,
+      "p10": 0,
+      "p90": 4,
+      "within5": 0.939
+     }
+    },
+    "death_turn": {
+     "sim": {
+      "n": 42,
+      "median": -2.0,
+      "mean": -1.3,
+      "mae": 1.8,
+      "p10": -4,
+      "p90": 1,
+      "within5": 0.976
+     },
+     "clock": {
+      "n": 45,
+      "median": 1,
+      "mean": 0.9,
+      "mae": 2.3,
+      "p10": -3,
+      "p90": 5,
+      "within5": 0.867
+     }
+    },
+    "base_brier": 0.2411,
+    "common_n": 111,
+    "loss_all_sim": {
+     "n": 111,
+     "median": 0,
+     "mean": 5.5,
+     "mae": 10.4,
+     "p10": -8.1,
+     "p90": 29.4,
+     "within5": 0.495
+    },
+    "capped": 0,
+    "samples": 22200,
+    "sim_ms": {
+     "n": 111,
+     "median": 12.8,
+     "mean": 21.5,
+     "mae": 21.5,
+     "p10": 6.6,
+     "p90": 52.7,
+     "within5": 0.036
+    }
+   },
+   "t5": {
+    "n": 108,
+    "won": 66,
+    "base_rate": 0.611,
+    "win": {
+     "sim": {
+      "n": 108,
+      "brier": 0.0828,
+      "auc": 0.96,
+      "mean_pred": 0.562,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 40,
+        "pred": 0.026,
+        "actual": 0.1
+       },
+       {
+        "bucket": "20–40%",
+        "n": 6,
+        "pred": 0.248,
+        "actual": 0.5
+       },
+       {
+        "bucket": "40–60%",
+        "n": 4,
+        "pred": 0.497,
+        "actual": 0.75
+       },
+       {
+        "bucket": "60–80%",
+        "n": 1,
+        "pred": 0.66,
+        "actual": 1.0
+       },
+       {
+        "bucket": "80–100%",
+        "n": 57,
+        "pred": 0.975,
+        "actual": 0.965
+       }
+      ],
+      "accuracy": 0.898
+     },
+     "rollout": {
+      "n": 108,
+      "brier": 0.1045,
+      "auc": 0.927,
+      "mean_pred": 0.549,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 36,
+        "pred": 0.035,
+        "actual": 0.194
+       },
+       {
+        "bucket": "20–40%",
+        "n": 11,
+        "pred": 0.28,
+        "actual": 0.182
+       },
+       {
+        "bucket": "40–60%",
+        "n": 3,
+        "pred": 0.517,
+        "actual": 0.667
+       },
+       {
+        "bucket": "60–80%",
+        "n": 13,
+        "pred": 0.713,
+        "actual": 0.846
+       },
+       {
+        "bucket": "80–100%",
+        "n": 45,
+        "pred": 0.98,
+        "actual": 0.978
+       }
+      ],
+      "accuracy": 0.87
+     },
+     "rollout-model": {
+      "n": 108,
+      "brier": 0.1057,
+      "auc": 0.925,
+      "mean_pred": 0.55,
+      "buckets": [
+       {
+        "bucket": "0–20%",
+        "n": 32,
+        "pred": 0.022,
+        "actual": 0.188
+       },
+       {
+        "bucket": "20–40%",
+        "n": 14,
+        "pred": 0.289,
+        "actual": 0.286
+       },
+       {
+        "bucket": "40–60%",
+        "n": 6,
+        "pred": 0.497,
+        "actual": 0.167
+       },
+       {
+        "bucket": "60–80%",
+        "n": 12,
+        "pred": 0.73,
+        "actual": 0.917
+       },
+       {
+        "bucket": "80–100%",
+        "n": 44,
+        "pred": 0.975,
+        "actual": 1.0
+       }
+      ],
+      "accuracy": 0.88
+     }
+    },
+    "loss_won": {
+     "sim": {
+      "n": 65,
+      "median": 3,
+      "mean": 4.1,
+      "mae": 8.1,
+      "p10": -8,
+      "p90": 20,
+      "within5": 0.431
+     },
+     "rollout": {
+      "n": 66,
+      "median": 5.1,
+      "mean": 7.6,
+      "mae": 9.5,
+      "p10": -4.4,
+      "p90": 19.9,
+      "within5": 0.424
+     },
+     "rollout-model": {
+      "n": 66,
+      "median": 4.6,
+      "mean": 6.9,
+      "mae": 9.1,
+      "p10": -4.4,
+      "p90": 19.9,
+      "within5": 0.455
+     }
+    },
+    "turns_won": {
+     "sim": {
+      "n": 65,
+      "median": 0,
+      "mean": -0.1,
+      "mae": 0.7,
+      "p10": -1,
+      "p90": 1,
+      "within5": 1.0
+     },
+     "rollout": {
+      "n": 65,
+      "median": 0,
+      "mean": -0.1,
+      "mae": 0.8,
+      "p10": -1.3,
+      "p90": 0.9,
+      "within5": 1.0
+     }
+    },
+    "death_turn": {
+     "sim": {
+      "n": 42,
+      "median": 0.0,
+      "mean": -0.4,
+      "mae": 1.2,
+      "p10": -2,
+      "p90": 1,
+      "within5": 0.976
+     }
+    },
+    "base_brier": 0.2377,
+    "common_n": 108,
+    "loss_all_sim": {
+     "n": 108,
+     "median": 0.0,
+     "mean": 3.1,
+     "mae": 5.9,
+     "p10": -4.8,
+     "p90": 15.1,
+     "within5": 0.62
+    },
+    "capped": 0,
+    "samples": 21600,
+    "sim_ms": {
+     "n": 108,
+     "median": 4.4,
+     "mean": 7.7,
+     "mae": 7.7,
+     "p10": 1.3,
+     "p90": 17.3,
+     "within5": 0.519
+    }
+   }
+  }
+ },
+ "ablation": {
+  "t1": {
+   "n": 422,
+   "brier_on": 0.182110663507109,
+   "brier_off": 0.24411137440758293,
+   "auc_on": 0.8656956803856136,
+   "auc_off": 0.8528109936967,
+   "loss_on": 7,
+   "loss_off": 8,
+   "turn_on": 0,
+   "turn_off": 1
+  },
+  "t5": {
+   "n": 412,
+   "brier_on": 0.0920621359223301,
+   "brier_off": 0.11314029126213591,
+   "auc_on": 0.9565179976396538,
+   "auc_off": 0.9477896341463414,
+   "loss_on": 3.0,
+   "loss_off": 4.0,
+   "turn_on": 0.0,
+   "turn_off": 0.0
+  }
+ },
+ "ablation_bosses": [
+  {
+   "enc": "CEREMONIAL_BEAST",
+   "name": "仪式兽",
+   "n": 36,
+   "brier_on": 0.21163055555555554,
+   "brier_off": 0.42096666666666666,
+   "win_on": 0.5758333333333333,
+   "win_off": 0.3327777777777778,
+   "actual": 0.8333333333333334
+  },
+  {
+   "enc": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+   "name": "同族",
+   "n": 43,
+   "brier_on": 0.16957906976744186,
+   "brier_off": 0.21272093023255814,
+   "win_on": 0.49697674418604654,
+   "win_off": 0.4269767441860465,
+   "actual": 0.627906976744186
+  },
+  {
+   "enc": "LAGAVULIN_MATRIARCH",
+   "name": "乐加维林族母",
+   "n": 37,
+   "brier_on": 0.19610810810810808,
+   "brier_off": 0.3605297297297297,
+   "win_on": 0.5021621621621623,
+   "win_off": 0.2583783783783784,
+   "actual": 0.7027027027027027
+  },
+  {
+   "enc": "SOUL_FYSH",
+   "name": "灵魂鱼",
+   "n": 45,
+   "brier_on": 0.1455311111111111,
+   "brier_off": 0.14195333333333335,
+   "win_on": 0.8108888888888889,
+   "win_off": 0.7735555555555556,
+   "actual": 0.8222222222222222
+  },
+  {
+   "enc": "VANTOM",
+   "name": "幻影墨",
+   "n": 47,
+   "brier_on": 0.22004468085106382,
+   "brier_off": 0.28973617021276593,
+   "win_on": 0.5857446808510639,
+   "win_off": 0.5017021276595744,
+   "actual": 0.8723404255319149
+  },
+  {
+   "enc": "WATERFALL_GIANT",
+   "name": "瀑布巨兽",
+   "n": 55,
+   "brier_on": 0.13691818181818183,
+   "brier_off": 0.22773454545454544,
+   "win_on": 0.5267272727272727,
+   "win_off": 0.30363636363636365,
+   "actual": 0.5818181818181818
+  },
+  {
+   "enc": "CRUSHER+ROCKET",
+   "name": "帝王蟹",
+   "n": 43,
+   "brier_on": 0.19715116279069766,
+   "brier_off": 0.2139558139534884,
+   "win_on": 0.02116279069767442,
+   "win_off": 0.010465116279069767,
+   "actual": 0.23255813953488372
+  },
+  {
+   "enc": "KNOWLEDGE_DEMON",
+   "name": "知识恶魔",
+   "n": 41,
+   "brier_on": 0.173490243902439,
+   "brier_off": 0.23111463414634145,
+   "win_on": 0.28219512195121954,
+   "win_off": 0.20804878048780487,
+   "actual": 0.4878048780487805
+  },
+  {
+   "enc": "THE_INSATIABLE",
+   "name": "贪得无厌者",
+   "n": 42,
+   "brier_on": 0.21138809523809524,
+   "brier_off": 0.19615238095238097,
+   "win_on": 0.554047619047619,
+   "win_off": 0.44190476190476186,
+   "actual": 0.42857142857142855
+  },
+  {
+   "enc": "AEONGLASS",
+   "name": "永恒镜",
+   "n": 9,
+   "brier_on": 0.0904,
+   "brier_off": 0.1207222222222222,
+   "win_on": 0.13555555555555554,
+   "win_off": 0.07,
+   "actual": 0.2222222222222222
+  },
+  {
+   "enc": "QUEEN+TORCH_HEAD_AMALGAM",
+   "name": "女王",
+   "n": 15,
+   "brier_on": 0.19867333333333334,
+   "brier_off": 0.19079333333333331,
+   "win_on": 0.0006666666666666666,
+   "win_off": 0.014000000000000002,
+   "actual": 0.2
+  },
+  {
+   "enc": "TEST_SUBJECT",
+   "name": "实验体",
+   "n": 9,
+   "brier_on": 0.2222222222222222,
+   "brier_off": 0.2200111111111111,
+   "win_on": 0.0,
+   "win_off": 0.0011111111111111111,
+   "actual": 0.2222222222222222
+  }
+ ]
+}

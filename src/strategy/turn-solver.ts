@@ -285,6 +285,13 @@ export interface PlayerSim {
    * turn ends with energy unspent (PAELS_TEARS_ENERGY; logged: 1, 2 or 3 left, next turn 5 on a base of 3).
    */
   paelsTears?: number;
+  /**
+   * Whole-fight simulator only (src/sim, B2; the live planner never sets them): end-of-turn block relics. Orichalcum
+   * (「如果你在回合结束时没有任何格挡，获得格挡」, logged 6): this much when the turn's cards left no block; Ripple Basin
+   * (「如果你在本回合中没有打出过攻击牌，则获得格挡」, logged 4): this much when no Attack was played this turn.
+   */
+  orichalcum?: number;
+  rippleBasin?: number;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -419,6 +426,16 @@ export interface SolverInput {
    */
   laterIncoming?: number[];
   maxNodes?: number;
+  /**
+   * The damage weight times this (unset: 1): the whole boss fight simulator's policy knob (src/sim/boss-sim.ts,
+   * docs/boss-sim.md), never set by the live planner.
+   */
+  damageScale?: number;
+  /**
+   * The HP weight times this (unset: 1): the whole boss fight simulator's policy knob (rollout policyWeights, B1.5),
+   * never set by the live planner.
+   */
+  hpScale?: number;
   /**
    * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
    * the rest of the turn" (potion-mc.ts). Unset: any first play.
@@ -602,6 +619,11 @@ export interface Outcome {
    * when 0: none drunk, a boss fight, no value). The score takes weights.hp x it off; effectiveLoss adds it to hpLoss.
    */
   potionCost?: number;
+  /**
+   * HP the potions this line drinks heal this turn (Blood Potion; absent when none): hpLoss is net of it. What the
+   * line itself costs us is hpLoss + potionHeal (the saturated rollout ranking compares that: rollout-live turnLoss).
+   */
+  potionHeal?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
   /**
@@ -718,6 +740,8 @@ interface Sim {
   lastingDrinks: number;
   /** The drunk potions' cost in HP (card.potionCost). */
   potionCost: number;
+  /** HP the drunk potions healed this turn (Blood Potion), never past max HP. */
+  potionHeal: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /**
@@ -1362,7 +1386,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "radiance") next.flat += RADIANCE_ENERGY_VALUE * RADIANCE_LATER_ENERGY;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
   if (card.special === "heal") {
+    const before = next.hp;
     next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+    next.potionHeal += next.hp - before;
     redSkullCheck(next, player);
   }
   // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
@@ -1941,6 +1967,8 @@ export function weightsFor(input: SolverInput): Weights {
   let damage = input.fightKind === "boss" ? 0.8 : input.fightKind === "elite" ? 0.7 : 0.45; // hallway 0.55 -> 0.45: supervisor kept preferring HP over chip damage
   if (input.enemies.some((enemy) => enemy.revives || (enemy.stock ?? 0) > 0)) hp *= NEXT_PHASE_HP;
   if (input.raceEruption) damage *= ERUPTION_RACE_DAMAGE;
+  if (input.damageScale !== undefined) damage *= input.damageScale;
+  if (input.hpScale !== undefined) hp *= input.hpScale;
   // Cards that pay off on Vulnerable in the deck (Dismantle hits twice, Bully, Molten Fist doubles it,
   // Dominate): each stack is worth more (5R0G F24 T5: Molten Fist line over Bash+ for Vulnerable 3 at
   // the same HP; Dismantle x2 on T7 would have killed the beetle).
@@ -1956,6 +1984,26 @@ export function weightsFor(input: SolverInput): Weights {
  */
 function lastingValue(sim: Sim, weights: Weights): number {
   return weights.strength * sim.permStrength + sim.flat;
+}
+
+/**
+ * What a point of lasting value (Outcome.lasting) adds to the score: it pays off over the rest of the fight, more in
+ * long fights (boss 1.8, elite 1.4, hallway 0.8), less the later it comes (8% a turn, never below 40%); nothing on
+ * the last turn before a time limit ends the fight.
+ */
+export function lastingScale(input: Pick<SolverInput, "fightKind" | "turn" | "enemies">): number {
+  if (turnsLeftOf(input) === 1) return 0;
+  const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
+  const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
+  return fightLength * earliness;
+}
+
+/**
+ * A point of lasting value in HP, as the score trades them (lastingScale over the HP weight): what the random potions'
+ * Monte Carlo counts for a power or Strength a sample sets up (potion-mc.ts beatsDryLine).
+ */
+export function lastingHpPerPoint(input: SolverInput): number {
+  return lastingScale(input) / weightsFor(input).hp;
 }
 
 /** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
@@ -2046,7 +2094,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
-  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock;
+  // Whole-fight simulator only (unset live): Orichalcum when the cards left no block, Ripple Basin when no Attack was played.
+  const relicEndBlock =
+    (sim.block + etherealBlock + platingNow + claspBlock <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
   // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
   const endTurnGuards = winsFight
     ? []
@@ -2351,11 +2402,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // The last turn before a time limit ends the fight: nothing that pays on a later turn counts.
   const later = turnsLeftOf(input) === 1 ? 0 : 1;
   if (!winsFight) {
-    // Lasting value (Strength, powers) pays off over the rest of the fight: more in long fights,
-    // less the later it comes.
-    const fightLength = (input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8) * later;
-    const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, weights) * fightLength * earliness;
+    score += lastingValue(sim, weights) * lastingScale(input);
     score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
     // Pael's Tear: energy left unspent gives the next turn its extra energy, valued as Radiant Tincture's later energy.
@@ -2366,7 +2413,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // (N1V2 F48: exhausted T4, fired once, back in hand T7).
     // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over
     // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
-    if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
+    if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * lastingScale(input) + weights.hp * 5);
   }
   // After The Gambit every unblocked hit for the rest of the fight kills: a last resort only.
   if (gambitPlayed && !winsFight) score -= weights.hp * GAMBIT_COST;
@@ -2438,6 +2485,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
+      ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
       ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
@@ -2617,6 +2665,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
     potionCost: 0,
+    potionHeal: 0,
     attacksPlayed: 0,
     relicAttacks: 0,
     skillsPlayed: 0,
@@ -2727,6 +2776,16 @@ export function effectiveLoss(plan: Pick<Plan, "outcome">): number {
   return plan.outcome.hpLoss + (plan.outcome.potionCost ?? 0);
 }
 
+/**
+ * The Strength the living enemies gain for good from a line (Fight Me!, Enrage, Crab Rage: enemyHpAfter strengthGained;
+ * a loss counts negative). It raises every later hit: a dominance axis of its own (fix-queue-v4 #6, 9FVEQKJ0Y1YQ F33 T6:
+ * "Blood Wall, Fight Me!, Defend" -2 dominated "Blood Wall, Defend" -2 on our Strength and damage, code played it as
+ * the only distinct line, and the Insatiable's +1 made T7's bite exactly lethal).
+ */
+export function enemyStrengthGained(outcome: Pick<Outcome, "enemyHpAfter">): number {
+  return outcome.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + (enemy.strengthGained ?? 0), 0);
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
@@ -2745,7 +2804,8 @@ function vector(plan: Plan): number[] {
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
+  // The enemies' Strength gained is an axis too (enemyStrengthGained): a line feeding it never dominates one that does not.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -2778,6 +2838,7 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
+        enemyStrengthGained(other.outcome) === enemyStrengthGained(plan.outcome) &&
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter &&
         (other.outcome.nextTurnEnergy ?? 0) === (plan.outcome.nextTurnEnergy ?? 0),
     );

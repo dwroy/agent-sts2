@@ -11,17 +11,21 @@
  *
  * Every sample's line starts with the drink (SolverInput.firstKey): the option is "drink now, then re-plan
  * with the real cards". Samples are seeded per board (deterministic); other potions are not combined in
- * them (cost). A time budget cuts the samples (never below MC_MIN_SAMPLES).
+ * them (cost). A time budget cuts the samples (never below MC_MIN_SAMPLES: one).
  */
 
 import type { JsonValue } from "../util/json.js";
 import { CHOICE_POTIONS, DRAW_POTIONS, potionEffect, potionShell, type CardModel } from "./card-model.js";
-import { effectiveLoss, hpText, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
+import { effectiveLoss, hpText, lastingHpPerPoint, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Samples per random potion (fewer when the time budget runs out). */
 export const MC_SAMPLES = 12;
-/** Samples kept whatever the clock says. */
-export const MC_MIN_SAMPLES = 4;
+/**
+ * Samples kept whatever the clock says: one, the option's example line. Every later sample starts only while the budget
+ * lasts (fix-queue-v4 #5: the minimum used to be 4 run blind, DT1H1URTUAD8 F42 knights T1 took 1795 + 1023 ms of a 400 ms
+ * budget, and the rollout, whose budget is what is left of 1500 ms, fell back to 1 turn).
+ */
+export const MC_MIN_SAMPLES = 1;
 /** Node cap of one sample's solve (the drink is forced first, so it searches one subtree). */
 export const MC_NODES = 8000;
 /** Node cap floor when slow samples cut it (the rollout's fast policy uses the same). */
@@ -40,20 +44,32 @@ export const POOL_RARITIES = new Set(["Common", "Uncommon", "Rare"]);
  * MC_BEATS_HP / MC_BEATS_DAMAGE >= MC_BEATS_HP), or wins the fight this turn when the dry line does not,
  * or lives where the dry line dies. A sample that dies where the dry line lives never beats it. The HP saved is after
  * the drink's cost (potion-cost.ts: the sample's outcome.potionCost, its held value; 0 in a boss fight).
+ *
+ * What lasts past this turn counts too (fix-queue-v4 #4: 9FVEQKJ0Y1YQ F33, CDR0Q6929CKR F33, W80JV2YVC8UZ: a Power
+ * Potion kept for the boss read "beats 0/12" there, its Power worth nothing this turn, and was never drunk): the
+ * lasting value the sample sets up over the dry line's (Outcome.lasting: permanent Strength, powers, Regen's later
+ * heals), in HP as the solver's own score trades them (turn-solver lastingHpPerPoint: x 1.8 in a boss fight, 1.4 an
+ * elite, 0.8 a hallway, less the later the turn, over the HP weight). The same number the line's score already has.
  */
 export const MC_BEATS_HP = 2;
 /** Damage worth MC_BEATS_HP HP in the beats margin. */
 export const MC_BEATS_DAMAGE = 5;
 
 /** Whether a sample's line beats the best potion-free line by the MC_BEATS margin. */
-export function beatsDryLine(plan: Plan, dry: Plan | null): boolean {
+export function beatsDryLine(plan: Plan, dry: Plan | null, lastingHp = 0): boolean {
   if (dry === null) return !plan.outcome.dies;
   if (plan.outcome.dies) return false;
   if (dry.outcome.dies) return true;
   if (plan.outcome.winsFight && !dry.outcome.winsFight) return true;
   const hpSaved = effectiveLoss(dry) - effectiveLoss(plan);
   const damageGained = plan.outcome.damageDealt - dry.outcome.damageDealt;
-  return hpSaved + (damageGained * MC_BEATS_HP) / MC_BEATS_DAMAGE >= MC_BEATS_HP - 1e-9;
+  return hpSaved + (damageGained * MC_BEATS_HP) / MC_BEATS_DAMAGE + lastingGainedHp(plan, dry, lastingHp) >= MC_BEATS_HP - 1e-9;
+}
+
+/** The lasting value a line sets up over the dry line's, in HP at `lastingHp` per point (0 when the fight is won now). */
+export function lastingGainedHp(plan: Plan, dry: Plan, lastingHp: number): number {
+  if (plan.outcome.winsFight) return 0;
+  return ((plan.outcome.lasting ?? 0) - (dry.outcome.lasting ?? 0)) * lastingHp;
 }
 
 /** Seeded PRNG (mulberry32, as the rollout's). */
@@ -117,8 +133,11 @@ export interface PotionMc {
   dies: number;
   /** Samples whose line beats the best potion-free line by a real margin (beatsDryLine; dry dead: any living sample). */
   beats: number;
-  /** Mean over the samples with a line of HP saved and damage gained against the best potion-free line (null: none). */
-  vsDry: { hpSaved: number; damageGained: number } | null;
+  /**
+   * Mean over the samples with a line of HP saved, damage gained and lasting value gained (in HP: beatsDryLine) against
+   * the best potion-free line (null: none).
+   */
+  vsDry: { hpSaved: number; damageGained: number; lastingGained: number } | null;
   ms: number;
   degraded: boolean;
 }
@@ -215,8 +234,10 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
     // Snecko Oil's 10 cards, Gambler's Brew's discard sets), down to MC_MIN_NODES.
     let nodes = MC_NODES;
     const share = budgetMs / Math.max(1, requested);
+    let lastTook = 0;
     for (let i = 0; i < requested; i += 1) {
-      if (i >= MC_MIN_SAMPLES && now() - start > budgetMs) {
+      // Past the minimum, a sample starts only when it fits: the time so far and the last sample's again within the budget.
+      if (i >= MC_MIN_SAMPLES && now() - start + lastTook > budgetMs) {
         degraded = true;
         break;
       }
@@ -224,6 +245,7 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
       const began = now();
       const solved = solveTurn({ ...input, hand: [...hand, potion], firstKey: potion.key, maxNodes: nodes });
       const took = now() - began;
+      lastTook = took;
       if (took > share && nodes > MC_MIN_NODES) {
         nodes = Math.max(MC_MIN_NODES, Math.floor((nodes * share) / took));
         degraded = true;
@@ -236,10 +258,15 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
   const lines = plans.filter((plan): plan is Plan => plan !== null);
   const byScore = [...lines].sort((a, b) => a.score - b.score);
   const median = byScore.length > 0 ? byScore[Math.floor((byScore.length - 1) / 2)]! : null;
-  const beatsDry = lines.filter((plan) => beatsDryLine(plan, dryBest)).length;
+  const lastingHp = lastingHpPerPoint(input);
+  const beatsDry = lines.filter((plan) => beatsDryLine(plan, dryBest, lastingHp)).length;
   const mean = (xs: number[]) => xs.reduce((sum, x) => sum + x, 0) / Math.max(1, xs.length);
   const vsDry = dryBest !== null && lines.length > 0
-    ? { hpSaved: mean(lines.map((plan) => dryBest.outcome.hpLoss - plan.outcome.hpLoss)), damageGained: mean(lines.map((plan) => plan.outcome.damageDealt - dryBest.outcome.damageDealt)) }
+    ? {
+        hpSaved: mean(lines.map((plan) => dryBest.outcome.hpLoss - plan.outcome.hpLoss)),
+        damageGained: mean(lines.map((plan) => plan.outcome.damageDealt - dryBest.outcome.damageDealt)),
+        lastingGained: mean(lines.map((plan) => lastingGainedHp(plan, dryBest, lastingHp))),
+      }
     : null;
   const result: PotionMc = {
     source,
@@ -321,9 +348,12 @@ export function potionMcCriteria(mc: PotionMc, dryBest: Plan | null, stepText: (
   if (mc.dies > 0) out["dies_this_turn"] = `${mc.dies}/${n} samples`;
   const signed = (x: number) => `${x >= 0 ? "+" : ""}${round1(x)}`;
   out["beats_best_potion_free_line"] = dryBest
-    ? `${mc.beats}/${n} samples (best potion-free line: ${hpText(dryBest.outcome.hpLoss)}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP${(mc.source.cost ?? 0) > 0 ? ` after the potion's cost (${round1(mc.source.cost!)} HP)` : ""} or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much), winning the fight, or living where it dies)`
+    ? `${mc.beats}/${n} samples (best potion-free line: ${hpText(dryBest.outcome.hpLoss)}, dmg ${dryBest.outcome.damageDealt}${dryBest.outcome.dies ? ", dies" : ""}; a sample beats it by saving ${MC_BEATS_HP}+ HP${(mc.source.cost ?? 0) > 0 ? ` after the potion's cost (${round1(mc.source.cost!)} HP)` : ""} or dealing ${MC_BEATS_DAMAGE}+ more damage (or a mix worth as much, the lasting value it sets up counted in HP), winning the fight, or living where it dies)`
     : `${mc.beats}/${n} samples (no potion-free line)`;
-  if (dryBest && mc.vsDry) out["vs_best_potion_free_line"] = `mean HP saved ${signed(mc.vsDry.hpSaved)}, mean damage ${signed(mc.vsDry.damageGained)}`;
+  if (dryBest && mc.vsDry) {
+    const lasting = Math.abs(mc.vsDry.lastingGained) >= 0.05 ? `, mean lasting value ${signed(mc.vsDry.lastingGained)} HP (Strength and powers set up, over the rest of the fight, as the plan scores rate them)` : "";
+    out["vs_best_potion_free_line"] = `mean HP saved ${signed(mc.vsDry.hpSaved)}, mean damage ${signed(mc.vsDry.damageGained)}${lasting}`;
+  }
   if (othersHeld) out["note"] = "the other potions held are not combined in these samples";
   return out;
 }
@@ -339,7 +369,7 @@ export function potionMcLog(mc: PotionMc): Record<string, JsonValue> {
     ms: Math.round(mc.ms),
     wins: mc.wins,
     beats: mc.beats,
-    ...(mc.vsDry ? { hp_saved_mean: round1(mc.vsDry.hpSaved), dmg_gained_mean: round1(mc.vsDry.damageGained) } : {}),
+    ...(mc.vsDry ? { hp_saved_mean: round1(mc.vsDry.hpSaved), dmg_gained_mean: round1(mc.vsDry.damageGained), lasting_gained_mean: round1(mc.vsDry.lastingGained) } : {}),
     dies: mc.dies,
     hp_mean: round1(mc.hpLoss.mean),
     dmg_mean: round1(mc.damage.mean),

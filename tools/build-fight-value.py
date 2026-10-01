@@ -146,8 +146,10 @@ class RowBuilder(bmd.Builder):
 
 
 def _observe(original):
-    def observe(fight, state, ts):
-        original(fight, state, ts)
+    # Same signature as build-monster-db.observe_combat, which gained the draw/discard piles (`piles`);
+    # a three-argument wrapper raised TypeError on every fight and stopped the fight-value refresh.
+    def observe(fight, state, ts, piles=None):
+        original(fight, state, ts, piles)
         turn = state.get("turn")
         if not isinstance(turn, int):
             return

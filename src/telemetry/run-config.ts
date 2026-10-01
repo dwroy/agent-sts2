@@ -15,8 +15,13 @@
  *   whether tracked files differ from HEAD (ops/run.sh's `+dirty`: after every run the knowledge data is refreshed
  *   in the run worktree), with one `git status` call.
  * - KNOWLEDGE_PREFIX=full: the prefix is rendered for the run's ascension through the brain's own KnowledgePrompt,
- *   so it is the same render (and cache) the run's first question uses; its hash equals brain.jsonl's
- *   knowledge.prefix_sha. Token counts are estimates from the M1 replay's measured ratios (TOKENS_PER_CHAR).
+ *   so it is the same render (and cache) the run's first question uses; its hash equals that question's brain.jsonl
+ *   knowledge.prefix_sha. The brain re-renders the prefix whenever the knowledge files or the lessons change
+ *   (brain/knowledge.ts), which a refresh after the last run often does in the next run's first minutes (fix-queue-v4
+ *   #10: 1-2 system prompts a run start, WLM6YKJ0ASNE): the row says so (knowledge.prefix_note), and the prefix a
+ *   call used is its own brain.jsonl row's. The prefix and system hashes are knowledge data, not configuration: they
+ *   are left out of config_sha, so a restart after a knowledge refresh is not a "configuration changed mid-run".
+ *   Token counts are estimates from the M1 replay's measured ratios (TOKENS_PER_CHAR).
  * - Never throws: a failure is a note and the run goes on.
  */
 
@@ -112,8 +117,10 @@ export interface RunConfigRow {
     prefix: "off" | "full";
     /** The ascension the prompt was rendered for (the run's). */
     ascension: number | null;
-    /** KNOWLEDGE_PREFIX=full: the rendered prefix (the same hash as brain.jsonl's knowledge.prefix_sha). */
+    /** KNOWLEDGE_PREFIX=full: the prefix rendered at this run's start (its first brain.jsonl row's knowledge.prefix_sha). */
     prefix_sha: string | null;
+    /** KNOWLEDGE_PREFIX=full: that the prefix may be re-rendered mid-run, and where each call's is (PREFIX_NOTE). */
+    prefix_note?: string;
     prefix_chars: number | null;
     prefix_tokens_est: { deepseek: number; claude: number } | null;
     /** The system prompt the brain sends at this run's start (brain.jsonl system_sha): v3's when off. */
@@ -133,6 +140,8 @@ export interface RunConfigRow {
     combat_planner: string;
     build_decider: string;
     build_oneshot: string;
+    /** B3: the act boss simulated for each option of a deck-building question (BOSS_SIM_BUILD). */
+    boss_sim_build: string;
     combat_deepseek: string;
     fight_plan: string;
     run_plan: string;
@@ -288,6 +297,10 @@ function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null
   };
 }
 
+/** knowledge.prefix_note: the prefix above is the run's start; brain.jsonl has the one each call used. */
+export const PREFIX_NOTE =
+  "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha";
+
 /** The knowledge part: the prompt the brain sends for this ascension, its hashes and sizes. */
 function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: number | null, knowledgeDir: string): RunConfigRow["knowledge"] {
   const prefix = config.brain.knowledgePrefix;
@@ -313,6 +326,7 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
     return {
       ...out,
       prefix_sha: note.prefix_sha ?? null,
+      prefix_note: PREFIX_NOTE,
       prefix_chars: chars,
       prefix_tokens_est: chars === null ? null : estimateTokens(chars),
       system_sha: sha(system),
@@ -391,6 +405,7 @@ export function runConfigRow(
       combat_planner: config.combatPlanner,
       build_decider: config.buildDecider,
       build_oneshot: config.buildOneshot,
+      boss_sim_build: config.bossSimBuild,
       combat_deepseek: config.combatDeepseek,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
@@ -408,8 +423,9 @@ export function runConfigRow(
   const identity = {
     code: opts.code.code,
     ...setup,
-    // The prompt's identity, not its sizes or a load error's wording.
-    knowledge: { prefix: knowledge.prefix, prefix_sha: knowledge.prefix_sha, system_sha: knowledge.system_sha, experience_version: knowledge.experience_version },
+    // The prompt's setup, not its sizes, a load error's wording, or the hashes of the knowledge data rendered into it
+    // (prefix_sha, system_sha: the data is refreshed between runs and re-rendered mid-run; brain.jsonl has each call's).
+    knowledge: { prefix: knowledge.prefix, experience_version: knowledge.experience_version },
   };
   return {
     ts: now.toISOString(),

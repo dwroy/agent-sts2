@@ -1,0 +1,2316 @@
+{
+ "raw": {
+  "t1": {
+   "n": 140,
+   "actual_win": 0.593,
+   "mean_pred": 0.552,
+   "brier": 0.157,
+   "auc": 0.848,
+   "const_brier": 0.2414,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 47,
+     "pred": 0.033,
+     "actual": 0.149
+    },
+    {
+     "bucket": "20–40%",
+     "n": 10,
+     "pred": 0.307,
+     "actual": 0.7
+    },
+    {
+     "bucket": "40–60%",
+     "n": 11,
+     "pred": 0.53,
+     "actual": 0.636
+    },
+    {
+     "bucket": "60–80%",
+     "n": 8,
+     "pred": 0.679,
+     "actual": 0.75
+    },
+    {
+     "bucket": "80–100%",
+     "n": 64,
+     "pred": 0.959,
+     "actual": 0.875
+    }
+   ],
+   "worst_bucket_n20": 0.116,
+   "won_loss_err": {
+    "n": 80,
+    "median": 3.5,
+    "mean": 4.5,
+    "mae": 12.1,
+    "p10": -12,
+    "p90": 23,
+    "within5": 0.275
+   },
+   "leak": {
+    "n": 732,
+    "sim_enemy": 9.07,
+    "actual_enemy": 8.19,
+    "enemy_ratio": 1.108,
+    "sim_loss": 9.68,
+    "actual_loss": 8.41,
+    "loss_ratio": 1.15
+   },
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.292,
+     "brier": 0.1594,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 23.0,
+      "mean": 23.0,
+      "mae": 28.0,
+      "p10": -5,
+      "p90": 51,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 21,
+      "sim_enemy": 9.67,
+      "actual_enemy": 8.86,
+      "enemy_ratio": 1.092,
+      "sim_loss": 11.59,
+      "actual_loss": 9.67,
+      "loss_ratio": 1.199
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.746,
+     "brier": 0.0498,
+     "auc": 1.0,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 6,
+      "mean": 3.8,
+      "mae": 13.9,
+      "p10": -5.5,
+      "p90": 20,
+      "within5": 0.111
+     },
+     "leak": {
+      "n": 61,
+      "sim_enemy": 8.57,
+      "actual_enemy": 7.46,
+      "enemy_ratio": 1.148,
+      "sim_loss": 8.72,
+      "actual_loss": 7.67,
+      "loss_ratio": 1.136
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 11,
+     "actual_win": 0.182,
+     "mean_pred": 0.015,
+     "brier": 0.1722,
+     "auc": 0.889,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 22.8,
+      "mean": 22.8,
+      "mae": 22.8,
+      "p10": 17.5,
+      "p90": 28,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 42,
+      "sim_enemy": 21.55,
+      "actual_enemy": 12.6,
+      "enemy_ratio": 1.711,
+      "sim_loss": 22.38,
+      "actual_loss": 12.88,
+      "loss_ratio": 1.738
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.773,
+     "brier": 0.1637,
+     "auc": 0.65,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 2.5,
+      "mean": 1.8,
+      "mae": 9.0,
+      "p10": -13,
+      "p90": 12,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 62,
+      "sim_enemy": 9.33,
+      "actual_enemy": 10.53,
+      "enemy_ratio": 0.886,
+      "sim_loss": 9.92,
+      "actual_loss": 10.94,
+      "loss_ratio": 0.907
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 17,
+     "actual_win": 0.647,
+     "mean_pred": 0.526,
+     "brier": 0.0506,
+     "auc": 1.0,
+     "const_brier": 0.2284,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 11,
+      "median": 19,
+      "mean": 15.6,
+      "mae": 17.0,
+      "p10": 2,
+      "p90": 23.5,
+      "within5": 0.091
+     },
+     "leak": {
+      "n": 92,
+      "sim_enemy": 8.17,
+      "actual_enemy": 7.6,
+      "enemy_ratio": 1.076,
+      "sim_loss": 8.94,
+      "actual_loss": 8.11,
+      "loss_ratio": 1.102
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 9,
+     "actual_win": 0.667,
+     "mean_pred": 0.498,
+     "brier": 0.0927,
+     "auc": 1.0,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 3.5,
+      "mean": 2.2,
+      "mae": 8.7,
+      "p10": -11,
+      "p90": 7.5,
+      "within5": 0.167
+     },
+     "leak": {
+      "n": 53,
+      "sim_enemy": 4.63,
+      "actual_enemy": 5.26,
+      "enemy_ratio": 0.879,
+      "sim_loss": 4.97,
+      "actual_loss": 5.55,
+      "loss_ratio": 0.896
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 7,
+     "actual_win": 0.143,
+     "mean_pred": 0.011,
+     "brier": 0.1347,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 30,
+      "mean": 30.0,
+      "mae": 30.0,
+      "p10": 30,
+      "p90": 30,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 30,
+      "sim_enemy": 13.48,
+      "actual_enemy": 11.7,
+      "enemy_ratio": 1.152,
+      "sim_loss": 14.17,
+      "actual_loss": 12.0,
+      "loss_ratio": 1.181
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.895,
+     "brier": 0.1394,
+     "auc": 0.719,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -10.0,
+      "mean": -7.9,
+      "mae": 9.8,
+      "p10": -17.5,
+      "p90": 3,
+      "within5": 0.25
+     },
+     "leak": {
+      "n": 109,
+      "sim_enemy": 4.75,
+      "actual_enemy": 6.34,
+      "enemy_ratio": 0.749,
+      "sim_loss": 5.46,
+      "actual_loss": 6.48,
+      "loss_ratio": 0.843
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 3,
+     "actual_win": 0.667,
+     "mean_pred": 0.0,
+     "brier": 0.6667,
+     "auc": 0.5,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 27.51,
+      "actual_enemy": 10.21,
+      "enemy_ratio": 2.693,
+      "sim_loss": 29.0,
+      "actual_loss": 9.86,
+      "loss_ratio": 2.942
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.712,
+     "brier": 0.2794,
+     "auc": 0.762,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 2,
+      "mean": 2.8,
+      "mae": 4.8,
+      "p10": -5,
+      "p90": 9,
+      "within5": 0.6
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 11.15,
+      "actual_enemy": 11.11,
+      "enemy_ratio": 1.003,
+      "sim_loss": 11.6,
+      "actual_loss": 10.9,
+      "loss_ratio": 1.064
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.685,
+     "brier": 0.1546,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 5.0,
+      "mean": 5.5,
+      "mae": 12.5,
+      "p10": -12,
+      "p90": 23,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 72,
+      "sim_enemy": 8.45,
+      "actual_enemy": 8.56,
+      "enemy_ratio": 0.988,
+      "sim_loss": 8.74,
+      "actual_loss": 8.74,
+      "loss_ratio": 1.001
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.437,
+     "brier": 0.194,
+     "auc": 0.762,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 7.0,
+      "mean": 8.0,
+      "mae": 9.0,
+      "p10": -3,
+      "p90": 10,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 113,
+      "sim_enemy": 7.24,
+      "actual_enemy": 6.15,
+      "enemy_ratio": 1.178,
+      "sim_loss": 7.79,
+      "actual_loss": 6.27,
+      "loss_ratio": 1.242
+     }
+    }
+   }
+  },
+  "t5": {
+   "n": 137,
+   "actual_win": 0.606,
+   "mean_pred": 0.582,
+   "brier": 0.0922,
+   "auc": 0.952,
+   "const_brier": 0.2388,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 44,
+     "pred": 0.022,
+     "actual": 0.091
+    },
+    {
+     "bucket": "20–40%",
+     "n": 11,
+     "pred": 0.284,
+     "actual": 0.364
+    },
+    {
+     "bucket": "40–60%",
+     "n": 7,
+     "pred": 0.499,
+     "actual": 0.714
+    },
+    {
+     "bucket": "60–80%",
+     "n": 4,
+     "pred": 0.685,
+     "actual": 0.75
+    },
+    {
+     "bucket": "80–100%",
+     "n": 71,
+     "pred": 0.978,
+     "actual": 0.944
+    }
+   ],
+   "worst_bucket_n20": 0.069,
+   "won_loss_err": {
+    "n": 83,
+    "median": 2,
+    "mean": 2.3,
+    "mae": 7.2,
+    "p10": -10,
+    "p90": 15,
+    "within5": 0.53
+   },
+   "leak": {
+    "n": 357,
+    "sim_enemy": 8.22,
+    "actual_enemy": 7.08,
+    "enemy_ratio": 1.161,
+    "sim_loss": 8.87,
+    "actual_loss": 7.36,
+    "loss_ratio": 1.205
+   },
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.557,
+     "brier": 0.0186,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 6.5,
+      "mean": 6.5,
+      "mae": 14.5,
+      "p10": -8,
+      "p90": 21,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 6,
+      "sim_enemy": 8.37,
+      "actual_enemy": 6.83,
+      "enemy_ratio": 1.224,
+      "sim_loss": 10.0,
+      "actual_loss": 8.0,
+      "loss_ratio": 1.25
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.731,
+     "brier": 0.0838,
+     "auc": 1.0,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 2,
+      "mean": -1.4,
+      "mae": 7.2,
+      "p10": -10,
+      "p90": 6,
+      "within5": 0.556
+     },
+     "leak": {
+      "n": 29,
+      "sim_enemy": 8.91,
+      "actual_enemy": 7.48,
+      "enemy_ratio": 1.19,
+      "sim_loss": 9.17,
+      "actual_loss": 7.72,
+      "loss_ratio": 1.188
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 10,
+     "actual_win": 0.2,
+     "mean_pred": 0.216,
+     "brier": 0.0133,
+     "auc": 1.0,
+     "const_brier": 0.16,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 13.0,
+      "mean": 13.0,
+      "mae": 13.0,
+      "p10": 2,
+      "p90": 24,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 11,
+      "sim_enemy": 20.5,
+      "actual_enemy": 12.55,
+      "enemy_ratio": 1.634,
+      "sim_loss": 21.37,
+      "actual_loss": 12.82,
+      "loss_ratio": 1.667
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.617,
+     "brier": 0.1115,
+     "auc": 1.0,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 0.0,
+      "mean": 1.0,
+      "mae": 2.2,
+      "p10": -2,
+      "p90": 5,
+      "within5": 0.9
+     },
+     "leak": {
+      "n": 24,
+      "sim_enemy": 6.77,
+      "actual_enemy": 7.08,
+      "enemy_ratio": 0.956,
+      "sim_loss": 7.3,
+      "actual_loss": 7.17,
+      "loss_ratio": 1.019
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 16,
+     "actual_win": 0.625,
+     "mean_pred": 0.624,
+     "brier": 0.0601,
+     "auc": 0.967,
+     "const_brier": 0.2344,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 9.5,
+      "mean": 8.2,
+      "mae": 10.2,
+      "p10": -5,
+      "p90": 16,
+      "within5": 0.3
+     },
+     "leak": {
+      "n": 49,
+      "sim_enemy": 10.33,
+      "actual_enemy": 8.08,
+      "enemy_ratio": 1.279,
+      "sim_loss": 10.88,
+      "actual_loss": 8.29,
+      "loss_ratio": 1.313
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 10,
+     "actual_win": 0.7,
+     "mean_pred": 0.611,
+     "brier": 0.0398,
+     "auc": 1.0,
+     "const_brier": 0.21,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 7,
+      "median": -1,
+      "mean": 1.1,
+      "mae": 8.6,
+      "p10": -10.5,
+      "p90": 9,
+      "within5": 0.286
+     },
+     "leak": {
+      "n": 33,
+      "sim_enemy": 7.04,
+      "actual_enemy": 7.42,
+      "enemy_ratio": 0.948,
+      "sim_loss": 7.52,
+      "actual_loss": 7.76,
+      "loss_ratio": 0.969
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 6,
+     "actual_win": 0.167,
+     "mean_pred": 0.09,
+     "brier": 0.0353,
+     "auc": 1.0,
+     "const_brier": 0.1389,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 25,
+      "mean": 25.0,
+      "mae": 25.0,
+      "p10": 25,
+      "p90": 25,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 9,
+      "sim_enemy": 10.41,
+      "actual_enemy": 6.89,
+      "enemy_ratio": 1.511,
+      "sim_loss": 11.16,
+      "actual_loss": 7.22,
+      "loss_ratio": 1.545
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.885,
+     "brier": 0.0887,
+     "auc": 0.927,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -0.5,
+      "mean": -3.4,
+      "mae": 7.4,
+      "p10": -12,
+      "p90": 7,
+      "within5": 0.562
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 4.56,
+      "actual_enemy": 7.11,
+      "enemy_ratio": 0.641,
+      "sim_loss": 5.85,
+      "actual_loss": 7.3,
+      "loss_ratio": 0.801
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 2,
+     "actual_win": 1.0,
+     "mean_pred": 0.175,
+     "brier": 0.7078,
+     "auc": null,
+     "const_brier": 0.0,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 10.5,
+      "mean": 10.5,
+      "mae": 10.5,
+      "p10": 1,
+      "p90": 20,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 4,
+      "sim_enemy": 15.97,
+      "actual_enemy": 5.75,
+      "enemy_ratio": 2.778,
+      "sim_loss": 17.45,
+      "actual_loss": 6.25,
+      "loss_ratio": 2.792
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.568,
+     "brier": 0.1462,
+     "auc": 1.0,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 0,
+      "mean": 4.5,
+      "mae": 4.5,
+      "p10": 0,
+      "p90": 13,
+      "within5": 0.6
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 14.0,
+      "actual_enemy": 9.07,
+      "enemy_ratio": 1.543,
+      "sim_loss": 14.94,
+      "actual_loss": 9.86,
+      "loss_ratio": 1.515
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.749,
+     "brier": 0.0605,
+     "auc": 1.0,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 1.5,
+      "mean": 1.8,
+      "mae": 5.3,
+      "p10": -5,
+      "p90": 13.5,
+      "within5": 0.75
+     },
+     "leak": {
+      "n": 26,
+      "sim_enemy": 10.68,
+      "actual_enemy": 9.88,
+      "enemy_ratio": 1.081,
+      "sim_loss": 10.97,
+      "actual_loss": 10.04,
+      "loss_ratio": 1.093
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.402,
+     "brier": 0.1386,
+     "auc": 0.857,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 7,
+      "median": 6,
+      "mean": 3.7,
+      "mae": 5.7,
+      "p10": 0,
+      "p90": 7,
+      "within5": 0.286
+     },
+     "leak": {
+      "n": 89,
+      "sim_enemy": 6.54,
+      "actual_enemy": 4.54,
+      "enemy_ratio": 1.442,
+      "sim_loss": 6.94,
+      "actual_loss": 4.87,
+      "loss_ratio": 1.427
+     }
+    }
+   }
+  },
+  "pre": {
+   "n": 140,
+   "actual_win": 0.593,
+   "mean_pred": 0.545,
+   "brier": 0.1509,
+   "auc": 0.855,
+   "const_brier": 0.2414,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 47,
+     "pred": 0.043,
+     "actual": 0.17
+    },
+    {
+     "bucket": "20–40%",
+     "n": 10,
+     "pred": 0.329,
+     "actual": 0.6
+    },
+    {
+     "bucket": "40–60%",
+     "n": 9,
+     "pred": 0.488,
+     "actual": 0.556
+    },
+    {
+     "bucket": "60–80%",
+     "n": 14,
+     "pred": 0.699,
+     "actual": 0.643
+    },
+    {
+     "bucket": "80–100%",
+     "n": 60,
+     "pred": 0.946,
+     "actual": 0.917
+    }
+   ],
+   "worst_bucket_n20": 0.127,
+   "won_loss_err": {
+    "n": 81,
+    "median": 5,
+    "mean": 5.5,
+    "mae": 13.0,
+    "p10": -14,
+    "p90": 26,
+    "within5": 0.284
+   },
+   "leak": {
+    "n": 734,
+    "sim_enemy": 9.06,
+    "actual_enemy": 8.19,
+    "enemy_ratio": 1.106,
+    "sim_loss": 9.67,
+    "actual_loss": 8.42,
+    "loss_ratio": 1.148
+   },
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.283,
+     "brier": 0.1948,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 24.0,
+      "mean": 24.0,
+      "mae": 25.0,
+      "p10": -1,
+      "p90": 49,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 21,
+      "sim_enemy": 9.33,
+      "actual_enemy": 8.86,
+      "enemy_ratio": 1.054,
+      "sim_loss": 11.42,
+      "actual_loss": 9.67,
+      "loss_ratio": 1.182
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.745,
+     "brier": 0.0765,
+     "auc": 0.944,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 7,
+      "mean": 5.1,
+      "mae": 16.4,
+      "p10": -6,
+      "p90": 26,
+      "within5": 0.111
+     },
+     "leak": {
+      "n": 61,
+      "sim_enemy": 8.42,
+      "actual_enemy": 7.46,
+      "enemy_ratio": 1.129,
+      "sim_loss": 8.57,
+      "actual_loss": 7.67,
+      "loss_ratio": 1.117
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 11,
+     "actual_win": 0.182,
+     "mean_pred": 0.023,
+     "brier": 0.1645,
+     "auc": 0.889,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 21.5,
+      "mean": 21.5,
+      "mae": 21.5,
+      "p10": 14,
+      "p90": 29,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 44,
+      "sim_enemy": 21.34,
+      "actual_enemy": 12.43,
+      "enemy_ratio": 1.717,
+      "sim_loss": 22.21,
+      "actual_loss": 12.75,
+      "loss_ratio": 1.742
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.761,
+     "brier": 0.0962,
+     "auc": 0.9,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 2.5,
+      "mean": 4.2,
+      "mae": 11.8,
+      "p10": -15.5,
+      "p90": 25,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 62,
+      "sim_enemy": 9.78,
+      "actual_enemy": 10.53,
+      "enemy_ratio": 0.928,
+      "sim_loss": 10.3,
+      "actual_loss": 10.94,
+      "loss_ratio": 0.942
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 17,
+     "actual_win": 0.647,
+     "mean_pred": 0.514,
+     "brier": 0.0688,
+     "auc": 1.0,
+     "const_brier": 0.2284,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 11,
+      "median": 24,
+      "mean": 17.4,
+      "mae": 19.2,
+      "p10": -1,
+      "p90": 27,
+      "within5": 0.091
+     },
+     "leak": {
+      "n": 92,
+      "sim_enemy": 8.06,
+      "actual_enemy": 7.6,
+      "enemy_ratio": 1.061,
+      "sim_loss": 8.87,
+      "actual_loss": 8.11,
+      "loss_ratio": 1.094
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 9,
+     "actual_win": 0.667,
+     "mean_pred": 0.514,
+     "brier": 0.0972,
+     "auc": 1.0,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 3.2,
+      "mean": 1.6,
+      "mae": 7.2,
+      "p10": -10,
+      "p90": 5,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 53,
+      "sim_enemy": 4.59,
+      "actual_enemy": 5.26,
+      "enemy_ratio": 0.871,
+      "sim_loss": 4.87,
+      "actual_loss": 5.55,
+      "loss_ratio": 0.878
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 7,
+     "actual_win": 0.143,
+     "mean_pred": 0.011,
+     "brier": 0.1407,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 29,
+      "mean": 29.0,
+      "mae": 29.0,
+      "p10": 29,
+      "p90": 29,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 30,
+      "sim_enemy": 14.09,
+      "actual_enemy": 11.7,
+      "enemy_ratio": 1.204,
+      "sim_loss": 14.65,
+      "actual_loss": 12.0,
+      "loss_ratio": 1.221
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.886,
+     "brier": 0.1159,
+     "auc": 0.698,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -6.5,
+      "mean": -6.9,
+      "mae": 9.8,
+      "p10": -19,
+      "p90": 3,
+      "within5": 0.375
+     },
+     "leak": {
+      "n": 109,
+      "sim_enemy": 4.85,
+      "actual_enemy": 6.34,
+      "enemy_ratio": 0.765,
+      "sim_loss": 5.55,
+      "actual_loss": 6.48,
+      "loss_ratio": 0.856
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 3,
+     "actual_win": 0.667,
+     "mean_pred": 0.02,
+     "brier": 0.6279,
+     "auc": 0.75,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": -10,
+      "mean": -10.0,
+      "mae": 10.0,
+      "p10": -10,
+      "p90": -10,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 22.89,
+      "actual_enemy": 10.21,
+      "enemy_ratio": 2.241,
+      "sim_loss": 24.64,
+      "actual_loss": 9.86,
+      "loss_ratio": 2.5
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.687,
+     "brier": 0.3021,
+     "auc": 0.675,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 6,
+      "mean": 8.0,
+      "mae": 8.0,
+      "p10": 0,
+      "p90": 23,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 11.23,
+      "actual_enemy": 11.11,
+      "enemy_ratio": 1.011,
+      "sim_loss": 11.75,
+      "actual_loss": 10.9,
+      "loss_ratio": 1.078
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.689,
+     "brier": 0.141,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 6.0,
+      "mean": 5.4,
+      "mae": 12.6,
+      "p10": -10,
+      "p90": 22,
+      "within5": 0.25
+     },
+     "leak": {
+      "n": 72,
+      "sim_enemy": 8.26,
+      "actual_enemy": 8.56,
+      "enemy_ratio": 0.966,
+      "sim_loss": 8.6,
+      "actual_loss": 8.74,
+      "loss_ratio": 0.984
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.414,
+     "brier": 0.1803,
+     "auc": 0.75,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 8.0,
+      "mean": 9.1,
+      "mae": 9.1,
+      "p10": 4,
+      "p90": 10,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 113,
+      "sim_enemy": 7.41,
+      "actual_enemy": 6.15,
+      "enemy_ratio": 1.205,
+      "sim_loss": 7.92,
+      "actual_loss": 6.27,
+      "loss_ratio": 1.263
+     }
+    }
+   }
+  }
+ },
+ "platt": {
+  "t1": {
+   "n": 140,
+   "actual_win": 0.593,
+   "mean_pred": 0.613,
+   "brier": 0.1456,
+   "auc": 0.848,
+   "const_brier": 0.2414,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 30,
+     "pred": 0.104,
+     "actual": 0.133
+    },
+    {
+     "bucket": "20–40%",
+     "n": 15,
+     "pred": 0.323,
+     "actual": 0.2
+    },
+    {
+     "bucket": "40–60%",
+     "n": 14,
+     "pred": 0.526,
+     "actual": 0.571
+    },
+    {
+     "bucket": "60–80%",
+     "n": 20,
+     "pred": 0.701,
+     "actual": 0.75
+    },
+    {
+     "bucket": "80–100%",
+     "n": 61,
+     "pred": 0.925,
+     "actual": 0.869
+    }
+   ],
+   "worst_bucket_n20": 0.056,
+   "won_loss_err": {
+    "n": 80,
+    "median": 3.5,
+    "mean": 4.5,
+    "mae": 12.1,
+    "p10": -12,
+    "p90": 23,
+    "within5": 0.275
+   },
+   "leak": {
+    "n": 732,
+    "sim_enemy": 9.07,
+    "actual_enemy": 8.19,
+    "enemy_ratio": 1.108,
+    "sim_loss": 9.68,
+    "actual_loss": 8.41,
+    "loss_ratio": 1.15
+   },
+   "platt": [
+    0.5534,
+    0.5036
+   ],
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.423,
+     "brier": 0.1007,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 23.0,
+      "mean": 23.0,
+      "mae": 28.0,
+      "p10": -5,
+      "p90": 51,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 21,
+      "sim_enemy": 9.67,
+      "actual_enemy": 8.86,
+      "enemy_ratio": 1.092,
+      "sim_loss": 11.59,
+      "actual_loss": 9.67,
+      "loss_ratio": 1.199
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.789,
+     "brier": 0.0537,
+     "auc": 1.0,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 6,
+      "mean": 3.8,
+      "mae": 13.9,
+      "p10": -5.5,
+      "p90": 20,
+      "within5": 0.111
+     },
+     "leak": {
+      "n": 61,
+      "sim_enemy": 8.57,
+      "actual_enemy": 7.46,
+      "enemy_ratio": 1.148,
+      "sim_loss": 8.72,
+      "actual_loss": 7.67,
+      "loss_ratio": 1.136
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 11,
+     "actual_win": 0.182,
+     "mean_pred": 0.13,
+     "brier": 0.1304,
+     "auc": 0.889,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 22.8,
+      "mean": 22.8,
+      "mae": 22.8,
+      "p10": 17.5,
+      "p90": 28,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 42,
+      "sim_enemy": 21.55,
+      "actual_enemy": 12.6,
+      "enemy_ratio": 1.711,
+      "sim_loss": 22.38,
+      "actual_loss": 12.88,
+      "loss_ratio": 1.738
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.802,
+     "brier": 0.1492,
+     "auc": 0.65,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 2.5,
+      "mean": 1.8,
+      "mae": 9.0,
+      "p10": -13,
+      "p90": 12,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 62,
+      "sim_enemy": 9.33,
+      "actual_enemy": 10.53,
+      "enemy_ratio": 0.886,
+      "sim_loss": 9.92,
+      "actual_loss": 10.94,
+      "loss_ratio": 0.907
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 17,
+     "actual_win": 0.647,
+     "mean_pred": 0.58,
+     "brier": 0.0496,
+     "auc": 1.0,
+     "const_brier": 0.2284,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 11,
+      "median": 19,
+      "mean": 15.6,
+      "mae": 17.0,
+      "p10": 2,
+      "p90": 23.5,
+      "within5": 0.091
+     },
+     "leak": {
+      "n": 92,
+      "sim_enemy": 8.17,
+      "actual_enemy": 7.6,
+      "enemy_ratio": 1.076,
+      "sim_loss": 8.94,
+      "actual_loss": 8.11,
+      "loss_ratio": 1.102
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 9,
+     "actual_win": 0.667,
+     "mean_pred": 0.584,
+     "brier": 0.0652,
+     "auc": 1.0,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 3.5,
+      "mean": 2.2,
+      "mae": 8.7,
+      "p10": -11,
+      "p90": 7.5,
+      "within5": 0.167
+     },
+     "leak": {
+      "n": 53,
+      "sim_enemy": 4.63,
+      "actual_enemy": 5.26,
+      "enemy_ratio": 0.879,
+      "sim_loss": 4.97,
+      "actual_loss": 5.55,
+      "loss_ratio": 0.896
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 7,
+     "actual_win": 0.143,
+     "mean_pred": 0.136,
+     "brier": 0.1005,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 30,
+      "mean": 30.0,
+      "mae": 30.0,
+      "p10": 30,
+      "p90": 30,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 30,
+      "sim_enemy": 13.48,
+      "actual_enemy": 11.7,
+      "enemy_ratio": 1.152,
+      "sim_loss": 14.17,
+      "actual_loss": 12.0,
+      "loss_ratio": 1.181
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.894,
+     "brier": 0.1243,
+     "auc": 0.719,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -10.0,
+      "mean": -7.9,
+      "mae": 9.8,
+      "p10": -17.5,
+      "p90": 3,
+      "within5": 0.25
+     },
+     "leak": {
+      "n": 109,
+      "sim_enemy": 4.75,
+      "actual_enemy": 6.34,
+      "enemy_ratio": 0.749,
+      "sim_loss": 5.46,
+      "actual_loss": 6.48,
+      "loss_ratio": 0.843
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 3,
+     "actual_win": 0.667,
+     "mean_pred": 0.078,
+     "brier": 0.5684,
+     "auc": 0.5,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 27.51,
+      "actual_enemy": 10.21,
+      "enemy_ratio": 2.693,
+      "sim_loss": 29.0,
+      "actual_loss": 9.86,
+      "loss_ratio": 2.942
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.745,
+     "brier": 0.304,
+     "auc": 0.762,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 2,
+      "mean": 2.8,
+      "mae": 4.8,
+      "p10": -5,
+      "p90": 9,
+      "within5": 0.6
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 11.15,
+      "actual_enemy": 11.11,
+      "enemy_ratio": 1.003,
+      "sim_loss": 11.6,
+      "actual_loss": 10.9,
+      "loss_ratio": 1.064
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.737,
+     "brier": 0.1121,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 5.0,
+      "mean": 5.5,
+      "mae": 12.5,
+      "p10": -12,
+      "p90": 23,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 72,
+      "sim_enemy": 8.45,
+      "actual_enemy": 8.56,
+      "enemy_ratio": 0.988,
+      "sim_loss": 8.74,
+      "actual_loss": 8.74,
+      "loss_ratio": 1.001
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.539,
+     "brier": 0.2259,
+     "auc": 0.762,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 7.0,
+      "mean": 8.0,
+      "mae": 9.0,
+      "p10": -3,
+      "p90": 10,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 113,
+      "sim_enemy": 7.24,
+      "actual_enemy": 6.15,
+      "enemy_ratio": 1.178,
+      "sim_loss": 7.79,
+      "actual_loss": 6.27,
+      "loss_ratio": 1.242
+     }
+    }
+   }
+  },
+  "t5": {
+   "n": 137,
+   "actual_win": 0.606,
+   "mean_pred": 0.617,
+   "brier": 0.0882,
+   "auc": 0.952,
+   "const_brier": 0.2388,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 40,
+     "pred": 0.039,
+     "actual": 0.075
+    },
+    {
+     "bucket": "20–40%",
+     "n": 7,
+     "pred": 0.311,
+     "actual": 0.286
+    },
+    {
+     "bucket": "40–60%",
+     "n": 9,
+     "pred": 0.485,
+     "actual": 0.444
+    },
+    {
+     "bucket": "60–80%",
+     "n": 10,
+     "pred": 0.695,
+     "actual": 0.7
+    },
+    {
+     "bucket": "80–100%",
+     "n": 71,
+     "pred": 0.978,
+     "actual": 0.944
+    }
+   ],
+   "worst_bucket_n20": 0.036,
+   "won_loss_err": {
+    "n": 83,
+    "median": 2,
+    "mean": 2.3,
+    "mae": 7.2,
+    "p10": -10,
+    "p90": 15,
+    "within5": 0.53
+   },
+   "leak": {
+    "n": 357,
+    "sim_enemy": 8.22,
+    "actual_enemy": 7.08,
+    "enemy_ratio": 1.161,
+    "sim_loss": 8.87,
+    "actual_loss": 7.36,
+    "loss_ratio": 1.205
+   },
+   "platt": [
+    0.5624,
+    0.8224
+   ],
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.601,
+     "brier": 0.0481,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 6.5,
+      "mean": 6.5,
+      "mae": 14.5,
+      "p10": -8,
+      "p90": 21,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 6,
+      "sim_enemy": 8.37,
+      "actual_enemy": 6.83,
+      "enemy_ratio": 1.224,
+      "sim_loss": 10.0,
+      "actual_loss": 8.0,
+      "loss_ratio": 1.25
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.737,
+     "brier": 0.0714,
+     "auc": 1.0,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 2,
+      "mean": -1.4,
+      "mae": 7.2,
+      "p10": -10,
+      "p90": 6,
+      "within5": 0.556
+     },
+     "leak": {
+      "n": 29,
+      "sim_enemy": 8.91,
+      "actual_enemy": 7.48,
+      "enemy_ratio": 1.19,
+      "sim_loss": 9.17,
+      "actual_loss": 7.72,
+      "loss_ratio": 1.188
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 10,
+     "actual_win": 0.2,
+     "mean_pred": 0.252,
+     "brier": 0.0259,
+     "auc": 1.0,
+     "const_brier": 0.16,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 13.0,
+      "mean": 13.0,
+      "mae": 13.0,
+      "p10": 2,
+      "p90": 24,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 11,
+      "sim_enemy": 20.5,
+      "actual_enemy": 12.55,
+      "enemy_ratio": 1.634,
+      "sim_loss": 21.37,
+      "actual_loss": 12.82,
+      "loss_ratio": 1.667
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.659,
+     "brier": 0.0728,
+     "auc": 1.0,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 0.0,
+      "mean": 1.0,
+      "mae": 2.2,
+      "p10": -2,
+      "p90": 5,
+      "within5": 0.9
+     },
+     "leak": {
+      "n": 24,
+      "sim_enemy": 6.77,
+      "actual_enemy": 7.08,
+      "enemy_ratio": 0.956,
+      "sim_loss": 7.3,
+      "actual_loss": 7.17,
+      "loss_ratio": 1.019
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 16,
+     "actual_win": 0.625,
+     "mean_pred": 0.657,
+     "brier": 0.0658,
+     "auc": 0.967,
+     "const_brier": 0.2344,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 9.5,
+      "mean": 8.2,
+      "mae": 10.2,
+      "p10": -5,
+      "p90": 16,
+      "within5": 0.3
+     },
+     "leak": {
+      "n": 49,
+      "sim_enemy": 10.33,
+      "actual_enemy": 8.08,
+      "enemy_ratio": 1.279,
+      "sim_loss": 10.88,
+      "actual_loss": 8.29,
+      "loss_ratio": 1.313
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 10,
+     "actual_win": 0.7,
+     "mean_pred": 0.644,
+     "brier": 0.024,
+     "auc": 1.0,
+     "const_brier": 0.21,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 7,
+      "median": -1,
+      "mean": 1.1,
+      "mae": 8.6,
+      "p10": -10.5,
+      "p90": 9,
+      "within5": 0.286
+     },
+     "leak": {
+      "n": 33,
+      "sim_enemy": 7.04,
+      "actual_enemy": 7.42,
+      "enemy_ratio": 0.948,
+      "sim_loss": 7.52,
+      "actual_loss": 7.76,
+      "loss_ratio": 0.969
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 6,
+     "actual_win": 0.167,
+     "mean_pred": 0.122,
+     "brier": 0.0186,
+     "auc": 1.0,
+     "const_brier": 0.1389,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 25,
+      "mean": 25.0,
+      "mae": 25.0,
+      "p10": 25,
+      "p90": 25,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 9,
+      "sim_enemy": 10.41,
+      "actual_enemy": 6.89,
+      "enemy_ratio": 1.511,
+      "sim_loss": 11.16,
+      "actual_loss": 7.22,
+      "loss_ratio": 1.545
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.907,
+     "brier": 0.0901,
+     "auc": 0.927,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -0.5,
+      "mean": -3.4,
+      "mae": 7.4,
+      "p10": -12,
+      "p90": 7,
+      "within5": 0.562
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 4.56,
+      "actual_enemy": 7.11,
+      "enemy_ratio": 0.641,
+      "sim_loss": 5.85,
+      "actual_loss": 7.3,
+      "loss_ratio": 0.801
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 2,
+     "actual_win": 1.0,
+     "mean_pred": 0.271,
+     "brier": 0.5851,
+     "auc": null,
+     "const_brier": 0.0,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 10.5,
+      "mean": 10.5,
+      "mae": 10.5,
+      "p10": 1,
+      "p90": 20,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 4,
+      "sim_enemy": 15.97,
+      "actual_enemy": 5.75,
+      "enemy_ratio": 2.778,
+      "sim_loss": 17.45,
+      "actual_loss": 6.25,
+      "loss_ratio": 2.792
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.598,
+     "brier": 0.165,
+     "auc": 1.0,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 0,
+      "mean": 4.5,
+      "mae": 4.5,
+      "p10": 0,
+      "p90": 13,
+      "within5": 0.6
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 14.0,
+      "actual_enemy": 9.07,
+      "enemy_ratio": 1.543,
+      "sim_loss": 14.94,
+      "actual_loss": 9.86,
+      "loss_ratio": 1.515
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.782,
+     "brier": 0.0367,
+     "auc": 1.0,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 1.5,
+      "mean": 1.8,
+      "mae": 5.3,
+      "p10": -5,
+      "p90": 13.5,
+      "within5": 0.75
+     },
+     "leak": {
+      "n": 26,
+      "sim_enemy": 10.68,
+      "actual_enemy": 9.88,
+      "enemy_ratio": 1.081,
+      "sim_loss": 10.97,
+      "actual_loss": 10.04,
+      "loss_ratio": 1.093
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.461,
+     "brier": 0.1552,
+     "auc": 0.857,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 7,
+      "median": 6,
+      "mean": 3.7,
+      "mae": 5.7,
+      "p10": 0,
+      "p90": 7,
+      "within5": 0.286
+     },
+     "leak": {
+      "n": 89,
+      "sim_enemy": 6.54,
+      "actual_enemy": 4.54,
+      "enemy_ratio": 1.442,
+      "sim_loss": 6.94,
+      "actual_loss": 4.87,
+      "loss_ratio": 1.427
+     }
+    }
+   }
+  },
+  "pre": {
+   "n": 140,
+   "actual_win": 0.593,
+   "mean_pred": 0.604,
+   "brier": 0.1436,
+   "auc": 0.855,
+   "const_brier": 0.2414,
+   "buckets": [
+    {
+     "bucket": "0–20%",
+     "n": 27,
+     "pred": 0.092,
+     "actual": 0.148
+    },
+    {
+     "bucket": "20–40%",
+     "n": 18,
+     "pred": 0.323,
+     "actual": 0.222
+    },
+    {
+     "bucket": "40–60%",
+     "n": 14,
+     "pred": 0.529,
+     "actual": 0.5
+    },
+    {
+     "bucket": "60–80%",
+     "n": 28,
+     "pred": 0.715,
+     "actual": 0.714
+    },
+    {
+     "bucket": "80–100%",
+     "n": 53,
+     "pred": 0.922,
+     "actual": 0.906
+    }
+   ],
+   "worst_bucket_n20": 0.056,
+   "won_loss_err": {
+    "n": 81,
+    "median": 5,
+    "mean": 5.5,
+    "mae": 13.0,
+    "p10": -14,
+    "p90": 26,
+    "within5": 0.284
+   },
+   "leak": {
+    "n": 734,
+    "sim_enemy": 9.06,
+    "actual_enemy": 8.19,
+    "enemy_ratio": 1.106,
+    "sim_loss": 9.67,
+    "actual_loss": 8.42,
+    "loss_ratio": 1.148
+   },
+   "platt": [
+    0.5236,
+    0.5219
+   ],
+   "by_boss": {
+    "AEONGLASS": {
+     "n": 4,
+     "actual_win": 0.5,
+     "mean_pred": 0.425,
+     "brier": 0.1363,
+     "auc": 1.0,
+     "const_brier": 0.25,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 24.0,
+      "mean": 24.0,
+      "mae": 25.0,
+      "p10": -1,
+      "p90": 49,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 21,
+      "sim_enemy": 9.33,
+      "actual_enemy": 8.86,
+      "enemy_ratio": 1.054,
+      "sim_loss": 11.42,
+      "actual_loss": 9.67,
+      "loss_ratio": 1.182
+     }
+    },
+    "CEREMONIAL_BEAST": {
+     "n": 11,
+     "actual_win": 0.818,
+     "mean_pred": 0.78,
+     "brier": 0.0798,
+     "auc": 0.944,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 9,
+      "median": 7,
+      "mean": 5.1,
+      "mae": 16.4,
+      "p10": -6,
+      "p90": 26,
+      "within5": 0.111
+     },
+     "leak": {
+      "n": 61,
+      "sim_enemy": 8.42,
+      "actual_enemy": 7.46,
+      "enemy_ratio": 1.129,
+      "sim_loss": 8.57,
+      "actual_loss": 7.67,
+      "loss_ratio": 1.117
+     }
+    },
+    "CRUSHER+ROCKET": {
+     "n": 11,
+     "actual_win": 0.182,
+     "mean_pred": 0.13,
+     "brier": 0.1245,
+     "auc": 0.889,
+     "const_brier": 0.1488,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 2,
+      "median": 21.5,
+      "mean": 21.5,
+      "mae": 21.5,
+      "p10": 14,
+      "p90": 29,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 44,
+      "sim_enemy": 21.34,
+      "actual_enemy": 12.43,
+      "enemy_ratio": 1.717,
+      "sim_loss": 22.21,
+      "actual_loss": 12.75,
+      "loss_ratio": 1.742
+     }
+    },
+    "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+     "n": 13,
+     "actual_win": 0.769,
+     "mean_pred": 0.783,
+     "brier": 0.1046,
+     "auc": 0.9,
+     "const_brier": 0.1775,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 10,
+      "median": 2.5,
+      "mean": 4.2,
+      "mae": 11.8,
+      "p10": -15.5,
+      "p90": 25,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 62,
+      "sim_enemy": 9.78,
+      "actual_enemy": 10.53,
+      "enemy_ratio": 0.928,
+      "sim_loss": 10.3,
+      "actual_loss": 10.94,
+      "loss_ratio": 0.942
+     }
+    },
+    "KNOWLEDGE_DEMON": {
+     "n": 17,
+     "actual_win": 0.647,
+     "mean_pred": 0.577,
+     "brier": 0.0702,
+     "auc": 1.0,
+     "const_brier": 0.2284,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 11,
+      "median": 24,
+      "mean": 17.4,
+      "mae": 19.2,
+      "p10": -1,
+      "p90": 27,
+      "within5": 0.091
+     },
+     "leak": {
+      "n": 92,
+      "sim_enemy": 8.06,
+      "actual_enemy": 7.6,
+      "enemy_ratio": 1.061,
+      "sim_loss": 8.87,
+      "actual_loss": 8.11,
+      "loss_ratio": 1.094
+     }
+    },
+    "LAGAVULIN_MATRIARCH": {
+     "n": 9,
+     "actual_win": 0.667,
+     "mean_pred": 0.608,
+     "brier": 0.0775,
+     "auc": 1.0,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 3.2,
+      "mean": 1.6,
+      "mae": 7.2,
+      "p10": -10,
+      "p90": 5,
+      "within5": 0.5
+     },
+     "leak": {
+      "n": 53,
+      "sim_enemy": 4.59,
+      "actual_enemy": 5.26,
+      "enemy_ratio": 0.871,
+      "sim_loss": 4.87,
+      "actual_loss": 5.55,
+      "loss_ratio": 0.878
+     }
+    },
+    "QUEEN+TORCH_HEAD_AMALGAM": {
+     "n": 7,
+     "actual_win": 0.143,
+     "mean_pred": 0.112,
+     "brier": 0.124,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": 29,
+      "mean": 29.0,
+      "mae": 29.0,
+      "p10": 29,
+      "p90": 29,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 30,
+      "sim_enemy": 14.09,
+      "actual_enemy": 11.7,
+      "enemy_ratio": 1.204,
+      "sim_loss": 14.65,
+      "actual_loss": 12.0,
+      "loss_ratio": 1.221
+     }
+    },
+    "SOUL_FYSH": {
+     "n": 19,
+     "actual_win": 0.842,
+     "mean_pred": 0.882,
+     "brier": 0.1106,
+     "auc": 0.698,
+     "const_brier": 0.133,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 16,
+      "median": -6.5,
+      "mean": -6.9,
+      "mae": 9.8,
+      "p10": -19,
+      "p90": 3,
+      "within5": 0.375
+     },
+     "leak": {
+      "n": 109,
+      "sim_enemy": 4.85,
+      "actual_enemy": 6.34,
+      "enemy_ratio": 0.765,
+      "sim_loss": 5.55,
+      "actual_loss": 6.48,
+      "loss_ratio": 0.856
+     }
+    },
+    "TEST_SUBJECT": {
+     "n": 3,
+     "actual_win": 0.667,
+     "mean_pred": 0.141,
+     "brier": 0.4603,
+     "auc": 0.75,
+     "const_brier": 0.2222,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 1,
+      "median": -10,
+      "mean": -10.0,
+      "mae": 10.0,
+      "p10": -10,
+      "p90": -10,
+      "within5": 0.0
+     },
+     "leak": {
+      "n": 14,
+      "sim_enemy": 22.89,
+      "actual_enemy": 10.21,
+      "enemy_ratio": 2.241,
+      "sim_loss": 24.64,
+      "actual_loss": 9.86,
+      "loss_ratio": 2.5
+     }
+    },
+    "THE_INSATIABLE": {
+     "n": 13,
+     "actual_win": 0.385,
+     "mean_pred": 0.718,
+     "brier": 0.3143,
+     "auc": 0.675,
+     "const_brier": 0.2367,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 5,
+      "median": 6,
+      "mean": 8.0,
+      "mae": 8.0,
+      "p10": 0,
+      "p90": 23,
+      "within5": 0.4
+     },
+     "leak": {
+      "n": 63,
+      "sim_enemy": 11.23,
+      "actual_enemy": 11.11,
+      "enemy_ratio": 1.011,
+      "sim_loss": 11.75,
+      "actual_loss": 10.9,
+      "loss_ratio": 1.078
+     }
+    },
+    "VANTOM": {
+     "n": 14,
+     "actual_win": 0.857,
+     "mean_pred": 0.729,
+     "brier": 0.1018,
+     "auc": 0.833,
+     "const_brier": 0.1224,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 12,
+      "median": 6.0,
+      "mean": 5.4,
+      "mae": 12.6,
+      "p10": -10,
+      "p90": 22,
+      "within5": 0.25
+     },
+     "leak": {
+      "n": 72,
+      "sim_enemy": 8.26,
+      "actual_enemy": 8.56,
+      "enemy_ratio": 0.966,
+      "sim_loss": 8.6,
+      "actual_loss": 8.74,
+      "loss_ratio": 0.984
+     }
+    },
+    "WATERFALL_GIANT": {
+     "n": 19,
+     "actual_win": 0.368,
+     "mean_pred": 0.521,
+     "brier": 0.2214,
+     "auc": 0.75,
+     "const_brier": 0.2327,
+     "worst_bucket_n20": null,
+     "won_loss_err": {
+      "n": 6,
+      "median": 8.0,
+      "mean": 9.1,
+      "mae": 9.1,
+      "p10": 4,
+      "p90": 10,
+      "within5": 0.333
+     },
+     "leak": {
+      "n": 113,
+      "sim_enemy": 7.41,
+      "actual_enemy": 6.15,
+      "enemy_ratio": 1.205,
+      "sim_loss": 7.92,
+      "actual_loss": 6.27,
+      "loss_ratio": 1.263
+     }
+    }
+   }
+  }
+ }
+}

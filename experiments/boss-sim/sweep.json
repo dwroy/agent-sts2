@@ -1,0 +1,186 @@
+[
+ {
+  "run": "noscripts",
+  "desc": "无整场脚本、无已知抽牌，伤害权重 ×1（= 5 回合推演的模拟去掉窗口）",
+  "t1": {
+   "n": 422,
+   "brier": 0.2546,
+   "auc": 0.843,
+   "mean_pred": 0.329,
+   "actual": 0.588,
+   "loss_won_median": 10.0,
+   "turn2_6_loss_sim": 11.0,
+   "turn2_6_loss_actual": 7.2,
+   "turn2_6_dmg_sim": 28.6,
+   "turn2_6_dmg_actual": 29.8
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.1153,
+   "auc": 0.948,
+   "mean_pred": 0.493,
+   "actual": 0.602,
+   "loss_won_median": 5.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ },
+ {
+  "run": "v3",
+  "desc": "整场脚本，无已知抽牌，×1",
+  "t1": {
+   "n": 422,
+   "brier": 0.2243,
+   "auc": 0.851,
+   "mean_pred": 0.375,
+   "actual": 0.588,
+   "loss_won_median": 10.5,
+   "turn2_6_loss_sim": 10.5,
+   "turn2_6_loss_actual": 7.2,
+   "turn2_6_dmg_sim": 29.4,
+   "turn2_6_dmg_actual": 29.8
+  }
+ },
+ {
+  "run": "v4",
+  "desc": "整场脚本 + 已知抽牌，×1",
+  "t1": {
+   "n": 422,
+   "brier": 0.1905,
+   "auc": 0.87,
+   "mean_pred": 0.434,
+   "actual": 0.588,
+   "loss_won_median": 9,
+   "turn2_6_loss_sim": 10.5,
+   "turn2_6_loss_actual": 7.1,
+   "turn2_6_dmg_sim": 31.9,
+   "turn2_6_dmg_actual": 29.9
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.096,
+   "auc": 0.955,
+   "mean_pred": 0.533,
+   "actual": 0.602,
+   "loss_won_median": 4.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ },
+ {
+  "run": "k07",
+  "desc": "同上，×0.7",
+  "t1": {
+   "n": 422,
+   "brier": 0.1844,
+   "auc": 0.868,
+   "mean_pred": 0.445,
+   "actual": 0.588,
+   "loss_won_median": 8,
+   "turn2_6_loss_sim": 9.9,
+   "turn2_6_loss_actual": 7.1,
+   "turn2_6_dmg_sim": 30.7,
+   "turn2_6_dmg_actual": 29.9
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.0939,
+   "auc": 0.955,
+   "mean_pred": 0.534,
+   "actual": 0.602,
+   "loss_won_median": 3.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ },
+ {
+  "run": "k05",
+  "desc": "同上，×0.5（100 样本）",
+  "t1": {
+   "n": 422,
+   "brier": 0.1826,
+   "auc": 0.867,
+   "mean_pred": 0.451,
+   "actual": 0.588,
+   "loss_won_median": 7.0,
+   "turn2_6_loss_sim": 9.3,
+   "turn2_6_loss_actual": 7.2,
+   "turn2_6_dmg_sim": 29.0,
+   "turn2_6_dmg_actual": 29.8
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.0921,
+   "auc": 0.955,
+   "mean_pred": 0.531,
+   "actual": 0.602,
+   "loss_won_median": 3.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ },
+ {
+  "run": "k03",
+  "desc": "同上，×0.3",
+  "t1": {
+   "n": 422,
+   "brier": 0.194,
+   "auc": 0.862,
+   "mean_pred": 0.437,
+   "actual": 0.588,
+   "loss_won_median": 6.0,
+   "turn2_6_loss_sim": 8.6,
+   "turn2_6_loss_actual": 7.2,
+   "turn2_6_dmg_sim": 26.0,
+   "turn2_6_dmg_actual": 29.9
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.0988,
+   "auc": 0.955,
+   "mean_pred": 0.516,
+   "actual": 0.602,
+   "loss_won_median": 2.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ },
+ {
+  "run": "final",
+  "desc": "同上，×0.5（200 样本，最终）",
+  "t1": {
+   "n": 422,
+   "brier": 0.1821,
+   "auc": 0.866,
+   "mean_pred": 0.452,
+   "actual": 0.588,
+   "loss_won_median": 7,
+   "turn2_6_loss_sim": 9.3,
+   "turn2_6_loss_actual": 7.2,
+   "turn2_6_dmg_sim": 29.0,
+   "turn2_6_dmg_actual": 29.8
+  },
+  "t5": {
+   "n": 412,
+   "brier": 0.0916,
+   "auc": 0.957,
+   "mean_pred": 0.531,
+   "actual": 0.602,
+   "loss_won_median": 3.0,
+   "turn2_6_loss_sim": null,
+   "turn2_6_loss_actual": null,
+   "turn2_6_dmg_sim": null,
+   "turn2_6_dmg_actual": null
+  }
+ }
+]

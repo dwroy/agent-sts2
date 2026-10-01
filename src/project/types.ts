@@ -89,6 +89,8 @@ export interface ScreenMemory {
   fightStart?: { fight: string; maxHp: number };
   /** The fight's encounter (first enemy ids seen, sorted, "+"-joined) for the rollout facts (rollout-live.ts). */
   rolloutEncounter?: { fight: string; enc: string };
+  /** B2 (src/sim/boss-lines.ts): the whole-fight simulation's wall clock spent this boss turn (its budget over re-plans). */
+  bossLines?: { turn: string; spentMs: number };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
@@ -195,6 +197,8 @@ export interface ScreenMemory {
   shopPlan?: import("../screens/shop.js").ShopPlan;
   /** The deck card(s) a one-shot plan named for the selection screen its action opens (screens/oneshot.ts). */
   pendingPick?: import("../screens/oneshot.js").PendingPick;
+  /** The card a one-shot plan named that its selection screen did not list (selection.ts pickNotOfferedNote). */
+  pickNotOffered?: { runId: string; floor: number | null; task: string; name: string };
   /** visitKey of a one-shot question whose answer was unusable: that visit is asked step by step. */
   oneshotFailed?: string;
   /** One-shot plans played in this run (their references count up). */
@@ -301,7 +305,7 @@ export interface ResolvedAction {
    * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
    * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
    */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string> };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue };
   /**
    * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
    * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.
@@ -374,6 +378,12 @@ export interface AskDecision {
     plan?: { resolve(json: Record<string, unknown>): ResolvedAction | { invalid: string } };
     /** Deck card ids the question offers beyond the screen's own (cards to smith or remove): the knowledge slice's offered cards. */
     offeredCards?: string[];
+    /**
+     * The options as the screen built them (key, action, summary): what each one does to the deck or HP, for facts added
+     * after the question is built (B3: the act boss simulated with each option's deck, src/sim/build-sim-facts.ts). A
+     * function, so it never reaches the logs or the question.
+     */
+    options?: () => { key: string; intent: ActionRequest; summary: JsonValue }[];
   };
 }
 

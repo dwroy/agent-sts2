@@ -17,6 +17,7 @@ import {
   bossClock,
   bossClockJson,
   bossHp,
+  bossHpParts,
   bossLossPerTurn,
   bossMechanic,
   bossNote,
@@ -349,6 +350,29 @@ describe("expected boss entry HP: current HP plus the pre-boss rest's heal", () 
 
 describe("boss HP and HP loss a turn from the monster DB at the run's ascension", () => {
   const profile = (id: string) => bossProfile(`${id}_BOSS`)!;
+
+  it("the note shows the boss's own HP apart from what its mechanic adds (fix-queue-v4 #11: HFNEL0CRKF96 F17 \"270 (A8)\")", () => {
+    // A fixture DB (the real one is refreshed every run): the Giant 250 at A8, the Kin's priest 199 at A9.
+    setMonsterDbForTests({
+      bosses: {
+        WATERFALL_GIANT: { "8": { fights: 30, parts: { WATERFALL_GIANT: { median: 250, n: 30 } } } },
+        THE_KIN: { "9": { fights: 12, parts: { KIN_PRIEST: { median: 199, n: 12 }, KIN_FOLLOWER: { median: 124, n: 12 } } } },
+      },
+      encounters: {},
+      monsters: {},
+    } as never);
+    try {
+      expect(bossHpParts(profile("WATERFALL_GIANT"), 8)).toEqual({ body: 250, added: 20 });
+      expect(bossHp(profile("WATERFALL_GIANT"), 8)).toBe(270);
+      const giant = bossClock(mapState(starter(), "WATERFALL_GIANT_BOSS", { ascension: 8, floor: 10 }), testKnowledge, 80)!;
+      expect(giant.hpNote).toMatch(/^250 \(A8\) \+ 20 \(Siphon heals\)/);
+      expect(giant.hp).toBeGreaterThanOrEqual(270);
+      const kin = bossClock(mapState(starter(), "THE_KIN_BOSS", { ascension: 9, floor: 10 }), testKnowledge, 80)!;
+      expect(kin.hpNote).toMatch(/^199 \(A9\) \+ 60 \(the followers soaking hits\)/);
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
 
   it("HP: the DB's parts at this ascension (else the nearest logged), plus what the mechanic adds", () => {
     // Logged at A9: as logged; the Kin counts the priest plus ~60 of followers, the Queen her own HP plus ~60 block.

@@ -50,6 +50,7 @@ import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
+import { samplePotion, type PotionMcSource } from "./potion-mc.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
@@ -379,6 +380,11 @@ export interface EnemyMove {
    */
   shown?: boolean;
   /**
+   * Whole fights only (simulateFight; B4, docs/boss-sim.md §13): the Sandpit count the move starts on its user (the
+   * Insatiable's Liquify Ground: 4).
+   */
+  sandpit?: number;
+  /**
    * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
    * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
    * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
@@ -389,6 +395,11 @@ export interface EnemyMove {
   selfPowers?: Partial<Record<EnemySelfPower, number>>;
   /** HP it heals itself (Waterfall Giant's Siphon, Knowledge Demon's Ponder; rollout-live healOf). */
   heal?: number;
+  /**
+   * Damage a hit gains with each use (the Waterfall Giant's Pressure Gun: A8 20, 25, 30; monster-db moveBaseDamages).
+   * Whole fights only (simulateFight): a 5-turn window sees one use.
+   */
+  growth?: number;
   /**
    * Status cards it puts in our piles (monster DB status_cards, status_card_ids, status_card_pile): Soul
    * Fysh's Beckon 2, Vantom's Dismember, Chomper's Screech 3 … `cardId` null when the DB does not know
@@ -427,6 +438,11 @@ export interface EnemyTable {
   moves: Record<string, EnemyMove>;
   /** Successor counts per move. */
   next: Record<string, Record<string, number>>;
+  /**
+   * A Shriek / Plow threshold the enemy gets later in the fight (the Ceremonial Beast's Plow 150, A9 160: first seen
+   * on turn 2, after Stamp): its amount and the fight turn it is up from. Whole fights arm it then (simulateFight).
+   */
+  shriekFrom?: { amount: number; turn: number };
 }
 
 /** The enemy behind each solver enemy (same index). */
@@ -447,6 +463,23 @@ export interface RolloutOptions {
   seed?: number;
   /** Node cap of the fast policy's solver call. */
   policyNodes?: number;
+  /** The fast policy's damage weight times this (SolverInput.damageScale; the whole-fight simulator's knob). Unset: 1. */
+  policyDamageScale?: number;
+  /**
+   * The whole-fight simulator's policy only (src/sim/boss-sim.ts, docs/boss-sim.md B1.5; never set by the live planner or
+   * the rollout): the policy's HP weight times this (SolverInput.hpScale). Unset: 1.
+   */
+  policyHpScale?: number;
+  /**
+   * The whole-fight policy only: the HP weight also times (1 + policyThreat x the enemies' attack this turn / our HP), so
+   * a turn whose hit is large against the HP left blocks more, as the logged boss fights did. Unset: 0.
+   */
+  policyThreat?: number;
+  /**
+   * The whole-fight simulator's pre-fight start only (simulateFight with no line; boss-sim syntheticStart): cards drawn
+   * from the shuffled draw pile into the hand before the policy plays the first turn. Unset: 0 (the hand as given).
+   */
+  drawFirst?: number;
   handSize?: number;
   /** Clock in ms (injectable for tests). */
   now?: () => number;
@@ -502,6 +535,31 @@ export interface RolloutInput {
    * of 20 third turns started with exactly 18, every other turn with none): the amount and that turn.
    */
   relicBlock?: { amount: number; turn: number }[];
+  /**
+   * Whole fights only (simulateFight; the rollout and the live planner never read it): relics whose energy or block
+   * comes on given fight turns and that relicEnergy / relicBlock leave out (rollout-live fightRelicsOf: Candelabra's 2
+   * energy on turn 2, Chandelier's 3 on turn 3, Happy Flower's 1 every 3rd turn, Horn Cleat's 14 block on turn 2).
+   */
+  fightRelics?: {
+    energy: { amount: number; turn: number }[];
+    block: { amount: number; turn: number }[];
+    /**
+     * B2 (whole fights only): Pendulum's extra draws on given turns (logged: every 3rd turn, 1 card), Orichalcum's end-of-turn
+     * block when the turn left none (6), Ripple Basin's when no Attack was played (4), Sturdy Clamp's block kept into the
+     * next turn (up to 10), Ice Cream's unspent energy carried over.
+     */
+    draws?: { amount: number; turn: number }[];
+    orichalcum?: number;
+    rippleBasin?: number;
+    blockKeep?: number;
+    iceCream?: boolean;
+  };
+  /**
+   * Whole fights only (B2): the random potions held (potion-mc sources: card-choice potions' pools, draw potions). Each
+   * later turn a held one is a new sample of it, as potion-mc draws them: a random offer of 3 cards from the pool, or
+   * the top cards of this sample's own draw pile; the hand's card for it (card-model's expected value) otherwise.
+   */
+  randomPotions?: PotionMcSource[];
   /**
    * What an enemy spawns when it dies, by its id (monster-db ON_DEATH_SPAWNS: the Phrog Parasite's 4 Wrigglers,
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
@@ -861,6 +919,24 @@ interface SimEnemy {
    * Knight 15, 15, 14, 13).
    */
   plating: number;
+  /**
+   * Whole fights only (simulateFight; undefined in the 5-turn rollout): Asleep turns left (Lagavulin Matriarch,
+   * fightNextMove), whether it lost HP this turn (wakes a sleeper), its phase (PHASE_MOVES index) and the hits its
+   * growing move has gained (GROWING_HITS).
+   */
+  asleep?: number;
+  hurt?: boolean;
+  phase?: number;
+  extraHits?: number;
+  /** Uses of each growing move so far (EnemyMove.growth). */
+  uses?: Record<string, number>;
+  /** The Knowledge Demon's Curse of Knowledge uses so far (whole fights: KNOWLEDGE_CURSES at most). */
+  curses?: number;
+  /**
+   * Whole fights: this enemy's own random stream for its moves (seeded by the sample and its board index), so two
+   * lines compared on the same sample see the same enemy moves however differently they drew and played.
+   */
+  random?: () => number;
   powers: Record<string, number>;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
@@ -1037,6 +1113,9 @@ export interface TurnRecord {
   /** The potions this turn drank (ids), and their cost in HP (the plan's outcome.potionCost; potion-cost.ts). */
   drunk?: string[];
   potionCost?: number;
+  /** Whole fights only (simulateFight): the Power cards played this turn (ids) and the block the line gained. */
+  powers?: string[];
+  blockGained?: number;
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
@@ -1044,8 +1123,11 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
-  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits: Math.max(1, m.hits) }];
-  return [{ damage: Math.max(0, Math.floor((m.damage + enemy.strength + enemy.vigor) * scale)), hits: Math.max(1, m.hits) }];
+  // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.
+  const hits = Math.max(1, m.hits) + (move === GROWING_HITS[enemy.id] ? enemy.extraHits ?? 0 : 0);
+  const grown = m.growth && move ? m.growth * (enemy.uses?.[move] ?? 0) : 0;
+  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits }];
+  return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.strength + enemy.vigor) * scale)), hits }];
 }
 
 /** Some move of the enemy gives it this power (EnemyMove.selfPowers). */
@@ -1064,13 +1146,14 @@ export function usualMove(table: EnemyTable | undefined): string | null {
 /** The move-model state after an enemy's stun (the Bowlbug Rock's Imbalanced). */
 const STUNNED_MOVE = "STUNNED";
 
-function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number, exclude?: string): string | null {
+function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number, exclude?: string, allowed?: (move: string) => boolean): string | null {
   if (!table || !move) return move;
   const successors = table.next[move];
   if (!successors) return move;
   // An Imbalanced enemy's stun comes from our block, not by chance (exclude "STUNNED"), unless nothing else follows.
+  // A whole fight's script (fightNextMove) keeps only the moves `allowed` now, unless none follows.
   const all = Object.entries(successors);
-  const kept = exclude ? all.filter(([m]) => m !== exclude) : all;
+  const kept = all.filter(([m]) => m !== exclude && (!allowed || allowed(m)));
   const entries = kept.length > 0 ? kept : all;
   const total = entries.reduce((s, [, n]) => s + n, 0);
   let r = random() * total;
@@ -1079,6 +1162,74 @@ function nextMove(table: EnemyTable | undefined, move: string | null, random: ()
     if (r < 0) return m;
   }
   return entries[entries.length - 1]![0];
+}
+
+// ---------------------------------------------------------------- whole-fight scripts (src/sim/boss-sim.ts)
+
+/**
+ * Moves an enemy only makes once it is dead: a Waterfall Giant husk's Explode, the Test Subject's Respawn into its
+ * last phase. The move model has them after the move of the turn it was killed (the Giant: ~10% after every move),
+ * which a 5-turn window seldom reaches and a whole fight does (a living Giant "exploding" on turn 9). A whole-fight
+ * simulation never picks them for a living enemy (the husk's blast is enemyDown's).
+ */
+export const DEATH_MOVES: Record<string, readonly string[]> = { WATERFALL_GIANT: ["EXPLODE_MOVE"], TEST_SUBJECT: ["RESPAWN_MOVE"] };
+
+/**
+ * A phase boss's moves by phase (logged A7-A9 Test Subject: Bite / Skull Bash at 111 HP, Multi Claw at 212, then
+ * Lacerate > Big Pounce > Burning Growl at 313). The move model mixes them (Bite -> Multi Claw 45%: the turn phase 1
+ * died); a whole fight keeps each phase to its own moves and starts the next phase at its first.
+ */
+export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
+  TEST_SUBJECT: [["BITE_MOVE", "SKULL_BASH_MOVE"], ["MULTI_CLAW_MOVE"], ["PHASE3_LACERATE_MOVE", "BIG_POUNCE", "BURNING_GROWL_MOVE"]],
+};
+
+/** Moves that gain a hit each use (Multi Claw: logged 10x3, 10x4, … 10x7 in one phase 2): the move and its enemy. */
+export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
+
+/**
+ * B4 (docs/boss-sim.md §13): the Knowledge Demon's Curse of Knowledge, 3 uses a fight (logged on turns 1, 5 and 9 only,
+ * 132 uses in 52 fights; after the third, Ponder is followed by Slap: turns 13, 16). The move model's Ponder -> Curse 91%
+ * gave long fights a 4th and 5th curse.
+ */
+export const KNOWLEDGE_CURSES = 3;
+
+/**
+ * Status cards a move shuffles into the draw pile, of the ones it adds (the rest go to the move's pile): the Insatiable's
+ * Liquify Ground, 6 Frantic Escapes, 3 into the draw pile and 3 into the discard pile (46 of 46 logged fights at turn 2:
+ * draw + hand 3, discard 3; the monster DB records the discard pile only).
+ */
+export const STATUS_INTO_DRAW: Record<string, number> = { LIQUIFY_GROUND_MOVE: 3 };
+
+/**
+ * The next move in a whole fight: the move model's successors, but where the game's script depends on the fight's
+ * state and not on the last move alone (logged A8 move sequences, 2026-09-30):
+ *  - Ceremonial Beast: Plow again until the stun at its Plow threshold (then STUNNED > Beast Cry, applyPlan's shriek);
+ *    the model's Plow -> Beast Cry 27% is the stun turn;
+ *  - the Queen: Burn Bright For Me while the Torch Head Amalgam lives, Off With Your Head once it is dead;
+ *  - Lagavulin Matriarch: Sleep while Asleep lasts (3 enemy turns), Slash the turn after the first HP it loses; awake,
+ *    its Plating and block are gone;
+ *  - never a death move (DEATH_MOVES) or another phase's move (PHASE_MOVES).
+ */
+function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string): string | null {
+  if (e.id === "CEREMONIAL_BEAST" && e.move === "PLOW_MOVE" && e.shriekArmed) return "PLOW_MOVE";
+  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  // B4: no fourth curse; the move model's Ponder -> Slap is what the logged fights do after the third.
+  if (e.id === "KNOWLEDGE_DEMON" && (e.curses ?? 0) >= KNOWLEDGE_CURSES) {
+    const next = nextMove(table, e.move, random, exclude, (m) => m !== "CURSE_OF_KNOWLEDGE_MOVE");
+    return next === "CURSE_OF_KNOWLEDGE_MOVE" ? "SLAP_MOVE" : next;
+  }
+  if (e.asleep !== undefined && e.asleep > 0) {
+    e.asleep = e.hurt ? 0 : e.asleep - 1;
+    if (e.asleep > 0) return e.move;
+    // Awake: its sleeping Plating is gone with its block (logged Matriarch: Plating 12, block 12/12/11 on T1-T3, 0 on T4).
+    e.plating = 0;
+    e.block = 0;
+    const awake = nextMove(table, e.move, random, exclude, (m) => m !== e.move && m !== STUNNED_MOVE);
+    return awake === e.move ? usualMove(table) : awake;
+  }
+  const dead = DEATH_MOVES[e.id] ?? [];
+  const phase = PHASE_MOVES[e.id]?.[e.phase ?? 0];
+  return nextMove(table, e.move, random, exclude, (m) => !dead.includes(m) && (!phase || phase.includes(m)));
 }
 
 function withStrength(card: CardModel, player: SimPlayer, index: number, targets: number[]): CardModel {
@@ -1160,7 +1311,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
 }
 
 /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
-function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[]): void {
+function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[], fullFight = false): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
     // Waterfall Giant: a husk that explodes at the end of our next turn (turn-solver explodesNext).
     e.hp = HUSK_HP;
@@ -1200,6 +1351,13 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
       }
     }
     e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
+    // A whole fight: the next phase's own moves, from its first (Multi Claw at phase 2, Lacerate at phase 3).
+    const phases = PHASE_MOVES[e.id];
+    if (fullFight && phases) {
+      e.phase = Math.min(phases.length - 1, (e.phase ?? 0) + 1);
+      e.move = phases[e.phase]![0] ?? e.move;
+      e.extraHits = 0;
+    }
   } else {
     e.alive = false;
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
@@ -1216,12 +1374,13 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
  * start-of-turn AoE (Inferno per loss event, Mercury Hourglass) through each enemy's block. The HP those
  * losses cost is already in the line's outcome (the solver's startTurnHpLoss). Returns the damage dealt.
  */
-function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput): number {
+function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input: RolloutInput, fullFight = false): number {
   player.plating = Math.max(0, player.plating - 1);
   player.block += player.mantle;
   // A relic's block on this fight turn (Captain's Wheel on turn 3): `turn` is the one that just ended.
   const fightTurn = (input.solver.turn ?? input.meta.t) + turn + 1;
   for (const relic of input.relicBlock ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
+  if (fullFight) for (const relic of input.fightRelics?.block ?? []) if (relic.turn === fightTurn) player.block += relic.amount;
   // Self-Forming Clay's block for the last turn's HP losses.
   player.block += player.clayNext;
   player.clayNext = 0;
@@ -1252,8 +1411,9 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     const lost = Math.min(e.hp, through);
     e.hp -= lost;
     dealt += lost;
+    if (fullFight && lost > 0) e.hurt = true;
     if (e.hp <= (e.base.shriek ?? 0)) e.shriekArmed = false;
-    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies, fullFight);
   }
   return dealt;
 }
@@ -1261,6 +1421,59 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
 /** Energy the relics give at the start of fight turn `turn` (RolloutInput.relicEnergy). */
 function relicEnergyAt(input: RolloutInput, turn: number): number {
   return (input.relicEnergy ?? []).reduce((sum, relic) => sum + (turn >= relic.from ? relic.amount : 0), 0);
+}
+
+/** Whole fights: the one-turn energy relics' energy on fight turn `turn` (RolloutInput.fightRelics). */
+function fightRelicEnergyAt(input: RolloutInput, turn: number): number {
+  return (input.fightRelics?.energy ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
+}
+
+/** Whole fights (B2): the end-of-turn block relics for the policy's solver (turn-solver PlayerSim.orichalcum / rippleBasin). */
+function endBlockRelics(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "rippleBasin"> {
+  const relics = input.fightRelics;
+  return { ...(relics?.orichalcum ? { orichalcum: relics.orichalcum } : {}), ...(relics?.rippleBasin ? { rippleBasin: relics.rippleBasin } : {}) };
+}
+
+/** Whole fights (B2): Pendulum's extra draws on a fight turn. */
+function fightRelicDrawsAt(input: RolloutInput, turn: number): number {
+  return (input.fightRelics?.draws ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
+}
+
+/** Draw potions whose only random part is which cards they draw (card-model DRAW_POTIONS without a special). */
+const PLAIN_DRAW_POTIONS = new Set(["SWIFT_POTION", "CLARITY", "CURE_ALL"]);
+
+/**
+ * Whole fights (B2): each random potion held (RolloutInput.randomPotions) as a new sample of it for this turn, as
+ * potion-mc draws them: a card-choice potion's offer of 3 from its pool (samplePotion), from a stream of its own (the
+ * sample's seed, the slot, the turn: the same offer for every line of a sample); a plain draw potion's cards the next
+ * ones on this sample's draw pile after the draw cards' (knownDraws), known and playable like theirs (added to `known`).
+ * The policy's cost of drinking it (potionCost) stays. Others keep the hand's expected-value card.
+ */
+function sampledPotions(potions: CardModel[], input: RolloutInput, seed: number, turn: number, hand: CardModel[], piles: Piles, player: SimPlayer, targets: number[], known: Map<number, { card: CardModel; base: CardModel }> | undefined): CardModel[] {
+  const sources = input.randomPotions ?? [];
+  if (sources.length === 0) return potions;
+  return potions.map((card) => {
+    const [, id, slotText] = card.cardId.split(":");
+    const source = sources.find((entry) => entry.potionId === id && String(entry.slot) === slotText);
+    if (!source) return card;
+    if (source.kind === "choice") {
+      const random = rng((Math.imul(seed, 0x27d4eb2f) ^ Math.imul(source.slot + 1, 0x165667b1) ^ Math.imul(turn + 1, 0x9e3779b1)) >>> 0 || 1);
+      const sample = samplePotion({ ...source, cost: 0 }, hand, random);
+      return { ...sample, validTargets: card.validTargets, ...(card.potionCost !== undefined ? { potionCost: card.potionCost } : {}) };
+    }
+    if (!PLAIN_DRAW_POTIONS.has(source.potionId) || !known || source.noDraw) return card;
+    const count = Math.max(0, Math.round(card.draw));
+    const drawn: CardModel[] = [];
+    for (let k = 0; k < count && known.size < piles.draw.length; k += 1) {
+      const depth = known.size;
+      const base = piles.draw[piles.draw.length - 1 - depth]!;
+      const index = KNOWN_DRAW_INDEX + depth;
+      const model = { ...withStrength(base, player, index, targets), key: `drawn${index}` };
+      known.set(index, { card: model, base });
+      drawn.push(model);
+    }
+    return drawn.length > 0 ? { ...card, drawn, draw: card.draw - drawn.length } : card;
+  });
 }
 
 /** A debuff's turns: -1 (and any amount below 0) is for the fight. */
@@ -1312,6 +1525,50 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
   player.wasteAway += powers.WASTE_AWAY_POWER ?? 0;
 }
 
+/** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
+function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  const effect = POWER_EFFECTS[card.cardId];
+  if (effect && card.type === "Power") {
+    const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
+    if (effect.effect === "keepsBlock") player.keepsBlock = true;
+    else if (effect.effect === "unmovable") player.unmovable = true;
+    else if (effect.effect === "hellraiser") player.hellraiser = true;
+    else player[effect.effect] += amount;
+    playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
+  }
+  if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
+  if (card.plating) player.plating += card.plating;
+}
+
+/** The solver index of the first card a draw card is known to draw (knownDraws): past the hand, Music Box copies and potions. */
+export const KNOWN_DRAW_INDEX = 600;
+
+/**
+ * Whole fights: the cards each draw card in the hand draws, from the top of the sampled pile (in hand order, the first
+ * draw card the pile's first cards), as known cards (CardModel.drawn) instead of expected draws. The live loop re-plans
+ * once a draw card has drawn, so the drawn cards get played; the rollout's draws only cycled the pile, their use a flat
+ * value in the score, so a whole fight played ~0.8 cards a turn fewer than the logged boss fights (3.5 draw cards in a
+ * 23.5-card deck). Past what the pile holds, the rest stays an expected draw. The policy knows what it will draw (the
+ * loop decides the draw card blind): a little optimistic.
+ */
+function knownDraws(hand: CardModel[], piles: Piles, player: SimPlayer, targets: number[]): { hand: CardModel[]; known: Map<number, { card: CardModel; base: CardModel }> } {
+  const known = new Map<number, { card: CardModel; base: CardModel }>();
+  let depth = 0;
+  const out = hand.map((card) => {
+    if (card.type === "Potion" || card.draw <= 0 || card.drawn || card.drawsUntil) return card;
+    const drawn: CardModel[] = [];
+    for (let k = 0; k < card.draw && depth < piles.draw.length; k += 1, depth += 1) {
+      const base = piles.draw[piles.draw.length - 1 - depth]!;
+      const index = KNOWN_DRAW_INDEX + depth;
+      const model = { ...withStrength(base, player, index, targets), key: `drawn${index}` };
+      known.set(index, { card: model, base });
+      drawn.push(model);
+    }
+    return drawn.length > 0 ? { ...card, drawn, draw: card.draw - drawn.length } : card;
+  });
+  return { hand: out, known };
+}
+
 /** Apply a played line's outcome to the simulated state; returns the turn record. */
 function applyPlan(
   turn: number,
@@ -1324,6 +1581,10 @@ function applyPlan(
   input: RolloutInput,
   random: () => number,
   playerPowers: Record<string, number>,
+  /** A whole fight (simulateFight): the enemies' moves follow fightNextMove's scripts. */
+  fullFight = false,
+  /** Whole fights: the cards the hand's draw cards draw, known from the pile (knownDraws), by their solver index. */
+  known?: Map<number, { card: CardModel; base: CardModel }>,
 ): TurnRecord {
   const o = plan.outcome;
   const startHp = player.hp;
@@ -1332,6 +1593,9 @@ function applyPlan(
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
+  // Known draws (whole fights) played this turn that leave the fight or the piles (exhausted, a Power).
+  const knownGone = new Set<CardModel>();
+  const knownPlayed = new Set<number>();
   // Thrashes that took one of several Attacks at random: put back once the pick is made (below).
   const thrashPending: { back: CardModel; grown: number; picks: { strength: number }[] }[] = [];
   for (const step of plan.steps) {
@@ -1354,6 +1618,15 @@ function applyPlan(
     }
     const at = hand.findIndex((card, i) => !played.has(i) && card.index === step.cardIndex && card.cardId === step.cardId);
     if (at < 0) {
+      // A card a draw card drew this turn (known from the pile, whole fights): its lasting effects; exhausted or a
+      // Power, it does not go to the discard pile with the others drawn (below).
+      const drawn = known?.get(step.cardIndex);
+      if (drawn && drawn.card.cardId === step.cardId && !knownPlayed.has(step.cardIndex)) {
+        knownPlayed.add(step.cardIndex);
+        applyLasting(drawn.card, player, playerPowers);
+        if (drawn.card.exhausts || drawn.card.type === "Power") knownGone.add(drawn.base);
+        continue;
+      }
       // Music Box's copy of the turn's first Attack (turn-solver musicBoxCopy, index MUSIC_BOX_INDEX + the original's):
       // not a card of the hand, but played it goes to the discard pile as an Ethereal copy and can be drawn again
       // (YVYZ F48: T7 drew back the T5 Pommel Strike copy). Unplayed, it is exhausted at the turn's end: gone.
@@ -1363,17 +1636,7 @@ function applyPlan(
     }
     played.add(at);
     const card = hand[at]!;
-    const effect = POWER_EFFECTS[card.cardId];
-    if (effect && card.type === "Power") {
-      const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
-      if (effect.effect === "keepsBlock") player.keepsBlock = true;
-      else if (effect.effect === "unmovable") player.unmovable = true;
-      else if (effect.effect === "hellraiser") player.hellraiser = true;
-      else player[effect.effect] += amount;
-      playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
-    }
-    if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
-    if (card.plating) player.plating += card.plating;
+    applyLasting(card, player, playerPowers);
     if (card.exhausts || card.type === "Power") continue;
     // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
     const back = handBase[at] ?? card;
@@ -1425,7 +1688,7 @@ function applyPlan(
   const usedDraws = keep ? Math.max(0, Math.floor(o.energyLeft)) : Number.POSITIVE_INFINITY;
   for (let i = 0; i < o.cardsDrawn; i += 1) {
     const card = drawOne(piles, random);
-    if (!card || i < exhaustedDraws) continue;
+    if (!card || i < exhaustedDraws || knownGone.has(card)) continue;
     (i - exhaustedDraws < usedDraws || card.ethereal ? piles.discard : player.retained).push(card);
   }
   // Dark Embrace: each ethereal card exhausted at the end of the turn draws a card, discarded with the hand
@@ -1476,6 +1739,7 @@ function applyPlan(
     if (!a || !e.alive) continue;
     const hit = a.hp < e.hp;
     e.hp = a.hp - (a.hp > 0 && !a.husk ? Math.min(a.hp, retaliated.get(e.index) ?? 0) : 0);
+    if (fullFight) e.hurt = e.hurt === true || hit || e.hp < a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
     if (a.artifact !== undefined) e.artifact = a.artifact;
@@ -1489,7 +1753,7 @@ function applyPlan(
     e.strength += a.strengthGained ?? 0;
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
-    if (e.hp <= 0) enemyDown(e, turn, input, enemies);
+    if (e.hp <= 0) enemyDown(e, turn, input, enemies, fullFight);
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
@@ -1529,7 +1793,8 @@ function applyPlan(
     player.revives = player.revives.slice(spent);
   }
   // Barricade keeps block every turn; Blur N only at the start of the next N turns.
-  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : 0;
+  // Sturdy Clamp (whole fights, B2): up to its amount of the block left is kept.
+  player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : fullFight ? Math.min(input.fightRelics?.blockKeep ?? 0, o.blockWasted ?? 0) : 0;
   const died = !won && (o.dies || player.hp <= 0);
   // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
   if (!won && !died) {
@@ -1580,10 +1845,17 @@ function applyPlan(
         if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
         if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
         // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
-        // already there; ~800 logged fights had them added).
+        // already there; ~800 logged fights had them added). B4, whole fights: some of them into the draw pile.
         for (const status of m?.statusCards ?? []) {
           const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
-          if (card) addToPile(piles, card, status.count, status.pile, random);
+          const intoDraw = fullFight && e.move ? Math.min(status.count, STATUS_INTO_DRAW[e.move] ?? 0) : 0;
+          if (card && intoDraw > 0) addToPile(piles, card, intoDraw, "draw", random);
+          if (card) addToPile(piles, card, status.count - intoDraw, status.pile, random);
+        }
+        if (fullFight) {
+          // B4 whole-fight scripts: the Sandpit Liquify Ground starts, the curses used.
+          if (m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
+          if (e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
         }
         if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
@@ -1612,16 +1884,30 @@ function applyPlan(
       // move is the stun; otherwise never a stun (the move model's HEADBUTT -> STUNNED 110/367 was a free 30%
       // stun each turn whatever we blocked: KTRT1M2SVVL3 F23 T3, leaving the Rock alive read safer than killing it).
       const imbalanced = (e.powers["IMBALANCED_POWER"] ?? 0) > 0;
-      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", random) : nextMove(table, e.move, random);
+      // A whole fight draws each enemy's moves from its own stream (common random numbers across lines).
+      const pick = e.random ?? random;
+      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick) : nextMove(table, e.move, pick);
       else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
-      else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
+      else if (fullFight && !(e.burrowed && m && !m.burrows)) {
+        // The growing move's next use has a hit more (Multi Claw) or more damage (Pressure Gun); the script picks the next move.
+        if (e.move !== null && e.move === GROWING_HITS[e.id]) e.extraHits = (e.extraHits ?? 0) + 1;
+        if (e.move !== null && m?.growth) e.uses = { ...e.uses, [e.move]: (e.uses?.[e.move] ?? 0) + 1 };
+        e.move = fightNextMove(e, table, pick, enemies, imbalanced ? STUNNED_MOVE : undefined);
+      } else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
+      e.hurt = false;
+      // A Plow threshold that comes up later (the Beast's after Stamp): armed from its turn on, once.
+      const later = fullFight ? table?.shriekFrom : undefined;
+      if (later && !(e.base.shriek ?? 0) && (input.solver.turn ?? input.meta.t) + turn + 1 >= later.turn) {
+        e.base = { ...e.base, shriek: later.amount };
+        e.shriekArmed = e.hp > later.amount;
+      }
     }
     // Demise: HP lost at the end of each of its turns, stunned or not, until it dies (the solver only priced about
     // three turns of it; ARKG3JFT26HC F17: 9 a turn on the Soul Fysh never counted in any later turn).
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined || e.demise <= 0) continue;
       e.hp -= e.demise;
-      if (e.hp <= 0) enemyDown(e, turn, input, enemies);
+      if (e.hp <= 0) enemyDown(e, turn, input, enemies, fullFight);
     }
     won = allDown();
     // Rampart (Living Shield, RAMPART_POWER: 「在玩家回合开始时，高塔炮手获得25点格挡」): the Turret Operator's
@@ -1669,7 +1955,7 @@ function applyPlan(
   const carried = player.startDealt;
   player.startDealt = 0;
   if (!won && !died) {
-    player.startDealt = startOfTurn(turn, player, enemies, input);
+    player.startDealt = startOfTurn(turn, player, enemies, input, fullFight);
     won = allDown();
   }
   // The potions this turn drinks and their cost (the solver's outcome: potion-cost.ts), for the line's effective loss.
@@ -1684,6 +1970,13 @@ function applyPlan(
     ...(o.revived ? { revived: o.revived.sources.length } : {}),
     hpLeft,
     ...(drunk.length > 0 ? { drunk, potionCost: o.potionCost ?? 0 } : {}),
+    // Whole fights (B2's fight plan): the Powers played and the block gained this turn.
+    ...(fullFight
+      ? {
+          powers: plan.steps.map((step) => hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId) ?? known?.get(step.cardIndex)?.card).filter((card): card is CardModel => card?.type === "Power").map((card) => card.cardId),
+          blockGained: o.blockGained,
+        }
+      : {}),
   };
 }
 
@@ -1723,7 +2016,8 @@ interface Budget {
 /** One sample of one line: the line itself, then up to horizon-1 policy turns. Returns the per-turn records. */
 function simulate(
   input: RolloutInput,
-  plan: Plan,
+  /** The start turn's line; null (whole fights only, simulateFight): the policy plays the start turn too. */
+  plan: Plan | null,
   horizon: number,
   seed: number,
   budget: Budget,
@@ -1733,6 +2027,8 @@ function simulate(
   used: { depth: number } = { depth: 0 },
   /** The "no potion this fight" line (RolloutOptions.noPotionLine): the later turns hold no potion either. */
   noPotions = false,
+  /** A whole fight (simulateFight): the enemies' scripts (fightNextMove), sleepers and phases carried turn to turn. */
+  fullFight = false,
 ): TurnRecord[] | null {
   const random = rng(seed);
   const s = input.solver;
@@ -1859,6 +2155,8 @@ function simulate(
       // Killed before this decision, it revives on this enemy turn (QUG1DSDARAXU F23 T3: the rollout left
       // it out and read "4.9 loss, win 97%"; it came back at 21 HP and T4 cost 12).
       ...(e.illusion && e.hp <= 0 ? { reviveIn: 1 } : {}),
+      // A whole fight: a sleeper's Asleep turns, a phase boss's phase (from its max HP) and its growing move's hits.
+      ...(fullFight ? { ...fullFightState(info, e, input), random: rng((Math.imul(seed, 0x9e3779b1) ^ Math.imul(e.index + 1, 0x85ebca6b)) >>> 0) } : {}),
     };
   });
   const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
@@ -1878,11 +2176,44 @@ function simulate(
   };
   // Withering Presence counts every card played in the fight: the later turns go on from this line's count.
   const cardPlays = (line: Plan) => line.steps.filter((step) => !isPotion(step)).length;
-  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(plan);
-  // Turn 0: the candidate line as the solver scored it.
-  records.push(applyPlan(0, plan, s.hand, input.piles.handBase, player, enemies, piles, input, random, powers));
+  // Turn 0: the candidate line as the solver scored it. None (a whole fight from the policy's own start turn): the policy
+  // plays it from the hand given, after drawing `drawFirst` cards into it (a pre-fight start's hand is empty).
+  let first = plan;
+  let firstHand = s.hand;
+  let firstBase = input.piles.handBase;
+  let firstKnown: Map<number, { card: CardModel; base: CardModel }> | undefined;
+  if (!first) {
+    const targets = enemies.filter((e) => e.alive).map((e) => e.index);
+    const cards = s.hand.filter((card) => card.type !== "Potion");
+    const bases = s.hand.map((card, i) => [card, input.piles.handBase[i] ?? null] as const).filter(([card]) => card.type !== "Potion").map(([, b]) => b);
+    for (let i = 0; i < (opts.drawFirst ?? 0) && cards.length < HAND_LIMIT; i += 1) {
+      const card = drawOne(piles, random);
+      if (!card) break;
+      bases.push(card);
+      cards.push(withStrength(card, player, cards.length, targets));
+    }
+    const drawing = fullFight ? knownDraws(cards, piles, player, targets) : null;
+    const potions = noPotions ? [] : fullFight ? sampledPotions(held, input, seed, 0, cards, piles, player, targets, drawing?.known) : held;
+    firstHand = [...(drawing?.hand ?? cards), ...potions];
+    firstBase = [...bases, ...potions.map(() => null)];
+    firstKnown = drawing?.known;
+    const { drawPile: _d, ...rest } = s;
+    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...policyWeights(opts, s.player, s.enemies), hand: firstHand, maxNodes: policyNodes });
+    budget.policyTurns += 1;
+    budget.policyNodes += solved.nodes;
+    first = solved.plans[0] ?? null;
+    if (!first) return records;
+  }
+  let witherPlayed = (s.wither?.played ?? 0) + cardPlays(first);
+  // Whole fights (B2): Surrounded's facing carried turn to turn (the last enemy a line targeted; the solver's own rule).
+  let facing: number | null = s.player.facing ?? null;
+  const turnTo = (line: Plan) => {
+    for (const step of line.steps) if (typeof step.target === "number") facing = step.target;
+  };
+  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
+  turnTo(first);
   timeUp(0);
-  drink(plan);
+  drink(first);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     if (budget.now() - budget.start > deadline) return null;
@@ -1900,7 +2231,8 @@ function simulate(
       hand.push(withStrength(card, player, hand.length, targets));
     }
     player.retained = [];
-    for (let i = 0; i < Math.max(0, handSize + clarity - player.mindRot) && hand.length < HAND_LIMIT; i += 1) {
+    const relicDraws = fullFight ? fightRelicDrawsAt(input, (s.turn ?? input.meta.t) + h) : 0;
+    for (let i = 0; i < Math.max(0, handSize + clarity + relicDraws - player.mindRot) && hand.length < HAND_LIMIT; i += 1) {
       const card = drawOne(piles, random);
       if (!card) break;
       handBase.push(card);
@@ -1915,6 +2247,10 @@ function simulate(
         ...(i < player.chains ? { soulbound: true } : {}),
       });
     }
+    // Surrounded (whole fights, B2): an enemy we do not face hits for +50%, as the game shows it (turn-solver backAttack
+    // takes it off when the line turns to it); the rollout keeps every later hit as the move model's.
+    const behind = (index: number, attacks: { damage: number; hits: number }[]) =>
+      fullFight && base.surrounded && facing !== null && index !== facing ? attacks.map((a) => ({ ...a, damage: Math.floor(a.damage * 1.5) })) : attacks;
     const sims: EnemySim[] = enemies
       .filter((e) => e.alive)
       .map((e) => ({
@@ -1937,12 +2273,14 @@ function simulate(
         vitalSpark: e.vitalSpark,
         // Burrowed is this simulated turn's own state, not the decision's (laterTurnSim drops the latter).
         burrowed: e.burrowed,
+        // A whole fight's sleeper still asleep: the solver prices waking it (laterTurnSim drops the decision's).
+        ...(e.asleep !== undefined && e.asleep > 0 ? { asleep: e.asleep } : {}),
         // Shriek / Plow still to come (laterTurnSim drops the decision's).
         ...(e.shriekArmed && (e.base.shriek ?? 0) > 0 ? { shriek: e.base.shriek! } : {}),
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
-        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0)),
       }))
       // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
       // its next hit (about this one) saved.
@@ -1952,11 +2290,13 @@ function simulate(
         return imbalanced > 0 ? { ...sim, imbalanced } : sim;
       });
     for (const e of enemies) e.base = { ...e.base, attacks: sims.find((x) => x.index === e.index)?.attacks ?? [] };
+    // Ice Cream (whole fights, B2): the last turn's unspent energy carries over.
+    const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
       hp: player.hp,
       block: player.block,
-      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
+      energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) + carried : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
       strengthNow: player.strength,
@@ -1970,7 +2310,8 @@ function simulate(
       buffer: 0,
       vigor: 0,
       regen: player.regen,
-      facing: null,
+      facing: fullFight ? facing : null,
+      ...(fullFight ? endBlockRelics(input) : {}),
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
@@ -2023,18 +2364,84 @@ function simulate(
     const target = aim?.target;
     const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
     const wither = s.wither ? { wither: { ...s.wither, played: witherPlayed } } : {};
-    const solved = solveTurn({ ...rest, ...focus, ...wither, hand: [...hand, ...potions], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes });
+    const scale = policyWeights(opts, pSim, sims);
+    // A whole fight: the draw cards draw known cards (knownDraws), which the line can play.
+    const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
+    const played = drawing?.hand ?? hand;
+    const potionsNow = fullFight ? sampledPotions(potions, input, seed, h, played, piles, player, targets, drawing?.known) : potions;
+    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     const best = solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(h, best, [...hand, ...potions], handBase, player, enemies, piles, input, random, powers));
+    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    turnTo(best);
     witherPlayed += cardPlays(best);
     timeUp(h);
     drink(best);
   }
   return records;
+}
+
+/**
+ * The policy's weight knobs (turn-solver damageScale / hpScale) from the options: the whole-fight simulator's
+ * (policyDamageScale, policyHpScale, policyThreat); none of them set (the rollout, the live planner): nothing.
+ */
+export function policyWeights(opts: RolloutOptions, player: Pick<PlayerSim, "hp">, enemies: Pick<EnemySim, "attacks" | "hp">[]): { damageScale?: number; hpScale?: number } {
+  const out: { damageScale?: number; hpScale?: number } = {};
+  if (opts.policyDamageScale !== undefined) out.damageScale = opts.policyDamageScale;
+  const threat = opts.policyThreat ?? 0;
+  if (opts.policyHpScale === undefined && threat === 0) return out;
+  const incoming = enemies.reduce((sum, e) => sum + (e.hp > 0 ? e.attacks.reduce((s, a) => s + a.damage * a.hits, 0) : 0), 0);
+  out.hpScale = (opts.policyHpScale ?? 1) * (1 + (threat * incoming) / Math.max(1, player.hp));
+  return out;
+}
+
+/**
+ * A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits, the
+ * Knowledge Demon's curses used (B4: one per curse we hold; a Disintegration taken twice counts once).
+ */
+function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: RolloutInput): Pick<SimEnemy, "asleep" | "phase" | "extraHits" | "curses"> {
+  const id = info?.id ?? e.name;
+  const phases = PHASE_MOVES[id];
+  const asleep = info?.powers?.["ASLEEP_POWER"] ?? e.asleep ?? 0;
+  // Multi Claw shown now: its hits over the move's base are the uses before this one.
+  const table = input.tables[id];
+  const growing = GROWING_HITS[id];
+  const shownHits = growing && info?.move === growing ? Math.max(0, ...e.attacks.map((a) => a.hits)) : 0;
+  const baseHits = growing ? table?.moves[growing]?.hits ?? 0 : 0;
+  return {
+    ...(asleep > 0 ? { asleep } : {}),
+    ...(phases ? { phase: Math.max(0, phases.length - 1 - laterPhaseHps(e.maxHp, input.meta.asc).length) } : {}),
+    ...(growing ? { extraHits: Math.max(0, shownHits - baseHits) } : {}),
+    ...(id === "KNOWLEDGE_DEMON" ? { curses: KNOWLEDGE_CURSE_POWERS.filter((power) => (input.playerPowers[power] ?? 0) > 0).length } : {}),
+  };
+}
+
+/** The Knowledge Demon's curses (Curse of Knowledge puts one of them on us a use). */
+const KNOWLEDGE_CURSE_POWERS = ["SLOTH_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"];
+
+/** A whole-fight sample (simulateFight): the per-turn records and the policy's work. */
+export interface FightTrajectory {
+  records: TurnRecord[];
+  policyTurns: number;
+  policyNodes: number;
+}
+
+/**
+ * One sample of a whole fight (src/sim/boss-sim.ts): the given line as turn 1, then the policy (the solver with
+ * options.policyNodes) turn after turn until the fight is won, lost, out of time, or `maxTurns` turns were played.
+ * The rollout's own mechanics without its horizon, plus the whole-fight scripts (fightNextMove, PHASE_MOVES,
+ * GROWING_HITS, Asleep turns, each enemy's own move stream; `scripts` false leaves them out). No time budget: a pure
+ * function of the input, the line and the seed.
+ */
+export function simulateFight(input: RolloutInput, plan: Plan | null, maxTurns: number, seed: number, scripts = true, order: KillOrder | null = null): FightTrajectory {
+  const budget: Budget = { now: () => 0, start: 0, budgetMs: Infinity, policyTurns: 0, policyMs: 0, policyNodes: 0 };
+  // scripts = false: the rollout's simulation exactly, only without its horizon (the backtest's ablation). `order`: the
+  // later turns aim at its first group alive (the rollout's kill orders), null: the solver's own targets.
+  const records = simulate(input, plan, maxTurns, seed, budget, Infinity, order, { depth: 0 }, false, scripts) ?? [];
+  return { records, policyTurns: budget.policyTurns, policyNodes: budget.policyNodes };
 }
 
 interface SampleValue {

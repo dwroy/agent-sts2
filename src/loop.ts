@@ -36,6 +36,7 @@ import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMe
 import { createRunConfigLog } from "./telemetry/run-config.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
+import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
 
 export type LoopMode = "shadow" | "play";
 
@@ -80,6 +81,11 @@ export interface LoopOptions {
   restoreRun?: boolean;
   /** Backoff before each retry of a transient Jev failure (5xx/429/timeout); default 2/4/8/16 s. */
   jevRetryDelaysMs?: readonly number[];
+  /**
+   * BOSS_SIM_BUILD=on (B3): the runner that simulates the act boss for each option of a deck-building question DeepSeek
+   * decides (src/sim/build-sim-facts.ts); absent or null: the questions as they were.
+   */
+  buildSim?: BuildSimSetup | null;
 }
 
 export interface LoopStats {
@@ -722,9 +728,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekNote: Record<string, string> | undefined;
     /** DeepSeek's answer failed the consistency guard: both answers and how it was resolved. */
     let deepseekConsistency: JsonValue | undefined;
+    /** B3: the act boss simulation added to this DeepSeek question (its numbers and timing), for the log. */
+    let bossSimRecord: JsonValue | undefined;
     if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
       const spec = decision.deepseek;
-      const question = decision.questions[spec.question];
+      let question = decision.questions[spec.question];
       const memoKey = `${str(state.raw["run_id"])}|${state.run?.floor ?? ""}|${decision.label}|${JSON.stringify(question ?? null)}`;
       if (deepseekMemo && deepseekMemo.key === memoKey) {
         stats.debounced += 1;
@@ -744,6 +752,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           await sleep(pollIntervalMs);
           continue;
         }
+        // B3 (BOSS_SIM_BUILD=on): each option of a deck-building question with the act boss simulated on its deck.
+        if (options.buildSim) {
+          const simmed = await withBossSim(decision, env, options.buildSim);
+          if (simmed.record) {
+            decision = simmed.decision;
+            question = decision.kind === "ask" ? decision.questions[spec.question] : question;
+            bossSimRecord = simmed.record;
+            const r = simmed.record;
+            onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `failed (${String(r["error"])}), clock kept` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
+          }
+        }
+        if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
@@ -1220,6 +1240,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
+      ...(bossSimRecord === undefined ? {} : { boss_sim: bossSimRecord }),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
       // Combat: the rollout facts' timing and whether Jev picked the rollout's best line (rollout-live.ts).
       ...(resolved.log ?? {}),

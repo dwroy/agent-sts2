@@ -73,7 +73,7 @@ const fastClock = () => {
   return () => (t += 0.01);
 };
 
-describe("1. A saturated board ranks deaths first, then this turn's loss, before enemy HP left (CJ88575SQS6H F17 T2)", () => {
+describe("1. A saturated board ranks deaths first (CJ88575SQS6H F17 T2), then enemy HP left, before this turn's loss", () => {
   // Every line "expected further HP loss 50" = our HP, no sample won: saturated.
   const line = (name: string, turnLoss: number, over: Partial<LineEstimate>): LineEstimate =>
     ({
@@ -101,12 +101,12 @@ describe("1. A saturated board ranks deaths first, then this turn's loss, before
     expect(pickRolloutBest([again2, again1], 50).best).toBe(again1);
   });
 
-  it("the same deaths: the least HP lost this turn, then enemy HP left", () => {
+  it("the same deaths: the enemy HP left (the fight's progress), then this turn's loss (fix-queue-v4: CDR0Q6929CKR F33 T5)", () => {
     const blocks = line("blocks", 3, { deaths: 2, enemyHpLeft: 120 });
     const hits = line("hits", 9, { deaths: 2, enemyHpLeft: 90 });
-    expect(pickRolloutBest([hits, blocks], 50).best).toBe(blocks);
-    const a = line("a", 5, { deaths: 2, enemyHpLeft: 120 });
-    const b = line("b", 5, { deaths: 2, enemyHpLeft: 90 });
+    expect(pickRolloutBest([blocks, hits], 50).best).toBe(hits);
+    const a = line("a", 5, { deaths: 2, enemyHpLeft: 90 });
+    const b = line("b", 3, { deaths: 2, enemyHpLeft: 90.4 });
     expect(pickRolloutBest([a, b], 50).best).toBe(b);
   });
 

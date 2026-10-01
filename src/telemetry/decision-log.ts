@@ -72,6 +72,12 @@ export interface DecisionRecord {
   rollout?: JsonValue;
   /** Combat plan choice: Jev's pick was the rollout's best line (null: no pick, or no rollout). */
   rollout_best_chosen?: boolean | null;
+  /**
+   * The boss simulation behind this decision. Boss fights (B2, BOSS_SIM_LINES, src/sim/boss-lines.ts): the whole-fight
+   * simulation of the lines shown ({ms, samples, best, lines, plan, …}). Deck-building questions (B3, BOSS_SIM_BUILD,
+   * src/sim/build-sim-facts.ts): the act boss simulation the options carried (numbers and timing). One decision has one.
+   */
+  boss_sim?: JsonValue;
   /** The run the decision was made in (the state's run_id), so a restart can find its rows. */
   run_id?: string;
   /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */

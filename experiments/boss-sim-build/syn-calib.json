@@ -1,0 +1,408 @@
+{
+ "fights": 140,
+ "starts": {
+  "pre": {
+   "raw": {
+    "n": 140,
+    "actual_win": 0.593,
+    "mean_pred": 0.522,
+    "brier": 0.1585,
+    "auc": 0.852,
+    "buckets": [
+     {
+      "bucket": "0–20%",
+      "n": 49,
+      "pred": 0.041,
+      "actual": 0.184
+     },
+     {
+      "bucket": "20–40%",
+      "n": 13,
+      "pred": 0.322,
+      "actual": 0.615
+     },
+     {
+      "bucket": "40–60%",
+      "n": 7,
+      "pred": 0.51,
+      "actual": 0.571
+     },
+     {
+      "bucket": "60–80%",
+      "n": 15,
+      "pred": 0.695,
+      "actual": 0.733
+     },
+     {
+      "bucket": "80–100%",
+      "n": 56,
+      "pred": 0.945,
+      "actual": 0.911
+     }
+    ],
+    "worst_bucket_n20": 0.143,
+    "won_loss_err": {
+     "n": 81,
+     "median": 5,
+     "mean": 6.8,
+     "mae": 13.1,
+     "p10": -12,
+     "p90": 28,
+     "within5": 0.321
+    }
+   },
+   "calibrated": {
+    "n": 140,
+    "actual_win": 0.593,
+    "mean_pred": 0.61,
+    "brier": 0.1459,
+    "auc": 0.852,
+    "buckets": [
+     {
+      "bucket": "0–20%",
+      "n": 28,
+      "pred": 0.104,
+      "actual": 0.143
+     },
+     {
+      "bucket": "20–40%",
+      "n": 13,
+      "pred": 0.308,
+      "actual": 0.154
+     },
+     {
+      "bucket": "40–60%",
+      "n": 16,
+      "pred": 0.504,
+      "actual": 0.5
+     },
+     {
+      "bucket": "60–80%",
+      "n": 25,
+      "pred": 0.701,
+      "actual": 0.68
+     },
+     {
+      "bucket": "80–100%",
+      "n": 58,
+      "pred": 0.912,
+      "actual": 0.897
+     }
+    ],
+    "worst_bucket_n20": 0.039,
+    "won_loss_err": {
+     "n": 81,
+     "median": 5,
+     "mean": 6.8,
+     "mae": 13.1,
+     "p10": -12,
+     "p90": 28,
+     "within5": 0.321
+    }
+   },
+   "by_boss": {
+    "永恒镜": {
+     "n": 4,
+     "brier_cal": 0.131,
+     "pred_cal": 0.46,
+     "actual": 0.5
+    },
+    "仪式兽": {
+     "n": 11,
+     "brier_cal": 0.092,
+     "pred_cal": 0.79,
+     "actual": 0.82
+    },
+    "帝王蟹": {
+     "n": 11,
+     "brier_cal": 0.099,
+     "pred_cal": 0.18,
+     "actual": 0.18
+    },
+    "同族": {
+     "n": 13,
+     "brier_cal": 0.109,
+     "pred_cal": 0.79,
+     "actual": 0.77
+    },
+    "知识恶魔": {
+     "n": 17,
+     "brier_cal": 0.056,
+     "pred_cal": 0.57,
+     "actual": 0.65
+    },
+    "乐加维林族母": {
+     "n": 9,
+     "brier_cal": 0.132,
+     "pred_cal": 0.59,
+     "actual": 0.67
+    },
+    "女王": {
+     "n": 7,
+     "brier_cal": 0.113,
+     "pred_cal": 0.11,
+     "actual": 0.14
+    },
+    "灵魂鱼": {
+     "n": 19,
+     "brier_cal": 0.11,
+     "pred_cal": 0.88,
+     "actual": 0.84
+    },
+    "实验体": {
+     "n": 3,
+     "brier_cal": 0.519,
+     "pred_cal": 0.11,
+     "actual": 0.67
+    },
+    "贪得无厌者": {
+     "n": 13,
+     "brier_cal": 0.322,
+     "pred_cal": 0.74,
+     "actual": 0.38
+    },
+    "幻影墨": {
+     "n": 14,
+     "brier_cal": 0.088,
+     "pred_cal": 0.72,
+     "actual": 0.86
+    },
+    "瀑布巨兽": {
+     "n": 19,
+     "brier_cal": 0.231,
+     "pred_cal": 0.53,
+     "actual": 0.37
+    }
+   }
+  },
+  "syn": {
+   "raw": {
+    "n": 140,
+    "actual_win": 0.593,
+    "mean_pred": 0.518,
+    "brier": 0.1553,
+    "auc": 0.856,
+    "buckets": [
+     {
+      "bucket": "0–20%",
+      "n": 47,
+      "pred": 0.039,
+      "actual": 0.149
+     },
+     {
+      "bucket": "20–40%",
+      "n": 11,
+      "pred": 0.291,
+      "actual": 0.545
+     },
+     {
+      "bucket": "40–60%",
+      "n": 14,
+      "pred": 0.487,
+      "actual": 0.714
+     },
+     {
+      "bucket": "60–80%",
+      "n": 15,
+      "pred": 0.698,
+      "actual": 0.8
+     },
+     {
+      "bucket": "80–100%",
+      "n": 53,
+      "pred": 0.947,
+      "actual": 0.906
+     }
+    ],
+    "worst_bucket_n20": 0.11,
+    "won_loss_err": {
+     "n": 81,
+     "median": 6,
+     "mean": 7.4,
+     "mae": 13.0,
+     "p10": -10,
+     "p90": 28,
+     "within5": 0.284
+    }
+   },
+   "calibrated": {
+    "n": 140,
+    "actual_win": 0.593,
+    "mean_pred": 0.611,
+    "brier": 0.1451,
+    "auc": 0.856,
+    "buckets": [
+     {
+      "bucket": "0–20%",
+      "n": 26,
+      "pred": 0.1,
+      "actual": 0.154
+     },
+     {
+      "bucket": "20–40%",
+      "n": 15,
+      "pred": 0.315,
+      "actual": 0.133
+     },
+     {
+      "bucket": "40–60%",
+      "n": 15,
+      "pred": 0.508,
+      "actual": 0.467
+     },
+     {
+      "bucket": "60–80%",
+      "n": 30,
+      "pred": 0.703,
+      "actual": 0.7
+     },
+     {
+      "bucket": "80–100%",
+      "n": 54,
+      "pred": 0.915,
+      "actual": 0.907
+     }
+    ],
+    "worst_bucket_n20": 0.054,
+    "won_loss_err": {
+     "n": 81,
+     "median": 6,
+     "mean": 7.4,
+     "mae": 13.0,
+     "p10": -10,
+     "p90": 28,
+     "within5": 0.284
+    }
+   },
+   "by_boss": {
+    "永恒镜": {
+     "n": 4,
+     "brier_cal": 0.088,
+     "pred_cal": 0.45,
+     "actual": 0.5
+    },
+    "仪式兽": {
+     "n": 11,
+     "brier_cal": 0.095,
+     "pred_cal": 0.79,
+     "actual": 0.82
+    },
+    "帝王蟹": {
+     "n": 11,
+     "brier_cal": 0.109,
+     "pred_cal": 0.21,
+     "actual": 0.18
+    },
+    "同族": {
+     "n": 13,
+     "brier_cal": 0.115,
+     "pred_cal": 0.77,
+     "actual": 0.77
+    },
+    "知识恶魔": {
+     "n": 17,
+     "brier_cal": 0.053,
+     "pred_cal": 0.57,
+     "actual": 0.65
+    },
+    "乐加维林族母": {
+     "n": 9,
+     "brier_cal": 0.129,
+     "pred_cal": 0.58,
+     "actual": 0.67
+    },
+    "女王": {
+     "n": 7,
+     "brier_cal": 0.115,
+     "pred_cal": 0.12,
+     "actual": 0.14
+    },
+    "灵魂鱼": {
+     "n": 19,
+     "brier_cal": 0.108,
+     "pred_cal": 0.88,
+     "actual": 0.84
+    },
+    "实验体": {
+     "n": 3,
+     "brier_cal": 0.519,
+     "pred_cal": 0.11,
+     "actual": 0.67
+    },
+    "贪得无厌者": {
+     "n": 13,
+     "brier_cal": 0.317,
+     "pred_cal": 0.73,
+     "actual": 0.38
+    },
+    "幻影墨": {
+     "n": 14,
+     "brier_cal": 0.092,
+     "pred_cal": 0.73,
+     "actual": 0.86
+    },
+    "瀑布巨兽": {
+     "n": 19,
+     "brier_cal": 0.227,
+     "pred_cal": 0.54,
+     "actual": 0.37
+    }
+   }
+  }
+ },
+ "paired_raw_gap": {
+  "mean": -0.0044,
+  "mean_abs": 0.026,
+  "p90_abs": 0.06,
+  "largest": [
+   {
+    "key": "YX5E7NFW5R82:7",
+    "enc": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+    "pre": 0.98,
+    "syn": 0.65
+   },
+   {
+    "key": "Q8XR6EXAF6QV:16",
+    "enc": "KNOWLEDGE_DEMON",
+    "pre": 0.86,
+    "syn": 0.64
+   },
+   {
+    "key": "DHGT6Z3Q7VAP:8",
+    "enc": "WATERFALL_GIANT",
+    "pre": 0.67,
+    "syn": 0.81
+   },
+   {
+    "key": "MZFVC3RB3JD8:9",
+    "enc": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+    "pre": 0.55,
+    "syn": 0.42
+   },
+   {
+    "key": "5LRZ7HJ7YGSY:18",
+    "enc": "KNOWLEDGE_DEMON",
+    "pre": 0.39,
+    "syn": 0.5
+   },
+   {
+    "key": "79YRPJ8TCCZ5:8",
+    "enc": "CEREMONIAL_BEAST",
+    "pre": 0.64,
+    "syn": 0.53
+   },
+   {
+    "key": "PHMVUY73R0D7:9",
+    "enc": "VANTOM",
+    "pre": 0.33,
+    "syn": 0.44
+   },
+   {
+    "key": "7XK6DUJYMYY3:6",
+    "enc": "VANTOM",
+    "pre": 0.61,
+    "syn": 0.51
+   }
+  ]
+ }
+}

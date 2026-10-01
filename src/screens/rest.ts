@@ -9,7 +9,7 @@ import type { GameState } from "../mod/schema.js";
 import type { Decision, DecisionEnv, RememberedMap, ScreenMemory } from "../project/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
-import { deckCards, deckFollowUp, eligibleCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp, type DeckFollowUp } from "./oneshot.js";
+import { deckCards, deckFollowUp, selectableCards, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp, type DeckFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
@@ -162,7 +162,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       const raw = rawByKey.get(option.key) ?? {};
       const follow: DeckFollowUp | null = str(raw["option_id"]).toUpperCase() === "SMITH" ? { task: "upgrade", count: 1, upTo: false, text: "SMITH" } : deckFollowUp(str(raw["description"]));
       if (!follow) return [planOnly(env, option, ref)];
-      for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
+      for (const card of selectableCards(env.state, cards, follow).listed) offered.add(card.identity.card_id);
       return withFollowUp(env, option, follow, cards, ref, "rest", followUpTargetScore(env, follow.task));
     });
     const note = `Each smith option names its card: code upgrades that card on the next screen without asking again.${discardNote}`;

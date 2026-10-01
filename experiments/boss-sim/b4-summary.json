@@ -1,0 +1,2760 @@
+{
+ "before": "experiments/boss-sim/raw/b4-base/results-*.jsonl",
+ "after": "experiments/boss-sim/raw/b4-sub/results-*.jsonl",
+ "sets": {
+  "val": {
+   "before": {
+    "t1": {
+     "overall": {
+      "n": 140,
+      "brier": 0.1456,
+      "mean_pred": 0.613,
+      "actual_win": 0.593,
+      "leak": 1.108,
+      "leak_sim": 9.07,
+      "leak_log": 8.19,
+      "raw_brier": 0.157,
+      "auc": 0.848,
+      "worst_bucket_n20": 0.056,
+      "platt": [
+       0.5534,
+       0.5036
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.1007,
+       "mean_pred": 0.423,
+       "actual_win": 0.5,
+       "leak": 1.092,
+       "leak_sim": 9.67,
+       "leak_log": 8.86,
+       "raw_brier": 0.1594,
+       "raw_mean_pred": 0.292
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0537,
+       "mean_pred": 0.789,
+       "actual_win": 0.818,
+       "leak": 1.148,
+       "leak_sim": 8.57,
+       "leak_log": 7.46,
+       "raw_brier": 0.0498,
+       "raw_mean_pred": 0.746
+      },
+      "CRUSHER+ROCKET": {
+       "n": 11,
+       "brier": 0.1304,
+       "mean_pred": 0.13,
+       "actual_win": 0.182,
+       "leak": 1.711,
+       "leak_sim": 21.55,
+       "leak_log": 12.6,
+       "raw_brier": 0.1722,
+       "raw_mean_pred": 0.015
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1492,
+       "mean_pred": 0.802,
+       "actual_win": 0.769,
+       "leak": 0.886,
+       "leak_sim": 9.33,
+       "leak_log": 10.53,
+       "raw_brier": 0.1637,
+       "raw_mean_pred": 0.773
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 17,
+       "brier": 0.0496,
+       "mean_pred": 0.58,
+       "actual_win": 0.647,
+       "leak": 1.076,
+       "leak_sim": 8.17,
+       "leak_log": 7.6,
+       "raw_brier": 0.0506,
+       "raw_mean_pred": 0.526
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 9,
+       "brier": 0.0652,
+       "mean_pred": 0.584,
+       "actual_win": 0.667,
+       "leak": 0.879,
+       "leak_sim": 4.63,
+       "leak_log": 5.26,
+       "raw_brier": 0.0927,
+       "raw_mean_pred": 0.498
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.1005,
+       "mean_pred": 0.136,
+       "actual_win": 0.143,
+       "leak": 1.152,
+       "leak_sim": 13.48,
+       "leak_log": 11.7,
+       "raw_brier": 0.1347,
+       "raw_mean_pred": 0.011
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.1243,
+       "mean_pred": 0.894,
+       "actual_win": 0.842,
+       "leak": 0.749,
+       "leak_sim": 4.75,
+       "leak_log": 6.34,
+       "raw_brier": 0.1394,
+       "raw_mean_pred": 0.895
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.5684,
+       "mean_pred": 0.078,
+       "actual_win": 0.667,
+       "leak": 2.693,
+       "leak_sim": 27.51,
+       "leak_log": 10.21,
+       "raw_brier": 0.6667,
+       "raw_mean_pred": 0.0
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.304,
+       "mean_pred": 0.745,
+       "actual_win": 0.385,
+       "leak": 1.003,
+       "leak_sim": 11.15,
+       "leak_log": 11.11,
+       "raw_brier": 0.2794,
+       "raw_mean_pred": 0.712
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.1121,
+       "mean_pred": 0.737,
+       "actual_win": 0.857,
+       "leak": 0.988,
+       "leak_sim": 8.45,
+       "leak_log": 8.56,
+       "raw_brier": 0.1546,
+       "raw_mean_pred": 0.685
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.2259,
+       "mean_pred": 0.539,
+       "actual_win": 0.368,
+       "leak": 1.178,
+       "leak_sim": 7.24,
+       "leak_log": 6.15,
+       "raw_brier": 0.194,
+       "raw_mean_pred": 0.437
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 137,
+      "brier": 0.0882,
+      "mean_pred": 0.617,
+      "actual_win": 0.606,
+      "leak": 1.161,
+      "leak_sim": 8.22,
+      "leak_log": 7.08,
+      "raw_brier": 0.0922,
+      "auc": 0.952,
+      "worst_bucket_n20": 0.036,
+      "platt": [
+       0.5624,
+       0.8224
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.0481,
+       "mean_pred": 0.601,
+       "actual_win": 0.5,
+       "leak": 1.224,
+       "leak_sim": 8.37,
+       "leak_log": 6.83,
+       "raw_brier": 0.0186,
+       "raw_mean_pred": 0.557
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0714,
+       "mean_pred": 0.737,
+       "actual_win": 0.818,
+       "leak": 1.19,
+       "leak_sim": 8.91,
+       "leak_log": 7.48,
+       "raw_brier": 0.0838,
+       "raw_mean_pred": 0.731
+      },
+      "CRUSHER+ROCKET": {
+       "n": 10,
+       "brier": 0.0259,
+       "mean_pred": 0.252,
+       "actual_win": 0.2,
+       "leak": 1.634,
+       "leak_sim": 20.5,
+       "leak_log": 12.55,
+       "raw_brier": 0.0133,
+       "raw_mean_pred": 0.216
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.0728,
+       "mean_pred": 0.659,
+       "actual_win": 0.769,
+       "leak": 0.956,
+       "leak_sim": 6.77,
+       "leak_log": 7.08,
+       "raw_brier": 0.1115,
+       "raw_mean_pred": 0.617
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 16,
+       "brier": 0.0658,
+       "mean_pred": 0.657,
+       "actual_win": 0.625,
+       "leak": 1.279,
+       "leak_sim": 10.33,
+       "leak_log": 8.08,
+       "raw_brier": 0.0601,
+       "raw_mean_pred": 0.624
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.024,
+       "mean_pred": 0.644,
+       "actual_win": 0.7,
+       "leak": 0.948,
+       "leak_sim": 7.04,
+       "leak_log": 7.42,
+       "raw_brier": 0.0398,
+       "raw_mean_pred": 0.611
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 6,
+       "brier": 0.0186,
+       "mean_pred": 0.122,
+       "actual_win": 0.167,
+       "leak": 1.511,
+       "leak_sim": 10.41,
+       "leak_log": 6.89,
+       "raw_brier": 0.0353,
+       "raw_mean_pred": 0.09
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.0901,
+       "mean_pred": 0.907,
+       "actual_win": 0.842,
+       "leak": 0.641,
+       "leak_sim": 4.56,
+       "leak_log": 7.11,
+       "raw_brier": 0.0887,
+       "raw_mean_pred": 0.885
+      },
+      "TEST_SUBJECT": {
+       "n": 2,
+       "brier": 0.5851,
+       "mean_pred": 0.271,
+       "actual_win": 1.0,
+       "leak": 2.778,
+       "leak_sim": 15.97,
+       "leak_log": 5.75,
+       "raw_brier": 0.7078,
+       "raw_mean_pred": 0.175
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.165,
+       "mean_pred": 0.598,
+       "actual_win": 0.385,
+       "leak": 1.543,
+       "leak_sim": 14.0,
+       "leak_log": 9.07,
+       "raw_brier": 0.1462,
+       "raw_mean_pred": 0.568
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.0367,
+       "mean_pred": 0.782,
+       "actual_win": 0.857,
+       "leak": 1.081,
+       "leak_sim": 10.68,
+       "leak_log": 9.88,
+       "raw_brier": 0.0605,
+       "raw_mean_pred": 0.749
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.1552,
+       "mean_pred": 0.461,
+       "actual_win": 0.368,
+       "leak": 1.442,
+       "leak_sim": 6.54,
+       "leak_log": 4.54,
+       "raw_brier": 0.1386,
+       "raw_mean_pred": 0.402
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 140,
+      "brier": 0.1436,
+      "mean_pred": 0.604,
+      "actual_win": 0.593,
+      "leak": 1.106,
+      "leak_sim": 9.06,
+      "leak_log": 8.19,
+      "raw_brier": 0.1509,
+      "auc": 0.855,
+      "worst_bucket_n20": 0.056,
+      "platt": [
+       0.5236,
+       0.5219
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.1363,
+       "mean_pred": 0.425,
+       "actual_win": 0.5,
+       "leak": 1.054,
+       "leak_sim": 9.33,
+       "leak_log": 8.86,
+       "raw_brier": 0.1948,
+       "raw_mean_pred": 0.283
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0798,
+       "mean_pred": 0.78,
+       "actual_win": 0.818,
+       "leak": 1.129,
+       "leak_sim": 8.42,
+       "leak_log": 7.46,
+       "raw_brier": 0.0765,
+       "raw_mean_pred": 0.745
+      },
+      "CRUSHER+ROCKET": {
+       "n": 11,
+       "brier": 0.1245,
+       "mean_pred": 0.13,
+       "actual_win": 0.182,
+       "leak": 1.717,
+       "leak_sim": 21.34,
+       "leak_log": 12.43,
+       "raw_brier": 0.1645,
+       "raw_mean_pred": 0.023
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1046,
+       "mean_pred": 0.783,
+       "actual_win": 0.769,
+       "leak": 0.928,
+       "leak_sim": 9.78,
+       "leak_log": 10.53,
+       "raw_brier": 0.0962,
+       "raw_mean_pred": 0.761
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 17,
+       "brier": 0.0702,
+       "mean_pred": 0.577,
+       "actual_win": 0.647,
+       "leak": 1.061,
+       "leak_sim": 8.06,
+       "leak_log": 7.6,
+       "raw_brier": 0.0688,
+       "raw_mean_pred": 0.514
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 9,
+       "brier": 0.0775,
+       "mean_pred": 0.608,
+       "actual_win": 0.667,
+       "leak": 0.871,
+       "leak_sim": 4.59,
+       "leak_log": 5.26,
+       "raw_brier": 0.0972,
+       "raw_mean_pred": 0.514
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.124,
+       "mean_pred": 0.112,
+       "actual_win": 0.143,
+       "leak": 1.204,
+       "leak_sim": 14.09,
+       "leak_log": 11.7,
+       "raw_brier": 0.1407,
+       "raw_mean_pred": 0.011
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.1106,
+       "mean_pred": 0.882,
+       "actual_win": 0.842,
+       "leak": 0.765,
+       "leak_sim": 4.85,
+       "leak_log": 6.34,
+       "raw_brier": 0.1159,
+       "raw_mean_pred": 0.886
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.4603,
+       "mean_pred": 0.141,
+       "actual_win": 0.667,
+       "leak": 2.241,
+       "leak_sim": 22.89,
+       "leak_log": 10.21,
+       "raw_brier": 0.6279,
+       "raw_mean_pred": 0.02
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.3143,
+       "mean_pred": 0.718,
+       "actual_win": 0.385,
+       "leak": 1.011,
+       "leak_sim": 11.23,
+       "leak_log": 11.11,
+       "raw_brier": 0.3021,
+       "raw_mean_pred": 0.687
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.1018,
+       "mean_pred": 0.729,
+       "actual_win": 0.857,
+       "leak": 0.966,
+       "leak_sim": 8.26,
+       "leak_log": 8.56,
+       "raw_brier": 0.141,
+       "raw_mean_pred": 0.689
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.2214,
+       "mean_pred": 0.521,
+       "actual_win": 0.368,
+       "leak": 1.205,
+       "leak_sim": 7.41,
+       "leak_log": 6.15,
+       "raw_brier": 0.1803,
+       "raw_mean_pred": 0.414
+      }
+     }
+    }
+   },
+   "after": {
+    "t1": {
+     "overall": {
+      "n": 140,
+      "brier": 0.1358,
+      "mean_pred": 0.62,
+      "actual_win": 0.593,
+      "leak": 1.118,
+      "leak_sim": 9.16,
+      "leak_log": 8.19,
+      "raw_brier": 0.1453,
+      "auc": 0.873,
+      "worst_bucket_n20": 0.04,
+      "platt": [
+       0.7875,
+       0.5587
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.0901,
+       "mean_pred": 0.447,
+       "actual_win": 0.5,
+       "leak": 1.092,
+       "leak_sim": 9.67,
+       "leak_log": 8.86,
+       "raw_brier": 0.1594,
+       "raw_mean_pred": 0.292
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0506,
+       "mean_pred": 0.815,
+       "actual_win": 0.818,
+       "leak": 1.148,
+       "leak_sim": 8.57,
+       "leak_log": 7.46,
+       "raw_brier": 0.0498,
+       "raw_mean_pred": 0.746
+      },
+      "CRUSHER+ROCKET": {
+       "n": 11,
+       "brier": 0.1301,
+       "mean_pred": 0.129,
+       "actual_win": 0.182,
+       "leak": 1.711,
+       "leak_sim": 21.55,
+       "leak_log": 12.6,
+       "raw_brier": 0.1722,
+       "raw_mean_pred": 0.015
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1481,
+       "mean_pred": 0.832,
+       "actual_win": 0.769,
+       "leak": 0.886,
+       "leak_sim": 9.33,
+       "leak_log": 10.53,
+       "raw_brier": 0.1637,
+       "raw_mean_pred": 0.773
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 17,
+       "brier": 0.0402,
+       "mean_pred": 0.601,
+       "actual_win": 0.647,
+       "leak": 1.076,
+       "leak_sim": 8.17,
+       "leak_log": 7.6,
+       "raw_brier": 0.0548,
+       "raw_mean_pred": 0.519
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 9,
+       "brier": 0.0539,
+       "mean_pred": 0.609,
+       "actual_win": 0.667,
+       "leak": 0.879,
+       "leak_sim": 4.63,
+       "leak_log": 5.26,
+       "raw_brier": 0.0927,
+       "raw_mean_pred": 0.498
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.099,
+       "mean_pred": 0.135,
+       "actual_win": 0.143,
+       "leak": 1.152,
+       "leak_sim": 13.48,
+       "leak_log": 11.7,
+       "raw_brier": 0.1347,
+       "raw_mean_pred": 0.011
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.1279,
+       "mean_pred": 0.916,
+       "actual_win": 0.842,
+       "leak": 0.749,
+       "leak_sim": 4.75,
+       "leak_log": 6.34,
+       "raw_brier": 0.1394,
+       "raw_mean_pred": 0.895
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.5762,
+       "mean_pred": 0.072,
+       "actual_win": 0.667,
+       "leak": 2.693,
+       "leak_sim": 27.51,
+       "leak_log": 10.21,
+       "raw_brier": 0.6667,
+       "raw_mean_pred": 0.0
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.2055,
+       "mean_pred": 0.611,
+       "actual_win": 0.385,
+       "leak": 1.096,
+       "leak_sim": 12.17,
+       "leak_log": 11.11,
+       "raw_brier": 0.1481,
+       "raw_mean_pred": 0.519
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.1035,
+       "mean_pred": 0.772,
+       "actual_win": 0.857,
+       "leak": 0.988,
+       "leak_sim": 8.45,
+       "leak_log": 8.56,
+       "raw_brier": 0.1546,
+       "raw_mean_pred": 0.685
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.2422,
+       "mean_pred": 0.569,
+       "actual_win": 0.368,
+       "leak": 1.178,
+       "leak_sim": 7.24,
+       "leak_log": 6.15,
+       "raw_brier": 0.194,
+       "raw_mean_pred": 0.437
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 137,
+      "brier": 0.0882,
+      "mean_pred": 0.617,
+      "actual_win": 0.606,
+      "leak": 1.161,
+      "leak_sim": 8.22,
+      "leak_log": 7.08,
+      "raw_brier": 0.0922,
+      "auc": 0.952,
+      "worst_bucket_n20": 0.035,
+      "platt": [
+       0.5682,
+       0.8221
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.0484,
+       "mean_pred": 0.602,
+       "actual_win": 0.5,
+       "leak": 1.224,
+       "leak_sim": 8.37,
+       "leak_log": 6.83,
+       "raw_brier": 0.0186,
+       "raw_mean_pred": 0.557
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0713,
+       "mean_pred": 0.737,
+       "actual_win": 0.818,
+       "leak": 1.19,
+       "leak_sim": 8.91,
+       "leak_log": 7.48,
+       "raw_brier": 0.0838,
+       "raw_mean_pred": 0.731
+      },
+      "CRUSHER+ROCKET": {
+       "n": 10,
+       "brier": 0.026,
+       "mean_pred": 0.252,
+       "actual_win": 0.2,
+       "leak": 1.634,
+       "leak_sim": 20.5,
+       "leak_log": 12.55,
+       "raw_brier": 0.0133,
+       "raw_mean_pred": 0.216
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.0724,
+       "mean_pred": 0.659,
+       "actual_win": 0.769,
+       "leak": 0.956,
+       "leak_sim": 6.77,
+       "leak_log": 7.08,
+       "raw_brier": 0.1115,
+       "raw_mean_pred": 0.617
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 16,
+       "brier": 0.0659,
+       "mean_pred": 0.657,
+       "actual_win": 0.625,
+       "leak": 1.279,
+       "leak_sim": 10.33,
+       "leak_log": 8.08,
+       "raw_brier": 0.0601,
+       "raw_mean_pred": 0.624
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.0239,
+       "mean_pred": 0.645,
+       "actual_win": 0.7,
+       "leak": 0.948,
+       "leak_sim": 7.04,
+       "leak_log": 7.42,
+       "raw_brier": 0.0398,
+       "raw_mean_pred": 0.611
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 6,
+       "brier": 0.0185,
+       "mean_pred": 0.122,
+       "actual_win": 0.167,
+       "leak": 1.511,
+       "leak_sim": 10.41,
+       "leak_log": 6.89,
+       "raw_brier": 0.0353,
+       "raw_mean_pred": 0.09
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.0901,
+       "mean_pred": 0.908,
+       "actual_win": 0.842,
+       "leak": 0.641,
+       "leak_sim": 4.56,
+       "leak_log": 7.11,
+       "raw_brier": 0.0887,
+       "raw_mean_pred": 0.885
+      },
+      "TEST_SUBJECT": {
+       "n": 2,
+       "brier": 0.5841,
+       "mean_pred": 0.272,
+       "actual_win": 1.0,
+       "leak": 2.778,
+       "leak_sim": 15.97,
+       "leak_log": 5.75,
+       "raw_brier": 0.7078,
+       "raw_mean_pred": 0.175
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.1652,
+       "mean_pred": 0.598,
+       "actual_win": 0.385,
+       "leak": 1.543,
+       "leak_sim": 14.0,
+       "leak_log": 9.07,
+       "raw_brier": 0.1462,
+       "raw_mean_pred": 0.568
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.0365,
+       "mean_pred": 0.783,
+       "actual_win": 0.857,
+       "leak": 1.081,
+       "leak_sim": 10.68,
+       "leak_log": 9.88,
+       "raw_brier": 0.0605,
+       "raw_mean_pred": 0.749
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.1555,
+       "mean_pred": 0.462,
+       "actual_win": 0.368,
+       "leak": 1.442,
+       "leak_sim": 6.54,
+       "leak_log": 4.54,
+       "raw_brier": 0.1386,
+       "raw_mean_pred": 0.402
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 140,
+      "brier": 0.1354,
+      "mean_pred": 0.615,
+      "actual_win": 0.593,
+      "leak": 1.116,
+      "leak_sim": 9.14,
+      "leak_log": 8.19,
+      "raw_brier": 0.1423,
+      "auc": 0.882,
+      "worst_bucket_n20": 0.092,
+      "platt": [
+       0.7573,
+       0.5783
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 4,
+       "brier": 0.1285,
+       "mean_pred": 0.449,
+       "actual_win": 0.5,
+       "leak": 1.054,
+       "leak_sim": 9.33,
+       "leak_log": 8.86,
+       "raw_brier": 0.1948,
+       "raw_mean_pred": 0.283
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 11,
+       "brier": 0.0773,
+       "mean_pred": 0.812,
+       "actual_win": 0.818,
+       "leak": 1.129,
+       "leak_sim": 8.42,
+       "leak_log": 7.46,
+       "raw_brier": 0.0765,
+       "raw_mean_pred": 0.745
+      },
+      "CRUSHER+ROCKET": {
+       "n": 11,
+       "brier": 0.1238,
+       "mean_pred": 0.13,
+       "actual_win": 0.182,
+       "leak": 1.717,
+       "leak_sim": 21.34,
+       "leak_log": 12.43,
+       "raw_brier": 0.1645,
+       "raw_mean_pred": 0.023
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.108,
+       "mean_pred": 0.817,
+       "actual_win": 0.769,
+       "leak": 0.928,
+       "leak_sim": 9.78,
+       "leak_log": 10.53,
+       "raw_brier": 0.0962,
+       "raw_mean_pred": 0.761
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 17,
+       "brier": 0.0611,
+       "mean_pred": 0.602,
+       "actual_win": 0.647,
+       "leak": 1.061,
+       "leak_sim": 8.06,
+       "leak_log": 7.6,
+       "raw_brier": 0.0743,
+       "raw_mean_pred": 0.506
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 9,
+       "brier": 0.0689,
+       "mean_pred": 0.635,
+       "actual_win": 0.667,
+       "leak": 0.871,
+       "leak_sim": 4.59,
+       "leak_log": 5.26,
+       "raw_brier": 0.0972,
+       "raw_mean_pred": 0.514
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.1258,
+       "mean_pred": 0.109,
+       "actual_win": 0.143,
+       "leak": 1.204,
+       "leak_sim": 14.09,
+       "leak_log": 11.7,
+       "raw_brier": 0.1407,
+       "raw_mean_pred": 0.011
+      },
+      "SOUL_FYSH": {
+       "n": 19,
+       "brier": 0.1128,
+       "mean_pred": 0.906,
+       "actual_win": 0.842,
+       "leak": 0.765,
+       "leak_sim": 4.85,
+       "leak_log": 6.34,
+       "raw_brier": 0.1159,
+       "raw_mean_pred": 0.886
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.4563,
+       "mean_pred": 0.143,
+       "actual_win": 0.667,
+       "leak": 2.241,
+       "leak_sim": 22.89,
+       "leak_log": 10.21,
+       "raw_brier": 0.6279,
+       "raw_mean_pred": 0.02
+      },
+      "THE_INSATIABLE": {
+       "n": 13,
+       "brier": 0.2309,
+       "mean_pred": 0.6,
+       "actual_win": 0.385,
+       "leak": 1.097,
+       "leak_sim": 12.19,
+       "leak_log": 11.11,
+       "raw_brier": 0.2025,
+       "raw_mean_pred": 0.485
+      },
+      "VANTOM": {
+       "n": 14,
+       "brier": 0.092,
+       "mean_pred": 0.763,
+       "actual_win": 0.857,
+       "leak": 0.966,
+       "leak_sim": 8.26,
+       "leak_log": 8.56,
+       "raw_brier": 0.141,
+       "raw_mean_pred": 0.689
+      },
+      "WATERFALL_GIANT": {
+       "n": 19,
+       "brier": 0.2361,
+       "mean_pred": 0.553,
+       "actual_win": 0.368,
+       "leak": 1.205,
+       "leak_sim": 7.41,
+       "leak_log": 6.15,
+       "raw_brier": 0.1803,
+       "raw_mean_pred": 0.414
+      }
+     }
+    }
+   }
+  },
+  "val_ext": {
+   "before": {
+    "t1": {
+     "overall": {
+      "n": 164,
+      "brier": 0.1347,
+      "mean_pred": 0.616,
+      "actual_win": 0.61,
+      "leak": 1.137,
+      "leak_sim": 9.28,
+      "leak_log": 8.17,
+      "raw_brier": 0.1495,
+      "auc": 0.865,
+      "worst_bucket_n20": 0.109,
+      "platt": [
+       0.5534,
+       0.5036
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1123,
+       "mean_pred": 0.459,
+       "actual_win": 0.6,
+       "leak": 1.049,
+       "leak_sim": 10.41,
+       "leak_log": 9.92,
+       "raw_brier": 0.1925,
+       "raw_mean_pred": 0.32
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0456,
+       "mean_pred": 0.818,
+       "actual_win": 0.846,
+       "leak": 1.183,
+       "leak_sim": 8.23,
+       "leak_log": 6.96,
+       "raw_brier": 0.0421,
+       "raw_mean_pred": 0.785
+      },
+      "CRUSHER+ROCKET": {
+       "n": 14,
+       "brier": 0.126,
+       "mean_pred": 0.162,
+       "actual_win": 0.214,
+       "leak": 1.891,
+       "leak_sim": 22.28,
+       "leak_log": 11.78,
+       "raw_brier": 0.1767,
+       "raw_mean_pred": 0.032
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1492,
+       "mean_pred": 0.802,
+       "actual_win": 0.769,
+       "leak": 0.886,
+       "leak_sim": 9.33,
+       "leak_log": 10.53,
+       "raw_brier": 0.1637,
+       "raw_mean_pred": 0.773
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 19,
+       "brier": 0.0566,
+       "mean_pred": 0.57,
+       "actual_win": 0.632,
+       "leak": 1.057,
+       "leak_sim": 8.23,
+       "leak_log": 7.79,
+       "raw_brier": 0.0582,
+       "raw_mean_pred": 0.501
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.0588,
+       "mean_pred": 0.622,
+       "actual_win": 0.7,
+       "leak": 0.904,
+       "leak_sim": 5.01,
+       "leak_log": 5.54,
+       "raw_brier": 0.0834,
+       "raw_mean_pred": 0.548
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 9,
+       "brier": 0.0795,
+       "mean_pred": 0.123,
+       "actual_win": 0.111,
+       "leak": 1.204,
+       "leak_sim": 14.06,
+       "leak_log": 11.68,
+       "raw_brier": 0.1047,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.1185,
+       "mean_pred": 0.882,
+       "actual_win": 0.87,
+       "leak": 0.788,
+       "leak_sim": 4.61,
+       "leak_log": 5.85,
+       "raw_brier": 0.1481,
+       "raw_mean_pred": 0.875
+      },
+      "TEST_SUBJECT": {
+       "n": 4,
+       "brier": 0.4278,
+       "mean_pred": 0.078,
+       "actual_win": 0.5,
+       "leak": 2.703,
+       "leak_sim": 26.22,
+       "leak_log": 9.7,
+       "raw_brier": 0.5,
+       "raw_mean_pred": 0.0
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.2486,
+       "mean_pred": 0.77,
+       "actual_win": 0.471,
+       "leak": 0.99,
+       "leak_sim": 10.55,
+       "leak_log": 10.65,
+       "raw_brier": 0.2182,
+       "raw_mean_pred": 0.736
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.1029,
+       "mean_pred": 0.747,
+       "actual_win": 0.882,
+       "leak": 0.968,
+       "leak_sim": 8.45,
+       "leak_log": 8.73,
+       "raw_brier": 0.1428,
+       "raw_mean_pred": 0.699
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.2219,
+       "mean_pred": 0.543,
+       "actual_win": 0.4,
+       "leak": 1.16,
+       "leak_sim": 7.32,
+       "leak_log": 6.31,
+       "raw_brier": 0.1989,
+       "raw_mean_pred": 0.439
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 159,
+      "brier": 0.0797,
+      "mean_pred": 0.63,
+      "actual_win": 0.629,
+      "leak": 1.184,
+      "leak_sim": 8.36,
+      "leak_log": 7.06,
+      "raw_brier": 0.0861,
+      "auc": 0.958,
+      "worst_bucket_n20": 0.029,
+      "platt": [
+       0.5624,
+       0.8224
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.0397,
+       "mean_pred": 0.665,
+       "actual_win": 0.6,
+       "leak": 1.224,
+       "leak_sim": 8.37,
+       "leak_log": 6.83,
+       "raw_brier": 0.0165,
+       "raw_mean_pred": 0.628
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0604,
+       "mean_pred": 0.777,
+       "actual_win": 0.846,
+       "leak": 1.162,
+       "leak_sim": 8.45,
+       "leak_log": 7.27,
+       "raw_brier": 0.0709,
+       "raw_mean_pred": 0.772
+      },
+      "CRUSHER+ROCKET": {
+       "n": 12,
+       "brier": 0.0216,
+       "mean_pred": 0.294,
+       "actual_win": 0.25,
+       "leak": 2.255,
+       "leak_sim": 21.34,
+       "leak_log": 9.46,
+       "raw_brier": 0.0111,
+       "raw_mean_pred": 0.263
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.0728,
+       "mean_pred": 0.659,
+       "actual_win": 0.769,
+       "leak": 0.956,
+       "leak_sim": 6.77,
+       "leak_log": 7.08,
+       "raw_brier": 0.1115,
+       "raw_mean_pred": 0.617
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 18,
+       "brier": 0.0591,
+       "mean_pred": 0.636,
+       "actual_win": 0.611,
+       "leak": 1.361,
+       "leak_sim": 10.52,
+       "leak_log": 7.73,
+       "raw_brier": 0.0542,
+       "raw_mean_pred": 0.604
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 11,
+       "brier": 0.0218,
+       "mean_pred": 0.676,
+       "actual_win": 0.727,
+       "leak": 0.962,
+       "leak_sim": 7.04,
+       "leak_log": 7.31,
+       "raw_brier": 0.0362,
+       "raw_mean_pred": 0.646
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.016,
+       "mean_pred": 0.106,
+       "actual_win": 0.143,
+       "leak": 1.351,
+       "leak_sim": 10.81,
+       "leak_log": 8.0,
+       "raw_brier": 0.0302,
+       "raw_mean_pred": 0.077
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.0851,
+       "mean_pred": 0.901,
+       "actual_win": 0.87,
+       "leak": 0.651,
+       "leak_sim": 4.4,
+       "leak_log": 6.76,
+       "raw_brier": 0.0922,
+       "raw_mean_pred": 0.876
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.3901,
+       "mean_pred": 0.185,
+       "actual_win": 0.667,
+       "leak": 2.68,
+       "leak_sim": 17.87,
+       "leak_log": 6.67,
+       "raw_brier": 0.4719,
+       "raw_mean_pred": 0.117
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.1262,
+       "mean_pred": 0.635,
+       "actual_win": 0.471,
+       "leak": 1.346,
+       "leak_sim": 13.06,
+       "leak_log": 9.71,
+       "raw_brier": 0.1118,
+       "raw_mean_pred": 0.612
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.0458,
+       "mean_pred": 0.789,
+       "actual_win": 0.882,
+       "leak": 1.042,
+       "leak_sim": 10.79,
+       "leak_log": 10.35,
+       "raw_brier": 0.0771,
+       "raw_mean_pred": 0.752
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.1511,
+       "mean_pred": 0.475,
+       "actual_win": 0.4,
+       "leak": 1.432,
+       "leak_sim": 6.51,
+       "leak_log": 4.55,
+       "raw_brier": 0.1386,
+       "raw_mean_pred": 0.413
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 164,
+      "brier": 0.1326,
+      "mean_pred": 0.609,
+      "actual_win": 0.61,
+      "leak": 1.135,
+      "leak_sim": 9.27,
+      "leak_log": 8.17,
+      "raw_brier": 0.1419,
+      "auc": 0.873,
+      "worst_bucket_n20": 0.089,
+      "platt": [
+       0.5236,
+       0.5219
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1346,
+       "mean_pred": 0.469,
+       "actual_win": 0.6,
+       "leak": 1.013,
+       "leak_sim": 10.05,
+       "leak_log": 9.92,
+       "raw_brier": 0.2,
+       "raw_mean_pred": 0.332
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0676,
+       "mean_pred": 0.81,
+       "actual_win": 0.846,
+       "leak": 1.176,
+       "leak_sim": 8.18,
+       "leak_log": 6.96,
+       "raw_brier": 0.0647,
+       "raw_mean_pred": 0.785
+      },
+      "CRUSHER+ROCKET": {
+       "n": 14,
+       "brier": 0.1263,
+       "mean_pred": 0.168,
+       "actual_win": 0.214,
+       "leak": 1.847,
+       "leak_sim": 21.57,
+       "leak_log": 11.68,
+       "raw_brier": 0.1703,
+       "raw_mean_pred": 0.044
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1046,
+       "mean_pred": 0.783,
+       "actual_win": 0.769,
+       "leak": 0.928,
+       "leak_sim": 9.78,
+       "leak_log": 10.53,
+       "raw_brier": 0.0962,
+       "raw_mean_pred": 0.761
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 19,
+       "brier": 0.0712,
+       "mean_pred": 0.573,
+       "actual_win": 0.632,
+       "leak": 1.041,
+       "leak_sim": 8.11,
+       "leak_log": 7.79,
+       "raw_brier": 0.0646,
+       "raw_mean_pred": 0.505
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.0698,
+       "mean_pred": 0.645,
+       "actual_win": 0.7,
+       "leak": 0.899,
+       "leak_sim": 4.98,
+       "leak_log": 5.54,
+       "raw_brier": 0.0875,
+       "raw_mean_pred": 0.563
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 9,
+       "brier": 0.0975,
+       "mean_pred": 0.102,
+       "actual_win": 0.111,
+       "leak": 1.229,
+       "leak_sim": 14.36,
+       "leak_log": 11.68,
+       "raw_brier": 0.1094,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.109,
+       "mean_pred": 0.869,
+       "actual_win": 0.87,
+       "leak": 0.808,
+       "leak_sim": 4.73,
+       "leak_log": 5.85,
+       "raw_brier": 0.1295,
+       "raw_mean_pred": 0.866
+      },
+      "TEST_SUBJECT": {
+       "n": 4,
+       "brier": 0.3464,
+       "mean_pred": 0.123,
+       "actual_win": 0.5,
+       "leak": 2.477,
+       "leak_sim": 24.03,
+       "leak_log": 9.7,
+       "raw_brier": 0.4709,
+       "raw_mean_pred": 0.015
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.253,
+       "mean_pred": 0.741,
+       "actual_win": 0.471,
+       "leak": 1.008,
+       "leak_sim": 10.74,
+       "leak_log": 10.65,
+       "raw_brier": 0.2334,
+       "raw_mean_pred": 0.711
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.0957,
+       "mean_pred": 0.739,
+       "actual_win": 0.882,
+       "leak": 0.948,
+       "leak_sim": 8.28,
+       "leak_log": 8.73,
+       "raw_brier": 0.1345,
+       "raw_mean_pred": 0.7
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.2157,
+       "mean_pred": 0.528,
+       "actual_win": 0.4,
+       "leak": 1.183,
+       "leak_sim": 7.47,
+       "leak_log": 6.31,
+       "raw_brier": 0.1797,
+       "raw_mean_pred": 0.423
+      }
+     }
+    }
+   },
+   "after": {
+    "t1": {
+     "overall": {
+      "n": 164,
+      "brier": 0.124,
+      "mean_pred": 0.621,
+      "actual_win": 0.61,
+      "leak": 1.149,
+      "leak_sim": 9.38,
+      "leak_log": 8.17,
+      "raw_brier": 0.1405,
+      "auc": 0.887,
+      "worst_bucket_n20": 0.093,
+      "platt": [
+       0.7875,
+       0.5587
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.0962,
+       "mean_pred": 0.488,
+       "actual_win": 0.6,
+       "leak": 1.049,
+       "leak_sim": 10.41,
+       "leak_log": 9.92,
+       "raw_brier": 0.1925,
+       "raw_mean_pred": 0.32
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0429,
+       "mean_pred": 0.841,
+       "actual_win": 0.846,
+       "leak": 1.183,
+       "leak_sim": 8.23,
+       "leak_log": 6.96,
+       "raw_brier": 0.0421,
+       "raw_mean_pred": 0.785
+      },
+      "CRUSHER+ROCKET": {
+       "n": 14,
+       "brier": 0.1232,
+       "mean_pred": 0.164,
+       "actual_win": 0.214,
+       "leak": 1.891,
+       "leak_sim": 22.28,
+       "leak_log": 11.78,
+       "raw_brier": 0.1767,
+       "raw_mean_pred": 0.032
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.1481,
+       "mean_pred": 0.832,
+       "actual_win": 0.769,
+       "leak": 0.886,
+       "leak_sim": 9.33,
+       "leak_log": 10.53,
+       "raw_brier": 0.1637,
+       "raw_mean_pred": 0.773
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 19,
+       "brier": 0.0454,
+       "mean_pred": 0.588,
+       "actual_win": 0.632,
+       "leak": 1.057,
+       "leak_sim": 8.23,
+       "leak_log": 7.79,
+       "raw_brier": 0.0639,
+       "raw_mean_pred": 0.491
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.0485,
+       "mean_pred": 0.647,
+       "actual_win": 0.7,
+       "leak": 0.904,
+       "leak_sim": 5.01,
+       "leak_log": 5.54,
+       "raw_brier": 0.0834,
+       "raw_mean_pred": 0.548
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 9,
+       "brier": 0.0782,
+       "mean_pred": 0.121,
+       "actual_win": 0.111,
+       "leak": 1.204,
+       "leak_sim": 14.06,
+       "leak_log": 11.68,
+       "raw_brier": 0.1047,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.1198,
+       "mean_pred": 0.903,
+       "actual_win": 0.87,
+       "leak": 0.788,
+       "leak_sim": 4.61,
+       "leak_log": 5.85,
+       "raw_brier": 0.1481,
+       "raw_mean_pred": 0.875
+      },
+      "TEST_SUBJECT": {
+       "n": 4,
+       "brier": 0.4335,
+       "mean_pred": 0.072,
+       "actual_win": 0.5,
+       "leak": 2.703,
+       "leak_sim": 26.22,
+       "leak_log": 9.7,
+       "raw_brier": 0.5,
+       "raw_mean_pred": 0.0
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.166,
+       "mean_pred": 0.632,
+       "actual_win": 0.471,
+       "leak": 1.091,
+       "leak_sim": 11.62,
+       "leak_log": 10.65,
+       "raw_brier": 0.125,
+       "raw_mean_pred": 0.544
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.0925,
+       "mean_pred": 0.783,
+       "actual_win": 0.882,
+       "leak": 0.968,
+       "leak_sim": 8.45,
+       "leak_log": 8.73,
+       "raw_brier": 0.1428,
+       "raw_mean_pred": 0.699
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.2356,
+       "mean_pred": 0.574,
+       "actual_win": 0.4,
+       "leak": 1.16,
+       "leak_sim": 7.32,
+       "leak_log": 6.31,
+       "raw_brier": 0.1989,
+       "raw_mean_pred": 0.439
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 159,
+      "brier": 0.0797,
+      "mean_pred": 0.63,
+      "actual_win": 0.629,
+      "leak": 1.184,
+      "leak_sim": 8.36,
+      "leak_log": 7.06,
+      "raw_brier": 0.0861,
+      "auc": 0.958,
+      "worst_bucket_n20": 0.029,
+      "platt": [
+       0.5682,
+       0.8221
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.0399,
+       "mean_pred": 0.666,
+       "actual_win": 0.6,
+       "leak": 1.224,
+       "leak_sim": 8.37,
+       "leak_log": 6.83,
+       "raw_brier": 0.0165,
+       "raw_mean_pred": 0.628
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0603,
+       "mean_pred": 0.777,
+       "actual_win": 0.846,
+       "leak": 1.162,
+       "leak_sim": 8.45,
+       "leak_log": 7.27,
+       "raw_brier": 0.0709,
+       "raw_mean_pred": 0.772
+      },
+      "CRUSHER+ROCKET": {
+       "n": 12,
+       "brier": 0.0217,
+       "mean_pred": 0.294,
+       "actual_win": 0.25,
+       "leak": 2.255,
+       "leak_sim": 21.34,
+       "leak_log": 9.46,
+       "raw_brier": 0.0111,
+       "raw_mean_pred": 0.263
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.0724,
+       "mean_pred": 0.659,
+       "actual_win": 0.769,
+       "leak": 0.956,
+       "leak_sim": 6.77,
+       "leak_log": 7.08,
+       "raw_brier": 0.1115,
+       "raw_mean_pred": 0.617
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 18,
+       "brier": 0.0593,
+       "mean_pred": 0.636,
+       "actual_win": 0.611,
+       "leak": 1.361,
+       "leak_sim": 10.52,
+       "leak_log": 7.73,
+       "raw_brier": 0.0543,
+       "raw_mean_pred": 0.604
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 11,
+       "brier": 0.0217,
+       "mean_pred": 0.676,
+       "actual_win": 0.727,
+       "leak": 0.962,
+       "leak_sim": 7.04,
+       "leak_log": 7.31,
+       "raw_brier": 0.0362,
+       "raw_mean_pred": 0.646
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 7,
+       "brier": 0.0159,
+       "mean_pred": 0.106,
+       "actual_win": 0.143,
+       "leak": 1.351,
+       "leak_sim": 10.81,
+       "leak_log": 8.0,
+       "raw_brier": 0.0302,
+       "raw_mean_pred": 0.077
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.0851,
+       "mean_pred": 0.902,
+       "actual_win": 0.87,
+       "leak": 0.651,
+       "leak_sim": 4.4,
+       "leak_log": 6.76,
+       "raw_brier": 0.0922,
+       "raw_mean_pred": 0.876
+      },
+      "TEST_SUBJECT": {
+       "n": 3,
+       "brier": 0.3894,
+       "mean_pred": 0.186,
+       "actual_win": 0.667,
+       "leak": 2.68,
+       "leak_sim": 17.87,
+       "leak_log": 6.67,
+       "raw_brier": 0.4719,
+       "raw_mean_pred": 0.117
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.1264,
+       "mean_pred": 0.635,
+       "actual_win": 0.471,
+       "leak": 1.346,
+       "leak_sim": 13.06,
+       "leak_log": 9.71,
+       "raw_brier": 0.1118,
+       "raw_mean_pred": 0.612
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.0456,
+       "mean_pred": 0.789,
+       "actual_win": 0.882,
+       "leak": 1.042,
+       "leak_sim": 10.79,
+       "leak_log": 10.35,
+       "raw_brier": 0.0771,
+       "raw_mean_pred": 0.752
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.1513,
+       "mean_pred": 0.475,
+       "actual_win": 0.4,
+       "leak": 1.432,
+       "leak_sim": 6.51,
+       "leak_log": 4.55,
+       "raw_brier": 0.1386,
+       "raw_mean_pred": 0.413
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 164,
+      "brier": 0.1239,
+      "mean_pred": 0.616,
+      "actual_win": 0.61,
+      "leak": 1.146,
+      "leak_sim": 9.36,
+      "leak_log": 8.17,
+      "raw_brier": 0.1365,
+      "auc": 0.895,
+      "worst_bucket_n20": 0.032,
+      "platt": [
+       0.7573,
+       0.5783
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1213,
+       "mean_pred": 0.499,
+       "actual_win": 0.6,
+       "leak": 1.013,
+       "leak_sim": 10.05,
+       "leak_log": 9.92,
+       "raw_brier": 0.2,
+       "raw_mean_pred": 0.332
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 13,
+       "brier": 0.0654,
+       "mean_pred": 0.839,
+       "actual_win": 0.846,
+       "leak": 1.176,
+       "leak_sim": 8.18,
+       "leak_log": 6.96,
+       "raw_brier": 0.0647,
+       "raw_mean_pred": 0.785
+      },
+      "CRUSHER+ROCKET": {
+       "n": 14,
+       "brier": 0.1241,
+       "mean_pred": 0.172,
+       "actual_win": 0.214,
+       "leak": 1.847,
+       "leak_sim": 21.57,
+       "leak_log": 11.68,
+       "raw_brier": 0.1703,
+       "raw_mean_pred": 0.044
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 13,
+       "brier": 0.108,
+       "mean_pred": 0.817,
+       "actual_win": 0.769,
+       "leak": 0.928,
+       "leak_sim": 9.78,
+       "leak_log": 10.53,
+       "raw_brier": 0.0962,
+       "raw_mean_pred": 0.761
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 19,
+       "brier": 0.0618,
+       "mean_pred": 0.596,
+       "actual_win": 0.632,
+       "leak": 1.041,
+       "leak_sim": 8.11,
+       "leak_log": 7.79,
+       "raw_brier": 0.0705,
+       "raw_mean_pred": 0.495
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 10,
+       "brier": 0.062,
+       "mean_pred": 0.67,
+       "actual_win": 0.7,
+       "leak": 0.899,
+       "leak_sim": 4.98,
+       "leak_log": 5.54,
+       "raw_brier": 0.0875,
+       "raw_mean_pred": 0.563
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 9,
+       "brier": 0.0987,
+       "mean_pred": 0.099,
+       "actual_win": 0.111,
+       "leak": 1.229,
+       "leak_sim": 14.36,
+       "leak_log": 11.68,
+       "raw_brier": 0.1094,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 23,
+       "brier": 0.109,
+       "mean_pred": 0.892,
+       "actual_win": 0.87,
+       "leak": 0.808,
+       "leak_sim": 4.73,
+       "leak_log": 5.85,
+       "raw_brier": 0.1295,
+       "raw_mean_pred": 0.866
+      },
+      "TEST_SUBJECT": {
+       "n": 4,
+       "brier": 0.3432,
+       "mean_pred": 0.123,
+       "actual_win": 0.5,
+       "leak": 2.477,
+       "leak_sim": 24.03,
+       "leak_log": 9.7,
+       "raw_brier": 0.4709,
+       "raw_mean_pred": 0.015
+      },
+      "THE_INSATIABLE": {
+       "n": 17,
+       "brier": 0.1866,
+       "mean_pred": 0.607,
+       "actual_win": 0.471,
+       "leak": 1.1,
+       "leak_sim": 11.72,
+       "leak_log": 10.65,
+       "raw_brier": 0.1746,
+       "raw_mean_pred": 0.5
+      },
+      "VANTOM": {
+       "n": 17,
+       "brier": 0.0841,
+       "mean_pred": 0.774,
+       "actual_win": 0.882,
+       "leak": 0.948,
+       "leak_sim": 8.28,
+       "leak_log": 8.73,
+       "raw_brier": 0.1345,
+       "raw_mean_pred": 0.7
+      },
+      "WATERFALL_GIANT": {
+       "n": 20,
+       "brier": 0.2281,
+       "mean_pred": 0.561,
+       "actual_win": 0.4,
+       "leak": 1.183,
+       "leak_sim": 7.47,
+       "leak_log": 6.31,
+       "raw_brier": 0.1797,
+       "raw_mean_pred": 0.423
+      }
+     }
+    }
+   }
+  },
+  "tune": {
+   "before": {
+    "t1": {
+     "overall": {
+      "n": 282,
+      "brier": 0.139,
+      "mean_pred": 0.585,
+      "actual_win": 0.585,
+      "leak": 1.195,
+      "leak_sim": 8.32,
+      "leak_log": 6.97,
+      "raw_brier": 0.1563,
+      "auc": 0.886,
+      "worst_bucket_n20": 0.105,
+      "platt": [
+       0.5534,
+       0.5036
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.0996,
+       "mean_pred": 0.252,
+       "actual_win": 0.0,
+       "leak": 1.453,
+       "leak_sim": 9.37,
+       "leak_log": 6.45,
+       "raw_brier": 0.0331,
+       "raw_mean_pred": 0.098
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.134,
+       "mean_pred": 0.677,
+       "actual_win": 0.84,
+       "leak": 1.181,
+       "leak_sim": 7.09,
+       "leak_log": 6.01,
+       "raw_brier": 0.1829,
+       "raw_mean_pred": 0.622
+      },
+      "CRUSHER+ROCKET": {
+       "n": 32,
+       "brier": 0.1133,
+       "mean_pred": 0.177,
+       "actual_win": 0.25,
+       "leak": 1.659,
+       "leak_sim": 17.54,
+       "leak_log": 10.57,
+       "raw_brier": 0.172,
+       "raw_mean_pred": 0.059
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 30,
+       "brier": 0.1452,
+       "mean_pred": 0.68,
+       "actual_win": 0.567,
+       "leak": 1.02,
+       "leak_sim": 8.74,
+       "leak_log": 8.57,
+       "raw_brier": 0.1157,
+       "raw_mean_pred": 0.603
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 24,
+       "brier": 0.1931,
+       "mean_pred": 0.37,
+       "actual_win": 0.375,
+       "leak": 1.163,
+       "leak_sim": 7.56,
+       "leak_log": 6.5,
+       "raw_brier": 0.2069,
+       "raw_mean_pred": 0.233
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1172,
+       "mean_pred": 0.652,
+       "actual_win": 0.714,
+       "leak": 1.051,
+       "leak_sim": 4.04,
+       "leak_log": 3.85,
+       "raw_brier": 0.1508,
+       "raw_mean_pred": 0.612
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.2125,
+       "mean_pred": 0.115,
+       "actual_win": 0.25,
+       "leak": 1.411,
+       "leak_sim": 14.69,
+       "leak_log": 10.41,
+       "raw_brier": 0.248,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.1093,
+       "mean_pred": 0.829,
+       "actual_win": 0.808,
+       "leak": 0.697,
+       "leak_sim": 4.36,
+       "leak_log": 6.26,
+       "raw_brier": 0.1233,
+       "raw_mean_pred": 0.819
+      },
+      "TEST_SUBJECT": {
+       "n": 6,
+       "brier": 0.0087,
+       "mean_pred": 0.09,
+       "actual_win": 0.0,
+       "leak": 2.304,
+       "leak_sim": 31.85,
+       "leak_log": 13.82,
+       "raw_brier": 0.0,
+       "raw_mean_pred": 0.002
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.2413,
+       "mean_pred": 0.718,
+       "actual_win": 0.448,
+       "leak": 1.009,
+       "leak_sim": 8.79,
+       "leak_log": 8.71,
+       "raw_brier": 0.2106,
+       "raw_mean_pred": 0.663
+      },
+      "VANTOM": {
+       "n": 33,
+       "brier": 0.1278,
+       "mean_pred": 0.718,
+       "actual_win": 0.879,
+       "leak": 1.013,
+       "leak_sim": 6.67,
+       "leak_log": 6.58,
+       "raw_brier": 0.2031,
+       "raw_mean_pred": 0.654
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.1009,
+       "mean_pred": 0.724,
+       "actual_win": 0.694,
+       "leak": 1.202,
+       "leak_sim": 5.7,
+       "leak_log": 4.74,
+       "raw_brier": 0.0884,
+       "raw_mean_pred": 0.679
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 275,
+      "brier": 0.0732,
+      "mean_pred": 0.6,
+      "actual_win": 0.6,
+      "leak": 1.109,
+      "leak_sim": 7.06,
+      "leak_log": 6.37,
+      "raw_brier": 0.0766,
+      "auc": 0.965,
+      "worst_bucket_n20": 0.051,
+      "platt": [
+       0.5624,
+       0.8224
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1172,
+       "mean_pred": 0.228,
+       "actual_win": 0.0,
+       "leak": 1.376,
+       "leak_sim": 11.7,
+       "leak_log": 8.5,
+       "raw_brier": 0.0592,
+       "raw_mean_pred": 0.154
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.0597,
+       "mean_pred": 0.772,
+       "actual_win": 0.84,
+       "leak": 1.171,
+       "leak_sim": 6.4,
+       "leak_log": 5.46,
+       "raw_brier": 0.0737,
+       "raw_mean_pred": 0.735
+      },
+      "CRUSHER+ROCKET": {
+       "n": 27,
+       "brier": 0.0513,
+       "mean_pred": 0.238,
+       "actual_win": 0.296,
+       "leak": 1.914,
+       "leak_sim": 12.96,
+       "leak_log": 6.77,
+       "raw_brier": 0.0764,
+       "raw_mean_pred": 0.193
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 31,
+       "brier": 0.0831,
+       "mean_pred": 0.63,
+       "actual_win": 0.581,
+       "leak": 1.116,
+       "leak_sim": 5.77,
+       "leak_log": 5.17,
+       "raw_brier": 0.0775,
+       "raw_mean_pred": 0.59
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 23,
+       "brier": 0.0779,
+       "mean_pred": 0.38,
+       "actual_win": 0.391,
+       "leak": 1.187,
+       "leak_sim": 8.49,
+       "leak_log": 7.15,
+       "raw_brier": 0.0863,
+       "raw_mean_pred": 0.322
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1193,
+       "mean_pred": 0.704,
+       "actual_win": 0.714,
+       "leak": 0.821,
+       "leak_sim": 5.33,
+       "leak_log": 6.49,
+       "raw_brier": 0.1199,
+       "raw_mean_pred": 0.666
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.0871,
+       "mean_pred": 0.133,
+       "actual_win": 0.25,
+       "leak": 1.999,
+       "leak_sim": 11.83,
+       "leak_log": 5.92,
+       "raw_brier": 0.1149,
+       "raw_mean_pred": 0.101
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.0685,
+       "mean_pred": 0.829,
+       "actual_win": 0.808,
+       "leak": 0.662,
+       "leak_sim": 4.33,
+       "leak_log": 6.54,
+       "raw_brier": 0.0688,
+       "raw_mean_pred": 0.792
+      },
+      "TEST_SUBJECT": {
+       "n": 5,
+       "brier": 0.0294,
+       "mean_pred": 0.087,
+       "actual_win": 0.0,
+       "leak": 1.347,
+       "leak_sim": 23.26,
+       "leak_log": 17.27,
+       "raw_brier": 0.0097,
+       "raw_mean_pred": 0.044
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.0462,
+       "mean_pred": 0.508,
+       "actual_win": 0.448,
+       "leak": 0.901,
+       "leak_sim": 8.73,
+       "leak_log": 9.69,
+       "raw_brier": 0.0322,
+       "raw_mean_pred": 0.464
+      },
+      "VANTOM": {
+       "n": 32,
+       "brier": 0.072,
+       "mean_pred": 0.822,
+       "actual_win": 0.875,
+       "leak": 1.11,
+       "leak_sim": 8.66,
+       "leak_log": 7.81,
+       "raw_brier": 0.1003,
+       "raw_mean_pred": 0.784
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.0751,
+       "mean_pred": 0.724,
+       "actual_win": 0.694,
+       "leak": 1.376,
+       "leak_sim": 5.17,
+       "leak_log": 3.76,
+       "raw_brier": 0.0613,
+       "raw_mean_pred": 0.687
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 282,
+      "brier": 0.1406,
+      "mean_pred": 0.585,
+      "actual_win": 0.585,
+      "leak": 1.191,
+      "leak_sim": 8.3,
+      "leak_log": 6.97,
+      "raw_brier": 0.1573,
+      "auc": 0.879,
+      "worst_bucket_n20": 0.101,
+      "platt": [
+       0.5236,
+       0.5219
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.0934,
+       "mean_pred": 0.244,
+       "actual_win": 0.0,
+       "leak": 1.419,
+       "leak_sim": 9.15,
+       "leak_log": 6.45,
+       "raw_brier": 0.0312,
+       "raw_mean_pred": 0.096
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.1323,
+       "mean_pred": 0.674,
+       "actual_win": 0.84,
+       "leak": 1.197,
+       "leak_sim": 7.19,
+       "leak_log": 6.01,
+       "raw_brier": 0.1866,
+       "raw_mean_pred": 0.608
+      },
+      "CRUSHER+ROCKET": {
+       "n": 32,
+       "brier": 0.1149,
+       "mean_pred": 0.172,
+       "actual_win": 0.25,
+       "leak": 1.665,
+       "leak_sim": 17.58,
+       "leak_log": 10.56,
+       "raw_brier": 0.1695,
+       "raw_mean_pred": 0.061
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 30,
+       "brier": 0.1498,
+       "mean_pred": 0.69,
+       "actual_win": 0.567,
+       "leak": 0.989,
+       "leak_sim": 8.48,
+       "leak_log": 8.57,
+       "raw_brier": 0.1155,
+       "raw_mean_pred": 0.622
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 24,
+       "brier": 0.1972,
+       "mean_pred": 0.374,
+       "actual_win": 0.375,
+       "leak": 1.157,
+       "leak_sim": 7.52,
+       "leak_log": 6.5,
+       "raw_brier": 0.2091,
+       "raw_mean_pred": 0.247
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1152,
+       "mean_pred": 0.664,
+       "actual_win": 0.714,
+       "leak": 1.058,
+       "leak_sim": 4.07,
+       "leak_log": 3.85,
+       "raw_brier": 0.1439,
+       "raw_mean_pred": 0.627
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.2219,
+       "mean_pred": 0.077,
+       "actual_win": 0.25,
+       "leak": 1.459,
+       "leak_sim": 14.93,
+       "leak_log": 10.24,
+       "raw_brier": 0.25,
+       "raw_mean_pred": 0.001
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.1057,
+       "mean_pred": 0.816,
+       "actual_win": 0.808,
+       "leak": 0.696,
+       "leak_sim": 4.35,
+       "leak_log": 6.26,
+       "raw_brier": 0.1164,
+       "raw_mean_pred": 0.798
+      },
+      "TEST_SUBJECT": {
+       "n": 6,
+       "brier": 0.0094,
+       "mean_pred": 0.088,
+       "actual_win": 0.0,
+       "leak": 2.176,
+       "leak_sim": 29.45,
+       "leak_log": 13.53,
+       "raw_brier": 0.0001,
+       "raw_mean_pred": 0.003
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.2606,
+       "mean_pred": 0.717,
+       "actual_win": 0.448,
+       "leak": 1.018,
+       "leak_sim": 8.87,
+       "leak_log": 8.71,
+       "raw_brier": 0.242,
+       "raw_mean_pred": 0.672
+      },
+      "VANTOM": {
+       "n": 33,
+       "brier": 0.1155,
+       "mean_pred": 0.726,
+       "actual_win": 0.879,
+       "leak": 0.996,
+       "leak_sim": 6.55,
+       "leak_log": 6.58,
+       "raw_brier": 0.1877,
+       "raw_mean_pred": 0.661
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.1054,
+       "mean_pred": 0.723,
+       "actual_win": 0.694,
+       "leak": 1.197,
+       "leak_sim": 5.68,
+       "leak_log": 4.74,
+       "raw_brier": 0.0937,
+       "raw_mean_pred": 0.677
+      }
+     }
+    }
+   },
+   "after": {
+    "t1": {
+     "overall": {
+      "n": 282,
+      "brier": 0.1304,
+      "mean_pred": 0.585,
+      "actual_win": 0.585,
+      "leak": 1.211,
+      "leak_sim": 8.44,
+      "leak_log": 6.97,
+      "raw_brier": 0.1498,
+      "auc": 0.9,
+      "worst_bucket_n20": 0.116,
+      "platt": [
+       0.7875,
+       0.5587
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1144,
+       "mean_pred": 0.264,
+       "actual_win": 0.0,
+       "leak": 1.453,
+       "leak_sim": 9.37,
+       "leak_log": 6.45,
+       "raw_brier": 0.0331,
+       "raw_mean_pred": 0.098
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.1256,
+       "mean_pred": 0.706,
+       "actual_win": 0.84,
+       "leak": 1.181,
+       "leak_sim": 7.09,
+       "leak_log": 6.01,
+       "raw_brier": 0.1829,
+       "raw_mean_pred": 0.622
+      },
+      "CRUSHER+ROCKET": {
+       "n": 32,
+       "brier": 0.108,
+       "mean_pred": 0.18,
+       "actual_win": 0.25,
+       "leak": 1.659,
+       "leak_sim": 17.54,
+       "leak_log": 10.57,
+       "raw_brier": 0.172,
+       "raw_mean_pred": 0.059
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 30,
+       "brier": 0.1565,
+       "mean_pred": 0.713,
+       "actual_win": 0.567,
+       "leak": 1.02,
+       "leak_sim": 8.74,
+       "leak_log": 8.57,
+       "raw_brier": 0.1157,
+       "raw_mean_pred": 0.603
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 24,
+       "brier": 0.1971,
+       "mean_pred": 0.379,
+       "actual_win": 0.375,
+       "leak": 1.163,
+       "leak_sim": 7.56,
+       "leak_log": 6.5,
+       "raw_brier": 0.2046,
+       "raw_mean_pred": 0.223
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1128,
+       "mean_pred": 0.681,
+       "actual_win": 0.714,
+       "leak": 1.051,
+       "leak_sim": 4.04,
+       "leak_log": 3.85,
+       "raw_brier": 0.1508,
+       "raw_mean_pred": 0.612
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.2153,
+       "mean_pred": 0.112,
+       "actual_win": 0.25,
+       "leak": 1.411,
+       "leak_sim": 14.69,
+       "leak_log": 10.41,
+       "raw_brier": 0.248,
+       "raw_mean_pred": 0.009
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.1136,
+       "mean_pred": 0.856,
+       "actual_win": 0.808,
+       "leak": 0.697,
+       "leak_sim": 4.36,
+       "leak_log": 6.26,
+       "raw_brier": 0.1233,
+       "raw_mean_pred": 0.819
+      },
+      "TEST_SUBJECT": {
+       "n": 6,
+       "brier": 0.0078,
+       "mean_pred": 0.084,
+       "actual_win": 0.0,
+       "leak": 2.304,
+       "leak_sim": 31.85,
+       "leak_log": 13.82,
+       "raw_brier": 0.0,
+       "raw_mean_pred": 0.002
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.1582,
+       "mean_pred": 0.528,
+       "actual_win": 0.448,
+       "leak": 1.145,
+       "leak_sim": 9.97,
+       "leak_log": 8.71,
+       "raw_brier": 0.149,
+       "raw_mean_pred": 0.366
+      },
+      "VANTOM": {
+       "n": 33,
+       "brier": 0.1197,
+       "mean_pred": 0.744,
+       "actual_win": 0.879,
+       "leak": 1.013,
+       "leak_sim": 6.67,
+       "leak_log": 6.58,
+       "raw_brier": 0.2031,
+       "raw_mean_pred": 0.654
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.1045,
+       "mean_pred": 0.754,
+       "actual_win": 0.694,
+       "leak": 1.202,
+       "leak_sim": 5.7,
+       "leak_log": 4.74,
+       "raw_brier": 0.0884,
+       "raw_mean_pred": 0.679
+      }
+     }
+    },
+    "t5": {
+     "overall": {
+      "n": 275,
+      "brier": 0.0731,
+      "mean_pred": 0.6,
+      "actual_win": 0.6,
+      "leak": 1.109,
+      "leak_sim": 7.06,
+      "leak_log": 6.37,
+      "raw_brier": 0.0766,
+      "auc": 0.965,
+      "worst_bucket_n20": 0.053,
+      "platt": [
+       0.5682,
+       0.8221
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1178,
+       "mean_pred": 0.229,
+       "actual_win": 0.0,
+       "leak": 1.376,
+       "leak_sim": 11.7,
+       "leak_log": 8.5,
+       "raw_brier": 0.0592,
+       "raw_mean_pred": 0.154
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.0596,
+       "mean_pred": 0.773,
+       "actual_win": 0.84,
+       "leak": 1.171,
+       "leak_sim": 6.4,
+       "leak_log": 5.46,
+       "raw_brier": 0.0737,
+       "raw_mean_pred": 0.735
+      },
+      "CRUSHER+ROCKET": {
+       "n": 27,
+       "brier": 0.0511,
+       "mean_pred": 0.239,
+       "actual_win": 0.296,
+       "leak": 1.914,
+       "leak_sim": 12.96,
+       "leak_log": 6.77,
+       "raw_brier": 0.0764,
+       "raw_mean_pred": 0.193
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 31,
+       "brier": 0.0832,
+       "mean_pred": 0.63,
+       "actual_win": 0.581,
+       "leak": 1.116,
+       "leak_sim": 5.77,
+       "leak_log": 5.17,
+       "raw_brier": 0.0775,
+       "raw_mean_pred": 0.59
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 23,
+       "brier": 0.076,
+       "mean_pred": 0.375,
+       "actual_win": 0.391,
+       "leak": 1.187,
+       "leak_sim": 8.49,
+       "leak_log": 7.15,
+       "raw_brier": 0.0862,
+       "raw_mean_pred": 0.318
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1194,
+       "mean_pred": 0.705,
+       "actual_win": 0.714,
+       "leak": 0.821,
+       "leak_sim": 5.33,
+       "leak_log": 6.49,
+       "raw_brier": 0.1199,
+       "raw_mean_pred": 0.666
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.0868,
+       "mean_pred": 0.133,
+       "actual_win": 0.25,
+       "leak": 1.999,
+       "leak_sim": 11.83,
+       "leak_log": 5.92,
+       "raw_brier": 0.1149,
+       "raw_mean_pred": 0.101
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.0685,
+       "mean_pred": 0.829,
+       "actual_win": 0.808,
+       "leak": 0.662,
+       "leak_sim": 4.33,
+       "leak_log": 6.54,
+       "raw_brier": 0.0688,
+       "raw_mean_pred": 0.792
+      },
+      "TEST_SUBJECT": {
+       "n": 5,
+       "brier": 0.0296,
+       "mean_pred": 0.087,
+       "actual_win": 0.0,
+       "leak": 1.347,
+       "leak_sim": 23.26,
+       "leak_log": 17.27,
+       "raw_brier": 0.0097,
+       "raw_mean_pred": 0.044
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.0463,
+       "mean_pred": 0.509,
+       "actual_win": 0.448,
+       "leak": 0.901,
+       "leak_sim": 8.73,
+       "leak_log": 9.69,
+       "raw_brier": 0.0322,
+       "raw_mean_pred": 0.464
+      },
+      "VANTOM": {
+       "n": 32,
+       "brier": 0.0717,
+       "mean_pred": 0.822,
+       "actual_win": 0.875,
+       "leak": 1.11,
+       "leak_sim": 8.66,
+       "leak_log": 7.81,
+       "raw_brier": 0.1003,
+       "raw_mean_pred": 0.784
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.0752,
+       "mean_pred": 0.724,
+       "actual_win": 0.694,
+       "leak": 1.376,
+       "leak_sim": 5.17,
+       "leak_log": 3.76,
+       "raw_brier": 0.0613,
+       "raw_mean_pred": 0.687
+      }
+     }
+    },
+    "pre": {
+     "overall": {
+      "n": 282,
+      "brier": 0.1316,
+      "mean_pred": 0.585,
+      "actual_win": 0.585,
+      "leak": 1.207,
+      "leak_sim": 8.41,
+      "leak_log": 6.97,
+      "raw_brier": 0.1506,
+      "auc": 0.893,
+      "worst_bucket_n20": 0.085,
+      "platt": [
+       0.7573,
+       0.5783
+      ]
+     },
+     "by_boss": {
+      "AEONGLASS": {
+       "n": 5,
+       "brier": 0.1075,
+       "mean_pred": 0.256,
+       "actual_win": 0.0,
+       "leak": 1.419,
+       "leak_sim": 9.15,
+       "leak_log": 6.45,
+       "raw_brier": 0.0312,
+       "raw_mean_pred": 0.096
+      },
+      "CEREMONIAL_BEAST": {
+       "n": 25,
+       "brier": 0.1213,
+       "mean_pred": 0.706,
+       "actual_win": 0.84,
+       "leak": 1.197,
+       "leak_sim": 7.19,
+       "leak_log": 6.01,
+       "raw_brier": 0.1866,
+       "raw_mean_pred": 0.608
+      },
+      "CRUSHER+ROCKET": {
+       "n": 32,
+       "brier": 0.1094,
+       "mean_pred": 0.176,
+       "actual_win": 0.25,
+       "leak": 1.665,
+       "leak_sim": 17.58,
+       "leak_log": 10.56,
+       "raw_brier": 0.1695,
+       "raw_mean_pred": 0.061
+      },
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": {
+       "n": 30,
+       "brier": 0.1621,
+       "mean_pred": 0.727,
+       "actual_win": 0.567,
+       "leak": 0.989,
+       "leak_sim": 8.48,
+       "leak_log": 8.57,
+       "raw_brier": 0.1155,
+       "raw_mean_pred": 0.622
+      },
+      "KNOWLEDGE_DEMON": {
+       "n": 24,
+       "brier": 0.199,
+       "mean_pred": 0.388,
+       "actual_win": 0.375,
+       "leak": 1.157,
+       "leak_sim": 7.52,
+       "leak_log": 6.5,
+       "raw_brier": 0.2041,
+       "raw_mean_pred": 0.238
+      },
+      "LAGAVULIN_MATRIARCH": {
+       "n": 28,
+       "brier": 0.1111,
+       "mean_pred": 0.694,
+       "actual_win": 0.714,
+       "leak": 1.058,
+       "leak_sim": 4.07,
+       "leak_log": 3.85,
+       "raw_brier": 0.1439,
+       "raw_mean_pred": 0.627
+      },
+      "QUEEN+TORCH_HEAD_AMALGAM": {
+       "n": 8,
+       "brier": 0.2243,
+       "mean_pred": 0.071,
+       "actual_win": 0.25,
+       "leak": 1.459,
+       "leak_sim": 14.93,
+       "leak_log": 10.24,
+       "raw_brier": 0.25,
+       "raw_mean_pred": 0.001
+      },
+      "SOUL_FYSH": {
+       "n": 26,
+       "brier": 0.1084,
+       "mean_pred": 0.844,
+       "actual_win": 0.808,
+       "leak": 0.696,
+       "leak_sim": 4.35,
+       "leak_log": 6.26,
+       "raw_brier": 0.1164,
+       "raw_mean_pred": 0.798
+      },
+      "TEST_SUBJECT": {
+       "n": 6,
+       "brier": 0.0089,
+       "mean_pred": 0.083,
+       "actual_win": 0.0,
+       "leak": 2.176,
+       "leak_sim": 29.45,
+       "leak_log": 13.53,
+       "raw_brier": 0.0001,
+       "raw_mean_pred": 0.003
+      },
+      "THE_INSATIABLE": {
+       "n": 29,
+       "brier": 0.1802,
+       "mean_pred": 0.513,
+       "actual_win": 0.448,
+       "leak": 1.153,
+       "leak_sim": 10.04,
+       "leak_log": 8.71,
+       "raw_brier": 0.1804,
+       "raw_mean_pred": 0.342
+      },
+      "VANTOM": {
+       "n": 33,
+       "brier": 0.106,
+       "mean_pred": 0.752,
+       "actual_win": 0.879,
+       "leak": 0.996,
+       "leak_sim": 6.55,
+       "leak_log": 6.58,
+       "raw_brier": 0.1877,
+       "raw_mean_pred": 0.661
+      },
+      "WATERFALL_GIANT": {
+       "n": 36,
+       "brier": 0.1086,
+       "mean_pred": 0.755,
+       "actual_win": 0.694,
+       "leak": 1.197,
+       "leak_sim": 5.68,
+       "leak_log": 4.74,
+       "raw_brier": 0.0937,
+       "raw_mean_pred": 0.677
+      }
+     }
+    }
+   }
+  }
+ }
+}
