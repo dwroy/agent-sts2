@@ -35,3 +35,7 @@
 ### V4.2 第 10–12 局复盘补充（2026-10-01 18:33）
 - **魂缚锁链锁住的牌被当成「只是能量不够」**：src/strategy/card-model.ts:595 `playable: … || unplayable_reason === "not_enough_energy"`，被锁牌在 0 能量时 mod 报 not_enough_energy，但 unplayable_preventer_id=CHAINS_OF_BINDING_POWER；turn-solver.ts:1156 只锁同一计划内其余魂缚牌，不知道本回合已打出过一张。证据 4JGP F48 T2（帧 4817188058/4817282082）：计划「能量药水、防御+」预测掉 2 血，喝药后 blocked_by_hook，结束回合实掉 10 血，药白喝。不阻塞。
 - 已知项复发：build-sim-facts.ts:387（THR F17「地狱狂徒 6%→56%」被引用后选中）；小样本 B3 差值被引用（THR F29/F37、4JGP F27/F32）；低可信 boss 满时模拟（4JGP 帝王蟹约 110 s、3 题超时）；战中选牌屏 mod 超时约 13 s（THR、KSPL 各 1）。gate_reject 0、DeepSeek 空内容 0、无泄漏。
+
+### V4.2 第 13–15 局复盘补充（2026-10-01 21:05）
+- 无新纯 bug。已知项复发：build-sim-facts.ts:387（三局都中，KXG7 F17、JR6E F33 被引用）；低可信 boss 满时模拟（帝王蟹 75.5/38.2 s、女王 36.9/48.5 s、实验体 19.3 s）；mod 超时约 10 s 自愈（KXG7 还出现在地图和火堆屏）。gate_reject 0，魂缚误判未复发，无泄漏。
+- 观察：rollout 被时间预算砍到 2 样本、3 回合的题仍给出「最优」喝药线（KXG7 F27、JR6E F45），可能与机器负载/低可信 boss 满时模拟抢 CPU 有关，待窗口报告看负载。
