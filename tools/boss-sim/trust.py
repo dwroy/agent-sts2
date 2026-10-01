@@ -83,7 +83,7 @@ def main():
     parser.add_argument("--results", required=True)
     parser.add_argument("--set", default="val_ext")
     parser.add_argument("--split", default=os.path.join(ROOT, "experiments", "boss-sim", "split.json"))
-    parser.add_argument("--turns", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "turns-1001.jsonl"))
+    parser.add_argument("--turns", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "turns-1002.jsonl"))
     parser.add_argument("--out", default=os.path.join(ROOT, "src", "sim", "boss-trust.json"))
     parser.add_argument("--md")
     parser.add_argument("--source", default="")
@@ -120,7 +120,7 @@ def main():
         json.dump(out, handle, ensure_ascii=False, indent=1)
         handle.write("\n")
     if args.md:
-        lines = [f"# Boss trust (B4): {args.set}, {out['source']}", "",
+        lines = [f"# Boss trust: {args.set}, {out['source']}", "",
                  f"Criteria: n ≥ {MIN_FIGHTS}; calibrated Brier ≤ {BRIER_RATIO} × overall; |mean forecast − actual| ≤ {MAX_GAP:.0%}; "
                  f"HP through block sim/log in [{LEAK_RANGE[0]}, {LEAK_RANGE[1]}].", ""]
         for use, start in STARTS.items():
