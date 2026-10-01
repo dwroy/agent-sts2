@@ -6,13 +6,49 @@
 import { describe, expect, it } from "vitest";
 
 import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
-import { potionEffect, potionShell } from "../src/strategy/card-model.js";
+import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
+import { beatsDryLine, potionMcCriteria, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
 const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
+
+function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
+  return {
+    index,
+    key: `c${index}`,
+    cardId,
+    name: cardId,
+    type: "Attack",
+    upgraded: false,
+    cost: 1,
+    xCost: false,
+    playable: true,
+    target: "single",
+    validTargets: [0],
+    damage: null,
+    hits: 1,
+    block: 0,
+    vulnerable: 0,
+    weak: 0,
+    strength: 0,
+    tempStrength: 0,
+    enemyStrength: 0,
+    enemyTempStrengthLoss: 0,
+    hpLoss: 0,
+    energyGain: 0,
+    draw: 0,
+    exhausts: false,
+    special: null,
+    known: true,
+    flatValue: 0,
+    heldPenalty: 0,
+    text: "",
+    ...overrides,
+  };
+}
 
 /** A rollout line as the saturated ranking reads it: this turn's exact loss, deaths, enemy HP left, turns alive. */
 function rolled(name: string, turnLoss: number, over: Partial<LineEstimate> & { hpLoss: number }): LineEstimate {
@@ -128,5 +164,40 @@ describe("3. The elite/boss HP guard compares HP lost, not the potions' held val
     const drink = line("drink", 10, 0);
     const dry = line("dry", 4);
     expect(hpGuardReplacement(drink, [dry, drink], 80, hpGuardSlack(80, "boss"))).toBeNull();
+  });
+});
+
+describe("4. A random potion's Power counts past this turn (fix-queue-v4 potion-mc:49-57 beatsDryLine)", () => {
+  // 9FVEQKJ0Y1YQ F33 (the Insatiable): the Power Potion bought for the boss read "beats 0/12", never drunk.
+  const strike = card(0, "STRIKE_IRONCLAD", { name: "Strike", damage: 6 });
+  const inflame = card(0, "INFLAME", { name: "Inflame", type: "Power", cost: 0, target: "self", validTargets: [], strength: 2 });
+  const input = (fightKind: SolverInput["fightKind"]): SolverInput => ({
+    hand: [strike],
+    player: player({ hp: 60, maxHp: 80, energy: 1 }),
+    enemies: [enemy({ hp: 341, maxHp: 341, attacks: [{ damage: 10, hits: 1 }] })],
+    fightKind,
+    turn: 1,
+  });
+  const source: PotionMcSource = { potionId: "POWER_POTION", name: "Power Potion", slot: 0, text: "", kind: "choice", pools: { Power: [inflame] }, poolName: "ironclad" };
+
+  it("boss T1: Inflame's 2 Strength for the fight beats the dry Strike, though this turn gains only 2 damage", () => {
+    const dry = solveTurn(input("boss")).plans[0]!;
+    expect(dry.outcome.damageDealt).toBe(6);
+    const mc = runPotionMc(input("boss"), source, dry, 7, 1e9, 4);
+    expect(mc.samples).toBe(4);
+    // This turn alone: 2 more damage (0.8 HP's worth), under the 2-HP margin.
+    expect(mc.vsDry!.damageGained).toBe(2);
+    expect(mc.beats).toBe(4);
+    // Strength 2 at the solver's 5 a point, x 1.8 (a boss fight, T1), over HP weight 1.0: 18 HP.
+    expect(mc.vsDry!.lastingGained).toBeCloseTo(18, 5);
+    expect(String(potionMcCriteria(mc, dry, () => "", false)["vs_best_potion_free_line"])).toMatch(/mean lasting value \+18 HP/);
+  });
+
+  it("a line that wins the fight now sets nothing up for later; a hallway fight weighs it less", () => {
+    const dry = solveTurn(input("monster")).plans[0]!;
+    const mc = runPotionMc(input("monster"), source, dry, 7, 1e9, 4);
+    expect(mc.vsDry!.lastingGained).toBeCloseTo(8, 5);
+    const won = { ...mc.median!, outcome: { ...mc.median!.outcome, winsFight: true } } as Plan;
+    expect(beatsDryLine(won, dry, 1)).toBe(true);
   });
 });

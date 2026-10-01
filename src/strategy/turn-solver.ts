@@ -1986,6 +1986,26 @@ function lastingValue(sim: Sim, weights: Weights): number {
   return weights.strength * sim.permStrength + sim.flat;
 }
 
+/**
+ * What a point of lasting value (Outcome.lasting) adds to the score: it pays off over the rest of the fight, more in
+ * long fights (boss 1.8, elite 1.4, hallway 0.8), less the later it comes (8% a turn, never below 40%); nothing on
+ * the last turn before a time limit ends the fight.
+ */
+export function lastingScale(input: Pick<SolverInput, "fightKind" | "turn" | "enemies">): number {
+  if (turnsLeftOf(input) === 1) return 0;
+  const fightLength = input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8;
+  const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
+  return fightLength * earliness;
+}
+
+/**
+ * A point of lasting value in HP, as the score trades them (lastingScale over the HP weight): what the random potions'
+ * Monte Carlo counts for a power or Strength a sample sets up (potion-mc.ts beatsDryLine).
+ */
+export function lastingHpPerPoint(input: SolverInput): number {
+  return lastingScale(input) / weightsFor(input).hp;
+}
+
 /** Crab balance: HP gap between the two parts allowed before it costs (a same-turn double kill still fits). */
 export const CRAB_GAP_FREE = 30;
 /** Per point of gap past that, as a share of the damage weight (damage into the low part is worth half). */
@@ -2382,11 +2402,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // The last turn before a time limit ends the fight: nothing that pays on a later turn counts.
   const later = turnsLeftOf(input) === 1 ? 0 : 1;
   if (!winsFight) {
-    // Lasting value (Strength, powers) pays off over the rest of the fight: more in long fights,
-    // less the later it comes.
-    const fightLength = (input.fightKind === "boss" ? 1.8 : input.fightKind === "elite" ? 1.4 : 0.8) * later;
-    const earliness = Math.max(0.4, 1 - 0.08 * ((input.turn ?? 1) - 1));
-    score += lastingValue(sim, weights) * fightLength * earliness;
+    score += lastingValue(sim, weights) * lastingScale(input);
     score += platingValue * later;
     score += drawScoreAt(sim.draws, sim.energy);
     // Pael's Tear: energy left unspent gives the next turn its extra energy, valued as Radiant Tincture's later energy.
@@ -2397,7 +2413,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     // (N1V2 F48: exhausted T4, fired once, back in hand T7).
     // A Mantle played this low bleeds us out before its block pays (YP9 T3: 30 HP, Mantle over
     // Defend+ into a 28 hit, 2 HP left, then the Mantle's own HP cost killed us).
-    if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * fightLength * earliness + weights.hp * 5);
+    if (sim.mantles > 0 && hpAfter <= 10) score -= sim.mantles * (MANTLE_VALUE * lastingScale(input) + weights.hp * 5);
   }
   // After The Gambit every unblocked hit for the rest of the fight kills: a last resort only.
   if (gambitPlayed && !winsFight) score -= weights.hp * GAMBIT_COST;
