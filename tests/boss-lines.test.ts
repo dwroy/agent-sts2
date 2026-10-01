@@ -7,6 +7,7 @@
 
 import { afterAll, describe, expect, it } from "vitest";
 
+import { LOW_TRUST_B2 } from "../src/sim/boss-trust.js";
 import { BossLinesPool, bossKeyOf, fightPlanText, LOW_TRUST_BOSSES, rankLines, runLines, runPairsSerial, linesInput, lineSimText, simWinsLess, type BossLineSim } from "../src/sim/boss-lines.js";
 import { summarizeLine, type BossSimLineResult, type FightSampleResult } from "../src/sim/boss-sim.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
@@ -129,9 +130,10 @@ describe("B2 ranking", () => {
     expect(bossKeyOf(["CRUSHER", "ROCKET"])).toBe("KAISER_CRAB");
     expect(bossKeyOf(["TORCH_HEAD_AMALGAM", "QUEEN"])).toBe("QUEEN");
     expect(bossKeyOf(["KIN_FOLLOWER", "KIN_PRIEST"])).toBe("THE_KIN");
-    expect(Object.keys(LOW_TRUST_BOSSES).sort()).toEqual(["AEONGLASS", "KAISER_CRAB", "KNOWLEDGE_DEMON", "QUEEN", "TEST_SUBJECT", "THE_INSATIABLE"]);
+    // B4: the list is the validation data's (src/sim/boss-trust.json, tests/boss-sim-b4.test.ts checks it against its criteria).
+    expect(LOW_TRUST_BOSSES).toEqual(LOW_TRUST_B2);
     expect(LOW_TRUST_BOSSES[bossKeyOf(["SOUL_FYSH"])!]).toBeUndefined();
-    const text = lineSimText(line(0, outcomes(60, 20)), 0.6, null, { samples: 100, requested: 100, timedOut: false }, 2, { best: true, winTied: true, lowTrust: LOW_TRUST_BOSSES["QUEEN"]! });
+    const text = lineSimText(line(0, outcomes(60, 20)), 0.6, null, { samples: 100, requested: 100, timedOut: false }, 2, { best: true, winTied: true, lowTrust: "a reason" });
     expect(text.startsWith("low confidence: win 60% (the simulation's best line)")).toBe(true);
   });
 });

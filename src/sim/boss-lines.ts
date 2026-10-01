@@ -50,6 +50,7 @@ import {
   type FightSampleResult,
   type LineComparison,
 } from "./boss-sim.js";
+import { LOW_TRUST_B2 } from "./boss-trust.js";
 
 /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
 export const BOSS_LINES_SAMPLES = 600;
@@ -101,17 +102,11 @@ export const bossLinesOptions: {
 };
 
 /**
- * Bosses whose simulated numbers are information only (the 5-turn rollout keeps ranking the lines), and why: the
- * validation fights of B1.5 (docs/boss-sim.md §6.5) and what the simulator does not model.
+ * Bosses whose simulated numbers are information only (the 5-turn rollout keeps ranking the lines), and why: B4's
+ * criteria on each boss's validation numbers from turn 1 (docs/boss-sim.md §13), the data file src/sim/boss-trust.json
+ * that tools/boss-sim/trust.py writes (boss-trust.ts LOW_TRUST_B2).
  */
-export const LOW_TRUST_BOSSES: Record<string, string> = {
-  KAISER_CRAB: "the simulated play takes ~1.6x the logged HP through block in this fight (it blocks less than our play did)",
-  TEST_SUBJECT: "the simulated play takes ~2.5x the logged HP through block in phase 2 (only 9 logged fights)",
-  QUEEN: "the simulated play blocks less than our play under You Are Mine, and the Amalgam's moves are approximated",
-  KNOWLEDGE_DEMON: "Ponder's and the curses' limits are not simulated",
-  AEONGLASS: "only 9 logged fights to check the simulation against",
-  THE_INSATIABLE: "the simulation was too optimistic on the validation fights (forecast 70% won, 39% won)",
-};
+export const LOW_TRUST_BOSSES: Record<string, string> = LOW_TRUST_B2;
 
 /** The boss of a fight by its enemies' ids (the encounter's key in LOW_TRUST_BOSSES and the monster DB's bosses). */
 export function bossKeyOf(enemyIds: string[]): string | null {

@@ -14,7 +14,7 @@ import { parseGameState } from "../src/mod/schema.js";
 import { sampleSeed } from "../src/sim/boss-sim.js";
 import { bossOpening, syntheticBossStart } from "../src/sim/boss-start.js";
 import { compareOptions } from "../src/sim/build-sim.js";
-import { BOSS_SIM_NOTE, withBossSim } from "../src/sim/build-sim-facts.js";
+import { BOSS_SIM_NOTE, LOW_CONFIDENCE, withBossSim } from "../src/sim/build-sim-facts.js";
 import { BuildSimPool, SerialDeckRunner, type DeckRunRequest } from "../src/sim/build-sim-pool.js";
 import type { JsonValue } from "../src/util/json.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
@@ -168,13 +168,19 @@ describe("B3 boss simulation on the questions", () => {
     expect(record).toMatchObject({ boss: "SOUL_FYSH", samples: 16, entry_source: "hp_now" });
   });
 
-  it("the Kaiser Crab is marked low-confidence, with why; a relic the fight does not model is not simulated", async () => {
+  it("a low-confidence boss (the Kaiser Crab here) is marked, with why; a relic the fight does not model is not simulated", async () => {
+    // B4: which bosses are low confidence is the validation data's (src/sim/boss-trust.json); this test sets its own.
+    const saved = LOW_CONFIDENCE["KAISER_CRAB"];
+    LOW_CONFIDENCE["KAISER_CRAB"] = "测试用的理由";
     const e = env(board("u6ru-f22-shop", "open"));
-    const { decision, record } = await withBossSim(decide(e), e, { ...setup, samples: 8, deadlineMs: 60_000 });
+    const { decision, record } = await withBossSim(decide(e), e, { ...setup, samples: 8, deadlineMs: 60_000 }).finally(() => {
+      if (saved === undefined) delete LOW_CONFIDENCE["KAISER_CRAB"];
+      else LOW_CONFIDENCE["KAISER_CRAB"] = saved;
+    });
     const after = criteria(decision);
     expect(record).toMatchObject({ samples: 8, timed_out: false, orders: 3 });
     expect(String(after["leave"]!["boss_sim"])).toContain("低可信，见 facts.act_boss_sim");
-    expect(((ask(decision).state["facts"] as Record<string, JsonValue>)["act_boss_sim"] as Record<string, JsonValue>)["low_confidence"]).toContain("1.6 倍");
+    expect(((ask(decision).state["facts"] as Record<string, JsonValue>)["act_boss_sim"] as Record<string, JsonValue>)["low_confidence"]).toBe("测试用的理由");
     const relics = Object.entries(after).filter(([k]) => k.startsWith("buy_relic")).map(([, o]) => String(o["boss_sim"]));
     expect(relics.some((line) => line.endsWith("效果没有建模：不模拟"))).toBe(true);
     // The removal: one line per removable card.
