@@ -180,10 +180,10 @@ describe("askJson's reply parsing (0B5Y F30: run-plan review returned two object
     expect(pickJsonObject('{"choice": "x", "reason": "y"}')).toEqual({ choice: "x", reason: "y" });
   });
 
-  it("still fails on garbage: prose, a truncated object, trailing text, a non-object", () => {
+  it("still fails on garbage: prose, a truncated object, a non-object; an object then text is the object (fix-queue-v4 #9)", () => {
     expect(() => pickJsonObject("Here is the plan: {}")).toThrow(/non-JSON/);
     expect(() => pickJsonObject('{"a": 1')).toThrow(/non-JSON/);
-    expect(() => pickJsonObject('{"a": 1} and more')).toThrow(/non-JSON/);
+    expect(pickJsonObject('{"a": 1} and more')).toEqual({ a: 1 });
     expect(() => pickJsonObject("")).toThrow(/non-JSON/);
     expect(() => pickJsonObject("[1, 2]")).toThrow(/non-object/);
   });

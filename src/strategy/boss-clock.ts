@@ -46,6 +46,8 @@ export interface BossProfile {
   hpParts?: string[];
   /** HP the mechanic adds over the parts' max HP (block, heals, the followers the fight goes through). */
   addedHp?: number;
+  /** What addedHp is, in a few words, for the notes (bossHpParts: never shown as the boss's own HP). */
+  addedHpWhy?: string;
   /** Turns the boss's script allows before it ends the fight (a kill turn, a sandpit, the typical length). */
   scriptTurns: number;
   /**
@@ -70,21 +72,21 @@ export const BOSSES: Record<string, BossProfile> = {
   KNOWLEDGE_DEMON: { hp: 379, hpA8: 399, scriptTurns: 11, lossPerTurn: 6.3, note: "heals 30 twice (Ponder), curses the deck on T1/T5/T9; Strength scaling wins", mechanic: "curses from T1: Sloth caps plays at 3 a turn, Mind Rot draws one less from T5; +60 HP of heals" },
   THE_INSATIABLE: { hp: 321, hpA8: 341, scriptTurns: 8, lossPerTurn: 8.9, note: "Sandpit starts at {POWER:THE_INSATIABLE:SANDPIT_POWER}, eaten at 0; each Frantic Escape adds a turn, which only helps while the Sandpit would end the fight before our HP does ({SANDPIT_DEATHS_EN}; experience insatiable-escape)", mechanic: "Sandpit: the fight ends around T7 unless Frantic Escapes push it back" },
   // 512 (A8 535) plus two 33-block Ebb turns (L34T: 48 a turn, left at 173; M6P7: 33 a turn, left at 234).
-  AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact {POWER:AEONGLASS:ARTIFACT_POWER} at start; Ebb gains {BLOCK:AEONGLASS:EBB_MOVE} block every 3rd turn; a Wither every {POWER:AEONGLASS:WITHERING_PRESENCE_POWER} cards played: few big cards", mechanic: "Artifact eats Vulnerable; two Ebbs of {BLOCK:AEONGLASS:EBB_MOVE} block; small cards feed Withers" },
+  AEONGLASS: { hp: 578, hpA8: 601, addedHp: 66, addedHpWhy: "Ebb's block", scriptTurns: 9, lossPerTurn: 8.6, note: "Artifact {POWER:AEONGLASS:ARTIFACT_POWER} at start; Ebb gains {BLOCK:AEONGLASS:EBB_MOVE} block every 3rd turn; a Wither every {POWER:AEONGLASS:WITHERING_PRESENCE_POWER} cards played: few big cards", mechanic: "Artifact eats Vulnerable; two Ebbs of {BLOCK:AEONGLASS:EBB_MOVE} block; small cards feed Withers" },
   // Queen 400 (A8 419) plus ~20 block a turn while the Amalgam lives (~60). The Amalgam (199, A8 211) leaves
   // when she dies (notes/bosses.md; VE97, CWU9 ended with the Queen alone): its HP only counts when it
   // is killed first for survival.
-  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, single-target damage from turn 1 too, the Queen takes only AoE ({QUEEN_AMALGAM_EN}; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
+  QUEEN: { hp: 460, hpA8: 480, hpParts: ["QUEEN"], addedHp: 60, addedHpWhy: "her block", scriptTurns: 8, lossPerTurn: 13.3, note: "kill the Amalgam first, single-target damage from turn 1 too, the Queen takes only AoE ({QUEEN_AMALGAM_EN}; experience queen-plan); from her third turn the Amalgam hits {DMG:TORCH_HEAD_AMALGAM:BEAM_MOVE}/{DMG:TORCH_HEAD_AMALGAM:TACKLE_3_MOVE} as shown under Vulnerable, Weak and Frail", mechanic: "\"You are mine\" from her T3: Weak (-25% damage), Vulnerable and Frail for the rest of the fight; ~60 Queen block; the Amalgam ({HP:TORCH_HEAD_AMALGAM}) adds its HP only if killed first" },
   // Three phases, 100/200/300 (A8 111/212/313 as logged).
   TEST_SUBJECT: { hp: 600, hpA8: 636, scriptTurns: 12, lossPerTurn: 7.5, note: "three phases ({PHASES} HP); Painful Stabs Wounds on unblocked hits; Multi Claw grows each use", mechanic: "phase 2 is a race: Multi Claw starts {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} and gains a hit every turn (D3X1: dead on its 5th)" },
   LAGAVULIN_MATRIARCH: { hp: 222, hpA8: 233, scriptTurns: 12, lossPerTurn: 5.8, note: "sleeps two turns (play powers), then drains Strength/Dexterity", mechanic: "drains Strength and Dexterity each cycle after it wakes" },
   SOUL_FYSH: { hp: 211, hpA8: 221, scriptTurns: 12, lossPerTurn: 5.1, note: "shuffles Beckons into the deck, Intangible turns; Scream ({DMG:SOUL_FYSH:SCREAM_MOVE}) puts {APPLIES:SOUL_FYSH:SCREAM_MOVE:VULNERABLE_POWER} Vulnerable on us, and De-Gas ({DMG:SOUL_FYSH:DE_GAS_MOVE}) then hits x1.5", mechanic: "Intangible turns (each hit deals 1) and Beckons clogging the draw" },
   // Priest 190 (A8 199) plus two followers ~59 (A8 62/63); the fight ends with the priest, winners dealt
   // ~60 into the followers on the way.
-  THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
+  THE_KIN: { hp: 250, hpA8: 260, hpParts: ["KIN_PRIEST"], addedHp: 60, addedHpWhy: "the followers soaking hits", scriptTurns: 10, lossPerTurn: 10.1, note: "priest {KIN_PRIEST} plus two followers ~{KIN_FOLLOWER}: AoE; priest cycle Orb of Frailty, Orb of Weakness, Beam {DMG:KIN_PRIEST:BEAM_MOVE} plus Strength a hit on T3/T7/T11, Ritual (+{GAIN:KIN_PRIEST:RITUAL_MOVE:STRENGTH_POWER} Strength): be above the T11 Beam (~{KIN_BEAM_T11})", mechanic: "followers soak single-target damage; Ritual grows the Beam every cycle" },
   VANTOM: { hp: 173, hpA8: 183, scriptTurns: 11, lossPerTurn: 7.3, note: "{POWER:VANTOM:SLIPPERY_POWER} Slippery stacks: multi-hit", mechanic: "Slippery {POWER:VANTOM:SLIPPERY_POWER}: its next {POWER:VANTOM:SLIPPERY_POWER} HP losses are 1 each (64ZB: 9 damage in T1-T4); multi-hit strips it" },
   // 240 (A8 250) plus Siphon heals (~20: winners dealt 250-285).
-  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: HP at the kill plus that turn's block must cover the stacks ({GIANT_BLOCK}; ERPH: T14 kill, 51 into 25 HP); an earlier kill has fewer stacks but is lost too without the HP ({GIANT_KILLS}; experience giant-explode)" },
+  WATERFALL_GIANT: { hp: 260, hpA8: 270, addedHp: 20, addedHpWhy: "Siphon heals", scriptTurns: 14, lossPerTurn: 5.1, note: "Siphon heals {SIPHON}; Pressure Gun on T5/T10/T15 ({GUN}): block it fully; Steam Eruption explodes for its stacks when it dies", mechanic: "eruption {ERUPTION} explodes on the kill: HP at the kill plus that turn's block must cover the stacks ({GIANT_BLOCK}; ERPH: T14 kill, 51 into 25 HP); an earlier kill has fewer stacks but is lost too without the HP ({GIANT_KILLS}; experience giant-explode)" },
   // 252 (A8 262); Ringing turns allow one card (02L4 T6, T9: 0 damage).
   CEREMONIAL_BEAST: { hp: 252, hpA8: 262, scriptTurns: 12, lossPerTurn: 6.2, note: "stunned when HP first drops to {POWER:CEREMONIAL_BEAST:PLOW_POWER}; Ringing turns allow one card: keep block potions for them", mechanic: "Ringing: every third turn from T6 you play one card (02L4: T6 and T9 dealt 0)" },
 };
@@ -229,6 +231,18 @@ export function bossHp(profile: BossProfile & { id?: string }, ascension: number
   const db = profile.id ? bossHpAt(profile.id, ascension, profile.hpParts) : null;
   if (db) return db.hp + (profile.addedHp ?? 0);
   return ascension >= 8 ? profile.hpA8 : profile.hp;
+}
+
+/**
+ * bossHp in its two parts: the boss's own HP at this ascension (the monster DB's parts) and what its mechanic adds
+ * (addedHp: block, heals, followers). The notes show them apart (fix-queue-v4 #11: HFNEL0CRKF96 F17, 16 questions read
+ * the Waterfall Giant as "270 (A8)", its A8 HP 250 and 20 the Siphon heals; the Kin "259 (A8)", the priest 199 + 60).
+ * Without the DB (the hand-set numbers) or for the Test Subject's phases: all of it as the body.
+ */
+export function bossHpParts(profile: BossProfile & { id?: string }, ascension: number): { body: number; added: number } {
+  const db = profile.id && profile.id !== "TEST_SUBJECT" ? bossHpAt(profile.id, ascension, profile.hpParts) : null;
+  if (!db) return { body: bossHp(profile, ascension), added: 0 };
+  return { body: db.hp, added: profile.addedHp ?? 0 };
 }
 
 /** Where bossHp's number comes from, for the notes DeepSeek reads: "(A9)", or the nearest logged ascension. */
@@ -1302,10 +1316,12 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   const hp = bossHp(profile, ascension) + extraHp(profile.id, deck, fightTurns, deckNow);
   const need = Math.round(hp / fightTurns);
   const extra = hp - bossHp(profile, ascension);
+  // Its own HP at this ascension (the source's), then what the mechanic adds, then the fight's extra: never the sum as "(A8)".
+  const parts = bossHpParts(profile, ascension);
   return {
     ...base,
     hp,
-    hpNote: `${bossHp(profile, ascension)} ${bossHpSource(profile, ascension)}${extra > 0 ? ` + ${extra} (${profile.id === "VANTOM" ? `Slippery: ~${slipperyTurns(deck, fightTurns).toFixed(1)} turns of hits dealing 1` : "heals"})` : ""}`,
+    hpNote: `${parts.body} ${bossHpSource(profile, ascension)}${parts.added > 0 ? ` + ${parts.added} (${profile.addedHpWhy ?? "what its mechanic adds"})` : ""}${extra > 0 ? ` + ${extra} (${profile.id === "VANTOM" ? `Slippery: ~${slipperyTurns(deck, fightTurns).toFixed(1)} turns of hits dealing 1` : "heals"})` : ""}`,
     fightTurns,
     turnsNote: `min(${capWhy}, survive ~${survive} at ${entryHp} HP losing ~${loss.value}/turn: ${loss.source})`,
     need,

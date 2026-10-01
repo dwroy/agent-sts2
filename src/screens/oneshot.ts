@@ -191,6 +191,43 @@ export function eligibleCards(cards: DeckCard[], follow: DeckFollowUp): DeckCard
   });
 }
 
+/**
+ * The most cards a deck selection screen lists (deck_upgrade_select, deck_card_select, deck_transform_select): the mod
+ * sends the first this many eligible copies, in deck order (index 0-24). 0U96U4D9Z3PP F47: 33 upgradable cards, the
+ * screen listed 25; Inferno at deck[36]/[40] was named, silently dropped and re-asked (~130 s), and another card
+ * upgraded (fix-queue-v4 #7).
+ */
+export const SELECTION_SCREEN_CARDS = 25;
+
+/**
+ * The eligible cards the selection screen will list (`listed`: a copy among its first SELECTION_SCREEN_CARDS eligible
+ * copies in deck order) and those it will not (`unlisted`). Without the deck's own list, every eligible card is listed.
+ */
+export function selectableCards(state: GameState, cards: DeckCard[], follow: DeckFollowUp): { listed: DeckCard[]; unlisted: DeckCard[] } {
+  const eligible = eligibleCards(cards, follow);
+  const raws = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  if (raws.length === 0) return { listed: eligible, unlisted: [] };
+  const listed = new Set<DeckCard>();
+  let copies = 0;
+  for (const raw of raws) {
+    const identity = cardIdentity(raw);
+    const card = eligible.find((entry) => sameCard(entry.raw, identity));
+    if (!card) continue;
+    copies += 1;
+    if (copies > SELECTION_SCREEN_CARDS) break;
+    listed.add(card);
+  }
+  return { listed: eligible.filter((card) => listed.has(card)), unlisted: eligible.filter((card) => !listed.has(card)) };
+}
+
+/** The note on a question whose follow-up screen will not list some eligible cards (none when it lists them all). */
+export function unlistedNote(unlisted: DeckCard[], task: DeckTask): Record<string, JsonValue> {
+  if (unlisted.length === 0) return {};
+  return {
+    not_on_selection_screen: `the game's ${task} screen lists only the first ${SELECTION_SCREEN_CARDS} eligible cards in deck order; these cannot be picked there: ${unlisted.map((card) => `${card.name}${card.count > 1 ? ` x${card.count}` : ""}`).join(", ")}`,
+  };
+}
+
 /** The task a CARD_SELECTION screen performs (null: a pick among new cards, or a combat pick). */
 export function selectionTask(kind: string, prompt: string): DeckTask | null {
   const text = prompt.replace(/\[[^\]]*\]/g, "");
@@ -325,7 +362,9 @@ export function withFollowUp(
   source: PendingPick["source"],
   targetScore: TargetScore,
 ): PickOption[] {
-  const eligible = eligibleCards(cards, follow);
+  // Only the cards the selection screen will list (selectableCards): a card past them could never be selected.
+  const { listed: eligible, unlisted } = selectableCards(env.state, cards, follow);
+  const cut = unlistedNote(unlisted, follow.task);
   const summary = asRecord(option.summary) as Record<string, JsonValue>;
   const arm = (picked: DeckCard[]): (() => void) => () => {
     usePlanRef(env.screenMemory, str(env.state.raw["run_id"]));
@@ -343,7 +382,7 @@ export function withFollowUp(
   };
   if (eligible.length === 0) return [planOnly(env, option, ref)];
   if (follow.count === 1 && !follow.upTo) {
-    return eligible.map((card) => {
+    return eligible.map((card, at) => {
       const ranked = targetScore(card);
       const preview = follow.task === "upgrade" ? upgradePreview(card.raw, env.knowledge) : null;
       return {
@@ -360,6 +399,8 @@ export function withFollowUp(
           ...(preview ? { upgrade: preview } : { card_text: truncate(card.text, 140) }),
           ...(card.enchant ? { enchanted: card.enchant } : {}),
           card_outcome_stats: cardOutcome(card.identity.card_id),
+          // Said once, on the first card's option.
+          ...(at === 0 ? cut : {}),
         },
         plan: () => ({ id: ref, steps: [option.key, card.key], apply: arm([card]), journal: `${option.label ?? option.key}: ${follow.task} ${card.name}` }),
       } satisfies PickOption;
@@ -376,6 +417,7 @@ export function withFollowUp(
         // Each card as it is, and our runs' outcome statistics for it (V4 M2: no code value as a target).
         eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, cardLine(card)])),
         card_outcome_stats: Object.fromEntries(eligible.map((card) => [card.key, cardOutcome(card.identity.card_id)])),
+        ...cut,
       },
       plan: (answer: PlanAnswer) => {
         const picked: DeckCard[] = [];

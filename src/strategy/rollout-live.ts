@@ -33,6 +33,7 @@ import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
+  DEATH_HP,
   gateFor,
   ENEMY_SELF_POWERS,
   LEADER_HP_TIE,
@@ -482,8 +483,8 @@ export type LiveRollout =
       byPlan: Map<Plan, LineEstimate>;
       /**
        * The best line by the backtest's scoring (value = -E[HP loss] - 40 x (1 - win)), among those it may
-       * add; ties by enemy HP left, then turns survived; saturated boards by deaths, HP lost this turn, then
-       * enemy HP left and turns survived; null when that ties too (pickRolloutBest).
+       * add; ties by enemy HP left, then turns survived; saturated boards by deaths, then the fight's progress
+       * (enemy HP left), turns survived and HP lost this turn; null when that ties too (pickRolloutBest).
        */
       best: Plan | null;
       /**
@@ -514,6 +515,8 @@ export type LiveRollout =
        * base line it is the same as (its own rollout drinks no potion later either). Null when none was asked for.
        */
       noPotion: { line: Plan; base: Plan; merged: boolean } | null;
+      /** Wall clock the random potions' Monte Carlo took out of this decision's budget before the rollout (spentMs). */
+      spentMs: number;
       elapsedMs: number;
     };
 
@@ -546,36 +549,59 @@ const FALLBACK_TAG = "1-turn";
 
 /** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
 export const SATURATED_HP = 1;
+/**
+ * Fewer samples than this never make a board saturated: one sample (the time budget's cut, F4K88F267RCX F48 T1 "3-turn
+ * rollout (1 sample)"; W80JV2YVC8UZ F48 T1) is one draw order, not "every line loses all our HP".
+ */
+export const SATURATED_MIN_SAMPLES = 2;
 /** Enemy HP left within this much, and turns survived within ROLLOUT_TURNS_TIE, is a tie. */
 export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
 
 /**
- * Our own HP lost this turn (the line's exact first turn): a saturated board's second key, after deaths. No potion cost
- * here: when every line loses all our HP a potion kept has no later to be worth anything in (potion-cost.ts).
+ * Our own HP lost this turn (the line's exact first turn): a saturated board's last key, after deaths and the fight's
+ * progress. No potion cost here: when every line loses all our HP a potion kept has no later to be worth anything in
+ * (potion-cost.ts). A healing drink's HP is not taken off (W80JV2YVC8UZ F48 T1: Blood Potion at 84/88 for +4 read as
+ * the line losing the least): what the line loses to the turn, not the potion spent to refill it.
  */
-const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
+const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0) + (line.plan.outcome?.potionHeal ?? 0);
 
 /**
  * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
  * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
- * then code's order. When every line is saturated (its loss capped at the HP we have, no sample won) the
- * value says nothing: the samples dead within the horizon decide first (fewest), then the HP this turn
- * loses (least), then the enemy HP left and turns alive; when they all tie there is no best line and the
- * lines tied are returned (HEACJRY5LEVD F17 T2: all three lines "further loss 69" = our HP; T6: 49 vs 48.9
- * by one sample's HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best;
- * CJ88575SQS6H F17 T2: "-14, dead 5/8" was tagged best over "-2, dead 1/8" by enemy HP left).
- * With a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP
- * left comes first among those, within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders):
- * summed enemy HP counted the minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best).
+ * then code's order.
+ *
+ * Saturated boards (every line's loss capped at the HP we have, no sample won, SATURATED_MIN_SAMPLES samples or more):
+ * the value says nothing, and what ranks
+ * the lines is the fight's progress (fix-queue-v4, CDR0Q6929CKR F33, F4K88F267RCX F48, HME0FA7VA0J6 F33: in the clock
+ * boss fights, the Insatiable's Sandpit, the Queen's Off With Your Head, the Knowledge Demon, every line is judged dead
+ * from T1, and ranking by this turn's HP loss picked the turtle line turn after turn; CDR0 T5: -9 HP leaving the worm
+ * ~116 over -16 leaving ~66). The keys, in order:
+ *   1. the samples dead within the horizon (fewest): the only survival signal left (CJ88575SQS6H F17 T2: "-14, dead
+ *      5/8" over "-2, dead 1/8" was wrong);
+ *   2. with a leader (its death ends the fight, the others are minions: The Kin's Priest; not the Queen) its HP left,
+ *      within LEADER_HP_TIE of the least, as the kill orders are ranked (rankOrders): summed enemy HP counted the
+ *      minions as progress (W2TBR2YUMQ5Y F17 T2: Fiend Fire into a Follower was the best);
+ *   3. the enemy HP left at the horizon or at our death (least, within ROLLOUT_ENEMY_HP_TIE): the damage the line and
+ *      its later turns deal before the death the rollout forecasts. Every line loses the fight unless the enemy dies
+ *      first, so this is the one number that measures a way out; it already counts what a power set up now deals
+ *      later (Demon Form, Inferno) and what staying alive longer lets us deal;
+ *   4. the turns we stay alive (most, within ROLLOUT_TURNS_TIE): more turns to draw an answer;
+ *   5. the HP this turn loses (least): only when the fight's progress is the same.
+ * When they all tie there is no best line and the lines tied are returned (HEACJRY5LEVD F17 T2: all three lines
+ * "further loss 69" = our HP; 8V0HD9Y207WY F17 T1-T2: all ten lines 62, and the first was tagged best).
+ * A boss the whole-fight simulation is trusted on (B2, docs/boss-sim.md) is ranked by that simulation instead
+ * (combat-plan simRanks); this order is the rollout's own, for the low-trust bosses and every other fight.
+ *
+ * Not saturated, with a leader, its HP left comes first among the lines tied on the value, as above.
  * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some
  * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
- * more often). A saturated board (every line loses all our HP) ranks as before, without costs: a potion kept there has no
+ * more often). A saturated board (every line loses all our HP) ranks without costs: a potion kept there has no
  * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
-  const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
+  const saturated = lines.every((line) => line.samples >= SATURATED_MIN_SAMPLES && line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
   // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
@@ -583,14 +609,7 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   const fewestDead = Math.min(...lines.map((line) => line.deaths));
   const pool = costs && !saturated ? lines.filter((line) => line.deaths === fewestDead) : lines;
   const top = Math.max(...pool.map((line) => line.value));
-  let contenders = saturated ? lines : pool.filter((line) => line.value === top);
-  if (saturated) {
-    // Deaths within the horizon, then this turn's loss: what still differs when the expected loss is capped.
-    const fewest = Math.min(...contenders.map((line) => line.deaths));
-    contenders = contenders.filter((line) => line.deaths === fewest);
-    const least = Math.min(...contenders.map(turnLoss));
-    contenders = contenders.filter((line) => turnLoss(line) === least);
-  }
+  let contenders = saturated ? lines.filter((line) => line.deaths === fewestDead) : pool.filter((line) => line.value === top);
   if (contenders.every((line) => line.leaderHpLeft !== null && line.leaderHpLeft !== undefined)) {
     const leastLeader = Math.min(...contenders.map((line) => line.leaderHpLeft!));
     contenders = contenders.filter((line) => line.leaderHpLeft! <= leastLeader + LEADER_HP_TIE);
@@ -599,18 +618,35 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   // alive (a stable sort: code's order among equals).
   const least = Math.min(...contenders.map((line) => line.enemyHpLeft));
   const near = contenders.filter((line) => line.enemyHpLeft < least + ROLLOUT_ENEMY_HP_TIE).sort((a, b) => b.turnsSurvived - a.turnsSurvived);
-  if (saturated && near.length >= 2 && near[0]!.turnsSurvived - near[1]!.turnsSurvived < ROLLOUT_TURNS_TIE) {
-    return { best: null, saturated, tied: near.filter((line) => near[0]!.turnsSurvived - line.turnsSurvived < ROLLOUT_TURNS_TIE) };
-  }
-  return { best: near[0]!, saturated };
+  if (!saturated) return { best: near[0]!, saturated };
+  // Saturated: the lines as alive as the longest-lived, then the least HP lost this turn; still two or more, a tie.
+  const alive = near.filter((line) => near[0]!.turnsSurvived - line.turnsSurvived < ROLLOUT_TURNS_TIE);
+  const leastLoss = Math.min(...alive.map(turnLoss));
+  const last = alive.filter((line) => turnLoss(line) === leastLoss);
+  return last.length >= 2 ? { best: null, saturated, tied: last } : { best: last[0]!, saturated };
 }
 
 /**
- * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal)
- * and the share of samples dead.
+ * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal),
+ * the share of samples dead, and the win chance the ranking counts (shown in whole percent: rankingNote).
  */
 export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
-  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples;
+  return round1(effectiveFightLoss(a)) === round1(effectiveFightLoss(b)) && a.deaths * b.samples === b.deaths * a.samples && winPercent(a) === winPercent(b);
+}
+
+/** The win chance a line's ranking value counts, as shown: whole percent. */
+const winPercent = (line: Pick<LineEstimate, "winProb">): number => Math.round((line.winProb ?? 0) * 100);
+
+/**
+ * How the rollout ranks a line that is not saturated, with the one number of it Jev did not see (fix-queue-v4 #12:
+ * Z3DFG85QDRCD F46, the shown total said drinking was worse and the drink line was still the rollout's best): the
+ * value is -(further loss + potion cost) - DEATH_HP x (1 - win chance), the win chance counting the samples that won
+ * within the horizon and, for the rest, the end-of-horizon estimate (history model or clock). Shown, the ranking's
+ * numbers are the question's.
+ */
+export function rankingNote(line: LineEstimate, deathsFirst = false): string {
+  const cost = line.potionCost ?? 0;
+  return `; ranked on ${deathsFirst ? "fewest dead first (some line pays a potion cost), then " : ""}-(further loss${cost > 0 ? " + potion cost" : ""}) - ${DEATH_HP} x (1 - win chance): win chance ~${winPercent(line)}% (fights won in the samples, the others by the end-of-horizon estimate), value ${round1(line.value)}`;
 }
 
 /** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts). */
@@ -809,6 +845,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       lossCap,
       ordersDropped: args.ordersDropped ?? 0,
       noPotion,
+      spentMs: args.spentMs ?? 0,
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -821,15 +858,15 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
 /**
- * Saturated boards: the expected loss is the same for every line, so what ranks them is shown: deaths
- * within the horizon, HP lost this turn, then the enemy HP left and turns alive (the leader's HP left first
- * when its death ends the fight).
+ * Saturated boards: the expected loss is the same for every line, so what ranks them is shown (pickRolloutBest):
+ * deaths within the horizon, then the fight's progress (the leader's HP left first when its death ends the fight, the
+ * enemy HP left), the turns alive, and only then the HP lost this turn.
  */
 function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true }): string {
   if (!r.saturated) return "";
   const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
   const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
-  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}), then ${leaderText}enemy HP left ~${Math.round(line.enemyHpLeft)} (at T${line.horizon} or at our death), alive ~${round1(line.turnsSurvived)} turns`;
+  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then the fight's progress: ${leaderText}least enemy HP left (this line ~${Math.round(line.enemyHpLeft)}, at T${line.horizon} or at our death), then most turns alive (this line ~${round1(line.turnsSurvived)}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}${line.plan.outcome?.potionHeal ? `, before the ${line.plan.outcome.potionHeal} HP its potion heals` : ""})`;
 }
 
 /** The facts of one shown line. */
@@ -842,7 +879,9 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   // forecast: the estimate is capped at our HP, so a cap reached says nothing of the line dying.
   const fallback = r.result.degraded.includes(FALLBACK_TAG);
   const capped = line.hpLoss >= r.lossCap - SATURATED_HP;
-  const fallbackText = `no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
+  // The budget is shared with the random potions' Monte Carlo, run first: say when it took a share (DT1H1URTUAD8 F42).
+  const mcShare = r.spentMs >= 1 ? `, ${Math.round(r.spentMs)} ms of it taken by the random potions' Monte Carlo` : "";
+  const fallbackText = `no rollout (it ran past its time budget${mcShare}; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   // The later turns drink a potion still held only when the turn gains more than its cost (potion-cost.ts); the
@@ -855,7 +894,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
         : " (later turns may use the potions still held)"
       : "";
   const facts: Record<string, JsonValue> = {
-    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${saturatedNote(line, r)}${cut}`,
+    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${r.saturated ? saturatedNote(line, r) : rankingNote(line, r.result.lines.some((other) => (other.potionCost ?? 0) > 0))}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order && !fallback) {

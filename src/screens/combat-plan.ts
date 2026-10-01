@@ -475,14 +475,23 @@ export function hpGuardSlack(hp: number, kind: SolverInput["fightKind"] = "unkno
  */
 export function hpGuardReplacement(chosen: Plan, options: Plan[], hp: number, slack = hpGuardSlack(hp), eligible: (plan: Plan) => boolean = () => true): Plan | null {
   if (chosen.outcome.winsFight || options.length === 0) return null;
-  // Effective loss: HP lost plus the potions drunk at their cost (potion-cost.ts), as every line is ranked.
-  const minLoss = Math.min(...options.map(effectiveLoss));
+  // The HP the line loses this turn (guardLoss), not the potions' cost: the guard bounds HP traded for damage; a drink's
+  // cost is a ranking matter, already in the score and the rollout's value (fix-queue-v4 G3MU2NADPEDU F9: Fysh Oil's
+  // held value 9.1 over the elite slack of 8 vetoed it on every line, at equal HP loss).
+  const minLoss = Math.min(...options.map(guardLoss));
   const bound = minLoss + slack;
-  if (effectiveLoss(chosen) <= bound) return null;
+  if (guardLoss(chosen) <= bound) return null;
   const pool = options.filter((plan) => plan === chosen || eligible(plan));
-  const found = pool.find((plan) => effectiveLoss(plan) <= bound) ?? pool.find((plan) => effectiveLoss(plan) === minLoss) ?? null;
+  const found = pool.find((plan) => guardLoss(plan) <= bound) ?? pool.find((plan) => guardLoss(plan) === minLoss) ?? null;
   return found === chosen ? null : found;
 }
+
+/**
+ * What the HP guard compares: the HP a line loses this turn (outcome.hpLoss), without its potions' cost (potion-cost.ts,
+ * 0 in a boss fight anyway). The cost ranks the lines (score, rollout value); counting it here too vetoed a potion whose
+ * held value is above the slack on every line, and charged it twice.
+ */
+export const guardLoss = (plan: Plan): number => plan.outcome.hpLoss;
 
 /**
  * Jev's focus target: the live enemy (enemies, on a tie) its pick puts the most damage into; none when
@@ -2029,7 +2038,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // progress (H8LC F23: the hallway guard swapped Uppercut -> Obscura for a line hitting the Parafright).
     const illusionFight = enemies.some((enemy) => enemy.illusion);
     if ((kind !== "boss" && kind !== "elite" && !illusionFight) || replacement === null) return false;
-    const extraLoss = effectiveLoss(picked) - effectiveLoss(replacement);
+    const extraLoss = guardLoss(picked) - guardLoss(replacement);
     const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
@@ -2251,7 +2260,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
     const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
     if (simRanks) return { rollout_tied: `tied for the best whole-fight simulation numbers with ${others.join(", ")} (the same simulated win rate and HP lost when won); the ranking picks none of them` };
-    const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, HP lost this turn, enemy HP left and turns alive" : "the same expected further HP loss and deaths";
+    const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn" : "the same expected further HP loss, deaths and win chance";
     return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
@@ -2491,7 +2500,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const raceKept = proposed !== null && winsRace(picked, proposed);
       const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
-      const extra = plan.outcome.winsFight ? 0 : Math.max(0, effectiveLoss(plan) - Math.min(...guardOptions.map(effectiveLoss)));
+      const extra = plan.outcome.winsFight ? 0 : Math.max(0, guardLoss(plan) - Math.min(...guardOptions.map(guardLoss)));
       const rank = shown.indexOf(plan) + 1;
       const guardNote = replacement
         ? hpGuardNote(shown.indexOf(picked) + 1, picked, slack, rank, plan)
@@ -2701,10 +2710,9 @@ export function guardedText(top: Plan, guarded: Plan): string {
   return `code plan ${lineLabel(top)} (${lossText(top)}) is over the HP guard bound; playing ${lineLabel(guarded)} instead (${lossText(guarded)}, dmg ${guarded.outcome.damageDealt})`;
 }
 
-/** A line's HP change (hpText), and its potions' cost when it drinks any that cost (the guard compares the sum). */
+/** A line's HP change (hpText): what the guard compares (guardLoss; the potions' cost is not in it). */
 function lossText(plan: Plan): string {
-  const cost = plan.outcome.potionCost ?? 0;
-  return cost > 0 ? `${hpText(plan.outcome.hpLoss)} + potions ${Math.round(cost * 10) / 10} HP` : hpText(plan.outcome.hpLoss);
+  return hpText(guardLoss(plan));
 }
 
 /** The HP guard's note on replacing the picked line (plan `pickedNo`) with plan `rank`; HP changes as hpText. */

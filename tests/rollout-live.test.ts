@@ -68,7 +68,7 @@ describe("rollout facts on Jev's combat question", () => {
         // Turn by turn: turn 1 exact, then T2..T5 with the spread over the samples.
         expect(String(f["rollout_turns"])).toMatch(/^T1 exact: hp -\d+, dmg \d+(, won|, dead)?(; T[2-5]: (hp -[\d.]+ \[\d+-\d+\], dmg [\d.]+ \[\d+-\d+\], alive \d\/8, won \d\/8|over \(alive \d\/8, won \d\/8\)))*$/);
         expect(String(f["rollout_turns"]).split("; ")).toHaveLength(5);
-        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?$/);
+        expect(String(f["rollout"])).toMatch(/^5-turn rollout \(8 samples\)( \(later turns may use the potions still held\))?: expected further HP loss [\d.]+, fight over within 5 turns in \d\/8(, expected turns to the end \(surviving samples\) ~[\d.]+)?(, dead within 5 turns in \d\/8 \(~turn [\d.]+\))?; ranked on -\(further loss\) - 40 x \(1 - win chance\): win chance ~\d+% \(fights won in the samples, the others by the end-of-horizon estimate\), value -?[\d.]+$/);
         expect(String(f["history_estimate"])).toMatch(/^further HP loss \d+, win \d+% \(this encounter n=\d+(; estimate from [\w -]+ n=\d+)?, typical error ±[\d.]+(; few similar states for this encounter)?\)$/);
         expect(JSON.stringify(f)).not.toMatch(/\bw\b|weight/);
       }
@@ -304,7 +304,7 @@ describe("enemy tables", () => {
 
 describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD F17, 8V0HD9Y207WY F17)", () => {
   const line = (name: string, over: Partial<LineEstimate>): LineEstimate =>
-    ({ plan: { steps: [], name } as unknown as LineEstimate["plan"], value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, enemyHpLeft: 100, turnsSurvived: 4, ...over }) as LineEstimate;
+    ({ plan: { steps: [], name } as unknown as LineEstimate["plan"], value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, samples: 8, enemyHpLeft: 100, turnsSurvived: 4, ...over }) as LineEstimate;
 
   it("saturated: the value says nothing; the least enemy HP left, then the most turns alive, else no best", () => {
     // 8V0H T2: all ten lines "further loss 62" = our HP; the first (code rank 1) was tagged best.
@@ -333,7 +333,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
     expect(pickRolloutBest([tieA, same], 62).best).toBe(tieA);
   });
 
-  it("logged saturated boards: every line reads its deaths, this turn's loss and the enemy HP left; a tagged best has the fewest deaths, then the least loss", () => {
+  it("logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left", () => {
     rolloutLiveOptions.budgetMs = 1e9;
     for (const name of ["8v0h-f17-t2-saturated", "heac-f17-t2-saturated", "heac-f17-t6-saturated"]) {
       const decision = plan(name, true) as AskDecision;
@@ -344,10 +344,10 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
       const keys = new Map<string, { dead: number; loss: number; left: number }>();
       for (const key of Object.keys(criteria)) {
         const text = String(facts(criteria, key)["rollout"] ?? "");
-        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then least HP lost this turn \(this line (gains )?(\d+)\), then .*enemy HP left ~(\d+) \(at T\d or at our death\)/.exec(text);
+        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then the fight's progress: .*least enemy HP left \(this line ~(\d+), at T\d or at our death\), then most turns alive \(this line ~[\d.]+\), then least HP lost this turn \(this line (gains )?(\d+)(, before [^)]*)?\)/.exec(text);
         if (/^not rolled out/.test(text)) continue;
         expect(m, `${name} ${key}: ${text}`).not.toBeNull();
-        keys.set(key, { dead: Number(m![1]), loss: (m![2] ? -1 : 1) * Number(m![3]), left: Number(m![4]) });
+        keys.set(key, { dead: Number(m![1]), loss: (m![3] ? -1 : 1) * Number(m![4]), left: Number(m![2]) });
       }
       const tagged = [...keys.keys()].filter((key) => facts(criteria, key)["rollout_best"] === true);
       expect(tagged.length, name).toBeLessThanOrEqual(1);
@@ -355,9 +355,8 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
         const best = keys.get(tagged[0]!)!;
         const all = [...keys.values()];
         expect(best.dead, name).toBe(Math.min(...all.map((k) => k.dead)));
-        expect(best.loss, name).toBe(Math.min(...all.filter((k) => k.dead === best.dead).map((k) => k.loss)));
-        const same = all.filter((k) => k.dead === best.dead && k.loss === best.loss);
-        expect(best.left - Math.min(...same.map((k) => k.left)), name).toBeLessThanOrEqual(1);
+        // Shown rounded: the tie is within ROLLOUT_ENEMY_HP_TIE of the least, unrounded.
+        expect(best.left - Math.min(...all.filter((k) => k.dead === best.dead).map((k) => k.left)), name).toBeLessThanOrEqual(1);
       }
     }
   }, 30_000);

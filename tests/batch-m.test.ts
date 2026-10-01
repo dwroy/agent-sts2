@@ -75,11 +75,11 @@ describe("2. DeepSeek replies that are JSON but were judged non-JSON (79YR F6 on
     expect(json["plan"]).toEqual(["remove:c0", "buy_card3", "buy_card2"]);
   });
 
-  it("a comma still needs values on both sides; other garbage still fails", () => {
-    expect(() => pickJsonObject('{"a": 1},')).toThrow(/non-JSON/);
+  it("a reply that does not start with an object still fails; one that does, with junk after it, is that object (fix-queue-v4 #9)", () => {
     expect(() => pickJsonObject(', {"a": 1}')).toThrow(/non-JSON/);
-    expect(() => pickJsonObject('{"a": 1},, {"b": 2}')).toThrow(/non-JSON/);
-    expect(() => pickJsonObject('{"a": 1} and more')).toThrow(/non-JSON/);
+    expect(pickJsonObject('{"a": 1},')).toEqual({ a: 1 });
+    expect(pickJsonObject('{"a": 1},, {"b": 2}')).toEqual({ a: 1 });
+    expect(pickJsonObject('{"a": 1} and more')).toEqual({ a: 1 });
   });
 
   it("a reply cut inside its reason keeps the whole members and the reason so far, marked [truncated]", async () => {

@@ -370,16 +370,16 @@ describe("a boss fight behaves as before (costs 0): the same options, scores and
 const outcomePlan = (hpLoss: number, potionCost = 0, drink = false): Plan =>
   ({ steps: drink ? [{ cardId: "POTION:BLOCK_POTION:0", name: "potion Block Potion", cardIndex: 100, target: null }] : [], score: 0, outcome: { hpLoss, winsFight: false, dies: false, damageDealt: 10, ...(potionCost > 0 ? { potionCost } : {}) } }) as unknown as Plan;
 
-describe("the HP guard and the Monte Carlo compare HP lost plus the potions' cost", () => {
-  it("HP guard: a drink line within the slack on HP but over it with its cost is replaced", () => {
+describe("the Monte Carlo compares HP lost plus the potions' cost; the HP guard HP lost alone (fix-queue-v4 #3)", () => {
+  it("HP guard: a drink line is never replaced for its cost; the bound is set by HP lost", () => {
     const dry = outcomePlan(10);
     const drink = outcomePlan(4, 12, true);
-    // Slack 6: the drink's 4 HP is under 10 + 6, but 4 + 12 = 16 is not over it either; a 14 HP cost is.
     expect(hpGuardReplacement(drink, [drink, dry], 60, 6)).toBeNull();
     const dear = outcomePlan(4, 14, true);
-    expect(hpGuardReplacement(dear, [dear, dry], 60, 6)).toBe(dry);
-    // A dry line over the bound set by a costed drink line: the bound is the effective minimum.
-    expect(hpGuardReplacement(outcomePlan(20), [outcomePlan(20), outcomePlan(4, 14, true)], 60, 6)).toBeNull();
+    expect(hpGuardReplacement(dear, [dear, dry], 60, 6)).toBeNull();
+    // A dry line over the bound set by a drink line's HP lost (the call site leaves out drinks the pick does not make).
+    const drinkCheap = outcomePlan(4, 14, true);
+    expect(hpGuardReplacement(outcomePlan(20), [outcomePlan(20), drinkCheap], 60, 6)).toBe(drinkCheap);
   });
 
   it("Monte Carlo: a sample beats the potion-free line only by a margin after the potion's cost", () => {

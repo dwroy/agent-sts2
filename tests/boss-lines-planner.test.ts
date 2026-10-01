@@ -71,19 +71,25 @@ function digestOf(name: string, jevContext: "off" | "v1"): string {
 // sees no boss there, so its digests pin a question B2 never touches.
 const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-saturated", "ez2l-f48-t2"] as const;
 
-/** Digests of the pre-B2 planner (bd606d9 with the B2 simulator fixes, which leave the planner as it was). */
+/**
+ * Digests of the pre-B2 planner (bd606d9 with the B2 simulator fixes, which leave the planner as it was). The two
+ * saturated boards (8v0h, ez2l) re-pinned at fix-queue-v4 #1: the saturated ranking's order and its text changed;
+ * 8v0h again at #2 (its Blood Potion line: this turn's loss before the heal); ez2l, k8tc, xmy2 at #4 (their random
+ * potions' Monte Carlo counts the lasting value a sample sets up: its facts and log). Every board at #12: a line's
+ * rollout fact shows the win chance and the value it is ranked on.
+ */
 const GOLDEN: Record<string, string> = {
-  "3sbp-f17-t3-flex:off": "54195aef830cffc934ee84d6f8ae5e75",
-  "3sbp-f17-t3-flex:v1": "3c062fccc02d0de61026fe8f1b229fec",
-  "k8tc-f17-t5:off": "5db5f843d737fd9bef50dd7f9890dfbd",
-  "k8tc-f17-t5:v1": "db378ae176302d722581163726dfd044",
-  "xmy2-f17-t1:off": "32a8a233cfeb57945f29c8db3a282c89",
-  "xmy2-f17-t1:v1": "9f60a44dc7cb4816699ad8053f9715f9",
-  "8v0h-f17-t2-saturated:off": "70b10b6a0d56151dba0f8565130e274f",
-  "8v0h-f17-t2-saturated:v1": "a65a2a8a08e068eb08e73b38f6d36e1e",
-  "ez2l-f48-t2:off": "7233916f25e43b00b334706b1c27d9f4",
-  "ez2l-f48-t2:v1": "ac720a04a72550621e24d3540950d583",
-  "2mk4-f8-t2-ask:v1": "07448a5e8359434d51b955b91d956810",
+  "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
+  "3sbp-f17-t3-flex:v1": "ab67ba3e9749da3925216e5fd2386a20",
+  "k8tc-f17-t5:off": "5596bcc903bff54b339142bbb803f04f",
+  "k8tc-f17-t5:v1": "f384927f7a7eb8ea80042a0997231940",
+  "xmy2-f17-t1:off": "ccf70183bb58499c1e90534f573e3ec3",
+  "xmy2-f17-t1:v1": "d8ef465061a61dd7ae4326cf65e80e33",
+  "8v0h-f17-t2-saturated:off": "8b438468c96718c5ceccd0e6721c790a",
+  "8v0h-f17-t2-saturated:v1": "3e8bd1db016185cc173b00efb6a66b97",
+  "ez2l-f48-t2:off": "c6de5775368dfdf499e362edb02feb22",
+  "ez2l-f48-t2:v1": "5ce33d7f7a81fa513856c48a7120381d",
+  "2mk4-f8-t2-ask:v1": "a8c6b59e8bca465e9e48beac868692c2",
 };
 
 describe("B2 off: the boss question as before", () => {

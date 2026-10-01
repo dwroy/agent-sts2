@@ -35,11 +35,29 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
 import type { BrainConfig } from "../config.js";
-import type { BrainAnswer, BrainEngine, BrainRequest, EngineName, KnowledgeNote } from "./types.js";
+import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
 export function labelPrefix(label: string): string {
   return (label.split("/")[0] ?? "").toUpperCase().replace(/[^A-Z0-9]+/g, "_");
+}
+
+/**
+ * The tokens a failed call is known to have used (an engine attaches them to its error: withUsage), for the log row of
+ * a failed question (fix-queue-v4 #8: a non-JSON DeepSeek reply's 1,042 output tokens were logged as 0). Undefined
+ * when unknown (a timeout, a connection error).
+ */
+export function errorUsage(error: unknown): BrainUsage | undefined {
+  const usage = typeof error === "object" && error !== null ? (error as { usage?: unknown }).usage : undefined;
+  if (typeof usage !== "object" || usage === null) return undefined;
+  const { inputTokens, outputTokens } = usage as Partial<BrainUsage>;
+  return typeof inputTokens === "number" && typeof outputTokens === "number" ? (usage as BrainUsage) : undefined;
+}
+
+/** Attaches a failed call's known usage to its error (errorUsage reads it back); the error, for a rethrow. */
+export function withUsage<T>(error: T, usage: BrainUsage): T {
+  if (typeof error === "object" && error !== null) (error as { usage?: BrainUsage }).usage = usage;
+  return error;
 }
 
 /** An error that means "the engine answered, but unusably" (not an engine failure): no fallback. */
@@ -254,10 +272,11 @@ export class BrainRouter {
     if (rest && rest.until > this.now() && fallback && this.canFallBackTo(fallback)) {
       // Resting after a quota / rate-limit failure: straight to the fallback, no wait on the primary.
       const fellBackFrom = { engine: primary, error: restNote };
+      const began = this.now();
       try {
         result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
       } catch (error) {
-        this.write(fallback, req, null, error, { ...fellBackFrom, kind: rest.kind });
+        this.write(fallback, req, null, error, { ...fellBackFrom, kind: rest.kind }, this.spent(error, began));
         throw error;
       }
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind: rest.kind });
@@ -269,24 +288,26 @@ export class BrainRouter {
       this.write(primary, req, null, error);
       throw error;
     }
+    const began = this.now();
     try {
       result = await this.attempt(primary, req);
     } catch (error) {
       if (isAnswerFailure(error)) {
-        this.write(primary, req, null, error);
+        this.write(primary, req, null, error, undefined, this.spent(error, began));
         throw error;
       }
       const kind = failureKind(error);
       if (error instanceof EngineFailure && error.cooldownMs > 0) this.resting.set(primary, { until: this.now() + error.cooldownMs, reason: message(error).slice(0, 200), kind });
       if (!fallback || !this.canFallBackTo(fallback)) {
-        this.write(primary, req, null, error);
+        this.write(primary, req, null, error, undefined, this.spent(error, began));
         throw error;
       }
       const fellBackFrom = { engine: primary, error: message(error).slice(0, 300) };
+      const again = this.now();
       try {
         result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
       } catch (second) {
-        this.write(fallback, req, null, second, { ...fellBackFrom, kind });
+        this.write(fallback, req, null, second, { ...fellBackFrom, kind }, this.spent(second, again));
         throw second;
       }
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind });
@@ -311,10 +332,11 @@ export class BrainRouter {
     this.write(primary, req, first);
     const fellBackFrom = { engine: primary, error: `answer unusable after the re-ask: ${first.problems.join("; ") || "no answer"}`.slice(0, 300) };
     let result: Attempt;
+    const began = this.now();
     try {
       result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
     } catch (error) {
-      this.write(fallback, req, null, error, { ...fellBackFrom, kind: "invalid" });
+      this.write(fallback, req, null, error, { ...fellBackFrom, kind: "invalid" }, this.spent(error, began));
       if (isAnswerFailure(error)) throw error;
       return first;
     }
@@ -415,7 +437,17 @@ export class BrainRouter {
     this.resting.set(engine, { until: this.now() + TIMEOUT_REST_MS, reason: `${count} timeouts in a row (${ms} ms each)`, kind: "timeout" });
   }
 
-  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"]): void {
+  /** What a failed attempt cost: the wall clock since it began, and the tokens its error says it used (errorUsage). */
+  private spent(error: unknown, began: number): { latencyMs: number; usage?: BrainUsage } {
+    const usage = errorUsage(error);
+    return { latencyMs: Math.max(0, this.now() - began), ...(usage ? { usage } : {}) };
+  }
+
+  /**
+   * One log row. A failed question (no result) has `failed`: its real wall clock and known usage (fix-queue-v4 #8:
+   * 41VAUAM2EFY7 F34's 300 s timeout was logged as 0 ms).
+   */
+  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }): void {
     let model = result?.model ?? "";
     if (!result) {
       try {
@@ -443,8 +475,8 @@ export class BrainRouter {
       problems: result?.problems ?? [],
       reasks: result?.reasks ?? 0,
       attempts: result?.attempts ?? 0,
-      latency_ms: result?.latencyMs ?? 0,
-      usage: result?.usage ?? { inputTokens: 0, outputTokens: 0 },
+      latency_ms: result?.latencyMs ?? failed?.latencyMs ?? 0,
+      usage: result?.usage ?? failed?.usage ?? { inputTokens: 0, outputTokens: 0 },
       ...(result?.first ? { first: result.first } : {}),
       ...(fellBackFrom ? { fell_back_from: fellBackFrom } : {}),
       ...(error === undefined ? {} : { error: message(error).slice(0, 500), error_kind: failureKind(error) }),

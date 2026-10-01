@@ -17,7 +17,7 @@ import { measuredRoom } from "../knowledge/room-costs.js";
 import { actOf } from "../strategy/run-plan.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
-import { deckCards, deckFollowUp, eligibleCards, eventPage, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
+import { deckCards, deckFollowUp, selectableCards, eventPage, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import { actStartPlan } from "./act-start.js";
 import { continueAfterDiscard, DISCARD_ANSWER_NOTE, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
@@ -307,7 +307,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
       const expanded = deepseekOptions.flatMap((option) => {
         const follow = follows.get(option.key) ?? null;
         if (!follow) return [planOnly(env, option, ref)];
-        for (const card of eligibleCards(cards, follow)) offered.add(card.identity.card_id);
+        for (const card of selectableCards(env.state, cards, follow).listed) offered.add(card.identity.card_id);
         return withFollowUp(env, option, follow, cards, ref, "event", followUpTargetScore(env, follow.task));
       });
       const block = routeBlock();

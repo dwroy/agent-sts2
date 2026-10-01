@@ -5,7 +5,7 @@
  * fixtures have the writer's shape. Fixed data (tests/gkb-data), no model is called.
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -264,6 +264,30 @@ describe("once per run", () => {
     const rows = rowsOf(first.path);
     expect(rows.map((row) => [row.run_id, row.restart])).toEqual([["RUNZ00000001", false], ["RUNZ00000001", true]]);
     expect(rows[0]!.config_sha).not.toBe(rows[1]!.config_sha);
+  });
+
+  it("the knowledge prefix re-rendered mid-run is not a configuration change; the row says brain.jsonl has each call's (fix-queue-v4 #10)", () => {
+    const dir = temp();
+    const lessons = join(dir, "lessons.md");
+    const saved = process.env["KNOWLEDGE_LESSONS_FILE"];
+    process.env["KNOWLEDGE_LESSONS_FILE"] = lessons;
+    try {
+      writeFileSync(lessons, readFileSync(join(DATA, "lessons.md"), "utf8"));
+      const first = logOf(V4_ENV, dir);
+      const before = first.log.observe(state("RUNW00000001"))!;
+      expect(before.knowledge.prefix_note).toMatch(/brain\.jsonl row's knowledge\.prefix_sha/);
+      // The lessons refreshed after the last run (WLM6YKJ0ASNE: the prefix changed in the run's first minutes), then
+      // a restart joins the run at F7: the same configuration, no second row, so no "configuration changed mid-run".
+      writeFileSync(lessons, `${readFileSync(lessons, "utf8")}\n## RUNCCCCCCCC3（A8，第48层，死于女王 QUEEN）\n- 新复盘\n`);
+      const again = logOf(V4_ENV, dir);
+      const rendered = again.brain!.knowledge.system({ ascension: 9, knowledgeDir: KNOWLEDGE }).note.prefix_sha;
+      expect(rendered).not.toBe(before.knowledge.prefix_sha);
+      expect(again.log.observe(state("RUNW00000001", 9, 7))).toBeNull();
+      expect(rowsOf(first.path).filter((row) => row.run_id === "RUNW00000001")).toHaveLength(1);
+    } finally {
+      if (saved === undefined) delete process.env["KNOWLEDGE_LESSONS_FILE"];
+      else process.env["KNOWLEDGE_LESSONS_FILE"] = saved;
+    }
   });
 });
 

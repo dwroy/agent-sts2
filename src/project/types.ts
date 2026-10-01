@@ -197,6 +197,8 @@ export interface ScreenMemory {
   shopPlan?: import("../screens/shop.js").ShopPlan;
   /** The deck card(s) a one-shot plan named for the selection screen its action opens (screens/oneshot.ts). */
   pendingPick?: import("../screens/oneshot.js").PendingPick;
+  /** The card a one-shot plan named that its selection screen did not list (selection.ts pickNotOfferedNote). */
+  pickNotOffered?: { runId: string; floor: number | null; task: string; name: string };
   /** visitKey of a one-shot question whose answer was unusable: that visit is asked step by step. */
   oneshotFailed?: string;
   /** One-shot plans played in this run (their references count up). */
