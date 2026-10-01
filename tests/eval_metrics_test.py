@@ -126,6 +126,23 @@ class EliteAndRestTest(unittest.TestCase):
 
 
 class StatsTest(unittest.TestCase):
+    def test_first_attempt_from_the_sl_rows(self):
+        passed = {1: True, 2: True}
+        bosses = {1: 17, 2: 33}
+        # No SL row (SL off) or no foreseen death: the run is its own first attempt.
+        self.assertEqual(metrics.first_attempt([], 40, False, passed, bosses),
+                         {"sl_rows": 0, "reloads": 0, "death_floor": None, "floor": 40, "victory": False, "passed_act1": True, "passed_act2": True})
+        won = [{"result": "won", "floor": 17, "reload_ok": None}]
+        self.assertEqual(metrics.first_attempt(won, 48, True, passed, bosses)["victory"], True)
+        # The first foreseen death (attempt 1 at the act-2 boss, F33) is where the first attempts' run died.
+        rows = [{"result": "predicted_death", "floor": 33, "reload_ok": True}, {"result": "won", "floor": 33, "reload_ok": None},
+                {"result": "predicted_death", "floor": 48, "reload_ok": True}]
+        self.assertEqual(metrics.first_attempt(rows, 48, True, {1: True, 2: True}, {1: 17, 2: 33, 3: 48}),
+                         {"sl_rows": 3, "reloads": 2, "death_floor": 33, "floor": 33, "victory": False, "passed_act1": True, "passed_act2": False})
+        # A reload that failed still marks the first attempts' death.
+        failed = [{"result": "predicted_death", "floor": 24, "reload_ok": False}]
+        self.assertEqual(metrics.first_attempt(failed, 24, False, {1: True, 2: False}, bosses)["reloads"], 0)
+
     def test_mean_interval(self):
         s = metrics.mean_stats([1, 2, 3, None])
         self.assertEqual((s["n"], s["mean"], s["median"]), (3, 2.0, 2.0))
@@ -284,6 +301,16 @@ class FixtureTest(unittest.TestCase):
         self.assertEqual((d["strength_act1"]["any"], d["strength_act1"]["max_strength"]), (False, 2))
         self.assertEqual([(r["entered_act2"], r["act2_first_rest"], r["died_before_act2_rest"]) for r in (c, d)], [(True, None, True), (True, 4, False)])
 
+    def test_first_attempt_next_to_the_final_result(self):
+        c, d = self.rows["RUNC00000003"], self.rows["RUND00000004"]
+        self.assertEqual(c["first_attempt"], {"sl_rows": 0, "reloads": 0, "death_floor": None, "floor": 5, "victory": False, "passed_act1": True, "passed_act2": False})
+        # D: its act-1 boss (F3) was reloaded once; the final run passed act 1, the first attempts' run died there.
+        self.assertEqual(d["first_attempt"], {"sl_rows": 2, "reloads": 1, "death_floor": 3, "floor": 3, "victory": False, "passed_act1": False, "passed_act2": False})
+        self.assertEqual((d["floor"], d["passed_act1"]), (5, True))
+        summary = metrics.summarize([c, d])
+        self.assertEqual((summary["sl_runs"], summary["sl_reloads"]["mean"], summary["fa_floor"]["mean"], summary["fa_passed_act1"]["k"]), (1, 0.5, 4.0, 1))
+        self.assertNotIn("sl_runs", metrics.summarize([c]))
+
     def test_the_configuration_comes_with_the_run(self):
         c, d = self.rows["RUNC00000003"], self.rows["RUND00000004"]
         self.assertEqual((c["config_rows"], c["brain_label"], c["knowledge_prefix"]), (0, None, None))
@@ -325,7 +352,9 @@ class FixtureTest(unittest.TestCase):
         self.assertIn("| 二幕第一个休息点前死亡（占进二幕的局） | 50%（1/2；", text)
         self.assertIn("样本不足", text)
         self.assertIn("| RUND00000004 | V3.oneshot | 0c93138+dirty |", text)
-        self.assertIn("| deepseek:deepseek-flash; REST=claude:claude-opus-5-5 · 知识前缀 full |", text)  # the per-run 配置 column
+        self.assertIn("| deepseek:deepseek-flash; REST=claude:claude-opus-5-5 · 知识前缀 full | 1 / F3 |", text)  # the per-run 配置 and SL columns
+        self.assertIn("| 第一次尝试：终层 | ", text)
+        self.assertIn("| SL：有 SL 记录的局 | 1/2 | 1/2 |", text)
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(args + ["--json", "--group-by", "config"]), 0)

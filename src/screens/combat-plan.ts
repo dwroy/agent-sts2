@@ -2227,7 +2227,10 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   const simRanks = bossSim?.available && !bossSim.lowTrust ? bossSim : null;
-  const simShown = bossSim !== null && (bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null;
+  // SL_RETRY_SHOW_SIM (docs/sl.md): on a retried boss fight a low-trust boss's numbers are shown too, labelled; the
+  // ranking (simRanks) stays the trusted bosses' only.
+  const slLowTrustSim = env.sl?.showSim === true && bossSim?.available === true && bossSim.lowTrust !== null ? bossSim.lowTrust : null;
+  const simShown = bossSim !== null && ((bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null || slLowTrustSim !== null);
   const simFact = (plan: Plan): Record<string, JsonValue> => {
     const line = simShown && bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
     return line ? { whole_fight_sim: line.text } : {};
@@ -2366,6 +2369,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
     ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
+    ...(slLowTrustSim !== null
+      ? { whole_fight_sim_trust: `低可信 (low trust): the simulator is not validated on this boss (${slLowTrustSim}). Its numbers are shown only because this fight is an SL retry, to help find another approach; no option is ranked by them.` }
+      : {}),
+    // SL (docs/sl.md): how the earlier attempts at this fight went (a retried fight only).
+    ...(env.sl ? { previous_attempts: env.sl.previousAttempts } : {}),
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),

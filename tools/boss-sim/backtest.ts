@@ -21,6 +21,7 @@
  *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5,pre] [--limit N] [--no-rollout] [--no-scripts] [--no-orders]
  *          [--damage-scale D] [--hp-scale H] [--threat T] [--potion-hold K] [--start-line policy|plan1] [--no-best-order] [--set tune|val|val_ext (experiments/boss-sim/split.json)]
  *          [--enc CRUSHER,QUEEN (B4: only these encounters)] [--boss-threat CRUSHER=2 (B4: a boss's own policy threat; "" none)]
+ *          [--lookahead lethal=1,threat=0.5 (B5: the policy's one-turn lookahead; "" none)]
  * --start-line: the start turn played by the sim's policy (default, B1.5) or the live solver's best line (B1).
  * B2: the random potions held are in the sim (sampled each turn as potion-mc does; --no-random-potions leaves them out),
  * and the turn relics B2 added (Orichalcum, Ripple Basin, Sturdy Clamp, Pendulum, Ice Cream) and the Kaiser Crab's facing.
@@ -31,7 +32,7 @@ import { join } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
 import { parseGameState, type GameState } from "../../src/mod/schema.js";
-import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
+import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
 import { bossClock } from "../../src/strategy/boss-clock.js";
 import { loadFightValueModel } from "../../src/strategy/fight-value.js";
 import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/strategy/rollout.js";
@@ -74,6 +75,15 @@ if (process.argv.includes("--boss-threat")) {
   for (const pair of arg("boss-threat", "").split(",").filter((x) => x !== "")) {
     const [id, value] = pair.split("=");
     if (id && value !== undefined && Number(value) !== 0) BOSS_POLICY_THREAT[id] = Number(value);
+  }
+}
+// --lookahead lethal=1,threat=0.5 (B5): the policy's one-turn lookahead (BOSS_SIM_LOOKAHEAD), replacing the committed one.
+if (process.argv.includes("--lookahead")) {
+  BOSS_SIM_LOOKAHEAD.lethal = 0;
+  BOSS_SIM_LOOKAHEAD.threat = 0;
+  for (const pair of arg("lookahead", "").split(",").filter((x) => x !== "")) {
+    const [name, value] = pair.split("=");
+    if (name === "lethal" || name === "threat") BOSS_SIM_LOOKAHEAD[name] = Number(value);
   }
 }
 const keep: Set<string> | null = set ? new Set((JSON.parse(readFileSync("experiments/boss-sim/split.json", "utf8")) as Record<string, string[]>)[set]) : null;

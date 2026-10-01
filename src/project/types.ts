@@ -50,6 +50,21 @@ export interface DecisionEnv {
    * means "on"; "off" keeps the step-by-step questions.
    */
   oneshot?: "on" | "off";
+  /**
+   * SL (docs/sl.md): set only on a retried fight (attempt 2 and later); undefined otherwise, so a first attempt's
+   * questions are exactly as without SL.
+   */
+  sl?: SlEnv;
+}
+
+/** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
+export interface SlEnv {
+  attempt: number;
+  maxAttempts: number;
+  /** The combat questions' previous_attempts block (src/sl/attempts.ts previousAttemptsJson). */
+  previousAttempts: JsonValue;
+  /** SL_RETRY_SHOW_SIM: show the whole-fight simulation even for a low-trust boss, labelled. */
+  showSim: boolean;
 }
 
 export interface ScreenMemory {

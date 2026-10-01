@@ -63,6 +63,8 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 
 **区间**：均值用 Student t 的 95% 区间（n ≥ 2；这些量都不为负，下限截到 0）；比例用 Wilson 95% 区间。局数（或这个指标的 n）少于 `--min-n`（默认 10）标 `*`：样本不足，区间只作参考。
 
+**SL（docs/sl.md §5）**：组里有 SL 记录（logs/sl-attempts.jsonl → 表 sl_attempts）的局时多六行，没有时输出和以前一样。上面各行是**最终**成绩（重打之后）；「第一次尝试」各行是只算第一次尝试的成绩：这局第一条 `predicted_death`（某场战斗第 1 次尝试预判必死、触发重打）的层就是「第一次尝试」的死亡层和终层，不算胜，某幕 boss 只有在这层之前（boss 层 < 死亡层）且最终也过了才算过；没有这种行的局（SL 关、或从没重打）第一次尝试 = 最终。另有「SL：有 SL 记录的局」「SL：重打次数 / 局」（reload 成功的 predicted_death 行数）。`--per-run` 多一列「SL 重打 / 第一次尝试终层」。注意：日志库的 fights 按层切战斗，同一场战斗的几次尝试合成一场（喝药数是几次的和），按战斗的指标在 SL 局里是「重打之后」的口径。
+
 ## 4. 核对
 
 - 每局非 boss 战喝药次数、进 boss 带药数和 ops/version_compare.py 的结果（paper/materials/v3-vs-v2-10runs-2026-09-29.md 的逐局表：hallway + elite 次数、F17/F33/F48 带药）逐局一致：V2 10 局、V3 10 局、V3-pre 2 局，22 局全部相同。

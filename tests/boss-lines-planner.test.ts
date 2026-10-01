@@ -174,14 +174,14 @@ describe("B2 on: the boss question", () => {
     bossLinesOptions.holdHp = null;
   });
 
-  function ask(name: string, enabled: boolean): { decision: AskDecision; criteria: Record<string, Record<string, unknown>> } {
+  function ask(name: string, enabled: boolean, over: Partial<import("../src/project/types.js").DecisionEnv> = {}): { decision: AskDecision; criteria: Record<string, Record<string, unknown>> } {
     rolloutLiveOptions.now = () => 0;
     potionMcOptions.now = () => 0;
     bossLinesOptions.enabled = enabled;
     bossLinesOptions.serial = true;
     bossLinesOptions.samples = 16;
     bossLinesOptions.holdHp = () => null;
-    const decision = planCombatTurn(loggedEnv(logged(name), { jevContext: "off" })) as AskDecision;
+    const decision = planCombatTurn(loggedEnv(logged(name), { jevContext: "off", ...over })) as AskDecision;
     const raw = (decision.questions["plan"] as { criteria: Record<string, string | null> }).criteria;
     return { decision, criteria: Object.fromEntries(Object.entries(raw).map(([key, text]) => [key, text ? (JSON.parse(text) as Record<string, unknown>) : {}])) };
   }
@@ -225,6 +225,23 @@ describe("B2 on: the boss question", () => {
       for (const key of Object.keys(on.criteria).filter((k) => k.startsWith("plan"))) expect(typeof logged.lines[key]!.win).toBe("number");
     }
   }, 120_000);
+
+  it("an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question", () => {
+    const sl = { attempt: 2, maxAttempts: 4, previousAttempts: { note: "the earlier attempt" }, showSim: true };
+    const plain = ask("ez2l-f48-t2", true);
+    const retry = ask("ez2l-f48-t2", true, { sl });
+    expect(retry.decision.state["previous_attempts"]).toEqual({ note: "the earlier attempt" });
+    expect(String(retry.decision.state["whole_fight_sim_trust"])).toMatch(/^低可信 \(low trust\): .*no option is ranked by them/);
+    expect(String(retry.decision.state["whole_fight_sim"])).toContain("rollout_best is the line with the highest simulated win rate");
+    for (const key of Object.keys(retry.criteria).filter((k) => k.startsWith("plan"))) expect(String(retry.criteria[key]!["whole_fight_sim"])).toMatch(/^low confidence: win \d+%/);
+    // The ranking is the low-trust one (the rollout's), as without SL.
+    expect(flagged(retry.criteria)).toEqual(flagged(plain.criteria));
+    // SL_RETRY_SHOW_SIM off: the question without SL plus the previous attempts, nothing else.
+    const noSim = ask("ez2l-f48-t2", true, { sl: { ...sl, showSim: false } });
+    const { previous_attempts: previous, ...rest } = noSim.decision.state;
+    expect(previous).toEqual({ note: "the earlier attempt" });
+    expect(JSON.stringify({ state: rest, questions: noSim.decision.questions })).toBe(JSON.stringify({ state: plain.decision.state, questions: plain.decision.questions }));
+  }, 240_000);
 
   it("turn 1: the fight plan from the best line's samples", () => {
     const { decision } = ask("xmy2-f17-t1", true);

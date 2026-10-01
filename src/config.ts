@@ -1,5 +1,5 @@
 import { accessSync, constants as fsConstants, readFileSync, statSync } from "node:fs";
-import { delimiter, isAbsolute, join } from "node:path";
+import { delimiter, dirname, isAbsolute, join } from "node:path";
 
 import type { Effort, EngineName } from "./brain/types.js";
 /**
@@ -34,6 +34,22 @@ export interface EnricherConfig {
   apiKey: string | null;
   model: string | null;
   tasks: string[];
+}
+
+/** SL (docs/sl.md, src/sl/controller.ts). */
+export interface SlConfig {
+  /** SL_ENABLED (default off). */
+  enabled: boolean;
+  /** SL_BOSS_RETRIES (default 5, Dai 2026-10-02): a boss fight gets at most 1 + this many attempts. */
+  bossRetries: number;
+  /** SL_ELITE_RETRIES (default 3, Dai 2026-10-02): the same for the hard fights listed in src/sl/sl-elites.json (any room, not only elites). */
+  eliteRetries: number;
+  /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
+  retryShowSim: boolean;
+  /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
+  log: string | null;
+  /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
+  stepTimeoutMs: number;
 }
 
 export interface AppConfig {
@@ -99,6 +115,8 @@ export interface AppConfig {
    * (default): combat, potions and in-combat card picks stay with code and Jev.
    */
   combatDeepseek: "off" | "on";
+  /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; off by default). */
+  sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
   brain: BrainConfig;
   mode: Mode;
@@ -608,6 +626,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
   }
   const combatDeepseek: "off" | "on" = combatDeepseekRaw === "on" ? "on" : "off";
+  const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
+  const slLogRaw = readEnv(env, "SL_LOG");
+  const sl: SlConfig = {
+    enabled: parseOnOff(readEnv(env, "SL_ENABLED"), "SL_ENABLED", problems) ?? false,
+    bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "5", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
+    eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
+    retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
+    log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
+    stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
+  };
   const brain = readBrainConfig(env, problems);
 
   const logLevelRaw = (readEnv(env, "LOG_LEVEL") ?? DEFAULTS.logLevel).toLowerCase();
@@ -692,11 +720,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     buildOneshot,
     bossSimBuild,
     combatDeepseek,
+    sl,
     brain,
     deepseek,
     escalation,
     mode,
-    log: { level: logLevel, decisionLog: readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog, ...jevPromptLogConfig(readEnv(env, "JEV_PROMPT_LOG")), ...runConfigLogConfig(readEnv(env, "RUN_CONFIG_LOG")) },
+    log: { level: logLevel, decisionLog, ...jevPromptLogConfig(readEnv(env, "JEV_PROMPT_LOG")), ...runConfigLogConfig(readEnv(env, "RUN_CONFIG_LOG")) },
     warnings,
   };
 }
