@@ -469,3 +469,5 @@
 - 2026-10-01 12:46 Dai 要自己玩约 2 小时：建 ops/STOP，ops/stop.sh 停掉 play（PID 657113/657124），autoplay 已退出；stop-after-a8.sh（PID 611598）保留继续计数。V4.2 已完成 4 局（5CWL、ZRYR、GSFS、NBCD），第 5 局 ALBM9RUA77WR 中途暂停（Dai 若在同一存档开新局，这局会作废，恢复后从新局继续算）。
 - 2026-10-01 12:49 试图恢复 autoplay 时发现本机 Steam 和游戏进程都已不在（Dai 在家里的机器上用同一 Steam 账号开玩，本机会话被挤掉）；重新建 ops/STOP、停掉 autoplay（PID 664285）。Dai 玩的期间不重开游戏（重开会把 Dai 那边挤下线），等 Dai 说玩好再重开。
 - 2026-10-01 13:21 Dai 玩好了：用 schtasks /it 在桌面会话重开游戏（SlayTheSpire2.exe PID 31060，Console 1，mod 15 s 上线，计划任务已删），删 ops/STOP，autoplay 重启 PID 672186；ALBM9RUA77WR 的存档还在，从 F21 接着打（这局跨暂停，复盘时注明）。stop-after-a8.sh PID 611598 继续计数。
+- 2026-10-01 14:50 学习闭环：V4.2 第 6 局 R6V3 结束（F48 女王，负），派后台 agent 复盘 NBCD/ALBM/R6V3（第 4–6 局）。
+- 2026-10-01 15:05 学习闭环：V4.2 第 4–6 局复盘写完（NBCD F17 瀑布巨兽、ALBM F33 知识恶魔、R6V3 F48 女王），无新纯 bug/无阻塞；已知项复发记 fix-queue-v4，boss 药路上喝掉与女王墙证据记 for-dai；paper_dataset 已跑。

@@ -20,3 +20,9 @@
 - 2026-10-01 12:30 (V4.2) src/sim/build-sim-facts.ts:458: low-win-rate note says the calibrated floor is "约 8%"; actual floor 6.24%. Cosmetic.
 - 2026-10-01 12:30 (V4.2) planner counted damage for an X-cost card (串刺) played after 无情猛攻+ at 0 energy (ZRYR F39 T1: predicted 70, dealt 58). file:line not found yet.
 - 2026-10-01 12:30 (V4.2, design) low-trust bosses still run the full boss sim (up to 25 s/question) only for logging: Crab ~84 s and ~154 s per fight (6 timeouts). B3 deltas from small samples (40–160) quoted as real; suggest hiding deltas under ~300 samples; Crab/Test Subject build deltas all sit at the 6.24% floor.
+
+### V4.2 第 4–6 局复盘补充（2026-10-01 15:05）
+- 无新纯 bug。已知项复发：build-sim-facts.ts:387（ALBM F17、R6V3 F17/F33，R6V3 F17 引用 +11.6 后选中）；小样本 B3 差值被引用（R6V3 F22 n=24、F29 n=72、F32 n=96、F43 n=88、F44 n=48）；低可信 boss 满时模拟（R6V3 帝王蟹约 112 s，3 题超时；女王约 36 s）。
+- mod 战中选牌屏请求超时 4 次（ALBM 3 次知识恶魔诅咒选择，R6V3 1 次「拿进手牌」），约 13 s 自愈，不阻塞。
+- R6V3 F9 DeepSeek 空内容，从推理找回选择，路线答案丢失（同已知类）。
+- 设计观察：低可信 boss（瀑布巨兽，NBCD）整场模拟 7 题一致比 5 回合 rollout 更偏多打伤害（差 14–28 个百分点）；rollout 看不到「越晚打死自爆越大」。
