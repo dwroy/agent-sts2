@@ -73,7 +73,8 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
 
 /**
  * Digests of the pre-B2 planner (bd606d9 with the B2 simulator fixes, which leave the planner as it was). The two
- * saturated boards (8v0h, ez2l) re-pinned at fix-queue-v4 #1: the saturated ranking's order and its text changed.
+ * saturated boards (8v0h, ez2l) re-pinned at fix-queue-v4 #1: the saturated ranking's order and its text changed;
+ * 8v0h again at #2 (its Blood Potion line: this turn's loss before the heal).
  */
 const GOLDEN: Record<string, string> = {
   "3sbp-f17-t3-flex:off": "54195aef830cffc934ee84d6f8ae5e75",
@@ -82,8 +83,8 @@ const GOLDEN: Record<string, string> = {
   "k8tc-f17-t5:v1": "db378ae176302d722581163726dfd044",
   "xmy2-f17-t1:off": "32a8a233cfeb57945f29c8db3a282c89",
   "xmy2-f17-t1:v1": "9f60a44dc7cb4816699ad8053f9715f9",
-  "8v0h-f17-t2-saturated:off": "fd65f05c8efc8ecae723a994e88e1164",
-  "8v0h-f17-t2-saturated:v1": "b9d56a8a0605cb0ad61baa5cbce601c1",
+  "8v0h-f17-t2-saturated:off": "8b438468c96718c5ceccd0e6721c790a",
+  "8v0h-f17-t2-saturated:v1": "3e8bd1db016185cc173b00efb6a66b97",
   "ez2l-f48-t2:off": "47ffd87e31b2dff42b0fb6937c4b3ef2",
   "ez2l-f48-t2:v1": "cdaa92575b7d7984b6a937dd7a0b82cb",
   "2mk4-f8-t2-ask:v1": "07448a5e8359434d51b955b91d956810",

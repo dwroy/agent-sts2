@@ -619,6 +619,11 @@ export interface Outcome {
    * when 0: none drunk, a boss fight, no value). The score takes weights.hp x it off; effectiveLoss adds it to hpLoss.
    */
   potionCost?: number;
+  /**
+   * HP the potions this line drinks heal this turn (Blood Potion; absent when none): hpLoss is net of it. What the
+   * line itself costs us is hpLoss + potionHeal (the saturated rollout ranking compares that: rollout-live turnLoss).
+   */
+  potionHeal?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
   /**
@@ -735,6 +740,8 @@ interface Sim {
   lastingDrinks: number;
   /** The drunk potions' cost in HP (card.potionCost). */
   potionCost: number;
+  /** HP the drunk potions healed this turn (Blood Potion), never past max HP. */
+  potionHeal: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
   /**
@@ -1379,7 +1386,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "radiance") next.flat += RADIANCE_ENERGY_VALUE * RADIANCE_LATER_ENERGY;
   // Blood Potion: a share of max HP back at once; the turn's HP loss is net of it (never above max HP).
   if (card.special === "heal") {
+    const before = next.hp;
     next.hp = Math.min(player.maxHp, next.hp + Math.floor(player.maxHp * BLOOD_POTION_HEAL));
+    next.potionHeal += next.hp - before;
     redSkullCheck(next, player);
   }
   // Regen: healed at the end of this turn (evaluate), the later turns' heals as lasting value.
@@ -2460,6 +2469,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
+      ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
       ...(retaliated.length > 0 ? { retaliated } : {}),
       ...(clayBlockNext > 0 ? { clayBlockNext } : {}),
       ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
@@ -2639,6 +2649,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
     potionCost: 0,
+    potionHeal: 0,
     attacksPlayed: 0,
     relicAttacks: 0,
     skillsPlayed: 0,

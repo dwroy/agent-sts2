@@ -304,7 +304,7 @@ describe("enemy tables", () => {
 
 describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD F17, 8V0HD9Y207WY F17)", () => {
   const line = (name: string, over: Partial<LineEstimate>): LineEstimate =>
-    ({ plan: { steps: [], name } as unknown as LineEstimate["plan"], value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, enemyHpLeft: 100, turnsSurvived: 4, ...over }) as LineEstimate;
+    ({ plan: { steps: [], name } as unknown as LineEstimate["plan"], value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, samples: 8, enemyHpLeft: 100, turnsSurvived: 4, ...over }) as LineEstimate;
 
   it("saturated: the value says nothing; the least enemy HP left, then the most turns alive, else no best", () => {
     // 8V0H T2: all ten lines "further loss 62" = our HP; the first (code rank 1) was tagged best.
@@ -344,7 +344,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
       const keys = new Map<string, { dead: number; loss: number; left: number }>();
       for (const key of Object.keys(criteria)) {
         const text = String(facts(criteria, key)["rollout"] ?? "");
-        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then the fight's progress: .*least enemy HP left \(this line ~(\d+), at T\d or at our death\), then most turns alive \(this line ~[\d.]+\), then least HP lost this turn \(this line (gains )?(\d+)\)/.exec(text);
+        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then the fight's progress: .*least enemy HP left \(this line ~(\d+), at T\d or at our death\), then most turns alive \(this line ~[\d.]+\), then least HP lost this turn \(this line (gains )?(\d+)(, before [^)]*)?\)/.exec(text);
         if (/^not rolled out/.test(text)) continue;
         expect(m, `${name} ${key}: ${text}`).not.toBeNull();
         keys.set(key, { dead: Number(m![1]), loss: (m![3] ? -1 : 1) * Number(m![4]), left: Number(m![2]) });

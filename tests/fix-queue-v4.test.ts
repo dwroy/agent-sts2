@@ -5,9 +5,13 @@
 
 import { describe, expect, it } from "vitest";
 
+import { potionEffect, potionShell } from "../src/strategy/card-model.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
 
 /** A rollout line as the saturated ranking reads it: this turn's exact loss, deaths, enemy HP left, turns alive. */
 function rolled(name: string, turnLoss: number, over: Partial<LineEstimate> & { hpLoss: number }): LineEstimate {
@@ -71,5 +75,30 @@ describe("1. A saturated board ranks by the fight's progress, not this turn's HP
     expect(pickRolloutBest([a, b, longer], 40).best).toBe(longer);
     const c = rolled("c", 9, { hpLoss: 40, enemyHpLeft: 80, turnsSurvived: 3 });
     expect(pickRolloutBest([b, c], 40)).toEqual({ best: null, saturated: true, tied: [b, c] });
+  });
+});
+
+describe("2. One sample never saturates; a healing drink is not taken off this turn's loss (fix-queue-v4 rollout-live:479/458/493)", () => {
+  it("F4K88F267RCX F48 T1 (\"3-turn rollout (1 sample)\", every line capped at our 63 HP): not saturated", () => {
+    const one = (name: string, loss: number, left: number) => rolled(name, loss, { hpLoss: 63, samples: 1, deaths: 0, enemyHpLeft: left, turnsSurvived: 3 });
+    const lines = [one("plan1", 17, 497), one("plan3", 6, 487), one("plan4", 7, 531)];
+    const picked = pickRolloutBest(lines, 63);
+    expect(picked.saturated).toBe(false);
+    // Two samples or more, the same numbers: saturated as before.
+    expect(pickRolloutBest(lines.map((line) => ({ ...line, samples: 2 })), 63).saturated).toBe(true);
+  });
+
+  it("W80JV2YVC8UZ F48 T1: Blood Potion at 84/88 heals 4; the line counts what the turn takes, not net of the heal", () => {
+    const blood = { ...potionShell("BLOOD_POTION", "Blood Potion", 0, []), ...potionEffect("BLOOD_POTION")! };
+    const solved = solveTurn({ hand: [blood], player: player({ hp: 84, maxHp: 88, energy: 0 }), enemies: [enemy({ attacks: [{ damage: 10, hits: 1 }] })], fightKind: "boss", turn: 1 });
+    const drink = solved.plans.find((plan) => plan.steps.length === 1)!;
+    expect(drink.outcome.hpLoss).toBe(6);
+    expect(drink.outcome.potionHeal).toBe(4);
+    expect(solved.plans.find((plan) => plan.steps.length === 0)!.outcome.potionHeal).toBeUndefined();
+    // Saturated, the same progress and turns alive: the drink line nets 2 (6 taken, 4 healed), the dry one loses 5.
+    const drinks = rolled("drinks", 2, { hpLoss: 84, enemyHpLeft: 300 });
+    (drinks.plan.outcome as { potionHeal?: number }).potionHeal = 4;
+    const dry = rolled("dry", 5, { hpLoss: 84, enemyHpLeft: 300 });
+    expect(pickRolloutBest([drinks, dry], 84)).toMatchObject({ best: dry, saturated: true });
   });
 });

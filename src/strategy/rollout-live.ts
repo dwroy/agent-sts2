@@ -543,6 +543,11 @@ const FALLBACK_TAG = "1-turn";
 
 /** A line whose expected further loss is within this much of the HP we have, winning in no sample, is saturated. */
 export const SATURATED_HP = 1;
+/**
+ * Fewer samples than this never make a board saturated: one sample (the time budget's cut, F4K88F267RCX F48 T1 "3-turn
+ * rollout (1 sample)"; W80JV2YVC8UZ F48 T1) is one draw order, not "every line loses all our HP".
+ */
+export const SATURATED_MIN_SAMPLES = 2;
 /** Enemy HP left within this much, and turns survived within ROLLOUT_TURNS_TIE, is a tie. */
 export const ROLLOUT_ENEMY_HP_TIE = 1;
 export const ROLLOUT_TURNS_TIE = 0.1;
@@ -550,16 +555,18 @@ export const ROLLOUT_TURNS_TIE = 0.1;
 /**
  * Our own HP lost this turn (the line's exact first turn): a saturated board's last key, after deaths and the fight's
  * progress. No potion cost here: when every line loses all our HP a potion kept has no later to be worth anything in
- * (potion-cost.ts).
+ * (potion-cost.ts). A healing drink's HP is not taken off (W80JV2YVC8UZ F48 T1: Blood Potion at 84/88 for +4 read as
+ * the line losing the least): what the line loses to the turn, not the potion spent to refill it.
  */
-const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
+const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0) + (line.plan.outcome?.potionHeal ?? 0);
 
 /**
  * The rollout's best line: the highest value (-E[HP loss] - 40 x (1 - win)); lines tied on it are told
  * apart by the enemy HP left at the horizon (least first), then the turns we stay alive (most first),
  * then code's order.
  *
- * Saturated boards (every line's loss capped at the HP we have, no sample won): the value says nothing, and what ranks
+ * Saturated boards (every line's loss capped at the HP we have, no sample won, SATURATED_MIN_SAMPLES samples or more):
+ * the value says nothing, and what ranks
  * the lines is the fight's progress (fix-queue-v4, CDR0Q6929CKR F33, F4K88F267RCX F48, HME0FA7VA0J6 F33: in the clock
  * boss fights, the Insatiable's Sandpit, the Queen's Off With Your Head, the Knowledge Demon, every line is judged dead
  * from T1, and ranking by this turn's HP loss picked the turtle line turn after turn; CDR0 T5: -9 HP leaving the worm
@@ -588,7 +595,7 @@ const turnLoss = (line: LineEstimate): number => line.plan.outcome?.hpLoss ?? 0;
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
-  const saturated = lines.every((line) => line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
+  const saturated = lines.every((line) => line.samples >= SATURATED_MIN_SAMPLES && line.wins === 0 && line.hpLoss >= startHp - SATURATED_HP);
   // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
   // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
@@ -837,7 +844,7 @@ function saturatedNote(line: LineEstimate, r: LiveRollout & { available: true })
   if (!r.saturated) return "";
   const leader = r.result.orders.find((order) => order.leader)?.leader?.name;
   const leaderText = leader && line.leaderHpLeft !== null && line.leaderHpLeft !== undefined ? `${leader} HP left ~${Math.round(line.leaderHpLeft)} (its death ends the fight), ` : "";
-  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then the fight's progress: ${leaderText}least enemy HP left (this line ~${Math.round(line.enemyHpLeft)}, at T${line.horizon} or at our death), then most turns alive (this line ~${round1(line.turnsSurvived)}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)})`;
+  return `; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within ${line.horizon} turns (this line ${line.deaths}/${line.samples}), then the fight's progress: ${leaderText}least enemy HP left (this line ~${Math.round(line.enemyHpLeft)}, at T${line.horizon} or at our death), then most turns alive (this line ~${round1(line.turnsSurvived)}), then least HP lost this turn (this line ${turnLoss(line) < 0 ? `gains ${-turnLoss(line)}` : turnLoss(line)}${line.plan.outcome?.potionHeal ? `, before the ${line.plan.outcome.potionHeal} HP its potion heals` : ""})`;
 }
 
 /** The facts of one shown line. */
