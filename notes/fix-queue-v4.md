@@ -44,3 +44,6 @@
 - **血量护栏 bigHit 让「保留能力牌」例外失效**：src/screens/combat-plan.ts:1783、:2047-2054，guardKeepsSetup 首条件 `!bigHit`（来袭减格挡 ≥ max(12, 25% 血)）。GTU2 F33 T1 21 ≥ 20，恶魔形态+（−17）被换成攻击线（−13），整场没再抽到；只进日志的整场模拟排恶魔形态+ 第一（44.9% 对 5.3%）。同一题 rollout 被砍到 3 回合 1 样本、10 线并列。:2052 注释里 5BXM 是同一问题，bigHit 绕开了那次修复。不阻塞，但很可能决定了这场 boss。
 - **性能：可信 boss（同族 THE_KIN）整场模拟每题超时**（1HF7 F17：9 题全超时，8×25 s + 1×5 s，样本 75–596，一场约 215 s；同场 rollout 全降级，T1 只算 1 回合）；一幕同族 B3 11 题 <300 样本。CPU 争用的最明显证据。不阻塞。
 - 已知项复发：build-sim-facts.ts:387 四局都中（NWVL 关键牌绯红披风、烙印+ 是它碰巧选中的）；小样本 B3 引用（1HF7 7、NWVL 4、GTU2 2）；低可信帝王蟹满时模拟（NWVL 136.5 s、GTU2 78.7 s）；mod 超时约 10 s 自愈（还出现在事件屏、结算屏；NWVL 6、1HF7 4、GTU2 2）。gate_reject 0，DeepSeek 空内容 0，无泄漏。
+
+### V4.2 第 20 局复盘补充（2026-10-02 00:26）
+- 设计缺口：遗物钗 SAI（每回合 7 格挡）在 rollout、整场模拟、boss 时钟里都没建模：src/strategy/rollout-live.ts:319-324 relicBlockOf 只认 CAPTAINS_WHEEL，:344-373 fightRelicsOf 无 SAI。8D8D 女王 T1 rollout 判「每条线都死」、模拟胜率 16%，实际 T1–T5 只掉 11 血（赢了）。不阻塞。

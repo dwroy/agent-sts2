@@ -1,21 +1,20 @@
 {
-  "generated_at": "2026-10-01T15:38:21.650Z",
+  "generated_at": "2026-10-01T16:26:02.301Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 318659402,
-    "deepseek-reasoning.jsonl": 304409517,
-    "runs.jsonl": 165831,
-    "states.jsonl": 4975435575,
+    "decisions.jsonl": 320408218,
+    "deepseek-reasoning.jsonl": 305679355,
+    "runs.jsonl": 166254,
+    "states.jsonl": 4992448700,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 4042153
+    "run-plans.jsonl": 4047701
   },
   "runs_total": 423,
   "runs_by_outcome": {
     "defeat": 406,
-    "victory": 16,
-    "in_progress": 1
+    "victory": 17
   },
-  "runs_finished": 422,
-  "runs_in_runs_jsonl": 419,
+  "runs_finished": 423,
+  "runs_in_runs_jsonl": 420,
   "wins": [
     {
       "run_id": "W6F4YXF3MT7A",
@@ -176,6 +175,16 @@
       "code_version_console": "146d8ac+dirty",
       "era": "deepseek_memory",
       "outcome_source": "runs.jsonl"
+    },
+    {
+      "run_id": "8D8DZ9K680C2",
+      "ascension": 8,
+      "floor": 48,
+      "end_ts": "2026-10-01T16:08:51.356Z",
+      "code_version": "146d8ac+dirty",
+      "code_version_console": "146d8ac+dirty",
+      "era": "deepseek_memory",
+      "outcome_source": "runs.jsonl"
     }
   ],
   "best_floors": [
@@ -254,7 +263,7 @@
     "23": 15,
     "24": 17,
     "25": 14,
-    "27": 9,
+    "27": 8,
     "28": 8,
     "29": 2,
     "30": 6,
@@ -267,7 +276,7 @@
     "42": 4,
     "43": 3,
     "45": 5,
-    "48": 66
+    "48": 67
   },
   "per_ascension": {
     "0": {
@@ -516,13 +525,13 @@
     },
     "8": {
       "runs": 219,
-      "finished": 218,
-      "wins": 8,
-      "win_rate_finished": 0.037,
-      "mean_floor_finished": 30.22,
-      "median_floor_finished": 33.0,
+      "finished": 219,
+      "wins": 9,
+      "win_rate_finished": 0.041,
+      "mean_floor_finished": 30.3,
+      "median_floor_finished": 33,
       "reached_act2": 165,
-      "reached_act3": 50,
+      "reached_act3": 51,
       "run_ids": [
         "SCBC3F0QT8BC",
         "H8LCRD86HPZB",
@@ -942,13 +951,13 @@
     },
     "deepseek_memory": {
       "runs": 358,
-      "finished": 357,
-      "wins": 13,
-      "win_rate_finished": 0.036,
-      "mean_floor_finished": 29.43,
-      "median_floor_finished": 33,
+      "finished": 358,
+      "wins": 14,
+      "win_rate_finished": 0.039,
+      "mean_floor_finished": 29.49,
+      "median_floor_finished": 33.0,
       "reached_act2": 260,
-      "reached_act3": 80,
+      "reached_act3": 81,
       "run_ids": [
         "5FMUSNUXEHGY",
         "VC4LRL945UEF",
@@ -1343,13 +1352,13 @@
     },
     "after": {
       "runs": 406,
-      "finished": 405,
-      "wins": 16,
-      "win_rate_finished": 0.04,
-      "mean_floor_finished": 29.28,
-      "median_floor_finished": 31,
+      "finished": 406,
+      "wins": 17,
+      "win_rate_finished": 0.042,
+      "mean_floor_finished": 29.32,
+      "median_floor_finished": 32.0,
       "reached_act2": 291,
-      "reached_act3": 89,
+      "reached_act3": 90,
       "run_ids": [
         "DG1CDGW8Y5JE",
         "G7EJ07RPR1NX",
@@ -1762,10 +1771,10 @@
   },
   "api": {
     "jev": {
-      "calls": 34052,
-      "in_tokens": 380801388,
-      "out_tokens": 22755032,
-      "cost_usd": 16.9494,
+      "calls": 34167,
+      "in_tokens": 385088844,
+      "out_tokens": 22881873,
+      "cost_usd": 17.1348,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -1791,19 +1800,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 32.2152,
+  "api_cost_total_usd": 32.4006,
   "decisions": {
-    "play_total": 168111,
-    "attributed_to_runs": 166077,
+    "play_total": 168530,
+    "attributed_to_runs": 166496,
     "unattributed_menu_timeline": 2034,
     "shadow": 20,
     "by_layer": {
-      "code": 106436,
-      "jev": 24520,
-      "deepseek": 9816,
+      "code": 106657,
+      "jev": 24609,
+      "deepseek": 9851,
       "claude": 186,
       "code-fallback": 1729,
-      "jev-plan": 22470,
+      "jev-plan": 22544,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -1819,13 +1828,13 @@
     }
   },
   "deepseek_reasoning_log": {
-    "records": 11479,
+    "records": 11508,
     "matched_to_escalations": 3207,
     "models": {
-      "deepseek-flash": 11479
+      "deepseek-flash": 11508
     }
   },
-  "states_lines_scanned": 170552,
+  "states_lines_scanned": 170984,
   "console_logs": 735,
   "commits": {
     "total": 1088,
@@ -1833,7 +1842,7 @@
     "experiment": 1069
   },
   "postmortems": {
-    "runs_with_heading": 399,
+    "runs_with_heading": 400,
     "preloop_listed": 13
   }
 }
