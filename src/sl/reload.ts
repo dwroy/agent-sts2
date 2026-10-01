@@ -38,6 +38,9 @@ export function encounterOf(state: GameState): string {
   return [...ids].sort().join("+");
 }
 
+/** How long (at most half the step's wait) the run may sit out of combat after continue_run before it counts as resumed elsewhere. */
+const ELSEWHERE_MS = 10_000;
+
 const defaultSleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 function inRun(state: GameState): boolean {
@@ -100,15 +103,15 @@ export async function reloadFight(target: ReloadTarget, start: GameState, deps: 
   const continueError = await act("continue_run");
 
   // Back in the run: the fight's first player phase, or somewhere else (a room that is not this fight) for good.
-  let elsewhere = 0;
+  let elsewhereSince: number | null = null;
   const back = await waitFor("back_in_fight", (state) => {
     if (fightReady(state)) return true;
     if (inRun(state) && !state.in_combat && state.screen !== "COMBAT") {
-      elsewhere += 1;
-      // A few reads in a row out of combat: the game resumed somewhere else (loading frames are rarely more than one).
-      return elsewhere >= 6 ? `the run resumed on ${state.screen} (F${state.run?.floor ?? "?"}), not in the fight` : null;
+      elsewhereSince ??= now();
+      // In the run but out of combat for a while (a loading frame or a room's entry is shorter): the run resumed elsewhere.
+      return now() - elsewhereSince >= Math.min(ELSEWHERE_MS, deps.stepTimeoutMs / 2) ? `the run resumed on ${state.screen} (F${state.run?.floor ?? "?"}), not in the fight` : null;
     }
-    elsewhere = 0;
+    elsewhereSince = null;
     return null;
   });
   if (!("raw" in back)) return withError(back, continueError, "continue_run");
