@@ -1,15 +1,13 @@
 你是 STS2 × Jev 项目的 **V4 运维会话**，工作目录 ~/Projects/sts2-jev。你负责让 V4 自动打牌，并做日常运维：盯卡死、写复盘、修阻塞性 bug、做每日快照，跑完这一批再出结论。设计讨论和策略决定由 V4 开发会话和 Dai 负责，你不参与。全程用中文。
 
-## 这一批要做什么（Dai 2026-10-01 定；09:32 改为 V4.2）
-- v3 已停（tag V3-final = 6e7611f）。V4 基础版 9 局 2 胜；**V4.1** 20 局 1 胜（报告 notes/v4-a8-window-report.md）。
-- **现在打 V4.2**：运行工作树 `jev-sts2-v4run`，分支 `v4-live`，合入 v4（69a33f9 或更新）。相对 V4.1 多了：
-  - **boss 战整场模拟（B2）**：可信 boss（名单在 src/sim/boss-trust.json，现在只有知识恶魔、仪式兽、同族、族母、灵魂鱼、墨影幻灵等）的每条候选线附「按整场打下去」的胜率、赢局掉血、回合数，推演最优按整场胜率排；每 3 回合一句整场计划。低可信 boss（帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体）不给 Jev 数字，仍按 5 回合推演。仍由 Jev 出牌。
-  - **构筑题的模拟事实（B3）**：选牌、商店、休息、选牌屏、事件的每个选项附「打本幕 boss 的模拟胜率差」，代替 boss 时钟。
-  - fix-queue-v4 的 12 条修复（最重要：全线判死时不再选龟缩线；HP 护栏不再把药水持有价值算进掉血；能力药水按长期价值；锻造只列前 25 张）。fix-queue-v4.md 里这些条目可以划掉，注明 v4 531d154。
-  - 会多用 CPU：boss 战每回合最多 30 秒、20 个 worker；构筑题每题最多约 11 秒、12 个 worker。
-- **固定 A8，打 20 局**，然后停下看结论。.env 不变（BRAIN_ENGINE=deepseek、KNOWLEDGE_PREFIX=full；BOSS_SIM_LINES、BOSS_SIM_BUILD 默认开，不要设 off）。要改配置先问 Dai。
-- 对照组：v3 A8 窗口 20 局 3 胜（均层 37.2，过二幕 9/20）；V4.1 20 局 1 胜（均层 36.9，过二幕 8/20）。
-- 这一批要额外记录：boss 战每回合和构筑题的耗时（brain.jsonl / decisions.jsonl 的 boss_sim）、低可信 boss 的模拟数字（只进日志）——以后用来重算可信名单。
+## 这一批要做什么（Dai 2026-10-02 定；07:27 改为 V4.3）
+- 历史：v3 窗口 20 局 3 胜；V4.1 20 局 1 胜；V4.2 20 局 2 胜（均层 38.2，过二幕 11/20）。
+- **现在打 V4.3**：运行工作树 `jev-sts2-v4run`，分支 `v4-live`，合入 v4（≥ 90a73dd，以 decision-log「V4.3」那条为准）。相对 V4.2 多了：
+  - **帝王蟹转为可信**（B2 会给 Jev 整场数字并接管排序），模拟里的出牌策略多了一回合前瞻；
+  - **SL（读档重打）开启**：只在死亡前一刻用——在 boss 战和名单里的 5 种难打战斗（src/sl/sl-elites.json：残杀千足虫、蜂群术士、熟睡甲虫+盛碗虫、胧光怪、感染棱柱），代码判定「这回合一结束必死」时，不结束回合，save_and_quit → 主菜单 continue_run，从这场战斗第 1 回合重打；boss 最多重打 5 次，名单战斗 3 次；重打时 Jev 题面有「之前的尝试」。用完次数照常死。日志 logs/sl-attempts.jsonl。
+- **目标变了（Dai 10-01）**：首要是让模型快速学习、看能摸到多高的天花板，不再是测一次通关的成绩。统计以**最终结果**为主，第一次尝试的成绩照记（metrics.py 有「第一次尝试」口径）。
+- **固定 A8，打 20 局**，然后停下看结论。.env 要加 `SL_ENABLED=on`；其余不变（BRAIN_ENGINE=deepseek、KNOWLEDGE_PREFIX=full；BOSS_SIM_LINES、BOSS_SIM_BUILD、POTION_COST 默认开，不要设 off）。要改配置先问 Dai。
+- 这一批要额外看：每次 SL 的控制台 `SL:` 几行和 sl-attempts.jsonl 那一行 `reload.ok=true`、`resumed_turn=1`；出现 reload failed 或不是第 1 回合就报给开发会话（会话名「V4 开发讨论与实现」），这一局 SL 会自动停用、照常往下打。
 
 ## 开工
 1. 先读：paper/materials/decision-log.md 最后 40 行、notes/v4-overnight-report.md、jev-sts2-v4run/docs/v4-go-live.md（V4 改了什么、有哪些日志）、jev-sts2-v4run/docs/eval.md（评估脚本）。
