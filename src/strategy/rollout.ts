@@ -380,6 +380,19 @@ export interface EnemyMove {
    */
   shown?: boolean;
   /**
+   * Whole fights only (simulateFight; B4, docs/boss-sim.md §13): the hit before Strength and our Vulnerable of a `shown`
+   * move, measured from the logged fights (rollout-live SHOWN_MOVE_BASES: the Torch Head Amalgam's Beam 8x3, the
+   * Queen's Off With Your Head 3x5). The whole fight adds Strength and Vulnerable to it as for any other move.
+   */
+  fightDamage?: number;
+  /**
+   * Whole fights only (B4): a Surrounded move's hit when we face it (monster-db moveDamageAt `base`); `damage` is the
+   * average over the logged facings, which the whole fight must not scale by the back attack's 1.5 again.
+   */
+  faceDamage?: number;
+  /** Whole fights only (B4): the Sandpit count the move starts on its user (the Insatiable's Liquify Ground: 4). */
+  sandpit?: number;
+  /**
    * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
    * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
    * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
@@ -925,6 +938,8 @@ interface SimEnemy {
   extraHits?: number;
   /** Uses of each growing move so far (EnemyMove.growth). */
   uses?: Record<string, number>;
+  /** The Knowledge Demon's Curse of Knowledge uses so far (whole fights: KNOWLEDGE_CURSES at most). */
+  curses?: number;
   /**
    * Whole fights: this enemy's own random stream for its moves (seeded by the sample and its board index), so two
    * lines compared on the same sample see the same enemy moves however differently they drew and played.
@@ -1111,7 +1126,7 @@ export interface TurnRecord {
   blockGained?: number;
 }
 
-function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean): { damage: number; hits: number }[] {
+function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean } = { fullFight: false, faced: false }): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
   const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
@@ -1119,8 +1134,11 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.
   const hits = Math.max(1, m.hits) + (move === GROWING_HITS[enemy.id] ? enemy.extraHits ?? 0 : 0);
   const grown = m.growth && move ? m.growth * (enemy.uses?.[move] ?? 0) : 0;
-  if (m.shown) return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits }];
-  return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.strength + enemy.vigor) * scale)), hits }];
+  // B4, whole fights: a shown move's measured base takes Strength and Vulnerable like any move (the Amalgam's Strength
+  // grows every Burn Bright For Me); a Surrounded move is its faced hit once the facing is tracked (x1.5 behind us).
+  const own = fight.fullFight && m.fightDamage !== undefined ? m.fightDamage : fight.faced && m.faceDamage !== undefined ? m.faceDamage : null;
+  if (m.shown && own === null) return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits }];
+  return [{ damage: Math.max(0, Math.floor(((own ?? m.damage) + grown + enemy.strength + enemy.vigor) * scale)), hits }];
 }
 
 /** Some move of the enemy gives it this power (EnemyMove.selfPowers). */
@@ -1180,6 +1198,29 @@ export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
 export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
 
 /**
+ * B4 (docs/boss-sim.md §13), measured on the logged A7-A8 Queen fights (29 of them, every turn's Strength read off the
+ * state): each Burn Bright For Me gives the living Torch Head Amalgam 1 Strength (its Strength after its turns 3+: +1 in
+ * 36 of 41; 0 on turns 1-2, when the Queen casts Puppet Strings and You Are Mine), and the Amalgam's death gives the
+ * Queen 2 (9 of 11).
+ */
+export const ALLY_STRENGTH_MOVES: Record<string, { ally: string; amount: number }> = { BURN_BRIGHT_FOR_ME_MOVE: { ally: "TORCH_HEAD_AMALGAM", amount: 1 } };
+export const AMALGAM_DEATH_STRENGTH = 2;
+
+/**
+ * The Knowledge Demon's Curse of Knowledge: 3 uses a fight (logged on turns 1, 5 and 9 only, 132 uses in 52 fights; after
+ * the third, Ponder is followed by Slap: turns 13, 16). The move model's Ponder -> Curse 91% gave long fights a 4th and
+ * 5th curse.
+ */
+export const KNOWLEDGE_CURSES = 3;
+
+/**
+ * Status cards a move shuffles into the draw pile, of the ones it adds (the rest go to the move's pile): the Insatiable's
+ * Liquify Ground, 6 Frantic Escapes, 3 into the draw pile and 3 into the discard pile (46 of 46 logged fights at turn 2:
+ * draw + hand 3, discard 3; the monster DB records the discard pile only).
+ */
+export const STATUS_INTO_DRAW: Record<string, number> = { LIQUIFY_GROUND_MOVE: 3 };
+
+/**
  * The next move in a whole fight: the move model's successors, but where the game's script depends on the fight's
  * state and not on the last move alone (logged A8 move sequences, 2026-09-30):
  *  - Ceremonial Beast: Plow again until the stun at its Plow threshold (then STUNNED > Beast Cry, applyPlan's shriek);
@@ -1191,7 +1232,16 @@ export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_
  */
 function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string): string | null {
   if (e.id === "CEREMONIAL_BEAST" && e.move === "PLOW_MOVE" && e.shriekArmed) return "PLOW_MOVE";
-  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  const amalgam = enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM");
+  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return amalgam ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  // B4: the Amalgam dead before Burn Bright ever came (killed by You Are Mine's turn): Off With Your Head straight away
+  // (logged 5GKAR00L5AYV F22: T2 You Are Mine, T3 Off With Your Head).
+  if (e.id === "QUEEN" && e.move === "YOU_ARE_MINE_MOVE" && !amalgam) return "OFF_WITH_YOUR_HEAD_MOVE";
+  // B4: no fourth curse; the move model's Ponder -> Slap is what the logged fights do after the third.
+  if (e.id === "KNOWLEDGE_DEMON" && (e.curses ?? 0) >= KNOWLEDGE_CURSES) {
+    const next = nextMove(table, e.move, random, exclude, (m) => m !== "CURSE_OF_KNOWLEDGE_MOVE");
+    return next === "CURSE_OF_KNOWLEDGE_MOVE" ? "SLAP_MOVE" : next;
+  }
   if (e.asleep !== undefined && e.asleep > 0) {
     e.asleep = e.hurt ? 0 : e.asleep - 1;
     if (e.asleep > 0) return e.move;
@@ -1334,6 +1384,8 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     }
   } else {
     e.alive = false;
+    // B4, whole fights: the Queen takes 2 Strength when her Torch Head Amalgam dies (ALLY_STRENGTH_MOVES' note).
+    if (fullFight && e.id === "TORCH_HEAD_AMALGAM") for (const x of enemies) if (x.alive && x.id === "QUEEN") x.strength += AMALGAM_DEATH_STRENGTH;
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
     // actual 23).
@@ -1819,10 +1871,19 @@ function applyPlan(
         if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
         if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
         // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
-        // already there; ~800 logged fights had them added).
+        // already there; ~800 logged fights had them added). B4, whole fights: some of them into the draw pile.
         for (const status of m?.statusCards ?? []) {
           const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
-          if (card) addToPile(piles, card, status.count, status.pile, random);
+          const intoDraw = fullFight && e.move ? Math.min(status.count, STATUS_INTO_DRAW[e.move] ?? 0) : 0;
+          if (card && intoDraw > 0) addToPile(piles, card, intoDraw, "draw", random);
+          if (card) addToPile(piles, card, status.count - intoDraw, status.pile, random);
+        }
+        if (fullFight) {
+          // B4 whole-fight scripts: Burn Bright's Strength for the Amalgam, the Sandpit Liquify Ground starts, the curses used.
+          const ally = e.move ? ALLY_STRENGTH_MOVES[e.move] : undefined;
+          if (ally) for (const x of enemies) if (x.alive && x.id === ally.ally) x.strength += ally.amount;
+          if (m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
+          if (e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
         }
         if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
@@ -2247,7 +2308,7 @@ function simulate(
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
-        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0)),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0, { fullFight, faced: fullFight && base.surrounded === true && facing !== null })),
       }))
       // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
       // its next hit (about this one) saved.
@@ -2365,8 +2426,11 @@ export function policyWeights(opts: RolloutOptions, player: Pick<PlayerSim, "hp"
   return out;
 }
 
-/** A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits. */
-function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: RolloutInput): Pick<SimEnemy, "asleep" | "phase" | "extraHits"> {
+/**
+ * A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits, the
+ * Knowledge Demon's curses used (B4: one per curse we hold; a Disintegration taken twice counts once).
+ */
+function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: RolloutInput): Pick<SimEnemy, "asleep" | "phase" | "extraHits" | "curses"> {
   const id = info?.id ?? e.name;
   const phases = PHASE_MOVES[id];
   const asleep = info?.powers?.["ASLEEP_POWER"] ?? e.asleep ?? 0;
@@ -2379,8 +2443,12 @@ function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: Roll
     ...(asleep > 0 ? { asleep } : {}),
     ...(phases ? { phase: Math.max(0, phases.length - 1 - laterPhaseHps(e.maxHp, input.meta.asc).length) } : {}),
     ...(growing ? { extraHits: Math.max(0, shownHits - baseHits) } : {}),
+    ...(id === "KNOWLEDGE_DEMON" ? { curses: KNOWLEDGE_CURSE_POWERS.filter((power) => (input.playerPowers[power] ?? 0) > 0).length } : {}),
   };
 }
+
+/** The Knowledge Demon's curses (Curse of Knowledge puts one of them on us a use). */
+const KNOWLEDGE_CURSE_POWERS = ["SLOTH_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"];
 
 /** A whole-fight sample (simulateFight): the per-turn records and the policy's work. */
 export interface FightTrajectory {
