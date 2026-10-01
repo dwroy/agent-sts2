@@ -468,3 +468,4 @@
 - 2026-10-01 12:30 V4.2 复盘第 1–3 局（5CWL F33 帝王蟹，火箭剩 49；ZRYR F39 巨斧机器人三条命 278 血；GSFS F48 永世沙漏剩 226/535）写入 lessons.md。B2：低可信 boss 未向 Jev 泄露数字（0 次）；可信 boss 3 战 T1 预测 96–99% 全胜。B3：构筑题中位 5–10 s、9–21 题撞 11 s 上限、最少 40 样本；大脑选最优差值选项 19/30、24/36、28/42。新问题 4 条入 fix-queue（boss 后选牌按刚打完的 boss 模拟等）。
 - 2026-10-01 12:46 Dai 要自己玩约 2 小时：建 ops/STOP，ops/stop.sh 停掉 play（PID 657113/657124），autoplay 已退出；stop-after-a8.sh（PID 611598）保留继续计数。V4.2 已完成 4 局（5CWL、ZRYR、GSFS、NBCD），第 5 局 ALBM9RUA77WR 中途暂停（Dai 若在同一存档开新局，这局会作废，恢复后从新局继续算）。
 - 2026-10-01 12:49 试图恢复 autoplay 时发现本机 Steam 和游戏进程都已不在（Dai 在家里的机器上用同一 Steam 账号开玩，本机会话被挤掉）；重新建 ops/STOP、停掉 autoplay（PID 664285）。Dai 玩的期间不重开游戏（重开会把 Dai 那边挤下线），等 Dai 说玩好再重开。
+- 2026-10-01 13:21 Dai 玩好了：用 schtasks /it 在桌面会话重开游戏（SlayTheSpire2.exe PID 31060，Console 1，mod 15 s 上线，计划任务已删），删 ops/STOP，autoplay 重启 PID 672186；ALBM9RUA77WR 的存档还在，从 F21 接着打（这局跨暂停，复盘时注明）。stop-after-a8.sh PID 611598 继续计数。
