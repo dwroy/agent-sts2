@@ -26,3 +26,8 @@
 - mod 战中选牌屏请求超时 4 次（ALBM 3 次知识恶魔诅咒选择，R6V3 1 次「拿进手牌」），约 13 s 自愈，不阻塞。
 - R6V3 F9 DeepSeek 空内容，从推理找回选择，路线答案丢失（同已知类）。
 - 设计观察：低可信 boss（瀑布巨兽，NBCD）整场模拟 7 题一致比 5 回合 rollout 更偏多打伤害（差 14–28 个百分点）；rollout 看不到「越晚打死自爆越大」。
+
+### V4.2 第 7–9 局复盘补充（2026-10-01 16:35）
+- **钢笔尖 PEN_NIB 被算在手里每张攻击牌上**：src/strategy/card-model.ts:182-190 `dyn()` 读 mod 显示伤害（current_value），钢笔尖就绪时 mod 对手里所有攻击都显示翻倍，游戏只翻下一张；活力有 stripVigor（:200），钢笔尖没有对应处理。证据 GSG0 F33 T2：计划预测 86 实打 53。不阻塞。
+- 设计缺口：血量护栏 guardKeepsPick（combat-plan.ts:514-521）只比 rollout 死亡数，不比胜率/价值；simWinsLess（:2494）只对可信 boss 生效。W5PT F33 T3 护栏把 Jev 0.92、rollout 最优（63%）换成 53% 的线。不阻塞。
+- 已知项复发：build-sim-facts.ts:387 三局 F17 都中且被大脑引用；战中选牌屏 mod 超时约 13 s（GSG0 2 次、RPC6 2 次）自愈。gate_reject 0，DeepSeek 空内容 0，低可信 boss 无泄漏，B3 无小样本（最小 360）。

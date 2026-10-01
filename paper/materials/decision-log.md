@@ -471,3 +471,5 @@
 - 2026-10-01 13:21 Dai 玩好了：用 schtasks /it 在桌面会话重开游戏（SlayTheSpire2.exe PID 31060，Console 1，mod 15 s 上线，计划任务已删），删 ops/STOP，autoplay 重启 PID 672186；ALBM9RUA77WR 的存档还在，从 F21 接着打（这局跨暂停，复盘时注明）。stop-after-a8.sh PID 611598 继续计数。
 - 2026-10-01 14:50 学习闭环：V4.2 第 6 局 R6V3 结束（F48 女王，负），派后台 agent 复盘 NBCD/ALBM/R6V3（第 4–6 局）。
 - 2026-10-01 15:05 学习闭环：V4.2 第 4–6 局复盘写完（NBCD F17 瀑布巨兽、ALBM F33 知识恶魔、R6V3 F48 女王），无新纯 bug/无阻塞；已知项复发记 fix-queue-v4，boss 药路上喝掉与女王墙证据记 for-dai；paper_dataset 已跑。
+- 2026-10-01 16:20 学习闭环：V4.2 第 7–9 局（GSG0 帝王蟹、W5PT/RPC6 无厌沙虫，均 F33）派后台 agent 复盘。
+- 2026-10-01 16:35 学习闭环：V4.2 第 7–9 局复盘写完（GSG0 帝王蟹、W5PT/RPC6 无厌沙虫），新纯 bug 1 条（钢笔尖伤害显示 card-model.ts:182，不阻塞）入 fix-queue-v4；沙虫伤害竞速与 boss 药被喝证据记 for-dai。
