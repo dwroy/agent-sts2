@@ -305,16 +305,54 @@ export function jsonValues(content: string): unknown[] | null {
 }
 
 /**
+ * The complete JSON object a reply starts with (after whitespace or a ```json fence) when other text follows it:
+ * the answer as first given, the rest ignored (fix-queue-v4 #9: RUDHQ1KJ49P8 F11 a valid answer, then "Wait — …"
+ * and a second object; F37 the answer and one stray "'"; both judged non-JSON, the route answers lost). Null when
+ * the reply does not start with a complete, parseable object.
+ */
+export function leadingJsonObject(content: string): Record<string, unknown> | null {
+  const text = content.trim().replace(/^```(?:json)?\s*/i, "");
+  if (!text.startsWith("{")) return null;
+  let depth = 0;
+  let inString = false;
+  for (let j = 0; j < text.length; j += 1) {
+    const c = text[j]!;
+    if (inString) {
+      if (c === "\\") j += 1;
+      else if (c === '"') inString = false;
+    } else if (c === '"') inString = true;
+    else if (c === "{" || c === "[") depth += 1;
+    else if (c === "}" || c === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        try {
+          const value: unknown = JSON.parse(text.slice(0, j + 1));
+          return typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+        } catch {
+          return null;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * askJson's answer out of a reply. One object: that object. Several back to back (0B5Y F30 run-plan
  * review: `{"choice": "review", "reason": "run plan"}` then the plan): the free-form tasks (run plan,
  * fight plan) each ask for ONE object in their own format, never the per-decision {choice, reason}
  * reply the cached system prompt describes, so an object with only those keys is an echo of that format
  * and skipped; of the rest the LAST is taken (a model that restates its answer ends on the final one).
- * Anything that is not purely JSON objects still fails.
+ * A reply that starts with a complete object and goes on with other text: that first object (leadingJsonObject).
+ * Anything else still fails.
  */
 export function pickJsonObject(content: string): Record<string, unknown> {
   const values = jsonValues(content);
-  if (values === null) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+  if (values === null) {
+    const lead = leadingJsonObject(content);
+    if (lead) return lead;
+    throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
+  }
   const objects = values.filter((value): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value));
   if (objects.length === 0) throw new Error("DeepSeek returned a non-object");
   if (objects.length === 1) return objects[0]!;
@@ -643,8 +681,9 @@ export class DeepSeekClient implements Escalator {
     try {
       parsed = JSON.parse(content) as { choice?: unknown; reason?: unknown; cards?: unknown; route?: unknown; route_reason?: unknown; discard?: unknown };
     } catch {
-      // Cut off after its complete members (truncatedJsonObject): the choice stands when it was written whole.
-      const cut = truncatedJsonObject(content);
+      // A complete object and then other text (leadingJsonObject): that object. Cut off after its complete members
+      // (truncatedJsonObject): the choice stands when it was written whole.
+      const cut = leadingJsonObject(content) ?? truncatedJsonObject(content);
       if (!cut) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
       parsed = cut;
     }

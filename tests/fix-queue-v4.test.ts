@@ -12,7 +12,8 @@ import { BrainRouter, errorUsage, withUsage, type BrainLogRow } from "../src/bra
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
-import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, leadingJsonObject, pickJsonObject } from "../src/llm/deepseek.js";
+import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { ask, board, decide, env as oneshotEnv, optionsOf, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
 import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
@@ -347,5 +348,37 @@ describe("8. A failed brain call is logged with its real time and known tokens (
     const error = await engine.decide({ ...request, system: engine["client"].systemPrompt }).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(DeepSeekAnswerError);
     expect(errorUsage(error)).toMatchObject({ inputTokens: 50_000, outputTokens: 1042, cacheHitTokens: 45_000 });
+  });
+});
+
+describe("9. A valid JSON answer with text after it is that answer, not non-JSON (fix-queue-v4 deepseek:580-584, :303)", () => {
+  let server: TestServer | null = null;
+  afterEach(async () => {
+    await server?.close();
+    server = null;
+  });
+  // RUDHQ1KJ49P8 F11: the answer, then "Wait — …" and a second object; F37: the answer and a stray quote.
+  const f11 = '{"choice": "o1", "reason": "smith Inflame", "route": "keep"}\n\nWait \u2014 the elite is next. {"choice": "o0", "reason": "heal"}';
+  const f37 = '{"choice": "o0", "reason": "heal before the boss", "route": "keep"}\'';
+
+  it("the first complete object is taken; prose first, or no complete object, is still not JSON", () => {
+    expect(leadingJsonObject(f11)).toEqual({ choice: "o1", reason: "smith Inflame", route: "keep" });
+    expect(leadingJsonObject(f37)).toEqual({ choice: "o0", reason: "heal before the boss", route: "keep" });
+    expect(leadingJsonObject('```json\n{"plan": ["leave"]}\n``` done')).toEqual({ plan: ["leave"] });
+    expect(leadingJsonObject('{"reason": "a } in a string", "choice": "o1"} x')).toEqual({ reason: "a } in a string", choice: "o1" });
+    expect(leadingJsonObject("I pick o1: {}")).toBeNull();
+    expect(leadingJsonObject('{"choice": "o1"')).toBeNull();
+    expect(pickJsonObject(f37)).toMatchObject({ choice: "o0", route: "keep" });
+  });
+
+  it("choose(): the F11 reply answers o1 with its route, no DeepSeekAnswerError", async () => {
+    server = await startTestServer((req, res) => {
+      req.on("data", () => undefined);
+      req.on("end", () => sendJson(res, 200, { choices: [{ message: { content: f11 } }], usage: { prompt_tokens: 1, completion_tokens: 1 } }));
+    });
+    const client = new DeepSeekClient({ apiKey: "k", baseUrl: server.url, model: "m", timeoutMs: 5000 });
+    const answer = await client.choose({ floor: 11 }, "Heal or smith?", { o0: JSON.stringify({ option: "heal" }), o1: JSON.stringify({ option: "smith Inflame" }) }, { label: "rest/plan" });
+    expect(answer.choice).toBe("o1");
+    expect(answer.route).toBe("keep");
   });
 });
