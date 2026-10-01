@@ -371,7 +371,8 @@ def refresh_knowledge() -> None:
            f'python3 {tools}/build-boss-damage.py >/dev/null 2>&1; '
            f'python3 {tools}/build-card-upgrades.py >/dev/null 2>&1; '
            f'nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1; '
-           f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1')
+           f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1; '
+           f'{wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1')
     log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
     subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
 
